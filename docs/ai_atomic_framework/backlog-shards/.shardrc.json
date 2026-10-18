@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "source": "../ATM_BUG_OPTIMIZATION_BACKLOG.md",
+  "indexTitle": "ATM Bug and Optimization Backlog",
+  "indexPath": "docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md",
+  "type": "markdown-h2",
+  "preambleShard": "overview",
+  "defaultShard": "overview",
+  "keepSourceIntact": true,
+  "shards": [
+    {
+      "name": "overview",
+      "title": "用途與維護",
+      "pattern": "^(Purpose|Item Template|Maintenance Rules)$"
+    },
+    {
+      "name": "open-items",
+      "title": "開放問題",
+      "pattern": "^Open Items$"
+    },
+    {
+      "name": "triage",
+      "title": "嚴重度分類",
+      "pattern": "^Captain Severity Triage"
+    },
+    {
+      "name": "aao-history",
+      "title": "AAO 歷史",
+      "pattern": "^AAO "
+    },
+    {
+      "name": "parallel",
+      "title": "並行與結案",
+      "pattern": "^Parallel "
+    },
+    {
+      "name": "mem",
+      "title": "記憶與跨專案",
+      "pattern": "^MEM Lane"
+    },
+    {
+      "name": "plan31",
+      "title": "Plan 3.1",
+      "pattern": "^Plan 3\\.1"
+    },
+    {
+      "name": "sequencing",
+      "title": "處理順序",
+      "pattern": "^Current Captain Sequencing Ruling$"
+    }
+  ]
+}

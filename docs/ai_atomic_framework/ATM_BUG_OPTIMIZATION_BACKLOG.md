@@ -48,6 +48,8 @@ Use this file when:
   - Possible optimization: Name the rejecting authority and provide tasks scope add --claim-first --add <explicit-files> in the error; distinguish separate write tickets from claim admission. Synchronize configured project task projections during close or explicitly report them pending.
   - Related tasks / commits: PROG-2-0137; normal explicit scope amendment enabled evidence commit 46674f25f; native close 301fb19ff; PR483. No ledger edits or emergency bypass were used.
 
+  - 2026-10-17 / PROG-2-0140 reproduction: metadata-only import preserves deliverables and only refreshes validators/planning source seal; it cannot amend the delivery contract. Directory-only deliverables are filtered before expansion, falling back to scopePaths and producing misleading scope failures. Declare exact deliverable files at birth; omit the planning card from target-source deliverables, and commit planning metadata before close. Legacy task-lock --files accepts separate arguments, not CSV (native tasks scope add uses CSV). A released owned maintenance task was normally re-imported using the CLI-documented overwrite option after verifying no active claim; no foreign claim or ledger was overwritten. Native closure still leaves project JSON/body projections stale, tracked by TASK-AAO-0207. Related source f2bd8f227, native closure d9717e582, PR487; projection planning PR488. PROG-2-0141 adds read-only shards so this long-term record can pass document health without deleting history.
+
 - [ ] ATM-BUG-2026-07-13-176: Framework-repo task open does not remind agents to author the 3KLife planning card first
   - Status: open
   - Severity: P1 Captain / planning-root workflow friction

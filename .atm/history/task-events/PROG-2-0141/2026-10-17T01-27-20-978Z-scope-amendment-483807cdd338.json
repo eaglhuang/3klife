@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-17T01-27-20-978Z-scope-amendment-483807cdd338",
+  "taskId": "PROG-2-0141",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/PROG-2-0141.json",
+  "taskSha256": "sha256:c3e514719c58ebd555a8a4826141e892100a343e5c3ee6b78f826b8dd0115107",
+  "createdAt": "2026-10-17T01:27:20.978Z",
+  "command": "node atm.mjs tasks scope add --task PROG-2-0141 --actor codex-gpt-6 --add \"docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md,docs/ai_atomic_framework/backlog-shards/.shardrc.json,docs/ai_atomic_framework/backlog-shards/README.md,docs/ai_atomic_framework/backlog-shards/overview.md,docs/ai_atomic_framework/backlog-shards/open-items.md,docs/ai_atomic_framework/backlog-shards/triage.md,docs/ai_atomic_framework/backlog-shards/aao-history.md,docs/ai_atomic_framework/backlog-shards/parallel.md,docs/ai_atomic_framework/backlog-shards/mem.md,docs/ai_atomic_framework/backlog-shards/plan31.md,docs/ai_atomic_framework/backlog-shards/sequencing.md,docs/ai_atomic_framework/backlog-shards/aao-history/.shardrc.json,docs/ai_atomic_framework/backlog-shards/aao-history/aao-history-part-1.md,docs/ai_atomic_framework/backlog-shards/aao-history/aao-history-part-2.md,docs/ai_atomic_framework/backlog-shards/aao-history/aao-history-part-3.md,artifacts/PROG-2-0141/result.md,artifacts/PROG-2-0141/verify-backlog.js,artifacts/PROG-2-0141/verification.json\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}
