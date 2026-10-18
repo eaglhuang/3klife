@@ -4,8 +4,8 @@
   "summary": {
     "done": 10,
     "in_progress": 7,
-    "open": 17,
-    "total": 34
+    "open": 18,
+    "total": 35
   },
   "tasks": [
     {
@@ -1564,6 +1564,37 @@
         "packages/*/dist/**"
       ],
       "notes": "2026-10-18 | 狀態: planned | 驗證: pending | 變更: independent runner-sync planning | 阻塞: authority and foreign WIP audit required"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0209",
+      "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0209-ticket-directory-glob-parity.task.md",
+      "planning_repo": "3KLife",
+      "target_repo": "AI-Atomic-Framework",
+      "closure_authority": "target_repo",
+      "title": "Ticket directory glob parity",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "planned",
+      "type": "implementation",
+      "phase": "Backlog-P1",
+      "created": "2026-10-18",
+      "created_by_agent": "codex-gpt-6",
+      "description": "Align trailing directory glob ticket grants with canonical matching while preserving existing prefix and authorization boundaries.",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "Interior glob grants match canonical scope semantics",
+        "All write stage commit close push operations share parity",
+        "Plain directory and negative authorization behavior is unchanged",
+        "Red-to-green regression and existing admission gates pass"
+      ],
+      "deliverables": [
+        "packages/core/src/broker/write-scope-policy.ts",
+        "tests/cli/work-admission-ticket-scope-glob-parity.test.ts",
+        "tests/cli/scope-amendment-work-admission-ticket.test.ts"
+      ],
+      "notes": "2026-10-18 | 狀態: planned | 驗證: pending | 變更: directory glob parity planning only | 阻塞: Phase 1 claim required"
     }
   ]
 }
