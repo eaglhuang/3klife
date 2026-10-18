@@ -4,8 +4,8 @@
   "summary": {
     "done": 10,
     "in_progress": 7,
-    "open": 20,
-    "total": 37
+    "open": 21,
+    "total": 38
   },
   "tasks": [
     {
@@ -1665,6 +1665,39 @@
         "tests/cli/taskflow-host-close-projection.test.ts"
       ],
       "notes": "2026-10-19 | 狀態: planned | 驗證: pending | 變更: imports-only CI repair planning | 阻塞: Phase 1 claim required"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0212",
+      "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0212-host-import-sealed-runner-sync.task.md",
+      "planning_repo": "3KLife",
+      "target_repo": "AI-Atomic-Framework",
+      "closure_authority": "target_repo",
+      "title": "Sealed runner sync for host projection import cleanup",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "planned",
+      "type": "maintenance",
+      "phase": "Backlog-P1",
+      "created": "2026-10-18",
+      "created_by_agent": "codex-gpt-6",
+      "description": "Publish the official AAF sealed runner containing delivered host projection import cleanup, preserving foreign work and publication authority.",
+      "related": [
+        "TASK-AAO-0211"
+      ],
+      "depends": [],
+      "acceptance": [
+        "Published receipt proves source input hash output inventory and steward release",
+        "Foreign snapshots remain unchanged",
+        "Fresh target-owned close preview has null writer planning mirror",
+        "No source or adopter writes and no concrete-scope workaround"
+      ],
+      "deliverables": [
+        "release/atm-onefile/**",
+        "release/atm-root-drop/**",
+        "packages/*/dist/**"
+      ],
+      "notes": "2026-10-19 | 狀態: planned | 驗證: pending | 變更: independent sealed runner planning | 阻塞: Phase 1 publication authority required"
     }
   ]
 }
