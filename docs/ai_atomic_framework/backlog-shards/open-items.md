@@ -4,6 +4,17 @@
 
 ## Open Items
 
+### 2026-10-18 — TASK-AAO-0208 observed follow-ups
+
+- [ ] Ticket scope matching treats an interior wildcard literally when the scope ends in `/**`.
+  Reproduce: grant `packages/*/dist/**`, then authorize `packages/cli/dist/index.js`; `pathMatchesWriteScope` takes the prefix branch before glob matching and close reports `ATM_WRITE_TICKET_SCOPE_VIOLATION` even after renewal.
+  Impact: valid sealed runner outputs cannot close under the declared scope. Improve the canonical matcher and add interior-wildcard coverage; include the first denied path in diagnostics.
+  Current disposition: normal scope amendment to 27 equivalent concrete dist roots; no gate bypass. Related: TASK-AAO-0208, AAF PR #349, closure ce689eeb0.
+- [ ] A single Markdown card with both `id` and identical `task_id` can be misclassified as a fenced example.
+  Reproduce: import the opener-generated TASK-AAO-0208 card with both fields and fenced validators; the installed runner returned `ATM_TASK_IMPORT_REFERENCE_ONLY_ID_FRAGMENT` and `ATM_TASKS_PLAN_EMPTY`.
+  Impact: normal registration blocks before claim. Improve single-card source-line fidelity and test equal dual IDs plus fenced commands; preserve actual conflicting-ID rejection.
+  Current disposition: retain canonical `id`, remove redundant `task_id`; normal import then parsed exactly one card. Related: 3KLife PR #490, correction 83b8e0c9a; source diagnosis belongs in a separate framework card.
+
 - [ ] ATM-BUG-2026-10-16-003: Standard gate and per-card geometry checks do not prove cross-panel UI separation
   - Status: game regression repaired by PROG-2-0139; verification coverage guidance remains open. PR483 stays draft until its follow-up stack is reviewed.
   - Severity: P1 verification scope / misleading completion confidence.
