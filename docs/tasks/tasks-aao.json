@@ -4,8 +4,8 @@
   "summary": {
     "done": 10,
     "in_progress": 7,
-    "open": 21,
-    "total": 38
+    "open": 22,
+    "total": 39
   },
   "tasks": [
     {
@@ -1698,6 +1698,36 @@
         "packages/*/dist/**"
       ],
       "notes": "2026-10-19 | 狀態: planned | 驗證: pending | 變更: independent sealed runner planning | 阻塞: Phase 1 publication authority required"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0213",
+      "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0213-workspace-bin-executable-modes.task.md",
+      "planning_repo": "3KLife",
+      "target_repo": "AI-Atomic-Framework",
+      "closure_authority": "target_repo",
+      "title": "Workspace bin executable mode contract",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "planned",
+      "type": "maintenance",
+      "phase": "Backlog-P1",
+      "created": "2026-10-19",
+      "created_by_agent": "codex-gpt-6",
+      "description": "Correct create-atm executable Git mode without changing its blob and validate every declared tracked workspace bin.",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "All declared tracked workspace bins have mode100755",
+        "create-atm blob is identical before and after mode-only repair",
+        "Native sealed commit preserves authorized staged mode and excludes foreign staged paths",
+        "Remote Product CI progress is verified without overstating full CI success"
+      ],
+      "deliverables": [
+        "packages/create-atm/dist/index.js",
+        "tests/cli/ci-product-lane-contract.test.ts"
+      ],
+      "notes": "2026-10-19 | 狀態: planned | 驗證: pending | 變更: workspace executable mode planning | 阻塞: Phase 1 claim required"
     }
   ]
 }
