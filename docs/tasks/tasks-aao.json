@@ -4,8 +4,8 @@
   "summary": {
     "done": 10,
     "in_progress": 7,
-    "open": 22,
-    "total": 39
+    "open": 23,
+    "total": 40
   },
   "tasks": [
     {
@@ -1728,6 +1728,37 @@
         "tests/cli/ci-product-lane-contract.test.ts"
       ],
       "notes": "2026-10-19 | 狀態: planned | 驗證: pending | 變更: workspace executable mode planning | 阻塞: Phase 1 claim required"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0214",
+      "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0214-runtime-git-head-test-contract.task.md",
+      "planning_repo": "3KLife",
+      "target_repo": "AI-Atomic-Framework",
+      "closure_authority": "target_repo",
+      "title": "Runtime-only Git HEAD evidence test contract",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "planned",
+      "type": "maintenance",
+      "phase": "Backlog-P1",
+      "created": "2026-10-19",
+      "created_by_agent": "codex-gpt-6",
+      "description": "Align the internal sealed attribution fixture with the established runtime-only Git HEAD observation architecture while retaining governance audit and tamper assertions.",
+      "related": [
+        "TASK-AAO-0213"
+      ],
+      "depends": [],
+      "acceptance": [
+        "Runtime receipt has null history evidence path and correct runtime path",
+        "Runtime JSONL proves actual candidate tree parent and task identity",
+        "Candidate and committed trees exclude history and runtime Git HEAD telemetry",
+        "Declared governance audit remains included and existing negative assertions remain intact"
+      ],
+      "deliverables": [
+        "packages/cli/src/commands/git-governance/implementation/sealed-commit-attribution.test.ts"
+      ],
+      "notes": "2026-10-19 | 狀態: planned | 驗證: pending | 變更: runtime-only fixture contract planning | 阻塞: Phase 1 claim required"
     }
   ]
 }
