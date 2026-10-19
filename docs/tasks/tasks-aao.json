@@ -4,8 +4,8 @@
   "summary": {
     "done": 10,
     "in_progress": 7,
-    "open": 23,
-    "total": 40
+    "open": 24,
+    "total": 41
   },
   "tasks": [
     {
@@ -1759,6 +1759,38 @@
         "packages/cli/src/commands/git-governance/implementation/sealed-commit-attribution.test.ts"
       ],
       "notes": "2026-10-19 | 狀態: planned | 驗證: pending | 變更: runtime-only fixture contract planning | 阻塞: Phase 1 claim required"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-AAO-0215",
+      "card_path": "docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0215-runtime-test-sealed-runner-sync.task.md",
+      "planning_repo": "3KLife",
+      "target_repo": "AI-Atomic-Framework",
+      "closure_authority": "target_repo",
+      "title": "Sealed runner sync for runtime test contract",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "planned",
+      "type": "maintenance",
+      "phase": "Backlog-P1",
+      "created": "2026-10-19",
+      "created_by_agent": "codex-gpt-6",
+      "description": "Publish official AAF runner outputs from runtime-only test contract delivery 4414aa1710a337ec1834486158607ce50024350d or its input-tree-equivalent metadata-only descendant.",
+      "related": [
+        "TASK-AAO-0214"
+      ],
+      "depends": [],
+      "acceptance": [
+        "Published receipt proves exact delivered source input hash and output inventory",
+        "Fresh target-owned close preview has no stale runner blocker and no planning writes",
+        "Foreign snapshots remain unchanged and no temporary takeover is used"
+      ],
+      "deliverables": [
+        "release/atm-onefile/**",
+        "release/atm-root-drop/**",
+        "packages/*/dist/**"
+      ],
+      "notes": "2026-10-19 | 狀態: planned | 驗證: pending | 變更: sealed source4414aa1710a337ec1834486158607ce50024350d | 阻塞: Phase 1 publication authority required"
     }
   ]
 }
