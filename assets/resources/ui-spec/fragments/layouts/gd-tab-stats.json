@@ -10,7 +10,7 @@
       "width": "100%",
       "height": 24,
       "children": [
-        { "type": "sprite", "name": "StatsSectionBar", "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 }, "skinSlot": "gdv3.summary.sectionBar" },
+        { "type": "image", "name": "StatsSectionBar", "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 }, "skinSlot": "gdv3.summary.sectionBar" },
         { "type": "label", "name": "StatsSectionTitle", "widget": { "left": 12, "top": 3 }, "width": 110, "height": 18, "text": "資質．實力", "styleSlot": "gdv3.label.summarySection" },
         { "type": "label", "name": "StatsSectionTitleEn", "widget": { "left": 118, "top": 5 }, "width": 170, "height": 14, "text": "DUAL-LAYER ATTRIBUTES", "styleSlot": "gdv3.label.summarySectionEn" }
       ]
@@ -194,7 +194,7 @@
       "width": "100%",
       "height": 24,
       "children": [
-        { "type": "sprite", "name": "VitalsSectionBar", "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 }, "skinSlot": "gdv3.summary.sectionBar" },
+        { "type": "image", "name": "VitalsSectionBar", "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 }, "skinSlot": "gdv3.summary.sectionBar" },
         { "type": "label", "name": "VitalsSectionTitle", "widget": { "left": 12, "top": 3 }, "width": 84, "height": 18, "text": "生命狀態", "styleSlot": "gdv3.label.summarySection" },
         { "type": "label", "name": "VitalsSectionTitleEn", "widget": { "left": 98, "top": 5 }, "width": 86, "height": 14, "text": "VITALS", "styleSlot": "gdv3.label.summarySectionEn" }
       ]
@@ -259,7 +259,7 @@
       "width": "100%",
       "height": 24,
       "children": [
-        { "type": "sprite", "name": "ProfileSectionBar", "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 }, "skinSlot": "gdv3.summary.sectionBar" },
+        { "type": "image", "name": "ProfileSectionBar", "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 }, "skinSlot": "gdv3.summary.sectionBar" },
         { "type": "label", "name": "ProfileSectionTitle", "widget": { "left": 12, "top": 3 }, "width": 84, "height": 18, "text": "基本資料", "styleSlot": "gdv3.label.summarySection" },
         { "type": "label", "name": "ProfileSectionTitleEn", "widget": { "left": 98, "top": 5 }, "width": 92, "height": 14, "text": "PROFILE", "styleSlot": "gdv3.label.summarySectionEn" }
       ]

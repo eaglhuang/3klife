@@ -22,6 +22,8 @@ export interface BattleSkillExecutionContext {
   getDefenseZoneMultiplier?(unit: TroopUnit): number;
   /** 新增持續防禦區（PROG-2-0761） */
   addFormationZone?(zone: FormationZone): void;
+  /** 對單位施加持續傷害（毒箭，PROG-2-0766）；舊測試 context 可不提供 */
+  addUnitDot?(unit: TroopUnit, ratio: number, turns: number): void;
   /** 把指定格設為火場等持續傷害格（PROG-2-0757）；舊測試 context 可不提供 */
   setTileHazard?(cell: { lane: number; depth: number }, damagePerTurn: number): void;
   applyDamage(unit: TroopUnit, damage: number, casterFaction: Faction): void;

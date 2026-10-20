@@ -1,0 +1,1043 @@
+{
+  "id": "general-version-gallery-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "GalleryRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "GalleryBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "nurture.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "GalleryPanel",
+        "id": "galleryPanel",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1600,
+        "height": 900,
+        "skinSlot": "nurture.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "GalleryTitle",
+            "id": "galleryTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "width": 900,
+            "height": 40,
+            "styleSlot": "nurture.label.title"
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseGallery",
+            "id": "btnCloseGallery",
+            "widget": {
+              "top": 18,
+              "right": 32
+            },
+            "width": 160,
+            "height": 48,
+            "skinSlot": "nurture.button.rest.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "CloseGalleryLabel",
+                "id": "closeGalleryLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 160,
+                "height": 40,
+                "styleSlot": "nurture.label.button",
+                "text": "關閉"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "GroupRow0",
+            "id": "groupRow_0",
+            "widget": {
+              "top": 110,
+              "left": 32
+            },
+            "width": 400,
+            "height": 84,
+            "children": [
+              {
+                "type": "panel",
+                "name": "GroupSelected0",
+                "id": "groupSelected_0",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "button",
+                "name": "BtnGroup0",
+                "id": "btnGroup_0",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.button.rest.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "GroupName0",
+                    "id": "groupName_0",
+                    "widget": {
+                      "top": 10,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 40,
+                    "styleSlot": "nurture.label.button"
+                  },
+                  {
+                    "type": "label",
+                    "name": "GroupProgress0",
+                    "id": "groupProgress_0",
+                    "widget": {
+                      "top": 48,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 30,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "GroupRow1",
+            "id": "groupRow_1",
+            "widget": {
+              "top": 202,
+              "left": 32
+            },
+            "width": 400,
+            "height": 84,
+            "children": [
+              {
+                "type": "panel",
+                "name": "GroupSelected1",
+                "id": "groupSelected_1",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "button",
+                "name": "BtnGroup1",
+                "id": "btnGroup_1",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.button.rest.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "GroupName1",
+                    "id": "groupName_1",
+                    "widget": {
+                      "top": 10,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 40,
+                    "styleSlot": "nurture.label.button"
+                  },
+                  {
+                    "type": "label",
+                    "name": "GroupProgress1",
+                    "id": "groupProgress_1",
+                    "widget": {
+                      "top": 48,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 30,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "GroupRow2",
+            "id": "groupRow_2",
+            "widget": {
+              "top": 294,
+              "left": 32
+            },
+            "width": 400,
+            "height": 84,
+            "children": [
+              {
+                "type": "panel",
+                "name": "GroupSelected2",
+                "id": "groupSelected_2",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "button",
+                "name": "BtnGroup2",
+                "id": "btnGroup_2",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.button.rest.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "GroupName2",
+                    "id": "groupName_2",
+                    "widget": {
+                      "top": 10,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 40,
+                    "styleSlot": "nurture.label.button"
+                  },
+                  {
+                    "type": "label",
+                    "name": "GroupProgress2",
+                    "id": "groupProgress_2",
+                    "widget": {
+                      "top": 48,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 30,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "GroupRow3",
+            "id": "groupRow_3",
+            "widget": {
+              "top": 386,
+              "left": 32
+            },
+            "width": 400,
+            "height": 84,
+            "children": [
+              {
+                "type": "panel",
+                "name": "GroupSelected3",
+                "id": "groupSelected_3",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "button",
+                "name": "BtnGroup3",
+                "id": "btnGroup_3",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.button.rest.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "GroupName3",
+                    "id": "groupName_3",
+                    "widget": {
+                      "top": 10,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 40,
+                    "styleSlot": "nurture.label.button"
+                  },
+                  {
+                    "type": "label",
+                    "name": "GroupProgress3",
+                    "id": "groupProgress_3",
+                    "widget": {
+                      "top": 48,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 30,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "GroupRow4",
+            "id": "groupRow_4",
+            "widget": {
+              "top": 478,
+              "left": 32
+            },
+            "width": 400,
+            "height": 84,
+            "children": [
+              {
+                "type": "panel",
+                "name": "GroupSelected4",
+                "id": "groupSelected_4",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "button",
+                "name": "BtnGroup4",
+                "id": "btnGroup_4",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.button.rest.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "GroupName4",
+                    "id": "groupName_4",
+                    "widget": {
+                      "top": 10,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 40,
+                    "styleSlot": "nurture.label.button"
+                  },
+                  {
+                    "type": "label",
+                    "name": "GroupProgress4",
+                    "id": "groupProgress_4",
+                    "widget": {
+                      "top": 48,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 30,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "GroupRow5",
+            "id": "groupRow_5",
+            "widget": {
+              "top": 570,
+              "left": 32
+            },
+            "width": 400,
+            "height": 84,
+            "children": [
+              {
+                "type": "panel",
+                "name": "GroupSelected5",
+                "id": "groupSelected_5",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "button",
+                "name": "BtnGroup5",
+                "id": "btnGroup_5",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.button.rest.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "GroupName5",
+                    "id": "groupName_5",
+                    "widget": {
+                      "top": 10,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 40,
+                    "styleSlot": "nurture.label.button"
+                  },
+                  {
+                    "type": "label",
+                    "name": "GroupProgress5",
+                    "id": "groupProgress_5",
+                    "widget": {
+                      "top": 48,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 30,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "GroupRow6",
+            "id": "groupRow_6",
+            "widget": {
+              "top": 662,
+              "left": 32
+            },
+            "width": 400,
+            "height": 84,
+            "children": [
+              {
+                "type": "panel",
+                "name": "GroupSelected6",
+                "id": "groupSelected_6",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "button",
+                "name": "BtnGroup6",
+                "id": "btnGroup_6",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.button.rest.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "GroupName6",
+                    "id": "groupName_6",
+                    "widget": {
+                      "top": 10,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 40,
+                    "styleSlot": "nurture.label.button"
+                  },
+                  {
+                    "type": "label",
+                    "name": "GroupProgress6",
+                    "id": "groupProgress_6",
+                    "widget": {
+                      "top": 48,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 30,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "GroupRow7",
+            "id": "groupRow_7",
+            "widget": {
+              "top": 754,
+              "left": 32
+            },
+            "width": 400,
+            "height": 84,
+            "children": [
+              {
+                "type": "panel",
+                "name": "GroupSelected7",
+                "id": "groupSelected_7",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "button",
+                "name": "BtnGroup7",
+                "id": "btnGroup_7",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 84,
+                "skinSlot": "nurture.button.rest.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "GroupName7",
+                    "id": "groupName_7",
+                    "widget": {
+                      "top": 10,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 40,
+                    "styleSlot": "nurture.label.button"
+                  },
+                  {
+                    "type": "label",
+                    "name": "GroupProgress7",
+                    "id": "groupProgress_7",
+                    "widget": {
+                      "top": 48,
+                      "left": 20
+                    },
+                    "width": 360,
+                    "height": 30,
+                    "styleSlot": "nurture.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "SelectedName",
+            "id": "selectedName",
+            "widget": {
+              "top": 80,
+              "left": 480
+            },
+            "width": 800,
+            "height": 40,
+            "styleSlot": "nurture.label.title"
+          },
+          {
+            "type": "container",
+            "name": "Cell0",
+            "id": "cell_0",
+            "widget": {
+              "top": 200,
+              "left": 480
+            },
+            "width": 400,
+            "height": 170,
+            "children": [
+              {
+                "type": "panel",
+                "name": "CellBg0",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 170,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "label",
+                "name": "CellName0",
+                "id": "cellName_0",
+                "widget": {
+                  "top": 14,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 40,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellTitle0",
+                "id": "cellTitle_0",
+                "widget": {
+                  "top": 62,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellState0",
+                "id": "cellState_0",
+                "widget": {
+                  "top": 110,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellLimited0",
+                "id": "cellLimited_0",
+                "widget": {
+                  "top": 14,
+                  "right": 20
+                },
+                "width": 120,
+                "height": 36,
+                "styleSlot": "nurture.label.button",
+                "text": "限定"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "Cell1",
+            "id": "cell_1",
+            "widget": {
+              "top": 200,
+              "left": 910
+            },
+            "width": 400,
+            "height": 170,
+            "children": [
+              {
+                "type": "panel",
+                "name": "CellBg1",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 170,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "label",
+                "name": "CellName1",
+                "id": "cellName_1",
+                "widget": {
+                  "top": 14,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 40,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellTitle1",
+                "id": "cellTitle_1",
+                "widget": {
+                  "top": 62,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellState1",
+                "id": "cellState_1",
+                "widget": {
+                  "top": 110,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellLimited1",
+                "id": "cellLimited_1",
+                "widget": {
+                  "top": 14,
+                  "right": 20
+                },
+                "width": 120,
+                "height": 36,
+                "styleSlot": "nurture.label.button",
+                "text": "限定"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "Cell2",
+            "id": "cell_2",
+            "widget": {
+              "top": 390,
+              "left": 480
+            },
+            "width": 400,
+            "height": 170,
+            "children": [
+              {
+                "type": "panel",
+                "name": "CellBg2",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 170,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "label",
+                "name": "CellName2",
+                "id": "cellName_2",
+                "widget": {
+                  "top": 14,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 40,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellTitle2",
+                "id": "cellTitle_2",
+                "widget": {
+                  "top": 62,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellState2",
+                "id": "cellState_2",
+                "widget": {
+                  "top": 110,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellLimited2",
+                "id": "cellLimited_2",
+                "widget": {
+                  "top": 14,
+                  "right": 20
+                },
+                "width": 120,
+                "height": 36,
+                "styleSlot": "nurture.label.button",
+                "text": "限定"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "Cell3",
+            "id": "cell_3",
+            "widget": {
+              "top": 390,
+              "left": 910
+            },
+            "width": 400,
+            "height": 170,
+            "children": [
+              {
+                "type": "panel",
+                "name": "CellBg3",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 170,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "label",
+                "name": "CellName3",
+                "id": "cellName_3",
+                "widget": {
+                  "top": 14,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 40,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellTitle3",
+                "id": "cellTitle_3",
+                "widget": {
+                  "top": 62,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellState3",
+                "id": "cellState_3",
+                "widget": {
+                  "top": 110,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellLimited3",
+                "id": "cellLimited_3",
+                "widget": {
+                  "top": 14,
+                  "right": 20
+                },
+                "width": 120,
+                "height": 36,
+                "styleSlot": "nurture.label.button",
+                "text": "限定"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "Cell4",
+            "id": "cell_4",
+            "widget": {
+              "top": 580,
+              "left": 480
+            },
+            "width": 400,
+            "height": 170,
+            "children": [
+              {
+                "type": "panel",
+                "name": "CellBg4",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 170,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "label",
+                "name": "CellName4",
+                "id": "cellName_4",
+                "widget": {
+                  "top": 14,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 40,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellTitle4",
+                "id": "cellTitle_4",
+                "widget": {
+                  "top": 62,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellState4",
+                "id": "cellState_4",
+                "widget": {
+                  "top": 110,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellLimited4",
+                "id": "cellLimited_4",
+                "widget": {
+                  "top": 14,
+                  "right": 20
+                },
+                "width": 120,
+                "height": 36,
+                "styleSlot": "nurture.label.button",
+                "text": "限定"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "Cell5",
+            "id": "cell_5",
+            "widget": {
+              "top": 580,
+              "left": 910
+            },
+            "width": 400,
+            "height": 170,
+            "children": [
+              {
+                "type": "panel",
+                "name": "CellBg5",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 400,
+                "height": 170,
+                "skinSlot": "nurture.card.bg"
+              },
+              {
+                "type": "label",
+                "name": "CellName5",
+                "id": "cellName_5",
+                "widget": {
+                  "top": 14,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 40,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellTitle5",
+                "id": "cellTitle_5",
+                "widget": {
+                  "top": 62,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellState5",
+                "id": "cellState_5",
+                "widget": {
+                  "top": 110,
+                  "left": 20
+                },
+                "width": 360,
+                "height": 36,
+                "styleSlot": "nurture.label.button"
+              },
+              {
+                "type": "label",
+                "name": "CellLimited5",
+                "id": "cellLimited_5",
+                "widget": {
+                  "top": 14,
+                  "right": 20
+                },
+                "width": 120,
+                "height": 36,
+                "styleSlot": "nurture.label.button",
+                "text": "限定"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -126,12 +126,34 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     falloffRule: 'none',
     battleLogKey: 'skill.zhao_yun_pierce.hit',
   },
+  // 長坂雄咆（PROG-2-0764）：本卡只做定身；後退 1 格另開 push 卡（規格 G-1）
+  'tally-changban-root': {
+    battleSkillId: 'tally-changban-root',
+    targetMode: BattleSkillTargetMode.Self,
+    effectKind: 'root',
+    coefficient: 0,
+    rootTurns: 1,
+    battleLogKey: 'skill.tally_changban_root.root',
+  },
   'eight-formation': {
     battleSkillId: 'eight-formation',
     targetMode: BattleSkillTargetMode.Self,
     effectKind: 'tile-buff',
     coefficient: 0,
     battleLogKey: 'skill.eight_formation.cast',
+  },
+  // 毒箭（PROG-2-0766）：目標中毒 2 回合，每回合扣最大 HP 10%
+  'tally-poison-arrow': {
+    battleSkillId: 'tally-poison-arrow',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'dot',
+    coefficient: 0,
+    maxTargets: 1,
+    dotMaxHpRatio: 0.1,
+    statusTurns: 2,
+    battleLogKey: 'skill.tally_poison_arrow.poison',
   },
   // 緩速（PROG-2-0765）：單體敵軍下一回合移動 -1（規格 G-2 計略）
   'mentor-slow': {
