@@ -80,6 +80,7 @@ import {
     raiseBloodlineUltimateCap,
 } from '../systems/BloodlineUltimateRoster';
 import type { UltimateAwakenReason } from '../systems/BloodlineTransmissionUltimate';
+import { ultimateProgressFromBattleRecord } from '../systems/UltimateProgress';
 import {
     battleExpSource,
     DiscoveryExpSource,
@@ -109,7 +110,7 @@ import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMili
 import { buildEraResetEvent } from '../systems/EraReset';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
-import type { BattlePerformance } from '../systems/BattleRecordStats';
+import type { BattlePerformance, BattleRecordLike } from '../systems/BattleRecordStats';
 import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
 import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
@@ -1516,7 +1517,8 @@ export class GameSession {
         const roster = this._roster.getAll();
         const target = roster.find((g) => g.id === generalId);
         if (!target) return { ok: false, reason: 'GENERAL_NOT_FOUND' };
-        const result = awakenBloodlineUltimate(target);
+        const progress = ultimateProgressFromBattleRecord((target as { battleRecord?: BattleRecordLike }).battleRecord);
+        const result = awakenBloodlineUltimate(target, progress);
         if (result.ok === false) return result;
         this._roster.replaceAll(roster.map((g) => (g.id === generalId ? result.general : g)));
         if (this._autoSave && this._save) {
