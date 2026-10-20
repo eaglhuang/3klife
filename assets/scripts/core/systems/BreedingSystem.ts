@@ -35,6 +35,7 @@ import { baseVitalityMaxOf } from './VitalityCap';
 import { rollWildGene, STAR_JUMP_MAX_LEVEL, STAR_JUMP_STEP } from './WildGene';
 import { luckThresholdEffects, type LuckThresholdEffects } from './LuckThresholds';
 import { forceFatherTacticCopy } from './LuckTacticCopy';
+import { applyFateInheritance } from './LuckFateInheritance';
 import { applyBloodlineMutation } from './LuckBloodlineMutation';
 
 export const BREEDING_MIN_AGE = 20;
@@ -621,7 +622,8 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
 
     const { pedigree, ep: previewEp } = previewBreedingEp(request);
     const profiles = collectProfiles(pedigree, request);
-    const factors = inheritFactors(buildFactorSources(pedigree, profiles), {
+    const sources = buildFactorSources(pedigree, profiles);
+    const factors = inheritFactors(sources, {
         random: request.random,
         dictionary: request.dictionary,
         enabledColors: request.enabledColors,
@@ -635,13 +637,16 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
     const parentAvgLuk = (statOf(request.father, 'luk') + statOf(request.mother, 'luk')) / 2;
     const ep = applyFateWave(previewEp, rollFateWave(parentAvgLuk, request.random));
     const luckEffects = luckThresholdEffects(parentAvgLuk);
-    // 戰法強制複製（LUK ≥ 80，PROG-2-0874）→ 血統變異（LUK ≥ 95，PROG-2-0877）；皆在隨機抽選之後、子嗣生成之前
+    // 戰法強制複製（LUK ≥ 80，PROG-2-0874）→ 血統變異（LUK ≥ 95，PROG-2-0877）→ 天命傳承（LUK = 100，PROG-2-0878）
     const tacticFactors = luckEffects.forceTacticCopy
         ? forceFatherTacticCopy(finalFactors, request.father, request.dictionary, request.maxFactors ?? DEFAULT_MAX_INHERITED_FACTORS)
         : finalFactors;
-    const childFactors = luckEffects.bloodlineMutation
+    const bloodlineFactors = luckEffects.bloodlineMutation
         ? applyBloodlineMutation(tacticFactors, request.random, request.dictionary)
         : tacticFactors;
+    const childFactors = luckEffects.fateInheritance
+        ? applyFateInheritance(bloodlineFactors, sources, { random: request.random, dictionary: request.dictionary, enabledColors: request.enabledColors })
+        : bloodlineFactors;
     const child = createChild({
         id: request.childId,
         father: request.father,
