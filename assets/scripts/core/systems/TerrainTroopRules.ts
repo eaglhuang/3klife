@@ -37,6 +37,16 @@ const RULES: Readonly<Partial<Record<TroopType, Partial<Record<TerrainType, Part
     },
 };
 
+/**
+ * 林地 S 級「迴避 +30%」（PROG-2-0788，暫定實作）：防守方站在林地且林地適性 S 時，
+ * 攻擊方命中率 −30%，仍受命中下限約束。規格寫的是迴避，這裡沿用既有命中率機制表達。
+ */
+export const FOREST_S_EVASION_BONUS = 0.3;
+
+export function terrainEvasionBonusOf(terrain: TerrainType, terrainGrade: string): number {
+    return terrain === TerrainType.Forest && terrainGrade === 'S' ? FOREST_S_EVASION_BONUS : 0;
+}
+
 /** 兵種站在地形上的固定效果；沒有規則的組合回傳全 0 */
 export function getTerrainTroopEffect(troop: TroopType, terrain: TerrainType): TerrainTroopEffect {
     const partial = RULES[troop]?.[terrain];
