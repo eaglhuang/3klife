@@ -95,6 +95,8 @@ import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
 import { MentorDuplicateOutcome, overflowToastText, resolveMentorDuplicate } from '../systems/MentorOverflow';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
+import { borrowCandidateOf, type NpcFriendMentor } from '../systems/NpcFriendMentor';
+import { canBorrow, createBorrow, type BorrowBlockReason, type BorrowLedger, type BorrowRequest } from '../systems/FriendBorrow';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
@@ -355,6 +357,10 @@ export class GameSession {
     private _onboarding: OnboardingState = { ...FRESH_ONBOARDING };
     /** 結義點數（轉蛋滿轉溢出獲得，傭兵轉永久用）；存檔欄位 bondPoints */
     private _bondPoints = 0;
+    /** NPC 好友教官清單（MENT-14 MVP）；由 ServiceLoader 從資料表載入 */
+    private _npcFriendMentors: NpcFriendMentor[] = [];
+    /** 好友借用紀錄（MENT-14）；目前只存在記憶體，尚未寫入存檔 */
+    private _borrowLedger: BorrowLedger = { records: [] };
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
     private _clearedStageIds: string[] = [];
     /** 收藏武將 id（HALL-07 收藏權重，PROG-2-0453） */
@@ -1523,6 +1529,39 @@ export class GameSession {
             await this.save();
         }
         return { ok: true, awakenedStage: result.awakenedStage };
+    }
+
+    /** 設定 NPC 好友教官清單（MENT-14 MVP）；ServiceLoader 載入資料表後呼叫 */
+    public setNpcFriendMentors(list: readonly NpcFriendMentor[]): void {
+        this._npcFriendMentors = [...list];
+    }
+
+    public get npcFriendMentors(): readonly NpcFriendMentor[] {
+        return this._npcFriendMentors;
+    }
+
+    /**
+     * 借用好友的教官（MENT-14 MVP）：找不到好友回 UNKNOWN_FRIEND；規則不過回傳原因且不改紀錄；
+     * 成功寫入借用紀錄並回傳原主結義點數（由呼叫端決定如何入帳）。day 由呼叫端傳入（YYYY-MM-DD）。
+     */
+    public borrowFriendMentor(request: { friendId: string; day: string; sessionId: string; recordId: string }):
+        { ok: true; ownerBondReward: number } | { ok: false; blocked: BorrowBlockReason | 'UNKNOWN_FRIEND' } {
+        const friend = this._npcFriendMentors.find((f) => f.friendId === request.friendId);
+        if (!friend) return { ok: false, blocked: 'UNKNOWN_FRIEND' };
+        const borrowRequest: BorrowRequest = {
+            day: request.day,
+            borrowerId: 'player',
+            ownerId: friend.friendId,
+            candidate: borrowCandidateOf(friend),
+            sessionId: request.sessionId,
+            recordId: request.recordId,
+        };
+        const check = canBorrow(this._borrowLedger, borrowRequest);
+        if (!check.ok) return { ok: false, blocked: check.blocked };
+        const outcome = createBorrow(this._borrowLedger, borrowRequest);
+        if (!outcome) throw new Error('canBorrow 通過後 createBorrow 不應回傳 null');
+        this._borrowLedger = outcome.ledger;
+        return { ok: true, ownerBondReward: outcome.ownerBondReward };
     }
 
     /** 覺醒名冊中某位武將的鎖定因子；失敗回傳原因，成功才改名冊、存檔並廣播 */
