@@ -89,6 +89,7 @@ import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } fr
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
+import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
@@ -1166,7 +1167,7 @@ export class GameSession {
 
     /** 開始回合制趕路（接取天下沙盤遠征等事件呼叫）；會覆蓋目前的趕路。 */
     public startTravel(targetId: string, turns: number): void {
-        this._travel = createTravelCountdown(targetId, turns);
+        this._travel = createTravelCountdown(targetId, turns + seasonModifiersOf(this._clock.state.currentSeason).travelTurnsDelta);
         this._emit(GAME_SESSION_EVENTS.TravelChanged, this.travel);
     }
 
@@ -1530,7 +1531,7 @@ export class GameSession {
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
         this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
-        this._military = regenMilitaryOneSeason(this._military);
+        this._military = regenMilitaryOneSeason(this._military, 1, seasonModifiersOf(advance.current.currentSeason).foodMultiplier);
         // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
         this._prison = { ...this._prison, intel: this._prison.intel + prisonYield.intel };

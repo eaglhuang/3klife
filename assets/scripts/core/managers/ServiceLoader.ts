@@ -38,6 +38,7 @@ import { UIManager } from "./UIManager";
 import { UISpecLoader } from "../../ui/core/UISpecLoader";
 import { UCUFLogger, LogCategory } from "../utils/UCUFLogger";
 import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
+import { seasonModifiersOf } from "../systems/SeasonModifiers";
 
 export class ServiceLoader {
     private static instance: ServiceLoader | null = null;
@@ -84,6 +85,7 @@ export class ServiceLoader {
     public readonly breeding = new BreedingService(this.rosterStore, BloodlineGraph.getInstance(), {
         random: this.session.randomSource,
         currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
+        seasonConceptionMod: () => seasonModifiersOf(this.session.gameTime.currentSeason).conceptionMultiplier,
         getDictionary: () => this.factorDictionary,
         getFemaleSource: (uid) => this.session.femaleSources[uid] ?? null,
         getHistoricalPairs: () => this.historicalPairs,
