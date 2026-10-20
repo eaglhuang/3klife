@@ -20,6 +20,7 @@ import { createEmptyPedigree, Pedigree, PEDIGREE_SLOTS, PedigreeSlot, pedigreeSl
 import {
     AncestorFactorSource,
     DEFAULT_ENABLED_FACTOR_COLORS,
+    DEFAULT_MAX_INHERITED_FACTORS,
     FACTOR_POOL_RATE,
     FactorColor,
     FactorDictionary,
@@ -33,6 +34,7 @@ import { analyzeTagResonance, KIN_RESONANCE_MIN_COUNT } from './KinRelation';
 import { baseVitalityMaxOf } from './VitalityCap';
 import { rollWildGene, STAR_JUMP_MAX_LEVEL, STAR_JUMP_STEP } from './WildGene';
 import { luckThresholdEffects, type LuckThresholdEffects } from './LuckThresholds';
+import { forceFatherTacticCopy } from './LuckTacticCopy';
 import { applyBloodlineMutation } from './LuckBloodlineMutation';
 
 export const BREEDING_MIN_AGE = 20;
@@ -632,11 +634,14 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
     // 天命波動（PROG-2-0511）：父母平均 LUK × Random(-0.5, 1.5)，在子嗣生成前套用到 EP
     const parentAvgLuk = (statOf(request.father, 'luk') + statOf(request.mother, 'luk')) / 2;
     const ep = applyFateWave(previewEp, rollFateWave(parentAvgLuk, request.random));
-    // 血統變異（LUK ≥ 95，PROG-2-0877）：在子嗣生成前套用，只在門檻達成時消耗亂數
     const luckEffects = luckThresholdEffects(parentAvgLuk);
-    const childFactors = luckEffects.bloodlineMutation
-        ? applyBloodlineMutation(finalFactors, request.random, request.dictionary)
+    // 戰法強制複製（LUK ≥ 80，PROG-2-0874）→ 血統變異（LUK ≥ 95，PROG-2-0877）；皆在隨機抽選之後、子嗣生成之前
+    const tacticFactors = luckEffects.forceTacticCopy
+        ? forceFatherTacticCopy(finalFactors, request.father, request.dictionary, request.maxFactors ?? DEFAULT_MAX_INHERITED_FACTORS)
         : finalFactors;
+    const childFactors = luckEffects.bloodlineMutation
+        ? applyBloodlineMutation(tacticFactors, request.random, request.dictionary)
+        : tacticFactors;
     const child = createChild({
         id: request.childId,
         father: request.father,
