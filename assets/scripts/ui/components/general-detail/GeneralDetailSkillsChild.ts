@@ -11,6 +11,8 @@ import { ChildPanelBase } from '../../core/ChildPanelBase';
 import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { GeneralConfig, GeneralTacticSlotConfig, GeneralUltimateSlotConfig } from '../../../core/models/GeneralUnit';
+import { ultimateProgressOf } from '../../../core/systems/UltimateProgress';
+import { ultimateStageSummary } from '../../core/UltimateStageSummary';
 import {
     formatBulletList,
     formatSkillSource,
@@ -109,8 +111,9 @@ export class GeneralDetailSkillsChild extends ChildPanelBase {
         this._set(this._lInspired,
             `已定義奧義\n${formatBulletList(unlockedUltLines, '• 此武將目前無專屬奧義')}`
         );
+        const ultimateStage = ultimateStageSummary(cfg.bloodlineUltimate, ultimateProgressOf(cfg));
         this._set(this._lLocked,
-            `奧義解鎖條件\n${formatBulletList(lockedUltLines, '• 無待解鎖奧義槽')}`
+            `奧義解鎖條件\n${formatBulletList(lockedUltLines, '• 無待解鎖奧義槽')}\n${ultimateStage}`
         );
 
         const demoSkillId = this._resolveDemoSkillId(cfg);
