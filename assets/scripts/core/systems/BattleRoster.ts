@@ -81,6 +81,9 @@ export type BattleRosterGeneral = GeneralConfig & {
     prowess?: Partial<Record<'str' | 'int' | 'lea' | 'pol' | 'cha', number>>;
     negativeFactors?: string[];
     battleRecord?: BattleRecord;
+    /** 試用傭兵旗標（MERC-06）；與 PrisonerOfWar.isTrialMercenary 讀取的欄位一致 */
+    isMercenary?: boolean;
+    templateFlag?: string;
     /** 最後一次出戰的季度，供每季回補分辨「出征 / 待命」 */
     lastDeployedSeason?: number;
 };
