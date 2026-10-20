@@ -270,11 +270,5 @@
   "ui.fate.defy": "Defy heaven (growth -20%, a chance to bloom late)",
   "ui.fate.job_change": "Consume 1 Career Writ; adds secondary role: {0}",
   "ui.fate.retire_weapon": "Received tiger tally: {0}",
-  "ui.fate.retire_scroll": "Received bamboo slip: {0}",
-  "UI_NAV_BATTLE": "Battle",
-  "UI_NAV_GENERALS": "Generals",
-  "UI_NAV_SUPPORT": "Support",
-  "UI_NAV_GACHA": "Gacha",
-  "UI_NAV_SHOP": "Shop",
-  "UI_NAV_FLOOD": "Flood War"
+  "ui.fate.retire_scroll": "Received bamboo slip: {0}"
 }

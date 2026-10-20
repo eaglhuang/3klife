@@ -270,11 +270,5 @@
   "ui.fate.defy": "逆天而行（成长率 -20%，有机率大器晚成）",
   "ui.fate.job_change": "消耗转职令 ×1，追加副职能：{0}",
   "ui.fate.retire_weapon": "获得虎符：{0}",
-  "ui.fate.retire_scroll": "获得竹简：{0}",
-  "UI_NAV_BATTLE": "战场",
-  "UI_NAV_GENERALS": "武将",
-  "UI_NAV_SUPPORT": "支援",
-  "UI_NAV_GACHA": "转蛋",
-  "UI_NAV_SHOP": "商店",
-  "UI_NAV_FLOOD": "洪战"
+  "ui.fate.retire_scroll": "获得竹简：{0}"
 }
