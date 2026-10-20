@@ -30,6 +30,7 @@ import { MentorCardDetailController } from '../core/MentorCardDetailController';
 import { GeneralVersionGalleryController } from '../core/GeneralVersionGalleryController';
 import type { GeneralVersionRecord } from '../../core/models/GeneralVersion';
 import { GALLERY_GROUP_SLOTS } from '../../core/systems/GeneralVersionGallery';
+import { beastForGeneral, formatBeastSummary } from '../../core/systems/BloodlineBeast';
 import type { MentorCardData, MentorCardTab } from '../../core/systems/MentorCardTabs';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { buildCountdownIconFlowView } from '../../core/systems/CountdownIconView';
@@ -82,6 +83,10 @@ import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 
 const { ccclass } = _decorator;
+
+/** 命紋靈獸摘要的暫定位置（PROVISIONAL：畫面沒有預留節點，程式掛在 CharacterDs3Host 下，待 Codex 實機微調） */
+const BEAST_SUMMARY_NODE_NAME = 'BeastSummaryLabel';
+const BEAST_SUMMARY_POSITION = { x: -240, y: -280 };
 
 type GeneralDetailRuntimeTab = 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitude';
 type GeneralDetailEntrySmokeSource = 'ucuf-nav';
@@ -2593,6 +2598,8 @@ export class LobbyScene extends Component {
             );
         }
 
+        this._refreshBeastSummary(config);
+
         UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] CharacterDs3 smoke selection opened screen host', {
             generalId: config.id,
             generalName: config.name,
@@ -2615,6 +2622,29 @@ export class LobbyScene extends Component {
                 fragment: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Overview,
             });
         }
+    }
+
+    /**
+     * 命紋靈獸摘要（GDUI-09 cc 接線）：依暫定綁定取得靈獸，以一段文字掛在 CharacterDs3Host 下。
+     * 靈獸清單與綁定規則都是暫定，見 BloodlineBeast.PROVISIONAL_BEAST_CATALOG。
+     */
+    private _refreshBeastSummary(config: GeneralConfig): void {
+        const hostNode = this._characterDs3Host?.node;
+        if (!hostNode) {
+            return;
+        }
+        let labelNode = hostNode.getChildByName(BEAST_SUMMARY_NODE_NAME);
+        if (!labelNode) {
+            labelNode = new Node(BEAST_SUMMARY_NODE_NAME);
+            labelNode.layer = hostNode.layer;
+            labelNode.parent = hostNode;
+            labelNode.setPosition(BEAST_SUMMARY_POSITION.x, BEAST_SUMMARY_POSITION.y, 0);
+            labelNode.addComponent(UITransform);
+        }
+        const label = labelNode.getComponent(Label) ?? labelNode.addComponent(Label);
+        label.fontSize = 20;
+        label.lineHeight = 26;
+        label.string = formatBeastSummary(beastForGeneral(config.id));
     }
 
     /** 「武將列表」按鈕：顯示玄家已取得武將（源自轉蛋 / PlayerRosterService） */
