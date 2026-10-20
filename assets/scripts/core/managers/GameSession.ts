@@ -92,6 +92,7 @@ import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
+import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
@@ -371,6 +372,8 @@ export class GameSession {
     private _legacyCount = 0;
     /** 已傳道過的名將 id（MENT-15 一生一次） */
     private _legendaryMentoringUsedIds: string[] = [];
+    /** 結緣成功的本機端紀錄（BRD-12）；暫定只存在記憶體，尚未寫入存檔 */
+    private _breedingBirthRecords: BreedingBirthRecord[] = [];
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 名聲（暫定：存於 resources.fame） */
@@ -857,6 +860,19 @@ export class GameSession {
         return this._seeded.snapshot().state;
     }
 
+    /** 結緣成功產生子嗣時記下本機紀錄（BRD-12，暫定：只存在記憶體，不送 server） */
+    public recordBreedingBirth(record: BreedingBirthRecord): void {
+        this._breedingBirthRecords.push(record);
+    }
+
+    /** 本局已記下的結緣子嗣紀錄（回傳複本，外部改動不影響內部） */
+    public breedingBirthRecords(): BreedingBirthRecord[] {
+        return this._breedingBirthRecords.map((record) => ({
+            session: { ...record.session, Oracle_Hints: [...record.session.Oracle_Hints] },
+            child: { ...record.child },
+        }));
+    }
+
     public isSageUnlocked(sageId: string): boolean {
         return isSageUnlocked(sageId, this._oracleCount);
     }
@@ -943,6 +959,7 @@ export class GameSession {
         this._gachaRevision += 1;
         this._legacyCount = 0;
         this._legendaryMentoringUsedIds = [];
+        this._breedingBirthRecords = [];
         this._officerState = initialOfficerState();
         this._military = { ...STARTER_MILITARY };
         this._yearAgingEvents = [];
