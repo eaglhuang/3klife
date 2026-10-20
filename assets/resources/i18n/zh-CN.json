@@ -239,5 +239,10 @@
   "ui.gene.tag.green": "🟢 战法种子",
   "ui.gene.tag.purple": "🟣 天命因子",
   "ui.gene.tag.white": "⚪ 天赋因子",
-  "ui.gene.tag.red": "🔴 体魄因子"
+  "ui.gene.tag.red": "🔴 体魄因子",
+  "ui.season.display": "第 {0} 年 {1} 季",
+  "ui.season.spring": "春——万物复苏",
+  "ui.season.summer": "夏——烽火连天",
+  "ui.season.autumn": "秋——策马奔腾",
+  "ui.season.winter": "冬——雪夜屯兵"
 }

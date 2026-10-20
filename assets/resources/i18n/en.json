@@ -239,5 +239,10 @@
   "ui.gene.tag.green": "🟢 Tactic Seed",
   "ui.gene.tag.purple": "🟣 Fate Gene",
   "ui.gene.tag.white": "⚪ Talent Gene",
-  "ui.gene.tag.red": "🔴 Physique Gene"
+  "ui.gene.tag.red": "🔴 Physique Gene",
+  "ui.season.display": "Year {0}, {1}",
+  "ui.season.spring": "Spring — Renewal",
+  "ui.season.summer": "Summer — Beacon Fires",
+  "ui.season.autumn": "Autumn — Galloping Charge",
+  "ui.season.winter": "Winter — Siege in the Snow"
 }
