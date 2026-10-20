@@ -19,6 +19,7 @@ import { VITALITY_SCRIPT_KEYS, vitalityScriptText } from './VitalityScriptTexts'
 import { fateText } from './FateScriptTexts';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { MentorCard } from '../../core/models/MentorCard';
+import type { LegendaryMentoringBlock } from '../../core/systems/LegendaryMentoring';
 import type { NurtureBlockReason, NurtureService } from '../../core/services/NurtureService';
 import { mentorToCardData, type MentorCardData } from '../../core/systems/MentorCardTabs';
 import type { UnveilingService } from '../../core/services/UnveilingService';
@@ -134,6 +135,29 @@ export interface NurtureFlowDeps {
     text?: BreedTextLookup;
     /** 精力歸 0 時的劇本提示（PROG-2-0732）；正式環境接 SHOW_TOAST，未提供時不顯示 */
     showToast?: (message: string) => void;
+    /** 名將傳道（MENT-15）；正式環境接 GameSession.performLegendaryMentoringFor，未提供時入口不可用 */
+    performLegendaryMentoring?: (
+        generalId: string,
+        childId: string,
+        exclusiveSkillId: string | undefined,
+    ) => Promise<{ ok: boolean; blocked?: LegendaryMentoringBlock }>;
+}
+
+/** 傳道失敗的提示（暫定，文案待企劃定稿） */
+const LEGENDARY_MENTORING_BLOCK_TEXT: Record<LegendaryMentoringBlock, string> = {
+    NO_TICKET: '傳道令不足',
+    NO_EXCLUSIVE_SKILL: '這位名將沒有專屬奧義',
+    NOT_NURTURING: '這位子嗣不在培育中',
+    SESSION_ENDED: '這場培育已結束',
+    ALREADY_USED: '這位名將已傳道過一次',
+};
+
+/**
+ * 名將專屬奧義（暫定，PM 2026-10-20）：先從武將既有的奧義欄位找標記為專屬的那一個。
+ * 名將模型目前沒有獨立的專屬奧義欄位，待企劃／資料裁決後再換來源。
+ */
+export function exclusiveSkillOf(general: Pick<GeneralConfig, 'ultimateSlots'> | undefined): string | undefined {
+    return general?.ultimateSlots?.find((slot) => slot.isExclusive)?.ultimateId;
 }
 
 export class NurtureFlowController {
@@ -205,6 +229,28 @@ export class NurtureFlowController {
         this._deps.nurture.startWithCards(child.id, cards);
         this._notice = cards.length > 0 ? `入學完成，${cards.length} 位教官任教` : '入學完成（沒有教官任教）';
         await this._persist();
+    }
+
+    /**
+     * 傳道入口（MENT-15）：英靈卡所屬名將的專屬奧義傳給目前選中的子嗣。
+     * 成功寫入培育紀錄並扣傳道令；失敗只顯示原因，不扣令。
+     */
+    async legendaryMentor(card: MentorCard): Promise<boolean> {
+        const child = this._requireSelected();
+        const perform = this._deps.performLegendaryMentoring;
+        if (!perform) {
+            this._notice = '傳道尚未開放';
+            return false;
+        }
+        const source = this._deps.roster.getAll().find((g) => g.id === card.sourceGeneralId);
+        const result = await perform(card.sourceGeneralId, child.id, exclusiveSkillOf(source));
+        if (!result.ok) {
+            this._notice = LEGENDARY_MENTORING_BLOCK_TEXT[result.blocked ?? 'NOT_NURTURING'];
+            return false;
+        }
+        this._notice = `${child.name} 習得${card.name}的專屬奧義`;
+        await this._persist();
+        return true;
     }
 
     async train(action: NurtureAction): Promise<NurtureRoundLog> {
