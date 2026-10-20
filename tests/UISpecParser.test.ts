@@ -20,7 +20,7 @@ const LAYOUTS_DIR = path.join(UI_SPEC_DIR, 'layouts');
 /** 與 UIPreviewBuilder.buildNode 的 switch 分支一一對應（引擎真的會建立元件的類型） */
 const ENGINE_TYPES = [
     'container', 'panel', 'label', 'button', 'scroll-list', 'scroll-view',
-    'image', 'resource-counter', 'spacer', 'composite-image',
+    'image', 'resource-counter', 'spacer', 'composite-image', 'toggle',
 ];
 
 /**
