@@ -92,8 +92,11 @@ export class TroopUnit {
   /** 士氣剩餘回合（PROG-2-0770，暫定 3 回合）；0 表示無鼓舞 */
   public moraleTurns = 0;
 
+  /** 單騎破陣（PROG-2-0794）：回合開始重算，無相鄰友軍時 ×1.3；預設 1 不影響既有數值 */
+  public soloBreachMultiplier = 1;
+
   public getEffectiveAttack(): number {
-    return Math.max(1, (this.attack + this.attackBonus) * this.getTallyAffinityMod() * (1 + this.morale / 100));
+    return Math.max(1, (this.attack + this.attackBonus) * this.getTallyAffinityMod() * (1 + this.morale / 100) * this.soloBreachMultiplier);
   }
 
   /** 防禦（不含盾牆、地形等戰鬥中的加成）；虎符適性乘數在這裡套用 */
