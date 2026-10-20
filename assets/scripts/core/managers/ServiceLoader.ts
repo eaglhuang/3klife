@@ -30,6 +30,7 @@ import { NurtureService } from "../services/NurtureService";
 import { BreedingService } from "../services/BreedingService";
 import { UnveilingService } from "../services/UnveilingService";
 import { buildFactorDictionary, FactorDictionary } from "../systems/FactorInheritance";
+import { parseNpcFriendMentors } from "../systems/NpcFriendMentor";
 import type { PersonRegistryData } from "../models/PersonRegistry";
 import { DataStorageAdapter } from "../storage/DataStorageAdapter";
 import { IndexedDbAdapter } from "../storage/IndexedDbAdapter";
@@ -213,6 +214,16 @@ export class ServiceLoader {
         }
     }
 
+    /** NPC 好友教官清單（MENT-14 MVP）：資料表載入失敗時清單為空，借用入口不可用 */
+    public async loadNpcFriendMentors(): Promise<void> {
+        try {
+            const raw = await this.resource.loadJson<{ data?: unknown[] }>('data/npc-friend-mentors');
+            this.session.setNpcFriendMentors(parseNpcFriendMentors(raw));
+        } catch (e) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] npc-friend-mentors.json 載入失敗，好友借用清單為空:', e);
+        }
+    }
+
     public async loadFactorDictionary(): Promise<void> {
         try {
             const raw = await this.resource.loadJson<{ data?: [] }>('data/master/gene-dictionary');
@@ -231,6 +242,7 @@ export class ServiceLoader {
         if (!this.factorDictionary) {
             await this.loadFactorDictionary();
         }
+        await this.loadNpcFriendMentors();
         if (!this.historicalPairs) {
             await this.loadHistoricalPairs();
         }
