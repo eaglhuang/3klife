@@ -89,6 +89,11 @@ export class BattleCombatResolver {
     return this.getUnitAptitude(unit).moveDelta + getTerrainTroopEffect(unit.type, terrain).moveDelta;
   }
 
+  /** 移動力直接設值（水域 D「移動力歸 1」，PROG-2-0786）；null 表示用加減修正 */
+  public getUnitMoveSetTo(unit: TroopUnit): number | null {
+    return this.getUnitAptitude(unit).moveSetTo;
+  }
+
   public getFactionUnits(faction: Faction): TroopUnit[] {
     const result: TroopUnit[] = [];
     this.context.state.units.forEach((unit) => {
