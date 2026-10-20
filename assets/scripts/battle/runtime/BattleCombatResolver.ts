@@ -14,6 +14,7 @@ import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import {
   canNavalCombinedAttack,
+  hasNavalAptitude,
   hasBattleEffect,
   isFogHitGuaranteed,
   isOrthogonallyAdjacent,
@@ -266,7 +267,8 @@ export class BattleCombatResolver {
   private resolveNavalCombinedFollowUp(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
     if (defender.isDead() || attacker.isDead()) return;
     const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
-    if (!canNavalCombinedAttack(attackerCell?.terrain ?? TerrainType.Plain, hasBattleEffect(attacker.factorEffects, 'naval-combined-attack'))) return;
+    const navalAptitude = hasNavalAptitude(this.getUnitAptitude(attacker).terrain, hasBattleEffect(attacker.factorEffects, 'naval-combined-attack'));
+    if (!canNavalCombinedAttack(attackerCell?.terrain ?? TerrainType.Plain, navalAptitude)) return;
 
     const helper = this.findNavalCombinedHelper(attacker, defender);
     if (!helper) return;
