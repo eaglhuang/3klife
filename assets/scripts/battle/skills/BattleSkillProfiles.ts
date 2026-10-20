@@ -4,7 +4,7 @@ import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } 
 export type BattleSkillFalloffRule = 'none' | 'linear-step';
 export type BattleSkillEffectKind =
   | 'damage' | 'heal' | 'control' | 'link' | 'counter' | 'reset'
-  | 'push' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack';
+  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack';
 
 export interface BattleSkillProfile {
   battleSkillId: string;
@@ -217,6 +217,18 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     firstTurnDamageMultiplier: 2,
     resetSelfOnKill: true,
     battleLogKey: 'skill.tally_wei_zhen_hua_xia.hit',
+  },
+  // 火神狩獵（PROG-2-0771）：單體敵軍擊退 1 格，並將其原本所在格設為火場（規格 戰法系統 火神狩獵）
+  'tally-fire-god-hunt': {
+    battleSkillId: 'tally-fire-god-hunt',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'push-fire',
+    coefficient: 0,
+    maxTargets: 1,
+    pushSteps: 1,
+    battleLogKey: 'skill.tally_fire_god_hunt.push',
   },
   'zhuge-liang-storm': {
     battleSkillId: 'zhuge-liang-storm',

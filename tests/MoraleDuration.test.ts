@@ -1,6 +1,6 @@
 import { Faction } from '../assets/scripts/core/config/Constants';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { MORALE_DURATION_TURNS, advanceMoraleOf, advanceMorale, castMorale } from '../assets/scripts/battle/shared/Morale';
+import { MORALE_DURATION_TURNS, advanceMoraleOf, advanceMorale, castMorale, clearMorale } from '../assets/scripts/battle/shared/Morale';
 import { TestSuite, assert } from './TestRunner';
 import { createTestUnit } from './BattleSkillTestUtils';
 
@@ -70,6 +70,16 @@ export function createMoraleDurationSuite(): TestSuite {
     assert.equals(2, ally.moraleTurns);
     assert.equals(3, enemy.moraleTurns);
     assert.equals(20, enemy.morale);
+  });
+
+  suite.test('單位退場時清除士氣與計時（clearMorale）', () => {
+    const unit = makeUnit('ally', Faction.Player);
+    castMorale(unit, 20);
+    advanceMorale(unit);
+    clearMorale(unit);
+    assert.equals(0, unit.morale);
+    assert.equals(0, unit.moraleTurns);
+    assert.isFalse(advanceMorale(unit));
   });
 
   return suite;
