@@ -15,7 +15,8 @@ import { LobbyMissionDetailDialogComposite, type LobbyMissionDetailDialogOpenPay
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
-import { formatModeLabel, formatSeasonLabel } from '../../core/systems/GameClock';
+import { formatModeLabel } from '../../core/systems/GameClock';
+import { seasonDisplayText } from '../core/SeasonTexts';
 import { buildYearReportTexts, withYearReportFallback, type YearReport } from '../../core/systems/YearReport';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
@@ -150,6 +151,11 @@ const DECK_SELECT_SLOTS = 4;
 /** 結緣與開獎文案：走 i18n，語系表未載入時退回 zh-TW 預設（PROG-2-0526 / 0527） */
 function breedText(): BreedTextLookup {
     return withBreedFallback((key, ...args) => services().i18n.t(key, ...args));
+}
+
+/** 季節字串：走 i18n（ui.season.display），語系表未載入時退回 zh-TW 預設（PROG-2-0730） */
+function seasonText(state: Parameters<typeof seasonDisplayText>[1]): string {
+    return seasonDisplayText((key, ...args) => services().i18n.t(key, ...args), state);
 }
 
 interface ScreenButtonBinding {
@@ -399,7 +405,7 @@ export class LobbyScene extends Component {
     private _refreshSeasonHud(): void {
         const time = services().session.gameTime;
         this._seasonHudHost?.binder?.setTexts({
-            seasonLabel: formatSeasonLabel(time),
+            seasonLabel: seasonText(time),
             modeLabel: formatModeLabel(time.currentMode),
         });
         const countdownIcon = buildCountdownIconFlowView(services().session.countdown, Date.now());
@@ -1768,7 +1774,7 @@ export class LobbyScene extends Component {
             const died = agingEvents.filter((event) => event.type === 'died').length;
             const suffix = died > 0 ? `（${died} 位武將離世）` : '';
             services().event.emit('SHOW_TOAST', {
-                message: `進入${formatSeasonLabel(advance.current)}${suffix}`,
+                message: `進入${seasonText(advance.current)}${suffix}`,
                 duration: 2,
             });
         } catch (error) {
