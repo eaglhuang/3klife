@@ -34,6 +34,7 @@ function buildResolver(enemyGeneral: StubUnit, ambushAt: { lane: number; depth: 
         units,
         battleTactic: BattleTactic.Normal,
         getCell: () => ({ terrain: TerrainType.Plain, occupantId: null }),
+        getGeneral: () => null,
         getTileEffect: (lane: number, depth: number) =>
             ambushAt && ambushAt.lane === lane && ambushAt.depth === depth
                 ? { id: 'ambush', lane, depth, state: 'ambush-field' }

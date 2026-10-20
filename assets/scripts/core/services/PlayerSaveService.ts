@@ -338,6 +338,8 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.hallAssignments !== undefined ? { hallAssignments: normalizeHallAssignments(snapshot.hallAssignments) } : {}),
         ...(snapshot.dynamicRelations !== undefined ? { dynamicRelations: normalizeDynamicRelations(snapshot.dynamicRelations) } : {}),
         ...(snapshot.legacyCount !== undefined ? { legacyCount: normalizeLegacyCount(snapshot.legacyCount) } : {}),
+        // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
+        ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
     };
 }
 

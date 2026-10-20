@@ -18,6 +18,7 @@ import { BattleSkillExecutor } from '../skills/BattleSkillExecutor';
 import { createDefaultBattleSkillExecutor } from '../skills/BattleSkillResolverFactory';
 import { zoneDefenseMultiplier, type FormationZone } from '../shared/FormationZone';
 import { isFixedTileState } from '../shared/TileStateRules';
+import { terrainAttackRangeCapOf } from '../../core/systems/TerrainTroopRules';
 import {
   BattleSkillTargetMode,
   BattleSkillTiming,
@@ -284,6 +285,16 @@ export class BattleSkillDispatcher {
           : this.context.getEnemyGeneralUnitId();
         const general = generalId ? state.units.get(generalId) : undefined;
         return general ? { lane: general.lane, depth: general.depth } : null;
+      },
+      getCasterRangeCap: (casterFaction: Faction) => {
+        // 林地 D 視野受限（PROG-2-0789）：施放者武將的單位在林地且地形適性 D 時，射程上限 1
+        const generalId = casterFaction === Faction.Player
+          ? this.context.getPlayerGeneralUnitId()
+          : this.context.getEnemyGeneralUnitId();
+        const general = generalId ? state.units.get(generalId) : undefined;
+        if (!general) return null;
+        const terrain = state.getCell(general.lane, general.depth)?.terrain ?? TerrainType.Plain;
+        return terrainAttackRangeCapOf(terrain, combatResolver.getUnitAptitude(general).terrain);
       },
       getWeather: () => state.weather,
       getTurnNumber: () => services().battle.getSnapshot().turn,

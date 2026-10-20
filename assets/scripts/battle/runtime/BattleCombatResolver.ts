@@ -7,7 +7,7 @@ import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
-import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
+import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
 import { extraAttackHitsOf } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
@@ -202,7 +202,9 @@ export class BattleCombatResolver {
     const defenderStealth = getTerrainTroopEffect(defender.type, defenderCell?.terrain ?? TerrainType.Plain).stealthBonus;
     // 場景命中加成（夜襲 -25%，SCN-06）：加在適性與隱蔽之後
     const sceneAccuracy = tacticBehavior.getAccuracyDelta?.(attacker, this.context.state) ?? 0;
-    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth + sceneAccuracy;
+    // 林地 S 迴避 +30%（PROG-2-0788）：防守方在林地且林地適性 S 時，攻擊方命中率再 −30%
+    const defenderEvasion = terrainEvasionBonusOf(defenderCell?.terrain ?? TerrainType.Plain, this.getUnitAptitude(defender).terrain);
+    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth - defenderEvasion + sceneAccuracy;
     // 大霧免疫（PROG-2-0584）：大霧天氣下攻擊方有此效果時命中必中，略過擲骰
     const fogGuaranteed = isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects);
     if (!fogGuaranteed && !rollHit(attackerAccuracy, this.hitRandom)) {
@@ -617,7 +619,10 @@ export class BattleCombatResolver {
     if (baseRange === 0) return 0;
     const cell = this.context.state.getCell(unit.lane, unit.depth);
     const terrain = cell?.terrain ?? TerrainType.Plain;
-    return Math.max(1, baseRange + getTerrainTroopEffect(unit.type, terrain).attackRangeDelta);
+    const range = Math.max(1, baseRange + getTerrainTroopEffect(unit.type, terrain).attackRangeDelta);
+    // 林地 D 視野受限（PROG-2-0789）：射程上限 1，只打相鄰格
+    const cap = terrainAttackRangeCapOf(terrain, this.getUnitAptitude(unit).terrain);
+    return cap === null ? range : Math.min(range, cap);
   }
 
   private getForwardDirection(unit: TroopUnit): number {
