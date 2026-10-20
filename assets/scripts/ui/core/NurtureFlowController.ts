@@ -164,6 +164,8 @@ export class NurtureFlowController {
     private _selectedId: string | null = null;
     private _report: GraduationReport | null = null;
     private _notice = '';
+    private _legendaryCards: MentorCard[] = [];
+    private _legendaryCardUid: string | null = null;
 
     constructor(private readonly _deps: NurtureFlowDeps) {}
 
@@ -235,8 +237,24 @@ export class NurtureFlowController {
      * 傳道入口（MENT-15）：英靈卡所屬名將的專屬奧義傳給目前選中的子嗣。
      * 成功寫入培育紀錄並扣傳道令；失敗只顯示原因，不扣令。
      */
-    async legendaryMentor(card: MentorCard): Promise<boolean> {
+    /** 英靈卡選擇列：循環 無 → 第 1 張 → … → 無（暫定：卡片清單先用教官卡來源） */
+    async cycleLegendaryCard(): Promise<void> {
+        this._legendaryCards = await this._deps.loadMentorCards();
+        const index = this._legendaryCards.findIndex((c) => c.uid === this._legendaryCardUid);
+        this._legendaryCardUid = index + 1 < this._legendaryCards.length ? this._legendaryCards[index + 1].uid : null;
+    }
+
+    get legendaryCard(): MentorCard | null {
+        return this._legendaryCards.find((c) => c.uid === this._legendaryCardUid) ?? null;
+    }
+
+    async legendaryMentor(): Promise<boolean> {
         const child = this._requireSelected();
+        const card = this.legendaryCard;
+        if (!card) {
+            this._notice = '請先選擇英靈卡';
+            return false;
+        }
         const perform = this._deps.performLegendaryMentoring;
         if (!perform) {
             this._notice = '傳道尚未開放';
@@ -362,6 +380,8 @@ export class NurtureFlowController {
         for (const kind of TRAINING_KINDS) enabled[`btnTrain_${kind}`] = false;
         enabled.btnAutoNurture = false;
         enabled.btnMentorDetail = false;
+        enabled.btnLegendaryCard = false;
+        enabled.btnLegendaryMentor = false;
 
         if (!child) {
             actives.flowEmptyHint = true;
@@ -420,6 +440,11 @@ export class NurtureFlowController {
         enabled.btnAutoNurture = !!this._deps.autoNurture;
         enabled.btnMentorDetail = session.mentors.length > 0;
         texts.mentorDetailLabel = '教官詳情';
+        const legendary = this.legendaryCard;
+        enabled.btnLegendaryCard = true;
+        texts.legendaryCardLabel = legendary ? `英靈：${legendary.name}` : '英靈：未選';
+        enabled.btnLegendaryMentor = !!this._deps.performLegendaryMentoring && !!legendary && session.status === 'active';
+        texts.legendaryMentorLabel = '傳道';
         texts.autoNurtureLabel = '自動培育整季';
         return { mode: 'train', childId: child.id, texts, actives, enabled };
     }

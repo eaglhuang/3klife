@@ -454,6 +454,7 @@ export class LobbyScene extends Component {
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             autoNurture: (childId) => services().session.runAutoNurture(childId),
+            performLegendaryMentoring: (generalId, childId, exclusiveSkillId) => services().session.performLegendaryMentoringFor(generalId, childId, exclusiveSkillId),
             showToast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2 }); },
         });
         this._nurtureFlow = flow;
@@ -483,6 +484,8 @@ export class LobbyScene extends Component {
                 if (detail) { this.openMentorCardDetail(detail.card, detail.title); }
             } },
             ...trainBindings,
+            { buttonId: 'btnLegendaryCard', handler: act(() => flow.cycleLegendaryCard()) },
+            { buttonId: 'btnLegendaryMentor', handler: act(() => flow.legendaryMentor()) },
             { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
             { buttonId: 'btnUsePill', handler: () => { void this._usePillOnNurtureChild(flow); } },
             { buttonId: 'btnAbandon', handler: act(() => flow.abandon()) },
