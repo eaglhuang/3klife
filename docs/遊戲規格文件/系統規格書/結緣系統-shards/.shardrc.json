@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "source": "../結緣系統（配種）.md",
+  "indexTitle": "結緣系統（配種）規格（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/結緣系統（配種）.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-d",
+  "shards": [
+    { "name": "shard-a", "title": "A–E 系統描述／目的／套路／TA／功能清單", "pattern": "^[A-E]\\." },
+    { "name": "shard-b", "title": "F–J 公式／劇本／字串／Data Schema／名詞", "pattern": "^[F-J]\\." },
+    { "name": "shard-c", "title": "K–L 近親繁殖範圍／精力值與生育限制", "pattern": "^[K-L]\\." },
+    { "name": "shard-d", "title": "M 血統模擬器／MCQ 決策記錄", "pattern": "." }
+  ]
+}
