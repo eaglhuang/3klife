@@ -12,6 +12,8 @@ const sample: BloodlineBeastDefinition = {
     archetype: 'DRAGON',
     personaTags: ['果決', '好勝'],
     awakeningTendency: ['BATTLE_WIN'],
+    awakeningHint: '連勝',
+    ultimateBias: '全軍領導',
 };
 
 export function createBloodlineBeastSuite(): TestSuite {
@@ -33,6 +35,16 @@ export function createBloodlineBeastSuite(): TestSuite {
         assert.isTrue(validateBloodlineBeast({ ...sample, personaTags: ['a', 'b', 'c', 'd'] }).length > 0);
         assert.isTrue(validateBloodlineBeast({ ...sample, personaTags: ['同名', '同名'] }).length > 0);
         assert.isTrue(validateBloodlineBeast({ ...sample, awakeningTendency: [] }).length > 0);
+        assert.isTrue(validateBloodlineBeast({ ...sample, awakeningHint: '' }).length > 0);
+        assert.isTrue(validateBloodlineBeast({ ...sample, ultimateBias: '' }).length > 0);
+    });
+
+    suite.test('靈獸清單的人格標籤與覺醒傾向說明與血統理論系統 §M 靈獸原型建議表一致', () => {
+        const byArchetype = Object.fromEntries(PROVISIONAL_BEAST_CATALOG.map((b) => [b.archetype, b]));
+        assert.equals('統御、果決、昂揚', byArchetype.DRAGON.personaTags.join('、'));
+        assert.equals('守城、護軍、長線續戰', byArchetype.TORTOISE.awakeningHint);
+        assert.equals('救援、援護、民望威望', byArchetype.QILIN.awakeningHint);
+        assert.equals('位移切入、追獵、破綻擴大', byArchetype.WOLF.ultimateBias);
     });
 
     suite.test('傾向比對：事蹟類型在傾向清單內才符合', () => {
@@ -51,8 +63,9 @@ export function createBloodlineBeastSuite(): TestSuite {
         assert.equals(beastForGeneral('ZHAO_YUN').id, beastForGeneral('ZHAO_YUN').id);
         const summary = formatBeastSummary(PROVISIONAL_BEAST_CATALOG[0]);
         assert.isTrue(summary.includes('龍'));
-        assert.isTrue(summary.includes('威儀'));
-        assert.isTrue(summary.includes('battle-win'));
+        assert.isTrue(summary.includes('統御'));
+        assert.isTrue(summary.includes('連勝、先鋒破陣、統軍成勢'));
+        assert.isTrue(summary.includes('全軍領導、開場氣勢、軍勢壓制'));
     });
 
     return suite;
