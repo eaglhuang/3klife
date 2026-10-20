@@ -5,7 +5,7 @@
  * 退役不產卡，死亡只產一張，存檔往返不遺失。
  */
 import { assert, TestSuite } from './TestRunner';
-import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import { GAME_SESSION_EVENTS, GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { LegacyService } from '../assets/scripts/core/services/LegacyService';
 import { PlayerSaveService, normalizeTallyCardsMap } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
@@ -102,6 +102,27 @@ export function createRetireDeathTallyChainSuite(): TestSuite {
         await a.advanceSeason();
         assert.equals(0, Object.values(a.tallyCards).filter((c) => c.source === 'death').length, '退役者死亡不產陣亡虎符');
         assert.equals(1, Object.keys(a.tallyCards).length, '全程只有退役那一張');
+    });
+
+    suite.test('退役的武將純超齡（季結增齡）死亡，不會再發第二張虎符', async () => {
+        const adapter = new MemoryStorageAdapter();
+        // 年齡已過壽命上限：季結增齡時以機率判定死亡，這裡強制擲出最小值讓它必死
+        const a = createSession(adapter, [
+            general('vet', 70, { isHistorical: true, maxLifespan: 70, primaryClass: 'Warrior' }),
+        ]);
+        await a.retireGeneral('vet');
+        const died: string[] = [];
+        a.setEventEmitter({
+            emit: (name: string, payload?: unknown) => {
+                if (name === GAME_SESSION_EVENTS.GeneralDied) died.push((payload as { generalId: string }).generalId);
+            },
+        });
+        a.setRandomSource(() => 0);
+        await a.advanceSeason();
+
+        assert.equals('vet', died.join(','), '超齡退役者應由季結增齡死亡');
+        assert.equals(0, Object.values(a.tallyCards).filter((c) => c.source === 'death').length, '超齡死亡不產陣亡虎符');
+        assert.equals(1, Object.keys(a.tallyCards).length, '全程只有退役那一張虎符');
     });
 
     suite.test('沒有出征戰績的名將死亡：仍產卡，但品質只有最低（R）', async () => {
