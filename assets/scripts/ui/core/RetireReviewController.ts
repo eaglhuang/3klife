@@ -12,6 +12,10 @@ import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { BattleRecord } from '../../core/systems/BattleRoster';
 import { buildBattleRecordPanel } from '../../core/systems/BattleRecordStats';
 import { quarterlyBattleReport, retireReviewCareerLine, retireReviewScriptLine, vitalityPercentOf } from '../../core/systems/RetireReviewCopy';
+import { routeRetirement } from '../../core/systems/RetirementRouting';
+import { JobWiringGeneral, resolvePrimaryClass } from '../../core/systems/JobChangeWiring';
+import { ITEM_DISPLAY_NAMES, ITEM_BAMBOO_SLIP } from '../../core/systems/PlayerInventory';
+import { fateText } from './FateScriptTexts';
 
 export interface RetireReviewView {
     /** 退役回顧：生涯戰績一行（UI_RETIRE_REVIEW） */
@@ -83,6 +87,18 @@ export function withRetireReviewFallback(lookup: RetireReviewTextLookup): Retire
 }
 
 /**
+ * 退役獎勵一行（PROG-2-0739）：只在退役真的會發竹簡時顯示，規則與 GameSession.retireGeneral 相同
+ * （文職與雙職能退役發竹簡）。武職退役目前不發虎符（虎符只在死亡結算發），所以這裡不顯示虎符句，
+ * 避免畫面說有獎勵、實際卻沒有；武職是否改發虎符待 PM 裁定。
+ */
+export function retireGrantText(general: GeneralConfig | undefined | null, lookup: RetireReviewTextLookup = fallbackRetireReviewText): string {
+    const g = (general ?? {}) as GeneralConfig & JobWiringGeneral;
+    const route = routeRetirement({ primaryClass: resolvePrimaryClass(g), subClass: g.subClass });
+    if (route.reason !== 'SCHOLAR' && route.reason !== 'DUAL_CLASS') return '';
+    return fateText(lookup, 'ui.fate.retire_scroll', ITEM_DISPLAY_NAMES[ITEM_BAMBOO_SLIP]);
+}
+
+/**
  * 退役回顧面板的全部文字，key 等於 retire-review-main.json 的節點 id。
  * 所有句子都走語系查詢，數值以占位參數傳入；缺資料時戰績為 0 勝 0 敗。
  */
@@ -102,6 +118,7 @@ export function buildRetireReviewTexts(
         retireScript: lookup('ui.retire_review.script', wins, kills, guardian),
         retireReport: lookup('ui.retire_review.report', String(pct)),
         retireQuarterly: lookup('ui.retire_review.quarterly', g.name ?? '', String(pct), bondText),
+        retireGrant: retireGrantText(general, lookup),
         closeRetireLabel: lookup('ui.retire_review.close'),
     };
 }
