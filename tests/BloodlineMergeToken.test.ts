@@ -9,7 +9,7 @@ import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
-import { ITEM_MERGE_TOKEN } from '../assets/scripts/core/systems/PlayerInventory';
+import { ITEM_MERGE_TOKEN, MERGE_TOKEN_SHORTAGE_KEY, MERGE_TOKEN_SHORTAGE_TEXT } from '../assets/scripts/core/systems/PlayerInventory';
 
 function gen(id: string, bloodlineId: string, geneIds: string[]): GeneralConfig {
     return { id, name: id, bloodlineId, genes: geneIds.map((gid) => ({ id: gid, type: 'Red' })) } as GeneralConfig;
@@ -62,6 +62,11 @@ export function createBloodlineMergeTokenSuite(): TestSuite {
         const second = sessionWith([], storage);
         assert.isTrue(await second.load());
         assert.equals(2, second.itemCount(ITEM_MERGE_TOKEN));
+    });
+
+    suite.test('歸宗令不足的暫定文案與語系 key 已登錄（文案待企劃定稿）', () => {
+        assert.equals('UI_MERGE_TOKEN_SHORTAGE', MERGE_TOKEN_SHORTAGE_KEY);
+        assert.equals('歸宗令不足', MERGE_TOKEN_SHORTAGE_TEXT);
     });
 
     return suite;
