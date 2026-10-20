@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "source": "../家族關係（史實相性）系統.md",
+  "indexTitle": "家族關係（史實相性）系統",
+  "indexPath": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md",
+  "type": "markdown-h2",
+  "preambleShard": "ab",
+  "defaultShard": "ab",
+  "shards": [
+    {
+      "name": "ab",
+      "title": "A–E",
+      "pattern": "^[A-E]\\."
+    },
+    {
+      "name": "fj",
+      "title": "F–J",
+      "pattern": "^[F-J]\\."
+    }
+  ]
+}
