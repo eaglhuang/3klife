@@ -88,6 +88,15 @@ export class ProjectedDamageSkillResolver implements BattleSkillResolver {
         context.applyDamage(unit, damage, casterFaction);
         deltas.push({ unitUid: unit.id, deltaHp: -damage });
         battleLogLines.push(`${profile.battleLogKey ?? request.battleSkillId}:${unit.id}:${damage}`);
+        if (profile.resetSelfOnKill && unit.isDead()) {
+          // 威震華夏（PROG-2-0773）：致命一擊後施放者行動重置，再行動 1 次（首擊倍率維持 1）
+          const casterUnitId = context.getCasterUnitId?.(casterFaction) ?? null;
+          const casterUnit = casterUnitId ? context.getUnit(casterUnitId) : null;
+          if (casterUnit && !casterUnit.isDead()) {
+            context.registerActionReset(casterUnit, request.battleSkillId, 1, 1);
+            deltas.push({ unitUid: casterUnit.id, notes: `reset-on-kill:${request.battleSkillId}` });
+          }
+        }
       }
     }
 

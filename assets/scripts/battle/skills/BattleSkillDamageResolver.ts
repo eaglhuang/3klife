@@ -35,7 +35,8 @@ export class BattleSkillDamageResolver {
       defenderTerrain: context.getTerrain(target.lane, target.depth),
       attackBonus: caster.attackBonus,
     });
-    const baseDamage = this.applyCharge(profile, context, caster, target, rawBaseDamage);
+    const chargedDamage = this.applyCharge(profile, context, caster, target, rawBaseDamage);
+    const baseDamage = this.applyFirstTurn(profile, context, chargedDamage);
 
     const weatherMultiplier = fireDamageMultiplier(profile.tags ?? [], context.getWeather?.() ?? Weather.Clear);
     const stageMultiplier = profile.hitStageMultipliers?.[stageIndex] ?? 1;
@@ -72,6 +73,18 @@ export class BattleSkillDamageResolver {
       return baseDamage;
     }
     return Math.max(1, Math.floor(baseDamage * profile.chargeMultiplier));
+  }
+
+  /** 威震華夏（PROG-2-0773）：戰鬥第 1 回合傷害 × firstTurnDamageMultiplier；其他回合不變 */
+  private applyFirstTurn(
+    profile: BattleSkillProfile,
+    context: BattleSkillExecutionContext,
+    baseDamage: number,
+  ): number {
+    if (!profile.firstTurnDamageMultiplier || context.getTurnNumber?.() !== 1) {
+      return baseDamage;
+    }
+    return Math.max(1, Math.floor(baseDamage * profile.firstTurnDamageMultiplier));
   }
 
   private resolveScaledAttack(
