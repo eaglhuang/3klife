@@ -18,6 +18,8 @@ export interface BattleSkillExecutionContext {
   getWeather?(): Weather;
   /** 目前戰鬥回合數（PROG-2-0773：威震華夏首回合加倍用）；舊測試 context 可不提供，視為非首回合 */
   getTurnNumber?(): number;
+  /** 戰場種子亂數源（爆擊擲骰用）；舊測試 context 可不提供，視為不擲骰 */
+  randomSource?(): number;
   /** 施放者的戰場單位 id（PROG-2-0761：防禦區陣亡即移除用）；舊測試 context 可不提供 */
   getCasterUnitId?(casterFaction: Faction): string | null;
   /** 站位上的持續防禦區倍率（PROG-2-0761）；舊測試 context 可不提供，視為 1 */

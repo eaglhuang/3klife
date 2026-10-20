@@ -19,8 +19,10 @@ export interface BattleSkillProfile {
   ignoreDefense?: boolean;
   /** 防禦穿透比例 0~1，無視目標該比例的防禦力（G-1 無視防禦：0.5） */
   defensePenetrationRatio?: number;
-  /** 傷害爆擊加成倍率（flat 增益）：final = base * (1 + critBonus)（G-1 百步穿楊：0.5） */
-  critBonus?: number;
+  /** 爆擊率加成（加在基礎爆擊率上，G-1 百步穿楊 +50%）；爆擊時傷害 ×1.5，擲骰走戰場種子亂數源 */
+  critRateBonus?: number;
+  /** 射程加成（格）：目標需在施放者射程（攻擊者 attackRange）＋此值之內（G-1 百步穿楊 +2） */
+  rangeBonus?: number;
   maxTargets?: number;
   /** 多段結算的遞增係數：每段對全部目標各結算一次（趙家槍法 1.0/1.2/1.4） */
   hitStageMultipliers?: readonly number[];
@@ -424,7 +426,8 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     coefficient: 1.2,
     scalingStat: 'str',
     maxTargets: 1,
-    critBonus: 0.5,
+    rangeBonus: 2,
+    critRateBonus: 0.5,
     battleLogKey: 'skill.tally_hundred_steps.hit',
   },
 };
