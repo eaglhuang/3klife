@@ -264,5 +264,20 @@
   "ui.fate.defy": "天に逆らう（成長率 -20%、大器晩成の見込みあり）",
   "ui.fate.job_change": "転職令 ×1 を消費し、副職能を追加：{0}",
   "ui.fate.retire_weapon": "虎符を獲得：{0}",
-  "ui.fate.retire_scroll": "竹簡を獲得：{0}"
+  "ui.fate.retire_scroll": "竹簡を獲得：{0}",
+  "ui.general.mentor.borrow.star": "★{0}",
+  "ui.general.mentor.borrow.ssr": "SSR",
+  "ui.general.mentor.borrow.ok": "借用可能",
+  "ui.general.mentor.borrow.blocked.SELF_BORROW": "自分の教官は借用できません",
+  "ui.general.mentor.borrow.blocked.NOT_SSR": "借用できるのはSSR教官のみ",
+  "ui.general.mentor.borrow.blocked.DAILY_LIMIT": "今日はすでに1回借用済み",
+  "ui.general.mentor.borrow.blocked.SAME_CARD_TODAY": "このカードは今日すでに借用済み",
+  "ui.general.mentor.borrow.blocked.CARD_LOCKED": "このカードは育成中です",
+  "ui.general.nurture.record.period": "第{0}季〜第{1}季",
+  "ui.general.nurture.record.rating": "評価 {0}",
+  "ui.general.nurture.record.tags_empty": "タグなし",
+  "ui.general.nurture.record.tp_unknown": "TP未記録",
+  "ui.general.nurture.record.tp": "TP {0}",
+  "ui.general.nurture.record.revelation_none": "未公開",
+  "ui.general.nurture.record.revelation": "第{0}段階まで公開"
 }

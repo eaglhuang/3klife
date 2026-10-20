@@ -290,5 +290,20 @@
   "ui.fate.defy": "逆天而行（成長率 -20%，有機率大器晚成）",
   "ui.fate.job_change": "消耗轉職令 ×1，追加副職能：{0}",
   "ui.fate.retire_weapon": "獲得虎符：{0}",
-  "ui.fate.retire_scroll": "獲得竹簡：{0}"
+  "ui.fate.retire_scroll": "獲得竹簡：{0}",
+  "ui.general.mentor.borrow.star": "★{0}",
+  "ui.general.mentor.borrow.ssr": "SSR",
+  "ui.general.mentor.borrow.ok": "可借用",
+  "ui.general.mentor.borrow.blocked.SELF_BORROW": "不能借用自己的教官",
+  "ui.general.mentor.borrow.blocked.NOT_SSR": "只能借用 SSR 教官",
+  "ui.general.mentor.borrow.blocked.DAILY_LIMIT": "今天已借過一次",
+  "ui.general.mentor.borrow.blocked.SAME_CARD_TODAY": "今天已借過這張卡",
+  "ui.general.mentor.borrow.blocked.CARD_LOCKED": "這張卡仍在培育中",
+  "ui.general.nurture.record.period": "第 {0} 季至第 {1} 季",
+  "ui.general.nurture.record.rating": "評級 {0}",
+  "ui.general.nurture.record.tags_empty": "無標籤",
+  "ui.general.nurture.record.tp_unknown": "TP 未紀錄",
+  "ui.general.nurture.record.tp": "TP {0}",
+  "ui.general.nurture.record.revelation_none": "未揭露",
+  "ui.general.nurture.record.revelation": "揭露第 {0} 層"
 }
