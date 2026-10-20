@@ -2,7 +2,7 @@
  * NurtureRecordWiring.test.ts — 畢業培育紀錄寫入存檔欄位（NUR-15 MVP，PROG-2-0721）headless 測試
  *
  * 鎖住：畢業時 graduationRecords 多一筆；欄位取自培育會話與畢業結果；取不到的欄位為 null 並列在 unavailable；
- * 這筆紀錄用 server 列驗證函式檢查，只剩 revelation_level 未接（見卡片）。
+ * 這筆紀錄用 server 列驗證函式檢查；revelation_level 未揭露記 0（PROG-2-0744）。
  */
 import { assert, TestSuite } from './TestRunner';
 import { NurtureService } from '../assets/scripts/core/services/NurtureService';
@@ -52,10 +52,10 @@ export function createNurtureRecordWiringSuite(): TestSuite {
         assert.equals(5, row.end_season);
         assert.equals(result.rating, row.rating);
         assert.equals(null, row.mentor_id);
-        assert.equals(null, row.revelation_level);
+        assert.equals(0, row.revelation_level);
     });
 
-    suite.test('紀錄經 server 列驗證，只剩 revelation_level 未接', () => {
+    suite.test('紀錄經 server 列驗證，只剩 tp_total 可能缺', () => {
         const store = new InMemoryRosterStore([readyChild('kid') as never]);
         const svc = new NurtureService(store as never, { random: seeded(3), currentSeason: () => 0, admissionsPerSeason: 5 });
         svc.start('kid', []);
@@ -64,8 +64,8 @@ export function createNurtureRecordWiringSuite(): TestSuite {
         const row = svc.getState().graduationRecords![0];
         const errors = validateNurtureRecordRow(row as never);
         const tpMissingOnNewSession = row.tp_total === null;
-        assert.isTrue(errors.some((e) => e.startsWith('revelation_level')));
-        assert.equals(tpMissingOnNewSession ? 2 : 1, errors.length);
+        assert.isFalse(errors.some((e) => e.startsWith('revelation_level')));
+        assert.equals(tpMissingOnNewSession ? 1 : 0, errors.length);
     });
 
     suite.test('buildNurtureRecordRow：JSON 欄位取不到時寫 "null"，仍可解析', () => {
@@ -83,8 +83,8 @@ export function createNurtureRecordWiringSuite(): TestSuite {
         assert.equals('["耐戰"]', row.graduation_tags_json);
         assert.equals(120, row.tp_total);
         assert.equals(7, row.end_season);
-        assert.equals('revelation_level,phase_block_history_json,mentoring_mode_log_json,reveal_log_json', unavailable.join(','));
-        assert.equals('', validateNurtureRecordRow(row as never).filter((e) => !e.startsWith('revelation_level')).join(';'));
+        assert.equals('phase_block_history_json,mentoring_mode_log_json,reveal_log_json', unavailable.join(','));
+        assert.equals('', validateNurtureRecordRow(row as never).join(';'));
     });
 
     suite.test('舊存檔的會話沒有 totalTp 時 tp_total 為 null，並列在 unavailable', () => {
