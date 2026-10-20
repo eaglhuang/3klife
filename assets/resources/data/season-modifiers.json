@@ -1,0 +1,38 @@
+{
+    "version": "1.0.0",
+    "note": "TIME-08 四季特色修正；暫定值見 PROG-2-0812",
+    "seasons": {
+        "1": {
+            "taxMultiplier": 1,
+            "constructionMultiplier": 1,
+            "trainingStaminaMultiplier": 1,
+            "foodMultiplier": 1,
+            "conceptionMultiplier": 1,
+            "travelTurnsDelta": 0
+        },
+        "2": {
+            "taxMultiplier": 1,
+            "constructionMultiplier": 2,
+            "trainingStaminaMultiplier": 1.25,
+            "foodMultiplier": 1,
+            "conceptionMultiplier": 1,
+            "travelTurnsDelta": 0
+        },
+        "3": {
+            "taxMultiplier": 1,
+            "constructionMultiplier": 1,
+            "trainingStaminaMultiplier": 1,
+            "foodMultiplier": 1.5,
+            "conceptionMultiplier": 1,
+            "travelTurnsDelta": 0
+        },
+        "4": {
+            "taxMultiplier": 1,
+            "constructionMultiplier": 1,
+            "trainingStaminaMultiplier": 1,
+            "foodMultiplier": 1,
+            "conceptionMultiplier": 1.1,
+            "travelTurnsDelta": 1
+        }
+    }
+}
