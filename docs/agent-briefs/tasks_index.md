@@ -15,15 +15,13 @@ manifest: ../ui-quality-todo.json
 
 - Total: 56
 - done: 35
-- in-progress: 3
+- in-progress: 4
 - open: 17
-- planned: 1
 
 ## Tasks
 
 | ID | Owner | Status | Priority | Phase | Type | Link |
 | --- | --- | --- | --- | --- | --- | --- |
-| HARN-UI-9001 | codex-gpt-6 | planned | P1 | M6 | refactor | [HARN-UI-9001](./tasks/HARN-UI-9001.md) |
 | DC-0-0001 | Agent1 | done | P0 | DC | data-structure | [DC-0-0001](./tasks/DC-0-0001.md) |
 | DC-0-0002 | Agent1 | done | P0 | DC | data-structure | [DC-0-0002](./tasks/DC-0-0002.md) |
 | DC-0-0003 | Agent1 | done | P0 | DC | feature | [DC-0-0003](./tasks/DC-0-0003.md) |
@@ -79,3 +77,4 @@ manifest: ../ui-quality-todo.json
 | PROG-1-0014 | Agent1 | open | P2 | P | validation | [PROG-1-0014](./tasks/PROG-1-0014.md) |
 | PROG-1-0015 | Agent1 | open | P2 | P | validation | [PROG-1-0015](./tasks/PROG-1-0015.md) |
 | PROG-1-0016 | Agent1 | open | P2 | P | validation | [PROG-1-0016](./tasks/PROG-1-0016.md) |
+| TASK-UI-9001 | codex-gpt-6 | in-progress | P1 | M6 | refactor | [TASK-UI-9001](./tasks/TASK-UI-9001.md) |
