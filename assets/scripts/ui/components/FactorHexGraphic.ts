@@ -22,6 +22,7 @@ const VERTEX_COLORS: Readonly<Record<FactorColor, Color>> = {
     white: new Color(240, 240, 240, 255),
     red: new Color(230, 80, 70, 255),
 };
+const MASK_COLOR = new Color(110, 110, 110, 255);
 const RING_LEVELS = [0.25, 0.5, 0.75, 1];
 const FLASH_DURATION_SEC = 0.4;
 const FLASH_SCALE = 2.2;
@@ -42,8 +43,11 @@ export class FactorHexGraphic extends Component {
         this._graphics = this.node.getComponent(Graphics) ?? this.node.addComponent(Graphics);
     }
 
-    /** 整張重畫：外圈環、軸線、已覺醒的數值多邊形與各色頂點點。 */
-    public render(vertices: readonly FactorHexVertex[]): void {
+    /**
+     * 整張重畫：外圈環、軸線、已覺醒的數值多邊形與各色頂點點。
+     * visibleColors 為玩家已解鎖的色（LUK-04）；省略時全部可見。未解鎖的色以灰階遮罩畫點。
+     */
+    public render(vertices: readonly FactorHexVertex[], visibleColors?: readonly FactorColor[]): void {
         const g = this._graphics;
         if (!g) return;
         this._vertices = [...vertices];
@@ -72,6 +76,15 @@ export class FactorHexGraphic extends Component {
         g.stroke();
 
         for (let i = 0; i < vertices.length; i++) {
+            const visible = visibleColors === undefined || visibleColors.includes(vertices[i].color);
+            if (!visible) {
+                // 未解鎖色：灰階遮罩（LUK-04），不顯示色相
+                const p = valuePoints[i];
+                g.fillColor = MASK_COLOR;
+                g.circle(p.x, p.y, 5);
+                g.fill();
+                continue;
+            }
             if (!vertices[i].lit) continue;
             const p = valuePoints[i];
             g.fillColor = VERTEX_COLORS[vertices[i].color];
