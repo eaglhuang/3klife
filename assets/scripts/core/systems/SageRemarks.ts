@@ -72,18 +72,3 @@ export function pickOmen(birthSeason: number, saveSeed: number): OmenKind {
     const hashed = Math.imul(mixed ^ (mixed >>> 15), 0x2c1b3c6d) >>> 0;
     return OMEN_KINDS[hashed % OMEN_KINDS.length];
 }
-
-/**
- * 以文字（例：父母 id 組合）產生固定的亂數序列，同一組輸入每次畫面刷新都得到同樣的批語。
- * 用 FNV-1a 把文字壓成種子，再接線性同餘產生器。
- */
-export function remarkRandomOf(seedText: string): () => number {
-    let hash = 0x811c9dc5;
-    for (let i = 0; i < seedText.length; i++) {
-        hash = Math.imul(hash ^ seedText.charCodeAt(i), 0x01000193) >>> 0;
-    }
-    return () => {
-        hash = (Math.imul(hash, 1664525) + 1013904223) >>> 0;
-        return hash / 0x100000000;
-    };
-}
