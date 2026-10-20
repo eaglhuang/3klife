@@ -20,6 +20,14 @@ export function learnTpCost(baseTp: number, hasMatchingGreenFactor: boolean): nu
     return Math.ceil(hasMatchingGreenFactor ? baseTp * GREEN_FACTOR_TP_MULTIPLIER : baseTp);
 }
 
+/**
+ * 水戰適性：水域 S 級，或有 naval-combined-attack 因子效果，兩者取聯集（PROG-2-0787，協調者裁示）。
+ * 規格：水域 S「可執行合攻」；既有的因子效果也保留。
+ */
+export function hasNavalAptitude(terrainGrade: string, hasNavalFactorEffect: boolean): boolean {
+    return terrainGrade === 'S' || hasNavalFactorEffect;
+}
+
 /** 水域格是否可執行「合攻」（需要水戰適性）；河流對應規格的「水域」 */
 export function canNavalCombinedAttack(terrain: TerrainType, hasWaterAptitude: boolean): boolean {
     return hasWaterAptitude && terrain === TerrainType.River;

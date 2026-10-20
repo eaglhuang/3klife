@@ -60,3 +60,33 @@ export function validateBloodlineBeast(def: BloodlineBeastDefinition): string[] 
 export function beastTendencyMatches(def: BloodlineBeastDefinition, incidentKind: string): boolean {
     return def.awakeningTendency.includes(incidentKind);
 }
+
+/**
+ * 暫定靈獸清單：六種原型各一筆，名稱用原型名，人格標籤與覺醒傾向為暫定（PROVISIONAL，交企劃替換）。
+ * 覺醒傾向的事蹟類型 id 也是暫定，待事蹟系統定案後改為正式 id。
+ */
+export const PROVISIONAL_BEAST_CATALOG: readonly BloodlineBeastDefinition[] = [
+    { id: 'BEAST_DRAGON', name: '龍', archetype: 'DRAGON', personaTags: ['威儀', '霸氣'], awakeningTendency: ['battle-win'] },
+    { id: 'BEAST_TIGER', name: '虎', archetype: 'TIGER', personaTags: ['勇猛', '剛烈'], awakeningTendency: ['duel-win'] },
+    { id: 'BEAST_CRANE', name: '鶴', archetype: 'CRANE', personaTags: ['清逸', '超然'], awakeningTendency: ['event-clear'] },
+    { id: 'BEAST_TORTOISE', name: '玄龜', archetype: 'TORTOISE', personaTags: ['沉穩', '守成'], awakeningTendency: ['defense-hold'] },
+    { id: 'BEAST_WOLF', name: '狼', archetype: 'WOLF', personaTags: ['警覺', '野心'], awakeningTendency: ['fame-gain'] },
+    { id: 'BEAST_QILIN', name: '麒麟', archetype: 'QILIN', personaTags: ['仁厚', '祥瑞'], awakeningTendency: ['event-clear', 'fame-gain'] },
+];
+
+/**
+ * 暫定綁定：武將 id 雜湊後對清單取餘數，決定這位武將的命紋靈獸。
+ * 正式的綁定規則（依血統、依原型）尚未定案，此函式為暫定，待 PM 裁定後替換。
+ */
+export function beastForGeneral(generalId: string): BloodlineBeastDefinition {
+    let hash = 0;
+    for (let i = 0; i < generalId.length; i++) {
+        hash = (hash * 31 + generalId.charCodeAt(i)) >>> 0;
+    }
+    return PROVISIONAL_BEAST_CATALOG[hash % PROVISIONAL_BEAST_CATALOG.length];
+}
+
+/** 深層人格區的一行摘要：名稱、人格標籤、覺醒傾向。 */
+export function formatBeastSummary(def: BloodlineBeastDefinition): string {
+    return `命紋靈獸：${def.name}（${BEAST_ARCHETYPE_LABELS[def.archetype]}）\n人格：${def.personaTags.join('、')}\n覺醒傾向：${def.awakeningTendency.join('、')}`;
+}

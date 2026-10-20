@@ -233,5 +233,11 @@
   "ui.spirit_codex.count": "{0} Spirits",
   "ui.spirit_codex.empty": "No Spirit Cards yet. Generals who qualify after death are recorded here.",
   "ui.spirit_codex.more": "{0} more not shown",
-  "legacy.essence_line": "Essence snapshot: {0}"
+  "legacy.essence_line": "Essence snapshot: {0}",
+  "ui.gene.tag.blue": "🔵 Attribute Gene",
+  "ui.gene.tag.pink": "💗 Aptitude Gene",
+  "ui.gene.tag.green": "🟢 Tactic Seed",
+  "ui.gene.tag.purple": "🟣 Fate Gene",
+  "ui.gene.tag.white": "⚪ Talent Gene",
+  "ui.gene.tag.red": "🔴 Physique Gene"
 }

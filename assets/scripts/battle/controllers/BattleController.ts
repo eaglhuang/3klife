@@ -24,6 +24,7 @@ import { executeBattleAutoMovePhase } from '../runtime/phases/BattleAutoMovePhas
 import { executeBattleEnemyDeployPhase } from '../runtime/phases/BattleEnemyDeployPhase';
 import { executeBattleSpecialResolvePhase } from '../runtime/phases/BattleSpecialResolvePhase';
 import { executeBattleTileEffectPhase } from '../runtime/phases/BattleTileEffectPhase';
+import { desertVitalityDrain } from '../../core/systems/DesertVitality';
 import { BattleCombatResolver } from '../runtime/BattleCombatResolver';
 import { BattleGeneralDuelFlow } from '../runtime/BattleGeneralDuelFlow';
 import { BattleTileBuffLifecycleManager, DEFAULT_BATTLE_TILE_BUFF_CONFIG, type BattleTileBuffConfig } from '../runtime/BattleTileBuffLifecycleManager';
@@ -753,6 +754,7 @@ export class BattleController {
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
+          getAptitudeMoveSetTo: (unit) => this.combatResolver.getUnitMoveSetTo(unit),
           applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
             attackerId: null,
             attackerLane: null,
@@ -772,6 +774,7 @@ export class BattleController {
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
+          getAptitudeMoveSetTo: (unit) => this.combatResolver.getUnitMoveSetTo(unit),
           applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
             attackerId: null,
             attackerLane: null,
@@ -791,6 +794,10 @@ export class BattleController {
           applyUnitDamage: (unit, damage, attackerFaction, options) => this.combatResolver.applyUnitDamage(unit, damage, attackerFaction, options),
           onGeneralUnitKilled: (faction, svc) => this.combatResolver.onGeneralUnitKilled(faction, svc),
           onUnitKilled: (unit, killer, svc) => this.combatResolver.onUnitKilled(unit, killer, svc),
+          getTerrainVitalityDrain: (unit) => desertVitalityDrain(
+            this.state.getCell(unit.lane, unit.depth)?.terrain,
+            this.combatResolver.getUnitAptitude(unit).terrain,
+          ),
         });
         return {};
       case 'enemy-tile-effect':
@@ -802,6 +809,10 @@ export class BattleController {
           applyUnitDamage: (unit, damage, attackerFaction, options) => this.combatResolver.applyUnitDamage(unit, damage, attackerFaction, options),
           onGeneralUnitKilled: (faction, svc) => this.combatResolver.onGeneralUnitKilled(faction, svc),
           onUnitKilled: (unit, killer, svc) => this.combatResolver.onUnitKilled(unit, killer, svc),
+          getTerrainVitalityDrain: (unit) => desertVitalityDrain(
+            this.state.getCell(unit.lane, unit.depth)?.terrain,
+            this.combatResolver.getUnitAptitude(unit).terrain,
+          ),
         });
         return {};
       case 'player-combat-resolve':

@@ -259,5 +259,11 @@
   "ui.spirit_codex.count": "英靈 {0} 位",
   "ui.spirit_codex.empty": "尚無英靈卡。武將死後若具備英靈資格，會收錄於此。",
   "ui.spirit_codex.more": "另有 {0} 位未列出",
-  "legacy.essence_line": "精華快照：{0}"
+  "legacy.essence_line": "精華快照：{0}",
+  "ui.gene.tag.blue": "🔵 屬性因子",
+  "ui.gene.tag.pink": "💗 適性因子",
+  "ui.gene.tag.green": "🟢 戰法種子",
+  "ui.gene.tag.purple": "🟣 天命因子",
+  "ui.gene.tag.white": "⚪ 天賦因子",
+  "ui.gene.tag.red": "🔴 體魄因子"
 }

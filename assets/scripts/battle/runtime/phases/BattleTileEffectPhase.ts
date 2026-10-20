@@ -25,6 +25,8 @@ export interface BattleTileEffectPhaseContext {
   ): void;
   onGeneralUnitKilled(faction: Faction, svc: ReturnType<typeof services>): void;
   onUnitKilled(unit: TroopUnit, killer: TroopUnit | null, svc: ReturnType<typeof services>): void;
+  /** 沙漠每回合精力消耗（APT-05，PROG-2-0785）：單位本回合要扣主將的精力；不提供時為 0 */
+  getTerrainVitalityDrain?(unit: TroopUnit): number;
 }
 
 export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseContext): void {
@@ -87,6 +89,17 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
       killedIds.add(unit.id);
       killed.push(unit);
     }
+  }
+
+  // 沙漠精力消耗（APT-05，PROG-2-0785）：同陣營本回合站在沙漠的部隊取最大值，主將精力扣一次（暫定）
+  let desertDrain = 0;
+  for (const [, unit] of context.state.units) {
+    if (unit.faction !== context.actingFaction || unit.isDead()) continue;
+    desertDrain = Math.max(desertDrain, context.getTerrainVitalityDrain?.(unit) ?? 0);
+  }
+  const actingGeneral = context.state.getGeneral(context.actingFaction);
+  if (actingGeneral && desertDrain > 0) {
+    actingGeneral.vitality = Math.max(0, actingGeneral.vitality - desertDrain);
   }
 
   for (const dead of killed) {

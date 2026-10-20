@@ -7,13 +7,14 @@ import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
-import { getTerrainTroopEffect, terrainAttackRangeCapOf } from '../../core/systems/TerrainTroopRules';
+import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
 import { extraAttackHitsOf } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import {
   canNavalCombinedAttack,
+  hasNavalAptitude,
   hasBattleEffect,
   isFogHitGuaranteed,
   isOrthogonallyAdjacent,
@@ -87,6 +88,11 @@ export class BattleCombatResolver {
     const cell = this.context.state.getCell(unit.lane, unit.depth);
     const terrain = cell?.terrain ?? TerrainType.Plain;
     return this.getUnitAptitude(unit).moveDelta + getTerrainTroopEffect(unit.type, terrain).moveDelta;
+  }
+
+  /** 移動力直接設值（水域 D「移動力歸 1」，PROG-2-0786）；null 表示用加減修正 */
+  public getUnitMoveSetTo(unit: TroopUnit): number | null {
+    return this.getUnitAptitude(unit).moveSetTo;
   }
 
   public getFactionUnits(faction: Faction): TroopUnit[] {
@@ -196,7 +202,9 @@ export class BattleCombatResolver {
     const defenderStealth = getTerrainTroopEffect(defender.type, defenderCell?.terrain ?? TerrainType.Plain).stealthBonus;
     // 場景命中加成（夜襲 -25%，SCN-06）：加在適性與隱蔽之後
     const sceneAccuracy = tacticBehavior.getAccuracyDelta?.(attacker, this.context.state) ?? 0;
-    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth + sceneAccuracy;
+    // 林地 S 迴避 +30%（PROG-2-0788）：防守方在林地且林地適性 S 時，攻擊方命中率再 −30%
+    const defenderEvasion = terrainEvasionBonusOf(defenderCell?.terrain ?? TerrainType.Plain, this.getUnitAptitude(defender).terrain);
+    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth - defenderEvasion + sceneAccuracy;
     // 大霧免疫（PROG-2-0584）：大霧天氣下攻擊方有此效果時命中必中，略過擲骰
     const fogGuaranteed = isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects);
     if (!fogGuaranteed && !rollHit(attackerAccuracy, this.hitRandom)) {
@@ -266,7 +274,8 @@ export class BattleCombatResolver {
   private resolveNavalCombinedFollowUp(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
     if (defender.isDead() || attacker.isDead()) return;
     const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
-    if (!canNavalCombinedAttack(attackerCell?.terrain ?? TerrainType.Plain, hasBattleEffect(attacker.factorEffects, 'naval-combined-attack'))) return;
+    const navalAptitude = hasNavalAptitude(this.getUnitAptitude(attacker).terrain, hasBattleEffect(attacker.factorEffects, 'naval-combined-attack'));
+    if (!canNavalCombinedAttack(attackerCell?.terrain ?? TerrainType.Plain, navalAptitude)) return;
 
     const helper = this.findNavalCombinedHelper(attacker, defender);
     if (!helper) return;

@@ -4,7 +4,7 @@
  * Unity 對照：像 EditMode 測試，驗靈獸表的欄位規則與傾向比對。
  */
 import { assert, TestSuite } from './TestRunner';
-import { beastTendencyMatches, BEAST_ARCHETYPE_LABELS, validateBloodlineBeast, type BloodlineBeastDefinition } from '../assets/scripts/core/systems/BloodlineBeast';
+import { beastForGeneral, beastTendencyMatches, BEAST_ARCHETYPE_LABELS, formatBeastSummary, PROVISIONAL_BEAST_CATALOG, validateBloodlineBeast, type BloodlineBeastDefinition } from '../assets/scripts/core/systems/BloodlineBeast';
 
 const sample: BloodlineBeastDefinition = {
     id: 'TEST_BEAST_01',
@@ -38,6 +38,21 @@ export function createBloodlineBeastSuite(): TestSuite {
     suite.test('傾向比對：事蹟類型在傾向清單內才符合', () => {
         assert.isTrue(beastTendencyMatches(sample, 'BATTLE_WIN'));
         assert.isFalse(beastTendencyMatches(sample, 'TRADE'));
+    });
+
+    suite.test('暫定靈獸清單：六種原型各一筆、每筆通過驗證、名稱為原型名', () => {
+        assert.equals(6, PROVISIONAL_BEAST_CATALOG.length);
+        assert.equals(6, new Set(PROVISIONAL_BEAST_CATALOG.map((b) => b.archetype)).size);
+        assert.isTrue(PROVISIONAL_BEAST_CATALOG.every((b) => validateBloodlineBeast(b).length === 0));
+        assert.equals(BEAST_ARCHETYPE_LABELS[PROVISIONAL_BEAST_CATALOG[0].archetype], PROVISIONAL_BEAST_CATALOG[0].name);
+    });
+
+    suite.test('暫定綁定：同一武將 id 每次得到同一靈獸；摘要含名稱、人格與傾向', () => {
+        assert.equals(beastForGeneral('ZHAO_YUN').id, beastForGeneral('ZHAO_YUN').id);
+        const summary = formatBeastSummary(PROVISIONAL_BEAST_CATALOG[0]);
+        assert.isTrue(summary.includes('龍'));
+        assert.isTrue(summary.includes('威儀'));
+        assert.isTrue(summary.includes('battle-win'));
     });
 
     return suite;
