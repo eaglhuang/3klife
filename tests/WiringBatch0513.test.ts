@@ -66,7 +66,7 @@ function mentorCard(sourceGeneralId: string): MentorCard {
     const generalSnapshot = chooseFate(unveilGeneral({
         id: sourceGeneralId, name: sourceGeneralId, faction: 'shu', gender: '男', age: 5, status: 'Mystery', hp: 800,
         str: 60, int: 50, lea: 55, pol: 40, cha: 45, luk: 30, hiddenFlags: ['mystery-phase'], genes: [],
-    } as UnveilingGeneral).general, 'accept') as unknown as GeneralConfig;
+    } as unknown as UnveilingGeneral).general, 'accept') as unknown as GeneralConfig;
     return {
         uid: `mentor-${sourceGeneralId}`, sourceGeneralId, name: sourceGeneralId, faction: 'shu',
         retiredAge: 66, retiredSeason: 4, retiredYear: 2, ep_snapshot: 80, gene_refs: [],
@@ -215,6 +215,6 @@ function unveilChild(id: string): UnveilingGeneral {
     const raw = {
         id, name: id, faction: 'shu', gender: '男', age: 5, status: 'Mystery', hp: 800,
         str: 60, int: 50, lea: 55, pol: 40, cha: 45, luk: 30, hiddenFlags: ['mystery-phase'], genes: [],
-    } as UnveilingGeneral;
-    return chooseFate(unveilGeneral(raw).general, 'accept') as UnveilingGeneral;
+    } as unknown as UnveilingGeneral;
+    return chooseFate(unveilGeneral(raw).general, 'accept') as unknown as UnveilingGeneral;
 }

@@ -37,6 +37,7 @@ import {
     troopsFromHp,
     UNIT_TROOP_COST,
     updateUnitTroops,
+    SortieMember,
     validateSortieLoadout,
 } from '../assets/scripts/core/systems/SortieDeploy';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
@@ -234,7 +235,7 @@ export function createSortieDeploySuite(): TestSuite {
         const ok = spendTactic(state, 10);
         assert.equals(true, ok.ok);
         assert.equals(BASE_TACTIC_START - 10, ok.state.tacticCurrent);
-        assert.equals(10, ok.spent);
+        assert.equals(10, (ok as { spent: number }).spent);
         const short = spendTactic(ok.state, 999);
         assert.equals(false, short.ok);
         assert.equals('TACTIC_SHORT', short.ok ? '' : short.reason);
@@ -296,7 +297,7 @@ export function createSortieDeploySuite(): TestSuite {
         const spend = ctrl.trySpendTacticPoints.bind(ctrl);
         ctrl.trySpendTacticPoints = cost => { spends += 1; return spend(cost); };
         assert.equals(DEFAULT_TACTIC_TP_COST, getTacticTpCost(null));
-        ctrl['sortie'].tacticCurrent = DEFAULT_TACTIC_TP_COST - 1;
+        ctrl['sortie']!.tacticCurrent = DEFAULT_TACTIC_TP_COST - 1;
         const refused = ctrl.triggerGeneralSkill({ targetMode: BattleSkillTargetMode.Line, targetUnitUid: 'enemy-anchor' });
         assert.equals(false, refused);
         assert.equals(playerGeneral.maxSp, playerGeneral.currentSp, '點數不足不扣精力');
@@ -305,7 +306,7 @@ export function createSortieDeploySuite(): TestSuite {
         assert.equals(0, spends, '不足不進扣點入口');
         assert.equals(false, ctrl.getPlayerTacticPointState().enabled);
 
-        ctrl['sortie'].tacticCurrent = 40;
+        ctrl['sortie']!.tacticCurrent = 40;
         const cast = ctrl.triggerGeneralSkill({ targetMode: BattleSkillTargetMode.Line, targetUnitUid: 'enemy-anchor' });
         assert.equals(true, cast);
         assert.equals(40 - DEFAULT_TACTIC_TP_COST, ctrl.getSortieState()!.tacticCurrent);

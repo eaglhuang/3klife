@@ -88,7 +88,7 @@ export function createStageProgressSaveSuite(): TestSuite {
 
     suite.test('敗北或沒有 stageId 時不記通關紀錄', async () => {
         const session = createSession(new MemoryStorageAdapter());
-        await session.recordBattle([], 'player-lose', { stageId: 'encounter-001' });
+        await session.recordBattle([], 'enemy-win', { stageId: 'encounter-001' });
         await session.recordBattle([], 'player-win');
         assert.equals(0, session.clearedStageIds.length);
     });

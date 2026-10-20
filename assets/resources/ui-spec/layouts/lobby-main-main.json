@@ -8,7 +8,7 @@
     "widget": { "top": 0, "left": 0, "right": 0, "bottom": 0 },
     "children": [
       {
-        "type": "sprite",
+        "type": "image",
         "name": "Background",
         "widget": { "top": 0, "left": 0, "right": 0, "bottom": 0 },
         "skinSlot": "lobby.bg",
@@ -28,7 +28,7 @@
             "height": 84,
             "skinSlot": "lobby.topbar.bg",
             "children": [
-              { "type": "sprite", "name": "Avatar", "widget": { "top": 14, "left": 24 }, "width": 56, "height": 56, "skinSlot": "lobby.avatar" },
+              { "type": "image", "name": "Avatar", "widget": { "top": 14, "left": 24 }, "width": 56, "height": 56, "skinSlot": "lobby.avatar" },
               { "type": "label", "name": "PlayerName", "widget": { "top": 18, "left": 96 }, "width": 220, "height": 26, "styleSlot": "lobby.label.name" },
               {
                 "type": "panel",

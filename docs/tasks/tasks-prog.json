@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 43,
-    "total": 79
+    "open": 46,
+    "total": 82
   },
   "tasks": [
     {
@@ -3220,6 +3220,95 @@
         "artifacts/PROG-2-0132/**"
       ],
       "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 活動任務阻擋"
+    },
+    {
+      "id": "PROG-2-0133",
+      "title": "實機驗收：新玩家開場一路走通（PROG-2-0645、0646、0647）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M0",
+      "created": "2026-10-15",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "開場第一幕、宿命轉蛋與首戰後紅顏展示已接上 master，三段銜接與版面待實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #447",
+        "PR #455",
+        "PR #456",
+        "PROG-2-0645",
+        "PROG-2-0646",
+        "PROG-2-0647"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0133.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0133/**"
+      ],
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: ATM 0088"
+    },
+    {
+      "id": "PROG-2-0134",
+      "title": "重爬 24 筆武將 lore（截斷與消歧義修復後）",
+      "owner": "Codex",
+      "priority": "P2",
+      "status": "open",
+      "type": "data",
+      "phase": "M0",
+      "created": "2026-10-15",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "用修好的 ingest-generals-wiki.js 在能連 wiki 的本機重爬 24 筆 lore 並清快取。",
+      "related": [],
+      "depends": [
+        "PR #451",
+        "PROG-2-0807",
+        "PROG-2-0415"
+      ],
+      "acceptance": [
+        "24 筆重爬完成並附差異報告",
+        "佔位文字列入人工審閱清單"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0134.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0134/**"
+      ],
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: ATM 0088；需能連 wiki 的本機"
+    },
+    {
+      "id": "PROG-2-0135",
+      "title": "實機驗收：AI 委任 Toggle 勾選與事件（PROG-2-0494、#473）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M6",
+      "created": "2026-10-15",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "引擎 toggle 節點與 AI 委任開關的勾選、事件待實機驗收，#473 合併後派發。",
+      "related": [],
+      "depends": [
+        "PR #473",
+        "PROG-2-0494"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0135.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0135/**"
+      ],
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: #473 未合併；ATM 0088"
     }
   ]
 }
