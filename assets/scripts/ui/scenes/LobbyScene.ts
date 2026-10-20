@@ -152,6 +152,12 @@ function breedText(): BreedTextLookup {
     return withBreedFallback((key, ...args) => services().i18n.t(key, ...args));
 }
 
+/** 結緣：選中待產的母方時顯示劇本提示（PROG-2-0732） */
+function toastPregnantMother(bonding: { pregnantMotherHint(): string | null }): void {
+    const hint = bonding.pregnantMotherHint();
+    if (hint) services().event.emit('SHOW_TOAST', { message: hint, duration: 2 });
+}
+
 interface ScreenButtonBinding {
     buttonId: string;
     handler: () => void;
@@ -437,6 +443,7 @@ export class LobbyScene extends Component {
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             autoNurture: (childId) => services().session.runAutoNurture(childId),
+            showToast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2 }); },
         });
         this._nurtureFlow = flow;
 
@@ -666,8 +673,8 @@ export class LobbyScene extends Component {
             { buttonId: 'btnCloseBond', handler: () => { this._closeBondingSetup(); } },
             { buttonId: 'btnPrevFather', handler: () => { bonding.cycleFather(-1); this._refreshBondingSetup(); } },
             { buttonId: 'btnNextFather', handler: () => { bonding.cycleFather(1); this._refreshBondingSetup(); } },
-            { buttonId: 'btnPrevMother', handler: () => { bonding.cycleMother(-1); this._refreshBondingSetup(); } },
-            { buttonId: 'btnNextMother', handler: () => { bonding.cycleMother(1); this._refreshBondingSetup(); } },
+            { buttonId: 'btnPrevMother', handler: () => { bonding.cycleMother(-1); this._refreshBondingSetup(); toastPregnantMother(bonding); } },
+            { buttonId: 'btnNextMother', handler: () => { bonding.cycleMother(1); this._refreshBondingSetup(); toastPregnantMother(bonding); } },
             { buttonId: 'btnConfirmBond', handler: () => { void this._onClickConfirmBond(); } },
             {
                 buttonId: 'btnOpenOracle',
