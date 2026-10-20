@@ -20,6 +20,7 @@ import { createEmptyPedigree, Pedigree, PEDIGREE_SLOTS, PedigreeSlot, pedigreeSl
 import {
     AncestorFactorSource,
     DEFAULT_ENABLED_FACTOR_COLORS,
+    DEFAULT_MAX_INHERITED_FACTORS,
     FACTOR_POOL_RATE,
     FactorColor,
     FactorDictionary,
@@ -32,6 +33,8 @@ import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
 import { analyzeTagResonance, KIN_RESONANCE_MIN_COUNT } from './KinRelation';
 import { baseVitalityMaxOf } from './VitalityCap';
 import { rollWildGene, STAR_JUMP_MAX_LEVEL, STAR_JUMP_STEP } from './WildGene';
+import { luckThresholdEffects, type LuckThresholdEffects } from './LuckThresholds';
+import { forceFatherTacticCopy } from './LuckTacticCopy';
 
 export const BREEDING_MIN_AGE = 20;
 export const FATHER_VIGOR_COST = 50;
@@ -522,6 +525,8 @@ export interface BreedingResult {
     childPedigree?: Pedigree;
     ep?: EpBreakdown;
     factors?: InheritedFactor[];
+    /** 運氣特殊門檻旗標（LUK-06）：依父母平均 LUK 判定，只在受孕成功時有值 */
+    luckEffects?: LuckThresholdEffects;
 }
 
 /** 預覽 EP（結緣介面用），不消耗亂數也不改任何資料 */
@@ -628,19 +633,27 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
     // 天命波動（PROG-2-0511）：父母平均 LUK × Random(-0.5, 1.5)，在子嗣生成前套用到 EP
     const parentAvgLuk = (statOf(request.father, 'luk') + statOf(request.mother, 'luk')) / 2;
     const ep = applyFateWave(previewEp, rollFateWave(parentAvgLuk, request.random));
+    // 戰法強制複製（LUK ≥ 80，PROG-2-0874）：在隨機抽選之後套用，不消耗亂數
+    const luckEffects = luckThresholdEffects(parentAvgLuk);
+    const childFactors = luckEffects.forceTacticCopy
+        ? forceFatherTacticCopy(finalFactors, request.father, request.dictionary, request.maxFactors ?? DEFAULT_MAX_INHERITED_FACTORS)
+        : finalFactors;
     const child = createChild({
         id: request.childId,
         father: request.father,
         mother: request.mother,
         ep,
-        factors: finalFactors,
+        factors: childFactors,
         pedigree,
         random: request.random,
         dictionary: request.dictionary,
         birthSeason: request.birthSeason,
     });
 
-    return { outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: finalFactors };
+    return {
+        outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: childFactors,
+        luckEffects,
+    };
 }
 
 /**
