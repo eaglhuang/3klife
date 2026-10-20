@@ -1617,6 +1617,11 @@ export class LobbyScene extends Component {
                 const enemyId = this._currentEncounter()?.enemyGeneralId;
                 return enemyId ? this._generals.find((g) => g.id === enemyId) ?? null : null;
             },
+            // 編制預設（DEP-14）：寫入 GameSession，隨存檔保存
+            presets: {
+                get: () => services().session.sortiePresets,
+                set: (store) => { services().session.setSortiePresets(store); },
+            },
         });
         this._sortie = sortie;
         const step = (role: SortieRole, delta: number): void => { sortie.cycle(role, delta); this._refreshSortieSetup(); };
@@ -1628,6 +1633,8 @@ export class LobbyScene extends Component {
             { buttonId: 'btnPrevDeputy', handler: () => { step('deputy', -1); } },
             { buttonId: 'btnNextDeputy', handler: () => { step('deputy', 1); } },
             { buttonId: 'btnClearDeputy', handler: () => { sortie.clear('deputy'); this._refreshSortieSetup(); } },
+            { buttonId: 'btnSavePreset', handler: () => { sortie.savePreset(); this._refreshSortieSetup(); } },
+            { buttonId: 'btnApplyPreset', handler: () => { sortie.applyPreset(); this._refreshSortieSetup(); } },
         ]);
         const refresh = (): void => { this._refreshSortieSetup(); };
         const event = services().event;

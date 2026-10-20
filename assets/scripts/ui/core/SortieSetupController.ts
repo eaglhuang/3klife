@@ -119,6 +119,8 @@ export class SortieSetupController {
             sortieSummary: '',
             sortiePredict: '',
             sortieNotice: this._notice,
+            savePresetLabel: '儲存預設',
+            applyPresetLabel: '套用預設',
         };
         const actives: Record<string, boolean> = {
             sortiePanel: commander !== null,
@@ -132,6 +134,8 @@ export class SortieSetupController {
             btnPrevDeputy: false,
             btnNextDeputy: false,
             btnClearDeputy: false,
+            btnSavePreset: false,
+            btnApplyPreset: false,
         };
         if (!commander) {
             return { commanderId: null, texts, actives, enabled };
@@ -168,6 +172,8 @@ export class SortieSetupController {
         enabled.btnPrevDeputy = deputyOptions > 1;
         enabled.btnNextDeputy = deputyOptions > 1;
         enabled.btnClearDeputy = summary.deputy !== null;
+        enabled.btnSavePreset = this._deps.presets !== undefined;
+        enabled.btnApplyPreset = this._deps.presets !== undefined && this._deps.presets.get()[commander.id] !== undefined;
         return { commanderId: commander.id, texts, actives, enabled };
     }
 
