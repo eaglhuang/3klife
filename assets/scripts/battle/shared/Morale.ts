@@ -38,6 +38,12 @@ export function advanceMorale(unit: MoraleCarrier): boolean {
   return true;
 }
 
+/** 單位退場（陣亡或移出戰場）時清除士氣與計時（PROG-2-0770 PM 裁決 05:16） */
+export function clearMorale(unit: MoraleCarrier): void {
+  unit.morale = 0;
+  unit.moraleTurns = 0;
+}
+
 /** 行動陣營回合頭：只遞減該陣營單位的士氣計時（與防禦區同一時機） */
 export function advanceMoraleOf(units: Iterable<MoraleCarrier>, faction: Faction): void {
   for (const unit of units) {

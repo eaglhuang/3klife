@@ -10,6 +10,7 @@ import { RootSkillResolver } from './resolvers/RootSkillResolver';
 import { SlowSkillResolver } from './resolvers/SlowSkillResolver';
 import { MoraleSkillResolver } from './resolvers/MoraleSkillResolver';
 import { PushSkillResolver } from './resolvers/PushSkillResolver';
+import { FireGodHuntSkillResolver } from './resolvers/FireGodHuntSkillResolver';
 import { FormationZoneSkillResolver } from './resolvers/FormationZoneSkillResolver';
 
 export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
@@ -25,6 +26,7 @@ export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
     new SlowSkillResolver(),
     new MoraleSkillResolver(),
     new PushSkillResolver(),
+    new FireGodHuntSkillResolver(),
     new FormationZoneSkillResolver(),
   ]);
 }
