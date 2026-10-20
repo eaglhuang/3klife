@@ -76,6 +76,11 @@ import {
     rollBattleAwakening,
 } from '../systems/FactorAwakening';
 import {
+    awakenBloodlineUltimate,
+    raiseBloodlineUltimateCap,
+} from '../systems/BloodlineUltimateRoster';
+import type { UltimateAwakenReason } from '../systems/BloodlineTransmissionUltimate';
+import {
     battleExpSource,
     DiscoveryExpSource,
     DiscoveryGain,
@@ -1482,6 +1487,33 @@ export class GameSession {
             await this.save();
         }
         return { ok: true, transferredFactor: plan.transferredFactor };
+    }
+
+    /** 升星後提高某位武將五階奧義的 Stage_Cap（PROG-2-0718）；找不到武將回傳 false，成功才改名冊並存檔 */
+    public async raiseBloodlineUltimateCap(generalId: string, stars: number): Promise<boolean> {
+        const roster = this._roster.getAll();
+        if (!roster.some((g) => g.id === generalId)) return false;
+        this._roster.replaceAll(roster.map((g) => (g.id === generalId ? raiseBloodlineUltimateCap(g, stars) : g)));
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return true;
+    }
+
+    /** 覺醒某位武將的五階奧義下一階（PROG-2-0718）；條件不足回傳原因且不改名冊，成功才改名冊並存檔 */
+    public async awakenBloodlineUltimate(
+        generalId: string,
+    ): Promise<{ ok: true; awakenedStage: number } | { ok: false; reason: UltimateAwakenReason | 'GENERAL_NOT_FOUND' }> {
+        const roster = this._roster.getAll();
+        const target = roster.find((g) => g.id === generalId);
+        if (!target) return { ok: false, reason: 'GENERAL_NOT_FOUND' };
+        const result = awakenBloodlineUltimate(target);
+        if (result.ok === false) return result;
+        this._roster.replaceAll(roster.map((g) => (g.id === generalId ? result.general : g)));
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, awakenedStage: result.awakenedStage };
     }
 
     /** 覺醒名冊中某位武將的鎖定因子；失敗回傳原因，成功才改名冊、存檔並廣播 */
