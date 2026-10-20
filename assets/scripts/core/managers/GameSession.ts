@@ -104,6 +104,8 @@ import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
+import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
+import type { FactorColor } from '../systems/FactorInheritance';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { buildEraResetEvent } from '../systems/EraReset';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
@@ -431,6 +433,16 @@ export class GameSession {
     /** 因子覺醒用的玩家層級（決定能解鎖到哪個色階） */
     public get discoveryLevel(): number {
         return this._discoveryLevel;
+    }
+
+    /** 目前的因子解鎖階段（FUL-06）：由玩家層級換算，Lv1~20 為 Phase 1 */
+    public get unlockPhase(): UnlockPhase {
+        return phaseForLevel(this._discoveryLevel);
+    }
+
+    /** 目前階段已解鎖的因子色（FUL-06）；尚未接到結緣參與色 */
+    public unlockedFactorColors(): FactorColor[] {
+        return phaseFactorColors(this.unlockPhase);
     }
 
     /** 目前等級內累積的覺醒經驗 */
