@@ -129,6 +129,17 @@ export function createAutoNurtureSuite(): TestSuite {
         assert.isTrue(result.logs.every((log) => !log.injured && !log.affectionGained));
     });
 
+    suite.test('自動培育套用季節訓練體力倍率：夏季整季消耗較多精力', () => {
+        const session = freshSession('auto-summer', [makeMentor('m1')]);
+        const schedule = resolveAutoSchedule(session.prowess);
+        const firstTraining = (result: ReturnType<typeof runAutoNurtureSeason>) => result.logs.find((log) => log.action !== 'rest')!;
+        const normal = firstTraining(runAutoNurtureSeason(session, schedule, seeded(11)));
+        const summer = firstTraining(runAutoNurtureSeason(session, schedule, seeded(11), { trainingVigorMultiplier: 1.25 }));
+        const costOf = (log: { vigorBefore: number; vigorAfter: number }) => log.vigorBefore - log.vigorAfter;
+        assert.equals(Math.round(costOf(normal) * 1.25), costOf(summer), '夏季訓練消耗 = round(原消耗 × 1.25)');
+        assert.isTrue(costOf(summer) > costOf(normal));
+    });
+
     suite.test('畢業評級上限：自動培育會話即使 prowess 達 S 也只給 A，手動維持 S', () => {
         const high = (id: string) => ({ ...freshSession(id), status: 'completed' as const, prowess: { str: 1000, int: 1000, lea: 1000, pol: 1000, cha: 1000 } });
         const manual = graduate(high('manual-grad'), readyChild('manual-grad'));

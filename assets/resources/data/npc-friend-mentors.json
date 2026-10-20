@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2026-10-20",
+  "description": "MENT-14 MVP：NPC 好友教官清單（暫定）。真正的好友系統屬 server 後續；displayName 為暫定文案。",
+  "data": [
+    { "friendId": "npc_friend_01", "displayName": "暫定好友甲", "supportTemplateId": "SUP_ZHAO_SSR_01", "isSSR": true, "star": 3 },
+    { "friendId": "npc_friend_02", "displayName": "暫定好友乙", "supportTemplateId": "SUP_ZHUGE_SR_01", "isSSR": false, "star": 2 }
+  ]
+}

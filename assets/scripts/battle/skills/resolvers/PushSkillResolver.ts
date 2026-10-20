@@ -2,6 +2,7 @@ import { Faction, GAME_CONFIG } from '../../../core/config/Constants';
 import type { BattleSkillRequest, SkillExecutionResult } from '../../../shared/SkillRuntimeContract';
 import { forcedMoveBlockedDamageRatio } from '../../shared/ForcedMoveTile';
 import { pushAway } from '../../shared/PushMove';
+import { BattleSkillDamageResolver } from '../BattleSkillDamageResolver';
 import { resolveBattleSkillProfile } from '../BattleSkillProfiles';
 import type { BattleSkillExecutionContext, BattleSkillResolver } from '../BattleSkillResolver';
 import { squareCells } from '../SkillGridGeometry';
@@ -9,8 +10,11 @@ import { squareCells } from '../SkillGridGeometry';
 /**
  * 位移（push）：以施放者為中心 pushRadius（預設 3x3）內的敵軍遠離施放者 pushSteps 格（PROG-2-0767）。
  * 遇障礙即停；受阻時依未走完的步數扣最大 HP（每步 5%，上限 20%，PM 暫定）。
+ * coefficient > 0 時先結算傷害（無雙亂舞，PROG-2-0799）；陣亡者不擊退。
  */
 export class PushSkillResolver implements BattleSkillResolver {
+  constructor(private readonly damageResolver = new BattleSkillDamageResolver()) {}
+
   public canResolve(request: BattleSkillRequest): boolean {
     return resolveBattleSkillProfile(request.battleSkillId)?.effectKind === 'push';
   }
@@ -48,7 +52,17 @@ export class PushSkillResolver implements BattleSkillResolver {
     const steps = profile.pushSteps ?? 1;
     const deltas: SkillExecutionResult['deltas'] = [];
     const battleLogLines: string[] = [];
+    const caster = profile.coefficient > 0 ? context.getCasterGeneral(casterFaction) : null;
     for (const unit of targets) {
+      if (caster && context.applyDamage) {
+        const damage = this.damageResolver.resolveDamage(profile, caster, unit, context, 0, 0);
+        context.applyDamage(unit, damage, casterFaction);
+        deltas.push({ unitUid: unit.id, deltaHp: -damage });
+        if (unit.isDead()) {
+          battleLogLines.push(`${profile.battleLogKey ?? request.battleSkillId}:${unit.id}:${damage}`);
+          continue;
+        }
+      }
       const plan = pushAway(unit, center, steps, context.isCellFreeForPush);
       if (plan.movedSteps > 0) {
         context.pushUnitTo(unit, plan.lane, plan.depth);
