@@ -14,6 +14,7 @@ import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import {
   canNavalCombinedAttack,
+  hasNavalAptitude,
   hasBattleEffect,
   isFogHitGuaranteed,
   isOrthogonallyAdjacent,
@@ -87,6 +88,11 @@ export class BattleCombatResolver {
     const cell = this.context.state.getCell(unit.lane, unit.depth);
     const terrain = cell?.terrain ?? TerrainType.Plain;
     return this.getUnitAptitude(unit).moveDelta + getTerrainTroopEffect(unit.type, terrain).moveDelta;
+  }
+
+  /** 移動力直接設值（水域 D「移動力歸 1」，PROG-2-0786）；null 表示用加減修正 */
+  public getUnitMoveSetTo(unit: TroopUnit): number | null {
+    return this.getUnitAptitude(unit).moveSetTo;
   }
 
   public getFactionUnits(faction: Faction): TroopUnit[] {
@@ -266,7 +272,8 @@ export class BattleCombatResolver {
   private resolveNavalCombinedFollowUp(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
     if (defender.isDead() || attacker.isDead()) return;
     const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
-    if (!canNavalCombinedAttack(attackerCell?.terrain ?? TerrainType.Plain, hasBattleEffect(attacker.factorEffects, 'naval-combined-attack'))) return;
+    const navalAptitude = hasNavalAptitude(this.getUnitAptitude(attacker).terrain, hasBattleEffect(attacker.factorEffects, 'naval-combined-attack'));
+    if (!canNavalCombinedAttack(attackerCell?.terrain ?? TerrainType.Plain, navalAptitude)) return;
 
     const helper = this.findNavalCombinedHelper(attacker, defender);
     if (!helper) return;

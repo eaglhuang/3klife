@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "source": "../戰法系統.md",
+  "indexTitle": "戰法系統",
+  "indexPath": "docs/遊戲規格文件/系統規格書/戰法系統.md",
+  "type": "markdown-h2",
+  "preambleShard": "a",
+  "defaultShard": "a",
+  "shards": [
+    {
+      "name": "a",
+      "title": "A 系統描述",
+      "pattern": "^A\\."
+    },
+    {
+      "name": "fh",
+      "title": "F、H 公式與 UI 約束",
+      "pattern": "^(F|H)\\."
+    },
+    {
+      "name": "g",
+      "title": "G 戰法大清單",
+      "pattern": "^G\\."
+    },
+    {
+      "name": "g5",
+      "title": "G-5 天賦戰法初始庫",
+      "pattern": "^G-5\\."
+    }
+  ]
+}

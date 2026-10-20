@@ -20,6 +20,8 @@ export const ITEM_JOB_CHANGE_ORDER = 'ITEM_JOB_ORDER';
 export const ITEM_TRIAL_TICKET = 'ITEM_TRIAL_TICKET';
 /** 竹簡（文職退役產物，PROG-2-0330；暫定）。起始庫存為 0。 */
 export const ITEM_BAMBOO_SLIP = 'ITEM_BAMBOO_SLIP';
+/** 戰法筆記（千人斬等里程碑產出，GEN-13 / PROG-2-0816；交給教官轉化）。起始庫存為 0。 */
+export const ITEM_BATTLE_NOTE = 'ITEM_BATTLE_NOTE';
 /** 補元散（精力 +50；PROG-2-0443 接線）。起始庫存為 0。 */
 export const ITEM_VITALITY_PILL = 'ITEM_VITALITY_PILL';
 /** 高級補元散（精力 +100；PROG-2-0443 接線）。起始庫存為 0。 */
@@ -30,6 +32,7 @@ export const ITEM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
     [ITEM_JOB_CHANGE_ORDER]: '轉職令',
     [ITEM_TRIAL_TICKET]: '試用券',
     [ITEM_BAMBOO_SLIP]: '竹簡',
+    [ITEM_BATTLE_NOTE]: '戰法筆記',
     [ITEM_VITALITY_PILL]: '補元散',
     [ITEM_PREMIUM_VITALITY_PILL]: '高級補元散',
 };

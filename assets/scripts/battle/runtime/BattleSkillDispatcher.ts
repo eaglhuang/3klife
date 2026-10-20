@@ -287,6 +287,7 @@ export class BattleSkillDispatcher {
       },
       getWeather: () => state.weather,
       getTurnNumber: () => services().battle.getSnapshot().turn,
+      randomSource: () => services().session.randomSource(),
       isCellFreeForPush: (lane: number, depth: number) => {
         if (lane < 0 || lane >= GAME_CONFIG.GRID_LANES || depth < 0 || depth >= GAME_CONFIG.GRID_DEPTH) return false;
         const cell = state.getCell(lane, depth);

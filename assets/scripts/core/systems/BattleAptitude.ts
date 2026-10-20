@@ -120,15 +120,25 @@ export interface ResolvedAptitude {
     troop: AptitudeGrade;
     terrain: AptitudeGrade;
     weather: AptitudeGrade;
-    /** 攻擊倍率 = (1+地形)(1+天氣)(1+兵種) */
+    /** 攻擊倍率 = (1+地形)(1+天氣)(1+兵種)；水域 D 的地形項改為 ×0.5 */
     attackMultiplier: number;
-    /** 防禦倍率 = (1+地形)(1+天氣)(1+兵種) */
+    /** 防禦倍率 = (1+地形)(1+天氣)(1+兵種)；水域 D 的地形項為 1 */
     defenseMultiplier: number;
-    /** 移動修正 = 地形 + 兵種 */
+    /** 移動修正 = 地形 + 兵種；水域 D 時地形項不計 */
     moveDelta: number;
-    /** 命中修正 = 地形 + 天氣 */
+    /** 移動力直接設為此值（水域 D「移動力歸 1」）；null 表示用加減修正 */
+    moveSetTo: number | null;
+    /** 命中修正 = 地形 + 天氣；水域 D 時地形項不計 */
     accuracyDelta: number;
 }
+
+/**
+ * 水域 D 級專屬規則（規格：移動力歸 1、攻擊減半）。
+ * 地形專屬規則優先於通用 D 表：取代水域 D 的地形項（攻防 −25%、移動 −2、命中 −15%），不疊加。
+ * 兵種與天氣的適性照常計算。
+ */
+export const WATER_D_MOVE_SET_TO = 1;
+export const WATER_D_ATTACK_FACTOR = 0.5;
 
 function round3(value: number): number {
     return Math.round(value * 1000) / 1000;
@@ -142,14 +152,18 @@ export function resolveAptitude(profile: AptitudeProfile | null | undefined, con
     const t = APTITUDE_MODIFIERS[terrain];
     const w = APTITUDE_MODIFIERS[weather];
     const r = APTITUDE_MODIFIERS[troop];
+    const waterD = codeOf(context.terrain) === 'river' && terrain === 'D';
+    const terrainAttack = waterD ? WATER_D_ATTACK_FACTOR : 1 + t.atk;
+    const terrainDefense = waterD ? 1 : 1 + t.def;
     return {
         troop,
         terrain,
         weather,
-        attackMultiplier: round3((1 + t.atk) * (1 + w.atk) * (1 + r.atk)),
-        defenseMultiplier: round3((1 + t.def) * (1 + w.def) * (1 + r.def)),
-        moveDelta: t.move + r.move,
-        accuracyDelta: round3(t.acc + w.acc),
+        attackMultiplier: round3(terrainAttack * (1 + w.atk) * (1 + r.atk)),
+        defenseMultiplier: round3(terrainDefense * (1 + w.def) * (1 + r.def)),
+        moveDelta: (waterD ? 0 : t.move) + r.move,
+        moveSetTo: waterD ? WATER_D_MOVE_SET_TO : null,
+        accuracyDelta: round3((waterD ? 0 : t.acc) + w.acc),
     };
 }
 
@@ -179,9 +193,11 @@ export function rollHit(accuracyDelta: number, random: () => number = Math.rando
 /**
  * 套用適性移動修正：原本會走（≥1 格）的部隊，修正後至少還能走 1 格，
  * 避免 C/D 級步兵（基礎 1 格）整場站著不動（暫定）；原本就不能走的維持不動。
+ * moveSetTo 有值（水域 D「移動力歸 1」）時直接設為該值，不看加減修正。
  */
-export function applyAptitudeMove(baseMove: number, moveDelta: number): number {
+export function applyAptitudeMove(baseMove: number, moveDelta: number, moveSetTo: number | null = null): number {
     if (baseMove <= 0) return baseMove;
+    if (moveSetTo !== null) return Math.max(1, Math.trunc(moveSetTo));
     const delta = Number.isFinite(moveDelta) ? Math.trunc(moveDelta) : 0;
     return Math.max(1, baseMove + delta);
 }

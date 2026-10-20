@@ -114,6 +114,22 @@ export interface PlayerSaveSnapshot {
     bondPoints?: number;
     /** 趕路（回合制）；後加的選填欄位，舊檔讀回為沒有趕路（PROG-2-0475） */
     travelCountdown?: TravelCountdown;
+    /** 編制預設（DEP-14）：主將 id → 參謀官 / 後勤官；舊檔沒有此欄位時視為空 */
+    sortiePresets?: Readonly<Record<string, { strategistUid: string | null; deputyUid: string | null }>>;
+}
+
+/** 讀回編制預設：只保留格式正確的條目；缺欄位、非物件一律丟棄（舊存檔視為空） */
+export function normalizeSortiePresets(raw: unknown): Record<string, { strategistUid: string | null; deputyUid: string | null }> {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+    const out: Record<string, { strategistUid: string | null; deputyUid: string | null }> = {};
+    for (const [commanderId, value] of Object.entries(raw as Record<string, unknown>)) {
+        if (!value || typeof value !== 'object') continue;
+        const entry = value as { strategistUid?: unknown; deputyUid?: unknown };
+        const strategistUid = typeof entry.strategistUid === 'string' ? entry.strategistUid : null;
+        const deputyUid = typeof entry.deputyUid === 'string' ? entry.deputyUid : null;
+        out[commanderId] = { strategistUid, deputyUid };
+    }
+    return out;
 }
 
 /** 虎符卡表：只保留 uid 與 templateId 為非空字串的卡；非物件視為沒有紀錄 */
