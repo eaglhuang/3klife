@@ -1633,7 +1633,7 @@ export class LobbyScene extends Component {
             // 編制預設（DEP-14）：寫入 GameSession，隨存檔保存
             presets: {
                 get: () => services().session.sortiePresets,
-                set: (store) => { services().session.setSortiePresets(store); },
+                set: (store) => { void services().session.setSortiePresets(store); },
             },
         });
         this._sortie = sortie;

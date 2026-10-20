@@ -1264,9 +1264,10 @@ export class GameSession {
         return { ...this._sortiePresets };
     }
 
-    /** 整批寫入編制預設（DEP-14）；存檔後會保留 */
-    public setSortiePresets(store: Readonly<Record<string, SortieSupport>>): void {
+    /** 整批寫入編制預設（DEP-14）；有存檔服務時立刻存檔，不等下一次存檔（PROG-2-0791） */
+    public async setSortiePresets(store: Readonly<Record<string, SortieSupport>>): Promise<void> {
         this._sortiePresets = { ...store };
+        if (this._autoSave && this._save) await this.save();
     }
 
     /**
