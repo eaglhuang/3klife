@@ -60,12 +60,12 @@ export function createHallMissionBoardPresenterSuite(): TestSuite {
 
     suite.test('官階不足的任務不出現在列中；已接取置頂且不可再接', () => {
         const loaded = loadLobbyHub(sampleHub([
-            task('A', { Required_Rank: 3 }),
+            task('A', { Required_Rank: 4 }),
             task('B', { Required_Rank: 0 }),
             task('C', { Required_Rank: 1, Is_Accepted: true }),
         ]));
         if (!loaded.ok) throw new Error('fixture should validate');
-        const rows = buildHallBoardRows(loaded.hub, 'Military', { rankTier: 2, worldStage: 0, intel: 100 });
+        const rows = buildHallBoardRows(loaded.hub, 'Military', { rankTier: 3, worldStage: 0, intel: 100 });
         assert.equals(2, rows.length);
         assert.equals('C', rows[0].taskId);
         assert.equals(true, rows[0].accepted);
@@ -77,7 +77,7 @@ export function createHallMissionBoardPresenterSuite(): TestSuite {
     suite.test('列文字：難度、官階需求、獎勵依暫定對照表產生', () => {
         const loaded = loadLobbyHub(sampleHub([task('B', { Required_Rank: 2 })]));
         if (!loaded.ok) throw new Error('fixture should validate');
-        const [row] = buildHallBoardRows(loaded.hub, 'Military', { rankTier: 2, worldStage: 0, intel: 100 });
+        const [row] = buildHallBoardRows(loaded.hub, 'Military', { rankTier: 3, worldStage: 0, intel: 100 });
         assert.equals('精英', row.difficultyText);
         assert.equals('官階 2 以上', row.requiredRankText);
         assert.equals('糧草 +1200、黃金 +300', row.rewardText);
@@ -87,7 +87,7 @@ export function createHallMissionBoardPresenterSuite(): TestSuite {
     suite.test('軍事牆依情報度過濾，內政牆不看情報', () => {
         const loaded = loadLobbyHub(sampleHub([task('I', { Required_Intel: 60 })]));
         if (!loaded.ok) throw new Error('fixture should validate');
-        const player = { rankTier: 2, worldStage: 0, intel: 10 };
+        const player = { rankTier: 3, worldStage: 0, intel: 10 };
         assert.equals(0, buildHallBoardRows(loaded.hub, 'Military', player).length);
         assert.equals(1, buildHallBoardRows(loaded.hub, 'Domestic', player).length);
     });
