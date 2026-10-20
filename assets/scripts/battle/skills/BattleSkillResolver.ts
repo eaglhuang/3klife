@@ -14,6 +14,8 @@ export interface BattleSkillExecutionContext {
   getTerrain(lane: number, depth: number): TerrainType;
   /** 施放者所在格（PROG-2-0756：衝鋒判定直線用）；舊測試 context 可不提供，視為無衝鋒 */
   getCasterCell?(casterFaction: Faction): { lane: number; depth: number } | null;
+  /** 施放者的射程上限（林地 D 視野受限，PROG-2-0789）；沒有上限時為 null */
+  getCasterRangeCap?(casterFaction: Faction): number | null;
   /** 目前戰場天氣（PROG-2-0406：火計大風 ×2）；舊測試 context 可不提供，視為晴天 */
   getWeather?(): Weather;
   /** 目前戰鬥回合數（PROG-2-0773：威震華夏首回合加倍用）；舊測試 context 可不提供，視為非首回合 */
