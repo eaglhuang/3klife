@@ -24,6 +24,7 @@
  */
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
 import { addOfficerExp, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
+import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
 import { battleIntelligenceOf } from '../systems/BattleRoster';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
@@ -1135,6 +1136,11 @@ export class GameSession {
     /** 官職狀態（唯讀副本）：階位、累積經驗與解鎖歷史（OFC-03）。 */
     public get officerState(): OfficerState {
         return { ...this._officerState, unlockHistory: [...this._officerState.unlockHistory] };
+    }
+
+    /** 官職權限快照（唯讀，OFC-04）：大廳、領地、沙盤與他國 AI 只經此取得權限。 */
+    public get officerPermissions(): Readonly<OfficerPermissions> {
+        return officerPermissionsOf(this._officerState);
     }
 
     /** 目前官職解鎖（唯讀）：由官職階位推得任務難度上限、欄位數、沙盤階段、熱點數。 */
