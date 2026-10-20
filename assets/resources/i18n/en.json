@@ -188,7 +188,7 @@
   "UI_ULTIMATE_CAST": "[EN] UI_ULTIMATE_CAST",
   "UI_ULTIMATE_CANCEL": "[EN] UI_ULTIMATE_CANCEL",
   "toast.sync_complete": "Sync complete",
-  "toast.offline_reminder": "You are offline. Please reconnect soon to sync your data.",
+  "toast.offline_reminder": "Offline. Reconnect to sync.",
   "ui.style_check.title": "Ink & Steel v2.2 Style Check",
   "ui.style_check.primary": "Crimson Fire Primary Button",
   "ui.style_check.secondary": "Gilded Secondary Button",

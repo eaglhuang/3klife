@@ -188,7 +188,7 @@
   "UI_ULTIMATE_CAST": "[JA] UI_ULTIMATE_CAST",
   "UI_ULTIMATE_CANCEL": "[JA] UI_ULTIMATE_CANCEL",
   "toast.sync_complete": "同期完了",
-  "toast.offline_reminder": "現在オフラインです。データを同期するため、早めにネットに接続してください。",
+  "toast.offline_reminder": "オフラインです。接続して同期してください。",
   "ui.style_check.title": "水墨鋼鉄 v2.2 スタイル検証",
   "ui.style_check.primary": "赤火メインボタン",
   "ui.style_check.secondary": "流金サブボタン",

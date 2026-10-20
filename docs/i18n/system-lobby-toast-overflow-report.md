@@ -14,7 +14,7 @@ zh-TW 為基礎；zh-CN、en、ja 已補。UI_NAV_* 六鍵在 zh-CN／en／ja �
 | UI_NAV_GACHA | 轉蛋 | Gacha | ガチャ | 低 | |
 | toast.no_grain | 糧草不足 | Not enough supplies | 兵糧が不足しています | 中 | toast 單行，ja 偏長 |
 | toast.cooldown | 兵種冷卻中 | Unit on cooldown | 兵種クールダウン中 | 中 | |
-| toast.offline_reminder | 您目前處於離線模式… | You are offline. Please reconnect soon to sync your data. | 現在オフラインです… | 高 | 長句，建議縮句或改多行框 |
+| toast.offline_reminder | 您目前處於離線模式… | Offline. Reconnect to sync. | オフラインです。接続して同期してください。 | 中 | 已於第 1 批縮句（en／ja）；zh-TW 基礎句未動 |
 | network.connecting | 連線中... | Connecting... | 接続中... | 低 | |
 | ui.style_check.lorem | 水墨宣紙… | Visual clash between… | 水墨宣紙… | 低 | 僅風格驗證頁，正式畫面不用 |
 
