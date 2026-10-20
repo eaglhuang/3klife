@@ -182,6 +182,7 @@ export type UINodeType =
     | 'label'           // 文字標籤
     | 'button'          // 按鈕
     | 'button-group'    // 按鈕群組
+    | 'toggle'          // 勾選切換（Cocos Toggle，繼承 Button）
     | 'scroll-list'     // 可捲動列表
     | 'scroll-view'     // scroll-list 舊別名（向後相容 battle-log-main 等既有 JSON）
     | 'image'           // 靜態圖片
