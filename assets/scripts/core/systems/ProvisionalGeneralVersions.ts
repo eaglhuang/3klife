@@ -41,3 +41,16 @@ export function deriveProvisionalVersionTable(generals: ProvisionalGeneralSource
     }
     return records;
 }
+
+/**
+ * 圖鑑的暫定輸入（PROG-2-0719）：版本表取「已知武將」與「名冊武將」的並集，已擁有集合取名冊武將的 Template_ID。
+ * 「已擁有」依 PM 裁定暫定為整份名冊，不只看目前這一位武將。
+ */
+export function galleryInputsFromGenerals(
+    known: ProvisionalGeneralSource[],
+    roster: ProvisionalGeneralSource[],
+): { table: GeneralVersionRecord[]; owned: Set<string> } {
+    const table = deriveProvisionalVersionTable([...known, ...roster]);
+    const owned = new Set(deriveProvisionalVersionTable(roster).map((v) => v.Template_ID));
+    return { table, owned };
+}

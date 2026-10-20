@@ -30,6 +30,7 @@ import { MentorCardDetailController } from '../core/MentorCardDetailController';
 import { GeneralVersionGalleryController } from '../core/GeneralVersionGalleryController';
 import type { GeneralVersionRecord } from '../../core/models/GeneralVersion';
 import { GALLERY_GROUP_SLOTS } from '../../core/systems/GeneralVersionGallery';
+import { galleryInputsFromGenerals } from '../../core/systems/ProvisionalGeneralVersions';
 import { beastForGeneral, formatBeastSummary } from '../../core/systems/BloodlineBeast';
 import { buildFactorHexView, factorHexInputsFromGenes, newlyLitFactorColors, type FactorHexInput } from '../../core/systems/FactorHexPanel';
 import { FactorHexGraphic } from '../components/FactorHexGraphic';
@@ -93,6 +94,10 @@ const BEAST_SUMMARY_POSITION = { x: -240, y: -280 };
 const FACTOR_HEX_NODE_NAME = 'FactorHexGraphic';
 const FACTOR_HEX_RADIUS = 120;
 const FACTOR_HEX_POSITION = { x: -240, y: -160 };
+
+/** 圖鑑入口的暫定位置（PROVISIONAL：畫面沒有預留節點，程式掛在 CharacterDs3Host 下，待 Codex 實機微調） */
+const GALLERY_ENTRY_NODE_NAME = 'GeneralVersionGalleryEntry';
+const GALLERY_ENTRY_POSITION = { x: 240, y: -280 };
 
 type GeneralDetailRuntimeTab = 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitude';
 type GeneralDetailEntrySmokeSource = 'ucuf-nav';
@@ -2614,6 +2619,7 @@ export class LobbyScene extends Component {
         }
 
         this._refreshBeastSummary(config);
+        this._refreshGalleryEntry();
         this._refreshFactorHex(config);
 
         UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] CharacterDs3 smoke selection opened screen host', {
@@ -2688,6 +2694,34 @@ export class LobbyScene extends Component {
         graphic.render(buildFactorHexView(inputs));
         graphic.playUnlockFlash(freshColors);
         this._factorHexInputsByGeneral.set(config.id, inputs);
+    }
+
+    /**
+     * 版本圖鑑入口（GDUI-07 cc 接線）：在武將詳情頁掛一個文字按鈕，點擊後開啟圖鑑。
+     * 版本表與已擁有集合的來源見 galleryInputsFromGenerals（暫定）。
+     */
+    private _refreshGalleryEntry(): void {
+        const hostNode = this._characterDs3Host?.node;
+        if (!hostNode) {
+            return;
+        }
+        let entryNode = hostNode.getChildByName(GALLERY_ENTRY_NODE_NAME);
+        if (!entryNode) {
+            entryNode = new Node(GALLERY_ENTRY_NODE_NAME);
+            entryNode.layer = hostNode.layer;
+            entryNode.parent = hostNode;
+            entryNode.setPosition(GALLERY_ENTRY_POSITION.x, GALLERY_ENTRY_POSITION.y, 0);
+            entryNode.addComponent(UITransform);
+            const label = entryNode.addComponent(Label);
+            label.fontSize = 22;
+            label.string = '版本圖鑑';
+            entryNode.on(Node.EventType.TOUCH_END, () => this._openGalleryFromDetail(), this);
+        }
+    }
+
+    private _openGalleryFromDetail(): void {
+        const { table, owned } = galleryInputsFromGenerals(this._generals, PlayerRosterService.getAll());
+        this.openGeneralVersionGallery(table, owned);
     }
 
     /** 「武將列表」按鈕：顯示玄家已取得武將（源自轉蛋 / PlayerRosterService） */
