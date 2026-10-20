@@ -85,6 +85,8 @@ export interface PlayerSaveSnapshot {
     dynamicRelations?: DynamicRelation[];
     /** Legacy_Count（跨世代成就次數，RET-07）；後加的選填欄位，舊檔讀回為 0 */
     legacyCount?: number;
+    /** 已傳道過的名將 id（MENT-15 一生一次）；後加的選填欄位，舊檔讀回為空陣列 */
+    legendaryMentoringUsedIds?: string[];
     /** 官職狀態（OFC-03）：階位、經驗、解鎖歷史；舊檔沒有此欄位時讀回為階位 1；版號不升（扁平欄位） */
     officerState?: OfficerState;
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
@@ -190,6 +192,11 @@ export function normalizeClearedStageIds(value: unknown): string[] {
 }
 
 /** 收藏武將 id：去重、略過空字串與非字串；壞資料補空陣列（PROG-2-0453） */
+/** 已傳道過的名將 id（MENT-15）：只保留字串，非陣列回傳空陣列 */
+export function normalizeLegendaryMentoringUsedIds(value: unknown): string[] {
+    return Array.isArray(value) ? value.filter((id): id is string => typeof id === 'string') : [];
+}
+
 export function normalizeFavoriteGeneralIds(value: unknown): string[] {
     if (!Array.isArray(value)) return [];
     const seen = new Set<string>();
@@ -346,6 +353,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.officerState !== undefined ? { officerState: normalizeOfficerState(snapshot.officerState) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
+        ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
     };
 }
 

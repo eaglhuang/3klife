@@ -90,7 +90,8 @@ import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../sy
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
@@ -368,6 +369,8 @@ export class GameSession {
     private _gachaRevision = 0;
     /** Legacy_Count（RET-07）：玩家層級的跨世代成就次數 */
     private _legacyCount = 0;
+    /** 已傳道過的名將 id（MENT-15 一生一次） */
+    private _legendaryMentoringUsedIds: string[] = [];
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 名聲（暫定：存於 resources.fame） */
@@ -939,6 +942,7 @@ export class GameSession {
         this._gachaWallet = null;
         this._gachaRevision += 1;
         this._legacyCount = 0;
+        this._legendaryMentoringUsedIds = [];
         this._officerState = initialOfficerState();
         this._military = { ...STARTER_MILITARY };
         this._yearAgingEvents = [];
@@ -2053,6 +2057,7 @@ export class GameSession {
         const pending = this._pendingLifespanEvents.map((event) => ({ generalId: event.generalId, age: event.age }));
         return {
             ...this._createBaseSnapshot(now),
+            ...(this._legendaryMentoringUsedIds.length > 0 ? { legendaryMentoringUsedIds: [...this._legendaryMentoringUsedIds] } : {}),
             military: this.military,
             yearAgingEvents: this._yearAgingEvents.map((event) => ({ ...event })),
             resources: {
@@ -2076,6 +2081,39 @@ export class GameSession {
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
         return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount, this._officerState);
+    }
+
+    /**
+     * 名將傳道（MENT-15）：通過判定才扣 1 張傳道令、名將記入一生一次、子嗣培育紀錄 mentoringModeLog 寫一筆。
+     * 專屬奧義 id 由呼叫端提供（名將資料模型目前沒有專屬奧義欄位）。判定失敗不扣令、不寫入。
+     */
+    public async performLegendaryMentoringFor(
+        generalId: string,
+        childId: string,
+        exclusiveSkillId: string | undefined,
+    ): Promise<{ ok: true; skillId: string } | { ok: false; blocked: LegendaryMentoringBlock }> {
+        const state = this._nurture?.getState();
+        const input = {
+            generalId,
+            exclusiveSkillId,
+            tickets: itemCount(this._inventory, ITEM_LEGENDARY_MENTORING_TICKET),
+            usedGeneralIds: this._legendaryMentoringUsedIds,
+            session: state?.sessions.find((s) => s.childId === childId),
+        };
+        const check = checkLegendaryMentoring(input);
+        if (!check.ok) return { ok: false, blocked: check.blocked ?? 'NOT_NURTURING' };
+        const outcome = performLegendaryMentoring(input);
+        if (!state || !outcome) return { ok: false, blocked: 'NOT_NURTURING' };
+        this._nurture!.restoreState({
+            ...state,
+            sessions: state.sessions.map((s) => (s.childId === childId ? outcome.session : s)),
+        });
+        this._inventory = consumeItem(this._inventory, ITEM_LEGENDARY_MENTORING_TICKET) ?? this._inventory;
+        this._legendaryMentoringUsedIds = outcome.usedGeneralIds;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, skillId: outcome.skillId };
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -2112,6 +2150,7 @@ export class GameSession {
         this._discoveryLevel = progress.level;
         this._discoveryExp = progress.exp;
         this._inventory = normalizeInventory(snapshot.inventory);
+        this._legendaryMentoringUsedIds = (snapshot.legendaryMentoringUsedIds ?? []).filter((id) => typeof id === 'string');
         this._oracleCount = snapshot.oracleCount ?? 0;
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
         this._favoriteGeneralIds = normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds);
