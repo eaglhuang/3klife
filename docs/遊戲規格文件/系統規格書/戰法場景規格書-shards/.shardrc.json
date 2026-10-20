@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "source": "../戰法場景規格書.md",
+  "indexTitle": "戰法場景規格書",
+  "indexPath": "docs/遊戲規格文件/系統規格書/戰法場景規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "ac",
+  "defaultShard": "meta",
+  "shards": [
+    {
+      "name": "ac",
+      "title": "A–C",
+      "pattern": "^[A-C]\\."
+    },
+    {
+      "name": "df",
+      "title": "D–F",
+      "pattern": "^[D-F]\\."
+    },
+    {
+      "name": "meta",
+      "title": "MCQ 與實作紀錄",
+      "pattern": "."
+    }
+  ]
+}

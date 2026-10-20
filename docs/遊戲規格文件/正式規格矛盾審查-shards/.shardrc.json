@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "source": "../正式規格矛盾審查.md",
+  "indexTitle": "正式規格矛盾審查",
+  "indexPath": "docs/遊戲規格文件/正式規格矛盾審查.md",
+  "type": "markdown-h2",
+  "preambleShard": "s1",
+  "defaultShard": "s1",
+  "shards": [
+    {
+      "name": "s1",
+      "title": "1. 本輪已修正",
+      "pattern": "^1\\."
+    },
+    {
+      "name": "s2",
+      "title": "2. 仍待處理",
+      "pattern": "^2\\."
+    },
+    {
+      "name": "s3",
+      "title": "3. 審查結論",
+      "pattern": "^3\\."
+    }
+  ]
+}
