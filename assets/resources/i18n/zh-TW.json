@@ -119,7 +119,11 @@
   "ui.general.bloodline.ep_locked":        "🔒 未公開",
   "ui.general.bloodline.awakening":        "覺醒名號：",
   "ui.general.bloodline.awakening_locked": "🔒 待覺醒",
-
+  "ui.general.bloodline.hidden_factor": "隱藏因子：",
+  "ui.general.bloodline.hidden_factor_none": "尚未覺醒",
+  "ui.general.bloodline.hidden_factor.undefeated": "不敗",
+  "ui.general.bloodline.hidden_factor.iron_wall": "鐵壁",
+  "ui.general.bloodline.hidden_factor.killing_intent": "殺意",
   "ui.general.extended.hp":                "目前 HP：",
   "ui.general.extended.sp":                "目前 SP：",
   "ui.general.extended.atk":               "攻擊加成：",
