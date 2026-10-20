@@ -26,6 +26,8 @@ import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from 
 import { addOfficerExp, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
+import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
+import type { HallBoardKey, HallGateTask, HallPlayerState } from '../systems/HallMissionBoard';
 import { battleIntelligenceOf } from '../systems/BattleRoster';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
@@ -1194,6 +1196,25 @@ export class GameSession {
             this._emit(GAME_SESSION_EVENTS.OfficerPromoted, { tiers: promoted });
         }
         return promoted;
+    }
+
+    /**
+     * 大廳任務派遣（暫定即時結算）：通過派遣條件後指派武將，再依成敗結算官職經驗。
+     * 阻擋時不指派、不結算。
+     */
+    public async dispatchHallTask(
+        task: HallGateTask,
+        board: HallBoardKey,
+        player: Readonly<HallPlayerState>,
+        generalId: string | null,
+        generalPower: number,
+    ): Promise<HallDispatchResult> {
+        const result = resolveHallDispatch(task, player, board, generalId, generalPower);
+        if (!result.ok || generalId === null) return result;
+        const assigned = await this.assignHallTask(task.Task_ID, generalId);
+        if (!assigned) return { ok: false, reason: 'NO_GENERAL' };
+        this.settleHallMission(result.outcome);
+        return result;
     }
 
     /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */

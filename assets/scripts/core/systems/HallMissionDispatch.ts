@@ -13,6 +13,7 @@
  * Resolve 不呼叫 Random，方便重播與測試。
  */
 import { getVisibleHallTasks, type HallBoardKey, type HallGateTask, type HallPlayerState } from './HallMissionBoard';
+import type { HallMissionOutcome } from './HallMissionSettlement';
 
 export type HallDispatchBlockReason = 'NOT_VISIBLE' | 'ALREADY_ACCEPTED' | 'NO_GENERAL';
 
@@ -29,6 +30,21 @@ export function canDispatchHallTask(
     if (task.Is_Accepted) return { ok: false, reason: 'ALREADY_ACCEPTED' };
     if (!generalId) return { ok: false, reason: 'NO_GENERAL' };
     return { ok: true };
+}
+
+export type HallDispatchResult = { ok: true; outcome: HallMissionOutcome } | { ok: false; reason: HallDispatchBlockReason };
+
+/** 派遣並判定結果（暫定：派遣即結算）；通過條件才判定，阻擋時不產生結果。 */
+export function resolveHallDispatch(
+    task: HallGateTask,
+    player: Readonly<HallPlayerState>,
+    board: HallBoardKey,
+    generalId: string | null,
+    generalPower: number,
+): HallDispatchResult {
+    const check = canDispatchHallTask(task, player, board, generalId);
+    if (!check.ok) return check;
+    return { ok: true, outcome: { difficulty: task.Difficulty, board, success: judgeHallMissionSuccess(task.Difficulty, generalPower) } };
 }
 
 /** 暫定難度門檻：武將戰力需達到的數值。 */
