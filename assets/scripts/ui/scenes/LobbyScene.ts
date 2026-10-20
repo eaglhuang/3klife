@@ -30,6 +30,7 @@ import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { attachSupportToCards, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
 import { NurtureFlowController } from '../core/NurtureFlowController';
+import { VitalityPillController } from '../core/VitalityPillController';
 import { MentorCardDetailController } from '../core/MentorCardDetailController';
 import { GeneralVersionGalleryController } from '../core/GeneralVersionGalleryController';
 import type { GeneralVersionRecord } from '../../core/models/GeneralVersion';
@@ -481,6 +482,7 @@ export class LobbyScene extends Component {
             } },
             ...trainBindings,
             { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
+            { buttonId: 'btnUsePill', handler: () => { void this._usePillOnNurtureChild(flow); } },
             { buttonId: 'btnAbandon', handler: act(() => flow.abandon()) },
             { buttonId: 'btnGraduate', handler: act(() => flow.graduate()) },
             { buttonId: 'btnKeepReport', handler: act(() => flow.keepReport()) },
@@ -647,6 +649,17 @@ export class LobbyScene extends Component {
         if (this._nurtureFlowHost) {
             this._nurtureFlowHost.node.active = false;
         }
+    }
+
+    /** 培育畫面的補元散鈕：對目前選中的子嗣使用一顆補元散，結果以劇本 toast 顯示（PROG-2-0733） */
+    private async _usePillOnNurtureChild(flow: NurtureFlowController): Promise<void> {
+        const childId = flow.selectedId;
+        if (!childId) return;
+        const name = services().session.roster.find((g) => g.id === childId)?.name ?? '';
+        const pill = new VitalityPillController({ session: services().session, text: breedText() });
+        const message = await pill.use(childId, 'vitalityPill', name);
+        services().event.emit('SHOW_TOAST', { message, duration: 2 });
+        this._refreshNurtureFlow();
     }
 
     private _refreshNurtureFlow(): void {
