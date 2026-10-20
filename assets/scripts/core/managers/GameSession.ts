@@ -25,6 +25,7 @@
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
 import { addOfficerExp, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
+import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
 import { battleIntelligenceOf } from '../systems/BattleRoster';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
@@ -92,6 +93,7 @@ import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
+import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
@@ -129,6 +131,8 @@ import {
 export const GAME_SESSION_EVENTS = {
     /** payload: SeasonAdvancedPayload */
     SeasonAdvanced: 'game-session-season-advanced',
+    /** payload: { tiers: number[] }（大廳任務結算後官職晉升，OFC-08 提示用） */
+    OfficerPromoted: 'game-session-officer-promoted',
     /** payload: YearReport（第 4 季結束時發出；養成線 FEM-06 等年度掛點接在這裡） */
     YearEnded: 'game-session-year-ended',
     /** payload: AgingEvent（type = reached-retirement-age） */
@@ -371,6 +375,8 @@ export class GameSession {
     private _legacyCount = 0;
     /** 已傳道過的名將 id（MENT-15 一生一次） */
     private _legendaryMentoringUsedIds: string[] = [];
+    /** 結緣成功的本機端紀錄（BRD-12）；暫定只存在記憶體，尚未寫入存檔 */
+    private _breedingBirthRecords: BreedingBirthRecord[] = [];
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 名聲（暫定：存於 resources.fame） */
@@ -857,6 +863,19 @@ export class GameSession {
         return this._seeded.snapshot().state;
     }
 
+    /** 結緣成功產生子嗣時記下本機紀錄（BRD-12，暫定：只存在記憶體，不送 server） */
+    public recordBreedingBirth(record: BreedingBirthRecord): void {
+        this._breedingBirthRecords.push(record);
+    }
+
+    /** 本局已記下的結緣子嗣紀錄（回傳複本，外部改動不影響內部） */
+    public breedingBirthRecords(): BreedingBirthRecord[] {
+        return this._breedingBirthRecords.map((record) => ({
+            session: { ...record.session, Oracle_Hints: [...record.session.Oracle_Hints] },
+            child: { ...record.child },
+        }));
+    }
+
     public isSageUnlocked(sageId: string): boolean {
         return isSageUnlocked(sageId, this._oracleCount);
     }
@@ -943,6 +962,7 @@ export class GameSession {
         this._gachaRevision += 1;
         this._legacyCount = 0;
         this._legendaryMentoringUsedIds = [];
+        this._breedingBirthRecords = [];
         this._officerState = initialOfficerState();
         this._military = { ...STARTER_MILITARY };
         this._yearAgingEvents = [];
@@ -1160,6 +1180,20 @@ export class GameSession {
         const result = addOfficerExp(this._officerState, calcOfficerExpGain(task));
         this._officerState = result.state;
         return result.promotedTiers;
+    }
+
+    /**
+     * 大廳任務結算（OFC-08）：任務完成或失敗都會入帳官職經驗；晉升時發出 OfficerPromoted。
+     * 無法對應的任務（未知難度或無對應牆）不入帳，回傳空陣列。
+     */
+    public settleHallMission(outcome: HallMissionOutcome): number[] {
+        const task = hallMissionToOfficerTask(outcome);
+        if (!task) return [];
+        const promoted = this.gainOfficerExp(task);
+        if (promoted.length > 0) {
+            this._emit(GAME_SESSION_EVENTS.OfficerPromoted, { tiers: promoted });
+        }
+        return promoted;
     }
 
     /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */

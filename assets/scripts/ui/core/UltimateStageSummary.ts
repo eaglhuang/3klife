@@ -19,6 +19,6 @@ const NEXT_STEP_TEXT: Record<UltimateAwakenReason, string> = {
 export function ultimateStageSummary(raw: { stageCap?: number; stageCurrent?: number } | undefined, progress: UltimateProgressInput): string {
     const state: UltimateState = normalizeUltimateState(raw);
     const check = checkNextStage(state, progress);
-    const next = check.ok === true ? `下一階可點亮` : NEXT_STEP_TEXT[check.reason];
+    const next = check.ok ? `下一階可點亮` : NEXT_STEP_TEXT[(check as { ok: false; reason: keyof typeof NEXT_STEP_TEXT }).reason];
     return `血脈傳承奧義：已點亮 ${state.stageCurrent} / ${ULTIMATE_MAX_STAGE} 階（上限 ${state.stageCap}），${next}`;
 }

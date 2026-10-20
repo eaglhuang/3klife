@@ -32,6 +32,7 @@ import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
 import { analyzeTagResonance, KIN_RESONANCE_MIN_COUNT } from './KinRelation';
 import { baseVitalityMaxOf } from './VitalityCap';
 import { rollWildGene, STAR_JUMP_MAX_LEVEL, STAR_JUMP_STEP } from './WildGene';
+import { luckThresholdEffects, type LuckThresholdEffects } from './LuckThresholds';
 
 export const BREEDING_MIN_AGE = 20;
 export const FATHER_VIGOR_COST = 50;
@@ -522,6 +523,8 @@ export interface BreedingResult {
     childPedigree?: Pedigree;
     ep?: EpBreakdown;
     factors?: InheritedFactor[];
+    /** 運氣特殊門檻旗標（LUK-06）：依父母平均 LUK 判定，只在受孕成功時有值；效果本身另卡套用 */
+    luckEffects?: LuckThresholdEffects;
 }
 
 /** 預覽 EP（結緣介面用），不消耗亂數也不改任何資料 */
@@ -640,7 +643,10 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         birthSeason: request.birthSeason,
     });
 
-    return { outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: finalFactors };
+    return {
+        outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: finalFactors,
+        luckEffects: luckThresholdEffects(parentAvgLuk),
+    };
 }
 
 /**
