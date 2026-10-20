@@ -58,6 +58,37 @@
       "children": [
         { "type": "label", "name": "SkillNoteValue", "width": "100%", "height": 44, "styleSlot": "detail.label.note", "wrapText": true }
       ]
+    },
+    {
+      "type": "panel",
+      "name": "UltimateStageCard",
+      "width": "100%",
+      "height": 142,
+      "skinSlot": "detail.section.bg",
+      "layout": { "type": "vertical", "spacing": 6, "paddingTop": 8, "paddingBottom": 8, "paddingLeft": 14, "paddingRight": 14 },
+      "children": [
+        { "type": "label", "name": "UltimateActionValue", "width": "100%", "height": 40, "styleSlot": "detail.label.valueDense", "wrapText": true },
+        {
+          "type": "button",
+          "name": "UltimateAwakenButton",
+          "width": "100%",
+          "height": 36,
+          "skinSlot": "detail.button.primary",
+          "children": [
+            { "type": "label", "name": "UltimateAwakenLabel", "widget": { "vCenter": true, "left": 0, "right": 0 }, "height": 16, "styleSlot": "detail.label.button", "text": "點亮下一階" }
+          ]
+        },
+        {
+          "type": "button",
+          "name": "UltimateRaiseButton",
+          "width": "100%",
+          "height": 36,
+          "skinSlot": "detail.button.primary",
+          "children": [
+            { "type": "label", "name": "UltimateRaiseLabel", "widget": { "vCenter": true, "left": 0, "right": 0 }, "height": 16, "styleSlot": "detail.label.button", "text": "升星提高上限" }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -58,6 +58,19 @@
           },
           {
             "type": "label",
+            "name": "SeasonEffectLabel",
+            "id": "seasonEffectLabel",
+            "widget": {
+              "top": 104,
+              "left": 12,
+              "right": 12
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "season.hud.label.mode"
+          },
+          {
+            "type": "label",
             "name": "CountdownIconLabel",
             "id": "countdownIconLabel",
             "widget": {
