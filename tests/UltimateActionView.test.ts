@@ -51,7 +51,7 @@ export function createUltimateActionViewSuite(): TestSuite {
     });
 
     suite.test('升星素材有值時，升星按鈕標示需要的素材，仍然鎖定', () => {
-        const view = ultimateActionView({ stageCap: 5, stageCurrent: 1 }, enough, 'TEMPLATE_CARD');
+        const view = ultimateActionView({ stageCap: 5, stageCurrent: 1 }, enough, undefined, 'TEMPLATE_CARD');
         assert.equals(STAR_UP_MATERIAL_TEXT.TEMPLATE_CARD, view.raiseLabel);
         assert.isFalse(view.raiseEnabled);
     });

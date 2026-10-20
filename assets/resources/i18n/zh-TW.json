@@ -306,5 +306,16 @@
   "ui.general.nurture.record.tp_unknown": "TP 未紀錄",
   "ui.general.nurture.record.tp": "TP {0}",
   "ui.general.nurture.record.revelation_none": "未揭露",
-  "ui.general.nurture.record.revelation": "揭露第 {0} 層"
+  "ui.general.nurture.record.revelation": "揭露第 {0} 層",
+  "ui.general.ultimate.head": "血脈傳承奧義：已點亮 {0} / {1} 階（上限 {2}）",
+  "ui.general.ultimate.summary": "{0}，{1}",
+  "ui.general.ultimate.next_ready": "下一階可點亮",
+  "ui.general.ultimate.next.cap_locked": "需先升星提高上限",
+  "ui.general.ultimate.next.already_max": "已全部點亮",
+  "ui.general.ultimate.next.fame_short": "名聲不足",
+  "ui.general.ultimate.next.incident_short": "事蹟不足",
+  "ui.general.ultimate.next.epic_required": "需要一次史詩事蹟",
+  "ui.general.ultimate.awaken_label": "點亮第 {0} 階",
+  "ui.general.ultimate.awaken_blocked": "條件未達成",
+  "ui.general.ultimate.raise_locked": "升星提高上限（來源待裁決，暫未開放）"
 }
