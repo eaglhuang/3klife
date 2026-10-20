@@ -9,6 +9,7 @@ import {
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleUnitSpawner, type TroopDataTable } from '../runtime/BattleUnitSpawner';
+import { applySoloBreachAtTurnStart } from '../runtime/BattleSoloBreach';
 import { BattleState, TerrainGrid } from "../models/BattleState";
 import type { BattleResult } from "../BattleTypes";
 import { detectWeatherTransition, validateWeatherSchedule, weatherForTurn, type WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
@@ -920,6 +921,11 @@ export class BattleController {
     this.applyWeatherForTurn(svc.battle.getSnapshot().turn);
     this.turnManager.refreshForNextTurn();
     this.orderRefusedThisTurn = this.rollOrderRefusal();
+    applySoloBreachAtTurnStart(
+      [...this.combatResolver.getFactionUnits(Faction.Player), ...this.combatResolver.getFactionUnits(Faction.Enemy)],
+      this.state.getGeneral(Faction.Player)?.id ?? null,
+      this.playerGeneralUnitId,
+    );
     this.tileBuffLifecycleManager.spawnTileBuffsForTurn();
   }
 

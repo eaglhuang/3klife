@@ -29,6 +29,7 @@ import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeDynamicRelations } from '../systems/KinDynamicRelations';
 import { normalizeLegacyCount } from '../systems/LegacyAchievement';
+import { initialOfficerState, normalizeOfficerState, type OfficerState } from '../systems/OfficerState';
 import type { DynamicRelation } from '../systems/KinRelation';
 import { normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
@@ -86,6 +87,8 @@ export interface PlayerSaveSnapshot {
     legacyCount?: number;
     /** 已傳道過的名將 id（MENT-15 一生一次）；後加的選填欄位，舊檔讀回為空陣列 */
     legendaryMentoringUsedIds?: string[];
+    /** 官職狀態（OFC-03）：階位、經驗、解鎖歷史；舊檔沒有此欄位時讀回為階位 1；版號不升（扁平欄位） */
+    officerState?: OfficerState;
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
@@ -245,6 +248,7 @@ export function createPlayerSaveSnapshot(
     hallAssignments: Readonly<Record<string, string>> = {},
     dynamicRelations: readonly DynamicRelation[] = [],
     legacyCount = 0,
+    officerState: Readonly<OfficerState> = initialOfficerState(),
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -272,6 +276,7 @@ export function createPlayerSaveSnapshot(
         ...(Object.keys(normalizeHallAssignments(hallAssignments)).length > 0 ? { hallAssignments: normalizeHallAssignments(hallAssignments) } : {}),
         ...(dynamicRelations.length > 0 ? { dynamicRelations: normalizeDynamicRelations(dynamicRelations) } : {}),
         ...(normalizeLegacyCount(legacyCount) > 0 ? { legacyCount: normalizeLegacyCount(legacyCount) } : {}),
+        ...(officerState.currentTier > 1 || officerState.officerExp > 0 ? { officerState: normalizeOfficerState(officerState) } : {}),
     };
 }
 
@@ -345,6 +350,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.hallAssignments !== undefined ? { hallAssignments: normalizeHallAssignments(snapshot.hallAssignments) } : {}),
         ...(snapshot.dynamicRelations !== undefined ? { dynamicRelations: normalizeDynamicRelations(snapshot.dynamicRelations) } : {}),
         ...(snapshot.legacyCount !== undefined ? { legacyCount: normalizeLegacyCount(snapshot.legacyCount) } : {}),
+        ...(snapshot.officerState !== undefined ? { officerState: normalizeOfficerState(snapshot.officerState) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),

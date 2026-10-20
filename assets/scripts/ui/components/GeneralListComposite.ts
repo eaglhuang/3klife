@@ -678,7 +678,7 @@ export class GeneralListComposite extends CompositePanel {
     }
 
     private async _retireSelected(): Promise<void> {
-        // 退役後武將會轉成教官卡、離開名冊，所以退役前先留快照給退役回顧畫面
+        // 退役後武將仍留在名冊（標 isMentorCard），退役前先留快照給退役回顧畫面
         const retiring = this._retirementFlow.selected;
         const pending = this._retirementFlow.retire();
         this._refreshRetirementToolbar();
