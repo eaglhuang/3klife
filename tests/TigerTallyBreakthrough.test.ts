@@ -1,5 +1,5 @@
 /**
- * TigerTallyBreakthrough — 虎符 4★→5★ 精華突破（TRP-11 / PROG-2-0851）的 headless 測試
+ * TigerTallyBreakthrough — 虎符 4★→5★ 精華突破（TRP-11 / PROG-2-0839）的 headless 測試
  *
  * 鎖住：成功率 80% / UR 90%、失敗扣一半材料、保底符必成功、材料與品質封頂的阻擋、不擲骰。
  */
