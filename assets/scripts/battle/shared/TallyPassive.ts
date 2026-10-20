@@ -16,12 +16,16 @@ const ARCHER_ATTACK_RANGE = 2;
 export interface TallyPassiveSpec {
   /** 射程下限：攻擊射程至少提高到這個值 */
   attackRangeFloor?: number;
+  /** 結姻連射：與男性武將相鄰時，每次攻擊額外多打的次數 */
+  extraHitWhenAdjacentMale?: number;
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
 export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec>> = {
   // 騎射合一：騎兵保留騎兵移動力，攻擊射程改用弓兵射程
   'tiger-tally-bai-ma': { attackRangeFloor: ARCHER_ATTACK_RANGE },
+  // 結姻連射：與男性武將相鄰時攻擊次數 +1（每次攻擊判定，不是出陣時套用）
+  'tiger-tally-jiao-ji': { extraHitWhenAdjacentMale: 1 },
 };
 
 /** 把虎符被動套到部隊上；沒有被動或沒有模板 id 時什麼都不做 */
@@ -31,4 +35,14 @@ export function applyTallyPassive(unit: TroopUnit, templateId: string | null): v
   if (spec.attackRangeFloor !== undefined) {
     unit.attackRange = Math.max(unit.attackRange, spec.attackRangeFloor);
   }
+}
+
+/**
+ * 額外攻擊次數（結姻連射）：沒有此被動、或不與男性武將相鄰時為 0。
+ * 相鄰判定由戰鬥解算端算好傳入（武將不在格子上，要看所屬陣營的主將位置）。
+ */
+export function extraAttackHitsOf(unit: TroopUnit, adjacentToMaleGeneral: boolean): number {
+  const spec = unit.tallyTemplateId ? TALLY_PASSIVE_BY_TEMPLATE[unit.tallyTemplateId] : undefined;
+  if (!spec?.extraHitWhenAdjacentMale || !adjacentToMaleGeneral) return 0;
+  return spec.extraHitWhenAdjacentMale;
 }
