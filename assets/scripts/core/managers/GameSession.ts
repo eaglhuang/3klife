@@ -83,6 +83,7 @@ import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
+import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
@@ -1274,6 +1275,33 @@ export class GameSession {
             discoveryLevel: () => this._discoveryLevel,
             onAwakened: (event) => this._emit(GAME_SESSION_EVENTS.FactorAwakened, event),
         };
+    }
+
+    /**
+     * 血脈歸宗（BLT-11）：V1 取得 V2 的一個因子，V2 記為已歸宗。歸宗令先不扣（待辦）。
+     * 失敗回傳原因、不改名冊；成功才改名冊、存檔。
+     */
+    public async mergeBloodlineFor(
+        v1Id: string,
+        v2Id: string,
+    ): Promise<{ ok: true; transferredFactor: string } | { ok: false; reason: BloodlineMergeRejectReason | 'NOT_FOUND' }> {
+        const roster = this._roster.getAll();
+        const v1 = roster.find((g) => g.id === v1Id);
+        const v2 = roster.find((g) => g.id === v2Id);
+        if (!v1 || !v2) return { ok: false, reason: 'NOT_FOUND' };
+        const plan = planBloodlineMergeForGenerals(v1, v2);
+        if (!plan.ok) return plan;
+        const v2Gene = (v2.genes ?? []).find((g) => g.id === plan.transferredFactor);
+        const updated = roster.map((g) => {
+            if (g.id === v1Id) return { ...g, genes: [...(g.genes ?? []), ...(v2Gene ? [{ ...v2Gene }] : [])] };
+            if (g.id === v2Id) return { ...g, mergedOutFactors: plan.v2MergedOut };
+            return g;
+        });
+        this._roster.replaceAll(updated);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, transferredFactor: plan.transferredFactor };
     }
 
     /** 覺醒名冊中某位武將的鎖定因子；失敗回傳原因，成功才改名冊、存檔並廣播 */

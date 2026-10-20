@@ -3,6 +3,7 @@ import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
 import { advanceFormationZonesOf } from '../../shared/FormationZone';
+import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 
 export interface BattleTileEffectPhaseContext {
   readonly state: BattleState;
@@ -51,6 +52,30 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
       allowDamageLink: true,
     });
 
+    if (unit.isDead() && !killedIds.has(unit.id)) {
+      killedIds.add(unit.id);
+      killed.push(unit);
+    }
+  }
+
+  // 毒箭（PROG-2-0766）：所屬陣營的中毒單位在本階段結算
+  for (const [unitId, dot] of [...context.state.unitDots]) {
+    const unit = context.state.units.get(unitId);
+    if (!unit || unit.faction !== context.actingFaction) continue;
+    if (unit.isDead()) {
+      context.state.unitDots.delete(unitId);
+      continue;
+    }
+    context.applyUnitDamage(unit, dotTickAmount(unit.maxHp, dot.ratio), null, {
+      attackerId: null,
+      attackerLane: null,
+      attackerDepth: null,
+      damageSource: 'poison',
+      allowDamageLink: false,
+    });
+    if (!advanceUnitDot(dot)) {
+      context.state.unitDots.delete(unitId);
+    }
     if (unit.isDead() && !killedIds.has(unit.id)) {
       killedIds.add(unit.id);
       killed.push(unit);

@@ -8,7 +8,7 @@ import type { AgingEvent } from '../assets/scripts/core/systems/GeneralAging';
 import type { BreedingGeneral } from '../assets/scripts/core/systems/BreedingSystem';
 import { isTallyEligible } from '../assets/scripts/core/systems/TigerTally';
 
-type TestGeneral = BreedingGeneral & { uid?: string; isHistorical?: boolean; troopType?: string };
+type TestGeneral = BreedingGeneral & { uid?: string; isHistorical?: boolean; troopType?: string; maxLifespan?: number };
 
 function general(id = 'hero', extra: Partial<TestGeneral> = {}): TestGeneral {
     return {
