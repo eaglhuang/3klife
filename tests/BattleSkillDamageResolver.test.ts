@@ -59,11 +59,11 @@ export function createBattleSkillDamageResolverSuite(): TestSuite {
     assert.equals(74, damage);
   });
 
-  suite.test('critBonus：tally-hundred-steps 傷害含 flat 50% 爆擊加成', () => {
+  suite.test('爆擊率加成：tally-hundred-steps 擲中時傷害 ×1.5（92→138）', () => {
     const profile = resolveBattleSkillProfile('tally-hundred-steps');
     assert.isDefined(profile);
     // str:100, lea:80 → base=94; coeff 1.2 → scaledAttack=floor(94*1.2)=112
-    // defense=20; baseDamage=max(1,112-20)=92; critBonus=0.5 → max(1,floor(92*1.5))=138
+    // defense=20; baseDamage=max(1,112-20)=92; 擲中（0 < 55%）→ max(1,floor(92*1.5))=138
     const caster = createTestGeneral('test-hundred', Faction.Player, { str: 100, lea: 80 });
     const target = createTestUnit('enemy', Faction.Enemy, 2, 3, { defense: 20 });
     const bundle = createBattleSkillTestContext({
@@ -71,8 +71,21 @@ export function createBattleSkillDamageResolverSuite(): TestSuite {
       enemyGeneral: createTestGeneral('enemy-general', Faction.Enemy),
       units: [target],
     });
-    const damage = resolver.resolveDamage(profile!, caster, target, bundle.context, 0);
+    const damage = resolver.resolveDamage(profile!, caster, target, { ...bundle.context, randomSource: () => 0 }, 0);
     assert.equals(138, damage);
+  });
+
+  suite.test('爆擊率加成：未擲中時傷害不變（92）；沒有亂數源時不爆擊', () => {
+    const profile = resolveBattleSkillProfile('tally-hundred-steps');
+    const caster = createTestGeneral('test-hundred', Faction.Player, { str: 100, lea: 80 });
+    const target = createTestUnit('enemy', Faction.Enemy, 2, 3, { defense: 20 });
+    const bundle = createBattleSkillTestContext({
+      playerGeneral: caster,
+      enemyGeneral: createTestGeneral('enemy-general', Faction.Enemy),
+      units: [target],
+    });
+    assert.equals(92, resolver.resolveDamage(profile!, caster, target, { ...bundle.context, randomSource: () => 0.99 }, 0));
+    assert.equals(92, resolver.resolveDamage(profile!, caster, target, bundle.context, 0));
   });
   return suite;
 }

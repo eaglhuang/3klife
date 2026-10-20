@@ -4,6 +4,7 @@ import { fateBlessingLevel, fateDamageMultiplier } from '../../core/systems/Fate
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { TroopUnit } from '../../core/models/TroopUnit';
 import { FormulaSystem } from '../../core/systems/FormulaSystem';
+import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import type { SkillScalingStat } from '../../shared/SkillRuntimeContract';
 import type { BattleSkillExecutionContext } from './BattleSkillResolver';
 import type { BattleSkillProfile } from './BattleSkillProfiles';
@@ -48,8 +49,10 @@ export class BattleSkillDamageResolver {
       : 1;
     const fated = fateMultiplier === 1 ? weathered : Math.max(1, Math.floor(weathered * fateMultiplier));
 
-    if (profile.critBonus) {
-      return Math.max(1, Math.floor(fated * (1 + profile.critBonus)));
+    // 爆擊率加成（百步穿楊 +50%）：以基礎爆擊率加成後擲骰，爆擊 ×1.5；沒有亂數源的測試 context 視為不爆擊
+    if (profile.critRateBonus && context.randomSource) {
+      const rate = critRateOf(profile.critRateBonus);
+      return rollCrit(rate, context.randomSource) ? critDamageOf(fated) : fated;
     }
     return fated;
   }
