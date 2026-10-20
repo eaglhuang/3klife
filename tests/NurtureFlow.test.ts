@@ -147,9 +147,9 @@ export function createNurtureFlowSuite(): TestSuite {
         assert.isTrue(view.texts.fateStats.includes('武力 60'));
         assert.isTrue(view.texts.fateStats.includes('運氣 30'));
         // str+lea = 115 > int+pol = 90 → 武官
-        assert.equals('天命建議：武官', view.texts.fateRecommend);
-        assert.isTrue(view.texts.fateAcceptLabel.includes('武官'));
-        assert.isTrue(view.texts.fateDefyLabel.includes('文官'));
+        assert.equals('天命分流：武官', view.texts.fateRecommend);
+        assert.equals('順應天命（成長率正常）', view.texts.fateAcceptLabel);
+        assert.equals('逆天而行（成長率 -20%，有機率大器晚成）', view.texts.fateDefyLabel);
         assert.isTrue(view.texts.fateDefyHint.includes('0.8'));
         assert.isTrue(view.enabled.btnFateAccept);
         assert.isTrue(view.enabled.btnFateDefy);
