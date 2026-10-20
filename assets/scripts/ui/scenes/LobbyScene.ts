@@ -3482,6 +3482,7 @@ export class LobbyScene extends Component {
             weather: normalizeWeather(encounter.weather) ?? DEFAULT_BATTLE_ENTRY_PARAMS.weather,
             battleTactic: battleTactic ?? encounter.battleTactic ?? DEFAULT_BATTLE_ENTRY_PARAMS.battleTactic,
             backgroundId: battleTactic === BattleTactic.FloodAttack ? undefined : encounter.backgroundId,
+            campaignStageId: services().session.resolveCampaignStage(encounter.campaignStage).id,
             tutorial: isTutorialBattle(services().session.clearedStageIds),
         };
     }

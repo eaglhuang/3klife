@@ -37,6 +37,11 @@ export function enabledCampaignStages(): CampaignStageDef[] {
     return CAMPAIGN_STAGES.filter(stage => stage.enabled);
 }
 
+/** 指定 id 的階段存在且已啟用時為 true */
+export function isCampaignStagePlayable(id: string): boolean {
+    return getCampaignStage(id)?.enabled === true;
+}
+
 /** 依規格順序取下一個階段；已是最後一階段或未知 id 回傳 null */
 export function nextCampaignStage(id: string): CampaignStageDef | null {
     const index = CAMPAIGN_STAGES.findIndex(stage => stage.id === id);
