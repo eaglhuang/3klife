@@ -36,7 +36,8 @@ export class TroopUnit {
   
   // 新增屬性：移動力與攻擊距離
   public readonly moveRange: number;
-  public readonly attackRange: number;
+  /** 攻擊射程；虎符被動（騎射合一）可把它提高到弓兵射程，故不設 readonly */
+  public attackRange: number;
   public attackBonus = 0;
   public maxHpBonus = 0;
   public moveRangeBonus = 0;
