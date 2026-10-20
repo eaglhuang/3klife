@@ -11,7 +11,7 @@ import {
     mergeBloodlineGene,
     MergeGeneral,
     MergeSourceGeneral,
-} from '../assets/scripts/core/models/BloodlineMerge';
+} from '../assets/scripts/core/models/SameBloodlineMerge';
 
 function v1(overrides: Partial<MergeGeneral> = {}): MergeGeneral {
     return { templateId: 'TPL_ZY_A', bloodlineId: 'BL_ZhaoYun', genes: ['G_RED'], mergeTokens: 1, ...overrides };
@@ -30,8 +30,8 @@ function reasonOf(result: BloodlineMergeResult): string {
     return result.ok ? 'OK' : result.reason;
 }
 
-export function createBloodlineMergeSuite(): TestSuite {
-    const suite = new TestSuite('BloodlineMerge (血脈歸宗 SAME-09)');
+export function createSameBloodlineMergeSuite(): TestSuite {
+    const suite = new TestSuite('SameBloodlineMerge (血脈歸宗 SAME-09)');
 
     suite.test('成功：V1 獲得因子並扣一張歸宗令；V2 保留該因子並標記已歸宗', () => {
         const result = mergeBloodlineGene(v1(), v2(), 'G_WHITE');
