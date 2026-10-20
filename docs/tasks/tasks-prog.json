@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 50,
-    "total": 86
+    "open": 52,
+    "total": 88
   },
   "tasks": [
     {
@@ -3419,6 +3419,62 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0146/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0147",
+      "title": "實機驗收：BRD-09 批語面板（PROG-2-0822、#575）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "結緣介面名士批語與提示的顯示時機、文字與版位需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #575",
+        "PROG-2-0822"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0147.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0147/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0148",
+      "title": "實機驗收：BRD-09 天象異變通知（PROG-2-0823、#577）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "結緣成功通知的天象異變顯示時機、文字與版位需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #577",
+        "PROG-2-0823"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0148.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0148/**"
       ],
       "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     }
