@@ -248,5 +248,16 @@
   "ui.season.spring": "春——万物復甦",
   "ui.season.summer": "夏——烽火連天",
   "ui.season.autumn": "秋——騎馬疾走",
-  "ui.season.winter": "冬——雪夜駐兵"
+  "ui.season.winter": "冬——雪夜駐兵",
+  "ui.fate.script.reveal": "天命の導き：{0}は{1}として生まれ、{2}の道が向いている。",
+  "ui.fate.script.defy": "主君は天に逆らった！{0}の成長の道はさらに険しくなる…",
+  "ui.fate.script.job_change": "{0}は二十歳の成人の儀で、副業として{1}を選んだ。",
+  "ui.fate.script.retire_weapon": "{0}は刃を置き、虎符となった。その戦技は永く伝わる。",
+  "ui.fate.script.retire_scroll": "{0}は竹簡を置いた。その知恵は墨香となって後世に伝わる。",
+  "ui.fate.reveal": "天命の分岐：{0}",
+  "ui.fate.accept": "天命に順う（成長率は通常）",
+  "ui.fate.defy": "天に逆らう（成長率 -20%、大器晩成の見込みあり）",
+  "ui.fate.job_change": "転職令 ×1 を消費し、副職能を追加：{0}",
+  "ui.fate.retire_weapon": "虎符を獲得：{0}",
+  "ui.fate.retire_scroll": "竹簡を獲得：{0}"
 }
