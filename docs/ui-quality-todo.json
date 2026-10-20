@@ -1,11 +1,16 @@
 {
   "kind": "ui-quality-task-manifest",
   "version": 1,
-  "generated": "2026-05-18T01:55:40.299Z",
+  "generated": "2026-10-20T23:03:33.238Z",
   "_note": "Thin index. Full task data is in docs/ui-quality-tasks/*.json shards.",
   "_usage": "Read specific shard: docs/ui-quality-tasks/<shard>.json",
   "_rebuild": "node tools_node/build-ui-task-manifest.js",
   "shards": [
+    {
+      "file": "docs\\ui-quality-tasks\\HARN-UI-9001.json",
+      "version": 1,
+      "taskCount": 1
+    },
     {
       "file": "docs\\ui-quality-tasks\\phase-dc-datacenter-0.json",
       "version": 1,
@@ -53,6 +58,7 @@
     }
   ],
   "summary": {
+    "planned": 1,
     "done": 35,
     "in-progress": 3,
     "open": 17

@@ -1,0 +1,79 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "HARN-UI-9001",
+      "title": "人物頁 chrome 與擷取診斷拆分",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "planned",
+      "type": "refactor",
+      "phase": "M6",
+      "created": "2026-10-20",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "不新增 DS3 選人功能",
+        "不修改其他驗收卡",
+        "不改共用 browser core 或遊戲載入 timeout",
+        "完整測試與實機擷取成功"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/components/GeneralDetailComposite.ts",
+        "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts",
+        "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts.meta",
+        "tools_node/capture-ui-screens.js",
+        "tools_node/lib/ui-capture-diagnostics.js",
+        "tests/ucuf/architectureGovernance.test.ts",
+        "tests/ucuf/fixtures/architectureEngineStubs.ts",
+        "tests/ucuf/generalDetailChromePresenter.test.ts"
+      ],
+      "notes": "2026-10-20 | 狀態: planned | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+      "brief": {
+        "style": "harn-rich",
+        "label": "",
+        "summary": "在最新 master 基準交付已保存的行為不變抽取。正式 PROG-2-0150 退役驗收卡不變。",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [
+          "先正常上鎖與認領並提交 started 欄位",
+          "來源三個舊檔與保存快照基準相同",
+          "規劃文件為 scope 與 closeback 資料而非產品 deliverables"
+        ],
+        "output": [
+          "保留人物頁掛載與可見性及事件 owner",
+          "完整保留既有測試斷言與診斷 schema",
+          "舊檔交付行數上限 696/1453/334 且新模組不超過600行",
+          "擷取呼叫保留其餘 browser args 並允許硬體渲染"
+        ],
+        "validation_cmd": "node node_modules/ts-node/dist/bin.js --project tsconfig.test.json tests/ucuf/generalDetailChromePresenter.test.ts --verify-extraction-ceilings\nnpm run test:ucuf:governance\nnpm run test:ucuf\nnode tools_node/validate-ui-specs.js --strict --check-content-contract\nnode tools_node/compute-gate.js --profile standard --agent-feedback\nnode tools_node/check-general-detail-lobby-flow-smoke.js\ngit diff --check",
+        "rollback_hint": "以正常 Git revert 回復本卡正式交付；保留來源快照供復原。",
+        "execution_steps": [
+          "比對基準與已保存快照",
+          "認領並提交開始欄位",
+          "恢復八個來源檔且檢查雜湊",
+          "執行七個驗證與 Cocos 擷取",
+          "正常 pre-close dry-run close write"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}
