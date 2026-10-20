@@ -42,6 +42,7 @@ import type { FactorDictionary, InheritedFactor } from '../systems/FactorInherit
 import { hybridSourcesFromParents } from '../systems/HybridSkill';
 import { revealStat, RevealedStat, RevelationLevel } from '../systems/StatRevelation';
 import { commitReportCard, emptyReportCardBook, keepReportCard, ReportCardBook } from '../systems/ReportCardBook';
+import { mentorBoundaryViolations, MentorBoundaryViolation } from '../systems/MentorBoundary';
 
 /** 每季入學令數量；規格只說「每季限 N 張」，暫定 2 */
 export const DEFAULT_ADMISSIONS_PER_SEASON = 2;
@@ -119,6 +120,8 @@ export interface NurtureTrainResult {
     awakening?: FactorAwakenedEvent;
     /** 本回合新觸發的戰法靈感；沒有則省略 */
     inspirations?: NurtureInspiration[];
+    /** 教學邊界違規（MENT-11）：教官加成回寫了子嗣因子；正常情況省略 */
+    boundaryViolations?: MentorBoundaryViolation[];
 }
 
 /** 戰法靈感觸發紀錄（給畫面與之後的戰法授予用） */
@@ -259,9 +262,12 @@ export class NurtureService {
     train(childId: string, action: NurtureAction): NurtureTrainResult {
         const current = this._requireSession(childId);
         const result: NurtureTrainResult = executeRound(current, action, this._rng());
+        const genesBefore = this._roster.getAll().find((g) => g.id === childId)?.genes;
         const inspired = action === 'rest' ? { session: result.session, triggered: [] } : this._rollInspirations(childId, result.session);
         result.session = inspired.session;
         if (inspired.triggered.length > 0) result.inspirations = inspired.triggered;
+        const violations = mentorBoundaryViolations(genesBefore, this._roster.getAll().find((g) => g.id === childId)?.genes);
+        if (violations.length > 0) result.boundaryViolations = violations;
         this._replace(result.session);
         const awakening = this._rollAwakening(childId, result.session, result.log);
         if (awakening) result.awakening = awakening;
