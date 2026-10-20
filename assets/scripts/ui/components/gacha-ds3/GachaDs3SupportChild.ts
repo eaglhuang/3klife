@@ -9,7 +9,6 @@
 
 import { Button } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
-import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import { applyFlowView } from '../../core/NurtureFlowViewApplier';
 import {
@@ -32,8 +31,9 @@ export class GachaDs3SupportChild extends ChildPanelBase {
         this._refreshRedFace();
     }
 
-    public override onMount(binder: UITemplateBinder, _skin: UISkinResolver): void {
+    public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[GachaDs3SupportChild] onMount', { rootPath: GachaDs3SupportChild.ROOT_PATH });
+        const binder: UITemplateBinder = this.binder;
         this._binder = binder;
         for (let i = 0; i < RED_FACE_SHOW_MAX_ROWS; i++) {
             const button = binder.getButton(`btnRedFaceRow${i}`);
@@ -44,8 +44,15 @@ export class GachaDs3SupportChild extends ChildPanelBase {
         this._refreshRedFace();
     }
 
-    public override onDataChanged(_data: unknown): void {
+    public override onDataUpdate(_data: unknown): void {
         this._refreshRedFace();
+    }
+
+    public override validateDataFormat(data: unknown): string | null {
+        if (!data || typeof data !== 'object') {
+            return 'GachaDs3SupportChild expects an object';
+        }
+        return null;
     }
 
     public override onUnmount(): void {

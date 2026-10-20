@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 61,
-    "total": 97
+    "open": 62,
+    "total": 98
   },
   "tasks": [
     {
@@ -3729,6 +3729,34 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0157/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0158",
+      "title": "實機驗收：戰技 Tab 五階血脈傳承奧義操作區（PROG-2-0720、#647）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "戰技 Tab 奧義操作卡的高度（暫定 142）、按鈕樣式、點亮後刷新與升星按鈕鎖定需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #647",
+        "PROG-2-0720"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0158.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0158/**"
       ],
       "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     }

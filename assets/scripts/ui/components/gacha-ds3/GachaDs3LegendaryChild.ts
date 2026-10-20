@@ -2,24 +2,30 @@
 //
 // GachaDs3LegendaryChild — UCUF ChildPanel for tab "Legendary".
 // Wire this into the CompositePanel's _switchToTab routing table.
+//
+// 契約對齊 ChildPanelBase（PROG-2-0884）：onMount(spec)／onDataUpdate／validateDataFormat；binder 用基底的 this.binder。
 
 import { ChildPanelBase } from '../../core/ChildPanelBase';
-import type { UISkinResolver } from '../../core/UISkinResolver';
-import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 
 export class GachaDs3LegendaryChild extends ChildPanelBase {
     override dataSource = 'config';
     private static readonly ROOT_PATH = 'TabLegendaryContent';
 
-    public override onMount(binder: UITemplateBinder, _skin: UISkinResolver): void {
+    public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[GachaDs3LegendaryChild] onMount', { rootPath: GachaDs3LegendaryChild.ROOT_PATH });
-        // TODO: cache Label / Sprite refs from binder under TabLegendaryContent
-        void binder;
+        // TODO: cache Label / Sprite refs from this.binder under TabLegendaryContent
     }
 
-    public override onDataChanged(_data: unknown): void {
+    public override onDataUpdate(_data: unknown): void {
         // TODO: bind data to cached refs.
+    }
+
+    public override validateDataFormat(data: unknown): string | null {
+        if (!data || typeof data !== 'object') {
+            return 'GachaDs3LegendaryChild expects an object';
+        }
+        return null;
     }
 
     public override onUnmount(): void {
