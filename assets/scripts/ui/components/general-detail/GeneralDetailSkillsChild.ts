@@ -127,7 +127,7 @@ export class GeneralDetailSkillsChild extends ChildPanelBase {
         this._set(this._lLocked,
             `奧義解鎖條件\n${formatBulletList(lockedUltLines, '• 無待解鎖奧義槽')}`
         );
-        const action = ultimateActionView(cfg.bloodlineUltimate, ultimateProgressOf(cfg as UltimateProgressSource));
+        const action = ultimateActionView(cfg.bloodlineUltimate, ultimateProgressOf(cfg as UltimateProgressSource), (key) => this.t(key));
         this._set(this._lUltimateAction, action.summary);
         this._set(this._lUltimateAwaken, action.awakenLabel);
         this._set(this._lUltimateRaise, action.raiseLabel);
