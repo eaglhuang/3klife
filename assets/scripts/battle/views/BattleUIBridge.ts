@@ -83,7 +83,7 @@ export interface BattleSceneContext {
   combatVisualTaskId: number;
   skillTargetingFlow?: {
     isPending: boolean;
-    beginPlayerSkillFlow(skillId: string, sourceType: SkillSourceType, sourceLabel: string): void;
+    beginPlayerSkillFlow(skillId: string, sourceType: SkillSourceType, sourceLabel: string, ultimateId?: string): void;
     handleSkillTargetClick(screenX: number, screenY: number): void;
     cancelPendingSkillTargeting(showToast: boolean): void;
   } | null;
