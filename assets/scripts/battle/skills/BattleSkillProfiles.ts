@@ -48,6 +48,10 @@ export interface BattleSkillProfile {
   extraHits?: number;
   /** 強制位移的格數（規格 1～2） */
   pushSteps?: number;
+  /** 強制位移的範圍（格，以施放者為中心的方形半徑）；未填為 1（3x3） */
+  pushRadius?: number;
+  /** 只對智力低於施放者主將的敵方武將所屬單位生效（空城計：Self.INT > Target.INT） */
+  pushRequiresIntAdvantage?: boolean;
   /** 定身回合數（規格 1） */
   rootTurns?: number;
   /** 火計連環：結算後把每個目標及其四向相鄰格設為火場（PROG-2-0757） */
@@ -154,6 +158,17 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     coefficient: 0,
     moraleBonus: 20,
     battleLogKey: 'skill.mentor_morale.buff',
+  },
+  // 空城計（教官，PROG-2-0777）：施放者智力高於敵方武將時，半徑 2 內敵軍沿反向直線後退 2 格（規格 戰法系統 空城計）
+  'empty-fort': {
+    battleSkillId: 'empty-fort',
+    targetMode: BattleSkillTargetMode.Self,
+    effectKind: 'push',
+    coefficient: 0,
+    pushRadius: 2,
+    pushSteps: 2,
+    pushRequiresIntAdvantage: true,
+    battleLogKey: 'skill.empty_fort.push',
   },
   // 長坂雄咆的後退（PROG-2-0767）：3x3 內敵軍遠離施放者 1 格；定身部分見 tally-changban-root
   'tally-changban-push': {
