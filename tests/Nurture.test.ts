@@ -494,6 +494,24 @@ export function createNurtureSuite(): TestSuite {
         assert.throws(() => service.revealedStats('nobody', {}), '找不到子嗣');
     });
 
+    suite.test('訓練體力消耗：夏季倍率 ×1.25 套用於訓練（15~25 → 19~31），休息不受影響', () => {
+        const child = readyChild('c');
+        const session = { ...createNurtureSession({ sessionId: 's', child, mentors: [], startSeason: 0, random: seeded(1) }), vigor: 100 };
+        assert.equals(85, executeRound(session, 'str', seq(0)).session.vigor, '預設消耗 15');
+        assert.equals(81, executeRound(session, 'str', seq(0), { trainingVigorMultiplier: 1.25 }).session.vigor, '夏季消耗 round(15×1.25)=19');
+        assert.equals(81, executeRound({ ...session, vigor: 100 }, 'str', seq(0), { trainingVigorMultiplier: 1.25 }).session.vigor);
+    });
+
+    suite.test('訓練體力消耗接線：NurtureService 讀季節倍率，夏季訓練多扣體力', () => {
+        const store = new InMemoryRosterStore([readyChild('kid') as never]);
+        const svc = new NurtureService(store as never, { random: seeded(3), currentSeason: () => 0, admissionsPerSeason: 5, seasonTrainingVigorMod: () => 1.25 });
+        svc.start('kid', []);
+        const before = svc.getSession('kid')!.vigor;
+        const result = svc.train('kid', 'str');
+        assert.equals(before, result.log.vigorBefore, '訓練前精力為開場值');
+        assert.isTrue(before - result.session.vigor >= 19 && before - result.session.vigor <= 31, '夏季訓練消耗落在 19~31');
+    });
+
     suite.test('紅色因子：未鎖定的紅因子總級數加成休息精力回復（每級 +10%），鎖定的不計', () => {
         const child = readyChild('c');
         const dict = buildFactorDictionary([{ id: 'gene_hp', category: 'physique' }, { id: 'gene_lock', category: 'physique' }]);

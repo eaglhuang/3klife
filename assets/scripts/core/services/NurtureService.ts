@@ -89,6 +89,8 @@ export interface NurtureServiceOptions {
     currentSeason?: () => number;
     /** 目前的季度模式；提供時，開場限定在培育模式 */
     currentMode?: () => GameTimeMode;
+    /** 目前季節的訓練體力消耗倍率（夏 ×1.25）；沒提供視為 1 */
+    seasonTrainingVigorMod?: () => number;
     requireNurtureMode?: boolean;
     admissionsPerSeason?: number;
     /** 培育回合的因子覺醒（PROG-2-0044）；沒提供就不擲骰，回合結果與舊版完全相同 */
@@ -261,7 +263,9 @@ export class NurtureService {
      */
     train(childId: string, action: NurtureAction): NurtureTrainResult {
         const current = this._requireSession(childId);
-        const result: NurtureTrainResult = executeRound(current, action, this._rng());
+        const result: NurtureTrainResult = executeRound(current, action, this._rng(), {
+            trainingVigorMultiplier: this._options.seasonTrainingVigorMod?.(),
+        });
         const genesBefore = this._roster.getAll().find((g) => g.id === childId)?.genes;
         const inspired = action === 'rest' ? { session: result.session, triggered: [] } : this._rollInspirations(childId, result.session);
         result.session = inspired.session;

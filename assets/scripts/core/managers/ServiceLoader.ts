@@ -73,6 +73,7 @@ export class ServiceLoader {
         random: this.session.randomSource,
         currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
         currentMode: () => this.session.gameTime.currentMode,
+        seasonTrainingVigorMod: () => seasonModifiersOf(this.session.gameTime.currentSeason).trainingStaminaMultiplier,
         // 因子覺醒（PROG-2-0044）：訓練回合擲培育窺探 / 教官覺醒；畢業給 discoveryLevel 經驗
         awakening: this.session.nurtureAwakeningHooks(),
         onGraduated: () => { void this.session.gainDiscoveryExp('nurture-graduate'); },

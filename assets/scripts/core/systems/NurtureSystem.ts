@@ -353,6 +353,8 @@ export const AUTO_NURTURE_TP_PENALTY = 0.5;
 export interface ExecuteRoundOptions {
     /** 自動培育：不擲受傷／好感事件骰，獲取量與教官 TP 加成依 AUTO_* 懲罰 */
     auto?: boolean;
+    /** 季節對訓練體力消耗的倍率（夏 ×1.25）；沒提供視為 1，不影響亂數順序 */
+    trainingVigorMultiplier?: number;
 }
 
 const NO_ROUND_EVENTS = { injured: false, affection: false } as const;
@@ -409,7 +411,7 @@ export function executeRound(
     } else {
         const failureRate = failureRateForVigor(vigorBefore);
         const failed = failureRate > 0 && random() < failureRate;
-        const cost = randInt(random, TRAINING_VIGOR_COST[0], TRAINING_VIGOR_COST[1]);
+        const cost = Math.round(randInt(random, TRAINING_VIGOR_COST[0], TRAINING_VIGOR_COST[1]) * (options.trainingVigorMultiplier ?? 1));
         session.vigor = Math.max(0, vigorBefore - cost);
         log.failureRate = failureRate;
         log.mentorsOnSlot = source.mentors.filter((mentor) => source.mentorSlots[mentor.id] === action).map((mentor) => mentor.id);
