@@ -1,4 +1,4 @@
-import { Node } from 'cc';
+import { Color, Node } from 'cc';
 
 /**
  * 戰場相關 UI 元件的抽象介面集合，用於解除 Battle 模組對 UI 具體實作的依賴。
@@ -61,7 +61,7 @@ export interface IDeployRuntimeLike {
     updateDp(dp: number): void;
     selectLane(lane: number): void;
     deploySelected(): void;
-    showToast(message: string): void;
+    showToast(message: string, duration?: number, options?: { color?: Color }): void;
     setTroopSlotButtonsVisible(visible: boolean): void;
     registerDragDropCallback(callback: (x: number, y: number) => void): void;
     updateSkillStatus(available: boolean): void;
