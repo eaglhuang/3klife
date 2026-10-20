@@ -128,7 +128,7 @@ export class GeneralListComposite extends CompositePanel {
     private _allGenerals: GeneralConfig[] = [];
     private readonly _retirementFlow = new RetirementFlowController({
         roster: () => services().session.roster,
-        retireGeneral: (id) => services().session.retireGeneral(id),
+        retireGeneral: (id, options) => services().session.retireGeneral(id, options),
     });
     private _filterMode: GeneralFilterMode = 'all';
     private _sortKey: SortKey | null = null;
@@ -618,9 +618,12 @@ export class GeneralListComposite extends CompositePanel {
             layout.type = Layout.Type.HORIZONTAL;
             layout.resizeMode = Layout.ResizeMode.NONE;
             layout.spacingX = 16;
-            this._addToolbarLabel(controls, 'RetirementTarget', 390, 48, 0, 0, '', 19, HorizontalTextAlignment.LEFT);
+            this._addToolbarLabel(controls, 'RetirementTarget', 290, 48, 0, 0, '', 19, HorizontalTextAlignment.LEFT);
             this._addToolbarButton(controls, 'RetirementNext', 120, 48, 0, 0, '下一位', () => {
                 this._retirementFlow.selectNext(); this._refreshRetirementToolbar();
+            });
+            this._addToolbarButton(controls, 'RetirementCatalyst', 160, 48, 0, 0, '媒介：無', () => {
+                this._retirementFlow.selectNextCatalystChild(); this._refreshRetirementToolbar();
             });
             this._addToolbarButton(controls, 'RetirementConfirm', 180, 48, 0, 0, '退役轉教官', () => { void this._retireSelected(); });
             this._addToolbarButton(controls, 'RetirementCancel', 120, 48, 0, 0, '取消', () => {
@@ -661,7 +664,10 @@ export class GeneralListComposite extends CompositePanel {
         const confirm = controls?.getChildByName('RetirementConfirm');
         const confirmLabel = confirm?.getComponent(Label);
         if (confirmLabel) confirmLabel.string = flow.busy ? '退役中…' : flow.confirming ? '確認退役' : '退役轉教官';
-        for (const name of ['RetirementNext', 'RetirementConfirm', 'RetirementCancel']) {
+        const catalyst = flow.catalystChild;
+        const catalystLabel = controls?.getChildByName('RetirementCatalyst')?.getComponent(Label);
+        if (catalystLabel) catalystLabel.string = catalyst ? `媒介：${catalyst.name}` : '媒介：無';
+        for (const name of ['RetirementNext', 'RetirementCatalyst', 'RetirementConfirm', 'RetirementCancel']) {
             const button = controls?.getChildByName(name)?.getComponent(Button);
             if (button) {
                 button.interactable = !flow.busy && !!target && (name !== 'RetirementCancel' || flow.confirming);
