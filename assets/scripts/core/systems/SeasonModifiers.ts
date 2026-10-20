@@ -74,7 +74,14 @@ export function normalizeSeasonModifiers(raw: unknown): SeasonModifierConfig {
     return out;
 }
 
-/** 目前季的修正；config 未指定時用預設表 */
-export function seasonModifiersOf(season: SeasonIndex, config: Readonly<SeasonModifierConfig> = DEFAULT_SEASON_MODIFIERS): SeasonModifier {
+/** 執行中的修正表：開場載入 season-modifiers.json 後以 setActiveSeasonModifiers 換上；未載入時為預設 */
+let activeConfig: SeasonModifierConfig = { ...DEFAULT_SEASON_MODIFIERS };
+
+export function setActiveSeasonModifiers(config: Readonly<SeasonModifierConfig>): void {
+    activeConfig = { ...config };
+}
+
+/** 目前季的修正；config 未指定時用執行中的修正表 */
+export function seasonModifiersOf(season: SeasonIndex, config: Readonly<SeasonModifierConfig> = activeConfig): SeasonModifier {
     return config[season] ?? DEFAULT_SEASON_MODIFIERS[season];
 }
