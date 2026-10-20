@@ -155,6 +155,54 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     moraleBonus: 20,
     battleLogKey: 'skill.mentor_morale.buff',
   },
+  // 長坂雄咆的後退（PROG-2-0767）：3x3 內敵軍遠離施放者 1 格；定身部分見 tally-changban-root
+  'tally-changban-push': {
+    battleSkillId: 'tally-changban-push',
+    targetMode: BattleSkillTargetMode.Self,
+    effectKind: 'push',
+    coefficient: 0,
+    pushSteps: 1,
+    battleLogKey: 'skill.tally_changban_push.push',
+  },
+  // 毒箭（PROG-2-0766）：目標中毒 2 回合，每回合扣最大 HP 10%
+  'tally-poison-arrow': {
+    battleSkillId: 'tally-poison-arrow',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'dot',
+    coefficient: 0,
+    maxTargets: 1,
+    dotMaxHpRatio: 0.1,
+    statusTurns: 2,
+    battleLogKey: 'skill.tally_poison_arrow.poison',
+  },
+  // 緩速（PROG-2-0765）：單體敵軍下一回合移動 -1（規格 G-2 計略）
+  'mentor-slow': {
+    battleSkillId: 'mentor-slow',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'slow',
+    coefficient: 0,
+    maxTargets: 1,
+    slowAmount: 1,
+    statusTurns: 1,
+    battleLogKey: 'skill.mentor_slow.debuff',
+  },
+  // 威震華夏（PROG-2-0773）：單體敵軍傷害；第 1 回合 ×2，擊殺後施放者再行動 1 次（規格 戰法系統 威震華夏）
+  'tally-wei-zhen-hua-xia': {
+    battleSkillId: 'tally-wei-zhen-hua-xia',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    coefficient: 1.0,
+    scalingStat: 'str',
+    maxTargets: 1,
+    firstTurnDamageMultiplier: 2,
+    resetSelfOnKill: true,
+    battleLogKey: 'skill.tally_wei_zhen_hua_xia.hit',
+  },
   // 火神狩獵（PROG-2-0771）：單體敵軍擊退 1 格，並將其原本所在格設為火場（規格 戰法系統 火神狩獵）
   'tally-fire-god-hunt': {
     battleSkillId: 'tally-fire-god-hunt',
