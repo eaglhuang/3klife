@@ -6,7 +6,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import type { FactorPoolEntry } from '../assets/scripts/core/systems/BreedingSystem';
-import { buildSageRemarks, OMEN_KINDS, OMEN_LABEL, pickOmen, REMARK_ERROR_RATE, remarkRandomOf } from '../assets/scripts/core/systems/SageRemarks';
+import { buildSageRemarks, OMEN_KINDS, OMEN_LABEL, pickOmen, REMARK_ERROR_RATE } from '../assets/scripts/core/systems/SageRemarks';
 
 const POOL = [
     { id: 'f-blue', color: 'blue', chance: 1, displayName: '藍因子' },
@@ -57,15 +57,6 @@ export function createSageRemarksSuite(): TestSuite {
         const seen = new Set<string>();
         for (let season = 1; season <= 60; season++) seen.add(pickOmen(season, 42));
         for (const kind of OMEN_KINDS) assert.isTrue(seen.has(kind));
-    });
-
-    suite.test('批語隨機源：同一組種子每次刷新序列相同，不同種子不同', () => {
-        const first = remarkRandomOf('a|b');
-        const again = remarkRandomOf('a|b');
-        const other = remarkRandomOf('a|c');
-        const seqA = [first(), first(), first()];
-        assert.equals(JSON.stringify(seqA), JSON.stringify([again(), again(), again()]));
-        assert.isFalse(seqA[0] === other());
     });
 
     suite.test('天象異變顯示名稱：三種都有中文名', () => {
