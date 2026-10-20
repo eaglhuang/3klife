@@ -223,6 +223,43 @@ export function buildTallyCardCatalog(): Map<string, TallyCardData> {
         timing: 'active-cast' as BattleSkillTiming,
       },
     },
+    {
+      type: TroopType.Cavalry,
+      name: '白馬義從',
+      sub: '白馬騎兵',
+      rarity: 'epic',
+      rarityLabel: 'SSR',
+      stars: '★★★',
+      artResource: resolveTallyCardArtResource(TroopType.Cavalry),
+      traits: ['騎射', '機動'],
+      traitDetails: [
+        { label: '騎射', detail: '騎兵的機動配上弓兵的射程，可在遠處持續施壓。' },
+        { label: '機動', detail: '保留騎兵的移動力，調度快。' },
+      ],
+      abilities: ['騎射合一'],
+      abilityDetails: [
+        { name: '騎射合一', detail: '騎兵移動不變，攻擊射程提高為弓兵射程（2 格）。戰鬥開始前即生效。' },
+      ],
+      source: {
+        faction: '群雄',
+        origin: '公孫瓚麾下白馬義從',
+        sourceType: '死亡傳承虎符',
+        obtainHint: '公孫瓚死亡結算後取得。',
+      },
+      lore: {
+        title: '白馬映雪',
+        summary: '以白馬為陣、騎射並重的幽州精騎。',
+        body: '白馬義從的虎符象徵騎射並用的機動戰法，持有者可讓騎兵在遠距離先行壓制。',
+      },
+      desc: '騎兵的機動加上弓兵的射程，遠近皆能施壓。',
+      tacticMeta: {
+        tacticId: 'tiger-tally-bai-ma',
+        battleSkillId: 'tiger-passive-bai-ma',
+        sourceType: 'tiger-tally' as SkillSourceType,
+        targetMode: 'self' as BattleSkillTargetMode,
+        timing: 'start-of-battle' as BattleSkillTiming,
+      },
+    },
   ];
 
   const TROOP_DEFAULTS: Record<string, { hp: number; attack: number; defense: number; moveRange: number }> = {

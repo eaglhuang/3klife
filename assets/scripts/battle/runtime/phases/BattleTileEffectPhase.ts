@@ -3,6 +3,7 @@ import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
 import { advanceFormationZonesOf } from '../../shared/FormationZone';
+import { advanceMoraleOf } from '../../shared/Morale';
 import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 
 export interface BattleTileEffectPhaseContext {
@@ -32,6 +33,7 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
     const caster = context.state.units.get(casterUnitId);
     return !!caster && !caster.isDead();
   });
+  advanceMoraleOf(context.state.units.values(), context.actingFaction);
   const killed: TroopUnit[] = [];
   const killedIds = new Set<string>();
 
@@ -61,7 +63,12 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
   // 毒箭（PROG-2-0766）：所屬陣營的中毒單位在本階段結算
   for (const [unitId, dot] of [...context.state.unitDots]) {
     const unit = context.state.units.get(unitId);
-    if (!unit || unit.faction !== context.actingFaction) continue;
+    // 單位被擊殺後會從 units 移除：記錄找不到單位就丟掉，否則會殘留到戰鬥結束（單位 id 重用時還會誤中毒）
+    if (!unit) {
+      context.state.unitDots.delete(unitId);
+      continue;
+    }
+    if (unit.faction !== context.actingFaction) continue;
     if (unit.isDead()) {
       context.state.unitDots.delete(unitId);
       continue;
