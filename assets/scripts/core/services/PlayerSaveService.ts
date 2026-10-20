@@ -36,6 +36,7 @@ import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw
 import { SAVE_VERSION_LATEST, saveVersionOf } from '../storage/SaveVersion';
 import { normalizeYearAgingEvents } from '../systems/YearReport';
 import type { AgingEvent } from '../systems/GeneralAging';
+import { mapSnapshotToSixTables } from './PlayerSaveTableRows';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
@@ -415,6 +416,7 @@ function normalizePendingLifespanDeaths(value: unknown): PendingLifespanDeath[] 
 export class PlayerSaveService {
     private _ready: Promise<void> | null = null;
     private _lastLoadRecoveredFromBackup = false;
+    private _lastSixTableErrors: readonly string[] = [];
 
     constructor(private readonly _adapter: DataStorageAdapter, private readonly _key: string = PLAYER_SAVE_KEY) {}
 
@@ -427,6 +429,11 @@ export class PlayerSaveService {
         return this._lastLoadRecoveredFromBackup;
     }
 
+    /** 最近一次存檔時六表列驗證的錯誤（MVP-12）；只回報，不阻擋存檔 */
+    public lastSixTableErrors(): readonly string[] {
+        return this._lastSixTableErrors;
+    }
+
     /**
      * 寫入新存檔前，若目前主檔有效，先把它保留到備份槽（DS-14）。
      * 主檔已損壞時不覆蓋既有備份，避免好的備份被壞檔取代。
@@ -434,6 +441,7 @@ export class PlayerSaveService {
     public async save(snapshot: PlayerSaveSnapshot): Promise<void> {
         await this._ensureReady();
         const validated = validatePlayerSaveSnapshot(snapshot);
+        this._lastSixTableErrors = mapSnapshotToSixTables(validated).errors;
         const previous = await this._adapter.get<unknown>(this._key);
         if (previous !== null && this._isValid(previous)) {
             await this._adapter.set(this._backupKey, previous);

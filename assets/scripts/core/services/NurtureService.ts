@@ -33,6 +33,7 @@ import {
     TRAINING_KINDS,
     TrainingKind,
 } from '../systems/NurtureSystem';
+import { buildNurtureRecordRow, type NurtureRecordDraft } from '../systems/NurtureRecordRow';
 import { UNVEILING_AGE, UnveilingGeneral } from '../systems/Unveiling';
 import { InspireContext, rollInspireRound } from '../systems/MentorInspiration';
 import { isBloodlineGuaranteedRound, isBloodlineMatch } from '../systems/BloodlineGuarantee';
@@ -75,6 +76,8 @@ export interface NurtureState {
     admission: { season: number; used: number };
     /** 每位子嗣保留的畢業成績單（最多 3 份）；舊存檔沒有此欄位視為空 */
     reportBooks?: Record<string, ReportCardBook<GraduationResult>>;
+    /** 畢業培育紀錄（NUR-15 MVP 存檔欄位，見 NurtureRecordRow）；舊存檔沒有此欄位視為空 */
+    graduationRecords?: NurtureRecordDraft[];
 }
 
 /** 父母各自的繼承因子；用來推導混種戰法來源，沒提供就不擲混種 */
@@ -290,6 +293,8 @@ export class NurtureService {
         this._roster.replaceAll(next);
         this._state.sessions = this._state.sessions.filter((s) => s.sessionId !== session.sessionId);
         this._dropReportBook(childId);
+        const { row } = buildNurtureRecordRow(session, result, this._season());
+        this._state.graduationRecords = [...(this._state.graduationRecords ?? []), row];
         this._options.onGraduated?.(result);
         return result;
     }

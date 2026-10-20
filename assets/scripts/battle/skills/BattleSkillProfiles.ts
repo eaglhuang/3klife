@@ -183,6 +183,17 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     pushSteps: 1,
     battleLogKey: 'skill.tally_changban_push.push',
   },
+  // 無雙亂舞（PROG-2-0799，暫定）：周身 8 格傷害後擊退 1 格；沿用 push 的 pushRadius，coefficient 為傷害係數
+  'tally-wushuang': {
+    battleSkillId: 'tally-wushuang',
+    targetMode: BattleSkillTargetMode.AroundSelf,
+    effectKind: 'push',
+    coefficient: 1.0,
+    scalingStat: 'str',
+    pushRadius: 1,
+    pushSteps: 1,
+    battleLogKey: 'skill.tally_wushuang.push',
+  },
   // 毒箭（PROG-2-0766）：目標中毒 2 回合，每回合扣最大 HP 10%
   'tally-poison-arrow': {
     battleSkillId: 'tally-poison-arrow',
