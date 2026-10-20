@@ -82,6 +82,7 @@ import { resolveFactorColor } from '../systems/FactorInheritance';
 import type { FactorDictionary } from '../systems/FactorInheritance';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
+import { MentorDuplicateOutcome, overflowToastText, resolveMentorDuplicate } from '../systems/MentorOverflow';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
@@ -2004,6 +2005,17 @@ export class GameSession {
             await this.save();
         }
         return this._scorePoints;
+    }
+
+    /**
+     * 教官卡重複抽中（MENT-07）：未滿 ★5 → 突破（不入帳）；已滿 ★5 → 溢出，依稀有度入帳積分。
+     * 只做判定與入帳，不改寫教官卡星等（星等由呼叫端依 result.star 保存）。
+     */
+    public async resolveMentorDuplicateCard(currentStar: number | undefined, rarity: string, cardName: string): Promise<MentorDuplicateOutcome & { toast: string | null }> {
+        const outcome = resolveMentorDuplicate(currentStar, rarity);
+        if (outcome.scoreGain > 0) await this.grantScorePoints(outcome.scoreGain);
+        const toast = outcome.result.kind === 'overflow' ? overflowToastText(cardName, outcome.scoreGain) : null;
+        return { ...outcome, toast };
     }
 
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
