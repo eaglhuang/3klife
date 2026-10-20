@@ -10,7 +10,7 @@
  *
  * Unity 對照：UnityNodeFactory（同介面，換 Unity API 實作）
  */
-import { Node } from 'cc';
+import { Node, UITransform } from 'cc';
 import { UIPreviewNodeFactory } from '../../core/UIPreviewNodeFactory';
 import { UIPreviewStyleBuilder } from '../../core/UIPreviewStyleBuilder';
 import { UIPreviewLayoutBuilder } from '../../core/UIPreviewLayoutBuilder';
@@ -62,7 +62,9 @@ export class CocosNodeFactory implements INodeFactory {
     async buildScrollList(parent: NodeHandle, spec: UILayoutNodeSpec): Promise<NodeHandle> {
         const node = new Node(spec.name ?? 'ScrollList');
         (parent as Node).addChild(node);
-        await this.inner.buildScrollList(node, spec);
+        // 捲動區尺寸取節點自身的 UITransform（與 UIPreviewBuilder 的 scrollW/scrollH 一致）
+        const transform = node.getComponent(UITransform);
+        await this.inner.buildScrollList(node, spec, transform?.width ?? 0, transform?.height ?? 0);
         return node;
     }
 
