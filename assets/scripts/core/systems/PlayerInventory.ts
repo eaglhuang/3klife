@@ -28,6 +28,9 @@ export const ITEM_VITALITY_PILL = 'ITEM_VITALITY_PILL';
 export const ITEM_PREMIUM_VITALITY_PILL = 'ITEM_VITALITY_PILL_PREMIUM';
 /** 歸宗令（血脈歸宗消耗 1 張，名詞表 Merge_Token；PROG-2-0862 接線）。起始庫存為 0，取得來源未定。 */
 export const ITEM_MERGE_TOKEN = 'ITEM_MERGE_TOKEN';
+/** 歸宗令不足的提示（暫定，PM 2026-10-20 裁定）：語系 key 先用此名，文案待企劃定稿。 */
+export const MERGE_TOKEN_SHORTAGE_KEY = 'UI_MERGE_TOKEN_SHORTAGE';
+export const MERGE_TOKEN_SHORTAGE_TEXT = '歸宗令不足';
 
 export const ITEM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
     [ITEM_ORACLE_TOKEN]: '求籤令',
