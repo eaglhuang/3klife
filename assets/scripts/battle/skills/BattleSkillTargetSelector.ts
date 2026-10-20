@@ -173,11 +173,14 @@ export class BattleSkillTargetSelector {
     casterFaction: Faction,
     context: BattleSkillExecutionContext,
   ): number | null {
-    if (!profile.rangeBonus || !context.getCasterCell || !context.getCasterUnitId || !context.getUnit) return null;
+    // 林地 D 視野受限（PROG-2-0789）：施放者有射程上限時，技能射程不超過上限（即使技能沒有 rangeBonus）
+    const cap = context.getCasterRangeCap?.(casterFaction) ?? null;
+    if (!profile.rangeBonus || !context.getCasterCell || !context.getCasterUnitId || !context.getUnit) return cap;
     const casterUnitId = context.getCasterUnitId(casterFaction);
     const casterUnit = casterUnitId ? context.getUnit(casterUnitId) : null;
-    if (!casterUnit) return null;
-    return casterUnit.attackRange + profile.rangeBonus;
+    if (!casterUnit) return cap;
+    const range = casterUnit.attackRange + profile.rangeBonus;
+    return cap === null ? range : Math.min(range, cap);
   }
 
   private selectAutoLineTargets(

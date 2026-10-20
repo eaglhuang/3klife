@@ -38,6 +38,17 @@ const RULES: Readonly<Partial<Record<TroopType, Partial<Record<TerrainType, Part
 };
 
 /**
+ * 林地 D 級「視野受限」簡化版（PROG-2-0789，協調者暫定）：
+ * 站在林地且林地適性 D 的部隊，只能攻擊相鄰格（射程上限 1），不能對射程 2 以上的目標發動遠程攻擊或戰法。
+ * 回傳射程上限；沒有上限時為 null。
+ */
+export const FOREST_D_ATTACK_RANGE_CAP = 1;
+
+export function terrainAttackRangeCapOf(terrain: TerrainType, terrainGrade: string): number | null {
+    return terrain === TerrainType.Forest && terrainGrade === 'D' ? FOREST_D_ATTACK_RANGE_CAP : null;
+}
+
+/**
  * 林地 S 級「迴避 +30%」（PROG-2-0788，暫定實作）：防守方站在林地且林地適性 S 時，
  * 攻擊方命中率 −30%，仍受命中下限約束。規格寫的是迴避，這裡沿用既有命中率機制表達。
  */

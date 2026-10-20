@@ -7,7 +7,7 @@ import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
-import { getTerrainTroopEffect, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
+import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
 import { extraAttackHitsOf } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
@@ -619,7 +619,10 @@ export class BattleCombatResolver {
     if (baseRange === 0) return 0;
     const cell = this.context.state.getCell(unit.lane, unit.depth);
     const terrain = cell?.terrain ?? TerrainType.Plain;
-    return Math.max(1, baseRange + getTerrainTroopEffect(unit.type, terrain).attackRangeDelta);
+    const range = Math.max(1, baseRange + getTerrainTroopEffect(unit.type, terrain).attackRangeDelta);
+    // 林地 D 視野受限（PROG-2-0789）：射程上限 1，只打相鄰格
+    const cap = terrainAttackRangeCapOf(terrain, this.getUnitAptitude(unit).terrain);
+    return cap === null ? range : Math.min(range, cap);
   }
 
   private getForwardDirection(unit: TroopUnit): number {
