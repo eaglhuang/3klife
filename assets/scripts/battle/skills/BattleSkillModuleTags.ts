@@ -40,3 +40,17 @@ export function statusModuleTagOf(
 ): BattleSkillStatusModuleTag | null {
   return profile.effectKind ? (STATUS_MODULE_BY_EFFECT_KIND[profile.effectKind] ?? null) : null;
 }
+
+/**
+ * 施放時回報的規格代號清單（PROG-2-0587／PROG-2-0588）：由 BattleSkillExecutor 呼叫，寫入執行結果的 moduleTags。
+ * 傷害類回 TDIR／TLINE／TFAN，狀態類回 THEAL／TBUFF／TDEBUFF；沒有對應的回空清單。
+ */
+export function moduleTagsOfSkill(profile: BattleSkillProfile | null): string[] {
+  if (!profile) return [];
+  const tags: string[] = [];
+  const damageTag = damageModuleTagOf(profile);
+  if (damageTag) tags.push(damageTag);
+  const statusTag = statusModuleTagOf(profile);
+  if (statusTag) tags.push(statusTag);
+  return tags;
+}

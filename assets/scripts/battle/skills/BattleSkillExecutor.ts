@@ -1,5 +1,7 @@
 import type { BattleSkillRequest, SkillExecutionResult } from '../../shared/SkillRuntimeContract';
 import type { BattleSkillExecutionContext, BattleSkillResolver } from './BattleSkillResolver';
+import { moduleTagsOfSkill } from './BattleSkillModuleTags';
+import { resolveBattleSkillProfile } from './BattleSkillProfiles';
 
 export class BattleSkillExecutor {
   constructor(private readonly resolvers: BattleSkillResolver[]) {}
@@ -20,6 +22,7 @@ export class BattleSkillExecutor {
       };
     }
 
-    return resolver.execute(request, context);
+    const result = resolver.execute(request, context);
+    return { ...result, moduleTags: moduleTagsOfSkill(resolveBattleSkillProfile(request.battleSkillId)) };
   }
 }
