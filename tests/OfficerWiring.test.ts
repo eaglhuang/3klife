@@ -17,13 +17,15 @@ export function createOfficerWiringSuite(): TestSuite {
         assert.isTrue(session.officerUnlocks.sandtableStage === null);
     });
 
-    suite.test('GameSession：呼叫端設定階位 3 後解鎖 S1，壞值退回階位 1', () => {
+    suite.test('GameSession：累積經驗晉升到階位 3 後解鎖 S1', () => {
         const session = new GameSession();
-        session.setOfficerSnapshot({ tier: 3 });
+        const hellMilitaryWin = { difficulty: 'HELL' as const, boardType: 'MILITARY' as const, success: true };
+        assert.equals(0, session.gainOfficerExp(hellMilitaryWin).length, '79 經驗不足 100，仍是階位 1');
+        assert.equals(2, session.gainOfficerExp(hellMilitaryWin)[0] ?? -1, '158 經驗晉升到階位 2');
+        assert.equals(0, session.gainOfficerExp(hellMilitaryWin).length, '237 經驗仍是階位 2');
+        assert.equals(3, session.gainOfficerExp(hellMilitaryWin)[0] ?? -1, '316 經驗晉升到階位 3');
         assert.equals(3, session.officerUnlocks.tier);
         assert.equals('S1', session.officerUnlocks.sandtableStage ?? '');
-        session.setOfficerSnapshot({ tier: 'bad' });
-        assert.equals(1, session.officerUnlocks.tier);
     });
 
     suite.test('大廳玩家狀態：階位即 rankTier，S1/S2/S3 對應 worldStage 1/2/3', () => {
