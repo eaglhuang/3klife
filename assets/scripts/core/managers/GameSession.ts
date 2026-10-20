@@ -25,6 +25,7 @@
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
 import { addOfficerExp, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
+import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
 import { battleIntelligenceOf } from '../systems/BattleRoster';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
@@ -130,6 +131,8 @@ import {
 export const GAME_SESSION_EVENTS = {
     /** payload: SeasonAdvancedPayload */
     SeasonAdvanced: 'game-session-season-advanced',
+    /** payload: { tiers: number[] }（大廳任務結算後官職晉升，OFC-08 提示用） */
+    OfficerPromoted: 'game-session-officer-promoted',
     /** payload: YearReport（第 4 季結束時發出；養成線 FEM-06 等年度掛點接在這裡） */
     YearEnded: 'game-session-year-ended',
     /** payload: AgingEvent（type = reached-retirement-age） */
@@ -1177,6 +1180,20 @@ export class GameSession {
         const result = addOfficerExp(this._officerState, calcOfficerExpGain(task));
         this._officerState = result.state;
         return result.promotedTiers;
+    }
+
+    /**
+     * 大廳任務結算（OFC-08）：任務完成或失敗都會入帳官職經驗；晉升時發出 OfficerPromoted。
+     * 無法對應的任務（未知難度或無對應牆）不入帳，回傳空陣列。
+     */
+    public settleHallMission(outcome: HallMissionOutcome): number[] {
+        const task = hallMissionToOfficerTask(outcome);
+        if (!task) return [];
+        const promoted = this.gainOfficerExp(task);
+        if (promoted.length > 0) {
+            this._emit(GAME_SESSION_EVENTS.OfficerPromoted, { tiers: promoted });
+        }
+        return promoted;
     }
 
     /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */

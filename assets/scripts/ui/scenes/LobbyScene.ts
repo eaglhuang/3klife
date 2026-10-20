@@ -52,6 +52,7 @@ import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
+import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
@@ -398,7 +399,15 @@ export class LobbyScene extends Component {
         this._officerHudHost = await this._mountPreviewScreenHost('OfficerHudHost', 'lobby-officer-hud-screen', []);
         this._refreshOfficerHud();
         const refresh = (): void => { this._refreshOfficerHud(); };
-        this._sessionEventUnsubscribers.push(services().event.on(GAME_SESSION_EVENTS.Loaded, refresh));
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+            services().event.on(GAME_SESSION_EVENTS.OfficerPromoted, (payload: { tiers: number[] }) => {
+                refresh();
+                for (const message of officerPromotionNoticeOf(payload.tiers)) {
+                    services().event.emit('SHOW_TOAST', { message, duration: 2 });
+                }
+            }),
+        );
     }
 
     private _refreshOfficerHud(): void {
