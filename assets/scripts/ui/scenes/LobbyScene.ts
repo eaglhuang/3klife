@@ -53,6 +53,7 @@ import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
 import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
+import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
@@ -874,7 +875,7 @@ export class LobbyScene extends Component {
             player: () => hallPlayerOf(services().session.officerUnlocks),
             assignments: () => services().session.hallAssignments,
             leadGeneralId: () => services().session.leadGeneralId,
-            assign: (taskId, generalId) => services().session.assignHallTask(taskId, generalId),
+            assign: (taskId, generalId) => this._dispatchHallTask(taskId, generalId),
             refreshSpots: () => services().session.refreshHallSpots(Date.now() / 1000, Math.random),
             displayName: (generalId) => services().session.roster.find((g) => g.id === generalId)?.name ?? generalId,
         });
@@ -1244,6 +1245,28 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._hallBoard.getFlowView());
+    }
+
+    /** 大廳任務派遣：找出目前牆面的任務，交給 GameSession 判定並結算。 */
+    private async _dispatchHallTask(taskId: string, generalId: string): Promise<boolean> {
+        const board = this._hallBoard?.board;
+        const hub = this._lobbyHub;
+        if (!board || !hub) {
+            return false;
+        }
+        const task = hub.Mission_Boards[board as keyof typeof hub.Mission_Boards]?.Tasks.find((t) => t.Task_ID === taskId);
+        if (!task) {
+            return false;
+        }
+        const session = services().session;
+        const general = session.roster.find((g) => g.id === generalId);
+        const power = general ? estimateSortiePower(general) : 0;
+        const result = await session.dispatchHallTask(task, board, hallPlayerOf(session.officerUnlocks), generalId, power);
+        if (!result.ok) {
+            return false;
+        }
+        services().event.emit('SHOW_TOAST', { message: result.outcome.success ? '任務成功' : '任務失敗', duration: 2.5 });
+        return true;
     }
 
     private async _onClickHallAccept(index: number): Promise<void> {

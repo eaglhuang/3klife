@@ -26,6 +26,8 @@ import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from 
 import { addOfficerExp, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
+import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
+import type { HallBoardKey, HallGateTask, HallPlayerState } from '../systems/HallMissionBoard';
 import { battleIntelligenceOf } from '../systems/BattleRoster';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
@@ -103,6 +105,7 @@ import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
+import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
@@ -1196,6 +1199,25 @@ export class GameSession {
         return promoted;
     }
 
+    /**
+     * 大廳任務派遣（暫定即時結算）：通過派遣條件後指派武將，再依成敗結算官職經驗。
+     * 阻擋時不指派、不結算。
+     */
+    public async dispatchHallTask(
+        task: HallGateTask,
+        board: HallBoardKey,
+        player: Readonly<HallPlayerState>,
+        generalId: string | null,
+        generalPower: number,
+    ): Promise<HallDispatchResult> {
+        const result = resolveHallDispatch(task, player, board, generalId, generalPower);
+        if (!result.ok || generalId === null) return result;
+        const assigned = await this.assignHallTask(task.Task_ID, generalId);
+        if (!assigned) return { ok: false, reason: 'NO_GENERAL' };
+        this.settleHallMission(result.outcome);
+        return result;
+    }
+
     /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */
     public get hallAssignments(): Readonly<Record<string, string>> {
         return { ...this._hallAssignments };
@@ -1935,6 +1957,11 @@ export class GameSession {
         const factorTags = dictionary ? (factorId: string) => dictionary.get(factorId)?.defaultTags : undefined;
         const awakenings: FactorAwakenedEvent[] = [];
         let roster = settlement.roster;
+        // 里程碑隱藏因子（REC-06 / PROG-2-0711）：新達成的不敗／鐵壁／殺意，把白、紅因子寫進武將基因
+        roster = roster.map((g) => {
+            const entry = settlement.entries.find((e) => e.generalId === g.id);
+            return entry ? awakenHiddenFactors(g, entry.newMilestones) : g;
+        });
         for (const entry of settlement.entries) {
             const index = roster.findIndex((g) => g.id === entry.generalId);
             const actions = options.specialActions?.[entry.generalId] ?? [];

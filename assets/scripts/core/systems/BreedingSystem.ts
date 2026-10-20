@@ -36,6 +36,7 @@ import { rollWildGene, STAR_JUMP_MAX_LEVEL, STAR_JUMP_STEP } from './WildGene';
 import { luckThresholdEffects, type LuckThresholdEffects } from './LuckThresholds';
 import { forceFatherTacticCopy } from './LuckTacticCopy';
 import { applyFateInheritance } from './LuckFateInheritance';
+import { applyBloodlineMutation } from './LuckBloodlineMutation';
 
 export const BREEDING_MIN_AGE = 20;
 export const FATHER_VIGOR_COST = 50;
@@ -640,9 +641,12 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
     const tacticFactors = luckEffects.forceTacticCopy
         ? forceFatherTacticCopy(finalFactors, request.father, request.dictionary, request.maxFactors ?? DEFAULT_MAX_INHERITED_FACTORS)
         : finalFactors;
-    const childFactors = luckEffects.fateInheritance
-        ? applyFateInheritance(tacticFactors, sources, { random: request.random, dictionary: request.dictionary, enabledColors: request.enabledColors })
+    const bloodlineFactors = luckEffects.bloodlineMutation
+        ? applyBloodlineMutation(tacticFactors, request.random, request.dictionary)
         : tacticFactors;
+    const childFactors = luckEffects.fateInheritance
+        ? applyFateInheritance(bloodlineFactors, sources, { random: request.random, dictionary: request.dictionary, enabledColors: request.enabledColors })
+        : bloodlineFactors;
     const child = createChild({
         id: request.childId,
         father: request.father,
