@@ -1,0 +1,13 @@
+{
+  "id": "lobby-officer-hud-screen",
+  "version": 1,
+  "uiId": "LobbyOfficerHud",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "lobby-officer-hud-main",
+  "skin": "lobby-officer-hud-default",
+  "validation": {
+    "devices": ["phone-16-9", "phone-19_5-9", "tablet-4-3"],
+    "allowMissingSkin": false
+  }
+}
