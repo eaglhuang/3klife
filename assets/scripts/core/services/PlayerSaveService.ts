@@ -38,6 +38,8 @@ import { normalizeYearAgingEvents } from '../systems/YearReport';
 import type { AgingEvent } from '../systems/GeneralAging';
 
 export const PLAYER_SAVE_KEY = 'player.save';
+/** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
+export const PLAYER_SAVE_BACKUP_SUFFIX = '.bak';
 /** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
 export const PLAYER_SAVE_SCHEMA_VERSION = 1;
 
@@ -412,6 +414,7 @@ function normalizePendingLifespanDeaths(value: unknown): PendingLifespanDeath[] 
 
 export class PlayerSaveService {
     private _ready: Promise<void> | null = null;
+    private _lastLoadRecoveredFromBackup = false;
 
     constructor(private readonly _adapter: DataStorageAdapter, private readonly _key: string = PLAYER_SAVE_KEY) {}
 
@@ -419,21 +422,61 @@ export class PlayerSaveService {
         return this._adapter.adapterName;
     }
 
-    public async save(snapshot: PlayerSaveSnapshot): Promise<void> {
-        await this._ensureReady();
-        await this._adapter.set(this._key, validatePlayerSaveSnapshot(snapshot));
+    /** 最近一次 load() 是否改從備份讀回（DS-14）；每次 load() 都會重設 */
+    public lastLoadRecoveredFromBackup(): boolean {
+        return this._lastLoadRecoveredFromBackup;
     }
 
-    /** 沒有存檔時回傳 null；有存檔但格式錯誤時拋錯 */
+    /**
+     * 寫入新存檔前，若目前主檔有效，先把它保留到備份槽（DS-14）。
+     * 主檔已損壞時不覆蓋既有備份，避免好的備份被壞檔取代。
+     */
+    public async save(snapshot: PlayerSaveSnapshot): Promise<void> {
+        await this._ensureReady();
+        const validated = validatePlayerSaveSnapshot(snapshot);
+        const previous = await this._adapter.get<unknown>(this._key);
+        if (previous !== null && this._isValid(previous)) {
+            await this._adapter.set(this._backupKey, previous);
+        }
+        await this._adapter.set(this._key, validated);
+    }
+
+    /**
+     * 沒有存檔時回傳 null；主檔格式錯誤時退回備份並記錄（DS-14）。
+     * 備份也無效或沒有備份時，拋出主檔的錯誤。
+     */
     public async load(): Promise<PlayerSaveSnapshot | null> {
         await this._ensureReady();
+        this._lastLoadRecoveredFromBackup = false;
         const raw = await this._adapter.get<unknown>(this._key);
-        return raw === null ? null : validatePlayerSaveSnapshot(raw);
+        if (raw === null) return null;
+        try {
+            return validatePlayerSaveSnapshot(raw);
+        } catch (error) {
+            const backup = await this._adapter.get<unknown>(this._backupKey);
+            if (backup === null || !this._isValid(backup)) throw error;
+            this._lastLoadRecoveredFromBackup = true;
+            return validatePlayerSaveSnapshot(backup);
+        }
     }
 
     public async clear(): Promise<void> {
         await this._ensureReady();
         await this._adapter.delete(this._key);
+        await this._adapter.delete(this._backupKey);
+    }
+
+    private get _backupKey(): string {
+        return `${this._key}${PLAYER_SAVE_BACKUP_SUFFIX}`;
+    }
+
+    private _isValid(raw: unknown): boolean {
+        try {
+            validatePlayerSaveSnapshot(raw);
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     /** 第一次存取時才初始化後端（例如開啟 IndexedDB），之後重用同一個 Promise */
