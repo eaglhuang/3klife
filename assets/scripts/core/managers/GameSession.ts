@@ -28,7 +28,8 @@ import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, r
 import type { NurtureAction, NurtureRoundLog } from '../systems/NurtureSystem';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
-import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
+import { GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
+import { buildYearReport, YearReport } from '../systems/YearReport';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import type { CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
@@ -90,6 +91,7 @@ import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { buildEraResetEvent } from '../systems/EraReset';
+import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
@@ -119,6 +121,8 @@ import {
 export const GAME_SESSION_EVENTS = {
     /** payload: SeasonAdvancedPayload */
     SeasonAdvanced: 'game-session-season-advanced',
+    /** payload: YearReport（第 4 季結束時發出；養成線 FEM-06 等年度掛點接在這裡） */
+    YearEnded: 'game-session-year-ended',
     /** payload: AgingEvent（type = reached-retirement-age） */
     GeneralReachedRetirementAge: 'game-session-general-retirement-age',
     /** payload: AgingEvent（type = died） */
@@ -188,6 +192,8 @@ export interface SeasonAdvancedPayload {
     lifecycle?: LifecycleSettlement;
     /** 本季免費發放的求籤令（已達免費上限時為 0） */
     oracleTokensGranted?: number;
+    /** 本季是年末時才有：本年的年報（TIME-07） */
+    yearReport?: YearReport;
 }
 
 /** 進行中的培育會話存取介面；正式環境為 NurtureService，讓存檔帶著培育進度 */
@@ -299,6 +305,8 @@ export class GameSession {
     private _random: RandomSource = () => this._seeded.next();
     /** 主動指令造成的死亡事件；下一次季結時併入 aging 事件交給季結結算（不寫入存檔，見 PROG-2-0221） */
     private _pendingLifespanEvents: AgingEvent[] = [];
+    /** 本年度累積的老化事件（年末產出年報後清空，不存檔；年中讀檔時從 0 起算） */
+    private _yearAgingEvents: AgingEvent[] = [];
     /** 本季第一次主動扣壽命前的名冊；季結時當作陣亡虎符結算的「之前」基準，結算後清掉（不存檔） */
     private _preLifespanRoster: GeneralConfig[] | null = null;
     /** 共用入口保持同一函式身分，讀檔恢復游標後既有服務會立即使用新狀態。 */
@@ -1169,7 +1177,7 @@ export class GameSession {
 
     /** 開始回合制趕路（接取天下沙盤遠征等事件呼叫）；會覆蓋目前的趕路。 */
     public startTravel(targetId: string, turns: number): void {
-        this._travel = createTravelCountdown(targetId, turns);
+        this._travel = createTravelCountdown(targetId, turns + seasonModifiersOf(this._clock.state.currentSeason).travelTurnsDelta);
         this._emit(GAME_SESSION_EVENTS.TravelChanged, this.travel);
     }
 
@@ -1533,13 +1541,19 @@ export class GameSession {
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
         this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
-        this._military = regenMilitaryOneSeason(this._military);
+        this._military = regenMilitaryOneSeason(this._military, 1, seasonModifiersOf(advance.current.currentSeason).foodMultiplier);
         // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
         this._prison = { ...this._prison, intel: this._prison.intel + prisonYield.intel };
         this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + prisonYield.resource) };
 
-        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted };
+        this._yearAgingEvents.push(...agingEvents);
+        let yearReport: YearReport | undefined;
+        if (advance.yearEnded) {
+            yearReport = buildYearReport(advance.previous.currentYear, this._yearAgingEvents);
+            this._yearAgingEvents = [];
+        }
+        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport };
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -1558,7 +1572,23 @@ export class GameSession {
         for (const card of lifecycle?.spiritCards ?? []) {
             this._emit(GAME_SESSION_EVENTS.SpiritCardCreated, card);
         }
+        if (yearReport) {
+            this._emit(GAME_SESSION_EVENTS.YearEnded, yearReport);
+        }
         return payload;
+    }
+
+    /**
+     * 年度推進：一直推進季，直到本年年末（第 4 季結束）為止，回傳年報。
+     * 從第 1 季開始會跑滿 4 季；從中間季開始則跑到該年年末。最多推進 SEASONS_PER_YEAR 季。
+     */
+    public async advanceYear(): Promise<YearReport> {
+        for (let i = 0; i < SEASONS_PER_YEAR; i++) {
+            const payload = await this.advanceSeason();
+            if (payload.yearReport) return payload.yearReport;
+        }
+        // 季數與 GameClock 不一致時才會走到這裡；不靜默回傳假資料
+        throw new Error('advanceYear：未在 4 季內遇到年末');
     }
 
     /**

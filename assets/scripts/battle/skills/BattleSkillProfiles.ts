@@ -34,6 +34,10 @@ export interface BattleSkillProfile {
   healFloor?: number;
   /** 精銳突擊：衝鋒傷害倍率（PROG-2-0751，規格 2.0） */
   chargeMultiplier?: number;
+  /** 首回合傷害倍率（PROG-2-0773 威震華夏）：戰鬥第 1 回合傷害 × 此值 */
+  firstTurnDamageMultiplier?: number;
+  /** 擊殺目標後重置施放者行動（PROG-2-0773 威震華夏） */
+  resetSelfOnKill?: boolean;
   /** 毒箭：每回合扣目標最大 HP 的比例（規格 10%） */
   dotMaxHpRatio?: number;
   /** 緩速：移動範圍減少的格數（規格 1） */
@@ -185,6 +189,19 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     slowAmount: 1,
     statusTurns: 1,
     battleLogKey: 'skill.mentor_slow.debuff',
+  },
+  // 威震華夏（PROG-2-0773）：單體敵軍傷害；第 1 回合 ×2，擊殺後施放者再行動 1 次（規格 戰法系統 威震華夏）
+  'tally-wei-zhen-hua-xia': {
+    battleSkillId: 'tally-wei-zhen-hua-xia',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    coefficient: 1.0,
+    scalingStat: 'str',
+    maxTargets: 1,
+    firstTurnDamageMultiplier: 2,
+    resetSelfOnKill: true,
+    battleLogKey: 'skill.tally_wei_zhen_hua_xia.hit',
   },
   'zhuge-liang-storm': {
     battleSkillId: 'zhuge-liang-storm',

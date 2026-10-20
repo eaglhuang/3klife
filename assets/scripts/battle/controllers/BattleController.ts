@@ -44,6 +44,7 @@ import { factorBattleEffectsOf, type FactorBattleEffectMap } from '../../core/sy
 import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
 import { buildTallyCardCatalog, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { starStatMultiplier } from '../../core/systems/TigerTallyStar';
+import { applyTallyPassive } from '../shared/TallyPassive';
 import { describeActiveTallySets } from '../../core/systems/TigerTallySetBonus';
 import type { TacticCondition } from '../../core/systems/TacticCondition';
 import {
@@ -282,6 +283,7 @@ export class BattleController {
     const info = this.tallyInfoOf(ref.cardUid);
     unit.tallyStarMultiplier = starStatMultiplier(info?.star ?? 1);
     unit.tallyTemplateId = info?.templateId ?? null;
+    applyTallyPassive(unit, unit.tallyTemplateId);
     this._deployedTallyIds.add(ref.cardUid);
     unit.commanderUid = commander?.uid ?? null;
     unit.tallyAffinity = (lane, depth) =>
