@@ -151,7 +151,6 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     pushSteps: 1,
     battleLogKey: 'skill.tally_changban_push.push',
   },
-  },
   // 毒箭（PROG-2-0766）：目標中毒 2 回合，每回合扣最大 HP 10%
   'tally-poison-arrow': {
     battleSkillId: 'tally-poison-arrow',
