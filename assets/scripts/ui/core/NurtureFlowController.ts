@@ -15,6 +15,7 @@
  * Presenter 讀 Model（名冊 / NurtureService）後吐出 ViewModel，按鈕 onClick 只轉呼叫 Presenter 的方法。
  */
 import { lateBloomClueText } from '../../core/systems/LateBloomClue';
+import { VITALITY_SCRIPT_KEYS, vitalityScriptText } from './VitalityScriptTexts';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { MentorCard } from '../../core/models/MentorCard';
 import type { NurtureBlockReason, NurtureService } from '../../core/services/NurtureService';
@@ -130,6 +131,8 @@ export interface NurtureFlowDeps {
     spendLifespan?: (generalId: string, command: 'nurture') => { events: readonly { type: string }[] } | null;
     /** 開獎與大器晚成文案（ui.breed.*）；正式環境接 i18n.t，未提供時用 zh-TW 預設文案 */
     text?: BreedTextLookup;
+    /** 精力歸 0 時的劇本提示（PROG-2-0732）；正式環境接 SHOW_TOAST，未提供時不顯示 */
+    showToast?: (message: string) => void;
 }
 
 export class NurtureFlowController {
@@ -208,6 +211,9 @@ export class NurtureFlowController {
         const { log, awakening } = this._deps.nurture.train(child.id, action);
         // 因子解鎖系統 §H UI_AWAKENING：「【覺醒】{GeneName}！」
         this._notice = awakening ? `${describeRound(log)}　【覺醒】${awakening.displayName}！` : describeRound(log);
+        if (log.vigorAfter === 0) {
+            this._deps.showToast?.(vitalityScriptText(this._t.bind(this), VITALITY_SCRIPT_KEYS.exhausted, child.name));
+        }
         const lifespan = this._deps.spendLifespan?.(child.id, 'nurture');
         if (lifespan?.events.some((event) => event.type === 'died')) {
             this._notice += '　壽命耗盡，武將已故';

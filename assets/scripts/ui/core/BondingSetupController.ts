@@ -23,6 +23,7 @@ import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
 import type { BreedingService } from '../../core/services/BreedingService';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
+import { VITALITY_SCRIPT_KEYS, vitalityScriptText } from './VitalityScriptTexts';
 import {
     BREEDING_MIN_AGE,
     BreedingBlockReason,
@@ -118,6 +119,13 @@ export class BondingSetupController {
     /** 可放進父方欄位的武將；精力不足等暫時狀態仍列出，由資格檢查說明原因 */
     fathers(): BreedingGeneral[] {
         return this._parents().filter((g) => isMale(g));
+    }
+
+    /** 結緣畫面：目前選中的母方待產中時回傳劇本句（PROG-2-0732，ui.vit.script.pregnancy_lock）；否則 null */
+    pregnantMotherHint(): string | null {
+        const mother = this.mothers().find((g) => g.id === this._motherId);
+        if (!mother || (mother.pregnancySeasonsLeft ?? 0) <= 0) return null;
+        return vitalityScriptText(this._deps.text ?? fallbackBreedText, VITALITY_SCRIPT_KEYS.pregnancyLock, mother.name);
     }
 
     mothers(): BreedingGeneral[] {

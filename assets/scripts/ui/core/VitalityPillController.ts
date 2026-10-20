@@ -12,6 +12,8 @@
  */
 import type { VitalityPillKind, VitalityPillRejectReason } from '../../core/systems/VitalityPill';
 import { ITEM_PREMIUM_VITALITY_PILL, ITEM_VITALITY_PILL, itemCount, PlayerInventory } from '../../core/systems/PlayerInventory';
+import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
+import { VITALITY_SCRIPT_KEYS, vitalityScriptText } from './VitalityScriptTexts';
 
 export const VITALITY_PILL_REJECT_TEXT: Record<VitalityPillRejectReason | 'no-general', string> = {
     'vitality-full': '精力已滿，不需使用補元散',
@@ -20,6 +22,8 @@ export const VITALITY_PILL_REJECT_TEXT: Record<VitalityPillRejectReason | 'no-ge
 };
 
 export interface VitalityPillDeps {
+    /** 劇本文案（ui.vit.script.*）；正式環境接 i18n.t，未提供時用 zh-TW 預設 */
+    text?: BreedTextLookup;
     session: {
         readonly inventory: PlayerInventory;
         usePillOnGeneral(generalId: string, kind: VitalityPillKind): Promise<
@@ -46,10 +50,10 @@ export class VitalityPillController {
         };
     }
 
-    /** 對指定武將使用補元散，回傳要顯示的提示文字 */
-    public async use(generalId: string, kind: VitalityPillKind): Promise<string> {
+    /** 對指定武將使用補元散：成功時顯示劇本句（PROG-2-0732），失敗時顯示拒絕原因 */
+    public async use(generalId: string, kind: VitalityPillKind, generalName: string): Promise<string> {
         const result = await this.deps.session.usePillOnGeneral(generalId, kind);
         if (!result.ok) return VITALITY_PILL_REJECT_TEXT[result.reason];
-        return `精力回復 ${result.restored}，目前 ${result.vitality}`;
+        return vitalityScriptText(this.deps.text ?? fallbackBreedText, VITALITY_SCRIPT_KEYS.pillUsed, generalName);
     }
 }
