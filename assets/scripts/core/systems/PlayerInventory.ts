@@ -26,6 +26,8 @@ export const ITEM_BATTLE_NOTE = 'ITEM_BATTLE_NOTE';
 export const ITEM_VITALITY_PILL = 'ITEM_VITALITY_PILL';
 /** 高級補元散（精力 +100；PROG-2-0443 接線）。起始庫存為 0。 */
 export const ITEM_PREMIUM_VITALITY_PILL = 'ITEM_VITALITY_PILL_PREMIUM';
+/** 歸宗令（血脈歸宗消耗 1 張，名詞表 Merge_Token；PROG-2-0862 接線）。起始庫存為 0，取得來源未定。 */
+export const ITEM_MERGE_TOKEN = 'ITEM_MERGE_TOKEN';
 
 export const ITEM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
     [ITEM_ORACLE_TOKEN]: '求籤令',
@@ -35,6 +37,7 @@ export const ITEM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
     [ITEM_BATTLE_NOTE]: '戰法筆記',
     [ITEM_VITALITY_PILL]: '補元散',
     [ITEM_PREMIUM_VITALITY_PILL]: '高級補元散',
+    [ITEM_MERGE_TOKEN]: '歸宗令',
 };
 
 export type PlayerInventory = Readonly<Record<string, number>>;

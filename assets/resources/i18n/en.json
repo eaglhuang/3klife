@@ -243,5 +243,10 @@
   "ui.vit.script.exhausted": "{0} is exhausted and cannot act for now.",
   "ui.vit.script.pill_used": "{0} took a Vitality Pill. Vitality restored!",
   "ui.vit.script.pregnancy_lock": "{0} is pregnant. Vitality recovery is paused…",
-  "ui.vit.script.hint_late_bloomer": "{0} is frail, yet there is a strange light in their eyes…"
+  "ui.vit.script.hint_late_bloomer": "{0} is frail, yet there is a strange light in their eyes…",
+  "ui.season.display": "Year {0}, {1}",
+  "ui.season.spring": "Spring — Renewal",
+  "ui.season.summer": "Summer — Beacon Fires",
+  "ui.season.autumn": "Autumn — Galloping Charge",
+  "ui.season.winter": "Winter — Siege in the Snow"
 }
