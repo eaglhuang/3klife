@@ -182,7 +182,7 @@
     {
       "id": "gene_hidden_01",
       "displayName": "咆哮覺醒因子",
-      "color": "gold",
+      "color": "white",
       "category": "hidden",
       "maxLevel": 1,
       "defaultTags": ["exclusive", "awakening", "zhang-fei"],
@@ -191,7 +191,7 @@
     {
       "id": "gene_hidden_02",
       "displayName": "烈膽覺醒因子",
-      "color": "gold",
+      "color": "white",
       "category": "hidden",
       "maxLevel": 1,
       "defaultTags": ["exclusive", "awakening", "zhang-fei"],
@@ -200,7 +200,7 @@
     {
       "id": "gene_hidden_03",
       "displayName": "義絕覺醒因子",
-      "color": "gold",
+      "color": "white",
       "category": "hidden",
       "maxLevel": 1,
       "defaultTags": ["exclusive", "awakening", "guan-yu"],
@@ -209,7 +209,7 @@
     {
       "id": "gene_hidden_04",
       "displayName": "天下無雙因子",
-      "color": "gold",
+      "color": "purple",
       "category": "hidden",
       "maxLevel": 1,
       "defaultTags": ["exclusive", "awakening", "lu-bu"],
@@ -218,7 +218,7 @@
     {
       "id": "gene_hidden_05",
       "displayName": "霸道因子",
-      "color": "gold",
+      "color": "white",
       "category": "hidden",
       "maxLevel": 1,
       "defaultTags": ["exclusive", "awakening", "cao-cao"],
