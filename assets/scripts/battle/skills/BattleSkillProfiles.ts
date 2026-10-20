@@ -190,15 +190,6 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     statusTurns: 1,
     battleLogKey: 'skill.mentor_slow.debuff',
   },
-  // 鼓舞（PROG-2-0769）：全隊士氣 +20（規格 G-2）
-  'mentor-morale': {
-    battleSkillId: 'mentor-morale',
-    targetMode: BattleSkillTargetMode.AllyAll,
-    effectKind: 'morale',
-    coefficient: 0,
-    moraleBonus: 20,
-    battleLogKey: 'skill.mentor_morale.buff',
-  },
   // 威震華夏（PROG-2-0773）：單體敵軍傷害；第 1 回合 ×2，擊殺後施放者再行動 1 次（規格 戰法系統 威震華夏）
   'tally-wei-zhen-hua-xia': {
     battleSkillId: 'tally-wei-zhen-hua-xia',
