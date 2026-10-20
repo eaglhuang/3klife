@@ -27,6 +27,9 @@ import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { attachSupportToCards, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { MentorCardDetailController } from '../core/MentorCardDetailController';
+import { GeneralVersionGalleryController } from '../core/GeneralVersionGalleryController';
+import type { GeneralVersionRecord } from '../../core/models/GeneralVersion';
+import { GALLERY_GROUP_SLOTS } from '../../core/systems/GeneralVersionGallery';
 import type { MentorCardData, MentorCardTab } from '../../core/systems/MentorCardTabs';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { buildCountdownIconFlowView } from '../../core/systems/CountdownIconView';
@@ -159,6 +162,8 @@ export class LobbyScene extends Component {
     /** 教官卡詳情（MENT-13）：頁籤與目前卡的狀態 */
     private _mentorCardHost: UIScreenPreviewHost | null = null;
     private readonly _mentorCardDetail = new MentorCardDetailController();
+    private _generalGalleryHost: UIScreenPreviewHost | null = null;
+    private readonly _generalGallery = new GeneralVersionGalleryController();
     private _supportCatalog: SupportCatalog | null = null;
     private _bondingHost: UIScreenPreviewHost | null = null;
     private _bonding: BondingSetupController | null = null;
@@ -262,6 +267,7 @@ export class LobbyScene extends Component {
         await this._mountSeasonHud();
         await this._mountNurtureFlow();
         await this._mountMentorCardDetail();
+        await this._mountGeneralVersionGallery();
         await this._mountBondingSetup();
         await this._mountJobChange();
         await this._mountDomestic();
@@ -296,7 +302,8 @@ export class LobbyScene extends Component {
         try {
             await Promise.all([
                 services().loadSkills(),
-                services().loadVfxEffects()
+                services().loadVfxEffects(),
+                services().loadSeasonModifiers()
             ]);
             
             this._generals = await services().resource.loadJson<GeneralConfig[]>(
@@ -521,6 +528,57 @@ export class LobbyScene extends Component {
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshMentorCardDetail();
+    }
+
+    /**
+     * 同名武將版本圖鑑（PROG-2-0708 cc 接線）：以 general-version-gallery-screen 組裝，
+     * 狀態在 GeneralVersionGalleryController，這裡只綁按鈕與套 view。
+     */
+    private async _mountGeneralVersionGallery(): Promise<void> {
+        const bindings = [{ buttonId: 'btnCloseGallery', handler: () => { this._closeGeneralVersionGallery(); } }];
+        for (let i = 0; i < GALLERY_GROUP_SLOTS; i++) {
+            bindings.push({ buttonId: `btnGroup_${i}`, handler: () => this._selectGalleryGroup(i) });
+        }
+        this._generalGalleryHost = await this._mountPreviewScreenHost('GeneralVersionGalleryHost', 'general-version-gallery-screen', bindings);
+        if (this._generalGalleryHost) {
+            this._generalGalleryHost.node.active = false;
+        }
+    }
+
+    /** 開啟圖鑑。版本表與已擁有集合由呼叫端傳入（正式版本資料由企劃提供後接來源）。 */
+    public openGeneralVersionGallery(table: GeneralVersionRecord[], owned: ReadonlySet<string>): void {
+        const host = this._generalGalleryHost;
+        if (!host) {
+            return;
+        }
+        this._generalGallery.open(table, owned);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshGeneralVersionGallery();
+    }
+
+    private _selectGalleryGroup(index: number): void {
+        const bloodlineId = this._generalGallery.getBloodlineIdAt(index);
+        if (bloodlineId) {
+            this._generalGallery.selectBloodline(bloodlineId);
+            this._refreshGeneralVersionGallery();
+        }
+    }
+
+    private _closeGeneralVersionGallery(): void {
+        this._generalGallery.close();
+        if (this._generalGalleryHost) {
+            this._generalGalleryHost.node.active = false;
+        }
+    }
+
+    private _refreshGeneralVersionGallery(): void {
+        const binder = this._generalGalleryHost?.binder;
+        if (!binder) {
+            return;
+        }
+        const view = this._generalGallery.getView();
+        applyFlowView(binder, { texts: view.texts, actives: view.actives, enabled: {} });
     }
 
     private _closeMentorCardDetail(): void {

@@ -85,6 +85,45 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         assert.equals(6, session.roster.length);
     });
 
+    suite.test('開場後半：宿命鎖定存檔 → 重開不再是新玩家 → 首戰勝利 → 紅顏只彈一次（存讀往返）', async () => {
+        const generals = readJson<GeneralConfig[]>('assets/resources/data/generals.json');
+        const heroPool = readJson<GachaConfig[]>('assets/resources/data/gacha-config.json').find(c => c.poolId === 'hero-pool')!;
+        const adapter = new MemoryStorageAdapter();
+        const make = (): GameSession => {
+            const s = new GameSession();
+            s.setRosterStore(new InMemoryRosterStore([]));
+            s.setSaveService(new PlayerSaveService(adapter));
+            s.setRandomSource(() => 0.4);
+            return s;
+        };
+
+        const first = make();
+        assert.isFalse(await first.load(), '新玩家沒有存檔');
+        const destiny = new DestinyOpeningController({
+            config: () => heroPool, generals: () => generals, session: first,
+            random: first.randomSource, seed: () => 1, onStarted: async () => { await first.save(); },
+        });
+        destiny.roll();
+        assert.isTrue(await destiny.select(1));
+        const leadId = first.leadGeneralId!;
+
+        // 重開遊戲：讀得到存檔（LobbyScene 不再開開場），主將仍是所選，尚未打過首戰
+        const second = make();
+        assert.isTrue(await second.load());
+        assert.equals(leadId, second.leadGeneralId);
+        assert.isFalse(second.shouldShowOpeningRedFace);
+
+        await second.recordBattle([leadId], 'player-win');
+        assert.isTrue(second.shouldShowOpeningRedFace, '首戰通過後該彈紅顏');
+        await second.markOpeningRedFaceShown();
+
+        const third = make();
+        assert.isTrue(await third.load());
+        assert.isTrue(third.firstBattleCleared);
+        assert.isFalse(third.shouldShowOpeningRedFace, '展示過不再彈');
+        assert.equals(leadId, third.leadGeneralId);
+    });
+
     suite.test('opening-intro layout 含 FlowView 所有 key，skin 含全部 slot', () => {
         const layout = readJson<any>('assets/resources/ui-spec/layouts/opening-intro-main.json');
         const ids = new Set<string>();

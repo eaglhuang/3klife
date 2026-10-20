@@ -55,3 +55,17 @@ export function assignDaughterRoute(daughter: DaughterRecord, route: DaughterRou
 export function daughtersAwaitingRoute(daughters: readonly DaughterRecord[]): DaughterRecord[] {
     return daughters.filter((d) => isComingOfAge(d.age) && !d.route);
 }
+
+/**
+ * 年度推進：每年女兒長一歲；回傳新清單與「本年剛滿 14 歲」的女兒（只回傳跨過門檻的那一年）。
+ * 暫定（可逆）：一年一歲，與年報的年度節奏一致。
+ */
+export function advanceDaughtersOneYear(list: readonly DaughterRecord[]): { daughters: DaughterRecord[]; newlyOfAge: DaughterRecord[] } {
+    const newlyOfAge: DaughterRecord[] = [];
+    const daughters = list.map((d) => {
+        const next = { ...d, age: d.age + 1 };
+        if (!isComingOfAge(d.age) && isComingOfAge(next.age)) newlyOfAge.push(next);
+        return next;
+    });
+    return { daughters, newlyOfAge };
+}

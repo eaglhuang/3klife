@@ -408,8 +408,11 @@ export function spendTactic(state: SortieState, cost: number): TacticSpendResult
 
 /** 戰法計謀點成本預設（暫定：戰法系統範例 20~55 TP，尚未逐招定案，先取中間值 30） */
 export const DEFAULT_TACTIC_TP_COST = 30;
-/** 逐招成本覆寫表（tacticId → 成本）；定案前留空 */
-export const TACTIC_TP_COST_OVERRIDE: Readonly<Record<string, number>> = {};
+/** 逐招成本覆寫表（tacticId → 成本）；只放規格有寫的招式 */
+export const TACTIC_TP_COST_OVERRIDE: Readonly<Record<string, number>> = {
+    // 空城計（戰法系統：55 TP，PROG-2-0778）
+    TAC_EMPTY_FORT: 55,
+};
 
 /** 施放戰法所需計謀點；沒有 tacticId（只有普通攻擊或 demo 技能）時用預設值 */
 export function getTacticTpCost(tacticId: string | null | undefined): number {
