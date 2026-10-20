@@ -18,12 +18,15 @@ export interface TallyPassiveSpec {
   attackRangeFloor?: number;
   /** 結姻連射：與男性武將相鄰時，每次攻擊額外多打的次數 */
   extraHitWhenAdjacentMale?: number;
+  /** 騎射合一：移動力加成（規格 Move + 1，PROG-2-0796） */
+  moveRangeBonus?: number;
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
 export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec>> = {
   // 騎射合一：騎兵保留騎兵移動力，攻擊射程改用弓兵射程
-  'tiger-tally-bai-ma': { attackRangeFloor: ARCHER_ATTACK_RANGE },
+  // 騎射合一：攻擊射程 ＝ 弓兵射程、移動 +1（g.md 規格）；移動後攻擊由戰鬥階段用移動後格位計算
+  'tiger-tally-bai-ma': { attackRangeFloor: ARCHER_ATTACK_RANGE, moveRangeBonus: 1 },
   // 結姻連射：與男性武將相鄰時攻擊次數 +1（每次攻擊判定，不是出陣時套用）
   'tiger-tally-jiao-ji': { extraHitWhenAdjacentMale: 1 },
 };
@@ -34,6 +37,9 @@ export function applyTallyPassive(unit: TroopUnit, templateId: string | null): v
   if (!spec) return;
   if (spec.attackRangeFloor !== undefined) {
     unit.attackRange = Math.max(unit.attackRange, spec.attackRangeFloor);
+  }
+  if (spec.moveRangeBonus !== undefined) {
+    unit.moveRangeBonus += spec.moveRangeBonus;
   }
 }
 
