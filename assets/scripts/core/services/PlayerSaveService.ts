@@ -158,7 +158,8 @@ export function normalizeTallyHoldingsMap(value: unknown): Record<string, TallyH
     const out: Record<string, TallyHolder> = {};
     for (const [uid, holder] of Object.entries(value as Record<string, unknown>)) {
         if (uid.length === 0) continue;
-        if (holder === null || (typeof holder === 'string' && holder.length > 0)) out[uid] = holder;
+        if (holder === null) out[uid] = null;
+        else if (typeof holder === 'string' && holder.length > 0) out[uid] = holder;
     }
     return out;
 }
