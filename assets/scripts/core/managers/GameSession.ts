@@ -102,7 +102,8 @@ import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw
 import { drawFemalePool, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
 import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome } from '../systems/DungeonRescue';
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
-import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
+import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral, UNVEILING_AGE, GENERAL_STATUS_UNVEILED } from '../systems/Unveiling';
+import { injectCatalystFactor, markCatalystUsed, type CatalystGeneral } from '../systems/GeneCatalyst';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
 import { grantLegacyRewards, normalizeLegacyCount, type LegacyAchievement } from '../systems/LegacyAchievement';
@@ -137,6 +138,8 @@ export const GAME_SESSION_EVENTS = {
     GeneralUnveiled: 'game-session-general-unveiled',
     /** payload: MentorCard */
     GeneralRetired: 'game-session-general-retired',
+    /** payload: { childId, injectedFactorId, consumed }（退役時因子媒介注入，PROG-2-0865） */
+    GeneCatalystInjected: 'game-session-gene-catalyst-injected',
     /** payload: SpiritCard（每位死亡武將一張） */
     SpiritCardCreated: 'game-session-spirit-card-created',
     /** payload: BattleSettlement（戰後精力、戰績、功勳已寫回名冊） */
@@ -1674,13 +1677,31 @@ export class GameSession {
         return true;
     }
 
-    /** 玩家讓 65 歲以上的武將退役，轉成教官傳承資料並立即存檔 */
-    public async retireGeneral(generalId: string): Promise<MentorCard> {
+    /**
+     * 玩家讓 65 歲以上的武將退役，轉成教官傳承資料並立即存檔。
+     * 可選擇一位 0~5 歲、尚未開獎的子嗣，退役時注入因子媒介（PROG-2-0865）；不選則行為與原本相同。
+     */
+    public async retireGeneral(generalId: string, options?: { catalystChildId?: string }): Promise<MentorCard> {
         if (!this._lifecycle) {
             throw new Error('[GameSession] 尚未設定 SeasonLifecycle（setLifecycle）');
         }
+        const childId = options?.catalystChildId;
+        if (childId !== undefined) this._assertCatalystChild(generalId, childId);
         const result = await this._lifecycle.retireGeneral(this._roster.getAll(), generalId, this._clock.state);
-        this._roster.replaceAll(result.roster);
+        let roster = result.roster;
+        let injection: { childId: string; injectedFactorId: string | null; consumed: boolean } | null = null;
+        if (childId !== undefined) {
+            const retired = roster.find((g) => g.id === generalId)! as GeneralConfig & CatalystGeneral;
+            const child = roster.find((g) => g.id === childId)!;
+            const outcome = injectCatalystFactor(retired, child, () => this._random());
+            roster = roster.map((g): GeneralConfig => {
+                if (g.id === childId) return outcome.child;
+                if (g.id === generalId && outcome.consumed) return markCatalystUsed(g as GeneralConfig & CatalystGeneral);
+                return g;
+            });
+            injection = { childId, injectedFactorId: outcome.injectedFactorId, consumed: outcome.consumed };
+        }
+        this._roster.replaceAll(roster);
         this._clearLeadIfGone();
         const reason = result.card.mentorRoute?.reason;
         if (reason === 'SCHOLAR' || reason === 'DUAL_CLASS') {
@@ -1691,7 +1712,20 @@ export class GameSession {
             await this.save();
         }
         this._emit(GAME_SESSION_EVENTS.GeneralRetired, result.card);
+        if (injection) this._emit(GAME_SESSION_EVENTS.GeneCatalystInjected, injection);
         return result.card;
+    }
+
+    /** 因子媒介的子嗣必須存在、不是退役武將本人、年齡 0~UNVEILING_AGE 且尚未開獎；不合法時拋錯，不改任何狀態 */
+    private _assertCatalystChild(generalId: string, childId: string): void {
+        const child = this._roster.getAll().find((g) => g.id === childId);
+        const eligible = !!child
+            && childId !== generalId
+            && typeof child.age === 'number'
+            && child.age >= 0
+            && child.age <= UNVEILING_AGE
+            && child.status !== GENERAL_STATUS_UNVEILED;
+        if (!eligible) throw new Error('[GameSession] 因子媒介只能注入 0~5 歲、尚未開獎的子嗣');
     }
 
     /**
