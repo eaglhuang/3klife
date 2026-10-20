@@ -286,11 +286,36 @@ export class BattleSkillDispatcher {
         return general ? { lane: general.lane, depth: general.depth } : null;
       },
       getWeather: () => state.weather,
+      getTurnNumber: () => services().battle.getSnapshot().turn,
+      isCellFreeForPush: (lane: number, depth: number) => {
+        if (lane < 0 || lane >= GAME_CONFIG.GRID_LANES || depth < 0 || depth >= GAME_CONFIG.GRID_DEPTH) return false;
+        const cell = state.getCell(lane, depth);
+        return !!cell && !cell.occupantId && state.getTileEffect(lane, depth)?.blocksMovement !== true;
+      },
+      pushUnitTo: (unit: TroopUnit, lane: number, depth: number) => {
+        const fromLane = unit.lane;
+        const fromDepth = unit.depth;
+        state.getCell(fromLane, fromDepth)!.occupantId = null;
+        unit.moveTo(lane, depth);
+        state.getCell(lane, depth)!.occupantId = unit.id;
+        services().event.emit(EVENT_NAMES.UnitMoved, {
+          unitId: unit.id,
+          lane,
+          depth,
+          fromLane,
+          fromDepth,
+          forcedMove: true,
+          forcedMoveReason: 'skill:push',
+        });
+      },
       getCasterUnitId: (casterFaction: Faction) => (casterFaction === Faction.Player
         ? this.context.getPlayerGeneralUnitId()
         : this.context.getEnemyGeneralUnitId()),
       getDefenseZoneMultiplier: (unit: TroopUnit) => zoneDefenseMultiplier(state.getFormationZone(unit.lane, unit.depth), unit.faction),
       addFormationZone: (zone: FormationZone) => state.setFormationZone(zone),
+      addUnitDot: (unit: TroopUnit, ratio: number, turns: number) => {
+        state.unitDots.set(unit.id, { unitId: unit.id, ratio, remainingTurns: turns });
+      },
       setTileHazard: (cell: { lane: number; depth: number }, damagePerTurn: number) => {
         // 固定地形格（掩體、營帳）不被火場覆蓋；暫時性格子狀態則以新的覆蓋舊的
         const existing = state.getTileEffect(cell.lane, cell.depth);

@@ -4,7 +4,7 @@
   "children": [
     {
       "name": "Shadow",
-      "type": "shadow",
+      "type": "panel",
       "widget": { "top": -4, "bottom": -4, "left": -4, "right": -4 },
       "skinSlot": "parchment.bg.shadow",
       "zIndex": -1

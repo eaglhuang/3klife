@@ -223,6 +223,80 @@ export function buildTallyCardCatalog(): Map<string, TallyCardData> {
         timing: 'active-cast' as BattleSkillTiming,
       },
     },
+    {
+      type: TroopType.Cavalry,
+      name: '白馬義從',
+      sub: '白馬騎兵',
+      rarity: 'epic',
+      rarityLabel: 'SSR',
+      stars: '★★★',
+      artResource: resolveTallyCardArtResource(TroopType.Cavalry),
+      traits: ['騎射', '機動'],
+      traitDetails: [
+        { label: '騎射', detail: '騎兵的機動配上弓兵的射程，可在遠處持續施壓。' },
+        { label: '機動', detail: '保留騎兵的移動力，調度快。' },
+      ],
+      abilities: ['騎射合一'],
+      abilityDetails: [
+        { name: '騎射合一', detail: '騎兵移動不變，攻擊射程提高為弓兵射程（2 格）。戰鬥開始前即生效。' },
+      ],
+      source: {
+        faction: '群雄',
+        origin: '公孫瓚麾下白馬義從',
+        sourceType: '死亡傳承虎符',
+        obtainHint: '公孫瓚死亡結算後取得。',
+      },
+      lore: {
+        title: '白馬映雪',
+        summary: '以白馬為陣、騎射並重的幽州精騎。',
+        body: '白馬義從的虎符象徵騎射並用的機動戰法，持有者可讓騎兵在遠距離先行壓制。',
+      },
+      desc: '騎兵的機動加上弓兵的射程，遠近皆能施壓。',
+      tacticMeta: {
+        tacticId: 'tiger-tally-bai-ma',
+        battleSkillId: 'tiger-passive-bai-ma',
+        sourceType: 'tiger-tally' as SkillSourceType,
+        targetMode: 'self' as BattleSkillTargetMode,
+        timing: 'start-of-battle' as BattleSkillTiming,
+      },
+    },
+    {
+      type: TroopType.Archer,
+      name: '巾幗軍',
+      sub: '弩射女兵',
+      rarity: 'rare',
+      rarityLabel: 'SR',
+      stars: '★★',
+      artResource: resolveTallyCardArtResource(TroopType.Archer),
+      traits: ['連射', '協同'],
+      traitDetails: [
+        { label: '連射', detail: '弓兵射擊的節奏快，同一目標可被多次命中。' },
+        { label: '協同', detail: '身旁有主將的男性武將時，火力配合更緊密。' },
+      ],
+      abilities: ['結姻連射'],
+      abilityDetails: [
+        { name: '結姻連射', detail: '與男性武將相鄰時，每次攻擊次數 +1。戰鬥中每次攻擊判定。' },
+      ],
+      source: {
+        faction: '蜀',
+        origin: '孫尚香麾下巾幗軍',
+        sourceType: '死亡傳承虎符',
+        obtainHint: '孫尚香死亡結算後取得。',
+      },
+      lore: {
+        title: '結姻連射',
+        summary: '以弓弩與婚盟凝聚的女子親衛。',
+        body: '巾幗軍的虎符象徵同盟之義，持有者的弓手與男性主將並肩時，箭矢會更密。',
+      },
+      desc: '與男性武將並肩時，射擊次數更多。',
+      tacticMeta: {
+        tacticId: 'tiger-tally-jiao-ji',
+        battleSkillId: 'tiger-passive-jiao-ji',
+        sourceType: 'tiger-tally' as SkillSourceType,
+        targetMode: 'self' as BattleSkillTargetMode,
+        timing: 'on-attack' as BattleSkillTiming,
+      },
+    },
   ];
 
   const TROOP_DEFAULTS: Record<string, { hp: number; attack: number; defense: number; moveRange: number }> = {

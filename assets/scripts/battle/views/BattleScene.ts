@@ -159,6 +159,7 @@ export class BattleScene extends Component {
       await Promise.all([
           services().loadSkills(),
           services().loadVfxEffects(),
+          services().loadSeasonModifiers(),
           loadBattleSkillMetadata(),
           prewarmBattleAudioClips(),
       ]);

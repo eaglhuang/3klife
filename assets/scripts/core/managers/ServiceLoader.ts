@@ -38,6 +38,7 @@ import { UIManager } from "./UIManager";
 import { UISpecLoader } from "../../ui/core/UISpecLoader";
 import { UCUFLogger, LogCategory } from "../utils/UCUFLogger";
 import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
+import { normalizeSeasonModifiers, seasonModifiersOf, setActiveSeasonModifiers } from "../systems/SeasonModifiers";
 
 export class ServiceLoader {
     private static instance: ServiceLoader | null = null;
@@ -84,6 +85,7 @@ export class ServiceLoader {
     public readonly breeding = new BreedingService(this.rosterStore, BloodlineGraph.getInstance(), {
         random: this.session.randomSource,
         currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
+        seasonConceptionMod: () => seasonModifiersOf(this.session.gameTime.currentSeason).conceptionMultiplier,
         getDictionary: () => this.factorDictionary,
         getFemaleSource: (uid) => this.session.femaleSources[uid] ?? null,
         getHistoricalPairs: () => this.historicalPairs,
@@ -252,6 +254,16 @@ export class ServiceLoader {
      * 非同步載入 vfx-effects.json 並批量注冊至 EffectSystem。
      * 建議在 BattleScene.start() 中與 loadSkills() 一起 await。
      */
+    /** 載入四季特色修正表（TIME-08）；失敗時退回程式內建預設，遊戲照常進行 */
+    public async loadSeasonModifiers(): Promise<void> {
+        try {
+            const raw = await this.resource.loadJson<unknown>('data/season-modifiers');
+            setActiveSeasonModifiers(normalizeSeasonModifiers(raw));
+        } catch (e) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] season-modifiers.json 載入失敗，使用預設四季修正:', e);
+        }
+    }
+
     public async loadVfxEffects(): Promise<void> {
         try {
             const rawTable = await this.resource.loadJson<unknown>('data/vfx-effects');

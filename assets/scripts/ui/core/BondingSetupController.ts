@@ -14,6 +14,7 @@
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 SelectFather / SelectMother / Confirm，
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
+import { buildBreedingPreviewLines } from './BreedingPreviewPresenter';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
@@ -230,12 +231,8 @@ export class BondingSetupController {
         const eligibility = this._deps.breeding.checkEligibility(father.id, mother.id);
         const ep = this._deps.breeding.previewEp(father.id, mother.id);
         texts.epEstimate = this._t('ui.breed.ep_display', String(ep.ep), ep.rating);
-        texts.epDetail = [
-            '基礎 50',
-            `共鳴 +${ep.resonance}${ep.topTag ? `（${ep.topTag} × ${ep.topTagCount} 人）` : ''}`,
-            `異脈 +${ep.outcross}`,
-            `契合 +${ep.affinity}`,
-        ].join(' · ');
+        const preview = buildBreedingPreviewLines(ep);
+        texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine].join(' · ');
         texts.conceptionLabel = `受孕率 ${Math.round(conceptionRate(father, mother) * 100)}%`;
         texts.costLabel = this._t('ui.breed.confirm', father.name, String(FATHER_VIGOR_COST), mother.name, String(MOTHER_VIGOR_COST));
         texts.eligibilityLabel = eligibility.ok

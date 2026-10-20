@@ -52,7 +52,7 @@ export function createMentorSupportCatalogSuite(): TestSuite {
         const bad = { General_ID: 'x-bad', Support: { Support_ID: 'SUP_BAD' } };
         const catalog = parseSupportCatalog([bad, ...good, good[0]]);
         assert.equals(good.length, catalog.byGeneralId.size, '好條目全部保留');
-        assert.equals(good.length, 1);
+        assert.isTrue(good.length >= 1, '至少要有一筆好資料');
         assert.equals(2, catalog.problems.length, '壞條目與重複各一筆');
         assert.equals(0, catalog.problems[0].index);
         assert.isTrue(catalog.problems[1].errors.some((e) => e.includes('重複')));

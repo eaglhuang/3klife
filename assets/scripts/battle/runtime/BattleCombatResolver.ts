@@ -9,6 +9,8 @@ import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
+import { extraAttackHitsOf } from '../shared/TallyPassive';
+import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import {
   canNavalCombinedAttack,
@@ -166,6 +168,23 @@ export class BattleCombatResolver {
   }
 
   public resolveCombat(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
+    // 結姻連射（PROG-2-0775）：攻擊次數 = 1 + 額外次數；每一下都是完整的命中、傷害、反擊解算
+    const hits = 1 + extraAttackHitsOf(attacker, this.isAdjacentToMaleGeneral(attacker));
+    for (let hit = 0; hit < hits; hit += 1) {
+      if (attacker.isDead() || defender.isDead()) return;
+      this.resolveHit(attacker, defender, svc);
+    }
+  }
+
+  /** 攻擊方的主將是男性，且部隊站在主將所在排的前一排（武將不在格子上，只看排位） */
+  private isAdjacentToMaleGeneral(unit: TroopUnit): boolean {
+    const general = this.context.state.getGeneral(unit.faction);
+    if (general?.gender !== '男') return false;
+    const generalDepth = unit.faction === Faction.Player ? GAME_CONFIG.GRID_DEPTH : -1;
+    return Math.abs(generalDepth - unit.depth) === 1;
+  }
+
+  private resolveHit(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
     const tacticBehavior = resolveBattleTacticBehavior(this.context.state.battleTactic);
     const attackerGeneral = this.context.state.getGeneral(attacker.faction);
     const aCell = this.context.state.getCell(attacker.lane, attacker.depth);
@@ -454,6 +473,7 @@ export class BattleCombatResolver {
     const { lane, depth, faction, type } = unit;
     this.context.state.removeUnit(unit.id);
     svc.buff.clearUnit(unit.id);
+    clearMorale(unit);
     svc.event.emit(EVENT_NAMES.UnitDied, { unitId: unit.id, lane, depth, faction, type });
 
     if (killer) {

@@ -1,0 +1,21 @@
+{
+  "id": "terrain",
+  "version": "1",
+  "description": "地形修正值（REV-02 自 Constants.ts 抽出）。runtime 仍以 Constants.ts 的 TERRAIN_ATTACK_MOD / TERRAIN_DEFENSE_MOD 為準，tests/TerrainConfig.test.ts 交叉比對兩邊一致。",
+  "attackMod": {
+    "plain": 0,
+    "river": 0,
+    "mountain": 0,
+    "fortress": 0,
+    "desert": 0.15,
+    "forest": 0.1
+  },
+  "defenseMod": {
+    "plain": 0,
+    "river": 0.05,
+    "mountain": 0.15,
+    "fortress": 0.25,
+    "desert": 0,
+    "forest": 0
+  }
+}
