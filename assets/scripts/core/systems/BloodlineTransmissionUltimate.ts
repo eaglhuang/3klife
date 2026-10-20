@@ -87,7 +87,7 @@ export function checkNextStage(state: UltimateState, progress: UltimateProgressI
 /** 覺醒下一階；條件不足時回傳原因，狀態不變。 */
 export function awakenNextStage(state: UltimateState, progress: UltimateProgressInput): UltimateAwakenResult {
     const check = checkNextStage(state, progress);
-    if (!check.ok) return check;
+    if (check.ok === false) return check;
     return { ok: true, state: { ...state, stageCurrent: check.stage }, awakenedStage: check.stage };
 }
 

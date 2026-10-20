@@ -56,7 +56,7 @@ export function dynamicRelationForEvent(
         createdSeason: season,
         decayRate: DYNAMIC_RELATION_DECAY_RATE,
     });
-    if (!parsed.ok) return { ok: false, reason: parsed.reason };
+    if (parsed.ok === false) return { ok: false, reason: parsed.reason };
     return { ok: true, relation: parsed.value, created: true };
 }
 
