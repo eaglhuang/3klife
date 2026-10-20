@@ -469,7 +469,7 @@ export class NurtureFlowController {
         const child = this._requireSelected();
         if (!this._deps.autoNurture) return;
         const result = await this._deps.autoNurture(child.id);
-        this._notice = result.ok
+        this._notice = result.ok === true
             ? `自動培育完成（${result.logs.length} 回合），可以畢業了`
             : AUTO_BLOCK_TEXT[result.blocked] ?? '無法自動培育';
         await this._persist();

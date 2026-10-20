@@ -416,7 +416,7 @@ export class BattleController {
     if (!this.sortie) return { ok: true };
     const result = spendTactic(this.sortie, cost);
     this.sortie = result.state;
-    return result.ok ? { ok: true } : { ok: false, reason: result.reason };
+    return result.ok === true ? { ok: true } : { ok: false, reason: result.reason };
   }
 
   /** 目前帳本（已同步場上存活與剩餘兵力）；沒有出征帳本時回傳 null */

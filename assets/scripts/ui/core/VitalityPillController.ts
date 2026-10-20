@@ -53,7 +53,7 @@ export class VitalityPillController {
     /** 對指定武將使用補元散：成功時顯示劇本句（PROG-2-0732），失敗時顯示拒絕原因 */
     public async use(generalId: string, kind: VitalityPillKind, generalName: string): Promise<string> {
         const result = await this.deps.session.usePillOnGeneral(generalId, kind);
-        if (!result.ok) return VITALITY_PILL_REJECT_TEXT[result.reason];
+        if (result.ok === false) return VITALITY_PILL_REJECT_TEXT[result.reason];
         return vitalityScriptText(this.deps.text ?? fallbackBreedText, VITALITY_SCRIPT_KEYS.pillUsed, generalName);
     }
 }
