@@ -1,5 +1,6 @@
 ---
 scopePaths:
+  - docs/ai_atomic_framework/atm-backlog-shards/**
   - assets/scripts/ui/components/GeneralDetailComposite.ts
   - assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts
   - assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts.meta
@@ -14,6 +15,7 @@ scopePaths:
   - docs/ui-quality-todo.json
   - docs/agent-briefs/tasks_index.md
 deliverables:
+  - docs/ai_atomic_framework/atm-backlog-shards/**
   - assets/scripts/ui/components/GeneralDetailComposite.ts
   - assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts
   - assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts.meta
@@ -39,11 +41,12 @@ created: 2026-10-21
 created_by_agent: codex-gpt-6
 owner: codex-gpt-6
 status: in-progress
+amendment_epoch: 1
 started_at: 2026-10-20T23:27:18.111Z
 started_by_agent: codex-gpt-6
 type: refactor
 depends: []
-notes: "2026-10-21 | 狀態: planned | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none"
+notes: "2026-10-21 | 狀態: in-progress | 驗證: pending | 變更: 獨立維護卡已接手；正常增加問題清單分片範圍 | 阻塞: none"
 ---
 # [TASK-UI-9001] 人物頁 chrome 與擷取診斷拆分
 
