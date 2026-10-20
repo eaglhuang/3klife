@@ -102,6 +102,17 @@
     },
     {
       "type": "panel",
+      "name": "HiddenFactorCard",
+      "width": "100%",
+      "height": 40,
+      "skinSlot": "detail.awakening.card",
+      "layout": { "type": "vertical", "spacing": 0, "paddingTop": 4, "paddingBottom": 4, "paddingLeft": 14, "paddingRight": 14 },
+      "children": [
+        { "type": "label", "name": "HiddenFactorValue", "width": "100%", "height": 32, "styleSlot": "detail.label.value" }
+      ]
+    },
+    {
+      "type": "panel",
       "name": "SpiritFamilyState",
       "width": "100%",
       "height": 96,

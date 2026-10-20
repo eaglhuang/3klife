@@ -15,6 +15,7 @@ import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { GeneralConfig } from '../../../core/models/GeneralUnit';
 import { mask, formatGene } from './GeneralDetailFormatters';
+import { hiddenFactorLine } from '../../core/HiddenFactorText';
 import { FactorMaskPresenter } from '../../../core/systems/FactorMaskState';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
@@ -44,6 +45,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
     /** 本次資料更新剛解鎖的因子槽位（0-based）；動畫由 View 讀取 */
     get justRevealedSlots(): readonly number[] { return this._justRevealed; }
     private _lAwakening!: Label;
+    private _lHiddenFactor!: Label;
     private _treePanel: BloodlineTreePanel | null = null;
     _lastData: GeneralConfig | null = null;
 
@@ -59,6 +61,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         this._lParents   = this._label(h, 'BloodlineSummaryCard/ParentsValue');
         this._lAncestors = this._label(h, 'BloodlineSummaryCard/AncestorsValue');
         this._lAwakening = this._label(h, 'AwakeningCard/AwakeningValue');
+        this._lHiddenFactor = this._label(h, 'HiddenFactorCard/HiddenFactorValue');
 
         for (let i = 1; i <= 5; i++) {
             this._lGenes.push(this._label(h, `GeneListCard/Gene${i}Value`));
@@ -93,6 +96,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         }
 
         this._set(this._lAwakening, `${this.t('ui.general.bloodline.awakening')}${mask(cfg.awakeningTitle, this.t('ui.general.bloodline.awakening_locked'))}`);
+        this._set(this._lHiddenFactor, hiddenFactorLine(cfg.genes, (key) => this.t(key)));
 
         // AncestorTree 動態載入
         if (this._treePanel) {
