@@ -11,23 +11,23 @@ import { hallMissionToOfficerTask, officerPromotionNoticeOf } from '../assets/sc
 export function createHallMissionSettlementSuite(): TestSuite {
     const suite = new TestSuite('HallMissionSettlement (大廳任務結算 OFC-08)');
 
-    suite.test('難度與任務牆對應：basic→EASY、hell→HELL、Military→MILITARY', () => {
-        const task = hallMissionToOfficerTask({ difficulty: 'hell', board: 'Military', success: true });
+    suite.test('難度與任務牆對應：EASY→EASY、HELL→HELL、Military→MILITARY', () => {
+        const task = hallMissionToOfficerTask({ difficulty: 'HELL', board: 'Military', success: true });
         assert.equals('HELL', task?.difficulty ?? '');
         assert.equals('MILITARY', task?.boardType ?? '');
-        assert.equals('EASY', hallMissionToOfficerTask({ difficulty: 'basic', board: 'Domestic', success: false })?.difficulty ?? '');
+        assert.equals('EASY', hallMissionToOfficerTask({ difficulty: 'EASY', board: 'Domestic', success: false })?.difficulty ?? '');
     });
 
     suite.test('無對應（未知難度或 Expedition 牆）回傳 null', () => {
-        assert.isTrue(hallMissionToOfficerTask({ difficulty: 'legendary', board: 'Military', success: true }) === null);
-        assert.isTrue(hallMissionToOfficerTask({ difficulty: 'normal', board: 'Expedition', success: true }) === null);
+        assert.isTrue(hallMissionToOfficerTask({ difficulty: 'LEGENDARY', board: 'Military', success: true }) === null);
+        assert.isTrue(hallMissionToOfficerTask({ difficulty: 'NORMAL', board: 'Expedition', success: true }) === null);
     });
 
     suite.test('結算入帳經驗；失敗也入帳（0.4 倍）', () => {
         const session = new GameSession();
-        session.settleHallMission({ difficulty: 'normal', board: 'Domestic', success: true });
+        session.settleHallMission({ difficulty: 'NORMAL', board: 'Domestic', success: true });
         assert.equals(18, session.officerState.officerExp);
-        session.settleHallMission({ difficulty: 'normal', board: 'Domestic', success: false });
+        session.settleHallMission({ difficulty: 'NORMAL', board: 'Domestic', success: false });
         assert.equals(25, session.officerState.officerExp);
     });
 
@@ -35,8 +35,8 @@ export function createHallMissionSettlementSuite(): TestSuite {
         const emitted: Array<{ name: string; payload: unknown }> = [];
         const session = new GameSession();
         session.setEventEmitter({ emit: (name, payload) => emitted.push({ name, payload }) });
-        assert.equals(0, session.settleHallMission({ difficulty: 'hell', board: 'Military', success: true }).length, '79 經驗不足 100');
-        const promoted = session.settleHallMission({ difficulty: 'hell', board: 'Military', success: true });
+        assert.equals(0, session.settleHallMission({ difficulty: 'HELL', board: 'Military', success: true }).length, '79 經驗不足 100');
+        const promoted = session.settleHallMission({ difficulty: 'HELL', board: 'Military', success: true });
         assert.equals(2, promoted[0] ?? -1);
         const event = emitted.find((e) => e.name === GAME_SESSION_EVENTS.OfficerPromoted);
         assert.isTrue(event !== undefined);
@@ -47,7 +47,7 @@ export function createHallMissionSettlementSuite(): TestSuite {
         const emitted: string[] = [];
         const session = new GameSession();
         session.setEventEmitter({ emit: (name) => emitted.push(name) });
-        session.settleHallMission({ difficulty: 'basic', board: 'Domestic', success: false });
+        session.settleHallMission({ difficulty: 'EASY', board: 'Domestic', success: false });
         assert.isFalse(emitted.includes(GAME_SESSION_EVENTS.OfficerPromoted));
     });
 

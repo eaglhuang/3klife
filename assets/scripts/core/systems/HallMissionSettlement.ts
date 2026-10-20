@@ -6,7 +6,7 @@
  * 交給 GameSession.gainOfficerExp 入帳。晉升時產生 UI_OFFICER_PROMOTE 文案。
  *
  * 暫定（規格缺，可逆）：
- * - 大廳難度 basic / normal / elite / advanced / hell 對應官職難度 EASY / NORMAL / ELITE / HIGH / HELL。
+ * - 大廳難度 EASY / NORMAL / ELITE / ADVANCED / HELL 對應官職難度 EASY / NORMAL / ELITE / HIGH / HELL（與大廳資料一致，皆大寫）。
  * - 任務牆 Military / Domestic 對應 MILITARY / DOMESTIC；Expedition 牆暫無對應（回傳 null，不入帳）。
  * - 晉升的一次性獎勵內容規格沒寫，本次不發獎，只出提示。
  *
@@ -18,7 +18,7 @@ import type { HallBoardKey } from './HallMissionBoard';
 import type { OfficerDisplayRow } from './OfficerDisplay';
 
 export interface HallMissionOutcome {
-    /** 大廳任務難度（basic / normal / elite / advanced / hell） */
+    /** 大廳任務難度（EASY / NORMAL / ELITE / ADVANCED / HELL，與大廳資料一致） */
     difficulty: string;
     /** 任務所在的任務牆 */
     board: HallBoardKey;
@@ -26,11 +26,11 @@ export interface HallMissionOutcome {
 }
 
 const HALL_DIFFICULTY_TO_OFFICER: Readonly<Record<string, OfficerDifficulty>> = {
-    basic: 'EASY',
-    normal: 'NORMAL',
-    elite: 'ELITE',
-    advanced: 'HIGH',
-    hell: 'HELL',
+    EASY: 'EASY',
+    NORMAL: 'NORMAL',
+    ELITE: 'ELITE',
+    ADVANCED: 'HIGH',
+    HELL: 'HELL',
 };
 
 const HALL_BOARD_TO_DOMAIN: Readonly<Partial<Record<HallBoardKey, OfficerTaskResult['boardType']>>> = {
