@@ -36,6 +36,8 @@ export interface EncounterConfig {
   chainId?: string;
   /** 主鏈內順序，越小越前面（PROG-2-0215） */
   order?: number;
+  /** 所屬全球征途階段 id（MVP-13）；沒有就是第一階段 */
+  campaignStage?: string;
 }
 
 /**
@@ -73,6 +75,8 @@ export interface IBattleEntryParams {
   backgroundId?: string;
   /** 首戰教學戰：開啟教學提示浮窗（PROG-2-0241）；預設關閉 */
   tutorial?: boolean;
+  /** 全球征途階段 id（MVP-13）；由 GameSession.resolveCampaignStage 驗證後帶入，戰場流程尚未讀取 */
+  campaignStageId?: string;
 }
 
 /** QA 工具 / preview target 5 使用的預設參數 */
