@@ -44,8 +44,8 @@ notes: "先把可疊加的 buff / heal / debuff 規則釘死，避免後續戰�
 - [-] `鼓舞` (TBUFF, 教官 G-2) — 規格對位待驗收
 - [-] `緩速` (TDEBUFF, 教官 G-2) — 規格對位待驗收
 - [-] `八陣圖` (TBUFF 段, 教官 G-2) — TBUFF 部分，TTILE 部分歸 TAC-0003
-- [ ] `毒箭` 持續傷害 / 減益段 (TDEBUFF DOT, 虎符 G-1)
-- [ ] `幼麒天算` (TDEBUFF 段, 虎符 G-1) — 反擊後附加 Weak debuff
+- [x] `毒箭` 持續傷害 / 減益段 (TDEBUFF DOT, 虎符 G-1)（PROG-2-0766，中毒 2 回合，每回合 10%）
+- [x] `幼麒天算` (TDEBUFF 段, 虎符 G-1) — 反擊後附加 Weak debuff（you-qi-counter 的 counterStatusEffect）
 - [x] `長槍列陣` (TBUFF+TCOND, 初始庫 G-5)
 - [x] `軍心鼓舞` (TBUFF, 初始庫 G-5)
 

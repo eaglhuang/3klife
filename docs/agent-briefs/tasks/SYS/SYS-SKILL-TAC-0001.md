@@ -42,10 +42,10 @@ notes: "覆蓋單體、直線、扇形投射傷害；以單一 target resolver �
 - [x] `無視防禦` (TDIR, 虎符)
 - [x] `百步穿楊` (TDIR, 虎符)
 - [-] `趙家槍法` (TLINE, 血統 G-3) — 三段遞增、演出驗收待補
-- [ ] `精銳突擊` (TLINE 段, 虎符 G-1) — 衝鋒傷害倍率
+- [-] `精銳突擊` (TLINE 段, 虎符 G-1) — 衝鋒傷害倍率已落地（PROG-2-0751，chargeMultiplier 2.0），但形狀是單體（EnemySingle），規格是直線（Self -> LineEnemy），待改形狀
 - [ ] `長坂雄咆` (TFAN 段, 虎符 G-1) — 3×3 AOE 結算
 - [ ] `無雙亂舞` (TFAN 段, 虎符 G-1) — 周身 8 格 AOE
-- [ ] `威震華夏` (TDIR 段, 虎符 G-1) — 首擊加倍計算
+- [x] `威震華夏` (TDIR 段, 虎符 G-1) — 首擊加倍計算（PROG-2-0773，firstTurnDamageMultiplier 2）
 - [ ] `連環計` (TDIR 觸發端, 虎符 G-1) — 主體傷害結算
 - [ ] `結姻連射` (TDIR, 虎符 G-1) — 追加普攻
 - [ ] `火神狩獵` (TDIR 段, 虎符 G-1) — 單目標擊退後傷害
