@@ -16,6 +16,8 @@ import { LocalGachaService, type LocalGachaResultEntry } from '../../core/servic
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
 import { formatModeLabel } from '../../core/systems/GameClock';
+import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
+import { SAGES } from '../../core/systems/SageDivination';
 import { seasonDisplayText } from '../core/SeasonTexts';
 import { buildYearReportTexts, withYearReportFallback, type YearReport } from '../../core/systems/YearReport';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
@@ -665,6 +667,11 @@ export class LobbyScene extends Component {
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
             omenSeed: () => services().session.omenSeed(),
+            sageRemarks: (fatherId, motherId) => {
+                const pool = services().breeding.previewFactorPool(fatherId, motherId);
+                const unlocked = Object.keys(SAGES).filter((id) => services().session.isSageUnlocked(id));
+                return buildSageRemarks(pool, unlocked, remarkRandomOf(`${fatherId}|${motherId}`));
+            },
             text: breedText(),
         });
         this._bonding = bonding;
