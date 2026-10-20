@@ -56,12 +56,20 @@ export class HealSkillResolver implements BattleSkillResolver {
       };
     }
 
-    const healAmount = this.formulaSystem.calculateHeal(caster.maxHp, profile.healRatio ?? 0.12, profile.healFloor ?? 20);
+    const fixedHealAmount = profile.healMissingRatio === undefined
+      ? this.formulaSystem.calculateHeal(caster.maxHp, profile.healRatio ?? 0.12, profile.healFloor ?? 20)
+      : 0;
     const deltas: SkillExecutionResult['deltas'] = [];
     const battleLogLines: string[] = [];
 
     for (const unit of targets) {
       if (unit.isDead()) {
+        continue;
+      }
+      const healAmount = profile.healMissingRatio === undefined
+        ? fixedHealAmount
+        : Math.floor((unit.getEffectiveMaxHp() - unit.currentHp) * profile.healMissingRatio);
+      if (healAmount <= 0) {
         continue;
       }
       context.healUnit(unit, healAmount, casterFaction);
@@ -74,9 +82,9 @@ export class HealSkillResolver implements BattleSkillResolver {
         requestId: `${request.ownerUid}:${request.battleSkillId}`,
         battleSkillId: request.battleSkillId,
         applied: false,
-        blockedReason: 'all-targets-dead',
+        blockedReason: profile.healMissingRatio === undefined ? 'all-targets-dead' : 'no-missing-hp',
         deltas: [],
-        battleLogLines: [`${request.battleSkillId} skipped because all targets were dead`],
+        battleLogLines: [`${request.battleSkillId} skipped because no target could be healed`],
       };
     }
 
