@@ -11,6 +11,9 @@ import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveSer
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
+/** 名冊裡的標記欄位不在 GeneralConfig 型別上，測試用轉型讀取（避免 tsc 新增錯誤） */
+const flagsOf = (general: unknown) => general as { catalystUsed?: boolean; isMentorCard?: boolean };
+
 function gen(id: string, age: number, genes: string[], extra: Record<string, unknown> = {}): GeneralConfig {
     return {
         id, name: id, faction: 'shu', gender: '男', age, hp: 900, str: 85, int: 40, lea: 75, pol: 30, cha: 40, luk: 20, ep: 70,
@@ -38,7 +41,7 @@ export function createGameSessionCatalystSuite(): TestSuite {
         const { session } = sessionWith([gen('old', 66, ['F1', 'F2']), gen('kid', 3, ['F9'])], 0);
         await session.retireGeneral('old');
         assert.equals('F9', genesOf(session, 'kid'));
-        assert.isFalse(session.roster.find((g) => g.id === 'old')!.catalystUsed === true);
+        assert.isFalse(flagsOf(session.roster.find((g) => g.id === 'old')!).catalystUsed === true);
     });
 
     suite.test('命中：子嗣加入退役武將的因子，退役武將標記媒介已用，只存一次檔', async () => {
@@ -46,7 +49,7 @@ export function createGameSessionCatalystSuite(): TestSuite {
         const before = saves.count;
         await session.retireGeneral('old', { catalystChildId: 'kid' });
         assert.equals('F9,F1', genesOf(session, 'kid'));
-        assert.isTrue(session.roster.find((g) => g.id === 'old')!.catalystUsed === true);
+        assert.isTrue(flagsOf(session.roster.find((g) => g.id === 'old')!).catalystUsed === true);
         assert.equals(1, saves.count - before);
     });
 
@@ -54,7 +57,7 @@ export function createGameSessionCatalystSuite(): TestSuite {
         const { session } = sessionWith([gen('old', 66, ['F1']), gen('kid', 3, ['F9'])], 0.99);
         await session.retireGeneral('old', { catalystChildId: 'kid' });
         assert.equals('F9', genesOf(session, 'kid'));
-        assert.isTrue(session.roster.find((g) => g.id === 'old')!.catalystUsed === true);
+        assert.isTrue(flagsOf(session.roster.find((g) => g.id === 'old')!).catalystUsed === true);
     });
 
     suite.test('子嗣不合法（超過 5 歲、已開獎、或就是退役武將本人）：拋錯，名冊與存檔都不變', async () => {
@@ -73,8 +76,8 @@ export function createGameSessionCatalystSuite(): TestSuite {
                 threw = true;
             }
             assert.isTrue(threw);
-            assert.isFalse(session.roster.find((g) => g.id === 'old')!.isMentorCard === true);
-            assert.isFalse(session.roster.find((g) => g.id === 'old')!.catalystUsed === true);
+            assert.isFalse(flagsOf(session.roster.find((g) => g.id === 'old')!).isMentorCard === true);
+            assert.isFalse(flagsOf(session.roster.find((g) => g.id === 'old')!).catalystUsed === true);
             assert.equals(0, saves.count);
         }
     });
