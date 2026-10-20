@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "source": "../ATM_BUG_OPTIMIZATION_BACKLOG.md",
+  "indexTitle": "ATM Bug and Optimization Backlog",
+  "indexPath": "docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md",
+  "type": "markdown-h2",
+  "preambleShard": "purpose",
+  "defaultShard": "purpose",
+  "shards": [
+    {
+      "name": "purpose",
+      "title": "Purpose",
+      "pattern": "^Purpose$"
+    },
+    {
+      "name": "item-template",
+      "title": "Item Template",
+      "pattern": "^Item Template$"
+    },
+    {
+      "name": "open-items",
+      "title": "Open Items",
+      "pattern": "^Open Items$"
+    },
+    {
+      "name": "severity-triage",
+      "title": "Captain Severity Triage - 2026-06-14",
+      "pattern": "^Captain Severity Triage - 2026-06-14$"
+    },
+    {
+      "name": "aao-status",
+      "title": "AAO 未開工對照（截至 2026-06-15）",
+      "pattern": "^AAO 未開工對照（截至 2026-06-15）$"
+    },
+    {
+      "name": "parallel-dogfood",
+      "title": "Parallel 0041-0042 Dogfood and Close Lane - 2026-06-17",
+      "pattern": "^Parallel 0041-0042 Dogfood and Close Lane - 2026-06-17$"
+    },
+    {
+      "name": "mem-gaps",
+      "title": "MEM Lane Cross-Repo Governance Gaps - 2026-07-15 (claude-fable-5)",
+      "pattern": "^MEM Lane Cross-Repo Governance Gaps - 2026-07-15 \\(claude-fable-5\\)$"
+    },
+    {
+      "name": "plan31-gaps",
+      "title": "Plan 3.1 Live Dogfood Gaps - 2026-07-22",
+      "pattern": "^Plan 3\\.1 Live Dogfood Gaps - 2026-07-22$"
+    },
+    {
+      "name": "captain-sequencing",
+      "title": "Current Captain Sequencing Ruling",
+      "pattern": "^Current Captain Sequencing Ruling$"
+    },
+    {
+      "name": "maintenance-rules",
+      "title": "Maintenance Rules",
+      "pattern": "^Maintenance Rules$"
+    },
+    {
+      "name": "maintenance-9001",
+      "title": "TASK-UI-9001 實作期間的治理觀察（2026-10-21）",
+      "pattern": "^TASK-UI-9001 實作期間的治理觀察（2026-10-21）$"
+    }
+  ]
+}
