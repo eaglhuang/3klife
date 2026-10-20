@@ -59,12 +59,13 @@ export function applySortieResult(reserve: MilitaryReserve, summary: Pick<Sortie
     };
 }
 
-/** 每季：城市兵源 + 補兵速度、糧草 + 固定補給，皆不超過上限 */
-export function regenMilitaryOneSeason(reserve: MilitaryReserve, seasons = 1): MilitaryReserve {
+/** 每季：城市兵源 + 補兵速度、糧草 + 固定補給（可乘季節倍率，TIME-08），皆不超過上限 */
+export function regenMilitaryOneSeason(reserve: MilitaryReserve, seasons = 1, foodMultiplier = 1): MilitaryReserve {
     const n = Math.max(0, Math.floor(seasons));
+    const food = Math.floor(FOOD_PER_SEASON * n * Math.max(0, foodMultiplier));
     return {
         ...reserve,
         cityTroops: Math.min(reserve.cityTroopsCap, reserve.cityTroops + reserve.recruitRegen * n),
-        food: Math.min(reserve.foodCap, reserve.food + FOOD_PER_SEASON * n),
+        food: Math.min(reserve.foodCap, reserve.food + food),
     };
 }
