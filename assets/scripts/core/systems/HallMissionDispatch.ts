@@ -43,7 +43,8 @@ export function resolveHallDispatch(
     generalPower: number,
 ): HallDispatchResult {
     const check = canDispatchHallTask(task, player, board, generalId);
-    if (!check.ok) return check;
+    // cc 設定沒開 strictNullChecks，布林判別聯合不會依 ok 縮窄，這裡以斷言取 reason
+    if (!check.ok) return { ok: false, reason: (check as { ok: false; reason: HallDispatchBlockReason }).reason };
     return { ok: true, outcome: { difficulty: task.Difficulty, board, success: judgeHallMissionSuccess(task.Difficulty, generalPower) } };
 }
 
