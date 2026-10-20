@@ -47,7 +47,7 @@ export function parseSupportCatalog(raw: unknown): SupportCatalog {
             return;
         }
         const parsed = parseSupportCard((entry as { Support?: unknown }).Support);
-        if (!parsed.ok) {
+        if (parsed.ok === false) {
             problems.push({ index, errors: parsed.errors });
             return;
         }
