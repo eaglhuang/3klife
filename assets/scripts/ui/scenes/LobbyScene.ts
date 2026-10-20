@@ -1178,7 +1178,7 @@ export class LobbyScene extends Component {
                 }
                 const result = installOfficerTierTable(asset.json);
                 if (!result.ok) {
-                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 官職階位資料驗證失敗，沿用內建門檻', result.issues);
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 官職階位資料驗證失敗，沿用內建門檻', (result as { ok: false; issues: string[] }).issues);
                 }
                 resolve();
             });
