@@ -30,6 +30,8 @@ import { MentorCardDetailController } from '../core/MentorCardDetailController';
 import { GeneralVersionGalleryController } from '../core/GeneralVersionGalleryController';
 import type { GeneralVersionRecord } from '../../core/models/GeneralVersion';
 import { GALLERY_GROUP_SLOTS } from '../../core/systems/GeneralVersionGallery';
+import { buildFactorHexView, factorHexInputsFromGenes, newlyLitFactorColors, type FactorHexInput } from '../../core/systems/FactorHexPanel';
+import { FactorHexGraphic } from '../components/FactorHexGraphic';
 import type { MentorCardData, MentorCardTab } from '../../core/systems/MentorCardTabs';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
 import { buildCountdownIconFlowView } from '../../core/systems/CountdownIconView';
@@ -82,6 +84,11 @@ import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 
 const { ccclass } = _decorator;
+
+/** 六角圖暫定位置與半徑：畫面沒有預留節點，由程式掛在 CharacterDs3Host 下（PROVISIONAL，座標待 Codex 實機微調） */
+const FACTOR_HEX_NODE_NAME = 'FactorHexGraphic';
+const FACTOR_HEX_RADIUS = 120;
+const FACTOR_HEX_POSITION = { x: -240, y: -160 };
 
 type GeneralDetailRuntimeTab = 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitude';
 type GeneralDetailEntrySmokeSource = 'ucuf-nav';
@@ -205,6 +212,8 @@ export class LobbyScene extends Component {
     private _bloodlineMirrorLoadingHost: UIScreenPreviewHost | null = null;
     private _bloodlineMirrorAwakeningHost: UIScreenPreviewHost | null = null;
     private _characterDs3Host: UIScreenPreviewHost | null = null;
+    /** 每位武將上次顯示的因子狀態，用來判斷這次新亮起的顏色（只在同一武將的二次檢視才播解鎖特效） */
+    private readonly _factorHexInputsByGeneral = new Map<string, FactorHexInput[]>();
     private _eliteTroopCodexPanel: EliteTroopCodexComposite | null = null;
     private _missionDetailDialogPanel: LobbyMissionDetailDialogComposite | null = null;
     private _characterDs3ActiveTab: GeneralDetailRuntimeTab = 'Overview';
@@ -2600,6 +2609,8 @@ export class LobbyScene extends Component {
             );
         }
 
+        this._refreshFactorHex(config);
+
         UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] CharacterDs3 smoke selection opened screen host', {
             generalId: config.id,
             generalName: config.name,
@@ -2622,6 +2633,33 @@ export class LobbyScene extends Component {
                 fragment: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Overview,
             });
         }
+    }
+
+    /**
+     * 六色因子六角圖（OPEN-08 cc 接線）：依武將基因算出六個頂點，掛在 CharacterDs3Host 下重畫。
+     * 同一武將在本次執行中第二次以後檢視時，新亮起的顏色會播一次解鎖特效。
+     */
+    private _refreshFactorHex(config: GeneralConfig): void {
+        const hostNode = this._characterDs3Host?.node;
+        if (!hostNode) {
+            return;
+        }
+        let hexNode = hostNode.getChildByName(FACTOR_HEX_NODE_NAME);
+        if (!hexNode) {
+            hexNode = new Node(FACTOR_HEX_NODE_NAME);
+            hexNode.layer = hostNode.layer;
+            hexNode.parent = hostNode;
+            hexNode.setPosition(FACTOR_HEX_POSITION.x, FACTOR_HEX_POSITION.y, 0);
+        }
+        const graphic = hexNode.getComponent(FactorHexGraphic) ?? hexNode.addComponent(FactorHexGraphic);
+        graphic.setup(FACTOR_HEX_RADIUS);
+
+        const inputs = factorHexInputsFromGenes(config.genes ?? []);
+        const before = this._factorHexInputsByGeneral.get(config.id);
+        const freshColors = before ? newlyLitFactorColors(before, inputs) : [];
+        graphic.render(buildFactorHexView(inputs));
+        graphic.playUnlockFlash(freshColors);
+        this._factorHexInputsByGeneral.set(config.id, inputs);
     }
 
     /** 「武將列表」按鈕：顯示玄家已取得武將（源自轉蛋 / PlayerRosterService） */
