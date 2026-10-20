@@ -7,7 +7,7 @@
  */
 import { checkNextStage, normalizeUltimateState, ULTIMATE_MAX_STAGE, type UltimateAwakenReason, type UltimateProgressInput, type UltimateState } from '../../core/systems/BloodlineTransmissionUltimate';
 
-const NEXT_STEP_TEXT: Record<UltimateAwakenReason, string> = {
+export const NEXT_STEP_TEXT: Record<UltimateAwakenReason, string> = {
     CAP_LOCKED: '需先升星提高上限',
     ALREADY_MAX: '已全部點亮',
     FAME_SHORT: '名聲不足',
