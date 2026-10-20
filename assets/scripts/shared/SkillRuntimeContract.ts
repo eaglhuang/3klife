@@ -181,6 +181,8 @@ export interface SkillExecutionResult {
     blockedReason?: string | null;
     deltas: SkillExecutionDelta[];
     battleLogLines: string[];
+    /** 戰法規格代號（TDIR／TLINE／TFAN／THEAL／TBUFF／TDEBUFF），由 BattleSkillExecutor 依 profile 填入（PROG-2-0588） */
+    moduleTags?: string[];
 }
 
 export function buildIdMap<T extends { id: string }>(items?: T[] | null): Map<string, T> {
