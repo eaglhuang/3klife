@@ -79,13 +79,14 @@ export function runAutoNurtureSeason(
     session: NurtureSession,
     schedule: readonly NurtureAction[],
     random: RandomSource,
+    options: { trainingVigorMultiplier?: number } = {},
 ): AutoNurtureResult {
     let current: NurtureSession = { ...session, auto: true };
     const logs: NurtureRoundLog[] = [];
     while (current.status === 'active') {
         const action = schedule[current.round];
         if (action === undefined) break;
-        const step = executeRound(current, action, random, { auto: true });
+        const step = executeRound(current, action, random, { auto: true, trainingVigorMultiplier: options.trainingVigorMultiplier });
         current = step.session;
         logs.push(step.log);
     }

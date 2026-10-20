@@ -2104,7 +2104,9 @@ export class GameSession {
         if (!state || !session) return { ok: false, blocked: 'NOT_NURTURING' };
         if (session.status !== 'active') return { ok: false, blocked: 'SESSION_ENDED' };
         const schedule = resolveAutoSchedule(session.prowess, manualSchedule);
-        const run = runAutoNurtureSeason(session, schedule, random);
+        const run = runAutoNurtureSeason(session, schedule, random, {
+            trainingVigorMultiplier: seasonModifiersOf(this._clock.state.currentSeason).trainingStaminaMultiplier,
+        });
         const next = consumeAutoNurtureTicket(this._autoNurtureTickets);
         this._autoNurtureTickets = next ?? this._autoNurtureTickets;
         this._nurture!.restoreState({
