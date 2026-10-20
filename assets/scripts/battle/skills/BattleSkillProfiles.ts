@@ -34,6 +34,8 @@ export interface BattleSkillProfile {
   excludeCenter?: boolean;
   healRatio?: number;
   healFloor?: number;
+  /** 依目標已損 HP 的比例治療（PROG-2-0793 醫療，規格 25%）；有填時不用施放者最大 HP */
+  healMissingRatio?: number;
   /** 精銳突擊：衝鋒傷害倍率（PROG-2-0751，規格 2.0） */
   chargeMultiplier?: number;
   /** 首回合傷害倍率（PROG-2-0773 威震華夏）：戰鬥第 1 回合傷害 × 此值 */
@@ -280,6 +282,14 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     healRatio: 0.18,
     healFloor: 30,
     battleLogKey: 'skill.liu_bei_rally.heal',
+  },
+  'medical-aid': {
+    battleSkillId: 'medical-aid',
+    targetMode: BattleSkillTargetMode.AllySingle,
+    manualTargeting: false,
+    effectKind: 'heal',
+    coefficient: 0,
+    healMissingRatio: 0.25,
   },
   'diao-chan-charm': {
     battleSkillId: 'diao-chan-charm',
