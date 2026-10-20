@@ -33,6 +33,7 @@ import { analyzeTagResonance, KIN_RESONANCE_MIN_COUNT } from './KinRelation';
 import { baseVitalityMaxOf } from './VitalityCap';
 import { rollWildGene, STAR_JUMP_MAX_LEVEL, STAR_JUMP_STEP } from './WildGene';
 import { luckThresholdEffects, type LuckThresholdEffects } from './LuckThresholds';
+import { applyBloodlineMutation } from './LuckBloodlineMutation';
 
 export const BREEDING_MIN_AGE = 20;
 export const FATHER_VIGOR_COST = 50;
@@ -631,12 +632,17 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
     // 天命波動（PROG-2-0511）：父母平均 LUK × Random(-0.5, 1.5)，在子嗣生成前套用到 EP
     const parentAvgLuk = (statOf(request.father, 'luk') + statOf(request.mother, 'luk')) / 2;
     const ep = applyFateWave(previewEp, rollFateWave(parentAvgLuk, request.random));
+    // 血統變異（LUK ≥ 95，PROG-2-0877）：在子嗣生成前套用，只在門檻達成時消耗亂數
+    const luckEffects = luckThresholdEffects(parentAvgLuk);
+    const childFactors = luckEffects.bloodlineMutation
+        ? applyBloodlineMutation(finalFactors, request.random, request.dictionary)
+        : finalFactors;
     const child = createChild({
         id: request.childId,
         father: request.father,
         mother: request.mother,
         ep,
-        factors: finalFactors,
+        factors: childFactors,
         pedigree,
         random: request.random,
         dictionary: request.dictionary,
@@ -644,8 +650,8 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
     });
 
     return {
-        outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: finalFactors,
-        luckEffects: luckThresholdEffects(parentAvgLuk),
+        outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: childFactors,
+        luckEffects,
     };
 }
 
