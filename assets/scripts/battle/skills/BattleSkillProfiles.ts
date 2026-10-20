@@ -34,6 +34,10 @@ export interface BattleSkillProfile {
   healFloor?: number;
   /** 精銳突擊：衝鋒傷害倍率（PROG-2-0751，規格 2.0） */
   chargeMultiplier?: number;
+  /** 首回合傷害倍率（PROG-2-0773 威震華夏）：戰鬥第 1 回合傷害 × 此值 */
+  firstTurnDamageMultiplier?: number;
+  /** 擊殺目標後重置施放者行動（PROG-2-0773 威震華夏） */
+  resetSelfOnKill?: boolean;
   /** 毒箭：每回合扣目標最大 HP 的比例（規格 10%） */
   dotMaxHpRatio?: number;
   /** 緩速：移動範圍減少的格數（規格 1） */
@@ -142,6 +146,24 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     coefficient: 0,
     battleLogKey: 'skill.eight_formation.cast',
   },
+  // 鼓舞（PROG-2-0769）：全隊士氣 +20（規格 G-2）
+  'mentor-morale': {
+    battleSkillId: 'mentor-morale',
+    targetMode: BattleSkillTargetMode.AllyAll,
+    effectKind: 'morale',
+    coefficient: 0,
+    moraleBonus: 20,
+    battleLogKey: 'skill.mentor_morale.buff',
+  },
+  // 長坂雄咆的後退（PROG-2-0767）：3x3 內敵軍遠離施放者 1 格；定身部分見 tally-changban-root
+  'tally-changban-push': {
+    battleSkillId: 'tally-changban-push',
+    targetMode: BattleSkillTargetMode.Self,
+    effectKind: 'push',
+    coefficient: 0,
+    pushSteps: 1,
+    battleLogKey: 'skill.tally_changban_push.push',
+  },
   // 毒箭（PROG-2-0766）：目標中毒 2 回合，每回合扣最大 HP 10%
   'tally-poison-arrow': {
     battleSkillId: 'tally-poison-arrow',
@@ -168,14 +190,18 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     statusTurns: 1,
     battleLogKey: 'skill.mentor_slow.debuff',
   },
-  // 鼓舞（PROG-2-0769）：全隊士氣 +20（規格 G-2）
-  'mentor-morale': {
-    battleSkillId: 'mentor-morale',
-    targetMode: BattleSkillTargetMode.AllyAll,
-    effectKind: 'morale',
-    coefficient: 0,
-    moraleBonus: 20,
-    battleLogKey: 'skill.mentor_morale.buff',
+  // 威震華夏（PROG-2-0773）：單體敵軍傷害；第 1 回合 ×2，擊殺後施放者再行動 1 次（規格 戰法系統 威震華夏）
+  'tally-wei-zhen-hua-xia': {
+    battleSkillId: 'tally-wei-zhen-hua-xia',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    coefficient: 1.0,
+    scalingStat: 'str',
+    maxTargets: 1,
+    firstTurnDamageMultiplier: 2,
+    resetSelfOnKill: true,
+    battleLogKey: 'skill.tally_wei_zhen_hua_xia.hit',
   },
   // 長坂雄咆的後退（PROG-2-0767）：3x3 內敵軍遠離施放者 1 格；定身部分見 tally-changban-root
   'tally-changban-push': {

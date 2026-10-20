@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 45,
-    "total": 81
+    "open": 46,
+    "total": 82
   },
   "tasks": [
     {
@@ -3281,6 +3281,34 @@
         "artifacts/PROG-2-0134/**"
       ],
       "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: ATM 0088；需能連 wiki 的本機"
+    },
+    {
+      "id": "PROG-2-0135",
+      "title": "實機驗收：AI 委任 Toggle 勾選與事件（PROG-2-0494、#473）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M6",
+      "created": "2026-10-15",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "引擎 toggle 節點與 AI 委任開關的勾選、事件待實機驗收，#473 合併後派發。",
+      "related": [],
+      "depends": [
+        "PR #473",
+        "PROG-2-0494"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0135.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0135/**"
+      ],
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: #473 未合併；ATM 0088"
     }
   ]
 }
