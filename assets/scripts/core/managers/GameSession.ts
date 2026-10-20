@@ -96,7 +96,7 @@ import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
 import { MentorDuplicateOutcome, overflowToastText, resolveMentorDuplicate } from '../systems/MentorOverflow';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
 import { borrowCandidateOf, type NpcFriendMentor } from '../systems/NpcFriendMentor';
-import { canBorrow, createBorrow, type BorrowBlockReason, type BorrowLedger, type BorrowRequest } from '../systems/FriendBorrow';
+import { canBorrow, createBorrow, normalizeBorrowLedger, type BorrowBlockReason, type BorrowLedger, type BorrowRequest } from '../systems/FriendBorrow';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
@@ -1544,12 +1544,13 @@ export class GameSession {
      * 借用好友的教官（MENT-14 MVP）：找不到好友回 UNKNOWN_FRIEND；規則不過回傳原因且不改紀錄；
      * 成功寫入借用紀錄並回傳原主結義點數（由呼叫端決定如何入帳）。day 由呼叫端傳入（YYYY-MM-DD）。
      */
-    public borrowFriendMentor(request: { friendId: string; day: string; sessionId: string; recordId: string }):
-        { ok: true; ownerBondReward: number } | { ok: false; blocked: BorrowBlockReason | 'UNKNOWN_FRIEND' } {
+    public async borrowFriendMentor(request: { friendId: string; sessionId: string; recordId: string }):
+        Promise<{ ok: true; ownerBondReward: number } | { ok: false; blocked: BorrowBlockReason | 'UNKNOWN_FRIEND' }> {
         const friend = this._npcFriendMentors.find((f) => f.friendId === request.friendId);
         if (!friend) return { ok: false, blocked: 'UNKNOWN_FRIEND' };
         const borrowRequest: BorrowRequest = {
-            day: request.day,
+            // 借用日由遊戲時鐘提供（PROG-2-0745，暫定：以季為一日）
+            day: `S${this._clock.state.totalSeasonsElapsed}`,
             borrowerId: 'player',
             ownerId: friend.friendId,
             candidate: borrowCandidateOf(friend),
@@ -1561,6 +1562,10 @@ export class GameSession {
         const outcome = createBorrow(this._borrowLedger, borrowRequest);
         if (!outcome) throw new Error('canBorrow 通過後 createBorrow 不應回傳 null');
         this._borrowLedger = outcome.ledger;
+        this._bondPoints += outcome.ownerBondReward;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
         return { ok: true, ownerBondReward: outcome.ownerBondReward };
     }
 
@@ -2230,6 +2235,7 @@ export class GameSession {
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
             onboarding: { ...this._onboarding },
             bondPoints: this._bondPoints,
+            friendBorrowLedger: { records: [...this._borrowLedger.records] },
             femaleSystem: this.femaleSystemState,
             ...(this._travel ? { travelCountdown: { ...this._travel } } : {}),
             sortiePresets: { ...this._sortiePresets },
@@ -2297,6 +2303,7 @@ export class GameSession {
         this._nurture?.restoreState(snapshot.nurture);
         this._onboarding = normalizeOnboardingState(snapshot.onboarding);
         this._bondPoints = normalizeBondPoints(snapshot.bondPoints);
+        this._borrowLedger = normalizeBorrowLedger(snapshot.friendBorrowLedger);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };

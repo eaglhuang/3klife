@@ -37,6 +37,7 @@ import { SAVE_VERSION_LATEST, saveVersionOf } from '../storage/SaveVersion';
 import { normalizeYearAgingEvents } from '../systems/YearReport';
 import type { AgingEvent } from '../systems/GeneralAging';
 import { mapSnapshotToSixTables } from './PlayerSaveTableRows';
+import { normalizeBorrowLedger, type BorrowLedger } from '../systems/FriendBorrow';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
@@ -118,6 +119,8 @@ export interface PlayerSaveSnapshot {
     onboarding?: OnboardingState;
     /** 結義點數餘額；後加的選填欄位，舊檔讀回為 0（GCH-06） */
     bondPoints?: number;
+    /** 好友借用帳本；後加的選填欄位，舊檔讀回為空帳本（MENT-14，PROG-2-0745） */
+    friendBorrowLedger?: BorrowLedger;
     /** 趕路（回合制）；後加的選填欄位，舊檔讀回為沒有趕路（PROG-2-0475） */
     travelCountdown?: TravelCountdown;
     /** 編制預設（DEP-14）：主將 id → 參謀官 / 後勤官；舊檔沒有此欄位時視為空 */
@@ -344,6 +347,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
         ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),
+        ...(snapshot.friendBorrowLedger !== undefined ? { friendBorrowLedger: normalizeBorrowLedger(snapshot.friendBorrowLedger) } : {}),
         ...(normalizeTravelCountdown(snapshot.travelCountdown) ? { travelCountdown: normalizeTravelCountdown(snapshot.travelCountdown)! } : {}),
         ...(snapshot.gachaPity !== undefined ? { gachaPity: normalizeGachaPityBook(snapshot.gachaPity) } : {}),
         ...(snapshot.gachaWallet !== undefined ? { gachaWallet: normalizeGachaWalletSave(snapshot.gachaWallet) } : {}),
