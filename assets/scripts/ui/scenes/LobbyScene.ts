@@ -52,6 +52,7 @@ import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
+import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
@@ -398,7 +399,15 @@ export class LobbyScene extends Component {
         this._officerHudHost = await this._mountPreviewScreenHost('OfficerHudHost', 'lobby-officer-hud-screen', []);
         this._refreshOfficerHud();
         const refresh = (): void => { this._refreshOfficerHud(); };
-        this._sessionEventUnsubscribers.push(services().event.on(GAME_SESSION_EVENTS.Loaded, refresh));
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+            services().event.on(GAME_SESSION_EVENTS.OfficerPromoted, (payload: { tiers: number[] }) => {
+                refresh();
+                for (const message of officerPromotionNoticeOf(payload.tiers)) {
+                    services().event.emit('SHOW_TOAST', { message, duration: 2 });
+                }
+            }),
+        );
     }
 
     private _refreshOfficerHud(): void {
@@ -712,6 +721,7 @@ export class LobbyScene extends Component {
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
             omenSeed: () => services().session.omenSeed(),
+            recordBreeding: (record) => services().session.recordBreedingBirth(record),
             sageRemarks: (fatherId, motherId) => {
                 const pool = services().breeding.previewFactorPool(fatherId, motherId);
                 const unlocked = Object.keys(SAGES).filter((id) => services().session.isSageUnlocked(id));
@@ -1168,7 +1178,7 @@ export class LobbyScene extends Component {
                 }
                 const result = installOfficerTierTable(asset.json);
                 if (!result.ok) {
-                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 官職階位資料驗證失敗，沿用內建門檻', result.issues);
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 官職階位資料驗證失敗，沿用內建門檻', (result as { ok: false; issues: string[] }).issues);
                 }
                 resolve();
             });

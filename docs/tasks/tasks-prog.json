@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 57,
-    "total": 93
+    "open": 59,
+    "total": 95
   },
   "tasks": [
     {
@@ -3617,6 +3617,62 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0153/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0154",
+      "title": "實機驗收：培育英靈循環與傳道按鈕（PROG-2-0871、#613）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "培育畫面英靈卡循環、傳道按鈕的可按狀態、結果與版位需實機驗收；英靈卡清單來源不在範圍。",
+      "related": [],
+      "depends": [
+        "PR #613",
+        "PROG-2-0871"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0154.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0154/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0155",
+      "title": "實機驗收：大廳官職區塊（PROG-2-0831、#614）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "大廳季度 HUD 下方官職區塊的文字、刷新與版位需實機驗收；任務結算與晉升提示不在範圍。",
+      "related": [],
+      "depends": [
+        "PR #614",
+        "PROG-2-0831"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0155.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0155/**"
       ],
       "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     }

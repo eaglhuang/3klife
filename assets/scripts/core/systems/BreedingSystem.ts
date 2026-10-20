@@ -525,7 +525,7 @@ export interface BreedingResult {
     childPedigree?: Pedigree;
     ep?: EpBreakdown;
     factors?: InheritedFactor[];
-    /** 運氣特殊門檻旗標（LUK-06）：依父母平均 LUK 判定，只在受孕成功時有值 */
+    /** 運氣特殊門檻旗標（LUK-06）：依父母平均 LUK 判定，只在受孕成功時有值；效果本身另卡套用 */
     luckEffects?: LuckThresholdEffects;
 }
 
