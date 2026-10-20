@@ -22,7 +22,8 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
-import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerSnapshot, type OfficerUnlocks } from '../systems/OfficerSnapshot';
+import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
+import { addOfficerExp, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { battleIntelligenceOf } from '../systems/BattleRoster';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
@@ -353,7 +354,8 @@ export class GameSession {
     /** 虎符卡資料（uid → 卡）；陣亡產出的卡會登記到這裡 */
     private _tallyCards: Record<string, TigerTallyCard> = {};
     /** 女性武將來源（uid → 來源，FEM-01）；戰俘女將歸入名冊時寫入（PROG-2-0245） */
-    private _officerSnapshot: OfficerSnapshot = normalizeOfficerSnapshot(null);
+    /** 官職狀態（OFC-03）：階位、經驗與解鎖歷史；存檔為扁平欄位 officerState */
+    private _officerState: OfficerState = initialOfficerState();
     private _femaleSources: Record<string, FemaleSource> = {};
     /** 轉蛋各池保底計數（PROG-2-0337）；由轉蛋服務寫入，存檔時一併保存 */
     private _gachaPity: GachaPityBook = {};
@@ -935,6 +937,7 @@ export class GameSession {
         this._gachaWallet = null;
         this._gachaRevision += 1;
         this._legacyCount = 0;
+        this._officerState = initialOfficerState();
         this._military = { ...STARTER_MILITARY };
         this._yearAgingEvents = [];
         this._prison = createPrisonState<GeneralConfig>();
@@ -1128,17 +1131,24 @@ export class GameSession {
         return [...this._favoriteGeneralIds];
     }
 
-    /**
-     * 官職快照（PROG-2-0824）：官職系統（OFC-01～03）未實作，快照由呼叫端傳入。
-     * 不寫入存檔；缺欄位或壞值退回鄉里義士（階位 1）。
-     */
-    public setOfficerSnapshot(raw: unknown): void {
-        this._officerSnapshot = normalizeOfficerSnapshot(raw);
+    /** 官職狀態（唯讀副本）：階位、累積經驗與解鎖歷史（OFC-03）。 */
+    public get officerState(): OfficerState {
+        return { ...this._officerState, unlockHistory: [...this._officerState.unlockHistory] };
     }
 
-    /** 目前官職解鎖（唯讀）：任務難度上限、欄位數、沙盤階段、熱點數。 */
+    /** 目前官職解鎖（唯讀）：由官職階位推得任務難度上限、欄位數、沙盤階段、熱點數。 */
     public get officerUnlocks(): OfficerUnlocks {
-        return officerUnlocksOf(this._officerSnapshot);
+        return officerUnlocksOf(normalizeOfficerSnapshot(toOfficerSnapshot(this._officerState)));
+    }
+
+    /**
+     * 官職經驗入帳（OFC-03）：依任務結果算經驗（F-1）並晉升，回傳這次新解鎖的階位（由低到高）。
+     * 只升不降；天下大亂不會動到官職（F-3）。
+     */
+    public gainOfficerExp(task: OfficerTaskResult): number[] {
+        const result = addOfficerExp(this._officerState, calcOfficerExpGain(task));
+        this._officerState = result.state;
+        return result.promotedTiers;
     }
 
     /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */
@@ -2047,7 +2057,7 @@ export class GameSession {
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount, this._officerState);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -2090,6 +2100,7 @@ export class GameSession {
         this._hallAssignments = normalizeHallAssignments(snapshot.hallAssignments);
         this.dynamicRelations.restore(snapshot.dynamicRelations ?? []);
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
+        this._officerState = normalizeOfficerState(snapshot.officerState);
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
