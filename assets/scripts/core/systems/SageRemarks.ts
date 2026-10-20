@@ -34,6 +34,13 @@ export type OmenKind = 'meteor' | 'purple-qi' | 'deer-grass';
 
 export const OMEN_KINDS: readonly OmenKind[] = ['meteor', 'purple-qi', 'deer-grass'];
 
+/** 天象異變的顯示名稱 */
+export const OMEN_LABEL: Readonly<Record<OmenKind, string>> = {
+    meteor: '流星',
+    'purple-qi': '紫氣',
+    'deer-grass': '鹿銜草',
+};
+
 /** 名士批語：不足 2 位名士時不出批語 */
 export function buildSageRemarks(
     pool: readonly FactorPoolEntry[],

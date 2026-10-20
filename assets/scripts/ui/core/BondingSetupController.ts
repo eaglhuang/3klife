@@ -15,7 +15,7 @@
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
 import { getSage } from '../../core/systems/SageDivination';
-import type { SageRemark } from '../../core/systems/SageRemarks';
+import { OMEN_LABEL, pickOmen, type SageRemark } from '../../core/systems/SageRemarks';
 import type { FactorColor } from '../../core/systems/FactorInheritance';
 import { buildBreedingPreviewLines } from './BreedingPreviewPresenter';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
@@ -90,6 +90,8 @@ export interface BondingSetupDeps {
     spendLifespan?: (generalId: string, command: 'breeding') => { events: readonly { type: string }[] } | null;
     /** 玩家發現等級，決定父母因子是否顯示名稱；未提供時視為 1（只看得到藍粉） */
     playerDiscoveryLevel?: () => number;
+    /** 天象異變的存檔亂數種子（PROG-2-0823）；未提供時視為 0 */
+    omenSeed?: () => number;
     /** 結緣畫面文案查詢（ui.breed.*）；正式環境接 i18n.t，未提供時用 zh-TW 預設文案 */
     text?: BreedTextLookup;
 }
@@ -193,7 +195,8 @@ export class BondingSetupController {
             const gender = child.gender === '女' ? '千金' : '麟兒';
             this._notice = this._t('ui.breed.child_born', result.father.name, result.mother.name, gender)
                 + `子嗣名為「${child.name}」。`
-                + this._t('ui.breed.preg_status', result.mother.name, String(PREGNANCY_LOCK_SEASONS));
+                + this._t('ui.breed.preg_status', result.mother.name, String(PREGNANCY_LOCK_SEASONS))
+                + `天象異變：${OMEN_LABEL[pickOmen(child.birthSeason ?? 0, this._deps.omenSeed?.() ?? 0)]}。`;
         }
         // 父母壽命耗盡時提示，與培育回合的「壽命耗盡，武將已故」一致（QA 回報，PROG-2-0224）
         const deceased = [

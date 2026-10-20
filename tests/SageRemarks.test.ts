@@ -6,7 +6,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import type { FactorPoolEntry } from '../assets/scripts/core/systems/BreedingSystem';
-import { buildSageRemarks, OMEN_KINDS, pickOmen, REMARK_ERROR_RATE } from '../assets/scripts/core/systems/SageRemarks';
+import { buildSageRemarks, OMEN_KINDS, OMEN_LABEL, pickOmen, REMARK_ERROR_RATE } from '../assets/scripts/core/systems/SageRemarks';
 
 const POOL = [
     { id: 'f-blue', color: 'blue', chance: 1, displayName: '藍因子' },
@@ -57,6 +57,12 @@ export function createSageRemarksSuite(): TestSuite {
         const seen = new Set<string>();
         for (let season = 1; season <= 60; season++) seen.add(pickOmen(season, 42));
         for (const kind of OMEN_KINDS) assert.isTrue(seen.has(kind));
+    });
+
+    suite.test('天象異變顯示名稱：三種都有中文名', () => {
+        assert.equals('流星', OMEN_LABEL.meteor);
+        assert.equals('紫氣', OMEN_LABEL['purple-qi']);
+        assert.equals('鹿銜草', OMEN_LABEL['deer-grass']);
     });
 
     return suite;
