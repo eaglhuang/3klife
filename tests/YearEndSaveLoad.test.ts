@@ -1,5 +1,5 @@
 /**
- * YearEndSaveLoad.test.ts — 年度推進 × 存讀檔 × aging 整合（QA，PROG-2-0652）
+ * YearEndSaveLoad.test.ts — 年度推進 × 存讀檔 × aging 整合（QA，PROG-2-0618）
  *
  * Unity 對照：像 PlayMode 測試，跨存讀檔跑完一整年，看年報會不會重複或漏發。
  */
