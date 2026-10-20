@@ -7,6 +7,7 @@
 import { TestSuite, assert } from './TestRunner';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { planBloodlineMergeForGenerals } from '../assets/scripts/core/systems/BloodlineMerge';
+import { ITEM_MERGE_TOKEN } from '../assets/scripts/core/systems/PlayerInventory';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 function gen(id: string, bloodlineId: string | undefined, geneIds: string[], mergedOutFactors?: string[]): GeneralConfig {
@@ -25,6 +26,7 @@ export function createBloodlineMergeWiringSuite(): TestSuite {
     suite.test('同血源：V1 取得 V2 第一個 V1 沒有的因子，V2 記為已歸宗', async () => {
         const session = new GameSession(3);
         session.setRosterStore(new InMemoryRosterStore([gen('v1', 'BL_A', ['F1']), gen('v2', 'BL_A', ['F1', 'F2'])]));
+        await session.addItem(ITEM_MERGE_TOKEN, 1);
         const result = await session.mergeBloodlineFor('v1', 'v2');
         assert.isTrue(result.ok);
         const roster = session.roster;

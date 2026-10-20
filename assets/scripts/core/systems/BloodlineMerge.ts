@@ -61,7 +61,7 @@ export interface GeneralMergeInput {
 
 /**
  * 武將版本之間的血脈歸宗（BLT-11 接線用，純計算）。
- * V1 取得 V2 的一個因子；V2 的 mergedOutFactors 追加該因子。不扣歸宗令（規格未定，待辦）。
+ * V1 取得 V2 的一個因子；V2 的 mergedOutFactors 追加該因子。不扣歸宗令；扣令在 GameSession.mergeBloodlineFor（PROG-2-0862）。
  * 同一 Bloodline_ID 才可歸宗；缺 mergedOutFactors 視為空。
  */
 export function planBloodlineMergeForGenerals(
