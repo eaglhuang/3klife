@@ -37,10 +37,12 @@ export function ultimateActionView(raw: { stageCap?: number; stageCurrent?: numb
             raiseEnabled: false,
         };
     }
+    // cc 設定沒開 strictNullChecks，.ok 無法收斂 union，需手動斷言
+    const { reason } = check as { ok: false; reason: keyof typeof NEXT_STEP_TEXT };
     return {
-        summary: `${head}，${NEXT_STEP_TEXT[check.reason]}`,
+        summary: `${head}，${NEXT_STEP_TEXT[reason]}`,
         awakenEnabled: false,
-        awakenLabel: check.reason === 'ALREADY_MAX' ? '已全部點亮' : '條件未達成',
+        awakenLabel: reason === 'ALREADY_MAX' ? '已全部點亮' : '條件未達成',
         raiseLabel: RAISE_LOCKED_TEXT,
         raiseEnabled: false,
     };
