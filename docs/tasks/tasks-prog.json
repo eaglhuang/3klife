@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 53,
-    "total": 89
+    "open": 55,
+    "total": 91
   },
   "tasks": [
     {
@@ -3505,6 +3505,62 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0149/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0150",
+      "title": "實機驗收：退役畫面因子媒介選擇（PROG-2-0866、#590）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "退役工具列媒介按鈕的循環選擇、候選子嗣、版位需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #590",
+        "PROG-2-0866"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0150.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0150/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0151",
+      "title": "實機驗收：宿命揭曉文字與劇本列（PROG-2-0735、#588）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "宿命揭曉按鈕與天命分流文字、劇本列位置與逆天抗命句需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #588",
+        "PROG-2-0735"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0151.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0151/**"
       ],
       "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     }
