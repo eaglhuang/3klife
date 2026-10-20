@@ -50,6 +50,7 @@ import { DomesticPanelController } from '../core/DomesticPanelController';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
+import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
@@ -832,6 +833,7 @@ export class LobbyScene extends Component {
      * 任務資料載入或驗證失敗時不掛載，HUD 入口保留但開不起來（會在 log 留下原因）。
      */
     private async _mountHallBoard(): Promise<void> {
+        await this._loadOfficerTiers();
         const hub = await this._loadLobbyHub();
         if (!hub) {
             return;
@@ -1131,6 +1133,24 @@ export class LobbyScene extends Component {
                     return;
                 }
                 resolve(asset.json as T);
+            });
+        });
+    }
+
+    /** 官職階位資料檔（OFC-01）：驗證通過才覆寫晉升門檻；失敗保留內建備援並記 log。 */
+    private _loadOfficerTiers(): Promise<void> {
+        return new Promise((resolve) => {
+            resources.load<JsonAsset>('data/officer-tiers', JsonAsset, (err, asset) => {
+                if (err || !asset) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 官職階位資料載入失敗，沿用內建門檻', err);
+                    resolve();
+                    return;
+                }
+                const result = installOfficerTierTable(asset.json);
+                if (!result.ok) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 官職階位資料驗證失敗，沿用內建門檻', result.issues);
+                }
+                resolve();
             });
         });
     }

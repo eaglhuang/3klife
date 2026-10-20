@@ -16,8 +16,11 @@
 export const OFFICER_TIER_MIN = 1;
 export const OFFICER_TIER_MAX = 5;
 
-/** 各階晉升所需累積經驗（F-2；階位 1 為初始，不需要經驗） */
-export const OFFICER_TIER_EXP_THRESHOLDS: Readonly<Record<number, number>> = {
+/**
+ * 各階晉升所需累積經驗（F-2；階位 1 為初始，不需要經驗）。
+ * 內建值只是備援；遊戲啟動時由 installOfficerTierTable 依 officer-tiers.json 覆寫（OFC-01）。
+ */
+export const OFFICER_TIER_EXP_THRESHOLDS: Record<number, number> = {
     2: 100,
     3: 260,
     4: 520,

@@ -12,6 +12,8 @@ import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { BattleRecord } from '../../core/systems/BattleRoster';
 import { buildBattleRecordPanel } from '../../core/systems/BattleRecordStats';
 import { quarterlyBattleReport, retireReviewCareerLine, retireReviewScriptLine, vitalityPercentOf } from '../../core/systems/RetireReviewCopy';
+import { routeRetirement } from '../../core/systems/RetirementRouting';
+import { JobWiringGeneral, resolvePrimaryClass } from '../../core/systems/JobChangeWiring';
 
 export interface RetireReviewView {
     /** 退役回顧：生涯戰績一行（UI_RETIRE_REVIEW） */
@@ -59,6 +61,8 @@ export const RETIRE_REVIEW_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>>
     'ui.retire_review.quarterly': '本季戰報：{0} 精力剩 {1}%，{2}',
     'ui.retire_review.bond_ok': '可進行結緣。',
     'ui.retire_review.bond_no': '不建議進行結緣。',
+    'ui.retire_review.grant_scroll': '獲得竹簡 ×1',
+    'ui.retire_review.grant_weapon': '獲得虎符 ×1',
 };
 
 /** 文案查詢：key 與可選的 {0}、{1} 占位參數；語系表沒有該 key 時回傳 key 本身 */
@@ -82,6 +86,21 @@ export function withRetireReviewFallback(lookup: RetireReviewTextLookup): Retire
     };
 }
 
+/** 退役獎勵一行對應的文案 key；武職得虎符，文職與雙職能得竹簡（規則同 GameSession.retireGeneral） */
+const RETIRE_GRANT_KEY_BY_REASON: Readonly<Record<string, string>> = {
+    WARRIOR: 'ui.retire_review.grant_weapon',
+    SCHOLAR: 'ui.retire_review.grant_scroll',
+    DUAL_CLASS: 'ui.retire_review.grant_scroll',
+};
+
+/** 退役獎勵一行（PROG-2-0739）：依退役路線給虎符或竹簡；UNKNOWN_CLASS 不給，回傳空字串 */
+export function retireGrantText(general: GeneralConfig | undefined | null, lookup: RetireReviewTextLookup = fallbackRetireReviewText): string {
+    const g = (general ?? {}) as GeneralConfig & JobWiringGeneral;
+    const route = routeRetirement({ primaryClass: resolvePrimaryClass(g), subClass: g.subClass });
+    const key = RETIRE_GRANT_KEY_BY_REASON[route.reason];
+    return key === undefined ? '' : withRetireReviewFallback(lookup)(key);
+}
+
 /**
  * 退役回顧面板的全部文字，key 等於 retire-review-main.json 的節點 id。
  * 所有句子都走語系查詢，數值以占位參數傳入；缺資料時戰績為 0 勝 0 敗。
@@ -102,6 +121,7 @@ export function buildRetireReviewTexts(
         retireScript: lookup('ui.retire_review.script', wins, kills, guardian),
         retireReport: lookup('ui.retire_review.report', String(pct)),
         retireQuarterly: lookup('ui.retire_review.quarterly', g.name ?? '', String(pct), bondText),
+        retireGrant: retireGrantText(general, lookup),
         closeRetireLabel: lookup('ui.retire_review.close'),
     };
 }
