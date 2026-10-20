@@ -12,6 +12,7 @@ import { zoneDefenseMultiplier } from '../shared/FormationZone';
 import { extraAttackHitsOf } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
+import { tileStateRuleOf } from '../shared/TileStateRules';
 import {
   canNavalCombinedAttack,
   hasNavalAptitude,
@@ -106,7 +107,7 @@ export class BattleCombatResolver {
   }
 
   public isCellMovementBlocked(lane: number, depth: number): boolean {
-    return this.context.state.getTileEffect(lane, depth)?.blocksMovement === true;
+    return tileStateRuleOf(this.context.state.getTileEffect(lane, depth)).blocksOnEnter;
   }
 
   public isGeneralUnit(unitId: string): boolean {
