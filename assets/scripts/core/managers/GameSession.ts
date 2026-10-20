@@ -29,7 +29,7 @@ import type { NurtureAction, NurtureRoundLog } from '../systems/NurtureSystem';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
-import { buildYearReport, YearReport } from '../systems/YearReport';
+import { buildYearReport, normalizeYearAgingEvents, YearReport } from '../systems/YearReport';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import type { CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
@@ -870,6 +870,7 @@ export class GameSession {
         this._gachaRevision += 1;
         this._legacyCount = 0;
         this._military = { ...STARTER_MILITARY };
+        this._yearAgingEvents = [];
         this._prison = createPrisonState<GeneralConfig>();
         this._fame = 0;
         this._scorePoints = 0;
@@ -1893,6 +1894,7 @@ export class GameSession {
         return {
             ...this._createBaseSnapshot(now),
             military: this.military,
+            yearAgingEvents: this._yearAgingEvents.map((event) => ({ ...event })),
             resources: {
                 fame: this._fame,
                 scorePoints: this._scorePoints,
@@ -1965,6 +1967,7 @@ export class GameSession {
         this._femaleSystem = normalizeFemaleSystemState(snapshot.femaleSystem);
         this._gachaWallet = snapshot.gachaWallet ? normalizeGachaWalletSave(snapshot.gachaWallet) : null;
         this._military = normalizeMilitaryReserve(snapshot.military);
+        this._yearAgingEvents = normalizeYearAgingEvents(snapshot.yearAgingEvents);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
         this._fame = normalizeFame(snapshot.resources?.fame);
         this._scorePoints = normalizeScorePoints(snapshot.resources?.scorePoints);

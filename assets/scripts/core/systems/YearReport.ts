@@ -8,7 +8,7 @@
  *
  * Unity 對照：像一個 Presenter 的資料層，把一年的事件計數好，畫面只把 lines 寫進 Label。
  */
-import type { AgingEvent } from './GeneralAging';
+import type { AgingEvent, AgingEventType } from './GeneralAging';
 import { SEASONS_PER_YEAR } from './GameClock';
 
 export interface YearReport {
@@ -19,6 +19,23 @@ export interface YearReport {
 }
 
 /** 這一季結束後是否為年末（第 4 季結束時觸發年報） */
+const AGING_EVENT_TYPES: readonly AgingEventType[] = ['reached-retirement-age', 'died', 'entered-growth-stage'];
+
+/**
+ * 讀檔時還原本年累積的老化事件（PROG-2-0815）。
+ * 舊存檔沒有這個欄位時回傳空陣列；壞掉的項目直接丟棄，不讓年報算錯。
+ */
+export function normalizeYearAgingEvents(raw: unknown): AgingEvent[] {
+    if (!Array.isArray(raw)) return [];
+    return raw.flatMap((item): AgingEvent[] => {
+        if (!item || typeof item !== 'object') return [];
+        const event = item as Partial<AgingEvent>;
+        if (typeof event.generalId !== 'string' || typeof event.age !== 'number' || !Number.isFinite(event.age)) return [];
+        if (!AGING_EVENT_TYPES.includes(event.type as AgingEventType)) return [];
+        return [{ type: event.type as AgingEventType, generalId: event.generalId, age: event.age, ...(event.stage ? { stage: event.stage } : {}) }];
+    });
+}
+
 export function isYearEndSeason(season: number): boolean {
     return season === SEASONS_PER_YEAR;
 }
