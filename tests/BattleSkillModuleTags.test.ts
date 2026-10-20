@@ -22,7 +22,7 @@ export function createBattleSkillModuleTagsSuite(): TestSuite {
         assert.equals(null, damageModuleTagOf({ targetMode: BattleSkillTargetMode.Tile }));
     });
 
-    suite.test('已落地的戰法對到規格代號：無視防禦、百步穿楊為 TDIR，趙家槍法為 TLINE，呂布無雙亂舞為 TFAN', () => {
+    suite.test('已落地的戰法對到規格代號：無視防禦、百步穿楊為 TDIR，趙家槍法為 TLINE，呂布天下無雙為 TFAN', () => {
         const tagOf = (id: string) => {
             const profile = resolveBattleSkillProfile(id);
             assert.isTrue(profile !== null, `缺少戰法 profile：${id}`);
