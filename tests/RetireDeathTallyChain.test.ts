@@ -88,6 +88,22 @@ export function createRetireDeathTallyChainSuite(): TestSuite {
         assert.equals(canonical(a.tallyHoldings), canonical(b.tallyHoldings));
     });
 
+    suite.test('退役的武將之後壽命耗盡或超齡死亡，不會再發第二張虎符', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const a = createSession(adapter, [
+            general('vet', 70, { isHistorical: true, maxLifespan: 71, primaryClass: 'Warrior' }),
+        ]);
+        await a.retireGeneral('vet');
+        assert.equals(1, Object.values(a.tallyCards).length, '退役時發一張虎符');
+
+        // 退役者仍留在名冊（只標 isMentorCard），壽命耗盡後的死亡結算不得再產卡
+        for (let i = 0; i < 4; i += 1) a.spendLifespan('vet', 'breeding');
+        await a.advanceSeason();
+        await a.advanceSeason();
+        assert.equals(0, Object.values(a.tallyCards).filter((c) => c.source === 'death').length, '退役者死亡不產陣亡虎符');
+        assert.equals(1, Object.keys(a.tallyCards).length, '全程只有退役那一張');
+    });
+
     suite.test('沒有出征戰績的名將死亡：仍產卡，但品質只有最低（R）', async () => {
         const adapter = new MemoryStorageAdapter();
         const a = createSession(adapter, [general('hero', 59.75, { isHistorical: true, maxLifespan: 60 })]);
