@@ -66,7 +66,9 @@ export class FactorHexGraphic extends Component {
             g.stroke();
         }
 
-        const valuePoints = vertices.map((v, i) => hexVertexPoint(i, v.value, this._radius));
+        // 未解鎖色的數值不露出：頂點固定畫在圓心，相鄰邊改畫灰色（LUK-04）
+        const isVisible = (i: number): boolean => visibleColors === undefined || visibleColors.includes(vertices[i].color);
+        const valuePoints = vertices.map((v, i) => hexVertexPoint(i, isVisible(i) ? v.value : 0, this._radius));
         g.fillColor = new Color(220, 180, 90, 110);
         this._tracePolygon(g, valuePoints);
         g.fill();
@@ -75,10 +77,17 @@ export class FactorHexGraphic extends Component {
         this._tracePolygon(g, valuePoints);
         g.stroke();
 
+        g.strokeColor = MASK_COLOR;
         for (let i = 0; i < vertices.length; i++) {
-            const visible = visibleColors === undefined || visibleColors.includes(vertices[i].color);
-            if (!visible) {
-                // 未解鎖色：灰階遮罩（LUK-04），不顯示色相
+            const j = (i + 1) % vertices.length;
+            if (isVisible(i) && isVisible(j)) continue;
+            g.moveTo(valuePoints[i].x, valuePoints[i].y);
+            g.lineTo(valuePoints[j].x, valuePoints[j].y);
+            g.stroke();
+        }
+
+        for (let i = 0; i < vertices.length; i++) {
+            if (!isVisible(i)) {
                 const p = valuePoints[i];
                 g.fillColor = MASK_COLOR;
                 g.circle(p.x, p.y, 5);
