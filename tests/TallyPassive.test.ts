@@ -13,11 +13,12 @@ function cavalry(attackRange: number): TroopUnit {
 export function createTallyPassiveSuite(): TestSuite {
   const suite = new TestSuite('TallyPassive (虎符被動掛點 PROG-2-0774)');
 
-  suite.test('騎射合一：白馬騎兵攻擊射程提高為弓兵射程，移動力不變', () => {
+  suite.test('騎射合一：白馬騎兵攻擊射程提高為弓兵射程，移動力 +1', () => {
     const unit = cavalry(1);
+    const baseMove = unit.getEffectiveMoveRange();
     applyTallyPassive(unit, 'tiger-tally-bai-ma');
     assert.equals(2, unit.attackRange);
-    assert.equals(2, unit.getEffectiveMoveRange());
+    assert.equals(baseMove + 1, unit.getEffectiveMoveRange());
   });
 
   suite.test('射程下限只升不降：已有更高射程的部隊不被壓低', () => {
