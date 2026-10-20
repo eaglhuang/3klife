@@ -16,6 +16,7 @@
  */
 import { lateBloomClueText } from '../../core/systems/LateBloomClue';
 import { VITALITY_SCRIPT_KEYS, vitalityScriptText } from './VitalityScriptTexts';
+import { fateText } from './FateScriptTexts';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { MentorCard } from '../../core/models/MentorCard';
 import type { NurtureBlockReason, NurtureService } from '../../core/services/NurtureService';
@@ -192,7 +193,7 @@ export class NurtureFlowController {
         const updated = this._deps.unveiling.choose(child.id, choice);
         this._notice = choice === 'accept'
             ? `${child.name} 順應天命，成為${CAREER_LABELS[updated.careerClass ?? ''] ?? '？'}`
-            : `${child.name} 逆天而行${updated.fate?.lateBloomer ? `，${this._t('ui.breed.daqi')}` : '，成長率 ×0.8'}`;
+            : `${fateText(this._t.bind(this), 'ui.fate.script.defy', child.name)}　${child.name} 逆天而行${updated.fate?.lateBloomer ? `，${this._t('ui.breed.daqi')}` : '，成長率 ×0.8'}`;
         await this._persist();
     }
 
@@ -450,9 +451,10 @@ function buildFateTexts(child: UnveilingGeneral, t: BreedTextLookup): Record<str
         fateFactors: factors.length > 0
             ? `初始因子：${factors.map((gene) => gene.displayName ?? gene.id ?? '？').join('、')}`
             : '初始因子：尚未顯現',
-        fateRecommend: `天命建議：${CAREER_LABELS[recommended]}`,
-        fateAcceptLabel: `順應天命（${CAREER_LABELS[recommended]}）`,
-        fateDefyLabel: `逆天而行（${CAREER_LABELS[other]}）`,
+        fateRecommend: fateText(t, 'ui.fate.reveal', CAREER_LABELS[recommended]),
+        fateScript: fateText(t, 'ui.fate.script.reveal', child.name, recommended === 'Warrior' ? '武骨' : '文才', CAREER_LABELS[recommended]),
+        fateAcceptLabel: fateText(t, 'ui.fate.accept'),
+        fateDefyLabel: fateText(t, 'ui.fate.defy'),
         fateDefyHint: `逆天：成長率 ×${FATE_DEFY_GROWTH_MODIFIER}，有 ${Math.round(LATE_BLOOMER_CHANCE * 100)}% 機率大器晚成。選擇後不可更改。`,
     };
 }

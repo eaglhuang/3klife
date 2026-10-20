@@ -1,17 +1,19 @@
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { GENERAL_STATUS_DEAD, RETIREMENT_AGE } from '../../core/systems/GeneralAging';
+import { GENERAL_STATUS_UNVEILED, UNVEILING_AGE } from '../../core/systems/Unveiling';
 
 type RetirementGeneral = GeneralConfig & { isMentorCard?: boolean };
 export interface RetirementFlowDeps {
     /** Must return the owned session roster, never the template catalogue. */
     roster(): GeneralConfig[];
-    retireGeneral(id: string): Promise<unknown>;
+    retireGeneral(id: string, options?: { catalystChildId?: string }): Promise<unknown>;
 }
 export type RetirementOutcome = 'confirmation-required' | 'retired' | 'unavailable' | 'busy' | 'failed';
 
 /** Player-driven retirement; delegates card creation and saving to GameSession. */
 export class RetirementFlowController {
     private _selectedId: string | null = null;
+    private _catalystChildId: string | null = null;
     private _confirmId: string | null = null;
     private _busy = false;
     private _notice = '';
@@ -22,6 +24,21 @@ export class RetirementFlowController {
         return this._deps.roster().filter((g: RetirementGeneral) =>
             (g.age ?? 0) >= RETIREMENT_AGE && !g.isMentorCard
             && (g.status ?? '').toLowerCase() !== GENERAL_STATUS_DEAD);
+    }
+
+    /** 可當因子媒介的子嗣：0~UNVEILING_AGE 歲、尚未開獎、未死亡，且不是目前退役的武將。 */
+    catalystChildren(): RetirementGeneral[] {
+        const targetId = this.selected?.id;
+        return this._deps.roster().filter((g: RetirementGeneral) =>
+            g.id !== targetId
+            && (g.age ?? 0) >= 0 && (g.age ?? 0) <= UNVEILING_AGE
+            && g.status !== GENERAL_STATUS_UNVEILED
+            && (g.status ?? '').toLowerCase() !== GENERAL_STATUS_DEAD);
+    }
+
+    /** 目前選中的媒介子嗣；沒有選或已不合法時為 null。 */
+    get catalystChild(): RetirementGeneral | null {
+        return this.catalystChildren().find(g => g.id === this._catalystChildId) ?? null;
     }
 
     get selected(): RetirementGeneral | null {
@@ -40,7 +57,16 @@ export class RetirementFlowController {
         const candidates = this.candidates();
         const index = candidates.findIndex(g => g.id === selected?.id);
         this._selectedId = candidates.length ? candidates[(index + 1) % candidates.length].id : null;
+        this._catalystChildId = null;
         this.cancel();
+    }
+
+    /** 循環選擇媒介：無 → 子嗣1 → … → 無。 */
+    selectNextCatalystChild(): void {
+        if (this._busy) return;
+        const children = this.catalystChildren();
+        const index = children.findIndex(g => g.id === this._catalystChildId);
+        this._catalystChildId = index + 1 < children.length ? children[index + 1].id : null;
     }
 
     cancel(): void {
@@ -63,8 +89,10 @@ export class RetirementFlowController {
             return 'confirmation-required';
         }
         this._busy = true;
+        const child = this.catalystChild;
         try {
-            await this._deps.retireGeneral(target.id);
+            if (child) await this._deps.retireGeneral(target.id, { catalystChildId: child.id });
+            else await this._deps.retireGeneral(target.id);
             this._notice = `${target.name} 已退役，教官卡已保存`;
             return 'retired';
         } catch (error) {

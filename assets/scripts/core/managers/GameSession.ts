@@ -22,6 +22,7 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
+import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerSnapshot, type OfficerUnlocks } from '../systems/OfficerSnapshot';
 import { battleIntelligenceOf } from '../systems/BattleRoster';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
@@ -102,7 +103,8 @@ import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw
 import { drawFemalePool, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
 import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome } from '../systems/DungeonRescue';
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
-import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
+import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral, UNVEILING_AGE, GENERAL_STATUS_UNVEILED } from '../systems/Unveiling';
+import { injectCatalystFactor, markCatalystUsed, type CatalystGeneral } from '../systems/GeneCatalyst';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
 import { grantLegacyRewards, normalizeLegacyCount, type LegacyAchievement } from '../systems/LegacyAchievement';
@@ -137,6 +139,8 @@ export const GAME_SESSION_EVENTS = {
     GeneralUnveiled: 'game-session-general-unveiled',
     /** payload: MentorCard */
     GeneralRetired: 'game-session-general-retired',
+    /** payload: { childId, injectedFactorId, consumed }（退役時因子媒介注入，PROG-2-0865） */
+    GeneCatalystInjected: 'game-session-gene-catalyst-injected',
     /** payload: SpiritCard（每位死亡武將一張） */
     SpiritCardCreated: 'game-session-spirit-card-created',
     /** payload: BattleSettlement（戰後精力、戰績、功勳已寫回名冊） */
@@ -349,6 +353,7 @@ export class GameSession {
     /** 虎符卡資料（uid → 卡）；陣亡產出的卡會登記到這裡 */
     private _tallyCards: Record<string, TigerTallyCard> = {};
     /** 女性武將來源（uid → 來源，FEM-01）；戰俘女將歸入名冊時寫入（PROG-2-0245） */
+    private _officerSnapshot: OfficerSnapshot = normalizeOfficerSnapshot(null);
     private _femaleSources: Record<string, FemaleSource> = {};
     /** 轉蛋各池保底計數（PROG-2-0337）；由轉蛋服務寫入，存檔時一併保存 */
     private _gachaPity: GachaPityBook = {};
@@ -1123,6 +1128,19 @@ export class GameSession {
         return [...this._favoriteGeneralIds];
     }
 
+    /**
+     * 官職快照（PROG-2-0824）：官職系統（OFC-01～03）未實作，快照由呼叫端傳入。
+     * 不寫入存檔；缺欄位或壞值退回鄉里義士（階位 1）。
+     */
+    public setOfficerSnapshot(raw: unknown): void {
+        this._officerSnapshot = normalizeOfficerSnapshot(raw);
+    }
+
+    /** 目前官職解鎖（唯讀）：任務難度上限、欄位數、沙盤階段、熱點數。 */
+    public get officerUnlocks(): OfficerUnlocks {
+        return officerUnlocksOf(this._officerSnapshot);
+    }
+
     /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */
     public get hallAssignments(): Readonly<Record<string, string>> {
         return { ...this._hallAssignments };
@@ -1679,13 +1697,31 @@ export class GameSession {
         return true;
     }
 
-    /** 玩家讓 65 歲以上的武將退役，轉成教官傳承資料並立即存檔 */
-    public async retireGeneral(generalId: string): Promise<MentorCard> {
+    /**
+     * 玩家讓 65 歲以上的武將退役，轉成教官傳承資料並立即存檔。
+     * 可選擇一位 0~5 歲、尚未開獎的子嗣，退役時注入因子媒介（PROG-2-0865）；不選則行為與原本相同。
+     */
+    public async retireGeneral(generalId: string, options?: { catalystChildId?: string }): Promise<MentorCard> {
         if (!this._lifecycle) {
             throw new Error('[GameSession] 尚未設定 SeasonLifecycle（setLifecycle）');
         }
+        const childId = options?.catalystChildId;
+        if (childId !== undefined) this._assertCatalystChild(generalId, childId);
         const result = await this._lifecycle.retireGeneral(this._roster.getAll(), generalId, this._clock.state);
-        this._roster.replaceAll(result.roster);
+        let roster = result.roster;
+        let injection: { childId: string; injectedFactorId: string | null; consumed: boolean } | null = null;
+        if (childId !== undefined) {
+            const retired = roster.find((g) => g.id === generalId)! as GeneralConfig & CatalystGeneral;
+            const child = roster.find((g) => g.id === childId)!;
+            const outcome = injectCatalystFactor(retired, child, () => this._random());
+            roster = roster.map((g): GeneralConfig => {
+                if (g.id === childId) return outcome.child;
+                if (g.id === generalId && outcome.consumed) return markCatalystUsed(g as GeneralConfig & CatalystGeneral);
+                return g;
+            });
+            injection = { childId, injectedFactorId: outcome.injectedFactorId, consumed: outcome.consumed };
+        }
+        this._roster.replaceAll(roster);
         this._clearLeadIfGone();
         const reason = result.card.mentorRoute?.reason;
         if (reason === 'SCHOLAR' || reason === 'DUAL_CLASS') {
@@ -1696,7 +1732,20 @@ export class GameSession {
             await this.save();
         }
         this._emit(GAME_SESSION_EVENTS.GeneralRetired, result.card);
+        if (injection) this._emit(GAME_SESSION_EVENTS.GeneCatalystInjected, injection);
         return result.card;
+    }
+
+    /** 因子媒介的子嗣必須存在、不是退役武將本人、年齡 0~UNVEILING_AGE 且尚未開獎；不合法時拋錯，不改任何狀態 */
+    private _assertCatalystChild(generalId: string, childId: string): void {
+        const child = this._roster.getAll().find((g) => g.id === childId);
+        const eligible = !!child
+            && childId !== generalId
+            && typeof child.age === 'number'
+            && child.age >= 0
+            && child.age <= UNVEILING_AGE
+            && child.status !== GENERAL_STATUS_UNVEILED;
+        if (!eligible) throw new Error('[GameSession] 因子媒介只能注入 0~5 歲、尚未開獎的子嗣');
     }
 
     /**

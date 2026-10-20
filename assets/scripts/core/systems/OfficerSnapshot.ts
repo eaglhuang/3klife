@@ -66,6 +66,16 @@ export function normalizeOfficerSnapshot(raw: unknown): OfficerSnapshot {
 }
 
 /** 依階位算出大廳該開放的權限；不倒退由官職系統保證，這裡只做查表 */
+/**
+ * 大廳任務牆的玩家狀態（PROG-2-0824）：階位即 rankTier；世界沙盤階段 S1/S2/S3 對應 worldStage 1/2/3。
+ * 未解鎖沙盤時 worldStage 退回 1，與既有 HALL_DEFAULT_PLAYER 一致，避免舊的任務牆被隱藏。
+ * 暫定：worldStage 退回值沿用既有預設。
+ */
+export function hallPlayerOf(unlocks: OfficerUnlocks): { rankTier: number; worldStage: number; intel: number } {
+    const stage = unlocks.sandtableStage ? Number(unlocks.sandtableStage.slice(1)) : 1;
+    return { rankTier: unlocks.tier, worldStage: stage, intel: 0 };
+}
+
 export function officerUnlocksOf(snapshot: OfficerSnapshot): OfficerUnlocks {
     const tier = normalizeOfficerSnapshot(snapshot).tier;
     return {

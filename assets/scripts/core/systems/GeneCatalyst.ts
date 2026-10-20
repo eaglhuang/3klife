@@ -33,7 +33,6 @@ export function markCatalystUsed<T extends CatalystGeneral>(general: T): Omit<T,
 export const CATALYST_BASE_INHERITANCE_CHANCE = 0.5;
 
 export interface CatalystInjectable {
-    /** 與 GeneralConfig.genes 同形（id 為選填）；沒有 id 的因子不參與注入 */
     genes?: readonly { id?: string }[];
 }
 
@@ -61,7 +60,7 @@ export function injectCatalystFactor<C extends CatalystInjectable>(
         return { child, injectedFactorId: null, consumed: false, reason: 'ALREADY_USED' };
     }
     const owned = new Set((child.genes ?? []).map((gene) => gene.id));
-    const candidate = (retiredGeneral.genes ?? []).find((gene) => typeof gene.id === 'string' && gene.id.length > 0 && !owned.has(gene.id));
+    const candidate = (retiredGeneral.genes ?? []).find((gene): gene is { id: string } => gene.id !== undefined && !owned.has(gene.id));
     if (!candidate) {
         return { child, injectedFactorId: null, consumed: false, reason: 'NO_CANDIDATE' };
     }
@@ -70,6 +69,6 @@ export function injectCatalystFactor<C extends CatalystInjectable>(
     if (!hit) {
         return { child, injectedFactorId: null, consumed: true };
     }
-    const injected = { ...child, genes: [...(child.genes ?? []), { ...candidate }] };
-    return { child: injected, injectedFactorId: candidate.id ?? null, consumed: true };
+    const injected: C = { ...child, genes: [...(child.genes ?? []), { ...candidate }] };
+    return { child: injected, injectedFactorId: candidate.id, consumed: true };
 }

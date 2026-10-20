@@ -231,6 +231,18 @@
                 "styleSlot": "nurture.label.name"
               },
               {
+                "type": "label",
+                "name": "FateScript",
+                "id": "fateScript",
+                "widget": {
+                  "top": 280,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 28,
+                "styleSlot": "nurture.label.meta"
+              },
+              {
                 "type": "button",
                 "name": "BtnFateAccept",
                 "id": "btnFateAccept",
