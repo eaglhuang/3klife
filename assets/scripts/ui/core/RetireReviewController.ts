@@ -14,8 +14,6 @@ import { buildBattleRecordPanel } from '../../core/systems/BattleRecordStats';
 import { quarterlyBattleReport, retireReviewCareerLine, retireReviewScriptLine, vitalityPercentOf } from '../../core/systems/RetireReviewCopy';
 import { routeRetirement } from '../../core/systems/RetirementRouting';
 import { JobWiringGeneral, resolvePrimaryClass } from '../../core/systems/JobChangeWiring';
-import { ITEM_DISPLAY_NAMES, ITEM_BAMBOO_SLIP } from '../../core/systems/PlayerInventory';
-import { fateText } from './FateScriptTexts';
 
 export interface RetireReviewView {
     /** 退役回顧：生涯戰績一行（UI_RETIRE_REVIEW） */
@@ -63,6 +61,8 @@ export const RETIRE_REVIEW_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>>
     'ui.retire_review.quarterly': '本季戰報：{0} 精力剩 {1}%，{2}',
     'ui.retire_review.bond_ok': '可進行結緣。',
     'ui.retire_review.bond_no': '不建議進行結緣。',
+    'ui.retire_review.grant_scroll': '獲得竹簡 ×1',
+    'ui.retire_review.grant_weapon': '獲得虎符 ×1',
 };
 
 /** 文案查詢：key 與可選的 {0}、{1} 占位參數；語系表沒有該 key 時回傳 key 本身 */
@@ -86,16 +86,19 @@ export function withRetireReviewFallback(lookup: RetireReviewTextLookup): Retire
     };
 }
 
-/**
- * 退役獎勵一行（PROG-2-0739）：只在退役真的會發竹簡時顯示，規則與 GameSession.retireGeneral 相同
- * （文職與雙職能退役發竹簡）。武職退役目前不發虎符（虎符只在死亡結算發），所以這裡不顯示虎符句，
- * 避免畫面說有獎勵、實際卻沒有；武職是否改發虎符待 PM 裁定。
- */
+/** 退役獎勵一行對應的文案 key；武職得虎符，文職與雙職能得竹簡（規則同 GameSession.retireGeneral） */
+const RETIRE_GRANT_KEY_BY_REASON: Readonly<Record<string, string>> = {
+    WARRIOR: 'ui.retire_review.grant_weapon',
+    SCHOLAR: 'ui.retire_review.grant_scroll',
+    DUAL_CLASS: 'ui.retire_review.grant_scroll',
+};
+
+/** 退役獎勵一行（PROG-2-0739）：依退役路線給虎符或竹簡；UNKNOWN_CLASS 不給，回傳空字串 */
 export function retireGrantText(general: GeneralConfig | undefined | null, lookup: RetireReviewTextLookup = fallbackRetireReviewText): string {
     const g = (general ?? {}) as GeneralConfig & JobWiringGeneral;
     const route = routeRetirement({ primaryClass: resolvePrimaryClass(g), subClass: g.subClass });
-    if (route.reason !== 'SCHOLAR' && route.reason !== 'DUAL_CLASS') return '';
-    return fateText(lookup, 'ui.fate.retire_scroll', ITEM_DISPLAY_NAMES[ITEM_BAMBOO_SLIP]);
+    const key = RETIRE_GRANT_KEY_BY_REASON[route.reason];
+    return key === undefined ? '' : withRetireReviewFallback(lookup)(key);
 }
 
 /**

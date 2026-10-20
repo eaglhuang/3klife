@@ -35,12 +35,12 @@ const canonical = (value: unknown): string => JSON.stringify(value);
 export function createRetireDeathTallyChainSuite(): TestSuite {
     const suite = new TestSuite('RetireDeathTallyChain (出征→退役→死亡→虎符 一條龍)');
 
-    suite.test('戰績累計進陣亡虎符的品質與兵種；退役不產卡；死亡只產一張；存檔往返不遺失', async () => {
+    suite.test('戰績累計進陣亡虎符的品質與兵種；武職退役產一張退役虎符；死亡只產一張陣亡虎符；存檔往返不遺失', async () => {
         const adapter = new MemoryStorageAdapter();
         const roster = [
             // 剩 3 個月壽命：之後結緣扣 6 個月即死亡
             general('hero', 59.75, { isHistorical: true, maxLifespan: 60, troopAptitude: { CAVALRY: 'S', INFANTRY: 'B' } }),
-            general('vet', 70, { isHistorical: true, maxLifespan: 90 }),
+            general('vet', 70, { isHistorical: true, maxLifespan: 90, primaryClass: 'Warrior' }),
         ];
         const a = createSession(adapter, roster);
 
@@ -54,16 +54,20 @@ export function createRetireDeathTallyChainSuite(): TestSuite {
         assert.equals(3, record?.wins ?? -1);
         assert.equals(30, record?.kills ?? -1);
 
-        // 退役：不產虎符
+        // 武職退役：發一張退役虎符，由君主持有
         await a.retireGeneral('vet');
-        assert.equals(0, Object.keys(a.tallyCards).length, '退役不發虎符');
+        const retireCards = Object.values(a.tallyCards);
+        assert.equals(1, retireCards.length, '武職退役發一張虎符');
+        assert.equals('retire', retireCards[0].source);
+        assert.equals('vet', retireCards[0].sourceGeneralUid);
+        assert.isTrue(a.tallyHoldings[retireCards[0].uid] === null, '退役虎符由君主持有');
 
-        // 死亡 → 季結產卡
+        // 死亡 → 季結產卡（退役的 vet 不會再走陣亡產卡）
         const spent = a.spendLifespan('hero', 'breeding');
         assert.isTrue(spent?.events.some((e) => e.type === 'died') ?? false, '壽命不足應死亡');
         await a.advanceSeason();
-        const cards = Object.values(a.tallyCards);
-        assert.equals(1, cards.length, '死亡只產一張');
+        const cards = Object.values(a.tallyCards).filter((c) => c.source === 'death');
+        assert.equals(1, cards.length, '死亡只產一張陣亡虎符');
         const card = cards[0];
         assert.equals('hero', card.sourceGeneralUid);
         assert.equals('death', card.source);
@@ -73,7 +77,7 @@ export function createRetireDeathTallyChainSuite(): TestSuite {
 
         // 再過一季不重複產卡
         await a.advanceSeason();
-        assert.equals(1, Object.keys(a.tallyCards).length);
+        assert.equals(1, Object.values(a.tallyCards).filter((c) => c.source === 'death').length);
 
         // 存檔往返
         const b = new GameSession();
