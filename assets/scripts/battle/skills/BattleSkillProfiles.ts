@@ -142,6 +142,15 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     coefficient: 0,
     battleLogKey: 'skill.eight_formation.cast',
   },
+  // 長坂雄咆的後退（PROG-2-0767）：3x3 內敵軍遠離施放者 1 格；定身部分見 tally-changban-root
+  'tally-changban-push': {
+    battleSkillId: 'tally-changban-push',
+    targetMode: BattleSkillTargetMode.Self,
+    effectKind: 'push',
+    coefficient: 0,
+    pushSteps: 1,
+    battleLogKey: 'skill.tally_changban_push.push',
+  },
   // 毒箭（PROG-2-0766）：目標中毒 2 回合，每回合扣最大 HP 10%
   'tally-poison-arrow': {
     battleSkillId: 'tally-poison-arrow',
