@@ -89,6 +89,7 @@ import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } fr
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
+import { buildEraResetEvent } from '../systems/EraReset';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
@@ -124,6 +125,8 @@ export const GAME_SESSION_EVENTS = {
     GeneralDied: 'game-session-general-died',
     /** payload: AgingEvent（type = entered-growth-stage，stage 為 grow-up / prime / elder） */
     GeneralGrowthStage: 'game-session-general-growth-stage',
+    /** payload: EraResetEvent（每 60 月一次；目前只發訊號，領土/外交/AI 重置待世界沙盤接入，TIME-10） */
+    EraReset: 'game-session-era-reset',
     /** payload: UnveilingEvent（UI 在此播放血脈命鏡開獎演出，再讓玩家選宿命） */
     GeneralUnveiled: 'game-session-general-unveiled',
     /** payload: MentorCard */
@@ -1542,6 +1545,10 @@ export class GameSession {
         }
 
         this._emit(GAME_SESSION_EVENTS.SeasonAdvanced, payload);
+        const eraReset = buildEraResetEvent(advance.current.totalSeasonsElapsed);
+        if (eraReset) {
+            this._emit(GAME_SESSION_EVENTS.EraReset, eraReset);
+        }
         for (const event of unveil.events) {
             this._emit(GAME_SESSION_EVENTS.GeneralUnveiled, event);
         }
