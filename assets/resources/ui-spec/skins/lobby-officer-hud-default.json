@@ -1,0 +1,35 @@
+{
+  "id": "lobby-officer-hud-default",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "officer.hud.card.bg": { "kind": "color-rect", "color": "backgroundDeep", "alpha": 224 },
+    "officer.hud.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "officer.hud.label.rank": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 28,
+      "lineHeight": 34,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "officer.hud.label.exp": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "overflow": "CLAMP"
+    }
+  }
+}

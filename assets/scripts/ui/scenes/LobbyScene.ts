@@ -50,6 +50,7 @@ import { DomesticPanelController } from '../core/DomesticPanelController';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
+import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
@@ -189,6 +190,7 @@ export class LobbyScene extends Component {
     private _shopMainHost: UIScreenPreviewHost | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
     private _seasonHudHost: UIScreenPreviewHost | null = null;
+    private _officerHudHost: UIScreenPreviewHost | null = null;
     /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
@@ -301,6 +303,7 @@ export class LobbyScene extends Component {
         await this._mountLobbyMainHub();
         await this._mountSecondaryMainHubs();
         await this._mountSeasonHud();
+        await this._mountOfficerHud();
         await this._mountNurtureFlow();
         await this._mountMentorCardDetail();
         await this._mountGeneralVersionGallery();
@@ -387,6 +390,23 @@ export class LobbyScene extends Component {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 讀取玩家存檔失敗，從新局開始', error);
             return false;
         }
+    }
+
+    /** 官職區塊（OFC-08 顯示段）：以 UCUF JSON（lobby-officer-hud-screen）顯示階位與經驗，資料來自 officerDisplayOf */
+    private async _mountOfficerHud(): Promise<void> {
+        this._officerHudHost = await this._mountPreviewScreenHost('OfficerHudHost', 'lobby-officer-hud-screen', []);
+        this._refreshOfficerHud();
+        const refresh = (): void => { this._refreshOfficerHud(); };
+        this._sessionEventUnsubscribers.push(services().event.on(GAME_SESSION_EVENTS.Loaded, refresh));
+    }
+
+    private _refreshOfficerHud(): void {
+        const display = officerDisplayOf(services().session.officerState);
+        this._officerHudHost?.binder?.setTexts({
+            officerTitle: display.sectionTitle,
+            officerRank: display.rankName,
+            officerExp: display.expLabel,
+        });
     }
 
     /** 季度 HUD：以 UCUF JSON（lobby-season-hud-screen）執行期組裝，顯示「第 N 年 M 季」與推進入口 */
