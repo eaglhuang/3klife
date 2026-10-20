@@ -23,6 +23,7 @@ export interface BattleAutoMovePhaseContext {
   isGeneralUnit(unitId: string): boolean;
   /** 主將適性給的移動修正（PROG-2-0080）；不提供時視為 0 */
   getAptitudeMoveDelta?(unit: TroopUnit): number;
+  getAptitudeMoveSetTo?(unit: TroopUnit): number | null;
   /** 位移受阻的傷害（GRD-03，PROG-2-0577）；不提供時受阻只停下、不扣血 */
   applyForcedMoveDamage?(unit: TroopUnit, damage: number): void;
 }
@@ -60,7 +61,7 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
   const isFloodBattle = context.state.battleTactic === BattleTactic.FloodAttack;
   const baseMoveRange = isFloodBattle
     ? 1
-    : applyAptitudeMove(tacticMoveRange, context.getAptitudeMoveDelta?.(unit) ?? 0);
+    : applyAptitudeMove(tacticMoveRange, context.getAptitudeMoveDelta?.(unit) ?? 0, context.getAptitudeMoveSetTo?.(unit) ?? null);
   let remainingMoveBudget = Math.max(0, baseMoveRange - slowPenalty);
   if (!isFloodBattle) {
     remainingMoveBudget += resolveTileMoveRangeDelta(context.state, unit.lane, unit.depth);
