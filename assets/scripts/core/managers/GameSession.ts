@@ -34,7 +34,7 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import { advanceDaughtersOneYear, assignDaughterRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
 import { GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
 import { buildYearReport, normalizeYearAgingEvents, YearReport } from '../systems/YearReport';
-import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
+import { backfillTallyTroopTypes, mainTroopTypeOf, produceRetireTally } from '../systems/TigerTally';
 import type { CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { ageGeneralsOneSeason, AgingEvent, isGeneralDead, RandomSource } from '../systems/GeneralAging';
@@ -58,7 +58,7 @@ import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type Domesti
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
 import { createPlayerSaveSnapshot, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
-import { settleDeathTallies } from '../systems/TallyDeathSettlement';
+import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
@@ -1748,6 +1748,20 @@ export class GameSession {
         if (reason === 'SCHOLAR' || reason === 'DUAL_CLASS') {
             // 文職與雙職能退役發 1 份竹簡（PM 暫定）；虎符只在死亡結算發，退役不發
             this._inventory = addItem(this._inventory, ITEM_BAMBOO_SLIP, 1);
+        }
+        if (reason === 'WARRIOR') {
+            // 武職退役發一張虎符（PROG-2-0739，PM 2026-10-20 裁定照規格 §H）；退役者之後不會再走陣亡產卡，不會重複
+            const retired = roster.find((g) => g.id === generalId);
+            const card = retired && produceRetireTally(
+                { troopType: mainTroopTypeOf(retired.troopAptitude), ...retired },
+                computeDeathBattleScore((retired as { battleRecord?: Parameters<typeof computeDeathBattleScore>[0] }).battleRecord),
+                TALLY_DEATH_SCORE_TUNING.legacyQualityFallback,
+                this._clock.state.totalSeasonsElapsed,
+            );
+            if (card) {
+                this._tallyCards = { ...this._tallyCards, [card.uid]: card };
+                this._tallyHoldings = { holders: { ...this._tallyHoldings.holders, [card.uid]: null } };
+            }
         }
         if (this._autoSave && this._save) {
             await this.save();

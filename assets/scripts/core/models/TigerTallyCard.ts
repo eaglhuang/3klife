@@ -7,7 +7,7 @@ export interface TigerTallyCard {
     sourceGeneralUid: string;
     quality: TigerTallyQuality;
     score: number;
-    source: 'death' | 'surrender' | 'reward';
+    source: 'death' | 'retire' | 'surrender' | 'reward';
     producedSeason: number;
     troopType?: string;
     /** 星級 1~5（TRP-10）；舊存檔缺欄位時讀回 1★ */

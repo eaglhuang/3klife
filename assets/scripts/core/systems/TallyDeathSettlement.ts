@@ -58,6 +58,8 @@ export interface TallyDeathSettlementResult extends TallyDeathState {
 interface DeathCandidate extends TigerTallyGeneral {
     status?: string;
     battleRecord?: BattleRecord;
+    /** 已退役（教官卡）的武將留在名冊，退役時已發過虎符，之後死亡不再產卡（PROG-2-0739） */
+    isMentorCard?: boolean;
 }
 
 function isDead(general: DeathCandidate): boolean {
@@ -81,7 +83,7 @@ export function settleDeathTallies(
     const returned: string[] = [];
 
     for (const general of after) {
-        if (!isDead(general) || wasDead.has(general.id)) continue;
+        if (!isDead(general) || wasDead.has(general.id) || general.isMentorCard) continue;
 
         const back = onGeneralDeath(holdings, general.id);
         holdings = back.state;
