@@ -1,0 +1,104 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "TASK-UI-9001",
+      "title": "人物頁 chrome 與擷取診斷拆分",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "refactor",
+      "phase": "M6",
+      "created": "2026-10-21",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "2026-10-20T23:27:18.111Z",
+      "started_by_agent": "codex-gpt-6",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "抽取既有 chrome、capture diagnostics 與測試 fixture，維持 baseline 行為；擷取保留硬體渲染且不延長遊戲 timeout。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "不新增 DS3 選人功能",
+        "不修改其他驗收卡",
+        "不改共用 browser core 或遊戲載入 timeout",
+        "完整測試與實機擷取成功",
+        "將撞號、planning deliverable 誤列、舊 runner 與過期租約的實證補回共用問題紀錄"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/components/GeneralDetailComposite.ts",
+        "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts",
+        "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts.meta",
+        "tools_node/capture-ui-screens.js",
+        "tools_node/lib/ui-capture-diagnostics.js",
+        "tests/ucuf/architectureGovernance.test.ts",
+        "tests/ucuf/fixtures/architectureEngineStubs.ts",
+        "tests/ucuf/generalDetailChromePresenter.test.ts",
+        "docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md"
+      ],
+      "notes": "2026-10-21 | 狀態: planned | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+      "brief": {
+        "style": "harn-rich",
+        "label": "",
+        "summary": "在最新 master 基準交付已保存的行為不變抽取。正式 PROG-2-0150 退役驗收卡不變。",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [
+          "先正常上鎖與認領並提交 started 欄位",
+          "來源三個舊檔與保存快照基準相同",
+          "規劃文件為 scope 與 closeback 資料而非產品 deliverables"
+        ],
+        "output": [
+          "保留人物頁掛載與可見性及事件 owner",
+          "完整保留既有測試斷言與診斷 schema",
+          "GeneralDetailComposite.ts <=696；capture-ui-screens.js <=1453；architectureGovernance.test.ts <=334；新模組 <=600",
+          "擷取呼叫保留其餘 browser args 並允許硬體渲染"
+        ],
+        "validation_cmd": "node node_modules/ts-node/dist/bin.js --project tsconfig.test.json tests/ucuf/generalDetailChromePresenter.test.ts --verify-extraction-ceilings\nnpm run test:ucuf:governance\nnpm run test:ucuf\nnode tools_node/validate-ui-specs.js --strict --check-content-contract\nnode tools_node/compute-gate.js --profile standard --agent-feedback\nnode tools_node/check-general-detail-lobby-flow-smoke.js\ngit diff --check",
+        "rollback_hint": "以正常 Git revert 回復本卡正式交付；保留來源快照供復原。",
+        "execution_steps": [
+          "比對基準與已保存快照",
+          "認領並提交開始欄位",
+          "恢復八個來源檔且檢查雜湊",
+          "執行七個驗證與 Cocos 擷取",
+          "正常 pre-close dry-run close write"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "contextMap": {
+        "primary": [
+          "assets/scripts/ui/components/GeneralDetailComposite.ts",
+          "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts",
+          "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts.meta",
+          "tools_node/capture-ui-screens.js",
+          "tools_node/lib/ui-capture-diagnostics.js",
+          "tests/ucuf/architectureGovernance.test.ts",
+          "tests/ucuf/fixtures/architectureEngineStubs.ts",
+          "tests/ucuf/generalDetailChromePresenter.test.ts"
+        ],
+        "secondary": [
+          "assets/scripts/ui/core/ChildPanelBase.ts",
+          "tools_node/lib/browser-capture-core.js"
+        ],
+        "testCoverage": [
+          "tests/ucuf/architectureGovernance.test.ts",
+          "tests/ucuf/generalDetailChromePresenter.test.ts"
+        ],
+        "patternsToFollow": [
+          "Preserve original host ownership and diagnostics schema"
+        ]
+      }
+    }
+  ]
+}
