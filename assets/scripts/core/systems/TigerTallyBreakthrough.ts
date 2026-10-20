@@ -1,4 +1,4 @@
-// @spec-source → 兵種（虎符）系統.md §4★→5★ 虎符精華突破、突破成功率、品質封頂；TRP-11（PROG-2-0851）
+// @spec-source → 兵種（虎符）系統.md §4★→5★ 虎符精華突破、突破成功率、品質封頂；TRP-11（PROG-2-0839）
 /**
  * TigerTallyBreakthrough — 虎符 4★→5★ 精華突破（純邏輯，不依賴 cc）
  *
