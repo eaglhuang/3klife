@@ -239,5 +239,9 @@
   "ui.gene.tag.green": "🟢 战法种子",
   "ui.gene.tag.purple": "🟣 天命因子",
   "ui.gene.tag.white": "⚪ 天赋因子",
-  "ui.gene.tag.red": "🔴 体魄因子"
+  "ui.gene.tag.red": "🔴 体魄因子",
+  "ui.vit.script.exhausted": "{0} 已精疲力竭，暂无法行动。",
+  "ui.vit.script.pill_used": "{0} 服下补元散，精力恢复！",
+  "ui.vit.script.pregnancy_lock": "{0} 正在待产中，精力恢复暂停…",
+  "ui.vit.script.hint_late_bloomer": "{0} 虽然虚弱，但眼中似有异光…"
 }
