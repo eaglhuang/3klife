@@ -8,6 +8,7 @@ import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
+import { ITEM_MERGE_TOKEN } from '../assets/scripts/core/systems/PlayerInventory';
 
 function gen(id: string, bloodlineId: string, geneIds: string[]): GeneralConfig {
     return { id, name: id, bloodlineId, genes: geneIds.map((gid) => ({ id: gid, type: 'Red' })) } as GeneralConfig;
@@ -26,6 +27,7 @@ export function createBloodlineMergeE2ESuite(): TestSuite {
     suite.test('歸宗後存檔重讀：V1 因子與 V2 已歸宗標記都還在，再歸宗只會取下一個因子', async () => {
         const storage = new MemoryStorageAdapter();
         const first = sessionWith(storage, [gen('v1', 'BL_A', ['F1']), gen('v2', 'BL_A', ['F1', 'F2', 'F3'])]);
+        await first.addItem(ITEM_MERGE_TOKEN, 2);
         assert.isTrue((await first.mergeBloodlineFor('v1', 'v2')).ok);
 
         const second = sessionWith(storage, []);
@@ -46,6 +48,7 @@ export function createBloodlineMergeE2ESuite(): TestSuite {
     suite.test('V2 的因子全部歸宗或 V1 已有後：NO_TRANSFERABLE，名冊與 V1 因子數不變', async () => {
         const storage = new MemoryStorageAdapter();
         const session = sessionWith(storage, [gen('v1', 'BL_A', ['F1']), gen('v2', 'BL_A', ['F1', 'F2'])]);
+        await session.addItem(ITEM_MERGE_TOKEN, 1);
         assert.isTrue((await session.mergeBloodlineFor('v1', 'v2')).ok);
         const result = await session.mergeBloodlineFor('v1', 'v2');
         assert.isFalse(result.ok);
@@ -55,6 +58,7 @@ export function createBloodlineMergeE2ESuite(): TestSuite {
 
     suite.test('移植的是複本：之後改 V1 的因子不會連動 V2', async () => {
         const session = sessionWith(new MemoryStorageAdapter(), [gen('v1', 'BL_A', []), gen('v2', 'BL_A', ['F2'])]);
+        await session.addItem(ITEM_MERGE_TOKEN, 1);
         assert.isTrue((await session.mergeBloodlineFor('v1', 'v2')).ok);
         const v1Gene = session.roster.find((g) => g.id === 'v1')!.genes![0];
         const v2Gene = session.roster.find((g) => g.id === 'v2')!.genes![0];

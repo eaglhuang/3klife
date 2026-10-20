@@ -86,7 +86,7 @@ import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../sy
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
@@ -1353,19 +1353,21 @@ export class GameSession {
     }
 
     /**
-     * 血脈歸宗（BLT-11）：V1 取得 V2 的一個因子，V2 記為已歸宗。歸宗令先不扣（待辦）。
-     * 失敗回傳原因、不改名冊；成功才改名冊、存檔。
+     * 血脈歸宗（BLT-11）：V1 取得 V2 的一個因子，V2 記為已歸宗；成功扣 1 張歸宗令（PROG-2-0862）。
+     * 失敗回傳原因、不改名冊、不扣歸宗令；成功才改名冊、扣令、存檔。
      */
     public async mergeBloodlineFor(
         v1Id: string,
         v2Id: string,
-    ): Promise<{ ok: true; transferredFactor: string } | { ok: false; reason: BloodlineMergeRejectReason | 'NOT_FOUND' }> {
+    ): Promise<{ ok: true; transferredFactor: string } | { ok: false; reason: BloodlineMergeRejectReason | 'NOT_FOUND' | 'NO_MERGE_TOKEN' }> {
         const roster = this._roster.getAll();
         const v1 = roster.find((g) => g.id === v1Id);
         const v2 = roster.find((g) => g.id === v2Id);
         if (!v1 || !v2) return { ok: false, reason: 'NOT_FOUND' };
         const plan = planBloodlineMergeForGenerals(v1, v2);
         if (!plan.ok) return plan;
+        const inventory = consumeItem(this._inventory, ITEM_MERGE_TOKEN);
+        if (!inventory) return { ok: false, reason: 'NO_MERGE_TOKEN' };
         const v2Gene = (v2.genes ?? []).find((g) => g.id === plan.transferredFactor);
         const updated = roster.map((g) => {
             if (g.id === v1Id) return { ...g, genes: [...(g.genes ?? []), ...(v2Gene ? [{ ...v2Gene }] : [])] };
@@ -1373,6 +1375,8 @@ export class GameSession {
             return g;
         });
         this._roster.replaceAll(updated);
+        this._inventory = inventory;
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         if (this._autoSave && this._save) {
             await this.save();
         }
