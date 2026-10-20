@@ -7,7 +7,7 @@ import type { BattleSkillExecutionContext, BattleSkillResolver } from '../Battle
 import { squareCells } from '../SkillGridGeometry';
 
 /**
- * 位移（push）：以施放者為中心 3x3 內的敵軍遠離施放者 pushSteps 格（PROG-2-0767）。
+ * 位移（push）：以施放者為中心 pushRadius（預設 3x3）內的敵軍遠離施放者 pushSteps 格（PROG-2-0767）。
  * 遇障礙即停；受阻時依未走完的步數扣最大 HP（每步 5%，上限 20%，PM 暫定）。
  */
 export class PushSkillResolver implements BattleSkillResolver {
@@ -29,10 +29,18 @@ export class PushSkillResolver implements BattleSkillResolver {
     }
 
     const cellKeys = new Set(
-      squareCells(center.lane, center.depth, 1, GAME_CONFIG.GRID_LANES, GAME_CONFIG.GRID_DEPTH).map((c) => `${c.lane},${c.depth}`),
+      squareCells(center.lane, center.depth, profile.pushRadius ?? 1, GAME_CONFIG.GRID_LANES, GAME_CONFIG.GRID_DEPTH)
+        .map((c) => `${c.lane},${c.depth}`),
     );
+    // 空城計（PROG-2-0777）：施放者主將智力須高於該敵軍所屬武將，否則不位移
+    const casterInt = profile.pushRequiresIntAdvantage ? context.getCasterGeneral(casterFaction)?.int : undefined;
     const targets = context.getOpposingUnits(casterFaction)
-      .filter((unit) => !unit.isDead() && cellKeys.has(`${unit.lane},${unit.depth}`));
+      .filter((unit) => !unit.isDead() && cellKeys.has(`${unit.lane},${unit.depth}`))
+      .filter((unit) => {
+        if (!profile.pushRequiresIntAdvantage) return true;
+        const targetInt = context.getCasterGeneral(unit.faction)?.int;
+        return casterInt !== undefined && targetInt !== undefined && casterInt > targetInt;
+      });
     if (!targets.length) {
       return { requestId, battleSkillId: request.battleSkillId, applied: false, blockedReason: 'no-target', deltas: [], battleLogLines: [] };
     }

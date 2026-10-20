@@ -10,6 +10,7 @@ import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type Reso
 import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
 import { extraAttackHitsOf } from '../shared/TallyPassive';
+import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import {
   canNavalCombinedAttack,
@@ -472,6 +473,7 @@ export class BattleCombatResolver {
     const { lane, depth, faction, type } = unit;
     this.context.state.removeUnit(unit.id);
     svc.buff.clearUnit(unit.id);
+    clearMorale(unit);
     svc.event.emit(EVENT_NAMES.UnitDied, { unitId: unit.id, lane, depth, faction, type });
 
     if (killer) {

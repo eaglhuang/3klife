@@ -4,7 +4,7 @@ import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } 
 export type BattleSkillFalloffRule = 'none' | 'linear-step';
 export type BattleSkillEffectKind =
   | 'damage' | 'heal' | 'control' | 'link' | 'counter' | 'reset'
-  | 'push' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack';
+  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack';
 
 export interface BattleSkillProfile {
   battleSkillId: string;
@@ -34,6 +34,10 @@ export interface BattleSkillProfile {
   healFloor?: number;
   /** 精銳突擊：衝鋒傷害倍率（PROG-2-0751，規格 2.0） */
   chargeMultiplier?: number;
+  /** 首回合傷害倍率（PROG-2-0773 威震華夏）：戰鬥第 1 回合傷害 × 此值 */
+  firstTurnDamageMultiplier?: number;
+  /** 擊殺目標後重置施放者行動（PROG-2-0773 威震華夏） */
+  resetSelfOnKill?: boolean;
   /** 毒箭：每回合扣目標最大 HP 的比例（規格 10%） */
   dotMaxHpRatio?: number;
   /** 緩速：移動範圍減少的格數（規格 1） */
@@ -44,6 +48,10 @@ export interface BattleSkillProfile {
   extraHits?: number;
   /** 強制位移的格數（規格 1～2） */
   pushSteps?: number;
+  /** 強制位移的範圍（格，以施放者為中心的方形半徑）；未填為 1（3x3） */
+  pushRadius?: number;
+  /** 只對智力低於施放者主將的敵方武將所屬單位生效（空城計：Self.INT > Target.INT） */
+  pushRequiresIntAdvantage?: boolean;
   /** 定身回合數（規格 1） */
   rootTurns?: number;
   /** 火計連環：結算後把每個目標及其四向相鄰格設為火場（PROG-2-0757） */
@@ -151,6 +159,17 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     moraleBonus: 20,
     battleLogKey: 'skill.mentor_morale.buff',
   },
+  // 空城計（教官，PROG-2-0777）：施放者智力高於敵方武將時，半徑 2 內敵軍沿反向直線後退 2 格（規格 戰法系統 空城計）
+  'empty-fort': {
+    battleSkillId: 'empty-fort',
+    targetMode: BattleSkillTargetMode.Self,
+    effectKind: 'push',
+    coefficient: 0,
+    pushRadius: 2,
+    pushSteps: 2,
+    pushRequiresIntAdvantage: true,
+    battleLogKey: 'skill.empty_fort.push',
+  },
   // 長坂雄咆的後退（PROG-2-0767）：3x3 內敵軍遠離施放者 1 格；定身部分見 tally-changban-root
   'tally-changban-push': {
     battleSkillId: 'tally-changban-push',
@@ -185,6 +204,31 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     slowAmount: 1,
     statusTurns: 1,
     battleLogKey: 'skill.mentor_slow.debuff',
+  },
+  // 威震華夏（PROG-2-0773）：單體敵軍傷害；第 1 回合 ×2，擊殺後施放者再行動 1 次（規格 戰法系統 威震華夏）
+  'tally-wei-zhen-hua-xia': {
+    battleSkillId: 'tally-wei-zhen-hua-xia',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    coefficient: 1.0,
+    scalingStat: 'str',
+    maxTargets: 1,
+    firstTurnDamageMultiplier: 2,
+    resetSelfOnKill: true,
+    battleLogKey: 'skill.tally_wei_zhen_hua_xia.hit',
+  },
+  // 火神狩獵（PROG-2-0771）：單體敵軍擊退 1 格，並將其原本所在格設為火場（規格 戰法系統 火神狩獵）
+  'tally-fire-god-hunt': {
+    battleSkillId: 'tally-fire-god-hunt',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'push-fire',
+    coefficient: 0,
+    maxTargets: 1,
+    pushSteps: 1,
+    battleLogKey: 'skill.tally_fire_god_hunt.push',
   },
   'zhuge-liang-storm': {
     battleSkillId: 'zhuge-liang-storm',

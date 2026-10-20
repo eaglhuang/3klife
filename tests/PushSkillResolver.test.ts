@@ -66,5 +66,46 @@ export function createPushSkillResolverSuite(): TestSuite {
     assert.isFalse(result.applied);
   });
 
+  const emptyFortRequest = { ...request, battleSkillId: 'empty-fort' };
+
+  suite.test('空城計：半徑 2 內敵軍後退 2 格；半徑外不動', () => {
+    const inRange = createTestUnit('in-range', Faction.Enemy, 2, 6, { hp: 1000 });
+    const outOfRange = createTestUnit('out-of-range', Faction.Enemy, 2, 8, { hp: 1000 });
+    const bundle = createBattleSkillTestContext({
+      playerGeneral: createTestGeneral('zhuge', Faction.Player, { int: 90 }),
+      enemyGeneral: createTestGeneral('enemy-general', Faction.Enemy, { int: 50 }),
+      units: [inRange, outOfRange],
+    });
+    const moves: Array<{ id: string; lane: number; depth: number }> = [];
+    const context = {
+      ...bundle.context,
+      getCasterCell: () => ({ lane: 2, depth: 4 }),
+      isCellFreeForPush: () => true,
+      pushUnitTo: (unit: { id: string }, lane: number, depth: number) => { moves.push({ id: unit.id, lane, depth }); },
+    };
+    const result = new PushSkillResolver().execute(emptyFortRequest as never, context as never);
+    assert.isTrue(result.applied);
+    assert.equals(1, moves.length);
+    assert.equals('in-range', moves[0].id);
+    assert.equals(8, moves[0].depth);
+  });
+
+  suite.test('空城計：施放者智力不高於敵方武將時不位移', () => {
+    const near = createTestUnit('near', Faction.Enemy, 2, 6, { hp: 1000 });
+    const bundle = createBattleSkillTestContext({
+      playerGeneral: createTestGeneral('zhuge', Faction.Player, { int: 50 }),
+      enemyGeneral: createTestGeneral('enemy-general', Faction.Enemy, { int: 50 }),
+      units: [near],
+    });
+    const context = {
+      ...bundle.context,
+      getCasterCell: () => ({ lane: 2, depth: 4 }),
+      isCellFreeForPush: () => true,
+      pushUnitTo: () => { throw new Error('should not move'); },
+    };
+    const result = new PushSkillResolver().execute(emptyFortRequest as never, context as never);
+    assert.isFalse(result.applied);
+  });
+
   return suite;
 }
