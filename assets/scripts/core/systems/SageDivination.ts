@@ -173,7 +173,7 @@ export interface ProphecyKeywordSource {
     displayName?: string;
 }
 
-function distortColor(actual: FactorColor, sage: SageDefinition): FactorColor {
+export function distortColor(actual: FactorColor, sage: SageDefinition): FactorColor {
     const biased = sage.biasColors.find((c) => c !== actual);
     if (biased) return biased;
     const index = ALL_FACTOR_COLORS.indexOf(actual);
