@@ -177,3 +177,40 @@ export function countSpecFieldCoverage(records: readonly GeneralMainRecord[]): R
     }
     return counts;
 }
+
+/**
+ * 已知差異：generals.json 目前保留的舊形狀與規格寫法不同。PM 裁定（2026-10-20）：先保留現有形狀，
+ * 不改 235 筆資料；在此登記差異與 adapter 對照，待使用者裁決後再統一。
+ * 讀取端應經 adapter 轉成規格形狀，不直接假設資料已是規格寫法。
+ */
+export interface GeneralMainKnownDifference {
+    /** 規格欄位名 */
+    specField: GeneralMainSpecField;
+    /** generals.json 目前的欄位名 */
+    legacyKey: string;
+    /** 對照說明（adapter 要做的轉換） */
+    adapterNote: string;
+    /** 待裁決事項（任務卡 PROG-2-0464 與待辦檔） */
+    pendingDecision: string;
+}
+
+export const GENERAL_MAIN_KNOWN_DIFFERENCES: readonly GeneralMainKnownDifference[] = [
+    {
+        specField: 'Genes',
+        legacyKey: 'genes',
+        adapterNote: '舊 {id, displayName, type(中文), level, description} → 規格 {ID=id, Level=level, Type(六色), Is_Locked, Discovery_Level}；Type 需中文→六色對照表，缺 type 者需補值',
+        pendingDecision: '六色對照表、ID 命名規則、5 筆無 type 的補法（PROG-2-0464）',
+    },
+    {
+        specField: 'Ancestors_JSON',
+        legacyKey: 'ancestor_chain',
+        adapterNote: '舊 ancestor_chain 為 VIRT_* UID 清單，ancestorsSummary 為摘要字串 → 規格三代 14 人樹；需以 PersonRegistry 依 UID 展開人物物件',
+        pendingDecision: 'UID 是否展開成人物物件，或保留 UID 並標示（BLT-02 VIRT_，PROG-2-0464）',
+    },
+    {
+        specField: 'Profile_Presentation',
+        legacyKey: 'storyStripCells',
+        adapterNote: '舊 storyStripCells 為 [{slot, text}] 陣列 → 規格 Story_Strip_Cells keyed map；Default_Tab、Bloodline_StoryDock_State 舊資料無，adapter 需給預設值',
+        pendingDecision: 'Default_Tab 與 StoryDock 預設值；UI mapper 是否同步（PROG-2-0464）',
+    },
+];

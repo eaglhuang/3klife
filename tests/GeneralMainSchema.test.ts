@@ -9,6 +9,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import {
+    GENERAL_MAIN_KNOWN_DIFFERENCES,
     GENERAL_MAIN_SPEC_FIELDS,
     GeneralMainRecord,
     countSpecFieldCoverage,
@@ -150,5 +151,15 @@ export function createGeneralMainSchemaSuite(): TestSuite {
         assert.equals(1, counts.Genes);
     });
 
+    suite.test('已知差異涵蓋 Genes / Ancestors_JSON / Profile_Presentation 三項，且每項都有 adapter 說明與待裁決', () => {
+        const fields = GENERAL_MAIN_KNOWN_DIFFERENCES.map((d) => d.specField).sort();
+        assert.equals('Ancestors_JSON,Genes,Profile_Presentation', fields.join(','));
+        for (const diff of GENERAL_MAIN_KNOWN_DIFFERENCES) {
+            assert.isTrue(diff.adapterNote.length > 0, diff.specField);
+            assert.isTrue(diff.pendingDecision.length > 0, diff.specField);
+        }
+    });
+
     return suite;
 }
+
