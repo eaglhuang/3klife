@@ -104,6 +104,7 @@ import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
+import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampaignStagePlayable } from '../config/CampaignStages';
 import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
 import type { FactorColor } from '../systems/FactorInheritance';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
@@ -894,6 +895,14 @@ export class GameSession {
             session: { ...record.session, Oracle_Hints: [...record.session.Oracle_Hints] },
             child: { ...record.child },
         }));
+    }
+
+    /** 解析全球征途階段（MVP-13）：指定階段已啟用就用它；未知或未啟用則回到第一個可玩階段 */
+    public resolveCampaignStage(requestedId: string | undefined): CampaignStageDef {
+        if (requestedId !== undefined && isCampaignStagePlayable(requestedId)) {
+            return getCampaignStage(requestedId)!;
+        }
+        return enabledCampaignStages()[0];
     }
 
     public isSageUnlocked(sageId: string): boolean {

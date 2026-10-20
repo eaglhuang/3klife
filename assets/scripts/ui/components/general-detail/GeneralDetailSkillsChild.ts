@@ -12,7 +12,7 @@ import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { GeneralConfig, GeneralTacticSlotConfig, GeneralUltimateSlotConfig } from '../../../core/models/GeneralUnit';
 import { ultimateProgressOf, type UltimateProgressSource } from '../../../core/systems/UltimateProgress';
-import { ultimateStageSummary } from '../../core/UltimateStageSummary';
+import { ultimateActionView } from '../../core/UltimateActionView';
 import {
     formatBulletList,
     formatSkillSource,
@@ -60,6 +60,11 @@ export class GeneralDetailSkillsChild extends ChildPanelBase {
     private _lLocked!:    Label;
     private _lNote!:      Label;
     private _noteNode!:   Node | null;
+    private _lUltimateAction!: Label;
+    private _lUltimateAwaken!: Label;
+    private _lUltimateRaise!:  Label;
+    private _awakenBtn: Button | null = null;
+    private _raiseBtn:  Button | null = null;
     private _tacticsById: Map<string, CanonicalTacticDefinition> = new Map();
     private _ultimatesById: Map<string, CanonicalUltimateDefinition> = new Map();
 
@@ -77,6 +82,14 @@ export class GeneralDetailSkillsChild extends ChildPanelBase {
         this._lLocked   = this._label(h, 'LockedSkillsCard/LockedSkillsValue');
         this._lNote     = this._label(h, 'SkillNoteCard/SkillNoteValue');
         this._noteNode  = this._requireNode(h, 'SkillNoteCard/SkillNoteValue');
+        this._lUltimateAction = this._label(h, 'UltimateStageCard/UltimateActionValue');
+        this._lUltimateAwaken = this._label(h, 'UltimateStageCard/UltimateAwakenButton/UltimateAwakenLabel');
+        this._lUltimateRaise  = this._label(h, 'UltimateStageCard/UltimateRaiseButton/UltimateRaiseLabel');
+        const awakenNode = this._requireNode(h, 'UltimateStageCard/UltimateAwakenButton');
+        this._awakenBtn = awakenNode.getComponent(Button) ?? awakenNode.addComponent(Button);
+        this._awakenBtn.node.on(Button.EventType.CLICK, this._onAwakenClick, this);
+        const raiseNode = this._requireNode(h, 'UltimateStageCard/UltimateRaiseButton');
+        this._raiseBtn = raiseNode.getComponent(Button) ?? raiseNode.addComponent(Button);
         try {
             const [tacticsById, ultimatesById] = await Promise.all([
                 loadTacticDefinitionMap(),
@@ -111,10 +124,15 @@ export class GeneralDetailSkillsChild extends ChildPanelBase {
         this._set(this._lInspired,
             `已定義奧義\n${formatBulletList(unlockedUltLines, '• 此武將目前無專屬奧義')}`
         );
-        const ultimateStage = ultimateStageSummary(cfg.bloodlineUltimate, ultimateProgressOf(cfg as UltimateProgressSource));
         this._set(this._lLocked,
-            `奧義解鎖條件\n${formatBulletList(lockedUltLines, '• 無待解鎖奧義槽')}\n${ultimateStage}`
+            `奧義解鎖條件\n${formatBulletList(lockedUltLines, '• 無待解鎖奧義槽')}`
         );
+        const action = ultimateActionView(cfg.bloodlineUltimate, ultimateProgressOf(cfg as UltimateProgressSource));
+        this._set(this._lUltimateAction, action.summary);
+        this._set(this._lUltimateAwaken, action.awakenLabel);
+        this._set(this._lUltimateRaise, action.raiseLabel);
+        this._setInteractable(this._awakenBtn, action.awakenEnabled);
+        this._setInteractable(this._raiseBtn, action.raiseEnabled);
 
         const demoSkillId = this._resolveDemoSkillId(cfg);
         if (demoSkillId) {
@@ -137,6 +155,24 @@ export class GeneralDetailSkillsChild extends ChildPanelBase {
 
     onUnmount(): void {
         this._clearSkillDemoBinding();
+        this._awakenBtn?.node.off(Button.EventType.CLICK, this._onAwakenClick, this);
+    }
+
+    /** 點亮下一階（PROG-2-0720）：成功後用名冊上的最新資料重畫；失敗時維持目前畫面 */
+    private async _onAwakenClick(): Promise<void> {
+        const cfg = this._lastData;
+        if (!cfg) return;
+        const result = await services().session.awakenBloodlineUltimate(cfg.id);
+        if (result.ok === false) {
+            UCUFLogger.info(LogCategory.LIFECYCLE, '[SkillsChild] 點亮奧義未成功', { reason: result.reason, generalId: cfg.id });
+            this.onDataUpdate(cfg);
+            return;
+        }
+        this.onDataUpdate(services().session.roster.find((g) => g.id === cfg.id) ?? cfg);
+    }
+
+    private _setInteractable(button: Button | null, enabled: boolean): void {
+        if (button) button.interactable = enabled;
     }
 
     private _bindSkillDemo(cfg: GeneralConfig, demoSkillId: string): void {
