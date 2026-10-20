@@ -15,9 +15,11 @@ const DAMAGE_MODULE_BY_TARGET_MODE: Partial<Record<BattleSkillTargetMode, Battle
   [BattleSkillTargetMode.Area]: 'TFAN',
 };
 
+/** 只有真的造成傷害（coefficient > 0）的施放才有傷害代號；緩速、鼓舞、純 DOT 沒有（PROG-2-0772 之後的校正） */
 export function damageModuleTagOf(
-  profile: Pick<BattleSkillProfile, 'targetMode'>,
+  profile: Pick<BattleSkillProfile, 'targetMode' | 'coefficient'>,
 ): BattleSkillDamageModuleTag | null {
+  if (!(profile.coefficient > 0)) return null;
   return DAMAGE_MODULE_BY_TARGET_MODE[profile.targetMode] ?? null;
 }
 
