@@ -7,6 +7,7 @@
 import { assert, TestSuite } from './TestRunner';
 import { officerPermissionsOf } from '../assets/scripts/core/systems/OfficerPermissions';
 import { initialOfficerState, type OfficerState } from '../assets/scripts/core/systems/OfficerState';
+import { GameSession } from '../assets/scripts/core/managers/GameSession';
 
 function stateAtTier(tier: number): OfficerState {
     return { currentTier: tier, officerExp: 0, unlockHistory: Array.from({ length: tier }, (_, i) => i + 1) };
@@ -45,6 +46,18 @@ export function createOfficerPermissionsSuite(): TestSuite {
         const permissions = officerPermissionsOf(state);
         state.unlockHistory.push(9);
         assert.equals(2, permissions.unlockHistory.length);
+    });
+
+    suite.test('GameSession.officerPermissions：跟著經驗晉升更新，且是唯讀快照', () => {
+        const session = new GameSession();
+        assert.equals(1, session.officerPermissions.tier);
+        const hellMilitaryWin = { difficulty: 'HELL' as const, boardType: 'MILITARY' as const, success: true };
+        for (let i = 0; i < 4; i++) session.gainOfficerExp(hellMilitaryWin);
+        const permissions = session.officerPermissions;
+        assert.equals(3, permissions.tier);
+        assert.equals('S1', permissions.sandtableStage ?? '');
+        assert.equals(316, permissions.officerExp);
+        assert.isTrue(Object.isFrozen(permissions));
     });
 
     return suite;
