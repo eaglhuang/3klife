@@ -17,7 +17,7 @@ import type { BattleSkillExecutionContext } from '../skills/BattleSkillResolver'
 import { BattleSkillExecutor } from '../skills/BattleSkillExecutor';
 import { createDefaultBattleSkillExecutor } from '../skills/BattleSkillResolverFactory';
 import { zoneDefenseMultiplier, type FormationZone } from '../shared/FormationZone';
-import { isFixedTileState } from '../shared/TileStateRules';
+import { isFixedTileState, tileStateRuleOf } from '../shared/TileStateRules';
 import { terrainAttackRangeCapOf } from '../../core/systems/TerrainTroopRules';
 import {
   BattleSkillTargetMode,
@@ -302,7 +302,7 @@ export class BattleSkillDispatcher {
       isCellFreeForPush: (lane: number, depth: number) => {
         if (lane < 0 || lane >= GAME_CONFIG.GRID_LANES || depth < 0 || depth >= GAME_CONFIG.GRID_DEPTH) return false;
         const cell = state.getCell(lane, depth);
-        return !!cell && !cell.occupantId && state.getTileEffect(lane, depth)?.blocksMovement !== true;
+        return !!cell && !cell.occupantId && !tileStateRuleOf(state.getTileEffect(lane, depth)).blocksOnEnter;
       },
       pushUnitTo: (unit: TroopUnit, lane: number, depth: number) => {
         const fromLane = unit.lane;

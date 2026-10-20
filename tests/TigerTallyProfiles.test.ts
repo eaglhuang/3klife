@@ -1,14 +1,17 @@
 import { resolveBattleSkillProfile } from '../assets/scripts/battle/skills/BattleSkillProfiles';
+import { BattleSkillTargetMode } from '../assets/scripts/shared/SkillRuntimeContract';
 import { StatusEffect } from '../assets/scripts/core/config/Constants';
 import { TestSuite, assert } from './TestRunner';
 
 export function createTigerTallyProfilesSuite(): TestSuite {
   const suite = new TestSuite('TigerTallyProfiles (虎符戰法 G-1 第一批 PROG-2-0763)');
 
-  suite.test('精銳突擊：衝鋒傷害 ×2.0', () => {
+  suite.test('精銳突擊：衝鋒傷害 ×2.0，形狀為直線（規格 Self -> LineEnemy）', () => {
     const profile = resolveBattleSkillProfile('tally-charge');
     assert.isDefined(profile);
     assert.equals(2.0, profile!.chargeMultiplier);
+    assert.equals(BattleSkillTargetMode.Line, profile!.targetMode);
+    assert.equals(3, profile!.lineLength);
   });
 
   suite.test('火計連環：目標十字火場、火系標籤', () => {

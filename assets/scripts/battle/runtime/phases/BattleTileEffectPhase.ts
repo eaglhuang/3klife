@@ -5,6 +5,7 @@ import type { BattleState } from '../../models/BattleState';
 import { advanceFormationZonesOf } from '../../shared/FormationZone';
 import { advanceMoraleOf } from '../../shared/Morale';
 import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
+import { tileStateRuleOf } from '../../shared/TileStateRules';
 
 export interface BattleTileEffectPhaseContext {
   readonly state: BattleState;
@@ -44,7 +45,7 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
       continue;
     }
     const effect = context.state.getTileEffect(unit.lane, unit.depth);
-    if (!effect?.damagePerTurn || unit.isDead()) {
+    if (!effect?.damagePerTurn || !tileStateRuleOf(effect).damagesOnTurnEnd || unit.isDead()) {
       continue;
     }
 

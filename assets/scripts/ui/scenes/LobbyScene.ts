@@ -15,7 +15,11 @@ import { LobbyMissionDetailDialogComposite, type LobbyMissionDetailDialogOpenPay
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
-import { formatModeLabel, formatSeasonLabel } from '../../core/systems/GameClock';
+import { formatModeLabel } from '../../core/systems/GameClock';
+import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
+import { SAGES } from '../../core/systems/SageDivination';
+import { seasonDisplayText } from '../core/SeasonTexts';
+import { buildYearReportTexts, withYearReportFallback, type YearReport } from '../../core/systems/YearReport';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
@@ -26,6 +30,7 @@ import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { attachSupportToCards, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
 import { NurtureFlowController } from '../core/NurtureFlowController';
+import { VitalityPillController } from '../core/VitalityPillController';
 import { MentorCardDetailController } from '../core/MentorCardDetailController';
 import { GeneralVersionGalleryController } from '../core/GeneralVersionGalleryController';
 import type { GeneralVersionRecord } from '../../core/models/GeneralVersion';
@@ -151,6 +156,17 @@ function breedText(): BreedTextLookup {
     return withBreedFallback((key, ...args) => services().i18n.t(key, ...args));
 }
 
+/** 結緣：選中待產的母方時顯示劇本提示（PROG-2-0732） */
+function toastPregnantMother(bonding: { pregnantMotherHint(): string | null }): void {
+    const hint = bonding.pregnantMotherHint();
+    if (hint) services().event.emit('SHOW_TOAST', { message: hint, duration: 2 });
+}
+
+/** 季節字串：走 i18n（ui.season.display），語系表未載入時退回 zh-TW 預設（PROG-2-0730） */
+function seasonText(state: Parameters<typeof seasonDisplayText>[1]): string {
+    return seasonDisplayText((key, ...args) => services().i18n.t(key, ...args), state);
+}
+
 interface ScreenButtonBinding {
     buttonId: string;
     handler: () => void;
@@ -210,6 +226,7 @@ export class LobbyScene extends Component {
     private _spiritCodexHost: UIScreenPreviewHost | null = null;
     private _oracle: SageOracleController | null = null;
     private _prisonerHost: UIScreenPreviewHost | null = null;
+    private _yearReportHost: UIScreenPreviewHost | null = null;
     private _prisoner: PrisonerPopupController | null = null;
     private _sortieHost: UIScreenPreviewHost | null = null;
     private _sortie: SortieSetupController | null = null;
@@ -299,6 +316,7 @@ export class LobbyScene extends Component {
         await this._mountRetireReview();
         await this._mountSpiritCodex();
         await this._mountPrisonerPopup();
+        await this._mountYearReport();
         await this._mountDeckSelect();
         await this._mountLeadSelect();
         await this._mountSortieSetup();
@@ -396,7 +414,7 @@ export class LobbyScene extends Component {
     private _refreshSeasonHud(): void {
         const time = services().session.gameTime;
         this._seasonHudHost?.binder?.setTexts({
-            seasonLabel: formatSeasonLabel(time),
+            seasonLabel: seasonText(time),
             modeLabel: formatModeLabel(time.currentMode),
         });
         const countdownIcon = buildCountdownIconFlowView(services().session.countdown, Date.now());
@@ -434,6 +452,7 @@ export class LobbyScene extends Component {
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             autoNurture: (childId) => services().session.runAutoNurture(childId),
+            showToast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2 }); },
         });
         this._nurtureFlow = flow;
 
@@ -463,6 +482,7 @@ export class LobbyScene extends Component {
             } },
             ...trainBindings,
             { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
+            { buttonId: 'btnUsePill', handler: () => { void this._usePillOnNurtureChild(flow); } },
             { buttonId: 'btnAbandon', handler: act(() => flow.abandon()) },
             { buttonId: 'btnGraduate', handler: act(() => flow.graduate()) },
             { buttonId: 'btnKeepReport', handler: act(() => flow.keepReport()) },
@@ -631,6 +651,17 @@ export class LobbyScene extends Component {
         }
     }
 
+    /** 培育畫面的補元散鈕：對目前選中的子嗣使用一顆補元散，結果以劇本 toast 顯示（PROG-2-0733） */
+    private async _usePillOnNurtureChild(flow: NurtureFlowController): Promise<void> {
+        const childId = flow.selectedId;
+        if (!childId) return;
+        const name = services().session.roster.find((g) => g.id === childId)?.name ?? '';
+        const pill = new VitalityPillController({ session: services().session, text: breedText() });
+        const message = await pill.use(childId, 'vitalityPill', name);
+        services().event.emit('SHOW_TOAST', { message, duration: 2 });
+        this._refreshNurtureFlow();
+    }
+
     private _refreshNurtureFlow(): void {
         const binder = this._nurtureFlowHost?.binder;
         if (!binder || !this._nurtureFlow) {
@@ -655,6 +686,12 @@ export class LobbyScene extends Component {
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
+            omenSeed: () => services().session.omenSeed(),
+            sageRemarks: (fatherId, motherId) => {
+                const pool = services().breeding.previewFactorPool(fatherId, motherId);
+                const unlocked = Object.keys(SAGES).filter((id) => services().session.isSageUnlocked(id));
+                return buildSageRemarks(pool, unlocked, remarkRandomOf(`${fatherId}|${motherId}`));
+            },
             text: breedText(),
         });
         this._bonding = bonding;
@@ -663,8 +700,8 @@ export class LobbyScene extends Component {
             { buttonId: 'btnCloseBond', handler: () => { this._closeBondingSetup(); } },
             { buttonId: 'btnPrevFather', handler: () => { bonding.cycleFather(-1); this._refreshBondingSetup(); } },
             { buttonId: 'btnNextFather', handler: () => { bonding.cycleFather(1); this._refreshBondingSetup(); } },
-            { buttonId: 'btnPrevMother', handler: () => { bonding.cycleMother(-1); this._refreshBondingSetup(); } },
-            { buttonId: 'btnNextMother', handler: () => { bonding.cycleMother(1); this._refreshBondingSetup(); } },
+            { buttonId: 'btnPrevMother', handler: () => { bonding.cycleMother(-1); this._refreshBondingSetup(); toastPregnantMother(bonding); } },
+            { buttonId: 'btnNextMother', handler: () => { bonding.cycleMother(1); this._refreshBondingSetup(); toastPregnantMother(bonding); } },
             { buttonId: 'btnConfirmBond', handler: () => { void this._onClickConfirmBond(); } },
             {
                 buttonId: 'btnOpenOracle',
@@ -1407,6 +1444,35 @@ export class LobbyScene extends Component {
         }
     }
 
+    /** 年報畫面（UI_YEAR_REPORT，TIME-07）：年末 YearEnded 時彈出，文字走 zh-TW 預設退回 */
+    private async _mountYearReport(): Promise<void> {
+        this._yearReportHost = await this._mountPreviewScreenHost('YearReportHost', 'year-report-screen', [
+            { buttonId: 'btnCloseYearReport', handler: () => { this._closeYearReport(); } },
+        ]);
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.YearEnded, (payload?: unknown) => {
+                this._openYearReport(payload as YearReport | undefined);
+            }),
+        );
+    }
+
+    private _openYearReport(report: YearReport | undefined): void {
+        const host = this._yearReportHost;
+        if (!host || !report) {
+            return;
+        }
+        const lookup = withYearReportFallback((key, ...args) => services().i18n.t(key, ...args));
+        host.binder.setTexts(buildYearReportTexts(report, lookup));
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+    }
+
+    private _closeYearReport(): void {
+        if (this._yearReportHost) {
+            this._yearReportHost.node.active = false;
+        }
+    }
+
     private _refreshPrisonerPopup(): void {
         const binder = this._prisonerHost?.binder;
         if (!binder || !this._prisoner) {
@@ -1736,7 +1802,7 @@ export class LobbyScene extends Component {
             const died = agingEvents.filter((event) => event.type === 'died').length;
             const suffix = died > 0 ? `（${died} 位武將離世）` : '';
             services().event.emit('SHOW_TOAST', {
-                message: `進入${formatSeasonLabel(advance.current)}${suffix}`,
+                message: `進入${seasonText(advance.current)}${suffix}`,
                 duration: 2,
             });
         } catch (error) {

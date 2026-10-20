@@ -1,0 +1,71 @@
+{
+  "id": "year-report-screen.skin",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "yr.backdrop.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 200
+    },
+    "yr.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 246
+    },
+    "yr.slot.bg": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "alpha": 230
+    },
+    "yr.button.confirm.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 220
+    },
+    "yr.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 32,
+      "lineHeight": 40,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    },
+    "yr.label.year": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    },
+    "yr.label.body": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 30,
+      "color": "secondaryLight",
+      "overflow": "RESIZE_HEIGHT"
+    },
+    "yr.label.stat": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 30,
+      "lineHeight": 38,
+      "color": "secondaryLight",
+      "overflow": "SHRINK",
+      "isBold": true
+    },
+    "yr.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "overflow": "SHRINK",
+      "isBold": true
+    }
+  }
+}

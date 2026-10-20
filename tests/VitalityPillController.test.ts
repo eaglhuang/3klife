@@ -37,8 +37,8 @@ export function createVitalityPillControllerSuite(): TestSuite {
             inventory: {} as PlayerInventory,
             usePillOnGeneral: async () => ({ ok: true as const, vitality: 70, restored: 50 }),
         };
-        const text = await new VitalityPillController({ session }).use('g1', 'vitalityPill');
-        assert.equals('精力回復 50，目前 70', text);
+        const text = await new VitalityPillController({ session }).use('g1', 'vitalityPill', '趙雲');
+        assert.equals('趙雲 服下補元散，精力恢復！', text);
     });
 
     suite.test('拒絕原因轉成提示文字：精力已滿、沒有道具、查無武將', async () => {
@@ -48,7 +48,7 @@ export function createVitalityPillControllerSuite(): TestSuite {
                 inventory: {} as PlayerInventory,
                 usePillOnGeneral: async () => ({ ok: false as const, reason }),
             };
-            const text = await new VitalityPillController({ session }).use('g1', 'premiumVitalityPill');
+            const text = await new VitalityPillController({ session }).use('g1', 'premiumVitalityPill', '趙雲');
             assert.equals(VITALITY_PILL_REJECT_TEXT[reason], text);
         }
     });

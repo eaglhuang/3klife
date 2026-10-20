@@ -843,6 +843,11 @@ export class GameSession {
         return result;
     }
 
+    /** 目前存檔亂數的狀態種子（唯讀，不推進亂數）；天象異變以此確定性抽選 */
+    public omenSeed(): number {
+        return this._seeded.snapshot().state;
+    }
+
     public isSageUnlocked(sageId: string): boolean {
         return isSageUnlocked(sageId, this._oracleCount);
     }

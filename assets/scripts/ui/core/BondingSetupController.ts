@@ -14,12 +14,16 @@
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 SelectFather / SelectMother / Confirm，
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
+import { getSage } from '../../core/systems/SageDivination';
+import { OMEN_LABEL, pickOmen, type SageRemark } from '../../core/systems/SageRemarks';
+import type { FactorColor } from '../../core/systems/FactorInheritance';
 import { buildBreedingPreviewLines } from './BreedingPreviewPresenter';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
 import type { BreedingService } from '../../core/services/BreedingService';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
+import { VITALITY_SCRIPT_KEYS, vitalityScriptText } from './VitalityScriptTexts';
 import {
     BREEDING_MIN_AGE,
     BreedingBlockReason,
@@ -58,6 +62,9 @@ export const BLOCK_REASON_TEXT: Record<BreedingBlockReason, string> = {
 /** Breeding_Mode：退役年齡後仍為活體武將的結緣視為和平血統線（只做摘要，不另開系統） */
 export type BondingMode = 'Standard' | 'Peace_Lineage';
 
+/** 批語面板用的色系中文名 */
+const FACTOR_COLOR_NAME: Record<FactorColor, string> = { blue: '藍', pink: '粉', green: '綠', purple: '紫', white: '白', red: '紅' };
+
 export interface BondingView {
     fatherId: string | null;
     motherId: string | null;
@@ -72,6 +79,8 @@ export interface BondingView {
 
 export interface BondingSetupDeps {
     roster: { getAll(): GeneralConfig[] };
+    /** 名士批語（BRD-09）：已解鎖名士的方向性批語；未提供時不顯示批語 */
+    sageRemarks?: (fatherId: string, motherId: string) => SageRemark[];
     breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'>;
     /** 開畫面前的準備（載入血統圖、補回已出生子嗣）；失敗只提示，不擋畫面 */
     prepare?: () => Promise<unknown>;
@@ -81,6 +90,8 @@ export interface BondingSetupDeps {
     spendLifespan?: (generalId: string, command: 'breeding') => { events: readonly { type: string }[] } | null;
     /** 玩家發現等級，決定父母因子是否顯示名稱；未提供時視為 1（只看得到藍粉） */
     playerDiscoveryLevel?: () => number;
+    /** 天象異變的存檔亂數種子（PROG-2-0823）；未提供時視為 0 */
+    omenSeed?: () => number;
     /** 結緣畫面文案查詢（ui.breed.*）；正式環境接 i18n.t，未提供時用 zh-TW 預設文案 */
     text?: BreedTextLookup;
 }
@@ -96,11 +107,27 @@ export class BondingSetupController {
         return (this._deps.text ?? fallbackBreedText)(key, ...args);
     }
 
+    private _sageRemarkText(fatherId: string, motherId: string): string {
+        if (!this._deps.sageRemarks) return '';
+        const remarks = this._deps.sageRemarks(fatherId, motherId);
+        if (remarks.length === 0) return '名士批語：需先解鎖 2 位名士';
+        return remarks
+            .map((remark) => `${getSage(remark.sageId)?.name ?? remark.sageId}：${FACTOR_COLOR_NAME[remark.color]}${remark.keyword ? `（${remark.keyword}）` : ''}`)
+            .join('\n');
+    }
+
     // ── 清單 ───────────────────────────────────────────────────────────────
 
     /** 可放進父方欄位的武將；精力不足等暫時狀態仍列出，由資格檢查說明原因 */
     fathers(): BreedingGeneral[] {
         return this._parents().filter((g) => isMale(g));
+    }
+
+    /** 結緣畫面：目前選中的母方待產中時回傳劇本句（PROG-2-0732，ui.vit.script.pregnancy_lock）；否則 null */
+    pregnantMotherHint(): string | null {
+        const mother = this.mothers().find((g) => g.id === this._motherId);
+        if (!mother || (mother.pregnancySeasonsLeft ?? 0) <= 0) return null;
+        return vitalityScriptText(this._deps.text ?? fallbackBreedText, VITALITY_SCRIPT_KEYS.pregnancyLock, mother.name);
     }
 
     mothers(): BreedingGeneral[] {
@@ -168,7 +195,8 @@ export class BondingSetupController {
             const gender = child.gender === '女' ? '千金' : '麟兒';
             this._notice = this._t('ui.breed.child_born', result.father.name, result.mother.name, gender)
                 + `子嗣名為「${child.name}」。`
-                + this._t('ui.breed.preg_status', result.mother.name, String(PREGNANCY_LOCK_SEASONS));
+                + this._t('ui.breed.preg_status', result.mother.name, String(PREGNANCY_LOCK_SEASONS))
+                + `天象異變：${OMEN_LABEL[pickOmen(child.birthSeason ?? 0, this._deps.omenSeed?.() ?? 0)]}。`;
         }
         // 父母壽命耗盡時提示，與培育回合的「壽命耗盡，武將已故」一致（QA 回報，PROG-2-0224）
         const deceased = [
@@ -234,6 +262,7 @@ export class BondingSetupController {
         const preview = buildBreedingPreviewLines(ep);
         texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine].join(' · ');
         texts.conceptionLabel = `受孕率 ${Math.round(conceptionRate(father, mother) * 100)}%`;
+        texts.sageRemarkLines = this._sageRemarkText(father.id, mother.id);
         texts.costLabel = this._t('ui.breed.confirm', father.name, String(FATHER_VIGOR_COST), mother.name, String(MOTHER_VIGOR_COST));
         texts.eligibilityLabel = eligibility.ok
             ? `${father.name} 與 ${mother.name} 良緣天成，可以結緣`
