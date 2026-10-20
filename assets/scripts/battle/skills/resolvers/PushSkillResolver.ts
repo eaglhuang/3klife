@@ -1,5 +1,6 @@
 import { Faction, GAME_CONFIG } from '../../../core/config/Constants';
 import type { BattleSkillRequest, SkillExecutionResult } from '../../../shared/SkillRuntimeContract';
+import { forcedMoveBlockedDamageRatio } from '../../shared/ForcedMoveTile';
 import { pushAway } from '../../shared/PushMove';
 import { resolveBattleSkillProfile } from '../BattleSkillProfiles';
 import type { BattleSkillExecutionContext, BattleSkillResolver } from '../BattleSkillResolver';
@@ -7,7 +8,7 @@ import { squareCells } from '../SkillGridGeometry';
 
 /**
  * 位移（push）：以施放者為中心 3x3 內的敵軍遠離施放者 pushSteps 格（PROG-2-0767）。
- * 遇障礙即停；沒有被位移的單位不扣血（規格未寫受阻傷害）。
+ * 遇障礙即停；受阻時依未走完的步數扣最大 HP（每步 5%，上限 20%，PM 暫定）。
  */
 export class PushSkillResolver implements BattleSkillResolver {
   public canResolve(request: BattleSkillRequest): boolean {
@@ -44,6 +45,15 @@ export class PushSkillResolver implements BattleSkillResolver {
       if (plan.movedSteps > 0) {
         context.pushUnitTo(unit, plan.lane, plan.depth);
         deltas.push({ unitUid: unit.id, notes: `push:${plan.movedSteps}` });
+      }
+      // 受阻傷害（PM 暫定，PROG-2-0768）：未走完的每一步扣最大 HP 5%，上限 20%，與地形強制位移一致
+      if (plan.blocked && context.applyDamage) {
+        const ratio = forcedMoveBlockedDamageRatio(steps - plan.movedSteps);
+        const damage = Math.round(unit.maxHp * ratio);
+        if (damage > 0) {
+          context.applyDamage(unit, damage, casterFaction);
+          deltas.push({ unitUid: unit.id, deltaHp: -damage, notes: 'push-blocked' });
+        }
       }
       battleLogLines.push(`${profile.battleLogKey ?? request.battleSkillId}:${unit.id}:${plan.movedSteps}`);
     }

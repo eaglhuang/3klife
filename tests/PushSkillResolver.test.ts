@@ -36,6 +36,25 @@ export function createPushSkillResolverSuite(): TestSuite {
     assert.equals(6, moves[0].depth);
   });
 
+  suite.test('下一格受阻：未走完 1 步扣最大 HP 5%', () => {
+    const blocked = createTestUnit('blocked', Faction.Enemy, 2, 5, { hp: 1000 });
+    const bundle = createBattleSkillTestContext({
+      playerGeneral: createTestGeneral('changban', Faction.Player),
+      enemyGeneral: createTestGeneral('enemy-general', Faction.Enemy),
+      units: [blocked],
+    });
+    const context = {
+      ...bundle.context,
+      getCasterCell: () => ({ lane: 2, depth: 4 }),
+      isCellFreeForPush: () => false,
+      pushUnitTo: () => { throw new Error('should not move'); },
+    };
+    const result = new PushSkillResolver().execute(request as never, context as never);
+    assert.isTrue(result.applied);
+    assert.equals(1, bundle.damageLog.length);
+    assert.equals(Math.round(blocked.maxHp * 0.05), bundle.damageLog[0].damage);
+  });
+
   suite.test('沒有施放者位置：不施放', () => {
     const bundle = createBattleSkillTestContext({
       playerGeneral: createTestGeneral('changban', Faction.Player),
