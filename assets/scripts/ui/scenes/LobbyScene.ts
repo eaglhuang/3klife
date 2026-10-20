@@ -302,7 +302,8 @@ export class LobbyScene extends Component {
         try {
             await Promise.all([
                 services().loadSkills(),
-                services().loadVfxEffects()
+                services().loadVfxEffects(),
+                services().loadSeasonModifiers()
             ]);
             
             this._generals = await services().resource.loadJson<GeneralConfig[]>(

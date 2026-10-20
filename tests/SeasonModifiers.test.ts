@@ -11,6 +11,7 @@ import {
     DEFAULT_SEASON_MODIFIERS,
     normalizeSeasonModifiers,
     seasonModifiersOf,
+    setActiveSeasonModifiers,
 } from '../assets/scripts/core/systems/SeasonModifiers';
 import { FOOD_PER_SEASON, regenMilitaryOneSeason, type MilitaryReserve } from '../assets/scripts/core/systems/MilitaryReserve';
 
@@ -59,6 +60,18 @@ export function createSeasonModifiersSuite(): TestSuite {
         assert.equals(100 + Math.floor(FOOD_PER_SEASON * 1.5), autumn.food);
         const capped = regenMilitaryOneSeason(reserve({ food: 990 }), 1, 1.5);
         assert.equals(1000, capped.food);
+    });
+
+    suite.test('執行中的修正表：載入後換上，預設查詢跟著變，重設後回到預設', () => {
+        const raw = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+        const custom = normalizeSeasonModifiers({ seasons: { '4': { conceptionMultiplier: 1.5 } } });
+        setActiveSeasonModifiers(custom);
+        try {
+            assert.equals(1.5, seasonModifiersOf(4).conceptionMultiplier);
+        } finally {
+            setActiveSeasonModifiers(normalizeSeasonModifiers(raw));
+        }
+        assert.equals(1.1, seasonModifiersOf(4).conceptionMultiplier);
     });
 
     return suite;
