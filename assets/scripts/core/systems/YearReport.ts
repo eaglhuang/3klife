@@ -55,7 +55,7 @@ export type YearReportTextLookup = (key: string, ...args: string[]) => string;
 
 /** 年報文字的 zh-TW 預設；與 resources/i18n/zh-TW.json 的 ui.year_report.* 同步（測試會比對） */
 export const YEAR_REPORT_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
-    'ui.year_report.title': '年報',
+    'ui.year_report.title': '{0} 年度總結',
     'ui.year_report.intro': '一年將盡，回首今年……',
     'ui.year_report.deaths': '本年歿：{0} 人',
     'ui.year_report.retirements': '本年屆齡退役候選：{0} 人',
@@ -82,7 +82,7 @@ export function withYearReportFallback(lookup: YearReportTextLookup): YearReport
 /** 年報面板的全部文字，key 為面板節點 id 的候選名稱；數值以占位參數傳入 */
 export function buildYearReportTexts(report: YearReport, lookup: YearReportTextLookup = fallbackYearReportText): Record<string, string> {
     return {
-        yearReportTitle: lookup('ui.year_report.title'),
+        yearReportTitle: lookup('ui.year_report.title', String(report.year)),
         yearReportYear: `${report.year}`,
         yearReportIntro: lookup('ui.year_report.intro'),
         yearReportDeaths: lookup('ui.year_report.deaths', String(report.deaths)),

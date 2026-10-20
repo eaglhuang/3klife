@@ -36,7 +36,7 @@
             "widget": { "top": 24, "left": 32 },
             "width": 360,
             "height": 44,
-            "text": "年報",
+            "text": "年度總結",
             "styleSlot": "yr.label.title"
           },
           {
