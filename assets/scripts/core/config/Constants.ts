@@ -2,11 +2,11 @@
 export const GAME_CONFIG = {
   GRID_LANES: 5,
   GRID_DEPTH: 8,
-  /** [P2-N1] 糧草初始值（原 INITIAL_DP） */
+  /** [P2-N1] 糧草初始值（名詞：糧草 = Food，見名詞定義文件） */
   INITIAL_FOOD: 30,
-  /** [P2-N1] 每回合補充糧草量（原 DP_PER_TURN） */
+  /** [P2-N1] 每回合補充糧草量（Food） */
   FOOD_PER_TURN: 10,
-  /** [P2-N1] 糧草上限（原 MAX_DP） */
+  /** [P2-N1] 糧草上限（Food） */
   MAX_FOOD: 50,
   /** 技能狀態提示（閃現）顯示毫秒數；原本漏定義，HUD 用它算 scheduleOnce 延遲 */
   SKILL_STATUS_DISPLAY_MS: 2000,
@@ -45,6 +45,7 @@ export const COUNTER_MULTIPLIER = 1.3;
 export const DISADVANTAGE_MULTIPLIER = 0.8;
 export const MIN_DAMAGE = 1;
 
+// 地形修正值數據同步於 assets/resources/data/terrain.json（REV-02），由 tests/TerrainConfig.test.ts 交叉比對。
 export const TERRAIN_ATTACK_MOD: Record<TerrainType, number> = {
   [TerrainType.Plain]: 0,
   [TerrainType.River]: 0,
