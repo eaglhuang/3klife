@@ -30,6 +30,10 @@ export interface OfficerUnlocks {
     sandtableStage: 'S1' | 'S2' | 'S3' | null;
     /** 大廳熱點數（暫定） */
     hotspotCount: number;
+    /** 聯盟文書（F-2：州牧起） */
+    allianceDocs: boolean;
+    /** 反霸權高階會盟（F-2：霸府重臣起） */
+    antiHegemonySummit: boolean;
 }
 
 const QUEST_CAP_BY_TIER: Readonly<Record<number, QuestDifficultyCap>> = {
@@ -54,6 +58,10 @@ const SANDTABLE_BY_TIER: Readonly<Record<number, OfficerUnlocks['sandtableStage'
 
 /** 熱點數（暫定）：隨階位增加 */
 const HOTSPOTS_BY_TIER: Readonly<Record<number, number>> = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5 };
+
+const ALLIANCE_DOCS_BY_TIER: Readonly<Record<number, boolean>> = { 1: false, 2: false, 3: false, 4: true, 5: true };
+
+const ANTI_HEGEMONY_BY_TIER: Readonly<Record<number, boolean>> = { 1: false, 2: false, 3: false, 4: false, 5: true };
 
 /** 讀入 Officer_Snapshot；Current_Tier 可以是代碼字串或數字，壞值退回階位 1 */
 export function normalizeOfficerSnapshot(raw: unknown): OfficerSnapshot {
@@ -84,5 +92,7 @@ export function officerUnlocksOf(snapshot: OfficerSnapshot): OfficerUnlocks {
         questColumns: QUEST_COLUMNS_BY_TIER[tier],
         sandtableStage: SANDTABLE_BY_TIER[tier],
         hotspotCount: HOTSPOTS_BY_TIER[tier],
+        allianceDocs: ALLIANCE_DOCS_BY_TIER[tier],
+        antiHegemonySummit: ANTI_HEGEMONY_BY_TIER[tier],
     };
 }

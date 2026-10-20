@@ -60,5 +60,12 @@ export function createOfficerPermissionsSuite(): TestSuite {
         assert.isTrue(Object.isFrozen(permissions));
     });
 
+    suite.test('聯盟文書與反霸權會盟依 F-2：州牧起開放聯盟文書，霸府重臣才開反霸權會盟', () => {
+        assert.isFalse(officerPermissionsOf(stateAtTier(3)).allianceDocs);
+        assert.isTrue(officerPermissionsOf(stateAtTier(4)).allianceDocs);
+        assert.isFalse(officerPermissionsOf(stateAtTier(4)).antiHegemonySummit);
+        assert.isTrue(officerPermissionsOf(stateAtTier(5)).antiHegemonySummit);
+    });
+
     return suite;
 }
