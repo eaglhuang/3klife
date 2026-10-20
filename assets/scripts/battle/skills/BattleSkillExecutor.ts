@@ -23,6 +23,8 @@ export class BattleSkillExecutor {
     }
 
     const result = resolver.execute(request, context);
-    return { ...result, moduleTags: moduleTagsOfSkill(resolveBattleSkillProfile(request.battleSkillId)) };
+    // 只有套用成功才回報代號；被阻擋或未套用的施放回空清單（PROG-2-0772）
+    const moduleTags = result.applied ? moduleTagsOfSkill(resolveBattleSkillProfile(request.battleSkillId)) : [];
+    return { ...result, moduleTags };
   }
 }
