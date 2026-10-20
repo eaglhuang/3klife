@@ -14,6 +14,9 @@
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 SelectFather / SelectMother / Confirm，
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
+import { getSage } from '../../core/systems/SageDivination';
+import type { SageRemark } from '../../core/systems/SageRemarks';
+import type { FactorColor } from '../../core/systems/FactorInheritance';
 import { buildBreedingPreviewLines } from './BreedingPreviewPresenter';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskLabels } from '../../core/systems/FactorMask';
@@ -58,6 +61,9 @@ export const BLOCK_REASON_TEXT: Record<BreedingBlockReason, string> = {
 /** Breeding_Mode：退役年齡後仍為活體武將的結緣視為和平血統線（只做摘要，不另開系統） */
 export type BondingMode = 'Standard' | 'Peace_Lineage';
 
+/** 批語面板用的色系中文名 */
+const FACTOR_COLOR_NAME: Record<FactorColor, string> = { blue: '藍', pink: '粉', green: '綠', purple: '紫', white: '白', red: '紅' };
+
 export interface BondingView {
     fatherId: string | null;
     motherId: string | null;
@@ -72,6 +78,8 @@ export interface BondingView {
 
 export interface BondingSetupDeps {
     roster: { getAll(): GeneralConfig[] };
+    /** 名士批語（BRD-09）：已解鎖名士的方向性批語；未提供時不顯示批語 */
+    sageRemarks?: (fatherId: string, motherId: string) => SageRemark[];
     breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'>;
     /** 開畫面前的準備（載入血統圖、補回已出生子嗣）；失敗只提示，不擋畫面 */
     prepare?: () => Promise<unknown>;
@@ -94,6 +102,15 @@ export class BondingSetupController {
 
     private _t(key: string, ...args: string[]): string {
         return (this._deps.text ?? fallbackBreedText)(key, ...args);
+    }
+
+    private _sageRemarkText(fatherId: string, motherId: string): string {
+        if (!this._deps.sageRemarks) return '';
+        const remarks = this._deps.sageRemarks(fatherId, motherId);
+        if (remarks.length === 0) return '名士批語：需先解鎖 2 位名士';
+        return remarks
+            .map((remark) => `${getSage(remark.sageId)?.name ?? remark.sageId}：${FACTOR_COLOR_NAME[remark.color]}${remark.keyword ? `（${remark.keyword}）` : ''}`)
+            .join('\n');
     }
 
     // ── 清單 ───────────────────────────────────────────────────────────────
@@ -234,6 +251,7 @@ export class BondingSetupController {
         const preview = buildBreedingPreviewLines(ep);
         texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine].join(' · ');
         texts.conceptionLabel = `受孕率 ${Math.round(conceptionRate(father, mother) * 100)}%`;
+        texts.sageRemarkLines = this._sageRemarkText(father.id, mother.id);
         texts.costLabel = this._t('ui.breed.confirm', father.name, String(FATHER_VIGOR_COST), mother.name, String(MOTHER_VIGOR_COST));
         texts.eligibilityLabel = eligibility.ok
             ? `${father.name} 與 ${mother.name} 良緣天成，可以結緣`
