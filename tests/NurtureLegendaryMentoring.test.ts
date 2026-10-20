@@ -56,15 +56,18 @@ async function rigWith(perform?: (generalId: string, childId: string, skill: str
     const roster = new InMemoryRosterStore([unveiledChild('alpha'), legendHero()]);
     const nurture = new NurtureService(roster, { random: seeded(7), currentSeason: () => 3, currentMode: () => GameTimeMode.Nurture, requireNurtureMode: true });
     const calls: Array<{ generalId: string; childId: string; skill: string | undefined }> = [];
+    // 開場時不帶英靈卡（卡片資料不完整會讓入學換算出錯）；開場後才放入英靈卡清單
+    let cards: MentorCard[] = [];
     const flow = new NurtureFlowController({
         roster, unveiling: new UnveilingService(roster, seeded(3)), nurture,
-        loadMentorCards: async () => [], persist: async () => undefined,
+        loadMentorCards: async () => cards, persist: async () => undefined,
         performLegendaryMentoring: perform
             ? async (generalId, childId, skill) => { calls.push({ generalId, childId, skill }); return perform(generalId, childId, skill); }
             : undefined,
     });
     await flow.chooseFate('accept');
     await flow.startNurture();
+    cards = [card()];
     return { flow, calls };
 }
 
@@ -77,9 +80,23 @@ export function createNurtureLegendaryMentoringSuite(): TestSuite {
         assert.equals(undefined, exclusiveSkillOf(undefined));
     });
 
+    suite.test('英靈卡選擇列：循環 無 → 英靈甲 → 無，並反映在按鈕文字與可按狀態', async () => {
+        const { flow } = await rigWith(async () => ({ ok: true, skillId: 'ULT_EXCLUSIVE' }));
+        assert.equals(null, flow.legendaryCard);
+        assert.equals('英靈：未選', flow.getView().texts['legendaryCardLabel'] ?? '');
+        assert.isFalse(flow.getView().enabled['btnLegendaryMentor'] ?? true);
+        await flow.cycleLegendaryCard();
+        assert.equals('英靈甲', flow.legendaryCard?.name ?? '');
+        assert.equals('英靈：英靈甲', flow.getView().texts['legendaryCardLabel'] ?? '');
+        assert.isTrue(flow.getView().enabled['btnLegendaryMentor'] ?? false);
+        await flow.cycleLegendaryCard();
+        assert.equals(null, flow.legendaryCard);
+    });
+
     suite.test('傳道成功：把英靈的專屬奧義與目前子嗣交給 GameSession，回傳 true', async () => {
         const { flow, calls } = await rigWith(async () => ({ ok: true, skillId: 'ULT_EXCLUSIVE' }));
-        const ok = await flow.legendaryMentor(card());
+        await flow.cycleLegendaryCard();
+        const ok = await flow.legendaryMentor();
         assert.isTrue(ok);
         assert.equals(1, calls.length);
         assert.equals('hero', calls[0].generalId);
@@ -89,13 +106,16 @@ export function createNurtureLegendaryMentoringSuite(): TestSuite {
 
     suite.test('傳道失敗：回傳 false，並顯示原因（傳道令不足）', async () => {
         const { flow } = await rigWith(async () => ({ ok: false, blocked: 'NO_TICKET' }));
-        assert.isFalse(await flow.legendaryMentor(card()));
+        await flow.cycleLegendaryCard();
+        assert.isFalse(await flow.legendaryMentor());
         assert.equals('傳道令不足', (flow as unknown as { _notice: string })._notice);
     });
 
     suite.test('沒有接線傳道 Command：入口不可用，回傳 false 且不崩潰', async () => {
         const { flow } = await rigWith(undefined);
-        assert.isFalse(await flow.legendaryMentor(card()));
+        await flow.cycleLegendaryCard();
+        assert.isFalse(await flow.legendaryMentor());
+        assert.isFalse(flow.getView().enabled['btnLegendaryMentor'] ?? true);
     });
 
     return suite;

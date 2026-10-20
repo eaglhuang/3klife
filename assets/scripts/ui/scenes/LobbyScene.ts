@@ -50,8 +50,8 @@ import { DomesticPanelController } from '../core/DomesticPanelController';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
-import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
+import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
 import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
@@ -483,6 +483,7 @@ export class LobbyScene extends Component {
             },
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             autoNurture: (childId) => services().session.runAutoNurture(childId),
+            performLegendaryMentoring: (generalId, childId, exclusiveSkillId) => services().session.performLegendaryMentoringFor(generalId, childId, exclusiveSkillId),
             showToast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2 }); },
         });
         this._nurtureFlow = flow;
@@ -512,6 +513,8 @@ export class LobbyScene extends Component {
                 if (detail) { this.openMentorCardDetail(detail.card, detail.title); }
             } },
             ...trainBindings,
+            { buttonId: 'btnLegendaryCard', handler: act(() => flow.cycleLegendaryCard()) },
+            { buttonId: 'btnLegendaryMentor', handler: act(() => flow.legendaryMentor()) },
             { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
             { buttonId: 'btnUsePill', handler: () => { void this._usePillOnNurtureChild(flow); } },
             { buttonId: 'btnAbandon', handler: act(() => flow.abandon()) },
@@ -718,6 +721,7 @@ export class LobbyScene extends Component {
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
             omenSeed: () => services().session.omenSeed(),
+            recordBreeding: (record) => services().session.recordBreedingBirth(record),
             sageRemarks: (fatherId, motherId) => {
                 const pool = services().breeding.previewFactorPool(fatherId, motherId);
                 const unlocked = Object.keys(SAGES).filter((id) => services().session.isSageUnlocked(id));

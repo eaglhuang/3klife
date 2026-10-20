@@ -831,6 +831,60 @@
                   },
                   {
                     "type": "button",
+                    "name": "BtnLegendaryCard",
+                    "id": "btnLegendaryCard",
+                    "widget": {
+                      "top": 296,
+                      "right": 27
+                    },
+                    "width": 360,
+                    "height": 52,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnLegendaryCardLabel",
+                        "id": "legendaryCardLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "英靈：未選",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnLegendaryMentor",
+                    "id": "btnLegendaryMentor",
+                    "widget": {
+                      "top": 360,
+                      "right": 27
+                    },
+                    "width": 360,
+                    "height": 52,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnLegendaryMentorLabel",
+                        "id": "legendaryMentorLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "傳道",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
                     "name": "BtnRest",
                     "id": "btnRest",
                     "widget": {
