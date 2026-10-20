@@ -21,7 +21,7 @@ export const HALL_BOARD_MAX_ROWS = 6;
 export const HALL_BOARD_SPOT_SLOTS = 4;
 
 /** 目前官階／沙盤階段／情報度尚未由 GameSession 提供，先用新手預設值（暫定）。 */
-export const HALL_DEFAULT_PLAYER: HallPlayerState = Object.freeze({ rankTier: 0, worldStage: 1, intel: 0 });
+export const HALL_DEFAULT_PLAYER: HallPlayerState = Object.freeze({ rankTier: 1, worldStage: 1, intel: 0 });
 
 export interface HallBoardFlowView {
     texts: Record<string, string>;

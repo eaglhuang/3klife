@@ -34,13 +34,13 @@ export interface HallPlayerState {
 /** Expedition = 世界沙盤遠征牆，與雙牆共用同一條接取（指派）入口，依沙盤階段過濾。 */
 export type HallBoardKey = 'Military' | 'Domestic' | 'Expedition';
 
-/** 暫定：各難度所需的最低官職（規格只定「官職越高，難度上限越高」，對照表待 PM 確認）。 */
+/** 各難度所需的最低官階（依規格 F-2：tier1 basic、tier2 normal、tier3 elite、tier4 advanced、tier5 hell）。 */
 export const HALL_DIFFICULTY_MIN_RANK: Readonly<Record<string, number>> = Object.freeze({
-    EASY: 0,
-    NORMAL: 1,
-    ELITE: 2,
-    ADVANCED: 3,
-    HELL: 4,
+    EASY: 1,
+    NORMAL: 2,
+    ELITE: 3,
+    ADVANCED: 4,
+    HELL: 5,
 });
 
 /** 大廳時段（早中晚三巡）。 */
