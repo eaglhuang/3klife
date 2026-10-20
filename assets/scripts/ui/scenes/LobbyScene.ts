@@ -46,7 +46,8 @@ import { withBreedFallback, type BreedTextLookup } from '../core/BreedingTexts';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
-import { HallBoardPanelController, HALL_BOARD_MAX_ROWS, HALL_DEFAULT_PLAYER } from '../core/HallBoardPanelController';
+import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
+import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
@@ -391,7 +392,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnOpenJobChange', handler: () => { this._openJobChange(); } },
             { buttonId: 'btnOpenDomestic', handler: () => { this._openDomestic(); } },
             { buttonId: 'btnOpenHallBoard', handler: () => { this._openHallBoard(); } },
-            { buttonId: 'btnOpenSandtable', handler: () => { this._openHallBoard('Expedition'); } },
+            { buttonId: 'btnOpenSandtable', handler: () => { this._onClickOpenSandtable(); } },
         ]);
         this._refreshSeasonHud();
 
@@ -814,7 +815,7 @@ export class LobbyScene extends Component {
         this._lobbyHub = hub;
         this._hallBoard = new HallBoardPanelController({
             hub: () => hub,
-            player: () => HALL_DEFAULT_PLAYER,
+            player: () => hallPlayerOf(services().session.officerUnlocks),
             assignments: () => services().session.hallAssignments,
             leadGeneralId: () => services().session.leadGeneralId,
             assign: (taskId, generalId) => services().session.assignHallTask(taskId, generalId),
@@ -1141,6 +1142,15 @@ export class LobbyScene extends Component {
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshHallBoard();
+    }
+
+    /** 天下沙盤入口：官職未達沙盤階段（S1 起於階位 3）時只提示，不開牆 */
+    private _onClickOpenSandtable(): void {
+        if (!services().session.officerUnlocks.sandtableStage) {
+            services().event.emit('SHOW_TOAST', { message: '官職尚未達沙盤階段，暫時無法進入天下沙盤', duration: 2.5 });
+            return;
+        }
+        this._openHallBoard('Expedition');
     }
 
     private _closeHallBoard(): void {

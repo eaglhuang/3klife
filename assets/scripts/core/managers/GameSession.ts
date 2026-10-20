@@ -22,6 +22,7 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
+import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerSnapshot, type OfficerUnlocks } from '../systems/OfficerSnapshot';
 import { battleIntelligenceOf } from '../systems/BattleRoster';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
@@ -349,6 +350,7 @@ export class GameSession {
     /** 虎符卡資料（uid → 卡）；陣亡產出的卡會登記到這裡 */
     private _tallyCards: Record<string, TigerTallyCard> = {};
     /** 女性武將來源（uid → 來源，FEM-01）；戰俘女將歸入名冊時寫入（PROG-2-0245） */
+    private _officerSnapshot: OfficerSnapshot = normalizeOfficerSnapshot(null);
     private _femaleSources: Record<string, FemaleSource> = {};
     /** 轉蛋各池保底計數（PROG-2-0337）；由轉蛋服務寫入，存檔時一併保存 */
     private _gachaPity: GachaPityBook = {};
@@ -1116,6 +1118,19 @@ export class GameSession {
     /** 收藏武將 id 清單（唯讀副本）。 */
     public get favoriteGeneralIds(): readonly string[] {
         return [...this._favoriteGeneralIds];
+    }
+
+    /**
+     * 官職快照（PROG-2-0824）：官職系統（OFC-01～03）未實作，快照由呼叫端傳入。
+     * 不寫入存檔；缺欄位或壞值退回鄉里義士（階位 1）。
+     */
+    public setOfficerSnapshot(raw: unknown): void {
+        this._officerSnapshot = normalizeOfficerSnapshot(raw);
+    }
+
+    /** 目前官職解鎖（唯讀）：任務難度上限、欄位數、沙盤階段、熱點數。 */
+    public get officerUnlocks(): OfficerUnlocks {
+        return officerUnlocksOf(this._officerSnapshot);
     }
 
     /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */
