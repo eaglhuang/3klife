@@ -18,7 +18,7 @@ import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
 import { formatModeLabel } from '../../core/systems/GameClock';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
-import { seasonDisplayText } from '../core/SeasonTexts';
+import { seasonDisplayText, seasonEffectHintText } from '../core/SeasonTexts';
 import { buildYearReportTexts, withYearReportFallback, type YearReport } from '../../core/systems/YearReport';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
@@ -448,6 +448,7 @@ export class LobbyScene extends Component {
         this._seasonHudHost?.binder?.setTexts({
             seasonLabel: seasonText(time),
             modeLabel: formatModeLabel(time.currentMode),
+            seasonEffectLabel: seasonEffectHintText((key, ...args) => services().i18n.t(key, ...args), time.currentSeason),
         });
         const countdownIcon = buildCountdownIconFlowView(services().session.countdown, Date.now());
         this._seasonHudHost?.binder?.setTexts(countdownIcon.texts);
