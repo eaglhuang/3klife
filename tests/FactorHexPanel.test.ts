@@ -4,7 +4,7 @@
  * Unity 對照：像 EditMode 測試，驗 Presenter 的頂點數值、亮起判定與座標。
  */
 import { assert, TestSuite } from './TestRunner';
-import { buildFactorHexView, hexVertexPoint, newlyLitFactorColors, FACTOR_COLOR_LABELS } from '../assets/scripts/core/systems/FactorHexPanel';
+import { buildFactorHexView, factorHexInputsFromGenes, hexVertexPoint, newlyLitFactorColors, FACTOR_COLOR_LABELS } from '../assets/scripts/core/systems/FactorHexPanel';
 
 export function createFactorHexPanelSuite(): TestSuite {
     const suite = new TestSuite('FactorHexPanel (六色六角圖與解鎖特效 OPEN-08)');
@@ -50,6 +50,19 @@ export function createFactorHexPanelSuite(): TestSuite {
         const center = hexVertexPoint(3, 0, 100);
         assert.equals(0, center.x);
         assert.equals(0, center.y);
+    });
+
+    suite.test('基因轉輸入：isLocked === false 才算覺醒；判不出色系的基因略過', () => {
+        const inputs = factorHexInputsFromGenes([
+            { id: 'f1', type: 'red', isLocked: false },
+            { id: 'f2', type: 'blue', isLocked: true },
+            { id: 'f3', type: 'NOT_A_COLOR' },
+        ]);
+        assert.equals(2, inputs.length);
+        assert.equals('red', inputs[0].color);
+        assert.isTrue(inputs[0].awakened);
+        assert.equals('blue', inputs[1].color);
+        assert.isFalse(inputs[1].awakened);
     });
 
     return suite;

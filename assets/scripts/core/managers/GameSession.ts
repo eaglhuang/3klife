@@ -54,7 +54,7 @@ import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingStat
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
-import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { settleDeathTallies } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
@@ -95,6 +95,7 @@ import { buildEraResetEvent } from '../systems/EraReset';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import type { BattlePerformance } from '../systems/BattleRecordStats';
+import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
@@ -320,6 +321,8 @@ export class GameSession {
     private _leadGeneralId: string | null = null;
     /** 出征支援（參謀官 / 後勤官）；暫定只存在本次遊玩，不寫存檔 */
     private _sortieSupport: SortieSupport = { strategistUid: null, deputyUid: null };
+    /** 編制預設（DEP-14）：主將 id → 參謀官 / 後勤官，會寫入存檔 */
+    private _sortiePresets: Record<string, SortieSupport> = {};
     /** 趕路倒數（OPEN-11）；目前未存檔，讀檔後為 null。 */
     private _countdown: CountdownState | null = null;
     /** 回合制趕路（PROG-2-0475）：每季遞減，歸零即到達並清除；存檔欄位 travelCountdown。 */
@@ -901,6 +904,7 @@ export class GameSession {
         this._deck = [];
         this._leadGeneralId = null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };
+        this._sortiePresets = {};
         this._travel = null;
         this._countdown = null;
         this._discoveryLevel = 1;
@@ -1253,6 +1257,16 @@ export class GameSession {
 
     public get sortieSupport(): SortieSupport {
         return { ...this._sortieSupport };
+    }
+
+    /** 編制預設（DEP-14）的目前內容；回傳副本 */
+    public get sortiePresets(): Record<string, SortieSupport> {
+        return { ...this._sortiePresets };
+    }
+
+    /** 整批寫入編制預設（DEP-14）；存檔後會保留 */
+    public setSortiePresets(store: Readonly<Record<string, SortieSupport>>): void {
+        this._sortiePresets = { ...store };
     }
 
     /**
@@ -1772,6 +1786,9 @@ export class GameSession {
             performance: options.performance,
             vitalityAfterBattle: options.vitalityAfterBattle,
         });
+        // 新達成的里程碑發獎勵（千人斬等戰法筆記，GEN-13 / PROG-2-0817）；每個里程碑只在首次達成時發
+        const milestoneRewards = settlement.entries.flatMap((entry) => rewardsForMilestones(entry.newMilestones));
+        this._inventory = grantTacticNotes(this._inventory, milestoneRewards);
         if (settlement.entries.length === 0) {
             if ((clearChanged || firstClear || tallyChanged || comradeChanged) && this._autoSave && this._save) {
                 await this.save();
@@ -1966,6 +1983,7 @@ export class GameSession {
             bondPoints: this._bondPoints,
             femaleSystem: this.femaleSystemState,
             ...(this._travel ? { travelCountdown: { ...this._travel } } : {}),
+            sortiePresets: { ...this._sortiePresets },
         };
     }
 
@@ -2000,6 +2018,7 @@ export class GameSession {
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };
+        this._sortiePresets = normalizeSortiePresets(snapshot.sortiePresets);
         this._travel = normalizeTravelCountdown(snapshot.travelCountdown);
         this._countdown = null;
         const progress = normalizeDiscoveryProgress(snapshot.discoveryLevel, snapshot.discoveryExp);

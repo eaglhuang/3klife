@@ -6,6 +6,8 @@
 import { assert, TestSuite } from './TestRunner';
 import { buildVersionGallery, findGalleryGroup, galleryTotals, toGalleryLayoutState } from '../assets/scripts/core/systems/GeneralVersionGallery';
 import type { GeneralVersionRecord } from '../assets/scripts/core/models/GeneralVersion';
+import { validateGeneralVersions } from '../assets/scripts/core/models/GeneralVersion';
+import { deriveProvisionalVersionTable } from '../assets/scripts/core/systems/ProvisionalGeneralVersions';
 
 const TABLE: GeneralVersionRecord[] = [
     { Template_ID: 'Zhao_Yun_V3_Holy', Bloodline_ID: 'BL_ZhaoYun', Display_Name: '神聖趙雲', Version_Title: '聖光降臨', Release_Date: '2026-06-01', Is_Limited: true },
@@ -82,6 +84,25 @@ export function createGeneralVersionGalleryLayoutSuite(): TestSuite {
         assert.isFalse(state.actives.cell_0);
         assert.isFalse(state.actives.groupRow_5);
         assert.isTrue(state.actives.groupRow_1);
+    });
+    return suite;
+}
+
+export function createProvisionalGeneralVersionsSuite(): TestSuite {
+    const suite = new TestSuite('ProvisionalGeneralVersions 暫定版本表 (PROG-2-0709)');
+    suite.test('每位武將推一個 V1，通過版本表驗證，血源 ID 與 Template 名稱段一致', () => {
+        const table = deriveProvisionalVersionTable([
+            { id: 'cao-cao', name: '曹操', title: '【魏武】' },
+            { id: 'zhao_yun', name: '趙雲' },
+        ]);
+        assert.equals(JSON.stringify(['Cao_Cao_V1', 'Zhao_Yun_V1']), JSON.stringify(table.map((r) => r.Template_ID)));
+        assert.equals('BL_Cao_Cao', table[0].Bloodline_ID);
+        assert.equals('曹操', table[0].Display_Name);
+        assert.equals(JSON.stringify([]), JSON.stringify(validateGeneralVersions(table)));
+    });
+    suite.test('重複的名稱段只保留第一筆', () => {
+        const table = deriveProvisionalVersionTable([{ id: 'lu-bu', name: '呂布' }, { id: 'lu_bu', name: '呂布' }]);
+        assert.equals(1, table.length);
     });
     return suite;
 }

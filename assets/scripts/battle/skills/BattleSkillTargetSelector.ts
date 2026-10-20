@@ -27,7 +27,7 @@ export class BattleSkillTargetSelector {
       case BattleSkillTargetMode.EnemyAll:
         return context.getOpposingUnits(casterFaction);
       case BattleSkillTargetMode.EnemySingle:
-        return this.selectEnemySingleTarget(request, casterFaction, context);
+        return this.selectEnemySingleTarget(request, casterFaction, context, profile);
       case BattleSkillTargetMode.Line:
         return this.selectAutoLineTargets(request, casterFaction, profile, context);
       case BattleSkillTargetMode.Fan:
@@ -115,6 +115,7 @@ export class BattleSkillTargetSelector {
     request: BattleSkillRequest,
     casterFaction: Faction,
     context: BattleSkillExecutionContext,
+    maxRange: number | null = null,
   ): TroopUnit | null {
     if (request.targetUnitUid) {
       const explicitTarget = context.getUnit(request.targetUnitUid);
@@ -123,7 +124,14 @@ export class BattleSkillTargetSelector {
       }
     }
 
-    const enemies = context.getOpposingUnits(casterFaction);
+    let enemies = context.getOpposingUnits(casterFaction);
+    if (maxRange !== null) {
+      // 射程內才算目標：距離 = 格距（同排 lane 差 + depth 差）；施放者位置拿不到時不擋
+      const caster = context.getCasterCell?.(casterFaction) ?? null;
+      if (caster) {
+        enemies = enemies.filter((enemy) => Math.abs(enemy.lane - caster.lane) + Math.abs(enemy.depth - caster.depth) <= maxRange);
+      }
+    }
     if (!enemies.length) {
       return null;
     }
@@ -150,9 +158,26 @@ export class BattleSkillTargetSelector {
     request: BattleSkillRequest,
     casterFaction: Faction,
     context: BattleSkillExecutionContext,
+    profile: BattleSkillProfile,
   ): TroopUnit[] {
-    const anchor = this.resolveAnchorTarget(request, casterFaction, context);
+    const anchor = this.resolveAnchorTarget(request, casterFaction, context, this.skillRangeOf(profile, casterFaction, context));
     return anchor ? [anchor] : [];
+  }
+
+  /**
+   * 技能射程（G-1 百步穿楊）：施放者部隊的攻擊射程 ＋ rangeBonus。
+   * 沒有 rangeBonus、或拿不到施放者部隊位置時回傳 null（不限射程，維持原本行為）。
+   */
+  private skillRangeOf(
+    profile: BattleSkillProfile,
+    casterFaction: Faction,
+    context: BattleSkillExecutionContext,
+  ): number | null {
+    if (!profile.rangeBonus || !context.getCasterCell || !context.getCasterUnitId || !context.getUnit) return null;
+    const casterUnitId = context.getCasterUnitId(casterFaction);
+    const casterUnit = casterUnitId ? context.getUnit(casterUnitId) : null;
+    if (!casterUnit) return null;
+    return casterUnit.attackRange + profile.rangeBonus;
   }
 
   private selectAutoLineTargets(
