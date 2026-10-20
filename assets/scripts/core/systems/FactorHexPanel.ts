@@ -11,7 +11,8 @@
  *
  * Unity 對照：像一個 Presenter，把因子清單算成六個頂點數值；解鎖特效只看「前後兩次覺醒數」的差。
  */
-import { ALL_FACTOR_COLORS, DEFAULT_MAX_INHERITED_FACTORS, type FactorColor } from './FactorInheritance';
+import { ALL_FACTOR_COLORS, DEFAULT_MAX_INHERITED_FACTORS, resolveFactorColor, type FactorColor } from './FactorInheritance';
+import type { GeneralGeneConfig } from '../models/GeneralUnit';
 
 export const FACTOR_COLOR_LABELS: Readonly<Record<FactorColor, string>> = {
     blue: '藍',
@@ -69,4 +70,18 @@ export function hexVertexPoint(index: number, value: number, radius: number): { 
     const angle = (-Math.PI / 2) + (index * Math.PI * 2) / ALL_FACTOR_COLORS.length;
     const r = radius * Math.max(0, Math.min(1, value));
     return { x: Math.round(Math.cos(angle) * r * 100) / 100, y: Math.round(Math.sin(angle) * r * 100) / 100 };
+}
+
+/**
+ * 把武將的基因清單轉成六角圖的輸入。isLocked === false 才算已覺醒（與 FactorAwakening 同義）；
+ * 色系依 resolveFactorColor 判定，判不出色系（例如隱藏因子）的基因不參與六角圖。
+ */
+export function factorHexInputsFromGenes(genes: readonly GeneralGeneConfig[]): FactorHexInput[] {
+    const inputs: FactorHexInput[] = [];
+    for (const gene of genes) {
+        const color = resolveFactorColor(gene.id ?? '', undefined, gene);
+        if (!color) continue;
+        inputs.push({ color, awakened: gene.isLocked === false });
+    }
+    return inputs;
 }
