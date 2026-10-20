@@ -1,7 +1,9 @@
 import { TroopType, Faction } from '../assets/scripts/core/config/Constants';
 import { buildTallyCardCatalog } from '../assets/scripts/core/config/TallyCardCatalog';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { applyTallyPassive } from '../assets/scripts/battle/shared/TallyPassive';
+import { applyTallyPassive, extraAttackHitsOf } from '../assets/scripts/battle/shared/TallyPassive';
+import { BattleCombatResolver } from '../assets/scripts/battle/runtime/BattleCombatResolver';
+import { GAME_CONFIG } from '../assets/scripts/core/config/Constants';
 import { TestSuite, assert } from './TestRunner';
 
 function cavalry(attackRange: number): TroopUnit {
@@ -31,12 +33,49 @@ export function createTallyPassiveSuite(): TestSuite {
     assert.equals(1, unit.attackRange);
   });
 
+  suite.test('梟姬卡目錄：弓兵、SR、攻擊時觸發', () => {
+    const card = buildTallyCardCatalog().get('tiger-tally-jiao-ji');
+    assert.isDefined(card);
+    assert.equals('archer', card!.unitType);
+    assert.equals('SR', card!.rarityLabel);
+    assert.equals('on-attack', card!.timing);
+  });
+
   suite.test('白馬卡目錄：騎兵、SSR、戰鬥開始時觸發', () => {
     const card = buildTallyCardCatalog().get('tiger-tally-bai-ma');
     assert.isDefined(card);
     assert.equals('cavalry', card!.unitType);
     assert.equals('SSR', card!.rarityLabel);
     assert.equals('start-of-battle', card!.timing);
+  });
+
+  suite.test('結姻連射：梟姬與男性武將相鄰時攻擊次數 +1，否則 0', () => {
+    const unit = new TroopUnit('archer', TroopType.Archer, Faction.Player, { hp: 80, attack: 30, defense: 15 });
+    unit.tallyTemplateId = 'tiger-tally-jiao-ji';
+    assert.equals(1, extraAttackHitsOf(unit, true));
+    assert.equals(0, extraAttackHitsOf(unit, false));
+  });
+
+  suite.test('結姻連射：沒有此被動的部隊不因相鄰而多打', () => {
+    const unit = cavalry(1);
+    unit.tallyTemplateId = 'tiger-tally-cavalry-shock';
+    assert.equals(0, extraAttackHitsOf(unit, true));
+  });
+
+  suite.test('結姻連射相鄰判定：只有主將男性且站在主將前一排才算', () => {
+    const resolver = (general: { gender?: string } | null) => new BattleCombatResolver({
+      state: { getGeneral: () => general },
+    } as any);
+    const archer = (depth: number) => {
+      const unit = new TroopUnit('archer', TroopType.Archer, Faction.Player, { hp: 80, attack: 30, defense: 15 });
+      unit.moveTo(0, depth);
+      return unit;
+    };
+    const male = resolver({ gender: '男' }) as any;
+    assert.isTrue(male.isAdjacentToMaleGeneral(archer(GAME_CONFIG.GRID_DEPTH - 1)));
+    assert.isFalse(male.isAdjacentToMaleGeneral(archer(GAME_CONFIG.GRID_DEPTH - 2)));
+    const female = resolver({ gender: '女' }) as any;
+    assert.isFalse(female.isAdjacentToMaleGeneral(archer(GAME_CONFIG.GRID_DEPTH - 1)));
   });
 
   return suite;

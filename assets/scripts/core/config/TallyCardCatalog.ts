@@ -260,6 +260,43 @@ export function buildTallyCardCatalog(): Map<string, TallyCardData> {
         timing: 'start-of-battle' as BattleSkillTiming,
       },
     },
+    {
+      type: TroopType.Archer,
+      name: '巾幗軍',
+      sub: '弩射女兵',
+      rarity: 'rare',
+      rarityLabel: 'SR',
+      stars: '★★',
+      artResource: resolveTallyCardArtResource(TroopType.Archer),
+      traits: ['連射', '協同'],
+      traitDetails: [
+        { label: '連射', detail: '弓兵射擊的節奏快，同一目標可被多次命中。' },
+        { label: '協同', detail: '身旁有主將的男性武將時，火力配合更緊密。' },
+      ],
+      abilities: ['結姻連射'],
+      abilityDetails: [
+        { name: '結姻連射', detail: '與男性武將相鄰時，每次攻擊次數 +1。戰鬥中每次攻擊判定。' },
+      ],
+      source: {
+        faction: '蜀',
+        origin: '孫尚香麾下巾幗軍',
+        sourceType: '死亡傳承虎符',
+        obtainHint: '孫尚香死亡結算後取得。',
+      },
+      lore: {
+        title: '結姻連射',
+        summary: '以弓弩與婚盟凝聚的女子親衛。',
+        body: '巾幗軍的虎符象徵同盟之義，持有者的弓手與男性主將並肩時，箭矢會更密。',
+      },
+      desc: '與男性武將並肩時，射擊次數更多。',
+      tacticMeta: {
+        tacticId: 'tiger-tally-jiao-ji',
+        battleSkillId: 'tiger-passive-jiao-ji',
+        sourceType: 'tiger-tally' as SkillSourceType,
+        targetMode: 'self' as BattleSkillTargetMode,
+        timing: 'on-attack' as BattleSkillTiming,
+      },
+    },
   ];
 
   const TROOP_DEFAULTS: Record<string, { hp: number; attack: number; defense: number; moveRange: number }> = {
