@@ -28,6 +28,7 @@ import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, r
 import type { NurtureAction, NurtureRoundLog } from '../systems/NurtureSystem';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
+import { advanceDaughtersOneYear, assignDaughterRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
 import { GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
 import { buildYearReport, YearReport } from '../systems/YearReport';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
@@ -583,6 +584,54 @@ export class GameSession {
     }
 
     /** 轉蛋各池保底計數（唯讀副本） */
+    /** 子嗣女兒清單（唯讀副本，FEM-06） */
+    public get daughters(): DaughterRecord[] {
+        return [...this.femaleSystemState.daughters];
+    }
+
+    /** 新增一位子嗣女兒；id 重複回傳 false、不改狀態。 */
+    public async addDaughter(record: DaughterRecord): Promise<boolean> {
+        const current = this.femaleSystemState;
+        if (current.daughters.some((d) => d.id === record.id)) return false;
+        this._femaleSystem = { ...current, daughters: [...current.daughters, { ...record }] };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return true;
+    }
+
+    /** 女兒滿 14 歲後選路線；成功才寫回並存檔，失敗回傳原因且不改狀態。 */
+    public async assignDaughterRouteFor(daughterId: string, route: DaughterRoute): Promise<AssignDaughterResult | { ok: false; reason: 'NOT_FOUND' }> {
+        const current = this.femaleSystemState;
+        const target = current.daughters.find((d) => d.id === daughterId);
+        if (!target) return { ok: false, reason: 'NOT_FOUND' };
+        const result = assignDaughterRoute(target, route);
+        if (!result.ok) return result;
+        this._femaleSystem = {
+            ...current,
+            daughters: current.daughters.map((d) => (d.id === daughterId ? result.daughter : d)),
+        };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
+    }
+
+    /**
+     * 年度掛點（FEM-06）：女兒每年長一歲，回傳本年剛滿 14 歲的女兒（給 UI 排分流提示）。
+     * 年末事件（YearEnded）接上後由它呼叫；本函式只改女兒年齡，不發事件。
+     */
+    public async onYearAdvanced(): Promise<DaughterRecord[]> {
+        const current = this.femaleSystemState;
+        const { daughters, newlyOfAge } = advanceDaughtersOneYear(current.daughters);
+        if (daughters.length === 0) return newlyOfAge;
+        this._femaleSystem = { ...current, daughters };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return newlyOfAge;
+    }
+
     /** 女性來源系統狀態的唯讀副本（傭兵池／救美刷新時間、送禮好感） */
     public get femaleSystemState(): FemaleSystemState {
         return normalizeFemaleSystemState(this._femaleSystem);
