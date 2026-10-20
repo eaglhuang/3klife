@@ -36,6 +36,7 @@ import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw
 import { SAVE_VERSION_LATEST, saveVersionOf } from '../storage/SaveVersion';
 import { normalizeYearAgingEvents } from '../systems/YearReport';
 import type { AgingEvent } from '../systems/GeneralAging';
+import { mapSnapshotToSixTables } from './PlayerSaveTableRows';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
@@ -412,6 +413,7 @@ function normalizePendingLifespanDeaths(value: unknown): PendingLifespanDeath[] 
 
 export class PlayerSaveService {
     private _ready: Promise<void> | null = null;
+    private _lastSixTableErrors: readonly string[] = [];
 
     constructor(private readonly _adapter: DataStorageAdapter, private readonly _key: string = PLAYER_SAVE_KEY) {}
 
@@ -419,9 +421,16 @@ export class PlayerSaveService {
         return this._adapter.adapterName;
     }
 
+    /** 最近一次存檔時六表列驗證的錯誤（MVP-12）；只回報，不阻擋存檔 */
+    public lastSixTableErrors(): readonly string[] {
+        return this._lastSixTableErrors;
+    }
+
     public async save(snapshot: PlayerSaveSnapshot): Promise<void> {
         await this._ensureReady();
-        await this._adapter.set(this._key, validatePlayerSaveSnapshot(snapshot));
+        const validated = validatePlayerSaveSnapshot(snapshot);
+        this._lastSixTableErrors = mapSnapshotToSixTables(validated).errors;
+        await this._adapter.set(this._key, validated);
     }
 
     /** 沒有存檔時回傳 null；有存檔但格式錯誤時拋錯 */
