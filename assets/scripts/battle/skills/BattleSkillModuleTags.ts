@@ -20,3 +20,23 @@ export function damageModuleTagOf(
 ): BattleSkillDamageModuleTag | null {
   return DAMAGE_MODULE_BY_TARGET_MODE[profile.targetMode] ?? null;
 }
+
+/**
+ * 狀態類戰法的規格代號（SYS-SKILL-TAC-0002 第一片，PROG-2-0586）。
+ * THEAL 治療、TBUFF 增益（士氣等）、TDEBUFF 減益（緩速、DOT）。
+ * 只看效果種類，不改既有的 buff／heal／debuff 結算。
+ */
+export type BattleSkillStatusModuleTag = 'THEAL' | 'TBUFF' | 'TDEBUFF';
+
+const STATUS_MODULE_BY_EFFECT_KIND: Partial<Record<string, BattleSkillStatusModuleTag>> = {
+  heal: 'THEAL',
+  morale: 'TBUFF',
+  slow: 'TDEBUFF',
+  dot: 'TDEBUFF',
+};
+
+export function statusModuleTagOf(
+  profile: Pick<BattleSkillProfile, 'effectKind'>,
+): BattleSkillStatusModuleTag | null {
+  return profile.effectKind ? (STATUS_MODULE_BY_EFFECT_KIND[profile.effectKind] ?? null) : null;
+}
