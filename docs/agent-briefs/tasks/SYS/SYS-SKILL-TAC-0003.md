@@ -42,10 +42,10 @@ notes: "位移、推擠、地格狀態是 battle board 的核心差異化能力�
 - [ ] `騎射合一` (TMOVE+TDIR+TCOND, 虎符 G-1) — 移動後遠程攻擊
 - [ ] `精銳突擊` (TMOVE+TLINE, 虎符 G-1) — 直線衝鋒移動段
 - [ ] `七進七出` (TMOVE+TSTEALTH, 虎符 G-1) — Ghost_Move 穿透路徑
-- [ ] `長坂雄咆` (TPUSH 段, 虎符 G-1) — 3×3 強制擊退
+- [x] `長坂雄咆` (TPUSH 段, 虎符 G-1) — 3×3 強制擊退（PROG-2-0795 驗證）
 - [ ] `無雙亂舞` (TPUSH 段, 虎符 G-1) — 周身 8 格擊退
 - [ ] `火計連環` (TTILE 段, 虎符 G-1) — 目標格+周邊格化為 HAZARD_FIRE
-- [ ] `火神狩獵` (TPUSH+TTILE, 虎符 G-1) — 擊退後點火格
+- [x] `火神狩獵` (TPUSH+TTILE, 虎符 G-1) — 擊退後點火格（PROG-2-0771）
 - [-] `八陣圖` (TTILE 段, 教官 G-2) — 3×3 Def_Up tile buff，進行中
 - [-] `空城計` (TPUSH+TCOND, 教官 G-2) — 智力判定強推，進行中
 - [x] `火計佈陣` (TTILE+TDIR+TCOND, 初始庫 G-5) — 已落地
