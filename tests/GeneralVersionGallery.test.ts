@@ -4,7 +4,7 @@
  * Unity 對照：像 EditMode 測試，逐條驗 ViewModel 的分組、進度文字與排序。
  */
 import { assert, TestSuite } from './TestRunner';
-import { buildVersionGallery, findGalleryGroup, galleryTotals } from '../assets/scripts/core/systems/GeneralVersionGallery';
+import { buildVersionGallery, findGalleryGroup, galleryTotals, toGalleryLayoutState } from '../assets/scripts/core/systems/GeneralVersionGallery';
 import type { GeneralVersionRecord } from '../assets/scripts/core/models/GeneralVersion';
 
 const TABLE: GeneralVersionRecord[] = [
@@ -59,5 +59,29 @@ export function createGeneralVersionGallerySuite(): TestSuite {
         assert.equals(null, findGalleryGroup(groups, 'BL_NOPE'));
     });
 
+    return suite;
+}
+
+export function createGeneralVersionGalleryLayoutSuite(): TestSuite {
+    const suite = new TestSuite('GeneralVersionGallery 版面狀態 (PROG-2-0708)');
+    suite.test('左欄列血源與進度；選中血源時右欄列版本格與狀態', () => {
+        const groups = buildVersionGallery(TABLE, new Set(['Zhao_Yun_V1']));
+        const state = toGalleryLayoutState(groups, 'BL_ZhaoYun');
+        assert.equals('收集 1/2', state.texts.groupProgress_1);
+        assert.isTrue(state.actives.groupSelected_1);
+        assert.equals('趙雲', state.texts.groupName_1);
+        assert.equals('已擁有', state.texts.cellState_0);
+        assert.equals('未收集', state.texts.cellState_1);
+        assert.isTrue(state.actives.cellLimited_1);
+        assert.isFalse(state.actives.cell_2);
+    });
+    suite.test('沒有選中或槽位不足時不顯示多餘列', () => {
+        const groups = buildVersionGallery(TABLE, new Set());
+        const state = toGalleryLayoutState(groups, null);
+        assert.equals('', state.texts.selectedName);
+        assert.isFalse(state.actives.cell_0);
+        assert.isFalse(state.actives.groupRow_5);
+        assert.isTrue(state.actives.groupRow_1);
+    });
     return suite;
 }

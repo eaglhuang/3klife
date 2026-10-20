@@ -303,6 +303,8 @@ export interface GeneralConfig {
   ep?: number;
   epRating?: string;
   bloodlineId?: string;
+  /** 血脈歸宗：已被移植給其他版本的因子 id（V2 側的「已歸宗」）；缺欄位視為空（舊檔相容） */
+  mergedOutFactors?: string[];
   /** 將階 General_Rank 0~5（TERM-03）；缺欄位視為 0，Command_Capacity 用 */
   generalRank?: number;
   /** 名聲 General_Fame（TERM-03）；暫定直接作為 Command_Capacity 的名聲加成，缺欄位視為 0 */
