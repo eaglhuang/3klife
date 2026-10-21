@@ -67,9 +67,9 @@ export function createForcedMoveKillE2ESuite(): TestSuite {
         mover.takeDamage(mover.maxHp - 1);
         put(ctrl, troop('wall', Faction.Enemy, 2, 2));
         const died: string[] = [];
-        const off = services().event.on(EVENT_NAMES.UnitDied, (payload: { unitId: string }) => { died.push(payload.unitId); });
+        const off = services().event.on(EVENT_NAMES.UnitDied, (payload?: { unitId: string }) => { if (payload) died.push(payload.unitId); });
         const moved: number[] = [];
-        const offMoved = services().event.on(EVENT_NAMES.UnitMoved, (payload: { unitId: string; depth: number }) => { if (payload.unitId === 'mover') moved.push(payload.depth); });
+        const offMoved = services().event.on(EVENT_NAMES.UnitMoved, (payload?: { unitId: string; depth: number }) => { if (payload && payload.unitId === 'mover') moved.push(payload.depth); });
         ctrl.resolvePlayerTurn();
         off();
         offMoved();
