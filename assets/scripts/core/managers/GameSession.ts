@@ -1313,6 +1313,8 @@ export class GameSession {
         const assigned = await this.assignHallTask(task.Task_ID, generalId);
         if (!assigned) return { ok: false, reason: 'NO_GENERAL' };
         this.settleHallMission(result.outcome);
+        // 任務結束：同一任務若有未結算的委任紀錄，一併結清（PROG-2-1008）
+        await this.settleHallAssign(task.Task_ID, result.outcome.success ? 'success' : 'failure', new Date().toISOString());
         return result;
     }
 
