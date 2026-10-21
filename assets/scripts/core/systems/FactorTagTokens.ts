@@ -45,7 +45,7 @@ export function parseFactorTagColors(raw: unknown): Readonly<Record<FactorColor,
 /**
  * 暫定色碼（藍 粉 綠 紫 白 紅）。
  * 與 uid-design-tokens.json 的 factorTagColors 必須一致（tests/FactorTagTokens.test.ts 會比對）；
- * 因 cc 端尚未在載入時注入 JSON，runtime 先用這份常數。
+ * LoadingScene 載入 JSON 成功時會以 applyFactorTagTokens 覆蓋；失敗則沿用這份常數。
  */
 export const FACTOR_TAG_COLORS: Readonly<Record<FactorColor, string>> = {
     blue: '#50A0FF',
@@ -55,6 +55,23 @@ export const FACTOR_TAG_COLORS: Readonly<Record<FactorColor, string>> = {
     white: '#F0F0F0',
     red: '#E65046',
 };
+
+let activeFactorTagColors: Readonly<Record<FactorColor, string>> = FACTOR_TAG_COLORS;
+
+/**
+ * 載入 uid-design-tokens.json 後套用色碼；格式不合時保留目前色碼（預設為常數）並回傳 false。
+ */
+export function applyFactorTagTokens(raw: unknown): boolean {
+    const parsed = parseFactorTagColors(raw);
+    if (!parsed) return false;
+    activeFactorTagColors = parsed;
+    return true;
+}
+
+/** 目前生效的因子色碼：JSON 套用後用 JSON，否則用常數。 */
+export function factorTagColorOf(color: FactorColor): string {
+    return activeFactorTagColors[color];
+}
 
 /** 查語系表取標籤文字；查不到時退回 key 本身，避免畫面空白。 */
 export function factorTagText(color: FactorColor, lookup: (key: string) => string | undefined): string {

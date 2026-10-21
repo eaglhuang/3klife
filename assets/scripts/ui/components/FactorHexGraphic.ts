@@ -10,18 +10,15 @@
 import { _decorator, Color, Component, Graphics, Node, tween, UITransform, Vec3 } from 'cc';
 import { FactorHexVertex, hexVertexPoint } from '../../core/systems/FactorHexPanel';
 import type { FactorColor } from '../../core/systems/FactorInheritance';
+import { factorTagColorOf } from '../../core/systems/FactorTagTokens';
 
 const { ccclass } = _decorator;
 
-/** 暫定色票：藍 粉 綠 紫 白 紅 */
-const VERTEX_COLORS: Readonly<Record<FactorColor, Color>> = {
-    blue: new Color(80, 160, 255, 255),
-    pink: new Color(255, 140, 190, 255),
-    green: new Color(110, 200, 120, 255),
-    purple: new Color(170, 120, 230, 255),
-    white: new Color(240, 240, 240, 255),
-    red: new Color(230, 80, 70, 255),
-};
+/** 色票由 uid-design-tokens.json（經 factorTagColorOf）提供，這裡只把 #RRGGBB 轉成 Color。 */
+function vertexColorOf(color: FactorColor): Color {
+    const hex = parseInt(factorTagColorOf(color).slice(1), 16);
+    return new Color((hex >> 16) & 255, (hex >> 8) & 255, hex & 255, 255);
+}
 const MASK_COLOR = new Color(110, 110, 110, 255);
 const RING_LEVELS = [0.25, 0.5, 0.75, 1];
 const FLASH_DURATION_SEC = 0.4;
@@ -96,7 +93,7 @@ export class FactorHexGraphic extends Component {
             }
             if (!vertices[i].lit) continue;
             const p = valuePoints[i];
-            g.fillColor = VERTEX_COLORS[vertices[i].color];
+            g.fillColor = vertexColorOf(vertices[i].color);
             g.circle(p.x, p.y, 5);
             g.fill();
         }
@@ -116,7 +113,7 @@ export class FactorHexGraphic extends Component {
             flash.parent = this.node;
             flash.setPosition(p.x, p.y, 0);
             const g = flash.addComponent(Graphics);
-            g.fillColor = VERTEX_COLORS[color];
+            g.fillColor = vertexColorOf(color);
             g.circle(0, 0, 8);
             g.fill();
             flash.setScale(new Vec3(0.5, 0.5, 1));

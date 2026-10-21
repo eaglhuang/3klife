@@ -5,7 +5,7 @@
  * 色碼六個且互不相同；查不到文案時退回 key；uid-design-tokens.json 可解析且與常數一致。
  */
 import { assert, TestSuite } from './TestRunner';
-import { FACTOR_TAG_COLORS, FACTOR_TAG_I18N_KEYS, factorTagText, parseFactorTagColors } from '../assets/scripts/core/systems/FactorTagTokens';
+import { FACTOR_TAG_COLORS, FACTOR_TAG_I18N_KEYS, applyFactorTagTokens, factorTagColorOf, factorTagText, parseFactorTagColors } from '../assets/scripts/core/systems/FactorTagTokens';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -57,6 +57,16 @@ export function createFactorTagTokensSuite(): TestSuite {
         assert.isTrue(parseFactorTagColors({ factorTagColors: { blue: '#50A0FF' } }) === null);
         const bad = { factorTagColors: { ...FACTOR_TAG_COLORS, red: 'red' } };
         assert.isTrue(parseFactorTagColors(bad) === null);
+    });
+
+    suite.test('applyFactorTagTokens 合格時覆蓋色碼，不合格時保留原色碼', () => {
+        const next = { factorTagColors: { ...FACTOR_TAG_COLORS, red: '#000000' } };
+        assert.isTrue(applyFactorTagTokens(next));
+        assert.equals('#000000', factorTagColorOf('red'));
+        assert.isFalse(applyFactorTagTokens({ factorTagColors: { red: 'bad' } }));
+        assert.equals('#000000', factorTagColorOf('red'));
+        assert.isTrue(applyFactorTagTokens({ factorTagColors: FACTOR_TAG_COLORS }));
+        assert.equals(FACTOR_TAG_COLORS.red, factorTagColorOf('red'));
     });
 
     return suite;
