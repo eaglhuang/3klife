@@ -4,15 +4,22 @@
  * 每個測試都做「會話 → 快照 → JSON 往返 → 新會話還原」，驗證資料不會在存檔時丟失。
  */
 import { assert, TestSuite } from './TestRunner';
-import { GameSession } from '../assets/scripts/core/managers/GameSession';
+import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import type { PlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
+
+/** 被指派的武將必須在名冊內（PROG-2-0663）；治理存檔不含名冊，還原後的會話也要有同一批武將 */
+function withRoster(session: GameSession): GameSession {
+    session.setRosterStore(new InMemoryRosterStore(['G010', 'G045'].map((id) => ({ id, name: id, faction: 'shu', gender: '男', age: 30, hp: 1000, maxLifespan: 120 } as unknown as GeneralConfig))));
+    return session;
+}
 
 function roundTrip(snapshot: PlayerSaveSnapshot): PlayerSaveSnapshot {
     return JSON.parse(JSON.stringify(snapshot)) as PlayerSaveSnapshot;
 }
 
 function restoredFrom(source: GameSession): GameSession {
-    const restored = new GameSession(1);
+    const restored = withRoster(new GameSession(1));
     restored.restoreLifespanState(roundTrip(source.createSnapshot(new Date(0))));
     return restored;
 }
@@ -21,7 +28,7 @@ export function createGameSessionLifespanSaveSuite(): TestSuite {
     const suite = new TestSuite('GameSessionLifespanSave (PROG-2-0975 領地治理存讀檔)');
 
     suite.test('多回合：指派、失守、日誌跨存讀檔保留', async () => {
-        const session = new GameSession(1);
+        const session = withRoster(new GameSession(1));
         session.setTerritories([
             { id: 'home-city', isHome: true },
             { id: 'a', isHome: false },
@@ -51,7 +58,7 @@ export function createGameSessionLifespanSaveSuite(): TestSuite {
     });
 
     suite.test('還原後的指派仍受衝突規則限制（同一武將不可重複指派）', () => {
-        const session = new GameSession(1);
+        const session = withRoster(new GameSession(1));
         session.assignGovernor('farming', 'G010');
         const restored = restoredFrom(session);
         const dup = restored.assignGovernor('commerce', 'G010');

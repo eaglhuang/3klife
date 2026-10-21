@@ -47,7 +47,7 @@ export function createGovernanceSessionFlowE2ESuite(): TestSuite {
         assert.isTrue(session.assignGovernor(task, 'zhang').ok);
     });
 
-    suite.test('開新局與讀檔都不沿用別局記憶體裡的治理指派、領地與日誌', async () => {
+    suite.test('開新局清空治理指派與領地，讀檔再把存下的讀回來（#805 存檔後）', async () => {
         const adapter = new MemoryStorageAdapter();
         const session = setup([general('liu'), general('zhang')], adapter);
         session.startNewGame(3);
@@ -62,10 +62,9 @@ export function createGovernanceSessionFlowE2ESuite(): TestSuite {
         assert.equals(1, session.territories.length, '開新局只剩主城');
         assert.equals(2, session.lastStand.defenseMultiplier);
 
-        session.setTerritories([{ id: 'home-city', isHome: true }, { id: 'north', isHome: false }]);
-        assert.isTrue(session.assignGovernor('farming', 'liu').ok);
         assert.isTrue(await session.load());
-        assert.equals(0, session.governanceAssignments.length, '讀檔不沿用目前記憶體的指派');
+        assert.equals(1, session.governanceAssignments.length, '讀檔把存下的指派讀回來');
+        assert.equals(2, session.territories.length, '讀檔把存下的領地讀回來');
     });
 
     return suite;

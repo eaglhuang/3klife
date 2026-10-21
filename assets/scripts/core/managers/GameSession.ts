@@ -1122,7 +1122,6 @@ export class GameSession {
         // 上一局的進度不能帶進新局（PROG-2-0660）
         this._soulFragments = emptySoulFragmentLedger();
         this._pendingLifespanEvents = [];
-        this._resetGovernanceState();
         this._bondPoints = 0;
         this._borrowLedger = { records: [] };
         this._onboarding = { ...FRESH_ONBOARDING };
@@ -1362,12 +1361,6 @@ export class GameSession {
     private _governance: GovernanceAssignment[] = [];
     private _territories: KeepTerritory[] = defaultKeepTerritories();
     private _journal: JournalState = createEmptyJournal();
-
-    private _resetGovernanceState(): void {
-        this._governance = [];
-        this._territories = [{ id: HOME_TERRITORY_ID, isHome: true }];
-        this._journal = createEmptyJournal();
-    }
 
     /** 內政任務格的武將指派（唯讀副本，GOV-04）。 */
     public get governanceAssignments(): GovernanceAssignment[] {
@@ -2696,8 +2689,6 @@ export class GameSession {
         this._sandtableMarkerTerritories = normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories);
         this.restoreLifespanState(snapshot);
         this._gachaMentorJournal = normalizeGachaMentorJournal(snapshot.gachaMentorJournal);
-        // 領地治理、日誌尚未寫入存檔：讀檔時回到初始，不沿用目前記憶體裡別局的狀態（PROG-2-0663）
-        this._resetGovernanceState();
         this._hallAssignLog = normalizeHallAssignLog(snapshot.hallAssignLog);
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
