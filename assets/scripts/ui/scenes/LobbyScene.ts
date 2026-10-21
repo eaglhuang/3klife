@@ -627,6 +627,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnRetake', handler: act(() => flow.retake()) },
             { buttonId: 'btnCommitReport', handler: act(() => flow.commitReport()) },
             { buttonId: 'btnDismissReport', handler: () => { flow.dismissReport(); this._refreshNurtureFlow(); } },
+            { buttonId: 'btnViewGraduationRecord', handler: () => { this._setGraduationOpen(true); } },
         ]);
 
         const event = services().event;

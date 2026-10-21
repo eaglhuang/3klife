@@ -1263,6 +1263,33 @@
                         "styleSlot": "nurture.label.button"
                       }
                     ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnViewGraduationRecord",
+                    "id": "btnViewGraduationRecord",
+                    "widget": {
+                      "top": 210,
+                      "left": 800
+                    },
+                    "width": 420,
+                    "height": 64,
+                    "skinSlot": "nurture.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnViewGraduationRecordLabel",
+                        "id": "viewGraduationLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 56,
+                        "text": "查看紀錄",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
                   }
                 ]
               }

@@ -376,6 +376,7 @@ export class NurtureFlowController {
             btnCommitReport: false,
             btnAbandon: false,
             btnDismissReport: false,
+            btnViewGraduationRecord: false,
         };
         for (const kind of TRAINING_KINDS) enabled[`btnTrain_${kind}`] = false;
         enabled.btnAutoNurture = false;
@@ -392,6 +393,7 @@ export class NurtureFlowController {
             actives.nurturePanel = true;
             actives.reportBlock = true;
             enabled.btnDismissReport = true;
+            enabled.btnViewGraduationRecord = true;
             Object.assign(texts, buildReportTexts(this._report));
             return { mode: 'report', childId: child.id, texts, actives, enabled };
         }
