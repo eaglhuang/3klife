@@ -7,7 +7,7 @@
       "title": "整合 DS3 人物頁與 master 變更",
       "owner": "codex-gpt-6",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "started_at": "2026-10-21T07:18:00Z",
       "started_by_agent": "codex-gpt-6",
       "type": "integration",

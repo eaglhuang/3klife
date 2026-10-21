@@ -1,7 +1,7 @@
 {
   "kind": "ui-quality-task-manifest",
   "version": 1,
-  "generated": "2026-10-21T07:19:26.341Z",
+  "generated": "2026-10-21T09:12:17.314Z",
   "_note": "Thin index. Full task data is in docs/ui-quality-tasks/*.json shards.",
   "_usage": "Read specific shard: docs/ui-quality-tasks/<shard>.json",
   "_rebuild": "node tools_node/build-ui-task-manifest.js",
@@ -68,8 +68,8 @@
     }
   ],
   "summary": {
-    "done": 36,
-    "in-progress": 5,
+    "done": 37,
+    "in-progress": 4,
     "open": 17
   }
 }
