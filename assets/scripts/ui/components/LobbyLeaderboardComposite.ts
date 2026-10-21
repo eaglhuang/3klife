@@ -14,9 +14,8 @@ import {
     buildLeaderboardPanelTexts,
     buildLeaderboardRows,
     LEADERBOARD_PANEL_ROWS,
-    type LeaderboardMetric,
 } from '../../core/systems/BattleLeaderboardView';
-import type { LeaderboardSource } from '../../core/systems/BattleLeaderboard';
+import type { LeaderboardMetric, LeaderboardSource } from '../../core/systems/BattleLeaderboard';
 
 const { ccclass } = _decorator;
 
