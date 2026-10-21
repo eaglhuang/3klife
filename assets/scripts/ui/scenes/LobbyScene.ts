@@ -276,6 +276,12 @@ export class LobbyScene extends Component {
         // 抽卡結果入冊不存檔，由 batch 統一存一次（PROG-2-1003）
         enroll: (results) => {
             this._gachaEnrollResult = services().session.enrollGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true });
+            // 支援卡教官卡同批登記；實際寫入在入冊存檔後由 _applyGachaMentorJournal 補上（PROG-2-1004）
+            services().session.queueGachaMentorDraw({
+                drawn: results.map((entry) => entry.general),
+                time: { ...services().session.gameTime },
+                poolId: results[0]?.poolId,
+            });
         },
         batch: (fn) => this._batchGachaSave(fn),
     }, () => services().session.randomSource());
@@ -362,6 +368,7 @@ export class LobbyScene extends Component {
         await services().ui.open(UIID.LobbyMain);
         this._openPrisonerPopupIfPending();
         this._bindSaveRecoveryToast();
+        void this._applyGachaMentorJournal();
 
         // 動態注入輕提示系統 (Toast)
         const toastNode = new Node('ToastContainer');
@@ -1993,17 +2000,31 @@ export class LobbyScene extends Component {
         }
     }
 
+    /**
+     * 把日誌裡待補的 Gacha 教官卡寫進 legacy 存檔（PROG-2-0506 PM 裁定：只有支援卡池才會產生）。
+     * 寫完一筆移除一筆並存檔；中途強關時日誌還在，下次進大廳會補寫（addMentorToHoldings 以 uid 去重，重複執行無害）。
+     */
+    private async _applyGachaMentorJournal(): Promise<void> {
+        const legacy = services().legacy;
+        if (!legacy) return;
+        const pending = services().session.gachaMentorJournal;
+        if (pending.length === 0) return;
+        try {
+            const catalog = await this._loadSupportCatalog();
+            for (const entry of pending) {
+                await legacy.addGachaMentors(entry.drawn, catalog, entry.time, entry.poolId);
+                services().session.completeGachaMentorDraw(entry.id);
+                await services().session.save();
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 補寫抽卡教官卡失敗，留待下次進大廳重試', error);
+        }
+    }
+
     /** 抽卡成功：新武將寫進名冊並存檔，重複的只提示不重複加入 */
     private async _onGachaPullSuccess(results: LocalGachaResultEntry[]): Promise<void> {
         try {
-            // 只有支援卡池抽到的支援卡武將才產生 Gacha 教官卡（PROG-2-0506，PM 裁定）
-            const catalog = await this._loadSupportCatalog();
-            await services().legacy?.addGachaMentors(
-                results.map((entry) => entry.general),
-                catalog,
-                services().session.gameTime,
-                results[0]?.poolId,
-            );
+            await this._applyGachaMentorJournal();
             const { added, duplicates, rebirths } = this._gachaEnrollResult ?? { added: [], duplicates: [], rebirths: [] };
             const parts: string[] = [];
             if (added.length > 0) {
