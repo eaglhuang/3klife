@@ -55,7 +55,8 @@ export function injectFromLedger(
     const fragment = ledger[deadUid];
     if (!fragment) return { ok: false, reason: 'NO_FRAGMENT' };
     const result = injectSoulFragment(target, fragment);
-    if (!result.ok) return { ok: false, reason: result.reason };
+    // cc 設定沒開 strictNullChecks，.ok 無法收斂 union，需手動斷言
+    if (!result.ok) return { ok: false, reason: (result as Extract<SoulInjectResult, { ok: false }>).reason };
     const next = { ...ledger };
     delete next[deadUid];
     return { ok: true, ledger: next, target: result.target, amount: result.amount };

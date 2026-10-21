@@ -924,7 +924,7 @@ export class GameSession {
             bloodlineId: target.bloodlineId ?? '',
             tp: current,
         });
-        if (!result.ok) return { ok: false, reason: result.reason };
+        if (!result.ok) return { ok: false, reason: (result as { ok: false; reason: 'NO_FRAGMENT' | 'SAME_TEMPLATE' | 'BLOODLINE_MISMATCH' }).reason };
         this._soulFragments = result.ledger;
         const next = [...roster];
         next[index] = { ...target, totalTp: result.target.tp } as GeneralConfig;
