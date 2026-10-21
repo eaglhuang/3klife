@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-21T09-08-45-882Z-scope-amendment-dd5776edb6c0",
+  "taskId": "TASK-UI-9002",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/TASK-UI-9002.json",
+  "taskSha256": "sha256:8e528974026b7683e15d068626f72e22997e868aa19c537f3a1086beaab439d5",
+  "createdAt": "2026-10-21T09:08:45.882Z",
+  "command": "node atm.mjs tasks scope add --task TASK-UI-9002 --actor codex-gpt-6 --add \"docs/ui-quality-todo.json,docs/agent-briefs/tasks_index.md,docs/ui-quality-tasks/TASK-UI-9002.json\" --reason \"Align active delivery authority with the existing declared UI planning projection deliverables; do not change ledger lifecycle.\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Align active delivery authority with the existing declared UI planning projection deliverables; do not change ledger lifecycle."
+  }
+}
