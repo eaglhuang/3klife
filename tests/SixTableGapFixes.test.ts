@@ -12,6 +12,7 @@ import { BreedingService } from '../assets/scripts/core/services/BreedingService
 import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { mapGeneralRows } from '../assets/scripts/core/services/PlayerSaveTableRows';
+import { childRoleOf } from '../assets/scripts/core/systems/BreedingSystem';
 import { buildFactorDictionary } from '../assets/scripts/core/systems/FactorInheritance';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import type { PlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
@@ -58,18 +59,21 @@ export function createSixTableGapFixesSuite(): TestSuite {
         assert.equals('Whatever', rows[4].status, '未知值保留原樣，讓驗證回報');
     });
 
-    suite.test('子嗣繼承父親 role；父親沒有（或不認識）role 時不寫入假值', () => {
-        const withRole = new InMemoryRosterStore([person('dad', '男', 'Commander'), person('mom', '女', 'Support')]);
-        const a = new BreedingService(withRole, new BloodlineGraph(), { random: () => 0.01, dictionary, currentSeason: () => 1 });
-        assert.equals('conceived', a.breed('dad', 'mom').outcome);
-        const kid = withRole.getAll().find((g) => g.id !== 'dad' && g.id !== 'mom') as GeneralConfig;
-        assert.equals('Combat', kid.role, '舊值 Commander 轉成規格職能 Combat');
+    suite.test('子嗣職能：先取父親；父親是 Mentor 或沒有時用母親；都不行填 Combat；永遠不是 Mentor', () => {
+        assert.equals('Combat', childRoleOf('Commander', 'Support'), '父親 Commander → Combat');
+        assert.equals('Combat', childRoleOf('Support', 'Warrior'), '父親 Support(Mentor) → 改用母親');
+        assert.equals('Combat', childRoleOf('Support', 'Support'), '雙 Mentor → Combat');
+        assert.equals('Combat', childRoleOf(undefined, undefined), '都沒有 → Combat');
+        assert.equals('Combat', childRoleOf('不認識', 'Mentor'));
+        assert.equals('Combat', childRoleOf(undefined, 'Noble'), '父親沒有 → 母親 Noble→Combat');
+    });
 
-        const noRole = new InMemoryRosterStore([person('dad2', '男', undefined), person('mom2', '女', 'Support')]);
-        const b = new BreedingService(noRole, new BloodlineGraph(), { random: () => 0.01, dictionary, currentSeason: () => 1 });
-        assert.equals('conceived', b.breed('dad2', 'mom2').outcome);
-        const kid2 = noRole.getAll().find((g) => g.id !== 'dad2' && g.id !== 'mom2') as GeneralConfig;
-        assert.isTrue(kid2.role === undefined, '不憑空補值');
+    suite.test('結緣：Support 父母生出的子嗣是 Combat，不是 Mentor', () => {
+        const store = new InMemoryRosterStore([person('dad', '男', 'Support'), person('mom', '女', 'Support')]);
+        const service = new BreedingService(store, new BloodlineGraph(), { random: () => 0.01, dictionary, currentSeason: () => 1 });
+        assert.equals('conceived', service.breed('dad', 'mom').outcome);
+        const kid = store.getAll().find((g) => g.id !== 'dad' && g.id !== 'mom') as GeneralConfig;
+        assert.equals('Combat', kid.role);
     });
 
     suite.test('真實流程：開局→結緣→子嗣開獎後存檔，六表映射零錯誤', async () => {
