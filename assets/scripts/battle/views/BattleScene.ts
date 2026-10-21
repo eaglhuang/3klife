@@ -34,6 +34,13 @@ import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureBattle
 const { ccclass, property } = _decorator;
 
 
+/** 虎符來源武將（uid）→ 模板 id；名冊找不到時回傳 null，該部隊不參與史實合攻 */
+function sourceTemplateIdOf(sourceGeneralUid: string | undefined): string | null {
+  if (!sourceGeneralUid) return null;
+  const general = PlayerRosterService.getAll().find((g) => (g as { uid?: string }).uid === sourceGeneralUid || g.id === sourceGeneralUid);
+  return general ? (general.templateId ?? general.id) : null;
+}
+
 /**
  * BattleScene — 戰鬥場景的入口元件。
  *
@@ -47,13 +54,6 @@ const { ccclass, property } = _decorator;
  * 使用方式：掛載於場景根節點，並在 Inspector 中綁定各 UI 元件。
  */
 @ccclass("BattleScene")
-/** 虎符來源武將（uid）→ 模板 id；名冊找不到時回傳 null，該部隊不參與史實合攻 */
-function sourceTemplateIdOf(sourceGeneralUid: string | undefined): string | null {
-  if (!sourceGeneralUid) return null;
-  const general = PlayerRosterService.getAll().find((g) => g.uid === sourceGeneralUid || g.id === sourceGeneralUid);
-  return general ? (general.templateId ?? general.id) : null;
-}
-
 export class BattleScene extends Component {
   // ─── UI 元件綁定 ──────────────────────────────────────────────────────────
   @property(Node)
