@@ -117,6 +117,7 @@ import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from '../systems/BattleRecordStats';
 import { buildBattleSnapshot, type BattleSnapshot } from '../systems/BattleSnapshot';
+import { leaderboardEntryOf, rankLeaderboard, type LeaderboardMetric, type LeaderboardEntry } from '../systems/BattleLeaderboard';
 import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
 import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
@@ -432,6 +433,12 @@ export class GameSession {
     /** 最近一場戰鬥的單場戰報快照（唯讀；尚未有戰鬥時為空） */
     public get lastBattleSnapshots(): readonly BattleSnapshot[] {
         return this._lastBattleSnapshots;
+    }
+
+    /** 本機戰績排行：依指定指標排序，取前 N 名（REC-11，PROG-2-0955；好友與全服尚未接） */
+    public rankBattleLeaderboard(metric: LeaderboardMetric, limit: number): LeaderboardEntry[] {
+        const entries = this._roster.getAll().map((general) => leaderboardEntryOf(general));
+        return rankLeaderboard(entries, metric, limit);
     }
 
     public get roster(): GeneralConfig[] {
