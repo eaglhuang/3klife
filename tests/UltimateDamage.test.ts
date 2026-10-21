@@ -4,7 +4,7 @@
  * 規格：ult_damage = base_power × (1 + ult_level × 0.15) × stat_modifier；
  * base_power：奧義 1~5 = 200、300、400、500、700。stat_modifier 由呼叫端傳入（規格未定）。
  */
-import { ultBasePowerOf, ultDamage } from '../assets/scripts/core/systems/UltimateDamage';
+import { ultBasePowerOf, ultDamage, ultimateAttackOf } from '../assets/scripts/core/systems/UltimateDamage';
 import { TestSuite, assert } from './TestRunner';
 
 const SPEC_BASE_POWER: Readonly<Record<string, number>> = { '1': 200, '2': 300, '3': 400, '4': 500, '5': 700 };
@@ -48,6 +48,20 @@ export function createUltimateDamageSuite(): TestSuite {
         assert.equals(0, ultDamage(200, 6, 1));
         assert.equals(0, ultDamage(200, 1, -0.5));
         assert.equals(0, ultDamage(200, 1, Number.POSITIVE_INFINITY));
+    });
+
+    suite.test('奧義攻擊基準：物理 STR、謀略 INT 依係數 屬性/100 計算；其他屬性回 null', () => {
+        const stats = { str: 100, int: 50 };
+        const near = (expected: number, actual: number | null, message: string) => {
+            assert.isTrue(actual !== null && Math.abs(expected - actual) <= 1, `${message}：預期約 ${expected}，實際 ${actual}`);
+        };
+        near(230, ultimateAttackOf(1, SPEC_BASE_POWER, 'str', stats), 'STR 係數 1.0');
+        near(115, ultimateAttackOf(1, SPEC_BASE_POWER, 'int', stats), 'INT 係數 0.5');
+        assert.equals(null, ultimateAttackOf(1, SPEC_BASE_POWER, 'cha', stats));
+        assert.equals(null, ultimateAttackOf(1, SPEC_BASE_POWER, 'lea', stats));
+        assert.equals(null, ultimateAttackOf(1, SPEC_BASE_POWER, null, stats));
+        assert.equals(null, ultimateAttackOf(1, {}, 'str', stats));
+        assert.equals(null, ultimateAttackOf(6, SPEC_BASE_POWER, 'str', stats));
     });
 
     return suite;

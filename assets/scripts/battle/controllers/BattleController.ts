@@ -19,7 +19,7 @@ import { EnemyAI } from "./EnemyAI";
 import { resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
-import { findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
+import { findUltBasePowerTable, findUltimateDamageDef, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
 import { BattleFlowStateMachine } from './BattleFlowStateMachine';
 import { BattleRuntimeOrchestrator } from '../orchestrators/BattleRuntimeOrchestrator';
 import { executeBattleCombatPhase } from '../runtime/phases/BattleCombatPhase';
@@ -193,6 +193,8 @@ export class BattleController {
       getEnemyGeneralUnitId: () => this.enemyGeneralUnitId,
       getTacticConditions: (tacticId) => this.tacticDefinitionMap.get(tacticId)?.tcond as TacticCondition[] | undefined,
       getUltimateVitalityCostPct: (ultimateId) => findUltimateVitalityCostPct(ultimateId),
+      getUltimateDamageDef: (ultimateId) => findUltimateDamageDef(ultimateId),
+      getUltBasePowerTable: () => findUltBasePowerTable(),
       isUnitActionBlocked: (unitId) => this.turnManager.isUnitActionBlockedThisTurn(unitId),
     },
     this.skillSourceTranslator,

@@ -35,3 +35,24 @@ export function ultDamage(basePower: number, ultLevel: number, statModifier: num
     if (!Number.isFinite(statModifier) || statModifier < 0) return 0;
     return basePower * (1 + ultLevel * ULT_LEVEL_DAMAGE_STEP) * statModifier;
 }
+
+/** 奧義攻擊基準的屬性除數（PM 裁定 2026-10-21：係數 = 屬性 / 100） */
+export const ULT_STAT_DIVISOR = 100;
+
+/**
+ * 奧義的攻擊基準（取代一般的 scaledAttack）。
+ * PM 裁定：物理型以 STR、謀略型以 INT 為主屬性；其他屬性（例如 cha、lea）規格未定，回 null 沿用一般傷害路徑。
+ * 基礎表查不到或等級超界也回 null。結果至少為 1。
+ */
+export function ultimateAttackOf(
+    ultLevel: number,
+    basePowerTable: Readonly<Record<string, number>>,
+    scalingStat: string | null | undefined,
+    stats: { str: number; int: number },
+): number | null {
+    const basePower = ultBasePowerOf(ultLevel, basePowerTable);
+    if (basePower === null) return null;
+    const stat = scalingStat === 'str' ? stats.str : scalingStat === 'int' ? stats.int : null;
+    if (stat === null) return null;
+    return Math.max(1, Math.floor(ultDamage(basePower, ultLevel, stat / ULT_STAT_DIVISOR)));
+}
