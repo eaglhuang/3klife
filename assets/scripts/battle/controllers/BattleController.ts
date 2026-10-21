@@ -75,6 +75,13 @@ import {
   type SortieState,
   type SortieSummary,
 } from '../../core/systems/SortieDeploy';
+import {
+  delegatePickDeploy,
+  delegateQualityOf,
+  sortDelegateCandidates,
+  type DelegateQuality,
+  type DelegateSituation,
+} from '../../core/systems/DelegateAi';
 
 /**
  * [P2-N3] 部署失敗原因：food = 糧草不足（原 dp）。
@@ -150,6 +157,8 @@ export class BattleController {
   private readonly _deployedTallyIds = new Set<string>();
   /** 出征軍勢 / 糧草帳本；null = 舊版 demo 戰鬥（不扣軍勢） */
   private sortie: SortieState | null = null;
+  /** 委任 AI 品質（PROG-2-0908）；null 為未開委任 */
+  private delegateQuality: DelegateQuality | null = null;
 
   // ─── 武將單挑系統狀態 ──────────────────────────────────────────────────
   private readonly combatResolver = new BattleCombatResolver({
@@ -360,6 +369,29 @@ export class BattleController {
       services().battle.spendFood(applied.check.cost.foodCost);
     }
     return { ok: true, unit };
+  }
+
+  /** 依我方主將智力開啟委任（PROG-2-0908）；沒有主將時關閉 */
+  public enableDelegateFromGeneral(): void {
+    const general = this.state.getGeneral(Faction.Player);
+    this.delegateQuality = general ? delegateQualityOf(general.int) : null;
+  }
+
+  public disableDelegate(): void {
+    this.delegateQuality = null;
+  }
+
+  /**
+   * 委任 AI 在指定路部署一隊（PROG-2-0908）：委任未開或沒有出征帳本時回 null。
+   * 候選依糧耗低→兵力耗低排序，挑選規則由 DelegateAi 決定，實際部署仍走 tryDeployTroop。
+   */
+  public tryDelegateDeploy(lane: number, situation: DelegateSituation = { bossTargetVisible: false }): DeployOutcome | null {
+    if (!this.delegateQuality || !this.sortie) return null;
+    this.syncSortieWithField();
+    const candidates = sortDelegateCandidates(this.sortie, DEPLOY_SUGGESTION_CANDIDATES);
+    const pick = delegatePickDeploy(this.sortie, candidates, this.delegateQuality, situation);
+    if (pick.troopType === null) return null;
+    return this.tryDeployTroop(pick.troopType as TroopType, lane);
   }
 
   /**
