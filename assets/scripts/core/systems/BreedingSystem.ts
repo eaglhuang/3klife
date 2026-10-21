@@ -15,6 +15,7 @@
  * 回傳新的 GeneralData；寫回名冊與存檔交給上層 Service（BreedingService）。
  */
 import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
+import { toCanonicalRole } from '../models/GeneralRole';
 import type { PersonRecord } from '../models/PersonRegistry';
 import { createEmptyPedigree, Pedigree, PEDIGREE_SLOTS, PedigreeSlot, pedigreeSlotGeneration } from '../services/BloodlineGraph';
 import {
@@ -469,6 +470,8 @@ export function createChild(input: CreateChildInput): BreedingGeneral {
         ep: ep.ep,
         epRating: ep.rating,
         bloodlineId: father.bloodlineId,
+        // 暫定（PM）：子嗣繼承父親的職能（轉成規格值），存檔六表 generals.role 為必填
+        ...(toCanonicalRole(father.role) ? { role: toCanonicalRole(father.role) as string } : {}),
         parentsSummary: `父：${father.name} / 母：${mother.name}`,
         genes: toGeneConfigs(input.factors, input.dictionary),
         ancestor_chain: PEDIGREE_SLOTS.map((slot) => input.pedigree[slot]).filter((uid): uid is string => !!uid),
