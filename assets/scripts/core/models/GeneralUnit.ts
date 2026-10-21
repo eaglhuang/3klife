@@ -21,6 +21,8 @@ export interface GeneralUltimateSlotConfig {
   isExclusive?: boolean;
   inheritedFromGeneId?: string | null;
   notes?: string;
+  /** 依轉數算出的解鎖狀態（PROG-2-1059 寫入存檔）；讀取時仍以 unlockReincarnation 與轉數為準 */
+  isUnlocked?: boolean;
 }
 
 export interface GeneralGeneratorProfileConfig {
