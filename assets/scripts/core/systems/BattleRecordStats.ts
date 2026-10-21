@@ -12,6 +12,8 @@
  * 戰鬥結束把累計值交給 SaveData；面板只讀 BuildRecordPanel() 的 ViewModel。
  */
 
+import type { SeasonStats } from './BattleSeasonStats';
+
 export interface BattlePerformance {
     kills: number;
     damageDealt: number;
@@ -31,6 +33,7 @@ export interface BattleRecordLike {
     totalDamage?: number;
     guardianPower?: number;
     milestones?: readonly string[];
+    season?: SeasonStats | null;
 }
 
 function nonNeg(value: number | undefined): number {
@@ -212,6 +215,7 @@ export interface BattleRecordTabText {
     stats: string;
     milestones: string;
     retire: string;
+    season: string;
 }
 
 /** 數字加千分位，傷害、守護力動輒上萬 */
@@ -220,10 +224,25 @@ function groupDigits(value: number): string {
 }
 
 /**
- * 武將詳情「戰績」分頁要顯示的五段文字（View 只負責塞進 Label）。
+ * 本賽季戰績一行（PROG-2-0956）。
+ * currentSeasonId 未知時顯示「—」；賽季 ID 對不上（上一季的殘留紀錄）或本季沒出征，都視為「尚未出征」。
+ * Unity 對照：Presenter 先比對計分表的賽季 ID 再決定顯示，過期的表不顯示。
+ */
+export function buildSeasonRecordLine(season: SeasonStats | null | undefined, currentSeasonId: string | undefined): string {
+    if (!currentSeasonId) return '本賽季：—';
+    if (!season || season.seasonId !== currentSeasonId) return '本賽季：尚未出征';
+    const wins = nonNeg(season.wins);
+    const losses = nonNeg(season.losses);
+    if (wins + losses === 0) return '本賽季：尚未出征';
+    return `本賽季：${wins}勝 ${losses}敗 斬${nonNeg(season.kills)}人`;
+}
+
+/**
+ * 武將詳情「戰績」分頁要顯示的文字（View 只負責塞進 Label）。
+ * currentSeasonId 為目前 PvP 賽季 ID（由 pvpSeasonIdOf 換算）；不傳則本賽季行顯示「—」。
  * Unity 對照：Presenter 把 ViewModel 轉成字串，MonoBehaviour 只做 label.text = ...
  */
-export function buildBattleRecordTabText(record: BattleRecordLike | null | undefined): BattleRecordTabText {
+export function buildBattleRecordTabText(record: BattleRecordLike | null | undefined, currentSeasonId?: string): BattleRecordTabText {
     const panel = buildBattleRecordPanel(record);
     return {
         career: panel.hasRecord ? panel.careerText : '尚未出征',
@@ -231,5 +250,6 @@ export function buildBattleRecordTabText(record: BattleRecordLike | null | undef
         stats: panel.rows.map((row) => `${row.label}：${groupDigits(row.value)}`).join('\n'),
         milestones: panel.milestones.length > 0 ? `里程碑：${panel.milestones.join('、')}` : '里程碑：尚未達成',
         retire: `退役評價：${panel.retireGrade}`,
+        season: buildSeasonRecordLine(record?.season, currentSeasonId),
     };
 }
