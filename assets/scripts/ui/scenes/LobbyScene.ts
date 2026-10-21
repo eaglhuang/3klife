@@ -361,6 +361,7 @@ export class LobbyScene extends Component {
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
         this._openPrisonerPopupIfPending();
+        this._bindSaveRecoveryToast();
 
         // 動態注入輕提示系統 (Toast)
         const toastNode = new Node('ToastContainer');
@@ -524,6 +525,16 @@ export class LobbyScene extends Component {
             event.on(GAME_SESSION_EVENTS.SeasonAdvanced, refresh),
             event.on(GAME_SESSION_EVENTS.CountdownChanged, refresh),
             event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+        );
+    }
+
+    /** 存檔從備份還原時提示玩家（PROG-2-1000）：文案走 i18n，事件由 GameSession.load() 發出 */
+    private _bindSaveRecoveryToast(): void {
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.LoadRecoveredFromBackup, () => {
+                const message = services().i18n.t('toast.save_recovered_from_backup');
+                services().event.emit('SHOW_TOAST', { message, duration: 3 });
+            }),
         );
     }
 

@@ -184,6 +184,7 @@
   "UI_ULTIMATE_CANCEL": "Cancel",
   "toast.sync_complete": "Sync complete",
   "toast.offline_reminder": "Offline. Reconnect to sync.",
+  "toast.save_recovered_from_backup": "Save file was corrupted and restored from the previous backup",
   "ui.style_check.title": "Ink & Steel v2.2 Style Check",
   "ui.style_check.primary": "Crimson Fire Primary Button",
   "ui.style_check.secondary": "Gilded Secondary Button",

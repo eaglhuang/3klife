@@ -2,6 +2,7 @@
 import {
   EVENT_NAMES,
   Faction,
+  GAME_CONFIG,
   TroopType,
   Weather,
   BattleTactic,
@@ -392,6 +393,39 @@ export class BattleController {
     const pick = delegatePickDeploy(this.sortie, candidates, this.delegateQuality, situation);
     if (pick.troopType === null) return null;
     return this.tryDeployTroop(pick.troopType as TroopType, lane);
+  }
+
+  /** 委任開關（PROG-2-0913）：true 依主將智力開啟，false 關閉 */
+  public setDelegateEnabled(on: boolean): void {
+    if (on) this.enableDelegateFromGeneral();
+    else this.disableDelegate();
+  }
+
+  public isDelegateEnabled(): boolean {
+    return this.delegateQuality !== null;
+  }
+
+  /**
+   * 玩家部署階段（PROG-2-0913）：敵方部署前呼叫一次；委任關閉時不做事。
+   * 路由由 pickDelegateLane 決定。
+   */
+  public runPlayerDelegateDeployPhase(): void {
+    if (!this.delegateQuality || !this.sortie) return;
+    this.tryDelegateDeploy(this.pickDelegateLane());
+  }
+
+  /** 我方存活部隊最少的那一路，同數取較小路號（PROG-2-0913 暫定） */
+  public pickDelegateLane(): number {
+    const counts: number[] = Array.from({ length: GAME_CONFIG.GRID_LANES }, () => 0);
+    for (const unit of this.state.units.values()) {
+      if (unit.faction !== Faction.Player || unit.currentHp <= 0) continue;
+      if (unit.lane >= 0 && unit.lane < counts.length) counts[unit.lane] += 1;
+    }
+    let best = 0;
+    for (let lane = 1; lane < counts.length; lane += 1) {
+      if (counts[lane] < counts[best]) best = lane;
+    }
+    return best;
   }
 
   /**
@@ -795,6 +829,7 @@ export class BattleController {
   private executeRuntimePhase(phaseName: BattleRuntimePhaseName): BattleRuntimePhaseOutcome {
     switch (phaseName) {
       case 'enemy-deploy':
+        this.runPlayerDelegateDeployPhase();
         executeBattleEnemyDeployPhase({
           state: this.state,
           enemyAi: this.enemyAi,
