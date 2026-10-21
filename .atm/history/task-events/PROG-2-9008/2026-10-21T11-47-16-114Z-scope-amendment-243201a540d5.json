@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-21T11-47-16-114Z-scope-amendment-243201a540d5",
+  "taskId": "PROG-2-9008",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/PROG-2-9008.json",
+  "taskSha256": "sha256:963af429965d1b928f6159d7b0ead5a9c247c8abc93649650d9aa112f2627a80",
+  "createdAt": "2026-10-21T11:47:16.114Z",
+  "command": "node atm.mjs tasks scope add --task PROG-2-9008 --actor codex-gpt-6 --add docs/agent-briefs/tasks/PROG/PROG-2-0136.md --reason \"Exact declared userauthorized0136 projection, preserve its completedsmallfix semantics and historicalclose\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Exact declared userauthorized0136 projection, preserve its completedsmallfix semantics and historicalclose"
+  }
+}

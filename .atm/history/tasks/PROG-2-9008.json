@@ -1,0 +1,256 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "PROG-2-9008",
+  "title": "PROG-2-9008",
+  "status": "running",
+  "milestone": null,
+  "dependencies": [],
+  "acceptance": [],
+  "deliverables": [
+    "docs/tasks/tasks-prog.json",
+    "docs/agent-briefs/tasks/PROG/PROG-2-0136.md"
+  ],
+  "scopePaths": [
+    "docs/tasks/tasks-prog.json",
+    "docs/agent-briefs/tasks/PROG/PROG-2-0136.md",
+    "docs/agent-briefs/tasks/PROG/PROG-2-9008.md",
+    ".atm/history/evidence/PROG-2-9008.*",
+    ".atm/history/task-events/PROG-2-9008/**",
+    ".atm/history/tasks/PROG-2-9008.json"
+  ],
+  "validators": [
+    "git diff --check"
+  ],
+  "planningRepo": "3klife-pr480-bd49815d",
+  "targetRepo": "3klife-pr480-bd49815d",
+  "closureAuthority": "planning_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "planningArtifacts": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "rollbackNotes": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": null,
+    "atomCid": null,
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [
+    {
+      "code": "IMPORT_BODY_SECTION_IGNORED",
+      "severity": "warning",
+      "message": "Front-matter `deliverables` key is present; body section deliverables were ignored in favour of front-matter values.",
+      "field": "deliverables"
+    },
+    {
+      "code": "ATM_TASK_IMPORT_LEGACY_VALIDATOR_PROJECTION",
+      "severity": "warning",
+      "field": "validators",
+      "message": "Command-only validators were projected to 1 advisory legacy case id(s) for migration. Prefer requiredTestCaseIds / testContributions for new cards."
+    },
+    {
+      "code": "ATM_TASK_IMPORT_EXTRACTION_FIRST_CANDIDATE",
+      "severity": "warning",
+      "field": "atomizationImpact",
+      "message": "Scope touches 1 module(s) over 600 lines but the card declares no atomizationImpact.extractionCandidates. Extraction-first is the ATM default: propose an atom/atom-map extraction (see .agents/skills/atm-atom-map-refactor), or record disposition \"inline\" with an inlineReason approved by a human.",
+      "candidates": [
+        "docs/tasks/tasks-prog.json (4044 lines)"
+      ]
+    }
+  ],
+  "tags": [],
+  "notes": "- 2026-10-21 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+  "source": {
+    "planPath": "docs/agent-briefs/tasks/PROG/PROG-2-9008.md",
+    "sectionTitle": "PROG-2-9008",
+    "headingLine": 20,
+    "hash": "78317a496f5641cd",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "/workspace/3klife-pr480-bd49815d",
+      "taskCardPath": "docs/agent-briefs/tasks/PROG/PROG-2-9008.md",
+      "planningCommitSha": null,
+      "contentDigest": "sha256:78317a496f5641cdbc7141561910f6980165d643f9957af59bfdafba17547c7d",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-10-21T11:47:13.880Z"
+    }
+  },
+  "importedAt": "2026-10-21T11:47:13.880Z",
+  "workAdmission": {
+    "recoveryMode": "auto",
+    "resolvedRecoveryMode": "disabled",
+    "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+  },
+  "causalGraph": {
+    "causalDependencies": [],
+    "startConditions": [],
+    "softRelations": [],
+    "changedPublicSeams": [],
+    "causalImpactEdges": [],
+    "parallelFrontierInputs": [],
+    "validatorReferences": [],
+    "phaseOwner": null
+  },
+  "testContributions": [],
+  "requiredTestCaseIds": [],
+  "phaseTestCaseIds": [],
+  "advisoryTestCaseIds": [],
+  "legacyValidatorProjection": [
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_git.diff.check",
+      "command": "git diff --check",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    }
+  ],
+  "dependencyClassification": {
+    "schemaId": "atm.taskDependencyClassification.v1",
+    "semantics": "legacy",
+    "edges": []
+  },
+  "frontmatterFidelity": {
+    "schemaId": "atm.taskFrontmatterFidelity.v1",
+    "specVersion": "0.1.0",
+    "ok": true,
+    "checkedFields": [],
+    "findings": []
+  },
+  "lastTransitionId": "2026-10-21T11-47-16-114Z-scope-amendment-243201a540d5",
+  "lastTransitionAt": "2026-10-21T11:47:16.114Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "owner": "codex-gpt-6",
+  "reservedAt": "2026-10-21T11:47:14.837Z",
+  "promotedAt": "2026-10-21T11:47:14.839Z",
+  "claim": {
+    "actorId": "codex-gpt-6",
+    "leaseId": "lease-321725568a3b",
+    "claimedAt": "2026-10-21T11:47:14.842Z",
+    "heartbeatAt": "2026-10-21T11:47:14.842Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/evidence/PROG-2-9008.*",
+      ".atm/history/task-events/PROG-2-9008/**",
+      ".atm/history/tasks/PROG-2-9008.json",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0136.md",
+      "docs/tasks/tasks-prog.json"
+    ],
+    "state": "active",
+    "intent": "write",
+    "laneSession": {
+      "laneSessionId": "lane-20261021114714-codex-gpt-6-34667275e6",
+      "status": "active",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261021114714-codex-gpt-6-34667275e6\""
+    }
+  },
+  "startedAt": "2026-10-21T11:47:14.842Z",
+  "startedByActor": "codex-gpt-6",
+  "workAdmissionTicket": {
+    "schemaId": "atm.workAdmissionTicket.v1",
+    "specVersion": "0.1.0",
+    "ticketId": "wat-69d8b3cbc9e36ec1",
+    "ticketDigest": "sha256:69d8b3cbc9e36ec18d2b81b34cc33f0bbd5eda38c98dced737a57ae0e6aa6859",
+    "taskId": "PROG-2-9008",
+    "origin": "claim",
+    "actorId": "codex-gpt-6",
+    "laneSessionId": "lane-20261021114714-codex-gpt-6-34667275e6",
+    "claimGeneration": "lease-321725568a3b",
+    "issuedAt": "2026-10-21T11:47:16.096Z",
+    "expiresAt": "2026-10-21T12:17:16.096Z",
+    "scopeDigest": "sha256:622823c34eb03be780e633ffab9fdda77b877c557b38a17b75742198021a68f1",
+    "runnerSelection": {
+      "runnerKind": "frozen",
+      "runnerRef": "release/atm-onefile/atm.mjs",
+      "selectedAt": "2026-10-21T11:47:16.096Z"
+    },
+    "grants": [
+      {
+        "kind": "file-write",
+        "values": [
+          ".atm/history/evidence/PROG-2-9008.*",
+          ".atm/history/task-events/PROG-2-9008/**",
+          ".atm/history/tasks/PROG-2-9008.json",
+          "docs/agent-briefs/tasks/PROG/PROG-2-0136.md",
+          "docs/tasks/tasks-prog.json"
+        ],
+        "digest": "sha256:58d8d3e1434b8452c819bfe4bff6fd714c4f817f36d82c12371194951222be5f"
+      },
+      {
+        "kind": "lifecycle-operation",
+        "values": [
+          "close",
+          "commit",
+          "push",
+          "stage",
+          "write"
+        ],
+        "digest": "sha256:a2f98ae20b476885ded7ed9f79b94ad99cf2b615779e9a8cc266680fc60f009f"
+      },
+      {
+        "kind": "process-manifest",
+        "values": [],
+        "digest": "sha256:706ceedd89f6ac8c08a76e915fa88ba979c4552a0890c95d8f9e01cc090afb8f"
+      }
+    ],
+    "deferredForeignResidue": [],
+    "recovery": {
+      "requestedMode": "auto",
+      "resolvedMode": "disabled",
+      "reasons": [
+        "low-risk-task"
+      ],
+      "maxSavePoints": 0,
+      "perTaskByteBudget": 0,
+      "repositoryByteBudget": 0,
+      "handoffTtlSeconds": 0,
+      "tempRoot": ".atm/runtime/work-admission-temp",
+      "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+    }
+  },
+  "startedBySessionId": "session-20261021114714-codex-gpt-6-PROG-2-9008-a28076800e",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "PROG-2-9008",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/PROG-2-9008.*",
+      ".atm/history/task-events/PROG-2-9008/**",
+      ".atm/history/tasks/PROG-2-9008.json",
+      "docs/agent-briefs/tasks/PROG/PROG-2-0136.md",
+      "docs/tasks/tasks-prog.json"
+    ],
+    "planningReadOnlyPaths": [
+      "/workspace/3klife-pr480-bd49815d/docs/agent-briefs/tasks/PROG/PROG-2-9008.md"
+    ],
+    "planningMirrorPaths": [
+      "docs/agent-briefs/",
+      "docs/agent-briefs/tasks/",
+      "docs/agent-briefs/tasks/PROG/",
+      "docs/agent-briefs/tasks/PROG/PROG-2-9008.md"
+    ],
+    "allowPlanningMirror": false,
+    "promptHash": "e46df6df0ca7914fb904e5fb487a0e26d0ce18486b285869b2b3da5219198ae8",
+    "actorId": "codex-gpt-6",
+    "sessionId": null,
+    "laneSession": {
+      "laneSessionId": "lane-20261021114714-codex-gpt-6-34667275e6",
+      "status": "active",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261021114714-codex-gpt-6-34667275e6\""
+    },
+    "createdAt": "2026-10-21T11:47:15.506Z",
+    "status": "active"
+  }
+}

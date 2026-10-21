@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 34,
+    "done": 35,
     "in_progress": 2,
     "open": 72,
-    "total": 108
+    "total": 109
   },
   "tasks": [
     {
@@ -4038,6 +4038,61 @@
         "artifacts/PROG-2-0168/**"
       ],
       "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0136",
+      "title": "宿命選將完成後才顯示三段式引導",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-15",
+      "created_by_agent": "codex-gpt-6",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "0133 Web 驗收發現引導提前顯示；新玩家等待宿命開局成功，既有存檔維持原行為",
+      "related": [
+        "PROG-2-0133",
+        "PROG-2-0646"
+      ],
+      "depends": [],
+      "acceptance": [
+        "intro 與宿命選將期間隱藏引導",
+        "選將成功後自動顯示",
+        "舊存檔與已完成引導不退化",
+        "行為測試與實機驗證"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/scripts/ui/core/OnboardingFlowController.ts",
+        "tests/OnboardingFlow.test.ts",
+        "artifacts/PROG-2-0136/"
+      ],
+      "notes": "2026-10-21 | 狀態: done | 驗證: 固定masterbd49815d91a5整合；focused9 passed、headless3337 passed/3 skipped、npm test passed；4項typecheck錯誤與同SHA純master相同；本次Cocos UI未執行，舊Web證據僅為歷史 | 變更: 產品整合c560d929a117；維持0136引導時序小修已完成語意並保留原close證據 | 阻塞: 本小修無新增阻塞；0120/0133完整開場、首戰與紅顏UI驗收仍獨立待辦",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
