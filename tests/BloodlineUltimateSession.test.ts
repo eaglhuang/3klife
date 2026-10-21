@@ -48,8 +48,7 @@ export function createBloodlineUltimateSessionSuite(): TestSuite {
     suite.test('awakenBloodlineUltimate：條件足夠時覺醒下一階並寫回名冊', async () => {
         const session = sessionWith(general({
             bloodlineUltimate: { stageCap: 3, stageCurrent: 1 },
-            fame: 100,
-            incidents: 1,
+            battleRecord: { wins: 100, losses: 0, milestones: ['FIRST_WIN'] },
         }));
         const result = await session.awakenBloodlineUltimate('gen_ult');
         assert.isTrue(result.ok);
@@ -61,8 +60,7 @@ export function createBloodlineUltimateSessionSuite(): TestSuite {
     suite.test('awakenBloodlineUltimate：名聲不足被擋，回傳原因且名冊不變', async () => {
         const session = sessionWith(general({
             bloodlineUltimate: { stageCap: 3, stageCurrent: 1 },
-            fame: 99,
-            incidents: 1,
+            battleRecord: { wins: 99, losses: 0, milestones: ['FIRST_WIN'] },
         }));
         const result = await session.awakenBloodlineUltimate('gen_ult');
         assert.isFalse(result.ok);

@@ -27,6 +27,7 @@
   },
   "include": [
     "@cocos/creator-types/engine.d.ts",
+    "types/cc-env.d.ts",
     "assets/scripts/**/*.ts"
   ],
   "exclude": [

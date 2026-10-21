@@ -3,7 +3,7 @@ import { _decorator, Button, Color, Component, instantiate, JsonAsset, Label, No
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
-import type { UIManagedController } from '../../core/managers/UIManager';
+import type { IUIManagedController } from '../../shared/interfaces/IUIInterfaces';
 import { SceneName } from '../../core/config/Constants';
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig, isTutorialBattle } from '../../shared/BattleEntryParams';
 import { normalizeWeather } from '../../shared/CommonEnums';
@@ -18,7 +18,7 @@ import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
 import { formatModeLabel } from '../../core/systems/GameClock';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
-import { seasonDisplayText } from '../core/SeasonTexts';
+import { seasonDisplayText, seasonEffectHintText } from '../core/SeasonTexts';
 import { buildYearReportTexts, withYearReportFallback, type YearReport } from '../../core/systems/YearReport';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
@@ -51,6 +51,8 @@ import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoard
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
+import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
+import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
 import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
 import { estimateSortiePower } from '../../core/systems/SortiePrediction';
@@ -194,6 +196,7 @@ export class LobbyScene extends Component {
     private _gachaHost: UIScreenPreviewHost | null = null;
     private _seasonHudHost: UIScreenPreviewHost | null = null;
     private _officerHudHost: UIScreenPreviewHost | null = null;
+    private _officerPageHost: UIScreenPreviewHost | null = null;
     /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
@@ -397,7 +400,12 @@ export class LobbyScene extends Component {
 
     /** 官職區塊（OFC-08 顯示段）：以 UCUF JSON（lobby-officer-hud-screen）顯示階位與經驗，資料來自 officerDisplayOf */
     private async _mountOfficerHud(): Promise<void> {
-        this._officerHudHost = await this._mountPreviewScreenHost('OfficerHudHost', 'lobby-officer-hud-screen', []);
+        this._officerPageHost = await this._mountPreviewScreenHost('OfficerPageHost', 'lobby-officer-page-screen', [
+            { buttonId: 'btnCloseOfficerPage', handler: () => this._setOfficerPageOpen(false) },
+        ]);
+        this._officerHudHost = await this._mountPreviewScreenHost('OfficerHudHost', 'lobby-officer-hud-screen', [
+            { buttonId: 'btnOpenOfficerPage', handler: () => this._setOfficerPageOpen(true) },
+        ]);
         this._refreshOfficerHud();
         const refresh = (): void => { this._refreshOfficerHud(); };
         this._sessionEventUnsubscribers.push(
@@ -412,12 +420,24 @@ export class LobbyScene extends Component {
     }
 
     private _refreshOfficerHud(): void {
-        const display = officerDisplayOf(services().session.officerState);
+        const state = services().session.officerState;
+        const display = officerDisplayOf(state);
         this._officerHudHost?.binder?.setTexts({
             officerTitle: display.sectionTitle,
             officerRank: display.rankName,
             officerExp: display.expLabel,
         });
+        const lookup = (key: string, ...args: string[]): string => services().i18n.t(key, ...args);
+        this._officerPageHost?.binder?.setTexts({
+            officerPageTitle: officerPageTitleText(lookup, display.rankName),
+            officerPermissionText: officerPermissionLinesOf(officerPermissionsOf(state), lookup).join('\n'),
+        });
+    }
+
+    /** 官職詳情頁：由官職區塊的按鈕打開，關閉鈕收起；頁面內容每次打開前都依最新官職狀態重算 */
+    private _setOfficerPageOpen(open: boolean): void {
+        if (open) this._refreshOfficerHud();
+        if (this._officerPageHost) this._officerPageHost.node.active = open;
     }
 
     /** 季度 HUD：以 UCUF JSON（lobby-season-hud-screen）執行期組裝，顯示「第 N 年 M 季」與推進入口 */
@@ -448,6 +468,7 @@ export class LobbyScene extends Component {
         this._seasonHudHost?.binder?.setTexts({
             seasonLabel: seasonText(time),
             modeLabel: formatModeLabel(time.currentMode),
+            seasonEffectLabel: seasonEffectHintText((key, ...args) => services().i18n.t(key, ...args), time.currentSeason),
         });
         const countdownIcon = buildCountdownIconFlowView(services().session.countdown, Date.now());
         this._seasonHudHost?.binder?.setTexts(countdownIcon.texts);
@@ -2267,7 +2288,7 @@ export class LobbyScene extends Component {
         services().ui.register(UIID.LobbyMissionDetailDialog, missionDetailDialogController);
     }
 
-    private _createEliteTroopCodexController(): UIManagedController {
+    private _createEliteTroopCodexController(): IUIManagedController {
         if (!this._eliteTroopCodexPanel) {
             throw new Error('[LobbyScene] EliteTroopCodexComposite 尚未初始化，無法註冊至 UIManager');
         }
@@ -2283,7 +2304,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createLobbyMissionDetailDialogController(): UIManagedController {
+    private _createLobbyMissionDetailDialogController(): IUIManagedController {
         if (!this._missionDetailDialogPanel) {
             throw new Error('[LobbyScene] LobbyMissionDetailDialogComposite cannot be registered before mount');
         }
@@ -2315,7 +2336,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createGeneralDetailController(): UIManagedController {
+    private _createGeneralDetailController(): IUIManagedController {
         if (!this._detailPanel) {
             throw new Error('[LobbyScene] GeneralDetailComposite 尚未初始化，無法註冊至 UIManager');
         }
@@ -2340,7 +2361,7 @@ export class LobbyScene extends Component {
         host: UIScreenPreviewHost | null,
         screenId: string,
         onShown?: () => void,
-    ): UIManagedController {
+    ): IUIManagedController {
         if (!host) {
             throw new Error(`[LobbyScene] ${screenId} host 尚未初始化，無法註冊至 UIManager`);
         }
@@ -2359,7 +2380,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createSpiritFamilyOverviewController(): UIManagedController {
+    private _createSpiritFamilyOverviewController(): IUIManagedController {
         if (!this._spiritFamilyOverviewHost) {
             throw new Error('[LobbyScene] SpiritFamilyOverviewHost 尚未初始化，無法註冊至 UIManager');
         }
@@ -2606,7 +2627,7 @@ export class LobbyScene extends Component {
         });
     }
 
-    private _createLobbyMainController(): UIManagedController {
+    private _createLobbyMainController(): IUIManagedController {
         if (!this._lobbyMainHost) {
             throw new Error('[LobbyScene] LobbyMainHost 尚未初始化，無法註冊至 UIManager');
         }
@@ -2655,7 +2676,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createGeneralListController(): UIManagedController {
+    private _createGeneralListController(): IUIManagedController {
         if (!this._listPanel) {
             throw new Error('[LobbyScene] GeneralListComposite 尚未初始化，無法註冊至 UIManager');
         }
@@ -2708,7 +2729,7 @@ export class LobbyScene extends Component {
 
     private async _showGeneralListWithHandler(
         onSelectGeneral: (config: GeneralConfig) => void | Promise<void>,
-        options: { factionFilter?: 'all' | 'player' | 'enemy'; npcDialogueDevControls?: boolean } = { factionFilter: 'all' },
+        options: NonNullable<GeneralListOpenPayload['options']> = { factionFilter: 'all' },
     ): Promise<void> {
         await services().ui.open(UIID.GeneralList, {
             generals: this._generals,
@@ -2843,8 +2864,9 @@ export class LobbyScene extends Component {
         const inputs = factorHexInputsFromGenes(config.genes ?? []);
         const before = this._factorHexInputsByGeneral.get(config.id);
         const freshColors = before ? newlyLitFactorColors(before, inputs) : [];
-        graphic.render(buildFactorHexView(inputs));
-        graphic.playUnlockFlash(freshColors);
+        const visibleColors = services().session.visibleFactorColors();
+        graphic.render(buildFactorHexView(inputs), visibleColors);
+        graphic.playUnlockFlash(freshColors.filter((color) => visibleColors.includes(color)));
         this._factorHexInputsByGeneral.set(config.id, inputs);
     }
 

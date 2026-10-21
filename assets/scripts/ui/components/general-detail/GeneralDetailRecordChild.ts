@@ -15,6 +15,8 @@ import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { GeneralConfig } from '../../../core/models/GeneralUnit';
 import type { BattleRecord } from '../../../core/systems/BattleRoster';
 import { buildBattleRecordTabText } from '../../../core/systems/BattleRecordStats';
+import { pvpSeasonIdOf } from '../../../core/systems/BattleSeasonStats';
+import { services } from '../../../core/managers/ServiceLoader';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 
 type RecordCarrier = GeneralConfig & { battleRecord?: BattleRecord };
@@ -47,8 +49,8 @@ export class GeneralDetailRecordChild extends ChildPanelBase {
 
     onDataUpdate(data: unknown): void {
         this._lastData = data as RecordCarrier;
-        const text = buildBattleRecordTabText(this._lastData?.battleRecord);
-        this._set(this._lCareer, text.career);
+        const text = buildBattleRecordTabText(this._lastData?.battleRecord, this._currentSeasonId());
+        this._set(this._lCareer, `${text.career}\n${text.season}`);
         this._set(this._lWinRate, text.winRate);
         this._set(this._lStats, text.stats);
         this._set(this._lMilestone, text.milestones);
@@ -72,6 +74,15 @@ export class GeneralDetailRecordChild extends ChildPanelBase {
             throw new Error(`[RecordChild] 必要 Label 缺失 ${fullPath}`);
         }
         return label;
+    }
+
+    /** 目前 PvP 賽季 ID；services 尚未就緒（預覽／單獨掛載）時回傳 undefined，本賽季行顯示「—」 */
+    private _currentSeasonId(): string | undefined {
+        try {
+            return pvpSeasonIdOf(services().session.gameTime.totalSeasonsElapsed);
+        } catch {
+            return undefined;
+        }
     }
 
     private _set(label: Label | null, text: string): void {

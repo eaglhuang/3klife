@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 61,
-    "total": 97
+    "open": 65,
+    "total": 101
   },
   "tasks": [
     {
@@ -3731,6 +3731,118 @@
         "artifacts/PROG-2-0157/**"
       ],
       "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0158",
+      "title": "實機驗收：戰技 Tab 五階血脈傳承奧義操作區（PROG-2-0720、#647）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "戰技 Tab 奧義操作卡的高度（暫定 142）、按鈕樣式、點亮後刷新與升星按鈕鎖定需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #647",
+        "PROG-2-0720"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0158.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0158/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0159",
+      "title": "實機驗收：大廳季節卡「本季效果」提示行（PROG-2-0841、#665）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "季節卡「本季效果」行的排版與可讀性、季節卡高度 232 與下方按鈕區的重疊需實機驗收，並回報建議高度。",
+      "related": [],
+      "depends": [
+        "PR #665",
+        "PROG-2-0841"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0159.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0159/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0160",
+      "title": "實機驗收：因子六角圖依層級遮罩（LUK-04、PROG-2-0883、#663）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "Lv1／Lv21／Lv46 三層級下未解鎖色的灰點與灰軸、解鎖特效只播已解鎖色需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #663",
+        "PROG-2-0883"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0160.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0160/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0161",
+      "title": "實機驗收：大廳官職區塊與官職詳情頁（PROG-2-0842、#670）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "官職區塊卡高 168、「官職詳情」按鈕位置、詳情頁六項權限行是否被裁切需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #670",
+        "PROG-2-0842"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0161.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0161/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     }
   ]
 }

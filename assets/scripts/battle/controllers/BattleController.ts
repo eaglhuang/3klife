@@ -60,6 +60,8 @@ import {
 import {
   applyDeploy,
   checkDeploy,
+  DEPLOY_SUGGESTION_CANDIDATES,
+  suggestLowCostDeploy,
   createSortieState,
   finishSortie,
   getTacticTpCost,
@@ -92,6 +94,8 @@ export interface DeployOutcome {
   reason?: DeployFailReason;
   /** 有出征帳本時列出全部不可部署原因（UI 可各自顯示） */
   reasons?: DeployFailReason[];
+  /** 改派建議（DEP-10）：可派出的低耗兵種，只供玩家確認，不自動改派 */
+  suggestion?: string | null;
 }
 
 export type { GeneralSkillCastOptions };
@@ -339,7 +343,8 @@ export class BattleController {
       const check = checkDeploy(this.sortie, { troopType: type, militia: options.militia });
       if (!check.ok) {
         const reasons = check.reasons.map((reason) => SORTIE_BLOCK_TO_FAIL_REASON[reason]);
-        return { ok: false, unit: null, reason: reasons[0], reasons };
+        const suggestion = suggestLowCostDeploy(this.sortie, type, DEPLOY_SUGGESTION_CANDIDATES);
+        return { ok: false, unit: null, reason: reasons[0], reasons, suggestion };
       }
     }
 
@@ -702,6 +707,28 @@ export class BattleController {
     ];
   }
 
+  /**
+   * 非攻擊結算的傷害（位移受阻、七進七出穿透）：致死時與技能傷害一致，走陣亡流程
+   * （移出戰場、釋放格子、發 UnitDied、主將陣亡判定）。
+   */
+  private applyNonCombatDamage(target: TroopUnit, damage: number, damageSource: string): void {
+    const svc = services();
+    this.combatResolver.applyUnitDamage(target, damage, null, {
+      attackerId: null,
+      attackerLane: null,
+      attackerDepth: null,
+      damageSource,
+      allowDamageLink: false,
+    });
+    if (!target.isDead()) return;
+    if (target.id === this.playerGeneralUnitId) {
+      this.combatResolver.onGeneralUnitKilled(Faction.Player, svc);
+    } else if (target.id === this.enemyGeneralUnitId) {
+      this.combatResolver.onGeneralUnitKilled(Faction.Enemy, svc);
+    }
+    this.combatResolver.onUnitKilled(target, null, svc);
+  }
+
   private buildPlayerTurnPhaseExecutors(): readonly BattlePhaseExecutor[] {
     return [
       createBattlePhaseExecutor('player-auto-move', (context) => context.executePhase('player-auto-move')),
@@ -756,13 +783,8 @@ export class BattleController {
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
           getAptitudeMoveSetTo: (unit) => this.combatResolver.getUnitMoveSetTo(unit),
-          applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
-            attackerId: null,
-            attackerLane: null,
-            attackerDepth: null,
-            damageSource: 'forced-move',
-            allowDamageLink: false,
-          }),
+          applyForcedMoveDamage: (unit, damage) => this.applyNonCombatDamage(unit, damage, 'forced-move'),
+          applyGhostPassDamage: (target, damage) => this.applyNonCombatDamage(target, damage, 'ghost-pass'),
         });
         return {};
       case 'enemy-auto-move':
@@ -776,13 +798,8 @@ export class BattleController {
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
           getAptitudeMoveSetTo: (unit) => this.combatResolver.getUnitMoveSetTo(unit),
-          applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
-            attackerId: null,
-            attackerLane: null,
-            attackerDepth: null,
-            damageSource: 'forced-move',
-            allowDamageLink: false,
-          }),
+          applyForcedMoveDamage: (unit, damage) => this.applyNonCombatDamage(unit, damage, 'forced-move'),
+          applyGhostPassDamage: (target, damage) => this.applyNonCombatDamage(target, damage, 'ghost-pass'),
         });
         return {};
       case 'player-tile-effect':
@@ -955,7 +972,7 @@ export class BattleController {
 
   // ─── 勝敗判定 ─────────────────────────────────────────────────────────────
 
-  private canUsePlayerSkills(): boolean {
+  public canUsePlayerSkills(): boolean {
     return this.flowStateMachine.canUsePlayerSkills();
   }
 

@@ -1,0 +1,17 @@
+{
+  "id": "lobby-officer-page-screen",
+  "version": 1,
+  "uiId": "LobbyOfficerPage",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "lobby-officer-page-main",
+  "skin": "lobby-officer-page-default",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

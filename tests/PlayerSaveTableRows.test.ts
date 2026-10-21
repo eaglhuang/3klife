@@ -7,7 +7,7 @@
  * Unity 對照：像存檔前把角色資料轉成 DB 行，再拿 Server 端的 Constraint 驗一次，驗不過就列出來。
  */
 import { assert, TestSuite } from './TestRunner';
-import { mapSnapshotToSixTables, mapPlayerResourcesRow, resourceFieldsFromRow, LOCAL_PLAYER_ID } from '../assets/scripts/core/services/PlayerSaveTableRows';
+import { mapSnapshotToSixTables, mapPlayerResourcesRow, resourceFieldsFromRow, LOCAL_PLAYER_ID, UNKNOWN_BLOODLINE_ID } from '../assets/scripts/core/services/PlayerSaveTableRows';
 import type { PlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
 import {
     validateGeneralRow,
@@ -67,14 +67,26 @@ export function createPlayerSaveTableRowsSuite(): TestSuite {
         assert.equals(7, back.bondPoints);
     });
 
-    suite.test('缺模板或血脈欄位：回報錯誤且不補預設值', () => {
-        const broken = snapshot({
+    suite.test('缺模板或血脈欄位：暫定占位（模板用武將 id、血脈用 none），不回報錯誤', () => {
+        const sparse = snapshot({
             roster: [{ id: 'G009', vitality: 10, maxVitality: 10, role: 'Scout', status: 'Active' }],
         });
-        const { rows, errors } = mapSnapshotToSixTables(broken);
-        assert.equals('', rows.generals[0].template_id);
-        assert.isTrue(errors.includes('generals[G009].template_id: 缺少'));
-        assert.isTrue(errors.includes('generals[G009].bloodline_id: 缺少'));
+        const { rows, errors } = mapSnapshotToSixTables(sparse);
+        assert.equals('G009', rows.generals[0].template_id);
+        assert.equals(UNKNOWN_BLOODLINE_ID, rows.generals[0].bloodline_id);
+        assert.equals(0, errors.length);
+    });
+
+    suite.test('子嗣 Mystery 狀態映射為 Active，正常存檔錯誤為空', () => {
+        const withChild = snapshot({
+            roster: [
+                { id: 'G001', templateId: 'T001', bloodlineId: 'B001', vitality: 80, maxVitality: 100, role: 'Commander', status: 'Active' },
+                { id: 'C001', templateId: 'T002', bloodlineId: 'B001', vitality: 20, maxVitality: 40, role: 'Child', status: 'Mystery' },
+            ],
+        });
+        const { rows, errors } = mapSnapshotToSixTables(withChild);
+        assert.equals('Active', rows.generals[1].status);
+        assert.equals(0, errors.length);
     });
 
     return suite;

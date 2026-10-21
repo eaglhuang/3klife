@@ -13,6 +13,7 @@ import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { GeneralConfig, GeneralTacticSlotConfig, GeneralUltimateSlotConfig } from '../../../core/models/GeneralUnit';
 import { ultimateProgressOf, type UltimateProgressSource } from '../../../core/systems/UltimateProgress';
 import { ultimateActionView } from '../../core/UltimateActionView';
+import { starUpMaterialOf } from '../../../core/systems/StarUpMaterial';
 import {
     formatBulletList,
     formatSkillSource,
@@ -127,7 +128,13 @@ export class GeneralDetailSkillsChild extends ChildPanelBase {
         this._set(this._lLocked,
             `奧義解鎖條件\n${formatBulletList(lockedUltLines, '• 無待解鎖奧義槽')}`
         );
-        const action = ultimateActionView(cfg.bloodlineUltimate, ultimateProgressOf(cfg as UltimateProgressSource));
+        // 譜牒印記來源待裁決，子嗣分支暫不接，只顯示史實武將的範本卡需求
+        const starUp = starUpMaterialOf({
+            isHistorical: (cfg as { isHistorical?: boolean }).isHistorical === true,
+            isDescendant: false,
+            lineageSealRule: false,
+        });
+        const action = ultimateActionView(cfg.bloodlineUltimate, ultimateProgressOf(cfg as UltimateProgressSource), starUp);
         this._set(this._lUltimateAction, action.summary);
         this._set(this._lUltimateAwaken, action.awakenLabel);
         this._set(this._lUltimateRaise, action.raiseLabel);
