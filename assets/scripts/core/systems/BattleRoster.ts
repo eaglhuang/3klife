@@ -18,8 +18,9 @@ import { CHILD_STATUS_MYSTERY } from './BreedingSystem';
 import { GENERAL_STATUS_DEAD } from './GeneralAging';
 import { baseVitalityMaxOf } from './VitalityCap';
 import type { NurtureRating } from './NurtureSystem';
-import { guardianPowerOf, newlyReachedMilestones, type BattlePerformance } from './BattleRecordStats';
+import { EMPTY_PERFORMANCE, guardianPowerOf, newlyReachedMilestones, type BattlePerformance } from './BattleRecordStats';
 import { isTrialMercenary } from './PrisonerOfWar';
+import { accumulateSeasonBattle, type SeasonStats } from './BattleSeasonStats';
 
 // ── 常數（規格有的標出處；沒有的標「暫定」）────────────────────────────────
 
@@ -71,6 +72,8 @@ export interface BattleRecord {
     guardianPower?: number;
     /** 已達成的里程碑 id（百人斬、不敗神話……） */
     milestones?: string[];
+    /** 本賽季戰績（PROG-2-0950）；舊存檔沒有，讀到時視為無 */
+    season?: SeasonStats;
 }
 
 /** 戰場整合會讀寫的名冊欄位；比照 BreedingGeneral 以延伸型別承載 */
@@ -249,6 +252,8 @@ export interface SettleBattleRequest {
     deployedIds: readonly string[];
     result: BattleResult;
     season?: number;
+    /** PvP 賽季 ID；有提供時把本場寫入出戰武將的賽季戰績（PROG-2-0950） */
+    seasonId?: string;
     /** 各出戰武將本場表現（擊殺 / 傷害 / 承傷 / 治療）；沒有的武將只記勝敗 */
     performance?: Readonly<Record<string, BattlePerformance>>;
     /** 戰鬥結束時各武將的精力（已扣奧義成本）；有提供時以此為基準再扣 BATTLE_VITALITY_COST，沒有則用名冊值 */
@@ -287,6 +292,9 @@ export function settleBattle(roster: readonly GeneralConfig[], request: SettleBa
             guardianPower: (previous.guardianPower ?? 0) + (performance ? guardianPowerOf(performance) : 0),
             milestones: [...(previous.milestones ?? [])],
         };
+        if (request.seasonId) {
+            record.season = accumulateSeasonBattle(previous.season, request.seasonId, outcome, performance ?? EMPTY_PERFORMANCE);
+        }
         const newMilestones = newlyReachedMilestones(record);
         record.milestones = [...(record.milestones ?? []), ...newMilestones];
         entries.push({ generalId: g.id, outcome, vitalityBefore: before, vitalityAfter: after, meritGained: merit, record, performance, newMilestones });

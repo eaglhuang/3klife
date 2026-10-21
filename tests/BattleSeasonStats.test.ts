@@ -17,7 +17,7 @@ export function createBattleSeasonStatsSuite(): TestSuite {
 
     suite.test('同賽季累加：勝負、擊殺、傷害與守護力（承傷＋治療）正確', () => {
         const once = accumulateSeasonBattle(null, 'S1', 'win', { kills: 3, damageDealt: 500, damageTaken: 120, healingDone: 30 });
-        const twice = accumulateSeasonBattle(once, 'S1', 'lose', { kills: 1, damageDealt: 200, damageTaken: 80, healingDone: 0 });
+        const twice = accumulateSeasonBattle(once, 'S1', 'loss', { kills: 1, damageDealt: 200, damageTaken: 80, healingDone: 0 });
         assert.equals(1, twice.wins);
         assert.equals(1, twice.losses);
         assert.equals(4, twice.kills);
@@ -42,7 +42,7 @@ export function createBattleSeasonStatsSuite(): TestSuite {
 
     suite.test('賽季 ID 不同時惰性重置：舊季數值不混入新季', () => {
         const s1 = accumulateSeasonBattle(null, 'S1', 'win', { kills: 5, damageDealt: 400, damageTaken: 0, healingDone: 0 });
-        const s2 = accumulateSeasonBattle(s1, 'S2', 'lose', { kills: 1, damageDealt: 50, damageTaken: 0, healingDone: 0 });
+        const s2 = accumulateSeasonBattle(s1, 'S2', 'loss', { kills: 1, damageDealt: 50, damageTaken: 0, healingDone: 0 });
         assert.equals('S2', s2.seasonId);
         assert.equals(0, s2.wins);
         assert.equals(1, s2.losses);
