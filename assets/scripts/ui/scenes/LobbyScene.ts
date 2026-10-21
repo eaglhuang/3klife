@@ -2307,8 +2307,6 @@ export class LobbyScene extends Component {
         panelNode.active = false;
     }
 
-    private async _mountSeasonReportPanel(): Promise<void> {
-        const panelNode = this.node.getChildByName('SeasonReportComposite') ?? new Node('SeasonReportComposite');
     private async _mountSandtableTerritoryPanel(): Promise<void> {
         const panelNode = this.node.getChildByName('SandtableTerritoryComposite') ?? new Node('SandtableTerritoryComposite');
         panelNode.layer = this.node.layer;
@@ -2319,8 +2317,21 @@ export class LobbyScene extends Component {
         this._ensureWidget(panelNode);
         panelNode.setSiblingIndex(this.node.children.length - 1);
 
-        this._seasonReportPanel = panelNode.getComponent(SeasonReportComposite) ?? panelNode.addComponent(SeasonReportComposite);
         this._sandtableTerritoryPanel = panelNode.getComponent(SandtableTerritoryComposite) ?? panelNode.addComponent(SandtableTerritoryComposite);
+        panelNode.active = false;
+    }
+
+    private async _mountSeasonReportPanel(): Promise<void> {
+        const panelNode = this.node.getChildByName('SeasonReportComposite') ?? new Node('SeasonReportComposite');
+        panelNode.layer = this.node.layer;
+        if (!panelNode.parent) {
+            panelNode.parent = this.node;
+        }
+
+        this._ensureWidget(panelNode);
+        panelNode.setSiblingIndex(this.node.children.length - 1);
+
+        this._seasonReportPanel = panelNode.getComponent(SeasonReportComposite) ?? panelNode.addComponent(SeasonReportComposite);
         panelNode.active = false;
     }
 
@@ -2595,18 +2606,6 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createSeasonReportController(): IUIManagedController {
-        if (!this._seasonReportPanel) {
-            throw new Error('[LobbyScene] SeasonReportComposite cannot be registered before mount');
-        }
-
-        return {
-            node: this._seasonReportPanel.node,
-            show: async (payload?: unknown) => {
-                await this._seasonReportPanel!.show(payload as SeasonReportOpenPayload | undefined);
-            },
-            hide: () => {
-                this._seasonReportPanel!.hide();
     private _createSandtableTerritoryController(): IUIManagedController {
         if (!this._sandtableTerritoryPanel) {
             throw new Error('[LobbyScene] SandtableTerritoryComposite cannot be registered before mount');
@@ -2619,6 +2618,22 @@ export class LobbyScene extends Component {
             },
             hide: () => {
                 this._sandtableTerritoryPanel!.hide();
+            },
+        };
+    }
+
+    private _createSeasonReportController(): IUIManagedController {
+        if (!this._seasonReportPanel) {
+            throw new Error('[LobbyScene] SeasonReportComposite cannot be registered before mount');
+        }
+
+        return {
+            node: this._seasonReportPanel.node,
+            show: async (payload?: unknown) => {
+                await this._seasonReportPanel!.show(payload as SeasonReportOpenPayload | undefined);
+            },
+            hide: () => {
+                this._seasonReportPanel!.hide();
             },
         };
     }
