@@ -5,12 +5,14 @@
  * MVP 期間紀錄先存在存檔欄位（扁平快照，版號不升），之後才搬到 server 表。
  * 欄位與 server/schema/nur15-row-validators.ts 的 NurtureRecordRow 對齊（snake_case）。
  *
- * 取不到的值一律設為 null，不填假值：
- *   - revelation_level：沒有揭露時記 0（「未揭露」），有揭露就用實際層級（PROG-2-0744，PM 裁定，暫定）。
- *   - phase_block_history_json、mentoring_mode_log_json、reveal_log_json：現有培育狀態沒有這三份歷程，
- *     以 JSON 文字 "null" 表示「未紀錄」，仍是可解析的 JSON（server 列驗證要求可解析）。
- *   - tp_total：舊存檔的會話沒有 totalTp 時為 null。
- * 上述缺值會列在 unavailable，方便呼叫端與測試看出哪些欄位還沒接上。
+ * 欄位來源（PM 裁定，暫定，可逆）：
+ *   - revelation_level：沒有揭露時記 0（「未揭露」），有揭露就用實際層級（PROG-2-0744）。
+ *   - phase_block_history_json：由每回合紀錄的 phase 組成 [{round, phase}]。
+ *   - mentoring_mode_log_json：會話的 mentoringModeLog；沒有傳道時為空陣列。
+ *   - reveal_log_json：用每回合揭露的負面因子組成 [{round, negativeFactor}]，沒有則為空陣列。
+ *     這是最接近的既有欄位，不等於規格的完整揭露歷程。
+ *   - tp_total：優先用 totalTp；舊存檔沒有 totalTp 時退用目前的 tp（只是餘額，可能偏低），並列在 unavailable。
+ * 上述替代來源會列在 unavailable，方便呼叫端與測試看出哪些欄位是替代值。
  */
 import type { NurtureSession, NurtureRating } from './NurtureSystem';
 
@@ -42,9 +44,9 @@ export function buildNurtureRecordRow(
     graduation: { rating: NurtureRating; tags: readonly string[] },
     endSeason: number,
 ): NurtureRecordBuildResult {
-    const unavailable = ['phase_block_history_json', 'mentoring_mode_log_json', 'reveal_log_json'];
-    const tpTotal = session.totalTp ?? null;
-    if (tpTotal === null) unavailable.push('tp_total');
+    const unavailable: string[] = [];
+    const tpTotal = session.totalTp ?? session.tp;
+    if (session.totalTp === undefined) unavailable.push('tp_total');
     return {
         row: {
             session_id: session.sessionId,
@@ -53,9 +55,12 @@ export function buildNurtureRecordRow(
             end_season: endSeason,
             mentor_id: session.mentors[0]?.id ?? null,
             revelation_level: 0,
-            phase_block_history_json: JSON.stringify(null),
-            mentoring_mode_log_json: JSON.stringify(null),
-            reveal_log_json: JSON.stringify(null),
+            phase_block_history_json: JSON.stringify(session.log.map(({ round, phase }) => ({ round, phase }))),
+            mentoring_mode_log_json: JSON.stringify(session.mentoringModeLog ?? []),
+            reveal_log_json: JSON.stringify(
+                session.log.filter((entry) => entry.negativeFactor !== undefined)
+                    .map(({ round, negativeFactor }) => ({ round, negativeFactor })),
+            ),
             final_stats_json: JSON.stringify(session.prowess),
             graduation_tags_json: JSON.stringify([...graduation.tags]),
             rating: graduation.rating,

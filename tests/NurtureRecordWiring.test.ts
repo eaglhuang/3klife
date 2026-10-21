@@ -1,7 +1,7 @@
 /**
  * NurtureRecordWiring.test.ts — 畢業培育紀錄寫入存檔欄位（NUR-15 MVP，PROG-2-0721）headless 測試
  *
- * 鎖住：畢業時 graduationRecords 多一筆；欄位取自培育會話與畢業結果；取不到的欄位為 null 並列在 unavailable；
+ * 鎖住：畢業時 graduationRecords 多一筆；欄位取自培育會話與畢業結果；替代來源的欄位列在 unavailable；
  * 這筆紀錄用 server 列驗證函式檢查；revelation_level 未揭露記 0（PROG-2-0744）。
  */
 import { assert, TestSuite } from './TestRunner';
@@ -55,45 +55,49 @@ export function createNurtureRecordWiringSuite(): TestSuite {
         assert.equals(0, row.revelation_level);
     });
 
-    suite.test('紀錄經 server 列驗證，只剩 tp_total 可能缺', () => {
+    suite.test('紀錄經 server 列驗證通過', () => {
         const store = new InMemoryRosterStore([readyChild('kid') as never]);
         const svc = new NurtureService(store as never, { random: seeded(3), currentSeason: () => 0, admissionsPerSeason: 5 });
         svc.start('kid', []);
         for (let i = 0; i < NURTURE_TOTAL_ROUNDS; i++) svc.train('kid', 'rest');
         svc.graduate('kid');
         const row = svc.getState().graduationRecords![0];
-        const errors = validateNurtureRecordRow(row as never);
-        const tpMissingOnNewSession = row.tp_total === null;
-        assert.isFalse(errors.some((e) => e.startsWith('revelation_level')));
-        assert.equals(tpMissingOnNewSession ? 1 : 0, errors.length);
+        assert.equals('', validateNurtureRecordRow(row as never).join(';'));
     });
 
-    suite.test('buildNurtureRecordRow：JSON 欄位取不到時寫 "null"，仍可解析', () => {
+    suite.test('buildNurtureRecordRow：歷程欄位由會話既有欄位組成，仍可解析', () => {
         const session = {
             sessionId: 's1', childId: 'kid', startSeason: 2, round: 36, vigor: 0,
             talent: { str: 50, int: 50, lea: 50, pol: 50, cha: 50, luk: 50 },
             prowess: { str: 60, int: 50, lea: 50, pol: 50, cha: 50, luk: 50 },
             tp: 0, totalTp: 120, growthModifier: 1, mentors: [], status: 'completed',
+            log: [
+                { round: 1, phase: 'Foundation', negativeFactor: 'x' },
+                { round: 2, phase: 'Midterm' },
+            ],
+            mentoringModeLog: [{ round: 3, mode: 'Support', sourceId: 'm1' }],
         } as unknown as NurtureSession;
         const { row, unavailable } = buildNurtureRecordRow(session, { rating: 'A', tags: ['耐戰'] }, 7);
-        assert.equals('null', row.phase_block_history_json);
-        assert.equals('null', row.mentoring_mode_log_json);
-        assert.equals('null', row.reveal_log_json);
+        assert.equals('[{"round":1,"phase":"Foundation"},{"round":2,"phase":"Midterm"}]', row.phase_block_history_json);
+        assert.equals('[{"round":3,"mode":"Support","sourceId":"m1"}]', row.mentoring_mode_log_json);
+        assert.equals('[{"round":1,"negativeFactor":"x"}]', row.reveal_log_json);
         assert.equals(JSON.stringify(session.prowess), row.final_stats_json);
         assert.equals('["耐戰"]', row.graduation_tags_json);
         assert.equals(120, row.tp_total);
         assert.equals(7, row.end_season);
-        assert.equals('phase_block_history_json,mentoring_mode_log_json,reveal_log_json', unavailable.join(','));
+        assert.equals('', unavailable.join(','));
         assert.equals('', validateNurtureRecordRow(row as never).join(';'));
     });
 
-    suite.test('舊存檔的會話沒有 totalTp 時 tp_total 為 null，並列在 unavailable', () => {
+    suite.test('舊存檔的會話沒有 totalTp 時 tp_total 改用目前 tp，並列在 unavailable', () => {
         const session = {
             sessionId: 's2', childId: 'kid', startSeason: 0, round: 36, vigor: 0,
-            talent: {}, prowess: {}, tp: 0, growthModifier: 1, mentors: [], status: 'completed',
+            talent: {}, prowess: {}, tp: 15, growthModifier: 1, mentors: [], status: 'completed', log: [],
         } as unknown as NurtureSession;
         const { row, unavailable } = buildNurtureRecordRow(session, { rating: 'C', tags: [] }, 0);
-        assert.equals(null, row.tp_total);
+        assert.equals(15, row.tp_total);
+        assert.equals('[]', row.reveal_log_json);
+        assert.equals('[]', row.mentoring_mode_log_json);
         assert.isTrue(unavailable.includes('tp_total'));
     });
 
