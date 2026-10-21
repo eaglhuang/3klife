@@ -29,7 +29,7 @@ export interface HallAutoAssignRecord {
 
 export type HallAutoAssignResult =
     | { ok: true; record: HallAutoAssignRecord }
-    | { ok: false; reason: 'not-enabled' | 'no-candidate' };
+    | { ok: false; reason: 'not-enabled' | 'no-candidate' | 'task-already-assigned' };
 
 /** 選將：忽略非有限戰力；戰力高者優先，同分取 generalId 字典序較小者；沒有候選回傳 null。 */
 export function pickAutoAssignGeneral(candidates: readonly HallAutoAssignCandidate[]): string | null {
@@ -47,14 +47,22 @@ export function pickAutoAssignGeneral(candidates: readonly HallAutoAssignCandida
     return best ? best.generalId : null;
 }
 
-/** 委任一個任務；未開啟委任或沒有可選武將時拒絕，不產生紀錄。 */
+/**
+ * 委任一個任務；未開啟委任、同一任務已有未結算委任、或沒有可選武將時拒絕，不產生紀錄。
+ * 候選武將若已在其他未結算的委任上，視為忙碌，不列入選將（PM 裁定）。
+ */
 export function autoAssignHallTask(
     task: Readonly<HallTaskIntelInput & { taskId: string }>,
     candidates: readonly HallAutoAssignCandidate[],
     assignedAt: string,
+    log: readonly HallAutoAssignRecord[] = [],
 ): HallAutoAssignResult {
     if (!isAutoAssignEnabled(task)) return { ok: false, reason: 'not-enabled' };
-    const generalId = pickAutoAssignGeneral(candidates);
+    if (log.some(record => record.taskId === task.taskId && record.outcome === undefined)) {
+        return { ok: false, reason: 'task-already-assigned' };
+    }
+    const busy = new Set(log.filter(record => record.outcome === undefined).map(record => record.generalId));
+    const generalId = pickAutoAssignGeneral(candidates.filter(candidate => !busy.has(candidate.generalId)));
     if (generalId === null) return { ok: false, reason: 'no-candidate' };
     return { ok: true, record: { taskId: task.taskId, generalId, assignedAt } };
 }

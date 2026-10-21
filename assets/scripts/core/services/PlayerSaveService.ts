@@ -100,6 +100,8 @@ export interface PlayerSaveSnapshot {
     sandtableMarkerTerritories?: string[];
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
+    /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
+    hallAssignLog?: HallAssignLogEntry[];
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
@@ -245,6 +247,28 @@ export interface GachaMentorJournalEntry {
     drawn: GeneralConfig[];
     time: { currentYear: number; currentSeason: number };
     poolId: string | undefined;
+}
+
+/** 委任紀錄的存檔形狀；與 HallAutoAssignRecord 相同，這裡只做讀檔正規化 */
+export interface HallAssignLogEntry {
+    taskId: string;
+    generalId: string;
+    assignedAt: string;
+    outcome?: 'success' | 'failure';
+    settledAt?: string;
+}
+
+export function normalizeHallAssignLog(raw: unknown): HallAssignLogEntry[] {
+    if (!Array.isArray(raw)) return [];
+    return raw
+        .filter((entry): entry is HallAssignLogEntry => !!entry && typeof entry.taskId === 'string' && typeof entry.generalId === 'string' && typeof entry.assignedAt === 'string')
+        .map((entry) => ({
+            taskId: entry.taskId,
+            generalId: entry.generalId,
+            assignedAt: entry.assignedAt,
+            ...(entry.outcome === 'success' || entry.outcome === 'failure' ? { outcome: entry.outcome } : {}),
+            ...(typeof entry.settledAt === 'string' ? { settledAt: entry.settledAt } : {}),
+        }));
 }
 
 export function normalizeGachaMentorJournal(raw: unknown): GachaMentorJournalEntry[] {
@@ -408,6 +432,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.sandtableMarkersPlaced !== undefined ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced) } : {}),
         ...(snapshot.sandtableMarkerTerritories !== undefined ? { sandtableMarkerTerritories: normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
+        ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
