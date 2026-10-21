@@ -464,7 +464,7 @@ export class LobbyScene extends Component {
         );
     }
 
-    /** 存檔從備份還原時提示玩家（PROG-2-0911）：文案走 i18n，事件由 GameSession.load() 發出 */
+    /** 存檔從備份還原時提示玩家（PROG-2-1000）：文案走 i18n，事件由 GameSession.load() 發出 */
     private _bindSaveRecoveryToast(): void {
         this._sessionEventUnsubscribers.push(
             services().event.on(GAME_SESSION_EVENTS.LoadRecoveredFromBackup, () => {
