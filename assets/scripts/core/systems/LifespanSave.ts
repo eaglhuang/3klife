@@ -28,6 +28,11 @@ function isNonEmptyString(value: unknown): value is string {
     return typeof value === 'string' && value.length > 0;
 }
 
+/** 自動治理開關（PROG-2-0978）：只認 true，其餘（含舊檔缺欄位）一律關閉。 */
+export function normalizeGovernanceAutoMode(raw: unknown): boolean {
+    return raw === true;
+}
+
 /** 指派清單：任務必須是五大內政之一，武將 ID 非空；同一任務格或同一武將只留第一筆。 */
 export function normalizeGovernanceAssignments(raw: unknown): GovernanceAssignment[] {
     if (!Array.isArray(raw)) return [];

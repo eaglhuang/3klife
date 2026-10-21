@@ -44,6 +44,7 @@ import { normalizeBorrowLedger, type BorrowLedger } from '../systems/FriendBorro
 import { normalizeSoulFragmentLedger, type SoulFragmentLedger } from '../systems/SoulFragmentLedger';
 import {
     normalizeGovernanceAssignments,
+    normalizeGovernanceAutoMode,
     normalizeJournalEntries,
     normalizeKeepTerritories,
 } from '../systems/LifespanSave';
@@ -115,6 +116,8 @@ export interface PlayerSaveSnapshot {
     territories?: KeepTerritory[];
     /** 武將日誌條目（PROG-2-0975）；舊檔沒有時讀回空陣列；版號不升 */
     journalEntries?: JournalEntry[];
+    /** 自動治理開關（PROG-2-0978）；只在開啟時寫入，舊檔沒有時讀回關閉；版號不升 */
+    governanceAutoMode?: boolean;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -461,6 +464,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.governanceAssignments !== undefined ? { governanceAssignments: normalizeGovernanceAssignments(snapshot.governanceAssignments) } : {}),
         ...(snapshot.territories !== undefined ? { territories: normalizeKeepTerritories(snapshot.territories) } : {}),
         ...(snapshot.journalEntries !== undefined ? { journalEntries: normalizeJournalEntries(snapshot.journalEntries) } : {}),
+        ...(snapshot.governanceAutoMode !== undefined ? { governanceAutoMode: normalizeGovernanceAutoMode(snapshot.governanceAutoMode) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
