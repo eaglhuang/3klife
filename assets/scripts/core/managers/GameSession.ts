@@ -168,9 +168,12 @@ import {
     type JournalWriteResult,
 } from '../systems/JournalLog';
 import type { DomesticTaskId } from '../systems/DomesticTasks';
-
-/** 主城領地 id（暫定：規格未給固定 id，待領地資料定案後改由資料檔提供）。 */
-const HOME_TERRITORY_ID = 'home-city';
+import {
+    defaultKeepTerritories,
+    normalizeGovernanceAssignments,
+    normalizeJournalEntries,
+    normalizeKeepTerritories,
+} from '../systems/LifespanSave';
 import {
     BattleResult,
     BattleSettlement,
@@ -1111,6 +1114,9 @@ export class GameSession {
         this._breedingBirthRecords = [];
         this._officerState = initialOfficerState();
         this._sandtableMarkerTerritories = [];
+        this._governance = [];
+        this._territories = defaultKeepTerritories();
+        this._journal = createEmptyJournal();
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
         // 上一局的進度不能帶進新局（PROG-2-0660）
@@ -1353,7 +1359,7 @@ export class GameSession {
 
     // ---- 領地治理接線（GOV-04 指派 / GOV-09 主城保護 / JRN-01 日誌，PROG-2-0974）：目前僅記憶體狀態，尚未寫入存檔 ----
     private _governance: GovernanceAssignment[] = [];
-    private _territories: KeepTerritory[] = [{ id: HOME_TERRITORY_ID, isHome: true }];
+    private _territories: KeepTerritory[] = defaultKeepTerritories();
     private _journal: JournalState = createEmptyJournal();
 
     /** 內政任務格的武將指派（唯讀副本，GOV-04）。 */
@@ -2556,7 +2562,26 @@ export class GameSession {
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
         const base = createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount, this._officerState, this.sandtableMarkersPlaced, this._sandtableMarkerTerritories);
         const withJournal = this._gachaMentorJournal.length > 0 ? { ...base, gachaMentorJournal: normalizeGachaMentorJournal(this._gachaMentorJournal) } : base;
-        return this._hallAssignLog.length > 0 ? { ...withJournal, hallAssignLog: normalizeHallAssignLog(this._hallAssignLog) } : withJournal;
+        const withHallLog = this._hallAssignLog.length > 0 ? { ...withJournal, hallAssignLog: normalizeHallAssignLog(this._hallAssignLog) } : withJournal;
+        return { ...withHallLog, ...this.lifespanSaveFields() };
+    }
+
+    /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'territories' | 'journalEntries'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'territories' | 'journalEntries'> = {};
+        if (this._governance.length > 0) fields.governanceAssignments = this.governanceAssignments;
+        if (JSON.stringify(this._territories) !== JSON.stringify(defaultKeepTerritories())) fields.territories = this.territories;
+        if (this._journal.entries.length > 0) {
+            fields.journalEntries = this._journal.entries.map(e => ({ ...e, relatedGeneralUids: [...e.relatedGeneralUids] }));
+        }
+        return fields;
+    }
+
+    /** 讀檔時還原領地治理狀態（PROG-2-0975）；缺欄位回到預設值。 */
+    public restoreLifespanState(snapshot: PlayerSaveSnapshot): void {
+        this._governance = normalizeGovernanceAssignments(snapshot.governanceAssignments);
+        this._territories = normalizeKeepTerritories(snapshot.territories);
+        this._journal = { entries: normalizeJournalEntries(snapshot.journalEntries) };
     }
 
     /**
@@ -2637,6 +2662,7 @@ export class GameSession {
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
         this._officerState = normalizeOfficerState(snapshot.officerState);
         this._sandtableMarkerTerritories = normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories);
+        this.restoreLifespanState(snapshot);
         this._gachaMentorJournal = normalizeGachaMentorJournal(snapshot.gachaMentorJournal);
         this._hallAssignLog = normalizeHallAssignLog(snapshot.hallAssignLog);
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
