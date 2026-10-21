@@ -41,7 +41,7 @@ const targets = [
     { id: 'GeneralDetailOverviewProd', screenId: 'general-detail-unified-screen', targetIndex: 6, previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
     { id: 'GeneralDetailOverviewDs3', screenId: 'general-detail-unified-screen', targetIndex: 6, uiVariant: 'ds3', previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
     // Product flow parity: LobbyScene btnGenerals -> GeneralList -> select general -> Character DS3 screen host.
-    { id: 'GeneralDetailFromLobbyGeneralsButton', screenId: 'character-ds3-main', targetIndex: 19, uiVariant: 'ds3', previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
+    { id: 'GeneralDetailFromLobbyGeneralsButton', runtimeGuard: require('./check-general-detail-lobby-flow-smoke').collectDs3SelectedPersonJourney, screenId: 'character-ds3-main', targetIndex: 19, uiVariant: 'ds3', previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
     { id: 'GeneralDetailSkills', screenId: 'general-detail-unified-screen', targetIndex: 12, uiVariant: 'unified', uiSourceDir: 'general-detail-skills', runtimeScreenId: 'GeneralDetailSkills' },
     { id: 'GeneralDetailSkillsDs3', screenId: 'general-detail-unified-screen', targetIndex: 12, uiVariant: 'ds3', previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
     { id: 'GeneralDetailStats', screenId: 'general-detail-unified-screen', targetIndex: 13, uiVariant: 'unified', uiSourceDir: 'general-detail-stats', runtimeScreenId: 'GeneralDetailStats' },

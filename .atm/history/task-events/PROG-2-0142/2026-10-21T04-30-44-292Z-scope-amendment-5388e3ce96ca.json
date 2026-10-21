@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-21T04-30-44-292Z-scope-amendment-5388e3ce96ca",
+  "taskId": "PROG-2-0142",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/PROG-2-0142.json",
+  "taskSha256": "sha256:4bf52432288de52b9887e4aa3b8544711007a6c35349be7223eab0fa858c9ae6",
+  "createdAt": "2026-10-21T04:30:44.292Z",
+  "command": "node atm.mjs tasks scope remove --task PROG-2-0142 --actor codex-gpt-6 --remove docs/agent-briefs/tasks_index.md,docs/agent-briefs/tasks/PROG/PROG-2-0142.md,docs/tasks/tasks-prog.json,docs/ui-quality-tasks/PROG-2-0142.json,docs/ui-quality-todo.json --json",
+  "amendmentMetadata": {
+    "amendmentClass": "scope-shrink",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Separate planning-only files from product delivery; preserve external planning authority."
+  }
+}

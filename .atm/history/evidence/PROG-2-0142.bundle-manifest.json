@@ -1,0 +1,129 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "PROG-2-0142",
+  "updatedAt": "2026-10-21T04:29:43.947Z",
+  "updatedBy": "codex-gpt-6",
+  "freshValidationPasses": [
+    "git diff --check",
+    "node tools_node/check-general-detail-lobby-flow-smoke.js",
+    "node tools_node/compute-gate.js --profile standard --agent-feedback",
+    "node tools_node/validate-ui-specs.js --strict --check-content-contract",
+    "test:ucuf"
+  ],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:6ac5b62b5efe04154f89964fe9a41468d375d3559b38dce64d8e68a25512b0cd",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node tools_node/compute-gate.js --profile standard --agent-feedback"
+      ],
+      "generatedAt": "2026-10-21T04:13:20.163Z",
+      "startedAt": "2026-10-21T04:13:15.571Z",
+      "finishedAt": "2026-10-21T04:13:20.163Z",
+      "durationMs": 4592,
+      "runnerKind": "dev-source",
+      "sourceCommit": "ce67dc14acc45645805efe944100723579646db8",
+      "cached": false
+    },
+    {
+      "command": "npm run test:ucuf",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:a9cc072ce29f42a9cd0e9b938d1fec97028e42be01b71944f28c203ae031177b",
+      "stderrSha256": "sha256:534297dab52aa4207b16e3e62e2c72d7e8fd0d2c5045527596c947233832cfe4",
+      "validators": [
+        "test:ucuf"
+      ],
+      "generatedAt": "2026-10-21T04:13:46.466Z",
+      "startedAt": "2026-10-21T04:13:41.953Z",
+      "finishedAt": "2026-10-21T04:13:46.466Z",
+      "durationMs": 4513,
+      "runnerKind": "dev-source",
+      "sourceCommit": "ce67dc14acc45645805efe944100723579646db8",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/validate-ui-specs.js --strict --check-content-contract",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:edc852aa9d72ed2bb65a38cc2b6fc169022986e3d274363f2b178718d397ea3d",
+      "stderrSha256": "sha256:e607935068fcb21f7797ad1fbf5fb27dcc08645ecbd8f80c47cfb920c8b85b79",
+      "validators": [
+        "node tools_node/validate-ui-specs.js --strict --check-content-contract"
+      ],
+      "generatedAt": "2026-10-21T04:13:59.040Z",
+      "startedAt": "2026-10-21T04:13:58.579Z",
+      "finishedAt": "2026-10-21T04:13:59.040Z",
+      "durationMs": 461,
+      "runnerKind": "dev-source",
+      "sourceCommit": "ce67dc14acc45645805efe944100723579646db8",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/check-general-detail-lobby-flow-smoke.js",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:06012ccb415f325e8fe862439ad98b67c6a701aead8898385fa8cc16bfbc1569",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node tools_node/check-general-detail-lobby-flow-smoke.js"
+      ],
+      "generatedAt": "2026-10-21T04:25:47.809Z",
+      "startedAt": "2026-10-21T04:24:29.082Z",
+      "finishedAt": "2026-10-21T04:25:47.809Z",
+      "durationMs": 78727,
+      "runnerKind": "dev-source",
+      "sourceCommit": "ce67dc14acc45645805efe944100723579646db8",
+      "cached": false
+    },
+    {
+      "command": "npm run test:ucuf",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:1f1eaa1a187ecf320437eb2651c1aa237868e88fab3e8a7e84be94e82840d467",
+      "stderrSha256": "sha256:534297dab52aa4207b16e3e62e2c72d7e8fd0d2c5045527596c947233832cfe4",
+      "validators": [
+        "test:ucuf"
+      ],
+      "generatedAt": "2026-10-21T04:29:01.873Z",
+      "startedAt": "2026-10-21T04:28:56.984Z",
+      "finishedAt": "2026-10-21T04:29:01.873Z",
+      "durationMs": 4889,
+      "runnerKind": "dev-source",
+      "sourceCommit": "ce67dc14acc45645805efe944100723579646db8",
+      "cached": false
+    },
+    {
+      "command": "node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:57180619b9cd38f49524cb6ac6ad7404b6e1587434ba420778c9a5b5284711e7",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "node tools_node/compute-gate.js --profile standard --agent-feedback"
+      ],
+      "generatedAt": "2026-10-21T04:29:41.657Z",
+      "startedAt": "2026-10-21T04:29:36.941Z",
+      "finishedAt": "2026-10-21T04:29:41.657Z",
+      "durationMs": 4716,
+      "runnerKind": "dev-source",
+      "sourceCommit": "ce67dc14acc45645805efe944100723579646db8",
+      "cached": false
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-10-21T04:29:43.946Z",
+      "startedAt": "2026-10-21T04:29:43.512Z",
+      "finishedAt": "2026-10-21T04:29:43.946Z",
+      "durationMs": 434,
+      "runnerKind": "dev-source",
+      "sourceCommit": "ce67dc14acc45645805efe944100723579646db8",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}

@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-21T09-06-25-031Z-scope-amendment-e331d0c8c5f3",
+  "taskId": "TASK-UI-9002",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/TASK-UI-9002.json",
+  "taskSha256": "sha256:12549e2e90d561df455cb5911d23d4c1115f197a852d1502e99a4284ff1a3502",
+  "createdAt": "2026-10-21T09:06:25.031Z",
+  "command": "node atm.mjs tasks scope remove --task TASK-UI-9002 --actor codex-gpt-6 --remove docs/tasks/tasks-prog.json --json",
+  "amendmentMetadata": {
+    "amendmentClass": "scope-shrink",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Inherited planning shards are already fully committed, not product integration delivery; exclude them from active close scope."
+  }
+}
