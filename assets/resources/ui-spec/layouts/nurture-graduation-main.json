@@ -179,7 +179,7 @@
             ]
           },
           {
-            "type": "horizontal",
+            "type": "container",
             "name": "GraduationPager",
             "widget": {
               "bottom": 76,
@@ -209,16 +209,19 @@
                     "text": "上一頁",
                     "styleSlot": "nurture.graduation.label.button"
                   }
-                ]
+                ],
+                "widget": {
+                  "vCenter": true,
+                  "left": 0
+                }
               },
               {
                 "type": "label",
                 "name": "GraduationPageLabel",
                 "id": "graduationPage",
                 "widget": {
-                  "top": 8,
-                  "left": 12,
-                  "right": 12
+                  "vCenter": true,
+                  "hCenter": true
                 },
                 "height": 36,
                 "text": "1 / 1",
@@ -245,7 +248,11 @@
                     "text": "下一頁",
                     "styleSlot": "nurture.graduation.label.button"
                   }
-                ]
+                ],
+                "widget": {
+                  "vCenter": true,
+                  "right": 0
+                }
               }
             ]
           },
