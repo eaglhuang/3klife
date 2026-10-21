@@ -14,7 +14,7 @@ import { EliteTroopCodexComposite, type EliteTroopCodexOpenPayload } from '../co
 import { LobbyMissionDetailDialogComposite, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
-import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
+import { GAME_SESSION_EVENTS, type AddGeneralsResult } from '../../core/managers/GameSession';
 import { formatModeLabel } from '../../core/systems/GameClock';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
@@ -273,9 +273,29 @@ export class LobbyScene extends Component {
             this._saveGachaState();
         },
         revision: () => services().session.gachaRevision,
+        // 抽卡結果入冊不存檔，由 batch 統一存一次（PROG-2-1003）
+        enroll: (results) => {
+            this._gachaEnrollResult = services().session.enrollGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true });
+        },
+        batch: (fn) => this._batchGachaSave(fn),
     }, () => services().session.randomSource());
+    /** 最近一次抽卡的入冊結果（由 enroll 寫入，_onGachaPullSuccess 讀取做提示） */
+    private _gachaEnrollResult: AddGeneralsResult | null = null;
+    private _gachaSaveBatching = false;
+
+    /** 扣款、保底、入冊併成一次存檔：批次中途不寫，結束時只存一次 */
+    private _batchGachaSave<T>(fn: () => T): T {
+        this._gachaSaveBatching = true;
+        try {
+            return fn();
+        } finally {
+            this._gachaSaveBatching = false;
+            this._saveGachaState();
+        }
+    }
 
     private _saveGachaState(): void {
+        if (this._gachaSaveBatching) return;
         void services().session.save().catch(() => undefined);
     }
     private _gachaFlowCoordinator: GachaFlowCoordinator | null = null;
@@ -1984,7 +2004,7 @@ export class LobbyScene extends Component {
                 services().session.gameTime,
                 results[0]?.poolId,
             );
-            const { added, duplicates, rebirths } = await services().session.addGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true });
+            const { added, duplicates, rebirths } = this._gachaEnrollResult ?? { added: [], duplicates: [], rebirths: [] };
             const parts: string[] = [];
             if (added.length > 0) {
                 parts.push(`新增 ${added.length} 位武將入名冊`);
