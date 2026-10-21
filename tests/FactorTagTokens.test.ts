@@ -2,10 +2,10 @@
  * FactorTagTokens.test.ts — 六色因子標籤進語系表與色碼 token（FBR-08 / PROG-2-0725）headless 測試
  *
  * 鎖住：四個語系都有 ui.gene.tag.* 六個 key；zh-TW 文案與因子爆發系統.md §H 一致；
- * 色碼六個且互不相同；查不到文案時退回 key。
+ * 色碼六個且互不相同；查不到文案時退回 key；uid-design-tokens.json 可解析且與常數一致。
  */
 import { assert, TestSuite } from './TestRunner';
-import { FACTOR_TAG_COLORS, FACTOR_TAG_I18N_KEYS, factorTagText } from '../assets/scripts/core/systems/FactorTagTokens';
+import { FACTOR_TAG_COLORS, FACTOR_TAG_I18N_KEYS, factorTagText, parseFactorTagColors } from '../assets/scripts/core/systems/FactorTagTokens';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -43,6 +43,20 @@ export function createFactorTagTokensSuite(): TestSuite {
     suite.test('查不到文案時退回 key；查得到時用語系文字', () => {
         assert.equals('ui.gene.tag.red', factorTagText('red', () => undefined));
         assert.equals('體魄', factorTagText('red', (key) => (key === 'ui.gene.tag.red' ? '體魄' : undefined)));
+    });
+
+    suite.test('uid-design-tokens.json 可解析，六色與 FACTOR_TAG_COLORS 一致', () => {
+        const raw = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/uid-design-tokens.json'), 'utf8'));
+        const parsed = parseFactorTagColors(raw);
+        assert.isTrue(parsed !== null);
+        assert.equals(JSON.stringify(FACTOR_TAG_COLORS), JSON.stringify(parsed));
+    });
+
+    suite.test('parseFactorTagColors 缺色或格式錯誤時回傳 null', () => {
+        assert.isTrue(parseFactorTagColors(null) === null);
+        assert.isTrue(parseFactorTagColors({ factorTagColors: { blue: '#50A0FF' } }) === null);
+        const bad = { factorTagColors: { ...FACTOR_TAG_COLORS, red: 'red' } };
+        assert.isTrue(parseFactorTagColors(bad) === null);
     });
 
     return suite;
