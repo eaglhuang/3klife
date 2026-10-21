@@ -40,6 +40,14 @@ import type { AgingEvent } from '../systems/GeneralAging';
 import { mapSnapshotToSixTables } from './PlayerSaveTableRows';
 import { normalizeBorrowLedger, type BorrowLedger } from '../systems/FriendBorrow';
 import { normalizeSoulFragmentLedger, type SoulFragmentLedger } from '../systems/SoulFragmentLedger';
+import {
+    normalizeGovernanceAssignments,
+    normalizeJournalEntries,
+    normalizeKeepTerritories,
+} from '../systems/LifespanSave';
+import type { GovernanceAssignment } from '../systems/GovernanceAssignment';
+import type { KeepTerritory } from '../systems/HereditaryKeep';
+import type { JournalEntry } from '../systems/JournalLog';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
@@ -99,6 +107,12 @@ export interface PlayerSaveSnapshot {
     sandtableMarkersPlaced?: number;
     /** 標記所在領地 id（PROG-2-0965）；舊檔沒有時讀回空陣列；版號不升 */
     sandtableMarkerTerritories?: string[];
+    /** 內政任務格的武將指派（PROG-2-0975）；舊檔沒有時讀回空陣列；版號不升 */
+    governanceAssignments?: GovernanceAssignment[];
+    /** 領地清單含主城（PROG-2-0975）；舊檔沒有時讀回只有主城的預設清單；版號不升 */
+    territories?: KeepTerritory[];
+    /** 武將日誌條目（PROG-2-0975）；舊檔沒有時讀回空陣列；版號不升 */
+    journalEntries?: JournalEntry[];
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -259,6 +273,9 @@ export interface HallAssignLogEntry {
     assignedAt: string;
     outcome?: 'success' | 'failure';
     settledAt?: string;
+    /** 任務難度與任務牆（PROG-2-1015 季結自動結算用）；舊檔缺省 */
+    difficulty?: string;
+    board?: 'Military' | 'Domestic' | 'Expedition';
 }
 
 export function normalizeHallAssignLog(raw: unknown): HallAssignLogEntry[] {
@@ -271,6 +288,8 @@ export function normalizeHallAssignLog(raw: unknown): HallAssignLogEntry[] {
             assignedAt: entry.assignedAt,
             ...(entry.outcome === 'success' || entry.outcome === 'failure' ? { outcome: entry.outcome } : {}),
             ...(typeof entry.settledAt === 'string' ? { settledAt: entry.settledAt } : {}),
+            ...(typeof entry.difficulty === 'string' ? { difficulty: entry.difficulty } : {}),
+            ...(entry.board === 'Military' || entry.board === 'Domestic' || entry.board === 'Expedition' ? { board: entry.board } : {}),
         }));
 }
 
@@ -435,6 +454,9 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.officerState !== undefined ? { officerState: normalizeOfficerState(snapshot.officerState) } : {}),
         ...(snapshot.sandtableMarkersPlaced !== undefined ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced) } : {}),
         ...(snapshot.sandtableMarkerTerritories !== undefined ? { sandtableMarkerTerritories: normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories) } : {}),
+        ...(snapshot.governanceAssignments !== undefined ? { governanceAssignments: normalizeGovernanceAssignments(snapshot.governanceAssignments) } : {}),
+        ...(snapshot.territories !== undefined ? { territories: normalizeKeepTerritories(snapshot.territories) } : {}),
+        ...(snapshot.journalEntries !== undefined ? { journalEntries: normalizeJournalEntries(snapshot.journalEntries) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉

@@ -64,7 +64,7 @@ import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type Domesti
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
 import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
-import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult } from '../systems/HallAutoAssign';
+import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, settleOpenAssignsForSeason, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult, type HallAutoAssignTaskInput } from '../systems/HallAutoAssign';
 import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
 import { estimateSortiePower } from '../systems/SortiePrediction';
 import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
@@ -168,9 +168,12 @@ import {
     type JournalWriteResult,
 } from '../systems/JournalLog';
 import type { DomesticTaskId } from '../systems/DomesticTasks';
-
-/** 主城領地 id（暫定：規格未給固定 id，待領地資料定案後改由資料檔提供）。 */
-const HOME_TERRITORY_ID = 'home-city';
+import {
+    defaultKeepTerritories,
+    normalizeGovernanceAssignments,
+    normalizeJournalEntries,
+    normalizeKeepTerritories,
+} from '../systems/LifespanSave';
 import {
     BattleResult,
     BattleSettlement,
@@ -1111,6 +1114,9 @@ export class GameSession {
         this._breedingBirthRecords = [];
         this._officerState = initialOfficerState();
         this._sandtableMarkerTerritories = [];
+        this._governance = [];
+        this._territories = defaultKeepTerritories();
+        this._journal = createEmptyJournal();
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
         // 上一局的進度不能帶進新局（PROG-2-0660）
@@ -1354,7 +1360,7 @@ export class GameSession {
 
     // ---- 領地治理接線（GOV-04 指派 / GOV-09 主城保護 / JRN-01 日誌，PROG-2-0974）：目前僅記憶體狀態，尚未寫入存檔 ----
     private _governance: GovernanceAssignment[] = [];
-    private _territories: KeepTerritory[] = [{ id: HOME_TERRITORY_ID, isHome: true }];
+    private _territories: KeepTerritory[] = defaultKeepTerritories();
     private _journal: JournalState = createEmptyJournal();
 
     private _resetGovernanceState(): void {
@@ -2028,6 +2034,7 @@ export class GameSession {
         }
         this._roster.replaceAll(roster);
         this._clearLeadIfGone();
+        this._settleOpenHallAssigns();
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
         // 陣亡或退休的武將不再佔著內政任務格
         this._governance = this._governance.filter((a) => roster.some((general) => general.id === a.generalUid && general.status !== 'dead'));
@@ -2181,7 +2188,7 @@ export class GameSession {
      * 未開啟委任或沒有可選武將時拒絕，不寫紀錄、不存檔。
      */
     public async autoAssignHallMission(
-        task: Readonly<HallTaskIntelInput & { taskId: string }>,
+        task: HallAutoAssignTaskInput,
         assignedAt: string,
     ): Promise<HallAutoAssignResult> {
         const candidates = this.getDeployableGenerals().map((general) => ({
@@ -2195,6 +2202,27 @@ export class GameSession {
             await this.save();
         }
         return result;
+    }
+
+    /**
+     * 季結自動結算所有未結的大廳委任（PROG-2-1015，暫定）：依武將戰力判定成敗、釋放武將；
+     * 紀錄帶有難度與任務牆時，同時入帳官職經驗（比照派遣即結算）。武將已不在名冊時戰力為 0，判為失敗。
+     */
+    private _settleOpenHallAssigns(): void {
+        const roster = this._roster.getAll();
+        const settled = settleOpenAssignsForSeason(
+            this._hallAssignLog,
+            (generalId) => {
+                const general = roster.find((g) => g.id === generalId);
+                return general ? estimateSortiePower(general) : 0;
+            },
+            new Date().toISOString(),
+        );
+        this._hallAssignLog = settled.log;
+        for (const entry of settled.settled) {
+            if (entry.difficulty === undefined || entry.board === undefined) continue;
+            this.settleHallMission({ difficulty: entry.difficulty, board: entry.board, success: entry.success });
+        }
     }
 
     /** 結算同一任務最新一筆未結算的委任紀錄（結算結果由戰後系統傳入）；沒有未結算紀錄時回傳 false。 */
@@ -2566,7 +2594,26 @@ export class GameSession {
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
         const base = createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount, this._officerState, this.sandtableMarkersPlaced, this._sandtableMarkerTerritories);
         const withJournal = this._gachaMentorJournal.length > 0 ? { ...base, gachaMentorJournal: normalizeGachaMentorJournal(this._gachaMentorJournal) } : base;
-        return this._hallAssignLog.length > 0 ? { ...withJournal, hallAssignLog: normalizeHallAssignLog(this._hallAssignLog) } : withJournal;
+        const withHallLog = this._hallAssignLog.length > 0 ? { ...withJournal, hallAssignLog: normalizeHallAssignLog(this._hallAssignLog) } : withJournal;
+        return { ...withHallLog, ...this.lifespanSaveFields() };
+    }
+
+    /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'territories' | 'journalEntries'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'territories' | 'journalEntries'> = {};
+        if (this._governance.length > 0) fields.governanceAssignments = this.governanceAssignments;
+        if (JSON.stringify(this._territories) !== JSON.stringify(defaultKeepTerritories())) fields.territories = this.territories;
+        if (this._journal.entries.length > 0) {
+            fields.journalEntries = this._journal.entries.map(e => ({ ...e, relatedGeneralUids: [...e.relatedGeneralUids] }));
+        }
+        return fields;
+    }
+
+    /** 讀檔時還原領地治理狀態（PROG-2-0975）；缺欄位回到預設值。 */
+    public restoreLifespanState(snapshot: PlayerSaveSnapshot): void {
+        this._governance = normalizeGovernanceAssignments(snapshot.governanceAssignments);
+        this._territories = normalizeKeepTerritories(snapshot.territories);
+        this._journal = { entries: normalizeJournalEntries(snapshot.journalEntries) };
     }
 
     /**
@@ -2647,6 +2694,7 @@ export class GameSession {
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
         this._officerState = normalizeOfficerState(snapshot.officerState);
         this._sandtableMarkerTerritories = normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories);
+        this.restoreLifespanState(snapshot);
         this._gachaMentorJournal = normalizeGachaMentorJournal(snapshot.gachaMentorJournal);
         // 領地治理、日誌尚未寫入存檔：讀檔時回到初始，不沿用目前記憶體裡別局的狀態（PROG-2-0663）
         this._resetGovernanceState();
