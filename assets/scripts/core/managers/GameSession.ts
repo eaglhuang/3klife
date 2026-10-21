@@ -1603,6 +1603,20 @@ export class GameSession {
      * 借用好友的教官（MENT-14 MVP）：找不到好友回 UNKNOWN_FRIEND；規則不過回傳原因且不改紀錄；
      * 成功寫入借用紀錄並回傳原主結義點數（由呼叫端決定如何入帳）。day 由呼叫端傳入（YYYY-MM-DD）。
      */
+    /** 借將畫面的可借性檢查：與 borrowFriendMentor 用同一組規則，回傳 null 代表可借，否則是擋下原因（不改紀錄） */
+    public borrowBlockFor(friend: NpcFriendMentor, sessionId: string): BorrowBlockReason | null {
+        const check = canBorrow(this._borrowLedger, {
+            day: `S${this._clock.state.totalSeasonsElapsed}`,
+            borrowerId: 'player',
+            ownerId: friend.friendId,
+            candidate: borrowCandidateOf(friend),
+            sessionId,
+            recordId: '',
+        });
+        if (check.ok === false) return check.blocked;
+        return null;
+    }
+
     public async borrowFriendMentor(request: { friendId: string; sessionId: string; recordId: string }):
         Promise<{ ok: true; ownerBondReward: number } | { ok: false; blocked: BorrowBlockReason | 'UNKNOWN_FRIEND' }> {
         const friend = this._npcFriendMentors.find((f) => f.friendId === request.friendId);

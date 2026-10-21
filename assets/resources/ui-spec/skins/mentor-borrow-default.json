@@ -1,0 +1,49 @@
+{
+  "id": "mentor-borrow-default",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "mentor.borrow.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 232
+    },
+    "mentor.borrow.row.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 180
+    },
+    "mentor.borrow.button.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 140
+    },
+    "mentor.borrow.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 28,
+      "lineHeight": 34,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    },
+    "mentor.borrow.label.body": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "overflow": "CLAMP"
+    },
+    "mentor.borrow.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    }
+  }
+}
