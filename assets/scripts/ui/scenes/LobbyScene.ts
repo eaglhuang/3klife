@@ -2728,7 +2728,7 @@ export class LobbyScene extends Component {
 
     private async _showGeneralListWithHandler(
         onSelectGeneral: (config: GeneralConfig) => void | Promise<void>,
-        options: { factionFilter?: 'all' | 'player' | 'enemy'; npcDialogueDevControls?: boolean } = { factionFilter: 'all' },
+        options: NonNullable<GeneralListOpenPayload['options']> = { factionFilter: 'all' },
     ): Promise<void> {
         await services().ui.open(UIID.GeneralList, {
             generals: this._generals,
