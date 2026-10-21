@@ -54,6 +54,9 @@ export interface IDeployController {
     canUsePlayerSkills(): boolean;
     /** 施放主將技能；成功回傳 true */
     triggerGeneralSkill(): boolean;
+    /** 委任開關（PROG-2-0913）：開啟後玩家部署階段由委任 AI 自動部署 */
+    setDelegateEnabled(on: boolean): void;
+    isDelegateEnabled(): boolean;
 }
 
 /**

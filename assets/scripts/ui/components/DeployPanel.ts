@@ -114,6 +114,9 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
 
   @property(Button)
   btnEndTurn: Button = null!;
+  /** 委任開關按鈕（PROG-2-0913）；節點由 cc 場景綁定，未綁定時此功能不可用 */
+  @property(Button)
+  btnDelegate: Button | null = null;
 
   // ─── 狀態標籤 ─────────────────────────────────────────────────────────────
   @property(Label)
@@ -277,6 +280,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
     this.btnDuel?.node.on(Button.EventType.CLICK, this.onDuelClick, this);
     this.btnTactics?.node.on(Button.EventType.CLICK, this.onTacticsClick, this);
     this.btnEndTurn?.node.on(Button.EventType.CLICK, this.onEndTurnClick, this);
+    this.btnDelegate?.node.on(Button.EventType.CLICK, this.onDelegateToggleClick, this);
 
     // 路線按鈕已廢棄
     this.laneButtons.forEach(btn => btn.node.destroy());
@@ -852,6 +856,14 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
   private onTacticsClick(): void {
     if (!this.ctrl) return;
     this.showToast("計謀策略功能開發中");
+  }
+
+  /** 委任開關切換（PROG-2-0913）：依控制器目前狀態反向設定，並以吐司回報 */
+  private onDelegateToggleClick(): void {
+    if (!this.ctrl) return;
+    const next = !this.ctrl.isDelegateEnabled();
+    this.ctrl.setDelegateEnabled(next);
+    this.showToast(next ? '委任已開啟：部署交由委任 AI' : '委任已關閉：回到手動部署');
   }
 
   private onEndTurnClick(): void {
