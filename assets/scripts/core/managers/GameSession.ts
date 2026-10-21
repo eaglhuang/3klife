@@ -1594,7 +1594,7 @@ export class GameSession {
             recordId: request.recordId,
         };
         const check = canBorrow(this._borrowLedger, borrowRequest);
-        if (!check.ok) return { ok: false, blocked: check.blocked };
+        if (check.ok === false) return { ok: false, blocked: check.blocked };
         const outcome = createBorrow(this._borrowLedger, borrowRequest);
         if (!outcome) throw new Error('canBorrow 通過後 createBorrow 不應回傳 null');
         this._borrowLedger = outcome.ledger;
