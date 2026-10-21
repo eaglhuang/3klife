@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "templateFamily": "season-report",
+  "layout": "season-report-main",
+  "defaultState": "smoke-report",
+  "states": {
+    "smoke-report": {
+      "title": "季度戰報",
+      "seasonLabel": "第 2 年 春季",
+      "emptyHintLabel": "本季沒有可回報的武將",
+      "hintLabel": "另有 2 位武將未列出 ・ 結緣建議門檻：精力 50% 以上（暫定）",
+      "row0RankLabel": "1",
+      "row0LineLabel": "本季戰報：關羽 精力剩 72%，可進行結緣。",
+      "row1RankLabel": "2",
+      "row1LineLabel": "本季戰報：呂布 精力剩 41%，不建議進行結緣。",
+      "row2RankLabel": "3",
+      "row2LineLabel": "本季戰報：趙雲 精力剩 90%，可進行結緣。",
+      "row3RankLabel": "—",
+      "row3LineLabel": "—",
+      "row4RankLabel": "—",
+      "row4LineLabel": "—",
+      "row5RankLabel": "—",
+      "row5LineLabel": "—"
+    }
+  }
+}

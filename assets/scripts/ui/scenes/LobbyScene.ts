@@ -13,6 +13,7 @@ import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
 import { EliteTroopCodexComposite, type EliteTroopCodexOpenPayload } from '../components/EliteTroopCodexComposite';
 import { LobbyMissionDetailDialogComposite, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
 import { LobbyLeaderboardComposite, type LobbyLeaderboardOpenPayload } from '../components/LobbyLeaderboardComposite';
+import { SeasonReportComposite, type SeasonReportOpenPayload } from '../components/SeasonReportComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS, type AddGeneralsResult } from '../../core/managers/GameSession';
@@ -261,6 +262,7 @@ export class LobbyScene extends Component {
     private _eliteTroopCodexPanel: EliteTroopCodexComposite | null = null;
     private _missionDetailDialogPanel: LobbyMissionDetailDialogComposite | null = null;
     private _leaderboardPanel: LobbyLeaderboardComposite | null = null;
+    private _seasonReportPanel: SeasonReportComposite | null = null;
     private _characterDs3ActiveTab: GeneralDetailRuntimeTab = 'Overview';
     private _isCharacterDs3TabSwitching = false;
     private _gachaPoolIndex = 0;
@@ -372,6 +374,7 @@ export class LobbyScene extends Component {
         await this._mountEliteTroopCodexPanel();
         await this._mountLobbyMissionDetailDialogPanel();
         await this._mountLobbyLeaderboardPanel();
+        await this._mountSeasonReportPanel();
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
         this._openPrisonerPopupIfPending();
@@ -2073,13 +2076,17 @@ export class LobbyScene extends Component {
 
     private async _onClickAdvanceSeason(): Promise<void> {
         try {
-            const { advance, agingEvents } = await services().session.advanceSeason();
+            const { advance, agingEvents, quarterlyReports } = await services().session.advanceSeason();
             const died = agingEvents.filter((event) => event.type === 'died').length;
             const suffix = died > 0 ? `（${died} 位武將離世）` : '';
             services().event.emit('SHOW_TOAST', {
                 message: `進入${seasonText(advance.current)}${suffix}`,
                 duration: 2,
             });
+            if (quarterlyReports && quarterlyReports.length > 0) {
+                const payload: SeasonReportOpenPayload = { seasonLabel: seasonText(advance.current), reports: quarterlyReports };
+                void services().ui.open(UIID.SeasonReport, payload);
+            }
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 推進季度失敗', error);
             services().event.emit('SHOW_TOAST', { message: '推進季度失敗', duration: 2 });
@@ -2248,6 +2255,20 @@ export class LobbyScene extends Component {
         panelNode.setSiblingIndex(this.node.children.length - 1);
 
         this._leaderboardPanel = panelNode.getComponent(LobbyLeaderboardComposite) ?? panelNode.addComponent(LobbyLeaderboardComposite);
+        panelNode.active = false;
+    }
+
+    private async _mountSeasonReportPanel(): Promise<void> {
+        const panelNode = this.node.getChildByName('SeasonReportComposite') ?? new Node('SeasonReportComposite');
+        panelNode.layer = this.node.layer;
+        if (!panelNode.parent) {
+            panelNode.parent = this.node;
+        }
+
+        this._ensureWidget(panelNode);
+        panelNode.setSiblingIndex(this.node.children.length - 1);
+
+        this._seasonReportPanel = panelNode.getComponent(SeasonReportComposite) ?? panelNode.addComponent(SeasonReportComposite);
         panelNode.active = false;
     }
 
@@ -2471,6 +2492,7 @@ export class LobbyScene extends Component {
         const eliteTroopCodexController = this._createEliteTroopCodexController();
         const missionDetailDialogController = this._createLobbyMissionDetailDialogController();
         const leaderboardController = this._createLobbyLeaderboardController();
+        const seasonReportController = this._createSeasonReportController();
 
         services().ui.register(UIID.LobbyMain, lobbyMainController);
         services().ui.register(UIID.GeneralList, generalListController);
@@ -2484,6 +2506,7 @@ export class LobbyScene extends Component {
         services().ui.register(UIID.EliteTroopCodex, eliteTroopCodexController);
         services().ui.register(UIID.LobbyMissionDetailDialog, missionDetailDialogController);
         services().ui.register(UIID.LobbyLeaderboard, leaderboardController);
+        services().ui.register(UIID.SeasonReport, seasonReportController);
     }
 
     private _createEliteTroopCodexController(): IUIManagedController {
@@ -2514,6 +2537,22 @@ export class LobbyScene extends Component {
             },
             hide: () => {
                 this._leaderboardPanel!.hide();
+            },
+        };
+    }
+
+    private _createSeasonReportController(): IUIManagedController {
+        if (!this._seasonReportPanel) {
+            throw new Error('[LobbyScene] SeasonReportComposite cannot be registered before mount');
+        }
+
+        return {
+            node: this._seasonReportPanel.node,
+            show: async (payload?: unknown) => {
+                await this._seasonReportPanel!.show(payload as SeasonReportOpenPayload | undefined);
+            },
+            hide: () => {
+                this._seasonReportPanel!.hide();
             },
         };
     }

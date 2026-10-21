@@ -1,0 +1,84 @@
+{
+  "id": "season-report-default",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "season-report.overlay.mask": {
+      "kind": "sprite-frame",
+      "path": "sprites/common/overlay_dark/spriteFrame",
+      "spriteType": "sliced",
+      "border": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "allowAutoAtlas": false
+    },
+    "season-report.card.bg": {
+      "kind": "sprite-frame",
+      "path": "sprites/common/popup_card_bg/spriteFrame",
+      "spriteType": "sliced",
+      "border": [
+        40,
+        40,
+        40,
+        40
+      ],
+      "allowAutoAtlas": true
+    },
+    "season-report.header.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 252
+    },
+    "season-report.scroll.bg": {
+      "kind": "color-rect",
+      "color": "background",
+      "alpha": 194
+    },
+    "season-report.row.bg": {
+      "kind": "color-rect",
+      "color": "backgroundNavyAlt",
+      "alpha": 170
+    },
+    "season-report.footer.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 224
+    },
+    "season-report.close.btn": {
+      "kind": "color-rect",
+      "color": "surfaceContainer",
+      "alpha": 220
+    },
+    "season-report.text.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 34,
+      "lineHeight": 40,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "season-report.text.primary": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 24,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "season-report.text.secondary": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "isBold": false,
+      "overflow": "CLAMP"
+    }
+  }
+}
