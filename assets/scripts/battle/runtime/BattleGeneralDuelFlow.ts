@@ -6,6 +6,12 @@ import { TroopUnit, type TroopStats } from "../../core/models/TroopUnit";
 import { BattleState } from "../models/BattleState";
 import { type BattleResult, BATTLE_FRONT_DEPTH } from "../BattleTypes";
 
+/**
+ * 單挑最多交手回合數（暫定，規格未定義）。達上限仍雙方存活 → 平局，單挑結束、不產生死亡、不套用懲罰。
+ * 避免骰子異常（例如全部閃躲）時迴圈永不結束。
+ */
+export const DUEL_MAX_ROUNDS = 50;
+
 export type { BattleResult };
 
 export interface BattleGeneralDuelFlowContext {
@@ -282,7 +288,8 @@ export class BattleGeneralDuelFlow {
     const challengerAttack = getAttack(challengerGeneral, challengerUnit);
     const defenderAttack = getAttack(defenderGeneral, defenderUnit);
 
-    while (!challengerGeneral.isDead() && !defenderGeneral.isDead()) {
+    for (let round = 0; round < DUEL_MAX_ROUNDS; round += 1) {
+      if (challengerGeneral.isDead() || defenderGeneral.isDead()) break;
       const defenderDodged = svc.formula.rollDodge(defenderGeneral.luk);
       let attackDmg = challengerAttack;
       let challengerCrit = false;
