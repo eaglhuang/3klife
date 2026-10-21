@@ -523,6 +523,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnBorrowClose', handler: () => this._setMentorBorrowOpen(false) },
             { buttonId: 'btnBorrowPrev', handler: () => this._turnMentorBorrowPage(-1) },
             { buttonId: 'btnBorrowNext', handler: () => this._turnMentorBorrowPage(1) },
+            { buttonId: 'btnBorrowRecord', handler: () => { this._setMentorBorrowOpen(false); this._setGraduationOpen(true); } },
             { buttonId: 'btnBorrowRow0', handler: () => { void this._borrowRow(0); } },
             { buttonId: 'btnBorrowRow1', handler: () => { void this._borrowRow(1); } },
             { buttonId: 'btnBorrowRow2', handler: () => { void this._borrowRow(2); } },
