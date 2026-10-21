@@ -16,7 +16,9 @@ export interface BattleSpecialResolvePhaseContext {
   readonly state: BattleState;
   readonly actingFaction: Faction;
   readonly turnManager: BattleTurnManager;
-  castEnemySeedTactic(battleSkillId: string | null): SkillExecutionResult;
+  castEnemySeedTactic(battleSkillId: string | null, tacticId?: string | null): SkillExecutionResult;
+  /** 敵方選技（PROG-2-0918）：回傳本回合要施放的戰法；null 時退回武將主技能 */
+  chooseEnemyTactic?(): { tacticId: string; battleSkillId: string } | null;
 }
 
 export function executeBattleSpecialResolvePhase(context: BattleSpecialResolvePhaseContext): void {
@@ -37,7 +39,11 @@ export function executeBattleSpecialResolvePhase(context: BattleSpecialResolvePh
 
   const enemyGeneral = context.state.enemyGeneral;
   if (context.actingFaction === Faction.Enemy && enemyGeneral?.canUseSkill() && context.turnManager.canEnemyAutoCastSkill(currentTurn)) {
-    const result = context.castEnemySeedTactic(enemyGeneral.skillId ?? enemyGeneral.battlePrimarySkillId ?? null);
+    const chosen = context.chooseEnemyTactic?.() ?? null;
+    const result = context.castEnemySeedTactic(
+      chosen?.battleSkillId ?? enemyGeneral.skillId ?? enemyGeneral.battlePrimarySkillId ?? null,
+      chosen?.tacticId ?? null,
+    );
     if (result.applied) {
       context.turnManager.markEnemyAutoSkillUsed(currentTurn);
       enemyGeneral.currentSp = 0;

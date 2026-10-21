@@ -3,6 +3,7 @@ import {
   EVENT_NAMES,
   Faction,
   GAME_CONFIG,
+  TerrainType,
   TroopType,
   Weather,
   BattleTactic,
@@ -83,6 +84,11 @@ import {
   type DelegateQuality,
   type DelegateSituation,
 } from '../../core/systems/DelegateAi';
+import { FormulaSystem } from '../../core/systems/FormulaSystem';
+import { buildEnemyTacticCandidates } from '../shared/EnemyTacticCandidates';
+import { pickEnemyTactic, type TacticMetrics } from '../shared/EnemyTacticNumbers';
+import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
+import type { TacticAiSituation } from '../shared/TacticAiRules';
 
 /**
  * [P2-N3] 部署失敗原因：food = 糧草不足（原 dp）。
@@ -600,6 +606,71 @@ export class BattleController {
     return this.skillDispatcher.dispatchDirectBattleSkill(options.battleSkillId ?? null, sourceType, faction, options);
   }
 
+  /**
+   * 敵方選技（PROG-2-0918）：戰法槽 → 戰法庫候選 → 填入預估數值 → AI 規則選一招。
+   * 數值暫定：單體傷害以我方血量最低的單位估算，倍率 1、地形平原；效果值與地形不填（分數為 0）。
+   * 沒有可選戰法或戰法庫查不到 battleSkillId 時回 null，呼叫端退回武將主技能。
+   */
+  public chooseEnemyTactic(): { tacticId: string; battleSkillId: string } | null {
+    const general = this.state.enemyGeneral;
+    if (!general) return null;
+
+    const library = [...this.tacticDefinitionMap.values()].map(def => ({ id: def.id, category: def.category }));
+    const candidates = buildEnemyTacticCandidates(general.tacticSlots, library);
+    if (candidates.length === 0) return null;
+
+    const playerUnits = this.livingUnitsOf(Faction.Player);
+    const enemyUnits = this.livingUnitsOf(Faction.Enemy);
+    const situation: TacticAiSituation = {
+      enemyHp: playerUnits.map(unit => unit.currentHp),
+      allyLowestHpRate: enemyUnits.length === 0
+        ? 1
+        : Math.min(...enemyUnits.map(unit => unit.currentHp / unit.maxHp)),
+    };
+
+    const metrics: Record<string, TacticMetrics> = {};
+    const weakest = playerUnits.reduce<TroopUnit | null>(
+      (lowest, unit) => (lowest === null || unit.currentHp < lowest.currentHp ? unit : lowest),
+      null,
+    );
+    if (weakest) {
+      const formula = new FormulaSystem();
+      const attackerInt = general.int > general.str;
+      const attackerAttack = formula.calculateGeneralAttack(
+        attackerInt
+          ? { int: general.int, lea: general.lea, maxHp: general.maxHp }
+          : { str: general.str, lea: general.lea, maxHp: general.maxHp },
+      );
+      const damage = estimateTacticDamage(
+        {
+          attackerAttack,
+          defenderDefense: weakest.getEffectiveDefense(),
+          attackerType: attackerInt ? TroopType.Archer : TroopType.Infantry,
+          defenderType: weakest.type,
+          attackerTerrain: TerrainType.Plain,
+          defenderTerrain: TerrainType.Plain,
+          attackBonus: general.attackBonus,
+        },
+        1,
+        formula,
+      );
+      for (const candidate of candidates) {
+        if (candidate.category === 'single-damage') {
+          metrics[candidate.tacticId] = { estimatedDamage: damage };
+        }
+      }
+    }
+
+    const tacticId = pickEnemyTactic(candidates, metrics, situation);
+    if (!tacticId) return null;
+    const battleSkillId = this.tacticDefinitionMap.get(tacticId)?.battleSkillId;
+    return battleSkillId ? { tacticId, battleSkillId } : null;
+  }
+
+  private livingUnitsOf(faction: Faction): TroopUnit[] {
+    return [...this.state.units.values()].filter(unit => unit.faction === faction && unit.currentHp > 0);
+  }
+
   public triggerPlayerSeedTactic(options: GeneralSkillCastOptions = {}): boolean {
     if (!this.canUsePlayerSkills()) return false;
 
@@ -960,7 +1031,7 @@ export class BattleController {
           state: this.state,
           actingFaction: Faction.Player,
           turnManager: this.turnManager,
-          castEnemySeedTactic: (battleSkillId) => this.castBattleSkill(Faction.Enemy, { battleSkillId }),
+          castEnemySeedTactic: (battleSkillId, tacticId) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId }),
         });
         return {};
       case 'enemy-special-resolve':
@@ -969,7 +1040,8 @@ export class BattleController {
           state: this.state,
           actingFaction: Faction.Enemy,
           turnManager: this.turnManager,
-          castEnemySeedTactic: (battleSkillId) => this.castBattleSkill(Faction.Enemy, { battleSkillId }),
+          castEnemySeedTactic: (battleSkillId, tacticId) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId }),
+          chooseEnemyTactic: () => this.chooseEnemyTactic(),
         });
         if (phaseName === 'enemy-special-resolve' && this.state.battleTactic === BattleTactic.FloodAttack) {
           resolveBattleTacticBehavior(this.state.battleTactic).advanceTurn(this.state, {
