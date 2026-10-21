@@ -763,6 +763,13 @@ export class BattleController {
             damageSource: 'forced-move',
             allowDamageLink: false,
           }),
+          applyGhostPassDamage: (target, damage) => this.combatResolver.applyUnitDamage(target, damage, null, {
+            attackerId: null,
+            attackerLane: null,
+            attackerDepth: null,
+            damageSource: 'ghost-pass',
+            allowDamageLink: false,
+          }),
         });
         return {};
       case 'enemy-auto-move':
@@ -781,6 +788,13 @@ export class BattleController {
             attackerLane: null,
             attackerDepth: null,
             damageSource: 'forced-move',
+            allowDamageLink: false,
+          }),
+          applyGhostPassDamage: (target, damage) => this.combatResolver.applyUnitDamage(target, damage, null, {
+            attackerId: null,
+            attackerLane: null,
+            attackerDepth: null,
+            damageSource: 'ghost-pass',
             allowDamageLink: false,
           }),
         });
