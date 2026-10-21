@@ -1984,8 +1984,9 @@ export class GameSession {
 
         if (options.rebirthOnDuplicate && duplicates.length > 0) {
             // 同一批可能抽到同名多次，逐筆依序累加轉數
+            // 同一批先抽到的新武將還在 added 裡、尚未進名冊，批內第二張也要算重複（與跨批一致）
             const roster = this._roster.getAll();
-            const byId = new Map(roster.map((general) => [general.id, general]));
+            const byId = new Map([...roster, ...added].map((general) => [general.id, general]));
             for (const duplicate of duplicates) {
                 const target = byId.get(duplicate.id);
                 if (!target) continue;
@@ -1998,6 +1999,7 @@ export class GameSession {
             }
             if (rebirths.length > 0) {
                 this._roster.replaceAll(roster.map((general) => byId.get(general.id) ?? general));
+                for (let i = 0; i < added.length; i++) added[i] = byId.get(added[i].id) ?? added[i];
             }
             this._bondPoints += bondPointsGained;
         }
