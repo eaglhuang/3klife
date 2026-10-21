@@ -11,7 +11,7 @@ import { BattleTactic } from '../../core/config/Constants';
 import { GeneralListComposite } from '../components/GeneralListComposite';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
 import { EliteTroopCodexComposite, type EliteTroopCodexOpenPayload } from '../components/EliteTroopCodexComposite';
-import { LobbyMissionDetailDialogComposite, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
+import { LobbyMissionDetailDialogComposite, type LobbyMissionActionKey, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
 import { LobbyLeaderboardComposite, type LobbyLeaderboardOpenPayload } from '../components/LobbyLeaderboardComposite';
 import { SeasonReportComposite, type SeasonReportOpenPayload } from '../components/SeasonReportComposite';
 import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
@@ -52,6 +52,7 @@ import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
+import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
@@ -1081,10 +1082,10 @@ export class LobbyScene extends Component {
             refreshSpots: () => services().session.refreshHallSpots(Date.now() / 1000, Math.random),
             displayName: (generalId) => services().session.roster.find((g) => g.id === generalId)?.name ?? generalId,
         });
-        const rowBindings = Array.from({ length: HALL_BOARD_MAX_ROWS }, (_, i) => ({
-            buttonId: `btnHallRow${i}`,
-            handler: () => { void this._onClickHallAccept(i); },
-        }));
+        const rowBindings = Array.from({ length: HALL_BOARD_MAX_ROWS }, (_, i) => [
+            { buttonId: `btnHallRow${i}`, handler: () => { void this._onClickHallAccept(i); } },
+            { buttonId: `btnHallRow${i}Detail`, handler: () => { this._onClickHallDetail(i); } },
+        ]).flat();
         this._hallBoardHost = await this._mountPreviewScreenHost('HallBoardHost', 'hall-board-screen', [
             { buttonId: 'btnClose', handler: () => { this._closeHallBoard(); } },
             { buttonId: 'btnHallBoardMilitary', handler: () => { this._switchHallBoard('Military'); } },
@@ -1508,6 +1509,47 @@ export class LobbyScene extends Component {
         }
         services().event.emit('SHOW_TOAST', { message: result.outcome.success ? '任務成功' : '任務失敗', duration: 2.5 });
         return true;
+    }
+
+    /** 任務列「詳情」：開啟任務詳情彈窗（PROG-2-1007）。 */
+    private _onClickHallDetail(index: number): void {
+        const board = this._hallBoard;
+        const row = board?.rows()[index];
+        const task = board?.taskAt(index);
+        if (!board || !row || !task) {
+            services().event.emit('SHOW_TOAST', { message: '此格目前沒有任務', duration: 2.5 });
+            return;
+        }
+        const taskId = task.Task_ID;
+        void services().ui.open(UIID.LobbyMissionDetailDialog, {
+            state: hallMissionDialogStateOf(row, HALL_BOARD_TYPE_LABEL[board.board]),
+            availableGenerals: this._buildMissionDetailGeneralOptions(),
+            selectedGeneralId: services().session.leadGeneralId ?? undefined,
+            onActionSelected: (action) => this._onHallMissionAction(action, taskId),
+        } satisfies LobbyMissionDetailDialogOpenPayload);
+    }
+
+    /** 彈窗「委任」：由 AI 選將並寫入委任紀錄（PROG-2-1006）；其他動作仍沿用既有流程，本卡不改。 */
+    private async _onHallMissionAction(action: LobbyMissionActionKey, taskId: string): Promise<void> {
+        if (action !== 'assign') return;
+        const task = this._lobbyHub?.Mission_Boards
+            ? Object.values(this._lobbyHub.Mission_Boards).flatMap((board) => board?.Tasks ?? []).find((t) => t.Task_ID === taskId)
+            : undefined;
+        if (!task) {
+            services().event.emit('SHOW_TOAST', { message: '此任務已不存在', duration: 2.5 });
+            return;
+        }
+        try {
+            const result = await services().session.autoAssignHallMission(
+                { taskId, Intel_Reveal_Percent: task.Intel_Reveal_Percent, AI_Assign_Enabled: task.AI_Assign_Enabled },
+                new Date().toISOString(),
+            );
+            services().event.emit('SHOW_TOAST', { message: hallAssignNoticeOf(result), duration: 2.5 });
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 委任大廳任務失敗', error);
+        } finally {
+            this._refreshHallBoard();
+        }
     }
 
     private async _onClickHallAccept(index: number): Promise<void> {
