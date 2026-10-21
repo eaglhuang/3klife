@@ -79,7 +79,7 @@ export function createGhostMoveE2ESuite(): TestSuite {
         const mover = put(ctrl, ghost('mover', 2, 0, 2));
         const weak = put(ctrl, troop('weak', Faction.Enemy, 2, 1, { hp: 1 }));
         const died: string[] = [];
-        const off = services().event.on(EVENT_NAMES.UnitDied, (payload: { unitId: string }) => { died.push(payload.unitId); });
+        const off = services().event.on(EVENT_NAMES.UnitDied, (payload?: { unitId: string }) => { if (payload) died.push(payload.unitId); });
         ctrl.resolvePlayerTurn();
         off();
         assert.equals(2, mover.depth);
