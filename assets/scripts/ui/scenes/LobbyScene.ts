@@ -51,6 +51,8 @@ import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoard
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
+import { nurtureGraduationRows } from '../core/NurtureGraduationView';
+import { pageSliceOf } from '../core/FixedSlotPager';
 import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
 import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
@@ -197,6 +199,8 @@ export class LobbyScene extends Component {
     private _seasonHudHost: UIScreenPreviewHost | null = null;
     private _officerHudHost: UIScreenPreviewHost | null = null;
     private _officerPageHost: UIScreenPreviewHost | null = null;
+    private _graduationHost: UIScreenPreviewHost | null = null;
+    private _graduationPage = 0;
     /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
@@ -311,6 +315,7 @@ export class LobbyScene extends Component {
         await this._mountSeasonHud();
         await this._mountOfficerHud();
         await this._mountNurtureFlow();
+        await this._mountGraduationRecord();
         await this._mountMentorCardDetail();
         await this._mountGeneralVersionGallery();
         await this._mountBondingSetup();
@@ -438,6 +443,45 @@ export class LobbyScene extends Component {
     private _setOfficerPageOpen(open: boolean): void {
         if (open) this._refreshOfficerHud();
         if (this._officerPageHost) this._officerPageHost.node.active = open;
+    }
+
+    /** 畢業紀錄畫面（PROG-2-0746）：固定 5 列、分頁按鈕；資料來自培育服務的畢業紀錄，每次打開都重算 */
+    private async _mountGraduationRecord(): Promise<void> {
+        this._graduationHost = await this._mountPreviewScreenHost('GraduationRecordHost', 'nurture-graduation-screen', [
+            { buttonId: 'btnGradClose', handler: () => this._setGraduationOpen(false) },
+            { buttonId: 'btnGradPrev', handler: () => this._turnGraduationPage(-1) },
+            { buttonId: 'btnGradNext', handler: () => this._turnGraduationPage(1) },
+        ]);
+        this._setGraduationOpen(false);
+    }
+
+    private _setGraduationOpen(open: boolean): void {
+        if (open) {
+            this._graduationPage = 0;
+            this._refreshGraduationRecord();
+        }
+        if (this._graduationHost) this._graduationHost.node.active = open;
+    }
+
+    private _turnGraduationPage(delta: number): void {
+        this._graduationPage += delta;
+        this._refreshGraduationRecord();
+    }
+
+    private _refreshGraduationRecord(): void {
+        const lookup = (key: string): string => services().i18n.t(key);
+        const records = services().nurture.getState().graduationRecords ?? [];
+        const slice = pageSliceOf(nurtureGraduationRows(records, lookup), this._graduationPage);
+        this._graduationPage = slice.page;
+        const texts: Record<string, string> = { graduationPage: `${slice.page + 1} / ${slice.pageCount}` };
+        const actives: Record<string, boolean> = {};
+        for (let i = 0; i < 5; i++) {
+            const row = slice.items[i];
+            actives[`graduationRow${i}Box`] = row !== undefined;
+            texts[`graduationRow${i}`] = row ? `${row.periodText}　${row.ratingText}\n${row.tagsText}　${row.tpText}　${row.revelationText}` : '';
+        }
+        this._graduationHost?.binder?.setTexts(texts);
+        this._graduationHost?.binder?.setActives(actives);
     }
 
     /** 季度 HUD：以 UCUF JSON（lobby-season-hud-screen）執行期組裝，顯示「第 N 年 M 季」與推進入口 */
