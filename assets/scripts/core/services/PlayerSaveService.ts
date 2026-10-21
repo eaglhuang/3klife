@@ -273,6 +273,9 @@ export interface HallAssignLogEntry {
     assignedAt: string;
     outcome?: 'success' | 'failure';
     settledAt?: string;
+    /** 任務難度與任務牆（PROG-2-1015 季結自動結算用）；舊檔缺省 */
+    difficulty?: string;
+    board?: 'Military' | 'Domestic' | 'Expedition';
 }
 
 export function normalizeHallAssignLog(raw: unknown): HallAssignLogEntry[] {
@@ -285,6 +288,8 @@ export function normalizeHallAssignLog(raw: unknown): HallAssignLogEntry[] {
             assignedAt: entry.assignedAt,
             ...(entry.outcome === 'success' || entry.outcome === 'failure' ? { outcome: entry.outcome } : {}),
             ...(typeof entry.settledAt === 'string' ? { settledAt: entry.settledAt } : {}),
+            ...(typeof entry.difficulty === 'string' ? { difficulty: entry.difficulty } : {}),
+            ...(entry.board === 'Military' || entry.board === 'Domestic' || entry.board === 'Expedition' ? { board: entry.board } : {}),
         }));
 }
 
