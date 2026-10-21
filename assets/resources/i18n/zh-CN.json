@@ -270,5 +270,10 @@
   "UI_NAV_SUPPORT": "支援",
   "UI_NAV_GACHA": "转蛋",
   "UI_NAV_SHOP": "商店",
-  "UI_NAV_FLOOD": "洪战"
+  "UI_NAV_FLOOD": "洪战",
+  "ui.season.effect.none": "本季无特殊效果",
+  "ui.season.effect.training": "训练体力消耗 ×{0}",
+  "ui.season.effect.food": "粮草补给 ×{0}",
+  "ui.season.effect.travel": "赶路 +{0} 回合",
+  "ui.season.effect.conception": "受孕率 ×{0}"
 }

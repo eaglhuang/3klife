@@ -270,5 +270,10 @@
   "UI_NAV_SUPPORT": "支援",
   "UI_NAV_GACHA": "ガチャ",
   "UI_NAV_SHOP": "ショップ",
-  "UI_NAV_FLOOD": "洪戦"
+  "UI_NAV_FLOOD": "洪戦",
+  "ui.season.effect.none": "今季の特別効果はなし",
+  "ui.season.effect.training": "訓練スタミナ消費 ×{0}",
+  "ui.season.effect.food": "兵糧補給 ×{0}",
+  "ui.season.effect.travel": "行軍 +{0}ターン",
+  "ui.season.effect.conception": "受胎率 ×{0}"
 }

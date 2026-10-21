@@ -270,5 +270,10 @@
   "UI_NAV_SUPPORT": "Support",
   "UI_NAV_GACHA": "Gacha",
   "UI_NAV_SHOP": "Shop",
-  "UI_NAV_FLOOD": "Flood War"
+  "UI_NAV_FLOOD": "Flood War",
+  "ui.season.effect.none": "No season effect",
+  "ui.season.effect.training": "Training stamina cost ×{0}",
+  "ui.season.effect.food": "Supply income ×{0}",
+  "ui.season.effect.travel": "Travel +{0} turns",
+  "ui.season.effect.conception": "Conception rate ×{0}"
 }
