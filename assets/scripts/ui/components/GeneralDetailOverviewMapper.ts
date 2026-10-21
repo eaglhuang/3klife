@@ -9,6 +9,8 @@ import type {
     GeneralStatsConfig,
 } from '../../core/models/GeneralUnit';
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
+import type { InventoryViews } from '../../core/systems/InventoryProjection';
+import { equippedTalismanSlot, type TalismanSlotView } from '../../core/systems/TalismanSlotView';
 import { resolveRarityTier } from '../../core/utils/RarityResolver';
 import { resolveCommercialBand } from '../../core/utils/CommercialRarityBand';
 
@@ -70,6 +72,8 @@ export interface GeneralDetailOverviewContentState {
     crestTitle: string;
     crestHint: string;
     crestState: GeneralDetailCrestState;
+    /** 兵分頁虎符槽（PROG-2-1026）：由統一物件庫視圖推導，沒有視圖時為 EMPTY */
+    tallySlot: TalismanSlotView;
     crestFaceResource?: string;
     crestGlyphPrimary: string;
     crestGlyphSecondary: string;
@@ -204,7 +208,9 @@ export function buildGeneralDetailOverview(config: GeneralConfig): GeneralDetail
     };
 }
 
-export function buildGeneralDetailOverviewContentState(config: GeneralConfig): GeneralDetailOverviewContentState {
+const EMPTY_INVENTORY_VIEWS: InventoryViews = { talismans: {}, spiritCards: {}, skipped: [] };
+
+export function buildGeneralDetailOverviewContentState(config: GeneralConfig, views: InventoryViews = EMPTY_INVENTORY_VIEWS): GeneralDetailOverviewContentState {
     const overview = buildGeneralDetailOverview(config);
     const storyCells = storyCellsToRecord(overview.cards.storyCells);
     const crestState = config.profilePresentation?.crestState ?? overview.cards.crestState;
@@ -250,6 +256,7 @@ export function buildGeneralDetailOverviewContentState(config: GeneralConfig): G
                 : storyCells,
         },
         trainingProfile: buildTrainingProfile(config),
+        tallySlot: equippedTalismanSlot(views, config.id),
         portraitResource: `sprites/generals/${config.id.replace(/-/g, '_')}_portrait`,
     };
 }
