@@ -71,7 +71,9 @@ export function delegateDecideDeploy(
 
     // 精銳：非主將目標時，保留槽不得佔用（暫定：規格「保留 1 槽」與「等主將戰再下」兩條都套用）
     if (check.cost.isElite && !situation.bossTargetVisible) {
-        if (state.eliteDeployed + 1 > state.eliteCap - policy.reserveSiegeSlots) {
+        // 以場上現有精銳計（與 checkDeploy 同口徑）；eliteDeployed 是累計派出數，陣亡退場後不會減少
+        const eliteActive = Object.values(state.units).filter((unit) => unit.isElite && !unit.retired).length;
+        if (eliteActive + 1 > state.eliteCap - policy.reserveSiegeSlots) {
             return { deploy: false, reason: 'hold-reserved-elite' };
         }
         if (policy.reserveSpecialForBoss) {
