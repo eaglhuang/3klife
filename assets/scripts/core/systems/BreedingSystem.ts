@@ -17,6 +17,7 @@
 import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
 import { toCanonicalRole, type CanonicalRole } from '../models/GeneralRole';
 import type { PersonRecord } from '../models/PersonRegistry';
+import type { RelationEventHit } from './RelationEvents';
 import { createEmptyPedigree, Pedigree, PEDIGREE_SLOTS, PedigreeSlot, pedigreeSlotGeneration } from '../services/BloodlineGraph';
 import {
     AncestorFactorSource,
@@ -530,6 +531,8 @@ export type BreedingOutcome = 'blocked' | 'failed' | 'conceived';
 
 export interface BreedingResult {
     outcome: BreedingOutcome;
+    /** 本次結緣新觸發的治理關係事件（KIN-08，例如宿敵配種）；blocked 時不產生 */
+    relationEvents?: RelationEventHit[];
     /** 本次結緣的模式標記；舊呼叫端不傳時為 Standard */
     breedingMode?: BreedingMode;
     reasons: BreedingBlockReason[];
