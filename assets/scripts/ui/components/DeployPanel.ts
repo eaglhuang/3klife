@@ -1032,7 +1032,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
           toastNode.getComponent('ToastMessageComposite')
           ?? toastNode.getComponent('ToastMessage')
           ?? toastNode.addComponent('ToastMessageComposite')
-        ) as ToastMessageLike | null;
+        ) as unknown as ToastMessageLike | null;
       } else {
         const n = new Node("Toast");
         this.node.addChild(n);
