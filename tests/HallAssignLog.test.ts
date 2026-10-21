@@ -98,5 +98,25 @@ export function createHallAssignLogSuite(): TestSuite {
         assert.equals(1, reloaded.listHallAssignRecords().length);
     });
 
+    suite.test('委任後任務結束（派遣結算）：同一任務的未結算紀錄被結清，存檔後仍在', async () => {
+        services().initialize();
+        sys.localStorage.removeItem('CLIENT_DEVICE_ID');
+        const adapter = new MemoryStorageAdapter();
+        const session = newSession(adapter, true);
+        await session.addGenerals([general('g-a', 'epic')]);
+        const assigned = await session.autoAssignHallMission(OPEN_TASK, '第1年春');
+        assert.isTrue(assigned.ok);
+        const gateTask = { Task_ID: 'HALL-T1', Difficulty: 'EASY', Required_Rank: 1, Intel_Reveal_Percent: 100, Is_Accepted: false, AI_Assign_Enabled: true };
+        const dispatched = await session.dispatchHallTask(gateTask as never, 'Military', { rankTier: 1, worldStage: 1, intel: 0 }, 'g-a', 999);
+        assert.isTrue(dispatched.ok);
+        const records = session.listHallAssignRecords('HALL-T1');
+        assert.equals(1, records.length);
+        assert.equals('success', records[0].outcome ?? '');
+
+        const reloaded = newSession(adapter);
+        assert.isTrue(await reloaded.load());
+        assert.equals('success', reloaded.listHallAssignRecords('HALL-T1')[0].outcome ?? '');
+    });
+
     return suite;
 }
