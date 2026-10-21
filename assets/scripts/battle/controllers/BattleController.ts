@@ -585,6 +585,21 @@ export class BattleController {
       enabled: !!descriptor && this.canAffordTactic(this.resolveSeedTacticId(options)) };
   }
 
+  /**
+   * 戰法施放共用入口（PROG-2-0916）：玩家與敵方都經此分派，保證同一套結算。
+   * 只負責分派到 dispatcher，不扣點、不重設 SP、不發事件；資源與事件由呼叫端決定。
+   */
+  public castBattleSkill(
+    faction: Faction,
+    options: GeneralSkillCastOptions = {},
+    sourceType: SkillSourceType = SkillSourceType.SeedTactic,
+  ): SkillExecutionResult {
+    if (sourceType === SkillSourceType.SeedTactic) {
+      return this.skillDispatcher.dispatchSeedTactic(faction, options);
+    }
+    return this.skillDispatcher.dispatchDirectBattleSkill(options.battleSkillId ?? null, sourceType, faction, options);
+  }
+
   public triggerPlayerSeedTactic(options: GeneralSkillCastOptions = {}): boolean {
     if (!this.canUsePlayerSkills()) return false;
 
@@ -597,7 +612,7 @@ export class BattleController {
     const tpCost = getTacticTpCost(tacticId);
     if (!this.canAffordTactic(tacticId)) return false;
 
-    const result = this.skillDispatcher.dispatchSeedTactic(Faction.Player, {
+    const result = this.castBattleSkill(Faction.Player, {
       ...options,
       battleSkillId: options.battleSkillId ?? descriptor?.skillId ?? null,
       tacticId,
@@ -945,7 +960,7 @@ export class BattleController {
           state: this.state,
           actingFaction: Faction.Player,
           turnManager: this.turnManager,
-          castEnemySeedTactic: (battleSkillId) => this.skillDispatcher.dispatchSeedTactic(Faction.Enemy, { battleSkillId }),
+          castEnemySeedTactic: (battleSkillId) => this.castBattleSkill(Faction.Enemy, { battleSkillId }),
         });
         return {};
       case 'enemy-special-resolve':
@@ -954,7 +969,7 @@ export class BattleController {
           state: this.state,
           actingFaction: Faction.Enemy,
           turnManager: this.turnManager,
-          castEnemySeedTactic: (battleSkillId) => this.skillDispatcher.dispatchSeedTactic(Faction.Enemy, { battleSkillId }),
+          castEnemySeedTactic: (battleSkillId) => this.castBattleSkill(Faction.Enemy, { battleSkillId }),
         });
         if (phaseName === 'enemy-special-resolve' && this.state.battleTactic === BattleTactic.FloodAttack) {
           resolveBattleTacticBehavior(this.state.battleTactic).advanceTurn(this.state, {
