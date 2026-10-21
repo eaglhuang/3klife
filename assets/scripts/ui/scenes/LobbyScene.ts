@@ -12,6 +12,7 @@ import { GeneralListComposite } from '../components/GeneralListComposite';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
 import { EliteTroopCodexComposite, type EliteTroopCodexOpenPayload } from '../components/EliteTroopCodexComposite';
 import { LobbyMissionDetailDialogComposite, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
+import { LobbyLeaderboardComposite, type LobbyLeaderboardOpenPayload } from '../components/LobbyLeaderboardComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS, type AddGeneralsResult } from '../../core/managers/GameSession';
@@ -255,6 +256,7 @@ export class LobbyScene extends Component {
     private readonly _factorHexInputsByGeneral = new Map<string, FactorHexInput[]>();
     private _eliteTroopCodexPanel: EliteTroopCodexComposite | null = null;
     private _missionDetailDialogPanel: LobbyMissionDetailDialogComposite | null = null;
+    private _leaderboardPanel: LobbyLeaderboardComposite | null = null;
     private _characterDs3ActiveTab: GeneralDetailRuntimeTab = 'Overview';
     private _isCharacterDs3TabSwitching = false;
     private _gachaPoolIndex = 0;
@@ -364,6 +366,7 @@ export class LobbyScene extends Component {
         await this._mountCharacterDs3Host();
         await this._mountEliteTroopCodexPanel();
         await this._mountLobbyMissionDetailDialogPanel();
+        await this._mountLobbyLeaderboardPanel();
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
         this._openPrisonerPopupIfPending();
@@ -2151,6 +2154,20 @@ export class LobbyScene extends Component {
         panelNode.active = false;
     }
 
+    private async _mountLobbyLeaderboardPanel(): Promise<void> {
+        const panelNode = this.node.getChildByName('LobbyLeaderboardComposite') ?? new Node('LobbyLeaderboardComposite');
+        panelNode.layer = this.node.layer;
+        if (!panelNode.parent) {
+            panelNode.parent = this.node;
+        }
+
+        this._ensureWidget(panelNode);
+        panelNode.setSiblingIndex(this.node.children.length - 1);
+
+        this._leaderboardPanel = panelNode.getComponent(LobbyLeaderboardComposite) ?? panelNode.addComponent(LobbyLeaderboardComposite);
+        panelNode.active = false;
+    }
+
     private async _mountLobbyMissionDetailDialogPanel(): Promise<void> {
         const panelNode = this.node.getChildByName('LobbyMissionDetailDialogComposite') ?? new Node('LobbyMissionDetailDialogComposite');
         panelNode.layer = this.node.layer;
@@ -2370,6 +2387,7 @@ export class LobbyScene extends Component {
         const bloodlineMirrorAwakeningController = this._createPreviewScreenController(this._bloodlineMirrorAwakeningHost, 'bloodline-mirror-awakening-screen');
         const eliteTroopCodexController = this._createEliteTroopCodexController();
         const missionDetailDialogController = this._createLobbyMissionDetailDialogController();
+        const leaderboardController = this._createLobbyLeaderboardController();
 
         services().ui.register(UIID.LobbyMain, lobbyMainController);
         services().ui.register(UIID.GeneralList, generalListController);
@@ -2382,6 +2400,7 @@ export class LobbyScene extends Component {
         services().ui.register(UIID.BloodlineMirrorAwakening, bloodlineMirrorAwakeningController);
         services().ui.register(UIID.EliteTroopCodex, eliteTroopCodexController);
         services().ui.register(UIID.LobbyMissionDetailDialog, missionDetailDialogController);
+        services().ui.register(UIID.LobbyLeaderboard, leaderboardController);
     }
 
     private _createEliteTroopCodexController(): IUIManagedController {
@@ -2396,6 +2415,22 @@ export class LobbyScene extends Component {
             },
             hide: () => {
                 this._eliteTroopCodexPanel!.hide();
+            },
+        };
+    }
+
+    private _createLobbyLeaderboardController(): IUIManagedController {
+        if (!this._leaderboardPanel) {
+            throw new Error('[LobbyScene] LobbyLeaderboardComposite cannot be registered before mount');
+        }
+
+        return {
+            node: this._leaderboardPanel.node,
+            show: async (payload?: unknown) => {
+                await this._leaderboardPanel!.show(payload as LobbyLeaderboardOpenPayload | undefined);
+            },
+            hide: () => {
+                this._leaderboardPanel!.hide();
             },
         };
     }

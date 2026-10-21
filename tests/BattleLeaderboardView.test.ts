@@ -5,6 +5,7 @@
  */
 import { TestSuite, assert } from './TestRunner';
 import {
+    buildLeaderboardPanelTexts,
     buildLeaderboardRows,
     nextLeaderboardMetric,
     LEADERBOARD_METRICS,
@@ -65,6 +66,24 @@ export function createBattleLeaderboardViewSuite(): TestSuite {
         assert.equals('guardian', nextLeaderboardMetric('kills'));
         assert.equals('damage', nextLeaderboardMetric('guardian'));
         assert.equals(3, LEADERBOARD_METRICS.length);
+    });
+
+    suite.test('畫面文字鍵為 content contract 的路徑，列數不足時以「—」佔位', () => {
+        const rows = buildLeaderboardRows(roster, 'damage', 2);
+        const texts = buildLeaderboardPanelTexts(rows, 'damage');
+        assert.equals('1', texts['DialogCard/ScrollView/ScrollContent/Row0/RankLabel']);
+        assert.equals('關羽', texts['DialogCard/ScrollView/ScrollContent/Row0/NameLabel']);
+        assert.equals('120,000', texts['DialogCard/ScrollView/ScrollContent/Row0/ValueLabel']);
+        assert.equals('—', texts['DialogCard/ScrollView/ScrollContent/Row2/NameLabel']);
+        assert.equals('傷害總量', texts['DialogCard/MetricRow/MetricDamageButton/MetricDamageLabel']);
+        assert.equals('目前排序：傷害總量', texts['DialogCard/FooterBar/HintLabel']);
+        assert.equals('', texts['DialogCard/ScrollView/ScrollContent/EmptyHintLabel']);
+    });
+
+    suite.test('沒有任何武將時顯示空白提示', () => {
+        const texts = buildLeaderboardPanelTexts([], 'kills');
+        assert.equals('尚無戰績', texts['DialogCard/ScrollView/ScrollContent/EmptyHintLabel']);
+        assert.equals('—', texts['DialogCard/ScrollView/ScrollContent/Row0/ValueLabel']);
     });
 
     return suite;

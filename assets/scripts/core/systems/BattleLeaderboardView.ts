@@ -61,3 +61,31 @@ export function nextLeaderboardMetric(current: LeaderboardMetric): LeaderboardMe
     const index = LEADERBOARD_METRICS.indexOf(current);
     return LEADERBOARD_METRICS[(index + 1) % LEADERBOARD_METRICS.length];
 }
+
+/** 畫面固定顯示的列數，與 content contract 的 row0..row4 對應 */
+export const LEADERBOARD_PANEL_ROWS = 5;
+
+const EMPTY_ROW_TEXT = '—';
+
+/**
+ * 排行榜畫面要塞進 Label 的文字，鍵為 content contract 的 bindPath（相對於畫面根節點）。
+ * 列數不足 LEADERBOARD_PANEL_ROWS 時，剩下的列以「—」佔位。
+ */
+export function buildLeaderboardPanelTexts(rows: readonly LeaderboardRow[], metric: LeaderboardMetric): Record<string, string> {
+    const texts: Record<string, string> = {
+        'DialogCard/HeaderBar/TitleLabel': '戰績排行榜',
+        'DialogCard/MetricRow/MetricDamageButton/MetricDamageLabel': LEADERBOARD_METRIC_LABEL.damage,
+        'DialogCard/MetricRow/MetricKillsButton/MetricKillsLabel': LEADERBOARD_METRIC_LABEL.kills,
+        'DialogCard/MetricRow/MetricGuardianButton/MetricGuardianLabel': LEADERBOARD_METRIC_LABEL.guardian,
+        'DialogCard/ScrollView/ScrollContent/EmptyHintLabel': rows.length === 0 ? '尚無戰績' : '',
+        'DialogCard/FooterBar/HintLabel': `目前排序：${LEADERBOARD_METRIC_LABEL[metric]}`,
+    };
+    for (let i = 0; i < LEADERBOARD_PANEL_ROWS; i += 1) {
+        const row = rows[i];
+        const base = `DialogCard/ScrollView/ScrollContent/Row${i}`;
+        texts[`${base}/RankLabel`] = row ? String(row.rank) : EMPTY_ROW_TEXT;
+        texts[`${base}/NameLabel`] = row ? row.name : EMPTY_ROW_TEXT;
+        texts[`${base}/ValueLabel`] = row ? row.valueText : EMPTY_ROW_TEXT;
+    }
+    return texts;
+}
