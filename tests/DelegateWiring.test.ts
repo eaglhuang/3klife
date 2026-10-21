@@ -71,5 +71,35 @@ export function createDelegateWiringSuite(): TestSuite {
         assert.equals(null, ctrl.tryDelegateDeploy(2));
     });
 
+    suite.test('pickDelegateLane：我方部隊最少的那一路，同數取較小路號', () => {
+        const ctrl = battleWithSortie(90);
+        assert.equals(0, ctrl.pickDelegateLane(), '主將在路 2，路 0 與 1、3、4 皆空，同數取最小路號 0');
+        const own = new TroopUnit('own-0', TroopType.Infantry, Faction.Player, { hp: 1000, attack: 1, defense: 10, moveRange: 1, attackRange: 1 });
+        own.moveTo(0, 0);
+        ctrl.state.addUnit(own);
+        ctrl.state.getCell(0, 0)!.occupantId = own.id;
+        assert.equals(1, ctrl.pickDelegateLane(), '路 0 與路 2 各有一隊，空路 1 最少');
+    });
+
+    suite.test('runPlayerDelegateDeployPhase：委任關閉時不部署；開啟後部署一隊', () => {
+        const ctrl = battleWithSortie(90);
+        const before = ctrl.state.units.size;
+        ctrl.runPlayerDelegateDeployPhase();
+        assert.equals(before, ctrl.state.units.size, '關閉時不部署');
+        ctrl.setDelegateEnabled(true);
+        assert.isTrue(ctrl.isDelegateEnabled());
+        ctrl.runPlayerDelegateDeployPhase();
+        assert.equals(before + 1, ctrl.state.units.size, '開啟後每回合部署一隊');
+    });
+
+    suite.test('setDelegateEnabled 可切換開關狀態', () => {
+        const ctrl = battleWithSortie(90);
+        assert.isFalse(ctrl.isDelegateEnabled());
+        ctrl.setDelegateEnabled(true);
+        assert.isTrue(ctrl.isDelegateEnabled());
+        ctrl.setDelegateEnabled(false);
+        assert.isFalse(ctrl.isDelegateEnabled());
+    });
+
     return suite;
 }
