@@ -1,8 +1,20 @@
 {
   "type": "container",
   "name": "TabRecordContent",
-  "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 },
-  "layout": { "type": "vertical", "spacing": 16, "paddingTop": 0, "paddingBottom": 28, "paddingLeft": 28, "paddingRight": 28 },
+  "widget": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+  },
+  "layout": {
+    "type": "vertical",
+    "spacing": 16,
+    "paddingTop": 0,
+    "paddingBottom": 28,
+    "paddingLeft": 28,
+    "paddingRight": 28
+  },
   "children": [
     {
       "type": "panel",
@@ -10,10 +22,29 @@
       "width": "100%",
       "height": 92,
       "skinSlot": "detail.field.bg",
-      "layout": { "type": "vertical", "spacing": 8, "paddingTop": 18, "paddingBottom": 18, "paddingLeft": 20, "paddingRight": 20 },
+      "layout": {
+        "type": "vertical",
+        "spacing": 8,
+        "paddingTop": 18,
+        "paddingBottom": 18,
+        "paddingLeft": 20,
+        "paddingRight": 20
+      },
       "children": [
-        { "type": "label", "name": "CareerValue", "width": "100%", "height": 24, "styleSlot": "detail.label.subtitle" },
-        { "type": "label", "name": "WinRateValue", "width": "100%", "height": 24, "styleSlot": "detail.label.subtitle" }
+        {
+          "type": "label",
+          "name": "CareerValue",
+          "width": "100%",
+          "height": 24,
+          "styleSlot": "detail.label.subtitle"
+        },
+        {
+          "type": "label",
+          "name": "WinRateValue",
+          "width": "100%",
+          "height": 24,
+          "styleSlot": "detail.label.subtitle"
+        }
       ]
     },
     {
@@ -22,9 +53,23 @@
       "width": "100%",
       "height": 196,
       "skinSlot": "detail.field.bg",
-      "layout": { "type": "vertical", "spacing": 0, "paddingTop": 18, "paddingBottom": 18, "paddingLeft": 20, "paddingRight": 20 },
+      "layout": {
+        "type": "vertical",
+        "spacing": 0,
+        "paddingTop": 18,
+        "paddingBottom": 18,
+        "paddingLeft": 20,
+        "paddingRight": 20
+      },
       "children": [
-        { "type": "label", "name": "StatsValue", "width": "100%", "height": 160, "styleSlot": "detail.label.valueDense", "wrapText": true }
+        {
+          "type": "label",
+          "name": "StatsValue",
+          "width": "100%",
+          "height": 160,
+          "styleSlot": "detail.label.valueDense",
+          "wrapText": true
+        }
       ]
     },
     {
@@ -33,9 +78,23 @@
       "width": "100%",
       "height": 148,
       "skinSlot": "detail.field.bg",
-      "layout": { "type": "vertical", "spacing": 0, "paddingTop": 18, "paddingBottom": 18, "paddingLeft": 20, "paddingRight": 20 },
+      "layout": {
+        "type": "vertical",
+        "spacing": 0,
+        "paddingTop": 18,
+        "paddingBottom": 18,
+        "paddingLeft": 20,
+        "paddingRight": 20
+      },
       "children": [
-        { "type": "label", "name": "MilestoneValue", "width": "100%", "height": 112, "styleSlot": "detail.label.valueDense", "wrapText": true }
+        {
+          "type": "label",
+          "name": "MilestoneValue",
+          "width": "100%",
+          "height": 112,
+          "styleSlot": "detail.label.valueDense",
+          "wrapText": true
+        }
       ]
     },
     {
@@ -44,9 +103,40 @@
       "width": "100%",
       "height": 60,
       "skinSlot": "detail.field.bg",
-      "layout": { "type": "vertical", "spacing": 0, "paddingTop": 18, "paddingBottom": 18, "paddingLeft": 20, "paddingRight": 20 },
+      "layout": {
+        "type": "vertical",
+        "spacing": 0,
+        "paddingTop": 18,
+        "paddingBottom": 18,
+        "paddingLeft": 20,
+        "paddingRight": 20
+      },
       "children": [
-        { "type": "label", "name": "RetireValue", "width": "100%", "height": 24, "styleSlot": "detail.label.subtitle" }
+        {
+          "type": "label",
+          "name": "RetireValue",
+          "width": "100%",
+          "height": 24,
+          "styleSlot": "detail.label.subtitle"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "BtnLeaderboard",
+      "id": "btnLeaderboard",
+      "width": "100%",
+      "height": 56,
+      "skinSlot": "detail.field.bg",
+      "children": [
+        {
+          "type": "label",
+          "name": "LeaderboardLabel",
+          "width": "100%",
+          "height": "100%",
+          "styleSlot": "detail.label.subtitle",
+          "text": "全軍戰績排行榜"
+        }
       ]
     }
   ]

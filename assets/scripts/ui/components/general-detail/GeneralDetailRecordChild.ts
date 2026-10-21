@@ -7,7 +7,7 @@
  *
  * Unity 對照：只做 label.text = presenter 輸出；文字組合在純邏輯 buildBattleRecordTabText。
  */
-import { Label } from 'cc';
+import { Button, Label } from 'cc';
 import type { Node } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import type { UISkinResolver } from '../../core/UISkinResolver';
@@ -17,6 +17,8 @@ import type { BattleRecord } from '../../../core/systems/BattleRoster';
 import { buildBattleRecordTabText } from '../../../core/systems/BattleRecordStats';
 import { pvpSeasonIdOf } from '../../../core/systems/BattleSeasonStats';
 import { services } from '../../../core/managers/ServiceLoader';
+import { UIID } from '../../../core/config/UIConfig';
+import type { LobbyLeaderboardOpenPayload } from '../LobbyLeaderboardComposite';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 
 type RecordCarrier = GeneralConfig & { battleRecord?: BattleRecord };
@@ -44,6 +46,7 @@ export class GeneralDetailRecordChild extends ChildPanelBase {
         this._lStats     = this._label(h, 'StatsCard/StatsValue');
         this._lMilestone = this._label(h, 'MilestoneCard/MilestoneValue');
         this._lRetire    = this._label(h, 'RetireCard/RetireValue');
+        this._bindLeaderboardButton();
         if (this._lastData) this.onDataUpdate(this._lastData);
     }
 
@@ -83,6 +86,18 @@ export class GeneralDetailRecordChild extends ChildPanelBase {
         } catch {
             return undefined;
         }
+    }
+
+    /** 戰績分頁底部的「全軍戰績排行榜」入口（PROG-2-0960）；按鈕不存在時略過，不影響分頁其他內容 */
+    private _bindLeaderboardButton(): void {
+        const button: Button | null = this.binder.getButton('btnLeaderboard');
+        if (!button) return;
+        button.node.on(Button.EventType.CLICK, this._onLeaderboardClick, this);
+    }
+
+    private _onLeaderboardClick(): void {
+        const payload: LobbyLeaderboardOpenPayload = { roster: services().session.roster, metric: 'damage' };
+        void services().ui.open(UIID.LobbyLeaderboard, payload);
     }
 
     private _set(label: Label | null, text: string): void {
