@@ -1,0 +1,17 @@
+{
+  "id": "nurture-graduation-screen",
+  "version": 1,
+  "uiId": "NurtureGraduationRecord",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "nurture-graduation-main",
+  "skin": "nurture-graduation-default",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
