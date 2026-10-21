@@ -28,6 +28,14 @@ export function createKinComboRelationsSuite(): TestSuite {
         assert.equals(0, comboChanceOfPair(relations));
     });
 
+    suite.test('敵軍同一位敵將的部隊互為同一來源，不成對（不觸發）', () => {
+        assert.equals(0, combatRelationsBetween(TABLE, 'cao-cao', 'cao-cao').length);
+    });
+
+    suite.test('敵軍兩位不同敵將若有史實關係，同樣觸發（與玩家側共用同一查表）', () => {
+        assert.equals(1, combatRelationsBetween(TABLE, 'liu-bei', 'zhang-fei').length);
+    });
+
     suite.test('缺模板 id、或沒有配對表時回傳空陣列', () => {
         assert.equals(0, combatRelationsBetween(TABLE, null, 'liu-bei').length);
         assert.equals(0, combatRelationsBetween(TABLE, 'guan-yu', null).length);

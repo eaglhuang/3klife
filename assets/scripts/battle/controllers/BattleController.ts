@@ -308,10 +308,15 @@ export class BattleController {
     return combatRelationsBetween(this.historicalPairs, this.sourceTemplateOfUnit(attackerId), this.sourceTemplateOfUnit(helperId));
   }
 
-  /** 部隊的來源武將模板 id：由出陣虎符的 sourceTemplateId 取得 */
+  /**
+   * 部隊的來源武將模板 id：玩家部隊由出陣虎符的 sourceTemplateId 取得；
+   * 敵軍部隊（沒有虎符）以本場敵將的 id 為來源（PM 裁定，PROG-2-1066，暫定）。
+   */
   private sourceTemplateOfUnit(unitId: string): string | null {
-    const tallyId = this.state.units.get(unitId)?.tallyId;
-    return tallyId ? (this.tallyInfoOf(tallyId)?.sourceTemplateId ?? null) : null;
+    const unit = this.state.units.get(unitId);
+    if (!unit) return null;
+    if (unit.faction === Faction.Enemy) return this.state.enemyGeneral?.id ?? null;
+    return unit.tallyId ? (this.tallyInfoOf(unit.tallyId)?.sourceTemplateId ?? null) : null;
   }
 
   private bindTallyAffinity(unit: TroopUnit, ref: TallyDeployRef): void {
