@@ -1,0 +1,200 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "schemaId": "lobby-leaderboard-content",
+  "familyId": "lobby-leaderboard",
+  "version": 1,
+  "description": "LobbyLeaderboard content contract；戰績排行榜彈窗，依傷害、擊殺或守護力列出前 5 名。",
+  "fields": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "description": "排行榜標題。",
+      "bindPath": "DialogCard/HeaderBar/TitleLabel"
+    },
+    "metricDamageLabel": {
+      "type": "string",
+      "required": true,
+      "description": "傷害指標按鈕文字。",
+      "bindPath": "DialogCard/MetricRow/MetricDamageButton/MetricDamageLabel"
+    },
+    "metricKillsLabel": {
+      "type": "string",
+      "required": true,
+      "description": "擊殺指標按鈕文字。",
+      "bindPath": "DialogCard/MetricRow/MetricKillsButton/MetricKillsLabel"
+    },
+    "metricGuardianLabel": {
+      "type": "string",
+      "required": true,
+      "description": "守護力指標按鈕文字。",
+      "bindPath": "DialogCard/MetricRow/MetricGuardianButton/MetricGuardianLabel"
+    },
+    "emptyHintVisible": {
+      "type": "boolean",
+      "required": true,
+      "description": "名冊沒有任何武將時顯示空白提示。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/EmptyHintLabel"
+    },
+    "emptyHintLabel": {
+      "type": "string",
+      "required": true,
+      "description": "空白提示文字。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/EmptyHintLabel"
+    },
+    "hintLabel": {
+      "type": "string",
+      "required": true,
+      "description": "底部說明文字（同分規則暫定）。",
+      "bindPath": "DialogCard/FooterBar/HintLabel"
+    },
+    "row0RankLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 1 列名次。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row0/RankLabel"
+    },
+    "row0NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 1 列武將名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row0/NameLabel"
+    },
+    "row0ValueLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 1 列數值文字。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row0/ValueLabel"
+    },
+    "row0Visible": {
+      "type": "boolean",
+      "required": true,
+      "description": "第 1 列是否顯示。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row0"
+    },
+    "row1RankLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 2 列名次。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row1/RankLabel"
+    },
+    "row1NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 2 列武將名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row1/NameLabel"
+    },
+    "row1ValueLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 2 列數值文字。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row1/ValueLabel"
+    },
+    "row1Visible": {
+      "type": "boolean",
+      "required": true,
+      "description": "第 2 列是否顯示。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row1"
+    },
+    "row2RankLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 3 列名次。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row2/RankLabel"
+    },
+    "row2NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 3 列武將名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row2/NameLabel"
+    },
+    "row2ValueLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 3 列數值文字。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row2/ValueLabel"
+    },
+    "row2Visible": {
+      "type": "boolean",
+      "required": true,
+      "description": "第 3 列是否顯示。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row2"
+    },
+    "row3RankLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 4 列名次。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row3/RankLabel"
+    },
+    "row3NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 4 列武將名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row3/NameLabel"
+    },
+    "row3ValueLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 4 列數值文字。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row3/ValueLabel"
+    },
+    "row3Visible": {
+      "type": "boolean",
+      "required": true,
+      "description": "第 4 列是否顯示。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row3"
+    },
+    "row4RankLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 5 列名次。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row4/RankLabel"
+    },
+    "row4NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 5 列武將名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row4/NameLabel"
+    },
+    "row4ValueLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 5 列數值文字。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row4/ValueLabel"
+    },
+    "row4Visible": {
+      "type": "boolean",
+      "required": true,
+      "description": "第 5 列是否顯示。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row4"
+    }
+  },
+  "requiredFields": [
+    "title",
+    "metricDamageLabel",
+    "metricKillsLabel",
+    "metricGuardianLabel",
+    "emptyHintVisible",
+    "emptyHintLabel",
+    "hintLabel",
+    "row0RankLabel",
+    "row0NameLabel",
+    "row0ValueLabel",
+    "row0Visible",
+    "row1RankLabel",
+    "row1NameLabel",
+    "row1ValueLabel",
+    "row1Visible",
+    "row2RankLabel",
+    "row2NameLabel",
+    "row2ValueLabel",
+    "row2Visible",
+    "row3RankLabel",
+    "row3NameLabel",
+    "row3ValueLabel",
+    "row3Visible",
+    "row4RankLabel",
+    "row4NameLabel",
+    "row4ValueLabel",
+    "row4Visible"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "lobby-leaderboard-screen",
+  "version": 1,
+  "uiId": "LobbyLeaderboard",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "lobby-leaderboard-main",
+  "skin": "lobby-leaderboard-default",
+  "contentRequirements": {
+    "schemaId": "lobby-leaderboard-content",
+    "familyId": "lobby-leaderboard",
+    "requiredFields": [
+      "title",
+      "metricDamageLabel",
+      "metricKillsLabel",
+      "metricGuardianLabel",
+      "emptyHintVisible",
+      "emptyHintLabel",
+      "hintLabel",
+      "row0RankLabel",
+      "row0NameLabel",
+      "row0ValueLabel",
+      "row0Visible",
+      "row1RankLabel",
+      "row1NameLabel",
+      "row1ValueLabel",
+      "row1Visible",
+      "row2RankLabel",
+      "row2NameLabel",
+      "row2ValueLabel",
+      "row2Visible",
+      "row3RankLabel",
+      "row3NameLabel",
+      "row3ValueLabel",
+      "row3Visible",
+      "row4RankLabel",
+      "row4NameLabel",
+      "row4ValueLabel",
+      "row4Visible"
+    ]
+  },
+  "content": {
+    "source": "lobby-leaderboard-states-v1",
+    "state": "smoke-damage"
+  },
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
