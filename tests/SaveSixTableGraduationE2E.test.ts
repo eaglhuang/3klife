@@ -137,10 +137,9 @@ export function createSaveSixTableGraduationE2ESuite(): TestSuite {
         assert.equals(childId, record.child_uid);
         assert.isTrue(record.end_season >= record.start_season, '結束季不早於開始季');
         assert.isTrue(typeof record.tp_total === 'number', '新培育會話有 totalTp');
-        // server 列驗證：目前只允許 revelation_level 未接線這一項（#651 已知，待 PM 裁定）
+        // server 列驗證：#675 補上 revelation_level 後應完全通過
         const serverErrors = validateNurtureRecordRow(record as never);
-        assert.equals(1, serverErrors.length, serverErrors.join('；'));
-        assert.isTrue(serverErrors[0].startsWith('revelation_level'));
+        assert.equals(0, serverErrors.length, serverErrors.join('；'));
         // 重新載入後再存一次，紀錄不重複、不遺失
         const b = buildWorld(adapter, []);
         assert.isTrue(await b.session.load());
