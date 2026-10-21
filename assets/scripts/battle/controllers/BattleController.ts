@@ -707,14 +707,17 @@ export class BattleController {
     ];
   }
 
-  /** 七進七出穿透傷害：致死時與技能傷害一致，走陣亡流程（移出戰場、發 UnitDied、主將陣亡判定） */
-  private applyGhostPassDamage(target: TroopUnit, damage: number): void {
+  /**
+   * 非攻擊結算的傷害（位移受阻、七進七出穿透）：致死時與技能傷害一致，走陣亡流程
+   * （移出戰場、釋放格子、發 UnitDied、主將陣亡判定）。
+   */
+  private applyNonCombatDamage(target: TroopUnit, damage: number, damageSource: string): void {
     const svc = services();
     this.combatResolver.applyUnitDamage(target, damage, null, {
       attackerId: null,
       attackerLane: null,
       attackerDepth: null,
-      damageSource: 'ghost-pass',
+      damageSource,
       allowDamageLink: false,
     });
     if (!target.isDead()) return;
@@ -780,14 +783,8 @@ export class BattleController {
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
           getAptitudeMoveSetTo: (unit) => this.combatResolver.getUnitMoveSetTo(unit),
-          applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
-            attackerId: null,
-            attackerLane: null,
-            attackerDepth: null,
-            damageSource: 'forced-move',
-            allowDamageLink: false,
-          }),
-          applyGhostPassDamage: (target, damage) => this.applyGhostPassDamage(target, damage),
+          applyForcedMoveDamage: (unit, damage) => this.applyNonCombatDamage(unit, damage, 'forced-move'),
+          applyGhostPassDamage: (target, damage) => this.applyNonCombatDamage(target, damage, 'ghost-pass'),
         });
         return {};
       case 'enemy-auto-move':
@@ -801,14 +798,8 @@ export class BattleController {
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
           getAptitudeMoveSetTo: (unit) => this.combatResolver.getUnitMoveSetTo(unit),
-          applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
-            attackerId: null,
-            attackerLane: null,
-            attackerDepth: null,
-            damageSource: 'forced-move',
-            allowDamageLink: false,
-          }),
-          applyGhostPassDamage: (target, damage) => this.applyGhostPassDamage(target, damage),
+          applyForcedMoveDamage: (unit, damage) => this.applyNonCombatDamage(unit, damage, 'forced-move'),
+          applyGhostPassDamage: (target, damage) => this.applyNonCombatDamage(target, damage, 'ghost-pass'),
         });
         return {};
       case 'player-tile-effect':

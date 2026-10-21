@@ -132,6 +132,7 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
         context.consumeTileBuff(unit);
         remainingMoveBudget -= 1;
         remainingMoveBudget += applyTileEffectOnEnter(unit, dir, svc, context);
+        if (unit.isDead()) return;
         continue;
       }
 
@@ -157,6 +158,8 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
     context.consumeTileBuff(unit);
     remainingMoveBudget -= 1;
     remainingMoveBudget += applyTileEffectOnEnter(unit, dir, svc, context);
+    // 位移受阻傷害可能讓單位陣亡：不再拿死掉的單位走下一步
+    if (unit.isDead()) return;
   }
 }
 
