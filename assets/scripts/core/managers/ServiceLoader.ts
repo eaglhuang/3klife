@@ -219,6 +219,11 @@ export class ServiceLoader {
         }
     }
 
+    /** 已載入的史實配對表；未載入或失敗時為 null（戰場合攻讀它） */
+    public historicalPairTable(): HistoricalPairTable | null {
+        return this.historicalPairs ?? null;
+    }
+
     /** NPC 好友教官清單（MENT-14 MVP）：資料表載入失敗時清單為空，借用入口不可用 */
     public async loadNpcFriendMentors(): Promise<void> {
         try {

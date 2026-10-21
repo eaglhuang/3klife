@@ -75,3 +75,17 @@ export function conceptionModBetween(table: HistoricalPairTable, templateA: stri
     const mod = table.relationBetween(templateA, templateB)?.extraEffects.conceptionRateMod;
     return mod !== undefined && Number.isFinite(mod) && mod > 0 ? mod : 1;
 }
+
+/**
+ * 戰場合攻用：兩個部隊背後武將（模板 id）的史實關係，回傳陣列供 comboChanceOfPair 使用。
+ * 任一端沒有模板 id、沒有配對表、或沒有配對都回傳空陣列（不觸發合攻）。
+ */
+export function combatRelationsBetween(
+    table: HistoricalPairTable | null,
+    templateA: string | null,
+    templateB: string | null,
+): HistoricalRelation[] {
+    if (!table || !templateA || !templateB) return [];
+    const relation = table.relationBetween(templateA, templateB);
+    return relation ? [relation] : [];
+}
