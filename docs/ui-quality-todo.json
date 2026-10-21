@@ -1,7 +1,7 @@
 {
   "kind": "ui-quality-task-manifest",
   "version": 1,
-  "generated": "2026-05-18T01:55:40.299Z",
+  "generated": "2026-10-20T23:27:18.164Z",
   "_note": "Thin index. Full task data is in docs/ui-quality-tasks/*.json shards.",
   "_usage": "Read specific shard: docs/ui-quality-tasks/<shard>.json",
   "_rebuild": "node tools_node/build-ui-task-manifest.js",
@@ -50,11 +50,16 @@
       "file": "docs\\ui-quality-tasks\\phase-prog-opening.json",
       "version": 1,
       "taskCount": 16
+    },
+    {
+      "file": "docs\\ui-quality-tasks\\TASK-UI-9001.json",
+      "version": 1,
+      "taskCount": 1
     }
   ],
   "summary": {
     "done": 35,
-    "in-progress": 3,
+    "in-progress": 4,
     "open": 17
   }
 }
