@@ -414,6 +414,14 @@ export class BattleController {
     this.tryDelegateDeploy(this.pickDelegateLane());
   }
 
+  /**
+   * 回合結算開始前先讓委任 AI 部署（PROG-2-0913）。必須在 beginTurnResolution 之前：
+   * 結算中流程狀態是 ResolvingTurn，tryDeployTroop 會回 battle-locked，委任永遠部署不了。
+   */
+  private runDelegateDeployBeforeTurn(): void {
+    if (this.flowStateMachine.canAdvanceTurn()) this.runPlayerDelegateDeployPhase();
+  }
+
   /** 我方存活部隊最少的那一路，同數取較小路號（PROG-2-0913 暫定） */
   public pickDelegateLane(): number {
     const counts: number[] = Array.from({ length: GAME_CONFIG.GRID_LANES }, () => 0);
@@ -691,6 +699,7 @@ export class BattleController {
    * 若結果為 "ongoing"，自動推進至下一回合（補充玩家糧草）。
    */
   public advanceTurn(): BattleResult {
+    this.runDelegateDeployBeforeTurn();
     if (!this.flowStateMachine.beginTurnResolution()) {
       return this.flowStateMachine.result ?? 'ongoing';
     }
@@ -701,6 +710,7 @@ export class BattleController {
   }
 
   public resolvePlayerTurn(): BattleResult {
+    this.runDelegateDeployBeforeTurn();
     if (!this.flowStateMachine.beginTurnResolution()) {
       return this.flowStateMachine.result ?? 'ongoing';
     }
@@ -829,7 +839,6 @@ export class BattleController {
   private executeRuntimePhase(phaseName: BattleRuntimePhaseName): BattleRuntimePhaseOutcome {
     switch (phaseName) {
       case 'enemy-deploy':
-        this.runPlayerDelegateDeployPhase();
         executeBattleEnemyDeployPhase({
           state: this.state,
           enemyAi: this.enemyAi,
