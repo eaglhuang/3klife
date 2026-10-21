@@ -136,6 +136,8 @@ export interface BattleSkillRequest {
     generalTemplateId?: string | null;
     tacticId?: string | null;
     ultimateId?: string | null;
+    /** 奧義的攻擊基準（UltimateDamage.ultimateAttackOf）；有值時取代一般的 scaledAttack（PROG-2-0927） */
+    ultimateAttack?: number | null;
     battleSkillId: string;
     targetMode: BattleSkillTargetMode;
     timing: BattleSkillTiming;

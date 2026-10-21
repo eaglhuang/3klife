@@ -20,8 +20,10 @@ export class BattleSkillDamageResolver {
     context: BattleSkillExecutionContext,
     hitIndex: number,
     stageIndex = 0,
+    ultimateAttack?: number | null,
   ): number {
-    const scaledAttack = this.resolveScaledAttack(profile, caster, hitIndex);
+    // 奧義攻擊基準（PROG-2-0927）：有值時取代一般的 scaledAttack，其餘防禦與加成照常結算
+    const scaledAttack = ultimateAttack ?? this.resolveScaledAttack(profile, caster, hitIndex);
     const zoneMultiplier = context.getDefenseZoneMultiplier?.(target) ?? 1;
     const rawDefense = profile.ignoreDefense ? 0 : target.getEffectiveDefense() * (target.isShieldWallActive ? 2 : 1) * zoneMultiplier;
     const penetration = profile.defensePenetrationRatio ?? 0;

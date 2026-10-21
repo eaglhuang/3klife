@@ -27,6 +27,7 @@ import {
   type SkillExecutionResult,
 } from '../../shared/SkillRuntimeContract';
 import { services } from '../../core/managers/ServiceLoader';
+import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
 
 export interface GeneralSkillCastOptions {
   tacticId?: string | null;
@@ -49,6 +50,10 @@ export interface BattleSkillDispatcherContext {
   getUltimateVitalityCostPct?(ultimateId: string): number | undefined;
   /** 撤退失敗、本回合鎖定行動的單位（PROG-2-0441）；未提供時視為沒有鎖定 */
   isUnitActionBlocked?(unitId: string): boolean;
+  /** 奧義的槽位與主屬性（PROG-2-0927）；查不到時不套用奧義攻擊基準 */
+  getUltimateDamageDef?(ultimateId: string): { slot?: number; scalingStat?: string | null } | undefined;
+  /** 奧義 base_power 表（NumericalConfig.Ult_Base_Power）；未載入時不套用（PROG-2-0927） */
+  getUltBasePowerTable?(): Readonly<Record<string, number>> | undefined;
 }
 
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
@@ -189,11 +194,25 @@ export class BattleSkillDispatcher {
         battleLogLines: [vitalityCheck.reason],
       };
     }
-    const result = this.skillExecutor.execute(request, this.buildBattleSkillExecutionContext());
+    const result = this.skillExecutor.execute(this.withUltimateAttack(request), this.buildBattleSkillExecutionContext());
     if (result.applied && request.sourceType === SkillSourceType.Ultimate) {
       this.spendUltimateCost(request);
     }
     return result;
+  }
+
+  /**
+   * 奧義攻擊基準（PROG-2-0927）：依奧義槽位的 base_power 與施放者主屬性算出 ultimateAttack。
+   * 查不到定義、表未載入或主屬性規格未定時不設定，沿用一般傷害路徑。
+   */
+  private withUltimateAttack(request: BattleSkillRequest): BattleSkillRequest {
+    if (request.sourceType !== SkillSourceType.Ultimate || !request.ultimateId) return request;
+    const def = this.context.getUltimateDamageDef?.(request.ultimateId);
+    const table = this.context.getUltBasePowerTable?.();
+    const caster = this.resolveCasterGeneral(request);
+    if (!def || def.slot === undefined || !table || !caster) return request;
+    const attack = ultimateAttackOf(def.slot, table, def.scalingStat, { str: caster.str, int: caster.int });
+    return attack === null ? request : { ...request, ultimateAttack: attack };
   }
 
   /** 奧義生效後扣精力（PROG-2-0429）：只在 applied 時扣，被擋或沒有目標不扣 */

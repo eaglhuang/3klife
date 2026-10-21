@@ -40,11 +40,36 @@ export interface UltimateSkillItem {
 
 let tacticDefinitionMap = new Map<string, CanonicalTacticDefinition>();
 let ultimateDefinitionMap = new Map<string, CanonicalUltimateDefinition>();
+let ultBasePowerTable: Readonly<Record<string, number>> | undefined;
 
 /** 奧義的精力成本比例（例如 0.05 = 5%）；定義尚未載入或查不到時回傳 undefined（PROG-2-0429） */
 export function findUltimateVitalityCostPct(ultimateId: string): number | undefined {
   return ultimateDefinitionMap.get(ultimateId)?.vitalityCostPct;
 }
+
+/** 奧義的槽位與主屬性（奧義攻擊基準用，PROG-2-0927）；查不到時回傳 undefined */
+export function findUltimateDamageDef(ultimateId: string): { slot?: number; scalingStat?: string | null } | undefined {
+  const def = ultimateDefinitionMap.get(ultimateId);
+  return def ? { slot: def.slot, scalingStat: def.scalingStat } : undefined;
+}
+
+/** 奧義 base_power 表（NumericalConfig.Ult_Base_Power）；尚未載入時回傳 undefined（PROG-2-0927） */
+export function findUltBasePowerTable(): Readonly<Record<string, number>> | undefined {
+  return ultBasePowerTable;
+}
+
+/**
+ * 無頭測試用：不經資源載入，直接注入奧義定義與 base_power 表（PROG-2-0927）。
+ * 測試以 fs 讀 JSON 後呼叫，與其他 headless 測試讀資料的方式一致。
+ */
+export function seedUltimateDataForHeadless(
+  ultimates: CanonicalUltimateDefinition[],
+  basePowerTable: Readonly<Record<string, number>>,
+): void {
+  ultimateDefinitionMap = buildIdMap(ultimates);
+  ultBasePowerTable = basePowerTable;
+}
+
 let battleSkillMetadataPromise: Promise<void> | null = null;
 
 /**
@@ -80,9 +105,11 @@ export async function loadBattleSkillMetadata(): Promise<void> {
     battleSkillMetadataPromise = Promise.all([
       services().resource.loadJson<JsonListEnvelope<CanonicalTacticDefinition>>('data/master/tactic-library', { tags: ['battle'] }),
       services().resource.loadJson<JsonListEnvelope<CanonicalUltimateDefinition>>('data/master/ultimate-definitions', { tags: ['battle'] }),
-    ]).then(([tacticJson, ultimateJson]) => {
+      services().resource.loadJson<{ NumericalConfig?: { Ult_Base_Power?: Record<string, number> } }>('data/numerical-config', { tags: ['battle'] }),
+    ]).then(([tacticJson, ultimateJson, numericalJson]) => {
       tacticDefinitionMap = buildIdMap(tacticJson.data);
       ultimateDefinitionMap = buildIdMap(ultimateJson.data);
+      ultBasePowerTable = numericalJson.NumericalConfig?.Ult_Base_Power;
     });
   }
   await battleSkillMetadataPromise;
