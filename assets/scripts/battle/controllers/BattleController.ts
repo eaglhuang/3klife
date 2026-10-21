@@ -974,7 +974,7 @@ export class BattleController {
 
   // ─── 勝敗判定 ─────────────────────────────────────────────────────────────
 
-  private canUsePlayerSkills(): boolean {
+  public canUsePlayerSkills(): boolean {
     return this.flowStateMachine.canUsePlayerSkills();
   }
 
