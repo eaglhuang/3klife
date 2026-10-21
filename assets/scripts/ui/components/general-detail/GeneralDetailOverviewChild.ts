@@ -104,6 +104,12 @@ const TRAIT_LINE_PATHS = [
     },
 ] as const;
 
+interface BulletLinePathDefinition {
+    rowPath: string;
+    bulletPath: string;
+    textPath: string;
+}
+
 export class GeneralDetailOverviewChild extends ChildPanelBase {
     override dataSource = 'overview';
     private readonly _contentBinder = new UIContentBinder();
@@ -140,7 +146,7 @@ export class GeneralDetailOverviewChild extends ChildPanelBase {
             this.binder,
             this._contentContractRef,
             this._contentSchema,
-            s as Record<string, unknown>,
+            s as unknown as Record<string, unknown>,
             {
                 suppressUnresolvedWarnings: true,
                 transformBindPath: (bindPath, fieldKey) => resolveOverviewBindPathForTarget(fieldKey, bindPath, 'unified'),
@@ -186,7 +192,7 @@ export class GeneralDetailOverviewChild extends ChildPanelBase {
 
     private _applyBulletList(
         lines: string[],
-        paths: typeof ROLE_LINE_PATHS,
+        paths: readonly BulletLinePathDefinition[],
         bulletColor: Color,
     ): void {
         for (let index = 0; index < paths.length; index += 1) {
