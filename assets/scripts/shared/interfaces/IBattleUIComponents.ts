@@ -49,7 +49,7 @@ export interface IDeployController {
         lane: number,
         unitName?: string,
         options?: { tally?: { cardUid: string; templateId: string } },
-    ): { ok: boolean; reason?: string };
+    ): { ok: boolean; reason?: string; suggestion?: string | null };
     /** 目前流程是否允許玩家施放技能（戰鬥流程鎖定時為 false） */
     canUsePlayerSkills(): boolean;
     /** 施放主將技能；成功回傳 true */
