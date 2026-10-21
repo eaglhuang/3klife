@@ -23,7 +23,7 @@ import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounte
 import { BattleSkillTargetingFlow } from './BattleSkillTargetingFlow';
 import { BattleSceneFlow } from './BattleSceneFlow';
 import { validateBattleStateReadModel, validateSortieLoadoutReadModel } from '../../core/systems/ReadModelValidators';
-import { getEliteDeployCap } from '../../core/systems/SortieDeploy';
+import { getEliteDeployCap, scenePresetIdOf } from '../../core/systems/SortieDeploy';
 import { BattleTutorialHint } from './BattleTutorialHint';
 import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
 import { TurnFlowManager } from './TurnFlowManager';
@@ -212,7 +212,8 @@ export class BattleScene extends Component {
       if (weatherSchedule) this.ctrl.setWeatherSchedule(weatherSchedule);
       // 名冊武將出戰：部署改扣出征軍勢與糧草（PROG-2-0070）
       const sortieInput = buildRosterSortieInput(pg);
-      if (sortieInput) this.ctrl.configureSortie(sortieInput);
+      const scenePresetId = scenePresetIdOf(encounter?.battleKind);
+      if (sortieInput) this.ctrl.configureSortie({ ...sortieInput, scenePresetId });
       // 戰前檢查出征編制 read model（DS-06）：只記錄，不擋戰鬥；實際生效的參謀／後勤已由 session 過濾
       const support = services().session.getSortieSupportSummary(pg.id);
       const sortieCheck = validateSortieLoadoutReadModel({ Commander_UID: pg.id, Strategist_UID: support.strategist?.id ?? null, Deputy_UID: support.deputy?.id ?? null });
@@ -225,7 +226,7 @@ export class BattleScene extends Component {
         Max_Food: services().battle.getMaxFood(),
         Current_Tactic_Points: tacticState.current ?? 0,
         Max_Tactic_Points: tacticState.max ?? 0,
-        Elite_Deploy_Cap: getEliteDeployCap(),
+        Elite_Deploy_Cap: getEliteDeployCap(scenePresetId),
         Active_Elite_Count: 0,
         Strategist_UID: support.strategist?.id ?? null,
         Deputy_UID: support.deputy?.id ?? null,

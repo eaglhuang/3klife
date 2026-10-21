@@ -245,9 +245,17 @@ export function getTallyGrainCost(quality: string, star: number): number {
     return TALLY_GRAIN_COST[quality]?.[star] ?? TALLY_GRAIN_COST_FALLBACK;
 }
 
+/** 攻城戰場景預設 ID（戰場部署系統：SCENE_SIEGE = 攻城戰） */
+export const SCENE_PRESET_SIEGE = 'SCENE_SIEGE';
+
+/** 由遭遇戰種類推場景預設：攻城戰 → SCENE_SIEGE，野戰或未設定 → null（PROG-2-0926） */
+export function scenePresetIdOf(battleKind?: string | null): string | null {
+    return battleKind === 'siege' ? SCENE_PRESET_SIEGE : null;
+}
+
 /** 精銳部署上限：基礎 4，攻城 +1，官職 / 任務最多 +1 */
 export function getEliteDeployCap(scenePresetId?: string | null, officerTierDeployBonus = 0): number {
-    const siege = scenePresetId === 'SCENE_SIEGE' ? ELITE_DEPLOY_LIMIT.siegeSceneBonus : 0;
+    const siege = scenePresetId === SCENE_PRESET_SIEGE ? ELITE_DEPLOY_LIMIT.siegeSceneBonus : 0;
     const officer = Math.min(nonNegInt(officerTierDeployBonus), ELITE_DEPLOY_LIMIT.officerTierBonusCap);
     return ELITE_DEPLOY_LIMIT.baseActiveCap + siege + officer;
 }
