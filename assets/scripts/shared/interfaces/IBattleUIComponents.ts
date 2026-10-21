@@ -17,6 +17,7 @@ export interface IBattleHUDLike {
     waitUntilReady(timeoutMs?: number): Promise<boolean>;
     playerSpBarNode: Node | null;
     enemySpBarNode: Node | null;
+    showPersistentStatus(msg: string): void;
     clearPersistentStatus(): void;
     clearSceneGambitBadge(): void;
     showSceneGambitBadge(text: string): void;
