@@ -3,7 +3,8 @@
 - 範圍：`assets/resources/i18n/en.json`、`ja.json`，對照 `zh-TW.json`，共 257（en）與 233（ja）筆風險項。
 - 工具：`node tools_node/i18n-overflow-check.js --locale en|ja --threshold 1.0`，以字元數估算寬度（比例 = 譯文寬 ÷ zh-TW 寬）。
 - 基準：master 於 2026-10-21 的語系檔。其中 `（佔位，待譯）` 代表 master 仍是佔位字串，寬度為佔位字長，不代表實際譯文寬度。
-- 等級：高 ≥ 3 倍、中 2–3 倍、低 < 2 倍（依工具輸出）。
+- 等級：高 ≥ 2.0 倍、中 1.5–2.0 倍、低 < 1.5 倍（與 `/tmp/claude-parse.js` 的判定一致）。
+- 快照性質：本表是 2026-10-21 產生時的 master 狀態。#674、#676 合併後，`ui.result.*`、`toast.deploy_*`、`toast.no_grain`、`toast.cooldown` 已有譯文，表中仍標「佔位，待譯」的列已過期，請以重跑工具的結果為準。
 - 未做實機排版驗證，待 Codex 在 Web 建置中抽查。
 
 ## 分工
