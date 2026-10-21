@@ -1369,6 +1369,7 @@ export class GameSession {
 
     /** 指派武將到內政任務格（GOV-04）；被拒絕時不改動狀態。 */
     public assignGovernor(task: string, generalUid: string, maxSlots: number = DEFAULT_MAX_TASK_SLOTS): GovernanceResult {
+        if (!this._roster.getAll().some((general) => general.id === generalUid)) return { ok: false, reason: 'invalid-general', assignments: this.governanceAssignments };
         const result = assignGovernanceGeneral(this._governance, task, generalUid, maxSlots);
         if (result.ok) this._governance = result.assignments;
         return result;
@@ -2028,6 +2029,8 @@ export class GameSession {
         this._clearLeadIfGone();
         this._settleOpenHallAssigns();
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
+        // 陣亡或退休的武將不再佔著內政任務格
+        this._governance = this._governance.filter((a) => roster.some((general) => general.id === a.generalUid && general.status !== 'dead'));
         this._recordSoulFragmentsFor(beforeRoster, agingEvents);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;

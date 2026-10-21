@@ -4,7 +4,14 @@
  * 每個測試都跨越真實的 advanceSeason()，驗證狀態在季與季之間保留，而不是只測單一函式。
  */
 import { assert, TestSuite } from './TestRunner';
-import { GameSession } from '../assets/scripts/core/managers/GameSession';
+import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
+
+/** 被指派的武將必須在名冊內（PROG-2-0663） */
+function withRoster(session: GameSession, ...ids: string[]): GameSession {
+    session.setRosterStore(new InMemoryRosterStore(ids.map((id) => ({ id, name: id, faction: 'shu', gender: '男', age: 30, hp: 1000, maxLifespan: 120 } as unknown as GeneralConfig))));
+    return session;
+}
 
 const HOME = 'home-city';
 
@@ -12,7 +19,7 @@ export function createGameSessionLifespanWiringSuite(): TestSuite {
     const suite = new TestSuite('GameSessionLifespanWiring (PROG-2-0974 領地治理多回合流程)');
 
     suite.test('多回合：指派跨季保留，同一武將不可重複指派，卸下後可改派', async () => {
-        const session = new GameSession(1);
+        const session = withRoster(new GameSession(1), 'G010');
         assert.isTrue(session.assignGovernor('farming', 'G010').ok);
         await session.advanceSeason();
         assert.equals(1, session.governanceAssignments.length);
@@ -96,7 +103,7 @@ export function createGameSessionLifespanWiringSuite(): TestSuite {
     });
 
     suite.test('被拒絕的操作不改變會話狀態（指派、失守、日誌）', () => {
-        const session = new GameSession(1);
+        const session = withRoster(new GameSession(1), 'G010', 'G045');
         session.assignGovernor('farming', 'G010');
         session.assignGovernor('farming', 'G045');
         assert.equals(1, session.governanceAssignments.length);
