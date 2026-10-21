@@ -10,6 +10,7 @@
  */
 import { BOND_POINT_COST, BondRarity } from './MercenaryBondPermanent';
 import { canBondMercenary, MercenaryState, TRIAL_DAYS } from './MercenaryBond';
+import { ILLUSTRATION_STAGE_MAX, ILLUSTRATION_STAGE_MIN } from './MercenaryIllustration';
 
 export interface MercenaryPanelInput {
     /** 原主名字（名牌用） */
@@ -25,6 +26,8 @@ export interface MercenaryPanelInput {
 export interface MercenaryPanelView {
     countdownText: string;
     bondText: string;
+    /** 插畫階段文字，例如「插畫 3/5」 */
+    illustrationText: string;
     nametagText: string;
     /** 可結義時才有確認文字 */
     confirmText: string | null;
@@ -42,6 +45,7 @@ export function buildMercenaryPanelView(state: Readonly<MercenaryState>, input: 
     return {
         countdownText: `結義倒數：${state.daysLeft} 日`,
         bondText: `結義進度：${state.bond}/${TRIAL_DAYS}`,
+        illustrationText: `插畫 ${state.illustrationStage ?? ILLUSTRATION_STAGE_MIN}/${ILLUSTRATION_STAGE_MAX}`,
         nametagText: `原主：${input.originalOwnerName}`,
         confirmText: bondable ? `消耗 ${cost} 結義點數，將 ${input.generalName} 納為永久武將？` : null,
         farewellText: state.status === 'Expired' ? `${input.generalName} 已離隊。六日情緣，且作追憶。` : null,

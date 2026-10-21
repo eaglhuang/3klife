@@ -34,6 +34,12 @@ export function createMercenaryPanelViewSuite(): TestSuite {
         assert.isTrue(view.insufficientPoints);
     });
 
+    suite.test('插畫文字：缺省顯示 1/5，有階段時顯示該階段', () => {
+        assert.equals('插畫 1/5', buildMercenaryPanelView(createTrialMercenary('m1'), INPUT).illustrationText);
+        const staged = { ...createTrialMercenary('m1'), illustrationStage: 4 };
+        assert.equals('插畫 4/5', buildMercenaryPanelView(staged, INPUT).illustrationText);
+    });
+
     suite.test('已離隊：只回傳告別文字，結義按鈕不可按', () => {
         const expired = { ...createTrialMercenary('m1'), status: 'Expired' as const, daysLeft: 0 };
         const view = buildMercenaryPanelView(expired, INPUT);

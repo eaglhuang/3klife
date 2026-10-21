@@ -14,6 +14,8 @@ export interface MercenaryState {
     generalId?: string;
     /** 選填：好感 0~60；結義點數即好感值（PM 暫定）。 */
     affection?: number;
+    /** 選填：插畫階段 1~5，依好感度推進、只進不退（PROG-2-0968）；舊存檔沒有此欄，視為 1。 */
+    illustrationStage?: number;
 }
 
 export type MercenaryEvent =

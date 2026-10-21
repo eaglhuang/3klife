@@ -35,7 +35,7 @@ export function createMercenaryPanelControllerSuite(): TestSuite {
         const view = controller.getFlowView();
         assert.equals('結義倒數：0 日', view.texts.mercCountdown);
         assert.isTrue(view.actives.mercConfirm);
-        assert.equals('結義進度：6/6', view.texts.mercBond);
+        assert.equals('結義進度：6/6　插畫 1/5', view.texts.mercBond);
         assert.equals('原主：原主甲', view.texts.mercNametag);
         assert.equals('名zhang-fei', view.texts.mercRow0Name);
         assert.isTrue(view.actives.mercDetail);

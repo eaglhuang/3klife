@@ -11,6 +11,7 @@
  */
 import { advanceMercenaryDay, MercenaryResult, MercenaryState } from './MercenaryBond';
 import { applyDailyAffection } from './MercenaryAffection';
+import { advanceIllustrationStage } from './MercenaryIllustration';
 
 export interface TrialDayResult extends MercenaryResult {
     /** 本日好感實際增加量；推進失敗時為 0。 */
@@ -24,9 +25,10 @@ export function advanceTrialDay(source: Readonly<MercenaryState>): TrialDayResul
         return { ...advanced, affectionGained: 0 };
     }
     const affection = applyDailyAffection(source.affection ?? 0);
+    const illustrationStage = advanceIllustrationStage(source.illustrationStage ?? 1, affection.affection);
     return {
         ...advanced,
-        state: { ...advanced.state, affection: affection.affection },
+        state: { ...advanced.state, affection: affection.affection, illustrationStage },
         affectionGained: affection.gained,
     };
 }
