@@ -90,6 +90,8 @@ export const EVENT_NAMES = {
   UnitDamaged:       "unit-damaged",
   /** 適性命中判定落空（PROG-2-0080）：payload { attackerId, targetId, hitRate } */
   UnitAttackMissed:  "unit-attack-missed",
+  /** 史實合攻觸發（KIN-09 演出）：payload { attackerId, helperId, targetId }，於追加傷害前發出 */
+  KinComboAttack:    "kin-combo-attack-triggered",
   UnitDied:          "unit-died",
   UnitMoved:         "unit-moved",
   UnitHealed:        "unit-healed",

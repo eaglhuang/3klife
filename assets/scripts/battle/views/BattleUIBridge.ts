@@ -162,6 +162,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.UnitDeployed,            this._onUnitDeployed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDamaged,             this._onUnitDamaged.bind(this)),
       svc.event.on(EVENT_NAMES.UnitAttackMissed,        this._onUnitAttackMissed.bind(this)),
+      svc.event.on(EVENT_NAMES.KinComboAttack,          this._onKinComboAttack.bind(this)),
       svc.event.on(EVENT_NAMES.UnitHealed,              this._onUnitHealed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitMoved,               this._onUnitMoved.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDied,                this._onUnitDied.bind(this)),
@@ -375,6 +376,21 @@ export class BattleUIBridge {
         UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] unit-damage end unit=${data.unitId}`);
       });
     }
+  }
+
+  /** 史實合攻觸發（KIN-09 演出）：記一行戰報，助攻方撲向目標 */
+  private _onKinComboAttack(data?: { attackerId: string; helperId: string; targetId: string }): void {
+    if (!data) return;
+    const c = this.ctx;
+    const attacker = c.ctrl?.state.units.get(data.attackerId);
+    const helper = c.ctrl?.state.units.get(data.helperId);
+    const target = c.ctrl?.state.units.get(data.targetId);
+    if (!attacker || !helper || !target) return;
+    const side = helper.faction === Faction.Player ? '我方' : '敵方';
+    this.appendLog(`${side}${helper.name} 與${attacker.name}史實合攻，追擊${target.name}`);
+    this._enqueueCombatVisual(`kin-combo:${data.helperId}`, async () => {
+      await (c.unitRenderer?.playAttackAnimationAsync(data.helperId, target.lane, target.depth) ?? Promise.resolve());
+    });
   }
 
   /** 適性命中落空：記一行戰報、攻方照樣撲上去（PROG-2-0080） */
