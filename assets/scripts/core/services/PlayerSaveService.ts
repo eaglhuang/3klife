@@ -93,6 +93,8 @@ export interface PlayerSaveSnapshot {
     legendaryMentoringUsedIds?: string[];
     /** 官職狀態（OFC-03）：階位、經驗、解鎖歷史；舊檔沒有此欄位時讀回為階位 1；版號不升（扁平欄位） */
     officerState?: OfficerState;
+    /** 世界沙盤已放置標記數（OFC-06）；扁平選填欄位，舊檔沒有時讀回 0；版號不升 */
+    sandtableMarkersPlaced?: number;
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
@@ -231,6 +233,11 @@ function normalizeDiscoveryExp(value: unknown): number {
     return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? Math.floor(value) : 0;
 }
 
+/** 世界沙盤標記數：非正數、非有限數一律視為 0；小數無條件捨去（OFC-06） */
+export function normalizeSandtableMarkersPlaced(raw: unknown): number {
+    return typeof raw === 'number' && Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 0;
+}
+
 export function createPlayerSaveSnapshot(
     gameTime: GameTimeState,
     roster: readonly GeneralConfig[],
@@ -256,6 +263,7 @@ export function createPlayerSaveSnapshot(
     dynamicRelations: readonly DynamicRelation[] = [],
     legacyCount = 0,
     officerState: Readonly<OfficerState> = initialOfficerState(),
+    sandtableMarkersPlaced = 0,
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -284,6 +292,7 @@ export function createPlayerSaveSnapshot(
         ...(dynamicRelations.length > 0 ? { dynamicRelations: normalizeDynamicRelations(dynamicRelations) } : {}),
         ...(normalizeLegacyCount(legacyCount) > 0 ? { legacyCount: normalizeLegacyCount(legacyCount) } : {}),
         ...(officerState.currentTier > 1 || officerState.officerExp > 0 ? { officerState: normalizeOfficerState(officerState) } : {}),
+        ...(normalizeSandtableMarkersPlaced(sandtableMarkersPlaced) > 0 ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(sandtableMarkersPlaced) } : {}),
     };
 }
 
@@ -359,6 +368,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.dynamicRelations !== undefined ? { dynamicRelations: normalizeDynamicRelations(snapshot.dynamicRelations) } : {}),
         ...(snapshot.legacyCount !== undefined ? { legacyCount: normalizeLegacyCount(snapshot.legacyCount) } : {}),
         ...(snapshot.officerState !== undefined ? { officerState: normalizeOfficerState(snapshot.officerState) } : {}),
+        ...(snapshot.sandtableMarkersPlaced !== undefined ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
