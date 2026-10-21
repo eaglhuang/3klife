@@ -88,6 +88,8 @@ export class GeneralUnit {
   public readonly tacticSlots: GeneralTacticSlotConfig[];
   /** 正式奧義槽位，供 Battle HUD / 詳情頁共用 */
   public readonly ultimateSlots: GeneralUltimateSlotConfig[];
+  /** 轉生次數（缺值視為 1 轉）；奧義欄位依此解鎖（ULT-03） */
+  public readonly rebirthCount: number | undefined;
 
   /** 該武將提供給同陣營兵種的攻擊加成比例（例如 0.1 = +10%） */
   public readonly attackBonus: number;
@@ -118,6 +120,7 @@ export class GeneralUnit {
     this.skillId = this.battlePrimarySkillId;
     this.tacticSlots = [...(config.tacticSlots ?? [])];
     this.ultimateSlots = [...(config.ultimateSlots ?? [])];
+    this.rebirthCount = config.rebirthCount;
     this.str = config.str ?? config.stats?.str ?? 0;
     this.int = config.int ?? config.stats?.int ?? 0;
     this.lea = config.lea ?? config.stats?.lea ?? 0;
