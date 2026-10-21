@@ -1,0 +1,17 @@
+{
+  "id": "mentor-borrow-screen",
+  "version": 1,
+  "uiId": "NurtureMentorBorrow",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "mentor-borrow-main",
+  "skin": "mentor-borrow-default",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
