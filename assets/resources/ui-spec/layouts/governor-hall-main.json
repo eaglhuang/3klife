@@ -1,0 +1,395 @@
+{
+  "id": "governor-hall-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "GovernorHallRoot",
+    "id": "governorHallRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "GovernorHallCard",
+        "id": "governorHallCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1400,
+        "height": 900,
+        "skinSlot": "mp.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "GovHallTitle",
+            "id": "govHallTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "height": 40,
+            "text": "太守府",
+            "styleSlot": "mp.label.title",
+            "width": 700
+          },
+          {
+            "type": "button",
+            "name": "BtnClose",
+            "id": "btnClose",
+            "widget": {
+              "top": 16,
+              "left": 1250
+            },
+            "width": 110,
+            "height": 48,
+            "skinSlot": "mp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseLabel",
+                "id": "btnCloseLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "mp.label.button"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "GovLeftPanel",
+            "id": "govLeftPanel",
+            "widget": {
+              "top": 90,
+              "left": 32
+            },
+            "width": 640,
+            "height": 480,
+            "skinSlot": "mp.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "GovPopulation",
+                "id": "govPopulation",
+                "widget": {
+                  "top": 110,
+                  "left": 32
+                },
+                "height": 48,
+                "text": "",
+                "styleSlot": "mp.label.title",
+                "width": 640
+              },
+              {
+                "type": "label",
+                "name": "GovMorale",
+                "id": "govMorale",
+                "widget": {
+                  "top": 170,
+                  "left": 32
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 640
+              },
+              {
+                "type": "label",
+                "name": "GovFlowGold",
+                "id": "govFlowGold",
+                "widget": {
+                  "top": 250,
+                  "left": 32
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 640
+              },
+              {
+                "type": "label",
+                "name": "GovFlowFood",
+                "id": "govFlowFood",
+                "widget": {
+                  "top": 300,
+                  "left": 32
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 640
+              },
+              {
+                "type": "label",
+                "name": "GovFlowCityTroopCap",
+                "id": "govFlowCityTroopCap",
+                "widget": {
+                  "top": 350,
+                  "left": 32
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 640
+              },
+              {
+                "type": "label",
+                "name": "GovFlowRecruitRegen",
+                "id": "govFlowRecruitRegen",
+                "widget": {
+                  "top": 400,
+                  "left": 32
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 640
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "GovGoldCard",
+            "id": "govGoldCard",
+            "widget": {
+              "top": 110,
+              "left": 740
+            },
+            "width": 600,
+            "height": 230,
+            "skinSlot": "mp.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "GovGoldCardTitle",
+                "id": "govGoldTitle",
+                "widget": {
+                  "top": 20,
+                  "left": 24
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.name",
+                "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovGoldBase",
+                "id": "govGoldBase",
+                "widget": {
+                  "top": 72,
+                  "left": 24
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovGoldPopulationBonus",
+                "id": "govGoldPopulationBonus",
+                "widget": {
+                  "top": 112,
+                  "left": 24
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovGoldPolicyModifier",
+                "id": "govGoldPolicyModifier",
+                "widget": {
+                  "top": 152,
+                  "left": 24
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovGoldTotal",
+                "id": "govGoldTotal",
+                "widget": {
+                  "top": 192,
+                  "left": 24
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "GovFoodCard",
+            "id": "govFoodCard",
+            "widget": {
+              "top": 360,
+              "left": 740
+            },
+            "width": 600,
+            "height": 230,
+            "skinSlot": "mp.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "GovFoodCardTitle",
+                "id": "govFoodTitle",
+                "widget": {
+                  "top": 20,
+                  "left": 24
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.name",
+                "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovFoodBase",
+                "id": "govFoodBase",
+                "widget": {
+                  "top": 72,
+                  "left": 24
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovFoodPopulationBonus",
+                "id": "govFoodPopulationBonus",
+                "widget": {
+                  "top": 112,
+                  "left": 24
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovFoodPolicyModifier",
+                "id": "govFoodPolicyModifier",
+                "widget": {
+                  "top": 152,
+                  "left": 24
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovFoodTotal",
+                "id": "govFoodTotal",
+                "widget": {
+                  "top": 192,
+                  "left": 24
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "GovTroopCard",
+            "id": "govTroopCard",
+            "widget": {
+              "top": 610,
+              "left": 740
+            },
+            "width": 600,
+            "height": 230,
+            "skinSlot": "mp.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "GovTroopCardTitle",
+                "id": "govTroopTitle",
+                "widget": {
+                  "top": 20,
+                  "left": 24
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.name",
+                "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovTroopStock",
+                "id": "govTroopStock",
+                "widget": {
+                  "top": 72,
+                  "left": 24
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovTroopRecruit",
+                "id": "govTroopRecruit",
+                "widget": {
+                  "top": 112,
+                  "left": 24
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovTroopRecover",
+                "id": "govTroopRecover",
+                "widget": {
+                  "top": 152,
+                  "left": 24
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

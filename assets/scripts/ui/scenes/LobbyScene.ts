@@ -69,6 +69,7 @@ import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
+import { GovernorHallController } from '../core/GovernorHallController';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceShowcaseController, RED_FACE_SHOW_MAX_ROWS } from '../core/RedFaceShowcaseController';
 import { DestinyOpeningController, DESTINY_OPENING_MAX_ROWS } from '../core/DestinyOpeningController';
@@ -231,6 +232,8 @@ export class LobbyScene extends Component {
     private _hallBoard: HallBoardPanelController | null = null;
     private _mercPanelHost: UIScreenPreviewHost | null = null;
     private _mercPanel: MercenaryPanelController | null = null;
+    private _govHallHost: UIScreenPreviewHost | null = null;
+    private _govHall: GovernorHallController | null = null;
     private _redFaceHost: UIScreenPreviewHost | null = null;
     private _redFace: RedFaceShowcaseController | null = null;
     private _destinyHost: UIScreenPreviewHost | null = null;
@@ -368,6 +371,7 @@ export class LobbyScene extends Component {
         await this._mountDomestic();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
+        await this._mountGovernorHall();
         await this._mountRedFaceShowcase();
         await this._mountDestinyOpening();
         await this._mountOpeningIntro();
@@ -1133,6 +1137,48 @@ export class LobbyScene extends Component {
             ...rowBindings,
         ]);
         this._mercPanelHost.node.active = false;
+    }
+
+    /** 太守府（GOV-07）：隱藏掛載，入口待 PM 指定，對外提供 openGovernorHall()。 */
+    private async _mountGovernorHall(): Promise<void> {
+        // 人口、民心與產出的正式來源尚未接線（領地資料來源另卡），暫以零值顯示
+        this._govHall = new GovernorHallController({
+            snapshot: () => ({
+                population: 0,
+                morale: 0,
+                gold: { base: 0, populationBonus: 0, policyModifier: 0 },
+                food: { base: 0, populationBonus: 0, policyModifier: 0 },
+                cityTroops: { current: 0, cap: 0, recruitPerTurn: 0 },
+            }),
+        });
+        this._govHallHost = await this._mountPreviewScreenHost('GovernorHallHost', 'governor-hall-screen', [
+            { buttonId: 'btnClose', handler: () => { this._closeGovernorHall(); } },
+        ]);
+        this._govHallHost.node.active = false;
+    }
+
+    public openGovernorHall(): void {
+        const host = this._govHallHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshGovernorHall();
+    }
+
+    private _closeGovernorHall(): void {
+        if (this._govHallHost) {
+            this._govHallHost.node.active = false;
+        }
+    }
+
+    private _refreshGovernorHall(): void {
+        const binder = this._govHallHost?.binder;
+        if (!binder || !this._govHall) {
+            return;
+        }
+        applyFlowView(binder, this._govHall.getFlowView());
     }
 
     public openMercenaryPanel(): void {
