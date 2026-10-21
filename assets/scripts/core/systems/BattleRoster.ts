@@ -20,7 +20,7 @@ import { baseVitalityMaxOf } from './VitalityCap';
 import type { NurtureRating } from './NurtureSystem';
 import { EMPTY_PERFORMANCE, guardianPowerOf, newlyReachedMilestones, type BattlePerformance } from './BattleRecordStats';
 import { isTrialMercenary } from './PrisonerOfWar';
-import { accumulateSeasonBattle, type SeasonStats } from './BattleSeasonStats';
+import { accumulateSeasonBattle, rolloverSeason, type SeasonStats } from './BattleSeasonStats';
 
 // ── 常數（規格有的標出處；沒有的標「暫定」）────────────────────────────────
 
@@ -74,6 +74,8 @@ export interface BattleRecord {
     milestones?: string[];
     /** 本賽季戰績（PROG-2-0950）；舊存檔沒有，讀到時視為無 */
     season?: SeasonStats;
+    /** 已結束賽季的戰績歸檔（賽季切換時由上一季收入，供賽季結算讀取；舊存檔沒有） */
+    seasonHistory?: SeasonStats[];
 }
 
 /** 戰場整合會讀寫的名冊欄位；比照 BreedingGeneral 以延伸型別承載 */
@@ -293,6 +295,9 @@ export function settleBattle(roster: readonly GeneralConfig[], request: SettleBa
             milestones: [...(previous.milestones ?? [])],
         };
         if (request.seasonId) {
+            // 賽季切換時先把上一季收進歸檔（rolloverSeason 對沒有戰績的上一季不歸檔、同賽季冪等）
+            const { archived } = rolloverSeason(previous.season, request.seasonId);
+            if (archived) record.seasonHistory = [...(previous.seasonHistory ?? []), archived];
             record.season = accumulateSeasonBattle(previous.season, request.seasonId, outcome, performance ?? EMPTY_PERFORMANCE);
         }
         const newMilestones = newlyReachedMilestones(record);
