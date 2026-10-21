@@ -304,5 +304,16 @@
   "ui.general.nurture.record.tp_unknown": "TP未記録",
   "ui.general.nurture.record.tp": "TP {0}",
   "ui.general.nurture.record.revelation_none": "未公開",
-  "ui.general.nurture.record.revelation": "第{0}段階まで公開"
+  "ui.general.nurture.record.revelation": "第{0}段階まで公開",
+  "ui.general.ultimate.head": "血脈伝承奥義：{0} / {1} 段階を点灯（上限 {2}）",
+  "ui.general.ultimate.summary": "{0}、{1}",
+  "ui.general.ultimate.next_ready": "次の段階を点灯できます",
+  "ui.general.ultimate.next.cap_locked": "先に昇星して上限を上げる必要あり",
+  "ui.general.ultimate.next.already_max": "すべて点灯済み",
+  "ui.general.ultimate.next.fame_short": "名声が不足",
+  "ui.general.ultimate.next.incident_short": "事績が不足",
+  "ui.general.ultimate.next.epic_required": "史詩の事績が一度必要",
+  "ui.general.ultimate.awaken_label": "第{0}段階を点灯",
+  "ui.general.ultimate.awaken_blocked": "条件未達成",
+  "ui.general.ultimate.raise_locked": "昇星で上限を上げる（入手元は未決定のため未開放）"
 }

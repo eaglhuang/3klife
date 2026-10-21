@@ -134,7 +134,7 @@ export class GeneralDetailSkillsChild extends ChildPanelBase {
             isDescendant: false,
             lineageSealRule: false,
         });
-        const action = ultimateActionView(cfg.bloodlineUltimate, ultimateProgressOf(cfg as UltimateProgressSource), starUp);
+        const action = ultimateActionView(cfg.bloodlineUltimate, ultimateProgressOf(cfg as UltimateProgressSource), (key) => this.t(key), starUp);
         this._set(this._lUltimateAction, action.summary);
         this._set(this._lUltimateAwaken, action.awakenLabel);
         this._set(this._lUltimateRaise, action.raiseLabel);

@@ -304,5 +304,16 @@
   "ui.general.nurture.record.tp_unknown": "TP 未记录",
   "ui.general.nurture.record.tp": "TP {0}",
   "ui.general.nurture.record.revelation_none": "未揭露",
-  "ui.general.nurture.record.revelation": "揭露第 {0} 层"
+  "ui.general.nurture.record.revelation": "揭露第 {0} 层",
+  "ui.general.ultimate.head": "血统传承奥义：已点亮 {0} / {1} 阶（上限 {2}）",
+  "ui.general.ultimate.summary": "{0}，{1}",
+  "ui.general.ultimate.next_ready": "下一阶可点亮",
+  "ui.general.ultimate.next.cap_locked": "需先升星提高上限",
+  "ui.general.ultimate.next.already_max": "已全部点亮",
+  "ui.general.ultimate.next.fame_short": "名声不足",
+  "ui.general.ultimate.next.incident_short": "事迹不足",
+  "ui.general.ultimate.next.epic_required": "需要一次史诗事迹",
+  "ui.general.ultimate.awaken_label": "点亮第 {0} 阶",
+  "ui.general.ultimate.awaken_blocked": "条件未达成",
+  "ui.general.ultimate.raise_locked": "升星提高上限（来源待裁决，暂未开放）"
 }
