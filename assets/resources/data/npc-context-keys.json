@@ -1,0 +1,167 @@
+{
+  "Npc_Context_Keys": {
+    "zhang-fei": {
+      "Content_Status": "LOCAL_DATA",
+      "Context_Keys": [
+        {
+          "Context_Key": "changban-bridge",
+          "Category": "event",
+          "Label": "長坂橋斷後",
+          "Max_Label_Chars": 10,
+          "Source": "LOCAL_KEYWORD_OPTIONS"
+        },
+        {
+          "Context_Key": "liu-bei",
+          "Category": "person",
+          "Label": "劉備",
+          "Max_Label_Chars": 8,
+          "Source": "LOCAL_KEYWORD_OPTIONS"
+        },
+        {
+          "Context_Key": "guan-yu",
+          "Category": "person",
+          "Label": "關羽",
+          "Max_Label_Chars": 8,
+          "Source": "LOCAL_KEYWORD_OPTIONS"
+        },
+        {
+          "Context_Key": "cao-cao",
+          "Category": "person",
+          "Label": "曹操",
+          "Max_Label_Chars": 8,
+          "Source": "LOCAL_KEYWORD_OPTIONS"
+        }
+      ]
+    },
+    "liu-bei": {
+      "Content_Status": "PROVISIONAL",
+      "Context_Keys": [
+        {
+          "Context_Key": "taoyuan-oath",
+          "Category": "event",
+          "Label": "桃園結義",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        },
+        {
+          "Context_Key": "sangu-maolu",
+          "Category": "event",
+          "Label": "三顧茅廬",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        },
+        {
+          "Context_Key": "baidi-tuoji",
+          "Category": "event",
+          "Label": "白帝託孤",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        }
+      ]
+    },
+    "guan-yu": {
+      "Content_Status": "PROVISIONAL",
+      "Context_Keys": [
+        {
+          "Context_Key": "wuguan-zhanliu",
+          "Category": "event",
+          "Label": "過五關斬六將",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        },
+        {
+          "Context_Key": "huarong-dao",
+          "Category": "event",
+          "Label": "華容道",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        },
+        {
+          "Context_Key": "dandao-fuhui",
+          "Category": "event",
+          "Label": "單刀赴會",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        }
+      ]
+    },
+    "zhuge-liang": {
+      "Content_Status": "PROVISIONAL",
+      "Context_Keys": [
+        {
+          "Context_Key": "kongcheng-ji",
+          "Category": "event",
+          "Label": "空城計",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        },
+        {
+          "Context_Key": "caochuan-jiejian",
+          "Category": "event",
+          "Label": "草船借箭",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        },
+        {
+          "Context_Key": "chushi-biao",
+          "Category": "event",
+          "Label": "出師表",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        }
+      ]
+    },
+    "zhao-yun": {
+      "Content_Status": "PROVISIONAL",
+      "Context_Keys": [
+        {
+          "Context_Key": "danqi-jiuzhu",
+          "Category": "event",
+          "Label": "單騎救主",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        },
+        {
+          "Context_Key": "qijin-qichu",
+          "Category": "event",
+          "Label": "七進七出",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        },
+        {
+          "Context_Key": "changban-rescue",
+          "Category": "event",
+          "Label": "長坂坡救主",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        }
+      ]
+    },
+    "cao-cao": {
+      "Content_Status": "PROVISIONAL",
+      "Context_Keys": [
+        {
+          "Context_Key": "xieti-ling",
+          "Category": "event",
+          "Label": "挾天子以令諸侯",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        },
+        {
+          "Context_Key": "chibi",
+          "Category": "event",
+          "Label": "赤壁之戰",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        },
+        {
+          "Context_Key": "guandu",
+          "Category": "event",
+          "Label": "官渡之戰",
+          "Max_Label_Chars": 10,
+          "Source": "PROVISIONAL_DRAFT"
+        }
+      ]
+    }
+  }
+}
