@@ -118,5 +118,31 @@ export function createHallAssignLogSuite(): TestSuite {
         assert.equals('success', reloaded.listHallAssignRecords('HALL-T1')[0].outcome ?? '');
     });
 
+    suite.test('季結自動結算（跨季流程）：委任後跨季，紀錄結算、武將釋放，存檔後仍在', async () => {
+        services().initialize();
+        sys.localStorage.removeItem('CLIENT_DEVICE_ID');
+        const adapter = new MemoryStorageAdapter();
+        const session = newSession(adapter, true);
+        await session.addGenerals([general('g-a', 'epic')]);
+        const assigned = await session.autoAssignHallMission({ taskId: 'HALL-T1', AI_Assign_Enabled: true, Difficulty: 'EASY', board: 'Military' }, '第1年春');
+        assert.isTrue(assigned.ok);
+        const busy = await session.autoAssignHallMission({ taskId: 'HALL-T2', AI_Assign_Enabled: true, Difficulty: 'EASY', board: 'Military' }, '第1年春');
+        assert.isFalse(busy.ok, '唯一武將忙碌時不能再委任第二個任務');
+
+        await session.advanceSeason();
+        const records = session.listHallAssignRecords('HALL-T1');
+        assert.isTrue(records[0].outcome === 'success' || records[0].outcome === 'failure', '季結後紀錄已結算');
+        assert.isTrue((records[0].settledAt ?? '').length > 0);
+
+        const reassigned = await session.autoAssignHallMission({ taskId: 'HALL-T2', AI_Assign_Enabled: true, Difficulty: 'EASY', board: 'Military' }, '第1年夏');
+        assert.isTrue(reassigned.ok, '季結釋放武將後可再委任');
+        await session.save();
+
+        const reloaded = newSession(adapter);
+        assert.isTrue(await reloaded.load());
+        assert.equals(records[0].outcome ?? '', reloaded.listHallAssignRecords('HALL-T1')[0].outcome ?? '');
+        assert.equals(1, reloaded.listHallAssignRecords('HALL-T2').filter((r) => r.outcome === undefined).length);
+    });
+
     return suite;
 }

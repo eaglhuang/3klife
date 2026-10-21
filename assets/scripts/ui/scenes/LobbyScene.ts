@@ -1532,16 +1532,17 @@ export class LobbyScene extends Component {
     /** 彈窗「委任」：由 AI 選將並寫入委任紀錄（PROG-2-1006）；其他動作仍沿用既有流程，本卡不改。 */
     private async _onHallMissionAction(action: LobbyMissionActionKey, taskId: string): Promise<void> {
         if (action !== 'assign') return;
-        const task = this._lobbyHub?.Mission_Boards
-            ? Object.values(this._lobbyHub.Mission_Boards).flatMap((board) => board?.Tasks ?? []).find((t) => t.Task_ID === taskId)
+        const found = this._lobbyHub?.Mission_Boards
+            ? Object.entries(this._lobbyHub.Mission_Boards).flatMap(([board, data]) => (data?.Tasks ?? []).map((t) => ({ board: board as HallBoardKey, task: t }))).find((entry) => entry.task.Task_ID === taskId)
             : undefined;
-        if (!task) {
+        if (!found) {
             services().event.emit('SHOW_TOAST', { message: '此任務已不存在', duration: 2.5 });
             return;
         }
+        const { task, board } = found;
         try {
             const result = await services().session.autoAssignHallMission(
-                { taskId, Intel_Reveal_Percent: task.Intel_Reveal_Percent, AI_Assign_Enabled: task.AI_Assign_Enabled },
+                { taskId, Intel_Reveal_Percent: task.Intel_Reveal_Percent, AI_Assign_Enabled: task.AI_Assign_Enabled, Difficulty: task.Difficulty, board },
                 new Date().toISOString(),
             );
             services().event.emit('SHOW_TOAST', { message: hallAssignNoticeOf(result), duration: 2.5 });

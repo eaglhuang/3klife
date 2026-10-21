@@ -64,7 +64,7 @@ import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type Domesti
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
 import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
-import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult } from '../systems/HallAutoAssign';
+import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, settleOpenAssignsForSeason, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult, type HallAutoAssignTaskInput } from '../systems/HallAutoAssign';
 import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
 import { estimateSortiePower } from '../systems/SortiePrediction';
 import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
@@ -1930,6 +1930,7 @@ export class GameSession {
         }
         this._roster.replaceAll(roster);
         this._clearLeadIfGone();
+        this._settleOpenHallAssigns();
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
         this._recordSoulFragmentsFor(beforeRoster, agingEvents);
         const tokens = grantSeasonalOracleTokens(this._inventory);
@@ -2081,7 +2082,7 @@ export class GameSession {
      * 未開啟委任或沒有可選武將時拒絕，不寫紀錄、不存檔。
      */
     public async autoAssignHallMission(
-        task: Readonly<HallTaskIntelInput & { taskId: string }>,
+        task: HallAutoAssignTaskInput,
         assignedAt: string,
     ): Promise<HallAutoAssignResult> {
         const candidates = this.getDeployableGenerals().map((general) => ({
@@ -2095,6 +2096,27 @@ export class GameSession {
             await this.save();
         }
         return result;
+    }
+
+    /**
+     * 季結自動結算所有未結的大廳委任（PROG-2-1015，暫定）：依武將戰力判定成敗、釋放武將；
+     * 紀錄帶有難度與任務牆時，同時入帳官職經驗（比照派遣即結算）。武將已不在名冊時戰力為 0，判為失敗。
+     */
+    private _settleOpenHallAssigns(): void {
+        const roster = this._roster.getAll();
+        const settled = settleOpenAssignsForSeason(
+            this._hallAssignLog,
+            (generalId) => {
+                const general = roster.find((g) => g.id === generalId);
+                return general ? estimateSortiePower(general) : 0;
+            },
+            new Date().toISOString(),
+        );
+        this._hallAssignLog = settled.log;
+        for (const entry of settled.settled) {
+            if (entry.difficulty === undefined || entry.board === undefined) continue;
+            this.settleHallMission({ difficulty: entry.difficulty, board: entry.board, success: entry.success });
+        }
     }
 
     /** 結算同一任務最新一筆未結算的委任紀錄（結算結果由戰後系統傳入）；沒有未結算紀錄時回傳 false。 */
