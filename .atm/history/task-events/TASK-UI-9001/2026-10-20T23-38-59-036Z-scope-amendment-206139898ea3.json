@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-20T23-38-59-036Z-scope-amendment-206139898ea3",
+  "taskId": "TASK-UI-9001",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/TASK-UI-9001.json",
+  "taskSha256": "sha256:683232075a1ef01b1c57ee2c6b3bb367833e2e1640302c9280881031cc689444",
+  "createdAt": "2026-10-20T23:38:59.036Z",
+  "command": "node atm.mjs tasks scope add --task TASK-UI-9001 --actor codex-gpt-6 --add docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md --class doc-sync --phase during-implementation --reason \"Restore exact backlog path already declared in original scopePaths and deliverables but omitted from direction-lock admission\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "doc-sync",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Restore exact backlog path already declared in original scopePaths and deliverables but omitted from direction-lock admission"
+  }
+}

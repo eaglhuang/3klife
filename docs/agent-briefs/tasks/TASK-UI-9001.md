@@ -40,13 +40,22 @@ phase: M6
 created: 2026-10-21
 created_by_agent: codex-gpt-6
 owner: codex-gpt-6
-status: in-progress
+status: done
 amendment_epoch: 1
 started_at: 2026-10-20T23:27:18.111Z
 started_by_agent: codex-gpt-6
 type: refactor
 depends: []
 notes: "2026-10-21 | 狀態: in-progress | 驗證: pending | 變更: 獨立維護卡已接手；正常增加問題清單分片範圍 | 阻塞: none"
+completed_at: "2026-10-21T03:56:38.957Z"
+completed_by_agent: "codex-gpt-6"
+closedAt: "2026-10-21T03:56:38.957Z"
+closedByActor: "codex-gpt-6"
+closedByCommand: atm tasks close
+lastTransitionId: "2026-10-21T03-56-38-957Z-close-124c6daf6d63"
+lastTransitionAt: "2026-10-21T03:56:38.957Z"
+ledgerContractVersion: task-ledger/v1
+delivery_commit: "cce91fdb200e423864aa90bb28d8b94e447a7e80"
 ---
 # [TASK-UI-9001] 人物頁 chrome 與擷取診斷拆分
 

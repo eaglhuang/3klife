@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-20T23-31-17-308Z-scope-amendment-176812817fe9",
+  "taskId": "TASK-UI-9001",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/TASK-UI-9001.json",
+  "taskSha256": "sha256:a7d1b625ac5e439c5538149b58f92c1ec7c2200abfb9a74f6c171a392c2545af",
+  "createdAt": "2026-10-20T23:31:17.308Z",
+  "command": "node atm.mjs tasks scope add --task TASK-UI-9001 --actor codex-gpt-6 --add \"docs/ai_atomic_framework/atm-backlog-shards/**\" --class doc-sync --phase during-implementation --reason \"Required backlog update exposes pre-existing oversized unmanaged document; lossless section sharding is needed to satisfy unchanged standard gate\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "doc-sync",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Required backlog update exposes pre-existing oversized unmanaged document; lossless section sharding is needed to satisfy unchanged standard gate"
+  }
+}
