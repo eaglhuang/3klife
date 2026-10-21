@@ -60,6 +60,8 @@ import {
 import {
   applyDeploy,
   checkDeploy,
+  DEPLOY_SUGGESTION_CANDIDATES,
+  suggestLowCostDeploy,
   createSortieState,
   finishSortie,
   getTacticTpCost,
@@ -73,6 +75,13 @@ import {
   type SortieState,
   type SortieSummary,
 } from '../../core/systems/SortieDeploy';
+import {
+  delegatePickDeploy,
+  delegateQualityOf,
+  sortDelegateCandidates,
+  type DelegateQuality,
+  type DelegateSituation,
+} from '../../core/systems/DelegateAi';
 
 /**
  * [P2-N3] 部署失敗原因：food = 糧草不足（原 dp）。
@@ -92,6 +101,8 @@ export interface DeployOutcome {
   reason?: DeployFailReason;
   /** 有出征帳本時列出全部不可部署原因（UI 可各自顯示） */
   reasons?: DeployFailReason[];
+  /** 改派建議（DEP-10）：可派出的低耗兵種，只供玩家確認，不自動改派 */
+  suggestion?: string | null;
 }
 
 export type { GeneralSkillCastOptions };
@@ -146,6 +157,8 @@ export class BattleController {
   private readonly _deployedTallyIds = new Set<string>();
   /** 出征軍勢 / 糧草帳本；null = 舊版 demo 戰鬥（不扣軍勢） */
   private sortie: SortieState | null = null;
+  /** 委任 AI 品質（PROG-2-0908）；null 為未開委任 */
+  private delegateQuality: DelegateQuality | null = null;
 
   // ─── 武將單挑系統狀態 ──────────────────────────────────────────────────
   private readonly combatResolver = new BattleCombatResolver({
@@ -339,7 +352,8 @@ export class BattleController {
       const check = checkDeploy(this.sortie, { troopType: type, militia: options.militia });
       if (!check.ok) {
         const reasons = check.reasons.map((reason) => SORTIE_BLOCK_TO_FAIL_REASON[reason]);
-        return { ok: false, unit: null, reason: reasons[0], reasons };
+        const suggestion = suggestLowCostDeploy(this.sortie, type, DEPLOY_SUGGESTION_CANDIDATES);
+        return { ok: false, unit: null, reason: reasons[0], reasons, suggestion };
       }
     }
 
@@ -355,6 +369,29 @@ export class BattleController {
       services().battle.spendFood(applied.check.cost.foodCost);
     }
     return { ok: true, unit };
+  }
+
+  /** 依我方主將智力開啟委任（PROG-2-0908）；沒有主將時關閉 */
+  public enableDelegateFromGeneral(): void {
+    const general = this.state.getGeneral(Faction.Player);
+    this.delegateQuality = general ? delegateQualityOf(general.int) : null;
+  }
+
+  public disableDelegate(): void {
+    this.delegateQuality = null;
+  }
+
+  /**
+   * 委任 AI 在指定路部署一隊（PROG-2-0908）：委任未開或沒有出征帳本時回 null。
+   * 候選依糧耗低→兵力耗低排序，挑選規則由 DelegateAi 決定，實際部署仍走 tryDeployTroop。
+   */
+  public tryDelegateDeploy(lane: number, situation: DelegateSituation = { bossTargetVisible: false }): DeployOutcome | null {
+    if (!this.delegateQuality || !this.sortie) return null;
+    this.syncSortieWithField();
+    const candidates = sortDelegateCandidates(this.sortie, DEPLOY_SUGGESTION_CANDIDATES);
+    const pick = delegatePickDeploy(this.sortie, candidates, this.delegateQuality, situation);
+    if (pick.troopType === null) return null;
+    return this.tryDeployTroop(pick.troopType as TroopType, lane);
   }
 
   /**
@@ -702,6 +739,28 @@ export class BattleController {
     ];
   }
 
+  /**
+   * 非攻擊結算的傷害（位移受阻、七進七出穿透）：致死時與技能傷害一致，走陣亡流程
+   * （移出戰場、釋放格子、發 UnitDied、主將陣亡判定）。
+   */
+  private applyNonCombatDamage(target: TroopUnit, damage: number, damageSource: string): void {
+    const svc = services();
+    this.combatResolver.applyUnitDamage(target, damage, null, {
+      attackerId: null,
+      attackerLane: null,
+      attackerDepth: null,
+      damageSource,
+      allowDamageLink: false,
+    });
+    if (!target.isDead()) return;
+    if (target.id === this.playerGeneralUnitId) {
+      this.combatResolver.onGeneralUnitKilled(Faction.Player, svc);
+    } else if (target.id === this.enemyGeneralUnitId) {
+      this.combatResolver.onGeneralUnitKilled(Faction.Enemy, svc);
+    }
+    this.combatResolver.onUnitKilled(target, null, svc);
+  }
+
   private buildPlayerTurnPhaseExecutors(): readonly BattlePhaseExecutor[] {
     return [
       createBattlePhaseExecutor('player-auto-move', (context) => context.executePhase('player-auto-move')),
@@ -756,13 +815,8 @@ export class BattleController {
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
           getAptitudeMoveSetTo: (unit) => this.combatResolver.getUnitMoveSetTo(unit),
-          applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
-            attackerId: null,
-            attackerLane: null,
-            attackerDepth: null,
-            damageSource: 'forced-move',
-            allowDamageLink: false,
-          }),
+          applyForcedMoveDamage: (unit, damage) => this.applyNonCombatDamage(unit, damage, 'forced-move'),
+          applyGhostPassDamage: (target, damage) => this.applyNonCombatDamage(target, damage, 'ghost-pass'),
         });
         return {};
       case 'enemy-auto-move':
@@ -776,13 +830,8 @@ export class BattleController {
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
           getAptitudeMoveSetTo: (unit) => this.combatResolver.getUnitMoveSetTo(unit),
-          applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
-            attackerId: null,
-            attackerLane: null,
-            attackerDepth: null,
-            damageSource: 'forced-move',
-            allowDamageLink: false,
-          }),
+          applyForcedMoveDamage: (unit, damage) => this.applyNonCombatDamage(unit, damage, 'forced-move'),
+          applyGhostPassDamage: (target, damage) => this.applyNonCombatDamage(target, damage, 'ghost-pass'),
         });
         return {};
       case 'player-tile-effect':
@@ -955,7 +1004,7 @@ export class BattleController {
 
   // ─── 勝敗判定 ─────────────────────────────────────────────────────────────
 
-  private canUsePlayerSkills(): boolean {
+  public canUsePlayerSkills(): boolean {
     return this.flowStateMachine.canUsePlayerSkills();
   }
 

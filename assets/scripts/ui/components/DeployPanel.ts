@@ -53,6 +53,7 @@ import { TallyCardData } from "../../shared/TallyCardContract";
 import type { ToastOptions } from "./ToastMessage";
 import { emitDeployDragDebug, shouldLogDeployDragMove } from "./DeployDragDebug";
 import { tallyDeployRefOf, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
+import { deploySuggestionCopy, nextRedirectStep, type RedirectPrompt } from '../../core/systems/SortieDeploy';
 import { UCUFLogger, LogLevel, LogCategory } from '../../core/utils/UCUFLogger';
 
 const { ccclass, property } = _decorator;
@@ -131,6 +132,8 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
   private selectedTally: TallyDeployRef | null = null;
   private selectedSlotIndex = 0;
   private selectedLane: number = 0;
+  /** 改派二次確認：上一次被擋的目標（DEP-10 A 案） */
+  private redirectPrompt: RedirectPrompt | null = null;
   /** [P2-N6] 當前糧草（原 currentDp，與 TurnSnapshot.playerFood 同步） */
   private currentDp = GAME_CONFIG.INITIAL_FOOD;
 
@@ -740,14 +743,26 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
       });
       return;
     }
-    const outcome = this.ctrl.tryDeployTroop(this.selectedType, this.selectedLane, this.selectedUnitName || undefined, this._tallyOptions());
+    let outcome = this.ctrl.tryDeployTroop(this.selectedType, this.selectedLane, this.selectedUnitName || undefined, this._tallyOptions());
     emitDeployDragDebug("DeployPanel", "deploy-click-result", {
       ok: outcome.ok,
       reason: outcome.reason,
       type: this.selectedType,
       lane: this.selectedLane,
     });
+    if (!outcome.ok) {
+      const step = nextRedirectStep(this.redirectPrompt, { troopType: this.selectedType, lane: this.selectedLane }, outcome.suggestion ?? null);
+      this.redirectPrompt = step.prompt;
+      if (step.action === 'arm' && step.troopType) {
+        this.showToast(`${this.getDeployFailMessage(outcome.reason)}\n${deploySuggestionCopy(this.toTroopDisplayName(step.troopType as TroopType))}，再點一次確認改派`);
+        return;
+      }
+      if (step.action === 'confirm' && step.troopType) {
+        outcome = this.ctrl.tryDeployTroop(step.troopType as TroopType, this.selectedLane);
+      }
+    }
     if (outcome.ok) {
+      this.redirectPrompt = null;
       this.endDrag();
       this.refillDeploySlot(this.selectedSlotIndex);
       this.refreshSlotDisplay();
@@ -1017,7 +1032,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
           toastNode.getComponent('ToastMessageComposite')
           ?? toastNode.getComponent('ToastMessage')
           ?? toastNode.addComponent('ToastMessageComposite')
-        ) as ToastMessageLike | null;
+        ) as unknown as ToastMessageLike | null;
       } else {
         const n = new Node("Toast");
         this.node.addChild(n);

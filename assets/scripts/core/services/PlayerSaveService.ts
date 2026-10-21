@@ -37,8 +37,11 @@ import { SAVE_VERSION_LATEST, saveVersionOf } from '../storage/SaveVersion';
 import { normalizeYearAgingEvents } from '../systems/YearReport';
 import type { AgingEvent } from '../systems/GeneralAging';
 import { mapSnapshotToSixTables } from './PlayerSaveTableRows';
+import { normalizeBorrowLedger, type BorrowLedger } from '../systems/FriendBorrow';
 
 export const PLAYER_SAVE_KEY = 'player.save';
+/** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
+export const PLAYER_SAVE_BACKUP_SUFFIX = '.bak';
 /** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
 export const PLAYER_SAVE_SCHEMA_VERSION = 1;
 
@@ -90,6 +93,8 @@ export interface PlayerSaveSnapshot {
     legendaryMentoringUsedIds?: string[];
     /** 官職狀態（OFC-03）：階位、經驗、解鎖歷史；舊檔沒有此欄位時讀回為階位 1；版號不升（扁平欄位） */
     officerState?: OfficerState;
+    /** 世界沙盤已放置標記數（OFC-06）；扁平選填欄位，舊檔沒有時讀回 0；版號不升 */
+    sandtableMarkersPlaced?: number;
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
@@ -118,6 +123,8 @@ export interface PlayerSaveSnapshot {
     onboarding?: OnboardingState;
     /** 結義點數餘額；後加的選填欄位，舊檔讀回為 0（GCH-06） */
     bondPoints?: number;
+    /** 好友借用帳本；後加的選填欄位，舊檔讀回為空帳本（MENT-14，PROG-2-0745） */
+    friendBorrowLedger?: BorrowLedger;
     /** 趕路（回合制）；後加的選填欄位，舊檔讀回為沒有趕路（PROG-2-0475） */
     travelCountdown?: TravelCountdown;
     /** 編制預設（DEP-14）：主將 id → 參謀官 / 後勤官；舊檔沒有此欄位時視為空 */
@@ -226,6 +233,11 @@ function normalizeDiscoveryExp(value: unknown): number {
     return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? Math.floor(value) : 0;
 }
 
+/** 世界沙盤標記數：非正數、非有限數一律視為 0；小數無條件捨去（OFC-06） */
+export function normalizeSandtableMarkersPlaced(raw: unknown): number {
+    return typeof raw === 'number' && Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 0;
+}
+
 export function createPlayerSaveSnapshot(
     gameTime: GameTimeState,
     roster: readonly GeneralConfig[],
@@ -251,6 +263,7 @@ export function createPlayerSaveSnapshot(
     dynamicRelations: readonly DynamicRelation[] = [],
     legacyCount = 0,
     officerState: Readonly<OfficerState> = initialOfficerState(),
+    sandtableMarkersPlaced = 0,
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -279,6 +292,7 @@ export function createPlayerSaveSnapshot(
         ...(dynamicRelations.length > 0 ? { dynamicRelations: normalizeDynamicRelations(dynamicRelations) } : {}),
         ...(normalizeLegacyCount(legacyCount) > 0 ? { legacyCount: normalizeLegacyCount(legacyCount) } : {}),
         ...(officerState.currentTier > 1 || officerState.officerExp > 0 ? { officerState: normalizeOfficerState(officerState) } : {}),
+        ...(normalizeSandtableMarkersPlaced(sandtableMarkersPlaced) > 0 ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(sandtableMarkersPlaced) } : {}),
     };
 }
 
@@ -344,6 +358,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
         ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),
+        ...(snapshot.friendBorrowLedger !== undefined ? { friendBorrowLedger: normalizeBorrowLedger(snapshot.friendBorrowLedger) } : {}),
         ...(normalizeTravelCountdown(snapshot.travelCountdown) ? { travelCountdown: normalizeTravelCountdown(snapshot.travelCountdown)! } : {}),
         ...(snapshot.gachaPity !== undefined ? { gachaPity: normalizeGachaPityBook(snapshot.gachaPity) } : {}),
         ...(snapshot.gachaWallet !== undefined ? { gachaWallet: normalizeGachaWalletSave(snapshot.gachaWallet) } : {}),
@@ -353,6 +368,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.dynamicRelations !== undefined ? { dynamicRelations: normalizeDynamicRelations(snapshot.dynamicRelations) } : {}),
         ...(snapshot.legacyCount !== undefined ? { legacyCount: normalizeLegacyCount(snapshot.legacyCount) } : {}),
         ...(snapshot.officerState !== undefined ? { officerState: normalizeOfficerState(snapshot.officerState) } : {}),
+        ...(snapshot.sandtableMarkersPlaced !== undefined ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
@@ -413,6 +429,7 @@ function normalizePendingLifespanDeaths(value: unknown): PendingLifespanDeath[] 
 
 export class PlayerSaveService {
     private _ready: Promise<void> | null = null;
+    private _lastLoadRecoveredFromBackup = false;
     private _lastSixTableErrors: readonly string[] = [];
 
     constructor(private readonly _adapter: DataStorageAdapter, private readonly _key: string = PLAYER_SAVE_KEY) {}
@@ -421,28 +438,67 @@ export class PlayerSaveService {
         return this._adapter.adapterName;
     }
 
+    /** 最近一次 load() 是否改從備份讀回（DS-14）；每次 load() 都會重設 */
+    public lastLoadRecoveredFromBackup(): boolean {
+        return this._lastLoadRecoveredFromBackup;
+    }
+
     /** 最近一次存檔時六表列驗證的錯誤（MVP-12）；只回報，不阻擋存檔 */
     public lastSixTableErrors(): readonly string[] {
         return this._lastSixTableErrors;
     }
 
+    /**
+     * 寫入新存檔前，若目前主檔有效，先把它保留到備份槽（DS-14）。
+     * 主檔已損壞時不覆蓋既有備份，避免好的備份被壞檔取代。
+     */
     public async save(snapshot: PlayerSaveSnapshot): Promise<void> {
         await this._ensureReady();
         const validated = validatePlayerSaveSnapshot(snapshot);
         this._lastSixTableErrors = mapSnapshotToSixTables(validated).errors;
+        const previous = await this._adapter.get<unknown>(this._key);
+        if (previous !== null && this._isValid(previous)) {
+            await this._adapter.set(this._backupKey, previous);
+        }
         await this._adapter.set(this._key, validated);
     }
 
-    /** 沒有存檔時回傳 null；有存檔但格式錯誤時拋錯 */
+    /**
+     * 沒有存檔時回傳 null；主檔格式錯誤時退回備份並記錄（DS-14）。
+     * 備份也無效或沒有備份時，拋出主檔的錯誤。
+     */
     public async load(): Promise<PlayerSaveSnapshot | null> {
         await this._ensureReady();
+        this._lastLoadRecoveredFromBackup = false;
         const raw = await this._adapter.get<unknown>(this._key);
-        return raw === null ? null : validatePlayerSaveSnapshot(raw);
+        if (raw === null) return null;
+        try {
+            return validatePlayerSaveSnapshot(raw);
+        } catch (error) {
+            const backup = await this._adapter.get<unknown>(this._backupKey);
+            if (backup === null || !this._isValid(backup)) throw error;
+            this._lastLoadRecoveredFromBackup = true;
+            return validatePlayerSaveSnapshot(backup);
+        }
     }
 
     public async clear(): Promise<void> {
         await this._ensureReady();
         await this._adapter.delete(this._key);
+        await this._adapter.delete(this._backupKey);
+    }
+
+    private get _backupKey(): string {
+        return `${this._key}${PLAYER_SAVE_BACKUP_SUFFIX}`;
+    }
+
+    private _isValid(raw: unknown): boolean {
+        try {
+            validatePlayerSaveSnapshot(raw);
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     /** 第一次存取時才初始化後端（例如開啟 IndexedDB），之後重用同一個 Promise */

@@ -30,9 +30,15 @@ export type BloodlineUltimateAwakenResult<T> =
     | { ok: true; general: T; awakenedStage: number }
     | { ok: false; reason: UltimateAwakenReason };
 
-/** 覺醒下一階：依武將目前的名聲與事蹟判定，成功回傳新副本，失敗回傳第一個擋下的原因且不改資料 */
-export function awakenBloodlineUltimate<T extends BloodlineUltimateHolder>(general: T): BloodlineUltimateAwakenResult<T> {
-    const result = awakenNextStage(normalizeUltimateState(general.bloodlineUltimate), ultimateProgressOf(general));
+/**
+ * 覺醒下一階：依名聲與事蹟判定，成功回傳新副本，失敗回傳第一個擋下的原因且不改資料。
+ * progress 沒給時沿用武將自身的 fame／incidents／epicIncidents（PROG-2-0741 之前的讀法）。
+ */
+export function awakenBloodlineUltimate<T extends BloodlineUltimateHolder>(
+    general: T,
+    progress?: UltimateProgressSource,
+): BloodlineUltimateAwakenResult<T> {
+    const result = awakenNextStage(normalizeUltimateState(general.bloodlineUltimate), ultimateProgressOf(progress ?? general));
     if (result.ok === false) return result;
     return { ok: true, general: { ...general, bloodlineUltimate: result.state }, awakenedStage: result.awakenedStage };
 }

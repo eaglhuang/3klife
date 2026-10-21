@@ -3,7 +3,7 @@ import { _decorator, Button, Color, Component, instantiate, JsonAsset, Label, No
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
-import type { UIManagedController } from '../../core/managers/UIManager';
+import type { IUIManagedController } from '../../shared/interfaces/IUIInterfaces';
 import { SceneName } from '../../core/config/Constants';
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig, isTutorialBattle } from '../../shared/BattleEntryParams';
 import { normalizeWeather } from '../../shared/CommonEnums';
@@ -51,8 +51,10 @@ import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoard
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
+import { nurtureGraduationRows } from '../core/NurtureGraduationView';
+import { pageSliceOf } from '../core/FixedSlotPager';
 import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
-import { officerPermissionLinesOf } from '../core/OfficerPermissionText';
+import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
 import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
 import { estimateSortiePower } from '../../core/systems/SortiePrediction';
@@ -199,6 +201,8 @@ export class LobbyScene extends Component {
     private _seasonHudHost: UIScreenPreviewHost | null = null;
     private _officerHudHost: UIScreenPreviewHost | null = null;
     private _officerPageHost: UIScreenPreviewHost | null = null;
+    private _graduationHost: UIScreenPreviewHost | null = null;
+    private _graduationPage = 0;
     /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
@@ -313,6 +317,7 @@ export class LobbyScene extends Component {
         await this._mountSeasonHud();
         await this._mountOfficerHud();
         await this._mountNurtureFlow();
+        await this._mountGraduationRecord();
         await this._mountMentorCardDetail();
         await this._mountGeneralVersionGallery();
         await this._mountBondingSetup();
@@ -429,9 +434,10 @@ export class LobbyScene extends Component {
             officerRank: display.rankName,
             officerExp: display.expLabel,
         });
+        const lookup = (key: string, ...args: string[]): string => services().i18n.t(key, ...args);
         this._officerPageHost?.binder?.setTexts({
-            officerPageTitle: `官職詳情：${display.rankName}`,
-            officerPermissionText: officerPermissionLinesOf(officerPermissionsOf(state)).join('\n'),
+            officerPageTitle: officerPageTitleText(lookup, display.rankName),
+            officerPermissionText: officerPermissionLinesOf(officerPermissionsOf(state), lookup).join('\n'),
         });
     }
 
@@ -439,6 +445,45 @@ export class LobbyScene extends Component {
     private _setOfficerPageOpen(open: boolean): void {
         if (open) this._refreshOfficerHud();
         if (this._officerPageHost) this._officerPageHost.node.active = open;
+    }
+
+    /** 畢業紀錄畫面（PROG-2-0746）：固定 5 列、分頁按鈕；資料來自培育服務的畢業紀錄，每次打開都重算 */
+    private async _mountGraduationRecord(): Promise<void> {
+        this._graduationHost = await this._mountPreviewScreenHost('GraduationRecordHost', 'nurture-graduation-screen', [
+            { buttonId: 'btnGradClose', handler: () => this._setGraduationOpen(false) },
+            { buttonId: 'btnGradPrev', handler: () => this._turnGraduationPage(-1) },
+            { buttonId: 'btnGradNext', handler: () => this._turnGraduationPage(1) },
+        ]);
+        this._setGraduationOpen(false);
+    }
+
+    private _setGraduationOpen(open: boolean): void {
+        if (open) {
+            this._graduationPage = 0;
+            this._refreshGraduationRecord();
+        }
+        if (this._graduationHost) this._graduationHost.node.active = open;
+    }
+
+    private _turnGraduationPage(delta: number): void {
+        this._graduationPage += delta;
+        this._refreshGraduationRecord();
+    }
+
+    private _refreshGraduationRecord(): void {
+        const lookup = (key: string): string => services().i18n.t(key);
+        const records = services().nurture.getState().graduationRecords ?? [];
+        const slice = pageSliceOf(nurtureGraduationRows(records, lookup), this._graduationPage);
+        this._graduationPage = slice.page;
+        const texts: Record<string, string> = { graduationPage: `${slice.page + 1} / ${slice.pageCount}` };
+        const actives: Record<string, boolean> = {};
+        for (let i = 0; i < 5; i++) {
+            const row = slice.items[i];
+            actives[`graduationRow${i}Box`] = row !== undefined;
+            texts[`graduationRow${i}`] = row ? `${row.periodText}　${row.ratingText}\n${row.tagsText}　${row.tpText}　${row.revelationText}` : '';
+        }
+        this._graduationHost?.binder?.setTexts(texts);
+        this._graduationHost?.binder?.setActives(actives);
     }
 
     /** 季度 HUD：以 UCUF JSON（lobby-season-hud-screen）執行期組裝，顯示「第 N 年 M 季」與推進入口 */
@@ -2289,7 +2334,7 @@ export class LobbyScene extends Component {
         services().ui.register(UIID.LobbyMissionDetailDialog, missionDetailDialogController);
     }
 
-    private _createEliteTroopCodexController(): UIManagedController {
+    private _createEliteTroopCodexController(): IUIManagedController {
         if (!this._eliteTroopCodexPanel) {
             throw new Error('[LobbyScene] EliteTroopCodexComposite 尚未初始化，無法註冊至 UIManager');
         }
@@ -2305,7 +2350,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createLobbyMissionDetailDialogController(): UIManagedController {
+    private _createLobbyMissionDetailDialogController(): IUIManagedController {
         if (!this._missionDetailDialogPanel) {
             throw new Error('[LobbyScene] LobbyMissionDetailDialogComposite cannot be registered before mount');
         }
@@ -2337,7 +2382,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createGeneralDetailController(): UIManagedController {
+    private _createGeneralDetailController(): IUIManagedController {
         if (!this._detailPanel) {
             throw new Error('[LobbyScene] GeneralDetailComposite 尚未初始化，無法註冊至 UIManager');
         }
@@ -2362,7 +2407,7 @@ export class LobbyScene extends Component {
         host: UIScreenPreviewHost | null,
         screenId: string,
         onShown?: () => void,
-    ): UIManagedController {
+    ): IUIManagedController {
         if (!host) {
             throw new Error(`[LobbyScene] ${screenId} host 尚未初始化，無法註冊至 UIManager`);
         }
@@ -2381,7 +2426,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createSpiritFamilyOverviewController(): UIManagedController {
+    private _createSpiritFamilyOverviewController(): IUIManagedController {
         if (!this._spiritFamilyOverviewHost) {
             throw new Error('[LobbyScene] SpiritFamilyOverviewHost 尚未初始化，無法註冊至 UIManager');
         }
@@ -2628,7 +2673,7 @@ export class LobbyScene extends Component {
         });
     }
 
-    private _createLobbyMainController(): UIManagedController {
+    private _createLobbyMainController(): IUIManagedController {
         if (!this._lobbyMainHost) {
             throw new Error('[LobbyScene] LobbyMainHost 尚未初始化，無法註冊至 UIManager');
         }
@@ -2677,7 +2722,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createGeneralListController(): UIManagedController {
+    private _createGeneralListController(): IUIManagedController {
         if (!this._listPanel) {
             throw new Error('[LobbyScene] GeneralListComposite 尚未初始化，無法註冊至 UIManager');
         }
@@ -2730,7 +2775,7 @@ export class LobbyScene extends Component {
 
     private async _showGeneralListWithHandler(
         onSelectGeneral: (config: GeneralConfig) => void | Promise<void>,
-        options: { factionFilter?: 'all' | 'player' | 'enemy'; npcDialogueDevControls?: boolean } = { factionFilter: 'all' },
+        options: NonNullable<GeneralListOpenPayload['options']> = { factionFilter: 'all' },
     ): Promise<void> {
         await services().ui.open(UIID.GeneralList, {
             generals: this._generals,
@@ -2839,8 +2884,9 @@ export class LobbyScene extends Component {
         const inputs = factorHexInputsFromGenes(config.genes ?? []);
         const before = this._factorHexInputsByGeneral.get(config.id);
         const freshColors = before ? newlyLitFactorColors(before, inputs) : [];
-        graphic.render(buildFactorHexView(inputs));
-        graphic.playUnlockFlash(freshColors);
+        const visibleColors = services().session.visibleFactorColors();
+        graphic.render(buildFactorHexView(inputs), visibleColors);
+        graphic.playUnlockFlash(freshColors.filter((color) => visibleColors.includes(color)));
         this._factorHexInputsByGeneral.set(config.id, inputs);
     }
 

@@ -5,7 +5,7 @@
  * 升星按鈕在來源未定前永遠鎖定。
  */
 import { assert, TestSuite } from './TestRunner';
-import { ultimateActionView, RAISE_LOCKED_TEXT } from '../assets/scripts/ui/core/UltimateActionView';
+import { ultimateActionView, RAISE_LOCKED_TEXT, STAR_UP_MATERIAL_TEXT } from '../assets/scripts/ui/core/UltimateActionView';
 
 const enough = { fame: 1500, incidents: 3, epicIncidents: 1 };
 
@@ -48,6 +48,12 @@ export function createUltimateActionViewSuite(): TestSuite {
             assert.isFalse(view.raiseEnabled);
             assert.equals(RAISE_LOCKED_TEXT, view.raiseLabel);
         }
+    });
+
+    suite.test('升星素材有值時，升星按鈕標示需要的素材，仍然鎖定', () => {
+        const view = ultimateActionView({ stageCap: 5, stageCurrent: 1 }, enough, 'TEMPLATE_CARD');
+        assert.equals(STAR_UP_MATERIAL_TEXT.TEMPLATE_CARD, view.raiseLabel);
+        assert.isFalse(view.raiseEnabled);
     });
 
     suite.test('缺欄位的舊武將視為初始狀態（已點亮 1、上限 1）', () => {

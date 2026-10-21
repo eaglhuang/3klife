@@ -16,6 +16,7 @@
 import type { FactorColor } from './FactorInheritance';
 import type { FactorPoolEntry } from './BreedingSystem';
 import { distortColor, getSage, ProphecyKeywordSource, SAGE_BIAS_WEIGHT } from './SageDivination';
+import { SeededRandom } from './SeededRandom';
 
 /** 批語誤差率（暫定 15%，10~20% 中點） */
 export const REMARK_ERROR_RATE = 0.15;
@@ -40,6 +41,17 @@ export const OMEN_LABEL: Readonly<Record<OmenKind, string>> = {
     'purple-qi': '紫氣',
     'deer-grass': '鹿銜草',
 };
+
+/** 依武將配對字串（如 `父ID|母ID`）產生確定性亂數：同一對父母每次結果相同 */
+export function remarkRandomOf(seedKey: string): () => number {
+    let hash = 0x811c9dc5;
+    for (let i = 0; i < seedKey.length; i++) {
+        hash ^= seedKey.charCodeAt(i);
+        hash = Math.imul(hash, 0x01000193) >>> 0;
+    }
+    const rng = new SeededRandom(hash);
+    return () => rng.next();
+}
 
 /** 名士批語：不足 2 位名士時不出批語 */
 export function buildSageRemarks(

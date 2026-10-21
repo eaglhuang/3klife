@@ -37,6 +37,14 @@ export interface BorrowLedger {
     records: BorrowRecord[];
 }
 
+/** 存檔讀回：舊檔沒有欄位時為空帳本；只過濾結構（陣列、id 與 day 為字串），不逐欄驗證（PROG-2-0745） */
+export function normalizeBorrowLedger(raw: unknown): BorrowLedger {
+    const records = (raw as { records?: unknown } | null | undefined)?.records;
+    if (!Array.isArray(records)) return { records: [] };
+    const valid = records.filter((r): r is BorrowRecord => typeof r?.id === 'string' && typeof r?.day === 'string');
+    return { records: valid };
+}
+
 /** 借用候選卡的資訊（呼叫端從好友的展示教官槽讀出） */
 export interface BorrowCandidate {
     supportTemplateId: string;

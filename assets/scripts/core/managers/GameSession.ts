@@ -25,10 +25,12 @@
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
 import { addOfficerExp, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
+import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/SandtableMarkers';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
 import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
 import type { HallBoardKey, HallGateTask, HallPlayerState } from '../systems/HallMissionBoard';
 import { battleIntelligenceOf } from '../systems/BattleRoster';
+import { pvpSeasonIdOf } from '../systems/BattleSeasonStats';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
 import type { NurtureAction, NurtureRoundLog } from '../systems/NurtureSystem';
@@ -60,7 +62,7 @@ import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingStat
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
-import { createPlayerSaveSnapshot, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeSandtableMarkersPlaced, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
@@ -80,6 +82,7 @@ import {
     raiseBloodlineUltimateCap,
 } from '../systems/BloodlineUltimateRoster';
 import type { UltimateAwakenReason } from '../systems/BloodlineTransmissionUltimate';
+import { ultimateProgressFromBattleRecord } from '../systems/UltimateProgress';
 import {
     battleExpSource,
     DiscoveryExpSource,
@@ -90,13 +93,14 @@ import {
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
 import { resolveFactorColor } from '../systems/FactorInheritance';
-import type { FactorDictionary } from '../systems/FactorInheritance';
+import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
+import { visibleFactorColors as factorColorsVisibleAtLevel } from '../systems/FactorMask';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
 import { MentorDuplicateOutcome, overflowToastText, resolveMentorDuplicate } from '../systems/MentorOverflow';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
 import { borrowCandidateOf, type NpcFriendMentor } from '../systems/NpcFriendMentor';
-import { canBorrow, createBorrow, type BorrowBlockReason, type BorrowLedger, type BorrowRequest } from '../systems/FriendBorrow';
+import { canBorrow, createBorrow, normalizeBorrowLedger, type BorrowBlockReason, type BorrowLedger, type BorrowRequest } from '../systems/FriendBorrow';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
@@ -108,12 +112,13 @@ import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
 import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampaignStagePlayable } from '../config/CampaignStages';
 import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
-import type { FactorColor } from '../systems/FactorInheritance';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { buildEraResetEvent } from '../systems/EraReset';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
-import type { BattlePerformance } from '../systems/BattleRecordStats';
+import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from '../systems/BattleRecordStats';
+import { buildBattleSnapshot, type BattleSnapshot } from '../systems/BattleSnapshot';
+import { leaderboardEntryOf, rankLeaderboard, type LeaderboardMetric, type LeaderboardEntry } from '../systems/BattleLeaderboard';
 import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
 import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
@@ -182,6 +187,8 @@ export const GAME_SESSION_EVENTS = {
     FirstBattleCleared: 'game-session-first-battle-cleared',
     /** payload: PlayerSaveSnapshot */
     Loaded: 'game-session-loaded',
+    /** payload: PlayerSaveSnapshot（主檔損壞、改從備份讀回時在 Loaded 之後發出；UI 據此提示玩家進度退回上一份，DS-14） */
+    LoadRecoveredFromBackup: 'game-session-load-recovered-from-backup',
     /** payload: string[]（新的出戰卡組） */
     DeckChanged: 'game-session-deck-changed',
     /** payload: FactorAwakenedEvent */
@@ -322,6 +329,9 @@ export interface MercenaryDayReport {
 
 export class GameSession {
     private _clock = new GameClock();
+    /** 單場戰報快照（PROG-2-0951）：只保留最近一場，記憶體內，不寫入存檔 */
+    private _battleSerial = 0;
+    private _lastBattleSnapshots: BattleSnapshot[] = [];
     /** 動態關係表（KIN-10）：目前只在記憶體中，存檔欄位另卡接線 */
     public readonly dynamicRelations = new DynamicRelationBook();
     private _roster: RosterStore = new InMemoryRosterStore();
@@ -380,6 +390,8 @@ export class GameSession {
     /** 女性武將來源（uid → 來源，FEM-01）；戰俘女將歸入名冊時寫入（PROG-2-0245） */
     /** 官職狀態（OFC-03）：階位、經驗與解鎖歷史；存檔為扁平欄位 officerState */
     private _officerState: OfficerState = initialOfficerState();
+    /** 世界沙盤已放置的標記數（OFC-06）；上限由官職階段決定，存檔為扁平欄位 sandtableMarkersPlaced */
+    private _sandtableMarkersPlaced = 0;
     private _femaleSources: Record<string, FemaleSource> = {};
     /** 轉蛋各池保底計數（PROG-2-0337）；由轉蛋服務寫入，存檔時一併保存 */
     private _gachaPity: GachaPityBook = {};
@@ -423,6 +435,17 @@ export class GameSession {
         return this._clock.state;
     }
 
+    /** 最近一場戰鬥的單場戰報快照（唯讀；尚未有戰鬥時為空） */
+    public get lastBattleSnapshots(): readonly BattleSnapshot[] {
+        return this._lastBattleSnapshots;
+    }
+
+    /** 本機戰績排行：依指定指標排序，取前 N 名（REC-11，PROG-2-0955；好友與全服尚未接） */
+    public rankBattleLeaderboard(metric: LeaderboardMetric, limit: number): LeaderboardEntry[] {
+        const entries = this._roster.getAll().map((general) => leaderboardEntryOf(general));
+        return rankLeaderboard(entries, metric, limit);
+    }
+
     public get roster(): GeneralConfig[] {
         return this._roster.getAll();
     }
@@ -440,6 +463,11 @@ export class GameSession {
     /** 因子覺醒用的玩家層級（決定能解鎖到哪個色階） */
     public get discoveryLevel(): number {
         return this._discoveryLevel;
+    }
+
+    /** 目前玩家層級已開放的因子色（LUK-04），依 ALL_FACTOR_COLORS 順序；Lv1 只有藍粉 */
+    public visibleFactorColors(): FactorColor[] {
+        return factorColorsVisibleAtLevel(this._discoveryLevel);
     }
 
     /** 目前的因子解鎖階段（FUL-06）：由玩家層級換算，Lv1~20 為 Phase 1 */
@@ -999,6 +1027,7 @@ export class GameSession {
         this._legendaryMentoringUsedIds = [];
         this._breedingBirthRecords = [];
         this._officerState = initialOfficerState();
+        this._sandtableMarkersPlaced = 0;
         this._military = { ...STARTER_MILITARY };
         this._yearAgingEvents = [];
         this._prison = createPrisonState<GeneralConfig>();
@@ -1205,6 +1234,23 @@ export class GameSession {
     /** 目前官職解鎖（唯讀）：由官職階位推得任務難度上限、欄位數、沙盤階段、熱點數。 */
     public get officerUnlocks(): OfficerUnlocks {
         return officerUnlocksOf(normalizeOfficerSnapshot(toOfficerSnapshot(this._officerState)));
+    }
+
+    /** 世界沙盤已放置標記數（唯讀，OFC-06）。 */
+    public get sandtableMarkersPlaced(): number {
+        return this._sandtableMarkersPlaced;
+    }
+
+    /** 世界沙盤還能再放的標記數（OFC-06）；未解鎖沙盤時為 0。 */
+    public get sandtableRemaining(): number {
+        return remainingSandtableMarkers(this._sandtableMarkersPlaced, this.officerUnlocks.sandtableStage);
+    }
+
+    /** 在世界沙盤放置一個標記（OFC-06）；上限已滿或未解鎖時回傳 false，不改動狀態。 */
+    public placeSandtableMarker(): boolean {
+        if (!canPlaceSandtableMarker(this._sandtableMarkersPlaced, this.officerUnlocks.sandtableStage)) return false;
+        this._sandtableMarkersPlaced += 1;
+        return true;
     }
 
     /**
@@ -1534,7 +1580,8 @@ export class GameSession {
         const roster = this._roster.getAll();
         const target = roster.find((g) => g.id === generalId);
         if (!target) return { ok: false, reason: 'GENERAL_NOT_FOUND' };
-        const result = awakenBloodlineUltimate(target);
+        const progress = ultimateProgressFromBattleRecord((target as { battleRecord?: BattleRecordLike }).battleRecord);
+        const result = awakenBloodlineUltimate(target, progress);
         if (result.ok === false) return result;
         this._roster.replaceAll(roster.map((g) => (g.id === generalId ? result.general : g)));
         if (this._autoSave && this._save) {
@@ -1556,12 +1603,13 @@ export class GameSession {
      * 借用好友的教官（MENT-14 MVP）：找不到好友回 UNKNOWN_FRIEND；規則不過回傳原因且不改紀錄；
      * 成功寫入借用紀錄並回傳原主結義點數（由呼叫端決定如何入帳）。day 由呼叫端傳入（YYYY-MM-DD）。
      */
-    public borrowFriendMentor(request: { friendId: string; day: string; sessionId: string; recordId: string }):
-        { ok: true; ownerBondReward: number } | { ok: false; blocked: BorrowBlockReason | 'UNKNOWN_FRIEND' } {
+    public async borrowFriendMentor(request: { friendId: string; sessionId: string; recordId: string }):
+        Promise<{ ok: true; ownerBondReward: number } | { ok: false; blocked: BorrowBlockReason | 'UNKNOWN_FRIEND' }> {
         const friend = this._npcFriendMentors.find((f) => f.friendId === request.friendId);
         if (!friend) return { ok: false, blocked: 'UNKNOWN_FRIEND' };
         const borrowRequest: BorrowRequest = {
-            day: request.day,
+            // 借用日由遊戲時鐘提供（PROG-2-0745，暫定：以季為一日）
+            day: `S${this._clock.state.totalSeasonsElapsed}`,
             borrowerId: 'player',
             ownerId: friend.friendId,
             candidate: borrowCandidateOf(friend),
@@ -1569,10 +1617,14 @@ export class GameSession {
             recordId: request.recordId,
         };
         const check = canBorrow(this._borrowLedger, borrowRequest);
-        if (!check.ok) return { ok: false, blocked: check.blocked };
+        if (check.ok === false) return { ok: false, blocked: check.blocked };
         const outcome = createBorrow(this._borrowLedger, borrowRequest);
         if (!outcome) throw new Error('canBorrow 通過後 createBorrow 不應回傳 null');
         this._borrowLedger = outcome.ledger;
+        this._bondPoints += outcome.ownerBondReward;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
         return { ok: true, ownerBondReward: outcome.ownerBondReward };
     }
 
@@ -1955,8 +2007,9 @@ export class GameSession {
 
         if (options.rebirthOnDuplicate && duplicates.length > 0) {
             // 同一批可能抽到同名多次，逐筆依序累加轉數
+            // 同一批先抽到的新武將還在 added 裡、尚未進名冊，批內第二張也要算重複（與跨批一致）
             const roster = this._roster.getAll();
-            const byId = new Map(roster.map((general) => [general.id, general]));
+            const byId = new Map([...roster, ...added].map((general) => [general.id, general]));
             for (const duplicate of duplicates) {
                 const target = byId.get(duplicate.id);
                 if (!target) continue;
@@ -1969,6 +2022,7 @@ export class GameSession {
             }
             if (rebirths.length > 0) {
                 this._roster.replaceAll(roster.map((general) => byId.get(general.id) ?? general));
+                for (let i = 0; i < added.length; i++) added[i] = byId.get(added[i].id) ?? added[i];
             }
             this._bondPoints += bondPointsGained;
         }
@@ -2025,11 +2079,18 @@ export class GameSession {
             deployedIds,
             result,
             season: this._clock.state.totalSeasonsElapsed,
+            seasonId: pvpSeasonIdOf(this._clock.state.totalSeasonsElapsed),
             performance: options.performance,
             vitalityAfterBattle: options.vitalityAfterBattle,
         });
         // 新達成的里程碑發獎勵（千人斬等戰法筆記，GEN-13 / PROG-2-0817）；每個里程碑只在首次達成時發
         const milestoneRewards = settlement.entries.flatMap((entry) => rewardsForMilestones(entry.newMilestones));
+        if (settlement.entries.length > 0) {
+            const battleId = `B${++this._battleSerial}`;
+            const battleDate = `${this.gameTime.currentYear}Q${this.gameTime.currentSeason}`;
+            this._lastBattleSnapshots = settlement.entries.map((entry) =>
+                buildBattleSnapshot(battleId, entry.generalId, entry.performance ?? EMPTY_PERFORMANCE, entry.outcome === 'win', battleDate));
+        }
         this._inventory = grantTacticNotes(this._inventory, milestoneRewards);
         if (settlement.entries.length === 0) {
             if ((clearChanged || firstClear || tallyChanged || comradeChanged) && this._autoSave && this._save) {
@@ -2242,6 +2303,7 @@ export class GameSession {
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
             onboarding: { ...this._onboarding },
             bondPoints: this._bondPoints,
+            friendBorrowLedger: { records: [...this._borrowLedger.records] },
             femaleSystem: this.femaleSystemState,
             ...(this._travel ? { travelCountdown: { ...this._travel } } : {}),
             sortiePresets: { ...this._sortiePresets },
@@ -2249,7 +2311,7 @@ export class GameSession {
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount, this._officerState);
+        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount, this._officerState, this._sandtableMarkersPlaced);
     }
 
     /**
@@ -2309,6 +2371,7 @@ export class GameSession {
         this._nurture?.restoreState(snapshot.nurture);
         this._onboarding = normalizeOnboardingState(snapshot.onboarding);
         this._bondPoints = normalizeBondPoints(snapshot.bondPoints);
+        this._borrowLedger = normalizeBorrowLedger(snapshot.friendBorrowLedger);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };
@@ -2327,6 +2390,7 @@ export class GameSession {
         this.dynamicRelations.restore(snapshot.dynamicRelations ?? []);
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
         this._officerState = normalizeOfficerState(snapshot.officerState);
+        this._sandtableMarkersPlaced = normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced);
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
@@ -2351,6 +2415,9 @@ export class GameSession {
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
+        if (this._requireSave().lastLoadRecoveredFromBackup()) {
+            this._emit(GAME_SESSION_EVENTS.LoadRecoveredFromBackup, snapshot);
+        }
         return true;
     }
 
