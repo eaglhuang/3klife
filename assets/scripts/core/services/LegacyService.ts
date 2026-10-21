@@ -73,6 +73,8 @@ export interface SettleResult {
 export interface SeasonLifecycle {
     settleSeason(roster: GeneralConfig[], advance: SeasonAdvanceResult, events: AgingEvent[]): Promise<SettleResult>;
     retireGeneral(roster: GeneralConfig[], generalId: string, time: GameTimeState): Promise<RetireResult>;
+    /** 有提供 archiver 的生命週期才有（血脈灌注 PROG-2-1074 用） */
+    getArchiver?(): GeneralArchiver;
 }
 
 export interface LegacyServiceOptions {

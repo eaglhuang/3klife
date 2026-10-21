@@ -49,6 +49,7 @@ import { applyJobChangeToRoster, JobWiringGeneral } from '../systems/JobChangeWi
 import type { JobChangeResult, JobClass } from '../systems/JobChange';
 import type { LifespanCommand } from '../systems/LifespanCost';
 import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacyService';
+import type { SpiritCard } from '../models/SpiritCard';
 import type { MentorCard } from '../models/MentorCard';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
@@ -2686,6 +2687,16 @@ export class GameSession {
             await this.save();
         }
         return { ok: true, skillId: outcome.skillId };
+    }
+
+    /**
+     * 血脈灌注（PROG-2-1074）：把重複卡灌入既有英靈卡。沒有掛 SeasonLifecycle（或其 archiver）時回傳 null。
+     * 灌注數值由呼叫端傳入（規格未定）。不產生新本體。
+     */
+    public async infuseSpiritCard(uid: string, duplicateCardValue: number): Promise<SpiritCard | null> {
+        const archiver = this._lifecycle?.getArchiver?.();
+        if (!archiver) return null;
+        return archiver.infuseSpiritCard(uid, duplicateCardValue);
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {

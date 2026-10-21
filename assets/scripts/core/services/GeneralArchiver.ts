@@ -17,6 +17,7 @@
 
 import { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { SpiritCard, DeathContext } from '../models/SpiritCard';
+import { applyBloodlineInfusion } from '../systems/BloodlineInfusion';
 import {
     GeneralLifecycleClass,
     classifyGeneral,
@@ -163,6 +164,21 @@ export class GeneralArchiver {
         const index = cards.findIndex(card => card.uid === uid);
         if (index < 0) throw new Error(`[GeneralArchiver] 找不到歸檔快照 ${uid}`);
         const marked: SpiritCard = { ...cards[index], isSpiritRelic };
+        cards[index] = marked;
+        await this.adapter.set(STORE_SPIRIT_CARDS, cards);
+        return marked;
+    }
+
+    /**
+     * 血脈灌注（PROG-2-1074）：套用 applyBloodlineInfusion 並寫回英靈卡；不改 L5、分類或 GC 路由。
+     * 灌注數值的來源由呼叫端決定。
+     */
+    public async infuseSpiritCard(uid: string, duplicateCardValue: number): Promise<SpiritCard> {
+        const cards = await this.getAllSpiritCards();
+        const index = cards.findIndex(card => card.uid === uid);
+        if (index < 0) throw new Error(`[GeneralArchiver] 找不到歸檔快照 ${uid}`);
+        const infused = applyBloodlineInfusion(cards[index], duplicateCardValue);
+        const marked: SpiritCard = { ...cards[index], ...infused };
         cards[index] = marked;
         await this.adapter.set(STORE_SPIRIT_CARDS, cards);
         return marked;
