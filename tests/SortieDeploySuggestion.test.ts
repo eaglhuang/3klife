@@ -3,11 +3,18 @@
  * 規格：目標不可部署時推薦可派出的低耗部隊；只給建議、不自動改派。
  */
 import { TestSuite, assert } from './TestRunner';
-import { applyDeploy, checkDeploy, createSortieState, suggestLowCostDeploy, UNIT_TROOP_COST } from '../assets/scripts/core/systems/SortieDeploy';
+import {
+    applyDeploy,
+    checkDeploy,
+    createSortieState,
+    DEPLOY_SUGGESTION_CANDIDATES,
+    deploySuggestionCopy,
+    suggestLowCostDeploy,
+} from '../assets/scripts/core/systems/SortieDeploy';
 
 export function createSortieDeploySuggestionSuite(): TestSuite {
     const suite = new TestSuite('SortieDeploySuggestion (改派建議 DEP-10)');
-    const candidates = Object.keys(UNIT_TROOP_COST);
+    const candidates = DEPLOY_SUGGESTION_CANDIDATES;
 
     suite.test('軍勢與糧草都足時不需要建議：目標本身可部署', () => {
         const state = createSortieState({ commandCapacity: 9000, cityTroops: 9000, food: 1000 });
@@ -35,6 +42,10 @@ export function createSortieDeploySuggestionSuite(): TestSuite {
         suggestLowCostDeploy(state, 'cavalry', candidates);
         assert.equals(before, JSON.stringify(state));
         assert.isFalse(applyDeploy(state, 'u1', { troopType: 'cavalry' }).ok, '原目標仍不可部署');
+    });
+
+    suite.test('改派文案沿用規格：可改派低耗部隊：{TroopName}。', () => {
+        assert.equals('可改派低耗部隊：步兵。', deploySuggestionCopy('步兵'));
     });
 
     return suite;

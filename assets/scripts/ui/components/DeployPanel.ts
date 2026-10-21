@@ -53,6 +53,7 @@ import { TallyCardData } from "../../shared/TallyCardContract";
 import type { ToastOptions } from "./ToastMessage";
 import { emitDeployDragDebug, shouldLogDeployDragMove } from "./DeployDragDebug";
 import { tallyDeployRefOf, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
+import { deploySuggestionCopy } from '../../core/systems/SortieDeploy';
 import { UCUFLogger, LogLevel, LogCategory } from '../../core/utils/UCUFLogger';
 
 const { ccclass, property } = _decorator;
@@ -758,7 +759,21 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
       this.node.emit("playerDeployed");
       return;
     }
-    this.showToast(this.getDeployFailMessage(outcome.reason));
+    const suggestionText = outcome.suggestion
+      ? `\n${deploySuggestionCopy(this.toTroopDisplayName(outcome.suggestion as TroopType))}`
+      : '';
+    this.showToast(this.getDeployFailMessage(outcome.reason) + suggestionText);
+  }
+
+  private toTroopDisplayName(type: TroopType): string {
+    const map: Partial<Record<TroopType, string>> = {
+      [TroopType.Cavalry]: '騎兵',
+      [TroopType.Infantry]: '步兵',
+      [TroopType.Shield]: '盾兵',
+      [TroopType.Archer]: '弓兵',
+      [TroopType.Pikeman]: '槍兵',
+    };
+    return map[type] ?? String(type);
   }
 
   private getDeployFailMessage(reason?: string): string {

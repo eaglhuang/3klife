@@ -60,8 +60,8 @@ import {
 import {
   applyDeploy,
   checkDeploy,
+  DEPLOY_SUGGESTION_CANDIDATES,
   suggestLowCostDeploy,
-  UNIT_TROOP_COST,
   createSortieState,
   finishSortie,
   getTacticTpCost,
@@ -343,7 +343,7 @@ export class BattleController {
       const check = checkDeploy(this.sortie, { troopType: type, militia: options.militia });
       if (!check.ok) {
         const reasons = check.reasons.map((reason) => SORTIE_BLOCK_TO_FAIL_REASON[reason]);
-        const suggestion = suggestLowCostDeploy(this.sortie, type, Object.keys(UNIT_TROOP_COST));
+        const suggestion = suggestLowCostDeploy(this.sortie, type, DEPLOY_SUGGESTION_CANDIDATES);
         return { ok: false, unit: null, reason: reasons[0], reasons, suggestion };
       }
     }

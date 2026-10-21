@@ -23,6 +23,7 @@ import {
   Vec3,
 } from 'cc';
 import { GAME_CONFIG, TROOP_DEPLOY_COST, TroopType } from '../../core/config/Constants';
+import { deploySuggestionCopy } from '../../core/systems/SortieDeploy';
 import { IDeployController, IDeployRuntimeLike } from '../../shared/interfaces/IBattleUIComponents';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
@@ -354,7 +355,10 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
       this.node.emit('playerDeployed');
       return;
     }
-    this.showToast(this.getDeployFailMessage(outcome.reason));
+    const suggestionText = outcome.suggestion
+      ? `\n${deploySuggestionCopy(this.toTroopDisplayName(outcome.suggestion as TroopType))}`
+      : '';
+    this.showToast(this.getDeployFailMessage(outcome.reason) + suggestionText);
   }
 
   private toTroopDisplayName(type: TroopType): string {
