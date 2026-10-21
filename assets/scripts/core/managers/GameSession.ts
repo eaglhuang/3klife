@@ -23,7 +23,7 @@
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
-import { addOfficerExp, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
+import { addOfficerExp, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
 import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/SandtableMarkers';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
@@ -1891,6 +1891,8 @@ export class GameSession {
         this._emit(GAME_SESSION_EVENTS.SeasonAdvanced, payload);
         const eraReset = buildEraResetEvent(advance.current.totalSeasonsElapsed);
         if (eraReset) {
+            // 天下大亂：官職階位、經驗與解鎖歷史保留（OFC-09，F-3）
+            this._officerState = applyEraShiftToOfficerState(this._officerState);
             this._emit(GAME_SESSION_EVENTS.EraReset, eraReset);
         }
         for (const event of unveil.events) {
