@@ -23,6 +23,7 @@ import {
   Vec3,
 } from 'cc';
 import { GAME_CONFIG, TROOP_DEPLOY_COST, TroopType } from '../../core/config/Constants';
+import { deploySuggestionCopy, nextRedirectStep, type RedirectPrompt } from '../../core/systems/SortieDeploy';
 import { IDeployController, IDeployRuntimeLike } from '../../shared/interfaces/IBattleUIComponents';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
@@ -58,6 +59,8 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
   /** 目前選的虎符 id（TRP-13）；選一般兵種時為 null */
   private selectedTally: TallyDeployRef | null = null;
   private selectedLane = 0;
+  /** 改派二次確認：上一次被擋的目標（DEP-10 A 案） */
+  private redirectPrompt: RedirectPrompt | null = null;
   private currentDp = GAME_CONFIG.INITIAL_FOOD;
 
   private infoRow: Node | null = null;
@@ -342,14 +345,26 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
       });
       return;
     }
-    const outcome = this.ctrl.tryDeployTroop(this.selectedType, this.selectedLane, this.selectedUnitName || undefined, this._tallyOptions());
+    let outcome = this.ctrl.tryDeployTroop(this.selectedType, this.selectedLane, this.selectedUnitName || undefined, this._tallyOptions());
     emitDeployDragDebug('DeployComposite', 'deploy-click-result', {
       ok: outcome.ok,
       reason: outcome.reason,
       type: this.selectedType,
       lane: this.selectedLane,
     });
+    if (!outcome.ok) {
+      const step = nextRedirectStep(this.redirectPrompt, { troopType: this.selectedType, lane: this.selectedLane }, outcome.suggestion ?? null);
+      this.redirectPrompt = step.prompt;
+      if (step.action === 'arm' && step.troopType) {
+        this.showToast(`${this.getDeployFailMessage(outcome.reason)}\n${deploySuggestionCopy(this.toTroopDisplayName(step.troopType as TroopType))}，再點一次確認改派`);
+        return;
+      }
+      if (step.action === 'confirm' && step.troopType) {
+        outcome = this.ctrl.tryDeployTroop(step.troopType as TroopType, this.selectedLane);
+      }
+    }
     if (outcome.ok) {
+      this.redirectPrompt = null;
       this.endDrag();
       this.node.emit('playerDeployed');
       return;

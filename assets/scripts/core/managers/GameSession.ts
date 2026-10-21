@@ -29,6 +29,7 @@ import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/Ha
 import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
 import type { HallBoardKey, HallGateTask, HallPlayerState } from '../systems/HallMissionBoard';
 import { battleIntelligenceOf } from '../systems/BattleRoster';
+import { pvpSeasonIdOf } from '../systems/BattleSeasonStats';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
 import type { NurtureAction, NurtureRoundLog } from '../systems/NurtureSystem';
@@ -114,7 +115,9 @@ import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMili
 import { buildEraResetEvent } from '../systems/EraReset';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
-import type { BattlePerformance, BattleRecordLike } from '../systems/BattleRecordStats';
+import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from '../systems/BattleRecordStats';
+import { buildBattleSnapshot, type BattleSnapshot } from '../systems/BattleSnapshot';
+import { leaderboardEntryOf, rankLeaderboard, type LeaderboardMetric, type LeaderboardEntry } from '../systems/BattleLeaderboard';
 import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
 import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
@@ -183,6 +186,8 @@ export const GAME_SESSION_EVENTS = {
     FirstBattleCleared: 'game-session-first-battle-cleared',
     /** payload: PlayerSaveSnapshot */
     Loaded: 'game-session-loaded',
+    /** payload: PlayerSaveSnapshot（主檔損壞、改從備份讀回時在 Loaded 之後發出；UI 據此提示玩家進度退回上一份，DS-14） */
+    LoadRecoveredFromBackup: 'game-session-load-recovered-from-backup',
     /** payload: string[]（新的出戰卡組） */
     DeckChanged: 'game-session-deck-changed',
     /** payload: FactorAwakenedEvent */
@@ -323,6 +328,9 @@ export interface MercenaryDayReport {
 
 export class GameSession {
     private _clock = new GameClock();
+    /** 單場戰報快照（PROG-2-0951）：只保留最近一場，記憶體內，不寫入存檔 */
+    private _battleSerial = 0;
+    private _lastBattleSnapshots: BattleSnapshot[] = [];
     /** 動態關係表（KIN-10）：目前只在記憶體中，存檔欄位另卡接線 */
     public readonly dynamicRelations = new DynamicRelationBook();
     private _roster: RosterStore = new InMemoryRosterStore();
@@ -422,6 +430,17 @@ export class GameSession {
 
     public get gameTime(): GameTimeState {
         return this._clock.state;
+    }
+
+    /** 最近一場戰鬥的單場戰報快照（唯讀；尚未有戰鬥時為空） */
+    public get lastBattleSnapshots(): readonly BattleSnapshot[] {
+        return this._lastBattleSnapshots;
+    }
+
+    /** 本機戰績排行：依指定指標排序，取前 N 名（REC-11，PROG-2-0955；好友與全服尚未接） */
+    public rankBattleLeaderboard(metric: LeaderboardMetric, limit: number): LeaderboardEntry[] {
+        const entries = this._roster.getAll().map((general) => leaderboardEntryOf(general));
+        return rankLeaderboard(entries, metric, limit);
     }
 
     public get roster(): GeneralConfig[] {
@@ -1577,7 +1596,7 @@ export class GameSession {
             recordId: request.recordId,
         };
         const check = canBorrow(this._borrowLedger, borrowRequest);
-        if (!check.ok) return { ok: false, blocked: check.blocked };
+        if (check.ok === false) return { ok: false, blocked: check.blocked };
         const outcome = createBorrow(this._borrowLedger, borrowRequest);
         if (!outcome) throw new Error('canBorrow 通過後 createBorrow 不應回傳 null');
         this._borrowLedger = outcome.ledger;
@@ -2037,11 +2056,18 @@ export class GameSession {
             deployedIds,
             result,
             season: this._clock.state.totalSeasonsElapsed,
+            seasonId: pvpSeasonIdOf(this._clock.state.totalSeasonsElapsed),
             performance: options.performance,
             vitalityAfterBattle: options.vitalityAfterBattle,
         });
         // 新達成的里程碑發獎勵（千人斬等戰法筆記，GEN-13 / PROG-2-0817）；每個里程碑只在首次達成時發
         const milestoneRewards = settlement.entries.flatMap((entry) => rewardsForMilestones(entry.newMilestones));
+        if (settlement.entries.length > 0) {
+            const battleId = `B${++this._battleSerial}`;
+            const battleDate = `${this.gameTime.currentYear}Q${this.gameTime.currentSeason}`;
+            this._lastBattleSnapshots = settlement.entries.map((entry) =>
+                buildBattleSnapshot(battleId, entry.generalId, entry.performance ?? EMPTY_PERFORMANCE, entry.outcome === 'win', battleDate));
+        }
         this._inventory = grantTacticNotes(this._inventory, milestoneRewards);
         if (settlement.entries.length === 0) {
             if ((clearChanged || firstClear || tallyChanged || comradeChanged) && this._autoSave && this._save) {
@@ -2365,6 +2391,9 @@ export class GameSession {
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
+        if (this._requireSave().lastLoadRecoveredFromBackup()) {
+            this._emit(GAME_SESSION_EVENTS.LoadRecoveredFromBackup, snapshot);
+        }
         return true;
     }
 

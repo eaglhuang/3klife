@@ -17,8 +17,8 @@ import type { PlayerSaveSnapshot } from './PlayerSaveService';
 export const LOCAL_PLAYER_ID = 'local-player';
 
 const GENERAL_STATUSES = ['Active', 'Training', 'Retired', 'Dead'];
-/** 暫定：子嗣尚未開獎的 Mystery 不在表的 CHECK 內，先映射為 Active */
-const GENERAL_STATUS_FALLBACK: Readonly<Record<string, string>> = { Mystery: 'Active' };
+/** 暫定：Mystery、Unveiled（子嗣開獎後）與沒有 status 的開局武將都不在表的 CHECK 內，先映射為 Active */
+const GENERAL_STATUS_FALLBACK: Readonly<Record<string, string>> = { '': 'Active', Mystery: 'Active', Unveiled: 'Active' };
 /** 暫定：存檔沒有血統來源時的占位值；bloodline_id 為 NOT NULL，不能用 null */
 export const UNKNOWN_BLOODLINE_ID = 'none';
 const BOND_STATUSES = ['Trial', 'Bonded', 'Expired'];

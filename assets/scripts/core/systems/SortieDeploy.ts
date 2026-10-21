@@ -448,6 +448,49 @@ export function checkDeploy(state: SortieState, request: DeployRequest): SortieD
     return { ok: reasons.length === 0, reasons, cost };
 }
 
+/** 改派建議可推薦的兵種（與 UI 兵種名稱對照表一致；水軍等無名稱的不列入） */
+export const DEPLOY_SUGGESTION_CANDIDATES: readonly string[] = ['cavalry', 'infantry', 'shield', 'archer', 'pikeman'];
+
+/** 改派二次確認記憶（DEP-10 A 案）：記下上一次被擋的目標與建議兵種 */
+export interface RedirectPrompt {
+    deniedType: string;
+    lane: number;
+    suggestedType: string;
+}
+
+export interface RedirectStep {
+    prompt: RedirectPrompt | null;
+    action: 'none' | 'arm' | 'confirm';
+    troopType: string | null;
+}
+
+/**
+ * 改派二次確認（規格：玩家必須再次確認，不自動改派）。
+ * 第一次點不可部署的目標 → arm（只提示）；同一目標、同一格、同一建議的第二次點 → confirm（才改派）；沒有建議 → none。
+ */
+export function nextRedirectStep(
+    prompt: RedirectPrompt | null,
+    attempt: { troopType: string; lane: number },
+    suggestion: string | null,
+): RedirectStep {
+    if (!suggestion) return { prompt: null, action: 'none', troopType: null };
+    const confirmed = prompt !== null
+        && prompt.deniedType === attempt.troopType
+        && prompt.lane === attempt.lane
+        && prompt.suggestedType === suggestion;
+    if (confirmed) return { prompt: null, action: 'confirm', troopType: suggestion };
+    return {
+        prompt: { deniedType: attempt.troopType, lane: attempt.lane, suggestedType: suggestion },
+        action: 'arm',
+        troopType: suggestion,
+    };
+}
+
+/** 改派建議文案（規格 戰場部署系統 §G「可改派低耗部隊：{TroopName}。」） */
+export function deploySuggestionCopy(troopName: string): string {
+    return `可改派低耗部隊：${troopName}。`;
+}
+
 /**
  * 改派建議 Deploy_Suggestion（DEP-10）：目標不可部署時，從候選兵種中推薦一隊可派出的低耗部隊。
  * 只回傳建議，玩家必須再次確認，不自動改派（規格）。排序暫定：糧耗低者優先，再比兵力耗，同分取候選順序較前者。

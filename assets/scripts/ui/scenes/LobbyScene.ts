@@ -3,7 +3,7 @@ import { _decorator, Button, Color, Component, instantiate, JsonAsset, Label, No
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
-import type { UIManagedController } from '../../core/managers/UIManager';
+import type { IUIManagedController } from '../../shared/interfaces/IUIInterfaces';
 import { SceneName } from '../../core/config/Constants';
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig, isTutorialBattle } from '../../shared/BattleEntryParams';
 import { normalizeWeather } from '../../shared/CommonEnums';
@@ -52,7 +52,7 @@ import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
 import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
-import { officerPermissionLinesOf } from '../core/OfficerPermissionText';
+import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
 import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
 import { estimateSortiePower } from '../../core/systems/SortiePrediction';
@@ -427,9 +427,10 @@ export class LobbyScene extends Component {
             officerRank: display.rankName,
             officerExp: display.expLabel,
         });
+        const lookup = (key: string, ...args: string[]): string => services().i18n.t(key, ...args);
         this._officerPageHost?.binder?.setTexts({
-            officerPageTitle: `官職詳情：${display.rankName}`,
-            officerPermissionText: officerPermissionLinesOf(officerPermissionsOf(state)).join('\n'),
+            officerPageTitle: officerPageTitleText(lookup, display.rankName),
+            officerPermissionText: officerPermissionLinesOf(officerPermissionsOf(state), lookup).join('\n'),
         });
     }
 
@@ -2287,7 +2288,7 @@ export class LobbyScene extends Component {
         services().ui.register(UIID.LobbyMissionDetailDialog, missionDetailDialogController);
     }
 
-    private _createEliteTroopCodexController(): UIManagedController {
+    private _createEliteTroopCodexController(): IUIManagedController {
         if (!this._eliteTroopCodexPanel) {
             throw new Error('[LobbyScene] EliteTroopCodexComposite 尚未初始化，無法註冊至 UIManager');
         }
@@ -2303,7 +2304,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createLobbyMissionDetailDialogController(): UIManagedController {
+    private _createLobbyMissionDetailDialogController(): IUIManagedController {
         if (!this._missionDetailDialogPanel) {
             throw new Error('[LobbyScene] LobbyMissionDetailDialogComposite cannot be registered before mount');
         }
@@ -2335,7 +2336,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createGeneralDetailController(): UIManagedController {
+    private _createGeneralDetailController(): IUIManagedController {
         if (!this._detailPanel) {
             throw new Error('[LobbyScene] GeneralDetailComposite 尚未初始化，無法註冊至 UIManager');
         }
@@ -2360,7 +2361,7 @@ export class LobbyScene extends Component {
         host: UIScreenPreviewHost | null,
         screenId: string,
         onShown?: () => void,
-    ): UIManagedController {
+    ): IUIManagedController {
         if (!host) {
             throw new Error(`[LobbyScene] ${screenId} host 尚未初始化，無法註冊至 UIManager`);
         }
@@ -2379,7 +2380,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createSpiritFamilyOverviewController(): UIManagedController {
+    private _createSpiritFamilyOverviewController(): IUIManagedController {
         if (!this._spiritFamilyOverviewHost) {
             throw new Error('[LobbyScene] SpiritFamilyOverviewHost 尚未初始化，無法註冊至 UIManager');
         }
@@ -2626,7 +2627,7 @@ export class LobbyScene extends Component {
         });
     }
 
-    private _createLobbyMainController(): UIManagedController {
+    private _createLobbyMainController(): IUIManagedController {
         if (!this._lobbyMainHost) {
             throw new Error('[LobbyScene] LobbyMainHost 尚未初始化，無法註冊至 UIManager');
         }
@@ -2675,7 +2676,7 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _createGeneralListController(): UIManagedController {
+    private _createGeneralListController(): IUIManagedController {
         if (!this._listPanel) {
             throw new Error('[LobbyScene] GeneralListComposite 尚未初始化，無法註冊至 UIManager');
         }
@@ -2728,7 +2729,7 @@ export class LobbyScene extends Component {
 
     private async _showGeneralListWithHandler(
         onSelectGeneral: (config: GeneralConfig) => void | Promise<void>,
-        options: { factionFilter?: 'all' | 'player' | 'enemy'; npcDialogueDevControls?: boolean } = { factionFilter: 'all' },
+        options: NonNullable<GeneralListOpenPayload['options']> = { factionFilter: 'all' },
     ): Promise<void> {
         await services().ui.open(UIID.GeneralList, {
             generals: this._generals,

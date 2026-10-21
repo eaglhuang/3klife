@@ -64,7 +64,7 @@ export class GeneralQuickViewComposite extends CompositePanel {
             NameText: general.name ?? '—',
             TitleText: general.title ?? '',
             FactionText: general.faction ?? '—',
-            TemplateText: general.template ?? '—',
+            TemplateText: general.templateId ?? '—',
             StrText: String(general.str ?? 0),
             IntText: String(general.int ?? 0),
             LeaText: String(general.lea ?? 0),

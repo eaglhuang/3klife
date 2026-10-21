@@ -15,6 +15,7 @@
  * 回傳新的 GeneralData；寫回名冊與存檔交給上層 Service（BreedingService）。
  */
 import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
+import { toCanonicalRole, type CanonicalRole } from '../models/GeneralRole';
 import type { PersonRecord } from '../models/PersonRegistry';
 import { createEmptyPedigree, Pedigree, PEDIGREE_SLOTS, PedigreeSlot, pedigreeSlotGeneration } from '../services/BloodlineGraph';
 import {
@@ -442,6 +443,18 @@ export function applyWildGeneMutation(
     });
 }
 
+/**
+ * 子嗣職能（暫定，PM）：教官只由 Support 與退役轉化而來，子嗣不直接成為 Mentor。
+ * 先取父親的規格職能；父親是 Mentor 或沒有時改用母親；兩者都不行就填 Combat。存檔六表 generals.role 為必填。
+ */
+export function childRoleOf(fatherRole: unknown, motherRole: unknown): CanonicalRole {
+    for (const raw of [fatherRole, motherRole]) {
+        const role = toCanonicalRole(raw);
+        if (role && role !== 'Mentor') return role;
+    }
+    return 'Combat';
+}
+
 export function createChild(input: CreateChildInput): BreedingGeneral {
     const { father, mother, ep } = input;
     const gender = input.random() < 0.5 ? '男' : '女';
@@ -469,6 +482,7 @@ export function createChild(input: CreateChildInput): BreedingGeneral {
         ep: ep.ep,
         epRating: ep.rating,
         bloodlineId: father.bloodlineId,
+        role: childRoleOf(father.role, mother.role),
         parentsSummary: `父：${father.name} / 母：${mother.name}`,
         genes: toGeneConfigs(input.factors, input.dictionary),
         ancestor_chain: PEDIGREE_SLOTS.map((slot) => input.pedigree[slot]).filter((uid): uid is string => !!uid),
