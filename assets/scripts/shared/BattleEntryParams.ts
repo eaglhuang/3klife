@@ -14,6 +14,8 @@ export interface WeatherScheduleEntry {
 /** encounters.json 中單一遭遇戰的設定結構 */
 export interface EncounterConfig {
   id: string;
+  /** AI 難度（可選，PROG-2-0921）：easy / normal / hard / nightmare / hell；缺省為 normal */
+  difficulty?: string;
   name: string;
   playerGeneralId: string;
   enemyGeneralId: string;
@@ -28,6 +30,8 @@ export interface EncounterConfig {
   weatherSchedule?: WeatherScheduleEntry[];
   /** 場景戰法（可選，預設 Normal） */
   battleTactic?: BattleTactic;
+  /** AI 難度（可選，PROG-2-0921）；有值時優先於遭遇資料 */
+  aiDifficulty?: string;
   /** 我軍裝備 ID 列表（預留） */
   playerEquipment?: string[];
   /** 敵軍裝備 ID 列表（預留） */
@@ -69,6 +73,8 @@ export interface IBattleEntryParams {
   weather: Weather;
   /** 天氣排程（可選）；覆蓋 encounter 設定（PROG-2-0401） */
   weatherSchedule?: WeatherScheduleEntry[];
+  /** AI 難度（可選，PROG-2-0921）；有值時優先於遭遇資料 */
+  aiDifficulty?: string;
   /** 戰場戰法 */
   battleTactic: BattleTactic;
   /** 背景 ID（覆蓋 encounter 設定；為空時由 encounter 決定） */

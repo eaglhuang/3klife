@@ -20,6 +20,17 @@ export const AI_DIFFICULTY_SP_MOD: Readonly<Record<AiDifficulty, number>> = {
     hell: 1.5,
 };
 
+/**
+ * 戰鬥入口難度解析（PROG-2-0921）：依序取第一個合法值（入口參數 → 遭遇資料），都沒有則 NORMAL。
+ * 不合法的字串（例如拼錯）會略過，不會讓戰鬥以未知倍率開打。
+ */
+export function resolveAiDifficulty(...sources: Array<string | null | undefined>): AiDifficulty {
+    for (const source of sources) {
+        if (source && source in AI_DIFFICULTY_SP_MOD) return source as AiDifficulty;
+    }
+    return 'normal';
+}
+
 /** AI 每次擊殺獲得的 SP；小數無條件捨去，避免 SP 出現小數 */
 export function aiSpGainPerKill(difficulty: AiDifficulty = 'normal'): number {
     return Math.floor(SP_PER_KILL * AI_DIFFICULTY_SP_MOD[difficulty]);

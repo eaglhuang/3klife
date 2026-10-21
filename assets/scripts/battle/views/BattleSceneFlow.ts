@@ -13,6 +13,7 @@ import type { GeneralUnit } from '../../core/models/GeneralUnit';
 
 
 import type { BoardRenderer } from './BoardRenderer';
+import { resolveAiDifficulty } from '../../core/systems/AiSpCharge';
 
 export interface BattleSceneFlowContext {
   getCtrl(): BattleController | null;
@@ -70,7 +71,14 @@ export class BattleSceneFlow {
     this.ctx.setPlayerGeneral(pg);
     this.ctx.setEnemyGeneral(eg);
 
-    ctrl.initBattle(pg, eg, terrain, battleParams?.weather, battleParams?.battleTactic);
+    ctrl.initBattle(
+      pg,
+      eg,
+      terrain,
+      battleParams?.weather,
+      battleParams?.battleTactic,
+      resolveAiDifficulty(battleParams?.aiDifficulty, encounter?.difficulty),
+    );
     // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
     const weatherSchedule = battleParams?.weatherSchedule ?? encounter?.weatherSchedule;
     if (weatherSchedule) ctrl.setWeatherSchedule(weatherSchedule);
