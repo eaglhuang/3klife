@@ -408,10 +408,37 @@ export function spendTactic(state: SortieState, cost: number): TacticSpendResult
 
 /** 戰法計謀點成本預設（暫定：戰法系統範例 20~55 TP，尚未逐招定案，先取中間值 30） */
 export const DEFAULT_TACTIC_TP_COST = 30;
-/** 逐招成本覆寫表（tacticId → 成本）；只放規格有寫的招式 */
+/** 逐招成本覆寫表（tacticId → 成本）；數值來源為數值系統.md E-9 戰法 TP 消耗表（28 招） */
 export const TACTIC_TP_COST_OVERRIDE: Readonly<Record<string, number>> = {
+    TAC_CAVALRY_CHARGE: 30,
+    TAC_LONE_RIDER: 50,
+    TAC_LANCE_THRUST: 20,
+    TAC_IRON_WALL_CHARGE: 40,
+    TAC_BACKSTAB: 25,
+    TAC_AMBUSH: 40,
+    TAC_NIGHT_RAID: 35,
+    TAC_SEVEN_IN_OUT: 60,
+    TAC_DISCORD: 45,
+    TAC_TAUNT: 15,
+    TAC_SLOW: 20,
     // 空城計（戰法系統：55 TP，PROG-2-0778）
     TAC_EMPTY_FORT: 55,
+    TAC_CHAIN_LINK: 70,
+    TAC_WATER_ATTACK: 65,
+    TAC_COMBO_ATTACK: 20,
+    TAC_SWORN_FURY: 45,
+    TAC_HEAL: 25,
+    TAC_INSPIRE: 30,
+    TAC_HASTE: 15,
+    TAC_SHIELD: 35,
+    TAC_EIGHT_ARRAY: 80,
+    TAC_WEI_MIGHT: 70,
+    TAC_DRAGON_GALL: 60,
+    TAC_FIRE_ATTACK: 35,
+    TAC_RED_CLIFF: 90,
+    TAC_FIRE_ARROW: 25,
+    TAC_ARROW_RAIN: 50,
+    TAC_FOREST_AMBUSH: 30,
 };
 
 /** 施放戰法所需計謀點；沒有 tacticId（只有普通攻擊或 demo 技能）時用預設值 */
