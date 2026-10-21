@@ -2863,8 +2863,9 @@ export class LobbyScene extends Component {
         const inputs = factorHexInputsFromGenes(config.genes ?? []);
         const before = this._factorHexInputsByGeneral.get(config.id);
         const freshColors = before ? newlyLitFactorColors(before, inputs) : [];
-        graphic.render(buildFactorHexView(inputs));
-        graphic.playUnlockFlash(freshColors);
+        const visibleColors = services().session.visibleFactorColors();
+        graphic.render(buildFactorHexView(inputs), visibleColors);
+        graphic.playUnlockFlash(freshColors.filter((color) => visibleColors.includes(color)));
         this._factorHexInputsByGeneral.set(config.id, inputs);
     }
 

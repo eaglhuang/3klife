@@ -46,6 +46,11 @@ function estimateWidth(str) {
     return width;
 }
 
+/** 去掉以 _ 開頭的註解鍵（如 _comment），不計入寬度檢查 */
+function dropCommentKeys(obj) {
+    return Object.fromEntries(Object.entries(obj).filter(([key]) => !key.startsWith('_')));
+}
+
 /** 遞迴攤平 nested JSON 為 flat key-value */
 function flattenJson(obj, prefix = '') {
     const result = {};
@@ -60,9 +65,18 @@ function flattenJson(obj, prefix = '') {
     return result;
 }
 
-/** 載入一個 locale 的所有 JSON 檔案並合併 */
+/** 載入一個 locale 的所有 JSON 檔案並合併；同時支援「每語系一個目錄」與本專案的扁平檔 {locale}.json */
 function loadLocale(locale) {
     const localeDir = path.join(config.paths.i18nDir, locale);
+    const flatFile = path.join(config.paths.i18nDir, `${locale}.json`);
+    if (!fs.existsSync(localeDir) && fs.existsSync(flatFile)) {
+        try {
+            const flat = flattenJson(JSON.parse(fs.readFileSync(flatFile, 'utf-8')));
+            return dropCommentKeys(flat);
+        } catch {
+            return null;
+        }
+    }
     if (!fs.existsSync(localeDir)) return null;
 
     const merged = {};
@@ -77,7 +91,7 @@ function loadLocale(locale) {
         }
     }
 
-    return Object.keys(merged).length > 0 ? merged : null;
+    return Object.keys(merged).length > 0 ? dropCommentKeys(merged) : null;
 }
 
 // ─── main ─────────────────────────────────────────────────

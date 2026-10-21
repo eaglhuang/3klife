@@ -6,7 +6,7 @@
  * 欄位與 server/schema/nur15-row-validators.ts 的 NurtureRecordRow 對齊（snake_case）。
  *
  * 取不到的值一律設為 null，不填假值：
- *   - revelation_level：目前沒有子嗣的揭露層級紀錄，無法得出 0~3。
+ *   - revelation_level：沒有揭露時記 0（「未揭露」），有揭露就用實際層級（PROG-2-0744，PM 裁定，暫定）。
  *   - phase_block_history_json、mentoring_mode_log_json、reveal_log_json：現有培育狀態沒有這三份歷程，
  *     以 JSON 文字 "null" 表示「未紀錄」，仍是可解析的 JSON（server 列驗證要求可解析）。
  *   - tp_total：舊存檔的會話沒有 totalTp 時為 null。
@@ -42,7 +42,7 @@ export function buildNurtureRecordRow(
     graduation: { rating: NurtureRating; tags: readonly string[] },
     endSeason: number,
 ): NurtureRecordBuildResult {
-    const unavailable = ['revelation_level', 'phase_block_history_json', 'mentoring_mode_log_json', 'reveal_log_json'];
+    const unavailable = ['phase_block_history_json', 'mentoring_mode_log_json', 'reveal_log_json'];
     const tpTotal = session.totalTp ?? null;
     if (tpTotal === null) unavailable.push('tp_total');
     return {
@@ -52,7 +52,7 @@ export function buildNurtureRecordRow(
             start_season: session.startSeason,
             end_season: endSeason,
             mentor_id: session.mentors[0]?.id ?? null,
-            revelation_level: null,
+            revelation_level: 0,
             phase_block_history_json: JSON.stringify(null),
             mentoring_mode_log_json: JSON.stringify(null),
             reveal_log_json: JSON.stringify(null),
