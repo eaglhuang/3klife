@@ -72,6 +72,8 @@ import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING }
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
+import { deriveInventoryViews, type InventoryRecord, type InventoryViews } from '../systems/InventoryProjection';
+import { buildTallyInventoryRecords, normalizeInventoryRecords } from '../systems/InventoryRecordBridge';
 import { applyTallyConfiscation, applyTallyLoyaltyChange, createTallyLoyaltyState, type TallyLoyaltyAction, type TallyLoyaltyResult, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
 import type { TigerTallyQuality } from '../models/TigerTallyCard';
 import type { NurtureState } from '../services/NurtureService';
@@ -430,6 +432,8 @@ export class GameSession {
     private _tallyHoldings: TallyHoldings = createTallyHoldings([]);
     /** 虎符卡資料（uid → 卡）；陣亡產出的卡會登記到這裡 */
     private _tallyCards: Record<string, TigerTallyCard> = {};
+    /** 統一物件庫列（DS-08 canonical，PROG-2-1021）；過渡期虎符寫入後同步重算 TALLY 列 */
+    private _inventoryRecords: InventoryRecord[] = [];
     /** 女性武將來源（uid → 來源，FEM-01）；戰俘女將歸入名冊時寫入（PROG-2-0245） */
     /** 官職狀態（OFC-03）：階位、經驗與解鎖歷史；存檔為扁平欄位 officerState */
     private _officerState: OfficerState = initialOfficerState();
@@ -846,6 +850,17 @@ export class GameSession {
         return { ...this._tallyCards };
     }
 
+    /** 統一物件庫推導的虎符與英靈卡視圖（DS-08）；讀取一律走這裡，不直接讀 _tallyCards */
+    public get inventoryViews(): InventoryViews {
+        return deriveInventoryViews(this._inventoryRecords);
+    }
+
+    /** 過渡期 dual-write（DS-08）：虎符寫入後重算 TALLY 列，其他類型的列保留 */
+    private _syncInventoryRecords(): void {
+        const others = this._inventoryRecords.filter((r) => r.Item_Type !== 'TALLY');
+        this._inventoryRecords = [...others, ...buildTallyInventoryRecords(this._tallyCards, this._tallyHoldings.holders)];
+    }
+
     /**
      * 戰後把戰鬥經驗寫回出陣的虎符卡片實例（PROG-2-0573）。
      * 只有有結果的戰鬥會結算（ongoing 不結算）；卡片不存在的 id 略過。回傳是否有卡片被改動。
@@ -861,7 +876,10 @@ export class GameSession {
             nextCards[uid] = { ...card, ...applyBattleExpToCard(card, outcome) };
             changed = true;
         }
-        if (changed) this._tallyCards = nextCards;
+        if (changed) {
+            this._tallyCards = nextCards;
+            this._syncInventoryRecords();
+        }
         return changed;
     }
 
@@ -876,6 +894,7 @@ export class GameSession {
         }
         this._tallyHoldings = { holders };
         this._tallyCards = stored;
+        this._syncInventoryRecords();
         await this._autoSaveAfterTallyChange();
     }
 
@@ -899,6 +918,7 @@ export class GameSession {
         const next = applyTallyConfiscation(current, quality);
         this._tallyLoyalty = { ...this._tallyLoyalty, [generalId]: next };
         this._tallyHoldings = confiscateFrom(this._tallyHoldings, generalId).state;
+        this._syncInventoryRecords();
         await this._autoSaveAfterTallyChange();
         return { cardUid, loyalty: next.loyalty };
     }
@@ -916,6 +936,7 @@ export class GameSession {
     private async _commitTallyResult(result: TallyHoldingsResult): Promise<TallyHoldingsResult> {
         if (result.ok) {
             this._tallyHoldings = result.state;
+            this._syncInventoryRecords();
             await this._autoSaveAfterTallyChange();
         }
         return result;
@@ -974,6 +995,7 @@ export class GameSession {
         const result = settleDeathTallies({ holdings: this._tallyHoldings, cards: this._tallyCards }, before.map(withTroop), after.map(withTroop), season);
         this._tallyHoldings = result.holdings;
         this._tallyCards = { ...result.cards };
+        this._syncInventoryRecords();
     }
 
     /**
@@ -1103,6 +1125,7 @@ export class GameSession {
         this._tallyLoyalty = {};
         this._tallyHoldings = createTallyHoldings([]);
         this._tallyCards = {};
+        this._inventoryRecords = [];
         this._femaleSources = {};
         this._gachaPity = {};
         this._femaleSystem = normalizeFemaleSystemState(undefined);
@@ -2142,6 +2165,7 @@ export class GameSession {
             if (card) {
                 this._tallyCards = { ...this._tallyCards, [card.uid]: card };
                 this._tallyHoldings = { holders: { ...this._tallyHoldings.holders, [card.uid]: null } };
+                this._syncInventoryRecords();
             }
         }
         if (this._autoSave && this._save) {
@@ -2585,7 +2609,9 @@ export class GameSession {
         const base = createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount, this._officerState, this.sandtableMarkersPlaced, this._sandtableMarkerTerritories);
         const withJournal = this._gachaMentorJournal.length > 0 ? { ...base, gachaMentorJournal: normalizeGachaMentorJournal(this._gachaMentorJournal) } : base;
         const withHallLog = this._hallAssignLog.length > 0 ? { ...withJournal, hallAssignLog: normalizeHallAssignLog(this._hallAssignLog) } : withJournal;
-        return { ...withHallLog, ...this.lifespanSaveFields() };
+        // 統一物件庫列只在非空時寫入；舊檔與空狀態不多一個欄位（PROG-2-1021）
+        const withInventory = this._inventoryRecords.length > 0 ? { ...withHallLog, inventoryRecords: normalizeInventoryRecords(this._inventoryRecords) } : withHallLog;
+        return { ...withInventory, ...this.lifespanSaveFields() };
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
@@ -2692,6 +2718,10 @@ export class GameSession {
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
         // 讀檔回填：舊存檔的虎符卡可能缺 troopType，依名冊武將的主兵種補上（PROG-2-0582）
         this._tallyCards = backfillTallyTroopTypes(normalizeTallyCardsMap(snapshot.tallyCards), this._roster.getAll());
+        // 統一物件庫：有存列就以列為準；舊存檔沒有列時由虎符卡與持有表重建（PROG-2-1021）
+        this._inventoryRecords = snapshot.inventoryRecords !== undefined
+            ? normalizeInventoryRecords(snapshot.inventoryRecords)
+            : buildTallyInventoryRecords(this._tallyCards, this._tallyHoldings.holders);
         this._femaleSources = normalizeFemaleSourcesMap(snapshot.femaleSources);
         this._gachaPity = normalizeGachaPityBook(snapshot.gachaPity);
         this._gachaRevision += 1;
