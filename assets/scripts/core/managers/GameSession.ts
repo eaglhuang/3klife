@@ -186,6 +186,8 @@ export const GAME_SESSION_EVENTS = {
     FirstBattleCleared: 'game-session-first-battle-cleared',
     /** payload: PlayerSaveSnapshot */
     Loaded: 'game-session-loaded',
+    /** payload: PlayerSaveSnapshot（主檔損壞、改從備份讀回時在 Loaded 之後發出；UI 據此提示玩家進度退回上一份，DS-14） */
+    LoadRecoveredFromBackup: 'game-session-load-recovered-from-backup',
     /** payload: string[]（新的出戰卡組） */
     DeckChanged: 'game-session-deck-changed',
     /** payload: FactorAwakenedEvent */
@@ -2389,6 +2391,9 @@ export class GameSession {
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
+        if (this._requireSave().lastLoadRecoveredFromBackup()) {
+            this._emit(GAME_SESSION_EVENTS.LoadRecoveredFromBackup, snapshot);
+        }
         return true;
     }
 
