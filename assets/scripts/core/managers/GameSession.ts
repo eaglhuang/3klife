@@ -67,6 +67,7 @@ import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAss
 import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult } from '../systems/HallAutoAssign';
 import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
 import { estimateSortiePower } from '../systems/SortiePrediction';
+import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
@@ -1169,7 +1170,7 @@ export class GameSession {
             this._domesticLog,
             season,
             taskId,
-            { food: this._military.foodCap, gold: Infinity, fame: Infinity, cityTroops: this._military.cityTroopsCap },
+            { food: this._military.foodCap, gold: Infinity, fame: BASE_RESOURCE_CAPS.fame, cityTroops: this._military.cityTroopsCap },
         );
         if (!result.ok) return result;
         this._military = { ...this._military, food: result.stock.food, cityTroops: result.stock.cityTroops };
@@ -2509,7 +2510,7 @@ export class GameSession {
         this._military = normalizeMilitaryReserve(snapshot.military);
         this._yearAgingEvents = normalizeYearAgingEvents(snapshot.yearAgingEvents);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
-        this._fame = normalizeFame(snapshot.resources?.fame);
+        this._fame = clampResource('fame', normalizeFame(snapshot.resources?.fame));
         this._scorePoints = normalizeScorePoints(snapshot.resources?.scorePoints);
         this._autoNurtureTickets = normalizeAutoNurtureTickets(snapshot.resources?.autoNurtureTickets);
         this._mainlineNurtureClearedOnce = normalizeFlag(snapshot.resources?.mainlineNurtureClearedOnce);

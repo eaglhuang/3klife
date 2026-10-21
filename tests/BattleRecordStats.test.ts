@@ -14,6 +14,7 @@ import {
     winRate,
 } from '../assets/scripts/core/systems/BattleRecordStats';
 import { applySortieResult, FOOD_PER_SEASON, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../assets/scripts/core/systems/MilitaryReserve';
+import { BASE_RESOURCE_CAPS } from '../assets/scripts/core/systems/ResourceCap';
 import { formatSortieSummary } from '../assets/scripts/core/systems/SortieDeploy';
 import { BattleRosterGeneral, settleBattle } from '../assets/scripts/core/systems/BattleRoster';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
@@ -114,8 +115,10 @@ export function createBattleRecordStatsSuite(): TestSuite {
 
     suite.test('城市兵源與糧草：正規化、戰後扣戰損與糧草、每季補回不超過上限', () => {
         assert.equals(JSON.stringify(STARTER_MILITARY), JSON.stringify(normalizeMilitaryReserve(undefined)));
+        // 上限是規則（ResourceCap），存檔裡的上限欄位被忽略
         const broken = normalizeMilitaryReserve({ cityTroops: 99999, cityTroopsCap: 9000, food: -3 });
-        assert.equals(9000, broken.cityTroops, '不超過上限');
+        assert.equals(BASE_RESOURCE_CAPS.troops, broken.cityTroops, '不超過上限');
+        assert.equals(BASE_RESOURCE_CAPS.troops, broken.cityTroopsCap, '上限取 ResourceCap');
         assert.equals(STARTER_MILITARY.food, broken.food, '壞值補起始值');
         const after = applySortieResult(STARTER_MILITARY, { lostTroops: 1700, foodSpent: 42 });
         assert.equals(STARTER_MILITARY.cityTroops - 1700, after.cityTroops);

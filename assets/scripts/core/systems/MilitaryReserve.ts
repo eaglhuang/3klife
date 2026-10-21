@@ -10,6 +10,7 @@
  * 戰鬥結束與每回合結束時各呼叫一次純函式更新。
  */
 import { DEFAULT_CITY_TROOPS, DEFAULT_RECRUIT_REGEN, DEFAULT_SORTIE_FOOD, type SortieSummary } from './SortieDeploy';
+import { BASE_RESOURCE_CAPS } from './ResourceCap';
 
 export interface MilitaryReserve {
     cityTroops: number;
@@ -21,11 +22,13 @@ export interface MilitaryReserve {
 
 /** 每季糧草補給與上限（暫定：治理產出尚未接入前的固定值） */
 export const FOOD_PER_SEASON = 150;
-export const DEFAULT_FOOD_CAP = 600;
+/** 糧草與城市兵源上限統一由 ResourceCap 提供（經濟系統表，PROG-2-1010），不在這裡另存一份 */
+export const DEFAULT_FOOD_CAP = BASE_RESOURCE_CAPS.food;
+export const DEFAULT_CITY_TROOPS_CAP = BASE_RESOURCE_CAPS.troops;
 
 export const STARTER_MILITARY: Readonly<MilitaryReserve> = {
-    cityTroops: DEFAULT_CITY_TROOPS,
-    cityTroopsCap: DEFAULT_CITY_TROOPS,
+    cityTroops: Math.min(DEFAULT_CITY_TROOPS, DEFAULT_CITY_TROOPS_CAP),
+    cityTroopsCap: DEFAULT_CITY_TROOPS_CAP,
     recruitRegen: DEFAULT_RECRUIT_REGEN,
     food: DEFAULT_SORTIE_FOOD,
     foodCap: DEFAULT_FOOD_CAP,
@@ -39,8 +42,9 @@ function intOr(value: unknown, fallback: number): number {
 export function normalizeMilitaryReserve(raw: unknown): MilitaryReserve {
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return { ...STARTER_MILITARY };
     const r = raw as Partial<MilitaryReserve>;
-    const cityTroopsCap = intOr(r.cityTroopsCap, STARTER_MILITARY.cityTroopsCap);
-    const foodCap = intOr(r.foodCap, STARTER_MILITARY.foodCap);
+    // 上限是規則不是存檔狀態：舊存檔的上限一律改用 ResourceCap 的值
+    const cityTroopsCap = DEFAULT_CITY_TROOPS_CAP;
+    const foodCap = DEFAULT_FOOD_CAP;
     return {
         cityTroopsCap,
         cityTroops: Math.min(cityTroopsCap, intOr(r.cityTroops, cityTroopsCap)),
