@@ -707,6 +707,25 @@ export class BattleController {
     ];
   }
 
+  /** 七進七出穿透傷害：致死時與技能傷害一致，走陣亡流程（移出戰場、發 UnitDied、主將陣亡判定） */
+  private applyGhostPassDamage(target: TroopUnit, damage: number): void {
+    const svc = services();
+    this.combatResolver.applyUnitDamage(target, damage, null, {
+      attackerId: null,
+      attackerLane: null,
+      attackerDepth: null,
+      damageSource: 'ghost-pass',
+      allowDamageLink: false,
+    });
+    if (!target.isDead()) return;
+    if (target.id === this.playerGeneralUnitId) {
+      this.combatResolver.onGeneralUnitKilled(Faction.Player, svc);
+    } else if (target.id === this.enemyGeneralUnitId) {
+      this.combatResolver.onGeneralUnitKilled(Faction.Enemy, svc);
+    }
+    this.combatResolver.onUnitKilled(target, null, svc);
+  }
+
   private buildPlayerTurnPhaseExecutors(): readonly BattlePhaseExecutor[] {
     return [
       createBattlePhaseExecutor('player-auto-move', (context) => context.executePhase('player-auto-move')),
@@ -768,13 +787,7 @@ export class BattleController {
             damageSource: 'forced-move',
             allowDamageLink: false,
           }),
-          applyGhostPassDamage: (target, damage) => this.combatResolver.applyUnitDamage(target, damage, null, {
-            attackerId: null,
-            attackerLane: null,
-            attackerDepth: null,
-            damageSource: 'ghost-pass',
-            allowDamageLink: false,
-          }),
+          applyGhostPassDamage: (target, damage) => this.applyGhostPassDamage(target, damage),
         });
         return {};
       case 'enemy-auto-move':
@@ -795,13 +808,7 @@ export class BattleController {
             damageSource: 'forced-move',
             allowDamageLink: false,
           }),
-          applyGhostPassDamage: (target, damage) => this.combatResolver.applyUnitDamage(target, damage, null, {
-            attackerId: null,
-            attackerLane: null,
-            attackerDepth: null,
-            damageSource: 'ghost-pass',
-            allowDamageLink: false,
-          }),
+          applyGhostPassDamage: (target, damage) => this.applyGhostPassDamage(target, damage),
         });
         return {};
       case 'player-tile-effect':
