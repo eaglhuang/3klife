@@ -448,6 +448,14 @@ export function checkDeploy(state: SortieState, request: DeployRequest): SortieD
     return { ok: reasons.length === 0, reasons, cost };
 }
 
+/** 改派建議可推薦的兵種（與 UI 兵種名稱對照表一致；水軍等無名稱的不列入） */
+export const DEPLOY_SUGGESTION_CANDIDATES: readonly string[] = ['cavalry', 'infantry', 'shield', 'archer', 'pikeman'];
+
+/** 改派建議文案（規格 戰場部署系統 §G「可改派低耗部隊：{TroopName}。」） */
+export function deploySuggestionCopy(troopName: string): string {
+    return `可改派低耗部隊：${troopName}。`;
+}
+
 /**
  * 改派建議 Deploy_Suggestion（DEP-10）：目標不可部署時，從候選兵種中推薦一隊可派出的低耗部隊。
  * 只回傳建議，玩家必須再次確認，不自動改派（規格）。排序暫定：糧耗低者優先，再比兵力耗，同分取候選順序較前者。
