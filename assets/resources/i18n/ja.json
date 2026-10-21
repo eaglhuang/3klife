@@ -184,6 +184,7 @@
   "UI_ULTIMATE_CANCEL": "キャンセル",
   "toast.sync_complete": "同期完了",
   "toast.offline_reminder": "オフラインです。接続して同期してください。",
+  "toast.save_recovered_from_backup": "セーブデータが破損していたため、前回のバックアップから復元しました",
   "ui.style_check.title": "水墨鋼鉄 v2.2 スタイル検証",
   "ui.style_check.primary": "赤火メインボタン",
   "ui.style_check.secondary": "流金サブボタン",
