@@ -7,42 +7,37 @@ type Ds3StatKey = 'str' | 'lea' | 'cha' | 'int' | 'pol' | 'luk';
 
 interface Ds3SummaryLineSlot {
     row: string;
-    bullet: string;
     text: string;
 }
 
 const CORE_STAT_LABELS: Record<Ds3StatKey, string> = {
-    str: 'CharacterDs3Main_span_16',
-    lea: 'CharacterDs3Main_span_18',
-    cha: 'CharacterDs3Main_span_20',
-    int: 'CharacterDs3Main_span_22',
-    pol: 'CharacterDs3Main_span_24',
-    luk: 'CharacterDs3Main_span_26',
+    str: 'CharacterDs3TabOverview_span_12',
+    lea: 'CharacterDs3TabOverview_span_14',
+    cha: 'CharacterDs3TabOverview_span_16',
+    int: 'CharacterDs3TabOverview_span_18',
+    pol: 'CharacterDs3TabOverview_span_20',
+    luk: 'CharacterDs3TabOverview_span_22',
 };
 
 const ROLE_LINE_SLOTS: Ds3SummaryLineSlot[] = [
     {
-        row: 'CharacterDs3Main_div_28',
-        bullet: 'CharacterDs3Main_span_29',
-        text: 'CharacterDs3Main_span_30',
+        row: 'CharacterDs3TabOverview_div_22',
+        text: 'CharacterDs3TabOverview_span_26',
     },
     {
-        row: 'CharacterDs3Main_div_29',
-        bullet: 'CharacterDs3Main_span_31',
-        text: 'CharacterDs3Main_span_32',
+        row: 'CharacterDs3TabOverview_div_23',
+        text: 'CharacterDs3TabOverview_span_28',
     },
 ];
 
 const TRAIT_LINE_SLOTS: Ds3SummaryLineSlot[] = [
     {
-        row: 'CharacterDs3Main_div_33',
-        bullet: 'CharacterDs3Main_span_35',
-        text: 'CharacterDs3Main_span_36',
+        row: 'CharacterDs3TabOverview_div_27',
+        text: 'CharacterDs3TabOverview_span_32',
     },
     {
-        row: 'CharacterDs3Main_div_34',
-        bullet: 'CharacterDs3Main_span_37',
-        text: 'CharacterDs3Main_span_38',
+        row: 'CharacterDs3TabOverview_div_28',
+        text: 'CharacterDs3TabOverview_span_34',
     },
 ];
 
@@ -79,10 +74,8 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3OverviewChild] onMount', { rootPath: CharacterDs3OverviewChild.ROOT_PATH });
-        if (!this.binder.getLabel('OverviewName')) {
-            UCUFLogger.warn(LogCategory.LIFECYCLE,
-                '[CharacterDs3OverviewChild] mount target missing — layout 未匯出 OverviewName，Overview 內容暫不渲染',
-                { expected: 'OverviewName' });
+        if (!this.binder.getLabel('CharacterDs3TabOverview_span_1')) {
+            throw new Error('[CharacterDs3OverviewChild] 缺少正式 Overview 人物名稱節點');
         }
     }
 
@@ -94,20 +87,21 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         const state = data as GeneralDetailOverviewContentState;
         this._lastData = state;
 
-        this._setLabelText('OverviewName', state.headerName);
-        this._setLabelText('OverviewRoleBadge', state.headerMeta);
-        this._setLabelText('OverviewRarityTier', state.rarityLabel);
-        this._setLabelText('OverviewBio', state.biographyBody);
-        this._setLabelText('CharacterDs3Main_span_41', state.crestTitle);
-        this._setLabelText('CharacterDs3Main_div_42', state.bloodlineName);
-        this._setLabelText('CharacterDs3Main_span_43', `${Math.round(state.awakeningProgress)}%`);
-        this._setLabelText('CharacterDs3Main_span_45', state.crestHint);
-        this._setLabelText('CharacterDs3Main_span_47', state.personalityValue);
-        this._setLabelText('CharacterDs3Main_div_52', state.footerTitle);
+        this._setLabelText('CharacterDs3TabOverview_span_1', state.headerName);
+        this._setLabelText('CharacterDs3TabOverview_span_2', state.headerTitle);
+        this._setLabelText('CharacterDs3TabOverview_div_5', state.headerMeta);
+        this._setLabelText('CharacterDs3TabOverview_span_3', state.rarityLabel);
+        this._setLabelText('CharacterDs3TabOverview_div_45', state.biographyBody);
+        this._setLabelText('CharacterDs3TabOverview_span_37', state.crestTitle);
+        this._setLabelText('CharacterDs3TabOverview_div_36', state.bloodlineName);
+        this._setLabelText('CharacterDs3TabOverview_span_39', `${Math.round(state.awakeningProgress)}%`);
+        this._setLabelText('CharacterDs3TabOverview_span_41', state.crestHint);
+        this._setLabelText('CharacterDs3TabOverview_span_43', state.personalityValue);
+        this._setLabelText('CharacterDs3TabOverview_div_46', state.footerTitle);
 
         this._applyCoreStats(state);
-        this._applySummaryLines(state.roleValue, ROLE_LINE_SLOTS, '定位未定');
-        this._applySummaryLines(state.traitValue, TRAIT_LINE_SLOTS, '氣質描述待補');
+        this._applySummaryLines(state.roleValue, ROLE_LINE_SLOTS, '—');
+        this._applySummaryLines(state.traitValue, TRAIT_LINE_SLOTS, '—');
         this._applyRarityPill(state.rarityTier);
         this._applyRarityStars(state.rarityTier);
         this._applyAwakeningProgress(state.awakeningProgress);
@@ -151,13 +145,12 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
             if (!active) {
                 continue;
             }
-            this._setLabelText(slot.bullet, '•');
             this._setLabelText(slot.text, line);
         }
     }
 
     private _applyRarityStars(tier: GeneralDetailOverviewContentState['rarityTier']): void {
-        const root = this.binder.getNode('OverviewRarityStars');
+        const root = this.binder.getNode('CharacterDs3TabOverview_div_7');
         if (!root) {
             return;
         }
@@ -178,9 +171,9 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
     }
 
     private _applyRarityPill(tier: GeneralDetailOverviewContentState['rarityTier']): void {
-        const pillNode = this.binder.getNode('CharacterDs3Main_div_12_pill');
+        const pillNode = this.binder.getNode('CharacterDs3TabOverview_div_6');
         const pillSprite = pillNode?.getComponent(Sprite) ?? null;
-        const pillLabel = this.binder.getLabel('OverviewRarityTier');
+        const pillLabel = this.binder.getLabel('CharacterDs3TabOverview_span_3');
 
         if (pillSprite) {
             pillSprite.color = this._toColor(DS3_RARITY_PILL_BG[tier]);
@@ -192,8 +185,8 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
     }
 
     private _applyAwakeningProgress(progress: number): void {
-        const trackNode = this.binder.getNode('CharacterDs3Main_div_44');
-        const fillNode = this.binder.getNode('CharacterDs3Main_div_45');
+        const trackNode = this.binder.getNode('CharacterDs3TabOverview_div_38');
+        const fillNode = this.binder.getNode('CharacterDs3TabOverview_div_39');
         const trackTransform = trackNode?.getComponent(UITransform) ?? null;
         const fillTransform = fillNode?.getComponent(UITransform) ?? null;
         if (!trackTransform || !fillTransform) {
@@ -207,7 +200,7 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
     private _setLabelText(nodeName: string, text: string): void {
         const label = this.binder.getLabel(nodeName);
         if (!label) {
-            return;
+            throw new Error(`[CharacterDs3OverviewChild] 缺少資料欄位 ${nodeName}`);
         }
         label.string = text?.trim() ?? '';
     }

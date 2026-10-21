@@ -1,6 +1,6 @@
-import { _decorator, Button, Label, Node, UIOpacity } from 'cc';
+import { _decorator, Button, Label, Node, Sprite, SpriteFrame, UIOpacity } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
-import type { UITemplateBinder } from '../core/UITemplateBinder';
+import { UITemplateBinder } from '../core/UITemplateBinder';
 import type { ChildPanelBase } from '../core/ChildPanelBase';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { UIID } from '../../core/config/UIConfig';
@@ -17,6 +17,10 @@ import { UIVariantRouter } from '../core/UIVariantRouter';
 const { ccclass } = _decorator;
 
 type UnifiedOverviewContentState = GeneralDetailOverviewContentState;
+export interface GeneralDetailOpenOptions {
+    screenId?: 'character-ds3-main';
+    initialTab?: Exclude<TabKey, 'Record'>;
+}
 
 const DS3_CONTENT_SLOT_CANDIDATES = ['ContentSlot', 'CharacterDs3Main_div_8', 'CharacterDs3Main_div_6'] as const;
 
@@ -25,6 +29,9 @@ export class GeneralDetailComposite extends CompositePanel {
     public onRequestClose: (() => void) | null = null;
 
     private _isMounted = false;
+    private _mountedScreenId: string | null = null;
+    private _selectionVersion = 0;
+    private _operationQueue: Promise<void> = Promise.resolve();
     private _activeTab: TabKey = 'Overview';
     private _currentConfig: GeneralConfig | null = null;
     private readonly _chrome = new GeneralDetailChromePresenter({
@@ -40,6 +47,7 @@ export class GeneralDetailComposite extends CompositePanel {
         owner: () => this,
     });
     private _gdBinder: UITemplateBinder | null = null;
+    private _appliedDs3Portrait: { resource: string; frame: SpriteFrame } | null = null;
     private _ds3TabChildren = new Map<TabKey, ChildPanelBase>();
 
     /**
@@ -79,11 +87,7 @@ export class GeneralDetailComposite extends CompositePanel {
 
     /** 目前 GeneralDetailComposite 是否以 DS3 layout 作為當前 screen。 */
     private _isDs3Active(): boolean {
-        try {
-            return GeneralDetailComposite._resolveScreenId() === 'character-ds3-main';
-        } catch {
-            return false;
-        }
+        return this._mountedScreenId === 'character-ds3-main';
     }
 
     private _clearLegacySceneChildren(): void {
@@ -92,7 +96,20 @@ export class GeneralDetailComposite extends CompositePanel {
         }
     }
 
-    public async show(config: GeneralConfig): Promise<void> {
+    public show(config: GeneralConfig, options: GeneralDetailOpenOptions = {}): Promise<void> {
+        const version = ++this._selectionVersion;
+        this._currentConfig = config;
+        this.node.active = false;
+        this._setSelectionOpacity(0);
+        const operation = this._operationQueue.catch(() => undefined).then(async () => {
+            if (version !== this._selectionVersion) return;
+            await this._showSelection(config, options, version);
+        });
+        this._operationQueue = operation;
+        return operation;
+    }
+
+    private async _showSelection(config: GeneralConfig, options: GeneralDetailOpenOptions, version: number): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[GeneralDetailComposite] show start', {
             generalId: config.id,
             generalName: config.name,
@@ -109,9 +126,16 @@ export class GeneralDetailComposite extends CompositePanel {
         // 必須在 mount/buildScreen 之前啟用節點，確保 Widget 計算時父容器尺寸正確
         this.node.active = true;
 
+        const screenId = options.screenId ?? GeneralDetailComposite._resolveScreenId();
+        if (this._isMounted && this._mountedScreenId !== screenId) {
+            this.unmount();
+            this._ds3TabChildren.clear();
+            this._isMounted = false;
+            this._gdBinder = null;
+        }
         if (!this._isMounted) {
             this._clearLegacySceneChildren();
-            const screenId = GeneralDetailComposite._resolveScreenId();
+            this._mountedScreenId = screenId;
             // 滿足 compute-gate 靜態檢查：必須顯式呼叫 mount('...')
             if (screenId === 'general-detail-unified-screen') {
                 await this.mount('general-detail-unified-screen');
@@ -126,12 +150,16 @@ export class GeneralDetailComposite extends CompositePanel {
                 screenId,
             });
         }
+        if (version !== this._selectionVersion || !this.node.isValid) return;
         this._currentConfig = config;
 
         if (this._isDs3Active()) {
             const overview = buildGeneralDetailOverviewContentState(config);
-            const entryTab = this._chrome.resolveEntryTab(config);
-            await this._switchToDs3Tab(entryTab, overview);
+            await this._applyDs3Identity(overview, version);
+            if (version !== this._selectionVersion) return;
+            const entryTab = options.initialTab ?? (options.screenId ? 'Overview' : this._chrome.resolveEntryTab(config));
+            await this._switchToDs3Tab(entryTab, overview, version);
+            if (version !== this._selectionVersion) return;
             (this.node as Node & { __generalDetailReadyTab?: string }).__generalDetailReadyTab = entryTab;
             UCUFLogger.info(LogCategory.LIFECYCLE, '[GeneralDetailComposite] DS3 show complete', {
                 generalId: config.id,
@@ -151,6 +179,8 @@ export class GeneralDetailComposite extends CompositePanel {
             entryTab,
         });
         await this._switchToTab(entryTab);
+        if (version !== this._selectionVersion) return;
+        this._setSelectionOpacity(255);
         (this.node as Node & { __generalDetailReadyTab?: string }).__generalDetailReadyTab = entryTab;
 
         // 確保 GeneralDetailRoot 的 UIOpacity 為完全不透明
@@ -175,7 +205,72 @@ export class GeneralDetailComposite extends CompositePanel {
     }
 
     public hide(): void {
+        ++this._selectionVersion;
+        this._currentConfig = null;
+        this._setSelectionOpacity(0);
         this.node.active = false;
+        delete (this.node as Node & { __generalDetailReadyTab?: string }).__generalDetailReadyTab;
+        delete (this.node as Node & { __generalDetailGeneralId?: string }).__generalDetailGeneralId;
+    }
+
+    private _setSelectionOpacity(opacity: number): void {
+        const component = this.node.getComponent(UIOpacity) || this.node.addComponent(UIOpacity);
+        component.opacity = opacity;
+    }
+
+    private async _applyDs3Identity(state: UnifiedOverviewContentState, version: number): Promise<void> {
+        const binder = this._gdBinder;
+        if (!binder) throw new Error('[GeneralDetailComposite] DS3 identity binder 尚未就緒');
+        const story = this.getSlotNode('slot.story-strip');
+        if (story) story.active = false;
+        for (const [name, value] of [
+            ['CharacterDs3Main_div_3', state.headerTitle],
+            ['CharacterDs3Main_span_1', state.rarityLabel],
+            ['CharacterDs3Main_span_2', state.rarityTier.toUpperCase()],
+        ]) {
+            const label = binder.getLabel(name);
+            if (!label) throw new Error(`[GeneralDetailComposite] DS3 identity 缺少 ${name}`);
+            label.string = value;
+        }
+        const portrait = this._resolveDs3PortraitSprite();
+        if (!portrait) throw new Error('[GeneralDetailComposite] DS3 缺少人物圖片節點');
+        portrait.spriteFrame = null;
+        this._appliedDs3Portrait = null;
+        const frame = await services().resource.loadSpriteFrame(state.portraitResource, { preferTextureFallback: true }).catch(() => null);
+        if (version !== this._selectionVersion || !portrait.node.isValid) return;
+        if (frame) {
+            portrait.spriteFrame = frame;
+            this._appliedDs3Portrait = { resource: state.portraitResource, frame };
+        } else {
+            UCUFLogger.warn(LogCategory.DATA, '[GeneralDetailComposite] selected portrait unavailable', { resource: state.portraitResource });
+        }
+    }
+
+    /** Observe the rendered selection, including visibility and the frame actually assigned. */
+    public selectedPersonViewState(): {
+        generalId: string | null; name: string; visible: boolean; portraitResource: string | null;
+    } {
+        const name = this._ds3TabChildren.get('Overview')?.binder.getLabel('CharacterDs3TabOverview_span_1');
+        const portrait = this._resolveDs3PortraitSprite();
+        const visible = (node: Node | undefined): boolean => {
+            if (!node?.activeInHierarchy) return false;
+            for (let ancestor: Node | null = node; ancestor; ancestor = ancestor.parent) {
+                if (ancestor.getComponent(UIOpacity)?.opacity === 0) return false;
+            }
+            return true;
+        };
+        return {
+            generalId: this._currentConfig?.id ?? null,
+            name: name?.string ?? '',
+            visible: visible(name?.node) && visible(portrait?.node),
+            portraitResource: portrait?.spriteFrame && portrait.spriteFrame === this._appliedDs3Portrait?.frame
+                ? this._appliedDs3Portrait.resource : null,
+        };
+    }
+
+    private _resolveDs3PortraitSprite(): Sprite | null {
+        return this._gdBinder?.getSprite('CharacterDs3Main_img_1_ImageContent')
+            ?? this._gdBinder?.getSprite('CharacterDs3Main_img_1') ?? null;
     }
 
     public requestClose(): void {
@@ -189,12 +284,15 @@ export class GeneralDetailComposite extends CompositePanel {
     public override applyContentState(state: Record<string, unknown>): void {
         const config = state.config as GeneralConfig | undefined;
         if (config) {
-            this._currentConfig = config;
-            const overview = buildGeneralDetailOverviewContentState(config);
             if (this._isDs3Active()) {
-                super.applyContentState({ config, overview });
+                const initialTab = this._activeTab === 'Record' ? 'Overview' : this._activeTab;
+                void this.show(config, { screenId: 'character-ds3-main', initialTab }).catch((error: unknown) => {
+                    UCUFLogger.error(LogCategory.DATA, '[GeneralDetailComposite] DS3 selection update failed', { error: String(error) });
+                });
                 return;
             }
+            this._currentConfig = config;
+            const overview = buildGeneralDetailOverviewContentState(config);
             this._applyOverviewChrome(overview);
             super.applyContentState({ config, overview });
             return;
@@ -204,10 +302,13 @@ export class GeneralDetailComposite extends CompositePanel {
     }
 
     protected onDestroy(): void {
+        ++this._selectionVersion;
+        this._currentConfig = null;
         if ((this.node as Node & { isValid?: boolean }).isValid) {
             this.unmount();
         }
         this._isMounted = false;
+        this._mountedScreenId = null;
         this._ds3TabChildren.clear();
         this._gdBinder = null;
     }
@@ -218,7 +319,7 @@ export class GeneralDetailComposite extends CompositePanel {
             return;
         }
 
-        this._bindOptionalClick('TopCloseBtn', () => {
+        this._chrome.bindOptionalClick('TopCloseBtn', () => {
             this.requestClose();
         });
 
@@ -239,24 +340,62 @@ export class GeneralDetailComposite extends CompositePanel {
             const nodeName = DS3_TAB_BUTTON_NODE[tab];
             if (!nodeName) continue;
             this._bindOptionalClickByNodeName(nodeName, () => {
-                const overview = this._currentConfig ? buildGeneralDetailOverviewContentState(this._currentConfig) : null;
-                void this._switchToDs3Tab(tab, overview);
+                const version = this._selectionVersion;
+                const config = this._currentConfig;
+                if (!config) return;
+                const operation = this._operationQueue.catch(() => undefined).then(async () => {
+                    if (version !== this._selectionVersion || this._currentConfig !== config) return;
+                    await this._switchToDs3Tab(tab, buildGeneralDetailOverviewContentState(config), version);
+                });
+                this._operationQueue = operation;
+                void operation.catch((error: unknown) => {
+                    UCUFLogger.error(LogCategory.LIFECYCLE, '[GeneralDetailComposite] DS3 tab switch failed', { error: String(error), tab });
+                });
             });
         }
         this._syncDs3TabVisualState();
     }
 
-    private async _switchToDs3Tab(tab: TabKey, overview: UnifiedOverviewContentState | null): Promise<void> {
+    private async _switchToDs3Tab(tab: TabKey, overview: UnifiedOverviewContentState | null, version = this._selectionVersion): Promise<void> {
+        if (version !== this._selectionVersion || !this._currentConfig) return;
+        this._setSelectionOpacity(0);
         this._activeTab = tab;
         this._bindDs3TabChild(tab);
         await this.switchTab(tab);
+        if (version !== this._selectionVersion || !this.node.isValid) return;
         if (this._currentConfig) {
             super.applyContentState({
                 config: this._currentConfig,
                 overview: overview ?? buildGeneralDetailOverviewContentState(this._currentConfig),
             });
         }
+        this._clearPendingDs3Tab(tab);
         this._syncDs3TabVisualState();
+        (this.node as Node & { __generalDetailGeneralId?: string }).__generalDetailGeneralId = this._currentConfig?.id;
+        (this.node as Node & { __generalDetailReadyTab?: string }).__generalDetailReadyTab = tab;
+        this._setSelectionOpacity(255);
+    }
+
+    /** Unwired pages may show an empty value, never another person's demo. */
+    private _clearPendingDs3Tab(tab: TabKey): void {
+        if (tab === 'Overview' || tab === 'Stats') return;
+        const slot = this._resolveDs3ContentSlotHost();
+        const root = slot?.children[slot.children.length - 1];
+        if (!slot || !root) throw new Error(`[GeneralDetailComposite] ${tab} 缺少內容節點`);
+        const label = root.getComponentsInChildren(Label).find((candidate) => {
+            for (let node: Node | null = candidate.node; node && node !== root; node = node.parent) {
+                if (node.getComponent(Button)) return false;
+            }
+            return true;
+        });
+        if (!label) throw new Error(`[GeneralDetailComposite] ${tab} 缺少空狀態文字節點`);
+        const hideContents = (node: Node): void => {
+            node.active = false;
+            for (const child of node.children) hideContents(child);
+        };
+        for (const child of root.children) hideContents(child);
+        label.string = '—';
+        for (let node: Node | null = label.node; node && node !== slot; node = node.parent) node.active = true;
     }
 
     private _resolveDs3ContentSlotHost(): Node | null {
@@ -295,6 +434,11 @@ export class GeneralDetailComposite extends CompositePanel {
         }
 
         const child = this._ensureDs3TabChild(tab, slotNode, this._gdBinder);
+        const previous = this.childPanels.get(slotId);
+        if (previous && previous !== child) {
+            previous.onUnmount();
+            previous._lastData = null;
+        }
         this.registerChildPanel(slotId, child);
     }
 
@@ -304,7 +448,15 @@ export class GeneralDetailComposite extends CompositePanel {
             return existing;
         }
 
-        const created = this._chrome.createDs3Child(tab, slotNode, binder, this.skinResolver);
+        const contentBinder = new UITemplateBinder();
+        const created = this._chrome.createDs3Child(tab, slotNode, contentBinder, this.skinResolver);
+        const onMount = created.onMount.bind(created);
+        created.onMount = async (spec) => {
+            const root = slotNode.children[slotNode.children.length - 1];
+            if (!root) throw new Error(`[GeneralDetailComposite] ${tab} 缺少 fragment root`);
+            contentBinder.bind(root);
+            await onMount(spec);
+        };
         this._ds3TabChildren.set(tab, created);
         return created;
     }
@@ -367,7 +519,7 @@ export class GeneralDetailComposite extends CompositePanel {
             config: this._currentConfig,
             overview,
         });
-        this._syncSpiritFamilyShortcut();
+        this._chrome.syncSpiritFamilyShortcut();
     }
 
     private _applyOverviewChrome(state: UnifiedOverviewContentState): void {
@@ -402,18 +554,6 @@ export class GeneralDetailComposite extends CompositePanel {
 
     private _syncTabVisualState(): void {
         this._chrome.syncTabVisualState();
-    }
-
-    private _syncSpiritFamilyShortcut(): void {
-        this._chrome.syncSpiritFamilyShortcut();
-    }
-
-    private _bindClick(path: string, handler: () => void): void {
-        this._chrome.bindClick(path, handler);
-    }
-
-    private _bindOptionalClick(path: string, handler: () => void): void {
-        this._chrome.bindOptionalClick(path, handler);
     }
 
     private _bindOptionalClickByNodeName(path: string, handler: () => void): void {

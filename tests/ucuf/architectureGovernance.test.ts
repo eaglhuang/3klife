@@ -20,6 +20,7 @@ import { StubEventSystem, StubPanel } from './fixtures/architectureEngineStubs';
 import { registerGeneralDetailChromePresenterTests } from './generalDetailChromePresenter.test';
 import * as fs from 'fs';
 import * as path from 'path';
+import { ModuleKind, ScriptTarget, transpileModule } from 'typescript';
 import { CURRENT_SPEC_VERSION } from '../../assets/scripts/ui/core/UISpecTypes';
 import type { UIScreenSpec, UILayoutSpec } from '../../assets/scripts/ui/core/UISpecTypes';
 
@@ -29,10 +30,245 @@ function readProjectFile(...segments: string[]): string {
     return fs.readFileSync(path.join(PROJECT_ROOT, ...segments), 'utf8');
 }
 
+/** Run the actual Composite lifecycle with deferred engine I/O, without cc. */
+function createSelectedPersonFixture(block: 'mount' | 'tab' | 'portrait') {
+    const applied: string[] = [];
+    const visibleNode = { isValid: true, activeInHierarchy: true, parent: null, getComponent: () => null };
+    const labels = new Map<string, { string: string; node: typeof visibleNode }>();
+    const portrait = { node: visibleNode, spriteFrame: null as null | { personId: string } };
+    let entered = false;
+    let release: () => void = () => undefined;
+    const pending = new Promise<void>((resolve) => { release = resolve; });
+    let blockedOnce = false;
+    const waitOnce = async (at: 'mount' | 'tab' | 'portrait') => {
+        if (at !== block || blockedOnce) return;
+        blockedOnce = true;
+        entered = true;
+        await pending;
+    };
+    class EnginePanel {
+        private opacity = { opacity: 255 };
+        node = {
+            active: false, isValid: true, parent: null, children: [],
+            getComponent: () => this.opacity, addComponent: () => this.opacity,
+        };
+        async mount() { await waitOnce('mount'); }
+        async switchTab() { await waitOnce('tab'); }
+        getSlotNode() { return null; }
+        applyContentState(state: { config?: { id: string } }) {
+            if (state.config) applied.push(state.config.id);
+        }
+        unmount() { /* fixture engine has no resources */ }
+    }
+    const source = readProjectFile('assets', 'scripts', 'ui', 'components', 'GeneralDetailComposite.ts');
+    const output = transpileModule(source, {
+        compilerOptions: { module: ModuleKind.CommonJS, target: ScriptTarget.ES2018, experimentalDecorators: true },
+    }).outputText;
+    const testModule = { exports: {} as Record<string, new () => {
+        node: EnginePanel['node'];
+        show(config: { id: string; name: string }, options: { screenId: string }): Promise<void>;
+        applyContentState(state: { config: { id: string; name: string } }): void;
+        _operationQueue: Promise<void>;
+        selectedPersonViewState(): { name: string; visible: boolean; portraitResource: string | null };
+        hide(): void;
+    }> };
+    const load = (id: string): unknown => {
+        if (id === 'cc') return { _decorator: { ccclass: () => (constructor: unknown) => constructor } };
+        if (id === '../core/CompositePanel') return { CompositePanel: EnginePanel };
+        if (id.endsWith('/GeneralDetailChromePresenter')) {
+            const chromeSource = readProjectFile('assets', 'scripts', 'ui', 'components', 'character-ds3', 'GeneralDetailChromePresenter.ts');
+            const chromeOutput = transpileModule(chromeSource, {
+                compilerOptions: { module: ModuleKind.CommonJS, target: ScriptTarget.ES2018 },
+            }).outputText;
+            const chromeModule = { exports: {} };
+            new Function('require', 'exports', 'module', chromeOutput)(load, chromeModule.exports, chromeModule);
+            return chromeModule.exports;
+        }
+        if (id === './GeneralDetailOverviewMapper') return {
+            buildGeneralDetailOverviewContentState: (config: { id: string; name: string }) => ({
+                headerName: config.name, headerTitle: config.name, rarityLabel: 'Rare', rarityTier: 'rare', portraitResource: config.id,
+            }),
+        };
+        if (id.endsWith('/ServiceLoader')) return { services: () => ({ resource: {
+            loadSpriteFrame: async (personId: string) => { await waitOnce('portrait'); return { personId }; },
+        } }) };
+        if (id.endsWith('/UCUFLogger')) return {
+            UCUFLogger: { info: () => undefined, error: () => undefined, warn: () => undefined }, LogCategory: { LIFECYCLE: 'lifecycle' },
+        };
+        return {};
+    };
+    new Function('require', 'exports', 'module', output)(load, testModule.exports, testModule);
+    const panel = new testModule.exports.GeneralDetailComposite();
+    Object.assign(panel, {
+        _gdBinder: {
+            getLabel: (id: string) => {
+                if (!labels.has(id)) labels.set(id, { string: '', node: visibleNode });
+                return labels.get(id);
+            },
+            getSprite: (id: string) => id === 'CharacterDs3Main_img_1_ImageContent' ? portrait : null,
+            getButton: () => null,
+        },
+        _bindDs3TabChild: () => undefined,
+    });
+    (panel as any)._ds3TabChildren.set('Overview', {
+        binder: { getLabel: (id: string) => (panel as any)._gdBinder.getLabel(id) },
+    });
+    return { panel, applied, portrait, labels, release, entered: () => entered };
+}
+
+async function waitForSelectionIo(fixture: ReturnType<typeof createSelectedPersonFixture>): Promise<void> {
+    for (let tick = 0; tick < 12 && !fixture.entered(); tick++) await Promise.resolve();
+    assert.isTrue(fixture.entered(), 'fixture must reach the deferred engine operation');
+}
+
+/** Execute the real fragment presenter against engine ports; no copied mapping logic. */
+function loadDs3Presenter(className: string): any {
+    const source = readProjectFile('assets', 'scripts', 'ui', 'components', 'character-ds3', `${className}.ts`);
+    const output = transpileModule(source, {
+        compilerOptions: { module: ModuleKind.CommonJS, target: ScriptTarget.ES2018 },
+    }).outputText;
+    const testModule = { exports: {} as Record<string, new () => unknown> };
+    class Color { clone() { return this; } }
+    const load = (id: string): unknown => {
+        if (id === 'cc') return { Color };
+        if (id.endsWith('/ChildPanelBase')) return { ChildPanelBase: class {} };
+        if (id.endsWith('/GeneralDetailFormatters')) return {
+            resolveStat: (config: Record<string, unknown>, key: string) => config[key],
+        };
+        if (id.endsWith('/UCUFLogger')) return { UCUFLogger: { info: () => undefined }, LogCategory: {} };
+        return {};
+    };
+    new Function('require', 'exports', 'module', output)(load, testModule.exports, testModule);
+    return new testModule.exports[className]();
+}
+
 // ─── Test Suite ──────────────────────────────────────────────────────────────
 
 export function createArchitectureGovernanceSuite(): TestSuite {
     const suite = new TestSuite('UCUF-M9-ArchitectureGovernance');
+
+    suite.test('DS3 selection: delayed tab result cannot apply the previous person', async () => {
+        const fixture = createSelectedPersonFixture('tab');
+        const first = fixture.panel.show({ id: 'person-a', name: 'A' }, { screenId: 'character-ds3-main' });
+        await waitForSelectionIo(fixture);
+        const latest = fixture.panel.show({ id: 'person-b', name: 'B' }, { screenId: 'character-ds3-main' });
+        fixture.release();
+        await Promise.all([first, latest]);
+        assert.isTrue(fixture.applied.join(',') === 'person-b', 'only the latest selected person may reach content binding');
+        assert.isTrue(fixture.panel.node.active, 'latest selection must remain open');
+    });
+
+    suite.test('DS3 selection: closing during mount invalidates pending content and permits reopening', async () => {
+        const fixture = createSelectedPersonFixture('mount');
+        const pending = fixture.panel.show({ id: 'person-a', name: 'A' }, { screenId: 'character-ds3-main' });
+        await waitForSelectionIo(fixture);
+        fixture.panel.hide();
+        fixture.release();
+        await pending;
+        assert.isTrue(fixture.applied.length === 0, 'a closed selection must never bind delayed content');
+        assert.isTrue(!fixture.panel.node.active, 'delayed mount must not reopen a closed view');
+        await fixture.panel.show({ id: 'person-b', name: 'B' }, { screenId: 'character-ds3-main' });
+        assert.isTrue(fixture.applied.join(',') === 'person-b', 'reopening must bind the new person');
+    });
+
+    suite.test('DS3 content update: delayed A portrait cannot overwrite config B', async () => {
+        const fixture = createSelectedPersonFixture('portrait');
+        const first = fixture.panel.show({ id: 'person-a', name: 'A' }, { screenId: 'character-ds3-main' });
+        await waitForSelectionIo(fixture);
+        fixture.panel.applyContentState({ config: { id: 'person-b', name: 'B' } });
+        const latest = fixture.panel._operationQueue;
+        fixture.release();
+        await Promise.all([first, latest]);
+        assert.isTrue(fixture.applied.join(',') === 'person-b', 'config updates must invalidate the previous selection');
+        assert.isTrue(fixture.portrait.spriteFrame?.personId === 'person-b', 'portrait must match the updated config');
+        assert.isTrue(fixture.labels.get('CharacterDs3Main_div_3')?.string === 'B', 'identity chrome must match the updated config');
+    });
+
+    suite.test('DS3 content update: an open A view refreshes both chrome and content for B', async () => {
+        const fixture = createSelectedPersonFixture('tab');
+        const first = fixture.panel.show({ id: 'person-a', name: 'A' }, { screenId: 'character-ds3-main' });
+        await waitForSelectionIo(fixture);
+        fixture.release();
+        await first;
+        fixture.panel.applyContentState({ config: { id: 'person-b', name: 'B' } });
+        await fixture.panel._operationQueue;
+        assert.isTrue(fixture.applied.join(',') === 'person-a,person-b', 'open content must receive the new selection');
+        assert.isTrue(fixture.portrait.spriteFrame?.personId === 'person-b', 'open portrait must receive the new selection');
+    });
+
+    suite.test('DS3 rendered observation rejects a replaced portrait and hidden name', async () => {
+        const fixture = createSelectedPersonFixture('tab');
+        const opening = fixture.panel.show({ id: 'person-a', name: 'A' }, { screenId: 'character-ds3-main' });
+        await waitForSelectionIo(fixture);
+        fixture.release();
+        await opening;
+        assert.isTrue(fixture.panel.selectedPersonViewState().portraitResource === 'person-a', 'observation must identify the assigned frame');
+        fixture.portrait.spriteFrame = { personId: 'stale-person' };
+        assert.isTrue(fixture.panel.selectedPersonViewState().portraitResource === null, 'metadata must not conceal a replaced frame');
+        fixture.labels.get('CharacterDs3TabOverview_span_1')!.node.activeInHierarchy = false;
+        assert.isTrue(!fixture.panel.selectedPersonViewState().visible, 'hidden labels must not satisfy visual readiness');
+    });
+
+    suite.test('DS3 Overview binds actual fragment labels and replaces A data with B', () => {
+        const presenter = loadDs3Presenter('CharacterDs3OverviewChild');
+        const labels = new Map<string, { string: string }>();
+        const layout = JSON.parse(readProjectFile('assets', 'resources', 'ui-spec', 'fragments', 'layouts', 'character-ds3-overview-content.json'));
+        const visit = (node: any): void => {
+            if (node.type === 'label') labels.set(node.name, { string: 'demo' });
+            (node.children || []).forEach(visit);
+        };
+        visit(layout);
+        presenter.binder = { getLabel: (name: string) => labels.get(name), getNode: () => null };
+        const state = (name: string, biography: string) => ({
+            headerName: name, headerTitle: '—', headerMeta: '—', rarityLabel: 'Rare', rarityTier: 'rare',
+            biographyBody: biography, crestTitle: '—', bloodlineName: '—', awakeningProgress: 0,
+            crestHint: '—', personalityValue: '—', footerTitle: '—', roleValue: '', traitValue: '',
+            dualLayerStats: {},
+        });
+        presenter.onDataUpdate(state('A', 'A biography'));
+        presenter.onDataUpdate(state('B', '—'));
+        assert.isTrue(labels.get('CharacterDs3TabOverview_span_1')?.string === 'B', 'real name node must receive B');
+        assert.isTrue(labels.get('CharacterDs3TabOverview_div_45')?.string === '—', 'missing B biography must clear A');
+        assert.isTrue(labels.get('CharacterDs3TabOverview_span_26')?.string === '—', 'empty roles must clear demo values');
+    });
+
+    suite.test('DS3 Stats clears missing prowess and uses actual current talent', () => {
+        const presenter = loadDs3Presenter('CharacterDs3StatsChild');
+        const rows = Array.from({ length: 6 }, () => ({ current: { string: '' }, prowess: { string: '' } }));
+        presenter._statRows = rows;
+        presenter._setBarRatio = () => undefined;
+        presenter._syncStatsRows({ dualLayerStats: { str: { base: 80, current: 91, prowess: 1234 } } });
+        assert.isTrue(rows[0].current.string === '91', 'selected current talent must be used');
+        assert.isTrue(rows[0].prowess.string === (1234).toLocaleString(), 'explicit prowess must be used');
+        presenter._syncStatsRows({ str: 20 });
+        assert.isTrue(rows[0].current.string === '20' && rows[0].prowess.string === '—', 'B must not inherit A prowess or synthesize it');
+        assert.isTrue(rows[1].current.string === '—', 'missing talent must not become zero');
+    });
+
+    suite.test('DS3 pending pages leave only an empty state visible', () => {
+        const fixture = createSelectedPersonFixture('mount');
+        const node = (parent: any = null): any => ({
+            active: true, parent, children: [], getComponent: () => null,
+        });
+        const slot = node();
+        const root = node(slot);
+        const textNode = node(root);
+        const demoNode = node(root);
+        const demoChild = node(demoNode);
+        slot.children = [root];
+        root.children = [textNode, demoNode];
+        demoNode.children = [demoChild];
+        const label = { node: textNode, string: 'previous person demo' };
+        root.getComponentsInChildren = () => [label];
+        Object.assign(fixture.panel, { getSlotNode: () => slot });
+        for (const tab of ['Tactics', 'Bloodline', 'Equip', 'Aptitude']) {
+            demoNode.active = demoChild.active = true;
+            label.string = 'previous person demo';
+            (fixture.panel as any)._clearPendingDs3Tab(tab);
+            assert.isTrue(label.string === '—' && textNode.active, `${tab} must expose the empty state`);
+            assert.isTrue(!demoNode.active && !demoChild.active, `${tab} must hide nested demo content`);
+        }
+    });
 
     // ── _shallowDiff 合約 ──────────────────────────────────────────────────
 

@@ -119,6 +119,7 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
     private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
 
     private _radarChartNode: Node | null = null;
+    private _radarHostNode: Node | null = null;
     private _statRows: StatRowBinding[] = [];
     private _hp!: VitalBinding;
     private _sp!: VitalBinding;
@@ -131,6 +132,8 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
     private _totalRankText!: Label;
     private _tokenColors: Record<string, string> = {};
     private _latestConfig: GeneralConfig | null = null;
+    private _dataVersion = 0;
+    private _radarQueue: Promise<void> = Promise.resolve();
     private _metrics = {
         radarSize: 90,
         radarAxisLabelRadiusOffset: 18,
@@ -147,6 +150,7 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         await this._loadTokenColors();
         this._radarChartNode = this._node('CharacterDs3TabStats_svg_1');
+        this._radarHostNode = this._radarChartNode;
         this._statRows = STAT_DEFS.map((def) => this._bindStatRow(def));
         this._hp = this._bindVital(VITAL_BINDINGS.hp);
         this._sp = this._bindVital(VITAL_BINDINGS.sp);
@@ -175,7 +179,16 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
 
         const cfg = data as GeneralConfig;
         this._latestConfig = cfg;
-        void this._syncRadar(cfg);
+        const version = ++this._dataVersion;
+        if (this._radarHostNode) this._radarHostNode.active = false;
+        const operation = this._radarQueue.catch(() => undefined).then(async () => {
+            if (version !== this._dataVersion || this._latestConfig !== cfg) return;
+            await this._syncRadar(cfg, version);
+        });
+        this._radarQueue = operation;
+        void operation.catch((error: unknown) => {
+            UCUFLogger.error(LogCategory.DATA, '[CharacterDs3StatsChild] radar update failed', { error: String(error) });
+        });
         this._syncStatsRows(cfg);
         this._syncVitals(cfg);
         this._syncProfile(cfg);
@@ -190,7 +203,12 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
     }
 
     public override onUnmount(): void {
+        ++this._dataVersion;
+        this._latestConfig = null;
+        this._lastData = null;
+        if (this._radarHostNode?.isValid) this._radarHostNode.active = false;
         this._radarChartNode = null;
+        this._radarHostNode = null;
         this._statRows = [];
     }
 
@@ -212,10 +230,11 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         };
     }
 
-    private async _syncRadar(cfg: GeneralConfig): Promise<void> {
+    private async _syncRadar(cfg: GeneralConfig, version: number): Promise<void> {
         if (!this._radarChartNode || !this._services.renderer) {
             return;
         }
+        const host = this._radarChartNode;
 
         const radarHostTransform = this._radarChartNode.getComponent(UITransform);
         const availableSize = Math.max(
@@ -264,11 +283,17 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         this._normalizeRadarChartNode();
         if ((this._radarChartNode as Node & { __statsRadar?: boolean }).__statsRadar) {
             this._services.renderer.updateRadarChart(this._radarChartNode, chartConfig);
+            if (this._radarHostNode) this._radarHostNode.active = true;
             return;
         }
 
-        const chartNode = await this._services.renderer.drawRadarChart(this._radarChartNode, chartConfig);
+        const chartNode = await this._services.renderer.drawRadarChart(this._radarChartNode, chartConfig) as Node;
+        if (version !== this._dataVersion || this._latestConfig !== cfg || this._radarChartNode !== host || !host.isValid) {
+            if (chartNode !== host && chartNode.isValid) chartNode.destroy();
+            return;
+        }
         this._radarChartNode = chartNode as Node;
+        if (this._radarHostNode) this._radarHostNode.active = true;
         if (sourceSvg) {
             (this._radarChartNode as Node & { __ucufRendererHint?: string }).__ucufRendererHint = 'svg-radar-chart';
             (this._radarChartNode as Node & { __ucufSvgMeta?: RadarChartConfig['sourceSvg'] }).__ucufSvgMeta = sourceSvg;
@@ -314,16 +339,15 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
             }
 
             const stat = cfg.dualLayerStats?.[def.key];
-            const current = Math.round(stat?.current ?? stat?.base ?? resolveStat(cfg, def.key) ?? 0);
-            const prowess = stat?.prowess != null
-                ? Math.round(stat.prowess)
-                : Math.round(current * this._metrics.prowessScaleFactor);
+            const currentValue = stat?.current ?? stat?.base ?? resolveStat(cfg, def.key);
+            const current = typeof currentValue === 'number' && Number.isFinite(currentValue) ? Math.round(currentValue) : null;
+            const prowess = typeof stat?.prowess === 'number' && Number.isFinite(stat.prowess) ? Math.round(stat.prowess) : null;
 
-            binding.current.string = `${current}`;
+            binding.current.string = current === null ? '—' : `${current}`;
             binding.current.color = this._hexToColor(this._tokenColor(def.colorToken, '#8CCFC4'));
-            binding.prowess.string = prowess.toLocaleString();
+            binding.prowess.string = prowess === null ? '—' : prowess.toLocaleString();
             binding.prowess.color = this._hexToColor(this._tokenColor('gdv3NumProwess', '#E8D8A0'));
-            this._setBarRatio(binding.barTrack, binding.barFill, prowess / 2000, def.colorToken, 5, 232);
+            this._setBarRatio(binding.barTrack, binding.barFill, (prowess ?? 0) / 2000, def.colorToken, 5, 232);
         });
     }
 
@@ -355,20 +379,13 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
     private _syncProfile(cfg: GeneralConfig): void {
         const life = describeLifespan(cfg);
         const vit = describeVitality(cfg);
-        const level = typeof (cfg as { level?: unknown }).level === 'number'
-            ? Math.round((cfg as { level?: number }).level ?? 0)
-            : null;
-        const maxLevel = typeof (cfg as { maxLevel?: unknown }).maxLevel === 'number'
-            ? Math.round((cfg as { maxLevel?: number }).maxLevel ?? 0)
-            : null;
 
         this._age.string = cfg.age != null ? life.ageText : '--';
         // 待產優先，其次精力不足；都沒有時顯示「精力 / 上限」
         this._vitalityProfile.string = vit.statusText || `${vit.current} / ${vit.max}`;
         this._status.string = cfg.status?.trim() ? cfg.status : '--';
-        this._level.string = level != null
-            ? `${level}${maxLevel != null ? ` / ${maxLevel}` : ''}`
-            : '--';
+        // 母規格的武將本體沒有傳統 Level；不把舊資料欄位當成有效養成值。
+        this._level.string = '—';
     }
 
     private _syncTotalRank(cfg: GeneralConfig): void {
@@ -377,7 +394,7 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
             ? rankRaw.trim().toUpperCase()
             : typeof rankRaw === 'number'
                 ? `${Math.round(rankRaw)}`
-                : 'S';
+                : '—';
         this._totalRankBadge.string = rank;
         this._totalRankText.string = this._describeRank(rank);
     }
@@ -440,7 +457,7 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         case 'B':
             return '可堪重任';
         default:
-            return '尚可培養';
+            return '—';
         }
     }
 

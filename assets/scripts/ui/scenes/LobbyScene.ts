@@ -191,6 +191,8 @@ export class LobbyScene extends Component {
     private _encounters: EncounterConfig[] = [];
     private _listPanel: GeneralListComposite | null = null;
     private _detailPanel: GeneralDetailComposite | null = null;
+    private _generalDetailSelectionVersion = 0;
+    private _generalDetailListClose: Promise<boolean> | null = null;
     private _lobbyMainHost: UIScreenPreviewHost | null = null;
     private _shopMainHost: UIScreenPreviewHost | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
@@ -2759,63 +2761,37 @@ export class LobbyScene extends Component {
     }
 
     private async _openCharacterDs3FromListSelection(config: GeneralConfig): Promise<void> {
-        if (!this._characterDs3Host) {
-            throw new Error('[LobbyScene] CharacterDs3Host 尚未初始化，無法開啟 DS3 人物頁');
+        if (!this._detailPanel) {
+            throw new Error('[LobbyScene] GeneralDetailComposite 尚未初始化，無法開啟 DS3 人物頁');
         }
+        const version = ++this._generalDetailSelectionVersion;
+        this._detailPanel.hide();
 
         if (services().ui.isOpen(UIID.GeneralList)) {
-            await services().ui.closeCurrentUI();
+            if (!this._generalDetailListClose) {
+                this._generalDetailListClose = services().ui.closeCurrentUI().finally(() => {
+                    this._generalDetailListClose = null;
+                });
+            }
+            const closed = await this._generalDetailListClose;
+            if (!closed) throw new Error('[LobbyScene] 武將列表尚未關閉，無法開啟人物頁');
         } else {
             this._listPanel?.hide();
         }
+        if (version !== this._generalDetailSelectionVersion || !this.node.isValid) return;
 
-        this._characterDs3Host.node.active = true;
-        this._bringNodeToFront(this._characterDs3Host.node);
-        await this._characterDs3Host.showScreen('character-ds3-main');
-        this._bindCharacterDs3PreviewTabRouting();
-
-        // 診斷鉤子：在 host 層直接綁定 tab 點擊，繞開 LobbyScene 事件路徑
-        let hookCount = 0;
-        for (const slotId of CHARACTER_DS3_PREVIEW_SLOT_CANDIDATES) {
-            hookCount += this._characterDs3Host.installTabSwitchHook(
-                slotId,
-                {
-                    CharacterDs3Main_button_4: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Overview,
-                    CharacterDs3Main_button_5: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Stats,
-                    CharacterDs3Main_button_6: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Tactics,
-                    CharacterDs3Main_button_7: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Bloodline,
-                    CharacterDs3Main_button_8: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Equip,
-                    CharacterDs3Main_button_9: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Aptitude,
-                },
-            );
-        }
-
-        this._refreshBeastSummary(config);
-        this._refreshGalleryEntry();
-        this._refreshFactorHex(config);
-
-        UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] CharacterDs3 smoke selection opened screen host', {
+        if (this._characterDs3Host) this._characterDs3Host.node.active = false;
+        this._detailPanel.onRequestClose = () => {
+            this._detailPanel?.hide();
+            this.onClickGeneralList();
+        };
+        await this._detailPanel.show(config, { screenId: 'character-ds3-main' });
+        if (version !== this._generalDetailSelectionVersion) return;
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] selected general opened DS3 composite', {
             generalId: config.id,
             generalName: config.name,
             screenId: 'character-ds3-main',
-            diagHookCount: hookCount,
         });
-
-        // 每次由正式入口打開人物頁都回到 Overview，避免沿用前一次停留 tab。
-        const resetSlotId = await this._switchCharacterDs3SlotFragment(
-            this._characterDs3Host,
-            CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Overview,
-        );
-        if (resetSlotId) {
-            this._characterDs3ActiveTab = 'Overview';
-            this._syncCharacterDs3PreviewTabVisualState();
-        } else {
-            UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 default tab reset failed', {
-                tab: 'Overview',
-                slotCandidates: [...CHARACTER_DS3_PREVIEW_SLOT_CANDIDATES],
-                fragment: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Overview,
-            });
-        }
     }
 
     /**
@@ -2898,6 +2874,8 @@ export class LobbyScene extends Component {
 
     /** 「武將列表」按鈕：顯示玄家已取得武將（源自轉蛋 / PlayerRosterService） */
     public onClickGeneralList() {
+        ++this._generalDetailSelectionVersion;
+        this._detailPanel?.hide();
         const roster = PlayerRosterService.getAll();
         const displayList = roster.length > 0 ? roster : this._generals;
         void services().ui.open(UIID.GeneralList, {
@@ -3085,18 +3063,25 @@ export class LobbyScene extends Component {
             await new Promise<void>((resolve) => setTimeout(resolve, 80));
         }
 
-        throw new Error(`[LobbyScene] CharacterDs3 smoke route timed out waiting for visual ready: ${config.id}`);
+        const actual = this._detailPanel?.selectedPersonViewState();
+        throw new Error(`[LobbyScene] CharacterDs3 visual-ready timeout: ${config.id}; actual=${JSON.stringify(actual)}; tab=${(this._detailPanel?.node as Node & { __generalDetailReadyTab?: string })?.__generalDetailReadyTab}`);
     }
 
     private _isCharacterDs3HostVisualReady(config: GeneralConfig): boolean {
-        const hostNode = this._characterDs3Host?.node ?? null;
+        const hostNode = this._detailPanel?.node as (Node & {
+            __generalDetailGeneralId?: string;
+            __generalDetailReadyTab?: string;
+        }) | undefined;
         if (!hostNode?.activeInHierarchy) {
             return false;
         }
 
-        return this._hasDescendantLabelText(hostNode, config.name)
-            && this._hasDescendantLabelText(hostNode, 'BIOGRAPHY')
-            && this._hasDescendantLabelText(hostNode, '燕人武聖');
+        const rendered = this._detailPanel?.selectedPersonViewState();
+        return hostNode.__generalDetailGeneralId === config.id
+            && hostNode.__generalDetailReadyTab === 'Overview'
+            && rendered?.visible === true
+            && rendered.name === config.name
+            && rendered.portraitResource === `sprites/generals/${config.id.replace(/-/g, '_')}_portrait`;
     }
 
     private _hasDescendantLabelText(root: Node, expectedText: string): boolean {
@@ -3442,14 +3427,7 @@ export class LobbyScene extends Component {
     }
 
     private _resolveCharacterDs3SmokeGeneral(previewVariant: string): GeneralConfig | null {
-        const requested = previewVariant.trim().toLowerCase();
-        if (requested && requested !== 'default' && requested !== 'ds3' && requested !== 'zhang-fei' && requested !== 'zhangfei' && requested !== 'smoke-zhang-fei') {
-            UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] CharacterDs3 smoke route currently renders the DS3 Zhang Fei capture target only; fallback to zhang-fei', {
-                previewVariant,
-            });
-        }
-
-        return this._resolveGeneralDetailSmokeGeneral('zhang-fei');
+        return this._resolveGeneralDetailSmokeGeneral(previewVariant);
     }
 
     public onClickEnterBattle() {

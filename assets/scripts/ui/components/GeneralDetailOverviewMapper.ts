@@ -119,7 +119,7 @@ const STORY_SLOT_FALLBACK: Record<GeneralDetailStorySlot, (config: GeneralConfig
 };
 
 const FACTION_DISPLAY: Record<string, string> = {
-    player: '蜀漢',
+    player: '己方',
     enemy: '敵軍',
 };
 
@@ -166,8 +166,8 @@ export function buildGeneralDetailOverview(config: GeneralConfig): GeneralDetail
 
     return {
         header: {
-            title: mask(config.title, '燕人猛將'),
-            name: mask(config.name, '張飛'),
+            title: mask(config.title, '—'),
+            name: mask(config.name, '—'),
             meta: buildHeaderMeta(config),
         },
         summary: {
@@ -190,7 +190,7 @@ export function buildGeneralDetailOverview(config: GeneralConfig): GeneralDetail
             roleSummary: buildRoleSummary(str, int, lea),
             traitSummary: buildTraitSummary(config, currentSp, maxSp),
                 bloodlineTitle: '祖紋',
-            bloodlineName: formatBloodlineDisplayName(config.bloodlineId, '震雷先鋒'),
+            bloodlineName: formatBloodlineDisplayName(config.bloodlineId, '—'),
             awakeningLabel: '覺醒傾向',
             awakeningProgress: resolveAwakeningProgress(config.ep),
             personalityValue: buildPersonalitySummary(config),
@@ -455,7 +455,7 @@ function buildPersonalitySummary(config: GeneralConfig): string {
     if (config.epRating) {
         return `EP 評級 ${config.epRating}`;
     }
-    return '豪烈直進 / 正面破敵';
+    return '—';
 }
 
 function buildBloodlineBody(config: GeneralConfig): string {
@@ -486,9 +486,7 @@ function buildBiographyBody(config: GeneralConfig): string {
         return normalized;
     }
 
-    const role = formatRole(config.role);
-    const faction = formatFaction(config.faction);
-    return `${mask(config.name, '名將')}以${role}之姿活躍於${faction}戰局，人物傳記待補。`;
+    return '—';
 }
 
 function resolveCrestState(config: GeneralConfig): GeneralDetailCrestState {
