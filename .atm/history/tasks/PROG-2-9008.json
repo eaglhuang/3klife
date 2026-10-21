@@ -2,7 +2,7 @@
   "schemaVersion": "atm.workItem.v0.2",
   "workItemId": "PROG-2-9008",
   "title": "PROG-2-9008",
-  "status": "running",
+  "status": "done",
   "milestone": null,
   "dependencies": [],
   "acceptance": [],
@@ -123,8 +123,8 @@
     "checkedFields": [],
     "findings": []
   },
-  "lastTransitionId": "2026-10-21T11-47-16-114Z-scope-amendment-243201a540d5",
-  "lastTransitionAt": "2026-10-21T11:47:16.114Z",
+  "lastTransitionId": "2026-10-21T11-48-58-772Z-close-68dd18dc187a",
+  "lastTransitionAt": "2026-10-21T11:48:58.772Z",
   "ledgerContractVersion": "task-ledger/v1",
   "owner": "codex-gpt-6",
   "reservedAt": "2026-10-21T11:47:14.837Z",
@@ -133,7 +133,7 @@
     "actorId": "codex-gpt-6",
     "leaseId": "lease-321725568a3b",
     "claimedAt": "2026-10-21T11:47:14.842Z",
-    "heartbeatAt": "2026-10-21T11:47:14.842Z",
+    "heartbeatAt": "2026-10-21T11:48:58.771Z",
     "ttlSeconds": 1800,
     "files": [
       ".atm/history/evidence/PROG-2-9008.*",
@@ -142,14 +142,14 @@
       "docs/agent-briefs/tasks/PROG/PROG-2-0136.md",
       "docs/tasks/tasks-prog.json"
     ],
-    "state": "active",
-    "intent": "write",
+    "state": "released",
     "laneSession": {
       "laneSessionId": "lane-20261021114714-codex-gpt-6-34667275e6",
       "status": "active",
       "source": "minted",
       "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261021114714-codex-gpt-6-34667275e6\""
-    }
+    },
+    "reason": "closed"
   },
   "startedAt": "2026-10-21T11:47:14.842Z",
   "startedByActor": "codex-gpt-6",
@@ -252,5 +252,8 @@
     },
     "createdAt": "2026-10-21T11:47:15.506Z",
     "status": "active"
-  }
+  },
+  "closedAt": "2026-10-21T11:48:58.771Z",
+  "closedByActor": "codex-gpt-6",
+  "closedBySessionId": "session-20261021114714-codex-gpt-6-PROG-2-9008-a28076800e"
 }
