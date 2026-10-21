@@ -38,7 +38,7 @@ import type { NurtureAction, NurtureRoundLog } from '../systems/NurtureSystem';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { advanceDaughtersOneYear, assignDaughterRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
-import { GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
+import { formatSeasonLabel, GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
 import { buildYearReport, normalizeYearAgingEvents, YearReport } from '../systems/YearReport';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import type { CountdownState } from '../systems/CountdownManager';
@@ -315,6 +315,19 @@ export interface AddGeneralsResult {
 export interface AddGeneralsOptions {
     /** 轉蛋抽到重複同名武將時改為轉生（+1 轉）；預設關閉，俘虜招募等來源維持原行為 */
     rebirthOnDuplicate?: boolean;
+}
+
+/** 季結日誌的排序優先級（PROG-2-0976）；低於戰鬥與派駐條目，不會擠掉它們 */
+const SEASON_JOURNAL_PRIORITY = 50;
+
+/**
+ * 季結日誌的時間戳只作排序鍵（PROG-2-0976，暫定）：以「年-季序號-01」表示，
+ * 讓同年較後的季排在較前面。尚未對應遊戲內實際日期。
+ */
+function seasonJournalTimestamp(current: GameTimeState): string {
+    const year = String(current.currentYear).padStart(4, '0');
+    const season = String(current.currentSeason).padStart(2, '0');
+    return `${year}-${season}-01T00:00:00`;
 }
 
 export class InMemoryRosterStore implements RosterStore {
@@ -1407,6 +1420,21 @@ export class GameSession {
         return lastStandModifiers(this._territories);
     }
 
+    /**
+     * 季結自動寫日誌（PROG-2-0976）：每個結束的季寫一筆 SYSTEM 條目，列出該季有戰損報告的武將。
+     * 同一季重複結算時 ID 重複，寫入會被拒絕，不會寫兩筆。
+     */
+    private recordSeasonJournal(ended: GameTimeState, reports: readonly QuarterlyBattleReportRow[]): void {
+        this.recordJournal({
+            entryId: `SEASON-${ended.totalSeasonsElapsed}`,
+            timestamp: seasonJournalTimestamp(ended),
+            category: 'SYSTEM',
+            relatedGeneralUids: reports.map(r => r.generalId),
+            priority: SEASON_JOURNAL_PRIORITY,
+            summary: `${formatSeasonLabel(ended)}結算。`,
+        });
+    }
+
     /** 寫入武將日誌（JRN-01）；被拒絕時不改動狀態。 */
     public recordJournal(input: JournalEntryInput): JournalWriteResult {
         const result = appendJournalEntry(this._journal, input);
@@ -2053,6 +2081,7 @@ export class GameSession {
             this._yearAgingEvents = [];
         }
         const quarterlyReports = buildQuarterlyBattleReportRows(this._roster.getAll());
+        this.recordSeasonJournal(advance.previous, quarterlyReports);
         const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports };
         if (this._autoSave && this._save) {
             await this.save();
