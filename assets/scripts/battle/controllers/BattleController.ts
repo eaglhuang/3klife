@@ -9,6 +9,7 @@ import {
   BattleTactic,
 } from "../../core/config/Constants";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
+import type { AiDifficulty } from "../../core/systems/AiSpCharge";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleUnitSpawner, type TroopDataTable } from '../runtime/BattleUnitSpawner';
 import { applySoloBreachAtTurnStart } from '../runtime/BattleSoloBreach';
@@ -246,8 +247,10 @@ export class BattleController {
     terrainGrid?: TerrainGrid,
     weather?: Weather,
     battleTactic?: BattleTactic,
+    aiDifficulty: AiDifficulty = 'normal',
   ): void {
     this.state.reset(playerGeneral, enemyGeneral, terrainGrid, weather, battleTactic);
+    this.state.aiDifficulty = aiDifficulty;
     this.duelFlow.resetForBattle();
     this.flowStateMachine.reset();
     this.flowStateMachine.startBattle();

@@ -2,7 +2,7 @@
  * AiSpCharge — AI 擊殺充能難度倍率（PROG-2-0920，規格 AI武將強度系統 F-3）
  */
 import { Faction, SP_PER_KILL, TroopType } from '../assets/scripts/core/config/Constants';
-import { AI_DIFFICULTY_SP_MOD, aiSpGainPerKill } from '../assets/scripts/core/systems/AiSpCharge';
+import { AI_DIFFICULTY_SP_MOD, aiSpGainPerKill, resolveAiDifficulty } from '../assets/scripts/core/systems/AiSpCharge';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
@@ -62,6 +62,25 @@ export function createAiSpChargeSuite(): TestSuite {
 
         assert.equals(SP_PER_KILL, playerSpAfter, '玩家擊殺仍是 20');
         assert.equals(enemySpBefore + 30, ctrl.state.enemyGeneral!.currentSp, '敵方在 HELL 擊殺應充能 30');
+    });
+
+    suite.test('難度解析：入口參數優先，其次遭遇資料，都沒有或不合法則 NORMAL', () => {
+        assert.equals('hell', resolveAiDifficulty('hell', 'easy'));
+        assert.equals('hard', resolveAiDifficulty(undefined, 'hard'));
+        assert.equals('normal', resolveAiDifficulty(undefined, undefined));
+        assert.equals('normal', resolveAiDifficulty('Hell', null));
+        assert.equals('nightmare', resolveAiDifficulty('typo', 'nightmare'));
+    });
+
+    suite.test('戰鬥入口：initBattle 傳入的難度寫進 state，未傳則 NORMAL', () => {
+        services().initialize();
+        const withHell = new BattleController();
+        withHell.initBattle(general('p', Faction.Player), general('e', Faction.Enemy), undefined, undefined, undefined, 'hell');
+        assert.equals('hell', withHell.state.aiDifficulty);
+
+        const defaulted = new BattleController();
+        defaulted.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
+        assert.equals('normal', defaulted.state.aiDifficulty);
     });
 
     return suite;

@@ -28,6 +28,7 @@ import { BattleTutorialHint } from './BattleTutorialHint';
 import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
 import { TurnFlowManager } from './TurnFlowManager';
 import { setupCameraForBoard, initSceneBackground, addBackgroundSwitchUI, resolveSceneBackgroundId } from './BattleSceneSetup';
+import { resolveAiDifficulty } from '../../core/systems/AiSpCharge';
 import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureBattleScenePanel, ensureBoardRenderer, ensureUnitRenderer } from './BattleUIInitializer';
 
 const { ccclass, property } = _decorator;
@@ -206,7 +207,14 @@ export class BattleScene extends Component {
       await services().material.warmupCritical(this.node);
 
       // 5. 開始第一場戰鬥（含地形、天氣、戰法）
-      this.ctrl.initBattle(pg, eg, terrain, battleParams.weather, battleParams.battleTactic);
+      this.ctrl.initBattle(
+        pg,
+        eg,
+        terrain,
+        battleParams.weather,
+        battleParams.battleTactic,
+        resolveAiDifficulty(battleParams.aiDifficulty, encounter?.difficulty),
+      );
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;
       if (weatherSchedule) this.ctrl.setWeatherSchedule(weatherSchedule);
