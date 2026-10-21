@@ -449,10 +449,30 @@ export const TACTIC_TP_COST_OVERRIDE: Readonly<Record<string, number>> = {
     TAC_FOREST_AMBUSH: 30,
 };
 
+/**
+ * 戰場戰法庫（tactic-library.json）id → 規格表 TAC_* id 的暫定對照（PM 2026-10-21 裁定：規格 id 保持正式）。
+ * 明顯對得上的直接對；其餘依分類與描述選最接近的一招，皆為暫定，記於待辦檔。
+ */
+export const TACTIC_LIBRARY_TO_SPEC_ID: Readonly<Record<string, string>> = {
+    'tactic-cavalry-shock': 'TAC_CAVALRY_CHARGE',
+    'tactic-fire-scheme': 'TAC_FIRE_ATTACK',
+    'tactic-archer-volley': 'TAC_ARROW_RAIN',
+    'tactic-morale-rally': 'TAC_INSPIRE',
+    'tactic-battle-roar': 'TAC_TAUNT',
+    'tactic-river-ambush': 'TAC_AMBUSH',
+    'tactic-spear-phalanx': 'TAC_LANCE_THRUST',
+    'tactic-dragon-pierce': 'TAC_LONE_RIDER',
+};
+
+/** 戰場 id 先經對照轉成規格 id；本來就是規格 id 或查無對照時原樣回傳 */
+export function toSpecTacticId(tacticId: string): string {
+    return TACTIC_LIBRARY_TO_SPEC_ID[tacticId] ?? tacticId;
+}
+
 /** 施放戰法所需計謀點；沒有 tacticId（只有普通攻擊或 demo 技能）時用預設值 */
 export function getTacticTpCost(tacticId: string | null | undefined): number {
     if (!tacticId) return DEFAULT_TACTIC_TP_COST;
-    return TACTIC_TP_COST_OVERRIDE[tacticId] ?? DEFAULT_TACTIC_TP_COST;
+    return TACTIC_TP_COST_OVERRIDE[toSpecTacticId(tacticId)] ?? DEFAULT_TACTIC_TP_COST;
 }
 
 /** 回合開始回復計謀點，不超過上限 */
