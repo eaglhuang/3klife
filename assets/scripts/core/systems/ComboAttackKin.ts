@@ -5,11 +5,14 @@
  * 規則：相鄰格有史實關係帶 comboAttackRateMod 時，觸發率乘上倍率（義兄弟 1.3，即 +30%）。
  * 多個相鄰關係不疊乘，只取最大的一個倍率；結果夾在 0~1 之間。
  *
- * 暫定：合攻的基礎觸發率由呼叫端傳入（規格未定基礎值，待 PM 裁定）。
+ * 暫定：合攻基礎觸發率 COMBO_ATTACK_BASE_CHANCE = 20%（PM 裁定，規格未定，可調）。
  *
  * Unity 對照：像 Buff 的 Modifier，同一類 Modifier 不疊加，只取最大值（Max 而非 Sum）。
  */
 import type { HistoricalRelation } from './KinRelation';
+
+/** 合攻基礎觸發率（PM 暫定 20%） */
+export const COMBO_ATTACK_BASE_CHANCE = 0.2;
 
 export function comboAttackChanceWithKin(baseChance: number, adjacentRelations: readonly HistoricalRelation[]): number {
     const mods = adjacentRelations
