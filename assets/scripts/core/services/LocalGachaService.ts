@@ -142,6 +142,10 @@ export interface GachaSaveStore {
     writeWallet(wallet: LocalGachaWalletSnapshot): void;
     /** 選填：存檔端的轉蛋資料版本號。外部改動（讀檔、新遊戲、成就入帳）會讓它改變，服務據此丟掉過期快取 */
     revision?(): number;
+    /** 選填：抽卡結果同步入冊（不存檔）。扣款與保底寫入前呼叫，與扣款落在同一次存檔 */
+    enroll?(results: readonly LocalGachaResultEntry[]): void;
+    /** 選填：把 fn 內的寫入併成一次存檔（扣款、保底、入冊要嘛全寫、要嘛全不寫）；沒有時逐筆寫入 */
+    batch?<T>(fn: () => T): T;
 }
 
 export class LocalGachaService {
@@ -329,9 +333,18 @@ export class LocalGachaService {
         }
 
         // 紀錄寫入成功才算這批抽數：失敗時不扣款，保底計數也不能前進
-        this._pityBookCache = { ...this._pityBookOf(), [request.poolId]: pity };
-        this._persistPityBook();
-        this._spendCurrency(request.currencyKey, cost);
+        // 入冊、保底、扣款同一批寫入：若中途強關，存檔裡不會出現「已扣款未入冊」
+        const commit = (): void => {
+            this._saveStore?.enroll?.(results);
+            this._pityBookCache = { ...this._pityBookOf(), [request.poolId]: pity };
+            this._persistPityBook();
+            this._spendCurrency(request.currencyKey, cost);
+        };
+        if (this._saveStore?.batch) {
+            this._saveStore.batch(commit);
+        } else {
+            commit();
+        }
 
         return results;
     }

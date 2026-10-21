@@ -40,6 +40,20 @@ function lobbyGacha(session: GameSession): LocalGachaService {
     }, () => session.randomSource());
 }
 
+/** 和 LobbyScene 改版後一樣：入冊不存檔，扣款、保底、入冊由 batch 一次存檔（PROG-2-1003） */
+function lobbyGachaBatched(session: GameSession): LocalGachaService {
+    return new LocalGachaService({
+        readPity: () => session.gachaPityBook,
+        writePity: (book) => session.setGachaPityBook(book),
+        readWallet: () => session.gachaWalletSave,
+        writeWallet: (wallet) => session.setGachaWalletSave(wallet),
+        revision: () => session.gachaRevision,
+        enroll: (results) => { session.enrollGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true }); },
+        // 測試中由呼叫端決定何時存檔，batch 只負責把寫入包成同一段
+        batch: (fn) => fn(),
+    }, () => session.randomSource());
+}
+
 function pool(): GeneralConfig[] {
     return [
         general('ssr-1', 'legendary'), general('sr-1', 'epic'), general('sr-2', 'epic'),
@@ -94,6 +108,38 @@ export function createGachaPullToRosterE2ESuite(): TestSuite {
         const again = await session.addGenerals([general('twin', 'epic')], { rebirthOnDuplicate: true });
         assert.equals(1, again.rebirths.length);
         assert.equals(base + 2, (session.roster.find((g) => g.id === 'twin') as unknown as { rebirthCount?: number }).rebirthCount);
+    });
+
+    suite.test('強關模擬：抽完還沒存檔就強關，讀回的錢包、保底、名冊仍是抽卡前的狀態；存檔後三者一起到位', async () => {
+        services().initialize();
+        sys.localStorage.removeItem('CLIENT_DEVICE_ID');
+        const adapter = new MemoryStorageAdapter();
+        const a = newSession(adapter);
+        const gacha = lobbyGachaBatched(a);
+        gacha.grantCurrency('gems', 5000);
+        const gemsBefore = gacha.getCurrencyAmount('gems');
+        await a.save();
+        const rosterBefore = a.roster.length;
+
+        await gacha.performLocalGacha('P1', 10, 1000, pool());
+        // 抽卡當下記憶體已同時扣款、入冊、推進保底
+        assert.equals(gemsBefore - 1000, gacha.getCurrencyAmount('gems'));
+        assert.isTrue(a.roster.length > rosterBefore);
+
+        // 強關：沒有走到存檔，存檔裡不能只有扣款而沒有入冊
+        const crashed = newSession(adapter);
+        assert.isTrue(await crashed.load());
+        assert.equals(gemsBefore, lobbyGachaBatched(crashed).getCurrencyAmount('gems'));
+        assert.equals(rosterBefore, crashed.roster.length);
+        assert.equals(0, crashed.gachaPityBook['P1']?.pullCount ?? 0);
+
+        // 正常流程：批次結束後存一次，讀回三者一致
+        await a.save();
+        const restored = newSession(adapter);
+        assert.isTrue(await restored.load());
+        assert.equals(gemsBefore - 1000, lobbyGachaBatched(restored).getCurrencyAmount('gems'));
+        assert.equals(10, restored.gachaPityBook['P1'].pullCount);
+        assert.equals(a.roster.length, restored.roster.length);
     });
 
     suite.test('餘額不足：不扣款、不推進保底、不入冊', async () => {

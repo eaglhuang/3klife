@@ -1988,6 +1988,20 @@ export class GameSession {
      * 已持有的武將不會重複加入，回傳 duplicates 供 UI 提示（之後可換算成碎片）。
      */
     public async addGenerals(generals: GeneralConfig[], options: AddGeneralsOptions = {}): Promise<AddGeneralsResult> {
+        const result = this.enrollGenerals(generals, options);
+        if (result.added.length > 0 || result.rebirths.length > 0) {
+            if (this._autoSave && this._save) {
+                await this.save();
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 同步入冊（不存檔）：轉蛋要把「扣款、保底、入冊」併進同一次存檔時使用，呼叫端負責存檔。
+     * 入冊有新武將時發出 RosterChanged。
+     */
+    public enrollGenerals(generals: GeneralConfig[], options: AddGeneralsOptions = {}): AddGeneralsResult {
         const owned = new Set(this._roster.getAll().map((general) => general.id));
         const added: GeneralConfig[] = [];
         const duplicates: GeneralConfig[] = [];
@@ -2029,11 +2043,6 @@ export class GameSession {
 
         if (added.length > 0) {
             this._roster.replaceAll([...this._roster.getAll(), ...added]);
-        }
-        if (added.length > 0 || rebirths.length > 0) {
-            if (this._autoSave && this._save) {
-                await this.save();
-            }
         }
         if (added.length > 0) {
             this._emit(GAME_SESSION_EVENTS.RosterChanged, added);
