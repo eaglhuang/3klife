@@ -990,6 +990,19 @@
                   "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject"
                 }
               ]
+            },
+            {
+              "type": "label",
+              "name": "TotalTpLabel",
+              "id": "totalTpLabel",
+              "widget": {
+                "bottom": 16,
+                "left": 460
+              },
+              "width": 300,
+              "height": 44,
+              "text": "總 TP 0",
+              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_total_tp"
             }
           ]
         }

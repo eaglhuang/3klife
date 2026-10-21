@@ -4953,6 +4953,17 @@
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
       "isBold": true
+    },
+    "auto.character-ds3-tab-overview.characterds3taboverview_span_total_tp": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
     }
   },
   "bundles": [
