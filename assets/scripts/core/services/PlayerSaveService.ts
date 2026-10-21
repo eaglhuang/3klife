@@ -95,6 +95,8 @@ export interface PlayerSaveSnapshot {
     officerState?: OfficerState;
     /** 世界沙盤已放置標記數（OFC-06）；扁平選填欄位，舊檔沒有時讀回 0；版號不升 */
     sandtableMarkersPlaced?: number;
+    /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
+    gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
@@ -234,6 +236,26 @@ function normalizeDiscoveryExp(value: unknown): number {
 }
 
 /** 世界沙盤標記數：非正數、非有限數一律視為 0；小數無條件捨去（OFC-06） */
+/** 抽卡待補教官卡的一筆紀錄；id 用來在教官卡寫入完成後移除這一筆 */
+export interface GachaMentorJournalEntry {
+    id: string;
+    drawn: GeneralConfig[];
+    time: { currentYear: number; currentSeason: number };
+    poolId: string | undefined;
+}
+
+export function normalizeGachaMentorJournal(raw: unknown): GachaMentorJournalEntry[] {
+    if (!Array.isArray(raw)) return [];
+    return raw
+        .filter((entry): entry is GachaMentorJournalEntry => !!entry && typeof entry.id === 'string' && Array.isArray(entry.drawn))
+        .map((entry) => ({
+            id: entry.id,
+            drawn: entry.drawn.map((general) => ({ ...general })),
+            time: { currentYear: Number(entry.time?.currentYear) || 0, currentSeason: Number(entry.time?.currentSeason) || 0 },
+            poolId: typeof entry.poolId === 'string' ? entry.poolId : undefined,
+        }));
+}
+
 export function normalizeSandtableMarkersPlaced(raw: unknown): number {
     return typeof raw === 'number' && Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 0;
 }
@@ -369,6 +391,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.legacyCount !== undefined ? { legacyCount: normalizeLegacyCount(snapshot.legacyCount) } : {}),
         ...(snapshot.officerState !== undefined ? { officerState: normalizeOfficerState(snapshot.officerState) } : {}),
         ...(snapshot.sandtableMarkersPlaced !== undefined ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced) } : {}),
+        ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),

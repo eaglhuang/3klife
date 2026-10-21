@@ -48,7 +48,10 @@ function lobbyGachaBatched(session: GameSession): LocalGachaService {
         readWallet: () => session.gachaWalletSave,
         writeWallet: (wallet) => session.setGachaWalletSave(wallet),
         revision: () => session.gachaRevision,
-        enroll: (results) => { session.enrollGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true }); },
+        enroll: (results) => {
+            session.enrollGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true });
+            session.queueGachaMentorDraw({ drawn: results.map((entry) => entry.general), time: { ...session.gameTime }, poolId: results[0]?.poolId });
+        },
         // 測試中由呼叫端決定何時存檔，batch 只負責把寫入包成同一段
         batch: (fn) => fn(),
     }, () => session.randomSource());
@@ -140,6 +143,37 @@ export function createGachaPullToRosterE2ESuite(): TestSuite {
         assert.equals(gemsBefore - 1000, lobbyGachaBatched(restored).getCurrencyAmount('gems'));
         assert.equals(10, restored.gachaPityBook['P1'].pullCount);
         assert.equals(a.roster.length, restored.roster.length);
+    });
+
+    suite.test('教官卡日誌：與入冊同批登記；未存檔強關不留日誌，存檔後留到補寫完成才移除（PROG-2-1004）', async () => {
+        services().initialize();
+        sys.localStorage.removeItem('CLIENT_DEVICE_ID');
+        const adapter = new MemoryStorageAdapter();
+        const a = newSession(adapter);
+        const gacha = lobbyGachaBatched(a);
+        gacha.grantCurrency('gems', 5000);
+        await a.save();
+
+        await gacha.performLocalGacha('P1', 10, 1000, pool());
+
+        // 強關（未存檔）：日誌與入冊一樣不存在
+        const crashed = newSession(adapter);
+        assert.isTrue(await crashed.load());
+        assert.equals(0, crashed.gachaMentorJournal.length);
+
+        // 存檔後強關：日誌在，下次進大廳可以補寫
+        await a.save();
+        const restarted = newSession(adapter);
+        assert.isTrue(await restarted.load());
+        assert.equals(1, restarted.gachaMentorJournal.length);
+        assert.equals(10, restarted.gachaMentorJournal[0].drawn.length);
+
+        // 補寫完成後移除並存檔
+        restarted.completeGachaMentorDraw(restarted.gachaMentorJournal[0].id);
+        await restarted.save();
+        const done = newSession(adapter);
+        assert.isTrue(await done.load());
+        assert.equals(0, done.gachaMentorJournal.length);
     });
 
     suite.test('餘額不足：不扣款、不推進保底、不入冊', async () => {
