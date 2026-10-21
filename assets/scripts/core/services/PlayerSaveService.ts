@@ -27,6 +27,8 @@ import { RandomState, validateRandomState } from '../systems/SeededRandom';
 import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
 import type { TallyHolder } from '../systems/TigerTallyHoldings';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
+import type { InventoryRecord } from '../systems/InventoryProjection';
+import { normalizeInventoryRecords } from '../systems/InventoryRecordBridge';
 import { normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeDynamicRelations } from '../systems/KinDynamicRelations';
 import { normalizeLegacyCount } from '../systems/LegacyAchievement';
@@ -123,6 +125,8 @@ export interface PlayerSaveSnapshot {
     tallyHoldings?: Record<string, TallyHolder>;
     /** 虎符卡資料（uid → 卡）；後加的選填欄位，舊檔讀回補空物件 */
     tallyCards?: Record<string, TigerTallyCard>;
+    /** 統一物件庫列（DS-08 canonical，PROG-2-1021）；舊檔沒有時由虎符卡與持有表重建 */
+    inventoryRecords?: InventoryRecord[];
     /** 女性武將來源（uid → 來源，FEM-01）；後加的選填欄位，舊檔讀回補空物件 */
     femaleSources?: Record<string, FemaleSource>;
     /** 主動指令（培育／結緣）造成、尚未進季結結算的武將死亡；後加的選填欄位，舊檔讀回為空陣列（PROG-2-0222） */
@@ -459,6 +463,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.journalEntries !== undefined ? { journalEntries: normalizeJournalEntries(snapshot.journalEntries) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
+        ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
