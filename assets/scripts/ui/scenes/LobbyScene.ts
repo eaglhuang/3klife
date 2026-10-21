@@ -10,7 +10,7 @@ import { normalizeWeather } from '../../shared/CommonEnums';
 import { BattleTactic } from '../../core/config/Constants';
 import { GeneralListComposite } from '../components/GeneralListComposite';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
-import { canOpenSoulInject, soulInjectCandidatesFor, type SoulInjectCandidate } from '../../core/systems/SoulInjectCandidates';
+import { canOpenSoulInject, SOUL_INJECT_REASON_I18N_KEY, soulInjectCandidatesFor, type SoulInjectCandidate } from '../../core/systems/SoulInjectCandidates';
 import { EliteTroopCodexComposite, type EliteTroopCodexOpenPayload } from '../components/EliteTroopCodexComposite';
 import { LobbyMissionDetailDialogComposite, type LobbyMissionActionKey, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
 import { LobbyLeaderboardComposite, type LobbyLeaderboardOpenPayload } from '../components/LobbyLeaderboardComposite';
@@ -2551,6 +2551,15 @@ export class LobbyScene extends Component {
         const button = this._characterDs3Host?.binder?.getButton('btnSoulInject');
         if (!button) return;
         button.interactable = canOpenSoulInject(this._soulInjectCandidates());
+        this._refreshCharacterDs3TotalTp();
+    }
+
+    /** 人物頁總 TP（寄宿戰魂會加總到 totalTp）；寄宿後重讀名冊，避免顯示舊值（PROG-2-1070） */
+    private _refreshCharacterDs3TotalTp(): void {
+        const label = this._characterDs3Host?.binder?.getLabel('totalTpLabel');
+        const general = this._characterDs3General as (GeneralConfig & { totalTp?: number }) | null;
+        if (!label || !general) return;
+        label.string = services().i18n.t('ui.general.soul_inject.total_tp', String(general.totalTp ?? 0));
     }
 
     private _soulInjectCandidates(): SoulInjectCandidate[] {
@@ -2585,8 +2594,12 @@ export class LobbyScene extends Component {
         }
         this._soulInjectArmedDeadUid = null;
         const result = await services().session.injectSoulFragment(general.id, first.deadUid);
+        const refreshed = services().session.roster.find((g) => g.id === general.id);
+        if (refreshed) this._characterDs3General = refreshed;
         // cc 設定沒開 strictNullChecks，union 不會依 .ok 收斂
-        this._showToast(result.ok ? `寄宿成功，+${(result as { ok: true; amount: number }).amount} TP` : `寄宿失敗：${(result as { ok: false; reason: string }).reason}`);
+        const failure = result as { ok: false; reason: string };
+        const reasonText = result.ok ? '' : services().i18n.t(SOUL_INJECT_REASON_I18N_KEY[failure.reason] ?? 'ui.general.soul_inject.reason.unknown');
+        this._showToast(result.ok ? `寄宿成功，+${(result as { ok: true; amount: number }).amount} TP` : services().i18n.t('ui.general.soul_inject.failed', reasonText));
         this._refreshCharacterDs3SoulInject();
     }
 
