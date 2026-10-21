@@ -1921,7 +1921,7 @@ export class GameSession {
         this._roster.replaceAll(roster);
         this._clearLeadIfGone();
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
-        this._recordSoulFragmentsFor(beforeRoster, aging.events);
+        this._recordSoulFragmentsFor(beforeRoster, agingEvents);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
         this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
