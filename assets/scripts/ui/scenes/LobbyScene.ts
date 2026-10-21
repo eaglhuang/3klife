@@ -2584,7 +2584,8 @@ export class LobbyScene extends Component {
         }
         this._soulInjectArmedDeadUid = null;
         const result = await services().session.injectSoulFragment(general.id, first.deadUid);
-        this._showToast(result.ok ? `寄宿成功，+${result.amount} TP` : `寄宿失敗：${result.reason}`);
+        // cc 設定沒開 strictNullChecks，union 不會依 .ok 收斂
+        this._showToast(result.ok ? `寄宿成功，+${(result as { ok: true; amount: number }).amount} TP` : `寄宿失敗：${(result as { ok: false; reason: string }).reason}`);
         this._refreshCharacterDs3SoulInject();
     }
 
