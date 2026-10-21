@@ -114,6 +114,7 @@ import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampa
 import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { buildEraResetEvent } from '../systems/EraReset';
+import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from '../systems/BattleRecordStats';
@@ -228,6 +229,8 @@ export interface SeasonAdvancedPayload {
     oracleTokensGranted?: number;
     /** 本季是年末時才有：本年的年報（TIME-07） */
     yearReport?: YearReport;
+    /** 本季每位名冊武將的季度戰報（REC-08）；沒有精力資料的武將不列 */
+    quarterlyReports?: QuarterlyBattleReportRow[];
 }
 
 /** 進行中的培育會話存取介面；正式環境為 NurtureService，讓存檔帶著培育進度 */
@@ -1883,7 +1886,8 @@ export class GameSession {
             yearReport = buildYearReport(advance.previous.currentYear, this._yearAgingEvents);
             this._yearAgingEvents = [];
         }
-        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport };
+        const quarterlyReports = buildQuarterlyBattleReportRows(this._roster.getAll());
+        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports };
         if (this._autoSave && this._save) {
             await this.save();
         }
