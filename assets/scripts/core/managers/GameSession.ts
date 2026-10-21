@@ -29,6 +29,7 @@ import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/Ha
 import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
 import type { HallBoardKey, HallGateTask, HallPlayerState } from '../systems/HallMissionBoard';
 import { battleIntelligenceOf } from '../systems/BattleRoster';
+import { pvpSeasonIdOf } from '../systems/BattleSeasonStats';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
 import type { NurtureAction, NurtureRoundLog } from '../systems/NurtureSystem';
@@ -2037,6 +2038,7 @@ export class GameSession {
             deployedIds,
             result,
             season: this._clock.state.totalSeasonsElapsed,
+            seasonId: pvpSeasonIdOf(this._clock.state.totalSeasonsElapsed),
             performance: options.performance,
             vitalityAfterBattle: options.vitalityAfterBattle,
         });

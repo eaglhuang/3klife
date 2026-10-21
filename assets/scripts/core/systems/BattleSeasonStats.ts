@@ -13,7 +13,7 @@
 
 import type { BattlePerformance } from './BattleRecordStats';
 
-export type BattleOutcome = 'win' | 'lose' | 'draw';
+export type BattleOutcome = 'win' | 'loss' | 'draw';
 
 export interface SeasonStats {
     seasonId: string;
@@ -69,7 +69,7 @@ export function accumulateSeasonBattle(
     return {
         seasonId,
         wins: base.wins + (outcome === 'win' ? 1 : 0),
-        losses: base.losses + (outcome === 'lose' ? 1 : 0),
+        losses: base.losses + (outcome === 'loss' ? 1 : 0),
         kills: base.kills + nonNeg(performance.kills),
         totalDamage: base.totalDamage + nonNeg(performance.damageDealt),
         guardianPower: base.guardianPower + nonNeg(performance.damageTaken) + nonNeg(performance.healingDone),
@@ -89,4 +89,17 @@ export function rolloverSeason(current: SeasonStats | null | undefined, nextSeas
         archived: current && hasActivity ? current : null,
         current: emptySeasonStats(nextSeasonId),
     };
+}
+
+/**
+ * 每幾個遊戲季算一個 PvP 賽季（暫定 4，即一年一季；規格未定，待 PM 裁定）。
+ */
+export const GAME_SEASONS_PER_PVP_SEASON = 4;
+
+/**
+ * 由遊戲累計季數換算賽季 ID（S1、S2…）。負數視為第 1 季。
+ */
+export function pvpSeasonIdOf(totalSeasonsElapsed: number): string {
+    const elapsed = Number.isFinite(totalSeasonsElapsed) && totalSeasonsElapsed > 0 ? Math.floor(totalSeasonsElapsed) : 0;
+    return `S${Math.floor(elapsed / GAME_SEASONS_PER_PVP_SEASON) + 1}`;
 }
