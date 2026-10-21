@@ -68,15 +68,13 @@ import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceShowcaseController, RED_FACE_SHOW_MAX_ROWS } from '../core/RedFaceShowcaseController';
-import { DestinyOpeningController, DESTINY_OPENING_MAX_ROWS } from '../core/DestinyOpeningController';
+import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { OpeningIntroController } from '../core/OpeningIntroController';
 import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE } from '../../core/systems/NewPlayerOpening';
-import { destinyLockedEvent } from '../../core/systems/DestinyOpening';
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
-import { OnboardingFlowController } from '../core/OnboardingFlowController';
 import { ITEM_JOB_CHANGE_ORDER } from '../../core/systems/PlayerInventory';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
@@ -230,8 +228,6 @@ export class LobbyScene extends Component {
     private _mercPanel: MercenaryPanelController | null = null;
     private _redFaceHost: UIScreenPreviewHost | null = null;
     private _redFace: RedFaceShowcaseController | null = null;
-    private _destinyHost: UIScreenPreviewHost | null = null;
-    private _destiny: DestinyOpeningController | null = null;
     /** 開場沒有讀到存檔＝新玩家，需要先走宿命轉蛋 */
     private _isNewPlayer = false;
     private _introHost: UIScreenPreviewHost | null = null;
@@ -240,8 +236,6 @@ export class LobbyScene extends Component {
     private _jobChange: JobChangeController | null = null;
     private _domestic: DomesticPanelController | null = null;
     private _lobbyHub: LobbyHub | null = null;
-    private _onboardingHost: UIScreenPreviewHost | null = null;
-    private _onboarding: OnboardingFlowController | null = null;
     private _oracleHost: UIScreenPreviewHost | null = null;
     private _retireReviewHost: UIScreenPreviewHost | null = null;
     private _spiritCodexHost: UIScreenPreviewHost | null = null;
@@ -1019,42 +1013,7 @@ export class LobbyScene extends Component {
      * 進度存在 GameSession，每段確認後自動存檔。開場流程本身不在這裡（OPEN-01）。
      */
     private async _mountOnboardingTutorial(): Promise<void> {
-        const onboarding = new OnboardingFlowController({
-            state: () => services().session.onboarding,
-            acknowledge: (segmentId) => services().session.acknowledgeOnboarding(segmentId),
-        });
-        this._onboarding = onboarding;
-        this._onboardingHost = await this._mountPreviewScreenHost('OnboardingTutorialHost', 'onboarding-tutorial-screen', [
-            { buttonId: 'btnNextTutorial', handler: () => { void this._onClickNextTutorial(); } },
-        ]);
-        this._refreshOnboardingTutorial();
-    }
-
-    private _refreshOnboardingTutorial(): void {
-        const host = this._onboardingHost;
-        const onboarding = this._onboarding;
-        if (!host || !onboarding) {
-            return;
-        }
-        host.node.active = onboarding.shouldShow();
-        if (!host.node.active) {
-            return;
-        }
-        this._bringNodeToFront(host.node);
-        applyFlowView(host.binder, onboarding.getFlowView());
-    }
-
-    private async _onClickNextTutorial(): Promise<void> {
-        if (!this._onboarding) {
-            return;
-        }
-        try {
-            await this._onboarding.next();
-        } catch (error) {
-            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 新手引導存檔失敗', error);
-        } finally {
-            this._refreshOnboardingTutorial();
-        }
+        await this._openingPanels.mountOnboarding();
     }
 
     /**
@@ -1242,69 +1201,24 @@ export class LobbyScene extends Component {
      * 新局宿命轉蛋（OPEN-05）：新玩家（沒有存檔）進大廳時先開，鎖定後開新局並存檔。
      * 規則全在 DestinyOpeningController（純邏輯），這裡只綁按鈕、套 FlowView。
      */
+    private readonly _openingPanels = new LobbyOpeningPanels({
+        session: () => services().session,
+        generals: () => this._generals,
+        isNewPlayer: () => this._isNewPlayer,
+        loadGachaConfig: () => this._loadDataJson<GachaConfig[]>('data/gacha-config'),
+        mountHost: (name, screen, bindings) => this._mountPreviewScreenHost(name, screen, bindings),
+        bringToFront: node => this._bringNodeToFront(node),
+        refreshSeasonHud: () => this._refreshSeasonHud(),
+        advanceOpening: event => { this._openingFlow?.advance(event); },
+        warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
+    });
+
     private async _mountDestinyOpening(): Promise<void> {
-        const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
-        const heroPool = (Array.isArray(gachaConfig) ? gachaConfig : []).find(pool => pool.poolId === 'hero-pool');
-        if (!heroPool) {
-            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 找不到 hero-pool 轉蛋設定，略過宿命轉蛋');
-            return;
-        }
-        const session = services().session;
-        this._destiny = new DestinyOpeningController({
-            config: () => heroPool,
-            generals: () => this._generals,
-            session,
-            random: session.randomSource,
-            seed: () => Math.floor(session.randomSource() * 4294967296),
-            onStarted: async () => {
-                if (session.hasSaveService) {
-                    await session.save();
-                }
-                this._refreshSeasonHud();
-            },
-        });
-        const act = (task: () => Promise<unknown> | unknown): (() => void) => () => {
-            void Promise.resolve(task()).then(() => { this._afterDestinyAction(); });
-        };
-        const rowBindings = Array.from({ length: DESTINY_OPENING_MAX_ROWS }, (_, i) => ({
-            buttonId: `btnDestinyRow${i}`,
-            handler: act(() => this._destiny?.select(i)),
-        }));
-        this._destinyHost = await this._mountPreviewScreenHost('DestinyOpeningHost', 'destiny-opening-screen', [
-            { buttonId: 'btnDestinyRoll', handler: act(() => this._destiny?.roll()) },
-            { buttonId: 'btnDestinyReset', handler: act(() => this._destiny?.reset()) },
-            { buttonId: 'btnDestinyConfirm', handler: act(() => this._destiny?.confirm()) },
-            ...rowBindings,
-        ]);
+        await this._openingPanels.mountDestiny();
     }
 
     public openDestinyOpening(): void {
-        const host = this._destinyHost;
-        if (!host) {
-            return;
-        }
-        host.node.active = true;
-        this._bringNodeToFront(host.node);
-        this._refreshDestinyOpening();
-    }
-
-    private _afterDestinyAction(): void {
-        if (this._destiny?.started && this._destinyHost) {
-            this._destinyHost.node.active = false;
-            if (destinyLockedEvent(this._destiny.state)) {
-                this._openingFlow?.advance(destinyLockedEvent(this._destiny.state)!);
-            }
-            return;
-        }
-        this._refreshDestinyOpening();
-    }
-
-    private _refreshDestinyOpening(): void {
-        const binder = this._destinyHost?.binder;
-        if (!binder || !this._destiny) {
-            return;
-        }
-        applyFlowView(binder, this._destiny.getFlowView());
+        this._openingPanels.openDestiny();
     }
 
     /**

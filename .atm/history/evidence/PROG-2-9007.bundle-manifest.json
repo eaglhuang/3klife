@@ -1,0 +1,65 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "PROG-2-9007",
+  "updatedAt": "2026-10-21T11:46:13.559Z",
+  "updatedBy": "codex-gpt-6",
+  "freshValidationPasses": [
+    "git diff --check",
+    "test"
+  ],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:0efd5a3c90a8520e2c4cc6de842c4e4ad7c2f874751732faa3b7059a0539d25f",
+      "stderrSha256": "sha256:76162e465989f3f070a9de8db711fbf358e53b74d09ce1bbdb57c727e4c4a16d",
+      "validators": [
+        "test"
+      ],
+      "generatedAt": "2026-10-21T11:46:12.263Z",
+      "startedAt": null,
+      "finishedAt": null,
+      "durationMs": null,
+      "runnerKind": "dev-source",
+      "sourceCommit": "bd49815d91a59db8127039ba25a0af563e158db6",
+      "cached": false
+    },
+    {
+      "command": "./node_modules/.bin/ts-node --transpile-only -r ./tests/register-cc-test-stub.js -r ./tests/register-tsconfig-test-paths.js --project tsconfig.test.json tests/run-cli.ts",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:65e324fba22a5e60d5d0e48160479c8511dee51d351291a2dc1d27acebd48710",
+      "stderrSha256": "sha256:2f2a1441feb36341a03fbb117c9eba563fdf80f61561224c50e01d0740a04a0a",
+      "validators": [],
+      "generatedAt": "2026-10-21T11:46:12.876Z",
+      "startedAt": null,
+      "finishedAt": null,
+      "durationMs": null,
+      "runnerKind": "dev-source",
+      "sourceCommit": "bd49815d91a59db8127039ba25a0af563e158db6",
+      "cached": false
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-10-21T11:46:13.558Z",
+      "startedAt": "2026-10-21T11:46:13.504Z",
+      "finishedAt": "2026-10-21T11:46:13.558Z",
+      "durationMs": 54,
+      "runnerKind": "dev-source",
+      "sourceCommit": "bd49815d91a59db8127039ba25a0af563e158db6",
+      "cached": false
+    }
+  ],
+  "artifactPaths": [
+    "/tmp/pr480-bd498-headless.stderr",
+    "/tmp/pr480-bd498-headless.stdout",
+    "/tmp/pr480-bd498-npm.stderr",
+    "/tmp/pr480-bd498-npm.stdout"
+  ]
+}
