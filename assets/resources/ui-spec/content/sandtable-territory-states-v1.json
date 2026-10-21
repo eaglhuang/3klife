@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "templateFamily": "sandtable-territory",
+  "layout": "sandtable-territory-main",
+  "defaultState": "smoke-picker",
+  "states": {
+    "smoke-picker": {
+      "title": "天下沙盤・領地",
+      "hintLabel": "階段 S1｜標記 2/3，每領地最多一個",
+      "row0NameLabel": "司隸",
+      "row0StateLabel": "已放置",
+      "row1NameLabel": "豫州",
+      "row1StateLabel": "已放置",
+      "row2NameLabel": "兗州",
+      "row2StateLabel": "可放置",
+      "row3NameLabel": "徐州",
+      "row3StateLabel": "可放置",
+      "row4NameLabel": "青州",
+      "row4StateLabel": "—",
+      "row5NameLabel": "冀州",
+      "row5StateLabel": "—",
+      "row6NameLabel": "幽州",
+      "row6StateLabel": "—",
+      "row7NameLabel": "并州",
+      "row7StateLabel": "—",
+      "row8NameLabel": "涼州",
+      "row8StateLabel": "—",
+      "row9NameLabel": "益州",
+      "row9StateLabel": "—",
+      "row10NameLabel": "荊州",
+      "row10StateLabel": "—",
+      "row11NameLabel": "揚州",
+      "row11StateLabel": "—",
+      "row12NameLabel": "交州",
+      "row12StateLabel": "—"
+    }
+  }
+}
