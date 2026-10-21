@@ -14,7 +14,7 @@
  */
 import { HallBoardKey, HallPlayerState } from '../../core/systems/HallMissionBoard';
 import { buildHallBoardRows, HallTaskRow } from '../../core/systems/HallMissionBoardPresenter';
-import { LobbyHub } from '../../core/systems/LobbyHubSchema';
+import { HallTask, LobbyHub } from '../../core/systems/LobbyHubSchema';
 import { HallSpotRow } from '../../core/systems/HallCharacterPresenter';
 
 export const HALL_BOARD_MAX_ROWS = 6;
@@ -90,6 +90,13 @@ export class HallBoardPanelController {
             },
         };
         return buildHallBoardRows(overlaid, this._board, this._deps.player()).slice(0, HALL_BOARD_MAX_ROWS);
+    }
+
+    /** 第 index 列對應的任務資料（彈窗與委任用）；沒有該列時回傳 undefined。 */
+    public taskAt(index: number): HallTask | undefined {
+        const row = this.rows()[index];
+        if (!row) return undefined;
+        return this._deps.hub().Mission_Boards[this._board]?.Tasks.find((task) => task.Task_ID === row.taskId);
     }
 
     /** 接取第 index 列任務：指派給出戰主將。 */
