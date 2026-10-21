@@ -80,7 +80,8 @@ export function createGameSessionLifespanWiringSuite(): TestSuite {
         const byGeneral = session.queryJournal({ generalUid: 'G010' });
         assert.equals(1, byGeneral.length);
         assert.equals('JR_0001', byGeneral[0].entryId);
-        assert.equals(2, session.queryJournal().length);
+        // 2 筆手寫 + 2 筆季結自動寫入（PROG-2-0976）
+        assert.equals(4, session.queryJournal().length);
 
         const dup = session.recordJournal({
             entryId: 'JR_0001',
@@ -92,7 +93,8 @@ export function createGameSessionLifespanWiringSuite(): TestSuite {
         });
         assert.isFalse(dup.ok);
         assert.equals('duplicate-entry-id', dup.reason!);
-        assert.equals(2, session.queryJournal().length);
+        // 2 筆手寫 + 2 筆季結自動寫入（PROG-2-0976）
+        assert.equals(4, session.queryJournal().length);
     });
 
     suite.test('被拒絕的操作不改變會話狀態（指派、失守、日誌）', () => {
