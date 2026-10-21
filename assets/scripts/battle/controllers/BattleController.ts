@@ -60,6 +60,8 @@ import {
 import {
   applyDeploy,
   checkDeploy,
+  suggestLowCostDeploy,
+  UNIT_TROOP_COST,
   createSortieState,
   finishSortie,
   getTacticTpCost,
@@ -92,6 +94,8 @@ export interface DeployOutcome {
   reason?: DeployFailReason;
   /** 有出征帳本時列出全部不可部署原因（UI 可各自顯示） */
   reasons?: DeployFailReason[];
+  /** 改派建議（DEP-10）：可派出的低耗兵種，只供玩家確認，不自動改派 */
+  suggestion?: string | null;
 }
 
 export type { GeneralSkillCastOptions };
@@ -339,7 +343,8 @@ export class BattleController {
       const check = checkDeploy(this.sortie, { troopType: type, militia: options.militia });
       if (!check.ok) {
         const reasons = check.reasons.map((reason) => SORTIE_BLOCK_TO_FAIL_REASON[reason]);
-        return { ok: false, unit: null, reason: reasons[0], reasons };
+        const suggestion = suggestLowCostDeploy(this.sortie, type, Object.keys(UNIT_TROOP_COST));
+        return { ok: false, unit: null, reason: reasons[0], reasons, suggestion };
       }
     }
 
