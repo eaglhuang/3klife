@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 69,
-    "total": 105
+    "open": 71,
+    "total": 107
   },
   "tasks": [
     {
@@ -3952,6 +3952,61 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0165/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0166",
+      "title": "實機驗收：戰績排行榜畫面（PROG-2-0959、PROG-2-0960）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "戰績分頁入口按鈕、三指標切換、文字換行與空列顯示需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-0959",
+        "PROG-2-0960"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0166.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0166/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0167",
+      "title": "實機驗收：借將選擇畫面（PROG-2-0731）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "教官區借將按鈕、借將畫面分頁與借用提示需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-0731"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0167.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0167/**"
       ],
       "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     }
