@@ -73,6 +73,8 @@ export interface IBattleEntryParams {
   weather: Weather;
   /** 天氣排程（可選）；覆蓋 encounter 設定（PROG-2-0401） */
   weatherSchedule?: WeatherScheduleEntry[];
+  /** AI 難度（可選，PROG-2-0921）；有值時優先於遭遇資料 */
+  aiDifficulty?: string;
   /** 戰場戰法 */
   battleTactic: BattleTactic;
   /** 背景 ID（覆蓋 encounter 設定；為空時由 encounter 決定） */
