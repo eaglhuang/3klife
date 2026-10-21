@@ -7,6 +7,7 @@ import { buildOrderLoyalty, buildRosterSortieInput, createGeneral, loadEncounter
 import { buildSceneGambitSummary } from './BattleSceneGambitSummary';
 import { BATTLE_TURN_FLOW_TIMING } from './BattlePresentationTiming';
 import type { IBattleEntryParams } from '../../shared/BattleEntryParams';
+import { scenePresetIdOf } from '../../core/systems/SortieDeploy';
 import type { TerrainGrid } from '../models/BattleState';
 import type { GeneralUnit } from '../../core/models/GeneralUnit';
 
@@ -84,7 +85,7 @@ export class BattleSceneFlow {
     if (weatherSchedule) ctrl.setWeatherSchedule(weatherSchedule);
     // 名冊武將出戰：部署改扣出征軍勢與糧草（PROG-2-0070）
     const sortieInput = buildRosterSortieInput(pg);
-    if (sortieInput) ctrl.configureSortie(sortieInput);
+    if (sortieInput) ctrl.configureSortie({ ...sortieInput, scenePresetId: scenePresetIdOf(encounter?.battleKind) });
     ctrl.configureOrderLoyalty(buildOrderLoyalty(pg));
 
     const deployRuntime = this.ctx.getDeployRuntime();
