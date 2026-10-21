@@ -1,6 +1,5 @@
 
 // @spec-source → 見 docs/cross-reference-index.md
-import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { _decorator, Component, Label, Node, Vec3, geometry } from "cc";
 import {
   Faction,
@@ -10,7 +9,7 @@ import {
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { services } from "../../core/managers/ServiceLoader";
 import { bindHeldTallyInstances } from '../../core/config/TallyCardCatalog';
-import { readCardStarState } from "../../core/systems/TigerTallyStar";
+import { tallyBattleInfoOf } from "../../core/systems/TigerTallyStar";
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog } from '../../shared/BattleEntryParams';
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { BattleController } from "../controllers/BattleController";
@@ -33,13 +32,6 @@ import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureBattle
 
 const { ccclass, property } = _decorator;
 
-
-/** 虎符來源武將（uid）→ 模板 id；名冊找不到時回傳 null，該部隊不參與史實合攻 */
-function sourceTemplateIdOf(sourceGeneralUid: string | undefined): string | null {
-  if (!sourceGeneralUid) return null;
-  const general = PlayerRosterService.getAll().find((g) => (g as { uid?: string }).uid === sourceGeneralUid || g.id === sourceGeneralUid);
-  return general ? (general.templateId ?? general.id) : null;
-}
 
 /**
  * BattleScene — 戰鬥場景的入口元件。
@@ -157,7 +149,7 @@ export class BattleScene extends Component {
       // 虎符星級與模板 id 從玩家卡組的卡片實例讀取（PROG-2-0573、PROG-2-0574）；查不到卡時 1★、無模板
       this.ctrl.tallyInfoOf = (tallyId) => {
         const card = services().session.tallyCards[tallyId];
-        return card ? { star: readCardStarState(card).star, templateId: card.templateId, sourceTemplateId: sourceTemplateIdOf(card.sourceGeneralUid) } : null;
+        return card ? tallyBattleInfoOf(card) : null;
       };
       // 史實合攻（PROG-2-1065）：部隊來源武將的史實關係表；載入失敗時不觸發史實合攻
       await services().loadHistoricalPairs();

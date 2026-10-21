@@ -8,7 +8,7 @@
  *
  * Unity 對照：像 Equipment 的 Auto-Upgrade，累積經驗到門檻就自動升一級，不需要玩家按按鈕。
  */
-import type { TigerTallyQuality } from '../models/TigerTallyCard';
+import type { TigerTallyCard, TigerTallyQuality } from '../models/TigerTallyCard';
 
 export const TALLY_STAR_EXP: Readonly<Record<number, number>> = { 2: 100, 3: 350 };
 
@@ -78,4 +78,20 @@ export function tallyBattleOutcome(result: string): TallyBattleOutcome | null {
     if (result === 'enemy-win') return 'lose';
     if (result === 'draw') return 'draw';
     return null;
+}
+
+/** 戰場讀取虎符時需要的資訊（星級、模板、來源武將模板） */
+export interface TallyBattleInfo {
+    star: number;
+    templateId: string;
+    /** 來源武將的模板 id，供史實合攻查關係；虎符即來源模板（TigerTally.produceDeathTally），不查名冊 */
+    sourceTemplateId: string;
+}
+
+/**
+ * 出陣時戰場讀取虎符的資訊。來源武將戰死後已不在名冊，因此來源模板直接取虎符的 templateId，
+ * 不能依賴 sourceGeneralUid 回頭查名冊（PM QA 2026-10-21）。
+ */
+export function tallyBattleInfoOf(card: TigerTallyCard): TallyBattleInfo {
+    return { star: readCardStarState(card).star, templateId: card.templateId, sourceTemplateId: card.templateId };
 }
