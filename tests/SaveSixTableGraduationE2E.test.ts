@@ -36,7 +36,7 @@ function person(id: string, gender: '男' | '女', age: number, extra: Record<st
     return {
         id, name: id, faction: 'shu', gender, age, hp: 1000, vitality: 100, maxVitality: 100, maxLifespan: 120,
         str: 80, int: 60, lea: 70, pol: 50, cha: 100, luk: 40, careerClass: 'Warrior',
-        genes: [{ id: 'gene_command', level: 3 }],
+        genes: [{ id: 'gene_command', level: 3 }], role: 'Commander',
         ...extra,
     } as unknown as GeneralConfig;
 }
@@ -105,7 +105,7 @@ export function createSaveSixTableGraduationE2ESuite(): TestSuite {
         return childId;
     }
 
-    suite.test('真實玩到畢業後存檔：六表映射不阻擋存檔，錯誤只落在已知的資料落差欄位', async () => {
+    suite.test('真實玩到畢業後存檔：六表映射零錯誤且不阻擋存檔', async () => {
         const adapter = new MemoryStorageAdapter();
         const saveService = new PlayerSaveService(adapter);
         const w = buildWorld(adapter, [person('hero', '男', 30), person('lady', '女', 28)], saveService);
@@ -116,12 +116,9 @@ export function createSaveSixTableGraduationE2ESuite(): TestSuite {
         const mapped = mapSnapshotToSixTables(snapshot);
         assert.equals(snapshot.roster.length, mapped.rows.generals.length, '每個名冊武將一列');
         assert.equals(mapped.errors.join('|'), saveService.lastSixTableErrors().join('|'), 'service 回報與直接映射一致');
-        // 已知落差（#652 暫定範圍）：母資料 generals-base.json 沒有 templateId / bloodlineId / status，
-        // 子嗣的 status 是 Mystery，不在六表 CHECK 的 Active/Training/Retired/Dead 內。
-        // 這裡只擋「出現已知欄位以外的新錯誤」；落差補齊後此測試仍會通過。
-        const KNOWN_GAP = /\.(template_id|bloodline_id|role|status):/;
-        const unexpected = mapped.errors.filter((message) => !KNOWN_GAP.test(message));
-        assert.equals(0, unexpected.length, unexpected.join('；'));
+        // #686、#695 起正常存檔不再回報錯誤：真實流程產生的存檔必須零錯
+        assert.equals(0, mapped.errors.length, mapped.errors.join('；'));
+        assert.equals(0, saveService.lastSixTableErrors().length);
         assert.equals(0, mapped.errors.filter((m) => m.startsWith('player_resources')).length, '資源列不該出錯');
     });
 
