@@ -1,5 +1,5 @@
 /**
- * EnemyTacticCandidates.test.ts — 敵方戰法候選來源（PROG-2-0909 第 1 段）
+ * EnemyTacticCandidates.test.ts — 敵方戰法候選來源（PROG-2-0912 第 1 段）
  */
 import { TestSuite, assert } from './TestRunner';
 import { buildEnemyTacticCandidates, tacticAiCategoryOf } from '../assets/scripts/battle/shared/EnemyTacticCandidates';
@@ -12,7 +12,7 @@ const LIBRARY = [
 ];
 
 export function createEnemyTacticCandidatesSuite(): TestSuite {
-    const suite = new TestSuite('EnemyTacticCandidates (敵方戰法候選 PROG-2-0909)');
+    const suite = new TestSuite('EnemyTacticCandidates (敵方戰法候選 PROG-2-0912)');
 
     suite.test('分類對照：support→buff-heal、formation→tile-scene、charge→single-damage，未知回 null', () => {
         assert.equals('buff-heal', tacticAiCategoryOf('support'));

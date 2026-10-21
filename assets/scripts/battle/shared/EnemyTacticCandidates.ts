@@ -1,4 +1,4 @@
-// @spec-source → 戰法系統-shards/g5.md Step 6 AI 規則層；TacticAiRules.ts（PROG-2-0909 第 1 段）
+// @spec-source → 戰法系統-shards/g5.md Step 6 AI 規則層；TacticAiRules.ts（PROG-2-0912 第 1 段）
 /**
  * EnemyTacticCandidates — 敵方戰法候選來源（純邏輯，不依賴 cc）
  *
