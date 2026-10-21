@@ -27,8 +27,8 @@ async function sessionWith(generals: GeneralConfig[]): Promise<GameSession> {
 export function createRebirthSuite(): TestSuite {
     const suite = new TestSuite('Rebirth (轉生 GCH-05)');
 
-    suite.test('轉生表與轉蛋系統 §F 一致：1~5 轉的上限與培育機會', () => {
-        const expected = [[1000, 1], [1100, 2], [1250, 3], [1400, 4], [1500, 5]];
+    suite.test('轉生表與奧義系統轉生解鎖規則一致：1~5 轉的上限與培育機會', () => {
+        const expected = [[1000, 1], [1100, 2], [1200, 3], [1350, 4], [1500, 5]];
         assert.equals(5, REBIRTH_TABLE.length);
         REBIRTH_TABLE.forEach((tier, index) => {
             assert.equals(expected[index][0], tier.attributeCap);

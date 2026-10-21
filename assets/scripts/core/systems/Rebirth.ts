@@ -7,8 +7,8 @@
  *   - 每轉對應屬性上限與培育機會次數（轉蛋系統.md §F 表）。
  *   - 已滿 5 轉還重複抽到時，回報「溢出」，由呼叫端轉成結義點數（GCH-06 另接）。
  *
- * 暫定：奧義系統.md §轉生解鎖規則 的上限數字（1200 / 1350）與轉蛋系統.md（1250 / 1400）不一致，
- * 這裡採轉蛋系統.md（轉生的正式來源），奧義表待規格統一後再對齊。
+ * 屬性上限採奧義系統.md §轉生解鎖規則（1000 / 1100 / 1200 / 1350 / 1500+）。
+ * 轉蛋系統.md §F 另列 1250 / 1400，兩份規格不一致，PM 裁定以奧義表為準（待辦檔記錄）。
  *
  * Unity 對照：類似 ScriptableObject 的升級表（RebirthTable），
  * 重複抽到時只改 rebirthCount 一個欄位，其餘數值由表查出來。
@@ -28,8 +28,8 @@ export interface RebirthTierDef {
 export const REBIRTH_TABLE: readonly RebirthTierDef[] = [
     { rebirth: 1, attributeCap: 1000, trainingChances: 1 },
     { rebirth: 2, attributeCap: 1100, trainingChances: 2 },
-    { rebirth: 3, attributeCap: 1250, trainingChances: 3 },
-    { rebirth: 4, attributeCap: 1400, trainingChances: 4 },
+    { rebirth: 3, attributeCap: 1200, trainingChances: 3 },
+    { rebirth: 4, attributeCap: 1350, trainingChances: 4 },
     { rebirth: 5, attributeCap: 1500, trainingChances: 5 },
 ];
 
