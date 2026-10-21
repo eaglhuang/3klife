@@ -1116,6 +1116,7 @@ export class GameSession {
         // 上一局的進度不能帶進新局（PROG-2-0660）
         this._soulFragments = emptySoulFragmentLedger();
         this._pendingLifespanEvents = [];
+        this._resetGovernanceState();
         this._bondPoints = 0;
         this._borrowLedger = { records: [] };
         this._onboarding = { ...FRESH_ONBOARDING };
@@ -1356,6 +1357,12 @@ export class GameSession {
     private _territories: KeepTerritory[] = [{ id: HOME_TERRITORY_ID, isHome: true }];
     private _journal: JournalState = createEmptyJournal();
 
+    private _resetGovernanceState(): void {
+        this._governance = [];
+        this._territories = [{ id: HOME_TERRITORY_ID, isHome: true }];
+        this._journal = createEmptyJournal();
+    }
+
     /** 內政任務格的武將指派（唯讀副本，GOV-04）。 */
     public get governanceAssignments(): GovernanceAssignment[] {
         return this._governance.map(a => ({ ...a }));
@@ -1363,6 +1370,7 @@ export class GameSession {
 
     /** 指派武將到內政任務格（GOV-04）；被拒絕時不改動狀態。 */
     public assignGovernor(task: string, generalUid: string, maxSlots: number = DEFAULT_MAX_TASK_SLOTS): GovernanceResult {
+        if (!this._roster.getAll().some((general) => general.id === generalUid)) return { ok: false, reason: 'invalid-general', assignments: this.governanceAssignments };
         const result = assignGovernanceGeneral(this._governance, task, generalUid, maxSlots);
         if (result.ok) this._governance = result.assignments;
         return result;
@@ -2021,6 +2029,8 @@ export class GameSession {
         this._roster.replaceAll(roster);
         this._clearLeadIfGone();
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
+        // 陣亡或退休的武將不再佔著內政任務格
+        this._governance = this._governance.filter((a) => roster.some((general) => general.id === a.generalUid && general.status !== 'dead'));
         this._recordSoulFragmentsFor(beforeRoster, agingEvents);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
@@ -2638,6 +2648,8 @@ export class GameSession {
         this._officerState = normalizeOfficerState(snapshot.officerState);
         this._sandtableMarkerTerritories = normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories);
         this._gachaMentorJournal = normalizeGachaMentorJournal(snapshot.gachaMentorJournal);
+        // 領地治理、日誌尚未寫入存檔：讀檔時回到初始，不沿用目前記憶體裡別局的狀態（PROG-2-0663）
+        this._resetGovernanceState();
         this._hallAssignLog = normalizeHallAssignLog(snapshot.hallAssignLog);
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
