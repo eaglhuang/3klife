@@ -274,5 +274,19 @@
   "ui.season.effect.training": "训练体力消耗 ×{0}",
   "ui.season.effect.food": "粮草补给 ×{0}",
   "ui.season.effect.travel": "赶路 +{0} 回合",
-  "ui.season.effect.conception": "受孕率 ×{0}"
+  "ui.season.effect.conception": "受孕率 ×{0}",
+  "ui.officer.page_title": "官职详情：{0}",
+  "ui.officer.perm.quest_cap": "任务难度上限：{0}",
+  "ui.officer.perm.quest_cols": "任务栏位数：{0}",
+  "ui.officer.perm.hotspots": "大厅热点数：{0}",
+  "ui.officer.perm.sandtable": "世界沙盘：{0}",
+  "ui.officer.perm.alliance_docs": "联盟文书：{0}",
+  "ui.officer.perm.summit": "反霸权会盟：{0}",
+  "ui.officer.perm.locked": "未解锁",
+  "ui.officer.perm.unlocked": "已解锁",
+  "ui.officer.cap.basic": "初级",
+  "ui.officer.cap.normal": "中级",
+  "ui.officer.cap.elite": "精英",
+  "ui.officer.cap.advanced": "高阶",
+  "ui.officer.cap.hell": "地狱"
 }

@@ -274,5 +274,19 @@
   "ui.season.effect.training": "訓練スタミナ消費 ×{0}",
   "ui.season.effect.food": "兵糧補給 ×{0}",
   "ui.season.effect.travel": "行軍 +{0}ターン",
-  "ui.season.effect.conception": "受胎率 ×{0}"
+  "ui.season.effect.conception": "受胎率 ×{0}",
+  "ui.officer.page_title": "官職詳細：{0}",
+  "ui.officer.perm.quest_cap": "任務難度上限：{0}",
+  "ui.officer.perm.quest_cols": "任務欄数：{0}",
+  "ui.officer.perm.hotspots": "大広間ホットスポット数：{0}",
+  "ui.officer.perm.sandtable": "天下沙盤：{0}",
+  "ui.officer.perm.alliance_docs": "同盟文書：{0}",
+  "ui.officer.perm.summit": "反覇権会盟：{0}",
+  "ui.officer.perm.locked": "未解放",
+  "ui.officer.perm.unlocked": "解放済み",
+  "ui.officer.cap.basic": "初級",
+  "ui.officer.cap.normal": "中級",
+  "ui.officer.cap.elite": "精鋭",
+  "ui.officer.cap.advanced": "上級",
+  "ui.officer.cap.hell": "地獄"
 }

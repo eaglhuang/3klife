@@ -52,7 +52,7 @@ import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
 import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
-import { officerPermissionLinesOf } from '../core/OfficerPermissionText';
+import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
 import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
 import { estimateSortiePower } from '../../core/systems/SortiePrediction';
@@ -427,9 +427,10 @@ export class LobbyScene extends Component {
             officerRank: display.rankName,
             officerExp: display.expLabel,
         });
+        const lookup = (key: string, ...args: string[]): string => services().i18n.t(key, ...args);
         this._officerPageHost?.binder?.setTexts({
-            officerPageTitle: `官職詳情：${display.rankName}`,
-            officerPermissionText: officerPermissionLinesOf(officerPermissionsOf(state)).join('\n'),
+            officerPageTitle: officerPageTitleText(lookup, display.rankName),
+            officerPermissionText: officerPermissionLinesOf(officerPermissionsOf(state), lookup).join('\n'),
         });
     }
 
