@@ -25,6 +25,8 @@ function verifyCeilings(ceilings: Record<string, number>): void {
 /** Execute the real presenter through its resource and scene ports. */
 function chromeFixture(failLoad = false) {
     const requests: string[] = [];
+    let resourceFailure = failLoad;
+    let badgeNodeAvailable = true;
     class Color { static WHITE = {}; }
     class Sprite { static Type = { SIMPLE: 0 }; static SizeMode = { CUSTOM: 0 }; spriteFrame: unknown = null; }
     const background = new Sprite();
@@ -40,7 +42,7 @@ function chromeFixture(failLoad = false) {
             if (name !== 'BackgroundFull') throw new Error(`unexpected required node: ${name}`);
             return backgroundNode;
         },
-        findNode: (name: string) => name === 'PortraitRarityBadge' ? badgeNode : name === 'PortraitImage' ? artworkNode : null,
+        findNode: (name: string) => name === 'PortraitRarityBadge' && badgeNodeAvailable ? badgeNode : name === 'PortraitImage' ? artworkNode : null,
         mainRoot: () => null,
         currentConfig: () => null,
         portraitVisible: () => portraitVisible,
@@ -60,7 +62,7 @@ function chromeFixture(failLoad = false) {
         if (id.endsWith('/ServiceLoader')) return { services: () => ({ resource: {
             loadSpriteFrame: async (resource: string) => {
                 requests.push(resource);
-                if (failLoad) throw new Error('fixture resource unavailable');
+                if (resourceFailure) throw new Error('fixture resource unavailable');
                 return { resource, width: 1, height: 1 };
             },
         } }) };
@@ -72,6 +74,8 @@ function chromeFixture(failLoad = false) {
     new Function('require', 'exports', 'module', compiled)(load, testModule.exports, testModule);
     const presenter = new testModule.exports.GeneralDetailChromePresenter(ports);
     return { presenter, requests, background, badge, artworkNode, ports,
+        setResourceFailure: (value: boolean) => { resourceFailure = value; },
+        setBadgeNodeAvailable: (value: boolean) => { badgeNodeAvailable = value; },
         setPortraitVisible: (value: boolean) => { portraitVisible = value; } };
 }
 
@@ -109,6 +113,46 @@ export function registerGeneralDetailChromePresenterTests(suite: TestSuite): voi
         assert.isTrue(fixture.requests[0].endsWith('badge_rarity_legendary_flat'), 'mythic keeps the existing resource mapping');
         await fixture.presenter.loadPortraitRarityBadge('common');
         assert.isTrue(fixture.requests[1].endsWith('badge_rarity_common_flat'), 'tier changes load the actual new badge');
+    });
+
+    suite.test('Chrome: failed background replacement preserves the valid frame and permits retry', async () => {
+        const fixture = chromeFixture();
+        await fixture.presenter.loadBackground('backgrounds/a');
+        const previousFrame = fixture.background.spriteFrame;
+        fixture.setResourceFailure(true);
+        await expectFailure(() => fixture.presenter.loadBackground('backgrounds/b'), '載入 BackgroundFull');
+        assert.isTrue(fixture.background.spriteFrame === previousFrame, 'failed replacement must preserve the valid frame');
+        await fixture.presenter.loadBackground('backgrounds/a');
+        assert.isTrue(fixture.requests.length === 2, 'failure must preserve the previous successful cache entry');
+        fixture.setResourceFailure(false);
+        await fixture.presenter.loadBackground('backgrounds/b');
+        assert.isTrue(fixture.requests.length === 3, 'failed resource must remain retryable');
+        assert.isTrue((fixture.background.spriteFrame as { resource: string }).resource === 'backgrounds/b', 'retry must assign the recovered frame');
+    });
+
+    suite.test('Chrome: failed rarity replacement preserves the valid badge and permits retry', async () => {
+        const fixture = chromeFixture();
+        await fixture.presenter.loadPortraitRarityBadge('rare');
+        const previousFrame = fixture.badge.spriteFrame;
+        fixture.setResourceFailure(true);
+        await fixture.presenter.loadPortraitRarityBadge('epic');
+        assert.isTrue(fixture.badge.spriteFrame === previousFrame, 'badge loading keeps its existing non-throwing failure behavior');
+        await fixture.presenter.loadPortraitRarityBadge('rare');
+        assert.isTrue(fixture.requests.length === 2, 'failed replacement must not overwrite the previous badge cache');
+        fixture.setResourceFailure(false);
+        await fixture.presenter.loadPortraitRarityBadge('epic');
+        assert.isTrue(fixture.requests.length === 3, 'failed badge resource must remain retryable');
+        assert.isTrue((fixture.badge.spriteFrame as { resource: string }).resource.endsWith('badge_rarity_epic_flat'), 'retry must assign the recovered badge');
+    });
+
+    suite.test('Chrome: missing rarity node fails before resource loading and can recover', async () => {
+        const fixture = chromeFixture();
+        fixture.setBadgeNodeAvailable(false);
+        await expectFailure(() => fixture.presenter.loadPortraitRarityBadge('common'), '缺少必要節點 PortraitRarityBadge');
+        assert.isTrue(fixture.requests.length === 0, 'missing nodes must fail before loading artwork');
+        fixture.setBadgeNodeAvailable(true);
+        await fixture.presenter.loadPortraitRarityBadge('common');
+        assert.isTrue(fixture.requests.length === 1 && fixture.badge.spriteFrame !== null, 'restored node must allow a real retry');
     });
 
     suite.test('Chrome: scene-owned visibility controls the original artwork node', () => {
