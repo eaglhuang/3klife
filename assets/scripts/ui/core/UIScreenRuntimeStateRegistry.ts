@@ -176,7 +176,7 @@ function resolveScreenStateKey(
     return defaultState;
 }
 
-function assertRouteMatchesScreen(screen: UIScreenSpec, route: UIScreenRuntimeStateRouteSpec): void {
+function assertRouteMatchesScreen(screen: UIScreenSpecWithContent, route: UIScreenRuntimeStateRouteSpec): void {
     if (screen.version !== route.screenVersion) {
         throw new Error(
             `[UIScreenRuntimeStateRegistry] ${route.screenId} version mismatch: ` +
