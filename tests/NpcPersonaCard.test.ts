@@ -31,6 +31,23 @@ export function createNpcPersonaCardSuite(): TestSuite {
         assert.equals(2, result.cards['zhang-fei'].Relationship_Anchors.length);
     });
 
+    suite.test('核心武將 provisional 卡齊全：關係錨點都指向表內武將，台詞不超過字數上限', () => {
+        const result = validateNpcPersonaCards(readJson('assets/resources/data/npc-persona-cards.json'));
+        assert.isTrue(result.ok);
+        if (!result.ok) return;
+        for (const id of ['liu-bei', 'guan-yu', 'zhang-fei', 'zhuge-liang', 'zhao-yun', 'cao-cao']) {
+            const card = result.cards[id];
+            assert.isTrue(card !== undefined, `缺少 ${id}`);
+            assert.equals('PROVISIONAL', card.Content_Status ?? '');
+            for (const anchor of card.Relationship_Anchors) {
+                assert.isTrue(result.cards[anchor.Target_General_ID] !== undefined, `${id} 錨點指向不存在的 ${anchor.Target_General_ID}`);
+            }
+            for (const line of card.Golden_Lines) {
+                assert.isTrue([...line].length <= NPC_LINE_MAX_CHARS, `${id} 台詞過長：${line}`);
+            }
+        }
+    });
+
     suite.test('缺少名稱、核心性格為空、General_ID 與 key 不一致都會被列出', () => {
         const result = validateNpcPersonaCards({
             Npc_Persona_Cards: { 'zhang-fei': validCard({ Display_Name: '', Core_Traits: [], General_ID: 'guan-yu' }) },
