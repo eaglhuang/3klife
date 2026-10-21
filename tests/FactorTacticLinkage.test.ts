@@ -102,7 +102,7 @@ export function createFactorBattleWiringSuite(): TestSuite {
     suite.test('水域合攻在攻擊命中後結算，不觸發反擊、不擲命中', () => {
         const source = read('assets/scripts/battle/runtime/BattleCombatResolver.ts');
         assert.isTrue(source.includes('this.resolveNavalCombinedFollowUp(attacker, defender, svc);'), 'resolveCombat 沒有呼叫水域合攻');
-        const body = source.slice(source.indexOf('private resolveNavalCombinedFollowUp'), source.indexOf('private findNavalCombinedHelper'));
+        const body = source.slice(source.indexOf('private resolveNavalCombinedFollowUp'), source.indexOf('private resolveKinComboFollowUp'));
         assert.isFalse(body.includes('tryTriggerCounterReaction'), '水域合攻不應觸發反擊');
         assert.isFalse(body.includes('rollHit('), '水域合攻不應擲命中');
         assert.isTrue(body.includes('attacker.isDead()'), '攻擊方陣亡時仍結算合攻');

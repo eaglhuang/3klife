@@ -21,3 +21,8 @@ export function comboAttackChanceWithKin(baseChance: number, adjacentRelations: 
     const mod = mods.length > 0 ? Math.max(...mods) : 1;
     return Math.min(1, Math.max(0, baseChance * mod));
 }
+
+/** 相鄰組合的合攻觸發率：沒有史實關係就是 0（PM 裁定：一般友軍不觸發合攻） */
+export function comboChanceOfPair(relations: readonly HistoricalRelation[]): number {
+    return relations.length === 0 ? 0 : comboAttackChanceWithKin(COMBO_ATTACK_BASE_CHANCE, relations);
+}

@@ -4,7 +4,7 @@
  * 鎖住：沒有相鄰關係時維持基礎值；相鄰義兄弟乘 1.3；多個相鄰關係不疊乘；結果夾在 0~1。
  */
 import { assert, TestSuite } from './TestRunner';
-import { COMBO_ATTACK_BASE_CHANCE, comboAttackChanceWithKin } from '../assets/scripts/core/systems/ComboAttackKin';
+import { COMBO_ATTACK_BASE_CHANCE, comboAttackChanceWithKin, comboChanceOfPair } from '../assets/scripts/core/systems/ComboAttackKin';
 import type { HistoricalRelation } from '../assets/scripts/core/systems/KinRelation';
 
 function relation(comboAttackRateMod?: number): HistoricalRelation {
@@ -46,6 +46,12 @@ export function createComboAttackKinSuite(): TestSuite {
         assert.isTrue(near(comboAttackChanceWithKin(0.5, [relation(), relation(0.8)]), 0.5));
         assert.isTrue(near(comboAttackChanceWithKin(0.9, [relation(1.3)]), 1));
         assert.isTrue(near(comboAttackChanceWithKin(-0.2, [relation(1.3)]), 0));
+    });
+
+    suite.test('沒有史實關係的組合觸發率為 0；有關係時為基礎 20%', () => {
+        assert.isTrue(near(comboChanceOfPair([]), 0));
+        assert.isTrue(near(comboChanceOfPair([relation()]), 0.2));
+        assert.isTrue(near(comboChanceOfPair([relation(1.3)]), 0.26));
     });
 
     return suite;
