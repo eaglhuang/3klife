@@ -57,5 +57,19 @@ export function createEraResetSuite(): TestSuite {
         assert.equals(1, (hits[0].payload as { eraIndex: number }).eraIndex);
     });
 
+    suite.test('時代更迭後官職保留：階位、經驗與解鎖歷史不變（OFC-09）', async () => {
+        const session = createSession();
+        session.setEventEmitter({ emit: () => undefined });
+        for (let i = 0; i < 4; i++) session.gainOfficerExp({ difficulty: 'HELL', boardType: 'MILITARY', success: true });
+        const before = session.officerState;
+        assert.equals(3, before.currentTier);
+        for (let i = 0; i < 20; i++) await session.advanceSeason();
+        const after = session.officerState;
+        assert.equals(before.currentTier, after.currentTier);
+        assert.equals(before.officerExp, after.officerExp);
+        assert.equals(JSON.stringify(before.unlockHistory), JSON.stringify(after.unlockHistory));
+        assert.equals('S1', session.officerUnlocks.sandtableStage ?? '');
+    });
+
     return suite;
 }
