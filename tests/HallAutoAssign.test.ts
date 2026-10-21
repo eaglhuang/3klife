@@ -47,6 +47,46 @@ export function createHallAutoAssignSuite(): TestSuite {
         assert.equals('no-candidate', (result as { reason: string }).reason);
     });
 
+    suite.test('同一任務已有未結算委任時拒絕，不重複委任', () => {
+        const open: HallAutoAssignRecord[] = [{ taskId: 't1', generalId: 'guan-yu', assignedAt: 'T1' }];
+        const result = autoAssignHallTask(ENABLED, CANDIDATES, 'T2', open);
+        assert.isFalse(result.ok);
+        assert.equals('task-already-assigned', (result as { reason: string }).reason);
+    });
+
+    suite.test('同一任務已結算後可再次委任', () => {
+        const settled: HallAutoAssignRecord[] = [
+            { taskId: 't1', generalId: 'guan-yu', assignedAt: 'T1', outcome: 'success', settledAt: 'T1b' },
+        ];
+        const result = autoAssignHallTask(ENABLED, CANDIDATES, 'T2', settled);
+        assert.isTrue(result.ok);
+    });
+
+    suite.test('選將排除已在其他未結算委任上的武將', () => {
+        const open: HallAutoAssignRecord[] = [{ taskId: 't9', generalId: 'zhang-fei', assignedAt: 'T1' }];
+        const result = autoAssignHallTask(ENABLED, CANDIDATES, 'T2', open);
+        assert.isTrue(result.ok);
+        if (!result.ok) return;
+        assert.equals('zhao-yun', result.record.generalId);
+    });
+
+    suite.test('候選全部忙碌時回傳沒有候選，不產生紀錄', () => {
+        const open: HallAutoAssignRecord[] = CANDIDATES.map((c, i) => ({ taskId: `o${i}`, generalId: c.generalId, assignedAt: 'T1' }));
+        const result = autoAssignHallTask(ENABLED, CANDIDATES, 'T2', open);
+        assert.isFalse(result.ok);
+        assert.equals('no-candidate', (result as { reason: string }).reason);
+    });
+
+    suite.test('已結算的委任不佔用武將', () => {
+        const settled: HallAutoAssignRecord[] = [
+            { taskId: 't9', generalId: 'zhang-fei', assignedAt: 'T1', outcome: 'failure', settledAt: 'T1b' },
+        ];
+        const result = autoAssignHallTask(ENABLED, CANDIDATES, 'T2', settled);
+        assert.isTrue(result.ok);
+        if (!result.ok) return;
+        assert.equals('zhang-fei', result.record.generalId);
+    });
+
     suite.test('委任不改動任務的情報度，情報與委任分開判斷', () => {
         const task = { ...ENABLED };
         autoAssignHallTask(task, CANDIDATES, '2026-10-14T20:00:00Z');

@@ -2033,7 +2033,7 @@ export class GameSession {
             generalId: general.id,
             power: estimateSortiePower(general),
         }));
-        const result = autoAssignHallTask(task, candidates, assignedAt);
+        const result = autoAssignHallTask(task, candidates, assignedAt, this._hallAssignLog);
         if (!result.ok) return result;
         this._hallAssignLog = appendAssignRecord(this._hallAssignLog, result.record);
         if (this._autoSave && this._save) {
