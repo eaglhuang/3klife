@@ -87,8 +87,8 @@
             "name": "BtnOpenOracle",
             "id": "btnOpenOracle",
             "widget": {
-              "top": 16,
-              "right": 150
+              "bottom": 12,
+              "right": 24
             },
             "width": 180,
             "height": 48,
@@ -1106,16 +1106,42 @@
           },
           {
             "type": "label",
-            "name": "SageRemarkLines",
-            "id": "sageRemarkLines",
+            "name": "SageRemarkLeft",
+            "id": "sageRemarkLeft",
             "widget": {
-              "bottom": 56,
-              "hCenter": true
+              "bottom": 120,
+              "left": 24
             },
-            "width": 420,
-            "height": 96,
+            "width": 220,
+            "height": 220,
             "text": "",
             "styleSlot": "bonding.label.log"
+          },
+          {
+            "type": "label",
+            "name": "SageRemarkRight",
+            "id": "sageRemarkRight",
+            "widget": {
+              "bottom": 120,
+              "right": 24
+            },
+            "width": 220,
+            "height": 220,
+            "text": "",
+            "styleSlot": "bonding.label.log"
+          },
+          {
+            "type": "label",
+            "name": "OracleTokenLabel",
+            "id": "oracleTokenLabel",
+            "widget": {
+              "bottom": 18,
+              "right": 220
+            },
+            "width": 180,
+            "height": 40,
+            "text": "求籤令 ×0",
+            "styleSlot": "bonding.label.button"
           }
         ]
       }

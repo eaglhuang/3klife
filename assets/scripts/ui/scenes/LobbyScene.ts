@@ -929,6 +929,7 @@ export class LobbyScene extends Component {
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
             omenSeed: () => services().session.omenSeed(),
+            oracleTokens: () => services().session.oracleCount,
             recordBreeding: (record) => services().session.recordBreedingBirth(record),
             sageRemarks: (fatherId, motherId) => {
                 const pool = services().breeding.previewFactorPool(fatherId, motherId);
