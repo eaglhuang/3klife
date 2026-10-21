@@ -184,6 +184,7 @@
   "UI_ULTIMATE_CANCEL": "[ZH-CN] 取消",
   "toast.sync_complete": "同步完成",
   "toast.offline_reminder": "您目前處於離線模式，請儘速連網以同步資料。",
+  "toast.save_recovered_from_backup": "存档损毁，已从上一份备份还原",
   "ui.style_check.title": "水墨鋼鐵 v2.2 風格驗證",
   "ui.style_check.primary": "赤火主按鈕",
   "ui.style_check.secondary": "流金次按鈕",
