@@ -4,7 +4,7 @@
  */
 import { TestSuite, assert } from './TestRunner';
 import { applyDeploy, checkDeploy, createSortieState } from '../assets/scripts/core/systems/SortieDeploy';
-import { delegateDecideDeploy, delegateQualityOf, DELEGATE_RESERVE_POLICY } from '../assets/scripts/core/systems/DelegateAi';
+import { delegateDecideDeploy, delegatePickDeploy, delegateQualityOf, DELEGATE_RESERVE_POLICY } from '../assets/scripts/core/systems/DelegateAi';
 
 const NO_BOSS = { bossTargetVisible: false };
 const BOSS = { bossTargetVisible: true };
@@ -78,6 +78,23 @@ export function createDelegateAiSuite(): TestSuite {
         const before = JSON.stringify(state);
         delegateDecideDeploy(state, { troopType: 'infantry' }, 'EXPERT', NO_BOSS);
         assert.equals(before, JSON.stringify(state));
+    });
+
+    suite.test('delegatePickDeploy：依候選順序挑第一個被批准的兵種，前面被擋就跳過', () => {
+        const state = createSortieState({ commandCapacity: 20000, cityTroops: 20000, stageSortieCap: 20000, food: 1000 });
+        const pick = delegatePickDeploy(state, ['cavalry', 'infantry'], 'HIGH', NO_BOSS);
+        assert.equals('infantry', pick.troopType, '騎兵非主將戰被擋，改派步兵');
+        assert.equals('ok', pick.reason);
+    });
+
+    suite.test('delegatePickDeploy：全部被擋回 null 並帶第一個擋下原因；空候選回 deploy-check-failed', () => {
+        const state = createSortieState({ commandCapacity: 20000, cityTroops: 20000, stageSortieCap: 20000, food: 1000 });
+        const blocked = delegatePickDeploy(state, ['cavalry'], 'HIGH', NO_BOSS);
+        assert.equals(null, blocked.troopType);
+        assert.equals('hold-for-boss', blocked.reason);
+        const empty = delegatePickDeploy(state, [], 'LOW', NO_BOSS);
+        assert.equals(null, empty.troopType);
+        assert.equals('deploy-check-failed', empty.reason);
     });
 
     return suite;
