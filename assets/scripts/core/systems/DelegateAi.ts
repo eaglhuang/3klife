@@ -110,3 +110,26 @@ export function delegatePickDeploy(
     }
     return { troopType: null, reason: firstReason ?? 'deploy-check-failed' };
 }
+
+/**
+ * 候選兵種依糧耗低→兵力耗低排序（與 DEP-10 改派建議同一規則）；不合法的排後面，同值保留原順序。
+ * 只排序，不做保留策略判斷（那是 delegateDecideDeploy 的事）。
+ */
+export function sortDelegateCandidates(state: SortieState, candidates: readonly string[]): string[] {
+    const ranked = candidates.map((troopType, index) => {
+        const check = checkDeploy(state, { troopType });
+        return {
+            troopType,
+            index,
+            ok: check.ok,
+            foodCost: check.cost.foodCost,
+            troopCost: check.cost.troopCost,
+        };
+    });
+    ranked.sort((a, b) => {
+        if (a.ok !== b.ok) return a.ok ? -1 : 1;
+        if (!a.ok && !b.ok) return a.index - b.index;
+        return a.foodCost - b.foodCost || a.troopCost - b.troopCost || a.index - b.index;
+    });
+    return ranked.map(r => r.troopType);
+}
