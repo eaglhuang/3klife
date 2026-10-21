@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 65,
-    "total": 101
+    "open": 69,
+    "total": 105
   },
   "tasks": [
     {
@@ -3841,6 +3841,117 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0161/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0162",
+      "title": "實機驗收：抽卡原子性（PROG-2-1003、PROG-2-1004）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "十連抽後立即強關再開，錢包、名冊與教官卡數一致需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-1003",
+        "PROG-2-1004"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0162.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0162/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0163",
+      "title": "實機驗收：存檔從備份還原時大廳 toast（PROG-2-1000）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "存檔損毀改從備份還原時大廳 toast 的出現、可讀性與四語系溢出需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-1000"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0163.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0163/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0164",
+      "title": "實機驗收：畢業紀錄畫面（PROG-2-0726、PROG-2-0746）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "畢業紀錄 5 列版面與分頁越界需實機驗收；開啟入口待確認。",
+      "related": [],
+      "depends": [
+        "PROG-2-0726",
+        "PROG-2-0746"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0164.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0164/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0165",
+      "title": "實機驗收：委任開關按鈕 btnDelegate（PROG-2-0913、PROG-2-0908）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "btnDelegate 位置、點擊回饋與委任開關對部署的影響需實機驗收；場景綁定需先確認。",
+      "related": [],
+      "depends": [
+        "PROG-2-0913",
+        "PROG-2-0908"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0165.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0165/**"
       ],
       "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     }
