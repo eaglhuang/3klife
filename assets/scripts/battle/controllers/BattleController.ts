@@ -17,7 +17,7 @@ import { BattleState, TerrainGrid } from "../models/BattleState";
 import type { BattleResult } from "../BattleTypes";
 import { detectWeatherTransition, validateWeatherSchedule, weatherForTurn, type WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import { EnemyAI } from "./EnemyAI";
-import { resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
+import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
 import { findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
@@ -749,6 +749,8 @@ export class BattleController {
     options: GeneralSkillCastOptions = {},
   ): boolean {
     if (!this.canUsePlayerSkills()) return false;
+    // 殼戰法效果未實作：不施放，SP／TP 都不動（PROG-2-0933）
+    if (!isBattleSkillImplemented(skillId)) return false;
 
     if (sourceType === SkillSourceType.SeedTactic) {
       return this.triggerPlayerSeedTactic({

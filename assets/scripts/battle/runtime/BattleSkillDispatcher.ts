@@ -8,7 +8,7 @@ import {
 import { TroopUnit } from '../../core/models/TroopUnit';
 import { BattleState } from '../models/BattleState';
 import { BattleCombatResolver } from './BattleCombatResolver';
-import { resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
+import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { WEATHER_RESTRICTION_TOAST, checkTacticWeather } from '../../core/systems/WeatherTacticRestriction';
 import { evaluateCasterTacticConditions, type TacticCondition, type TacticConditionResult } from '../../core/systems/TacticCondition';
 import { canPerformAction, spendUltimateVitality, vitalityBandOf, type BattleActionKind } from '../../core/systems/VitalityBattleGate';
@@ -142,6 +142,17 @@ export class BattleSkillDispatcher {
   }
 
   public executeBattleSkillRequest(request: BattleSkillRequest): SkillExecutionResult {
+    // 殼戰法（TRP-15 殼 profile，效果未實作）：不進執行器、不扣任何資源
+    if (!isBattleSkillImplemented(request.battleSkillId)) {
+      return {
+        requestId: `${request.ownerUid}:${request.battleSkillId}`,
+        battleSkillId: request.battleSkillId,
+        applied: false,
+        blockedReason: 'not-implemented',
+        deltas: [],
+        battleLogLines: [],
+      };
+    }
     // 天氣強約束（PROG-2-0406）：火計在雨／霧／雷暴禁用，不扣任何資源、不進入執行器
     const weatherCheck = checkTacticWeather(resolveBattleSkillProfile(request.battleSkillId)?.tags ?? [], this.context.state.weather);
     if (!weatherCheck.allowed) {
