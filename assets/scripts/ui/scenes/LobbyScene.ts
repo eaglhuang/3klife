@@ -10,6 +10,7 @@ import { normalizeWeather } from '../../shared/CommonEnums';
 import { BattleTactic } from '../../core/config/Constants';
 import { GeneralListComposite } from '../components/GeneralListComposite';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
+import { canOpenSoulInject, soulInjectCandidatesFor, type SoulInjectCandidate } from '../../core/systems/SoulInjectCandidates';
 import { EliteTroopCodexComposite, type EliteTroopCodexOpenPayload } from '../components/EliteTroopCodexComposite';
 import { LobbyMissionDetailDialogComposite, type LobbyMissionActionKey, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
 import { LobbyLeaderboardComposite, type LobbyLeaderboardOpenPayload } from '../components/LobbyLeaderboardComposite';
@@ -269,6 +270,10 @@ export class LobbyScene extends Component {
     private _seasonReportPanel: SeasonReportComposite | null = null;
     private _sandtableTerritoryPanel: SandtableTerritoryComposite | null = null;
     private _characterDs3ActiveTab: GeneralDetailRuntimeTab = 'Overview';
+    /** 目前人物頁顯示的武將（寄宿戰魂用，PROG-2-1058） */
+    private _characterDs3General: GeneralConfig | null = null;
+    /** 寄宿戰魂兩段確認：第一次點按後記下待確認的亡者 uid */
+    private _soulInjectArmedDeadUid: string | null = null;
     private _isCharacterDs3TabSwitching = false;
     private _gachaPoolIndex = 0;
     private _characterDs3TabBindRetryCount = 0;
@@ -2529,6 +2534,64 @@ export class LobbyScene extends Component {
         return null;
     }
 
+    /** 寄宿戰魂按鈕：綁定點按，並依可否寄宿設定灰階（PROG-2-1058） */
+    private _bindCharacterDs3SoulInject(): void {
+        const button = this._characterDs3Host?.binder?.getButton('btnSoulInject');
+        if (!button) {
+            UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 soul inject button missing', { buttonNode: 'btnSoulInject' });
+            return;
+        }
+        button.node.off(Button.EventType.CLICK, this._onCharacterDs3SoulInjectClick, this);
+        button.node.on(Button.EventType.CLICK, this._onCharacterDs3SoulInjectClick, this);
+        this._refreshCharacterDs3SoulInject();
+    }
+
+    private _refreshCharacterDs3SoulInject(): void {
+        const button = this._characterDs3Host?.binder?.getButton('btnSoulInject');
+        if (!button) return;
+        button.interactable = canOpenSoulInject(this._soulInjectCandidates());
+    }
+
+    private _soulInjectCandidates(): SoulInjectCandidate[] {
+        const general = this._characterDs3General;
+        if (!general) return [];
+        const withTp = general as GeneralConfig & { totalTp?: number };
+        return soulInjectCandidatesFor(services().session.soulFragmentLedger(), {
+            templateId: general.templateId ?? general.id,
+            bloodlineId: general.bloodlineId ?? '',
+            tp: withTp.totalTp ?? 0,
+        });
+    }
+
+    private readonly _onCharacterDs3SoulInjectClick = (): void => {
+        void this._runCharacterDs3SoulInject();
+    };
+
+    /** 第一次點按列出可寄宿的候選；第二次點按確認寄宿第一筆（候選選單另卡） */
+    private async _runCharacterDs3SoulInject(): Promise<void> {
+        const general = this._characterDs3General;
+        const enabled = this._soulInjectCandidates().filter((candidate) => candidate.enabled);
+        if (!general || enabled.length === 0) {
+            this._showToast('沒有可寄宿的戰魂');
+            return;
+        }
+        const first = enabled[0];
+        if (this._soulInjectArmedDeadUid !== first.deadUid) {
+            this._soulInjectArmedDeadUid = first.deadUid;
+            const list = enabled.map((candidate) => `${candidate.deadUid}（+${candidate.tp} TP）`).join('、');
+            this._showToast(`可寄宿：${list}，再點一次確認寄宿第一筆`);
+            return;
+        }
+        this._soulInjectArmedDeadUid = null;
+        const result = await services().session.injectSoulFragment(general.id, first.deadUid);
+        this._showToast(result.ok ? `寄宿成功，+${result.amount} TP` : `寄宿失敗：${result.reason}`);
+        this._refreshCharacterDs3SoulInject();
+    }
+
+    private _showToast(message: string): void {
+        services().event.emit('SHOW_TOAST', { message, duration: 2 });
+    }
+
     private _syncCharacterDs3PreviewTabVisualState(): void {
         const binder = this._characterDs3Host?.binder;
         if (!binder) {
@@ -3139,6 +3202,8 @@ export class LobbyScene extends Component {
         if (!this._characterDs3Host) {
             throw new Error('[LobbyScene] CharacterDs3Host 尚未初始化，無法開啟 DS3 人物頁');
         }
+        this._characterDs3General = config;
+        this._soulInjectArmedDeadUid = null;
 
         if (services().ui.isOpen(UIID.GeneralList)) {
             await services().ui.closeCurrentUI();
@@ -3177,6 +3242,9 @@ export class LobbyScene extends Component {
             screenId: 'character-ds3-main',
             diagHookCount: hookCount,
         });
+
+        // 寄宿戰魂按鈕在 Overview 分頁（PROG-2-1058），切回後再綁定。
+        this._bindCharacterDs3SoulInject();
 
         // 每次由正式入口打開人物頁都回到 Overview，避免沿用前一次停留 tab。
         const resetSlotId = await this._switchCharacterDs3SlotFragment(
