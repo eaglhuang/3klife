@@ -54,3 +54,23 @@ export function quarterlyBattleReport(name: string, vitalityPct: number): Quarte
         bondRecommended,
     };
 }
+
+/** 季度戰報的一列：名冊武將一筆（REC-08） */
+export interface QuarterlyBattleReportRow extends QuarterlyBattleReport {
+    generalId: string;
+}
+
+/**
+ * 名冊武將的季度戰報（REC-08）。沒有精力資料的武將略過，不編造數值。
+ * 精力上限缺少時沿用精力值當上限（與 BattleRoster 的預設一致）。
+ */
+export function buildQuarterlyBattleReportRows(
+    roster: readonly { id: string; name: string; vitality?: number; maxVitality?: number }[],
+): QuarterlyBattleReportRow[] {
+    return roster.flatMap((general) => {
+        if (general.vitality === undefined) return [];
+        const max = general.maxVitality ?? general.vitality;
+        const pct = vitalityPercentOf(general.vitality, max);
+        return [{ generalId: general.id, ...quarterlyBattleReport(general.name, pct) }];
+    });
+}
