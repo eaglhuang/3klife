@@ -105,6 +105,7 @@ import { MentorDuplicateOutcome, overflowToastText, resolveMentorDuplicate } fro
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
 import { borrowCandidateOf, type NpcFriendMentor } from '../systems/NpcFriendMentor';
 import { canBorrow, createBorrow, normalizeBorrowLedger, type BorrowBlockReason, type BorrowLedger, type BorrowRequest } from '../systems/FriendBorrow';
+import { emptySoulFragmentLedger, injectFromLedger, normalizeSoulFragmentLedger, recordDeathFragment, type SoulFragmentLedger } from '../systems/SoulFragmentLedger';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
@@ -380,6 +381,8 @@ export class GameSession {
     private _npcFriendMentors: NpcFriendMentor[] = [];
     /** 好友借用紀錄（MENT-14）；目前只存在記憶體，尚未寫入存檔 */
     private _borrowLedger: BorrowLedger = { records: [] };
+    /** 戰魂碎片帳本（以亡者 uid 為鍵）；超齡死亡時產生，寄宿後消耗（SAME-08，PROG-2-1056） */
+    private _soulFragments: SoulFragmentLedger = emptySoulFragmentLedger();
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
     private _clearedStageIds: string[] = [];
     /** 收藏武將 id（HALL-07 收藏權重，PROG-2-0453） */
@@ -893,6 +896,45 @@ export class GameSession {
      * 陣亡事件的虎符結算（TRP-08 / PROG-2-0236）：只處理這次才變成陣亡的武將，
      * 手上的虎符退回君主，符合條件者產出一張陣亡虎符（君主持有）。只改記憶體狀態，由呼叫端的存檔一併寫入。
      */
+    /** 超齡死亡（ageGeneralsOneSeason 的 died 事件）產生戰魂碎片；亡者在季前名冊內才找得到 */
+    private _recordSoulFragmentsFor(before: readonly GeneralConfig[], events: readonly AgingEvent[]): void {
+        for (const event of events) {
+            if (event.type !== 'died') continue;
+            const dead = before.find((g) => g.id === event.generalId);
+            if (!dead) continue;
+            const templateId = dead.templateId ?? dead.id;
+            const totalTp = (dead as GeneralConfig & { totalTp?: number }).totalTp;
+            this._soulFragments = recordDeathFragment(this._soulFragments, dead.id, { templateId, bloodlineId: dead.bloodlineId ?? '', totalTp }).ledger;
+        }
+    }
+
+    /**
+     * 把亡者的戰魂碎片寄宿到目標武將（同 Bloodline_ID、不同版本）。成功時目標的 totalTp 增加並消耗碎片，自動存檔。
+     * 目標不在名冊、或碎片不存在時回傳原因；不合規時不改任何狀態。
+     */
+    public async injectSoulFragment(targetId: string, deadUid: string):
+        Promise<{ ok: true; amount: number } | { ok: false; reason: 'TARGET_NOT_FOUND' | 'NO_FRAGMENT' | 'SAME_TEMPLATE' | 'BLOODLINE_MISMATCH' }> {
+        const roster = this._roster.getAll();
+        const index = roster.findIndex((g) => g.id === targetId);
+        if (index < 0) return { ok: false, reason: 'TARGET_NOT_FOUND' };
+        const target = roster[index];
+        const current = (target as GeneralConfig & { totalTp?: number }).totalTp ?? 0;
+        const result = injectFromLedger(this._soulFragments, deadUid, {
+            templateId: target.templateId ?? target.id,
+            bloodlineId: target.bloodlineId ?? '',
+            tp: current,
+        });
+        if (!result.ok) return { ok: false, reason: (result as { ok: false; reason: 'NO_FRAGMENT' | 'SAME_TEMPLATE' | 'BLOODLINE_MISMATCH' }).reason };
+        this._soulFragments = result.ledger;
+        const next = [...roster];
+        next[index] = { ...target, totalTp: result.target.tp } as GeneralConfig;
+        this._roster.replaceAll(next);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, amount: result.amount };
+    }
+
     private _settleDeaths(before: readonly GeneralConfig[], after: readonly GeneralConfig[], season: number): void {
         // 死亡產卡的兵種：武將資料沒有 troopType 時，由適性推出主兵種（PROG-2-0582）
         const withTroop = (general: GeneralConfig) => ({ troopType: mainTroopTypeOf(general.troopAptitude), ...general });
@@ -1885,6 +1927,7 @@ export class GameSession {
         this._roster.replaceAll(roster);
         this._clearLeadIfGone();
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
+        this._recordSoulFragmentsFor(beforeRoster, agingEvents);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
         this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
@@ -2405,6 +2448,7 @@ export class GameSession {
             onboarding: { ...this._onboarding },
             bondPoints: this._bondPoints,
             friendBorrowLedger: { records: [...this._borrowLedger.records] },
+            soulFragments: { ...this._soulFragments },
             femaleSystem: this.femaleSystemState,
             ...(this._travel ? { travelCountdown: { ...this._travel } } : {}),
             sortiePresets: { ...this._sortiePresets },
@@ -2475,6 +2519,7 @@ export class GameSession {
         this._onboarding = normalizeOnboardingState(snapshot.onboarding);
         this._bondPoints = normalizeBondPoints(snapshot.bondPoints);
         this._borrowLedger = normalizeBorrowLedger(snapshot.friendBorrowLedger);
+        this._soulFragments = normalizeSoulFragmentLedger(snapshot.soulFragments);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };
