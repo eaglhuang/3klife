@@ -2,11 +2,11 @@
  * NurtureRecordWiring.test.ts — 畢業培育紀錄寫入存檔欄位（NUR-15 MVP，PROG-2-0721）headless 測試
  *
  * 鎖住：畢業時 graduationRecords 多一筆；欄位取自培育會話與畢業結果；替代來源的欄位列在 unavailable；
- * 這筆紀錄用 server 列驗證函式檢查；revelation_level 未揭露記 0（PROG-2-0744）。
+ * 這筆紀錄用 server 列驗證函式檢查；revelation_level 取子嗣六維揭露層級的最低值（未揭露為 0）。
  */
 import { assert, TestSuite } from './TestRunner';
 import { NurtureService } from '../assets/scripts/core/services/NurtureService';
-import { buildNurtureRecordRow } from '../assets/scripts/core/systems/NurtureRecordRow';
+import { buildNurtureRecordRow, revelationLevelOf } from '../assets/scripts/core/systems/NurtureRecordRow';
 import { NURTURE_TOTAL_ROUNDS, type NurtureSession } from '../assets/scripts/core/systems/NurtureSystem';
 import { chooseFate, unveilGeneral, type UnveilingGeneral } from '../assets/scripts/core/systems/Unveiling';
 import { InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
@@ -52,7 +52,17 @@ export function createNurtureRecordWiringSuite(): TestSuite {
         assert.equals(5, row.end_season);
         assert.equals(result.rating, row.rating);
         assert.equals(null, row.mentor_id);
-        assert.equals(0, row.revelation_level);
+        assert.equals(3, row.revelation_level);
+    });
+
+    suite.test('revelationLevelOf 取六維最低揭露層級，缺資料為 0', () => {
+        const layer = (level: string) => ({ revelationLevel: level });
+        const exact = { str: layer('EXACT'), int: layer('EXACT'), lea: layer('EXACT'), pol: layer('EXACT'), cha: layer('EXACT'), luk: layer('EXACT') };
+        const oneHidden = { ...exact, luk: layer('HIDDEN') };
+        assert.equals(3, revelationLevelOf({ dualLayerStats: exact as never }));
+        assert.equals(0, revelationLevelOf({ dualLayerStats: oneHidden as never }));
+        assert.equals(0, revelationLevelOf({ dualLayerStats: { str: layer('EXACT') } as never }));
+        assert.equals(0, revelationLevelOf({}));
     });
 
     suite.test('紀錄經 server 列驗證通過', () => {
