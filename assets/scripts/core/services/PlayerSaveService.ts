@@ -1,3 +1,4 @@
+import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import { normalizeTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { readCardStarState } from '../systems/TigerTallyStar';
 import { normalizeDomesticLog, type DomesticSeasonLog } from '../systems/DomesticTasks';
@@ -95,6 +96,8 @@ export interface PlayerSaveSnapshot {
     officerState?: OfficerState;
     /** 世界沙盤已放置標記數（OFC-06）；扁平選填欄位，舊檔沒有時讀回 0；版號不升 */
     sandtableMarkersPlaced?: number;
+    /** 標記所在領地 id（PROG-2-0965）；舊檔沒有時讀回空陣列；版號不升 */
+    sandtableMarkerTerritories?: string[];
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
@@ -260,6 +263,16 @@ export function normalizeSandtableMarkersPlaced(raw: unknown): number {
     return typeof raw === 'number' && Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 0;
 }
 
+/** 標記所在領地：只留清單內的 id、去重、保留順序；非陣列視為空（PROG-2-0965） */
+export function normalizeSandtableMarkerTerritories(raw: unknown): string[] {
+    if (!Array.isArray(raw)) return [];
+    const out: string[] = [];
+    for (const id of raw) {
+        if (typeof id === 'string' && isSandtableTerritory(id) && !out.includes(id)) out.push(id);
+    }
+    return out;
+}
+
 export function createPlayerSaveSnapshot(
     gameTime: GameTimeState,
     roster: readonly GeneralConfig[],
@@ -286,6 +299,7 @@ export function createPlayerSaveSnapshot(
     legacyCount = 0,
     officerState: Readonly<OfficerState> = initialOfficerState(),
     sandtableMarkersPlaced = 0,
+    sandtableMarkerTerritories: readonly string[] = [],
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -315,6 +329,7 @@ export function createPlayerSaveSnapshot(
         ...(normalizeLegacyCount(legacyCount) > 0 ? { legacyCount: normalizeLegacyCount(legacyCount) } : {}),
         ...(officerState.currentTier > 1 || officerState.officerExp > 0 ? { officerState: normalizeOfficerState(officerState) } : {}),
         ...(normalizeSandtableMarkersPlaced(sandtableMarkersPlaced) > 0 ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(sandtableMarkersPlaced) } : {}),
+        ...(normalizeSandtableMarkerTerritories(sandtableMarkerTerritories).length > 0 ? { sandtableMarkerTerritories: normalizeSandtableMarkerTerritories(sandtableMarkerTerritories) } : {}),
     };
 }
 
@@ -391,6 +406,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.legacyCount !== undefined ? { legacyCount: normalizeLegacyCount(snapshot.legacyCount) } : {}),
         ...(snapshot.officerState !== undefined ? { officerState: normalizeOfficerState(snapshot.officerState) } : {}),
         ...(snapshot.sandtableMarkersPlaced !== undefined ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced) } : {}),
+        ...(snapshot.sandtableMarkerTerritories !== undefined ? { sandtableMarkerTerritories: normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
