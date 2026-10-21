@@ -7,6 +7,7 @@
  */
 import { buildBattleRecordPanel, type BattleRecordLike } from './BattleRecordStats';
 import { VITALITY_HIGH_THRESHOLD_PCT } from './VitalityBattleGate';
+import { GENERAL_STAGE_START_AGE } from './GeneralStage';
 
 /** 退役面板的生涯戰績一行（UI_RETIRE_REVIEW） */
 export function retireReviewCareerLine(record: BattleRecordLike | null | undefined): string {
@@ -60,15 +61,33 @@ export interface QuarterlyBattleReportRow extends QuarterlyBattleReport {
     generalId: string;
 }
 
+/** 季度戰報的對象資格：只列現役可出戰武將（PM 2026-10-21 裁定）；排除教官卡與退休年齡、未成年 */
+export interface QuarterlyReportEligibility {
+    readonly age?: number;
+    readonly isMentorCard?: boolean;
+}
+
+/**
+ * 年齡未知時不排除（暫定）；成年（adult 起）到退休前才算現役。
+ * 退休教官（isMentorCard）一律排除，即使年齡仍在現役區間。
+ */
+export function isQuarterlyReportEligible(general: QuarterlyReportEligibility): boolean {
+    if (general.isMentorCard) return false;
+    if (general.age === undefined) return true;
+    return general.age >= GENERAL_STAGE_START_AGE.adult && general.age < GENERAL_STAGE_START_AGE.retired;
+}
+
 /**
  * 名冊武將的季度戰報（REC-08）。沒有精力資料的武將略過，不編造數值。
  * 精力上限缺少時沿用精力值當上限（與 BattleRoster 的預設一致）。
+ * 不符合戰報資格（退休、未成年）的武將也略過。
  */
 export function buildQuarterlyBattleReportRows(
-    roster: readonly { id: string; name: string; vitality?: number; maxVitality?: number }[],
+    roster: readonly ({ id: string; name: string; vitality?: number; maxVitality?: number } & QuarterlyReportEligibility)[],
 ): QuarterlyBattleReportRow[] {
     return roster.flatMap((general) => {
         if (general.vitality === undefined) return [];
+        if (!isQuarterlyReportEligible(general)) return [];
         const max = general.maxVitality ?? general.vitality;
         const pct = vitalityPercentOf(general.vitality, max);
         return [{ generalId: general.id, ...quarterlyBattleReport(general.name, pct) }];
