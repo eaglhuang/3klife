@@ -68,6 +68,8 @@ export enum UIID {
     LobbyMissionDetailDialog = "LobbyMissionDetailDialog",
     /** 戰績排行榜彈窗（PROG-2-0959） */
     LobbyLeaderboard = "LobbyLeaderboard",
+    /** 季結戰報彈窗（PROG-2-0963） */
+    SeasonReport = "SeasonReport",
 
     // ── 對話框層（LayerType.Dialog）── 佇列式、帶遮罩 ────────────────────────
     /** 對決挑戰確認對話框 */
@@ -192,6 +194,7 @@ export const UIConfig: Record<UIID, UIConfigEntry> = {
     [UIID.EliteTroopCodex]:        { layer: LayerType.PopUp, prefab: "ui/elite-troop-codex" },
     [UIID.LobbyMissionDetailDialog]: { layer: LayerType.PopUp, cache: true },
     [UIID.LobbyLeaderboard]: { layer: LayerType.PopUp, cache: true },
+    [UIID.SeasonReport]: { layer: LayerType.PopUp, cache: true },
 
     // ── 對話框層（Dialog 層） ─────────────────────────────────────────────────
     [UIID.DuelChallenge]: { layer: LayerType.Dialog, mask: true, prefab: "ui/duel-challenge" },

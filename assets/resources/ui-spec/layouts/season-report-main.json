@@ -1,0 +1,372 @@
+{
+  "id": "season-report-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "SeasonReportRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "transition": {
+      "enter": "scaleIn",
+      "exit": "scaleOut",
+      "duration": 0.22,
+      "easing": "backOut"
+    },
+    "children": [
+      {
+        "type": "button",
+        "name": "OverlayMask",
+        "id": "overlayMask",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "season-report.overlay.mask",
+        "onClick": "onClose"
+      },
+      {
+        "type": "panel",
+        "name": "DialogCard",
+        "widget": {
+          "hCenter": 0,
+          "vCenter": 0
+        },
+        "width": 800,
+        "height": 900,
+        "skinSlot": "season-report.card.bg",
+        "layout": {
+          "type": "vertical",
+          "spacing": 0,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0
+        },
+        "children": [
+          {
+            "type": "panel",
+            "name": "HeaderBar",
+            "width": "100%",
+            "height": 88,
+            "skinSlot": "season-report.header.bg",
+            "layout": {
+              "type": "horizontal",
+              "spacing": 16,
+              "paddingTop": 16,
+              "paddingBottom": 16,
+              "paddingLeft": 28,
+              "paddingRight": 24
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "TitleLabel",
+                "width": 280,
+                "height": 56,
+                "skinSlot": "season-report.text.title",
+                "text": "季度戰報"
+              },
+              {
+                "type": "label",
+                "name": "SeasonLabel",
+                "width": 360,
+                "height": 56,
+                "skinSlot": "season-report.text.primary",
+                "text": ""
+              },
+              {
+                "type": "button",
+                "name": "BtnClose",
+                "id": "btnClose",
+                "width": 56,
+                "height": 56,
+                "skinSlot": "season-report.close.btn",
+                "onClick": "onClose",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "CloseLabel",
+                    "width": "100%",
+                    "height": "100%",
+                    "skinSlot": "season-report.text.primary",
+                    "text": "X"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "scroll-view",
+            "name": "ScrollView",
+            "width": "100%",
+            "height": 620,
+            "skinSlot": "season-report.scroll.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "ScrollContent",
+                "width": "100%",
+                "height": 620,
+                "layout": {
+                  "type": "vertical",
+                  "spacing": 8,
+                  "paddingTop": 8,
+                  "paddingBottom": 8,
+                  "paddingLeft": 8,
+                  "paddingRight": 8
+                },
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "EmptyHintLabel",
+                    "width": "100%",
+                    "height": 56,
+                    "skinSlot": "season-report.text.secondary",
+                    "text": ""
+                  },
+                  {
+                    "type": "panel",
+                    "name": "Row0",
+                    "width": "100%",
+                    "height": 72,
+                    "skinSlot": "season-report.row.bg",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "RankLabel",
+                        "width": 80,
+                        "height": 56,
+                        "skinSlot": "season-report.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LineLabel",
+                        "width": 600,
+                        "height": 56,
+                        "skinSlot": "season-report.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "Row1",
+                    "width": "100%",
+                    "height": 72,
+                    "skinSlot": "season-report.row.bg",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "RankLabel",
+                        "width": 80,
+                        "height": 56,
+                        "skinSlot": "season-report.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LineLabel",
+                        "width": 600,
+                        "height": 56,
+                        "skinSlot": "season-report.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "Row2",
+                    "width": "100%",
+                    "height": 72,
+                    "skinSlot": "season-report.row.bg",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "RankLabel",
+                        "width": 80,
+                        "height": 56,
+                        "skinSlot": "season-report.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LineLabel",
+                        "width": 600,
+                        "height": 56,
+                        "skinSlot": "season-report.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "Row3",
+                    "width": "100%",
+                    "height": 72,
+                    "skinSlot": "season-report.row.bg",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "RankLabel",
+                        "width": 80,
+                        "height": 56,
+                        "skinSlot": "season-report.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LineLabel",
+                        "width": 600,
+                        "height": 56,
+                        "skinSlot": "season-report.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "Row4",
+                    "width": "100%",
+                    "height": 72,
+                    "skinSlot": "season-report.row.bg",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "RankLabel",
+                        "width": 80,
+                        "height": 56,
+                        "skinSlot": "season-report.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LineLabel",
+                        "width": 600,
+                        "height": 56,
+                        "skinSlot": "season-report.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "Row5",
+                    "width": "100%",
+                    "height": 72,
+                    "skinSlot": "season-report.row.bg",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "RankLabel",
+                        "width": 80,
+                        "height": 56,
+                        "skinSlot": "season-report.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LineLabel",
+                        "width": 600,
+                        "height": 56,
+                        "skinSlot": "season-report.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "FooterBar",
+            "width": "100%",
+            "height": 80,
+            "skinSlot": "season-report.footer.bg",
+            "layout": {
+              "type": "horizontal",
+              "spacing": 16,
+              "paddingTop": 16,
+              "paddingBottom": 16,
+              "paddingLeft": 28,
+              "paddingRight": 24
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "HintLabel",
+                "width": "100%",
+                "height": 48,
+                "skinSlot": "season-report.text.secondary",
+                "text": ""
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

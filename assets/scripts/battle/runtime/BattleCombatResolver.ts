@@ -1,4 +1,5 @@
 import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER } from '../../core/config/Constants';
+import { aiSpGainPerKill } from '../../core/systems/AiSpCharge';
 import { services } from '../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../core/models/TroopUnit';
 import { fieldTallySetMods, type TallySetMember } from '../../core/systems/TigerTallySetBonus';
@@ -489,7 +490,7 @@ export class BattleCombatResolver {
     if (killer) {
       const general = this.context.state.getGeneral(killer.faction);
       if (general) {
-        general.addSp(SP_PER_KILL);
+        general.addSp(killer.faction === Faction.Enemy ? aiSpGainPerKill(this.context.state.aiDifficulty) : SP_PER_KILL);
         svc.event.emit(EVENT_NAMES.GeneralSpChanged, {
           faction: killer.faction,
           sp: general.currentSp,

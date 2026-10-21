@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 71,
-    "total": 107
+    "open": 72,
+    "total": 108
   },
   "tasks": [
     {
@@ -4007,6 +4007,35 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0167/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0168",
+      "title": "實機驗收：畢業紀錄入口（PROG-2-0736、PROG-2-1050，連同 PROG-2-0726 畫面）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "報告區「查看紀錄」與借將畫面「畢業紀錄」兩個入口能否開啟畢業紀錄畫面，按鈕座標與窄版溢出需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-0736",
+        "PROG-2-1050",
+        "PROG-2-0726"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0168.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0168/**"
       ],
       "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     }

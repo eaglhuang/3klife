@@ -34,6 +34,17 @@ export function createQuarterlyBattleReportWiringSuite(): TestSuite {
         assert.equals('戰損報告：精力 100%', rows[0].reportLine);
     });
 
+    suite.test('戰報只列現役：退休教官、退休年齡與未成年一律排除（PROG-2-0966）', () => {
+        const rows = buildQuarterlyBattleReportRows([
+            { id: 'adult', name: '趙雲', vitality: 90, maxVitality: 100, age: 30 },
+            { id: 'mentor', name: '教官甲', vitality: 80, maxVitality: 100, age: 35, isMentorCard: true },
+            { id: 'retired', name: '老將乙', vitality: 60, maxVitality: 100, age: 70 },
+            { id: 'child', name: '幼子丙', vitality: 100, maxVitality: 100, age: 12 },
+            { id: 'unknown-age', name: '無齡丁', vitality: 70, maxVitality: 100 },
+        ]);
+        assert.equals('adult,unknown-age', rows.map(row => row.generalId).join(','));
+    });
+
     suite.test('季度推進的 SeasonAdvanced payload 帶出名冊武將的季度戰報', async () => {
         const general = { id: 'g-wire', name: '趙雲', vitality: 90, maxVitality: 100, gender: 'male' } as unknown as GeneralConfig;
         const session = new GameSession();

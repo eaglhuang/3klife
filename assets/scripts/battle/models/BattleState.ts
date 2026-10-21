@@ -1,4 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
+import type { AiDifficulty } from '../../core/systems/AiSpCharge';
 import { Faction, GAME_CONFIG, Weather, BattleTactic } from "../../core/config/Constants";
 import { TerrainType, TerrainGrid } from "../../shared/CommonEnums";
 export type { TerrainGrid };
@@ -105,6 +106,8 @@ export class BattleState {
   public sceneCampPosition: { lane: number; depth: number } | null = null;
   /** 本局是否已對外發出 BattleEnded（勝負判定可重複呼叫，事件只發一次） */
   public battleEndAnnounced = false;
+  /** AI 擊殺充能難度（PROG-2-0920）；只影響敵方擊殺的 SP，玩家擊殺仍是固定值 */
+  public aiDifficulty: AiDifficulty = 'normal';
 
   constructor() {
     for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
