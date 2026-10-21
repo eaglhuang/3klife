@@ -274,5 +274,19 @@
   "ui.season.effect.training": "Training stamina cost ×{0}",
   "ui.season.effect.food": "Supply income ×{0}",
   "ui.season.effect.travel": "Travel +{0} turns",
-  "ui.season.effect.conception": "Conception rate ×{0}"
+  "ui.season.effect.conception": "Conception rate ×{0}",
+  "ui.officer.page_title": "Office: {0}",
+  "ui.officer.perm.quest_cap": "Max quest difficulty: {0}",
+  "ui.officer.perm.quest_cols": "Quest columns: {0}",
+  "ui.officer.perm.hotspots": "Hall hotspots: {0}",
+  "ui.officer.perm.sandtable": "World sandtable: {0}",
+  "ui.officer.perm.alliance_docs": "Alliance docs: {0}",
+  "ui.officer.perm.summit": "Anti-hegemony summit: {0}",
+  "ui.officer.perm.locked": "Locked",
+  "ui.officer.perm.unlocked": "Unlocked",
+  "ui.officer.cap.basic": "Basic",
+  "ui.officer.cap.normal": "Normal",
+  "ui.officer.cap.elite": "Elite",
+  "ui.officer.cap.advanced": "Advanced",
+  "ui.officer.cap.hell": "Hell"
 }

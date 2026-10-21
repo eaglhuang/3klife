@@ -295,5 +295,19 @@
   "ui.fate.defy": "逆天而行（成長率 -20%，有機率大器晚成）",
   "ui.fate.job_change": "消耗轉職令 ×1，追加副職能：{0}",
   "ui.fate.retire_weapon": "獲得虎符：{0}",
-  "ui.fate.retire_scroll": "獲得竹簡：{0}"
+  "ui.fate.retire_scroll": "獲得竹簡：{0}",
+  "ui.officer.page_title": "官職詳情：{0}",
+  "ui.officer.perm.quest_cap": "任務難度上限：{0}",
+  "ui.officer.perm.quest_cols": "任務欄位數：{0}",
+  "ui.officer.perm.hotspots": "大廳熱點數：{0}",
+  "ui.officer.perm.sandtable": "世界沙盤：{0}",
+  "ui.officer.perm.alliance_docs": "聯盟文書：{0}",
+  "ui.officer.perm.summit": "反霸權會盟：{0}",
+  "ui.officer.perm.locked": "未解鎖",
+  "ui.officer.perm.unlocked": "已解鎖",
+  "ui.officer.cap.basic": "初級",
+  "ui.officer.cap.normal": "中級",
+  "ui.officer.cap.elite": "精英",
+  "ui.officer.cap.advanced": "高階",
+  "ui.officer.cap.hell": "地獄"
 }
