@@ -9,6 +9,7 @@ import type {
     GeneralStatsConfig,
 } from '../../core/models/GeneralUnit';
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
+import { mapGeneralReadModel, type GeneralReadModel } from '../../core/systems/GeneralReadModel';
 import { resolveRarityTier } from '../../core/utils/RarityResolver';
 import { resolveCommercialBand } from '../../core/utils/CommercialRarityBand';
 
@@ -70,6 +71,8 @@ export interface GeneralDetailOverviewContentState {
     crestTitle: string;
     crestHint: string;
     crestState: GeneralDetailCrestState;
+    /** 人物頁 §10 讀取模型（GDUI-13，PROG-2-1024）：缺漏欄位為 NO_DATA，不影響既有欄位 */
+    readModel: GeneralReadModel;
     crestFaceResource?: string;
     crestGlyphPrimary: string;
     crestGlyphSecondary: string;
@@ -250,6 +253,7 @@ export function buildGeneralDetailOverviewContentState(config: GeneralConfig): G
                 : storyCells,
         },
         trainingProfile: buildTrainingProfile(config),
+        readModel: mapGeneralReadModel(config as unknown as Readonly<Record<string, unknown>>),
         portraitResource: `sprites/generals/${config.id.replace(/-/g, '_')}_portrait`,
     };
 }
