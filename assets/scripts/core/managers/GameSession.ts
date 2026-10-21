@@ -40,7 +40,7 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import { advanceDaughtersOneYear, assignDaughterRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
 import { GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
 import { buildYearReport, normalizeYearAgingEvents, YearReport } from '../systems/YearReport';
-import { backfillTallyTroopTypes, mainTroopTypeOf, produceRetireTally } from '../systems/TigerTally';
+import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import type { CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { ageGeneralsOneSeason, AgingEvent, isGeneralDead, RandomSource } from '../systems/GeneralAging';
@@ -962,6 +962,11 @@ export class GameSession {
         }
     }
 
+    /** 目前戰魂碎片帳本的副本（寄宿面板列候選用，PROG-2-1058） */
+    public soulFragmentLedger(): SoulFragmentLedger {
+        return { ...this._soulFragments };
+    }
+
     /**
      * 把亡者的戰魂碎片寄宿到目標武將（同 Bloodline_ID、不同版本）。成功時目標的 totalTp 增加並消耗碎片，自動存檔。
      * 目標不在名冊、或碎片不存在時回傳原因；不合規時不改任何狀態。
@@ -1392,6 +1397,7 @@ export class GameSession {
 
     /** 指派武將到內政任務格（GOV-04）；被拒絕時不改動狀態。 */
     public assignGovernor(task: string, generalUid: string, maxSlots: number = DEFAULT_MAX_TASK_SLOTS): GovernanceResult {
+        if (!this._roster.getAll().some((general) => general.id === generalUid)) return { ok: false, reason: 'invalid-general', assignments: this.governanceAssignments };
         const result = assignGovernanceGeneral(this._governance, task, generalUid, maxSlots);
         if (result.ok) this._governance = result.assignments;
         return result;
@@ -2051,6 +2057,8 @@ export class GameSession {
         this._clearLeadIfGone();
         this._settleOpenHallAssigns();
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
+        // 陣亡或退休的武將不再佔著內政任務格
+        this._governance = this._governance.filter((a) => roster.some((general) => general.id === a.generalUid && general.status !== 'dead'));
         this._recordSoulFragmentsFor(beforeRoster, agingEvents);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
@@ -2153,21 +2161,7 @@ export class GameSession {
             // 文職與雙職能退役發 1 份竹簡（PM 暫定）；虎符只在死亡結算發，退役不發
             this._inventory = addItem(this._inventory, ITEM_BAMBOO_SLIP, 1);
         }
-        if (reason === 'WARRIOR') {
-            // 武職退役發一張虎符（PROG-2-0739，PM 2026-10-20 裁定照規格 §H）；退役者之後不會再走陣亡產卡，不會重複
-            const retired = roster.find((g) => g.id === generalId);
-            const card = retired && produceRetireTally(
-                { troopType: mainTroopTypeOf(retired.troopAptitude), ...retired },
-                computeDeathBattleScore((retired as { battleRecord?: Parameters<typeof computeDeathBattleScore>[0] }).battleRecord),
-                TALLY_DEATH_SCORE_TUNING.legacyQualityFallback,
-                this._clock.state.totalSeasonsElapsed,
-            );
-            if (card) {
-                this._tallyCards = { ...this._tallyCards, [card.uid]: card };
-                this._tallyHoldings = { holders: { ...this._tallyHoldings.holders, [card.uid]: null } };
-                this._syncInventoryRecords();
-            }
-        }
+        // 退役不產虎符（規格 Q61=C 明文禁止，PROG-2-1020）；虎符只在陣亡結算產生
         if (this._autoSave && this._save) {
             await this.save();
         }

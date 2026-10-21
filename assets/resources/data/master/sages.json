@@ -1,0 +1,62 @@
+{
+  "version": "1.0.0",
+  "description": "名士預言名士表（ORAC-01）。偏好面向與準確率取自名士預言系統.md；解鎖條件中「default」與其他名士的解鎖次數為暫定，待 PM 確認。",
+  "data": [
+    {
+      "sageId": "SAGE_ZHUGE",
+      "name": "諸葛亮",
+      "biasType": "INTELLECT_POLITICS",
+      "accuracyBase": 0.85,
+      "unlockCondition": {
+        "type": "default"
+      }
+    },
+    {
+      "sageId": "SAGE_HUATUO",
+      "name": "華佗",
+      "biasType": "LIFESPAN_PHYSIQUE",
+      "accuracyBase": 0.8,
+      "unlockCondition": {
+        "type": "default"
+      }
+    },
+    {
+      "sageId": "SAGE_SIMAHUI",
+      "name": "司馬徽",
+      "biasType": "BALANCED",
+      "accuracyBase": 0.75,
+      "unlockCondition": {
+        "type": "default"
+      }
+    },
+    {
+      "sageId": "SAGE_XUSHAO",
+      "name": "許劭",
+      "biasType": "PERSONALITY_TALENT",
+      "accuracyBase": 0.8,
+      "unlockCondition": {
+        "type": "default"
+      }
+    },
+    {
+      "sageId": "SAGE_PANGTONG",
+      "name": "龐統",
+      "biasType": "MILITARY_TACTIC",
+      "accuracyBase": 0.85,
+      "unlockCondition": {
+        "type": "divination-count",
+        "count": 50
+      }
+    },
+    {
+      "sageId": "SAGE_ZUOCI",
+      "name": "左慈",
+      "biasType": "LUCK_FATE",
+      "accuracyBase": 0.7,
+      "unlockCondition": {
+        "type": "divination-count",
+        "count": 100
+      }
+    }
+  ]
+}

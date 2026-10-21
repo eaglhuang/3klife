@@ -4934,6 +4934,25 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START"
+    },
+    "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.12,
+      "cornerRadius": 8,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 24,
+      "lineHeight": 28,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
     }
   },
   "bundles": [

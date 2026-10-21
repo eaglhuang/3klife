@@ -9,6 +9,7 @@ import {
   BattleTactic,
 } from "../../core/config/Constants";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
+import type { AiDifficulty } from "../../core/systems/AiSpCharge";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleUnitSpawner, type TroopDataTable } from '../runtime/BattleUnitSpawner';
 import { applySoloBreachAtTurnStart } from '../runtime/BattleSoloBreach';
@@ -28,6 +29,8 @@ import { executeBattleEnemyDeployPhase } from '../runtime/phases/BattleEnemyDepl
 import { executeBattleSpecialResolvePhase } from '../runtime/phases/BattleSpecialResolvePhase';
 import { executeBattleTileEffectPhase } from '../runtime/phases/BattleTileEffectPhase';
 import { desertVitalityDrain } from '../../core/systems/DesertVitality';
+import { combatRelationsBetween, type HistoricalPairTable } from '../../core/systems/HistoricalPairs';
+import type { HistoricalRelation } from '../../core/systems/KinRelation';
 import { BattleCombatResolver } from '../runtime/BattleCombatResolver';
 import { BattleGeneralDuelFlow } from '../runtime/BattleGeneralDuelFlow';
 import { BattleTileBuffLifecycleManager, DEFAULT_BATTLE_TILE_BUFF_CONFIG, type BattleTileBuffConfig } from '../runtime/BattleTileBuffLifecycleManager';
@@ -160,7 +163,9 @@ export class BattleController {
   });
   private tacticDefinitionMap = new Map<string, CanonicalTacticDefinition>();
   /** 虎符卡片實例的星級與模板 id 查詢（由場景注入玩家卡組；沒注入時一律 1★、無模板） */
-  public tallyInfoOf: (tallyId: string) => { star: number; templateId: string } | null = () => null;
+  public tallyInfoOf: (tallyId: string) => { star: number; templateId: string; sourceTemplateId?: string | null } | null = () => null;
+  /** 史實配對表（KIN-02）；合攻判定讀它，未設定時不觸發史實合攻（PROG-2-1065） */
+  public historicalPairs: HistoricalPairTable | null = null;
   /** 本場出陣過的虎符 id（PROG-2-0573：戰後依此結算戰鬥經驗） */
   private readonly _deployedTallyIds = new Set<string>();
   /** 出征軍勢 / 糧草帳本；null = 舊版 demo 戰鬥（不扣軍勢） */
@@ -172,6 +177,7 @@ export class BattleController {
   private readonly combatResolver = new BattleCombatResolver({
     state: this.state,
     turnManager: this.turnManager,
+    relationsBetween: (attackerId, helperId) => this.relationsBetweenUnits(attackerId, helperId),
     getPlayerGeneralUnitId: () => this.playerGeneralUnitId,
     getEnemyGeneralUnitId: () => this.enemyGeneralUnitId,
     setPlayerGeneralUnitId: (unitId) => {
@@ -246,8 +252,10 @@ export class BattleController {
     terrainGrid?: TerrainGrid,
     weather?: Weather,
     battleTactic?: BattleTactic,
+    aiDifficulty: AiDifficulty = 'normal',
   ): void {
     this.state.reset(playerGeneral, enemyGeneral, terrainGrid, weather, battleTactic);
+    this.state.aiDifficulty = aiDifficulty;
     this.duelFlow.resetForBattle();
     this.flowStateMachine.reset();
     this.flowStateMachine.startBattle();
@@ -298,6 +306,17 @@ export class BattleController {
    * 虎符部隊（TRP-13）：部隊記下虎符與主將，適性乘數每次結算時依當下格子的地形算。
    * 虎符目錄查不到或沒有適性資料時，乘數恆為 1。
    */
+  /** 合攻判定用：兩個部隊背後武將的史實關係（PROG-2-1065）；敵軍與無虎符部隊沒有來源武將，回傳空陣列 */
+  public relationsBetweenUnits(attackerId: string, helperId: string): HistoricalRelation[] {
+    return combatRelationsBetween(this.historicalPairs, this.sourceTemplateOfUnit(attackerId), this.sourceTemplateOfUnit(helperId));
+  }
+
+  /** 部隊的來源武將模板 id：由出陣虎符的 sourceTemplateId 取得 */
+  private sourceTemplateOfUnit(unitId: string): string | null {
+    const tallyId = this.state.units.get(unitId)?.tallyId;
+    return tallyId ? (this.tallyInfoOf(tallyId)?.sourceTemplateId ?? null) : null;
+  }
+
   private bindTallyAffinity(unit: TroopUnit, ref: TallyDeployRef): void {
     const profile = buildTallyCardCatalog().get(ref.templateId)?.affinity ?? null;
     const general = this.state.getGeneral(Faction.Player);

@@ -9,7 +9,7 @@ import {
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { services } from "../../core/managers/ServiceLoader";
 import { bindHeldTallyInstances } from '../../core/config/TallyCardCatalog';
-import { readCardStarState } from "../../core/systems/TigerTallyStar";
+import { tallyBattleInfoOf } from "../../core/systems/TigerTallyStar";
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog } from '../../shared/BattleEntryParams';
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { BattleController } from "../controllers/BattleController";
@@ -28,6 +28,7 @@ import { BattleTutorialHint } from './BattleTutorialHint';
 import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
 import { TurnFlowManager } from './TurnFlowManager';
 import { setupCameraForBoard, initSceneBackground, addBackgroundSwitchUI, resolveSceneBackgroundId } from './BattleSceneSetup';
+import { resolveAiDifficulty } from '../../core/systems/AiSpCharge';
 import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureBattleScenePanel, ensureBoardRenderer, ensureUnitRenderer } from './BattleUIInitializer';
 
 const { ccclass, property } = _decorator;
@@ -149,8 +150,11 @@ export class BattleScene extends Component {
       // 虎符星級與模板 id 從玩家卡組的卡片實例讀取（PROG-2-0573、PROG-2-0574）；查不到卡時 1★、無模板
       this.ctrl.tallyInfoOf = (tallyId) => {
         const card = services().session.tallyCards[tallyId];
-        return card ? { star: readCardStarState(card).star, templateId: card.templateId } : null;
+        return card ? tallyBattleInfoOf(card) : null;
       };
+      // 史實合攻（PROG-2-1065）：部隊來源武將的史實關係表；載入失敗時不觸發史實合攻
+      await services().loadHistoricalPairs();
+      this.ctrl.historicalPairs = services().historicalPairTable();
       await this.ctrl.loadData();
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] BattleController 資料載入完成");
 
@@ -206,7 +210,14 @@ export class BattleScene extends Component {
       await services().material.warmupCritical(this.node);
 
       // 5. 開始第一場戰鬥（含地形、天氣、戰法）
-      this.ctrl.initBattle(pg, eg, terrain, battleParams.weather, battleParams.battleTactic);
+      this.ctrl.initBattle(
+        pg,
+        eg,
+        terrain,
+        battleParams.weather,
+        battleParams.battleTactic,
+        resolveAiDifficulty(battleParams.aiDifficulty, encounter?.difficulty),
+      );
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;
       if (weatherSchedule) this.ctrl.setWeatherSchedule(weatherSchedule);

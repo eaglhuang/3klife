@@ -1,5 +1,7 @@
 import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER } from '../../core/config/Constants';
 import { aiSpGainPerKill } from '../../core/systems/AiSpCharge';
+import { comboChanceOfPair } from '../../core/systems/ComboAttackKin';
+import type { HistoricalRelation } from '../../core/systems/KinRelation';
 import { services } from '../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../core/models/TroopUnit';
 import { fieldTallySetMods, type TallySetMember } from '../../core/systems/TigerTallySetBonus';
@@ -35,6 +37,8 @@ export interface BattleCombatResolverContext {
   getEnemyGeneralUnitId(): string | null;
   setPlayerGeneralUnitId(unitId: string | null): void;
   setEnemyGeneralUnitId(unitId: string | null): void;
+  /** 兩個部隊背後武將的史實關係；沒提供時不觸發史實合攻（PROG-2-1065） */
+  relationsBetween?(attackerId: string, helperId: string): readonly HistoricalRelation[];
 }
 
 export class BattleCombatResolver {
@@ -266,6 +270,7 @@ export class BattleCombatResolver {
       this.tryTriggerCounterReaction(defender, attacker, svc);
     }
     this.resolveNavalCombinedFollowUp(attacker, defender, svc);
+    this.resolveKinComboFollowUp(attacker, defender, svc);
   }
 
   /**
@@ -279,8 +284,32 @@ export class BattleCombatResolver {
     const navalAptitude = hasNavalAptitude(this.getUnitAptitude(attacker).terrain, hasBattleEffect(attacker.factorEffects, 'naval-combined-attack'));
     if (!canNavalCombinedAttack(attackerCell?.terrain ?? TerrainType.Plain, navalAptitude)) return;
 
-    const helper = this.findNavalCombinedHelper(attacker, defender);
+    const helper = this.findCombinedHelper(attacker, defender, () => true);
     if (!helper) return;
+    this.applyCombinedFollowUpDamage(helper, defender, svc, 'naval-combined-attack');
+  }
+
+  /**
+   * 史實合攻（PM 裁定，PROG-2-1065）：與目標相鄰、且與攻擊方有史實關係的我方部隊，以基礎 20% 觸發（義兄弟 ×1.3），
+   * 追加一次 50% 傷害，不觸發反擊、不擲命中。沒有史實關係的相鄰友軍不觸發。
+   */
+  private resolveKinComboFollowUp(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
+    const relationsBetween = this.context.relationsBetween;
+    if (!relationsBetween || defender.isDead() || attacker.isDead()) return;
+    const helper = this.findCombinedHelper(attacker, defender, (unit) => relationsBetween(attacker.id, unit.id).length > 0);
+    if (!helper) return;
+    const chance = comboChanceOfPair(relationsBetween(attacker.id, helper.id));
+    if (this.hitRandom() >= chance) return;
+    this.applyCombinedFollowUpDamage(helper, defender, svc, 'kin-combo-attack');
+  }
+
+  /** 合攻追加傷害：助攻方對目標的傷害 × 50%，不擲命中、不反擊 */
+  private applyCombinedFollowUpDamage(
+    helper: TroopUnit,
+    defender: TroopUnit,
+    svc: ReturnType<typeof services>,
+    damageSource: 'naval-combined-attack' | 'kin-combo-attack',
+  ): void {
     const helperCell = this.context.state.getCell(helper.lane, helper.depth);
     const dCell = this.context.state.getCell(defender.lane, defender.depth);
     const baseDamage = svc.formula.calculateDamage({
@@ -295,17 +324,17 @@ export class BattleCombatResolver {
     });
     const damage = Math.max(1, Math.floor(baseDamage * NAVAL_COMBINED_DAMAGE_RATIO));
 
-    this.applyUnitDamage(defender, damage, attacker.faction, {
+    this.applyUnitDamage(defender, damage, helper.faction, {
       attackerId: helper.id,
       attackerLane: helper.lane,
       attackerDepth: helper.depth,
-      damageSource: 'naval-combined-attack',
+      damageSource,
       allowDamageLink: true,
     });
   }
 
-  /** 與目標四方向相鄰的我方非主將、存活部隊（固定掃描順序，取第一個） */
-  private findNavalCombinedHelper(attacker: TroopUnit, defender: TroopUnit): TroopUnit | null {
+  /** 與目標四方向相鄰的我方非主將、存活部隊，且通過 accept 條件（固定掃描順序，取第一個） */
+  private findCombinedHelper(attacker: TroopUnit, defender: TroopUnit, accept: (unit: TroopUnit) => boolean): TroopUnit | null {
     const offsets = [{ dl: 0, dd: 1 }, { dl: 0, dd: -1 }, { dl: 1, dd: 0 }, { dl: -1, dd: 0 }];
     for (const { dl, dd } of offsets) {
       const cell = this.context.state.getCell(defender.lane + dl, defender.depth + dd);
@@ -313,7 +342,8 @@ export class BattleCombatResolver {
       const unit = this.context.state.units.get(cell.occupantId);
       if (!unit || unit.id === attacker.id || unit.faction !== attacker.faction) continue;
       if (unit.isDead() || this.isGeneralUnit(unit.id)) continue;
-      if (isOrthogonallyAdjacent(unit.lane, unit.depth, defender.lane, defender.depth)) return unit;
+      if (!isOrthogonallyAdjacent(unit.lane, unit.depth, defender.lane, defender.depth)) continue;
+      if (accept(unit)) return unit;
     }
     return null;
   }

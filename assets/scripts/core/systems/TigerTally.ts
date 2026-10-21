@@ -72,18 +72,6 @@ export function produceDeathTally(
     };
 }
 
-/** 武職退役產卡（PROG-2-0739，PM 2026-10-20 裁定照規格發虎符）：品質算法與陣亡產卡相同，uid 另開前綴，與陣亡不衝突 */
-export function produceRetireTally(
-    general: TigerTallyGeneral,
-    retireBattleScore: number,
-    legacyQualityScore: number,
-    season: number,
-): TigerTallyCard | null {
-    const card = produceDeathTally(general, retireBattleScore, legacyQualityScore, season);
-    if (!card) return null;
-    return { ...card, uid: `tally-retire-${card.sourceGeneralUid}-${season}`, source: 'retire' };
-}
-
 export function transferSurrenderTally(
     card: TigerTallyCard,
     recruitedSeason: number,

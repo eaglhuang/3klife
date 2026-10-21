@@ -19,6 +19,7 @@ import type {
   CanonicalTacticDefinition,
   CanonicalUltimateDefinition,
 } from "../../shared/SkillRuntimeContract";
+import { isUltimateSlotUnlocked } from '../../core/systems/UltimateSlotUnlock';
 import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
 import { TallyCardData } from '../../shared/TallyCardContract';
 
@@ -355,6 +356,7 @@ export function resolveTallyDeckIds(selectedCardIds?: readonly string[]): string
  */
 export function buildUltimateSkills(general: GeneralUnit): UltimateSkillItem[] {
   const slotSkills = [...(general.ultimateSlots ?? [])]
+    .filter((slot) => isUltimateSlotUnlocked(slot, general.rebirthCount))
     .sort((left, right) => left.slot - right.slot)
     .map((slot) => {
       const ultimateDef = ultimateDefinitionMap.get(slot.ultimateId);
