@@ -14,6 +14,7 @@ import { EliteTroopCodexComposite, type EliteTroopCodexOpenPayload } from '../co
 import { LobbyMissionDetailDialogComposite, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
 import { LobbyLeaderboardComposite, type LobbyLeaderboardOpenPayload } from '../components/LobbyLeaderboardComposite';
 import { SeasonReportComposite, type SeasonReportOpenPayload } from '../components/SeasonReportComposite';
+import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS, type AddGeneralsResult } from '../../core/managers/GameSession';
@@ -265,6 +266,7 @@ export class LobbyScene extends Component {
     private _missionDetailDialogPanel: LobbyMissionDetailDialogComposite | null = null;
     private _leaderboardPanel: LobbyLeaderboardComposite | null = null;
     private _seasonReportPanel: SeasonReportComposite | null = null;
+    private _sandtableTerritoryPanel: SandtableTerritoryComposite | null = null;
     private _characterDs3ActiveTab: GeneralDetailRuntimeTab = 'Overview';
     private _isCharacterDs3TabSwitching = false;
     private _gachaPoolIndex = 0;
@@ -377,6 +379,7 @@ export class LobbyScene extends Component {
         await this._mountLobbyMissionDetailDialogPanel();
         await this._mountLobbyLeaderboardPanel();
         await this._mountSeasonReportPanel();
+        await this._mountSandtableTerritoryPanel();
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
         this._openPrisonerPopupIfPending();
@@ -1438,11 +1441,32 @@ export class LobbyScene extends Component {
 
     /** 天下沙盤入口：官職未達沙盤階段（S1 起於階位 3）時只提示，不開牆 */
     private _onClickOpenSandtable(): void {
-        if (!services().session.officerUnlocks.sandtableStage) {
+        const session = services().session;
+        if (!session.officerUnlocks.sandtableStage) {
             services().event.emit('SHOW_TOAST', { message: '官職尚未達沙盤階段，暫時無法進入天下沙盤', duration: 2.5 });
             return;
         }
-        this._openHallBoard('Expedition');
+        const payload: SandtableTerritoryOpenPayload = {
+            stage: session.officerUnlocks.sandtableStage,
+            markerTerritories: session.sandtableMarkerTerritories,
+            nameOf: (territoryId: string) => services().i18n.t(`territory.${territoryId}.name`),
+            onPlace: (territoryId: string) => this._placeSandtableMarker(territoryId),
+        };
+        void services().ui.open(UIID.SandtableTerritory, payload);
+    }
+
+    /** 在領地放置沙盤標記（PROG-2-0967）：成功後存檔並刷新季度 HUD；失敗給提示 */
+    private _placeSandtableMarker(territoryId: string): boolean {
+        const placed = services().session.placeSandtableMarker(territoryId);
+        if (!placed) {
+            services().event.emit('SHOW_TOAST', { message: '無法在此領地放置標記', duration: 2 });
+            return false;
+        }
+        this._refreshSeasonHud();
+        services().session.save().catch((error: unknown) => {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 沙盤標記存檔失敗', error);
+        });
+        return true;
     }
 
     private _closeHallBoard(): void {
@@ -2283,6 +2307,20 @@ export class LobbyScene extends Component {
         panelNode.active = false;
     }
 
+    private async _mountSandtableTerritoryPanel(): Promise<void> {
+        const panelNode = this.node.getChildByName('SandtableTerritoryComposite') ?? new Node('SandtableTerritoryComposite');
+        panelNode.layer = this.node.layer;
+        if (!panelNode.parent) {
+            panelNode.parent = this.node;
+        }
+
+        this._ensureWidget(panelNode);
+        panelNode.setSiblingIndex(this.node.children.length - 1);
+
+        this._sandtableTerritoryPanel = panelNode.getComponent(SandtableTerritoryComposite) ?? panelNode.addComponent(SandtableTerritoryComposite);
+        panelNode.active = false;
+    }
+
     private async _mountSeasonReportPanel(): Promise<void> {
         const panelNode = this.node.getChildByName('SeasonReportComposite') ?? new Node('SeasonReportComposite');
         panelNode.layer = this.node.layer;
@@ -2518,6 +2556,7 @@ export class LobbyScene extends Component {
         const missionDetailDialogController = this._createLobbyMissionDetailDialogController();
         const leaderboardController = this._createLobbyLeaderboardController();
         const seasonReportController = this._createSeasonReportController();
+        const sandtableTerritoryController = this._createSandtableTerritoryController();
 
         services().ui.register(UIID.LobbyMain, lobbyMainController);
         services().ui.register(UIID.GeneralList, generalListController);
@@ -2532,6 +2571,7 @@ export class LobbyScene extends Component {
         services().ui.register(UIID.LobbyMissionDetailDialog, missionDetailDialogController);
         services().ui.register(UIID.LobbyLeaderboard, leaderboardController);
         services().ui.register(UIID.SeasonReport, seasonReportController);
+        services().ui.register(UIID.SandtableTerritory, sandtableTerritoryController);
     }
 
     private _createEliteTroopCodexController(): IUIManagedController {
@@ -2562,6 +2602,22 @@ export class LobbyScene extends Component {
             },
             hide: () => {
                 this._leaderboardPanel!.hide();
+            },
+        };
+    }
+
+    private _createSandtableTerritoryController(): IUIManagedController {
+        if (!this._sandtableTerritoryPanel) {
+            throw new Error('[LobbyScene] SandtableTerritoryComposite cannot be registered before mount');
+        }
+
+        return {
+            node: this._sandtableTerritoryPanel.node,
+            show: async (payload?: unknown) => {
+                await this._sandtableTerritoryPanel!.show(payload as SandtableTerritoryOpenPayload);
+            },
+            hide: () => {
+                this._sandtableTerritoryPanel!.hide();
             },
         };
     }

@@ -70,6 +70,8 @@ export enum UIID {
     LobbyLeaderboard = "LobbyLeaderboard",
     /** 季結戰報彈窗（PROG-2-0963） */
     SeasonReport = "SeasonReport",
+    /** 天下沙盤領地選擇彈窗（PROG-2-0967） */
+    SandtableTerritory = "SandtableTerritory",
 
     // ── 對話框層（LayerType.Dialog）── 佇列式、帶遮罩 ────────────────────────
     /** 對決挑戰確認對話框 */
@@ -195,6 +197,7 @@ export const UIConfig: Record<UIID, UIConfigEntry> = {
     [UIID.LobbyMissionDetailDialog]: { layer: LayerType.PopUp, cache: true },
     [UIID.LobbyLeaderboard]: { layer: LayerType.PopUp, cache: true },
     [UIID.SeasonReport]: { layer: LayerType.PopUp, cache: true },
+    [UIID.SandtableTerritory]: { layer: LayerType.PopUp, cache: true },
 
     // ── 對話框層（Dialog 層） ─────────────────────────────────────────────────
     [UIID.DuelChallenge]: { layer: LayerType.Dialog, mask: true, prefab: "ui/duel-challenge" },

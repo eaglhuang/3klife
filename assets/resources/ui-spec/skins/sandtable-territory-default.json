@@ -1,0 +1,84 @@
+{
+  "id": "sandtable-territory-default",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "sandtable-picker.overlay.mask": {
+      "kind": "sprite-frame",
+      "path": "sprites/common/overlay_dark/spriteFrame",
+      "spriteType": "sliced",
+      "border": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "allowAutoAtlas": false
+    },
+    "sandtable-picker.card.bg": {
+      "kind": "sprite-frame",
+      "path": "sprites/common/popup_card_bg/spriteFrame",
+      "spriteType": "sliced",
+      "border": [
+        40,
+        40,
+        40,
+        40
+      ],
+      "allowAutoAtlas": true
+    },
+    "sandtable-picker.header.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 252
+    },
+    "sandtable-picker.scroll.bg": {
+      "kind": "color-rect",
+      "color": "background",
+      "alpha": 194
+    },
+    "sandtable-picker.row.bg": {
+      "kind": "color-rect",
+      "color": "backgroundNavyAlt",
+      "alpha": 170
+    },
+    "sandtable-picker.footer.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 224
+    },
+    "sandtable-picker.close.btn": {
+      "kind": "color-rect",
+      "color": "surfaceContainer",
+      "alpha": 220
+    },
+    "sandtable-picker.text.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 34,
+      "lineHeight": 40,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "sandtable-picker.text.primary": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 24,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "isBold": true,
+      "overflow": "CLAMP"
+    },
+    "sandtable-picker.text.secondary": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 24,
+      "color": "secondaryLight",
+      "isBold": false,
+      "overflow": "CLAMP"
+    }
+  }
+}

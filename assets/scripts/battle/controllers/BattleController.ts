@@ -16,7 +16,7 @@ import { BattleState, TerrainGrid } from "../models/BattleState";
 import type { BattleResult } from "../BattleTypes";
 import { detectWeatherTransition, validateWeatherSchedule, weatherForTurn, type WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import { EnemyAI } from "./EnemyAI";
-import { resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
+import { resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
 import { findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
@@ -89,6 +89,7 @@ import { buildEnemyTacticCandidates } from '../shared/EnemyTacticCandidates';
 import { pickEnemyTactic, type TacticMetrics } from '../shared/EnemyTacticNumbers';
 import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
+import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
 
 /**
  * [P2-N3] 部署失敗原因：food = 糧草不足（原 dp）。
@@ -658,6 +659,23 @@ export class BattleController {
         if (candidate.category === 'single-damage') {
           metrics[candidate.tacticId] = { estimatedDamage: damage };
         }
+      }
+    }
+
+    const playerCells = playerUnits.map(unit => ({ lane: unit.lane, depth: unit.depth }));
+    const denseArea = hasDenseArea(playerCells);
+    const hasChokePoint = hasChokePointLane(playerCells);
+    const lowestAllyMissingHp = enemyUnits.reduce((most, unit) => Math.max(most, unit.maxHp - unit.currentHp), 0);
+    for (const candidate of candidates) {
+      if (candidate.category === 'tile-scene') {
+        metrics[candidate.tacticId] = { ...metrics[candidate.tacticId], denseArea, hasChokePoint };
+      }
+      if (candidate.category === 'buff-heal') {
+        const battleSkillId = this.tacticDefinitionMap.get(candidate.tacticId)?.battleSkillId ?? null;
+        const profile = battleSkillId ? resolveBattleSkillProfile(battleSkillId) : null;
+        metrics[candidate.tacticId] = {
+          effectValue: estimateHealValue(profile, general.maxHp, lowestAllyMissingHp),
+        };
       }
     }
 

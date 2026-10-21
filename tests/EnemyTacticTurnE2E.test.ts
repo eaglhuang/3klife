@@ -87,6 +87,49 @@ export function createEnemyTacticTurnE2ESuite(): TestSuite {
         assert.equals(TEST_BATTLE_SKILL_ID, enemyCasts[0].options.battleSkillId);
     });
 
+    suite.test('敵方有受傷隊友、回復戰法在戰法庫中：危險時會挑回復戰法', () => {
+        const ctrl = battle([{ slotId: 's1', tacticId: 'test-heal-tactic', source: 'bloodline' }]);
+        (ctrl as unknown as { tacticDefinitionMap: Map<string, unknown> }).tacticDefinitionMap.set('test-heal-tactic', {
+            id: 'test-heal-tactic',
+            displayName: '測試醫療',
+            category: 'support',
+            battleSkillId: 'medical-aid',
+        });
+        const hurt = new TroopUnit('enemy-foot', TroopType.Infantry, Faction.Enemy, {
+            hp: 100, attack: 30, defense: 10, moveRange: 1, attackRange: 1,
+        });
+        hurt.moveTo(2, 1);
+        hurt.currentHp = 10;
+        ctrl.state.addUnit(hurt);
+
+        const picked = ctrl.chooseEnemyTactic();
+        assert.isDefined(picked);
+        assert.equals('test-heal-tactic', picked!.tacticId);
+        assert.equals('medical-aid', picked!.battleSkillId);
+    });
+
+    suite.test('我方聚成密集區、場景類戰法在戰法庫中：會挑場景戰法', () => {
+        const ctrl = battle([{ slotId: 's1', tacticId: 'test-scene-tactic', source: 'bloodline' }]);
+        (ctrl as unknown as { tacticDefinitionMap: Map<string, unknown> }).tacticDefinitionMap.set('test-scene-tactic', {
+            id: 'test-scene-tactic',
+            displayName: '測試埋伏',
+            category: 'ambush',
+            battleSkillId: TEST_BATTLE_SKILL_ID,
+        });
+        // 3 個我方單位聚在相鄰格（3x3 內），形成密集區
+        for (const [id, lane, depth] of [['pf-2', 2, 4], ['pf-3', 2, 5]] as const) {
+            const unit = new TroopUnit(id, TroopType.Infantry, Faction.Player, {
+                hp: 100, attack: 30, defense: 10, moveRange: 1, attackRange: 1,
+            });
+            unit.moveTo(lane, depth);
+            ctrl.state.addUnit(unit);
+        }
+
+        const picked = ctrl.chooseEnemyTactic();
+        assert.isDefined(picked);
+        assert.equals('test-scene-tactic', picked!.tacticId);
+    });
+
     suite.test('真實回合：玩家施放路徑不受影響（玩家 castBattleSkill 不帶敵方戰法）', () => {
         const ctrl = battle([{ slotId: 's1', tacticId: TEST_TACTIC_ID, source: 'bloodline' }]);
         const playerCalls: Array<Faction> = [];

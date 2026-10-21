@@ -1,0 +1,55 @@
+{
+  "id": "sandtable-territory-screen",
+  "version": 1,
+  "uiId": "SandtableTerritory",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "sandtable-territory-main",
+  "skin": "sandtable-territory-default",
+  "contentRequirements": {
+    "schemaId": "sandtable-territory-content",
+    "familyId": "sandtable-territory",
+    "requiredFields": [
+      "title",
+      "hintLabel",
+      "row0NameLabel",
+      "row0StateLabel",
+      "row1NameLabel",
+      "row1StateLabel",
+      "row2NameLabel",
+      "row2StateLabel",
+      "row3NameLabel",
+      "row3StateLabel",
+      "row4NameLabel",
+      "row4StateLabel",
+      "row5NameLabel",
+      "row5StateLabel",
+      "row6NameLabel",
+      "row6StateLabel",
+      "row7NameLabel",
+      "row7StateLabel",
+      "row8NameLabel",
+      "row8StateLabel",
+      "row9NameLabel",
+      "row9StateLabel",
+      "row10NameLabel",
+      "row10StateLabel",
+      "row11NameLabel",
+      "row11StateLabel",
+      "row12NameLabel",
+      "row12StateLabel"
+    ]
+  },
+  "content": {
+    "source": "sandtable-territory-states-v1",
+    "state": "smoke-picker"
+  },
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
