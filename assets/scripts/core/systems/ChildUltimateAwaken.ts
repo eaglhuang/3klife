@@ -35,6 +35,52 @@ export function rollChildUltimateAwaken(greenGeneLevel: number, hasMatchingGreen
     return roll < childUltimateAwakenChance(greenGeneLevel);
 }
 
+/** 奧義母表中與繼承有關的兩個欄位（ultimate-definitions.json 的 id 與 inheritanceGeneId） */
+export interface ChildUltimateDefinition {
+    ultimateId: string;
+    inheritanceGeneId: string;
+}
+
+/** 子嗣的基因（只看覺醒判定用到的欄位；type 即因子顏色） */
+export interface ChildUltimateGene {
+    id: string;
+    type: string;
+    level: number;
+}
+
+export interface ChildUltimateParent {
+    parentUid: string;
+    ultimateIds: readonly string[];
+}
+
+export interface ChildUltimateCandidate {
+    ultimateId: string;
+    sourceParentUid: string;
+    greenGeneLevel: number;
+}
+
+/**
+ * 找出子嗣可以擲覺醒的父方奧義：奧義的 inheritanceGeneId 必須是子嗣遺傳到的綠色因子。
+ * 父方的奧義沒有在母表中找到、或子嗣沒有對應綠色因子時略過。
+ */
+export function childUltimateCandidates(
+    child: { genes: readonly ChildUltimateGene[] },
+    parents: readonly ChildUltimateParent[],
+    definitions: readonly ChildUltimateDefinition[],
+): ChildUltimateCandidate[] {
+    const out: ChildUltimateCandidate[] = [];
+    for (const parent of parents) {
+        for (const ultimateId of parent.ultimateIds) {
+            const def = definitions.find((d) => d.ultimateId === ultimateId);
+            if (!def) continue;
+            const gene = child.genes.find((g) => g.id === def.inheritanceGeneId && g.type === 'green');
+            if (!gene) continue;
+            out.push({ ultimateId, sourceParentUid: parent.parentUid, greenGeneLevel: gene.level });
+        }
+    }
+    return out;
+}
+
 /** 把覺醒的父方奧義加入子嗣清單；已有同一奧義時不重複加，不修改輸入。 */
 export function unlockInheritedUltimate(
     owned: readonly InheritedUltimate[],

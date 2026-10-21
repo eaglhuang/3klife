@@ -30,6 +30,7 @@ import { NurtureService } from "../services/NurtureService";
 import { BreedingService } from "../services/BreedingService";
 import { UnveilingService } from "../services/UnveilingService";
 import { buildFactorDictionary, FactorDictionary } from "../systems/FactorInheritance";
+import type { ChildUltimateDefinition } from "../systems/ChildUltimateAwaken";
 import { parseNpcFriendMentors } from "../systems/NpcFriendMentor";
 import type { PersonRegistryData } from "../models/PersonRegistry";
 import { DataStorageAdapter } from "../storage/DataStorageAdapter";
@@ -78,7 +79,11 @@ export class ServiceLoader {
         // 因子覺醒（PROG-2-0044）：訓練回合擲培育窺探 / 教官覺醒；畢業給 discoveryLevel 經驗
         awakening: this.session.nurtureAwakeningHooks(),
         onGraduated: () => { void this.session.gainDiscoveryExp('nurture-graduate'); },
+        // 子嗣奧義覺醒（ULT-15）：奧義母表在 prepareBreeding() 載入
+        childUltimate: { definitions: () => this.ultimateDefinitions },
     });
+    /** loadUltimateDefinitions() 載入後的奧義母表（只留 id 與繼承基因）；子嗣奧義覺醒用 */
+    private ultimateDefinitions: ChildUltimateDefinition[] = [];
     /** loadFactorDictionary() 載入後的因子字典；結緣產生子嗣時用來補因子名稱與顏色 */
     private factorDictionary: FactorDictionary | undefined;
     /** loadHistoricalPairs() 載入後的史實配對表（KIN-02）；結緣契合與宿敵受孕率讀它 */
@@ -224,6 +229,18 @@ export class ServiceLoader {
         }
     }
 
+    /** 載入奧義母表的 id 與 inheritanceGeneId；失敗時子嗣奧義覺醒不擲骰，其餘培育不受影響。 */
+    public async loadUltimateDefinitions(): Promise<void> {
+        try {
+            const raw = await this.resource.loadJson<{ data?: Array<{ id?: unknown; inheritanceGeneId?: unknown }> }>('data/master/ultimate-definitions');
+            this.ultimateDefinitions = (raw?.data ?? [])
+                .filter((d): d is { id: string; inheritanceGeneId: string } => typeof d.id === 'string' && typeof d.inheritanceGeneId === 'string')
+                .map((d) => ({ ultimateId: d.id, inheritanceGeneId: d.inheritanceGeneId }));
+        } catch (e) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] ultimate-definitions.json 載入失敗，子嗣奧義覺醒停用:', e);
+        }
+    }
+
     public async loadFactorDictionary(): Promise<void> {
         try {
             const raw = await this.resource.loadJson<{ data?: [] }>('data/master/gene-dictionary');
@@ -241,6 +258,9 @@ export class ServiceLoader {
     public async prepareBreeding(): Promise<void> {
         if (!this.factorDictionary) {
             await this.loadFactorDictionary();
+        }
+        if (this.ultimateDefinitions.length === 0) {
+            await this.loadUltimateDefinitions();
         }
         await this.loadNpcFriendMentors();
         if (!this.historicalPairs) {

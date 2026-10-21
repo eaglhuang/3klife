@@ -35,6 +35,14 @@ import {
 } from '../systems/NurtureSystem';
 import { buildNurtureRecordRow, type NurtureRecordDraft } from '../systems/NurtureRecordRow';
 import { UNVEILING_AGE, UnveilingGeneral } from '../systems/Unveiling';
+import {
+    childUltimateCandidates,
+    rollChildUltimateAwaken,
+    unlockInheritedUltimate,
+    type ChildUltimateDefinition,
+    type ChildUltimateParent,
+    type InheritedUltimate,
+} from '../systems/ChildUltimateAwaken';
 import { InspireContext, rollInspireRound } from '../systems/MentorInspiration';
 import { isBloodlineGuaranteedRound, isBloodlineMatch } from '../systems/BloodlineGuarantee';
 import { GENERAL_STATUS_DEAD } from '../systems/GeneralAging';
@@ -98,6 +106,8 @@ export interface NurtureServiceOptions {
     admissionsPerSeason?: number;
     /** 培育回合的因子覺醒（PROG-2-0044）；沒提供就不擲骰，回合結果與舊版完全相同 */
     awakening?: NurtureAwakeningHooks;
+    /** 子嗣奧義覺醒（ULT-15）：訓練回合依父方奧義與子嗣綠色因子擲覺醒；沒提供就不擲骰 */
+    childUltimate?: { definitions: () => readonly ChildUltimateDefinition[] };
     /** 畢業後通知（例如給玩家 discoveryLevel 經驗） */
     onGraduated?: (result: GraduationResult) => void;
     /** 因子字典；用來推導混種戰法領域（defaultTags），沒提供則退回因子 id */
@@ -278,6 +288,7 @@ export class NurtureService {
         this._replace(result.session);
         const awakening = this._rollAwakening(childId, result.session, result.log);
         if (awakening) result.awakening = awakening;
+        this._rollChildUltimate(childId, result.log);
         return result;
     }
 
@@ -362,6 +373,36 @@ export class NurtureService {
     }
 
     // ── 內部 ───────────────────────────────────────────────────────────────
+
+    /**
+     * 子嗣奧義覺醒（ULT-15）：只在訓練回合擲；父方在名冊內才有候選。
+     * 覺醒的奧義寫入子嗣的 inheritedUltimates（level 1、Is_Inherited、Source_Parent_UID）。
+     */
+    private _rollChildUltimate(childId: string, log: NurtureRoundLog): void {
+        const definitions = this._options.childUltimate?.definitions();
+        if (!definitions || log.action === 'rest') return;
+        const roster = this._roster.getAll() as Array<UnveilingGeneral & { fatherId?: string; motherId?: string; inheritedUltimates?: InheritedUltimate[] }>;
+        const index = roster.findIndex((g) => g.id === childId);
+        if (index < 0) return;
+        const child = roster[index];
+        const parents: ChildUltimateParent[] = [child.fatherId, child.motherId]
+            .map((pid) => roster.find((g) => g.id === pid))
+            .filter((p): p is NonNullable<typeof p> => p !== undefined)
+            .map((p) => ({ parentUid: p.id, ultimateIds: (p.ultimateSlots ?? []).map((slot) => slot.ultimateId) }));
+        const candidates = childUltimateCandidates({ genes: child.genes as never }, parents, definitions);
+        let owned = child.inheritedUltimates ?? [];
+        let changed = false;
+        for (const candidate of candidates) {
+            if (owned.some((u) => u.ultimateId === candidate.ultimateId)) continue;
+            if (!rollChildUltimateAwaken(candidate.greenGeneLevel, true, this._rng()())) continue;
+            owned = unlockInheritedUltimate(owned, candidate.ultimateId, candidate.sourceParentUid).list;
+            changed = true;
+        }
+        if (!changed) return;
+        const next = [...roster];
+        next[index] = { ...child, inheritedUltimates: owned };
+        this._roster.replaceAll(next);
+    }
 
     private _rollAwakening(childId: string, session: NurtureSession, log: NurtureRoundLog): FactorAwakenedEvent | undefined {
         const hooks = this._options.awakening;
