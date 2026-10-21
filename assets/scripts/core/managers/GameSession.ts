@@ -144,6 +144,34 @@ import { STARTER_GACHA_WALLET } from '../services/GachaWalletRules';
 import type { DynamicRelation } from '../systems/KinRelation';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
+    assignGovernanceGeneral,
+    DEFAULT_MAX_TASK_SLOTS,
+    removeGovernanceAssignment,
+    type GovernanceAssignment,
+    type GovernanceResult,
+} from '../systems/GovernanceAssignment';
+import {
+    attemptTerritoryLoss,
+    lastStandModifiers,
+    type KeepTerritory,
+    type LastStandModifiers,
+    type TerritoryLossResult,
+} from '../systems/HereditaryKeep';
+import {
+    appendJournalEntry,
+    createEmptyJournal,
+    queryJournal,
+    type JournalEntry,
+    type JournalEntryInput,
+    type JournalQuery,
+    type JournalState,
+    type JournalWriteResult,
+} from '../systems/JournalLog';
+import type { DomesticTaskId } from '../systems/DomesticTasks';
+
+/** 主城領地 id（暫定：規格未給固定 id，待領地資料定案後改由資料檔提供）。 */
+const HOME_TERRITORY_ID = 'home-city';
+import {
     BattleResult,
     BattleSettlement,
     buildBattleConfig,
@@ -1321,6 +1349,62 @@ export class GameSession {
         if (this._sandtableMarkerTerritories.includes(territoryId)) return false;
         this._sandtableMarkerTerritories = [...this._sandtableMarkerTerritories, territoryId];
         return true;
+    }
+
+    // ---- 領地治理接線（GOV-04 指派 / GOV-09 主城保護 / JRN-01 日誌，PROG-2-0974）：目前僅記憶體狀態，尚未寫入存檔 ----
+    private _governance: GovernanceAssignment[] = [];
+    private _territories: KeepTerritory[] = [{ id: HOME_TERRITORY_ID, isHome: true }];
+    private _journal: JournalState = createEmptyJournal();
+
+    /** 內政任務格的武將指派（唯讀副本，GOV-04）。 */
+    public get governanceAssignments(): GovernanceAssignment[] {
+        return this._governance.map(a => ({ ...a }));
+    }
+
+    /** 指派武將到內政任務格（GOV-04）；被拒絕時不改動狀態。 */
+    public assignGovernor(task: string, generalUid: string, maxSlots: number = DEFAULT_MAX_TASK_SLOTS): GovernanceResult {
+        const result = assignGovernanceGeneral(this._governance, task, generalUid, maxSlots);
+        if (result.ok) this._governance = result.assignments;
+        return result;
+    }
+
+    /** 卸下內政任務格的武將（GOV-04）。 */
+    public unassignGovernor(task: DomesticTaskId): void {
+        this._governance = removeGovernanceAssignment(this._governance, task).assignments;
+    }
+
+    /** 設定領地清單（含主城），供領地資料載入或測試使用（GOV-09）。 */
+    public setTerritories(territories: readonly KeepTerritory[]): void {
+        this._territories = territories.map(t => ({ ...t }));
+    }
+
+    /** 領地清單（唯讀副本，GOV-09）。 */
+    public get territories(): KeepTerritory[] {
+        return this._territories.map(t => ({ ...t }));
+    }
+
+    /** 外圍領地失守（GOV-09）；主城拒絕，被拒絕時不改動狀態。 */
+    public loseTerritory(territoryId: string): TerritoryLossResult {
+        const result = attemptTerritoryLoss(this._territories, territoryId);
+        if (result.ok) this._territories = result.territories;
+        return result;
+    }
+
+    /** 背水一戰加成（GOV-09）：領地只剩主城時防禦 ×2、兵力生產 +50%。 */
+    public get lastStand(): LastStandModifiers {
+        return lastStandModifiers(this._territories);
+    }
+
+    /** 寫入武將日誌（JRN-01）；被拒絕時不改動狀態。 */
+    public recordJournal(input: JournalEntryInput): JournalWriteResult {
+        const result = appendJournalEntry(this._journal, input);
+        if (result.ok) this._journal = result.state;
+        return result;
+    }
+
+    /** 依武將與類別查詢日誌（JRN-01），新到舊。 */
+    public queryJournal(query: JournalQuery = {}): JournalEntry[] {
+        return queryJournal(this._journal, query);
     }
 
     /**
