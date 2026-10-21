@@ -941,6 +941,11 @@ export class GameSession {
         }
     }
 
+    /** 目前戰魂碎片帳本的副本（寄宿面板列候選用，PROG-2-1058） */
+    public soulFragmentLedger(): SoulFragmentLedger {
+        return { ...this._soulFragments };
+    }
+
     /**
      * 把亡者的戰魂碎片寄宿到目標武將（同 Bloodline_ID、不同版本）。成功時目標的 totalTp 增加並消耗碎片，自動存檔。
      * 目標不在名冊、或碎片不存在時回傳原因；不合規時不改任何狀態。
