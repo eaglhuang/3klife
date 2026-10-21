@@ -37,7 +37,9 @@ export function soulInjectCandidatesFor(ledger: SoulFragmentLedger, target: Soul
         if (result.ok) {
             return { deadUid, tp: fragment.tp, enabled: true, reasonText: null };
         }
-        return { deadUid, tp: fragment.tp, enabled: false, reasonText: SOUL_INJECT_REASON_TEXT[result.reason] };
+        // cc 設定沒開 strictNullChecks，.ok 無法收斂 union，需手動斷言
+        const reason = (result as Extract<SoulInjectResult, { ok: false }>).reason;
+        return { deadUid, tp: fragment.tp, enabled: false, reasonText: SOUL_INJECT_REASON_TEXT[reason] };
     });
 }
 
