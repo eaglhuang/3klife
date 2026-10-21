@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "templateFamily": "lobby-leaderboard",
+  "layout": "lobby-leaderboard-main",
+  "defaultState": "smoke-damage",
+  "states": {
+    "smoke-damage": {
+      "title": "戰績排行榜",
+      "metricDamageLabel": "傷害總量",
+      "metricKillsLabel": "擊殺數",
+      "metricGuardianLabel": "守護力",
+      "emptyHintVisible": false,
+      "emptyHintLabel": "尚無戰績",
+      "hintLabel": "同分依其餘指標排序，再依武將 id 排序（暫定）",
+      "row0RankLabel": "1",
+      "row0NameLabel": "關羽",
+      "row0ValueLabel": "120,000",
+      "row0Visible": true,
+      "row1RankLabel": "2",
+      "row1NameLabel": "呂布",
+      "row1ValueLabel": "98,000",
+      "row1Visible": true,
+      "row2RankLabel": "3",
+      "row2NameLabel": "趙雲",
+      "row2ValueLabel": "5,000",
+      "row2Visible": true,
+      "row3RankLabel": "—",
+      "row3NameLabel": "—",
+      "row3ValueLabel": "—",
+      "row3Visible": false,
+      "row4RankLabel": "—",
+      "row4NameLabel": "—",
+      "row4ValueLabel": "—",
+      "row4Visible": false
+    }
+  }
+}
