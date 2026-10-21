@@ -56,6 +56,19 @@ export function findUltimateDamageDef(ultimateId: string): { slot?: number; scal
 export function findUltBasePowerTable(): Readonly<Record<string, number>> | undefined {
   return ultBasePowerTable;
 }
+
+/**
+ * 無頭測試用：不經資源載入，直接注入奧義定義與 base_power 表（PROG-2-0927）。
+ * 測試以 fs 讀 JSON 後呼叫，與其他 headless 測試讀資料的方式一致。
+ */
+export function seedUltimateDataForHeadless(
+  ultimates: CanonicalUltimateDefinition[],
+  basePowerTable: Readonly<Record<string, number>>,
+): void {
+  ultimateDefinitionMap = buildIdMap(ultimates);
+  ultBasePowerTable = basePowerTable;
+}
+
 let battleSkillMetadataPromise: Promise<void> | null = null;
 
 /**

@@ -6,11 +6,15 @@
  *
  * Unity 對照：像在 Animator 的 StateMachine 進入點先算好一個 damage 參數，再交給 Combat 元件使用。
  */
-import { Faction } from '../assets/scripts/core/config/Constants';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { BattleSkillDispatcher } from '../assets/scripts/battle/runtime/BattleSkillDispatcher';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { ultimateAttackOf } from '../assets/scripts/core/systems/UltimateDamage';
+import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
+import { seedUltimateDataForHeadless } from '../assets/scripts/battle/views/BattleSceneLoader';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { BattleSkillTargetMode, BattleSkillTiming, SkillSourceType, type BattleSkillRequest } from '../assets/scripts/shared/SkillRuntimeContract';
 import { TestSuite, assert } from './TestRunner';
@@ -58,6 +62,12 @@ function ultimateRequest(): BattleSkillRequest {
         targetMode: BattleSkillTargetMode.EnemyAll,
         timing: BattleSkillTiming.ActiveCast,
     };
+}
+
+function fullTurn(ctrl: BattleController): void {
+    ctrl.resolvePlayerTurn();
+    ctrl.resolveEnemyTurn();
+    ctrl.finalizeEnemyTurn();
 }
 
 export function createUltimateDamageWiringSuite(): TestSuite {
@@ -114,6 +124,64 @@ export function createUltimateDamageWiringSuite(): TestSuite {
         dispatcher.executeBattleSkillRequest({ ...ultimateRequest(), sourceType: SkillSourceType.SeedTactic, ultimateId: null });
 
         assert.equals(undefined, captured.request!.ultimateAttack);
+    });
+
+    suite.test('真實多回合流程：奧義經派發後造成的傷害與精力扣減，與無奧義資料的對照組不同', () => {
+        const dataDir = join(__dirname, '..', 'assets', 'resources', 'data');
+        const ultimates = JSON.parse(readFileSync(join(dataDir, 'master', 'ultimate-definitions.json'), 'utf8')).data;
+        const basePower = JSON.parse(readFileSync(join(dataDir, 'numerical-config.json'), 'utf8')).NumericalConfig.Ult_Base_Power;
+
+        /** 同一場景：玩家關羽在前排，敵方三隊步兵在同一縱列；回傳奧義造成的敵方總掉血量與精力扣減量 */
+        const castAndMeasure = (seed: { ultimates: unknown[]; basePower: Record<string, number> }) => {
+            services().initialize();
+            services().session.setRandomSource(() => 0.99);
+            seedUltimateDataForHeadless(seed.ultimates as never, seed.basePower);
+            const ctrl = new BattleController();
+            const player = general('guan-yu', Faction.Player);
+            ctrl.initBattle(player, general('enemy', Faction.Enemy));
+            ctrl.placeGeneralOnBoard(2, 2);
+            const enemies: TroopUnit[] = [];
+            for (let i = 0; i < 3; i += 1) {
+                const troop = new TroopUnit(`e-${i}`, TroopType.Infantry, Faction.Enemy, {
+                    hp: 100000, attack: 1, defense: 0, moveRange: 1, attackRange: 1,
+                });
+                troop.moveTo(2, 4 + i);
+                ctrl.state.addUnit(troop);
+                enemies.push(troop);
+            }
+            // 施放奧義需要滿 SP（canUseSkill）；initBattle 會把武將 SP 歸零
+            player.currentSp = player.maxSp;
+            const hpBefore = enemies.reduce((sum, troop) => sum + troop.currentHp, 0);
+            const vitalityBefore = player.vitality;
+            const applied = ctrl.triggerPlayerBattleSkill('guan-yu-slash', SkillSourceType.Ultimate, {
+                ultimateId: 'ult-guan-yu-1',
+                targetMode: BattleSkillTargetMode.Line,
+            });
+            const hpAfter = enemies.reduce((sum, troop) => sum + troop.currentHp, 0);
+            return {
+                applied,
+                damage: hpBefore - hpAfter,
+                vitalityDrop: vitalityBefore - player.vitality,
+                maxVitality: player.maxVitality,
+                ctrl,
+            };
+        };
+
+        try {
+            const withUlt = castAndMeasure({ ultimates, basePower });
+            const control = castAndMeasure({ ultimates: [], basePower: {} });
+
+            assert.isTrue(withUlt.applied, '奧義應該成功施放（真實流程）');
+            assert.isTrue(withUlt.damage > 0, '奧義應造成傷害');
+            assert.isTrue(withUlt.damage !== control.damage, `有奧義資料與無資料的傷害應不同：${withUlt.damage} vs ${control.damage}`);
+            // 精力扣減：ult-guan-yu-1 的 vitalityCostPct = 0.05，成本 = round(maxVitality × 0.05)
+            assert.equals(Math.round(withUlt.maxVitality * 0.05), withUlt.vitalityDrop);
+
+            // 之後幾個完整回合（玩家、敵方、收尾）要能跑完，不會卡住或丟例外
+            for (let turn = 0; turn < 3; turn += 1) fullTurn(withUlt.ctrl);
+        } finally {
+            seedUltimateDataForHeadless([], {});
+        }
     });
 
     return suite;
