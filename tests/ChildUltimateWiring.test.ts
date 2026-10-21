@@ -2,7 +2,7 @@
  * ChildUltimateWiring.test.ts — 子嗣奧義覺醒接上培育回合（ULT-15 接線，PROG-2-1054）真實流程測試
  *
  * 鎖住：訓練回合會依父方奧義與子嗣綠色因子擲覺醒，成功後名冊上的子嗣多出一筆繼承奧義（level 1、Source_Parent_UID）；
- * 沒有綠色因子對應、或只做休息時不覺醒；沒提供 childUltimate 選項時完全不擲骰。
+ * 沒有綠色因子對應、或只做休息時不覺醒；沒提供 childUltimate 選項時完全不擲骰；覺醒結果經 JSON 往返後保留。
  */
 import { assert, TestSuite } from './TestRunner';
 import { NurtureService } from '../assets/scripts/core/services/NurtureService';
@@ -57,6 +57,13 @@ export function createChildUltimateWiringSuite(): TestSuite {
         assert.equals(1, inherited[0].level);
         assert.isTrue(inherited[0].isInherited as boolean);
         assert.equals('dad', inherited[0].sourceParentUid);
+    });
+
+    suite.test('覺醒的繼承奧義經 JSON 存檔往返後保留（名冊以 JSON 寫入）', () => {
+        const kid = runTraining([father(), greenChild()], { childUltimate: true });
+        const restored = JSON.parse(JSON.stringify(kid)) as Record<string, unknown>;
+        assert.equals(JSON.stringify(kid.inheritedUltimates), JSON.stringify(restored.inheritedUltimates));
+        assert.equals('dad', (restored.inheritedUltimates as Array<Record<string, unknown>>)[0].sourceParentUid);
     });
 
     suite.test('子嗣沒有對應綠色因子時不覺醒', () => {
