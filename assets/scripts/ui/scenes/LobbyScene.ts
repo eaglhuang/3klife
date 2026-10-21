@@ -20,6 +20,7 @@ import { formatModeLabel } from '../../core/systems/GameClock';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
 import { seasonDisplayText, seasonEffectHintText } from '../core/SeasonTexts';
+import { buildSandtableStatusLabel } from '../../core/systems/SandtableStatus';
 import { buildYearReportTexts, withYearReportFallback, type YearReport } from '../../core/systems/YearReport';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
@@ -636,6 +637,10 @@ export class LobbyScene extends Component {
         const countdownIcon = buildCountdownIconFlowView(services().session.countdown, Date.now());
         this._seasonHudHost?.binder?.setTexts(countdownIcon.texts);
         this._seasonHudHost?.binder?.setActives(countdownIcon.actives);
+        const session = services().session;
+        this._seasonHudHost?.binder?.setTexts({
+            openSandtableLabel: buildSandtableStatusLabel(session.officerUnlocks.sandtableStage, session.sandtableMarkersPlaced),
+        });
     }
 
     /** 教官支援卡目錄（mentor-support-cards.json）：只讀一次；讀取失敗視為空目錄，不擋培育 */
