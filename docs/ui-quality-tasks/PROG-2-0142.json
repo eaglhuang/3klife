@@ -1,0 +1,158 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "id": "PROG-2-0142",
+      "title": "DS3人物頁選取身分與資料生命週期",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "done",
+      "started_at": "2026-10-21T04:08:54.009Z",
+      "started_by_agent": "codex-gpt-6",
+      "type": "implementation",
+      "phase": "M6",
+      "created_by_agent": "codex-gpt-6",
+      "screenId": "character-ds3-main",
+      "family": "detail-split",
+      "proof": {
+        "kind": "existing-layout",
+        "path": "assets/resources/ui-spec/layouts/character-ds3-main.json",
+        "visual_redesign": false
+      },
+      "normalized_recipe": {
+        "reuse": "assets/resources/ui-spec/screens/character-ds3-main.json",
+        "geometry": "unchanged",
+        "variant": "typed per-instance DS3 config"
+      },
+      "canonical_references": [
+        "docs/UI 規格書.md",
+        "docs/遊戲規格文件/系統規格書/武將人物介面規格書.md",
+        "docs/cross-reference-index.md"
+      ],
+      "skin_fragments": [
+        "assets/resources/ui-spec/skins/character-ds3-main.skin.json",
+        "assets/resources/ui-spec/screens/character-ds3-main.json#tabs"
+      ],
+      "content_contract": {
+        "references": [
+          "assets/resources/ui-spec/contracts/general-detail-content.schema.json",
+          "assets/resources/ui-spec/contracts/general-detail-overview-content.schema.json"
+        ],
+        "authority": "Mother spec v2 six routes override legacy seven-tab schema description",
+        "instance": [
+          "selectedGeneralId",
+          "selected GeneralConfig",
+          "DS3 screen variant",
+          "request generation / disposed state"
+        ],
+        "rules": [
+          "All six tabs use one selected identity",
+          "Overview/Stats use actual selected data and existing mapper semantics",
+          "Late async responses never overwrite a later selection or closed instance",
+          "Clear prior person and demo before binding",
+          "Missing optional data renders explicit empty state"
+        ],
+        "deferred": [
+          "Tactics full content",
+          "Bloodline full content/story",
+          "Equip full content",
+          "Aptitude full content"
+        ]
+      },
+      "implementation_scope": [
+        "assets/scripts/ui/components/character-ds3/CharacterDs3OverviewChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3StatsChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3TacticsChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3BloodlineChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3EquipChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3AptitudeChild.ts",
+        "tests/ucuf/architectureGovernance.test.ts",
+        "tools_node/capture-ui-screens.js"
+      ],
+      "smoke_route": {
+        "routing": "Replace GeneralDetailSkills unified delegation with real Lobby A/B DS3 route; capture target 19 is an existing seam, not preview proof.",
+        "command": "node tools_node/check-general-detail-lobby-flow-smoke.js",
+        "entry": "Real Lobby -> GeneralList -> select A/B -> DS3 via GeneralDetailComposite",
+        "matrix": [
+          "A all six tabs",
+          "B all six tabs after A",
+          "rapid A/B with delayed A response",
+          "close/reopen selected person",
+          "missing optional data shows empty state"
+        ],
+        "assertions": [
+          "identity/name/portrait agree",
+          "Overview/Stats match selected source",
+          "no previous-person/demo in unimplemented tabs",
+          "no legacy/unified smoke or global/localStorage variant",
+          "runtime errors absent"
+        ],
+        "viewports": [
+          "1920x1080 desktop",
+          "1280x720 phone landscape"
+        ]
+      },
+      "sizing": {
+        "canvas": "1920x1080 unchanged",
+        "portraitZone": "1190x1080 unchanged",
+        "contentSlotWidth": "560 unchanged",
+        "tabHitbox": "128x128 unchanged",
+        "layout_skin_fonts": "no changes"
+      },
+      "docs_backwritten": {
+        "keep": "no consensus change",
+        "ui_spec": "read and referenced; no new rule",
+        "cross_reference": "read and referenced; update only if actual entry ownership changes"
+      },
+      "acceptance": [
+        "Real Lobby A/B selection preserves identity across six tabs",
+        "Overview/Stats bind actual data",
+        "Other four tabs clear demo and show honest empty state",
+        "Async replacement cannot show stale person",
+        "Sizing unchanged; full deferred pages not claimed complete"
+      ],
+      "blockers": [
+        "Implementation and runtime proof pending",
+        "Existing smoke must verify real DS3 entry rather than legacy/unified"
+      ],
+      "next_step": "Normal Phase1 claim and source-scoped implementation after planning review",
+      "depends": [
+        "TASK-UI-9001"
+      ],
+      "scopePaths": [
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/scripts/ui/components/GeneralDetailComposite.ts",
+        "assets/scripts/ui/components/GeneralDetailOverviewMapper.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3OverviewChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3StatsChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3TacticsChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3BloodlineChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3EquipChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3AptitudeChild.ts",
+        "tests/ucuf/architectureGovernance.test.ts",
+        "tools_node/capture-ui-screens.js",
+        "tools_node/check-general-detail-lobby-flow-smoke.js",
+        "docs/agent-briefs/tasks/PROG/PROG-2-0142.md",
+        "docs/tasks/tasks-prog.json",
+        "docs/ui-quality-tasks/PROG-2-0142.json",
+        "docs/ui-quality-todo.json",
+        "docs/agent-briefs/tasks_index.md"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/scripts/ui/components/GeneralDetailComposite.ts",
+        "assets/scripts/ui/components/GeneralDetailOverviewMapper.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3OverviewChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3StatsChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3TacticsChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3BloodlineChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3EquipChild.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3AptitudeChild.ts",
+        "tests/ucuf/architectureGovernance.test.ts",
+        "tools_node/capture-ui-screens.js",
+        "tools_node/check-general-detail-lobby-flow-smoke.js"
+      ]
+    }
+  ]
+}
