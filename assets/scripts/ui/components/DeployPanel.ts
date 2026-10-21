@@ -776,17 +776,6 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
     this.showToast(this.getDeployFailMessage(outcome.reason));
   }
 
-  private toTroopDisplayName(type: TroopType): string {
-    const map: Partial<Record<TroopType, string>> = {
-      [TroopType.Cavalry]: '騎兵',
-      [TroopType.Infantry]: '步兵',
-      [TroopType.Shield]: '盾兵',
-      [TroopType.Archer]: '弓兵',
-      [TroopType.Pikeman]: '槍兵',
-    };
-    return map[type] ?? String(type);
-  }
-
   private getDeployFailMessage(reason?: string): string {
     if (reason === 'battle-locked') return '目前流程鎖定，暫時無法部署';
     if (reason === 'limit') return '本回合已部署，請等待下一回合';
