@@ -1,0 +1,613 @@
+{
+  "id": "sandtable-territory-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "SandtableTerritoryRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "transition": {
+      "enter": "scaleIn",
+      "exit": "scaleOut",
+      "duration": 0.22,
+      "easing": "backOut"
+    },
+    "children": [
+      {
+        "type": "button",
+        "name": "OverlayMask",
+        "id": "overlayMask",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "sandtable-picker.overlay.mask",
+        "onClick": "onClose"
+      },
+      {
+        "type": "panel",
+        "name": "DialogCard",
+        "widget": {
+          "hCenter": 0,
+          "vCenter": 0
+        },
+        "width": 800,
+        "height": 900,
+        "skinSlot": "sandtable-picker.card.bg",
+        "layout": {
+          "type": "vertical",
+          "spacing": 0,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0
+        },
+        "children": [
+          {
+            "type": "panel",
+            "name": "HeaderBar",
+            "width": "100%",
+            "height": 88,
+            "skinSlot": "sandtable-picker.header.bg",
+            "layout": {
+              "type": "horizontal",
+              "spacing": 16,
+              "paddingTop": 16,
+              "paddingBottom": 16,
+              "paddingLeft": 28,
+              "paddingRight": 24
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "TitleLabel",
+                "width": 640,
+                "height": 56,
+                "skinSlot": "sandtable-picker.text.title",
+                "text": "天下沙盤・領地"
+              },
+              {
+                "type": "button",
+                "name": "BtnClose",
+                "id": "btnClose",
+                "width": 56,
+                "height": 56,
+                "skinSlot": "sandtable-picker.close.btn",
+                "onClick": "onClose",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "CloseLabel",
+                    "width": "100%",
+                    "height": "100%",
+                    "skinSlot": "sandtable-picker.text.primary",
+                    "text": "X"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "scroll-view",
+            "name": "ScrollView",
+            "width": "100%",
+            "height": 700,
+            "skinSlot": "sandtable-picker.scroll.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "ScrollContent",
+                "width": "100%",
+                "height": 1004,
+                "layout": {
+                  "type": "vertical",
+                  "spacing": 8,
+                  "paddingTop": 8,
+                  "paddingBottom": 8,
+                  "paddingLeft": 8,
+                  "paddingRight": 8
+                },
+                "children": [
+                  {
+                    "type": "button",
+                    "name": "Row0",
+                    "id": "territoryRow0",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow0",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "Row1",
+                    "id": "territoryRow1",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow1",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "Row2",
+                    "id": "territoryRow2",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow2",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "Row3",
+                    "id": "territoryRow3",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow3",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "Row4",
+                    "id": "territoryRow4",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow4",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "Row5",
+                    "id": "territoryRow5",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow5",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "Row6",
+                    "id": "territoryRow6",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow6",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "Row7",
+                    "id": "territoryRow7",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow7",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "Row8",
+                    "id": "territoryRow8",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow8",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "Row9",
+                    "id": "territoryRow9",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow9",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "Row10",
+                    "id": "territoryRow10",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow10",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "Row11",
+                    "id": "territoryRow11",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow11",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "Row12",
+                    "id": "territoryRow12",
+                    "width": "100%",
+                    "height": 68,
+                    "skinSlot": "sandtable-picker.row.bg",
+                    "onClick": "onRow12",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 420,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "StateLabel",
+                        "width": 200,
+                        "height": 52,
+                        "skinSlot": "sandtable-picker.text.secondary",
+                        "text": "-"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "FooterBar",
+            "width": "100%",
+            "height": 80,
+            "skinSlot": "sandtable-picker.footer.bg",
+            "layout": {
+              "type": "horizontal",
+              "spacing": 16,
+              "paddingTop": 16,
+              "paddingBottom": 16,
+              "paddingLeft": 28,
+              "paddingRight": 24
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "HintLabel",
+                "width": "100%",
+                "height": 48,
+                "skinSlot": "sandtable-picker.text.secondary",
+                "text": ""
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

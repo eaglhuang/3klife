@@ -33,7 +33,7 @@ import {
     TRAINING_KINDS,
     TrainingKind,
 } from '../systems/NurtureSystem';
-import { buildNurtureRecordRow, type NurtureRecordDraft } from '../systems/NurtureRecordRow';
+import { buildNurtureRecordRow, revelationLevelOf, type NurtureRecordDraft } from '../systems/NurtureRecordRow';
 import { UNVEILING_AGE, UnveilingGeneral } from '../systems/Unveiling';
 import { InspireContext, rollInspireRound } from '../systems/MentorInspiration';
 import { isBloodlineGuaranteedRound, isBloodlineMatch } from '../systems/BloodlineGuarantee';
@@ -293,7 +293,7 @@ export class NurtureService {
         this._roster.replaceAll(next);
         this._state.sessions = this._state.sessions.filter((s) => s.sessionId !== session.sessionId);
         this._dropReportBook(childId);
-        const { row } = buildNurtureRecordRow(session, result, this._season());
+        const { row } = buildNurtureRecordRow(session, { ...result, revelationLevel: revelationLevelOf(result.general) }, this._season());
         this._state.graduationRecords = [...(this._state.graduationRecords ?? []), row];
         this._options.onGraduated?.(result);
         return result;

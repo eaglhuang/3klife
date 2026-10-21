@@ -1,0 +1,207 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "schemaId": "sandtable-territory-content",
+  "familyId": "sandtable-territory",
+  "version": 1,
+  "description": "SandtableTerritory content contract；天下沙盤領地選擇彈窗，列出十三州的標記狀態。",
+  "requiredFields": [
+    "title",
+    "hintLabel",
+    "row0NameLabel",
+    "row0StateLabel",
+    "row1NameLabel",
+    "row1StateLabel",
+    "row2NameLabel",
+    "row2StateLabel",
+    "row3NameLabel",
+    "row3StateLabel",
+    "row4NameLabel",
+    "row4StateLabel",
+    "row5NameLabel",
+    "row5StateLabel",
+    "row6NameLabel",
+    "row6StateLabel",
+    "row7NameLabel",
+    "row7StateLabel",
+    "row8NameLabel",
+    "row8StateLabel",
+    "row9NameLabel",
+    "row9StateLabel",
+    "row10NameLabel",
+    "row10StateLabel",
+    "row11NameLabel",
+    "row11StateLabel",
+    "row12NameLabel",
+    "row12StateLabel"
+  ],
+  "fields": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "description": "彈窗標題。",
+      "bindPath": "DialogCard/HeaderBar/TitleLabel"
+    },
+    "hintLabel": {
+      "type": "string",
+      "required": true,
+      "description": "底部提示：階段與標記數。",
+      "bindPath": "DialogCard/FooterBar/HintLabel"
+    },
+    "row0NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 1 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row0/NameLabel"
+    },
+    "row0StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 1 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row0/StateLabel"
+    },
+    "row1NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 2 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row1/NameLabel"
+    },
+    "row1StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 2 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row1/StateLabel"
+    },
+    "row2NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 3 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row2/NameLabel"
+    },
+    "row2StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 3 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row2/StateLabel"
+    },
+    "row3NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 4 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row3/NameLabel"
+    },
+    "row3StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 4 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row3/StateLabel"
+    },
+    "row4NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 5 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row4/NameLabel"
+    },
+    "row4StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 5 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row4/StateLabel"
+    },
+    "row5NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 6 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row5/NameLabel"
+    },
+    "row5StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 6 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row5/StateLabel"
+    },
+    "row6NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 7 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row6/NameLabel"
+    },
+    "row6StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 7 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row6/StateLabel"
+    },
+    "row7NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 8 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row7/NameLabel"
+    },
+    "row7StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 8 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row7/StateLabel"
+    },
+    "row8NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 9 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row8/NameLabel"
+    },
+    "row8StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 9 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row8/StateLabel"
+    },
+    "row9NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 10 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row9/NameLabel"
+    },
+    "row9StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 10 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row9/StateLabel"
+    },
+    "row10NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 11 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row10/NameLabel"
+    },
+    "row10StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 11 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row10/StateLabel"
+    },
+    "row11NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 12 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row11/NameLabel"
+    },
+    "row11StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 12 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row11/StateLabel"
+    },
+    "row12NameLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 13 列領地名稱。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row12/NameLabel"
+    },
+    "row12StateLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 13 列狀態（已放置／可放置／—）。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row12/StateLabel"
+    }
+  }
+}

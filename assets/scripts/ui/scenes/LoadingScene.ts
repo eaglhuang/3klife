@@ -26,6 +26,7 @@ import { GeneralListComposite } from '../components/GeneralListComposite';
 import { EliteTroopCodexComposite } from '../components/EliteTroopCodexComposite';
 import { LobbyMissionDetailDialogComposite } from '../components/LobbyMissionDetailDialogComposite';
 import { LobbyScene } from './LobbyScene';
+import { applyFactorTagTokens, FACTOR_TAG_TOKEN_PATH } from '../../core/systems/FactorTagTokens';
 import { BattleTactic } from '../../core/config/Constants';
 import { DEFAULT_BATTLE_ENTRY_PARAMS, type IBattleEntryParams } from '../../shared/BattleEntryParams';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
@@ -209,6 +210,13 @@ export class LoadingScene extends Component {
         } as Partial<CSSStyleDeclaration>);
     }
 
+    private _loadFactorTagTokens(): void {
+        resources.load<JsonAsset>(FACTOR_TAG_TOKEN_PATH, JsonAsset, (err, asset) => {
+            if (err || !asset) return;
+            applyFactorTagTokens(asset.json);
+        });
+    }
+
     private async _resolveRuntimeVersionByScreenId(screenId: string): Promise<string> {
         if (!screenId) return '';
         const assetPath = `ui-spec/screens/${screenId}.runtime-version`;
@@ -355,6 +363,7 @@ export class LoadingScene extends Component {
 
     onLoad() {
         this._applyPreviewParamsFromQuery();
+        this._loadFactorTagTokens();
 
         const eagerQueryVersion = this._resolveVersionFromQuery();
         if (eagerQueryVersion) {

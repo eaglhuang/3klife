@@ -13,6 +13,8 @@ import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
 import { EliteTroopCodexComposite, type EliteTroopCodexOpenPayload } from '../components/EliteTroopCodexComposite';
 import { LobbyMissionDetailDialogComposite, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
 import { LobbyLeaderboardComposite, type LobbyLeaderboardOpenPayload } from '../components/LobbyLeaderboardComposite';
+import { SeasonReportComposite, type SeasonReportOpenPayload } from '../components/SeasonReportComposite';
+import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS, type AddGeneralsResult } from '../../core/managers/GameSession';
@@ -20,6 +22,7 @@ import { formatModeLabel } from '../../core/systems/GameClock';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
 import { seasonDisplayText, seasonEffectHintText } from '../core/SeasonTexts';
+import { buildSandtableStatusLabel } from '../../core/systems/SandtableStatus';
 import { buildYearReportTexts, withYearReportFallback, type YearReport } from '../../core/systems/YearReport';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
@@ -58,6 +61,7 @@ import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView
 import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
 import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
+import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
 import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
 import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
@@ -261,6 +265,8 @@ export class LobbyScene extends Component {
     private _eliteTroopCodexPanel: EliteTroopCodexComposite | null = null;
     private _missionDetailDialogPanel: LobbyMissionDetailDialogComposite | null = null;
     private _leaderboardPanel: LobbyLeaderboardComposite | null = null;
+    private _seasonReportPanel: SeasonReportComposite | null = null;
+    private _sandtableTerritoryPanel: SandtableTerritoryComposite | null = null;
     private _characterDs3ActiveTab: GeneralDetailRuntimeTab = 'Overview';
     private _isCharacterDs3TabSwitching = false;
     private _gachaPoolIndex = 0;
@@ -372,6 +378,8 @@ export class LobbyScene extends Component {
         await this._mountEliteTroopCodexPanel();
         await this._mountLobbyMissionDetailDialogPanel();
         await this._mountLobbyLeaderboardPanel();
+        await this._mountSeasonReportPanel();
+        await this._mountSandtableTerritoryPanel();
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
         this._openPrisonerPopupIfPending();
@@ -636,6 +644,10 @@ export class LobbyScene extends Component {
         const countdownIcon = buildCountdownIconFlowView(services().session.countdown, Date.now());
         this._seasonHudHost?.binder?.setTexts(countdownIcon.texts);
         this._seasonHudHost?.binder?.setActives(countdownIcon.actives);
+        const session = services().session;
+        this._seasonHudHost?.binder?.setTexts({
+            openSandtableLabel: buildSandtableStatusLabel(session.officerUnlocks.sandtableStage, session.sandtableMarkersPlaced),
+        });
     }
 
     /** 教官支援卡目錄（mentor-support-cards.json）：只讀一次；讀取失敗視為空目錄，不擋培育 */
@@ -1054,6 +1066,7 @@ export class LobbyScene extends Component {
      */
     private async _mountHallBoard(): Promise<void> {
         await this._loadOfficerTiers();
+        await this._loadSandtableTerritories();
         const hub = await this._loadLobbyHub();
         if (!hub) {
             return;
@@ -1375,6 +1388,24 @@ export class LobbyScene extends Component {
         });
     }
 
+    /** 沙盤領地資料檔（PROG-2-0965）：驗證通過才覆寫清單；失敗沿用內建清單並記 log。 */
+    private _loadSandtableTerritories(): Promise<void> {
+        return new Promise((resolve) => {
+            resources.load<JsonAsset>('data/sandtable-territories', JsonAsset, (err, asset) => {
+                if (err || !asset) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 沙盤領地資料載入失敗，沿用內建清單', err);
+                    resolve();
+                    return;
+                }
+                const result = installSandtableTerritories(asset.json);
+                if (!result.ok) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 沙盤領地資料驗證失敗，沿用內建清單', (result as { ok: false; issues: string[] }).issues);
+                }
+                resolve();
+            });
+        });
+    }
+
     private _loadLobbyHub(): Promise<LobbyHub | null> {
         return new Promise((resolve) => {
             resources.load<JsonAsset>('data/lobby-hub', JsonAsset, (err, asset) => {
@@ -1410,11 +1441,32 @@ export class LobbyScene extends Component {
 
     /** 天下沙盤入口：官職未達沙盤階段（S1 起於階位 3）時只提示，不開牆 */
     private _onClickOpenSandtable(): void {
-        if (!services().session.officerUnlocks.sandtableStage) {
+        const session = services().session;
+        if (!session.officerUnlocks.sandtableStage) {
             services().event.emit('SHOW_TOAST', { message: '官職尚未達沙盤階段，暫時無法進入天下沙盤', duration: 2.5 });
             return;
         }
-        this._openHallBoard('Expedition');
+        const payload: SandtableTerritoryOpenPayload = {
+            stage: session.officerUnlocks.sandtableStage,
+            markerTerritories: session.sandtableMarkerTerritories,
+            nameOf: (territoryId: string) => services().i18n.t(`territory.${territoryId}.name`),
+            onPlace: (territoryId: string) => this._placeSandtableMarker(territoryId),
+        };
+        void services().ui.open(UIID.SandtableTerritory, payload);
+    }
+
+    /** 在領地放置沙盤標記（PROG-2-0967）：成功後存檔並刷新季度 HUD；失敗給提示 */
+    private _placeSandtableMarker(territoryId: string): boolean {
+        const placed = services().session.placeSandtableMarker(territoryId);
+        if (!placed) {
+            services().event.emit('SHOW_TOAST', { message: '無法在此領地放置標記', duration: 2 });
+            return false;
+        }
+        this._refreshSeasonHud();
+        services().session.save().catch((error: unknown) => {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 沙盤標記存檔失敗', error);
+        });
+        return true;
     }
 
     private _closeHallBoard(): void {
@@ -2073,13 +2125,17 @@ export class LobbyScene extends Component {
 
     private async _onClickAdvanceSeason(): Promise<void> {
         try {
-            const { advance, agingEvents } = await services().session.advanceSeason();
+            const { advance, agingEvents, quarterlyReports } = await services().session.advanceSeason();
             const died = agingEvents.filter((event) => event.type === 'died').length;
             const suffix = died > 0 ? `（${died} 位武將離世）` : '';
             services().event.emit('SHOW_TOAST', {
                 message: `進入${seasonText(advance.current)}${suffix}`,
                 duration: 2,
             });
+            if (quarterlyReports && quarterlyReports.length > 0) {
+                const payload: SeasonReportOpenPayload = { seasonLabel: seasonText(advance.current), reports: quarterlyReports };
+                void services().ui.open(UIID.SeasonReport, payload);
+            }
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 推進季度失敗', error);
             services().event.emit('SHOW_TOAST', { message: '推進季度失敗', duration: 2 });
@@ -2248,6 +2304,34 @@ export class LobbyScene extends Component {
         panelNode.setSiblingIndex(this.node.children.length - 1);
 
         this._leaderboardPanel = panelNode.getComponent(LobbyLeaderboardComposite) ?? panelNode.addComponent(LobbyLeaderboardComposite);
+        panelNode.active = false;
+    }
+
+    private async _mountSandtableTerritoryPanel(): Promise<void> {
+        const panelNode = this.node.getChildByName('SandtableTerritoryComposite') ?? new Node('SandtableTerritoryComposite');
+        panelNode.layer = this.node.layer;
+        if (!panelNode.parent) {
+            panelNode.parent = this.node;
+        }
+
+        this._ensureWidget(panelNode);
+        panelNode.setSiblingIndex(this.node.children.length - 1);
+
+        this._sandtableTerritoryPanel = panelNode.getComponent(SandtableTerritoryComposite) ?? panelNode.addComponent(SandtableTerritoryComposite);
+        panelNode.active = false;
+    }
+
+    private async _mountSeasonReportPanel(): Promise<void> {
+        const panelNode = this.node.getChildByName('SeasonReportComposite') ?? new Node('SeasonReportComposite');
+        panelNode.layer = this.node.layer;
+        if (!panelNode.parent) {
+            panelNode.parent = this.node;
+        }
+
+        this._ensureWidget(panelNode);
+        panelNode.setSiblingIndex(this.node.children.length - 1);
+
+        this._seasonReportPanel = panelNode.getComponent(SeasonReportComposite) ?? panelNode.addComponent(SeasonReportComposite);
         panelNode.active = false;
     }
 
@@ -2471,6 +2555,8 @@ export class LobbyScene extends Component {
         const eliteTroopCodexController = this._createEliteTroopCodexController();
         const missionDetailDialogController = this._createLobbyMissionDetailDialogController();
         const leaderboardController = this._createLobbyLeaderboardController();
+        const seasonReportController = this._createSeasonReportController();
+        const sandtableTerritoryController = this._createSandtableTerritoryController();
 
         services().ui.register(UIID.LobbyMain, lobbyMainController);
         services().ui.register(UIID.GeneralList, generalListController);
@@ -2484,6 +2570,8 @@ export class LobbyScene extends Component {
         services().ui.register(UIID.EliteTroopCodex, eliteTroopCodexController);
         services().ui.register(UIID.LobbyMissionDetailDialog, missionDetailDialogController);
         services().ui.register(UIID.LobbyLeaderboard, leaderboardController);
+        services().ui.register(UIID.SeasonReport, seasonReportController);
+        services().ui.register(UIID.SandtableTerritory, sandtableTerritoryController);
     }
 
     private _createEliteTroopCodexController(): IUIManagedController {
@@ -2514,6 +2602,38 @@ export class LobbyScene extends Component {
             },
             hide: () => {
                 this._leaderboardPanel!.hide();
+            },
+        };
+    }
+
+    private _createSandtableTerritoryController(): IUIManagedController {
+        if (!this._sandtableTerritoryPanel) {
+            throw new Error('[LobbyScene] SandtableTerritoryComposite cannot be registered before mount');
+        }
+
+        return {
+            node: this._sandtableTerritoryPanel.node,
+            show: async (payload?: unknown) => {
+                await this._sandtableTerritoryPanel!.show(payload as SandtableTerritoryOpenPayload);
+            },
+            hide: () => {
+                this._sandtableTerritoryPanel!.hide();
+            },
+        };
+    }
+
+    private _createSeasonReportController(): IUIManagedController {
+        if (!this._seasonReportPanel) {
+            throw new Error('[LobbyScene] SeasonReportComposite cannot be registered before mount');
+        }
+
+        return {
+            node: this._seasonReportPanel.node,
+            show: async (payload?: unknown) => {
+                await this._seasonReportPanel!.show(payload as SeasonReportOpenPayload | undefined);
+            },
+            hide: () => {
+                this._seasonReportPanel!.hide();
             },
         };
     }

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "provisional": true,
+  "note": "PM 2026-10-21 暫定：東漢十三州作為領地（州節點）。世界沙盤（TIME-10）接入後可替換。名稱見 zh-TW／en／ja 的 territory.<id>.name。",
+  "territories": [
+    { "id": "sili", "nameKey": "territory.sili.name" },
+    { "id": "yu", "nameKey": "territory.yu.name" },
+    { "id": "yan", "nameKey": "territory.yan.name" },
+    { "id": "xu", "nameKey": "territory.xu.name" },
+    { "id": "qing", "nameKey": "territory.qing.name" },
+    { "id": "ji", "nameKey": "territory.ji.name" },
+    { "id": "you", "nameKey": "territory.you.name" },
+    { "id": "bing", "nameKey": "territory.bing.name" },
+    { "id": "liang", "nameKey": "territory.liang.name" },
+    { "id": "yi", "nameKey": "territory.yi.name" },
+    { "id": "jing", "nameKey": "territory.jing.name" },
+    { "id": "yang", "nameKey": "territory.yang.name" },
+    { "id": "jiao", "nameKey": "territory.jiao.name" }
+  ]
+}

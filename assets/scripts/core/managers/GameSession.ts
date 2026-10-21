@@ -26,6 +26,7 @@ import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from 
 import { addOfficerExp, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
 import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/SandtableMarkers';
+import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
 import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
 import type { HallBoardKey, HallGateTask, HallPlayerState } from '../systems/HallMissionBoard';
@@ -62,7 +63,10 @@ import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingStat
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
-import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, type GachaMentorJournalEntry, normalizeSandtableMarkersPlaced, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult } from '../systems/HallAutoAssign';
+import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
+import { estimateSortiePower } from '../systems/SortiePrediction';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
@@ -393,10 +397,12 @@ export class GameSession {
     /** 女性武將來源（uid → 來源，FEM-01）；戰俘女將歸入名冊時寫入（PROG-2-0245） */
     /** 官職狀態（OFC-03）：階位、經驗與解鎖歷史；存檔為扁平欄位 officerState */
     private _officerState: OfficerState = initialOfficerState();
-    /** 世界沙盤已放置的標記數（OFC-06）；上限由官職階段決定，存檔為扁平欄位 sandtableMarkersPlaced */
-    private _sandtableMarkersPlaced = 0;
+    /** 世界沙盤標記所在的領地 id（OFC-06 / PROG-2-0965）；每領地最多一個，數量上限由官職階段決定 */
+    private _sandtableMarkerTerritories: readonly string[] = [];
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔 */
     private _gachaMentorJournal: GachaMentorJournalEntry[] = [];
+    /** 大廳任務 AI 委任紀錄（PROG-2-1006） */
+    private _hallAssignLog: HallAutoAssignRecord[] = [];
     private _femaleSources: Record<string, FemaleSource> = {};
     /** 轉蛋各池保底計數（PROG-2-0337）；由轉蛋服務寫入，存檔時一併保存 */
     private _gachaPity: GachaPityBook = {};
@@ -1032,8 +1038,9 @@ export class GameSession {
         this._legendaryMentoringUsedIds = [];
         this._breedingBirthRecords = [];
         this._officerState = initialOfficerState();
-        this._sandtableMarkersPlaced = 0;
+        this._sandtableMarkerTerritories = [];
         this._gachaMentorJournal = [];
+        this._hallAssignLog = [];
         this._military = { ...STARTER_MILITARY };
         this._yearAgingEvents = [];
         this._prison = createPrisonState<GeneralConfig>();
@@ -1244,18 +1251,25 @@ export class GameSession {
 
     /** 世界沙盤已放置標記數（唯讀，OFC-06）。 */
     public get sandtableMarkersPlaced(): number {
-        return this._sandtableMarkersPlaced;
+        return this._sandtableMarkerTerritories.length;
+    }
+
+    /** 已放置標記的領地 id（PROG-2-0965） */
+    public get sandtableMarkerTerritories(): readonly string[] {
+        return this._sandtableMarkerTerritories;
     }
 
     /** 世界沙盤還能再放的標記數（OFC-06）；未解鎖沙盤時為 0。 */
     public get sandtableRemaining(): number {
-        return remainingSandtableMarkers(this._sandtableMarkersPlaced, this.officerUnlocks.sandtableStage);
+        return remainingSandtableMarkers(this.sandtableMarkersPlaced, this.officerUnlocks.sandtableStage);
     }
 
-    /** 在世界沙盤放置一個標記（OFC-06）；上限已滿或未解鎖時回傳 false，不改動狀態。 */
-    public placeSandtableMarker(): boolean {
-        if (!canPlaceSandtableMarker(this._sandtableMarkersPlaced, this.officerUnlocks.sandtableStage)) return false;
-        this._sandtableMarkersPlaced += 1;
+    /** 在指定領地放置一個標記（OFC-06 / PROG-2-0965）；上限已滿、未解鎖、領地不存在或已有標記時回傳 false，不改動狀態。 */
+    public placeSandtableMarker(territoryId: string): boolean {
+        if (!canPlaceSandtableMarker(this.sandtableMarkersPlaced, this.officerUnlocks.sandtableStage)) return false;
+        if (!isSandtableTerritory(territoryId)) return false;
+        if (this._sandtableMarkerTerritories.includes(territoryId)) return false;
+        this._sandtableMarkerTerritories = [...this._sandtableMarkerTerritories, territoryId];
         return true;
     }
 
@@ -2010,6 +2024,43 @@ export class GameSession {
      * 抽卡 / 招募入口：把新武將寫進名冊（以 id 去重）並自動存檔。
      * 已持有的武將不會重複加入，回傳 duplicates 供 UI 提示（之後可換算成碎片）。
      */
+    /** 大廳任務委任紀錄，新到舊（唯讀副本）；taskId 缺省時回傳全部 */
+    public listHallAssignRecords(taskId?: string): HallAutoAssignRecord[] {
+        return listAssignRecords(this._hallAssignLog, taskId);
+    }
+
+    /**
+     * 委任大廳任務：由 AI 從可出戰武將中選將，寫入委任紀錄並存檔（HALL-05 / PROG-2-1006）。
+     * 未開啟委任或沒有可選武將時拒絕，不寫紀錄、不存檔。
+     */
+    public async autoAssignHallMission(
+        task: Readonly<HallTaskIntelInput & { taskId: string }>,
+        assignedAt: string,
+    ): Promise<HallAutoAssignResult> {
+        const candidates = this.getDeployableGenerals().map((general) => ({
+            generalId: general.id,
+            power: estimateSortiePower(general),
+        }));
+        const result = autoAssignHallTask(task, candidates, assignedAt, this._hallAssignLog);
+        if (!result.ok) return result;
+        this._hallAssignLog = appendAssignRecord(this._hallAssignLog, result.record);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
+    }
+
+    /** 結算同一任務最新一筆未結算的委任紀錄（結算結果由戰後系統傳入）；沒有未結算紀錄時回傳 false。 */
+    public async settleHallAssign(taskId: string, outcome: HallAssignOutcome, settledAt: string): Promise<boolean> {
+        const settled = settleLatestAssign(this._hallAssignLog, taskId, outcome, settledAt);
+        if (!settled.ok) return false;
+        this._hallAssignLog = settled.log;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return true;
+    }
+
     /** 抽卡待補教官卡的日誌（唯讀副本） */
     public get gachaMentorJournal(): readonly GachaMentorJournalEntry[] {
         return normalizeGachaMentorJournal(this._gachaMentorJournal);
@@ -2361,8 +2412,9 @@ export class GameSession {
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        const base = createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount, this._officerState, this._sandtableMarkersPlaced);
-        return this._gachaMentorJournal.length > 0 ? { ...base, gachaMentorJournal: normalizeGachaMentorJournal(this._gachaMentorJournal) } : base;
+        const base = createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount, this._officerState, this.sandtableMarkersPlaced, this._sandtableMarkerTerritories);
+        const withJournal = this._gachaMentorJournal.length > 0 ? { ...base, gachaMentorJournal: normalizeGachaMentorJournal(this._gachaMentorJournal) } : base;
+        return this._hallAssignLog.length > 0 ? { ...withJournal, hallAssignLog: normalizeHallAssignLog(this._hallAssignLog) } : withJournal;
     }
 
     /**
@@ -2441,8 +2493,9 @@ export class GameSession {
         this.dynamicRelations.restore(snapshot.dynamicRelations ?? []);
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
         this._officerState = normalizeOfficerState(snapshot.officerState);
-        this._sandtableMarkersPlaced = normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced);
+        this._sandtableMarkerTerritories = normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories);
         this._gachaMentorJournal = normalizeGachaMentorJournal(snapshot.gachaMentorJournal);
+        this._hallAssignLog = normalizeHallAssignLog(snapshot.hallAssignLog);
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };

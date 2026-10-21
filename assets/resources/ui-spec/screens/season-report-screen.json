@@ -1,0 +1,43 @@
+{
+  "id": "season-report-screen",
+  "version": 1,
+  "uiId": "SeasonReport",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "season-report-main",
+  "skin": "season-report-default",
+  "contentRequirements": {
+    "schemaId": "season-report-content",
+    "familyId": "season-report",
+    "requiredFields": [
+      "title",
+      "seasonLabel",
+      "emptyHintLabel",
+      "hintLabel",
+      "row0RankLabel",
+      "row0LineLabel",
+      "row1RankLabel",
+      "row1LineLabel",
+      "row2RankLabel",
+      "row2LineLabel",
+      "row3RankLabel",
+      "row3LineLabel",
+      "row4RankLabel",
+      "row4LineLabel",
+      "row5RankLabel",
+      "row5LineLabel"
+    ]
+  },
+  "content": {
+    "source": "season-report-states-v1",
+    "state": "smoke-report"
+  },
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
