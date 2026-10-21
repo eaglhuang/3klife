@@ -448,6 +448,32 @@ export function checkDeploy(state: SortieState, request: DeployRequest): SortieD
     return { ok: reasons.length === 0, reasons, cost };
 }
 
+/**
+ * 改派建議 Deploy_Suggestion（DEP-10）：目標不可部署時，從候選兵種中推薦一隊可派出的低耗部隊。
+ * 只回傳建議，玩家必須再次確認，不自動改派（規格）。排序暫定：糧耗低者優先，再比兵力耗，同分取候選順序較前者。
+ */
+export function suggestLowCostDeploy(
+    state: SortieState,
+    deniedType: string,
+    candidateTypes: readonly string[],
+): string | null {
+    let best: { troopType: string; cost: DeployCost } | null = null;
+    for (const troopType of candidateTypes) {
+        if (troopCodeOf(troopType) === troopCodeOf(deniedType)) continue;
+        const check = checkDeploy(state, { troopType });
+        if (!check.ok) continue;
+        const cost = check.cost;
+        if (
+            !best
+            || cost.foodCost < best.cost.foodCost
+            || (cost.foodCost === best.cost.foodCost && cost.troopCost < best.cost.troopCost)
+        ) {
+            best = { troopType, cost };
+        }
+    }
+    return best?.troopType ?? null;
+}
+
 export interface ApplyDeployResult {
     ok: boolean;
     state: SortieState;
