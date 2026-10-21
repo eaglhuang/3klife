@@ -288,5 +288,20 @@
   "ui.officer.cap.normal": "中级",
   "ui.officer.cap.elite": "精英",
   "ui.officer.cap.advanced": "高阶",
-  "ui.officer.cap.hell": "地狱"
+  "ui.officer.cap.hell": "地狱",
+  "ui.general.mentor.borrow.star": "★{0}",
+  "ui.general.mentor.borrow.ssr": "SSR",
+  "ui.general.mentor.borrow.ok": "可借用",
+  "ui.general.mentor.borrow.blocked.SELF_BORROW": "不能借用自己的教官",
+  "ui.general.mentor.borrow.blocked.NOT_SSR": "只能借用 SSR 教官",
+  "ui.general.mentor.borrow.blocked.DAILY_LIMIT": "今天已借过一次",
+  "ui.general.mentor.borrow.blocked.SAME_CARD_TODAY": "今天已借过这张卡",
+  "ui.general.mentor.borrow.blocked.CARD_LOCKED": "这张卡仍在培育中",
+  "ui.general.nurture.record.period": "第 {0} 季至第 {1} 季",
+  "ui.general.nurture.record.rating": "评级 {0}",
+  "ui.general.nurture.record.tags_empty": "无标签",
+  "ui.general.nurture.record.tp_unknown": "TP 未记录",
+  "ui.general.nurture.record.tp": "TP {0}",
+  "ui.general.nurture.record.revelation_none": "未揭露",
+  "ui.general.nurture.record.revelation": "揭露第 {0} 层"
 }

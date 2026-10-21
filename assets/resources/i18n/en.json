@@ -288,5 +288,20 @@
   "ui.officer.cap.normal": "Normal",
   "ui.officer.cap.elite": "Elite",
   "ui.officer.cap.advanced": "Advanced",
-  "ui.officer.cap.hell": "Hell"
+  "ui.officer.cap.hell": "Hell",
+  "ui.general.mentor.borrow.star": "★{0}",
+  "ui.general.mentor.borrow.ssr": "SSR",
+  "ui.general.mentor.borrow.ok": "Available",
+  "ui.general.mentor.borrow.blocked.SELF_BORROW": "Can't borrow your own mentor",
+  "ui.general.mentor.borrow.blocked.NOT_SSR": "Only SSR mentors can be borrowed",
+  "ui.general.mentor.borrow.blocked.DAILY_LIMIT": "Already borrowed once today",
+  "ui.general.mentor.borrow.blocked.SAME_CARD_TODAY": "This card was borrowed today",
+  "ui.general.mentor.borrow.blocked.CARD_LOCKED": "This card is still in training",
+  "ui.general.nurture.record.period": "Season {0} to season {1}",
+  "ui.general.nurture.record.rating": "Rating {0}",
+  "ui.general.nurture.record.tags_empty": "No tags",
+  "ui.general.nurture.record.tp_unknown": "TP not recorded",
+  "ui.general.nurture.record.tp": "TP {0}",
+  "ui.general.nurture.record.revelation_none": "Undisclosed",
+  "ui.general.nurture.record.revelation": "Revealed to level {0}"
 }
