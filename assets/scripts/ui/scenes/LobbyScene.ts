@@ -54,6 +54,7 @@ import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
 import { nurtureGraduationRows } from '../core/NurtureGraduationView';
 import { pageSliceOf } from '../core/FixedSlotPager';
+import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView';
 import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
 import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
@@ -202,6 +203,9 @@ export class LobbyScene extends Component {
     private _officerPageHost: UIScreenPreviewHost | null = null;
     private _graduationHost: UIScreenPreviewHost | null = null;
     private _graduationPage = 0;
+    private _mentorBorrowHost: UIScreenPreviewHost | null = null;
+    private _mentorBorrowSessionId: string | null = null;
+    private _mentorBorrowPage = 0;
     /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
@@ -344,6 +348,7 @@ export class LobbyScene extends Component {
         await this._mountOfficerHud();
         await this._mountNurtureFlow();
         await this._mountGraduationRecord();
+        await this._mountMentorBorrow();
         await this._mountMentorCardDetail();
         await this._mountGeneralVersionGallery();
         await this._mountBondingSetup();
@@ -515,6 +520,78 @@ export class LobbyScene extends Component {
         this._graduationHost?.binder?.setActives(actives);
     }
 
+    /** 借將畫面（PROG-2-0726，PM 裁定採 A）：從養成流程的借將按鈕打開，固定 5 列加分頁；選列後呼叫 borrowFriendMentor */
+    private async _mountMentorBorrow(): Promise<void> {
+        this._mentorBorrowHost = await this._mountPreviewScreenHost('MentorBorrowHost', 'mentor-borrow-screen', [
+            { buttonId: 'btnBorrowClose', handler: () => this._setMentorBorrowOpen(false) },
+            { buttonId: 'btnBorrowPrev', handler: () => this._turnMentorBorrowPage(-1) },
+            { buttonId: 'btnBorrowNext', handler: () => this._turnMentorBorrowPage(1) },
+            { buttonId: 'btnBorrowRow0', handler: () => { void this._borrowRow(0); } },
+            { buttonId: 'btnBorrowRow1', handler: () => { void this._borrowRow(1); } },
+            { buttonId: 'btnBorrowRow2', handler: () => { void this._borrowRow(2); } },
+            { buttonId: 'btnBorrowRow3', handler: () => { void this._borrowRow(3); } },
+            { buttonId: 'btnBorrowRow4', handler: () => { void this._borrowRow(4); } },
+        ]);
+        this._setMentorBorrowOpen(false);
+    }
+
+    private _openMentorBorrow(sessionId: string): void {
+        this._mentorBorrowSessionId = sessionId;
+        this._mentorBorrowPage = 0;
+        this._setMentorBorrowOpen(true);
+    }
+
+    private _setMentorBorrowOpen(open: boolean): void {
+        if (open) this._refreshMentorBorrow();
+        if (this._mentorBorrowHost) this._mentorBorrowHost.node.active = open;
+    }
+
+    private _turnMentorBorrowPage(delta: number): void {
+        this._mentorBorrowPage += delta;
+        this._refreshMentorBorrow();
+    }
+
+    /** 目前的借將列表（全部好友，依借用檢查結果標示）；每次刷新都重算，避免打開後狀態過期 */
+    private _mentorBorrowRowsNow(): MentorBorrowRow[] {
+        const sessionId = this._mentorBorrowSessionId ?? '';
+        const lookup = (key: string): string => services().i18n.t(key);
+        return mentorBorrowRows(services().session.npcFriendMentors, (friend) => services().session.borrowBlockFor(friend, sessionId), lookup);
+    }
+
+    private _refreshMentorBorrow(): void {
+        const slice = pageSliceOf(this._mentorBorrowRowsNow(), this._mentorBorrowPage);
+        this._mentorBorrowPage = slice.page;
+        const texts: Record<string, string> = { borrowPage: `${slice.page + 1} / ${slice.pageCount}` };
+        const actives: Record<string, boolean> = {};
+        for (let i = 0; i < 5; i++) {
+            const row = slice.items[i];
+            actives[`borrowRow${i}Box`] = row !== undefined;
+            texts[`borrowRow${i}`] = row ? `${row.name}　${row.rankText}\n${row.statusText}` : '';
+            texts[`borrowRow${i}Btn`] = row?.enabled ? '借用' : '—';
+        }
+        this._mentorBorrowHost?.binder?.setTexts(texts);
+        this._mentorBorrowHost?.binder?.setActives(actives);
+    }
+
+    /** 選第 i 列借用：擋下時顯示原因不改紀錄；成功後刷新列表並顯示結義點數 */
+    private async _borrowRow(index: number): Promise<void> {
+        const sessionId = this._mentorBorrowSessionId;
+        const slice = pageSliceOf(this._mentorBorrowRowsNow(), this._mentorBorrowPage);
+        const row = slice.items[index];
+        if (!sessionId || !row || !row.enabled) return;
+        const result = await services().session.borrowFriendMentor({
+            friendId: row.friendId,
+            sessionId,
+            recordId: `borrow-${sessionId}-${row.friendId}-${Date.now()}`,
+        });
+        if (result.ok === false) {
+            services().event.emit('SHOW_TOAST', { message: services().i18n.t(`ui.general.mentor.borrow.blocked.${result.blocked}`), duration: 2 });
+        } else {
+            services().event.emit('SHOW_TOAST', { message: `借用完成，結義點數 +${result.ownerBondReward}`, duration: 2 });
+        }
+        this._refreshMentorBorrow();
+    }
+
     /** 季度 HUD：以 UCUF JSON（lobby-season-hud-screen）執行期組裝，顯示「第 N 年 M 季」與推進入口 */
     private async _mountSeasonHud(): Promise<void> {
         this._seasonHudHost = await this._mountPreviewScreenHost('SeasonHudHost', 'lobby-season-hud-screen', [
@@ -622,6 +699,10 @@ export class LobbyScene extends Component {
             ...trainBindings,
             { buttonId: 'btnLegendaryCard', handler: act(() => flow.cycleLegendaryCard()) },
             { buttonId: 'btnLegendaryMentor', handler: act(() => flow.legendaryMentor()) },
+            { buttonId: 'btnMentorBorrow', handler: () => {
+                const sessionId = flow.mentorBorrowSessionId();
+                if (sessionId) this._openMentorBorrow(sessionId);
+            } },
             { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
             { buttonId: 'btnUsePill', handler: () => { void this._usePillOnNurtureChild(flow); } },
             { buttonId: 'btnAbandon', handler: act(() => flow.abandon()) },

@@ -248,6 +248,13 @@ export class NurtureFlowController {
         return this._legendaryCards.find((c) => c.uid === this._legendaryCardUid) ?? null;
     }
 
+    /** 借將入口：目前養成中的 sessionId；沒有進行中的培育時回傳 null */
+    mentorBorrowSessionId(): string | null {
+        const child = this._resolveSelected();
+        const session = child ? this._deps.nurture.getSession(child.id) : null;
+        return session && session.status === 'active' ? session.sessionId : null;
+    }
+
     async legendaryMentor(): Promise<boolean> {
         const child = this._requireSelected();
         const card = this.legendaryCard;
@@ -382,6 +389,7 @@ export class NurtureFlowController {
         enabled.btnMentorDetail = false;
         enabled.btnLegendaryCard = false;
         enabled.btnLegendaryMentor = false;
+        enabled.btnMentorBorrow = false;
 
         if (!child) {
             actives.flowEmptyHint = true;
@@ -445,6 +453,8 @@ export class NurtureFlowController {
         texts.legendaryCardLabel = legendary ? `英靈：${legendary.name}` : '英靈：未選';
         enabled.btnLegendaryMentor = !!this._deps.performLegendaryMentoring && !!legendary && session.status === 'active';
         texts.legendaryMentorLabel = '傳道';
+        enabled.btnMentorBorrow = session.status === 'active';
+        texts.mentorBorrowLabel = '借將';
         texts.autoNurtureLabel = '自動培育整季';
         return { mode: 'train', childId: child.id, texts, actives, enabled };
     }
