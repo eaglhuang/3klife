@@ -1,5 +1,5 @@
 import { assert, TestSuite } from './TestRunner';
-import { createItemEffectDispatcher, isItemEffectType, vitalityRestoreAmount } from '../assets/scripts/core/systems/ItemEffectDispatcher';
+import { createItemEffectDispatcher, isItemEffectType } from '../assets/scripts/core/systems/ItemEffectDispatcher';
 
 export function createItemEffectDispatcherSuite(): TestSuite {
     const suite = new TestSuite('ItemEffectDispatcher (ITM-04a 道具效果派發)');
@@ -38,11 +38,12 @@ export function createItemEffectDispatcherSuite(): TestSuite {
         assert.isFalse(isItemEffectType(undefined));
     });
 
-    suite.test('回精力 50%：依上限取整數，上限非正數為 0', () => {
-        assert.equals(60, vitalityRestoreAmount(120));
-        assert.equals(50, vitalityRestoreAmount(101));
-        assert.equals(0, vitalityRestoreAmount(0));
-        assert.equals(0, vitalityRestoreAmount(Number.NaN));
+    suite.test('Effect_Value 為固定數值：原樣交給處理函式（補元散 +50 不換算）', () => {
+        let received = 0;
+        const dispatcher = createItemEffectDispatcher<null, number>({ RESTORE_VITALITY: (value) => { received = value; return value; } });
+        const result = dispatcher.apply('RESTORE_VITALITY', 50, null);
+        assert.isTrue(result.ok);
+        assert.equals(50, received);
     });
 
     return suite;
