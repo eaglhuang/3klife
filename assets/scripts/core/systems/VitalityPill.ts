@@ -10,6 +10,7 @@
  * Unity 對照：像 Inventory.Use(item)，先檢查條件，全部通過才回傳新的背包與數值。
  */
 import { consumeItem, ITEM_PREMIUM_VITALITY_PILL, ITEM_VITALITY_PILL, itemCount, PlayerInventory } from './PlayerInventory';
+import { createItemEffectDispatcher } from './ItemEffectDispatcher';
 
 export type VitalityPillKind = 'vitalityPill' | 'premiumVitalityPill';
 
@@ -31,13 +32,21 @@ function sanitize(current: number, max: number): { current: number; max: number 
     return { current: safeCurrent, max: safeMax };
 }
 
+/** 道具效果派發器的精力處理（ITM-04b）：RESTORE_VITALITY 的效果值為回復量，結果夾在上限內。 */
+const vitalityEffects = createItemEffectDispatcher<{ current: number; max: number }, number>({
+    RESTORE_VITALITY: (value, ctx) => Math.min(ctx.max, ctx.current + value),
+});
+
 /**
  * 使用一個補元散後的精力（只算數值，不扣道具）。
  * current 無效視為 0；max 無效視為 0；結果夾在 0 到 max 之間。
+ * 回復量經由 ItemEffectDispatcher 派發（RESTORE_VITALITY）。
  */
 export function applyVitalityPill(current: number, max: number, kind: VitalityPillKind): number {
     const s = sanitize(current, max);
-    return Math.min(s.max, s.current + VITALITY_PILL_RESTORE[kind]);
+    const result = vitalityEffects.apply('RESTORE_VITALITY', VITALITY_PILL_RESTORE[kind], s);
+    // 回復量來自內建表，必為正數；派發失敗時維持精力不變，不拋例外
+    return result.ok === true ? result.result : s.current;
 }
 
 export type VitalityPillRejectReason = 'no-item' | 'vitality-full';

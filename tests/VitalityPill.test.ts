@@ -34,6 +34,11 @@ export function createVitalityPillSuite(): TestSuite {
         assert.equals(0, applyVitalityPill(10, Number.NaN, 'vitalityPill'));
     });
 
+    suite.test('經派發器回復：高級補元散在精力歸零時回復 100，且不超過上限', () => {
+        assert.equals(100, applyVitalityPill(0, 1000, 'premiumVitalityPill'));
+        assert.equals(120, applyVitalityPill(110, 120, 'premiumVitalityPill'));
+    });
+
     suite.test('使用成功：扣 1 個對應道具並回復精力', () => {
         const r = useVitalityPill(withPills(2, 0), 20, 120, 'vitalityPill');
         assert.isTrue(r.ok);
