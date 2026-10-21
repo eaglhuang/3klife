@@ -29,7 +29,7 @@ export function createSandtableSaveWiringSuite(): TestSuite {
     suite.test('未解鎖沙盤時不能放標記，剩餘數為 0', () => {
         const session = createSession(new MemoryStorageAdapter());
         assert.equals(0, session.sandtableRemaining);
-        assert.isFalse(session.placeSandtableMarker());
+        assert.isFalse(session.placeSandtableMarker('sili'));
         assert.equals(0, session.sandtableMarkersPlaced);
     });
 
@@ -37,10 +37,10 @@ export function createSandtableSaveWiringSuite(): TestSuite {
         const session = createSession(new MemoryStorageAdapter());
         promoteToTierThree(session);
         assert.equals(3, session.sandtableRemaining);
-        assert.isTrue(session.placeSandtableMarker());
-        assert.isTrue(session.placeSandtableMarker());
-        assert.isTrue(session.placeSandtableMarker());
-        assert.isFalse(session.placeSandtableMarker());
+        assert.isTrue(session.placeSandtableMarker('sili'));
+        assert.isTrue(session.placeSandtableMarker('yu'));
+        assert.isTrue(session.placeSandtableMarker('yan'));
+        assert.isFalse(session.placeSandtableMarker('xu'));
         assert.equals(3, session.sandtableMarkersPlaced);
         assert.equals(0, session.sandtableRemaining);
     });
@@ -49,20 +49,33 @@ export function createSandtableSaveWiringSuite(): TestSuite {
         const adapter = new MemoryStorageAdapter();
         let session = createSession(adapter);
         promoteToTierThree(session);
-        session.placeSandtableMarker();
-        session.placeSandtableMarker();
+        session.placeSandtableMarker('sili');
+        session.placeSandtableMarker('jing');
         await session.save();
 
         session = createSession(adapter);
         assert.isTrue(await session.load());
         assert.equals(2, session.sandtableMarkersPlaced);
         assert.equals(1, session.sandtableRemaining);
+        assert.equals('sili', session.sandtableMarkerTerritories[0]);
+        assert.equals('jing', session.sandtableMarkerTerritories[1]);
     });
 
     suite.test('沒有放置過標記時不寫入欄位（舊存檔相容，版號不升）', () => {
         const session = createSession(new MemoryStorageAdapter());
         const snapshot = JSON.parse(JSON.stringify(session.createSnapshot(new Date(0)))) as Record<string, unknown>;
         assert.isFalse('sandtableMarkersPlaced' in snapshot);
+        assert.isFalse('sandtableMarkerTerritories' in snapshot);
+    });
+
+    suite.test('同一領地只能放一個標記，未知領地與重複領地都不改動狀態', () => {
+        const session = createSession(new MemoryStorageAdapter());
+        promoteToTierThree(session);
+        assert.isFalse(session.placeSandtableMarker('not-a-territory'));
+        assert.isTrue(session.placeSandtableMarker('yu'));
+        assert.isFalse(session.placeSandtableMarker('yu'));
+        assert.equals(1, session.sandtableMarkersPlaced);
+        assert.equals(2, session.sandtableRemaining);
     });
 
     return suite;

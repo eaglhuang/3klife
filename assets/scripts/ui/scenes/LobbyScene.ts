@@ -60,6 +60,7 @@ import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView
 import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
 import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
+import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
 import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
 import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
@@ -1062,6 +1063,7 @@ export class LobbyScene extends Component {
      */
     private async _mountHallBoard(): Promise<void> {
         await this._loadOfficerTiers();
+        await this._loadSandtableTerritories();
         const hub = await this._loadLobbyHub();
         if (!hub) {
             return;
@@ -1377,6 +1379,24 @@ export class LobbyScene extends Component {
                 const result = installOfficerTierTable(asset.json);
                 if (!result.ok) {
                     UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 官職階位資料驗證失敗，沿用內建門檻', (result as { ok: false; issues: string[] }).issues);
+                }
+                resolve();
+            });
+        });
+    }
+
+    /** 沙盤領地資料檔（PROG-2-0965）：驗證通過才覆寫清單；失敗沿用內建清單並記 log。 */
+    private _loadSandtableTerritories(): Promise<void> {
+        return new Promise((resolve) => {
+            resources.load<JsonAsset>('data/sandtable-territories', JsonAsset, (err, asset) => {
+                if (err || !asset) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 沙盤領地資料載入失敗，沿用內建清單', err);
+                    resolve();
+                    return;
+                }
+                const result = installSandtableTerritories(asset.json);
+                if (!result.ok) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 沙盤領地資料驗證失敗，沿用內建清單', (result as { ok: false; issues: string[] }).issues);
                 }
                 resolve();
             });
