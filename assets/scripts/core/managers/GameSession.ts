@@ -101,6 +101,7 @@ import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance
 import { visibleFactorColors as factorColorsVisibleAtLevel } from '../systems/FactorMask';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
+import { withUltimateUnlockState } from '../systems/UltimateSlotUnlock';
 import { MentorDuplicateOutcome, overflowToastText, resolveMentorDuplicate } from '../systems/MentorOverflow';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
 import { borrowCandidateOf, type NpcFriendMentor } from '../systems/NpcFriendMentor';
@@ -2165,7 +2166,11 @@ export class GameSession {
                 const target = byId.get(duplicate.id);
                 if (!target) continue;
                 const pull = applyDuplicatePull(target.rebirthCount);
-                byId.set(duplicate.id, { ...target, rebirthCount: pull.rebirthCount });
+                byId.set(duplicate.id, {
+                    ...target,
+                    rebirthCount: pull.rebirthCount,
+                    ultimateSlots: withUltimateUnlockState(target.ultimateSlots ?? [], pull.rebirthCount),
+                });
                 rebirths.push({ id: duplicate.id, ...pull });
                 if (pull.overflow) {
                     bondPointsGained += overflowBondPoints(overflowRarityOf(target));
