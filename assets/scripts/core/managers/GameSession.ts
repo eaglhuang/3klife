@@ -40,7 +40,7 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import { advanceDaughtersOneYear, assignDaughterRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
 import { GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
 import { buildYearReport, normalizeYearAgingEvents, YearReport } from '../systems/YearReport';
-import { backfillTallyTroopTypes, mainTroopTypeOf, produceRetireTally } from '../systems/TigerTally';
+import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import type { CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { ageGeneralsOneSeason, AgingEvent, isGeneralDead, RandomSource } from '../systems/GeneralAging';
@@ -2138,20 +2138,7 @@ export class GameSession {
             // 文職與雙職能退役發 1 份竹簡（PM 暫定）；虎符只在死亡結算發，退役不發
             this._inventory = addItem(this._inventory, ITEM_BAMBOO_SLIP, 1);
         }
-        if (reason === 'WARRIOR') {
-            // 武職退役發一張虎符（PROG-2-0739，PM 2026-10-20 裁定照規格 §H）；退役者之後不會再走陣亡產卡，不會重複
-            const retired = roster.find((g) => g.id === generalId);
-            const card = retired && produceRetireTally(
-                { troopType: mainTroopTypeOf(retired.troopAptitude), ...retired },
-                computeDeathBattleScore((retired as { battleRecord?: Parameters<typeof computeDeathBattleScore>[0] }).battleRecord),
-                TALLY_DEATH_SCORE_TUNING.legacyQualityFallback,
-                this._clock.state.totalSeasonsElapsed,
-            );
-            if (card) {
-                this._tallyCards = { ...this._tallyCards, [card.uid]: card };
-                this._tallyHoldings = { holders: { ...this._tallyHoldings.holders, [card.uid]: null } };
-            }
-        }
+        // 退役不產虎符（規格 Q61=C 明文禁止，PROG-2-1020）；虎符只在陣亡結算產生
         if (this._autoSave && this._save) {
             await this.save();
         }

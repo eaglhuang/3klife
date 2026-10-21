@@ -54,13 +54,9 @@ export function createRetireDeathTallyChainSuite(): TestSuite {
         assert.equals(3, record?.wins ?? -1);
         assert.equals(30, record?.kills ?? -1);
 
-        // 武職退役：發一張退役虎符，由君主持有
+        // 武職退役：不產虎符（規格 Q61=C，PROG-2-1020）
         await a.retireGeneral('vet');
-        const retireCards = Object.values(a.tallyCards);
-        assert.equals(1, retireCards.length, '武職退役發一張虎符');
-        assert.equals('retire', retireCards[0].source);
-        assert.equals('vet', retireCards[0].sourceGeneralUid);
-        assert.isTrue(a.tallyHoldings[retireCards[0].uid] === null, '退役虎符由君主持有');
+        assert.equals(0, Object.values(a.tallyCards).length, '退役不發虎符');
 
         // 死亡 → 季結產卡（退役的 vet 不會再走陣亡產卡）
         const spent = a.spendLifespan('hero', 'breeding');
@@ -94,14 +90,14 @@ export function createRetireDeathTallyChainSuite(): TestSuite {
             general('vet', 70, { isHistorical: true, maxLifespan: 71, primaryClass: 'Warrior' }),
         ]);
         await a.retireGeneral('vet');
-        assert.equals(1, Object.values(a.tallyCards).length, '退役時發一張虎符');
+        assert.equals(0, Object.values(a.tallyCards).length, '退役不發虎符');
 
         // 退役者仍留在名冊（只標 isMentorCard），壽命耗盡後的死亡結算不得再產卡
         for (let i = 0; i < 4; i += 1) a.spendLifespan('vet', 'breeding');
         await a.advanceSeason();
         await a.advanceSeason();
         assert.equals(0, Object.values(a.tallyCards).filter((c) => c.source === 'death').length, '退役者死亡不產陣亡虎符');
-        assert.equals(1, Object.keys(a.tallyCards).length, '全程只有退役那一張');
+        assert.equals(0, Object.keys(a.tallyCards).length, '全程沒有虎符');
     });
 
     suite.test('退役的武將純超齡（季結增齡）死亡，不會再發第二張虎符', async () => {
@@ -122,7 +118,7 @@ export function createRetireDeathTallyChainSuite(): TestSuite {
 
         assert.equals('vet', died.join(','), '超齡退役者應由季結增齡死亡');
         assert.equals(0, Object.values(a.tallyCards).filter((c) => c.source === 'death').length, '超齡死亡不產陣亡虎符');
-        assert.equals(1, Object.keys(a.tallyCards).length, '全程只有退役那一張虎符');
+        assert.equals(0, Object.keys(a.tallyCards).length, '全程沒有虎符');
     });
 
     suite.test('沒有出征戰績的名將死亡：仍產卡，但品質只有最低（R）', async () => {
