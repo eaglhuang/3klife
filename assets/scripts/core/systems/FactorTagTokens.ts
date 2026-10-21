@@ -18,7 +18,35 @@ export const FACTOR_TAG_I18N_KEYS: Readonly<Record<FactorColor, string>> = {
     red: 'ui.gene.tag.red',
 };
 
-/** 暫定色碼（藍 粉 綠 紫 白 紅） */
+/** 色碼的設計 token 來源檔（assets/resources/data/uid-design-tokens.json） */
+export const FACTOR_TAG_TOKEN_PATH = 'data/uid-design-tokens';
+
+const FACTOR_COLORS: readonly FactorColor[] = ['blue', 'pink', 'green', 'purple', 'white', 'red'];
+const HEX_COLOR = /^#[0-9A-Fa-f]{6}$/;
+
+/**
+ * 從 uid-design-tokens.json 解析六色色碼；缺色或格式不是 #RRGGBB 時回傳 null，
+ * 呼叫端退回預設值，不讓壞資料把畫面染成空白。
+ *
+ * Unity 對照：像讀 ScriptableObject 的欄位，欄位缺失就走 Inspector 預設值。
+ */
+export function parseFactorTagColors(raw: unknown): Readonly<Record<FactorColor, string>> | null {
+    const table = (raw as { factorTagColors?: Record<string, unknown> } | null)?.factorTagColors;
+    if (!table) return null;
+    const out = {} as Record<FactorColor, string>;
+    for (const color of FACTOR_COLORS) {
+        const hex = table[color];
+        if (typeof hex !== 'string' || !HEX_COLOR.test(hex)) return null;
+        out[color] = hex.toUpperCase();
+    }
+    return out;
+}
+
+/**
+ * 暫定色碼（藍 粉 綠 紫 白 紅）。
+ * 與 uid-design-tokens.json 的 factorTagColors 必須一致（tests/FactorTagTokens.test.ts 會比對）；
+ * 因 cc 端尚未在載入時注入 JSON，runtime 先用這份常數。
+ */
 export const FACTOR_TAG_COLORS: Readonly<Record<FactorColor, string>> = {
     blue: '#50A0FF',
     pink: '#FF8CBE',
