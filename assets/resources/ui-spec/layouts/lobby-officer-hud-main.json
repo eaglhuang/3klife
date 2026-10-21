@@ -27,7 +27,7 @@
           "left": 32
         },
         "width": 320,
-        "height": 128,
+        "height": 168,
         "skinSlot": "officer.hud.card.bg",
         "children": [
           {
@@ -68,6 +68,33 @@
             "height": 24,
             "text": "官職經驗：0/100",
             "styleSlot": "officer.hud.label.exp"
+          },
+          {
+            "type": "button",
+            "name": "OpenOfficerPageButton",
+            "id": "btnOpenOfficerPage",
+            "widget": {
+              "bottom": 8,
+              "left": 12,
+              "right": 12
+            },
+            "height": 32,
+            "skinSlot": "officer.hud.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "OpenOfficerPageLabel",
+                "id": "openOfficerPageLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "官職詳情",
+                "styleSlot": "officer.hud.label.button"
+              }
+            ]
           }
         ]
       }

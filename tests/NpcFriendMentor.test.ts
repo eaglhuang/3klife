@@ -6,7 +6,9 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { borrowCandidateOf, parseNpcFriendMentors } from '../assets/scripts/core/systems/NpcFriendMentor';
-import { GameSession } from '../assets/scripts/core/managers/GameSession';
+import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
+import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -43,23 +45,43 @@ export function createNpcFriendMentorSuite(): TestSuite {
         assert.equals('SUP_X:true:3', ((c) => `${c.supportTemplateId}:${c.isSSR}:${c.star}`)(borrowCandidateOf(friend)));
     });
 
-    suite.test('GameSession 借用：未知好友、非 SSR 被擋；SSR 成功後同日再借被每日上限擋下、隔天因卡仍鎖定被擋', () => {
+    suite.test('GameSession 借用：未知好友、非 SSR 被擋；SSR 成功後同季再借被每日上限擋下、下一季因卡仍鎖定被擋', async () => {
         const session = new GameSession(7);
         session.setNpcFriendMentors(parseNpcFriendMentors(JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/npc-friend-mentors.json'), 'utf8'))));
-        const base = { sessionId: 'sess-1', day: '2026-10-20' };
+        const base = { sessionId: 'sess-1' };
 
-        assert.equals('UNKNOWN_FRIEND', (session.borrowFriendMentor({ ...base, friendId: 'nobody', recordId: 'r0' }) as { blocked: string }).blocked);
-        assert.equals('NOT_SSR', (session.borrowFriendMentor({ ...base, friendId: 'npc_friend_02', recordId: 'r1' }) as { blocked: string }).blocked);
+        assert.equals('UNKNOWN_FRIEND', (await session.borrowFriendMentor({ ...base, friendId: 'nobody', recordId: 'r0' }) as { blocked: string }).blocked);
+        assert.equals('NOT_SSR', (await session.borrowFriendMentor({ ...base, friendId: 'npc_friend_02', recordId: 'r1' }) as { blocked: string }).blocked);
 
-        const ok = session.borrowFriendMentor({ ...base, friendId: 'npc_friend_01', recordId: 'r2' });
+        const ok = await session.borrowFriendMentor({ ...base, friendId: 'npc_friend_01', recordId: 'r2' });
         assert.isTrue(ok.ok);
         assert.equals(1, (ok as { ownerBondReward: number }).ownerBondReward);
+        assert.equals(1, session.bondPoints);
 
-        assert.equals('DAILY_LIMIT', (session.borrowFriendMentor({ ...base, friendId: 'npc_friend_01', recordId: 'r3' }) as { blocked: string }).blocked);
+        assert.equals('DAILY_LIMIT', (await session.borrowFriendMentor({ ...base, friendId: 'npc_friend_01', recordId: 'r3' }) as { blocked: string }).blocked);
 
         // 借用中的卡在培育期間鎖定，隔天也借不到（同一原主同一張卡只能有一筆 active）
-        const nextDay = session.borrowFriendMentor({ sessionId: 'sess-2', day: '2026-10-21', friendId: 'npc_friend_01', recordId: 'r4' });
+        await session.advanceSeason();
+        const nextDay = await session.borrowFriendMentor({ sessionId: 'sess-2', friendId: 'npc_friend_01', recordId: 'r4' });
         assert.equals('CARD_LOCKED', (nextDay as { blocked: string }).blocked);
+    });
+
+    suite.test('借用紀錄與結義點數存檔往返：讀回後同季仍被每日上限擋下，結義點數保留', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const session = new GameSession(7);
+        session.setNpcFriendMentors(parseNpcFriendMentors(JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/npc-friend-mentors.json'), 'utf8'))));
+        session.setRosterStore(new InMemoryRosterStore());
+        session.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue((await session.borrowFriendMentor({ sessionId: 'sess-1', friendId: 'npc_friend_01', recordId: 'r0' })).ok);
+        await session.save();
+
+        const reloaded = new GameSession(7);
+        reloaded.setNpcFriendMentors(parseNpcFriendMentors(JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/npc-friend-mentors.json'), 'utf8'))));
+        reloaded.setRosterStore(new InMemoryRosterStore());
+        reloaded.setSaveService(new PlayerSaveService(adapter));
+        assert.isTrue(await reloaded.load());
+        assert.equals(1, reloaded.bondPoints);
+        assert.equals('DAILY_LIMIT', (await reloaded.borrowFriendMentor({ sessionId: 'sess-2', friendId: 'npc_friend_01', recordId: 'r1' }) as { blocked: string }).blocked);
     });
 
     return suite;

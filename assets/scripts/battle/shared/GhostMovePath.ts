@@ -26,6 +26,7 @@ export interface GhostPathResult {
 /** 依序檢查路徑格（不含起點，終點為最後一格） */
 export function resolveGhostPath(cells: readonly GhostPathCell[], casterFaction: Faction): GhostPathResult {
   const passedEnemyCells: Array<{ lane: number; depth: number }> = [];
+  const seen = new Set<string>();
   for (let index = 0; index < cells.length; index += 1) {
     const cell = cells[index];
     if (cell.blocksMovement || cell.occupantFaction === casterFaction) {
@@ -36,7 +37,11 @@ export function resolveGhostPath(cells: readonly GhostPathCell[], casterFaction:
       if (isDestination) {
         return { passedEnemyCells: [], blocked: true };
       }
-      passedEnemyCells.push({ lane: cell.lane, depth: cell.depth });
+      const key = `${cell.lane},${cell.depth}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        passedEnemyCells.push({ lane: cell.lane, depth: cell.depth });
+      }
     }
   }
   return { passedEnemyCells, blocked: false };
