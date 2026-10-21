@@ -12,6 +12,7 @@
  * Unity 對照：像 Button.interactable 由一個純函式算出來，Inspector 不手填，避免按鈕規則散在多處。
  */
 import type { HallTaskAction } from '../../core/systems/LobbyHubSchema';
+import { HALL_INTEL_FULL_PERCENT, canRevealFullHallTask } from '../../core/systems/HallTaskIntel';
 
 export type DetailActionKey = 're-scout' | 'execute' | 'wait' | 'assign';
 
@@ -22,7 +23,7 @@ export const DETAIL_ACTION_TO_TASK_ACTION: Readonly<Record<DetailActionKey, Hall
     assign: 'ASSIGN',
 });
 
-export const FULL_INTEL_PERCENT = 100;
+export const FULL_INTEL_PERCENT = HALL_INTEL_FULL_PERCENT;
 
 /** 把任務資料的 Available_Actions（RECON 等）轉成按鈕 key；未知項目略過。 */
 export function detailActionsFromTaskActions(actions: readonly HallTaskAction[]): DetailActionKey[] {
@@ -55,7 +56,8 @@ export interface DetailActionStates {
 }
 
 export function isFullIntel(intelRevealPercent: number): boolean {
-    return Number.isFinite(intelRevealPercent) && intelRevealPercent >= FULL_INTEL_PERCENT;
+    // 判斷統一走 HallTaskIntel（F-5）：缺值、非數字視為預設 50，未滿 100 不算完整（PROG-2-1005）
+    return canRevealFullHallTask({ Intel_Reveal_Percent: intelRevealPercent });
 }
 
 /** 再探後的情報度：派探子會把情報度刷新到 100（E-9 §3）。 */
