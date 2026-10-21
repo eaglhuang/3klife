@@ -81,3 +81,30 @@ export function delegateDecideDeploy(
 
     return { deploy: true, reason: 'ok' };
 }
+
+export interface DelegatePick {
+    /** 被批准部署的兵種；全部被擋時為 null */
+    troopType: string | null;
+    reason: DelegateDeployReason;
+}
+
+/**
+ * 依候選兵種順序挑第一個被批准的部署（委任 AI 的戰鬥呼叫端入口）。
+ * 全部被擋時回傳第一個候選的擋下原因；候選為空時回傳 deploy-check-failed。
+ */
+export function delegatePickDeploy(
+    state: SortieState,
+    candidates: readonly string[],
+    quality: DelegateQuality,
+    situation: DelegateSituation,
+): DelegatePick {
+    if (candidates.length === 0) return { troopType: null, reason: 'deploy-check-failed' };
+
+    let firstReason: DelegateDeployReason | null = null;
+    for (const troopType of candidates) {
+        const decision = delegateDecideDeploy(state, { troopType }, quality, situation);
+        if (decision.deploy) return { troopType, reason: 'ok' };
+        firstReason ??= decision.reason;
+    }
+    return { troopType: null, reason: firstReason ?? 'deploy-check-failed' };
+}
