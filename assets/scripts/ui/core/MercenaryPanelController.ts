@@ -112,7 +112,7 @@ export class MercenaryPanelController {
             mercPanelTitle: '傭兵・結義',
             mercEmptyLabel: rows.length === 0 ? '目前沒有傭兵' : '',
             mercCountdown: view?.countdownText ?? '',
-            mercBond: view?.bondText ?? '',
+            mercBond: view ? `${view.bondText}　${view.illustrationText}` : '',
             mercNametag: view?.nametagText ?? '',
             mercConfirm: view?.confirmText ?? '',
             mercFarewell: view?.farewellText ?? '',

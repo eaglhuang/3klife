@@ -67,6 +67,26 @@ export function createMercenarySaveModelSuite(): TestSuite {
         assert.equals('a', restored.cooldowns[0].uid);
     });
 
+    suite.test('illustrationStage 合法值（1~5）保留，非法值只丟該欄', () => {
+        const merc = (illustrationStage: unknown) => ({
+            uid: 'm1', daysLeft: 3, bond: 3, status: 'Trial', affection: 30, illustrationStage,
+        });
+        const kept = normalizeMercenaryBundle({ mercenaries: [merc(3)] }).mercenaries[0];
+        assert.equals(3, kept.illustrationStage!);
+        assert.equals(30, kept.affection!);
+        for (const bad of [0, 6, 2.5, -1, '3', null]) {
+            const restored = normalizeMercenaryBundle({ mercenaries: [merc(bad)] });
+            assert.equals(1, restored.mercenaries.length);
+            assert.isTrue(restored.mercenaries[0].illustrationStage === undefined);
+            assert.equals(30, restored.mercenaries[0].affection!);
+        }
+    });
+
+    suite.test('舊存檔沒有 illustrationStage：讀檔後不帶此欄', () => {
+        const restored = normalizeMercenaryBundle({ mercenaries: [{ uid: 'm1', daysLeft: 3, bond: 3, status: 'Trial' }] });
+        assert.isTrue(restored.mercenaries[0].illustrationStage === undefined);
+    });
+
     suite.test('陣列欄位不是陣列時視為空，不影響其他欄位', () => {
         const restored = normalizeMercenaryBundle({ mercenaries: 'oops', cooldowns: [{ uid: 'a', availableOnDay: 2 }] });
         assert.equals(0, restored.mercenaries.length);

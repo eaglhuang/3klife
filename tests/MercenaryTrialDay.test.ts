@@ -36,6 +36,18 @@ export function createMercenaryTrialDaySuite(): TestSuite {
         assert.equals('Trial', state.status);
     });
 
+    suite.test('插畫階段隨好感上升：好感 10 → 階段 1，好感 30 → 階段 3', () => {
+        const first = advanceTrialDay(trialWith(0));
+        assert.equals(1, first.state.illustrationStage!);
+        const third = advanceTrialDay(trialWith(20));
+        assert.equals(3, third.state.illustrationStage!);
+    });
+
+    suite.test('插畫階段只進不退：既有階段 4 時，好感推出較低階段仍保留 4', () => {
+        const state = { ...trialWith(0), illustrationStage: 4 };
+        assert.equals(4, advanceTrialDay(state).state.illustrationStage!);
+    });
+
     suite.test('倒數歸零後再推進：回 trial-incomplete，好感不變', () => {
         const done = { ...trialWith(60), daysLeft: 0 };
         const result = advanceTrialDay(done);
