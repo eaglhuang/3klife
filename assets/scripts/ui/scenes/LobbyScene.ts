@@ -1178,7 +1178,8 @@ export class LobbyScene extends Component {
         if (!binder || !this._govHall) {
             return;
         }
-        applyFlowView(binder, this._govHall.getFlowView());
+        // 太守府沒有按鈕可按與否的狀態，enabled 給空表
+        applyFlowView(binder, { enabled: {}, ...this._govHall.getFlowView() });
     }
 
     public openMercenaryPanel(): void {
