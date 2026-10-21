@@ -1085,6 +1085,12 @@ export class GameSession {
         this._sandtableMarkerTerritories = [];
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
+        // 上一局的進度不能帶進新局（PROG-2-0660）
+        this._soulFragments = emptySoulFragmentLedger();
+        this._pendingLifespanEvents = [];
+        this._bondPoints = 0;
+        this._borrowLedger = { records: [] };
+        this._onboarding = { ...FRESH_ONBOARDING };
         this._military = { ...STARTER_MILITARY };
         this._yearAgingEvents = [];
         this._prison = createPrisonState<GeneralConfig>();
