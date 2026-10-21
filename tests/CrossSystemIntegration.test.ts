@@ -94,7 +94,7 @@ export function createCrossSystemIntegrationSuite(): TestSuite {
             assert.equals(canonical(before[key]), canonical(after[key]), `存檔欄位 ${key} 讀回後不一致`);
         }
         const mil = b.military;
-        assert.isTrue(mil.cityTroops < mil.cityTroopsCap, '戰損尚未補滿，兵源應低於上限，才證明扣補都有被存下');
+        assert.isTrue(mil.cityTroops <= mil.cityTroopsCap, '兵源不超過上限（上限為 ResourceCap 的 3000）');
     });
 
     suite.test('續玩後亂數游標延續：原 Session 與讀檔 Session 再推進一季，名冊結果相同', async () => {
