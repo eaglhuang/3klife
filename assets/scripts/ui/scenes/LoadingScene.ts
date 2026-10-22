@@ -932,6 +932,9 @@ export class LoadingScene extends Component {
         const rarityLabel = getUIRarityMarkLabel(rarityTier as GeneralDetailRarityTier);
         const title = general.title?.replace(/^【|】$/g, '').trim();
         binder.setTexts({
+            'banner-hero-name': general.name,
+            'banner-hero-subtitle': [title, `${rarityLabel} ${poolCharacterType}`].filter(Boolean).join(' · '),
+            // 舊版 gacha-preview-main 保留原有語意 ID。
             HeroName: general.name,
             HeroSubtitle: [title, `${rarityLabel} ${poolCharacterType}`].filter(Boolean).join(' · '),
         });
