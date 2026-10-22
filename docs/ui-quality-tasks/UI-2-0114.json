@@ -26,11 +26,11 @@
         "UI-2-0113"
       ],
       "acceptance": [
-        "新立繪為原創新構圖、無水印文字且符合參考圖的粉白羽飾、銀藍鱗甲、扇與歷史人物辨識",
+        "新立繪為原創新構圖、無水印文字且符合使用者偏好的女將參考圖風格，並與趙雲現有設計比對整體視覺調性",
         "大喬 full portrait 與 256x256 頭像正確匯入 assets/resources，Cocos metadata 可重建",
         "人物介紹頁展示大喬立繪及正確姓名、稱號、稀有度；趙雲原有呈現無退化",
-        "轉蛋人物預覽可固定指定大喬與趙雲，實際網頁畫面均正確且不改抽取邏輯",
-        "保存 GeneralDetail 與 GachaHero 對趙雲、大喬共四張實機截圖",
+        "轉蛋主頁人物預覽可固定指定大喬與趙雲，實際網頁畫面均正確且不改抽取邏輯",
+        "保存 GeneralDetail 與對應轉蛋池預覽對趙雲、大喬共四張實機截圖；本卡保留趙雲原有資產",
         "記錄 prompt、尺寸、裁切座標、資產匯入及預覽驗收步驟"
       ],
       "deliverables": [
@@ -41,7 +41,7 @@
         "artifacts/ui-qa/UI-2-0114/ 四張正式預覽截圖",
         "docs/ui/da-qiao-art-integration.md 美術設定及整合流程"
       ],
-      "notes": "2026-10-22 | 狀態: in-progress | 驗證: pending | 變更: codex-gpt-6.1-sol 開始產製大喬立繪並接入人物介紹、轉蛋預覽 | 阻塞: 待建立隔離分支 Cocos Preview 以完成網頁驗收",
+      "notes": "2026-10-22 | 狀態: in-progress | 驗證: pending | 變更: codex-gpt-6.1-sol 開始產製大喬立繪並接入人物介紹、轉蛋預覽 | 阻塞: 隔離 Creator 資產刷新已成功，但 7457 的 browser capture 等待 __UI_CAPTURE_STATE__ 逾時；GeneralDetail/Gacha 實機畫面仍待驗收",
       "brief": {
         "style": "classic",
         "label": "",
@@ -60,7 +60,7 @@
           "256x256 head-and-neck avatar with verified crop bounds",
           "Cocos metadata and visible GeneralDetail/GachaHero outputs for Zhao Yun and Da Qiao"
         ],
-        "validation_cmd": "node tools_node/generate-general-avatars.js da-qiao --verify\nnode tools_node/capture-ui-screens.js --target GeneralDetailOverviewDaQiao\nnode tools_node/capture-ui-screens.js --target GachaHeroDaQiao\nRepeat GeneralDetailOverview and GachaHero for zhao-yun; inspect all four captured results.",
+        "validation_cmd": "node tools_node/generate-general-avatars.js da-qiao --verify\nnode tools_node/capture-ui-screens.js --target GeneralDetailOverviewDaQiao\nnode tools_node/capture-ui-screens.js --target GachaSupportDaQiao\nnode tools_node/capture-ui-screens.js --target GeneralDetailOverviewZhaoYun\nnode tools_node/capture-ui-screens.js --target GachaHeroZhaoYun; inspect all four captured results.",
         "rollback_hint": "Revert only UI-2-0114 assets/config/runtime changes; keep the original reference image outside the repository.",
         "execution_steps": [
           "Confirm target GeneralConfig, gacha pool, UI art slots and current Zhao Yun capture targets",
