@@ -13,9 +13,9 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 57
+- Total: 58
 - done: 35
-- in-progress: 5
+- in-progress: 6
 - open: 17
 
 ## Tasks
@@ -79,3 +79,4 @@ manifest: ../ui-quality-todo.json
 | PROG-1-0016 | Agent1 | open | P2 | P | validation | [PROG-1-0016](./tasks/PROG-1-0016.md) |
 | TASK-UI-9001 | codex-gpt-6 | in-progress | P1 | M6 | refactor | [TASK-UI-9001](./tasks/TASK-UI-9001.md) |
 | UI-2-0113 | codex-gpt-6.1-sol | in-progress | P1 | M1 | implementation | [UI-2-0113](./tasks/UI-2-0113.md) |
+| UI-2-0114 | codex-gpt-6.1-sol | in-progress | P1 | M1 | asset-generation | [UI-2-0114](./tasks/UI-2-0114.md) |
