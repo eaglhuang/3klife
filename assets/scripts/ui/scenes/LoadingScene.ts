@@ -29,7 +29,7 @@ import { LobbyScene } from './LobbyScene';
 import { applyFactorTagTokens, FACTOR_TAG_TOKEN_PATH } from '../../core/systems/FactorTagTokens';
 import { BattleTactic } from '../../core/config/Constants';
 import { DEFAULT_BATTLE_ENTRY_PARAMS, type IBattleEntryParams } from '../../shared/BattleEntryParams';
-import type { GeneralConfig } from '../../core/models/GeneralUnit';
+import type { GeneralConfig, GeneralDetailRarityTier } from '../../core/models/GeneralUnit';
 import { getUIRarityMarkLabel } from '../core/UIRarityMark';
 import { applyUIPreviewBinderState, type UIPreviewBinderState } from '../core/UIPreviewStateApplicator';
 import { applyUIScreenRuntimeState } from '../core/UIScreenRuntimeStateRegistry';
@@ -37,6 +37,12 @@ import { LocalGachaService } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { GachaFlowCoordinator, GACHA_SCREEN_ID, GACHA_PULL_RESULT_SCREEN_ID } from '../core/GachaFlowCoordinator';
+import {
+    GACHA_PREVIEW_BANNER_ART_BINDING,
+    orderGachaPreviewCandidateIds,
+    resolveGachaPreviewPortraitPath,
+    resolveGachaPreviewStateKey,
+} from '../core/GachaPreviewStateRoute';
 import { showGachaError, refreshCurrencyDisplay, attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay } from '../dev/GachaDevOverlay';
 
 const { ccclass, property } = _decorator;
@@ -799,9 +805,77 @@ export class LoadingScene extends Component {
                 UCUFLogger.warn(LogCategory.DATA, '[LoadingScene] Failed to load generals catalog for gacha preview', err);
             }
         }
+        await this._applyGachaPreviewBannerCharacter();
         this._wireGachaPreviewButtons();
         attachCurrencyCheatPanel(this._previewGachaService, undefined, () => { PlayerRosterService.clear(); }, () => {
             this._refreshPreviewGachaWalletState();
+        });
+    }
+
+    private async _applyGachaPreviewBannerCharacter(): Promise<void> {
+        const binder = this._previewHost?.binder;
+        if (!binder) return;
+
+        const bannerSprite = binder.getSprite(GACHA_PREVIEW_BANNER_ART_BINDING);
+        if (!bannerSprite) {
+            throw new Error(`[LoadingScene] gacha preview missing ${GACHA_PREVIEW_BANNER_ART_BINDING} sprite`);
+        }
+
+        const catalogById = new Map(this._generalsCatalog.map((general) => [general.id, general]));
+        const defaultGeneral = catalogById.get('guan-yu');
+        if (defaultGeneral) {
+            this._setGachaPreviewBannerLabels(binder, defaultGeneral, '武將');
+        }
+
+        let pools: Array<{ poolId?: string; poolType?: string; candidateIds?: string[] }>;
+        try {
+            const config = await services().resource.loadJson<Array<{ poolId?: string; poolType?: string; candidateIds?: string[] }>>(
+                'data/gacha-config',
+                { tags: ['GachaPreview'] },
+            );
+            pools = Array.isArray(config) ? config : ((config as any)?.data ?? []);
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LoadingScene] Failed to load gacha pools for banner preview', error);
+            return;
+        }
+
+        const stateKey = resolveGachaPreviewStateKey('bloodline-seed', this.previewVariant);
+        const poolId = stateKey === 'nurture-depth' ? 'support-pool' : 'hero-pool';
+        const pool = pools.find((entry) => entry.poolId === poolId);
+        if (!pool) {
+            UCUFLogger.warn(LogCategory.DATA, `[LoadingScene] gacha preview pool not found: ${poolId}`);
+            return;
+        }
+
+        const orderedIds = orderGachaPreviewCandidateIds(pool.candidateIds ?? [], this.previewVariant);
+        for (const generalId of orderedIds) {
+            const general = catalogById.get(generalId);
+            if (!general) continue;
+
+            const spriteFrame = await services().resource.loadSpriteFrame(resolveGachaPreviewPortraitPath(generalId)).catch(() => null);
+            if (!spriteFrame?.texture) continue;
+
+            bannerSprite.spriteFrame = spriteFrame;
+            const poolCharacterType = pool.poolType === 'support' ? '紅顏' : '武將';
+            this._setGachaPreviewBannerLabels(binder, general, poolCharacterType);
+            UCUFLogger.info(LogCategory.UI, `[LoadingScene] Gacha banner preview character: ${general.id}`);
+            return;
+        }
+
+        UCUFLogger.warn(LogCategory.DATA, `[LoadingScene] No portrait available for gacha preview pool ${poolId}; keeping default banner art`);
+    }
+
+    private _setGachaPreviewBannerLabels(
+        binder: NonNullable<UIScreenPreviewHost['binder']>,
+        general: GeneralConfig,
+        poolCharacterType: string,
+    ): void {
+        const rarityTier = general.rarityTier ?? 'epic';
+        const rarityLabel = getUIRarityMarkLabel(rarityTier as GeneralDetailRarityTier);
+        const title = general.title?.replace(/^【|】$/g, '').trim();
+        binder.setTexts({
+            HeroName: general.name,
+            HeroSubtitle: [title, `${rarityLabel} ${poolCharacterType}`].filter(Boolean).join(' · '),
         });
     }
 

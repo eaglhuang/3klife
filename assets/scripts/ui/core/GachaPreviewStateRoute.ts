@@ -1,12 +1,14 @@
 import type { UIPreviewBinderState } from './UIPreviewStateApplicator';
 
+export const GACHA_PREVIEW_BANNER_ART_BINDING = 'skinLayer_BannerCharacterArt';
+
 export interface GachaPreviewContentFile {
     defaultState?: string;
     states?: Record<string, Record<string, unknown>>;
 }
 
 export function resolveGachaPreviewStateKey(defaultState: string, previewVariant = ''): string {
-    const requested = previewVariant.trim().toLowerCase();
+    const requested = previewVariant.trim().toLowerCase().split(':', 1)[0];
     if (requested === 'hero') {
         return 'bloodline-seed';
     }
@@ -24,6 +26,69 @@ export function resolveGachaPreviewStateKey(defaultState: string, previewVariant
         return requested;
     }
     return defaultState;
+}
+
+export function resolveGachaPreviewGeneralIdOverride(previewVariant = ''): string | null {
+    const segments = previewVariant.trim().toLowerCase().split(':').map((part) => part.trim()).filter(Boolean);
+    if (segments.length < 2 || segments[1] === 'seed') {
+        return null;
+    }
+    return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(segments[1]) ? segments[1] : null;
+}
+
+export function resolveGachaPreviewPortraitPath(generalId: string): string {
+    const normalizedId = generalId.trim().toLowerCase();
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(normalizedId)) {
+        throw new Error(`Invalid gacha preview general id: ${generalId}`);
+    }
+    return `sprites/generals/${normalizedId.replace(/-/g, '_')}_portrait`;
+}
+
+export function orderGachaPreviewCandidateIds(
+    candidateIds: string[],
+    previewVariant = '',
+    random: () => number = Math.random,
+): string[] {
+    const uniqueIds = Array.from(new Set(candidateIds
+        .filter((id): id is string => typeof id === 'string')
+        .map((id) => id.trim().toLowerCase())
+        .filter((id) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id))));
+    const requestedId = resolveGachaPreviewGeneralIdOverride(previewVariant);
+    const requestedIndex = requestedId ? uniqueIds.indexOf(requestedId) : -1;
+    const requested = requestedIndex >= 0 ? uniqueIds.splice(requestedIndex, 1)[0] : null;
+    const seed = resolveGachaPreviewSeed(previewVariant);
+    const nextRandom = seed ? createSeededRandom(seed) : random;
+
+    for (let index = uniqueIds.length - 1; index > 0; index -= 1) {
+        const sample = Math.max(0, Math.min(0.999999999, nextRandom()));
+        const swapIndex = Math.floor(sample * (index + 1));
+        [uniqueIds[index], uniqueIds[swapIndex]] = [uniqueIds[swapIndex], uniqueIds[index]];
+    }
+
+    return requested ? [requested, ...uniqueIds] : uniqueIds;
+}
+
+function resolveGachaPreviewSeed(previewVariant: string): string | null {
+    const segments = previewVariant.trim().split(':').map((part) => part.trim());
+    if (segments.length < 3 || segments[1].toLowerCase() !== 'seed') {
+        return null;
+    }
+    return segments.slice(2).join(':') || null;
+}
+
+function createSeededRandom(seed: string): () => number {
+    let state = 2166136261;
+    for (let index = 0; index < seed.length; index += 1) {
+        state ^= seed.charCodeAt(index);
+        state = Math.imul(state, 16777619);
+    }
+    return () => {
+        state += 0x6D2B79F5;
+        let value = state;
+        value = Math.imul(value ^ (value >>> 15), value | 1);
+        value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+        return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+    };
 }
 
 export function resolveGachaPreviewContentState(

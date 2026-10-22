@@ -1,0 +1,78 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0406",
+      "id": "UI-2-0113",
+      "title": "轉蛋主頁人物預覽輪替",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M1",
+      "created": "2026-10-22",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-22T14:55:09+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "轉蛋主頁 gacha-preview-main 的 BannerCharacterArt 目前固定綁關羽。改為依當前卡池的有效候選武將動態選擇人物立繪，並支援預覽指定角色或固定 seed，讓 QA 能穩定檢視。",
+      "related": [
+        "UI-1-0017",
+        "UI-1-0019"
+      ],
+      "depends": [],
+      "acceptance": [
+        "主頁 BannerCharacterArt 依卡池候選武將選擇有效 *_portrait SpriteFrame，不再只固定顯示關羽。",
+        "支援預覽指定武將或 deterministic seed；人物名稱、卡池狀態與人物立繪一致。",
+        "至少能用趙雲立繪呈現主頁預覽；大喬在其正式資產可用時可納入輪替。",
+        "缺少或無效立繪時回退現有關羽預設，不影響抽卡互動或十連結果。",
+        "新增候選選擇與立繪路徑解析的 focused test/validator，並在預覽環境可用時保留 runtime 截圖證據。"
+      ],
+      "deliverables": [
+        "轉蛋主頁人物立繪動態綁定與選擇邏輯。",
+        "同步更新任務卡、UI task shard/manifest 與協作索引。",
+        "focused 驗證結果；預覽截圖或具體 runtime blocker 紀錄。"
+      ],
+      "notes": "2026-10-22 | 狀態: in-progress | 驗證: focused tests 3/3、TypeScript syntax 642 files、encoding pass | 變更: 主頁依卡池候選輪替立繪，趙雲固定預覽 | 阻塞: Browser Review 7456 指向主工作目錄，無法驗證隔離分支畫面；support-pool 5 位候選均缺正式 portrait",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "allowed_files": [
+        "assets/scripts/ui/scenes/LoadingScene.ts",
+        "assets/scripts/ui/core/GachaPreviewStateRoute.ts",
+        "tools_node/capture-ui-screens.js",
+        "tests/GachaPreviewStateRoute.test.ts",
+        "docs/agent-briefs/tasks/UI/UI-2-0113.md",
+        "docs/ui-quality-tasks/UI-2-0113.json",
+        "docs/ui-quality-todo.json",
+        "docs/tasks/tasks-ui.json",
+        "docs/agent-briefs/tasks_index.md",
+        "docs/agent-briefs/CheckList.md",
+        "docs/doc-id-registry-shards/registry-task.json",
+        "docs/doc-id-registry.json",
+        ".atm/catalog/registry/actors.json"
+      ]
+    }
+  ]
+}
