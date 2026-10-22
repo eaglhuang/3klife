@@ -38,7 +38,6 @@ import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { GachaFlowCoordinator, GACHA_SCREEN_ID, GACHA_PULL_RESULT_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import {
-    GACHA_PREVIEW_BANNER_ART_BINDING,
     orderGachaPreviewCandidateIds,
     resolveGachaPreviewPortraitPath,
     resolveGachaPreviewStateKey,
@@ -533,16 +532,21 @@ export class LoadingScene extends Component {
         const contentWrap = document.querySelector('.contentWrap') as HTMLElement | null;
         if (!wrapper) return;
 
-        const wrapperRect = wrapper.getBoundingClientRect();
-        if (wrapperRect.width <= 0 || wrapperRect.height <= 0) return;
+        // Read the untransformed dimensions: getBoundingClientRect() already
+        // includes the previous scale, which makes repeated fit ticks drift.
+        const wrapperWidth = wrapper.offsetWidth;
+        const wrapperHeight = wrapper.offsetHeight;
+        if (wrapperWidth <= 0 || wrapperHeight <= 0) return;
 
         const availableWidth = contentWrap?.clientWidth ?? window.innerWidth;
         const availableHeight = contentWrap?.clientHeight ?? window.innerHeight;
         if (availableWidth <= 0 || availableHeight <= 0) return;
 
-        const scale = Math.min(1, availableWidth / wrapperRect.width, availableHeight / wrapperRect.height);
-        wrapper.style.transformOrigin = 'top center';
-        wrapper.style.transform = scale < 1 ? `scale(${scale})` : 'none';
+        const scale = Math.min(1, availableWidth / wrapperWidth, availableHeight / wrapperHeight);
+        // GameDiv is anchored at 50%/50% in style.css. Keep that anchor after
+        // Cocos replaces its stylesheet transform with inline frame styles.
+        wrapper.style.transformOrigin = 'center center';
+        wrapper.style.transform = `translate(-50%, -50%) scale(${scale})`;
     }
 
     onDestroy() {
@@ -816,11 +820,6 @@ export class LoadingScene extends Component {
         const binder = this._previewHost?.binder;
         if (!binder) return;
 
-        const bannerSprite = binder.getSprite(GACHA_PREVIEW_BANNER_ART_BINDING);
-        if (!bannerSprite) {
-            throw new Error(`[LoadingScene] gacha preview missing ${GACHA_PREVIEW_BANNER_ART_BINDING} sprite`);
-        }
-
         const catalogById = new Map(this._generalsCatalog.map((general) => [general.id, general]));
         const defaultGeneral = catalogById.get('guan-yu');
         if (defaultGeneral) {
@@ -847,6 +846,11 @@ export class LoadingScene extends Component {
             return;
         }
 
+        const bannerSprite = this._resolveGachaPreviewBannerSprite(binder, stateKey);
+        if (!bannerSprite) {
+            throw new Error(`[LoadingScene] gacha preview missing portrait art slot for state=${stateKey}`);
+        }
+
         const orderedIds = orderGachaPreviewCandidateIds(pool.candidateIds ?? [], this.previewVariant);
         for (const generalId of orderedIds) {
             const general = catalogById.get(generalId);
@@ -863,6 +867,60 @@ export class LoadingScene extends Component {
         }
 
         UCUFLogger.warn(LogCategory.DATA, `[LoadingScene] No portrait available for gacha preview pool ${poolId}; keeping default banner art`);
+    }
+
+    private _resolveGachaPreviewBannerSprite(
+        binder: NonNullable<UIScreenPreviewHost['binder']>,
+        stateKey: string,
+    ): Sprite | null {
+        const panelByState: Record<string, string> = {
+            'bloodline-seed': 'pool-panel-general',
+            'nurture-depth': 'pool-panel-support',
+            'limited-spotlight': 'pool-panel-legendary',
+        };
+        const activePanelId = panelByState[stateKey] ?? 'pool-panel-general';
+        const panelIds = ['pool-panel-general', 'pool-panel-legendary', 'pool-panel-support'];
+        for (const panelId of panelIds) {
+            const panel = binder.getNode(panelId);
+            if (!panel) continue;
+
+            const isActivePanel = panelId === activePanelId;
+            panel.active = isActivePanel;
+            const opacity = panel.getComponent(UIOpacity);
+            if (opacity) opacity.opacity = isActivePanel ? 255 : 0;
+            if (isActivePanel) {
+                const alignToPanelLayer = (node: Node) => {
+                    node.layer = panel.layer;
+                    for (const child of node.children) alignToPanelLayer(child);
+                };
+                alignToPanelLayer(panel);
+            }
+        }
+
+        const panel = binder.getNode(activePanelId);
+        if (!panel) {
+            return binder.getSprite('skinLayer_BannerCharacterArt');
+        }
+
+        // The DS3 banner is generated from source HTML, so its decorative node names are
+        // implementation IDs. Reuse the existing portrait-shaped art slot instead of
+        // depending on those generated names or changing the gameplay draw flow.
+        const portraitSlots = panel.children
+            .map((node) => ({ sprite: node.getComponent(Sprite), nodeName: node.name }))
+            .filter(({ sprite }) => {
+                const texture = sprite?.spriteFrame?.texture;
+                if (!texture || texture.height <= 0) return false;
+                const aspectRatio = texture.width / texture.height;
+                return aspectRatio >= 0.5 && aspectRatio <= 0.85;
+            });
+
+        if (portraitSlots.length > 1) {
+            UCUFLogger.warn(
+                LogCategory.UI,
+                `[LoadingScene] Multiple portrait-shaped banner slots in ${activePanelId}; using ${portraitSlots[0].nodeName}`,
+            );
+        }
+        return portraitSlots[0]?.sprite ?? binder.getSprite('skinLayer_BannerCharacterArt');
     }
 
     private _setGachaPreviewBannerLabels(
