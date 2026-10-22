@@ -4,11 +4,11 @@
 
 大喬新立繪以使用者提供、較滿意的女將參考圖為風格依據，保留粉白羽飾、銀藍甲片、長髮、羽扇與半寫實的中式奇幻筆觸；使用透明背景與新的全身構圖。趙雲沿用現有立繪，本卡不重製其造型；兩人並列預覽後再確認筆觸、光感、輪廓細節與色彩完成度是否一致。
 
-生成工具：Codex 圖像生成工具（以使用者提供的大喬參考圖引導風格）。候選圖輸出為透明 PNG，1024×1536。完整 prompt 與原始候選稿保存在 `artifacts/ui-source/general-art/da-qiao/`；正式人物資產為 `assets/resources/sprites/generals/da_qiao_portrait.png`。
+生成工具：Codex 圖像生成工具（以使用者提供的大喬參考圖引導風格）。採用稿為透明 PNG，1024×1536。v1 因冷藍金屬色、暗部對比和厚重羽翼感偏離使用者偏好的柔粉白女將風格而淘汰；v2 改為柔光、象牙白與淡粉紗、輕盈羽飾，作為目前接入資產。原始候選稿保存在本機忽略路徑 `artifacts/ui-source/general-art/da-qiao/`；正式人物資產為 `assets/resources/sprites/generals/da_qiao_portrait.png`。
 
-候選稿 prompt：
+採用稿 prompt：
 
-> Create a new original full-body character illustration of Da Qiao (大喬), an adult heroine from the Three Kingdoms era, using the user-provided image only as a style reference. Keep the polished semi-realistic Chinese fantasy game key art feeling: elegant facial features, flowing long dark hair, fine painterly details, graceful movement, pale rose and ivory feather accents, a translucent rose silk mantle, layered silver-blue scale armor with restrained gold filigree, and a refined feather fan. Give her a dignified, confident, gentle expression and modestly covered battle attire. Use a fresh pose and original composition: three-quarter view, standing, full figure from hair ornaments to both shoes visible, one hand holding an ornate fan near shoulder height, the other relaxed, clear readable silhouette, centered with generous transparent margins. Keep the palette soft rose, pearl white, cool silver-blue, and small antique-gold accents. High-quality hand-painted digital illustration, subtle atmospheric rim light on the character only. Transparent background, clean alpha edges. Exactly one character. No scenery, no floor, no shadow plane, no text, no calligraphy, no logo, no watermark, no frame, no cropped limbs, no extra fingers, no duplicate objects. Vertical portrait composition around 2:3 ratio, suitable for a Cocos Creator character portrait and a gacha banner overlay.
+> Create a fresh original full-body illustration of Da Qiao for a Three Kingdoms fantasy game portrait. Use the attached image only as a style reference, not as a pose, costume, composition, watermark, or signature template. Match its gentle semi-realistic Chinese fantasy painting: soft painterly detail, luminous soft lighting, delicate facial rendering, elegant flowing long dark hair, graceful silhouette, pale ivory and blush-pink layered silk, light rose feather accents, subtle muted silver-blue scale armor, small antique-gold details, modest battle attire, refined feather fan. New standing three-quarter pose, centered with generous transparent margin, both shoes and entire figure visible, vertical 2:3. Truly transparent background, clean alpha, character only. Keep saturation and contrast soft; avoid dark cinematic scenery, hard rim light, heavy shadows, oversized wings, blue-dominant armor, text, watermark, logo, frame, cropped limbs, extra fingers, or duplicate objects.
 
 ## 頭像與匯入
 
@@ -35,6 +35,7 @@ node tools_node/capture-ui-screens.js --target GachaHeroZhaoYun --outDir artifac
 ## 視覺驗收紀錄
 
 - 趙雲造型未重做；本卡只將現有趙雲立繪作為一致性對照。
+- 2026-10-22：初版大喬候選與使用者偏好的女將參考圖並列後，確認初版冷藍金屬色、暗部對比偏重；已改採 v2 粉白柔光稿。趙雲保留原稿，等兩人實機預覽完成後再評估是否另開重製卡。
 - 隔離工作目錄中的 Cocos Creator 資產刷新已成功。
 - 2026-10-22：瀏覽器捕捉在等待 `__UI_CAPTURE_STATE__` 時逾時；四張遊戲畫面與風格一致性尚未完成正式驗收。
 - 完成驗收後，將四張截圖存入 `artifacts/ui-qa/UI-2-0114/`，並補記角色是否清楚可見、構圖裁切、文字與風格一致性的實際觀察。

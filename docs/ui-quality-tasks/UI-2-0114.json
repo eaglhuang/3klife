@@ -41,7 +41,7 @@
         "artifacts/ui-qa/UI-2-0114/ 四張正式預覽截圖",
         "docs/ui/da-qiao-art-integration.md 美術設定及整合流程"
       ],
-      "notes": "2026-10-22 | 狀態: in-progress | 驗證: pending | 變更: codex-gpt-6.1-sol 開始產製大喬立繪並接入人物介紹、轉蛋預覽 | 阻塞: 隔離 Creator 資產刷新已成功，但 7457 的 browser capture 等待 __UI_CAPTURE_STATE__ 逾時；GeneralDetail/Gacha 實機畫面仍待驗收",
+      "notes": "2026-10-22 | 狀態: in-progress | 進度: 初版大喬冷藍與暗部偏重，依使用者偏好改採粉白柔光 v2；立繪及頭像重產，頭像 verify 通過 | 阻塞: 隔離 Editor browser capture 仍待處理，趙雲與大喬四張實機畫面尚未驗收",
       "brief": {
         "style": "classic",
         "label": "",
