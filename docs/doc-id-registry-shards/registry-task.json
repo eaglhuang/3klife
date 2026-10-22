@@ -2386,5 +2386,11 @@
     "path": "docs/agent-briefs/tasks/UI/UI-2-0113.md",
     "title": "[UI-2-0113] 轉蛋主頁人物預覽輪替",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0407",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0114.md",
+    "title": "[UI-2-0114] 大喬新立繪接入人物介紹與轉蛋預覽",
+    "category": "task"
   }
 ]

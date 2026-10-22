@@ -63,6 +63,7 @@
 | P1 | [UI-2-0024](tasks/UI-2-0024.md (doc_task_0048)) (doc_task_0048) | 拆分 `UIPreviewBuilder.ts` 降低風險 | completed | 100% | Agent1 |
 | P1 | [UI-2-0025](tasks/UI-2-0025.md (doc_task_0049)) (doc_task_0049) | 對齊 `Gacha` preview contract | done | 100% | Agent1 |
 | P1 | [UI-2-0113](tasks/UI/UI-2-0113.md (doc_task_0406)) (doc_task_0406) | 轉蛋主頁人物預覽輪替 | in-progress | 0% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0114](tasks/UI/UI-2-0114.md (doc_task_0407)) (doc_task_0407) | 大喬新立繪接入人物介紹與轉蛋預覽 | in-progress | 10% | codex-gpt-6.1-sol |
 | P1 | [UI-1-0005](tasks/UI-1-0005.md (doc_task_0013)) (doc_task_0013) | 產生水平 Tab active/inactive sprites | done | 100% | Agent2 |
 | P1 | [UI-1-0006](tasks/UI-1-0006.md (doc_task_0014)) (doc_task_0014) | 產生 bleed overlay sprites | done | 100% | Agent2 |
 | P1 | [UI-1-0007](tasks/UI-1-0007.md (doc_task_0015)) (doc_task_0015) | 產生 dark_metal frame/fill/bg sprites | done | 100% | Agent2 |

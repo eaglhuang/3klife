@@ -1,9 +1,3 @@
-# P0 ATM Bug / Optimization Backlog
-
-- Every ATM Captain / framework agent must check and update `C:/Users/User/3KLife/docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md` when encountering ATM bugs, confusing workflow, governance drift, validator gaps, runner-sync friction, or process optimizations.
-- Record each issue with: encountered problem, reproduce / detect, impact, possible optimization, and related task / commit.
-- Do not rely on chat memory for ATM workflow defects. If it can affect future agents, put it in the backlog.
-
 # Keep Consensus
 
 > **⚠️ 已拆分為 4 個分片，本檔為索引入口。**
@@ -15,7 +9,7 @@
 |------|------|------|
 | Core（P0 · §0–§2c） | `docs/keep-shards/keep-core.md` | 142 行 / ~10 KB |
 | Workflow（§3–§6 · §13） | `docs/keep-shards/keep-workflow.md` | 253 行 / ~10 KB |
-| UI Architecture（§7–§12 · §19–§23） | `docs/keep-shards/keep-ui-arch.md` | 719 行 / ~24 KB |
+| UI Architecture（§7–§12 · §19–§23） | `docs/keep-shards/keep-ui-arch.md` | 724 行 / ~25 KB |
 | Current Status（§14–§18 · §24 · MCP） | `docs/keep-shards/keep-status.md` | 237 行 / ~11 KB |
 
 ## 使用說明

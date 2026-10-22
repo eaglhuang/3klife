@@ -81,6 +81,7 @@
                       },
                       {
                         "type": "label",
+                        "id": "banner-hero-name",
                         "name": "GachaDs3_div_9",
                         "width": 233,
                         "height": 72,
@@ -89,6 +90,7 @@
                       },
                       {
                         "type": "label",
+                        "id": "banner-hero-subtitle",
                         "name": "GachaDs3_div_10",
                         "width": 233,
                         "height": 19,

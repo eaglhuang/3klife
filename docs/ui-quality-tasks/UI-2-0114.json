@@ -1,0 +1,108 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0407",
+      "id": "UI-2-0114",
+      "title": "大喬新立繪接入人物介紹與轉蛋預覽",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "asset-generation",
+      "phase": "M1",
+      "created": "2026-10-22",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-22T15:20:03+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依使用者提供的大喬參考圖製作一張同風格但新構圖的角色立繪，依正式人物資產流程產生頭像並接入 GeneralDetail 與轉蛋主頁，為趙雲與大喬保存兩個畫面的網頁預覽截圖及美術/整合設定紀錄。",
+      "related": [
+        "UI-2-0113"
+      ],
+      "depends": [
+        "UI-2-0113"
+      ],
+      "acceptance": [
+        "新立繪為原創新構圖、無水印文字且符合使用者偏好的女將參考圖風格，並與趙雲現有設計比對整體視覺調性，符合使用者偏好的成年女性曲線與豐滿胸型並保持端莊衣著",
+        "大喬 full portrait 與 256x256 頭像正確匯入 assets/resources，Cocos metadata 可重建",
+        "人物介紹頁展示大喬立繪及正確姓名、稱號、稀有度；趙雲原有呈現無退化",
+        "轉蛋主頁人物預覽可固定指定大喬與趙雲，實際網頁畫面均正確且不改抽取邏輯",
+        "保存 GeneralDetail 與對應轉蛋池預覽對趙雲、大喬共四張實機截圖；本卡保留趙雲原有資產",
+        "記錄 prompt、尺寸、裁切座標、資產匯入及預覽驗收步驟"
+      ],
+      "deliverables": [
+        "artifacts/ui-source/general-art/da-qiao/ 原始 prompt 與候選立繪",
+        "assets/resources/sprites/generals/da_qiao_portrait.png 及 Cocos metadata",
+        "assets/resources/sprites/generals/avatars/da_qiao_avatar.png 與 general-avatar-crops 設定",
+        "必要的 UI capture previewVariant 設定",
+        "artifacts/ui-qa/UI-2-0114/ 四張正式預覽截圖",
+        "docs/ui/da-qiao-art-integration.md 美術設定及整合流程"
+      ],
+      "notes": "2026-10-22 | 狀態: in-progress | 進度: 依使用者偏好改採大喬 v3，粉白柔光並加強成年角色曲線與胸型；立繪透明角落 alpha=0，頭像重產及 verify 通過 | 阻塞: 隔離 Editor browser capture 未完成，趙雲與大喬四張實機畫面仍待驗收",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [
+          "Reference image C:\\Users\\User\\Pictures\\cocos專案\\人物\\女武將\\大喬3.png (768x1280)",
+          "Da Qiao record exists in generals.json and gacha-config.json",
+          "GeneralDetail smoke state expects sprites/generals/da_qiao_portrait"
+        ],
+        "output": [
+          "New portrait art and documented generation settings",
+          "256x256 head-and-neck avatar with verified crop bounds",
+          "Cocos metadata and visible GeneralDetail/GachaHero outputs for Zhao Yun and Da Qiao"
+        ],
+        "validation_cmd": "node tools_node/generate-general-avatars.js da-qiao --verify\nnode tools_node/capture-ui-screens.js --target GeneralDetailOverviewDaQiao\nnode tools_node/capture-ui-screens.js --target GachaSupportDaQiao\nnode tools_node/capture-ui-screens.js --target GeneralDetailOverviewZhaoYun\nnode tools_node/capture-ui-screens.js --target GachaHeroZhaoYun; inspect all four captured results.",
+        "rollback_hint": "Revert only UI-2-0114 assets/config/runtime changes; keep the original reference image outside the repository.",
+        "execution_steps": [
+          "Confirm target GeneralConfig, gacha pool, UI art slots and current Zhao Yun capture targets",
+          "Generate and visually select the new Da Qiao concept art",
+          "Resize/crop to formal portrait, author verified avatar crop coordinates, refresh Cocos assets",
+          "Integrate Da Qiao and Zhao Yun deterministic preview targets into GeneralDetail and Gacha",
+          "Run browser preview, capture four screenshots and visually inspect them",
+          "Write generation, crop, import and preview settings; run relevant asset/UI checks"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "contextMap": {
+        "primary": [
+          "assets/resources/data/gacha-config.json",
+          "assets/resources/data/generals.json",
+          "assets/resources/ui-spec/content/general-detail-overview-states-v1.json",
+          "assets/resources/sprites/generals/da_qiao_portrait.png",
+          "assets/resources/data/general-avatar-crops.json",
+          "tools_node/capture-ui-screens.js",
+          "docs/ui/da-qiao-art-integration.md"
+        ],
+        "secondary": [
+          "assets/scripts/ui/scenes/LoadingScene.ts",
+          "assets/scripts/ui/components/GeneralDetailOverviewShell.ts"
+        ],
+        "testCoverage": [
+          "tests/GachaPreviewStateRoute.test.ts",
+          "tools_node/generate-general-avatars.js",
+          "tools_node/capture-ui-screens.js"
+        ],
+        "patternsToFollow": [
+          "User reference is style-only; create a new composition with no watermark or text",
+          "Use formal gacha candidate and GeneralDetail data; do not invent character facts",
+          "Follow general-avatar-crop dimensions and verify both Cocos resources"
+        ]
+      }
+    }
+  ]
+}

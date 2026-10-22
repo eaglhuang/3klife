@@ -866,7 +866,7 @@ export class UIPreviewBuilder extends Component {
                 paths.add((slot as any).font as string);
             }
         }
-        await Promise.all([...paths].map(async (path) => {
+        await Promise.all(Array.from(paths).map(async (path) => {
             if (this._fontCache.has(path)) return;
             try {
                 const font = await services().resource.loadFont(path);
