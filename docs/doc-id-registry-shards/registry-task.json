@@ -2380,5 +2380,11 @@
     "path": "docs/agent-briefs/tasks/ATM/ATM-0-0026.md",
     "title": "[ATM-0-0026] 把 Review001 改成產品方向校準器而非逐行找錯",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0406",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0113.md",
+    "title": "[UI-2-0113] 轉蛋主頁人物預覽輪替",
+    "category": "task"
   }
 ]

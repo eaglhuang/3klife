@@ -31,7 +31,7 @@ const targets = [
     { id: 'Gacha', screenId: 'gacha-ds3', targetIndex: 3, uiSourceDir: 'gacha-main', runtimeScreenId: 'GachaMain' },
     { id: 'GachaFromLobby', screenId: 'gacha-ds3', targetIndex: 17, uiSourceDir: 'gacha-main', runtimeScreenId: 'GachaMain' },
     { id: 'CharacterDs3', screenId: 'character-ds3-main', targetIndex: 18, previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
-    { id: 'GachaHero', screenId: 'gacha-ds3', targetIndex: 3, previewVariant: 'hero' },
+    { id: 'GachaHero', screenId: 'gacha-ds3', targetIndex: 3, previewVariant: 'hero:zhao-yun' },
     { id: 'GachaSupport', screenId: 'gacha-ds3', targetIndex: 3, previewVariant: 'support' },
     { id: 'GachaLimited', screenId: 'gacha-ds3', targetIndex: 3, previewVariant: 'limited' },
     { id: 'GachaPullResult', screenId: 'gacha-pull-result', targetIndex: 22, uiSourceDir: 'gacha-pull-result', runtimeScreenId: 'GachaPullResult' },
