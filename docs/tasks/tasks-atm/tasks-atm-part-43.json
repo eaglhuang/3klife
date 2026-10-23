@@ -1,5 +1,117 @@
 [
   {
+    "doc_id": "",
+    "id": "ATM-0-0026",
+    "title": "升級 3KLife 內嵌 ATM 至最新版並建立可重複升級技能",
+    "owner": "codex-gpt-6.1-sol",
+    "priority": "P1",
+    "status": "blocked",
+    "type": "implementation",
+    "phase": "ATM-0",
+    "created": "2026-10-23",
+    "created_by_agent": "codex-gpt-6.1-sol",
+    "started_at": "2026-10-23T18:41:17+08:00",
+    "started_by_agent": "codex-gpt-6.1-sol",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 3KLife ATM adopter 從現行版本升級至官方可驗證的最新版，保留 3KLife 客製治理規則；新增可重複使用的 adopter upgrade skill，並完成安裝、路由及治理健康驗證。",
+    "related": [
+      "ATM-0-0025"
+    ],
+    "depends": [],
+    "acceptance": [
+      "鎖定並記錄官方穩定版來源、版本及完整性證據",
+      "升級後 CLI 與 repo-local 路由均回報目標版本，且 doctor、framework-mode、tasks audit 通過",
+      "不覆寫客製 AGENTS.md 區塊；若官方 setup/refusal 無安全的支援路徑，記錄具體阻擋並停止，不手動覆寫",
+      "新增可重複使用的升級 skill，提供乾跑、驗證、回退步驟及來源證據",
+      "任務卡、ATM 任務索引、技能編碼與差異檢查通過"
+    ],
+    "deliverables": [
+      ".agents/skills/atm-adopter-upgrade/SKILL.md",
+      "更新後的 ATM adopter runner/integration 產物",
+      "ATM doctor 與 tasks audit 驗證紀錄"
+    ],
+    "notes": "2026-10-23 | 狀態: blocked | 驗證: CLI 0.1.23 identity verified; setup refuses customized AGENTS.md; doctor reports charter integrity failure and recommends init --force | 變更: added reusable adopter-upgrade skill; runner unchanged | 阻塞: governance-block and charter migration review required",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        ".agents/skills/atm-adopter-upgrade/SKILL.md",
+        "docs/agent-briefs/tasks/ATM/ATM-0-0026.md"
+      ],
+      "validation_evidence": [
+        "npm CLI 0.1.23 runtime identity verified; sourceCommit eba8fb787976ad149e396ca8d934deadfa634040; frozen tag runner reports 0.1.2.",
+        "setup dry-run blocks on customized AGENTS.md; doctor reports ATM_DOCTOR_CHARTER_MISSING; init --force not run."
+      ],
+      "handoff_diff_status": "Upgrade is blocked pending reviewed AGENTS/charter migration; reusable skill is present.",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "hostKind": "downstream-3klife",
+    "targetRepo": "3KLife",
+    "alphaGate": {
+      "requiresAlpha0": false,
+      "blocker": false
+    },
+    "packageScope": [
+      "ATM adopter CLI and Codex integration only"
+    ],
+    "adapterScope": [
+      "atm.mjs",
+      ".atm/**",
+      "integrations/codex-skills/atm-governance-router/**"
+    ],
+    "allowed_files": [
+      "atm.mjs",
+      ".atm/**",
+      ".agents/skills/atm-adopter-upgrade/**",
+      "integrations/codex-skills/atm-governance-router/**",
+      "docs/agent-briefs/tasks/ATM/ATM-0-0026.md",
+      "docs/tasks/tasks-atm.json",
+      "docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "docs/tasks/tasks-atm/.shardrc.json",
+      "docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md"
+    ],
+    "forbidden_files": [
+      "AGENTS.md",
+      "library/**",
+      "temp/**",
+      "profiles/**",
+      "settings/**",
+      "node_modules/**"
+    ],
+    "non_goals": [
+      "不改寫或刪除 AGENTS.md 中使用者客製的 ATM 區塊；setup 若拒絕就停下並記錄阻擋",
+      "不更動 ATM 上游 repo、不發佈 ATM、不合併 master",
+      "不將舊 onefile runner 或未驗證 npm runtime 複製成正式 runner"
+    ],
+    "executionMode": "task-card-opener",
+    "validation_cmd": "node atm.mjs doctor --json; node atm.mjs tasks audit --json; node tools_node/check-encoding-touched.js --files <changed files>",
+    "rollback_hint": "只回退 ATM-0-0026 自己新增的任務卡、技能與 adopter 檔案；保留主工作目錄與其他工作樹內容。任何官方 setup 衝突先停止，不手動恢復或覆寫 AGENTS.md。",
+    "doc_refs": [],
+    "completed_at": "",
+    "contextMap": {
+      "primary": [
+        "README.md",
+        ".agents/skills/atm-version-upgrade/SKILL.md",
+        ".agents/skills/atm-internal-build-sync/SKILL.md"
+      ]
+    }
+  },
+  {
     "doc_id": "doc_task_0339",
     "id": "ATM-2-0033",
     "title": "Atomization & Infection Adapter Contract",
@@ -46,68 +158,5 @@
     },
     "completed_at": "2026-05-10",
     "completed_by_agent": "vs-code-gpt-5.4-mini"
-  },
-  {
-    "doc_id": "doc_task_0347",
-    "id": "ATM-2-0040",
-    "title": "Backfill Existing Core Atoms Through Atom Generator",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P0",
-    "status": "done",
-    "type": "migration",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T15:14:35.1752897+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "completed_at": "2026-05-08T17:35:00+08:00",
-    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
-    "chain_step": "2/3",
-    "sensor_triggered_by": "atm-pre-generator-atom-backfill",
-    "description": "讓既有核心原子 ATM-CORE-0001 與 ATM-CORE-0003 重新走 generator provenance，不直接手改 registry/workbench，並保留既有 atomId 與 hash-lock 可追溯性。",
-    "related": [],
-    "depends": [
-      "ATM-2-0038",
-      "ATM-2-0039"
-    ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始回填 pre-generator core atoms provenance | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node scripts/backfill-generator-provenance.mjs / npm run validate:registry-catalog / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: ATM-CORE-0001/0003 補 canonical workbench witness、test report、generator-provenance:backfilled，catalog 顯示 provenance | 阻塞: none\n2026-05-08 | ??: done | ??: node scripts/backfill-generator-provenance.mjs pass?npm.cmd run validate:generator-provenance pass | ??: pre-generator core atoms provenance backfill ??? report/selfVerification???? task shard ??? | ??: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM pre-generator atom backfill 開卡",
-      "summary": "用 generator 重新產生或遷移前期核心原子，補齊 generator provenance 與 workbench 四件套。",
-      "position": "ATM-2（migration / generator backfill）",
-      "prereq": "ATM-2-0038 / ATM-2-0039"
-    },
-    "contracts": {
-      "input": [
-        "ATM-CORE-0001 與 ATM-CORE-0003 是 generator 之前手動建立的核心原子",
-        "既有 atomId 不可變",
-        "既有 registry hash-lock 不可靜默失效"
-      ],
-      "output": [
-        "定義 pre-generator atom backfill 流程",
-        "用 generator 或 generator-backed migration 重建 ATM-CORE-0001/0003 workbench",
-        "保留或重算 registry selfVerification 並留下 migration evidence",
-        "catalog 顯示 generator provenance"
-      ],
-      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:registry-catalog\\nnpm test\\nnpm run lint",
-      "rollback_hint": "若 backfill 造成 hash drift，回退該 atom 的 regenerated workbench/registry entry，保留 ATM-2-0038 generator 本體。",
-      "execution_steps": [
-        "盤點 ATM-CORE-0001/0003 既有 sourcePaths",
-        "定義保留 atomId 的 generator-backed backfill 模式",
-        "逐顆重建 workbench/spec/test/report",
-        "重算 registry 與 catalog",
-        "跑完整 registry drift 驗證"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
   }
 ]
