@@ -336,6 +336,8 @@ export class LobbyScene extends Component {
     }
 
     async start() {
+        // 讀存檔前先備妥服務（存檔後端、名冊、生命週期）；否則 load() 因未設定存檔服務而失敗，每次重開都被當成新玩家
+        services().initialize(this.node);
         // 為 LobbyScene 大背板生成穩定的組件背景
         const bgNode = this.node.getChildByName('Background');
         if (bgNode) {
