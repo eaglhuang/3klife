@@ -245,9 +245,17 @@ export function getTallyGrainCost(quality: string, star: number): number {
     return TALLY_GRAIN_COST[quality]?.[star] ?? TALLY_GRAIN_COST_FALLBACK;
 }
 
+/** 攻城戰場景預設 ID（戰場部署系統：SCENE_SIEGE = 攻城戰） */
+export const SCENE_PRESET_SIEGE = 'SCENE_SIEGE';
+
+/** 由遭遇戰種類推場景預設：攻城戰 → SCENE_SIEGE，野戰或未設定 → null（PROG-2-0926） */
+export function scenePresetIdOf(battleKind?: string | null): string | null {
+    return battleKind === 'siege' ? SCENE_PRESET_SIEGE : null;
+}
+
 /** 精銳部署上限：基礎 4，攻城 +1，官職 / 任務最多 +1 */
 export function getEliteDeployCap(scenePresetId?: string | null, officerTierDeployBonus = 0): number {
-    const siege = scenePresetId === 'SCENE_SIEGE' ? ELITE_DEPLOY_LIMIT.siegeSceneBonus : 0;
+    const siege = scenePresetId === SCENE_PRESET_SIEGE ? ELITE_DEPLOY_LIMIT.siegeSceneBonus : 0;
     const officer = Math.min(nonNegInt(officerTierDeployBonus), ELITE_DEPLOY_LIMIT.officerTierBonusCap);
     return ELITE_DEPLOY_LIMIT.baseActiveCap + siege + officer;
 }
@@ -408,13 +416,63 @@ export function spendTactic(state: SortieState, cost: number): TacticSpendResult
 
 /** 戰法計謀點成本預設（暫定：戰法系統範例 20~55 TP，尚未逐招定案，先取中間值 30） */
 export const DEFAULT_TACTIC_TP_COST = 30;
-/** 逐招成本覆寫表（tacticId → 成本）；定案前留空 */
-export const TACTIC_TP_COST_OVERRIDE: Readonly<Record<string, number>> = {};
+/** 逐招成本覆寫表（tacticId → 成本）；數值來源為數值系統.md E-9 戰法 TP 消耗表（28 招） */
+export const TACTIC_TP_COST_OVERRIDE: Readonly<Record<string, number>> = {
+    TAC_CAVALRY_CHARGE: 30,
+    TAC_LONE_RIDER: 50,
+    TAC_LANCE_THRUST: 20,
+    TAC_IRON_WALL_CHARGE: 40,
+    TAC_BACKSTAB: 25,
+    TAC_AMBUSH: 40,
+    TAC_NIGHT_RAID: 35,
+    TAC_SEVEN_IN_OUT: 60,
+    TAC_DISCORD: 45,
+    TAC_TAUNT: 15,
+    TAC_SLOW: 20,
+    // 空城計（戰法系統：55 TP，PROG-2-0778）
+    TAC_EMPTY_FORT: 55,
+    TAC_CHAIN_LINK: 70,
+    TAC_WATER_ATTACK: 65,
+    TAC_COMBO_ATTACK: 20,
+    TAC_SWORN_FURY: 45,
+    TAC_HEAL: 25,
+    TAC_INSPIRE: 30,
+    TAC_HASTE: 15,
+    TAC_SHIELD: 35,
+    TAC_EIGHT_ARRAY: 80,
+    TAC_WEI_MIGHT: 70,
+    TAC_DRAGON_GALL: 60,
+    TAC_FIRE_ATTACK: 35,
+    TAC_RED_CLIFF: 90,
+    TAC_FIRE_ARROW: 25,
+    TAC_ARROW_RAIN: 50,
+    TAC_FOREST_AMBUSH: 30,
+};
+
+/**
+ * 戰場戰法庫（tactic-library.json）id → 規格表 TAC_* id 的暫定對照（PM 2026-10-21 裁定：規格 id 保持正式）。
+ * 明顯對得上的直接對；其餘依分類與描述選最接近的一招，皆為暫定，記於待辦檔。
+ */
+export const TACTIC_LIBRARY_TO_SPEC_ID: Readonly<Record<string, string>> = {
+    'tactic-cavalry-shock': 'TAC_CAVALRY_CHARGE',
+    'tactic-fire-scheme': 'TAC_FIRE_ATTACK',
+    'tactic-archer-volley': 'TAC_ARROW_RAIN',
+    'tactic-morale-rally': 'TAC_INSPIRE',
+    'tactic-battle-roar': 'TAC_TAUNT',
+    'tactic-river-ambush': 'TAC_AMBUSH',
+    'tactic-spear-phalanx': 'TAC_LANCE_THRUST',
+    'tactic-dragon-pierce': 'TAC_LONE_RIDER',
+};
+
+/** 戰場 id 先經對照轉成規格 id；本來就是規格 id 或查無對照時原樣回傳 */
+export function toSpecTacticId(tacticId: string): string {
+    return TACTIC_LIBRARY_TO_SPEC_ID[tacticId] ?? tacticId;
+}
 
 /** 施放戰法所需計謀點；沒有 tacticId（只有普通攻擊或 demo 技能）時用預設值 */
 export function getTacticTpCost(tacticId: string | null | undefined): number {
     if (!tacticId) return DEFAULT_TACTIC_TP_COST;
-    return TACTIC_TP_COST_OVERRIDE[tacticId] ?? DEFAULT_TACTIC_TP_COST;
+    return TACTIC_TP_COST_OVERRIDE[toSpecTacticId(tacticId)] ?? DEFAULT_TACTIC_TP_COST;
 }
 
 /** 回合開始回復計謀點，不超過上限 */
@@ -443,6 +501,75 @@ export function checkDeploy(state: SortieState, request: DeployRequest): SortieD
     if (state.poolCurrent < cost.troopCost) reasons.push('TROOPS_SHORT');
     if (state.food < cost.foodCost) reasons.push('FOOD_SHORT');
     return { ok: reasons.length === 0, reasons, cost };
+}
+
+/** 改派建議可推薦的兵種（與 UI 兵種名稱對照表一致；水軍等無名稱的不列入） */
+export const DEPLOY_SUGGESTION_CANDIDATES: readonly string[] = ['cavalry', 'infantry', 'shield', 'archer', 'pikeman'];
+
+/** 改派二次確認記憶（DEP-10 A 案）：記下上一次被擋的目標與建議兵種 */
+export interface RedirectPrompt {
+    deniedType: string;
+    lane: number;
+    suggestedType: string;
+}
+
+export interface RedirectStep {
+    prompt: RedirectPrompt | null;
+    action: 'none' | 'arm' | 'confirm';
+    troopType: string | null;
+}
+
+/**
+ * 改派二次確認（規格：玩家必須再次確認，不自動改派）。
+ * 第一次點不可部署的目標 → arm（只提示）；同一目標、同一格、同一建議的第二次點 → confirm（才改派）；沒有建議 → none。
+ */
+export function nextRedirectStep(
+    prompt: RedirectPrompt | null,
+    attempt: { troopType: string; lane: number },
+    suggestion: string | null,
+): RedirectStep {
+    if (!suggestion) return { prompt: null, action: 'none', troopType: null };
+    const confirmed = prompt !== null
+        && prompt.deniedType === attempt.troopType
+        && prompt.lane === attempt.lane
+        && prompt.suggestedType === suggestion;
+    if (confirmed) return { prompt: null, action: 'confirm', troopType: suggestion };
+    return {
+        prompt: { deniedType: attempt.troopType, lane: attempt.lane, suggestedType: suggestion },
+        action: 'arm',
+        troopType: suggestion,
+    };
+}
+
+/** 改派建議文案（規格 戰場部署系統 §G「可改派低耗部隊：{TroopName}。」） */
+export function deploySuggestionCopy(troopName: string): string {
+    return `可改派低耗部隊：${troopName}。`;
+}
+
+/**
+ * 改派建議 Deploy_Suggestion（DEP-10）：目標不可部署時，從候選兵種中推薦一隊可派出的低耗部隊。
+ * 只回傳建議，玩家必須再次確認，不自動改派（規格）。排序暫定：糧耗低者優先，再比兵力耗，同分取候選順序較前者。
+ */
+export function suggestLowCostDeploy(
+    state: SortieState,
+    deniedType: string,
+    candidateTypes: readonly string[],
+): string | null {
+    let best: { troopType: string; cost: DeployCost } | null = null;
+    for (const troopType of candidateTypes) {
+        if (troopCodeOf(troopType) === troopCodeOf(deniedType)) continue;
+        const check = checkDeploy(state, { troopType });
+        if (!check.ok) continue;
+        const cost = check.cost;
+        if (
+            !best
+            || cost.foodCost < best.cost.foodCost
+            || (cost.foodCost === best.cost.foodCost && cost.troopCost < best.cost.troopCost)
+        ) {
+            best = { troopType, cost };
+        }
+    }
+    return best?.troopType ?? null;
 }
 
 export interface ApplyDeployResult {

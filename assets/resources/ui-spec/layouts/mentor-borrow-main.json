@@ -1,0 +1,455 @@
+{
+  "id": "mentor-borrow-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "MentorBorrowRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "MentorBorrowCard",
+        "widget": {
+          "top": 120,
+          "left": 32
+        },
+        "width": 900,
+        "height": 760,
+        "skinSlot": "mentor.borrow.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "MentorBorrowTitleLabel",
+            "id": "borrowTitle",
+            "widget": {
+              "top": 12,
+              "left": 16,
+              "right": 16
+            },
+            "height": 34,
+            "text": "借用好友的教官",
+            "styleSlot": "mentor.borrow.label.title"
+          },
+          {
+            "type": "panel",
+            "name": "BorrowRow0",
+            "id": "borrowRow0Box",
+            "widget": {
+              "top": 92,
+              "left": 16,
+              "right": 16
+            },
+            "height": 96,
+            "skinSlot": "mentor.borrow.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BorrowRow0Label",
+                "id": "borrowRow0",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 220
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "mentor.borrow.label.body"
+              },
+              {
+                "type": "button",
+                "name": "BorrowRow0Button",
+                "id": "btnBorrowRow0",
+                "widget": {
+                  "vCenter": true,
+                  "right": 12
+                },
+                "width": 190,
+                "height": 52,
+                "skinSlot": "mentor.borrow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BorrowRow0ButtonLabel",
+                    "id": "borrowRow0Btn",
+                    "widget": {
+                      "top": 8,
+                      "left": 8,
+                      "right": 8
+                    },
+                    "height": 36,
+                    "text": "借用",
+                    "styleSlot": "mentor.borrow.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "BorrowRow1",
+            "id": "borrowRow1Box",
+            "widget": {
+              "top": 196,
+              "left": 16,
+              "right": 16
+            },
+            "height": 96,
+            "skinSlot": "mentor.borrow.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BorrowRow1Label",
+                "id": "borrowRow1",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 220
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "mentor.borrow.label.body"
+              },
+              {
+                "type": "button",
+                "name": "BorrowRow1Button",
+                "id": "btnBorrowRow1",
+                "widget": {
+                  "vCenter": true,
+                  "right": 12
+                },
+                "width": 190,
+                "height": 52,
+                "skinSlot": "mentor.borrow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BorrowRow1ButtonLabel",
+                    "id": "borrowRow1Btn",
+                    "widget": {
+                      "top": 8,
+                      "left": 8,
+                      "right": 8
+                    },
+                    "height": 36,
+                    "text": "借用",
+                    "styleSlot": "mentor.borrow.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "BorrowRow2",
+            "id": "borrowRow2Box",
+            "widget": {
+              "top": 300,
+              "left": 16,
+              "right": 16
+            },
+            "height": 96,
+            "skinSlot": "mentor.borrow.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BorrowRow2Label",
+                "id": "borrowRow2",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 220
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "mentor.borrow.label.body"
+              },
+              {
+                "type": "button",
+                "name": "BorrowRow2Button",
+                "id": "btnBorrowRow2",
+                "widget": {
+                  "vCenter": true,
+                  "right": 12
+                },
+                "width": 190,
+                "height": 52,
+                "skinSlot": "mentor.borrow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BorrowRow2ButtonLabel",
+                    "id": "borrowRow2Btn",
+                    "widget": {
+                      "top": 8,
+                      "left": 8,
+                      "right": 8
+                    },
+                    "height": 36,
+                    "text": "借用",
+                    "styleSlot": "mentor.borrow.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "BorrowRow3",
+            "id": "borrowRow3Box",
+            "widget": {
+              "top": 404,
+              "left": 16,
+              "right": 16
+            },
+            "height": 96,
+            "skinSlot": "mentor.borrow.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BorrowRow3Label",
+                "id": "borrowRow3",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 220
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "mentor.borrow.label.body"
+              },
+              {
+                "type": "button",
+                "name": "BorrowRow3Button",
+                "id": "btnBorrowRow3",
+                "widget": {
+                  "vCenter": true,
+                  "right": 12
+                },
+                "width": 190,
+                "height": 52,
+                "skinSlot": "mentor.borrow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BorrowRow3ButtonLabel",
+                    "id": "borrowRow3Btn",
+                    "widget": {
+                      "top": 8,
+                      "left": 8,
+                      "right": 8
+                    },
+                    "height": 36,
+                    "text": "借用",
+                    "styleSlot": "mentor.borrow.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "BorrowRow4",
+            "id": "borrowRow4Box",
+            "widget": {
+              "top": 508,
+              "left": 16,
+              "right": 16
+            },
+            "height": 96,
+            "skinSlot": "mentor.borrow.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BorrowRow4Label",
+                "id": "borrowRow4",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 220
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "mentor.borrow.label.body"
+              },
+              {
+                "type": "button",
+                "name": "BorrowRow4Button",
+                "id": "btnBorrowRow4",
+                "widget": {
+                  "vCenter": true,
+                  "right": 12
+                },
+                "width": 190,
+                "height": 52,
+                "skinSlot": "mentor.borrow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BorrowRow4ButtonLabel",
+                    "id": "borrowRow4Btn",
+                    "widget": {
+                      "top": 8,
+                      "left": 8,
+                      "right": 8
+                    },
+                    "height": 36,
+                    "text": "借用",
+                    "styleSlot": "mentor.borrow.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "MentorBorrowPager",
+            "widget": {
+              "bottom": 76,
+              "left": 16,
+              "right": 16
+            },
+            "height": 52,
+            "children": [
+              {
+                "type": "button",
+                "name": "MentorBorrowPrevButton",
+                "id": "btnBorrowPrev",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0
+                },
+                "width": 150,
+                "height": 44,
+                "skinSlot": "mentor.borrow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "MentorBorrowPrevLabel",
+                    "id": "borrowPrevLabel",
+                    "widget": {
+                      "top": 8,
+                      "left": 8,
+                      "right": 8
+                    },
+                    "height": 28,
+                    "text": "上一頁",
+                    "styleSlot": "mentor.borrow.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "MentorBorrowPageLabel",
+                "id": "borrowPage",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 12,
+                  "vCenter": true,
+                  "hCenter": true
+                },
+                "height": 36,
+                "text": "1 / 1",
+                "styleSlot": "mentor.borrow.label.body"
+              },
+              {
+                "type": "button",
+                "name": "MentorBorrowNextButton",
+                "id": "btnBorrowNext",
+                "widget": {
+                  "vCenter": true,
+                  "right": 0
+                },
+                "width": 150,
+                "height": 44,
+                "skinSlot": "mentor.borrow.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "MentorBorrowNextLabel",
+                    "id": "borrowNextLabel",
+                    "widget": {
+                      "top": 8,
+                      "left": 8,
+                      "right": 8
+                    },
+                    "height": 28,
+                    "text": "下一頁",
+                    "styleSlot": "mentor.borrow.label.button"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "CloseMentorBorrowButton",
+            "id": "btnBorrowClose",
+            "widget": {
+              "bottom": 12,
+              "left": 16,
+              "right": 16
+            },
+            "height": 44,
+            "skinSlot": "mentor.borrow.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "CloseMentorBorrowLabel",
+                "id": "closeBorrowLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "關閉",
+                "styleSlot": "mentor.borrow.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "MentorBorrowRecordButton",
+            "id": "btnBorrowRecord",
+            "widget": {
+              "top": 12,
+              "right": 16
+            },
+            "width": 200,
+            "height": 40,
+            "skinSlot": "mentor.borrow.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "MentorBorrowRecordLabel",
+                "id": "borrowRecordLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 32,
+                "text": "畢業紀錄",
+                "styleSlot": "mentor.borrow.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

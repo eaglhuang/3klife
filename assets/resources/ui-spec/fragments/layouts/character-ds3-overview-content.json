@@ -963,6 +963,46 @@
               "height": 35,
               "text": "燕人武聖",
               "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_46"
+            },
+            {
+              "type": "button",
+              "name": "BtnSoulInject",
+              "id": "btnSoulInject",
+              "widget": {
+                "bottom": 12,
+                "left": 80
+              },
+              "width": 360,
+              "height": 52,
+              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "BtnSoulInjectLabel",
+                  "id": "soulInjectLabel",
+                  "widget": {
+                    "vCenter": true,
+                    "left": 0,
+                    "right": 0
+                  },
+                  "height": 44,
+                  "text": "寄宿戰魂",
+                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject"
+                }
+              ]
+            },
+            {
+              "type": "label",
+              "name": "TotalTpLabel",
+              "id": "totalTpLabel",
+              "widget": {
+                "bottom": 16,
+                "left": 460
+              },
+              "width": 300,
+              "height": 44,
+              "text": "總 TP 0",
+              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_total_tp"
             }
           ]
         }

@@ -21,6 +21,8 @@ export interface GeneralUltimateSlotConfig {
   isExclusive?: boolean;
   inheritedFromGeneId?: string | null;
   notes?: string;
+  /** 依轉數算出的解鎖狀態（PROG-2-1059 寫入存檔）；讀取時仍以 unlockReincarnation 與轉數為準 */
+  isUnlocked?: boolean;
 }
 
 export interface GeneralGeneratorProfileConfig {
@@ -86,6 +88,8 @@ export class GeneralUnit {
   public readonly tacticSlots: GeneralTacticSlotConfig[];
   /** 正式奧義槽位，供 Battle HUD / 詳情頁共用 */
   public readonly ultimateSlots: GeneralUltimateSlotConfig[];
+  /** 轉生次數（缺值視為 1 轉）；奧義欄位依此解鎖（ULT-03） */
+  public readonly rebirthCount: number | undefined;
 
   /** 該武將提供給同陣營兵種的攻擊加成比例（例如 0.1 = +10%） */
   public readonly attackBonus: number;
@@ -116,6 +120,7 @@ export class GeneralUnit {
     this.skillId = this.battlePrimarySkillId;
     this.tacticSlots = [...(config.tacticSlots ?? [])];
     this.ultimateSlots = [...(config.ultimateSlots ?? [])];
+    this.rebirthCount = config.rebirthCount;
     this.str = config.str ?? config.stats?.str ?? 0;
     this.int = config.int ?? config.stats?.int ?? 0;
     this.lea = config.lea ?? config.stats?.lea ?? 0;
@@ -303,6 +308,10 @@ export interface GeneralConfig {
   ep?: number;
   epRating?: string;
   bloodlineId?: string;
+  /** 血脈歸宗：已被移植給其他版本的因子 id（V2 側的「已歸宗」）；缺欄位視為空（舊檔相容） */
+  mergedOutFactors?: string[];
+  /** 因子媒介（BLT-10）已對這位退役武將使用過；缺欄位視為未用（舊檔相容） */
+  catalystUsed?: boolean;
   /** 將階 General_Rank 0~5（TERM-03）；缺欄位視為 0，Command_Capacity 用 */
   generalRank?: number;
   /** 名聲 General_Fame（TERM-03）；暫定直接作為 Command_Capacity 的名聲加成，缺欄位視為 0 */
@@ -336,6 +345,8 @@ export interface GeneralConfig {
   lockedTactics?: string[];
   tacticSlots?: GeneralTacticSlotConfig[];
   ultimateSlots?: GeneralUltimateSlotConfig[];
+  /** 五階血脈傳承奧義的點亮狀態（PROG-2-0737）；缺欄位時讀取端以 normalizeUltimateState 補成初始值 */
+  bloodlineUltimate?: { stageCap?: number; stageCurrent?: number };
 
   troopAptitude?: Record<string, string>;
   terrainAptitude?: Record<string, string>;

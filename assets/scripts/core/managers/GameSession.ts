@@ -22,13 +22,24 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
+import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
+import { addOfficerExp, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
+import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
+import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/SandtableMarkers';
+import { isSandtableTerritory } from '../systems/SandtableTerritories';
+import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
+import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
+import type { HallBoardKey, HallGateTask, HallPlayerState } from '../systems/HallMissionBoard';
 import { battleIntelligenceOf } from '../systems/BattleRoster';
+import { pvpSeasonIdOf } from '../systems/BattleSeasonStats';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
 import type { NurtureAction, NurtureRoundLog } from '../systems/NurtureSystem';
 import { learnTpCost } from '../systems/FactorTacticLinkage';
 import type { GeneralConfig } from '../models/GeneralUnit';
-import { GameClock, GameTimeState, SeasonAdvanceResult } from '../systems/GameClock';
+import { advanceDaughtersOneYear, assignDaughterRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
+import { formatSeasonLabel, GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
+import { buildYearReport, normalizeYearAgingEvents, YearReport } from '../systems/YearReport';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import type { CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
@@ -52,11 +63,17 @@ import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingStat
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
-import { createPlayerSaveSnapshot, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
-import { settleDeathTallies } from '../systems/TallyDeathSettlement';
+import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, settleOpenAssignsForSeason, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult, type HallAutoAssignTaskInput } from '../systems/HallAutoAssign';
+import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
+import { estimateSortiePower } from '../systems/SortiePrediction';
+import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
+import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
+import { deriveInventoryViews, type InventoryRecord, type InventoryViews } from '../systems/InventoryProjection';
+import { buildTallyInventoryRecords, normalizeInventoryRecords } from '../systems/InventoryRecordBridge';
 import { applyTallyConfiscation, applyTallyLoyaltyChange, createTallyLoyaltyState, type TallyLoyaltyAction, type TallyLoyaltyResult, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
 import type { TigerTallyQuality } from '../models/TigerTallyCard';
 import type { NurtureState } from '../services/NurtureService';
@@ -68,6 +85,12 @@ import {
     rollBattleAwakening,
 } from '../systems/FactorAwakening';
 import {
+    awakenBloodlineUltimate,
+    raiseBloodlineUltimateCap,
+} from '../systems/BloodlineUltimateRoster';
+import type { UltimateAwakenReason } from '../systems/BloodlineTransmissionUltimate';
+import { ultimateProgressFromBattleRecord } from '../systems/UltimateProgress';
+import {
     battleExpSource,
     DiscoveryExpSource,
     DiscoveryGain,
@@ -77,32 +100,82 @@ import {
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
 import { resolveFactorColor } from '../systems/FactorInheritance';
-import type { FactorDictionary } from '../systems/FactorInheritance';
+import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
+import { visibleFactorColors as factorColorsVisibleAtLevel } from '../systems/FactorMask';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
+import { withUltimateUnlockState } from '../systems/UltimateSlotUnlock';
+import { MentorDuplicateOutcome, overflowToastText, resolveMentorDuplicate } from '../systems/MentorOverflow';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
+import { borrowCandidateOf, type NpcFriendMentor } from '../systems/NpcFriendMentor';
+import { canBorrow, createBorrow, normalizeBorrowLedger, type BorrowBlockReason, type BorrowLedger, type BorrowRequest } from '../systems/FriendBorrow';
+import { emptySoulFragmentLedger, injectFromLedger, normalizeSoulFragmentLedger, recordDeathFragment, type SoulFragmentLedger } from '../systems/SoulFragmentLedger';
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
+import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
+import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampaignStagePlayable } from '../config/CampaignStages';
+import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
+import { buildEraResetEvent } from '../systems/EraReset';
+import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
+import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
-import type { BattlePerformance } from '../systems/BattleRecordStats';
+import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from '../systems/BattleRecordStats';
+import { buildBattleSnapshot, type BattleSnapshot } from '../systems/BattleSnapshot';
+import { leaderboardEntryOf, rankLeaderboard, type LeaderboardMetric, type LeaderboardEntry } from '../systems/BattleLeaderboard';
+import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
+import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
 import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { drawFemalePool, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
 import { isRescueRefreshDue, rollDungeonRescue, type RescueOutcome } from '../systems/DungeonRescue';
 import { giftToFemale, normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
-import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral } from '../systems/Unveiling';
+import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral, UNVEILING_AGE, GENERAL_STATUS_UNVEILED } from '../systems/Unveiling';
+import { injectCatalystFactor, markCatalystUsed, type CatalystGeneral } from '../systems/GeneCatalyst';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
 import { grantLegacyRewards, normalizeLegacyCount, type LegacyAchievement } from '../systems/LegacyAchievement';
 import { STARTER_GACHA_WALLET } from '../services/GachaWalletRules';
 import type { DynamicRelation } from '../systems/KinRelation';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
+import {
+    assignGovernanceGeneral,
+    DEFAULT_MAX_TASK_SLOTS,
+    removeGovernanceAssignment,
+    type GovernanceAssignment,
+    type GovernanceResult,
+} from '../systems/GovernanceAssignment';
+import {
+    attemptTerritoryLoss,
+    lastStandModifiers,
+    type KeepTerritory,
+    type LastStandModifiers,
+    type TerritoryLossResult,
+} from '../systems/HereditaryKeep';
+import {
+    appendJournalEntry,
+    createEmptyJournal,
+    queryJournal,
+    type JournalEntry,
+    type JournalEntryInput,
+    type JournalQuery,
+    type JournalState,
+    type JournalWriteResult,
+} from '../systems/JournalLog';
+import type { DomesticTaskId } from '../systems/DomesticTasks';
+import {
+    defaultKeepTerritories,
+    normalizeGovernanceAssignments,
+    normalizeJournalEntries,
+    normalizeKeepTerritories,
+} from '../systems/LifespanSave';
 import {
     BattleResult,
     BattleSettlement,
@@ -117,16 +190,24 @@ import {
 export const GAME_SESSION_EVENTS = {
     /** payload: SeasonAdvancedPayload */
     SeasonAdvanced: 'game-session-season-advanced',
+    /** payload: { tiers: number[] }（大廳任務結算後官職晉升，OFC-08 提示用） */
+    OfficerPromoted: 'game-session-officer-promoted',
+    /** payload: YearReport（第 4 季結束時發出；養成線 FEM-06 等年度掛點接在這裡） */
+    YearEnded: 'game-session-year-ended',
     /** payload: AgingEvent（type = reached-retirement-age） */
     GeneralReachedRetirementAge: 'game-session-general-retirement-age',
     /** payload: AgingEvent（type = died） */
     GeneralDied: 'game-session-general-died',
     /** payload: AgingEvent（type = entered-growth-stage，stage 為 grow-up / prime / elder） */
     GeneralGrowthStage: 'game-session-general-growth-stage',
+    /** payload: EraResetEvent（每 60 月一次；目前只發訊號，領土/外交/AI 重置待世界沙盤接入，TIME-10） */
+    EraReset: 'game-session-era-reset',
     /** payload: UnveilingEvent（UI 在此播放血脈命鏡開獎演出，再讓玩家選宿命） */
     GeneralUnveiled: 'game-session-general-unveiled',
     /** payload: MentorCard */
     GeneralRetired: 'game-session-general-retired',
+    /** payload: { childId, injectedFactorId, consumed }（退役時因子媒介注入，PROG-2-0865） */
+    GeneCatalystInjected: 'game-session-gene-catalyst-injected',
     /** payload: SpiritCard（每位死亡武將一張） */
     SpiritCardCreated: 'game-session-spirit-card-created',
     /** payload: BattleSettlement（戰後精力、戰績、功勳已寫回名冊） */
@@ -147,6 +228,8 @@ export const GAME_SESSION_EVENTS = {
     FirstBattleCleared: 'game-session-first-battle-cleared',
     /** payload: PlayerSaveSnapshot */
     Loaded: 'game-session-loaded',
+    /** payload: PlayerSaveSnapshot（主檔損壞、改從備份讀回時在 Loaded 之後發出；UI 據此提示玩家進度退回上一份，DS-14） */
+    LoadRecoveredFromBackup: 'game-session-load-recovered-from-backup',
     /** payload: string[]（新的出戰卡組） */
     DeckChanged: 'game-session-deck-changed',
     /** payload: FactorAwakenedEvent */
@@ -184,6 +267,10 @@ export interface SeasonAdvancedPayload {
     lifecycle?: LifecycleSettlement;
     /** 本季免費發放的求籤令（已達免費上限時為 0） */
     oracleTokensGranted?: number;
+    /** 本季是年末時才有：本年的年報（TIME-07） */
+    yearReport?: YearReport;
+    /** 本季每位名冊武將的季度戰報（REC-08）；沒有精力資料的武將不列 */
+    quarterlyReports?: QuarterlyBattleReportRow[];
 }
 
 /** 進行中的培育會話存取介面；正式環境為 NurtureService，讓存檔帶著培育進度 */
@@ -230,6 +317,19 @@ export interface AddGeneralsResult {
 export interface AddGeneralsOptions {
     /** 轉蛋抽到重複同名武將時改為轉生（+1 轉）；預設關閉，俘虜招募等來源維持原行為 */
     rebirthOnDuplicate?: boolean;
+}
+
+/** 季結日誌的排序優先級（PROG-2-0976）；低於戰鬥與派駐條目，不會擠掉它們 */
+const SEASON_JOURNAL_PRIORITY = 50;
+
+/**
+ * 季結日誌的時間戳只作排序鍵（PROG-2-0976，暫定）：以「年-季序號-01」表示，
+ * 讓同年較後的季排在較前面。尚未對應遊戲內實際日期。
+ */
+function seasonJournalTimestamp(current: GameTimeState): string {
+    const year = String(current.currentYear).padStart(4, '0');
+    const season = String(current.currentSeason).padStart(2, '0');
+    return `${year}-${season}-01T00:00:00`;
 }
 
 export class InMemoryRosterStore implements RosterStore {
@@ -285,6 +385,9 @@ export interface MercenaryDayReport {
 
 export class GameSession {
     private _clock = new GameClock();
+    /** 單場戰報快照（PROG-2-0951）：只保留最近一場，記憶體內，不寫入存檔 */
+    private _battleSerial = 0;
+    private _lastBattleSnapshots: BattleSnapshot[] = [];
     /** 動態關係表（KIN-10）：目前只在記憶體中，存檔欄位另卡接線 */
     public readonly dynamicRelations = new DynamicRelationBook();
     private _roster: RosterStore = new InMemoryRosterStore();
@@ -295,6 +398,8 @@ export class GameSession {
     private _random: RandomSource = () => this._seeded.next();
     /** 主動指令造成的死亡事件；下一次季結時併入 aging 事件交給季結結算（不寫入存檔，見 PROG-2-0221） */
     private _pendingLifespanEvents: AgingEvent[] = [];
+    /** 本年度累積的老化事件（年末產出年報後清空，不存檔；年中讀檔時從 0 起算） */
+    private _yearAgingEvents: AgingEvent[] = [];
     /** 本季第一次主動扣壽命前的名冊；季結時當作陣亡虎符結算的「之前」基準，結算後清掉（不存檔） */
     private _preLifespanRoster: GeneralConfig[] | null = null;
     /** 共用入口保持同一函式身分，讀檔恢復游標後既有服務會立即使用新狀態。 */
@@ -307,6 +412,8 @@ export class GameSession {
     private _leadGeneralId: string | null = null;
     /** 出征支援（參謀官 / 後勤官）；暫定只存在本次遊玩，不寫存檔 */
     private _sortieSupport: SortieSupport = { strategistUid: null, deputyUid: null };
+    /** 編制預設（DEP-14）：主將 id → 參謀官 / 後勤官，會寫入存檔 */
+    private _sortiePresets: Record<string, SortieSupport> = {};
     /** 趕路倒數（OPEN-11）；目前未存檔，讀檔後為 null。 */
     private _countdown: CountdownState | null = null;
     /** 回合制趕路（PROG-2-0475）：每季遞減，歸零即到達並清除；存檔欄位 travelCountdown。 */
@@ -318,6 +425,12 @@ export class GameSession {
     private _onboarding: OnboardingState = { ...FRESH_ONBOARDING };
     /** 結義點數（轉蛋滿轉溢出獲得，傭兵轉永久用）；存檔欄位 bondPoints */
     private _bondPoints = 0;
+    /** NPC 好友教官清單（MENT-14 MVP）；由 ServiceLoader 從資料表載入 */
+    private _npcFriendMentors: NpcFriendMentor[] = [];
+    /** 好友借用紀錄（MENT-14）；目前只存在記憶體，尚未寫入存檔 */
+    private _borrowLedger: BorrowLedger = { records: [] };
+    /** 戰魂碎片帳本（以亡者 uid 為鍵）；超齡死亡時產生，寄宿後消耗（SAME-08，PROG-2-1056） */
+    private _soulFragments: SoulFragmentLedger = emptySoulFragmentLedger();
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
     private _clearedStageIds: string[] = [];
     /** 收藏武將 id（HALL-07 收藏權重，PROG-2-0453） */
@@ -332,7 +445,17 @@ export class GameSession {
     private _tallyHoldings: TallyHoldings = createTallyHoldings([]);
     /** 虎符卡資料（uid → 卡）；陣亡產出的卡會登記到這裡 */
     private _tallyCards: Record<string, TigerTallyCard> = {};
+    /** 統一物件庫列（DS-08 canonical，PROG-2-1021）；過渡期虎符寫入後同步重算 TALLY 列 */
+    private _inventoryRecords: InventoryRecord[] = [];
     /** 女性武將來源（uid → 來源，FEM-01）；戰俘女將歸入名冊時寫入（PROG-2-0245） */
+    /** 官職狀態（OFC-03）：階位、經驗與解鎖歷史；存檔為扁平欄位 officerState */
+    private _officerState: OfficerState = initialOfficerState();
+    /** 世界沙盤標記所在的領地 id（OFC-06 / PROG-2-0965）；每領地最多一個，數量上限由官職階段決定 */
+    private _sandtableMarkerTerritories: readonly string[] = [];
+    /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔 */
+    private _gachaMentorJournal: GachaMentorJournalEntry[] = [];
+    /** 大廳任務 AI 委任紀錄（PROG-2-1006） */
+    private _hallAssignLog: HallAutoAssignRecord[] = [];
     private _femaleSources: Record<string, FemaleSource> = {};
     /** 轉蛋各池保底計數（PROG-2-0337）；由轉蛋服務寫入，存檔時一併保存 */
     private _gachaPity: GachaPityBook = {};
@@ -343,6 +466,10 @@ export class GameSession {
     private _gachaRevision = 0;
     /** Legacy_Count（RET-07）：玩家層級的跨世代成就次數 */
     private _legacyCount = 0;
+    /** 已傳道過的名將 id（MENT-15 一生一次） */
+    private _legendaryMentoringUsedIds: string[] = [];
+    /** 結緣成功的本機端紀錄（BRD-12）；暫定只存在記憶體，尚未寫入存檔 */
+    private _breedingBirthRecords: BreedingBirthRecord[] = [];
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 名聲（暫定：存於 resources.fame） */
@@ -372,6 +499,17 @@ export class GameSession {
         return this._clock.state;
     }
 
+    /** 最近一場戰鬥的單場戰報快照（唯讀；尚未有戰鬥時為空） */
+    public get lastBattleSnapshots(): readonly BattleSnapshot[] {
+        return this._lastBattleSnapshots;
+    }
+
+    /** 本機戰績排行：依指定指標排序，取前 N 名（REC-11，PROG-2-0955；好友與全服尚未接） */
+    public rankBattleLeaderboard(metric: LeaderboardMetric, limit: number): LeaderboardEntry[] {
+        const entries = this._roster.getAll().map((general) => leaderboardEntryOf(general));
+        return rankLeaderboard(entries, metric, limit);
+    }
+
     public get roster(): GeneralConfig[] {
         return this._roster.getAll();
     }
@@ -389,6 +527,21 @@ export class GameSession {
     /** 因子覺醒用的玩家層級（決定能解鎖到哪個色階） */
     public get discoveryLevel(): number {
         return this._discoveryLevel;
+    }
+
+    /** 目前玩家層級已開放的因子色（LUK-04），依 ALL_FACTOR_COLORS 順序；Lv1 只有藍粉 */
+    public visibleFactorColors(): FactorColor[] {
+        return factorColorsVisibleAtLevel(this._discoveryLevel);
+    }
+
+    /** 目前的因子解鎖階段（FUL-06）：由玩家層級換算，Lv1~20 為 Phase 1 */
+    public get unlockPhase(): UnlockPhase {
+        return phaseForLevel(this._discoveryLevel);
+    }
+
+    /** 目前階段已解鎖的因子色（FUL-06）；尚未接到結緣參與色 */
+    public unlockedFactorColors(): FactorColor[] {
+        return phaseFactorColors(this.unlockPhase);
     }
 
     /** 目前等級內累積的覺醒經驗 */
@@ -571,6 +724,54 @@ export class GameSession {
     }
 
     /** 轉蛋各池保底計數（唯讀副本） */
+    /** 子嗣女兒清單（唯讀副本，FEM-06） */
+    public get daughters(): DaughterRecord[] {
+        return [...this.femaleSystemState.daughters];
+    }
+
+    /** 新增一位子嗣女兒；id 重複回傳 false、不改狀態。 */
+    public async addDaughter(record: DaughterRecord): Promise<boolean> {
+        const current = this.femaleSystemState;
+        if (current.daughters.some((d) => d.id === record.id)) return false;
+        this._femaleSystem = { ...current, daughters: [...current.daughters, { ...record }] };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return true;
+    }
+
+    /** 女兒滿 14 歲後選路線；成功才寫回並存檔，失敗回傳原因且不改狀態。 */
+    public async assignDaughterRouteFor(daughterId: string, route: DaughterRoute): Promise<AssignDaughterResult | { ok: false; reason: 'NOT_FOUND' }> {
+        const current = this.femaleSystemState;
+        const target = current.daughters.find((d) => d.id === daughterId);
+        if (!target) return { ok: false, reason: 'NOT_FOUND' };
+        const result = assignDaughterRoute(target, route);
+        if (!result.ok) return result;
+        this._femaleSystem = {
+            ...current,
+            daughters: current.daughters.map((d) => (d.id === daughterId ? result.daughter : d)),
+        };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
+    }
+
+    /**
+     * 年度掛點（FEM-06）：女兒每年長一歲，回傳本年剛滿 14 歲的女兒（給 UI 排分流提示）。
+     * 年末事件（YearEnded）接上後由它呼叫；本函式只改女兒年齡，不發事件。
+     */
+    public async onYearAdvanced(): Promise<DaughterRecord[]> {
+        const current = this.femaleSystemState;
+        const { daughters, newlyOfAge } = advanceDaughtersOneYear(current.daughters);
+        if (daughters.length === 0) return newlyOfAge;
+        this._femaleSystem = { ...current, daughters };
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return newlyOfAge;
+    }
+
     /** 女性來源系統狀態的唯讀副本（傭兵池／救美刷新時間、送禮好感） */
     public get femaleSystemState(): FemaleSystemState {
         return normalizeFemaleSystemState(this._femaleSystem);
@@ -662,6 +863,17 @@ export class GameSession {
         return { ...this._tallyCards };
     }
 
+    /** 統一物件庫推導的虎符與英靈卡視圖（DS-08）；讀取一律走這裡，不直接讀 _tallyCards */
+    public get inventoryViews(): InventoryViews {
+        return deriveInventoryViews(this._inventoryRecords);
+    }
+
+    /** 過渡期 dual-write（DS-08）：虎符寫入後重算 TALLY 列，其他類型的列保留 */
+    private _syncInventoryRecords(): void {
+        const others = this._inventoryRecords.filter((r) => r.Item_Type !== 'TALLY');
+        this._inventoryRecords = [...others, ...buildTallyInventoryRecords(this._tallyCards, this._tallyHoldings.holders)];
+    }
+
     /**
      * 戰後把戰鬥經驗寫回出陣的虎符卡片實例（PROG-2-0573）。
      * 只有有結果的戰鬥會結算（ongoing 不結算）；卡片不存在的 id 略過。回傳是否有卡片被改動。
@@ -677,7 +889,10 @@ export class GameSession {
             nextCards[uid] = { ...card, ...applyBattleExpToCard(card, outcome) };
             changed = true;
         }
-        if (changed) this._tallyCards = nextCards;
+        if (changed) {
+            this._tallyCards = nextCards;
+            this._syncInventoryRecords();
+        }
         return changed;
     }
 
@@ -692,6 +907,7 @@ export class GameSession {
         }
         this._tallyHoldings = { holders };
         this._tallyCards = stored;
+        this._syncInventoryRecords();
         await this._autoSaveAfterTallyChange();
     }
 
@@ -715,6 +931,7 @@ export class GameSession {
         const next = applyTallyConfiscation(current, quality);
         this._tallyLoyalty = { ...this._tallyLoyalty, [generalId]: next };
         this._tallyHoldings = confiscateFrom(this._tallyHoldings, generalId).state;
+        this._syncInventoryRecords();
         await this._autoSaveAfterTallyChange();
         return { cardUid, loyalty: next.loyalty };
     }
@@ -732,6 +949,7 @@ export class GameSession {
     private async _commitTallyResult(result: TallyHoldingsResult): Promise<TallyHoldingsResult> {
         if (result.ok) {
             this._tallyHoldings = result.state;
+            this._syncInventoryRecords();
             await this._autoSaveAfterTallyChange();
         }
         return result;
@@ -745,12 +963,57 @@ export class GameSession {
      * 陣亡事件的虎符結算（TRP-08 / PROG-2-0236）：只處理這次才變成陣亡的武將，
      * 手上的虎符退回君主，符合條件者產出一張陣亡虎符（君主持有）。只改記憶體狀態，由呼叫端的存檔一併寫入。
      */
+    /** 超齡死亡（ageGeneralsOneSeason 的 died 事件）產生戰魂碎片；亡者在季前名冊內才找得到 */
+    private _recordSoulFragmentsFor(before: readonly GeneralConfig[], events: readonly AgingEvent[]): void {
+        for (const event of events) {
+            if (event.type !== 'died') continue;
+            const dead = before.find((g) => g.id === event.generalId);
+            if (!dead) continue;
+            const templateId = dead.templateId ?? dead.id;
+            const totalTp = (dead as GeneralConfig & { totalTp?: number }).totalTp;
+            this._soulFragments = recordDeathFragment(this._soulFragments, dead.id, { templateId, bloodlineId: dead.bloodlineId ?? '', totalTp }).ledger;
+        }
+    }
+
+    /** 目前戰魂碎片帳本的副本（寄宿面板列候選用，PROG-2-1058） */
+    public soulFragmentLedger(): SoulFragmentLedger {
+        return { ...this._soulFragments };
+    }
+
+    /**
+     * 把亡者的戰魂碎片寄宿到目標武將（同 Bloodline_ID、不同版本）。成功時目標的 totalTp 增加並消耗碎片，自動存檔。
+     * 目標不在名冊、或碎片不存在時回傳原因；不合規時不改任何狀態。
+     */
+    public async injectSoulFragment(targetId: string, deadUid: string):
+        Promise<{ ok: true; amount: number } | { ok: false; reason: 'TARGET_NOT_FOUND' | 'NO_FRAGMENT' | 'SAME_TEMPLATE' | 'BLOODLINE_MISMATCH' }> {
+        const roster = this._roster.getAll();
+        const index = roster.findIndex((g) => g.id === targetId);
+        if (index < 0) return { ok: false, reason: 'TARGET_NOT_FOUND' };
+        const target = roster[index];
+        const current = (target as GeneralConfig & { totalTp?: number }).totalTp ?? 0;
+        const result = injectFromLedger(this._soulFragments, deadUid, {
+            templateId: target.templateId ?? target.id,
+            bloodlineId: target.bloodlineId ?? '',
+            tp: current,
+        });
+        if (!result.ok) return { ok: false, reason: (result as { ok: false; reason: 'NO_FRAGMENT' | 'SAME_TEMPLATE' | 'BLOODLINE_MISMATCH' }).reason };
+        this._soulFragments = result.ledger;
+        const next = [...roster];
+        next[index] = { ...target, totalTp: result.target.tp } as GeneralConfig;
+        this._roster.replaceAll(next);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, amount: result.amount };
+    }
+
     private _settleDeaths(before: readonly GeneralConfig[], after: readonly GeneralConfig[], season: number): void {
         // 死亡產卡的兵種：武將資料沒有 troopType 時，由適性推出主兵種（PROG-2-0582）
         const withTroop = (general: GeneralConfig) => ({ troopType: mainTroopTypeOf(general.troopAptitude), ...general });
         const result = settleDeathTallies({ holdings: this._tallyHoldings, cards: this._tallyCards }, before.map(withTroop), after.map(withTroop), season);
         this._tallyHoldings = result.holdings;
         this._tallyCards = { ...result.cards };
+        this._syncInventoryRecords();
     }
 
     /**
@@ -774,6 +1037,32 @@ export class GameSession {
             }
         }
         return result;
+    }
+
+    /** 目前存檔亂數的狀態種子（唯讀，不推進亂數）；天象異變以此確定性抽選 */
+    public omenSeed(): number {
+        return this._seeded.snapshot().state;
+    }
+
+    /** 結緣成功產生子嗣時記下本機紀錄（BRD-12，暫定：只存在記憶體，不送 server） */
+    public recordBreedingBirth(record: BreedingBirthRecord): void {
+        this._breedingBirthRecords.push(record);
+    }
+
+    /** 本局已記下的結緣子嗣紀錄（回傳複本，外部改動不影響內部） */
+    public breedingBirthRecords(): BreedingBirthRecord[] {
+        return this._breedingBirthRecords.map((record) => ({
+            session: { ...record.session, Oracle_Hints: [...record.session.Oracle_Hints] },
+            child: { ...record.child },
+        }));
+    }
+
+    /** 解析全球征途階段（MVP-13）：指定階段已啟用就用它；未知或未啟用則回到第一個可玩階段 */
+    public resolveCampaignStage(requestedId: string | undefined): CampaignStageDef {
+        if (requestedId !== undefined && isCampaignStagePlayable(requestedId)) {
+            return getCampaignStage(requestedId)!;
+        }
+        return enabledCampaignStages()[0];
     }
 
     public isSageUnlocked(sageId: string): boolean {
@@ -840,6 +1129,7 @@ export class GameSession {
         this._deck = [];
         this._leadGeneralId = null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };
+        this._sortiePresets = {};
         this._travel = null;
         this._countdown = null;
         this._discoveryLevel = 1;
@@ -853,6 +1143,7 @@ export class GameSession {
         this._tallyLoyalty = {};
         this._tallyHoldings = createTallyHoldings([]);
         this._tallyCards = {};
+        this._inventoryRecords = [];
         this._femaleSources = {};
         this._gachaPity = {};
         this._femaleSystem = normalizeFemaleSystemState(undefined);
@@ -860,7 +1151,23 @@ export class GameSession {
         this._gachaWallet = null;
         this._gachaRevision += 1;
         this._legacyCount = 0;
+        this._legendaryMentoringUsedIds = [];
+        this._breedingBirthRecords = [];
+        this._officerState = initialOfficerState();
+        this._sandtableMarkerTerritories = [];
+        this._governance = [];
+        this._territories = defaultKeepTerritories();
+        this._journal = createEmptyJournal();
+        this._gachaMentorJournal = [];
+        this._hallAssignLog = [];
+        // 上一局的進度不能帶進新局（PROG-2-0660）
+        this._soulFragments = emptySoulFragmentLedger();
+        this._pendingLifespanEvents = [];
+        this._bondPoints = 0;
+        this._borrowLedger = { records: [] };
+        this._onboarding = { ...FRESH_ONBOARDING };
         this._military = { ...STARTER_MILITARY };
+        this._yearAgingEvents = [];
         this._prison = createPrisonState<GeneralConfig>();
         this._fame = 0;
         this._scorePoints = 0;
@@ -987,7 +1294,7 @@ export class GameSession {
             this._domesticLog,
             season,
             taskId,
-            { food: this._military.foodCap, gold: Infinity, fame: Infinity, cityTroops: this._military.cityTroopsCap },
+            { food: this._military.foodCap, gold: Infinity, fame: BASE_RESOURCE_CAPS.fame, cityTroops: this._military.cityTroopsCap },
         );
         if (!result.ok) return result;
         this._military = { ...this._military, food: result.stock.food, cityTroops: result.stock.cityTroops };
@@ -1050,6 +1357,162 @@ export class GameSession {
     /** 收藏武將 id 清單（唯讀副本）。 */
     public get favoriteGeneralIds(): readonly string[] {
         return [...this._favoriteGeneralIds];
+    }
+
+    /** 官職狀態（唯讀副本）：階位、累積經驗與解鎖歷史（OFC-03）。 */
+    public get officerState(): OfficerState {
+        return { ...this._officerState, unlockHistory: [...this._officerState.unlockHistory] };
+    }
+
+    /** 官職權限快照（唯讀，OFC-04）：大廳、領地、沙盤與他國 AI 只經此取得權限。 */
+    public get officerPermissions(): Readonly<OfficerPermissions> {
+        return officerPermissionsOf(this._officerState);
+    }
+
+    /** 目前官職解鎖（唯讀）：由官職階位推得任務難度上限、欄位數、沙盤階段、熱點數。 */
+    public get officerUnlocks(): OfficerUnlocks {
+        return officerUnlocksOf(normalizeOfficerSnapshot(toOfficerSnapshot(this._officerState)));
+    }
+
+    /** 世界沙盤已放置標記數（唯讀，OFC-06）。 */
+    public get sandtableMarkersPlaced(): number {
+        return this._sandtableMarkerTerritories.length;
+    }
+
+    /** 已放置標記的領地 id（PROG-2-0965） */
+    public get sandtableMarkerTerritories(): readonly string[] {
+        return this._sandtableMarkerTerritories;
+    }
+
+    /** 世界沙盤還能再放的標記數（OFC-06）；未解鎖沙盤時為 0。 */
+    public get sandtableRemaining(): number {
+        return remainingSandtableMarkers(this.sandtableMarkersPlaced, this.officerUnlocks.sandtableStage);
+    }
+
+    /** 在指定領地放置一個標記（OFC-06 / PROG-2-0965）；上限已滿、未解鎖、領地不存在或已有標記時回傳 false，不改動狀態。 */
+    public placeSandtableMarker(territoryId: string): boolean {
+        if (!canPlaceSandtableMarker(this.sandtableMarkersPlaced, this.officerUnlocks.sandtableStage)) return false;
+        if (!isSandtableTerritory(territoryId)) return false;
+        if (this._sandtableMarkerTerritories.includes(territoryId)) return false;
+        this._sandtableMarkerTerritories = [...this._sandtableMarkerTerritories, territoryId];
+        return true;
+    }
+
+    // ---- 領地治理接線（GOV-04 指派 / GOV-09 主城保護 / JRN-01 日誌，PROG-2-0974）：目前僅記憶體狀態，尚未寫入存檔 ----
+    private _governance: GovernanceAssignment[] = [];
+    private _territories: KeepTerritory[] = defaultKeepTerritories();
+    private _journal: JournalState = createEmptyJournal();
+
+    /** 內政任務格的武將指派（唯讀副本，GOV-04）。 */
+    public get governanceAssignments(): GovernanceAssignment[] {
+        return this._governance.map(a => ({ ...a }));
+    }
+
+    /** 指派武將到內政任務格（GOV-04）；被拒絕時不改動狀態。 */
+    public assignGovernor(task: string, generalUid: string, maxSlots: number = DEFAULT_MAX_TASK_SLOTS): GovernanceResult {
+        if (!this._roster.getAll().some((general) => general.id === generalUid)) return { ok: false, reason: 'invalid-general', assignments: this.governanceAssignments };
+        const result = assignGovernanceGeneral(this._governance, task, generalUid, maxSlots);
+        if (result.ok) this._governance = result.assignments;
+        return result;
+    }
+
+    /** 卸下內政任務格的武將（GOV-04）。 */
+    public unassignGovernor(task: DomesticTaskId): void {
+        this._governance = removeGovernanceAssignment(this._governance, task).assignments;
+    }
+
+    /** 設定領地清單（含主城），供領地資料載入或測試使用（GOV-09）。 */
+    public setTerritories(territories: readonly KeepTerritory[]): void {
+        this._territories = territories.map(t => ({ ...t }));
+    }
+
+    /** 領地清單（唯讀副本，GOV-09）。 */
+    public get territories(): KeepTerritory[] {
+        return this._territories.map(t => ({ ...t }));
+    }
+
+    /** 外圍領地失守（GOV-09）；主城拒絕，被拒絕時不改動狀態。 */
+    public loseTerritory(territoryId: string): TerritoryLossResult {
+        const result = attemptTerritoryLoss(this._territories, territoryId);
+        if (result.ok) this._territories = result.territories;
+        return result;
+    }
+
+    /** 背水一戰加成（GOV-09）：領地只剩主城時防禦 ×2、兵力生產 +50%。 */
+    public get lastStand(): LastStandModifiers {
+        return lastStandModifiers(this._territories);
+    }
+
+    /**
+     * 季結自動寫日誌（PROG-2-0976）：每個結束的季寫一筆 SYSTEM 條目，列出該季有戰損報告的武將。
+     * 同一季重複結算時 ID 重複，寫入會被拒絕，不會寫兩筆。
+     */
+    private recordSeasonJournal(ended: GameTimeState, reports: readonly QuarterlyBattleReportRow[]): void {
+        this.recordJournal({
+            entryId: `SEASON-${ended.totalSeasonsElapsed}`,
+            timestamp: seasonJournalTimestamp(ended),
+            category: 'SYSTEM',
+            relatedGeneralUids: reports.map(r => r.generalId),
+            priority: SEASON_JOURNAL_PRIORITY,
+            summary: `${formatSeasonLabel(ended)}結算。`,
+        });
+    }
+
+    /** 寫入武將日誌（JRN-01）；被拒絕時不改動狀態。 */
+    public recordJournal(input: JournalEntryInput): JournalWriteResult {
+        const result = appendJournalEntry(this._journal, input);
+        if (result.ok) this._journal = result.state;
+        return result;
+    }
+
+    /** 依武將與類別查詢日誌（JRN-01），新到舊。 */
+    public queryJournal(query: JournalQuery = {}): JournalEntry[] {
+        return queryJournal(this._journal, query);
+    }
+
+    /**
+     * 官職經驗入帳（OFC-03）：依任務結果算經驗（F-1）並晉升，回傳這次新解鎖的階位（由低到高）。
+     * 只升不降；天下大亂不會動到官職（F-3）。
+     */
+    public gainOfficerExp(task: OfficerTaskResult): number[] {
+        const result = addOfficerExp(this._officerState, calcOfficerExpGain(task));
+        this._officerState = result.state;
+        return result.promotedTiers;
+    }
+
+    /**
+     * 大廳任務結算（OFC-08）：任務完成或失敗都會入帳官職經驗；晉升時發出 OfficerPromoted。
+     * 無法對應的任務（未知難度或無對應牆）不入帳，回傳空陣列。
+     */
+    public settleHallMission(outcome: HallMissionOutcome): number[] {
+        const task = hallMissionToOfficerTask(outcome);
+        if (!task) return [];
+        const promoted = this.gainOfficerExp(task);
+        if (promoted.length > 0) {
+            this._emit(GAME_SESSION_EVENTS.OfficerPromoted, { tiers: promoted });
+        }
+        return promoted;
+    }
+
+    /**
+     * 大廳任務派遣（暫定即時結算）：通過派遣條件後指派武將，再依成敗結算官職經驗。
+     * 阻擋時不指派、不結算。
+     */
+    public async dispatchHallTask(
+        task: HallGateTask,
+        board: HallBoardKey,
+        player: Readonly<HallPlayerState>,
+        generalId: string | null,
+        generalPower: number,
+    ): Promise<HallDispatchResult> {
+        const result = resolveHallDispatch(task, player, board, generalId, generalPower);
+        if (!result.ok || generalId === null) return result;
+        const assigned = await this.assignHallTask(task.Task_ID, generalId);
+        if (!assigned) return { ok: false, reason: 'NO_GENERAL' };
+        this.settleHallMission(result.outcome);
+        // 任務結束：同一任務若有未結算的委任紀錄，一併結清（PROG-2-1008）
+        await this.settleHallAssign(task.Task_ID, result.outcome.success ? 'success' : 'failure', new Date().toISOString());
+        return result;
     }
 
     /** 大廳任務指派（唯讀副本）：任務 id → 指派武將 id。 */
@@ -1165,7 +1628,7 @@ export class GameSession {
 
     /** 開始回合制趕路（接取天下沙盤遠征等事件呼叫）；會覆蓋目前的趕路。 */
     public startTravel(targetId: string, turns: number): void {
-        this._travel = createTravelCountdown(targetId, turns);
+        this._travel = createTravelCountdown(targetId, turns + seasonModifiersOf(this._clock.state.currentSeason).travelTurnsDelta);
         this._emit(GAME_SESSION_EVENTS.TravelChanged, this.travel);
     }
 
@@ -1191,6 +1654,17 @@ export class GameSession {
 
     public get sortieSupport(): SortieSupport {
         return { ...this._sortieSupport };
+    }
+
+    /** 編制預設（DEP-14）的目前內容；回傳副本 */
+    public get sortiePresets(): Record<string, SortieSupport> {
+        return { ...this._sortiePresets };
+    }
+
+    /** 整批寫入編制預設（DEP-14）；有存檔服務時立刻存檔，不等下一次存檔（PROG-2-0791） */
+    public async setSortiePresets(store: Readonly<Record<string, SortieSupport>>): Promise<void> {
+        this._sortiePresets = { ...store };
+        if (this._autoSave && this._save) await this.save();
     }
 
     /**
@@ -1274,6 +1748,117 @@ export class GameSession {
             discoveryLevel: () => this._discoveryLevel,
             onAwakened: (event) => this._emit(GAME_SESSION_EVENTS.FactorAwakened, event),
         };
+    }
+
+    /**
+     * 血脈歸宗（BLT-11）：V1 取得 V2 的一個因子，V2 記為已歸宗；成功扣 1 張歸宗令（PROG-2-0862）。
+     * 失敗回傳原因、不改名冊、不扣歸宗令；成功才改名冊、扣令、存檔。
+     */
+    public async mergeBloodlineFor(
+        v1Id: string,
+        v2Id: string,
+    ): Promise<{ ok: true; transferredFactor: string } | { ok: false; reason: BloodlineMergeRejectReason | 'NOT_FOUND' | 'NO_MERGE_TOKEN' }> {
+        const roster = this._roster.getAll();
+        const v1 = roster.find((g) => g.id === v1Id);
+        const v2 = roster.find((g) => g.id === v2Id);
+        if (!v1 || !v2) return { ok: false, reason: 'NOT_FOUND' };
+        const plan = planBloodlineMergeForGenerals(v1, v2);
+        if (!plan.ok) return plan;
+        const inventory = consumeItem(this._inventory, ITEM_MERGE_TOKEN);
+        if (!inventory) return { ok: false, reason: 'NO_MERGE_TOKEN' };
+        const v2Gene = (v2.genes ?? []).find((g) => g.id === plan.transferredFactor);
+        const updated = roster.map((g) => {
+            if (g.id === v1Id) return { ...g, genes: [...(g.genes ?? []), ...(v2Gene ? [{ ...v2Gene }] : [])] };
+            if (g.id === v2Id) return { ...g, mergedOutFactors: plan.v2MergedOut };
+            return g;
+        });
+        this._roster.replaceAll(updated);
+        this._inventory = inventory;
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, transferredFactor: plan.transferredFactor };
+    }
+
+    /** 升星後提高某位武將五階奧義的 Stage_Cap（PROG-2-0718）；找不到武將回傳 false，成功才改名冊並存檔 */
+    public async raiseBloodlineUltimateCap(generalId: string, stars: number): Promise<boolean> {
+        const roster = this._roster.getAll();
+        if (!roster.some((g) => g.id === generalId)) return false;
+        this._roster.replaceAll(roster.map((g) => (g.id === generalId ? raiseBloodlineUltimateCap(g, stars) : g)));
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return true;
+    }
+
+    /** 覺醒某位武將的五階奧義下一階（PROG-2-0718）；條件不足回傳原因且不改名冊，成功才改名冊並存檔 */
+    public async awakenBloodlineUltimate(
+        generalId: string,
+    ): Promise<{ ok: true; awakenedStage: number } | { ok: false; reason: UltimateAwakenReason | 'GENERAL_NOT_FOUND' }> {
+        const roster = this._roster.getAll();
+        const target = roster.find((g) => g.id === generalId);
+        if (!target) return { ok: false, reason: 'GENERAL_NOT_FOUND' };
+        const progress = ultimateProgressFromBattleRecord((target as { battleRecord?: BattleRecordLike }).battleRecord);
+        const result = awakenBloodlineUltimate(target, progress);
+        if (result.ok === false) return result;
+        this._roster.replaceAll(roster.map((g) => (g.id === generalId ? result.general : g)));
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, awakenedStage: result.awakenedStage };
+    }
+
+    /** 設定 NPC 好友教官清單（MENT-14 MVP）；ServiceLoader 載入資料表後呼叫 */
+    public setNpcFriendMentors(list: readonly NpcFriendMentor[]): void {
+        this._npcFriendMentors = [...list];
+    }
+
+    public get npcFriendMentors(): readonly NpcFriendMentor[] {
+        return this._npcFriendMentors;
+    }
+
+    /**
+     * 借用好友的教官（MENT-14 MVP）：找不到好友回 UNKNOWN_FRIEND；規則不過回傳原因且不改紀錄；
+     * 成功寫入借用紀錄並回傳原主結義點數（由呼叫端決定如何入帳）。day 由呼叫端傳入（YYYY-MM-DD）。
+     */
+    /** 借將畫面的可借性檢查：與 borrowFriendMentor 用同一組規則，回傳 null 代表可借，否則是擋下原因（不改紀錄） */
+    public borrowBlockFor(friend: NpcFriendMentor, sessionId: string): BorrowBlockReason | null {
+        const check = canBorrow(this._borrowLedger, {
+            day: `S${this._clock.state.totalSeasonsElapsed}`,
+            borrowerId: 'player',
+            ownerId: friend.friendId,
+            candidate: borrowCandidateOf(friend),
+            sessionId,
+            recordId: '',
+        });
+        if (check.ok === false) return check.blocked;
+        return null;
+    }
+
+    public async borrowFriendMentor(request: { friendId: string; sessionId: string; recordId: string }):
+        Promise<{ ok: true; ownerBondReward: number } | { ok: false; blocked: BorrowBlockReason | 'UNKNOWN_FRIEND' }> {
+        const friend = this._npcFriendMentors.find((f) => f.friendId === request.friendId);
+        if (!friend) return { ok: false, blocked: 'UNKNOWN_FRIEND' };
+        const borrowRequest: BorrowRequest = {
+            // 借用日由遊戲時鐘提供（PROG-2-0745，暫定：以季為一日）
+            day: `S${this._clock.state.totalSeasonsElapsed}`,
+            borrowerId: 'player',
+            ownerId: friend.friendId,
+            candidate: borrowCandidateOf(friend),
+            sessionId: request.sessionId,
+            recordId: request.recordId,
+        };
+        const check = canBorrow(this._borrowLedger, borrowRequest);
+        if (check.ok === false) return { ok: false, blocked: check.blocked };
+        const outcome = createBorrow(this._borrowLedger, borrowRequest);
+        if (!outcome) throw new Error('canBorrow 通過後 createBorrow 不應回傳 null');
+        this._borrowLedger = outcome.ledger;
+        this._bondPoints += outcome.ownerBondReward;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, ownerBondReward: outcome.ownerBondReward };
     }
 
     /** 覺醒名冊中某位武將的鎖定因子；失敗回傳原因，成功才改名冊、存檔並廣播 */
@@ -1498,22 +2083,40 @@ export class GameSession {
         }
         this._roster.replaceAll(roster);
         this._clearLeadIfGone();
+        this._settleOpenHallAssigns();
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
+        // 陣亡或退休的武將不再佔著內政任務格
+        this._governance = this._governance.filter((a) => roster.some((general) => general.id === a.generalUid && general.status !== 'dead'));
+        this._recordSoulFragmentsFor(beforeRoster, agingEvents);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
         this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
-        this._military = regenMilitaryOneSeason(this._military);
+        this._military = regenMilitaryOneSeason(this._military, 1, seasonModifiersOf(advance.previous.currentSeason).foodMultiplier);
         // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
         this._prison = { ...this._prison, intel: this._prison.intel + prisonYield.intel };
         this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + prisonYield.resource) };
 
-        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted };
+        this._yearAgingEvents.push(...agingEvents);
+        let yearReport: YearReport | undefined;
+        if (advance.yearEnded) {
+            yearReport = buildYearReport(advance.previous.currentYear, this._yearAgingEvents);
+            this._yearAgingEvents = [];
+        }
+        const quarterlyReports = buildQuarterlyBattleReportRows(this._roster.getAll());
+        this.recordSeasonJournal(advance.previous, quarterlyReports);
+        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports };
         if (this._autoSave && this._save) {
             await this.save();
         }
 
         this._emit(GAME_SESSION_EVENTS.SeasonAdvanced, payload);
+        const eraReset = buildEraResetEvent(advance.current.totalSeasonsElapsed);
+        if (eraReset) {
+            // 天下大亂：官職階位、經驗與解鎖歷史保留（OFC-09，F-3）
+            this._officerState = applyEraShiftToOfficerState(this._officerState);
+            this._emit(GAME_SESSION_EVENTS.EraReset, eraReset);
+        }
         for (const event of unveil.events) {
             this._emit(GAME_SESSION_EVENTS.GeneralUnveiled, event);
         }
@@ -1523,7 +2126,23 @@ export class GameSession {
         for (const card of lifecycle?.spiritCards ?? []) {
             this._emit(GAME_SESSION_EVENTS.SpiritCardCreated, card);
         }
+        if (yearReport) {
+            this._emit(GAME_SESSION_EVENTS.YearEnded, yearReport);
+        }
         return payload;
+    }
+
+    /**
+     * 年度推進：一直推進季，直到本年年末（第 4 季結束）為止，回傳年報。
+     * 從第 1 季開始會跑滿 4 季；從中間季開始則跑到該年年末。最多推進 SEASONS_PER_YEAR 季。
+     */
+    public async advanceYear(): Promise<YearReport> {
+        for (let i = 0; i < SEASONS_PER_YEAR; i++) {
+            const payload = await this.advanceSeason();
+            if (payload.yearReport) return payload.yearReport;
+        }
+        // 季數與 GameClock 不一致時才會走到這裡；不靜默回傳假資料
+        throw new Error('advanceYear：未在 4 季內遇到年末');
     }
 
     /**
@@ -1540,31 +2159,153 @@ export class GameSession {
         return true;
     }
 
-    /** 玩家讓 65 歲以上的武將退役，轉成教官傳承資料並立即存檔 */
-    public async retireGeneral(generalId: string): Promise<MentorCard> {
+    /**
+     * 玩家讓 65 歲以上的武將退役，轉成教官傳承資料並立即存檔。
+     * 可選擇一位 0~5 歲、尚未開獎的子嗣，退役時注入因子媒介（PROG-2-0865）；不選則行為與原本相同。
+     */
+    public async retireGeneral(generalId: string, options?: { catalystChildId?: string }): Promise<MentorCard> {
         if (!this._lifecycle) {
             throw new Error('[GameSession] 尚未設定 SeasonLifecycle（setLifecycle）');
         }
+        const childId = options?.catalystChildId;
+        if (childId !== undefined) this._assertCatalystChild(generalId, childId);
         const result = await this._lifecycle.retireGeneral(this._roster.getAll(), generalId, this._clock.state);
-        this._roster.replaceAll(result.roster);
+        let roster = result.roster;
+        let injection: { childId: string; injectedFactorId: string | null; consumed: boolean } | null = null;
+        if (childId !== undefined) {
+            const retired = roster.find((g) => g.id === generalId)! as GeneralConfig & CatalystGeneral;
+            const child = roster.find((g) => g.id === childId)!;
+            const outcome = injectCatalystFactor(retired, child, () => this._random());
+            roster = roster.map((g): GeneralConfig => {
+                if (g.id === childId) return outcome.child;
+                if (g.id === generalId && outcome.consumed) return markCatalystUsed(g as GeneralConfig & CatalystGeneral);
+                return g;
+            });
+            injection = { childId, injectedFactorId: outcome.injectedFactorId, consumed: outcome.consumed };
+        }
+        this._roster.replaceAll(roster);
         this._clearLeadIfGone();
         const reason = result.card.mentorRoute?.reason;
         if (reason === 'SCHOLAR' || reason === 'DUAL_CLASS') {
             // 文職與雙職能退役發 1 份竹簡（PM 暫定）；虎符只在死亡結算發，退役不發
             this._inventory = addItem(this._inventory, ITEM_BAMBOO_SLIP, 1);
         }
+        // 退役不產虎符（規格 Q61=C 明文禁止，PROG-2-1020）；虎符只在陣亡結算產生
         if (this._autoSave && this._save) {
             await this.save();
         }
         this._emit(GAME_SESSION_EVENTS.GeneralRetired, result.card);
+        if (injection) this._emit(GAME_SESSION_EVENTS.GeneCatalystInjected, injection);
         return result.card;
+    }
+
+    /** 因子媒介的子嗣必須存在、不是退役武將本人、年齡 0~UNVEILING_AGE 且尚未開獎；不合法時拋錯，不改任何狀態 */
+    private _assertCatalystChild(generalId: string, childId: string): void {
+        const child = this._roster.getAll().find((g) => g.id === childId);
+        const eligible = !!child
+            && childId !== generalId
+            && typeof child.age === 'number'
+            && child.age >= 0
+            && child.age <= UNVEILING_AGE
+            && child.status !== GENERAL_STATUS_UNVEILED;
+        if (!eligible) throw new Error('[GameSession] 因子媒介只能注入 0~5 歲、尚未開獎的子嗣');
     }
 
     /**
      * 抽卡 / 招募入口：把新武將寫進名冊（以 id 去重）並自動存檔。
      * 已持有的武將不會重複加入，回傳 duplicates 供 UI 提示（之後可換算成碎片）。
      */
+    /** 大廳任務委任紀錄，新到舊（唯讀副本）；taskId 缺省時回傳全部 */
+    public listHallAssignRecords(taskId?: string): HallAutoAssignRecord[] {
+        return listAssignRecords(this._hallAssignLog, taskId);
+    }
+
+    /**
+     * 委任大廳任務：由 AI 從可出戰武將中選將，寫入委任紀錄並存檔（HALL-05 / PROG-2-1006）。
+     * 未開啟委任或沒有可選武將時拒絕，不寫紀錄、不存檔。
+     */
+    public async autoAssignHallMission(
+        task: HallAutoAssignTaskInput,
+        assignedAt: string,
+    ): Promise<HallAutoAssignResult> {
+        const candidates = this.getDeployableGenerals().map((general) => ({
+            generalId: general.id,
+            power: estimateSortiePower(general),
+        }));
+        const result = autoAssignHallTask(task, candidates, assignedAt, this._hallAssignLog);
+        if (!result.ok) return result;
+        this._hallAssignLog = appendAssignRecord(this._hallAssignLog, result.record);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
+    }
+
+    /**
+     * 季結自動結算所有未結的大廳委任（PROG-2-1015，暫定）：依武將戰力判定成敗、釋放武將；
+     * 紀錄帶有難度與任務牆時，同時入帳官職經驗（比照派遣即結算）。武將已不在名冊時戰力為 0，判為失敗。
+     */
+    private _settleOpenHallAssigns(): void {
+        const roster = this._roster.getAll();
+        const settled = settleOpenAssignsForSeason(
+            this._hallAssignLog,
+            (generalId) => {
+                const general = roster.find((g) => g.id === generalId);
+                return general ? estimateSortiePower(general) : 0;
+            },
+            new Date().toISOString(),
+        );
+        this._hallAssignLog = settled.log;
+        for (const entry of settled.settled) {
+            if (entry.difficulty === undefined || entry.board === undefined) continue;
+            this.settleHallMission({ difficulty: entry.difficulty, board: entry.board, success: entry.success });
+        }
+    }
+
+    /** 結算同一任務最新一筆未結算的委任紀錄（結算結果由戰後系統傳入）；沒有未結算紀錄時回傳 false。 */
+    public async settleHallAssign(taskId: string, outcome: HallAssignOutcome, settledAt: string): Promise<boolean> {
+        const settled = settleLatestAssign(this._hallAssignLog, taskId, outcome, settledAt);
+        if (!settled.ok) return false;
+        this._hallAssignLog = settled.log;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return true;
+    }
+
+    /** 抽卡待補教官卡的日誌（唯讀副本） */
+    public get gachaMentorJournal(): readonly GachaMentorJournalEntry[] {
+        return normalizeGachaMentorJournal(this._gachaMentorJournal);
+    }
+
+    /** 抽卡入冊時登記待補的教官卡；不存檔，由呼叫端與扣款、入冊同批存檔（PROG-2-1004） */
+    public queueGachaMentorDraw(entry: Omit<GachaMentorJournalEntry, 'id'>): void {
+        const id = `${entry.poolId ?? ''}|${entry.time.currentYear}Q${entry.time.currentSeason}|${entry.drawn.map((general) => general.id).join(',')}`;
+        this._gachaMentorJournal = [...this._gachaMentorJournal, ...normalizeGachaMentorJournal([{ ...entry, id }])];
+    }
+
+    /** 教官卡已寫入：移除一筆同 id 的日誌（只移除第一筆，同批重複抽到時逐筆處理） */
+    public completeGachaMentorDraw(id: string): void {
+        const index = this._gachaMentorJournal.findIndex((entry) => entry.id === id);
+        if (index < 0) return;
+        this._gachaMentorJournal = this._gachaMentorJournal.filter((_, i) => i !== index);
+    }
+
     public async addGenerals(generals: GeneralConfig[], options: AddGeneralsOptions = {}): Promise<AddGeneralsResult> {
+        const result = this.enrollGenerals(generals, options);
+        if (result.added.length > 0 || result.rebirths.length > 0) {
+            if (this._autoSave && this._save) {
+                await this.save();
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 同步入冊（不存檔）：轉蛋要把「扣款、保底、入冊」併進同一次存檔時使用，呼叫端負責存檔。
+     * 入冊有新武將時發出 RosterChanged。
+     */
+    public enrollGenerals(generals: GeneralConfig[], options: AddGeneralsOptions = {}): AddGeneralsResult {
         const owned = new Set(this._roster.getAll().map((general) => general.id));
         const added: GeneralConfig[] = [];
         const duplicates: GeneralConfig[] = [];
@@ -1584,13 +2325,18 @@ export class GameSession {
 
         if (options.rebirthOnDuplicate && duplicates.length > 0) {
             // 同一批可能抽到同名多次，逐筆依序累加轉數
+            // 同一批先抽到的新武將還在 added 裡、尚未進名冊，批內第二張也要算重複（與跨批一致）
             const roster = this._roster.getAll();
-            const byId = new Map(roster.map((general) => [general.id, general]));
+            const byId = new Map([...roster, ...added].map((general) => [general.id, general]));
             for (const duplicate of duplicates) {
                 const target = byId.get(duplicate.id);
                 if (!target) continue;
                 const pull = applyDuplicatePull(target.rebirthCount);
-                byId.set(duplicate.id, { ...target, rebirthCount: pull.rebirthCount });
+                byId.set(duplicate.id, {
+                    ...target,
+                    rebirthCount: pull.rebirthCount,
+                    ultimateSlots: withUltimateUnlockState(target.ultimateSlots ?? [], pull.rebirthCount),
+                });
                 rebirths.push({ id: duplicate.id, ...pull });
                 if (pull.overflow) {
                     bondPointsGained += overflowBondPoints(overflowRarityOf(target));
@@ -1598,17 +2344,13 @@ export class GameSession {
             }
             if (rebirths.length > 0) {
                 this._roster.replaceAll(roster.map((general) => byId.get(general.id) ?? general));
+                for (let i = 0; i < added.length; i++) added[i] = byId.get(added[i].id) ?? added[i];
             }
             this._bondPoints += bondPointsGained;
         }
 
         if (added.length > 0) {
             this._roster.replaceAll([...this._roster.getAll(), ...added]);
-        }
-        if (added.length > 0 || rebirths.length > 0) {
-            if (this._autoSave && this._save) {
-                await this.save();
-            }
         }
         if (added.length > 0) {
             this._emit(GAME_SESSION_EVENTS.RosterChanged, added);
@@ -1654,9 +2396,19 @@ export class GameSession {
             deployedIds,
             result,
             season: this._clock.state.totalSeasonsElapsed,
+            seasonId: pvpSeasonIdOf(this._clock.state.totalSeasonsElapsed),
             performance: options.performance,
             vitalityAfterBattle: options.vitalityAfterBattle,
         });
+        // 新達成的里程碑發獎勵（千人斬等戰法筆記，GEN-13 / PROG-2-0817）；每個里程碑只在首次達成時發
+        const milestoneRewards = settlement.entries.flatMap((entry) => rewardsForMilestones(entry.newMilestones));
+        if (settlement.entries.length > 0) {
+            const battleId = `B${++this._battleSerial}`;
+            const battleDate = `${this.gameTime.currentYear}Q${this.gameTime.currentSeason}`;
+            this._lastBattleSnapshots = settlement.entries.map((entry) =>
+                buildBattleSnapshot(battleId, entry.generalId, entry.performance ?? EMPTY_PERFORMANCE, entry.outcome === 'win', battleDate));
+        }
+        this._inventory = grantTacticNotes(this._inventory, milestoneRewards);
         if (settlement.entries.length === 0) {
             if ((clearChanged || firstClear || tallyChanged || comradeChanged) && this._autoSave && this._save) {
                 await this.save();
@@ -1675,6 +2427,11 @@ export class GameSession {
         const factorTags = dictionary ? (factorId: string) => dictionary.get(factorId)?.defaultTags : undefined;
         const awakenings: FactorAwakenedEvent[] = [];
         let roster = settlement.roster;
+        // 里程碑隱藏因子（REC-06 / PROG-2-0711）：新達成的不敗／鐵壁／殺意，把白、紅因子寫進武將基因
+        roster = roster.map((g) => {
+            const entry = settlement.entries.find((e) => e.generalId === g.id);
+            return entry ? awakenHiddenFactors(g, entry.newMilestones) : g;
+        });
         for (const entry of settlement.entries) {
             const index = roster.findIndex((g) => g.id === entry.generalId);
             const actions = options.specialActions?.[entry.generalId] ?? [];
@@ -1776,7 +2533,9 @@ export class GameSession {
         if (!state || !session) return { ok: false, blocked: 'NOT_NURTURING' };
         if (session.status !== 'active') return { ok: false, blocked: 'SESSION_ENDED' };
         const schedule = resolveAutoSchedule(session.prowess, manualSchedule);
-        const run = runAutoNurtureSeason(session, schedule, random);
+        const run = runAutoNurtureSeason(session, schedule, random, {
+            trainingVigorMultiplier: seasonModifiersOf(this._clock.state.currentSeason).trainingStaminaMultiplier,
+        });
         const next = consumeAutoNurtureTicket(this._autoNurtureTickets);
         this._autoNurtureTickets = next ?? this._autoNurtureTickets;
         this._nurture!.restoreState({
@@ -1830,11 +2589,24 @@ export class GameSession {
         return this._scorePoints;
     }
 
+    /**
+     * 教官卡重複抽中（MENT-07）：未滿 ★5 → 突破（不入帳）；已滿 ★5 → 溢出，依稀有度入帳積分。
+     * 只做判定與入帳，不改寫教官卡星等（星等由呼叫端依 result.star 保存）。
+     */
+    public async resolveMentorDuplicateCard(currentStar: number | undefined, rarity: string, cardName: string): Promise<MentorDuplicateOutcome & { toast: string | null }> {
+        const outcome = resolveMentorDuplicate(currentStar, rarity);
+        if (outcome.scoreGain > 0) await this.grantScorePoints(outcome.scoreGain);
+        const toast = outcome.result.kind === 'overflow' ? overflowToastText(cardName, outcome.scoreGain) : null;
+        return { ...outcome, toast };
+    }
+
     public createSnapshot(now?: Date): PlayerSaveSnapshot {
         const pending = this._pendingLifespanEvents.map((event) => ({ generalId: event.generalId, age: event.age }));
         return {
             ...this._createBaseSnapshot(now),
+            ...(this._legendaryMentoringUsedIds.length > 0 ? { legendaryMentoringUsedIds: [...this._legendaryMentoringUsedIds] } : {}),
             military: this.military,
+            yearAgingEvents: this._yearAgingEvents.map((event) => ({ ...event })),
             resources: {
                 fame: this._fame,
                 scorePoints: this._scorePoints,
@@ -1848,13 +2620,72 @@ export class GameSession {
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
             onboarding: { ...this._onboarding },
             bondPoints: this._bondPoints,
+            friendBorrowLedger: { records: [...this._borrowLedger.records] },
+            soulFragments: { ...this._soulFragments },
             femaleSystem: this.femaleSystemState,
             ...(this._travel ? { travelCountdown: { ...this._travel } } : {}),
+            sortiePresets: { ...this._sortiePresets },
         };
     }
 
     private _createBaseSnapshot(now?: Date): PlayerSaveSnapshot {
-        return createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount);
+        const base = createPlayerSaveSnapshot(this._clock.state, this._roster.getAll(), now, this._nurture?.getState(), this._deck, this._leadGeneralId, this._discoveryLevel, this._seeded.snapshot(), this._discoveryExp, this._inventory, this._oracleCount, this._clearedStageIds, this._tallyLoyalty, this._tallyHoldings.holders, this._tallyCards, this._mercenaries, this._femaleSources, this._gachaPity, this._gachaWallet, this._favoriteGeneralIds, this._hallAssignments, this.dynamicRelations.snapshot(), this._legacyCount, this._officerState, this.sandtableMarkersPlaced, this._sandtableMarkerTerritories);
+        const withJournal = this._gachaMentorJournal.length > 0 ? { ...base, gachaMentorJournal: normalizeGachaMentorJournal(this._gachaMentorJournal) } : base;
+        const withHallLog = this._hallAssignLog.length > 0 ? { ...withJournal, hallAssignLog: normalizeHallAssignLog(this._hallAssignLog) } : withJournal;
+        // 統一物件庫列只在非空時寫入；舊檔與空狀態不多一個欄位（PROG-2-1021）
+        const withInventory = this._inventoryRecords.length > 0 ? { ...withHallLog, inventoryRecords: normalizeInventoryRecords(this._inventoryRecords) } : withHallLog;
+        return { ...withInventory, ...this.lifespanSaveFields() };
+    }
+
+    /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'territories' | 'journalEntries'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'territories' | 'journalEntries'> = {};
+        if (this._governance.length > 0) fields.governanceAssignments = this.governanceAssignments;
+        if (JSON.stringify(this._territories) !== JSON.stringify(defaultKeepTerritories())) fields.territories = this.territories;
+        if (this._journal.entries.length > 0) {
+            fields.journalEntries = this._journal.entries.map(e => ({ ...e, relatedGeneralUids: [...e.relatedGeneralUids] }));
+        }
+        return fields;
+    }
+
+    /** 讀檔時還原領地治理狀態（PROG-2-0975）；缺欄位回到預設值。 */
+    public restoreLifespanState(snapshot: PlayerSaveSnapshot): void {
+        this._governance = normalizeGovernanceAssignments(snapshot.governanceAssignments);
+        this._territories = normalizeKeepTerritories(snapshot.territories);
+        this._journal = { entries: normalizeJournalEntries(snapshot.journalEntries) };
+    }
+
+    /**
+     * 名將傳道（MENT-15）：通過判定才扣 1 張傳道令、名將記入一生一次、子嗣培育紀錄 mentoringModeLog 寫一筆。
+     * 專屬奧義 id 由呼叫端提供（名將資料模型目前沒有專屬奧義欄位）。判定失敗不扣令、不寫入。
+     */
+    public async performLegendaryMentoringFor(
+        generalId: string,
+        childId: string,
+        exclusiveSkillId: string | undefined,
+    ): Promise<{ ok: true; skillId: string } | { ok: false; blocked: LegendaryMentoringBlock }> {
+        const state = this._nurture?.getState();
+        const input = {
+            generalId,
+            exclusiveSkillId,
+            tickets: itemCount(this._inventory, ITEM_LEGENDARY_MENTORING_TICKET),
+            usedGeneralIds: this._legendaryMentoringUsedIds,
+            session: state?.sessions.find((s) => s.childId === childId),
+        };
+        const check = checkLegendaryMentoring(input);
+        if (!check.ok) return { ok: false, blocked: check.blocked ?? 'NOT_NURTURING' };
+        const outcome = performLegendaryMentoring(input);
+        if (!state || !outcome) return { ok: false, blocked: 'NOT_NURTURING' };
+        this._nurture!.restoreState({
+            ...state,
+            sessions: state.sessions.map((s) => (s.childId === childId ? outcome.session : s)),
+        });
+        this._inventory = consumeItem(this._inventory, ITEM_LEGENDARY_MENTORING_TICKET) ?? this._inventory;
+        this._legendaryMentoringUsedIds = outcome.usedGeneralIds;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return { ok: true, skillId: outcome.skillId };
     }
 
     public async save(): Promise<PlayerSaveSnapshot> {
@@ -1881,34 +2712,48 @@ export class GameSession {
         this._nurture?.restoreState(snapshot.nurture);
         this._onboarding = normalizeOnboardingState(snapshot.onboarding);
         this._bondPoints = normalizeBondPoints(snapshot.bondPoints);
+        this._borrowLedger = normalizeBorrowLedger(snapshot.friendBorrowLedger);
+        this._soulFragments = normalizeSoulFragmentLedger(snapshot.soulFragments);
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };
+        this._sortiePresets = normalizeSortiePresets(snapshot.sortiePresets);
         this._travel = normalizeTravelCountdown(snapshot.travelCountdown);
         this._countdown = null;
         const progress = normalizeDiscoveryProgress(snapshot.discoveryLevel, snapshot.discoveryExp);
         this._discoveryLevel = progress.level;
         this._discoveryExp = progress.exp;
         this._inventory = normalizeInventory(snapshot.inventory);
+        this._legendaryMentoringUsedIds = (snapshot.legendaryMentoringUsedIds ?? []).filter((id) => typeof id === 'string');
         this._oracleCount = snapshot.oracleCount ?? 0;
         this._clearedStageIds = normalizeClearedStageIds(snapshot.clearedStageIds);
         this._favoriteGeneralIds = normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds);
         this._hallAssignments = normalizeHallAssignments(snapshot.hallAssignments);
         this.dynamicRelations.restore(snapshot.dynamicRelations ?? []);
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
+        this._officerState = normalizeOfficerState(snapshot.officerState);
+        this._sandtableMarkerTerritories = normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories);
+        this.restoreLifespanState(snapshot);
+        this._gachaMentorJournal = normalizeGachaMentorJournal(snapshot.gachaMentorJournal);
+        this._hallAssignLog = normalizeHallAssignLog(snapshot.hallAssignLog);
         this._hallSpotState = EMPTY_HALL_SPOT_STATE;
         this._tallyLoyalty = normalizeTallyLoyaltyMap(snapshot.tallyLoyalty);
         this._tallyHoldings = { holders: normalizeTallyHoldingsMap(snapshot.tallyHoldings) };
         // 讀檔回填：舊存檔的虎符卡可能缺 troopType，依名冊武將的主兵種補上（PROG-2-0582）
         this._tallyCards = backfillTallyTroopTypes(normalizeTallyCardsMap(snapshot.tallyCards), this._roster.getAll());
+        // 統一物件庫：有存列就以列為準；舊存檔沒有列時由虎符卡與持有表重建（PROG-2-1021）
+        this._inventoryRecords = snapshot.inventoryRecords !== undefined
+            ? normalizeInventoryRecords(snapshot.inventoryRecords)
+            : buildTallyInventoryRecords(this._tallyCards, this._tallyHoldings.holders);
         this._femaleSources = normalizeFemaleSourcesMap(snapshot.femaleSources);
         this._gachaPity = normalizeGachaPityBook(snapshot.gachaPity);
         this._gachaRevision += 1;
         this._femaleSystem = normalizeFemaleSystemState(snapshot.femaleSystem);
         this._gachaWallet = snapshot.gachaWallet ? normalizeGachaWalletSave(snapshot.gachaWallet) : null;
         this._military = normalizeMilitaryReserve(snapshot.military);
+        this._yearAgingEvents = normalizeYearAgingEvents(snapshot.yearAgingEvents);
         this._prison = normalizePrisonState<GeneralConfig>(snapshot.prison);
-        this._fame = normalizeFame(snapshot.resources?.fame);
+        this._fame = clampResource('fame', normalizeFame(snapshot.resources?.fame));
         this._scorePoints = normalizeScorePoints(snapshot.resources?.scorePoints);
         this._autoNurtureTickets = normalizeAutoNurtureTickets(snapshot.resources?.autoNurtureTickets);
         this._mainlineNurtureClearedOnce = normalizeFlag(snapshot.resources?.mainlineNurtureClearedOnce);
@@ -1919,6 +2764,9 @@ export class GameSession {
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
+        if (this._requireSave().lastLoadRecoveredFromBackup()) {
+            this._emit(GAME_SESSION_EVENTS.LoadRecoveredFromBackup, snapshot);
+        }
         return true;
     }
 

@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "source": "../整併疑問書.md",
+  "indexTitle": "整併疑問書",
+  "indexPath": "docs/遊戲規格文件/整併疑問書.md",
+  "type": "markdown-h2",
+  "preambleShard": "meta",
+  "defaultShard": "meta",
+  "shards": [
+    {
+      "name": "q01-13",
+      "title": "Q1–Q13 與已裁決紀錄",
+      "pattern": "^Q([1-9]|1[0-3])\\."
+    },
+    {
+      "name": "q14-30",
+      "title": "Q14–Q30",
+      "pattern": "^Q(1[4-9]|2[0-9]|30)\\."
+    },
+    {
+      "name": "q31-40",
+      "title": "Q31–Q40",
+      "pattern": "^Q(3[1-9]|40)\\."
+    },
+    {
+      "name": "q41-52",
+      "title": "Q41–Q52",
+      "pattern": "^Q(4[1-9]|5[0-2])\\."
+    },
+    {
+      "name": "q53-63",
+      "title": "Q53–Q63",
+      "pattern": "^Q(5[3-9]|6[0-3])\\."
+    },
+    {
+      "name": "q64-74",
+      "title": "Q64–Q74",
+      "pattern": "^Q(6[4-9]|7[0-4])\\."
+    },
+    {
+      "name": "q75-plus",
+      "title": "Q75 起",
+      "pattern": "^Q(7[5-9]|[89][0-9]|\\d{3,})\\."
+    },
+    {
+      "name": "meta",
+      "title": "其他（掃描紀錄、回寫落點、補記）",
+      "pattern": "."
+    }
+  ]
+}

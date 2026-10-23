@@ -83,7 +83,7 @@ export interface BattleSceneContext {
   combatVisualTaskId: number;
   skillTargetingFlow?: {
     isPending: boolean;
-    beginPlayerSkillFlow(skillId: string, sourceType: SkillSourceType, sourceLabel: string): void;
+    beginPlayerSkillFlow(skillId: string, sourceType: SkillSourceType, sourceLabel: string, ultimateId?: string): void;
     handleSkillTargetClick(screenX: number, screenY: number): void;
     cancelPendingSkillTargeting(showToast: boolean): void;
   } | null;
@@ -393,7 +393,6 @@ export class BattleUIBridge {
 
   private _onUnitHealed(data: { unitId: string; amount: number; hp: number }): void {
     const c = this.ctx;
-    this._observeSpecialActionHit(data);
     const unit = c.ctrl?.state.units.get(data.unitId);
     this.performance.observeHealed(data.amount, unit?.faction ?? null);
     if (unit) {
@@ -411,7 +410,6 @@ export class BattleUIBridge {
     forcedMove?: boolean; forcedMoveReason?: string;
   }): void {
     const c = this.ctx;
-    this._observeSpecialActionHit(data);
     const unit = c.ctrl?.state.units.get(data.unitId);
     if (unit) {
       const side = unit.faction === Faction.Player ? '我方' : '敵方';

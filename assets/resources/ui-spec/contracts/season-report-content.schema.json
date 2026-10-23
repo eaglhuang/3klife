@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "schemaId": "season-report-content",
+  "familyId": "season-report",
+  "version": 1,
+  "description": "SeasonReport content contract；季結後的季度戰報彈窗，列出前 6 位武將的戰損與結緣建議。",
+  "requiredFields": [
+    "title",
+    "seasonLabel",
+    "emptyHintLabel",
+    "hintLabel",
+    "row0RankLabel",
+    "row0LineLabel",
+    "row1RankLabel",
+    "row1LineLabel",
+    "row2RankLabel",
+    "row2LineLabel",
+    "row3RankLabel",
+    "row3LineLabel",
+    "row4RankLabel",
+    "row4LineLabel",
+    "row5RankLabel",
+    "row5LineLabel"
+  ],
+  "fields": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "description": "彈窗標題。",
+      "bindPath": "DialogCard/HeaderBar/TitleLabel"
+    },
+    "seasonLabel": {
+      "type": "string",
+      "required": true,
+      "description": "本季季節字串，例如「第 2 年 春季」。",
+      "bindPath": "DialogCard/HeaderBar/SeasonLabel"
+    },
+    "emptyHintLabel": {
+      "type": "string",
+      "required": true,
+      "description": "名冊沒有可回報武將時的空白提示。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/EmptyHintLabel"
+    },
+    "hintLabel": {
+      "type": "string",
+      "required": true,
+      "description": "底部提示：未列出人數與結緣門檻。",
+      "bindPath": "DialogCard/FooterBar/HintLabel"
+    },
+    "row0RankLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 1 列名次。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row0/RankLabel"
+    },
+    "row0LineLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 1 列戰報劇本句。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row0/LineLabel"
+    },
+    "row1RankLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 2 列名次。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row1/RankLabel"
+    },
+    "row1LineLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 2 列戰報劇本句。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row1/LineLabel"
+    },
+    "row2RankLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 3 列名次。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row2/RankLabel"
+    },
+    "row2LineLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 3 列戰報劇本句。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row2/LineLabel"
+    },
+    "row3RankLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 4 列名次。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row3/RankLabel"
+    },
+    "row3LineLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 4 列戰報劇本句。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row3/LineLabel"
+    },
+    "row4RankLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 5 列名次。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row4/RankLabel"
+    },
+    "row4LineLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 5 列戰報劇本句。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row4/LineLabel"
+    },
+    "row5RankLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 6 列名次。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row5/RankLabel"
+    },
+    "row5LineLabel": {
+      "type": "string",
+      "required": true,
+      "description": "第 6 列戰報劇本句。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/Row5/LineLabel"
+    }
+  }
+}

@@ -423,6 +423,60 @@
                 "height": 60,
                 "text": "",
                 "styleSlot": "sortie.label.body"
+              },
+              {
+                "type": "button",
+                "name": "BtnSavePreset",
+                "id": "btnSavePreset",
+                "widget": {
+                  "top": 476,
+                  "left": 8
+                },
+                "height": 44,
+                "width": 168,
+                "skinSlot": "sortie.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnSavePresetLabel",
+                    "id": "savePresetLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "儲存預設",
+                    "styleSlot": "sortie.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnApplyPreset",
+                "id": "btnApplyPreset",
+                "widget": {
+                  "top": 476,
+                  "left": 184
+                },
+                "height": 44,
+                "width": 168,
+                "skinSlot": "sortie.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnApplyPresetLabel",
+                    "id": "applyPresetLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "套用預設",
+                    "styleSlot": "sortie.label.button"
+                  }
+                ]
               }
             ]
           }

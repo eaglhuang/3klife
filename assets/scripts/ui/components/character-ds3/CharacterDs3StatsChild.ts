@@ -84,6 +84,13 @@ const STAT_DEFS: StatRowDefinition[] = [
     },
 ];
 
+interface VitalBindingDefinition {
+    value: string;
+    max: string;
+    barTrack: string;
+    barFill: string;
+}
+
 const VITAL_BINDINGS = {
     hp: {
         value: 'CharacterDs3TabStats_span_38',
@@ -203,7 +210,7 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         };
     }
 
-    private _bindVital(binding: typeof VITAL_BINDINGS.hp): VitalBinding {
+    private _bindVital(binding: VitalBindingDefinition): VitalBinding {
         return {
             value: this._label(binding.value),
             max: this._label(binding.max),

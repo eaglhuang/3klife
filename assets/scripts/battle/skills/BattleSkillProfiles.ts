@@ -1,15 +1,18 @@
 import { StatusEffect } from '../../core/config/Constants';
+import { TIGER_TALLY_PENDING_SKILL_IDS } from '../../core/config/TigerTallySpecTactics';
 import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } from '../../shared/SkillRuntimeContract';
 
 export type BattleSkillFalloffRule = 'none' | 'linear-step';
 export type BattleSkillEffectKind =
   | 'damage' | 'heal' | 'control' | 'link' | 'counter' | 'reset'
-  | 'push' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack';
+  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack';
 
 export interface BattleSkillProfile {
   battleSkillId: string;
   /** 戰法標籤（PROG-2-0406）：例如 fire 火計，供天氣強約束判定 */
   tags?: readonly string[];
+  /** 殼：效果尚未實作（TRP-15 殼 profile），不可施放，UI 應灰掉且不扣 SP／TP */
+  pendingEffect?: boolean;
   targetMode: BattleSkillTargetMode;
   manualTargeting?: boolean;
   autoAimMode?: BattleSkillAutoAimMode;
@@ -19,8 +22,10 @@ export interface BattleSkillProfile {
   ignoreDefense?: boolean;
   /** 防禦穿透比例 0~1，無視目標該比例的防禦力（G-1 無視防禦：0.5） */
   defensePenetrationRatio?: number;
-  /** 傷害爆擊加成倍率（flat 增益）：final = base * (1 + critBonus)（G-1 百步穿楊：0.5） */
-  critBonus?: number;
+  /** 爆擊率加成（加在基礎爆擊率上，G-1 百步穿楊 +50%）；爆擊時傷害 ×1.5，擲骰走戰場種子亂數源 */
+  critRateBonus?: number;
+  /** 射程加成（格）：目標需在施放者射程（攻擊者 attackRange）＋此值之內（G-1 百步穿楊 +2） */
+  rangeBonus?: number;
   maxTargets?: number;
   /** 多段結算的遞增係數：每段對全部目標各結算一次（趙家槍法 1.0/1.2/1.4） */
   hitStageMultipliers?: readonly number[];
@@ -32,8 +37,14 @@ export interface BattleSkillProfile {
   excludeCenter?: boolean;
   healRatio?: number;
   healFloor?: number;
+  /** 依目標已損 HP 的比例治療（PROG-2-0793 醫療，規格 25%）；有填時不用施放者最大 HP */
+  healMissingRatio?: number;
   /** 精銳突擊：衝鋒傷害倍率（PROG-2-0751，規格 2.0） */
   chargeMultiplier?: number;
+  /** 首回合傷害倍率（PROG-2-0773 威震華夏）：戰鬥第 1 回合傷害 × 此值 */
+  firstTurnDamageMultiplier?: number;
+  /** 擊殺目標後重置施放者行動（PROG-2-0773 威震華夏） */
+  resetSelfOnKill?: boolean;
   /** 毒箭：每回合扣目標最大 HP 的比例（規格 10%） */
   dotMaxHpRatio?: number;
   /** 緩速：移動範圍減少的格數（規格 1） */
@@ -44,6 +55,10 @@ export interface BattleSkillProfile {
   extraHits?: number;
   /** 強制位移的格數（規格 1～2） */
   pushSteps?: number;
+  /** 強制位移的範圍（格，以施放者為中心的方形半徑）；未填為 1（3x3） */
+  pushRadius?: number;
+  /** 只對智力低於施放者主將的敵方武將所屬單位生效（空城計：Self.INT > Target.INT） */
+  pushRequiresIntAdvantage?: boolean;
   /** 定身回合數（規格 1） */
   rootTurns?: number;
   /** 火計連環：結算後把每個目標及其四向相鄰格設為火場（PROG-2-0757） */
@@ -142,6 +157,46 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     coefficient: 0,
     battleLogKey: 'skill.eight_formation.cast',
   },
+  // 鼓舞（PROG-2-0769）：全隊士氣 +20（規格 G-2）
+  'mentor-morale': {
+    battleSkillId: 'mentor-morale',
+    targetMode: BattleSkillTargetMode.AllyAll,
+    effectKind: 'morale',
+    coefficient: 0,
+    moraleBonus: 20,
+    battleLogKey: 'skill.mentor_morale.buff',
+  },
+  // 空城計（教官，PROG-2-0777）：施放者智力高於敵方武將時，半徑 2 內敵軍沿反向直線後退 2 格（規格 戰法系統 空城計）
+  'empty-fort': {
+    battleSkillId: 'empty-fort',
+    targetMode: BattleSkillTargetMode.Self,
+    effectKind: 'push',
+    coefficient: 0,
+    pushRadius: 2,
+    pushSteps: 2,
+    pushRequiresIntAdvantage: true,
+    battleLogKey: 'skill.empty_fort.push',
+  },
+  // 長坂雄咆的後退（PROG-2-0767）：3x3 內敵軍遠離施放者 1 格；定身部分見 tally-changban-root
+  'tally-changban-push': {
+    battleSkillId: 'tally-changban-push',
+    targetMode: BattleSkillTargetMode.Self,
+    effectKind: 'push',
+    coefficient: 0,
+    pushSteps: 1,
+    battleLogKey: 'skill.tally_changban_push.push',
+  },
+  // 無雙亂舞（PROG-2-0799，暫定）：周身 8 格傷害後擊退 1 格；沿用 push 的 pushRadius，coefficient 為傷害係數
+  'tally-wushuang': {
+    battleSkillId: 'tally-wushuang',
+    targetMode: BattleSkillTargetMode.AroundSelf,
+    effectKind: 'push',
+    coefficient: 1.0,
+    scalingStat: 'str',
+    pushRadius: 1,
+    pushSteps: 1,
+    battleLogKey: 'skill.tally_wushuang.push',
+  },
   // 毒箭（PROG-2-0766）：目標中毒 2 回合，每回合扣最大 HP 10%
   'tally-poison-arrow': {
     battleSkillId: 'tally-poison-arrow',
@@ -167,6 +222,31 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     slowAmount: 1,
     statusTurns: 1,
     battleLogKey: 'skill.mentor_slow.debuff',
+  },
+  // 威震華夏（PROG-2-0773）：單體敵軍傷害；第 1 回合 ×2，擊殺後施放者再行動 1 次（規格 戰法系統 威震華夏）
+  'tally-wei-zhen-hua-xia': {
+    battleSkillId: 'tally-wei-zhen-hua-xia',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    coefficient: 1.0,
+    scalingStat: 'str',
+    maxTargets: 1,
+    firstTurnDamageMultiplier: 2,
+    resetSelfOnKill: true,
+    battleLogKey: 'skill.tally_wei_zhen_hua_xia.hit',
+  },
+  // 火神狩獵（PROG-2-0771）：單體敵軍擊退 1 格，並將其原本所在格設為火場（規格 戰法系統 火神狩獵）
+  'tally-fire-god-hunt': {
+    battleSkillId: 'tally-fire-god-hunt',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'push-fire',
+    coefficient: 0,
+    maxTargets: 1,
+    pushSteps: 1,
+    battleLogKey: 'skill.tally_fire_god_hunt.push',
   },
   'zhuge-liang-storm': {
     battleSkillId: 'zhuge-liang-storm',
@@ -216,6 +296,14 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     healRatio: 0.18,
     healFloor: 30,
     battleLogKey: 'skill.liu_bei_rally.heal',
+  },
+  'medical-aid': {
+    battleSkillId: 'medical-aid',
+    targetMode: BattleSkillTargetMode.AllySingle,
+    manualTargeting: false,
+    effectKind: 'heal',
+    coefficient: 0,
+    healMissingRatio: 0.25,
   },
   'diao-chan-charm': {
     battleSkillId: 'diao-chan-charm',
@@ -316,13 +404,15 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
   },
   'tally-charge': {
     battleSkillId: 'tally-charge',
-    targetMode: BattleSkillTargetMode.EnemySingle,
+    targetMode: BattleSkillTargetMode.Line,
     manualTargeting: false,
-    autoAimMode: 'frontmost-enemy',
+    autoAimMode: 'densest-line',
     effectKind: 'damage',
     coefficient: 1.0,
     scalingStat: 'str',
-    maxTargets: 1,
+    maxTargets: 3,
+    lineLength: 3,
+    falloffRule: 'none',
     chargeMultiplier: 2.0,
     battleLogKey: 'skill.tally_charge.hit',
   },
@@ -374,10 +464,27 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     coefficient: 1.2,
     scalingStat: 'str',
     maxTargets: 1,
-    critBonus: 0.5,
+    rangeBonus: 2,
+    critRateBonus: 0.5,
     battleLogKey: 'skill.tally_hundred_steps.hit',
   },
 };
+
+// --- 虎符特殊戰法殼（PROG-2-0928，TRP-15）：規格 34 條中尚未實作效果的 23 條 ---
+// coefficient 0、無效果欄位，只讓 battleSkillId 能解析進管線；效果待各戰法另卡補上，此時不造成傷害
+for (const battleSkillId of TIGER_TALLY_PENDING_SKILL_IDS) {
+  PROFILE_BY_SKILL_ID[battleSkillId] = {
+    battleSkillId,
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    coefficient: 0,
+    scalingStat: 'str',
+    maxTargets: 1,
+    pendingEffect: true,
+    battleLogKey: `skill.${battleSkillId.replace(/-/g, '_')}.hit`,
+  };
+}
 
 export function resolveBattleSkillProfile(skillId: string): BattleSkillProfile | null {
   return PROFILE_BY_SKILL_ID[skillId] ?? null;
@@ -392,6 +499,11 @@ export function resolveBattleSkillTargetMode(
   fallback: BattleSkillTargetMode,
 ): BattleSkillTargetMode {
   return resolveBattleSkillProfile(skillId)?.targetMode ?? fallback;
+}
+
+/** 技能是否可施放：殼 profile（pendingEffect）不可施放；查無 profile 時維持既有行為（可施放） */
+export function isBattleSkillImplemented(skillId: string): boolean {
+  return resolveBattleSkillProfile(skillId)?.pendingEffect !== true;
 }
 
 export function requiresBattleSkillManualTargeting(skillId: string): boolean {

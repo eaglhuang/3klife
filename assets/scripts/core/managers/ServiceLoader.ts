@@ -30,6 +30,8 @@ import { NurtureService } from "../services/NurtureService";
 import { BreedingService } from "../services/BreedingService";
 import { UnveilingService } from "../services/UnveilingService";
 import { buildFactorDictionary, FactorDictionary } from "../systems/FactorInheritance";
+import type { ChildUltimateDefinition } from "../systems/ChildUltimateAwaken";
+import { parseNpcFriendMentors } from "../systems/NpcFriendMentor";
 import type { PersonRegistryData } from "../models/PersonRegistry";
 import { DataStorageAdapter } from "../storage/DataStorageAdapter";
 import { IndexedDbAdapter } from "../storage/IndexedDbAdapter";
@@ -38,6 +40,7 @@ import { UIManager } from "./UIManager";
 import { UISpecLoader } from "../../ui/core/UISpecLoader";
 import { UCUFLogger, LogCategory } from "../utils/UCUFLogger";
 import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
+import { normalizeSeasonModifiers, seasonModifiersOf, setActiveSeasonModifiers } from "../systems/SeasonModifiers";
 
 export class ServiceLoader {
     private static instance: ServiceLoader | null = null;
@@ -72,10 +75,15 @@ export class ServiceLoader {
         random: this.session.randomSource,
         currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
         currentMode: () => this.session.gameTime.currentMode,
+        seasonTrainingVigorMod: () => seasonModifiersOf(this.session.gameTime.currentSeason).trainingStaminaMultiplier,
         // 因子覺醒（PROG-2-0044）：訓練回合擲培育窺探 / 教官覺醒；畢業給 discoveryLevel 經驗
         awakening: this.session.nurtureAwakeningHooks(),
         onGraduated: () => { void this.session.gainDiscoveryExp('nurture-graduate'); },
+        // 子嗣奧義覺醒（ULT-15）：奧義母表在 prepareBreeding() 載入
+        childUltimate: { definitions: () => this.ultimateDefinitions },
     });
+    /** loadUltimateDefinitions() 載入後的奧義母表（只留 id 與繼承基因）；子嗣奧義覺醒用 */
+    private ultimateDefinitions: ChildUltimateDefinition[] = [];
     /** loadFactorDictionary() 載入後的因子字典；結緣產生子嗣時用來補因子名稱與顏色 */
     private factorDictionary: FactorDictionary | undefined;
     /** loadHistoricalPairs() 載入後的史實配對表（KIN-02）；結緣契合與宿敵受孕率讀它 */
@@ -84,6 +92,7 @@ export class ServiceLoader {
     public readonly breeding = new BreedingService(this.rosterStore, BloodlineGraph.getInstance(), {
         random: this.session.randomSource,
         currentSeason: () => this.session.gameTime.totalSeasonsElapsed,
+        seasonConceptionMod: () => seasonModifiersOf(this.session.gameTime.currentSeason).conceptionMultiplier,
         getDictionary: () => this.factorDictionary,
         getFemaleSource: (uid) => this.session.femaleSources[uid] ?? null,
         getHistoricalPairs: () => this.historicalPairs,
@@ -210,6 +219,33 @@ export class ServiceLoader {
         }
     }
 
+    /** 已載入的史實配對表；未載入或失敗時為 null（戰場合攻讀它） */
+    public historicalPairTable(): HistoricalPairTable | null {
+        return this.historicalPairs ?? null;
+    }
+
+    /** NPC 好友教官清單（MENT-14 MVP）：資料表載入失敗時清單為空，借用入口不可用 */
+    public async loadNpcFriendMentors(): Promise<void> {
+        try {
+            const raw = await this.resource.loadJson<{ data?: unknown[] }>('data/npc-friend-mentors');
+            this.session.setNpcFriendMentors(parseNpcFriendMentors(raw));
+        } catch (e) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] npc-friend-mentors.json 載入失敗，好友借用清單為空:', e);
+        }
+    }
+
+    /** 載入奧義母表的 id 與 inheritanceGeneId；失敗時子嗣奧義覺醒不擲骰，其餘培育不受影響。 */
+    public async loadUltimateDefinitions(): Promise<void> {
+        try {
+            const raw = await this.resource.loadJson<{ data?: Array<{ id?: unknown; inheritanceGeneId?: unknown }> }>('data/master/ultimate-definitions');
+            this.ultimateDefinitions = (raw?.data ?? [])
+                .filter((d): d is { id: string; inheritanceGeneId: string } => typeof d.id === 'string' && typeof d.inheritanceGeneId === 'string')
+                .map((d) => ({ ultimateId: d.id, inheritanceGeneId: d.inheritanceGeneId }));
+        } catch (e) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] ultimate-definitions.json 載入失敗，子嗣奧義覺醒停用:', e);
+        }
+    }
+
     public async loadFactorDictionary(): Promise<void> {
         try {
             const raw = await this.resource.loadJson<{ data?: [] }>('data/master/gene-dictionary');
@@ -228,6 +264,10 @@ export class ServiceLoader {
         if (!this.factorDictionary) {
             await this.loadFactorDictionary();
         }
+        if (this.ultimateDefinitions.length === 0) {
+            await this.loadUltimateDefinitions();
+        }
+        await this.loadNpcFriendMentors();
         if (!this.historicalPairs) {
             await this.loadHistoricalPairs();
         }
@@ -252,6 +292,16 @@ export class ServiceLoader {
      * 非同步載入 vfx-effects.json 並批量注冊至 EffectSystem。
      * 建議在 BattleScene.start() 中與 loadSkills() 一起 await。
      */
+    /** 載入四季特色修正表（TIME-08）；失敗時退回程式內建預設，遊戲照常進行 */
+    public async loadSeasonModifiers(): Promise<void> {
+        try {
+            const raw = await this.resource.loadJson<unknown>('data/season-modifiers');
+            setActiveSeasonModifiers(normalizeSeasonModifiers(raw));
+        } catch (e) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] season-modifiers.json 載入失敗，使用預設四季修正:', e);
+        }
+    }
+
     public async loadVfxEffects(): Promise<void> {
         try {
             const rawTable = await this.resource.loadJson<unknown>('data/vfx-effects');

@@ -7,6 +7,8 @@ import { resolveBattleTacticBehavior } from '../../shared/BattleTacticBehavior';
 import { applyAptitudeMove } from '../../../core/systems/BattleAptitude';
 import { forestMoveBonusFor } from '../../../core/systems/FactorTacticLinkage';
 import { forcedMoveBlockedDamageRatio, resolveForcedMove } from '../../shared/ForcedMoveTile';
+import { resolveGhostPath, type GhostPathCell } from '../../shared/GhostMovePath';
+import { hasGhostMove } from '../../shared/TallyPassive';
 
 const FORWARD_DIR: Record<Faction, number> = {
   [Faction.Player]: 1,
@@ -23,8 +25,11 @@ export interface BattleAutoMovePhaseContext {
   isGeneralUnit(unitId: string): boolean;
   /** 主將適性給的移動修正（PROG-2-0080）；不提供時視為 0 */
   getAptitudeMoveDelta?(unit: TroopUnit): number;
+  getAptitudeMoveSetTo?(unit: TroopUnit): number | null;
   /** 位移受阻的傷害（GRD-03，PROG-2-0577）；不提供時受阻只停下、不扣血 */
   applyForcedMoveDamage?(unit: TroopUnit, damage: number): void;
+  /** 七進七出穿透敵格的傷害（PROG-2-0776）；不提供時穿透不扣血 */
+  applyGhostPassDamage?(target: TroopUnit, damage: number): void;
 }
 
 export function executeBattleAutoMovePhase(context: BattleAutoMovePhaseContext): void {
@@ -60,13 +65,18 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
   const isFloodBattle = context.state.battleTactic === BattleTactic.FloodAttack;
   const baseMoveRange = isFloodBattle
     ? 1
-    : applyAptitudeMove(tacticMoveRange, context.getAptitudeMoveDelta?.(unit) ?? 0);
+    : applyAptitudeMove(tacticMoveRange, context.getAptitudeMoveDelta?.(unit) ?? 0, context.getAptitudeMoveSetTo?.(unit) ?? null);
   let remainingMoveBudget = Math.max(0, baseMoveRange - slowPenalty);
   if (!isFloodBattle) {
     remainingMoveBudget += resolveTileMoveRangeDelta(context.state, unit.lane, unit.depth);
     // 林地適性（PROG-2-0584）：站在林地且有 forest-move-bonus 的部隊移動力 +1
     const cell = context.state.getCell(unit.lane, unit.depth);
     remainingMoveBudget += forestMoveBonusFor(cell?.terrain ?? TerrainType.Plain, unit.factorEffects);
+  }
+
+  if (hasGhostMove(unit)) {
+    stepGhostMoveUnit(unit, remainingMoveBudget, svc, context);
+    return;
   }
 
   while (remainingMoveBudget > 0) {
@@ -122,6 +132,7 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
         context.consumeTileBuff(unit);
         remainingMoveBudget -= 1;
         remainingMoveBudget += applyTileEffectOnEnter(unit, dir, svc, context);
+        if (unit.isDead()) return;
         continue;
       }
 
@@ -147,6 +158,66 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
     context.consumeTileBuff(unit);
     remainingMoveBudget -= 1;
     remainingMoveBudget += applyTileEffectOnEnter(unit, dir, svc, context);
+    // 位移受阻傷害可能讓單位陣亡：不再拿死掉的單位走下一步
+    if (unit.isDead()) return;
+  }
+}
+
+/**
+ * 七進七出（Ghost_Move）：沿前進方向找最遠的有效終點，穿過敵軍不停下，每個穿過的敵軍各扣一次傷害。
+ * 終點必須空；路徑上有岩石或友軍、或終點被佔時縮短，都無效時原地不動（PM 暫定裁定）。
+ */
+function stepGhostMoveUnit(
+  unit: TroopUnit,
+  moveBudget: number,
+  svc: ReturnType<typeof services>,
+  context: BattleAutoMovePhaseContext,
+): void {
+  const dir = FORWARD_DIR[unit.faction];
+  const path: GhostPathCell[] = [];
+  for (let step = 1; step <= moveBudget; step++) {
+    const depth = unit.depth + dir * step;
+    const cell = context.state.getCell(unit.lane, depth);
+    if (!cell) break;
+    const occupant = cell.occupantId ? context.state.units.get(cell.occupantId) : undefined;
+    path.push({
+      lane: unit.lane,
+      depth,
+      occupantFaction: occupant?.faction ?? null,
+      blocksMovement: context.isCellMovementBlocked(unit.lane, depth),
+    });
+  }
+
+  for (let length = path.length; length > 0; length--) {
+    const result = resolveGhostPath(path.slice(0, length), unit.faction);
+    if (result.blocked) continue;
+
+    const destination = path[length - 1];
+    const prevLane = unit.lane;
+    const prevDepth = unit.depth;
+    context.state.getCell(prevLane, prevDepth)!.occupantId = null;
+    unit.moveTo(unit.lane, destination.depth);
+    context.state.getCell(unit.lane, unit.depth)!.occupantId = unit.id;
+    svc.event.emit(EVENT_NAMES.UnitMoved, {
+      unitId: unit.id,
+      lane: unit.lane,
+      depth: unit.depth,
+      fromLane: prevLane,
+      fromDepth: prevDepth,
+      ghostMove: true,
+    });
+    context.turnManager.markUnitMoved(unit.id);
+    context.consumeTileBuff(unit);
+
+    if (context.applyGhostPassDamage) {
+      const passDamage = Math.round(unit.getEffectiveAttack());
+      for (const passed of result.passedEnemyCells) {
+        const target = context.state.units.get(context.state.getCell(passed.lane, passed.depth)!.occupantId!);
+        if (target && passDamage > 0) context.applyGhostPassDamage(target, passDamage);
+      }
+    }
+    applyTileEffectOnEnter(unit, dir, svc, context);
+    return;
   }
 }
 

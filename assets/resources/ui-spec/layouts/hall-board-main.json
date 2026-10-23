@@ -186,7 +186,7 @@
                   "top": 50,
                   "left": 20
                 },
-                "width": 620,
+                "width": 440,
                 "height": 30,
                 "text": "",
                 "styleSlot": "hall.label.body"
@@ -203,6 +203,33 @@
                 "height": 30,
                 "text": "",
                 "styleSlot": "hall.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnHallRow0Detail",
+                "id": "btnHallRow0Detail",
+                "widget": {
+                  "top": 44,
+                  "left": 500
+                },
+                "width": 180,
+                "height": 44,
+                "skinSlot": "hall.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnHallRow0DetailLabel",
+                    "id": "btnHallRow0DetailLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "詳情",
+                    "styleSlot": "hall.label.button"
+                  }
+                ]
               },
               {
                 "type": "button",
@@ -266,7 +293,7 @@
                   "top": 50,
                   "left": 20
                 },
-                "width": 620,
+                "width": 440,
                 "height": 30,
                 "text": "",
                 "styleSlot": "hall.label.body"
@@ -283,6 +310,33 @@
                 "height": 30,
                 "text": "",
                 "styleSlot": "hall.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnHallRow1Detail",
+                "id": "btnHallRow1Detail",
+                "widget": {
+                  "top": 44,
+                  "left": 500
+                },
+                "width": 180,
+                "height": 44,
+                "skinSlot": "hall.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnHallRow1DetailLabel",
+                    "id": "btnHallRow1DetailLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "詳情",
+                    "styleSlot": "hall.label.button"
+                  }
+                ]
               },
               {
                 "type": "button",
@@ -346,7 +400,7 @@
                   "top": 50,
                   "left": 20
                 },
-                "width": 620,
+                "width": 440,
                 "height": 30,
                 "text": "",
                 "styleSlot": "hall.label.body"
@@ -363,6 +417,33 @@
                 "height": 30,
                 "text": "",
                 "styleSlot": "hall.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnHallRow2Detail",
+                "id": "btnHallRow2Detail",
+                "widget": {
+                  "top": 44,
+                  "left": 500
+                },
+                "width": 180,
+                "height": 44,
+                "skinSlot": "hall.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnHallRow2DetailLabel",
+                    "id": "btnHallRow2DetailLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "詳情",
+                    "styleSlot": "hall.label.button"
+                  }
+                ]
               },
               {
                 "type": "button",
@@ -426,7 +507,7 @@
                   "top": 50,
                   "left": 20
                 },
-                "width": 620,
+                "width": 440,
                 "height": 30,
                 "text": "",
                 "styleSlot": "hall.label.body"
@@ -443,6 +524,33 @@
                 "height": 30,
                 "text": "",
                 "styleSlot": "hall.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnHallRow3Detail",
+                "id": "btnHallRow3Detail",
+                "widget": {
+                  "top": 44,
+                  "left": 500
+                },
+                "width": 180,
+                "height": 44,
+                "skinSlot": "hall.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnHallRow3DetailLabel",
+                    "id": "btnHallRow3DetailLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "詳情",
+                    "styleSlot": "hall.label.button"
+                  }
+                ]
               },
               {
                 "type": "button",
@@ -506,7 +614,7 @@
                   "top": 50,
                   "left": 20
                 },
-                "width": 620,
+                "width": 440,
                 "height": 30,
                 "text": "",
                 "styleSlot": "hall.label.body"
@@ -523,6 +631,33 @@
                 "height": 30,
                 "text": "",
                 "styleSlot": "hall.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnHallRow4Detail",
+                "id": "btnHallRow4Detail",
+                "widget": {
+                  "top": 44,
+                  "left": 500
+                },
+                "width": 180,
+                "height": 44,
+                "skinSlot": "hall.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnHallRow4DetailLabel",
+                    "id": "btnHallRow4DetailLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "詳情",
+                    "styleSlot": "hall.label.button"
+                  }
+                ]
               },
               {
                 "type": "button",
@@ -586,7 +721,7 @@
                   "top": 50,
                   "left": 20
                 },
-                "width": 620,
+                "width": 440,
                 "height": 30,
                 "text": "",
                 "styleSlot": "hall.label.body"
@@ -603,6 +738,33 @@
                 "height": 30,
                 "text": "",
                 "styleSlot": "hall.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnHallRow5Detail",
+                "id": "btnHallRow5Detail",
+                "widget": {
+                  "top": 44,
+                  "left": 500
+                },
+                "width": 180,
+                "height": 44,
+                "skinSlot": "hall.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnHallRow5DetailLabel",
+                    "id": "btnHallRow5DetailLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 36,
+                    "text": "詳情",
+                    "styleSlot": "hall.label.button"
+                  }
+                ]
               },
               {
                 "type": "button",

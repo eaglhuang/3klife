@@ -1,0 +1,445 @@
+{
+  "id": "lobby-leaderboard-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "LobbyLeaderboardRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "transition": {
+      "enter": "scaleIn",
+      "exit": "scaleOut",
+      "duration": 0.22,
+      "easing": "backOut"
+    },
+    "children": [
+      {
+        "type": "button",
+        "name": "OverlayMask",
+        "id": "overlayMask",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "leaderboard.overlay.mask",
+        "onClick": "onClose"
+      },
+      {
+        "type": "panel",
+        "name": "DialogCard",
+        "widget": {
+          "hCenter": 0,
+          "vCenter": 0
+        },
+        "width": 800,
+        "height": 900,
+        "skinSlot": "leaderboard.card.bg",
+        "layout": {
+          "type": "vertical",
+          "spacing": 0,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0
+        },
+        "children": [
+          {
+            "type": "panel",
+            "name": "HeaderBar",
+            "width": "100%",
+            "height": 88,
+            "skinSlot": "leaderboard.header.bg",
+            "layout": {
+              "type": "horizontal",
+              "spacing": 16,
+              "paddingTop": 16,
+              "paddingBottom": 16,
+              "paddingLeft": 28,
+              "paddingRight": 24
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "TitleLabel",
+                "width": 680,
+                "height": 56,
+                "skinSlot": "leaderboard.text.title",
+                "text": "戰績排行榜"
+              },
+              {
+                "type": "button",
+                "name": "BtnClose",
+                "id": "btnClose",
+                "width": 56,
+                "height": 56,
+                "skinSlot": "leaderboard.close.btn",
+                "onClick": "onClose",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "CloseLabel",
+                    "width": "100%",
+                    "height": "100%",
+                    "skinSlot": "leaderboard.text.primary",
+                    "text": "X"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "MetricRow",
+            "width": "100%",
+            "height": 80,
+            "skinSlot": "leaderboard.section.bg",
+            "layout": {
+              "type": "horizontal",
+              "spacing": 16,
+              "paddingTop": 12,
+              "paddingBottom": 12,
+              "paddingLeft": 24,
+              "paddingRight": 24
+            },
+            "children": [
+              {
+                "type": "button",
+                "name": "MetricDamageButton",
+                "id": "metricDamage",
+                "width": 200,
+                "height": 56,
+                "skinSlot": "leaderboard.metric.btn",
+                "onClick": "onMetricDamage",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "MetricDamageLabel",
+                    "width": "100%",
+                    "height": "100%",
+                    "skinSlot": "leaderboard.text.primary",
+                    "text": "傷害總量"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "MetricKillsButton",
+                "id": "metricKills",
+                "width": 200,
+                "height": 56,
+                "skinSlot": "leaderboard.metric.btn",
+                "onClick": "onMetricKills",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "MetricKillsLabel",
+                    "width": "100%",
+                    "height": "100%",
+                    "skinSlot": "leaderboard.text.primary",
+                    "text": "擊殺數"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "MetricGuardianButton",
+                "id": "metricGuardian",
+                "width": 200,
+                "height": 56,
+                "skinSlot": "leaderboard.metric.btn",
+                "onClick": "onMetricGuardian",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "MetricGuardianLabel",
+                    "width": "100%",
+                    "height": "100%",
+                    "skinSlot": "leaderboard.text.primary",
+                    "text": "守護力"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "scroll-view",
+            "name": "ScrollView",
+            "width": "100%",
+            "height": 620,
+            "skinSlot": "leaderboard.scroll.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "ScrollContent",
+                "width": "100%",
+                "height": 620,
+                "layout": {
+                  "type": "vertical",
+                  "spacing": 8,
+                  "paddingTop": 8,
+                  "paddingBottom": 8,
+                  "paddingLeft": 8,
+                  "paddingRight": 8
+                },
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "EmptyHintLabel",
+                    "width": "100%",
+                    "height": 56,
+                    "skinSlot": "leaderboard.text.secondary",
+                    "text": "尚無戰績"
+                  },
+                  {
+                    "type": "panel",
+                    "name": "Row0",
+                    "width": "100%",
+                    "height": 72,
+                    "skinSlot": "leaderboard.row.bg",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "RankLabel",
+                        "width": 80,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 360,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.primary",
+                        "text": ""
+                      },
+                      {
+                        "type": "label",
+                        "name": "ValueLabel",
+                        "width": 240,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.value",
+                        "text": ""
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "Row1",
+                    "width": "100%",
+                    "height": 72,
+                    "skinSlot": "leaderboard.row.bg",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "RankLabel",
+                        "width": 80,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 360,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.primary",
+                        "text": ""
+                      },
+                      {
+                        "type": "label",
+                        "name": "ValueLabel",
+                        "width": 240,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.value",
+                        "text": ""
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "Row2",
+                    "width": "100%",
+                    "height": 72,
+                    "skinSlot": "leaderboard.row.bg",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "RankLabel",
+                        "width": 80,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 360,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.primary",
+                        "text": ""
+                      },
+                      {
+                        "type": "label",
+                        "name": "ValueLabel",
+                        "width": 240,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.value",
+                        "text": ""
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "Row3",
+                    "width": "100%",
+                    "height": 72,
+                    "skinSlot": "leaderboard.row.bg",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "RankLabel",
+                        "width": 80,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 360,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.primary",
+                        "text": ""
+                      },
+                      {
+                        "type": "label",
+                        "name": "ValueLabel",
+                        "width": 240,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.value",
+                        "text": ""
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "Row4",
+                    "width": "100%",
+                    "height": 72,
+                    "skinSlot": "leaderboard.row.bg",
+                    "layout": {
+                      "type": "horizontal",
+                      "spacing": 12,
+                      "paddingTop": 8,
+                      "paddingBottom": 8,
+                      "paddingLeft": 20,
+                      "paddingRight": 20
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "RankLabel",
+                        "width": 80,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.primary",
+                        "text": "-"
+                      },
+                      {
+                        "type": "label",
+                        "name": "NameLabel",
+                        "width": 360,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.primary",
+                        "text": ""
+                      },
+                      {
+                        "type": "label",
+                        "name": "ValueLabel",
+                        "width": 240,
+                        "height": 56,
+                        "skinSlot": "leaderboard.text.value",
+                        "text": ""
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "FooterBar",
+            "width": "100%",
+            "height": 88,
+            "skinSlot": "leaderboard.footer.bg",
+            "layout": {
+              "type": "horizontal",
+              "spacing": 0,
+              "paddingTop": 16,
+              "paddingBottom": 16,
+              "paddingLeft": 28,
+              "paddingRight": 28
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "HintLabel",
+                "width": "100%",
+                "height": 56,
+                "skinSlot": "leaderboard.text.secondary",
+                "text": ""
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

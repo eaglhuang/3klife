@@ -68,6 +68,9 @@ export class Button {
     declare disabledSprite: any;
     node: any = null;
 }
+export class Toggle extends Button {
+    isChecked = false;
+}
 export class Sprite {
     enabled = true; spriteFrame: any = null;
     declare color: Color;

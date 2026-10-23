@@ -4,6 +4,7 @@
  * 只驗證純邏輯：何時要問、三個選擇各自會不會執行、會不會再探、情報度怎麼變。
  */
 import { assert, TestSuite } from './TestRunner';
+import { isFullIntel } from '../assets/scripts/ui/core/HallDetailActionStates';
 import {
     INTEL_CONFIRM_TEXT,
     applyIntelConfirmChoice,
@@ -12,6 +13,14 @@ import {
 
 export function createHallExecuteConfirmSuite(): TestSuite {
     const suite = new TestSuite('HallExecuteConfirm (大廳任務執行前的情報確認)');
+
+    suite.test('完整情報判斷與 HallTaskIntel 一致：100 與超過 100 算完整，未滿、NaN、Infinity 不算', () => {
+        assert.isTrue(isFullIntel(100));
+        assert.isTrue(isFullIntel(101));
+        assert.isFalse(isFullIntel(99.5));
+        assert.isFalse(isFullIntel(Number.NaN));
+        assert.isFalse(isFullIntel(Number.POSITIVE_INFINITY));
+    });
 
     suite.test('情報滿 100 直接執行；未滿則先問「是否再探一次？」', () => {
         assert.equals('execute', resolveExecutePress(100));

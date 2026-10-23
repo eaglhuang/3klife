@@ -6,8 +6,10 @@
 import { assert, TestSuite } from './TestRunner';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { checkIdContract, PATTERNS } = require('../tools_node/validate-id-contract.js') as {
+const { checkIdContract, checkGeneDictionary, checkBloodlineTemplates, PATTERNS } = require('../tools_node/validate-id-contract.js') as {
     checkIdContract: (generals: Array<Record<string, unknown>>) => Array<{ generalId: string; field: string; value: string }>;
+    checkGeneDictionary: (genes: Array<Record<string, unknown>>) => Array<{ source: string; entryId: string; field: string; value: string }>;
+    checkBloodlineTemplates: (templates: Array<Record<string, unknown>>) => Array<{ source: string; entryId: string; field: string; value: string }>;
     PATTERNS: Record<'templateId' | 'bloodlineId' | 'geneId', RegExp>;
 };
 
@@ -45,6 +47,24 @@ export function createIdContractValidatorSuite(): TestSuite {
         assert.equals('templateId', violations[0].field);
         assert.equals('bloodlineId', violations[1].field);
         assert.equals('genes[].id', violations[2].field);
+    });
+
+    suite.test('gene-dictionary：id 不符 {COLOR}_{ATTR}_{NN} 即回報，來源標為 gene-dictionary', () => {
+        const violations = checkGeneDictionary([{ id: 'GREEN_DRAGON_04' }, { id: 'gene_strategy' }]);
+        assert.equals(1, violations.length);
+        assert.equals('gene-dictionary', violations[0].source);
+        assert.equals('gene_strategy', violations[0].value);
+    });
+
+    suite.test('bloodline-templates：只檢查明確帶 bloodlineId 的條目；模板 id 不算違規', () => {
+        const violations = checkBloodlineTemplates([
+            { id: 'g1-paternal-core', templateType: 'ancestor-slot-template' },
+            { id: 'tpl-x', bloodlineId: 'ZhaoYun' },
+            { id: 'tpl-y', bloodlineId: 'BL_ZhaoYun' },
+        ]);
+        assert.equals(1, violations.length);
+        assert.equals('bloodline-templates', violations[0].source);
+        assert.equals('ZhaoYun', violations[0].value);
     });
 
     return suite;

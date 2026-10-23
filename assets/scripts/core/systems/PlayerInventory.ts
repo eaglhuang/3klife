@@ -20,18 +20,30 @@ export const ITEM_JOB_CHANGE_ORDER = 'ITEM_JOB_ORDER';
 export const ITEM_TRIAL_TICKET = 'ITEM_TRIAL_TICKET';
 /** 竹簡（文職退役產物，PROG-2-0330；暫定）。起始庫存為 0。 */
 export const ITEM_BAMBOO_SLIP = 'ITEM_BAMBOO_SLIP';
+/** 戰法筆記（千人斬等里程碑產出，GEN-13 / PROG-2-0816；交給教官轉化）。起始庫存為 0。 */
+export const ITEM_BATTLE_NOTE = 'ITEM_BATTLE_NOTE';
 /** 補元散（精力 +50；PROG-2-0443 接線）。起始庫存為 0。 */
 export const ITEM_VITALITY_PILL = 'ITEM_VITALITY_PILL';
 /** 高級補元散（精力 +100；PROG-2-0443 接線）。起始庫存為 0。 */
 export const ITEM_PREMIUM_VITALITY_PILL = 'ITEM_VITALITY_PILL_PREMIUM';
+/** 歸宗令（血脈歸宗消耗 1 張，名詞表 Merge_Token；PROG-2-0862 接線）。起始庫存為 0，取得來源未定。 */
+export const ITEM_MERGE_TOKEN = 'ITEM_MERGE_TOKEN';
+/** 傳道令（名將傳道消耗 1 張，MENT-15；PROG-2-0868 接線）。起始庫存為 0，取得來源待使用者裁決。 */
+export const ITEM_LEGENDARY_MENTORING_TICKET = 'ITEM_LEGENDARY_MENTORING_TICKET';
+/** 歸宗令不足的提示（暫定，PM 2026-10-20 裁定）：語系 key 先用此名，文案待企劃定稿。 */
+export const MERGE_TOKEN_SHORTAGE_KEY = 'UI_MERGE_TOKEN_SHORTAGE';
+export const MERGE_TOKEN_SHORTAGE_TEXT = '歸宗令不足';
 
 export const ITEM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
     [ITEM_ORACLE_TOKEN]: '求籤令',
     [ITEM_JOB_CHANGE_ORDER]: '轉職令',
     [ITEM_TRIAL_TICKET]: '試用券',
     [ITEM_BAMBOO_SLIP]: '竹簡',
+    [ITEM_BATTLE_NOTE]: '戰法筆記',
     [ITEM_VITALITY_PILL]: '補元散',
     [ITEM_PREMIUM_VITALITY_PILL]: '高級補元散',
+    [ITEM_MERGE_TOKEN]: '歸宗令',
+    [ITEM_LEGENDARY_MENTORING_TICKET]: '傳道令',
 };
 
 export type PlayerInventory = Readonly<Record<string, number>>;

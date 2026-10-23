@@ -1,4 +1,7 @@
 import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER } from '../../core/config/Constants';
+import { aiSpGainPerKill } from '../../core/systems/AiSpCharge';
+import { comboChanceOfPair } from '../../core/systems/ComboAttackKin';
+import type { HistoricalRelation } from '../../core/systems/KinRelation';
 import { services } from '../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../core/models/TroopUnit';
 import { fieldTallySetMods, type TallySetMember } from '../../core/systems/TigerTallySetBonus';
@@ -7,11 +10,15 @@ import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
 import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
-import { getTerrainTroopEffect } from '../../core/systems/TerrainTroopRules';
+import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
+import { extraAttackHitsOf } from '../shared/TallyPassive';
+import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
+import { tileStateRuleOf } from '../shared/TileStateRules';
 import {
   canNavalCombinedAttack,
+  hasNavalAptitude,
   hasBattleEffect,
   isFogHitGuaranteed,
   isOrthogonallyAdjacent,
@@ -30,6 +37,8 @@ export interface BattleCombatResolverContext {
   getEnemyGeneralUnitId(): string | null;
   setPlayerGeneralUnitId(unitId: string | null): void;
   setEnemyGeneralUnitId(unitId: string | null): void;
+  /** 兩個部隊背後武將的史實關係；沒提供時不觸發史實合攻（PROG-2-1065） */
+  relationsBetween?(attackerId: string, helperId: string): readonly HistoricalRelation[];
 }
 
 export class BattleCombatResolver {
@@ -87,6 +96,11 @@ export class BattleCombatResolver {
     return this.getUnitAptitude(unit).moveDelta + getTerrainTroopEffect(unit.type, terrain).moveDelta;
   }
 
+  /** 移動力直接設值（水域 D「移動力歸 1」，PROG-2-0786）；null 表示用加減修正 */
+  public getUnitMoveSetTo(unit: TroopUnit): number | null {
+    return this.getUnitAptitude(unit).moveSetTo;
+  }
+
   public getFactionUnits(faction: Faction): TroopUnit[] {
     const result: TroopUnit[] = [];
     this.context.state.units.forEach((unit) => {
@@ -98,7 +112,7 @@ export class BattleCombatResolver {
   }
 
   public isCellMovementBlocked(lane: number, depth: number): boolean {
-    return this.context.state.getTileEffect(lane, depth)?.blocksMovement === true;
+    return tileStateRuleOf(this.context.state.getTileEffect(lane, depth)).blocksOnEnter;
   }
 
   public isGeneralUnit(unitId: string): boolean {
@@ -166,6 +180,23 @@ export class BattleCombatResolver {
   }
 
   public resolveCombat(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
+    // 結姻連射（PROG-2-0775）：攻擊次數 = 1 + 額外次數；每一下都是完整的命中、傷害、反擊解算
+    const hits = 1 + extraAttackHitsOf(attacker, this.isAdjacentToMaleGeneral(attacker));
+    for (let hit = 0; hit < hits; hit += 1) {
+      if (attacker.isDead() || defender.isDead()) return;
+      this.resolveHit(attacker, defender, svc);
+    }
+  }
+
+  /** 攻擊方的主將是男性，且部隊站在主將所在排的前一排（武將不在格子上，只看排位） */
+  private isAdjacentToMaleGeneral(unit: TroopUnit): boolean {
+    const general = this.context.state.getGeneral(unit.faction);
+    if (general?.gender !== '男') return false;
+    const generalDepth = unit.faction === Faction.Player ? GAME_CONFIG.GRID_DEPTH : -1;
+    return Math.abs(generalDepth - unit.depth) === 1;
+  }
+
+  private resolveHit(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
     const tacticBehavior = resolveBattleTacticBehavior(this.context.state.battleTactic);
     const attackerGeneral = this.context.state.getGeneral(attacker.faction);
     const aCell = this.context.state.getCell(attacker.lane, attacker.depth);
@@ -177,7 +208,9 @@ export class BattleCombatResolver {
     const defenderStealth = getTerrainTroopEffect(defender.type, defenderCell?.terrain ?? TerrainType.Plain).stealthBonus;
     // 場景命中加成（夜襲 -25%，SCN-06）：加在適性與隱蔽之後
     const sceneAccuracy = tacticBehavior.getAccuracyDelta?.(attacker, this.context.state) ?? 0;
-    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth + sceneAccuracy;
+    // 林地 S 迴避 +30%（PROG-2-0788）：防守方在林地且林地適性 S 時，攻擊方命中率再 −30%
+    const defenderEvasion = terrainEvasionBonusOf(defenderCell?.terrain ?? TerrainType.Plain, this.getUnitAptitude(defender).terrain);
+    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth - defenderEvasion + sceneAccuracy;
     // 大霧免疫（PROG-2-0584）：大霧天氣下攻擊方有此效果時命中必中，略過擲骰
     const fogGuaranteed = isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects);
     if (!fogGuaranteed && !rollHit(attackerAccuracy, this.hitRandom)) {
@@ -237,6 +270,7 @@ export class BattleCombatResolver {
       this.tryTriggerCounterReaction(defender, attacker, svc);
     }
     this.resolveNavalCombinedFollowUp(attacker, defender, svc);
+    this.resolveKinComboFollowUp(attacker, defender, svc);
   }
 
   /**
@@ -247,10 +281,35 @@ export class BattleCombatResolver {
   private resolveNavalCombinedFollowUp(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
     if (defender.isDead() || attacker.isDead()) return;
     const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
-    if (!canNavalCombinedAttack(attackerCell?.terrain ?? TerrainType.Plain, hasBattleEffect(attacker.factorEffects, 'naval-combined-attack'))) return;
+    const navalAptitude = hasNavalAptitude(this.getUnitAptitude(attacker).terrain, hasBattleEffect(attacker.factorEffects, 'naval-combined-attack'));
+    if (!canNavalCombinedAttack(attackerCell?.terrain ?? TerrainType.Plain, navalAptitude)) return;
 
-    const helper = this.findNavalCombinedHelper(attacker, defender);
+    const helper = this.findCombinedHelper(attacker, defender, () => true);
     if (!helper) return;
+    this.applyCombinedFollowUpDamage(helper, defender, svc, 'naval-combined-attack');
+  }
+
+  /**
+   * 史實合攻（PM 裁定，PROG-2-1065）：與目標相鄰、且與攻擊方有史實關係的我方部隊，以基礎 20% 觸發（義兄弟 ×1.3），
+   * 追加一次 50% 傷害，不觸發反擊、不擲命中。沒有史實關係的相鄰友軍不觸發。
+   */
+  private resolveKinComboFollowUp(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
+    const relationsBetween = this.context.relationsBetween;
+    if (!relationsBetween || defender.isDead() || attacker.isDead()) return;
+    const helper = this.findCombinedHelper(attacker, defender, (unit) => relationsBetween(attacker.id, unit.id).length > 0);
+    if (!helper) return;
+    const chance = comboChanceOfPair(relationsBetween(attacker.id, helper.id));
+    if (this.hitRandom() >= chance) return;
+    this.applyCombinedFollowUpDamage(helper, defender, svc, 'kin-combo-attack');
+  }
+
+  /** 合攻追加傷害：助攻方對目標的傷害 × 50%，不擲命中、不反擊 */
+  private applyCombinedFollowUpDamage(
+    helper: TroopUnit,
+    defender: TroopUnit,
+    svc: ReturnType<typeof services>,
+    damageSource: 'naval-combined-attack' | 'kin-combo-attack',
+  ): void {
     const helperCell = this.context.state.getCell(helper.lane, helper.depth);
     const dCell = this.context.state.getCell(defender.lane, defender.depth);
     const baseDamage = svc.formula.calculateDamage({
@@ -265,17 +324,17 @@ export class BattleCombatResolver {
     });
     const damage = Math.max(1, Math.floor(baseDamage * NAVAL_COMBINED_DAMAGE_RATIO));
 
-    this.applyUnitDamage(defender, damage, attacker.faction, {
+    this.applyUnitDamage(defender, damage, helper.faction, {
       attackerId: helper.id,
       attackerLane: helper.lane,
       attackerDepth: helper.depth,
-      damageSource: 'naval-combined-attack',
+      damageSource,
       allowDamageLink: true,
     });
   }
 
-  /** 與目標四方向相鄰的我方非主將、存活部隊（固定掃描順序，取第一個） */
-  private findNavalCombinedHelper(attacker: TroopUnit, defender: TroopUnit): TroopUnit | null {
+  /** 與目標四方向相鄰的我方非主將、存活部隊，且通過 accept 條件（固定掃描順序，取第一個） */
+  private findCombinedHelper(attacker: TroopUnit, defender: TroopUnit, accept: (unit: TroopUnit) => boolean): TroopUnit | null {
     const offsets = [{ dl: 0, dd: 1 }, { dl: 0, dd: -1 }, { dl: 1, dd: 0 }, { dl: -1, dd: 0 }];
     for (const { dl, dd } of offsets) {
       const cell = this.context.state.getCell(defender.lane + dl, defender.depth + dd);
@@ -283,7 +342,8 @@ export class BattleCombatResolver {
       const unit = this.context.state.units.get(cell.occupantId);
       if (!unit || unit.id === attacker.id || unit.faction !== attacker.faction) continue;
       if (unit.isDead() || this.isGeneralUnit(unit.id)) continue;
-      if (isOrthogonallyAdjacent(unit.lane, unit.depth, defender.lane, defender.depth)) return unit;
+      if (!isOrthogonallyAdjacent(unit.lane, unit.depth, defender.lane, defender.depth)) continue;
+      if (accept(unit)) return unit;
     }
     return null;
   }
@@ -454,12 +514,13 @@ export class BattleCombatResolver {
     const { lane, depth, faction, type } = unit;
     this.context.state.removeUnit(unit.id);
     svc.buff.clearUnit(unit.id);
+    clearMorale(unit);
     svc.event.emit(EVENT_NAMES.UnitDied, { unitId: unit.id, lane, depth, faction, type });
 
     if (killer) {
       const general = this.context.state.getGeneral(killer.faction);
       if (general) {
-        general.addSp(SP_PER_KILL);
+        general.addSp(killer.faction === Faction.Enemy ? aiSpGainPerKill(this.context.state.aiDifficulty) : SP_PER_KILL);
         svc.event.emit(EVENT_NAMES.GeneralSpChanged, {
           faction: killer.faction,
           sp: general.currentSp,
@@ -590,7 +651,10 @@ export class BattleCombatResolver {
     if (baseRange === 0) return 0;
     const cell = this.context.state.getCell(unit.lane, unit.depth);
     const terrain = cell?.terrain ?? TerrainType.Plain;
-    return Math.max(1, baseRange + getTerrainTroopEffect(unit.type, terrain).attackRangeDelta);
+    const range = Math.max(1, baseRange + getTerrainTroopEffect(unit.type, terrain).attackRangeDelta);
+    // 林地 D 視野受限（PROG-2-0789）：射程上限 1，只打相鄰格
+    const cap = terrainAttackRangeCapOf(terrain, this.getUnitAptitude(unit).terrain);
+    return cap === null ? range : Math.min(range, cap);
   }
 
   private getForwardDirection(unit: TroopUnit): number {

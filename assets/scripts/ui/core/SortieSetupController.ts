@@ -22,6 +22,7 @@ import {
     type SortieLoadoutCheck,
 } from '../../core/systems/SortieDeploy';
 import { sortiePredictText } from '../../core/systems/SortiePrediction';
+import { hasUsablePreset, resolvePreset, savePresetFor, type SortiePresetStore } from '../../core/systems/SortieLoadoutPreset';
 
 export type SortieRole = 'strategist' | 'deputy';
 
@@ -44,6 +45,11 @@ export interface SortieSetupDeps {
     };
     /** 大廳開戰時的守方敵將（第一個關卡）；未載入時回傳 null，畫面顯示資料未載入 */
     getEnemyGeneral?: () => GeneralConfig | null;
+    /** 編制預設（DEP-14）：每位主將一組；未提供時不能儲存、也沒有推薦 */
+    presets?: {
+        get(): SortiePresetStore;
+        set(store: SortiePresetStore): void;
+    };
 }
 
 /** 計謀點已進戰場（PROG-2-0084）：上限與開局補點會套進本場帳本 */
@@ -119,6 +125,8 @@ export class SortieSetupController {
             sortieSummary: '',
             sortiePredict: '',
             sortieNotice: this._notice,
+            savePresetLabel: '儲存預設',
+            applyPresetLabel: '套用預設',
         };
         const actives: Record<string, boolean> = {
             sortiePanel: commander !== null,
@@ -132,6 +140,8 @@ export class SortieSetupController {
             btnPrevDeputy: false,
             btnNextDeputy: false,
             btnClearDeputy: false,
+            btnSavePreset: false,
+            btnApplyPreset: false,
         };
         if (!commander) {
             return { commanderId: null, texts, actives, enabled };
@@ -168,7 +178,38 @@ export class SortieSetupController {
         enabled.btnPrevDeputy = deputyOptions > 1;
         enabled.btnNextDeputy = deputyOptions > 1;
         enabled.btnClearDeputy = summary.deputy !== null;
+        enabled.btnSavePreset = this._deps.presets !== undefined;
+        enabled.btnApplyPreset = this._deps.presets !== undefined && this._deps.presets.get()[commander.id] !== undefined;
         return { commanderId: commander.id, texts, actives, enabled };
+    }
+
+    /** 把目前的參謀官 / 後勤官存成這位主將的編制預設（DEP-14）；沒有預設儲存時回傳 false */
+    savePreset(): boolean {
+        const commander = this.commander();
+        const store = this._deps.presets;
+        if (!commander || !store) return false;
+        store.set(savePresetFor(store.get(), commander.id, this._effective(commander.id)));
+        this._notice = '已儲存編制預設';
+        return true;
+    }
+
+    /**
+     * 套用這位主將的編制預設（DEP-14 推薦）：只保留仍可出戰的人選，失效的欄位改為不派。
+     * 回傳是否套用成功；沒有預設或預設全部失效時回傳 false，不改動目前編制。
+     */
+    applyPreset(): boolean {
+        const commander = this.commander();
+        const store = this._deps.presets;
+        if (!commander || !store) return false;
+        const deployableIds = new Set(this._deps.session.getDeployableGenerals().map((g) => g.id));
+        const resolved = resolvePreset(store.get()[commander.id], commander.id, deployableIds);
+        if (!hasUsablePreset(resolved)) {
+            this._notice = '編制預設的人選都已無法出戰';
+            return false;
+        }
+        const check = this._deps.session.setSortieSupport(resolved.strategistUid, resolved.deputyUid);
+        this._notice = check.ok ? '已套用編制預設' : check.issues.map((i) => SORTIE_LOADOUT_ISSUE_TEXT[i]).join('、');
+        return check.ok;
     }
 
     /** 實際生效的支援（存著但已失效的人，例如後來被改成主將，視為不派） */

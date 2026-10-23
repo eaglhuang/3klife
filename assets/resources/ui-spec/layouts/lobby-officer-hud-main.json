@@ -1,0 +1,103 @@
+{
+  "id": "lobby-officer-hud-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "LobbyOfficerHudRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "OfficerHudCard",
+        "widget": {
+          "top": 368,
+          "left": 32
+        },
+        "width": 320,
+        "height": 168,
+        "skinSlot": "officer.hud.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "OfficerTitleLabel",
+            "id": "officerTitle",
+            "widget": {
+              "top": 10,
+              "left": 12,
+              "right": 12
+            },
+            "height": 26,
+            "text": "官職",
+            "styleSlot": "officer.hud.label.title"
+          },
+          {
+            "type": "label",
+            "name": "OfficerRankLabel",
+            "id": "officerRank",
+            "widget": {
+              "top": 44,
+              "left": 12,
+              "right": 12
+            },
+            "height": 36,
+            "text": "鄉里義士",
+            "styleSlot": "officer.hud.label.rank"
+          },
+          {
+            "type": "label",
+            "name": "OfficerExpLabel",
+            "id": "officerExp",
+            "widget": {
+              "top": 90,
+              "left": 12,
+              "right": 12
+            },
+            "height": 24,
+            "text": "官職經驗：0/100",
+            "styleSlot": "officer.hud.label.exp"
+          },
+          {
+            "type": "button",
+            "name": "OpenOfficerPageButton",
+            "id": "btnOpenOfficerPage",
+            "widget": {
+              "bottom": 8,
+              "left": 12,
+              "right": 12
+            },
+            "height": 32,
+            "skinSlot": "officer.hud.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "OpenOfficerPageLabel",
+                "id": "openOfficerPageLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "官職詳情",
+                "styleSlot": "officer.hud.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

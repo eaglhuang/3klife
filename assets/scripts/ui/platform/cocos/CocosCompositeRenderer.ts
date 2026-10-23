@@ -5,6 +5,7 @@ import {
     Label,
     Layout,
     Node,
+    Size,
     UITransform,
     VerticalTextAlignment,
 } from 'cc';
@@ -470,8 +471,7 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
             layout.spacingY = config.gap.y;
         }
         if (config.cellSize) {
-            layout.cellSize.width = config.cellSize.w;
-            layout.cellSize.height = config.cellSize.h;
+            layout.cellSize = new Size(config.cellSize.w, config.cellSize.h);
         }
 
         parentNode.addChild(container);

@@ -8,18 +8,22 @@
  * Unity 對照：像一個 ScriptableObject 的序列化欄位，缺的欄位給預設值，超出範圍的數字夾回。
  */
 import { applyGiftAffection, GIFT_AFFECTION_MAX, GIFT_AFFECTION_MIN } from './GiftAffection';
+import type { DaughterRecord, DaughterRoute } from './DaughterComingOfAge';
 
 /** 上次刷新時間（毫秒）；null 表示從未刷新，第一次一定會刷新 */
 export interface FemaleSystemState {
     poolRefreshedAtMs: number | null;
     rescueRefreshedAtMs: number | null;
     giftAffection: Record<string, number>;
+    /** 子嗣女兒清單（FEM-06）；後加的選填欄位，舊檔讀回為空清單 */
+    daughters: DaughterRecord[];
 }
 
 export const EMPTY_FEMALE_SYSTEM_STATE: Readonly<FemaleSystemState> = Object.freeze({
     poolRefreshedAtMs: null,
     rescueRefreshedAtMs: null,
     giftAffection: Object.freeze({}) as Record<string, number>,
+    daughters: Object.freeze([] as DaughterRecord[]) as DaughterRecord[],
 });
 
 function timestampOrNull(value: unknown): number | null {
@@ -39,7 +43,32 @@ export function normalizeFemaleSystemState(raw: unknown): FemaleSystemState {
         poolRefreshedAtMs: timestampOrNull(source.poolRefreshedAtMs),
         rescueRefreshedAtMs: timestampOrNull(source.rescueRefreshedAtMs),
         giftAffection,
+        daughters: normalizeDaughters(source.daughters),
     };
+}
+
+const DAUGHTER_ROUTES: readonly DaughterRoute[] = ['frontline', 'palace', 'instructor'];
+
+/** 讀檔正規化：丟掉缺 id 或年齡不是數字的紀錄，重複 id 只留第一筆，路線不合法則視為未分流 */
+function normalizeDaughters(raw: unknown): DaughterRecord[] {
+    if (!Array.isArray(raw)) return [];
+    const seen = new Set<string>();
+    const out: DaughterRecord[] = [];
+    for (const item of raw) {
+        if (!item || typeof item !== 'object') continue;
+        const d = item as Partial<Record<keyof DaughterRecord, unknown>>;
+        if (typeof d.id !== 'string' || d.id.length === 0 || seen.has(d.id)) continue;
+        if (typeof d.age !== 'number' || !Number.isFinite(d.age)) continue;
+        seen.add(d.id);
+        const route = DAUGHTER_ROUTES.includes(d.route as DaughterRoute) ? (d.route as DaughterRoute) : null;
+        out.push({
+            id: d.id,
+            age: Math.max(0, Math.floor(d.age)),
+            role: typeof d.role === 'string' ? (d.role as DaughterRecord['role']) : null,
+            route,
+        });
+    }
+    return out;
 }
 
 /** 送禮：回傳新的狀態（不改傳入物件） */

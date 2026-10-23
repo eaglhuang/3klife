@@ -1,4 +1,4 @@
-import { Node } from 'cc';
+import { Color, Node } from 'cc';
 
 /**
  * 戰場相關 UI 元件的抽象介面集合，用於解除 Battle 模組對 UI 具體實作的依賴。
@@ -17,6 +17,7 @@ export interface IBattleHUDLike {
     waitUntilReady(timeoutMs?: number): Promise<boolean>;
     playerSpBarNode: Node | null;
     enemySpBarNode: Node | null;
+    showPersistentStatus(msg: string): void;
     clearPersistentStatus(): void;
     clearSceneGambitBadge(): void;
     showSceneGambitBadge(text: string): void;
@@ -48,8 +49,15 @@ export interface IDeployController {
         type: string,
         lane: number,
         unitName?: string,
-        options?: { tally?: { tallyId: string } },
-    ): { ok: boolean; reason?: string };
+        options?: { tally?: { cardUid: string; templateId: string } },
+    ): { ok: boolean; reason?: string; suggestion?: string | null };
+    /** 目前流程是否允許玩家施放技能（戰鬥流程鎖定時為 false） */
+    canUsePlayerSkills(): boolean;
+    /** 施放主將技能；成功回傳 true */
+    triggerGeneralSkill(): boolean;
+    /** 委任開關（PROG-2-0913）：開啟後玩家部署階段由委任 AI 自動部署 */
+    setDelegateEnabled(on: boolean): void;
+    isDelegateEnabled(): boolean;
 }
 
 /**
@@ -61,7 +69,7 @@ export interface IDeployRuntimeLike {
     updateDp(dp: number): void;
     selectLane(lane: number): void;
     deploySelected(): void;
-    showToast(message: string): void;
+    showToast(message: string, duration?: number, options?: { color?: Color }): void;
     setTroopSlotButtonsVisible(visible: boolean): void;
     registerDragDropCallback(callback: (x: number, y: number) => void): void;
     updateSkillStatus(available: boolean): void;

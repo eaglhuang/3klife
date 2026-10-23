@@ -33,7 +33,16 @@ import {
     TRAINING_KINDS,
     TrainingKind,
 } from '../systems/NurtureSystem';
+import { buildNurtureRecordRow, revelationLevelOf, type NurtureRecordDraft } from '../systems/NurtureRecordRow';
 import { UNVEILING_AGE, UnveilingGeneral } from '../systems/Unveiling';
+import {
+    childUltimateCandidates,
+    rollChildUltimateAwaken,
+    unlockInheritedUltimate,
+    type ChildUltimateDefinition,
+    type ChildUltimateParent,
+    type InheritedUltimate,
+} from '../systems/ChildUltimateAwaken';
 import { InspireContext, rollInspireRound } from '../systems/MentorInspiration';
 import { isBloodlineGuaranteedRound, isBloodlineMatch } from '../systems/BloodlineGuarantee';
 import { GENERAL_STATUS_DEAD } from '../systems/GeneralAging';
@@ -42,6 +51,7 @@ import type { FactorDictionary, InheritedFactor } from '../systems/FactorInherit
 import { hybridSourcesFromParents } from '../systems/HybridSkill';
 import { revealStat, RevealedStat, RevelationLevel } from '../systems/StatRevelation';
 import { commitReportCard, emptyReportCardBook, keepReportCard, ReportCardBook } from '../systems/ReportCardBook';
+import { mentorBoundaryViolations, MentorBoundaryViolation } from '../systems/MentorBoundary';
 
 /** 每季入學令數量；規格只說「每季限 N 張」，暫定 2 */
 export const DEFAULT_ADMISSIONS_PER_SEASON = 2;
@@ -74,6 +84,8 @@ export interface NurtureState {
     admission: { season: number; used: number };
     /** 每位子嗣保留的畢業成績單（最多 3 份）；舊存檔沒有此欄位視為空 */
     reportBooks?: Record<string, ReportCardBook<GraduationResult>>;
+    /** 畢業培育紀錄（NUR-15 MVP 存檔欄位，見 NurtureRecordRow）；舊存檔沒有此欄位視為空 */
+    graduationRecords?: NurtureRecordDraft[];
 }
 
 /** 父母各自的繼承因子；用來推導混種戰法來源，沒提供就不擲混種 */
@@ -88,10 +100,14 @@ export interface NurtureServiceOptions {
     currentSeason?: () => number;
     /** 目前的季度模式；提供時，開場限定在培育模式 */
     currentMode?: () => GameTimeMode;
+    /** 目前季節的訓練體力消耗倍率（夏 ×1.25）；沒提供視為 1 */
+    seasonTrainingVigorMod?: () => number;
     requireNurtureMode?: boolean;
     admissionsPerSeason?: number;
     /** 培育回合的因子覺醒（PROG-2-0044）；沒提供就不擲骰，回合結果與舊版完全相同 */
     awakening?: NurtureAwakeningHooks;
+    /** 子嗣奧義覺醒（ULT-15）：訓練回合依父方奧義與子嗣綠色因子擲覺醒；沒提供就不擲骰 */
+    childUltimate?: { definitions: () => readonly ChildUltimateDefinition[] };
     /** 畢業後通知（例如給玩家 discoveryLevel 經驗） */
     onGraduated?: (result: GraduationResult) => void;
     /** 因子字典；用來推導混種戰法領域（defaultTags），沒提供則退回因子 id */
@@ -119,6 +135,8 @@ export interface NurtureTrainResult {
     awakening?: FactorAwakenedEvent;
     /** 本回合新觸發的戰法靈感；沒有則省略 */
     inspirations?: NurtureInspiration[];
+    /** 教學邊界違規（MENT-11）：教官加成回寫了子嗣因子；正常情況省略 */
+    boundaryViolations?: MentorBoundaryViolation[];
 }
 
 /** 戰法靈感觸發紀錄（給畫面與之後的戰法授予用） */
@@ -258,13 +276,19 @@ export class NurtureService {
      */
     train(childId: string, action: NurtureAction): NurtureTrainResult {
         const current = this._requireSession(childId);
-        const result: NurtureTrainResult = executeRound(current, action, this._rng());
+        const result: NurtureTrainResult = executeRound(current, action, this._rng(), {
+            trainingVigorMultiplier: this._options.seasonTrainingVigorMod?.(),
+        });
+        const genesBefore = this._roster.getAll().find((g) => g.id === childId)?.genes;
         const inspired = action === 'rest' ? { session: result.session, triggered: [] } : this._rollInspirations(childId, result.session);
         result.session = inspired.session;
         if (inspired.triggered.length > 0) result.inspirations = inspired.triggered;
+        const violations = mentorBoundaryViolations(genesBefore, this._roster.getAll().find((g) => g.id === childId)?.genes);
+        if (violations.length > 0) result.boundaryViolations = violations;
         this._replace(result.session);
         const awakening = this._rollAwakening(childId, result.session, result.log);
         if (awakening) result.awakening = awakening;
+        this._rollChildUltimate(childId, result.log);
         return result;
     }
 
@@ -280,6 +304,8 @@ export class NurtureService {
         this._roster.replaceAll(next);
         this._state.sessions = this._state.sessions.filter((s) => s.sessionId !== session.sessionId);
         this._dropReportBook(childId);
+        const { row } = buildNurtureRecordRow(session, { ...result, revelationLevel: revelationLevelOf(result.general) }, this._season());
+        this._state.graduationRecords = [...(this._state.graduationRecords ?? []), row];
         this._options.onGraduated?.(result);
         return result;
     }
@@ -347,6 +373,36 @@ export class NurtureService {
     }
 
     // ── 內部 ───────────────────────────────────────────────────────────────
+
+    /**
+     * 子嗣奧義覺醒（ULT-15）：只在訓練回合擲；父方在名冊內才有候選。
+     * 覺醒的奧義寫入子嗣的 inheritedUltimates（level 1、Is_Inherited、Source_Parent_UID）。
+     */
+    private _rollChildUltimate(childId: string, log: NurtureRoundLog): void {
+        const definitions = this._options.childUltimate?.definitions();
+        if (!definitions || log.action === 'rest') return;
+        const roster = this._roster.getAll() as Array<UnveilingGeneral & { fatherId?: string; motherId?: string; inheritedUltimates?: InheritedUltimate[] }>;
+        const index = roster.findIndex((g) => g.id === childId);
+        if (index < 0) return;
+        const child = roster[index];
+        const parents: ChildUltimateParent[] = [child.fatherId, child.motherId]
+            .map((pid) => roster.find((g) => g.id === pid))
+            .filter((p): p is NonNullable<typeof p> => p !== undefined)
+            .map((p) => ({ parentUid: p.id, ultimateIds: (p.ultimateSlots ?? []).map((slot) => slot.ultimateId) }));
+        const candidates = childUltimateCandidates({ genes: child.genes as never }, parents, definitions);
+        let owned = child.inheritedUltimates ?? [];
+        let changed = false;
+        for (const candidate of candidates) {
+            if (owned.some((u) => u.ultimateId === candidate.ultimateId)) continue;
+            if (!rollChildUltimateAwaken(candidate.greenGeneLevel, true, this._rng()())) continue;
+            owned = unlockInheritedUltimate(owned, candidate.ultimateId, candidate.sourceParentUid).list;
+            changed = true;
+        }
+        if (!changed) return;
+        const next = [...roster];
+        next[index] = { ...child, inheritedUltimates: owned };
+        this._roster.replaceAll(next);
+    }
 
     private _rollAwakening(childId: string, session: NurtureSession, log: NurtureRoundLog): FactorAwakenedEvent | undefined {
         const hooks = this._options.awakening;

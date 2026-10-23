@@ -2,18 +2,22 @@
 import {
   EVENT_NAMES,
   Faction,
+  GAME_CONFIG,
+  TerrainType,
   TroopType,
   Weather,
   BattleTactic,
 } from "../../core/config/Constants";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
+import type { AiDifficulty } from "../../core/systems/AiSpCharge";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleUnitSpawner, type TroopDataTable } from '../runtime/BattleUnitSpawner';
+import { applySoloBreachAtTurnStart } from '../runtime/BattleSoloBreach';
 import { BattleState, TerrainGrid } from "../models/BattleState";
 import type { BattleResult } from "../BattleTypes";
 import { detectWeatherTransition, validateWeatherSchedule, weatherForTurn, type WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import { EnemyAI } from "./EnemyAI";
-import { resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
+import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
 import { findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
@@ -24,6 +28,9 @@ import { executeBattleAutoMovePhase } from '../runtime/phases/BattleAutoMovePhas
 import { executeBattleEnemyDeployPhase } from '../runtime/phases/BattleEnemyDeployPhase';
 import { executeBattleSpecialResolvePhase } from '../runtime/phases/BattleSpecialResolvePhase';
 import { executeBattleTileEffectPhase } from '../runtime/phases/BattleTileEffectPhase';
+import { desertVitalityDrain } from '../../core/systems/DesertVitality';
+import { combatRelationsBetween, type HistoricalPairTable } from '../../core/systems/HistoricalPairs';
+import type { HistoricalRelation } from '../../core/systems/KinRelation';
 import { BattleCombatResolver } from '../runtime/BattleCombatResolver';
 import { BattleGeneralDuelFlow } from '../runtime/BattleGeneralDuelFlow';
 import { BattleTileBuffLifecycleManager, DEFAULT_BATTLE_TILE_BUFF_CONFIG, type BattleTileBuffConfig } from '../runtime/BattleTileBuffLifecycleManager';
@@ -44,6 +51,7 @@ import { factorBattleEffectsOf, type FactorBattleEffectMap } from '../../core/sy
 import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
 import { buildTallyCardCatalog, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { starStatMultiplier } from '../../core/systems/TigerTallyStar';
+import { applyTallyPassive } from '../shared/TallyPassive';
 import { describeActiveTallySets } from '../../core/systems/TigerTallySetBonus';
 import type { TacticCondition } from '../../core/systems/TacticCondition';
 import {
@@ -57,6 +65,8 @@ import {
 import {
   applyDeploy,
   checkDeploy,
+  DEPLOY_SUGGESTION_CANDIDATES,
+  suggestLowCostDeploy,
   createSortieState,
   finishSortie,
   getTacticTpCost,
@@ -70,6 +80,19 @@ import {
   type SortieState,
   type SortieSummary,
 } from '../../core/systems/SortieDeploy';
+import {
+  delegatePickDeploy,
+  delegateQualityOf,
+  sortDelegateCandidates,
+  type DelegateQuality,
+  type DelegateSituation,
+} from '../../core/systems/DelegateAi';
+import { FormulaSystem } from '../../core/systems/FormulaSystem';
+import { buildEnemyTacticCandidates } from '../shared/EnemyTacticCandidates';
+import { pickEnemyTactic, type TacticMetrics } from '../shared/EnemyTacticNumbers';
+import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
+import type { TacticAiSituation } from '../shared/TacticAiRules';
+import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
 
 /**
  * [P2-N3] 部署失敗原因：food = 糧草不足（原 dp）。
@@ -89,6 +112,8 @@ export interface DeployOutcome {
   reason?: DeployFailReason;
   /** 有出征帳本時列出全部不可部署原因（UI 可各自顯示） */
   reasons?: DeployFailReason[];
+  /** 改派建議（DEP-10）：可派出的低耗兵種，只供玩家確認，不自動改派 */
+  suggestion?: string | null;
 }
 
 export type { GeneralSkillCastOptions };
@@ -138,16 +163,21 @@ export class BattleController {
   });
   private tacticDefinitionMap = new Map<string, CanonicalTacticDefinition>();
   /** 虎符卡片實例的星級與模板 id 查詢（由場景注入玩家卡組；沒注入時一律 1★、無模板） */
-  public tallyInfoOf: (tallyId: string) => { star: number; templateId: string } | null = () => null;
+  public tallyInfoOf: (tallyId: string) => { star: number; templateId: string; sourceTemplateId?: string | null } | null = () => null;
+  /** 史實配對表（KIN-02）；合攻判定讀它，未設定時不觸發史實合攻（PROG-2-1065） */
+  public historicalPairs: HistoricalPairTable | null = null;
   /** 本場出陣過的虎符 id（PROG-2-0573：戰後依此結算戰鬥經驗） */
   private readonly _deployedTallyIds = new Set<string>();
   /** 出征軍勢 / 糧草帳本；null = 舊版 demo 戰鬥（不扣軍勢） */
   private sortie: SortieState | null = null;
+  /** 委任 AI 品質（PROG-2-0908）；null 為未開委任 */
+  private delegateQuality: DelegateQuality | null = null;
 
   // ─── 武將單挑系統狀態 ──────────────────────────────────────────────────
   private readonly combatResolver = new BattleCombatResolver({
     state: this.state,
     turnManager: this.turnManager,
+    relationsBetween: (attackerId, helperId) => this.relationsBetweenUnits(attackerId, helperId),
     getPlayerGeneralUnitId: () => this.playerGeneralUnitId,
     getEnemyGeneralUnitId: () => this.enemyGeneralUnitId,
     setPlayerGeneralUnitId: (unitId) => {
@@ -222,8 +252,10 @@ export class BattleController {
     terrainGrid?: TerrainGrid,
     weather?: Weather,
     battleTactic?: BattleTactic,
+    aiDifficulty: AiDifficulty = 'normal',
   ): void {
     this.state.reset(playerGeneral, enemyGeneral, terrainGrid, weather, battleTactic);
+    this.state.aiDifficulty = aiDifficulty;
     this.duelFlow.resetForBattle();
     this.flowStateMachine.reset();
     this.flowStateMachine.startBattle();
@@ -274,6 +306,17 @@ export class BattleController {
    * 虎符部隊（TRP-13）：部隊記下虎符與主將，適性乘數每次結算時依當下格子的地形算。
    * 虎符目錄查不到或沒有適性資料時，乘數恆為 1。
    */
+  /** 合攻判定用：兩個部隊背後武將的史實關係（PROG-2-1065）；敵軍與無虎符部隊沒有來源武將，回傳空陣列 */
+  public relationsBetweenUnits(attackerId: string, helperId: string): HistoricalRelation[] {
+    return combatRelationsBetween(this.historicalPairs, this.sourceTemplateOfUnit(attackerId), this.sourceTemplateOfUnit(helperId));
+  }
+
+  /** 部隊的來源武將模板 id：由出陣虎符的 sourceTemplateId 取得 */
+  private sourceTemplateOfUnit(unitId: string): string | null {
+    const tallyId = this.state.units.get(unitId)?.tallyId;
+    return tallyId ? (this.tallyInfoOf(tallyId)?.sourceTemplateId ?? null) : null;
+  }
+
   private bindTallyAffinity(unit: TroopUnit, ref: TallyDeployRef): void {
     const profile = buildTallyCardCatalog().get(ref.templateId)?.affinity ?? null;
     const general = this.state.getGeneral(Faction.Player);
@@ -282,6 +325,7 @@ export class BattleController {
     const info = this.tallyInfoOf(ref.cardUid);
     unit.tallyStarMultiplier = starStatMultiplier(info?.star ?? 1);
     unit.tallyTemplateId = info?.templateId ?? null;
+    applyTallyPassive(unit, unit.tallyTemplateId);
     this._deployedTallyIds.add(ref.cardUid);
     unit.commanderUid = commander?.uid ?? null;
     unit.tallyAffinity = (lane, depth) =>
@@ -335,7 +379,8 @@ export class BattleController {
       const check = checkDeploy(this.sortie, { troopType: type, militia: options.militia });
       if (!check.ok) {
         const reasons = check.reasons.map((reason) => SORTIE_BLOCK_TO_FAIL_REASON[reason]);
-        return { ok: false, unit: null, reason: reasons[0], reasons };
+        const suggestion = suggestLowCostDeploy(this.sortie, type, DEPLOY_SUGGESTION_CANDIDATES);
+        return { ok: false, unit: null, reason: reasons[0], reasons, suggestion };
       }
     }
 
@@ -351,6 +396,70 @@ export class BattleController {
       services().battle.spendFood(applied.check.cost.foodCost);
     }
     return { ok: true, unit };
+  }
+
+  /** 依我方主將智力開啟委任（PROG-2-0908）；沒有主將時關閉 */
+  public enableDelegateFromGeneral(): void {
+    const general = this.state.getGeneral(Faction.Player);
+    this.delegateQuality = general ? delegateQualityOf(general.int) : null;
+  }
+
+  public disableDelegate(): void {
+    this.delegateQuality = null;
+  }
+
+  /**
+   * 委任 AI 在指定路部署一隊（PROG-2-0908）：委任未開或沒有出征帳本時回 null。
+   * 候選依糧耗低→兵力耗低排序，挑選規則由 DelegateAi 決定，實際部署仍走 tryDeployTroop。
+   */
+  public tryDelegateDeploy(lane: number, situation: DelegateSituation = { bossTargetVisible: false }): DeployOutcome | null {
+    if (!this.delegateQuality || !this.sortie) return null;
+    this.syncSortieWithField();
+    const candidates = sortDelegateCandidates(this.sortie, DEPLOY_SUGGESTION_CANDIDATES);
+    const pick = delegatePickDeploy(this.sortie, candidates, this.delegateQuality, situation);
+    if (pick.troopType === null) return null;
+    return this.tryDeployTroop(pick.troopType as TroopType, lane);
+  }
+
+  /** 委任開關（PROG-2-0913）：true 依主將智力開啟，false 關閉 */
+  public setDelegateEnabled(on: boolean): void {
+    if (on) this.enableDelegateFromGeneral();
+    else this.disableDelegate();
+  }
+
+  public isDelegateEnabled(): boolean {
+    return this.delegateQuality !== null;
+  }
+
+  /**
+   * 玩家部署階段（PROG-2-0913）：敵方部署前呼叫一次；委任關閉時不做事。
+   * 路由由 pickDelegateLane 決定。
+   */
+  public runPlayerDelegateDeployPhase(): void {
+    if (!this.delegateQuality || !this.sortie) return;
+    this.tryDelegateDeploy(this.pickDelegateLane());
+  }
+
+  /**
+   * 回合結算開始前先讓委任 AI 部署（PROG-2-0913）。必須在 beginTurnResolution 之前：
+   * 結算中流程狀態是 ResolvingTurn，tryDeployTroop 會回 battle-locked，委任永遠部署不了。
+   */
+  private runDelegateDeployBeforeTurn(): void {
+    if (this.flowStateMachine.canAdvanceTurn()) this.runPlayerDelegateDeployPhase();
+  }
+
+  /** 我方存活部隊最少的那一路，同數取較小路號（PROG-2-0913 暫定） */
+  public pickDelegateLane(): number {
+    const counts: number[] = Array.from({ length: GAME_CONFIG.GRID_LANES }, () => 0);
+    for (const unit of this.state.units.values()) {
+      if (unit.faction !== Faction.Player || unit.currentHp <= 0) continue;
+      if (unit.lane >= 0 && unit.lane < counts.length) counts[unit.lane] += 1;
+    }
+    let best = 0;
+    for (let lane = 1; lane < counts.length; lane += 1) {
+      if (counts[lane] < counts[best]) best = lane;
+    }
+    return best;
   }
 
   /**
@@ -412,7 +521,7 @@ export class BattleController {
     if (!this.sortie) return { ok: true };
     const result = spendTactic(this.sortie, cost);
     this.sortie = result.state;
-    return result.ok ? { ok: true } : { ok: false, reason: result.reason };
+    return result.ok === true ? { ok: true } : { ok: false, reason: result.reason };
   }
 
   /** 目前帳本（已同步場上存活與剩餘兵力）；沒有出征帳本時回傳 null */
@@ -502,6 +611,103 @@ export class BattleController {
       enabled: !!descriptor && this.canAffordTactic(this.resolveSeedTacticId(options)) };
   }
 
+  /**
+   * 戰法施放共用入口（PROG-2-0916）：玩家與敵方都經此分派，保證同一套結算。
+   * 只負責分派到 dispatcher，不扣點、不重設 SP、不發事件；資源與事件由呼叫端決定。
+   */
+  public castBattleSkill(
+    faction: Faction,
+    options: GeneralSkillCastOptions = {},
+    sourceType: SkillSourceType = SkillSourceType.SeedTactic,
+  ): SkillExecutionResult {
+    if (sourceType === SkillSourceType.SeedTactic) {
+      return this.skillDispatcher.dispatchSeedTactic(faction, options);
+    }
+    return this.skillDispatcher.dispatchDirectBattleSkill(options.battleSkillId ?? null, sourceType, faction, options);
+  }
+
+  /**
+   * 敵方選技（PROG-2-0918）：戰法槽 → 戰法庫候選 → 填入預估數值 → AI 規則選一招。
+   * 數值暫定：單體傷害以我方血量最低的單位估算，倍率 1、地形平原；效果值與地形不填（分數為 0）。
+   * 沒有可選戰法或戰法庫查不到 battleSkillId 時回 null，呼叫端退回武將主技能。
+   */
+  public chooseEnemyTactic(): { tacticId: string; battleSkillId: string } | null {
+    const general = this.state.enemyGeneral;
+    if (!general) return null;
+
+    const library = [...this.tacticDefinitionMap.values()].map(def => ({ id: def.id, category: def.category }));
+    const candidates = buildEnemyTacticCandidates(general.tacticSlots, library);
+    if (candidates.length === 0) return null;
+
+    const playerUnits = this.livingUnitsOf(Faction.Player);
+    const enemyUnits = this.livingUnitsOf(Faction.Enemy);
+    const situation: TacticAiSituation = {
+      enemyHp: playerUnits.map(unit => unit.currentHp),
+      allyLowestHpRate: enemyUnits.length === 0
+        ? 1
+        : Math.min(...enemyUnits.map(unit => unit.currentHp / unit.maxHp)),
+    };
+
+    const metrics: Record<string, TacticMetrics> = {};
+    const weakest = playerUnits.reduce<TroopUnit | null>(
+      (lowest, unit) => (lowest === null || unit.currentHp < lowest.currentHp ? unit : lowest),
+      null,
+    );
+    if (weakest) {
+      const formula = new FormulaSystem();
+      const attackerInt = general.int > general.str;
+      const attackerAttack = formula.calculateGeneralAttack(
+        attackerInt
+          ? { int: general.int, lea: general.lea, maxHp: general.maxHp }
+          : { str: general.str, lea: general.lea, maxHp: general.maxHp },
+      );
+      const damage = estimateTacticDamage(
+        {
+          attackerAttack,
+          defenderDefense: weakest.getEffectiveDefense(),
+          attackerType: attackerInt ? TroopType.Archer : TroopType.Infantry,
+          defenderType: weakest.type,
+          attackerTerrain: TerrainType.Plain,
+          defenderTerrain: TerrainType.Plain,
+          attackBonus: general.attackBonus,
+        },
+        1,
+        formula,
+      );
+      for (const candidate of candidates) {
+        if (candidate.category === 'single-damage') {
+          metrics[candidate.tacticId] = { estimatedDamage: damage };
+        }
+      }
+    }
+
+    const playerCells = playerUnits.map(unit => ({ lane: unit.lane, depth: unit.depth }));
+    const denseArea = hasDenseArea(playerCells);
+    const hasChokePoint = hasChokePointLane(playerCells);
+    const lowestAllyMissingHp = enemyUnits.reduce((most, unit) => Math.max(most, unit.maxHp - unit.currentHp), 0);
+    for (const candidate of candidates) {
+      if (candidate.category === 'tile-scene') {
+        metrics[candidate.tacticId] = { ...metrics[candidate.tacticId], denseArea, hasChokePoint };
+      }
+      if (candidate.category === 'buff-heal') {
+        const battleSkillId = this.tacticDefinitionMap.get(candidate.tacticId)?.battleSkillId ?? null;
+        const profile = battleSkillId ? resolveBattleSkillProfile(battleSkillId) : null;
+        metrics[candidate.tacticId] = {
+          effectValue: estimateHealValue(profile, general.maxHp, lowestAllyMissingHp),
+        };
+      }
+    }
+
+    const tacticId = pickEnemyTactic(candidates, metrics, situation);
+    if (!tacticId) return null;
+    const battleSkillId = this.tacticDefinitionMap.get(tacticId)?.battleSkillId;
+    return battleSkillId ? { tacticId, battleSkillId } : null;
+  }
+
+  private livingUnitsOf(faction: Faction): TroopUnit[] {
+    return [...this.state.units.values()].filter(unit => unit.faction === faction && unit.currentHp > 0);
+  }
+
   public triggerPlayerSeedTactic(options: GeneralSkillCastOptions = {}): boolean {
     if (!this.canUsePlayerSkills()) return false;
 
@@ -514,7 +720,7 @@ export class BattleController {
     const tpCost = getTacticTpCost(tacticId);
     if (!this.canAffordTactic(tacticId)) return false;
 
-    const result = this.skillDispatcher.dispatchSeedTactic(Faction.Player, {
+    const result = this.castBattleSkill(Faction.Player, {
       ...options,
       battleSkillId: options.battleSkillId ?? descriptor?.skillId ?? null,
       tacticId,
@@ -543,6 +749,8 @@ export class BattleController {
     options: GeneralSkillCastOptions = {},
   ): boolean {
     if (!this.canUsePlayerSkills()) return false;
+    // 殼戰法效果未實作：不施放，SP／TP 都不動（PROG-2-0933）
+    if (!isBattleSkillImplemented(skillId)) return false;
 
     if (sourceType === SkillSourceType.SeedTactic) {
       return this.triggerPlayerSeedTactic({
@@ -616,6 +824,7 @@ export class BattleController {
    * 若結果為 "ongoing"，自動推進至下一回合（補充玩家糧草）。
    */
   public advanceTurn(): BattleResult {
+    this.runDelegateDeployBeforeTurn();
     if (!this.flowStateMachine.beginTurnResolution()) {
       return this.flowStateMachine.result ?? 'ongoing';
     }
@@ -626,6 +835,7 @@ export class BattleController {
   }
 
   public resolvePlayerTurn(): BattleResult {
+    this.runDelegateDeployBeforeTurn();
     if (!this.flowStateMachine.beginTurnResolution()) {
       return this.flowStateMachine.result ?? 'ongoing';
     }
@@ -698,6 +908,28 @@ export class BattleController {
     ];
   }
 
+  /**
+   * 非攻擊結算的傷害（位移受阻、七進七出穿透）：致死時與技能傷害一致，走陣亡流程
+   * （移出戰場、釋放格子、發 UnitDied、主將陣亡判定）。
+   */
+  private applyNonCombatDamage(target: TroopUnit, damage: number, damageSource: string): void {
+    const svc = services();
+    this.combatResolver.applyUnitDamage(target, damage, null, {
+      attackerId: null,
+      attackerLane: null,
+      attackerDepth: null,
+      damageSource,
+      allowDamageLink: false,
+    });
+    if (!target.isDead()) return;
+    if (target.id === this.playerGeneralUnitId) {
+      this.combatResolver.onGeneralUnitKilled(Faction.Player, svc);
+    } else if (target.id === this.enemyGeneralUnitId) {
+      this.combatResolver.onGeneralUnitKilled(Faction.Enemy, svc);
+    }
+    this.combatResolver.onUnitKilled(target, null, svc);
+  }
+
   private buildPlayerTurnPhaseExecutors(): readonly BattlePhaseExecutor[] {
     return [
       createBattlePhaseExecutor('player-auto-move', (context) => context.executePhase('player-auto-move')),
@@ -751,13 +983,9 @@ export class BattleController {
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
-          applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
-            attackerId: null,
-            attackerLane: null,
-            attackerDepth: null,
-            damageSource: 'forced-move',
-            allowDamageLink: false,
-          }),
+          getAptitudeMoveSetTo: (unit) => this.combatResolver.getUnitMoveSetTo(unit),
+          applyForcedMoveDamage: (unit, damage) => this.applyNonCombatDamage(unit, damage, 'forced-move'),
+          applyGhostPassDamage: (target, damage) => this.applyNonCombatDamage(target, damage, 'ghost-pass'),
         });
         return {};
       case 'enemy-auto-move':
@@ -770,13 +998,9 @@ export class BattleController {
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
           isGeneralUnit: (unitId) => this.combatResolver.isGeneralUnit(unitId),
           getAptitudeMoveDelta: (unit) => this.combatResolver.getUnitMoveDelta(unit),
-          applyForcedMoveDamage: (unit, damage) => this.combatResolver.applyUnitDamage(unit, damage, null, {
-            attackerId: null,
-            attackerLane: null,
-            attackerDepth: null,
-            damageSource: 'forced-move',
-            allowDamageLink: false,
-          }),
+          getAptitudeMoveSetTo: (unit) => this.combatResolver.getUnitMoveSetTo(unit),
+          applyForcedMoveDamage: (unit, damage) => this.applyNonCombatDamage(unit, damage, 'forced-move'),
+          applyGhostPassDamage: (target, damage) => this.applyNonCombatDamage(target, damage, 'ghost-pass'),
         });
         return {};
       case 'player-tile-effect':
@@ -789,6 +1013,10 @@ export class BattleController {
           applyUnitDamage: (unit, damage, attackerFaction, options) => this.combatResolver.applyUnitDamage(unit, damage, attackerFaction, options),
           onGeneralUnitKilled: (faction, svc) => this.combatResolver.onGeneralUnitKilled(faction, svc),
           onUnitKilled: (unit, killer, svc) => this.combatResolver.onUnitKilled(unit, killer, svc),
+          getTerrainVitalityDrain: (unit) => desertVitalityDrain(
+            this.state.getCell(unit.lane, unit.depth)?.terrain,
+            this.combatResolver.getUnitAptitude(unit).terrain,
+          ),
         });
         return {};
       case 'enemy-tile-effect':
@@ -800,6 +1028,10 @@ export class BattleController {
           applyUnitDamage: (unit, damage, attackerFaction, options) => this.combatResolver.applyUnitDamage(unit, damage, attackerFaction, options),
           onGeneralUnitKilled: (faction, svc) => this.combatResolver.onGeneralUnitKilled(faction, svc),
           onUnitKilled: (unit, killer, svc) => this.combatResolver.onUnitKilled(unit, killer, svc),
+          getTerrainVitalityDrain: (unit) => desertVitalityDrain(
+            this.state.getCell(unit.lane, unit.depth)?.terrain,
+            this.combatResolver.getUnitAptitude(unit).terrain,
+          ),
         });
         return {};
       case 'player-combat-resolve':
@@ -838,7 +1070,7 @@ export class BattleController {
           state: this.state,
           actingFaction: Faction.Player,
           turnManager: this.turnManager,
-          castEnemySeedTactic: (battleSkillId) => this.skillDispatcher.dispatchSeedTactic(Faction.Enemy, { battleSkillId }),
+          castEnemySeedTactic: (battleSkillId, tacticId) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId }),
         });
         return {};
       case 'enemy-special-resolve':
@@ -847,7 +1079,8 @@ export class BattleController {
           state: this.state,
           actingFaction: Faction.Enemy,
           turnManager: this.turnManager,
-          castEnemySeedTactic: (battleSkillId) => this.skillDispatcher.dispatchSeedTactic(Faction.Enemy, { battleSkillId }),
+          castEnemySeedTactic: (battleSkillId, tacticId) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId }),
+          chooseEnemyTactic: () => this.chooseEnemyTactic(),
         });
         if (phaseName === 'enemy-special-resolve' && this.state.battleTactic === BattleTactic.FloodAttack) {
           resolveBattleTacticBehavior(this.state.battleTactic).advanceTurn(this.state, {
@@ -907,6 +1140,11 @@ export class BattleController {
     this.applyWeatherForTurn(svc.battle.getSnapshot().turn);
     this.turnManager.refreshForNextTurn();
     this.orderRefusedThisTurn = this.rollOrderRefusal();
+    applySoloBreachAtTurnStart(
+      [...this.combatResolver.getFactionUnits(Faction.Player), ...this.combatResolver.getFactionUnits(Faction.Enemy)],
+      this.state.getGeneral(Faction.Player)?.id ?? null,
+      this.playerGeneralUnitId,
+    );
     this.tileBuffLifecycleManager.spawnTileBuffsForTurn();
   }
 
@@ -936,7 +1174,7 @@ export class BattleController {
 
   // ─── 勝敗判定 ─────────────────────────────────────────────────────────────
 
-  private canUsePlayerSkills(): boolean {
+  public canUsePlayerSkills(): boolean {
     return this.flowStateMachine.canUsePlayerSkills();
   }
 

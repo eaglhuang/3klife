@@ -107,6 +107,7 @@ const TALLY_TIER_STYLE: Record<TallyCardData['rarity'], {
 };
 
 import { TallyCardData } from '../../shared/TallyCardContract';
+export type { TallyCardData } from '../../shared/TallyCardContract';
 
 @ccclass('TigerTallyComposite')
 export class TigerTallyComposite extends CompositePanel {

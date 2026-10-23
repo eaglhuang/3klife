@@ -37,8 +37,8 @@ export function createHallMissionBoardSuite(): TestSuite {
 
     suite.test('難度上限隨官職提高（暫定對照表）', () => {
         const hell = task('h', { Difficulty: 'HELL' });
-        assert.equals(0, getVisibleHallTasks(PLAYER, [hell], 'Domestic').length);
-        assert.equals(1, getVisibleHallTasks({ ...PLAYER, rankTier: 4 }, [hell], 'Domestic').length);
+        assert.equals(0, getVisibleHallTasks({ ...PLAYER, rankTier: 4 }, [hell], 'Domestic').length);
+        assert.equals(1, getVisibleHallTasks({ ...PLAYER, rankTier: 5 }, [hell], 'Domestic').length);
     });
 
     suite.test('未知難度不顯示', () => {

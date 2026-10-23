@@ -1,0 +1,290 @@
+{
+  "id": "nurture-graduation-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "NurtureGraduationRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "NurtureGraduationCard",
+        "widget": {
+          "top": 120,
+          "left": 32
+        },
+        "width": 900,
+        "height": 760,
+        "skinSlot": "nurture.graduation.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "NurtureGraduationTitleLabel",
+            "id": "graduationTitle",
+            "widget": {
+              "top": 12,
+              "left": 16,
+              "right": 16
+            },
+            "height": 34,
+            "text": "畢業紀錄",
+            "styleSlot": "nurture.graduation.label.title"
+          },
+          {
+            "type": "panel",
+            "name": "GraduationRow0",
+            "id": "graduationRow0Box",
+            "widget": {
+              "top": 92,
+              "left": 16,
+              "right": 16
+            },
+            "height": 96,
+            "skinSlot": "nurture.graduation.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "GraduationRow0Label",
+                "id": "graduationRow0",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 12
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "nurture.graduation.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "GraduationRow1",
+            "id": "graduationRow1Box",
+            "widget": {
+              "top": 196,
+              "left": 16,
+              "right": 16
+            },
+            "height": 96,
+            "skinSlot": "nurture.graduation.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "GraduationRow1Label",
+                "id": "graduationRow1",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 12
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "nurture.graduation.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "GraduationRow2",
+            "id": "graduationRow2Box",
+            "widget": {
+              "top": 300,
+              "left": 16,
+              "right": 16
+            },
+            "height": 96,
+            "skinSlot": "nurture.graduation.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "GraduationRow2Label",
+                "id": "graduationRow2",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 12
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "nurture.graduation.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "GraduationRow3",
+            "id": "graduationRow3Box",
+            "widget": {
+              "top": 404,
+              "left": 16,
+              "right": 16
+            },
+            "height": 96,
+            "skinSlot": "nurture.graduation.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "GraduationRow3Label",
+                "id": "graduationRow3",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 12
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "nurture.graduation.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "GraduationRow4",
+            "id": "graduationRow4Box",
+            "widget": {
+              "top": 508,
+              "left": 16,
+              "right": 16
+            },
+            "height": 96,
+            "skinSlot": "nurture.graduation.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "GraduationRow4Label",
+                "id": "graduationRow4",
+                "widget": {
+                  "top": 8,
+                  "left": 12,
+                  "right": 12
+                },
+                "height": 80,
+                "text": "",
+                "styleSlot": "nurture.graduation.label.body"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "GraduationPager",
+            "widget": {
+              "bottom": 76,
+              "left": 16,
+              "right": 16
+            },
+            "height": 52,
+            "children": [
+              {
+                "type": "button",
+                "name": "GraduationPrevButton",
+                "id": "btnGradPrev",
+                "width": 150,
+                "height": 44,
+                "skinSlot": "nurture.graduation.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "GraduationPrevLabel",
+                    "id": "gradPrevLabel",
+                    "widget": {
+                      "top": 8,
+                      "left": 8,
+                      "right": 8
+                    },
+                    "height": 28,
+                    "text": "上一頁",
+                    "styleSlot": "nurture.graduation.label.button"
+                  }
+                ],
+                "widget": {
+                  "vCenter": true,
+                  "left": 0
+                }
+              },
+              {
+                "type": "label",
+                "name": "GraduationPageLabel",
+                "id": "graduationPage",
+                "widget": {
+                  "vCenter": true,
+                  "hCenter": true
+                },
+                "height": 36,
+                "text": "1 / 1",
+                "styleSlot": "nurture.graduation.label.body"
+              },
+              {
+                "type": "button",
+                "name": "GraduationNextButton",
+                "id": "btnGradNext",
+                "width": 150,
+                "height": 44,
+                "skinSlot": "nurture.graduation.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "GraduationNextLabel",
+                    "id": "gradNextLabel",
+                    "widget": {
+                      "top": 8,
+                      "left": 8,
+                      "right": 8
+                    },
+                    "height": 28,
+                    "text": "下一頁",
+                    "styleSlot": "nurture.graduation.label.button"
+                  }
+                ],
+                "widget": {
+                  "vCenter": true,
+                  "right": 0
+                }
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "CloseGraduationButton",
+            "id": "btnGradClose",
+            "widget": {
+              "bottom": 12,
+              "left": 16,
+              "right": 16
+            },
+            "height": 44,
+            "skinSlot": "nurture.graduation.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "CloseGraduationLabel",
+                "id": "closeGraduationLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "關閉",
+                "styleSlot": "nurture.graduation.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

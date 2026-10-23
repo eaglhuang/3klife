@@ -1,3 +1,4 @@
+import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import { normalizeTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { readCardStarState } from '../systems/TigerTallyStar';
 import { normalizeDomesticLog, type DomesticSeasonLog } from '../systems/DomesticTasks';
@@ -26,15 +27,33 @@ import { RandomState, validateRandomState } from '../systems/SeededRandom';
 import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
 import type { TallyHolder } from '../systems/TigerTallyHoldings';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
+import type { InventoryRecord } from '../systems/InventoryProjection';
+import { normalizeInventoryRecords } from '../systems/InventoryRecordBridge';
 import { normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeDynamicRelations } from '../systems/KinDynamicRelations';
 import { normalizeLegacyCount } from '../systems/LegacyAchievement';
+import { initialOfficerState, normalizeOfficerState, type OfficerState } from '../systems/OfficerState';
 import type { DynamicRelation } from '../systems/KinRelation';
 import { normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { SAVE_VERSION_LATEST, saveVersionOf } from '../storage/SaveVersion';
+import { normalizeYearAgingEvents } from '../systems/YearReport';
+import type { AgingEvent } from '../systems/GeneralAging';
+import { mapSnapshotToSixTables } from './PlayerSaveTableRows';
+import { normalizeBorrowLedger, type BorrowLedger } from '../systems/FriendBorrow';
+import { normalizeSoulFragmentLedger, type SoulFragmentLedger } from '../systems/SoulFragmentLedger';
+import {
+    normalizeGovernanceAssignments,
+    normalizeJournalEntries,
+    normalizeKeepTerritories,
+} from '../systems/LifespanSave';
+import type { GovernanceAssignment } from '../systems/GovernanceAssignment';
+import type { KeepTerritory } from '../systems/HereditaryKeep';
+import type { JournalEntry } from '../systems/JournalLog';
 
 export const PLAYER_SAVE_KEY = 'player.save';
+/** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
+export const PLAYER_SAVE_BACKUP_SUFFIX = '.bak';
 /** deck 為後加的選填欄位（讀舊檔補 []），所以版本維持 1，不讓既有存檔失效 */
 export const PLAYER_SAVE_SCHEMA_VERSION = 1;
 
@@ -82,16 +101,38 @@ export interface PlayerSaveSnapshot {
     dynamicRelations?: DynamicRelation[];
     /** Legacy_Count（跨世代成就次數，RET-07）；後加的選填欄位，舊檔讀回為 0 */
     legacyCount?: number;
+    /** 已傳道過的名將 id（MENT-15 一生一次）；後加的選填欄位，舊檔讀回為空陣列 */
+    legendaryMentoringUsedIds?: string[];
+    /** 官職狀態（OFC-03）：階位、經驗、解鎖歷史；舊檔沒有此欄位時讀回為階位 1；版號不升（扁平欄位） */
+    officerState?: OfficerState;
+    /** 世界沙盤已放置標記數（OFC-06）；扁平選填欄位，舊檔沒有時讀回 0；版號不升 */
+    sandtableMarkersPlaced?: number;
+    /** 標記所在領地 id（PROG-2-0965）；舊檔沒有時讀回空陣列；版號不升 */
+    sandtableMarkerTerritories?: string[];
+    /** 內政任務格的武將指派（PROG-2-0975）；舊檔沒有時讀回空陣列；版號不升 */
+    governanceAssignments?: GovernanceAssignment[];
+    /** 領地清單含主城（PROG-2-0975）；舊檔沒有時讀回只有主城的預設清單；版號不升 */
+    territories?: KeepTerritory[];
+    /** 武將日誌條目（PROG-2-0975）；舊檔沒有時讀回空陣列；版號不升 */
+    journalEntries?: JournalEntry[];
+    /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
+    gachaMentorJournal?: GachaMentorJournalEntry[];
+    /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
+    hallAssignLog?: HallAssignLogEntry[];
     /** 武將 id → 虎符忠誠度狀態（TRP-09）；後加的選填欄位，舊檔讀回補空物件 */
     tallyLoyalty?: Record<string, TallyLoyaltyState>;
     /** 虎符 uid → 持有者（null 為君主）（TRP-08）；後加的選填欄位，舊檔讀回補空物件 */
     tallyHoldings?: Record<string, TallyHolder>;
     /** 虎符卡資料（uid → 卡）；後加的選填欄位，舊檔讀回補空物件 */
     tallyCards?: Record<string, TigerTallyCard>;
+    /** 統一物件庫列（DS-08 canonical，PROG-2-1021）；舊檔沒有時由虎符卡與持有表重建 */
+    inventoryRecords?: InventoryRecord[];
     /** 女性武將來源（uid → 來源，FEM-01）；後加的選填欄位，舊檔讀回補空物件 */
     femaleSources?: Record<string, FemaleSource>;
     /** 主動指令（培育／結緣）造成、尚未進季結結算的武將死亡；後加的選填欄位，舊檔讀回為空陣列（PROG-2-0222） */
     pendingLifespanDeaths?: PendingLifespanDeath[];
+    /** 本年（未滿 4 季）累積的老化事件，供年終年報計數；後加的選填欄位，舊檔讀回為空陣列（PROG-2-0815） */
+    yearAgingEvents?: AgingEvent[];
     /** 轉蛋各池保底計數（poolId → 累計抽數）；後加的選填欄位，舊檔讀回為空（從 0 開始）（PROG-2-0337） */
     gachaPity?: GachaPityBook;
     /** 轉蛋錢包（玉／金幣／召喚券）；後加的選填欄位，舊檔讀回為 undefined（由轉蛋服務改讀舊 localStorage 一次）（PROG-2-0338） */
@@ -108,8 +149,28 @@ export interface PlayerSaveSnapshot {
     onboarding?: OnboardingState;
     /** 結義點數餘額；後加的選填欄位，舊檔讀回為 0（GCH-06） */
     bondPoints?: number;
+    /** 好友借用帳本；後加的選填欄位，舊檔讀回為空帳本（MENT-14，PROG-2-0745） */
+    friendBorrowLedger?: BorrowLedger;
+    /** 戰魂碎片帳本（以亡者 uid 為鍵）；後加的選填欄位，舊檔讀回為空（SAME-08，PROG-2-1056） */
+    soulFragments?: SoulFragmentLedger;
     /** 趕路（回合制）；後加的選填欄位，舊檔讀回為沒有趕路（PROG-2-0475） */
     travelCountdown?: TravelCountdown;
+    /** 編制預設（DEP-14）：主將 id → 參謀官 / 後勤官；舊檔沒有此欄位時視為空 */
+    sortiePresets?: Readonly<Record<string, { strategistUid: string | null; deputyUid: string | null }>>;
+}
+
+/** 讀回編制預設：只保留格式正確的條目；缺欄位、非物件一律丟棄（舊存檔視為空） */
+export function normalizeSortiePresets(raw: unknown): Record<string, { strategistUid: string | null; deputyUid: string | null }> {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+    const out: Record<string, { strategistUid: string | null; deputyUid: string | null }> = {};
+    for (const [commanderId, value] of Object.entries(raw as Record<string, unknown>)) {
+        if (!value || typeof value !== 'object') continue;
+        const entry = value as { strategistUid?: unknown; deputyUid?: unknown };
+        const strategistUid = typeof entry.strategistUid === 'string' ? entry.strategistUid : null;
+        const deputyUid = typeof entry.deputyUid === 'string' ? entry.deputyUid : null;
+        out[commanderId] = { strategistUid, deputyUid };
+    }
+    return out;
 }
 
 /** 虎符卡表：只保留 uid 與 templateId 為非空字串的卡；非物件視為沒有紀錄 */
@@ -133,7 +194,8 @@ export function normalizeTallyHoldingsMap(value: unknown): Record<string, TallyH
     const out: Record<string, TallyHolder> = {};
     for (const [uid, holder] of Object.entries(value as Record<string, unknown>)) {
         if (uid.length === 0) continue;
-        if (holder === null || (typeof holder === 'string' && holder.length > 0)) out[uid] = holder;
+        if (holder === null) out[uid] = null;
+        else if (typeof holder === 'string' && holder.length > 0) out[uid] = holder;
     }
     return out;
 }
@@ -167,6 +229,11 @@ export function normalizeClearedStageIds(value: unknown): string[] {
 }
 
 /** 收藏武將 id：去重、略過空字串與非字串；壞資料補空陣列（PROG-2-0453） */
+/** 已傳道過的名將 id（MENT-15）：只保留字串，非陣列回傳空陣列 */
+export function normalizeLegendaryMentoringUsedIds(value: unknown): string[] {
+    return Array.isArray(value) ? value.filter((id): id is string => typeof id === 'string') : [];
+}
+
 export function normalizeFavoriteGeneralIds(value: unknown): string[] {
     if (!Array.isArray(value)) return [];
     const seen = new Set<string>();
@@ -194,6 +261,68 @@ function normalizeDiscoveryExp(value: unknown): number {
     return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? Math.floor(value) : 0;
 }
 
+/** 世界沙盤標記數：非正數、非有限數一律視為 0；小數無條件捨去（OFC-06） */
+/** 抽卡待補教官卡的一筆紀錄；id 用來在教官卡寫入完成後移除這一筆 */
+export interface GachaMentorJournalEntry {
+    id: string;
+    drawn: GeneralConfig[];
+    time: { currentYear: number; currentSeason: number };
+    poolId: string | undefined;
+}
+
+/** 委任紀錄的存檔形狀；與 HallAutoAssignRecord 相同，這裡只做讀檔正規化 */
+export interface HallAssignLogEntry {
+    taskId: string;
+    generalId: string;
+    assignedAt: string;
+    outcome?: 'success' | 'failure';
+    settledAt?: string;
+    /** 任務難度與任務牆（PROG-2-1015 季結自動結算用）；舊檔缺省 */
+    difficulty?: string;
+    board?: 'Military' | 'Domestic' | 'Expedition';
+}
+
+export function normalizeHallAssignLog(raw: unknown): HallAssignLogEntry[] {
+    if (!Array.isArray(raw)) return [];
+    return raw
+        .filter((entry): entry is HallAssignLogEntry => !!entry && typeof entry.taskId === 'string' && typeof entry.generalId === 'string' && typeof entry.assignedAt === 'string')
+        .map((entry) => ({
+            taskId: entry.taskId,
+            generalId: entry.generalId,
+            assignedAt: entry.assignedAt,
+            ...(entry.outcome === 'success' || entry.outcome === 'failure' ? { outcome: entry.outcome } : {}),
+            ...(typeof entry.settledAt === 'string' ? { settledAt: entry.settledAt } : {}),
+            ...(typeof entry.difficulty === 'string' ? { difficulty: entry.difficulty } : {}),
+            ...(entry.board === 'Military' || entry.board === 'Domestic' || entry.board === 'Expedition' ? { board: entry.board } : {}),
+        }));
+}
+
+export function normalizeGachaMentorJournal(raw: unknown): GachaMentorJournalEntry[] {
+    if (!Array.isArray(raw)) return [];
+    return raw
+        .filter((entry): entry is GachaMentorJournalEntry => !!entry && typeof entry.id === 'string' && Array.isArray(entry.drawn))
+        .map((entry) => ({
+            id: entry.id,
+            drawn: entry.drawn.map((general) => ({ ...general })),
+            time: { currentYear: Number(entry.time?.currentYear) || 0, currentSeason: Number(entry.time?.currentSeason) || 0 },
+            poolId: typeof entry.poolId === 'string' ? entry.poolId : undefined,
+        }));
+}
+
+export function normalizeSandtableMarkersPlaced(raw: unknown): number {
+    return typeof raw === 'number' && Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 0;
+}
+
+/** 標記所在領地：只留清單內的 id、去重、保留順序；非陣列視為空（PROG-2-0965） */
+export function normalizeSandtableMarkerTerritories(raw: unknown): string[] {
+    if (!Array.isArray(raw)) return [];
+    const out: string[] = [];
+    for (const id of raw) {
+        if (typeof id === 'string' && isSandtableTerritory(id) && !out.includes(id)) out.push(id);
+    }
+    return out;
+}
+
 export function createPlayerSaveSnapshot(
     gameTime: GameTimeState,
     roster: readonly GeneralConfig[],
@@ -218,6 +347,9 @@ export function createPlayerSaveSnapshot(
     hallAssignments: Readonly<Record<string, string>> = {},
     dynamicRelations: readonly DynamicRelation[] = [],
     legacyCount = 0,
+    officerState: Readonly<OfficerState> = initialOfficerState(),
+    sandtableMarkersPlaced = 0,
+    sandtableMarkerTerritories: readonly string[] = [],
 ): PlayerSaveSnapshot {
     return {
         schemaVersion: PLAYER_SAVE_SCHEMA_VERSION,
@@ -245,6 +377,9 @@ export function createPlayerSaveSnapshot(
         ...(Object.keys(normalizeHallAssignments(hallAssignments)).length > 0 ? { hallAssignments: normalizeHallAssignments(hallAssignments) } : {}),
         ...(dynamicRelations.length > 0 ? { dynamicRelations: normalizeDynamicRelations(dynamicRelations) } : {}),
         ...(normalizeLegacyCount(legacyCount) > 0 ? { legacyCount: normalizeLegacyCount(legacyCount) } : {}),
+        ...(officerState.currentTier > 1 || officerState.officerExp > 0 ? { officerState: normalizeOfficerState(officerState) } : {}),
+        ...(normalizeSandtableMarkersPlaced(sandtableMarkersPlaced) > 0 ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(sandtableMarkersPlaced) } : {}),
+        ...(normalizeSandtableMarkerTerritories(sandtableMarkerTerritories).length > 0 ? { sandtableMarkerTerritories: normalizeSandtableMarkerTerritories(sandtableMarkerTerritories) } : {}),
     };
 }
 
@@ -304,11 +439,14 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         tallyCards: normalizeTallyCardsMap(snapshot.tallyCards),
         femaleSources: normalizeFemaleSourcesMap(snapshot.femaleSources),
         pendingLifespanDeaths: normalizePendingLifespanDeaths(snapshot.pendingLifespanDeaths),
+        yearAgingEvents: normalizeYearAgingEvents(snapshot.yearAgingEvents),
         ...(snapshot.resources !== undefined && snapshot.resources !== null ? { resources: { fame: normalizeFame((snapshot.resources as { fame?: unknown }).fame), scorePoints: normalizeScorePoints((snapshot.resources as { scorePoints?: unknown }).scorePoints), autoNurtureTickets: normalizeAutoNurtureTickets((snapshot.resources as { autoNurtureTickets?: unknown }).autoNurtureTickets), mainlineNurtureClearedOnce: normalizeFlag((snapshot.resources as { mainlineNurtureClearedOnce?: unknown }).mainlineNurtureClearedOnce), ...optionalFlag((snapshot.resources as { firstBattleCleared?: unknown }).firstBattleCleared, 'firstBattleCleared'), ...optionalFlag((snapshot.resources as { openingRedFaceShown?: unknown }).openingRedFaceShown, 'openingRedFaceShown') } } : {}),
         ...(snapshot.domestic !== undefined ? { domestic: normalizeDomesticLog(snapshot.domestic) } : {}),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
         ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),
+        ...(snapshot.friendBorrowLedger !== undefined ? { friendBorrowLedger: normalizeBorrowLedger(snapshot.friendBorrowLedger) } : {}),
+        ...(snapshot.soulFragments !== undefined ? { soulFragments: normalizeSoulFragmentLedger(snapshot.soulFragments) } : {}),
         ...(normalizeTravelCountdown(snapshot.travelCountdown) ? { travelCountdown: normalizeTravelCountdown(snapshot.travelCountdown)! } : {}),
         ...(snapshot.gachaPity !== undefined ? { gachaPity: normalizeGachaPityBook(snapshot.gachaPity) } : {}),
         ...(snapshot.gachaWallet !== undefined ? { gachaWallet: normalizeGachaWalletSave(snapshot.gachaWallet) } : {}),
@@ -317,6 +455,18 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.hallAssignments !== undefined ? { hallAssignments: normalizeHallAssignments(snapshot.hallAssignments) } : {}),
         ...(snapshot.dynamicRelations !== undefined ? { dynamicRelations: normalizeDynamicRelations(snapshot.dynamicRelations) } : {}),
         ...(snapshot.legacyCount !== undefined ? { legacyCount: normalizeLegacyCount(snapshot.legacyCount) } : {}),
+        ...(snapshot.officerState !== undefined ? { officerState: normalizeOfficerState(snapshot.officerState) } : {}),
+        ...(snapshot.sandtableMarkersPlaced !== undefined ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced) } : {}),
+        ...(snapshot.sandtableMarkerTerritories !== undefined ? { sandtableMarkerTerritories: normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories) } : {}),
+        ...(snapshot.governanceAssignments !== undefined ? { governanceAssignments: normalizeGovernanceAssignments(snapshot.governanceAssignments) } : {}),
+        ...(snapshot.territories !== undefined ? { territories: normalizeKeepTerritories(snapshot.territories) } : {}),
+        ...(snapshot.journalEntries !== undefined ? { journalEntries: normalizeJournalEntries(snapshot.journalEntries) } : {}),
+        ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
+        ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
+        ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
+        // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
+        ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
+        ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
     };
 }
 
@@ -374,6 +524,8 @@ function normalizePendingLifespanDeaths(value: unknown): PendingLifespanDeath[] 
 
 export class PlayerSaveService {
     private _ready: Promise<void> | null = null;
+    private _lastLoadRecoveredFromBackup = false;
+    private _lastSixTableErrors: readonly string[] = [];
 
     constructor(private readonly _adapter: DataStorageAdapter, private readonly _key: string = PLAYER_SAVE_KEY) {}
 
@@ -381,21 +533,67 @@ export class PlayerSaveService {
         return this._adapter.adapterName;
     }
 
-    public async save(snapshot: PlayerSaveSnapshot): Promise<void> {
-        await this._ensureReady();
-        await this._adapter.set(this._key, validatePlayerSaveSnapshot(snapshot));
+    /** 最近一次 load() 是否改從備份讀回（DS-14）；每次 load() 都會重設 */
+    public lastLoadRecoveredFromBackup(): boolean {
+        return this._lastLoadRecoveredFromBackup;
     }
 
-    /** 沒有存檔時回傳 null；有存檔但格式錯誤時拋錯 */
+    /** 最近一次存檔時六表列驗證的錯誤（MVP-12）；只回報，不阻擋存檔 */
+    public lastSixTableErrors(): readonly string[] {
+        return this._lastSixTableErrors;
+    }
+
+    /**
+     * 寫入新存檔前，若目前主檔有效，先把它保留到備份槽（DS-14）。
+     * 主檔已損壞時不覆蓋既有備份，避免好的備份被壞檔取代。
+     */
+    public async save(snapshot: PlayerSaveSnapshot): Promise<void> {
+        await this._ensureReady();
+        const validated = validatePlayerSaveSnapshot(snapshot);
+        this._lastSixTableErrors = mapSnapshotToSixTables(validated).errors;
+        const previous = await this._adapter.get<unknown>(this._key);
+        if (previous !== null && this._isValid(previous)) {
+            await this._adapter.set(this._backupKey, previous);
+        }
+        await this._adapter.set(this._key, validated);
+    }
+
+    /**
+     * 沒有存檔時回傳 null；主檔格式錯誤時退回備份並記錄（DS-14）。
+     * 備份也無效或沒有備份時，拋出主檔的錯誤。
+     */
     public async load(): Promise<PlayerSaveSnapshot | null> {
         await this._ensureReady();
+        this._lastLoadRecoveredFromBackup = false;
         const raw = await this._adapter.get<unknown>(this._key);
-        return raw === null ? null : validatePlayerSaveSnapshot(raw);
+        if (raw === null) return null;
+        try {
+            return validatePlayerSaveSnapshot(raw);
+        } catch (error) {
+            const backup = await this._adapter.get<unknown>(this._backupKey);
+            if (backup === null || !this._isValid(backup)) throw error;
+            this._lastLoadRecoveredFromBackup = true;
+            return validatePlayerSaveSnapshot(backup);
+        }
     }
 
     public async clear(): Promise<void> {
         await this._ensureReady();
         await this._adapter.delete(this._key);
+        await this._adapter.delete(this._backupKey);
+    }
+
+    private get _backupKey(): string {
+        return `${this._key}${PLAYER_SAVE_BACKUP_SUFFIX}`;
+    }
+
+    private _isValid(raw: unknown): boolean {
+        try {
+            validatePlayerSaveSnapshot(raw);
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     /** 第一次存取時才初始化後端（例如開啟 IndexedDB），之後重用同一個 Promise */

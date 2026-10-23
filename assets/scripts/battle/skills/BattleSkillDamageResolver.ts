@@ -4,6 +4,7 @@ import { fateBlessingLevel, fateDamageMultiplier } from '../../core/systems/Fate
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { TroopUnit } from '../../core/models/TroopUnit';
 import { FormulaSystem } from '../../core/systems/FormulaSystem';
+import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import type { SkillScalingStat } from '../../shared/SkillRuntimeContract';
 import type { BattleSkillExecutionContext } from './BattleSkillResolver';
 import type { BattleSkillProfile } from './BattleSkillProfiles';
@@ -35,7 +36,8 @@ export class BattleSkillDamageResolver {
       defenderTerrain: context.getTerrain(target.lane, target.depth),
       attackBonus: caster.attackBonus,
     });
-    const baseDamage = this.applyCharge(profile, context, caster, target, rawBaseDamage);
+    const chargedDamage = this.applyCharge(profile, context, caster, target, rawBaseDamage);
+    const baseDamage = this.applyFirstTurn(profile, context, chargedDamage);
 
     const weatherMultiplier = fireDamageMultiplier(profile.tags ?? [], context.getWeather?.() ?? Weather.Clear);
     const stageMultiplier = profile.hitStageMultipliers?.[stageIndex] ?? 1;
@@ -47,8 +49,10 @@ export class BattleSkillDamageResolver {
       : 1;
     const fated = fateMultiplier === 1 ? weathered : Math.max(1, Math.floor(weathered * fateMultiplier));
 
-    if (profile.critBonus) {
-      return Math.max(1, Math.floor(fated * (1 + profile.critBonus)));
+    // 爆擊率加成（百步穿楊 +50%）：以基礎爆擊率加成後擲骰，爆擊 ×1.5；沒有亂數源的測試 context 視為不爆擊
+    if (profile.critRateBonus && context.randomSource) {
+      const rate = critRateOf(profile.critRateBonus);
+      return rollCrit(rate, context.randomSource) ? critDamageOf(fated) : fated;
     }
     return fated;
   }
@@ -72,6 +76,18 @@ export class BattleSkillDamageResolver {
       return baseDamage;
     }
     return Math.max(1, Math.floor(baseDamage * profile.chargeMultiplier));
+  }
+
+  /** 威震華夏（PROG-2-0773）：戰鬥第 1 回合傷害 × firstTurnDamageMultiplier；其他回合不變 */
+  private applyFirstTurn(
+    profile: BattleSkillProfile,
+    context: BattleSkillExecutionContext,
+    baseDamage: number,
+  ): number {
+    if (!profile.firstTurnDamageMultiplier || context.getTurnNumber?.() !== 1) {
+      return baseDamage;
+    }
+    return Math.max(1, Math.floor(baseDamage * profile.firstTurnDamageMultiplier));
   }
 
   private resolveScaledAttack(

@@ -1,0 +1,369 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "TASK-UI-9001",
+  "title": "人物頁 chrome 與擷取診斷拆分",
+  "status": "done",
+  "milestone": null,
+  "dependencies": [],
+  "acceptance": [],
+  "deliverables": [
+    "assets/scripts/ui/components/GeneralDetailComposite.ts",
+    "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts",
+    "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts.meta",
+    "tools_node/capture-ui-screens.js",
+    "tools_node/lib/ui-capture-diagnostics.js",
+    "tests/ucuf/architectureGovernance.test.ts",
+    "tests/ucuf/fixtures/architectureEngineStubs.ts",
+    "tests/ucuf/generalDetailChromePresenter.test.ts",
+    "docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md"
+  ],
+  "scopePaths": [
+    "assets/scripts/ui/components/GeneralDetailComposite.ts",
+    "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts",
+    "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts.meta",
+    "tools_node/capture-ui-screens.js",
+    "tools_node/lib/ui-capture-diagnostics.js",
+    "tests/ucuf/architectureGovernance.test.ts",
+    "tests/ucuf/fixtures/architectureEngineStubs.ts",
+    "tests/ucuf/generalDetailChromePresenter.test.ts",
+    "docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md",
+    "docs/agent-briefs/tasks/TASK-UI-9001.md",
+    "docs/ui-quality-tasks/TASK-UI-9001.json",
+    "docs/ui-quality-todo.json",
+    "docs/agent-briefs/tasks_index.md",
+    ".atm/history/evidence/TASK-UI-9001.*",
+    ".atm/history/task-events/TASK-UI-9001/**",
+    ".atm/history/tasks/TASK-UI-9001.json",
+    "docs/ai_atomic_framework/atm-backlog-shards/**"
+  ],
+  "validators": [
+    "node node_modules/ts-node/dist/bin.js --project tsconfig.test.json tests/ucuf/generalDetailChromePresenter.test.ts --verify-extraction-ceilings",
+    "npm run test:ucuf:governance",
+    "npm run test:ucuf",
+    "node tools_node/validate-ui-specs.js --strict --check-content-contract",
+    "node tools_node/compute-gate.js --profile standard --agent-feedback",
+    "node tools_node/check-general-detail-lobby-flow-smoke.js",
+    "git diff --check"
+  ],
+  "planningRepo": null,
+  "targetRepo": null,
+  "closureAuthority": null,
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "planningArtifacts": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": null,
+  "rollbackStrategy": null,
+  "rollbackNotes": null,
+  "atomizationImpact": {
+    "ownerAtomOrMap": null,
+    "atomCid": null,
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [
+    {
+      "code": "ATM_TASK_IMPORT_LEGACY_VALIDATOR_PROJECTION",
+      "severity": "warning",
+      "field": "validators",
+      "message": "Command-only validators were projected to 7 advisory legacy case id(s) for migration. Prefer requiredTestCaseIds / testContributions for new cards."
+    },
+    {
+      "code": "ATM_TASK_IMPORT_EXTRACTION_FIRST_CANDIDATE",
+      "severity": "warning",
+      "field": "atomizationImpact",
+      "message": "Scope touches 3 module(s) over 600 lines but the card declares no atomizationImpact.extractionCandidates. Extraction-first is the ATM default: propose an atom/atom-map extraction (see .agents/skills/atm-atom-map-refactor), or record disposition \"inline\" with an inlineReason approved by a human.",
+      "candidates": [
+        "assets/scripts/ui/components/GeneralDetailComposite.ts (897 lines)",
+        "tools_node/capture-ui-screens.js (1554 lines)",
+        "docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md (856 lines)"
+      ]
+    }
+  ],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "docs/agent-briefs/tasks/TASK-UI-9001.md",
+    "sectionTitle": "TASK-UI-9001",
+    "headingLine": 1,
+    "hash": "9e38a41c1429f48f",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "C:/Users/User/.codex/worktrees/general-detail-chrome-maintenance/3KLife",
+      "taskCardPath": "docs/agent-briefs/tasks/TASK-UI-9001.md",
+      "planningCommitSha": null,
+      "contentDigest": "sha256:7d83b225d65fad45655b30d0024ca497c20fdad7cc1840a20db9497c661455a8",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-10-20T23:26:15.274Z"
+    }
+  },
+  "importedAt": "2026-10-20T23:26:15.274Z",
+  "workAdmission": {
+    "recoveryMode": "auto",
+    "resolvedRecoveryMode": "enabled",
+    "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
+  },
+  "causalGraph": {
+    "causalDependencies": [],
+    "startConditions": [],
+    "softRelations": [],
+    "changedPublicSeams": [],
+    "causalImpactEdges": [],
+    "parallelFrontierInputs": [],
+    "validatorReferences": [],
+    "phaseOwner": null
+  },
+  "testContributions": [],
+  "requiredTestCaseIds": [],
+  "phaseTestCaseIds": [],
+  "advisoryTestCaseIds": [],
+  "legacyValidatorProjection": [
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_node.node.modules.ts.node.dist.bin.js.project.tsconfig.test.json.tests.ucuf.generaldetailchromepresenter.test.ts.verify.extraction.ceilings",
+      "command": "node node_modules/ts-node/dist/bin.js --project tsconfig.test.json tests/ucuf/generalDetailChromePresenter.test.ts --verify-extraction-ceilings",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    },
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_npm.run.test.ucuf.governance",
+      "command": "npm run test:ucuf:governance",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    },
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_npm.run.test.ucuf",
+      "command": "npm run test:ucuf",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    },
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_node.tools.node.validate.ui.specs.js.strict.check.content.contract",
+      "command": "node tools_node/validate-ui-specs.js --strict --check-content-contract",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    },
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_node.tools.node.compute.gate.js.profile.standard.agent.feedback",
+      "command": "node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    },
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_node.tools.node.check.general.detail.lobby.flow.smoke.js",
+      "command": "node tools_node/check-general-detail-lobby-flow-smoke.js",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    },
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_git.diff.check",
+      "command": "git diff --check",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    }
+  ],
+  "dependencyClassification": {
+    "schemaId": "atm.taskDependencyClassification.v1",
+    "semantics": "legacy",
+    "edges": []
+  },
+  "frontmatterFidelity": {
+    "schemaId": "atm.taskFrontmatterFidelity.v1",
+    "specVersion": "0.1.0",
+    "ok": true,
+    "checkedFields": [],
+    "findings": []
+  },
+  "lastTransitionId": "2026-10-21T03-56-38-735Z-close-49f8b947f054",
+  "lastTransitionAt": "2026-10-21T03:56:38.735Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "owner": "codex-gpt-6",
+  "reservedAt": "2026-10-20T23:26:21.776Z",
+  "promotedAt": "2026-10-20T23:26:21.780Z",
+  "claim": {
+    "actorId": "codex-gpt-6",
+    "leaseId": "lease-6b86f5fb505a",
+    "claimedAt": "2026-10-20T23:26:21.784Z",
+    "heartbeatAt": "2026-10-21T03:56:38.667Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/evidence/TASK-UI-9001.*",
+      ".atm/history/task-events/TASK-UI-9001/**",
+      ".atm/history/tasks/TASK-UI-9001.json",
+      "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts",
+      "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts.meta",
+      "assets/scripts/ui/components/GeneralDetailComposite.ts",
+      "docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md",
+      "docs/ai_atomic_framework/atm-backlog-shards/**",
+      "docs/ui-quality-tasks/TASK-UI-9001.json",
+      "docs/ui-quality-todo.json",
+      "tests/ucuf/architectureGovernance.test.ts",
+      "tests/ucuf/fixtures/architectureEngineStubs.ts",
+      "tests/ucuf/generalDetailChromePresenter.test.ts",
+      "tools_node/capture-ui-screens.js",
+      "tools_node/lib/ui-capture-diagnostics.js"
+    ],
+    "state": "released",
+    "laneSession": {
+      "laneSessionId": "lane-20261021035552-codex-gpt-6-8bd918bf52",
+      "status": "active",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261021035552-codex-gpt-6-8bd918bf52\""
+    },
+    "reason": "closed"
+  },
+  "startedAt": "2026-10-20T23:26:21.784Z",
+  "startedByActor": "codex-gpt-6",
+  "workAdmissionTicket": {
+    "schemaId": "atm.workAdmissionTicket.v1",
+    "specVersion": "0.1.0",
+    "ticketId": "wat-ae2afdf319af5c2c",
+    "ticketDigest": "sha256:ae2afdf319af5c2cddef31789cc7b323626cc17c37d644c38af497641cde5e7c",
+    "taskId": "TASK-UI-9001",
+    "origin": "claim",
+    "actorId": "codex-gpt-6",
+    "laneSessionId": "lane-20261021035552-codex-gpt-6-8bd918bf52",
+    "claimGeneration": "lease-6b86f5fb505a",
+    "issuedAt": "2026-10-21T03:55:52.831Z",
+    "expiresAt": "2026-10-21T04:25:52.831Z",
+    "scopeDigest": "sha256:537c10e3ee66d009622c41774423882546a0f6fca4dfa739a250ca6a8a611f0a",
+    "runnerSelection": {
+      "runnerKind": "frozen",
+      "runnerRef": "release/atm-onefile/atm.mjs",
+      "selectedAt": "2026-10-21T03:55:52.831Z"
+    },
+    "grants": [
+      {
+        "kind": "file-write",
+        "values": [
+          ".atm/history/evidence/TASK-UI-9001.*",
+          ".atm/history/evidence/git-head.json",
+          ".atm/history/task-events/TASK-UI-9001/**",
+          ".atm/history/tasks/TASK-UI-9001.json",
+          "assets/scripts/ui/components/GeneralDetailComposite.ts",
+          "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts",
+          "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts.meta",
+          "docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md",
+          "docs/ai_atomic_framework/atm-backlog-shards/**",
+          "docs/ui-quality-tasks/TASK-UI-9001.json",
+          "docs/ui-quality-todo.json",
+          "tests/ucuf/architectureGovernance.test.ts",
+          "tests/ucuf/fixtures/architectureEngineStubs.ts",
+          "tests/ucuf/generalDetailChromePresenter.test.ts",
+          "tools_node/capture-ui-screens.js",
+          "tools_node/lib/ui-capture-diagnostics.js"
+        ],
+        "digest": "sha256:cc06bd5ada7d95c2986ac60477b26acc9054077533749c8b267471f983479a00"
+      },
+      {
+        "kind": "lifecycle-operation",
+        "values": [
+          "close",
+          "commit",
+          "push",
+          "stage",
+          "write"
+        ],
+        "digest": "sha256:a2f98ae20b476885ded7ed9f79b94ad99cf2b615779e9a8cc266680fc60f009f"
+      },
+      {
+        "kind": "process-manifest",
+        "values": [],
+        "digest": "sha256:706ceedd89f6ac8c08a76e915fa88ba979c4552a0890c95d8f9e01cc090afb8f"
+      }
+    ],
+    "deferredForeignResidue": [],
+    "recovery": {
+      "requestedMode": "auto",
+      "resolvedMode": "enabled",
+      "reasons": [
+        "complex-task"
+      ],
+      "maxSavePoints": 2,
+      "perTaskByteBudget": 16777216,
+      "repositoryByteBudget": 268435456,
+      "handoffTtlSeconds": 604800,
+      "tempRoot": ".atm/runtime/work-admission-temp",
+      "policyDigest": "sha256:bcb386515289e44fdcd42d646710ef1c28605e33ad8bd67ced526a53dc2fa9eb"
+    }
+  },
+  "startedBySessionId": "session-20261020232621-codex-gpt-6-TASK-UI-9001-d908939b14",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "TASK-UI-9001",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/history/evidence/TASK-UI-9001.*",
+      ".atm/history/task-events/TASK-UI-9001/**",
+      ".atm/history/tasks/TASK-UI-9001.json",
+      "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts",
+      "assets/scripts/ui/components/character-ds3/GeneralDetailChromePresenter.ts.meta",
+      "assets/scripts/ui/components/GeneralDetailComposite.ts",
+      "docs/ai_atomic_framework/ATM_BUG_OPTIMIZATION_BACKLOG.md",
+      "docs/ai_atomic_framework/atm-backlog-shards/**",
+      "docs/ui-quality-tasks/TASK-UI-9001.json",
+      "docs/ui-quality-todo.json",
+      "tests/ucuf/architectureGovernance.test.ts",
+      "tests/ucuf/fixtures/architectureEngineStubs.ts",
+      "tests/ucuf/generalDetailChromePresenter.test.ts",
+      "tools_node/capture-ui-screens.js",
+      "tools_node/lib/ui-capture-diagnostics.js"
+    ],
+    "planningReadOnlyPaths": [
+      "C:/Users/User/.codex/worktrees/general-detail-chrome-maintenance/3KLife/docs/agent-briefs/tasks/TASK-UI-9001.md"
+    ],
+    "planningMirrorPaths": [
+      "docs/agent-briefs/",
+      "docs/agent-briefs/tasks/",
+      "docs/agent-briefs/tasks/TASK-UI-9001.md"
+    ],
+    "allowPlanningMirror": false,
+    "promptHash": "1615eca48f37dfb0bd6049889e18275268f8ecdd6ecfaf76aea73e9f98df7c83",
+    "actorId": "codex-gpt-6",
+    "sessionId": null,
+    "laneSession": {
+      "laneSessionId": "lane-20261020232621-codex-gpt-6-bfc9e924aa",
+      "status": "active",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261020232621-codex-gpt-6-bfc9e924aa\""
+    },
+    "createdAt": "2026-10-20T23:26:27.849Z",
+    "status": "active"
+  },
+  "closedAt": "2026-10-21T03:56:38.667Z",
+  "closedByActor": "codex-gpt-6",
+  "closedBySessionId": "session-20261020232621-codex-gpt-6-TASK-UI-9001-d908939b14"
+}

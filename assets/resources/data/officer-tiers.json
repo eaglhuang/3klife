@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "tiers": [
+    {
+      "tier": 1,
+      "code": "OFFICER_TIER_1",
+      "title": "鄉里義士",
+      "expToReach": 0,
+      "questCap": "basic",
+      "unlockedFeatures": ["HALL_BASIC_ENTRY", "DOMESTIC_WALL_LOW"]
+    },
+    {
+      "tier": 2,
+      "code": "OFFICER_TIER_2",
+      "title": "縣府佐官",
+      "expToReach": 100,
+      "questCap": "normal",
+      "unlockedFeatures": ["BOARD_DOMESTIC_FULL", "BOARD_MILITARY_FULL"]
+    },
+    {
+      "tier": 3,
+      "code": "OFFICER_TIER_3",
+      "title": "郡守",
+      "expToReach": 260,
+      "questCap": "elite",
+      "unlockedFeatures": ["WORLD_SANDTABLE_S1"]
+    },
+    {
+      "tier": 4,
+      "code": "OFFICER_TIER_4",
+      "title": "州牧",
+      "expToReach": 520,
+      "questCap": "advanced",
+      "unlockedFeatures": ["WORLD_SANDTABLE_S2", "ALLIANCE_DOCS"]
+    },
+    {
+      "tier": 5,
+      "code": "OFFICER_TIER_5",
+      "title": "霸府重臣",
+      "expToReach": 920,
+      "questCap": "hell",
+      "unlockedFeatures": ["WORLD_SANDTABLE_S3", "ANTI_HEGEMONY_SUMMIT"]
+    }
+  ]
+}

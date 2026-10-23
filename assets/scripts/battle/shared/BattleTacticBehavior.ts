@@ -5,6 +5,7 @@ import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import { resolveBattleSceneMode, type BattleSceneMode } from './BattleSceneMode';
 import { floodDepthBonus } from '../../core/systems/WeatherTacticRestriction';
+import { tileStateRuleOf } from './TileStateRules';
 import { fateBlessingLevel, fateSuccessChance, rollEventSuccess, ROCK_SLIDE_BASE_SUCCESS, type FateHeldGene } from '../../core/systems/FateBlessing';
 
 export interface BattleDamageAdjustment {
@@ -130,7 +131,7 @@ function advanceFloodAttackTurn(state: BattleState, context?: BattleTurnAdvanceC
 
   for (const unit of enemyUnits) {
     const effect = state.getTileEffect(unit.lane, unit.depth);
-    if (effect?.state !== 'river-current') {
+    if (!tileStateRuleOf(effect).pushesOnTurnEnd) {
       continue;
     }
 

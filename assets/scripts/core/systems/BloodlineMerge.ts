@@ -44,3 +44,39 @@ export function mergeBloodline(v1: BloodlineSide, v2: BloodlineSide): BloodlineM
         v2MergedOut: [...v2.mergedOut, candidate],
     };
 }
+
+/** 只看 gene 的 id；沒有 id 的 gene 不參與因子比對。 */
+function factorIdsOf(general: { genes?: readonly { id?: string }[] }): string[] {
+    return (general.genes ?? []).map((g) => g.id).filter((id): id is string => typeof id === 'string' && id.length > 0);
+}
+
+export type BloodlineMergeRejectReason = 'SAME_GENERAL' | 'NO_BLOODLINE' | 'DIFFERENT_BLOODLINE' | 'NO_TRANSFERABLE';
+
+export interface GeneralMergeInput {
+    id: string;
+    bloodlineId?: string;
+    genes?: readonly { id?: string }[];
+    mergedOutFactors?: readonly string[];
+}
+
+/**
+ * 武將版本之間的血脈歸宗（BLT-11 接線用，純計算）。
+ * V1 取得 V2 的一個因子；V2 的 mergedOutFactors 追加該因子。不扣歸宗令；扣令在 GameSession.mergeBloodlineFor（PROG-2-0862）。
+ * 同一 Bloodline_ID 才可歸宗；缺 mergedOutFactors 視為空。
+ */
+export function planBloodlineMergeForGenerals(
+    v1: GeneralMergeInput,
+    v2: GeneralMergeInput,
+):
+    | { ok: true; transferredFactor: string; v1Factors: string[]; v2MergedOut: string[] }
+    | { ok: false; reason: BloodlineMergeRejectReason } {
+    if (v1.id === v2.id) return { ok: false, reason: 'SAME_GENERAL' };
+    if (!v1.bloodlineId || !v2.bloodlineId) return { ok: false, reason: 'NO_BLOODLINE' };
+    if (v1.bloodlineId !== v2.bloodlineId) return { ok: false, reason: 'DIFFERENT_BLOODLINE' };
+    const result = mergeBloodline(
+        { factors: factorIdsOf(v1), mergedOut: [] },
+        { factors: factorIdsOf(v2), mergedOut: v2.mergedOutFactors ?? [] },
+    );
+    if (!result) return { ok: false, reason: 'NO_TRANSFERABLE' };
+    return { ok: true, transferredFactor: result.transferredFactor, v1Factors: [...result.v1Factors], v2MergedOut: [...result.v2MergedOut] };
+}

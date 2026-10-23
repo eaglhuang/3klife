@@ -121,6 +121,19 @@
             "styleSlot": "retire.label.body"
           },
           {
+            "type": "label",
+            "name": "RetireGrant",
+            "id": "retireGrant",
+            "widget": {
+              "top": 470,
+              "left": 40,
+              "right": 40
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "retire.label.stats"
+          },
+          {
             "type": "button",
             "name": "BtnCloseRetire",
             "id": "btnCloseRetire",

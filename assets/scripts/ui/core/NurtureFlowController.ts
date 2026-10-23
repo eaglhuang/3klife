@@ -15,8 +15,11 @@
  * Presenter 讀 Model（名冊 / NurtureService）後吐出 ViewModel，按鈕 onClick 只轉呼叫 Presenter 的方法。
  */
 import { lateBloomClueText } from '../../core/systems/LateBloomClue';
+import { VITALITY_SCRIPT_KEYS, vitalityScriptText } from './VitalityScriptTexts';
+import { fateText } from './FateScriptTexts';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { MentorCard } from '../../core/models/MentorCard';
+import type { LegendaryMentoringBlock } from '../../core/systems/LegendaryMentoring';
 import type { NurtureBlockReason, NurtureService } from '../../core/services/NurtureService';
 import { mentorToCardData, type MentorCardData } from '../../core/systems/MentorCardTabs';
 import type { UnveilingService } from '../../core/services/UnveilingService';
@@ -130,12 +133,39 @@ export interface NurtureFlowDeps {
     spendLifespan?: (generalId: string, command: 'nurture') => { events: readonly { type: string }[] } | null;
     /** 開獎與大器晚成文案（ui.breed.*）；正式環境接 i18n.t，未提供時用 zh-TW 預設文案 */
     text?: BreedTextLookup;
+    /** 精力歸 0 時的劇本提示（PROG-2-0732）；正式環境接 SHOW_TOAST，未提供時不顯示 */
+    showToast?: (message: string) => void;
+    /** 名將傳道（MENT-15）；正式環境接 GameSession.performLegendaryMentoringFor，未提供時入口不可用 */
+    performLegendaryMentoring?: (
+        generalId: string,
+        childId: string,
+        exclusiveSkillId: string | undefined,
+    ) => Promise<{ ok: boolean; blocked?: LegendaryMentoringBlock }>;
+}
+
+/** 傳道失敗的提示（暫定，文案待企劃定稿） */
+const LEGENDARY_MENTORING_BLOCK_TEXT: Record<LegendaryMentoringBlock, string> = {
+    NO_TICKET: '傳道令不足',
+    NO_EXCLUSIVE_SKILL: '這位名將沒有專屬奧義',
+    NOT_NURTURING: '這位子嗣不在培育中',
+    SESSION_ENDED: '這場培育已結束',
+    ALREADY_USED: '這位名將已傳道過一次',
+};
+
+/**
+ * 名將專屬奧義（暫定，PM 2026-10-20）：先從武將既有的奧義欄位找標記為專屬的那一個。
+ * 名將模型目前沒有獨立的專屬奧義欄位，待企劃／資料裁決後再換來源。
+ */
+export function exclusiveSkillOf(general: Pick<GeneralConfig, 'ultimateSlots'> | undefined): string | undefined {
+    return general?.ultimateSlots?.find((slot) => slot.isExclusive)?.ultimateId;
 }
 
 export class NurtureFlowController {
     private _selectedId: string | null = null;
     private _report: GraduationReport | null = null;
     private _notice = '';
+    private _legendaryCards: MentorCard[] = [];
+    private _legendaryCardUid: string | null = null;
 
     constructor(private readonly _deps: NurtureFlowDeps) {}
 
@@ -189,7 +219,7 @@ export class NurtureFlowController {
         const updated = this._deps.unveiling.choose(child.id, choice);
         this._notice = choice === 'accept'
             ? `${child.name} 順應天命，成為${CAREER_LABELS[updated.careerClass ?? ''] ?? '？'}`
-            : `${child.name} 逆天而行${updated.fate?.lateBloomer ? `，${this._t('ui.breed.daqi')}` : '，成長率 ×0.8'}`;
+            : `${fateText(this._t.bind(this), 'ui.fate.script.defy', child.name)}　${child.name} 逆天而行${updated.fate?.lateBloomer ? `，${this._t('ui.breed.daqi')}` : '，成長率 ×0.8'}`;
         await this._persist();
     }
 
@@ -203,11 +233,59 @@ export class NurtureFlowController {
         await this._persist();
     }
 
+    /**
+     * 傳道入口（MENT-15）：英靈卡所屬名將的專屬奧義傳給目前選中的子嗣。
+     * 成功寫入培育紀錄並扣傳道令；失敗只顯示原因，不扣令。
+     */
+    /** 英靈卡選擇列：循環 無 → 第 1 張 → … → 無（暫定：卡片清單先用教官卡來源） */
+    async cycleLegendaryCard(): Promise<void> {
+        this._legendaryCards = await this._deps.loadMentorCards();
+        const index = this._legendaryCards.findIndex((c) => c.uid === this._legendaryCardUid);
+        this._legendaryCardUid = index + 1 < this._legendaryCards.length ? this._legendaryCards[index + 1].uid : null;
+    }
+
+    get legendaryCard(): MentorCard | null {
+        return this._legendaryCards.find((c) => c.uid === this._legendaryCardUid) ?? null;
+    }
+
+    /** 借將入口：目前養成中的 sessionId；沒有進行中的培育時回傳 null */
+    mentorBorrowSessionId(): string | null {
+        const child = this._resolveSelected();
+        const session = child ? this._deps.nurture.getSession(child.id) : null;
+        return session && session.status === 'active' ? session.sessionId : null;
+    }
+
+    async legendaryMentor(): Promise<boolean> {
+        const child = this._requireSelected();
+        const card = this.legendaryCard;
+        if (!card) {
+            this._notice = '請先選擇英靈卡';
+            return false;
+        }
+        const perform = this._deps.performLegendaryMentoring;
+        if (!perform) {
+            this._notice = '傳道尚未開放';
+            return false;
+        }
+        const source = this._deps.roster.getAll().find((g) => g.id === card.sourceGeneralId);
+        const result = await perform(card.sourceGeneralId, child.id, exclusiveSkillOf(source));
+        if (!result.ok) {
+            this._notice = LEGENDARY_MENTORING_BLOCK_TEXT[result.blocked ?? 'NOT_NURTURING'];
+            return false;
+        }
+        this._notice = `${child.name} 習得${card.name}的專屬奧義`;
+        await this._persist();
+        return true;
+    }
+
     async train(action: NurtureAction): Promise<NurtureRoundLog> {
         const child = this._requireSelected();
         const { log, awakening } = this._deps.nurture.train(child.id, action);
         // 因子解鎖系統 §H UI_AWAKENING：「【覺醒】{GeneName}！」
         this._notice = awakening ? `${describeRound(log)}　【覺醒】${awakening.displayName}！` : describeRound(log);
+        if (log.vigorAfter === 0) {
+            this._deps.showToast?.(vitalityScriptText(this._t.bind(this), VITALITY_SCRIPT_KEYS.exhausted, child.name));
+        }
         const lifespan = this._deps.spendLifespan?.(child.id, 'nurture');
         if (lifespan?.events.some((event) => event.type === 'died')) {
             this._notice += '　壽命耗盡，武將已故';
@@ -305,10 +383,14 @@ export class NurtureFlowController {
             btnCommitReport: false,
             btnAbandon: false,
             btnDismissReport: false,
+            btnViewGraduationRecord: false,
         };
         for (const kind of TRAINING_KINDS) enabled[`btnTrain_${kind}`] = false;
         enabled.btnAutoNurture = false;
         enabled.btnMentorDetail = false;
+        enabled.btnLegendaryCard = false;
+        enabled.btnLegendaryMentor = false;
+        enabled.btnMentorBorrow = false;
 
         if (!child) {
             actives.flowEmptyHint = true;
@@ -319,6 +401,7 @@ export class NurtureFlowController {
             actives.nurturePanel = true;
             actives.reportBlock = true;
             enabled.btnDismissReport = true;
+            enabled.btnViewGraduationRecord = true;
             Object.assign(texts, buildReportTexts(this._report));
             return { mode: 'report', childId: child.id, texts, actives, enabled };
         }
@@ -367,6 +450,13 @@ export class NurtureFlowController {
         enabled.btnAutoNurture = !!this._deps.autoNurture;
         enabled.btnMentorDetail = session.mentors.length > 0;
         texts.mentorDetailLabel = '教官詳情';
+        const legendary = this.legendaryCard;
+        enabled.btnLegendaryCard = true;
+        texts.legendaryCardLabel = legendary ? `英靈：${legendary.name}` : '英靈：未選';
+        enabled.btnLegendaryMentor = !!this._deps.performLegendaryMentoring && !!legendary && session.status === 'active';
+        texts.legendaryMentorLabel = '傳道';
+        enabled.btnMentorBorrow = session.status === 'active';
+        texts.mentorBorrowLabel = '借將';
         texts.autoNurtureLabel = '自動培育整季';
         return { mode: 'train', childId: child.id, texts, actives, enabled };
     }
@@ -391,7 +481,7 @@ export class NurtureFlowController {
         const child = this._requireSelected();
         if (!this._deps.autoNurture) return;
         const result = await this._deps.autoNurture(child.id);
-        this._notice = result.ok
+        this._notice = result.ok === true
             ? `自動培育完成（${result.logs.length} 回合），可以畢業了`
             : AUTO_BLOCK_TEXT[result.blocked] ?? '無法自動培育';
         await this._persist();
@@ -444,9 +534,10 @@ function buildFateTexts(child: UnveilingGeneral, t: BreedTextLookup): Record<str
         fateFactors: factors.length > 0
             ? `初始因子：${factors.map((gene) => gene.displayName ?? gene.id ?? '？').join('、')}`
             : '初始因子：尚未顯現',
-        fateRecommend: `天命建議：${CAREER_LABELS[recommended]}`,
-        fateAcceptLabel: `順應天命（${CAREER_LABELS[recommended]}）`,
-        fateDefyLabel: `逆天而行（${CAREER_LABELS[other]}）`,
+        fateRecommend: fateText(t, 'ui.fate.reveal', CAREER_LABELS[recommended]),
+        fateScript: fateText(t, 'ui.fate.script.reveal', child.name, recommended === 'Warrior' ? '武骨' : '文才', CAREER_LABELS[recommended]),
+        fateAcceptLabel: fateText(t, 'ui.fate.accept'),
+        fateDefyLabel: fateText(t, 'ui.fate.defy'),
         fateDefyHint: `逆天：成長率 ×${FATE_DEFY_GROWTH_MODIFIER}，有 ${Math.round(LATE_BLOOMER_CHANCE * 100)}% 機率大器晚成。選擇後不可更改。`,
     };
 }

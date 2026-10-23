@@ -53,6 +53,7 @@ import { TallyCardData } from "../../shared/TallyCardContract";
 import type { ToastOptions } from "./ToastMessage";
 import { emitDeployDragDebug, shouldLogDeployDragMove } from "./DeployDragDebug";
 import { tallyDeployRefOf, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
+import { deploySuggestionCopy, nextRedirectStep, type RedirectPrompt } from '../../core/systems/SortieDeploy';
 import { UCUFLogger, LogLevel, LogCategory } from '../../core/utils/UCUFLogger';
 
 const { ccclass, property } = _decorator;
@@ -113,6 +114,9 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
 
   @property(Button)
   btnEndTurn: Button = null!;
+  /** 委任開關按鈕（PROG-2-0913）；節點由 cc 場景綁定，未綁定時此功能不可用 */
+  @property(Button)
+  btnDelegate: Button | null = null;
 
   // ─── 狀態標籤 ─────────────────────────────────────────────────────────────
   @property(Label)
@@ -131,6 +135,8 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
   private selectedTally: TallyDeployRef | null = null;
   private selectedSlotIndex = 0;
   private selectedLane: number = 0;
+  /** 改派二次確認：上一次被擋的目標（DEP-10 A 案） */
+  private redirectPrompt: RedirectPrompt | null = null;
   /** [P2-N6] 當前糧草（原 currentDp，與 TurnSnapshot.playerFood 同步） */
   private currentDp = GAME_CONFIG.INITIAL_FOOD;
 
@@ -274,6 +280,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
     this.btnDuel?.node.on(Button.EventType.CLICK, this.onDuelClick, this);
     this.btnTactics?.node.on(Button.EventType.CLICK, this.onTacticsClick, this);
     this.btnEndTurn?.node.on(Button.EventType.CLICK, this.onEndTurnClick, this);
+    this.btnDelegate?.node.on(Button.EventType.CLICK, this.onDelegateToggleClick, this);
 
     // 路線按鈕已廢棄
     this.laneButtons.forEach(btn => btn.node.destroy());
@@ -740,14 +747,26 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
       });
       return;
     }
-    const outcome = this.ctrl.tryDeployTroop(this.selectedType, this.selectedLane, this.selectedUnitName || undefined, this._tallyOptions());
+    let outcome = this.ctrl.tryDeployTroop(this.selectedType, this.selectedLane, this.selectedUnitName || undefined, this._tallyOptions());
     emitDeployDragDebug("DeployPanel", "deploy-click-result", {
       ok: outcome.ok,
       reason: outcome.reason,
       type: this.selectedType,
       lane: this.selectedLane,
     });
+    if (!outcome.ok) {
+      const step = nextRedirectStep(this.redirectPrompt, { troopType: this.selectedType, lane: this.selectedLane }, outcome.suggestion ?? null);
+      this.redirectPrompt = step.prompt;
+      if (step.action === 'arm' && step.troopType) {
+        this.showToast(`${this.getDeployFailMessage(outcome.reason)}\n${deploySuggestionCopy(this.toTroopDisplayName(step.troopType as TroopType))}，再點一次確認改派`);
+        return;
+      }
+      if (step.action === 'confirm' && step.troopType) {
+        outcome = this.ctrl.tryDeployTroop(step.troopType as TroopType, this.selectedLane);
+      }
+    }
     if (outcome.ok) {
+      this.redirectPrompt = null;
       this.endDrag();
       this.refillDeploySlot(this.selectedSlotIndex);
       this.refreshSlotDisplay();
@@ -837,6 +856,14 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
   private onTacticsClick(): void {
     if (!this.ctrl) return;
     this.showToast("計謀策略功能開發中");
+  }
+
+  /** 委任開關切換（PROG-2-0913）：依控制器目前狀態反向設定，並以吐司回報 */
+  private onDelegateToggleClick(): void {
+    if (!this.ctrl) return;
+    const next = !this.ctrl.isDelegateEnabled();
+    this.ctrl.setDelegateEnabled(next);
+    this.showToast(next ? '委任已開啟：部署交由委任 AI' : '委任已關閉：回到手動部署');
   }
 
   private onEndTurnClick(): void {
@@ -1017,7 +1044,7 @@ export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike 
           toastNode.getComponent('ToastMessageComposite')
           ?? toastNode.getComponent('ToastMessage')
           ?? toastNode.addComponent('ToastMessageComposite')
-        ) as ToastMessageLike | null;
+        ) as unknown as ToastMessageLike | null;
       } else {
         const n = new Node("Toast");
         this.node.addChild(n);

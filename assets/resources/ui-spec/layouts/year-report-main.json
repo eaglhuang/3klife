@@ -1,0 +1,113 @@
+{
+  "id": "year-report-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "YearReportRoot",
+    "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 },
+    "children": [
+      {
+        "type": "panel",
+        "name": "YearReportBackdrop",
+        "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 },
+        "skinSlot": "yr.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "YearReportCard",
+        "id": "yearReportCard",
+        "widget": { "hCenter": true, "vCenter": true },
+        "width": 900,
+        "height": 560,
+        "skinSlot": "yr.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "YearReportTitle",
+            "id": "yearReportTitle",
+            "widget": { "top": 24, "left": 32 },
+            "width": 360,
+            "height": 44,
+            "text": "年度總結",
+            "styleSlot": "yr.label.title"
+          },
+          {
+            "type": "label",
+            "name": "YearReportYear",
+            "id": "yearReportYear",
+            "widget": { "top": 30, "right": 32 },
+            "width": 240,
+            "height": 36,
+            "text": "",
+            "styleSlot": "yr.label.year"
+          },
+          {
+            "type": "label",
+            "name": "YearReportIntro",
+            "id": "yearReportIntro",
+            "widget": { "top": 110, "left": 48, "right": 48 },
+            "height": 60,
+            "text": "一年將盡，回首今年……",
+            "styleSlot": "yr.label.body"
+          },
+          {
+            "type": "panel",
+            "name": "YearReportStatRow",
+            "id": "yearReportStatRow",
+            "widget": { "top": 200, "left": 48, "right": 48 },
+            "height": 200,
+            "skinSlot": "yr.slot.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "YearReportDeaths",
+                "id": "yearReportDeaths",
+                "widget": { "top": 32, "left": 32, "right": 32 },
+                "height": 44,
+                "text": "本年歿：0 人",
+                "styleSlot": "yr.label.stat"
+              },
+              {
+                "type": "label",
+                "name": "YearReportRetirements",
+                "id": "yearReportRetirements",
+                "widget": { "top": 96, "left": 32, "right": 32 },
+                "height": 44,
+                "text": "本年屆齡退役候選：0 人",
+                "styleSlot": "yr.label.stat"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseYearReport",
+            "id": "btnCloseYearReport",
+            "widget": { "bottom": 32, "hCenter": true },
+            "width": 240,
+            "height": 56,
+            "skinSlot": "yr.button.confirm.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseYearReportLabel",
+                "id": "closeYearReportLabel",
+                "widget": { "vCenter": true, "left": 0, "right": 0 },
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "yr.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

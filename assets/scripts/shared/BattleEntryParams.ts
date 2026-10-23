@@ -14,6 +14,8 @@ export interface WeatherScheduleEntry {
 /** encounters.json 中單一遭遇戰的設定結構 */
 export interface EncounterConfig {
   id: string;
+  /** AI 難度（可選，PROG-2-0921）：easy / normal / hard / nightmare / hell；缺省為 normal */
+  difficulty?: string;
   name: string;
   playerGeneralId: string;
   enemyGeneralId: string;
@@ -28,6 +30,8 @@ export interface EncounterConfig {
   weatherSchedule?: WeatherScheduleEntry[];
   /** 場景戰法（可選，預設 Normal） */
   battleTactic?: BattleTactic;
+  /** AI 難度（可選，PROG-2-0921）；有值時優先於遭遇資料 */
+  aiDifficulty?: string;
   /** 我軍裝備 ID 列表（預留） */
   playerEquipment?: string[];
   /** 敵軍裝備 ID 列表（預留） */
@@ -36,6 +40,8 @@ export interface EncounterConfig {
   chainId?: string;
   /** 主鏈內順序，越小越前面（PROG-2-0215） */
   order?: number;
+  /** 所屬全球征途階段 id（MVP-13）；沒有就是第一階段 */
+  campaignStage?: string;
 }
 
 /**
@@ -67,12 +73,16 @@ export interface IBattleEntryParams {
   weather: Weather;
   /** 天氣排程（可選）；覆蓋 encounter 設定（PROG-2-0401） */
   weatherSchedule?: WeatherScheduleEntry[];
+  /** AI 難度（可選，PROG-2-0921）；有值時優先於遭遇資料 */
+  aiDifficulty?: string;
   /** 戰場戰法 */
   battleTactic: BattleTactic;
   /** 背景 ID（覆蓋 encounter 設定；為空時由 encounter 決定） */
   backgroundId?: string;
   /** 首戰教學戰：開啟教學提示浮窗（PROG-2-0241）；預設關閉 */
   tutorial?: boolean;
+  /** 全球征途階段 id（MVP-13）；由 GameSession.resolveCampaignStage 驗證後帶入，戰場流程尚未讀取 */
+  campaignStageId?: string;
 }
 
 /** QA 工具 / preview target 5 使用的預設參數 */

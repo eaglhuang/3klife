@@ -231,6 +231,18 @@
                 "styleSlot": "nurture.label.name"
               },
               {
+                "type": "label",
+                "name": "FateScript",
+                "id": "fateScript",
+                "widget": {
+                  "top": 280,
+                  "left": 24,
+                  "right": 24
+                },
+                "height": 28,
+                "styleSlot": "nurture.label.meta"
+              },
+              {
                 "type": "button",
                 "name": "BtnFateAccept",
                 "id": "btnFateAccept",
@@ -819,6 +831,87 @@
                   },
                   {
                     "type": "button",
+                    "name": "BtnLegendaryCard",
+                    "id": "btnLegendaryCard",
+                    "widget": {
+                      "top": 296,
+                      "right": 27
+                    },
+                    "width": 360,
+                    "height": 52,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnLegendaryCardLabel",
+                        "id": "legendaryCardLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "英靈：未選",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnLegendaryMentor",
+                    "id": "btnLegendaryMentor",
+                    "widget": {
+                      "top": 360,
+                      "right": 27
+                    },
+                    "width": 360,
+                    "height": 52,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnLegendaryMentorLabel",
+                        "id": "legendaryMentorLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "傳道",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnMentorBorrow",
+                    "id": "btnMentorBorrow",
+                    "widget": {
+                      "top": 420,
+                      "right": 27
+                    },
+                    "width": 360,
+                    "height": 52,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnMentorBorrowLabel",
+                        "id": "mentorBorrowLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "傳道",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
                     "name": "BtnRest",
                     "id": "btnRest",
                     "widget": {
@@ -840,6 +933,33 @@
                         },
                         "height": 44,
                         "text": "休息回復精力",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnUsePill",
+                    "id": "btnUsePill",
+                    "widget": {
+                      "top": 296,
+                      "left": 27
+                    },
+                    "width": 360,
+                    "height": 52,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnUsePillLabel",
+                        "id": "usePillLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "使用補元散",
                         "styleSlot": "nurture.label.button"
                       }
                     ]
@@ -1167,6 +1287,33 @@
                         },
                         "height": 56,
                         "text": "完成",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnViewGraduationRecord",
+                    "id": "btnViewGraduationRecord",
+                    "widget": {
+                      "top": 210,
+                      "left": 800
+                    },
+                    "width": 420,
+                    "height": 64,
+                    "skinSlot": "nurture.button.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnViewGraduationRecordLabel",
+                        "id": "viewGraduationLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 56,
+                        "text": "查看紀錄",
                         "styleSlot": "nurture.label.button"
                       }
                     ]

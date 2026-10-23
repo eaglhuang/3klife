@@ -8,7 +8,7 @@ import {
 import { TroopUnit } from '../../core/models/TroopUnit';
 import { BattleState } from '../models/BattleState';
 import { BattleCombatResolver } from './BattleCombatResolver';
-import { resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
+import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { WEATHER_RESTRICTION_TOAST, checkTacticWeather } from '../../core/systems/WeatherTacticRestriction';
 import { evaluateCasterTacticConditions, type TacticCondition, type TacticConditionResult } from '../../core/systems/TacticCondition';
 import { canPerformAction, spendUltimateVitality, vitalityBandOf, type BattleActionKind } from '../../core/systems/VitalityBattleGate';
@@ -17,7 +17,8 @@ import type { BattleSkillExecutionContext } from '../skills/BattleSkillResolver'
 import { BattleSkillExecutor } from '../skills/BattleSkillExecutor';
 import { createDefaultBattleSkillExecutor } from '../skills/BattleSkillResolverFactory';
 import { zoneDefenseMultiplier, type FormationZone } from '../shared/FormationZone';
-import { isFixedTileState } from '../shared/TileStateRules';
+import { isFixedTileState, tileStateRuleOf } from '../shared/TileStateRules';
+import { terrainAttackRangeCapOf } from '../../core/systems/TerrainTroopRules';
 import {
   BattleSkillTargetMode,
   BattleSkillTiming,
@@ -141,6 +142,17 @@ export class BattleSkillDispatcher {
   }
 
   public executeBattleSkillRequest(request: BattleSkillRequest): SkillExecutionResult {
+    // 殼戰法（TRP-15 殼 profile，效果未實作）：不進執行器、不扣任何資源
+    if (!isBattleSkillImplemented(request.battleSkillId)) {
+      return {
+        requestId: `${request.ownerUid}:${request.battleSkillId}`,
+        battleSkillId: request.battleSkillId,
+        applied: false,
+        blockedReason: 'not-implemented',
+        deltas: [],
+        battleLogLines: [],
+      };
+    }
     // 天氣強約束（PROG-2-0406）：火計在雨／霧／雷暴禁用，不扣任何資源、不進入執行器
     const weatherCheck = checkTacticWeather(resolveBattleSkillProfile(request.battleSkillId)?.tags ?? [], this.context.state.weather);
     if (!weatherCheck.allowed) {
@@ -285,7 +297,40 @@ export class BattleSkillDispatcher {
         const general = generalId ? state.units.get(generalId) : undefined;
         return general ? { lane: general.lane, depth: general.depth } : null;
       },
+      getCasterRangeCap: (casterFaction: Faction) => {
+        // 林地 D 視野受限（PROG-2-0789）：施放者武將的單位在林地且地形適性 D 時，射程上限 1
+        const generalId = casterFaction === Faction.Player
+          ? this.context.getPlayerGeneralUnitId()
+          : this.context.getEnemyGeneralUnitId();
+        const general = generalId ? state.units.get(generalId) : undefined;
+        if (!general) return null;
+        const terrain = state.getCell(general.lane, general.depth)?.terrain ?? TerrainType.Plain;
+        return terrainAttackRangeCapOf(terrain, combatResolver.getUnitAptitude(general).terrain);
+      },
       getWeather: () => state.weather,
+      getTurnNumber: () => services().battle.getSnapshot().turn,
+      randomSource: () => services().session.randomSource(),
+      isCellFreeForPush: (lane: number, depth: number) => {
+        if (lane < 0 || lane >= GAME_CONFIG.GRID_LANES || depth < 0 || depth >= GAME_CONFIG.GRID_DEPTH) return false;
+        const cell = state.getCell(lane, depth);
+        return !!cell && !cell.occupantId && !tileStateRuleOf(state.getTileEffect(lane, depth)).blocksOnEnter;
+      },
+      pushUnitTo: (unit: TroopUnit, lane: number, depth: number) => {
+        const fromLane = unit.lane;
+        const fromDepth = unit.depth;
+        state.getCell(fromLane, fromDepth)!.occupantId = null;
+        unit.moveTo(lane, depth);
+        state.getCell(lane, depth)!.occupantId = unit.id;
+        services().event.emit(EVENT_NAMES.UnitMoved, {
+          unitId: unit.id,
+          lane,
+          depth,
+          fromLane,
+          fromDepth,
+          forcedMove: true,
+          forcedMoveReason: 'skill:push',
+        });
+      },
       getCasterUnitId: (casterFaction: Faction) => (casterFaction === Faction.Player
         ? this.context.getPlayerGeneralUnitId()
         : this.context.getEnemyGeneralUnitId()),

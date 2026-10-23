@@ -5,11 +5,12 @@
  * - serialize：輸出可 JSON 化的副本，不改輸入。
  * - normalize：讀檔時校正資料；欄位型別錯、數值超出範圍或狀態未知的項目會被丟棄，不讓壞資料進入遊戲。
  *
- * 規格的 Illustration_Stage、Original_Owner 尚未定義欄位型別，本模組不收，等資料設計定案後再加。
+ * Illustration_Stage 為選填欄位（1~5，PROG-2-0969）；Original_Owner 尚未定義欄位型別，本模組不收，等資料設計定案後再加。
  * Unity 對照：像 JsonUtility 讀檔後的 OnValidate，壞欄位直接丟棄而不是讓遊戲崩潰。
  */
 import { MercenaryState, MercenaryStatus, TRIAL_DAYS } from './MercenaryBond';
 import { AFFECTION_CAP } from './MercenaryAffection';
+import { ILLUSTRATION_STAGE_MAX, ILLUSTRATION_STAGE_MIN } from './MercenaryIllustration';
 import { PoolCooldown } from './MercenaryDeparture';
 import { UpkeepState, UpkeepStatus } from './MercenaryUpkeep';
 
@@ -60,6 +61,9 @@ function readMercenary(raw: unknown): MercenaryState | null {
     // 選填欄位壞掉只丟該欄，不丟整筆傭兵
     if (isNonEmptyString(raw.generalId)) mercenary.generalId = raw.generalId;
     if (isCount(raw.affection, AFFECTION_CAP)) mercenary.affection = raw.affection;
+    if (isCount(raw.illustrationStage, ILLUSTRATION_STAGE_MAX) && raw.illustrationStage >= ILLUSTRATION_STAGE_MIN) {
+        mercenary.illustrationStage = raw.illustrationStage;
+    }
     return mercenary;
 }
 

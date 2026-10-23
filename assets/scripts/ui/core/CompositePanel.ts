@@ -96,7 +96,7 @@ export abstract class CompositePanel extends UIPreviewBuilder {
     private _tabRouting: Record<string, TabRoute> | null = null;
 
     /** 最近一次 buildScreen 完成後由 onReady 存入的 binder */
-    private _binder: UITemplateBinder | null = null;
+    private _panelBinder: UITemplateBinder | null = null;
 
     /** 正在 mount 的 screenId（供重建用） */
     private _screenId: string | null = null;
@@ -241,8 +241,8 @@ export abstract class CompositePanel extends UIPreviewBuilder {
         if (isSameFragment && entry.node.children.length > 0) {
             const fragLayout = await services().specLoader.loadLayout(fragmentId);
             const fragmentRootNode = entry.node.children[entry.node.children.length - 1] ?? null;
-            if (this._binder && fragmentRootNode) {
-                this._binder.bindLazyFragment(fragmentRootNode, fragLayout.root);
+            if (this._panelBinder && fragmentRootNode) {
+                this._panelBinder.bindLazyFragment(fragmentRootNode, fragLayout.root);
             }
             this._refreshRenderableTree(entry.node);
             if (panel) {
@@ -312,8 +312,8 @@ export abstract class CompositePanel extends UIPreviewBuilder {
         // lazy fragment 是在 buildScreen 之後才動態掛進 slot；
         // 若不補建 path 索引，ChildPanel 的 content binder 會找不到 HeaderRow/... 這類節點。
         const fragmentRootNode = entry.node.children[entry.node.children.length - 1] ?? null;
-        if (this._binder && fragmentRootNode) {
-            this._binder.bindLazyFragment(fragmentRootNode, fragLayout.root);
+        if (this._panelBinder && fragmentRootNode) {
+            this._panelBinder.bindLazyFragment(fragmentRootNode, fragLayout.root);
         }
 
         // M9: enter 動畫（若有 transition）
@@ -437,7 +437,7 @@ export abstract class CompositePanel extends UIPreviewBuilder {
         this._lazySlots.clear();
         this._nodePool.clear();
         this.childPanels.clear();
-        this._binder     = null;
+        this._panelBinder     = null;
         this._tabRouting = null;
     }
 
@@ -646,7 +646,7 @@ export abstract class CompositePanel extends UIPreviewBuilder {
 
     /**
      * 子類應覆寫此鉤子而非 onReady()，以避免破壞 binder 存儲邏輯。
-     * 對應 UIPreviewBuilder.onReady() 的功能，但在 binder 已存入 _binder 後才呼叫。
+     * 對應 UIPreviewBuilder.onReady() 的功能，但在 binder 已存入 _panelBinder 後才呼叫。
      * Unity 對照：MonoBehaviour.Start()
      */
     protected _onAfterBuildReady(_binder: UITemplateBinder): void { /* 子類覆寫 */ }
@@ -658,7 +658,7 @@ export abstract class CompositePanel extends UIPreviewBuilder {
      * 子類不應再覆寫 onReady，請改用 _onAfterBuildReady()。
      */
     protected override onReady(binder: UITemplateBinder): void {
-        this._binder = binder;
+        this._panelBinder = binder;
         this._onAfterBuildReady(binder);
     }
 

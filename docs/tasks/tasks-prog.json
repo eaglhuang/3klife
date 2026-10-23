@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 34,
+    "done": 35,
     "in_progress": 2,
-    "open": 46,
-    "total": 82
+    "open": 72,
+    "total": 109
   },
   "tasks": [
     {
@@ -3281,6 +3281,763 @@
         "artifacts/PROG-2-0134/**"
       ],
       "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: ATM 0088；需能連 wiki 的本機"
+    },
+    {
+      "id": "PROG-2-0135",
+      "title": "實機驗收：AI 委任 Toggle 勾選與事件（PROG-2-0494、#473）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M6",
+      "created": "2026-10-15",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "引擎 toggle 節點與 AI 委任開關的勾選、事件待實機驗收，#473 合併後派發。",
+      "related": [],
+      "depends": [
+        "PR #473",
+        "PROG-2-0494"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0135.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0135/**"
+      ],
+      "notes": "2026-10-15 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: #473 未合併；ATM 0088"
+    },
+    {
+      "id": "PROG-2-0143",
+      "title": "實機驗收：出征編制「儲存預設」「套用預設」（PROG-2-0784、#538）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M6",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "編制預設存檔與兩個按鈕的點擊、存檔往返需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #538",
+        "PROG-2-0784"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0143.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0143/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0144",
+      "title": "實機驗收：因子六角圖與解鎖特效（PROG-2-0721、#539）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M6",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "六角圖繪製位置與解鎖特效需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #539",
+        "PROG-2-0721"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0144.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0144/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0145",
+      "title": "實機驗收：命紋靈獸摘要與六角圖並存（PROG-2-0720、#542）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M6",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "靈獸摘要與六角圖同畫面的版面與可點性需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #542",
+        "PROG-2-0720"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0145.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0145/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0146",
+      "title": "實機驗收：年報畫面彈出與內容（PROG-2-0820、#563）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "年末年報畫面的彈出、標題、歿與退役候選數字、關閉鈕與版位需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #563",
+        "PROG-2-0820"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0146.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0146/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0147",
+      "title": "實機驗收：BRD-09 批語面板（PROG-2-0822、#575）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "結緣介面名士批語與提示的顯示時機、文字與版位需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #575",
+        "PROG-2-0822"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0147.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0147/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0148",
+      "title": "實機驗收：BRD-09 天象異變通知（PROG-2-0823、#577）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "結緣成功通知的天象異變顯示時機、文字與版位需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #577",
+        "PROG-2-0823"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0148.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0148/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0149",
+      "title": "實機驗收：精力劇本 toast 與補元散按鈕（PROG-2-0732、PROG-2-0733、#578、#583）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "精力劇本 toast 的顯示時機與文字，以及培育畫面補元散按鈕的位置與行為需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #578",
+        "PR #583",
+        "PROG-2-0732",
+        "PROG-2-0733"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0149.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0149/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0150",
+      "title": "實機驗收：退役畫面因子媒介選擇（PROG-2-0866、#590）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "退役工具列媒介按鈕的循環選擇、候選子嗣、版位需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #590",
+        "PROG-2-0866"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0150.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0150/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0151",
+      "title": "實機驗收：宿命揭曉文字與劇本列（PROG-2-0735、#588）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "宿命揭曉按鈕與天命分流文字、劇本列位置與逆天抗命句需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #588",
+        "PROG-2-0735"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0151.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0151/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0152",
+      "title": "實機驗收：武將詳情五階奧義提示行（PROG-2-0740、#600）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "武將詳情奧義子頁的五階奧義進度行顯示、可點亮提示與版位需實機驗收；文案內容不在範圍。",
+      "related": [],
+      "depends": [
+        "PR #600",
+        "PROG-2-0740"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0152.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0152/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0153",
+      "title": "實機驗收：退役回顧獎勵（虎符／竹簡）（PROG-2-0739、#605）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "退役回顧的獎勵句顯示、武職虎符與文職竹簡的分流、版位需實機驗收；文案不在範圍。",
+      "related": [],
+      "depends": [
+        "PR #605",
+        "PROG-2-0739"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0153.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0153/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0154",
+      "title": "實機驗收：培育英靈循環與傳道按鈕（PROG-2-0871、#613）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "培育畫面英靈卡循環、傳道按鈕的可按狀態、結果與版位需實機驗收；英靈卡清單來源不在範圍。",
+      "related": [],
+      "depends": [
+        "PR #613",
+        "PROG-2-0871"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0154.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0154/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0155",
+      "title": "實機驗收：大廳官職區塊（PROG-2-0831、#614）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "大廳季度 HUD 下方官職區塊的文字、刷新與版位需實機驗收；任務結算與晉升提示不在範圍。",
+      "related": [],
+      "depends": [
+        "PR #614",
+        "PROG-2-0831"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0155.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0155/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0156",
+      "title": "實機驗收：大廳任務派遣（PROG-2-0836、#635）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "任務牆派遣條件提示、指派與結算 toast、官職經驗變化與版位需實機驗收；戰力估算與結算規則為暫定。",
+      "related": [],
+      "depends": [
+        "PR #635",
+        "PROG-2-0836"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0156.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0156/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0157",
+      "title": "實機驗收：武將血脈頁隱藏因子（PROG-2-0712、#638）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "血脈頁隱藏因子行的顯示、覺醒與未覺醒文字、行高與版位需實機驗收；非 zh-TW 譯文不判對錯。",
+      "related": [],
+      "depends": [
+        "PR #638",
+        "PROG-2-0712"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0157.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0157/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0158",
+      "title": "實機驗收：戰技 Tab 五階血脈傳承奧義操作區（PROG-2-0720、#647）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "戰技 Tab 奧義操作卡的高度（暫定 142）、按鈕樣式、點亮後刷新與升星按鈕鎖定需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #647",
+        "PROG-2-0720"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0158.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0158/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0159",
+      "title": "實機驗收：大廳季節卡「本季效果」提示行（PROG-2-0841、#665）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-20",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "季節卡「本季效果」行的排版與可讀性、季節卡高度 232 與下方按鈕區的重疊需實機驗收，並回報建議高度。",
+      "related": [],
+      "depends": [
+        "PR #665",
+        "PROG-2-0841"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0159.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0159/**"
+      ],
+      "notes": "2026-10-20 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0160",
+      "title": "實機驗收：因子六角圖依層級遮罩（LUK-04、PROG-2-0883、#663）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "Lv1／Lv21／Lv46 三層級下未解鎖色的灰點與灰軸、解鎖特效只播已解鎖色需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #663",
+        "PROG-2-0883"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0160.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0160/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0161",
+      "title": "實機驗收：大廳官職區塊與官職詳情頁（PROG-2-0842、#670）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "官職區塊卡高 168、「官職詳情」按鈕位置、詳情頁六項權限行是否被裁切需實機驗收。",
+      "related": [],
+      "depends": [
+        "PR #670",
+        "PROG-2-0842"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0161.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0161/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0162",
+      "title": "實機驗收：抽卡原子性（PROG-2-1003、PROG-2-1004）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "十連抽後立即強關再開，錢包、名冊與教官卡數一致需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-1003",
+        "PROG-2-1004"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0162.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0162/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0163",
+      "title": "實機驗收：存檔從備份還原時大廳 toast（PROG-2-1000）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "存檔損毀改從備份還原時大廳 toast 的出現、可讀性與四語系溢出需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-1000"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0163.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0163/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0164",
+      "title": "實機驗收：畢業紀錄畫面（PROG-2-0726、PROG-2-0746）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "畢業紀錄 5 列版面與分頁越界需實機驗收；開啟入口待確認。",
+      "related": [],
+      "depends": [
+        "PROG-2-0726",
+        "PROG-2-0746"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0164.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0164/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0165",
+      "title": "實機驗收：委任開關按鈕 btnDelegate（PROG-2-0913、PROG-2-0908）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "btnDelegate 位置、點擊回饋與委任開關對部署的影響需實機驗收；場景綁定需先確認。",
+      "related": [],
+      "depends": [
+        "PROG-2-0913",
+        "PROG-2-0908"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0165.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0165/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0166",
+      "title": "實機驗收：戰績排行榜畫面（PROG-2-0959、PROG-2-0960）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "戰績分頁入口按鈕、三指標切換、文字換行與空列顯示需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-0959",
+        "PROG-2-0960"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0166.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0166/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0167",
+      "title": "實機驗收：借將選擇畫面（PROG-2-0731）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "教官區借將按鈕、借將畫面分頁與借用提示需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-0731"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0167.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0167/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0168",
+      "title": "實機驗收：畢業紀錄入口（PROG-2-0736、PROG-2-1050，連同 PROG-2-0726 畫面）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-21",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "報告區「查看紀錄」與借將畫面「畢業紀錄」兩個入口能否開啟畢業紀錄畫面，按鈕座標與窄版溢出需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-0736",
+        "PROG-2-1050",
+        "PROG-2-0726"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0168.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0168/**"
+      ],
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     },
     {
       "doc_id": "",

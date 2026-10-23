@@ -5,7 +5,7 @@
  * 精力在高區才建議結緣。
  */
 import { assert, TestSuite } from './TestRunner';
-import { buildRetireReviewTexts, buildRetireReviewView, withRetireReviewFallback } from '../assets/scripts/ui/core/RetireReviewController';
+import { buildRetireReviewTexts, buildRetireReviewView, retireGrantText, withRetireReviewFallback } from '../assets/scripts/ui/core/RetireReviewController';
 import { quarterlyBattleReport, retireReviewCareerLine, retireReviewScriptLine } from '../assets/scripts/core/systems/RetireReviewCopy';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
@@ -69,6 +69,30 @@ export function createRetireReviewControllerSuite(): TestSuite {
         const view = buildRetireReviewView(null);
         assert.equals('戰損報告：精力 0%', view.reportLine);
         assert.isFalse(view.bondRecommended);
+    });
+
+    suite.test('文職退役顯示竹簡獎勵一行（PROG-2-0739）', () => {
+        const scholar = general({ primaryClass: 'Scholar', subClass: null });
+        assert.equals('獲得竹簡 ×1', retireGrantText(scholar));
+        assert.equals('獲得竹簡 ×1', buildRetireReviewTexts(scholar).retireGrant);
+    });
+
+    suite.test('武職退役顯示虎符獎勵一行（PM 2026-10-20 照規格發虎符）', () => {
+        const warrior = general({ primaryClass: 'Warrior', subClass: null });
+        assert.equals('獲得虎符 ×1', retireGrantText(warrior));
+        assert.equals('獲得虎符 ×1', buildRetireReviewTexts(warrior).retireGrant);
+    });
+
+    suite.test('雙職能退役顯示竹簡；無法判定職能的舊存檔不給獎勵', () => {
+        const dual = general({ primaryClass: 'Warrior', subClass: 'Scholar' });
+        assert.equals('獲得竹簡 ×1', retireGrantText(dual));
+        const unknown = general({ primaryClass: 'Mystic', subClass: null });
+        assert.equals('', retireGrantText(unknown));
+    });
+
+    suite.test('語系表查不到時退回 zh-TW 獎勵句', () => {
+        const missing = (key: string) => key;
+        assert.equals('獲得竹簡 ×1', retireGrantText(general({ primaryClass: 'Scholar' }), missing));
     });
 
     return suite;

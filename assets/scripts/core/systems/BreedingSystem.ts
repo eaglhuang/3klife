@@ -15,11 +15,13 @@
  * 回傳新的 GeneralData；寫回名冊與存檔交給上層 Service（BreedingService）。
  */
 import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
+import { toCanonicalRole, type CanonicalRole } from '../models/GeneralRole';
 import type { PersonRecord } from '../models/PersonRegistry';
 import { createEmptyPedigree, Pedigree, PEDIGREE_SLOTS, PedigreeSlot, pedigreeSlotGeneration } from '../services/BloodlineGraph';
 import {
     AncestorFactorSource,
     DEFAULT_ENABLED_FACTOR_COLORS,
+    DEFAULT_MAX_INHERITED_FACTORS,
     FACTOR_POOL_RATE,
     FactorColor,
     FactorDictionary,
@@ -32,6 +34,10 @@ import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
 import { analyzeTagResonance, KIN_RESONANCE_MIN_COUNT } from './KinRelation';
 import { baseVitalityMaxOf } from './VitalityCap';
 import { rollWildGene, STAR_JUMP_MAX_LEVEL, STAR_JUMP_STEP } from './WildGene';
+import { luckThresholdEffects, type LuckThresholdEffects } from './LuckThresholds';
+import { forceFatherTacticCopy } from './LuckTacticCopy';
+import { applyFateInheritance } from './LuckFateInheritance';
+import { applyBloodlineMutation } from './LuckBloodlineMutation';
 
 export const BREEDING_MIN_AGE = 20;
 export const FATHER_VIGOR_COST = 50;
@@ -437,6 +443,18 @@ export function applyWildGeneMutation(
     });
 }
 
+/**
+ * 子嗣職能（暫定，PM）：教官只由 Support 與退役轉化而來，子嗣不直接成為 Mentor。
+ * 先取父親的規格職能；父親是 Mentor 或沒有時改用母親；兩者都不行就填 Combat。存檔六表 generals.role 為必填。
+ */
+export function childRoleOf(fatherRole: unknown, motherRole: unknown): CanonicalRole {
+    for (const raw of [fatherRole, motherRole]) {
+        const role = toCanonicalRole(raw);
+        if (role && role !== 'Mentor') return role;
+    }
+    return 'Combat';
+}
+
 export function createChild(input: CreateChildInput): BreedingGeneral {
     const { father, mother, ep } = input;
     const gender = input.random() < 0.5 ? '男' : '女';
@@ -464,6 +482,7 @@ export function createChild(input: CreateChildInput): BreedingGeneral {
         ep: ep.ep,
         epRating: ep.rating,
         bloodlineId: father.bloodlineId,
+        role: childRoleOf(father.role, mother.role),
         parentsSummary: `父：${father.name} / 母：${mother.name}`,
         genes: toGeneConfigs(input.factors, input.dictionary),
         ancestor_chain: PEDIGREE_SLOTS.map((slot) => input.pedigree[slot]).filter((uid): uid is string => !!uid),
@@ -493,6 +512,8 @@ export interface BreedingRequest {
     motherConceptionMod?: number;
     /** 選填：史實配對受孕率倍率（宿敵 0.7，KIN-04）；與母體倍率相乘，不傳視為 1 */
     historicalConceptionMod?: number;
+    /** 選填：季節受孕率倍率（冬季結緣佳期 +10%，TIME-08）；不傳視為 1 */
+    seasonConceptionMod?: number;
     pedigree: PedigreeSource;
     random: RandomSource;
     childId: string;
@@ -520,6 +541,8 @@ export interface BreedingResult {
     childPedigree?: Pedigree;
     ep?: EpBreakdown;
     factors?: InheritedFactor[];
+    /** 運氣特殊門檻旗標（LUK-06）：依父母平均 LUK 判定，只在受孕成功時有值；效果本身另卡套用 */
+    luckEffects?: LuckThresholdEffects;
 }
 
 /** 預覽 EP（結緣介面用），不消耗亂數也不改任何資料 */
@@ -594,7 +617,7 @@ export function breed(request: BreedingRequest): BreedingResult {
 
 function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMode'> {
     const eligibility = checkBreedingEligibility(request.father, request.mother, request.pedigree);
-    const conceptionMod = (request.motherConceptionMod ?? 1) * (request.historicalConceptionMod ?? 1);
+    const conceptionMod = (request.motherConceptionMod ?? 1) * (request.historicalConceptionMod ?? 1) * (request.seasonConceptionMod ?? 1);
     const rate = applyConceptionMod(conceptionRate(request.father, request.mother), conceptionMod);
     if (!eligibility.ok) {
         return { outcome: 'blocked', reasons: eligibility.reasons, conceptionRate: rate, father: request.father, mother: request.mother };
@@ -613,7 +636,8 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
 
     const { pedigree, ep: previewEp } = previewBreedingEp(request);
     const profiles = collectProfiles(pedigree, request);
-    const factors = inheritFactors(buildFactorSources(pedigree, profiles), {
+    const sources = buildFactorSources(pedigree, profiles);
+    const factors = inheritFactors(sources, {
         random: request.random,
         dictionary: request.dictionary,
         enabledColors: request.enabledColors,
@@ -626,19 +650,33 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
     // 天命波動（PROG-2-0511）：父母平均 LUK × Random(-0.5, 1.5)，在子嗣生成前套用到 EP
     const parentAvgLuk = (statOf(request.father, 'luk') + statOf(request.mother, 'luk')) / 2;
     const ep = applyFateWave(previewEp, rollFateWave(parentAvgLuk, request.random));
+    const luckEffects = luckThresholdEffects(parentAvgLuk);
+    // 戰法強制複製（LUK ≥ 80，PROG-2-0874）→ 血統變異（LUK ≥ 95，PROG-2-0877）→ 天命傳承（LUK = 100，PROG-2-0878）
+    const tacticFactors = luckEffects.forceTacticCopy
+        ? forceFatherTacticCopy(finalFactors, request.father, request.dictionary, request.maxFactors ?? DEFAULT_MAX_INHERITED_FACTORS)
+        : finalFactors;
+    const bloodlineFactors = luckEffects.bloodlineMutation
+        ? applyBloodlineMutation(tacticFactors, request.random, request.dictionary)
+        : tacticFactors;
+    const childFactors = luckEffects.fateInheritance
+        ? applyFateInheritance(bloodlineFactors, sources, { random: request.random, dictionary: request.dictionary, enabledColors: request.enabledColors })
+        : bloodlineFactors;
     const child = createChild({
         id: request.childId,
         father: request.father,
         mother: request.mother,
         ep,
-        factors: finalFactors,
+        factors: childFactors,
         pedigree,
         random: request.random,
         dictionary: request.dictionary,
         birthSeason: request.birthSeason,
     });
 
-    return { outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: finalFactors };
+    return {
+        outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: childFactors,
+        luckEffects,
+    };
 }
 
 /**

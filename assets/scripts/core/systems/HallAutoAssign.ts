@@ -10,6 +10,8 @@
  * Unity 對照：像一個 Service，輸入任務與候選清單，輸出結果與新的紀錄列表，不直接改任何狀態。
  */
 import { isAutoAssignEnabled, HallTaskIntelInput } from './HallTaskIntel';
+import type { HallBoardKey } from './HallMissionBoard';
+import { judgeHallMissionSuccess } from './HallMissionDispatch';
 
 export interface HallAutoAssignCandidate {
     generalId: string;
@@ -22,14 +24,20 @@ export interface HallAutoAssignRecord {
     taskId: string;
     generalId: string;
     assignedAt: string;
-    /** 結算結果；尚未結算時缺省。由呼叫端依戰鬥結果傳入，本模組不推算。 */
+    /** 結算結果；尚未結算時缺省。由呼叫端依戰鬥結果傳入，季結由 settleOpenAssignsForSeason 推算。 */
     outcome?: HallAssignOutcome;
     settledAt?: string;
+    /** 任務難度與任務牆，委任時一併記下，季結自動結算要用；舊紀錄可能缺省（缺省難度視為失敗）。 */
+    difficulty?: string;
+    board?: HallBoardKey;
 }
+
+/** 委任時用到的任務欄位：難度與任務牆為選填，缺省時季結依未知難度判定。 */
+export type HallAutoAssignTaskInput = Readonly<HallTaskIntelInput & { taskId: string; Difficulty?: string; board?: HallBoardKey }>;
 
 export type HallAutoAssignResult =
     | { ok: true; record: HallAutoAssignRecord }
-    | { ok: false; reason: 'not-enabled' | 'no-candidate' };
+    | { ok: false; reason: 'not-enabled' | 'no-candidate' | 'task-already-assigned' };
 
 /** 選將：忽略非有限戰力；戰力高者優先，同分取 generalId 字典序較小者；沒有候選回傳 null。 */
 export function pickAutoAssignGeneral(candidates: readonly HallAutoAssignCandidate[]): string | null {
@@ -47,16 +55,27 @@ export function pickAutoAssignGeneral(candidates: readonly HallAutoAssignCandida
     return best ? best.generalId : null;
 }
 
-/** 委任一個任務；未開啟委任或沒有可選武將時拒絕，不產生紀錄。 */
+/**
+ * 委任一個任務；未開啟委任、同一任務已有未結算委任、或沒有可選武將時拒絕，不產生紀錄。
+ * 候選武將若已在其他未結算的委任上，視為忙碌，不列入選將（PM 裁定）。
+ */
 export function autoAssignHallTask(
-    task: Readonly<HallTaskIntelInput & { taskId: string }>,
+    task: HallAutoAssignTaskInput,
     candidates: readonly HallAutoAssignCandidate[],
     assignedAt: string,
+    log: readonly HallAutoAssignRecord[] = [],
 ): HallAutoAssignResult {
     if (!isAutoAssignEnabled(task)) return { ok: false, reason: 'not-enabled' };
-    const generalId = pickAutoAssignGeneral(candidates);
+    if (log.some(record => record.taskId === task.taskId && record.outcome === undefined)) {
+        return { ok: false, reason: 'task-already-assigned' };
+    }
+    const busy = new Set(log.filter(record => record.outcome === undefined).map(record => record.generalId));
+    const generalId = pickAutoAssignGeneral(candidates.filter(candidate => !busy.has(candidate.generalId)));
     if (generalId === null) return { ok: false, reason: 'no-candidate' };
-    return { ok: true, record: { taskId: task.taskId, generalId, assignedAt } };
+    const record: HallAutoAssignRecord = { taskId: task.taskId, generalId, assignedAt };
+    if (typeof task.Difficulty === 'string') record.difficulty = task.Difficulty;
+    if (task.board !== undefined) record.board = task.board;
+    return { ok: true, record };
 }
 
 /** 追加一筆委任紀錄；回傳新陣列，不改動輸入。 */
@@ -97,4 +116,30 @@ export function settleLatestAssign(
     if (target < 0) return { ok: false, reason: 'no-open-record' };
     const next = log.map((record, i) => (i === target ? { ...record, outcome, settledAt } : { ...record }));
     return { ok: true, log: next };
+}
+
+export interface HallSeasonSettleResult {
+    log: HallAutoAssignRecord[];
+    /** 本次新結算的紀錄：難度與任務牆（可能缺省）與成敗，供呼叫端入帳官職經驗。 */
+    settled: { difficulty?: string; board?: HallBoardKey; success: boolean }[];
+}
+
+/**
+ * 季結自動結算：所有未結算的委任依武將戰力判定成敗（比照派遣即結算的門檻），釋放武將。
+ * powerOf 回傳武將戰力；武將已不在名冊（陣亡或離開）時呼叫端應回傳 0，判為失敗。
+ * 回傳新陣列，不改動輸入；已結算的紀錄原樣保留。
+ */
+export function settleOpenAssignsForSeason(
+    log: readonly HallAutoAssignRecord[],
+    powerOf: (generalId: string) => number,
+    settledAt: string,
+): HallSeasonSettleResult {
+    const settled: HallSeasonSettleResult['settled'] = [];
+    const next = log.map((record): HallAutoAssignRecord => {
+        if (record.outcome !== undefined) return { ...record };
+        const success = judgeHallMissionSuccess(record.difficulty ?? '', powerOf(record.generalId));
+        settled.push({ difficulty: record.difficulty, board: record.board, success });
+        return { ...record, outcome: success ? 'success' : 'failure', settledAt };
+    });
+    return { log: next, settled };
 }

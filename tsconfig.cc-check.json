@@ -1,0 +1,36 @@
+{
+  /**
+   * tsconfig.cc-check.json — 雲端 cc 程式型別檢查（報告模式）
+   *
+   * 用途：temp/tsconfig.cocos.json 由 Cocos 編輯器產生，雲端容器沒有，
+   * 主 tsconfig.json 無法在雲端跑。本檔不繼承它，直接引用
+   * @cocos/creator-types/engine.d.ts 作為 cc 型別來源，檢查 assets/scripts。
+   *
+   * 注意：
+   *   - 只用來回報錯誤數，不接 CI，不代表遊戲可編譯。
+   *   - 不修改 tsconfig.json 或 temp/，不影響 Cocos 編譯流程。
+   *
+   * 執行：npx tsc --noEmit -p tsconfig.cc-check.json
+   */
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": false,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "types": ["node"],
+    "typeRoots": ["./node_modules/@types"],
+    "baseUrl": "."
+  },
+  "include": [
+    "@cocos/creator-types/engine.d.ts",
+    "types/cc-env.d.ts",
+    "assets/scripts/**/*.ts"
+  ],
+  "exclude": [
+    "assets/scripts/ui/core/_pending-delete/**"
+  ]
+}
