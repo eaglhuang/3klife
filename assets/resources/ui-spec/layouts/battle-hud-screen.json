@@ -91,6 +91,7 @@
                       {
                         "type": "label",
                         "name": "BattleHudScreen_div_4",
+                        "id": "TurnLabel",
                         "width": 232,
                         "height": 49,
                         "text": "第 7 回合",
@@ -840,6 +841,7 @@
                   {
                     "type": "label",
                     "name": "BattleHudScreen_div_58",
+                    "id": "PlayerNameLabel",
                     "width": 23,
                     "height": 16,
                     "text": "關羽",
@@ -1105,6 +1107,7 @@
                   {
                     "type": "label",
                     "name": "BattleHudScreen_div_78",
+                    "id": "EnemyNameLabel",
                     "width": 23,
                     "height": 16,
                     "text": "呂布",
@@ -1990,6 +1993,7 @@
                   {
                     "type": "label",
                     "name": "BattleHudScreen_div_124",
+                    "id": "PlayerCommandNameLabel",
                     "widget": {
                       "top": 118,
                       "left": 0,
