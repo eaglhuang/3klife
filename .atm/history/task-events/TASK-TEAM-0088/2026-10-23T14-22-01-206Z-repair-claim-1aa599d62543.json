@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-23T14-22-01-206Z-repair-claim-1aa599d62543",
+  "taskId": "TASK-TEAM-0088",
+  "action": "repair-claim",
+  "actorId": "claude-code-opus-5.5",
+  "sessionId": "session-20260906213041-codex-captain-TASK-TEAM-0088-0a5dad6c65",
+  "fromStatus": "running",
+  "toStatus": "ready",
+  "taskPath": ".atm/history/tasks/TASK-TEAM-0088.json",
+  "taskSha256": "sha256:e711145ee4b70e36e8c5e9b476b2a79a05efc8b9988fdfab3a278f544b2a2e12",
+  "createdAt": "2026-10-23T14:22:01.206Z",
+  "command": "node atm.mjs tasks repair-claim --task TASK-TEAM-0088 --actor claude-code-opus-5.5 --write --reason \"接手 Codex 交接：使用者先前明確同意釋放 codex-captain 過期租約；ATM 診斷 expired-claim 等問題 repairable=true、blocked=false，於最新 master 重新執行修復並正式落地。\" --json"
+}

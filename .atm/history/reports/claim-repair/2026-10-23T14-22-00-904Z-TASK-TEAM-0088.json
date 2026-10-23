@@ -1,0 +1,87 @@
+{
+  "schemaId": "atm.claimRepairReport.v1",
+  "generatedAt": "2026-10-23T14:22:00.904Z",
+  "taskId": "TASK-TEAM-0088",
+  "actorId": "claude-code-opus-5.5",
+  "reason": "接手 Codex 交接：使用者先前明確同意釋放 codex-captain 過期租約；ATM 診斷 expired-claim 等問題 repairable=true、blocked=false，於最新 master 重新執行修復並正式落地。",
+  "before": {
+    "status": "running",
+    "claim": {
+      "actorId": "codex-captain",
+      "leaseId": "lease-48f8528c17bb",
+      "claimedAt": "2026-09-06T21:30:41.341Z",
+      "heartbeatAt": "2026-09-06T21:30:41.341Z",
+      "ttlSeconds": 1800,
+      "files": [
+        ".atm/history/tasks/TASK-TEAM-0088.json",
+        ".atm/history/evidence/TASK-TEAM-0088.*",
+        ".atm/history/reports/task-import/2026-09-06T20-44-04-866Z.json",
+        ".atm/history/reports/task-import/2026-09-06T20-51-26-080Z.json",
+        ".atm/history/session-events/lane-20260906205133-codex-captain-4242dbaed9/2026-09-06T20-54-52-621Z-adopt-6699577da9ff.json",
+        ".atm/history/task-events/TASK-TEAM-0088/**"
+      ],
+      "state": "active",
+      "laneSession": {
+        "laneSessionId": "lane-20260906213041-codex-captain-714239a2f0",
+        "status": "active",
+        "source": "minted",
+        "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20260906213041-codex-captain-714239a2f0\""
+      }
+    }
+  },
+  "after": {
+    "status": "ready",
+    "claim": {
+      "actorId": "codex-captain",
+      "leaseId": "lease-48f8528c17bb",
+      "claimedAt": "2026-09-06T21:30:41.341Z",
+      "heartbeatAt": "2026-10-23T14:22:00.904Z",
+      "ttlSeconds": 1800,
+      "files": [
+        ".atm/history/tasks/TASK-TEAM-0088.json",
+        ".atm/history/evidence/TASK-TEAM-0088.*",
+        ".atm/history/reports/task-import/2026-09-06T20-44-04-866Z.json",
+        ".atm/history/reports/task-import/2026-09-06T20-51-26-080Z.json",
+        ".atm/history/session-events/lane-20260906205133-codex-captain-4242dbaed9/2026-09-06T20-54-52-621Z-adopt-6699577da9ff.json",
+        ".atm/history/task-events/TASK-TEAM-0088/**"
+      ],
+      "state": "released",
+      "reason": "接手 Codex 交接：使用者先前明確同意釋放 codex-captain 過期租約；ATM 診斷 expired-claim 等問題 repairable=true、blocked=false，於最新 master 重新執行修復並正式落地。",
+      "laneSession": {
+        "laneSessionId": "lane-20260906213041-codex-captain-714239a2f0",
+        "status": "active",
+        "source": "minted",
+        "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20260906213041-codex-captain-714239a2f0\""
+      }
+    }
+  },
+  "repairActions": [
+    "released-expired-claim",
+    "reset-status-to-ready",
+    "released-stale-active-claim",
+    "cleared-stale-owner",
+    "cleared-embedded-direction-lock"
+  ],
+  "issues": [
+    {
+      "kind": "expired-claim",
+      "severity": "repairable",
+      "summary": "Claim lease lease-48f8528c17bb expired for actor codex-captain.",
+      "details": {
+        "actorId": "codex-captain",
+        "leaseId": "lease-48f8528c17bb",
+        "heartbeatAt": "2026-09-06T21:30:41.341Z",
+        "ttlSeconds": 1800
+      }
+    },
+    {
+      "kind": "stale-running-without-claim",
+      "severity": "repairable",
+      "summary": "Task status is running but no valid active claim exists.",
+      "details": {
+        "status": "running",
+        "claimState": "active"
+      }
+    }
+  ]
+}
