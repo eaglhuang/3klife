@@ -139,6 +139,7 @@ export class BattleUIBridge {
     onGeneralDuelRequest: () => void;
     onBoardPlacement?: (screenX: number, screenY: number) => void;
     onReplay:       () => void;
+    onBack?:        () => void;
   }): void {
     this.unsubscribeEvents();
     this.onBoardPlacement = externalHandlers.onBoardPlacement ?? null;
@@ -182,6 +183,7 @@ export class BattleUIBridge {
     bindNodeEvent(actionCommandNode, 'endTurn', externalHandlers.onEndTurn);
     bindNodeEvent(actionCommandNode, 'tactics', externalHandlers.onTactics);
     bindNodeEvent(c.resultPopup?.node, 'replay', externalHandlers.onReplay);
+    if (externalHandlers.onBack) bindNodeEvent(c.resultPopup?.node, 'back', externalHandlers.onBack);
     bindNodeEvent(c.deployRuntime?.node, 'generalDuel', externalHandlers.onGeneralDuelRequest);
     input.on(Input.EventType.TOUCH_END, this._onGlobalBoardTouchEnd, this);
     this.unsubs.push(() => input.off(Input.EventType.TOUCH_END, this._onGlobalBoardTouchEnd, this));

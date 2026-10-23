@@ -11,6 +11,7 @@ import { services } from "../../core/managers/ServiceLoader";
 import { bindHeldTallyInstances } from '../../core/config/TallyCardCatalog';
 import { tallyBattleInfoOf } from "../../core/systems/TigerTallyStar";
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog } from '../../shared/BattleEntryParams';
+import { SceneName } from "../../shared/CommonEnums";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { BattleController } from "../controllers/BattleController";
 import { TerrainGrid } from "../models/BattleState";
@@ -415,6 +416,7 @@ export class BattleScene extends Component {
         onGeneralDuelRequest: () => this._onGeneralDuelRequest(),
         onBoardPlacement: (x, y) => this.turnFlowManager?.doDeployRaycast(x, y),
         onReplay: () => this.onReplay(),
+        onBack: () => this._onBackToLobby(),
       });
       this.refreshBattleViews();
 
@@ -518,6 +520,12 @@ export class BattleScene extends Component {
   private _signalCaptureErrorIfNeeded(error: unknown): void {
     if (!this._isBattleCaptureMode()) return;
     this._setBattleCaptureState('error', error);
+  }
+
+  /** 戰鬥結果彈窗「返回」：回大廳，讓結緣→培育→戰場→傳承循環能接續。 */
+  private _onBackToLobby(): void {
+    UCUFLogger.info(LogCategory.LIFECYCLE, "[BattleScene] 結果彈窗返回大廳");
+    services().scene.switchScene(SceneName.Lobby);
   }
 
   private onReplay(): void {

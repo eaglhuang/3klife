@@ -201,6 +201,8 @@ const baseCcStub = {
   EffectAsset: class {},
   Material: class {},
   Tween: class {},
+  Input: { EventType: { TOUCH_START: 'touch-start', TOUCH_MOVE: 'touch-move', TOUCH_END: 'touch-end' } },
+  input: { on() {}, off() {} },
   tween: () => createChainableTween(),
   instantiate: (prefab) => prefab instanceof DummyNode ? prefab : new DummyNode('InstantiatedNode'),
   NodePool: class {
