@@ -89,7 +89,7 @@ export function addOfficerExp(state: OfficerState, gain: number): OfficerExpResu
     for (let tier = state.currentTier + 1; tier <= currentTier; tier++) {
         promotedTiers.push(tier);
     }
-    const unlockHistory = [...new Set([...state.unlockHistory, ...promotedTiers])].sort((a, b) => a - b);
+    const unlockHistory = Array.from(new Set([...state.unlockHistory, ...promotedTiers])).sort((a, b) => a - b);
     return { state: { currentTier, officerExp, unlockHistory }, promotedTiers };
 }
 
@@ -112,7 +112,7 @@ export function normalizeOfficerState(raw: unknown): OfficerState {
     const saved = Array.isArray(source.unlockHistory)
         ? source.unlockHistory.filter((t): t is number => Number.isInteger(t) && t >= OFFICER_TIER_MIN && t <= currentTier)
         : [];
-    const unlockHistory = [...new Set([OFFICER_TIER_MIN, ...saved, ...rangeOf(OFFICER_TIER_MIN + 1, currentTier)])].sort((a, b) => a - b);
+    const unlockHistory = Array.from(new Set([OFFICER_TIER_MIN, ...saved, ...rangeOf(OFFICER_TIER_MIN + 1, currentTier)])).sort((a, b) => a - b);
     return { currentTier, officerExp: exp, unlockHistory };
 }
 

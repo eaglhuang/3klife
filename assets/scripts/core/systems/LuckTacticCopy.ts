@@ -53,7 +53,7 @@ export function forceFatherTacticCopy(
     const existing = factors.find((factor) => factor.id === tactic.id);
     if (existing) {
         forced.level = Math.max(forced.level, existing.level);
-        forced.sourceUids = [...new Set([sourceUid, ...existing.sourceUids])];
+        forced.sourceUids = Array.from(new Set([sourceUid, ...existing.sourceUids]));
     }
 
     // 名額已滿時，擠掉排序最後的非強制因子（排序與 inheritFactors 相同：星級高、世代近、id 小者優先）

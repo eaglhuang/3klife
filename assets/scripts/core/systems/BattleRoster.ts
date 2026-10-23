@@ -312,7 +312,7 @@ export function settleBattle(roster: readonly GeneralConfig[], request: SettleBa
         };
         return updated;
     });
-    return { roster: next, entries, skippedIds: [...ids].filter((id) => !found.has(id)) };
+    return { roster: next, entries, skippedIds: Array.from(ids).filter((id) => !found.has(id)) };
 }
 
 // ── 每季精力回補 ───────────────────────────────────────────────────────────

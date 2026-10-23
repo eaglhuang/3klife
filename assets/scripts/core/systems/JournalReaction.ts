@@ -47,7 +47,7 @@ export interface JournalReaction {
 
 /** 字數以 Unicode 字元計（中文一字一個），含標點。 */
 function charCount(text: string): number {
-    return [...text].length;
+    return Array.from(text).length;
 }
 
 /** 台詞檢查：長度在 20~60 字之間，且不含未填的 slot 括號。 */

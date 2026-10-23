@@ -225,7 +225,7 @@ export function normalizeClearedStageIds(value: unknown): string[] {
     for (const id of value) {
         if (typeof id === 'string' && id.length > 0) seen.add(id);
     }
-    return [...seen];
+    return Array.from(seen);
 }
 
 /** 收藏武將 id：去重、略過空字串與非字串；壞資料補空陣列（PROG-2-0453） */
@@ -240,7 +240,7 @@ export function normalizeFavoriteGeneralIds(value: unknown): string[] {
     for (const id of value) {
         if (typeof id === 'string' && id.length > 0) seen.add(id);
     }
-    return [...seen];
+    return Array.from(seen);
 }
 
 /** 大廳任務指派：只保留任務 id 與武將 id 都是非空字串的項目（PROG-2-0453） */

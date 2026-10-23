@@ -66,6 +66,6 @@ export class PersonRegistry {
 
     /** 依 uid 排序列出所有人物副本，順序固定。 */
     list(): PersonRecord[] {
-        return [...this.records.keys()].sort().map((uid) => copyRecord(this.records.get(uid) as PersonRecord));
+        return Array.from(this.records.keys()).sort().map((uid) => copyRecord(this.records.get(uid) as PersonRecord));
     }
 }

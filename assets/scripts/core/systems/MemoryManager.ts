@@ -282,7 +282,7 @@ export class MemoryManager {
         const items = this.getReport();
         UCUFLogger.info(LogCategory.DATA, `[MemoryManager] active:${items.length} lruBuffer:${this._lruBuffer.size}`);
         items.forEach(r => {
-            const sc = r.scopes.size > 0 ? ` scope:[${[...r.scopes].join(',')}]` : '';
+            const sc = r.scopes.size > 0 ? ` scope:[${Array.from(r.scopes).join(',')}]` : '';
             UCUFLogger.info(LogCategory.DATA, `  [${r.bundle}] ${r.assetType} | ref:${r.refCount}${sc} | ${r.key}`);
         });
     }

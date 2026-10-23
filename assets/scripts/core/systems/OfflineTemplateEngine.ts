@@ -34,7 +34,7 @@ const SLOT_PATTERN = /\{([A-Za-z_][A-Za-z0-9_]*)\}/g;
 
 /** 字數以 Unicode 字元計（中文一字算一字）。 */
 export function lineLength(line: string): number {
-    return [...line].length;
+    return Array.from(line).length;
 }
 
 export function isAcceptableOfflineLine(line: string): boolean {
