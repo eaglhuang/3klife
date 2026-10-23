@@ -5,7 +5,7 @@
     "title": "升級 3KLife 內嵌 ATM 至最新版並建立可重複升級技能",
     "owner": "codex-gpt-6.1-sol",
     "priority": "P1",
-    "status": "blocked",
+    "status": "in-progress",
     "type": "implementation",
     "phase": "ATM-0",
     "created": "2026-10-23",
@@ -32,7 +32,7 @@
       "更新後的 ATM adopter runner/integration 產物",
       "ATM doctor 與 tasks audit 驗證紀錄"
     ],
-    "notes": "2026-10-23 | 狀態: blocked | 驗證: CLI 0.1.23 identity verified; setup refuses customized AGENTS.md; doctor reports charter integrity failure and recommends init --force | 變更: added reusable adopter-upgrade skill; runner unchanged | 阻塞: governance-block and charter migration review required",
+    "notes": "2026-10-23 | 狀態: in-progress | 驗證: disposable 0.1.23 probe succeeds after setup; init --force replaces both existing charter files with different contents | 變更: recording exact migration impact; no 3KLife governance files changed | 阻塞: review migration scope before applying to adopter",
     "brief": {
       "style": "classic",
       "label": "",
@@ -53,10 +53,10 @@
         "docs/agent-briefs/tasks/ATM/ATM-0-0026.md"
       ],
       "validation_evidence": [
-        "npm CLI 0.1.23 runtime identity verified; sourceCommit eba8fb787976ad149e396ca8d934deadfa634040; frozen tag runner reports 0.1.2.",
-        "setup dry-run blocks on customized AGENTS.md; doctor reports ATM_DOCTOR_CHARTER_MISSING; init --force not run."
+        "npm CLI 0.1.23 identity verified; sourceCommit eba8fb787976ad149e396ca8d934deadfa634040; frozen tag runner reports 0.1.2.",
+        "setup --dry-run blocks on customized AGENTS.md. In a disposable probe, init --force plus setup succeeds, but both existing charter files are replaced by different contents (SHA-256 differs); no 3KLife charter or AGENTS file was changed."
       ],
-      "handoff_diff_status": "Upgrade is blocked pending reviewed AGENTS/charter migration; reusable skill is present.",
+      "handoff_diff_status": "Disposable probe confirms an official setup path, but applying it requires a reviewed AGENTS/charter migration plan.",
       "trace_artifacts": [],
       "metrics_summary": []
     },
