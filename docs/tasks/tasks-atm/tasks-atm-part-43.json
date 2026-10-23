@@ -5,7 +5,7 @@
     "title": "升級 3KLife 內嵌 ATM 至最新版並建立可重複升級技能",
     "owner": "codex-gpt-6.1-sol",
     "priority": "P1",
-    "status": "in-progress",
+    "status": "blocked",
     "type": "implementation",
     "phase": "ATM-0",
     "created": "2026-10-23",
@@ -32,7 +32,7 @@
       "更新後的 ATM adopter runner/integration 產物",
       "ATM doctor 與 tasks audit 驗證紀錄"
     ],
-    "notes": "2026-10-23 | 狀態: in-progress | 驗證: disposable 0.1.23 probe succeeds after setup; init --force replaces both existing charter files with different contents | 變更: recording exact migration impact; no 3KLife governance files changed | 阻塞: review migration scope before applying to adopter",
+    "notes": "2026-10-23 | 狀態: blocked | 驗證: 0.1.23 npm identity verified; setup refuses customized AGENTS; disposable init --force changes both charter files | 變更: reusable skill delivered; target runner and governance unchanged | 阻塞: formal scope amendment and owner-approved AGENTS/charter migration required",
     "brief": {
       "style": "classic",
       "label": "",
@@ -54,9 +54,10 @@
       ],
       "validation_evidence": [
         "npm CLI 0.1.23 identity verified; sourceCommit eba8fb787976ad149e396ca8d934deadfa634040; frozen tag runner reports 0.1.2.",
-        "setup --dry-run blocks on customized AGENTS.md. In a disposable probe, init --force plus setup succeeds, but both existing charter files are replaced by different contents (SHA-256 differs); no 3KLife charter or AGENTS file was changed."
+        "setup --dry-run blocks on customized AGENTS.md. Disposable probe: init --force plus setup succeeds, but both existing charter files are replaced with different contents (SHA-256 differs); no target AGENTS or charter file was changed.",
+        "ATM task single-truth, shard health, encoding, diff check, and quick Compute Gate passed; tasks audit emitted no output within 15s and was interrupted."
       ],
-      "handoff_diff_status": "Disposable probe confirms an official setup path, but applying it requires a reviewed AGENTS/charter migration plan.",
+      "handoff_diff_status": "Draft PR contains the reusable skill and evidence only. ATM runner remains 0.1.0; owner approval/scope amendment is needed to apply governance migration.",
       "trace_artifacts": [],
       "metrics_summary": []
     },
