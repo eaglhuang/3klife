@@ -35,6 +35,7 @@ import { femaleSourceConceptionMod, type FemaleSource } from '../systems/FemaleS
 import { affinityResolverOf, conceptionModBetween, type HistoricalPairTable } from '../systems/HistoricalPairs';
 import { generateVirtualAncestry, toRegistryEntries } from '../systems/VirtualAncestorGenerator';
 import type { RandomSource } from '../systems/GeneralAging';
+import { relationEventsForBreeding, RelationEventLedger } from '../systems/RelationEvents';
 
 export interface BreedingServiceOptions {
     random?: RandomSource;
@@ -76,6 +77,9 @@ export class BreedingService {
         private readonly _graph: BloodlineGraph,
         private readonly _options: BreedingServiceOptions = {},
     ) {}
+
+    /** 關係事件一次性紀錄（KIN-08）；存檔接線另卡，目前以記憶體為準 */
+    private readonly _relationEvents = new RelationEventLedger();
 
     /**
      * 初代名將（名冊沒有父母、血統圖也沒有祖先）補齊 14 位虛擬祖先（BLT-02）。
@@ -170,6 +174,13 @@ export class BreedingService {
             seasonConceptionMod: this._options.seasonConceptionMod?.(),
         });
         if (result.outcome === 'blocked') return result;
+        result.relationEvents = relationEventsForBreeding(
+            this._pairs(),
+            this._relationEvents,
+            `season-${this._options.currentSeason?.() ?? 0}`,
+            father.id,
+            mother.id,
+        );
 
         const next = roster.map((g) => (g.id === father.id ? result.father : g.id === mother.id ? result.mother : g));
         if (result.child) {
