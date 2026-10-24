@@ -53,6 +53,7 @@ import { withBreedFallback, type BreedTextLookup } from '../core/BreedingTexts';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
+import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
@@ -229,6 +230,8 @@ export class LobbyScene extends Component {
     private _motherTree: BloodlineTreePanel | null = null;
     private _jobChangeHost: UIScreenPreviewHost | null = null;
     private _domesticHost: UIScreenPreviewHost | null = null;
+    private _recruitHost: UIScreenPreviewHost | null = null;
+    private _recruit: RecruitHallController | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
     private _mercPanelHost: UIScreenPreviewHost | null = null;
@@ -373,6 +376,7 @@ export class LobbyScene extends Component {
         await this._mountBondingSetup();
         await this._mountJobChange();
         await this._mountDomestic();
+        await this._mountRecruitHall();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
         await this._mountRedFaceShowcase();
@@ -1031,6 +1035,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnDiplomacy', handler: () => { void this._onClickDomesticTask(domestic, 'diplomacy'); } },
             { buttonId: 'btnArms', handler: () => { void this._onClickDomesticTask(domestic, 'arms'); } },
             { buttonId: 'btnScouting', handler: () => { void this._onClickDomesticTask(domestic, 'scouting'); } },
+            { buttonId: 'btnOpenRecruit', handler: () => { this._closeDomestic(); this._openRecruitHall(); } },
         ]);
         this._domesticHost.node.active = false;
     }
@@ -1616,6 +1621,58 @@ export class LobbyScene extends Component {
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshJobChange();
+    }
+
+    /**
+     * 招賢館（PROG-2-1089）：以 UCUF JSON（recruit-hall-screen）執行期組裝。
+     * 名將池 20 位直接挑選、金幣招募入冊；規則在 RecruitHallController。
+     */
+    private async _mountRecruitHall(): Promise<void> {
+        const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
+        const heroPool = (Array.isArray(gachaConfig) ? gachaConfig : []).find(pool => pool.poolId === 'hero-pool');
+        const ids = heroPool?.candidateIds ?? [];
+        const gacha = this._localGachaService;
+        const recruit = new RecruitHallController({
+            candidates: () => ids.map((id) => this._generals.find((g) => g.id === id)).filter((g): g is GeneralConfig => !!g),
+            ownedIds: () => new Set(services().session.roster.map((g) => g.id)),
+            gold: () => gacha.getCurrencyAmount('gold'),
+            spendGold: (amount) => gacha.spendCurrency('gold', amount),
+            recruit: async (general) => { await services().session.addGenerals([{ ...general }]); },
+        });
+        this._recruit = recruit;
+        const rowButtons = Array.from({ length: RECRUIT_ROWS_PER_PAGE }, (_, i) => ({
+            buttonId: `btnRecruitRow${i}`,
+            handler: () => {
+                void recruit.recruitRow(i).catch((error) => {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 招募失敗', error);
+                }).finally(() => { this._refreshRecruitHall(); });
+            },
+        }));
+        this._recruitHost = await this._mountPreviewScreenHost('RecruitHallHost', 'recruit-hall-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._recruitHost) this._recruitHost.node.active = false; } },
+            ...rowButtons,
+            { buttonId: 'btnPrev', handler: () => { recruit.prev(); this._refreshRecruitHall(); } },
+            { buttonId: 'btnNext', handler: () => { recruit.next(); this._refreshRecruitHall(); } },
+        ]);
+        this._recruitHost.node.active = false;
+    }
+
+    private _openRecruitHall(): void {
+        const host = this._recruitHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshRecruitHall();
+    }
+
+    private _refreshRecruitHall(): void {
+        const binder = this._recruitHost?.binder;
+        if (!binder || !this._recruit) {
+            return;
+        }
+        applyFlowView(binder, this._recruit.getFlowView());
     }
 
     private _openDomestic(): void {

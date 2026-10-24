@@ -1,0 +1,17 @@
+{
+  "id": "recruit-hall-screen",
+  "version": 1,
+  "uiId": "RecruitHall",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "recruit-hall-main",
+  "skin": "recruit-hall-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

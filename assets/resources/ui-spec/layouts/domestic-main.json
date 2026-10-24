@@ -362,6 +362,33 @@
             "height": 36,
             "text": "",
             "styleSlot": "domestic.label.log"
+          },
+          {
+            "type": "button",
+            "name": "BtnOpenRecruit",
+            "id": "btnOpenRecruit",
+            "widget": {
+              "top": 430,
+              "right": 32
+            },
+            "width": 240,
+            "height": 84,
+            "skinSlot": "domestic.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnOpenRecruitLabel",
+                "id": "btnOpenRecruitLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "招賢館 ▶",
+                "styleSlot": "domestic.label.button"
+              }
+            ]
           }
         ]
       }
