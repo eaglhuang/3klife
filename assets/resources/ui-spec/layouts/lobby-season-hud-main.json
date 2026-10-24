@@ -23,11 +23,11 @@
         "type": "panel",
         "name": "SeasonHudCard",
         "widget": {
-          "top": 120,
+          "top": 96,
           "left": 32
         },
         "width": 320,
-        "height": 232,
+        "height": 340,
         "skinSlot": "season.hud.card.bg",
         "children": [
           {
@@ -89,7 +89,7 @@
             "widget": {
               "bottom": 8,
               "left": 12,
-              "right": 12
+              "right": 164
             },
             "height": 40,
             "skinSlot": "season.hud.button.bg",
@@ -114,8 +114,8 @@
             "name": "OpenNurtureButton",
             "id": "btnOpenNurture",
             "widget": {
-              "bottom": 56,
-              "left": 12,
+              "bottom": 8,
+              "left": 164,
               "right": 12
             },
             "height": 40,
@@ -141,9 +141,9 @@
             "name": "OpenBondingButton",
             "id": "btnOpenBonding",
             "widget": {
-              "bottom": 104,
+              "bottom": 56,
               "left": 12,
-              "right": 12
+              "right": 164
             },
             "height": 40,
             "skinSlot": "season.hud.button.bg",
@@ -168,8 +168,8 @@
             "name": "OpenJobChangeButton",
             "id": "btnOpenJobChange",
             "widget": {
-              "bottom": 152,
-              "left": 12,
+              "bottom": 56,
+              "left": 164,
               "right": 12
             },
             "height": 40,
@@ -195,9 +195,9 @@
             "name": "OpenDomesticButton",
             "id": "btnOpenDomestic",
             "widget": {
-              "bottom": 200,
+              "bottom": 104,
               "left": 12,
-              "right": 12
+              "right": 164
             },
             "height": 40,
             "skinSlot": "season.hud.button.bg",
@@ -222,8 +222,8 @@
             "name": "BtnOpenHallBoard",
             "id": "btnOpenHallBoard",
             "widget": {
-              "bottom": 248,
-              "left": 12,
+              "bottom": 104,
+              "left": 164,
               "right": 12
             },
             "height": 40,
@@ -249,9 +249,9 @@
             "name": "BtnOpenSandtable",
             "id": "btnOpenSandtable",
             "widget": {
-              "bottom": 296,
+              "bottom": 152,
               "left": 12,
-              "right": 12
+              "right": 164
             },
             "height": 40,
             "skinSlot": "season.hud.button.bg",
@@ -276,8 +276,8 @@
             "name": "BtnOpenSpiritCodex",
             "id": "btnOpenSpiritCodex",
             "widget": {
-              "bottom": 344,
-              "left": 12,
+              "bottom": 152,
+              "left": 164,
               "right": 12
             },
             "height": 40,
