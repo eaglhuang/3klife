@@ -53,6 +53,8 @@ import { withBreedFallback, type BreedTextLookup } from '../core/BreedingTexts';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
+import { FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems/SeasonFastForward';
+import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
@@ -229,6 +231,7 @@ export class LobbyScene extends Component {
     private _motherTree: BloodlineTreePanel | null = null;
     private _jobChangeHost: UIScreenPreviewHost | null = null;
     private _domesticHost: UIScreenPreviewHost | null = null;
+    private _fastForwarding = false;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
     private _mercPanelHost: UIScreenPreviewHost | null = null;
@@ -1031,6 +1034,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnDiplomacy', handler: () => { void this._onClickDomesticTask(domestic, 'diplomacy'); } },
             { buttonId: 'btnArms', handler: () => { void this._onClickDomesticTask(domestic, 'arms'); } },
             { buttonId: 'btnScouting', handler: () => { void this._onClickDomesticTask(domestic, 'scouting'); } },
+            { buttonId: 'btnFastForward', handler: () => { void this._onClickFastForward(); } },
         ]);
         this._domesticHost.node.active = false;
     }
@@ -2187,6 +2191,36 @@ export class LobbyScene extends Component {
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 主將存檔失敗', error);
             services().event.emit('SHOW_TOAST', { message: '主將存檔失敗，請稍後再試', duration: 2 });
+        }
+    }
+
+    /**
+     * 快進至下個事件（PROG-2-1090）：連續推進季度，遇到開獎、離世、有人成年就停，最多 5 年。
+     * 中間不跳季度戰報，只在最後提示停下的原因。
+     */
+    private async _onClickFastForward(): Promise<void> {
+        if (this._fastForwarding) return;
+        this._fastForwarding = true;
+        try {
+            const session = services().session;
+            const adultIds = (): Set<string> => new Set(session.roster
+                .filter((g) => g.status !== 'dead' && (g.age ?? 0) >= BREEDING_MIN_AGE)
+                .map((g) => g.id));
+            let adults = adultIds();
+            const result = await fastForwardSeasons(() => session.advanceSeason(), () => {
+                const now = adultIds();
+                const grew = Array.from(now).some((id) => !adults.has(id));
+                adults = now;
+                return grew;
+            });
+            const where = result.last ? seasonText(result.last.advance.current) : seasonText(session.gameTime);
+            services().event.emit('SHOW_TOAST', {
+                message: `快進 ${result.seasons} 季，來到${where}：${FAST_FORWARD_REASON_TEXT[result.reason]}`,
+                duration: 3,
+            });
+        } finally {
+            this._fastForwarding = false;
+            this._refreshDomestic();
         }
     }
 
