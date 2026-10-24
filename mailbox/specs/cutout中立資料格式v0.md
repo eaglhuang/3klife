@@ -34,6 +34,12 @@
 - 零件的 `x`、`y`、`rot` 是相對所屬骨骼的值。`pivot` 用 0～1，左下角是 (0,0)。`draw` 是整數，越大越在上層。
 - `slot` 對應 Rig 規格 §6 的槽位名稱。換裝備只換 `image`，`w`、`h` 的差距要在 ±8% 以內，`pivot` 不變。
 - `lighting` 只放參數，shader 由各引擎各自實作。
+- **裁決 46 增補**（只增不改）：
+  - 零件 PNG 一律先裁好；`w`、`h` 就是裁好後的檔案尺寸，`pivot` 以裁好的圖計算。不設 trim 欄位。
+  - 選填欄位 `scale: [sx, sy]`，預設 [1, 1]。正式零件必須是 [1, 1]；只有 `poc-legacy` 可以不是，讀取端要警告。
+  - 頂層欄位 `profile`：`"canonical"`（refHeightPx 固定 2048）或 `"poc-legacy"`（refHeightPx 寫實測值）。縮放公式統一為「目標角色高度 ÷ refHeightPx」。
+  - `bones[].len` 選填，預設 0，播放結果不能依賴它。
+  - `points` 和 `lighting` 可帶 `status`：`"candidate"`、`"default"` 或 `"approved"`。缺少欄位時，讀取端要報錯或警告，不能安靜地補預設值。
 - **禁止的欄位**：引擎專屬的 uuid、prefab 路徑、元件名稱、節點層級 flag。
 
 ## 2. anim/<動作>.json
