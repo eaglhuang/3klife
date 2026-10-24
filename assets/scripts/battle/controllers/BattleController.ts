@@ -343,7 +343,7 @@ export class BattleController {
 
   /** 本場出陣過的虎符 id，戰後結算戰鬥經驗用 */
   public get deployedTallyIds(): readonly string[] {
-    return [...this._deployedTallyIds];
+    return Array.from(this._deployedTallyIds);
   }
 
   public deployTroop(type: TroopType, lane: number, unitName?: string): TroopUnit | null {
@@ -635,7 +635,7 @@ export class BattleController {
     const general = this.state.enemyGeneral;
     if (!general) return null;
 
-    const library = [...this.tacticDefinitionMap.values()].map(def => ({ id: def.id, category: def.category }));
+    const library = Array.from(this.tacticDefinitionMap.values()).map(def => ({ id: def.id, category: def.category }));
     const candidates = buildEnemyTacticCandidates(general.tacticSlots, library);
     if (candidates.length === 0) return null;
 
@@ -705,7 +705,7 @@ export class BattleController {
   }
 
   private livingUnitsOf(faction: Faction): TroopUnit[] {
-    return [...this.state.units.values()].filter(unit => unit.faction === faction && unit.currentHp > 0);
+    return Array.from(this.state.units.values()).filter(unit => unit.faction === faction && unit.currentHp > 0);
   }
 
   public triggerPlayerSeedTactic(options: GeneralSkillCastOptions = {}): boolean {

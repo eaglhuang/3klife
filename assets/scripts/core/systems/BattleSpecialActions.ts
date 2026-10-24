@@ -191,7 +191,7 @@ export function specialActionFactorTags(actions: readonly string[]): string[] {
         const rule = BATTLE_SPECIAL_ACTION_RULES[action as BattleSpecialActionId];
         for (const tag of rule?.factorTags ?? []) tags.add(tag);
     }
-    return [...tags];
+    return Array.from(tags);
 }
 
 export function specialActionDisplayName(action: string): string {

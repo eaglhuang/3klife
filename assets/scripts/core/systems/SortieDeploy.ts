@@ -340,7 +340,7 @@ export function validateSortieLoadout(loadout: SortieLoadout, members?: readonly
     if (members) {
         const byId = new Map(members.map((m) => [m.id, m]));
         if (ids.some((id) => !byId.has(id))) issues.push('UNKNOWN_GENERAL');
-        const bloodlines = [...new Set(ids)].map((id) => byId.get(id)?.bloodlineId).filter((b): b is string => Boolean(b));
+        const bloodlines = Array.from(new Set(ids)).map((id) => byId.get(id)?.bloodlineId).filter((b): b is string => Boolean(b));
         if (new Set(bloodlines).size !== bloodlines.length) issues.push('SAME_BLOODLINE');
     }
     return { ok: issues.length === 0, issues };

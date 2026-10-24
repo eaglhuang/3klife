@@ -46,6 +46,6 @@ export class LoreCache<T> {
 
     /** 目前由舊到新的 key 順序，供測試與除錯用。 */
     keys(): string[] {
-        return [...this.entries.keys()];
+        return Array.from(this.entries.keys());
     }
 }

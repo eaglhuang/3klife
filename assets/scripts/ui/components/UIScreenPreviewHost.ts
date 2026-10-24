@@ -92,7 +92,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         const entry = this._lazySlots.get(slotId);
         if (!entry) {
             console.warn(`[UIScreenPreviewHost] switchLazySlot: 找不到 slotId=${slotId}`);
-            console.warn(`[UIScreenPreviewHost] 已知 slotId 清單: ${JSON.stringify([...this._lazySlots.keys()])}`);
+            console.warn(`[UIScreenPreviewHost] 已知 slotId 清單: ${JSON.stringify(Array.from(this._lazySlots.keys()))}`);
             return false;
         }
 
@@ -116,7 +116,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             return 0;
         }
 
-        const knownSlots = [...this._lazySlots.keys()];
+        const knownSlots = Array.from(this._lazySlots.keys());
         UCUFLogger.debug(LogCategory.UI, `[UIScreenPreviewHost-DIAG] slotId=${slotId}, 已知 lazySlots=${JSON.stringify(knownSlots)}`);
 
         let boundCount = 0;
@@ -324,7 +324,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         if (direct) {
             return direct;
         }
-        const routes = [...routeMap.values()];
+        const routes = Array.from(routeMap.values());
         if (/^(?:pool-)?prev(?:ious)?$/.test(key)) {
             return routes[routes.length - 1];
         }

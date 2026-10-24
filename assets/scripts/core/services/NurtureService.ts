@@ -477,7 +477,7 @@ export class NurtureService {
             }
         }
         if (triggered.length === 0) return { session, triggered };
-        return { session: { ...session, inspiredKeys: [...confirmed] }, triggered };
+        return { session: { ...session, inspiredKeys: Array.from(confirmed) }, triggered };
     }
 
     private _replace(session: NurtureSession): void {

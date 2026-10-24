@@ -84,7 +84,7 @@ export class UCUFRuleRegistry {
      * @param scope 觸發時機字串，例如 'mount' / 'switchSlot' / 'applyContentState'
      */
     getRulesByScope(scope: string): RuleEntry[] {
-        return [...this._rules.values()].filter(
+        return Array.from(this._rules.values()).filter(
             r => r.enabled && r.triggerPoints.includes(scope),
         );
     }
@@ -96,7 +96,7 @@ export class UCUFRuleRegistry {
 
     /** 取得所有已注冊規則（含停用）。 */
     getAllRules(): RuleEntry[] {
-        return [...this._rules.values()];
+        return Array.from(this._rules.values());
     }
 
     /**

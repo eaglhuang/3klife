@@ -206,7 +206,7 @@ export function parseSupportCard(raw: unknown): SupportCardParseResult {
         });
         const ids = tacticInspireEvents.map((e) => e.eventId);
         const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
-        if (dupes.length > 0) errors.push(`Tactic_Inspire_Events 的 Event_ID 重複：${[...new Set(dupes)].join(', ')}`);
+        if (dupes.length > 0) errors.push(`Tactic_Inspire_Events 的 Event_ID 重複：${Array.from(new Set(dupes)).join(', ')}`);
     }
 
     const passiveEffects: PassiveEffectDef[] = [];
