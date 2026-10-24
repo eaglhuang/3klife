@@ -300,6 +300,7 @@ export class BattleCombatResolver {
     if (!helper) return;
     const chance = comboChanceOfPair(relationsBetween(attacker.id, helper.id));
     if (this.hitRandom() >= chance) return;
+    svc.event.emit(EVENT_NAMES.KinComboAttack, { attackerId: attacker.id, helperId: helper.id, targetId: defender.id });
     this.applyCombinedFollowUpDamage(helper, defender, svc, 'kin-combo-attack');
   }
 
