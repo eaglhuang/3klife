@@ -23,8 +23,8 @@
         "type": "panel",
         "name": "OfficerHudCard",
         "widget": {
-          "top": 368,
-          "left": 32
+          "bottom": 112,
+          "right": 32
         },
         "width": 320,
         "height": 168,
