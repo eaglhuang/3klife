@@ -41,18 +41,19 @@ export interface DestinyNewGameTarget {
 }
 
 /**
- * 宿命鎖定後開新局：鎖定的那位成為核心主將。尚未鎖定、或鎖定的不在宿命池時拒絕（丟錯，不動存檔）。
+ * 宿命鎖定後開新局：鎖定的那位成為核心主將；有開局紅顏時一併入名冊。尚未鎖定、或鎖定的不在宿命池時拒絕（丟錯，不動存檔）。
  */
 export async function startNewGameFromDestiny(
     session: DestinyNewGameTarget,
     seed: number,
     generals: readonly GeneralConfig[],
     state: Readonly<DestinyGachaState>,
+    beautyGeneralId?: string | null,
 ): Promise<StarterGeneralId> {
     const locked = state.locked;
     if (state.phase !== 'locked' || locked === null) throw new Error('[DestinyPool] 宿命轉蛋尚未鎖定');
     const coreId = DESTINY_POOL_IDS.find((id) => id === locked);
     if (!coreId) throw new Error(`[DestinyPool] ${locked} 不在宿命池內`);
-    await session.startNewGameWithStarters(seed, generals, { coreGeneralId: coreId });
+    await session.startNewGameWithStarters(seed, generals, beautyGeneralId ? { coreGeneralId: coreId, beautyGeneralId } : { coreGeneralId: coreId });
     return coreId;
 }
