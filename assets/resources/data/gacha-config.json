@@ -53,5 +53,22 @@
     "confirmRequired": true,
     "currencyType": "ticket",
     "singlePullCost": 1
+  },
+  {
+    "poolId": "mentor-pool",
+    "poolName": "支援卡池",
+    "poolType": "mentor",
+    "resetEnabled": false,
+    "guaranteeRarity": "rare",
+    "guaranteeThreshold": 10,
+    "pickCount": 1,
+    "candidateIds": [
+      "zhao-yun",
+      "zhuge-liang"
+    ],
+    "firstPickOnly": false,
+    "confirmRequired": true,
+    "currencyType": "mentorTicket",
+    "singlePullCost": 1
   }
 ]

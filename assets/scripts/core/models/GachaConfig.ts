@@ -6,7 +6,8 @@ import type { HeroRarity } from './HeroBase';
 /** 抽卡池類型 */
 export type GachaPoolType =
   | 'hero'      // 名將池：可重置，抽將領
-  | 'support';  // 紅顏池：支援角色
+  | 'support'   // 紅顏池：支援角色
+  | 'mentor';   // 支援卡池：只產生教官卡，不入名冊（PROG-2-1085）
 
 export interface GachaConfig {
   /** 唯一識別字 */
@@ -30,7 +31,7 @@ export interface GachaConfig {
   /** 抽卡結果揭示前是否需要用戶確認（防止誤觸）*/
   confirmRequired: boolean;
   /** 急召/補抽所需資源類型（'gem' | 'ticket'）*/
-  currencyType?: 'gem' | 'ticket';
+  currencyType?: 'gem' | 'ticket' | 'mentorTicket';
   /** 單次十連所需貨幣數量 */
   singlePullCost?: number;
 }

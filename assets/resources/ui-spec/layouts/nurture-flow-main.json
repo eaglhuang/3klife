@@ -453,11 +453,165 @@
                     "styleSlot": "nurture.label.body"
                   },
                   {
+                    "type": "container",
+                    "name": "DeckRow",
+                    "widget": {
+                      "top": 86,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 110,
+                    "children": [
+                      {
+                        "type": "button",
+                        "name": "BtnDeckSlot0",
+                        "id": "btnDeckSlot0",
+                        "widget": {
+                          "top": 0,
+                          "left": 27
+                        },
+                        "width": 212,
+                        "height": 110,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "DeckSlotLabel0",
+                            "id": "deckSlotLabel0",
+                            "widget": {
+                              "vCenter": true,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 96,
+                            "styleSlot": "nurture.label.body"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "button",
+                        "name": "BtnDeckSlot1",
+                        "id": "btnDeckSlot1",
+                        "widget": {
+                          "top": 0,
+                          "left": 253
+                        },
+                        "width": 212,
+                        "height": 110,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "DeckSlotLabel1",
+                            "id": "deckSlotLabel1",
+                            "widget": {
+                              "vCenter": true,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 96,
+                            "styleSlot": "nurture.label.body"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "button",
+                        "name": "BtnDeckSlot2",
+                        "id": "btnDeckSlot2",
+                        "widget": {
+                          "top": 0,
+                          "left": 479
+                        },
+                        "width": 212,
+                        "height": 110,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "DeckSlotLabel2",
+                            "id": "deckSlotLabel2",
+                            "widget": {
+                              "vCenter": true,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 96,
+                            "styleSlot": "nurture.label.body"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "button",
+                        "name": "BtnDeckSlot3",
+                        "id": "btnDeckSlot3",
+                        "widget": {
+                          "top": 0,
+                          "left": 705
+                        },
+                        "width": 212,
+                        "height": 110,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "DeckSlotLabel3",
+                            "id": "deckSlotLabel3",
+                            "widget": {
+                              "vCenter": true,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 96,
+                            "styleSlot": "nurture.label.body"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "button",
+                        "name": "BtnDeckSlot4",
+                        "id": "btnDeckSlot4",
+                        "widget": {
+                          "top": 0,
+                          "left": 931
+                        },
+                        "width": 212,
+                        "height": 110,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "DeckSlotLabel4",
+                            "id": "deckSlotLabel4",
+                            "widget": {
+                              "vCenter": true,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 96,
+                            "styleSlot": "nurture.label.body"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "DeckHint",
+                    "id": "deckHint",
+                    "widget": {
+                      "top": 206,
+                      "left": 27,
+                      "right": 27
+                    },
+                    "height": 56,
+                    "styleSlot": "nurture.label.meta"
+                  },
+                  {
                     "type": "button",
                     "name": "BtnStartNurture",
                     "id": "btnStartNurture",
                     "widget": {
-                      "top": 100,
+                      "top": 290,
                       "left": 360
                     },
                     "width": 420,

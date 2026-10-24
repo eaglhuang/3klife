@@ -87,6 +87,21 @@ export class GachaFlowCoordinator {
         }
     }
 
+    /**
+     * 支援卡池召喚（PROG-2-1085）：扣支援券、抽支援卡目錄裡的武將；抽到的只變成教官卡，不入名冊。
+     * generals 由呼叫端先篩成本池候選且有支援卡資料的武將。
+     */
+    public async runSupportSummon(poolId: string, generals: GeneralConfig[]): Promise<void> {
+        try {
+            if (generals.length === 0) throw new Error('支援卡池目前沒有可抽的教官');
+            const results = await this._options.gachaService.performSupportCardSummon(poolId, 1, generals);
+            this._notifyPullSuccess(results);
+            await this._presentLocalGachaResults(1, results, '支援券', () => this.runSupportSummon(poolId, generals), 'mentorTickets');
+        } catch (error) {
+            this._emitError(error, '支援卡召喚失敗');
+        }
+    }
+
     public async runLocalGacha(drawCount: number): Promise<void> {
         const resolvedCount = Math.max(1, Math.floor(Number.isFinite(drawCount) ? drawCount : 1));
         const poolId = this._options.poolId ?? DEFAULT_POOL_ID;
@@ -111,7 +126,7 @@ export class GachaFlowCoordinator {
     private async _presentLocalGachaResults(
         drawCount: number, results: LocalGachaResultEntry[],
         title = drawCount === 1 ? '單抽' : '十連抽',
-        retry?: () => Promise<void>, currency: 'gems' | 'gold' | 'tickets' = 'gems',
+        retry?: () => Promise<void>, currency: 'gems' | 'gold' | 'tickets' | 'mentorTickets' = 'gems',
     ): Promise<void> {
         const host = this._options.getHost();
         const repull = retry ?? (drawCount === 10 && this._options.onRepullTen
@@ -166,7 +181,7 @@ export class GachaFlowCoordinator {
             GachaPullResult_div_173: drawCount === 10 ? '再抽十連' : `再${title}一次`,
             GachaPullResult_div_412: '返回卡池',
             GachaPullResult_div_413: drawCount === 10 ? '再抽十連' : `再${title}一次`,
-            GachaPullResult_div_186: `${currency === 'gold' ? '金幣' : currency === 'tickets' ? '召喚券' : '玉'} ${wallet[currency].toLocaleString('zh-TW')}`,
+            GachaPullResult_div_186: `${currency === 'gold' ? '金幣' : currency === 'tickets' ? '召喚券' : currency === 'mentorTickets' ? '支援券' : '玉'} ${wallet[currency].toLocaleString('zh-TW')}`,
             GachaPullResult_span_13: `SSR+ ×${rarityStats.high}`,
             GachaPullResult_span_14: `SR ×${rarityStats.mid}`,
             GachaPullResult_span_15: `R/N ×${rarityStats.low}`,

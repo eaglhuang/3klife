@@ -1,8 +1,8 @@
 import type { ActionRecord } from '../../../../shared/protocols';
 import { services } from '../managers/ServiceLoader';
 
-export type GachaActionType = 'LOCAL_GACHA_PULL' | 'LOCAL_GOLD_SUMMON' | 'LOCAL_TICKET_SUMMON';
-export type GachaCurrencyKey = 'gems' | 'gold' | 'tickets';
+export type GachaActionType = 'LOCAL_GACHA_PULL' | 'LOCAL_GOLD_SUMMON' | 'LOCAL_TICKET_SUMMON' | 'LOCAL_SUPPORT_SUMMON';
+export type GachaCurrencyKey = 'gems' | 'gold' | 'tickets' | 'mentorTickets';
 
 export interface GachaResultSummary {
     id: string;
@@ -37,6 +37,7 @@ const GACHA_ACTION_SET = new Set<GachaActionType>([
     'LOCAL_GACHA_PULL',
     'LOCAL_GOLD_SUMMON',
     'LOCAL_TICKET_SUMMON',
+    'LOCAL_SUPPORT_SUMMON',
 ]);
 
 function toRecordMap(payload: unknown): Record<string, unknown> {
@@ -78,7 +79,7 @@ function normalizeResults(rawResults: unknown): GachaResultSummary[] {
 
 function inferCurrencyKey(actionType: GachaActionType, rawValue: unknown): GachaCurrencyKey {
     const resolved = toStringValue(rawValue, '');
-    if (resolved === 'gems' || resolved === 'gold' || resolved === 'tickets') {
+    if (resolved === 'gems' || resolved === 'gold' || resolved === 'tickets' || resolved === 'mentorTickets') {
         return resolved;
     }
 
@@ -87,6 +88,8 @@ function inferCurrencyKey(actionType: GachaActionType, rawValue: unknown): Gacha
             return 'gold';
         case 'LOCAL_TICKET_SUMMON':
             return 'tickets';
+        case 'LOCAL_SUPPORT_SUMMON':
+            return 'mentorTickets';
         case 'LOCAL_GACHA_PULL':
         default:
             return 'gems';

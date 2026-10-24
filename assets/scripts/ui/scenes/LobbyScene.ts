@@ -33,7 +33,8 @@ import type { UnveilingEvent } from '../../core/systems/Unveiling';
 import type { AgingEvent } from '../../core/systems/GeneralAging';
 import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
-import { attachSupportToCards, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
+import { MENTOR_DECK_SIZE } from '../../core/systems/MentorDeck';
+import { attachSupportToCards, MENTOR_POOL_ID, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { VitalityPillController } from '../core/VitalityPillController';
 import { MentorCardDetailController } from '../core/MentorCardDetailController';
@@ -294,7 +295,10 @@ export class LobbyScene extends Component {
         revision: () => services().session.gachaRevision,
         // 抽卡結果入冊不存檔，由 batch 統一存一次（PROG-2-1003）
         enroll: (results) => {
-            this._gachaEnrollResult = services().session.enrollGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true });
+            // 支援卡池只發教官卡，不把武將收進名冊（PROG-2-1085）
+            this._gachaEnrollResult = results[0]?.poolId === MENTOR_POOL_ID
+                ? { added: [], duplicates: [], rebirths: [] } as unknown as AddGeneralsResult
+                : services().session.enrollGenerals(results.map((entry) => entry.general), { rebirthOnDuplicate: true });
             // 支援卡教官卡同批登記；實際寫入在入冊存檔後由 _applyGachaMentorJournal 補上（PROG-2-1004）
             services().session.queueGachaMentorDraw({
                 drawn: results.map((entry) => entry.general),
@@ -713,6 +717,10 @@ export class LobbyScene extends Component {
             { buttonId: 'btnFateAccept', handler: act(() => flow.chooseFate('accept')) },
             { buttonId: 'btnFateDefy', handler: act(() => flow.chooseFate('defy')) },
             { buttonId: 'btnStartNurture', handler: act(() => flow.startNurture()) },
+            ...Array.from({ length: MENTOR_DECK_SIZE }, (_, i) => ({
+                buttonId: `btnDeckSlot${i}`,
+                handler: () => { flow.cycleDeckSlot(i); this._refreshNurtureFlow(); },
+            })),
             { buttonId: 'btnAutoNurture', handler: act(() => flow.autoNurture()) },
             { buttonId: 'btnMentorDetail', handler: () => {
                 const detail = flow.mentorDetail();
@@ -888,6 +896,7 @@ export class LobbyScene extends Component {
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshNurtureFlow();
+        void this._nurtureFlow?.loadDeck().then(() => { this._refreshNurtureFlow(); });
     }
 
     private _closeNurtureFlow(): void {
@@ -2225,6 +2234,11 @@ export class LobbyScene extends Component {
     private async _onGachaPullSuccess(results: LocalGachaResultEntry[]): Promise<void> {
         try {
             await this._applyGachaMentorJournal();
+            if (results[0]?.poolId === MENTOR_POOL_ID) {
+                const names = results.map((entry) => entry.general.name).join('、');
+                services().event.emit('SHOW_TOAST', { message: `獲得教官卡：${names}（培育入場可編入）`, duration: 2.5 });
+                return;
+            }
             const { added, duplicates, rebirths } = this._gachaEnrollResult ?? { added: [], duplicates: [], rebirths: [] };
             const parts: string[] = [];
             if (added.length > 0) {
@@ -3009,8 +3023,11 @@ export class LobbyScene extends Component {
 
     private async _runGachaAction(action: () => Promise<void>): Promise<void> {
         if (this._gachaPullPending) return;
-        // 現有 LocalGachaService 只有一般武將池，避免把支援池抽成武將。
-        if (this._gachaPoolIndex !== 0) {
+        // 名將池走一般轉蛋；支援卡池改抽教官卡；其他池尚未開放。
+        if (this._gachaPoolIndex === 2) {
+            // 支援卡池：不論按哪顆鈕，都用 1 張支援券抽 1 張教官卡（PROG-2-1085）
+            action = () => this._runSupportSummon();
+        } else if (this._gachaPoolIndex !== 0) {
             services().event.emit('SHOW_TOAST', { message: '此卡池尚未開放召喚，請切回名將召喚。', duration: 2.5 });
             return;
         }
@@ -3671,6 +3688,15 @@ export class LobbyScene extends Component {
 
     private async _runGoldSummon(): Promise<void> {
         await this._getGachaFlowCoordinator().runGoldSummon();
+    }
+
+    private async _runSupportSummon(): Promise<void> {
+        const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
+        const pool = (Array.isArray(gachaConfig) ? gachaConfig : []).find((entry) => entry.poolId === MENTOR_POOL_ID);
+        const catalog = await this._loadSupportCatalog();
+        const ids = new Set(pool?.candidateIds ?? []);
+        const generals = this._generals.filter((general) => ids.has(general.id) && catalog.byGeneralId.has(general.id));
+        await this._getGachaFlowCoordinator().runSupportSummon(MENTOR_POOL_ID, generals);
     }
 
     private async _runTicketSummon(): Promise<void> {

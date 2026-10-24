@@ -80,9 +80,12 @@ function pickFrom<T>(list: readonly T[], rng: () => number): T {
     return list[index];
 }
 
-/** 依稀有度從高到低找第一個有項目的桶（Up 與常設視為同一稀有度） */
+/**
+ * 依稀有度從高到低找第一個有項目的桶（Up 與常設視為同一稀有度）；
+ * 往下都沒有時再往上找（支援卡池只有 SSR/SR，擲到 R 也要抽得到，PROG-2-1085）
+ */
 function firstAvailable<T>(pool: GachaPool<T>, rarity: GachaRarity): { rarity: GachaRarity; lists: Array<readonly T[]> } | null {
-    const order: GachaRarity[] = rarity === 'SSR' ? ['SSR', 'SR', 'R'] : rarity === 'SR' ? ['SR', 'R'] : ['R'];
+    const order: GachaRarity[] = rarity === 'SSR' ? ['SSR', 'SR', 'R'] : rarity === 'SR' ? ['SR', 'R', 'SSR'] : ['R', 'SR', 'SSR'];
     for (const next of order) {
         const lists = next === 'SSR' ? [pool.ssrUp, pool.ssrOther]
             : next === 'SR' ? [pool.srUp, pool.srOther]

@@ -59,9 +59,10 @@ export function createGachaMentorSourceSuite(): TestSuite {
         assert.equals(0, cards.length);
     });
 
-    suite.test('支援卡池設定預設留空：任何卡池都不產生', () => {
-        assert.equals(0, SUPPORT_CARD_POOL_IDS.length);
+    suite.test('預設支援卡池只有 mentor-pool（PROG-2-1085）：其他卡池不產生', () => {
+        assert.equals(['mentor-pool'].join(), SUPPORT_CARD_POOL_IDS.join());
         assert.equals(0, addGachaMentorCards([], [general('zhao-yun', '趙雲')], catalog(), TIME, SUPPORT_POOL).length);
+        assert.equals(1, addGachaMentorCards([], [general('zhao-yun', '趙雲')], catalog(), TIME, 'mentor-pool').length);
     });
 
     suite.test('同一武將重複抽到不重複新增；已有的退役來源卡保留原來源', () => {

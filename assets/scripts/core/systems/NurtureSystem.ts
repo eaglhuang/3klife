@@ -624,7 +624,7 @@ export const MENTOR_CARD_STAT_PER_BONUS_POINT = 5;
 /**
  * 把退役教官卡（PROG-2-0029 的 MentorCard）換算成培育教官。
  * - 擅長科目：武官取武力 / 統率較高者、文官取智力 / 政治較高者，沒有職能就五項取最高（同分依武、智、統、政、魅）
- * - 加成：tpBonus 看退役時的 EP，擅長科目另有屬性加成；星等預設 0
+ * - 加成：tpBonus 看退役時的 EP，擅長科目另有屬性加成；星等取卡片的突破星等（沒有視為 0）
  * 教官不參與血統因子遺傳，這裡不讀 gene_refs。
  */
 export function mentorFromCard(
@@ -640,7 +640,7 @@ export function mentorFromCard(
         tpBonus: Math.round(card.ep_snapshot / MENTOR_CARD_EP_PER_TP_POINT),
         statBonus: { [specialty]: Math.round(statOf(snapshot, specialty) / MENTOR_CARD_STAT_PER_BONUS_POINT) },
         specialty,
-        stars: overrides.stars ?? 0,
+        stars: overrides.stars ?? card.stars ?? 0,
         burstRate: overrides.burstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE,
         familyName: overrides.familyName ?? (card.name ? surnameOf(card.name) : undefined),
         ...(card.support
