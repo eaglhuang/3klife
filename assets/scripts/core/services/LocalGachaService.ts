@@ -33,6 +33,8 @@ export interface LocalGachaWalletSnapshot {
     bronze: number;
     /** 求籤令（定向道具，不是池幣）；PROG-2-0339 新增，舊檔補 0 */
     oracle: number;
+    /** 支援券（只用於支援卡池）；PROG-2-1085 新增，舊檔補 0 */
+    mentorTickets: number;
 }
 
 interface PerformGachaRequest {
@@ -84,6 +86,7 @@ function normalizeWalletSnapshot(value: Partial<LocalGachaWalletSnapshot>): Loca
         tickets: normalizeWalletValue(value.tickets, DEFAULT_WALLET.tickets),
         bronze: normalizeWalletValue(value.bronze, DEFAULT_WALLET.bronze),
         oracle: normalizeWalletValue(value.oracle, DEFAULT_WALLET.oracle),
+        mentorTickets: normalizeWalletValue(value.mentorTickets, DEFAULT_WALLET.mentorTickets),
     };
 }
 
@@ -271,6 +274,28 @@ export class LocalGachaService {
             drawCount: resolvedCount,
             cost: resolvedCount,
             currencyKey: 'tickets',
+            generals,
+            options,
+        });
+    }
+
+    /**
+     * 支援卡池召喚（PROG-2-1085）：扣支援券，每抽 1 張。generals 由呼叫端先篩成支援卡目錄裡的武將；
+     * 抽到的只會變成教官卡（入冊回呼端依 poolId 判斷），不進名冊。
+     */
+    public async performSupportCardSummon(
+        poolId: string,
+        drawCount: number,
+        generals: GeneralConfig[],
+        options: LocalGachaRollOptions = {},
+    ): Promise<LocalGachaResultEntry[]> {
+        const resolvedCount = normalizeCount(drawCount);
+        return this._performGacha({
+            actionType: 'LOCAL_SUPPORT_SUMMON',
+            poolId,
+            drawCount: resolvedCount,
+            cost: resolvedCount,
+            currencyKey: 'mentorTickets',
             generals,
             options,
         });

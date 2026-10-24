@@ -45,11 +45,17 @@ import {
 } from '../../core/systems/Unveiling';
 import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
 import { mentorFromCard } from '../../core/systems/NurtureSystem';
+import {
+    cycleMentorDeckSlot,
+    defaultMentorDeck,
+    MENTOR_DECK_SIZE,
+    MentorDeck,
+    mentorDeckCards,
+    sanitizeMentorDeck,
+} from '../../core/systems/MentorDeck';
 import { describeLifecycle } from './GeneralLifecyclePresenter';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
 
-/** 培育一次最多帶的教官數（NURTURE_MENTOR_SLOTS）由 NurtureService 把關，這裡只負責挑人 */
-const MAX_AUTO_MENTORS = 6;
 
 export const STAT_LABELS: Record<string, string> = {
     str: '武力',
@@ -166,6 +172,10 @@ export class NurtureFlowController {
     private _notice = '';
     private _legendaryCards: MentorCard[] = [];
     private _legendaryCardUid: string | null = null;
+    /** 入場編成（PROG-2-1085）：null 表示還沒整理過，第一次讀卡時帶預設最強 5 位 */
+    private _deck: MentorDeck | null = null;
+    /** 目前可帶入的教官卡（未被別場培育鎖定）；loadDeck 時更新 */
+    private _deckCandidates: MentorCard[] = [];
 
     constructor(private readonly _deps: NurtureFlowDeps) {}
 
@@ -223,11 +233,32 @@ export class NurtureFlowController {
         await this._persist();
     }
 
-    /** 入學：自動帶上未被別場鎖定的退役教官（最多 6 位） */
+    /** 重新讀可帶入的教官卡（排除別場培育鎖定的），並整理入場編成；第一次讀時帶預設最強 5 位 */
+    async loadDeck(): Promise<void> {
+        const locked = new Set(this._deps.nurture.lockedMentorIds());
+        this._deckCandidates = (await this._deps.loadMentorCards()).filter((card) => !locked.has(card.uid));
+        this._deck = this._deck === null ? defaultMentorDeck(this._deckCandidates) : sanitizeMentorDeck(this._deck, this._deckCandidates);
+    }
+
+    /** 點入場編成第 slot 格：換成下一位可用教官，最後一位之後回到空格 */
+    cycleDeckSlot(slot: number): void {
+        this._deck = cycleMentorDeckSlot(this._deck ?? defaultMentorDeck(this._deckCandidates), this._deckCandidates, slot);
+        this._notice = '';
+    }
+
+    get deck(): MentorDeck {
+        return this._deck ?? defaultMentorDeck(this._deckCandidates);
+    }
+
+    private async _deckCards(): Promise<MentorCard[]> {
+        await this.loadDeck();
+        return mentorDeckCards(this.deck, this._deckCandidates);
+    }
+
+    /** 入學：帶入場編成裡的教官（最多 5 位，未編成過時用預設最強 5 位） */
     async startNurture(): Promise<void> {
         const child = this._requireSelected();
-        const locked = new Set(this._deps.nurture.lockedMentorIds());
-        const cards = (await this._deps.loadMentorCards()).filter((card) => !locked.has(card.uid)).slice(0, MAX_AUTO_MENTORS);
+        const cards = await this._deckCards();
         this._deps.nurture.startWithCards(child.id, cards);
         this._notice = cards.length > 0 ? `入學完成，${cards.length} 位教官任教` : '入學完成（沒有教官任教）';
         await this._persist();
@@ -315,8 +346,7 @@ export class NurtureFlowController {
     /** 保留並重修：重新開場，已保留的成績單不會丟；入學與教官規則同入學 */
     async retake(): Promise<void> {
         const child = this._requireSelected();
-        const locked = new Set(this._deps.nurture.lockedMentorIds());
-        const cards = (await this._deps.loadMentorCards()).filter((card) => !locked.has(card.uid)).slice(0, MAX_AUTO_MENTORS);
+        const cards = await this._deckCards();
         this._deps.nurture.retake(child.id, cards.map((card) => mentorFromCard(card)));
         this._report = null;
         this._notice = `${child.name} 重修開場`;
@@ -391,6 +421,7 @@ export class NurtureFlowController {
         enabled.btnLegendaryCard = false;
         enabled.btnLegendaryMentor = false;
         enabled.btnMentorBorrow = false;
+        for (let i = 0; i < MENTOR_DECK_SIZE; i++) enabled[`btnDeckSlot${i}`] = false;
 
         if (!child) {
             actives.flowEmptyHint = true;
@@ -423,8 +454,10 @@ export class NurtureFlowController {
             const check = this._deps.nurture.checkStart(child.id);
             enabled.btnStartNurture = check.eligible;
             texts.startHint = check.eligible
-                ? `入學將消耗 1 張入學令（本季剩 ${this._deps.nurture.admissionsLeft()} 張），並帶上退役教官`
+                ? `入學將消耗 1 張入學令（本季剩 ${this._deps.nurture.admissionsLeft()} 張），並帶上下方編成的教官`
                 : check.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、');
+            Object.assign(texts, buildDeckTexts(this.deck, this._deckCandidates));
+            for (let i = 0; i < MENTOR_DECK_SIZE; i++) enabled[`btnDeckSlot${i}`] = this._deckCandidates.length > 0;
             Object.assign(texts, buildSlotTexts(child, null));
             return { mode: 'start', childId: child.id, texts, actives, enabled };
         }
@@ -563,6 +596,29 @@ function phaseRangeText(phase: PhaseBlock): string {
 }
 
 /** 五個訓練格各一行：資質 / 實力 / 站在這一格的教官 */
+const STAR_TEXT = (stars: number): string => (stars > 0 ? '★'.repeat(stars) : '☆0');
+
+/** 入場編成五格的文字：教官名、星等、擅長科目；空格提示可點選 */
+function buildDeckTexts(deck: MentorDeck, candidates: readonly MentorCard[]): Record<string, string> {
+    const byUid = new Map(candidates.map((card) => [card.uid, card]));
+    const texts: Record<string, string> = {};
+    let filled = 0;
+    for (let i = 0; i < MENTOR_DECK_SIZE; i++) {
+        const card = deck[i] ? byUid.get(deck[i] as string) : undefined;
+        if (card) {
+            filled++;
+            const mentor = mentorFromCard(card);
+            texts[`deckSlotLabel${i}`] = `${card.name}\n${STAT_LABELS[mentor.specialty]}擅長 ${STAR_TEXT(mentor.stars ?? 0)}`;
+        } else {
+            texts[`deckSlotLabel${i}`] = candidates.length > 0 ? '空格\n點此選教官' : '空格';
+        }
+    }
+    texts.deckHint = candidates.length > 0
+        ? `教官編成 ${filled} / ${MENTOR_DECK_SIZE}：點格子輪換（可用教官 ${candidates.length} 位）`
+        : '沒有可用教官：到轉蛋「支援卡池」用支援券抽教官，或讓武將 65 歲退役轉教官';
+    return texts;
+}
+
 function buildSlotTexts(child: UnveilingGeneral, session: NurtureSession | null): Record<string, string> {
     const texts: Record<string, string> = {};
     for (const kind of TRAINING_KINDS) {

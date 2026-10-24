@@ -213,7 +213,7 @@ export class LegacyService implements SeasonLifecycle {
         await this._ensureReady();
         const cards = await this.getMentorCards();
         const next = addGachaMentorCards(cards, drawn, catalog, time, poolId);
-        if (next.length !== cards.length) await this._adapter.set(STORE_MENTOR_CARDS, next);
+        if (JSON.stringify(next) !== JSON.stringify(cards)) await this._adapter.set(STORE_MENTOR_CARDS, next);
         return next;
     }
 
