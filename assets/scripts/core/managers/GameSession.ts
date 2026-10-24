@@ -152,6 +152,7 @@ import {
     type GovernanceAssignment,
     type GovernanceResult,
 } from '../systems/GovernanceAssignment';
+import { autoAssignIdle, type AutoAssignResult } from '../systems/GovernanceAutoAssign';
 import {
     attemptTerritoryLoss,
     lastStandModifiers,
@@ -173,6 +174,7 @@ import type { DomesticTaskId } from '../systems/DomesticTasks';
 import {
     defaultKeepTerritories,
     normalizeGovernanceAssignments,
+    normalizeGovernanceAutoMode,
     normalizeJournalEntries,
     normalizeKeepTerritories,
 } from '../systems/LifespanSave';
@@ -1156,6 +1158,7 @@ export class GameSession {
         this._officerState = initialOfficerState();
         this._sandtableMarkerTerritories = [];
         this._governance = [];
+        this._governanceAuto = false;
         this._territories = defaultKeepTerritories();
         this._journal = createEmptyJournal();
         this._gachaMentorJournal = [];
@@ -1400,6 +1403,8 @@ export class GameSession {
 
     // ---- 領地治理接線（GOV-04 指派 / GOV-09 主城保護 / JRN-01 日誌，PROG-2-0974）：目前僅記憶體狀態，尚未寫入存檔 ----
     private _governance: GovernanceAssignment[] = [];
+    /** 自動治理開關（GOV-06）；開啟時季結前把閒置武將分到內政任務格 */
+    private _governanceAuto = false;
     private _territories: KeepTerritory[] = defaultKeepTerritories();
     private _journal: JournalState = createEmptyJournal();
 
@@ -1419,6 +1424,27 @@ export class GameSession {
     /** 卸下內政任務格的武將（GOV-04）。 */
     public unassignGovernor(task: DomesticTaskId): void {
         this._governance = removeGovernanceAssignment(this._governance, task).assignments;
+    }
+
+    /** 自動治理開關（GOV-06）；讀檔與新遊戲時由會話還原。 */
+    public get autoGovernance(): boolean {
+        return this._governanceAuto;
+    }
+
+    public setAutoGovernance(enabled: boolean): void {
+        this._governanceAuto = enabled;
+    }
+
+    /**
+     * 自動治理分配（GOV-06）：開啟時把存活且閒置的武將依親和度分到未佔用的任務格；
+     * 未開啟回傳 null 且不動作。
+     */
+    public runAutoGovernance(maxSlots: number = DEFAULT_MAX_TASK_SLOTS): AutoAssignResult | null {
+        if (!this._governanceAuto) return null;
+        const alive = this._roster.getAll().filter((general) => general.status !== 'dead');
+        const result = autoAssignIdle(this._governance, alive, maxSlots);
+        this._governance = result.assignments;
+        return result;
     }
 
     /** 設定領地清單（含主城），供領地資料載入或測試使用（GOV-09）。 */
@@ -2103,6 +2129,7 @@ export class GameSession {
             yearReport = buildYearReport(advance.previous.currentYear, this._yearAgingEvents);
             this._yearAgingEvents = [];
         }
+        this.runAutoGovernance();
         const quarterlyReports = buildQuarterlyBattleReportRows(this._roster.getAll());
         this.recordSeasonJournal(advance.previous, quarterlyReports);
         const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports };
@@ -2638,9 +2665,10 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'territories' | 'journalEntries'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'territories' | 'journalEntries'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'territories' | 'journalEntries' | 'governanceAutoMode'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'territories' | 'journalEntries' | 'governanceAutoMode'> = {};
         if (this._governance.length > 0) fields.governanceAssignments = this.governanceAssignments;
+        if (this._governanceAuto) fields.governanceAutoMode = true;
         if (JSON.stringify(this._territories) !== JSON.stringify(defaultKeepTerritories())) fields.territories = this.territories;
         if (this._journal.entries.length > 0) {
             fields.journalEntries = this._journal.entries.map(e => ({ ...e, relatedGeneralUids: [...e.relatedGeneralUids] }));
@@ -2653,6 +2681,7 @@ export class GameSession {
         this._governance = normalizeGovernanceAssignments(snapshot.governanceAssignments);
         this._territories = normalizeKeepTerritories(snapshot.territories);
         this._journal = { entries: normalizeJournalEntries(snapshot.journalEntries) };
+        this._governanceAuto = normalizeGovernanceAutoMode(snapshot.governanceAutoMode);
     }
 
     /**
