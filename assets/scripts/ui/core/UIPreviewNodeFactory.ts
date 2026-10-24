@@ -22,6 +22,7 @@ import { UIPreviewStyleBuilder } from './UIPreviewStyleBuilder';
 import type { UILayoutNodeSpec } from './UISpecTypes';
 import { UIPreviewDiagnostics } from './UIPreviewDiagnostics';
 import { UIPreviewLayoutBuilder } from './UIPreviewLayoutBuilder';
+import { resolveLabelText, type LabelTextSpec } from './UILabelText';
 
 export class UIPreviewNodeFactory {
 
@@ -84,7 +85,7 @@ export class UIPreviewNodeFactory {
 
         // 文字優先順序：textKey > text > bind > 空字串
         if (spec.textKey) {
-            label.string = this.i18nStrings[spec.textKey] ?? spec.textKey;
+            label.string = resolveLabelText(spec as LabelTextSpec, this.i18nStrings);
         } else if ((spec as any).text !== undefined) {
             label.string = (spec as any).text as string;
         } else if (spec.bind) {

@@ -26,6 +26,7 @@ import { UIPreviewLayoutBuilder } from './UIPreviewLayoutBuilder';
 import { UITemplateBinder } from './UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { CssClipPathMask } from './CssClipPathMask';
+import { resolveLabelText, type LabelTextSpec } from './UILabelText';
 
 const { ccclass } = _decorator;
 
@@ -601,16 +602,7 @@ export class UIPreviewBuilder extends Component {
     }
 
     private _resolveSpecText(spec: UILayoutNodeSpec): string {
-        if (spec.textKey) {
-            return this.i18nStrings[spec.textKey] ?? spec.textKey;
-        }
-        if ((spec as any).text !== undefined) {
-            return String((spec as any).text);
-        }
-        if (spec.bind) {
-            return `{${spec.bind}}`;
-        }
-        return '';
+        return resolveLabelText(spec as LabelTextSpec, this.i18nStrings);
     }
 
     private _resizeFlowNodeToContent(node: Node, spec: UILayoutNodeSpec, flowChildInLayout: boolean): void {
