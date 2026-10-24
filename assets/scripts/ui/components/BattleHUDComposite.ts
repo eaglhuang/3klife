@@ -52,6 +52,8 @@ export class BattleHUDComposite extends CompositePanel {
     private _sceneGambitBadgeDock: Node   | null = null;
     private _sceneGambitBadgeLabel: Label | null = null;
     private _playerNameLabel:     Label  | null = null;
+    /** 底部指令列的主將名（battle-hud-screen 的 div_124），與頂部陣列第一格同步 */
+    private _playerCommandNameLabel: Label | null = null;
     private _enemyNameLabel:      Label  | null = null;
     private _playerFortressLabel: Label  | null = null;
     private _enemyFortressLabel:  Label  | null = null;
@@ -102,6 +104,7 @@ export class BattleHUDComposite extends CompositePanel {
         this._sceneGambitBadgeDock = binder.getNode('SceneGambitBadgeDock');
         this._sceneGambitBadgeLabel = binder.getLabel('SceneGambitBadgeLabel');
         this._playerNameLabel     = binder.getLabel('PlayerNameLabel');
+        this._playerCommandNameLabel = binder.getLabel('PlayerCommandNameLabel');
         this._playerTallySetLabel = binder.getLabel('PlayerTallySetLabel');
         this._enemyNameLabel      = binder.getLabel('EnemyNameLabel');
         this._playerFortressLabel = binder.getLabel('PlayerFortressLabel');
@@ -166,6 +169,7 @@ export class BattleHUDComposite extends CompositePanel {
     public setPlayerName(name: string): void {
         if (!this._buildCompleted) { this._pendingPlayerName = name; return; }
         if (this._playerNameLabel) this._playerNameLabel.string = name;
+        if (this._playerCommandNameLabel) this._playerCommandNameLabel.string = name;
     }
 
     /** 玩家在場的 Set 顯示文字（PROG-2-0580）；沒有 Set 時清空，只是提示、不是持續狀態列 */
