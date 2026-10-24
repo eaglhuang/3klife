@@ -2083,7 +2083,7 @@ export class GameSession {
         }
         this._roster.replaceAll(roster);
         this._clearLeadIfGone();
-        this._settleOpenHallAssigns();
+        this._settleOpenHallAssigns(formatSeasonLabel(advance.previous));
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
         // 陣亡或退休的武將不再佔著內政任務格
         this._governance = this._governance.filter((a) => roster.some((general) => general.id === a.generalUid && general.status !== 'dead'));
@@ -2245,7 +2245,7 @@ export class GameSession {
      * 季結自動結算所有未結的大廳委任（PROG-2-1015，暫定）：依武將戰力判定成敗、釋放武將；
      * 紀錄帶有難度與任務牆時，同時入帳官職經驗（比照派遣即結算）。武將已不在名冊時戰力為 0，判為失敗。
      */
-    private _settleOpenHallAssigns(): void {
+    private _settleOpenHallAssigns(settledAt: string): void {
         const roster = this._roster.getAll();
         const settled = settleOpenAssignsForSeason(
             this._hallAssignLog,
@@ -2253,7 +2253,7 @@ export class GameSession {
                 const general = roster.find((g) => g.id === generalId);
                 return general ? estimateSortiePower(general) : 0;
             },
-            new Date().toISOString(),
+            settledAt,
         );
         this._hallAssignLog = settled.log;
         for (const entry of settled.settled) {
