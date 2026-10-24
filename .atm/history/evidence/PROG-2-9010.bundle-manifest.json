@@ -1,0 +1,46 @@
+{
+  "schemaId": "atm.evidenceBundleManifest.v1",
+  "taskId": "PROG-2-9010",
+  "updatedAt": "2026-10-24T16:23:43.549Z",
+  "updatedBy": "codex-gpt-6",
+  "freshValidationPasses": [
+    "git diff --check",
+    "test"
+  ],
+  "staleValidationPasses": [],
+  "commandRuns": [
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "validators": [
+        "git diff --check"
+      ],
+      "generatedAt": "2026-10-24T16:23:37.625Z",
+      "startedAt": "2026-10-24T16:23:37.604Z",
+      "finishedAt": "2026-10-24T16:23:37.625Z",
+      "durationMs": 21,
+      "runnerKind": "dev-source",
+      "sourceCommit": "372deb71666b4941529481c5ce09250573f9fc85",
+      "cached": false
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "stdoutSha256": "sha256:a43316856542f6130117458b0d259e93750eac763a38c37efc360d890271f742",
+      "stderrSha256": "sha256:45342ca54fc3787657ce6eb4dbe6d4510cbf68d24318d44416c0176ab31ebf4b",
+      "validators": [
+        "test"
+      ],
+      "generatedAt": "2026-10-24T16:23:43.547Z",
+      "startedAt": "2026-10-24T16:23:38.196Z",
+      "finishedAt": "2026-10-24T16:23:43.547Z",
+      "durationMs": 5351,
+      "runnerKind": "dev-source",
+      "sourceCommit": "372deb71666b4941529481c5ce09250573f9fc85",
+      "cached": false
+    }
+  ],
+  "artifactPaths": []
+}
