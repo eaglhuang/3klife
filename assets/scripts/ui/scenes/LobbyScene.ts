@@ -53,6 +53,8 @@ import { withBreedFallback, type BreedTextLookup } from '../core/BreedingTexts';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
 import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
+import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
+import type { SeasonAdvancedPayload } from '../../core/managers/GameSession';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
@@ -229,6 +231,8 @@ export class LobbyScene extends Component {
     private _motherTree: BloodlineTreePanel | null = null;
     private _jobChangeHost: UIScreenPreviewHost | null = null;
     private _domesticHost: UIScreenPreviewHost | null = null;
+    private _rivalHost: UIScreenPreviewHost | null = null;
+    private _rival: RivalDiplomacyController | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
     private _mercPanelHost: UIScreenPreviewHost | null = null;
@@ -373,6 +377,7 @@ export class LobbyScene extends Component {
         await this._mountBondingSetup();
         await this._mountJobChange();
         await this._mountDomestic();
+        await this._mountRivalDiplomacy();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
         await this._mountRedFaceShowcase();
@@ -1031,6 +1036,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnDiplomacy', handler: () => { void this._onClickDomesticTask(domestic, 'diplomacy'); } },
             { buttonId: 'btnArms', handler: () => { void this._onClickDomesticTask(domestic, 'arms'); } },
             { buttonId: 'btnScouting', handler: () => { void this._onClickDomesticTask(domestic, 'scouting'); } },
+            { buttonId: 'btnOpenRival', handler: () => { this._closeDomestic(); this._openRivalDiplomacy(); } },
         ]);
         this._domesticHost.node.active = false;
     }
@@ -1616,6 +1622,70 @@ export class LobbyScene extends Component {
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshJobChange();
+    }
+
+    /**
+     * 外交・出征畫面（PROG-2-1088）：以 UCUF JSON（rival-diplomacy-screen）執行期組裝。
+     * 邦交與自動戰鬥規則在 RivalNations，這裡只綁按鈕、套 view；他國來犯的結算用 toast 提示。
+     */
+    private async _mountRivalDiplomacy(): Promise<void> {
+        const gacha = this._localGachaService;
+        const rival = new RivalDiplomacyController({
+            world: () => services().session.rivals,
+            setWorld: (world) => services().session.setRivals(world),
+            squad: () => services().session.rivalBattleSquad(),
+            gold: () => gacha.getCurrencyAmount('gold'),
+            spendGold: (amount) => gacha.spendCurrency('gold', amount),
+            grantGold: (amount) => { gacha.grantCurrency('gold', amount); },
+            random: Math.random,
+            leaderName: (id) => this._generals.find((g) => g.id === id)?.name,
+        });
+        this._rival = rival;
+        const act = (run: () => Promise<void>): void => {
+            void run().catch((error) => {
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 外交指令失敗', error);
+            }).finally(() => { this._refreshRivalDiplomacy(); });
+        };
+        const nationButtons = Array.from({ length: RIVAL_NATION_SLOTS }, (_, i) => ({
+            buttonId: `btnNation${i}`,
+            handler: () => { rival.select(i); this._refreshRivalDiplomacy(); },
+        }));
+        this._rivalHost = await this._mountPreviewScreenHost('RivalDiplomacyHost', 'rival-diplomacy-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._rivalHost) this._rivalHost.node.active = false; } },
+            ...nationButtons,
+            { buttonId: 'btnGift', handler: () => { act(() => rival.gift()); } },
+            { buttonId: 'btnAlliance', handler: () => { act(() => rival.alliance()); } },
+            { buttonId: 'btnWar', handler: () => { act(() => rival.war()); } },
+            { buttonId: 'btnCampaign', handler: () => { act(() => rival.campaign()); } },
+        ]);
+        this._rivalHost.node.active = false;
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, (payload: SeasonAdvancedPayload) => {
+                for (const battle of payload?.rivalBattles ?? []) {
+                    if (battle.goldReward > 0) gacha.grantCurrency('gold', battle.goldReward);
+                    services().event.emit('SHOW_TOAST', { message: `敵軍來犯！${battle.lines[2]}`, duration: 3 });
+                }
+                this._refreshRivalDiplomacy();
+            }),
+        );
+    }
+
+    private _openRivalDiplomacy(): void {
+        const host = this._rivalHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshRivalDiplomacy();
+    }
+
+    private _refreshRivalDiplomacy(): void {
+        const binder = this._rivalHost?.binder;
+        if (!binder || !this._rival || !this._rivalHost?.node.active) {
+            return;
+        }
+        applyFlowView(binder, this._rival.getFlowView());
     }
 
     private _openDomestic(): void {
