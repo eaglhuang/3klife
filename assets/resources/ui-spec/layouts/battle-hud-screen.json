@@ -1374,16 +1374,15 @@
                   }
                 ]
               }
-            ]
+            ],
+            "active": false
           },
           {
             "type": "panel",
             "name": "BattleHudScreen_aside_1",
             "widget": {
               "top": 112,
-              "left": 24,
-              "right": 1616,
-              "bottom": 784
+              "left": 24
             },
             "width": 280,
             "height": 184,
@@ -1599,9 +1598,7 @@
             "name": "BattleHudScreen_aside_2",
             "widget": {
               "top": 112,
-              "left": 1556,
-              "right": 24,
-              "bottom": 501
+              "right": 24
             },
             "width": 340,
             "height": 467,
@@ -1959,10 +1956,8 @@
             "type": "container",
             "name": "BattleHudScreen_div_122",
             "widget": {
-              "left": 488,
-              "right": -98,
-              "top": 900,
-              "bottom": -310
+              "bottom": 24,
+              "hCenter": true
             },
             "width": 944,
             "height": 160,
@@ -2329,10 +2324,8 @@
             "type": "button",
             "name": "BattleHudScreen_button_1",
             "widget": {
-              "top": 988,
-              "left": 1650,
-              "right": 24,
-              "bottom": 24
+              "bottom": 24,
+              "right": 24
             },
             "width": 246,
             "height": 68,
