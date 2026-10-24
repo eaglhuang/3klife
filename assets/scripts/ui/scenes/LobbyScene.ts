@@ -75,6 +75,7 @@ import { DestinyOpeningController, DESTINY_OPENING_MAX_ROWS } from '../core/Dest
 import { OpeningIntroController } from '../core/OpeningIntroController';
 import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE } from '../../core/systems/NewPlayerOpening';
 import { destinyLockedEvent } from '../../core/systems/DestinyOpening';
+import { OPENING_BEAUTY_POOL_ID, rollOpeningBeauty } from '../../core/systems/OpeningBeauty';
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
@@ -1260,9 +1261,11 @@ export class LobbyScene extends Component {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 找不到 hero-pool 轉蛋設定，略過宿命轉蛋');
             return;
         }
+        const beautyPool = (Array.isArray(gachaConfig) ? gachaConfig : []).find(pool => pool.poolId === OPENING_BEAUTY_POOL_ID);
         const session = services().session;
         this._destiny = new DestinyOpeningController({
             config: () => heroPool,
+            beauty: () => rollOpeningBeauty(beautyPool, this._generals, session.randomSource),
             generals: () => this._generals,
             session,
             random: session.randomSource,
@@ -1270,6 +1273,11 @@ export class LobbyScene extends Component {
             onStarted: async () => {
                 if (session.hasSaveService) {
                     await session.save();
+                }
+                const beautyId = this._destiny?.beautyId;
+                const beautyName = beautyId ? this._generals.find(g => g.id === beautyId)?.name : null;
+                if (beautyName) {
+                    services().event.emit('SHOW_TOAST', { message: `紅顏 ${beautyName} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 });
                 }
                 this._refreshSeasonHud();
             },

@@ -41,6 +41,8 @@ export interface DestinyOpeningDeps {
     random: () => number;
     /** 新局種子。 */
     seed: () => number;
+    /** 開局紅顏（紅顏池抽 1 位的武將 id）；沒有時回 null。 */
+    beauty?: () => string | null;
     /** 鎖定並開局後呼叫，通常是存檔。 */
     onStarted: (coreId: StarterGeneralId) => Promise<void> | void;
 }
@@ -56,6 +58,9 @@ export class DestinyOpeningController {
     /** 已鎖定並開完新局。 */
     public get started(): boolean { return this._state.phase === 'locked' && !this._busy && this._startedId !== null; }
     private _startedId: StarterGeneralId | null = null;
+    private _beautyId: string | null = null;
+    /** 開局抽到的紅顏武將 id（未開局或沒有時為 null）。 */
+    public get beautyId(): string | null { return this._beautyId; }
 
     private _options() { return destinyOptionsFromConfig(this._deps.config()); }
 
@@ -103,8 +108,11 @@ export class DestinyOpeningController {
     private async _startGame(): Promise<boolean> {
         this._busy = true;
         try {
-            const coreId = await startNewGameFromDestiny(this._deps.session, this._deps.seed(), this._deps.generals(), this._state);
+            const beautyId = this._deps.beauty?.() ?? null;
+            const coreId = await startNewGameFromDestiny(this._deps.session, this._deps.seed(), this._deps.generals(), this._state, beautyId);
             this._startedId = coreId;
+            this._beautyId = beautyId;
+            this._lastMessage = beautyId ? `紅顏 ${this._nameOf(beautyId)} 前來相會，已加入名冊，可到「結緣」配對` : '';
             await this._deps.onStarted(coreId);
             return true;
         } catch (error) {
