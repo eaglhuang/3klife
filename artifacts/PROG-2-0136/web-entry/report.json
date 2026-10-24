@@ -1,0 +1,490 @@
+{
+  "generatedAt": "2026-10-15T15:42:09.185Z",
+  "url": "http://127.0.0.1:10306/",
+  "buildDir": "build\\web-onboarding-0136",
+  "buildRevision": null,
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "engineStarted": true,
+  "sceneName": "LobbyScene",
+  "errorCount": 0,
+  "flow": {
+    "name": "PROG-2-0136-onboarding-order",
+    "completed": false,
+    "interaction": "actual-pointer",
+    "steps": [
+      "BtnStart",
+      "BtnIntroNext",
+      "BtnIntroNext",
+      "BtnIntroNext",
+      "BtnIntroNext",
+      "BtnDestinyRoll",
+      "BtnDestinyRow0",
+      "BtnNextTutorial",
+      "BtnNextTutorial",
+      "BtnNextTutorial"
+    ],
+    "showcaseObserved": false,
+    "final": {
+      "scene": "LobbyScene",
+      "buttons": [
+        {
+          "name": "__ui-backdrop",
+          "enabled": false
+        },
+        {
+          "name": "LobbyMainScreen_button_1",
+          "enabled": true
+        },
+        {
+          "name": "LobbyMainScreen_button_2",
+          "enabled": true
+        },
+        {
+          "name": "LobbyMainScreen_button_3",
+          "enabled": true
+        },
+        {
+          "name": "GameplayBattle",
+          "enabled": true
+        },
+        {
+          "name": "GameplayGenerals",
+          "enabled": true
+        },
+        {
+          "name": "GameplaySupportCard",
+          "enabled": true
+        },
+        {
+          "name": "GameplayGacha",
+          "enabled": true
+        },
+        {
+          "name": "GameplayShop",
+          "enabled": true
+        },
+        {
+          "name": "GameplayFloodBattle",
+          "enabled": true
+        },
+        {
+          "name": "AdvanceSeasonButton",
+          "enabled": true
+        },
+        {
+          "name": "OpenNurtureButton",
+          "enabled": true
+        },
+        {
+          "name": "OpenBondingButton",
+          "enabled": true
+        },
+        {
+          "name": "OpenJobChangeButton",
+          "enabled": true
+        },
+        {
+          "name": "OpenDomesticButton",
+          "enabled": true
+        },
+        {
+          "name": "BtnOpenHallBoard",
+          "enabled": true
+        },
+        {
+          "name": "BtnOpenSandtable",
+          "enabled": true
+        },
+        {
+          "name": "BtnOpenSpiritCodex",
+          "enabled": true
+        },
+        {
+          "name": "DeckCardButton0",
+          "enabled": true
+        },
+        {
+          "name": "DeckCardButton1",
+          "enabled": true
+        },
+        {
+          "name": "DeckCardButton2",
+          "enabled": true
+        },
+        {
+          "name": "DeckCardButton3",
+          "enabled": true
+        },
+        {
+          "name": "LeadGeneralButton0",
+          "enabled": true
+        },
+        {
+          "name": "LeadGeneralButton1",
+          "enabled": true
+        },
+        {
+          "name": "LeadGeneralButton2",
+          "enabled": true
+        },
+        {
+          "name": "LeadPageButton",
+          "enabled": true
+        },
+        {
+          "name": "OpenSortieButton",
+          "enabled": true
+        }
+      ],
+      "labels": [
+        {
+          "name": "SubLabel",
+          "text": "（施工中）"
+        },
+        {
+          "name": "LobbyMainScreen_div_1",
+          "text": "auto.lobby-main-screen.lobby-main-screen-div-1"
+        },
+        {
+          "name": "LobbyMainScreen_div_2",
+          "text": "auto.lobby-main-screen.lobby-main-screen-div-2"
+        },
+        {
+          "name": "LobbyMainScreen_div_6",
+          "text": "劉玄德"
+        },
+        {
+          "name": "LobbyMainScreen_div_7",
+          "text": "auto.lobby-main-screen.lobby-main-screen-div-7"
+        },
+        {
+          "name": "LobbyMainScreen_div_11",
+          "text": "金"
+        },
+        {
+          "name": "LobbyMainScreen_span_1",
+          "text": "auto.lobby-main-screen.lobby-main-screen-span-1"
+        },
+        {
+          "name": "LobbyMainScreen_span_2",
+          "text": "+"
+        },
+        {
+          "name": "LobbyMainScreen_div_13",
+          "text": "玉"
+        },
+        {
+          "name": "LobbyMainScreen_span_3",
+          "text": "auto.lobby-main-screen.lobby-main-screen-span-3"
+        },
+        {
+          "name": "LobbyMainScreen_span_4",
+          "text": "+"
+        },
+        {
+          "name": "LobbyMainScreen_div_15",
+          "text": "糧"
+        },
+        {
+          "name": "LobbyMainScreen_span_5",
+          "text": "auto.lobby-main-screen.lobby-main-screen-span-5"
+        },
+        {
+          "name": "LobbyMainScreen_span_6",
+          "text": "+"
+        },
+        {
+          "name": "LobbyMainScreen_span_7",
+          "text": "帥"
+        },
+        {
+          "name": "LobbyMainScreen_span_8",
+          "text": "LOBBY"
+        },
+        {
+          "name": "LobbyMainScreen_span_9",
+          "text": "鑑"
+        },
+        {
+          "name": "LobbyMainScreen_span_10",
+          "text": "CODEX"
+        },
+        {
+          "name": "LobbyMainScreen_span_11",
+          "text": "符"
+        },
+        {
+          "name": "LobbyMainScreen_span_12",
+          "text": "GACHA"
+        },
+        {
+          "name": "LobbyMainScreen_span_13",
+          "text": "市"
+        },
+        {
+          "name": "LobbyMainScreen_span_14",
+          "text": "SHOP"
+        },
+        {
+          "name": "LobbyMainScreen_span_15",
+          "text": "信"
+        },
+        {
+          "name": "LobbyMainScreen_span_16",
+          "text": "MAIL"
+        },
+        {
+          "name": "LobbyMainScreen_div_22",
+          "text": "關 羽"
+        },
+        {
+          "name": "LobbyMainScreen_div_23",
+          "text": "auto.lobby-main-screen.lobby-main-screen-div-23"
+        },
+        {
+          "name": "LobbyMainScreen_div_27",
+          "text": "auto.lobby-main-screen.lobby-main-screen-div-27"
+        },
+        {
+          "name": "LobbyMainScreen_div_28",
+          "text": "LIMITED"
+        },
+        {
+          "name": "LobbyMainScreen_div_29",
+          "text": "auto.lobby-main-screen.lobby-main-screen-div-29"
+        },
+        {
+          "name": "LobbyMainScreen_span_17",
+          "text": "auto.lobby-main-screen.lobby-main-screen-span-17"
+        },
+        {
+          "name": "LobbyMainScreen_span_18",
+          "text": "參戰"
+        },
+        {
+          "name": "LobbyMainScreen_div_33",
+          "text": "auto.lobby-main-screen.lobby-main-screen-div-33"
+        },
+        {
+          "name": "LobbyMainScreen_div_34",
+          "text": "NEW"
+        },
+        {
+          "name": "LobbyMainScreen_div_35",
+          "text": "auto.lobby-main-screen.lobby-main-screen-div-35"
+        },
+        {
+          "name": "LobbyMainScreen_span_19",
+          "text": "auto.lobby-main-screen.lobby-main-screen-span-19"
+        },
+        {
+          "name": "LobbyMainScreen_span_20",
+          "text": "前往"
+        },
+        {
+          "name": "LobbyMainScreen_div_39",
+          "text": "auto.lobby-main-screen.lobby-main-screen-div-39"
+        },
+        {
+          "name": "LobbyMainScreen_div_40",
+          "text": "DAILY"
+        },
+        {
+          "name": "LobbyMainScreen_div_41",
+          "text": "auto.lobby-main-screen.lobby-main-screen-div-41"
+        },
+        {
+          "name": "LobbyMainScreen_span_21",
+          "text": "auto.lobby-main-screen.lobby-main-screen-span-21"
+        },
+        {
+          "name": "LobbyMainScreen_span_22",
+          "text": "領取"
+        },
+        {
+          "name": "LobbyMainScreen_div_44",
+          "text": "⚙"
+        },
+        {
+          "name": "LobbyMainScreen_div_45",
+          "text": "♖"
+        },
+        {
+          "name": "LobbyMainScreen_div_46",
+          "text": "☰"
+        },
+        {
+          "name": "GameplayBattleLabel",
+          "text": "戰場"
+        },
+        {
+          "name": "GameplayGeneralsLabel",
+          "text": "武將"
+        },
+        {
+          "name": "GameplaySupportCardLabel",
+          "text": "支援"
+        },
+        {
+          "name": "GameplayGachaLabel",
+          "text": "轉蛋"
+        },
+        {
+          "name": "GameplayShopLabel",
+          "text": "商店"
+        },
+        {
+          "name": "GameplayFloodBattleLabel",
+          "text": "洪戰"
+        },
+        {
+          "name": "SeasonLabel",
+          "text": "第 1 年 1 季"
+        },
+        {
+          "name": "ModeLabel",
+          "text": "治理"
+        },
+        {
+          "name": "AdvanceSeasonLabel",
+          "text": "推進一季"
+        },
+        {
+          "name": "OpenNurtureLabel",
+          "text": "開獎・培育"
+        },
+        {
+          "name": "OpenBondingLabel",
+          "text": "結緣"
+        },
+        {
+          "name": "OpenJobChangeLabel",
+          "text": "成人禮"
+        },
+        {
+          "name": "OpenDomesticLabel",
+          "text": "內政"
+        },
+        {
+          "name": "OpenHallBoardLabel",
+          "text": "任務牆"
+        },
+        {
+          "name": "OpenSandtableLabel",
+          "text": "天下沙盤"
+        },
+        {
+          "name": "OpenSpiritCodexLabel",
+          "text": "英靈"
+        },
+        {
+          "name": "DeckTitleLabel",
+          "text": "出戰卡組 0/4"
+        },
+        {
+          "name": "DeckCardLabel0",
+          "text": "　 虎豹騎（重騎兵）"
+        },
+        {
+          "name": "DeckCardLabel1",
+          "text": "　 陷陣營（重步兵）"
+        },
+        {
+          "name": "DeckCardLabel2",
+          "text": "　 大戟士（防禦盾兵）"
+        },
+        {
+          "name": "DeckCardLabel3",
+          "text": "　 連弩手（遠程弓兵）"
+        },
+        {
+          "name": "LeadTitleLabel",
+          "text": "出戰主將：張飛"
+        },
+        {
+          "name": "LeadGeneralLabel0",
+          "text": "✓ 張飛"
+        },
+        {
+          "name": "LeadGeneralLabel1",
+          "text": "　 魏延"
+        },
+        {
+          "name": "LeadGeneralLabel2",
+          "text": "　 夏侯惇"
+        },
+        {
+          "name": "LeadPageLabel",
+          "text": "換頁 ▶ 1/2"
+        },
+        {
+          "name": "OpenSortieLabel",
+          "text": "出征編制（參謀／後勤）"
+        }
+      ]
+    },
+    "limitation": "Entry diagnosis only; first-battle victory and complete showcase interaction remain unverified."
+  },
+  "testAccount": {
+    "playerId": "WEB_VERIFY_4a1818f7-86ab-4d3c-bc6c-60e10075a4d3",
+    "isolation": "per-run-account-and-backend",
+    "routedSyncRequests": 0
+  },
+  "errors": [],
+  "consoleTail": [
+    "[log] [UCUF:lifecycle] [UIPreviewBuilder] buildScreen 完成 (layout: lobby-deck-select-main) root.children=1",
+    "[warn] [UISpecLoader] sidecar not found: ui-spec/screens/lobby-deck-select-screen.interaction Error: Bundle resources doesn't contain ui-spec/screens/lobby-deck-select-screen.interaction",
+    "[log] [UCUF:ui] [UIScreenPreviewHost] mounted lobby-deck-select-screen -> LobbyDeckSelect",
+    "[log] [UCUF:ui] [UISpecLoader] loadLayout: 開始載入 \"lobby-lead-select-main\"",
+    "[log] [UCUF:ui] [UISpecLoader] loadLayout: \"lobby-lead-select-main\" 載入成功，開始解析 $ref 引用",
+    "[log] [UCUF:ui] [UIPreviewBuilder] buildScreen 開始 layout=\"lobby-lead-select-main\" skin=\"lobby-lead-select-default\" node=\"LeadSelectHost\"",
+    "[warn] [UCUF:skin] [UIPreviewBuilder] 字型加載失敗: [object Set]",
+    "[log] [UCUF:lifecycle] [UIPreviewBuilder] buildScreen 完成 (layout: lobby-lead-select-main) root.children=1",
+    "[warn] [UISpecLoader] sidecar not found: ui-spec/screens/lobby-lead-select-screen.interaction Error: Bundle resources doesn't contain ui-spec/screens/lobby-lead-select-screen.interaction",
+    "[log] [UCUF:ui] [UIScreenPreviewHost] mounted lobby-lead-select-screen -> LobbyLeadSelect",
+    "[log] [UCUF:ui] [UISpecLoader] loadLayout: 開始載入 \"sortie-setup-main\"",
+    "[log] [UCUF:ui] [UISpecLoader] loadLayout: \"sortie-setup-main\" 載入成功，開始解析 $ref 引用",
+    "[log] [UCUF:ui] [UIPreviewBuilder] buildScreen 開始 layout=\"sortie-setup-main\" skin=\"sortie-setup-screen.skin\" node=\"SortieSetupHost\"",
+    "[warn] [UCUF:skin] [UIPreviewBuilder] 字型加載失敗: [object Set]",
+    "[log] [UCUF:lifecycle] [UIPreviewBuilder] buildScreen 完成 (layout: sortie-setup-main) root.children=2",
+    "[warn] [UISpecLoader] sidecar not found: ui-spec/screens/sortie-setup-screen.interaction Error: Bundle resources doesn't contain ui-spec/screens/sortie-setup-screen.interaction",
+    "[log] [UCUF:ui] [UIScreenPreviewHost] mounted sortie-setup-screen -> SortieSetup",
+    "[log] [UCUF:ui] [UISpecLoader] loadLayout: 開始載入 \"character-ds3-main\"",
+    "[log] [UCUF:ui] [UISpecLoader] loadLayout: \"character-ds3-main\" 載入成功，開始解析 $ref 引用",
+    "[log] [UCUF:ui] [UIPreviewBuilder] buildScreen 開始 layout=\"character-ds3-main\" skin=\"character-ds3-main.skin\" node=\"CharacterDs3Host\"",
+    "[warn] [UCUF:skin] [UIPreviewBuilder] 字型加載失敗: [object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_img_1 → sprites/generals/zhang_fei_portrait Error: load spriteFrame failed: sprites/generals/zhang_fei_portrait/spriteFrame (raw: sprites/generals/zhang_fei_portrait) | attempts=Texture2D:[object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_button_4 → sprites/ui_families/general_detail/tab_active_button Error: load spriteFrame failed: sprites/ui_families/general_detail/tab_active_button/spriteFrame (raw: sprites/ui_families/general_detail/tab_active_button) | attempts=Texture2D:[object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_button_5 → sprites/ui_families/general_detail/tab_active_button Error: load spriteFrame failed: sprites/ui_families/general_detail/tab_active_button/spriteFrame (raw: sprites/ui_families/general_detail/tab_active_button) | attempts=Texture2D:[object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_button_6 → sprites/ui_families/general_detail/tab_active_button Error: load spriteFrame failed: sprites/ui_families/general_detail/tab_active_button/spriteFrame (raw: sprites/ui_families/general_detail/tab_active_button) | attempts=Texture2D:[object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_button_7 → sprites/ui_families/general_detail/tab_active_button Error: load spriteFrame failed: sprites/ui_families/general_detail/tab_active_button/spriteFrame (raw: sprites/ui_families/general_detail/tab_active_button) | attempts=Texture2D:[object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_button_8 → sprites/ui_families/general_detail/tab_active_button Error: load spriteFrame failed: sprites/ui_families/general_detail/tab_active_button/spriteFrame (raw: sprites/ui_families/general_detail/tab_active_button) | attempts=Texture2D:[object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_button_9 → sprites/ui_families/general_detail/tab_active_button Error: load spriteFrame failed: sprites/ui_families/general_detail/tab_active_button/spriteFrame (raw: sprites/ui_families/general_detail/tab_active_button) | attempts=Texture2D:[object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_button_10 → sprites/ui_families/general_detail/tab_active_button Error: load spriteFrame failed: sprites/ui_families/general_detail/tab_active_button/spriteFrame (raw: sprites/ui_families/general_detail/tab_active_button) | attempts=Texture2D:[object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_button_11 → sprites/ui_families/general_detail/tab_active_button Error: load spriteFrame failed: sprites/ui_families/general_detail/tab_active_button/spriteFrame (raw: sprites/ui_families/general_detail/tab_active_button) | attempts=Texture2D:[object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_button_12 → sprites/ui_families/general_detail/tab_active_button Error: load spriteFrame failed: sprites/ui_families/general_detail/tab_active_button/spriteFrame (raw: sprites/ui_families/general_detail/tab_active_button) | attempts=Texture2D:[object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_button_13 → sprites/ui_families/general_detail/tab_active_button Error: load spriteFrame failed: sprites/ui_families/general_detail/tab_active_button/spriteFrame (raw: sprites/ui_families/general_detail/tab_active_button) | attempts=Texture2D:[object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_button_14 → sprites/ui_families/general_detail/tab_active_button Error: load spriteFrame failed: sprites/ui_families/general_detail/tab_active_button/spriteFrame (raw: sprites/ui_families/general_detail/tab_active_button) | attempts=Texture2D:[object Set]",
+    "[warn] [UCUF:ui] [UISkinResolver] 載入 SpriteFrame 失敗: auto.character-ds3-main.characterds3main_button_15 → sprites/ui_families/general_detail/tab_active_button Error: load spriteFrame failed: sprites/ui_families/general_detail/tab_active_button/spriteFrame (raw: sprites/ui_families/general_detail/tab_active_button) | attempts=Texture2D:[object Set]",
+    "[log] [UCUF:lifecycle] [UIPreviewBuilder] buildScreen 完成 (layout: character-ds3-main) root.children=1",
+    "[log] [UCUF:ui] [UISpecLoader] loadLayout: 開始載入 \"fragments/layouts/character-ds3-overview-content\"",
+    "[log] [UCUF:ui] [UISpecLoader] loadLayout: \"fragments/layouts/character-ds3-overview-content\" 載入成功，開始解析 $ref 引用",
+    "[log] [UCUF:ui] [UISpecLoader] loadLayout: 開始載入 \"fragments/layouts/character-ds3-story-strip-collapsed\"",
+    "[log] [UCUF:ui] [UISpecLoader] loadLayout: \"fragments/layouts/character-ds3-story-strip-collapsed\" 載入成功，開始解析 $ref 引用",
+    "[log] [UCUF:ui] [UIScreenPreviewHost] interaction sidecar bound 8/14",
+    "[log] [UCUF:ui] [UIScreenPreviewHost] mounted character-ds3-main -> GeneralDetail",
+    "[log] [UCUF:lifecycle] [LobbyScene] Character DS3 tab routing bound [object Object]",
+    "[log] [UCUF:ui] [UIScreenPreviewHost] screen 已掛載，略過重建: lobby-main-screen",
+    "[log] [UCUF:data] [SyncManager] 本地同步狀態已還原，pending actions=0",
+    "[log] [UCUF:ui] [UISpecLoader] loadLayout: 開始載入 \"toast-message-main\"",
+    "[log] [UCUF:ui] [UISpecLoader] loadLayout: \"toast-message-main\" 載入成功，開始解析 $ref 引用",
+    "[log] [UCUF:ui] [UIPreviewBuilder] buildScreen 開始 layout=\"toast-message-main\" skin=\"toast-message-default\" node=\"ToastContainer\"",
+    "[warn] [UCUF:skin] [UIPreviewBuilder] 字型加載失敗: [object Set]",
+    "[log] [UCUF:lifecycle] [UIPreviewBuilder] buildScreen 完成 (layout: toast-message-main) root.children=1",
+    "[warn] '%s' is deprecated. (setting size in CSS pixels is not recommended, please use screen.windowSize instead.) View.prototype.setFrameSize"
+  ],
+  "screenshot": "artifacts\\PROG-2-0136\\web-entry\\boot.png"
+}
