@@ -120,9 +120,11 @@ export abstract class CompositePanel extends UIPreviewBuilder {
         this._scopeId = `screen:${screenId}`;
         this._loadedAssetPaths.add(screenId);
         services().memory?.notifyLoaded(screenId, 'resources', 'json', this._scopeId);
-        const [{ screen, layout, skin }, tokens] = await Promise.all([
+        const locale = services().i18n?.currentLocale;
+        const [{ screen, layout, skin }, tokens, i18nStrings] = await Promise.all([
             services().specLoader.loadFullScreen(screenId),
             services().specLoader.loadDesignTokensForScreen(screenId),
+            locale ? services().specLoader.loadI18n(locale).catch(() => undefined) : Promise.resolve(undefined),
         ]);
         this._tabRouting = screen.tabRouting ?? null;
 
@@ -153,7 +155,7 @@ export abstract class CompositePanel extends UIPreviewBuilder {
             designHeight: _safeDesignH,
         });
 
-        await this.buildScreen(layout, skin, undefined, tokens);
+        await this.buildScreen(layout, skin, i18nStrings, tokens);
 
         // R29 post-build: 若 safeAreaConstrained，插入一個固定 designWidth×designHeight 的
         // 中介容器 (__safeArea)，使 layout root 子節點的 Widget 計算以設計解析度為基準。
