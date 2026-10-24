@@ -40,6 +40,7 @@ export class LobbyOpeningPanels {
 
     public async mountOnboarding(): Promise<void> {
         this._onboarding = new OnboardingFlowController({
+            ready: () => !this._ports.isNewPlayer() || this._destiny?.started === true,
             state: () => this._ports.session().onboarding,
             acknowledge: segmentId => this._ports.session().acknowledgeOnboarding(segmentId),
         });
@@ -118,6 +119,7 @@ export class LobbyOpeningPanels {
     }
 
     private afterDestinyAction(): void {
+        this.refreshOnboarding();
         if (this._destiny?.started && this._destinyHost) {
             this._destinyHost.node.active = false;
             if (destinyLockedEvent(this._destiny.state)) {
