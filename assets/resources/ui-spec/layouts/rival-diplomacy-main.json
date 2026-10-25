@@ -129,11 +129,25 @@
                 "id": "rivalAvatarMask0",
                 "widget": {
                   "vCenter": true,
-                  "left": 12
+                  "left": 8
                 },
-                "width": 48,
-                "height": 48,
+                "width": 58,
+                "height": 58,
                 "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg0",
+                    "id": "rivalAvatarBg0",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
                   {
                     "type": "image",
                     "name": "RivalAvatar0",
@@ -144,8 +158,8 @@
                       "left": 0,
                       "right": 0
                     },
-                    "width": 48,
-                    "height": 48,
+                    "width": 58,
+                    "height": 58,
                     "skinSlot": "rival.avatar"
                   }
                 ]
@@ -156,7 +170,7 @@
                 "id": "btnNation0Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 70,
+                  "left": 76,
                   "right": 12
                 },
                 "height": 40,
@@ -183,11 +197,25 @@
                 "id": "rivalAvatarMask1",
                 "widget": {
                   "vCenter": true,
-                  "left": 12
+                  "left": 8
                 },
-                "width": 48,
-                "height": 48,
+                "width": 58,
+                "height": 58,
                 "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg1",
+                    "id": "rivalAvatarBg1",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
                   {
                     "type": "image",
                     "name": "RivalAvatar1",
@@ -198,8 +226,8 @@
                       "left": 0,
                       "right": 0
                     },
-                    "width": 48,
-                    "height": 48,
+                    "width": 58,
+                    "height": 58,
                     "skinSlot": "rival.avatar"
                   }
                 ]
@@ -210,7 +238,7 @@
                 "id": "btnNation1Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 70,
+                  "left": 76,
                   "right": 12
                 },
                 "height": 40,
@@ -237,11 +265,25 @@
                 "id": "rivalAvatarMask2",
                 "widget": {
                   "vCenter": true,
-                  "left": 12
+                  "left": 8
                 },
-                "width": 48,
-                "height": 48,
+                "width": 58,
+                "height": 58,
                 "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg2",
+                    "id": "rivalAvatarBg2",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
                   {
                     "type": "image",
                     "name": "RivalAvatar2",
@@ -252,8 +294,8 @@
                       "left": 0,
                       "right": 0
                     },
-                    "width": 48,
-                    "height": 48,
+                    "width": 58,
+                    "height": 58,
                     "skinSlot": "rival.avatar"
                   }
                 ]
@@ -264,7 +306,7 @@
                 "id": "btnNation2Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 70,
+                  "left": 76,
                   "right": 12
                 },
                 "height": 40,
@@ -291,11 +333,25 @@
                 "id": "rivalAvatarMask3",
                 "widget": {
                   "vCenter": true,
-                  "left": 12
+                  "left": 8
                 },
-                "width": 48,
-                "height": 48,
+                "width": 58,
+                "height": 58,
                 "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg3",
+                    "id": "rivalAvatarBg3",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
                   {
                     "type": "image",
                     "name": "RivalAvatar3",
@@ -306,8 +362,8 @@
                       "left": 0,
                       "right": 0
                     },
-                    "width": 48,
-                    "height": 48,
+                    "width": 58,
+                    "height": 58,
                     "skinSlot": "rival.avatar"
                   }
                 ]
@@ -318,7 +374,7 @@
                 "id": "btnNation3Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 70,
+                  "left": 76,
                   "right": 12
                 },
                 "height": 40,
@@ -345,11 +401,25 @@
                 "id": "rivalAvatarMask4",
                 "widget": {
                   "vCenter": true,
-                  "left": 12
+                  "left": 8
                 },
-                "width": 48,
-                "height": 48,
+                "width": 58,
+                "height": 58,
                 "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg4",
+                    "id": "rivalAvatarBg4",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
                   {
                     "type": "image",
                     "name": "RivalAvatar4",
@@ -360,8 +430,8 @@
                       "left": 0,
                       "right": 0
                     },
-                    "width": 48,
-                    "height": 48,
+                    "width": 58,
+                    "height": 58,
                     "skinSlot": "rival.avatar"
                   }
                 ]
@@ -372,7 +442,7 @@
                 "id": "btnNation4Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 70,
+                  "left": 76,
                   "right": 12
                 },
                 "height": 40,
@@ -399,11 +469,25 @@
                 "id": "rivalAvatarMask5",
                 "widget": {
                   "vCenter": true,
-                  "left": 12
+                  "left": 8
                 },
-                "width": 48,
-                "height": 48,
+                "width": 58,
+                "height": 58,
                 "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg5",
+                    "id": "rivalAvatarBg5",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
                   {
                     "type": "image",
                     "name": "RivalAvatar5",
@@ -414,8 +498,8 @@
                       "left": 0,
                       "right": 0
                     },
-                    "width": 48,
-                    "height": 48,
+                    "width": 58,
+                    "height": 58,
                     "skinSlot": "rival.avatar"
                   }
                 ]
@@ -426,7 +510,7 @@
                 "id": "btnNation5Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 70,
+                  "left": 76,
                   "right": 12
                 },
                 "height": 40,
@@ -453,11 +537,25 @@
                 "id": "rivalAvatarMask6",
                 "widget": {
                   "vCenter": true,
-                  "left": 12
+                  "left": 8
                 },
-                "width": 48,
-                "height": 48,
+                "width": 58,
+                "height": 58,
                 "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg6",
+                    "id": "rivalAvatarBg6",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
                   {
                     "type": "image",
                     "name": "RivalAvatar6",
@@ -468,8 +566,8 @@
                       "left": 0,
                       "right": 0
                     },
-                    "width": 48,
-                    "height": 48,
+                    "width": 58,
+                    "height": 58,
                     "skinSlot": "rival.avatar"
                   }
                 ]
@@ -480,7 +578,7 @@
                 "id": "btnNation6Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 70,
+                  "left": 76,
                   "right": 12
                 },
                 "height": 40,
@@ -507,11 +605,25 @@
                 "id": "rivalAvatarMask7",
                 "widget": {
                   "vCenter": true,
-                  "left": 12
+                  "left": 8
                 },
-                "width": 48,
-                "height": 48,
+                "width": 58,
+                "height": 58,
                 "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg7",
+                    "id": "rivalAvatarBg7",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
                   {
                     "type": "image",
                     "name": "RivalAvatar7",
@@ -522,8 +634,8 @@
                       "left": 0,
                       "right": 0
                     },
-                    "width": 48,
-                    "height": 48,
+                    "width": 58,
+                    "height": 58,
                     "skinSlot": "rival.avatar"
                   }
                 ]
@@ -534,7 +646,7 @@
                 "id": "btnNation7Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 70,
+                  "left": 76,
                   "right": 12
                 },
                 "height": 40,
