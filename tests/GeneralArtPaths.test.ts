@@ -32,7 +32,7 @@ export function createGeneralArtPathsSuite(): TestSuite {
         configureGeneralArtPaths({ avatar: ['art/v2/{id}/head'] });
         assert.equals('art/v2/zhang-fei/head', avatarCandidates('zhang-fei')[0]);
         assert.equals('sprites/generals/zhang_fei_portrait', portraitPathOf('zhang-fei'));
-        assert.equals(defaultGeneralArtPaths().avatarPlaceholder, avatarPlaceholderPath());
+        assert.equals('sprites/ui_avatars/unknown_avatar_m', avatarPlaceholderPath());
         resetGeneralArtPaths();
     });
 
