@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-15T15-42-31-653Z-renew-951dce6dbd8c",
+  "taskId": "PROG-2-0136",
+  "action": "renew",
+  "actorId": "codex-gpt-6",
+  "sessionId": "session-20261015153842-codex-gpt-6-PROG-2-0136-88c9f3a1ac",
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/PROG-2-0136.json",
+  "taskSha256": "sha256:f1b24d268335ddd714f532e00381d0a344f7589f302c5c1d63d959aa8719f4ba",
+  "createdAt": "2026-10-15T15:42:31.653Z",
+  "command": "node atm.mjs tasks renew"
+}

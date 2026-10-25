@@ -1,0 +1,15 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-10-15T23-14-23-831Z-close-821b1c884d7c",
+  "taskId": "PROG-2-0136.md",
+  "action": "close",
+  "actorId": "codex-gpt-6",
+  "sessionId": null,
+  "fromStatus": "in-progress",
+  "toStatus": "done",
+  "taskPath": "docs/agent-briefs/tasks/PROG/PROG-2-0136.md",
+  "taskSha256": "sha256:9bd4cb7a8e4e6c2e7405f26657a579f1a575a36cb3d07d807cc3e256e155c48e",
+  "createdAt": "2026-10-15T23:14:23.831Z",
+  "command": "node atm.mjs tasks close --task PROG-2-0136.md --actor codex-gpt-6"
+}
