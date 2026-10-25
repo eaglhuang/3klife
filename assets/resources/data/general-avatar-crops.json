@@ -8,7 +8,7 @@
       "y": 56,
       "w": 221,
       "h": 221,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 116,
         "chin": 200,
@@ -21,7 +21,7 @@
       "y": 27,
       "w": 163,
       "h": 163,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 65,
         "chin": 127,
@@ -34,7 +34,7 @@
       "y": 32,
       "w": 250,
       "h": 250,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 95,
         "chin": 190,
@@ -47,7 +47,7 @@
       "y": 84,
       "w": 153,
       "h": 153,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 122,
         "chin": 180,
@@ -60,7 +60,7 @@
       "y": 59,
       "w": 189,
       "h": 189,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 108,
         "chin": 180,
@@ -69,15 +69,15 @@
       }
     },
     "diao-chan": {
-      "x": 38,
-      "y": 53,
-      "w": 205,
-      "h": 205,
+      "x": 48,
+      "y": 62,
+      "w": 184,
+      "h": 184,
       "source": "auto",
       "face": {
-        "top": 100,
-        "chin": 178,
-        "eyeY": 135,
+        "top": 112,
+        "chin": 182,
+        "eyeY": 136,
         "cx": 140
       }
     },
@@ -86,7 +86,7 @@
       "y": 71,
       "w": 197,
       "h": 197,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 115,
         "chin": 190,
@@ -99,7 +99,7 @@
       "y": 84,
       "w": 211,
       "h": 211,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 145,
         "chin": 225,
@@ -112,7 +112,7 @@
       "y": 61,
       "w": 197,
       "h": 197,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 105,
         "chin": 180,
@@ -125,7 +125,7 @@
       "y": 65,
       "w": 250,
       "h": 250,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 125,
         "chin": 220,
@@ -138,7 +138,7 @@
       "y": 63,
       "w": 229,
       "h": 229,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 118,
         "chin": 205,
@@ -151,7 +151,7 @@
       "y": 60,
       "w": 224,
       "h": 224,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 115,
         "chin": 200,
@@ -164,7 +164,7 @@
       "y": 70,
       "w": 250,
       "h": 250,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 130,
         "chin": 225,
@@ -177,7 +177,7 @@
       "y": 140,
       "w": 224,
       "h": 224,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 190,
         "chin": 275,
@@ -190,7 +190,7 @@
       "y": 127,
       "w": 158,
       "h": 158,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 170,
         "chin": 230,
@@ -203,7 +203,7 @@
       "y": 116,
       "w": 184,
       "h": 184,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 160,
         "chin": 230,
@@ -216,7 +216,7 @@
       "y": 40,
       "w": 250,
       "h": 250,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 100,
         "chin": 195,
@@ -229,7 +229,7 @@
       "y": 15,
       "w": 224,
       "h": 224,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 75,
         "chin": 160,
@@ -242,7 +242,7 @@
       "y": 21,
       "w": 211,
       "h": 211,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 70,
         "chin": 150,
@@ -255,7 +255,7 @@
       "y": 91,
       "w": 184,
       "h": 184,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 140,
         "chin": 210,
@@ -268,7 +268,7 @@
       "y": 71,
       "w": 184,
       "h": 184,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 115,
         "chin": 185,
@@ -281,7 +281,7 @@
       "y": 86,
       "w": 211,
       "h": 211,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 145,
         "chin": 225,
@@ -301,7 +301,7 @@
       "y": 41,
       "w": 147,
       "h": 147,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 82,
         "chin": 138,
@@ -314,7 +314,7 @@
       "y": 11,
       "w": 211,
       "h": 211,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 70,
         "chin": 150,
@@ -342,7 +342,7 @@
       "y": 18,
       "w": 168,
       "h": 168,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 58,
         "chin": 122,
@@ -355,7 +355,7 @@
       "y": 205,
       "w": 158,
       "h": 158,
-      "source": "auto",
+      "source": "reviewed",
       "face": {
         "top": 240,
         "chin": 300,
