@@ -170,6 +170,7 @@ import {
     type JournalWriteResult,
 } from '../systems/JournalLog';
 import type { DomesticTaskId } from '../systems/DomesticTasks';
+import { advanceRivalSeason, autoResolveBattle, createRivalWorld, generalPower, normalizeRivalWorld, type AutoBattleResult, type BattleGeneral, type RivalWorld } from '../systems/RivalNations';
 import {
     defaultKeepTerritories,
     normalizeGovernanceAssignments,
@@ -271,6 +272,8 @@ export interface SeasonAdvancedPayload {
     yearReport?: YearReport;
     /** 本季每位名冊武將的季度戰報（REC-08）；沒有精力資料的武將不列 */
     quarterlyReports?: QuarterlyBattleReportRow[];
+    /** 本季他國 AI 來犯、以名冊前 3 強自動迎戰的結算（PROG-2-1088） */
+    rivalBattles?: AutoBattleResult[];
 }
 
 /** 進行中的培育會話存取介面；正式環境為 NurtureService，讓存檔帶著培育進度 */
@@ -486,6 +489,7 @@ export class GameSession {
     private _openingRedFaceShown = false;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
+    private _rivals: RivalWorld = createRivalWorld();
     /** 季末糧不足標記（TRP-12）；只給下一場出征用，不進存檔 */
     private _tallyFoodDiscountArmed = false;
     /** 傭兵存檔包（試用、薪水、冷卻）；隨存檔保存（MERC-01 接線） */
@@ -1176,6 +1180,7 @@ export class GameSession {
         this._firstBattleCleared = false;
         this._openingRedFaceShown = false;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
+        this._rivals = createRivalWorld();
         this._mercenaries = createEmptyMercenaryBundle();
     }
 
@@ -1277,6 +1282,42 @@ export class GameSession {
     /** 城市兵源與糧草儲備（PROG-2-0072） */
     public get fame(): number {
         return this._fame;
+    }
+
+    /** 他國 AI 勢力（邦交、兵力、領地）；外交畫面讀這份（PROG-2-1088） */
+    public get rivals(): RivalWorld {
+        return this._rivals;
+    }
+
+    /** 外交指令或出征結算後寫回勢力狀態並存檔 */
+    public async setRivals(world: RivalWorld): Promise<void> {
+        this._rivals = normalizeRivalWorld(world);
+        if (this._save) {
+            await this.save();
+        }
+    }
+
+    /** 名冊中戰力最高的 3 位在世武將：出征與迎戰的預設陣容 */
+    public rivalBattleSquad(): BattleGeneral[] {
+        return this._roster.getAll()
+            .filter((g) => g.status !== 'dead')
+            .map((g) => ({ name: g.name, str: g.str ?? 0, int: g.int ?? 0, lea: g.lea ?? 0 }))
+            .sort((a, b) => generalPower(b) - generalPower(a))
+            .slice(0, 3);
+    }
+
+    /** 季度推進：勢力成長、邦交回歸；來犯的勢力用名冊前 3 強自動迎戰 */
+    private _tickRivals(): AutoBattleResult[] {
+        const tick = advanceRivalSeason(this._rivals, this._random);
+        let world = tick.world;
+        const battles: AutoBattleResult[] = [];
+        for (const event of tick.events) {
+            const battle = autoResolveBattle(world, event.nationId, this.rivalBattleSquad(), this._random);
+            world = battle.world;
+            battles.push(battle);
+        }
+        this._rivals = world;
+        return battles;
     }
 
     public get domesticLog(): Readonly<DomesticSeasonLog> {
@@ -2105,7 +2146,8 @@ export class GameSession {
         }
         const quarterlyReports = buildQuarterlyBattleReportRows(this._roster.getAll());
         this.recordSeasonJournal(advance.previous, quarterlyReports);
-        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports };
+        const rivalBattles = this._tickRivals();
+        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -2616,6 +2658,7 @@ export class GameSession {
                 openingRedFaceShown: this._openingRedFaceShown,
             },
             domestic: { ...this._domesticLog },
+            rivals: this._rivals,
             prison: this.prison,
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
             onboarding: { ...this._onboarding },
@@ -2762,6 +2805,7 @@ export class GameSession {
         this._openingRedFaceShown = normalizeFlag(snapshot.resources?.openingRedFaceShown)
             || (snapshot.resources?.firstBattleCleared === undefined && this._clearedStageIds.length > 0);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
+        this._rivals = normalizeRivalWorld(snapshot.rivals);
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         if (this._requireSave().lastLoadRecoveredFromBackup()) {

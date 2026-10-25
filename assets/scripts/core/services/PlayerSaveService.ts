@@ -2,6 +2,7 @@ import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import { normalizeTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { readCardStarState } from '../systems/TigerTallyStar';
 import { normalizeDomesticLog, type DomesticSeasonLog } from '../systems/DomesticTasks';
+import { normalizeRivalWorld, type RivalWorld } from '../systems/RivalNations';
 // @spec-source → 遊戲時間系統.md (doc_spec_0034) §I、Data Schema文件（本機端與Server端）.md (doc_tech_0013)
 /**
  * PlayerSaveService — 玩家長局存檔快照（純邏輯，不依賴 cc）
@@ -141,6 +142,8 @@ export interface PlayerSaveSnapshot {
     resources?: { fame: number; scorePoints?: number; autoNurtureTickets?: number; mainlineNurtureClearedOnce?: boolean; firstBattleCleared?: boolean; openingRedFaceShown?: boolean };
     /** 內政本季紀錄（同季只能選一項）；後加的選填欄位，舊檔讀回為空紀錄 */
     domestic?: DomesticSeasonLog;
+    /** 他國 AI 勢力狀態；後加的選填欄位，舊檔讀回為初始勢力（PROG-2-1088） */
+    rivals?: RivalWorld;
     /** 傭兵存檔包（試用、薪水、冷卻）；後加的選填欄位，舊檔讀回為空包（MERC-01） */
     mercenaries?: MercenarySaveBundle;
     /** 女性來源系統狀態（傭兵池／救美刷新時間、送禮好感）；後加的選填欄位，舊檔讀回預設值（FEM 接線） */
@@ -442,6 +445,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         yearAgingEvents: normalizeYearAgingEvents(snapshot.yearAgingEvents),
         ...(snapshot.resources !== undefined && snapshot.resources !== null ? { resources: { fame: normalizeFame((snapshot.resources as { fame?: unknown }).fame), scorePoints: normalizeScorePoints((snapshot.resources as { scorePoints?: unknown }).scorePoints), autoNurtureTickets: normalizeAutoNurtureTickets((snapshot.resources as { autoNurtureTickets?: unknown }).autoNurtureTickets), mainlineNurtureClearedOnce: normalizeFlag((snapshot.resources as { mainlineNurtureClearedOnce?: unknown }).mainlineNurtureClearedOnce), ...optionalFlag((snapshot.resources as { firstBattleCleared?: unknown }).firstBattleCleared, 'firstBattleCleared'), ...optionalFlag((snapshot.resources as { openingRedFaceShown?: unknown }).openingRedFaceShown, 'openingRedFaceShown') } } : {}),
         ...(snapshot.domestic !== undefined ? { domestic: normalizeDomesticLog(snapshot.domestic) } : {}),
+        ...(snapshot.rivals !== undefined ? { rivals: normalizeRivalWorld(snapshot.rivals) } : {}),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
         ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),

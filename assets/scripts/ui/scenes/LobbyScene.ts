@@ -55,6 +55,9 @@ import { JobChangeController } from '../core/JobChangeController';
 import { DomesticPanelController } from '../core/DomesticPanelController';
 import { FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems/SeasonFastForward';
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
+import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
+import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
+import type { SeasonAdvancedPayload } from '../../core/managers/GameSession';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
@@ -78,7 +81,7 @@ import { DestinyOpeningController, DESTINY_OPENING_MAX_ROWS } from '../core/Dest
 import { OpeningIntroController } from '../core/OpeningIntroController';
 import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE } from '../../core/systems/NewPlayerOpening';
 import { destinyLockedEvent } from '../../core/systems/DestinyOpening';
-import { OPENING_BEAUTY_POOL_ID, rollOpeningBeauty } from '../../core/systems/OpeningBeauty';
+import { OPENING_BEAUTY_POOL_ID, openingBeautyCandidates, rollOpeningBeauty } from '../../core/systems/OpeningBeauty';
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
@@ -232,6 +235,10 @@ export class LobbyScene extends Component {
     private _jobChangeHost: UIScreenPreviewHost | null = null;
     private _domesticHost: UIScreenPreviewHost | null = null;
     private _fastForwarding = false;
+    private _recruitHost: UIScreenPreviewHost | null = null;
+    private _recruit: RecruitHallController | null = null;
+    private _rivalHost: UIScreenPreviewHost | null = null;
+    private _rival: RivalDiplomacyController | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
     private _mercPanelHost: UIScreenPreviewHost | null = null;
@@ -376,6 +383,8 @@ export class LobbyScene extends Component {
         await this._mountBondingSetup();
         await this._mountJobChange();
         await this._mountDomestic();
+        await this._mountRecruitHall();
+        await this._mountRivalDiplomacy();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
         await this._mountRedFaceShowcase();
@@ -1035,6 +1044,8 @@ export class LobbyScene extends Component {
             { buttonId: 'btnArms', handler: () => { void this._onClickDomesticTask(domestic, 'arms'); } },
             { buttonId: 'btnScouting', handler: () => { void this._onClickDomesticTask(domestic, 'scouting'); } },
             { buttonId: 'btnFastForward', handler: () => { void this._onClickFastForward(); } },
+            { buttonId: 'btnOpenRecruit', handler: () => { this._closeDomestic(); this._openRecruitHall(); } },
+            { buttonId: 'btnOpenRival', handler: () => { this._closeDomestic(); this._openRivalDiplomacy(); } },
         ]);
         this._domesticHost.node.active = false;
     }
@@ -1620,6 +1631,122 @@ export class LobbyScene extends Component {
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshJobChange();
+    }
+
+    /**
+     * 招賢館（PROG-2-1089）：以 UCUF JSON（recruit-hall-screen）執行期組裝。
+     * 名將池 20 位直接挑選、金幣招募入冊；規則在 RecruitHallController。
+     */
+    private async _mountRecruitHall(): Promise<void> {
+        const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
+        const heroPool = (Array.isArray(gachaConfig) ? gachaConfig : []).find(pool => pool.poolId === 'hero-pool');
+        const ids = heroPool?.candidateIds ?? [];
+        const gacha = this._localGachaService;
+        const recruit = new RecruitHallController({
+            candidates: () => ids.map((id) => this._generals.find((g) => g.id === id)).filter((g): g is GeneralConfig => !!g),
+            ownedIds: () => new Set(services().session.roster.map((g) => g.id)),
+            gold: () => gacha.getCurrencyAmount('gold'),
+            spendGold: (amount) => gacha.spendCurrency('gold', amount),
+            recruit: async (general) => { await services().session.addGenerals([{ ...general }]); },
+        });
+        this._recruit = recruit;
+        const rowButtons = Array.from({ length: RECRUIT_ROWS_PER_PAGE }, (_, i) => ({
+            buttonId: `btnRecruitRow${i}`,
+            handler: () => {
+                void recruit.recruitRow(i).catch((error) => {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 招募失敗', error);
+                }).finally(() => { this._refreshRecruitHall(); });
+            },
+        }));
+        this._recruitHost = await this._mountPreviewScreenHost('RecruitHallHost', 'recruit-hall-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._recruitHost) this._recruitHost.node.active = false; } },
+            ...rowButtons,
+            { buttonId: 'btnPrev', handler: () => { recruit.prev(); this._refreshRecruitHall(); } },
+            { buttonId: 'btnNext', handler: () => { recruit.next(); this._refreshRecruitHall(); } },
+        ]);
+        this._recruitHost.node.active = false;
+    }
+
+    private _openRecruitHall(): void {
+        const host = this._recruitHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshRecruitHall();
+    }
+
+    private _refreshRecruitHall(): void {
+        const binder = this._recruitHost?.binder;
+        if (!binder || !this._recruit) {
+            return;
+        }
+        applyFlowView(binder, this._recruit.getFlowView());
+    }
+
+    /**
+     * 外交・出征畫面（PROG-2-1088）：以 UCUF JSON（rival-diplomacy-screen）執行期組裝。
+     * 邦交與自動戰鬥規則在 RivalNations，這裡只綁按鈕、套 view；他國來犯的結算用 toast 提示。
+     */
+    private async _mountRivalDiplomacy(): Promise<void> {
+        const gacha = this._localGachaService;
+        const rival = new RivalDiplomacyController({
+            world: () => services().session.rivals,
+            setWorld: (world) => services().session.setRivals(world),
+            squad: () => services().session.rivalBattleSquad(),
+            gold: () => gacha.getCurrencyAmount('gold'),
+            spendGold: (amount) => gacha.spendCurrency('gold', amount),
+            grantGold: (amount) => { gacha.grantCurrency('gold', amount); },
+            random: Math.random,
+            leaderName: (id) => this._generals.find((g) => g.id === id)?.name,
+        });
+        this._rival = rival;
+        const act = (run: () => Promise<void>): void => {
+            void run().catch((error) => {
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 外交指令失敗', error);
+            }).finally(() => { this._refreshRivalDiplomacy(); });
+        };
+        const nationButtons = Array.from({ length: RIVAL_NATION_SLOTS }, (_, i) => ({
+            buttonId: `btnNation${i}`,
+            handler: () => { rival.select(i); this._refreshRivalDiplomacy(); },
+        }));
+        this._rivalHost = await this._mountPreviewScreenHost('RivalDiplomacyHost', 'rival-diplomacy-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._rivalHost) this._rivalHost.node.active = false; } },
+            ...nationButtons,
+            { buttonId: 'btnGift', handler: () => { act(() => rival.gift()); } },
+            { buttonId: 'btnAlliance', handler: () => { act(() => rival.alliance()); } },
+            { buttonId: 'btnWar', handler: () => { act(() => rival.war()); } },
+            { buttonId: 'btnCampaign', handler: () => { act(() => rival.campaign()); } },
+        ]);
+        this._rivalHost.node.active = false;
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, (payload: SeasonAdvancedPayload) => {
+                for (const battle of payload?.rivalBattles ?? []) {
+                    if (battle.goldReward > 0) gacha.grantCurrency('gold', battle.goldReward);
+                    services().event.emit('SHOW_TOAST', { message: `敵軍來犯！${battle.lines[2]}`, duration: 3 });
+                }
+                this._refreshRivalDiplomacy();
+            }),
+        );
+    }
+
+    private _openRivalDiplomacy(): void {
+        const host = this._rivalHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshRivalDiplomacy();
+    }
+
+    private _refreshRivalDiplomacy(): void {
+        const binder = this._rivalHost?.binder;
+        if (!binder || !this._rival || !this._rivalHost?.node.active) {
+            return;
+        }
+        applyFlowView(binder, this._rival.getFlowView());
     }
 
     private _openDomestic(): void {
@@ -3048,6 +3175,10 @@ export class LobbyScene extends Component {
         const guideLines = buildGachaPoolGuideLines();
         host.binder.setTexts({
             GachaDs3_div_8: guideLines.generalSeries,
+            GachaDs3_div_18: '★ 紅顏池 · 召喚券 1 張抽 1 位',
+            GachaDs3_div_19: '紅 顏',
+            GachaDs3_div_20: '大喬、小喬、甄姬、黃月英、蔡琰',
+            GachaDs3_div_21: '抽到的武將入名冊，成年後可到「結緣」配對',
             GachaDs3_div_28: guideLines.supportSeries,
             GachaDs3_div_44: '單 抽 ×1', GachaDs3_div_47: '100',
             GachaDs3_div_49: '十 連 ×10', GachaDs3_div_53: '1000',
@@ -3058,7 +3189,10 @@ export class LobbyScene extends Component {
     private async _runGachaAction(action: () => Promise<void>): Promise<void> {
         if (this._gachaPullPending) return;
         // 名將池走一般轉蛋；支援卡池改抽教官卡；其他池尚未開放。
-        if (this._gachaPoolIndex === 2) {
+        if (this._gachaPoolIndex === 1) {
+            // 紅顏池：不論按哪顆鈕，都用 1 張召喚券抽 1 位女性武將（PROG-2-1086）
+            action = () => this._runBeautySummon();
+        } else if (this._gachaPoolIndex === 2) {
             // 支援卡池：不論按哪顆鈕，都用 1 張支援券抽 1 張教官卡（PROG-2-1085）
             action = () => this._runSupportSummon();
         } else if (this._gachaPoolIndex !== 0) {
@@ -3722,6 +3856,14 @@ export class LobbyScene extends Component {
 
     private async _runGoldSummon(): Promise<void> {
         await this._getGachaFlowCoordinator().runGoldSummon();
+    }
+
+    private async _runBeautySummon(): Promise<void> {
+        const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
+        const pool = (Array.isArray(gachaConfig) ? gachaConfig : []).find((entry) => entry.poolId === OPENING_BEAUTY_POOL_ID);
+        const ids = new Set(openingBeautyCandidates(pool, this._generals));
+        const generals = this._generals.filter((general) => ids.has(general.id));
+        await this._getGachaFlowCoordinator().runBeautySummon(OPENING_BEAUTY_POOL_ID, generals);
     }
 
     private async _runSupportSummon(): Promise<void> {

@@ -1,5 +1,6 @@
 
 // @spec-source → 見 docs/cross-reference-index.md
+import { DEV } from 'cc/env';
 import { _decorator, Component, Label, Node, Vec3, geometry } from "cc";
 import {
   Faction,
@@ -404,7 +405,8 @@ export class BattleScene extends Component {
 
       // 8. 初始背景與切換功能（Debug UI）
       this.sceneBackground = await initSceneBackground(this.node.scene!, backgroundId);
-      if (!isBattleCaptureMode) {
+      // 切換背景是開發用按鈕，正式打包不顯示（PROG-2-1086）
+      if (!isBattleCaptureMode && DEV) {
         addBackgroundSwitchUI(canvas, this.sceneBackground, this._deployPanelRuntime);
       }
 

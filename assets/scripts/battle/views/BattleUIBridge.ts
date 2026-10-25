@@ -12,6 +12,7 @@
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
+import { autoResolveOutcome } from '../runtime/BattleAutoResolve';
 import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance, localizedMilestoneName } from '../../core/systems/BattleRecordStats';
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
@@ -171,6 +172,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.TileBuffSpawned,         this._onTileBuffSpawned.bind(this)),
       svc.event.on(EVENT_NAMES.TileBuffConsumed,        this._onTileBuffConsumed.bind(this)),
       svc.event.on(EVENT_NAMES.BattleEnded,             this._onBattleEnded.bind(this)),
+      svc.event.on(EVENT_NAMES.AutoBattleToggled,       this._onAutoBattleToggled.bind(this)),
       svc.event.on(EVENT_NAMES.RequestGeneralQuickView, this._onRequestGeneralQuickView.bind(this)),
       svc.event.on(EVENT_NAMES.UltimateSkillSelected,   this._onUltimateSkillSelected.bind(this)),
     );
@@ -528,6 +530,21 @@ export class BattleUIBridge {
       c.unitRenderer?.playBuffEffect(data.unitId, data.lane, data.depth, data.attackDelta, data.hpDelta);
     }
     this.refreshBattleViews();
+  }
+
+  /** 自動鈕（PROG-2-1091）：開啟即依雙方數值模擬勝負，走既有 BattleEnded → 結算彈窗流程 */
+  private _onAutoBattleToggled(enabled: boolean): void {
+    const state = this.ctx.ctrl?.state;
+    if (!enabled || !state || state.battleEndAnnounced) return;
+    const side = (faction: Faction, fortressHp: number) => ({
+      general: state.getGeneral(faction),
+      troops: Array.from(state.units.values()).filter((u) => u.faction === faction && !u.isDead()),
+      fortressHp,
+    });
+    const outcome = autoResolveOutcome(side(Faction.Player, state.playerFortressHp), side(Faction.Enemy, state.enemyFortressHp), Math.random);
+    this.appendLog(`自動模擬：我方戰力 ${outcome.playerPower}，敵方戰力 ${outcome.enemyPower}`);
+    state.battleEndAnnounced = true;
+    services().event.emit(EVENT_NAMES.BattleEnded, { result: outcome.result });
   }
 
   private _onBattleEnded(data: { result: string }): void {
