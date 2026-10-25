@@ -21,6 +21,20 @@
     },
     "children": [
       {
+        "type": "image",
+        "name": "DomesticBackdrop",
+        "id": "domesticBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "width": 1920,
+        "height": 1080,
+        "skinSlot": "domestic.backdrop"
+      },
+      {
         "type": "panel",
         "name": "DomesticCard",
         "id": "domesticCard",
@@ -28,8 +42,8 @@
           "hCenter": true,
           "vCenter": true
         },
-        "width": 1200,
-        "height": 780,
+        "width": 1120,
+        "height": 740,
         "skinSlot": "domestic.card.bg",
         "children": [
           {
@@ -37,11 +51,11 @@
             "name": "DomesticTitle",
             "id": "domesticTitle",
             "widget": {
-              "top": 22,
-              "left": 32
+              "top": 34,
+              "left": 48
             },
-            "width": 400,
-            "height": 40,
+            "width": 500,
+            "height": 56,
             "text": "大廳・內政",
             "styleSlot": "domestic.label.title"
           },
@@ -50,11 +64,11 @@
             "name": "SeasonLabel",
             "id": "seasonLabel",
             "widget": {
-              "top": 30,
-              "left": 460
+              "top": 96,
+              "left": 50
             },
-            "width": 420,
-            "height": 34,
+            "width": 500,
+            "height": 30,
             "text": "",
             "styleSlot": "domestic.label.meta"
           },
@@ -63,11 +77,11 @@
             "name": "BtnClose",
             "id": "btnClose",
             "widget": {
-              "top": 16,
-              "right": 24
+              "top": 30,
+              "right": 36
             },
-            "width": 110,
-            "height": 48,
+            "width": 100,
+            "height": 44,
             "skinSlot": "domestic.button.bg",
             "children": [
               {
@@ -86,15 +100,40 @@
             ]
           },
           {
+            "type": "panel",
+            "name": "TitleDivider",
+            "id": "titleDivider",
+            "widget": {
+              "top": 140,
+              "left": 48,
+              "right": 48
+            },
+            "height": 1,
+            "skinSlot": "domestic.divider"
+          },
+          {
+            "type": "label",
+            "name": "SectionTasks",
+            "id": "sectionTasks",
+            "widget": {
+              "top": 160,
+              "left": 48
+            },
+            "width": 300,
+            "height": 26,
+            "text": "內政任務",
+            "styleSlot": "domestic.label.section"
+          },
+          {
             "type": "button",
             "name": "BtnFarming",
             "id": "btnFarming",
             "widget": {
-              "top": 100,
-              "left": 32
+              "top": 200,
+              "left": 48
             },
-            "width": 280,
-            "height": 84,
+            "width": 500,
+            "height": 88,
             "skinSlot": "domestic.button.bg",
             "children": [
               {
@@ -103,12 +142,12 @@
                 "id": "btnFarmingLabel",
                 "widget": {
                   "vCenter": true,
-                  "left": 0,
+                  "left": 28,
                   "right": 0
                 },
                 "height": 40,
                 "text": "農耕",
-                "styleSlot": "domestic.label.button"
+                "styleSlot": "domestic.label.tile"
               }
             ]
           },
@@ -117,11 +156,11 @@
             "name": "FarmingOutput",
             "id": "farmingOutput",
             "widget": {
-              "top": 124,
-              "left": 340
+              "top": 230,
+              "left": 198
             },
-            "width": 320,
-            "height": 36,
+            "width": 220,
+            "height": 30,
             "text": "",
             "styleSlot": "domestic.label.name"
           },
@@ -130,11 +169,11 @@
             "name": "FarmingChosen",
             "id": "farmingChosen",
             "widget": {
-              "top": 128,
-              "left": 700
+              "top": 232,
+              "left": 428
             },
-            "width": 200,
-            "height": 30,
+            "width": 100,
+            "height": 26,
             "text": "",
             "styleSlot": "domestic.label.meta"
           },
@@ -143,11 +182,11 @@
             "name": "BtnCommerce",
             "id": "btnCommerce",
             "widget": {
-              "top": 210,
-              "left": 32
+              "top": 200,
+              "left": 572
             },
-            "width": 280,
-            "height": 84,
+            "width": 500,
+            "height": 88,
             "skinSlot": "domestic.button.bg",
             "children": [
               {
@@ -156,12 +195,12 @@
                 "id": "btnCommerceLabel",
                 "widget": {
                   "vCenter": true,
-                  "left": 0,
+                  "left": 28,
                   "right": 0
                 },
                 "height": 40,
                 "text": "商業",
-                "styleSlot": "domestic.label.button"
+                "styleSlot": "domestic.label.tile"
               }
             ]
           },
@@ -170,11 +209,11 @@
             "name": "CommerceOutput",
             "id": "commerceOutput",
             "widget": {
-              "top": 234,
-              "left": 340
+              "top": 230,
+              "left": 722
             },
-            "width": 320,
-            "height": 36,
+            "width": 220,
+            "height": 30,
             "text": "",
             "styleSlot": "domestic.label.name"
           },
@@ -183,11 +222,11 @@
             "name": "CommerceChosen",
             "id": "commerceChosen",
             "widget": {
-              "top": 238,
-              "left": 700
+              "top": 232,
+              "left": 952
             },
-            "width": 200,
-            "height": 30,
+            "width": 100,
+            "height": 26,
             "text": "",
             "styleSlot": "domestic.label.meta"
           },
@@ -196,11 +235,11 @@
             "name": "BtnDiplomacy",
             "id": "btnDiplomacy",
             "widget": {
-              "top": 320,
-              "left": 32
+              "top": 304,
+              "left": 48
             },
-            "width": 280,
-            "height": 84,
+            "width": 500,
+            "height": 88,
             "skinSlot": "domestic.button.bg",
             "children": [
               {
@@ -209,12 +248,12 @@
                 "id": "btnDiplomacyLabel",
                 "widget": {
                   "vCenter": true,
-                  "left": 0,
+                  "left": 28,
                   "right": 0
                 },
                 "height": 40,
                 "text": "外交",
-                "styleSlot": "domestic.label.button"
+                "styleSlot": "domestic.label.tile"
               }
             ]
           },
@@ -223,11 +262,11 @@
             "name": "DiplomacyOutput",
             "id": "diplomacyOutput",
             "widget": {
-              "top": 344,
-              "left": 340
+              "top": 334,
+              "left": 198
             },
-            "width": 320,
-            "height": 36,
+            "width": 220,
+            "height": 30,
             "text": "",
             "styleSlot": "domestic.label.name"
           },
@@ -236,11 +275,11 @@
             "name": "DiplomacyChosen",
             "id": "diplomacyChosen",
             "widget": {
-              "top": 348,
-              "left": 700
+              "top": 336,
+              "left": 428
             },
-            "width": 200,
-            "height": 30,
+            "width": 100,
+            "height": 26,
             "text": "",
             "styleSlot": "domestic.label.meta"
           },
@@ -249,11 +288,11 @@
             "name": "BtnArms",
             "id": "btnArms",
             "widget": {
-              "top": 430,
-              "left": 32
+              "top": 304,
+              "left": 572
             },
-            "width": 280,
-            "height": 84,
+            "width": 500,
+            "height": 88,
             "skinSlot": "domestic.button.bg",
             "children": [
               {
@@ -262,12 +301,12 @@
                 "id": "btnArmsLabel",
                 "widget": {
                   "vCenter": true,
-                  "left": 0,
+                  "left": 28,
                   "right": 0
                 },
                 "height": 40,
                 "text": "軍備",
-                "styleSlot": "domestic.label.button"
+                "styleSlot": "domestic.label.tile"
               }
             ]
           },
@@ -276,11 +315,11 @@
             "name": "ArmsOutput",
             "id": "armsOutput",
             "widget": {
-              "top": 454,
-              "left": 340
+              "top": 334,
+              "left": 722
             },
-            "width": 320,
-            "height": 36,
+            "width": 220,
+            "height": 30,
             "text": "",
             "styleSlot": "domestic.label.name"
           },
@@ -289,11 +328,11 @@
             "name": "ArmsChosen",
             "id": "armsChosen",
             "widget": {
-              "top": 458,
-              "left": 700
+              "top": 336,
+              "left": 952
             },
-            "width": 200,
-            "height": 30,
+            "width": 100,
+            "height": 26,
             "text": "",
             "styleSlot": "domestic.label.meta"
           },
@@ -302,11 +341,11 @@
             "name": "BtnScouting",
             "id": "btnScouting",
             "widget": {
-              "top": 540,
-              "left": 32
+              "top": 408,
+              "left": 48
             },
-            "width": 280,
-            "height": 84,
+            "width": 500,
+            "height": 88,
             "skinSlot": "domestic.button.bg",
             "children": [
               {
@@ -315,12 +354,12 @@
                 "id": "btnScoutingLabel",
                 "widget": {
                   "vCenter": true,
-                  "left": 0,
+                  "left": 28,
                   "right": 0
                 },
                 "height": 40,
                 "text": "偵查",
-                "styleSlot": "domestic.label.button"
+                "styleSlot": "domestic.label.tile"
               }
             ]
           },
@@ -329,11 +368,11 @@
             "name": "ScoutingOutput",
             "id": "scoutingOutput",
             "widget": {
-              "top": 564,
-              "left": 340
+              "top": 438,
+              "left": 198
             },
-            "width": 320,
-            "height": 36,
+            "width": 220,
+            "height": 30,
             "text": "",
             "styleSlot": "domestic.label.name"
           },
@@ -342,11 +381,11 @@
             "name": "ScoutingChosen",
             "id": "scoutingChosen",
             "widget": {
-              "top": 568,
-              "left": 700
+              "top": 440,
+              "left": 428
             },
-            "width": 200,
-            "height": 30,
+            "width": 100,
+            "height": 26,
             "text": "",
             "styleSlot": "domestic.label.meta"
           },
@@ -355,25 +394,38 @@
             "name": "NoticeLabel",
             "id": "noticeLabel",
             "widget": {
-              "top": 640,
-              "left": 32
+              "top": 520,
+              "left": 48
             },
-            "width": 1136,
-            "height": 36,
+            "width": 1024,
+            "height": 32,
             "text": "",
             "styleSlot": "domestic.label.log"
+          },
+          {
+            "type": "label",
+            "name": "SectionNav",
+            "id": "sectionNav",
+            "widget": {
+              "top": 572,
+              "left": 48
+            },
+            "width": 300,
+            "height": 26,
+            "text": "前往",
+            "styleSlot": "domestic.label.section"
           },
           {
             "type": "button",
             "name": "BtnOpenRival",
             "id": "btnOpenRival",
             "widget": {
-              "top": 320,
-              "right": 32
+              "top": 612,
+              "left": 48
             },
-            "width": 240,
-            "height": 84,
-            "skinSlot": "domestic.button.bg",
+            "width": 238,
+            "height": 72,
+            "skinSlot": "domestic.button.accent",
             "children": [
               {
                 "type": "label",
@@ -395,11 +447,11 @@
             "name": "BtnOpenRecruit",
             "id": "btnOpenRecruit",
             "widget": {
-              "top": 430,
-              "right": 32
+              "top": 612,
+              "left": 310
             },
-            "width": 240,
-            "height": 84,
+            "width": 238,
+            "height": 72,
             "skinSlot": "domestic.button.bg",
             "children": [
               {
@@ -422,11 +474,11 @@
             "name": "BtnFastForward",
             "id": "btnFastForward",
             "widget": {
-              "top": 540,
-              "right": 32
+              "top": 612,
+              "left": 572
             },
-            "width": 240,
-            "height": 84,
+            "width": 238,
+            "height": 72,
             "skinSlot": "domestic.button.bg",
             "children": [
               {
@@ -449,11 +501,11 @@
             "name": "BtnOpenWarehouse",
             "id": "btnOpenWarehouse",
             "widget": {
-              "top": 650,
-              "right": 32
+              "top": 612,
+              "left": 834
             },
-            "width": 240,
-            "height": 84,
+            "width": 238,
+            "height": 72,
             "skinSlot": "domestic.button.bg",
             "children": [
               {
