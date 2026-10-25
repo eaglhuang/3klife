@@ -104,8 +104,13 @@
     "rival.avatar": {
       "kind": "sprite-frame",
       "path": "sprites/ui_avatars/unknown_avatar",
-      "expectedWidth": 48,
-      "expectedHeight": 48
+      "expectedWidth": 58,
+      "expectedHeight": 58
+    },
+    "rival.avatar.bg": {
+      "kind": "color-rect",
+      "color": "#2A2622",
+      "alpha": 235
     }
   }
 }

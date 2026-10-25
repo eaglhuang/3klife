@@ -19,7 +19,7 @@
         "wrapModeT": "clamp-to-edge",
         "minfilter": "linear",
         "magfilter": "linear",
-        "mipfilter": "none",
+        "mipfilter": "linear",
         "anisotropy": 0,
         "isUuid": true,
         "imageUuidOrDatabaseUri": "731e9265-4777-4a77-b595-38d46050c206",
