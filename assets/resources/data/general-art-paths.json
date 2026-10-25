@@ -6,6 +6,6 @@
     "sprites/generals/avatars/{file}_avatar",
     "sprites/ui_avatars/cropped/{file}_avatar"
   ],
-  "avatarPlaceholder": "sprites/battle/portrait_player_placeholder",
+  "avatarPlaceholder": "sprites/ui_avatars/unknown_avatar",
   "croppedAvatarDir": "sprites/ui_avatars/cropped"
 }
