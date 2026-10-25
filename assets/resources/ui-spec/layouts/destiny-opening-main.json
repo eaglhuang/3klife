@@ -22,6 +22,20 @@
     "children": [
       {
         "type": "panel",
+        "name": "DestinyScrim",
+        "id": "destinyScrim",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "width": 1920,
+        "height": 1080,
+        "skinSlot": "do.scrim"
+      },
+      {
+        "type": "panel",
         "name": "DestinyOpeningCard",
         "id": "destinyOpeningCard",
         "widget": {
