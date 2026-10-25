@@ -21,5 +21,11 @@ export function createNurtureInspireNoticeSuite(): TestSuite {
         assert.equals('【靈感】趙雲傳授戰法「槍陣」', text);
     });
 
+    suite.test('有戰法名稱查詢時顯示中文名', () => {
+        const names = new Map([['tactic-fire-scheme', '火計']]);
+        const text = describeMentorTriggers(undefined, [{ mentorId: 'm1', eventId: 'e1', tacticId: 'tactic-fire-scheme' }], mentors, (id) => names.get(id));
+        assert.equals('【靈感】趙雲傳授戰法「火計」', text);
+    });
+
     return suite;
 }

@@ -143,6 +143,8 @@ export interface NurtureFlowDeps {
     text?: BreedTextLookup;
     /** 精力歸 0 時的劇本提示（PROG-2-0732）；正式環境接 SHOW_TOAST，未提供時不顯示 */
     showToast?: (message: string) => void;
+    /** 戰法 id → 中文名（tactic-library）；未提供或查不到時顯示 id（PROG-2-1096） */
+    tacticName?: (tacticId: string) => string | undefined;
     /** 名將傳道（MENT-15）；正式環境接 GameSession.performLegendaryMentoringFor，未提供時入口不可用 */
     performLegendaryMentoring?: (
         generalId: string,
@@ -317,7 +319,7 @@ export class NurtureFlowController {
         // 因子解鎖系統 §H UI_AWAKENING：「【覺醒】{GeneName}！」
         this._notice = awakening ? `${describeRound(log)}　【覺醒】${awakening.displayName}！` : describeRound(log);
         // 教官系統 §E：靈感與羈絆觸發要讓玩家看得到（PROG-2-1096）
-        const mentorNotes = describeMentorTriggers(log.synergyId, inspirations, session?.mentors ?? []);
+        const mentorNotes = describeMentorTriggers(log.synergyId, inspirations, session?.mentors ?? [], this._deps.tacticName);
         if (mentorNotes) this._notice += `　${mentorNotes}`;
         if (log.vigorAfter === 0) {
             this._deps.showToast?.(vitalityScriptText(this._t.bind(this), VITALITY_SCRIPT_KEYS.exhausted, child.name));
@@ -660,6 +662,7 @@ export function describeMentorTriggers(
     synergyId: string | undefined,
     inspirations: readonly NurtureInspiration[] | undefined,
     mentors: readonly { id: string; name?: string }[],
+    tacticName?: (tacticId: string) => string | undefined,
 ): string {
     const parts: string[] = [];
     if (synergyId) {
@@ -668,7 +671,7 @@ export function describeMentorTriggers(
     }
     for (const entry of inspirations ?? []) {
         const mentor = mentors.find((m) => m.id === entry.mentorId)?.name ?? entry.mentorId;
-        parts.push(`【靈感】${mentor}傳授戰法「${entry.tacticId}」`);
+        parts.push(`【靈感】${mentor}傳授戰法「${tacticName?.(entry.tacticId) ?? entry.tacticId}」`);
     }
     return parts.join('　');
 }
