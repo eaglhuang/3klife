@@ -22,7 +22,7 @@
     },
     "domestic.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 40,
       "lineHeight": 52,
       "color": "#F6E7C3",
@@ -32,7 +32,7 @@
     },
     "domestic.label.name": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "#B8A888",
@@ -41,7 +41,7 @@
     },
     "domestic.label.meta": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 20,
       "lineHeight": 26,
       "color": "#A89470",
@@ -50,7 +50,7 @@
     },
     "domestic.label.log": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "color": "#D9C9A6",
@@ -58,7 +58,7 @@
     },
     "domestic.label.button": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "#F1E5CC",
@@ -89,7 +89,7 @@
     },
     "domestic.label.section": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 18,
       "lineHeight": 24,
       "letterSpacing": 8,
@@ -98,7 +98,7 @@
     },
     "domestic.label.tile": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 28,
       "lineHeight": 36,
       "letterSpacing": 4,
