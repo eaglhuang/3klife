@@ -90,7 +90,7 @@
 - ⏸ 6.8 （3D 路線暫停，裁決 128）3D Q 版共用底模的平行比較（工時估算、Mixamo 動作重定向可行性、貼圖降規後重量）
 - 🔶 6.8b 2D atlas 256／512 A/B（暫定：武將母稿 512、主將與 UR／SSR 可 512；兵每兵種共用 256；武器必須跨共用 rig 換，盔甲 MVP 不換，裁決 10）：180px 顯示、2× 裝置比例下的槍尖與髮絲
 - 🔶 6.8e DragonBones 對照組（使用者 19:20 要求三路線都做可播 demo 比較，改從中立 JSON 直接轉、不經 Spine、不用 LoongBones，裁決 87、通知 88；以下為舊紀錄：轉檔 PoC 也未通過，裁決 19 停止；LoongBones 條款限制商用，待使用者決定是否申請同意；2D 比較暫改 Cocos 原生拆件，裁決 15）：選 LoongBones（保有共用骨架與 slot 換武器）；PSD2Live 因動作烘焙在單一角色、無法共用動作庫，降為參考（裁決 13）
-- 🔶 6.9 路線定案：Spine／DragonBones／3D（Claude 依證據裁決）；【進度】Cocos 原生突刺 v3.2 在隔離場景達 L3、已結案（只限此片段；六格六點節點變換誤差 <1e-12、整體配準 p95 ≤2.14 px、weapon_impact 一次；裁決 105）。美術驗收另判，還差亮點定位和左眼，Spine 和 DragonBones 待用 v3.2 重跑（Spine 補 cape 槽成 21 槽，裁決 109）；3D 趙雲 GLB 已匯入 AssetDB，屬 L1，待交渲染圖和並排圖（裁決 109）；先做原生、Spine、DragonBones 三路線同素材同動作的並排可播 demo 給使用者看（裁決 87）
+- 🔶 6.9 路線定案：Spine／DragonBones／Cocos 原生（3D 已暫停，裁決 128）（Claude 依證據裁決）；【進度】Cocos 原生突刺 v3.2 在隔離場景達 L3、已結案（只限此片段；六格六點節點變換誤差 <1e-12、整體配準 p95 ≤2.14 px、weapon_impact 一次；裁決 105）。美術驗收另判，還差亮點定位和左眼，Spine 和 DragonBones 待用 v3.2 重跑（Spine 補 cape 槽成 21 槽，裁決 109）；3D 趙雲 GLB 已匯入 AssetDB，屬 L1，待交渲染圖和並排圖（裁決 109）；先做原生、Spine、DragonBones 三路線同素材同動作的並排可播 demo 給使用者看（裁決 87）
 - ⬜ 6.10 特效：依武器類別共用刀光拖尾，套武將識別色，沿用 `vfx-block-registry`
 - ⬜ 6.11 Web build 播放（L4）
 - ⏸ 6.12 （使用者 10:30 延後：先做網頁版，裁決 124）Android 實機：10 對 10 同屏的 FPS、draw call、ASTC 貼圖記憶體（L5）
