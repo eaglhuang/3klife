@@ -6,56 +6,88 @@
   "slots": {
     "recruit.card.bg": {
       "kind": "color-rect",
-      "color": "backgroundDeep",
-      "alpha": 246
+      "color": "#140F0C",
+      "alpha": 118,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#E8C88CA0"
     },
     "recruit.button.bg": {
       "kind": "color-rect",
-      "color": "primary",
-      "alpha": 160
+      "color": "#FFF0D7",
+      "alpha": 20,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "#E8C88C70"
     },
     "recruit.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
-      "fontSize": 32,
-      "lineHeight": 40,
-      "color": "secondaryLight",
-      "isBold": true,
-      "overflow": "CLAMP"
+      "font": "fonts/notoserif_tc/notoserif_tc",
+      "fontSize": 40,
+      "lineHeight": 52,
+      "color": "#F6E7C3",
+      "isBold": false,
+      "overflow": "CLAMP",
+      "letterSpacing": 10
     },
     "recruit.label.name": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 28,
       "lineHeight": 36,
-      "color": "secondaryLight",
-      "isBold": true,
+      "color": "#D9C9A6",
+      "isBold": false,
       "overflow": "SHRINK"
     },
     "recruit.label.meta": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 20,
       "lineHeight": 26,
-      "color": "secondaryLight",
-      "overflow": "SHRINK"
+      "color": "#A89470",
+      "overflow": "SHRINK",
+      "isBold": false,
+      "letterSpacing": 2
     },
     "recruit.label.log": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 22,
       "lineHeight": 28,
-      "color": "secondaryLight",
-      "overflow": "SHRINK"
+      "color": "#D9C9A6",
+      "overflow": "SHRINK",
+      "isBold": false
     },
     "recruit.label.button": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notoserif_tc/notoserif_tc",
       "fontSize": 22,
       "lineHeight": 28,
-      "color": "secondaryLight",
+      "color": "#F1E5CC",
       "isBold": false,
-      "overflow": "SHRINK"
+      "overflow": "SHRINK",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "letterSpacing": 0
+    },
+    "recruit.backdrop": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_bg/recruit_bg",
+      "expectedWidth": 1280,
+      "expectedHeight": 720
+    },
+    "recruit.button.accent": {
+      "kind": "color-rect",
+      "color": "#A8322A",
+      "alpha": 190,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "#F0B48C99"
+    },
+    "recruit.divider": {
+      "kind": "color-rect",
+      "color": "#E8C88C",
+      "alpha": 110
     }
   }
 }

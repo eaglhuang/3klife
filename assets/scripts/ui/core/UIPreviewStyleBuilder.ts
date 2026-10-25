@@ -391,6 +391,8 @@ export class UIPreviewStyleBuilder {
         label.lineHeight      = style.lineHeight;
         label.color           = style.color;
         label.spacingX        = style.letterSpacing;
+        // Cocos 3.8 的 TTF 預設模式不吃 spacingX，只有逐字快取（CHAR）走 bmfont 排版才會套用字距
+        if (style.letterSpacing > 0) label.cacheMode = Label.CacheMode.CHAR;
         label.horizontalAlign = style.horizontalAlign;
         label.verticalAlign   = style.verticalAlign;
         // overflow floor：不允許 skin 將 overflow 設為 NONE（0），

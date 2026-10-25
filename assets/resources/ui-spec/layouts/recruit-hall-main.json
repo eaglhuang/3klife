@@ -21,6 +21,20 @@
     },
     "children": [
       {
+        "type": "image",
+        "name": "RecruitBackdrop",
+        "id": "recruitBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "width": 1920,
+        "height": 1080,
+        "skinSlot": "recruit.backdrop"
+      },
+      {
         "type": "panel",
         "name": "RecruitCard",
         "id": "recruitCard",
@@ -44,6 +58,18 @@
             "height": 40,
             "text": "招賢館",
             "styleSlot": "recruit.label.title"
+          },
+          {
+            "type": "panel",
+            "name": "TitleDivider",
+            "id": "titleDivider",
+            "widget": {
+              "top": 78,
+              "left": 32,
+              "right": 32
+            },
+            "height": 1,
+            "skinSlot": "recruit.divider"
           },
           {
             "type": "button",
