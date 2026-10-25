@@ -45,6 +45,8 @@ import {
 } from '../../core/systems/Unveiling';
 import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
 import { mentorFromCard } from '../../core/systems/NurtureSystem';
+import type { NurtureInspiration } from '../../core/services/NurtureService';
+import { DEFAULT_SYNERGY_GROUPS } from '../../core/systems/MentorSynergy';
 import {
     cycleMentorDeckSlot,
     defaultMentorDeck,
@@ -311,9 +313,12 @@ export class NurtureFlowController {
 
     async train(action: NurtureAction): Promise<NurtureRoundLog> {
         const child = this._requireSelected();
-        const { log, awakening } = this._deps.nurture.train(child.id, action);
+        const { log, awakening, inspirations, session } = this._deps.nurture.train(child.id, action);
         // 因子解鎖系統 §H UI_AWAKENING：「【覺醒】{GeneName}！」
         this._notice = awakening ? `${describeRound(log)}　【覺醒】${awakening.displayName}！` : describeRound(log);
+        // 教官系統 §E：靈感與羈絆觸發要讓玩家看得到（PROG-2-1096）
+        const mentorNotes = describeMentorTriggers(log.synergyId, inspirations, session?.mentors ?? []);
+        if (mentorNotes) this._notice += `　${mentorNotes}`;
         if (log.vigorAfter === 0) {
             this._deps.showToast?.(vitalityScriptText(this._t.bind(this), VITALITY_SCRIPT_KEYS.exhausted, child.name));
         }
@@ -648,6 +653,24 @@ function buildSessionTexts(session: NurtureSession, notice: string): Record<stri
         nurtureFactors: session.negativeFactors.length > 0 ? `負面因子：${session.negativeFactors.join('、')}` : '負面因子：無',
         nurtureLog: notice || lateBloomClueText(session.vigor, VIGOR_MAX) || (last ? describeRound(last) : '選擇本回合的訓練，或休息回復精力'),
     };
+}
+
+/** 教官觸發提示：羈絆名稱與戰法靈感（沒有觸發回傳空字串） */
+export function describeMentorTriggers(
+    synergyId: string | undefined,
+    inspirations: readonly NurtureInspiration[] | undefined,
+    mentors: readonly { id: string; name?: string }[],
+): string {
+    const parts: string[] = [];
+    if (synergyId) {
+        const group = DEFAULT_SYNERGY_GROUPS.find((g) => g.id === synergyId);
+        parts.push(`【羈絆】${group?.name ?? synergyId}`);
+    }
+    for (const entry of inspirations ?? []) {
+        const mentor = mentors.find((m) => m.id === entry.mentorId)?.name ?? entry.mentorId;
+        parts.push(`【靈感】${mentor}傳授戰法「${entry.tacticId}」`);
+    }
+    return parts.join('　');
 }
 
 export function describeRound(log: NurtureRoundLog): string {
