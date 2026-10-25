@@ -28,7 +28,7 @@
       "color": "#F6E7C3",
       "isBold": false,
       "overflow": "CLAMP",
-      "letterSpacing": 12
+      "letterSpacing": 10
     },
     "domestic.label.name": {
       "kind": "label-style",
@@ -66,7 +66,7 @@
       "overflow": "CLAMP",
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
-      "letterSpacing": 4
+      "letterSpacing": 0
     },
     "domestic.backdrop": {
       "kind": "sprite-frame",

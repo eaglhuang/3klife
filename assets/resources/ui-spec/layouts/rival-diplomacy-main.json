@@ -21,6 +21,20 @@
     },
     "children": [
       {
+        "type": "image",
+        "name": "RivalBackdrop",
+        "id": "rivalBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "width": 1920,
+        "height": 1080,
+        "skinSlot": "rival.backdrop"
+      },
+      {
         "type": "panel",
         "name": "RivalCard",
         "id": "rivalCard",
@@ -44,6 +58,18 @@
             "height": 40,
             "text": "外交・出征",
             "styleSlot": "rival.label.title"
+          },
+          {
+            "type": "panel",
+            "name": "TitleDivider",
+            "id": "titleDivider",
+            "widget": {
+              "top": 78,
+              "left": 32,
+              "right": 32
+            },
+            "height": 1,
+            "skinSlot": "rival.divider"
           },
           {
             "type": "button",
@@ -405,7 +431,7 @@
             },
             "width": 170,
             "height": 72,
-            "skinSlot": "rival.button.bg",
+            "skinSlot": "rival.button.accent",
             "children": [
               {
                 "type": "label",
