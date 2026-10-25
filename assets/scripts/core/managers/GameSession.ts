@@ -188,6 +188,9 @@ import {
     settleBattle,
 } from '../systems/BattleRoster';
 
+/** 倉庫擴容次數的庫存標記道具 id（PROG-2-1103） */
+export const WAREHOUSE_EXPANSION_ITEM = 'warehouse.expansion';
+
 export const GAME_SESSION_EVENTS = {
     /** payload: SeasonAdvancedPayload */
     SeasonAdvanced: 'game-session-season-advanced',
@@ -1075,6 +1078,16 @@ export class GameSession {
 
     public itemCount(itemId: string): number {
         return itemCount(this._inventory, itemId);
+    }
+
+    /** 主城倉庫擴容次數（倉庫系統 §倉庫容量）；存成庫存標記道具，沿用既有庫存存檔 */
+    public get warehouseExpansions(): number {
+        return this.itemCount(WAREHOUSE_EXPANSION_ITEM);
+    }
+
+    /** 主城倉庫已用格數：持有量 > 0 的道具種類數（不含擴容標記） */
+    public get warehouseUsedSlots(): number {
+        return Object.keys(this._inventory).filter((id) => id !== WAREHOUSE_EXPANSION_ITEM && itemCount(this._inventory, id) > 0).length;
     }
 
     /** 增加道具（商城購買、活動獎勵）並自動存檔 */
