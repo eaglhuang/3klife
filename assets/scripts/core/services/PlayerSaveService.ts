@@ -485,6 +485,8 @@ export interface GachaWalletSave {
     oracle: number;
     /** 支援券；舊檔缺欄位補 0（PROG-2-1085） */
     mentorTickets: number;
+    /** 積分（教官卡滿星溢出）；舊檔缺欄位補 0（PROG-2-1095） */
+    scorePoints: number;
 }
 
 export function normalizeGachaWalletSave(value: unknown): GachaWalletSave {
@@ -493,7 +495,7 @@ export function normalizeGachaWalletSave(value: unknown): GachaWalletSave {
         const n = Math.floor(Number(raw[key]));
         return Number.isFinite(n) && n >= 0 ? n : 0;
     };
-    return { gems: pick('gems'), gold: pick('gold'), tickets: pick('tickets'), bronze: pick('bronze'), oracle: pick('oracle'), mentorTickets: pick('mentorTickets') };
+    return { gems: pick('gems'), gold: pick('gold'), tickets: pick('tickets'), bronze: pick('bronze'), oracle: pick('oracle'), mentorTickets: pick('mentorTickets'), scorePoints: pick('scorePoints') };
 }
 
 /** 名聲：非負整數，壞掉視為 0 */
