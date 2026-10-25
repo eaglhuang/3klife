@@ -168,42 +168,44 @@
       "y": -19,
       "w": 280,
       "h": 280,
-      "source": "auto"
+      "source": "reviewed"
     },
     "guan-yu": {
       "x": 116,
       "y": 12,
       "w": 279,
       "h": 279,
-      "source": "auto"
+      "source": "reviewed"
     },
     "zhang-fei": {
       "x": 119,
       "y": -18,
       "w": 279,
       "h": 279,
-      "source": "auto"
+      "source": "reviewed"
     },
     "lu-bu": {
       "x": 118,
-      "y": -19,
+      "y": 23,
       "w": 280,
       "h": 280,
-      "source": "auto"
+      "source": "auto",
+      "placeholder": true,
+      "$note": "臉下移到約 45%；黑紫版重畫前暫代，不得標 reviewed"
     },
     "da-qiao": {
       "x": 119,
       "y": -16,
       "w": 274,
       "h": 274,
-      "source": "auto"
+      "source": "reviewed"
     },
     "xiao-qiao": {
       "x": 215,
       "y": 198,
       "w": 160,
       "h": 160,
-      "source": "auto",
+      "source": "reviewed",
       "$note": "舞扇全身姿，外框過寬，手動對臉"
     }
   }
