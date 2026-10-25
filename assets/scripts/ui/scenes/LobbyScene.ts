@@ -56,6 +56,7 @@ import { DomesticPanelController } from '../core/DomesticPanelController';
 import { FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems/SeasonFastForward';
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
+import { overflowToastText } from '../../core/systems/MentorOverflow';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
 import type { SeasonAdvancedPayload } from '../../core/managers/GameSession';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
@@ -2374,30 +2375,45 @@ export class LobbyScene extends Component {
      * 把日誌裡待補的 Gacha 教官卡寫進 legacy 存檔（PROG-2-0506 PM 裁定：只有支援卡池才會產生）。
      * 寫完一筆移除一筆並存檔；中途強關時日誌還在，下次進大廳會補寫（addMentorToHoldings 以 uid 去重，重複執行無害）。
      */
-    private async _applyGachaMentorJournal(): Promise<void> {
+    private async _applyGachaMentorJournal(emitToast = true): Promise<string[]> {
         const legacy = services().legacy;
-        if (!legacy) return;
+        if (!legacy) return [];
         const pending = services().session.gachaMentorJournal;
-        if (pending.length === 0) return;
+        if (pending.length === 0) return [];
+        const notes: string[] = [];
         try {
             const catalog = await this._loadSupportCatalog();
             for (const entry of pending) {
-                await legacy.addGachaMentors(entry.drawn, catalog, entry.time, entry.poolId);
+                // 重複教官卡：未滿星自動升星，已滿 ★5 轉積分入帳（PROG-2-1095，教官系統 §M）
+                await legacy.addGachaMentors(entry.drawn, catalog, entry.time, entry.poolId, (event) => {
+                    if (event.kind === 'overflow') {
+                        this._localGachaService.grantCurrency('scorePoints', event.scoreGain);
+                        notes.push(overflowToastText(event.name, event.scoreGain));
+                    } else {
+                        notes.push(`${event.name} 突破 ★${event.fromStar} → ★${event.toStar}`);
+                    }
+                });
                 services().session.completeGachaMentorDraw(entry.id);
                 await services().session.save();
+            }
+            if (emitToast && notes.length > 0) {
+                services().event.emit('SHOW_TOAST', { message: notes.join('\n'), duration: 3 });
             }
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 補寫抽卡教官卡失敗，留待下次進大廳重試', error);
         }
+        return notes;
     }
 
     /** 抽卡成功：新武將寫進名冊並存檔，重複的只提示不重複加入 */
     private async _onGachaPullSuccess(results: LocalGachaResultEntry[]): Promise<void> {
         try {
-            await this._applyGachaMentorJournal();
+            const mentorNotes = await this._applyGachaMentorJournal(false);
             if (results[0]?.poolId === MENTOR_POOL_ID) {
                 const names = results.map((entry) => entry.general.name).join('、');
-                services().event.emit('SHOW_TOAST', { message: `獲得教官卡：${names}（培育入場可編入）`, duration: 2.5 });
+                // 升星／積分提示併進同一則，避免被「獲得教官卡」蓋掉（PROG-2-1095）
+                const message = [`獲得教官卡：${names}（培育入場可編入）`, ...mentorNotes].join('\n');
+                services().event.emit('SHOW_TOAST', { message, duration: 3 });
                 return;
             }
             const { added, duplicates, rebirths } = this._gachaEnrollResult ?? { added: [], duplicates: [], rebirths: [] };
