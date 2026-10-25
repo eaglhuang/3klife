@@ -279,6 +279,25 @@ export class LocalGachaService {
         });
     }
 
+    /** 指定卡池的召喚券召喚（PROG-2-1086 紅顏池）：扣召喚券，抽到的武將照常入名冊 */
+    public async performPoolTicketSummon(
+        poolId: string,
+        drawCount: number,
+        generals: GeneralConfig[],
+        options: LocalGachaRollOptions = {},
+    ): Promise<LocalGachaResultEntry[]> {
+        const resolvedCount = normalizeCount(drawCount);
+        return this._performGacha({
+            actionType: 'LOCAL_TICKET_SUMMON',
+            poolId,
+            drawCount: resolvedCount,
+            cost: resolvedCount,
+            currencyKey: 'tickets',
+            generals,
+            options,
+        });
+    }
+
     /**
      * 支援卡池召喚（PROG-2-1085）：扣支援券，每抽 1 張。generals 由呼叫端先篩成支援卡目錄裡的武將；
      * 抽到的只會變成教官卡（入冊回呼端依 poolId 判斷），不進名冊。

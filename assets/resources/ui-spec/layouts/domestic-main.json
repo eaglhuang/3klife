@@ -365,6 +365,33 @@
           },
           {
             "type": "button",
+            "name": "BtnOpenRival",
+            "id": "btnOpenRival",
+            "widget": {
+              "top": 320,
+              "right": 32
+            },
+            "width": 240,
+            "height": 84,
+            "skinSlot": "domestic.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnOpenRivalLabel",
+                "id": "btnOpenRivalLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "外交・出征 ▶",
+                "styleSlot": "domestic.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
             "name": "BtnOpenRecruit",
             "id": "btnOpenRecruit",
             "widget": {

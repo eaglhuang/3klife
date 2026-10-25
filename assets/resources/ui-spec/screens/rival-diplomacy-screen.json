@@ -1,0 +1,17 @@
+{
+  "id": "rival-diplomacy-screen",
+  "version": 1,
+  "uiId": "RivalDiplomacy",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "rival-diplomacy-main",
+  "skin": "rival-diplomacy-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
