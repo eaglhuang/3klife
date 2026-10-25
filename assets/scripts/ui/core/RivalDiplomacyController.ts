@@ -80,6 +80,11 @@ export class RivalDiplomacyController {
         this._lines = ['【出征結算】', ...battle.lines];
     }
 
+    /** 各勢力君主武將 id（依按鈕順序），供列表畫小頭像 */
+    public leaderIds(): string[] {
+        return NATION_DEFS.map((def) => def.leaderId);
+    }
+
     public getFlowView(): RivalDiplomacyFlowView {
         const world = this._deps.world();
         const texts: Record<string, string> = {};

@@ -246,7 +246,8 @@ export class LobbyScene extends Component {
     private _motherTree: BloodlineTreePanel | null = null;
     private _jobChangeHost: UIScreenPreviewHost | null = null;
     private _domesticHost: UIScreenPreviewHost | null = null;
-    private _recruitAvatarSeq = 0;
+    /** 各列表頭像載入序號，避免舊的非同步載入蓋掉新內容 */
+    private readonly _avatarSeq = new Map<string, number>();
     private _fastForwarding = false;
     private _recruitHost: UIScreenPreviewHost | null = null;
     private _recruit: RecruitHallController | null = null;
@@ -1805,20 +1806,20 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._recruit.getFlowView());
-        this._applyRecruitAvatars(binder);
+        this._applyRowAvatars(binder, 'recruit', this._recruit.rowGeneralIds());
     }
 
-    /** 招賢館每列的圓形小人頭；路徑規則在 data/general-art-paths.json（正式頭像 → 自動裁切 → 剪影） */
-    private _applyRecruitAvatars(binder: NonNullable<UIScreenPreviewHost['binder']>): void {
-        const ids = this._recruit?.rowGeneralIds() ?? [];
-        const seq = ++this._recruitAvatarSeq;
+    /** 列表左側的圓形小人頭；路徑規則在 data/general-art-paths.json（正式頭像 → 自動裁切 → 剪影） */
+    private _applyRowAvatars(binder: NonNullable<UIScreenPreviewHost['binder']>, prefix: string, ids: readonly string[]): void {
+        const seq = (this._avatarSeq.get(prefix) ?? 0) + 1;
+        this._avatarSeq.set(prefix, seq);
         ids.forEach((id, i) => {
-            const holder = binder.getNode(`recruitAvatarMask${i}`);
-            const sprite = binder.getSprite(`recruitAvatar${i}`);
+            const holder = binder.getNode(`${prefix}AvatarMask${i}`);
+            const sprite = binder.getSprite(`${prefix}Avatar${i}`);
             if (!holder || !sprite) return;
             if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
             void loadGeneralAvatar(id).then((frame) => {
-                if (frame && seq === this._recruitAvatarSeq && sprite.isValid) {
+                if (frame && seq === this._avatarSeq.get(prefix) && sprite.isValid) {
                     sprite.spriteFrame = frame;
                     sprite.sizeMode = Sprite.SizeMode.CUSTOM;
                 }
@@ -1888,6 +1889,7 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._rival.getFlowView());
+        this._applyRowAvatars(binder, 'rival', this._rival.leaderIds());
     }
 
     private _openDomestic(): void {
