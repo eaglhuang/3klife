@@ -416,6 +416,33 @@
                 "styleSlot": "domestic.label.button"
               }
             ]
+          },
+          {
+            "type": "button",
+            "name": "BtnFastForward",
+            "id": "btnFastForward",
+            "widget": {
+              "top": 540,
+              "right": 32
+            },
+            "width": 240,
+            "height": 84,
+            "skinSlot": "domestic.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnFastForwardLabel",
+                "id": "btnFastForwardLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "快進至下個事件 ▶▶",
+                "styleSlot": "domestic.label.button"
+              }
+            ]
           }
         ]
       }
