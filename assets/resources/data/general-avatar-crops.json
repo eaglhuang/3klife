@@ -4,164 +4,290 @@
   "outputSize": 256,
   "crops": {
     "cao-cao": {
-      "x": 300,
-      "y": 50,
-      "w": 400,
-      "h": 400,
-      "source": "reviewed",
-      "$note": "1024×1024，改正方形以臉為中心，冠飾完整（美術總監：改完維持 reviewed）"
+      "x": 406,
+      "y": 56,
+      "w": 221,
+      "h": 221,
+      "source": "auto",
+      "face": {
+        "top": 116,
+        "chin": 200,
+        "eyeY": 144,
+        "cx": 516
+      }
     },
     "zhen-ji": {
-      "x": 123,
-      "y": 11,
-      "w": 200,
-      "h": 200,
-      "source": "reviewed",
-      "$note": "447×559，拉近到頭至鎖骨、改正方形（退回重裁）"
+      "x": 139,
+      "y": 27,
+      "w": 163,
+      "h": 163,
+      "source": "auto",
+      "face": {
+        "top": 65,
+        "chin": 127,
+        "eyeY": 92,
+        "cx": 220
+      }
     },
     "cao-ren": {
-      "x": 130,
-      "y": -16,
-      "w": 253,
-      "h": 253,
-      "source": "reviewed"
+      "x": 165,
+      "y": 32,
+      "w": 250,
+      "h": 250,
+      "source": "auto",
+      "face": {
+        "top": 95,
+        "chin": 190,
+        "eyeY": 132,
+        "cx": 290
+      }
     },
     "cao-zhi": {
-      "x": 206,
-      "y": 63,
-      "w": 128,
-      "h": 128,
-      "source": "reviewed"
+      "x": 165,
+      "y": 84,
+      "w": 153,
+      "h": 153,
+      "source": "auto",
+      "face": {
+        "top": 122,
+        "chin": 180,
+        "eyeY": 145,
+        "cx": 241
+      }
     },
     "dian-wei": {
-      "x": 117,
-      "y": 56,
-      "w": 269,
-      "h": 269,
-      "source": "reviewed"
+      "x": 172,
+      "y": 59,
+      "w": 189,
+      "h": 189,
+      "source": "auto",
+      "face": {
+        "top": 108,
+        "chin": 180,
+        "eyeY": 135,
+        "cx": 266
+      }
     },
     "diao-chan": {
-      "x": 45,
-      "y": 60,
-      "w": 190,
-      "h": 190,
-      "source": "reviewed",
-      "$note": "512×768 側身前傾，臉回中線（美術總監 2026-10-25 退回重裁）"
+      "x": 38,
+      "y": 53,
+      "w": 205,
+      "h": 205,
+      "source": "auto",
+      "face": {
+        "top": 100,
+        "chin": 178,
+        "eyeY": 135,
+        "cx": 140
+      }
     },
     "guo-jia": {
-      "x": 134,
-      "y": 53,
-      "w": 248,
-      "h": 248,
-      "source": "reviewed"
+      "x": 165,
+      "y": 71,
+      "w": 197,
+      "h": 197,
+      "source": "auto",
+      "face": {
+        "top": 115,
+        "chin": 190,
+        "eyeY": 150,
+        "cx": 263
+      }
     },
     "huang-zhong": {
-      "x": 127,
-      "y": 31,
-      "w": 273,
-      "h": 273,
-      "source": "reviewed"
+      "x": 149,
+      "y": 84,
+      "w": 211,
+      "h": 211,
+      "source": "auto",
+      "face": {
+        "top": 145,
+        "chin": 225,
+        "eyeY": 168,
+        "cx": 254
+      }
     },
     "jia-xu": {
       "x": 172,
-      "y": 100,
-      "w": 200,
-      "h": 200,
-      "source": "reviewed",
-      "$note": "512×768，臉原本貼右緣，左移置中（退回重裁）"
+      "y": 61,
+      "w": 197,
+      "h": 197,
+      "source": "auto",
+      "face": {
+        "top": 105,
+        "chin": 180,
+        "eyeY": 140,
+        "cx": 270
+      }
     },
     "liu-bei": {
-      "x": 115,
-      "y": 46,
-      "w": 282,
-      "h": 282,
-      "source": "reviewed"
+      "x": 135,
+      "y": 65,
+      "w": 250,
+      "h": 250,
+      "source": "auto",
+      "face": {
+        "top": 125,
+        "chin": 220,
+        "eyeY": 165,
+        "cx": 260
+      }
     },
     "lu-xun": {
-      "x": 129,
-      "y": 39,
-      "w": 272,
-      "h": 272,
-      "source": "reviewed"
+      "x": 156,
+      "y": 63,
+      "w": 229,
+      "h": 229,
+      "source": "auto",
+      "face": {
+        "top": 118,
+        "chin": 205,
+        "eyeY": 155,
+        "cx": 270
+      }
     },
     "ma-chao": {
-      "x": 191,
-      "y": 85,
-      "w": 190,
-      "h": 190,
-      "source": "reviewed",
-      "$note": "512×768，放大臉部、紅翎只露頂端（退回重裁）"
+      "x": 164,
+      "y": 60,
+      "w": 224,
+      "h": 224,
+      "source": "auto",
+      "face": {
+        "top": 115,
+        "chin": 200,
+        "eyeY": 150,
+        "cx": 276
+      }
     },
     "sima-yi": {
-      "x": 133,
-      "y": 54,
-      "w": 252,
-      "h": 252,
-      "source": "reviewed"
+      "x": 131,
+      "y": 70,
+      "w": 250,
+      "h": 250,
+      "source": "auto",
+      "face": {
+        "top": 130,
+        "chin": 225,
+        "eyeY": 170,
+        "cx": 256
+      }
     },
     "sun-quan": {
-      "x": 115,
-      "y": 113,
-      "w": 282,
-      "h": 282,
-      "source": "reviewed"
+      "x": 148,
+      "y": 140,
+      "w": 224,
+      "h": 224,
+      "source": "auto",
+      "face": {
+        "top": 190,
+        "chin": 275,
+        "eyeY": 230,
+        "cx": 260
+      }
     },
     "taishi-ci": {
-      "x": 128,
-      "y": 44,
-      "w": 270,
-      "h": 270,
-      "source": "reviewed"
+      "x": 181,
+      "y": 127,
+      "w": 158,
+      "h": 158,
+      "source": "auto",
+      "face": {
+        "top": 170,
+        "chin": 230,
+        "eyeY": 190,
+        "cx": 260
+      }
     },
     "xu-huang": {
-      "x": 129,
-      "y": 39,
-      "w": 264,
-      "h": 264,
-      "source": "reviewed"
+      "x": 170,
+      "y": 116,
+      "w": 184,
+      "h": 184,
+      "source": "auto",
+      "face": {
+        "top": 160,
+        "chin": 230,
+        "eyeY": 190,
+        "cx": 262
+      }
     },
     "xu-zhu": {
-      "x": 146,
-      "y": 54,
-      "w": 211,
-      "h": 211,
-      "source": "reviewed"
+      "x": 138,
+      "y": 40,
+      "w": 250,
+      "h": 250,
+      "source": "auto",
+      "face": {
+        "top": 100,
+        "chin": 195,
+        "eyeY": 140,
+        "cx": 263
+      }
     },
     "xun-yu": {
-      "x": 130,
-      "y": -13,
-      "w": 253,
-      "h": 253,
-      "source": "reviewed"
+      "x": 156,
+      "y": 15,
+      "w": 224,
+      "h": 224,
+      "source": "auto",
+      "face": {
+        "top": 75,
+        "chin": 160,
+        "eyeY": 105,
+        "cx": 268
+      }
     },
     "zhang-he": {
-      "x": 200,
-      "y": 50,
-      "w": 200,
-      "h": 200,
-      "source": "reviewed",
-      "$note": "512×768，臉原本貼左緣，右移（退回重裁）"
+      "x": 185,
+      "y": 21,
+      "w": 211,
+      "h": 211,
+      "source": "auto",
+      "face": {
+        "top": 70,
+        "chin": 150,
+        "eyeY": 105,
+        "cx": 290
+      }
     },
     "zhang-liao": {
-      "x": 128,
-      "y": 37,
-      "w": 273,
-      "h": 273,
-      "source": "reviewed"
+      "x": 163,
+      "y": 91,
+      "w": 184,
+      "h": 184,
+      "source": "auto",
+      "face": {
+        "top": 140,
+        "chin": 210,
+        "eyeY": 165,
+        "cx": 255
+      }
     },
     "zhou-yu": {
-      "x": 115,
-      "y": 43,
-      "w": 282,
-      "h": 282,
-      "source": "reviewed"
+      "x": 163,
+      "y": 71,
+      "w": 184,
+      "h": 184,
+      "source": "auto",
+      "face": {
+        "top": 115,
+        "chin": 185,
+        "eyeY": 145,
+        "cx": 255
+      }
     },
     "zhuge-liang": {
-      "x": 111,
-      "y": 40,
-      "w": 233,
-      "h": 233,
-      "source": "reviewed"
+      "x": 156,
+      "y": 86,
+      "w": 211,
+      "h": 211,
+      "source": "auto",
+      "face": {
+        "top": 145,
+        "chin": 225,
+        "eyeY": 170,
+        "cx": 261
+      }
     },
     "zhao-yun": {
       "x": 117,
@@ -171,42 +297,71 @@
       "source": "reviewed"
     },
     "guan-yu": {
-      "x": 116,
-      "y": 12,
-      "w": 279,
-      "h": 279,
-      "source": "reviewed"
+      "x": 225,
+      "y": 41,
+      "w": 147,
+      "h": 147,
+      "source": "auto",
+      "face": {
+        "top": 82,
+        "chin": 138,
+        "eyeY": 100,
+        "cx": 298
+      }
     },
     "zhang-fei": {
-      "x": 119,
-      "y": -18,
-      "w": 279,
-      "h": 279,
-      "source": "reviewed"
+      "x": 127,
+      "y": 11,
+      "w": 211,
+      "h": 211,
+      "source": "auto",
+      "face": {
+        "top": 70,
+        "chin": 150,
+        "eyeY": 95,
+        "cx": 232
+      }
     },
     "lu-bu": {
-      "x": 178,
-      "y": 83,
-      "w": 220,
-      "h": 220,
+      "x": 208,
+      "y": 112,
+      "w": 171,
+      "h": 171,
       "source": "auto",
       "placeholder": true,
-      "$note": "臉下移到約 45%；黑紫版重畫前暫代，不得標 reviewed"
+      "face": {
+        "top": 155,
+        "chin": 220,
+        "eyeY": 180,
+        "cx": 293
+      },
+      "$note": "黑紫版重畫前暫代，不得標 reviewed"
     },
     "da-qiao": {
-      "x": 119,
-      "y": -16,
-      "w": 274,
-      "h": 274,
-      "source": "reviewed"
+      "x": 194,
+      "y": 18,
+      "w": 168,
+      "h": 168,
+      "source": "auto",
+      "face": {
+        "top": 58,
+        "chin": 122,
+        "eyeY": 85,
+        "cx": 278
+      }
     },
     "xiao-qiao": {
-      "x": 215,
-      "y": 198,
-      "w": 160,
-      "h": 160,
-      "source": "reviewed",
-      "$note": "舞扇全身姿，外框過寬，手動對臉"
+      "x": 204,
+      "y": 205,
+      "w": 158,
+      "h": 158,
+      "source": "auto",
+      "face": {
+        "top": 240,
+        "chin": 300,
+        "eyeY": 268,
+        "cx": 283
+      }
     }
   }
 }

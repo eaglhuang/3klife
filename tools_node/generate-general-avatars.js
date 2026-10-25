@@ -4,6 +4,7 @@
  *
  * 從武將立繪裁切頭像（PROG-2-1107 改版，與美術總監對齊）：
  *   - 立繪路徑讀 data/general-art-paths.json 的 portrait 樣板（標準路徑，只讀）。
+ *   - 有 face 量測（髮際 top、下巴 chin、眼線 eyeY、臉中心 cx）時，裁框由臉高反推：臉高＝邊長 38%、眼線在 40%。
  *   - 裁切座標讀 data/general-avatar-crops.json；沒有座標的武將自動估算並寫回，標 "source": "auto"，
  *     美術總監看過後改 "reviewed"。已有座標的不覆蓋。
  *   - 輸出：遊戲用 256×256 → croppedAvatarDir（sprites/ui_avatars/cropped，不碰 sprites/generals）；
@@ -36,6 +37,10 @@ const REVIEW_SIZE = 64;
 const TOP_MARGIN  = 0.08;
 /** 自動估算：裁切邊長 = 人物外框寬 × 此比例 */
 const AUTO_WIDTH_RATIO = 0.55;
+/** 臉高（髮際→下巴）佔裁框邊長比例，美術總監 2026-10-25 規範 38% ±3% */
+const FACE_HEIGHT_RATIO = 0.38;
+/** 眼線距裁框頂端比例 */
+const EYE_LINE_RATIO = 0.40;
 
 const args       = process.argv.slice(2);
 const verifyOnly = args.includes('--verify');
@@ -77,6 +82,12 @@ function autoCrop(png) {
     const size = Math.round(Math.min(bb.w * AUTO_WIDTH_RATIO, png.width));
     const cx = bb.x + bb.w / 2;
     return { x: Math.round(cx - size / 2), y: Math.round(bb.y - size * TOP_MARGIN), w: size, h: size };
+}
+
+/** 由臉部量測反推正方形裁框：face = { top, chin, eyeY, cx }（立繪原始像素） */
+function cropFromFace(face) {
+    const size = Math.round((face.chin - face.top) / FACE_HEIGHT_RATIO);
+    return { x: Math.round(face.cx - size / 2), y: Math.round(face.eyeY - size * EYE_LINE_RATIO), w: size, h: size };
 }
 
 /** Box filter 縮放；裁切框超出原圖的部分當透明 */
@@ -149,6 +160,10 @@ function main() {
             cropsDoc.crops[id] = crop;
             added++;
         }
+        if (crop.face) {
+            const derived = cropFromFace(crop.face);
+            if (['x', 'y', 'w', 'h'].some((k) => crop[k] !== derived[k])) { Object.assign(crop, derived); added++; }
+        }
         if (!validate(id, crop, png)) { fail++; continue; }
         console.log(`  ✓  ${id.padEnd(16)} ${String(crop.source || 'manual').padEnd(8)} (${crop.x},${crop.y})+${crop.w}×${crop.h}`);
         ok++;
@@ -162,7 +177,7 @@ function main() {
     if (!verifyOnly) {
         if (added) fs.writeFileSync(CROPS_PATH, JSON.stringify(cropsDoc, null, 2) + '\n');
         if (review.length) writeOverview(review);
-        console.log(`\n輸出：${paths.croppedAvatarDir}（遊戲）、artifacts/general-avatars（512 母圖與 64px 總覽）；新增自動座標 ${added} 筆`);
+        console.log(`\n輸出：${paths.croppedAvatarDir}（遊戲）、artifacts/general-avatars（512 母圖與 64px 總覽）；新增／更新座標 ${added} 筆`);
     }
     console.log(`結果：${ok} 成功  ${fail} 失敗`);
     if (fail > 0) process.exit(1);
