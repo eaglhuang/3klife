@@ -10,10 +10,25 @@ import {
     avatarCandidates,
     avatarPlaceholderPath,
     configureGeneralArtPaths,
+    generalIdFromKey,
     portraitCandidates,
 } from '../../core/systems/GeneralArtPaths';
 
 let _configReady: Promise<void> | null = null;
+let _genders: Promise<Map<string, string>> | null = null;
+
+/** 未知頭像要分男女，性別從輕量的 generals-index 取。 */
+function genderOf(id: string): Promise<string | undefined> {
+    if (!_genders) {
+        _genders = services().resource.loadJson('data/generals-index')
+            .then((raw: any) => {
+                const rows: any[] = Array.isArray(raw) ? raw : (raw?.data ?? []);
+                return new Map(rows.filter((r) => r?.uid && r.gender).map((r) => [r.uid, r.gender]));
+            })
+            .catch(() => new Map<string, string>());
+    }
+    return _genders.then((m) => m.get(id));
+}
 
 function ensureConfig(): Promise<void> {
     if (!_configReady) {
@@ -38,7 +53,7 @@ export async function loadGeneralAvatar(idOrPortraitKey: string, withPlaceholder
     await ensureConfig();
     const frame = await firstLoadable(avatarCandidates(idOrPortraitKey));
     if (frame || !withPlaceholder) return frame;
-    return firstLoadable([avatarPlaceholderPath()]);
+    return firstLoadable([avatarPlaceholderPath(await genderOf(generalIdFromKey(idOrPortraitKey)))]);
 }
 
 /** 立繪：依標準路徑規則。 */

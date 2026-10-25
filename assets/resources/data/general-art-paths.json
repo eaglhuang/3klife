@@ -1,11 +1,11 @@
 {
-  "$comment": "武將美術路徑的唯一來源。{file} = 武將 id 的 - 換成 _（cao-cao → cao_cao），{id} = 原 id。每類依序嘗試，先找到先用；正式頭像放前面，自動裁切頭像墊後，立繪畫完或重畫頭像時只要放檔，不用改程式。工具 generate-general-avatars.js 也讀這份。",
+  "$comment": "武將美術路徑的唯一來源。{file} = 武將 id 的 - 換成 _（cao-cao → cao_cao），{id} = 原 id。每類依序嘗試，先找到先用；{gender} = 未知頭像的性別版（女→f，其餘→m）。正式頭像放前面，自動裁切頭像墊後，立繪畫完或重畫頭像時只要放檔，不用改程式。工具 generate-general-avatars.js 也讀這份。",
   "version": 1,
   "portrait": ["sprites/generals/{file}_portrait"],
   "avatar": [
     "sprites/generals/avatars/{file}_avatar",
     "sprites/ui_avatars/cropped/{file}_avatar"
   ],
-  "avatarPlaceholder": "sprites/ui_avatars/unknown_avatar",
+  "avatarPlaceholder": "sprites/ui_avatars/unknown_avatar_{gender}",
   "croppedAvatarDir": "sprites/ui_avatars/cropped"
 }
