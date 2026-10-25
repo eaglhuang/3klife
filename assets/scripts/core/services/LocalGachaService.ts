@@ -4,7 +4,7 @@ import { Faction } from '../config/Constants';
 import { services } from '../managers/ServiceLoader';
 import { SyncActionType } from '../systems/SyncManager';
 import { checkWalletBalance, formatInsufficientMessage, STARTER_GACHA_WALLET } from './GachaWalletRules';
-import { drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
+import { GACHA_MENTOR_RARITY_RATES, GACHA_RARITY_RATES, drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
 import { ActionLogStore, type GachaActionType, type GachaCurrencyKey, type GachaHistoryRecord } from './ActionLogStore';
 
 export interface LocalGachaRollOptions {
@@ -334,10 +334,11 @@ export class LocalGachaService {
         const pool = buildGachaPool(candidates, request.options?.upGeneralIds ?? []);
         const rng = request.options?.rng ?? this._defaultRng;
         let pity = normalizeGachaPity(this._pityBookOf()[request.poolId]);
+        const rates = request.actionType === 'LOCAL_SUPPORT_SUMMON' ? GACHA_MENTOR_RARITY_RATES : GACHA_RARITY_RATES;
 
         const results: LocalGachaResultEntry[] = [];
         for (let index = 0; index < drawCount; index++) {
-            const drawn = drawGeneralOnce(pool, pity, rng);
+            const drawn = drawGeneralOnce(pool, pity, rng, rates);
             pity = drawn.nextPity;
             const picked = drawn.item;
             const clonedGeneral = cloneGeneral(picked);

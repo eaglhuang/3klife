@@ -19,6 +19,8 @@
 export type GachaRarity = 'SSR' | 'SR' | 'R';
 
 export const GACHA_RARITY_RATES: Readonly<Record<GachaRarity, number>> = Object.freeze({ SSR: 0.03, SR: 0.10, R: 0.87 });
+/** 支援卡（教官）池：SSR 5%、SR 25%、R 70%（規格 §入池機率表；PROG-2-1093） */
+export const GACHA_MENTOR_RARITY_RATES: Readonly<Record<GachaRarity, number>> = Object.freeze({ SSR: 0.05, SR: 0.25, R: 0.70 });
 /** Up 占比：SSR 70%、SR 80%（規格 §入池機率表） */
 export const GACHA_UP_SHARE: Readonly<Record<'SSR' | 'SR', number>> = Object.freeze({ SSR: 0.7, SR: 0.8 });
 export const GACHA_SMALL_PITY_INTERVAL = 50;
@@ -95,10 +97,10 @@ function firstAvailable<T>(pool: GachaPool<T>, rarity: GachaRarity): { rarity: G
     return null;
 }
 
-function rollRarity(rng: () => number): GachaRarity {
+function rollRarity(rng: () => number, rates: Readonly<Record<GachaRarity, number>>): GachaRarity {
     const roll = rng();
-    if (roll < GACHA_RARITY_RATES.SSR) return 'SSR';
-    if (roll < GACHA_RARITY_RATES.SSR + GACHA_RARITY_RATES.SR) return 'SR';
+    if (roll < rates.SSR) return 'SSR';
+    if (roll < rates.SSR + rates.SR) return 'SR';
     return 'R';
 }
 
@@ -106,9 +108,14 @@ function rollRarity(rng: () => number): GachaRarity {
  * 抽一次。池內完全沒有武將時拋錯（呼叫端應先擋住）。
  * 順序：累計抽數 +1 → 擲稀有度 → 小保底檢查 → 擲 Up → 從對應桶抽人。
  */
-export function drawGeneralOnce<T>(pool: GachaPool<T>, pity: GachaPityState, rng: () => number = Math.random): GachaDrawResult<T> {
+export function drawGeneralOnce<T>(
+    pool: GachaPool<T>,
+    pity: GachaPityState,
+    rng: () => number = Math.random,
+    rates: Readonly<Record<GachaRarity, number>> = GACHA_RARITY_RATES,
+): GachaDrawResult<T> {
     const nextPity: GachaPityState = { pullCount: normalizeGachaPity(pity).pullCount + 1 };
-    let rarity = rollRarity(rng);
+    let rarity = rollRarity(rng, rates);
     let pityApplied = false;
     if (rarity === 'R' && nextPity.pullCount % GACHA_SMALL_PITY_INTERVAL === 0) {
         rarity = 'SR';
