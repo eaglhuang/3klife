@@ -11,38 +11,6 @@
       "source": "reviewed",
       "$note": "1024×1024，改正方形以臉為中心，冠飾完整（美術總監：改完維持 reviewed）"
     },
-    "guan-yu": {
-      "x": 84,
-      "y": 0,
-      "w": 600,
-      "h": 520,
-      "$note": "細長直式 768×1377，龍飾頭盔從頂端開始",
-      "source": "reviewed"
-    },
-    "lu-bu": {
-      "x": 110,
-      "y": 0,
-      "w": 500,
-      "h": 530,
-      "$note": "直式 720×1280，超高紅羽毛必須從 y=0 開始；暫代：Q 版非黑紫瘦臉定稿方向，不可標 reviewed",
-      "source": "placeholder"
-    },
-    "zhang-fei": {
-      "x": 100,
-      "y": 0,
-      "w": 520,
-      "h": 480,
-      "$note": "蹲踞姿 720×1280，頭巾偏大，寬一點",
-      "source": "reviewed"
-    },
-    "zhao-yun": {
-      "x": 168,
-      "y": 29,
-      "w": 220,
-      "h": 220,
-      "source": "reviewed",
-      "$note": "512×768 站立持槍；舊座標 800×500 非正方且超出圖寬，改方形"
-    },
     "zhen-ji": {
       "x": 123,
       "y": 11,
@@ -194,6 +162,51 @@
       "w": 233,
       "h": 233,
       "source": "reviewed"
+    },
+    "zhao-yun": {
+      "x": 117,
+      "y": -19,
+      "w": 280,
+      "h": 280,
+      "source": "reviewed"
+    },
+    "guan-yu": {
+      "x": 116,
+      "y": 12,
+      "w": 279,
+      "h": 279,
+      "source": "reviewed"
+    },
+    "zhang-fei": {
+      "x": 119,
+      "y": -18,
+      "w": 279,
+      "h": 279,
+      "source": "reviewed"
+    },
+    "lu-bu": {
+      "x": 178,
+      "y": 83,
+      "w": 220,
+      "h": 220,
+      "source": "auto",
+      "placeholder": true,
+      "$note": "臉下移到約 45%；黑紫版重畫前暫代，不得標 reviewed"
+    },
+    "da-qiao": {
+      "x": 119,
+      "y": -16,
+      "w": 274,
+      "h": 274,
+      "source": "reviewed"
+    },
+    "xiao-qiao": {
+      "x": 215,
+      "y": 198,
+      "w": 160,
+      "h": 160,
+      "source": "reviewed",
+      "$note": "舞扇全身姿，外框過寬，手動對臉"
     }
   }
 }
