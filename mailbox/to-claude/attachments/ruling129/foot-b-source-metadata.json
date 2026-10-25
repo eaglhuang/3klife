@@ -1,0 +1,34 @@
+{
+  "runtimeAtlasPath": "assets/resources/chibi-animation-demo/cocos-native-l3/shared-atlas.png",
+  "runtimeAtlasSizePx": [
+    2048,
+    4096
+  ],
+  "runtimeRegion": "foot_b",
+  "runtimeAtlasRectPx": [
+    883,
+    1008,
+    331,
+    258
+  ],
+  "runtimeTrimRectPx": [
+    1168,
+    2635,
+    331,
+    258
+  ],
+  "runtimeCropSizePx": [
+    331,
+    258
+  ],
+  "runtimeAtlasSha256": "88255b2f6ec6e7557f1f85fccc56b8903228c095c974e2ea0575a878bd693c03",
+  "rigSourcePath": "scratch\\zhaoyun-ruling25-parts-v1\\rig-source\\foot_b.png",
+  "rigSourceSizePx": [
+    115,
+    112
+  ],
+  "rigSourceSha256": "648415d15e7d1575bbfd186a39e48b54d95c878df714124091efd4d4ad28eb53",
+  "rigSourceSha256RecordedInRuntimeRig": "c71a94855dc4b206ff16410f1498c1f0c8bbbd88abef6ced1b2605b00b55c8e5",
+  "rigSourceMatchesRuntimeRigSourceSha256": false,
+  "display": "alpha checkerboard; 4x nearest-neighbor enlargement; labeled dimensions and provenance"
+}

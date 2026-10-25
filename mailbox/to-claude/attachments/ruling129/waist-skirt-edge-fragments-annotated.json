@@ -1,0 +1,69 @@
+{
+  "method": "warm-color connected component + dominant visible alpha-contributor slot; 4x nearest-neighbor crops",
+  "status": "candidate attribution; color heuristic may include decorative trim",
+  "fragments": [
+    {
+      "frame": 2,
+      "warmClusterArea360px": 46,
+      "centroid360px": [
+        439.0,
+        280.4
+      ],
+      "bbox360px": [
+        435,
+        277,
+        444,
+        285
+      ],
+      "dominantVisibleSlot": "skirt",
+      "dominantOwnerPixels": 44,
+      "meanRgb": [
+        157.3,
+        29.2,
+        1.7
+      ]
+    },
+    {
+      "frame": 3,
+      "warmClusterArea360px": 57,
+      "centroid360px": [
+        449.8,
+        280.8
+      ],
+      "bbox360px": [
+        446,
+        275,
+        456,
+        285
+      ],
+      "dominantVisibleSlot": "skirt",
+      "dominantOwnerPixels": 45,
+      "meanRgb": [
+        150.2,
+        26.8,
+        2.2
+      ]
+    },
+    {
+      "frame": 4,
+      "warmClusterArea360px": 48,
+      "centroid360px": [
+        458.4,
+        283.5
+      ],
+      "bbox360px": [
+        454,
+        280,
+        464,
+        288
+      ],
+      "dominantVisibleSlot": "skirt",
+      "dominantOwnerPixels": 46,
+      "meanRgb": [
+        156.1,
+        28.9,
+        1.9
+      ]
+    }
+  ]
+}
