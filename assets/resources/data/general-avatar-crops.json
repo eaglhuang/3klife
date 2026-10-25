@@ -290,17 +290,18 @@
       }
     },
     "zhao-yun": {
+      "src": "artifacts/art-direction/style-baseline/zhao_yun_dynamic_src22.png",
       "face": {
-        "top": 91,
-        "chin": 146,
-        "eyeY": 113,
-        "cx": 320
+        "top": 162,
+        "chin": 287,
+        "eyeY": 227,
+        "cx": 642
       },
       "source": "auto",
-      "x": 248,
-      "y": 55,
-      "w": 145,
-      "h": 145
+      "x": 478,
+      "y": 95,
+      "w": 329,
+      "h": 329
     },
     "guan-yu": {
       "x": 225,

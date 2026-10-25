@@ -5,6 +5,8 @@
  * 從武將立繪裁切頭像（PROG-2-1107 改版，與美術總監對齊）：
  *   - 立繪路徑讀 data/general-art-paths.json 的 portrait 樣板（標準路徑，只讀）。
  *   - 有 face 量測（髮際 top、下巴 chin、眼線 eyeY、臉中心 cx）時，裁框由臉高反推：臉高＝邊長 38%、眼線在 40%。
+ *   - 有 src（高解析原圖，repo 相對路徑）時從原圖量測與裁切，face 座標以原圖像素為準；
+ *     原圖在 artifacts/（不進版控），本機沒有時略過該武將、保留已提交的頭像。
  *   - 裁切座標讀 data/general-avatar-crops.json；沒有座標的武將自動估算並寫回，標 "source": "auto"，
  *     美術總監看過後改 "reviewed"。已有座標的不覆蓋。
  *   - 輸出：遊戲用 256×256 → croppedAvatarDir（sprites/ui_avatars/cropped，不碰 sprites/generals）；
@@ -151,7 +153,9 @@ function main() {
     let ok = 0, fail = 0, added = 0;
     const review = [];
     for (const id of ids) {
-        const src = path.join(RES, fill(portraitTemplate, id) + '.png');
+        const hiRes = cropsDoc.crops[id]?.src;
+        if (hiRes && !fs.existsSync(path.join(ROOT, hiRes))) { console.warn(`  ⚠  ${id}：本機沒有原圖 ${hiRes}，略過（保留現有頭像）`); continue; }
+        const src = hiRes ? path.join(ROOT, hiRes) : path.join(RES, fill(portraitTemplate, id) + '.png');
         if (!fs.existsSync(src)) { console.warn(`  ⚠  找不到立繪：${path.relative(ROOT, src)}`); fail++; continue; }
         const png = PNG.sync.read(fs.readFileSync(src));
         let crop = cropsDoc.crops[id];
