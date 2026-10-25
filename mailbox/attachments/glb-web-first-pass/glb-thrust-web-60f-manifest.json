@@ -1,0 +1,693 @@
+{
+  "asset": "assets/resources/animation-import-probe/zhaoyun-spear-only.glb",
+  "scene": "assets/scenes/AnimationImportProbe.scene",
+  "engine": "Cocos Creator 3.8.8 Web Preview",
+  "clip": "ZhaoYun_Spear_Thrust_2s",
+  "durationSeconds": 2,
+  "sampleFps": 30,
+  "framesCaptured": 60,
+  "layout": "two 6x5 sheets; 30 consecutive samples per sheet",
+  "characterPixelHeightPerCell": 180,
+  "runtimeOnlyRootYawDegrees": 90,
+  "runtimeOnlyCameraPosition": [
+    0,
+    0.1,
+    6.5
+  ],
+  "roi": {
+    "x": 700,
+    "y": 250,
+    "width": 500,
+    "height": 588
+  },
+  "foregroundThresholdRgbDistance": 24.0,
+  "backgroundRgb": [
+    51,
+    51,
+    51
+  ],
+  "frames": [
+    {
+      "frame": 0,
+      "timeSeconds": 0.0,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 1,
+      "timeSeconds": 0.0333,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 2,
+      "timeSeconds": 0.0667,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10495
+    },
+    {
+      "frame": 3,
+      "timeSeconds": 0.1,
+      "bboxInRoi": [
+        132,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10407
+    },
+    {
+      "frame": 4,
+      "timeSeconds": 0.1333,
+      "bboxInRoi": [
+        134,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10369
+    },
+    {
+      "frame": 5,
+      "timeSeconds": 0.1667,
+      "bboxInRoi": [
+        137,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10294
+    },
+    {
+      "frame": 6,
+      "timeSeconds": 0.2,
+      "bboxInRoi": [
+        140,
+        150,
+        280,
+        193
+      ],
+      "foregroundPixels": 10243
+    },
+    {
+      "frame": 7,
+      "timeSeconds": 0.2333,
+      "bboxInRoi": [
+        144,
+        150,
+        279,
+        193
+      ],
+      "foregroundPixels": 10198
+    },
+    {
+      "frame": 8,
+      "timeSeconds": 0.2667,
+      "bboxInRoi": [
+        147,
+        150,
+        278,
+        193
+      ],
+      "foregroundPixels": 9813
+    },
+    {
+      "frame": 9,
+      "timeSeconds": 0.3,
+      "bboxInRoi": [
+        150,
+        150,
+        277,
+        192
+      ],
+      "foregroundPixels": 9813
+    },
+    {
+      "frame": 10,
+      "timeSeconds": 0.3333,
+      "bboxInRoi": [
+        153,
+        150,
+        276,
+        192
+      ],
+      "foregroundPixels": 9822
+    },
+    {
+      "frame": 11,
+      "timeSeconds": 0.3667,
+      "bboxInRoi": [
+        154,
+        150,
+        277,
+        193
+      ],
+      "foregroundPixels": 9903
+    },
+    {
+      "frame": 12,
+      "timeSeconds": 0.4,
+      "bboxInRoi": [
+        157,
+        150,
+        277,
+        193
+      ],
+      "foregroundPixels": 10104
+    },
+    {
+      "frame": 13,
+      "timeSeconds": 0.4333,
+      "bboxInRoi": [
+        159,
+        150,
+        278,
+        193
+      ],
+      "foregroundPixels": 10405
+    },
+    {
+      "frame": 14,
+      "timeSeconds": 0.4667,
+      "bboxInRoi": [
+        162,
+        150,
+        278,
+        193
+      ],
+      "foregroundPixels": 10564
+    },
+    {
+      "frame": 15,
+      "timeSeconds": 0.5,
+      "bboxInRoi": [
+        164,
+        151,
+        279,
+        192
+      ],
+      "foregroundPixels": 11131
+    },
+    {
+      "frame": 16,
+      "timeSeconds": 0.5333,
+      "bboxInRoi": [
+        166,
+        151,
+        279,
+        192
+      ],
+      "foregroundPixels": 11132
+    },
+    {
+      "frame": 17,
+      "timeSeconds": 0.5667,
+      "bboxInRoi": [
+        167,
+        151,
+        280,
+        192
+      ],
+      "foregroundPixels": 11097
+    },
+    {
+      "frame": 18,
+      "timeSeconds": 0.6,
+      "bboxInRoi": [
+        168,
+        152,
+        280,
+        191
+      ],
+      "foregroundPixels": 11140
+    },
+    {
+      "frame": 19,
+      "timeSeconds": 0.6333,
+      "bboxInRoi": [
+        168,
+        151,
+        281,
+        192
+      ],
+      "foregroundPixels": 11079
+    },
+    {
+      "frame": 20,
+      "timeSeconds": 0.6667,
+      "bboxInRoi": [
+        168,
+        151,
+        281,
+        192
+      ],
+      "foregroundPixels": 11094
+    },
+    {
+      "frame": 21,
+      "timeSeconds": 0.7,
+      "bboxInRoi": [
+        168,
+        151,
+        280,
+        192
+      ],
+      "foregroundPixels": 10522
+    },
+    {
+      "frame": 22,
+      "timeSeconds": 0.7333,
+      "bboxInRoi": [
+        167,
+        151,
+        281,
+        192
+      ],
+      "foregroundPixels": 10560
+    },
+    {
+      "frame": 23,
+      "timeSeconds": 0.7667,
+      "bboxInRoi": [
+        166,
+        150,
+        281,
+        193
+      ],
+      "foregroundPixels": 10471
+    },
+    {
+      "frame": 24,
+      "timeSeconds": 0.8,
+      "bboxInRoi": [
+        165,
+        150,
+        281,
+        193
+      ],
+      "foregroundPixels": 10516
+    },
+    {
+      "frame": 25,
+      "timeSeconds": 0.8333,
+      "bboxInRoi": [
+        163,
+        150,
+        281,
+        193
+      ],
+      "foregroundPixels": 10467
+    },
+    {
+      "frame": 26,
+      "timeSeconds": 0.8667,
+      "bboxInRoi": [
+        161,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10427
+    },
+    {
+      "frame": 27,
+      "timeSeconds": 0.9,
+      "bboxInRoi": [
+        159,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10849
+    },
+    {
+      "frame": 28,
+      "timeSeconds": 0.9333,
+      "bboxInRoi": [
+        157,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10776
+    },
+    {
+      "frame": 29,
+      "timeSeconds": 0.9667,
+      "bboxInRoi": [
+        155,
+        150,
+        281,
+        193
+      ],
+      "foregroundPixels": 10736
+    },
+    {
+      "frame": 30,
+      "timeSeconds": 1.0,
+      "bboxInRoi": [
+        152,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10642
+    },
+    {
+      "frame": 31,
+      "timeSeconds": 1.0333,
+      "bboxInRoi": [
+        150,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10624
+    },
+    {
+      "frame": 32,
+      "timeSeconds": 1.0667,
+      "bboxInRoi": [
+        148,
+        150,
+        280,
+        193
+      ],
+      "foregroundPixels": 10642
+    },
+    {
+      "frame": 33,
+      "timeSeconds": 1.1,
+      "bboxInRoi": [
+        145,
+        150,
+        281,
+        193
+      ],
+      "foregroundPixels": 10536
+    },
+    {
+      "frame": 34,
+      "timeSeconds": 1.1333,
+      "bboxInRoi": [
+        143,
+        150,
+        281,
+        193
+      ],
+      "foregroundPixels": 10564
+    },
+    {
+      "frame": 35,
+      "timeSeconds": 1.1667,
+      "bboxInRoi": [
+        141,
+        150,
+        280,
+        193
+      ],
+      "foregroundPixels": 10554
+    },
+    {
+      "frame": 36,
+      "timeSeconds": 1.2,
+      "bboxInRoi": [
+        138,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10574
+    },
+    {
+      "frame": 37,
+      "timeSeconds": 1.2333,
+      "bboxInRoi": [
+        137,
+        149,
+        280,
+        194
+      ],
+      "foregroundPixels": 10520
+    },
+    {
+      "frame": 38,
+      "timeSeconds": 1.2667,
+      "bboxInRoi": [
+        135,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10552
+    },
+    {
+      "frame": 39,
+      "timeSeconds": 1.3,
+      "bboxInRoi": [
+        133,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10585
+    },
+    {
+      "frame": 40,
+      "timeSeconds": 1.3333,
+      "bboxInRoi": [
+        132,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10456
+    },
+    {
+      "frame": 41,
+      "timeSeconds": 1.3667,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10508
+    },
+    {
+      "frame": 42,
+      "timeSeconds": 1.4,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10471
+    },
+    {
+      "frame": 43,
+      "timeSeconds": 1.4333,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 44,
+      "timeSeconds": 1.4667,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 45,
+      "timeSeconds": 1.5,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 46,
+      "timeSeconds": 1.5333,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 47,
+      "timeSeconds": 1.5667,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 48,
+      "timeSeconds": 1.6,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 49,
+      "timeSeconds": 1.6333,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 50,
+      "timeSeconds": 1.6667,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 51,
+      "timeSeconds": 1.7,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 52,
+      "timeSeconds": 1.7333,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 53,
+      "timeSeconds": 1.7667,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 54,
+      "timeSeconds": 1.8,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 55,
+      "timeSeconds": 1.8333,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 56,
+      "timeSeconds": 1.8667,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 57,
+      "timeSeconds": 1.9,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 58,
+      "timeSeconds": 1.9333,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    },
+    {
+      "frame": 59,
+      "timeSeconds": 1.9667,
+      "bboxInRoi": [
+        131,
+        149,
+        281,
+        194
+      ],
+      "foregroundPixels": 10479
+    }
+  ],
+  "boundaryCheck": "largest character component did not touch the ROI edge on any of 60 samples",
+  "limitation": "Image bounds check does not prove joint/mesh integrity; director review of both sheets is still required."
+}
