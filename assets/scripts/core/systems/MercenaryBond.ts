@@ -1,5 +1,5 @@
 // @spec-source → MVP遊戲驗證規格書 §E #11、§I Mercenary；傭兵系統規格書：試用轉永久 §3；WBS v3 MVP-09
-/** 傭兵 6 日結義（試用→結義）的純邏輯；尚未接線到大廳、薪水或存檔。 */
+/** 傭兵 6 日結義（試用→結義）的純邏輯；由大廳傭兵面板（MercenaryPanelController）與存檔模型（MercenarySaveModel）使用。 */
 export const TRIAL_DAYS = 6;
 export type MercenaryStatus = 'Trial' | 'Bonded' | 'Expired';
 
