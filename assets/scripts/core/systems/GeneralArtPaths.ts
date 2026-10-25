@@ -17,7 +17,7 @@ export const GENERAL_ART_PATHS_JSON = 'data/general-art-paths';
 const DEFAULT_CONFIG: GeneralArtPathConfig = {
     portrait: ['sprites/generals/{file}_portrait'],
     avatar: ['sprites/generals/avatars/{file}_avatar', 'sprites/ui_avatars/cropped/{file}_avatar'],
-    avatarPlaceholder: 'sprites/battle/portrait_player_placeholder',
+    avatarPlaceholder: 'sprites/ui_avatars/unknown_avatar',
 };
 
 let _config: GeneralArtPathConfig = DEFAULT_CONFIG;
