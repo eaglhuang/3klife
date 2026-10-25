@@ -185,10 +185,10 @@
       "source": "reviewed"
     },
     "lu-bu": {
-      "x": 118,
-      "y": 23,
-      "w": 280,
-      "h": 280,
+      "x": 178,
+      "y": 83,
+      "w": 220,
+      "h": 220,
       "source": "auto",
       "placeholder": true,
       "$note": "臉下移到約 45%；黑紫版重畫前暫代，不得標 reviewed"
