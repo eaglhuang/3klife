@@ -17,7 +17,7 @@ export const GENERAL_ART_PATHS_JSON = 'data/general-art-paths';
 const DEFAULT_CONFIG: GeneralArtPathConfig = {
     portrait: ['sprites/generals/{file}_portrait'],
     avatar: ['sprites/generals/avatars/{file}_avatar', 'sprites/ui_avatars/cropped/{file}_avatar'],
-    avatarPlaceholder: 'sprites/ui_avatars/unknown_avatar',
+    avatarPlaceholder: 'sprites/ui_avatars/unknown_avatar_{gender}',
 };
 
 let _config: GeneralArtPathConfig = DEFAULT_CONFIG;
@@ -67,6 +67,8 @@ export function avatarCandidates(idOrPortraitKey: string): string[] {
     return _config.avatar.map((t) => fill(t, id));
 }
 
-export function avatarPlaceholderPath(): string {
-    return _config.avatarPlaceholder;
+/** 未知頭像：依性別挑男女版；沒有性別資料一律用男版。 */
+export function avatarPlaceholderPath(gender?: string | null): string {
+    const g = gender === '女' || gender === 'f' || gender === 'female' ? 'f' : 'm';
+    return _config.avatarPlaceholder.replace(/\{gender\}/g, g);
 }

@@ -44,5 +44,12 @@ export function createGeneralArtPathsSuite(): TestSuite {
         assert.equals(def.avatarPlaceholder, raw.avatarPlaceholder);
     });
 
+    suite.test('未知頭像依性別挑男女版，無性別用男版', () => {
+        resetGeneralArtPaths();
+        assert.equals('sprites/ui_avatars/unknown_avatar_f', avatarPlaceholderPath('女'));
+        assert.equals('sprites/ui_avatars/unknown_avatar_m', avatarPlaceholderPath('男'));
+        assert.equals('sprites/ui_avatars/unknown_avatar_m', avatarPlaceholderPath(undefined));
+    });
+
     return suite;
 }

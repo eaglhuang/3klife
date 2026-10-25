@@ -103,7 +103,7 @@
     },
     "rival.avatar": {
       "kind": "sprite-frame",
-      "path": "sprites/ui_avatars/unknown_avatar",
+      "path": "sprites/ui_avatars/unknown_avatar_m",
       "expectedWidth": 58,
       "expectedHeight": 58
     },
