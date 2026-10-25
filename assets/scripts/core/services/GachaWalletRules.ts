@@ -22,7 +22,8 @@ export const STARTER_GACHA_WALLET: Readonly<Record<WalletCurrencyKey, number>> =
     gems: 1280,
     gold: 128450,
     tickets: 12,
-    bronze: 0,
+    /** 開局送一次十連份的銅錢符（1500），規格十連漲到 1500 後新玩家仍抽得起（PROG-2-1094） */
+    bronze: 1500,
     oracle: 0,
     /** 開局送 5 張支援券，讓第一次培育能抽到教官（PROG-2-1085，使用者裁定 2026-10-24） */
     mentorTickets: 5,

@@ -233,13 +233,14 @@ export class LocalGachaService {
         cost: number,
         generals: GeneralConfig[],
         options: LocalGachaRollOptions = {},
+        currencyKey: 'gems' | 'bronze' = 'gems',
     ): Promise<LocalGachaResultEntry[]> {
         return this._performGacha({
             actionType: 'LOCAL_GACHA_PULL',
             poolId,
             drawCount,
             cost,
-            currencyKey: 'gems',
+            currencyKey,
             generals,
             options,
         });

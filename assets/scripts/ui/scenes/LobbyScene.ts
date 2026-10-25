@@ -3167,8 +3167,8 @@ export class LobbyScene extends Component {
                 showPool(this._gachaPoolIndex);
             },
             history: () => { void this._showGachaHistory(); },
-            single: () => { void this._runGachaAction(() => this._runLocalGacha(1)); },
-            ten: () => { void this._runGachaAction(() => this._runLocalGacha(10)); },
+            single: () => { void this._runGachaAction(() => this._runLocalGacha(1), 1); },
+            ten: () => { void this._runGachaAction(() => this._runLocalGacha(10), 10); },
             gold: () => { void this._runGachaAction(() => this._runGoldSummon()); },
             ticket: () => { void this._runGachaAction(() => this._runTicketSummon()); },
         }, this, Button.EventType.CLICK);
@@ -3180,21 +3180,21 @@ export class LobbyScene extends Component {
             GachaDs3_div_20: '大喬、小喬、甄姬、黃月英、蔡琰',
             GachaDs3_div_21: '抽到的武將入名冊，成年後可到「結緣」配對',
             GachaDs3_div_28: guideLines.supportSeries,
-            GachaDs3_div_44: '單 抽 ×1', GachaDs3_div_47: '100',
-            GachaDs3_div_49: '十 連 ×10', GachaDs3_div_53: '1000',
+            GachaDs3_div_44: '單 抽 ×1', GachaDs3_div_47: '150',
+            GachaDs3_div_49: '十 連 ×10', GachaDs3_div_53: '1500',
             GachaDs3_div_55: '金幣召喚（500）', GachaDs3_div_56: '使用召喚券（1）',
         });
     }
 
-    private async _runGachaAction(action: () => Promise<void>): Promise<void> {
+    private async _runGachaAction(action: () => Promise<void>, drawCount = 1): Promise<void> {
         if (this._gachaPullPending) return;
         // 名將池走一般轉蛋；支援卡池改抽教官卡；其他池尚未開放。
         if (this._gachaPoolIndex === 1) {
-            // 紅顏池：不論按哪顆鈕，都用 1 張召喚券抽 1 位女性武將（PROG-2-1086）
-            action = () => this._runBeautySummon();
+            // 紅顏池：單抽／十連各扣 1／10 張召喚券（PROG-2-1086、PROG-2-1094）；金幣／召喚券鈕視同單抽
+            action = () => this._runBeautySummon(drawCount);
         } else if (this._gachaPoolIndex === 2) {
-            // 支援卡池：不論按哪顆鈕，都用 1 張支援券抽 1 張教官卡（PROG-2-1085）
-            action = () => this._runSupportSummon();
+            // 支援卡池：單抽／十連各扣 1／10 張支援券（PROG-2-1085、PROG-2-1094）
+            action = () => this._runSupportSummon(drawCount);
         } else if (this._gachaPoolIndex !== 0) {
             services().event.emit('SHOW_TOAST', { message: '此卡池尚未開放召喚，請切回名將召喚。', duration: 2.5 });
             return;
@@ -3858,21 +3858,21 @@ export class LobbyScene extends Component {
         await this._getGachaFlowCoordinator().runGoldSummon();
     }
 
-    private async _runBeautySummon(): Promise<void> {
+    private async _runBeautySummon(drawCount = 1): Promise<void> {
         const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
         const pool = (Array.isArray(gachaConfig) ? gachaConfig : []).find((entry) => entry.poolId === OPENING_BEAUTY_POOL_ID);
         const ids = new Set(openingBeautyCandidates(pool, this._generals));
         const generals = this._generals.filter((general) => ids.has(general.id));
-        await this._getGachaFlowCoordinator().runBeautySummon(OPENING_BEAUTY_POOL_ID, generals);
+        await this._getGachaFlowCoordinator().runBeautySummon(OPENING_BEAUTY_POOL_ID, generals, drawCount);
     }
 
-    private async _runSupportSummon(): Promise<void> {
+    private async _runSupportSummon(drawCount = 1): Promise<void> {
         const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
         const pool = (Array.isArray(gachaConfig) ? gachaConfig : []).find((entry) => entry.poolId === MENTOR_POOL_ID);
         const catalog = await this._loadSupportCatalog();
         const ids = new Set(pool?.candidateIds ?? []);
         const generals = this._generals.filter((general) => ids.has(general.id) && catalog.byGeneralId.has(general.id));
-        await this._getGachaFlowCoordinator().runSupportSummon(MENTOR_POOL_ID, generals);
+        await this._getGachaFlowCoordinator().runSupportSummon(MENTOR_POOL_ID, generals, drawCount);
     }
 
     private async _runTicketSummon(): Promise<void> {

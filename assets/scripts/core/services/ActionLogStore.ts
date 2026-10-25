@@ -2,7 +2,7 @@ import type { ActionRecord } from '../../../../shared/protocols';
 import { services } from '../managers/ServiceLoader';
 
 export type GachaActionType = 'LOCAL_GACHA_PULL' | 'LOCAL_GOLD_SUMMON' | 'LOCAL_TICKET_SUMMON' | 'LOCAL_SUPPORT_SUMMON';
-export type GachaCurrencyKey = 'gems' | 'gold' | 'tickets' | 'mentorTickets';
+export type GachaCurrencyKey = 'gems' | 'gold' | 'tickets' | 'mentorTickets' | 'bronze';
 
 export interface GachaResultSummary {
     id: string;
@@ -79,7 +79,7 @@ function normalizeResults(rawResults: unknown): GachaResultSummary[] {
 
 function inferCurrencyKey(actionType: GachaActionType, rawValue: unknown): GachaCurrencyKey {
     const resolved = toStringValue(rawValue, '');
-    if (resolved === 'gems' || resolved === 'gold' || resolved === 'tickets' || resolved === 'mentorTickets') {
+    if (resolved === 'gems' || resolved === 'gold' || resolved === 'tickets' || resolved === 'mentorTickets' || resolved === 'bronze') {
         return resolved;
     }
 
