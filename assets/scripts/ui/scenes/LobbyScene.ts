@@ -693,6 +693,14 @@ export class LobbyScene extends Component {
      * 規則全在 NurtureFlowController（純邏輯），這裡只綁按鈕、套 FlowView。
      */
     private async _mountNurtureFlow(): Promise<void> {
+        // 靈感提示用戰法中文名；載入失敗就退回顯示 id
+        const tacticNames = new Map<string, string>();
+        try {
+            const library = await services().resource.loadJson<{ data?: { id: string; displayName?: string }[] }>('data/master/tactic-library', { tags: ['LobbyScene'] });
+            for (const t of library?.data ?? []) if (t.displayName) tacticNames.set(t.id, t.displayName);
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 戰法庫載入失敗，靈感提示改顯示戰法 id', error);
+        }
         const flow = new NurtureFlowController({
             roster: { getAll: () => services().session.roster },
             unveiling: services().unveiling,
@@ -708,6 +716,7 @@ export class LobbyScene extends Component {
             autoNurture: (childId) => services().session.runAutoNurture(childId),
             performLegendaryMentoring: (generalId, childId, exclusiveSkillId) => services().session.performLegendaryMentoringFor(generalId, childId, exclusiveSkillId),
             showToast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2 }); },
+            tacticName: (id) => tacticNames.get(id),
         });
         this._nurtureFlow = flow;
 
