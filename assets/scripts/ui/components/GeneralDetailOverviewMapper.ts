@@ -9,6 +9,7 @@ import type {
     GeneralStatsConfig,
 } from '../../core/models/GeneralUnit';
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
+import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
 import { mapGeneralReadModel, type GeneralReadModel } from '../../core/systems/GeneralReadModel';
 import { resolveRarityTier } from '../../core/utils/RarityResolver';
 import { resolveCommercialBand } from '../../core/utils/CommercialRarityBand';
@@ -254,7 +255,7 @@ export function buildGeneralDetailOverviewContentState(config: GeneralConfig): G
         },
         trainingProfile: buildTrainingProfile(config),
         readModel: mapGeneralReadModel(config as unknown as Readonly<Record<string, unknown>>),
-        portraitResource: `sprites/generals/${config.id.replace(/-/g, '_')}_portrait`,
+        portraitResource: portraitPathOf(config.id),
     };
 }
 

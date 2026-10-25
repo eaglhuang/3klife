@@ -88,6 +88,24 @@
       "kind": "color-rect",
       "color": "#E8C88C",
       "alpha": 110
+    },
+    "recruit.label.row": {
+      "kind": "label-style",
+      "font": "fonts/notoserif_tc/notoserif_tc",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "#F1E5CC",
+      "isBold": false,
+      "overflow": "SHRINK",
+      "horizontalAlign": "LEFT",
+      "verticalAlign": "CENTER",
+      "letterSpacing": 0
+    },
+    "recruit.avatar": {
+      "kind": "sprite-frame",
+      "path": "sprites/battle/portrait_player_placeholder",
+      "expectedWidth": 42,
+      "expectedHeight": 42
     }
   }
 }

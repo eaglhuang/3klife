@@ -14,6 +14,8 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  * Unity 對照：GameHUDController，監聽事件更新各個 Binding
  */
 import { _decorator, Button, Color, Label, Node, Sprite, UITransform, Vec3 } from 'cc';
+import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
+import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
 import { EVENT_NAMES, Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { buildBattleSkillEffectMessage, buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
 import { services } from '../../core/managers/ServiceLoader';
@@ -389,8 +391,8 @@ export class BattleHUDComposite extends CompositePanel {
         let spriteFrame = null;
 
         if (generalId) {
-            // 優先嘗試 256×256 頭像（頭+脖子裁切版）
-            spriteFrame = await res.loadSpriteFrame(this._buildAvatarPath(generalId)).catch(() => null);
+            // 優先嘗試頭像（正式 → 自動裁切，規則見 data/general-art-paths.json）
+            spriteFrame = await loadGeneralAvatar(generalId, false);
             // 退回完整立繪
             if (!spriteFrame) {
                 spriteFrame = await res.loadSpriteFrame(this._buildPortraitPath(generalId)).catch(() => null);
@@ -411,12 +413,8 @@ export class BattleHUDComposite extends CompositePanel {
         sprite.sizeMode = Sprite.SizeMode.CUSTOM;
     }
 
-    private _buildAvatarPath(generalId: string): string {
-        return `sprites/generals/avatars/${generalId.replace(/-/g, '_')}_avatar`;
-    }
-
     private _buildPortraitPath(generalId: string): string {
-        return `sprites/generals/${generalId.replace(/-/g, '_')}_portrait`;
+        return portraitPathOf(generalId);
     }
 
     private _getPortraitFallbackPath(side: 'player' | 'enemy'): string {

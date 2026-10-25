@@ -124,17 +124,44 @@
             "skinSlot": "recruit.button.bg",
             "children": [
               {
+                "type": "container",
+                "name": "RecruitAvatarMask0",
+                "id": "recruitAvatarMask0",
+                "widget": {
+                  "vCenter": true,
+                  "left": 14
+                },
+                "width": 42,
+                "height": 42,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "RecruitAvatar0",
+                    "id": "recruitAvatar0",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 42,
+                    "height": 42,
+                    "skinSlot": "recruit.avatar"
+                  }
+                ]
+              },
+              {
                 "type": "label",
                 "name": "BtnRecruitRow0Label",
                 "id": "btnRecruitRow0Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 12,
+                  "left": 72,
                   "right": 12
                 },
                 "height": 36,
                 "text": "",
-                "styleSlot": "recruit.label.button"
+                "styleSlot": "recruit.label.row"
               }
             ]
           },
@@ -151,17 +178,44 @@
             "skinSlot": "recruit.button.bg",
             "children": [
               {
+                "type": "container",
+                "name": "RecruitAvatarMask1",
+                "id": "recruitAvatarMask1",
+                "widget": {
+                  "vCenter": true,
+                  "left": 14
+                },
+                "width": 42,
+                "height": 42,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "RecruitAvatar1",
+                    "id": "recruitAvatar1",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 42,
+                    "height": 42,
+                    "skinSlot": "recruit.avatar"
+                  }
+                ]
+              },
+              {
                 "type": "label",
                 "name": "BtnRecruitRow1Label",
                 "id": "btnRecruitRow1Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 12,
+                  "left": 72,
                   "right": 12
                 },
                 "height": 36,
                 "text": "",
-                "styleSlot": "recruit.label.button"
+                "styleSlot": "recruit.label.row"
               }
             ]
           },
@@ -178,17 +232,44 @@
             "skinSlot": "recruit.button.bg",
             "children": [
               {
+                "type": "container",
+                "name": "RecruitAvatarMask2",
+                "id": "recruitAvatarMask2",
+                "widget": {
+                  "vCenter": true,
+                  "left": 14
+                },
+                "width": 42,
+                "height": 42,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "RecruitAvatar2",
+                    "id": "recruitAvatar2",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 42,
+                    "height": 42,
+                    "skinSlot": "recruit.avatar"
+                  }
+                ]
+              },
+              {
                 "type": "label",
                 "name": "BtnRecruitRow2Label",
                 "id": "btnRecruitRow2Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 12,
+                  "left": 72,
                   "right": 12
                 },
                 "height": 36,
                 "text": "",
-                "styleSlot": "recruit.label.button"
+                "styleSlot": "recruit.label.row"
               }
             ]
           },
@@ -205,17 +286,44 @@
             "skinSlot": "recruit.button.bg",
             "children": [
               {
+                "type": "container",
+                "name": "RecruitAvatarMask3",
+                "id": "recruitAvatarMask3",
+                "widget": {
+                  "vCenter": true,
+                  "left": 14
+                },
+                "width": 42,
+                "height": 42,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "RecruitAvatar3",
+                    "id": "recruitAvatar3",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 42,
+                    "height": 42,
+                    "skinSlot": "recruit.avatar"
+                  }
+                ]
+              },
+              {
                 "type": "label",
                 "name": "BtnRecruitRow3Label",
                 "id": "btnRecruitRow3Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 12,
+                  "left": 72,
                   "right": 12
                 },
                 "height": 36,
                 "text": "",
-                "styleSlot": "recruit.label.button"
+                "styleSlot": "recruit.label.row"
               }
             ]
           },
@@ -232,17 +340,44 @@
             "skinSlot": "recruit.button.bg",
             "children": [
               {
+                "type": "container",
+                "name": "RecruitAvatarMask4",
+                "id": "recruitAvatarMask4",
+                "widget": {
+                  "vCenter": true,
+                  "left": 14
+                },
+                "width": 42,
+                "height": 42,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "RecruitAvatar4",
+                    "id": "recruitAvatar4",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 42,
+                    "height": 42,
+                    "skinSlot": "recruit.avatar"
+                  }
+                ]
+              },
+              {
                 "type": "label",
                 "name": "BtnRecruitRow4Label",
                 "id": "btnRecruitRow4Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 12,
+                  "left": 72,
                   "right": 12
                 },
                 "height": 36,
                 "text": "",
-                "styleSlot": "recruit.label.button"
+                "styleSlot": "recruit.label.row"
               }
             ]
           },
@@ -259,17 +394,44 @@
             "skinSlot": "recruit.button.bg",
             "children": [
               {
+                "type": "container",
+                "name": "RecruitAvatarMask5",
+                "id": "recruitAvatarMask5",
+                "widget": {
+                  "vCenter": true,
+                  "left": 14
+                },
+                "width": 42,
+                "height": 42,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "RecruitAvatar5",
+                    "id": "recruitAvatar5",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 42,
+                    "height": 42,
+                    "skinSlot": "recruit.avatar"
+                  }
+                ]
+              },
+              {
                 "type": "label",
                 "name": "BtnRecruitRow5Label",
                 "id": "btnRecruitRow5Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 12,
+                  "left": 72,
                   "right": 12
                 },
                 "height": 36,
                 "text": "",
-                "styleSlot": "recruit.label.button"
+                "styleSlot": "recruit.label.row"
               }
             ]
           },
@@ -286,17 +448,44 @@
             "skinSlot": "recruit.button.bg",
             "children": [
               {
+                "type": "container",
+                "name": "RecruitAvatarMask6",
+                "id": "recruitAvatarMask6",
+                "widget": {
+                  "vCenter": true,
+                  "left": 14
+                },
+                "width": 42,
+                "height": 42,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "RecruitAvatar6",
+                    "id": "recruitAvatar6",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 42,
+                    "height": 42,
+                    "skinSlot": "recruit.avatar"
+                  }
+                ]
+              },
+              {
                 "type": "label",
                 "name": "BtnRecruitRow6Label",
                 "id": "btnRecruitRow6Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 12,
+                  "left": 72,
                   "right": 12
                 },
                 "height": 36,
                 "text": "",
-                "styleSlot": "recruit.label.button"
+                "styleSlot": "recruit.label.row"
               }
             ]
           },
@@ -313,17 +502,44 @@
             "skinSlot": "recruit.button.bg",
             "children": [
               {
+                "type": "container",
+                "name": "RecruitAvatarMask7",
+                "id": "recruitAvatarMask7",
+                "widget": {
+                  "vCenter": true,
+                  "left": 14
+                },
+                "width": 42,
+                "height": 42,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "RecruitAvatar7",
+                    "id": "recruitAvatar7",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 42,
+                    "height": 42,
+                    "skinSlot": "recruit.avatar"
+                  }
+                ]
+              },
+              {
                 "type": "label",
                 "name": "BtnRecruitRow7Label",
                 "id": "btnRecruitRow7Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 12,
+                  "left": 72,
                   "right": 12
                 },
                 "height": 36,
                 "text": "",
-                "styleSlot": "recruit.label.button"
+                "styleSlot": "recruit.label.row"
               }
             ]
           },
@@ -340,17 +556,44 @@
             "skinSlot": "recruit.button.bg",
             "children": [
               {
+                "type": "container",
+                "name": "RecruitAvatarMask8",
+                "id": "recruitAvatarMask8",
+                "widget": {
+                  "vCenter": true,
+                  "left": 14
+                },
+                "width": 42,
+                "height": 42,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "RecruitAvatar8",
+                    "id": "recruitAvatar8",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 42,
+                    "height": 42,
+                    "skinSlot": "recruit.avatar"
+                  }
+                ]
+              },
+              {
                 "type": "label",
                 "name": "BtnRecruitRow8Label",
                 "id": "btnRecruitRow8Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 12,
+                  "left": 72,
                   "right": 12
                 },
                 "height": 36,
                 "text": "",
-                "styleSlot": "recruit.label.button"
+                "styleSlot": "recruit.label.row"
               }
             ]
           },
@@ -367,17 +610,44 @@
             "skinSlot": "recruit.button.bg",
             "children": [
               {
+                "type": "container",
+                "name": "RecruitAvatarMask9",
+                "id": "recruitAvatarMask9",
+                "widget": {
+                  "vCenter": true,
+                  "left": 14
+                },
+                "width": 42,
+                "height": 42,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "RecruitAvatar9",
+                    "id": "recruitAvatar9",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 42,
+                    "height": 42,
+                    "skinSlot": "recruit.avatar"
+                  }
+                ]
+              },
+              {
                 "type": "label",
                 "name": "BtnRecruitRow9Label",
                 "id": "btnRecruitRow9Label",
                 "widget": {
                   "vCenter": true,
-                  "left": 12,
+                  "left": 72,
                   "right": 12
                 },
                 "height": 36,
                 "text": "",
-                "styleSlot": "recruit.label.button"
+                "styleSlot": "recruit.label.row"
               }
             ]
           },
