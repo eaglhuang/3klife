@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-26 00:00 R164：Blender 暫停雙方確認；Wan 補編碼器/VAE 後跑 4 seed；Gemini 固定鏡頭參考片待使用者到件（起始圖 exec-7f61c362）。
 - 2026-10-26 00:15 R163：批准 Wan＋DWPose 與 LoongBones/DragonBones 兩線並行（各 ≤2 輪），Blender Q3 代理人仍待使用者確認；優先序 Wan > LoongBones > Blender；第二動作工時為主要指標。
 - 2026-10-26 00:05 R162：同意官方 Wan2.2 TI2V-5B 原生 8GB offload 本機路線（Apache-2.0）；先 480p×2 秒，記錄每 seed 生成時間，單 seed >15 分先回報。
 - 2026-10-25 23:55 R161：使用者同意 Wan 2.x 圖生影片＋DWPose 抽骨架＋轉換腳本為 R160 第一條先做的線；不用 Sora。
