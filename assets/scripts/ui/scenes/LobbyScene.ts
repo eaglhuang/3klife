@@ -78,7 +78,7 @@ import { DestinyOpeningController, DESTINY_OPENING_MAX_ROWS } from '../core/Dest
 import { OpeningIntroController } from '../core/OpeningIntroController';
 import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE } from '../../core/systems/NewPlayerOpening';
 import { destinyLockedEvent } from '../../core/systems/DestinyOpening';
-import { OPENING_BEAUTY_POOL_ID, rollOpeningBeauty } from '../../core/systems/OpeningBeauty';
+import { OPENING_BEAUTY_POOL_ID, openingBeautyCandidates, rollOpeningBeauty } from '../../core/systems/OpeningBeauty';
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
@@ -3084,6 +3084,10 @@ export class LobbyScene extends Component {
         const guideLines = buildGachaPoolGuideLines();
         host.binder.setTexts({
             GachaDs3_div_8: guideLines.generalSeries,
+            GachaDs3_div_18: '★ 紅顏池 · 召喚券 1 張抽 1 位',
+            GachaDs3_div_19: '紅 顏',
+            GachaDs3_div_20: '大喬、小喬、甄姬、黃月英、蔡琰',
+            GachaDs3_div_21: '抽到的武將入名冊，成年後可到「結緣」配對',
             GachaDs3_div_28: guideLines.supportSeries,
             GachaDs3_div_44: '單 抽 ×1', GachaDs3_div_47: '100',
             GachaDs3_div_49: '十 連 ×10', GachaDs3_div_53: '1000',
@@ -3094,7 +3098,10 @@ export class LobbyScene extends Component {
     private async _runGachaAction(action: () => Promise<void>): Promise<void> {
         if (this._gachaPullPending) return;
         // 名將池走一般轉蛋；支援卡池改抽教官卡；其他池尚未開放。
-        if (this._gachaPoolIndex === 2) {
+        if (this._gachaPoolIndex === 1) {
+            // 紅顏池：不論按哪顆鈕，都用 1 張召喚券抽 1 位女性武將（PROG-2-1086）
+            action = () => this._runBeautySummon();
+        } else if (this._gachaPoolIndex === 2) {
             // 支援卡池：不論按哪顆鈕，都用 1 張支援券抽 1 張教官卡（PROG-2-1085）
             action = () => this._runSupportSummon();
         } else if (this._gachaPoolIndex !== 0) {
@@ -3758,6 +3765,14 @@ export class LobbyScene extends Component {
 
     private async _runGoldSummon(): Promise<void> {
         await this._getGachaFlowCoordinator().runGoldSummon();
+    }
+
+    private async _runBeautySummon(): Promise<void> {
+        const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
+        const pool = (Array.isArray(gachaConfig) ? gachaConfig : []).find((entry) => entry.poolId === OPENING_BEAUTY_POOL_ID);
+        const ids = new Set(openingBeautyCandidates(pool, this._generals));
+        const generals = this._generals.filter((general) => ids.has(general.id));
+        await this._getGachaFlowCoordinator().runBeautySummon(OPENING_BEAUTY_POOL_ID, generals);
     }
 
     private async _runSupportSummon(): Promise<void> {

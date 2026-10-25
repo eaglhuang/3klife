@@ -87,6 +87,18 @@ export class GachaFlowCoordinator {
         }
     }
 
+    /** 紅顏池召喚（PROG-2-1086）：扣 1 張召喚券抽 1 位女性武將，入名冊後可去結緣 */
+    public async runBeautySummon(poolId: string, generals: GeneralConfig[]): Promise<void> {
+        try {
+            if (generals.length === 0) throw new Error('紅顏池目前沒有可抽的武將');
+            const results = await this._options.gachaService.performPoolTicketSummon(poolId, 1, generals);
+            this._notifyPullSuccess(results);
+            await this._presentLocalGachaResults(1, results, '召喚券', () => this.runBeautySummon(poolId, generals), 'tickets');
+        } catch (error) {
+            this._emitError(error, '紅顏池召喚失敗');
+        }
+    }
+
     /**
      * 支援卡池召喚（PROG-2-1085）：扣支援券、抽支援卡目錄裡的武將；抽到的只變成教官卡，不入名冊。
      * generals 由呼叫端先篩成本池候選且有支援卡資料的武將。
