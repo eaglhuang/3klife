@@ -2522,6 +2522,37 @@ export class LobbyScene extends Component {
         hostNode.active = false;
     }
 
+    /** 大廳底部 dock（設計稿：出征編組／出　戰／訓練）：版面轉換只留下空按鈕，這裡補文字並接到既有流程 */
+    private _bindLobbyDock(binder: UITemplateBinder): void {
+        const dock: Array<[string, string, () => void]> = [
+            ['LobbyMainScreen_button_1', '出征編組', () => this._openSortieSetup()],
+            ['LobbyMainScreen_button_2', '出　戰', () => this.onClickEnterBattle()],
+            ['LobbyMainScreen_button_3', '訓練', () => this._openNurtureFlow()],
+        ];
+        for (const [id, text, handler] of dock) {
+            const button = binder.getButton(id);
+            if (!button) continue;
+            let label = button.node.getComponentInChildren(Label);
+            if (!label) {
+                const labelNode = new Node('DockLabel');
+                labelNode.layer = button.node.layer;
+                button.node.addChild(labelNode);
+                const size = button.node.getComponent(UITransform)?.contentSize;
+                const transform = labelNode.addComponent(UITransform);
+                if (size) transform.setContentSize(size);
+                label = labelNode.addComponent(Label);
+                label.fontSize = 28;
+                label.lineHeight = 32;
+                label.color = new Color(255, 236, 200, 255);
+                label.horizontalAlign = Label.HorizontalAlign.CENTER;
+                label.verticalAlign = Label.VerticalAlign.CENTER;
+            }
+            label.string = text;
+            button.node.off(Button.EventType.CLICK);
+            button.node.on(Button.EventType.CLICK, handler, this);
+        }
+    }
+
     private _configureLobbyMainHub(binder: UITemplateBinder | null): void {
         const generalsButton = binder?.getButton('btnGenerals');
         const battleButton = binder?.getButton('btnBattle');
@@ -2558,6 +2589,8 @@ export class LobbyScene extends Component {
             spiritFamilyOverviewButton.node.off(Button.EventType.CLICK, this.onClickSpiritFamilyOverview, this);
             spiritFamilyOverviewButton.node.on(Button.EventType.CLICK, this.onClickSpiritFamilyOverview, this);
         }
+
+        this._bindLobbyDock(binder);
 
         binder.setTexts({
             HeroWallTitle: '世家巡檢',
