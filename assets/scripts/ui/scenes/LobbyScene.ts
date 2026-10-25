@@ -1,5 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
+import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
@@ -1179,7 +1179,12 @@ export class LobbyScene extends Component {
                 generals: () => this._generals,
                 isNewPlayer: () => this._isNewPlayer,
                 loadGachaConfig: async () => await this._loadDataJson<GachaConfig[]>('data/gacha-config') ?? [],
-                mountHost: (name, screen, bindings) => this._mountPreviewScreenHost(name, screen, bindings),
+                mountHost: async (name, screen, bindings) => {
+                    const host = await this._mountPreviewScreenHost(name, screen, bindings);
+                    // 宿命轉蛋是選核心主將前的強制步驟：遮罩下的大廳按鈕不能點
+                    if (screen === 'destiny-opening-screen') host.node.addComponent(BlockInputEvents);
+                    return host;
+                },
                 bringToFront: node => this._bringNodeToFront(node),
                 refreshSeasonHud: () => this._refreshSeasonHud(),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),

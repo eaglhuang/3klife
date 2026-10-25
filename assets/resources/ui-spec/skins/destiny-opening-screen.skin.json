@@ -4,6 +4,11 @@
   "bundle": "lobby_ui",
   "atlasPolicy": "lobby_ui",
   "slots": {
+    "do.scrim": {
+      "kind": "color-rect",
+      "color": "#000000",
+      "alpha": 170
+    },
     "do.card.bg": {
       "kind": "color-rect",
       "color": "backgroundDeep",
