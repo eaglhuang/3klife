@@ -55,6 +55,11 @@ export class RecruitHallController {
         return this._deps.candidates().slice(start, start + RECRUIT_ROWS_PER_PAGE);
     }
 
+    /** 本頁各列的武將 id（給畫面載小人頭；空列不含） */
+    public rowGeneralIds(): string[] {
+        return this._rows().map((g) => g.id);
+    }
+
     public async recruitRow(index: number): Promise<boolean> {
         const general = this._rows()[index];
         if (!general) return false;

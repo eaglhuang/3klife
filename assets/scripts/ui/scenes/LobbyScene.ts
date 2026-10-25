@@ -1,5 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Button, Color, Component, instantiate, JsonAsset, Label, Node, Sprite, UITransform, Widget, resources } from 'cc';
+import { _decorator, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
@@ -56,6 +56,7 @@ import { DomesticPanelController } from '../core/DomesticPanelController';
 import { FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems/SeasonFastForward';
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
+import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
 import { overflowToastText } from '../../core/systems/MentorOverflow';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
 import { WarehousePanelController } from '../core/WarehousePanelController';
@@ -245,6 +246,7 @@ export class LobbyScene extends Component {
     private _motherTree: BloodlineTreePanel | null = null;
     private _jobChangeHost: UIScreenPreviewHost | null = null;
     private _domesticHost: UIScreenPreviewHost | null = null;
+    private _recruitAvatarSeq = 0;
     private _fastForwarding = false;
     private _recruitHost: UIScreenPreviewHost | null = null;
     private _recruit: RecruitHallController | null = null;
@@ -1803,6 +1805,25 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._recruit.getFlowView());
+        this._applyRecruitAvatars(binder);
+    }
+
+    /** 招賢館每列的圓形小人頭；路徑規則在 data/general-art-paths.json（正式頭像 → 自動裁切 → 剪影） */
+    private _applyRecruitAvatars(binder: NonNullable<UIScreenPreviewHost['binder']>): void {
+        const ids = this._recruit?.rowGeneralIds() ?? [];
+        const seq = ++this._recruitAvatarSeq;
+        ids.forEach((id, i) => {
+            const holder = binder.getNode(`recruitAvatarMask${i}`);
+            const sprite = binder.getSprite(`recruitAvatar${i}`);
+            if (!holder || !sprite) return;
+            if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+            void loadGeneralAvatar(id).then((frame) => {
+                if (frame && seq === this._recruitAvatarSeq && sprite.isValid) {
+                    sprite.spriteFrame = frame;
+                    sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+                }
+            });
+        });
     }
 
     /**

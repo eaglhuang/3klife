@@ -17,6 +17,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  * Unity 對照：GameHUDController，監聽事件更新各個 Binding
  */
 import { _decorator, Button, Color, Label, Node, Sprite, UITransform, Vec3 } from 'cc';
+import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
 import { EVENT_NAMES, Faction } from '../../core/config/Constants';
 import { buildBattleSkillEffectMessage, buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
 import { services } from '../../core/managers/ServiceLoader';
@@ -415,7 +416,7 @@ export class BattleHUD extends UIPreviewBuilder {
     }
 
     private _buildPortraitPath(generalId: string): string {
-        return `sprites/generals/${generalId.replace(/-/g, '_')}_portrait`;
+        return portraitPathOf(generalId);
     }
 
     private _getPortraitFallbackPath(side: 'player' | 'enemy'): string {
