@@ -17,7 +17,13 @@ import { parseSupportCard, SupportCardDef } from '../models/MentorSupportSchema'
 import type { MentorCard } from '../models/MentorCard';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { addMentorToHoldings } from './MentorSources';
-import { applyDuplicateMentorCard } from './MentorBreakthrough';
+import { applyDuplicateMentorCard, clampMentorStar } from './MentorBreakthrough';
+import { overflowScoreOf } from './MentorOverflow';
+
+/** 抽到重複教官卡的結果（PROG-2-1095）：未滿星升 1 星，已滿 ★5 轉為積分 */
+export type GachaMentorDuplicateEvent =
+    | { kind: 'breakthrough'; name: string; fromStar: number; toStar: number }
+    | { kind: 'overflow'; name: string; scoreGain: number };
 
 export interface SupportCatalogProblem {
     index: number;
@@ -118,6 +124,7 @@ export function addGachaMentorCards(
     time: GachaMentorTime,
     poolId: string | undefined,
     supportPoolIds: readonly string[] = SUPPORT_CARD_POOL_IDS,
+    onDuplicate?: (event: GachaMentorDuplicateEvent) => void,
 ): MentorCard[] {
     let next: MentorCard[] = [...holdings];
     if (!isSupportCardPool(poolId, supportPoolIds)) return next;
@@ -127,8 +134,12 @@ export function addGachaMentorCards(
         const card = mentorCardFromGachaDraw(general, support, time);
         const held = next.findIndex((h) => h.uid === card.uid);
         if (held >= 0) {
+            const fromStar = clampMentorStar(next[held].stars);
             const result = applyDuplicateMentorCard(next[held].stars);
             next = next.map((h, i) => (i === held ? { ...h, stars: result.star } : h));
+            onDuplicate?.(result.kind === 'overflow'
+                ? { kind: 'overflow', name: card.name, scoreGain: overflowScoreOf(support.rarity) }
+                : { kind: 'breakthrough', name: card.name, fromStar, toStar: result.star });
             continue;
         }
         next = addMentorToHoldings(next, card, 'Gacha');

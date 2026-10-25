@@ -35,6 +35,8 @@ export interface LocalGachaWalletSnapshot {
     oracle: number;
     /** 支援券（只用於支援卡池）；PROG-2-1085 新增，舊檔補 0 */
     mentorTickets: number;
+    /** 積分（教官卡滿星溢出轉化）；PROG-2-1095 新增，舊檔補 0 */
+    scorePoints: number;
 }
 
 interface PerformGachaRequest {
@@ -87,6 +89,7 @@ function normalizeWalletSnapshot(value: Partial<LocalGachaWalletSnapshot>): Loca
         bronze: normalizeWalletValue(value.bronze, DEFAULT_WALLET.bronze),
         oracle: normalizeWalletValue(value.oracle, DEFAULT_WALLET.oracle),
         mentorTickets: normalizeWalletValue(value.mentorTickets, DEFAULT_WALLET.mentorTickets),
+        scorePoints: normalizeWalletValue(value.scorePoints, DEFAULT_WALLET.scorePoints),
     };
 }
 
