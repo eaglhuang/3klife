@@ -64,7 +64,17 @@
     "pickCount": 1,
     "candidateIds": [
       "zhao-yun",
-      "zhuge-liang"
+      "zhuge-liang",
+      "guan-yu",
+      "zhang-fei",
+      "lu-bu",
+      "zhou-yu",
+      "pang-tong",
+      "sun-ce",
+      "zhang-liao",
+      "ling-tong",
+      "xu-sheng",
+      "zhang-bao"
     ],
     "firstPickOnly": false,
     "confirmRequired": true,
