@@ -58,6 +58,11 @@ import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { overflowToastText } from '../../core/systems/MentorOverflow';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
+import { WarehousePanelController } from '../core/WarehousePanelController';
+import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
+
+/** 倉庫擴容費用：規格（doc_spec_0017）只寫「付費或任務解鎖」，暫定每次 5000 金幣 */
+const WAREHOUSE_EXPAND_GOLD_COST = 5000;
 import type { SeasonAdvancedPayload } from '../../core/managers/GameSession';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
@@ -244,6 +249,8 @@ export class LobbyScene extends Component {
     private _recruitHost: UIScreenPreviewHost | null = null;
     private _recruit: RecruitHallController | null = null;
     private _rivalHost: UIScreenPreviewHost | null = null;
+    private _warehouse: WarehousePanelController | null = null;
+    private _warehouseHost: UIScreenPreviewHost | null = null;
     private _rival: RivalDiplomacyController | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
@@ -392,6 +399,7 @@ export class LobbyScene extends Component {
         await this._mountDomestic();
         await this._mountRecruitHall();
         await this._mountRivalDiplomacy();
+        await this._mountWarehouse();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
         await this._mountRedFaceShowcase();
@@ -1113,8 +1121,53 @@ export class LobbyScene extends Component {
             { buttonId: 'btnFastForward', handler: () => { void this._onClickFastForward(); } },
             { buttonId: 'btnOpenRecruit', handler: () => { this._closeDomestic(); this._openRecruitHall(); } },
             { buttonId: 'btnOpenRival', handler: () => { this._closeDomestic(); this._openRivalDiplomacy(); } },
+            { buttonId: 'btnOpenWarehouse', handler: () => { this._closeDomestic(); this._openWarehouse(); } },
         ]);
         this._domesticHost.node.active = false;
+    }
+
+    /**
+     * 主城倉庫（倉庫系統 §倉庫容量，PROG-2-1103）：容量規則在 WarehouseCapacity，這裡只綁按鈕、套 view。
+     * 擴容費用規格未定，暫定每次 WAREHOUSE_EXPAND_GOLD_COST 金幣。
+     */
+    private async _mountWarehouse(): Promise<void> {
+        const gacha = this._localGachaService;
+        const warehouse = new WarehousePanelController({
+            usedSlots: () => services().session.warehouseUsedSlots,
+            expansions: () => services().session.warehouseExpansions,
+            expand: () => {
+                if (!gacha.spendCurrency('gold', WAREHOUSE_EXPAND_GOLD_COST)) {
+                    services().event.emit('SHOW_TOAST', { message: `金幣不足：擴容需要 ${WAREHOUSE_EXPAND_GOLD_COST} 金幣`, duration: 2 });
+                    return false;
+                }
+                void services().session.addItem(WAREHOUSE_EXPANSION_ITEM, 1);
+                return true;
+            },
+        });
+        this._warehouse = warehouse;
+        this._warehouseHost = await this._mountPreviewScreenHost('WarehouseHost', 'warehouse-panel-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._warehouseHost) this._warehouseHost.node.active = false; } },
+            { buttonId: 'btnWarehouseExpand', handler: () => { warehouse.expandSelected(); this._refreshWarehouse(); } },
+        ]);
+        this._warehouseHost.node.active = false;
+    }
+
+    private _openWarehouse(): void {
+        const host = this._warehouseHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshWarehouse();
+    }
+
+    private _refreshWarehouse(): void {
+        const binder = this._warehouseHost?.binder;
+        if (!binder || !this._warehouse || !this._warehouseHost?.node.active) {
+            return;
+        }
+        applyFlowView(binder, this._warehouse.getFlowView());
     }
 
     /**
