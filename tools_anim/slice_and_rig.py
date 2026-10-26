@@ -648,31 +648,38 @@ def build_neutral_rig_v2(
     b_shin_b = "leg_lower_b" if use_v1_leg_names else "shin_b"
 
     # 定義骨骼層級與樞紐點 (pivotSourcePx: [x, y], y-down)
-    bone_Specs = [
-        ("root", None, pts["root"]),
-        ("pelvis", "root", pts["pelvis"]),
-        ("torso", "pelvis", pts["waist"]),
-        ("head", "torso", pts["neck"]),
-        ("cape", "torso", pts.get("chest", pts["neck"])),
-        ("hair_tail", "head", [pts["head_center"][0] - 80.0, pts["head_center"][1] - 120.0]),
-        ("skirt", "pelvis", pts["pelvis"]),
-        ("arm_upper_f", "torso", pts["shoulder_f"]),
-        ("arm_lower_f", "arm_upper_f", pts["elbow_f"]),
-        ("hand_f", "arm_lower_f", pts["wrist_f"]),
-        ("pauldron_f", "arm_upper_f", pts["shoulder_f"]),
-        ("arm_upper_b", "torso", pts["shoulder_b"]),
-        ("arm_lower_b", "arm_upper_b", pts["elbow_b"]),
-        ("hand_b", "arm_lower_b", pts["wrist_b"]),
-        ("pauldron_b", "arm_upper_b", pts["shoulder_b"]),
-        (b_thigh_f, "pelvis", pts["hip_f"]),
-        (b_shin_f, b_thigh_f, pts["knee_f"]),
-        ("foot_f", b_shin_f, pts["ankle_f"]),
-        (b_thigh_b, "pelvis", pts["hip_b"]),
-        (b_shin_b, b_thigh_b, pts["knee_b"]),
-        ("foot_b", b_shin_b, pts["ankle_b"]),
-        ("weapon", "hand_f", pts["grip_A"]),
-        ("grip_B", "weapon", pts["grip_B"]),
-    ]
+    # AG-14: 優先以 canonical_spec 中的 bones (v3.1 共用骨架 29 根) 作為最高權威
+    if canonical_spec and "bones" in canonical_spec:
+        bone_Specs = [
+            (b["name"], b["parent"], b["pivotCanvasPx"]) for b in canonical_spec["bones"]
+        ]
+    else:
+        # Fallback 舊版 23 根骨骼定義
+        bone_Specs = [
+            ("root", None, pts["root"]),
+            ("pelvis", "root", pts["pelvis"]),
+            ("torso", "pelvis", pts["waist"]),
+            ("head", "torso", pts["neck"]),
+            ("cape", "torso", pts.get("chest", pts["neck"])),
+            ("hair_tail", "head", [pts["head_center"][0] - 80.0, pts["head_center"][1] - 120.0]),
+            ("skirt", "pelvis", pts["pelvis"]),
+            ("arm_upper_f", "torso", pts["shoulder_f"]),
+            ("arm_lower_f", "arm_upper_f", pts["elbow_f"]),
+            ("hand_f", "arm_lower_f", pts.get("grip_A", pts["wrist_f"])),
+            ("pauldron_f", "arm_upper_f", pts["shoulder_f"]),
+            ("arm_upper_b", "torso", pts["shoulder_b"]),
+            ("arm_lower_b", "arm_upper_b", pts["elbow_b"]),
+            ("hand_b", "arm_lower_b", pts.get("grip_B", pts["wrist_b"])),
+            ("pauldron_b", "arm_upper_b", pts["shoulder_b"]),
+            (b_thigh_f, "pelvis", pts["hip_f"]),
+            (b_shin_f, b_thigh_f, pts["knee_f"]),
+            ("foot_f", b_shin_f, pts["ankle_f"]),
+            (b_thigh_b, "pelvis", pts["hip_b"]),
+            (b_shin_b, b_thigh_b, pts["knee_b"]),
+            ("foot_b", b_shin_b, pts["ankle_b"]),
+            ("weapon", "hand_f", pts["grip_A"]),
+            ("weapon_grip_rear", "weapon", [pts["grip_A"][0] - 448.0, pts["grip_A"][1]]),
+        ]
 
     pivot_map = {b_name: [round( float(piv[0]), 2), round(float(piv[1]), 2)] for b_name, _, piv in bone_Specs}
 
@@ -831,10 +838,10 @@ def build_neutral_rig_v2(
             },
             "grip_B": {
                 "parentBone": "weapon",
-                "sourcePx": pivot_map["grip_B"],
+                "sourcePx": pivot_map.get("weapon_grip_rear", pivot_map.get("grip_B", pivot_map.get("hand_b", [680.0, 1225.0]))),
                 "offsetFromWeaponPivotSourcePx": [
-                    round(pivot_map["grip_B"][0] - pivot_map["weapon"][0], 2),
-                    round(pivot_map["grip_B"][1] - pivot_map["weapon"][1], 2),
+                    round(pivot_map.get("weapon_grip_rear", pivot_map.get("grip_B", [917.0, 1225.0]))[0] - pivot_map["weapon"][0], 2),
+                    round(pivot_map.get("weapon_grip_rear", pivot_map.get("grip_B", [917.0, 1225.0]))[1] - pivot_map["weapon"][1], 2),
                 ],
             },
             **palm_contacts,

@@ -342,6 +342,43 @@ def run_rigpose_inspection(
         "detail": f"兩腿間隙寬度 >=16px: detected_gap={max_leg_zero}px",
     }
 
+    # 9. AG-14: 獨立髮尾圖根部對齊 hair_root (960, 420) 檢查
+    if hairtail_path and hairtail_path.exists():
+        hair_pil = Image.open(hairtail_path).convert("RGBA")
+        hair_arr = np.array(hair_pil)
+        ys_h, xs_h = np.where(hair_arr[..., 3] > 16)
+        if len(ys_h) > 0:
+            top_y_idx = int(ys_h.min())
+            root_xs = xs_h[ys_h == top_y_idx]
+            root_x = float(np.mean(root_xs))
+            target_hair_x, target_hair_y = 960.0, 420.0
+            hair_diff = math.hypot(root_x - target_hair_x, top_y_idx - target_hair_y)
+            if hair_diff <= 25.0:
+                h_tier = "PASS"
+            elif hair_diff <= 60.0:
+                h_tier = "SNAP"
+            else:
+                h_tier = "FAIL"
+            checks["hairtail_root_alignment"] = {
+                "pass": (h_tier == "PASS"),
+                "tier": h_tier,
+                "detail": f"獨立髮尾根部對齊 hair_root(960, 420): actual=({root_x:.1f}, {top_y_idx}), diff={hair_diff:.1f}px (tol=±25, snap<=60)",
+            }
+            draw.ellipse([target_hair_x - 25, target_hair_y - 25, target_hair_x + 25, target_hair_y + 25], outline=(100, 200, 255, 200), width=2)
+            draw.line([(int(root_x), top_y_idx), (int(target_hair_x), int(target_hair_y))], fill=(100, 200, 255, 255), width=2)
+        else:
+            checks["hairtail_root_alignment"] = {
+                "pass": True,
+                "tier": "PASS",
+                "detail": "髮尾圖為空，跳過",
+            }
+    else:
+        checks["hairtail_root_alignment"] = {
+            "pass": True,
+            "tier": "PASS",
+            "detail": "無獨立髮尾圖，跳過",
+        }
+
     # 8. 獨立武器乾淨度 (若有)
     if weapon_path and weapon_path.exists():
         weap_pil = Image.open(weapon_path).convert("RGBA")

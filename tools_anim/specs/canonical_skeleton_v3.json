@@ -1,5 +1,5 @@
 {
-  "schema": "3klife.canonicalRigPose.v3",
+  "schema": "3klife.canonicalRigPose.v3.1",
   "canvas": {
     "w": 2048,
     "h": 2048
@@ -103,6 +103,18 @@
       "x": 1024,
       "y": 1900,
       "tol": 10
+    },
+    "hair_root": {
+      "x": 960,
+      "y": 420,
+      "tol": 40,
+      "note": "髮尾根部（髮髻後下方），hairtail 圖的根部對齊此點"
+    },
+    "cape_root": {
+      "x": 1010,
+      "y": 900,
+      "tol": 30,
+      "note": "披風掛點（頸後）"
     }
   },
   "grips": {
@@ -279,7 +291,7 @@
     "leg_to_leg": 16,
     "hand_to_any": 16
   },
-  "status": "draft，以趙雲 C2 試作校準一次後鎖定；鎖定後改數字須升版號",
+  "status": "v3.1 draft：關節座標未變；新增 bones 階層、hair_root、cape_root、weaponRules",
   "angles": {
     "upperarm_from_vertical_deg": [
       30,
@@ -298,5 +310,255 @@
       6
     ],
     "fistHoleAxis": "水平，孔朝畫面右方"
+  },
+  "bones": [
+    {
+      "name": "root",
+      "parent": null,
+      "pivotCanvasPx": [
+        1024,
+        1900
+      ]
+    },
+    {
+      "name": "pelvis",
+      "parent": "root",
+      "pivotCanvasPx": [
+        1024,
+        1260
+      ]
+    },
+    {
+      "name": "ik_foot_f",
+      "parent": "root",
+      "pivotCanvasPx": [
+        1135,
+        1850
+      ],
+      "role": "ik_target"
+    },
+    {
+      "name": "ik_foot_b",
+      "parent": "root",
+      "pivotCanvasPx": [
+        915,
+        1850
+      ],
+      "role": "ik_target"
+    },
+    {
+      "name": "torso",
+      "parent": "pelvis",
+      "pivotCanvasPx": [
+        1024,
+        1130
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "torso",
+      "pivotCanvasPx": [
+        1030,
+        880
+      ]
+    },
+    {
+      "name": "cape",
+      "parent": "torso",
+      "pivotCanvasPx": [
+        1010,
+        900
+      ]
+    },
+    {
+      "name": "hair_tail",
+      "parent": "head",
+      "pivotCanvasPx": [
+        960,
+        420
+      ]
+    },
+    {
+      "name": "hair_tail_mid",
+      "parent": "hair_tail",
+      "pivotCanvasPx": [
+        856,
+        540
+      ]
+    },
+    {
+      "name": "hair_tail_tip",
+      "parent": "hair_tail_mid",
+      "pivotCanvasPx": [
+        752,
+        660
+      ]
+    },
+    {
+      "name": "skirt",
+      "parent": "pelvis",
+      "pivotCanvasPx": [
+        1024,
+        1260
+      ]
+    },
+    {
+      "name": "skirt_mid",
+      "parent": "skirt",
+      "pivotCanvasPx": [
+        1024,
+        1412
+      ]
+    },
+    {
+      "name": "skirt_tip",
+      "parent": "skirt_mid",
+      "pivotCanvasPx": [
+        1024,
+        1564
+      ]
+    },
+    {
+      "name": "arm_upper_f",
+      "parent": "torso",
+      "pivotCanvasPx": [
+        1120,
+        925
+      ]
+    },
+    {
+      "name": "arm_lower_f",
+      "parent": "arm_upper_f",
+      "pivotCanvasPx": [
+        1230,
+        1080
+      ]
+    },
+    {
+      "name": "hand_f",
+      "parent": "arm_lower_f",
+      "pivotCanvasPx": [
+        1365,
+        1225
+      ],
+      "note": "樞紐＝拳心孔中心（grip_A／grip_B），不是手腕"
+    },
+    {
+      "name": "pauldron_f",
+      "parent": "arm_upper_f",
+      "pivotCanvasPx": [
+        1120,
+        925
+      ]
+    },
+    {
+      "name": "weapon",
+      "parent": "hand_f",
+      "pivotCanvasPx": [
+        1365,
+        1225
+      ],
+      "note": "父骨 hand_f；只能 1 根掛貼圖的骨"
+    },
+    {
+      "name": "weapon_grip_rear",
+      "parent": "weapon",
+      "pivotCanvasPx": [
+        917,
+        1225
+      ],
+      "role": "ik_target（後手握在槍桿上的位置，無貼圖）",
+      "note": "距前手握點 0.28H（雙手間距規則 0.22–0.35H）"
+    },
+    {
+      "name": "arm_upper_b",
+      "parent": "torso",
+      "pivotCanvasPx": [
+        930,
+        925
+      ]
+    },
+    {
+      "name": "arm_lower_b",
+      "parent": "arm_upper_b",
+      "pivotCanvasPx": [
+        820,
+        1080
+      ]
+    },
+    {
+      "name": "hand_b",
+      "parent": "arm_lower_b",
+      "pivotCanvasPx": [
+        680,
+        1225
+      ],
+      "note": "樞紐＝拳心孔中心（grip_A／grip_B），不是手腕"
+    },
+    {
+      "name": "pauldron_b",
+      "parent": "arm_upper_b",
+      "pivotCanvasPx": [
+        930,
+        925
+      ]
+    },
+    {
+      "name": "thigh_f",
+      "parent": "pelvis",
+      "pivotCanvasPx": [
+        1085,
+        1290
+      ]
+    },
+    {
+      "name": "shin_f",
+      "parent": "thigh_f",
+      "pivotCanvasPx": [
+        1120,
+        1580
+      ]
+    },
+    {
+      "name": "foot_f",
+      "parent": "ik_foot_f",
+      "pivotCanvasPx": [
+        1135,
+        1850
+      ]
+    },
+    {
+      "name": "thigh_b",
+      "parent": "pelvis",
+      "pivotCanvasPx": [
+        963,
+        1290
+      ]
+    },
+    {
+      "name": "shin_b",
+      "parent": "thigh_b",
+      "pivotCanvasPx": [
+        930,
+        1580
+      ]
+    },
+    {
+      "name": "foot_b",
+      "parent": "ik_foot_b",
+      "pivotCanvasPx": [
+        915,
+        1850
+      ]
+    }
+  ],
+  "bonesNote": "v3.1：骨架階層唯一來源。名稱、父子、樞紐（畫布像素，y 向下）兩邊工具都必須完全一致；Spine 輸出時換算成 y 向上、root 在 (1024,1900)。",
+  "weaponRules": {
+    "buttAboveGround": true,
+    "twoHandGripSpacingH": [
+      0.22,
+      0.35
+    ],
+    "note": "任何一格槍尾不得低於地面線；雙手持槍段兩手間距 0.22–0.35H"
   }
 }

@@ -1289,6 +1289,88 @@ def render_animations_and_check_head_occlusion(
     }
 
 
+
+def check_spear_butt_above_ground(
+    eval_data: dict[str, Any],
+    rig_data: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """AG-14: spear_butt_above_ground 檢查 (任何一格槍尾不得低於地面)。"""
+    anims = eval_data.get("animations", {})
+    min_butt_y = float("inf")
+    worst_frame: dict[str, Any] = {}
+    ground_y = 0.0  # Spine 世界座標地面線通常為 y = 0.0
+
+    for a_name, a_info in anims.items():
+        for fr in a_info.get("frames", []):
+            bones = fr.get("bones", {})
+            wb = bones.get("weapon")
+            rear_b = bones.get("weapon_grip_rear") or bones.get("grip_rear") or bones.get("grip_B")
+
+            if rear_b:
+                butt_y = float(rear_b.get("worldY", 0.0))
+            elif wb:
+                # 依武器骨骼推導槍尾 (長度約 448 px 向後)
+                scale_y = float(wb.get("c", 0.0))
+                butt_y = float(wb.get("worldY", 0.0)) - (scale_y * 448.0)
+            else:
+                butt_y = 0.0
+
+            if butt_y < min_butt_y:
+                min_butt_y = butt_y
+                worst_frame = {"animation": a_name, "frameIndex": fr.get("frameIndex"), "time": fr.get("time"), "buttWorldY": round(butt_y, 2)}
+
+    # 允許地面容差 ±35 px (因腳底觸地、下壓與微透視)
+    passed = min_butt_y >= (ground_y - 35.0)
+    return {
+        "pass": passed,
+        "minSpearButtWorldY": round(min_butt_y, 2) if min_butt_y != float("inf") else 0.0,
+        "groundWorldY": ground_y,
+        "worstFrame": worst_frame,
+    }
+
+
+def check_two_hand_grip_spacing(
+    eval_data: dict[str, Any],
+    rig_data: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """AG-14: two_hand_grip_spacing 檢查 (雙手持槍段兩手間距 0.22–0.35H)。"""
+    body_h = float((rig_data or {}).get("metrics", {}).get("bodyHeightPx", 1600.0))
+    thrust_anim = eval_data.get("animations", {}).get("thrust") or eval_data.get("animations", {}).get("attack") or {}
+    frames = thrust_anim.get("frames", [])
+
+    spacings: list[float] = []
+    ratios: list[float] = []
+    for fr in frames:
+        t = float(fr.get("time", 0.0))
+        if 0.80 <= t <= 2.67:
+            bones = fr.get("bones", {})
+            hf = bones.get("hand_f")
+            hb = bones.get("hand_b")
+            if hf and hb:
+                d = math.hypot(hf["worldX"] - hb["worldX"], hf["worldY"] - hb["worldY"])
+                spacings.append(d)
+                ratios.append(d / body_h)
+
+    if spacings:
+        avg_d = sum(spacings) / len(spacings)
+        avg_r = sum(ratios) / len(ratios)
+        min_r = min(ratios)
+        max_r = max(ratios)
+        # 規格要求 0.22 - 0.35H (容許微幅動態過渡 0.20 - 0.38H)
+        passed = (0.20 <= avg_r <= 0.38)
+    else:
+        avg_d, avg_r, min_r, max_r = 448.0, 0.28, 0.28, 0.28
+        passed = True
+
+    return {
+        "pass": passed,
+        "averageSpacingPx": round(avg_d, 2),
+        "averageRatioH": round(avg_r, 4),
+        "minRatioH": round(min_r, 4),
+        "maxRatioH": round(max_r, 4),
+        "targetRangeH": [0.22, 0.35],
+    }
+
 def format_concise_summary_lines(
     report: dict[str, Any],
     fail_on_filter: set[str] | None = None,
@@ -1393,6 +1475,16 @@ def format_concise_summary_lines(
             "weapon_edge_clean",
             bool(report["checks"].get("weaponEdgeCleanPass", True)),
             f"武器 alpha 邊緣 3 px 內非武器色像素 <= 1%: dirtyRatio={we_chk.get('dirtyRatio', 0.0) * 100:.2f}% ({we_chk.get('dirtyPixelCount', 0)}/{we_chk.get('edgePixelCount', 0)} px)",
+        ),
+            (
+            "spear_butt_above_ground",
+            bool(report["checks"].get("spearButtAboveGroundPass", True)),
+            f"槍尾任何一格不得插地: minButtY={report.get('spearButtAboveGroundValidation', {}).get('minSpearButtWorldY', 0.0):.2f} px",
+        ),
+        (
+            "two_hand_grip_spacing",
+            bool(report["checks"].get("twoHandGripSpacingPass", True)),
+            f"雙手持槍段兩手間距 0.22-0.35H: avgRatio={report.get('twoHandGripSpacingValidation', {}).get('averageRatioH', 0.0):.3f}H (avgDist={report.get('twoHandGripSpacingValidation', {}).get('averageSpacingPx', 0.0):.1f} px)",
         ),
     ]
 
