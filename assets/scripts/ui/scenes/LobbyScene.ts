@@ -784,6 +784,8 @@ export class LobbyScene extends Component {
             performLegendaryMentoring: (generalId, childId, exclusiveSkillId) => services().session.performLegendaryMentoringFor(generalId, childId, exclusiveSkillId),
             showToast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2 }); },
             tacticName: (id) => tacticNames.get(id),
+            learnTactic: (childId, tacticId) => services().session.learnTactic(childId, tacticId),
+            tacticIds: () => Array.from(tacticNames.keys()),
         });
         this._nurtureFlow = flow;
 
@@ -824,6 +826,9 @@ export class LobbyScene extends Component {
             } },
             { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
             { buttonId: 'btnUsePill', handler: () => { void this._usePillOnNurtureChild(flow); } },
+            { buttonId: 'btnPrevTactic', handler: () => { flow.cycleTactic(-1); this._refreshNurtureFlow(); } },
+            { buttonId: 'btnNextTactic', handler: () => { flow.cycleTactic(1); this._refreshNurtureFlow(); } },
+            { buttonId: 'btnLearnTactic', handler: act(() => flow.learnSelectedTactic()) },
             { buttonId: 'btnAbandon', handler: act(() => flow.abandon()) },
             { buttonId: 'btnGraduate', handler: act(() => flow.graduate()) },
             { buttonId: 'btnKeepReport', handler: act(() => flow.keepReport()) },
