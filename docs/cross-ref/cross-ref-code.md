@@ -17,6 +17,8 @@
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
+| NurtureSystem.ts | doc_spec_0026, doc_spec_0027 | F/概: `inspiredTacticIds()` 取得本場教官靈感觸發戰法清單（PROG-2-1134 畢業區戰法來源）|
+| TacticLearning.ts | doc_spec_0026, doc_spec_0038 | F/概: 培育戰法學習判定（`hasMatchingGreenFactor`、`learnTacticInto`、`tacticLearnThreshold`），綠因子半價（PROG-2-1132）|
 | FormulaSystem.ts | doc_data_0001, doc_spec_0012 | F: calculateDamage, getCounterMultiplier, calculateHeal, calculateGeneralAttack, getCritChance, getDodgeChance, rollCrit, rollDodge; D: DamageContext, GeneralCombatParams; C: COUNTER_MULTIPLIER, GENERAL_BASE_CRIT_CHANCE, GENERAL_MAX_CRIT_CHANCE, GENERAL_CRIT_DAMAGE_MULTIPLIER, GENERAL_BASE_DODGE_CHANCE, GENERAL_MAX_DODGE_CHANCE |
 | BattleSystem.ts | doc_spec_0040, doc_data_0001 | D: TurnSnapshot, TurnPhase; C: INITIAL_DP, DP_PER_TURN, GRID_LANES, GRID_DEPTH |
 | BuffSystem.ts | doc_spec_0010 | D: BuffEntry, StatusEffect; 概: 狀態效果管理 |
@@ -75,6 +77,7 @@
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
+| GameSession.ts | doc_spec_0026, doc_spec_0027, doc_spec_0028 | 概: `learnTactic()` 擋 `NOT_GRADUATING`（未完成培育）與 `NOT_INSPIRED`（未觸發靈感）；入學需至少 1 位教官（PROG-2-1134）|
 | GameManager.ts | doc_spec_0045 | D: GameMode enum; 概: 遊戲模式切換 |
 | ServiceLoader.ts | doc_tech_0015 | 概: DI 容器（9+ 服務註冊） |
 | UIManager.ts | doc_ui_0027, doc_ui_0001 | 概: 六層 UI 生命週期管理 |
@@ -129,6 +132,7 @@
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
+| AwakeningReveal.ts | doc_spec_0009 | F/概: `formatAwakeningReveal()` 戰後覺醒在結算窗揭示「🔓 鎖頭碎裂！【覺醒】X」（PROG-2-1133）|
 | BattleScene.ts | doc_spec_0040, doc_spec_0161, doc_art_0003, doc_spec_0038, doc_spec_0030 | D: EncounterConfig; 概: 戰鬥場景進入點；正式讀取 `tacticSlots[] / ultimateSlots[]`，載入 battle skill metadata，並把戰法摘要 / 奧義列表推入 HUD |
 | BattleSceneLoader.ts | doc_spec_0040, doc_spec_0038, doc_spec_0030 | D: EncounterConfig, BattleSkillMetadata; 概: 由 `tactic-library.json` / `ultimate-definitions.json` 建立戰法摘要與奧義執行資料 |
 | TurnFlowManager.ts | doc_spec_0040, doc_spec_0038 | 概: 戰中行為流程；`onTactics()` 直接使用正式戰法摘要，不再顯示 placeholder toast |
@@ -168,6 +172,8 @@
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
+| NurtureFlowController.ts | doc_spec_0026, doc_spec_0027 | 概: 培育流程控制；畢業區戰法列（靈感清單＋TP 兌換，PROG-2-1132／1134）|
+| BondingSetupController.ts | doc_spec_0028, doc_spec_0006, doc_spec_0009 | 概: 結緣配置面板三欄重排（PROG-2-1130）、父母大頭照（PROG-2-1131）、名士批語 3 列 SageRow0~2（PROG-2-1131）|
 | UIPreviewBuilder.ts | doc_ui_0049, doc_index_0011 §8 | 概: 所有 UI 面板的基類（Unity 對照：Prefab Variant Builder + EditorWindow）；`buildScreen()` 末尾呼叫 `_realignAllWidgets()` + 清空 bind 佔位符 + `onReady(binder)`；子類覆寫 `onReady(binder)` 取代舊 `onBuildComplete()` |
 | UIContentBinder.ts | doc_ui_0049, doc_index_0008 §8.3 | 概: Content Contract 資料注入與 schema 驗證；`validate()` 支援 type / enum / range / pattern 四層進階驗證，以 warnings 回報不阻斷 runtime（Unity 對照：ViewModel 資料注入 + 欄位驗證器）|
 | UISpecTypes.ts | doc_ui_0049 | D: WidgetDef(hCenter/vCenter), UILayoutNodeSpec, UINodeType(scroll-view 新增), UIWidgetFragmentSpec, UITemplateParamDef, UITemplateComposeItem; F: resolveSize |
