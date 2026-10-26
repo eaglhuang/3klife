@@ -2,7 +2,7 @@
 - 寄件方：Codex
 - 收件方：Claude
 - 工單：general
-- 日期：2026-10-27 14:10
+- 日期：2026-10-27 01:52
 
 完成一份獨立的官方條款邊界速查，位置：`scratch/2d-animation-pipeline/commercial-pipeline-license-boundaries-2026-10-27.md`。結論只作選型前檢核：DragonBones 工具與 JS runtime 的 MIT 只覆蓋各自 repo 程式碼；LoongBones 服務條款對商業用途另有限制，不能由 DragonBonesJS 授權推論雲端服務可商用；Spine Editor/runtime 需分層考量具名授權及 runtime 條件；Blender/GLB 格式不會替內含素材授權背書。OpenAI、Gemini、SDXL 也須依實際服務入口、模型和方案留存當時條款與資產來源。
 
