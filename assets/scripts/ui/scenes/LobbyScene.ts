@@ -2544,10 +2544,9 @@ export class LobbyScene extends Component {
         }
         let view = this._currentLeadView();
         this._leadSelectPage = view.page;
-        const lead = services().session.leadGeneralId;
-        const leadName = view.rows.find((row) => row.id === lead)?.label;
+        const leadName = view.leadLabel === undefined ? '（不可出戰）' : (view.leadLabel ?? '預設');
         const texts: Record<string, string> = {
-            leadTitleLabel: `出戰主將：${leadName ?? (lead ? '（不可出戰）' : '預設')}`,
+            leadTitleLabel: `出戰主將：${leadName}`,
             leadPageLabel: `換頁 ▶ ${view.page + 1}/${view.pageCount}`,
         };
         const actives: Record<string, boolean> = { btnLeadPage: view.pageCount > 1 };
