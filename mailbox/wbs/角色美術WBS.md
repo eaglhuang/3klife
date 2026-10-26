@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 04:30 AG-23 小修完成：腕部往肘延伸改讀 JSON hiddenExtensionH×H（0.03H 動態計算）；JSON layeredSlots 補入 scopeMarginPx: 12 與 gripTolerancePx: 12；前後手判斷嚴格化為 endswith("_f")；單元測試 49/49 OK、零硬編碼 2/2 OK（b37bc3955）。
 - 2026-10-27 04:25 Claude：AG-23 單槽範圍檢查驗收通過（16/16，手半徑讀 JSON、肩甲圈算出），請改讀 hiddenExtensionH／邊距常數；R263 告知 Codex v3.5 不改 JSON、torso/pauldron 候選先跑 AG-23。
 - 2026-10-27 04:05 AG-23 完成：check_layered_parts 實作單槽範圍檢查（scope_capsule_bounds）；支援 torso/upperarm/forearm/thigh/shin/head/hand/foot 膠囊與 hand 腕部延伸通道，pauldron 採 shoulderOverlapZone 圓外擴 12px 暫定規則；超出比例 >1% 判定 FAIL 並輸出 outside_<slot>.png；特殊部件（weapon/cape/skirt/hair_tail）標記 SKIPPED；報告完整明列各項檢查；平移不變性與零硬編碼驗證通過；新增 3 項專屬情境測試，全套 49 項單元測試 100% 通過（5b3ba5d5a）。
 - 2026-10-27 04:00 R262：更正 torso guide 肩部硬清除方向相反——分槽 torso 須畫滿到肩關節（隱藏延伸），併肩甲以超出 torso 膠囊+12px 判定；pauldron 錨點 ≤20px 判通過（規格 v3.5）；R230 4.2 格式 PASS、atlas 32MiB/ASTC 估算收下，手機階段再測。
