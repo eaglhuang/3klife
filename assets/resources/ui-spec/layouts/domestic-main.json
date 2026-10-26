@@ -447,7 +447,7 @@
                   "top": 40,
                   "left": 0
                 },
-                "width": 238,
+                "width": 188,
                 "height": 72,
                 "skinSlot": "domestic.button.accent",
                 "children": [
@@ -472,9 +472,9 @@
                 "id": "btnOpenRecruit",
                 "widget": {
                   "top": 40,
-                  "left": 262
+                  "left": 209
                 },
-                "width": 238,
+                "width": 188,
                 "height": 72,
                 "skinSlot": "domestic.button.bg",
                 "children": [
@@ -499,9 +499,9 @@
                 "id": "btnFastForward",
                 "widget": {
                   "top": 40,
-                  "left": 524
+                  "left": 418
                 },
-                "width": 238,
+                "width": 188,
                 "height": 72,
                 "skinSlot": "domestic.button.bg",
                 "children": [
@@ -515,7 +515,7 @@
                       "right": 0
                     },
                     "height": 40,
-                    "text": "快進至下個事件 ▶▶",
+                    "text": "快進事件 ▶▶",
                     "styleSlot": "domestic.label.button"
                   }
                 ]
@@ -526,9 +526,9 @@
                 "id": "btnOpenWarehouse",
                 "widget": {
                   "top": 40,
-                  "left": 786
+                  "left": 627
                 },
-                "width": 238,
+                "width": 188,
                 "height": 72,
                 "skinSlot": "domestic.button.bg",
                 "children": [
@@ -543,6 +543,33 @@
                     },
                     "height": 40,
                     "text": "主城倉庫 ▶",
+                    "styleSlot": "domestic.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnOpenRedFace",
+                "id": "btnOpenRedFace",
+                "widget": {
+                  "top": 40,
+                  "left": 836
+                },
+                "width": 188,
+                "height": 72,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenRedFaceLabel",
+                    "id": "btnOpenRedFaceLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "紅顏 ▶",
                     "styleSlot": "domestic.label.button"
                   }
                 ]

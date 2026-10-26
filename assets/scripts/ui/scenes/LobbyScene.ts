@@ -1120,6 +1120,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnOpenRecruit', handler: () => { this._closeDomestic(); this._openRecruitHall(); } },
             { buttonId: 'btnOpenRival', handler: () => { this._closeDomestic(); this._openRivalDiplomacy(); } },
             { buttonId: 'btnOpenWarehouse', handler: () => { this._closeDomestic(); this._openWarehouse(); } },
+            { buttonId: 'btnOpenRedFace', handler: () => { this._closeDomestic(); this.openRedFaceShowcase(); } },
         ]);
         this._domesticHost.node.active = false;
     }
@@ -1321,7 +1322,7 @@ export class LobbyScene extends Component {
         applyFlowView(binder, this._mercPanel.getFlowView());
     }
 
-    /** 紅顏展示（OPEN-10）：隱藏掛載，入口位置待定，對外提供 openRedFaceShowcase()。 */
+    /** 紅顏展示（OPEN-10）：隱藏掛載，入口在內政導覽列「紅顏」（PROG-2-1124）。 */
     private async _mountRedFaceShowcase(): Promise<void> {
         const gachaConfig = await this._loadDataJson<GachaPoolConfigLike[]>('data/gacha-config');
         const supportCards = await this._loadDataJson<RedFaceCardLike[]>('data/support-cards');
