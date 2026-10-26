@@ -359,5 +359,25 @@ export function createBondingSetupSuite(): TestSuite {
         }
     });
 
+    suite.test('名士批語拆成三列，各列帶名士 id 給小頭像用（PROG-2-1131）', () => {
+        const roster = new InMemoryRosterStore([general('liu', '男'), general('sun', '女')] as unknown as GeneralConfig[]);
+        const service = new BreedingService(roster, new BloodlineGraph(), { random: seq(0.5) });
+        const flow = new BondingSetupController({
+            roster, breeding: service, prepare: async () => service.syncGraphFromRoster(), persist: async () => undefined,
+            sageRemarks: () => [{ sageId: 'zhuge-liang', color: 'blue' }, { sageId: 'hua-tuo', color: 'green' }] as never,
+        });
+        const view = flow.getView();
+        assert.equals('zhuge-liang,hua-tuo', view.sageIds.join(','));
+        assert.isTrue(view.actives.sageRow0 && view.actives.sageRow1);
+        assert.equals(false, view.actives.sageRow2);
+        assert.equals('', view.texts.sageRemarkLines);
+        const layout = readJson<{ root: { id?: string; children?: unknown[] } }>('assets/resources/ui-spec/layouts/bonding-setup-main.json');
+        const ids = new Set<string>();
+        collectLayoutIds(layout.root, ids);
+        for (const id of ['sageLine0', 'sageIcon0', 'sageIcon0Mask', 'sageRow2', 'fatherAvatar', 'fatherAvatarMask', 'motherAvatar', 'motherAvatarMask']) {
+            assert.isTrue(ids.has(id), `layout 缺 ${id}`);
+        }
+    });
+
     return suite;
 }

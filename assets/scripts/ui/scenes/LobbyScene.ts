@@ -1965,6 +1965,25 @@ export class LobbyScene extends Component {
         applyFlowView(binder, view);
         this._syncTreePanel(this._fatherTree, view.fatherId);
         this._syncTreePanel(this._motherTree, view.motherId);
+        // 父母大頭照、名士批語小頭像（PROG-2-1131）
+        const avatars: Array<[mask: string, sprite: string, id: string | null]> = [
+            ['fatherAvatarMask', 'fatherAvatar', view.fatherId],
+            ['motherAvatarMask', 'motherAvatar', view.motherId],
+            ...view.sageIds.map((id, i): [string, string, string] => [`sageIcon${i}Mask`, `sageIcon${i}`, id]),
+        ];
+        const seq = (this._avatarSeq.get('bonding') ?? 0) + 1;
+        this._avatarSeq.set('bonding', seq);
+        for (const [maskId, spriteId, id] of avatars) {
+            const holder = binder.getNode(maskId);
+            const sprite = binder.getSprite(spriteId);
+            if (!holder || !sprite || !id) continue;
+            if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+            void loadGeneralAvatar(id).then((frame) => {
+                if (!frame || seq !== this._avatarSeq.get('bonding') || !sprite.isValid) return;
+                sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+                sprite.spriteFrame = frame;
+            });
+        }
     }
 
     /** 在版面節點上掛 BloodlineTreePanel，並把 Gen1~3 容器接上；找不到節點時回傳 null（不擋畫面） */
