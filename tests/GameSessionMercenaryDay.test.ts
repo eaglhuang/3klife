@@ -128,5 +128,19 @@ export function createGameSessionMercenaryDaySuite(): TestSuite {
         assert.equals(start + 1, session.mercenaries.mercenaries.length);
     });
 
+    suite.test('暫定一季＝傭兵一日：推進季度會推進傭兵日，期滿未結義者離隊並列在季度結果（PROG-2-1154）', async () => {
+        const session = new GameSession(1);
+        const template = { id: 'gen-9', str: 50, int: 40, lea: 30, luk: 20, rarityTier: 'rare' } as GeneralConfig;
+        await session.hireTrialMercenary('merc-9', template);
+        const first = await session.advanceSeason();
+        assert.equals(1, session.mercenaryDay);
+        assert.equals(undefined, first.mercenaryDepartures);
+        let departed: string[] = [];
+        for (let i = 0; i < 8 && departed.length === 0; i++) {
+            departed = (await session.advanceSeason()).mercenaryDepartures ?? [];
+        }
+        assert.equals('merc-9', departed[0]);
+    });
+
     return suite;
 }
