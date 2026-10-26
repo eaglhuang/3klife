@@ -34,6 +34,68 @@ def load_canonical_spec() -> dict[str, Any]:
     return json.loads(SPEC_JSON_PATH.read_text(encoding="utf-8"))
 
 
+def build_arm_torso_capsule_mask(spec: dict[str, Any], w: int, h: int) -> np.ndarray:
+    """AG-18: 建立手臂與軀幹膠囊的二值遮罩 (膠囊內為 True，腰部收窄以保留合法負空間通道)"""
+    mask_im = Image.new("L", (w, h), 0)
+    draw = ImageDraw.Draw(mask_im)
+
+    joints = spec.get("joints", {})
+
+    def get_j(name: str, def_xy: tuple[float, float]) -> tuple[float, float]:
+        j = joints.get(name, {})
+        return float(j.get("x", def_xy[0])), float(j.get("y", def_xy[1]))
+
+    neck = get_j("neck", (1030, 880))
+    chest = get_j("chest", (1024, 980))
+    waist = get_j("waist", (1024, 1130))
+    pelvis = get_j("pelvis", (1024, 1450))
+    shoulder_f = get_j("shoulder_f", (1120, 925))
+    elbow_f = get_j("elbow_f", (1230, 1080))
+    wrist_f = get_j("wrist_f", (1330, 1200))
+    shoulder_b = get_j("shoulder_b", (930, 925))
+    elbow_b = get_j("elbow_b", (820, 1080))
+    wrist_b = get_j("wrist_b", (720, 1200))
+
+    # 軀幹多邊形 (依 spec segments 包絡線：頸 130, 腰 100, 骨盆 120)
+    torso_poly = [
+        (neck[0] - 130, neck[1]),
+        (neck[0] + 130, neck[1]),
+        (waist[0] + 100, waist[1]),
+        (pelvis[0] + 120, pelvis[1]),
+        (pelvis[0] - 120, pelvis[1]),
+        (waist[0] - 100, waist[1]),
+    ]
+    draw.polygon(torso_poly, fill=255)
+
+    def render_cap(p0: tuple[float, float], p1: tuple[float, float], rad: float):
+        x0, y0 = p0
+        x1, y1 = p1
+        dx, dy = x1 - x0, y1 - y0
+        dist = math.hypot(dx, dy)
+        if dist < 1e-4:
+            draw.ellipse([x0 - rad, y0 - rad, x0 + rad, y0 + rad], fill=255)
+            return
+        ux = -dy / dist * rad
+        uy = dx / dist * rad
+        poly = [
+            (x0 + ux, y0 + uy),
+            (x1 + ux, y1 + uy),
+            (x1 - ux, y1 - uy),
+            (x0 - ux, y0 - uy),
+        ]
+        draw.polygon(poly, fill=255)
+        draw.ellipse([x0 - rad, y0 - rad, x0 + rad, y0 + rad], fill=255)
+        draw.ellipse([x1 - rad, y1 - rad, x1 + rad, y1 + rad], fill=255)
+
+    # 手臂膠囊包絡線 (依 spec halfWidth 上限: upperarm=65, forearm=55)
+    render_cap(shoulder_f, elbow_f, 65.0)
+    render_cap(elbow_f, wrist_f, 55.0)
+    render_cap(shoulder_b, elbow_b, 65.0)
+    render_cap(elbow_b, wrist_b, 55.0)
+
+    return np.array(mask_im) > 128
+
+
 def find_fist_holes(
     hand_crop: np.ndarray,
     origin_xy: tuple[int, int],
@@ -118,15 +180,26 @@ def run_rigpose_inspection(
     alpha = img_arr[..., 3]
     live_mask = alpha > 16
 
-    # AG-17: 髮尾在獨立圖層，不計入全身底圖 gap 違規。建立扣除髮尾的 gap 專用像素陣列
+    # AG-17 / AG-18: 髮尾在獨立圖層，但為防實體黏連被掩蓋，只扣除同時符合：
+    # 1. 在 hairtail.png 的 alpha 範圍內 (alpha > 16)
+    # 2. 在 hair_root 下方 (y >= target_hair_y)
+    # 3. 在手臂與軀幹膠囊以外 (~arm_torso_capsule_mask)
+    target_hair_y = float(spec.get("joints", {}).get("hair_root", {}).get("y", 420.0))
+    arm_torso_capsule_mask = build_arm_torso_capsule_mask(spec, w, h)
+
     gap_arr = img_arr.copy()
+    hair_excluded_any = False
     if hairtail_path and hairtail_path.exists():
         try:
             hair_pil_raw = Image.open(hairtail_path).convert("RGBA")
             if hair_pil_raw.size == (w, h):
                 h_arr = np.array(hair_pil_raw)
                 hair_px = h_arr[..., 3] > 16
-                gap_arr[hair_px, 3] = 0
+                y_coords = np.arange(h)[:, None]
+                hair_excludable = hair_px & (y_coords >= target_hair_y) & (~arm_torso_capsule_mask)
+                if hair_excludable.any():
+                    gap_arr[hair_excludable, 3] = 0
+                    hair_excluded_any = True
         except Exception:
             pass
 
@@ -223,7 +296,7 @@ def run_rigpose_inspection(
             "scaleDeviationPercent": round(scale_dev_pct, 2),
             "translateOffsetPx": [0.0, round(dy, 1)],
             "detail": (
-                f"可透過整張等比縮放 {scale_factor:.4f} ({scale_dev_pct:+.2f}%) 與垂直平移 dy={dy:+.1f}px 修正地面線與身高"
+                f"以畫布原點 (0, 0) 為縮放中心：可透過整張等比縮放 {scale_factor:.4f} ({scale_dev_pct:+.2f}%) 與垂直平移 dy={dy:+.1f}px 修正地面線與身高"
                 if scale_feasible
                 else f"身高偏差 {scale_dev_pct:+.2f}% 超出 ±8% 容許範圍，無法僅靠整張等比縮放修正"
             ),
@@ -270,7 +343,7 @@ def run_rigpose_inspection(
         dx = target_center_x - (feet_cx * s_fac)
         scale_correction["translateOffsetPx"][0] = round(dx, 1)
         scale_correction["detail"] = (
-            f"可透過整張等比縮放 {s_fac:.4f} ({scale_correction['scaleDeviationPercent']:+.2f}%) "
+            f"以畫布原點 (0, 0) 為縮放中心：可透過整張等比縮放 {s_fac:.4f} ({scale_correction['scaleDeviationPercent']:+.2f}%) "
             f"與平移 dx={dx:+.1f}px, dy={scale_correction['translateOffsetPx'][1]:+.1f}px 修正地面線、身高與站立中心"
         )
     draw.line([(int(target_center_x), 0), (int(target_center_x), h)], fill=(220, 230, 245, 180), width=2)
@@ -351,7 +424,20 @@ def run_rigpose_inspection(
     min_gap_legs = int(min_gap_cfg.get("leg_to_leg", 16))
     min_gap_hand_any = int(min_gap_cfg.get("hand_to_any", 16))
 
-    # 7.1 手臂與軀幹 (使用 gap_arr，已排除 hairtail 獨立圖層)
+    # 7.1 手臂與軀幹 (使用 gap_arr，已按 AG-18 限制排除 hairtail)
+    # 計算未扣除髮尾前之原始 gap
+    raw_arm_box = img_arr[1020:1120, 1100:1210, 3] > 16
+    raw_col_has_pixel = raw_arm_box.any(axis=0)
+    raw_zero_run = 0
+    cur_rz = 0
+    for v in raw_col_has_pixel:
+        if not v:
+            cur_rz += 1
+            raw_zero_run = max(raw_zero_run, cur_rz)
+        else:
+            cur_rz = 0
+    raw_arm_gap_pass = (raw_zero_run >= min_gap_arm_torso)
+
     gap_arm_torso_box = gap_arr[1020:1120, 1100:1210, 3] > 16
     col_has_pixel = gap_arm_torso_box.any(axis=0)
     zero_runs = 0
@@ -365,10 +451,19 @@ def run_rigpose_inspection(
 
     arm_gap_pass = (max_zero_run >= min_gap_arm_torso)
     arm_gap_tier = "PASS" if arm_gap_pass else "FAIL"
+
+    # AG-18: 若扣除後 gap 才從 FAIL 變成 PASS，標示 gapPassedOnlyAfterHairExclusion 供人工複查
+    gap_passed_only_after_hair = bool(hair_excluded_any and (not raw_arm_gap_pass) and arm_gap_pass)
+
+    detail_str = f"手臂與軀幹間隙 >={min_gap_arm_torso}px: detected_gap={max_zero_run}px"
+    if gap_passed_only_after_hair:
+        detail_str += " (注意: 扣除獨立髮尾後才轉為 PASS，請人工複查)"
+
     checks["min_gap_arm_torso"] = {
         "pass": arm_gap_pass,
         "tier": arm_gap_tier,
-        "detail": f"手臂與軀幹間隙 >={min_gap_arm_torso}px: detected_gap={max_zero_run}px",
+        "gapPassedOnlyAfterHairExclusion": gap_passed_only_after_hair,
+        "detail": detail_str,
     }
 
     # AG-17: 若 gap 為 0，產出手臂與軀幹重疊區遮罩 PNG 供局部補繪
@@ -545,6 +640,7 @@ def run_rigpose_inspection(
         "canSnap": (overall_tier in ["PASS", "SNAP"]),
         "scaleAndTranslateCorrection": scale_correction,
         "armTorsoOverlapMask": overlap_mask_path,
+        "gapPassedOnlyAfterHairExclusion": gap_passed_only_after_hair,
         "checks": checks,
         "overlayPath": str(overlay_path),
     }

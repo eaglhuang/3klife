@@ -22,33 +22,31 @@ class TestAG17Features(unittest.TestCase):
         shutil.rmtree(self.tmp_dir, ignore_errors=True)
 
     def test_hairtail_excluded_from_gap_check(self):
-        # 1. 建立一張底圖，在手臂與軀幹間隙區 (y: 1020..1120, x: 1100..1210) 塗滿實心像素
+        # 1. 建立一張底圖，在兩腿間隙區 (y: 1480..1620, x: 980..1060，在手臂與軀幹膠囊外) 塗滿實心像素模擬長髮垂落
         rig_arr = np.zeros((2048, 2048, 4), dtype=np.uint8)
         rig_arr[300:1900, 1000:1048] = [200, 200, 200, 255] # 中軸
-        rig_arr[1020:1120, 1100:1210] = [150, 100, 50, 255] # 模擬披在身側的長髮
+        rig_arr[1480:1620, 980:1060] = [150, 100, 50, 255] # 模擬長髮尾垂入腿間隙
 
         rig_p = Path(self.tmp_dir) / "rig_with_hair_overlap.png"
         Image.fromarray(rig_arr).save(rig_p)
 
-        # 若未傳入 hairtail_path，arm_torso gap 應為 0 (FAIL)
+        # 若未傳入 hairtail_path，legs gap 應為 0 (FAIL)
         report_no_hair, _ = check_rigpose.run_rigpose_inspection(rig_p, None, None, None, None, self.out_dir / "no_hair")
-        self.assertEqual(report_no_hair["checks"]["min_gap_arm_torso"]["tier"], "FAIL")
-        self.assertFalse(report_no_hair["checks"]["min_gap_arm_torso"]["pass"])
-        self.assertIsNotNone(report_no_hair.get("armTorsoOverlapMask"))
-        self.assertTrue(Path(report_no_hair["armTorsoOverlapMask"]).exists())
+        self.assertEqual(report_no_hair["checks"]["min_gap_legs"]["tier"], "FAIL")
+        self.assertFalse(report_no_hair["checks"]["min_gap_legs"]["pass"])
 
         # 2. 建立獨立 hairtail.png，將該覆蓋區域註記為獨立髮尾
         hair_arr = np.zeros((2048, 2048, 4), dtype=np.uint8)
-        hair_arr[1020:1120, 1100:1210] = [150, 100, 50, 255]
+        hair_arr[1480:1620, 980:1060] = [150, 100, 50, 255]
         # 髮尾根部放在 (960, 420)
         hair_arr[420:450, 950:970] = [150, 100, 50, 255]
         hair_p = Path(self.tmp_dir) / "hairtail.png"
         Image.fromarray(hair_arr).save(hair_p)
 
-        # 傳入 hairtail_path，髮尾像素被自 gap 檢查排除，arm_torso gap 應轉為 PASS
+        # 傳入 hairtail_path，髮尾像素被自 gap 檢查排除，legs gap 應轉為 PASS
         report_with_hair, _ = check_rigpose.run_rigpose_inspection(rig_p, None, hair_p, None, None, self.out_dir / "with_hair")
-        self.assertEqual(report_with_hair["checks"]["min_gap_arm_torso"]["tier"], "PASS")
-        self.assertTrue(report_with_hair["checks"]["min_gap_arm_torso"]["pass"])
+        self.assertEqual(report_with_hair["checks"]["min_gap_legs"]["tier"], "PASS")
+        self.assertTrue(report_with_hair["checks"]["min_gap_legs"]["pass"])
 
     def test_scale_and_translate_correction_calculation(self):
         # 測試地面線 1918、身高 1617 (如趙雲目前底圖) 的縮放評估
