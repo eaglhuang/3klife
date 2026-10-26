@@ -1,0 +1,121 @@
+{
+  "id": "lobby-city-hub-default",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "hub.panel.bg": {
+      "kind": "color-rect",
+      "color": "#14100E",
+      "alpha": 230,
+      "cornerRadius": 10,
+      "borderWidth": 2,
+      "borderColor": "#6E5634"
+    },
+    "hub.chip.bg": {
+      "kind": "color-rect",
+      "color": "#14100E",
+      "alpha": 220,
+      "cornerRadius": 28,
+      "borderWidth": 2,
+      "borderColor": "#6E5634"
+    },
+    "hub.cat.bg": {
+      "kind": "color-rect",
+      "color": "#5A1A16",
+      "alpha": 235,
+      "cornerRadius": 12,
+      "borderWidth": 2,
+      "borderColor": "#C9A35A"
+    },
+    "hub.sub.bg": {
+      "kind": "color-rect",
+      "color": "#3A2418",
+      "alpha": 240,
+      "cornerRadius": 10,
+      "borderWidth": 2,
+      "borderColor": "#C9A35A"
+    },
+    "hub.avatar": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_avatars/unknown_avatar_f",
+      "expectedWidth": 256,
+      "expectedHeight": 256
+    },
+    "hub.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 30,
+      "lineHeight": 36,
+      "color": "#F0D9A8",
+      "overflow": "SHRINK",
+      "isBold": true
+    },
+    "hub.label.sub": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 26,
+      "color": "#C9B48A",
+      "overflow": "SHRINK"
+    },
+    "hub.label.res": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 24,
+      "lineHeight": 30,
+      "color": "#F0D9A8",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "hub.label.city": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 36,
+      "lineHeight": 44,
+      "color": "#F0D9A8",
+      "overflow": "SHRINK",
+      "isBold": true
+    },
+    "hub.label.stat": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "#E8D6B0",
+      "overflow": "SHRINK"
+    },
+    "hub.label.small": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 24,
+      "color": "#B8A27A",
+      "overflow": "SHRINK"
+    },
+    "hub.label.cat": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 30,
+      "lineHeight": 36,
+      "color": "#FFECC8",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "hub.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 24,
+      "lineHeight": 30,
+      "color": "#FFECC8",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    }
+  }
+}
