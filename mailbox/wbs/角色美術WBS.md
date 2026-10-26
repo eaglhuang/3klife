@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-26 AG-01 修訂：Antigravity 改做自動切片＋獨立驗證器，Sparkle 做產生器；先只做 4.2。R219：Codex 跑 4.2 全面驗收（含 physics、效能、Android）以決定放棄 3.8。
 - 2026-10-26 R218：使用者選先維持 4.2，Codex 先測物理樣本與 v2-4.2 版，測完再切 3.8。
 - 2026-10-26 R217：4.2 Web 通過收件；v2 切回 3.8 待使用者；交 4.2 物理樣本與 v2-4.2 版；核可 R216 schema/validator。
 - 2026-10-26 17:50 AG-01 寄 Antigravity：產生器雙版本 3.8/4.2、網格分類、驗收器含 drawOrder 與臉部遮擋檢查；R216：C2 槍 reference-only、雙層 manifest。
