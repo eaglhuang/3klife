@@ -572,6 +572,11 @@
     "canvas": "與本檔 canvas 相同（2048²），每槽一張全畫布透明 PNG，原位不裁切",
     "hiddenExtensionH": 0.03,
     "rotationTestDeg": 30,
+    "jointOverrides": {
+      "weapon": {"rigid": true, "note": "與 hand_f 剛性連接，不做旋轉露縫，只檢握點"},
+      "pauldron_f": {"rotationTestDeg": 15},
+      "pauldron_b": {"rotationTestDeg": 15}
+    },
     "note": "21 槽＝bones 去掉 root、ik_*、weapon_grip_rear、*_mid、*_tip；槽名即骨名，動作庫可直接共用。每個關節兩側部件須畫出被遮擋的延伸，至少越過關節 hiddenExtensionH×H；關節 ±rotationTestDeg 旋轉不得露縫。cape／skirt／hair_tail 可為空槽。runtime 再裁成圖集並附 offset/pivot manifest。"
   },
   "standingCenter": 1024,
