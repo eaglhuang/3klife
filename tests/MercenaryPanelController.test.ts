@@ -180,5 +180,12 @@ export function createMercenaryPanelControllerSuite(): TestSuite {
         assert.equals('目前沒有可試用的武將', none.getFlowView().texts.mercNotice);
     });
 
+    suite.test('結義按鈕點數依稀有度（SSR 600、UR 1200），與實際扣點同源', () => {
+        const ur = new MercenaryPanelController(makeDeps({ mercenaries: () => [EXPIRED], bondPoints: () => 700, info: () => ({ originalOwnerName: '甲', generalName: '關羽', rarity: 'UR' }) }));
+        assert.equals('結義（1200 點）', ur.getFlowView().texts.btnMercBondLabel);
+        const ssr = new MercenaryPanelController(makeDeps({ mercenaries: () => [EXPIRED], bondPoints: () => 700, info: () => ({ originalOwnerName: '甲', generalName: '黃忠', rarity: 'SSR' }) }));
+        assert.equals('結義（600 點）', ssr.getFlowView().texts.btnMercBondLabel);
+    });
+
     return suite;
 }
