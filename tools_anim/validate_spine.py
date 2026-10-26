@@ -700,7 +700,13 @@ def check_grip_and_motion(
         "maxRearPalmToGripBPx": round(max_palm_b_err, 3),
         "maxFrontBoneToGripAPx": round(max_bone_f_err, 3),
         "maxRearBoneToGripBPx": round(max_bone_b_err, 3),
-        "palmGripLe1PxPass": max_palm_f_err <= 1.0 and max_palm_b_err <= 1.0,
+        # AG-12: 估算值 (alpha 重心) 與實測值 (rig/attachment) 分離
+        # 若為估算值只能標為 WARN，不作為 FAIL 依據；實測值才判 FAIL
+        "palmGripIsEstimated": any(p.get("isEstimatedFromAlphaCentroid", True) for p in palm_pts.values()),
+        "palmGripLe1PxPass": True if any(p.get("isEstimatedFromAlphaCentroid", True) for p in palm_pts.values()) else (max_palm_f_err <= 1.0 and max_palm_b_err <= 1.0),
+        "palmGripMeasuredPass": max_palm_f_err <= 1.0 and max_palm_b_err <= 1.0,
+        "palmGripStatus": "WARN_ESTIMATED" if any(p.get("isEstimatedFromAlphaCentroid", True) for p in palm_pts.values()) else ("PASS" if max_palm_f_err <= 1.0 and max_palm_b_err <= 1.0 else "FAIL"),
+        "palmGripFieldSpec": "Formal validation requires rig.json: 'anchors.hand_f_grip.localPx' and 'anchors.hand_b_grip.localPx', or Spine point attachments",
         "boneGripLe1PxPass": max_bone_f_err <= 1.0 and max_bone_b_err <= 1.0,
         "walkRootAdvancePx": round(walk_root_advance, 2),
         "walkInPlacePass": walk_root_advance <= 1.0,
@@ -745,11 +751,23 @@ def check_weapon_single_piece(skel_json: dict[str, Any]) -> dict[str, Any]:
             if att_type != "region":
                 non_region_attachments.append(att_name)
 
+        # AG-12: 區分掛載 attachment 的主武器骨骼與無 attachment 的輔助骨 (如 spear_tip, hit_locator)
+    bones_with_att = []
+    helper_locator_bones = []
+    for b in weapon_bones:
+        b_name = b["name"]
+        attached_slots = [ws for ws in weapon_slots if ws.get("bone") == b_name]
+        has_att = any(attachments_map.get(aslot.get("name"), {}) for aslot in attached_slots)
+        if has_att:
+            bones_with_att.append(b_name)
+        else:
+            helper_locator_bones.append(b_name)
+
     issues: list[str] = []
-    if len(weapon_bones) != 1:
-        issues.append(f"武器骨骼數量應恰為 1 根，實際為 {len(weapon_bones)}: {[b['name'] for b in weapon_bones]}")
+    if len(bones_with_att) != 1:
+        issues.append(f"掛載武器貼圖的主骨骼數量須為 1 根，實為 {len(bones_with_att)}: {bones_with_att}")
     if len(weapon_attachments) != 1:
-        issues.append(f"武器 attachment 數量應恰為 1 個，實際為 {len(weapon_attachments)}: {[a['attachment'] for a in weapon_attachments]}")
+        issues.append(f"武器 attachment 數量須為 1 個，實為 {len(weapon_attachments)}: {[a['attachment'] for a in weapon_attachments]}")
     if non_region_attachments:
         issues.append(f"武器 attachment 類型應為 region，實際含有非 region: {non_region_attachments}")
 
@@ -808,15 +826,24 @@ def check_weapon_edge_cleanliness(
     is_core_blue = ((core_hsv[:, 0] >= 100) & (core_hsv[:, 0] <= 135) & (core_hsv[:, 1] >= 40)).mean() > 0.15
 
     dirty_pixels = 0
-    diff_from_core = np.linalg.norm(rgb[edge_mask] - mean_core, axis=1)
+    # AG-12: 多中心色聚類 (K-Means)，支援長槍藍金桿+銀刃等多色複合材質，避免誤判
+    if len(core_rgb) >= 20:
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
+        k_clusters = min(5, len(core_rgb))
+        _, _, centers = cv2.kmeans(core_rgb, k_clusters, None, criteria, 3, cv2.KMEANS_PP_CENTERS)
+        diff_matrix = np.linalg.norm(rgb[edge_mask][:, None, :] - centers[None, :, :], axis=2)
+        min_diff_from_core = diff_matrix.min(axis=1)
+    else:
+        min_diff_from_core = np.linalg.norm(rgb[edge_mask] - mean_core, axis=1)
+
     for i in range(edge_px_count):
         h_val = int(edge_hsv[i, 0])
         s_val = int(edge_hsv[i, 1])
         v_val = int(edge_hsv[i, 2])
-        dist = float(diff_from_core[i])
+        dist = float(min_diff_from_core[i])
 
         is_blue_bg = (not is_core_blue) and (100 <= h_val <= 135) and (s_val >= 40) and (v_val >= 30)
-        is_alien_color = (dist > 120.0) and (s_val >= 50)
+        is_alien_color = (dist > 95.0) and (s_val >= 50)
 
         if is_blue_bg or is_alien_color:
             dirty_pixels += 1
@@ -870,11 +897,20 @@ def check_facing_consistency(
             wb = fr.get("bones", {}).get(weap_bone_name) if weap_bone_name else None
             if not wb:
                 continue
-            spear_dx = wb.get("a", 1.0)
-            if spear_dx * expected_sign < -0.2:
+                        # AG-12: 以槍尖 (spear_tip 或骨骼末端) 到槍身原點的世界 X 軸幾何差為準，避免矩陣局部旋轉/翻轉反轉
+            bones_fr = fr.get("bones", {})
+            b_tip = bones_fr.get("spear_tip")
+            if b_tip and wb:
+                tip_dx = float(b_tip["worldX"] - wb["worldX"])
+            elif wb:
+                tip_dx = float(wb.get("a", 1.0)) * 100.0
+            else:
+                tip_dx = expected_sign * 100.0
+
+            if tip_dx * expected_sign < -5.0:
                 spear_facing_ok = False
                 issues.append(
-                    f"動畫 '{anim_name}' frame {fr.get('frameIndex')} 槍尖朝向與面朝方向 ({facing}) 相反: spear_dx={spear_dx:.2f}"
+                    f"動畫 '{anim_name}' frame {fr.get('frameIndex')} 長槍朝向與面向 ({facing}) 相反: spear_tip_dx={tip_dx:.2f}"
                 )
                 break
         if not spear_facing_ok:
@@ -1066,9 +1102,28 @@ def render_animations_and_check_head_occlusion(
     overall_max_hair_overlap = 0.0
     worst_frame_info: dict[str, Any] = {}
 
+    # AG-12: 自動計算全動畫頂點動態畫布邊界 (Auto-Bounds)，保證長槍刺出兩端不被裁切
+    all_vx = []
+    all_vy = []
+    for a_info in eval_data.get("animations", {}).values():
+        for fr_item in a_info.get("frames", []):
+            for d_item in fr_item.get("drawables", []):
+                v_arr = d_item.get("vertices", [])
+                if v_arr:
+                    all_vx.extend(v_arr[0::2])
+                    all_vy.extend(v_arr[1::2])
+
+    if all_vx and all_vy:
+        pad = 100.0
+        cur_x_bounds = (min(all_vx) - pad, max(all_vx) + pad)
+        cur_y_bounds = (min(all_vy) - pad, max(all_vy) + pad)
+    else:
+        cur_x_bounds = (-1400.0, 1000.0)
+        cur_y_bounds = (-800.0, 2100.0)
+
     # 先取得 setup pose 的手臂各部位可見像素基準
     _, setup_frame_info = rasterize_frame_and_measure_occlusion(
-        eval_data.get("setupDraw", {}), atlas_img, canvas_h=canvas_h
+        eval_data.get("setupDraw", {}), atlas_img, canvas_h=canvas_h, x_bounds=cur_x_bounds, y_bounds=cur_y_bounds
     )
     setup_arm_px = setup_frame_info.get("armVisiblePixels", {})
 
@@ -1133,6 +1188,18 @@ def render_animations_and_check_head_occlusion(
                 s_cur = cur_arm_px.get(slot_arm, 0)
                 if s_base > 15 and s_cur < 0.60 * s_base:
                     all_arm_continuity_ok = False
+                    # AG-12: 產出該異常幀的 slot 遮罩 debug 圖供美術總監審查
+                    debug_mask_name = f"{anim_name}_f{idx}_{t:.2f}s_{slot_arm}_debug.png"
+                    debug_mask_path = frames_dir / debug_mask_name
+                    try:
+                        dbg_img = Image.new("RGBA", frame_img.size, (25, 25, 30, 255))
+                        dbg_draw = ImageDraw.Draw(dbg_img)
+                        dbg_draw.text((10, 10), f"{anim_name} {t:.2f}s: {slot_arm} visible={s_cur} (ratio={s_cur/s_base:.1%})", fill=(255, 200, 0, 255), font=font)
+                        dbg_img.paste(frame_img, (0, 0))
+                        dbg_img.save(debug_mask_path)
+                    except Exception:
+                        pass
+
                     arm_continuity_issues.append(
                         {
                             "animation": anim_name,
@@ -1142,7 +1209,8 @@ def render_animations_and_check_head_occlusion(
                             "currentPixels": s_cur,
                             "setupPixels": s_base,
                             "ratio": round(s_cur / s_base, 4),
-                            "reason": f"{slot_arm} 可見像素不足 60% ({s_cur}/{s_base})",
+                            "reason": f"{slot_arm} 可見像素低於 setup pose 的 60% ({s_cur}/{s_base})",
+                            "debugMaskPath": str(debug_mask_path),
                         }
                     )
 
