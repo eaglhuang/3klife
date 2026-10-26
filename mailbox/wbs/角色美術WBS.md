@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-26 R217：4.2 Web 通過收件；v2 切回 3.8 待使用者；交 4.2 物理樣本與 v2-4.2 版；核可 R216 schema/validator。
 - 2026-10-26 17:50 AG-01 寄 Antigravity：產生器雙版本 3.8/4.2、網格分類、驗收器含 drawOrder 與臉部遮擋檢查；R216：C2 槍 reference-only、雙層 manifest。
 - 2026-10-26 17:40 R215：Sparkle v2 收到；離線檢查發現 drawOrder offsets 重疊致 runtime 拋錯、後臂遮臉、mesh 吃到鄰近雜點；暫修版交 Codex Cocos 實測。
 - 2026-10-26 17:20 新增 Antigravity 信箱 to-antigravity/ 與入隊說明；預定負責動畫產生器與自動切片工具。
