@@ -31,7 +31,7 @@ export function createLobbyCityHubControllerSuite(): TestSuite {
 
     suite.test('五類收納涵蓋大廳所有功能入口，不重複', () => {
         const actions = LOBBY_CATEGORIES.flatMap(c => c.items.map(i => i.id));
-        assert.equals(13, actions.length);
+        assert.equals(14, actions.length);
         assert.equals(actions.length, new Set(actions).size);
         assert.equals(4, LOBBY_SUB_SLOTS);
     });
@@ -41,6 +41,7 @@ export function createLobbyCityHubControllerSuite(): TestSuite {
         assert.equals(null, toggleCategory('sortie', 'sortie'));
         assert.equals('shop', toggleCategory('sortie', 'shop'));
         assert.equals('battle', actionAt('sortie', 0));
+        assert.equals('rival', actionAt('sortie', 1), '出征分類可直接進外交・征伐（AI 勢力互動）');
         assert.equals(null, actionAt('sortie', 3));
         assert.equals(null, actionAt(null, 0));
     });
