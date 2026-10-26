@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-26 17:50 AG-01 寄 Antigravity：產生器雙版本 3.8/4.2、網格分類、驗收器含 drawOrder 與臉部遮擋檢查；R216：C2 槍 reference-only、雙層 manifest。
 - 2026-10-26 17:40 R215：Sparkle v2 收到；離線檢查發現 drawOrder offsets 重疊致 runtime 拋錯、後臂遮臉、mesh 吃到鄰近雜點；暫修版交 Codex Cocos 實測。
 - 2026-10-26 17:20 新增 Antigravity 信箱 to-antigravity/ 與入隊說明；預定負責動畫產生器與自動切片工具。
 - 2026-10-26 17:10 R214：更正——Cocos 3.8.8 專案設定可選 Spine 4.2；請 Codex 在隔離專案切 4.2 重測冷載入、連播、Web/Android 支援。
