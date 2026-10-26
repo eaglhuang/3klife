@@ -292,7 +292,13 @@ def run_rigpose_inspection(
         "detail": "; ".join(grip_details),
     }
 
-    # 7. 手臂與軀幹、兩腿透明間隙 (minGapPx)
+    # 7. 透明間隙 (minGapPx，無 SNAP 級：>= 規格值 PASS，否則 FAIL，門檻讀取自 spec)
+    min_gap_cfg = spec.get("minGapPx", {})
+    min_gap_arm_torso = int(min_gap_cfg.get("arm_to_torso", 20))
+    min_gap_legs = int(min_gap_cfg.get("leg_to_leg", 16))
+    min_gap_hand_any = int(min_gap_cfg.get("hand_to_any", 16))
+
+    # 7.1 手臂與軀幹
     gap_arm_torso_box = img_arr[1020:1120, 1100:1210, 3] > 16
     col_has_pixel = gap_arm_torso_box.any(axis=0)
     zero_runs = 0
@@ -304,20 +310,15 @@ def run_rigpose_inspection(
         else:
             zero_runs = 0
 
-    if max_zero_run >= 12:
-        arm_gap_tier = "PASS"
-    elif max_zero_run >= 6:
-        arm_gap_tier = "SNAP"
-    else:
-        arm_gap_tier = "FAIL"
-
+    arm_gap_pass = (max_zero_run >= min_gap_arm_torso)
+    arm_gap_tier = "PASS" if arm_gap_pass else "FAIL"
     checks["min_gap_arm_torso"] = {
-        "pass": (arm_gap_tier == "PASS"),
+        "pass": arm_gap_pass,
         "tier": arm_gap_tier,
-        "detail": f"手臂與軀幹間隙 >=20px: detected_gap={max_zero_run}px",
+        "detail": f"手臂與軀幹間隙 >={min_gap_arm_torso}px: detected_gap={max_zero_run}px",
     }
 
-    # 兩腿 (y 在 1480-1620 檢查 x=980-1060 透明列)
+    # 7.2 兩腿 (y 在 1480-1620 檢查 x=980-1060 透明列)
     gap_legs_box = img_arr[1480:1620, 980:1060, 3] > 16
     leg_col_has_pixel = gap_legs_box.any(axis=0)
     leg_zero_run = 0
@@ -329,17 +330,43 @@ def run_rigpose_inspection(
         else:
             leg_zero_run = 0
 
-    if max_leg_zero >= 10:
-        leg_gap_tier = "PASS"
-    elif max_leg_zero >= 5:
-        leg_gap_tier = "SNAP"
-    else:
-        leg_gap_tier = "FAIL"
-
+    leg_gap_pass = (max_leg_zero >= min_gap_legs)
+    leg_gap_tier = "PASS" if leg_gap_pass else "FAIL"
     checks["min_gap_legs"] = {
-        "pass": (leg_gap_tier == "PASS"),
+        "pass": leg_gap_pass,
         "tier": leg_gap_tier,
-        "detail": f"兩腿間隙寬度 >=16px: detected_gap={max_leg_zero}px",
+        "detail": f"兩腿間隙寬度 >={min_gap_legs}px: detected_gap={max_leg_zero}px",
+    }
+
+    # 7.3 手與任何非相連部位 (y 在 1160-1290 檢查前手/後手與軀幹間透明列)
+    gap_hand_f_box = img_arr[1160:1290, 1150:1285, 3] > 16
+    gap_hand_b_box = img_arr[1160:1290, 760:950, 3] > 16
+
+    f_zero_max = 0
+    cur_z = 0
+    for v in gap_hand_f_box.any(axis=0):
+        if not v:
+            cur_z += 1
+            f_zero_max = max(f_zero_max, cur_z)
+        else:
+            cur_z = 0
+
+    b_zero_max = 0
+    cur_z = 0
+    for v in gap_hand_b_box.any(axis=0):
+        if not v:
+            cur_z += 1
+            b_zero_max = max(b_zero_max, cur_z)
+        else:
+            cur_z = 0
+
+    min_hand_gap = min(f_zero_max, b_zero_max)
+    hand_gap_pass = (min_hand_gap >= min_gap_hand_any)
+    hand_gap_tier = "PASS" if hand_gap_pass else "FAIL"
+    checks["min_gap_hand_to_any"] = {
+        "pass": hand_gap_pass,
+        "tier": hand_gap_tier,
+        "detail": f"手與非相連部位間隙 >={min_gap_hand_any}px: min_detected={min_hand_gap}px (f={f_zero_max}px, b={b_zero_max}px)",
     }
 
     # 9. AG-14: 獨立髮尾圖根部對齊 hair_root (960, 420) 檢查
