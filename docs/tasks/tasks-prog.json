@@ -25,9 +25,9 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 34,
-    "in_progress": 2,
+    "in_progress": 3,
     "open": 72,
-    "total": 108
+    "total": 109
   },
   "tasks": [
     {
@@ -4038,6 +4038,68 @@
         "artifacts/PROG-2-0168/**"
       ],
       "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-1146",
+      "title": "結緣出生紀錄跨重開保存",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M3",
+      "created": "2026-10-26",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "2026-10-26T15:06:32+00:00",
+      "started_by_agent": "codex-gpt-6",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "沿用既有 PlayerSaveSnapshot 保存出生紀錄；舊檔為空、child.UID 去重、深層複本與重置清空。不新增畫面，不改出生紀錄結構。",
+      "related": [
+        "PROG-2-0872",
+        "PROG-2-0853"
+      ],
+      "depends": [],
+      "acceptance": [
+        "紀錄存讀完整還原",
+        "舊檔欄位缺省為空",
+        "重複寫入與重複載入只保留一筆",
+        "新遊戲重置清空",
+        "輸入與回傳巢狀資料不影響內部",
+        "全部測試與 tsc 通過",
+        "standard gate 9/9"
+      ],
+      "deliverables": [
+        "assets/scripts/core/managers/GameSession.ts",
+        "assets/scripts/core/services/PlayerSaveService.ts",
+        "assets/scripts/core/systems/BreedingBirthRecordSave.ts",
+        "assets/scripts/core/systems/BreedingBirthRecordSave.ts.meta",
+        "tests/BreedingBirthRecordSave.test.ts",
+        "tests/run-cli.ts"
+      ],
+      "notes": "2026-10-26 | 狀態: in-progress | 驗證: pending | 變更: codex-gpt-6 依使用者指派接手；base d44d6dec34037b5006e646269827ed5e685e02ad；已 check/lock；現有 child.UID 為去重鍵，首筆有效紀錄優先，衝突忽略，讀檔替換不累加，不臆造舊資料。 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
