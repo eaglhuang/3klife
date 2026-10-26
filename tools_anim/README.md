@@ -1,9 +1,11 @@
 # 3KLife 美術動畫工具組 (`tools_anim`)
 
-本資料夾由 **Antigravity** 開發與維護，對應工單 `AG-01`、`AG-02`、`AG-04`、`AG-05`、`AG-06` 與 `AG-07`，提供：
-1. **`slice_and_rig.py`**：AG-02/AG-05/AG-07 自動切片、圖集打包、`3klife.neutral-rig.v2` 綁點生成、執行期縮放與綁骨專用分件圖支援工具（支援 `--hairtail-image`、`--weapon-image`、空心拳心孔洞握點推導與 `limb_completeness >= 95%` 驗證）。
-2. **`validate_spine.py`**（搭配 `spine_eval_helper.mjs`）：獨立 Spine 4.2 驗證器與軟體光柵化逐格渲染器（支援 H 比例門檻、`arm_continuity`、`facing_consistency`、`weapon_single_piece`、`hair_overlap`、`weapon_edge_clean` 與 `--fail-on all`）。
-3. **`run_regression.py`**：自動化回歸測試管線（趙雲 C2 + 張飛 Q3 + 趙雲 rigpose 待命組），輸出固定 OVERALL 判定。
+本資料夾由 **Antigravity** 開發與維護，對應工單 `AG-01`、`AG-02`、`AG-04`、`AG-05`、`AG-06`、`AG-07`、`AG-08` 與 `AG-09`，提供：
+1. **`slice_and_rig.py`**：AG-02/AG-05/AG-07/AG-09 自動切片、圖集打包、固定骨架 v3 生成與執行期縮放工具（支援 `--hairtail-image`、`--weapon-image`、`--canonical-skeleton` 固定骨架與空心拳心孔洞握點推導）。
+2. **`check_rigpose.py`**：AG-08/AG-09 綁骨分件圖交件前檢查工具（嚴格檢查 SPEC-RIG-POSE-03 地面線、H、關節 tol、拳心孔 tol、minGapPx、Zone 邊界、肢體完整度與武器 edge，未通過直接 exit 1）。
+3. **`generate_rigpose_templates.py`**：AG-08/AG-09 固定骨架 2048x2048 模板圖產生器（自動產出 `standard`, `heavy`, `slim`, `robe` 四款模板圖）。
+4. **`validate_spine.py`**（搭配 `spine_eval_helper.mjs`）：獨立 Spine 4.2 驗證器與軟體光柵化逐格渲染器（支援 H 比例門檻、`arm_continuity`、`facing_consistency`、`weapon_single_piece`、`hair_overlap`、`weapon_edge_clean` 與 `--fail-on all`）。
+5. **`run_regression.py`**：自動化回歸測試管線（趙雲 C2 + 張飛 Q3 + 趙雲 rigpose 待命組），輸出固定 OVERALL 判定。
 
 > **驗證範圍聲明**：本工具組產出之報告皆為離線驗證（官方 `@esotericsoftware/spine-core` 4.2 + 軟體光柵化器），未經 Cocos Creator 實際載入實測前，不得宣稱「已能播放」或「可量產」。
 
@@ -90,4 +92,41 @@ python tools_anim/run_regression.py --mode master --out-dir scratch/regression_m
 # 執行期 (runtime) 480px 縮放回歸
 python tools_anim/run_regression.py --mode runtime --runtime-height 480 --out-dir scratch/regression_runtime
 ```
+
+---
+
+## 4. 模板產生器 (`generate_rigpose_templates.py`)
+
+依據 `canonical_skeleton_v3.json` 自動繪製四款 2048×2048 模板圖：
+```powershell
+python tools_anim/generate_rigpose_templates.py
+```
+產出檔案存放於 `tools_anim/templates/`：
+- `rigpose_template_standard.png`
+- `rigpose_template_heavy.png`
+- `rigpose_template_slim.png`
+- `rigpose_template_robe.png`
+
+---
+
+## 5. 交件前檢查工具 (`check_rigpose.py`)
+
+針對武將分件目錄逐條檢核畫布規格、地面線、H、關節 tol、空心握拳握點 tol、透明間隙與肢體完整度：
+```powershell
+python tools_anim/check_rigpose.py --dir <分件目錄> --out-dir scratch/rigpose_check
+```
+- 若任一項未通過則以非 0 狀態碼 (`exit 1`) 退出，並輸出標示圖 `check_result_overlay.png`。
+
+---
+
+## 6. 通用性與固定骨架測試
+
+```powershell
+# 驗證核心生產程式碼 100% 絕無任何武將名稱硬編碼
+python tools_anim/tests/test_no_general_hardcoding.py
+
+# 驗證不同武將輸出的骨架 JSON 完全 100% 精確相等
+python tools_anim/tests/test_canonical_skeleton_match.py
+```
+
 

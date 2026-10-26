@@ -1366,7 +1366,7 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     atlas_info = parse_atlas(atlas_path)
-    png_path = Path(args.png).resolve() if args.png else (atlas_path.parent / (atlas_info["page"] or "zhaoyun.png"))
+    png_path = Path(args.png).resolve() if args.png else (atlas_path.parent / (atlas_info["page"] or "character.png"))
     rig_data = json.loads(Path(args.rig).read_text(encoding="utf-8")) if args.rig and Path(args.rig).exists() else None
     skel_json = json.loads(json_path.read_text(encoding="utf-8"))
 
