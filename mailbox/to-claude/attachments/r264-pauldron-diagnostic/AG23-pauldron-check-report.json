@@ -1,0 +1,69 @@
+{
+  "schema": "3klife.layered-parts-check-report.v1",
+  "verificationScope": "offline-layered-parts-check-only (NOT Cocos runtime verified)",
+  "overallPass": false,
+  "overallTier": "FAIL",
+  "testedSlots": [
+    "pauldron_f",
+    "pauldron_b"
+  ],
+  "slotCount": 2,
+  "slotReports": {
+    "pauldron_f": {
+      "pass": false,
+      "tier": "FAIL",
+      "empty": false,
+      "visiblePixels": 20319,
+      "checks": {
+        "dimension": {
+          "pass": true,
+          "tier": "PASS",
+          "skipped": false,
+          "detail": "尺寸: 現為2048x2048, 規格為2048x2048"
+        },
+        "scope_capsule_bounds": {
+          "pass": false,
+          "tier": "FAIL",
+          "skipped": false,
+          "scopeType": "pauldron_provisional_overlap_zone",
+          "outsideRatio": 0.2057,
+          "outsidePixels": 4180,
+          "totalVisiblePixels": 20319,
+          "toleranceRatio": 0.01,
+          "detail": "膠囊外擴12px外像素佔比=20.57% (容差<=1.0%)",
+          "note": "pauldron 在 JSON 無膠囊，暫以 shoulderOverlapZone 外擴 12px 判定 (暫定規則)",
+          "outsideImagePath": "scratch\\r263-ag23-pauldron-check-20261027\\output\\outside_pauldron_f.png"
+        }
+      }
+    },
+    "pauldron_b": {
+      "pass": true,
+      "tier": "PASS",
+      "empty": false,
+      "visiblePixels": 2061,
+      "checks": {
+        "dimension": {
+          "pass": true,
+          "tier": "PASS",
+          "skipped": false,
+          "detail": "尺寸: 現為2048x2048, 規格為2048x2048"
+        },
+        "scope_capsule_bounds": {
+          "pass": true,
+          "tier": "PASS",
+          "skipped": false,
+          "scopeType": "pauldron_provisional_overlap_zone",
+          "outsideRatio": 0.0,
+          "outsidePixels": 0,
+          "totalVisiblePixels": 2061,
+          "toleranceRatio": 0.01,
+          "detail": "膠囊外擴12px外像素佔比=0.00% (容差<=1.0%)",
+          "note": "pauldron 在 JSON 無膠囊，暫以 shoulderOverlapZone 外擴 12px 判定 (暫定規則)"
+        }
+      }
+    }
+  },
+  "jointHiddenExtensions": {},
+  "rotationLeakChecks": {},
+  "reassemblyReport": null
+}
