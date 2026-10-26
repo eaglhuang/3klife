@@ -1973,6 +1973,13 @@ export class LobbyScene extends Component {
                     services().event.emit('SHOW_TOAST', { message: `敵軍來犯！${battle.lines[2]}`, duration: 3 });
                 }
                 this._refreshRivalDiplomacy();
+                // 傭兵試用期滿離隊告別（傭兵規格 UI_MERC_FAREWELL，PROG-2-1154）
+                for (const uid of payload?.mercenaryDepartures ?? []) {
+                    const merc = services().session.mercenaries.mercenaries.find((m) => m.uid === uid);
+                    const name = this._generals.find((g) => g.id === merc?.generalId)?.name ?? '傭兵';
+                    services().event.emit('SHOW_TOAST', { message: `${name} 已離隊。六日情緣，且作追憶。`, duration: 3 });
+                }
+                this._refreshMercenaryPanel();
             }),
         );
     }
