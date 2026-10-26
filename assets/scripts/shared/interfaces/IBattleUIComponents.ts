@@ -39,7 +39,7 @@ export interface IDuelChallengeLike {
 export interface IResultPopupLike {
     node: Node;
     /** details：戰後結算摘要（出征軍勢 / 戰損 / 本場戰績），接在描述下方 */
-    showResult(result: string, details?: string): Promise<void>;
+    showResult(result: string, details?: string, generalId?: string): Promise<void>;
     show(result: any): Promise<void>;
     hide(): void;
 }
