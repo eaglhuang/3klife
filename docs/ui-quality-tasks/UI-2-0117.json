@@ -1,0 +1,64 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0406",
+      "id": "UI-2-0117",
+      "title": "修正蔡文姬與黃月英立繪辨識度",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-26",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-26T23:22:51+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依使用者審稿，重修蔡文姬、黃月英的臉型五官、綁髮方式、髮飾、妝感和配色，使兩人彼此及大喬之間都能明確辨識。",
+      "related": [],
+      "depends": [
+        "UI-2-0112"
+      ],
+      "acceptance": [
+        "蔡文姬、黃月英臉型與五官各有明確差異",
+        "兩人的綁髮方式彼此不同，且均不沿用大喬的披髮輪廓",
+        "髮飾形狀、妝感和配色清楚區隔三人",
+        "保留透明背景、全身構圖、既有畫風與角色身份",
+        "更新兩位頭像裁切，generate-general-avatars --verify 全數通過",
+        "Cocos Asset DB refresh 成功"
+      ],
+      "deliverables": [
+        "蔡文姬、黃月英正式 512x768 透明立繪",
+        "兩位 reviewed 頭像與 face crop 標記",
+        "更新 character-palette-ledger 的髮型、妝感和色彩識別方向",
+        "驗收紀錄與隊長回報"
+      ],
+      "notes": "2026-10-26 | 狀態: done | 驗證: 40/40 頭像通過；Cocos Asset DB refresh success；兩張 512x768 透明立繪 | 變更: 臉型、髮型、髮飾、妝感與色彩區隔 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0407",
+      "id": "UI-2-0118",
+      "title": "簡化女角衣帶並校正黃月英與蔡文姬道具",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-26",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-26T23:34:51+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依使用者新造型準則，簡化蔡文姬、黃月英服裝衣帶並保留角色辨識；同步記錄男性武將避免多層長飄帶的共通原則，修正黃月英右手手指。",
+      "related": [
+        "UI-2-0117"
+      ],
+      "depends": [],
+      "acceptance": [
+        "蔡文姬與黃月英服裝衣帶簡潔，臉型、髮型與主色維持清楚區隔",
+        "黃月英雙手自然；一手托小型機關、一手調輪，圖紙分開捲收在腰側",
+        "蔡文姬使用完整長身七弦琴，雙手穩定承托，琴弦朝外",
+        "兩張 PNG 均為 512x768 且四角透明",
+        "40 位頭像驗證全數通過；Cocos Asset DB refresh 回傳 success",
+        "角色造型紀錄已明定武將衣帶收束，飄帶只留給少數文人"
+      ],
+      "deliverables": [
+        "兩張正式女將立繪與對應頭像",
+        "更新頭像裁切資料與角色配色 ledger",
+        "任務驗收紀錄"
+      ],
+      "notes": "2026-10-26 | 狀態: done | 驗證: 40/40 頭像通過；Cocos Asset DB refresh success；512x768 透明圖 | 變更: 簡化衣帶、修正黃月英手指與機關／圖紙配置、調整蔡文姬古琴比例及抱琴姿勢 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

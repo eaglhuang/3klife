@@ -76,6 +76,10 @@
 | P2 | [UI-2-0005](tasks/UI-2-0005.md (doc_task_0029)) (doc_task_0029) | button-skin 新增 selected 第四態 | done | 100% | Agent1 |
 | P2 | [UI-1-0009](tasks/UI-1-0009.md (doc_task_0017)) (doc_task_0017) | 產生 diamond_tab sprites | done | 100% | Agent2 |
 
+| P1 | [UI-2-0117](tasks/UI/UI-2-0117.md (doc_task_0406)) (doc_task_0406) | 修正蔡文姬、黃月英臉型、髮型與配色辨識 | done | 100% | codex-gpt-6.1 |
+
+| P1 | [UI-2-0118](tasks/UI/UI-2-0118.md (doc_task_0407)) (doc_task_0407) | 簡化女角衣帶並校正手指與道具 | done | 100% | codex-gpt-6.1 |
+
 ## HTML-to-UCUF Plan5 Tooling
 
 | 優先級 | 卡號 | 簡單描述 | 狀態 | 完成度% | Owner |
