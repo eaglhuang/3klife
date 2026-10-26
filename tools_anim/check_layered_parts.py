@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """分槽進件檢查工具 (check_layered_parts.py)
 
-依據工單 AG-21 / AG-22 與 SPEC-RIG-POSE-03 / v3.4 規格：
+依據工單 AG-21 / AG-22 / AG-23 與 SPEC-RIG-POSE-03 / v3.4 規格：
 1. 尺寸：每槽圖檔必須與 spec.canvas (2048x2048) 相同，未裁切。
-2. 範圍：alpha 主體必須落在該骨膠囊外擴 12px 之內。特殊部件 (weapon, cape, skirt, hair_tail) 檢查錨點。
+2. 單槽範圍 (AG-23)：每槽依 JSON segments 與 bodyType 的 halfWidth 建出骨骼膠囊，外擴 12px。膠囊外不透明像素比例 > 1% 判 FAIL，輸出 outside_<slot>.png 標出超出位置。特殊部件檢查錨點。pauldron 依 shoulderOverlapZone 外擴 12px（暫定規則）。
 3. 關節連接表：由 JSON bones 的父子關係動態推導產生。特例由 layeredSlots.jointOverrides 驅動。
 4. 隱藏延伸：每個關節兩側部件必須越過關節至少 hiddenExtensionH * H (預設 0.03H = 48px)。
 5. 旋轉露縫：每個關節把子部件繞樞紐 (pivotCanvasPx) 旋轉 +/- rotationTestDeg，合成後關節附近不可出現透明露縫。剛性連接 (rigid=true) 略過。
 6. 重組差：若提供參考圖，比對 alpha 輪廓位置位移 (Chamfer/Hausdorff p95 <= 2 px)，RGB 差另外列為參考值。
 7. 握點：hand_f / hand_b 拳心孔中心與 grip_A / grip_B 誤差 <= 12px。
-8. 容錯：少一槽時，涉及該槽的關節標 SKIPPED，不判 FAIL。
+8. 容錯：少一槽時，涉及該槽的關節標 SKIPPED，不判 FAIL；報告中明列各項檢查結果。
 9. 絕不硬編碼數值 >= 200 的像素切片或 range 常數，全由 JSON 讀取與推導。
 """
 from __future__ import annotations
@@ -65,7 +65,15 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
 
         if child_name in slot_names and parent_name in slot_names:
             p_bone = bones_dict.get(parent_name, {})
-            child_pivot = tuple(b.get("pivotCanvasPx", [1024.0, 1024.0]))
+            # 樞紐關節點：手腕關節取 wrist_f/b，其他依子骨之 pivotCanvasPx
+            pivot_key_map = {"hand_f": "wrist_f", "hand_b": "wrist_b"}
+            j_key = pivot_key_map.get(child_name)
+            if j_key and j_key in spec.get("joints", {}):
+                j_obj = spec["joints"][j_key]
+                child_pivot = (float(j_obj.get("x", 1024.0)), float(j_obj.get("y", 1024.0)))
+            else:
+                child_pivot = tuple(b.get("pivotCanvasPx", [1024.0, 1024.0]))
+
             parent_pivot = tuple(p_bone.get("pivotCanvasPx", [1024.0, 1024.0]))
 
             cap_rad = float(override.get("capRadiusPx", 40.0))
@@ -85,6 +93,147 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
             })
 
     return connections
+
+
+def build_slot_scope_mask(
+    slot_name: str,
+    spec: dict[str, Any],
+    body_type: str,
+    w: int,
+    h: int,
+    ext_px: float = 12.0,
+) -> tuple[np.ndarray | None, str]:
+    """AG-23: 建立指定槽位的骨骼膠囊/範圍合規遮罩 (包含外擴 ext_px)
+    若該槽屬於特殊部件 (weapon, cape, skirt, hair_tail) 則回傳 (None, "anchor_only")
+    """
+    if slot_name in ("weapon", "cape", "skirt", "hair_tail"):
+        return None, "anchor_only"
+
+    joints = spec.get("joints", {})
+
+    def get_j(name: str, def_xy: tuple[float, float] = (1024.0, 1024.0)) -> tuple[float, float]:
+        j = joints.get(name, {})
+        return float(j.get("x", def_xy[0])), float(j.get("y", def_xy[1]))
+
+    im = Image.new("L", (w, h), 0)
+    draw = ImageDraw.Draw(im)
+
+    segments = spec.get("segments", {})
+    h_val = float(spec.get("H", 1600))
+
+    # 肩甲特殊暫定規則 (依 AG-23: 以 shoulderOverlapZone 圓外擴 12px)
+    if slot_name in ("pauldron_f", "pauldron_b"):
+        soz = spec.get("shoulderOverlapZone", {})
+        rad_h = float(soz.get("radiusH", 0.06))
+        rad = rad_h * h_val + ext_px
+        j_name = "shoulder_f" if slot_name == "pauldron_f" else "shoulder_b"
+        c = get_j(j_name)
+        draw.ellipse([c[0] - rad, c[1] - rad, c[0] + rad, c[1] + rad], fill=255)
+        return np.array(im) > 128, "pauldron_provisional_overlap_zone"
+
+    # 骨盆 (pelvis)
+    if slot_name == "pelvis":
+        c = get_j("pelvis")
+        hw_spec = segments.get("torso", {}).get("halfWidth", {})
+        bt_hw = hw_spec.get(body_type, hw_spec.get("standard", [110, 145])) if isinstance(hw_spec, dict) else [110, 145]
+        max_hw = float(bt_hw[1]) if isinstance(bt_hw, (list, tuple)) else float(bt_hw)
+        rad = max_hw + ext_px
+        draw.ellipse([c[0] - rad, c[1] - (rad * 0.7), c[0] + rad, c[1] + (rad * 0.7)], fill=255)
+        return np.array(im) > 128, "pelvis_capsule"
+
+    # 對應 segments key
+    seg_key_map = {
+        "torso": "torso",
+        "arm_upper_f": "upperarm_f",
+        "arm_upper_b": "upperarm_b",
+        "arm_lower_f": "forearm_f",
+        "arm_lower_b": "forearm_b",
+        "thigh_f": "thigh_f",
+        "thigh_b": "thigh_b",
+        "shin_f": "shin_f",
+        "shin_b": "shin_b",
+        "head": "head",
+        "hand_f": "hand_f",
+        "hand_b": "hand_b",
+        "foot_f": "foot_f",
+        "foot_b": "foot_b",
+    }
+    seg_key = seg_key_map.get(slot_name, slot_name)
+    seg_info = segments.get(seg_key, {})
+    if not seg_info:
+        return None, "no_segment_def"
+
+    # 1. 膠囊型 (from -> to)
+    if "from" in seg_info and "to" in seg_info:
+        p1 = get_j(seg_info["from"])
+        p2 = get_j(seg_info["to"])
+        hw_spec = seg_info.get("halfWidth", {})
+        if isinstance(hw_spec, str) and "upperarm_f" in hw_spec:
+            hw_spec = segments.get("upperarm_f", {}).get("halfWidth", {})
+        elif isinstance(hw_spec, str) and "forearm_f" in hw_spec:
+            hw_spec = segments.get("forearm_f", {}).get("halfWidth", {})
+        elif isinstance(hw_spec, str) and "thigh_f" in hw_spec:
+            hw_spec = segments.get("thigh_f", {}).get("halfWidth", {})
+        elif isinstance(hw_spec, str) and "shin_f" in hw_spec:
+            hw_spec = segments.get("shin_f", {}).get("halfWidth", {})
+
+        bt_hw = hw_spec.get(body_type, hw_spec.get("standard", [45, 65])) if isinstance(hw_spec, dict) else [45, 65]
+        max_hw = float(bt_hw[1]) if isinstance(bt_hw, (list, tuple)) else float(bt_hw)
+        rad = max_hw + ext_px
+
+        draw.line([p1, p2], fill=255, width=int(round(rad * 2)))
+        draw.ellipse([p1[0] - rad, p1[1] - rad, p1[0] + rad, p1[1] + rad], fill=255)
+        draw.ellipse([p2[0] - rad, p2[1] - rad, p2[0] + rad, p2[1] + rad], fill=255)
+        return np.array(im) > 128, "bone_capsule"
+
+    # 2. 圓形手部 (center, radius) + 手腕關節延伸
+    if "center" in seg_info and "radius" in seg_info:
+        grips_cfg = spec.get("grips", {})
+        g_name = seg_info["center"]
+        if g_name in grips_cfg:
+            c = (float(grips_cfg[g_name].get("x", 1024.0)), float(grips_cfg[g_name].get("y", 1024.0)))
+        else:
+            c = get_j(g_name)
+        rad_spec = seg_info["radius"]
+        max_r = float(rad_spec[1]) if isinstance(rad_spec, (list, tuple)) else float(rad_spec)
+        rad = max_r + ext_px
+        draw.ellipse([c[0] - rad, c[1] - rad, c[0] + rad, c[1] + rad], fill=255)
+
+        # 若為 hand，需涵蓋 wrist 樞紐連接通道與關節重疊延伸端蓋
+        wrist_joint_name = "wrist_f" if "f" in slot_name else "wrist_b"
+        if wrist_joint_name in joints:
+            w_pt = get_j(wrist_joint_name)
+            draw.line([c, w_pt], fill=255, width=int(round(rad * 2)))
+            draw.ellipse([w_pt[0] - rad, w_pt[1] - rad, w_pt[0] + rad, w_pt[1] + rad], fill=255)
+            elbow_name = "elbow_f" if "f" in slot_name else "elbow_b"
+            if elbow_name in joints:
+                e_pt = get_j(elbow_name)
+                v_ew = (e_pt[0] - w_pt[0], e_pt[1] - w_pt[1])
+                dist_ew = math.hypot(v_ew[0], v_ew[1]) or 1.0
+                ext_w = (w_pt[0] + (v_ew[0] / dist_ew) * 48.0, w_pt[1] + (v_ew[1] / dist_ew) * 48.0)
+                draw.line([w_pt, ext_w], fill=255, width=int(round(rad * 2)))
+                draw.ellipse([ext_w[0] - rad, ext_w[1] - rad, ext_w[0] + rad, ext_w[1] + rad], fill=255)
+
+        return np.array(im) > 128, "hand_circle"
+
+    # 3. 區域矩形 (zone: [x1, y1, x2, y2])
+    if "zone" in seg_info:
+        zone = seg_info["zone"]
+        ref_joint = "neck" if slot_name == "head" else ("ankle_f" if "f" in slot_name else "ankle_b")
+        cur_ref = get_j(ref_joint)
+        def_refs = {"neck": (1030.0, 880.0), "ankle_f": (1135.0, 1850.0), "ankle_b": (915.0, 1850.0)}
+        d_ref = def_refs.get(ref_joint, (1024.0, 1024.0))
+        shift_x = cur_ref[0] - d_ref[0]
+        shift_y = cur_ref[1] - d_ref[1]
+
+        x1 = float(zone[0]) + shift_x - ext_px
+        y1 = float(zone[1]) + shift_y - ext_px
+        x2 = float(zone[2]) + shift_x + ext_px
+        y2 = float(zone[3]) + shift_y + ext_px
+        draw.rectangle([x1, y1, x2, y2], fill=255)
+        return np.array(im) > 128, "zone_box"
+
+    return None, "unsupported"
 
 
 def find_fist_hole_center(hand_arr: np.ndarray, expected_pt: tuple[float, float]) -> tuple[bool, tuple[float, float], float]:
@@ -262,7 +411,7 @@ def run_layered_parts_inspection(
     slot_reports: dict[str, Any] = {}
     overall_pass = True
 
-    # 1. 讀取並檢驗各槽基本尺寸與空槽狀態
+    # 1. 讀取並檢驗各槽基本尺寸、空槽狀態與單槽範圍 (AG-23)
     for sid in target_slots:
         p_path = parts_dir / f"{sid}.png"
         if not p_path.exists():
@@ -271,6 +420,10 @@ def run_layered_parts_inspection(
                 "tier": "PASS",
                 "empty": True,
                 "detail": "空槽 (檔案不存在)",
+                "checks": {
+                    "dimension": {"pass": True, "tier": "SKIPPED", "skipped": True, "detail": "檔案不存在，略過尺寸檢查"},
+                    "scope_capsule_bounds": {"pass": True, "tier": "SKIPPED", "skipped": True, "detail": "檔案不存在，略過範圍檢查"},
+                },
             }
             continue
 
@@ -286,17 +439,29 @@ def run_layered_parts_inspection(
                 "tier": "PASS",
                 "empty": True,
                 "detail": "空槽 (完全透明)",
+                "checks": {
+                    "dimension": {"pass": True, "tier": "PASS", "skipped": False, "detail": f"尺寸={pw}x{ph}"},
+                    "scope_capsule_bounds": {"pass": True, "tier": "SKIPPED", "skipped": True, "detail": "完全透明，略過範圍檢查"},
+                },
             }
             loaded_parts[sid] = arr
             continue
 
         size_pass = (pw == exp_w and ph == exp_h)
+        dim_check = {
+            "pass": size_pass,
+            "tier": "PASS" if size_pass else "FAIL",
+            "skipped": False,
+            "detail": f"尺寸: 現為{pw}x{ph}, 規格為{exp_w}x{exp_h}",
+        }
+
         if not size_pass:
             slot_reports[sid] = {
                 "pass": False,
                 "tier": "FAIL",
                 "empty": False,
                 "detail": f"尺寸不合規格: 現為{pw}x{ph}, 規格為{exp_w}x{exp_h}",
+                "checks": {"dimension": dim_check},
             }
             overall_pass = False
             loaded_parts[sid] = arr
@@ -308,8 +473,55 @@ def run_layered_parts_inspection(
             "tier": "PASS",
             "empty": False,
             "visiblePixels": vis_count,
-            "checks": {},
+            "checks": {"dimension": dim_check},
         }
+
+        # AG-23: 單槽範圍檢查 (每槽都做，不需要相鄰槽)
+        scope_mask, scope_type = build_slot_scope_mask(sid, spec, body_type, exp_w, exp_h, ext_px=12.0)
+        if scope_type == "anchor_only":
+            slot_reports[sid]["checks"]["scope_capsule_bounds"] = {
+                "pass": True,
+                "tier": "SKIPPED",
+                "skipped": True,
+                "scopeType": scope_type,
+                "detail": "特殊部件 (weapon/cape/skirt/hair_tail)，依規格只檢查錨點，略過膠囊範圍限制",
+            }
+        elif scope_mask is not None:
+            vis_mask = alpha > 16
+            tot_vis = int(vis_mask.sum())
+            if tot_vis > 0:
+                outside_m = vis_mask & (~scope_mask)
+                outside_cnt = int(outside_m.sum())
+                outside_ratio = outside_cnt / tot_vis
+                scope_pass = (outside_ratio <= 0.01)
+
+                scope_check_entry: dict[str, Any] = {
+                    "pass": scope_pass,
+                    "tier": "PASS" if scope_pass else "FAIL",
+                    "skipped": False,
+                    "scopeType": scope_type,
+                    "outsideRatio": round(outside_ratio, 4),
+                    "outsidePixels": outside_cnt,
+                    "totalVisiblePixels": tot_vis,
+                    "toleranceRatio": 0.01,
+                    "detail": f"膠囊外擴12px外像素佔比={outside_ratio*100:.2f}% (容差<=1.0%)",
+                }
+                if scope_type == "pauldron_provisional_overlap_zone":
+                    scope_check_entry["note"] = "pauldron 在 JSON 無膠囊，暫以 shoulderOverlapZone 外擴 12px 判定 (暫定規則)"
+
+                if not scope_pass:
+                    slot_reports[sid]["pass"] = False
+                    slot_reports[sid]["tier"] = "FAIL"
+                    overall_pass = False
+                    if out_dir:
+                        out_img_path = out_dir / f"outside_{sid}.png"
+                        out_vis = np.zeros((exp_h, exp_w, 4), dtype=np.uint8)
+                        out_vis[vis_mask] = [100, 100, 100, 120]
+                        out_vis[outside_m] = [255, 0, 0, 255]
+                        Image.fromarray(out_vis).save(out_img_path)
+                        scope_check_entry["outsideImagePath"] = str(out_img_path)
+
+                slot_reports[sid]["checks"]["scope_capsule_bounds"] = scope_check_entry
 
     # 2. 檢驗握點 (hand_f / hand_b 拳心孔中心誤差 <= 12px)
     if "hand_f" in loaded_parts and not slot_reports["hand_f"].get("empty"):

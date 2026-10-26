@@ -67,10 +67,10 @@ class TestCheckLayeredParts(unittest.TestCase):
         bones = {b["name"]: b for b in spec.get("bones", []) if isinstance(b, dict)}
         ox, oy = offset
 
-        # 動態取自骨骼 pivotCanvasPx
-        sh = (float(bones["arm_upper_f"]["pivotCanvasPx"][0]) + ox, float(bones["arm_upper_f"]["pivotCanvasPx"][1]) + oy)
-        el = (float(bones["arm_lower_f"]["pivotCanvasPx"][0]) + ox, float(bones["arm_lower_f"]["pivotCanvasPx"][1]) + oy)
-        wr = (float(bones["hand_f"]["pivotCanvasPx"][0]) + ox, float(bones["hand_f"]["pivotCanvasPx"][1]) + oy)
+        # 動態取自關節與骨骼座標
+        sh = (float(self.spec["joints"]["shoulder_f"]["x"]) + ox, float(self.spec["joints"]["shoulder_f"]["y"]) + oy)
+        el = (float(self.spec["joints"]["elbow_f"]["x"]) + ox, float(self.spec["joints"]["elbow_f"]["y"]) + oy)
+        wr = (float(self.spec["joints"]["wrist_f"]["x"]) + ox, float(self.spec["joints"]["wrist_f"]["y"]) + oy)
 
         grips_cfg = spec.get("grips", {})
         grip_def = [1365.0, 1225.0]
@@ -78,24 +78,25 @@ class TestCheckLayeredParts(unittest.TestCase):
             grip_def = [float(grips_cfg["grip_A"].get("x", 1365.0)), float(grips_cfg["grip_A"].get("y", 1225.0))]
         grip = (grip_def[0] + ox, grip_def[1] + oy)
 
-        # 1. arm_upper_f: shoulder 到 elbow，越過 elbow 延伸 55px (>= 48px)
+        # 1. arm_upper_f: shoulder 到 elbow，越過 elbow 延伸 48px (>= 48px)
         im_upper = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
         d_upper = ImageDraw.Draw(im_upper)
         d_upper.line([sh, el], fill=(120, 140, 200, 255), width=50)
-        d_upper.ellipse([el[0] - 38, el[1] - 38, el[0] + 38, el[1] + 38], fill=(120, 140, 200, 255))
+        d_upper.ellipse([sh[0] - 35, sh[1] - 35, sh[0] + 35, sh[1] + 35], fill=(120, 140, 200, 255))
+        d_upper.ellipse([el[0] - 35, el[1] - 35, el[0] + 35, el[1] + 35], fill=(120, 140, 200, 255))
 
         v_ue = (el[0] - sh[0], el[1] - sh[1])
         mag_ue = math.hypot(v_ue[0], v_ue[1]) or 1.0
         u_ue = (v_ue[0] / mag_ue, v_ue[1] / mag_ue)
-        ext_el_upper = (el[0] + u_ue[0] * 55, el[1] + u_ue[1] * 55)
+        ext_el_upper = (el[0] + u_ue[0] * 48, el[1] + u_ue[1] * 48)
         d_upper.line([el, ext_el_upper], fill=(120, 140, 200, 255), width=45)
-        d_upper.ellipse([ext_el_upper[0] - 22, ext_el_upper[1] - 22, ext_el_upper[0] + 22, ext_el_upper[1] + 22], fill=(120, 140, 200, 255))
+        d_upper.ellipse([ext_el_upper[0] - 15, ext_el_upper[1] - 15, ext_el_upper[0] + 15, ext_el_upper[1] + 15], fill=(120, 140, 200, 255))
         im_upper.save(parts_dir / "arm_upper_f.png")
 
         # 2. arm_lower_f: elbow 到 wrist
         im_lower = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
         d_lower = ImageDraw.Draw(im_lower)
-        d_lower.line([el, wr], fill=(130, 150, 210, 255), width=50)
+        d_lower.line([el, wr], fill=(130, 150, 210, 255), width=48)
 
         # 肘部向上延伸 (朝 shoulder 方向)
         v_le = (sh[0] - el[0], sh[1] - el[1])
@@ -105,46 +106,48 @@ class TestCheckLayeredParts(unittest.TestCase):
         if shorten_lower_ext:
             # 刻意只延伸 15px (< 48px)
             ext_len = 15.0
-            cap_r = 20.0
+            cap_r = 15.0
             ext_el_lower = (el[0] + u_le[0] * ext_len, el[1] + u_le[1] * ext_len)
-            d_lower.line([el, ext_el_lower], fill=(130, 150, 210, 255), width=50)
+            d_lower.line([el, ext_el_lower], fill=(130, 150, 210, 255), width=48)
             d_lower.ellipse([ext_el_lower[0] - cap_r, ext_el_lower[1] - cap_r, ext_el_lower[0] + cap_r, ext_el_lower[1] + cap_r], fill=(130, 150, 210, 255))
         elif leak_on_rotate:
             # 旋轉露縫情境：前臂端蓋未覆蓋手肘樞紐，樞紐處存在 25px 脫節孔洞
             pass
         else:
-            # 正常延伸 55px (>= 48px)
-            ext_len = 55.0
-            cap_r = 40.0
+            # 正常延伸 48px (>= 48px)
+            ext_len = 48.0
             ext_el_lower = (el[0] + u_le[0] * ext_len, el[1] + u_le[1] * ext_len)
-            d_lower.line([el, ext_el_lower], fill=(130, 150, 210, 255), width=50)
-            d_lower.ellipse([ext_el_lower[0] - cap_r, ext_el_lower[1] - cap_r, ext_el_lower[0] + cap_r, ext_el_lower[1] + cap_r], fill=(130, 150, 210, 255))
-            d_lower.ellipse([el[0] - cap_r, el[1] - cap_r, el[0] + cap_r, el[1] + cap_r], fill=(130, 150, 210, 255))
+            d_lower.line([el, ext_el_lower], fill=(130, 150, 210, 255), width=48)
+            d_lower.ellipse([ext_el_lower[0] - 15, ext_el_lower[1] - 15, ext_el_lower[0] + 15, ext_el_lower[1] + 15], fill=(130, 150, 210, 255))
+            d_lower.ellipse([el[0] - 35, el[1] - 35, el[0] + 35, el[1] + 35], fill=(130, 150, 210, 255))
+
+        # 腕部向下延伸 (朝 hand 方向延伸 48px)
+        v_lw = (wr[0] - el[0], wr[1] - el[1])
+        mag_lw = math.hypot(v_lw[0], v_lw[1]) or 1.0
+        u_lw = (v_lw[0] / mag_lw, v_lw[1] / mag_lw)
+        ext_wr_lower = (wr[0] + u_lw[0] * 48, wr[1] + u_lw[1] * 48)
+        d_lower.line([wr, ext_wr_lower], fill=(130, 150, 210, 255), width=48)
+        d_lower.ellipse([wr[0] - 35, wr[1] - 35, wr[0] + 35, wr[1] + 35], fill=(130, 150, 210, 255))
+        d_lower.ellipse([ext_wr_lower[0] - 15, ext_wr_lower[1] - 15, ext_wr_lower[0] + 15, ext_wr_lower[1] + 15], fill=(130, 150, 210, 255))
 
         if leak_on_rotate:
             # 將手肘樞紐處挖成透明，旋轉時必然露縫穿透
             d_lower.ellipse([el[0] - 25, el[1] - 25, el[0] + 25, el[1] + 25], fill=(0, 0, 0, 0))
 
-        # 腕部向下延伸 (朝 hand 方向) 55px (>= 48px)
-        v_lw = (wr[0] - el[0], wr[1] - el[1])
-        mag_lw = math.hypot(v_lw[0], v_lw[1]) or 1.0
-        u_lw = (v_lw[0] / mag_lw, v_lw[1] / mag_lw)
-        ext_wr_lower = (wr[0] + u_lw[0] * 55, wr[1] + u_lw[1] * 55)
-        d_lower.line([wr, ext_wr_lower], fill=(130, 150, 210, 255), width=50)
-        d_lower.ellipse([wr[0] - 38, wr[1] - 38, wr[0] + 38, wr[1] + 38], fill=(130, 150, 210, 255))
-        d_lower.ellipse([ext_wr_lower[0] - 25, ext_wr_lower[1] - 25, ext_wr_lower[0] + 25, ext_wr_lower[1] + 25], fill=(130, 150, 210, 255))
         im_lower.save(parts_dir / "arm_lower_f.png")
 
-        # 3. hand_f: 覆蓋腕部與握點，並向腕部反向延伸 55px
+        # 3. hand_f: 覆蓋腕部與握點，並向腕部反向延伸 48px
         im_hand = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
         d_hand = ImageDraw.Draw(im_hand)
+        # 連接腕部並越過腕部延伸 48px
         v_hw = (el[0] - wr[0], el[1] - wr[1])
         mag_hw = math.hypot(v_hw[0], v_hw[1]) or 1.0
         u_hw = (v_hw[0] / mag_hw, v_hw[1] / mag_hw)
-        ext_wr_hand = (wr[0] + u_hw[0] * 55, wr[1] + u_hw[1] * 55)
-        d_hand.line([wr, ext_wr_hand], fill=(180, 130, 100, 255), width=48)
-        d_hand.ellipse([wr[0] - 38, wr[1] - 38, wr[0] + 38, wr[1] + 38], fill=(180, 130, 100, 255))
-        d_hand.ellipse([ext_wr_hand[0] - 25, ext_wr_hand[1] - 25, ext_wr_hand[0] + 25, ext_wr_hand[1] + 25], fill=(180, 130, 100, 255))
+        ext_wr_hand = (wr[0] + u_hw[0] * 48, wr[1] + u_hw[1] * 48)
+        d_hand.line([grip, wr], fill=(180, 130, 100, 255), width=40)
+        d_hand.line([wr, ext_wr_hand], fill=(180, 130, 100, 255), width=35)
+        d_hand.ellipse([wr[0] - 25, wr[1] - 25, wr[0] + 25, wr[1] + 25], fill=(180, 130, 100, 255))
+        d_hand.ellipse([ext_wr_hand[0] - 15, ext_wr_hand[1] - 15, ext_wr_hand[0] + 15, ext_wr_hand[1] + 15], fill=(180, 130, 100, 255))
 
         # 拳頭主體 (以 grip 為中心)
         d_hand.ellipse([grip[0] - 45, grip[1] - 45, grip[0] + 45, grip[1] + 45], fill=(180, 130, 100, 255))
@@ -226,6 +229,10 @@ class TestCheckLayeredParts(unittest.TestCase):
             if isinstance(b, dict) and "pivotCanvasPx" in b:
                 p = b["pivotCanvasPx"]
                 b["pivotCanvasPx"] = [p[0] + ox, p[1] + oy]
+
+        for j_name, j_data in shifted_spec.get("joints", {}).items():
+            j_data["x"] = float(j_data["x"]) + ox
+            j_data["y"] = float(j_data["y"]) + oy
 
         if "grips" in shifted_spec:
             for g_name, g_data in shifted_spec["grips"].items():
@@ -412,6 +419,109 @@ class TestCheckLayeredParts(unittest.TestCase):
         self.assertFalse(passed_bad, "輪廓位移過大應判定 FAIL")
         self.assertFalse(report_bad["reassemblyReport"]["pass"])
         self.assertGreater(report_bad["reassemblyReport"]["contourOffsetP95Px"], 2.0)
+
+    def test_torso_with_pauldrons_fail_and_outside_image(self) -> None:
+        """測試 10 (AG-23): torso 加上兩片肩甲應判定 FAIL，且 outside 圖標出超出位置"""
+        parts_dir = self.tmp_dir / "torso_with_pauldrons_parts"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+        im = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
+        d = ImageDraw.Draw(im)
+        p_pelvis = (float(self.spec["joints"]["pelvis"]["x"]), float(self.spec["joints"]["pelvis"]["y"]))
+        p_neck = (float(self.spec["joints"]["neck"]["x"]), float(self.spec["joints"]["neck"]["y"]))
+        # 繪製正常軀幹
+        d.line([p_pelvis, p_neck], fill=(120, 100, 80, 255), width=200)
+        # 繪製超出軀幹膠囊的左右兩側肩甲
+        d.ellipse([1200, 860, 1360, 980], fill=(200, 180, 50, 255))
+        d.ellipse([700, 860, 860, 980], fill=(200, 180, 50, 255))
+        im.save(parts_dir / "torso.png")
+
+        out_dir = self.tmp_dir / "out_torso_fail"
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["torso"],
+            out_dir=out_dir,
+        )
+
+        self.assertFalse(passed, "併入肩甲的 torso 應判定 FAIL")
+        torso_rep = report["slotReports"]["torso"]
+        self.assertFalse(torso_rep["pass"])
+        bounds_check = torso_rep["checks"]["scope_capsule_bounds"]
+        self.assertFalse(bounds_check["pass"])
+        self.assertGreater(bounds_check["outsideRatio"], 0.01)
+        self.assertIn("outsideImagePath", bounds_check)
+        self.assertTrue(Path(bounds_check["outsideImagePath"]).exists())
+
+    def test_pure_torso_pass(self) -> None:
+        """測試 11 (AG-23): 純 torso 應獲得 PASS"""
+        parts_dir = self.tmp_dir / "pure_torso_parts"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+        im = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
+        d = ImageDraw.Draw(im)
+        p_pelvis = (float(self.spec["joints"]["pelvis"]["x"]), float(self.spec["joints"]["pelvis"]["y"]))
+        p_neck = (float(self.spec["joints"]["neck"]["x"]), float(self.spec["joints"]["neck"]["y"]))
+        d.line([p_pelvis, p_neck], fill=(120, 100, 80, 255), width=200)
+        im.save(parts_dir / "torso.png")
+
+        out_dir = self.tmp_dir / "out_pure_torso"
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["torso"],
+            out_dir=out_dir,
+        )
+
+        self.assertTrue(passed, f"純 torso 應獲得 PASS: {report}")
+        torso_rep = report["slotReports"]["torso"]
+        self.assertTrue(torso_rep["pass"])
+        bounds_check = torso_rep["checks"]["scope_capsule_bounds"]
+        self.assertTrue(bounds_check["pass"])
+        self.assertLessEqual(bounds_check["outsideRatio"], 0.01)
+
+    def test_torso_shift_invariance(self) -> None:
+        """測試 12 (AG-23): 關節整體平移後判定不變（無座標硬編碼）"""
+        shifted_spec = copy.deepcopy(self.spec)
+        ox, oy = 60.0, 40.0
+        for j_name, j_data in shifted_spec.get("joints", {}).items():
+            j_data["x"] = float(j_data["x"]) + ox
+            j_data["y"] = float(j_data["y"]) + oy
+
+        spec_file = self.tmp_dir / "shifted_torso_spec.json"
+        spec_file.write_text(json.dumps(shifted_spec, indent=2, ensure_ascii=False), encoding="utf-8")
+
+        # 1. 產生同步平移的純 torso
+        parts_dir_pure = self.tmp_dir / "shifted_pure_torso"
+        parts_dir_pure.mkdir(parents=True, exist_ok=True)
+        im_pure = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
+        d_pure = ImageDraw.Draw(im_pure)
+        p_pelvis = (float(shifted_spec["joints"]["pelvis"]["x"]), float(shifted_spec["joints"]["pelvis"]["y"]))
+        p_neck = (float(shifted_spec["joints"]["neck"]["x"]), float(shifted_spec["joints"]["neck"]["y"]))
+        d_pure.line([p_pelvis, p_neck], fill=(120, 100, 80, 255), width=200)
+        im_pure.save(parts_dir_pure / "torso.png")
+
+        report_pure, passed_pure = run_layered_parts_inspection(
+            parts_dir=parts_dir_pure,
+            spec_path=spec_file,
+            filter_slots=["torso"],
+        )
+        self.assertTrue(passed_pure, "平移後的純 torso 應維持 PASS")
+
+        # 2. 產生同步平移的帶肩甲 torso
+        parts_dir_paul = self.tmp_dir / "shifted_paul_torso"
+        parts_dir_paul.mkdir(parents=True, exist_ok=True)
+        im_paul = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
+        d_paul = ImageDraw.Draw(im_paul)
+        d_paul.line([p_pelvis, p_neck], fill=(120, 100, 80, 255), width=200)
+        d_paul.ellipse([1200 + ox, 860 + oy, 1360 + ox, 980 + oy], fill=(200, 180, 50, 255))
+        d_paul.ellipse([700 + ox, 860 + oy, 860 + ox, 980 + oy], fill=(200, 180, 50, 255))
+        im_paul.save(parts_dir_paul / "torso.png")
+
+        report_paul, passed_paul = run_layered_parts_inspection(
+            parts_dir=parts_dir_paul,
+            spec_path=spec_file,
+            filter_slots=["torso"],
+        )
+        self.assertFalse(passed_paul, "平移後的帶肩甲 torso 應維持 FAIL")
 
 
 if __name__ == "__main__":
