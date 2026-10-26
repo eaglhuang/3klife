@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 03:10 AG-22 完成：check_layered_parts 關節表改由 bones 動態推導（涵蓋頸、腰、髖、肩甲、武器共 20 組關節）；JSON jointOverrides 驅動特例（weapon rigid 剛性連接略過旋轉、pauldron 旋轉 15°、foot 父骨覆蓋）；缺槽關節標記 SKIPPED 不判 FAIL；新增骨骼免改 code 自動納入；重組差改輪廓位移 Chamfer p95 ≤ 2.0px；通過 9 大專屬情境與全套 46 項回歸測試（b28998093）。
 - 2026-10-27 02:55 R259／AG-22：AG-21 check_layered_parts 獨立驗收 16/16 OK；關節表手寫 10 組缺頸腰髖肩甲，請改由 bones 推導、重組差改輪廓距離；JSON 加 jointOverrides；torso 兩次 prompt-only 退件，建議槽剪影 Canny+img2img＋Animagine，並評估 Codex 月額度透明背景生成為第二來源。
 - 2026-10-27 02:45 AG-21 完成：check_layered_parts.py 交付；支援 2048² 未裁切尺寸檢驗、空槽標記與 --slots 過濾、握點誤差 ≤12px、關節隱藏延伸 ≥0.03H(48px)、繞樞紐 ±30° 旋轉露縫檢驗（輸出 gap_leak_<slot>_<joint>.png）、重組差異比對 ≤2px；全由 JSON 動態推導，無數值 ≥200 之像素常數（平移不變）；通過 6 大情境與全套 43 項回歸測試（8403c329d）。
 - 2026-10-27 02:30 R258／AG-21：AG-20 獨立驗收 15/15 OK（JSON 全段檢查窗、肩部重疊圈、軀幹補底）；收 Codex 五封：停整身 inpaint，採分槽進件但須註冊到 v3.1 2048² 畫布；規格 v3.4 新增 layeredSlots（21 槽＝骨名、隱藏延伸 0.03H、±30° 不露縫）；上半身 10 槽首測改用骨名；3D 線維持暫停；請 AG 做 check_layered_parts。
