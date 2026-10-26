@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-26 使用者將 Sparkle v7 回饋包（3KLife-sparkle-v7-feedback.zip）轉給 Sparkle；等待 v8（槍尾不入地、雙手間距 0.22–0.35H、對齊 v3.1 骨架）。
 - 2026-10-26 AG-13 完成，Sparkle v6 獨立驗證 OVERALL PASS（前臂 15% 是裁切誤判）；AG-15 空隙門檻改讀規格 minGapPx 且不設 SNAP。Codex R234／R235：4.2 執行期換武器互斥、骨架不變；R236 給武器握點表規格。
 - 2026-10-26 Sparkle v7 共用骨架動作庫到：方向正確；與 Antigravity 骨架 23 根中 18 根一致。骨架升 v3.1（bones 階層、hair_root、cape_root、weaponRules）。v7 回饋：槍尾入地、雙手間距過近（0.12–0.21H，規則 0.22–0.35H）。AG-14 對齊骨架；R235 髮尾／披風錨點。
 - 2026-10-26 AG-11（三級評定＋自動貼齊）、AG-12（驗證器對齊，v6 重跑 15/16）完成；AG-13 追 Auto-Bounds 與除錯圖未生效。Codex R233：4.2 wasm 在最小場景可播放；ComfyUI inpaint 趙雲候選朝正面且空隙 0 → R234 准用人台方向線索（已更新三款人台）。
