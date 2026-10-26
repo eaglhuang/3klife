@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-26 使用者已將 Sparkle v6 回饋包（3KLife-sparkle-v6-feedback.zip）轉給 Sparkle；等待 v7 動作庫。
 - 2026-10-26 Sparkle v6 到：畫面大幅改善，但獨立驗證 11 PASS／5 FAIL，且 rig_loader 寫死 C2 像素（不可通用）。v6 回饋包轉向：Sparkle v7 只做共用固定骨架的動作庫。AG-12 對齊驗證器定義差異。
 - 2026-10-26 Codex v3 草稿失敗（AI 重畫模板標籤）。改給生圖無字人台三款（standard/heavy/slim）；R232 Codex 重試並可試 ComfyUI ControlNet；AG-11 工具加 SNAP 級自動貼齊（≤60 px、≤10°）。
 - 2026-10-26 AG-08／AG-09 完成（模板圖×4、check_rigpose、固定骨架建骨），總監重跑兩測試通過；AG-10 身高收緊為固定 1600。Codex R230：趙雲改依 v3 疊模板重畫；4.2 執行期仍未確認（Creator live log 斷線）。R231 回覆。
