@@ -4077,7 +4077,7 @@
         "assets/scripts/core/systems/BreedingBirthRecordSave.ts.meta",
         "tests/BreedingBirthRecordSave.test.ts"
       ],
-      "notes": "2026-10-26 | 狀態: blocked | 驗證: headless 3766 passed/3 既有 skipped；新增 10/10；npm test pass；standard 9/9；tsc exit 2，38 個診斷與 d44d6de 基線逐位元組相同 | 變更: 出生紀錄存讀檔與深層複本完成；child.UID 去重，首筆有效紀錄優先，同鍵衝突不覆寫，讀檔替換清單；無效筆忽略且不臆造舊紀錄；schema 結構未改；四個禁止檔案未改 | 阻塞: 既存 tsc 錯誤使全過驗收與合併條件未滿足，維持 draft，未標 done",
+      "notes": "2026-10-26 | 狀態: blocked | 驗證: headless 3766 passed/3 既有 skipped；新增 10/10；npm test pass；standard 9/9；tsc exit 2，38 個診斷與 d44d6de 基線逐位元組相同 | 變更: 出生紀錄存讀檔與深層複本完成；child.UID 去重，首筆有效紀錄優先，同鍵衝突不覆寫，讀檔替換清單；無效筆忽略且不臆造舊紀錄；schema 結構未改；四個禁止檔案未改 | 阻塞: 既存 tsc 錯誤使全過驗收與合併條件未滿足，維持 draft，未標 done | revision-2: 獨立唯讀 review 未發現 bug，focused 10/10；重跑 headless 3766/3舊skip、npm test pass、standard 9/9；兩次 tsc 38 診斷逐位元組相同仍 blocked；最終不可覆寫輸出與收據見 evidence/PROG-2-1146/revision-2/；未重建或查詢PR，未合併。",
       "brief": {
         "style": "classic",
         "label": "",

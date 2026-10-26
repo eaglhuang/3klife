@@ -1,48 +1,10 @@
 {
+  "schemaId": "prog1146.verificationIndex.v2",
   "task": "PROG-2-1146",
-  "baseSha": "d44d6dec34037b5006e646269827ed5e685e02ad",
-  "actor": "codex-gpt-6",
-  "dedupKey": "child.UID",
-  "conflictPolicy": "first valid record wins; load replaces list; no fabricated history",
-  "review": "self-review of controller->session->snapshot validation->storage/backup->load; defensive copies of input, getter and snapshot; forbidden files unchanged",
+  "status": "blocked",
+  "authoritativeReceipt": "revision-2/verification.json",
+  "supersededReceiptCommit": "788f6be2efcd989ca477232a3be03b1adb2fa2e8",
+  "reason": "Original headless/gate receipts preceded the final rerun. Revision-2 preserves raw final outputs with matching hashes.",
   "mergeBlocked": true,
-  "blocker": "Baseline tsc exits 2 with 38 diagnostics; no added diagnostics. No acceptance waiver or unrelated repairs authorized.",
-  "commands": [
-    {
-      "command": "headless baseline",
-      "exitCode": 0,
-      "result": "3756 passed, 3 existing skipped",
-      "outputSha256": "5121a55db1fdd4ea5840d47062f205161a60b9daa7d38fa1896c777321f5e810"
-    },
-    {
-      "command": "headless final",
-      "exitCode": 0,
-      "result": "3766 passed, 3 existing skipped; new suite 10/10",
-      "outputSha256": "d0a20dc12f578b8dc28999e6f6db53b9edc30bc06fbc84b8aae853f9eefba7a4"
-    },
-    {
-      "command": "tsc --noEmit --project tsconfig.test.json (baseline)",
-      "exitCode": 2,
-      "result": "38 existing diagnostics",
-      "outputSha256": "bc174db3c696d438dbd5e65d131000b5d9b046d4211164f15bec37a63b1e0b4d"
-    },
-    {
-      "command": "tsc --noEmit --project tsconfig.test.json (final)",
-      "exitCode": 2,
-      "result": "byte-identical to baseline",
-      "outputSha256": "bc174db3c696d438dbd5e65d131000b5d9b046d4211164f15bec37a63b1e0b4d"
-    },
-    {
-      "command": "node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "exitCode": 0,
-      "result": "9/9 passed",
-      "outputSha256": "d6a0edca3e9dadd56cccab82d0c30e7cb6e3005498972e707cf85f66caad4817"
-    },
-    {
-      "command": "npm test",
-      "exitCode": 0,
-      "result": "all acceptance checks passed",
-      "outputSha256": "ac2f8d05e2757f3661451bf43b5e2f1e8fdf5611f9fc6331b1ebd1618f26f61a"
-    }
-  ]
+  "authoritativeReceiptSha256": "90b446adb74a0413fa6264d6fa5755bb2a52f185853b724a726d87826f27c2c0"
 }
