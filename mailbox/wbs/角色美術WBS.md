@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-26 R224：Cocos 4.2 載入通過（第1項），補物理與變形影片；C2 以 AG-02 候選為底審。AG-04：趙雲＋張飛回歸測試。Sparkle v4 補充回饋（骨名 v2、位移按 H 縮放）。
 - 2026-10-26 R223：使用者已在隔離 Creator 切 4.2 並重建，請 Codex 重測 Sparkle v4 與 physics42。
 - 2026-10-26 Sparkle v4 以 AG validate_spine 獨立審：4 項未過（遮臉 23%、thrust root 位移、翻面 268、剛體跨骨），回饋 v4 已備；AG-03 下一步；R222 Engine Modules 待使用者、C2 加入 AG-02 候選。
 - 2026-10-26 R221：Sparkle v3（原生 4.2＋物理）官方 runtime 讀取通過，交 Codex 在 Cocos 4.2 測；回饋 v3 已備。
