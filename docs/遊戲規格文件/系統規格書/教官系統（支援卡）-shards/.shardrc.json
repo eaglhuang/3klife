@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "source": "../教官系統（支援卡）.md",
+  "indexTitle": "教官系統（支援卡）規格（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-d",
+  "shards": [
+    { "name": "shard-a", "title": "A–E 系統描述／目的／套路／TA／功能清單", "pattern": "^[A-E]\\." },
+    { "name": "shard-b", "title": "F 公式相關（支援卡 UI／TP／靈感機率／星等突破／爆發）", "pattern": "^F\\." },
+    { "name": "shard-c", "title": "G–J 劇本／字串／Data Schema／名詞", "pattern": "^[G-J]\\." },
+    { "name": "shard-d", "title": "K–M 師友羈絆／好友借用／溢出轉化／MCQ 決策記錄", "pattern": "." }
+  ]
+}
