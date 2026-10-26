@@ -787,6 +787,7 @@ export class LobbyScene extends Component {
     private _runCityHubAction(action: LobbyActionId): void {
         const run: Record<LobbyActionId, () => void> = {
             battle: () => this.onClickEnterBattle(),
+            rival: () => this._openRivalDiplomacy(),
             floodBattle: () => this.onClickFloodBattle(),
             generalList: () => this.onClickGeneralList(),
             bonding: () => { void this._openBondingSetup(); },
