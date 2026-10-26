@@ -22,6 +22,20 @@
     "children": [
       {
         "type": "panel",
+        "name": "RedFaceScrim",
+        "id": "redFaceScrim",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "width": 1920,
+        "height": 1080,
+        "skinSlot": "rf.scrim"
+      },
+      {
+        "type": "panel",
         "name": "RedFaceShowcaseCard",
         "id": "redFaceShowcaseCard",
         "widget": {

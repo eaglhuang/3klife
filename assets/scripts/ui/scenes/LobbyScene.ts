@@ -1344,6 +1344,8 @@ export class LobbyScene extends Component {
             { buttonId: 'btnClose', handler: () => { this._closeRedFaceShowcase(); } },
             ...rowBindings,
         ]);
+        // 遮罩下的大廳按鈕不能點
+        this._redFaceHost.node.addComponent(BlockInputEvents);
         this._redFaceHost.node.active = false;
         // 新手開場第四幕：首戰通過後第一次回大廳自動展示紅顏；展示時就記下，不重複彈
         if (services().session.shouldShowOpeningRedFace) {

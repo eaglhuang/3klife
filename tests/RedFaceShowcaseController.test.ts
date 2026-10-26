@@ -40,6 +40,7 @@ export function createRedFaceShowcaseControllerSuite(): TestSuite {
         assert.equals('大喬', view.texts.redFaceRow0Name);
         assert.equals('核心', view.texts.redFaceRow0Tag);
         assert.equals('江東二喬', view.texts.redFaceDetailLine ?? '');
+        assert.equals('士氣光環', view.texts.redFaceDetailTags, '效果標籤顯示中文，查無對照的照原字串');
         assert.isTrue(view.actives.redFaceDetail);
     });
 

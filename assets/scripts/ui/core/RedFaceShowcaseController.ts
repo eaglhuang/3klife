@@ -47,6 +47,30 @@ export function toRedFaceTabFlowView(view: RedFaceShowcaseFlowView): RedFaceShow
     return { texts, actives: view.actives, enabled };
 }
 
+/** 紅顏效果標籤中文名（support-cards.json effectTags）；查無則顯示原字串。 */
+const EFFECT_TAG_LABELS: Readonly<Record<string, string>> = {
+    'culture-output': '文化產出',
+    'morale-recovery': '士氣回復',
+    'literary-record': '文史記載',
+    'diplomacy-boost': '外交加成',
+    'morale-aura': '士氣光環',
+    'wu-affinity': '吳國親和',
+    'intelligence-boost': '智力加成',
+    'wei-affinity': '魏國親和',
+    'poem-inspiration': '詩文靈感',
+    'morale-boost': '士氣提升',
+    'sp-regen': '奧義回充',
+    'water-bonus': '水戰加成',
+    'tech-research': '技術研發',
+    'stratagem-boost': '計略加成',
+    'shu-affinity': '蜀國親和',
+    'inventor': '發明家',
+};
+
+export function effectTagLabel(tag: string): string {
+    return EFFECT_TAG_LABELS[tag] ?? tag;
+}
+
 export class RedFaceShowcaseController {
     private _selectedId: string | null = null;
 
@@ -81,7 +105,7 @@ export class RedFaceShowcaseController {
             redFaceEmptyLabel: rows.length === 0 ? '目前沒有可展示的紅顏' : '',
             redFaceDetailName: selected?.name ?? '',
             redFaceDetailLine: selected?.previewLine ?? '',
-            redFaceDetailTags: selected ? selected.effectTags.join(' · ') : '',
+            redFaceDetailTags: selected ? selected.effectTags.map(effectTagLabel).join(' · ') : '',
             btnCloseLabel: '關閉',
         };
         const actives: Record<string, boolean> = {
