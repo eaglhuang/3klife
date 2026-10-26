@@ -80,8 +80,9 @@ class TestAG19OwnershipMasks(unittest.TestCase):
 
         # 3. 驗證三張遮罩的像素總數與各自幾何定義一致
         band_px_count = int(arr_band.sum())
-        # 分離帶為 y: 1020..1120 (共 100 行)，每行寬度恰好為 minGapPx (20px)
-        self.assertEqual(band_px_count, 100 * 20, "分離帶面積應精確為 2000 px (100行 x 20px)")
+        # AG-20: 分離帶涵蓋整段 y 交集 (非固定 100 行)，每行寬度為 minGapPx (20px)
+        self.assertGreater(band_px_count, 2000, "分離帶應涵蓋整段交集，面積應大於 2000 px")
+        self.assertEqual(band_px_count, 3936, "分離帶在預設骨架下面積精確為 3936 px")
 
         arm_px_count = int(arr_arm.sum())
         torso_px_count = int(arr_torso.sum())
@@ -90,8 +91,8 @@ class TestAG19OwnershipMasks(unittest.TestCase):
 
         # 4. 驗證分離帶中不透明像素數量
         opaque_in_band = report["separationBandOpaquePixels"]
-        # 因為檢驗區內 1100..1210 全填滿，分離帶位於該區間，故分離帶內應有 2000 個不透明像素
-        self.assertEqual(opaque_in_band, 2000)
+        # AG-20: 分離帶沿手臂膠囊內側走，在檢驗區內有 1894 個不透明像素
+        self.assertEqual(opaque_in_band, 1894)
 
 
 if __name__ == "__main__":
