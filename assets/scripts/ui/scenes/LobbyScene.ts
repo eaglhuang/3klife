@@ -794,12 +794,14 @@ export class LobbyScene extends Component {
             jobChange: () => this._openJobChange(),
             spiritCodex: () => { void this._openSpiritCodex(); },
             domestic: () => this._openDomestic(),
+            recruitHall: () => this._openRecruitHall(),
             hallBoard: () => this._openHallBoard(),
             sandtable: () => this._onClickOpenSandtable(),
             nurture: () => this._openNurtureFlow(),
             supportCard: () => this.onClickSupportCard(),
             gacha: () => this.onClickGachaMain(),
             shop: () => this.onClickShopMain(),
+            warehouse: () => this._openWarehouse(),
         };
         run[action]();
     }
