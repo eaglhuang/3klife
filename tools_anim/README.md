@@ -1,8 +1,9 @@
 # 3KLife 美術動畫工具組 (`tools_anim`)
 
-本資料夾由 **Antigravity** 開發與維護，對應工單 `AG-01`、`AG-01修訂` 與 `AG-02`，提供：
-1. **`slice_and_rig.py`**：AG-02 自動切片、圖集打包與 `3klife.neutral-rig.v2` 綁點生成工具。
-2. **`validate_spine.py`**（搭配 `spine_eval_helper.mjs`）：獨立 Spine 4.2 驗證器與軟體光柵化逐格渲染器。
+本資料夾由 **Antigravity** 開發與維護，對應工單 `AG-01`、`AG-02`、`AG-04`、`AG-05` 與 `AG-06`，提供：
+1. **`slice_and_rig.py`**：AG-02/AG-05 自動切片、圖集打包、`3klife.neutral-rig.v2` 綁點生成與執行期縮放工具。
+2. **`validate_spine.py`**（搭配 `spine_eval_helper.mjs`）：獨立 Spine 4.2 驗證器與軟體光柵化逐格渲染器（支援 H 比例門檻與 `--fail-on`）。
+3. **`run_regression.py`**：雙角色（趙雲 C2 + 張飛 Q3）自動化回歸測試管線（切片 -> Sparkle -> 驗證），輸出兩行 OVERALL。
 
 > **驗證範圍聲明**：本工具組產出之報告皆為離線驗證（官方 `@esotericsoftware/spine-core` 4.2 + 軟體光柵化器），未經 Cocos Creator 實際載入實測前，不得宣稱「已能播放」或「可量產」。
 
@@ -71,3 +72,17 @@ C:\Users\User\AppData\Local\Programs\Python\Python313\python.exe tools_anim/vali
   --out-dir scratch/audit_sparkle_v4_42 `
   --fail-on
 ```
+
+---
+
+## 3. 雙角色自動化回歸管線 (`run_regression.py`)
+
+循序執行切片（趙雲 C2 + 張飛 Q3）、呼叫 Sparkle 產生器並以 `validate_spine.py --fail-on` 執行驗收，最後輸出兩行判定：
+```powershell
+# 原圖 (master) 解析度回歸
+python tools_anim/run_regression.py --mode master --out-dir scratch/regression_master
+
+# 執行期 (runtime) 480px 縮放回歸
+python tools_anim/run_regression.py --mode runtime --runtime-height 480 --out-dir scratch/regression_runtime
+```
+

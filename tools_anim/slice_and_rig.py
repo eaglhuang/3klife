@@ -850,6 +850,7 @@ def main() -> None:
     ap.add_argument("--facing", choices=["auto", "left", "right"], default="auto", help="角色朝向（預設 auto）")
     ap.add_argument("--atlas-width", type=int, default=2048, help="圖集寬度（預設 2048）")
     ap.add_argument("--atlas-height", type=int, default=4096, help="圖集高度（預設 4096）")
+    ap.add_argument("--runtime-height", type=int, default=480, help="執行期目標全身高度 px（預設 480，輸出縮放圖集至 master/ 同層，原解析度移至 master/）")
     ap.add_argument("--padding", type=int, default=2, help="圖集切件間距 px（預設 2，須 >= 2）")
     ap.add_argument("--alpha-cutoff", type=int, default=8, help="透明區雜訊清除門檻（alpha <= 此值歸零，預設 8）")
     args = ap.parse_args()
@@ -956,7 +957,9 @@ def main() -> None:
     max_alpha_diff = int(channel_diff[..., 3].max()) if live_count > 0 else 0
     pixels_over_2 = int((channel_diff.max(axis=-1) > 2).sum())
 
-    # 打包 Atlas 與寫出 .atlas
+    # 打包原解析度 Master Atlas 與寫出 .atlas
+    master_dir = out_dir / "master"
+    master_dir.mkdir(parents=True, exist_ok=True)
     padding = max(2, int(args.padding))
     atlas_img, placed_regions = pack_atlas_maxrects(
         trimmed_parts,
@@ -965,12 +968,12 @@ def main() -> None:
         padding=padding,
     )
     atlas_png_name = f"{args.name}.png"
-    atlas_png_path = out_dir / atlas_png_name
-    atlas_txt_path = out_dir / f"{args.name}.atlas"
+    atlas_png_path = master_dir / atlas_png_name
+    atlas_txt_path = master_dir / f"{args.name}.atlas"
     atlas_img.save(atlas_png_path)
     write_legacy_atlas(atlas_txt_path, atlas_png_name, atlas_img.size, placed_regions)
 
-    # 寫出中立 source-rig.json (v2) 與向下相容 Sparkle v1-v4 的 source-rig-v1-compat.json
+    # 寫出中立 source-rig.json (v2) 與向下相容 Sparkle v1-v4 的 source-rig-v1-compat.json（保留在 master/）
     rig_data = build_neutral_rig_v2(
         landmarks_info=landmarks_info,
         placed_regions=placed_regions,
@@ -983,7 +986,7 @@ def main() -> None:
         weapon_source_mode=weapon_source_mode,
         rig_schema="v2",
     )
-    rig_path = out_dir / "source-rig.json"
+    rig_path = master_dir / "source-rig.json"
     rig_path.write_text(json.dumps(rig_data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     rig_v1_compat = build_neutral_rig_v2(
@@ -998,8 +1001,100 @@ def main() -> None:
         weapon_source_mode=weapon_source_mode,
         rig_schema="v1-compat",
     )
-    rig_v1_compat_path = out_dir / "source-rig-v1-compat.json"
+    rig_v1_compat_path = master_dir / "source-rig-v1-compat.json"
     rig_v1_compat_path.write_text(json.dumps(rig_v1_compat, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    # AG-05: 產生執行期縮放版本（預設 --runtime-height 480，輸出至 out_dir 根目錄）
+    runtime_h = int(args.runtime_height) if args.runtime_height else 480
+    body_h_orig = landmarks_info["bodyHeightPx"]
+    rt_scale = runtime_h / body_h_orig
+    rt_canvas_w = max(1, int(round(w * rt_scale)))
+    rt_canvas_h = max(1, int(round(h * rt_scale)))
+
+    rt_trimmed_parts: dict[str, dict[str, Any]] = {}
+    for sid, t_info in trimmed_parts.items():
+        if t_info.get("empty", True) or t_info["crop"] is None:
+            rt_trimmed_parts[sid] = {
+                "empty": True,
+                "crop": None,
+                "trimRectPx": [0, 0, 0, 0],
+                "sourceCanvasSizePx": [rt_canvas_w, rt_canvas_h],
+                "partSha256": t_info.get("partSha256", ""),
+                "visiblePixels": 0,
+            }
+            continue
+        orig_crop = t_info["crop"]
+        ox, oy, ow, oh = t_info["trimRectPx"]
+        new_w = max(1, int(round(ow * rt_scale)))
+        new_h = max(1, int(round(oh * rt_scale)))
+        pil_sub = Image.fromarray(orig_crop, mode="RGBA").resize((new_w, new_h), Image.Resampling.LANCZOS)
+        rt_crop_arr = np.array(pil_sub)
+        rt_trimmed_parts[sid] = {
+            "empty": False,
+            "crop": rt_crop_arr,
+            "trimRectPx": [
+                int(round(ox * rt_scale)),
+                int(round(oy * rt_scale)),
+                new_w,
+                new_h,
+            ],
+            "sourceCanvasSizePx": [rt_canvas_w, rt_canvas_h],
+            "partSha256": t_info["partSha256"],
+            "visiblePixels": int((rt_crop_arr[..., 3] > 0).sum()),
+        }
+
+    rt_page_w = 1024
+    rt_page_h = 1024
+    rt_atlas_img, rt_placed_regions = pack_atlas_maxrects(
+        rt_trimmed_parts,
+        page_w=rt_page_w,
+        page_h=rt_page_h,
+        padding=padding,
+    )
+    rt_atlas_png_path = out_dir / atlas_png_name
+    rt_atlas_txt_path = out_dir / f"{args.name}.atlas"
+    rt_atlas_img.save(rt_atlas_png_path)
+    write_legacy_atlas(rt_atlas_txt_path, atlas_png_name, rt_atlas_img.size, rt_placed_regions)
+
+    # 縮放 19+2 標記點
+    rt_landmarks_info = {
+        "inputFormat": landmarks_info["inputFormat"] + "_runtime_scaled",
+        "bodyHeightPx": round(runtime_h, 2),
+        "points": {
+            k: [round(v[0] * rt_scale, 2), round(v[1] * rt_scale, 2)]
+            for k, v in landmarks_info["points"].items()
+        },
+    }
+
+    rt_rig_data = build_neutral_rig_v2(
+        landmarks_info=rt_landmarks_info,
+        placed_regions=rt_placed_regions,
+        trimmed_parts=rt_trimmed_parts,
+        canvas_size=(rt_canvas_w, rt_canvas_h),
+        source_sha256=source_sha,
+        atlas_filename=atlas_png_name,
+        atlas_size=rt_atlas_img.size,
+        padding=padding,
+        weapon_source_mode=weapon_source_mode,
+        rig_schema="v2",
+    )
+    rt_rig_path = out_dir / "source-rig.json"
+    rt_rig_path.write_text(json.dumps(rt_rig_data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    rt_rig_v1_compat = build_neutral_rig_v2(
+        landmarks_info=rt_landmarks_info,
+        placed_regions=rt_placed_regions,
+        trimmed_parts=rt_trimmed_parts,
+        canvas_size=(rt_canvas_w, rt_canvas_h),
+        source_sha256=source_sha,
+        atlas_filename=atlas_png_name,
+        atlas_size=rt_atlas_img.size,
+        padding=padding,
+        weapon_source_mode=weapon_source_mode,
+        rig_schema="v1-compat",
+    )
+    rt_rig_v1_compat_path = out_dir / "source-rig-v1-compat.json"
+    rt_rig_v1_compat_path.write_text(json.dumps(rt_rig_v1_compat, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     # 儲存 QA 預覽圖
     qa_paths = save_qa_previews(master_rgba, reassembled, owner_map, landmarks_info["points"], out_dir / "qa")

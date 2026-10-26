@@ -625,10 +625,9 @@ def check_grip_and_motion(
                     drift = max(planted_xs) - min(planted_xs)
                     walk_stance_drift_px = max(walk_stance_drift_px, drift)
 
-    # 4. Thrust dynamics (coil vs strike extension)
+    # 4. Thrust dynamics (coil vs strike extension with H ratios)
     thrust_metrics: dict[str, Any] = {}
     if thrust_frames:
-        # Find stance (~1.1s), coil (~1.5s), strike (~1.67s)
         def frame_at(target_t: float) -> dict[str, Any]:
             return min(thrust_frames, key=lambda fr: abs(float(fr["time"]) - target_t))
 
@@ -637,23 +636,58 @@ def check_grip_and_motion(
         f_strike = frame_at(1.67)
         root_xs = [f["bones"]["root"]["worldX"] for f in thrust_frames if "root" in f["bones"]]
         root_span = (max(root_xs) - min(root_xs)) if root_xs else 0.0
+        root_span_ratio_h = root_span / body_h
 
+        # Weapon / spear tip reach
         weap_stance_x = f_stance["bones"].get("weapon", {}).get("worldX", 0.0)
         weap_coil_x = f_coil["bones"].get("weapon", {}).get("worldX", 0.0)
         weap_strike_x = f_strike["bones"].get("weapon", {}).get("worldX", 0.0)
+        torso_strike_x = f_strike["bones"].get("torso", {}).get("worldX", 0.0)
         foot_f_stance_x = f_stance["bones"].get("foot_f", {}).get("worldX", 0.0)
         foot_f_strike_x = f_strike["bones"].get("foot_f", {}).get("worldX", 0.0)
 
+        # Spear tip: if spear_tip bone exists use its worldX, otherwise derive from weapon bone + rig weapon tip offset
+        if "spear_tip" in f_strike["bones"]:
+            spear_tip_strike_x = f_strike["bones"]["spear_tip"]["worldX"]
+        else:
+            # Fallback: estimate spear_tip from weapon world pos
+            spear_tip_strike_x = weap_strike_x
+
+        facing_dir = "right" if (weap_strike_x - weap_coil_x) >= 0 else "left"
+        if facing_dir == "right":
+            spear_tip_minus_torso_px = spear_tip_strike_x - torso_strike_x
+        else:
+            spear_tip_minus_torso_px = torso_strike_x - spear_tip_strike_x
+
+        spear_reach_ratio_h = spear_tip_minus_torso_px / body_h
+        foot_step_px = abs(foot_f_strike_x - foot_f_stance_x)
+        foot_step_ratio_h = foot_step_px / body_h
+
+        # AG-04 H-ratio criteria:
+        # 1. root stationary <= 0.005H
+        # 2. front foot step 0.2H .. 0.4H
+        # 3. strike spear tip ahead of torso >= 1.0H
+        root_stationary_h_ok = root_span_ratio_h <= 0.005
+        foot_step_h_ok = 0.20 <= foot_step_ratio_h <= 0.40
+        spear_reach_h_ok = spear_reach_ratio_h >= 1.0
+
         thrust_metrics = {
             "rootWorldXSpanPx": round(root_span, 2),
-            "rootIsStationary": root_span <= 1.0,
+            "rootSpanRatioH": round(root_span_ratio_h, 5),
+            "rootIsStationaryHPass": root_stationary_h_ok,
+            "rootIsStationary": root_stationary_h_ok,
             "weaponWorldX_stance_1.10s": round(weap_stance_x, 2),
             "weaponWorldX_coil_1.50s": round(weap_coil_x, 2),
             "weaponWorldX_strike_1.67s": round(weap_strike_x, 2),
             "weaponStrikeDeltaFromCoilPx": round(abs(weap_strike_x - weap_coil_x), 2),
-            "frontFootStepDeltaPx": round(abs(foot_f_strike_x - foot_f_stance_x), 2),
-            "frontFootStepRatioH": round(abs(foot_f_strike_x - foot_f_stance_x) / body_h, 4),
-            "facingDirection": "left" if (weap_strike_x - weap_coil_x) < 0 else "right",
+            "frontFootStepDeltaPx": round(foot_step_px, 2),
+            "frontFootStepRatioH": round(foot_step_ratio_h, 4),
+            "frontFootStepHPass": foot_step_h_ok,
+            "strikeSpearTipAheadOfTorsoPx": round(spear_tip_minus_torso_px, 2),
+            "strikeSpearTipAheadOfTorsoRatioH": round(spear_reach_ratio_h, 4),
+            "strikeSpearTipAheadOfTorsoHPass": spear_reach_h_ok,
+            "facingDirection": facing_dir,
+            "bodyHeightPx": round(body_h, 2),
         }
 
     drift_ratio = walk_stance_drift_px / body_h
@@ -971,7 +1005,12 @@ def format_concise_summary_lines(
         (
             "thrust_root_stationary",
             thrust_root_ok,
-            f"thrust 的 root 原地不動 (<= 1.0 px): rootSpanX={tm.get('rootWorldXSpanPx', 0.0):.2f} px, strikeDelta={tm.get('weaponStrikeDeltaFromCoilPx', 0.0):.1f} px, step={tm.get('frontFootStepRatioH', 0.0):.3f}H",
+            f"thrust 的 root 原地不動 (<= 0.005H): rootSpanX={tm.get('rootWorldXSpanPx', 0.0):.2f} px ({tm.get('rootSpanRatioH', 0.0):.4f}H), strikeDelta={tm.get('weaponStrikeDeltaFromCoilPx', 0.0):.1f} px",
+        ),
+        (
+            "thrust_step_and_reach_h",
+            bool(tm.get("frontFootStepHPass", False)) and bool(tm.get("strikeSpearTipAheadOfTorsoHPass", False)),
+            f"thrust 跨步 (0.2-0.4H) 與槍尖刺出 (>= 1.0H): step={tm.get('frontFootStepRatioH', 0.0):.3f}H, reach={tm.get('strikeSpearTipAheadOfTorsoRatioH', 0.0):.3f}H (diff={tm.get('strikeSpearTipAheadOfTorsoPx', 0.0):.1f} px, H={tm.get('bodyHeightPx', 0.0):.1f} px)",
         ),
         (
             "marker_dots",
