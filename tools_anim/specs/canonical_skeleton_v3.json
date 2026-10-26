@@ -563,5 +563,13 @@
     "buttGroundToleranceH": 0.01
   },
   "standingCenter": 1024,
-  "standingCenterTol": 25
+  "standingCenterTol": 25,
+  "shoulderOverlapZone": {
+    "joints": [
+      "shoulder_f",
+      "shoulder_b"
+    ],
+    "radiusH": 0.06,
+    "note": "以肩關節為圓心、半徑 0.06H（H=1600 時 96px）內允許肩甲與軀幹前後重疊，不要求 arm_to_torso 透明縫；圈內屬上臂膠囊者歸手臂。圈外至手腕全段仍須 ≥ minGapPx.arm_to_torso。切圖工具須為圈內被肩甲遮住的軀幹補底。"
+  }
 }

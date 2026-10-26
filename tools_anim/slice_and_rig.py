@@ -450,6 +450,23 @@ def build_mutually_exclusive_ownership(
 
         owner_map[ys_u, xs_u] = best_slot
 
+    # AG-20 補充: 肩部重疊圈 (radiusH * H) 內，凡落在上臂膠囊內者歸手臂 (肩甲隨上臂旋轉)
+    arm_u_f_idx = slot_to_idx.get("arm_upper_f")
+    if "shoulder_f" in landmarks and "elbow_f" in landmarks and arm_u_f_idx is not None:
+        p_sh = landmarks["shoulder_f"]
+        p_el = landmarks["elbow_f"]
+        sh_rad = 0.06 * float(landmarks.get("H", [1600.0])[0] if isinstance(landmarks.get("H"), list) else 1600.0)
+        # 尋找所有 live_mask 像素
+        ys_live, xs_live = np.where(live_mask)
+        xx_l = xs_live.astype(np.float32)
+        yy_l = ys_live.astype(np.float32)
+        in_circle = ((xx_l - p_sh[0]) ** 2 + (yy_l - p_sh[1]) ** 2) <= (sh_rad ** 2)
+        if in_circle.any():
+            d2_arm = segment_distance_sq_grid(xx_l[in_circle], yy_l[in_circle], (p_sh[0], p_sh[1]), (p_el[0], p_el[1]))
+            in_arm = d2_arm <= (45.0 ** 2)
+            match_idx = np.where(in_circle)[0][in_arm]
+            owner_map[ys_live[match_idx], xs_live[match_idx]] = arm_u_f_idx
+
     # AG-06 補充：確保 hair_tail 切件與 head 互斥，接縫藏在髮髻下
     head_idx = slot_to_idx.get("head")
     hair_idx = slot_to_idx.get("hair_tail")
@@ -1057,6 +1074,44 @@ def main() -> None:
                 part_full = ind_hair
                 vis_m = part_full[..., 3] > 0
 
+        # AG-20 補充: 軀幹切片在圈內被手臂遮住的部分補底層，並輸出 torso_underlay_mask.png
+        if sid == "torso":
+            sh_rad = 0.06 * float(canonical_spec.get("H", 1600) if canonical_spec else 1600.0)
+            p_sh = landmarks_info["points"].get("shoulder_f", [1120.0, 925.0])
+            p_el = landmarks_info["points"].get("elbow_f", [1230.0, 1080.0])
+            p_neck = landmarks_info["points"].get("neck", [1030.0, 880.0])
+            p_waist = landmarks_info["points"].get("waist", [1024.0, 1130.0])
+
+            # 軀幹頂部多邊形估計
+            tp_im = Image.new("L", (w, h), 0)
+            ImageDraw.Draw(tp_im).polygon([
+                (p_neck[0] - 120, p_neck[1]),
+                (p_neck[0] + 120, p_neck[1]),
+                (p_waist[0] + 80, p_waist[1]),
+                (p_waist[0] - 80, p_waist[1]),
+            ], fill=255)
+            tp_mask = np.array(tp_im) > 128
+
+            # 重疊圈內上臂覆蓋的軀幹區域
+            yy_all, xx_all = np.mgrid[:h, :w]
+            in_c = ((xx_all - p_sh[0]) ** 2 + (yy_all - p_sh[1]) ** 2) <= (sh_rad ** 2)
+            d2_a = segment_distance_sq_grid(xx_all.astype(np.float32), yy_all.astype(np.float32), (p_sh[0], p_sh[1]), (p_el[0], p_el[1]))
+            in_arm_cap = d2_a <= (45.0 ** 2)
+
+            torso_underlay_mask = in_c & in_arm_cap & tp_mask & (master_rgba[..., 3] > 0)
+            torso_underlay_area = int(torso_underlay_mask.sum())
+
+            underlay_path = parts_out_dir / "torso_underlay_mask.png"
+            Image.fromarray((torso_underlay_mask.astype(np.uint8) * 255), mode="L").save(underlay_path)
+
+            if torso_underlay_area > 0 and (part_full[..., 3] > 0).any():
+                inpaint_mask = torso_underlay_mask.astype(np.uint8) * 255
+                bgr = cv2.cvtColor(part_full[..., :3], cv2.COLOR_RGB2BGR)
+                inp_bgr = cv2.inpaint(bgr, inpaint_mask, 5, cv2.INPAINT_TELEA)
+                inp_rgb = cv2.cvtColor(inp_bgr, cv2.COLOR_BGR2RGB)
+                part_full[torso_underlay_mask, :3] = inp_rgb[torso_underlay_mask]
+                part_full[torso_underlay_mask, 3] = 255
+
         part_path = parts_out_dir / f"{sid}.png"
         mask_path = masks_out_dir / f"{sid}.png"
         anim_mask_path = anim_masks_out_dir / f"{sid}.png"
@@ -1338,6 +1393,7 @@ def main() -> None:
             "bodyHeightPx": landmarks_info["bodyHeightPx"],
             "pointCount": len(landmarks_info["points"]),
         },
+        "torsoUnderlayArea": torso_underlay_area if "torso_underlay_area" in locals() else 0,
         "ownershipAndReassembly": {
             "sourceLiveAlphaPixels": live_count,
             "unassignedLiveAlphaPixels": unassigned_count,

@@ -122,7 +122,27 @@ def compute_arm_torso_geometry(
     y_min = max(int(torso_ys.min()), int(arm_ys.min()))
     y_max = min(int(torso_ys.max()), int(arm_ys.max())) + 1
 
-    # 4. 分離帶沿手臂膠囊內緣（朝軀幹那一側）走，寬度＝minGapPx.arm_to_torso，涵蓋整段交集
+    # 4. 肩部重疊區 (AG-20 補充 / 規格 v3.3: 半徑 = radiusH * H，圈內不判 gap)
+    overlap_cfg = spec.get("shoulderOverlapZone", {})
+    overlap_radius_h = float(overlap_cfg.get("radiusH", 0.06))
+    h_val = float(spec.get("H", 1600))
+    shoulder_radius = overlap_radius_h * h_val
+
+    # 建立肩部重疊圈遮罩
+    circle_im = Image.new("L", (w, h), 0)
+    draw_c = ImageDraw.Draw(circle_im)
+    draw_c.ellipse(
+        [
+            shoulder[0] - shoulder_radius,
+            shoulder[1] - shoulder_radius,
+            shoulder[0] + shoulder_radius,
+            shoulder[1] + shoulder_radius,
+        ],
+        fill=255,
+    )
+    shoulder_circle_mask = np.array(circle_im) > 128
+
+    # 5. 分離帶沿手臂膠囊內緣（朝軀幹那一側）走，寬度＝minGapPx.arm_to_torso，涵蓋整段交集
     min_gap = int(spec.get("minGapPx", {}).get("arm_to_torso", 20))
     band_mask = np.zeros((h, w), dtype=bool)
 
@@ -157,8 +177,8 @@ def compute_arm_torso_geometry(
 
             roi_x_list.extend([torso_edge, arm_outer])
 
-    # 確保三張遮罩互不重疊
-    band_mask = band_mask & (~torso_mask)
+    # 確保三張遮罩互不重疊，且分離帶遮罩不得進入肩部重疊圈 (AG-20 補充)
+    band_mask = band_mask & (~torso_mask) & (~shoulder_circle_mask)
     arm_mask = raw_arm_mask & (~torso_mask) & (~band_mask)
 
     if arm_side == "f":
@@ -591,8 +611,28 @@ def run_rigpose_inspection(
     rf_ymin, rf_ymax = roi_f["y_min"], roi_f["y_max"]
     rf_xmin, rf_xmax = roi_f["x_min"], roi_f["x_max"]
 
-    # 檢查窗切片 (由變數切片，無常數硬編碼)
-    raw_arm_box = img_arr[rf_ymin:rf_ymax, rf_xmin:rf_xmax, 3] > 16
+    # 檢查窗切片 (由變數切片，AG-20 補充: 扣除肩部重疊圈，圈內不判 gap)
+    overlap_cfg = spec.get("shoulderOverlapZone", {})
+    overlap_radius_h = float(overlap_cfg.get("radiusH", 0.06))
+    h_val = float(spec.get("H", 1600))
+    shoulder_radius = overlap_radius_h * h_val
+
+    shoulder_f_pt = get_j("shoulder_f", (1120, 925))
+    circle_im_f = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(circle_im_f).ellipse(
+        [
+            shoulder_f_pt[0] - shoulder_radius,
+            shoulder_f_pt[1] - shoulder_radius,
+            shoulder_f_pt[0] + shoulder_radius,
+            shoulder_f_pt[1] + shoulder_radius,
+        ],
+        fill=255,
+    )
+    shoulder_circle_f = np.array(circle_im_f) > 128
+
+    sub_circle_f = shoulder_circle_f[rf_ymin:rf_ymax, rf_xmin:rf_xmax]
+
+    raw_arm_box = (img_arr[rf_ymin:rf_ymax, rf_xmin:rf_xmax, 3] > 16) & (~sub_circle_f)
     raw_col_has_pixel = raw_arm_box.any(axis=0)
     raw_zero_run = 0
     cur_rz = 0
@@ -604,7 +644,7 @@ def run_rigpose_inspection(
             cur_rz = 0
     raw_arm_gap_pass = (raw_zero_run >= min_gap_arm_torso)
 
-    gap_arm_torso_box = gap_arr[rf_ymin:rf_ymax, rf_xmin:rf_xmax, 3] > 16
+    gap_arm_torso_box = (gap_arr[rf_ymin:rf_ymax, rf_xmin:rf_xmax, 3] > 16) & (~sub_circle_f)
     col_has_pixel = gap_arm_torso_box.any(axis=0)
     zero_runs = 0
     max_zero_run = 0
