@@ -1,0 +1,302 @@
+{
+  "schema": "3klife.canonicalRigPose.v3",
+  "canvas": {
+    "w": 2048,
+    "h": 2048
+  },
+  "groundY": 1900,
+  "H": 1600,
+  "headTopY": 300,
+  "note": "所有武將共用同一組關節座標（畫布像素，朝右 3/4）。體型只改肉與甲的粗細，不改關節。身高差在執行期以整體縮放處理。",
+  "joints": {
+    "head_center": {
+      "x": 1040,
+      "y": 580,
+      "tol": 30
+    },
+    "nose": {
+      "x": 1150,
+      "y": 640,
+      "tol": 30
+    },
+    "neck": {
+      "x": 1030,
+      "y": 880,
+      "tol": 20
+    },
+    "chest": {
+      "x": 1024,
+      "y": 980,
+      "tol": 20
+    },
+    "shoulder_f": {
+      "x": 1120,
+      "y": 925,
+      "tol": 20
+    },
+    "shoulder_b": {
+      "x": 930,
+      "y": 925,
+      "tol": 20
+    },
+    "elbow_f": {
+      "x": 1230,
+      "y": 1080,
+      "tol": 20
+    },
+    "elbow_b": {
+      "x": 820,
+      "y": 1080,
+      "tol": 20
+    },
+    "wrist_f": {
+      "x": 1330,
+      "y": 1180,
+      "tol": 20
+    },
+    "wrist_b": {
+      "x": 715,
+      "y": 1180,
+      "tol": 20
+    },
+    "waist": {
+      "x": 1024,
+      "y": 1130,
+      "tol": 20
+    },
+    "pelvis": {
+      "x": 1024,
+      "y": 1260,
+      "tol": 20
+    },
+    "hip_f": {
+      "x": 1085,
+      "y": 1290,
+      "tol": 20
+    },
+    "hip_b": {
+      "x": 963,
+      "y": 1290,
+      "tol": 20
+    },
+    "knee_f": {
+      "x": 1120,
+      "y": 1580,
+      "tol": 20
+    },
+    "knee_b": {
+      "x": 930,
+      "y": 1580,
+      "tol": 20
+    },
+    "ankle_f": {
+      "x": 1135,
+      "y": 1850,
+      "tol": 20
+    },
+    "ankle_b": {
+      "x": 915,
+      "y": 1850,
+      "tol": 20
+    },
+    "root": {
+      "x": 1024,
+      "y": 1900,
+      "tol": 10
+    }
+  },
+  "grips": {
+    "grip_A": {
+      "x": 1365,
+      "y": 1225,
+      "tol": 12,
+      "note": "前手拳心孔中心"
+    },
+    "grip_B": {
+      "x": 680,
+      "y": 1225,
+      "tol": 12,
+      "note": "後手拳心孔中心"
+    }
+  },
+  "segments": {
+    "head": {
+      "from": "neck",
+      "to": "head_center",
+      "zone": [
+        760,
+        260,
+        1340,
+        900
+      ]
+    },
+    "torso": {
+      "from": "pelvis",
+      "to": "neck",
+      "halfWidth": {
+        "slim": [
+          90,
+          120
+        ],
+        "standard": [
+          110,
+          145
+        ],
+        "heavy": [
+          140,
+          190
+        ]
+      },
+      "note": "halfWidth 指肩寬；腰部須比肩窄，手肘內側與腰之間保留 minGapPx"
+    },
+    "upperarm_f": {
+      "from": "shoulder_f",
+      "to": "elbow_f",
+      "halfWidth": {
+        "slim": [
+          38,
+          55
+        ],
+        "standard": [
+          45,
+          65
+        ],
+        "heavy": [
+          60,
+          85
+        ]
+      }
+    },
+    "forearm_f": {
+      "from": "elbow_f",
+      "to": "wrist_f",
+      "halfWidth": {
+        "slim": [
+          32,
+          48
+        ],
+        "standard": [
+          38,
+          55
+        ],
+        "heavy": [
+          50,
+          72
+        ]
+      }
+    },
+    "hand_f": {
+      "center": "grip_A",
+      "radius": [
+        55,
+        80
+      ]
+    },
+    "upperarm_b": {
+      "from": "shoulder_b",
+      "to": "elbow_b",
+      "halfWidth": "同 upperarm_f"
+    },
+    "forearm_b": {
+      "from": "elbow_b",
+      "to": "wrist_b",
+      "halfWidth": "同 forearm_f"
+    },
+    "hand_b": {
+      "center": "grip_B",
+      "radius": [
+        55,
+        80
+      ]
+    },
+    "thigh_f": {
+      "from": "hip_f",
+      "to": "knee_f",
+      "halfWidth": {
+        "slim": [
+          45,
+          62
+        ],
+        "standard": [
+          52,
+          72
+        ],
+        "heavy": [
+          68,
+          95
+        ]
+      }
+    },
+    "shin_f": {
+      "from": "knee_f",
+      "to": "ankle_f",
+      "halfWidth": {
+        "slim": [
+          38,
+          55
+        ],
+        "standard": [
+          45,
+          62
+        ],
+        "heavy": [
+          58,
+          80
+        ]
+      }
+    },
+    "foot_f": {
+      "zone": [
+        1060,
+        1800,
+        1290,
+        1900
+      ],
+      "toeDirection": "right"
+    },
+    "thigh_b": {
+      "from": "hip_b",
+      "to": "knee_b",
+      "halfWidth": "同 thigh_f"
+    },
+    "shin_b": {
+      "from": "knee_b",
+      "to": "ankle_b",
+      "halfWidth": "同 shin_f"
+    },
+    "foot_b": {
+      "zone": [
+        840,
+        1800,
+        1070,
+        1900
+      ],
+      "toeDirection": "right"
+    }
+  },
+  "minGapPx": {
+    "arm_to_torso": 20,
+    "leg_to_leg": 16,
+    "hand_to_any": 16
+  },
+  "status": "draft，以趙雲 C2 試作校準一次後鎖定；鎖定後改數字須升版號",
+  "angles": {
+    "upperarm_from_vertical_deg": [
+      30,
+      40
+    ],
+    "elbow_bend_deg": [
+      8,
+      18
+    ],
+    "thigh_from_vertical_deg": [
+      3,
+      8
+    ],
+    "knee_bend_deg": [
+      0,
+      6
+    ],
+    "fistHoleAxis": "水平，孔朝畫面右方"
+  }
+}
