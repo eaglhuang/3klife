@@ -713,6 +713,183 @@ def check_grip_and_motion(
     }
 
 
+def check_weapon_single_piece(skel_json: dict[str, Any]) -> dict[str, Any]:
+    """AG-06 補充：weapon_single_piece（武器僅 1 個 region attachment、1 根骨）。"""
+    slots = skel_json.get("slots", [])
+    bones = skel_json.get("bones", [])
+
+    weapon_slots = [
+        s for s in slots if "weapon" in s.get("name", "").lower() or "spear" in s.get("name", "").lower()
+    ]
+    weapon_bones = [
+        b for b in bones if "weapon" in b.get("name", "").lower() or "spear" in b.get("name", "").lower()
+    ]
+
+    skins = skel_json.get("skins", [])
+    attachments_map: dict[str, dict[str, Any]] = {}
+    if isinstance(skins, list):
+        for sk in skins:
+            if sk.get("name") == "default" or not attachments_map:
+                attachments_map = sk.get("attachments", {})
+    elif isinstance(skins, dict):
+        attachments_map = skins.get("default", {})
+
+    weapon_attachments: list[dict[str, Any]] = []
+    non_region_attachments: list[str] = []
+    for ws in weapon_slots:
+        s_name = ws.get("name", "")
+        s_atts = attachments_map.get(s_name, {})
+        for att_name, att_val in s_atts.items():
+            att_type = att_val.get("type", "region")
+            weapon_attachments.append({"slot": s_name, "attachment": att_name, "type": att_type})
+            if att_type != "region":
+                non_region_attachments.append(att_name)
+
+    issues: list[str] = []
+    if len(weapon_bones) != 1:
+        issues.append(f"武器骨骼數量應恰為 1 根，實際為 {len(weapon_bones)}: {[b['name'] for b in weapon_bones]}")
+    if len(weapon_attachments) != 1:
+        issues.append(f"武器 attachment 數量應恰為 1 個，實際為 {len(weapon_attachments)}: {[a['attachment'] for a in weapon_attachments]}")
+    if non_region_attachments:
+        issues.append(f"武器 attachment 類型應為 region，實際含有非 region: {non_region_attachments}")
+
+    return {
+        "pass": len(issues) == 0,
+        "weaponBoneCount": len(weapon_bones),
+        "weaponAttachmentCount": len(weapon_attachments),
+        "weaponBones": [b["name"] for b in weapon_bones],
+        "weaponSlots": [s["name"] for s in weapon_slots],
+        "weaponAttachments": weapon_attachments,
+        "issues": issues,
+    }
+
+
+def check_weapon_edge_cleanliness(
+    atlas_info: dict[str, Any],
+    atlas_rgba: np.ndarray,
+) -> dict[str, Any]:
+    """AG-06 補充：weapon_edge_clean（武器 alpha 邊緣 3 px 內非武器色像素 <= 1%）。"""
+    weap_reg = None
+    for r_name, r in atlas_info.get("regions", {}).items():
+        if "weapon" in r_name.lower() or "spear" in r_name.lower():
+            weap_reg = r
+            break
+
+    if not weap_reg:
+        return {"pass": True, "edgePixelCount": 0, "dirtyPixelCount": 0, "dirtyRatio": 0.0, "note": "no weapon region"}
+
+    rx, ry, rw, rh = weap_reg["x"], weap_reg["y"], weap_reg["width"], weap_reg["height"]
+    crop = atlas_rgba[ry : ry + rh, rx : rx + rw]
+    alpha = crop[..., 3]
+    rgb = crop[..., :3].astype(np.float32)
+
+    core_mask = alpha >= 240
+    if not core_mask.any():
+        return {"pass": True, "edgePixelCount": 0, "dirtyPixelCount": 0, "dirtyRatio": 0.0}
+
+    # 邊緣 3 px 範圍：alpha > 12 且距離核心邊界 <= 3 px 的外邊緣過渡區
+    kernel_3px = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7, 7))
+    dilated_core = cv2.dilate(core_mask.astype(np.uint8), kernel_3px) > 0
+    edge_mask = (alpha > 12) & dilated_core & (~core_mask)
+
+    edge_px_count = int(edge_mask.sum())
+    if edge_px_count == 0:
+        return {"pass": True, "edgePixelCount": 0, "dirtyPixelCount": 0, "dirtyRatio": 0.0}
+
+    core_rgb = rgb[core_mask]
+    mean_core = core_rgb.mean(axis=0)
+
+    crop_bgr = cv2.cvtColor(crop[..., :3], cv2.COLOR_RGB2BGR)
+    crop_hsv = cv2.cvtColor(crop_bgr, cv2.COLOR_BGR2HSV)
+    edge_hsv = crop_hsv[edge_mask]
+    core_hsv = crop_hsv[core_mask]
+
+    # 檢查核心色是否本身為藍色（若不是，邊緣出現藍色背景像素即為背景殘留雜色）
+    is_core_blue = ((core_hsv[:, 0] >= 100) & (core_hsv[:, 0] <= 135) & (core_hsv[:, 1] >= 40)).mean() > 0.15
+
+    dirty_pixels = 0
+    diff_from_core = np.linalg.norm(rgb[edge_mask] - mean_core, axis=1)
+    for i in range(edge_px_count):
+        h_val = int(edge_hsv[i, 0])
+        s_val = int(edge_hsv[i, 1])
+        v_val = int(edge_hsv[i, 2])
+        dist = float(diff_from_core[i])
+
+        is_blue_bg = (not is_core_blue) and (100 <= h_val <= 135) and (s_val >= 40) and (v_val >= 30)
+        is_alien_color = (dist > 120.0) and (s_val >= 50)
+
+        if is_blue_bg or is_alien_color:
+            dirty_pixels += 1
+
+    dirty_ratio = dirty_pixels / edge_px_count
+    return {
+        "pass": dirty_ratio <= 0.01,
+        "edgePixelCount": edge_px_count,
+        "dirtyPixelCount": dirty_pixels,
+        "dirtyRatio": round(dirty_ratio, 5),
+    }
+
+
+def check_facing_consistency(
+    skel_json: dict[str, Any],
+    eval_data: dict[str, Any],
+    rig_data: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """AG-06：facing_consistency（臉、胸口朝向與槍頭方向同側）。"""
+    setup_bones = eval_data.get("setupBones", {})
+
+    facing = "right"
+    if rig_data and "facing" in rig_data:
+        facing = rig_data["facing"]
+    elif "shoulder_f" in setup_bones and "shoulder_b" in setup_bones:
+        sf_x = setup_bones["shoulder_f"]["worldX"]
+        sb_x = setup_bones["shoulder_b"]["worldX"]
+        facing = "right" if sf_x >= sb_x else "left"
+
+    expected_sign = 1.0 if facing == "right" else -1.0
+    issues: list[str] = []
+
+    # 1. 胸口面朝方向：前肩 shoulder_f 相對於後肩 shoulder_b 的 X 軸位移
+    chest_facing_ok = True
+    if "shoulder_f" in setup_bones and "shoulder_b" in setup_bones:
+        chest_dx = setup_bones["shoulder_f"]["worldX"] - setup_bones["shoulder_b"]["worldX"]
+        if (chest_dx * expected_sign) < -5.0:
+            chest_facing_ok = False
+            issues.append(f"胸口朝向與基準朝向 ({facing}) 相反: shoulder_f 到 shoulder_b dx={chest_dx:.1f}")
+
+    # 2. 槍頭方向（在 thrust、idle 動畫及 setup pose 中槍頭尖端應朝向前方同側）
+    spear_facing_ok = True
+    weap_bone_name = None
+    for b in skel_json.get("bones", []):
+        if "weapon" in b.get("name", "").lower() or "spear" in b.get("name", "").lower():
+            weap_bone_name = b.get("name")
+            break
+
+    for anim_name, anim in eval_data.get("animations", {}).items():
+        for fr in anim.get("frames", []):
+            wb = fr.get("bones", {}).get(weap_bone_name) if weap_bone_name else None
+            if not wb:
+                continue
+            spear_dx = wb.get("a", 1.0)
+            if spear_dx * expected_sign < -0.2:
+                spear_facing_ok = False
+                issues.append(
+                    f"動畫 '{anim_name}' frame {fr.get('frameIndex')} 槍尖朝向與面朝方向 ({facing}) 相反: spear_dx={spear_dx:.2f}"
+                )
+                break
+        if not spear_facing_ok:
+            break
+
+    is_pass = chest_facing_ok and spear_facing_ok and len(issues) == 0
+    return {
+        "pass": is_pass,
+        "baseFacing": facing,
+        "chestFacingOk": chest_facing_ok,
+        "spearFacingOk": spear_facing_ok,
+        "issues": issues,
+    }
+
+
 def rasterize_frame_and_measure_occlusion(
     frame: dict[str, Any],
     atlas_img: np.ndarray,
@@ -735,6 +912,7 @@ def rasterize_frame_and_measure_occlusion(
 
     head_mask = np.zeros((canvas_h, canvas_w), dtype=bool)
     occluding_after_head_mask = np.zeros((canvas_h, canvas_w), dtype=bool)
+    slot_masks: dict[str, np.ndarray] = {}
     seen_head = False
 
     for d in frame.get("drawables", []):
@@ -821,6 +999,11 @@ def rasterize_frame_and_measure_occlusion(
         bg[..., :3] = slot_layer[..., :3] * a_norm + bg[..., :3] * (1.0 - a_norm)
 
         slot_vis = slot_layer[..., 3] > 24.0
+        if slot_name in slot_masks:
+            slot_masks[slot_name] |= slot_vis
+        else:
+            slot_masks[slot_name] = slot_vis.copy()
+
         if slot_name == "head":
             head_mask |= slot_vis
             seen_head = True
@@ -831,11 +1014,40 @@ def rasterize_frame_and_measure_occlusion(
     occluded_px = int((head_mask & occluding_after_head_mask).sum())
     occ_ratio = (occluded_px / head_px) if head_px > 0 else 0.0
 
+    # 1. AG-06 補充：hair_overlap 檢查（hair_tail 與 head 渲染 alpha 重疊率 <= 2%）
+    hair_m = slot_masks.get("hair_tail")
+    hair_px = int(hair_m.sum()) if hair_m is not None else 0
+    hair_overlap_px = int((hair_m & head_mask).sum()) if hair_m is not None else 0
+    hair_overlap_ratio = (hair_overlap_px / hair_px) if hair_px > 0 else 0.0
+
+    # 2. AG-06：arm_continuity 手臂部位可見像素與手部相連性
+    arm_slot_names = ["arm_upper_f", "arm_lower_f", "arm_upper_b", "arm_lower_b", "hand_f", "hand_b"]
+    arm_vis_px = {s: int(slot_masks[s].sum()) if s in slot_masks else 0 for s in arm_slot_names}
+
+    k5 = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+    hand_f_m = slot_masks.get("hand_f")
+    arm_lf_m = slot_masks.get("arm_lower_f")
+    hand_f_connected = True
+    if hand_f_m is not None and arm_lf_m is not None and hand_f_m.sum() > 10 and arm_lf_m.sum() > 10:
+        hand_f_connected = bool((cv2.dilate(hand_f_m.astype(np.uint8), k5) & arm_lf_m.astype(np.uint8)).any())
+
+    hand_b_m = slot_masks.get("hand_b")
+    arm_lb_m = slot_masks.get("arm_lower_b")
+    hand_b_connected = True
+    if hand_b_m is not None and arm_lb_m is not None and hand_b_m.sum() > 10 and arm_lb_m.sum() > 10:
+        hand_b_connected = bool((cv2.dilate(hand_b_m.astype(np.uint8), k5) & arm_lb_m.astype(np.uint8)).any())
+
     img = Image.fromarray(np.clip(bg[..., :3], 0, 255).astype(np.uint8), mode="RGB")
     return img, {
         "headVisiblePixels": head_px,
         "headOccludedByUpperSlotsPixels": occluded_px,
         "headOcclusionRatio": round(occ_ratio, 5),
+        "hairVisiblePixels": hair_px,
+        "hairOverlapWithHeadPixels": hair_overlap_px,
+        "hairOverlapRatio": round(hair_overlap_ratio, 5),
+        "armVisiblePixels": arm_vis_px,
+        "handFConnected": hand_f_connected,
+        "handBConnected": hand_b_connected,
     }
 
 
@@ -845,11 +1057,23 @@ def render_animations_and_check_head_occlusion(
     out_dir: Path,
     canvas_h: int = 360,
 ) -> dict[str, Any]:
-    """對所有動畫進行逐格渲染，儲存逐格 PNG 與 Contact Sheet，並統計 head 最大遮擋比例。"""
+    """對所有動畫進行逐格渲染，儲存逐格 PNG 與 Contact Sheet，
+    並同步統計 head 遮擋率、hair_tail 重疊率、以及 arm 連續性（可見像素 >= 60% 與手部無縫隙）。
+    """
     out_dir.mkdir(parents=True, exist_ok=True)
     anim_reports: dict[str, Any] = {}
     overall_max_head_occ = 0.0
+    overall_max_hair_overlap = 0.0
     worst_frame_info: dict[str, Any] = {}
+
+    # 先取得 setup pose 的手臂各部位可見像素基準
+    _, setup_frame_info = rasterize_frame_and_measure_occlusion(
+        eval_data.get("setupDraw", {}), atlas_img, canvas_h=canvas_h
+    )
+    setup_arm_px = setup_frame_info.get("armVisiblePixels", {})
+
+    all_arm_continuity_ok = True
+    arm_continuity_issues: list[dict[str, Any]] = []
 
     try:
         font = ImageFont.truetype("arial.ttf", 12)
@@ -878,6 +1102,7 @@ def render_animations_and_check_head_occlusion(
         max_occ = 0.0
         max_occ_frame = 0
         max_occ_time = 0.0
+        max_hair_overlap = 0.0
 
         for fr in frames:
             idx = int(fr["frameIndex"])
@@ -894,6 +1119,53 @@ def render_animations_and_check_head_occlusion(
             if r > overall_max_head_occ:
                 overall_max_head_occ = r
                 worst_frame_info = {"animation": anim_name, "frameIndex": idx, "time": t, "ratio": r}
+
+            ho = occ["hairOverlapRatio"]
+            if ho > max_hair_overlap:
+                max_hair_overlap = ho
+            if ho > overall_max_hair_overlap:
+                overall_max_hair_overlap = ho
+
+            # 檢查手臂 60% 與相連性
+            cur_arm_px = occ["armVisiblePixels"]
+            for slot_arm in ["arm_upper_f", "arm_lower_f", "arm_upper_b", "arm_lower_b"]:
+                s_base = setup_arm_px.get(slot_arm, 0)
+                s_cur = cur_arm_px.get(slot_arm, 0)
+                if s_base > 15 and s_cur < 0.60 * s_base:
+                    all_arm_continuity_ok = False
+                    arm_continuity_issues.append(
+                        {
+                            "animation": anim_name,
+                            "frameIndex": idx,
+                            "time": t,
+                            "slot": slot_arm,
+                            "currentPixels": s_cur,
+                            "setupPixels": s_base,
+                            "ratio": round(s_cur / s_base, 4),
+                            "reason": f"{slot_arm} 可見像素不足 60% ({s_cur}/{s_base})",
+                        }
+                    )
+
+            if not occ["handFConnected"]:
+                all_arm_continuity_ok = False
+                arm_continuity_issues.append(
+                    {
+                        "animation": anim_name,
+                        "frameIndex": idx,
+                        "time": t,
+                        "reason": "hand_f 與 arm_lower_f 斷開（拳頭浮空無相連）",
+                    }
+                )
+            if not occ["handBConnected"]:
+                all_arm_continuity_ok = False
+                arm_continuity_issues.append(
+                    {
+                        "animation": anim_name,
+                        "frameIndex": idx,
+                        "time": t,
+                        "reason": "hand_b 與 arm_lower_b 斷開（拳頭浮空無相連）",
+                    }
+                )
 
         # Build contact sheet (up to 12 evenly spaced frames)
         n_total = len(rendered_imgs)
@@ -926,6 +1198,8 @@ def render_animations_and_check_head_occlusion(
             "maxHeadOcclusionFrame": max_occ_frame,
             "maxHeadOcclusionTimeSec": round(max_occ_time, 4),
             "headOcclusionLe5PctPass": max_occ <= 0.05,
+            "maxHairOverlapRatio": round(max_hair_overlap, 5),
+            "hairOverlapLe2PctPass": max_hair_overlap <= 0.02,
             "contactSheet": str(sheet_path),
             "framesDir": str(frames_dir),
         }
@@ -936,6 +1210,11 @@ def render_animations_and_check_head_occlusion(
         "pass": overall_max_head_occ <= 0.05,
         "maxHeadOcclusionRatio": round(overall_max_head_occ, 5),
         "worstFrame": worst_frame_info,
+        "maxHairOverlapRatio": round(overall_max_hair_overlap, 5),
+        "hairOverlapLe2PctPass": overall_max_hair_overlap <= 0.02,
+        "armContinuityPass": all_arm_continuity_ok,
+        "armContinuityIssues": arm_continuity_issues[:20],
+        "setupArmPixels": setup_arm_px,
         "animations": anim_reports,
     }
 
@@ -951,6 +1230,9 @@ def format_concise_summary_lines(
     ms_chk = report["meshAndRigidityValidation"]
     gm_chk = report["gripAndMotionValidation"]
     pm_chk = report["palmAndMarkerValidation"]
+    fc_chk = report.get("facingConsistencyValidation", {})
+    wp_chk = report.get("weaponSinglePieceValidation", {})
+    we_chk = report.get("weaponEdgeCleanValidation", {})
     tm = gm_chk.get("thrustMetrics", {})
 
     wf = ro_chk.get("worstFrame", {})
@@ -1016,6 +1298,31 @@ def format_concise_summary_lines(
             "marker_dots",
             bool(report["checks"]["noVisibleMarkerDotsInAtlas"]),
             f"圖集無殘留數位紅綠標記點: pass={report['checks']['noVisibleMarkerDotsInAtlas']}",
+        ),
+        (
+            "arm_continuity",
+            bool(report["checks"].get("armContinuityPass", True)),
+            f"每格上臂/前臂可見像素 >= 60% 且手腕相連無縫隙: pass={report['checks'].get('armContinuityPass')}, issues={len(ro_chk.get('armContinuityIssues', []))}",
+        ),
+        (
+            "facing_consistency",
+            bool(report["checks"].get("facingConsistencyPass", True)),
+            f"臉、胸口朝向與槍頭方向同側 ({fc_chk.get('baseFacing', '?')}): pass={fc_chk.get('pass')}, issues={fc_chk.get('issues', [])}",
+        ),
+        (
+            "weapon_single_piece",
+            bool(report["checks"].get("weaponSinglePiecePass", True)),
+            f"武器僅 1 個 region attachment、1 根骨: bones={wp_chk.get('weaponBoneCount')}, attachments={wp_chk.get('weaponAttachmentCount')}, issues={wp_chk.get('issues', [])}",
+        ),
+        (
+            "hair_overlap",
+            bool(report["checks"].get("hairOverlapLe2Pct", True)),
+            f"hair_tail 與 head 渲染 alpha 重疊 <= 2%: max={ro_chk.get('maxHairOverlapRatio', 0.0) * 100:.2f}%",
+        ),
+        (
+            "weapon_edge_clean",
+            bool(report["checks"].get("weaponEdgeCleanPass", True)),
+            f"武器 alpha 邊緣 3 px 內非武器色像素 <= 1%: dirtyRatio={we_chk.get('dirtyRatio', 0.0) * 100:.2f}% ({we_chk.get('dirtyPixelCount', 0)}/{we_chk.get('edgePixelCount', 0)} px)",
         ),
     ]
 
@@ -1104,6 +1411,9 @@ def main() -> None:
         out_dir / "renders",
         canvas_h=args.render_height,
     )
+    facing_check = check_facing_consistency(skel_json, eval_data, rig_data)
+    weapon_single_check = check_weapon_single_piece(skel_json)
+    weapon_edge_check = check_weapon_edge_cleanliness(atlas_info, atlas_rgba)
 
     runtime_anim_errors = sum(len(a.get("errors", [])) for a in eval_data.get("animations", {}).values())
     runtime_pass = bool(eval_data.get("loadSuccess")) and len(eval_data.get("loadErrors", [])) == 0 and runtime_anim_errors == 0
@@ -1122,6 +1432,11 @@ def main() -> None:
         ),
         "thrustRootStationary": bool(grip_and_motion_check.get("thrustMetrics", {}).get("rootIsStationary", True)),
         "noVisibleMarkerDotsInAtlas": palm_and_marker_check["visibleMarkerPass"],
+        "armContinuityPass": render_and_occlusion_check["armContinuityPass"],
+        "facingConsistencyPass": facing_check["pass"],
+        "weaponSinglePiecePass": weapon_single_check["pass"],
+        "hairOverlapLe2Pct": render_and_occlusion_check["hairOverlapLe2PctPass"],
+        "weaponEdgeCleanPass": weapon_edge_check["pass"],
     }
 
     overall_pass = all(checks_summary.values())
@@ -1153,6 +1468,9 @@ def main() -> None:
         "palmAndMarkerValidation": palm_and_marker_check,
         "gripAndMotionValidation": grip_and_motion_check,
         "renderAndOcclusionValidation": render_and_occlusion_check,
+        "facingConsistencyValidation": facing_check,
+        "weaponSinglePieceValidation": weapon_single_check,
+        "weaponEdgeCleanValidation": weapon_edge_check,
     }
 
     concise_lines, _ = format_concise_summary_lines(report, None)

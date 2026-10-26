@@ -450,6 +450,19 @@ def build_mutually_exclusive_ownership(
 
         owner_map[ys_u, xs_u] = best_slot
 
+    # AG-06 補充：確保 hair_tail 切件與 head 互斥，接縫藏在髮髻下
+    head_idx = slot_to_idx.get("head")
+    hair_idx = slot_to_idx.get("hair_tail")
+    if head_idx is not None and hair_idx is not None:
+        p_neck_y = landmarks.get("neck", [0.0, float(h)])[1]
+        p_head_cx = landmarks.get("head_center", [float(w) * 0.5, 0.0])[0]
+        # 凡是位於頭頂髮髻區域（Y < neck 且靠近 head_center 水平半徑內），若劃為 hair_tail 則強制歸屬 head
+        hair_pixels = owner_map == hair_idx
+        ys_h, xs_h = np.where(hair_pixels)
+        if len(ys_h) > 0:
+            bun_mask = (ys_h < p_neck_y) & (np.abs(xs_h - p_head_cx) < 200.0)
+            owner_map[ys_h[bun_mask], xs_h[bun_mask]] = head_idx
+
     # 3. 產出關節圓弧外擴的 animationMask（在可見遮罩基礎上，對肢體關節點做半徑 28px 的圓弧延伸且限於母圖有效區域內）
     anim_ext_masks: dict[str, np.ndarray] = {}
     joint_Pivot_for_slot = {
@@ -477,6 +490,10 @@ def build_mutually_exclusive_ownership(
             cv2.circle(circle_layer, (jx, jy), 28, 255, -1)
             ext_m |= (circle_layer > 0) & live_mask
         anim_ext_masks[sid] = ext_m
+
+    # 確保 hair_tail 的 animationMask 不滲透侵入 head 的可見區域
+    if "hair_tail" in anim_ext_masks and head_idx is not None:
+        anim_ext_masks["hair_tail"] &= ~(owner_map == head_idx)
 
     return owner_map, anim_ext_masks, mode_used
 

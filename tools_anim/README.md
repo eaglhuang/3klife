@@ -54,6 +54,11 @@ C:\Users\User\AppData\Local\Programs\Python\Python313\python.exe tools_anim/slic
   5. `idle` 與 `walk` 單手持槍時後手 IK mix = 0。
   6. `walk` 原地踏步（`root` 位移 = 0）、支撐腳接地漂移 `<= 0.02H`、首尾 Pose 閉合。
   7. 獨立軟體光柵化逐格渲染 PNG，並以像素級別計算 `head` 臉部遮擋率（門檻 `<= 5.0%`）。
+  8. `arm_continuity`（AG-06）：每格上臂與前臂可見像素各 `>= setup 的 60%`，且 `hand` 與 `arm_lower` 切件在畫面中緊密相連（手腕無背景空隙）。
+  9. `facing_consistency`（AG-06）：臉（`head`）、胸口（`torso`）朝向與槍頭（`spear` tip）方向同側。
+  10. `weapon_single_piece`（AG-06 補充）：武器僅 1 個 region attachment、1 根骨骼。
+  11. `hair_overlap`（AG-06 補充）：`hair_tail` 與 `head` 渲染 alpha 重疊率 `<= 2%`。
+  12. `weapon_edge_clean`（AG-06 補充）：武器 alpha 邊緣 3 px 內非武器色像素 `<= 1%`。
 
 ### 執行範例
 ```powershell
