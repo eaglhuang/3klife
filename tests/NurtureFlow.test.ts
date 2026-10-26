@@ -7,7 +7,7 @@
  * Unity 對照：EditMode Test 測 Presenter，不實例化 Scene。
  */
 import { TestSuite, assert } from './TestRunner';
-import { FlowView, NurtureFlowController } from '../assets/scripts/ui/core/NurtureFlowController';
+import { FlowView, NurtureFlowController, type NurtureFlowDeps } from '../assets/scripts/ui/core/NurtureFlowController';
 import { InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { NurtureService } from '../assets/scripts/core/services/NurtureService';
 import { UnveilingService } from '../assets/scripts/core/services/UnveilingService';
@@ -70,7 +70,7 @@ interface Rig {
 
 function makeRig(
     generals: GeneralConfig[],
-    options: { mode?: GameTimeMode; cards?: MentorCard[]; failSave?: boolean } = {},
+    options: { mode?: GameTimeMode; cards?: MentorCard[]; failSave?: boolean; extra?: Partial<NurtureFlowDeps> } = {},
 ): Rig {
     const roster = new InMemoryRosterStore(generals);
     const mode = options.mode;
@@ -90,6 +90,7 @@ function makeRig(
             saves.count += 1;
             if (options.failSave) throw new Error('disk full');
         },
+        ...options.extra,
     });
     return { roster, flow, nurture, saves };
 }
@@ -427,6 +428,46 @@ export function createNurtureFlowSuite(): TestSuite {
         assert.isTrue(rig.nurture.getSession('alpha') === null, '定型後會話移除');
         assert.isTrue((rig.roster.getAll()[0] as { graduationRating?: string }).graduationRating !== undefined, '定型後寫入名冊');
         assert.isTrue(rig.saves.count > before, '定型後存檔');
+    });
+
+    suite.test('培育中顯示戰法列：切換戰法、TP 未達門檻不可學、學習結果寫進提示（PROG-2-1132）', async () => {
+        const calls: string[] = [];
+        const names: Record<string, string> = { 'tactic-a': '甲計', 'tactic-b': '乙計' };
+        const { flow } = makeRig([unveiled('alpha')], {
+            mode: GameTimeMode.Nurture,
+            extra: {
+                tacticIds: () => ['tactic-a', 'tactic-b'],
+                tacticName: (id) => names[id],
+                learnTactic: async (childId, tacticId) => {
+                    calls.push(`${childId}:${tacticId}`);
+                    return { ok: false, blocked: 'TP_SHORT', learned: [] };
+                },
+            },
+        });
+        await flow.chooseFate('accept');
+        assert.equals(false, flow.getView().actives.tacticBlock);
+        await flow.startNurture();
+        let view = flow.getView();
+        assert.isTrue(view.actives.tacticBlock);
+        assert.isTrue(view.texts.tacticName.startsWith('甲計'));
+        assert.isTrue(view.texts.tacticCost.includes('門檻'));
+        assert.isFalse(view.enabled.btnLearnTactic);
+        assert.isTrue(view.texts.learnTacticLabel.includes('已學 0 /'));
+        flow.cycleTactic(1);
+        assert.isTrue(flow.getView().texts.tacticName.startsWith('乙計'));
+        flow.cycleTactic(1);
+        assert.isTrue(flow.getView().texts.tacticName.startsWith('甲計'));
+        await flow.learnSelectedTactic();
+        assert.equals('alpha:tactic-a', calls.join(','));
+        view = flow.getView();
+        assert.isTrue(view.texts.nurtureLog.includes('TP 未達門檻'));
+
+        const layout = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/ui-spec/layouts/nurture-flow-main.json'), 'utf8'));
+        const ids = new Set<string>();
+        collectLayoutIds(layout.root, ids);
+        for (const id of ['tacticBlock', 'tacticName', 'tacticCost', 'btnPrevTactic', 'btnNextTactic', 'btnLearnTactic', 'learnTacticLabel']) {
+            assert.isTrue(ids.has(id), `layout 缺 ${id}`);
+        }
     });
 
     return suite;
