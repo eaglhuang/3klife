@@ -38,6 +38,30 @@ from PIL import Image, ImageDraw, ImageFont
 HERE = Path(__file__).resolve().parent
 DEFAULT_SPINE_CORE = HERE.parent / "scratch" / "spine-runtime" / "node_modules" / "@esotericsoftware" / "spine-core"
 HELPER_MJS = HERE / "spine_eval_helper.mjs"
+SPEC_JSON_PATH = HERE / "specs" / "canonical_skeleton_v3.json"
+
+
+def load_canonical_spec() -> dict[str, Any]:
+    if not SPEC_JSON_PATH.exists():
+        return {}
+    try:
+        return json.loads(SPEC_JSON_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def get_effective_body_height(eval_data: dict[str, Any], rig_data: dict[str, Any] | None) -> float:
+    setup_bones = eval_data.get("setupBones", {})
+    if setup_bones:
+        ys = [float(b.get("worldY", 0.0)) for b in setup_bones.values() if isinstance(b, dict) and "worldY" in b]
+        if ys:
+            span = max(ys) - min(ys)
+            if span > 50.0:
+                return span
+    if rig_data and "metrics" in rig_data and "bodyHeightPx" in rig_data["metrics"]:
+        return float(rig_data["metrics"]["bodyHeightPx"])
+    spec = load_canonical_spec()
+    return float(spec.get("H", 1600.0))
 
 RIGID_SLOTS = {
     "head",
@@ -1319,12 +1343,21 @@ def check_spear_butt_above_ground(
                 min_butt_y = butt_y
                 worst_frame = {"animation": a_name, "frameIndex": fr.get("frameIndex"), "time": fr.get("time"), "buttWorldY": round(butt_y, 2)}
 
-    # 允許地面容差 ±35 px (因腳底觸地、下壓與微透視)
-    passed = min_butt_y >= (ground_y - 35.0)
+    # AG-16: 槍尾容許門檻改讀 JSON weaponRules.buttGroundToleranceH (0.01H)
+    spec = load_canonical_spec()
+    butt_tol_h = float(spec.get("weaponRules", {}).get("buttGroundToleranceH", 0.01))
+    effective_h = get_effective_body_height(eval_data, rig_data)
+    ground_tol_px = effective_h * butt_tol_h
+
+    min_allowed_y = ground_y - ground_tol_px
+    passed = min_butt_y >= min_allowed_y
     return {
         "pass": passed,
         "minSpearButtWorldY": round(min_butt_y, 2) if min_butt_y != float("inf") else 0.0,
         "groundWorldY": ground_y,
+        "buttGroundToleranceH": butt_tol_h,
+        "groundTolerancePx": round(ground_tol_px, 2),
+        "effectiveBodyHeight": round(effective_h, 2),
         "worstFrame": worst_frame,
     }
 
@@ -1479,7 +1512,7 @@ def format_concise_summary_lines(
             (
             "spear_butt_above_ground",
             bool(report["checks"].get("spearButtAboveGroundPass", True)),
-            f"槍尾任何一格不得插地: minButtY={report.get('spearButtAboveGroundValidation', {}).get('minSpearButtWorldY', 0.0):.2f} px",
+            f"槍尾任何一格不得插地: minButtY={report.get('spearButtAboveGroundValidation', {}).get('minSpearButtWorldY', 0.0):.2f} px (tol={report.get('spearButtAboveGroundValidation', {}).get('buttGroundToleranceH', 0.01):.2f}H = {report.get('spearButtAboveGroundValidation', {}).get('groundTolerancePx', 0.0):.1f} px)",
         ),
         (
             "two_hand_grip_spacing",

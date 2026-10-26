@@ -203,12 +203,15 @@ def run_rigpose_inspection(
     draw.line([(0, target_top_y - 60), (w, target_top_y - 60)], fill=(80, 180, 255, 60), width=1)
     draw.line([(0, target_top_y + 60), (w, target_top_y + 60)], fill=(80, 180, 255, 60), width=1)
 
-    # 4. 站立中心 (兩腳中點 x = 1024 ± 25, SNAP <= 60)
+    # 4. 站立中心 (兩腳中點 x 必須在 standingCenter ± standingCenterTol, SNAP <= 60)
     feet_ys_mask = live_mask & (np.arange(h)[:, None] >= 1750)
     ys_f, xs_f = np.where(feet_ys_mask)
-    feet_cx = float(np.mean(xs_f)) if len(xs_f) > 0 else 1024.0
-    center_diff = abs(feet_cx - 1024.0)
-    if center_diff <= 25.0:
+    target_center_x = float(spec.get("standingCenter", spec.get("joints", {}).get("root", {}).get("x", 1024.0)))
+    center_tol = float(spec.get("standingCenterTol", 25.0))
+
+    feet_cx = float(np.mean(xs_f)) if len(xs_f) > 0 else target_center_x
+    center_diff = abs(feet_cx - target_center_x)
+    if center_diff <= center_tol:
         center_tier = "PASS"
     elif center_diff <= 60.0:
         center_tier = "SNAP"
@@ -218,11 +221,11 @@ def run_rigpose_inspection(
     checks["standing_center"] = {
         "pass": (center_tier == "PASS"),
         "tier": center_tier,
-        "detail": f"站立中心落於 x=1024 (tol=±25px, snap=±60px): actual={feet_cx:.1f} (diff={center_diff:.1f}px)",
+        "detail": f"站立中心落於 x={target_center_x:.0f} (tol=±{center_tol:.0f}px, snap=±60px): actual={feet_cx:.1f} (diff={center_diff:.1f}px)",
     }
-    draw.line([(1024, 0), (1024, h)], fill=(220, 230, 245, 180), width=2)
-    draw.line([(1024 - 60, 0), (1024 - 60, h)], fill=(220, 230, 245, 60), width=1)
-    draw.line([(1024 + 60, 0), (1024 + 60, h)], fill=(220, 230, 245, 60), width=1)
+    draw.line([(int(target_center_x), 0), (int(target_center_x), h)], fill=(220, 230, 245, 180), width=2)
+    draw.line([(int(target_center_x - 60), 0), (int(target_center_x - 60), h)], fill=(220, 230, 245, 60), width=1)
+    draw.line([(int(target_center_x + 60), 0), (int(target_center_x + 60), h)], fill=(220, 230, 245, 60), width=1)
 
     # 5. 頭部 Zone 範圍
     hz = spec["segments"]["head"]["zone"]
@@ -369,7 +372,12 @@ def run_rigpose_inspection(
         "detail": f"手與非相連部位間隙 >={min_gap_hand_any}px: min_detected={min_hand_gap}px (f={f_zero_max}px, b={b_zero_max}px)",
     }
 
-    # 9. AG-14: 獨立髮尾圖根部對齊 hair_root (960, 420) 檢查
+    # 9. AG-14 / AG-16: 獨立髮尾圖根部對齊 hair_root 檢查 (讀取 JSON joints.hair_root)
+    hair_spec = spec.get("joints", {}).get("hair_root", {})
+    target_hair_x = float(hair_spec.get("x", 960.0))
+    target_hair_y = float(hair_spec.get("y", 420.0))
+    hair_tol = float(hair_spec.get("tol", 40.0))
+
     if hairtail_path and hairtail_path.exists():
         hair_pil = Image.open(hairtail_path).convert("RGBA")
         hair_arr = np.array(hair_pil)
@@ -378,9 +386,8 @@ def run_rigpose_inspection(
             top_y_idx = int(ys_h.min())
             root_xs = xs_h[ys_h == top_y_idx]
             root_x = float(np.mean(root_xs))
-            target_hair_x, target_hair_y = 960.0, 420.0
             hair_diff = math.hypot(root_x - target_hair_x, top_y_idx - target_hair_y)
-            if hair_diff <= 25.0:
+            if hair_diff <= hair_tol:
                 h_tier = "PASS"
             elif hair_diff <= 60.0:
                 h_tier = "SNAP"
@@ -389,9 +396,9 @@ def run_rigpose_inspection(
             checks["hairtail_root_alignment"] = {
                 "pass": (h_tier == "PASS"),
                 "tier": h_tier,
-                "detail": f"獨立髮尾根部對齊 hair_root(960, 420): actual=({root_x:.1f}, {top_y_idx}), diff={hair_diff:.1f}px (tol=±25, snap<=60)",
+                "detail": f"獨立髮尾根部對齊 hair_root({target_hair_x:.0f}, {target_hair_y:.0f}): actual=({root_x:.1f}, {top_y_idx}), diff={hair_diff:.1f}px (tol=±{hair_tol:.0f}, snap<=60)",
             }
-            draw.ellipse([target_hair_x - 25, target_hair_y - 25, target_hair_x + 25, target_hair_y + 25], outline=(100, 200, 255, 200), width=2)
+            draw.ellipse([target_hair_x - hair_tol, target_hair_y - hair_tol, target_hair_x + hair_tol, target_hair_y + hair_tol], outline=(100, 200, 255, 200), width=2)
             draw.line([(int(root_x), top_y_idx), (int(target_hair_x), int(target_hair_y))], fill=(100, 200, 255, 255), width=2)
         else:
             checks["hairtail_root_alignment"] = {

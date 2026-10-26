@@ -559,6 +559,9 @@
       0.22,
       0.35
     ],
-    "note": "任何一格槍尾不得低於地面線；雙手持槍段兩手間距 0.22–0.35H"
-  }
+    "note": "任何一格槍尾不得低於地面線；雙手持槍段兩手間距 0.22–0.35H",
+    "buttGroundToleranceH": 0.01
+  },
+  "standingCenter": 1024,
+  "standingCenterTol": 25
 }
