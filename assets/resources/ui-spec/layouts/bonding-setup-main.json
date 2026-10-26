@@ -39,7 +39,7 @@
           "vCenter": true
         },
         "width": 1200,
-        "height": 780,
+        "height": 880,
         "skinSlot": "bonding.card.bg",
         "children": [
           {
@@ -130,7 +130,7 @@
               "top": 84,
               "left": 24,
               "right": 24,
-              "bottom": 64
+              "bottom": 16
             },
             "children": [
               {
@@ -378,7 +378,7 @@
                 "widget": {
                   "top": 220,
                   "left": 16,
-                  "right": 16
+                  "right": 560
                 },
                 "height": 30,
                 "text": "",
@@ -389,13 +389,13 @@
                 "name": "FactorStage",
                 "id": "factorStage",
                 "widget": {
-                  "bottom": 8,
-                  "left": 16,
+                  "top": 224,
                   "right": 16
                 },
-                "height": 20,
+                "height": 24,
                 "text": "",
-                "styleSlot": "bonding.label.meta"
+                "styleSlot": "bonding.label.meta",
+                "width": 520
               },
               {
                 "type": "panel",
@@ -467,11 +467,11 @@
                 "name": "EligibilityLabel",
                 "id": "eligibilityLabel",
                 "widget": {
-                  "top": 472,
-                  "left": 16,
-                  "right": 16
+                  "top": 474,
+                  "left": 362,
+                  "right": 362
                 },
-                "height": 30,
+                "height": 56,
                 "text": "",
                 "styleSlot": "bonding.label.stats"
               },
@@ -480,9 +480,9 @@
                 "name": "CostLabel",
                 "id": "costLabel",
                 "widget": {
-                  "top": 510,
-                  "left": 16,
-                  "right": 16
+                  "top": 536,
+                  "left": 362,
+                  "right": 362
                 },
                 "height": 30,
                 "text": "",
@@ -493,11 +493,11 @@
                 "name": "BtnConfirmBond",
                 "id": "btnConfirmBond",
                 "widget": {
-                  "top": 556,
+                  "top": 574,
                   "hCenter": true
                 },
                 "width": 240,
-                "height": 64,
+                "height": 56,
                 "skinSlot": "bonding.button.confirm.bg",
                 "children": [
                   {
@@ -509,7 +509,7 @@
                       "left": 0,
                       "right": 0
                     },
-                    "height": 56,
+                    "height": 48,
                     "text": "確認結緣",
                     "styleSlot": "bonding.label.button"
                   }
@@ -522,7 +522,7 @@
                 "height": 260,
                 "widget": {
                   "left": 16,
-                  "top": 520
+                  "top": 470
                 },
                 "skinSlot": "bonding.slot.bg",
                 "layout": {
@@ -809,7 +809,7 @@
                 "height": 260,
                 "widget": {
                   "right": 16,
-                  "top": 520
+                  "top": 470
                 },
                 "skinSlot": "bonding.slot.bg",
                 "layout": {
@@ -1096,7 +1096,7 @@
             "name": "BondNotice",
             "id": "bondNotice",
             "widget": {
-              "bottom": 16,
+              "bottom": 12,
               "left": 32,
               "right": 32
             },
@@ -1113,7 +1113,7 @@
               "hCenter": true
             },
             "width": 420,
-            "height": 96,
+            "height": 92,
             "text": "",
             "styleSlot": "bonding.label.log"
           }
