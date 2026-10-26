@@ -558,7 +558,7 @@ export class BattleUIBridge {
     }
     this.appendLog(`戰鬥結束：${data.result}`);
     const details = this._settleRosterBattle(data.result as BattleResult);
-    c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined);
+    c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, c.pg?.id);
     c.boardRenderer?.clearDeployHint();
     c.hud?.clearPersistentStatus();
     c.hud?.clearSceneGambitBadge();

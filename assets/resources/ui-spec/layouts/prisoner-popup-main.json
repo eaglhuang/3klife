@@ -38,7 +38,7 @@
           "hCenter": true,
           "vCenter": true
         },
-        "width": 900,
+        "width": 1180,
         "height": 620,
         "skinSlot": "pow.card.bg",
         "children": [
@@ -120,12 +120,49 @@
             },
             "children": [
               {
+                "type": "panel",
+                "name": "PowPortraitFrame",
+                "id": "powPortraitFrame",
+                "widget": {
+                  "top": 0,
+                  "left": 8
+                },
+                "width": 250,
+                "height": 512,
+                "skinSlot": "pow.portrait.frame",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "PowPortraitMask",
+                    "id": "powPortraitMask",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 250,
+                    "height": 512,
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "PowPortrait",
+                        "id": "powPortrait",
+                        "width": 250,
+                        "height": 512,
+                        "skinSlot": "pow.portrait"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
                 "type": "label",
                 "name": "PowTarget",
                 "id": "powTarget",
                 "widget": {
                   "top": 0,
-                  "left": 8,
+                  "left": 282,
                   "right": 200
                 },
                 "height": 40,
@@ -138,7 +175,7 @@
                 "id": "powResource",
                 "widget": {
                   "top": 48,
-                  "left": 8,
+                  "left": 282,
                   "right": 8
                 },
                 "height": 28,
@@ -205,7 +242,7 @@
                 "id": "btnPersuade",
                 "widget": {
                   "top": 92,
-                  "left": 8,
+                  "left": 282,
                   "right": 8
                 },
                 "height": 64,
@@ -232,7 +269,7 @@
                 "id": "btnRecruit",
                 "widget": {
                   "top": 168,
-                  "left": 8,
+                  "left": 282,
                   "right": 8
                 },
                 "height": 64,
@@ -259,7 +296,7 @@
                 "id": "btnImprison",
                 "widget": {
                   "top": 244,
-                  "left": 8,
+                  "left": 282,
                   "right": 8
                 },
                 "height": 64,
@@ -286,7 +323,7 @@
                 "id": "btnRelease",
                 "widget": {
                   "top": 320,
-                  "left": 8,
+                  "left": 282,
                   "right": 8
                 },
                 "height": 64,
@@ -313,7 +350,7 @@
                 "id": "powNotice",
                 "widget": {
                   "top": 404,
-                  "left": 8,
+                  "left": 282,
                   "right": 8
                 },
                 "height": 84,

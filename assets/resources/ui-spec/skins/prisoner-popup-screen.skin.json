@@ -79,6 +79,20 @@
       "color": "secondaryLight",
       "overflow": "SHRINK",
       "isBold": true
+    },
+    "pow.portrait.frame": {
+      "kind": "color-rect",
+      "color": "#2E2422",
+      "alpha": 255,
+      "cornerRadius": 10,
+      "borderWidth": 2,
+      "borderColor": "#5A4C42"
+    },
+    "pow.portrait": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_avatars/unknown_avatar_f",
+      "expectedWidth": 256,
+      "expectedHeight": 256
     }
   }
 }

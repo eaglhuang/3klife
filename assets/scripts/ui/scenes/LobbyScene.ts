@@ -86,7 +86,7 @@ import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/Mercenary
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceGalleryController } from '../core/RedFaceShowcaseController';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
-import { FaceMarks, fitPortraitInFrame } from '../core/PortraitFrameFit';
+import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, fitPortraitInFrame } from '../core/PortraitFrameFit';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { OpeningIntroController } from '../core/OpeningIntroController';
 import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE } from '../../core/systems/NewPlayerOpening';
@@ -1756,12 +1756,19 @@ export class LobbyScene extends Component {
     }
 
     /** 六框全身立繪（PROG-2-1126）：臉高統一、眼睛同高、臉置中；框外裁掉。沒立繪的用剪影頭像。 */
-    private _applyFramePortraits(binder: NonNullable<UIScreenPreviewHost['binder']>, prefix: string, keys: readonly string[]): void {
+    private _applyFramePortraits(
+        binder: NonNullable<UIScreenPreviewHost['binder']>,
+        prefix: string,
+        keys: readonly string[],
+        nodeIds: (i: number) => readonly [mask: string, portrait: string] = (i) => [`frame${i}Mask`, `frame${i}Portrait`],
+        spec: PortraitFrameSpec = PORTRAIT_FRAME_SPEC,
+    ): void {
         const seq = (this._avatarSeq.get(prefix) ?? 0) + 1;
         this._avatarSeq.set(prefix, seq);
         keys.forEach((key, i) => {
-            const holder = binder.getNode(`frame${i}Mask`);
-            const sprite = binder.getSprite(`frame${i}Portrait`);
+            const [maskId, portraitId] = nodeIds(i);
+            const holder = binder.getNode(maskId);
+            const sprite = binder.getSprite(portraitId);
             if (!holder || !sprite) return;
             if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_RECT;
             void (async () => {
@@ -1775,8 +1782,8 @@ export class LobbyScene extends Component {
                 const size = frame.originalSize;
                 // 沒立繪：剪影頭像放在頭部位置，不拉成全身比例
                 const place = portrait
-                    ? fitPortraitInFrame(size.width, size.height, marks[id])
-                    : { width: 200, height: 200, x: 0, y: 280 - 40 - 100 };
+                    ? fitPortraitInFrame(size.width, size.height, marks[id], spec)
+                    : { width: 200, height: 200, x: 0, y: spec.frameHeight / 2 - 40 - 100 };
                 sprite.node.getComponent(UITransform)?.setContentSize(place.width, place.height);
                 sprite.node.setPosition(place.x, place.y);
             })();
@@ -2120,7 +2127,12 @@ export class LobbyScene extends Component {
         if (!binder || !this._prisoner) {
             return;
         }
-        applyFlowView(binder, this._prisoner.getView());
+        const view = this._prisoner.getView();
+        applyFlowView(binder, view);
+        // 俘虜敵將立繪：沿用六框的臉部對齊，框高 512
+        if (view.targetUid) {
+            this._applyFramePortraits(binder, 'prisoner', [view.targetUid], () => ['powPortraitMask', 'powPortrait'], { ...PORTRAIT_FRAME_SPEC, frameHeight: 512 });
+        }
     }
 
     private async _onClickPrisonerDecision(decision: PowDecision): Promise<void> {
