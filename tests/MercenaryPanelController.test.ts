@@ -159,5 +159,26 @@ export function createMercenaryPanelControllerSuite(): TestSuite {
         assert.equals(skin.id, `${screen.skin}`);
     });
 
+    suite.test('試用招募：有券才可按，成功後選中新傭兵並提示；無可招武將時提示', async () => {
+        const list = [TRIAL];
+        let tickets = 1;
+        const controller = new MercenaryPanelController(makeDeps({
+            mercenaries: () => list,
+            trialTickets: () => tickets,
+            hire: async () => { list.push({ ...EXPIRED, uid: 'm9' }); tickets -= 1; return '趙雲'; },
+        }));
+        assert.isTrue(controller.getFlowView().enabled.btnMercHire);
+        assert.equals('試用招募（試用券 1）', controller.getFlowView().texts.btnMercHireLabel);
+        assert.isTrue(await controller.hireTrial());
+        assert.equals('m9', controller.selected()!.uid);
+        assert.equals('趙雲 願為主公效力六日', controller.getFlowView().texts.mercNotice);
+        assert.isFalse(controller.getFlowView().enabled.btnMercHire);
+        assert.isFalse(await controller.hireTrial());
+        assert.equals('試用券不足', controller.getFlowView().texts.mercNotice);
+        const none = new MercenaryPanelController(makeDeps({ trialTickets: () => 3, hire: async () => null }));
+        assert.isFalse(await none.hireTrial());
+        assert.equals('目前沒有可試用的武將', none.getFlowView().texts.mercNotice);
+    });
+
     return suite;
 }

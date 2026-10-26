@@ -99,11 +99,12 @@ export function createGameSessionMercenaryDaySuite(): TestSuite {
 
     suite.test('試用券招募：消耗 1 張券、加入 Trial 傭兵並建立薪水紀錄', async () => {
         const session = new GameSession(1);
-        await session.addItem(ITEM_TRIAL_TICKET, 1);
+        const start = session.itemCount(ITEM_TRIAL_TICKET);
+        assert.equals(2, start, '新局起始背包有 2 張試用券（PROG-2-1152）');
         const template = { id: 'gen-9', str: 50, int: 40, lea: 30, luk: 20, rarityTier: 'rare' } as GeneralConfig;
         const result = await session.hireTrialMercenary('merc-9', template);
         assert.equals(true, result.ok);
-        assert.equals(0, session.itemCount(ITEM_TRIAL_TICKET));
+        assert.equals(start - 1, session.itemCount(ITEM_TRIAL_TICKET));
         const bundle = session.mercenaries;
         assert.equals('Trial', bundle.mercenaries[0].status);
         assert.equals('gen-9', bundle.mercenaries[0].generalId!);
@@ -113,16 +114,18 @@ export function createGameSessionMercenaryDaySuite(): TestSuite {
     suite.test('試用券招募：無券或 uid 重複時拒絕，且不扣券、不改傭兵包', async () => {
         const session = new GameSession(1);
         const template = { id: 'gen-9', str: 50, int: 40, lea: 30, luk: 20 } as GeneralConfig;
+        const start = session.itemCount(ITEM_TRIAL_TICKET);
+        for (let i = 0; i < start; i++) await session.hireTrialMercenary(`merc-s${i}`, template);
         const noTicket = await session.hireTrialMercenary('merc-9', template);
         assert.equals('no-ticket', noTicket.reason!);
-        assert.equals(0, session.mercenaries.mercenaries.length);
+        assert.equals(start, session.mercenaries.mercenaries.length);
 
         await session.addItem(ITEM_TRIAL_TICKET, 2);
         await session.hireTrialMercenary('merc-9', template);
         const dup = await session.hireTrialMercenary('merc-9', template);
         assert.equals('uid-taken', dup.reason!);
         assert.equals(1, session.itemCount(ITEM_TRIAL_TICKET));
-        assert.equals(1, session.mercenaries.mercenaries.length);
+        assert.equals(start + 1, session.mercenaries.mercenaries.length);
     });
 
     return suite;

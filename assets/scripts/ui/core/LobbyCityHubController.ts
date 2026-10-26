@@ -14,7 +14,7 @@ export type LobbyCategoryId = 'sortie' | 'generals' | 'domestic' | 'nurture' | '
 
 export type LobbyActionId =
     | 'battle' | 'rival' | 'floodBattle'
-    | 'generalList' | 'bonding' | 'jobChange' | 'spiritCodex'
+    | 'generalList' | 'mercenary' | 'bonding' | 'jobChange' | 'spiritCodex'
     | 'domestic' | 'recruitHall' | 'hallBoard' | 'sandtable'
     | 'nurture' | 'supportCard'
     | 'gacha' | 'shop' | 'warehouse';
@@ -27,7 +27,7 @@ export interface LobbyCategoryDef {
 
 export const LOBBY_CATEGORIES: readonly LobbyCategoryDef[] = [
     { id: 'sortie', label: '出征', items: [{ id: 'battle', label: '戰場' }, { id: 'rival', label: '外交・征伐' }, { id: 'floodBattle', label: '洪戰' }] },
-    { id: 'generals', label: '武將', items: [{ id: 'generalList', label: '武將名冊' }, { id: 'bonding', label: '結緣' }, { id: 'jobChange', label: '成人禮' }, { id: 'spiritCodex', label: '英靈' }] },
+    { id: 'generals', label: '武將', items: [{ id: 'generalList', label: '武將名冊' }, { id: 'mercenary', label: '傭兵結義' }, { id: 'bonding', label: '結緣' }, { id: 'jobChange', label: '成人禮' }, { id: 'spiritCodex', label: '英靈' }] },
     { id: 'domestic', label: '內政', items: [{ id: 'domestic', label: '內政' }, { id: 'recruitHall', label: '招賢館' }, { id: 'hallBoard', label: '任務牆' }, { id: 'sandtable', label: '天下沙盤' }] },
     { id: 'nurture', label: '培育', items: [{ id: 'nurture', label: '開獎・培育' }, { id: 'supportCard', label: '支援卡' }] },
     { id: 'shop', label: '商城', items: [{ id: 'gacha', label: '轉蛋' }, { id: 'shop', label: '商店' }, { id: 'warehouse', label: '倉庫' }] },

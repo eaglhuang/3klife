@@ -31,9 +31,9 @@ export function createLobbyCityHubControllerSuite(): TestSuite {
 
     suite.test('五類收納涵蓋大廳所有功能入口，不重複', () => {
         const actions = LOBBY_CATEGORIES.flatMap(c => c.items.map(i => i.id));
-        assert.equals(16, actions.length);
+        assert.equals(17, actions.length);
         assert.equals(actions.length, new Set(actions).size);
-        assert.equals(4, LOBBY_SUB_SLOTS);
+        assert.equals(5, LOBBY_SUB_SLOTS);
     });
 
     suite.test('點類別展開，再點同一類收起，點別類切換', () => {
@@ -54,7 +54,8 @@ export function createLobbyCityHubControllerSuite(): TestSuite {
         const open = buildLobbyCityHubView(input({ openCategory: 'generals' }));
         assert.isTrue(open.actives.subMenu);
         assert.equals('武將名冊', open.texts.sub0Label);
-        assert.isTrue(open.actives.btnSub3);
+        assert.isTrue(open.actives.btnSub4);
+        assert.equals('傭兵結義', open.texts.sub1Label, '武將分類可直接進傭兵試用→結義（MVP §E #11）');
         assert.equals('▲ 武將', open.texts.btnCatGeneralsLabel);
         const shop = buildLobbyCityHubView(input({ openCategory: 'shop' }));
         assert.isTrue(shop.actives.btnSub2);
