@@ -116,6 +116,7 @@ import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
+import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
@@ -474,7 +475,7 @@ export class GameSession {
     private _legacyCount = 0;
     /** 已傳道過的名將 id（MENT-15 一生一次） */
     private _legendaryMentoringUsedIds: string[] = [];
-    /** 結緣成功的本機端紀錄（BRD-12）；暫定只存在記憶體，尚未寫入存檔 */
+    /** 結緣成功的本機端紀錄（BRD-12）；隨既有玩家存檔保存（PROG-2-1146） */
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
@@ -1051,17 +1052,14 @@ export class GameSession {
         return this._seeded.snapshot().state;
     }
 
-    /** 結緣成功產生子嗣時記下本機紀錄（BRD-12，暫定：只存在記憶體，不送 server） */
+    /** 出生紀錄以子嗣 UID 去重並複製；結緣確認流程會在此之後呼叫既有 save。 */
     public recordBreedingBirth(record: BreedingBirthRecord): void {
-        this._breedingBirthRecords.push(record);
+        this._breedingBirthRecords = normalizeBreedingBirthRecords([...this._breedingBirthRecords, record]);
     }
 
     /** 本局已記下的結緣子嗣紀錄（回傳複本，外部改動不影響內部） */
     public breedingBirthRecords(): BreedingBirthRecord[] {
-        return this._breedingBirthRecords.map((record) => ({
-            session: { ...record.session, Oracle_Hints: [...record.session.Oracle_Hints] },
-            child: { ...record.child },
-        }));
+        return normalizeBreedingBirthRecords(this._breedingBirthRecords);
     }
 
     /** 解析全球征途階段（MVP-13）：指定階段已啟用就用它；未知或未啟用則回到第一個可玩階段 */
@@ -2684,6 +2682,7 @@ export class GameSession {
             femaleSystem: this.femaleSystemState,
             ...(this._travel ? { travelCountdown: { ...this._travel } } : {}),
             sortiePresets: { ...this._sortiePresets },
+            ...(this._breedingBirthRecords.length > 0 ? { breedingBirthRecords: this.breedingBirthRecords() } : {}),
         };
     }
 
@@ -2777,6 +2776,7 @@ export class GameSession {
         this._leadGeneralId = snapshot.leadGeneralId ?? null;
         this._sortieSupport = { strategistUid: null, deputyUid: null };
         this._sortiePresets = normalizeSortiePresets(snapshot.sortiePresets);
+        this._breedingBirthRecords = normalizeBreedingBirthRecords(snapshot.breedingBirthRecords);
         this._travel = normalizeTravelCountdown(snapshot.travelCountdown);
         this._countdown = null;
         const progress = normalizeDiscoveryProgress(snapshot.discoveryLevel, snapshot.discoveryExp);

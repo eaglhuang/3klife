@@ -25,8 +25,8 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 34,
-    "in_progress": 3,
-    "open": 72,
+    "in_progress": 2,
+    "open": 73,
     "total": 109
   },
   "tasks": [
@@ -4040,12 +4040,12 @@
       "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     },
     {
-      "doc_id": "",
+      "doc_id": "doc_task_0406",
       "id": "PROG-2-1146",
       "title": "結緣出生紀錄跨重開保存",
       "owner": "codex-gpt-6",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "blocked",
       "type": "implementation",
       "phase": "M3",
       "created": "2026-10-26",
@@ -4075,10 +4075,9 @@
         "assets/scripts/core/services/PlayerSaveService.ts",
         "assets/scripts/core/systems/BreedingBirthRecordSave.ts",
         "assets/scripts/core/systems/BreedingBirthRecordSave.ts.meta",
-        "tests/BreedingBirthRecordSave.test.ts",
-        "tests/run-cli.ts"
+        "tests/BreedingBirthRecordSave.test.ts"
       ],
-      "notes": "2026-10-26 | 狀態: in-progress | 驗證: pending | 變更: codex-gpt-6 依使用者指派接手；base d44d6dec34037b5006e646269827ed5e685e02ad；已 check/lock；現有 child.UID 為去重鍵，首筆有效紀錄優先，衝突忽略，讀檔替換不累加，不臆造舊資料。 | 阻塞: 無",
+      "notes": "2026-10-26 | 狀態: blocked | 驗證: headless 3766 passed/3 既有 skipped；新增 10/10；npm test pass；standard 9/9；tsc exit 2，38 個診斷與 d44d6de 基線逐位元組相同 | 變更: 出生紀錄存讀檔與深層複本完成；child.UID 去重，首筆有效紀錄優先，同鍵衝突不覆寫，讀檔替換清單；無效筆忽略且不臆造舊紀錄；schema 結構未改；四個禁止檔案未改 | 阻塞: 既存 tsc 錯誤使全過驗收與合併條件未滿足，維持 draft，未標 done",
       "brief": {
         "style": "classic",
         "label": "",
