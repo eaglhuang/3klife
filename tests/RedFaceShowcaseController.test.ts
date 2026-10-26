@@ -84,7 +84,7 @@ export function createRedFaceShowcaseControllerSuite(): TestSuite {
         assert.isFalse(view.actives[`redFaceRow${RED_FACE_SHOW_MAX_ROWS}`] ?? false);
     });
 
-    suite.test('layout 節點 id 涵蓋所有 flow key，skin slot 都已定義', () => {
+    suite.test('大廳紅顏 layout（六框，key 由 PortraitGallery 測試涵蓋）skin slot 都已定義', () => {
         const layout = readJson('assets/resources/ui-spec/layouts/red-face-showcase-main.json');
         const skin = readJson('assets/resources/ui-spec/skins/red-face-showcase-screen.skin.json');
         const screen = readJson('assets/resources/ui-spec/screens/red-face-showcase-screen.json');
@@ -98,11 +98,6 @@ export function createRedFaceShowcaseControllerSuite(): TestSuite {
             for (const child of node.children ?? []) walk(child);
         };
         walk(layout.root);
-        const view = new RedFaceShowcaseController(makeDeps()).getFlowView();
-        const keys = [...Object.keys(view.texts), ...Object.keys(view.actives), ...Object.keys(view.enabled)];
-        for (const key of keys) {
-            assert.isTrue(ids.has(key), `layout 缺少節點 ${key}`);
-        }
         for (const slot of slots) {
             assert.isTrue(slot in skin.slots, `skin 缺少 ${slot}`);
         }

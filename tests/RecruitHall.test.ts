@@ -48,10 +48,10 @@ function layoutIds(rel: string): Set<string> {
 export function createRecruitHallSuite(): TestSuite {
     const suite = new TestSuite('RecruitHall (招賢館 PROG-2-1089)');
 
-    suite.test('名將池 20 位都在 generals.json，分 2 頁', () => {
+    suite.test('名將池 20 位都在 generals.json，一頁六框分 4 頁', () => {
         const { controller, candidates } = harness(0);
         assert.equals(20, candidates.length);
-        assert.equals(2, controller.pageCount);
+        assert.equals(4, controller.pageCount);
     });
 
     suite.test('FlowView key 都在 layout；內政畫面有招賢館入口', () => {
@@ -60,19 +60,22 @@ export function createRecruitHallSuite(): TestSuite {
         for (const key of [...Object.keys(view.texts), ...Object.keys(view.enabled), ...Object.keys(view.actives)]) {
             assert.equals(true, ids.has(key), `${key} 要在 layout 裡`);
         }
-        for (let i = 0; i < RECRUIT_ROWS_PER_PAGE; i++) assert.equals(true, ids.has(`btnRecruitRow${i}`));
+        for (let i = 0; i < RECRUIT_ROWS_PER_PAGE; i++) assert.equals(true, ids.has(`btnFrame${i}`) && ids.has(`frame${i}Portrait`));
+        assert.equals(true, ids.has('btnRecruit'));
         assert.equals(true, layoutIds('assets/resources/ui-spec/layouts/domestic-main.json').has('btnOpenRecruit'));
     });
 
     suite.test('招募：扣金幣入冊；已在名冊與金幣不足擋下；翻頁後招第 2 頁', async () => {
         const { state, controller, candidates } = harness(RECRUIT_GOLD_COST * 2, [heroPool()[1].id]);
-        assert.equals(false, controller.getFlowView().enabled.btnRecruitRow1, '已在名冊停用');
+        controller.select(1);
+        assert.equals(false, controller.getFlowView().enabled.btnRecruit, '已在名冊停用');
+        assert.equals('已在名冊', controller.getFlowView().texts.frame1Sub);
         assert.equals(false, await controller.recruitRow(1));
         assert.equals(true, await controller.recruitRow(0));
         assert.equals(true, state.owned.has(candidates[0].id));
         assert.equals(RECRUIT_GOLD_COST, state.gold);
         controller.next();
-        assert.equals('2 / 2', controller.getFlowView().texts.pageLabel);
+        assert.equals('2 / 4', controller.getFlowView().texts.pageLabel);
         assert.equals(true, await controller.recruitRow(0));
         assert.equals(true, state.owned.has(candidates[RECRUIT_ROWS_PER_PAGE].id));
         assert.equals(false, await controller.recruitRow(1), '金幣不足');

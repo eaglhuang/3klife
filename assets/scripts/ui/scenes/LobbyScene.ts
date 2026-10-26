@@ -56,7 +56,7 @@ import { DomesticPanelController } from '../core/DomesticPanelController';
 import { FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems/SeasonFastForward';
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
-import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
+import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
 import { overflowToastText } from '../../core/systems/MentorOverflow';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
 import { WarehousePanelController } from '../core/WarehousePanelController';
@@ -84,7 +84,9 @@ import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
-import { RedFaceShowcaseController, RED_FACE_SHOW_MAX_ROWS } from '../core/RedFaceShowcaseController';
+import { RedFaceGalleryController } from '../core/RedFaceShowcaseController';
+import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
+import { FaceMarks, fitPortraitInFrame } from '../core/PortraitFrameFit';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { OpeningIntroController } from '../core/OpeningIntroController';
 import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE } from '../../core/systems/NewPlayerOpening';
@@ -258,7 +260,8 @@ export class LobbyScene extends Component {
     private _mercPanelHost: UIScreenPreviewHost | null = null;
     private _mercPanel: MercenaryPanelController | null = null;
     private _redFaceHost: UIScreenPreviewHost | null = null;
-    private _redFace: RedFaceShowcaseController | null = null;
+    private _redFace: RedFaceGalleryController | null = null;
+    private _faceMarks: Promise<Record<string, FaceMarks>> | null = null;
     private _openingPanels: LobbyOpeningPanels | null = null;
     /** 開場沒有讀到存檔＝新玩家，需要先走宿命轉蛋 */
     private _isNewPlayer = false;
@@ -1331,18 +1334,21 @@ export class LobbyScene extends Component {
         const heroPoolIds = pools
             .filter(pool => pool.poolType === 'hero')
             .flatMap(pool => pool.candidateIds ?? []);
-        this._redFace = new RedFaceShowcaseController({
+        this._redFace = new RedFaceGalleryController({
             pool: () => (supportPool ? { candidateIds: supportPool.candidateIds ?? [] } : null),
             cards: () => supportCards ?? [],
             generalPoolIds: () => heroPoolIds,
         });
-        const rowBindings = Array.from({ length: RED_FACE_SHOW_MAX_ROWS }, (_, i) => ({
-            buttonId: `btnRedFaceRow${i}`,
+        const redFace = this._redFace;
+        const frameBindings = Array.from({ length: PORTRAIT_GALLERY_PAGE_SIZE }, (_, i) => ({
+            buttonId: `btnFrame${i}`,
             handler: () => { this._selectRedFace(i); },
         }));
         this._redFaceHost = await this._mountPreviewScreenHost('RedFaceShowcaseHost', 'red-face-showcase-screen', [
             { buttonId: 'btnClose', handler: () => { this._closeRedFaceShowcase(); } },
-            ...rowBindings,
+            ...frameBindings,
+            { buttonId: 'btnPrev', handler: () => { redFace.prev(); this._refreshRedFaceShowcase(); } },
+            { buttonId: 'btnNext', handler: () => { redFace.next(); this._refreshRedFaceShowcase(); } },
         ]);
         // 遮罩下的大廳按鈕不能點
         this._redFaceHost.node.addComponent(BlockInputEvents);
@@ -1381,6 +1387,7 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._redFace.getFlowView());
+        this._applyFramePortraits(binder, 'redFace', this._redFace.framePortraitKeys());
     }
 
     /**
@@ -1696,16 +1703,21 @@ export class LobbyScene extends Component {
         });
         this._recruit = recruit;
         const rowButtons = Array.from({ length: RECRUIT_ROWS_PER_PAGE }, (_, i) => ({
-            buttonId: `btnRecruitRow${i}`,
+            buttonId: `btnFrame${i}`,
+            handler: () => { recruit.select(i); this._refreshRecruitHall(); },
+        }));
+        const recruitButton = {
+            buttonId: 'btnRecruit',
             handler: () => {
-                void recruit.recruitRow(i).catch((error) => {
+                void recruit.recruitSelected().catch((error) => {
                     UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 招募失敗', error);
                 }).finally(() => { this._refreshRecruitHall(); });
             },
-        }));
+        };
         this._recruitHost = await this._mountPreviewScreenHost('RecruitHallHost', 'recruit-hall-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._recruitHost) this._recruitHost.node.active = false; } },
             ...rowButtons,
+            recruitButton,
             { buttonId: 'btnPrev', handler: () => { recruit.prev(); this._refreshRecruitHall(); } },
             { buttonId: 'btnNext', handler: () => { recruit.next(); this._refreshRecruitHall(); } },
         ]);
@@ -1728,7 +1740,47 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._recruit.getFlowView());
-        this._applyRowAvatars(binder, 'recruit', this._recruit.rowGeneralIds());
+        this._applyFramePortraits(binder, 'recruit', this._recruit.framePortraitKeys());
+    }
+
+    /** 臉部標記（general-avatar-crops.json crops[id].face），六框立繪對齊用；只載一次 */
+    private _loadFaceMarks(): Promise<Record<string, FaceMarks>> {
+        this._faceMarks ??= this._loadDataJson<{ crops?: Record<string, { face?: FaceMarks }> }>('data/general-avatar-crops')
+            .then((data) => {
+                const out: Record<string, FaceMarks> = {};
+                for (const [id, crop] of Object.entries(data?.crops ?? {})) if (crop.face) out[id] = crop.face;
+                return out;
+            })
+            .catch(() => ({}));
+        return this._faceMarks;
+    }
+
+    /** 六框全身立繪（PROG-2-1126）：臉高統一、眼睛同高、臉置中；框外裁掉。沒立繪的用剪影頭像。 */
+    private _applyFramePortraits(binder: NonNullable<UIScreenPreviewHost['binder']>, prefix: string, keys: readonly string[]): void {
+        const seq = (this._avatarSeq.get(prefix) ?? 0) + 1;
+        this._avatarSeq.set(prefix, seq);
+        keys.forEach((key, i) => {
+            const holder = binder.getNode(`frame${i}Mask`);
+            const sprite = binder.getSprite(`frame${i}Portrait`);
+            if (!holder || !sprite) return;
+            if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_RECT;
+            void (async () => {
+                const id = key.replace(/_portrait$/, '').replace(/_/g, '-');
+                const [portrait, marks] = await Promise.all([loadGeneralPortrait(key), this._loadFaceMarks()]);
+                const frame = portrait ?? await loadGeneralAvatar(key);
+                if (!frame || seq !== this._avatarSeq.get(prefix) || !sprite.isValid) return;
+                sprite.trim = false;
+                sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+                sprite.spriteFrame = frame;
+                const size = frame.originalSize;
+                // 沒立繪：剪影頭像放在頭部位置，不拉成全身比例
+                const place = portrait
+                    ? fitPortraitInFrame(size.width, size.height, marks[id])
+                    : { width: 200, height: 200, x: 0, y: 280 - 40 - 100 };
+                sprite.node.getComponent(UITransform)?.setContentSize(place.width, place.height);
+                sprite.node.setPosition(place.x, place.y);
+            })();
+        });
     }
 
     /** 列表左側的圓形小人頭；路徑規則在 data/general-art-paths.json（正式頭像 → 自動裁切 → 剪影） */
