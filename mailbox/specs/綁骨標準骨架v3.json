@@ -575,7 +575,9 @@
     "jointOverrides": {
       "weapon": {"rigid": true, "note": "與 hand_f 剛性連接，不做旋轉露縫，只檢握點"},
       "pauldron_f": {"rotationTestDeg": 15},
-      "pauldron_b": {"rotationTestDeg": 15}
+      "pauldron_b": {"rotationTestDeg": 15},
+      "foot_f": {"parent": "shin_f", "note": "foot 骨父為 ik_foot，分槽關節改接 shin"},
+      "foot_b": {"parent": "shin_b"}
     },
     "note": "21 槽＝bones 去掉 root、ik_*、weapon_grip_rear、*_mid、*_tip；槽名即骨名，動作庫可直接共用。每個關節兩側部件須畫出被遮擋的延伸，至少越過關節 hiddenExtensionH×H；關節 ±rotationTestDeg 旋轉不得露縫。cape／skirt／hair_tail 可為空槽。runtime 再裁成圖集並附 offset/pivot manifest。"
   },

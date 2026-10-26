@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 03:15 R260／AG-22 驗收：check_layered_parts 改由 bones 推導 20 組關節，16/16 OK；mailbox JSON 同步 foot→shin 覆寫並定 mailbox 為唯一規格來源；胸甲 Canny 結構成功、美術 FAIL，下一變因換 Animagine＋趙雲色票；顯存 0.9GB 請查佔用者。
 - 2026-10-27 03:10 AG-22 完成：check_layered_parts 關節表改由 bones 動態推導（涵蓋頸、腰、髖、肩甲、武器共 20 組關節）；JSON jointOverrides 驅動特例（weapon rigid 剛性連接略過旋轉、pauldron 旋轉 15°、foot 父骨覆蓋）；缺槽關節標記 SKIPPED 不判 FAIL；新增骨骼免改 code 自動納入；重組差改輪廓位移 Chamfer p95 ≤ 2.0px；通過 9 大專屬情境與全套 46 項回歸測試（b28998093）。
 - 2026-10-27 02:55 R259／AG-22：AG-21 check_layered_parts 獨立驗收 16/16 OK；關節表手寫 10 組缺頸腰髖肩甲，請改由 bones 推導、重組差改輪廓距離；JSON 加 jointOverrides；torso 兩次 prompt-only 退件，建議槽剪影 Canny+img2img＋Animagine，並評估 Codex 月額度透明背景生成為第二來源。
 - 2026-10-27 02:45 AG-21 完成：check_layered_parts.py 交付；支援 2048² 未裁切尺寸檢驗、空槽標記與 --slots 過濾、握點誤差 ≤12px、關節隱藏延伸 ≥0.03H(48px)、繞樞紐 ±30° 旋轉露縫檢驗（輸出 gap_leak_<slot>_<joint>.png）、重組差異比對 ≤2px；全由 JSON 動態推導，無數值 ≥200 之像素常數（平移不變）；通過 6 大情境與全套 43 項回歸測試（8403c329d）。
