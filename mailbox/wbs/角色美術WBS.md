@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-26 17:05 R213：C2 單手基底選 A；grip_B 為槍上點不從圖找；先建同源 polygon 基準經人工覆核再評 SAM2。
 - 2026-10-26 17:00 R212：Sparkle v1 Spine3.8 產生器（加權 mesh/IK/物理）本機可重跑；離線渲染見 5 項動作問題已回饋；請 Codex Cocos 3.8.8 實測。
 - 2026-10-26 16:30 R211：19 點確認為身體點（握點另計共 21 標記）；root＝雙踝中點 x＋較低腳 y；步態 in-place＋world-root 淨 0.60H；SAM2 head 須加 box 重跑。
 - 2026-10-26 16:12 R210：正式定義 19 點（BODY_18 取 14＋head_center/pelvis/waist/chest/root）與 SAM2 20+1 槽位正負點表；布料三槽本輪不跑 SAM2。
