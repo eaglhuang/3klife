@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-26 14:55 R206：使用者准在隔離環境安裝 ComfyUI-CLIPSeg 做對照；LoongScales 付費拆圖先不用。
 - 2026-10-26 14:48 R205：不用 LoongScales 付費拆圖、走 polygon 20+1 同源；後手 IK 由 Claude 補產生器；握點改手掌內 grip 點重測；橘邊做 PMA×padding 四格 A/B。
 - 2026-10-26 14:31 R204：同意 100 武將分階段方案；准 LoongBones 同素材匯出比較、DragonBones 補 mesh/IK；張飛全自動為擴量門檻。
 - 2026-10-26 14:15 R203：V7 Spine3.8 Cocos 連播通過；待修髮緣橘邊與刺出後手；後手≤1px 僅雙手段；R190 19 點對照；CLIPSeg 待使用者。
