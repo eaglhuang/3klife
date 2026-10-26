@@ -632,6 +632,33 @@
                         "styleSlot": "nurture.label.button"
                       }
                     ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnStartBorrow",
+                    "id": "btnStartBorrow",
+                    "widget": {
+                      "top": 290,
+                      "left": 800
+                    },
+                    "width": 325,
+                    "height": 72,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnStartBorrowLabel",
+                        "id": "startBorrowLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 64,
+                        "text": "＋ 好友借用",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
                   }
                 ]
               },
@@ -1026,33 +1053,6 @@
                         "type": "label",
                         "name": "BtnLegendaryMentorLabel",
                         "id": "legendaryMentorLabel",
-                        "widget": {
-                          "vCenter": true,
-                          "left": 0,
-                          "right": 0
-                        },
-                        "height": 44,
-                        "text": "傳道",
-                        "styleSlot": "nurture.label.button"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "button",
-                    "name": "BtnMentorBorrow",
-                    "id": "btnMentorBorrow",
-                    "widget": {
-                      "top": 376,
-                      "right": 27
-                    },
-                    "width": 360,
-                    "height": 48,
-                    "skinSlot": "nurture.button.rest.bg",
-                    "children": [
-                      {
-                        "type": "label",
-                        "name": "BtnMentorBorrowLabel",
-                        "id": "mentorBorrowLabel",
                         "widget": {
                           "vCenter": true,
                           "left": 0,

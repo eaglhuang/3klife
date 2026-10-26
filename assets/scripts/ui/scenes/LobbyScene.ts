@@ -36,6 +36,7 @@ import type { NurtureAction } from '../../core/systems/NurtureSystem';
 import { TRAINING_KINDS } from '../../core/systems/NurtureSystem';
 import { MENTOR_DECK_SIZE } from '../../core/systems/MentorDeck';
 import { attachSupportToCards, MENTOR_POOL_ID, parseSupportCatalog, SupportCatalog } from '../../core/systems/MentorSupportCatalog';
+import { friendMentorCard } from '../../core/systems/NpcFriendMentor';
 import { NurtureFlowController } from '../core/NurtureFlowController';
 import { VitalityPillController } from '../core/VitalityPillController';
 import { MentorCardDetailController } from '../core/MentorCardDetailController';
@@ -226,7 +227,6 @@ export class LobbyScene extends Component {
     private _graduationHost: UIScreenPreviewHost | null = null;
     private _graduationPage = 0;
     private _mentorBorrowHost: UIScreenPreviewHost | null = null;
-    private _mentorBorrowSessionId: string | null = null;
     private _mentorBorrowPage = 0;
     /** 「我的教官卡」列表（PROG-2-1097）：重用 mentor-borrow-screen 版面 */
     private _mentorHoldingsHost: UIScreenPreviewHost | null = null;
@@ -638,8 +638,15 @@ export class LobbyScene extends Component {
         this._mentorHoldingsHost?.binder?.setActives(actives);
     }
 
-    private _openMentorBorrow(sessionId: string): void {
-        this._mentorBorrowSessionId = sessionId;
+    /** 入學前的好友借用（§L-2，PROG-2-1138）：已選時再點一次取消，否則開借將清單 */
+    private _onClickStartBorrow(): void {
+        const flow = this._nurtureFlow;
+        if (!flow) return;
+        if (flow.borrowedMentor) {
+            flow.setBorrowedMentor(null);
+            this._refreshNurtureFlow();
+            return;
+        }
         this._mentorBorrowPage = 0;
         this._setMentorBorrowOpen(true);
     }
@@ -656,9 +663,9 @@ export class LobbyScene extends Component {
 
     /** 目前的借將列表（全部好友，依借用檢查結果標示）；每次刷新都重算，避免打開後狀態過期 */
     private _mentorBorrowRowsNow(): MentorBorrowRow[] {
-        const sessionId = this._mentorBorrowSessionId ?? '';
         const lookup = (key: string): string => services().i18n.t(key);
-        return mentorBorrowRows(services().session.npcFriendMentors, (friend) => services().session.borrowBlockFor(friend, sessionId), lookup);
+        // 入學前還沒有 sessionId：只檢查 SSR／每日上限，入學後才以實際 sessionId 寫紀錄
+        return mentorBorrowRows(services().session.npcFriendMentors, (friend) => services().session.borrowBlockFor(friend, ''), lookup);
     }
 
     private _refreshMentorBorrow(): void {
@@ -676,23 +683,33 @@ export class LobbyScene extends Component {
         this._mentorBorrowHost?.binder?.setActives(actives);
     }
 
-    /** 選第 i 列借用：擋下時顯示原因不改紀錄；成功後刷新列表並顯示結義點數 */
+    /** 選第 i 列：設為入學的第 6 位教官（借用紀錄等入學成功才寫） */
     private async _borrowRow(index: number): Promise<void> {
-        const sessionId = this._mentorBorrowSessionId;
         const slice = pageSliceOf(this._mentorBorrowRowsNow(), this._mentorBorrowPage);
         const row = slice.items[index];
-        if (!sessionId || !row || !row.enabled) return;
-        const result = await services().session.borrowFriendMentor({
-            friendId: row.friendId,
-            sessionId,
-            recordId: `borrow-${sessionId}-${row.friendId}-${Date.now()}`,
-        });
-        if (result.ok === false) {
-            services().event.emit('SHOW_TOAST', { message: services().i18n.t(`ui.general.mentor.borrow.blocked.${result.blocked}`), duration: 2 });
-        } else {
-            services().event.emit('SHOW_TOAST', { message: `借用完成，結義點數 +${result.ownerBondReward}`, duration: 2 });
+        const friend = row ? services().session.npcFriendMentors.find((f) => f.friendId === row.friendId) : undefined;
+        if (!row || !row.enabled || !friend || !this._nurtureFlow) return;
+        const card = friendMentorCard(friend, await this._loadSupportCatalog(), this._generals);
+        if (!card) {
+            services().event.emit('SHOW_TOAST', { message: '找不到這位好友教官的支援卡資料', duration: 2 });
+            return;
         }
-        this._refreshMentorBorrow();
+        this._nurtureFlow.setBorrowedMentor(friend.friendId, card);
+        services().event.emit('SHOW_TOAST', { message: `${card.name} ★${card.stars ?? 0} 將作為第 6 位教官入學`, duration: 2 });
+        this._setMentorBorrowOpen(false);
+        this._refreshNurtureFlow();
+    }
+
+    /** 入學成功後寫入借用紀錄（每日 1 張），原主結義點數入帳 */
+    private async _commitFriendBorrow(friendId: string, sessionId: string): Promise<{ ok: boolean; message?: string }> {
+        const result = await services().session.borrowFriendMentor({
+            friendId,
+            sessionId,
+            recordId: `borrow-${sessionId}-${friendId}-${Date.now()}`,
+        });
+        if (result.ok === false) return { ok: false, message: services().i18n.t(`ui.general.mentor.borrow.blocked.${result.blocked}`) };
+        services().event.emit('SHOW_TOAST', { message: `好友借用完成，結義點數 +${result.ownerBondReward}`, duration: 2 });
+        return { ok: true };
     }
 
     /** 季度 HUD：以 UCUF JSON（lobby-season-hud-screen）執行期組裝，顯示「第 N 年 M 季」與推進入口 */
@@ -786,6 +803,7 @@ export class LobbyScene extends Component {
             showToast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2 }); },
             tacticName: (id) => tacticNames.get(id) ?? inspiredTacticName(id),
             learnTactic: (childId, tacticId) => services().session.learnTactic(childId, tacticId),
+            commitFriendBorrow: (friendId, sessionId) => this._commitFriendBorrow(friendId, sessionId),
         });
         this._nurtureFlow = flow;
 
@@ -820,10 +838,7 @@ export class LobbyScene extends Component {
             ...trainBindings,
             { buttonId: 'btnLegendaryCard', handler: act(() => flow.cycleLegendaryCard()) },
             { buttonId: 'btnLegendaryMentor', handler: act(() => flow.legendaryMentor()) },
-            { buttonId: 'btnMentorBorrow', handler: () => {
-                const sessionId = flow.mentorBorrowSessionId();
-                if (sessionId) this._openMentorBorrow(sessionId);
-            } },
+            { buttonId: 'btnStartBorrow', handler: () => { this._onClickStartBorrow(); } },
             { buttonId: 'btnRest', handler: act(() => flow.train('rest')) },
             { buttonId: 'btnUsePill', handler: () => { void this._usePillOnNurtureChild(flow); } },
             { buttonId: 'btnPrevTactic', handler: () => { flow.cycleTactic(-1); this._refreshNurtureFlow(); } },
