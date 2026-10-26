@@ -15,6 +15,7 @@ import {
     RedFacePoolLike,
     RedFaceShowcaseRow,
 } from '../../core/systems/RedFaceShowcase';
+import { PortraitGallery, PortraitGalleryItem } from './PortraitGallery';
 
 export const RED_FACE_SHOW_MAX_ROWS = 5;
 
@@ -122,5 +123,57 @@ export class RedFaceShowcaseController {
             texts[`btnRedFaceRow${i}Label`] = row && row.id === selected?.id ? '檢視中' : '檢視';
         }
         return { texts, actives, enabled };
+    }
+}
+
+interface RedFaceGalleryItem extends PortraitGalleryItem {
+    row: RedFaceShowcaseRow;
+}
+
+/**
+ * 大廳「紅顏池・展示」一頁六框全身立繪版（PROG-2-1126）；轉蛋分頁仍用上面的五列版。
+ * 紅顏不截到 5 位，超過 6 位翻頁。
+ */
+/** 紅顏池 id 與武將立繪 id 不同名的對照（甄宓＝甄姬，立繪與臉部標記登記在 zhen-ji） */
+const RED_FACE_PORTRAIT_ALIASES: Readonly<Record<string, string>> = { 'zhen-mi': 'zhen-ji' };
+
+export class RedFaceGalleryController {
+    private readonly _gallery: PortraitGallery<RedFaceGalleryItem>;
+
+    constructor(private readonly _deps: RedFaceShowcaseDeps) {
+        this._gallery = new PortraitGallery(() => {
+            const pool = this._deps.pool();
+            if (!pool) return [];
+            return buildRedFaceShowcase(pool, this._deps.cards(), this._deps.generalPoolIds()).map((row) => ({
+                id: row.id,
+                name: row.name,
+                sub: '',
+                portraitKey: RED_FACE_PORTRAIT_ALIASES[row.id] ?? row.id,
+                tag: row.isCore ? CORE_TAG_TEXT : '',
+                row,
+            }));
+        });
+    }
+
+    public prev(): void { this._gallery.prev(); }
+
+    public next(): void { this._gallery.next(); }
+
+    public select(slot: number): void { this._gallery.select(slot); }
+
+    public framePortraitKeys(): string[] {
+        return this._gallery.pageItems().map((item) => item.portraitKey);
+    }
+
+    public getFlowView(): RedFaceShowcaseFlowView {
+        const view = this._gallery.getView();
+        const row = this._gallery.selected()?.row ?? null;
+        view.texts.detailName = row?.name ?? '';
+        view.texts.detailMeta = row ? row.effectTags.map(effectTagLabel).join(' · ') : '';
+        view.texts.detailLine = row?.previewLine ? `「${row.previewLine}」` : '';
+        view.texts.emptyLabel = row ? '' : '目前沒有可展示的紅顏';
+        view.actives.emptyLabel = !row;
+        view.enabled.btnClose = true;
+        return view;
     }
 }

@@ -42,8 +42,8 @@
           "hCenter": true,
           "vCenter": true
         },
-        "width": 1400,
-        "height": 900,
+        "width": 1760,
+        "height": 960,
         "skinSlot": "rf.card.bg",
         "children": [
           {
@@ -51,10 +51,10 @@
             "name": "RedFaceTitle",
             "id": "redFaceTitle",
             "widget": {
-              "top": 22,
-              "left": 32
+              "top": 28,
+              "left": 75
             },
-            "height": 40,
+            "height": 56,
             "text": "紅顏池・展示",
             "styleSlot": "rf.label.title",
             "width": 700
@@ -64,11 +64,11 @@
             "name": "BtnClose",
             "id": "btnClose",
             "widget": {
-              "top": 16,
-              "left": 1250
+              "top": 24,
+              "right": 75
             },
-            "width": 110,
-            "height": 48,
+            "width": 150,
+            "height": 56,
             "skinSlot": "rf.button.bg",
             "children": [
               {
@@ -77,10 +77,10 @@
                 "id": "btnCloseLabel",
                 "widget": {
                   "vCenter": true,
-                  "left": 0,
-                  "right": 0
+                  "left": 8,
+                  "right": 8
                 },
-                "height": 40,
+                "height": 36,
                 "text": "關閉",
                 "styleSlot": "rf.label.button"
               }
@@ -88,404 +88,830 @@
           },
           {
             "type": "label",
-            "name": "RedFaceEmptyLabel",
-            "id": "redFaceEmptyLabel",
+            "name": "EmptyLabel",
+            "id": "emptyLabel",
             "widget": {
-              "top": 300,
-              "left": 32
+              "top": 360,
+              "left": 75,
+              "right": 75
             },
             "height": 40,
             "text": "",
-            "styleSlot": "rf.label.body",
-            "width": 620
+            "styleSlot": "rf.label.meta"
           },
           {
-            "type": "panel",
-            "name": "RedFaceRow0",
-            "id": "redFaceRow0",
+            "type": "button",
+            "name": "BtnFrame0",
+            "id": "btnFrame0",
             "widget": {
-              "top": 110,
-              "left": 32
+              "top": 120,
+              "left": 75
             },
-            "width": 620,
-            "height": 104,
-            "skinSlot": "rf.row.bg",
+            "width": 250,
+            "height": 560,
+            "skinSlot": "pg.frame.bg",
             "children": [
               {
+                "type": "container",
+                "name": "Frame0Mask",
+                "id": "frame0Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame0Portrait",
+                    "id": "frame0Portrait",
+                    "width": 250,
+                    "height": 560,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame0Plate",
+                "id": "frame0Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 130,
+                "skinSlot": "pg.plate"
+              },
+              {
                 "type": "label",
-                "name": "RedFaceRow0Name",
-                "id": "redFaceRow0Name",
+                "name": "Frame0Name",
+                "id": "frame0Name",
+                "widget": {
+                  "bottom": 46,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 52,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame0Sub",
+                "id": "frame0Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame0Tag",
+                "id": "frame0Tag",
                 "widget": {
                   "top": 12,
-                  "left": 24
+                  "left": 12
                 },
+                "width": 74,
                 "height": 36,
-                "text": "",
-                "styleSlot": "rf.label.name",
-                "width": 420
-              },
-              {
-                "type": "label",
-                "name": "RedFaceRow0Tag",
-                "id": "redFaceRow0Tag",
-                "widget": {
-                  "top": 52,
-                  "left": 24
-                },
-                "height": 28,
-                "text": "",
-                "styleSlot": "rf.label.meta",
-                "width": 420
-              },
-              {
-                "type": "button",
-                "name": "BtnRedFaceRow0",
-                "id": "btnRedFaceRow0",
-                "widget": {
-                  "vCenter": true,
-                  "right": 24
-                },
-                "width": 150,
-                "height": 56,
-                "skinSlot": "rf.button.bg",
+                "skinSlot": "pg.tag",
                 "children": [
                   {
                     "type": "label",
-                    "name": "BtnRedFaceRow0Label",
-                    "id": "btnRedFaceRow0Label",
+                    "name": "Frame0TagLabel",
+                    "id": "frame0TagLabel",
                     "widget": {
                       "vCenter": true,
                       "left": 0,
                       "right": 0
                     },
-                    "height": 40,
-                    "text": "檢視",
-                    "styleSlot": "rf.label.button"
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "pg.label.tag"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame0Sel",
+                "id": "frame0Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "skinSlot": "pg.sel"
               }
             ]
           },
           {
-            "type": "panel",
-            "name": "RedFaceRow1",
-            "id": "redFaceRow1",
+            "type": "button",
+            "name": "BtnFrame1",
+            "id": "btnFrame1",
             "widget": {
-              "top": 230,
-              "left": 32
+              "top": 120,
+              "left": 347
             },
-            "width": 620,
-            "height": 104,
-            "skinSlot": "rf.row.bg",
+            "width": 250,
+            "height": 560,
+            "skinSlot": "pg.frame.bg",
             "children": [
               {
+                "type": "container",
+                "name": "Frame1Mask",
+                "id": "frame1Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame1Portrait",
+                    "id": "frame1Portrait",
+                    "width": 250,
+                    "height": 560,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame1Plate",
+                "id": "frame1Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 130,
+                "skinSlot": "pg.plate"
+              },
+              {
                 "type": "label",
-                "name": "RedFaceRow1Name",
-                "id": "redFaceRow1Name",
+                "name": "Frame1Name",
+                "id": "frame1Name",
+                "widget": {
+                  "bottom": 46,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 52,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame1Sub",
+                "id": "frame1Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame1Tag",
+                "id": "frame1Tag",
                 "widget": {
                   "top": 12,
-                  "left": 24
+                  "left": 12
                 },
+                "width": 74,
                 "height": 36,
-                "text": "",
-                "styleSlot": "rf.label.name",
-                "width": 420
-              },
-              {
-                "type": "label",
-                "name": "RedFaceRow1Tag",
-                "id": "redFaceRow1Tag",
-                "widget": {
-                  "top": 52,
-                  "left": 24
-                },
-                "height": 28,
-                "text": "",
-                "styleSlot": "rf.label.meta",
-                "width": 420
-              },
-              {
-                "type": "button",
-                "name": "BtnRedFaceRow1",
-                "id": "btnRedFaceRow1",
-                "widget": {
-                  "vCenter": true,
-                  "right": 24
-                },
-                "width": 150,
-                "height": 56,
-                "skinSlot": "rf.button.bg",
+                "skinSlot": "pg.tag",
                 "children": [
                   {
                     "type": "label",
-                    "name": "BtnRedFaceRow1Label",
-                    "id": "btnRedFaceRow1Label",
+                    "name": "Frame1TagLabel",
+                    "id": "frame1TagLabel",
                     "widget": {
                       "vCenter": true,
                       "left": 0,
                       "right": 0
                     },
-                    "height": 40,
-                    "text": "檢視",
-                    "styleSlot": "rf.label.button"
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "pg.label.tag"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame1Sel",
+                "id": "frame1Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "skinSlot": "pg.sel"
               }
             ]
           },
           {
-            "type": "panel",
-            "name": "RedFaceRow2",
-            "id": "redFaceRow2",
+            "type": "button",
+            "name": "BtnFrame2",
+            "id": "btnFrame2",
             "widget": {
-              "top": 350,
-              "left": 32
+              "top": 120,
+              "left": 619
             },
-            "width": 620,
-            "height": 104,
-            "skinSlot": "rf.row.bg",
+            "width": 250,
+            "height": 560,
+            "skinSlot": "pg.frame.bg",
             "children": [
               {
+                "type": "container",
+                "name": "Frame2Mask",
+                "id": "frame2Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame2Portrait",
+                    "id": "frame2Portrait",
+                    "width": 250,
+                    "height": 560,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame2Plate",
+                "id": "frame2Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 130,
+                "skinSlot": "pg.plate"
+              },
+              {
                 "type": "label",
-                "name": "RedFaceRow2Name",
-                "id": "redFaceRow2Name",
+                "name": "Frame2Name",
+                "id": "frame2Name",
+                "widget": {
+                  "bottom": 46,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 52,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame2Sub",
+                "id": "frame2Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame2Tag",
+                "id": "frame2Tag",
                 "widget": {
                   "top": 12,
-                  "left": 24
+                  "left": 12
                 },
+                "width": 74,
                 "height": 36,
-                "text": "",
-                "styleSlot": "rf.label.name",
-                "width": 420
-              },
-              {
-                "type": "label",
-                "name": "RedFaceRow2Tag",
-                "id": "redFaceRow2Tag",
-                "widget": {
-                  "top": 52,
-                  "left": 24
-                },
-                "height": 28,
-                "text": "",
-                "styleSlot": "rf.label.meta",
-                "width": 420
-              },
-              {
-                "type": "button",
-                "name": "BtnRedFaceRow2",
-                "id": "btnRedFaceRow2",
-                "widget": {
-                  "vCenter": true,
-                  "right": 24
-                },
-                "width": 150,
-                "height": 56,
-                "skinSlot": "rf.button.bg",
+                "skinSlot": "pg.tag",
                 "children": [
                   {
                     "type": "label",
-                    "name": "BtnRedFaceRow2Label",
-                    "id": "btnRedFaceRow2Label",
+                    "name": "Frame2TagLabel",
+                    "id": "frame2TagLabel",
                     "widget": {
                       "vCenter": true,
                       "left": 0,
                       "right": 0
                     },
-                    "height": 40,
-                    "text": "檢視",
-                    "styleSlot": "rf.label.button"
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "pg.label.tag"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame2Sel",
+                "id": "frame2Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "skinSlot": "pg.sel"
               }
             ]
           },
           {
-            "type": "panel",
-            "name": "RedFaceRow3",
-            "id": "redFaceRow3",
+            "type": "button",
+            "name": "BtnFrame3",
+            "id": "btnFrame3",
             "widget": {
-              "top": 470,
-              "left": 32
+              "top": 120,
+              "left": 891
             },
-            "width": 620,
-            "height": 104,
-            "skinSlot": "rf.row.bg",
+            "width": 250,
+            "height": 560,
+            "skinSlot": "pg.frame.bg",
             "children": [
               {
+                "type": "container",
+                "name": "Frame3Mask",
+                "id": "frame3Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame3Portrait",
+                    "id": "frame3Portrait",
+                    "width": 250,
+                    "height": 560,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame3Plate",
+                "id": "frame3Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 130,
+                "skinSlot": "pg.plate"
+              },
+              {
                 "type": "label",
-                "name": "RedFaceRow3Name",
-                "id": "redFaceRow3Name",
+                "name": "Frame3Name",
+                "id": "frame3Name",
+                "widget": {
+                  "bottom": 46,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 52,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame3Sub",
+                "id": "frame3Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame3Tag",
+                "id": "frame3Tag",
                 "widget": {
                   "top": 12,
-                  "left": 24
+                  "left": 12
                 },
+                "width": 74,
                 "height": 36,
-                "text": "",
-                "styleSlot": "rf.label.name",
-                "width": 420
-              },
-              {
-                "type": "label",
-                "name": "RedFaceRow3Tag",
-                "id": "redFaceRow3Tag",
-                "widget": {
-                  "top": 52,
-                  "left": 24
-                },
-                "height": 28,
-                "text": "",
-                "styleSlot": "rf.label.meta",
-                "width": 420
-              },
-              {
-                "type": "button",
-                "name": "BtnRedFaceRow3",
-                "id": "btnRedFaceRow3",
-                "widget": {
-                  "vCenter": true,
-                  "right": 24
-                },
-                "width": 150,
-                "height": 56,
-                "skinSlot": "rf.button.bg",
+                "skinSlot": "pg.tag",
                 "children": [
                   {
                     "type": "label",
-                    "name": "BtnRedFaceRow3Label",
-                    "id": "btnRedFaceRow3Label",
+                    "name": "Frame3TagLabel",
+                    "id": "frame3TagLabel",
                     "widget": {
                       "vCenter": true,
                       "left": 0,
                       "right": 0
                     },
-                    "height": 40,
-                    "text": "檢視",
-                    "styleSlot": "rf.label.button"
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "pg.label.tag"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame3Sel",
+                "id": "frame3Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "skinSlot": "pg.sel"
               }
             ]
           },
           {
-            "type": "panel",
-            "name": "RedFaceRow4",
-            "id": "redFaceRow4",
+            "type": "button",
+            "name": "BtnFrame4",
+            "id": "btnFrame4",
             "widget": {
-              "top": 590,
-              "left": 32
+              "top": 120,
+              "left": 1163
             },
-            "width": 620,
-            "height": 104,
-            "skinSlot": "rf.row.bg",
+            "width": 250,
+            "height": 560,
+            "skinSlot": "pg.frame.bg",
             "children": [
               {
+                "type": "container",
+                "name": "Frame4Mask",
+                "id": "frame4Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame4Portrait",
+                    "id": "frame4Portrait",
+                    "width": 250,
+                    "height": 560,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame4Plate",
+                "id": "frame4Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 130,
+                "skinSlot": "pg.plate"
+              },
+              {
                 "type": "label",
-                "name": "RedFaceRow4Name",
-                "id": "redFaceRow4Name",
+                "name": "Frame4Name",
+                "id": "frame4Name",
+                "widget": {
+                  "bottom": 46,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 52,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame4Sub",
+                "id": "frame4Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame4Tag",
+                "id": "frame4Tag",
                 "widget": {
                   "top": 12,
-                  "left": 24
+                  "left": 12
                 },
+                "width": 74,
                 "height": 36,
-                "text": "",
-                "styleSlot": "rf.label.name",
-                "width": 420
-              },
-              {
-                "type": "label",
-                "name": "RedFaceRow4Tag",
-                "id": "redFaceRow4Tag",
-                "widget": {
-                  "top": 52,
-                  "left": 24
-                },
-                "height": 28,
-                "text": "",
-                "styleSlot": "rf.label.meta",
-                "width": 420
-              },
-              {
-                "type": "button",
-                "name": "BtnRedFaceRow4",
-                "id": "btnRedFaceRow4",
-                "widget": {
-                  "vCenter": true,
-                  "right": 24
-                },
-                "width": 150,
-                "height": 56,
-                "skinSlot": "rf.button.bg",
+                "skinSlot": "pg.tag",
                 "children": [
                   {
                     "type": "label",
-                    "name": "BtnRedFaceRow4Label",
-                    "id": "btnRedFaceRow4Label",
+                    "name": "Frame4TagLabel",
+                    "id": "frame4TagLabel",
                     "widget": {
                       "vCenter": true,
                       "left": 0,
                       "right": 0
                     },
-                    "height": 40,
-                    "text": "檢視",
-                    "styleSlot": "rf.label.button"
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "pg.label.tag"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame4Sel",
+                "id": "frame4Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "skinSlot": "pg.sel"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame5",
+            "id": "btnFrame5",
+            "widget": {
+              "top": 120,
+              "left": 1435
+            },
+            "width": 250,
+            "height": 560,
+            "skinSlot": "pg.frame.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "Frame5Mask",
+                "id": "frame5Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame5Portrait",
+                    "id": "frame5Portrait",
+                    "width": 250,
+                    "height": 560,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame5Plate",
+                "id": "frame5Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 130,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame5Name",
+                "id": "frame5Name",
+                "widget": {
+                  "bottom": 46,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 52,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame5Sub",
+                "id": "frame5Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame5Tag",
+                "id": "frame5Tag",
+                "widget": {
+                  "top": 12,
+                  "left": 12
+                },
+                "width": 74,
+                "height": 36,
+                "skinSlot": "pg.tag",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "Frame5TagLabel",
+                    "id": "frame5TagLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "pg.label.tag"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame5Sel",
+                "id": "frame5Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "skinSlot": "pg.sel"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnPrev",
+            "id": "btnPrev",
+            "widget": {
+              "top": 704,
+              "left": 690
+            },
+            "width": 96,
+            "height": 56,
+            "skinSlot": "pg.page.btn",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnPrevLabel",
+                "id": "btnPrevLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 36,
+                "text": "◀",
+                "styleSlot": "pg.label.page"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "PageLabel",
+            "id": "pageLabel",
+            "widget": {
+              "top": 712,
+              "left": 800
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "pg.label.page",
+            "width": 160
+          },
+          {
+            "type": "button",
+            "name": "BtnNext",
+            "id": "btnNext",
+            "widget": {
+              "top": 704,
+              "left": 974
+            },
+            "width": 96,
+            "height": 56,
+            "skinSlot": "pg.page.btn",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnNextLabel",
+                "id": "btnNextLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 36,
+                "text": "▶",
+                "styleSlot": "pg.label.page"
               }
             ]
           },
           {
             "type": "panel",
-            "name": "RedFaceDetail",
-            "id": "redFaceDetail",
+            "name": "DetailDivider",
+            "id": "detailDivider",
             "widget": {
-              "top": 110,
-              "left": 700
+              "top": 780,
+              "left": 75,
+              "right": 75
             },
-            "width": 668,
-            "height": 620,
-            "skinSlot": "rf.row.bg",
-            "children": [
-              {
-                "type": "label",
-                "name": "RedFaceDetailName",
-                "id": "redFaceDetailName",
-                "widget": {
-                  "top": 24,
-                  "left": 32
-                },
-                "height": 44,
-                "text": "",
-                "styleSlot": "rf.label.title",
-                "width": 600
-              },
-              {
-                "type": "label",
-                "name": "RedFaceDetailTags",
-                "id": "redFaceDetailTags",
-                "widget": {
-                  "top": 84,
-                  "left": 32
-                },
-                "height": 28,
-                "text": "",
-                "styleSlot": "rf.label.meta",
-                "width": 600
-              },
-              {
-                "type": "label",
-                "name": "RedFaceDetailLine",
-                "id": "redFaceDetailLine",
-                "widget": {
-                  "top": 140,
-                  "left": 32
-                },
-                "height": 160,
-                "text": "",
-                "styleSlot": "rf.label.body",
-                "width": 600
-              }
-            ]
+            "height": 1,
+            "skinSlot": "pg.divider"
+          },
+          {
+            "type": "label",
+            "name": "DetailName",
+            "id": "detailName",
+            "widget": {
+              "top": 796,
+              "left": 75
+            },
+            "height": 52,
+            "text": "",
+            "styleSlot": "pg.label.detailName",
+            "width": 320
+          },
+          {
+            "type": "label",
+            "name": "DetailMeta",
+            "id": "detailMeta",
+            "widget": {
+              "top": 806,
+              "left": 405
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "pg.label.meta",
+            "width": 900
+          },
+          {
+            "type": "label",
+            "name": "DetailLine",
+            "id": "detailLine",
+            "widget": {
+              "top": 854,
+              "left": 75
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "pg.label.body",
+            "width": 1300
           }
         ]
       }
