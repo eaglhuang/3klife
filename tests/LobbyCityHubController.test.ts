@@ -31,7 +31,7 @@ export function createLobbyCityHubControllerSuite(): TestSuite {
 
     suite.test('五類收納涵蓋大廳所有功能入口，不重複', () => {
         const actions = LOBBY_CATEGORIES.flatMap(c => c.items.map(i => i.id));
-        assert.equals(14, actions.length);
+        assert.equals(16, actions.length);
         assert.equals(actions.length, new Set(actions).size);
         assert.equals(4, LOBBY_SUB_SLOTS);
     });
@@ -43,6 +43,8 @@ export function createLobbyCityHubControllerSuite(): TestSuite {
         assert.equals('battle', actionAt('sortie', 0));
         assert.equals('rival', actionAt('sortie', 1), '出征分類可直接進外交・征伐（AI 勢力互動）');
         assert.equals(null, actionAt('sortie', 3));
+        assert.equals('recruitHall', actionAt('domestic', 1), '內政分類可直接進招賢館（20 位名將可選）');
+        assert.equals('warehouse', actionAt('shop', 2));
         assert.equals(null, actionAt(null, 0));
     });
 
@@ -55,12 +57,13 @@ export function createLobbyCityHubControllerSuite(): TestSuite {
         assert.isTrue(open.actives.btnSub3);
         assert.equals('▲ 武將', open.texts.btnCatGeneralsLabel);
         const shop = buildLobbyCityHubView(input({ openCategory: 'shop' }));
-        assert.isFalse(shop.actives.btnSub2);
+        assert.isTrue(shop.actives.btnSub2);
+        assert.isFalse(shop.actives.btnSub3);
     });
 
     suite.test('子功能可帶動態文字（天下沙盤開放狀態）', () => {
         const view = buildLobbyCityHubView(input({ openCategory: 'domestic', actionLabels: { sandtable: '天下沙盤（尚未開放）' } }));
-        assert.equals('天下沙盤（尚未開放）', view.texts.sub2Label);
+        assert.equals('天下沙盤（尚未開放）', view.texts.sub3Label);
     });
 
     suite.test('頂列顯示勢力、官職、主將與四項資源', () => {
