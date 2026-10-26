@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 04:05 AG-23 完成：check_layered_parts 實作單槽範圍檢查（scope_capsule_bounds）；支援 torso/upperarm/forearm/thigh/shin/head/hand/foot 膠囊與 hand 腕部延伸通道，pauldron 採 shoulderOverlapZone 圓外擴 12px 暫定規則；超出比例 >1% 判定 FAIL 並輸出 outside_<slot>.png；特殊部件（weapon/cape/skirt/hair_tail）標記 SKIPPED；報告完整明列各項檢查；平移不變性與零硬編碼驗證通過；新增 3 項專屬情境測試，全套 49 項單元測試 100% 通過（5b3ba5d5a）。
 - 2026-10-27 04:00 R262：更正 torso guide 肩部硬清除方向相反——分槽 torso 須畫滿到肩關節（隱藏延伸），併肩甲以超出 torso 膠囊+12px 判定；pauldron 錨點 ≤20px 判通過（規格 v3.5）；R230 4.2 格式 PASS、atlas 32MiB/ASTC 估算收下，手機階段再測。
 - 2026-10-27 03:40 R261／AG-23：收 R260 四封；ImageGen torso 材質佳但併肩甲退件，ImageGen 分槽暫列主線（每槽獨立出圖），Comfy 為對照；單槽 PASS 僅格式冒煙，請 AG 補膠囊範圍檢查；顯存由 Comfy/Cocos/Chrome 共用不 free；R230 編輯器可讀 4.2 資產，播放待 Preview。
 - 2026-10-27 03:30 AG-22 驗收完成：Claude 獨立執行 16/16 測試全數 OK；mailbox JSON 同步 foot_f／foot_b 覆寫，定 mailbox 為規格唯一來源；工具組待命，準備配合 Codex 第一批合格槽圖之實測驗證。
