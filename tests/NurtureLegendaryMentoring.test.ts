@@ -45,6 +45,16 @@ function legendHero(): GeneralConfig {
     } as unknown as GeneralConfig;
 }
 
+/** 入學至少要帶 1 位教官（PROG-2-1134） */
+function teacherCard(): MentorCard {
+    return {
+        uid: 'mentor-teacher', sourceGeneralId: 'teacher', name: 'teacher', faction: 'shu',
+        retiredAge: 66, retiredSeason: 4, retiredYear: 2, ep_snapshot: 80, gene_refs: [],
+        parentUids: ['f', 'm'],
+        generalSnapshot: { id: 'teacher', name: 'teacher', faction: 'shu', hp: 1000, str: 90, int: 40, lea: 70, pol: 30, cha: 50, careerClass: 'Warrior' } as unknown as GeneralConfig,
+    } as unknown as MentorCard;
+}
+
 function card(): MentorCard {
     return { uid: 'mentor-hero', sourceGeneralId: 'hero', name: '英靈甲' } as unknown as MentorCard;
 }
@@ -56,8 +66,8 @@ async function rigWith(perform?: (generalId: string, childId: string, skill: str
     const roster = new InMemoryRosterStore([unveiledChild('alpha'), legendHero()]);
     const nurture = new NurtureService(roster, { random: seeded(7), currentSeason: () => 3, currentMode: () => GameTimeMode.Nurture, requireNurtureMode: true });
     const calls: Array<{ generalId: string; childId: string; skill: string | undefined }> = [];
-    // 開場時不帶英靈卡（卡片資料不完整會讓入學換算出錯）；開場後才放入英靈卡清單
-    let cards: MentorCard[] = [];
+    // 開場時只帶完整的教官卡入學（英靈卡資料不完整會讓入學換算出錯）；開場後才換成英靈卡清單
+    let cards: MentorCard[] = [teacherCard()];
     const flow = new NurtureFlowController({
         roster, unveiling: new UnveilingService(roster, seeded(3)), nurture,
         loadMentorCards: async () => cards, persist: async () => undefined,

@@ -85,7 +85,7 @@ function makeRig(
         roster,
         unveiling: new UnveilingService(roster, seeded(3)),
         nurture,
-        loadMentorCards: async () => options.cards ?? [],
+        loadMentorCards: async () => options.cards ?? [card('guan')],
         persist: async () => {
             saves.count += 1;
             if (options.failSave) throw new Error('disk full');
@@ -207,6 +207,7 @@ export function createNurtureFlowSuite(): TestSuite {
             cards: [card('guan'), card('zhang')],
         });
         await flow.chooseFate('accept');
+        await flow.loadDeck();
 
         const start = flow.getView();
         assert.equals('start', start.mode);
@@ -430,13 +431,32 @@ export function createNurtureFlowSuite(): TestSuite {
         assert.isTrue(rig.saves.count > before, '定型後存檔');
     });
 
-    suite.test('培育中顯示戰法列：切換戰法、TP 未達門檻不可學、學習結果寫進提示（PROG-2-1132）', async () => {
+    suite.test('每張支援卡都有 ★0 靈感事件：新抽的卡也能在培育中觸發戰法（教官系統 §F-4，PROG-2-1134）', () => {
+        const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/mentor-support-cards.json'), 'utf8'));
+        const cards = (Array.isArray(data) ? data : data.cards) as Array<{ General_ID: string; Support: { Tactic_Inspire_Events?: Array<{ Min_Star: number }> } }>;
+        for (const c of cards) {
+            assert.isTrue((c.Support.Tactic_Inspire_Events ?? []).some((e) => e.Min_Star === 0), `${c.General_ID} 沒有 ★0 靈感事件`);
+        }
+    });
+
+    suite.test('入學至少帶 1 位教官：沒有教官卡時入學鈕停用、硬按也不入學（PROG-2-1134）', async () => {
+        const rig = makeRig([unveiled('alpha')], { mode: GameTimeMode.Nurture, cards: [] });
+        await rig.flow.chooseFate('accept');
+        await rig.flow.loadDeck();
+        const view = rig.flow.getView();
+        assert.isFalse(view.enabled.btnStartNurture);
+        assert.isTrue(view.texts.startHint.includes('至少需帶 1 位教官'));
+        await rig.flow.startNurture();
+        assert.isTrue(rig.nurture.getSession('alpha') === null);
+        assert.isTrue(rig.flow.getView().texts.flowNotice!.includes('至少需帶 1 位教官'));
+    });
+
+    suite.test('戰法列只在結業顯示，清單為本場靈感觸發的戰法（PROG-2-1134）', async () => {
         const calls: string[] = [];
         const names: Record<string, string> = { 'tactic-a': '甲計', 'tactic-b': '乙計' };
-        const { flow } = makeRig([unveiled('alpha')], {
+        const rig = makeRig([unveiled('alpha')], {
             mode: GameTimeMode.Nurture,
             extra: {
-                tacticIds: () => ['tactic-a', 'tactic-b'],
                 tacticName: (id) => names[id],
                 learnTactic: async (childId, tacticId) => {
                     calls.push(`${childId}:${tacticId}`);
@@ -444,23 +464,37 @@ export function createNurtureFlowSuite(): TestSuite {
                 },
             },
         });
+        const { flow, nurture } = rig;
         await flow.chooseFate('accept');
-        assert.equals(false, flow.getView().actives.tacticBlock);
         await flow.startNurture();
+        assert.equals(false, flow.getView().actives.tacticBlock, '培育中不顯示戰法列');
+
+        // 直接把會話推到結業：先無靈感，再補兩個靈感
+        const state = nurture.getState();
+        const session = state.sessions[0];
+        session.status = 'completed';
+        nurture.restoreState(state);
         let view = flow.getView();
         assert.isTrue(view.actives.tacticBlock);
+        assert.isTrue(view.texts.tacticName.includes('未觸發'));
+        assert.isFalse(view.enabled.btnLearnTactic);
+
+        session.mentors = [{ ...session.mentors[0], id: 'm1', inspire: { events: [
+            { eventId: 'e1', tacticId: 'tactic-a', triggerWindow: [1, 36], baseRate: 1, minStar: 0 },
+            { eventId: 'e2', tacticId: 'tactic-b', triggerWindow: [1, 36], baseRate: 1, minStar: 0 },
+        ], friendshipBonusByStar: [0] } }];
+        session.inspiredKeys = ['m1:e1', 'm1:e2'];
+        nurture.restoreState(state);
+        view = flow.getView();
         assert.isTrue(view.texts.tacticName.startsWith('甲計'));
         assert.isTrue(view.texts.tacticCost.includes('門檻'));
-        assert.isFalse(view.enabled.btnLearnTactic);
         assert.isTrue(view.texts.learnTacticLabel.includes('已學 0 /'));
         flow.cycleTactic(1);
         assert.isTrue(flow.getView().texts.tacticName.startsWith('乙計'));
         flow.cycleTactic(1);
-        assert.isTrue(flow.getView().texts.tacticName.startsWith('甲計'));
         await flow.learnSelectedTactic();
         assert.equals('alpha:tactic-a', calls.join(','));
-        view = flow.getView();
-        assert.isTrue(view.texts.nurtureLog.includes('TP 未達門檻'));
+        assert.isTrue(flow.getView().texts.nurtureLog.includes('TP 未達門檻'));
 
         const layout = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/ui-spec/layouts/nurture-flow-main.json'), 'utf8'));
         const ids = new Set<string>();

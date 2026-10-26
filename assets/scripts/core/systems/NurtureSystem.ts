@@ -653,3 +653,22 @@ export function mentorFromCard(
             : {}),
     };
 }
+
+/**
+ * 本場培育已觸發靈感的戰法 id（依觸發順序、去重）（PROG-2-1134）
+ * 教官系統 §F-3：36 回合內未觸發靈感的戰法不出現在結業點選清單。
+ * inspiredKeys 形如 `${mentorId}:${eventId}`，由教官的靈感事件表對回戰法。
+ */
+export function inspiredTacticIds(session: Pick<NurtureSession, 'mentors' | 'inspiredKeys'> | null | undefined): string[] {
+    const keys = session?.inspiredKeys ?? [];
+    const out: string[] = [];
+    for (const key of keys) {
+        for (const mentor of session?.mentors ?? []) {
+            const prefix = `${mentor.id}:`;
+            if (!key.startsWith(prefix)) continue;
+            const event = mentor.inspire?.events.find((e) => e.eventId === key.slice(prefix.length));
+            if (event && !out.includes(event.tacticId)) out.push(event.tacticId);
+        }
+    }
+    return out;
+}
