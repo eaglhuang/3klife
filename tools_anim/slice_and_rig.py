@@ -584,16 +584,23 @@ def build_neutral_rig_v2(
     atlas_size: tuple[int, int],
     padding: int,
     weapon_source_mode: str,
+    rig_schema: str = "v2",
 ) -> dict[str, Any]:
     """建立符合 AG-01 與 AG-01修訂規範的 `3klife.neutral-rig.v2` JSON，
     統一骨名與槽位名為 `thigh_f/b`, `shin_f/b`，並同時提供 `bonesV1Compat` 與 `hand_f_grip`/`hand_b_grip` 手掌接觸錨點。
+    若 `--rig-schema v1-compat` 則將腿骨名設為 `leg_upper_f/b`, `leg_lower_f/b` 供尚未升級 v2 的 Sparkle 產生器直接零修改讀取。
     """
     pts = landmarks_info["points"]
     body_h = landmarks_info["bodyHeightPx"]
     w, h = canvas_size
 
+    use_v1_leg_names = rig_schema == "v1-compat"
+    b_thigh_f = "leg_upper_f" if use_v1_leg_names else "thigh_f"
+    b_shin_f = "leg_lower_f" if use_v1_leg_names else "shin_f"
+    b_thigh_b = "leg_upper_b" if use_v1_leg_names else "thigh_b"
+    b_shin_b = "leg_lower_b" if use_v1_leg_names else "shin_b"
+
     # 定義骨骼層級與樞紐點 (pivotSourcePx: [x, y], y-down)
-    # 為了向下相容 Sparkle v1/v3，我們提供 v2 標準名稱 (thigh_f/b, shin_f/b) 的同時，也在 slot 記錄 boneV1
     bone_Specs = [
         ("root", None, pts["root"]),
         ("pelvis", "root", pts["pelvis"]),
@@ -610,12 +617,12 @@ def build_neutral_rig_v2(
         ("arm_lower_b", "arm_upper_b", pts["elbow_b"]),
         ("hand_b", "arm_lower_b", pts["wrist_b"]),
         ("pauldron_b", "arm_upper_b", pts["shoulder_b"]),
-        ("thigh_f", "pelvis", pts["hip_f"]),
-        ("shin_f", "thigh_f", pts["knee_f"]),
-        ("foot_f", "shin_f", pts["ankle_f"]),
-        ("thigh_b", "pelvis", pts["hip_b"]),
-        ("shin_b", "thigh_b", pts["knee_b"]),
-        ("foot_b", "shin_b", pts["ankle_b"]),
+        (b_thigh_f, "pelvis", pts["hip_f"]),
+        (b_shin_f, b_thigh_f, pts["knee_f"]),
+        ("foot_f", b_shin_f, pts["ankle_f"]),
+        (b_thigh_b, "pelvis", pts["hip_b"]),
+        (b_shin_b, b_thigh_b, pts["knee_b"]),
+        ("foot_b", b_shin_b, pts["ankle_b"]),
         ("weapon", "hand_f", pts["grip_A"]),
         ("grip_B", "weapon", pts["grip_B"]),
     ]
@@ -651,7 +658,7 @@ def build_neutral_rig_v2(
 
     for s_def in CANONICAL_SLOTS:
         sid = s_def["id"]
-        b_name = s_def["bone"]
+        b_name = s_def["boneV1"] if use_v1_leg_names else s_def["bone"]
         t_info = trimmed_parts.get(sid, {})
         if t_info.get("empty", True) or sid not in placed_regions:
             slots_out.append(
@@ -963,7 +970,7 @@ def main() -> None:
     atlas_img.save(atlas_png_path)
     write_legacy_atlas(atlas_txt_path, atlas_png_name, atlas_img.size, placed_regions)
 
-    # 寫出中立 source-rig.json (v2 + v1 相容)
+    # 寫出中立 source-rig.json (v2) 與向下相容 Sparkle v1-v4 的 source-rig-v1-compat.json
     rig_data = build_neutral_rig_v2(
         landmarks_info=landmarks_info,
         placed_regions=placed_regions,
@@ -974,9 +981,25 @@ def main() -> None:
         atlas_size=atlas_img.size,
         padding=padding,
         weapon_source_mode=weapon_source_mode,
+        rig_schema="v2",
     )
     rig_path = out_dir / "source-rig.json"
     rig_path.write_text(json.dumps(rig_data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    rig_v1_compat = build_neutral_rig_v2(
+        landmarks_info=landmarks_info,
+        placed_regions=placed_regions,
+        trimmed_parts=trimmed_parts,
+        canvas_size=(w, h),
+        source_sha256=source_sha,
+        atlas_filename=atlas_png_name,
+        atlas_size=atlas_img.size,
+        padding=padding,
+        weapon_source_mode=weapon_source_mode,
+        rig_schema="v1-compat",
+    )
+    rig_v1_compat_path = out_dir / "source-rig-v1-compat.json"
+    rig_v1_compat_path.write_text(json.dumps(rig_v1_compat, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     # 儲存 QA 預覽圖
     qa_paths = save_qa_previews(master_rgba, reassembled, owner_map, landmarks_info["points"], out_dir / "qa")

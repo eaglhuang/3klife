@@ -56,9 +56,18 @@ C:\Users\User\AppData\Local\Programs\Python\Python313\python.exe tools_anim/slic
 
 ### 執行範例
 ```powershell
+# 完整驗收（輸出 JSON 報告與逐格渲染 PNG）
 C:\Users\User\AppData\Local\Programs\Python\Python313\python.exe tools_anim/validate_spine.py `
-  --json artifacts/art-direction/sparkle-handoff/sparkle-v3-output-42/zhaoyun.json `
-  --atlas artifacts/art-direction/sparkle-handoff/sparkle-v3-output-42/zhaoyun.atlas `
+  --json artifacts/art-direction/sparkle-handoff/sparkle-v4-output-42/zhaoyun.json `
+  --atlas artifacts/art-direction/sparkle-handoff/sparkle-v4-output-42/zhaoyun.atlas `
   --rig artifacts/art-direction/spine-proof/source-rig.json `
-  --out-dir scratch/audit_sparkle_v3_42
+  --out-dir scratch/audit_sparkle_v4_42
+
+# 精簡 PASS/FAIL 摘要模式（每項一行，可直接貼給 Sparkle；若任一項未過則 exit code = 1）
+C:\Users\User\AppData\Local\Programs\Python\Python313\python.exe tools_anim/validate_spine.py `
+  --json artifacts/art-direction/sparkle-handoff/sparkle-v4-output-42/zhaoyun.json `
+  --atlas artifacts/art-direction/sparkle-handoff/sparkle-v4-output-42/zhaoyun.atlas `
+  --rig artifacts/art-direction/spine-proof/source-rig.json `
+  --out-dir scratch/audit_sparkle_v4_42 `
+  --fail-on
 ```

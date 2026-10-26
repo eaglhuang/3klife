@@ -906,8 +906,95 @@ def render_animations_and_check_head_occlusion(
     }
 
 
+def format_concise_summary_lines(
+    report: dict[str, Any],
+    fail_on_filter: set[str] | None = None,
+) -> tuple[list[str], bool]:
+    """產出每項一行的精簡 PASS/FAIL 摘要，方便直接複製貼給 Sparkle。"""
+    rt = report["runtime"]
+    do_chk = report["drawOrderValidation"]
+    ro_chk = report["renderAndOcclusionValidation"]
+    ms_chk = report["meshAndRigidityValidation"]
+    gm_chk = report["gripAndMotionValidation"]
+    pm_chk = report["palmAndMarkerValidation"]
+    tm = gm_chk.get("thrustMetrics", {})
+
+    wf = ro_chk.get("worstFrame", {})
+    wf_str = f"{wf.get('animation', '?')} f{wf.get('frameIndex', 0)} ({wf.get('time', 0.0):.2f}s)" if wf else "n/a"
+    rigid_bad = [v["slot"] for v in ms_chk.get("rigidSlotViolations", [])]
+    flipped_slot = ms_chk.get("animatedFlippedBySlot", {})
+    thrust_root_ok = bool(tm.get("rootIsStationary", True))
+    no_flipped_ok = ms_chk.get("setupFlippedTriangles", 0) == 0 and ms_chk.get("animatedFlippedTriangles", 0) == 0
+    rigid_ok = len(rigid_bad) == 0
+
+    items = [
+        (
+            "spine_core_42",
+            bool(report["checks"]["officialSpineCore42LoadAndPlay"]),
+            f"官方 spine-core 4.2 載入與播放: spine={rt.get('spineVersion')}, loadErrors={len(rt.get('loadErrors', []))}, animErrors={rt.get('animationRuntimeErrors', 0)}, physics={rt.get('physicsCount', 0)}",
+        ),
+        (
+            "draw_order",
+            bool(report["checks"]["drawOrderUniqueNoHoles"]),
+            f"drawOrder 唯一性（無重複/無空洞）: issues={do_chk.get('issueCount', 0)}",
+        ),
+        (
+            "head_occlusion",
+            bool(report["checks"]["headOcclusionLe5Pct"]),
+            f"head 臉部遮擋率 <= 5.0%: max={ro_chk.get('maxHeadOcclusionRatio', 0.0) * 100:.2f}% @ {wf_str}",
+        ),
+        (
+            "rigid_slots",
+            rigid_ok,
+            f"剛體部位不跨骨加權 (head/weapon/hand/foot/pauldron): violations={rigid_bad if rigid_bad else 'none'}",
+        ),
+        (
+            "flipped_triangles",
+            no_flipped_ok,
+            f"網格無翻面三角形 (= 0): setup={ms_chk.get('setupFlippedTriangles', 0)}, animated={ms_chk.get('animatedFlippedTriangles', 0)} {flipped_slot if flipped_slot else ''}".strip(),
+        ),
+        (
+            "palm_grip",
+            bool(report["checks"]["twoHandedPalmGripLe1Px"]),
+            f"雙手持槍手掌接觸點到握點 <= 1.0 px: frontPalm={gm_chk.get('maxFrontPalmToGripAPx', 0.0):.3f} px, rearPalm={gm_chk.get('maxRearPalmToGripBPx', 0.0):.3f} px",
+        ),
+        (
+            "single_hand_ik",
+            bool(report["checks"]["singleHandIkMixZero"]),
+            f"單手持槍 (idle/walk) 後手 IK mix = 0: idle={gm_chk.get('idleRearHandIkMix', 0.0)}, walk={gm_chk.get('walkRearHandIkMix', 0.0)}",
+        ),
+        (
+            "walk_in_place",
+            bool(report["checks"]["walkInPlaceAndDriftLe002H"]),
+            f"walk 原地踏步與接地漂移 <= 0.02H: rootAdvance={gm_chk.get('walkRootAdvancePx', 0.0):.2f} px, drift={gm_chk.get('walkStanceFootDriftRatioH', 0.0):.4f}H, loopDiff={gm_chk.get('walkLoopPoseClosureMaxDiffPx', 0.0):.2f} px",
+        ),
+        (
+            "thrust_root_stationary",
+            thrust_root_ok,
+            f"thrust 的 root 原地不動 (<= 1.0 px): rootSpanX={tm.get('rootWorldXSpanPx', 0.0):.2f} px, strikeDelta={tm.get('weaponStrikeDeltaFromCoilPx', 0.0):.1f} px, step={tm.get('frontFootStepRatioH', 0.0):.3f}H",
+        ),
+        (
+            "marker_dots",
+            bool(report["checks"]["noVisibleMarkerDotsInAtlas"]),
+            f"圖集無殘留數位紅綠標記點: pass={report['checks']['noVisibleMarkerDotsInAtlas']}",
+        ),
+    ]
+
+    lines: list[str] = []
+    any_selected_failed = False
+    for key, passed, desc in items:
+        if fail_on_filter and "all" not in fail_on_filter and key not in fail_on_filter:
+            continue
+        tag = "[PASS]" if passed else "[FAIL]"
+        lines.append(f"{tag} {key}: {desc}")
+        if not passed:
+            any_selected_failed = True
+
+    return lines, any_selected_failed
+
+
 def main() -> None:
-    ap = argparse.ArgumentParser(description="獨立 Spine 4.2 驗證器與逐格渲染工具 (AG-01 修訂)")
+    ap = argparse.ArgumentParser(description="獨立 Spine 4.2 驗證器與逐格渲染工具 (AG-01 修訂 / AG-03)")
     ap.add_argument("--json", required=True, help="Spine skeleton JSON 路徑")
     ap.add_argument("--atlas", required=True, help="Spine .atlas 路徑")
     ap.add_argument("--png", help="Atlas PNG 路徑（預設與 .atlas 同目錄同名）")
@@ -916,6 +1003,13 @@ def main() -> None:
     ap.add_argument("--fps", type=int, default=24, help="採樣幀率（預設 24）")
     ap.add_argument("--render-height", type=int, default=360, help="逐格渲染高度 px（預設 360）")
     ap.add_argument("--spine-core", default=str(DEFAULT_SPINE_CORE), help="@esotericsoftware/spine-core 目錄")
+    ap.add_argument(
+        "--fail-on",
+        nargs="?",
+        const="all",
+        default=None,
+        help="輸出每項一行的精簡 PASS/FAIL 摘要（可不帶值代表 all，或逗號分隔指定項目），若未通過則以非 0 狀態碼退出",
+    )
     args = ap.parse_args()
 
     sys.stdout.reconfigure(encoding="utf-8")
@@ -987,6 +1081,7 @@ def main() -> None:
             and grip_and_motion_check["walkStanceDriftLe002HPass"]
             and grip_and_motion_check["walkLoopClosurePass"]
         ),
+        "thrustRootStationary": bool(grip_and_motion_check.get("thrustMetrics", {}).get("rootIsStationary", True)),
         "noVisibleMarkerDotsInAtlas": palm_and_marker_check["visibleMarkerPass"],
     }
 
@@ -1021,8 +1116,24 @@ def main() -> None:
         "renderAndOcclusionValidation": render_and_occlusion_check,
     }
 
+    concise_lines, _ = format_concise_summary_lines(report, None)
+    report["conciseSummaryLines"] = concise_lines
+
     report_path = out_dir / "validation_report.json"
     report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    summary_txt_path = out_dir / "validation_summary.txt"
+    summary_txt_path.write_text("\n".join(concise_lines) + "\n", encoding="utf-8")
+
+    if args.fail_on is not None:
+        fail_filter = {s.strip() for s in args.fail_on.split(",") if s.strip()} or {"all"}
+        filtered_lines, any_failed = format_concise_summary_lines(report, fail_filter)
+        for line in filtered_lines:
+            print(line)
+        print(f"OVERALL: {'FAIL' if any_failed else 'PASS'} (report: {report_path})")
+        if any_failed:
+            sys.exit(1)
+        return
 
     print(
         json.dumps(
@@ -1030,6 +1141,7 @@ def main() -> None:
                 "overallPass": overall_pass,
                 "spineVersion": report["runtime"]["spineVersion"],
                 "checks": checks_summary,
+                "conciseSummary": concise_lines,
                 "keyFindings": {
                     "drawOrderIssues": draw_order_check["issueCount"],
                     "maxHeadOcclusionRatio": render_and_occlusion_check["maxHeadOcclusionRatio"],
