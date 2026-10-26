@@ -1,4 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
+import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
@@ -783,7 +784,7 @@ export class LobbyScene extends Component {
             autoNurture: (childId) => services().session.runAutoNurture(childId),
             performLegendaryMentoring: (generalId, childId, exclusiveSkillId) => services().session.performLegendaryMentoringFor(generalId, childId, exclusiveSkillId),
             showToast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2 }); },
-            tacticName: (id) => tacticNames.get(id),
+            tacticName: (id) => tacticNames.get(id) ?? inspiredTacticName(id),
             learnTactic: (childId, tacticId) => services().session.learnTactic(childId, tacticId),
         });
         this._nurtureFlow = flow;
