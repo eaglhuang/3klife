@@ -146,26 +146,39 @@ def run_rigpose_inspection(
     ground_ok = ground_diff <= 10
     checks["ground_line"] = {
         "pass": ground_ok,
-        "detail": f"腳底最低點須落於 y={target_ground_y} ±10px: actual={lowest_y} (diff={ground_diff}px)",
+        "detail": f"腳底最低點 y={target_ground_y} ±10px: actual={lowest_y} (diff={ground_diff}px)",
     }
+    # 繪製地面線與 ±10px 容差帶
     draw.line([(0, target_ground_y), (w, target_ground_y)], fill=(255, 215, 0, 220), width=3)
+    draw.line([(0, target_ground_y - 10), (w, target_ground_y - 10)], fill=(255, 215, 0, 100), width=1)
+    draw.line([(0, target_ground_y + 10), (w, target_ground_y + 10)], fill=(255, 215, 0, 100), width=1)
 
-    # 3. 身高 H (頭頂到地面線: 1500–1700 px，標準 1600)
+    # 3. 身高 H 與頭頂 (v3 固定 H=1600: 頭頂 y=300±20, 腳底 y=1900±10)
+    target_top_y = spec["headTopY"]
+    top_diff = abs(highest_y - target_top_y)
+    top_ok = top_diff <= 20
     actual_h = lowest_y - highest_y
-    h_ok = 1500 <= actual_h <= 1700
+    h_ok = top_ok and ground_ok
+    checks["head_top"] = {
+        "pass": top_ok,
+        "detail": f"頭頂最高點 y={target_top_y} ±20px: actual={highest_y} (diff={top_diff}px)",
+    }
     checks["body_height_H"] = {
         "pass": h_ok,
-        "detail": f"全身高度須落於 1500-1700px (標準 H=1600): actual={actual_h}px (top={highest_y}, bot={lowest_y})",
+        "detail": f"固定 H=1600 (頭頂 y={target_top_y}±20px: actual={highest_y}, 腳底 y={target_ground_y}±10px: actual={lowest_y}, 實測 H={actual_h}px)",
     }
-    draw.line([(0, spec["headTopY"]), (w, spec["headTopY"])], fill=(80, 200, 255, 200), width=2)
+    # 繪製頭頂線與 ±20px 容差帶
+    draw.line([(0, target_top_y), (w, target_top_y)], fill=(80, 200, 255, 200), width=3)
+    draw.line([(0, target_top_y - 20), (w, target_top_y - 20)], fill=(80, 200, 255, 100), width=1)
+    draw.line([(0, target_top_y + 20), (w, target_top_y + 20)], fill=(80, 200, 255, 100), width=1)
 
     # 4. 站立中心 (兩腳中點 x = 1024 ± 20)
-    # 取底部 y >= 1750 的像素平均 X
     feet_ys_mask = live_mask & (np.arange(h)[:, None] >= 1750)
     ys_f, xs_f = np.where(feet_ys_mask)
     feet_cx = float(np.mean(xs_f)) if len(xs_f) > 0 else 1024.0
     center_diff = abs(feet_cx - 1024.0)
     center_ok = center_diff <= 25.0
+
     checks["standing_center"] = {
         "pass": center_ok,
         "detail": f"站立中心須落於 x=1024 ±20px: actual={feet_cx:.1f} (diff={center_diff:.1f}px)",
