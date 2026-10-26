@@ -60,7 +60,8 @@ export function createLobbyLeftColumnLayoutSuite(): TestSuite {
         const kids = (hud.children ?? []).map((c) => ({ node: c, rect: place(c, W, H) }));
         const labels = kids.filter((k) => !/Button|BtnOpen/.test(k.node.name));
         const buttons = kids.filter((k) => /Button|BtnOpen/.test(k.node.name));
-        assert.equals(8, buttons.length);
+        // 其他入口已收進城池主視覺的分類列（PROG-2-1148），季度卡只留「推進一季」
+        assert.equals(1, buttons.length);
         const textBottom = Math.max(...labels.map((l) => l.rect.y + l.rect.h));
         for (const b of buttons) {
             assert.isTrue(b.rect.y >= textBottom, `${b.node.name} 壓到季度文字`);

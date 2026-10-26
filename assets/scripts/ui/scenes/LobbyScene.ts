@@ -72,6 +72,7 @@ import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } f
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
+import { LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, categoryButtonId, toggleCategory, type LobbyActionId, type LobbyCategoryId } from '../core/LobbyCityHubController';
 import { nurtureGraduationRows } from '../core/NurtureGraduationView';
 import { pageSliceOf } from '../core/FixedSlotPager';
 import { mentorHoldingRows, type MentorHoldingRow } from '../core/MentorHoldingRows';
@@ -222,6 +223,9 @@ export class LobbyScene extends Component {
     private _shopMainHost: UIScreenPreviewHost | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
     private _seasonHudHost: UIScreenPreviewHost | null = null;
+    private _cityHubHost: UIScreenPreviewHost | null = null;
+    private _cityHubCategory: LobbyCategoryId | null = null;
+    private _cityHubAvatarId: string | null = null;
     private _officerHudHost: UIScreenPreviewHost | null = null;
     private _officerPageHost: UIScreenPreviewHost | null = null;
     private _graduationHost: UIScreenPreviewHost | null = null;
@@ -389,6 +393,7 @@ export class LobbyScene extends Component {
         await this._mountLobbyMainHub();
         await this._mountSecondaryMainHubs();
         await this._mountSeasonHud();
+        await this._mountCityHub();
         await this._mountOfficerHud();
         await this._mountNurtureFlow();
         await this._mountGraduationRecord();
@@ -716,13 +721,6 @@ export class LobbyScene extends Component {
     private async _mountSeasonHud(): Promise<void> {
         this._seasonHudHost = await this._mountPreviewScreenHost('SeasonHudHost', 'lobby-season-hud-screen', [
             { buttonId: 'btnAdvanceSeason', handler: () => { void this._onClickAdvanceSeason(); } },
-            { buttonId: 'btnOpenNurture', handler: () => { this._openNurtureFlow(); } },
-            { buttonId: 'btnOpenSpiritCodex', handler: () => { void this._openSpiritCodex(); } },
-            { buttonId: 'btnOpenBonding', handler: () => { void this._openBondingSetup(); } },
-            { buttonId: 'btnOpenJobChange', handler: () => { this._openJobChange(); } },
-            { buttonId: 'btnOpenDomestic', handler: () => { this._openDomestic(); } },
-            { buttonId: 'btnOpenHallBoard', handler: () => { this._openHallBoard(); } },
-            { buttonId: 'btnOpenSandtable', handler: () => { this._onClickOpenSandtable(); } },
         ]);
         this._refreshSeasonHud();
 
@@ -755,10 +753,93 @@ export class LobbyScene extends Component {
         const countdownIcon = buildCountdownIconFlowView(services().session.countdown, Date.now());
         this._seasonHudHost?.binder?.setTexts(countdownIcon.texts);
         this._seasonHudHost?.binder?.setActives(countdownIcon.actives);
+        this._refreshCityHub();
+    }
+
+    /**
+     * 城池主視覺（PROG-2-1148）：頂列君主與資源、都市卡、底部五類功能收納。
+     * 規則在 LobbyCityHubController（純邏輯）；這裡只把子功能 id 接到既有流程。
+     */
+    private async _mountCityHub(): Promise<void> {
+        this._cityHubHost = await this._mountPreviewScreenHost('CityHubHost', 'lobby-city-hub-screen', [
+            ...LOBBY_CATEGORIES.map((c) => ({ buttonId: categoryButtonId(c.id), handler: () => {
+                this._cityHubCategory = toggleCategory(this._cityHubCategory, c.id);
+                this._refreshCityHub();
+            } })),
+            ...Array.from({ length: LOBBY_SUB_SLOTS }, (_, i) => ({ buttonId: `btnSub${i}`, handler: () => {
+                const action = actionAt(this._cityHubCategory, i);
+                this._cityHubCategory = null;
+                this._refreshCityHub();
+                if (action) this._runCityHubAction(action);
+            } })),
+        ]);
+        this._refreshCityHub();
+        const refresh = (): void => { this._refreshCityHub(); };
+        const event = services().event;
+        this._sessionEventUnsubscribers.push(
+            event.on(GAME_SESSION_EVENTS.LeadGeneralChanged, refresh),
+            event.on(GAME_SESSION_EVENTS.OfficerPromoted, refresh),
+            event.on(GAME_SESSION_EVENTS.BattleSettled, refresh),
+            event.on(GAME_SESSION_EVENTS.InventoryChanged, refresh),
+        );
+    }
+
+    private _runCityHubAction(action: LobbyActionId): void {
+        const run: Record<LobbyActionId, () => void> = {
+            battle: () => this.onClickEnterBattle(),
+            floodBattle: () => this.onClickFloodBattle(),
+            generalList: () => this.onClickGeneralList(),
+            bonding: () => { void this._openBondingSetup(); },
+            jobChange: () => this._openJobChange(),
+            spiritCodex: () => { void this._openSpiritCodex(); },
+            domestic: () => this._openDomestic(),
+            hallBoard: () => this._openHallBoard(),
+            sandtable: () => this._onClickOpenSandtable(),
+            nurture: () => this._openNurtureFlow(),
+            supportCard: () => this.onClickSupportCard(),
+            gacha: () => this.onClickGachaMain(),
+            shop: () => this.onClickShopMain(),
+        };
+        run[action]();
+    }
+
+    private _refreshCityHub(): void {
+        const binder = this._cityHubHost?.binder;
+        if (!binder) return;
         const session = services().session;
-        this._seasonHudHost?.binder?.setTexts({
-            openSandtableLabel: buildSandtableStatusLabel(session.officerUnlocks.sandtableStage, session.sandtableMarkersPlaced),
+        const wallet = this._localGachaService.getWalletSnapshot();
+        const leadId = session.leadGeneralId;
+        const view = buildLobbyCityHubView({
+            leadName: session.roster.find((g) => g.id === leadId)?.name ?? null,
+            officerRank: officerDisplayOf(session.officerState).rankName,
+            gold: wallet.gold,
+            gems: wallet.gems,
+            food: session.military.food,
+            cityTroops: session.military.cityTroops,
+            cityTroopsCap: session.military.cityTroopsCap,
+            totalSeasonsElapsed: session.gameTime.totalSeasonsElapsed,
+            fame: session.fame,
+            territoryCount: session.territories.length,
+            rivals: session.rivals,
+            openCategory: this._cityHubCategory,
+            actionLabels: { sandtable: buildSandtableStatusLabel(session.officerUnlocks.sandtableStage, session.sandtableMarkersPlaced) },
         });
+        binder.setTexts(view.texts);
+        binder.setActives(view.actives);
+        if (leadId && leadId !== this._cityHubAvatarId) {
+            this._cityHubAvatarId = leadId;
+            const holder = binder.getNode('lordAvatarMask');
+            const sprite = binder.getSprite('lordAvatar');
+            if (holder && sprite) {
+                if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+                void loadGeneralAvatar(leadId).then((frame) => {
+                    if (frame && leadId === this._cityHubAvatarId && sprite.isValid) {
+                        sprite.spriteFrame = frame;
+                        sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+                    }
+                });
+            }
+        }
     }
 
     /** 教官支援卡目錄（mentor-support-cards.json）：只讀一次；讀取失敗視為空目錄，不擋培育 */
@@ -3508,10 +3589,20 @@ export class LobbyScene extends Component {
                 await this._lobbyMainHost!.showScreen('lobby-main-screen');
                 this._configureLobbyMainHub(this._lobbyMainHost!.binder);
                 this._refreshWalletPreviewState();
+                // 城池主視覺取代舊的寫死頂列、底部導覽列、dock 與不能點的裝飾導覽（PROG-2-1148）
+                this._lobbyMainHost!.binder?.setActives({
+                    GameplayNavigation: false, LobbyMainScreen_div_3: false, LobbyMainScreen_div_47: false,
+                    LobbyMainScreen_nav_1: false, LobbyMainScreen_div_43: false,
+                });
                 if (this._seasonHudHost) {
                     this._seasonHudHost.node.active = true;
                     this._bringNodeToFront(this._seasonHudHost.node);
                     this._refreshSeasonHud();
+                }
+                if (this._cityHubHost) {
+                    this._cityHubHost.node.active = true;
+                    this._bringNodeToFront(this._cityHubHost.node);
+                    this._refreshCityHub();
                 }
                 if (this._deckSelectHost) {
                     this._deckSelectHost.node.active = true;
@@ -3528,6 +3619,10 @@ export class LobbyScene extends Component {
                 this._lobbyMainHost!.node.active = false;
                 if (this._seasonHudHost) {
                     this._seasonHudHost.node.active = false;
+                }
+                if (this._cityHubHost) {
+                    this._cityHubCategory = null;
+                    this._cityHubHost.node.active = false;
                 }
                 this._closeNurtureFlow();
                 this._closeBondingSetup();

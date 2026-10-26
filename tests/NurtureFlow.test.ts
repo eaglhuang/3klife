@@ -339,13 +339,13 @@ export function createNurtureFlowSuite(): TestSuite {
         assert.equals('', undefinedSlots.join(','));
     });
 
-    suite.test('大廳季度 HUD 有「開獎・培育」入口按鈕，且 LobbyScene 綁了它', () => {
-        const hud = readJson<{ root: { id?: string; children?: unknown[] } }>('assets/resources/ui-spec/layouts/lobby-season-hud-main.json');
+    suite.test('大廳「培育」收納列有「開獎・培育」入口，且 LobbyScene 接到培育流程', () => {
+        const hub = readJson<{ root: { id?: string; children?: unknown[] } }>('assets/resources/ui-spec/layouts/lobby-city-hub-main.json');
         const ids = new Set<string>();
-        collectLayoutIds(hud.root, ids);
-        assert.isTrue(ids.has('btnOpenNurture'));
+        collectLayoutIds(hub.root, ids);
+        assert.isTrue(ids.has('btnCatNurture'));
         const lobby = fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
-        assert.isTrue(lobby.includes("buttonId: 'btnOpenNurture'"));
+        assert.isTrue(lobby.includes('nurture: () => this._openNurtureFlow()'));
         assert.isTrue(lobby.includes("'nurture-flow-screen'"));
         assert.isTrue(lobby.includes('GAME_SESSION_EVENTS.GeneralUnveiled'));
     });
