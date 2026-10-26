@@ -292,16 +292,30 @@
     "zhao-yun": {
       "src": "artifacts/art-direction/style-baseline/zhao_yun_dynamic_src22.png",
       "face": {
-        "top": 162,
-        "chin": 287,
-        "eyeY": 227,
-        "cx": 642
+        "top": 90,
+        "chin": 158,
+        "eyeY": 120,
+        "cx": 285
       },
       "source": "reviewed",
       "x": 478,
       "y": 95,
       "w": 329,
       "h": 329
+    },
+    "huang-yueying": {
+      "x": 182,
+      "y": 66,
+      "w": 197,
+      "h": 197,
+      "source": "reviewed",
+      "face": {
+        "top": 110,
+        "chin": 185,
+        "eyeY": 145,
+        "cx": 280
+      },
+      "$note": "512×768 立繪；蜀國機巧女匠，竹葉綠袍與簡潔髮飾，人工檢視臉部定位"
     },
     "guan-yu": {
       "x": 225,
