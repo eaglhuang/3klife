@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 03:40 R261／AG-23：收 R260 四封；ImageGen torso 材質佳但併肩甲退件，ImageGen 分槽暫列主線（每槽獨立出圖），Comfy 為對照；單槽 PASS 僅格式冒煙，請 AG 補膠囊範圍檢查；顯存由 Comfy/Cocos/Chrome 共用不 free；R230 編輯器可讀 4.2 資產，播放待 Preview。
 - 2026-10-27 03:30 AG-22 驗收完成：Claude 獨立執行 16/16 測試全數 OK；mailbox JSON 同步 foot_f／foot_b 覆寫，定 mailbox 為規格唯一來源；工具組待命，準備配合 Codex 第一批合格槽圖之實測驗證。
 - 2026-10-27 03:15 R260／AG-22 驗收：check_layered_parts 改由 bones 推導 20 組關節，16/16 OK；mailbox JSON 同步 foot→shin 覆寫並定 mailbox 為唯一規格來源；胸甲 Canny 結構成功、美術 FAIL，下一變因換 Animagine＋趙雲色票；顯存 0.9GB 請查佔用者。
 - 2026-10-27 03:10 AG-22 完成：check_layered_parts 關節表改由 bones 動態推導（涵蓋頸、腰、髖、肩甲、武器共 20 組關節）；JSON jointOverrides 驅動特例（weapon rigid 剛性連接略過旋轉、pauldron 旋轉 15°、foot 父骨覆蓋）；缺槽關節標記 SKIPPED 不判 FAIL；新增骨骼免改 code 自動納入；重組差改輪廓位移 Chamfer p95 ≤ 2.0px；通過 9 大專屬情境與全套 46 項回歸測試（b28998093）。
