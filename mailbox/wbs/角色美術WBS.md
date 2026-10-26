@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-26 AG-11（三級評定＋自動貼齊）、AG-12（驗證器對齊，v6 重跑 15/16）完成；AG-13 追 Auto-Bounds 與除錯圖未生效。Codex R233：4.2 wasm 在最小場景可播放；ComfyUI inpaint 趙雲候選朝正面且空隙 0 → R234 准用人台方向線索（已更新三款人台）。
 - 2026-10-26 使用者已將 Sparkle v6 回饋包（3KLife-sparkle-v6-feedback.zip）轉給 Sparkle；等待 v7 動作庫。
 - 2026-10-26 Sparkle v6 到：畫面大幅改善，但獨立驗證 11 PASS／5 FAIL，且 rig_loader 寫死 C2 像素（不可通用）。v6 回饋包轉向：Sparkle v7 只做共用固定骨架的動作庫。AG-12 對齊驗證器定義差異。
 - 2026-10-26 Codex v3 草稿失敗（AI 重畫模板標籤）。改給生圖無字人台三款（standard/heavy/slim）；R232 Codex 重試並可試 ComfyUI ControlNet；AG-11 工具加 SNAP 級自動貼齊（≤60 px、≤10°）。
