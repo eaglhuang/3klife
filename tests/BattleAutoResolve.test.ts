@@ -4,7 +4,7 @@
  * 驗證：戰力組成、強弱分明時勝負、接近時平手、陣亡主將不計、戰場 HUD 自動鈕有接收端。
  */
 import { TestSuite, assert } from './TestRunner';
-import { autoResolveOutcome, sidePower, type AutoResolveSide } from '../assets/scripts/battle/runtime/BattleAutoResolve';
+import { applyOpeningWinGuarantee, autoResolveOutcome, sidePower, type AutoResolveSide } from '../assets/scripts/battle/runtime/BattleAutoResolve';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
@@ -42,6 +42,15 @@ export function createBattleAutoResolveSuite(): TestSuite {
         const src = fs.readFileSync(path.join(__dirname, '..', 'assets/scripts/battle/views/BattleUIBridge.ts'), 'utf8');
         assert.equals(true, src.includes('EVENT_NAMES.AutoBattleToggled'));
         assert.equals(true, src.includes('autoResolveOutcome('));
+    });
+
+    suite.test('首戰保證勝：未首勝時敗、和改判勝；已首勝照原結果', () => {
+        const lose = autoResolveOutcome(side(60), side(95), fixed(0.5));
+        const draw = autoResolveOutcome(side(80), side(81), fixed(0.5));
+        assert.equals('player-win', applyOpeningWinGuarantee(lose, false).result);
+        assert.equals('player-win', applyOpeningWinGuarantee(draw, false).result);
+        assert.equals(lose.enemyPower, applyOpeningWinGuarantee(lose, false).enemyPower);
+        assert.equals('enemy-win', applyOpeningWinGuarantee(lose, true).result);
     });
 
     return suite;

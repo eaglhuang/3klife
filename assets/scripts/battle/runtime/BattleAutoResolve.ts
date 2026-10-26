@@ -53,3 +53,8 @@ export function autoResolveOutcome(player: AutoResolveSide, enemy: AutoResolveSi
         : playerPower > enemyPower ? 'player-win' : 'enemy-win';
     return { result, playerPower, enemyPower };
 }
+
+/** 新手首戰保證勝（使用者裁定 2026-10-26，PROG-2-1127）：尚未首勝時敗、和都改判玩家勝，戰力數字照實顯示 */
+export function applyOpeningWinGuarantee(outcome: AutoResolveOutcome, firstBattleCleared: boolean): AutoResolveOutcome {
+    return firstBattleCleared ? outcome : { ...outcome, result: 'player-win' };
+}
