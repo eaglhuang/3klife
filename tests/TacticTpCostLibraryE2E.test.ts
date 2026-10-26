@@ -6,6 +6,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { getTacticTpCost, TACTIC_LIBRARY_TO_SPEC_ID, TACTIC_TP_COST_OVERRIDE, DEFAULT_TACTIC_TP_COST } from '../assets/scripts/core/systems/SortieDeploy';
+import { INSPIRED_TACTIC_MAP } from '../assets/scripts/core/systems/InspiredTacticMap';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -22,7 +23,8 @@ export function createTacticTpCostLibraryE2ESuite(): TestSuite {
         for (const id of libraryIds()) {
             const spec = TACTIC_LIBRARY_TO_SPEC_ID[id];
             assert.isTrue(spec !== undefined, `${id} 缺對照`);
-            assert.isTrue(TACTIC_TP_COST_OVERRIDE[spec] !== undefined, `${id} → ${spec} 不在規格表`);
+            // 靈感戰法不在 E-9 表時（趙家槍法）走預設價（PROG-2-1145）
+            assert.isTrue(TACTIC_TP_COST_OVERRIDE[spec] !== undefined || spec in INSPIRED_TACTIC_MAP, `${id} → ${spec} 不在規格表`);
         }
     });
 

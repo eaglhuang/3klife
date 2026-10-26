@@ -223,6 +223,31 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     statusTurns: 1,
     battleLogKey: 'skill.mentor_slow.debuff',
   },
+  // 連擊（PROG-2-1145 靈感戰法，數值暫定）：單體敵軍連打 2 段，每段武力 ×0.6
+  'insp-combo-attack': {
+    battleSkillId: 'insp-combo-attack',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    coefficient: 0.6,
+    scalingStat: 'str',
+    maxTargets: 1,
+    hitStageMultipliers: [1.0, 1.0],
+    battleLogKey: 'skill.insp_combo_attack.hit',
+  },
+  // 挑釁（PROG-2-1145 靈感戰法，數值暫定）：單體敵軍暈眩 1 回合
+  'insp-taunt': {
+    battleSkillId: 'insp-taunt',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'control',
+    coefficient: 0,
+    maxTargets: 1,
+    statusEffect: StatusEffect.Stun,
+    statusTurns: 1,
+    battleLogKey: 'skill.insp_taunt.control',
+  },
   // 威震華夏（PROG-2-0773）：單體敵軍傷害；第 1 回合 ×2，擊殺後施放者再行動 1 次（規格 戰法系統 威震華夏）
   'tally-wei-zhen-hua-xia': {
     battleSkillId: 'tally-wei-zhen-hua-xia',
