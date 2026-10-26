@@ -66,7 +66,8 @@ export function createOpeningBeautySuite(): TestSuite {
             onStarted: () => undefined,
         });
         controller.roll();
-        assert.isTrue(await controller.select(0) || await controller.confirm());
+        assert.isTrue(await controller.select(0));
+        assert.isTrue(await controller.confirm());
         assert.equals('zhen-ji', controller.beautyId);
         const beauty = session.roster.find(g => g.id === 'zhen-ji');
         assert.isTrue(!!beauty, '紅顏應在名冊');

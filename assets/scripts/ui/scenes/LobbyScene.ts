@@ -1214,6 +1214,7 @@ export class LobbyScene extends Component {
                 refreshSeasonHud: () => this._refreshSeasonHud(),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
                 advanceOpening: event => { this._openingFlow?.advance(event); },
+                applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
             });
         }

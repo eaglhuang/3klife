@@ -72,7 +72,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.isTrue(host.node.active);
         f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        assert.isTrue(!!host.texts.destinyRow0Name);
+        assert.isTrue(!!host.texts.frame0Name);
         f.click('DestinyOpeningHost', 'btnDestinyReset');
         await flush();
         assert.equals('重置 1 次', host.texts.destinyResetCount);
@@ -107,7 +107,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.panels.openDestiny();
         f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.click('DestinyOpeningHost', 'btnDestinyRow0');
+        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.node.active);
         assert.isFalse(f.events.includes('destiny-locked'));
@@ -135,14 +136,16 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.panels.openDestiny();
         f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.click('DestinyOpeningHost', 'btnDestinyRow0');
+        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.node.active);
         assert.isFalse(f.hosts.get('OnboardingTutorialHost')!.node.active);
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.texts.destinyMessage.includes('開局失敗'));
         assert.equals(0, f.events.filter(e => e.startsWith('beauty:')).length);
         fail = false;
-        f.click('DestinyOpeningHost', 'btnDestinyRow0');
+        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
         assert.isTrue(f.hosts.get('OnboardingTutorialHost')!.node.active);
@@ -164,7 +167,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.panels.openDestiny();
         f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.click('DestinyOpeningHost', 'btnDestinyRow0');
+        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.equals(2, calls);
         assert.equals(1, persisted);
@@ -174,7 +178,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.equals(0, f.events.filter(e => e === 'hud' || e === 'destiny-locked' || e.startsWith('beauty:')).length);
         await f.panels.nextTutorial();
         assert.equals(0, f.session.onboarding.nextIndex);
-        f.click('DestinyOpeningHost', 'btnDestinyRow0');
+        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.equals(4, calls);
         assert.equals(3, persisted);
@@ -192,7 +197,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             original.panels.openDestiny();
             original.click('DestinyOpeningHost', 'btnDestinyRoll');
             await flush();
-            original.click('DestinyOpeningHost', 'btnDestinyRow0');
+            original.click('DestinyOpeningHost', 'btnFrame0');
+            original.click('DestinyOpeningHost', 'btnDestinyConfirm');
             await flush();
             if (progress !== 'missing') {
                 for (const segment of ['fate', 'growth', 'legacy'].slice(0, progress)) {
@@ -236,7 +242,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.panels.openDestiny();
         f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.click('DestinyOpeningHost', 'btnDestinyRow0');
+        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.equals(7, f.session.roster.length);
         assert.equals(1, f.events.filter(e => e.startsWith('beauty:')).length);
@@ -258,7 +265,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.panels.openDestiny();
         f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
-        f.click('DestinyOpeningHost', 'btnDestinyRow0');
+        f.click('DestinyOpeningHost', 'btnFrame0');
+        f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.equals(2, calls);
         assert.equals(7, f.session.roster.length);
@@ -281,7 +289,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             original.panels.openDestiny();
             original.click('DestinyOpeningHost', 'btnDestinyRoll');
             await flush();
-            original.click('DestinyOpeningHost', 'btnDestinyRow0');
+            original.click('DestinyOpeningHost', 'btnFrame0');
+            original.click('DestinyOpeningHost', 'btnDestinyConfirm');
             await flush();
             const snapshot = await original.session.save();
             delete snapshot.onboarding;
