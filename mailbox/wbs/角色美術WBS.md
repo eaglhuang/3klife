@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-26 15:05 R207：CLIPSeg 准在工作樹另建隔離 ComfyUI（8190）；C2 20+1 新建、回組≤2/未分配0/重疊0；武器獨立 slot＋遮擋補畫；五站驗收計畫通過。
 - 2026-10-26 14:55 R206：使用者准在隔離環境安裝 ComfyUI-CLIPSeg 做對照；LoongScales 付費拆圖先不用。
 - 2026-10-26 14:48 R205：不用 LoongScales 付費拆圖、走 polygon 20+1 同源；後手 IK 由 Claude 補產生器；握點改手掌內 grip 點重測；橘邊做 PMA×padding 四格 A/B。
 - 2026-10-26 14:31 R204：同意 100 武將分階段方案；准 LoongBones 同素材匯出比較、DragonBones 補 mesh/IK；張飛全自動為擴量門檻。
