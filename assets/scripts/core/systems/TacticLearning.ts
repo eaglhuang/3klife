@@ -26,7 +26,8 @@ export function canLearnTactic(heldTp: number, tpCost: number): boolean {
     return heldTp >= tacticLearnThreshold(tpCost);
 }
 
-export type TacticLearnBlock = 'INVALID_TACTIC' | 'NOT_NURTURING' | 'ALREADY_LEARNED' | 'TP_SHORT' | 'SLOT_FULL';
+/** NOT_GRADUATING：36 回合未完成；NOT_INSPIRED：本場沒觸發該戰法的靈感（PROG-2-1134） */
+export type TacticLearnBlock = 'INVALID_TACTIC' | 'NOT_NURTURING' | 'NOT_GRADUATING' | 'NOT_INSPIRED' | 'ALREADY_LEARNED' | 'TP_SHORT' | 'SLOT_FULL';
 
 export interface TacticLearnCheck {
     ok: boolean;

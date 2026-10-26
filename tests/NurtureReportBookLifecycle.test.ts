@@ -33,12 +33,22 @@ function unveiledChild(id: string): UnveilingGeneral {
     } as unknown as UnveilingGeneral).general;
 }
 
+/** 入學至少要帶 1 位教官（PROG-2-1134） */
+function teacherCard(): MentorCard {
+    return {
+        uid: 'mentor-teacher', sourceGeneralId: 'teacher', name: 'teacher', faction: 'shu',
+        retiredAge: 66, retiredSeason: 4, retiredYear: 2, ep_snapshot: 80, gene_refs: [],
+        parentUids: ['f', 'm'],
+        generalSnapshot: { id: 'teacher', name: 'teacher', faction: 'shu', hp: 1000, str: 90, int: 40, lea: 70, pol: 30, cha: 50, careerClass: 'Warrior' } as unknown as GeneralConfig,
+    } as unknown as MentorCard;
+}
+
 function makeRig(generals: GeneralConfig[]) {
     const roster = new InMemoryRosterStore(generals);
     const nurture = new NurtureService(roster, { random: seeded(7), currentSeason: () => 3, currentMode: () => GameTimeMode.Nurture, requireNurtureMode: true });
     const flow = new NurtureFlowController({
         roster, unveiling: new UnveilingService(roster, seeded(3)), nurture,
-        loadMentorCards: async () => [], persist: async () => undefined,
+        loadMentorCards: async () => [teacherCard()], persist: async () => undefined,
     });
     return { roster, nurture, flow };
 }

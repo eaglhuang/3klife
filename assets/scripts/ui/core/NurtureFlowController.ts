@@ -44,7 +44,7 @@ import {
     UnveilingGeneral,
 } from '../../core/systems/Unveiling';
 import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
-import { mentorFromCard } from '../../core/systems/NurtureSystem';
+import { inspiredTacticIds, mentorFromCard } from '../../core/systems/NurtureSystem';
 import type { NurtureInspiration } from '../../core/services/NurtureService';
 import { DEFAULT_SYNERGY_GROUPS } from '../../core/systems/MentorSynergy';
 import {
@@ -150,10 +150,8 @@ export interface NurtureFlowDeps {
     showToast?: (message: string) => void;
     /** 戰法 id → 中文名（tactic-library）；未提供或查不到時顯示 id（PROG-2-1096） */
     tacticName?: (tacticId: string) => string | undefined;
-    /** 培育學戰法（MVP 結訓點選）：正式環境接 GameSession.learnTactic；與 tacticIds 都提供才顯示戰法列 */
+    /** 結業兌換戰法：正式環境接 GameSession.learnTactic；清單為本場靈感觸發的戰法（PROG-2-1134） */
     learnTactic?: (childId: string, tacticId: string) => Promise<TacticLearnCheck>;
-    /** 可學的戰法 id（tactic-library 順序） */
-    tacticIds?: () => readonly string[];
     /** 名將傳道（MENT-15）；正式環境接 GameSession.performLegendaryMentoringFor，未提供時入口不可用 */
     performLegendaryMentoring?: (
         generalId: string,
@@ -163,10 +161,16 @@ export interface NurtureFlowDeps {
 }
 
 /** 傳道失敗的提示（暫定，文案待企劃定稿） */
+/** 入學至少帶的教官數（使用者裁定 2026-10-26；上限為自有 5＋好友借用 1） */
+export const MIN_ENROLL_MENTORS = 1;
+const NO_MENTOR_HINT = '至少需帶 1 位教官才能入學，請先在下方編成教官';
+
 /** 學戰法失敗的提示 */
 const TACTIC_LEARN_BLOCK_TEXT: Record<TacticLearnBlock, string> = {
     INVALID_TACTIC: '沒有這個戰法',
     NOT_NURTURING: '只有培育中的子嗣能學戰法',
+    NOT_GRADUATING: '36 回合完成後才能用 TP 兌換戰法',
+    NOT_INSPIRED: '本場沒有觸發這個戰法的靈感',
     ALREADY_LEARNED: '已學會這個戰法',
     TP_SHORT: 'TP 未達門檻',
     SLOT_FULL: '戰法槽位已滿（智力每 30 點多 1 槽）',
@@ -198,7 +202,7 @@ export class NurtureFlowController {
     private _deck: MentorDeck | null = null;
     /** 目前可帶入的教官卡（未被別場培育鎖定）；loadDeck 時更新 */
     private _deckCandidates: MentorCard[] = [];
-    /** 戰法列目前指到的戰法（tacticIds 的索引） */
+    /** 戰法列目前指到的戰法（本場靈感戰法清單的索引） */
     private _tacticIndex = 0;
 
     constructor(private readonly _deps: NurtureFlowDeps) {}
@@ -283,8 +287,12 @@ export class NurtureFlowController {
     async startNurture(): Promise<void> {
         const child = this._requireSelected();
         const cards = await this._deckCards();
+        if (cards.length < MIN_ENROLL_MENTORS) {
+            this._notice = NO_MENTOR_HINT;
+            return;
+        }
         this._deps.nurture.startWithCards(child.id, cards);
-        this._notice = cards.length > 0 ? `入學完成，${cards.length} 位教官任教` : '入學完成（沒有教官任教）';
+        this._notice = `入學完成，${cards.length} 位教官任教`;
         await this._persist();
     }
 
@@ -354,7 +362,7 @@ export class NurtureFlowController {
 
     /** 戰法列左右切換 */
     cycleTactic(step: number): void {
-        const ids = this._deps.tacticIds?.() ?? [];
+        const ids = this._tacticIds();
         if (ids.length === 0) return;
         this._tacticIndex = (((this._tacticIndex + step) % ids.length) + ids.length) % ids.length;
     }
@@ -371,21 +379,32 @@ export class NurtureFlowController {
     }
 
     private _currentTacticId(): string | null {
-        const ids = this._deps.tacticIds?.() ?? [];
+        const ids = this._tacticIds();
         return ids.length > 0 ? ids[this._tacticIndex % ids.length] : null;
+    }
+
+    private _tacticIds(): string[] {
+        const child = this._resolveSelected();
+        return inspiredTacticIds(child ? this._deps.nurture.getSession(child.id) : null);
     }
 
     /** 戰法列文字與按鈕狀態：成本含綠因子折扣，門檻＝成本×2，槽位依戰場智力 */
     private _applyTacticRow(child: UnveilingGeneral, session: NurtureSession, texts: Record<string, string>, actives: Record<string, boolean>, enabled: Record<string, boolean>): void {
+        if (!this._deps.learnTactic) return;
+        actives.tacticBlock = true;
         const tacticId = this._currentTacticId();
-        if (!tacticId || !this._deps.learnTactic) return;
+        if (!tacticId) {
+            texts.tacticName = '本場未觸發戰法靈感';
+            texts.tacticCost = '培育中教官靈感事件觸發後，結業才可兌換';
+            texts.learnTacticLabel = '學習戰法';
+            return;
+        }
         const general = child as unknown as GeneralConfig;
         const green = hasMatchingGreenFactor(general.genes, tacticId);
         const cost = learnTpCost(getTacticTpCost(tacticId), green);
         const learned = general.learnedTactics ?? [];
         const capacity = tacticLoadoutCapacity(battleIntelligenceOf(general));
-        const count = this._deps.tacticIds?.().length ?? 0;
-        actives.tacticBlock = true;
+        const count = this._tacticIds().length;
         enabled.btnPrevTactic = count > 1;
         enabled.btnNextTactic = count > 1;
         enabled.btnLearnTactic = !learned.includes(tacticId) && session.tp >= tacticLearnThreshold(cost) && learned.length < capacity;
@@ -526,10 +545,13 @@ export class NurtureFlowController {
         if (!session) {
             actives.startBlock = true;
             const check = this._deps.nurture.checkStart(child.id);
-            enabled.btnStartNurture = check.eligible;
-            texts.startHint = check.eligible
-                ? `入學將消耗 1 張入學令（本季剩 ${this._deps.nurture.admissionsLeft()} 張），並帶上下方編成的教官`
-                : check.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、');
+            const hasMentor = this.deck.some((uid) => uid !== null);
+            enabled.btnStartNurture = check.eligible && hasMentor;
+            texts.startHint = !check.eligible
+                ? check.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、')
+                : hasMentor
+                    ? `入學將消耗 1 張入學令（本季剩 ${this._deps.nurture.admissionsLeft()} 張），帶上下方編成的教官（自有最多 ${MENTOR_DECK_SIZE} 位＋好友借用 1 位）`
+                    : NO_MENTOR_HINT;
             Object.assign(texts, buildDeckTexts(this.deck, this._deckCandidates));
             for (let i = 0; i < MENTOR_DECK_SIZE; i++) enabled[`btnDeckSlot${i}`] = this._deckCandidates.length > 0;
             Object.assign(texts, buildSlotTexts(child, null));
@@ -539,8 +561,8 @@ export class NurtureFlowController {
         Object.assign(texts, buildSlotTexts(child, session));
         Object.assign(texts, buildSessionTexts(session, this._notice));
         enabled.btnAbandon = session.status === 'active';
-        this._applyTacticRow(child, session, texts, actives, enabled);
         if (session.status === 'completed') {
+            this._applyTacticRow(child, session, texts, actives, enabled);
             actives.graduateBlock = true;
             enabled.btnGraduate = true;
             enabled.btnKeepReport = true;

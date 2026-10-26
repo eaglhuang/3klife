@@ -785,7 +785,6 @@ export class LobbyScene extends Component {
             showToast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2 }); },
             tacticName: (id) => tacticNames.get(id),
             learnTactic: (childId, tacticId) => services().session.learnTactic(childId, tacticId),
-            tacticIds: () => Array.from(tacticNames.keys()),
         });
         this._nurtureFlow = flow;
 

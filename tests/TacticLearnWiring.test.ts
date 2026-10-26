@@ -21,10 +21,19 @@ function makeGeneral(id: string, int: number, learnedTactics: string[] = [], gen
     } as unknown as GeneralConfig;
 }
 
+/** 36 回合已完成、且本場教官靈感觸發了這些戰法（結業才可兌換，PROG-2-1134） */
+function graduatingWith(tactics: string[], status = 'completed') {
+    return {
+        status,
+        mentors: [{ id: 'm1', inspire: { events: tactics.map((t) => ({ eventId: `e-${t}`, tacticId: t })), friendshipBonusByStar: [0] } }],
+        inspiredKeys: tactics.map((t) => `m1:e-${t}`),
+    };
+}
+
 /** 只帶 sessions 的假培育埠；restoreState 會收下新狀態，模擬存檔寫回 */
 function nurturePort(childId: string, tp: number): NurtureStatePort & { state: NurtureState } {
     const port = {
-        state: { sessions: [{ childId, tp }], admission: { season: 0, used: 0 } } as unknown as NurtureState,
+        state: { sessions: [{ childId, tp, ...graduatingWith(['TAC_A', 'TAC_B', 'TAC_G']) }], admission: { season: 0, used: 0 } } as unknown as NurtureState,
         getState() { return JSON.parse(JSON.stringify(this.state)) as NurtureState; },
         restoreState(next: NurtureState | null | undefined) { if (next) this.state = JSON.parse(JSON.stringify(next)); },
     };
@@ -69,6 +78,16 @@ export function createTacticLearnWiringSuite(): TestSuite {
         session.setRosterStore(new InMemoryRosterStore([makeGeneral('lead-1', 60)]));
         session.setNurtureStatePort(nurturePort('someone-else', 999));
         assert.equals('NOT_NURTURING', (await session.learnTactic('lead-1', 'TAC_A')).blocked!);
+    });
+
+    suite.test('學戰法：36 回合未完成以 NOT_GRADUATING 擋下；未觸發靈感以 NOT_INSPIRED 擋下（PROG-2-1134）', async () => {
+        const { session, port } = sessionWith(makeGeneral('lead-1', 60), 999);
+        Object.assign(port.state.sessions[0], { status: 'active' });
+        assert.equals('NOT_GRADUATING', (await session.learnTactic('lead-1', 'TAC_A')).blocked!);
+        Object.assign(port.state.sessions[0], { status: 'completed' });
+        assert.equals('NOT_INSPIRED', (await session.learnTactic('lead-1', 'TAC_Z')).blocked!);
+        assert.equals(999, port.state.sessions[0].tp);
+        assert.equals('[]', learnedOf(session, 'lead-1'));
     });
 
     suite.test('學戰法：找不到武將以 INVALID_TACTIC 擋下', async () => {
