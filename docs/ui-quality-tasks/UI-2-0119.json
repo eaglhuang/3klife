@@ -1,0 +1,63 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0408",
+      "id": "UI-2-0119",
+      "title": "拉開五位吳將立繪五官辨識度並收束衣帶",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-26",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-26T23:44:29+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依使用者指定，調整孫策、甘寧、凌統、徐盛、周瑜五張立繪的臉型五官辨識度，並讓武將服裝衣帶簡潔收束。",
+      "related": [
+        "UI-2-0115",
+        "UI-2-0118"
+      ],
+      "depends": [],
+      "acceptance": [
+        "五位武將的臉型、眉眼、鼻口與成熟感明確不同，不再像同一張臉",
+        "保留吳國紅色陣營基底，搭配各自不同的第二色、髮型或裝備辨識",
+        "武將衣帶俐落，避免多層長飄帶；周瑜僅保留克制文士細節",
+        "五張立繪維持 512x768 透明 PNG，五位頭像重產且全體驗證通過",
+        "Cocos Asset DB refresh 成功"
+      ],
+      "deliverables": [
+        "孫策、甘寧、凌統、徐盛、周瑜五張正式立繪與頭像",
+        "更新裁切資料、配色與造型 ledger",
+        "驗收紀錄"
+      ],
+      "notes": "2026-10-26 | 狀態: done | 驗證: 40/40 頭像通過；五張 512x768 透明圖；Cocos Asset DB refresh success | 變更: 區隔五官特徵、收束武將衣帶並保留吳紅基底 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

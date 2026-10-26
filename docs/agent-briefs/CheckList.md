@@ -80,6 +80,8 @@
 
 | P1 | [UI-2-0118](tasks/UI/UI-2-0118.md (doc_task_0407)) (doc_task_0407) | 簡化女角衣帶並校正手指與道具 | done | 100% | codex-gpt-6.1 |
 
+| P1 | [UI-2-0119](tasks/UI/UI-2-0119.md (doc_task_0408)) (doc_task_0408) | 拉開五位吳將五官辨識度並收束衣帶 | done | 100% | codex-gpt-6.1 |
+
 ## HTML-to-UCUF Plan5 Tooling
 
 | 優先級 | 卡號 | 簡單描述 | 狀態 | 完成度% | Owner |
