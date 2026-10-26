@@ -9,6 +9,7 @@
  *             + UIEventHandler (純事件轉接，無業務邏輯)
  */
 
+import { formatAwakeningReveal } from './AwakeningReveal';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
@@ -616,6 +617,7 @@ export class BattleUIBridge {
       for (const awakened of settlement.awakenings) {
         this.appendLog(`【覺醒】${awakened.displayName}！`);
       }
+      this.ctx.resultPopup?.appendDetails?.(formatAwakeningReveal(settlement.awakenings));
     }).catch((error) => {
       UCUFLogger.warn(LogCategory.BATTLE, '[BattleUIBridge] 戰後結算寫回名冊失敗', error);
     });
