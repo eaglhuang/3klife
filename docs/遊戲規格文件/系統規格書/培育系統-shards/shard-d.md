@@ -51,7 +51,7 @@ if (child.surname === supportCard.familyID) {
 
 ### O-3. 已知差異
 
-- 戰法靈感 id（例如 `TAC_LANCE_THRUST`）尚未登錄於戰法庫，畫面暫以 id 顯示。名稱與戰場效果另由 PROG-2-1135 處理，本分片不定義其設計。
+- 戰法靈感 id（例如 `TAC_LANCE_THRUST`）已由 PROG-2-1135（PR #929）對應至現有 8 招戰法庫（`InspiredTacticMap.ts`，例如 `TAC_LANCE_THRUST` → 長槍突刺 / `tactic-spear-phalanx`）：培育畫面顯示中文名，畢業兌換後上戰場會暫時套用對應戰法庫招式的效果。17 個靈感戰法各自的獨立戰場效果尚未實作，列為後續卡；本分片不定義其設計。
 - 支援卡資料：諸葛亮補「緩速（TAC_SLOW）」★0 事件；龐統、凌統、徐盛、張苞首個靈感事件降為 ★0（對應教官系統 §F-4「★0 解鎖事件組 1」，PR #927）。
 
 ## 🗳 MCQ 決策記錄
