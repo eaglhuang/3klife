@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """綁骨專用分件圖交件前檢查工具 (check_rigpose.py)
 
-依據 SPEC-RIG-POSE-02 (通用) 與 SPEC-RIG-POSE-03 (固定骨架 v3)：
-- 嚴格逐條檢查畫布尺寸、地面線、站立中心、身高 H、關節點 tol、拳心孔握點 tol、
-  最小透明空隙 minGapPx、各部位區域 Zone、肢體完整度 limb_completeness、武器邊緣與單件、meta.json 完整性。
-- 輸出每項一行的 PASS/FAIL 清單與視覺標示圖 check_result_overlay.png。
-- 未通過時以非 0 狀態碼 (exit 1) 退出，未通過不得進入切片。
+依據 SPEC-RIG-POSE-02 (通用) 與 SPEC-RIG-POSE-03 (固定骨架 v3 / AG-11 三級判定)：
+- 逐條檢查畫布尺寸、地面線、站立中心、身高 H、關節 tol、拳心孔 tol、
+  最小透明間隙 minGapPx、各部位 Zone、肢體完整度 limb_completeness、武器邊緣與 meta.json 健全度。
+- 分三級評定：
+  1. PASS: 落在標準 tolerance 內 (位移 <= tol, 角度差 <= 5°)
+  2. SNAP: 超出 tol 但 <= 60 px 且角度差 <= 10°，可由 slice_and_rig --snap 自動剛體貼齊
+  3. FAIL: 偏差 > 60 px、角度差 > 10° 或嚴重破損缺漏
+- 輸出 check_result_overlay.png 與 rigpose_check_report.json。
+- 嚴格模式下非 PASS 以非 0 狀態碼 (exit 1) 退出；若帶 --allow-snap 則 SNAP/PASS 均 exit 0。
 """
 from __future__ import annotations
 
@@ -34,7 +38,7 @@ def find_fist_holes(
     hand_crop: np.ndarray,
     origin_xy: tuple[int, int],
 ) -> tuple[bool, tuple[float, float], float]:
-    """在手掌裁切區域偵測內部空心孔洞，回傳 (found, (world_x, world_y), hole_area)"""
+    """在手部區域尋找空心孔洞，返回 (found, (world_x, world_y), hole_area)"""
     ox, oy = origin_xy
     a_ch = hand_crop[..., 3]
     bin_m = (a_ch > 24).astype(np.uint8) * 255
@@ -45,7 +49,7 @@ def find_fist_holes(
     best_area = 0.0
     best_center = (0.0, 0.0)
     for c_idx, h_node in enumerate(hierarchy[0]):
-        if h_node[3] >= 0:  # 具有 parent 代表為內部孔洞
+        if h_node[3] >= 0:  # 具有 parent 即內部孔洞
             area = cv2.contourArea(contours[c_idx])
             if area > 4.0 and area > best_area:
                 M = cv2.moments(contours[c_idx])
@@ -125,14 +129,16 @@ def run_rigpose_inspection(
 
     checks: dict[str, dict[str, Any]] = {}
 
-    # 1. 畫布規格
+    # 1. 畫布尺寸 (必須精確 2048x2048)
     canvas_ok = (w == spec["canvas"]["w"]) and (h == spec["canvas"]["h"])
+    canvas_tier = "PASS" if canvas_ok else "FAIL"
     checks["canvas_size"] = {
         "pass": canvas_ok,
-        "detail": f"畫布尺寸須為 2048x2048: actual={w}x{h}",
+        "tier": canvas_tier,
+        "detail": f"畫布尺寸 2048x2048: actual={w}x{h}",
     }
 
-    # 2. 地面線 (y = 1900 ± 10)
+    # 2. 地面線 (y = 1900 ± 10, SNAP <= 60)
     ys_live, xs_live = np.where(live_mask)
     if len(ys_live) == 0:
         lowest_y = 0
@@ -143,71 +149,109 @@ def run_rigpose_inspection(
 
     target_ground_y = spec["groundY"]
     ground_diff = abs(lowest_y - target_ground_y)
-    ground_ok = ground_diff <= 10
+    if ground_diff <= 10:
+        ground_tier = "PASS"
+    elif ground_diff <= 60:
+        ground_tier = "SNAP"
+    else:
+        ground_tier = "FAIL"
+
     checks["ground_line"] = {
-        "pass": ground_ok,
-        "detail": f"腳底最低點 y={target_ground_y} ±10px: actual={lowest_y} (diff={ground_diff}px)",
+        "pass": (ground_tier == "PASS"),
+        "tier": ground_tier,
+        "detail": f"腳底最低點 y={target_ground_y} (tol=±10px, snap=±60px): actual={lowest_y} (diff={ground_diff}px)",
     }
-    # 繪製地面線與 ±10px 容差帶
+    # 繪製地面線與容差帶
     draw.line([(0, target_ground_y), (w, target_ground_y)], fill=(255, 215, 0, 220), width=3)
     draw.line([(0, target_ground_y - 10), (w, target_ground_y - 10)], fill=(255, 215, 0, 100), width=1)
     draw.line([(0, target_ground_y + 10), (w, target_ground_y + 10)], fill=(255, 215, 0, 100), width=1)
+    draw.line([(0, target_ground_y - 60), (w, target_ground_y - 60)], fill=(255, 180, 0, 60), width=1)
+    draw.line([(0, target_ground_y + 60), (w, target_ground_y + 60)], fill=(255, 180, 0, 60), width=1)
 
-    # 3. 身高 H 與頭頂 (v3 固定 H=1600: 頭頂 y=300±20, 腳底 y=1900±10)
+    # 3. 身高 H 與頭頂 (v3 固定 H=1600: 頭頂 y=300±20, 腳底 y=1900±10, SNAP <= 60)
     target_top_y = spec["headTopY"]
     top_diff = abs(highest_y - target_top_y)
-    top_ok = top_diff <= 20
+    if top_diff <= 20:
+        top_tier = "PASS"
+    elif top_diff <= 60:
+        top_tier = "SNAP"
+    else:
+        top_tier = "FAIL"
+
     actual_h = lowest_y - highest_y
-    h_ok = top_ok and ground_ok
+    if ground_tier == "FAIL" or top_tier == "FAIL":
+        h_tier = "FAIL"
+    elif ground_tier == "SNAP" or top_tier == "SNAP":
+        h_tier = "SNAP"
+    else:
+        h_tier = "PASS"
+
     checks["head_top"] = {
-        "pass": top_ok,
-        "detail": f"頭頂最高點 y={target_top_y} ±20px: actual={highest_y} (diff={top_diff}px)",
+        "pass": (top_tier == "PASS"),
+        "tier": top_tier,
+        "detail": f"頭頂最高點 y={target_top_y} (tol=±20px, snap=±60px): actual={highest_y} (diff={top_diff}px)",
     }
     checks["body_height_H"] = {
-        "pass": h_ok,
-        "detail": f"固定 H=1600 (頭頂 y={target_top_y}±20px: actual={highest_y}, 腳底 y={target_ground_y}±10px: actual={lowest_y}, 實測 H={actual_h}px)",
+        "pass": (h_tier == "PASS"),
+        "tier": h_tier,
+        "detail": f"固定 H=1600 (頭頂 y={target_top_y}±20, 腳底 y={target_ground_y}±10): actual={actual_h}px (top={highest_y}, bot={lowest_y})",
     }
-    # 繪製頭頂線與 ±20px 容差帶
+    # 繪製頭頂線與容差帶
     draw.line([(0, target_top_y), (w, target_top_y)], fill=(80, 200, 255, 200), width=3)
     draw.line([(0, target_top_y - 20), (w, target_top_y - 20)], fill=(80, 200, 255, 100), width=1)
     draw.line([(0, target_top_y + 20), (w, target_top_y + 20)], fill=(80, 200, 255, 100), width=1)
+    draw.line([(0, target_top_y - 60), (w, target_top_y - 60)], fill=(80, 180, 255, 60), width=1)
+    draw.line([(0, target_top_y + 60), (w, target_top_y + 60)], fill=(80, 180, 255, 60), width=1)
 
-    # 4. 站立中心 (兩腳中點 x = 1024 ± 20)
+    # 4. 站立中心 (兩腳中點 x = 1024 ± 25, SNAP <= 60)
     feet_ys_mask = live_mask & (np.arange(h)[:, None] >= 1750)
     ys_f, xs_f = np.where(feet_ys_mask)
     feet_cx = float(np.mean(xs_f)) if len(xs_f) > 0 else 1024.0
     center_diff = abs(feet_cx - 1024.0)
-    center_ok = center_diff <= 25.0
+    if center_diff <= 25.0:
+        center_tier = "PASS"
+    elif center_diff <= 60.0:
+        center_tier = "SNAP"
+    else:
+        center_tier = "FAIL"
 
     checks["standing_center"] = {
-        "pass": center_ok,
-        "detail": f"站立中心須落於 x=1024 ±20px: actual={feet_cx:.1f} (diff={center_diff:.1f}px)",
+        "pass": (center_tier == "PASS"),
+        "tier": center_tier,
+        "detail": f"站立中心落於 x=1024 (tol=±25px, snap=±60px): actual={feet_cx:.1f} (diff={center_diff:.1f}px)",
     }
     draw.line([(1024, 0), (1024, h)], fill=(220, 230, 245, 180), width=2)
+    draw.line([(1024 - 60, 0), (1024 - 60, h)], fill=(220, 230, 245, 60), width=1)
+    draw.line([(1024 + 60, 0), (1024 + 60, h)], fill=(220, 230, 245, 60), width=1)
 
     # 5. 頭部 Zone 範圍
     hz = spec["segments"]["head"]["zone"]
-    # 檢查 y < 900 且屬於頭部的像素是否溢出
     top_live_mask = live_mask & (np.arange(h)[:, None] <= 880)
     ys_t, xs_t = np.where(top_live_mask)
     if len(xs_t) > 0:
         head_min_x, head_max_x = int(xs_t.min()), int(xs_t.max())
         head_min_y, head_max_y = int(ys_t.min()), int(ys_t.max())
-        head_zone_ok = (head_min_x >= hz[0] - 20) and (head_max_x <= hz[2] + 20)
+        if (head_min_x >= hz[0] - 20) and (head_max_x <= hz[2] + 20):
+            head_zone_tier = "PASS"
+        elif (head_min_x >= hz[0] - 60) and (head_max_x <= hz[2] + 60):
+            head_zone_tier = "SNAP"
+        else:
+            head_zone_tier = "FAIL"
     else:
         head_min_x, head_max_x, head_min_y, head_max_y = 0, 0, 0, 0
-        head_zone_ok = False
+        head_zone_tier = "FAIL"
+
     checks["head_zone"] = {
-        "pass": head_zone_ok,
-        "detail": f"頭部須落於 Zone [{hz[0]}-{hz[2]}]: actual_x=[{head_min_x}-{head_max_x}]",
+        "pass": (head_zone_tier == "PASS"),
+        "tier": head_zone_tier,
+        "detail": f"頭部 Zone [{hz[0]}-{hz[2]}]: actual_x=[{head_min_x}-{head_max_x}]",
     }
     draw.rectangle(hz, outline=(255, 160, 50, 200), width=2)
 
-    # 6. 空心握拳與拳心孔握點 (grip_A / grip_B)
+    # 6. 空心握拳內部孔洞與握點 (grip_A / grip_B)
     grips_spec = spec["grips"]
-    grips_ok = True
+    grips_tier = "PASS"
     grip_details = []
-    # 截取前手與後手區域
     hand_f_box = (1280, 1140, 1450, 1310)
     hand_b_box = (600, 1140, 770, 1310)
 
@@ -221,28 +265,36 @@ def run_rigpose_inspection(
         found, hole_xy, area = find_fist_holes(crop, (bx0, by0))
         if found:
             err = math.hypot(hole_xy[0] - tgt_x, hole_xy[1] - tgt_y)
-            is_pass = err <= (tol + 4)  # 允許微量誤差
-            if not is_pass:
-                grips_ok = False
-            grip_details.append(f"{g_id}: 空心孔面積={area:.0f}px, 座標=({hole_xy[0]:.1f},{hole_xy[1]:.1f}), 距標準={err:.1f}px (tol={tol})")
+            if err <= (tol + 4):
+                this_tier = "PASS"
+            elif err <= 60.0:
+                this_tier = "SNAP"
+            else:
+                this_tier = "FAIL"
+
+            if this_tier == "FAIL":
+                grips_tier = "FAIL"
+            elif this_tier == "SNAP" and grips_tier != "FAIL":
+                grips_tier = "SNAP"
+
+            grip_details.append(f"{g_id}: 空心孔面積={area:.0f}px, 座標=({hole_xy[0]:.1f},{hole_xy[1]:.1f}), 偏差={err:.1f}px (tol={tol}, snap<=60)")
             draw.ellipse([hole_xy[0] - 8, hole_xy[1] - 8, hole_xy[0] + 8, hole_xy[1] + 8], fill=(0, 255, 100, 255))
         else:
-            # 檢查是否為實心
-            grips_ok = False
-            grip_details.append(f"{g_id}: 未偵測到空心握拳孔洞（必須為空心握拳以供武器穿過）")
+            grips_tier = "FAIL"
+            grip_details.append(f"{g_id}: 未偵測到空心孔洞 (空心拳心穿武器必備)")
 
         draw.ellipse([tgt_x - tol, tgt_y - tol, tgt_x + tol, tgt_y + tol], outline=(0, 255, 255, 220), width=2)
+        draw.ellipse([tgt_x - 60, tgt_y - 60, tgt_x + 60, tgt_y + 60], outline=(0, 180, 255, 100), width=1)
 
     checks["fist_hole_grips"] = {
-        "pass": grips_ok,
+        "pass": (grips_tier == "PASS"),
+        "tier": grips_tier,
         "detail": "; ".join(grip_details),
     }
 
-    # 7. 手臂與軀幹、兩腿之間的最小透明間隙 (minGapPx)
-    # 檢查 x 在 [1080, 1200]、y 在 [1000, 1150]（前臂內側與腰部間）
+    # 7. 手臂與軀幹、兩腿透明間隙 (minGapPx)
     gap_arm_torso_box = img_arr[1020:1120, 1100:1210, 3] > 16
     col_has_pixel = gap_arm_torso_box.any(axis=0)
-    # 計算連續全透明列數
     zero_runs = 0
     max_zero_run = 0
     for v in col_has_pixel:
@@ -252,13 +304,20 @@ def run_rigpose_inspection(
         else:
             zero_runs = 0
 
-    arm_gap_ok = max_zero_run >= 12  # 要求可見透明空隙
+    if max_zero_run >= 12:
+        arm_gap_tier = "PASS"
+    elif max_zero_run >= 6:
+        arm_gap_tier = "SNAP"
+    else:
+        arm_gap_tier = "FAIL"
+
     checks["min_gap_arm_torso"] = {
-        "pass": arm_gap_ok,
-        "detail": f"手臂與軀幹間透明空隙須 >=20px: detected_gap={max_zero_run}px",
+        "pass": (arm_gap_tier == "PASS"),
+        "tier": arm_gap_tier,
+        "detail": f"手臂與軀幹間隙 >=20px: detected_gap={max_zero_run}px",
     }
 
-    # 兩腿間間隙 (y 在 1450-1650 之間檢查 x=980-1060 的透明空隔)
+    # 兩腿 (y 在 1480-1620 檢查 x=980-1060 透明列)
     gap_legs_box = img_arr[1480:1620, 980:1060, 3] > 16
     leg_col_has_pixel = gap_legs_box.any(axis=0)
     leg_zero_run = 0
@@ -270,54 +329,88 @@ def run_rigpose_inspection(
         else:
             leg_zero_run = 0
 
-    legs_gap_ok = max_leg_zero >= 10
+    if max_leg_zero >= 10:
+        leg_gap_tier = "PASS"
+    elif max_leg_zero >= 5:
+        leg_gap_tier = "SNAP"
+    else:
+        leg_gap_tier = "FAIL"
+
     checks["min_gap_legs"] = {
-        "pass": legs_gap_ok,
-        "detail": f"兩腿間透明空隙須 >=16px: detected_gap={max_leg_zero}px",
+        "pass": (leg_gap_tier == "PASS"),
+        "tier": leg_gap_tier,
+        "detail": f"兩腿間隙寬度 >=16px: detected_gap={max_leg_zero}px",
     }
 
-    # 8. 武器規格（若提供）
+    # 8. 獨立武器乾淨度 (若有)
     if weapon_path and weapon_path.exists():
         weap_pil = Image.open(weapon_path).convert("RGBA")
         weap_arr = np.array(weap_pil)
         clean_pass, dirty_r, dirty_cnt, total_edge = check_weapon_cleanliness(weap_arr)
+        weap_tier = "PASS" if clean_pass else "FAIL"
         checks["weapon_edge_clean"] = {
             "pass": clean_pass,
-            "detail": f"武器邊緣非武器色像素 <=1%: dirtyRatio={dirty_r*100:.2f}% ({dirty_cnt}/{total_edge}px)",
+            "tier": weap_tier,
+            "detail": f"獨立武器邊緣非武器殘色 <=1%: dirtyRatio={dirty_r*100:.2f}% ({dirty_cnt}/{total_edge}px)",
         }
     else:
         checks["weapon_edge_clean"] = {
             "pass": True,
-            "detail": "未提供獨立武器圖，跳過",
+            "tier": "PASS",
+            "detail": "無獨立武器圖，跳過",
         }
 
-    # 9. Meta.json 規格完整性（若提供）
+    # 9. Meta.json 規格完整性 (若有)
     if meta_path and meta_path.exists():
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
         has_req = all(k in meta for k in ["id", "bodyType", "weaponType"])
         bt_ok = meta.get("bodyType") in ["standard", "heavy", "slim", "robe"]
+        meta_ok = has_req and bt_ok
+        meta_tier = "PASS" if meta_ok else "FAIL"
         checks["meta_completeness"] = {
-            "pass": has_req and bt_ok,
-            "detail": f"meta.json 欄位與體型合法性: id={meta.get('id')}, bodyType={meta.get('bodyType')}, weaponType={meta.get('weaponType')}",
+            "pass": meta_ok,
+            "tier": meta_tier,
+            "detail": f"meta.json 與體型合法性: id={meta.get('id')}, bodyType={meta.get('bodyType')}, weaponType={meta.get('weaponType')}",
         }
     else:
         checks["meta_completeness"] = {
             "pass": True,
-            "detail": "未提供 meta.json，跳過",
+            "tier": "PASS",
+            "detail": "無 meta.json，跳過",
         }
 
-    overall_pass = all(c["pass"] for c in checks.values())
+    # 計算整體三級評定
+    all_tiers = [c.get("tier", "FAIL") for c in checks.values()]
+    if any(t == "FAIL" for t in all_tiers):
+        overall_tier = "FAIL"
+    elif any(t == "SNAP" for t in all_tiers):
+        overall_tier = "SNAP"
+    else:
+        overall_tier = "PASS"
+
+    overall_pass = (overall_tier == "PASS")
 
     # 輸出標記圖
     overlay_path = out_dir / "check_result_overlay.png"
-    status_tag = "PASS" if overall_pass else "FAIL"
-    draw.text((40, 40), f"SPEC-RIG-POSE-03 INSPECTION: {status_tag}", fill=(0, 255, 120, 255) if overall_pass else (255, 60, 60, 255), font=font_lg)
+    if overall_tier == "PASS":
+        color_tag = (0, 255, 120, 255)
+        text_tag = "SPEC-RIG-POSE-03 INSPECTION: PASS"
+    elif overall_tier == "SNAP":
+        color_tag = (255, 215, 0, 255)
+        text_tag = "SPEC-RIG-POSE-03 INSPECTION: SNAP (Can Auto-Snap <= 60px)"
+    else:
+        color_tag = (255, 60, 60, 255)
+        text_tag = "SPEC-RIG-POSE-03 INSPECTION: FAIL"
+
+    draw.text((40, 40), text_tag, fill=color_tag, font=font_lg)
     overlay.save(overlay_path)
 
     report = {
-        "schema": "3klife.rigpose-check-report.v1",
+        "schema": "3klife.rigpose-check-report.v2",
         "rigposeImage": str(rigpose_path),
+        "overall_tier": overall_tier,
         "overallPass": overall_pass,
+        "canSnap": (overall_tier in ["PASS", "SNAP"]),
         "checks": checks,
         "overlayPath": str(overlay_path),
     }
@@ -330,12 +423,13 @@ def run_rigpose_inspection(
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="綁骨專用分件圖交件前檢查 (check_rigpose.py)")
-    ap.add_argument("--dir", help="武將分件目錄（自動探索 <id>_rigpose.png, <id>_weapon.png 等）")
-    ap.add_argument("--rigpose", help="獨立 rigpose.png 路徑")
-    ap.add_argument("--weapon", help="獨立 weapon.png 路徑")
-    ap.add_argument("--hairtail", help="獨立 hairtail.png 路徑")
-    ap.add_argument("--meta", help="武將 meta.json 路徑")
-    ap.add_argument("--anchors", help="選填：anchors.json 路徑")
+    ap.add_argument("--dir", help="輸入資料夾 (自動找 <id>_rigpose.png 等)")
+    ap.add_argument("--rigpose", help="單獨 rigpose.png 路徑")
+    ap.add_argument("--weapon", help="單獨 weapon.png 路徑")
+    ap.add_argument("--hairtail", help="單獨 hairtail.png 路徑")
+    ap.add_argument("--meta", help="單獨 meta.json 路徑")
+    ap.add_argument("--anchors", help="單獨 anchors.json 路徑")
+    ap.add_argument("--allow-snap", action="store_true", help="若為 SNAP 級 (偏差<=60px) 亦允許通過 (exit 0)，供 slice_and_rig --snap 自動修正")
     ap.add_argument("--out-dir", default=str(HERE.parent / "scratch" / "rigpose_check_out"), help="輸出目錄")
     args = ap.parse_args()
 
@@ -389,14 +483,27 @@ def main() -> None:
         out_dir=out_dir,
     )
 
-    print("=== check_rigpose 檢查結果清單 ===")
-    for k, v in report["checks"].items():
-        tag = "[PASS]" if v["pass"] else "[FAIL]"
-        print(f"{tag} {k}: {v['detail']}")
+    overall_tier = report.get("overall_tier", "PASS" if is_pass else "FAIL")
 
-    print(f"\nOVERALL: {'PASS' if is_pass else 'FAIL'} (report: {out_dir / 'rigpose_check_report.json'})")
-    if not is_pass:
-        sys.exit(1)
+    print(f"=== check_rigpose 檢查結果清單 (整體評級: {overall_tier}) ===")
+    for k, v in report["checks"].items():
+        tier = v.get("tier", "PASS" if v.get("pass") else "FAIL")
+        tag = f"[{tier}]"
+        print(f"{tag:7s} {k}: {v['detail']}")
+
+    print("\nOVERALL TIER: " + overall_tier + " (report: " + str(out_dir / "rigpose_check_report.json") + ")")
+    if args.allow_snap:
+        if overall_tier in ["PASS", "SNAP"]:
+            print("[INFO] --allow-snap 生效: SNAP/PASS 級均允許進入切片管線")
+            sys.exit(0)
+        else:
+            print("[ERROR] 檢查結果為 FAIL (偏差大於 60px 或嚴重缺失)，阻擋切片！", file=sys.stderr)
+            sys.exit(1)
+    else:
+        if not is_pass:
+            if overall_tier == "SNAP":
+                print("[WARN] 檢查結果為 SNAP 級 (偏差在 60px 內)。若要自動貼齊骨架，請使用 --allow-snap 或 slice_and_rig --snap！", file=sys.stderr)
+            sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -937,6 +937,7 @@ def main() -> None:
         default="spear",
         help="武器類型（預設 spear）",
     )
+    ap.add_argument("--snap", action="store_true", help="啟用自動貼齊固定骨架 (AG-11): 依偵測關節剛體貼齊至 canonical_skeleton_v3")
     ap.add_argument("--input-dir", help="選填：武將分件目錄（若指定則先執行 check_rigpose 驗收，通過後自動導入分件）")
     ap.add_argument("--facing", choices=["auto", "left", "right"], default="auto", help="角色朝向（預設 auto）")
     ap.add_argument("--atlas-width", type=int, default=2048, help="圖集寬度（預設 2048）")
@@ -975,9 +976,13 @@ def main() -> None:
             anchors_path=rp_anch,
             out_dir=out_dir / "rigpose_precheck",
         )
-        if not check_pass:
-            print(f"Error: input-dir 未通過 check_rigpose 驗收，禁止進入切片！請見報告: {out_dir / 'rigpose_precheck'}", file=sys.stderr)
+        check_tier = check_rep.get("overall_tier", "PASS" if check_pass else "FAIL")
+        if check_tier == "FAIL":
+            print(f"Error: input-dir 未通過 check_rigpose (評級 FAIL，偏差 > 60px)，禁止進入！請看報告: {out_dir / 'rigpose_precheck'}", file=sys.stderr)
             sys.exit(1)
+        elif check_tier == "SNAP":
+            print(f"[INFO] input-dir 評級為 SNAP (偏差 <= 60px)，自動啟用 --snap 剛體貼齊！")
+            args.snap = True
 
     img_path = Path(args.image).resolve()
     lm_path = Path(args.landmarks).resolve()
@@ -1078,6 +1083,22 @@ def main() -> None:
             }
 
     # AG-07：評估肢體槽完整度 limb_completeness（可見像素相對估計完整面積 >= 95%）
+    # AG-11: 若啟用 --snap 且有 canonical_spec，執行剛體貼齊與接縫檢查
+    if args.snap and canonical_spec:
+        print("[INFO] 正在執行 AG-11 自動貼齊固定骨架 (--snap)...")
+        from snap_rigid_align import apply_snap_pipeline
+        trimmed_parts, snap_rep = apply_snap_pipeline(
+            trimmed_parts=trimmed_parts,
+            parts_out_dir=parts_out_dir,
+            masks_out_dir=masks_out_dir,
+            anim_masks_out_dir=anim_masks_out_dir,
+            detected_points=landmarks_info.get("points", {}),
+            canonical_spec=canonical_spec,
+            out_dir=out_dir,
+            canvas_size=(w, h),
+        )
+        print(f"[INFO] 剛體貼齊完成！報告已儲存: {out_dir / 'snap_report.json'}")
+
     limb_slots = ["arm_upper_f", "arm_lower_f", "arm_upper_b", "arm_lower_b", "thigh_f", "shin_f", "thigh_b", "shin_b"]
     limb_completeness_report: dict[str, Any] = {}
     all_limbs_complete_95 = True
