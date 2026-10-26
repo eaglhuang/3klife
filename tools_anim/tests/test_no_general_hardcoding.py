@@ -21,6 +21,7 @@ CORE_SCRIPTS = [
     TOOLS_DIR / "validate_spine.py",
     TOOLS_DIR / "check_rigpose.py",
     TOOLS_DIR / "generate_rigpose_templates.py",
+    TOOLS_DIR / "check_layered_parts.py",
 ]
 
 # 任何武將拼音或中文作為變數、字串判斷均為違規
@@ -61,10 +62,11 @@ def check_general_hardcoding() -> list[str]:
 
 
 def check_slice_and_range_hardcoding() -> list[str]:
-    """AG-20: 掃描 check_rigpose.py 和 validate_spine.py 中數值 >= 200 的像素切片或 range 常數"""
+    """AG-20 / AG-21: 掃描 check_rigpose.py, validate_spine.py, check_layered_parts.py 中數值 >= 200 的像素切片或 range 常數"""
     target_scripts = [
         TOOLS_DIR / "check_rigpose.py",
         TOOLS_DIR / "validate_spine.py",
+        TOOLS_DIR / "check_layered_parts.py",
     ]
     violations: list[str] = []
 
