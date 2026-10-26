@@ -423,7 +423,8 @@ export class LobbyScene extends Component {
         await this._mountSandtableTerritoryPanel();
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
-        this._openPrisonerPopupIfPending();
+        // 首勝紅顏展示開著時先不彈俘虜窗，等紅顏關閉再彈（PROG-2-1129）
+        if (!this._redFaceHost?.node.active) this._openPrisonerPopupIfPending();
         this._bindSaveRecoveryToast();
         void this._applyGachaMentorJournal();
 
@@ -1374,6 +1375,7 @@ export class LobbyScene extends Component {
         if (this._redFaceHost) {
             this._redFaceHost.node.active = false;
         }
+        this._openPrisonerPopupIfPending();
     }
 
     private _selectRedFace(index: number): void {
