@@ -118,6 +118,18 @@ def run_rigpose_inspection(
     alpha = img_arr[..., 3]
     live_mask = alpha > 16
 
+    # AG-17: 髮尾在獨立圖層，不計入全身底圖 gap 違規。建立扣除髮尾的 gap 專用像素陣列
+    gap_arr = img_arr.copy()
+    if hairtail_path and hairtail_path.exists():
+        try:
+            hair_pil_raw = Image.open(hairtail_path).convert("RGBA")
+            if hair_pil_raw.size == (w, h):
+                h_arr = np.array(hair_pil_raw)
+                hair_px = h_arr[..., 3] > 16
+                gap_arr[hair_px, 3] = 0
+        except Exception:
+            pass
+
     overlay = img_pil.copy()
     draw = ImageDraw.Draw(overlay)
     try:
@@ -196,6 +208,34 @@ def run_rigpose_inspection(
         "tier": h_tier,
         "detail": f"固定 H=1600 (頭頂 y={target_top_y}±20, 腳底 y={target_ground_y}±10): actual={actual_h}px (top={highest_y}, bot={lowest_y})",
     }
+
+    # AG-17: 地面線與 H 偏差能否用「整張等比縮放 ±8% ＋ 平移」修正
+    target_H = float(spec.get("H", 1600))
+    if actual_h > 0:
+        scale_factor = target_H / float(actual_h)
+        scale_dev_pct = (scale_factor - 1.0) * 100.0
+        scale_feasible = abs(scale_dev_pct) <= 8.0
+        dy = float(target_ground_y) - (float(lowest_y) * scale_factor)
+        dx = 0.0  # 待站立中心計算後補正
+        scale_correction = {
+            "feasible": scale_feasible,
+            "scaleFactor": round(scale_factor, 4),
+            "scaleDeviationPercent": round(scale_dev_pct, 2),
+            "translateOffsetPx": [0.0, round(dy, 1)],
+            "detail": (
+                f"可透過整張等比縮放 {scale_factor:.4f} ({scale_dev_pct:+.2f}%) 與垂直平移 dy={dy:+.1f}px 修正地面線與身高"
+                if scale_feasible
+                else f"身高偏差 {scale_dev_pct:+.2f}% 超出 ±8% 容許範圍，無法僅靠整張等比縮放修正"
+            ),
+        }
+    else:
+        scale_correction = {
+            "feasible": False,
+            "scaleFactor": 1.0,
+            "scaleDeviationPercent": 0.0,
+            "translateOffsetPx": [0.0, 0.0],
+            "detail": "無有效像素，無法計算縮放修正",
+        }
     # 繪製頭頂線與容差帶
     draw.line([(0, target_top_y), (w, target_top_y)], fill=(80, 200, 255, 200), width=3)
     draw.line([(0, target_top_y - 20), (w, target_top_y - 20)], fill=(80, 200, 255, 100), width=1)
@@ -223,6 +263,16 @@ def run_rigpose_inspection(
         "tier": center_tier,
         "detail": f"站立中心落於 x={target_center_x:.0f} (tol=±{center_tol:.0f}px, snap=±60px): actual={feet_cx:.1f} (diff={center_diff:.1f}px)",
     }
+
+    # AG-17: 補正水平平移 dx
+    if scale_correction.get("feasible", False):
+        s_fac = scale_correction["scaleFactor"]
+        dx = target_center_x - (feet_cx * s_fac)
+        scale_correction["translateOffsetPx"][0] = round(dx, 1)
+        scale_correction["detail"] = (
+            f"可透過整張等比縮放 {s_fac:.4f} ({scale_correction['scaleDeviationPercent']:+.2f}%) "
+            f"與平移 dx={dx:+.1f}px, dy={scale_correction['translateOffsetPx'][1]:+.1f}px 修正地面線、身高與站立中心"
+        )
     draw.line([(int(target_center_x), 0), (int(target_center_x), h)], fill=(220, 230, 245, 180), width=2)
     draw.line([(int(target_center_x - 60), 0), (int(target_center_x - 60), h)], fill=(220, 230, 245, 60), width=1)
     draw.line([(int(target_center_x + 60), 0), (int(target_center_x + 60), h)], fill=(220, 230, 245, 60), width=1)
@@ -301,8 +351,8 @@ def run_rigpose_inspection(
     min_gap_legs = int(min_gap_cfg.get("leg_to_leg", 16))
     min_gap_hand_any = int(min_gap_cfg.get("hand_to_any", 16))
 
-    # 7.1 手臂與軀幹
-    gap_arm_torso_box = img_arr[1020:1120, 1100:1210, 3] > 16
+    # 7.1 手臂與軀幹 (使用 gap_arr，已排除 hairtail 獨立圖層)
+    gap_arm_torso_box = gap_arr[1020:1120, 1100:1210, 3] > 16
     col_has_pixel = gap_arm_torso_box.any(axis=0)
     zero_runs = 0
     max_zero_run = 0
@@ -321,8 +371,19 @@ def run_rigpose_inspection(
         "detail": f"手臂與軀幹間隙 >={min_gap_arm_torso}px: detected_gap={max_zero_run}px",
     }
 
+    # AG-17: 若 gap 為 0，產出手臂與軀幹重疊區遮罩 PNG 供局部補繪
+    overlap_mask_path = None
+    if max_zero_run == 0:
+        overlap_mask = np.zeros((h, w), dtype=np.uint8)
+        sub_px = gap_arr[1020:1120, 1100:1210, 3] > 16
+        overlap_mask[1020:1120, 1100:1210][sub_px] = 255
+        mask_out_file = out_dir / "arm_torso_overlap_mask.png"
+        Image.fromarray(overlap_mask).save(mask_out_file)
+        overlap_mask_path = str(mask_out_file)
+        checks["min_gap_arm_torso"]["overlapMaskPath"] = overlap_mask_path
+
     # 7.2 兩腿 (y 在 1480-1620 檢查 x=980-1060 透明列)
-    gap_legs_box = img_arr[1480:1620, 980:1060, 3] > 16
+    gap_legs_box = gap_arr[1480:1620, 980:1060, 3] > 16
     leg_col_has_pixel = gap_legs_box.any(axis=0)
     leg_zero_run = 0
     max_leg_zero = 0
@@ -342,8 +403,8 @@ def run_rigpose_inspection(
     }
 
     # 7.3 手與任何非相連部位 (y 在 1160-1290 檢查前手/後手與軀幹間透明列)
-    gap_hand_f_box = img_arr[1160:1290, 1150:1285, 3] > 16
-    gap_hand_b_box = img_arr[1160:1290, 760:950, 3] > 16
+    gap_hand_f_box = gap_arr[1160:1290, 1150:1285, 3] > 16
+    gap_hand_b_box = gap_arr[1160:1290, 760:950, 3] > 16
 
     f_zero_max = 0
     cur_z = 0
@@ -482,6 +543,8 @@ def run_rigpose_inspection(
         "overall_tier": overall_tier,
         "overallPass": overall_pass,
         "canSnap": (overall_tier in ["PASS", "SNAP"]),
+        "scaleAndTranslateCorrection": scale_correction,
+        "armTorsoOverlapMask": overlap_mask_path,
         "checks": checks,
         "overlayPath": str(overlay_path),
     }
