@@ -101,7 +101,7 @@ def build_slot_scope_mask(
     body_type: str,
     w: int,
     h: int,
-    ext_px: float = 12.0,
+    ext_px: float | None = None,
 ) -> tuple[np.ndarray | None, str]:
     """AG-23: 建立指定槽位的骨骼膠囊/範圍合規遮罩 (包含外擴 ext_px)
     若該槽屬於特殊部件 (weapon, cape, skirt, hair_tail) 則回傳 (None, "anchor_only")
@@ -119,14 +119,17 @@ def build_slot_scope_mask(
     draw = ImageDraw.Draw(im)
 
     segments = spec.get("segments", {})
+    layered_cfg = spec.get("layeredSlots", {})
     h_val = float(spec.get("H", 1600))
+    if ext_px is None:
+        ext_px = float(layered_cfg.get("scopeMarginPx", 12.0))
 
-    # 肩甲特殊暫定規則 (依 AG-23: 以 shoulderOverlapZone 圓外擴 12px)
+    # 肩甲特殊暫定規則 (依 AG-23: 以 shoulderOverlapZone 圓外擴 ext_px)
     if slot_name in ("pauldron_f", "pauldron_b"):
         soz = spec.get("shoulderOverlapZone", {})
         rad_h = float(soz.get("radiusH", 0.06))
         rad = rad_h * h_val + ext_px
-        j_name = "shoulder_f" if slot_name == "pauldron_f" else "shoulder_b"
+        j_name = "shoulder_f" if slot_name.endswith("_f") else "shoulder_b"
         c = get_j(j_name)
         draw.ellipse([c[0] - rad, c[1] - rad, c[0] + rad, c[1] + rad], fill=255)
         return np.array(im) > 128, "pauldron_provisional_overlap_zone"
@@ -200,17 +203,19 @@ def build_slot_scope_mask(
         draw.ellipse([c[0] - rad, c[1] - rad, c[0] + rad, c[1] + rad], fill=255)
 
         # 若為 hand，需涵蓋 wrist 樞紐連接通道與關節重疊延伸端蓋
-        wrist_joint_name = "wrist_f" if "f" in slot_name else "wrist_b"
+        wrist_joint_name = "wrist_f" if slot_name.endswith("_f") else "wrist_b"
         if wrist_joint_name in joints:
             w_pt = get_j(wrist_joint_name)
             draw.line([c, w_pt], fill=255, width=int(round(rad * 2)))
             draw.ellipse([w_pt[0] - rad, w_pt[1] - rad, w_pt[0] + rad, w_pt[1] + rad], fill=255)
-            elbow_name = "elbow_f" if "f" in slot_name else "elbow_b"
+            elbow_name = "elbow_f" if slot_name.endswith("_f") else "elbow_b"
             if elbow_name in joints:
                 e_pt = get_j(elbow_name)
                 v_ew = (e_pt[0] - w_pt[0], e_pt[1] - w_pt[1])
                 dist_ew = math.hypot(v_ew[0], v_ew[1]) or 1.0
-                ext_w = (w_pt[0] + (v_ew[0] / dist_ew) * 48.0, w_pt[1] + (v_ew[1] / dist_ew) * 48.0)
+                hidden_ext_h = float(layered_cfg.get("hiddenExtensionH", 0.03))
+                ext_len = hidden_ext_h * h_val
+                ext_w = (w_pt[0] + (v_ew[0] / dist_ew) * ext_len, w_pt[1] + (v_ew[1] / dist_ew) * ext_len)
                 draw.line([w_pt, ext_w], fill=255, width=int(round(rad * 2)))
                 draw.ellipse([ext_w[0] - rad, ext_w[1] - rad, ext_w[0] + rad, ext_w[1] + rad], fill=255)
 
@@ -219,7 +224,7 @@ def build_slot_scope_mask(
     # 3. 區域矩形 (zone: [x1, y1, x2, y2])
     if "zone" in seg_info:
         zone = seg_info["zone"]
-        ref_joint = "neck" if slot_name == "head" else ("ankle_f" if "f" in slot_name else "ankle_b")
+        ref_joint = "neck" if slot_name == "head" else ("ankle_f" if slot_name.endswith("_f") else "ankle_b")
         cur_ref = get_j(ref_joint)
         def_refs = {"neck": (1030.0, 880.0), "ankle_f": (1135.0, 1850.0), "ankle_b": (915.0, 1850.0)}
         d_ref = def_refs.get(ref_joint, (1024.0, 1024.0))
@@ -477,7 +482,8 @@ def run_layered_parts_inspection(
         }
 
         # AG-23: 單槽範圍檢查 (每槽都做，不需要相鄰槽)
-        scope_mask, scope_type = build_slot_scope_mask(sid, spec, body_type, exp_w, exp_h, ext_px=12.0)
+        scope_margin_px = float(layered_cfg.get("scopeMarginPx", 12.0))
+        scope_mask, scope_type = build_slot_scope_mask(sid, spec, body_type, exp_w, exp_h, ext_px=scope_margin_px)
         if scope_type == "anchor_only":
             slot_reports[sid]["checks"]["scope_capsule_bounds"] = {
                 "pass": True,
@@ -504,10 +510,10 @@ def run_layered_parts_inspection(
                     "outsidePixels": outside_cnt,
                     "totalVisiblePixels": tot_vis,
                     "toleranceRatio": 0.01,
-                    "detail": f"膠囊外擴12px外像素佔比={outside_ratio*100:.2f}% (容差<=1.0%)",
+                    "detail": f"膠囊外擴{scope_margin_px:.0f}px外像素佔比={outside_ratio*100:.2f}% (容差<=1.0%)",
                 }
                 if scope_type == "pauldron_provisional_overlap_zone":
-                    scope_check_entry["note"] = "pauldron 在 JSON 無膠囊，暫以 shoulderOverlapZone 外擴 12px 判定 (暫定規則)"
+                    scope_check_entry["note"] = f"pauldron 在 JSON 無膠囊，暫以 shoulderOverlapZone 外擴 {scope_margin_px:.0f}px 判定 (暫定規則)"
 
                 if not scope_pass:
                     slot_reports[sid]["pass"] = False
@@ -523,12 +529,13 @@ def run_layered_parts_inspection(
 
                 slot_reports[sid]["checks"]["scope_capsule_bounds"] = scope_check_entry
 
-    # 2. 檢驗握點 (hand_f / hand_b 拳心孔中心誤差 <= 12px)
+    # 2. 檢驗握點 (hand_f / hand_b 拳心孔中心誤差 <= gripTolerancePx)
+    grip_tol_px = float(layered_cfg.get("gripTolerancePx", spec.get("gripsTolerancePx", 12.0)))
     if "hand_f" in loaded_parts and not slot_reports["hand_f"].get("empty"):
         h_arr = loaded_parts["hand_f"]
         exp_pt = (float(grip_a[0]), float(grip_a[1]))
         found, pt, dist = find_fist_hole_center(h_arr, exp_pt)
-        grip_pass = found and (dist <= 12.0)
+        grip_pass = found and (dist <= grip_tol_px)
         slot_reports["hand_f"]["checks"]["grip_point_accuracy"] = {
             "pass": grip_pass,
             "tier": "PASS" if grip_pass else "FAIL",
@@ -536,8 +543,8 @@ def run_layered_parts_inspection(
             "center": list(pt),
             "targetGrip": list(grip_a),
             "distancePx": round(dist, 2),
-            "tolerancePx": 12.0,
-            "detail": f"握點誤差={dist:.1f}px (tol=12px)",
+            "tolerancePx": grip_tol_px,
+            "detail": f"握點誤差={dist:.1f}px (tol={grip_tol_px:.0f}px)",
         }
         if not grip_pass:
             slot_reports["hand_f"]["pass"] = False
@@ -548,7 +555,7 @@ def run_layered_parts_inspection(
         h_arr = loaded_parts["hand_b"]
         exp_pt = (float(grip_b[0]), float(grip_b[1]))
         found, pt, dist = find_fist_hole_center(h_arr, exp_pt)
-        grip_pass = found and (dist <= 12.0)
+        grip_pass = found and (dist <= grip_tol_px)
         slot_reports["hand_b"]["checks"]["grip_point_accuracy"] = {
             "pass": grip_pass,
             "tier": "PASS" if grip_pass else "FAIL",
@@ -556,8 +563,8 @@ def run_layered_parts_inspection(
             "center": list(pt),
             "targetGrip": list(grip_b),
             "distancePx": round(dist, 2),
-            "tolerancePx": 12.0,
-            "detail": f"握點誤差={dist:.1f}px (tol=12px)",
+            "tolerancePx": grip_tol_px,
+            "detail": f"握點誤差={dist:.1f}px (tol={grip_tol_px:.0f}px)",
         }
         if not grip_pass:
             slot_reports["hand_b"]["pass"] = False

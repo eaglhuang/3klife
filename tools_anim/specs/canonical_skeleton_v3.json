@@ -617,6 +617,8 @@
       "foot_b": {
         "parent": "shin_b"
       }
-    }
+    },
+    "scopeMarginPx": 12,
+    "gripTolerancePx": 12
   }
 }
