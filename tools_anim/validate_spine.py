@@ -1162,7 +1162,7 @@ def render_animations_and_check_head_occlusion(
         for fr in frames:
             idx = int(fr["frameIndex"])
             t = float(fr["time"])
-            im, occ = rasterize_frame_and_measure_occlusion(fr, atlas_img, canvas_h=canvas_h)
+            im, occ = rasterize_frame_and_measure_occlusion(fr, atlas_img, canvas_h=canvas_h, x_bounds=cur_x_bounds, y_bounds=cur_y_bounds)
             im.save(frames_dir / f"frame_{idx:03d}.png")
             rendered_imgs.append(im)
 
@@ -1191,14 +1191,16 @@ def render_animations_and_check_head_occlusion(
                     # AG-12: 產出該異常幀的 slot 遮罩 debug 圖供美術總監審查
                     debug_mask_name = f"{anim_name}_f{idx}_{t:.2f}s_{slot_arm}_debug.png"
                     debug_mask_path = frames_dir / debug_mask_name
+                    root_debug_path = out_dir / debug_mask_name
                     try:
-                        dbg_img = Image.new("RGBA", frame_img.size, (25, 25, 30, 255))
+                        dbg_img = Image.new("RGBA", im.size, (25, 25, 30, 255))
                         dbg_draw = ImageDraw.Draw(dbg_img)
                         dbg_draw.text((10, 10), f"{anim_name} {t:.2f}s: {slot_arm} visible={s_cur} (ratio={s_cur/s_base:.1%})", fill=(255, 200, 0, 255), font=font)
-                        dbg_img.paste(frame_img, (0, 0))
+                        dbg_img.paste(im, (0, 0))
                         dbg_img.save(debug_mask_path)
-                    except Exception:
-                        pass
+                        dbg_img.save(root_debug_path)
+                    except Exception as e:
+                        print(f"[WARN] Failed to save arm debug mask: {e}")
 
                     arm_continuity_issues.append(
                         {
