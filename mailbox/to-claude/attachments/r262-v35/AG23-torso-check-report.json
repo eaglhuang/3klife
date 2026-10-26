@@ -1,0 +1,40 @@
+{
+  "schema": "3klife.layered-parts-check-report.v1",
+  "verificationScope": "offline-layered-parts-check-only (NOT Cocos runtime verified)",
+  "overallPass": true,
+  "overallTier": "PASS",
+  "testedSlots": [
+    "torso"
+  ],
+  "slotCount": 1,
+  "slotReports": {
+    "torso": {
+      "pass": true,
+      "tier": "PASS",
+      "empty": false,
+      "visiblePixels": 131897,
+      "checks": {
+        "dimension": {
+          "pass": true,
+          "tier": "PASS",
+          "skipped": false,
+          "detail": "尺寸: 現為2048x2048, 規格為2048x2048"
+        },
+        "scope_capsule_bounds": {
+          "pass": true,
+          "tier": "PASS",
+          "skipped": false,
+          "scopeType": "bone_capsule",
+          "outsideRatio": 0.0,
+          "outsidePixels": 0,
+          "totalVisiblePixels": 131897,
+          "toleranceRatio": 0.01,
+          "detail": "膠囊外擴12px外像素佔比=0.00% (容差<=1.0%)"
+        }
+      }
+    }
+  },
+  "jointHiddenExtensions": {},
+  "rotationLeakChecks": {},
+  "reassemblyReport": null
+}
