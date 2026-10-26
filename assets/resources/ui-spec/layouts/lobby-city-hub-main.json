@@ -336,7 +336,7 @@
               "top": 40,
               "left": 16
             },
-            "width": 200,
+            "width": 160,
             "height": 64,
             "skinSlot": "hub.sub.bg",
             "children": [
@@ -361,9 +361,9 @@
             "id": "btnSub1",
             "widget": {
               "top": 40,
-              "left": 232
+              "left": 188
             },
-            "width": 200,
+            "width": 160,
             "height": 64,
             "skinSlot": "hub.sub.bg",
             "children": [
@@ -388,9 +388,9 @@
             "id": "btnSub2",
             "widget": {
               "top": 40,
-              "left": 448
+              "left": 360
             },
-            "width": 200,
+            "width": 160,
             "height": 64,
             "skinSlot": "hub.sub.bg",
             "children": [
@@ -415,9 +415,9 @@
             "id": "btnSub3",
             "widget": {
               "top": 40,
-              "left": 664
+              "left": 532
             },
-            "width": 200,
+            "width": 160,
             "height": 64,
             "skinSlot": "hub.sub.bg",
             "children": [
@@ -425,6 +425,33 @@
                 "type": "label",
                 "name": "Sub3Label",
                 "id": "sub3Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 32,
+                "text": "",
+                "styleSlot": "hub.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnSub4",
+            "id": "btnSub4",
+            "widget": {
+              "top": 40,
+              "left": 704
+            },
+            "width": 160,
+            "height": 64,
+            "skinSlot": "hub.sub.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "Sub4Label",
+                "id": "sub4Label",
                 "widget": {
                   "vCenter": true,
                   "left": 0,

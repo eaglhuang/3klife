@@ -98,7 +98,7 @@ import type { OpeningFlowController } from '../../core/systems/OpeningFlowContro
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
-import { ITEM_JOB_CHANGE_ORDER } from '../../core/systems/PlayerInventory';
+import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET } from '../../core/systems/PlayerInventory';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
@@ -264,6 +264,8 @@ export class LobbyScene extends Component {
     private _hallBoard: HallBoardPanelController | null = null;
     private _mercPanelHost: UIScreenPreviewHost | null = null;
     private _mercPanel: MercenaryPanelController | null = null;
+    /** 名將池武將 id（gacha-config hero-pool）；招賢館與傭兵試用招募共用 */
+    private _heroPoolIds: readonly string[] = [];
     private _redFaceHost: UIScreenPreviewHost | null = null;
     private _redFace: RedFaceGalleryController | null = null;
     private _faceMarks: Promise<Record<string, FaceMarks>> | null = null;
@@ -790,6 +792,7 @@ export class LobbyScene extends Component {
             rival: () => this._openRivalDiplomacy(),
             floodBattle: () => this.onClickFloodBattle(),
             generalList: () => this.onClickGeneralList(),
+            mercenary: () => this.openMercenaryPanel(),
             bonding: () => { void this._openBondingSetup(); },
             jobChange: () => this._openJobChange(),
             spiritCodex: () => { void this._openSpiritCodex(); },
@@ -1344,7 +1347,7 @@ export class LobbyScene extends Component {
         this._hallBoardHost.node.active = false;
     }
 
-    /** 傭兵面板（MERC-07）：隱藏掛載，入口待 PM 指定，對外提供 openMercenaryPanel()。 */
+    /** 傭兵面板（MERC-07）：隱藏掛載，入口在城池主選單「武將 → 傭兵結義」（PROG-2-1152），對外提供 openMercenaryPanel()。 */
     private async _mountMercenaryPanel(): Promise<void> {
         this._mercPanel = new MercenaryPanelController({
             mercenaries: () => services().session.mercenaries.mercenaries,
@@ -1365,6 +1368,16 @@ export class LobbyScene extends Component {
                 const result = await services().session.bondMercenaryToRoster(uid, template);
                 return result.ok;
             },
+            trialTickets: () => services().session.itemCount(ITEM_TRIAL_TICKET),
+            hire: async () => {
+                const session = services().session;
+                const taken = new Set([...session.roster.map(g => g.id), ...session.mercenaries.mercenaries.map(m => m.generalId)]);
+                const pool = session.availablePoolGeneralIds(this._heroPoolIds.filter(id => !taken.has(id)));
+                const template = this._generals.find(g => g.id === pool[Math.floor(Math.random() * pool.length)]);
+                if (!template) return null;
+                const result = await session.hireTrialMercenary(`merc-${Date.now()}-${template.id}`, template);
+                return result.ok ? template.name : null;
+            },
         });
         const rowBindings = Array.from({ length: MERC_PANEL_MAX_ROWS }, (_, i) => ({
             buttonId: `btnMercRow${i}`,
@@ -1373,6 +1386,7 @@ export class LobbyScene extends Component {
         this._mercPanelHost = await this._mountPreviewScreenHost('MercenaryPanelHost', 'mercenary-panel-screen', [
             { buttonId: 'btnClose', handler: () => { this._closeMercenaryPanel(); } },
             { buttonId: 'btnMercBond', handler: () => { void this._onClickMercenaryBond(); } },
+            { buttonId: 'btnMercHire', handler: () => { void this._mercPanel?.hireTrial().then(() => this._refreshMercenaryPanel()); } },
             ...rowBindings,
         ]);
         this._mercPanelHost.node.active = false;
@@ -1800,6 +1814,7 @@ export class LobbyScene extends Component {
         const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
         const heroPool = (Array.isArray(gachaConfig) ? gachaConfig : []).find(pool => pool.poolId === 'hero-pool');
         const ids = heroPool?.candidateIds ?? [];
+        this._heroPoolIds = ids;
         const gacha = this._localGachaService;
         const recruit = new RecruitHallController({
             candidates: () => ids.map((id) => this._generals.find((g) => g.id === id)).filter((g): g is GeneralConfig => !!g),
