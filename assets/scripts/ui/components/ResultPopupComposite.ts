@@ -22,6 +22,7 @@ export class ResultPopupComposite extends CompositePanel {
     private _binder: UITemplateBinder | null = null;
     private _isMounted = false;
     private _visible = false;
+    private _description = '';
 
     protected onDestroy(): void {
         this.unmount();
@@ -34,6 +35,7 @@ export class ResultPopupComposite extends CompositePanel {
             this._isMounted = true;
         }
 
+        this._description = result.description;
         this._binder?.setTexts({
             TitleLabel: result.title,
             DescLabel: result.description,
@@ -84,6 +86,13 @@ export class ResultPopupComposite extends CompositePanel {
             description: details ? `${descMap[resultType]}\n${details}` : descMap[resultType],
         });
         void this._applyGeneralAvatar(generalId);
+    }
+
+    /** 結算窗開著時在描述下方追加行（戰後覺醒等非同步結果，PROG-2-1133） */
+    public appendDetails(lines: readonly string[]): void {
+        if (!this._visible || lines.length === 0) return;
+        this._description = [this._description, ...lines].join('\n');
+        this._binder?.setTexts({ DescLabel: this._description });
     }
 
     private async _applyGeneralAvatar(generalId: string | undefined): Promise<void> {
