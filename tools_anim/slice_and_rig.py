@@ -710,22 +710,42 @@ def build_neutral_rig_v2(
             }
         )
 
-        # 若為手掌切件，計算 alpha 重心作為手掌接觸點 hand_f_grip / hand_b_grip
+        # 若為手掌切件，尋找空心拳心孔洞位置（AG-07 綁骨分件圖空心握拳），若無孔洞則取 alpha 重心
         if sid in ("hand_f", "hand_b"):
             crop_arr = t_info["crop"]
             a_ch = crop_arr[..., 3]
-            ys_a, xs_a = np.where(a_ch > 24)
-            if len(xs_a) > 0:
-                w_a = a_ch[ys_a, xs_a].astype(np.float64)
-                palm_sx = tx + float(np.average(xs_a, weights=w_a))
-                palm_sy = ty + float(np.average(ys_a, weights=w_a))
+            bin_m = (a_ch > 24).astype(np.uint8) * 255
+            contours, hierarchy = cv2.findContours(bin_m, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+            hole_found = False
+            hole_cx, hole_cy = 0.0, 0.0
+            if hierarchy is not None and len(hierarchy[0]) > 1:
+                for c_idx, h_node in enumerate(hierarchy[0]):
+                    if h_node[3] >= 0:  # 具有 parent 即為內部孔洞
+                        M_h = cv2.moments(contours[c_idx])
+                        if M_h["m00"] > 4.0:
+                            hole_cx = float(M_h["m10"] / M_h["m00"])
+                            hole_cy = float(M_h["m01"] / M_h["m00"])
+                            hole_found = True
+                            break
+            if hole_found:
+                palm_sx = tx + hole_cx
+                palm_sy = ty + hole_cy
+                grip_note = "hollow fist hole center (AG-07 rigpose specification)"
             else:
-                palm_sx, palm_sy = cx, cy
+                ys_a, xs_a = np.where(a_ch > 24)
+                if len(xs_a) > 0:
+                    w_a = a_ch[ys_a, xs_a].astype(np.float64)
+                    palm_sx = tx + float(np.average(xs_a, weights=w_a))
+                    palm_sy = ty + float(np.average(ys_a, weights=w_a))
+                else:
+                    palm_sx, palm_sy = cx, cy
+                grip_note = "palm alpha centroid contact point"
+
             palm_contacts[f"{sid}_grip"] = {
                 "parentBone": b_name,
                 "sourcePx": [round(palm_sx, 2), round(palm_sy, 2)],
                 "offsetFromBoneSourcePx": [round(palm_sx - b_piv[0], 2), round(palm_sy - b_piv[1], 2)],
-                "note": "palm alpha centroid contact point for weapon grip alignment",
+                "note": grip_note,
             }
 
     head_w = placed_regions.get("head", {}).get("trimRectPx", [0, 0, int(body_h * 0.4), 0])[2]
@@ -864,6 +884,7 @@ def main() -> None:
     ap.add_argument("--masks-dir", help="選填：既有槽位遮罩目錄")
     ap.add_argument("--parts-dir", help="選填：既有切件目錄")
     ap.add_argument("--weapon-image", help="選填：獨立武器 PNG 路徑（若提供，母圖武器標為 reference_only_weapon）")
+    ap.add_argument("--hairtail-image", help="選填：獨立髮尾 PNG 路徑（AG-07 綁骨分件圖規格，母圖不含髮尾或標為 reference_only_hairtail）")
     ap.add_argument("--facing", choices=["auto", "left", "right"], default="auto", help="角色朝向（預設 auto）")
     ap.add_argument("--atlas-width", type=int, default=2048, help="圖集寬度（預設 2048）")
     ap.add_argument("--atlas-height", type=int, default=4096, help="圖集高度（預設 4096）")
@@ -932,6 +953,16 @@ def main() -> None:
                 part_full = ind_weap
                 vis_m = part_full[..., 3] > 0
 
+        # 若指定了獨立髮尾圖 (AG-07)，將母圖切出的髮尾存為 reference_only_hairtail.png，並以獨立髮尾作為正式 hair_tail 切件
+        if sid == "hair_tail" and args.hairtail_image and Path(args.hairtail_image).exists():
+            ref_path = parts_out_dir / "reference_only_hairtail.png"
+            Image.fromarray(part_full, mode="RGBA").save(ref_path)
+            ind_hair = np.array(Image.open(Path(args.hairtail_image).resolve()).convert("RGBA"))
+            ind_hair, _ = clean_transparent_and_marker_noise(ind_hair, alpha_cutoff=args.alpha_cutoff)
+            if ind_hair.shape[:2] == (h, w):
+                part_full = ind_hair
+                vis_m = part_full[..., 3] > 0
+
         part_path = parts_out_dir / f"{sid}.png"
         mask_path = masks_out_dir / f"{sid}.png"
         anim_mask_path = anim_masks_out_dir / f"{sid}.png"
@@ -963,6 +994,43 @@ def main() -> None:
                 "partSha256": sha256_file(part_path),
                 "visiblePixels": int(len(xs_p)),
             }
+
+    # AG-07：評估肢體槽完整度 limb_completeness（可見像素相對估計完整面積 >= 95%）
+    limb_slots = ["arm_upper_f", "arm_lower_f", "arm_upper_b", "arm_lower_b", "thigh_f", "shin_f", "thigh_b", "shin_b"]
+    limb_completeness_report: dict[str, Any] = {}
+    all_limbs_complete_95 = True
+    for l_sid in limb_slots:
+        t_slot = trimmed_parts.get(l_sid, {})
+        crop_arr = t_slot.get("crop")
+        if crop_arr is not None and not t_slot.get("empty", False):
+            vis_px = int((crop_arr[..., 3] > 0).sum())
+            bin_m = (crop_arr[..., 3] > 0).astype(np.uint8) * 255
+            contours, _ = cv2.findContours(bin_m, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            if contours:
+                hull = cv2.convexHull(np.vstack(contours))
+                hull_area = float(cv2.contourArea(hull))
+                est_full_area = max(float(vis_px), hull_area)
+                ratio = vis_px / est_full_area if est_full_area > 0 else 1.0
+            else:
+                est_full_area = float(vis_px)
+                ratio = 1.0
+            pass_95 = ratio >= 0.95
+            if not pass_95:
+                all_limbs_complete_95 = False
+            limb_completeness_report[l_sid] = {
+                "visiblePixels": vis_px,
+                "estimatedFullArea": round(est_full_area, 1),
+                "completenessRatio": round(ratio, 4),
+                "pass95Pct": pass_95,
+            }
+        else:
+            limb_completeness_report[l_sid] = {
+                "visiblePixels": 0,
+                "estimatedFullArea": 0.0,
+                "completenessRatio": 0.0,
+                "pass95Pct": False,
+            }
+            all_limbs_complete_95 = False
 
     # 驗證可見像素唯一歸屬與回組誤差 <= 2
     live_mask = master_rgba[..., 3] > 0
@@ -1159,6 +1227,10 @@ def main() -> None:
             "masksDir": str(masks_out_dir),
             "animationMasksDir": str(anim_masks_out_dir),
             "qaPreviews": qa_paths,
+        },
+        "limbCompleteness": {
+            "pass95Pct": all_limbs_complete_95,
+            "slots": limb_completeness_report,
         },
         "slotSummary": {
             sid: {

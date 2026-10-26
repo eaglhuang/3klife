@@ -1,9 +1,9 @@
 # 3KLife 美術動畫工具組 (`tools_anim`)
 
-本資料夾由 **Antigravity** 開發與維護，對應工單 `AG-01`、`AG-02`、`AG-04`、`AG-05` 與 `AG-06`，提供：
-1. **`slice_and_rig.py`**：AG-02/AG-05 自動切片、圖集打包、`3klife.neutral-rig.v2` 綁點生成與執行期縮放工具。
-2. **`validate_spine.py`**（搭配 `spine_eval_helper.mjs`）：獨立 Spine 4.2 驗證器與軟體光柵化逐格渲染器（支援 H 比例門檻與 `--fail-on`）。
-3. **`run_regression.py`**：雙角色（趙雲 C2 + 張飛 Q3）自動化回歸測試管線（切片 -> Sparkle -> 驗證），輸出兩行 OVERALL。
+本資料夾由 **Antigravity** 開發與維護，對應工單 `AG-01`、`AG-02`、`AG-04`、`AG-05`、`AG-06` 與 `AG-07`，提供：
+1. **`slice_and_rig.py`**：AG-02/AG-05/AG-07 自動切片、圖集打包、`3klife.neutral-rig.v2` 綁點生成、執行期縮放與綁骨專用分件圖支援工具（支援 `--hairtail-image`、`--weapon-image`、空心拳心孔洞握點推導與 `limb_completeness >= 95%` 驗證）。
+2. **`validate_spine.py`**（搭配 `spine_eval_helper.mjs`）：獨立 Spine 4.2 驗證器與軟體光柵化逐格渲染器（支援 H 比例門檻、`arm_continuity`、`facing_consistency`、`weapon_single_piece`、`hair_overlap`、`weapon_edge_clean` 與 `--fail-on all`）。
+3. **`run_regression.py`**：自動化回歸測試管線（趙雲 C2 + 張飛 Q3 + 趙雲 rigpose 待命組），輸出固定 OVERALL 判定。
 
 > **驗證範圍聲明**：本工具組產出之報告皆為離線驗證（官方 `@esotericsoftware/spine-core` 4.2 + 軟體光柵化器），未經 Cocos Creator 實際載入實測前，不得宣稱「已能播放」或「可量產」。
 

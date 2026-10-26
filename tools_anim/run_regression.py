@@ -162,9 +162,37 @@ def main() -> None:
         runtime_height=rt_h,
     )
 
-    print("\n=== 回歸測試兩行 OVERALL 輸出 ===")
+    print("\n=== 回歸測試 OVERALL 輸出 ===")
     print(f"[{c_zy}]: {res_zy}")
     print(f"[{c_zf}]: {res_zf}")
+
+    # 3. 趙雲 C2 綁骨專用分件圖（AG-07 試作圖到位後自動加入第三組）
+    rigpose_dir_candidates = [
+        HERE.parent / "scratch" / "zhaoyun-c2-rigpose",
+        Path(r"C:\Users\User\3KLife\artifacts\scratch\zhaoyun-c2-rigpose"),
+        Path(r"C:\Users\User\.codex\worktrees\zhaoyun-cutout-polish\3KLife\artifacts\scratch\zhaoyun-c2-rigpose"),
+    ]
+    rigpose_dir = next((d for d in rigpose_dir_candidates if (d / "zhaoyun_c2_rigpose.png").exists()), None)
+    if rigpose_dir:
+        rp_img = rigpose_dir / "zhaoyun_c2_rigpose.png"
+        rp_weap = rigpose_dir / "zhaoyun_c2_weapon.png"
+        rp_hair = rigpose_dir / "zhaoyun_c2_hairtail.png"
+        rp_opt = []
+        if rp_weap.exists():
+            rp_opt.extend(["--weapon-image", str(rp_weap)])
+        if rp_hair.exists():
+            rp_opt.extend(["--hairtail-image", str(rp_hair)])
+        c_rp, res_rp = run_pipeline(
+            char_id="zhaoyun_c2_rigpose",
+            img_path=rp_img,
+            lm_path=ZHAOYUN_LM,
+            opt_args=rp_opt,
+            out_base=out_base,
+            runtime_height=rt_h,
+        )
+        print(f"[{c_rp}]: {res_rp}")
+    else:
+        print("[zhaoyun_c2_rigpose]: PENDING (waiting for Codex delivery: rigpose + weapon + hairtail)")
 
 
 if __name__ == "__main__":
