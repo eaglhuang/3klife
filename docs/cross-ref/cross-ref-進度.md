@@ -66,7 +66,7 @@
 | 培育系統.md (doc_spec_0026) | NurtureSystem.ts、TacticLearning.ts、NurtureFlowController.ts（戰法列，PROG-2-1132／1134）；InspiredTacticMap.ts（靈感戰法對應戰法庫，PROG-2-1135） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 家族關係（史實相性）系統.md (doc_spec_0024) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
 | 戰場適性系統.md (doc_spec_0041) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 教官系統（支援卡）.md (doc_spec_0027) | NurtureSystem.ts（inspiredTacticIds）、GameSession.ts（learnTactic 擋法，PROG-2-1134）；InspiredTacticMap.ts（17 個靈感戰法對應現有 8 招戰法庫，PROG-2-1135；逐招獨立戰場效果未做） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 教官系統（支援卡）.md (doc_spec_0027) | NurtureSystem.ts（inspiredTacticIds）、GameSession.ts（learnTactic 擋法，PROG-2-1134）；InspiredTacticMap.ts（17 個靈感戰法對應現有 8 招戰法庫，PROG-2-1135；逐招獨立戰場效果未做）；NpcFriendMentor.ts（friendMentorCard）、NurtureFlowController.ts（setBorrowedMentor）、LobbyScene.ts（_onClickStartBorrow，好友借用入學前，PROG-2-1138） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 正式版劇本文案.md (doc_spec_0004) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
 | 武將壽命系統.md (doc_spec_0018) | GeneralAging.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
 | 武將戰績系統.md (doc_spec_0019) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
@@ -196,6 +196,7 @@
 
 | 日期 | 加權總進度 | 資料來源 | 備註 |
 |---|---|---|---|
+| 2026-10-26 | 38% | 掃描實算（D-4） | 同日覆蓋最新值 |
 | 2026-04-12 | 38% | 掃描實算（D-4） | 同日覆蓋最新值 |
 | 2026-04-10 | 36% | 估算（cross-ref 壓縮與工具化） | 追蹤基礎穩定 |
 | 2026-04-05 | 34% | 估算（戰場資料與 UI 合約補齊） | 核心/主戰場提升 |
