@@ -86,6 +86,7 @@ import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
+import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceGalleryController } from '../core/RedFaceShowcaseController';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
@@ -1354,10 +1355,10 @@ export class LobbyScene extends Component {
             info: (state) => {
                 const general = this._generals.find(g => g.id === state.generalId);
                 return {
-                    // 原主與稀有度尚無正式來源（暫定），待企劃定後替換
+                    // 原主尚無正式來源（暫定）；稀有度與實際結義扣點同源（rarityOfTemplate，PROG-2-1153）
                     originalOwnerName: '原主未定',
                     generalName: general?.name ?? state.generalId ?? '未知武將',
-                    rarity: 'R',
+                    rarity: (general && rarityOfTemplate(general)) ?? 'R',
                 };
             },
             bondPoints: () => services().session.bondPoints,
