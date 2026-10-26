@@ -277,7 +277,7 @@ export interface SeasonAdvancedPayload {
     quarterlyReports?: QuarterlyBattleReportRow[];
     /** 本季他國 AI 來犯、以名冊前 3 強自動迎戰的結算（PROG-2-1088） */
     rivalBattles?: AutoBattleResult[];
-    /** 本季（＝傭兵一日，暫定）試用期滿未結義而離隊的傭兵 uid（PROG-2-1154） */
+    /** 本季（＝傭兵一日，MVP 定案）試用期滿未結義而離隊的傭兵 uid（PROG-2-1154） */
     mercenaryDepartures?: string[];
 }
 
@@ -619,7 +619,7 @@ export class GameSession {
     /**
      * 推進一個遊戲日：試用中傭兵倒數 −1、好感 +10。
      * 倒數已在前一日歸零且仍未結義者，本日離隊、寫入告別事件並開始 30 天冷卻。
-     * 遊戲日觸發：暫定每推進一季過一日（PROG-2-1154，規格為真實每日登入，待定案後改觸發點）。
+     * 遊戲日觸發：MVP 定案每推進一季過一日（PROG-2-1154，2026-10-27 使用者裁定；規格原為真實每日登入，改版只需換觸發點）。
      */
     public async advanceMercenaryDay(): Promise<MercenaryDayReport> {
         const report = this._tickMercenaryDay();
@@ -2171,7 +2171,7 @@ export class GameSession {
         const quarterlyReports = buildQuarterlyBattleReportRows(this._roster.getAll());
         this.recordSeasonJournal(advance.previous, quarterlyReports);
         const rivalBattles = this._tickRivals();
-        // 暫定：一季＝傭兵一日（PROG-2-1154）
+        // MVP 定案：一季＝傭兵一日（PROG-2-1154，使用者裁定）
         const departedUids = this._tickMercenaryDay().events.filter((e) => e.type === 'departed').map((e) => e.uid);
         const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}) };
         if (this._autoSave && this._save) {
