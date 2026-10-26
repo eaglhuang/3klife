@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-26 R193：補 V7，Cocos 3.8.8 實測 sp.Skeleton 播 Claude 產 Spine 4.2 JSON，確認 runtime 版本、IK、drawOrder、mesh／physics
 - 2026-10-26 R192：使用者批准，Blender 暫停解除；D 站 Blender 動作工作台（MCP 代理操作 Q 版素體）＋方案一 Flow 正常比例演員／方案二 Quaternius；V1–V6 分工驗證
 - 2026-10-26 10:05 R191：小豆研究併入工具鏈——Quaternius CC0／CMU 動捕＋自錄 MediaPipe 為動作來源，新增角色無關約束轉接器；Mixamo 不入 AI 流程
 - 2026-10-26 10:20 R190：最高優先為武將標準工具鏈（模板繪圖→自動標點→自動切件→自動綁骨→自動 QA）；驗收以張飛全自動、不手調、≤30 分為準。
