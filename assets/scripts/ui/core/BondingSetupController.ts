@@ -64,12 +64,17 @@ export const BLOCK_REASON_TEXT: Record<BreedingBlockReason, string> = {
 export type BondingMode = 'Standard' | 'Peace_Lineage';
 
 /** 批語面板用的色系中文名 */
+/** 結緣面板名士批語列數（layout SageRow0~2） */
+export const SAGE_LINE_COUNT = 3;
+
 const FACTOR_COLOR_NAME: Record<FactorColor, string> = { blue: '藍', pink: '粉', green: '綠', purple: '紫', white: '白', red: '紅' };
 
 export interface BondingView {
     fatherId: string | null;
     motherId: string | null;
     mode: BondingMode | null;
+    /** 名士批語各列對應的名士 id（sageLine0~2 的小頭像用） */
+    sageIds: string[];
     /** layout 節點 id → 文字 */
     texts: Record<string, string>;
     /** layout 節點 id → 顯示 / 隱藏 */
@@ -110,13 +115,16 @@ export class BondingSetupController {
         return (this._deps.text ?? fallbackBreedText)(key, ...args);
     }
 
-    private _sageRemarkText(fatherId: string, motherId: string): string {
-        if (!this._deps.sageRemarks) return '';
-        const remarks = this._deps.sageRemarks(fatherId, motherId);
-        if (remarks.length === 0) return '名士批語：需先解鎖 2 位名士';
-        return remarks
-            .map((remark) => `${getSage(remark.sageId)?.name ?? remark.sageId}：${FACTOR_COLOR_NAME[remark.color]}${remark.keyword ? `（${remark.keyword}）` : ''}`)
-            .join('\n');
+    /** 名士批語：最多三列，各列一位名士；未解鎖足夠名士時只回提示句 */
+    private _sageRemarks(fatherId: string, motherId: string): { ids: string[]; lines: string[]; hint: string } {
+        if (!this._deps.sageRemarks) return { ids: [], lines: [], hint: '' };
+        const remarks = this._deps.sageRemarks(fatherId, motherId).slice(0, SAGE_LINE_COUNT);
+        if (remarks.length === 0) return { ids: [], lines: [], hint: '名士批語：需先解鎖 2 位名士' };
+        return {
+            ids: remarks.map((remark) => remark.sageId),
+            lines: remarks.map((remark) => `${getSage(remark.sageId)?.name ?? remark.sageId}：${FACTOR_COLOR_NAME[remark.color]}${remark.keyword ? `（${remark.keyword}）` : ''}`),
+            hint: '',
+        };
     }
 
     // ── 清單 ───────────────────────────────────────────────────────────────
@@ -237,6 +245,7 @@ export class BondingSetupController {
             bondPanel: false,
             bondEmptyHint: false,
         };
+        for (let i = 0; i < SAGE_LINE_COUNT; i++) actives[`sageRow${i}`] = false;
         const enabled: Record<string, boolean> = {
             btnCloseBond: true,
             btnPrevFather: fathers.length > 1,
@@ -252,7 +261,7 @@ export class BondingSetupController {
         if (!father || !mother) {
             actives.bondEmptyHint = true;
             Object.assign(texts, parentTexts('father', father, level), parentTexts('mother', mother, level));
-            return { fatherId: father?.id ?? null, motherId: mother?.id ?? null, mode: null, texts, actives, enabled };
+            return { fatherId: father?.id ?? null, motherId: mother?.id ?? null, mode: null, sageIds: [], texts, actives, enabled };
         }
 
         actives.bondPanel = true;
@@ -269,7 +278,9 @@ export class BondingSetupController {
         const preview = buildBreedingPreviewLines(ep);
         texts.epDetail = ['基礎 50', preview.breakdownLine, preview.tagLine].join(' · ');
         texts.conceptionLabel = `受孕率 ${Math.round(conceptionRate(father, mother) * 100)}%`;
-        texts.sageRemarkLines = this._sageRemarkText(father.id, mother.id);
+        const sage = this._sageRemarks(father.id, mother.id);
+        texts.sageRemarkLines = sage.hint;
+        sage.lines.forEach((line, i) => { texts[`sageLine${i}`] = line; actives[`sageRow${i}`] = true; });
         texts.costLabel = this._t('ui.breed.confirm', father.name, String(FATHER_VIGOR_COST), mother.name, String(MOTHER_VIGOR_COST));
         texts.eligibilityLabel = eligibility.ok
             ? `${father.name} 與 ${mother.name} 良緣天成，可以結緣`
@@ -282,7 +293,7 @@ export class BondingSetupController {
                 : '血緣：3 代內無共同祖先';
         enabled.btnConfirmBond = eligibility.ok;
 
-        return { fatherId: father.id, motherId: mother.id, mode, texts, actives, enabled };
+        return { fatherId: father.id, motherId: mother.id, mode, sageIds: sage.ids, texts, actives, enabled };
     }
 
     // ── 內部 ───────────────────────────────────────────────────────────────
