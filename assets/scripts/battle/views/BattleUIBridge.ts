@@ -12,7 +12,7 @@
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
-import { autoResolveOutcome } from '../runtime/BattleAutoResolve';
+import { applyOpeningWinGuarantee, autoResolveOutcome } from '../runtime/BattleAutoResolve';
 import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance, localizedMilestoneName } from '../../core/systems/BattleRecordStats';
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
@@ -541,7 +541,10 @@ export class BattleUIBridge {
       troops: Array.from(state.units.values()).filter((u) => u.faction === faction && !u.isDead()),
       fortressHp,
     });
-    const outcome = autoResolveOutcome(side(Faction.Player, state.playerFortressHp), side(Faction.Enemy, state.enemyFortressHp), Math.random);
+    const outcome = applyOpeningWinGuarantee(
+      autoResolveOutcome(side(Faction.Player, state.playerFortressHp), side(Faction.Enemy, state.enemyFortressHp), Math.random),
+      services().session.firstBattleCleared,
+    );
     this.appendLog(`自動模擬：我方戰力 ${outcome.playerPower}，敵方戰力 ${outcome.enemyPower}`);
     state.battleEndAnnounced = true;
     services().event.emit(EVENT_NAMES.BattleEnded, { result: outcome.result });
