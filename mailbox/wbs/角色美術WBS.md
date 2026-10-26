@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 07:10 Claude：R264 趙雲 torso 幾何（AG-23 0%）與質感通過，但為正面對稱畫法，退回改朝右 3/4；要求附套遮罩前的膠囊外占比；肩甲同樣 3/4。
 - 2026-10-27 04:40 Claude：AG-23 小修 b37bc3955 驗收通過（16/16；延伸讀 hiddenExtensionH、scopeMarginPx／gripTolerancePx 入 JSON、前後手改 endswith），AG-23 結案。
 - 2026-10-27 04:30 AG-23 小修完成：腕部往肘延伸改讀 JSON hiddenExtensionH×H（0.03H 動態計算）；JSON layeredSlots 補入 scopeMarginPx: 12 與 gripTolerancePx: 12；前後手判斷嚴格化為 endswith("_f")；單元測試 49/49 OK、零硬編碼 2/2 OK（b37bc3955）。
 - 2026-10-27 04:25 Claude：AG-23 單槽範圍檢查驗收通過（16/16，手半徑讀 JSON、肩甲圈算出），請改讀 hiddenExtensionH／邊距常數；R263 告知 Codex v3.5 不改 JSON、torso/pauldron 候選先跑 AG-23。
