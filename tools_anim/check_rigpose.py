@@ -34,6 +34,86 @@ def load_canonical_spec() -> dict[str, Any]:
     return json.loads(SPEC_JSON_PATH.read_text(encoding="utf-8"))
 
 
+def generate_ownership_and_separation_masks(
+    spec: dict[str, Any],
+    body_type: str,
+    w: int,
+    h: int,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """AG-19: 產出分開所有權的三張遮罩 (互不重疊)：
+    1. arm_f_mask: 前肢膠囊 (扣除軀幹與分離帶)
+    2. torso_mask: 軀幹膠囊
+    3. band_mask: 介於兩者之間寬度為 minGapPx.arm_to_torso (20px) 必須清空的分離帶
+    """
+    joints = spec.get("joints", {})
+
+    def get_j(name: str, def_xy: tuple[float, float]) -> tuple[float, float]:
+        j = joints.get(name, {})
+        return float(j.get("x", def_xy[0])), float(j.get("y", def_xy[1]))
+
+    neck = get_j("neck", (1030, 880))
+    waist = get_j("waist", (1024, 1130))
+    pelvis = get_j("pelvis", (1024, 1450))
+    shoulder_f = get_j("shoulder_f", (1120, 925))
+    elbow_f = get_j("elbow_f", (1230, 1080))
+    wrist_f = get_j("wrist_f", (1330, 1200))
+
+    # 1. 軀幹多邊形
+    torso_im = Image.new("L", (w, h), 0)
+    draw_t = ImageDraw.Draw(torso_im)
+    torso_poly = [
+        (neck[0] - 120, neck[1]),
+        (neck[0] + 120, neck[1]),
+        (waist[0] + 80, waist[1]),
+        (pelvis[0] + 110, pelvis[1]),
+        (pelvis[0] - 110, pelvis[1]),
+        (waist[0] - 80, waist[1]),
+    ]
+    draw_t.polygon(torso_poly, fill=255)
+    torso_mask = np.array(torso_im) > 128
+
+    # 2. 分離帶 (y: 1020..1120，在軀幹膠囊右緣向外擴展 minGapPx 寬度)
+    min_gap = int(spec.get("minGapPx", {}).get("arm_to_torso", 20))
+    band_mask = np.zeros((h, w), dtype=bool)
+    for y in range(1020, 1120):
+        row_t = np.where(torso_mask[y])[0]
+        right_t = int(row_t.max()) if len(row_t) > 0 else 1104
+        band_mask[y, right_t + 1 : right_t + 1 + min_gap] = True
+
+    # 3. 前肢膠囊 (前上臂與前下臂)
+    arm_im = Image.new("L", (w, h), 0)
+    draw_a = ImageDraw.Draw(arm_im)
+
+    def render_cap(draw: ImageDraw.ImageDraw, p0: tuple[float, float], p1: tuple[float, float], rad: float):
+        x0, y0 = p0
+        x1, y1 = p1
+        dx, dy = x1 - x0, y1 - y0
+        dist = math.hypot(dx, dy)
+        if dist < 1e-4:
+            draw.ellipse([x0 - rad, y0 - rad, x0 + rad, y0 + rad], fill=255)
+            return
+        ux = -dy / dist * rad
+        uy = dx / dist * rad
+        poly = [
+            (x0 + ux, y0 + uy),
+            (x1 + ux, y1 + uy),
+            (x1 - ux, y1 - uy),
+            (x0 - ux, y0 - uy),
+        ]
+        draw.polygon(poly, fill=255)
+        draw.ellipse([x0 - rad, y0 - rad, x0 + rad, y0 + rad], fill=255)
+        draw.ellipse([x1 - rad, y1 - rad, x1 + rad, y1 + rad], fill=255)
+
+    render_cap(draw_a, shoulder_f, elbow_f, 45.0)
+    render_cap(draw_a, elbow_f, wrist_f, 40.0)
+    raw_arm_mask = np.array(arm_im) > 128
+
+    # 扣除軀幹與分離帶，確保三者絕對互不重疊
+    arm_f_mask = raw_arm_mask & (~torso_mask) & (~band_mask)
+
+    return arm_f_mask, torso_mask, band_mask
+
+
 def build_arm_torso_capsule_mask(spec: dict[str, Any], w: int, h: int) -> np.ndarray:
     """AG-18: 建立手臂與軀幹膠囊的二值遮罩 (膠囊內為 True，腰部收窄以保留合法負空間通道)"""
     mask_im = Image.new("L", (w, h), 0)
@@ -477,6 +557,40 @@ def run_rigpose_inspection(
         overlap_mask_path = str(mask_out_file)
         checks["min_gap_arm_torso"]["overlapMaskPath"] = overlap_mask_path
 
+    # AG-19: 若 gap 判 FAIL，另外輸出三張分開所有權的 2048x2048 遮罩 PNG
+    arm_cap_mask_path = None
+    torso_cap_mask_path = None
+    band_mask_path = None
+    separation_band_opaque_count = 0
+
+    if not arm_gap_pass:
+        b_type = "standard"
+        if meta_path and meta_path.exists():
+            try:
+                b_type = json.loads(meta_path.read_text(encoding="utf-8")).get("bodyType", "standard")
+            except Exception:
+                pass
+
+        arm_m, torso_m, band_m = generate_ownership_and_separation_masks(spec, b_type, w, h)
+
+        arm_file = out_dir / "arm_f_capsule_mask.png"
+        torso_file = out_dir / "torso_capsule_mask.png"
+        band_file = out_dir / "arm_torso_separation_band.png"
+
+        Image.fromarray((arm_m.astype(np.uint8) * 255)).save(arm_file)
+        Image.fromarray((torso_m.astype(np.uint8) * 255)).save(torso_file)
+        Image.fromarray((band_m.astype(np.uint8) * 255)).save(band_file)
+
+        arm_cap_mask_path = str(arm_file)
+        torso_cap_mask_path = str(torso_file)
+        band_mask_path = str(band_file)
+        separation_band_opaque_count = int(((img_arr[..., 3] > 16) & band_m).sum())
+
+        checks["min_gap_arm_torso"]["armCapsuleMask"] = arm_cap_mask_path
+        checks["min_gap_arm_torso"]["torsoCapsuleMask"] = torso_cap_mask_path
+        checks["min_gap_arm_torso"]["armTorsoSeparationBandMask"] = band_mask_path
+        checks["min_gap_arm_torso"]["separationBandOpaquePixels"] = separation_band_opaque_count
+
     # 7.2 兩腿 (y 在 1480-1620 檢查 x=980-1060 透明列)
     gap_legs_box = gap_arr[1480:1620, 980:1060, 3] > 16
     leg_col_has_pixel = gap_legs_box.any(axis=0)
@@ -640,6 +754,10 @@ def run_rigpose_inspection(
         "canSnap": (overall_tier in ["PASS", "SNAP"]),
         "scaleAndTranslateCorrection": scale_correction,
         "armTorsoOverlapMask": overlap_mask_path,
+        "armCapsuleMask": arm_cap_mask_path,
+        "torsoCapsuleMask": torso_cap_mask_path,
+        "armTorsoSeparationBandMask": band_mask_path,
+        "separationBandOpaquePixels": separation_band_opaque_count,
         "gapPassedOnlyAfterHairExclusion": gap_passed_only_after_hair,
         "checks": checks,
         "overlayPath": str(overlay_path),
