@@ -460,10 +460,11 @@
       "name": "hand_f",
       "parent": "arm_lower_f",
       "pivotCanvasPx": [
-        1365,
-        1225
+        1330,
+        1180
       ],
-      "note": "樞紐＝拳心孔中心（grip_A／grip_B），不是手腕"
+      "note": "樞紐＝拳心孔中心（grip_A／grip_B），不是手腕",
+      "pivotNote": "v3.18（2026-10-28）：hand_f 樞紐由拳心 [1365,1225] 改到實際手腕 joints.wrist_f [1330,1180]。理由：Sparkle v11 實際動作 hand_f 轉到 50.67°，以拳心為樞紐時腕口繞大圓弧，±30° 裂縫 301/245 px、±51° 364/329 px，前臂延伸 48 px 會露在手外約 41.5 px（Codex R313 量測）。weapon 仍掛在 hand_f 下、樞紐維持 [1365,1225]，雙手握點不變。"
     },
     {
       "name": "pauldron_f",
