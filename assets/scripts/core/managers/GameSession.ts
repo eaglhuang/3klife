@@ -68,6 +68,10 @@ import {
     type DailyNewsState, type PlayerLogEntry, type PlayerLogType,
 } from '../systems/DailyNewsEngine';
 import { shouldTriggerOfflineInteraction } from '../systems/OfflineInteractionTrigger';
+import {
+    normalizeOfflineInteractionLog, offlineInteractionCandidates, offlineInteractionTags, pickOfflineInteraction,
+    type OfflineInteractionCandidate,
+} from '../systems/OfflineInteractionEvents';
 import { buildJournalEvent, type JournalEventKind, type JournalEventSubject } from '../systems/JournalEvents';
 import {
     EMPTY_MORNING_REPORT, markMorningReportRead, morningReportLines, normalizeMorningReportState, refreshMorningReport,
@@ -1350,6 +1354,7 @@ export class GameSession {
         this._morningReport = { ...EMPTY_MORNING_REPORT, items: [] };
         this._dispatch = normalizeDispatchState(EMPTY_DISPATCH_STATE);
         this._offlineBattleSnapshots = [];
+        this._offlineInteractionLog = [];
         this._tournament = null;
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
@@ -1525,6 +1530,8 @@ export class GameSession {
     }
 
     private _offlineBattleSnapshots: OfflineBattleSnapshot[] = [];
+    /** 離線互動紀錄 key（PROG-2-1193） */
+    private _offlineInteractionLog: string[] = [];
     private _tournament: TournamentState | null = null;
 
     /** 名將挑戰賽：首次存取時開季，過季自動結算 rollover（PROG-2-1190，doc_spec_0007 §F） */
@@ -1806,7 +1813,7 @@ export class GameSession {
 
     /**
      * 離線互動觸發（JRN-04）：離線時長＝現在減讀檔時的存檔時間。
-     * 未讀晨報數未傳時用實際未讀數（PROG-2-1174）；衝突標籤目前沒有來源，呼叫端先傳空值（PM 暫定）。
+     * 未讀晨報數未傳時用實際未讀數（PROG-2-1174）；衝突標籤未傳時用名冊武將間的動態關係類型（PROG-2-1193）。
      */
     public offlineInteractionDue(nowMs: number, context: { unreadMorningReport?: number; activeConflictTags?: readonly string[] } = {}): boolean {
         const savedAt = this._loadedSavedAtMs;
@@ -1814,9 +1821,33 @@ export class GameSession {
         return shouldTriggerOfflineInteraction({
             offlineHours: (nowMs - savedAt) / 3_600_000,
             unreadMorningReport: context.unreadMorningReport ?? unreadMorningReportCount(this._morningReport),
-            activeConflictTags: context.activeConflictTags ?? [],
+            activeConflictTags: context.activeConflictTags ?? offlineInteractionTags(this._offlineInteractionCandidates()),
             cooldowns: [],
         });
+    }
+
+    /** 離線互動候選：名冊在世武將之間的動態關係 */
+    private _offlineInteractionCandidates(): OfflineInteractionCandidate[] {
+        const generals = this._roster.getAll().filter((g) => g.status !== 'dead').map((g) => ({ id: g.id, name: g.name }));
+        return offlineInteractionCandidates(this.dynamicRelations.snapshot(), generals);
+    }
+
+    /** 離線互動紀錄（唯讀副本） */
+    public get offlineInteractionLog(): string[] {
+        return this._offlineInteractionLog.slice();
+    }
+
+    /**
+     * 離線互動（JRN-04，PROG-2-1193）：觸發成立時挑一組角色寫 INTERACTION 日誌；
+     * 登入窗以讀檔時的存檔時間識別，同窗同一對角色只排 1 則。回傳寫入的摘要，沒寫回 null。
+     */
+    public runOfflineInteraction(nowMs: number): string | null {
+        if (!this.offlineInteractionDue(nowMs)) return null;
+        const event = pickOfflineInteraction(this._offlineInteractionCandidates(), this._offlineInteractionLog, `W${this._loadedSavedAtMs}`,
+            this._random, this._journal.entries.length + 1, seasonJournalTimestamp(this._clock.state));
+        if (!event || !this.recordJournal(event.entry).ok) return null;
+        this._offlineInteractionLog = event.log;
+        return event.entry.summary;
     }
 
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
@@ -1826,6 +1857,8 @@ export class GameSession {
         this._dailyNews = refreshDailyNews(this._dailyNews, this._playerLogs, this._roster.getAll().map((g) => ({ name: g.name })), epochMs, this._random);
         // 派遣：離線期間到期的任務先結算寫日誌，才會進這次晨報（PROG-2-1178）
         this.settleDispatchJobs(epochMs, grantGold);
+        // 離線互動：寫進日誌後才產生晨報，讓晨報可挑到（PROG-2-1193）
+        this.runOfflineInteraction(epochMs);
         // 晨報：上次登入後新增的日誌挑高優先條目（PROG-2-1174）
         this._morningReport = refreshMorningReport(this._morningReport, this._journal.entries, this._officerState.currentTier);
     }
@@ -3409,8 +3442,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3430,6 +3463,7 @@ export class GameSession {
         }
         if (this._offlineBattleSnapshots.length > 0) fields.offlineBattleSnapshots = this.offlineBattleSnapshots;
         if (this._tournament) fields.tournament = JSON.parse(JSON.stringify(this._tournament)) as TournamentState;
+        if (this._offlineInteractionLog.length > 0) fields.offlineInteractionLog = this._offlineInteractionLog.slice();
         if (this._sandtableUnlockHistory.length > 0) fields.sandtableUnlockHistory = [...this._sandtableUnlockHistory];
         if (this._startingTalisman !== null) fields.startingTalisman = this.startingTalisman!;
         if (this._familySystemUnlockedFlag) fields.familySystemUnlocked = true;
@@ -3453,6 +3487,7 @@ export class GameSession {
         this._dispatch = normalizeDispatchState(snapshot.generalDispatch);
         this._offlineBattleSnapshots = normalizeOfflineBattleSnapshots(snapshot.offlineBattleSnapshots);
         this._tournament = normalizeTournamentState(snapshot.tournament);
+        this._offlineInteractionLog = normalizeOfflineInteractionLog(snapshot.offlineInteractionLog);
         this._sandtableUnlockHistory = normalizeUnlockHistory(snapshot.sandtableUnlockHistory);
         this._familySystemUnlockedFlag = snapshot.familySystemUnlocked === true;
         this._recordSandtableUnlockReached();
