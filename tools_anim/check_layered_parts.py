@@ -317,6 +317,65 @@ def build_slot_scope_mask(
     return None, "unsupported"
 
 
+def check_grip_enclosure_rays(
+    h_arr: np.ndarray,
+    exp_pt: tuple[float, float],
+    max_ray_dist_px: float = 40.0,
+    alpha_thresh: int = 128,
+    min_hits_required: int = 6,
+    inner_box_radius_px: float = 12.0,
+) -> dict[str, Any]:
+    """
+    AG-38: gripRegistration 改量「拳頭是否包住握點」。
+    從握點往 8 個方向 (每 45°) 射線，在 40 px 內碰到 hand alpha >= 128 的方向數，至少 6/8 才算 PASS。
+    同時量測握點 +/-12 px 內的覆蓋率 (只輸出，不判定)。
+    """
+    h, w = h_arr.shape[:2]
+    gx, gy = exp_pt
+    angles_deg = [0, 45, 90, 135, 180, 225, 270, 315]
+    hits_detail: dict[str, Any] = {}
+    hits_count = 0
+
+    for deg in angles_deg:
+        rad = math.radians(deg)
+        cos_a = math.cos(rad)
+        sin_a = math.sin(rad)
+        hit = False
+        hit_dist = None
+        for step in range(1, int(max_ray_dist_px) + 1):
+            px = int(round(gx + step * cos_a))
+            py = int(round(gy + step * sin_a))
+            if 0 <= px < w and 0 <= py < h:
+                if h_arr[py, px, 3] >= alpha_thresh:
+                    hit = True
+                    hit_dist = step
+                    break
+        hits_detail[f"{deg}deg"] = {"hit": hit, "distancePx": hit_dist}
+        if hit:
+            hits_count += 1
+
+    enclosure_pass = (hits_count >= min_hits_required)
+
+    # 握點 +/-12 px 覆蓋率 (以半徑 12 px 圓盤量測)
+    y_grid, x_grid = np.ogrid[:h, :w]
+    disk_12_m = ((x_grid - gx) ** 2 + (y_grid - gy) ** 2) <= (inner_box_radius_px ** 2)
+    disk_12_tot = max(1, int(disk_12_m.sum()))
+    disk_12_cov = int((disk_12_m & (h_arr[..., 3] > 0)).sum())
+    cov_12_pct = (disk_12_cov / disk_12_tot) * 100.0
+
+    return {
+        "pass": enclosure_pass,
+        "raysHit": hits_count,
+        "raysTotal": len(angles_deg),
+        "minRaysRequired": min_hits_required,
+        "rayMaxDistancePx": max_ray_dist_px,
+        "rayAlphaThreshold": alpha_thresh,
+        "rayHitsDetail": hits_detail,
+        "coverage12pxPct": round(cov_12_pct, 1),
+        "coverage12pxPixels": disk_12_cov,
+        "coverage12pxTotalPixels": disk_12_tot,
+    }
+
 def find_fist_hole_center(hand_arr: np.ndarray, expected_pt: tuple[float, float]) -> tuple[bool, tuple[float, float], float]:
     """尋找空心拳孔中心"""
     alpha = hand_arr[..., 3]
@@ -1189,40 +1248,45 @@ def run_layered_parts_inspection(
             slot_reports["hand_f"]["tier"] = "FAIL"
             overall_pass = False
 
-        # AG-36: hand_f gripRegistration (建議級檢查，形心到握點距離 <= 0.02H = 32px，24px 覆蓋率)
+        # AG-38: hand_f gripRegistration (判定改為 8 方向射線拳孔包覆 >= 6/8，形心僅供參考)
         h_alpha = h_arr[..., 3]
         h_ys, h_xs = np.where(h_alpha > 0)
         if len(h_xs) > 0:
             c_x = float(np.mean(h_xs))
             c_y = float(np.mean(h_ys))
             c_dist = float(math.hypot(c_x - exp_pt[0], c_y - exp_pt[1]))
-            c_pass = (c_dist <= max_grip_reg_dist)
 
-            ah, aw = h_alpha.shape
-            y_grid, x_grid = np.ogrid[:ah, :aw]
-            grip_disk_m = ((x_grid - exp_pt[0]) ** 2 + (y_grid - exp_pt[1]) ** 2) <= (grip_reg_radius ** 2)
-            grip_disk_tot = max(1, int(grip_disk_m.sum()))
-            grip_cov_px = int((grip_disk_m & (h_alpha > 0)).sum())
-            grip_cov_pct = (grip_cov_px / grip_disk_tot) * 100.0
+            enc_res = check_grip_enclosure_rays(
+                h_arr=h_arr,
+                exp_pt=exp_pt,
+                max_ray_dist_px=40.0,
+                alpha_thresh=128,
+                min_hits_required=6,
+                inner_box_radius_px=12.0,
+            )
+            reg_pass = enc_res["pass"]
+
+            summary_msg = (
+                f"拳孔包覆={enc_res['raysHit']}/8方向 (門檻>=6/8, 半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [PASS]"
+                if reg_pass
+                else f"拳孔未包覆={enc_res['raysHit']}/8方向 < 6/8 (半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [ADVISORY]"
+            )
 
             slot_reports["hand_f"]["checks"]["gripRegistration"] = {
-                "pass": c_pass,
-                "tier": "PASS" if c_pass else "ADVISORY",
+                "pass": reg_pass,
+                "tier": "PASS" if reg_pass else "ADVISORY",
                 "advisory": True,
+                "enclosure": enc_res,
+                "raysHit": enc_res["raysHit"],
+                "raysTotal": enc_res["raysTotal"],
+                "minRaysRequired": enc_res["minRaysRequired"],
+                "rayMaxDistancePx": enc_res["rayMaxDistancePx"],
+                "coverage12pxPct": enc_res["coverage12pxPct"],
                 "centroid": [round(c_x, 1), round(c_y, 1)],
                 "targetGrip": list(exp_pt),
                 "distancePx": round(c_dist, 1),
                 "maxDistancePx": round(max_grip_reg_dist, 1),
-                "radiusPx": grip_reg_radius,
-                "coveredPixels": grip_cov_px,
-                "diskTotalPixels": grip_disk_tot,
-                "coveragePct": round(grip_cov_pct, 1),
-                "detail": (
-                    f"形心到握點距離={c_dist:.1f}px (門檻={max_grip_reg_dist:.1f}px, 0.02H), "
-                    f"{grip_reg_radius:.0f}px覆蓋率={grip_cov_pct:.1f}% ({grip_cov_px}/{grip_disk_tot}) [ADVISORY]"
-                    if not c_pass
-                    else f"形心到握點距離={c_dist:.1f}px <= {max_grip_reg_dist:.1f}px, 覆蓋率={grip_cov_pct:.1f}%"
-                ),
+                "detail": summary_msg,
             }
 
     if "hand_b" in loaded_parts and not slot_reports["hand_b"].get("empty"):
@@ -1245,40 +1309,45 @@ def run_layered_parts_inspection(
             slot_reports["hand_b"]["tier"] = "FAIL"
             overall_pass = False
 
-        # AG-36: hand_b gripRegistration (建議級檢查)
+        # AG-38: hand_b gripRegistration (判定改為 8 方向射線拳孔包覆 >= 6/8，形心僅供參考)
         h_alpha = h_arr[..., 3]
         h_ys, h_xs = np.where(h_alpha > 0)
         if len(h_xs) > 0:
             c_x = float(np.mean(h_xs))
             c_y = float(np.mean(h_ys))
             c_dist = float(math.hypot(c_x - exp_pt[0], c_y - exp_pt[1]))
-            c_pass = (c_dist <= max_grip_reg_dist)
 
-            ah, aw = h_alpha.shape
-            y_grid, x_grid = np.ogrid[:ah, :aw]
-            grip_disk_m = ((x_grid - exp_pt[0]) ** 2 + (y_grid - exp_pt[1]) ** 2) <= (grip_reg_radius ** 2)
-            grip_disk_tot = max(1, int(grip_disk_m.sum()))
-            grip_cov_px = int((grip_disk_m & (h_alpha > 0)).sum())
-            grip_cov_pct = (grip_cov_px / grip_disk_tot) * 100.0
+            enc_res = check_grip_enclosure_rays(
+                h_arr=h_arr,
+                exp_pt=exp_pt,
+                max_ray_dist_px=40.0,
+                alpha_thresh=128,
+                min_hits_required=6,
+                inner_box_radius_px=12.0,
+            )
+            reg_pass = enc_res["pass"]
+
+            summary_msg = (
+                f"拳孔包覆={enc_res['raysHit']}/8方向 (門檻>=6/8, 半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [PASS]"
+                if reg_pass
+                else f"拳孔未包覆={enc_res['raysHit']}/8方向 < 6/8 (半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [ADVISORY]"
+            )
 
             slot_reports["hand_b"]["checks"]["gripRegistration"] = {
-                "pass": c_pass,
-                "tier": "PASS" if c_pass else "ADVISORY",
+                "pass": reg_pass,
+                "tier": "PASS" if reg_pass else "ADVISORY",
                 "advisory": True,
+                "enclosure": enc_res,
+                "raysHit": enc_res["raysHit"],
+                "raysTotal": enc_res["raysTotal"],
+                "minRaysRequired": enc_res["minRaysRequired"],
+                "rayMaxDistancePx": enc_res["rayMaxDistancePx"],
+                "coverage12pxPct": enc_res["coverage12pxPct"],
                 "centroid": [round(c_x, 1), round(c_y, 1)],
                 "targetGrip": list(exp_pt),
                 "distancePx": round(c_dist, 1),
                 "maxDistancePx": round(max_grip_reg_dist, 1),
-                "radiusPx": grip_reg_radius,
-                "coveredPixels": grip_cov_px,
-                "diskTotalPixels": grip_disk_tot,
-                "coveragePct": round(grip_cov_pct, 1),
-                "detail": (
-                    f"形心到握點距離={c_dist:.1f}px (門檻={max_grip_reg_dist:.1f}px, 0.02H), "
-                    f"{grip_reg_radius:.0f}px覆蓋率={grip_cov_pct:.1f}% ({grip_cov_px}/{grip_disk_tot}) [ADVISORY]"
-                    if not c_pass
-                    else f"形心到握點距離={c_dist:.1f}px <= {max_grip_reg_dist:.1f}px, 覆蓋率={grip_cov_pct:.1f}%"
-                ),
+                "detail": summary_msg,
             }
 
     # 依據 AG-22 動態推導關節列表
