@@ -513,6 +513,8 @@ export class GameSession {
     private _legendaryMentoringUsedIds: string[] = [];
     /** 結緣成功的本機端紀錄（BRD-12）；隨既有玩家存檔保存（PROG-2-1146） */
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
+    /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生時寫入；舊檔以出生紀錄推導。 */
+    private _familySystemUnlockedFlag = false;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 來投時依 uid 查回的武將配置（generals.json）；大廳載入後由 setGeneralTemplates 注入 */
@@ -1139,8 +1141,14 @@ export class GameSession {
     /** 出生紀錄以子嗣 UID 去重並複製；結緣確認流程會在此之後呼叫既有 save。 */
     public recordBreedingBirth(record: BreedingBirthRecord): void {
         this._breedingBirthRecords = normalizeBreedingBirthRecords([...this._breedingBirthRecords, record]);
+        this._familySystemUnlockedFlag = true;
         this.recordPlayerLog('GENERAL_BORN');
         this._recordEventJournal('GENERAL_BORN', this._journalSubjects([record.session.Father_UID, record.session.Mother_UID]));
+    }
+
+    /** 世家系統是否已解鎖：第一位子嗣誕生後為真；讀取舊檔時有出生紀錄也視為已解鎖。 */
+    public get familySystemUnlocked(): boolean {
+        return this._familySystemUnlockedFlag || this._breedingBirthRecords.length > 0;
     }
 
     /** 本局已記下的結緣子嗣紀錄（回傳複本，外部改動不影響內部） */
@@ -1254,6 +1262,7 @@ export class GameSession {
         this._legacyCount = 0;
         this._legendaryMentoringUsedIds = [];
         this._breedingBirthRecords = [];
+        this._familySystemUnlockedFlag = false;
         this._officerState = initialOfficerState();
         this._sandtableMarkerTerritories = [];
         this._sandtableUnlockHistory = [];
@@ -3132,8 +3141,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory' | 'familySystemUnlocked'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory' | 'familySystemUnlocked'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3152,6 +3161,7 @@ export class GameSession {
             fields.generalDispatch = this.dispatchState;
         }
         if (this._sandtableUnlockHistory.length > 0) fields.sandtableUnlockHistory = [...this._sandtableUnlockHistory];
+        if (this._familySystemUnlockedFlag) fields.familySystemUnlocked = true;
         return fields;
     }
 
@@ -3171,6 +3181,7 @@ export class GameSession {
         this._morningReport = normalizeMorningReportState(snapshot.morningReport);
         this._dispatch = normalizeDispatchState(snapshot.generalDispatch);
         this._sandtableUnlockHistory = normalizeUnlockHistory(snapshot.sandtableUnlockHistory);
+        this._familySystemUnlockedFlag = snapshot.familySystemUnlocked === true;
         this._recordSandtableUnlockReached();
     }
 

@@ -124,6 +124,7 @@ import { SolidBackground } from '../components/SolidBackground';
 import { ToastMessage } from '../components/ToastMessage';
 import { applyUIPreviewBinderState } from '../core/UIPreviewStateApplicator';
 import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPayload } from '../core/SpiritFamilyOverviewRoute';
+import { familyOverviewHotspotVisible } from '../../core/systems/FamilyOverviewHotspot';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
@@ -3065,6 +3066,7 @@ export class LobbyScene extends Component {
         if (spiritFamilyOverviewButton) {
             spiritFamilyOverviewButton.node.off(Button.EventType.CLICK, this.onClickSpiritFamilyOverview, this);
             spiritFamilyOverviewButton.node.on(Button.EventType.CLICK, this.onClickSpiritFamilyOverview, this);
+            spiritFamilyOverviewButton.node.active = familyOverviewHotspotVisible(services().session.familySystemUnlocked);
         }
 
         this._bindLobbyDock(binder);

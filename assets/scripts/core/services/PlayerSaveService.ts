@@ -150,6 +150,8 @@ export interface PlayerSaveSnapshot {
     generalDispatch?: DispatchState;
     /** 世界沙盤解鎖歷史（HALL-08）：只增不減，天下重組後不倒退；只在有紀錄時寫入；舊檔沒有時為空；版號不升 */
     sandtableUnlockHistory?: SandtableStageId[];
+    /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生後寫入；只寫 true；舊檔沒有時為未解鎖 */
+    familySystemUnlocked?: boolean;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -515,6 +517,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.morningReport !== undefined ? { morningReport: normalizeMorningReportState(snapshot.morningReport) } : {}),
         ...(snapshot.generalDispatch !== undefined ? { generalDispatch: normalizeDispatchState(snapshot.generalDispatch) } : {}),
         ...(snapshot.sandtableUnlockHistory !== undefined ? { sandtableUnlockHistory: normalizeUnlockHistory(snapshot.sandtableUnlockHistory) } : {}),
+        ...(snapshot.familySystemUnlocked === true ? { familySystemUnlocked: true } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
