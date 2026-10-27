@@ -27,6 +27,7 @@ import { burstRateAtStar, MENTOR_STAR_TABLE, mentorStarPerks } from './MentorBre
 import { inspireEventsFromSupport, InspireEvent } from './MentorInspiration';
 import { surnameOf } from './VirtualAncestorGenerator';
 import { findTriggeredSynergy, synergyTpBonus } from './MentorSynergy';
+import { trainingGainBreakdown } from './TrainingGainFormula';
 
 export const NURTURE_TOTAL_ROUNDS = 36;
 /** MCQ Q48：固定 6 教官槽，入學快照鎖定 */
@@ -350,8 +351,19 @@ export function computeStatGain(
     const onSlot = session.mentors.filter((mentor) => session.mentorSlots[mentor.id] === kind);
     const synergyBonus = Math.max(0, onSlot.length - 1) * SYNERGY_BONUS_PER_EXTRA_MENTOR;
     const burst = onSlot.some((mentor) => mentor.specialty === kind);
-    const raw = base * (1 + mentorBonus) * (1 + synergyBonus) * (burst ? MENTOR_BURST_MULTIPLIER : 1) * session.growthModifier;
-    return { base, mentorBonus, synergyBonus, burst, growthModifier: session.growthModifier, gain: Math.max(1, Math.round(raw)) };
+    // 走 FORM-01 總公式（TrainingGainFormula）：教官加值進加法區、資質即 growthModifier、
+    // 同格協力走陪伴乘區、傾囊相授走傾囊乘區；運勢與人數補正尚無來源，以中性值帶入。
+    const breakdown = trainingGainBreakdown({
+        base,
+        cardBonuses: session.mentors.map((mentor) => base * mentorBonusFor(mentor, kind)),
+        generalGrowth: session.growthModifier - 1,
+        baseMorale: 0,
+        moraleBoosts: [],
+        trainingBoosts: [synergyBonus],
+        friendshipBursts: burst ? [MENTOR_BURST_MULTIPLIER - 1] : [],
+        extraCrowd: 0,
+    });
+    return { base, mentorBonus, synergyBonus, burst, growthModifier: session.growthModifier, gain: Math.max(1, Math.round(breakdown.gain)) };
 }
 
 export function computeTpGain(mentors: readonly TrainingMentor[], scale = 1): number {
