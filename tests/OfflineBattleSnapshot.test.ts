@@ -6,7 +6,7 @@ import { GameSession } from '../assets/scripts/core/managers/GameSession';
 import type { PlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
 import {
     appendOfflineBattleSnapshot, nextOfflineBattleSnapshotId, normalizeOfflineBattleSnapshots, OFFLINE_BATTLE_SNAPSHOT_LIMIT,
-    offlineBattleResultDigest, snapshotDigest, verifyOfflineBattleChain, type OfflineBattleInput,
+    offlineBattleResultDigest, snapshotDigest, verifyOfflineBattleChain, FIELD_AUTO_BATTLE_JOURNAL, type OfflineBattleInput,
 } from '../assets/scripts/core/systems/OfflineBattleSnapshot';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
@@ -79,6 +79,23 @@ export function createOfflineBattleSnapshotSuite(): TestSuite {
         restored.restoreLifespanState(saved);
         assert.equals(JSON.stringify(snapshots), JSON.stringify(restored.offlineBattleSnapshots));
         assert.isTrue(new GameSession(9).createSnapshot().offlineBattleSnapshots === undefined);
+    });
+
+    suite.test('GameSession：戰場自動鈕結算寫快照、日誌關聯主將、平手記為未取勝，與既有快照同一條鏈', () => {
+        const session = new GameSession(10);
+        const input = (win: boolean, player: number, enemy: number) => ({
+            battleType: 'AUTO_RESOLVE' as const, seed: 'field', lineup: [{ id: 'zhao' }], tileState: {}, tactics: [],
+            win, playerStrength: player, enemyStrength: enemy,
+        });
+        const first = session.recordAutoResolveBattle(input(true, 300, 100), FIELD_AUTO_BATTLE_JOURNAL.win, ['zhao']);
+        const second = session.recordAutoResolveBattle(input(false, 100, 101), FIELD_AUTO_BATTLE_JOURNAL.draw, ['zhao']);
+        assert.equals('WIN_MAJOR', first.resultDigest);
+        assert.equals('LOSE_MINOR', second.resultDigest);
+        assert.equals('OBS_0002', second.snapshotId);
+        assert.equals(-1, verifyOfflineBattleChain(session.offlineBattleSnapshots));
+        const entries = session.queryJournal({ generalUid: 'zhao' });
+        assert.equals(2, entries.length);
+        assert.isTrue(entries.some((e) => e.snapshotRef === 'OBS_0002' && e.summary === FIELD_AUTO_BATTLE_JOURNAL.draw.summary));
     });
 
     return suite;

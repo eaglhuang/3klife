@@ -137,6 +137,13 @@ export const OFFLINE_BATTLE_JOURNAL = {
     lose: { priority: 65, summary: '邊境來犯，我軍自動迎戰失利。' },
 } as const;
 
+/** 暫定：戰場「自動」鈕結算寫日誌的重要度與摘要（PROG-2-1185） */
+export const FIELD_AUTO_BATTLE_JOURNAL = {
+    win: { priority: 60, summary: '戰場改由自動結算，我軍告捷。' },
+    lose: { priority: 55, summary: '戰場改由自動結算，我軍失利。' },
+    draw: { priority: 50, summary: '戰場改由自動結算，雙方不分勝負。' },
+} as const;
+
 /** 下一筆快照 id：接最後一筆的序號（截斷後仍遞增），格式 OBS_0001 */
 export function nextOfflineBattleSnapshotId(snapshots: readonly OfflineBattleSnapshot[]): string {
     const last = snapshots.length > 0 ? Number(/(\d+)$/.exec(snapshots[snapshots.length - 1].snapshotId)?.[1] ?? snapshots.length) : 0;
