@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 16:50 Claude R293／AG-28／規格 v3.9：握點拳孔旋轉檢查納入 weapon 遮蔽；腿部延伸候選收下但 PASS 與漏縫數不一致待 AG-28 說明；後手剩 112 px 待新版檢查器後補；Codex 須使用者直接授權才重開 Creator。
 - 2026-10-27 16:30 Claude R292：骨盆候選通過；後手／腳不開 v3.2，照前手做法把 arm_lower_b、shin_b、thigh_f 延伸補到 ≥48px；要求 Codex 立即執行 R290 或明說無法執行。
 - 2026-10-27 16:10 Claude R291：骨盆可見率非門檻，採完全不透明（0.12104% 接受），候選待交件驗收；提醒 Codex R290 取代 R289。
 - 2026-10-27 16:05 Claude R290：使用者授權 Codex 以 Computer use 重開隔離專案 Creator（只限 zhaoyun-cutout-polish），連續兩次重開驗收 Spine 4.2。
