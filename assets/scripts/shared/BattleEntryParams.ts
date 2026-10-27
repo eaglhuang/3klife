@@ -83,6 +83,8 @@ export interface IBattleEntryParams {
   tutorial?: boolean;
   /** 全球征途階段 id（MVP-13）；由 GameSession.resolveCampaignStage 驗證後帶入，戰場流程尚未讀取 */
   campaignStageId?: string;
+  /** 英靈夢回教學戰的傳說英靈（OPEN-13）：只有教學戰帶入，勝利時產出初始虎符；預設沒有 */
+  teachingSpirit?: { spiritId: string; spiritName: string; geneIds: readonly string[] } | null;
 }
 
 /** QA 工具 / preview target 5 使用的預設參數 */

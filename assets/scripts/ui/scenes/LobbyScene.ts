@@ -133,6 +133,7 @@ import { ToastMessage } from '../components/ToastMessage';
 import { applyUIPreviewBinderState } from '../core/UIPreviewStateApplicator';
 import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPayload } from '../core/SpiritFamilyOverviewRoute';
 import { familyOverviewHotspotVisible } from '../../core/systems/FamilyOverviewHotspot';
+import { provisionalTeachingSpirit } from '../../core/systems/TeachingSpiritProvisional';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
@@ -5100,6 +5101,7 @@ export class LobbyScene extends Component {
             backgroundId: battleTactic === BattleTactic.FloodAttack ? undefined : encounter.backgroundId,
             campaignStageId: services().session.resolveCampaignStage(encounter.campaignStage).id,
             tutorial: isTutorialBattle(services().session.clearedStageIds),
+            teachingSpirit: isTutorialBattle(services().session.clearedStageIds) ? provisionalTeachingSpirit() : null,
         };
     }
 }

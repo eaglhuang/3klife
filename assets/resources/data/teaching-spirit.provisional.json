@@ -1,0 +1,11 @@
+{
+  "_provisional": true,
+  "_note": "PM 暫定（2026-10-27）：從 generals.json 取稀有度最高的武將（同級依 id 排序取第一位），基因為其未鎖定因子。企劃定案後替換此檔即可。",
+  "spiritId": "cao-cao",
+  "spiritName": "曹操",
+  "geneIds": [
+    "gene_strategy",
+    "gene_command",
+    "gene_politics"
+  ]
+}

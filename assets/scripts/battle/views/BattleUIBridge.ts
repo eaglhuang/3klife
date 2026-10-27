@@ -11,6 +11,7 @@
 
 import { formatAwakeningReveal } from './AwakeningReveal';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
+import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
 import { applyOpeningWinGuarantee, autoResolveOutcome } from '../runtime/BattleAutoResolve';
@@ -79,6 +80,8 @@ export interface BattleSceneContext {
   eg:                GeneralUnit | null;
   /** 本場的關卡 id（連環破，勝利時記入通關紀錄） */
   encounterId:       string | null;
+  /** 教學戰的傳說英靈（OPEN-13）；沒有時為 null */
+  teachingSpirit:    TeachingSpiritInput | null;
   isAdvancingTurn:   boolean;
   isDuelPanelActive: boolean;
   combatVisualQueue: CombatVisualTask[];
@@ -105,7 +108,7 @@ export function createBattleSceneContext(): BattleSceneContext {
     hud: null, deployRuntime: null, battleLogPanel: null,
     battleScenePanel: null, boardRenderer: null, unitRenderer: null,
     resultPopup: null, duelChallengePanel: null,
-    ctrl: null, pg: null, eg: null, encounterId: null,
+    ctrl: null, pg: null, eg: null, encounterId: null, teachingSpirit: null,
     isAdvancingTurn: false, isDuelPanelActive: false,
     combatVisualQueue: [], isDrainingCombatVisual: false,
     combatVisualTaskId: 0,
@@ -648,7 +651,7 @@ export class BattleUIBridge {
     // 戰鬥結束時主將的精力（已扣奧義成本）是結算的基準，戰後再扣 30（PM 裁定，2026-10-14）
     const battleVitality = this.ctx.ctrl?.state.playerGeneral?.vitality;
     const vitalityAfterBattle = battleVitality !== undefined ? { [pgId]: battleVitality } : undefined;
-    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle }).then((settlement) => {
+    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, teachingSpirit: this.ctx.teachingSpirit }).then((settlement) => {
       const entry = settlement.entries[0];
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);
