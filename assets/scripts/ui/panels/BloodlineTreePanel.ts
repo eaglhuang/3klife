@@ -3,6 +3,8 @@ import { _decorator, Component, Label, Node } from 'cc';
 import { BloodlineGraph } from '../../core/services/BloodlineGraph';
 import { buildBloodlineTreeSlots, BloodlineTreeSlot } from '../../core/systems/BloodlineTreeSlots';
 import { treeCardNodeName } from '../../core/systems/BloodlineTreeBinding';
+import { buildNodeCards } from '../../core/systems/BloodlineNodeCards';
+import { redrawBloodlineTreeConnections } from '../components/BloodlineTreeLines';
 
 const { ccclass, property } = _decorator;
 
@@ -53,6 +55,7 @@ export class BloodlineTreePanel extends Component {
         this._fillContainer(this.gen3Container, 3, slots.gen3, graph);
         this._fillContainer(this.gen2Container, 2, slots.gen2, graph);
         this._fillContainer(this.gen1Container, 1, slots.gen1, graph);
+        this._redrawLines();
     }
 
     /** 清除所有祖先樹標籤（切換武將時呼叫） */
@@ -64,6 +67,16 @@ export class BloodlineTreePanel extends Component {
     }
 
     // ---- private ----
+
+    /**
+     * 依卡片實際位置重畫父子連線（PROG-2-1279）。延後一幀，等版面排好再讀座標。
+     * 子代連線顏色規則尚未定義，暫以 null 退回中性灰（PM 待裁）。
+     */
+    private _redrawLines(): void {
+        this.scheduleOnce(() => {
+            redrawBloodlineTreeConnections(this.node, buildNodeCards({}), () => null);
+        }, 0);
+    }
 
     private _fillContainer(
         container: Node | null,
