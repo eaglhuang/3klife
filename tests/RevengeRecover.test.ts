@@ -6,7 +6,8 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { GameSession } from '../assets/scripts/core/managers/GameSession';
-import { normalizePlayerLogs, revengeRecoverAmount } from '../assets/scripts/core/systems/DailyNewsEngine';
+import { normalizePlayerLogs, revengeRecoverAmount, rollRevengePct } from '../assets/scripts/core/systems/DailyNewsEngine';
+import { DailyReportController } from '../assets/scripts/ui/core/DailyReportController';
 import type { PlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
 
 function roundTrip(snapshot: PlayerSaveSnapshot): PlayerSaveSnapshot {
@@ -66,10 +67,34 @@ export function createRevengeRecoverSuite(): TestSuite {
         assert.equals(foodBefore + recovered, restored.military.food);
     });
 
+    suite.test('擲百分比落在 5~20，且上下限可被擲到', () => {
+        const values = [0, 0.999999].map((r) => rollRevengePct(() => r));
+        assert.equals(5, values[0]);
+        assert.equals(20, values[1]);
+        assert.isTrue(rollRevengePct(() => 0.5) >= 5 && rollRevengePct(() => 0.5) <= 20);
+    });
+
+    suite.test('面板：有可取回時顯示復仇按鈕，取回後隱藏；沒有可取回時不顯示', () => {
+        const morning = { opening: '', items: [], read: true, journalMark: 0 } as unknown as Parameters<typeof DailyReportController.capture>[1];
+        const news = {
+            lastGeneratedDay: '2026-10-27',
+            lastLoginMs: 0,
+            news: [{ type: 'REVENGE', character: '張飛', emotion: '憤怒', action: '反搶', result: '取回', date: '2026-10-27' }],
+        } as unknown as Parameters<typeof DailyReportController.capture>[0];
+        const date = new Date('2026-10-27T08:00:00+08:00');
+        const shown = DailyReportController.capture(news, morning, date, true)!.getFlowView();
+        assert.isTrue(shown.actives.btnRevenge);
+        const claimed = DailyReportController.capture(news, morning, date, true)!.withoutRevenge().getFlowView();
+        assert.isFalse(claimed.actives.btnRevenge);
+        const none = DailyReportController.capture(news, morning, date)!.getFlowView();
+        assert.isFalse(none.actives.btnRevenge);
+    });
+
     suite.test('沒有缺糧紀錄時取回為 0，糧草不變', async () => {
         const session = new GameSession(1);
         await session.advanceSeason();
         const foodBefore = session.military.food;
+        assert.equals(0, session.revengeRecoverable);
         assert.equals(0, session.claimRevengeRecovery(20));
         assert.equals(foodBefore, session.military.food);
     });

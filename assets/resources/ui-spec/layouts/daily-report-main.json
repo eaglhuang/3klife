@@ -146,6 +146,29 @@
               },
               {
                 "type": "button",
+                "name": "BtnRevenge",
+                "id": "btnRevenge",
+                "width": 280,
+                "height": 64,
+                "skinSlot": "dr.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnRevengeLabel",
+                    "id": "btnRevengeLabel",
+                    "width": 280,
+                    "height": 40,
+                    "text": "復仇取回 ▶",
+                    "styleSlot": "dr.label.body"
+                  }
+                ],
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
                 "name": "BtnClose",
                 "id": "btnClose",
                 "width": 280,
