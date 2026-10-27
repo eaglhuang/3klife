@@ -140,6 +140,7 @@ import {
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
 import { resolveFactorColor } from '../systems/FactorInheritance';
+import { setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
 import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
 import { visibleFactorColors as factorColorsVisibleAtLevel } from '../systems/FactorMask';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
@@ -1011,6 +1012,20 @@ export class GameSession {
     /** 卸下武將指定格的一般裝備（PROG-2-1040）；裝備回到倉庫 */
     public unequipGear(generalUid: string, slotId: EquipSlot): GearEquipResult {
         const result = unequipGearFlow(this._inventoryRecords, generalUid, slotId);
+        if (result.ok) this._inventoryRecords = result.records;
+        return result;
+    }
+
+    /** 卸下命槽英靈卡回倉庫（PROG-2-1280）；戰鬥鎖定由呼叫端傳入 */
+    public unequipSpiritCard(generalUid: string, battleLocked: boolean): SpiritSlotFlowResult {
+        const result = unequipSpiritCard(this._inventoryRecords, generalUid, battleLocked);
+        if (result.ok) this._inventoryRecords = result.records;
+        return result;
+    }
+
+    /** 命槽英靈卡設為主卡（PROG-2-1280）；戰鬥鎖定由呼叫端傳入 */
+    public setPrimarySpiritCard(generalUid: string, battleLocked: boolean): SpiritSlotFlowResult {
+        const result = setPrimarySpiritCard(this._inventoryRecords, generalUid, battleLocked);
         if (result.ok) this._inventoryRecords = result.records;
         return result;
     }
