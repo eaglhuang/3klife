@@ -23,7 +23,7 @@ import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
 import { spiritSlotActions, type SpiritSlotAction } from '../../../core/systems/BloodlineRightPanelLayout';
 import { spiritSlotViewOf } from '../../../core/systems/SpiritSlotState';
-import { spiritPickerRows, type SpiritPickerRow } from '../../../core/systems/SpiritSlotFlow';
+import { spiritPickerPage, spiritPickerRows, SPIRIT_PICKER_PAGE_SIZE, type SpiritPickerRow } from '../../../core/systems/SpiritSlotFlow';
 import {
     STORY_DOCK_VISIBLE_CELLS,
     nextStoryDockState,
@@ -33,7 +33,7 @@ import {
 } from '../../../core/systems/BloodlineStoryDockLayout';
 
 /** 選卡面板最多顯示的候選卡列數（對應 gd-tab-bloodline.json 的 SpiritPickRow1..6） */
-const SPIRIT_PICK_ROW_COUNT = 6;
+const SPIRIT_PICK_ROW_COUNT = SPIRIT_PICKER_PAGE_SIZE;
 
 /** 玩家發現等級；服務尚未初始化時退回 1（只顯示藍粉因子） */
 function currentDiscoveryLevel(): number {
@@ -266,9 +266,9 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
     }
 
     /** 選卡面板的目前狀態：要插入或替換哪位武將的命槽、列表與已選的卡（PROG-2-1286）。 */
-    private _spiritPick: { generalId: string; mode: 'insert' | 'replace'; rows: SpiritPickerRow[]; selected: string | null } | null = null;
+    private _spiritPick: { generalId: string; mode: 'insert' | 'replace'; rows: SpiritPickerRow[]; page: number; selected: string | null } | null = null;
 
-    /** 一次綁定選卡面板的列、取消與確認按鈕，之後只改顯示。 */
+    /** 一次綁定選卡面板的列、分頁、取消與確認按鈕，之後只改顯示。 */
     private _bindSpiritPicker(): void {
         const base = `${GeneralDetailBloodlineChild.ROOT_PATH}/BloodlineStage/SpiritPicker`;
         for (let i = 0; i < SPIRIT_PICK_ROW_COUNT; i++) {
@@ -277,6 +277,12 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
             node.off(Button.EventType.CLICK);
             node.on(Button.EventType.CLICK, () => this._selectSpiritPick(i));
         }
+        const prev = this.hostNode.getChildByPath(`${base}/SpiritPickPager/SpiritPickPrevButton`);
+        prev?.off(Button.EventType.CLICK);
+        prev?.on(Button.EventType.CLICK, () => this._turnSpiritPickPage(-1));
+        const next = this.hostNode.getChildByPath(`${base}/SpiritPickPager/SpiritPickNextButton`);
+        next?.off(Button.EventType.CLICK);
+        next?.on(Button.EventType.CLICK, () => this._turnSpiritPickPage(1));
         const cancel = this.hostNode.getChildByPath(`${base}/SpiritPickActions/SpiritPickCancelButton`);
         cancel?.off(Button.EventType.CLICK);
         cancel?.on(Button.EventType.CLICK, () => this._closeSpiritPicker());
@@ -292,14 +298,22 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         } catch {
             records = [];
         }
-        this._spiritPick = { generalId, mode, rows: spiritPickerRows(records), selected: null };
+        this._spiritPick = { generalId, mode, rows: spiritPickerRows(records), page: 0, selected: null };
         this._renderSpiritPicker();
     }
 
+    /** 點的是目前頁的第幾列；已選的卡跨頁保留，翻頁不會清掉選取。 */
     private _selectSpiritPick(index: number): void {
         const pick = this._spiritPick;
         if (!pick) return;
-        pick.selected = pick.rows[index]?.spiritId ?? null;
+        pick.selected = spiritPickerPage(pick.rows, pick.page).rows[index]?.spiritId ?? null;
+        this._renderSpiritPicker();
+    }
+
+    private _turnSpiritPickPage(delta: number): void {
+        const pick = this._spiritPick;
+        if (!pick) return;
+        pick.page = spiritPickerPage(pick.rows, pick.page + delta).page;
         this._renderSpiritPicker();
     }
 
@@ -330,13 +344,21 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         this._set(this._label(this.hostNode, `BloodlineStage/SpiritPicker/SpiritPickTitle`), pick.mode === 'insert' ? '插入英靈卡' : '替換英靈卡');
         const empty = this.hostNode.getChildByPath(`${base}/SpiritPickEmpty`);
         if (empty) empty.active = pick.rows.length === 0;
+        const view = spiritPickerPage(pick.rows, pick.page);
         for (let i = 0; i < SPIRIT_PICK_ROW_COUNT; i++) {
-            const row = pick.rows[i];
+            const row = view.rows[i];
             const node = this.hostNode.getChildByPath(`${base}/SpiritPickRow${i + 1}`);
             if (node) node.active = row !== undefined;
             const label = this.hostNode.getChildByPath(`${base}/SpiritPickRow${i + 1}/SpiritPickRow${i + 1}Label`)?.getComponent(Label) ?? null;
             if (row) this._set(label, row.spiritId === pick.selected ? `✓ ${row.label}` : row.label);
         }
+        const pager = this.hostNode.getChildByPath(`${base}/SpiritPickPager`);
+        if (pager) pager.active = view.pageCount > 1;
+        this._set(this._label(this.hostNode, `BloodlineStage/SpiritPicker/SpiritPickPager/SpiritPickPageLabel`), `${view.page + 1} / ${view.pageCount}`);
+        const prev = this.hostNode.getChildByPath(`${base}/SpiritPickPager/SpiritPickPrevButton`)?.getComponent(Button);
+        if (prev) prev.interactable = view.page > 0;
+        const next = this.hostNode.getChildByPath(`${base}/SpiritPickPager/SpiritPickNextButton`)?.getComponent(Button);
+        if (next) next.interactable = view.page < view.pageCount - 1;
         const confirm = this.hostNode.getChildByPath(`${base}/SpiritPickActions/SpiritPickConfirmButton`)?.getComponent(Button);
         if (confirm) confirm.interactable = pick.selected !== null;
     }

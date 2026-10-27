@@ -77,6 +77,25 @@ export function spiritPickerRows(records: readonly InventoryRecord[]): SpiritPic
     });
 }
 
+/** 選卡面板每頁列數，對應版面上的 SpiritPickRow 數量（PROG-2-1291）。 */
+export const SPIRIT_PICKER_PAGE_SIZE = 6;
+
+export interface SpiritPickerPage {
+    /** 本頁要顯示的列（最多 pageSize 列） */
+    rows: SpiritPickerRow[];
+    /** 實際頁碼（0 起算），超出範圍時已夾回合法範圍 */
+    page: number;
+    /** 總頁數；沒有列時為 1，讓分頁列至少有一頁 */
+    pageCount: number;
+}
+
+/** 把選卡列表切成分頁；頁碼超出範圍時夾回 0 ～ 最後一頁。 */
+export function spiritPickerPage(rows: readonly SpiritPickerRow[], page: number, pageSize = SPIRIT_PICKER_PAGE_SIZE): SpiritPickerPage {
+    const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
+    const current = Math.min(Math.max(0, page), pageCount - 1);
+    return { rows: rows.slice(current * pageSize, current * pageSize + pageSize), page: current, pageCount };
+}
+
 /** 檢查要放進命槽的英靈卡是否可用；可用回傳 null，否則回傳拒絕原因。 */
 function unpickableReason(records: readonly InventoryRecord[], spiritId: string): SpiritSlotFlowRejectReason | null {
     const card = records.find((record) => record.Inventory_ID === spiritId);
