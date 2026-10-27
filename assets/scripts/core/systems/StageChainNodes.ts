@@ -105,3 +105,17 @@ export function validateStageChainNodes(nodes: readonly StageChainNode[]): strin
 export function toChainStages(nodes: readonly StageChainNode[]): ChainStage[] {
     return nodes.map((node) => ({ id: node.stageId, chainId: node.chainId, order: node.order }));
 }
+
+/**
+ * 關卡的章節序位（PROG-2-1319，協調者裁定暫定）：所屬 chainId 在關卡資料中的出現順序，從 1 起。
+ * 找不到關卡或關卡沒有 chainId 時回傳 1。
+ */
+export function stageChapterOf(nodes: readonly StageChainNode[], stageId: string): number {
+    const target = nodes.find((node) => node.stageId === stageId);
+    if (!target || !target.chainId) return 1;
+    const chainIds: string[] = [];
+    for (const node of nodes) {
+        if (node.chainId && !chainIds.includes(node.chainId)) chainIds.push(node.chainId);
+    }
+    return chainIds.indexOf(target.chainId) + 1;
+}

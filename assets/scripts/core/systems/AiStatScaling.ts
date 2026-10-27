@@ -77,3 +77,43 @@ export function aiReincarnationOf(
     const safeChapter = Math.max(1, Math.floor(chapter));
     return Math.min(AI_REINCARNATION_CAP, Math.floor(safeChapter / 3) + difficulty.difficultyBonus);
 }
+
+/** 年齡轉年齡階段（數值系統 E-6）：65 以上超齡、55 老年、40 壯年、15 青年、其餘（含幼兒）為少年。 */
+export function aiAgeStageOf(age: number): AiAgeStage {
+    if (age >= 65) return 'Over';
+    if (age >= 55) return 'Elder';
+    if (age >= 40) return 'Peak';
+    if (age >= 15) return 'Prime';
+    return 'Youth';
+}
+
+/** 敵將 config 中會被縮放的數值（hp 與精力不在規格的 AI_Stat 範圍內，不縮放）。 */
+export interface AiScalableGeneralConfig {
+    str?: number;
+    int?: number;
+    lea?: number;
+    luk?: number;
+    age?: number;
+}
+
+const AI_SCALED_STAT_KEYS = ['str', 'int', 'lea', 'luk'] as const;
+
+/**
+ * 回傳縮放後的敵將 config（不改傳入物件）：只縮放有值的 str、int、lea、luk；
+ * 缺 age 時視為青年（修正 1.0），與規格預設一致。
+ *
+ * 暫定：呼叫端在建立 GeneralUnit 前先用這個函式處理 config，避免改到 readonly 欄位。
+ */
+export function scaleAiEnemyConfig<T extends AiScalableGeneralConfig>(
+    config: T,
+    difficulty: Pick<AiDifficultyEntry, 'statScale'>,
+    chapter: number,
+): T {
+    const age = config.age === undefined ? 'Prime' : aiAgeStageOf(config.age);
+    const scaled: AiScalableGeneralConfig = {};
+    for (const key of AI_SCALED_STAT_KEYS) {
+        const value = config[key];
+        if (value !== undefined) scaled[key] = aiStatOf(value, difficulty, chapter, age);
+    }
+    return { ...config, ...scaled };
+}
