@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-28 02:10 規格 v3.18 確認：同步規格 v3.18（canonical_skeleton_v3.json 22,137 位元組，逐位元組比對相符）；確認 check_layered_parts.py 依 childBonePivot 動態讀取 bones.hand_f.pivotCanvasPx [1330, 1180]，無硬編碼拳心座標，不需要開立 AG-39；同步更新單元測試，全套 114 項測試 100% 通過（9bff5387b）。
 - 2026-10-28 01:57 Claude：規格 v3.18 hand_f 樞紐改到手腕 [1330,1180]（R314 選 A）；領口下緣授權超出 ±6 px 重描；錨點用規格 joints 人工基準。
 - 2026-10-28 01:21 Claude：R313 腕口不豁免（hand_f 實際轉到 50.67°）須修前臂；領口授權估讀多邊形（scratch）；AG-38 驗收通過。
 - 2026-10-28 01:05 AG-38 完成：check_layered_parts.py 實作 gripRegistration 判定改為 8 方向射線拳孔包覆（門檻 >= 6/8，半徑 40 px，alpha >= 128），形心距離轉為參考不再阻擋，並量測握點 +/-12 px 覆蓋率（純輸出不判定）；對 R299 原版 hand_f 實測命中 0/8 方向正確判 FAIL (ADVISORY)，平移 (-65, +54) 實測命中 8/8 方向（命中距離 3~7 px 完美包覆）判定 PASS，R299 hand_b 實測命中 8/8 方向判定 PASS；更新 test_ag36_grip_registration.py，全套 114 項單元測試 100% 通過（c0dc76434）。
