@@ -1,0 +1,17 @@
+{
+  "id": "opening-letter-screen",
+  "version": 1,
+  "uiId": "OpeningLetter",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "opening-letter-main",
+  "skin": "opening-letter-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

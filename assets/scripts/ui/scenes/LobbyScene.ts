@@ -464,6 +464,7 @@ export class LobbyScene extends Component {
         await this._mountDestinyOpening();
         await this._mountOpeningIntro();
         await this._mountOnboardingTutorial();
+        await this._mountOpeningLetter();
         await this._mountSageOracle();
         await this._mountRetireReview();
         await this._mountSpiritCodex();
@@ -1596,6 +1597,7 @@ export class LobbyScene extends Component {
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
                 advanceOpening: event => { this._openingFlow?.advance(event); },
                 applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys),
+                openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: services().i18n.t('copy.letter.opening.body') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
             });
         }
@@ -1604,6 +1606,10 @@ export class LobbyScene extends Component {
 
     private async _mountOnboardingTutorial(): Promise<void> {
         await this._getOpeningPanels().mountOnboarding();
+    }
+
+    private async _mountOpeningLetter(): Promise<void> {
+        await this._getOpeningPanels().mountOpeningLetter();
     }
 
     /**
