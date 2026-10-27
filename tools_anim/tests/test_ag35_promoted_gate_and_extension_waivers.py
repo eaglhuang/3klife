@@ -185,6 +185,12 @@ class TestAG35PromotedGateAndExtensionWaivers(unittest.TestCase):
             "childAloneSufficient": "parentExtensionNotRequired",
             "gripJoint": "advisoryWhenCrackPasses",
         }
+        # 測試 gripJoint 豁免：將 hand_f 骨點設為握點 grip_A
+        gx_a = float(spec["grips"]["grip_A"]["x"])
+        gy_a = float(spec["grips"]["grip_A"]["y"])
+        for b in spec.get("bones", []):
+            if b.get("name") == "hand_f":
+                b["pivotCanvasPx"] = [gx_a, gy_a]
 
         spec_file = self.tmp_dir / "spec_grip_waiver.json"
         spec_file.write_text(json.dumps(spec, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -193,7 +199,7 @@ class TestAG35PromotedGateAndExtensionWaivers(unittest.TestCase):
         parts_dir.mkdir(parents=True, exist_ok=True)
 
         j_elbow_f = (float(spec["joints"]["elbow_f"]["x"]), float(spec["joints"]["elbow_f"]["y"]))
-        j_wrist_f = (float(spec["joints"]["wrist_f"]["x"]), float(spec["joints"]["wrist_f"]["y"]))
+        j_wrist_f = (gx_a, gy_a)
 
         # arm_lower_f: 延伸不足 (例如只延伸 12 px < 48 px)
         im_arm_lower = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
@@ -204,10 +210,10 @@ class TestAG35PromotedGateAndExtensionWaivers(unittest.TestCase):
         d_lower.line([j_elbow_f, ext_pt], fill=(80, 100, 160, 255), width=70)
         im_arm_lower.save(parts_dir / "arm_lower_f.png")
 
-        # hand_f: 覆蓋握點
+        # hand_f: 覆蓋握點且自身延伸充足 (半徑 60 px >= 48 px)
         im_hand = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
         d_hand = ImageDraw.Draw(im_hand)
-        d_hand.ellipse([j_wrist_f[0] - 30, j_wrist_f[1] - 30, j_wrist_f[0] + 30, j_wrist_f[1] + 30], fill=(200, 160, 120, 255))
+        d_hand.ellipse([j_wrist_f[0] - 60, j_wrist_f[1] - 60, j_wrist_f[0] + 60, j_wrist_f[1] + 60], fill=(200, 160, 120, 255))
         im_hand.save(parts_dir / "hand_f.png")
 
         report, passed = run_layered_parts_inspection(

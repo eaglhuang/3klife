@@ -155,6 +155,11 @@ class TestAG34ScopeGateAndCoverageRule(unittest.TestCase):
             c_draw.rectangle([piv[0], piv[1] - 8, piv[0] + 40, piv[1] + 8], fill=(0, 0, 0, 0))
             c_im.save(parts_dir / "hand_f.png")
 
+            # 在此測試中將 hand_f 骨點對齊自訂合成圖之握點 piv
+            for b in spec.get("bones", []):
+                if b.get("name") == "hand_f":
+                    b["pivotCanvasPx"] = [piv[0], piv[1]]
+
             spec_path = Path(tmp_dir) / "spec.json"
             with open(spec_path, "w", encoding="utf-8") as f:
                 json.dump(spec, f)

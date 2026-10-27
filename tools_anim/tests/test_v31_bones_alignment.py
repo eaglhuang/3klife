@@ -82,10 +82,10 @@ class TestV31BonesAlignment(unittest.TestCase):
             self.assertLessEqual(err_x, 1.0, f"骨骼 {act_b['name']} X 樞紐誤差超標: exp={exp_piv[0]}, act={act_piv[0]}")
             self.assertLessEqual(err_y, 1.0, f"骨骼 {act_b['name']} Y 樞紐誤差超標: exp={exp_piv[1]}, act={act_piv[1]}")
 
-        # 特別驗證關鍵新增骨骼與樞紐轉移 (AG-14 細項)
+        # 特別驗證關鍵新增骨骼與樞紐轉移 (AG-14 細項與 v3.18 規範)
         bone_map = {b["name"]: b for b in actual_bones}
-        # 1. hand_f / hand_b 樞紐在拳心孔 (grip_A / grip_B)
-        self.assertEqual(bone_map["hand_f"]["pivotSourcePx"], [1365, 1225])
+        # 1. hand_f 樞紐在手腕 joints.wrist_f [1330, 1180] (v3.18)；hand_b 樞紐在拳心孔 grip_B [680, 1225]
+        self.assertEqual(bone_map["hand_f"]["pivotSourcePx"], [1330, 1180])
         self.assertEqual(bone_map["hand_b"]["pivotSourcePx"], [680, 1225])
 
         # 2. weapon_grip_rear 父骨為 weapon，在握點後方 448 px
