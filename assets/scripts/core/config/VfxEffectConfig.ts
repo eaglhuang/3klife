@@ -67,13 +67,13 @@ export const DEFAULT_VFX_EFFECTS: Record<string, VfxEffectDef> = {
     hit_miss: {
         blockId: 'impact_sparkle',
         audio: 'feijian',
-        notify: { type: 'floatText', textKey: 'Miss', color: '#AAAAAA' },
+        notify: { type: 'floatText', textKey: 'POPUP_MISS', color: '#AAAAAA' },
         lifetime: 1.5,
     },
     crit_hit: {
         blockId: 'fire_burst',
         audio: 'boom',
-        notify: { type: 'floatText', textKey: '暴擊！', color: '#FF8800' },
+        notify: { type: 'floatText', textKey: 'POPUP_CRIT', color: '#FF8800' },
         lifetime: 2.0,
     },
     buff_gain_atk: {
