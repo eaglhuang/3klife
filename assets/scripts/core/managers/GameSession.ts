@@ -81,6 +81,7 @@ import { dispatchCompleteLine, getDispatchScore, type DispatchGeneral, type Disp
 import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type DispatchCatalogRow } from '../systems/DispatchCatalog';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
+import { FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
@@ -476,6 +477,8 @@ export class GameSession {
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
     private _oracleCount = 0;
     private _onboarding: OnboardingState = { ...FRESH_ONBOARDING };
+    /** 開場信件已讀狀態；存檔欄位 openingLetter（PROG-2-1304） */
+    private _openingLetter: OpeningLetterState = { ...FRESH_OPENING_LETTER };
     /** 結義點數（轉蛋滿轉溢出獲得，傭兵轉永久用）；存檔欄位 bondPoints */
     private _bondPoints = 0;
     /** NPC 好友教官清單（MENT-14 MVP）；由 ServiceLoader 從資料表載入 */
@@ -620,6 +623,20 @@ export class GameSession {
 
     public get onboarding(): OnboardingState {
         return { ...this._onboarding };
+    }
+
+    public get openingLetter(): OpeningLetterState {
+        return { ...this._openingLetter };
+    }
+
+    /**
+     * 玩家關閉開場信件後呼叫：記為已讀並自動存檔，之後不再自動開啟。
+     * 已讀時重複呼叫不會再存檔。
+     */
+    public async markOpeningLetterSeen(): Promise<void> {
+        if (this._openingLetter.seen) return;
+        this._openingLetter = markOpeningLetterSeen(this._openingLetter);
+        if (this._autoSave && this._save) await this.save();
     }
 
     /**
@@ -1316,6 +1333,7 @@ export class GameSession {
         this._bondPoints = 0;
         this._borrowLedger = { records: [] };
         this._onboarding = { ...FRESH_ONBOARDING };
+        this._openingLetter = { ...FRESH_OPENING_LETTER };
         this._military = { ...STARTER_MILITARY };
         this._yearAgingEvents = [];
         this._prison = createPrisonState<GeneralConfig>();
@@ -3196,6 +3214,7 @@ export class GameSession {
             prison: this.prison,
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
             onboarding: { ...this._onboarding },
+            openingLetter: { ...this._openingLetter },
             bondPoints: this._bondPoints,
             friendBorrowLedger: { records: [...this._borrowLedger.records] },
             soulFragments: { ...this._soulFragments },
@@ -3330,6 +3349,7 @@ export class GameSession {
         this._preLifespanRoster = preLifespanBaseline(snapshot.roster, (snapshot.pendingLifespanDeaths ?? []).map((death) => death.generalId));
         this._nurture?.restoreState(snapshot.nurture);
         this._onboarding = normalizeOnboardingState(snapshot.onboarding);
+        this._openingLetter = normalizeOpeningLetterState(snapshot.openingLetter);
         this._bondPoints = normalizeBondPoints(snapshot.bondPoints);
         this._borrowLedger = normalizeBorrowLedger(snapshot.friendBorrowLedger);
         this._soulFragments = normalizeSoulFragmentLedger(snapshot.soulFragments);

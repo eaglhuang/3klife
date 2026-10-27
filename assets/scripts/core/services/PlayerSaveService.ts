@@ -18,6 +18,7 @@ import { normalizeRivalWorld, type RivalWorld } from '../systems/RivalNations';
 import { normalizeInventory, PlayerInventory } from '../systems/PlayerInventory';
 import { normalizeBondPoints } from '../systems/OverflowBond';
 import { normalizeOnboardingState, OnboardingState } from '../systems/OnboardingTutorial';
+import { normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { normalizeMilitaryReserve, MilitaryReserve } from '../systems/MilitaryReserve';
 import { normalizePrisonState, type PrisonState } from '../systems/PrisonerOfWar';
 import { normalizeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
@@ -189,6 +190,8 @@ export interface PlayerSaveSnapshot {
     femaleSystem?: FemaleSystemState;
     /** 新手 3 段式引導進度；後加的選填欄位，舊檔讀回視為從頭開始（PROG-2-0229） */
     onboarding?: OnboardingState;
+    /** 開場信件已讀狀態；後加的選填欄位，舊檔讀回視為未讀（PROG-2-1304） */
+    openingLetter?: OpeningLetterState;
     /** 結義點數餘額；後加的選填欄位，舊檔讀回為 0（GCH-06） */
     bondPoints?: number;
     /** 好友借用帳本；後加的選填欄位，舊檔讀回為空帳本（MENT-14，PROG-2-0745） */
@@ -490,6 +493,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.rivals !== undefined ? { rivals: normalizeRivalWorld(snapshot.rivals) } : {}),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
+        ...(snapshot.openingLetter !== undefined ? { openingLetter: normalizeOpeningLetterState(snapshot.openingLetter) } : {}),
         ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),
         ...(snapshot.friendBorrowLedger !== undefined ? { friendBorrowLedger: normalizeBorrowLedger(snapshot.friendBorrowLedger) } : {}),
         ...(snapshot.soulFragments !== undefined ? { soulFragments: normalizeSoulFragmentLedger(snapshot.soulFragments) } : {}),
