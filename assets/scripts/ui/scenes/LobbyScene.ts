@@ -144,6 +144,7 @@ import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBinding
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 import { DailyReportController } from '../core/DailyReportController';
+import { dailySubsidyText } from '../core/DailySubsidyNotice';
 
 const { ccclass } = _decorator;
 
@@ -551,12 +552,24 @@ export class LobbyScene extends Component {
             UCUFLogger.info(LogCategory.DATA, loaded ? '[LobbyScene] 已讀取玩家存檔' : '[LobbyScene] 沒有玩家存檔，從新局開始');
             // 登入（連續登入 PROG-2-0987、三國日報 PROG-2-1170、離線互動 PROG-2-1193）：讀檔後記一次，當天第一次登入會生成日報
             services().session.recordLoginAt(Date.now(), (amount) => { this._localGachaService.grantCurrency('gold', amount); });
+            this._claimDailySubsidy();
             this._showDailyNews();
             return loaded;
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 讀取玩家存檔失敗，從新局開始', error);
             return false;
         }
+    }
+
+    /** 每日補貼（ECO-06，PROG-2-1315）：登入後低資源才補；黃金入錢包，有補才提示並存檔（文案暫定） */
+    private _claimDailySubsidy(): void {
+        const gacha = this._localGachaService;
+        const session = services().session;
+        const grants = session.claimDailySubsidy(Date.now(), gacha.getCurrencyAmount('gold'), (amount) => { gacha.grantCurrency('gold', amount); });
+        const text = dailySubsidyText(grants);
+        if (!text) return;
+        services().event.emit('SHOW_TOAST', { message: text, duration: 3 });
+        void session.save().catch(() => undefined);
     }
 
     /**

@@ -62,7 +62,8 @@ import { createUpkeepState } from '../systems/MercenaryUpkeep';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
 import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
-import { EMPTY_LOGIN_STREAK, LoginStreakState, recordLogin } from '../systems/LoginStreak';
+import { EMPTY_LOGIN_STREAK, LoginStreakState, loginDayOf, recordLogin } from '../systems/LoginStreak';
+import { dailySubsidyOf, type SubsidyResourceKey } from '../systems/DailySubsidy';
 import {
     appendPlayerLog, EMPTY_DAILY_NEWS, markDailyNewsRead, normalizeDailyNewsState, normalizePlayerLogs, refreshDailyNews,
     type DailyNewsState, type PlayerLogEntry, type PlayerLogType,
@@ -101,7 +102,7 @@ import { FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterStat
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
-import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, settleOpenAssignsForSeason, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult, type HallAutoAssignTaskInput } from '../systems/HallAutoAssign';
 import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
 import { estimateSortiePower } from '../systems/SortiePrediction';
@@ -1353,6 +1354,7 @@ export class GameSession {
         this._journal = createEmptyJournal();
         this._farewellLetters = [];
         this._loginStreak = { ...EMPTY_LOGIN_STREAK };
+        this._dailySubsidy = null;
         this._playerLogs = [];
         this._dailyNews = { ...EMPTY_DAILY_NEWS, news: [] };
         this._morningReport = { ...EMPTY_MORNING_REPORT, items: [] };
@@ -1906,6 +1908,36 @@ export class GameSession {
         if (!event || !this.recordJournal(event.entry).ok) return null;
         this._offlineInteractionLog = event.log;
         return event.entry.summary;
+    }
+
+    /** 每日補貼紀錄（PROG-2-1315）；從未領過為 null */
+    private _dailySubsidy: DailySubsidyRecord | null = null;
+
+    public get dailySubsidy(): DailySubsidyRecord | null {
+        return this._dailySubsidy ? { ...this._dailySubsidy } : null;
+    }
+
+    /**
+     * 每日補貼（ECO-06，PROG-2-1315）：UTC+8 切日，同日只領一次；糧草、城市兵源寫進軍備（依軍備上限夾制），
+     * 黃金交給 grantGold（錢包）。沒有資源低於門檻時不算領取。回傳本次各項補量（沒補為空物件）；不自動存檔。
+     */
+    public claimDailySubsidy(epochMs: number, goldBalance: number, grantGold: (amount: number) => void = () => {}): Partial<Record<SubsidyResourceKey, number>> {
+        const day = loginDayOf(epochMs);
+        const dayIndex = (d: string): number => Math.floor(Date.parse(`${d}T00:00:00Z`) / 86_400_000);
+        const last = this._dailySubsidy ? dayIndex(this._dailySubsidy.lastClaimDay) : null;
+        const result = dailySubsidyOf({ food: this._military.food, gold: goldBalance, troops: this._military.cityTroops }, last, dayIndex(day));
+        if (!result.claimed) return {};
+        const food = Math.max(0, Math.min(this._military.foodCap, result.resources.food) - this._military.food);
+        const troops = Math.max(0, Math.min(this._military.cityTroopsCap, result.resources.troops) - this._military.cityTroops);
+        const gold = result.grants.gold ?? 0;
+        this._military = { ...this._military, food: this._military.food + food, cityTroops: this._military.cityTroops + troops };
+        if (gold > 0) grantGold(gold);
+        this._dailySubsidy = { lastClaimDay: day, foodGranted: food, goldGranted: gold, troopsGranted: troops };
+        const grants: Partial<Record<SubsidyResourceKey, number>> = {};
+        if (food > 0) grants.food = food;
+        if (gold > 0) grants.gold = gold;
+        if (troops > 0) grants.troops = troops;
+        return grants;
     }
 
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
@@ -3500,8 +3532,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3513,6 +3545,7 @@ export class GameSession {
         }
         if (this._farewellLetters.length > 0) fields.farewellLetters = this.farewellLetters;
         if (this._loginStreak.lastLoginDay !== null) fields.loginStreak = this.loginStreak;
+        if (this._dailySubsidy) fields.dailySubsidy = this.dailySubsidy!;
         if (this._playerLogs.length > 0) fields.playerLogs = this.playerLogs;
         if (this._dailyNews.lastLoginMs !== null) fields.dailyNews = this.dailyNews;
         if (this._morningReport.journalMark > 0 || this._morningReport.items.length > 0) fields.morningReport = this.morningReport;
@@ -3540,6 +3573,7 @@ export class GameSession {
         this._pendingTerritoryLevel = normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) ?? null;
         this._farewellLetters = normalizeFarewellLetters(snapshot.farewellLetters);
         this._loginStreak = normalizeLoginStreak(snapshot.loginStreak);
+        this._dailySubsidy = normalizeDailySubsidyRecord(snapshot.dailySubsidy);
         this._playerLogs = normalizePlayerLogs(snapshot.playerLogs);
         this._dailyNews = normalizeDailyNewsState(snapshot.dailyNews);
         this._morningReport = normalizeMorningReportState(snapshot.morningReport);

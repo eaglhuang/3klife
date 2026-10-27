@@ -60,6 +60,23 @@ import type { KeepTerritory } from '../systems/HereditaryKeep';
 import type { JournalEntry } from '../systems/JournalLog';
 import type { FarewellLetter } from '../systems/FarewellLetterInbox';
 import type { LoginStreakState } from '../systems/LoginStreak';
+
+/** 每日補貼紀錄：上次領取日（YYYY-MM-DD，UTC+8）與該日各項補量 */
+export interface DailySubsidyRecord {
+    lastClaimDay: string;
+    foodGranted: number;
+    goldGranted: number;
+    troopsGranted: number;
+}
+
+/** 日期格式不對時視為從未領取（null）；補量只留非負整數 */
+export function normalizeDailySubsidyRecord(raw: unknown): DailySubsidyRecord | null {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    const r = raw as Record<string, unknown>;
+    if (typeof r.lastClaimDay !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(r.lastClaimDay)) return null;
+    const amount = (v: unknown): number => (typeof v === 'number' && Number.isFinite(v) && v > 0 ? Math.floor(v) : 0);
+    return { lastClaimDay: r.lastClaimDay, foodGranted: amount(r.foodGranted), goldGranted: amount(r.goldGranted), troopsGranted: amount(r.troopsGranted) };
+}
 import { normalizeDailyNewsState, normalizePlayerLogs, type DailyNewsState, type PlayerLogEntry } from '../systems/DailyNewsEngine';
 import { normalizeMorningReportState, type MorningReportState } from '../systems/MorningReport';
 import { normalizeDispatchState, type DispatchState } from '../systems/DispatchJobs';
@@ -146,6 +163,8 @@ export interface PlayerSaveSnapshot {
     farewellLetters?: FarewellLetter[];
     /** 連續登入統計（PROG-2-0987）：只在有登入紀錄時寫入；舊檔沒有時為從未登入；版號不升 */
     loginStreak?: LoginStreakState;
+    /** 每日補貼（Player_Economy.Daily_Subsidy，PROG-2-1315）：領過才寫入；版號不升 */
+    dailySubsidy?: DailySubsidyRecord;
     /** 三國日報素材：前 24h 玩家行為紀錄（PROG-2-1170）；只在有紀錄時寫入，舊檔沒有時讀回空陣列；版號不升 */
     playerLogs?: PlayerLogEntry[];
     /** 三國日報：當日生成的日報與已讀狀態（PROG-2-1170）；舊檔沒有時為從未生成；版號不升 */
@@ -531,6 +550,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
             : {}),
         ...(snapshot.farewellLetters !== undefined ? { farewellLetters: normalizeFarewellLetters(snapshot.farewellLetters) } : {}),
         ...(snapshot.loginStreak !== undefined ? { loginStreak: normalizeLoginStreak(snapshot.loginStreak) } : {}),
+        ...(normalizeDailySubsidyRecord(snapshot.dailySubsidy) ? { dailySubsidy: normalizeDailySubsidyRecord(snapshot.dailySubsidy)! } : {}),
         ...(snapshot.playerLogs !== undefined ? { playerLogs: normalizePlayerLogs(snapshot.playerLogs) } : {}),
         ...(snapshot.dailyNews !== undefined ? { dailyNews: normalizeDailyNewsState(snapshot.dailyNews) } : {}),
         ...(snapshot.morningReport !== undefined ? { morningReport: normalizeMorningReportState(snapshot.morningReport) } : {}),
