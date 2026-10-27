@@ -560,7 +560,9 @@
       0.35
     ],
     "note": "任何一格槍尾不得低於地面線；雙手持槍段兩手間距 0.22–0.35H",
-    "buttGroundToleranceH": 0.01
+    "buttGroundToleranceH": 0.01,
+    "twoHandGripSpacingAppliesTo": "animation",
+    "spacingNote": "twoHandGripSpacingH 只管動畫影格（後手 IK 目標 weapon_grip_rear）；setup pose 的 grip_A–grip_B 固定錨點（685px≈0.428H）是分件圖的雙手位置，不受此範圍限制。動畫中後手沿槍桿滑到 0.22–0.35H。v3.6（2026-10-27）。"
   },
   "shoulderOverlapZone": {
     "joints": [
@@ -568,7 +570,9 @@
       "shoulder_b"
     ],
     "radiusH": 0.06,
-    "note": "以肩關節為圓心、半徑 0.06H（H=1600 時 96px）內允許肩甲與軀幹前後重疊，不要求 arm_to_torso 透明縫；圈內屬上臂膠囊者歸手臂。圈外至手腕全段仍須 ≥ minGapPx.arm_to_torso。切圖工具須為圈內被肩甲遮住的軀幹補底。"
+    "note": "以肩關節為圓心、半徑 0.06H（H=1600 時 96px）內允許肩甲與軀幹前後重疊，不要求 arm_to_torso 透明縫；圈內屬上臂膠囊者歸手臂。圈外至手腕全段仍須 ≥ minGapPx.arm_to_torso。切圖工具須為圈內被肩甲遮住的軀幹補底。",
+    "parentSideExtensionWaivedWhen": "pauldron",
+    "waiverNote": "肩關節的父側（torso）隱藏延伸 ≥hiddenExtensionH 規則：同側 pauldron 槽存在且其 alpha 蓋住肩關節（≤20px）時豁免，改由含 pauldron 的旋轉露縫檢查把關。子側 arm_upper 的延伸仍須 ≥hiddenExtensionH。v3.6（2026-10-27）。"
   },
   "layeredSlots": {
     "names": [
