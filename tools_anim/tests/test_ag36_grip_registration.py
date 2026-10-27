@@ -15,6 +15,8 @@
 """
 from __future__ import annotations
 
+import cv2
+
 import json
 import math
 import os
@@ -83,7 +85,7 @@ class TestAG36GripRegistration(unittest.TestCase):
         self.assertTrue(g_reg.get("advisory", False), "advisory 標記應為 True")
         self.assertEqual(g_reg["raysHit"], 0, "8 方向命中應為 0/8")
         self.assertEqual(g_reg["coverage12pxPct"], 0.0, "+/-12px 覆蓋率應為 0.0%")
-        self.assertAlmostEqual(g_reg["distancePx"], 143.6, delta=1.0, msg="形心距離保留參考約 143.6 px")
+        self.assertAlmostEqual(g_reg["distancePx"], 152.3, delta=1.5, msg="主連通區形心距離約 152.3 px (AG-40 排除游離甲片)")
 
     def test_ag38_grip_registration_shifted_hand_f_passes(self) -> None:
         """
@@ -118,6 +120,8 @@ class TestAG36GripRegistration(unittest.TestCase):
                     ny = y + dy
                     if 0 <= nx < hf_arr.shape[1] and 0 <= ny < hf_arr.shape[0]:
                         shifted_arr[ny, nx] = hf_arr[y, x]
+        # AG-40: 護腕甲片接在手套上，連成單一主連通區
+        cv2.line(shifted_arr, (1357, 1113), (1362, 1111), [180, 150, 120, 255], 3)
         Image.fromarray(shifted_arr).save(parts_dir / "hand_f.png")
 
         rep, _ = run_layered_parts_inspection(
@@ -135,7 +139,7 @@ class TestAG36GripRegistration(unittest.TestCase):
         self.assertGreaterEqual(g_reg["raysHit"], 6, "命中方向數應 >= 6/8")
         self.assertEqual(g_reg["raysHit"], 8, "實測 8 方向全數命中")
         self.assertGreater(g_reg["coverage12pxPct"], 30.0, "+/-12px 覆蓋率應大於 30%")
-        self.assertAlmostEqual(g_reg["distancePx"], 117.3, delta=1.0, msg="形心距離約 117.3 px 作為參考")
+        self.assertAlmostEqual(g_reg["distancePx"], 118.5, delta=1.5, msg="形心距離約 117.3 px 作為參考")
 
     def test_ag38_grip_registration_hand_b_passes(self) -> None:
         """

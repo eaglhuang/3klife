@@ -866,6 +866,77 @@ def run_layered_parts_inspection(
             "checks": {"dimension": dim_check},
         }
 
+        # AG-40: 新增 detachedIslands 檢查 (每個槽)
+        # 主連通區以外、面積 >= 200 px (alpha > 16) 的連通區列出 bbox 與面積
+        # 層級：先當 ADVISORY，不擋驗收
+        # 例外：規格允許多塊的槽 (若有) 請讀規格欄位，不要寫死
+        vis_mask_16 = alpha > 16
+        tot_vis_16 = int(vis_mask_16.sum())
+
+        s_seg_cfg = spec.get("segments", {}).get(sid, {})
+        cov_rule_cfg = layered_cfg.get("coverageRule", {})
+        allow_detached = bool(
+            s_seg_cfg.get("allowDetachedIslands", False)
+            or s_seg_cfg.get("allowMultipleComponents", False)
+            or cov_rule_cfg.get("allowDetachedIslands", {}).get(sid, False)
+            or (isinstance(cov_rule_cfg.get("allowedDetachedSlots"), list) and sid in cov_rule_cfg.get("allowedDetachedSlots", []))
+            or (isinstance(cov_rule_cfg.get("allowDetachedIslands"), list) and sid in cov_rule_cfg.get("allowDetachedIslands", []))
+        )
+
+        slot_islands: list[dict[str, Any]] = []
+        slot_main_comp_area = 0
+        slot_main_comp_label = None
+
+        if tot_vis_16 > 0:
+            n_lbl_16, lbls_16, stats_16, cents_16 = cv2.connectedComponentsWithStats(
+                vis_mask_16.astype(np.uint8), connectivity=8
+            )
+            if n_lbl_16 > 1:
+                c_areas = [stats_16[lbl, cv2.CC_STAT_AREA] for lbl in range(1, n_lbl_16)]
+                max_c_idx = int(np.argmax(c_areas))
+                slot_main_comp_label = 1 + max_c_idx
+                slot_main_comp_area = int(stats_16[slot_main_comp_label, cv2.CC_STAT_AREA])
+
+                for lbl in range(1, n_lbl_16):
+                    if lbl == slot_main_comp_label:
+                        continue
+                    isl_area = int(stats_16[lbl, cv2.CC_STAT_AREA])
+                    if isl_area >= 200:
+                        ix = int(stats_16[lbl, cv2.CC_STAT_LEFT])
+                        iy = int(stats_16[lbl, cv2.CC_STAT_TOP])
+                        iw = int(stats_16[lbl, cv2.CC_STAT_WIDTH])
+                        ih = int(stats_16[lbl, cv2.CC_STAT_HEIGHT])
+                        slot_islands.append({
+                            "label": lbl,
+                            "areaPx": isl_area,
+                            "bbox": [ix, iy, ix + iw, iy + ih],
+                            "centroid": [round(float(cents_16[lbl][0]), 1), round(float(cents_16[lbl][1]), 1)],
+                        })
+
+        islands_pass = (len(slot_islands) == 0) or allow_detached
+        tier_str = "PASS" if islands_pass else "ADVISORY"
+
+        if allow_detached:
+            island_detail = f"規格允許游離碎片/多連通區 (檢出 {len(slot_islands)} 個 >=200px 連通區) [WAIVED/PASS]"
+        elif len(slot_islands) == 0:
+            island_detail = f"無游離碎片 (alpha>16, 面積>=200px 連通區數量=0, 主連通區面積={slot_main_comp_area}px) [PASS]"
+        else:
+            islands_str = ", ".join(f"{it['areaPx']}px@bbox{it['bbox']}" for it in slot_islands)
+            island_detail = f"檢出 {len(slot_islands)} 個游離碎片 (面積>=200px): {islands_str} (主連通區面積={slot_main_comp_area}px) [ADVISORY]"
+
+        slot_reports[sid]["checks"]["detachedIslands"] = {
+            "pass": islands_pass,
+            "tier": tier_str,
+            "advisory": True,
+            "allowedBySpec": allow_detached,
+            "mainComponentLabel": slot_main_comp_label,
+            "mainComponentAreaPx": slot_main_comp_area,
+            "islandsCount": len(slot_islands),
+            "islands": slot_islands,
+            "minIslandAreaPx": 200,
+            "detail": island_detail,
+        }
+
         # AG-23 / AG-34: 單槽範圍檢查與小島分三級 (scopeGate)
         scope_margin_px = float(layered_cfg.get("scopeMarginPx", 12.0))
         scope_gate_cfg = layered_cfg.get("scopeGate", {})
@@ -1228,11 +1299,53 @@ def run_layered_parts_inspection(
     grip_reg_radius = float(layered_cfg.get("gripRegistrationRadiusPx", 24.0))
 
     grip_tol_px = float(layered_cfg.get("gripTolerancePx", spec.get("gripsTolerancePx", 12.0)))
+    # AG-40: 輔助函式——提取主連通區 (面積最大, 8 鄰接, alpha >= 128)
+    def extract_main_component_128(arr_in: np.ndarray) -> tuple[np.ndarray, dict[str, Any]]:
+        alpha_in = arr_in[..., 3]
+        bin_128 = (alpha_in >= 128).astype(np.uint8)
+        n_lbls, lbls, stats, cents = cv2.connectedComponentsWithStats(bin_128, connectivity=8)
+        m_lbl = None
+        m_area = 0
+        m_bbox = [0, 0, 0, 0]
+        m_arr = np.zeros_like(arr_in)
+        if n_lbls > 1:
+            areas = [stats[lbl, cv2.CC_STAT_AREA] for lbl in range(1, n_lbls)]
+            max_idx = int(np.argmax(areas))
+            m_lbl = 1 + max_idx
+            m_area = int(stats[m_lbl, cv2.CC_STAT_AREA])
+            mx = int(stats[m_lbl, cv2.CC_STAT_LEFT])
+            my = int(stats[m_lbl, cv2.CC_STAT_TOP])
+            mw = int(stats[m_lbl, cv2.CC_STAT_WIDTH])
+            mh = int(stats[m_lbl, cv2.CC_STAT_HEIGHT])
+            m_bbox = [mx, my, mx + mw, my + mh]
+            m_mask = (lbls == m_lbl)
+            m_arr = arr_in.copy()
+            m_arr[~m_mask] = 0
+        return m_arr, {
+            "mainComponentLabel": m_lbl,
+            "mainComponentAreaPx": m_area,
+            "mainComponentBbox": m_bbox,
+            "totalComponentsCount": max(0, n_lbls - 1),
+        }
+
     if "hand_f" in loaded_parts and not slot_reports["hand_f"].get("empty"):
         h_arr = loaded_parts["hand_f"]
         exp_pt = (float(grip_a[0]), float(grip_a[1]))
-        found, pt, dist = find_fist_hole_center(h_arr, exp_pt)
+
+        # AG-40: 只用主連通區 (面積最大，8 鄰接、alpha >= 128) 判斷孔與包覆；其他連通區不算
+        h_arr_main, main_info = extract_main_component_128(h_arr)
+        found, pt, dist = find_fist_hole_center(h_arr_main, exp_pt)
         grip_pass = found and (dist <= grip_tol_px)
+
+        m_area = main_info["mainComponentAreaPx"]
+        m_lbl = main_info["mainComponentLabel"]
+        tot_c = main_info["totalComponentsCount"]
+
+        if found:
+            acc_detail = f"握點誤差={dist:.1f}px (tol={grip_tol_px:.0f}px), 主連通區={m_lbl} (面積={m_area}px)"
+        else:
+            acc_detail = f"找不到拳心孔 (主連通區={m_lbl}, 面積={m_area}px, 共{tot_c}個連通區)"
+
         slot_reports["hand_f"]["checks"]["grip_point_accuracy"] = {
             "pass": grip_pass,
             "tier": "PASS" if grip_pass else "FAIL",
@@ -1241,23 +1354,27 @@ def run_layered_parts_inspection(
             "targetGrip": list(grip_a),
             "distancePx": round(dist, 2),
             "tolerancePx": grip_tol_px,
-            "detail": f"握點誤差={dist:.1f}px (tol={grip_tol_px:.0f}px)",
+            "mainComponentLabel": m_lbl,
+            "mainComponentAreaPx": m_area,
+            "mainComponentBbox": main_info["mainComponentBbox"],
+            "totalComponentsCount": tot_c,
+            "detail": acc_detail,
         }
         if not grip_pass:
             slot_reports["hand_f"]["pass"] = False
             slot_reports["hand_f"]["tier"] = "FAIL"
             overall_pass = False
 
-        # AG-38: hand_f gripRegistration (判定改為 8 方向射線拳孔包覆 >= 6/8，形心僅供參考)
-        h_alpha = h_arr[..., 3]
-        h_ys, h_xs = np.where(h_alpha > 0)
+        # AG-38 + AG-40: hand_f gripRegistration (以主連通區執行 8 方向射線拳孔包覆 >= 6/8，形心僅供參考)
+        h_alpha_main = h_arr_main[..., 3]
+        h_ys, h_xs = np.where(h_alpha_main > 0)
         if len(h_xs) > 0:
             c_x = float(np.mean(h_xs))
             c_y = float(np.mean(h_ys))
             c_dist = float(math.hypot(c_x - exp_pt[0], c_y - exp_pt[1]))
 
             enc_res = check_grip_enclosure_rays(
-                h_arr=h_arr,
+                h_arr=h_arr_main,
                 exp_pt=exp_pt,
                 max_ray_dist_px=40.0,
                 alpha_thresh=128,
@@ -1267,9 +1384,9 @@ def run_layered_parts_inspection(
             reg_pass = enc_res["pass"]
 
             summary_msg = (
-                f"拳孔包覆={enc_res['raysHit']}/8方向 (門檻>=6/8, 半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [PASS]"
+                f"拳孔包覆={enc_res['raysHit']}/8方向 (門檻>=6/8, 半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 主連通區面積={m_area}px, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [PASS]"
                 if reg_pass
-                else f"拳孔未包覆={enc_res['raysHit']}/8方向 < 6/8 (半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [ADVISORY]"
+                else f"拳孔未包覆={enc_res['raysHit']}/8方向 < 6/8 (半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 主連通區面積={m_area}px, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [ADVISORY]"
             )
 
             slot_reports["hand_f"]["checks"]["gripRegistration"] = {
@@ -1286,14 +1403,31 @@ def run_layered_parts_inspection(
                 "targetGrip": list(exp_pt),
                 "distancePx": round(c_dist, 1),
                 "maxDistancePx": round(max_grip_reg_dist, 1),
+                "mainComponentLabel": m_lbl,
+                "mainComponentAreaPx": m_area,
+                "mainComponentBbox": main_info["mainComponentBbox"],
+                "totalComponentsCount": tot_c,
                 "detail": summary_msg,
             }
 
     if "hand_b" in loaded_parts and not slot_reports["hand_b"].get("empty"):
         h_arr = loaded_parts["hand_b"]
         exp_pt = (float(grip_b[0]), float(grip_b[1]))
-        found, pt, dist = find_fist_hole_center(h_arr, exp_pt)
+
+        # AG-40: 只用主連通區 (面積最大，8 鄰接、alpha >= 128) 判斷孔與包覆；其他連通區不算
+        h_arr_main, main_info = extract_main_component_128(h_arr)
+        found, pt, dist = find_fist_hole_center(h_arr_main, exp_pt)
         grip_pass = found and (dist <= grip_tol_px)
+
+        m_area = main_info["mainComponentAreaPx"]
+        m_lbl = main_info["mainComponentLabel"]
+        tot_c = main_info["totalComponentsCount"]
+
+        if found:
+            acc_detail = f"握點誤差={dist:.1f}px (tol={grip_tol_px:.0f}px), 主連通區={m_lbl} (面積={m_area}px)"
+        else:
+            acc_detail = f"找不到拳心孔 (主連通區={m_lbl}, 面積={m_area}px, 共{tot_c}個連通區)"
+
         slot_reports["hand_b"]["checks"]["grip_point_accuracy"] = {
             "pass": grip_pass,
             "tier": "PASS" if grip_pass else "FAIL",
@@ -1302,23 +1436,27 @@ def run_layered_parts_inspection(
             "targetGrip": list(grip_b),
             "distancePx": round(dist, 2),
             "tolerancePx": grip_tol_px,
-            "detail": f"握點誤差={dist:.1f}px (tol={grip_tol_px:.0f}px)",
+            "mainComponentLabel": m_lbl,
+            "mainComponentAreaPx": m_area,
+            "mainComponentBbox": main_info["mainComponentBbox"],
+            "totalComponentsCount": tot_c,
+            "detail": acc_detail,
         }
         if not grip_pass:
             slot_reports["hand_b"]["pass"] = False
             slot_reports["hand_b"]["tier"] = "FAIL"
             overall_pass = False
 
-        # AG-38: hand_b gripRegistration (判定改為 8 方向射線拳孔包覆 >= 6/8，形心僅供參考)
-        h_alpha = h_arr[..., 3]
-        h_ys, h_xs = np.where(h_alpha > 0)
+        # AG-38 + AG-40: hand_b gripRegistration (以主連通區執行 8 方向射線拳孔包覆 >= 6/8，形心僅供參考)
+        h_alpha_main = h_arr_main[..., 3]
+        h_ys, h_xs = np.where(h_alpha_main > 0)
         if len(h_xs) > 0:
             c_x = float(np.mean(h_xs))
             c_y = float(np.mean(h_ys))
             c_dist = float(math.hypot(c_x - exp_pt[0], c_y - exp_pt[1]))
 
             enc_res = check_grip_enclosure_rays(
-                h_arr=h_arr,
+                h_arr=h_arr_main,
                 exp_pt=exp_pt,
                 max_ray_dist_px=40.0,
                 alpha_thresh=128,
@@ -1328,9 +1466,9 @@ def run_layered_parts_inspection(
             reg_pass = enc_res["pass"]
 
             summary_msg = (
-                f"拳孔包覆={enc_res['raysHit']}/8方向 (門檻>=6/8, 半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [PASS]"
+                f"拳孔包覆={enc_res['raysHit']}/8方向 (門檻>=6/8, 半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 主連通區面積={m_area}px, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [PASS]"
                 if reg_pass
-                else f"拳孔未包覆={enc_res['raysHit']}/8方向 < 6/8 (半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [ADVISORY]"
+                else f"拳孔未包覆={enc_res['raysHit']}/8方向 < 6/8 (半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 主連通區面積={m_area}px, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [ADVISORY]"
             )
 
             slot_reports["hand_b"]["checks"]["gripRegistration"] = {
@@ -1347,6 +1485,10 @@ def run_layered_parts_inspection(
                 "targetGrip": list(exp_pt),
                 "distancePx": round(c_dist, 1),
                 "maxDistancePx": round(max_grip_reg_dist, 1),
+                "mainComponentLabel": m_lbl,
+                "mainComponentAreaPx": m_area,
+                "mainComponentBbox": main_info["mainComponentBbox"],
+                "totalComponentsCount": tot_c,
                 "detail": summary_msg,
             }
 
