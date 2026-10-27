@@ -4,7 +4,7 @@
 import { assert, TestSuite } from './TestRunner';
 import { GameSession } from '../assets/scripts/core/managers/GameSession';
 import {
-    DISPATCH_JOB_CATALOG, DISPATCH_ROW_TEXT, dispatchBoardRows, findDispatchJob,
+    DISPATCH_JOB_CATALOG, DISPATCH_QUALITY_LABEL, DISPATCH_ROW_TEXT, dispatchBoardRows, dispatchPreviewText, findDispatchJob,
 } from '../assets/scripts/core/systems/DispatchCatalog';
 import { EMPTY_DISPATCH_STATE, startDispatch } from '../assets/scripts/core/systems/DispatchJobs';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
@@ -53,6 +53,27 @@ export function createDispatchCatalogSuite(): TestSuite {
         const rows = session.dispatchBoardRows(0);
         assert.equals('FARM', rows[0].id);
         assert.equals('趙雲・剩 6 時', rows[0].scoreText);
+    });
+
+    suite.test('PROG-2-1188：預覽自動挑將或指定武將的分數；高風險尾綴；無人可派維持原字串；預設不預覽', () => {
+        const session = new GameSession(2);
+        const weak = { ...hero('weak', '弱將'), str: 20, int: 20, lea: 20, careerClass: 'Scholar' } as unknown as GeneralConfig;
+        session.enrollGenerals([weak, hero('zhao', '趙雲')]);
+        const farm = findDispatchJob('FARM')!;
+        const farmOf = (generalId?: string) => session.dispatchBoardRows(0, { preview: true, generalId }).find((r) => r.id === 'FARM')!.scoreText;
+        const scoreOf = (text: string) => Number(/ (\d+) 分/.exec(text)![1]);
+        const zhao = farmOf('zhao');
+        const weakText = farmOf('weak');
+        assert.isTrue(zhao.startsWith('趙雲 ') && weakText.startsWith('弱將 '), zhao + '／' + weakText);
+        assert.equals(dispatchPreviewText({ generalName: '趙雲', score: scoreOf(zhao) }, false), zhao);
+        assert.equals(scoreOf(zhao) >= scoreOf(weakText) ? zhao : weakText, farmOf());
+        const raid = session.dispatchBoardRows(0, { preview: true }).find((r) => r.id === 'RAID')!.scoreText;
+        assert.isTrue(raid.endsWith('・' + DISPATCH_ROW_TEXT.highRisk), raid);
+        assert.equals(DISPATCH_ROW_TEXT.available, session.dispatchBoardRows(0).find((r) => r.id === 'FARM')!.scoreText);
+        assert.isTrue(session.startDispatchJob(farm, 'zhao', 0)!.ok);
+        assert.isTrue(session.startDispatchJob(findDispatchJob('PATROL')!, 'weak', 0)!.ok);
+        assert.equals(DISPATCH_ROW_TEXT.available, session.dispatchBoardRows(0, { preview: true }).find((r) => r.id === 'ESCORT')!.scoreText);
+        assert.equals('良好', DISPATCH_QUALITY_LABEL.GOOD);
     });
 
     return suite;

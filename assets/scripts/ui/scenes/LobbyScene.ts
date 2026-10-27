@@ -1397,7 +1397,7 @@ export class LobbyScene extends Component {
     private async _mountJournalHub(): Promise<void> {
         this._journalHub = new JournalHubController({
             morningLines: () => services().session.morningReport.items.map((item) => item.summary),
-            dispatchRows: () => services().session.dispatchBoardRows(Date.now()),
+            dispatchRows: () => services().session.dispatchBoardRows(Date.now(), { preview: true, generalId: this._journalHub?.pickedGeneralId() }),
             dispatchGenerals: () => services().session.dispatchIdleGenerals(Date.now()),
         });
         this._journalHubHost = await this._mountPreviewScreenHost('JournalHubHost', 'journal-hub-screen', [

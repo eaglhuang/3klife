@@ -81,7 +81,7 @@ import { dispatchCompleteLine, getDispatchScore, type DispatchGeneral, type Disp
 import {
     appendOfflineBattleSnapshot, nextOfflineBattleSnapshotId, normalizeOfflineBattleSnapshots, OFFLINE_BATTLE_JOURNAL, type OfflineBattleInput, type OfflineBattleSnapshot,
 } from '../systems/OfflineBattleSnapshot';
-import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type DispatchCatalogRow } from '../systems/DispatchCatalog';
+import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type DispatchCatalogRow, type DispatchPreview } from '../systems/DispatchCatalog';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
@@ -1779,9 +1779,30 @@ export class GameSession {
     }
 
     /** 大廳派遣板列（暫定清單，PROG-2-1179）：進行中在前，名冊外的武將顯示 id */
-    public dispatchBoardRows(nowMs: number): DispatchCatalogRow[] {
+    /**
+     * 派遣板列。preview 為 true 時，未進行的任務預覽人選與分數（PROG-2-1188）：
+     * 帶 generalId 預覽該武將（須可派），否則預覽自動挑將的人選。
+     */
+    public dispatchBoardRows(nowMs: number, options: { preview?: boolean; generalId?: string } = {}): DispatchCatalogRow[] {
         const roster = this._roster.getAll();
-        return dispatchBoardRows(this._dispatch, DISPATCH_JOB_CATALOG, (id) => roster.find((g) => g.id === id)?.name ?? id, nowMs);
+        const preview = options.preview ? (job: Readonly<DispatchJobDef>): DispatchPreview | null => {
+            if (!options.generalId) return this._bestDispatchGeneral(job, nowMs);
+            const chosen = this.dispatchIdleGenerals(nowMs).find((g) => g.id === options.generalId);
+            const general = chosen ? roster.find((g) => g.id === chosen.id) : undefined;
+            return general ? { generalName: general.name, score: getDispatchScore(job, this._dispatchGeneralOf(general)) } : null;
+        } : undefined;
+        return dispatchBoardRows(this._dispatch, DISPATCH_JOB_CATALOG, (id) => roster.find((g) => g.id === id)?.name ?? id, nowMs, preview);
+    }
+
+    /** 自動挑將：分數最高、不忙碌也不在冷卻的武將（同分取名冊順序）；點列派遣與預覽共用 */
+    private _bestDispatchGeneral(job: Readonly<DispatchJobDef>, nowMs: number): { id: string; generalName: string; score: number } | null {
+        const idleIds = new Set(this.dispatchIdleGenerals(nowMs).map((g) => g.id));
+        let best: { id: string; generalName: string; score: number } | null = null;
+        for (const g of this._roster.getAll().filter((r) => idleIds.has(r.id))) {
+            const score = getDispatchScore(job, this._dispatchGeneralOf(g));
+            if (!best || score > best.score) best = { id: g.id, generalName: g.name, score };
+        }
+        return best;
     }
 
     /**
@@ -1835,18 +1856,11 @@ export class GameSession {
             if (!result?.ok) return { ok: false, reason: result?.reason ?? 'no-general', jobName: job.name, generalName: chosen.name };
             return { ok: true, jobName: job.name, generalName: chosen.name };
         }
-        const idleIds = new Set(this.dispatchIdleGenerals(nowMs).map((g) => g.id));
-        const idle = this._roster.getAll().filter((g) => idleIds.has(g.id));
-        let best: { id: string; name: string } | null = null;
-        let bestScore = -1;
-        for (const g of idle) {
-            const score = getDispatchScore(job, this._dispatchGeneralOf(g));
-            if (score > bestScore) { best = g; bestScore = score; }
-        }
+        const best = this._bestDispatchGeneral(job, nowMs);
         if (!best) return { ok: false, reason: 'no-general', jobName: job.name };
         const result = this.startDispatchJob(job, best.id, nowMs);
         if (!result?.ok) return { ok: false, reason: result?.reason ?? 'no-general', jobName: job.name };
-        return { ok: true, jobName: job.name, generalName: best.name };
+        return { ok: true, jobName: job.name, generalName: best.generalName };
     }
 
     /** 結算到期的派遣，每筆寫 DISPATCH 日誌（§G 完成句）；回傳本次完成的任務。 */
