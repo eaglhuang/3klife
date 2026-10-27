@@ -271,6 +271,8 @@ export class LobbyScene extends Component {
     private _mercPanel: MercenaryPanelController | null = null;
     private _govHallHost: UIScreenPreviewHost | null = null;
     private _govHall: GovernorHallController | null = null;
+    /** 太守府升級因金錢不足被拒（PROG-2-0991）；重新開啟太守府時清除。 */
+    private _territoryGoldShortage = false;
     /** 名將池武將 id（gacha-config hero-pool）；招賢館與傭兵試用招募共用 */
     private _heroPoolIds: readonly string[] = [];
     private _redFaceHost: UIScreenPreviewHost | null = null;
@@ -501,6 +503,10 @@ export class LobbyScene extends Component {
         try {
             const loaded = await services().session.load();
             UCUFLogger.info(LogCategory.DATA, loaded ? '[LobbyScene] 已讀取玩家存檔' : '[LobbyScene] 沒有玩家存檔，從新局開始');
+            // 離線互動（JRN-04）：目前尚無主互動內容，只記錄是否應觸發
+            if (loaded && services().session.offlineInteractionDue(Date.now())) {
+                UCUFLogger.info(LogCategory.DATA, '[LobbyScene] 離線互動事件待觸發');
+            }
             return loaded;
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 讀取玩家存檔失敗，從新局開始', error);
@@ -1465,6 +1471,7 @@ export class LobbyScene extends Component {
         if (!host) {
             return;
         }
+        this._territoryGoldShortage = false;
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshGovernorHall();
@@ -1478,6 +1485,7 @@ export class LobbyScene extends Component {
             maxSlots: session.maxTaskSlots,
             pendingLevel: session.pendingTerritoryLevel,
             plan: planTerritoryUpgrade(session.territoryLevel, session.pendingTerritoryLevel, session.military.food),
+            goldShortage: this._territoryGoldShortage,
         };
     }
 
@@ -1486,6 +1494,7 @@ export class LobbyScene extends Component {
         const session = services().session;
         const gacha = this._localGachaService;
         const plan = session.orderTerritoryUpgrade((amount) => gacha.spendCurrency('gold', amount));
+        this._territoryGoldShortage = !plan.ok && plan.reason === 'insufficient-gold';
         if (plan.ok) void session.save().catch(() => undefined);
         this._refreshGovernorHall();
     }
