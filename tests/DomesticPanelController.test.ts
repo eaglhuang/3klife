@@ -207,5 +207,18 @@ export function createDomesticPanelControllerSuite(): TestSuite {
         assert.equals(290, result!.output!.amount);
     });
 
+    suite.test('自動指派：空格補上武將並顯示太守府提示；全滿時再按只提示', () => {
+        const session = new GameSession();
+        session.setRosterStore(new InMemoryRosterStore([general('a', { pol: 90 }), general('b', { str: 90 })]));
+        session.setAutoSave(false);
+        const controller = sessionController(session);
+        assert.equals(2, controller.autoAssign());
+        assert.equals('太守府已自動安排武將執行內政。', controller.getFlowView().texts.noticeLabel);
+        assert.equals('主事：a', controller.getFlowView().texts.farmingGovernor);
+        assert.equals('主事：b', controller.getFlowView().texts.armsGovernor);
+        assert.equals(0, controller.autoAssign());
+        assert.equals('沒有可指派的閒置武將', controller.getFlowView().texts.noticeLabel);
+    });
+
     return suite;
 }

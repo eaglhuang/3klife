@@ -1244,6 +1244,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnDiplomacy', handler: () => { void this._onClickDomesticTask(domestic, 'diplomacy'); } },
             { buttonId: 'btnArms', handler: () => { void this._onClickDomesticTask(domestic, 'arms'); } },
             { buttonId: 'btnScouting', handler: () => { void this._onClickDomesticTask(domestic, 'scouting'); } },
+            { buttonId: 'btnAutoGov', handler: () => { domestic.autoAssign(); this._refreshDomestic(); } },
             ...(['farming', 'commerce', 'diplomacy', 'arms', 'scouting'] as const).map((taskId) => ({
                 buttonId: `btnGov${taskId.charAt(0).toUpperCase()}${taskId.slice(1)}`,
                 handler: () => { domestic.cycleGovernor(taskId); this._refreshDomestic(); },
