@@ -65,6 +65,7 @@ import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDe
 import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
 import { EMPTY_LOGIN_STREAK, LoginStreakState, loginDayOf, recordLogin } from '../systems/LoginStreak';
 import { dailySubsidyOf, type SubsidyResourceKey } from '../systems/DailySubsidy';
+import { activateMonthlyCard, claimMonthlyCardDaily, isMonthlyCardExpiring, monthlyCardDaysLeft, normalizeMonthlyCard, type MonthlyCardState } from '../systems/MonthlyCard';
 import {
     appendPlayerLog, EMPTY_DAILY_NEWS, markDailyNewsRead, normalizeDailyNewsState, normalizePlayerLogs, refreshDailyNews,
     type DailyNewsState, type PlayerLogEntry, type PlayerLogType,
@@ -1374,6 +1375,7 @@ export class GameSession {
         this._farewellLetters = [];
         this._loginStreak = { ...EMPTY_LOGIN_STREAK };
         this._dailySubsidy = null;
+        this._monthlyCard = null;
         this._playerLogs = [];
         this._dailyNews = { ...EMPTY_DAILY_NEWS, news: [] };
         this._morningReport = { ...EMPTY_MORNING_REPORT, items: [] };
@@ -1987,6 +1989,33 @@ export class GameSession {
         if (gold > 0) grants.gold = gold;
         if (troops > 0) grants.troops = troops;
         return grants;
+    }
+
+    /** 月卡（PROG-2-1359）；從未開通為 null */
+    private _monthlyCard: MonthlyCardState | null = null;
+
+    /** 月卡現況：剩餘天數（含今天）、是否即將到期、今天是否已領 */
+    public monthlyCardStatus(epochMs: number): { daysLeft: number; expiring: boolean; claimedToday: boolean } {
+        return {
+            daysLeft: monthlyCardDaysLeft(this._monthlyCard, epochMs),
+            expiring: isMonthlyCardExpiring(this._monthlyCard, epochMs),
+            claimedToday: this._monthlyCard?.lastClaimDay === loginDayOf(epochMs),
+        };
+    }
+
+    /** 開通或續約月卡（付費流程由呼叫端負責）；回傳剩餘天數；不自動存檔 */
+    public activateMonthlyCard(epochMs: number): number {
+        this._monthlyCard = activateMonthlyCard(this._monthlyCard, epochMs);
+        return monthlyCardDaysLeft(this._monthlyCard, epochMs);
+    }
+
+    /** 月卡每日領取（經濟系統 F，PROG-2-1359）：效期內同日一次，加速卡進背包；回傳本次張數；不自動存檔 */
+    public claimMonthlyCardDaily(epochMs: number): number {
+        const claim = claimMonthlyCardDaily(this._monthlyCard, epochMs);
+        if (claim.speedCards <= 0) return 0;
+        this._monthlyCard = claim.state;
+        this._inventory = addItem(this._inventory, ITEM_WISH_SPEED_CARD, claim.speedCards);
+        return claim.speedCards;
     }
 
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
@@ -3610,8 +3639,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3624,6 +3653,7 @@ export class GameSession {
         if (this._farewellLetters.length > 0) fields.farewellLetters = this.farewellLetters;
         if (this._loginStreak.lastLoginDay !== null) fields.loginStreak = this.loginStreak;
         if (this._dailySubsidy) fields.dailySubsidy = this.dailySubsidy!;
+        if (this._monthlyCard) fields.monthlyCard = { ...this._monthlyCard };
         if (this._playerLogs.length > 0) fields.playerLogs = this.playerLogs;
         if (this._dailyNews.lastLoginMs !== null) fields.dailyNews = this.dailyNews;
         if (this._morningReport.journalMark > 0 || this._morningReport.items.length > 0) fields.morningReport = this.morningReport;
@@ -3652,6 +3682,7 @@ export class GameSession {
         this._farewellLetters = normalizeFarewellLetters(snapshot.farewellLetters);
         this._loginStreak = normalizeLoginStreak(snapshot.loginStreak);
         this._dailySubsidy = normalizeDailySubsidyRecord(snapshot.dailySubsidy);
+        this._monthlyCard = normalizeMonthlyCard(snapshot.monthlyCard);
         this._playerLogs = normalizePlayerLogs(snapshot.playerLogs);
         this._dailyNews = normalizeDailyNewsState(snapshot.dailyNews);
         this._morningReport = normalizeMorningReportState(snapshot.morningReport);
