@@ -1,0 +1,17 @@
+{
+  "id": "wish-altar-screen",
+  "version": 1,
+  "uiId": "WishAltarPanel",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "wish-altar-main",
+  "skin": "wish-altar-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

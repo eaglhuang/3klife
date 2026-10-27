@@ -319,7 +319,7 @@
                 "type": "button",
                 "name": "BtnOpenGeneralJournal",
                 "id": "btnOpenGeneralJournal",
-                "width": 240,
+                "width": 220,
                 "height": 64,
                 "skinSlot": "jh.button.bg",
                 "children": [
@@ -327,7 +327,7 @@
                     "type": "label",
                     "name": "BtnOpenGeneralJournalLabel",
                     "id": "btnOpenGeneralJournalLabel",
-                    "width": 240,
+                    "width": 220,
                     "height": 40,
                     "text": "武將日誌 ▶",
                     "styleSlot": "jh.label.body"
@@ -342,7 +342,7 @@
                 "type": "button",
                 "name": "BtnOpenBattleReview",
                 "id": "btnOpenBattleReview",
-                "width": 240,
+                "width": 220,
                 "height": 64,
                 "skinSlot": "jh.button.bg",
                 "children": [
@@ -350,7 +350,7 @@
                     "type": "label",
                     "name": "BtnOpenBattleReviewLabel",
                     "id": "btnOpenBattleReviewLabel",
-                    "width": 240,
+                    "width": 220,
                     "height": 40,
                     "text": "戰報 ▶",
                     "styleSlot": "jh.label.body"
@@ -365,7 +365,7 @@
                 "type": "button",
                 "name": "BtnOpenTournament",
                 "id": "btnOpenTournament",
-                "width": 240,
+                "width": 220,
                 "height": 64,
                 "skinSlot": "jh.button.bg",
                 "children": [
@@ -373,14 +373,37 @@
                     "type": "label",
                     "name": "BtnOpenTournamentLabel",
                     "id": "btnOpenTournamentLabel",
-                    "width": 240,
+                    "width": 220,
                     "height": 40,
                     "text": "挑戰賽 ▶",
                     "styleSlot": "jh.label.body"
                   }
                 ],
                 "widget": {
-                  "hCenter": true,
+                  "left": 241,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnOpenWishAltar",
+                "id": "btnOpenWishAltar",
+                "width": 220,
+                "height": 64,
+                "skinSlot": "jh.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenWishAltarLabel",
+                    "id": "btnOpenWishAltarLabel",
+                    "width": 220,
+                    "height": 40,
+                    "text": "許願祭壇 ▶",
+                    "styleSlot": "jh.label.body"
+                  }
+                ],
+                "widget": {
+                  "right": 241,
                   "vCenter": true
                 }
               }
