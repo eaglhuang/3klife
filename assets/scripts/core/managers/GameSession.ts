@@ -76,6 +76,7 @@ import {
     type CompletedDispatchJob, type DispatchJobDef, type DispatchStartResult, type DispatchState,
 } from '../systems/DispatchJobs';
 import { dispatchCompleteLine, type DispatchStatKey } from '../systems/DispatchQuality';
+import { DISPATCH_JOB_CATALOG, dispatchBoardRows, type DispatchCatalogRow } from '../systems/DispatchCatalog';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
@@ -1590,6 +1591,12 @@ export class GameSession {
     /** 派遣狀態（複本）：進行中、已完成、冷卻 */
     public get dispatchState(): DispatchState {
         return normalizeDispatchState(this._dispatch);
+    }
+
+    /** 大廳派遣板列（暫定清單，PROG-2-1179）：進行中在前，名冊外的武將顯示 id */
+    public dispatchBoardRows(nowMs: number): DispatchCatalogRow[] {
+        const roster = this._roster.getAll();
+        return dispatchBoardRows(this._dispatch, DISPATCH_JOB_CATALOG, (id) => roster.find((g) => g.id === id)?.name ?? id, nowMs);
     }
 
     /**
