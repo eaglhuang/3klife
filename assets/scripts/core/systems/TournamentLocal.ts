@@ -1,4 +1,4 @@
-// @spec-source → 名將挑戰賽系統.md (doc_spec_0007) §F 賽季週期（TOURNAMENT_CONFIG）、配對機制、賽季鏡像快照與鎖定規則、排名積分；PROG-2-1190；§E-9 賽季獎勵 PROG-2-1194
+// @spec-source → 名將挑戰賽系統.md (doc_spec_0007) §F 賽季週期（TOURNAMENT_CONFIG）、配對機制、賽季鏡像快照與鎖定規則、排名積分；PROG-2-1190；§E-9 賽季獎勵 PROG-2-1194；§E-2 場地屬性公告、§A 杯賽命名 PROG-2-1195
 /**
  * TournamentLocal — 名將挑戰賽本機最小可行（純邏輯，不依賴 cc）。
  *
@@ -7,11 +7,13 @@
  *   - 報名：第一次參戰時凍結出戰陣容為鏡像快照；培育期每日可重登錄 1 次，競賽期整季只可替換 1 次。
  *   - 參戰：只在競賽期；每日免費 1 次，額外每次付費（呼叫端決定扣什麼），每日上限 5 次。
  *   - 對戰：對手戰力在我方 ±15% 內隨機；五戰三勝，每場雙方各帶 ±5% 地形浮動；系列賽勝負套規格 ELO（K=32）。
+ *   - 場地：每季依序號輪替一個杯賽（杯名＋地形＋天氣），培育期即公告（PROG-2-1195）。
  *   - 獎勵：有參賽（留有鏡像快照）的已結束賽季依最終段位列為待領，領取後標記已領（PROG-2-1194）。
  *
  * 暫定：對手的排名分以「我方分數 × 對手戰力比」估算；ELO 以整個系列賽算一次；獎勵先只發金錢（稀有虎符／限定外觀待企劃）。
  * Unity 對照：像一個存檔用的 ScriptableObject 狀態 + 純函式 reducer。
  */
+import { TerrainType, Weather } from '../../shared/CommonEnums';
 import { rankTierOf, softResetPoints, tournamentPhaseOf, TOURNAMENT_SEASON_DAYS, type RankTier, type TournamentPhase } from './TournamentSeason';
 
 export const TOURNAMENT_DAY_MS = 24 * 60 * 60 * 1000;
@@ -30,6 +32,34 @@ export const TOURNAMENT_LOCAL_CONFIG = {
     preparationDailyReplace: 1,
     competitionReplaceLimit: 1,
 } as const;
+
+/** 杯賽場地：杯名、地形、天氣 */
+export interface TournamentVenue {
+    cupName: string;
+    terrain: TerrainType;
+    weather: Weather;
+}
+
+/**
+ * 杯賽輪替表（依賽季序號循環）。赤壁／官渡／虎牢／夷陵沿用規格 §K 地形天氣；
+ * 武將盃與長坂盃的場地、以及輪替順序為暫定。
+ */
+export const TOURNAMENT_CUPS: readonly TournamentVenue[] = [
+    { cupName: '赤壁盃', terrain: TerrainType.River, weather: Weather.Windy },
+    { cupName: '張飛盃', terrain: TerrainType.Mountain, weather: Weather.Clear },
+    { cupName: '官渡盃', terrain: TerrainType.Plain, weather: Weather.Clear },
+    { cupName: '呂布盃', terrain: TerrainType.Fortress, weather: Weather.Thunder },
+    { cupName: '虎牢盃', terrain: TerrainType.Mountain, weather: Weather.Night },
+    { cupName: '趙雲盃', terrain: TerrainType.Plain, weather: Weather.Windy },
+    { cupName: '夷陵盃', terrain: TerrainType.Forest, weather: Weather.Rain },
+    { cupName: '長坂盃', terrain: TerrainType.Plain, weather: Weather.Fog },
+];
+
+/** 第 N 季的杯賽場地（N 從 1 起） */
+export function tournamentVenueOf(seasonIndex: number): TournamentVenue {
+    const n = TOURNAMENT_CUPS.length;
+    return { ...TOURNAMENT_CUPS[(((Math.floor(seasonIndex) - 1) % n) + n) % n] };
+}
 
 /** 賽季獎勵（暫定，只發金錢）：依最終段位 */
 export const TOURNAMENT_SEASON_REWARD_GOLD: Readonly<Record<RankTier, number>> = {
@@ -88,6 +118,7 @@ export interface TournamentEntrant {
 
 export interface TournamentStatus {
     seasonIndex: number;
+    venue: TournamentVenue;
     phase: TournamentPhase;
     dayInSeason: number;
     daysLeft: number;
@@ -153,6 +184,7 @@ export function tournamentStatus(state: Readonly<TournamentState>, nowMs: number
     const phase = tournamentPhaseOf(day);
     return {
         seasonIndex: state.seasonIndex,
+        venue: tournamentVenueOf(state.seasonIndex),
         phase,
         dayInSeason: day,
         daysLeft: Math.max(0, TOURNAMENT_SEASON_DAYS - day),

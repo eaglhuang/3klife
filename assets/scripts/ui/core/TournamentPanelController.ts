@@ -1,9 +1,9 @@
-// @spec-source → 名將挑戰賽系統.md (doc_spec_0007)；PROG-2-1191（挑戰賽彈窗）；§H UI_TOURNAMENT_REWARD 賽季獎勵 PROG-2-1194
+// @spec-source → 名將挑戰賽系統.md (doc_spec_0007)；PROG-2-1191（挑戰賽彈窗）；§H UI_TOURNAMENT_REWARD 賽季獎勵 PROG-2-1194；§E-2 場地公告 PROG-2-1195
 /**
  * TournamentPanelController — 名將挑戰賽彈窗：賽季卡、報名、參戰（純邏輯，不依賴 cc）。
  *
  * 職責：
- *   - 顯示賽季、相位、剩餘日、積分與段位、今日剩餘次數（含免費／付費）、出戰陣容
+ *   - 顯示屆數與杯名、本季地形／天氣（PROG-2-1195）、相位、剩餘日、積分與段位、今日剩餘次數（含免費／付費）、出戰陣容
  *   - 報名／參戰後顯示結果或拒絕原因
  *   - 顯示待領賽季獎勵，「領獎」一次領完（PROG-2-1194）
  *   - 輸出扁平 FlowView，key 與 tournament-main 版面節點 id 一一對應
@@ -12,6 +12,8 @@
  * Unity 對照：Presenter。
  */
 import type { RankTier, TournamentPhase } from '../../core/systems/TournamentSeason';
+import { WEATHER_LABEL } from '../../shared/BattleEntryParams';
+import { TERRAIN_LABEL } from './EnvScoutPresenter';
 import {
     TOURNAMENT_LOCAL_CONFIG, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeasonReward,
     type TournamentSeriesResult, type TournamentStatus,
@@ -111,7 +113,8 @@ export class TournamentPanelController {
         return {
             texts: {
                 trnTitle: '名將挑戰賽',
-                trnSeasonLabel: `第 ${status.seasonIndex} 季｜${TOURNAMENT_PHASE_LABEL[status.phase]}｜剩 ${status.daysLeft} 日`,
+                trnSeasonLabel: `第 ${status.seasonIndex} 屆【${status.venue.cupName}】｜${TOURNAMENT_PHASE_LABEL[status.phase]}｜剩 ${status.daysLeft} 日`,
+                trnVenueLabel: `地形：${TERRAIN_LABEL[status.venue.terrain]}、天氣：${WEATHER_LABEL[status.venue.weather]}`,
                 trnRankLabel: `積分 ${status.points}｜${TOURNAMENT_TIER_LABEL[status.tier]}`,
                 trnEntriesLabel: entries,
                 trnTeamLabel: team,

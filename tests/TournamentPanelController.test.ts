@@ -1,5 +1,5 @@
 /**
- * TournamentPanelController.test.ts — 名將挑戰賽彈窗：賽季卡文字、按鈕可用、報名與參戰訊息（PROG-2-1191）、賽季獎勵（PROG-2-1194）
+ * TournamentPanelController.test.ts — 名將挑戰賽彈窗：賽季卡文字、按鈕可用、報名與參戰訊息（PROG-2-1191）、賽季獎勵（PROG-2-1194）、場地公告（PROG-2-1195）
  */
 import { assert, TestSuite } from './TestRunner';
 import { GameSession } from '../assets/scripts/core/managers/GameSession';
@@ -41,7 +41,8 @@ export function createTournamentPanelControllerSuite(): TestSuite {
     suite.test('培育期：顯示季與相位，參戰鈕停用，報名後顯示陣容', () => {
         const { panel } = setup(0);
         let view = panel.getFlowView();
-        assert.equals('第 1 季｜培育期｜剩 14 日', view.texts.trnSeasonLabel);
+        assert.equals('第 1 屆【赤壁盃】｜培育期｜剩 14 日', view.texts.trnSeasonLabel);
+        assert.equals('地形：水域、天氣：大風', view.texts.trnVenueLabel);
         assert.equals('積分 0｜青銅', view.texts.trnRankLabel);
         assert.equals('競賽期才能參戰', view.texts.trnEntriesLabel);
         assert.isTrue(!view.enabled.btnPlay && view.enabled.btnRegister);
