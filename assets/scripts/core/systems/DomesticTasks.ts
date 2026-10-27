@@ -1,9 +1,8 @@
-// @spec-source → MVP遊戲驗證規格書 §E #12（基礎內政 5 大任務產出）；名詞定義文件 內政任務 Gov_Task；經濟系統 資源表；WBS v3 MVP-10
+// @spec-source → 領地治理系統 §F 產出公式；MVP遊戲驗證規格書 §E #12（基礎內政 5 大任務產出）；名詞定義文件 內政任務 Gov_Task；經濟系統 資源表；WBS v3 MVP-10
 /**
  * DomesticTasks — 基礎內政 5 大任務（每季選一項，產出資源）純邏輯，不依賴 cc。
  *
- * 產出數值為暫定值（規格只定義「每季選一任務產出資源」，未給數量）。
- * 尚未接到大廳內政牆、MilitaryReserve 或存檔；由後續工單接線。
+ * 有指派武將時依領地治理系統 §F 公式計算（PROG-2-1159）；未指派時沿用固定表（暫定）。
  *
  * Unity 對照：像 ScriptableObject 表 DomesticTaskConfig 加上一個 [Serializable]
  * 的「本季已選」欄位，每季結算時呼叫一次純函式算出新的資源。
@@ -27,6 +26,38 @@ export const DOMESTIC_TASK_OUTPUT: Readonly<Record<DomesticTaskId, DomesticOutpu
     arms: { resource: 'cityTroops', amount: 80 },
     scouting: { resource: 'gold', amount: 30 },
 });
+
+/** 計算內政產出用的武將屬性（領地治理系統 §F）。 */
+export interface DomesticStats {
+    str: number;
+    int: number;
+    pol: number;
+    cha: number;
+}
+
+/**
+ * 領地治理系統 §F：有指派武將時的產出公式 = base + 屬性加權。
+ * 偵查規格產「情報」，目前沒有情報資源，暫定沿用黃金（與固定表一致）。
+ */
+const DOMESTIC_STAT_FORMULA: Readonly<Record<DomesticTaskId, { base: number; weights: Partial<DomesticStats> }>> = Object.freeze({
+    farming: { base: 100, weights: { pol: 2 } },
+    commerce: { base: 50, weights: { cha: 3 } },
+    diplomacy: { base: 20, weights: { int: 1, cha: 1 } },
+    arms: { base: 80, weights: { str: 2 } },
+    scouting: { base: 30, weights: { int: 2 } },
+});
+
+/** 該任務的產出：有武將屬性時套 §F 公式，未指派時沿用固定表（暫定）。 */
+export function domesticOutputFor(taskId: DomesticTaskId, stats?: Readonly<DomesticStats> | null): DomesticOutput {
+    const fixed = DOMESTIC_TASK_OUTPUT[taskId];
+    if (!stats) return fixed;
+    const { base, weights } = DOMESTIC_STAT_FORMULA[taskId];
+    let amount = base;
+    for (const key of Object.keys(weights) as (keyof DomesticStats)[]) {
+        amount += Math.max(0, Math.floor(stats[key] || 0)) * (weights[key] ?? 0);
+    }
+    return { resource: fixed.resource, amount };
+}
 
 export interface DomesticStock {
     food: number;
@@ -80,6 +111,7 @@ export function runDomesticTask(
     season: number,
     taskId: string,
     caps: DomesticCaps,
+    stats?: Readonly<DomesticStats> | null,
 ): DomesticTaskResult {
     const stock = { ...source };
     const result: DomesticTaskResult = { stock, log: { ...log }, ok: false, granted: 0 };
@@ -91,7 +123,7 @@ export function runDomesticTask(
         result.reason = 'already-chosen-this-season';
         return result;
     }
-    const output = DOMESTIC_TASK_OUTPUT[taskId];
+    const output = domesticOutputFor(taskId, stats);
     const before = stock[output.resource];
     // 已超過上限時只會不增加，不會被強制砍回上限。
     const after = Math.max(before, Math.min(caps[output.resource], before + output.amount));

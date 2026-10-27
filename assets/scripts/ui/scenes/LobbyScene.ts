@@ -1223,6 +1223,18 @@ export class LobbyScene extends Component {
             log: () => services().session.domesticLog,
             season: () => services().session.gameTime.totalSeasonsElapsed,
             choose: (taskId: DomesticTaskId) => services().session.chooseDomesticTask(taskId, (amount) => { gacha.grantCurrency('gold', amount); }),
+            // 任務格指派武將（GOV-04 / PROG-2-1159）：產出依武將屬性；指派變動即存檔
+            candidates: () => services().session.roster
+                .filter((general) => general.status !== 'dead')
+                .map((general) => ({ id: general.id, name: general.name, stats: services().session.domesticStatsOf(general) })),
+            assignedUid: (taskId: DomesticTaskId) => services().session.governanceAssignments.find((a) => a.task === taskId)?.generalUid ?? null,
+            assign: (taskId: DomesticTaskId, uid: string | null) => {
+                const session = services().session;
+                if (uid === null) session.unassignGovernor(taskId);
+                else if (!session.assignGovernor(taskId, uid).ok) return false;
+                void session.save().catch(() => undefined);
+                return true;
+            },
         });
         this._domestic = domestic;
         this._domesticHost = await this._mountPreviewScreenHost('DomesticHost', 'domestic-screen', [
@@ -1232,6 +1244,10 @@ export class LobbyScene extends Component {
             { buttonId: 'btnDiplomacy', handler: () => { void this._onClickDomesticTask(domestic, 'diplomacy'); } },
             { buttonId: 'btnArms', handler: () => { void this._onClickDomesticTask(domestic, 'arms'); } },
             { buttonId: 'btnScouting', handler: () => { void this._onClickDomesticTask(domestic, 'scouting'); } },
+            ...(['farming', 'commerce', 'diplomacy', 'arms', 'scouting'] as const).map((taskId) => ({
+                buttonId: `btnGov${taskId.charAt(0).toUpperCase()}${taskId.slice(1)}`,
+                handler: () => { domestic.cycleGovernor(taskId); this._refreshDomestic(); },
+            })),
             { buttonId: 'btnFastForward', handler: () => { void this._onClickFastForward(); } },
             { buttonId: 'btnOpenRecruit', handler: () => { this._closeDomestic(); this._openRecruitHall(); } },
             { buttonId: 'btnOpenRival', handler: () => { this._closeDomestic(); this._openRivalDiplomacy(); } },

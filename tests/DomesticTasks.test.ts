@@ -6,6 +6,7 @@ import {
     DomesticStock,
     EMPTY_DOMESTIC_LOG,
     runDomesticTask,
+    domesticOutputFor,
 } from '../assets/scripts/core/systems/DomesticTasks';
 
 const STOCK: DomesticStock = { food: 100, gold: 100, fame: 100, cityTroops: 100 };
@@ -74,6 +75,23 @@ export function createDomesticTasksSuite(): TestSuite {
         assert.isTrue(result.ok);
         assert.equals(2500, result.stock.fame);
         assert.equals(0, result.granted);
+    });
+
+    suite.test('§F 公式：有武將屬性時依屬性計算，未指派沿用固定表（PROG-2-1159）', () => {
+        const stats = { str: 82, int: 94, pol: 96, cha: 90 };
+        assert.equals(292, domesticOutputFor('farming', stats).amount);
+        assert.equals(320, domesticOutputFor('commerce', stats).amount);
+        assert.equals(204, domesticOutputFor('diplomacy', stats).amount);
+        assert.equals(244, domesticOutputFor('arms', stats).amount);
+        assert.equals(218, domesticOutputFor('scouting', stats).amount);
+        assert.equals('gold', domesticOutputFor('scouting', stats).resource);
+        assert.equals(DOMESTIC_TASK_OUTPUT.farming.amount, domesticOutputFor('farming', null).amount);
+    });
+
+    suite.test('runDomesticTask 帶武將屬性時入帳量依 §F 公式', () => {
+        const result = runDomesticTask(STOCK, EMPTY_DOMESTIC_LOG, 1, 'farming', CAPS, { str: 0, int: 0, pol: 50, cha: 0 });
+        assert.equals(200, result.output!.amount);
+        assert.equals(STOCK.food + 200, result.stock.food);
     });
 
     return suite;
