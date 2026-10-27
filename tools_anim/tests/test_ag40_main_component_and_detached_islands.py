@@ -220,7 +220,7 @@ class TestAG40MainComponentAndDetachedIslands(unittest.TestCase):
         """AG-40 補充：R317 preserve-grip-v1 的 arm_lower_f 實測 47.4 px 在 1 px 容差內應判 PASS"""
         from tools_anim.check_layered_parts import derive_joint_connections, check_slot_hidden_extension
 
-        spec_path = Path("tools_anim/specs/canonical_skeleton_v3.json")
+        spec_path = Path(__file__).resolve().parent.parent / "specs" / "canonical_skeleton_v3.json"
         with open(spec_path, encoding="utf-8") as sf:
             spec = json.load(sf)
 

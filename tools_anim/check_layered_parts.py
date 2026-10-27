@@ -408,6 +408,146 @@ def find_fist_hole_center(hand_arr: np.ndarray, expected_pt: tuple[float, float]
     return found, best_center, best_dist
 
 
+
+def extract_main_component_128(arr_in: np.ndarray) -> tuple[np.ndarray, dict[str, Any]]:
+    """
+    AG-40: 提取主連通區 (面積最大, 8 鄰接, alpha >= 128)
+    """
+    alpha_in = arr_in[..., 3]
+    bin_128 = (alpha_in >= 128).astype(np.uint8)
+    n_lbls, lbls, stats, cents = cv2.connectedComponentsWithStats(bin_128, connectivity=8)
+    m_lbl = None
+    m_area = 0
+    m_bbox = [0, 0, 0, 0]
+    m_arr = np.zeros_like(arr_in)
+    if n_lbls > 1:
+        areas = [stats[lbl, cv2.CC_STAT_AREA] for lbl in range(1, n_lbls)]
+        max_idx = int(np.argmax(areas))
+        m_lbl = 1 + max_idx
+        m_area = int(stats[m_lbl, cv2.CC_STAT_AREA])
+        mx = int(stats[m_lbl, cv2.CC_STAT_LEFT])
+        my = int(stats[m_lbl, cv2.CC_STAT_TOP])
+        mw = int(stats[m_lbl, cv2.CC_STAT_WIDTH])
+        mh = int(stats[m_lbl, cv2.CC_STAT_HEIGHT])
+        m_bbox = [mx, my, mx + mw, my + mh]
+        m_mask = (lbls == m_lbl)
+        m_arr = arr_in.copy()
+        m_arr[~m_mask] = 0
+    return m_arr, {
+        "mainComponentLabel": m_lbl,
+        "mainComponentAreaPx": m_area,
+        "mainComponentBbox": m_bbox,
+        "totalComponentsCount": max(0, n_lbls - 1),
+    }
+
+
+def check_occluding_fist_grip(
+    hand_arr_main: np.ndarray,
+    hand_arr_raw: np.ndarray,
+    weapon_arr: np.ndarray | None,
+    exp_pt: tuple[float, float],
+    shaft_u: tuple[float, float],
+    min_inset_px: float = 12.0,
+    shaft_exit_search_px: float = 160.0,
+    alpha_thresh: int = 128,
+) -> dict[str, Any]:
+    """
+    AG-41: occludingFist 判定 (前手握點蓋住槍桿)
+    三條件全數成立才判定為 PASS:
+      1. 握點落在手槽主連通區 (alpha >= alpha_thresh) 內 (gripInsideMainComponent)
+      2. 握點往 8 方向各走 minInsetPx (12px) 仍在主連通區內
+      3. 由握點沿槍桿軸向往兩側，各在 shaftExitSearchPx (160px) 內找到 weapon alpha >= alpha_thresh 且手槽 alpha < alpha_thresh 的像素
+    """
+    h, w = hand_arr_main.shape[:2]
+    gx, gy = exp_pt
+    gx_r = int(round(gx))
+    gy_r = int(round(gy))
+
+    # 1. 握點是否在主連通區內
+    inside_main = False
+    if 0 <= gx_r < w and 0 <= gy_r < h:
+        inside_main = bool(hand_arr_main[gy_r, gx_r, 3] >= alpha_thresh)
+
+    # 2. 8 方向各走 minInsetPx (12px) 仍在主連通區內
+    angles_deg = [0, 45, 90, 135, 180, 225, 270, 315]
+    inset_pass = True
+    inset_details: dict[str, Any] = {}
+    inset_steps = max(1, int(round(min_inset_px)))
+
+    for deg in angles_deg:
+        rad = math.radians(deg)
+        cos_a = math.cos(rad)
+        sin_a = math.sin(rad)
+        dir_ok = True
+        failed_step = None
+        for step in range(1, inset_steps + 1):
+            px = int(round(gx + step * cos_a))
+            py = int(round(gy + step * sin_a))
+            if not (0 <= px < w and 0 <= py < h) or hand_arr_main[py, px, 3] < alpha_thresh:
+                dir_ok = False
+                failed_step = step
+                break
+        inset_details[f"{deg}deg"] = {"pass": dir_ok, "failedStep": failed_step}
+        if not dir_ok:
+            inset_pass = False
+
+    # 3. 沿槍桿軸向往兩側各在 shaftExitSearchPx 內找到 weapon >= 128 且 hand_raw < 128
+    fwd_exit_dist: float | None = None
+    bwd_exit_dist: float | None = None
+    shaft_exit_pass = False
+
+    if weapon_arr is not None and weapon_arr.shape[:2] == (h, w):
+        search_max = int(round(shaft_exit_search_px))
+        # 前向 (+shaft_u)
+        for t in range(1, search_max + 1):
+            px = int(round(gx + t * shaft_u[0]))
+            py = int(round(gy + t * shaft_u[1]))
+            if 0 <= px < w and 0 <= py < h:
+                if weapon_arr[py, px, 3] >= alpha_thresh and hand_arr_raw[py, px, 3] < alpha_thresh:
+                    fwd_exit_dist = float(t)
+                    break
+        # 後向 (-shaft_u)
+        for t in range(1, search_max + 1):
+            px = int(round(gx - t * shaft_u[0]))
+            py = int(round(gy - t * shaft_u[1]))
+            if 0 <= px < w and 0 <= py < h:
+                if weapon_arr[py, px, 3] >= alpha_thresh and hand_arr_raw[py, px, 3] < alpha_thresh:
+                    bwd_exit_dist = float(t)
+                    break
+        shaft_exit_pass = (fwd_exit_dist is not None and bwd_exit_dist is not None)
+
+    overall_pass = bool(inside_main and inset_pass and shaft_exit_pass)
+
+    reasons = []
+    if not inside_main:
+        reasons.append("握點未落在主連通區(alpha>=128)內")
+    if not inset_pass:
+        failed_dirs = [k for k, v in inset_details.items() if not v["pass"]]
+        reasons.append(f"8方向未全達{min_inset_px:.0f}px內縮(失敗方向: {', '.join(failed_dirs)})")
+    if weapon_arr is None:
+        reasons.append("缺少 weapon 圖層無法比對槍桿露出")
+    elif not shaft_exit_pass:
+        fwd_str = f"{fwd_exit_dist:.1f}px" if fwd_exit_dist is not None else f">{shaft_exit_search_px:.0f}px(未露出)"
+        bwd_str = f"{bwd_exit_dist:.1f}px" if bwd_exit_dist is not None else f">{shaft_exit_search_px:.0f}px(未露出)"
+        reasons.append(f"槍桿兩側未全露出(前向={fwd_str}, 後向={bwd_str}, 搜尋上限={shaft_exit_search_px:.0f}px)")
+
+    detail_msg = "三條件全數成立 [PASS]" if overall_pass else "、".join(reasons)
+
+    return {
+        "pass": overall_pass,
+        "gripInsideMainComponent": inside_main,
+        "minInset8DirectionsPass": inset_pass,
+        "minInsetPx": min_inset_px,
+        "insetDirections": inset_details,
+        "shaftExitPass": shaft_exit_pass,
+        "shaftExitSearchPx": shaft_exit_search_px,
+        "forwardExitDistPx": fwd_exit_dist,
+        "backwardExitDistPx": bwd_exit_dist,
+        "shaftUnitVector": [round(shaft_u[0], 4), round(shaft_u[1], 4)],
+        "detail": detail_msg,
+    }
+
+
 def check_slot_hidden_extension(
     part_arr: np.ndarray,
     pivot_pt: tuple[float, float],
@@ -1295,206 +1435,183 @@ def run_layered_parts_inspection(
 
                 slot_reports[sid]["checks"]["scope_capsule_bounds"] = scope_check_entry
 
-    # 2. 握拳握點檢查 (hand_f / hand_b 拳孔中心誤差 <= gripTolerancePx)
+    # 2. 握拳握點檢查 (hand_f / hand_b 拳孔中心誤差 <= gripTolerancePx 或 occludingFist 判定)
     # AG-36: 新增建議級檢查 gripRegistration (形心到握點距離 <= 0.02H, 24px 半徑覆蓋率)
     max_grip_reg_dist = float(layered_cfg.get("gripRegistrationMaxDistRatio", 0.02)) * h_val
     grip_reg_radius = float(layered_cfg.get("gripRegistrationRadiusPx", 24.0))
-
     grip_tol_px = float(layered_cfg.get("gripTolerancePx", spec.get("gripsTolerancePx", 12.0)))
-    # AG-40: 輔助函式——提取主連通區 (面積最大, 8 鄰接, alpha >= 128)
-    def extract_main_component_128(arr_in: np.ndarray) -> tuple[np.ndarray, dict[str, Any]]:
-        alpha_in = arr_in[..., 3]
-        bin_128 = (alpha_in >= 128).astype(np.uint8)
-        n_lbls, lbls, stats, cents = cv2.connectedComponentsWithStats(bin_128, connectivity=8)
-        m_lbl = None
-        m_area = 0
-        m_bbox = [0, 0, 0, 0]
-        m_arr = np.zeros_like(arr_in)
-        if n_lbls > 1:
-            areas = [stats[lbl, cv2.CC_STAT_AREA] for lbl in range(1, n_lbls)]
-            max_idx = int(np.argmax(areas))
-            m_lbl = 1 + max_idx
-            m_area = int(stats[m_lbl, cv2.CC_STAT_AREA])
-            mx = int(stats[m_lbl, cv2.CC_STAT_LEFT])
-            my = int(stats[m_lbl, cv2.CC_STAT_TOP])
-            mw = int(stats[m_lbl, cv2.CC_STAT_WIDTH])
-            mh = int(stats[m_lbl, cv2.CC_STAT_HEIGHT])
-            m_bbox = [mx, my, mx + mw, my + mh]
-            m_mask = (lbls == m_lbl)
-            m_arr = arr_in.copy()
-            m_arr[~m_mask] = 0
-        return m_arr, {
-            "mainComponentLabel": m_lbl,
-            "mainComponentAreaPx": m_area,
-            "mainComponentBbox": m_bbox,
-            "totalComponentsCount": max(0, n_lbls - 1),
-        }
 
-    if "hand_f" in loaded_parts and not slot_reports["hand_f"].get("empty"):
-        h_arr = loaded_parts["hand_f"]
-        exp_pt = (float(grip_a[0]), float(grip_a[1]))
+    # AG-41: 讀取 gripRule 規格 (modes, occludingFist 設定, drawOrder)
+    grip_rule = layered_cfg.get("gripRule", {})
+    grip_modes = grip_rule.get("modes", ["hole"])
+    occluding_applies_to = grip_rule.get("occludingFistAppliesTo", "slotsDrawnAboveWeapon")
+    occluding_cfg = grip_rule.get("occludingFist", {})
+    min_inset_px = float(occluding_cfg.get("minInsetPx", 12.0))
+    shaft_exit_search_px = float(occluding_cfg.get("shaftExitSearchPx", 160.0))
+    draw_order = layered_cfg.get("drawOrder", [])
 
-        # AG-40: 只用主連通區 (面積最大，8 鄰接、alpha >= 128) 判斷孔與包覆；其他連通區不算
-        h_arr_main, main_info = extract_main_component_128(h_arr)
-        found, pt, dist = find_fist_hole_center(h_arr_main, exp_pt)
-        grip_pass = found and (dist <= grip_tol_px)
+    # 槍桿軸向單位向量 (優先取 grip_A -> grip_B 連線，不可寫死水平)
+    dx_grip = float(grip_a[0]) - float(grip_b[0])
+    dy_grip = float(grip_a[1]) - float(grip_b[1])
+    hyp_grip = math.hypot(dx_grip, dy_grip)
+    if hyp_grip > 1e-3:
+        shaft_u = (dx_grip / hyp_grip, dy_grip / hyp_grip)
+    else:
+        # fallback 從 bones 搜尋 weapon
+        found_weapon_u = None
+        for b in spec.get("bones", []):
+            if b.get("name") == "weapon":
+                rot_deg = float(b.get("rotation", 0.0))
+                rad = math.radians(rot_deg)
+                found_weapon_u = (math.cos(rad), math.sin(rad))
+                break
+        shaft_u = found_weapon_u if found_weapon_u is not None else (1.0, 0.0)
 
-        m_area = main_info["mainComponentAreaPx"]
-        m_lbl = main_info["mainComponentLabel"]
-        tot_c = main_info["totalComponentsCount"]
+    for slot_name, target_grip, grip_key in [("hand_f", grip_a, "grip_A"), ("hand_b", grip_b, "grip_B")]:
+        if slot_name in loaded_parts and not slot_reports[slot_name].get("empty"):
+            h_arr = loaded_parts[slot_name]
+            exp_pt = (float(target_grip[0]), float(target_grip[1]))
 
-        if found:
-            acc_detail = f"握點誤差={dist:.1f}px (tol={grip_tol_px:.0f}px), 主連通區={m_lbl} (面積={m_area}px)"
-        else:
-            acc_detail = f"找不到拳心孔 (主連通區={m_lbl}, 面積={m_area}px, 共{tot_c}個連通區)"
+            # 判斷該槽位是否適用 occludingFist
+            can_use_occluding_fist = False
+            if "occludingFist" in grip_modes:
+                if occluding_applies_to == "slotsDrawnAboveWeapon":
+                    if "weapon" in draw_order and slot_name in draw_order:
+                        can_use_occluding_fist = (draw_order.index(slot_name) > draw_order.index("weapon"))
+                    else:
+                        can_use_occluding_fist = (slot_name == "hand_f")
+                elif occluding_applies_to == "all":
+                    can_use_occluding_fist = True
 
-        slot_reports["hand_f"]["checks"]["grip_point_accuracy"] = {
-            "pass": grip_pass,
-            "tier": "PASS" if grip_pass else "FAIL",
-            "holeFound": found,
-            "center": list(pt),
-            "targetGrip": list(grip_a),
-            "distancePx": round(dist, 2),
-            "tolerancePx": grip_tol_px,
-            "mainComponentLabel": m_lbl,
-            "mainComponentAreaPx": m_area,
-            "mainComponentBbox": main_info["mainComponentBbox"],
-            "totalComponentsCount": tot_c,
-            "detail": acc_detail,
-        }
-        if not grip_pass:
-            slot_reports["hand_f"]["pass"] = False
-            slot_reports["hand_f"]["tier"] = "FAIL"
-            overall_pass = False
+            # AG-40: 只用主連通區 (面積最大，8 鄰接、alpha >= 128) 判斷孔與包覆
+            h_arr_main, main_info = extract_main_component_128(h_arr)
+            m_area = main_info["mainComponentAreaPx"]
+            m_lbl = main_info["mainComponentLabel"]
+            tot_c = main_info["totalComponentsCount"]
 
-        # AG-38 + AG-40: hand_f gripRegistration (以主連通區執行 8 方向射線拳孔包覆 >= 6/8，形心僅供參考)
-        h_alpha_main = h_arr_main[..., 3]
-        h_ys, h_xs = np.where(h_alpha_main > 0)
-        if len(h_xs) > 0:
-            c_x = float(np.mean(h_xs))
-            c_y = float(np.mean(h_ys))
-            c_dist = float(math.hypot(c_x - exp_pt[0], c_y - exp_pt[1]))
+            # 模式 1: hole
+            found, pt, dist = find_fist_hole_center(h_arr_main, exp_pt)
+            hole_pass = found and (dist <= grip_tol_px)
 
-            enc_res = check_grip_enclosure_rays(
-                h_arr=h_arr_main,
-                exp_pt=exp_pt,
-                max_ray_dist_px=40.0,
-                alpha_thresh=128,
-                min_hits_required=6,
-                inner_box_radius_px=12.0,
-            )
-            reg_pass = enc_res["pass"]
+            # 模式 2: occludingFist (若適用)
+            occluding_res = None
+            if can_use_occluding_fist:
+                weapon_arr = loaded_parts.get("weapon")
+                occluding_res = check_occluding_fist_grip(
+                    hand_arr_main=h_arr_main,
+                    hand_arr_raw=h_arr,
+                    weapon_arr=weapon_arr,
+                    exp_pt=exp_pt,
+                    shaft_u=shaft_u,
+                    min_inset_px=min_inset_px,
+                    shaft_exit_search_px=shaft_exit_search_px,
+                )
 
-            summary_msg = (
-                f"拳孔包覆={enc_res['raysHit']}/8方向 (門檻>=6/8, 半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 主連通區面積={m_area}px, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [PASS]"
-                if reg_pass
-                else f"拳孔未包覆={enc_res['raysHit']}/8方向 < 6/8 (半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 主連通區面積={m_area}px, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [ADVISORY]"
-            )
+            # 任一成立即 PASS
+            has_visible_hole = bool(found and (dist <= 40.0))
+            if hole_pass:
+                grip_pass = True
+                chosen_mode = "hole"
+                acc_detail = f"[hole] 握點誤差={dist:.1f}px (tol={grip_tol_px:.0f}px), 主連通區={m_lbl} (面積={m_area}px)"
+            elif occluding_res and occluding_res["pass"]:
+                grip_pass = True
+                chosen_mode = "occludingFist"
+                fwd_d = occluding_res["forwardExitDistPx"]
+                bwd_d = occluding_res["backwardExitDistPx"]
+                acc_detail = (
+                    f"[occludingFist] 握點在主連通區內, 8方向>={min_inset_px:.0f}px, "
+                    f"槍桿兩側露出(前={fwd_d:.1f}px, 後={bwd_d:.1f}px, 軸向=[{shaft_u[0]:.2f},{shaft_u[1]:.2f}])"
+                )
+                if has_visible_hole:
+                    acc_detail += f" (ADVISORY: 可見孔，握點周圍{dist:.1f}px內存在包圍之透明孔)"
+            else:
+                grip_pass = False
+                chosen_mode = "hole" if not can_use_occluding_fist else "none"
+                if can_use_occluding_fist and occluding_res:
+                    acc_detail = (
+                        f"[FAIL] hole模式未過(holeFound={found}, dist={dist:.1f}px); "
+                        f"occludingFist模式未過: {occluding_res['detail']}"
+                    )
+                else:
+                    if found:
+                        acc_detail = f"握點誤差={dist:.1f}px (tol={grip_tol_px:.0f}px), 主連通區={m_lbl} (面積={m_area}px)"
+                    else:
+                        acc_detail = f"找不到拳心孔 (主連通區={m_lbl}, 面積={m_area}px, 共{tot_c}個連通區)"
 
-            slot_reports["hand_f"]["checks"]["gripRegistration"] = {
-                "pass": reg_pass,
-                "tier": "PASS" if reg_pass else "ADVISORY",
-                "advisory": True,
-                "enclosure": enc_res,
-                "raysHit": enc_res["raysHit"],
-                "raysTotal": enc_res["raysTotal"],
-                "minRaysRequired": enc_res["minRaysRequired"],
-                "rayMaxDistancePx": enc_res["rayMaxDistancePx"],
-                "coverage12pxPct": enc_res["coverage12pxPct"],
-                "centroid": [round(c_x, 1), round(c_y, 1)],
-                "targetGrip": list(exp_pt),
-                "distancePx": round(c_dist, 1),
-                "maxDistancePx": round(max_grip_reg_dist, 1),
+            chk_entry: dict[str, Any] = {
+                "pass": grip_pass,
+                "tier": "PASS" if grip_pass else "FAIL",
+                "mode": chosen_mode,
+                "holeFound": found,
+                "center": list(pt),
+                "targetGrip": list(target_grip),
+                "distancePx": round(dist, 2),
+                "tolerancePx": grip_tol_px,
                 "mainComponentLabel": m_lbl,
                 "mainComponentAreaPx": m_area,
                 "mainComponentBbox": main_info["mainComponentBbox"],
                 "totalComponentsCount": tot_c,
-                "detail": summary_msg,
+                "detail": acc_detail,
             }
+            if occluding_res:
+                chk_entry["occludingFist"] = occluding_res
+                if chosen_mode == "occludingFist" and has_visible_hole:
+                    chk_entry["visibleHoleNearGrip"] = True
+                    chk_entry["visibleHoleDistancePx"] = round(dist, 2)
+                    chk_entry["visibleHoleTier"] = "ADVISORY"
 
-    if "hand_b" in loaded_parts and not slot_reports["hand_b"].get("empty"):
-        h_arr = loaded_parts["hand_b"]
-        exp_pt = (float(grip_b[0]), float(grip_b[1]))
+            slot_reports[slot_name]["checks"]["grip_point_accuracy"] = chk_entry
 
-        # AG-40: 只用主連通區 (面積最大，8 鄰接、alpha >= 128) 判斷孔與包覆；其他連通區不算
-        h_arr_main, main_info = extract_main_component_128(h_arr)
-        found, pt, dist = find_fist_hole_center(h_arr_main, exp_pt)
-        grip_pass = found and (dist <= grip_tol_px)
+            if not grip_pass:
+                slot_reports[slot_name]["pass"] = False
+                slot_reports[slot_name]["tier"] = "FAIL"
+                overall_pass = False
 
-        m_area = main_info["mainComponentAreaPx"]
-        m_lbl = main_info["mainComponentLabel"]
-        tot_c = main_info["totalComponentsCount"]
+            # AG-38 + AG-40: gripRegistration (以主連通區執行 8 方向射線拳孔包覆 >= 6/8，形心僅供參考)
+            h_alpha_main = h_arr_main[..., 3]
+            h_ys, h_xs = np.where(h_alpha_main > 0)
+            if len(h_xs) > 0:
+                c_x = float(np.mean(h_xs))
+                c_y = float(np.mean(h_ys))
+                c_dist = float(math.hypot(c_x - exp_pt[0], c_y - exp_pt[1]))
 
-        if found:
-            acc_detail = f"握點誤差={dist:.1f}px (tol={grip_tol_px:.0f}px), 主連通區={m_lbl} (面積={m_area}px)"
-        else:
-            acc_detail = f"找不到拳心孔 (主連通區={m_lbl}, 面積={m_area}px, 共{tot_c}個連通區)"
+                enc_res = check_grip_enclosure_rays(
+                    h_arr=h_arr_main,
+                    exp_pt=exp_pt,
+                    max_ray_dist_px=40.0,
+                    alpha_thresh=128,
+                    min_hits_required=6,
+                    inner_box_radius_px=12.0,
+                )
+                reg_pass = enc_res["pass"]
 
-        slot_reports["hand_b"]["checks"]["grip_point_accuracy"] = {
-            "pass": grip_pass,
-            "tier": "PASS" if grip_pass else "FAIL",
-            "holeFound": found,
-            "center": list(pt),
-            "targetGrip": list(grip_b),
-            "distancePx": round(dist, 2),
-            "tolerancePx": grip_tol_px,
-            "mainComponentLabel": m_lbl,
-            "mainComponentAreaPx": m_area,
-            "mainComponentBbox": main_info["mainComponentBbox"],
-            "totalComponentsCount": tot_c,
-            "detail": acc_detail,
-        }
-        if not grip_pass:
-            slot_reports["hand_b"]["pass"] = False
-            slot_reports["hand_b"]["tier"] = "FAIL"
-            overall_pass = False
+                summary_msg = (
+                    f"拳孔包覆={enc_res['raysHit']}/8方向 (門檻>=6/8, 半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 主連通區面積={m_area}px, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [PASS]"
+                    if reg_pass
+                    else f"拳孔未包覆={enc_res['raysHit']}/8方向 < 6/8 (半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 主連通區面積={m_area}px, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [ADVISORY]"
+                )
 
-        # AG-38 + AG-40: hand_b gripRegistration (以主連通區執行 8 方向射線拳孔包覆 >= 6/8，形心僅供參考)
-        h_alpha_main = h_arr_main[..., 3]
-        h_ys, h_xs = np.where(h_alpha_main > 0)
-        if len(h_xs) > 0:
-            c_x = float(np.mean(h_xs))
-            c_y = float(np.mean(h_ys))
-            c_dist = float(math.hypot(c_x - exp_pt[0], c_y - exp_pt[1]))
+                slot_reports[slot_name]["checks"]["gripRegistration"] = {
+                    "pass": reg_pass,
+                    "tier": "PASS" if reg_pass else "ADVISORY",
+                    "advisory": True,
+                    "enclosure": enc_res,
+                    "raysHit": enc_res["raysHit"],
+                    "raysTotal": enc_res["raysTotal"],
+                    "minRaysRequired": enc_res["minRaysRequired"],
+                    "rayMaxDistancePx": enc_res["rayMaxDistancePx"],
+                    "coverage12pxPct": enc_res["coverage12pxPct"],
+                    "centroid": [round(c_x, 1), round(c_y, 1)],
+                    "targetGrip": list(exp_pt),
+                    "distancePx": round(c_dist, 1),
+                    "maxDistancePx": round(max_grip_reg_dist, 1),
+                    "mainComponentLabel": m_lbl,
+                    "mainComponentAreaPx": m_area,
+                    "mainComponentBbox": main_info["mainComponentBbox"],
+                    "totalComponentsCount": tot_c,
+                    "detail": summary_msg,
+                }
 
-            enc_res = check_grip_enclosure_rays(
-                h_arr=h_arr_main,
-                exp_pt=exp_pt,
-                max_ray_dist_px=40.0,
-                alpha_thresh=128,
-                min_hits_required=6,
-                inner_box_radius_px=12.0,
-            )
-            reg_pass = enc_res["pass"]
-
-            summary_msg = (
-                f"拳孔包覆={enc_res['raysHit']}/8方向 (門檻>=6/8, 半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 主連通區面積={m_area}px, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [PASS]"
-                if reg_pass
-                else f"拳孔未包覆={enc_res['raysHit']}/8方向 < 6/8 (半徑40px), ±12px覆蓋={enc_res['coverage12pxPct']}%, 主連通區面積={m_area}px, 形心距={c_dist:.1f}px (門檻{max_grip_reg_dist:.1f}px, 參考) [ADVISORY]"
-            )
-
-            slot_reports["hand_b"]["checks"]["gripRegistration"] = {
-                "pass": reg_pass,
-                "tier": "PASS" if reg_pass else "ADVISORY",
-                "advisory": True,
-                "enclosure": enc_res,
-                "raysHit": enc_res["raysHit"],
-                "raysTotal": enc_res["raysTotal"],
-                "minRaysRequired": enc_res["minRaysRequired"],
-                "rayMaxDistancePx": enc_res["rayMaxDistancePx"],
-                "coverage12pxPct": enc_res["coverage12pxPct"],
-                "centroid": [round(c_x, 1), round(c_y, 1)],
-                "targetGrip": list(exp_pt),
-                "distancePx": round(c_dist, 1),
-                "maxDistancePx": round(max_grip_reg_dist, 1),
-                "mainComponentLabel": m_lbl,
-                "mainComponentAreaPx": m_area,
-                "mainComponentBbox": main_info["mainComponentBbox"],
-                "totalComponentsCount": tot_c,
-                "detail": summary_msg,
-            }
-
-    # 依據 AG-22 動態推導關節列表
 
     # AG-37: weapon 建議級檢查 weaponGripOnShaft (握點兩側 50px 範圍內 weapon 每一欄厚度必須落在木桿厚度帶內)
     if "weapon" in loaded_parts and not slot_reports.get("weapon", {}).get("empty"):
