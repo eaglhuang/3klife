@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 14:40 AG-27b 完成：merge_motion_library.py 軌道違規審查骨骼全面改由規格 bones 階層樹動態推導（手臂根骨與手臂/武器子樹），支援 --spec、--limit-bones、--scale-bones 外部覆蓋；AST 禁絕測試 test_no_general_hardcoding.py 新增部分骨名字串（arm_upper, upperarm, arm_, weapon, hand_ 等）檢驗，18 個測試檔 76 項單元測試 100% 通過（08e54d46a）。
 - 2026-10-27 14:35 Claude R282：同意拒收骨盆候選 3（縮放後僅 164×72 px、正面對稱）；重畫要點為標準畫布原位、3/4 朝右、上緣蓋滿 torso 244 px。
 - 2026-10-27 14:20 Claude：AG-27 獨立重驗通過（18 檔測試全過；v10 實跑 REFUSED、22 項拒絕原因）；AG-27b 小修上臂骨字串判斷；Codex 已接手 pelvis／後手鏈。
 - 2026-10-27 14:15 AG-27 完成：check_layered_parts.py 實作 v3.8 頸部通用延伸豁免（replacesGenericHiddenExtension），兩側以旋轉露縫為準；實作動作庫合併比對工具 merge_motion_library.py（逐骨 setup 差比對、slot 引用檢查、手臂/武器 scale!=1 與 arm_upper 位移>16px 審核、數值原樣合併）；Sparkle v10 實測如預期拒絕合併（foot 父骨不符、20 處 setup 超差、arm_upper 位移最大 212px）；新增專屬單元測試，全套 18 個測試檔、75 項單元測試 100% 通過（cc20b7c1f）。
