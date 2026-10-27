@@ -14,6 +14,14 @@
  */
 import { domesticOutputFor, DomesticSeasonLog, DomesticStats, DomesticTaskId, DomesticTaskResult } from '../../core/systems/DomesticTasks';
 import { planAutoGovernance } from '../../core/systems/DomesticAutoGovernance';
+import { bonusPercentText, magistrateGoldBonus } from '../../core/systems/ChildMagistrate';
+
+/** 可擔任郡城縣令的子嗣（PROG-2-1162） */
+export interface MagistrateCandidate {
+    id: string;
+    name: string;
+    pol: number;
+}
 import { buildDomesticRows, DomesticGovernor, DomesticTaskRow } from '../../core/systems/DomesticPresenter';
 
 /** 可指派到內政任務格的武將 */
@@ -46,6 +54,10 @@ export interface DomesticPanelDeps {
     /** 自動治理開關（§E #7，PROG-2-1161）；setAutoMode 回傳開啟時補了幾格 */
     autoMode?: () => boolean;
     setAutoMode?: (on: boolean) => number;
+    /** 子嗣郡城縣令（§E #9，PROG-2-1162）；不提供時畫面不顯示縣令欄 */
+    magistrateCandidates?: () => MagistrateCandidate[];
+    magistrateUid?: () => string | null;
+    setMagistrate?: (uid: string | null) => boolean;
 }
 
 /** 任務 id → 節點名稱片段（layout 節點 id 用 btn<Name> / <name>Output / <name>Chosen） */
@@ -71,7 +83,7 @@ export class DomesticPanelController {
 
     /** 5 列資料（直接沿用 DomesticPresenter） */
     public rows(): DomesticTaskRow[] {
-        return buildDomesticRows(this._deps.log(), this._deps.season(), (taskId) => this._governorOf(taskId));
+        return buildDomesticRows(this._deps.log(), this._deps.season(), (taskId) => this._governorOf(taskId), this._goldBonus());
     }
 
     /**
@@ -121,6 +133,39 @@ export class DomesticPanelController {
         this._notice = on
             ? (filled > 0 ? `自動治理已啟用，太守府補上 ${filled} 格主事。` : '自動治理已啟用')
             : '已改回手動治理';
+    }
+
+    /** 縣令換人：依加成由高到低輪替子嗣（已任內政主事者跳過），最後回到未任命 */
+    public cycleMagistrate(): void {
+        const { magistrateCandidates, magistrateUid, setMagistrate, assignedUid } = this._deps;
+        if (!magistrateCandidates || !magistrateUid || !setMagistrate) return;
+        const busy = new Set(NODE_TASKS.map((t) => assignedUid?.(t)).filter((uid): uid is string => !!uid));
+        const order = magistrateCandidates().filter((c) => !busy.has(c.id)).sort((a, b) => b.pol - a.pol);
+        const current = magistrateUid();
+        const index = order.findIndex((c) => c.id === current);
+        const next = index + 1 < order.length ? order[index + 1] : null;
+        if (!next && current === null) {
+            this._notice = '沒有可任命的子嗣';
+            return;
+        }
+        if (!setMagistrate(next?.id ?? null)) {
+            this._notice = '無法任命此子嗣';
+            return;
+        }
+        this._notice = next
+            ? `任命「${next.name}」為郡城縣令：黃金產出 +${bonusPercentText(magistrateGoldBonus(next.pol))}`
+            : '已卸下郡城縣令';
+    }
+
+    private _magistrate(): MagistrateCandidate | null {
+        const uid = this._deps.magistrateUid?.();
+        if (!uid) return null;
+        return this._deps.magistrateCandidates?.().find((c) => c.id === uid) ?? null;
+    }
+
+    private _goldBonus(): number {
+        const magistrate = this._magistrate();
+        return magistrate ? magistrateGoldBonus(magistrate.pol) : 0;
     }
 
     private _governorOf(taskId: DomesticTaskId): DomesticGovernor | null {
@@ -173,6 +218,15 @@ export class DomesticPanelController {
         }
         enabled.btnClose = true;
         texts.btnAutoGovLabel = '自動指派';
+        const hasMagistrate = !!(this._deps.magistrateCandidates && this._deps.magistrateUid && this._deps.setMagistrate);
+        const magistrate = this._magistrate();
+        texts.magistrateLabel = magistrate
+            ? `郡城縣令：${magistrate.name}（黃金產出 +${bonusPercentText(magistrateGoldBonus(magistrate.pol))}）`
+            : (hasMagistrate && this._deps.magistrateCandidates!().length > 0 ? '郡城縣令：未任命（子嗣可任）' : '郡城縣令：尚無子嗣可任');
+        texts.btnMagistrateLabel = '換人';
+        actives.magistrateLabel = hasMagistrate;
+        actives.btnMagistrate = hasMagistrate;
+        enabled.btnMagistrate = hasMagistrate;
         const hasMode = !!(this._deps.autoMode && this._deps.setAutoMode);
         texts.btnAutoModeLabel = this._deps.autoMode?.() ? '自動治理：開' : '自動治理：關';
         actives.btnAutoMode = hasMode;

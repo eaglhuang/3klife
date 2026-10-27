@@ -47,15 +47,22 @@ const DOMESTIC_STAT_FORMULA: Readonly<Record<DomesticTaskId, { base: number; wei
     scouting: { base: 30, weights: { int: 2 } },
 });
 
-/** 該任務的產出：有武將屬性時套 §F 公式，未指派時沿用固定表（暫定）。 */
-export function domesticOutputFor(taskId: DomesticTaskId, stats?: Readonly<DomesticStats> | null): DomesticOutput {
+/**
+ * 該任務的產出：有武將屬性時套 §F 公式，未指派時沿用固定表（暫定）。
+ * goldBonus：黃金產出的加成比例（子嗣郡城縣令，PROG-2-1162），只作用在產黃金的任務。
+ */
+export function domesticOutputFor(taskId: DomesticTaskId, stats?: Readonly<DomesticStats> | null, goldBonus = 0): DomesticOutput {
     const fixed = DOMESTIC_TASK_OUTPUT[taskId];
-    if (!stats) return fixed;
-    const { base, weights } = DOMESTIC_STAT_FORMULA[taskId];
-    let amount = base;
-    for (const key of Object.keys(weights) as (keyof DomesticStats)[]) {
-        amount += Math.max(0, Math.floor(stats[key] || 0)) * (weights[key] ?? 0);
+    let amount = fixed.amount;
+    if (stats) {
+        const { base, weights } = DOMESTIC_STAT_FORMULA[taskId];
+        amount = base;
+        for (const key of Object.keys(weights) as (keyof DomesticStats)[]) {
+            amount += Math.max(0, Math.floor(stats[key] || 0)) * (weights[key] ?? 0);
+        }
     }
+    // 加 1e-9 吸收浮點誤差（100 × 1.3 不應變成 129）
+    if (fixed.resource === 'gold' && goldBonus > 0) amount = Math.floor(amount * (1 + goldBonus) + 1e-9);
     return { resource: fixed.resource, amount };
 }
 
@@ -112,6 +119,7 @@ export function runDomesticTask(
     taskId: string,
     caps: DomesticCaps,
     stats?: Readonly<DomesticStats> | null,
+    goldBonus = 0,
 ): DomesticTaskResult {
     const stock = { ...source };
     const result: DomesticTaskResult = { stock, log: { ...log }, ok: false, granted: 0 };
@@ -123,7 +131,7 @@ export function runDomesticTask(
         result.reason = 'already-chosen-this-season';
         return result;
     }
-    const output = domesticOutputFor(taskId, stats);
+    const output = domesticOutputFor(taskId, stats, goldBonus);
     const before = stock[output.resource];
     // 已超過上限時只會不增加，不會被強制砍回上限。
     const after = Math.max(before, Math.min(caps[output.resource], before + output.amount));
