@@ -37,7 +37,7 @@ export const DS3_TAB_BUTTON_NODE: Partial<Record<TabKey, string>> = {
     Equip: 'CharacterDs3Main_button_8',
     Aptitude: 'CharacterDs3Main_button_9',
 };
-const SPIRIT_FAMILY_SHORTCUT_ROOT_PATH = 'RightContentArea/ContentSlot/TabBloodlineContent/SpiritFamilyState';
+const SPIRIT_FAMILY_SHORTCUT_ROOT_PATH = 'RightContentArea/ContentSlot/TabBloodlineContent/BloodlineRightPanel/SpiritFamilyState';
 
 interface ResolvedSpiritFamilyState {
     hasFamilyBranch: boolean;
