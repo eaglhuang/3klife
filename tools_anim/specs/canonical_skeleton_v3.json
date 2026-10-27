@@ -637,7 +637,8 @@
         "derivedMaxCrackCanvasPx": 79,
         "note": "v3.13（2026-10-27）：戰場顯示高約 180 px，取 2 倍餘裕 360 px 為參考。jointCrackPx 正負角度各 ≤ maxCrackAreaDisplayPx2 ×(H／referenceDisplayHeightPx)² ＝ 4 ×(1600／360)² ≈ 79 canvas px。程式須由 H 與本節數值計算，不可寫死 79。立繪特寫不播骨架動畫，不適用。",
         "promoted": true,
-        "promotedNote": "v3.16（2026-10-27）：擬議閘門（裂縫量＋覆蓋規則）升為正式 rotation_leak 判定，舊的全半徑露縫只留報告不擋。理由：AG-28～34 逐步驗證，R299 候選 20 關節在擬議閘門下全數判讀與人工看圖一致。"
+        "promotedNote": "v3.16（2026-10-27）：擬議閘門（裂縫量＋覆蓋規則）升為正式 rotation_leak 判定，舊的全半徑露縫只留報告不擋。理由：AG-28～34 逐步驗證，R299 候選 20 關節在擬議閘門下全數判讀與人工看圖一致。",
+        "ownerApproved": "2026-10-27 21:40 使用者確認 360 px 參考顯示高照用"
       },
       "note": "v3.11（2026-10-27）：旋轉露縫只認『片與片之間的窄裂縫』：在 check_radius 圓盤內，對旋轉後 parent ∪ child ∪ 遮蔽槽做 maxWidthPx 閉運算，閉運算補上、原本透明的像素；再扣掉 0° 時同樣算法已存在的天然凹口與握點拳孔。子件轉走後留下的空位是正常動作，不算縫。"
     },
