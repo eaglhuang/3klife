@@ -474,7 +474,7 @@ export class EffectSystem {
 
         // 4. 顯示 floatText 通知
         if (def.notify?.type === 'floatText') {
-            services().floatText.show('status', def.notify.textKey, position);
+            services().floatText.show('status', services().i18n.t(def.notify.textKey), position);
         }
     }
 
