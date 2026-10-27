@@ -561,7 +561,7 @@ export class LobbyScene extends Component {
         }
     }
 
-    /** 每日補貼（ECO-06，PROG-2-1315）：登入後低資源才補；黃金入錢包，有補才提示並存檔（文案暫定） */
+    /** 每日補貼（ECO-06，PROG-2-1340）：登入後低資源才補；黃金入錢包，有補才提示並存檔（文案暫定） */
     private _claimDailySubsidy(): void {
         const gacha = this._localGachaService;
         const session = services().session;

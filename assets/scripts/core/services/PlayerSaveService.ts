@@ -163,7 +163,7 @@ export interface PlayerSaveSnapshot {
     farewellLetters?: FarewellLetter[];
     /** 連續登入統計（PROG-2-0987）：只在有登入紀錄時寫入；舊檔沒有時為從未登入；版號不升 */
     loginStreak?: LoginStreakState;
-    /** 每日補貼（Player_Economy.Daily_Subsidy，PROG-2-1315）：領過才寫入；版號不升 */
+    /** 每日補貼（Player_Economy.Daily_Subsidy，PROG-2-1340）：領過才寫入；版號不升 */
     dailySubsidy?: DailySubsidyRecord;
     /** 三國日報素材：前 24h 玩家行為紀錄（PROG-2-1170）；只在有紀錄時寫入，舊檔沒有時讀回空陣列；版號不升 */
     playerLogs?: PlayerLogEntry[];

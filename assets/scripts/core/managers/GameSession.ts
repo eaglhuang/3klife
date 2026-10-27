@@ -1910,7 +1910,7 @@ export class GameSession {
         return event.entry.summary;
     }
 
-    /** 每日補貼紀錄（PROG-2-1315）；從未領過為 null */
+    /** 每日補貼紀錄（PROG-2-1340）；從未領過為 null */
     private _dailySubsidy: DailySubsidyRecord | null = null;
 
     public get dailySubsidy(): DailySubsidyRecord | null {
@@ -1918,7 +1918,7 @@ export class GameSession {
     }
 
     /**
-     * 每日補貼（ECO-06，PROG-2-1315）：UTC+8 切日，同日只領一次；糧草、城市兵源寫進軍備（依軍備上限夾制），
+     * 每日補貼（ECO-06，PROG-2-1340）：UTC+8 切日，同日只領一次；糧草、城市兵源寫進軍備（依軍備上限夾制），
      * 黃金交給 grantGold（錢包）。沒有資源低於門檻時不算領取。回傳本次各項補量（沒補為空物件）；不自動存檔。
      */
     public claimDailySubsidy(epochMs: number, goldBalance: number, grantGold: (amount: number) => void = () => {}): Partial<Record<SubsidyResourceKey, number>> {

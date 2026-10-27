@@ -1,4 +1,4 @@
-// @spec-source → 經濟系統.md (doc_spec_0032)「地窖保護與每日補貼」；交叉索引 Sec D「經濟補貼提示」；PROG-2-1315
+// @spec-source → 經濟系統.md (doc_spec_0032)「地窖保護與每日補貼」；交叉索引 Sec D「經濟補貼提示」；PROG-2-1340
 /**
  * DailySubsidyNotice — 每日補貼的大廳提示文字（純邏輯，不依賴 cc）。
  *

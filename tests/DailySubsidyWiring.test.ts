@@ -1,5 +1,5 @@
 /**
- * DailySubsidyWiring.test.ts — 每日補貼接上 GameSession 與大廳提示（PROG-2-1315，ECO-06 接線）
+ * DailySubsidyWiring.test.ts — 每日補貼接上 GameSession 與大廳提示（PROG-2-1340，ECO-06 接線）
  */
 import { assert, TestSuite } from './TestRunner';
 import { GameSession } from '../assets/scripts/core/managers/GameSession';
@@ -18,7 +18,7 @@ function lowSession(food: number, cityTroops: number): GameSession {
 }
 
 export function createDailySubsidyWiringSuite(): TestSuite {
-    const suite = new TestSuite('DailySubsidyWiring (PROG-2-1315 每日補貼接線)');
+    const suite = new TestSuite('DailySubsidyWiring (PROG-2-1340 每日補貼接線)');
 
     suite.test('低於門檻才補：糧草與兵源進軍備，黃金交給錢包', () => {
         const session = lowSession(100, 50);
