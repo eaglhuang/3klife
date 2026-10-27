@@ -1,0 +1,578 @@
+{
+  "id": "item-bag-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "ItemBagRoot",
+    "id": "itemBagRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "ItemBagCard",
+        "id": "itemBagCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1400,
+        "height": 900,
+        "skinSlot": "mp.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "ItemBagTitle",
+            "id": "bagTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "height": 40,
+            "text": "道具背包",
+            "styleSlot": "mp.label.title",
+            "width": 700
+          },
+          {
+            "type": "button",
+            "name": "BtnClose",
+            "id": "btnClose",
+            "widget": {
+              "top": 16,
+              "left": 1250
+            },
+            "width": 110,
+            "height": 48,
+            "skinSlot": "mp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseLabel",
+                "id": "btnCloseLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "mp.label.button"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "ItemBagListPanel",
+            "id": "itemBagListPanel",
+            "widget": {
+              "top": 90,
+              "left": 32
+            },
+            "width": 640,
+            "height": 690,
+            "skinSlot": "mp.row.bg",
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnBagRow0",
+                "id": "btnBagRow0",
+                "widget": {
+                  "top": 110,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel0",
+                    "id": "bagRowLabel0",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagRow1",
+                "id": "btnBagRow1",
+                "widget": {
+                  "top": 158,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel1",
+                    "id": "bagRowLabel1",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagRow2",
+                "id": "btnBagRow2",
+                "widget": {
+                  "top": 206,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel2",
+                    "id": "bagRowLabel2",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagRow3",
+                "id": "btnBagRow3",
+                "widget": {
+                  "top": 254,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel3",
+                    "id": "bagRowLabel3",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagRow4",
+                "id": "btnBagRow4",
+                "widget": {
+                  "top": 302,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel4",
+                    "id": "bagRowLabel4",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagRow5",
+                "id": "btnBagRow5",
+                "widget": {
+                  "top": 350,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel5",
+                    "id": "bagRowLabel5",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagRow6",
+                "id": "btnBagRow6",
+                "widget": {
+                  "top": 398,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel6",
+                    "id": "bagRowLabel6",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagRow7",
+                "id": "btnBagRow7",
+                "widget": {
+                  "top": 446,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel7",
+                    "id": "bagRowLabel7",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagRow8",
+                "id": "btnBagRow8",
+                "widget": {
+                  "top": 494,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel8",
+                    "id": "bagRowLabel8",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagRow9",
+                "id": "btnBagRow9",
+                "widget": {
+                  "top": 542,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel9",
+                    "id": "bagRowLabel9",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagRow10",
+                "id": "btnBagRow10",
+                "widget": {
+                  "top": 590,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel10",
+                    "id": "bagRowLabel10",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagRow11",
+                "id": "btnBagRow11",
+                "widget": {
+                  "top": 638,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel11",
+                    "id": "bagRowLabel11",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagRow12",
+                "id": "btnBagRow12",
+                "widget": {
+                  "top": 686,
+                  "left": 20
+                },
+                "width": 600,
+                "height": 44,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BagRowLabel12",
+                    "id": "bagRowLabel12",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 16,
+                      "right": 16
+                    },
+                    "height": 36,
+                    "text": "",
+                    "styleSlot": "mp.label.body"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "ItemBagDetailPanel",
+            "id": "itemBagDetailPanel",
+            "widget": {
+              "top": 90,
+              "left": 720
+            },
+            "width": 648,
+            "height": 690,
+            "skinSlot": "mp.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ItemBagDetailName",
+                "id": "bagDetailName",
+                "widget": {
+                  "top": 40,
+                  "left": 32
+                },
+                "height": 48,
+                "text": "未選擇道具",
+                "styleSlot": "mp.label.title",
+                "width": 584
+              },
+              {
+                "type": "label",
+                "name": "ItemBagDetailCount",
+                "id": "bagDetailCount",
+                "widget": {
+                  "top": 100,
+                  "left": 32
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "mp.label.meta",
+                "width": 584
+              },
+              {
+                "type": "label",
+                "name": "ItemBagMessage",
+                "id": "bagMessage",
+                "widget": {
+                  "top": 180,
+                  "left": 32
+                },
+                "height": 120,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 584
+              },
+              {
+                "type": "button",
+                "name": "BtnBagUse",
+                "id": "btnBagUse",
+                "widget": {
+                  "top": 360,
+                  "left": 32
+                },
+                "width": 180,
+                "height": 56,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnBagUseLabel",
+                    "id": "btnBagUseLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "使用",
+                    "styleSlot": "mp.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagConfirm",
+                "id": "btnBagConfirm",
+                "widget": {
+                  "top": 360,
+                  "left": 228
+                },
+                "width": 180,
+                "height": 56,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnBagConfirmLabel",
+                    "id": "btnBagConfirmLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "確定",
+                    "styleSlot": "mp.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnBagCancel",
+                "id": "btnBagCancel",
+                "widget": {
+                  "top": 360,
+                  "left": 424
+                },
+                "width": 180,
+                "height": 56,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnBagCancelLabel",
+                    "id": "btnBagCancelLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "取消",
+                    "styleSlot": "mp.label.button"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
