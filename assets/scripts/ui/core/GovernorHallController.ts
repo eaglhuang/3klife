@@ -22,6 +22,8 @@ export interface GovernorTerritoryInfo {
     maxSlots: number;
     pendingLevel: number | null;
     plan: TerritoryUpgradePlan;
+    /** 上次升級被錢包拒絕（金錢不足）；為 true 時按鈕停用並提示（PROG-2-0991）。 */
+    goldShortage?: boolean;
 }
 
 export interface GovernorHallDeps {
@@ -51,9 +53,12 @@ export class GovernorHallController {
     public territoryTexts(): { texts: Record<string, string>; actives: Record<string, boolean> } {
         const info = this._deps.territory?.() ?? DEFAULT_TERRITORY;
         const plan = info.plan;
-        const upgradeLabel = plan.ok
-            ? `升級至 Lv${plan.targetLevel}（金 ${plan.cost.gold}・糧 ${plan.cost.food}）`
-            : UPGRADE_REJECT_TEXT[plan.reason ?? 'insufficient-food'];
+        const upgradeable = plan.ok && !info.goldShortage;
+        const upgradeLabel = info.goldShortage
+            ? UPGRADE_REJECT_TEXT['insufficient-gold']
+            : plan.ok
+                ? `升級至 Lv${plan.targetLevel}（金 ${plan.cost.gold}・糧 ${plan.cost.food}）`
+                : UPGRADE_REJECT_TEXT[plan.reason ?? 'insufficient-food'];
         return {
             texts: {
                 govLevel: `太守府 Lv${info.level}`,
@@ -61,7 +66,7 @@ export class GovernorHallController {
                 govPending: info.pendingLevel === null ? '' : `Lv${info.pendingLevel} 將於季結生效`,
                 btnUpgradeLabel: upgradeLabel,
             },
-            actives: { btnUpgrade: plan.ok },
+            actives: { btnUpgrade: upgradeable },
         };
     }
 

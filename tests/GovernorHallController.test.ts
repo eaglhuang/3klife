@@ -75,5 +75,14 @@ export function createGovernorHallControllerSuite(): TestSuite {
         assert.isFalse(flow.actives.btnUpgrade);
     });
 
+    suite.test('金錢不足時升級按鈕停用並顯示金錢不足提示', () => {
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot(),
+            territory: () => ({ level: 1, maxSlots: 2, pendingLevel: null, plan: planTerritoryUpgrade(1, null, 5000), goldShortage: true }),
+        }).getFlowView();
+        assert.equals('金錢不足', flow.texts.btnUpgradeLabel);
+        assert.isFalse(flow.actives.btnUpgrade);
+    });
+
     return suite;
 }

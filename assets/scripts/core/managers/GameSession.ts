@@ -61,6 +61,7 @@ import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
 import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
 import { EMPTY_LOGIN_STREAK, LoginStreakState, recordLogin } from '../systems/LoginStreak';
+import { shouldTriggerOfflineInteraction } from '../systems/OfflineInteractionTrigger';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
@@ -1520,6 +1521,24 @@ export class GameSession {
     /** 連續登入統計（唯讀副本）。 */
     public get loginStreak(): LoginStreakState {
         return { ...this._loginStreak };
+    }
+
+    /** 讀檔時的存檔時間（毫秒）；沒有讀檔為 null。 */
+    private _loadedSavedAtMs: number | null = null;
+
+    /**
+     * 離線互動觸發（JRN-04）：離線時長＝現在減讀檔時的存檔時間。
+     * 未讀晨報數與衝突標籤目前沒有來源，呼叫端先傳空值（PM 暫定）。
+     */
+    public offlineInteractionDue(nowMs: number, context: { unreadMorningReport?: number; activeConflictTags?: readonly string[] } = {}): boolean {
+        const savedAt = this._loadedSavedAtMs;
+        if (savedAt === null || nowMs < savedAt) return false;
+        return shouldTriggerOfflineInteraction({
+            offlineHours: (nowMs - savedAt) / 3_600_000,
+            unreadMorningReport: context.unreadMorningReport ?? 0,
+            activeConflictTags: context.activeConflictTags ?? [],
+            cooldowns: [],
+        });
     }
 
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
@@ -2987,6 +3006,8 @@ export class GameSession {
         if (!snapshot) {
             return false;
         }
+        const savedAtMs = Date.parse(snapshot.savedAt);
+        this._loadedSavedAtMs = Number.isFinite(savedAtMs) ? savedAtMs : null;
         this._preLifespanRoster = null;
         this._clock.restore(snapshot.gameTime);
         this._seeded.restore(snapshot.randomState ?? { algorithm: 'mulberry32-v1', state: LEGACY_RANDOM_SEED });
