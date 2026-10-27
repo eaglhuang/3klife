@@ -115,6 +115,7 @@ import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
 import { deriveInventoryViews, type InventoryRecord, type InventoryViews } from '../systems/InventoryProjection';
 import { buildTallyInventoryRecords, normalizeInventoryRecords } from '../systems/InventoryRecordBridge';
+import { sweepExpiredRecords } from '../systems/ItemExpiry';
 import { applyTallyConfiscation, applyTallyLoyaltyChange, createTallyLoyaltyState, type TallyLoyaltyAction, type TallyLoyaltyResult, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
 import type { TigerTallyQuality } from '../models/TigerTallyCard';
 import type { NurtureState } from '../services/NurtureService';
@@ -528,6 +529,8 @@ export class GameSession {
     private _tallyCards: Record<string, TigerTallyCard> = {};
     /** 統一物件庫列（DS-08 canonical，PROG-2-1021）；過渡期虎符寫入後同步重算 TALLY 列 */
     private _inventoryRecords: InventoryRecord[] = [];
+    /** 最近一次登入切日時被回收的限時道具列（PROG-2-1364）；供 UI 顯示 UI_ITEM_EXPIRE */
+    private _lastExpiredInventory: InventoryRecord[] = [];
     /** 女性武將來源（uid → 來源，FEM-01）；戰俘女將歸入名冊時寫入（PROG-2-0245） */
     /** 官職狀態（OFC-03）：階位、經驗與解鎖歷史；存檔為扁平欄位 officerState */
     private _officerState: OfficerState = initialOfficerState();
@@ -1001,6 +1004,22 @@ export class GameSession {
     /** 統一物件庫的原始列（唯讀副本）；寶頁依武將 uid 篩出一般裝備 */
     public get inventoryRecords(): readonly InventoryRecord[] {
         return this._inventoryRecords.map((record) => ({ ...record }));
+    }
+
+    /** 最近一次回收的限時道具列（唯讀副本）；沒有回收時為空陣列。 */
+    public get lastExpiredInventory(): readonly InventoryRecord[] {
+        return this._lastExpiredInventory.map((record) => ({ ...record }));
+    }
+
+    /**
+     * 回收已過期的限時道具列（PROG-2-1364）。永久列與格式不合的 expiresAt 保留。
+     * @returns 本次被回收的列；同時更新 lastExpiredInventory。
+     */
+    public sweepExpiredInventory(nowMs: number): InventoryRecord[] {
+        const { kept, expired } = sweepExpiredRecords(this._inventoryRecords, nowMs);
+        if (expired.length > 0) this._inventoryRecords = kept;
+        this._lastExpiredInventory = expired;
+        return expired.map((record) => ({ ...record }));
     }
 
     /** 穿戴一般裝備（PROG-2-1040）：可否放入由一般裝備定義表的槽位判斷；成功才寫回物件庫列 */
@@ -2036,6 +2055,8 @@ export class GameSession {
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
     public recordLoginAt(epochMs: number, grantGold: (amount: number) => void = () => {}): void {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
+        // 限時道具：登入切日時回收已過期的物件庫列（PROG-2-1364）
+        this.sweepExpiredInventory(epochMs);
         // 三國日報：當天第一次登入依前 24h 行為紀錄生成（PROG-2-1170）
         this._dailyNews = refreshDailyNews(this._dailyNews, this._playerLogs, this._roster.getAll().map((g) => ({ name: g.name })), epochMs, this._random);
         // 派遣：離線期間到期的任務先結算寫日誌，才會進這次晨報（PROG-2-1178）

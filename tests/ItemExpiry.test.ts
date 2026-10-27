@@ -7,7 +7,7 @@
  * Unity 對照：EditMode Test 驗證定時掃描的判定，不實際等待時間流逝。
  */
 import { assert, TestSuite } from './TestRunner';
-import { sweepExpiredItems, type ExpirableItem } from '../assets/scripts/core/systems/ItemExpiry';
+import { sweepExpiredItems, sweepExpiredRecords, type ExpirableItem } from '../assets/scripts/core/systems/ItemExpiry';
 
 const NOW = 1_000_000;
 
@@ -66,6 +66,23 @@ export function createItemExpirySuite(): TestSuite {
         assert.equals('c', result.expired[1].id);
         assert.equals(before, items.length);
         assert.equals('a', items[0].id);
+    });
+
+    suite.test('物件庫列：缺 expiresAt 欄位即永久，不過期', () => {
+        const records: Array<{ id: string; expiresAt?: number | null }> = [{ id: 'legacy' }, { id: 'null', expiresAt: null }];
+        const result = sweepExpiredRecords(records, NOW + 999_999_999);
+        assert.equals(2, result.kept.length);
+        assert.equals(0, result.expired.length);
+    });
+
+    suite.test('物件庫列：expiresAt 到期（含當下）回收，未到期保留', () => {
+        const records: Array<{ id: string; expiresAt?: number | null }> = [
+            { id: 'later', expiresAt: NOW + 1 },
+            { id: 'exact', expiresAt: NOW },
+        ];
+        const result = sweepExpiredRecords(records, NOW);
+        assert.equals('later', result.kept[0].id);
+        assert.equals('exact', result.expired[0].id);
     });
 
     return suite;
