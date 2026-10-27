@@ -24,6 +24,7 @@ import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
 import type { BreedingService } from '../../core/services/BreedingService';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
+import { relationLoreText, withRelationFallback } from './RelationTexts';
 import { VITALITY_SCRIPT_KEYS, vitalityScriptText } from './VitalityScriptTexts';
 import {
     BREEDING_MIN_AGE,
@@ -228,6 +229,11 @@ export class BondingSetupController {
         ].filter((name): name is string => name !== null);
         if (deceased.length > 0) {
             this._notice += `　${deceased.join('、')}壽命耗盡，已故`;
+        }
+        // 宿敵等關係事件的劇本台詞（PROG-2-1406）：同季同對只在第一次結緣時出現
+        const lookup = withRelationFallback(this._deps.text ?? fallbackBreedText);
+        for (const hit of result.relationEvents ?? []) {
+            this._notice += `　${relationLoreText(hit.loreKey, [], lookup)}`;
         }
         await this._persist();
         return result;
