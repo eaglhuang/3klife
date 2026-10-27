@@ -1485,9 +1485,11 @@ def run_layered_parts_inspection(
         if j_conn.get("rigid", False):
             rot_leak_reports[conn_id] = {
                 "pass": True,
-                "tier": "SKIPPED",
+                "tier": "NOT_APPLICABLE",
                 "skipped": True,
-                "detail": f"{c_sid} 與 {p_sid} 為剛性連接 (rigid=True)，略過旋轉露縫檢查",
+                "notApplicable": True,
+                "appliedWaiver": "rigidAttachment",
+                "detail": f"{c_sid} 與 {p_sid} 為剛性連接 (rigid=True)，無相對旋轉，不適用旋轉裂縫檢查 (豁免: rigidAttachment)",
             }
             continue
 
@@ -1801,6 +1803,34 @@ def run_layered_parts_inspection(
                 "tier": "SKIPPED",
                 "skipped": True,
                 "detail": f"槽位缺失或為空 ({', '.join(missing_info)})，跳過隱藏延伸檢查",
+            }
+            continue
+
+        # AG-39: 剛性掛點 (rigid=true) 父子同轉、無相對旋轉，免隱藏延伸檢查 (標記 NOT_APPLICABLE，豁免: rigidAttachment)
+        if j_conn.get("rigid", False):
+            joint_ext_reports[conn_id] = {
+                "pass": True,
+                "tier": "NOT_APPLICABLE",
+                "skipped": True,
+                "notApplicable": True,
+                "appliedWaiver": "rigidAttachment",
+                "pivot": list(j_conn["pivot"]),
+                "pivotSource": j_conn.get("pivotSource", "bonePivot"),
+                "detail": f"{c_sid} 與 {p_sid} 為剛性連接 (rigid=True)，無相對旋轉，不適用隱藏延伸檢查 (豁免: rigidAttachment)",
+            }
+            slot_reports[p_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
+                "pass": True,
+                "tier": "NOT_APPLICABLE",
+                "notApplicable": True,
+                "appliedWaiver": "rigidAttachment",
+                "detail": "剛性連接 (rigid=True) 不適用隱藏延伸檢查 (豁免: rigidAttachment)",
+            }
+            slot_reports[c_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
+                "pass": True,
+                "tier": "NOT_APPLICABLE",
+                "notApplicable": True,
+                "appliedWaiver": "rigidAttachment",
+                "detail": "剛性連接 (rigid=True) 不適用隱藏延伸檢查 (豁免: rigidAttachment)",
             }
             continue
 
