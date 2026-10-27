@@ -21,7 +21,7 @@
         "name": "TournamentCard",
         "id": "tournamentCard",
         "width": 1000,
-        "height": 612,
+        "height": 664,
         "skinSlot": "trn.card.bg",
         "layout": {
           "type": "vertical",
@@ -48,7 +48,16 @@
             "id": "trnSeasonLabel",
             "width": 944,
             "height": 40,
-            "text": "第 1 季｜培育期｜剩 14 日",
+            "text": "第 1 屆【赤壁盃】｜培育期｜剩 14 日",
+            "styleSlot": "trn.label.body"
+          },
+          {
+            "type": "label",
+            "name": "TrnVenueLabel",
+            "id": "trnVenueLabel",
+            "width": 944,
+            "height": 40,
+            "text": "地形：水域、天氣：大風",
             "styleSlot": "trn.label.body"
           },
           {

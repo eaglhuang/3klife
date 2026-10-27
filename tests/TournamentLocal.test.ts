@@ -7,7 +7,7 @@ import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import type { PlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
 import {
     claimTournamentRewards, createTournamentState, normalizeTournamentState, pendingTournamentRewards, playTournamentSeries,
-    registerTournamentTeam, rolloverTournament, tournamentEloChange, TOURNAMENT_SEASON_REWARD_GOLD, tournamentStatus, TOURNAMENT_DAY_MS, TOURNAMENT_LOCAL_CONFIG, type TournamentState,
+    registerTournamentTeam, rolloverTournament, tournamentEloChange, tournamentVenueOf, TOURNAMENT_CUPS, TOURNAMENT_SEASON_REWARD_GOLD, tournamentStatus, TOURNAMENT_DAY_MS, TOURNAMENT_LOCAL_CONFIG, type TournamentState,
 } from '../assets/scripts/core/systems/TournamentLocal';
 
 const D = TOURNAMENT_DAY_MS;
@@ -131,6 +131,16 @@ export function createTournamentLocalSuite(): TestSuite {
         const again = new GameSession(1);
         again.restoreLifespanState(JSON.parse(JSON.stringify(reloaded.createSnapshot(new Date(0)))) as PlayerSaveSnapshot);
         assert.equals(0, again.pendingTournamentRewards(14 * D).length);
+    });
+
+    suite.test('杯賽場地：依賽季序號輪替、過季換杯、狀態帶場地（PROG-2-1195）', () => {
+        assert.equals('赤壁盃', tournamentVenueOf(1).cupName);
+        assert.equals('張飛盃', tournamentVenueOf(2).cupName);
+        assert.equals('赤壁盃', tournamentVenueOf(TOURNAMENT_CUPS.length + 1).cupName);
+        assert.equals('長坂盃', tournamentVenueOf(0).cupName);
+        assert.equals(new Set(TOURNAMENT_CUPS.map((c) => c.cupName)).size, TOURNAMENT_CUPS.length);
+        const next = rolloverTournament(createTournamentState(0), 15 * D);
+        assert.equals('張飛盃', tournamentStatus(next, 15 * D).venue.cupName);
     });
 
     suite.test('存檔正規化：壞資料回 null，缺欄位補預設', () => {
