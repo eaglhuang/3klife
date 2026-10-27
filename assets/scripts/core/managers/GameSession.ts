@@ -1003,6 +1003,20 @@ export class GameSession {
         return deriveInventoryViews(this._inventoryRecords);
     }
 
+    /** 陣亡、退役或不在名冊的武將身上的一般裝備回到倉庫（兩欄清為 null），避免裝備掛在已離開的武將名下（PROG-2-0681） */
+    private _releaseGearOfInactiveGenerals(): void {
+        const active = new Set(this._roster.getAll()
+            .filter((g) => g.status !== 'dead' && !(g as { isMentorCard?: boolean }).isMentorCard)
+            .map((g) => g.id));
+        let changed = false;
+        const next = this._inventoryRecords.map((record): InventoryRecord => {
+            if (record.Item_Type !== 'OTHER' || !record.equippedBy || active.has(record.equippedBy)) return record;
+            changed = true;
+            return { ...record, equippedBy: null, slotId: null };
+        });
+        if (changed) this._inventoryRecords = next;
+    }
+
     /** 過渡期 dual-write（DS-08）：虎符寫入後重算 TALLY 列，其他類型的列保留 */
     private _syncInventoryRecords(): void {
         const others = this._inventoryRecords.filter((r) => r.Item_Type !== 'TALLY');
@@ -2640,6 +2654,7 @@ export class GameSession {
         }
         this._roster.replaceAll(roster);
         this._clearLeadIfGone();
+        this._releaseGearOfInactiveGenerals();
         this._settleOpenHallAssigns(formatSeasonLabel(advance.previous));
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
         // 陣亡或退休的武將不再佔著內政任務格
@@ -2762,6 +2777,7 @@ export class GameSession {
         }
         this._roster.replaceAll(roster);
         this._clearLeadIfGone();
+        this._releaseGearOfInactiveGenerals();
         const reason = result.card.mentorRoute?.reason;
         if (reason === 'SCHOLAR' || reason === 'DUAL_CLASS') {
             // 文職與雙職能退役發 1 份竹簡（PM 暫定）；虎符只在死亡結算發，退役不發
