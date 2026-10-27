@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 23:40 AG-37 完成：實作建議級檢查 weaponGripOnShaft（量測握點前後 50 px 範圍內木桿厚度，中位數 20.0 px，容許帶 [14.0, 26.0] px，advisory 模式不拉低整體判定）；對 R299 實測前手握點 x=1365 落在套環/槍頭厚度 27~62 px 正確回報 ADVISORY FAIL，後手握點 x=680 落在木桿厚度 20 px 通過 PASS；新增 test_ag37_weapon_grip_on_shaft.py，全套 114 項單元測試 100% 通過（026497e00）；R299 候選 21 槽全量驗收維持 exit=1, overallTier=FAIL，僅 head 與 hand_f 兩槽阻擋。
 - 2026-10-27 23:30 Claude：收下 R290（4.2 runtime 載入、trackTime 推進；追問編輯器 18 則錯誤）；R308 裁決：arm_lower_f 腕口可補隱藏延伸（≤64 px、設定姿勢須被 hand_f 完全蓋住），weapon 定 +180，檢查器從 fb3279aa8 唯讀取出。
 - 2026-10-27 23:10 Claude：審 Sparkle v12（zip 缺 output／README／驗收報告，無法獨立量測）；查出 weapon 分件前手握點落在槍頭套環，R306 補充：weapon 平移約 +170 px。
 - 2026-10-27 22:38 AG-36 完成：同步規格 canonical_skeleton_v3.json 至 21,388 位元組（補齊 ownerApproved 欄位）；實作建議級檢查 gripRegistration（手部形心到握點距離門檻 0.02H=32px，量測握點周圍 24px 半徑覆蓋率，advisory 模式不拉低整體判定）；對 R299 實測 hand_f 形心 (1353.7, 1081.8) 距離握點 143.6 px，24px 覆蓋率 0.0%，正確回報 ADVISORY，hand_b 形心距離 23.0 px 通過 PASS；新增 test_ag36_grip_registration.py，全套 112 項單元測試 100% 通過（fb3279aa8）；R299 候選 21 槽重跑 exit=1, overallTier=FAIL，維持僅 head 與 hand_f 兩槽阻擋。
