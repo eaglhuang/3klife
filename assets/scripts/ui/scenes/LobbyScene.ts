@@ -111,7 +111,9 @@ import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
 import { buildRetireReviewTexts, RETIRE_REVIEW_OPEN_EVENT, withRetireReviewFallback, type RetireReviewOpenPayload } from '../core/RetireReviewController';
 import { formatDeathNotice } from '../core/LifeVitalityPresenter';
-import { buildSpiritCodexTexts, withSpiritCodexFallback } from '../core/SpiritCodexController';
+import { buildSpiritCodexTexts, spiritRelicsNewestFirst, SPIRIT_CODEX_MAX_ROWS, withSpiritCodexFallback } from '../core/SpiritCodexController';
+import { buildSpiritCardDetailView, withSpiritCardDetailFallback } from '../core/SpiritCardDetailTexts';
+import type { SpiritCard } from '../../core/models/SpiritCard';
 import { lifeScriptCopy, type LifeScriptEvent } from '../../core/systems/LifeScriptCopy';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
@@ -288,6 +290,9 @@ export class LobbyScene extends Component {
     private _oracleHost: UIScreenPreviewHost | null = null;
     private _retireReviewHost: UIScreenPreviewHost | null = null;
     private _spiritCodexHost: UIScreenPreviewHost | null = null;
+    /** 英靈圖鑑目前列出的卡（與列上「詳情」按鈕同序） */
+    private _spiritCodexShown: SpiritCard[] = [];
+    private _spiritCardDetailHost: UIScreenPreviewHost | null = null;
     private _oracle: SageOracleController | null = null;
     private _prisonerHost: UIScreenPreviewHost | null = null;
     private _yearReportHost: UIScreenPreviewHost | null = null;
@@ -2517,8 +2522,16 @@ export class LobbyScene extends Component {
      * 英靈卡從歸檔層讀取（異步），列表文字在 SpiritCodexController（純邏輯）。
      */
     private async _mountSpiritCodex(): Promise<void> {
+        const detailButtons: ScreenButtonBinding[] = Array.from({ length: SPIRIT_CODEX_MAX_ROWS }, (_, index) => ({
+            buttonId: `btnSpiritDetail${index}`,
+            handler: () => { this._openSpiritCardDetail(index); },
+        }));
         this._spiritCodexHost = await this._mountPreviewScreenHost('SpiritCodexHost', 'spirit-codex-screen', [
             { buttonId: 'btnCloseSpiritCodex', handler: () => { this._closeSpiritCodex(); } },
+            ...detailButtons,
+        ]);
+        this._spiritCardDetailHost = await this._mountPreviewScreenHost('SpiritCardDetailHost', 'spirit-card-detail-screen', [
+            { buttonId: 'btnCloseSpiritCardDetail', handler: () => { this._closeSpiritCardDetail(); } },
         ]);
     }
 
@@ -2530,7 +2543,12 @@ export class LobbyScene extends Component {
         }
         const cards = (await services().legacy?.getArchiver().getAllSpiritCards()) ?? [];
         const lookup = withSpiritCodexFallback((key, ...args) => services().i18n.t(key, ...args));
-        applyFlowView(binder, { texts: buildSpiritCodexTexts(cards, lookup), actives: {}, enabled: {} });
+        this._spiritCodexShown = spiritRelicsNewestFirst(cards).slice(0, SPIRIT_CODEX_MAX_ROWS);
+        const enabled: Record<string, boolean> = {};
+        for (let index = 0; index < SPIRIT_CODEX_MAX_ROWS; index += 1) {
+            enabled[`btnSpiritDetail${index}`] = index < this._spiritCodexShown.length;
+        }
+        applyFlowView(binder, { texts: buildSpiritCodexTexts(cards, lookup), actives: {}, enabled });
         host.node.active = true;
         this._bringNodeToFront(host.node);
     }
@@ -2538,6 +2556,27 @@ export class LobbyScene extends Component {
     private _closeSpiritCodex(): void {
         if (this._spiritCodexHost) {
             this._spiritCodexHost.node.active = false;
+        }
+    }
+
+    /** 英靈卡詳情（DUP-02）：從圖鑑列上的「詳情」按鈕開啟；血脈灌注按鈕只在正式英靈卡上可點 */
+    private _openSpiritCardDetail(index: number): void {
+        const host = this._spiritCardDetailHost;
+        const binder = host?.binder;
+        const card = this._spiritCodexShown[index];
+        if (!host || !binder || !card) {
+            return;
+        }
+        const lookup = withSpiritCardDetailFallback((key, ...args) => services().i18n.t(key, ...args));
+        const view = buildSpiritCardDetailView(card, lookup);
+        applyFlowView(binder, { texts: view.texts, actives: {}, enabled: { btnInfuseSpiritCard: view.infuseEnabled } });
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+    }
+
+    private _closeSpiritCardDetail(): void {
+        if (this._spiritCardDetailHost) {
+            this._spiritCardDetailHost.node.active = false;
         }
     }
 

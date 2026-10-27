@@ -1,0 +1,17 @@
+{
+  "id": "spirit-card-detail-screen",
+  "version": 1,
+  "uiId": "SpiritCardDetail",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "spirit-card-detail-main",
+  "skin": "spirit-codex-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
