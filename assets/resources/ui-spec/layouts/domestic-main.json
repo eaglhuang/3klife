@@ -189,46 +189,6 @@
                 "styleSlot": "domestic.label.meta"
               },
               {
-                "type": "label",
-                "name": "FarmingGovernor",
-                "id": "farmingGovernor",
-                "widget": {
-                  "top": 50,
-                  "left": 150
-                },
-                "width": 230,
-                "height": 26,
-                "text": "",
-                "styleSlot": "domestic.label.meta"
-              },
-              {
-                "type": "button",
-                "name": "BtnGovFarming",
-                "id": "btnGovFarming",
-                "widget": {
-                  "top": 44,
-                  "left": 390
-                },
-                "width": 100,
-                "height": 36,
-                "skinSlot": "domestic.button.bg",
-                "children": [
-                  {
-                    "type": "label",
-                    "name": "BtnGovFarmingLabel",
-                    "id": "btnGovFarmingLabel",
-                    "widget": {
-                      "vCenter": true,
-                      "left": 0,
-                      "right": 0
-                    },
-                    "height": 28,
-                    "text": "換將",
-                    "styleSlot": "domestic.label.meta"
-                  }
-                ]
-              },
-              {
                 "type": "button",
                 "name": "BtnCommerce",
                 "id": "btnCommerce",
@@ -280,46 +240,6 @@
                 "height": 26,
                 "text": "",
                 "styleSlot": "domestic.label.meta"
-              },
-              {
-                "type": "label",
-                "name": "CommerceGovernor",
-                "id": "commerceGovernor",
-                "widget": {
-                  "top": 50,
-                  "left": 674
-                },
-                "width": 230,
-                "height": 26,
-                "text": "",
-                "styleSlot": "domestic.label.meta"
-              },
-              {
-                "type": "button",
-                "name": "BtnGovCommerce",
-                "id": "btnGovCommerce",
-                "widget": {
-                  "top": 44,
-                  "left": 914
-                },
-                "width": 100,
-                "height": 36,
-                "skinSlot": "domestic.button.bg",
-                "children": [
-                  {
-                    "type": "label",
-                    "name": "BtnGovCommerceLabel",
-                    "id": "btnGovCommerceLabel",
-                    "widget": {
-                      "vCenter": true,
-                      "left": 0,
-                      "right": 0
-                    },
-                    "height": 28,
-                    "text": "換將",
-                    "styleSlot": "domestic.label.meta"
-                  }
-                ]
               },
               {
                 "type": "button",
@@ -375,46 +295,6 @@
                 "styleSlot": "domestic.label.meta"
               },
               {
-                "type": "label",
-                "name": "DiplomacyGovernor",
-                "id": "diplomacyGovernor",
-                "widget": {
-                  "top": 154,
-                  "left": 150
-                },
-                "width": 230,
-                "height": 26,
-                "text": "",
-                "styleSlot": "domestic.label.meta"
-              },
-              {
-                "type": "button",
-                "name": "BtnGovDiplomacy",
-                "id": "btnGovDiplomacy",
-                "widget": {
-                  "top": 148,
-                  "left": 390
-                },
-                "width": 100,
-                "height": 36,
-                "skinSlot": "domestic.button.bg",
-                "children": [
-                  {
-                    "type": "label",
-                    "name": "BtnGovDiplomacyLabel",
-                    "id": "btnGovDiplomacyLabel",
-                    "widget": {
-                      "vCenter": true,
-                      "left": 0,
-                      "right": 0
-                    },
-                    "height": 28,
-                    "text": "換將",
-                    "styleSlot": "domestic.label.meta"
-                  }
-                ]
-              },
-              {
                 "type": "button",
                 "name": "BtnArms",
                 "id": "btnArms",
@@ -468,46 +348,6 @@
                 "styleSlot": "domestic.label.meta"
               },
               {
-                "type": "label",
-                "name": "ArmsGovernor",
-                "id": "armsGovernor",
-                "widget": {
-                  "top": 154,
-                  "left": 674
-                },
-                "width": 230,
-                "height": 26,
-                "text": "",
-                "styleSlot": "domestic.label.meta"
-              },
-              {
-                "type": "button",
-                "name": "BtnGovArms",
-                "id": "btnGovArms",
-                "widget": {
-                  "top": 148,
-                  "left": 914
-                },
-                "width": 100,
-                "height": 36,
-                "skinSlot": "domestic.button.bg",
-                "children": [
-                  {
-                    "type": "label",
-                    "name": "BtnGovArmsLabel",
-                    "id": "btnGovArmsLabel",
-                    "widget": {
-                      "vCenter": true,
-                      "left": 0,
-                      "right": 0
-                    },
-                    "height": 28,
-                    "text": "換將",
-                    "styleSlot": "domestic.label.meta"
-                  }
-                ]
-              },
-              {
                 "type": "button",
                 "name": "BtnScouting",
                 "id": "btnScouting",
@@ -559,6 +399,179 @@
                 "height": 26,
                 "text": "",
                 "styleSlot": "domestic.label.meta"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "DomesticGovGroup",
+            "id": "domesticGovGroup",
+            "widget": {
+              "top": 200,
+              "left": 48,
+              "right": 48
+            },
+            "height": 296,
+            "children": [
+              {
+                "type": "label",
+                "name": "FarmingGovernor",
+                "id": "farmingGovernor",
+                "widget": {
+                  "top": 50,
+                  "left": 150
+                },
+                "width": 230,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnGovFarming",
+                "id": "btnGovFarming",
+                "widget": {
+                  "top": 44,
+                  "left": 390
+                },
+                "width": 100,
+                "height": 36,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnGovFarmingLabel",
+                    "id": "btnGovFarmingLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 28,
+                    "text": "換將",
+                    "styleSlot": "domestic.label.meta"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "CommerceGovernor",
+                "id": "commerceGovernor",
+                "widget": {
+                  "top": 50,
+                  "left": 674
+                },
+                "width": 230,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnGovCommerce",
+                "id": "btnGovCommerce",
+                "widget": {
+                  "top": 44,
+                  "left": 914
+                },
+                "width": 100,
+                "height": 36,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnGovCommerceLabel",
+                    "id": "btnGovCommerceLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 28,
+                    "text": "換將",
+                    "styleSlot": "domestic.label.meta"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "DiplomacyGovernor",
+                "id": "diplomacyGovernor",
+                "widget": {
+                  "top": 154,
+                  "left": 150
+                },
+                "width": 230,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnGovDiplomacy",
+                "id": "btnGovDiplomacy",
+                "widget": {
+                  "top": 148,
+                  "left": 390
+                },
+                "width": 100,
+                "height": 36,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnGovDiplomacyLabel",
+                    "id": "btnGovDiplomacyLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 28,
+                    "text": "換將",
+                    "styleSlot": "domestic.label.meta"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ArmsGovernor",
+                "id": "armsGovernor",
+                "widget": {
+                  "top": 154,
+                  "left": 674
+                },
+                "width": 230,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnGovArms",
+                "id": "btnGovArms",
+                "widget": {
+                  "top": 148,
+                  "left": 914
+                },
+                "width": 100,
+                "height": 36,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnGovArmsLabel",
+                    "id": "btnGovArmsLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 28,
+                    "text": "換將",
+                    "styleSlot": "domestic.label.meta"
+                  }
+                ]
               },
               {
                 "type": "label",
