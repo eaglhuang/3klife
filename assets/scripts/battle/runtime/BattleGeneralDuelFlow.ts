@@ -4,6 +4,7 @@ import { services } from "../../core/managers/ServiceLoader";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit, type TroopStats } from "../../core/models/TroopUnit";
 import { BattleState } from "../models/BattleState";
+import { decideDuelAccept, DUEL_ACCEPT_THRESHOLD } from "../../core/systems/AiDuelDecision";
 import { type BattleResult, BATTLE_FRONT_DEPTH } from "../BattleTypes";
 
 /**
@@ -197,7 +198,7 @@ export class BattleGeneralDuelFlow {
 
   /**
    * 單挑接受決策（由防守方視角評估）：
-   * score = 0.45 * 主將血量優勢 + 0.35 * 場上兵力優勢 + 0.2 * 總戰力優勢
+   * score = 0.45 * 防守方主將血量（currentHP / maxHP）+ 0.35 * 防守方現存兵力占比 + 0.2 * 總戰力優勢（PROG-2-1323）
    */
   public evaluateDuelAcceptance(challengerFaction: Faction): {
     accepted: boolean;
@@ -212,13 +213,15 @@ export class BattleGeneralDuelFlow {
       return { accepted: false, score: 0, defenderFaction };
     }
 
-    const challengerHpPct = Math.max(0, challengerGeneral.currentHp) / Math.max(1, challengerGeneral.maxHp);
+    // E-7 字面：血量項為防守方主將 currentHP / maxHP
     const defenderHpPct = Math.max(0, defenderGeneral.currentHp) / Math.max(1, defenderGeneral.maxHp);
-    const hpAdvantage = defenderHpPct / Math.max(0.0001, challengerHpPct + defenderHpPct);
 
     const challengerUnits = this.collectFactionUnits(challengerFaction);
     const defenderUnits = this.collectFactionUnits(defenderFaction);
-    const unitCountAdvantage = defenderUnits.length / Math.max(1, challengerUnits.length + defenderUnits.length);
+    // 兵力項（雙方占比）：防守方現存兵力 /（雙方現存兵力和），暫定，待企劃確認
+    const challengerTroopHp = challengerUnits.reduce((sum, u) => sum + Math.max(0, u.currentHp), 0);
+    const defenderTroopHp = defenderUnits.reduce((sum, u) => sum + Math.max(0, u.currentHp), 0);
+    const squadRatio = defenderTroopHp / Math.max(1, challengerTroopHp + defenderTroopHp);
 
     const calcPower = (units: TroopUnit[], general: GeneralUnit | null): number => {
       const unitPower = units.reduce((sum, u) => {
@@ -234,8 +237,15 @@ export class BattleGeneralDuelFlow {
     const defenderPower = calcPower(defenderUnits, defenderGeneral);
     const powerAdvantage = defenderPower / Math.max(0.0001, challengerPower + defenderPower);
 
-    const score = 0.45 * hpAdvantage + 0.35 * unitCountAdvantage + 0.2 * powerAdvantage;
-    const accepted = score >= 0.58;
+    const score = 0.45 * defenderHpPct + 0.35 * squadRatio + 0.2 * powerAdvantage;
+    // 防守方是敵方 AI：走 E-7 接受判定（依難度閾值，含抖動）；玩家防守方沿用一般門檻
+    const accepted = defenderFaction === Faction.Enemy
+      ? decideDuelAccept(
+        { hpRatio: defenderHpPct, squadRatio, powerRatio: powerAdvantage },
+        services().session.randomSource(),
+        this.context.state.aiDifficulty,
+      )
+      : score >= DUEL_ACCEPT_THRESHOLD;
 
     return {
       accepted,
