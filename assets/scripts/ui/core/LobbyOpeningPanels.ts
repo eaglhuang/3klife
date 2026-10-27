@@ -7,6 +7,7 @@ import type { OpeningFlowEvent } from '../../core/config/OpeningFlowConfig';
 import { DestinyOpeningController, DESTINY_OPENING_MAX_ROWS } from './DestinyOpeningController';
 import { OnboardingFlowController } from './OnboardingFlowController';
 import { destinyLockedEvent } from '../../core/systems/DestinyOpening';
+import { shouldShowOpeningLetter } from '../../core/systems/OpeningLetter';
 import { OPENING_BEAUTY_POOL_ID, rollOpeningBeauty } from '../../core/systems/OpeningBeauty';
 import { applyFlowView } from './NurtureFlowViewApplier';
 
@@ -28,6 +29,8 @@ export interface LobbyOpeningPanelPorts {
     advanceOpening: (event: OpeningFlowEvent) => void;
     /** 宿命轉蛋六框載立繪（與招賢館同一套擺位，PROG-2-1147）；keys 依框序 */
     applyFramePortraits?: (binder: NonNullable<LobbyOpeningPanelHost['binder']>, keys: readonly string[]) => void;
+    /** 開場信件的標題與本文（已查好 i18n 的字串） */
+    openingLetterText?: () => { title: string; body: string };
     warn: (message: string, error?: unknown) => void;
 }
 
@@ -35,6 +38,7 @@ export interface LobbyOpeningPanelPorts {
 export class LobbyOpeningPanels {
     private _onboarding: OnboardingFlowController | null = null;
     private _onboardingHost: LobbyOpeningPanelHost | null = null;
+    private _openingLetterHost: LobbyOpeningPanelHost | null = null;
     private _destiny: DestinyOpeningController | null = null;
     private _destinyHost: LobbyOpeningPanelHost | null = null;
     /** 上次載入的立繪順序；沒變就不重載，避免每次點選都閃一下 */
@@ -72,6 +76,41 @@ export class LobbyOpeningPanels {
             this._ports.warn('[LobbyScene] 新手引導存檔失敗', error);
         } finally {
             this.refreshOnboarding();
+        }
+    }
+
+    /**
+     * 開場信件面板（PROG-2-1305）。就緒條件與新手引導相同：新局要等宿命開局開始後才開，
+     * 已讀後不再自動開；關閉時記為已讀並存檔。
+     */
+    public async mountOpeningLetter(): Promise<void> {
+        this._openingLetterHost = await this._ports.mountHost('OpeningLetterHost', 'opening-letter-screen', [
+            { buttonId: 'btnCloseOpeningLetter', handler: () => { void this.closeOpeningLetter(); } },
+        ]);
+        this.refreshOpeningLetter();
+    }
+
+    public refreshOpeningLetter(): void {
+        const host = this._openingLetterHost;
+        if (!host) return;
+        const ready = !this._ports.isNewPlayer() || this._destiny?.started === true;
+        const show = ready && shouldShowOpeningLetter(this._ports.session().openingLetter);
+        host.node.active = show;
+        if (!show) return;
+        this._ports.bringToFront(host.node);
+        if (host.binder) {
+            const text = this._ports.openingLetterText?.() ?? { title: '', body: '' };
+            host.binder.setTexts({ openingLetterTitle: text.title, openingLetterBody: text.body });
+        }
+    }
+
+    public async closeOpeningLetter(): Promise<void> {
+        const host = this._openingLetterHost;
+        if (host) host.node.active = false;
+        try {
+            await this._ports.session().markOpeningLetterSeen();
+        } catch (error) {
+            this._ports.warn('[LobbyScene] 開場信件已讀存檔失敗', error);
         }
     }
 
@@ -124,6 +163,7 @@ export class LobbyOpeningPanels {
 
     private afterDestinyAction(): void {
         this.refreshOnboarding();
+        this.refreshOpeningLetter();
         if (this._destiny?.started && this._destinyHost) {
             this._destinyHost.node.active = false;
             if (destinyLockedEvent(this._destiny.state)) {

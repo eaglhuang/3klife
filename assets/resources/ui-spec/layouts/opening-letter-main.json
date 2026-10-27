@@ -1,0 +1,103 @@
+{
+  "id": "opening-letter-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "OpeningLetterRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "LetterBackdrop",
+        "id": "letterBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "letter.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "LetterCard",
+        "id": "letterCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 960,
+        "height": 640,
+        "skinSlot": "letter.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "LetterTitle",
+            "id": "openingLetterTitle",
+            "widget": {
+              "top": 24,
+              "left": 48,
+              "right": 48
+            },
+            "height": 48,
+            "text": "",
+            "styleSlot": "letter.label.title"
+          },
+          {
+            "type": "label",
+            "name": "LetterBody",
+            "id": "openingLetterBody",
+            "widget": {
+              "top": 96,
+              "left": 56,
+              "right": 56
+            },
+            "height": 440,
+            "text": "",
+            "styleSlot": "letter.label.body"
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseOpeningLetter",
+            "id": "btnCloseOpeningLetter",
+            "widget": {
+              "bottom": 28,
+              "hCenter": true
+            },
+            "width": 240,
+            "height": 64,
+            "skinSlot": "letter.button.confirm.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseOpeningLetterLabel",
+                "id": "btnCloseOpeningLetterLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 56,
+                "text": "關閉",
+                "styleSlot": "letter.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

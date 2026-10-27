@@ -437,5 +437,6 @@
   "ui.ultimate_codex.count": "解放済み奥義 {0} 件",
   "ui.ultimate_codex.row": "{0}・{1}　Lv{2}",
   "ui.ultimate_codex.empty": "まだ奥義が解放されていません。",
-  "ui.ultimate_codex.more": "ほか {0} 件は表示されていません"
+  "ui.ultimate_codex.more": "ほか {0} 件は表示されていません",
+  "copy.letter.opening.title": "あなたへの一通の手紙（暫定タイトル）"
 }
