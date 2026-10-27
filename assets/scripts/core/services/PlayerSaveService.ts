@@ -116,6 +116,8 @@ export interface PlayerSaveSnapshot {
     governanceAssignments?: GovernanceAssignment[];
     /** 自動治理開關（領地治理 Auto_Mode，PROG-2-1161）；舊檔沒有時讀回關閉；版號不升 */
     autoGovernance?: boolean;
+    /** 擔任郡城縣令的子嗣 id（PROG-2-1162）；舊檔沒有時讀回無；版號不升 */
+    magistrateUid?: string;
     /** 領地清單含主城（PROG-2-0975）；舊檔沒有時讀回只有主城的預設清單；版號不升 */
     territories?: KeepTerritory[];
     /** 武將日誌條目（PROG-2-0975）；舊檔沒有時讀回空陣列；版號不升 */
@@ -471,6 +473,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.sandtableMarkerTerritories !== undefined ? { sandtableMarkerTerritories: normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories) } : {}),
         ...(snapshot.governanceAssignments !== undefined ? { governanceAssignments: normalizeGovernanceAssignments(snapshot.governanceAssignments) } : {}),
         ...(snapshot.autoGovernance !== undefined ? { autoGovernance: snapshot.autoGovernance === true } : {}),
+        ...(typeof snapshot.magistrateUid === 'string' && snapshot.magistrateUid ? { magistrateUid: snapshot.magistrateUid } : {}),
         ...(snapshot.territories !== undefined ? { territories: normalizeKeepTerritories(snapshot.territories) } : {}),
         ...(snapshot.journalEntries !== undefined ? { journalEntries: normalizeJournalEntries(snapshot.journalEntries) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),

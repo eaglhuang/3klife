@@ -99,6 +99,7 @@ import type { OpeningFlowController } from '../../core/systems/OpeningFlowContro
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
+import { isDescendant } from '../../core/systems/ChildMagistrate';
 import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET } from '../../core/systems/PlayerInventory';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
@@ -1235,6 +1236,16 @@ export class LobbyScene extends Component {
                 void session.save().catch(() => undefined);
                 return true;
             },
+            // 子嗣郡城縣令（PROG-2-1162）：黃金產出加成；任命變動即存檔
+            magistrateCandidates: () => services().session.roster
+                .filter((general) => general.status !== 'dead' && isDescendant(general as { fatherId?: string; motherId?: string }))
+                .map((general) => ({ id: general.id, name: general.name, pol: services().session.domesticStatsOf(general).pol })),
+            magistrateUid: () => services().session.magistrateUid,
+            setMagistrate: (uid: string | null) => {
+                const ok = services().session.setMagistrate(uid);
+                if (ok) void services().session.save().catch(() => undefined);
+                return ok;
+            },
             autoMode: () => services().session.autoGovernance,
             setAutoMode: (on: boolean) => {
                 const filled = services().session.setAutoGovernance(on);
@@ -1252,6 +1263,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnScouting', handler: () => { void this._onClickDomesticTask(domestic, 'scouting'); } },
             { buttonId: 'btnAutoGov', handler: () => { domestic.autoAssign(); this._refreshDomestic(); } },
             { buttonId: 'btnAutoMode', handler: () => { domestic.toggleAutoMode(); this._refreshDomestic(); } },
+            { buttonId: 'btnMagistrate', handler: () => { domestic.cycleMagistrate(); this._refreshDomestic(); } },
             ...(['farming', 'commerce', 'diplomacy', 'arms', 'scouting'] as const).map((taskId) => ({
                 buttonId: `btnGov${taskId.charAt(0).toUpperCase()}${taskId.slice(1)}`,
                 handler: () => { domestic.cycleGovernor(taskId); this._refreshDomestic(); },
