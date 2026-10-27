@@ -428,7 +428,7 @@
   "UI_AFFINITY_LOW": "Clashing affinity — rival blood may stir trouble",
   "UI_RESONANCE_TRIGGER": "Blood resonance triggered! {0} shares {1} members",
   "UI_FAMILY_TRADITION": "[Family Tradition] House of {0}: {1}",
-  "LORE_REL_EVENT_FAMOUS_MATCH": "Zhou Yu and Xiao Qiao — a match made in heaven! Burst power greatly increased!",
+  "LORE_REL_EVENT_FAMOUS_MATCH": "{0} & {1}: made for each other!",
   "LORE_REL_EVENT_BLOOD_RESONANCE": "Descendants of Zhao Yun and Ma Yunlu — the White Horse Vanguard's blood awakens once more!",
   "LORE_REL_EVENT_RIVAL_BREED": "Blood of Zhuge Liang and Sima Yi mingling? Heaven's will is hard to read...",
   "LORE_REL_EVENT_SWORN_COMBO": "The spirit of the Peach Garden Oath awakens at this moment!",

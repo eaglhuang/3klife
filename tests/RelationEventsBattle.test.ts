@@ -12,6 +12,9 @@ import type { RelationEventHit } from '../assets/scripts/core/systems/RelationEv
 import type { TallyBattleInfo } from '../assets/scripts/core/systems/TigerTallyStar';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { TestSuite, assert } from './TestRunner';
+import * as fs from 'fs';
+import * as path from 'path';
+import { generalNameMapOf, relationEventLogLine } from '../assets/scripts/ui/core/RelationEventLogText';
 
 const TABLE = HistoricalPairTable.load({
     relations: [
@@ -82,6 +85,24 @@ export function createRelationEventsBattleSuite(): TestSuite {
         unit(none, 'a', Faction.Player, 0, 'liu-bei');
         unit(none, 'b', Faction.Player, 1, 'guan-yu');
         assert.equals(0, none.checkBattleRelationEvents().length);
+    });
+
+
+    suite.test('戰報文字：名將契合帶入兩位名字，查不到退回 id；generals-index 轉名稱表', () => {
+        const zh = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/resources/i18n/zh-TW.json'), 'utf8')) as Record<string, string>;
+        const t = (key: string, ...args: string[]): string => args.reduce((s, v, i) => s.split(`{${i}}`).join(v), zh[key] ?? key);
+        const names = generalNameMapOf({ data: [{ uid: 'zhou-yu', name: '周瑜' }, { uid: 'bad' }, null] });
+        assert.equals(1, names.size);
+        const nameOf = (id: string) => names.get(id) ?? null;
+        assert.equals('周瑜與xiao-qiao，天作之合！',
+            relationEventLogLine({ loreKey: 'LORE_REL_EVENT_FAMOUS_MATCH', templateA: 'zhou-yu', templateB: 'xiao-qiao' }, nameOf, t));
+        assert.equals(zh.LORE_REL_EVENT_SWORN_COMBO,
+            relationEventLogLine({ loreKey: 'LORE_REL_EVENT_SWORN_COMBO', templateA: 'liu-bei', templateB: 'guan-yu' }, nameOf, t));
+        assert.equals(0, generalNameMapOf(null).size);
+        for (const loc of ['zh-CN', 'en', 'ja']) {
+            const j = JSON.parse(fs.readFileSync(path.join(__dirname, `../assets/resources/i18n/${loc}.json`), 'utf8')) as Record<string, string>;
+            assert.isTrue(j.LORE_REL_EVENT_FAMOUS_MATCH.includes('{0}') && j.LORE_REL_EVENT_FAMOUS_MATCH.includes('{1}'), loc);
+        }
     });
 
     return suite;
