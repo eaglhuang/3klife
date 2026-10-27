@@ -346,9 +346,15 @@ export class GradientRange { color = new Color(); }
 
 export class Size { constructor(public width = 0, public height = 0) {} }
 export class Vec2 { constructor(public x = 0, public y = 0) {} }
-export class Mask { [key: string]: any; }
+export class Mask {
+    [key: string]: any;
+    static Type: Record<string, number> = { GRAPHICS_RECT: 0, GRAPHICS_ELLIPSE: 1, GRAPHICS_STENCIL: 2, SPRITE_STENCIL: 3 };
+}
 export class ScrollView { [key: string]: any; }
-export class ScrollBar { [key: string]: any; }
+export class ScrollBar {
+    [key: string]: any;
+    static Direction: Record<string, number> = { HORIZONTAL: 0, VERTICAL: 1 };
+}
 
 // ─── 輸入事件（BattleUIBridge 全域點擊／鍵盤監聽用）────────────────────────────
 export class EventTouch {
