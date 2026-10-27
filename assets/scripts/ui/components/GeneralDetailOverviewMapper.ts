@@ -11,7 +11,9 @@ import type {
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
 import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
 import { mapGeneralReadModel, type GeneralReadModel } from '../../core/systems/GeneralReadModel';
-import type { InventoryViews } from '../../core/systems/InventoryProjection';
+import { deriveGeneralBackpack } from '../../core/systems/GeneralBackpackView';
+import { buildGearPageSlots, type GearSlotView } from '../../core/systems/GearPageSlots';
+import type { InventoryRecord, InventoryViews } from '../../core/systems/InventoryProjection';
 import { equippedTalismanSlot, type TalismanSlotView } from '../../core/systems/TalismanSlotView';
 import { resolveRarityTier } from '../../core/utils/RarityResolver';
 import { resolveCommercialBand } from '../../core/utils/CommercialRarityBand';
@@ -78,6 +80,8 @@ export interface GeneralDetailOverviewContentState {
     readModel: GeneralReadModel;
     /** 兵分頁虎符槽（PROG-2-1026）：由統一物件庫視圖推導，沒有視圖時為 EMPTY */
     tallySlot: TalismanSlotView;
+    /** 寶頁一般裝備 2x3 格位（PROG-2-1037）：由統一物件庫列依武將 uid 推導，沒有列時六格皆為未解鎖或空 */
+    gearSlots: GearSlotView[];
     crestFaceResource?: string;
     crestGlyphPrimary: string;
     crestGlyphSecondary: string;
@@ -214,7 +218,11 @@ export function buildGeneralDetailOverview(config: GeneralConfig): GeneralDetail
 
 const EMPTY_INVENTORY_VIEWS: InventoryViews = { talismans: {}, spiritCards: {}, skipped: [] };
 
-export function buildGeneralDetailOverviewContentState(config: GeneralConfig, views: InventoryViews = EMPTY_INVENTORY_VIEWS): GeneralDetailOverviewContentState {
+export function buildGeneralDetailOverviewContentState(
+    config: GeneralConfig,
+    views: InventoryViews = EMPTY_INVENTORY_VIEWS,
+    records: readonly InventoryRecord[] = [],
+): GeneralDetailOverviewContentState {
     const overview = buildGeneralDetailOverview(config);
     const storyCells = storyCellsToRecord(overview.cards.storyCells);
     const crestState = config.profilePresentation?.crestState ?? overview.cards.crestState;
@@ -263,6 +271,7 @@ export function buildGeneralDetailOverviewContentState(config: GeneralConfig, vi
         readModel: mapGeneralReadModel(config as unknown as Readonly<Record<string, unknown>>),
         portraitResource: portraitPathOf(config.id),
         tallySlot: equippedTalismanSlot(views, config.id),
+        gearSlots: buildGearPageSlots(deriveGeneralBackpack(records, config.id)),
     };
 }
 

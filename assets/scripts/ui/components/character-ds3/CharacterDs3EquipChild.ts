@@ -7,6 +7,8 @@
 
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
+import { gearSlotText } from '../../../core/systems/GearPageSlots';
+import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
 
 export class CharacterDs3EquipChild extends ChildPanelBase {
     override dataSource = 'config';
@@ -14,11 +16,23 @@ export class CharacterDs3EquipChild extends ChildPanelBase {
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3EquipChild] onMount', { rootPath: CharacterDs3EquipChild.ROOT_PATH });
-        // TODO(B-stage4): 一般裝備 / 傳家寶 / 道具槽。
+        // 傳家寶 / 道具摘要尚未接線（另卡）。
     }
 
-    public override onDataUpdate(_data: unknown): void {
-        // TODO(B-stage4): 把 GeneralConfig.equipment / heirloom / inventory 映到槽位。
+    /** 把六格一般裝備寫進具名格位節點 EquipSlot_<槽 ID>（PROG-2-1037）；節點不存在時略過。 */
+    public override onDataUpdate(data: unknown): void {
+        if (!data || typeof data !== 'object') return;
+        const slots = (data as GeneralDetailOverviewContentState).gearSlots;
+        if (!Array.isArray(slots)) return;
+        for (const view of slots) {
+            this._setLabelText(`EquipSlot_${view.slot}`, gearSlotText(view));
+        }
+    }
+
+    private _setLabelText(nodeName: string, text: string): void {
+        const label = this.binder.getLabel(nodeName);
+        if (!label) return;
+        label.string = text;
     }
 
     public override validateDataFormat(data: unknown): string | null {

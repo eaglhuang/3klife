@@ -627,6 +627,93 @@
                   "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_button_4"
                 }
               ]
+            },
+            {
+              "type": "container",
+              "name": "EquipGearGrid",
+              "width": 504,
+              "height": 88,
+              "layout": {
+                "type": "vertical",
+                "justifyContent": "start",
+                "spacingY": 8
+              },
+              "children": [
+                {
+                  "type": "container",
+                  "name": "EquipGearRow_0",
+                  "width": 504,
+                  "height": 40,
+                  "layout": {
+                    "type": "horizontal",
+                    "justifyContent": "start",
+                    "spacingX": 8
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "EquipSlot_WEAPON",
+                      "width": 160,
+                      "height": 40,
+                      "text": "",
+                      "styleSlot": "auto.character-ds3-tab-equip.equipslot_weapon"
+                    },
+                    {
+                      "type": "label",
+                      "name": "EquipSlot_ARMOR",
+                      "width": 160,
+                      "height": 40,
+                      "text": "",
+                      "styleSlot": "auto.character-ds3-tab-equip.equipslot_armor"
+                    },
+                    {
+                      "type": "label",
+                      "name": "EquipSlot_ACCESSORY",
+                      "width": 160,
+                      "height": 40,
+                      "text": "",
+                      "styleSlot": "auto.character-ds3-tab-equip.equipslot_accessory"
+                    }
+                  ]
+                },
+                {
+                  "type": "container",
+                  "name": "EquipGearRow_1",
+                  "width": 504,
+                  "height": 40,
+                  "layout": {
+                    "type": "horizontal",
+                    "justifyContent": "start",
+                    "spacingX": 8
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "EquipSlot_MOUNT",
+                      "width": 160,
+                      "height": 40,
+                      "text": "",
+                      "styleSlot": "auto.character-ds3-tab-equip.equipslot_mount"
+                    },
+                    {
+                      "type": "label",
+                      "name": "EquipSlot_TOME",
+                      "width": 160,
+                      "height": 40,
+                      "text": "",
+                      "styleSlot": "auto.character-ds3-tab-equip.equipslot_tome"
+                    },
+                    {
+                      "type": "label",
+                      "name": "EquipSlot_TREASURE",
+                      "width": 160,
+                      "height": 40,
+                      "text": "",
+                      "styleSlot": "auto.character-ds3-tab-equip.equipslot_treasure"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }

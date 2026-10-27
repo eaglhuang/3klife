@@ -28,6 +28,24 @@ export interface GearSlotView {
     equippedUid?: string;
 }
 
+/** 槽位的顯示名稱，對應《武將裝備道具系統》一般裝備六類 */
+export const GEAR_SLOT_NAMES: Readonly<Record<EquipSlot, string>> = Object.freeze({
+    WEAPON: '武器',
+    ARMOR: '防具',
+    ACCESSORY: '飾品',
+    MOUNT: '名馬',
+    TOME: '古書',
+    TREASURE: '秘寶',
+});
+
+/** 單格的顯示文字：槽名加狀態；已裝備只顯示「已裝備」，不在這裡組裝裝備名。 */
+export function gearSlotText(view: Readonly<GearSlotView>): string {
+    const name = GEAR_SLOT_NAMES[view.slot];
+    if (view.state === 'LOCKED') return `${name}：未解鎖`;
+    if (view.state === 'EMPTY') return `${name}：空`;
+    return `${name}：已裝備`;
+}
+
 /** 依 2x3 格位排序，回傳六個格位的檢視模型。 */
 export function buildGearPageSlots(backpack: Readonly<GeneralBackpack>): GearSlotView[] {
     const unlocked = new Set<EquipSlot>(backpack.unlocked);

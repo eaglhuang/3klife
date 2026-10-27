@@ -905,6 +905,11 @@ export class GameSession {
     }
 
     /** 統一物件庫推導的虎符與英靈卡視圖（DS-08）；讀取一律走這裡，不直接讀 _tallyCards */
+    /** 統一物件庫的原始列（唯讀副本）；寶頁依武將 uid 篩出一般裝備 */
+    public get inventoryRecords(): readonly InventoryRecord[] {
+        return this._inventoryRecords.map((record) => ({ ...record }));
+    }
+
     public get inventoryViews(): InventoryViews {
         return deriveInventoryViews(this._inventoryRecords);
     }
