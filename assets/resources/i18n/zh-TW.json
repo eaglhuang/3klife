@@ -434,5 +434,10 @@
   "LORE_REL_EVENT_RIVAL_BREED": "諸葛亮與司馬懿的血脈交融？天意難測……",
   "LORE_REL_EVENT_SWORN_COMBO": "桃園結義之魂，於此刻甦醒！",
   "LORE_REL_EVENT_COLLECTION_COMPLETE": "五虎上將齊聚——蜀漢之榮光重現！",
-  "LORE_REL_EVENT_FAMILY_TRADITION": "三代忠義傳承，{0}家風已成！"
+  "LORE_REL_EVENT_FAMILY_TRADITION": "三代忠義傳承，{0}家風已成！",
+  "ui.ultimate_codex.title": "奧義圖鑑",
+  "ui.ultimate_codex.count": "已解鎖奧義 {0} 項",
+  "ui.ultimate_codex.row": "{0}・{1}　Lv{2}",
+  "ui.ultimate_codex.empty": "尚未解鎖任何奧義。",
+  "ui.ultimate_codex.more": "另有 {0} 項未列出"
 }

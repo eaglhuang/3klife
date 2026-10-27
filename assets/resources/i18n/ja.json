@@ -432,5 +432,10 @@
   "LORE_REL_EVENT_RIVAL_BREED": "諸葛亮と司馬懿の血脈が交わる？天意は測りがたい……",
   "LORE_REL_EVENT_SWORN_COMBO": "桃園の誓いの魂が、今ここに目覚める！",
   "LORE_REL_EVENT_COLLECTION_COMPLETE": "五虎大将が集結——蜀漢の栄光、ここに再現！",
-  "LORE_REL_EVENT_FAMILY_TRADITION": "三代にわたる忠義の継承、{0}家の家風ここに成る！"
+  "LORE_REL_EVENT_FAMILY_TRADITION": "三代にわたる忠義の継承、{0}家の家風ここに成る！",
+  "ui.ultimate_codex.title": "奥義図鑑",
+  "ui.ultimate_codex.count": "解放済み奥義 {0} 件",
+  "ui.ultimate_codex.row": "{0}・{1}　Lv{2}",
+  "ui.ultimate_codex.empty": "まだ奥義が解放されていません。",
+  "ui.ultimate_codex.more": "ほか {0} 件は表示されていません"
 }
