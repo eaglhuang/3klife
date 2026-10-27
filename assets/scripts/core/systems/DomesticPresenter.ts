@@ -45,11 +45,12 @@ export function buildDomesticRows(
     log: Readonly<DomesticSeasonLog>,
     season: number,
     governorOf: (taskId: DomesticTaskId) => DomesticGovernor | null = () => null,
+    goldBonus = 0,
 ): DomesticTaskRow[] {
     const chosenThisSeason = log.lastSeason === season;
     return DOMESTIC_TASK_IDS.map(taskId => {
         const governor = governorOf(taskId);
-        const output = domesticOutputFor(taskId, governor?.stats);
+        const output = domesticOutputFor(taskId, governor?.stats, goldBonus);
         return {
             taskId,
             label: TASK_LABEL[taskId],

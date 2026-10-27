@@ -86,6 +86,7 @@ import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
+import { GovernorHallController } from '../core/GovernorHallController';
 import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceGalleryController } from '../core/RedFaceShowcaseController';
@@ -99,6 +100,7 @@ import type { OpeningFlowController } from '../../core/systems/OpeningFlowContro
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
+import { isDescendant } from '../../core/systems/ChildMagistrate';
 import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET } from '../../core/systems/PlayerInventory';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
@@ -266,6 +268,8 @@ export class LobbyScene extends Component {
     private _hallBoard: HallBoardPanelController | null = null;
     private _mercPanelHost: UIScreenPreviewHost | null = null;
     private _mercPanel: MercenaryPanelController | null = null;
+    private _govHallHost: UIScreenPreviewHost | null = null;
+    private _govHall: GovernorHallController | null = null;
     /** 名將池武將 id（gacha-config hero-pool）；招賢館與傭兵試用招募共用 */
     private _heroPoolIds: readonly string[] = [];
     private _redFaceHost: UIScreenPreviewHost | null = null;
@@ -415,6 +419,7 @@ export class LobbyScene extends Component {
         await this._mountWarehouse();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
+        await this._mountGovernorHall();
         await this._mountRedFaceShowcase();
         await this._mountDestinyOpening();
         await this._mountOpeningIntro();
@@ -1235,6 +1240,16 @@ export class LobbyScene extends Component {
                 void session.save().catch(() => undefined);
                 return true;
             },
+            // 子嗣郡城縣令（PROG-2-1162）：黃金產出加成；任命變動即存檔
+            magistrateCandidates: () => services().session.roster
+                .filter((general) => general.status !== 'dead' && isDescendant(general as { fatherId?: string; motherId?: string }))
+                .map((general) => ({ id: general.id, name: general.name, pol: services().session.domesticStatsOf(general).pol })),
+            magistrateUid: () => services().session.magistrateUid,
+            setMagistrate: (uid: string | null) => {
+                const ok = services().session.setMagistrate(uid);
+                if (ok) void services().session.save().catch(() => undefined);
+                return ok;
+            },
             autoMode: () => services().session.autoGovernance,
             setAutoMode: (on: boolean) => {
                 const filled = services().session.setAutoGovernance(on);
@@ -1252,6 +1267,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnScouting', handler: () => { void this._onClickDomesticTask(domestic, 'scouting'); } },
             { buttonId: 'btnAutoGov', handler: () => { domestic.autoAssign(); this._refreshDomestic(); } },
             { buttonId: 'btnAutoMode', handler: () => { domestic.toggleAutoMode(); this._refreshDomestic(); } },
+            { buttonId: 'btnMagistrate', handler: () => { domestic.cycleMagistrate(); this._refreshDomestic(); } },
             ...(['farming', 'commerce', 'diplomacy', 'arms', 'scouting'] as const).map((taskId) => ({
                 buttonId: `btnGov${taskId.charAt(0).toUpperCase()}${taskId.slice(1)}`,
                 handler: () => { domestic.cycleGovernor(taskId); this._refreshDomestic(); },
@@ -1419,6 +1435,49 @@ export class LobbyScene extends Component {
             ...rowBindings,
         ]);
         this._mercPanelHost.node.active = false;
+    }
+
+    /** 太守府（GOV-07）：隱藏掛載，入口待 PM 指定，對外提供 openGovernorHall()。 */
+    private async _mountGovernorHall(): Promise<void> {
+        // 人口、民心與產出的正式來源尚未接線（領地資料來源另卡），暫以零值顯示
+        this._govHall = new GovernorHallController({
+            snapshot: () => ({
+                population: 0,
+                morale: 0,
+                gold: { base: 0, populationBonus: 0, policyModifier: 0 },
+                food: { base: 0, populationBonus: 0, policyModifier: 0 },
+                cityTroops: { current: 0, cap: 0, recruitPerTurn: 0 },
+            }),
+        });
+        this._govHallHost = await this._mountPreviewScreenHost('GovernorHallHost', 'governor-hall-screen', [
+            { buttonId: 'btnClose', handler: () => { this._closeGovernorHall(); } },
+        ]);
+        this._govHallHost.node.active = false;
+    }
+
+    public openGovernorHall(): void {
+        const host = this._govHallHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshGovernorHall();
+    }
+
+    private _closeGovernorHall(): void {
+        if (this._govHallHost) {
+            this._govHallHost.node.active = false;
+        }
+    }
+
+    private _refreshGovernorHall(): void {
+        const binder = this._govHallHost?.binder;
+        if (!binder || !this._govHall) {
+            return;
+        }
+        // 太守府沒有按鈕可按與否的狀態，enabled 給空表
+        applyFlowView(binder, { enabled: {}, ...this._govHall.getFlowView() });
     }
 
     public openMercenaryPanel(): void {

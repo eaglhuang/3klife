@@ -149,12 +149,12 @@ import type { DynamicRelation } from '../systems/KinRelation';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
     assignGovernanceGeneral,
-    DEFAULT_MAX_TASK_SLOTS,
     removeGovernanceAssignment,
     type GovernanceAssignment,
     type GovernanceResult,
 } from '../systems/GovernanceAssignment';
 import { planAutoGovernance } from '../systems/DomesticAutoGovernance';
+import { isDescendant, magistrateGoldBonus } from '../systems/ChildMagistrate';
 import {
     maxTaskSlotsForLevel,
     planTerritoryUpgrade,
@@ -1189,6 +1189,7 @@ export class GameSession {
         this._sandtableMarkerTerritories = [];
         this._governance = [];
         this._autoGovernance = false;
+        this._magistrateUid = null;
         this._territoryLevel = 1;
         this._pendingTerritoryLevel = null;
         this._territories = defaultKeepTerritories();
@@ -1369,6 +1370,7 @@ export class GameSession {
             taskId,
             { food: this._military.foodCap, gold: Infinity, fame: BASE_RESOURCE_CAPS.fame, cityTroops: this._military.cityTroopsCap },
             this.domesticGovernorStats(taskId),
+            this.magistrateGoldBonus,
         );
         if (!result.ok) return result;
         this._military = { ...this._military, food: result.stock.food, cityTroops: result.stock.cityTroops };
@@ -1487,7 +1489,7 @@ export class GameSession {
     }
 
     /** 指派武將到內政任務格（GOV-04）；被拒絕時不改動狀態。 */
-    public assignGovernor(task: string, generalUid: string, maxSlots: number = DEFAULT_MAX_TASK_SLOTS): GovernanceResult {
+    public assignGovernor(task: string, generalUid: string, maxSlots: number = this.maxTaskSlots): GovernanceResult {
         if (!this._roster.getAll().some((general) => general.id === generalUid)) return { ok: false, reason: 'invalid-general', assignments: this.governanceAssignments };
         const result = assignGovernanceGeneral(this._governance, task, generalUid, maxSlots);
         if (result.ok) this._governance = result.assignments;
@@ -1509,6 +1511,32 @@ export class GameSession {
             pol: general.pol ?? general.stats?.pol ?? 0,
             cha: general.cha ?? general.stats?.cha ?? 0,
         };
+    }
+
+    // ---- 子嗣郡城縣令（領地治理 §E #9，PROG-2-1162）----
+    private _magistrateUid: string | null = null;
+
+    /** 擔任郡城縣令的子嗣 id；沒有時為 null */
+    public get magistrateUid(): string | null {
+        return this._magistrateUid;
+    }
+
+    /** 指派或卸下郡城縣令；只有名冊中存活的子嗣可擔任，失敗時不改狀態 */
+    public setMagistrate(uid: string | null): boolean {
+        if (uid === null) {
+            this._magistrateUid = null;
+            return true;
+        }
+        const general = this._roster.getAll().find((g) => g.id === uid);
+        if (!general || general.status === 'dead' || !isDescendant(general as GeneralConfig & { fatherId?: string; motherId?: string })) return false;
+        this._magistrateUid = uid;
+        return true;
+    }
+
+    /** 目前縣令的黃金產出加成比例（沒有縣令時為 0） */
+    public get magistrateGoldBonus(): number {
+        const general = this._magistrateUid ? this._roster.getAll().find((g) => g.id === this._magistrateUid) : undefined;
+        return general ? magistrateGoldBonus(this.domesticStatsOf(general).pol) : 0;
     }
 
     // ---- 自動治理（領地治理 §E #4/#7 Auto_Mode，PROG-2-1161）----
@@ -1533,7 +1561,7 @@ export class GameSession {
         const picks = planAutoGovernance(candidates, (task) => this._governance.find((a) => a.task === task)?.generalUid ?? null);
         let filled = 0;
         for (const pick of picks) {
-            const result = assignGovernanceGeneral(this._governance, pick.task, pick.generalUid, DEFAULT_MAX_TASK_SLOTS);
+            const result = assignGovernanceGeneral(this._governance, pick.task, pick.generalUid, this.maxTaskSlots);
             if (!result.ok) continue;
             this._governance = result.assignments;
             filled += 1;
@@ -2251,6 +2279,7 @@ export class GameSession {
         // 陣亡或退休的武將不再佔著內政任務格
         this._governance = this._governance.filter((a) => roster.some((general) => general.id === a.generalUid && general.status !== 'dead'));
         if (this._autoGovernance) this._fillAutoGovernance();
+        if (this._magistrateUid && !roster.some((general) => general.id === this._magistrateUid && general.status !== 'dead')) this._magistrateUid = null;
         this._recordSoulFragmentsFor(beforeRoster, agingEvents);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
@@ -2808,8 +2837,9 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending'> = {};
+        if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
         if (this._governance.length > 0) fields.governanceAssignments = this.governanceAssignments;
@@ -2825,6 +2855,7 @@ export class GameSession {
     public restoreLifespanState(snapshot: PlayerSaveSnapshot): void {
         this._governance = normalizeGovernanceAssignments(snapshot.governanceAssignments);
         this._autoGovernance = snapshot.autoGovernance === true;
+        this._magistrateUid = typeof snapshot.magistrateUid === 'string' && snapshot.magistrateUid ? snapshot.magistrateUid : null;
         this._territories = normalizeKeepTerritories(snapshot.territories);
         this._journal = { entries: normalizeJournalEntries(snapshot.journalEntries) };
         this._territoryLevel = normalizeTerritoryLevel(snapshot.territoryLevel);

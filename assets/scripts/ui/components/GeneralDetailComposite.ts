@@ -129,7 +129,7 @@ export class GeneralDetailComposite extends CompositePanel {
         this._currentConfig = config;
 
         if (this._isDs3Active()) {
-            const overview = buildGeneralDetailOverviewContentState(config);
+            const overview = buildGeneralDetailOverviewContentState(config, services().session.inventoryViews);
             const entryTab = this._chrome.resolveEntryTab(config);
             await this._switchToDs3Tab(entryTab, overview);
             (this.node as Node & { __generalDetailReadyTab?: string }).__generalDetailReadyTab = entryTab;

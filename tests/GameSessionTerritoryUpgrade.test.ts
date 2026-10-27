@@ -1,5 +1,5 @@
 /**
- * GameSessionTerritoryUpgrade.test.ts — 太守府升級下單、季結生效與格數上限（PROG-2-0979）
+ * GameSessionTerritoryUpgrade.test.ts — 太守府升級下單、季結生效與格數上限（PROG-2-0983）
  */
 import { assert, TestSuite } from './TestRunner';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
@@ -22,7 +22,7 @@ function roundTrip(snapshot: PlayerSaveSnapshot): PlayerSaveSnapshot {
 }
 
 export function createGameSessionTerritoryUpgradeSuite(): TestSuite {
-    const suite = new TestSuite('GameSessionTerritoryUpgrade (PROG-2-0979 領地升級)');
+    const suite = new TestSuite('GameSessionTerritoryUpgrade (PROG-2-0983 領地升級)');
 
     suite.test('新遊戲為 Lv1、2 格，沒有待生效升級', () => {
         const session = new GameSession(1);
@@ -66,6 +66,17 @@ export function createGameSessionTerritoryUpgradeSuite(): TestSuite {
         assert.isFalse(second.ok);
         assert.equals('upgrade-pending', second.reason!);
         assert.isFalse(called);
+    });
+
+    suite.test('指派上限跟著等級走：Lv1 只能 2 位，季結升到 Lv2 後可指派第 3 位', async () => {
+        const session = withFood(withRoster(new GameSession(1), 'G010', 'G011', 'G012'), 10000);
+        assert.isTrue(session.assignGovernor('farming', 'G010').ok);
+        assert.isTrue(session.assignGovernor('commerce', 'G011').ok);
+        assert.isFalse(session.assignGovernor('diplomacy', 'G012').ok);
+
+        session.orderTerritoryUpgrade(() => true);
+        await session.advanceSeason();
+        assert.isTrue(session.assignGovernor('diplomacy', 'G012').ok);
     });
 
     suite.test('跨存讀檔保留等級與待生效升級；預設值不寫入欄位', async () => {

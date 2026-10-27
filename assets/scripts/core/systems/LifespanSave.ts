@@ -29,12 +29,12 @@ function isNonEmptyString(value: unknown): value is string {
     return typeof value === 'string' && value.length > 0;
 }
 
-/** 太守府等級（PROG-2-0979）：只認 1 至上限的整數，其餘回到 Lv1。 */
+/** 太守府等級（PROG-2-0983）：只認 1 至上限的整數，其餘回到 Lv1。 */
 export function normalizeTerritoryLevel(raw: unknown): number {
     return typeof raw === 'number' && Number.isInteger(raw) && raw >= 1 && raw <= TERRITORY_MAX_LEVEL ? raw : 1;
 }
 
-/** 待生效的升級目標（PROG-2-0979）：只認 2 至上限的整數，其餘視為沒有待生效升級。 */
+/** 待生效的升級目標（PROG-2-0983）：只認 2 至上限的整數，其餘視為沒有待生效升級。 */
 export function normalizePendingTerritoryLevel(raw: unknown): number | undefined {
     return typeof raw === 'number' && Number.isInteger(raw) && raw >= 2 && raw <= TERRITORY_MAX_LEVEL ? raw : undefined;
 }

@@ -28,6 +28,11 @@ function sessionController(session: GameSession): DomesticPanelController {
             if (uid === null) { session.unassignGovernor(taskId); return true; }
             return session.assignGovernor(taskId, uid).ok;
         },
+        magistrateCandidates: () => session.roster
+            .filter((g) => (g as { fatherId?: string }).fatherId)
+            .map((g) => ({ id: g.id, name: g.name, pol: session.domesticStatsOf(g).pol })),
+        magistrateUid: () => session.magistrateUid,
+        setMagistrate: (uid) => session.setMagistrate(uid),
         autoMode: () => session.autoGovernance,
         setAutoMode: (on) => session.setAutoGovernance(on),
     });
@@ -234,6 +239,26 @@ export function createDomesticPanelControllerSuite(): TestSuite {
         controller.toggleAutoMode();
         assert.isFalse(session.autoGovernance);
         assert.equals('已改回手動治理', controller.getFlowView().texts.noticeLabel);
+    });
+
+    suite.test('縣令換人：政治高者先任，商業產出顯示含加成；內政主事者跳過；最後卸任', () => {
+        const session = new GameSession();
+        session.setRosterStore(new InMemoryRosterStore([
+            general('busy', { pol: 99, fatherId: 'f' }),
+            general('kid', { pol: 50, fatherId: 'f' }),
+            general('founder', { pol: 80 }),
+        ]));
+        session.setAutoSave(false);
+        const controller = sessionController(session);
+        assert.equals('郡城縣令：未任命（子嗣可任）', controller.getFlowView().texts.magistrateLabel);
+        assert.isTrue(session.assignGovernor('farming', 'busy').ok);
+        controller.cycleMagistrate();
+        assert.equals('kid', session.magistrateUid);
+        assert.equals('郡城縣令：kid（黃金產出 +30%）', controller.getFlowView().texts.magistrateLabel);
+        assert.equals('黃金 +130', controller.getFlowView().texts.commerceOutput);
+        controller.cycleMagistrate();
+        assert.equals(null, session.magistrateUid);
+        assert.equals('已卸下郡城縣令', controller.getFlowView().texts.noticeLabel);
     });
 
     return suite;

@@ -1,5 +1,5 @@
 /**
- * TerritoryUpgrade.test.ts — 太守府升級的格數表與費用規劃（PROG-2-0979）
+ * TerritoryUpgrade.test.ts — 太守府升級的格數表與費用規劃（PROG-2-0983）
  */
 import { assert, TestSuite } from './TestRunner';
 import {
@@ -10,7 +10,7 @@ import {
 } from '../assets/scripts/core/systems/TerritoryUpgrade';
 
 export function createTerritoryUpgradeSuite(): TestSuite {
-    const suite = new TestSuite('TerritoryUpgrade (PROG-2-0979 領地升級)');
+    const suite = new TestSuite('TerritoryUpgrade (PROG-2-0983 領地升級)');
 
     suite.test('格數表：Lv1–5 為 2/3/4/5/6，超出範圍夾在邊界', () => {
         assert.equals(2, maxTaskSlotsForLevel(1));

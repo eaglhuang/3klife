@@ -11,6 +11,8 @@ import type {
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
 import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
 import { mapGeneralReadModel, type GeneralReadModel } from '../../core/systems/GeneralReadModel';
+import type { InventoryViews } from '../../core/systems/InventoryProjection';
+import { equippedTalismanSlot, type TalismanSlotView } from '../../core/systems/TalismanSlotView';
 import { resolveRarityTier } from '../../core/utils/RarityResolver';
 import { resolveCommercialBand } from '../../core/utils/CommercialRarityBand';
 
@@ -74,6 +76,8 @@ export interface GeneralDetailOverviewContentState {
     crestState: GeneralDetailCrestState;
     /** 人物頁 §10 讀取模型（GDUI-13，PROG-2-1024）：缺漏欄位為 NO_DATA，不影響既有欄位 */
     readModel: GeneralReadModel;
+    /** 兵分頁虎符槽（PROG-2-1026）：由統一物件庫視圖推導，沒有視圖時為 EMPTY */
+    tallySlot: TalismanSlotView;
     crestFaceResource?: string;
     crestGlyphPrimary: string;
     crestGlyphSecondary: string;
@@ -208,7 +212,9 @@ export function buildGeneralDetailOverview(config: GeneralConfig): GeneralDetail
     };
 }
 
-export function buildGeneralDetailOverviewContentState(config: GeneralConfig): GeneralDetailOverviewContentState {
+const EMPTY_INVENTORY_VIEWS: InventoryViews = { talismans: {}, spiritCards: {}, skipped: [] };
+
+export function buildGeneralDetailOverviewContentState(config: GeneralConfig, views: InventoryViews = EMPTY_INVENTORY_VIEWS): GeneralDetailOverviewContentState {
     const overview = buildGeneralDetailOverview(config);
     const storyCells = storyCellsToRecord(overview.cards.storyCells);
     const crestState = config.profilePresentation?.crestState ?? overview.cards.crestState;
@@ -256,6 +262,7 @@ export function buildGeneralDetailOverviewContentState(config: GeneralConfig): G
         trainingProfile: buildTrainingProfile(config),
         readModel: mapGeneralReadModel(config as unknown as Readonly<Record<string, unknown>>),
         portraitResource: portraitPathOf(config.id),
+        tallySlot: equippedTalismanSlot(views, config.id),
     };
 }
 
