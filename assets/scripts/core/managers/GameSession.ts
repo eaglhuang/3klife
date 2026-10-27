@@ -78,6 +78,9 @@ import {
     type CompletedDispatchJob, type DispatchJobDef, type DispatchStartReason, type DispatchStartResult, type DispatchState,
 } from '../systems/DispatchJobs';
 import { dispatchCompleteLine, getDispatchScore, type DispatchGeneral, type DispatchStatKey } from '../systems/DispatchQuality';
+import {
+    appendOfflineBattleSnapshot, nextOfflineBattleSnapshotId, normalizeOfflineBattleSnapshots, OFFLINE_BATTLE_JOURNAL, type OfflineBattleSnapshot,
+} from '../systems/OfflineBattleSnapshot';
 import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type DispatchCatalogRow } from '../systems/DispatchCatalog';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
@@ -1341,6 +1344,7 @@ export class GameSession {
         this._dailyNews = { ...EMPTY_DAILY_NEWS, news: [] };
         this._morningReport = { ...EMPTY_MORNING_REPORT, items: [] };
         this._dispatch = normalizeDispatchState(EMPTY_DISPATCH_STATE);
+        this._offlineBattleSnapshots = [];
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
         // 上一局的進度不能帶進新局（PROG-2-0660）
@@ -1504,12 +1508,48 @@ export class GameSession {
         let world = tick.world;
         const battles: AutoBattleResult[] = [];
         for (const event of tick.events) {
-            const battle = autoResolveBattle(world, event.nationId, this.rivalBattleSquad(), this._random);
+            const squad = this.rivalBattleSquad();
+            const battle = autoResolveBattle(world, event.nationId, squad, this._random);
             world = battle.world;
             battles.push(battle);
+            this._recordOfflineBattle(squad, event.nationId, battle, battles.length);
         }
         this._rivals = world;
         return battles;
+    }
+
+    private _offlineBattleSnapshots: OfflineBattleSnapshot[] = [];
+
+    /** 離線戰鬥快照（複本，JRN-05） */
+    public get offlineBattleSnapshots(): OfflineBattleSnapshot[] {
+        return this._offlineBattleSnapshots.map((s) => ({ ...s }));
+    }
+
+    /** 敵襲自動迎戰：留 AUTO_RESOLVE 快照並寫 BATTLE 日誌，日誌以 snapshotRef 指向快照（§F-4，PROG-2-1184） */
+    private _recordOfflineBattle(squad: readonly unknown[], nationId: string, battle: AutoBattleResult, order: number): void {
+        const clock = this._clock.state;
+        const id = nextOfflineBattleSnapshotId(this._offlineBattleSnapshots);
+        const appended = appendOfflineBattleSnapshot(this._offlineBattleSnapshots, id, {
+            battleType: 'AUTO_RESOLVE',
+            seed: `${clock.currentYear}-${clock.currentSeason}-${order}`,
+            lineup: squad,
+            tileState: { nationId },
+            tactics: [],
+            win: battle.win,
+            playerStrength: battle.playerStrength,
+            enemyStrength: battle.enemyStrength,
+        });
+        this._offlineBattleSnapshots = appended.snapshots;
+        const rule = battle.win ? OFFLINE_BATTLE_JOURNAL.win : OFFLINE_BATTLE_JOURNAL.lose;
+        this.recordJournal({
+            entryId: `OFFLINE_BATTLE-${this._journal.entries.length + 1}`,
+            timestamp: seasonJournalTimestamp(clock),
+            category: 'BATTLE',
+            relatedGeneralUids: [],
+            priority: rule.priority,
+            summary: rule.summary,
+            snapshotRef: appended.snapshot.snapshotId,
+        });
     }
 
     public get domesticLog(): Readonly<DomesticSeasonLog> {
@@ -3270,8 +3310,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3289,6 +3329,7 @@ export class GameSession {
         if (this._dispatch.active.length > 0 || this._dispatch.completed.length > 0 || Object.keys(this._dispatch.cooldowns).length > 0) {
             fields.generalDispatch = this.dispatchState;
         }
+        if (this._offlineBattleSnapshots.length > 0) fields.offlineBattleSnapshots = this.offlineBattleSnapshots;
         if (this._sandtableUnlockHistory.length > 0) fields.sandtableUnlockHistory = [...this._sandtableUnlockHistory];
         if (this._startingTalisman !== null) fields.startingTalisman = this.startingTalisman!;
         if (this._familySystemUnlockedFlag) fields.familySystemUnlocked = true;
@@ -3310,6 +3351,7 @@ export class GameSession {
         this._dailyNews = normalizeDailyNewsState(snapshot.dailyNews);
         this._morningReport = normalizeMorningReportState(snapshot.morningReport);
         this._dispatch = normalizeDispatchState(snapshot.generalDispatch);
+        this._offlineBattleSnapshots = normalizeOfflineBattleSnapshots(snapshot.offlineBattleSnapshots);
         this._sandtableUnlockHistory = normalizeUnlockHistory(snapshot.sandtableUnlockHistory);
         this._familySystemUnlockedFlag = snapshot.familySystemUnlocked === true;
         this._recordSandtableUnlockReached();

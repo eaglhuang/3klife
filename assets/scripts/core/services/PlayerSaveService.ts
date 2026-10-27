@@ -63,6 +63,7 @@ import type { LoginStreakState } from '../systems/LoginStreak';
 import { normalizeDailyNewsState, normalizePlayerLogs, type DailyNewsState, type PlayerLogEntry } from '../systems/DailyNewsEngine';
 import { normalizeMorningReportState, type MorningReportState } from '../systems/MorningReport';
 import { normalizeDispatchState, type DispatchState } from '../systems/DispatchJobs';
+import { normalizeOfflineBattleSnapshots, type OfflineBattleSnapshot } from '../systems/OfflineBattleSnapshot';
 import { normalizeUnlockHistory, type SandtableStageId } from '../systems/SandtableProgress';
 import { normalizeStartingTalisman, type StartingSpiritTalisman } from '../systems/TeachingSpiritTalisman';
 
@@ -150,6 +151,8 @@ export interface PlayerSaveSnapshot {
     morningReport?: MorningReportState;
     /** 派遣整備：進行中、已完成、冷卻（PROG-2-1178）；只在有資料時寫入；舊檔沒有時為空；版號不升 */
     generalDispatch?: DispatchState;
+    /** 離線戰鬥快照（PROG-2-1184，JRN-05）：只在有資料時寫入；舊檔沒有時為空；版號不升 */
+    offlineBattleSnapshots?: OfflineBattleSnapshot[];
     /** 世界沙盤解鎖歷史（HALL-08）：只增不減，天下重組後不倒退；只在有紀錄時寫入；舊檔沒有時為空；版號不升 */
     sandtableUnlockHistory?: SandtableStageId[];
     /** 英靈夢回教學戰產出的初始虎符（OPEN-13）：只在教學戰完成後寫入一次；舊檔沒有時為空；版號不升 */
@@ -523,6 +526,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.dailyNews !== undefined ? { dailyNews: normalizeDailyNewsState(snapshot.dailyNews) } : {}),
         ...(snapshot.morningReport !== undefined ? { morningReport: normalizeMorningReportState(snapshot.morningReport) } : {}),
         ...(snapshot.generalDispatch !== undefined ? { generalDispatch: normalizeDispatchState(snapshot.generalDispatch) } : {}),
+        ...(snapshot.offlineBattleSnapshots !== undefined ? { offlineBattleSnapshots: normalizeOfflineBattleSnapshots(snapshot.offlineBattleSnapshots) } : {}),
         ...(snapshot.sandtableUnlockHistory !== undefined ? { sandtableUnlockHistory: normalizeUnlockHistory(snapshot.sandtableUnlockHistory) } : {}),
         ...(normalizeStartingTalisman(snapshot.startingTalisman) !== null ? { startingTalisman: normalizeStartingTalisman(snapshot.startingTalisman)! } : {}),
         ...(snapshot.familySystemUnlocked === true ? { familySystemUnlocked: true } : {}),
