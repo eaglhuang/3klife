@@ -16,29 +16,43 @@ export interface ExpirableItem {
     expireAt: number | null;
 }
 
-export interface ItemExpirySweep<T extends ExpirableItem> {
+export interface ItemExpirySweep<T> {
     /** 仍有效的道具（含永久與無法判定者）。 */
     kept: T[];
     /** 本次判定為過期並回收的道具。 */
     expired: T[];
 }
 
-function isExpired(item: ExpirableItem, nowMs: number): boolean {
-    if (item.expireAt === null) return false;
-    if (!Number.isFinite(item.expireAt)) return false;
-    return nowMs >= item.expireAt;
+/** 統一物件庫的列以選填的 expiresAt 表示到期；缺欄位或 null 即永久（PROG-2-1355）。 */
+export interface ExpirableRecord {
+    expiresAt?: number | null;
 }
 
-/** 依現在時間把道具分成仍有效與已過期兩組；兩組都保留原本的順序。 */
-export function sweepExpiredItems<T extends ExpirableItem>(items: readonly T[], nowMs: number): ItemExpirySweep<T> {
+function isExpired(expireAt: number | null, nowMs: number): boolean {
+    if (expireAt === null) return false;
+    if (!Number.isFinite(expireAt)) return false;
+    return nowMs >= expireAt;
+}
+
+function sweepBy<T>(items: readonly T[], expireAtOf: (item: T) => number | null, nowMs: number): ItemExpirySweep<T> {
     const kept: T[] = [];
     const expired: T[] = [];
     for (const item of items) {
-        if (isExpired(item, nowMs)) {
+        if (isExpired(expireAtOf(item), nowMs)) {
             expired.push(item);
         } else {
             kept.push(item);
         }
     }
     return { kept, expired };
+}
+
+/** 依現在時間把道具分成仍有效與已過期兩組；兩組都保留原本的順序。 */
+export function sweepExpiredItems<T extends ExpirableItem>(items: readonly T[], nowMs: number): ItemExpirySweep<T> {
+    return sweepBy(items, (item) => item.expireAt, nowMs);
+}
+
+/** 依現在時間掃描統一物件庫的列：expiresAt 缺欄位即永久，不補值。 */
+export function sweepExpiredRecords<T extends ExpirableRecord>(records: readonly T[], nowMs: number): ItemExpirySweep<T> {
+    return sweepBy(records, (record) => record.expiresAt ?? null, nowMs);
 }

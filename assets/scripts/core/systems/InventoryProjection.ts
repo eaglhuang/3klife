@@ -30,6 +30,8 @@ export interface InventoryRecord {
     slotId?: string | null;
     /** 一般裝備的定義 id（查 GearDefinitions 取名稱與槽位）；列不存名稱本身（PROG-2-1039） */
     Gear_ID?: string | null;
+    /** 限時道具的到期時刻（毫秒時戳）；缺欄位或 null 即永久，舊檔不補值（PROG-2-1355） */
+    expiresAt?: number | null;
 }
 
 export interface InventorySkipped {
