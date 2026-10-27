@@ -421,5 +421,6 @@
   "ui.ultimate_codex.count": "Unlocked ultimates: {0}",
   "ui.ultimate_codex.row": "{0} · {1}  Lv{2}",
   "ui.ultimate_codex.empty": "No ultimates unlocked yet.",
-  "ui.ultimate_codex.more": "{0} more not shown"
+  "ui.ultimate_codex.more": "{0} more not shown",
+  "ui.ultimate_codex.close": "Close"
 }

@@ -6,6 +6,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import {
+    buildUltimateCodexTexts,
     buildUltimateCodexView,
     fallbackUltimateCodexText,
     ULTIMATE_CODEX_MAX_ROWS,
@@ -47,6 +48,13 @@ export function createUltimateCodexTextsSuite(): TestSuite {
     suite.test('缺 key 時退回 zh-TW 預設', () => {
         assert.equals('奧義圖鑑', fallbackUltimateCodexText('ui.ultimate_codex.title'));
         assert.equals('no.such.key', fallbackUltimateCodexText('no.such.key'));
+    });
+
+    suite.test('畫面 Label 文字表的 key 對應版面節點 id', () => {
+        const texts = buildUltimateCodexTexts([{ generalId: 'g', ultimateId: 'u', slot: 1, level: 1 }]);
+        assert.equals('g・u　Lv1', texts.ultimateCodexList);
+        assert.equals('關閉', texts.closeUltimateCodexLabel);
+        assert.equals('', texts.ultimateCodexMore);
     });
 
     suite.test('四個語系都有 ui.ultimate_codex.* key，zh-TW 與內建預設一致', () => {

@@ -1,0 +1,129 @@
+{
+  "id": "ultimate-codex-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "UltimateCodexRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "CodexBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "codex.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "CodexCard",
+        "id": "ultimateCodexCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1000,
+        "height": 680,
+        "skinSlot": "codex.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "CodexTitle",
+            "id": "ultimateCodexTitle",
+            "widget": {
+              "top": 24,
+              "left": 40,
+              "right": 40
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "codex.label.title"
+          },
+          {
+            "type": "label",
+            "name": "CodexCount",
+            "id": "ultimateCodexCount",
+            "widget": {
+              "top": 80,
+              "left": 40,
+              "right": 40
+            },
+            "height": 32,
+            "text": "",
+            "styleSlot": "codex.label.body"
+          },
+          {
+            "type": "label",
+            "name": "CodexList",
+            "id": "ultimateCodexList",
+            "widget": {
+              "top": 124,
+              "left": 40,
+              "right": 160
+            },
+            "height": 420,
+            "text": "",
+            "styleSlot": "codex.label.body",
+            "multiline": true
+          },
+          {
+            "type": "label",
+            "name": "CodexMore",
+            "id": "ultimateCodexMore",
+            "widget": {
+              "top": 556,
+              "left": 40,
+              "right": 40
+            },
+            "height": 32,
+            "text": "",
+            "styleSlot": "codex.label.body"
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseUltimateCodex",
+            "id": "btnCloseUltimateCodex",
+            "widget": {
+              "bottom": 24,
+              "hCenter": true
+            },
+            "width": 200,
+            "height": 48,
+            "skinSlot": "codex.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "CloseSpiritCodexLabel",
+                "id": "closeSpiritCodexLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "",
+                "styleSlot": "codex.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
