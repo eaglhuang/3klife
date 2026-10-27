@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 16:10 Claude R291：骨盆可見率非門檻，採完全不透明（0.12104% 接受），候選待交件驗收；提醒 Codex R290 取代 R289。
 - 2026-10-27 16:05 Claude R290：使用者授權 Codex 以 Computer use 重開隔離專案 Creator（只限 zhaoyun-cutout-polish），連續兩次重開驗收 Spine 4.2。
 - 2026-10-27 16:00 Claude R289：使用者外出，Creator 重開延到回家後；Codex 先做分件，不再催重開。
 - 2026-10-27 15:55 Claude R288：Sparkle v11 到件，AG-27 合併 MERGED（setup 對齊）；肩關節平移、後手 drawOrder、thrust 起始姿勢仍未修，另骨盆下沉過深像坐著，回饋包已交使用者轉 v12。
