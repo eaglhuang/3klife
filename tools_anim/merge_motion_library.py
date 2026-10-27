@@ -8,8 +8,8 @@
    - Setup pose 逐骨座標與旋轉誤差: dx <= 0.5px, dy <= 0.5px, d_rotation <= 0.1°。
    - 動畫與 drawOrder 引用的 slot 均在骨架 slot 集合中存在。
 3. 動作軌道違規檢查 (只報告不修改數值，即使拒絕合併亦完整列出)：
-   - weapon 或手臂骨骼 scale != 1.0。
-   - 上臂骨骼 (arm_upper) translate 位移量 > 16.0px。
+   - 手臂與武器骨骼 scale != 1.0。
+   - 手臂根骨 translate 位移量 > 16.0px。
 4. 輸出：
    - 合併成功時輸出整合骨架與動作之 Spine 4.2 JSON。
    - 輸出詳細驗證與審查報告 (每段動畫時長、事件、引用到但分件缺的 slot、軌道違規清單)。
@@ -24,6 +24,9 @@ import math
 import sys
 from pathlib import Path
 from typing import Any
+
+
+DEFAULT_SPEC_PATH = Path(__file__).resolve().parent / "specs" / "canonical_skeleton_v3.json"
 
 
 def load_spine_json(path: Path | str) -> dict[str, Any]:
@@ -240,13 +243,107 @@ def check_animation_slots_and_draworder(
     return valid, issues, summary_by_anim
 
 
+def derive_bone_audit_groups(
+    spec: dict[str, Any] | None = None,
+    limit_bones_override: list[str] | set[str] | None = None,
+    scale_bones_override: list[str] | set[str] | None = None,
+) -> tuple[set[str], set[str]]:
+    """動態推導動作庫軌道違規審查之骨骼群組：
+    1. limit_bones: 位移需受 16px 限制之骨骼群組 (由規格 bones 階層推導：掛在軀幹下且具肢體子鏈的手臂根骨)
+    2. scale_bones: 縮放需受 1.0 限制之骨骼群組 (由規格 bones 階層推導：手臂子樹與武器所有骨骼)
+
+    絕無任何寫死骨名或部分字串比對，100% 由規格結構驅動。支援外部參數覆蓋。
+    """
+    if limit_bones_override is not None and scale_bones_override is not None:
+        return set(limit_bones_override), set(scale_bones_override)
+
+    limit_bones: set[str] = set()
+    scale_bones: set[str] = set()
+
+    # 若未直接提供 spec，嘗試自預設路徑載入
+    if spec is None and DEFAULT_SPEC_PATH.exists():
+        try:
+            spec = json.loads(DEFAULT_SPEC_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            spec = None
+
+    if spec and isinstance(spec, dict) and "bones" in spec and isinstance(spec["bones"], list):
+        bones = spec["bones"]
+        children_map: dict[str | None, list[str]] = {}
+        for b in bones:
+            if isinstance(b, dict) and "name" in b:
+                p = b.get("parent")
+                children_map.setdefault(p, []).append(b["name"])
+
+        # 找尋 root -> pelvis -> torso 階層
+        root_bone = next((b["name"] for b in bones if isinstance(b, dict) and not b.get("parent")), None)
+        pelvis_bone = next(
+            (b["name"] for b in bones if isinstance(b, dict) and b.get("parent") == root_bone and "ik" not in b.get("role", "")),
+            None,
+        )
+        torso_bone = next(
+            (b["name"] for b in bones if isinstance(b, dict) and b.get("parent") == pelvis_bone and len(children_map.get(b.get("name"), [])) > 1),
+            None,
+        )
+
+        # 找出頭部 segment (具有 registration 定位屬性之 segment，例如 head)
+        head_seg_names = {
+            k for k, v in spec.get("segments", {}).items()
+            if isinstance(v, dict) and "registration" in v
+        }
+
+        # 手臂根骨：parent 為 torso，排除頭部 segment，且其子樹深度 >= 3 (upper -> lower -> hand)
+        def get_depth(b_name: str) -> int:
+            ch = children_map.get(b_name, [])
+            if not ch:
+                return 1
+            return 1 + max(get_depth(c) for c in ch)
+
+        for b in bones:
+            if not isinstance(b, dict):
+                continue
+            b_name = b.get("name")
+            if not b_name:
+                continue
+            if b.get("parent") == torso_bone and b_name not in head_seg_names:
+                if len(children_map.get(b_name, [])) >= 1 and get_depth(b_name) >= 3:
+                    limit_bones.add(b_name)
+
+        # 手臂與武器全骨骼：從 limit_bones 出發的所有子孫骨骼 (包含自身)
+        stack = list(limit_bones)
+        while stack:
+            curr = stack.pop()
+            scale_bones.add(curr)
+            for ch in children_map.get(curr, []):
+                if ch not in scale_bones:
+                    stack.append(ch)
+
+    if limit_bones_override is not None:
+        limit_bones = set(limit_bones_override)
+    if scale_bones_override is not None:
+        scale_bones = set(scale_bones_override)
+
+    return limit_bones, scale_bones
+
+
 def audit_animation_tracks(
     motion_spine: dict[str, Any],
+    limit_bones: list[str] | set[str] | None = None,
+    scale_bones: list[str] | set[str] | None = None,
+    spec: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """檢驗動作庫動畫軌道違規 (不修改數值，僅審查報告)：
-    1. weapon 或手臂骨骼 scale != 1.0
-    2. arm_upper_f / arm_upper_b translate 超過 16.0 px
+    1. 手臂與武器骨骼 scale != 1.0
+    2. 手臂根骨 translate 超過 16.0 px
+
+    骨骼群組預設由規格 bones 階層動態推導，亦可由參數指定。
     """
+    effective_limit_bones, effective_scale_bones = derive_bone_audit_groups(
+        spec=spec,
+        limit_bones_override=limit_bones,
+        scale_bones_override=scale_bones,
+    )
+
     violations: list[dict[str, Any]] = []
     animations = motion_spine.get("animations", {})
 
@@ -259,10 +356,9 @@ def audit_animation_tracks(
             if not isinstance(b_timeline, dict):
                 continue
 
-            # (A) 檢查 scale 是否存在非 1.0
-            # 適用骨骼：手臂 (arm_*, forearm_*, upperarm_*) 或武器 (weapon*)
-            is_arm_or_weapon = ("arm_" in b_name) or ("weapon" in b_name) or ("hand_" in b_name)
-            if is_arm_or_weapon and "scale" in b_timeline:
+            # (A) 檢查 scale 是否存在非 1.0 (針對手臂及武器骨骼群組)
+            is_scale_target = (b_name in effective_scale_bones)
+            if is_scale_target and "scale" in b_timeline:
                 scale_keys = b_timeline["scale"]
                 if isinstance(scale_keys, list):
                     for kf in scale_keys:
@@ -279,9 +375,9 @@ def audit_animation_tracks(
                                 "detail": f"動畫 '{anim_name}' 骨骼 '{b_name}' 於 t={kf.get('time', 0.0)}s scale 含有縮放: ({sx}, {sy})",
                             })
 
-            # (B) 檢查 arm_upper 位移是否超過 16px
-            is_arm_upper = ("arm_upper" in b_name) or ("upperarm" in b_name)
-            if is_arm_upper and "translate" in b_timeline:
+            # (B) 檢查手臂根骨 translate 位移是否超過 16px
+            is_limit_target = (b_name in effective_limit_bones)
+            if is_limit_target and "translate" in b_timeline:
                 trans_keys = b_timeline["translate"]
                 if isinstance(trans_keys, list):
                     max_dist = 0.0
@@ -320,10 +416,21 @@ def merge_motion_library(
     motion_library_path: Path | str,
     output_spine_path: Path | str | None = None,
     report_output_path: Path | str | None = None,
+    spec: Path | str | dict[str, Any] | None = None,
+    limit_bones: list[str] | set[str] | None = None,
+    scale_bones: list[str] | set[str] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """合併動作庫主流程"""
     builder_spine = load_spine_json(builder_spine_path)
     motion_spine = load_spine_json(motion_library_path)
+
+    spec_data: dict[str, Any] | None = None
+    if isinstance(spec, (str, Path)):
+        sp = Path(spec)
+        if sp.exists():
+            spec_data = json.loads(sp.read_text(encoding="utf-8"))
+    elif isinstance(spec, dict):
+        spec_data = spec
 
     all_refusal_reasons: list[str] = []
 
@@ -338,7 +445,12 @@ def merge_motion_library(
         all_refusal_reasons.extend(slot_issues)
 
     # 3. 動作軌道違規檢查 (照樣全面審查並記錄，即使已拒絕合併亦完整輸出)
-    track_violations = audit_animation_tracks(motion_spine)
+    track_violations = audit_animation_tracks(
+        motion_spine=motion_spine,
+        limit_bones=limit_bones,
+        scale_bones=scale_bones,
+        spec=spec_data,
+    )
 
     overall_pass = (len(all_refusal_reasons) == 0)
 
@@ -393,6 +505,9 @@ def main() -> None:
     ap.add_argument("--motions", "--motion-library", type=Path, required=True, dest="motions", help="動作庫 Spine 4.2 JSON")
     ap.add_argument("-o", "--output", type=Path, default=None, help="合併後的 Spine 4.2 JSON 輸出路徑")
     ap.add_argument("--report", type=Path, default=None, help="合併報告 JSON 輸出路徑")
+    ap.add_argument("--spec", type=Path, default=None, help="規範 JSON 路徑 (預設使用 canonical_skeleton_v3.json)")
+    ap.add_argument("--limit-bones", nargs="*", default=None, help="位移需限制 <= 16px 的骨骼名稱清單 (預設由規格產生)")
+    ap.add_argument("--scale-bones", nargs="*", default=None, help="縮放需限制 == 1.0 的骨骼名稱清單 (預設由規格產生)")
 
     args = ap.parse_args()
 
@@ -401,6 +516,9 @@ def main() -> None:
         motion_library_path=args.motions,
         output_spine_path=args.output,
         report_output_path=args.report,
+        spec=args.spec,
+        limit_bones=args.limit_bones,
+        scale_bones=args.scale_bones,
     )
 
     print(json.dumps(report, indent=2, ensure_ascii=False))

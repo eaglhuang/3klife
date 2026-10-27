@@ -206,6 +206,52 @@ def check_no_joint_names_in_core_scripts() -> list[str]:
     return violations
 
 
+def check_no_partial_bone_names_in_motion_tool() -> list[str]:
+    """AG-27b: 檢查動作庫合併工具 (merge_motion_library.py) 代碼邏輯中不得出現部分骨名字串字面值進行過濾比對"""
+    script = TOOLS_DIR / "merge_motion_library.py"
+    if not script.exists():
+        return []
+
+    violations: list[str] = []
+    text = script.read_text(encoding="utf-8")
+    try:
+        tree = ast.parse(text, filename=str(script))
+    except Exception as e:
+        return [f"{script.name}: AST 解析失敗: {e}"]
+
+    forbidden_bone_patterns = {"arm_upper", "upperarm", "arm_", "weapon", "hand_"}
+
+    # 搜集所有 docstring 節點
+    docstring_nodes = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            if (
+                node.body
+                and isinstance(node.body[0], ast.Expr)
+                and isinstance(node.body[0].value, ast.Constant)
+                and isinstance(node.body[0].value.value, str)
+            ):
+                docstring_nodes.add(id(node.body[0].value))
+
+    for node in ast.walk(tree):
+        if id(node) in docstring_nodes:
+            continue
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            val = node.value
+            if val.endswith("_limit_16px") or val.endswith("_report.v1"):
+                continue
+            if val in forbidden_bone_patterns:
+                violations.append(
+                    f"{script.name}:{node.lineno}: 出現部分骨名字串字面值 '{val}'，骨骼群組應由 JSON 規格動態推導或由 CLI 參數傳入"
+                )
+            elif any(fb in val for fb in ["upperarm", "arm_upper"]):
+                violations.append(
+                    f"{script.name}:{node.lineno}: 出現包含 upperarm/arm_upper 字串 '{val}'，應由 JSON 規格動態推導"
+                )
+
+    return violations
+
+
 class TestNoHardcoding(unittest.TestCase):
     def test_no_general_names(self):
         v = check_general_hardcoding()
@@ -223,20 +269,25 @@ class TestNoHardcoding(unittest.TestCase):
         v = check_no_joint_names_in_core_scripts()
         self.assertEqual(len(v), 0, f"發現關節名稱硬編碼違規 (AG-26b):\n" + "\n".join(v))
 
+    def test_no_partial_bone_names_in_motion_tool(self):
+        v = check_no_partial_bone_names_in_motion_tool()
+        self.assertEqual(len(v), 0, f"發現部分骨名字串硬編碼違規 (AG-27b):\n" + "\n".join(v))
+
 
 def main():
     v1 = check_general_hardcoding()
     v2 = check_slice_and_range_hardcoding()
     v3 = check_no_canonical_slots_literal_list()
     v4 = check_no_joint_names_in_core_scripts()
-    all_v = v1 + v2 + v3 + v4
+    v5 = check_no_partial_bone_names_in_motion_tool()
+    all_v = v1 + v2 + v3 + v4 + v5
     if all_v:
         print(f"[FAIL] 發現 {len(all_v)} 處硬編碼違規：", file=sys.stderr)
         for v in all_v:
             print(f"  - {v}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"[PASS] 驗證通過：100% 無任何武將名稱、數值 >= 200 像素切片，無 21 槽名字面清單，亦無任何 joints 關節名硬編碼！")
+    print(f"[PASS] 驗證通過：100% 無任何武將名稱、數值 >= 200 像素切片，無 21 槽名字面清單，無 joints 關節名硬編碼，且無部分骨名字面值比對！")
 
 
 if __name__ == "__main__":
