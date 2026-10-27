@@ -1,4 +1,4 @@
-// @spec-source → 家族關係（史實相性）系統-shards/fj.md §G 劇本相關、§H 字串內容相關；WBS KIN-12（PROG-2-1143）
+// @spec-source → 家族關係（史實相性）系統-shards/fj.md §G 劇本相關、§H 字串內容相關；WBS KIN-12（PROG-2-1250）
 /**
  * RelationTexts — 相性關係的劇本與標籤字串（純邏輯，不依賴 cc）
  *

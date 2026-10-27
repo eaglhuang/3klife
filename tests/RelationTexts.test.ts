@@ -1,5 +1,5 @@
 /**
- * RelationTexts.test.ts — 相性關係劇本與標籤字串（KIN-12，PROG-2-1143）headless 測試
+ * RelationTexts.test.ts — 相性關係劇本與標籤字串（KIN-12，PROG-2-1250）headless 測試
  *
  * 鎖住：五種史實關係都有標籤、語系表沒載入時退回 zh-TW 預設、模板參數依序代入、
  * 找不到 key 時原樣回傳、已載入的語系值優先於預設。
@@ -16,7 +16,7 @@ import {
 import { HISTORICAL_RELATION_TYPES } from '../assets/scripts/core/systems/KinRelation';
 
 export function createRelationTextsSuite(): TestSuite {
-    const suite = new TestSuite('RelationTexts (相性劇本與字串 KIN-12 PROG-2-1143)');
+    const suite = new TestSuite('RelationTexts (相性劇本與字串 KIN-12 PROG-2-1250)');
 
     suite.test('五種史實關係都有標籤 key，且每個 key 都有 zh-TW 預設', () => {
         for (const type of HISTORICAL_RELATION_TYPES) {
