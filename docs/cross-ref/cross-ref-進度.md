@@ -184,6 +184,8 @@
 | UI 面板 / 彈窗 | UltimateSelectPopup, BloodlineTreePanel, GeneralDataDebugPanel | 3 |
 | **合計** | | **14** |
 
+> ✅ PROG-2-1423（2026-10-28）：上表 13 檔已補入 B-1（新增 UI Panels 小節）；BloodlineGenerator 已不存在。此時 B-1 收錄 141 個檔名，assets/scripts 共 731 個，未收錄約 590 個，本節數字為 2026-04-12 舊值，需重跑 crossref-progress-scanner 重算。
+
 > 上述 14 檔尚未納入 B-1 映射。建議依上表分類，優先補入「武將資料模型」一組（合計 8 檔）再接葵育/血統與 UI 面板兩組。
 
 > ✅ DC 架構 17 檔與 UCUF 框架 17 檔（合計 34 檔）已於 2026-04-12 補入 B-1（`doc_tech_0009` / `doc_ui_0049`）。剩餘 14 檔建議優先補入「武將資料模型」8 檔，再接培育/血統 3 檔與 UI 面板 3 檔。

@@ -44,6 +44,11 @@
 |---|---|---|
 | TroopUnit.ts | doc_spec_0012, doc_data_0001 | D: TroopStats, TroopUnit class; C: TroopType enum |
 | GeneralUnit.ts | TBD_DOC_IDS（scan-required） | D: `GeneralConfig`, `GeneralUnit` class；`historicalAnecdote / bloodlineRumor / storyStripCells / crestHint / crestState` 欄位契約待 crossref-progress-scanner 補全 |
+| AIPopulationConfig.ts | doc_tech_0009 §2.6 | D: AI 陣營人口管控設定介面（讀 ai-population-config.json）|
+| FamilyBranchSummary.ts | doc_tech_0009 §2.6 | D: 已滅絕支系壓縮摘要（BranchCompactor 產出）|
+| GeneralLifecycle.ts | doc_tech_0009 §2.6 | D/F: 武將資料生命週期分類 A/B/C/D |
+| PersonRegistry.ts | doc_spec_0011, doc_tech_0009 | D: 扁平化血統樹 PersonRecord + BloodlineLink 邊表 |
+| SpiritCard.ts | doc_tech_0009 | D: 已故武將魂卡快照（GeneralArchiver 建立）|
 
 #### Shared Contracts (`shared/`)
 
@@ -73,6 +78,7 @@
 |---|---|---|
 | MaterialUtils.ts | doc_index_0011 §7 棄用 API 管理 | 概: setMaterialSafe wrapper |
 | ParticleUtils.ts | doc_tech_0015 | D: ParticleOverride; F: applyParticleOverride |
+| RarityResolver.ts | doc_tech_0009 §3.3 | F: maxStat / avg5 雙軸解析 rarityTier |
 
 #### Core Managers (`assets/scripts/core/managers/`)
 
@@ -108,6 +114,9 @@
 | DeltaPatchBuilder.ts | doc_tech_0009 | 概: 增量更新補丁產生器 |
 | PendingDeleteStore.ts | doc_tech_0009 | 概: 待刪除資料暫存（軟刪除機制）|
 | SeasonalRollup.ts | doc_tech_0009 | 概: 季度數據彙整 |
+| BloodlineGraph.ts | doc_spec_0011 §E, doc_spec_0028 §K | 概: 祖先查詢、14 人祖譜、共同祖先距離、子嗣登記 |
+| BranchCompactor.ts | doc_tech_0009 §2.6 | 概: 已滅絕支系壓縮（年底由 DataLifecycleScheduler 觸發）|
+| BreedingQuotaEnforcer.ts | doc_tech_0009 §2.6 | 概: AI 繁殖配額（IBreedingGate hook、支系與全局人口預算）|
 
 #### Core Serialization (`assets/scripts/core/serialization/`)
 
@@ -168,6 +177,8 @@
 | StyleCheckPanel.ts        | doc_ui_0049                                                                | 概: 風格驗證面板 ✅ UIPreviewBuilder 已遷移 |
 | NetworkStatusIndicator.ts | doc_ui_0049, doc_tech_0013 | 概: 斷線警示與背景同步提示 UI ✅ UIPreviewBuilder 已遷移 → network-status-{main/default/screen}.json |
 | UIScreenPreviewHost.ts    | doc_ui_0051, doc_ui_0049                                          | 概: 以 `UISpecLoader.loadFullScreen(...)` 建立 screen-driven preview host，供 D-1~D-3 與後續 QA 共用 |
+| NurtureSessionMapper.ts | doc_spec_0026 | 概: 培育畫面資料映射（雙層屬性、畢業戰術標籤 graduationTags）|
+| UltimateSelectPopup.ts | doc_ui_0001 | 概: 奧義選擇小窗（@deprecated，改用 UltimateSelectPopupComposite）|
 
 #### UI Core (`assets/scripts/ui/core/`)
 
@@ -212,6 +223,13 @@
 | ProgressBarPanel.ts | doc_ui_0049 | 概: 進度條面板 |
 | RadarChartPanel.ts | doc_ui_0049 | 概: 雷達圖面板 |
 | ScrollListPanel.ts | doc_ui_0049 | 概: 捲動列表面板 |
+
+#### UI Panels (`assets/scripts/ui/panels/`)
+
+| 代碼檔 | 對應規格書 | 引用類型 |
+|---|---|---|
+| BloodlineTreePanel.ts | doc_tech_0009 §2.3 | 概: 祖先樹 UI，從 PersonRegistry / BloodlineGraph 讀資料 |
+| GeneralDataDebugPanel.ts | doc_tech_0009 §5 M7 | 概: DEV 模式武將資料偵錯面板（uid / 名稱搜尋 DSL）|
 
 #### UI Layers & Scenes (`assets/scripts/ui/`)
 
