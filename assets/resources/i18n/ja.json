@@ -1,5 +1,6 @@
 {
   "ui.back": "戻る",
+  "ui.item.expire": "{0} は期限切れのため回収されました",
   "ui.confirm": "確認",
   "ui.cancel": "キャンセル",
   "ui.close": "閉じる",

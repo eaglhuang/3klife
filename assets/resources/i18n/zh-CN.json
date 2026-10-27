@@ -1,5 +1,6 @@
 {
   "ui.back": "返回",
+  "ui.item.expire": "{0} 已过期并回收",
   "ui.confirm": "確認",
   "ui.cancel": "取消",
   "ui.close": "關閉",
