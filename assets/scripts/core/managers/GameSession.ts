@@ -113,6 +113,7 @@ import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../systems/TigerTallyStar';
+import { countGeneralBagSlots } from '../systems/BagDomain';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
 import { deriveInventoryViews, type InventoryRecord, type InventoryViews } from '../systems/InventoryProjection';
 import { buildTallyInventoryRecords, normalizeInventoryRecords } from '../systems/InventoryRecordBridge';
@@ -1291,9 +1292,14 @@ export class GameSession {
         return this.itemCount(WAREHOUSE_EXPANSION_ITEM);
     }
 
-    /** 主城倉庫已用格數：持有量 > 0 的道具種類數（不含擴容標記） */
+    /**
+     * 主城倉庫已用格數：持有量 > 0 的道具種類數（不含擴容標記），加上統一物件庫中一般倉庫列的格數。
+     * 已裝在武將身上的列（equippedBy）在武將背包，不計入倉庫（PROG-2-1360，BAG-10）。
+     */
     public get warehouseUsedSlots(): number {
-        return Object.keys(this._inventory).filter((id) => id !== WAREHOUSE_EXPANSION_ITEM && itemCount(this._inventory, id) > 0).length;
+        const flat = Object.keys(this._inventory).filter((id) => id !== WAREHOUSE_EXPANSION_ITEM && itemCount(this._inventory, id) > 0).length;
+        const stored = this._inventoryRecords.filter((record) => !record.equippedBy);
+        return flat + countGeneralBagSlots(stored);
     }
 
     /** 增加道具（商城購買、活動獎勵）並自動存檔 */
