@@ -61,6 +61,10 @@ import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
 import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
 import { EMPTY_LOGIN_STREAK, LoginStreakState, recordLogin } from '../systems/LoginStreak';
+import {
+    appendPlayerLog, EMPTY_DAILY_NEWS, markDailyNewsRead, normalizeDailyNewsState, normalizePlayerLogs, refreshDailyNews,
+    type DailyNewsState, type PlayerLogEntry, type PlayerLogType,
+} from '../systems/DailyNewsEngine';
 import { shouldTriggerOfflineInteraction } from '../systems/OfflineInteractionTrigger';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
@@ -1095,6 +1099,7 @@ export class GameSession {
     /** 出生紀錄以子嗣 UID 去重並複製；結緣確認流程會在此之後呼叫既有 save。 */
     public recordBreedingBirth(record: BreedingBirthRecord): void {
         this._breedingBirthRecords = normalizeBreedingBirthRecords([...this._breedingBirthRecords, record]);
+        this.recordPlayerLog('GENERAL_BORN');
     }
 
     /** 本局已記下的結緣子嗣紀錄（回傳複本，外部改動不影響內部） */
@@ -1219,6 +1224,8 @@ export class GameSession {
         this._journal = createEmptyJournal();
         this._farewellLetters = [];
         this._loginStreak = { ...EMPTY_LOGIN_STREAK };
+        this._playerLogs = [];
+        this._dailyNews = { ...EMPTY_DAILY_NEWS, news: [] };
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
         // 上一局的進度不能帶進新局（PROG-2-0660）
@@ -1550,6 +1557,30 @@ export class GameSession {
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
     public recordLoginAt(epochMs: number): void {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
+        // 三國日報：當天第一次登入依前 24h 行為紀錄生成（PROG-2-1170）
+        this._dailyNews = refreshDailyNews(this._dailyNews, this._playerLogs, this._roster.getAll().map((g) => ({ name: g.name })), epochMs, this._random);
+    }
+
+    private _playerLogs: PlayerLogEntry[] = [];
+    private _dailyNews: DailyNewsState = { ...EMPTY_DAILY_NEWS, news: [] };
+
+    /** 記一筆玩家行為（三國日報的素材，只留 24h 內）；其他系統的採集點也走這裡。時間預設為最近一次登入時間（未登入為 0）。 */
+    public recordPlayerLog(type: PlayerLogType, resource?: string, atMs: number = this._dailyNews.lastLoginMs ?? 0): void {
+        this._playerLogs = appendPlayerLog(this._playerLogs, resource ? { type, at: atMs, resource } : { type, at: atMs });
+    }
+
+    /** 前 24h 的行為紀錄（複本） */
+    public get playerLogs(): PlayerLogEntry[] {
+        return this._playerLogs.map((log) => ({ ...log }));
+    }
+
+    /** 今日三國日報（複本） */
+    public get dailyNews(): DailyNewsState {
+        return { lastGeneratedDay: this._dailyNews.lastGeneratedDay, lastLoginMs: this._dailyNews.lastLoginMs, news: this._dailyNews.news.map((n) => ({ ...n })) };
+    }
+
+    public markDailyNewsRead(): void {
+        this._dailyNews = markDailyNewsRead(this._dailyNews);
     }
 
     /** 告別信收件匣（唯讀副本）。 */
@@ -2641,6 +2672,10 @@ export class GameSession {
         if (added.length > 0) {
             this._emit(GAME_SESSION_EVENTS.RosterChanged, added);
         }
+        // 三國日報素材（暫定判定）：轉蛋抽到新武將算成功，全是重複算失敗
+        if (options.rebirthOnDuplicate && (added.length > 0 || duplicates.length > 0)) {
+            this.recordPlayerLog(added.length > 0 ? 'GACHA_SUCCESS' : 'GACHA_FAIL');
+        }
         return { added, duplicates, rebirths, bondPointsGained };
     }
 
@@ -2683,6 +2718,7 @@ export class GameSession {
         const firstClear = result === 'player-win' && !this._firstBattleCleared;
         if (firstClear) this._firstBattleCleared = true;
         const tallyChanged = this._settleTallyBattleExp(options.deployedTallyIds ?? [], result);
+        if (result === 'player-win' || result === 'enemy-win') this.recordPlayerLog(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE');
         const comradeChanged = this._recordBattleComrades(result, Boolean(options.sortie));
         const settlement = settleBattle(this._roster.getAll(), {
             deployedIds,
@@ -2932,8 +2968,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -2945,6 +2981,8 @@ export class GameSession {
         }
         if (this._farewellLetters.length > 0) fields.farewellLetters = this.farewellLetters;
         if (this._loginStreak.lastLoginDay !== null) fields.loginStreak = this.loginStreak;
+        if (this._playerLogs.length > 0) fields.playerLogs = this.playerLogs;
+        if (this._dailyNews.lastLoginMs !== null) fields.dailyNews = this.dailyNews;
         return fields;
     }
 
@@ -2959,6 +2997,8 @@ export class GameSession {
         this._pendingTerritoryLevel = normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) ?? null;
         this._farewellLetters = normalizeFarewellLetters(snapshot.farewellLetters);
         this._loginStreak = normalizeLoginStreak(snapshot.loginStreak);
+        this._playerLogs = normalizePlayerLogs(snapshot.playerLogs);
+        this._dailyNews = normalizeDailyNewsState(snapshot.dailyNews);
     }
 
     /**
