@@ -66,6 +66,10 @@ import {
     type DailyNewsState, type PlayerLogEntry, type PlayerLogType,
 } from '../systems/DailyNewsEngine';
 import { shouldTriggerOfflineInteraction } from '../systems/OfflineInteractionTrigger';
+import {
+    EMPTY_MORNING_REPORT, markMorningReportRead, morningReportLines, normalizeMorningReportState, refreshMorningReport,
+    unreadMorningReportCount, type MorningReportState,
+} from '../systems/MorningReport';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
@@ -1230,6 +1234,7 @@ export class GameSession {
         this._loginStreak = { ...EMPTY_LOGIN_STREAK };
         this._playerLogs = [];
         this._dailyNews = { ...EMPTY_DAILY_NEWS, news: [] };
+        this._morningReport = { ...EMPTY_MORNING_REPORT, items: [] };
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
         // 上一局的進度不能帶進新局（PROG-2-0660）
@@ -1545,14 +1550,14 @@ export class GameSession {
 
     /**
      * 離線互動觸發（JRN-04）：離線時長＝現在減讀檔時的存檔時間。
-     * 未讀晨報數與衝突標籤目前沒有來源，呼叫端先傳空值（PM 暫定）。
+     * 未讀晨報數未傳時用實際未讀數（PROG-2-1174）；衝突標籤目前沒有來源，呼叫端先傳空值（PM 暫定）。
      */
     public offlineInteractionDue(nowMs: number, context: { unreadMorningReport?: number; activeConflictTags?: readonly string[] } = {}): boolean {
         const savedAt = this._loadedSavedAtMs;
         if (savedAt === null || nowMs < savedAt) return false;
         return shouldTriggerOfflineInteraction({
             offlineHours: (nowMs - savedAt) / 3_600_000,
-            unreadMorningReport: context.unreadMorningReport ?? 0,
+            unreadMorningReport: context.unreadMorningReport ?? unreadMorningReportCount(this._morningReport),
             activeConflictTags: context.activeConflictTags ?? [],
             cooldowns: [],
         });
@@ -1563,10 +1568,13 @@ export class GameSession {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
         // 三國日報：當天第一次登入依前 24h 行為紀錄生成（PROG-2-1170）
         this._dailyNews = refreshDailyNews(this._dailyNews, this._playerLogs, this._roster.getAll().map((g) => ({ name: g.name })), epochMs, this._random);
+        // 晨報：上次登入後新增的日誌挑高優先條目（PROG-2-1174）
+        this._morningReport = refreshMorningReport(this._morningReport, this._journal.entries, this._officerState.currentTier);
     }
 
     private _playerLogs: PlayerLogEntry[] = [];
     private _dailyNews: DailyNewsState = { ...EMPTY_DAILY_NEWS, news: [] };
+    private _morningReport: MorningReportState = { ...EMPTY_MORNING_REPORT, items: [] };
 
     /** 記一筆玩家行為（三國日報的素材，只留 24h 內）；其他系統的採集點也走這裡。時間預設為最近一次登入時間（未登入為 0）。 */
     public recordPlayerLog(type: PlayerLogType, resource?: string, atMs: number = this._dailyNews.lastLoginMs ?? 0): void {
@@ -1585,6 +1593,20 @@ export class GameSession {
 
     public markDailyNewsRead(): void {
         this._dailyNews = markDailyNewsRead(this._dailyNews);
+    }
+
+    /** 晨報（複本） */
+    public get morningReport(): MorningReportState {
+        return { journalMark: this._morningReport.journalMark, items: this._morningReport.items.map((i) => ({ ...i })), read: this._morningReport.read };
+    }
+
+    /** 未讀時為 [開頭句, 每則摘要]，否則空陣列 */
+    public get morningReportLines(): string[] {
+        return morningReportLines(this._morningReport);
+    }
+
+    public markMorningReportRead(): void {
+        this._morningReport = markMorningReportRead(this._morningReport);
     }
 
     /** 告別信收件匣（唯讀副本）。 */
@@ -2975,8 +2997,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -2990,6 +3012,7 @@ export class GameSession {
         if (this._loginStreak.lastLoginDay !== null) fields.loginStreak = this.loginStreak;
         if (this._playerLogs.length > 0) fields.playerLogs = this.playerLogs;
         if (this._dailyNews.lastLoginMs !== null) fields.dailyNews = this.dailyNews;
+        if (this._morningReport.journalMark > 0 || this._morningReport.items.length > 0) fields.morningReport = this.morningReport;
         return fields;
     }
 
@@ -3006,6 +3029,7 @@ export class GameSession {
         this._loginStreak = normalizeLoginStreak(snapshot.loginStreak);
         this._playerLogs = normalizePlayerLogs(snapshot.playerLogs);
         this._dailyNews = normalizeDailyNewsState(snapshot.dailyNews);
+        this._morningReport = normalizeMorningReportState(snapshot.morningReport);
     }
 
     /**

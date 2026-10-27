@@ -528,15 +528,20 @@ export class LobbyScene extends Component {
         }
     }
 
-    /** 三國日報（PROG-2-1173）：toast 會互相覆蓋，所以頭條與每條日報間隔數秒依序顯示；顯示後標記已讀並存檔 */
+    /**
+     * 三國日報（PROG-2-1173）與晨報（PROG-2-1174）：toast 會互相覆蓋，所以日報在前、晨報在後，
+     * 每行間隔數秒依序顯示；顯示後兩者都標記已讀並存檔
+     */
     private _showDailyNews(): void {
-        const lines = dailyNewsToastLines(services().session.dailyNews, new Date());
+        const session = services().session;
+        const lines = [...dailyNewsToastLines(session.dailyNews, new Date()), ...session.morningReportLines];
         if (lines.length === 0) return;
         lines.forEach((message, index) => {
             this.scheduleOnce(() => services().event.emit('SHOW_TOAST', { message, duration: DAILY_NEWS_TOAST_SECONDS }), index * (DAILY_NEWS_TOAST_SECONDS + 0.4));
         });
-        services().session.markDailyNewsRead();
-        void services().session.save().catch(() => undefined);
+        session.markDailyNewsRead();
+        session.markMorningReportRead();
+        void session.save().catch(() => undefined);
     }
 
     /** 官職區塊（OFC-08 顯示段）：以 UCUF JSON（lobby-officer-hud-screen）顯示階位與經驗，資料來自 officerDisplayOf */
