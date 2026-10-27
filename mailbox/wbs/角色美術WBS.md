@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-28 01:05 AG-38 完成：check_layered_parts.py 實作 gripRegistration 判定改為 8 方向射線拳孔包覆（門檻 >= 6/8，半徑 40 px，alpha >= 128），形心距離轉為參考不再阻擋，並量測握點 +/-12 px 覆蓋率（純輸出不判定）；對 R299 原版 hand_f 實測命中 0/8 方向正確判 FAIL (ADVISORY)，平移 (-65, +54) 實測命中 8/8 方向（命中距離 3~7 px 完美包覆）判定 PASS，R299 hand_b 實測命中 8/8 方向判定 PASS；更新 test_ag36_grip_registration.py，全套 114 項單元測試 100% 通過（c0dc76434）。
 - 2026-10-28 00:58 Claude：R312：head 不用生圖、不碰 GPU，被遮住的頸部用既有膚色漸層補；先帶 anchors 重跑，再判斷 16/21 是否真失敗。
 - 2026-10-28 00:41 Claude：R309 腕口暫定通過（合成最大差 4/255）；R311 釐清 head 由 Codex 依 R305 自 R299 head 改圖、重跑檢查須帶 anchors 與 02c96dc3f；AG-38 把 gripRegistration 由形心改為拳孔包覆。
 - 2026-10-28 00:36 AG-37 補充裁決完成：同步規格 v3.17（canonical_skeleton_v3.json 21,711 位元組，逐位元組比對相符）；check_layered_parts.py 實作動態讀取頂層 weaponRules.gripSampleHalfWidthPx（預設 32.0 px，水平直徑 64 px），木桿容許帶 [14, 26] px 維持不變；對 R299 原版實測前手 27~59 px (FAIL ADVISORY)、後手 20 px (PASS)；對真實 R299 平移 +180 px 實測前手均勻 20 px 完美落在木桿段 (PASS)、後手 20~21 px (PASS)，雙手皆握在木桿段 weaponGripOnShaft 全體判定 PASS；更新 test_ag37_weapon_grip_on_shaft.py，全套 114 項單元測試 100% 通過（02c96dc3f）。
