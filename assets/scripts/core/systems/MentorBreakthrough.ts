@@ -7,7 +7,7 @@
  *
  * 暫定：
  *   - 已解鎖事件組數 = min(星等 + 1, 6)，對應 §F-4「★N 解鎖事件組 1–(N+1)」，★5 為全部 6 組。
- *   - 「其他加成」欄（初期情誼 +5、訓練機率 +3% 等）只保留文字說明，尚未接效果。
+ *   - 「其他加成」欄已接效果（PROG-2-1164）：高星包含低星的加成；「訓練機率 +3%」語意未定、★5「固有加成最高級」無數值，兩者仍只有文字。
  *
  * Unity 對照：像一張 ScriptableObject 星等表加一個 static 判定器，吃目前星等與「又抽到同名卡」事件，回傳結果；不直接改教官資料。
  */
@@ -23,17 +23,23 @@ export interface MentorStarEntry {
     trainingMultiplier: number;
     /** 已解鎖的靈感事件組數（1 = 只有事件組 1） */
     unlockedEventGroups: number;
-    /** 其他加成（文字，尚未接效果） */
+    /** 其他加成（文字說明） */
     otherBonus: string;
+    /** 本星新增的初期情誼量（PROG-2-1164） */
+    initialFriendship?: number;
+    /** 本星新增的擅長科目屬性加成倍率（1.1 = ×1.1） */
+    statBonusMultiplier?: number;
+    /** 本星新增的 TP 加成（百分點，10 = +10%） */
+    tpBonusAdd?: number;
 }
 
 /** 星等表，索引即星等 ★0~★5 */
 export const MENTOR_STAR_TABLE: readonly MentorStarEntry[] = [
     { star: 0, friendshipMultiplier: 1.0, trainingMultiplier: 1.0, unlockedEventGroups: 1, otherBonus: '屬性加成基礎值' },
-    { star: 1, friendshipMultiplier: 1.1, trainingMultiplier: 1.05, unlockedEventGroups: 2, otherBonus: '初期情誼量 +5' },
+    { star: 1, friendshipMultiplier: 1.1, trainingMultiplier: 1.05, unlockedEventGroups: 2, otherBonus: '初期情誼量 +5', initialFriendship: 5 },
     { star: 2, friendshipMultiplier: 1.2, trainingMultiplier: 1.1, unlockedEventGroups: 3, otherBonus: '訓練機率 +3%' },
-    { star: 3, friendshipMultiplier: 1.3, trainingMultiplier: 1.15, unlockedEventGroups: 4, otherBonus: '屬性加成 ×1.1' },
-    { star: 4, friendshipMultiplier: 1.4, trainingMultiplier: 1.2, unlockedEventGroups: 5, otherBonus: 'TP 加成 +10%' },
+    { star: 3, friendshipMultiplier: 1.3, trainingMultiplier: 1.15, unlockedEventGroups: 4, otherBonus: '屬性加成 ×1.1', statBonusMultiplier: 1.1 },
+    { star: 4, friendshipMultiplier: 1.4, trainingMultiplier: 1.2, unlockedEventGroups: 5, otherBonus: 'TP 加成 +10%', tpBonusAdd: 10 },
     { star: 5, friendshipMultiplier: 1.5, trainingMultiplier: 1.3, unlockedEventGroups: 6, otherBonus: '固有加成最高級' },
 ];
 
@@ -49,6 +55,26 @@ export function clampMentorStar(star: number | undefined): number {
 
 export function mentorStarEntry(star: number | undefined): MentorStarEntry {
     return MENTOR_STAR_TABLE[clampMentorStar(star)];
+}
+
+export interface MentorStarPerks {
+    initialFriendship: number;
+    statBonusMultiplier: number;
+    tpBonusAdd: number;
+}
+
+/**
+ * 到指定星等為止累計的「其他加成」（PROG-2-1164）：情誼與 TP 相加、屬性倍率相乘。
+ * 暫定：「TP 加成 +10%」解讀為教官 TP 加成 +10 個百分點（與「屬性加成 ×1.1」的乘法寫法區分）。
+ */
+export function mentorStarPerks(star: number | undefined): MentorStarPerks {
+    const perks: MentorStarPerks = { initialFriendship: 0, statBonusMultiplier: 1, tpBonusAdd: 0 };
+    for (const entry of MENTOR_STAR_TABLE.slice(0, clampMentorStar(star) + 1)) {
+        perks.initialFriendship += entry.initialFriendship ?? 0;
+        perks.statBonusMultiplier *= entry.statBonusMultiplier ?? 1;
+        perks.tpBonusAdd += entry.tpBonusAdd ?? 0;
+    }
+    return perks;
 }
 
 /**

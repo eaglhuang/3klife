@@ -914,7 +914,7 @@ export function createNurtureSuite(): TestSuite {
         const scholar = mentorFromCard(cardOf('zhuge', { careerClass: 'Scholar', int: 95, pol: 80, str: 99 }), { stars: 3, burstRate: 0.8 });
         assert.equals('int', scholar.specialty);
         assert.equals(8, scholar.tpBonus);
-        assert.equals(19, scholar.statBonus!.int!);
+        assert.equals(21, scholar.statBonus!.int!, '★3 屬性加成 ×1.1（PROG-2-1164）：19 × 1.1 = 20.9');
         assert.equals(3, scholar.stars!);
         assert.equals(0.8, scholar.burstRate);
 
