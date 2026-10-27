@@ -1358,7 +1358,7 @@ export class LobbyScene extends Component {
                     // 原主尚無正式來源（暫定）；稀有度與實際結義扣點同源（rarityOfTemplate，PROG-2-1153）
                     originalOwnerName: '原主未定',
                     generalName: general?.name ?? state.generalId ?? '未知武將',
-                    rarity: (general && rarityOfTemplate(general)) ?? 'R',
+                    rarity: (general ? rarityOfTemplate(general) : undefined) ?? 'R',
                 };
             },
             bondPoints: () => services().session.bondPoints,
