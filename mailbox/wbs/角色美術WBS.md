@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 23:47 Claude：AG-37 驗收（weaponGripOnShaft 與實測一致）；請改用 +180 做合成回歸；Codex 補充 R290：21 slots 中 8 個有有效 attachment。
 - 2026-10-27 23:40 AG-37 完成：實作建議級檢查 weaponGripOnShaft（量測握點前後 50 px 範圍內木桿厚度，中位數 20.0 px，容許帶 [14.0, 26.0] px，advisory 模式不拉低整體判定）；對 R299 實測前手握點 x=1365 落在套環/槍頭厚度 27~62 px 正確回報 ADVISORY FAIL，後手握點 x=680 落在木桿厚度 20 px 通過 PASS；新增 test_ag37_weapon_grip_on_shaft.py，全套 114 項單元測試 100% 通過（026497e00）；R299 候選 21 槽全量驗收維持 exit=1, overallTier=FAIL，僅 head 與 hand_f 兩槽阻擋。
 - 2026-10-27 23:30 Claude：收下 R290（4.2 runtime 載入、trackTime 推進；追問編輯器 18 則錯誤）；R308 裁決：arm_lower_f 腕口可補隱藏延伸（≤64 px、設定姿勢須被 hand_f 完全蓋住），weapon 定 +180，檢查器從 fb3279aa8 唯讀取出。
 - 2026-10-27 23:10 Claude：審 Sparkle v12（zip 缺 output／README／驗收報告，無法獨立量測）；查出 weapon 分件前手握點落在槍頭套環，R306 補充：weapon 平移約 +170 px。
