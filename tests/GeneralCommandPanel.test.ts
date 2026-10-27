@@ -1,5 +1,5 @@
 /**
- * GeneralCommandPanel — 將頁統領區塊列資料的 headless 測試（PROG-2-1211，TSK-06）
+ * GeneralCommandPanel — 將頁統領區塊列資料的 headless 測試（PROG-2-1212，TSK-06）
  */
 import { assert, TestSuite } from './TestRunner';
 import { buildGeneralCommandRows } from '../assets/scripts/core/systems/GeneralCommandPanel';
