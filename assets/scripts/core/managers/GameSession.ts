@@ -78,7 +78,7 @@ import { estimateSortiePower } from '../systems/SortiePrediction';
 import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
-import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
+import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../systems/TigerTallyStar';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
 import { deriveInventoryViews, type InventoryRecord, type InventoryViews } from '../systems/InventoryProjection';
 import { buildTallyInventoryRecords, normalizeInventoryRecords } from '../systems/InventoryRecordBridge';
@@ -938,7 +938,9 @@ export class GameSession {
         for (const uid of deployedTallyIds) {
             const card = nextCards[uid];
             if (!card) continue;
-            nextCards[uid] = { ...card, ...applyBattleExpToCard(card, outcome) };
+            const applied = applyBattleExpToCard(card, outcome);
+            if (applied.stars > readCardStarState(card).star) this.recordPlayerLog('TALLY_UPGRADE');
+            nextCards[uid] = { ...card, ...applied };
             changed = true;
         }
         if (changed) {
@@ -982,6 +984,7 @@ export class GameSession {
         const current = this._tallyLoyalty[generalId] ?? createTallyLoyaltyState(TALLY_LOYALTY_INITIAL, isGachaHero);
         const next = applyTallyConfiscation(current, quality);
         this._tallyLoyalty = { ...this._tallyLoyalty, [generalId]: next };
+        if (next.loyalty < current.loyalty) this.recordPlayerLog('LOYALTY_DROP');
         this._tallyHoldings = confiscateFrom(this._tallyHoldings, generalId).state;
         this._syncInventoryRecords();
         await this._autoSaveAfterTallyChange();
@@ -1084,6 +1087,7 @@ export class GameSession {
         const result = applyTallyLoyaltyChange(current, action, quality, this._clock.state.totalSeasonsElapsed);
         if (result.ok) {
             this._tallyLoyalty = { ...this._tallyLoyalty, [generalId]: result.state };
+            if (result.state.loyalty < current.loyalty) this.recordPlayerLog('LOYALTY_DROP');
             if (this._autoSave && this._save) {
                 await this.save();
             }
@@ -2394,6 +2398,8 @@ export class GameSession {
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
         this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
+        // 三國日報素材：缺糧（與虎符缺糧同一門檻，暫定）
+        if (this._tallyFoodDiscountArmed) this.recordPlayerLog('RESOURCE_LOW', '糧草');
         this._military = regenMilitaryOneSeason(this._military, 1, seasonModifiersOf(advance.previous.currentSeason).foodMultiplier);
         // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
@@ -2511,6 +2517,7 @@ export class GameSession {
         if (this._autoSave && this._save) {
             await this.save();
         }
+        this.recordPlayerLog('GENERAL_RETIRE');
         this._emit(GAME_SESSION_EVENTS.GeneralRetired, result.card);
         if (injection) this._emit(GAME_SESSION_EVENTS.GeneCatalystInjected, injection);
         return result.card;
