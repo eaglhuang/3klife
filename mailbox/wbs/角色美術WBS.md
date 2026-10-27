@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 18:05 Claude AG-30／R295／規格 v3.10：AG-29 收下（84 項 OK，R292 輪廓內縫表格獨立重現一致）；雙腿延伸收為候選定稿（腳踝輪廓內縫 0 與 4/2 px）；上臂以肩甲為遮蔽，前肩縫 27/35→0 px；AG-30 加全半徑輪廓內縫與擬議閘門並列；後手照 R294 補底色。
 - 2026-10-27 17:45 AG-29 完成：check_layered_parts.py 實作輪廓內透光縫 seamInsideContourPx（以 0° 外輪廓填實並依 spec.grips 保留拳孔中空為準，排除腳踝超出身體落入空氣之 329px 誤判，腳踝透光縫收斂至 0px）；覆蓋率嚴格回歸 child 本身（不可借遮蔽槽，child 核心 0px 即判定 FAIL）；附上 R292 實資料 20 個關節全量對照表；全套 20 個測試檔、84 項單元測試 100% 通過（242c7c0e1）。
 - 2026-10-27 17:25 Claude AG-29／R294：AG-28 合成測試與報告欄位收下（80 項 OK）；R292 實資料重跑後手不靠 weapon 即 PASS、weapon 蓋 0 px，回報的 845/632 無法重現；腳踝 trueSeam 329/340 px 待新增輪廓內透光縫判讀；後手 112 px 在核心圓盤外，Codex 直接補底色（不填拳孔）。
 - 2026-10-27 17:15 AG-28 完成：check_layered_parts.py 實作 rotationOccluders 剛性旋轉遮蔽聯集（零硬編碼，自 v3.9 規格讀取）；完成 PASS 與漏縫數一致性說明與報告輸出改進（明確輸出 leakTolerancePx、minRequiredOverlapPixels 與各角度 metrics）；Codex R292 趙雲後手加 weapon 遮蔽重疊達 844px 順利判 PASS、雙腿漏縫 285~495px 在容許上限 676px 內一致判定 PASS；全套 19 個測試檔、80 項單元測試 100% 通過（be9d72dac）。

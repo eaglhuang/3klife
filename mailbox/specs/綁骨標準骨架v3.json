@@ -641,6 +641,18 @@
       "foot_b": {
         "parent": "shin_b"
       },
+      "arm_upper_f": {
+        "rotationOccluders": [
+          "pauldron_f"
+        ],
+        "rotationOccludersNote": "v3.10（2026-10-27）：肩甲為上臂子骨、同樞紐、畫在上臂之前，±rotationTestDeg 檢查時以肩甲槽 alpha 一併視為遮蔽。R292 實測前肩輪廓內透光縫 27/35 px → 0/0 px（肩甲蓋掉 487 px）。"
+      },
+      "arm_upper_b": {
+        "rotationOccluders": [
+          "pauldron_b"
+        ],
+        "rotationOccludersNote": "v3.10（2026-10-27）：肩甲為上臂子骨、同樞紐、畫在上臂之前，±rotationTestDeg 檢查時以肩甲槽 alpha 一併視為遮蔽。R292 實測前肩輪廓內透光縫 27/35 px → 0/0 px（肩甲蓋掉 487 px）。"
+      },
       "hand_f": {
         "rotationOccluders": [
           "weapon"
