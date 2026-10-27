@@ -12,6 +12,7 @@ import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRari
 import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
 import { isLukVisible } from '../../core/systems/LuckVisibility';
 import { mapGeneralReadModel, type GeneralReadModel } from '../../core/systems/GeneralReadModel';
+import { buildGeneralCommandRows, type GeneralCommandRow } from '../../core/systems/GeneralCommandPanel';
 import { deriveGeneralBackpack, gearNameOfUid } from '../../core/systems/GeneralBackpackView';
 import { buildGearPageSlots, type GearSlotView } from '../../core/systems/GearPageSlots';
 import type { InventoryRecord, InventoryViews } from '../../core/systems/InventoryProjection';
@@ -79,6 +80,8 @@ export interface GeneralDetailOverviewContentState {
     crestState: GeneralDetailCrestState;
     /** 人物頁 §10 讀取模型（GDUI-13，PROG-2-1024）：缺漏欄位為 NO_DATA，不影響既有欄位 */
     readModel: GeneralReadModel;
+    /** 將頁「名聲／官職／統領軍勢」五列（PROG-2-1213、TSK-06）；官職暫為 null（顯示 —） */
+    commandPanelRows: GeneralCommandRow[];
     /** 兵分頁虎符槽（PROG-2-1026）：由統一物件庫視圖推導，沒有視圖時為 EMPTY */
     tallySlot: TalismanSlotView;
     /** 寶頁一般裝備 2x3 格位（PROG-2-1037）：由統一物件庫列依武將 uid 推導，沒有列時六格皆為未解鎖或空 */
@@ -223,10 +226,18 @@ export function buildGeneralDetailOverviewContentState(
     config: GeneralConfig,
     views: InventoryViews = EMPTY_INVENTORY_VIEWS,
     records: readonly InventoryRecord[] = [],
+    cityTroops: number | null = null,
 ): GeneralDetailOverviewContentState {
     const overview = buildGeneralDetailOverview(config);
     const storyCells = storyCellsToRecord(overview.cards.storyCells);
     const crestState = config.profilePresentation?.crestState ?? overview.cards.crestState;
+    const readModel = mapGeneralReadModel(config as unknown as Readonly<Record<string, unknown>>);
+    const commandPanelRows = buildGeneralCommandRows({
+        fame: readModel.generalFame.state === 'VALUE' ? readModel.generalFame.value : null,
+        officialTitle: null,
+        commandCapacity: readModel.commandCapacity.state === 'VALUE' ? readModel.commandCapacity.value : null,
+        cityTroops,
+    });
     return {
         headerTitle: overview.header.title,
         headerName: overview.header.name,
@@ -269,7 +280,8 @@ export function buildGeneralDetailOverviewContentState(
                 : storyCells,
         },
         trainingProfile: buildTrainingProfile(config),
-        readModel: mapGeneralReadModel(config as unknown as Readonly<Record<string, unknown>>),
+        readModel,
+        commandPanelRows,
         portraitResource: portraitPathOf(config.id),
         tallySlot: equippedTalismanSlot(views, config.id),
         gearSlots: buildGearPageSlots(deriveGeneralBackpack(records, config.id), (uid) => gearNameOfUid(records, uid)),

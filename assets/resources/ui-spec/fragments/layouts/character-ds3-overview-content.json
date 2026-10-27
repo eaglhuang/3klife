@@ -1005,6 +1005,169 @@
               "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_total_tp"
             }
           ]
+        },
+        {
+          "type": "panel",
+          "name": "CharacterDs3TabOverview_cmd",
+          "width": 520,
+          "height": 160,
+          "layout": {
+            "type": "vertical",
+            "paddingTop": 10,
+            "paddingRight": 18,
+            "paddingBottom": 10,
+            "paddingLeft": 18,
+            "spacingY": 6
+          },
+          "children": [
+            {
+              "type": "label",
+              "name": "CharacterDs3TabOverview_cmd_title",
+              "width": 482,
+              "height": 24,
+              "text": "統領軍勢"
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabOverview_cmd_row_fame",
+              "width": 482,
+              "height": 24,
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "justifyContent": "start",
+                "spacingX": 8
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_cmd_label_fame",
+                  "width": 150,
+                  "height": 24,
+                  "text": "名聲"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_cmd_value_fame",
+                  "width": 300,
+                  "height": 24,
+                  "text": "—"
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabOverview_cmd_row_official",
+              "width": 482,
+              "height": 24,
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "justifyContent": "start",
+                "spacingX": 8
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_cmd_label_official",
+                  "width": 150,
+                  "height": 24,
+                  "text": "官職"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_cmd_value_official",
+                  "width": 300,
+                  "height": 24,
+                  "text": "—"
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabOverview_cmd_row_commandCapacity",
+              "width": 482,
+              "height": 24,
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "justifyContent": "start",
+                "spacingX": 8
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_cmd_label_commandCapacity",
+                  "width": 150,
+                  "height": 24,
+                  "text": "帶兵上限"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_cmd_value_commandCapacity",
+                  "width": 300,
+                  "height": 24,
+                  "text": "—"
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabOverview_cmd_row_cityTroops",
+              "width": 482,
+              "height": 24,
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "justifyContent": "start",
+                "spacingX": 8
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_cmd_label_cityTroops",
+                  "width": 150,
+                  "height": 24,
+                  "text": "可用城市兵源"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_cmd_value_cityTroops",
+                  "width": 300,
+                  "height": 24,
+                  "text": "—"
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabOverview_cmd_row_sortiePool",
+              "width": 482,
+              "height": 24,
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "justifyContent": "start",
+                "spacingX": 8
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_cmd_label_sortiePool",
+                  "width": 150,
+                  "height": 24,
+                  "text": "預估出征軍勢"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_cmd_value_sortiePool",
+                  "width": 300,
+                  "height": 24,
+                  "text": "—"
+                }
+              ]
+            }
+          ]
         }
       ],
       "widget": {
