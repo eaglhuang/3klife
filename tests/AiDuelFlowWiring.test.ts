@@ -28,13 +28,17 @@ function troop(id: string, faction: Faction, lane: number, depth: number): Troop
     return unit;
 }
 
-/** 3 對 3 兵力、雙方主將滿血，單挑分數約 0.5；難度與骰子由呼叫端設定 */
+/** 3 對 3 兵力、雙方主將半血（E-7 血量項 0.5，兵力與戰力勢均），單挑分數恰為 0.5；難度與骰子由呼叫端設定 */
 function evenBattle(difficulty: AiDifficulty, roll: number): BattleController {
     services().initialize();
     // 骰子必須在 [0, 1)，1 會讓亂數索引越界並污染後續測試
     services().session.setRandomSource(() => roll);
     const ctrl = new BattleController();
-    ctrl.initBattle(general('challenger', Faction.Player), general('defender', Faction.Enemy));
+    const challenger = general('challenger', Faction.Player);
+    const defender = general('defender', Faction.Enemy);
+    ctrl.initBattle(challenger, defender);
+    challenger.currentHp = challenger.maxHp / 2;
+    defender.currentHp = defender.maxHp / 2;
     ctrl.state.aiDifficulty = difficulty;
     for (let i = 0; i < 3; i += 1) ctrl.state.addUnit(troop(`p-${i}`, Faction.Player, 2, 1 + i));
     for (let i = 0; i < 3; i += 1) ctrl.state.addUnit(troop(`e-${i}`, Faction.Enemy, 2, 6 - i));
@@ -44,9 +48,9 @@ function evenBattle(difficulty: AiDifficulty, roll: number): BattleController {
 export function createAiDuelFlowWiringSuite(): TestSuite {
     const suite = new TestSuite('AiDuelFlowWiring (單挑 AI 接受判定接線 AIS-10 / PROG-2-1323)');
 
-    suite.test('分數落在邊界附近（約 0.5），後續案例才有意義', () => {
+    suite.test('分數恰為 0.5（血量 0.5、兵力與戰力勢均），後續案例才有意義', () => {
         const result = evenBattle('normal', 0.5)['duelFlow'].evaluateDuelAcceptance(Faction.Player);
-        assert.isTrue(result.score > 0.45 && result.score < 0.55, `score=${result.score}`);
+        assert.isTrue(Math.abs(result.score - 0.5) < 1e-9, `score=${result.score}`);
     });
 
     suite.test('敵方 AI 防守、一般難度：即使抖動到最高（+0.05）仍低於 0.58，拒絕', () => {

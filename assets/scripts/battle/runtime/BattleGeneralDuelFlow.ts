@@ -198,7 +198,7 @@ export class BattleGeneralDuelFlow {
 
   /**
    * 單挑接受決策（由防守方視角評估）：
-   * score = 0.45 * 主將血量優勢 + 0.35 * 場上兵力優勢 + 0.2 * 總戰力優勢
+   * score = 0.45 * 防守方主將血量（currentHP / maxHP）+ 0.35 * 場上兵力優勢 + 0.2 * 總戰力優勢（PROG-2-1323，E-7 字面）
    */
   public evaluateDuelAcceptance(challengerFaction: Faction): {
     accepted: boolean;
@@ -213,9 +213,8 @@ export class BattleGeneralDuelFlow {
       return { accepted: false, score: 0, defenderFaction };
     }
 
-    const challengerHpPct = Math.max(0, challengerGeneral.currentHp) / Math.max(1, challengerGeneral.maxHp);
+    // E-7 字面：血量項為防守方主將 currentHP / maxHP
     const defenderHpPct = Math.max(0, defenderGeneral.currentHp) / Math.max(1, defenderGeneral.maxHp);
-    const hpAdvantage = defenderHpPct / Math.max(0.0001, challengerHpPct + defenderHpPct);
 
     const challengerUnits = this.collectFactionUnits(challengerFaction);
     const defenderUnits = this.collectFactionUnits(defenderFaction);
@@ -235,11 +234,11 @@ export class BattleGeneralDuelFlow {
     const defenderPower = calcPower(defenderUnits, defenderGeneral);
     const powerAdvantage = defenderPower / Math.max(0.0001, challengerPower + defenderPower);
 
-    const score = 0.45 * hpAdvantage + 0.35 * unitCountAdvantage + 0.2 * powerAdvantage;
+    const score = 0.45 * defenderHpPct + 0.35 * unitCountAdvantage + 0.2 * powerAdvantage;
     // 防守方是敵方 AI：走 E-7 接受判定（依難度閾值，含抖動）；玩家防守方沿用一般門檻
     const accepted = defenderFaction === Faction.Enemy
       ? decideDuelAccept(
-        { hpRatio: hpAdvantage, squadRatio: unitCountAdvantage, powerRatio: powerAdvantage },
+        { hpRatio: defenderHpPct, squadRatio: unitCountAdvantage, powerRatio: powerAdvantage },
         services().session.randomSource(),
         this.context.state.aiDifficulty,
       )
