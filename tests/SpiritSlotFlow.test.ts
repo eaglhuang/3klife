@@ -3,7 +3,13 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import type { InventoryRecord } from '../assets/scripts/core/systems/InventoryProjection';
-import { setPrimarySpiritCard, unequipSpiritCard } from '../assets/scripts/core/systems/SpiritSlotFlow';
+import {
+    insertSpiritCard,
+    replaceSpiritCard,
+    setPrimarySpiritCard,
+    unequipSpiritCard,
+    unequippedSpiritCards,
+} from '../assets/scripts/core/systems/SpiritSlotFlow';
 import { SPIRIT_SLOT_ID } from '../assets/scripts/core/systems/SpiritSlotState';
 
 function spiritCard(id: string, overrides: Partial<InventoryRecord> = {}): InventoryRecord {
@@ -81,6 +87,116 @@ export function createSpiritSlotFlowSuite(): TestSuite {
         assert.isTrue(result.ok);
         if (!result.ok) return;
         assert.isTrue(result.records[1].isPrimary === true);
+    });
+
+    suite.test('選卡清單只列未裝在任何武將身上的英靈卡', () => {
+        const records = [
+            spiritCard('S-1'),
+            spiritCard('S-2', { equippedBy: 'G-1', slotId: SPIRIT_SLOT_ID }),
+            spiritCard('O-1', { Item_Type: 'OTHER' }),
+        ];
+        const list = unequippedSpiritCards(records);
+        assert.equals(1, list.length);
+        assert.equals('S-1', list[0].Inventory_ID);
+    });
+
+    suite.test('插入：空命槽放入未裝配的卡，新卡不是主卡', () => {
+        const records = [spiritCard('S-1')];
+        const result = insertSpiritCard(records, 'G-1', 'S-1', false);
+        assert.isTrue(result.ok);
+        if (!result.ok) return;
+        assert.equals('G-1', result.records[0].equippedBy);
+        assert.equals(SPIRIT_SLOT_ID, result.records[0].slotId);
+        assert.isFalse(result.records[0].isPrimary === true);
+        assert.equals(null, records[0].equippedBy);
+    });
+
+    suite.test('插入：命槽已有卡回 SLOT_OCCUPIED', () => {
+        const records = [
+            spiritCard('S-1', { equippedBy: 'G-1', slotId: SPIRIT_SLOT_ID }),
+            spiritCard('S-2'),
+        ];
+        const result = insertSpiritCard(records, 'G-1', 'S-2', false);
+        assert.isFalse(result.ok);
+        if (result.ok) return;
+        assert.equals('SLOT_OCCUPIED', result.reason);
+    });
+
+    suite.test('插入：卡已在別的武將命槽上回 OWNED_ELSEWHERE', () => {
+        const records = [spiritCard('S-1', { equippedBy: 'G-2', slotId: SPIRIT_SLOT_ID })];
+        const result = insertSpiritCard(records, 'G-1', 'S-1', false);
+        assert.isFalse(result.ok);
+        if (result.ok) return;
+        assert.equals('OWNED_ELSEWHERE', result.reason);
+    });
+
+    suite.test('插入：指定的不是英靈卡列回 NOT_SPIRIT_CARD', () => {
+        const records = [spiritCard('O-1', { Item_Type: 'OTHER' })];
+        const missing = insertSpiritCard(records, 'G-1', 'NOPE', false);
+        const gear = insertSpiritCard(records, 'G-1', 'O-1', false);
+        assert.isFalse(missing.ok);
+        assert.isFalse(gear.ok);
+        if (!missing.ok) assert.equals('NOT_SPIRIT_CARD', missing.reason);
+        if (!gear.ok) assert.equals('NOT_SPIRIT_CARD', gear.reason);
+    });
+
+    suite.test('插入：戰鬥鎖定回 BATTLE_LOCKED', () => {
+        const result = insertSpiritCard([spiritCard('S-1')], 'G-1', 'S-1', true);
+        assert.isFalse(result.ok);
+        if (result.ok) return;
+        assert.equals('BATTLE_LOCKED', result.reason);
+    });
+
+    suite.test('替換：舊卡卸回倉庫、新卡裝入命槽，同一筆結果寫回', () => {
+        const records = [
+            spiritCard('S-1', { equippedBy: 'G-1', slotId: SPIRIT_SLOT_ID, isPrimary: true }),
+            spiritCard('S-2'),
+        ];
+        const result = replaceSpiritCard(records, 'G-1', 'S-2', false);
+        assert.isTrue(result.ok);
+        if (!result.ok) return;
+        assert.equals(null, result.records[0].equippedBy);
+        assert.equals(null, result.records[0].isPrimary);
+        assert.equals('G-1', result.records[1].equippedBy);
+        assert.equals(SPIRIT_SLOT_ID, result.records[1].slotId);
+    });
+
+    suite.test('替換：命槽是空的回 NOT_FOUND，應改用插入', () => {
+        const result = replaceSpiritCard([spiritCard('S-1')], 'G-1', 'S-1', false);
+        assert.isFalse(result.ok);
+        if (result.ok) return;
+        assert.equals('NOT_FOUND', result.reason);
+    });
+
+    suite.test('替換：選到命槽現有的同一張卡回 SAME_CARD', () => {
+        const records = [spiritCard('S-1', { equippedBy: 'G-1', slotId: SPIRIT_SLOT_ID })];
+        const result = replaceSpiritCard(records, 'G-1', 'S-1', false);
+        assert.isFalse(result.ok);
+        if (result.ok) return;
+        assert.equals('SAME_CARD', result.reason);
+    });
+
+    suite.test('替換：新卡在別的武將命槽上回 OWNED_ELSEWHERE，舊卡不動', () => {
+        const records = [
+            spiritCard('S-1', { equippedBy: 'G-1', slotId: SPIRIT_SLOT_ID }),
+            spiritCard('S-2', { equippedBy: 'G-2', slotId: SPIRIT_SLOT_ID }),
+        ];
+        const result = replaceSpiritCard(records, 'G-1', 'S-2', false);
+        assert.isFalse(result.ok);
+        if (result.ok) return;
+        assert.equals('OWNED_ELSEWHERE', result.reason);
+        assert.equals('G-1', records[0].equippedBy);
+    });
+
+    suite.test('替換：戰鬥鎖定回 BATTLE_LOCKED', () => {
+        const records = [
+            spiritCard('S-1', { equippedBy: 'G-1', slotId: SPIRIT_SLOT_ID }),
+            spiritCard('S-2'),
+        ];
+        const result = replaceSpiritCard(records, 'G-1', 'S-2', true);
+        assert.isFalse(result.ok);
+        if (result.ok) return;
+        assert.equals('BATTLE_LOCKED', result.reason);
     });
 
     return suite;
