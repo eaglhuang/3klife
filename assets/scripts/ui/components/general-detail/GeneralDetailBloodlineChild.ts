@@ -17,6 +17,7 @@ import type { GeneralConfig } from '../../../core/models/GeneralUnit';
 import { mask, formatGene } from './GeneralDetailFormatters';
 import { hiddenFactorLine } from '../../core/HiddenFactorText';
 import { FactorMaskPresenter } from '../../../core/systems/FactorMaskState';
+import type { AncestorPeekView } from '../../../core/systems/AncestorTreeLayout';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
@@ -54,6 +55,10 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
     private _lAwakening!: Label;
     private _lHiddenFactor!: Label;
     private _treePanel: BloodlineTreePanel | null = null;
+    private _peekNode: Node | null = null;
+    private _peekTitle!: Label;
+    private _peekTendency!: Label;
+    private _peekLine!: Label;
     /** 故事抽屜目前三態（GDUI-06）；預設收合 */
     private _storyDockState: StoryDockStateName = 'COLLAPSED';
     private _stageNode: Node | null = null;
@@ -94,6 +99,14 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         panel.gen2Container = treeRoot.getChildByPath('Gen2Container');
         panel.gen3Container = treeRoot.getChildByPath('Gen3Container');
         this._treePanel = panel;
+
+        // 祖先 peek（PROG-2-1278）：點擊卡片在樹旁顯示小面板
+        this._peekNode = this._requireNode(h, 'BloodlineStage/BloodlineLeftField/AncestorTree/AncestorPeek');
+        this._peekNode.active = false;
+        this._peekTitle = this._label(h, 'BloodlineStage/BloodlineLeftField/AncestorTree/AncestorPeek/PeekTitle');
+        this._peekTendency = this._label(h, 'BloodlineStage/BloodlineLeftField/AncestorTree/AncestorPeek/PeekTendency');
+        this._peekLine = this._label(h, 'BloodlineStage/BloodlineLeftField/AncestorTree/AncestorPeek/PeekLine');
+        panel.onCardPeek = (view) => this._showPeek(view);
         if (this._lastData) this.onDataUpdate(this._lastData);
     }
 
@@ -179,6 +192,14 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         if (dockTf) dockTf.height = layout.dockHeight;
         const visible = STORY_DOCK_VISIBLE_CELLS[this._storyDockState];
         this._storyCells.forEach((cell, i) => { cell.active = i < visible; });
+    }
+
+    private _showPeek(view: AncestorPeekView): void {
+        if (!this._peekNode) return;
+        this._peekNode.active = true;
+        this._set(this._peekTitle, view.title);
+        this._set(this._peekTendency, view.tendency);
+        this._set(this._peekLine, view.lines.join(' · '));
     }
 
     private _label(root: Node, path: string): Label {

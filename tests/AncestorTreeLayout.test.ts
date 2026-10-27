@@ -5,7 +5,7 @@
  * 血脈傾向在無標籤時為「—」；揭露後顯示名稱與勢力。
  */
 import { assert, TestSuite } from './TestRunner';
-import { ANCESTOR_TREE_SLOTS, ancestorPeekView } from '../assets/scripts/core/systems/AncestorTreeLayout';
+import { ANCESTOR_TREE_SLOTS, ancestorPeekView, isAncestorRevealed } from '../assets/scripts/core/systems/AncestorTreeLayout';
 
 export function createAncestorTreeLayoutSuite(): TestSuite {
     const suite = new TestSuite('AncestorTreeLayout (命頁祖先圖與 peek GDUI-04 PROG-2-1265)');
@@ -46,6 +46,11 @@ export function createAncestorTreeLayoutSuite(): TestSuite {
         assert.equals('趙雲', shown.title);
         assert.isTrue(shown.lines.includes('勢力：shu'));
         assert.isTrue(ancestorPeekView(null, true).locked);
+    });
+
+    suite.test('虛擬祖先未揭露，真實祖先已揭露（暫定規則）', () => {
+        assert.isFalse(isAncestorRevealed({ is_virtual: true }));
+        assert.isTrue(isAncestorRevealed({ is_virtual: false }));
     });
 
     return suite;

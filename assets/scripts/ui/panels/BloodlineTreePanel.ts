@@ -1,10 +1,14 @@
 // @spec-source → DC-3-0004 | 資料中心架構規格書.md §2.3
-import { _decorator, Component, Label, Node } from 'cc';
+import { _decorator, Button, Component, Label, Node } from 'cc';
 import { BloodlineGraph } from '../../core/services/BloodlineGraph';
 import { buildBloodlineTreeSlots, BloodlineTreeSlot } from '../../core/systems/BloodlineTreeSlots';
 import { treeCardNodeName } from '../../core/systems/BloodlineTreeBinding';
+import { ancestorPeekView, isAncestorRevealed, type AncestorPeekView } from '../../core/systems/AncestorTreeLayout';
 
 const { ccclass, property } = _decorator;
+
+/** peek 需要的祖先欄位（PersonRecord 的子集） */
+type PeekPerson = { name: string; faction: string; core_tags?: string[]; is_virtual: boolean };
 
 /**
  * BloodlineTreePanel — 祖先樹 UI 元件
@@ -33,6 +37,9 @@ export class BloodlineTreePanel extends Component {
     /** 父母容器（depth 1，2 個祖先槽） */
     @property(Node)
     gen3Container: Node | null = null;
+
+    /** 點擊祖先卡時的 peek 回呼；由命頁 ChildPanel 設定（PROG-2-1278） */
+    onCardPeek: ((view: AncestorPeekView) => void) | null = null;
 
     /**
      * 根據武將 uid 載入並渲染 3 代祖先樹。
@@ -75,12 +82,29 @@ export class BloodlineTreePanel extends Component {
         for (let i = 0; i < slots.length; i++) {
             const uid = slots[i].uid;
             const person = uid ? graph.getPerson(uid) : null;
+            const cardNode = container.getChildByPath(treeCardNodeName(row, i));
+            if (cardNode) this._bindPeek(cardNode, person);
             const txtNode = container.getChildByPath(`${treeCardNodeName(row, i)}/Txt`);
             if (!txtNode) continue;
             const label = txtNode.getComponent(Label);
             if (!label) continue;
             label.string = person ? this._formatAncestorLabel(person) : '—';
         }
+    }
+
+    /** 點擊卡片發出 peek；removeAll 避免重新填充時疊加多個回呼 */
+    private _bindPeek(cardNode: Node, person: PeekPerson | null): void {
+        const button = cardNode.getComponent(Button) ?? cardNode.addComponent(Button);
+        button.node.off(Button.EventType.CLICK);
+        button.node.on(Button.EventType.CLICK, () => this._emitPeek(person));
+    }
+
+    private _emitPeek(person: PeekPerson | null): void {
+        if (!this.onCardPeek) return;
+        const source = person
+            ? { name: person.name, faction: this._formatFaction(person.faction), core_tags: person.core_tags }
+            : null;
+        this.onCardPeek(ancestorPeekView(source, person ? isAncestorRevealed(person) : false));
     }
 
     private _formatAncestorLabel(person: { name: string; faction: string; gene_refs: string[]; is_virtual: boolean }): string {
