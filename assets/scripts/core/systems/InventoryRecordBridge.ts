@@ -78,5 +78,13 @@ function isInventoryRecord(value: unknown): value is InventoryRecord {
 /** 讀回存檔的統一物件庫列：形狀不合的列丟棄，不補預設值；非陣列視為沒有紀錄。 */
 export function normalizeInventoryRecords(raw: unknown): InventoryRecord[] {
     if (!Array.isArray(raw)) return [];
-    return raw.filter(isInventoryRecord).map((record) => ({ ...record, Attributes: { ...record.Attributes } }));
+    return raw.filter(isInventoryRecord).map(copyInventoryRecord);
+}
+
+/** 複製一列並只保留有限數字的 expiresAt；格式不合即視為永久，列本身保留（PROG-2-1364）。 */
+function copyInventoryRecord(record: InventoryRecord): InventoryRecord {
+    const copy: InventoryRecord = { ...record, Attributes: { ...record.Attributes } };
+    if (typeof record.expiresAt === 'number' && Number.isFinite(record.expiresAt)) copy.expiresAt = record.expiresAt;
+    else delete copy.expiresAt;
+    return copy;
 }
