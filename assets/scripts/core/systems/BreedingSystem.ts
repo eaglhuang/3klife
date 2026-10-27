@@ -514,6 +514,8 @@ export interface BreedingRequest {
     historicalConceptionMod?: number;
     /** 選填：季節受孕率倍率（冬季結緣佳期 +10%，TIME-08）；不傳視為 1 */
     seasonConceptionMod?: number;
+    /** 選填：道具受孕率倍率（安胎藥 ×1.5，ITM-04b）；不傳視為 1 */
+    itemConceptionMod?: number;
     pedigree: PedigreeSource;
     random: RandomSource;
     childId: string;
@@ -617,7 +619,7 @@ export function breed(request: BreedingRequest): BreedingResult {
 
 function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMode'> {
     const eligibility = checkBreedingEligibility(request.father, request.mother, request.pedigree);
-    const conceptionMod = (request.motherConceptionMod ?? 1) * (request.historicalConceptionMod ?? 1) * (request.seasonConceptionMod ?? 1);
+    const conceptionMod = (request.motherConceptionMod ?? 1) * (request.historicalConceptionMod ?? 1) * (request.seasonConceptionMod ?? 1) * (request.itemConceptionMod ?? 1);
     const rate = applyConceptionMod(conceptionRate(request.father, request.mother), conceptionMod);
     if (!eligibility.ok) {
         return { outcome: 'blocked', reasons: eligibility.reasons, conceptionRate: rate, father: request.father, mother: request.mother };

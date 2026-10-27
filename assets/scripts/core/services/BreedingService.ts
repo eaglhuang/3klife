@@ -52,6 +52,8 @@ export interface BreedingServiceOptions {
     currentSeason?: () => number;
     /** 季節受孕率倍率（TIME-08，冬季 +10%）；不傳視為 1 */
     seasonConceptionMod?: () => number;
+    /** 道具受孕率倍率（安胎藥 ×1.5，ITM-04b）；不傳或回傳非正數視為 1 */
+    itemConceptionMod?: () => number;
     /** 子嗣 id 產生器；預設 child-{父}-{母}-{序號} */
     childIdFactory?: (father: GeneralConfig, mother: GeneralConfig, existingIds: Set<string>) => string;
     /** 依武將 uid 取母體來源（FEM-02 受孕率倍率）；沒有來源回傳 null */
@@ -168,6 +170,7 @@ export class BreedingService {
             motherConceptionMod: femaleSourceConceptionMod(this._options.getFemaleSource?.(mother.id) ?? null),
             historicalConceptionMod: historicalPairs ? conceptionModBetween(historicalPairs, father.id, mother.id) : undefined,
             seasonConceptionMod: this._options.seasonConceptionMod?.(),
+            itemConceptionMod: this._options.itemConceptionMod?.(),
         });
         if (result.outcome === 'blocked') return result;
 
