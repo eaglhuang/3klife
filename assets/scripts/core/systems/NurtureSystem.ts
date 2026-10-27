@@ -221,6 +221,16 @@ export function failureRateForVigor(vigor: number): number {
     return 0.2 + ((30 - Math.max(0, vigor)) / 30) * 0.4;
 }
 
+/**
+ * 訓練失敗率（含教官突破 ★2「訓練機率 +3%」，PROG-2-1167）：
+ * 站在本回合訓練格的教官取最高的成功率加成，從體力失敗率扣掉，最低 0。
+ * 暫定：多位教官不疊加。
+ */
+export function trainingFailureRate(vigor: number, mentorsOnSlot: readonly TrainingMentor[]): number {
+    const bonus = mentorsOnSlot.reduce((best, mentor) => Math.max(best, mentorStarPerks(mentor.stars).trainingSuccessBonus), 0);
+    return Math.max(0, failureRateForVigor(vigor) - bonus);
+}
+
 function mentorStarEffect(mentor: TrainingMentor): number {
     const stars = Math.max(0, Math.min(5, Math.floor(mentor.stars ?? 0)));
     return MENTOR_STAR_EFFECT[stars];
@@ -409,7 +419,7 @@ export function executeRound(
         const redBoost = 1 + RED_VIGOR_RECOVER_PER_LEVEL * (source.redGeneLevel ?? 0);
         session.vigor = Math.min(VIGOR_MAX, vigorBefore + Math.round(recovered * redBoost));
     } else {
-        const failureRate = failureRateForVigor(vigorBefore);
+        const failureRate = trainingFailureRate(vigorBefore, source.mentors.filter((mentor) => source.mentorSlots[mentor.id] === action));
         const failed = failureRate > 0 && random() < failureRate;
         const cost = Math.round(randInt(random, TRAINING_VIGOR_COST[0], TRAINING_VIGOR_COST[1]) * (options.trainingVigorMultiplier ?? 1));
         session.vigor = Math.max(0, vigorBefore - cost);

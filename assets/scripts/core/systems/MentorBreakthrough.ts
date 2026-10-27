@@ -7,7 +7,7 @@
  *
  * 暫定：
  *   - 已解鎖事件組數 = min(星等 + 1, 6)，對應 §F-4「★N 解鎖事件組 1–(N+1)」，★5 為全部 6 組。
- *   - 「其他加成」欄已接效果（PROG-2-1164）：高星包含低星的加成；「訓練機率 +3%」語意未定、★5「固有加成最高級」無數值，兩者仍只有文字。
+ *   - 「其他加成」欄已接效果（PROG-2-1164）：高星包含低星的加成；★2「訓練機率 +3%」為訓練成功率（PROG-2-1167）；★5「固有加成最高級」無數值，仍只有文字。
  *
  * Unity 對照：像一張 ScriptableObject 星等表加一個 static 判定器，吃目前星等與「又抽到同名卡」事件，回傳結果；不直接改教官資料。
  */
@@ -31,13 +31,15 @@ export interface MentorStarEntry {
     statBonusMultiplier?: number;
     /** 本星新增的 TP 加成（百分點，10 = +10%） */
     tpBonusAdd?: number;
+    /** 本星新增的訓練成功率（小數，0.03 = +3 個百分點，PROG-2-1167） */
+    trainingSuccessBonus?: number;
 }
 
 /** 星等表，索引即星等 ★0~★5 */
 export const MENTOR_STAR_TABLE: readonly MentorStarEntry[] = [
     { star: 0, friendshipMultiplier: 1.0, trainingMultiplier: 1.0, unlockedEventGroups: 1, otherBonus: '屬性加成基礎值' },
     { star: 1, friendshipMultiplier: 1.1, trainingMultiplier: 1.05, unlockedEventGroups: 2, otherBonus: '初期情誼量 +5', initialFriendship: 5 },
-    { star: 2, friendshipMultiplier: 1.2, trainingMultiplier: 1.1, unlockedEventGroups: 3, otherBonus: '訓練機率 +3%' },
+    { star: 2, friendshipMultiplier: 1.2, trainingMultiplier: 1.1, unlockedEventGroups: 3, otherBonus: '訓練機率 +3%', trainingSuccessBonus: 0.03 },
     { star: 3, friendshipMultiplier: 1.3, trainingMultiplier: 1.15, unlockedEventGroups: 4, otherBonus: '屬性加成 ×1.1', statBonusMultiplier: 1.1 },
     { star: 4, friendshipMultiplier: 1.4, trainingMultiplier: 1.2, unlockedEventGroups: 5, otherBonus: 'TP 加成 +10%', tpBonusAdd: 10 },
     { star: 5, friendshipMultiplier: 1.5, trainingMultiplier: 1.3, unlockedEventGroups: 6, otherBonus: '固有加成最高級' },
@@ -61,6 +63,7 @@ export interface MentorStarPerks {
     initialFriendship: number;
     statBonusMultiplier: number;
     tpBonusAdd: number;
+    trainingSuccessBonus: number;
 }
 
 /**
@@ -68,11 +71,12 @@ export interface MentorStarPerks {
  * 暫定：「TP 加成 +10%」解讀為教官 TP 加成 +10 個百分點（與「屬性加成 ×1.1」的乘法寫法區分）。
  */
 export function mentorStarPerks(star: number | undefined): MentorStarPerks {
-    const perks: MentorStarPerks = { initialFriendship: 0, statBonusMultiplier: 1, tpBonusAdd: 0 };
+    const perks: MentorStarPerks = { initialFriendship: 0, statBonusMultiplier: 1, tpBonusAdd: 0, trainingSuccessBonus: 0 };
     for (const entry of MENTOR_STAR_TABLE.slice(0, clampMentorStar(star) + 1)) {
         perks.initialFriendship += entry.initialFriendship ?? 0;
         perks.statBonusMultiplier *= entry.statBonusMultiplier ?? 1;
         perks.tpBonusAdd += entry.tpBonusAdd ?? 0;
+        perks.trainingSuccessBonus += entry.trainingSuccessBonus ?? 0;
     }
     return perks;
 }
