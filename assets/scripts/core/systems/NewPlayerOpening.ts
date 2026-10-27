@@ -11,10 +11,12 @@
  * 畫面層依 current() 決定顯示哪個 Panel。
  */
 import type { OpeningFlowConfig } from '../config/OpeningFlowConfig';
-import { destinyOpeningPhase } from './DestinyOpening';
+import { DESTINY_LOCKED_EVENT_TYPE, destinyOpeningPhase } from './DestinyOpening';
 import { OpeningFlowController } from './OpeningFlowController';
 
 export const OPENING_INTRO_DONE = 'intro-done';
+/** 名將登場結束（分鏡 6）；離開後新玩家開場結束。 */
+export const SHOWCASE_DONE_EVENT = 'showcase-done';
 
 export interface IntroPanel {
     id: 'ancient' | 'letter' | 'pixel' | 'vortex';
@@ -31,12 +33,13 @@ export const INTRO_PANELS: readonly IntroPanel[] = Object.freeze([
     { id: 'vortex', text: '白點擴散成漩渦，舊日的靈魂被吸進命盤裂口，\n轉蛋盤自遠而近飛來。', button: '進入宿命' },
 ]);
 
-/** 新玩家開場：第一幕 intro 以 intro-done 離開，第二幕 destiny 以 destiny-locked 離開 */
+/** 新玩家開場：第一幕 intro 以 intro-done 離開，第二幕 destiny 以 destiny-locked 離開，名將登場 showcase 以 showcase-done 離開（PROG-2-1365，位置暫定） */
 export function createNewPlayerOpeningFlow(): OpeningFlowController {
     const config: OpeningFlowConfig = {
         phases: [
             { id: 'intro', enterWhen: (e) => e.type === 'start', leaveWhen: (e) => e.type === OPENING_INTRO_DONE },
             destinyOpeningPhase('destiny', OPENING_INTRO_DONE),
+            { id: 'showcase', enterWhen: (e) => e.type === DESTINY_LOCKED_EVENT_TYPE, leaveWhen: (e) => e.type === SHOWCASE_DONE_EVENT },
         ],
     };
     return new OpeningFlowController(config);

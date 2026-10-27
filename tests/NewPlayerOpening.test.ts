@@ -12,7 +12,7 @@ import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/manager
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { destinyLockedEvent } from '../assets/scripts/core/systems/DestinyOpening';
-import { createNewPlayerOpeningFlow, INTRO_PANELS, OPENING_INTRO_DONE } from '../assets/scripts/core/systems/NewPlayerOpening';
+import { createNewPlayerOpeningFlow, INTRO_PANELS, OPENING_INTRO_DONE, SHOWCASE_DONE_EVENT } from '../assets/scripts/core/systems/NewPlayerOpening';
 import { DestinyOpeningController } from '../assets/scripts/ui/core/DestinyOpeningController';
 import { OpeningIntroController } from '../assets/scripts/ui/core/OpeningIntroController';
 
@@ -49,12 +49,13 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         assert.isFalse(intro.next());
     });
 
-    suite.test('幕序：start → intro；intro-done → destiny；destiny-locked → 結束', () => {
+    suite.test('幕序：start → intro；intro-done → destiny；destiny-locked → showcase；showcase-done → 結束', () => {
         const flow = createNewPlayerOpeningFlow();
         assert.equals('intro', flow.start()!.id);
         assert.equals('intro', flow.advance({ type: 'destiny-locked' })!.id);
         assert.equals('destiny', flow.advance({ type: OPENING_INTRO_DONE })!.id);
-        assert.equals(null, flow.advance({ type: 'destiny-locked' }));
+        assert.equals('showcase', flow.advance({ type: 'destiny-locked' })!.id);
+        assert.equals(null, flow.advance({ type: SHOWCASE_DONE_EVENT }));
     });
 
     suite.test('一路走通：翻完第一幕 → 宿命轉蛋 → 鎖定後開新局，幕序結束', async () => {
@@ -81,7 +82,8 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         assert.isTrue(await destiny.select(0));
         assert.isTrue(await destiny.confirm());
         const locked = destinyLockedEvent(destiny.state)!;
-        assert.equals(null, flow.advance(locked));
+        assert.equals('showcase', flow.advance(locked)!.id);
+        assert.equals(null, flow.advance({ type: SHOWCASE_DONE_EVENT }));
         assert.equals(destiny.state.locked, session.leadGeneralId);
         assert.equals(6, session.roster.length);
     });

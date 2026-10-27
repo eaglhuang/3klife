@@ -104,7 +104,8 @@ import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
 import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, fitPortraitInFrame } from '../core/PortraitFrameFit';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { OpeningIntroController } from '../core/OpeningIntroController';
-import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE } from '../../core/systems/NewPlayerOpening';
+import { InitialShowcaseController } from '../core/InitialShowcaseController';
+import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE, SHOWCASE_DONE_EVENT } from '../../core/systems/NewPlayerOpening';
 import { OPENING_BEAUTY_POOL_ID, openingBeautyCandidates } from '../../core/systems/OpeningBeauty';
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
@@ -315,6 +316,8 @@ export class LobbyScene extends Component {
     private _isNewPlayer = false;
     private _introHost: UIScreenPreviewHost | null = null;
     private _intro: OpeningIntroController | null = null;
+    private _showcase: InitialShowcaseController | null = null;
+    private _showcaseHost: UIScreenPreviewHost | null = null;
     private _openingFlow: OpeningFlowController | null = null;
     private _jobChange: JobChangeController | null = null;
     private _domestic: DomesticPanelController | null = null;
@@ -1663,7 +1666,7 @@ export class LobbyScene extends Component {
                 bringToFront: node => this._bringNodeToFront(node),
                 refreshSeasonHud: () => this._refreshSeasonHud(),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
-                advanceOpening: event => { this._openingFlow?.advance(event); },
+                advanceOpening: event => { this._openingFlow?.advance(event); this._onOpeningPhaseAdvanced(); },
                 applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys),
                 openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? '') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
@@ -2038,6 +2041,46 @@ export class LobbyScene extends Component {
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshIntro();
+    }
+
+    /** 宿命鎖定後流程進入名將登場幕時才掛載展示畫面。 */
+    private _onOpeningPhaseAdvanced(): void {
+        if (this._openingFlow?.current()?.id !== 'showcase') {
+            return;
+        }
+        void this._showInitialShowcase();
+    }
+
+    private async _showInitialShowcase(): Promise<void> {
+        this._showcase = new InitialShowcaseController();
+        if (!this._showcaseHost) {
+            this._showcaseHost = await this._mountPreviewScreenHost('InitialShowcaseHost', 'initial-showcase-screen', [
+                { buttonId: 'btnShowcaseNext', handler: () => { this._onClickShowcaseNext(); } },
+            ]);
+        }
+        this._showcaseHost.node.active = true;
+        this._bringNodeToFront(this._showcaseHost.node);
+        this._refreshShowcase();
+    }
+
+    private _onClickShowcaseNext(): void {
+        if (!this._showcase?.next()) {
+            this._refreshShowcase();
+            return;
+        }
+        // 名將登場結束：離開展示，流程進入第三幕
+        if (this._showcaseHost) {
+            this._showcaseHost.node.active = false;
+        }
+        this._openingFlow?.advance({ type: SHOWCASE_DONE_EVENT });
+    }
+
+    private _refreshShowcase(): void {
+        const binder = this._showcaseHost?.binder;
+        if (!binder || !this._showcase) {
+            return;
+        }
+        applyFlowView(binder, this._showcase.getFlowView());
     }
 
     private _onClickIntroNext(): void {
