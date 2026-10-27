@@ -60,7 +60,7 @@ import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
-import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticTaskResult } from '../systems/DomesticTasks';
+import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
 import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
@@ -1346,6 +1346,7 @@ export class GameSession {
     /**
      * 選一項內政任務，依規格當下入帳：糧草、城市兵源寫進軍備，名聲寫進 fame，黃金交給 grantGold（沿用 LocalGachaService 錢包）。
      * 同季已選過則拒絕且不變動任何資源。成功時自動存檔（若有開啟）。
+     * 該任務格有指派武將時，產出依武將屬性計算（領地治理系統 §F，PROG-2-1159）。
      */
     public async chooseDomesticTask(taskId: string, grantGold: (amount: number) => void = () => {}): Promise<DomesticTaskResult> {
         const season = this._clock.state.totalSeasonsElapsed;
@@ -1355,6 +1356,7 @@ export class GameSession {
             season,
             taskId,
             { food: this._military.foodCap, gold: Infinity, fame: BASE_RESOURCE_CAPS.fame, cityTroops: this._military.cityTroopsCap },
+            this.domesticGovernorStats(taskId),
         );
         if (!result.ok) return result;
         this._military = { ...this._military, food: result.stock.food, cityTroops: result.stock.cityTroops };
@@ -1458,7 +1460,7 @@ export class GameSession {
         return true;
     }
 
-    // ---- 領地治理接線（GOV-04 指派 / GOV-09 主城保護 / JRN-01 日誌，PROG-2-0974）：目前僅記憶體狀態，尚未寫入存檔 ----
+    // ---- 領地治理接線（GOV-04 指派 / GOV-09 主城保護 / JRN-01 日誌，PROG-2-0974）：指派隨 lifespanSaveFields 寫入存檔 ----
     private _governance: GovernanceAssignment[] = [];
     private _territories: KeepTerritory[] = defaultKeepTerritories();
     private _journal: JournalState = createEmptyJournal();
@@ -1474,6 +1476,23 @@ export class GameSession {
         const result = assignGovernanceGeneral(this._governance, task, generalUid, maxSlots);
         if (result.ok) this._governance = result.assignments;
         return result;
+    }
+
+    /** 內政任務格指派武將的屬性（§F 產出公式用）；未指派或武將已不在名冊時回傳 null。 */
+    public domesticGovernorStats(task: string): DomesticStats | null {
+        const uid = this._governance.find((a) => a.task === task)?.generalUid;
+        const general = uid ? this._roster.getAll().find((g) => g.id === uid) : undefined;
+        return general ? this.domesticStatsOf(general) : null;
+    }
+
+    /** 武將的內政用屬性（頂層欄位優先，舊資料退回 stats 子物件）。 */
+    public domesticStatsOf(general: GeneralConfig): DomesticStats {
+        return {
+            str: general.str ?? general.stats?.str ?? 0,
+            int: general.int ?? general.stats?.int ?? 0,
+            pol: general.pol ?? general.stats?.pol ?? 0,
+            cha: general.cha ?? general.stats?.cha ?? 0,
+        };
     }
 
     /** 卸下內政任務格的武將（GOV-04）。 */

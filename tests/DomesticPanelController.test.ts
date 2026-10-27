@@ -10,6 +10,26 @@ import { assert, TestSuite } from './TestRunner';
 import { DomesticPanelController, DomesticFlowView } from '../assets/scripts/ui/core/DomesticPanelController';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { DomesticSeasonLog, DomesticTaskId, DomesticTaskResult, EMPTY_DOMESTIC_LOG } from '../assets/scripts/core/systems/DomesticTasks';
+import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
+
+function general(id: string, stats: Record<string, number>): GeneralConfig {
+    return { id, name: id, faction: 'shu', gender: '男', age: 40, hp: 1000, maxLifespan: 70, ...stats } as unknown as GeneralConfig;
+}
+
+/** 接上 GameSession 的換將依賴（與 LobbyScene 同形） */
+function sessionController(session: GameSession): DomesticPanelController {
+    return new DomesticPanelController({
+        log: () => session.domesticLog,
+        season: () => session.gameTime.totalSeasonsElapsed,
+        choose: (taskId) => session.chooseDomesticTask(taskId),
+        candidates: () => session.roster.map((g) => ({ id: g.id, name: g.name, stats: session.domesticStatsOf(g) })),
+        assignedUid: (taskId) => session.governanceAssignments.find((a) => a.task === taskId)?.generalUid ?? null,
+        assign: (taskId, uid) => {
+            if (uid === null) { session.unassignGovernor(taskId); return true; }
+            return session.assignGovernor(taskId, uid).ok;
+        },
+    });
+}
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
@@ -143,6 +163,48 @@ export function createDomesticPanelControllerSuite(): TestSuite {
         await controller.choose('commerce');
         assert.equals(1, granted.length);
         assert.isTrue(granted[0] > 0);
+    });
+
+    suite.test('換將：FlowView 含換將鈕與主事欄位，key 全部對得上版面', () => {
+        const session = new GameSession();
+        session.setRosterStore(new InMemoryRosterStore([general('a', { pol: 10 })]));
+        const view = sessionController(session).getFlowView();
+        const ids = layoutIds();
+        assert.equals(0, keysOf(view).filter((key) => !ids.has(key)).length);
+        assert.isTrue(view.enabled.btnGovFarming);
+        assert.equals('主事：未指派', view.texts.farmingGovernor);
+    });
+
+    suite.test('換將：依該任務產出由高到低輪替，最後回到未指派；他格的武將跳過', () => {
+        const session = new GameSession();
+        session.setRosterStore(new InMemoryRosterStore([
+            general('low', { pol: 10, str: 90 }),
+            general('high', { pol: 90, str: 10 }),
+        ]));
+        session.setAutoSave(false);
+        const controller = sessionController(session);
+        controller.cycleGovernor('farming');
+        assert.equals('high', session.governanceAssignments.find((a) => a.task === 'farming')?.generalUid);
+        assert.equals('糧草 +280', controller.getFlowView().texts.farmingOutput);
+        assert.equals('主事：high', controller.getFlowView().texts.farmingGovernor);
+
+        controller.cycleGovernor('arms');
+        assert.equals('low', session.governanceAssignments.find((a) => a.task === 'arms')?.generalUid);
+
+        controller.cycleGovernor('farming');
+        assert.equals(undefined, session.governanceAssignments.find((a) => a.task === 'farming'));
+        assert.equals('糧草 +120', controller.getFlowView().texts.farmingOutput);
+    });
+
+    suite.test('GameSession 整合：指派武將後選任務，入帳量依武將屬性', async () => {
+        const session = new GameSession();
+        session.setRosterStore(new InMemoryRosterStore([general('zhuge', { pol: 95 })]));
+        session.setAutoSave(false);
+        const controller = sessionController(session);
+        controller.cycleGovernor('farming');
+        const result = await controller.choose('farming');
+        assert.isTrue(result !== null && result.ok);
+        assert.equals(290, result!.output!.amount);
     });
 
     return suite;
