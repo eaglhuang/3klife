@@ -2,7 +2,9 @@ export type GeneralTacticSlotSource =
   | 'inborn'
   | 'bloodline'
   | 'awakened'
-  | 'locked';
+  | 'locked'
+  /** 轉蛋隨機產生的第 2、第 3 戰法（PROG-2-1168） */
+  | 'gacha';
 
 export interface GeneralTacticSlotConfig {
   slotId: string;
@@ -344,6 +346,8 @@ export interface GeneralConfig {
   inspiredTactics?: string[];
   lockedTactics?: string[];
   tacticSlots?: GeneralTacticSlotConfig[];
+  /** 戰法經驗值（戰法 id → 經驗）：轉蛋重複抽到已持有的戰法時累積（PROG-2-1168） */
+  tacticExp?: Record<string, number>;
   ultimateSlots?: GeneralUltimateSlotConfig[];
   /** 五階血脈傳承奧義的點亮狀態（PROG-2-0737）；缺欄位時讀取端以 normalizeUltimateState 補成初始值 */
   bloodlineUltimate?: { stageCap?: number; stageCurrent?: number };
