@@ -18,7 +18,7 @@ const JOB: DispatchJobDef = {
 const GEN: DispatchGeneral = { roleTags: ['Warrior'], stats: { lea: 80 }, mood: 'HIGH', journalTags: [] };
 
 function hero(id: string, name: string): GeneralConfig {
-    return { id, name, faction: 'shu', hp: 1000, str: 80, int: 70, lea: 80, pol: 60, cha: 70, careerClass: 'Warrior' } as GeneralConfig;
+    return { id, name, faction: 'shu', hp: 1000, str: 80, int: 70, lea: 80, pol: 60, cha: 70, careerClass: 'Warrior' } as unknown as GeneralConfig;
 }
 
 export function createDispatchJobsSuite(): TestSuite {
