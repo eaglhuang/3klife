@@ -23,9 +23,11 @@ export class Label {
     static readonly HorizontalAlign = { LEFT: 0, CENTER: 1, RIGHT: 2 };
     static readonly VerticalAlign   = { TOP: 0, CENTER: 1, BOTTOM: 2 };
     static readonly Overflow        = { NONE: 0, CLAMP: 1, SHRINK: 2, RESIZE_HEIGHT: 3 };
+    static readonly CacheMode       = { NONE: 0, BITMAP: 1, CHAR: 2 };
     string = ''; fontSize = 20; color = new Color(); horizontalAlign = 0; verticalAlign = 0; overflow = 0;
     isBold = false; font: any = null; lineHeight = 0;
     declare spacingX: number;
+    declare cacheMode: number;
     declare outlineColor: Color;
     declare outlineWidth: number;
     declare enableShadow: boolean;

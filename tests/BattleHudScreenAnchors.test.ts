@@ -29,8 +29,8 @@ export function createBattleHudScreenAnchorsSuite(): TestSuite {
         assert.isTrue(!!hud, '找不到 HUD 節點');
         assert.equals(0, hud!._lpos.y);
         const ut = (hud!._components as Array<{ __id__: number }>).map((c) => scene[c.__id__]).find((c) => c.__type__ === 'cc.UITransform');
-        assert.equals(1920, ut._contentSize.width);
-        assert.equals(1080, ut._contentSize.height);
+        assert.equals(1920, ut!._contentSize.width);
+        assert.equals(1080, ut!._contentSize.height);
     });
 
     suite.test('模擬棋盤 div_13 不顯示', () => {

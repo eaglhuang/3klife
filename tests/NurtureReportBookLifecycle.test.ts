@@ -6,6 +6,7 @@
  * Unity 對照：像背包裡的暫存存檔格，離開關卡（畢業／放棄）時要清空，否則下一輪會讀到上一輪的資料。
  */
 import { TestSuite, assert } from './TestRunner';
+import type { MentorCard } from '../assets/scripts/core/models/MentorCard';
 import { NurtureFlowController } from '../assets/scripts/ui/core/NurtureFlowController';
 import { InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { NurtureService } from '../assets/scripts/core/services/NurtureService';

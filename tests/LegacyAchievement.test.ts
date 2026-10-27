@@ -100,7 +100,7 @@ export function createLegacyAchievementSuite(): TestSuite {
     });
 
     suite.test('grantLegacyRewards：只把 premium 獎勵加到靈玉，回傳新錢包且不改傳入物件', () => {
-        const base = { gems: 3, gold: 9, tickets: 1, bronze: 0, oracle: 0 };
+        const base = { gems: 3, gold: 9, tickets: 1, bronze: 0, oracle: 0, mentorTickets: 0, scorePoints: 0 };
         const achievements = [
             { descendantUid: 'C', ancestorUid: 'fff', geneId: 'g', generationGap: 3, reward: { currency: 'premium' as const, amount: 100 } },
             { descendantUid: 'C', ancestorUid: 'mmm', geneId: 'h', generationGap: 3, reward: { currency: 'premium' as const, amount: 100 } },
