@@ -58,11 +58,37 @@
           },
           {
             "type": "button",
+            "name": "OpenRankProgressButton",
+            "id": "btnOpenRankProgress",
+            "widget": {
+              "bottom": 12,
+              "left": 16
+            },
+            "width": 236,
+            "height": 44,
+            "skinSlot": "officer.page.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "OpenRankProgressLabel",
+                "id": "openRankProgressLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "階位總覽",
+                "styleSlot": "officer.page.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
             "name": "CloseOfficerPageButton",
             "id": "btnCloseOfficerPage",
             "widget": {
               "bottom": 12,
-              "left": 16,
               "right": 16
             },
             "height": 44,
@@ -81,7 +107,8 @@
                 "text": "關閉",
                 "styleSlot": "officer.page.label.button"
               }
-            ]
+            ],
+            "width": 236
           }
         ]
       }

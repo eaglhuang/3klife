@@ -86,7 +86,8 @@ import { mentorHoldingRows, type MentorHoldingRow } from '../core/MentorHoldingR
 import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView';
 import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
 import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
-import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
+import { RANK_PROGRESS_ROW_COUNT, rankProgressOpenLabel, rankProgressViewOf } from '../core/RankProgressText';
+import { installOfficerTierTable, type OfficerTierRow } from '../../core/systems/OfficerTierTable';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
 import { officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
 import { estimateSortiePower } from '../../core/systems/SortiePrediction';
@@ -253,6 +254,9 @@ export class LobbyScene extends Component {
     private _cityHubAvatarId: string | null = null;
     private _officerHudHost: UIScreenPreviewHost | null = null;
     private _officerPageHost: UIScreenPreviewHost | null = null;
+    private _rankProgressHost: UIScreenPreviewHost | null = null;
+    /** officer-tiers.json 驗證通過的階位列（官職進度開窗用）；未載入時開窗用內建備援 */
+    private _officerTierRows: OfficerTierRow[] | null = null;
     private _graduationHost: UIScreenPreviewHost | null = null;
     private _graduationPage = 0;
     private _mentorBorrowHost: UIScreenPreviewHost | null = null;
@@ -598,6 +602,10 @@ export class LobbyScene extends Component {
     private async _mountOfficerHud(): Promise<void> {
         this._officerPageHost = await this._mountPreviewScreenHost('OfficerPageHost', 'lobby-officer-page-screen', [
             { buttonId: 'btnCloseOfficerPage', handler: () => this._setOfficerPageOpen(false) },
+            { buttonId: 'btnOpenRankProgress', handler: () => this._setRankProgressOpen(true) },
+        ]);
+        this._rankProgressHost = await this._mountPreviewScreenHost('RankProgressHost', 'rank-progress-screen', [
+            { buttonId: 'btnCloseRankProgress', handler: () => this._setRankProgressOpen(false) },
         ]);
         this._officerHudHost = await this._mountPreviewScreenHost('OfficerHudHost', 'lobby-officer-hud-screen', [
             { buttonId: 'btnOpenOfficerPage', handler: () => this._setOfficerPageOpen(true) },
@@ -630,6 +638,7 @@ export class LobbyScene extends Component {
         this._officerPageHost?.binder?.setTexts({
             officerPageTitle: officerPageTitleText(lookup, display.rankName),
             officerPermissionText: officerPermissionLinesOf(officerPermissionsOf(state), lookup).join('\n'),
+            openRankProgressLabel: rankProgressOpenLabel(lookup),
         });
     }
 
@@ -637,6 +646,28 @@ export class LobbyScene extends Component {
     private _setOfficerPageOpen(open: boolean): void {
         if (open) this._refreshOfficerHud();
         if (this._officerPageHost) this._officerPageHost.node.active = open;
+        if (!open) this._setRankProgressOpen(false);
+    }
+
+    /** 官職進度開窗（PROG-2-1424）：官職頁「階位總覽」打開；五列階位依最新官職狀態重算 */
+    private _setRankProgressOpen(open: boolean): void {
+        if (open) this._refreshRankProgress();
+        if (this._rankProgressHost) this._rankProgressHost.node.active = open;
+    }
+
+    private _refreshRankProgress(): void {
+        const lookup = (key: string, ...args: string[]): string => services().i18n.t(key, ...args);
+        const view = rankProgressViewOf(services().session.officerState, this._officerTierRows, lookup);
+        const texts: Record<string, string> = {
+            rankTitle: view.title,
+            rankExp: view.expLine,
+            closeRankProgressLabel: view.closeLabel,
+        };
+        for (let i = 0; i < RANK_PROGRESS_ROW_COUNT; i++) {
+            const row = view.rows[i];
+            texts[`rankRow${i}`] = row ? `${row.headline}\n${row.unlockLine}` : '';
+        }
+        this._rankProgressHost?.binder?.setTexts(texts);
     }
 
     /** 畢業紀錄畫面（PROG-2-0746）：固定 5 列、分頁按鈕；資料來自培育服務的畢業紀錄，每次打開都重算 */
@@ -2178,7 +2209,9 @@ export class LobbyScene extends Component {
                     return;
                 }
                 const result = installOfficerTierTable(asset.json);
-                if (!result.ok) {
+                if (result.ok) {
+                    this._officerTierRows = result.rows;
+                } else {
                     UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 官職階位資料驗證失敗，沿用內建門檻', (result as { ok: false; issues: string[] }).issues);
                 }
                 resolve();

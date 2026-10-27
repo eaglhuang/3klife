@@ -1,0 +1,155 @@
+{
+  "id": "rank-progress-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "RankProgressRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "RankProgressCard",
+        "widget": {
+          "top": 120,
+          "left": 32
+        },
+        "width": 600,
+        "height": 600,
+        "skinSlot": "rank.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "RankProgressTitleLabel",
+            "id": "rankTitle",
+            "widget": {
+              "top": 12,
+              "left": 20,
+              "right": 20
+            },
+            "height": 34,
+            "text": "官職進度",
+            "styleSlot": "rank.label.title"
+          },
+          {
+            "type": "label",
+            "name": "RankProgressExpLabel",
+            "id": "rankExp",
+            "widget": {
+              "top": 56,
+              "left": 20,
+              "right": 20
+            },
+            "height": 30,
+            "text": "",
+            "styleSlot": "rank.label.exp"
+          },
+          {
+            "type": "label",
+            "name": "RankRow0Label",
+            "id": "rankRow0",
+            "widget": {
+              "top": 110,
+              "left": 20,
+              "right": 20
+            },
+            "height": 72,
+            "text": "",
+            "styleSlot": "rank.label.row"
+          },
+          {
+            "type": "label",
+            "name": "RankRow1Label",
+            "id": "rankRow1",
+            "widget": {
+              "top": 190,
+              "left": 20,
+              "right": 20
+            },
+            "height": 72,
+            "text": "",
+            "styleSlot": "rank.label.row"
+          },
+          {
+            "type": "label",
+            "name": "RankRow2Label",
+            "id": "rankRow2",
+            "widget": {
+              "top": 270,
+              "left": 20,
+              "right": 20
+            },
+            "height": 72,
+            "text": "",
+            "styleSlot": "rank.label.row"
+          },
+          {
+            "type": "label",
+            "name": "RankRow3Label",
+            "id": "rankRow3",
+            "widget": {
+              "top": 350,
+              "left": 20,
+              "right": 20
+            },
+            "height": 72,
+            "text": "",
+            "styleSlot": "rank.label.row"
+          },
+          {
+            "type": "label",
+            "name": "RankRow4Label",
+            "id": "rankRow4",
+            "widget": {
+              "top": 430,
+              "left": 20,
+              "right": 20
+            },
+            "height": 72,
+            "text": "",
+            "styleSlot": "rank.label.row"
+          },
+          {
+            "type": "button",
+            "name": "CloseRankProgressButton",
+            "id": "btnCloseRankProgress",
+            "widget": {
+              "bottom": 12,
+              "left": 20,
+              "right": 20
+            },
+            "height": 44,
+            "skinSlot": "rank.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "CloseRankProgressLabel",
+                "id": "closeRankProgressLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "關閉",
+                "styleSlot": "rank.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
