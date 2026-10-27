@@ -141,10 +141,7 @@ import { buildGachaPoolGuideLines } from '../core/GachaPoolGuidePresenter';
 import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
-import { dailyNewsToastLines } from '../../core/systems/DailyNewsEngine';
-
-/** 三國日報每則 toast 顯示秒數（暫定） */
-const DAILY_NEWS_TOAST_SECONDS = 3;
+import { DailyReportController } from '../core/DailyReportController';
 
 const { ccclass } = _decorator;
 
@@ -288,6 +285,9 @@ export class LobbyScene extends Component {
     private _battleReviewHost: UIScreenPreviewHost | null = null;
     private _tournament: TournamentPanelController | null = null;
     private _tournamentHost: UIScreenPreviewHost | null = null;
+    /** 登入讀檔時擷取的未讀日報／晨報；面板掛好後開啟（PROG-2-1192） */
+    private _dailyReport: DailyReportController | null = null;
+    private _dailyReportHost: UIScreenPreviewHost | null = null;
     private _rival: RivalDiplomacyController | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
@@ -455,6 +455,7 @@ export class LobbyScene extends Component {
         await this._mountGeneralJournal();
         await this._mountBattleReview();
         await this._mountTournament();
+        await this._mountDailyReport();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
         await this._mountGovernorHall();
@@ -557,16 +558,13 @@ export class LobbyScene extends Component {
     }
 
     /**
-     * 三國日報（PROG-2-1173）與晨報（PROG-2-1174）：toast 會互相覆蓋，所以日報在前、晨報在後，
-     * 每行間隔數秒依序顯示；顯示後兩者都標記已讀並存檔
+     * 三國日報（PROG-2-1173）與晨報（PROG-2-1174）：讀檔時擷取未讀內容，改由 UCUF 面板顯示（PROG-2-1192）；
+     * 擷取後兩者都標記已讀並存檔，面板在 _mountDailyReport 掛好後開啟
      */
     private _showDailyNews(): void {
         const session = services().session;
-        const lines = [...dailyNewsToastLines(session.dailyNews, new Date()), ...session.morningReportLines];
-        if (lines.length === 0) return;
-        lines.forEach((message, index) => {
-            this.scheduleOnce(() => services().event.emit('SHOW_TOAST', { message, duration: DAILY_NEWS_TOAST_SECONDS }), index * (DAILY_NEWS_TOAST_SECONDS + 0.4));
-        });
+        this._dailyReport = DailyReportController.capture(session.dailyNews, session.morningReport, new Date());
+        if (!this._dailyReport) return;
         session.markDailyNewsRead();
         session.markMorningReportRead();
         void session.save().catch(() => undefined);
@@ -1493,6 +1491,20 @@ export class LobbyScene extends Component {
             { buttonId: 'btnPlay', handler: () => { afterAction(tournament.play()); } },
         ]);
         this._tournamentHost.node.active = false;
+    }
+
+    /** 日報／晨報登入面板（PROG-2-1192）：有未讀才開；「晨報派遣板」直接切到派遣板 */
+    private async _mountDailyReport(): Promise<void> {
+        const close = (): void => { if (this._dailyReportHost) this._dailyReportHost.node.active = false; };
+        this._dailyReportHost = await this._mountPreviewScreenHost('DailyReportHost', 'daily-report-screen', [
+            { buttonId: 'btnClose', handler: close },
+            { buttonId: 'btnOpenJournalHub', handler: () => { close(); this._openJournalHub(); } },
+        ]);
+        const report = this._dailyReport;
+        this._dailyReportHost.node.active = report !== null;
+        if (!report) return;
+        this._bringNodeToFront(this._dailyReportHost.node);
+        applyFlowView(this._dailyReportHost.binder, report.getFlowView());
     }
 
     private _openTournament(): void {
