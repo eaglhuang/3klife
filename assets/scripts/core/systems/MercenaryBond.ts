@@ -14,8 +14,12 @@ export interface MercenaryState {
     generalId?: string;
     /** 選填：好感 0~60；結義點數即好感值（PM 暫定）。 */
     affection?: number;
-    /** 選填：插畫階段 1~5，依好感度推進、只進不退（PROG-2-0968）；舊存檔沒有此欄，視為 1。 */
+    /** 選填：插畫階段 1~5，依解鎖條件推進、只進不退（PROG-2-0968、PROG-2-1214）；舊存檔沒有此欄，視為 1。 */
     illustrationStage?: number;
+    /** 選填：參與過的戰鬥場數（插畫階段 2 用）；戰鬥結算尚未寫入，舊存檔視為 0。 */
+    battles?: number;
+    /** 選填：戰勝場數（插畫階段 3 用）；戰鬥結算尚未寫入，舊存檔視為 0。 */
+    wins?: number;
 }
 
 export type MercenaryEvent =
