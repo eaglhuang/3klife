@@ -8,6 +8,7 @@ import {
     replaceSpiritCard,
     setPrimarySpiritCard,
     unequipSpiritCard,
+    spiritPickerRows,
     unequippedSpiritCards,
 } from '../assets/scripts/core/systems/SpiritSlotFlow';
 import { SPIRIT_SLOT_ID } from '../assets/scripts/core/systems/SpiritSlotState';
@@ -98,6 +99,18 @@ export function createSpiritSlotFlowSuite(): TestSuite {
         const list = unequippedSpiritCards(records);
         assert.equals(1, list.length);
         assert.equals('S-1', list[0].Inventory_ID);
+    });
+
+    suite.test('選卡面板列表：卡號與血脈分數，只列未裝配的英靈卡', () => {
+        const records = [
+            spiritCard('S-1', { Attributes: { LineageScore: 42 } }),
+            spiritCard('S-2', { equippedBy: 'G-1', slotId: SPIRIT_SLOT_ID, Attributes: { LineageScore: 7 } }),
+            spiritCard('S-3'),
+        ];
+        const rows = spiritPickerRows(records);
+        assert.equals('S-1,S-3', rows.map((row) => row.spiritId).join(','));
+        assert.equals('S-1（血脈 42）', rows[0].label);
+        assert.equals('S-3', rows[1].label);
     });
 
     suite.test('插入：空命槽放入未裝配的卡，新卡不是主卡', () => {

@@ -62,6 +62,21 @@ export function unequippedSpiritCards(records: readonly InventoryRecord[]): Inve
     return records.filter((record) => record.Item_Type === 'SPIRIT_CARD' && !record.equippedBy);
 }
 
+export interface SpiritPickerRow {
+    spiritId: string;
+    /** 列表顯示文字：卡號與血脈分數（LineageScore 缺欄位時只顯示卡號） */
+    label: string;
+}
+
+/** 選卡面板的列表內容；順序沿用倉庫順序，不另外排序。 */
+export function spiritPickerRows(records: readonly InventoryRecord[]): SpiritPickerRow[] {
+    return unequippedSpiritCards(records).map((record) => {
+        const lineage = record.Attributes['LineageScore'];
+        const label = typeof lineage === 'number' ? `${record.Inventory_ID}（血脈 ${lineage}）` : record.Inventory_ID;
+        return { spiritId: record.Inventory_ID, label };
+    });
+}
+
 /** 檢查要放進命槽的英靈卡是否可用；可用回傳 null，否則回傳拒絕原因。 */
 function unpickableReason(records: readonly InventoryRecord[], spiritId: string): SpiritSlotFlowRejectReason | null {
     const card = records.find((record) => record.Inventory_ID === spiritId);
