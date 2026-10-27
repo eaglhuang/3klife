@@ -65,8 +65,9 @@ import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDe
 import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
 import { EMPTY_LOGIN_STREAK, LoginStreakState, loginDayOf, recordLogin } from '../systems/LoginStreak';
 import { dailySubsidyOf, type SubsidyResourceKey } from '../systems/DailySubsidy';
+import { activateMonthlyCard, claimMonthlyCardDaily, isMonthlyCardExpiring, monthlyCardDaysLeft, normalizeMonthlyCard, type MonthlyCardState } from '../systems/MonthlyCard';
 import {
-    appendPlayerLog, EMPTY_DAILY_NEWS, markDailyNewsRead, normalizeDailyNewsState, normalizePlayerLogs, refreshDailyNews,
+    appendPlayerLog, EMPTY_DAILY_NEWS, markDailyNewsRead, normalizeDailyNewsState, normalizePlayerLogs, refreshDailyNews, revengeRecoverAmount,
     type DailyNewsState, type PlayerLogEntry, type PlayerLogType,
 } from '../systems/DailyNewsEngine';
 import { shouldTriggerOfflineInteraction } from '../systems/OfflineInteractionTrigger';
@@ -79,6 +80,7 @@ import {
     type OfflineInteractionCandidate,
 } from '../systems/OfflineInteractionEvents';
 import { buildJournalEvent, type JournalEventKind, type JournalEventSubject } from '../systems/JournalEvents';
+import { journalReactionLine } from '../systems/JournalReaction';
 import {
     EMPTY_MORNING_REPORT, markMorningReportRead, morningReportLines, normalizeMorningReportState, refreshMorningReport,
     unreadMorningReportCount, type MorningReportState,
@@ -111,6 +113,7 @@ import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../systems/TigerTallyStar';
+import { countGeneralBagSlots } from '../systems/BagDomain';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
 import { deriveInventoryViews, type InventoryRecord, type InventoryViews } from '../systems/InventoryProjection';
 import { buildTallyInventoryRecords, normalizeInventoryRecords } from '../systems/InventoryRecordBridge';
@@ -140,6 +143,7 @@ import {
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
 import { resolveFactorColor } from '../systems/FactorInheritance';
+import { insertSpiritCard, replaceSpiritCard, setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
 import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
 import { visibleFactorColors as factorColorsVisibleAtLevel } from '../systems/FactorMask';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
@@ -1015,6 +1019,34 @@ export class GameSession {
         return result;
     }
 
+    /** 卸下命槽英靈卡回倉庫（PROG-2-1280）；戰鬥鎖定由呼叫端傳入 */
+    public unequipSpiritCard(generalUid: string, battleLocked: boolean): SpiritSlotFlowResult {
+        const result = unequipSpiritCard(this._inventoryRecords, generalUid, battleLocked);
+        if (result.ok) this._inventoryRecords = result.records;
+        return result;
+    }
+
+    /** 命槽英靈卡設為主卡（PROG-2-1280）；戰鬥鎖定由呼叫端傳入 */
+    public setPrimarySpiritCard(generalUid: string, battleLocked: boolean): SpiritSlotFlowResult {
+        const result = setPrimarySpiritCard(this._inventoryRecords, generalUid, battleLocked);
+        if (result.ok) this._inventoryRecords = result.records;
+        return result;
+    }
+
+    /** 把倉庫英靈卡插入空命槽（PROG-2-1285）；戰鬥鎖定由呼叫端傳入 */
+    public insertSpiritCard(generalUid: string, spiritId: string, battleLocked: boolean): SpiritSlotFlowResult {
+        const result = insertSpiritCard(this._inventoryRecords, generalUid, spiritId, battleLocked);
+        if (result.ok) this._inventoryRecords = result.records;
+        return result;
+    }
+
+    /** 以倉庫英靈卡替換命槽現有英靈卡（PROG-2-1285）；戰鬥鎖定由呼叫端傳入 */
+    public replaceSpiritCard(generalUid: string, spiritId: string, battleLocked: boolean): SpiritSlotFlowResult {
+        const result = replaceSpiritCard(this._inventoryRecords, generalUid, spiritId, battleLocked);
+        if (result.ok) this._inventoryRecords = result.records;
+        return result;
+    }
+
     /** 使用道具（PROG-2-1038）：刷新券寫回傭兵池與救美冷卻；安胎藥記下 armed，等下一次結緣才生效 */
     public useItem(itemId: string, nowMs: number): ItemUseResult {
         const result = useItemFlow(this._inventory, itemId, nowMs);
@@ -1274,9 +1306,14 @@ export class GameSession {
         return this.itemCount(WAREHOUSE_EXPANSION_ITEM);
     }
 
-    /** 主城倉庫已用格數：持有量 > 0 的道具種類數（不含擴容標記） */
+    /**
+     * 主城倉庫已用格數：持有量 > 0 的道具種類數（不含擴容標記），加上統一物件庫中一般倉庫列的格數。
+     * 已裝在武將身上的列（equippedBy）在武將背包，不計入倉庫（PROG-2-1360，BAG-10）。
+     */
     public get warehouseUsedSlots(): number {
-        return Object.keys(this._inventory).filter((id) => id !== WAREHOUSE_EXPANSION_ITEM && itemCount(this._inventory, id) > 0).length;
+        const flat = Object.keys(this._inventory).filter((id) => id !== WAREHOUSE_EXPANSION_ITEM && itemCount(this._inventory, id) > 0).length;
+        const stored = this._inventoryRecords.filter((record) => !record.equippedBy);
+        return flat + countGeneralBagSlots(stored);
     }
 
     /** 增加道具（商城購買、活動獎勵）並自動存檔 */
@@ -1323,6 +1360,10 @@ export class GameSession {
     }
 
     /** 開獎的宿命建議要靠因子字典分武 / 文；沒有字典時只看五維 */
+    public get factorDictionary(): FactorDictionary | undefined {
+        return this._factorDictionary;
+    }
+
     public setFactorDictionary(dictionary: FactorDictionary | undefined): void {
         this._factorDictionary = dictionary;
     }
@@ -1374,6 +1415,7 @@ export class GameSession {
         this._farewellLetters = [];
         this._loginStreak = { ...EMPTY_LOGIN_STREAK };
         this._dailySubsidy = null;
+        this._monthlyCard = null;
         this._playerLogs = [];
         this._dailyNews = { ...EMPTY_DAILY_NEWS, news: [] };
         this._morningReport = { ...EMPTY_MORNING_REPORT, items: [] };
@@ -1989,6 +2031,33 @@ export class GameSession {
         return grants;
     }
 
+    /** 月卡（PROG-2-1359）；從未開通為 null */
+    private _monthlyCard: MonthlyCardState | null = null;
+
+    /** 月卡現況：剩餘天數（含今天）、是否即將到期、今天是否已領 */
+    public monthlyCardStatus(epochMs: number): { daysLeft: number; expiring: boolean; claimedToday: boolean } {
+        return {
+            daysLeft: monthlyCardDaysLeft(this._monthlyCard, epochMs),
+            expiring: isMonthlyCardExpiring(this._monthlyCard, epochMs),
+            claimedToday: this._monthlyCard?.lastClaimDay === loginDayOf(epochMs),
+        };
+    }
+
+    /** 開通或續約月卡（付費流程由呼叫端負責）；回傳剩餘天數；不自動存檔 */
+    public activateMonthlyCard(epochMs: number): number {
+        this._monthlyCard = activateMonthlyCard(this._monthlyCard, epochMs);
+        return monthlyCardDaysLeft(this._monthlyCard, epochMs);
+    }
+
+    /** 月卡每日領取（經濟系統 F，PROG-2-1359）：效期內同日一次，加速卡進背包；回傳本次張數；不自動存檔 */
+    public claimMonthlyCardDaily(epochMs: number): number {
+        const claim = claimMonthlyCardDaily(this._monthlyCard, epochMs);
+        if (claim.speedCards <= 0) return 0;
+        this._monthlyCard = claim.state;
+        this._inventory = addItem(this._inventory, ITEM_WISH_SPEED_CARD, claim.speedCards);
+        return claim.speedCards;
+    }
+
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
     public recordLoginAt(epochMs: number, grantGold: (amount: number) => void = () => {}): void {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
@@ -2138,8 +2207,31 @@ export class GameSession {
     }
 
     /** 記一筆玩家行為（三國日報的素材，只留 24h 內）；其他系統的採集點也走這裡。時間預設為最近一次登入時間（未登入為 0）。 */
-    public recordPlayerLog(type: PlayerLogType, resource?: string, atMs: number = this._dailyNews.lastLoginMs ?? 0): void {
-        this._playerLogs = appendPlayerLog(this._playerLogs, resource ? { type, at: atMs, resource } : { type, at: atMs });
+    public recordPlayerLog(type: PlayerLogType, resource?: string, atMs: number = this._dailyNews.lastLoginMs ?? 0, amount?: number): void {
+        const entry: PlayerLogEntry = { type, at: atMs };
+        if (resource) entry.resource = resource;
+        if (amount !== undefined && amount > 0) entry.amount = Math.floor(amount);
+        this._playerLogs = appendPlayerLog(this._playerLogs, entry);
+    }
+
+    /**
+     * 復仇取回（RET-05）：消耗最近一筆帶數量的缺糧紀錄，依 pct（5~20）取回糧草，不超過糧草上限。
+     * 沒有可取回的紀錄時回傳 0；被消耗的紀錄不會再取回第二次。
+     */
+    public claimRevengeRecovery(pct: number): number {
+        let index = -1;
+        for (let i = this._playerLogs.length - 1; i >= 0; i--) {
+            const log = this._playerLogs[i];
+            if (log.type === 'RESOURCE_LOW' && log.amount !== undefined) {
+                index = i;
+                break;
+            }
+        }
+        if (index < 0) return 0;
+        const recovered = revengeRecoverAmount(this._playerLogs[index].amount ?? 0, pct);
+        this._playerLogs = this._playerLogs.filter((_, i) => i !== index);
+        this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + recovered) };
+        return recovered;
     }
 
     /** 前 24h 的行為紀錄（複本） */
@@ -2354,8 +2446,12 @@ export class GameSession {
 
     /** 事件寫入日誌（PROG-2-1175）：時間沿用季度日誌的遊戲時間，ID 用目前條目數 +1。 */
     private _recordEventJournal(kind: JournalEventKind, subjects: readonly JournalEventSubject[]): void {
-        const input = buildJournalEvent(kind, subjects, this._journal.entries.length + 1, seasonJournalTimestamp(this._clock.state));
-        if (input) this.recordJournal(input);
+        const seq = this._journal.entries.length + 1;
+        const input = buildJournalEvent(kind, subjects, seq, seasonJournalTimestamp(this._clock.state));
+        if (!input) return;
+        // 日誌反應（JRN-04，PROG-2-1404）：以第一位相關武將的名字與條目序號決定台詞，失敗時回退
+        const reaction = journalReactionLine(input, subjects[0].name ?? '', seq);
+        this.recordJournal({ ...input, reaction });
     }
 
     /** 寫入武將日誌（JRN-01）；被拒絕時不改動狀態。 */
@@ -3000,7 +3096,8 @@ export class GameSession {
         this._inventory = tokens.inventory;
         this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
         // 三國日報素材：缺糧（與虎符缺糧同一門檻，暫定）
-        if (this._tallyFoodDiscountArmed) this.recordPlayerLog('RESOURCE_LOW', '糧草');
+        // 缺口 = 門檻 − 目前糧草（RET-05 復仇取回的基數，暫定）
+        if (this._tallyFoodDiscountArmed) this.recordPlayerLog('RESOURCE_LOW', '糧草', undefined, TALLY_SHORTAGE_FOOD_THRESHOLD - this._military.food);
         this._military = regenMilitaryOneSeason(this._military, 1, seasonModifiersOf(advance.previous.currentSeason).foodMultiplier);
         // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
@@ -3610,8 +3707,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3624,6 +3721,7 @@ export class GameSession {
         if (this._farewellLetters.length > 0) fields.farewellLetters = this.farewellLetters;
         if (this._loginStreak.lastLoginDay !== null) fields.loginStreak = this.loginStreak;
         if (this._dailySubsidy) fields.dailySubsidy = this.dailySubsidy!;
+        if (this._monthlyCard) fields.monthlyCard = { ...this._monthlyCard };
         if (this._playerLogs.length > 0) fields.playerLogs = this.playerLogs;
         if (this._dailyNews.lastLoginMs !== null) fields.dailyNews = this.dailyNews;
         if (this._morningReport.journalMark > 0 || this._morningReport.items.length > 0) fields.morningReport = this.morningReport;
@@ -3652,6 +3750,7 @@ export class GameSession {
         this._farewellLetters = normalizeFarewellLetters(snapshot.farewellLetters);
         this._loginStreak = normalizeLoginStreak(snapshot.loginStreak);
         this._dailySubsidy = normalizeDailySubsidyRecord(snapshot.dailySubsidy);
+        this._monthlyCard = normalizeMonthlyCard(snapshot.monthlyCard);
         this._playerLogs = normalizePlayerLogs(snapshot.playerLogs);
         this._dailyNews = normalizeDailyNewsState(snapshot.dailyNews);
         this._morningReport = normalizeMorningReportState(snapshot.morningReport);

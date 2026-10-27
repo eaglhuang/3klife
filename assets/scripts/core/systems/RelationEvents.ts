@@ -131,3 +131,19 @@ export class RelationEventLedger {
         }
     }
 }
+
+/**
+ * 結緣（治理場景）觸發的關係事件：父母的史實關係命中治理事件（例如宿敵配種）時回傳新觸發的事件。
+ * scopeKey 通常是季度，同一季同一對只播一次；沒有配對表時回傳空陣列。
+ */
+export function relationEventsForBreeding(
+    table: HistoricalPairTable | null | undefined,
+    ledger: RelationEventLedger,
+    scopeKey: string,
+    fatherId: string,
+    motherId: string,
+): RelationEventHit[] {
+    if (!table) return [];
+    const hits = detectRelationEvents(table, { scene: 'governance', templateIds: [fatherId, motherId] });
+    return ledger.takeNew(scopeKey, hits);
+}

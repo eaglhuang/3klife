@@ -1,4 +1,4 @@
 {
   "$comment": "tsc -p tsconfig.test.json 的錯誤數基準。只能往下調（修掉既有錯誤後），不得往上調；PR 的錯誤數超過此值即阻擋。",
-  "maxErrors": 4
+  "maxErrors": 0
 }

@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 81,
-    "total": 117
+    "open": 82,
+    "total": 118
   },
   "tasks": [
     {
@@ -4311,6 +4311,39 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0175/**"
+      ],
+      "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 由 Claude 協調線登錄 | 阻塞: TASK-TEAM-0088 未解，派信時暫擱"
+    },
+    {
+      "id": "PROG-2-0176",
+      "title": "實機驗收：血統樹樣式、父子連線與卡片位置（PROG-2-1353、#1129）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-27",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "血統樹父子連線與樣式實機驗收，確認端點位置與因子色上色。",
+      "related": [
+        "PROG-2-1353",
+        "PR #1129"
+      ],
+      "depends": [
+        "PROG-2-1353",
+        "PR #1129"
+      ],
+      "acceptance": [
+        "每對父子卡片有連線且端點在卡片邊緣",
+        "連線顏色與子代因子色一致"
+      ],
+      "deliverables": [
+        "截圖",
+        "色碼與座標",
+        "HEAD"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0176/**"
       ],
       "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 由 Claude 協調線登錄 | 阻塞: TASK-TEAM-0088 未解，派信時暫擱"
     },

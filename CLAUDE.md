@@ -45,7 +45,7 @@ node tools_node/task-lock.js lock <task-id> ClaudeCode_<model-name>
    ```bash
    node tools_node/compute-gate.js --profile standard --agent-feedback
    ```
-2. **測試型別檢查**：有改測試或 `tests/cc.mock.ts` 時，跑 `npx tsc -p tsconfig.test.json --noEmit`，錯誤數不得多於 master（基準 4 個）。
+2. **測試型別檢查**：有改測試或 `tests/cc.mock.ts` 時，跑 `npx tsc -p tsconfig.test.json --noEmit`，錯誤數必須為 0（基準已降為 0，見 tools_node/test-tsc-baseline.json）。
    - 測試裡造武將物件（缺欄位的字面量）一律寫 `as unknown as GeneralConfig`（或對應型別），不要直接 `as GeneralConfig`，否則會報 TS2352。
 3. **解鎖任務卡**：
    ```bash

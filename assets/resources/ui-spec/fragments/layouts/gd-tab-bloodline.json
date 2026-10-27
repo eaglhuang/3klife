@@ -66,6 +66,18 @@
               },
               "children": [
                 {
+                  "type": "panel",
+                  "name": "LineGraphics",
+                  "widget": {
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0
+                  },
+                  "width": "100%",
+                  "height": "100%"
+                },
+                {
                   "type": "label",
                   "name": "TreeTitle",
                   "width": "100%",
@@ -370,6 +382,15 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "type": "panel",
+                  "name": "TargetPortrait",
+                  "widget": {
+                    "hCenter": true
+                  },
+                  "width": 120,
+                  "height": 120
                 }
               ]
             }
@@ -638,6 +659,144 @@
                       "height": 16,
                       "styleSlot": "detail.label.button",
                       "text": "查看世家"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "SpiritSlotCard",
+              "width": "100%",
+              "height": 240,
+              "skinSlot": "detail.awakening.card",
+              "layout": {
+                "type": "vertical",
+                "spacing": 6,
+                "paddingTop": 8,
+                "paddingBottom": 8,
+                "paddingLeft": 14,
+                "paddingRight": 14
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "SpiritSlotTitle",
+                  "width": "100%",
+                  "height": 18,
+                  "styleSlot": "detail.label.meta",
+                  "text": "命槽"
+                },
+                {
+                  "type": "label",
+                  "name": "SpiritSlotCardValue",
+                  "width": "100%",
+                  "height": 18,
+                  "styleSlot": "detail.label.meta",
+                  "text": "未裝配"
+                },
+                {
+                  "type": "button",
+                  "name": "SlotInsertButton",
+                  "width": "100%",
+                  "height": 32,
+                  "skinSlot": "detail.button.primary",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "SlotInsertButtonLabel",
+                      "widget": {
+                        "vCenter": true,
+                        "left": 0,
+                        "right": 0
+                      },
+                      "height": 16,
+                      "styleSlot": "detail.label.button",
+                      "text": "插入"
+                    }
+                  ]
+                },
+                {
+                  "type": "button",
+                  "name": "SlotReplaceButton",
+                  "width": "100%",
+                  "height": 32,
+                  "skinSlot": "detail.button.primary",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "SlotReplaceButtonLabel",
+                      "widget": {
+                        "vCenter": true,
+                        "left": 0,
+                        "right": 0
+                      },
+                      "height": 16,
+                      "styleSlot": "detail.label.button",
+                      "text": "替換"
+                    }
+                  ]
+                },
+                {
+                  "type": "button",
+                  "name": "SlotUnequipButton",
+                  "width": "100%",
+                  "height": 32,
+                  "skinSlot": "detail.button.primary",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "SlotUnequipButtonLabel",
+                      "widget": {
+                        "vCenter": true,
+                        "left": 0,
+                        "right": 0
+                      },
+                      "height": 16,
+                      "styleSlot": "detail.label.button",
+                      "text": "卸下"
+                    }
+                  ]
+                },
+                {
+                  "type": "button",
+                  "name": "SlotSetMainButton",
+                  "width": "100%",
+                  "height": 32,
+                  "skinSlot": "detail.button.primary",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "SlotSetMainButtonLabel",
+                      "widget": {
+                        "vCenter": true,
+                        "left": 0,
+                        "right": 0
+                      },
+                      "height": 16,
+                      "styleSlot": "detail.label.button",
+                      "text": "設為主卡"
+                    }
+                  ]
+                },
+                {
+                  "type": "button",
+                  "name": "SlotDetailButton",
+                  "width": "100%",
+                  "height": 32,
+                  "skinSlot": "detail.button.primary",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "SlotDetailButtonLabel",
+                      "widget": {
+                        "vCenter": true,
+                        "left": 0,
+                        "right": 0
+                      },
+                      "height": 16,
+                      "styleSlot": "detail.label.button",
+                      "text": "查看詳情"
                     }
                   ]
                 }
