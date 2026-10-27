@@ -64,6 +64,8 @@ function readMercenary(raw: unknown): MercenaryState | null {
     if (isCount(raw.illustrationStage, ILLUSTRATION_STAGE_MAX) && raw.illustrationStage >= ILLUSTRATION_STAGE_MIN) {
         mercenary.illustrationStage = raw.illustrationStage;
     }
+    if (isCount(raw.battles)) mercenary.battles = raw.battles;
+    if (isCount(raw.wins)) mercenary.wins = raw.wins;
     return mercenary;
 }
 
