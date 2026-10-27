@@ -543,13 +543,9 @@ export class LobbyScene extends Component {
         try {
             const loaded = await services().session.load();
             UCUFLogger.info(LogCategory.DATA, loaded ? '[LobbyScene] 已讀取玩家存檔' : '[LobbyScene] 沒有玩家存檔，從新局開始');
-            // 登入（連續登入 PROG-2-0987、三國日報 PROG-2-1170）：讀檔後記一次，當天第一次登入會生成日報
+            // 登入（連續登入 PROG-2-0987、三國日報 PROG-2-1170、離線互動 PROG-2-1193）：讀檔後記一次，當天第一次登入會生成日報
             services().session.recordLoginAt(Date.now(), (amount) => { this._localGachaService.grantCurrency('gold', amount); });
             this._showDailyNews();
-            // 離線互動（JRN-04）：目前尚無主互動內容，只記錄是否應觸發
-            if (loaded && services().session.offlineInteractionDue(Date.now())) {
-                UCUFLogger.info(LogCategory.DATA, '[LobbyScene] 離線互動事件待觸發');
-            }
             return loaded;
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 讀取玩家存檔失敗，從新局開始', error);
