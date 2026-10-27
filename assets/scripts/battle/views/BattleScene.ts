@@ -21,7 +21,7 @@ import { BoardRenderer } from "./BoardRenderer";
 import { UnitRenderer } from "./UnitRenderer";
 import { SceneBackground } from "./SceneBackground";
 import { Camera, view } from "cc";
-import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, createGeneral, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput, buildOrderLoyalty } from './BattleSceneLoader';
+import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, loadEnemyScale, createGeneral, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput, buildOrderLoyalty } from './BattleSceneLoader';
 import { BattleSkillTargetingFlow } from './BattleSkillTargetingFlow';
 import { BattleSceneFlow } from './BattleSceneFlow';
 import { validateBattleStateReadModel, validateSortieLoadoutReadModel } from '../../core/systems/ReadModelValidators';
@@ -200,8 +200,10 @@ export class BattleScene extends Component {
       );
 
       // 4. 從 JSON 讀取武將設定（失敗時使用預設值）
+      const difficulty = resolveAiDifficulty(battleParams.aiDifficulty, encounter?.difficulty);
+      const enemyScale = await loadEnemyScale(this.currentEncounterId, difficulty);
       const pg = await createGeneral(pgId, Faction.Player);
-      const eg = await createGeneral(egId, Faction.Enemy);
+      const eg = await createGeneral(egId, Faction.Enemy, enemyScale);
       // 存為類別欄位，供 RequestGeneralQuickView 事件轉接層查詢
       this._pg = pg;
       this._eg = eg;
@@ -219,7 +221,7 @@ export class BattleScene extends Component {
         terrain,
         battleParams.weather,
         battleParams.battleTactic,
-        resolveAiDifficulty(battleParams.aiDifficulty, encounter?.difficulty),
+        difficulty,
       );
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;

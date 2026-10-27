@@ -22,6 +22,10 @@ import type {
 import { isUltimateSlotUnlocked } from '../../core/systems/UltimateSlotUnlock';
 import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
 import { TallyCardData } from '../../shared/TallyCardContract';
+import { parseAiDifficultyTable, aiDifficultyEntryOf, type AiDifficultyEntry } from '../../core/systems/AiDifficultyTable';
+import type { AiDifficulty } from '../../core/systems/AiSpCharge';
+import { scaleAiEnemyConfig } from '../../core/systems/AiStatScaling';
+import { buildStageChainNodes, stageChapterOf, type EncounterChainSource } from '../../core/systems/StageChainNodes';
 
 export interface BattleTacticSummary {
   count: number;
@@ -247,11 +251,35 @@ export async function loadGeneralConfig(id: string): Promise<GeneralConfig | nul
   }
 }
 
+/** 開戰敵將的 AI 縮放設定（PROG-2-1319）：難度列與關卡章節序位 */
+export interface EnemyScaleSetting {
+  difficulty: AiDifficultyEntry;
+  chapter: number;
+}
+
+/**
+ * 讀取開戰敵將要用的縮放設定；ai-difficulty.json 或關卡資料讀不到時回傳 undefined，敵將維持原數值。
+ * 章節 = 關卡所屬主鏈在關卡資料中的序位（stageChapterOf）。
+ * Unity 對照：Difficulty 與 Chapter 的 ScriptableObject，開戰前查出來交給 Spawner。
+ */
+export async function loadEnemyScale(encounterId: string, difficulty: AiDifficulty): Promise<EnemyScaleSetting | undefined> {
+  try {
+    const { table } = parseAiDifficultyTable(await services().resource.loadJson<unknown>("data/ai-difficulty"));
+    if (!table) return undefined;
+    const data = await services().resource.loadJson<{ encounters: EncounterChainSource[] }>("data/encounters");
+    const chapter = stageChapterOf(buildStageChainNodes(data.encounters), encounterId);
+    return { difficulty: aiDifficultyEntryOf(table, difficulty), chapter };
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * 從 generals.json 或內建預設值建立 GeneralUnit。
+ * 傳入 enemyScale 時，敵方武將先用 scaleAiEnemyConfig 縮放 str、int、lea、luk 再建立（不改 readonly 欄位）。
  * Unity 對照：GeneralFactory.Create(id, faction)
  */
-export async function createGeneral(id: string, faction: Faction): Promise<GeneralUnit> {
+export async function createGeneral(id: string, faction: Faction, enemyScale?: EnemyScaleSetting): Promise<GeneralUnit> {
   // 我軍主將若是名冊裡可出戰的武將（培育畢業 / 抽卡），用名冊數值（實力層、因子、戰法）建立
   if (faction === Faction.Player) {
     const rosterConfig = services().session.getBattleConfig(id, faction);
@@ -272,7 +300,10 @@ export async function createGeneral(id: string, faction: Faction): Promise<Gener
     const list = await services().resource.loadJson<GeneralsJson>("data/generals");
     const cfg  = list.find(g => g.id === id);
     if (cfg) {
-      return new GeneralUnit({ ...cfg, faction });
+      const scaled = faction === Faction.Enemy && enemyScale
+        ? scaleAiEnemyConfig(cfg, enemyScale.difficulty, enemyScale.chapter)
+        : cfg;
+      return new GeneralUnit({ ...scaled, faction });
     }
   } catch {
     // 靜默失敗，使用預設值
