@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 20:15 AG-33 完成：check_layered_parts.py 實作手部握孔「封閉孔 enclosedHole」檢測與核心覆蓋分母扣除；arm_lower_b 成功識別 1650px 封閉孔，裂縫降為 0/0 px，核心扣除後 <30px 標記 notApplicable，擬議閘門順利翻轉為 PASS；開口拳 (hand_f) 自動退回 radiusFallback；一般肢段不受影響 (none)；回答 pelvis_to_torso 覆蓋為 0 係幾何未覆蓋 (skirt 確實已被計入) 與 skipped 測試差異說明；新增 test_ag33_enclosed_grip_hole.py 3 項測試，全套 101 項單元測試 100% 通過（8d72e387b）。
 - 2026-10-27 20:10 Claude：R299 前腳踝裂縫 46/15 收為候選（整體 QC 未過）；膠囊範圍裁決 B，待 2D 專家量值後寫 v3.14；R290 卡 Cocos 登入頁，等使用者處理。
 - 2026-10-27 19:50 Claude：收下 AG-31b／AG-32（規格同 v3.13、98 測試 OK）；R296 前臂短樁收為候選；後手 171/159 是封閉握孔，派 AG-33；R300 裁決 pelvis_to_torso 暫不補、前手採握孔規則、hair_tail／pauldron_b 不擋。
 - 2026-10-27 19:40 AG-32 完成：check_layered_parts.py 實作規格 v3.13 戰場顯示高度換算裂縫門檻（maxCrackAreaDisplayPx2 * (H / referenceDisplayHeightPx)^2 = 79.01 px），完全零硬編碼，報告輸出來源資訊並與 derivedMaxCrackCanvasPx (79) 核對；R292 20 個關節全表重新評估，全身純裂縫超標關節僅剩 shin_f_to_foot_f (180/166 px)，其餘關節裂縫全數 <= 61 px 達標；新增 test_ag32_crack_gate_display_height.py 3 項單元測試，全套 98 項單元測試 100% 通過（884afb08e）。
