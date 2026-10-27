@@ -23,6 +23,8 @@ export interface GeneralUltimateSlotConfig {
   notes?: string;
   /** 依轉數算出的解鎖狀態（PROG-2-1059 寫入存檔）；讀取時仍以 unlockReincarnation 與轉數為準 */
   isUnlocked?: boolean;
+  /** 奧義等級（PROG-2-1251）：重複抽到時已解鎖欄位升級；缺欄位視為 Lv 1 */
+  ultLevel?: number;
 }
 
 export interface GeneralGeneratorProfileConfig {
