@@ -807,8 +807,13 @@ def run_layered_parts_inspection(
             "checks": {"dimension": dim_check},
         }
 
-        # AG-23: 單槽範圍檢查 (每槽都做，不需要相鄰槽)
+        # AG-23 / AG-34: 單槽範圍檢查與小島分三級 (scopeGate)
         scope_margin_px = float(layered_cfg.get("scopeMarginPx", 12.0))
+        scope_gate_cfg = layered_cfg.get("scopeGate", {})
+        scope_mode = scope_gate_cfg.get("mode", "strict")
+        loose_min_area = int(scope_gate_cfg.get("looseIslandMinAreaPx", 16))
+        designed_min_area = int(scope_gate_cfg.get("designedPieceMinAreaPx", 400))
+
         scope_mask, scope_type = build_slot_scope_mask(sid, spec, body_type, exp_w, exp_h, ext_px=scope_margin_px)
         if scope_type == "anchor_only":
             slot_reports[sid]["checks"]["scope_capsule_bounds"] = {
@@ -825,18 +830,85 @@ def run_layered_parts_inspection(
                 outside_m = vis_mask & (~scope_mask)
                 outside_cnt = int(outside_m.sum())
                 outside_ratio = outside_cnt / tot_vis
-                scope_pass = (outside_ratio <= 0.01)
+
+                # AG-34 + v3.15: 8 連通小島分三級
+                num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(vis_mask.astype(np.uint8), connectivity=8)
+                main_label = None
+                main_area = 0
+                tiny_islands: list[dict[str, Any]] = []
+                loose_outside_islands: list[dict[str, Any]] = []
+                designed_pieces: list[dict[str, Any]] = []
+                inside_loose_islands: list[dict[str, Any]] = []
+
+                if num_labels > 1:
+                    areas = [stats[lbl, cv2.CC_STAT_AREA] for lbl in range(1, num_labels)]
+                    max_idx = int(np.argmax(areas))
+                    main_label = 1 + max_idx
+                    main_area = int(stats[main_label, cv2.CC_STAT_AREA])
+
+                    for lbl in range(1, num_labels):
+                        if lbl == main_label:
+                            continue
+                        a_px = int(stats[lbl, cv2.CC_STAT_AREA])
+                        bx = int(stats[lbl, cv2.CC_STAT_LEFT])
+                        by = int(stats[lbl, cv2.CC_STAT_TOP])
+                        bw = int(stats[lbl, cv2.CC_STAT_WIDTH])
+                        bh = int(stats[lbl, cv2.CC_STAT_HEIGHT])
+                        isl_m = (labels == lbl)
+                        has_out = bool(np.any(isl_m & (~scope_mask)))
+                        isl_item = {
+                            "label": lbl,
+                            "areaPx": a_px,
+                            "bbox": [bx, by, bw, bh],
+                            "hasPixelsOutsideScope": has_out,
+                        }
+                        if a_px < loose_min_area:
+                            tiny_islands.append(isl_item)
+                        elif a_px >= designed_min_area:
+                            designed_pieces.append(isl_item)
+                        else:
+                            if has_out:
+                                loose_outside_islands.append(isl_item)
+                            else:
+                                inside_loose_islands.append(isl_item)
+
+                if scope_mode == "advisory":
+                    # advisory 模式：膠囊越界僅作報告不擋，改由游離雜片判定 pass/fail
+                    scope_pass = (len(loose_outside_islands) == 0)
+                    if not scope_pass:
+                        detail_msg = (
+                            f"膠囊範圍諮詢模式: 越界佔比={outside_ratio*100:.2f}% (advisory不擋)，"
+                            f"但檢出 {len(loose_outside_islands)} 個游離雜片在 scope 外 (面積 {loose_min_area}<=area<{designed_min_area} px): "
+                            + ", ".join(f"{it['areaPx']}px@bbox{it['bbox']}" for it in loose_outside_islands)
+                        )
+                    else:
+                        detail_msg = (
+                            f"膠囊範圍諮詢模式: 越界佔比={outside_ratio*100:.2f}% (advisory不擋)，"
+                            f"無游離雜片 (微小雜點<{loose_min_area}px: {len(tiny_islands)}個, "
+                            f"設計分塊>={designed_min_area}px: {len(designed_pieces)}個)"
+                        )
+                else:
+                    scope_pass = (outside_ratio <= 0.01)
+                    detail_msg = f"膠囊外擴{scope_margin_px:.0f}px外像素佔比={outside_ratio*100:.2f}% (容差<=1.0%)"
 
                 scope_check_entry: dict[str, Any] = {
                     "pass": scope_pass,
                     "tier": "PASS" if scope_pass else "FAIL",
                     "skipped": False,
                     "scopeType": scope_type,
+                    "scopeMode": scope_mode,
                     "outsideRatio": round(outside_ratio, 4),
                     "outsidePixels": outside_cnt,
                     "totalVisiblePixels": tot_vis,
-                    "toleranceRatio": 0.01,
-                    "detail": f"膠囊外擴{scope_margin_px:.0f}px外像素佔比={outside_ratio*100:.2f}% (容差<=1.0%)",
+                    "mainBodyAreaPx": main_area if main_label is not None else tot_vis,
+                    "tinyIslandsCount": len(tiny_islands),
+                    "tinyIslands": tiny_islands,
+                    "looseOutsideIslandsCount": len(loose_outside_islands),
+                    "looseOutsideIslands": loose_outside_islands,
+                    "designedPiecesCount": len(designed_pieces),
+                    "designedPieces": designed_pieces,
+                    "toleranceRatio": 0.01 if scope_mode != "advisory" else "advisory",
+                    "detail": detail_msg,
                 }
                 if scope_type == "pauldron_provisional_overlap_zone":
                     scope_check_entry["note"] = f"pauldron 在 JSON 無膠囊，暫以 shoulderOverlapZone 外擴 {scope_margin_px:.0f}px 判定 (暫定規則)"
@@ -1398,9 +1470,34 @@ def run_layered_parts_inspection(
         child_vac_pos = metrics_pos["childVacatedPx"]
         child_vac_neg = metrics_neg["childVacatedPx"]
 
-        # AG-33: 握孔扣除後核心覆蓋 notApplicable 與最小門檻
+        # AG-33 / AG-34: coverageRule 實作
+        cov_rule = layered_cfg.get("coverageRule", {})
+        grip_joint_cov_mode = cov_rule.get("gripJointCoverage", "standard")
+        child_alone_pct_req = float(cov_rule.get("childAloneSufficientPct", 90.0))
+
+        # 握孔扣除後核心覆蓋 notApplicable 與最小門檻
         child_cov_na = bool(metrics_pos.get("childCoreCoverageNA", False) or metrics_neg.get("childCoreCoverageNA", False))
         parent_cov_na = bool(metrics_pos.get("parentCoreCoverageNA", False) or metrics_neg.get("parentCoreCoverageNA", False))
+
+        # AG-34 規則 2: gripJointCoverage == "notApplicable" -> 有握孔關節 (gripHoleSource != "none") 覆蓋條件一律 notApplicable
+        is_grip_joint = (metrics_pos.get("gripHoleSource", "none") != "none")
+        if grip_joint_cov_mode == "notApplicable" and is_grip_joint:
+            child_cov_na = True
+            parent_cov_na = True
+
+        # AG-34 規則 3: childAloneSufficientPct
+        # 若 child 側 (含 rotationOccluders) 在 ±deg 各自覆蓋核心 >= childAloneSufficientPct%，且裂縫達標時，
+        # parent 覆蓋不足不擋，標記 childAloneSufficient (pelvis_to_torso 用)
+        c_eff_pos = metrics_pos["childCoverageWithOccluders"]
+        c_eff_neg = metrics_neg["childCoverageWithOccluders"]
+        child_core_tot_pos = max(1, metrics_pos.get("childCoreTotalPixels", core_tot))
+        child_core_tot_neg = max(1, metrics_neg.get("childCoreTotalPixels", core_tot))
+        c_pct_pos = (c_eff_pos / child_core_tot_pos) * 100.0
+        c_pct_neg = (c_eff_neg / child_core_tot_neg) * 100.0
+        min_c_cov_pct = min(c_pct_pos, c_pct_neg)
+
+        crack_ok = (crack_pos <= calc_crack_threshold) and (crack_neg <= calc_crack_threshold)
+        child_alone_sufficient = (min_c_cov_pct >= child_alone_pct_req) and crack_ok
 
         c_min_req_pos = metrics_pos.get("childMinCoverageReq", min_cov_req)
         c_min_req_neg = metrics_neg.get("childMinCoverageReq", min_cov_req)
@@ -1408,15 +1505,21 @@ def run_layered_parts_inspection(
         p_min_req_neg = metrics_neg.get("parentMinCoverageReq", min_cov_req)
 
         proposed_fail_reasons: list[str] = []
+        parent_lacks_coverage = (p_cov_pos < p_min_req_pos or p_cov_neg < p_min_req_neg)
         if not parent_cov_na:
-            if p_cov_pos < p_min_req_pos:
-                proposed_fail_reasons.append(
-                    f"parentCoverageInCore(+deg)={p_cov_pos} < 15% ({p_min_req_pos}px)"
-                )
-            if p_cov_neg < p_min_req_neg:
-                proposed_fail_reasons.append(
-                    f"parentCoverageInCore(-deg)={p_cov_neg} < 15% ({p_min_req_neg}px)"
-                )
+            if parent_lacks_coverage:
+                if child_alone_sufficient:
+                    # 豁免 parent 不足，標記 childAloneSufficient
+                    pass
+                else:
+                    if p_cov_pos < p_min_req_pos:
+                        proposed_fail_reasons.append(
+                            f"parentCoverageInCore(+deg)={p_cov_pos} < 15% ({p_min_req_pos}px)"
+                        )
+                    if p_cov_neg < p_min_req_neg:
+                        proposed_fail_reasons.append(
+                            f"parentCoverageInCore(-deg)={p_cov_neg} < 15% ({p_min_req_neg}px)"
+                        )
 
         if not is_detached_child and not child_cov_na:
             if c_cov_pos_raw < c_min_req_pos:
@@ -1440,8 +1543,19 @@ def run_layered_parts_inspection(
         proposed_pass = len(proposed_fail_reasons) == 0
         proposed_tier = "PASS" if proposed_pass else "FAIL"
 
-        c_cov_cond_val = "WAIVED (detachedChild)" if is_detached_child else ("notApplicable" if child_cov_na else 0.15)
-        p_cov_cond_val = "notApplicable" if parent_cov_na else 0.15
+        if parent_cov_na:
+            p_cov_cond_val = "notApplicable"
+        elif child_alone_sufficient and parent_lacks_coverage:
+            p_cov_cond_val = "childAloneSufficient"
+        else:
+            p_cov_cond_val = 0.15
+
+        if is_detached_child:
+            c_cov_cond_val = "WAIVED (detachedChild)"
+        elif child_cov_na:
+            c_cov_cond_val = "notApplicable"
+        else:
+            c_cov_cond_val = 0.15
 
         leak_entry: dict[str, Any] = {
             "pass": leak_pass,
@@ -1453,6 +1567,8 @@ def run_layered_parts_inspection(
                 "conditions": {
                     "parentCoreCoverageMinRatio": p_cov_cond_val,
                     "childCoreCoverageWithoutOccludersMinRatio": c_cov_cond_val,
+                    "childCoreCoveragePct": round(min_c_cov_pct, 2),
+                    "childAloneSufficient": child_alone_sufficient,
                     "maxJointCrackPx": round(calc_crack_threshold, 2),
                     "crackGateSource": {
                         "H": spec_H,

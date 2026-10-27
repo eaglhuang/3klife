@@ -438,9 +438,14 @@ class TestCheckLayeredParts(unittest.TestCase):
         im.save(parts_dir / "torso.png")
 
         out_dir = self.tmp_dir / "out_torso_fail"
+        strict_spec = copy.deepcopy(self.spec)
+        strict_spec.setdefault("layeredSlots", {}).setdefault("scopeGate", {})["mode"] = "strict"
+        spec_file = self.tmp_dir / "strict_torso_spec.json"
+        spec_file.write_text(json.dumps(strict_spec, indent=2, ensure_ascii=False), encoding="utf-8")
+
         report, passed = run_layered_parts_inspection(
             parts_dir=parts_dir,
-            spec_path=DEFAULT_SPEC_PATH,
+            spec_path=spec_file,
             filter_slots=["torso"],
             out_dir=out_dir,
         )
@@ -483,6 +488,7 @@ class TestCheckLayeredParts(unittest.TestCase):
     def test_torso_shift_invariance(self) -> None:
         """測試 12 (AG-23): 關節整體平移後判定不變（無座標硬編碼）"""
         shifted_spec = copy.deepcopy(self.spec)
+        shifted_spec.setdefault("layeredSlots", {}).setdefault("scopeGate", {})["mode"] = "strict"
         ox, oy = 60.0, 40.0
         for j_name, j_data in shifted_spec.get("joints", {}).items():
             j_data["x"] = float(j_data["x"]) + ox
