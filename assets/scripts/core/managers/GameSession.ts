@@ -71,6 +71,11 @@ import {
     EMPTY_MORNING_REPORT, markMorningReportRead, morningReportLines, normalizeMorningReportState, refreshMorningReport,
     unreadMorningReportCount, type MorningReportState,
 } from '../systems/MorningReport';
+import {
+    DISPATCH_JOURNAL_PRIORITY, EMPTY_DISPATCH_STATE, normalizeDispatchState, settleDueDispatches, startDispatch,
+    type CompletedDispatchJob, type DispatchJobDef, type DispatchStartResult, type DispatchState,
+} from '../systems/DispatchJobs';
+import { dispatchCompleteLine, type DispatchStatKey } from '../systems/DispatchQuality';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
@@ -1237,6 +1242,7 @@ export class GameSession {
         this._playerLogs = [];
         this._dailyNews = { ...EMPTY_DAILY_NEWS, news: [] };
         this._morningReport = { ...EMPTY_MORNING_REPORT, items: [] };
+        this._dispatch = normalizeDispatchState(EMPTY_DISPATCH_STATE);
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
         // 上一局的進度不能帶進新局（PROG-2-0660）
@@ -1570,6 +1576,8 @@ export class GameSession {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
         // 三國日報：當天第一次登入依前 24h 行為紀錄生成（PROG-2-1170）
         this._dailyNews = refreshDailyNews(this._dailyNews, this._playerLogs, this._roster.getAll().map((g) => ({ name: g.name })), epochMs, this._random);
+        // 派遣：離線期間到期的任務先結算寫日誌，才會進這次晨報（PROG-2-1178）
+        this.settleDispatchJobs(epochMs);
         // 晨報：上次登入後新增的日誌挑高優先條目（PROG-2-1174）
         this._morningReport = refreshMorningReport(this._morningReport, this._journal.entries, this._officerState.currentTier);
     }
@@ -1577,6 +1585,50 @@ export class GameSession {
     private _playerLogs: PlayerLogEntry[] = [];
     private _dailyNews: DailyNewsState = { ...EMPTY_DAILY_NEWS, news: [] };
     private _morningReport: MorningReportState = { ...EMPTY_MORNING_REPORT, items: [] };
+    private _dispatch: DispatchState = normalizeDispatchState(EMPTY_DISPATCH_STATE);
+
+    /** 派遣狀態（複本）：進行中、已完成、冷卻 */
+    public get dispatchState(): DispatchState {
+        return normalizeDispatchState(this._dispatch);
+    }
+
+    /**
+     * 派遣武將執行任務（JRN-03）：以 §F-2 評分快照分數；auto 為 AI 代勞時擋下高風險任務。
+     * 角色標籤取 careerClass／role，日誌標籤取該武將日誌的類別（暫定）。名冊外的武將不可派遣。
+     */
+    public startDispatchJob(job: DispatchJobDef, generalId: string, nowMs: number, auto = false): DispatchStartResult | null {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general) return null;
+        const raw = general as unknown as Record<string, unknown>;
+        const stats: Partial<Record<DispatchStatKey, number>> = {};
+        for (const key of ['str', 'int', 'lea', 'pol', 'cha'] as DispatchStatKey[]) {
+            if (typeof raw[key] === 'number') stats[key] = raw[key] as number;
+        }
+        const roleTags = [raw.careerClass, raw.role].filter((t): t is string => typeof t === 'string' && t.length > 0);
+        const journalTags = Array.from(new Set(queryJournal(this._journal, { generalUid: generalId }).map((e) => e.category as string)));
+        const result = startDispatch(this._dispatch, job, generalId, { roleTags, stats, journalTags }, nowMs, auto);
+        if (result.ok) this._dispatch = result.state;
+        return result;
+    }
+
+    /** 結算到期的派遣，每筆寫 DISPATCH 日誌（§G 完成句）；回傳本次完成的任務。 */
+    public settleDispatchJobs(nowMs: number): CompletedDispatchJob[] {
+        const settled = settleDueDispatches(this._dispatch, nowMs);
+        this._dispatch = settled.state;
+        const roster = this._roster.getAll();
+        for (const job of settled.completed) {
+            const name = roster.find((g) => g.id === job.generalId)?.name ?? job.generalId;
+            this.recordJournal({
+                entryId: `DISPATCH_JOB-${this._journal.entries.length + 1}`,
+                timestamp: seasonJournalTimestamp(this._clock.state),
+                category: 'DISPATCH',
+                relatedGeneralUids: [job.generalId],
+                priority: DISPATCH_JOURNAL_PRIORITY[job.quality],
+                summary: dispatchCompleteLine(name, job.name, job.rewardText),
+            });
+        }
+        return settled.completed;
+    }
 
     /** 記一筆玩家行為（三國日報的素材，只留 24h 內）；其他系統的採集點也走這裡。時間預設為最近一次登入時間（未登入為 0）。 */
     public recordPlayerLog(type: PlayerLogType, resource?: string, atMs: number = this._dailyNews.lastLoginMs ?? 0): void {
@@ -3021,8 +3073,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3037,6 +3089,9 @@ export class GameSession {
         if (this._playerLogs.length > 0) fields.playerLogs = this.playerLogs;
         if (this._dailyNews.lastLoginMs !== null) fields.dailyNews = this.dailyNews;
         if (this._morningReport.journalMark > 0 || this._morningReport.items.length > 0) fields.morningReport = this.morningReport;
+        if (this._dispatch.active.length > 0 || this._dispatch.completed.length > 0 || Object.keys(this._dispatch.cooldowns).length > 0) {
+            fields.generalDispatch = this.dispatchState;
+        }
         return fields;
     }
 
@@ -3054,6 +3109,7 @@ export class GameSession {
         this._playerLogs = normalizePlayerLogs(snapshot.playerLogs);
         this._dailyNews = normalizeDailyNewsState(snapshot.dailyNews);
         this._morningReport = normalizeMorningReportState(snapshot.morningReport);
+        this._dispatch = normalizeDispatchState(snapshot.generalDispatch);
     }
 
     /**

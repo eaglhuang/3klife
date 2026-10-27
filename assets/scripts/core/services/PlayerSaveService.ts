@@ -61,6 +61,7 @@ import type { FarewellLetter } from '../systems/FarewellLetterInbox';
 import type { LoginStreakState } from '../systems/LoginStreak';
 import { normalizeDailyNewsState, normalizePlayerLogs, type DailyNewsState, type PlayerLogEntry } from '../systems/DailyNewsEngine';
 import { normalizeMorningReportState, type MorningReportState } from '../systems/MorningReport';
+import { normalizeDispatchState, type DispatchState } from '../systems/DispatchJobs';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
@@ -144,6 +145,8 @@ export interface PlayerSaveSnapshot {
     dailyNews?: DailyNewsState;
     /** 晨報：時間窗標記、當次摘要與已讀（PROG-2-1174）；舊檔沒有時從頭算；版號不升 */
     morningReport?: MorningReportState;
+    /** 派遣整備：進行中、已完成、冷卻（PROG-2-1178）；只在有資料時寫入；舊檔沒有時為空；版號不升 */
+    generalDispatch?: DispatchState;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -507,6 +510,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.playerLogs !== undefined ? { playerLogs: normalizePlayerLogs(snapshot.playerLogs) } : {}),
         ...(snapshot.dailyNews !== undefined ? { dailyNews: normalizeDailyNewsState(snapshot.dailyNews) } : {}),
         ...(snapshot.morningReport !== undefined ? { morningReport: normalizeMorningReportState(snapshot.morningReport) } : {}),
+        ...(snapshot.generalDispatch !== undefined ? { generalDispatch: normalizeDispatchState(snapshot.generalDispatch) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
