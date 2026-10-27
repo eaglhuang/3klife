@@ -28,14 +28,6 @@ from PIL import Image, ImageDraw
 HERE = Path(__file__).resolve().parent
 DEFAULT_SPEC_PATH = HERE / "specs" / "canonical_skeleton_v3.json"
 
-CANONICAL_21_SLOTS = [
-    "pelvis", "torso", "head", "cape", "hair_tail", "skirt",
-    "arm_upper_f", "arm_lower_f", "hand_f", "pauldron_f", "weapon",
-    "arm_upper_b", "arm_lower_b", "hand_b", "pauldron_b",
-    "thigh_f", "shin_f", "foot_f", "thigh_b", "shin_b", "foot_b",
-]
-
-
 def load_spec(path: Path | None = None) -> dict[str, Any]:
     p = path or DEFAULT_SPEC_PATH
     if not p.exists():
@@ -51,7 +43,10 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
     bones_list = spec.get("bones", [])
     bones_dict = {b["name"]: b for b in bones_list if isinstance(b, dict) and "name" in b}
     layered_cfg = spec.get("layeredSlots", {})
-    slot_names = set(layered_cfg.get("names", CANONICAL_21_SLOTS))
+    raw_names = layered_cfg.get("names")
+    if not raw_names or not isinstance(raw_names, list):
+        raise ValueError("規範 JSON 中缺少 'layeredSlots.names'，請先於 JSON 定義槽位列表")
+    slot_names = set(raw_names)
     joint_overrides = layered_cfg.get("jointOverrides", {})
     default_rot = float(layered_cfg.get("rotationTestDeg", 30))
 
@@ -125,14 +120,16 @@ def build_slot_scope_mask(
         ext_px = float(layered_cfg.get("scopeMarginPx", 12.0))
 
     # 肩甲特殊暫定規則 (依 AG-23: 以 shoulderOverlapZone 圓外擴 ext_px)
-    if slot_name in ("pauldron_f", "pauldron_b"):
-        soz = spec.get("shoulderOverlapZone", {})
+    soz = spec.get("shoulderOverlapZone", {})
+    pauldron_prefix = soz.get("parentSideExtensionWaivedWhen", "pauldron")
+    pauldron_slots = (f"{pauldron_prefix}_f", f"{pauldron_prefix}_b")
+    if slot_name in pauldron_slots:
         rad_h = float(soz.get("radiusH", 0.06))
         rad = rad_h * h_val + ext_px
         j_name = "shoulder_f" if slot_name.endswith("_f") else "shoulder_b"
         c = get_j(j_name)
         draw.ellipse([c[0] - rad, c[1] - rad, c[0] + rad, c[1] + rad], fill=255)
-        return np.array(im) > 128, "pauldron_provisional_overlap_zone"
+        return np.array(im) > 128, f"{pauldron_prefix}_provisional_overlap_zone"
 
     # 骨盆 (pelvis)
     if slot_name == "pelvis":
@@ -390,7 +387,9 @@ def run_layered_parts_inspection(
     exp_h = int(canvas_cfg.get("h", 2048))
 
     layered_cfg = spec.get("layeredSlots", {})
-    all_slot_names = layered_cfg.get("names", CANONICAL_21_SLOTS)
+    all_slot_names = layered_cfg.get("names")
+    if not all_slot_names or not isinstance(all_slot_names, list):
+        raise ValueError("規範 JSON 中缺少 'layeredSlots.names'，請先於 JSON 定義槽位列表")
     target_slots = [s for s in all_slot_names if s in filter_slots] if filter_slots else all_slot_names
 
     hidden_ext_h = float(layered_cfg.get("hiddenExtensionH", 0.03))

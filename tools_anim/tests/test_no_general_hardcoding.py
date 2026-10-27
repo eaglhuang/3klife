@@ -113,6 +113,59 @@ def check_slice_and_range_hardcoding() -> list[str]:
     return violations
 
 
+def check_no_canonical_slots_literal_list() -> list[str]:
+    """AG-25 小修: 檢查 check_layered_parts.py 與 build_spine_from_v3.py 中不得出現 21 槽名的字面清單"""
+    target_scripts = [
+        TOOLS_DIR / "check_layered_parts.py",
+        TOOLS_DIR / "build_spine_from_v3.py",
+    ]
+    violations: list[str] = []
+    known_slots = {
+        "pelvis", "torso", "head", "cape", "hair_tail", "skirt",
+        "arm_upper_f", "arm_lower_f", "hand_f", "pauldron_f", "weapon",
+        "arm_upper_b", "arm_lower_b", "hand_b", "pauldron_b",
+        "thigh_f", "shin_f", "foot_f", "thigh_b", "shin_b", "foot_b",
+    }
+
+    for script in target_scripts:
+        if not script.exists():
+            continue
+        text = script.read_text(encoding="utf-8")
+        try:
+            tree = ast.parse(text, filename=str(script))
+        except Exception as e:
+            violations.append(f"{script.name}: AST 解析失敗: {e}")
+            continue
+
+        class SlotListVisitor(ast.NodeVisitor):
+            def visit_List(self, node):
+                self._check_seq(node.elts, node.lineno, "List")
+                self.generic_visit(node)
+
+            def visit_Tuple(self, node):
+                self._check_seq(node.elts, node.lineno, "Tuple")
+                self.generic_visit(node)
+
+            def visit_Set(self, node):
+                self._check_seq(node.elts, node.lineno, "Set")
+                self.generic_visit(node)
+
+            def _check_seq(self, elts, lineno, kind):
+                str_constants = [
+                    elt.value for elt in elts
+                    if isinstance(elt, ast.Constant) and isinstance(elt.value, str)
+                ]
+                match_count = sum(1 for s in str_constants if s in known_slots)
+                if match_count >= 10:
+                    violations.append(
+                        f"{script.name}:{lineno}: 出現 {kind} 字面槽名清單 ({match_count} 個槽名)，應改由 JSON layeredSlots 讀取"
+                    )
+
+        SlotListVisitor().visit(tree)
+
+    return violations
+
+
 class TestNoHardcoding(unittest.TestCase):
     def test_no_general_names(self):
         v = check_general_hardcoding()
@@ -122,18 +175,23 @@ class TestNoHardcoding(unittest.TestCase):
         v = check_slice_and_range_hardcoding()
         self.assertEqual(len(v), 0, f"發現切片或 range >= 200 常數硬編碼違規 (AG-20):\n" + "\n".join(v))
 
+    def test_no_canonical_slots_literal_list(self):
+        v = check_no_canonical_slots_literal_list()
+        self.assertEqual(len(v), 0, f"發現槽名清單硬編碼違規 (AG-25):\n" + "\n".join(v))
+
 
 def main():
     v1 = check_general_hardcoding()
     v2 = check_slice_and_range_hardcoding()
-    all_v = v1 + v2
+    v3 = check_no_canonical_slots_literal_list()
+    all_v = v1 + v2 + v3
     if all_v:
         print(f"[FAIL] 發現 {len(all_v)} 處硬編碼違規：", file=sys.stderr)
         for v in all_v:
             print(f"  - {v}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"[PASS] 驗證通過：100% 無任何武將名稱或數值 >= 200 的像素切片/range 硬編碼！")
+    print(f"[PASS] 驗證通過：100% 無任何武將名稱、數值 >= 200 像素切片，亦無 21 槽名字面清單！")
 
 
 if __name__ == "__main__":

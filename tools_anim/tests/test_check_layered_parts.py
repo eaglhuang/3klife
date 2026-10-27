@@ -33,7 +33,6 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from tools_anim.check_layered_parts import (
-    CANONICAL_21_SLOTS,
     DEFAULT_SPEC_PATH,
     compute_contour_chamfer_p95,
     derive_joint_connections,
@@ -618,6 +617,21 @@ class TestCheckLayeredParts(unittest.TestCase):
         self.assertFalse(joint_rep["pass"], "無 pauldron 時延伸不足應判定 FAIL")
         self.assertEqual(report["slotReports"]["torso"]["checks"]["hidden_extension_at_torso_to_arm_upper_f"]["tier"], "FAIL")
         self.assertFalse(passed, "無 pauldron 豁免時整體應判定 FAIL")
+
+    def test_missing_names_raises_error(self) -> None:
+        """測試 15: 若 JSON 缺少 layeredSlots.names，必須明確拋出 ValueError"""
+        spec_no_names = copy.deepcopy(self.spec)
+        del spec_no_names["layeredSlots"]["names"]
+
+        spec_file = self.tmp_dir / "no_names_spec.json"
+        spec_file.write_text(json.dumps(spec_no_names, indent=2, ensure_ascii=False), encoding="utf-8")
+
+        with self.assertRaises(ValueError) as ctx:
+            run_layered_parts_inspection(
+                parts_dir=self.tmp_dir,
+                spec_path=spec_file,
+            )
+        self.assertIn("layeredSlots.names", str(ctx.exception))
 
 
 if __name__ == "__main__":
