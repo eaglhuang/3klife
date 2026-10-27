@@ -69,6 +69,10 @@ import {
 } from '../systems/DailyNewsEngine';
 import { shouldTriggerOfflineInteraction } from '../systems/OfflineInteractionTrigger';
 import {
+    applySpeedCards, claimReadyWishes, createWishPoolState, normalizeWishPoolState, speedCardsNeeded, startWish,
+    type ActiveWish, type WishPoolState, type WishStartReason,
+} from '../systems/WishPool';
+import {
     normalizeOfflineInteractionLog, offlineInteractionCandidates, offlineInteractionTags, pickOfflineInteraction,
     type OfflineInteractionCandidate,
 } from '../systems/OfflineInteractionEvents';
@@ -148,7 +152,7 @@ import { emptySoulFragmentLedger, injectFromLedger, normalizeSoulFragmentLedger,
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFlow';
 import { equipGear as equipGearFlow, unequipGear as unequipGearFlow, type GearEquipResult } from '../systems/GearEquipFlow';
 import { gearDefinitionOf } from '../systems/GearDefinitions';
@@ -1356,6 +1360,7 @@ export class GameSession {
         this._offlineBattleSnapshots = [];
         this._offlineInteractionLog = [];
         this._tournament = null;
+        this._wishPool = null;
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
         // 上一局的進度不能帶進新局（PROG-2-0660）
@@ -1585,6 +1590,45 @@ export class GameSession {
         if ('reason' in played) return { ok: false, reason: played.reason };
         this._tournament = played.state;
         return { ok: true, result: played.result };
+    }
+
+    /** 許願池（PROG-2-1198）；從未許願為 null */
+    private _wishPool: WishPoolState | null = null;
+
+    /** 許願池狀態（深拷貝） */
+    public get wishPool(): WishPoolState {
+        return JSON.parse(JSON.stringify(this._wishPool ?? createWishPoolState())) as WishPoolState;
+    }
+
+    /** 許願：本巡與同時進行上限內才成立；不自動存檔 */
+    public startWish(itemId: string, nowMs: number): { ok: boolean; reason?: WishStartReason; wish?: ActiveWish } {
+        const result = startWish(this._wishPool ?? createWishPoolState(), itemId, nowMs);
+        if ('reason' in result) return { ok: false, reason: result.reason };
+        this._wishPool = result.state;
+        return { ok: true, wish: { ...result.wish } };
+    }
+
+    /** 使用加速卡（背包扣卡，只扣實際需要的張數）；回傳用掉幾張；不自動存檔 */
+    public speedUpWish(wishId: string, cards: number, nowMs: number): number {
+        if (!this._wishPool) return 0;
+        const used = Math.min(speedCardsNeeded(this._wishPool, wishId, cards, nowMs), itemCount(this._inventory, ITEM_WISH_SPEED_CARD));
+        const inventory = used > 0 ? consumeItem(this._inventory, ITEM_WISH_SPEED_CARD, used) : null;
+        if (!inventory) return 0;
+        this._inventory = inventory;
+        this._wishPool = applySpeedCards(this._wishPool, wishId, used);
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        return used;
+    }
+
+    /** 領取所有已實現的許願並入背包；不自動存檔 */
+    public claimWishes(nowMs: number): ActiveWish[] {
+        if (!this._wishPool) return [];
+        const result = claimReadyWishes(this._wishPool, nowMs);
+        if (result.claimed.length === 0) return [];
+        this._wishPool = result.state;
+        for (const wish of result.claimed) this._inventory = addItem(this._inventory, wish.itemId, wish.amount);
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        return result.claimed.map((w) => ({ ...w }));
     }
 
     /** 離線戰鬥快照（複本，JRN-05） */
@@ -3456,8 +3500,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3477,6 +3521,7 @@ export class GameSession {
         }
         if (this._offlineBattleSnapshots.length > 0) fields.offlineBattleSnapshots = this.offlineBattleSnapshots;
         if (this._tournament) fields.tournament = JSON.parse(JSON.stringify(this._tournament)) as TournamentState;
+        if (this._wishPool) fields.wishPool = this.wishPool;
         if (this._offlineInteractionLog.length > 0) fields.offlineInteractionLog = this._offlineInteractionLog.slice();
         if (this._sandtableUnlockHistory.length > 0) fields.sandtableUnlockHistory = [...this._sandtableUnlockHistory];
         if (this._startingTalisman !== null) fields.startingTalisman = this.startingTalisman!;
@@ -3501,6 +3546,7 @@ export class GameSession {
         this._dispatch = normalizeDispatchState(snapshot.generalDispatch);
         this._offlineBattleSnapshots = normalizeOfflineBattleSnapshots(snapshot.offlineBattleSnapshots);
         this._tournament = normalizeTournamentState(snapshot.tournament);
+        this._wishPool = normalizeWishPoolState(snapshot.wishPool);
         this._offlineInteractionLog = normalizeOfflineInteractionLog(snapshot.offlineInteractionLog);
         this._sandtableUnlockHistory = normalizeUnlockHistory(snapshot.sandtableUnlockHistory);
         this._familySystemUnlockedFlag = snapshot.familySystemUnlocked === true;
