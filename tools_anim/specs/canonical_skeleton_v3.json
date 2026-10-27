@@ -623,16 +623,24 @@
     "canvas": "與本檔 canvas 相同（2048²），每槽一張全畫布透明 PNG，原位不裁切",
     "hiddenExtensionH": 0.03,
     "rotationTestDeg": 30,
+    "rotationCrack": {
+      "maxWidthPx": 12,
+      "note": "v3.11（2026-10-27）：旋轉露縫只認『片與片之間的窄裂縫』：在 check_radius 圓盤內，對旋轉後 parent ∪ child ∪ 遮蔽槽做 maxWidthPx 閉運算，閉運算補上、原本透明的像素；再扣掉 0° 時同樣算法已存在的天然凹口與握點拳孔。子件轉走後留下的空位是正常動作，不算縫。"
+    },
     "jointOverrides": {
       "weapon": {
         "rigid": true,
         "note": "與 hand_f 剛性連接，不做旋轉露縫，只檢握點"
       },
       "pauldron_f": {
-        "rotationTestDeg": 15
+        "rotationTestDeg": 15,
+        "detachedChild": true,
+        "detachedChildNote": "v3.11：此子件是掛件，切圖不必延伸到樞紐，免核心覆蓋率要求；仍檢旋轉裂縫。R292 實測樞紐距最近像素：hair_tail 83.6 px、pauldron_b 72.7 px。"
       },
       "pauldron_b": {
-        "rotationTestDeg": 15
+        "rotationTestDeg": 15,
+        "detachedChild": true,
+        "detachedChildNote": "v3.11：此子件是掛件，切圖不必延伸到樞紐，免核心覆蓋率要求；仍檢旋轉裂縫。R292 實測樞紐距最近像素：hair_tail 83.6 px、pauldron_b 72.7 px。"
       },
       "foot_f": {
         "parent": "shin_f",
@@ -640,6 +648,16 @@
       },
       "foot_b": {
         "parent": "shin_b"
+      },
+      "hair_tail": {
+        "detachedChild": true,
+        "detachedChildNote": "v3.11：此子件是掛件，切圖不必延伸到樞紐，免核心覆蓋率要求；仍檢旋轉裂縫。R292 實測樞紐距最近像素：hair_tail 83.6 px、pauldron_b 72.7 px。"
+      },
+      "torso": {
+        "parentSideOccluders": [
+          "skirt"
+        ],
+        "parentSideOccludersNote": "v3.11：腰部樞紐由 pelvis 側的 skirt 遮住（R286 方案 A：pelvis 藏在裙下）。parentSideOccluders 留在 0° 不跟 child 轉，算入 parent 側覆蓋與裂縫判斷。"
       },
       "arm_upper_f": {
         "rotationOccluders": [

@@ -97,6 +97,8 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
                 rot_deg = float(c_seg_def["neckExtension"].get("rotationTestDeg", rot_deg))
 
             rot_occluders = list(override.get("rotationOccluders", []))
+            parent_side_occluders = list(override.get("parentSideOccluders", []))
+            detached_child = bool(override.get("detachedChild", False))
 
             connections.append({
                 "id": f"{parent_name}_to_{child_name}",
@@ -109,6 +111,8 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
                 "rigid": is_rigid,
                 "rotationTestDeg": rot_deg,
                 "rotationOccluders": rot_occluders,
+                "parentSideOccluders": parent_side_occluders,
+                "detachedChild": detached_child,
             })
 
     return connections
@@ -354,22 +358,35 @@ def check_rotation_gap_leak(
     h: int,
     occluder_arrs: dict[str, np.ndarray] | None = None,
     grip_points: list[tuple[float, float]] | None = None,
+    parent_side_occluder_arrs: dict[str, np.ndarray] | None = None,
+    max_crack_width_px: int = 12,
 ) -> tuple[bool, np.ndarray, dict[str, Any]]:
     """檢驗子部件繞樞紐旋轉 angle_deg 後，關節周圍是否出現穿透露縫
-    依據工單 AG-28 與 AG-29 規範：
+    依據工單 AG-28、AG-29 與 AG-31 規範：
     1. 支援 rotationOccluders 遮蔽聯集 (跟隨 child 剛性旋轉)
-    2. AG-29 A: 新增「輪廓內透光縫 (seamInsideContourPx)」：以 0° 時 parent ∪ child ∪ occluders 之
-       填實外輪廓 (保留握點拳孔中空) 為基準，僅統計肢體輪廓範圍內於旋轉後未被任何部件覆蓋之透光像素。
-    3. AG-29 B: 覆蓋率不可借遮蔽槽，child 核心覆蓋率嚴格僅以 child_cov_raw 計算 (>=15%)。
-    4. 咬合重疊率門檻 20%、容許非重疊上限 (leakTolerancePx = 80%)，分開統計各項指標。
+    2. 支援 parentSideOccluders (0° 不隨 child 旋轉，算入 parent 覆蓋與 U)
+    3. AG-31 A: 新增「關節裂縫量法 (jointCrackPx)」：在 check_radius 圓盤內，對旋轉後 U
+       做 maxWidthPx 閉運算補上之透光像素，扣除 0° 天然凹口與握點拳孔。
+    4. 舊全半徑縫改名為 vacatedInclusiveSeamPx，另列 childVacatedPx (子件轉走留下之位移空位)。
+    5. AG-29 B: 覆蓋率不可借遮蔽槽，child 核心覆蓋率嚴格僅以 child_cov_raw 計算 (>=15%)。
+    6. 咬合重疊率門檻 20%、容許非重疊上限 (leakTolerancePx = 80%)，分開統計各項指標。
     """
-    # 0° 實體二值圖 (用於計算 0° 肢體外輪廓)
+    # 0° 實體二值圖 (用於計算 0° 肢體外輪廓與 0° 天然凹口)
     parent_alpha_0 = parent_arr[..., 3] > 16
     child_alpha_0 = child_arr[..., 3] > 16
-    union_0 = parent_alpha_0 | child_alpha_0
+
+    parent_side_union = np.zeros((h, w), dtype=bool)
+    if parent_side_occluder_arrs:
+        for ps_arr in parent_side_occluder_arrs.values():
+            parent_side_union |= (ps_arr[..., 3] > 16)
+
+    occ_union_0 = np.zeros((h, w), dtype=bool)
     if occluder_arrs:
         for occ_arr in occluder_arrs.values():
-            union_0 |= (occ_arr[..., 3] > 16)
+            occ_union_0 |= (occ_arr[..., 3] > 16)
+
+    union_0 = parent_alpha_0 | parent_side_union | child_alpha_0 | occ_union_0
+    U_0 = union_0
 
     # 計算 0° 填實外輪廓 (若有 grip 握點，保留拳心孔中空不可填實)
     contours, hierarchy = cv2.findContours(union_0.astype(np.uint8), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
@@ -393,7 +410,8 @@ def check_rotation_gap_leak(
     M = cv2.getRotationMatrix2D(pivot_pt, angle_deg, 1.0)
     rotated_child = cv2.warpAffine(child_arr, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
-    parent_alpha = parent_alpha_0
+    # parent 側不隨 child 旋轉 (包含 parentSideOccluders)
+    parent_alpha = parent_alpha_0 | parent_side_union
     child_alpha = rotated_child[..., 3] > 16
 
     # 旋轉各 rotationOccluders 槽位 (與 child 剛性連接，以同一樞紐同一角度旋轉)
@@ -422,7 +440,7 @@ def check_rotation_gap_leak(
     core_disk = np.array(circle_im) > 128
     disk_total = max(1, int(core_disk.sum()))
 
-    # AG-30 B: 建立半徑為 check_radius_px 的全半徑檢查圓盤
+    # AG-30 B / AG-31 A: 建立半徑為 check_radius_px 的全半徑檢查圓盤
     full_rad = float(check_radius_px)
     circle_full_im = Image.new("L", (w, h), 0)
     draw_full = ImageDraw.Draw(circle_full_im)
@@ -437,6 +455,10 @@ def check_rotation_gap_leak(
     )
     full_disk = np.array(circle_full_im) > 128
 
+    # 旋轉後聯集 U_theta
+    child_effective_alpha = child_alpha | occ_union
+    U_theta = parent_alpha | child_effective_alpha
+
     # --- (A) 未加遮蔽時之指標 ---
     child_cov_raw = int((child_alpha & core_disk).sum())
     parent_cov = int((parent_alpha & core_disk).sum())
@@ -448,7 +470,6 @@ def check_rotation_gap_leak(
     uncovered_raw_count = int(uncovered_raw.sum())
 
     # --- (B) 加了遮蔽後之指標 ---
-    child_effective_alpha = child_alpha | occ_union
     child_cov_eff = int((child_effective_alpha & core_disk).sum())
     overlap_eff = core_disk & parent_alpha & child_effective_alpha
     overlap_eff_count = int(overlap_eff.sum())
@@ -463,13 +484,39 @@ def check_rotation_gap_leak(
         occ_in_leak = int((leak_raw_non_overlap & occ_a).sum())
         occluded_by_slot[occ_name] = occ_in_leak
 
-    # AG-29 A: 輪廓內透光縫 (排除超出身體外框落入背景之無肉像素)
-    seam_inside_contour_mask = core_disk & body_contour_0 & (~(parent_alpha | child_effective_alpha))
+    # AG-29 A: 核心輪廓內透光縫
+    seam_inside_contour_mask = core_disk & body_contour_0 & (~U_theta)
     seam_inside_contour_px = int(seam_inside_contour_mask.sum())
 
-    # AG-30 B: 全半徑輪廓內透光縫 (以全半徑圓盤統計透光像素)
-    seam_inside_contour_full_radius_mask = full_disk & body_contour_0 & (~(parent_alpha | child_effective_alpha))
-    seam_inside_contour_full_radius_px = int(seam_inside_contour_full_radius_mask.sum())
+    # AG-31 A: 全半徑含位移空位縫 (vacatedInclusiveSeamPx，相容 seamInsideContourFullRadiusPx)
+    vacated_inclusive_seam_mask = full_disk & body_contour_0 & (~U_theta)
+    vacated_inclusive_seam_px = int(vacated_inclusive_seam_mask.sum())
+
+    # AG-31 A: 子件轉走留下之位移空位 (childVacatedPx)
+    child_vacated_mask = full_disk & child_alpha_0 & (~U_theta)
+    child_vacated_px = int(child_vacated_mask.sum())
+
+    # AG-31 A: 關節閉運算裂縫 (jointCrackPx)
+    k_size = max(1, int(max_crack_width_px))
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k_size, k_size))
+
+    closed_theta = cv2.morphologyEx(U_theta.astype(np.uint8), cv2.MORPH_CLOSE, kernel) > 0
+    crack_theta_raw = closed_theta & (~U_theta) & full_disk
+
+    closed_0 = cv2.morphologyEx(U_0.astype(np.uint8), cv2.MORPH_CLOSE, kernel) > 0
+    crack_0_raw = closed_0 & (~U_0) & full_disk
+
+    # 扣除 0° 天然凹口
+    crack_net = crack_theta_raw & (~crack_0_raw)
+
+    # 扣除握點拳孔
+    if grip_points:
+        y_grid, x_grid = np.ogrid[:h, :w]
+        for gx, gy in grip_points:
+            grip_mask = ((x_grid - gx) ** 2 + (y_grid - gy) ** 2) <= (15.0 ** 2)
+            crack_net &= (~grip_mask)
+
+    joint_crack_px = int(crack_net.sum())
 
     # --- (C) 判定邏輯 (不改門檻數值；AG-29 B: child 覆蓋率嚴格不借用遮蔽槽) ---
     min_overlap_required = int(disk_total * 0.2)
@@ -496,7 +543,11 @@ def check_rotation_gap_leak(
         "trueSeamLeakPixelsWithoutOccluders": uncovered_raw_count,
         "trueSeamLeakPixelsWithOccluders": uncovered_eff_count,
         "seamInsideContourPx": seam_inside_contour_px,
-        "seamInsideContourFullRadiusPx": seam_inside_contour_full_radius_px,
+        "seamInsideContourFullRadiusPx": vacated_inclusive_seam_px,
+        "vacatedInclusiveSeamPx": vacated_inclusive_seam_px,
+        "childVacatedPx": child_vacated_px,
+        "jointCrackPx": joint_crack_px,
+        "maxCrackWidthPx": k_size,
         "occludedBySlotPx": occluded_by_slot,
         "passed": passed,
     }
@@ -1181,6 +1232,7 @@ def run_layered_parts_inspection(
         piv_pt = j_conn["pivot"]
         check_rad = float(j_conn.get("cap_rad", 40.0))
         tested_deg = float(j_conn.get("rotationTestDeg", rot_test_deg))
+        is_detached_child = bool(j_conn.get("detachedChild", False))
 
         p_arr = loaded_parts[p_sid]
         c_arr = loaded_parts[c_sid]
@@ -1191,25 +1243,42 @@ def run_layered_parts_inspection(
             if occ_sid in loaded_parts and not slot_reports.get(occ_sid, {}).get("empty", False):
                 occluder_arrs[occ_sid] = loaded_parts[occ_sid]
 
+        # AG-31 C: parentSideOccluders (0° 不轉，算入 parent 覆蓋與 U)
+        parent_side_occluder_names = j_conn.get("parentSideOccluders", [])
+        parent_side_occluder_arrs: dict[str, np.ndarray] = {}
+        for ps_sid in parent_side_occluder_names:
+            if ps_sid in loaded_parts and not slot_reports.get(ps_sid, {}).get("empty", False):
+                parent_side_occluder_arrs[ps_sid] = loaded_parts[ps_sid]
+
+        rot_crack_cfg = spec.get("layeredSlots", {}).get("rotationCrack", {})
+        max_crack_w = int(rot_crack_cfg.get("maxWidthPx", 12))
+
         leak_pos_ok, leak_pos_m, metrics_pos = check_rotation_gap_leak(
-            p_arr, c_arr, piv_pt, tested_deg, check_rad, exp_w, exp_h, occluder_arrs, grip_pts
+            p_arr, c_arr, piv_pt, tested_deg, check_rad, exp_w, exp_h,
+            occluder_arrs, grip_pts, parent_side_occluder_arrs, max_crack_w
         )
         leak_neg_ok, leak_neg_m, metrics_neg = check_rotation_gap_leak(
-            p_arr, c_arr, piv_pt, -tested_deg, check_rad, exp_w, exp_h, occluder_arrs, grip_pts
+            p_arr, c_arr, piv_pt, -tested_deg, check_rad, exp_w, exp_h,
+            occluder_arrs, grip_pts, parent_side_occluder_arrs, max_crack_w
         )
 
         leak_pass = leak_pos_ok and leak_neg_ok
 
-        # AG-30 C: 擬議閘門 (只並列、不取代現行 tier)
-        # 條件：parent 與 child (不含遮蔽槽) 核心覆蓋率各 >= 15%，且全半徑輪廓內縫正負角度各 <= 8 px
+        # AG-31 D: 擬議閘門 (只並列、不取代現行 tier)
+        # 條件：parent 核心覆蓋率 >= 15%；child (不含遮蔽槽) 核心覆蓋率 >= 15% (detachedChild 免除)；
+        # 且關節裂縫 jointCrackPx 正負角度各 <= 8 px
         core_tot = metrics_pos["coreTotalPixels"]
         min_cov_req = int(core_tot * 0.15)
         p_cov_pos = metrics_pos["parentCoverageInCore"]
         p_cov_neg = metrics_neg["parentCoverageInCore"]
         c_cov_pos_raw = metrics_pos["childCoverageWithoutOccluders"]
         c_cov_neg_raw = metrics_neg["childCoverageWithoutOccluders"]
-        full_seam_pos = metrics_pos["seamInsideContourFullRadiusPx"]
-        full_seam_neg = metrics_neg["seamInsideContourFullRadiusPx"]
+        crack_pos = metrics_pos["jointCrackPx"]
+        crack_neg = metrics_neg["jointCrackPx"]
+        full_seam_pos = metrics_pos["vacatedInclusiveSeamPx"]
+        full_seam_neg = metrics_neg["vacatedInclusiveSeamPx"]
+        child_vac_pos = metrics_pos["childVacatedPx"]
+        child_vac_neg = metrics_neg["childVacatedPx"]
 
         proposed_fail_reasons: list[str] = []
         if p_cov_pos < min_cov_req:
@@ -1220,21 +1289,22 @@ def run_layered_parts_inspection(
             proposed_fail_reasons.append(
                 f"parentCoverageInCore(-deg)={p_cov_neg} < 15% ({min_cov_req}px)"
             )
-        if c_cov_pos_raw < min_cov_req:
+        if not is_detached_child:
+            if c_cov_pos_raw < min_cov_req:
+                proposed_fail_reasons.append(
+                    f"childCoverageWithoutOccluders(+deg)={c_cov_pos_raw} < 15% ({min_cov_req}px)"
+                )
+            if c_cov_neg_raw < min_cov_req:
+                proposed_fail_reasons.append(
+                    f"childCoverageWithoutOccluders(-deg)={c_cov_neg_raw} < 15% ({min_cov_req}px)"
+                )
+        if crack_pos > 8:
             proposed_fail_reasons.append(
-                f"childCoverageWithoutOccluders(+deg)={c_cov_pos_raw} < 15% ({min_cov_req}px)"
+                f"jointCrackPx(+deg)={crack_pos} > 8px"
             )
-        if c_cov_neg_raw < min_cov_req:
+        if crack_neg > 8:
             proposed_fail_reasons.append(
-                f"childCoverageWithoutOccluders(-deg)={c_cov_neg_raw} < 15% ({min_cov_req}px)"
-            )
-        if full_seam_pos > 8:
-            proposed_fail_reasons.append(
-                f"seamInsideContourFullRadiusPx(+deg)={full_seam_pos} > 8px"
-            )
-        if full_seam_neg > 8:
-            proposed_fail_reasons.append(
-                f"seamInsideContourFullRadiusPx(-deg)={full_seam_neg} > 8px"
+                f"jointCrackPx(-deg)={crack_neg} > 8px"
             )
 
         proposed_pass = len(proposed_fail_reasons) == 0
@@ -1249,14 +1319,16 @@ def run_layered_parts_inspection(
                 "proposedTier": proposed_tier,
                 "conditions": {
                     "parentCoreCoverageMinRatio": 0.15,
-                    "childCoreCoverageWithoutOccludersMinRatio": 0.15,
-                    "maxFullRadiusSeamPx": 8,
+                    "childCoreCoverageWithoutOccludersMinRatio": 0.15 if not is_detached_child else "WAIVED (detachedChild)",
+                    "maxJointCrackPx": 8,
                 },
                 "reasons": proposed_fail_reasons,
             },
             "skipped": False,
             "testedAngles": [tested_deg, -tested_deg],
+            "detachedChild": is_detached_child,
             "rotationOccluders": rot_occluder_names,
+            "parentSideOccluders": parent_side_occluder_names,
             "coreTotalPixels": metrics_pos["coreTotalPixels"],
             "minRequiredOverlapPixels": metrics_pos["minRequiredOverlapPixels"],
             "leakTolerancePx": metrics_pos["leakTolerancePx"],
@@ -1266,6 +1338,12 @@ def run_layered_parts_inspection(
             "seamInsideContourNegativePx": metrics_neg["seamInsideContourPx"],
             "seamInsideContourFullRadiusPositivePx": full_seam_pos,
             "seamInsideContourFullRadiusNegativePx": full_seam_neg,
+            "vacatedInclusiveSeamPositivePx": full_seam_pos,
+            "vacatedInclusiveSeamNegativePx": full_seam_neg,
+            "childVacatedPositivePx": child_vac_pos,
+            "childVacatedNegativePx": child_vac_neg,
+            "jointCrackPositivePx": crack_pos,
+            "jointCrackNegativePx": crack_neg,
             "positiveAngleMetrics": {
                 "angleDeg": tested_deg,
                 "parentCoveragePx": p_cov_pos,
@@ -1276,6 +1354,9 @@ def run_layered_parts_inspection(
                 "trueSeamLeakPx": metrics_pos["trueSeamLeakPixelsWithOccluders"],
                 "seamInsideContourPx": metrics_pos["seamInsideContourPx"],
                 "seamInsideContourFullRadiusPx": full_seam_pos,
+                "vacatedInclusiveSeamPx": full_seam_pos,
+                "childVacatedPx": child_vac_pos,
+                "jointCrackPx": crack_pos,
                 "overlapPixels": metrics_pos["overlapPixelsWithOccluders"],
                 "minRequiredOverlapPx": metrics_pos["minRequiredOverlapPixels"],
                 "leakTolerancePx": metrics_pos["leakTolerancePx"],
@@ -1292,6 +1373,9 @@ def run_layered_parts_inspection(
                 "trueSeamLeakPx": metrics_neg["trueSeamLeakPixelsWithOccluders"],
                 "seamInsideContourPx": metrics_neg["seamInsideContourPx"],
                 "seamInsideContourFullRadiusPx": full_seam_neg,
+                "vacatedInclusiveSeamPx": full_seam_neg,
+                "childVacatedPx": child_vac_neg,
+                "jointCrackPx": crack_neg,
                 "overlapPixels": metrics_neg["overlapPixelsWithOccluders"],
                 "minRequiredOverlapPx": metrics_neg["minRequiredOverlapPixels"],
                 "leakTolerancePx": metrics_neg["leakTolerancePx"],
