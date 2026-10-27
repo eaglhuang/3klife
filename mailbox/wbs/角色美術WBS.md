@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 09:35 AG-25 完成：check_layered_parts.py 實作肩部父側延伸豁免（parentSideExtensionWaivedWhen），同側 pauldron 覆蓋時改標 WAIVED 不判 FAIL；同步 v3.6 規格與武器間距只管動畫規則；新增 2 項專屬單元測試，全套 57 項單元測試 100% 通過（9f89abdfb）。
 - 2026-10-27 09:50 Claude：R272 回覆任務卡缺口：14 槽補件仍在 scratch／隔離專案，沿用 mailbox general 工單不開 ATM 卡；升正式資產時才開卡上鎖，交使用者決定。
 - 2026-10-27 09:45 Claude：R271 v3 七槽半身經 AG-24 上 Cocos 組裝通過（首次走通，僅組裝）；Spine 4.2 再記一次未重啟觀察；指派趙雲補齊 14 槽（head→pelvis/skirt→後手鏈→雙腿→cape/hair_tail 可空）；atlas 正式版 ≤1024²。
 - 2026-10-27 09:25 Claude：R270 趙雲長槍（單尖朝右紅纓）通過，紅纓綁點需右移 80px（不擋）；v3.6 裁定雙手間距只管動畫、肩部 torso 側延伸在有肩甲時豁免；AG-24 小修通過，AG-25 派豁免實作；下一步七槽半身用 AG-24 上 Cocos。
