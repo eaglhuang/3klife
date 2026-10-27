@@ -41,7 +41,7 @@ function unveiled(id: string, extra: Partial<UnveilingGeneral> = {}): UnveilingG
 }
 
 /** 一張帶支援卡資料的教官卡；事件由呼叫端決定 */
-function supportWith(events: Record<string, unknown>[]): SupportCardDef {
+function supportWith(events: Record<string, unknown>[], burstRate = 0.55): SupportCardDef {
     const result = parseSupportCard({
         Support_ID: 'SUP_TEST_SSR_01',
         Name: '測試教官',
@@ -53,7 +53,7 @@ function supportWith(events: Record<string, unknown>[]): SupportCardDef {
         Friendship_Bonus: [1.0, 1.1, 1.2, 1.3, 1.4, 1.5],
         Training_Effect: [1.0, 1.05, 1.1, 1.15, 1.2, 1.3],
         Training_Slot_Affinity: ['STR'],
-        Slot_Burst_Rate: 0.55,
+        Slot_Burst_Rate: burstRate,
         Synergy_Partners: [],
         Source: 'Gacha',
         Role_Boundary: 'TeachingOnly',
@@ -72,10 +72,10 @@ function cardWith(support: SupportCardDef | undefined, uid = 'mentor-guan'): Men
     } as MentorCard;
 }
 
-function startWith(mentorCards: MentorCard[], childExtra: Partial<UnveilingGeneral> = {}): { nurture: NurtureService; childId: string } {
+function startWith(mentorCards: MentorCard[], childExtra: Partial<UnveilingGeneral> = {}, random: () => number = seeded(11)): { nurture: NurtureService; childId: string } {
     const roster = new InMemoryRosterStore([unveiled('alpha', childExtra)]);
     const nurture = new NurtureService(roster, {
-        random: seeded(11),
+        random,
         currentSeason: () => 3,
         currentMode: () => GameTimeMode.Nurture,
         requireNurtureMode: true,
@@ -119,6 +119,23 @@ export function createMentorInspireWireSuite(): TestSuite {
         assert.equals('EVT_A', result.inspirations![0].eventId);
         assert.equals('TAC_A', result.inspirations![0].tacticId);
         assert.equals('mentor-guan:EVT_A', nurture.getSession(childId)!.inspiredKeys![0]);
+    });
+
+    suite.test('爆發（教官站在擅長格）靈感率相對 +5%：同一擲骰值只有爆發時觸發（§F-8）', () => {
+        // 亂數固定 0.235；子嗣 LUK 30 → ×1.15。普通 0.2×1.15=0.23 不觸發，爆發 0.2×1.05×1.15=0.2415 觸發
+        const events = [{ Event_ID: 'EVT_A', Tactic_ID: 'TAC_A', Trigger_Window: [1, 36], Base_Rate: 0.2, Min_Star: 0 }];
+        const burst = startWith([cardWith(supportWith(events, 1))], {}, () => 0.235);
+        assert.equals(1, burst.nurture.train(burst.childId, 'str').inspirations?.length ?? 0, '擅長格爆發應觸發');
+        const plain = startWith([cardWith(supportWith(events, 0))], {}, () => 0.235);
+        assert.isTrue(plain.nurture.train(plain.childId, 'str').inspirations === undefined, '不在擅長格不觸發');
+    });
+
+    suite.test('mentorFromCard：支援卡帶入擅長格（Training_Slot_Affinity 第一格）與爆發率（Slot_Burst_Rate）', () => {
+        const def = supportWith([{ Event_ID: 'EVT_A', Tactic_ID: 'TAC_A', Trigger_Window: [1, 36], Base_Rate: 0.3, Min_Star: 0 }], 0.7);
+        const mentor = mentorFromCard(cardWith(def));
+        assert.equals('str', mentor.specialty);
+        assert.equals(0.7, mentor.burstRate);
+        assert.equals(0.4, mentorFromCard(cardWith(def), { burstRate: 0.4 }).burstRate, '呼叫端覆寫仍優先');
     });
 
     suite.test('同一事件同場只觸發一次：第二回合不再回報', () => {
