@@ -10,6 +10,8 @@
 
 export const FAREWELL_MIN_AFFECTION = 20;
 export const FAREWELL_MOVING_AFFECTION = 40;
+/** 收件匣上限（QA 2026-10-27 暫定）：只保留最新的信件。 */
+export const FAREWELL_INBOX_LIMIT = 50;
 
 export type FarewellTier = 'normal' | 'moving';
 
@@ -46,10 +48,11 @@ export function createFarewellLetter(input: { uid: string; generalName: string; 
     };
 }
 
-/** 加入收件匣；ID 已存在時不重複加入。不改輸入。 */
+/** 加入收件匣；ID 已存在時不重複加入，超過上限時丟棄最舊的信。不改輸入。 */
 export function appendFarewellLetter(inbox: readonly FarewellLetter[], letter: FarewellLetter): FarewellLetter[] {
     if (inbox.some(item => item.id === letter.id)) return inbox.map(item => ({ ...item }));
-    return [...inbox.map(item => ({ ...item })), { ...letter }];
+    const next = [...inbox.map(item => ({ ...item })), { ...letter }];
+    return next.length > FAREWELL_INBOX_LIMIT ? next.slice(next.length - FAREWELL_INBOX_LIMIT) : next;
 }
 
 /** 標記已讀；找不到 ID 時回傳副本，不變動。 */

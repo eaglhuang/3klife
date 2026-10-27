@@ -5,6 +5,7 @@ import { assert, TestSuite } from './TestRunner';
 import {
     appendFarewellLetter,
     createFarewellLetter,
+    FAREWELL_INBOX_LIMIT,
     farewellTierOf,
     markFarewellLetterRead,
     unreadFarewellCount,
@@ -48,6 +49,17 @@ export function createFarewellLetterInboxSuite(): TestSuite {
         assert.isFalse(next[1].read);
         assert.equals(1, unreadFarewellCount(next));
         assert.isFalse(inbox[0].read);
+    });
+
+    suite.test('收件匣上限 50 封：超過時丟棄最舊的信', () => {
+        let inbox: ReturnType<typeof appendFarewellLetter> = [];
+        for (let day = 1; day <= FAREWELL_INBOX_LIMIT + 2; day++) {
+            const letter = createFarewellLetter({ uid: 'M1', generalName: '關羽', affection: 30, day })!;
+            inbox = appendFarewellLetter(inbox, letter);
+        }
+        assert.equals(FAREWELL_INBOX_LIMIT, inbox.length);
+        assert.equals(3, inbox[0].day);
+        assert.equals(FAREWELL_INBOX_LIMIT + 2, inbox[inbox.length - 1].day);
     });
 
     suite.test('找不到的 ID 標記已讀時不變動', () => {
