@@ -4,6 +4,7 @@ import { services } from "../../core/managers/ServiceLoader";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit, type TroopStats } from "../../core/models/TroopUnit";
 import { BattleState } from "../models/BattleState";
+import { decideDuelAccept, DUEL_ACCEPT_THRESHOLD } from "../../core/systems/AiDuelDecision";
 import { type BattleResult, BATTLE_FRONT_DEPTH } from "../BattleTypes";
 
 /**
@@ -235,7 +236,14 @@ export class BattleGeneralDuelFlow {
     const powerAdvantage = defenderPower / Math.max(0.0001, challengerPower + defenderPower);
 
     const score = 0.45 * hpAdvantage + 0.35 * unitCountAdvantage + 0.2 * powerAdvantage;
-    const accepted = score >= 0.58;
+    // 防守方是敵方 AI：走 E-7 接受判定（依難度閾值，含抖動）；玩家防守方沿用一般門檻
+    const accepted = defenderFaction === Faction.Enemy
+      ? decideDuelAccept(
+        { hpRatio: hpAdvantage, squadRatio: unitCountAdvantage, powerRatio: powerAdvantage },
+        services().session.randomSource(),
+        this.context.state.aiDifficulty,
+      )
+      : score >= DUEL_ACCEPT_THRESHOLD;
 
     return {
       accepted,
