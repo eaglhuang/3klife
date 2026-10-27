@@ -469,6 +469,65 @@ def check_rotation_gap_leak(
     core_disk = np.array(circle_im) > 128
     disk_total = max(1, int(core_disk.sum()))
 
+    # AG-33: 握孔判定 (包含封閉孔 enclosedHole 與退回 radiusFallback)
+    # 規則 1: 握孔 = 手部 alpha 經填孔後新增、且包含子骨點的那一塊封閉區。找不到封閉孔時，退回現行 15 px 圓盤。
+    # 只有當 pivot 附近有 grip 握點 (如 <= 30 px) 時才視為手部握孔判定；一般肢段 (膝、肘) 不受影響。
+    has_grip = False
+    if grip_points:
+        has_grip = any(np.hypot(pivot_pt[0] - gx, pivot_pt[1] - gy) <= 30.0 for gx, gy in grip_points)
+
+    grip_hole_mask_0 = np.zeros((h, w), dtype=bool)
+    grip_hole_source: str = "none"
+    grip_hole_area: int = 0
+
+    if has_grip:
+        # 在 child_alpha_0 (手部) 上尋找包含子骨點 pivot_pt 的封閉孔
+        child_u8 = (child_alpha_0.astype(np.uint8) * 255).copy()
+        mask_flood = np.zeros((h + 2, w + 2), dtype=np.uint8)
+        for seed in [(0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1)]:
+            if child_u8[seed[1], seed[0]] == 0:
+                cv2.floodFill(child_u8, mask_flood, seed, 255)
+        holes_0 = (child_u8 == 0)
+        num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(holes_0.astype(np.uint8))
+
+        piv_ix, piv_iy = int(round(pivot_pt[0])), int(round(pivot_pt[1]))
+        found_hole_label = None
+        for lbl in range(1, num_labels):
+            if 0 <= piv_iy < h and 0 <= piv_ix < w:
+                sub = labels[max(0, piv_iy - 2):min(h, piv_iy + 3), max(0, piv_ix - 2):min(w, piv_ix + 3)]
+                if np.any(sub == lbl):
+                    found_hole_label = lbl
+                    break
+
+        if found_hole_label is not None:
+            grip_hole_mask_0 = (labels == found_hole_label)
+            grip_hole_source = "enclosedHole"
+            grip_hole_area = int(stats[found_hole_label, cv2.CC_STAT_AREA])
+        else:
+            # 開口拳或無封閉孔，退回 15px 圓盤
+            y_grid, x_grid = np.ogrid[:h, :w]
+            grip_hole_mask_0 = ((x_grid - pivot_pt[0]) ** 2 + (y_grid - pivot_pt[1]) ** 2) <= (15.0 ** 2)
+            grip_hole_source = "radiusFallback"
+            grip_hole_area = int(grip_hole_mask_0.sum())
+
+    # 旋轉後的握孔 (繞 pivot_pt 旋轉 angle_deg)
+    grip_hole_mask_rot = np.zeros((h, w), dtype=bool)
+    if has_grip and grip_hole_mask_0.any():
+        grip_hole_mask_rot = cv2.warpAffine(
+            grip_hole_mask_0.astype(np.uint8), M, (w, h), flags=cv2.INTER_NEAREST, borderMode=cv2.BORDER_CONSTANT
+        ) > 0
+
+    # AG-33: 核心扣除握孔分母計算
+    child_core_disk = core_disk & (~grip_hole_mask_rot) if has_grip else core_disk
+    child_core_total = int(child_core_disk.sum())
+    child_cov_na = (child_core_total < 30) if has_grip else False
+    child_min_cov_req = 0 if child_cov_na else int(child_core_total * 0.15)
+
+    parent_core_disk = core_disk & (~grip_hole_mask_0) if has_grip else core_disk
+    parent_core_total = int(parent_core_disk.sum())
+    parent_cov_na = (parent_core_total < 30) if has_grip else False
+    parent_min_cov_req = 0 if parent_cov_na else int(parent_core_total * 0.15)
+
     # AG-30 B / AG-31 A: 建立半徑為 check_radius_px 的全半徑檢查圓盤
     full_rad = float(check_radius_px)
     circle_full_im = Image.new("L", (w, h), 0)
@@ -538,8 +597,11 @@ def check_rotation_gap_leak(
     # 扣除 0° 天然凹口
     crack_net = crack_theta_raw & (~crack_0_raw)
 
-    # 扣除握點拳孔
-    if grip_points:
+    # 扣除握點拳孔 (AG-33: 優先扣除封閉孔，找不到時退回 15px 圓盤)
+    if has_grip:
+        crack_net &= (~grip_hole_mask_rot)
+        crack_net &= (~grip_hole_mask_0)
+    elif grip_points:
         y_grid, x_grid = np.ogrid[:h, :w]
         for gx, gy in grip_points:
             grip_mask = ((x_grid - gx) ** 2 + (y_grid - gy) ** 2) <= (15.0 ** 2)
@@ -559,6 +621,14 @@ def check_rotation_gap_leak(
         "coreRadiusPx": round(core_rad, 2),
         "fullRadiusPx": round(full_rad, 2),
         "coreTotalPixels": disk_total,
+        "gripHoleSource": grip_hole_source if has_grip else "none",
+        "gripHoleAreaPx": grip_hole_area if has_grip else 0,
+        "childCoreTotalPixels": child_core_total,
+        "parentCoreTotalPixels": parent_core_total,
+        "childCoreCoverageNA": child_cov_na,
+        "parentCoreCoverageNA": parent_cov_na,
+        "childMinCoverageReq": child_min_cov_req,
+        "parentMinCoverageReq": parent_min_cov_req,
         "minRequiredOverlapPixels": min_overlap_required,
         "minRequiredOverlapRatio": 0.2,
         "leakTolerancePx": leak_tolerance_px,
@@ -1328,24 +1398,36 @@ def run_layered_parts_inspection(
         child_vac_pos = metrics_pos["childVacatedPx"]
         child_vac_neg = metrics_neg["childVacatedPx"]
 
+        # AG-33: 握孔扣除後核心覆蓋 notApplicable 與最小門檻
+        child_cov_na = bool(metrics_pos.get("childCoreCoverageNA", False) or metrics_neg.get("childCoreCoverageNA", False))
+        parent_cov_na = bool(metrics_pos.get("parentCoreCoverageNA", False) or metrics_neg.get("parentCoreCoverageNA", False))
+
+        c_min_req_pos = metrics_pos.get("childMinCoverageReq", min_cov_req)
+        c_min_req_neg = metrics_neg.get("childMinCoverageReq", min_cov_req)
+        p_min_req_pos = metrics_pos.get("parentMinCoverageReq", min_cov_req)
+        p_min_req_neg = metrics_neg.get("parentMinCoverageReq", min_cov_req)
+
         proposed_fail_reasons: list[str] = []
-        if p_cov_pos < min_cov_req:
-            proposed_fail_reasons.append(
-                f"parentCoverageInCore(+deg)={p_cov_pos} < 15% ({min_cov_req}px)"
-            )
-        if p_cov_neg < min_cov_req:
-            proposed_fail_reasons.append(
-                f"parentCoverageInCore(-deg)={p_cov_neg} < 15% ({min_cov_req}px)"
-            )
-        if not is_detached_child:
-            if c_cov_pos_raw < min_cov_req:
+        if not parent_cov_na:
+            if p_cov_pos < p_min_req_pos:
                 proposed_fail_reasons.append(
-                    f"childCoverageWithoutOccluders(+deg)={c_cov_pos_raw} < 15% ({min_cov_req}px)"
+                    f"parentCoverageInCore(+deg)={p_cov_pos} < 15% ({p_min_req_pos}px)"
                 )
-            if c_cov_neg_raw < min_cov_req:
+            if p_cov_neg < p_min_req_neg:
                 proposed_fail_reasons.append(
-                    f"childCoverageWithoutOccluders(-deg)={c_cov_neg_raw} < 15% ({min_cov_req}px)"
+                    f"parentCoverageInCore(-deg)={p_cov_neg} < 15% ({p_min_req_neg}px)"
                 )
+
+        if not is_detached_child and not child_cov_na:
+            if c_cov_pos_raw < c_min_req_pos:
+                proposed_fail_reasons.append(
+                    f"childCoverageWithoutOccluders(+deg)={c_cov_pos_raw} < 15% ({c_min_req_pos}px)"
+                )
+            if c_cov_neg_raw < c_min_req_neg:
+                proposed_fail_reasons.append(
+                    f"childCoverageWithoutOccluders(-deg)={c_cov_neg_raw} < 15% ({c_min_req_neg}px)"
+                )
+
         if crack_pos > calc_crack_threshold:
             proposed_fail_reasons.append(
                 f"jointCrackPx(+deg)={crack_pos} > {calc_crack_threshold:.2f}px"
@@ -1358,6 +1440,9 @@ def run_layered_parts_inspection(
         proposed_pass = len(proposed_fail_reasons) == 0
         proposed_tier = "PASS" if proposed_pass else "FAIL"
 
+        c_cov_cond_val = "WAIVED (detachedChild)" if is_detached_child else ("notApplicable" if child_cov_na else 0.15)
+        p_cov_cond_val = "notApplicable" if parent_cov_na else 0.15
+
         leak_entry: dict[str, Any] = {
             "pass": leak_pass,
             "tier": "PASS" if leak_pass else "FAIL",
@@ -1366,8 +1451,8 @@ def run_layered_parts_inspection(
                 "pass": proposed_pass,
                 "proposedTier": proposed_tier,
                 "conditions": {
-                    "parentCoreCoverageMinRatio": 0.15,
-                    "childCoreCoverageWithoutOccludersMinRatio": 0.15 if not is_detached_child else "WAIVED (detachedChild)",
+                    "parentCoreCoverageMinRatio": p_cov_cond_val,
+                    "childCoreCoverageWithoutOccludersMinRatio": c_cov_cond_val,
                     "maxJointCrackPx": round(calc_crack_threshold, 2),
                     "crackGateSource": {
                         "H": spec_H,
@@ -1381,6 +1466,8 @@ def run_layered_parts_inspection(
                 "reasons": proposed_fail_reasons,
             },
             "maxJointCrackThresholdPx": round(calc_crack_threshold, 2),
+            "gripHoleSource": metrics_pos.get("gripHoleSource", "none"),
+            "gripHoleAreaPx": metrics_pos.get("gripHoleAreaPx", 0),
             "skipped": False,
             "pivot": list(piv_pt),
             "pivotSource": j_conn.get("pivotSource", "bonePivot"),
