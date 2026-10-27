@@ -131,6 +131,10 @@ import { buildGachaPoolGuideLines } from '../core/GachaPoolGuidePresenter';
 import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
+import { dailyNewsToastLines } from '../../core/systems/DailyNewsEngine';
+
+/** 三國日報每則 toast 顯示秒數（暫定） */
+const DAILY_NEWS_TOAST_SECONDS = 3;
 
 const { ccclass } = _decorator;
 
@@ -510,6 +514,9 @@ export class LobbyScene extends Component {
         try {
             const loaded = await services().session.load();
             UCUFLogger.info(LogCategory.DATA, loaded ? '[LobbyScene] 已讀取玩家存檔' : '[LobbyScene] 沒有玩家存檔，從新局開始');
+            // 登入（連續登入 PROG-2-0987、三國日報 PROG-2-1170）：讀檔後記一次，當天第一次登入會生成日報
+            services().session.recordLoginAt(Date.now());
+            this._showDailyNews();
             // 離線互動（JRN-04）：目前尚無主互動內容，只記錄是否應觸發
             if (loaded && services().session.offlineInteractionDue(Date.now())) {
                 UCUFLogger.info(LogCategory.DATA, '[LobbyScene] 離線互動事件待觸發');
@@ -519,6 +526,22 @@ export class LobbyScene extends Component {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 讀取玩家存檔失敗，從新局開始', error);
             return false;
         }
+    }
+
+    /**
+     * 三國日報（PROG-2-1173）與晨報（PROG-2-1174）：toast 會互相覆蓋，所以日報在前、晨報在後，
+     * 每行間隔數秒依序顯示；顯示後兩者都標記已讀並存檔
+     */
+    private _showDailyNews(): void {
+        const session = services().session;
+        const lines = [...dailyNewsToastLines(session.dailyNews, new Date()), ...session.morningReportLines];
+        if (lines.length === 0) return;
+        lines.forEach((message, index) => {
+            this.scheduleOnce(() => services().event.emit('SHOW_TOAST', { message, duration: DAILY_NEWS_TOAST_SECONDS }), index * (DAILY_NEWS_TOAST_SECONDS + 0.4));
+        });
+        session.markDailyNewsRead();
+        session.markMorningReportRead();
+        void session.save().catch(() => undefined);
     }
 
     /** 官職區塊（OFC-08 顯示段）：以 UCUF JSON（lobby-officer-hud-screen）顯示階位與經驗，資料來自 officerDisplayOf */

@@ -62,7 +62,21 @@ import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
 import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
 import { EMPTY_LOGIN_STREAK, LoginStreakState, recordLogin } from '../systems/LoginStreak';
+import {
+    appendPlayerLog, EMPTY_DAILY_NEWS, markDailyNewsRead, normalizeDailyNewsState, normalizePlayerLogs, refreshDailyNews,
+    type DailyNewsState, type PlayerLogEntry, type PlayerLogType,
+} from '../systems/DailyNewsEngine';
 import { shouldTriggerOfflineInteraction } from '../systems/OfflineInteractionTrigger';
+import { buildJournalEvent, type JournalEventKind, type JournalEventSubject } from '../systems/JournalEvents';
+import {
+    EMPTY_MORNING_REPORT, markMorningReportRead, morningReportLines, normalizeMorningReportState, refreshMorningReport,
+    unreadMorningReportCount, type MorningReportState,
+} from '../systems/MorningReport';
+import {
+    DISPATCH_JOURNAL_PRIORITY, EMPTY_DISPATCH_STATE, normalizeDispatchState, settleDueDispatches, startDispatch,
+    type CompletedDispatchJob, type DispatchJobDef, type DispatchStartResult, type DispatchState,
+} from '../systems/DispatchJobs';
+import { dispatchCompleteLine, type DispatchStatKey } from '../systems/DispatchQuality';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
@@ -75,7 +89,7 @@ import { estimateSortiePower } from '../systems/SortiePrediction';
 import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
-import { applyBattleExpToCard, tallyBattleOutcome } from '../systems/TigerTallyStar';
+import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../systems/TigerTallyStar';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
 import { deriveInventoryViews, type InventoryRecord, type InventoryViews } from '../systems/InventoryProjection';
 import { buildTallyInventoryRecords, normalizeInventoryRecords } from '../systems/InventoryRecordBridge';
@@ -109,6 +123,7 @@ import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance
 import { visibleFactorColors as factorColorsVisibleAtLevel } from '../systems/FactorMask';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
+import { randomizePulledTactics } from '../systems/TacticRandomization';
 import { withUltimateUnlockState } from '../systems/UltimateSlotUnlock';
 import { MentorDuplicateOutcome, overflowToastText, resolveMentorDuplicate } from '../systems/MentorOverflow';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
@@ -936,7 +951,9 @@ export class GameSession {
         for (const uid of deployedTallyIds) {
             const card = nextCards[uid];
             if (!card) continue;
-            nextCards[uid] = { ...card, ...applyBattleExpToCard(card, outcome) };
+            const applied = applyBattleExpToCard(card, outcome);
+            if (applied.stars > readCardStarState(card).star) this.recordPlayerLog('TALLY_UPGRADE');
+            nextCards[uid] = { ...card, ...applied };
             changed = true;
         }
         if (changed) {
@@ -980,6 +997,7 @@ export class GameSession {
         const current = this._tallyLoyalty[generalId] ?? createTallyLoyaltyState(TALLY_LOYALTY_INITIAL, isGachaHero);
         const next = applyTallyConfiscation(current, quality);
         this._tallyLoyalty = { ...this._tallyLoyalty, [generalId]: next };
+        if (next.loyalty < current.loyalty) this.recordPlayerLog('LOYALTY_DROP');
         this._tallyHoldings = confiscateFrom(this._tallyHoldings, generalId).state;
         this._syncInventoryRecords();
         await this._autoSaveAfterTallyChange();
@@ -1082,6 +1100,7 @@ export class GameSession {
         const result = applyTallyLoyaltyChange(current, action, quality, this._clock.state.totalSeasonsElapsed);
         if (result.ok) {
             this._tallyLoyalty = { ...this._tallyLoyalty, [generalId]: result.state };
+            if (result.state.loyalty < current.loyalty) this.recordPlayerLog('LOYALTY_DROP');
             if (this._autoSave && this._save) {
                 await this.save();
             }
@@ -1097,6 +1116,8 @@ export class GameSession {
     /** 出生紀錄以子嗣 UID 去重並複製；結緣確認流程會在此之後呼叫既有 save。 */
     public recordBreedingBirth(record: BreedingBirthRecord): void {
         this._breedingBirthRecords = normalizeBreedingBirthRecords([...this._breedingBirthRecords, record]);
+        this.recordPlayerLog('GENERAL_BORN');
+        this._recordEventJournal('GENERAL_BORN', this._journalSubjects([record.session.Father_UID, record.session.Mother_UID]));
     }
 
     /** 本局已記下的結緣子嗣紀錄（回傳複本，外部改動不影響內部） */
@@ -1222,6 +1243,10 @@ export class GameSession {
         this._journal = createEmptyJournal();
         this._farewellLetters = [];
         this._loginStreak = { ...EMPTY_LOGIN_STREAK };
+        this._playerLogs = [];
+        this._dailyNews = { ...EMPTY_DAILY_NEWS, news: [] };
+        this._morningReport = { ...EMPTY_MORNING_REPORT, items: [] };
+        this._dispatch = normalizeDispatchState(EMPTY_DISPATCH_STATE);
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
         // 上一局的進度不能帶進新局（PROG-2-0660）
@@ -1561,14 +1586,14 @@ export class GameSession {
 
     /**
      * 離線互動觸發（JRN-04）：離線時長＝現在減讀檔時的存檔時間。
-     * 未讀晨報數與衝突標籤目前沒有來源，呼叫端先傳空值（PM 暫定）。
+     * 未讀晨報數未傳時用實際未讀數（PROG-2-1174）；衝突標籤目前沒有來源，呼叫端先傳空值（PM 暫定）。
      */
     public offlineInteractionDue(nowMs: number, context: { unreadMorningReport?: number; activeConflictTags?: readonly string[] } = {}): boolean {
         const savedAt = this._loadedSavedAtMs;
         if (savedAt === null || nowMs < savedAt) return false;
         return shouldTriggerOfflineInteraction({
             offlineHours: (nowMs - savedAt) / 3_600_000,
-            unreadMorningReport: context.unreadMorningReport ?? 0,
+            unreadMorningReport: context.unreadMorningReport ?? unreadMorningReportCount(this._morningReport),
             activeConflictTags: context.activeConflictTags ?? [],
             cooldowns: [],
         });
@@ -1577,6 +1602,93 @@ export class GameSession {
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
     public recordLoginAt(epochMs: number): void {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
+        // 三國日報：當天第一次登入依前 24h 行為紀錄生成（PROG-2-1170）
+        this._dailyNews = refreshDailyNews(this._dailyNews, this._playerLogs, this._roster.getAll().map((g) => ({ name: g.name })), epochMs, this._random);
+        // 派遣：離線期間到期的任務先結算寫日誌，才會進這次晨報（PROG-2-1178）
+        this.settleDispatchJobs(epochMs);
+        // 晨報：上次登入後新增的日誌挑高優先條目（PROG-2-1174）
+        this._morningReport = refreshMorningReport(this._morningReport, this._journal.entries, this._officerState.currentTier);
+    }
+
+    private _playerLogs: PlayerLogEntry[] = [];
+    private _dailyNews: DailyNewsState = { ...EMPTY_DAILY_NEWS, news: [] };
+    private _morningReport: MorningReportState = { ...EMPTY_MORNING_REPORT, items: [] };
+    private _dispatch: DispatchState = normalizeDispatchState(EMPTY_DISPATCH_STATE);
+
+    /** 派遣狀態（複本）：進行中、已完成、冷卻 */
+    public get dispatchState(): DispatchState {
+        return normalizeDispatchState(this._dispatch);
+    }
+
+    /**
+     * 派遣武將執行任務（JRN-03）：以 §F-2 評分快照分數；auto 為 AI 代勞時擋下高風險任務。
+     * 角色標籤取 careerClass／role，日誌標籤取該武將日誌的類別（暫定）。名冊外的武將不可派遣。
+     */
+    public startDispatchJob(job: DispatchJobDef, generalId: string, nowMs: number, auto = false): DispatchStartResult | null {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general) return null;
+        const raw = general as unknown as Record<string, unknown>;
+        const stats: Partial<Record<DispatchStatKey, number>> = {};
+        for (const key of ['str', 'int', 'lea', 'pol', 'cha'] as DispatchStatKey[]) {
+            if (typeof raw[key] === 'number') stats[key] = raw[key] as number;
+        }
+        const roleTags = [raw.careerClass, raw.role].filter((t): t is string => typeof t === 'string' && t.length > 0);
+        const journalTags = Array.from(new Set(queryJournal(this._journal, { generalUid: generalId }).map((e) => e.category as string)));
+        const result = startDispatch(this._dispatch, job, generalId, { roleTags, stats, journalTags }, nowMs, auto);
+        if (result.ok) this._dispatch = result.state;
+        return result;
+    }
+
+    /** 結算到期的派遣，每筆寫 DISPATCH 日誌（§G 完成句）；回傳本次完成的任務。 */
+    public settleDispatchJobs(nowMs: number): CompletedDispatchJob[] {
+        const settled = settleDueDispatches(this._dispatch, nowMs);
+        this._dispatch = settled.state;
+        const roster = this._roster.getAll();
+        for (const job of settled.completed) {
+            const name = roster.find((g) => g.id === job.generalId)?.name ?? job.generalId;
+            this.recordJournal({
+                entryId: `DISPATCH_JOB-${this._journal.entries.length + 1}`,
+                timestamp: seasonJournalTimestamp(this._clock.state),
+                category: 'DISPATCH',
+                relatedGeneralUids: [job.generalId],
+                priority: DISPATCH_JOURNAL_PRIORITY[job.quality],
+                summary: dispatchCompleteLine(name, job.name, job.rewardText),
+            });
+        }
+        return settled.completed;
+    }
+
+    /** 記一筆玩家行為（三國日報的素材，只留 24h 內）；其他系統的採集點也走這裡。時間預設為最近一次登入時間（未登入為 0）。 */
+    public recordPlayerLog(type: PlayerLogType, resource?: string, atMs: number = this._dailyNews.lastLoginMs ?? 0): void {
+        this._playerLogs = appendPlayerLog(this._playerLogs, resource ? { type, at: atMs, resource } : { type, at: atMs });
+    }
+
+    /** 前 24h 的行為紀錄（複本） */
+    public get playerLogs(): PlayerLogEntry[] {
+        return this._playerLogs.map((log) => ({ ...log }));
+    }
+
+    /** 今日三國日報（複本） */
+    public get dailyNews(): DailyNewsState {
+        return { lastGeneratedDay: this._dailyNews.lastGeneratedDay, lastLoginMs: this._dailyNews.lastLoginMs, news: this._dailyNews.news.map((n) => ({ ...n })) };
+    }
+
+    public markDailyNewsRead(): void {
+        this._dailyNews = markDailyNewsRead(this._dailyNews);
+    }
+
+    /** 晨報（複本） */
+    public get morningReport(): MorningReportState {
+        return { journalMark: this._morningReport.journalMark, items: this._morningReport.items.map((i) => ({ ...i })), read: this._morningReport.read };
+    }
+
+    /** 未讀時為 [開頭句, 每則摘要]，否則空陣列 */
+    public get morningReportLines(): string[] {
+        return morningReportLines(this._morningReport);
+    }
+
+    public markMorningReportRead(): void {
+        this._morningReport = markMorningReportRead(this._morningReport);
     }
 
     /** 告別信收件匣（唯讀副本）。 */
@@ -1752,6 +1864,21 @@ export class GameSession {
         });
     }
 
+    /** 名冊內的武將轉成日誌主體；名冊外（例如內建 demo 武將）略過。 */
+    private _journalSubjects(uids: readonly string[]): JournalEventSubject[] {
+        const roster = this._roster.getAll();
+        return uids.flatMap((uid) => {
+            const general = roster.find((g) => g.id === uid);
+            return general ? [{ uid, name: general.name }] : [];
+        });
+    }
+
+    /** 事件寫入日誌（PROG-2-1175）：時間沿用季度日誌的遊戲時間，ID 用目前條目數 +1。 */
+    private _recordEventJournal(kind: JournalEventKind, subjects: readonly JournalEventSubject[]): void {
+        const input = buildJournalEvent(kind, subjects, this._journal.entries.length + 1, seasonJournalTimestamp(this._clock.state));
+        if (input) this.recordJournal(input);
+    }
+
     /** 寫入武將日誌（JRN-01）；被拒絕時不改動狀態。 */
     public recordJournal(input: JournalEntryInput): JournalWriteResult {
         const result = appendJournalEntry(this._journal, input);
@@ -1805,6 +1932,7 @@ export class GameSession {
         const assigned = await this.assignHallTask(task.Task_ID, generalId);
         if (!assigned) return { ok: false, reason: 'NO_GENERAL' };
         this.settleHallMission(result.outcome);
+        this._recordEventJournal(result.outcome.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([generalId]));
         // 任務結束：同一任務若有未結算的委任紀錄，一併結清（PROG-2-1008）
         await this.settleHallAssign(task.Task_ID, result.outcome.success ? 'success' : 'failure', new Date().toISOString());
         return result;
@@ -2391,6 +2519,8 @@ export class GameSession {
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
         this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
+        // 三國日報素材：缺糧（與虎符缺糧同一門檻，暫定）
+        if (this._tallyFoodDiscountArmed) this.recordPlayerLog('RESOURCE_LOW', '糧草');
         this._military = regenMilitaryOneSeason(this._military, 1, seasonModifiersOf(advance.previous.currentSeason).foodMultiplier);
         // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
@@ -2484,6 +2614,7 @@ export class GameSession {
         }
         const childId = options?.catalystChildId;
         if (childId !== undefined) this._assertCatalystChild(generalId, childId);
+        const retiredSubjects = this._journalSubjects([generalId]);
         const result = await this._lifecycle.retireGeneral(this._roster.getAll(), generalId, this._clock.state);
         let roster = result.roster;
         let injection: { childId: string; injectedFactorId: string | null; consumed: boolean } | null = null;
@@ -2509,6 +2640,8 @@ export class GameSession {
         if (this._autoSave && this._save) {
             await this.save();
         }
+        this.recordPlayerLog('GENERAL_RETIRE');
+        this._recordEventJournal('GENERAL_RETIRE', retiredSubjects);
         this._emit(GAME_SESSION_EVENTS.GeneralRetired, result.card);
         if (injection) this._emit(GAME_SESSION_EVENTS.GeneCatalystInjected, injection);
         return result.card;
@@ -2572,6 +2705,7 @@ export class GameSession {
         );
         this._hallAssignLog = settled.log;
         for (const entry of settled.settled) {
+            this._recordEventJournal(entry.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([entry.generalId]));
             if (entry.difficulty === undefined || entry.board === undefined) continue;
             this.settleHallMission({ difficulty: entry.difficulty, board: entry.board, success: entry.success });
         }
@@ -2635,7 +2769,7 @@ export class GameSession {
                 continue;
             }
             owned.add(general.id);
-            added.push({ ...general });
+            added.push(options.rebirthOnDuplicate ? this._withPulledTactics({ ...general }) : { ...general });
         }
 
         if (options.rebirthOnDuplicate && duplicates.length > 0) {
@@ -2648,7 +2782,7 @@ export class GameSession {
                 if (!target) continue;
                 const pull = applyDuplicatePull(target.rebirthCount);
                 byId.set(duplicate.id, {
-                    ...target,
+                    ...this._withPulledTactics(target),
                     rebirthCount: pull.rebirthCount,
                     ultimateSlots: withUltimateUnlockState(target.ultimateSlots ?? [], pull.rebirthCount),
                 });
@@ -2670,7 +2804,17 @@ export class GameSession {
         if (added.length > 0) {
             this._emit(GAME_SESSION_EVENTS.RosterChanged, added);
         }
+        // 三國日報素材（暫定判定）：轉蛋抽到新武將算成功，全是重複算失敗
+        if (options.rebirthOnDuplicate && (added.length > 0 || duplicates.length > 0)) {
+            this.recordPlayerLog(added.length > 0 ? 'GACHA_SUCCESS' : 'GACHA_FAIL');
+        }
         return { added, duplicates, rebirths, bondPointsGained };
+    }
+
+    /** 轉蛋戰法隨機化（PROG-2-1168）：每次抽到同名武將擲第 2、第 3 戰法，重複轉戰法經驗 */
+    private _withPulledTactics(general: GeneralConfig): GeneralConfig {
+        const pulled = randomizePulledTactics(general, this._random);
+        return { ...general, tacticSlots: pulled.tacticSlots, tacticExp: pulled.tacticExp };
     }
 
     /** 目前名冊中可以出戰的武將（排除死亡、退役教官、未畢業子嗣、精力不足、培育中） */
@@ -2706,6 +2850,10 @@ export class GameSession {
         const firstClear = result === 'player-win' && !this._firstBattleCleared;
         if (firstClear) this._firstBattleCleared = true;
         const tallyChanged = this._settleTallyBattleExp(options.deployedTallyIds ?? [], result);
+        if (result === 'player-win' || result === 'enemy-win') {
+            this.recordPlayerLog(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE');
+            this._recordEventJournal(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE', this._journalSubjects(deployedIds));
+        }
         const comradeChanged = this._recordBattleComrades(result, Boolean(options.sortie));
         const settlement = settleBattle(this._roster.getAll(), {
             deployedIds,
@@ -2955,8 +3103,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'sandtableUnlockHistory'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'sandtableUnlockHistory'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -2968,6 +3116,12 @@ export class GameSession {
         }
         if (this._farewellLetters.length > 0) fields.farewellLetters = this.farewellLetters;
         if (this._loginStreak.lastLoginDay !== null) fields.loginStreak = this.loginStreak;
+        if (this._playerLogs.length > 0) fields.playerLogs = this.playerLogs;
+        if (this._dailyNews.lastLoginMs !== null) fields.dailyNews = this.dailyNews;
+        if (this._morningReport.journalMark > 0 || this._morningReport.items.length > 0) fields.morningReport = this.morningReport;
+        if (this._dispatch.active.length > 0 || this._dispatch.completed.length > 0 || Object.keys(this._dispatch.cooldowns).length > 0) {
+            fields.generalDispatch = this.dispatchState;
+        }
         if (this._sandtableUnlockHistory.length > 0) fields.sandtableUnlockHistory = [...this._sandtableUnlockHistory];
         return fields;
     }
@@ -2983,6 +3137,10 @@ export class GameSession {
         this._pendingTerritoryLevel = normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) ?? null;
         this._farewellLetters = normalizeFarewellLetters(snapshot.farewellLetters);
         this._loginStreak = normalizeLoginStreak(snapshot.loginStreak);
+        this._playerLogs = normalizePlayerLogs(snapshot.playerLogs);
+        this._dailyNews = normalizeDailyNewsState(snapshot.dailyNews);
+        this._morningReport = normalizeMorningReportState(snapshot.morningReport);
+        this._dispatch = normalizeDispatchState(snapshot.generalDispatch);
         this._sandtableUnlockHistory = normalizeUnlockHistory(snapshot.sandtableUnlockHistory);
         this._recordSandtableUnlockReached();
     }

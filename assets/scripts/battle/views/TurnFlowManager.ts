@@ -23,6 +23,8 @@ import { geometry, Vec3 } from 'cc';
 import { BattleSceneContext } from './BattleUIBridge';
 import { BattleUIBridge } from './BattleUIBridge';
 import { BATTLE_TURN_FLOW_TIMING } from './BattlePresentationTiming';
+import { services } from '../../core/managers/ServiceLoader';
+import { duelLogType } from '../../core/systems/DailyNewsEngine';
 
 export class TurnFlowManager {
   private _advanceTurnGeneration = 0;
@@ -306,6 +308,9 @@ export class TurnFlowManager {
 
   private _showDuelResultToast(duelResult: string, accepted: boolean, defenderFaction: Faction): void {
     const c = this.ctx;
+    // 三國日報素材：單挑勝負（PROG-2-1172）
+    const logType = duelLogType(duelResult, accepted);
+    if (logType) services().session?.recordPlayerLog(logType);
     if (accepted) {
       if (duelResult === 'player-win') {
         c.deployRuntime?.showToast('單挑成立！我方武將獲勝！', 1.3, { color: new Color(90, 190, 255, 255) });
