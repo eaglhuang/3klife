@@ -8,6 +8,7 @@ import { assert, TestSuite } from './TestRunner';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
+import { formatSeasonLabel } from '../assets/scripts/core/systems/GameClock';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { estimateSortiePower } from '../assets/scripts/core/systems/SortiePrediction';
 import { judgeHallMissionSuccess } from '../assets/scripts/core/systems/HallMissionDispatch';
@@ -50,11 +51,13 @@ export function createHallSeasonSettleE2ESuite(): TestSuite {
         assert.isTrue((await session.autoAssignHallMission(task('T1', 'EASY'), 'y1')).ok);
         assert.isFalse((await session.autoAssignHallMission(task('T2', 'EASY'), 'y1')).ok, '唯一武將忙碌中');
         const expBefore = JSON.stringify(session.officerState);
+        const endingSeasonLabel = formatSeasonLabel(session.gameTime);
 
         await session.advanceSeason();
         const record = session.listHallAssignRecords('T1')[0];
         assert.equals(expected ? 'success' : 'failure', record.outcome!);
         assert.isTrue(record.settledAt !== undefined);
+        assert.equals(endingSeasonLabel, record.settledAt!, 'settledAt 用遊戲內季標籤，不是現實時間');
         assert.isTrue(JSON.stringify(session.officerState) !== expBefore, '官職經驗有入帳');
         assert.isTrue((await session.autoAssignHallMission(task('T2', 'EASY'), 'y2')).ok, '結算後武將釋放');
 
