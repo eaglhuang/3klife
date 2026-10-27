@@ -21,8 +21,8 @@ const GUAN_ZHANG = DEFAULT_SYNERGY_GROUPS.find((g) => g.id === 'SYN_GUAN_ZHANG_0
 function input(overrides: Partial<Parameters<typeof findTriggeredSynergy>[0]> = {}) {
     return {
         round: 3,
-        mentorIds: ['SUP_ZHUGE_SSR_01', 'SUP_PANG_SSR_01'],
-        friendship: { SUP_ZHUGE_SSR_01: 30, SUP_PANG_SSR_01: 0 },
+        mentorIds: ['SUP_ZHUGE_SR_01', 'SUP_PANG_SSR_01'],
+        friendship: { SUP_ZHUGE_SR_01: 30, SUP_PANG_SSR_01: 0 },
         triggered: [] as string[],
         ...overrides,
     };
@@ -47,12 +47,12 @@ export function createMentorSynergySuite(): TestSuite {
     });
 
     suite.test('友情差 1（29）不觸發；兩張卡只要其中一張友情達標即可', () => {
-        assert.equals(null, findTriggeredSynergy(input({ groups: [ZHAO_ZHUGE], friendship: { SUP_ZHUGE_SSR_01: 29, SUP_PANG_SSR_01: 0 } })));
-        assert.notEquals(null, findTriggeredSynergy(input({ groups: [ZHAO_ZHUGE], friendship: { SUP_ZHUGE_SSR_01: 0, SUP_PANG_SSR_01: 30 } })));
+        assert.equals(null, findTriggeredSynergy(input({ groups: [ZHAO_ZHUGE], friendship: { SUP_ZHUGE_SR_01: 29, SUP_PANG_SSR_01: 0 } })));
+        assert.notEquals(null, findTriggeredSynergy(input({ groups: [ZHAO_ZHUGE], friendship: { SUP_ZHUGE_SR_01: 0, SUP_PANG_SSR_01: 30 } })));
     });
 
     suite.test('只有一張羈絆卡在場不觸發', () => {
-        assert.equals(null, findTriggeredSynergy(input({ groups: [ZHAO_ZHUGE], mentorIds: ['SUP_ZHUGE_SSR_01'] })));
+        assert.equals(null, findTriggeredSynergy(input({ groups: [ZHAO_ZHUGE], mentorIds: ['SUP_ZHUGE_SR_01'] })));
     });
 
     suite.test('回合上限：第 12 回合（含）內可觸發，第 13 回合起不觸發', () => {

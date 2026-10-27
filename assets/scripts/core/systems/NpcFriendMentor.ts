@@ -6,6 +6,9 @@
  * 暫定：好友名稱與候選卡皆取自 npc-friend-mentors.json，不代表任何真實玩家。
  */
 import type { BorrowCandidate } from './FriendBorrow';
+import type { MentorCard } from '../models/MentorCard';
+import type { GeneralConfig } from '../models/GeneralUnit';
+import { mentorCardFromGachaDraw, type SupportCatalog } from './MentorSupportCatalog';
 
 export interface NpcFriendMentor {
     friendId: string;
@@ -33,4 +36,24 @@ export function parseNpcFriendMentors(raw: { data?: unknown } | readonly unknown
 /** 好友的借用候選：借用流程只需要卡 id、是否 SSR、當下星等 */
 export function borrowCandidateOf(friend: NpcFriendMentor): BorrowCandidate {
     return { supportTemplateId: friend.supportTemplateId, isSSR: friend.isSSR, star: friend.star };
+}
+
+/**
+ * 好友借用的教官卡（教官系統 §L-1／L-2，PROG-2-1138）：入學時佔第 6 教官槽。
+ * 以 Support_ID 在支援卡目錄找出武將與支援卡資料，星等取好友當下星等（快照，不繼承突破後效果）。
+ * uid 為 borrow-{friendId}，與自有同名教官卡（mentor-{武將 id}）不衝突。目錄或武將資料缺漏時回傳 null。
+ */
+export function friendMentorCard(
+    friend: NpcFriendMentor,
+    catalog: SupportCatalog,
+    generals: readonly GeneralConfig[],
+): MentorCard | null {
+    for (const [generalId, support] of catalog.byGeneralId) {
+        if (support.supportId !== friend.supportTemplateId) continue;
+        const general = generals.find((g) => g.id === generalId);
+        if (!general) return null;
+        const card = mentorCardFromGachaDraw(general, support, { currentYear: 0, currentSeason: 0 });
+        return { ...card, uid: `borrow-${friend.friendId}`, stars: friend.star };
+    }
+    return null;
 }

@@ -44,12 +44,25 @@ import {
     UnveilingGeneral,
 } from '../../core/systems/Unveiling';
 import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';
-import { mentorFromCard } from '../../core/systems/NurtureSystem';
+import { inspiredTacticIds, mentorFromCard } from '../../core/systems/NurtureSystem';
+import type { NurtureInspiration } from '../../core/services/NurtureService';
+import { DEFAULT_SYNERGY_GROUPS } from '../../core/systems/MentorSynergy';
+import {
+    cycleMentorDeckSlot,
+    defaultMentorDeck,
+    MENTOR_DECK_SIZE,
+    MentorDeck,
+    mentorDeckCards,
+    sanitizeMentorDeck,
+} from '../../core/systems/MentorDeck';
 import { describeLifecycle } from './GeneralLifecyclePresenter';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
+import { getTacticTpCost } from '../../core/systems/SortieDeploy';
+import { learnTpCost } from '../../core/systems/FactorTacticLinkage';
+import { hasMatchingGreenFactor, tacticLearnThreshold, type TacticLearnBlock, type TacticLearnCheck } from '../../core/systems/TacticLearning';
+import { tacticLoadoutCapacity } from '../../core/systems/TacticLoadout';
+import { battleIntelligenceOf } from '../../core/systems/BattleRoster';
 
-/** 培育一次最多帶的教官數（NURTURE_MENTOR_SLOTS）由 NurtureService 把關，這裡只負責挑人 */
-const MAX_AUTO_MENTORS = 6;
 
 export const STAT_LABELS: Record<string, string> = {
     str: '武力',
@@ -135,6 +148,15 @@ export interface NurtureFlowDeps {
     text?: BreedTextLookup;
     /** 精力歸 0 時的劇本提示（PROG-2-0732）；正式環境接 SHOW_TOAST，未提供時不顯示 */
     showToast?: (message: string) => void;
+    /** 戰法 id → 中文名（tactic-library）；未提供或查不到時顯示 id（PROG-2-1096） */
+    tacticName?: (tacticId: string) => string | undefined;
+    /**
+     * 好友借用（教官系統 §L-2，PROG-2-1138）：入學成功後寫入借用紀錄；正式環境接 GameSession.borrowFriendMentor。
+     * 未提供時開始頁不顯示「好友借用」。回傳 ok=false 時 message 為擋下原因文案。
+     */
+    commitFriendBorrow?: (friendId: string, sessionId: string) => Promise<{ ok: boolean; message?: string }>;
+    /** 結業兌換戰法：正式環境接 GameSession.learnTactic；清單為本場靈感觸發的戰法（PROG-2-1134） */
+    learnTactic?: (childId: string, tacticId: string) => Promise<TacticLearnCheck>;
     /** 名將傳道（MENT-15）；正式環境接 GameSession.performLegendaryMentoringFor，未提供時入口不可用 */
     performLegendaryMentoring?: (
         generalId: string,
@@ -144,6 +166,21 @@ export interface NurtureFlowDeps {
 }
 
 /** 傳道失敗的提示（暫定，文案待企劃定稿） */
+/** 入學至少帶的教官數（使用者裁定 2026-10-26；上限為自有 5＋好友借用 1） */
+export const MIN_ENROLL_MENTORS = 1;
+const NO_MENTOR_HINT = '至少需帶 1 位教官才能入學，請先在下方編成教官';
+
+/** 學戰法失敗的提示 */
+const TACTIC_LEARN_BLOCK_TEXT: Record<TacticLearnBlock, string> = {
+    INVALID_TACTIC: '沒有這個戰法',
+    NOT_NURTURING: '只有培育中的子嗣能學戰法',
+    NOT_GRADUATING: '36 回合完成後才能用 TP 兌換戰法',
+    NOT_INSPIRED: '本場沒有觸發這個戰法的靈感',
+    ALREADY_LEARNED: '已學會這個戰法',
+    TP_SHORT: 'TP 未達門檻',
+    SLOT_FULL: '戰法槽位已滿（智力每 30 點多 1 槽）',
+};
+
 const LEGENDARY_MENTORING_BLOCK_TEXT: Record<LegendaryMentoringBlock, string> = {
     NO_TICKET: '傳道令不足',
     NO_EXCLUSIVE_SKILL: '這位名將沒有專屬奧義',
@@ -166,6 +203,14 @@ export class NurtureFlowController {
     private _notice = '';
     private _legendaryCards: MentorCard[] = [];
     private _legendaryCardUid: string | null = null;
+    /** 入場編成（PROG-2-1085）：null 表示還沒整理過，第一次讀卡時帶預設最強 5 位 */
+    private _deck: MentorDeck | null = null;
+    /** 入學前選好的好友借用教官（第 6 槽）；入學後清空 */
+    private _borrowed: { friendId: string; card: MentorCard } | null = null;
+    /** 目前可帶入的教官卡（未被別場培育鎖定）；loadDeck 時更新 */
+    private _deckCandidates: MentorCard[] = [];
+    /** 戰法列目前指到的戰法（本場靈感戰法清單的索引） */
+    private _tacticIndex = 0;
 
     constructor(private readonly _deps: NurtureFlowDeps) {}
 
@@ -223,13 +268,53 @@ export class NurtureFlowController {
         await this._persist();
     }
 
-    /** 入學：自動帶上未被別場鎖定的退役教官（最多 6 位） */
+    /** 重新讀可帶入的教官卡（排除別場培育鎖定的），並整理入場編成；第一次讀時帶預設最強 5 位 */
+    async loadDeck(): Promise<void> {
+        const locked = new Set(this._deps.nurture.lockedMentorIds());
+        this._deckCandidates = (await this._deps.loadMentorCards()).filter((card) => !locked.has(card.uid));
+        this._deck = this._deck === null ? defaultMentorDeck(this._deckCandidates) : sanitizeMentorDeck(this._deck, this._deckCandidates);
+    }
+
+    /** 點入場編成第 slot 格：換成下一位可用教官，最後一位之後回到空格 */
+    cycleDeckSlot(slot: number): void {
+        this._deck = cycleMentorDeckSlot(this._deck ?? defaultMentorDeck(this._deckCandidates), this._deckCandidates, slot);
+        this._notice = '';
+    }
+
+    get deck(): MentorDeck {
+        return this._deck ?? defaultMentorDeck(this._deckCandidates);
+    }
+
+    private async _deckCards(): Promise<MentorCard[]> {
+        await this.loadDeck();
+        return mentorDeckCards(this.deck, this._deckCandidates);
+    }
+
+    /** 入學前選好友借用教官（§L-2）：佔第 6 槽；傳 null 取消 */
+    setBorrowedMentor(friendId: string | null, card: MentorCard | null = null): void {
+        this._borrowed = friendId && card ? { friendId, card } : null;
+    }
+
+    get borrowedMentor(): MentorCard | null {
+        return this._borrowed?.card ?? null;
+    }
+
+    /** 入學：帶入場編成裡的教官（最多 5 位，未編成過時用預設最強 5 位），加上好友借用的第 6 位 */
     async startNurture(): Promise<void> {
         const child = this._requireSelected();
-        const locked = new Set(this._deps.nurture.lockedMentorIds());
-        const cards = (await this._deps.loadMentorCards()).filter((card) => !locked.has(card.uid)).slice(0, MAX_AUTO_MENTORS);
-        this._deps.nurture.startWithCards(child.id, cards);
-        this._notice = cards.length > 0 ? `入學完成，${cards.length} 位教官任教` : '入學完成（沒有教官任教）';
+        const borrowed = this._borrowed;
+        const cards = [...(await this._deckCards()), ...(borrowed ? [borrowed.card] : [])];
+        if (cards.length < MIN_ENROLL_MENTORS) {
+            this._notice = NO_MENTOR_HINT;
+            return;
+        }
+        const session = this._deps.nurture.startWithCards(child.id, cards);
+        this._borrowed = null;
+        this._notice = `入學完成，${cards.length} 位教官任教`;
+        if (borrowed && this._deps.commitFriendBorrow) {
+            const result = await this._deps.commitFriendBorrow(borrowed.friendId, session.sessionId);
+            if (!result.ok) this._notice += `（借用紀錄未寫入：${result.message ?? '借用失敗'}）`;
+        }
         await this._persist();
     }
 
@@ -246,13 +331,6 @@ export class NurtureFlowController {
 
     get legendaryCard(): MentorCard | null {
         return this._legendaryCards.find((c) => c.uid === this._legendaryCardUid) ?? null;
-    }
-
-    /** 借將入口：目前養成中的 sessionId；沒有進行中的培育時回傳 null */
-    mentorBorrowSessionId(): string | null {
-        const child = this._resolveSelected();
-        const session = child ? this._deps.nurture.getSession(child.id) : null;
-        return session && session.status === 'active' ? session.sessionId : null;
     }
 
     async legendaryMentor(): Promise<boolean> {
@@ -280,9 +358,12 @@ export class NurtureFlowController {
 
     async train(action: NurtureAction): Promise<NurtureRoundLog> {
         const child = this._requireSelected();
-        const { log, awakening } = this._deps.nurture.train(child.id, action);
+        const { log, awakening, inspirations, session } = this._deps.nurture.train(child.id, action);
         // 因子解鎖系統 §H UI_AWAKENING：「【覺醒】{GeneName}！」
         this._notice = awakening ? `${describeRound(log)}　【覺醒】${awakening.displayName}！` : describeRound(log);
+        // 教官系統 §E：靈感與羈絆觸發要讓玩家看得到（PROG-2-1096）
+        const mentorNotes = describeMentorTriggers(log.synergyId, inspirations, session?.mentors ?? [], this._deps.tacticName);
+        if (mentorNotes) this._notice += `　${mentorNotes}`;
         if (log.vigorAfter === 0) {
             this._deps.showToast?.(vitalityScriptText(this._t.bind(this), VITALITY_SCRIPT_KEYS.exhausted, child.name));
         }
@@ -292,6 +373,60 @@ export class NurtureFlowController {
         }
         await this._persist();
         return log;
+    }
+
+    /** 戰法列左右切換 */
+    cycleTactic(step: number): void {
+        const ids = this._tacticIds();
+        if (ids.length === 0) return;
+        this._tacticIndex = (((this._tacticIndex + step) % ids.length) + ids.length) % ids.length;
+    }
+
+    /** 用 TP 學目前指到的戰法；成功或失敗都寫進提示列 */
+    async learnSelectedTactic(): Promise<TacticLearnCheck | null> {
+        const child = this._requireSelected();
+        const tacticId = this._currentTacticId();
+        if (!tacticId || !this._deps.learnTactic) return null;
+        const check = await this._deps.learnTactic(child.id, tacticId);
+        const name = this._deps.tacticName?.(tacticId) ?? tacticId;
+        this._notice = check.ok ? `${child.name} 習得戰法「${name}」` : `無法學習「${name}」：${TACTIC_LEARN_BLOCK_TEXT[check.blocked!]}`;
+        return check;
+    }
+
+    private _currentTacticId(): string | null {
+        const ids = this._tacticIds();
+        return ids.length > 0 ? ids[this._tacticIndex % ids.length] : null;
+    }
+
+    private _tacticIds(): string[] {
+        const child = this._resolveSelected();
+        return inspiredTacticIds(child ? this._deps.nurture.getSession(child.id) : null);
+    }
+
+    /** 戰法列文字與按鈕狀態：成本含綠因子折扣，門檻＝成本×2，槽位依戰場智力 */
+    private _applyTacticRow(child: UnveilingGeneral, session: NurtureSession, texts: Record<string, string>, actives: Record<string, boolean>, enabled: Record<string, boolean>): void {
+        if (!this._deps.learnTactic) return;
+        actives.tacticBlock = true;
+        const tacticId = this._currentTacticId();
+        if (!tacticId) {
+            texts.tacticName = '本場未觸發戰法靈感';
+            texts.tacticCost = '培育中教官靈感事件觸發後，結業才可兌換';
+            texts.learnTacticLabel = '學習戰法';
+            return;
+        }
+        const general = child as unknown as GeneralConfig;
+        const green = hasMatchingGreenFactor(general.genes, tacticId);
+        const cost = learnTpCost(getTacticTpCost(tacticId), green);
+        const learned = general.learnedTactics ?? [];
+        const capacity = tacticLoadoutCapacity(battleIntelligenceOf(general));
+        const count = this._tacticIds().length;
+        enabled.btnPrevTactic = count > 1;
+        enabled.btnNextTactic = count > 1;
+        enabled.btnLearnTactic = !learned.includes(tacticId) && session.tp >= tacticLearnThreshold(cost) && learned.length < capacity;
+        const name = this._deps.tacticName?.(tacticId) ?? tacticId;
+        texts.tacticName = learned.includes(tacticId) ? `${name}（已學）` : `${name}${green ? '（綠因子半價）' : ''}`;
+        texts.tacticCost = `需 TP ${cost}（門檻 ${tacticLearnThreshold(cost)}）`;
+        texts.learnTacticLabel = `學習戰法（已學 ${learned.length} / ${capacity} 槽）`;
     }
 
     async graduate(): Promise<GraduationResult> {
@@ -315,8 +450,7 @@ export class NurtureFlowController {
     /** 保留並重修：重新開場，已保留的成績單不會丟；入學與教官規則同入學 */
     async retake(): Promise<void> {
         const child = this._requireSelected();
-        const locked = new Set(this._deps.nurture.lockedMentorIds());
-        const cards = (await this._deps.loadMentorCards()).filter((card) => !locked.has(card.uid)).slice(0, MAX_AUTO_MENTORS);
+        const cards = await this._deckCards();
         this._deps.nurture.retake(child.id, cards.map((card) => mentorFromCard(card)));
         this._report = null;
         this._notice = `${child.name} 重修開場`;
@@ -390,7 +524,12 @@ export class NurtureFlowController {
         enabled.btnMentorDetail = false;
         enabled.btnLegendaryCard = false;
         enabled.btnLegendaryMentor = false;
-        enabled.btnMentorBorrow = false;
+        enabled.btnStartBorrow = false;
+        actives.tacticBlock = false;
+        enabled.btnPrevTactic = false;
+        enabled.btnNextTactic = false;
+        enabled.btnLearnTactic = false;
+        for (let i = 0; i < MENTOR_DECK_SIZE; i++) enabled[`btnDeckSlot${i}`] = false;
 
         if (!child) {
             actives.flowEmptyHint = true;
@@ -421,10 +560,18 @@ export class NurtureFlowController {
         if (!session) {
             actives.startBlock = true;
             const check = this._deps.nurture.checkStart(child.id);
-            enabled.btnStartNurture = check.eligible;
-            texts.startHint = check.eligible
-                ? `入學將消耗 1 張入學令（本季剩 ${this._deps.nurture.admissionsLeft()} 張），並帶上退役教官`
-                : check.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、');
+            const borrowed = this.borrowedMentor;
+            const hasMentor = this.deck.some((uid) => uid !== null) || borrowed !== null;
+            enabled.btnStartNurture = check.eligible && hasMentor;
+            enabled.btnStartBorrow = !!this._deps.commitFriendBorrow;
+            texts.startBorrowLabel = borrowed ? `好友：${borrowed.name} ★${borrowed.stars ?? 0}（點擊取消）` : '＋ 好友借用';
+            texts.startHint = !check.eligible
+                ? check.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、')
+                : hasMentor
+                    ? `入學將消耗 1 張入學令（本季剩 ${this._deps.nurture.admissionsLeft()} 張），帶上下方編成的教官（自有最多 ${MENTOR_DECK_SIZE} 位＋好友借用 1 位）`
+                    : NO_MENTOR_HINT;
+            Object.assign(texts, buildDeckTexts(this.deck, this._deckCandidates));
+            for (let i = 0; i < MENTOR_DECK_SIZE; i++) enabled[`btnDeckSlot${i}`] = this._deckCandidates.length > 0;
             Object.assign(texts, buildSlotTexts(child, null));
             return { mode: 'start', childId: child.id, texts, actives, enabled };
         }
@@ -433,6 +580,7 @@ export class NurtureFlowController {
         Object.assign(texts, buildSessionTexts(session, this._notice));
         enabled.btnAbandon = session.status === 'active';
         if (session.status === 'completed') {
+            this._applyTacticRow(child, session, texts, actives, enabled);
             actives.graduateBlock = true;
             enabled.btnGraduate = true;
             enabled.btnKeepReport = true;
@@ -455,8 +603,6 @@ export class NurtureFlowController {
         texts.legendaryCardLabel = legendary ? `英靈：${legendary.name}` : '英靈：未選';
         enabled.btnLegendaryMentor = !!this._deps.performLegendaryMentoring && !!legendary && session.status === 'active';
         texts.legendaryMentorLabel = '傳道';
-        enabled.btnMentorBorrow = session.status === 'active';
-        texts.mentorBorrowLabel = '借將';
         texts.autoNurtureLabel = '自動培育整季';
         return { mode: 'train', childId: child.id, texts, actives, enabled };
     }
@@ -563,6 +709,29 @@ function phaseRangeText(phase: PhaseBlock): string {
 }
 
 /** 五個訓練格各一行：資質 / 實力 / 站在這一格的教官 */
+const STAR_TEXT = (stars: number): string => (stars > 0 ? '★'.repeat(stars) : '☆0');
+
+/** 入場編成五格的文字：教官名、星等、擅長科目；空格提示可點選 */
+function buildDeckTexts(deck: MentorDeck, candidates: readonly MentorCard[]): Record<string, string> {
+    const byUid = new Map(candidates.map((card) => [card.uid, card]));
+    const texts: Record<string, string> = {};
+    let filled = 0;
+    for (let i = 0; i < MENTOR_DECK_SIZE; i++) {
+        const card = deck[i] ? byUid.get(deck[i] as string) : undefined;
+        if (card) {
+            filled++;
+            const mentor = mentorFromCard(card);
+            texts[`deckSlotLabel${i}`] = `${card.name}\n${STAT_LABELS[mentor.specialty]}擅長 ${STAR_TEXT(mentor.stars ?? 0)}`;
+        } else {
+            texts[`deckSlotLabel${i}`] = candidates.length > 0 ? '空格\n點此選教官' : '空格';
+        }
+    }
+    texts.deckHint = candidates.length > 0
+        ? `教官編成 ${filled} / ${MENTOR_DECK_SIZE}：點格子輪換（可用教官 ${candidates.length} 位）`
+        : '沒有可用教官：到轉蛋「支援卡池」用支援券抽教官，或讓武將 65 歲退役轉教官';
+    return texts;
+}
+
 function buildSlotTexts(child: UnveilingGeneral, session: NurtureSession | null): Record<string, string> {
     const texts: Record<string, string> = {};
     for (const kind of TRAINING_KINDS) {
@@ -592,6 +761,25 @@ function buildSessionTexts(session: NurtureSession, notice: string): Record<stri
         nurtureFactors: session.negativeFactors.length > 0 ? `負面因子：${session.negativeFactors.join('、')}` : '負面因子：無',
         nurtureLog: notice || lateBloomClueText(session.vigor, VIGOR_MAX) || (last ? describeRound(last) : '選擇本回合的訓練，或休息回復精力'),
     };
+}
+
+/** 教官觸發提示：羈絆名稱與戰法靈感（沒有觸發回傳空字串） */
+export function describeMentorTriggers(
+    synergyId: string | undefined,
+    inspirations: readonly NurtureInspiration[] | undefined,
+    mentors: readonly { id: string; name?: string }[],
+    tacticName?: (tacticId: string) => string | undefined,
+): string {
+    const parts: string[] = [];
+    if (synergyId) {
+        const group = DEFAULT_SYNERGY_GROUPS.find((g) => g.id === synergyId);
+        parts.push(`【羈絆】${group?.name ?? synergyId}`);
+    }
+    for (const entry of inspirations ?? []) {
+        const mentor = mentors.find((m) => m.id === entry.mentorId)?.name ?? entry.mentorId;
+        parts.push(`【靈感】${mentor}傳授戰法「${tacticName?.(entry.tacticId) ?? entry.tacticId}」`);
+    }
+    return parts.join('　');
 }
 
 export function describeRound(log: NurtureRoundLog): string {

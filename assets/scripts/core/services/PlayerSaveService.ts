@@ -1,7 +1,10 @@
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
+import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
+import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
 import { normalizeTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { readCardStarState } from '../systems/TigerTallyStar';
 import { normalizeDomesticLog, type DomesticSeasonLog } from '../systems/DomesticTasks';
+import { normalizeRivalWorld, type RivalWorld } from '../systems/RivalNations';
 // @spec-source → 遊戲時間系統.md (doc_spec_0034) §I、Data Schema文件（本機端與Server端）.md (doc_tech_0013)
 /**
  * PlayerSaveService — 玩家長局存檔快照（純邏輯，不依賴 cc）
@@ -111,6 +114,8 @@ export interface PlayerSaveSnapshot {
     sandtableMarkerTerritories?: string[];
     /** 內政任務格的武將指派（PROG-2-0975）；舊檔沒有時讀回空陣列；版號不升 */
     governanceAssignments?: GovernanceAssignment[];
+    /** 自動治理開關（領地治理 Auto_Mode，PROG-2-1161）；舊檔沒有時讀回關閉；版號不升 */
+    autoGovernance?: boolean;
     /** 領地清單含主城（PROG-2-0975）；舊檔沒有時讀回只有主城的預設清單；版號不升 */
     territories?: KeepTerritory[];
     /** 武將日誌條目（PROG-2-0975）；舊檔沒有時讀回空陣列；版號不升 */
@@ -141,6 +146,8 @@ export interface PlayerSaveSnapshot {
     resources?: { fame: number; scorePoints?: number; autoNurtureTickets?: number; mainlineNurtureClearedOnce?: boolean; firstBattleCleared?: boolean; openingRedFaceShown?: boolean };
     /** 內政本季紀錄（同季只能選一項）；後加的選填欄位，舊檔讀回為空紀錄 */
     domestic?: DomesticSeasonLog;
+    /** 他國 AI 勢力狀態；後加的選填欄位，舊檔讀回為初始勢力（PROG-2-1088） */
+    rivals?: RivalWorld;
     /** 傭兵存檔包（試用、薪水、冷卻）；後加的選填欄位，舊檔讀回為空包（MERC-01） */
     mercenaries?: MercenarySaveBundle;
     /** 女性來源系統狀態（傭兵池／救美刷新時間、送禮好感）；後加的選填欄位，舊檔讀回預設值（FEM 接線） */
@@ -157,6 +164,8 @@ export interface PlayerSaveSnapshot {
     travelCountdown?: TravelCountdown;
     /** 編制預設（DEP-14）：主將 id → 參謀官 / 後勤官；舊檔沒有此欄位時視為空 */
     sortiePresets?: Readonly<Record<string, { strategistUid: string | null; deputyUid: string | null }>>;
+    /** 出生紀錄（PROG-2-1146）：child.UID 去重；舊檔缺省為空，不回填歷史資料。 */
+    breedingBirthRecords?: BreedingBirthRecord[];
 }
 
 /** 讀回編制預設：只保留格式正確的條目；缺欄位、非物件一律丟棄（舊存檔視為空） */
@@ -225,7 +234,7 @@ export function normalizeClearedStageIds(value: unknown): string[] {
     for (const id of value) {
         if (typeof id === 'string' && id.length > 0) seen.add(id);
     }
-    return [...seen];
+    return Array.from(seen);
 }
 
 /** 收藏武將 id：去重、略過空字串與非字串；壞資料補空陣列（PROG-2-0453） */
@@ -240,7 +249,7 @@ export function normalizeFavoriteGeneralIds(value: unknown): string[] {
     for (const id of value) {
         if (typeof id === 'string' && id.length > 0) seen.add(id);
     }
-    return [...seen];
+    return Array.from(seen);
 }
 
 /** 大廳任務指派：只保留任務 id 與武將 id 都是非空字串的項目（PROG-2-0453） */
@@ -424,6 +433,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         savedAt: snapshot.savedAt,
         gameTime: GameClock.normalize(snapshot.gameTime as GameTimeState),
         roster: snapshot.roster,
+        ...(snapshot.breedingBirthRecords !== undefined ? { breedingBirthRecords: normalizeBreedingBirthRecords(snapshot.breedingBirthRecords) } : {}),
         ...(snapshot.nurture ? { nurture: snapshot.nurture } : {}),
         deck: normalizeDeck(snapshot.deck),
         ...(snapshot.leadGeneralId ? { leadGeneralId: snapshot.leadGeneralId } : {}),
@@ -442,6 +452,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         yearAgingEvents: normalizeYearAgingEvents(snapshot.yearAgingEvents),
         ...(snapshot.resources !== undefined && snapshot.resources !== null ? { resources: { fame: normalizeFame((snapshot.resources as { fame?: unknown }).fame), scorePoints: normalizeScorePoints((snapshot.resources as { scorePoints?: unknown }).scorePoints), autoNurtureTickets: normalizeAutoNurtureTickets((snapshot.resources as { autoNurtureTickets?: unknown }).autoNurtureTickets), mainlineNurtureClearedOnce: normalizeFlag((snapshot.resources as { mainlineNurtureClearedOnce?: unknown }).mainlineNurtureClearedOnce), ...optionalFlag((snapshot.resources as { firstBattleCleared?: unknown }).firstBattleCleared, 'firstBattleCleared'), ...optionalFlag((snapshot.resources as { openingRedFaceShown?: unknown }).openingRedFaceShown, 'openingRedFaceShown') } } : {}),
         ...(snapshot.domestic !== undefined ? { domestic: normalizeDomesticLog(snapshot.domestic) } : {}),
+        ...(snapshot.rivals !== undefined ? { rivals: normalizeRivalWorld(snapshot.rivals) } : {}),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
         ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),
@@ -459,6 +470,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.sandtableMarkersPlaced !== undefined ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced) } : {}),
         ...(snapshot.sandtableMarkerTerritories !== undefined ? { sandtableMarkerTerritories: normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories) } : {}),
         ...(snapshot.governanceAssignments !== undefined ? { governanceAssignments: normalizeGovernanceAssignments(snapshot.governanceAssignments) } : {}),
+        ...(snapshot.autoGovernance !== undefined ? { autoGovernance: snapshot.autoGovernance === true } : {}),
         ...(snapshot.territories !== undefined ? { territories: normalizeKeepTerritories(snapshot.territories) } : {}),
         ...(snapshot.journalEntries !== undefined ? { journalEntries: normalizeJournalEntries(snapshot.journalEntries) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
@@ -479,6 +491,10 @@ export interface GachaWalletSave {
     bronze: number;
     /** 求籤令；舊檔缺欄位補 0（PROG-2-0339） */
     oracle: number;
+    /** 支援券；舊檔缺欄位補 0（PROG-2-1085） */
+    mentorTickets: number;
+    /** 積分（教官卡滿星溢出）；舊檔缺欄位補 0（PROG-2-1095） */
+    scorePoints: number;
 }
 
 export function normalizeGachaWalletSave(value: unknown): GachaWalletSave {
@@ -487,7 +503,7 @@ export function normalizeGachaWalletSave(value: unknown): GachaWalletSave {
         const n = Math.floor(Number(raw[key]));
         return Number.isFinite(n) && n >= 0 ? n : 0;
     };
-    return { gems: pick('gems'), gold: pick('gold'), tickets: pick('tickets'), bronze: pick('bronze'), oracle: pick('oracle') };
+    return { gems: pick('gems'), gold: pick('gold'), tickets: pick('tickets'), bronze: pick('bronze'), oracle: pick('oracle'), mentorTickets: pick('mentorTickets'), scorePoints: pick('scorePoints') };
 }
 
 /** 名聲：非負整數，壞掉視為 0 */

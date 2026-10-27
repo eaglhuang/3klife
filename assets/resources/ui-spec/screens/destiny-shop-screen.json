@@ -1,0 +1,17 @@
+{
+  "id": "destiny-shop-screen",
+  "version": 1,
+  "uiId": "DestinyShop",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "destiny-shop-main",
+  "skin": "destiny-shop-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

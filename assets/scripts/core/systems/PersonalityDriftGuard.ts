@@ -37,7 +37,7 @@ export interface DriftGuardResult {
 
 /** 字數以 Unicode 字元計（中文一字一個）。 */
 function charCount(text: string): number {
-    return [...text].length;
+    return Array.from(text).length;
 }
 
 /** 台詞是否可接受：字數不超過上限、沒有禁止旗標、語氣標籤全部具備。 */

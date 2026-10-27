@@ -22,6 +22,20 @@
     "children": [
       {
         "type": "panel",
+        "name": "DestinyScrim",
+        "id": "destinyScrim",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "width": 1920,
+        "height": 1080,
+        "skinSlot": "do.scrim"
+      },
+      {
+        "type": "panel",
         "name": "DestinyOpeningCard",
         "id": "destinyOpeningCard",
         "widget": {
@@ -85,328 +99,616 @@
             "width": 260
           },
           {
-            "type": "panel",
-            "name": "DestinyRow0",
-            "id": "destinyRow0",
+            "type": "button",
+            "name": "BtnFrame0",
+            "id": "btnFrame0",
             "widget": {
-              "top": 130,
-              "left": 32
+              "top": 125,
+              "left": 34
             },
-            "width": 1336,
-            "height": 96,
-            "skinSlot": "do.row.bg",
+            "width": 200,
+            "height": 470,
+            "skinSlot": "pg.frame.bg",
             "children": [
               {
-                "type": "label",
-                "name": "DestinyRow0Name",
-                "id": "destinyRow0Name",
+                "type": "container",
+                "name": "Frame0Mask",
+                "id": "frame0Mask",
                 "widget": {
-                  "top": 28,
-                  "left": 32
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
                 },
-                "height": 36,
-                "text": "",
-                "styleSlot": "do.label.name",
-                "width": 900
-              },
-              {
-                "type": "button",
-                "name": "BtnDestinyRow0",
-                "id": "btnDestinyRow0",
-                "widget": {
-                  "vCenter": true,
-                  "right": 24
-                },
-                "width": 180,
-                "height": 56,
-                "skinSlot": "do.button.bg",
+                "width": 200,
+                "height": 470,
                 "children": [
                   {
-                    "type": "label",
-                    "name": "BtnDestinyRow0Label",
-                    "id": "btnDestinyRow0Label",
-                    "widget": {
-                      "vCenter": true,
-                      "left": 0,
-                      "right": 0
-                    },
-                    "height": 40,
-                    "text": "選擇",
-                    "styleSlot": "do.label.button"
+                    "type": "image",
+                    "name": "Frame0Portrait",
+                    "id": "frame0Portrait",
+                    "width": 200,
+                    "height": 470,
+                    "skinSlot": "pg.portrait"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame0Plate",
+                "id": "frame0Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 110,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame0Name",
+                "id": "frame0Name",
+                "widget": {
+                  "bottom": 44,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 50,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame0Sub",
+                "id": "frame0Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame0Sel",
+                "id": "frame0Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 200,
+                "height": 470,
+                "skinSlot": "pg.sel"
               }
             ]
           },
           {
-            "type": "panel",
-            "name": "DestinyRow1",
-            "id": "destinyRow1",
+            "type": "label",
+            "name": "Frame0Quote",
+            "id": "frame0Quote",
             "widget": {
-              "top": 242,
-              "left": 32
+              "top": 607,
+              "left": 34
             },
-            "width": 1336,
-            "height": 96,
-            "skinSlot": "do.row.bg",
+            "width": 200,
+            "height": 112,
+            "text": "",
+            "styleSlot": "do.label.quote"
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame1",
+            "id": "btnFrame1",
+            "widget": {
+              "top": 125,
+              "left": 258
+            },
+            "width": 200,
+            "height": 470,
+            "skinSlot": "pg.frame.bg",
             "children": [
               {
-                "type": "label",
-                "name": "DestinyRow1Name",
-                "id": "destinyRow1Name",
+                "type": "container",
+                "name": "Frame1Mask",
+                "id": "frame1Mask",
                 "widget": {
-                  "top": 28,
-                  "left": 32
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
                 },
-                "height": 36,
-                "text": "",
-                "styleSlot": "do.label.name",
-                "width": 900
-              },
-              {
-                "type": "button",
-                "name": "BtnDestinyRow1",
-                "id": "btnDestinyRow1",
-                "widget": {
-                  "vCenter": true,
-                  "right": 24
-                },
-                "width": 180,
-                "height": 56,
-                "skinSlot": "do.button.bg",
+                "width": 200,
+                "height": 470,
                 "children": [
                   {
-                    "type": "label",
-                    "name": "BtnDestinyRow1Label",
-                    "id": "btnDestinyRow1Label",
-                    "widget": {
-                      "vCenter": true,
-                      "left": 0,
-                      "right": 0
-                    },
-                    "height": 40,
-                    "text": "選擇",
-                    "styleSlot": "do.label.button"
+                    "type": "image",
+                    "name": "Frame1Portrait",
+                    "id": "frame1Portrait",
+                    "width": 200,
+                    "height": 470,
+                    "skinSlot": "pg.portrait"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame1Plate",
+                "id": "frame1Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 110,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame1Name",
+                "id": "frame1Name",
+                "widget": {
+                  "bottom": 44,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 50,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame1Sub",
+                "id": "frame1Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame1Sel",
+                "id": "frame1Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 200,
+                "height": 470,
+                "skinSlot": "pg.sel"
               }
             ]
           },
           {
-            "type": "panel",
-            "name": "DestinyRow2",
-            "id": "destinyRow2",
+            "type": "label",
+            "name": "Frame1Quote",
+            "id": "frame1Quote",
             "widget": {
-              "top": 354,
-              "left": 32
+              "top": 607,
+              "left": 258
             },
-            "width": 1336,
-            "height": 96,
-            "skinSlot": "do.row.bg",
+            "width": 200,
+            "height": 112,
+            "text": "",
+            "styleSlot": "do.label.quote"
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame2",
+            "id": "btnFrame2",
+            "widget": {
+              "top": 125,
+              "left": 482
+            },
+            "width": 200,
+            "height": 470,
+            "skinSlot": "pg.frame.bg",
             "children": [
               {
-                "type": "label",
-                "name": "DestinyRow2Name",
-                "id": "destinyRow2Name",
+                "type": "container",
+                "name": "Frame2Mask",
+                "id": "frame2Mask",
                 "widget": {
-                  "top": 28,
-                  "left": 32
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
                 },
-                "height": 36,
-                "text": "",
-                "styleSlot": "do.label.name",
-                "width": 900
-              },
-              {
-                "type": "button",
-                "name": "BtnDestinyRow2",
-                "id": "btnDestinyRow2",
-                "widget": {
-                  "vCenter": true,
-                  "right": 24
-                },
-                "width": 180,
-                "height": 56,
-                "skinSlot": "do.button.bg",
+                "width": 200,
+                "height": 470,
                 "children": [
                   {
-                    "type": "label",
-                    "name": "BtnDestinyRow2Label",
-                    "id": "btnDestinyRow2Label",
-                    "widget": {
-                      "vCenter": true,
-                      "left": 0,
-                      "right": 0
-                    },
-                    "height": 40,
-                    "text": "選擇",
-                    "styleSlot": "do.label.button"
+                    "type": "image",
+                    "name": "Frame2Portrait",
+                    "id": "frame2Portrait",
+                    "width": 200,
+                    "height": 470,
+                    "skinSlot": "pg.portrait"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame2Plate",
+                "id": "frame2Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 110,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame2Name",
+                "id": "frame2Name",
+                "widget": {
+                  "bottom": 44,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 50,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame2Sub",
+                "id": "frame2Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame2Sel",
+                "id": "frame2Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 200,
+                "height": 470,
+                "skinSlot": "pg.sel"
               }
             ]
           },
           {
-            "type": "panel",
-            "name": "DestinyRow3",
-            "id": "destinyRow3",
+            "type": "label",
+            "name": "Frame2Quote",
+            "id": "frame2Quote",
             "widget": {
-              "top": 466,
-              "left": 32
+              "top": 607,
+              "left": 482
             },
-            "width": 1336,
-            "height": 96,
-            "skinSlot": "do.row.bg",
+            "width": 200,
+            "height": 112,
+            "text": "",
+            "styleSlot": "do.label.quote"
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame3",
+            "id": "btnFrame3",
+            "widget": {
+              "top": 125,
+              "left": 706
+            },
+            "width": 200,
+            "height": 470,
+            "skinSlot": "pg.frame.bg",
             "children": [
               {
-                "type": "label",
-                "name": "DestinyRow3Name",
-                "id": "destinyRow3Name",
+                "type": "container",
+                "name": "Frame3Mask",
+                "id": "frame3Mask",
                 "widget": {
-                  "top": 28,
-                  "left": 32
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
                 },
-                "height": 36,
-                "text": "",
-                "styleSlot": "do.label.name",
-                "width": 900
-              },
-              {
-                "type": "button",
-                "name": "BtnDestinyRow3",
-                "id": "btnDestinyRow3",
-                "widget": {
-                  "vCenter": true,
-                  "right": 24
-                },
-                "width": 180,
-                "height": 56,
-                "skinSlot": "do.button.bg",
+                "width": 200,
+                "height": 470,
                 "children": [
                   {
-                    "type": "label",
-                    "name": "BtnDestinyRow3Label",
-                    "id": "btnDestinyRow3Label",
-                    "widget": {
-                      "vCenter": true,
-                      "left": 0,
-                      "right": 0
-                    },
-                    "height": 40,
-                    "text": "選擇",
-                    "styleSlot": "do.label.button"
+                    "type": "image",
+                    "name": "Frame3Portrait",
+                    "id": "frame3Portrait",
+                    "width": 200,
+                    "height": 470,
+                    "skinSlot": "pg.portrait"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame3Plate",
+                "id": "frame3Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 110,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame3Name",
+                "id": "frame3Name",
+                "widget": {
+                  "bottom": 44,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 50,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame3Sub",
+                "id": "frame3Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame3Sel",
+                "id": "frame3Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 200,
+                "height": 470,
+                "skinSlot": "pg.sel"
               }
             ]
           },
           {
-            "type": "panel",
-            "name": "DestinyRow4",
-            "id": "destinyRow4",
+            "type": "label",
+            "name": "Frame3Quote",
+            "id": "frame3Quote",
             "widget": {
-              "top": 578,
-              "left": 32
+              "top": 607,
+              "left": 706
             },
-            "width": 1336,
-            "height": 96,
-            "skinSlot": "do.row.bg",
+            "width": 200,
+            "height": 112,
+            "text": "",
+            "styleSlot": "do.label.quote"
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame4",
+            "id": "btnFrame4",
+            "widget": {
+              "top": 125,
+              "left": 930
+            },
+            "width": 200,
+            "height": 470,
+            "skinSlot": "pg.frame.bg",
             "children": [
               {
-                "type": "label",
-                "name": "DestinyRow4Name",
-                "id": "destinyRow4Name",
+                "type": "container",
+                "name": "Frame4Mask",
+                "id": "frame4Mask",
                 "widget": {
-                  "top": 28,
-                  "left": 32
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
                 },
-                "height": 36,
-                "text": "",
-                "styleSlot": "do.label.name",
-                "width": 900
-              },
-              {
-                "type": "button",
-                "name": "BtnDestinyRow4",
-                "id": "btnDestinyRow4",
-                "widget": {
-                  "vCenter": true,
-                  "right": 24
-                },
-                "width": 180,
-                "height": 56,
-                "skinSlot": "do.button.bg",
+                "width": 200,
+                "height": 470,
                 "children": [
                   {
-                    "type": "label",
-                    "name": "BtnDestinyRow4Label",
-                    "id": "btnDestinyRow4Label",
-                    "widget": {
-                      "vCenter": true,
-                      "left": 0,
-                      "right": 0
-                    },
-                    "height": 40,
-                    "text": "選擇",
-                    "styleSlot": "do.label.button"
+                    "type": "image",
+                    "name": "Frame4Portrait",
+                    "id": "frame4Portrait",
+                    "width": 200,
+                    "height": 470,
+                    "skinSlot": "pg.portrait"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame4Plate",
+                "id": "frame4Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 110,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame4Name",
+                "id": "frame4Name",
+                "widget": {
+                  "bottom": 44,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 50,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame4Sub",
+                "id": "frame4Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame4Sel",
+                "id": "frame4Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 200,
+                "height": 470,
+                "skinSlot": "pg.sel"
               }
             ]
           },
           {
-            "type": "panel",
-            "name": "DestinyRow5",
-            "id": "destinyRow5",
+            "type": "label",
+            "name": "Frame4Quote",
+            "id": "frame4Quote",
             "widget": {
-              "top": 690,
-              "left": 32
+              "top": 607,
+              "left": 930
             },
-            "width": 1336,
-            "height": 96,
-            "skinSlot": "do.row.bg",
+            "width": 200,
+            "height": 112,
+            "text": "",
+            "styleSlot": "do.label.quote"
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame5",
+            "id": "btnFrame5",
+            "widget": {
+              "top": 125,
+              "left": 1154
+            },
+            "width": 200,
+            "height": 470,
+            "skinSlot": "pg.frame.bg",
             "children": [
               {
-                "type": "label",
-                "name": "DestinyRow5Name",
-                "id": "destinyRow5Name",
+                "type": "container",
+                "name": "Frame5Mask",
+                "id": "frame5Mask",
                 "widget": {
-                  "top": 28,
-                  "left": 32
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
                 },
-                "height": 36,
-                "text": "",
-                "styleSlot": "do.label.name",
-                "width": 900
-              },
-              {
-                "type": "button",
-                "name": "BtnDestinyRow5",
-                "id": "btnDestinyRow5",
-                "widget": {
-                  "vCenter": true,
-                  "right": 24
-                },
-                "width": 180,
-                "height": 56,
-                "skinSlot": "do.button.bg",
+                "width": 200,
+                "height": 470,
                 "children": [
                   {
-                    "type": "label",
-                    "name": "BtnDestinyRow5Label",
-                    "id": "btnDestinyRow5Label",
-                    "widget": {
-                      "vCenter": true,
-                      "left": 0,
-                      "right": 0
-                    },
-                    "height": 40,
-                    "text": "選擇",
-                    "styleSlot": "do.label.button"
+                    "type": "image",
+                    "name": "Frame5Portrait",
+                    "id": "frame5Portrait",
+                    "width": 200,
+                    "height": 470,
+                    "skinSlot": "pg.portrait"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame5Plate",
+                "id": "frame5Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 110,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame5Name",
+                "id": "frame5Name",
+                "widget": {
+                  "bottom": 44,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 50,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame5Sub",
+                "id": "frame5Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame5Sel",
+                "id": "frame5Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 200,
+                "height": 470,
+                "skinSlot": "pg.sel"
               }
             ]
+          },
+          {
+            "type": "label",
+            "name": "Frame5Quote",
+            "id": "frame5Quote",
+            "widget": {
+              "top": 607,
+              "left": 1154
+            },
+            "width": 200,
+            "height": 112,
+            "text": "",
+            "styleSlot": "do.label.quote"
           },
           {
             "type": "button",

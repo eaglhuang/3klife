@@ -33,7 +33,7 @@ export const DEFAULT_SYNERGY_GROUPS: readonly SynergyGroup[] = [
     {
         id: 'SYN_ZHAO_ZHUGE_01',
         name: '龍鳳之誼',
-        partners: ['SUP_ZHUGE_SSR_01', 'SUP_PANG_SSR_01'],
+        partners: ['SUP_ZHUGE_SR_01', 'SUP_PANG_SSR_01'],
         minFriendship: SYNERGY_DEFAULT_MIN_FRIENDSHIP,
         effects: [{ type: 'SPECIAL_INSPIRATION', eventId: 'SYN_EVT_ZHAO_ZHUGE_01' }, { type: 'DIALOG_UNLOCK' }],
     },

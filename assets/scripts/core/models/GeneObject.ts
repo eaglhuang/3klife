@@ -91,7 +91,7 @@ export function findDuplicateGeneIds(genes: readonly GeneObject[]): string[] {
         if (seen.has(gene.id)) duplicates.add(gene.id);
         seen.add(gene.id);
     }
-    return [...duplicates];
+    return Array.from(duplicates);
 }
 
 /** 序列化成 JSON 字串（存檔用） */

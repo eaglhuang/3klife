@@ -9,9 +9,11 @@
  *             + UIEventHandler (純事件轉接，無業務邏輯)
  */
 
+import { formatAwakeningReveal } from './AwakeningReveal';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
+import { applyOpeningWinGuarantee, autoResolveOutcome } from '../runtime/BattleAutoResolve';
 import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance, localizedMilestoneName } from '../../core/systems/BattleRecordStats';
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
@@ -139,6 +141,7 @@ export class BattleUIBridge {
     onGeneralDuelRequest: () => void;
     onBoardPlacement?: (screenX: number, screenY: number) => void;
     onReplay:       () => void;
+    onBack?:        () => void;
   }): void {
     this.unsubscribeEvents();
     this.onBoardPlacement = externalHandlers.onBoardPlacement ?? null;
@@ -162,6 +165,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.UnitDeployed,            this._onUnitDeployed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDamaged,             this._onUnitDamaged.bind(this)),
       svc.event.on(EVENT_NAMES.UnitAttackMissed,        this._onUnitAttackMissed.bind(this)),
+      svc.event.on(EVENT_NAMES.KinComboAttack,          this._onKinComboAttack.bind(this)),
       svc.event.on(EVENT_NAMES.UnitHealed,              this._onUnitHealed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitMoved,               this._onUnitMoved.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDied,                this._onUnitDied.bind(this)),
@@ -170,6 +174,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.TileBuffSpawned,         this._onTileBuffSpawned.bind(this)),
       svc.event.on(EVENT_NAMES.TileBuffConsumed,        this._onTileBuffConsumed.bind(this)),
       svc.event.on(EVENT_NAMES.BattleEnded,             this._onBattleEnded.bind(this)),
+      svc.event.on(EVENT_NAMES.AutoBattleToggled,       this._onAutoBattleToggled.bind(this)),
       svc.event.on(EVENT_NAMES.RequestGeneralQuickView, this._onRequestGeneralQuickView.bind(this)),
       svc.event.on(EVENT_NAMES.UltimateSkillSelected,   this._onUltimateSkillSelected.bind(this)),
     );
@@ -182,6 +187,7 @@ export class BattleUIBridge {
     bindNodeEvent(actionCommandNode, 'endTurn', externalHandlers.onEndTurn);
     bindNodeEvent(actionCommandNode, 'tactics', externalHandlers.onTactics);
     bindNodeEvent(c.resultPopup?.node, 'replay', externalHandlers.onReplay);
+    if (externalHandlers.onBack) bindNodeEvent(c.resultPopup?.node, 'back', externalHandlers.onBack);
     bindNodeEvent(c.deployRuntime?.node, 'generalDuel', externalHandlers.onGeneralDuelRequest);
     input.on(Input.EventType.TOUCH_END, this._onGlobalBoardTouchEnd, this);
     this.unsubs.push(() => input.off(Input.EventType.TOUCH_END, this._onGlobalBoardTouchEnd, this));
@@ -377,6 +383,21 @@ export class BattleUIBridge {
     }
   }
 
+  /** 史實合攻觸發（KIN-09 演出）：記一行戰報，助攻方撲向目標 */
+  private _onKinComboAttack(data?: { attackerId: string; helperId: string; targetId: string }): void {
+    if (!data) return;
+    const c = this.ctx;
+    const attacker = c.ctrl?.state.units.get(data.attackerId);
+    const helper = c.ctrl?.state.units.get(data.helperId);
+    const target = c.ctrl?.state.units.get(data.targetId);
+    if (!attacker || !helper || !target) return;
+    const side = helper.faction === Faction.Player ? '我方' : '敵方';
+    this.appendLog(`${side}${helper.name} 與${attacker.name}史實合攻，追擊${target.name}`);
+    this._enqueueCombatVisual(`kin-combo:${data.helperId}`, async () => {
+      await (c.unitRenderer?.playAttackAnimationAsync(data.helperId, target.lane, target.depth) ?? Promise.resolve());
+    });
+  }
+
   /** 適性命中落空：記一行戰報、攻方照樣撲上去（PROG-2-0080） */
   private _onUnitAttackMissed(data?: { attackerId: string; targetId: string; hitRate: number }): void {
     if (!data) return;
@@ -528,6 +549,24 @@ export class BattleUIBridge {
     this.refreshBattleViews();
   }
 
+  /** 自動鈕（PROG-2-1091）：開啟即依雙方數值模擬勝負，走既有 BattleEnded → 結算彈窗流程 */
+  private _onAutoBattleToggled(enabled: boolean): void {
+    const state = this.ctx.ctrl?.state;
+    if (!enabled || !state || state.battleEndAnnounced) return;
+    const side = (faction: Faction, fortressHp: number) => ({
+      general: state.getGeneral(faction),
+      troops: Array.from(state.units.values()).filter((u) => u.faction === faction && !u.isDead()),
+      fortressHp,
+    });
+    const outcome = applyOpeningWinGuarantee(
+      autoResolveOutcome(side(Faction.Player, state.playerFortressHp), side(Faction.Enemy, state.enemyFortressHp), Math.random),
+      services().session.firstBattleCleared,
+    );
+    this.appendLog(`自動模擬：我方戰力 ${outcome.playerPower}，敵方戰力 ${outcome.enemyPower}`);
+    state.battleEndAnnounced = true;
+    services().event.emit(EVENT_NAMES.BattleEnded, { result: outcome.result });
+  }
+
   private _onBattleEnded(data: { result: string }): void {
     const c = this.ctx;
     const effectKey = resolveBattleResultEffectKey(data.result);
@@ -536,7 +575,7 @@ export class BattleUIBridge {
     }
     this.appendLog(`戰鬥結束：${data.result}`);
     const details = this._settleRosterBattle(data.result as BattleResult);
-    c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined);
+    c.resultPopup?.showResult(data.result as any, details.length > 0 ? details.join('\n') : undefined, c.pg?.id);
     c.boardRenderer?.clearDeployHint();
     c.hud?.clearPersistentStatus();
     c.hud?.clearSceneGambitBadge();
@@ -594,6 +633,7 @@ export class BattleUIBridge {
       for (const awakened of settlement.awakenings) {
         this.appendLog(`【覺醒】${awakened.displayName}！`);
       }
+      this.ctx.resultPopup?.appendDetails?.(formatAwakeningReveal(settlement.awakenings));
     }).catch((error) => {
       UCUFLogger.warn(LogCategory.BATTLE, '[BattleUIBridge] 戰後結算寫回名冊失敗', error);
     });

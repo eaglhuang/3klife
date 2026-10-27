@@ -4,6 +4,11 @@
   "bundle": "lobby_ui",
   "atlasPolicy": "lobby_ui",
   "slots": {
+    "rf.scrim": {
+      "kind": "color-rect",
+      "color": "#000000",
+      "alpha": 170
+    },
     "rf.card.bg": {
       "kind": "color-rect",
       "color": "backgroundDeep",
@@ -61,6 +66,123 @@
       "lineHeight": 30,
       "color": "secondaryLight",
       "overflow": "SHRINK"
+    },
+    "pg.frame.bg": {
+      "kind": "color-rect",
+      "color": "#2E2422",
+      "alpha": 255,
+      "cornerRadius": 10,
+      "borderWidth": 2,
+      "borderColor": "#5A4C42"
+    },
+    "pg.portrait": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_avatars/unknown_avatar_f",
+      "expectedWidth": 256,
+      "expectedHeight": 256
+    },
+    "pg.plate": {
+      "kind": "color-rect",
+      "color": "#0A0808",
+      "alpha": 200
+    },
+    "pg.tag": {
+      "kind": "color-rect",
+      "color": "#966A26",
+      "alpha": 255,
+      "cornerRadius": 6
+    },
+    "pg.sel": {
+      "kind": "color-rect",
+      "color": "#000000",
+      "alpha": 0,
+      "cornerRadius": 10,
+      "borderWidth": 5,
+      "borderColor": "#E8BE60"
+    },
+    "pg.page.btn": {
+      "kind": "color-rect",
+      "color": "#7A1E1A",
+      "alpha": 230,
+      "cornerRadius": 8
+    },
+    "pg.divider": {
+      "kind": "color-rect",
+      "color": "#5A4830",
+      "alpha": 255
+    },
+    "pg.label.name": {
+      "kind": "label-style",
+      "font": "fonts/notoserif_tc/notoserif_tc",
+      "fontSize": 40,
+      "lineHeight": 50,
+      "color": "#F6E6C4",
+      "isBold": true,
+      "overflow": "SHRINK",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "pg.label.sub": {
+      "kind": "label-style",
+      "font": "fonts/notoserif_tc/notoserif_tc",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "#B4A08A",
+      "overflow": "SHRINK",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "pg.label.tag": {
+      "kind": "label-style",
+      "font": "fonts/notoserif_tc/notoserif_tc",
+      "fontSize": 24,
+      "lineHeight": 30,
+      "color": "#FFF0D2",
+      "isBold": true,
+      "overflow": "SHRINK",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "pg.label.page": {
+      "kind": "label-style",
+      "font": "fonts/notoserif_tc/notoserif_tc",
+      "fontSize": 32,
+      "lineHeight": 40,
+      "color": "#ECD6AA",
+      "overflow": "SHRINK",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "pg.label.detailName": {
+      "kind": "label-style",
+      "font": "fonts/notoserif_tc/notoserif_tc",
+      "fontSize": 40,
+      "lineHeight": 50,
+      "color": "#F6E6C4",
+      "isBold": true,
+      "overflow": "SHRINK",
+      "horizontalAlign": "LEFT",
+      "verticalAlign": "CENTER"
+    },
+    "pg.label.meta": {
+      "kind": "label-style",
+      "font": "fonts/notoserif_tc/notoserif_tc",
+      "fontSize": 26,
+      "lineHeight": 34,
+      "color": "#D6B478",
+      "overflow": "SHRINK",
+      "horizontalAlign": "LEFT",
+      "verticalAlign": "CENTER"
+    },
+    "pg.label.body": {
+      "kind": "label-style",
+      "font": "fonts/notoserif_tc/notoserif_tc",
+      "fontSize": 28,
+      "lineHeight": 36,
+      "color": "#DCCEB8",
+      "overflow": "SHRINK",
+      "horizontalAlign": "LEFT",
+      "verticalAlign": "CENTER"
     }
   }
 }

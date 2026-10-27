@@ -22,6 +22,26 @@ function seqRandom(values: number[]): () => number {
 export function createDestinyGachaSuite(): TestSuite {
     const suite = new TestSuite('DestinyGacha (OPEN-05 宿命轉蛋)');
 
+    suite.test('降階陣列展開的 Web 輸出仍能抽完六名候選並去重', () => {
+        const ts = require('typescript');
+        const fs = require('fs');
+        const source = fs.readFileSync(require.resolve('../assets/scripts/core/systems/DestinyGacha.ts'), 'utf8');
+        const output = ts.transpileModule(source, { compilerOptions: {
+            target: ts.ScriptTarget.ES5, module: ts.ModuleKind.CommonJS, downlevelIteration: false,
+        } }).outputText;
+        const compiled: any = {};
+        new Function('exports', output)(compiled);
+        const candidates = POOL.slice(0, 6);
+        const result = compiled.rollDestinyGacha(compiled.createDestinyGachaState(),
+            candidates.concat(candidates[0]), { ...OPTIONS, pickCount: 6 }, seqRandom([0.2]));
+        assert.equals(true, result.ok);
+        assert.equals('rolled', result.state.phase);
+        assert.equals(6, result.state.rolled.length);
+        assert.equals(candidates.slice().sort().join(','), result.state.rolled.slice().sort().join(','));
+        assert.equals('pool-too-small', compiled.rollDestinyGacha(compiled.createDestinyGachaState(),
+            candidates, { ...OPTIONS, pickCount: 7 }, seqRandom([0])).reason);
+    });
+
     suite.test('十連抽：抽出 10 個不重複的 id，進入 rolled', () => {
         const result = rollDestinyGacha(createDestinyGachaState(), POOL, OPTIONS, seqRandom([0.1, 0.5, 0.9]));
         assert.equals(true, result.ok);

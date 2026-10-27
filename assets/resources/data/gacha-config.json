@@ -53,5 +53,32 @@
     "confirmRequired": true,
     "currencyType": "ticket",
     "singlePullCost": 1
+  },
+  {
+    "poolId": "mentor-pool",
+    "poolName": "支援卡池",
+    "poolType": "mentor",
+    "resetEnabled": false,
+    "guaranteeRarity": "rare",
+    "guaranteeThreshold": 10,
+    "pickCount": 1,
+    "candidateIds": [
+      "zhao-yun",
+      "zhuge-liang",
+      "guan-yu",
+      "zhang-fei",
+      "lu-bu",
+      "zhou-yu",
+      "pang-tong",
+      "sun-ce",
+      "zhang-liao",
+      "ling-tong",
+      "xu-sheng",
+      "zhang-bao"
+    ],
+    "firstPickOnly": false,
+    "confirmRequired": true,
+    "currencyType": "mentorTicket",
+    "singlePullCost": 1
   }
 ]

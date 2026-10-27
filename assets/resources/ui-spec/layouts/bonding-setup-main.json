@@ -39,7 +39,7 @@
           "vCenter": true
         },
         "width": 1200,
-        "height": 780,
+        "height": 880,
         "skinSlot": "bonding.card.bg",
         "children": [
           {
@@ -130,7 +130,7 @@
               "top": 84,
               "left": 24,
               "right": 24,
-              "bottom": 64
+              "bottom": 16
             },
             "children": [
               {
@@ -145,12 +145,47 @@
                 "skinSlot": "bonding.slot.bg",
                 "children": [
                   {
+                    "type": "panel",
+                    "name": "FatherAvatarRing",
+                    "id": "fatherAvatarRing",
+                    "widget": {
+                      "top": 14,
+                      "left": 16
+                    },
+                    "width": 112,
+                    "height": 112,
+                    "skinSlot": "bonding.avatar.ring",
+                    "children": [
+                      {
+                        "type": "container",
+                        "name": "FatherAvatarMask",
+                        "id": "fatherAvatarMask",
+                        "widget": {
+                          "hCenter": true,
+                          "vCenter": true
+                        },
+                        "width": 104,
+                        "height": 104,
+                        "children": [
+                          {
+                            "type": "image",
+                            "name": "FatherAvatar",
+                            "id": "fatherAvatar",
+                            "width": 104,
+                            "height": 104,
+                            "skinSlot": "bonding.avatar"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
                     "type": "label",
                     "name": "FatherName",
                     "id": "fatherName",
                     "widget": {
                       "top": 16,
-                      "left": 20,
+                      "left": 144,
                       "right": 20
                     },
                     "height": 38,
@@ -163,7 +198,7 @@
                     "id": "fatherInfo",
                     "widget": {
                       "top": 62,
-                      "left": 20,
+                      "left": 144,
                       "right": 20
                     },
                     "height": 28,
@@ -176,7 +211,7 @@
                     "id": "fatherFactors",
                     "widget": {
                       "top": 92,
-                      "left": 20,
+                      "left": 144,
                       "right": 20
                     },
                     "height": 28,
@@ -264,12 +299,47 @@
                 "skinSlot": "bonding.slot.bg",
                 "children": [
                   {
+                    "type": "panel",
+                    "name": "MotherAvatarRing",
+                    "id": "motherAvatarRing",
+                    "widget": {
+                      "top": 14,
+                      "left": 16
+                    },
+                    "width": 112,
+                    "height": 112,
+                    "skinSlot": "bonding.avatar.ring",
+                    "children": [
+                      {
+                        "type": "container",
+                        "name": "MotherAvatarMask",
+                        "id": "motherAvatarMask",
+                        "widget": {
+                          "hCenter": true,
+                          "vCenter": true
+                        },
+                        "width": 104,
+                        "height": 104,
+                        "children": [
+                          {
+                            "type": "image",
+                            "name": "MotherAvatar",
+                            "id": "motherAvatar",
+                            "width": 104,
+                            "height": 104,
+                            "skinSlot": "bonding.avatar"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
                     "type": "label",
                     "name": "MotherName",
                     "id": "motherName",
                     "widget": {
                       "top": 16,
-                      "left": 20,
+                      "left": 144,
                       "right": 20
                     },
                     "height": 38,
@@ -282,7 +352,7 @@
                     "id": "motherInfo",
                     "widget": {
                       "top": 62,
-                      "left": 20,
+                      "left": 144,
                       "right": 20
                     },
                     "height": 28,
@@ -295,7 +365,7 @@
                     "id": "motherFactors",
                     "widget": {
                       "top": 92,
-                      "left": 20,
+                      "left": 144,
                       "right": 20
                     },
                     "height": 28,
@@ -378,7 +448,7 @@
                 "widget": {
                   "top": 220,
                   "left": 16,
-                  "right": 16
+                  "right": 560
                 },
                 "height": 30,
                 "text": "",
@@ -389,13 +459,13 @@
                 "name": "FactorStage",
                 "id": "factorStage",
                 "widget": {
-                  "bottom": 8,
-                  "left": 16,
+                  "top": 224,
                   "right": 16
                 },
-                "height": 20,
+                "height": 24,
                 "text": "",
-                "styleSlot": "bonding.label.meta"
+                "styleSlot": "bonding.label.meta",
+                "width": 520
               },
               {
                 "type": "panel",
@@ -467,11 +537,11 @@
                 "name": "EligibilityLabel",
                 "id": "eligibilityLabel",
                 "widget": {
-                  "top": 472,
-                  "left": 16,
-                  "right": 16
+                  "top": 474,
+                  "left": 362,
+                  "right": 362
                 },
-                "height": 30,
+                "height": 56,
                 "text": "",
                 "styleSlot": "bonding.label.stats"
               },
@@ -480,9 +550,9 @@
                 "name": "CostLabel",
                 "id": "costLabel",
                 "widget": {
-                  "top": 510,
-                  "left": 16,
-                  "right": 16
+                  "top": 536,
+                  "left": 362,
+                  "right": 362
                 },
                 "height": 30,
                 "text": "",
@@ -493,11 +563,11 @@
                 "name": "BtnConfirmBond",
                 "id": "btnConfirmBond",
                 "widget": {
-                  "top": 556,
+                  "top": 574,
                   "hCenter": true
                 },
                 "width": 240,
-                "height": 64,
+                "height": 56,
                 "skinSlot": "bonding.button.confirm.bg",
                 "children": [
                   {
@@ -509,7 +579,7 @@
                       "left": 0,
                       "right": 0
                     },
-                    "height": 56,
+                    "height": 48,
                     "text": "確認結緣",
                     "styleSlot": "bonding.label.button"
                   }
@@ -522,7 +592,7 @@
                 "height": 260,
                 "widget": {
                   "left": 16,
-                  "top": 520
+                  "top": 470
                 },
                 "skinSlot": "bonding.slot.bg",
                 "layout": {
@@ -809,7 +879,7 @@
                 "height": 260,
                 "widget": {
                   "right": 16,
-                  "top": 520
+                  "top": 470
                 },
                 "skinSlot": "bonding.slot.bg",
                 "layout": {
@@ -1096,7 +1166,7 @@
             "name": "BondNotice",
             "id": "bondNotice",
             "widget": {
-              "bottom": 16,
+              "bottom": 12,
               "left": 32,
               "right": 32
             },
@@ -1113,9 +1183,192 @@
               "hCenter": true
             },
             "width": 420,
-            "height": 96,
+            "height": 92,
             "text": "",
             "styleSlot": "bonding.label.log"
+          },
+          {
+            "type": "container",
+            "name": "SageRow0",
+            "id": "sageRow0",
+            "widget": {
+              "bottom": 118,
+              "hCenter": true
+            },
+            "width": 420,
+            "height": 30,
+            "children": [
+              {
+                "type": "panel",
+                "name": "SageIcon0Ring",
+                "id": "sageIcon0Ring",
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                },
+                "width": 30,
+                "height": 30,
+                "skinSlot": "bonding.sage.ring",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "SageIcon0Mask",
+                    "id": "sageIcon0Mask",
+                    "widget": {
+                      "hCenter": true,
+                      "vCenter": true
+                    },
+                    "width": 22,
+                    "height": 22,
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "SageIcon0",
+                        "id": "sageIcon0",
+                        "width": 22,
+                        "height": 22,
+                        "skinSlot": "bonding.avatar"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "SageLine0",
+                "id": "sageLine0",
+                "widget": {
+                  "left": 40,
+                  "right": 0,
+                  "vCenter": true
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "bonding.label.log"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "SageRow1",
+            "id": "sageRow1",
+            "widget": {
+              "bottom": 87,
+              "hCenter": true
+            },
+            "width": 420,
+            "height": 30,
+            "children": [
+              {
+                "type": "panel",
+                "name": "SageIcon1Ring",
+                "id": "sageIcon1Ring",
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                },
+                "width": 30,
+                "height": 30,
+                "skinSlot": "bonding.sage.ring",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "SageIcon1Mask",
+                    "id": "sageIcon1Mask",
+                    "widget": {
+                      "hCenter": true,
+                      "vCenter": true
+                    },
+                    "width": 22,
+                    "height": 22,
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "SageIcon1",
+                        "id": "sageIcon1",
+                        "width": 22,
+                        "height": 22,
+                        "skinSlot": "bonding.avatar"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "SageLine1",
+                "id": "sageLine1",
+                "widget": {
+                  "left": 40,
+                  "right": 0,
+                  "vCenter": true
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "bonding.label.log"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "SageRow2",
+            "id": "sageRow2",
+            "widget": {
+              "bottom": 56,
+              "hCenter": true
+            },
+            "width": 420,
+            "height": 30,
+            "children": [
+              {
+                "type": "panel",
+                "name": "SageIcon2Ring",
+                "id": "sageIcon2Ring",
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                },
+                "width": 30,
+                "height": 30,
+                "skinSlot": "bonding.sage.ring",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "SageIcon2Mask",
+                    "id": "sageIcon2Mask",
+                    "widget": {
+                      "hCenter": true,
+                      "vCenter": true
+                    },
+                    "width": 22,
+                    "height": 22,
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "SageIcon2",
+                        "id": "sageIcon2",
+                        "width": 22,
+                        "height": 22,
+                        "skinSlot": "bonding.avatar"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "SageLine2",
+                "id": "sageLine2",
+                "widget": {
+                  "left": 40,
+                  "right": 0,
+                  "vCenter": true
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "bonding.label.log"
+              }
+            ]
           }
         ]
       }

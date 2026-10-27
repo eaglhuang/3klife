@@ -1,0 +1,25 @@
+{
+  "validatedSourceCommit": "788f6be2efcd989ca477232a3be03b1adb2fa2e8",
+  "baseCommit": "d44d6dec34037b5006e646269827ed5e685e02ad",
+  "gitObjects": {
+    "assets": "cd8447cfcb9e04b334c96136bc9fd0e5be0d2fdf",
+    "tests": "84151205d456b1dcb7aac927164d3300e8e90b1e",
+    "tools_node": "edda7cffd35f14ad59fa0ea891b8ab34318ccb69",
+    "shared": "1794603c5d794ddd8ac3f10644d0031cc66920ea",
+    "types": "8f3a4776b6b92f5a2e083b75f793d3a9c25cd607",
+    "specs": "717bb31db2d9feed0683d0d8d48ddf796452050d",
+    "schemas": "b15c69099e0c5047a53135b66c63b3746d5f2222",
+    "extensions": "895ddade43152eb3730529f16c0e36a6141900f2",
+    "tools": "031e3201a376726b43c71469d62d24b07f8455d2",
+    "package.json": "e10e9ee171d2cd79b0d88599cf7919c330f4f9c2",
+    "package-lock.json": "5c487fb5fb28041442054a145bc5c07793811aaa",
+    "tsconfig.test.json": "e702954ea06c8e80f04f9ba8cce51249775fcc60",
+    "tsconfig.json": "e63ea4d1751ce84b3917e6d487337df54aa28cac",
+    "tsconfig.cc-check.json": "cc40dfedb78e7443f8fef065d0134efdec7329a2",
+    "tsconfig.atomic.json": "f7a4f6135b997d6c768505af1e0a3c763983ce5f"
+  },
+  "nodeVersion": "v24.19.0",
+  "typescriptVersion": "Version 5.9.3",
+  "packageLockSha256": "5f28f8fddd73193451eacf518422f28bac3c5fa86bcb3ea98509191a2fdeeb11",
+  "note": "Final evidence commit may change docs only. Verify these git object IDs against final HEAD to bind all source/test/tool inputs without a self-referential commit hash."
+}

@@ -13,6 +13,8 @@
  *       Check all doc_ids in shard files exist in registry
  *   node tools_node/rebuild-crossref.js --rebuild-progress
  *       Scan assets/scripts/**\/*.ts, compare with B-1, write progress report
+ *   node tools_node/rebuild-crossref.js --rebuild-screens
+ *       Regenerate the "UI Spec JSON" table in cross-ref-code.md from ui-spec/screens (PROG-2-1100)
  *
  * Flags can be combined:
  *   node tools_node/rebuild-crossref.js --compress docs/cross-ref/cross-ref-specs.md --strip-code docs/cross-ref/cross-ref-specs.md
@@ -368,6 +370,57 @@ function readFile(filePath) {
 }
 
 // ── Main ─────────────────────────────────────────────────────────────────────
+// ─── --rebuild-screens ───────────────────────────────────────────────────────
+// 從 ui-spec/screens 主畫面檔（有 layout 或 screens 欄位）重生「UI Spec JSON」表，
+// 以 screen id 反查 assets/scripts 中引用它的 .ts（排除 .d.ts）。
+function rebuildScreens() {
+  const screensDir = path.join(ROOT, 'assets', 'resources', 'ui-spec', 'screens');
+  const scriptsDir = path.join(ROOT, 'assets', 'scripts');
+  const sources = [];
+  const walk = (dir) => {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) walk(full);
+      else if (e.name.endsWith('.ts') && !e.name.endsWith('.d.ts')) sources.push({ rel: path.relative(scriptsDir, full).split(path.sep).join('/'), text: fs.readFileSync(full, 'utf8') });
+    }
+  };
+  walk(scriptsDir);
+
+  const rows = [];
+  for (const name of fs.readdirSync(screensDir).sort()) {
+    if (!name.endsWith('.json')) continue;
+    let json;
+    try { json = JSON.parse(fs.readFileSync(path.join(screensDir, name), 'utf8')); } catch { continue; }
+    if (!json || typeof json.id !== 'string' || (!json.layout && !Array.isArray(json.screens))) continue;
+    const id = json.id;
+    const layout = json.layout ? `${json.layout}.json` : '— (多子畫面)';
+    const skin = json.skin ? `${json.skin}.json` : '—';
+    const users = sources.filter((s) => s.text.includes(`'${id}'`) || s.text.includes(`"${id}"`)).map((s) => s.rel);
+    const ts = users.length > 0 ? users.slice(0, 3).join('<br>') + (users.length > 3 ? ` 等 ${users.length} 檔` : '') : '（程式未引用）';
+    rows.push(`| ${id} | ${layout} | ${skin} | ${name} | ${json.bundle || '—'} | ${ts} |`);
+  }
+
+  const codeRefPath = path.join(ROOT, 'docs', 'cross-ref', 'cross-ref-code.md');
+  const content = fs.readFileSync(codeRefPath, 'utf8');
+  const start = content.search(/^#### UI Spec JSON.*$/m);
+  if (start < 0) { console.error('[rebuild-screens] 找不到「#### UI Spec JSON」標題'); process.exit(1); }
+  const bodyStart = content.indexOf(String.fromCharCode(10), start) + 1;
+  const nextHeading = content.slice(bodyStart).search(/^#{2,4} /m);
+  const end = nextHeading < 0 ? content.length : bodyStart + nextHeading;
+  const table = [
+    '#### UI Spec JSON（三層 JSON 系統；由 `node tools_node/rebuild-crossref.js --rebuild-screens` 自動產生）',
+    '',
+    '| Screen | Layout | Skin | Screen 檔 | Bundle | 引用的 TS（assets/scripts 相對路徑） |',
+    '|---|---|---|---|---|---|',
+    ...rows,
+    '',
+    '',
+  ].join('\n');
+  const next = content.slice(0, start) + table + content.slice(end);
+  if (next !== content) fs.writeFileSync(codeRefPath, next, 'utf8');
+  console.log(`[rebuild-screens] ${rows.length} 個畫面寫入 cross-ref-code.md${next === content ? '（無變化）' : ''}`);
+}
+
 function main() {
   if (argv.length === 0 || hasFlag('--help')) {
     console.log(`rebuild-crossref.js — Cross-Reference maintenance tool
@@ -470,6 +523,11 @@ Flags can be combined on one command line.
   // --rebuild-progress
   if (hasFlag('--rebuild-progress')) {
     rebuildProgress();
+  }
+
+  // --rebuild-screens
+  if (hasFlag('--rebuild-screens')) {
+    rebuildScreens();
   }
 }
 

@@ -79,6 +79,7 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         assert.isTrue(destiny.roll());
         assert.equals(null, destinyLockedEvent(destiny.state));
         assert.isTrue(await destiny.select(0));
+        assert.isTrue(await destiny.confirm());
         const locked = destinyLockedEvent(destiny.state)!;
         assert.equals(null, flow.advance(locked));
         assert.equals(destiny.state.locked, session.leadGeneralId);
@@ -105,6 +106,7 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         });
         destiny.roll();
         assert.isTrue(await destiny.select(1));
+        assert.isTrue(await destiny.confirm());
         const leadId = first.leadGeneralId!;
 
         // 重開遊戲：讀得到存檔（LobbyScene 不再開開場），主將仍是所選，尚未打過首戰

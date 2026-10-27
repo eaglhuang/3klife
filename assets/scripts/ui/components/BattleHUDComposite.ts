@@ -14,6 +14,8 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  * Unity 對照：GameHUDController，監聽事件更新各個 Binding
  */
 import { _decorator, Button, Color, Label, Node, Sprite, UITransform, Vec3 } from 'cc';
+import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
+import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
 import { EVENT_NAMES, Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { buildBattleSkillEffectMessage, buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
 import { services } from '../../core/managers/ServiceLoader';
@@ -52,6 +54,8 @@ export class BattleHUDComposite extends CompositePanel {
     private _sceneGambitBadgeDock: Node   | null = null;
     private _sceneGambitBadgeLabel: Label | null = null;
     private _playerNameLabel:     Label  | null = null;
+    /** 底部指令列的主將名（battle-hud-screen 的 div_124），與頂部陣列第一格同步 */
+    private _playerCommandNameLabel: Label | null = null;
     private _enemyNameLabel:      Label  | null = null;
     private _playerFortressLabel: Label  | null = null;
     private _enemyFortressLabel:  Label  | null = null;
@@ -102,6 +106,7 @@ export class BattleHUDComposite extends CompositePanel {
         this._sceneGambitBadgeDock = binder.getNode('SceneGambitBadgeDock');
         this._sceneGambitBadgeLabel = binder.getLabel('SceneGambitBadgeLabel');
         this._playerNameLabel     = binder.getLabel('PlayerNameLabel');
+        this._playerCommandNameLabel = binder.getLabel('PlayerCommandNameLabel');
         this._playerTallySetLabel = binder.getLabel('PlayerTallySetLabel');
         this._enemyNameLabel      = binder.getLabel('EnemyNameLabel');
         this._playerFortressLabel = binder.getLabel('PlayerFortressLabel');
@@ -166,6 +171,7 @@ export class BattleHUDComposite extends CompositePanel {
     public setPlayerName(name: string): void {
         if (!this._buildCompleted) { this._pendingPlayerName = name; return; }
         if (this._playerNameLabel) this._playerNameLabel.string = name;
+        if (this._playerCommandNameLabel) this._playerCommandNameLabel.string = name;
     }
 
     /** 玩家在場的 Set 顯示文字（PROG-2-0580）；沒有 Set 時清空，只是提示、不是持續狀態列 */
@@ -385,8 +391,8 @@ export class BattleHUDComposite extends CompositePanel {
         let spriteFrame = null;
 
         if (generalId) {
-            // 優先嘗試 256×256 頭像（頭+脖子裁切版）
-            spriteFrame = await res.loadSpriteFrame(this._buildAvatarPath(generalId)).catch(() => null);
+            // 優先嘗試頭像（正式 → 自動裁切，規則見 data/general-art-paths.json）
+            spriteFrame = await loadGeneralAvatar(generalId, false);
             // 退回完整立繪
             if (!spriteFrame) {
                 spriteFrame = await res.loadSpriteFrame(this._buildPortraitPath(generalId)).catch(() => null);
@@ -407,12 +413,8 @@ export class BattleHUDComposite extends CompositePanel {
         sprite.sizeMode = Sprite.SizeMode.CUSTOM;
     }
 
-    private _buildAvatarPath(generalId: string): string {
-        return `sprites/generals/avatars/${generalId.replace(/-/g, '_')}_avatar`;
-    }
-
     private _buildPortraitPath(generalId: string): string {
-        return `sprites/generals/${generalId.replace(/-/g, '_')}_portrait`;
+        return portraitPathOf(generalId);
     }
 
     private _getPortraitFallbackPath(side: 'player' | 'enemy'): string {

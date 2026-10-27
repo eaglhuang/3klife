@@ -83,7 +83,7 @@ function checkCard(issues: NpcPersonaIssue[], path: string, key: string, value: 
     }
     if (!isNonEmptyString(value.Safe_Fallback_Line)) {
         issues.push({ path: `${path}.Safe_Fallback_Line`, message: '必須為非空字串' });
-    } else if ([...value.Safe_Fallback_Line].length > NPC_LINE_MAX_CHARS) {
+    } else if (Array.from(value.Safe_Fallback_Line).length > NPC_LINE_MAX_CHARS) {
         issues.push({ path: `${path}.Safe_Fallback_Line`, message: `不可超過 ${NPC_LINE_MAX_CHARS} 字` });
     }
     if (!isStringArray(value.Golden_Lines)) issues.push({ path: `${path}.Golden_Lines`, message: '必須為字串陣列' });

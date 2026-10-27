@@ -5,7 +5,11 @@ export const STARTER_GENERAL_IDS = ['zhang-fei', 'wei-yan', 'xiahou-dun', 'zhang
 export type StarterGeneralId = typeof STARTER_GENERAL_IDS[number];
 /** 預設核心（沒指定時）：張飛是真實資料中六人唯一 legendary(SSR)，保留原數值與因子。 */
 export const STARTER_CORE_GENERAL_ID: StarterGeneralId = 'zhang-fei';
-export interface StarterRosterOptions { coreGeneralId?: StarterGeneralId }
+export interface StarterRosterOptions {
+    coreGeneralId?: StarterGeneralId;
+    /** 開局紅顏（OpeningBeauty 抽出）：排在六位名將之後入名冊，讓第一次結緣有母方。 */
+    beautyGeneralId?: string;
+}
 
 function copyValue<T>(value: T): T {
     if (Array.isArray(value)) return value.map(item => copyValue(item)) as T;
@@ -21,7 +25,9 @@ function copyValue<T>(value: T): T {
 export function buildStarterRoster(generals: readonly GeneralConfig[], options: StarterRosterOptions = {}): GeneralConfig[] {
     const coreId = options.coreGeneralId ?? STARTER_CORE_GENERAL_ID;
     if (!STARTER_GENERAL_IDS.some(id => id === coreId)) throw new Error('[StarterRoster] 核心主將不在六位初始名將內');
-    const roster = STARTER_GENERAL_IDS.map(id => {
+    const ids: string[] = [...STARTER_GENERAL_IDS];
+    if (options.beautyGeneralId && !ids.includes(options.beautyGeneralId)) ids.push(options.beautyGeneralId);
+    const roster = ids.map(id => {
         const matches = generals.filter(general => general.id === id);
         if (matches.length !== 1) throw new Error(`[StarterRoster] ${id} 必須有唯一資料，實際 ${matches.length} 筆`);
         const general = matches[0];

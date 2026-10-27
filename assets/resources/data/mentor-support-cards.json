@@ -106,6 +106,16 @@
       },
       "Tactic_Inspire_Events": [
         {
+          "Event_ID": "EVT_ZHUGE_01",
+          "Tactic_ID": "TAC_SLOW",
+          "Trigger_Window": [
+            1,
+            12
+          ],
+          "Base_Rate": 0.3,
+          "Min_Star": 0
+        },
+        {
           "Event_ID": "EVT_ZHUGE_02",
           "Tactic_ID": "TAC_EMPTY_FORT",
           "Trigger_Window": [
@@ -150,6 +160,631 @@
       "Source": "Gacha",
       "Role_Boundary": "TeachingOnly",
       "_provisional": "PROG-2-0779：諸葛亮 SR 支援卡暫定資料（僅空城計事件依規格，其餘欄位皆為暫定值）"
+    }
+  },
+  {
+    "General_ID": "guan-yu",
+    "Support": {
+      "Support_ID": "SUP_GUAN_SSR_01",
+      "Name": "關羽",
+      "Rarity": "SSR",
+      "Teaching_Style": "刀法",
+      "Stat_Bonus": {
+        "STR": 8,
+        "AGI": 5
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_GUAN_01",
+          "Tactic_ID": "TAC_SWORN_FURY",
+          "Trigger_Window": [
+            1,
+            18
+          ],
+          "Base_Rate": 0.25,
+          "Min_Star": 0
+        },
+        {
+          "Event_ID": "EVT_GUAN_02",
+          "Tactic_ID": "TAC_WEI_MIGHT",
+          "Trigger_Window": [
+            18,
+            36
+          ],
+          "Base_Rate": 0.15,
+          "Min_Star": 3
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "TP_Bonus",
+          "Value": 0.15,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "STR",
+        "AGI"
+      ],
+      "Slot_Burst_Rate": 0.55,
+      "Synergy_Partners": [
+        "SUP_ZHANG_SSR_01",
+        "SUP_ZHANGLIAO_SR_01"
+      ],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-1099：補齊羈絆與 R 卡的暫定資料，數值待企劃校正"
+    }
+  },
+  {
+    "General_ID": "zhang-fei",
+    "Support": {
+      "Support_ID": "SUP_ZHANG_SSR_01",
+      "Name": "張飛",
+      "Rarity": "SSR",
+      "Teaching_Style": "矛法",
+      "Stat_Bonus": {
+        "STR": 9,
+        "AGI": 3
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_ZHANG_01",
+          "Tactic_ID": "TAC_TAUNT",
+          "Trigger_Window": [
+            1,
+            18
+          ],
+          "Base_Rate": 0.25,
+          "Min_Star": 0
+        },
+        {
+          "Event_ID": "EVT_ZHANG_02",
+          "Tactic_ID": "TAC_SWORN_FURY",
+          "Trigger_Window": [
+            12,
+            30
+          ],
+          "Base_Rate": 0.15,
+          "Min_Star": 2
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "TP_Bonus",
+          "Value": 0.15,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "STR",
+        "AGI"
+      ],
+      "Slot_Burst_Rate": 0.55,
+      "Synergy_Partners": [
+        "SUP_GUAN_SSR_01"
+      ],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-1099：補齊羈絆與 R 卡的暫定資料，數值待企劃校正"
+    }
+  },
+  {
+    "General_ID": "lu-bu",
+    "Support": {
+      "Support_ID": "SUP_LVBU_SSR_01",
+      "Name": "呂布",
+      "Rarity": "SSR",
+      "Teaching_Style": "戟法",
+      "Stat_Bonus": {
+        "STR": 10,
+        "AGI": 3
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_LVBU_01",
+          "Tactic_ID": "TAC_CAVALRY_CHARGE",
+          "Trigger_Window": [
+            1,
+            24
+          ],
+          "Base_Rate": 0.3,
+          "Min_Star": 0
+        },
+        {
+          "Event_ID": "EVT_LVBU_02",
+          "Tactic_ID": "TAC_LONE_RIDER",
+          "Trigger_Window": [
+            20,
+            36
+          ],
+          "Base_Rate": 0.12,
+          "Min_Star": 3
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "TP_Bonus",
+          "Value": 0.15,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "STR",
+        "AGI"
+      ],
+      "Slot_Burst_Rate": 0.55,
+      "Synergy_Partners": [
+        "SUP_ZHAO_SSR_01"
+      ],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-1099：補齊羈絆與 R 卡的暫定資料，數值待企劃校正"
+    }
+  },
+  {
+    "General_ID": "zhou-yu",
+    "Support": {
+      "Support_ID": "SUP_ZHOUYU_SR_01",
+      "Name": "周瑜",
+      "Rarity": "SSR",
+      "Teaching_Style": "兵法",
+      "Stat_Bonus": {
+        "INT": 8,
+        "POL": 5
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_ZHOUYU_01",
+          "Tactic_ID": "TAC_FIRE_ATTACK",
+          "Trigger_Window": [
+            6,
+            24
+          ],
+          "Base_Rate": 0.25,
+          "Min_Star": 0
+        },
+        {
+          "Event_ID": "EVT_ZHOUYU_02",
+          "Tactic_ID": "TAC_RED_CLIFF",
+          "Trigger_Window": [
+            24,
+            36
+          ],
+          "Base_Rate": 0.1,
+          "Min_Star": 4
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "TP_Bonus",
+          "Value": 0.15,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "INT",
+        "POL"
+      ],
+      "Slot_Burst_Rate": 0.55,
+      "Synergy_Partners": [
+        "SUP_SUNCE_SR_01"
+      ],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-1099：補齊羈絆與 R 卡的暫定資料，數值待企劃校正"
+    }
+  },
+  {
+    "General_ID": "pang-tong",
+    "Support": {
+      "Support_ID": "SUP_PANG_SSR_01",
+      "Name": "龐統",
+      "Rarity": "SR",
+      "Teaching_Style": "奇謀",
+      "Stat_Bonus": {
+        "INT": 7,
+        "POL": 4
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_PANG_01",
+          "Tactic_ID": "TAC_CHAIN_LINK",
+          "Trigger_Window": [
+            8,
+            24
+          ],
+          "Base_Rate": 0.25,
+          "Min_Star": 0
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "TP_Bonus",
+          "Value": 0.1,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "INT",
+        "POL"
+      ],
+      "Slot_Burst_Rate": 0.55,
+      "Synergy_Partners": [
+        "SUP_ZHAO_SSR_01"
+      ],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-1099：補齊羈絆與 R 卡的暫定資料，數值待企劃校正"
+    }
+  },
+  {
+    "General_ID": "sun-ce",
+    "Support": {
+      "Support_ID": "SUP_SUNCE_SR_01",
+      "Name": "孫策",
+      "Rarity": "SR",
+      "Teaching_Style": "騎槍",
+      "Stat_Bonus": {
+        "STR": 7,
+        "CHA": 4
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_SUNCE_01",
+          "Tactic_ID": "TAC_HASTE",
+          "Trigger_Window": [
+            1,
+            18
+          ],
+          "Base_Rate": 0.25,
+          "Min_Star": 0
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "TP_Bonus",
+          "Value": 0.1,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "STR",
+        "CHA"
+      ],
+      "Slot_Burst_Rate": 0.55,
+      "Synergy_Partners": [
+        "SUP_ZHOUYU_SR_01"
+      ],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-1099：補齊羈絆與 R 卡的暫定資料，數值待企劃校正"
+    }
+  },
+  {
+    "General_ID": "zhang-liao",
+    "Support": {
+      "Support_ID": "SUP_ZHANGLIAO_SR_01",
+      "Name": "張遼",
+      "Rarity": "SR",
+      "Teaching_Style": "突騎",
+      "Stat_Bonus": {
+        "STR": 6,
+        "AGI": 5
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_ZHANGLIAO_01",
+          "Tactic_ID": "TAC_NIGHT_RAID",
+          "Trigger_Window": [
+            6,
+            24
+          ],
+          "Base_Rate": 0.25,
+          "Min_Star": 0
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "TP_Bonus",
+          "Value": 0.1,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "STR",
+        "AGI"
+      ],
+      "Slot_Burst_Rate": 0.55,
+      "Synergy_Partners": [
+        "SUP_GUAN_SSR_01"
+      ],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-1099：補齊羈絆與 R 卡的暫定資料，數值待企劃校正"
+    }
+  },
+  {
+    "General_ID": "ling-tong",
+    "Support": {
+      "Support_ID": "SUP_LINGTONG_R_01",
+      "Name": "凌統",
+      "Rarity": "R",
+      "Teaching_Style": "雙戟",
+      "Stat_Bonus": {
+        "STR": 4,
+        "AGI": 3
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_LINGTONG_01",
+          "Tactic_ID": "TAC_COMBO_ATTACK",
+          "Trigger_Window": [
+            6,
+            24
+          ],
+          "Base_Rate": 0.15,
+          "Min_Star": 0
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "TP_Bonus",
+          "Value": 0.05,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "STR",
+        "AGI"
+      ],
+      "Slot_Burst_Rate": 0.45,
+      "Synergy_Partners": [],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-1099：補齊羈絆與 R 卡的暫定資料，數值待企劃校正"
+    }
+  },
+  {
+    "General_ID": "xu-sheng",
+    "Support": {
+      "Support_ID": "SUP_XUSHENG_R_01",
+      "Name": "徐盛",
+      "Rarity": "R",
+      "Teaching_Style": "守禦",
+      "Stat_Bonus": {
+        "INT": 2,
+        "POL": 4
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_XUSHENG_01",
+          "Tactic_ID": "TAC_SHIELD",
+          "Trigger_Window": [
+            6,
+            24
+          ],
+          "Base_Rate": 0.15,
+          "Min_Star": 0
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "TP_Bonus",
+          "Value": 0.05,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "INT",
+        "POL"
+      ],
+      "Slot_Burst_Rate": 0.45,
+      "Synergy_Partners": [],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-1099：補齊羈絆與 R 卡的暫定資料，數值待企劃校正"
+    }
+  },
+  {
+    "General_ID": "zhang-bao",
+    "Support": {
+      "Support_ID": "SUP_ZHANGBAO_R_01",
+      "Name": "張苞",
+      "Rarity": "R",
+      "Teaching_Style": "矛法",
+      "Stat_Bonus": {
+        "STR": 4,
+        "AGI": 2
+      },
+      "Tactic_Inspire_Events": [
+        {
+          "Event_ID": "EVT_ZHANGBAO_01",
+          "Tactic_ID": "TAC_LANCE_THRUST",
+          "Trigger_Window": [
+            6,
+            24
+          ],
+          "Base_Rate": 0.15,
+          "Min_Star": 0
+        }
+      ],
+      "Passive_Effects": [
+        {
+          "Effect": "TP_Bonus",
+          "Value": 0.05,
+          "Min_Star": 0
+        }
+      ],
+      "Friendship_Bonus": [
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "Training_Effect": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.3
+      ],
+      "Training_Slot_Affinity": [
+        "STR",
+        "AGI"
+      ],
+      "Slot_Burst_Rate": 0.45,
+      "Synergy_Partners": [],
+      "Source": "Gacha",
+      "Role_Boundary": "TeachingOnly",
+      "_provisional": "PROG-2-1099：補齊羈絆與 R 卡的暫定資料，數值待企劃校正"
     }
   }
 ]

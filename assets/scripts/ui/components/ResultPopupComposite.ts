@@ -3,9 +3,10 @@
  * ResultPopupComposite — 戰鬥結果彈窗（Composite 版）
  * Wave 2 migration from ResultPopup - shows victory/defeat/stalemate results
  */
-import { _decorator, Button, Node, tween, UIOpacity } from 'cc';
+import { _decorator, Button, Mask, Node, Sprite, tween, UIOpacity } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
+import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
 
 const { ccclass } = _decorator;
 
@@ -21,6 +22,7 @@ export class ResultPopupComposite extends CompositePanel {
     private _binder: UITemplateBinder | null = null;
     private _isMounted = false;
     private _visible = false;
+    private _description = '';
 
     protected onDestroy(): void {
         this.unmount();
@@ -33,6 +35,7 @@ export class ResultPopupComposite extends CompositePanel {
             this._isMounted = true;
         }
 
+        this._description = result.description;
         this._binder?.setTexts({
             TitleLabel: result.title,
             DescLabel: result.description,
@@ -59,7 +62,8 @@ export class ResultPopupComposite extends CompositePanel {
     }
 
     /** BattleScene 使用的結果 key 相容入口。 */
-    public async showResult(result: string, details?: string): Promise<void> {
+    /** generalId：我方主將（kebab id），結算窗上方顯示其頭像（PROG-2-1128）；沒有則留剪影 */
+    public async showResult(result: string, details?: string, generalId?: string): Promise<void> {
         const typeMap: Record<string, BattleResult['resultType']> = {
             'player-win': 'victory', 'victory': 'victory',
             'enemy-win': 'defeat',   'defeat': 'defeat',
@@ -81,6 +85,26 @@ export class ResultPopupComposite extends CompositePanel {
             title: titleMap[resultType],
             description: details ? `${descMap[resultType]}\n${details}` : descMap[resultType],
         });
+        void this._applyGeneralAvatar(generalId);
+    }
+
+    /** 結算窗開著時在描述下方追加行（戰後覺醒等非同步結果，PROG-2-1133） */
+    public appendDetails(lines: readonly string[]): void {
+        if (!this._visible || lines.length === 0) return;
+        this._description = [this._description, ...lines].join('\n');
+        this._binder?.setTexts({ DescLabel: this._description });
+    }
+
+    private async _applyGeneralAvatar(generalId: string | undefined): Promise<void> {
+        const holder = this._binder?.getNode('AvatarMask');
+        const sprite = this._binder?.getNode('Avatar')?.getComponent(Sprite);
+        if (!holder || !sprite) return;
+        if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+        const frame = generalId ? await loadGeneralAvatar(generalId) : null;
+        if (frame && sprite.isValid) {
+            sprite.spriteFrame = frame;
+            sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+        }
     }
 
     protected override _onAfterBuildReady(binder: UITemplateBinder): void {

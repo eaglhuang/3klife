@@ -30,7 +30,7 @@ const dictionary: FactorDictionary = buildFactorDictionary(
     JSON.parse(fs.readFileSync(path.join(process.cwd(), 'assets/resources/data/master/gene-dictionary.json'), 'utf8')),
 );
 
-function person(id: string, gender: '男' | '女', age: number, extra: Record<string, unknown> = {}): GeneralConfig {
+export function person(id: string, gender: '男' | '女', age: number, extra: Record<string, unknown> = {}): GeneralConfig {
     return {
         id, name: id, faction: 'shu', gender, age, hp: 1000, vitality: 100, maxVitality: 100, maxLifespan: 120,
         str: 80, int: 60, lea: 70, pol: 50, cha: 100, luk: 40, careerClass: 'Warrior',
@@ -39,7 +39,7 @@ function person(id: string, gender: '男' | '女', age: number, extra: Record<st
     } as unknown as GeneralConfig;
 }
 
-interface World {
+export interface World {
     session: GameSession;
     store: InMemoryRosterStore;
     legacy: LegacyService;
@@ -49,7 +49,7 @@ interface World {
     emitted: string[];
 }
 
-function buildWorld(adapter: MemoryStorageAdapter, roster: GeneralConfig[]): World {
+export function buildWorld(adapter: MemoryStorageAdapter, roster: GeneralConfig[]): World {
     const session = new GameSession();
     const store = new InMemoryRosterStore(roster);
     const legacy = new LegacyService(adapter);

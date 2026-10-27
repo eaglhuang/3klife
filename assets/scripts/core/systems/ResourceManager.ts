@@ -58,7 +58,7 @@ export class ResourceManager {
       candidates.add(`${basePath}.png/spriteFrame`);
     }
 
-    return [...candidates].filter(candidate => candidate.length > 0);
+    return Array.from(candidates).filter(candidate => candidate.length > 0);
   }
 
   private buildTextureCandidates(path: string): string[] {
@@ -73,7 +73,7 @@ export class ResourceManager {
     candidates.add(`${basePath}/texture`);
     candidates.add(`${basePath}.png`);
     candidates.add(`${basePath}.png/texture`);
-    return [...candidates];
+    return Array.from(candidates);
   }
 
   /**

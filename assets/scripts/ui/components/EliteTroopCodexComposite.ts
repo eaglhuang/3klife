@@ -253,7 +253,7 @@ export class EliteTroopCodexComposite extends CompositePanel {
         paths.add(CARD_ART_FALLBACK_PATH);
         paths.add(TYPE_ICON_FALLBACK_PATH);
 
-        await Promise.all([...paths].map(async (path) => {
+        await Promise.all(Array.from(paths).map(async (path) => {
             if (this._isCodexArtPath(path)) {
                 await this._loadCodexArtSpriteFrame(path, true);
                 return;

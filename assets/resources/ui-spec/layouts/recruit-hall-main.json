@@ -1,0 +1,960 @@
+{
+  "id": "recruit-hall-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "RecruitRoot",
+    "id": "recruitRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "image",
+        "name": "RecruitBackdrop",
+        "id": "recruitBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "width": 1920,
+        "height": 1080,
+        "skinSlot": "recruit.backdrop"
+      },
+      {
+        "type": "panel",
+        "name": "RecruitCard",
+        "id": "recruitCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1760,
+        "height": 960,
+        "skinSlot": "recruit.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "RecruitTitle",
+            "id": "recruitTitle",
+            "widget": {
+              "top": 28,
+              "left": 75
+            },
+            "height": 56,
+            "text": "招賢館",
+            "styleSlot": "recruit.label.title",
+            "width": 300
+          },
+          {
+            "type": "label",
+            "name": "GoldLabel",
+            "id": "goldLabel",
+            "widget": {
+              "top": 40,
+              "left": 415
+            },
+            "height": 34,
+            "text": "",
+            "styleSlot": "recruit.label.meta",
+            "width": 800
+          },
+          {
+            "type": "button",
+            "name": "BtnClose",
+            "id": "btnClose",
+            "widget": {
+              "top": 24,
+              "right": 75
+            },
+            "width": 150,
+            "height": 56,
+            "skinSlot": "recruit.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseLabel",
+                "id": "btnCloseLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 36,
+                "text": "關閉",
+                "styleSlot": "recruit.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame0",
+            "id": "btnFrame0",
+            "widget": {
+              "top": 120,
+              "left": 75
+            },
+            "width": 250,
+            "height": 560,
+            "skinSlot": "pg.frame.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "Frame0Mask",
+                "id": "frame0Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame0Portrait",
+                    "id": "frame0Portrait",
+                    "width": 250,
+                    "height": 560,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame0Plate",
+                "id": "frame0Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 130,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame0Name",
+                "id": "frame0Name",
+                "widget": {
+                  "bottom": 46,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 52,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame0Sub",
+                "id": "frame0Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame0Tag",
+                "id": "frame0Tag",
+                "widget": {
+                  "top": 12,
+                  "left": 12
+                },
+                "width": 74,
+                "height": 36,
+                "skinSlot": "pg.tag",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "Frame0TagLabel",
+                    "id": "frame0TagLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "pg.label.tag"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame0Sel",
+                "id": "frame0Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "skinSlot": "pg.sel"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame1",
+            "id": "btnFrame1",
+            "widget": {
+              "top": 120,
+              "left": 347
+            },
+            "width": 250,
+            "height": 560,
+            "skinSlot": "pg.frame.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "Frame1Mask",
+                "id": "frame1Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame1Portrait",
+                    "id": "frame1Portrait",
+                    "width": 250,
+                    "height": 560,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame1Plate",
+                "id": "frame1Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 130,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame1Name",
+                "id": "frame1Name",
+                "widget": {
+                  "bottom": 46,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 52,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame1Sub",
+                "id": "frame1Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame1Tag",
+                "id": "frame1Tag",
+                "widget": {
+                  "top": 12,
+                  "left": 12
+                },
+                "width": 74,
+                "height": 36,
+                "skinSlot": "pg.tag",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "Frame1TagLabel",
+                    "id": "frame1TagLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "pg.label.tag"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame1Sel",
+                "id": "frame1Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "skinSlot": "pg.sel"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame2",
+            "id": "btnFrame2",
+            "widget": {
+              "top": 120,
+              "left": 619
+            },
+            "width": 250,
+            "height": 560,
+            "skinSlot": "pg.frame.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "Frame2Mask",
+                "id": "frame2Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame2Portrait",
+                    "id": "frame2Portrait",
+                    "width": 250,
+                    "height": 560,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame2Plate",
+                "id": "frame2Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 130,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame2Name",
+                "id": "frame2Name",
+                "widget": {
+                  "bottom": 46,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 52,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame2Sub",
+                "id": "frame2Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame2Tag",
+                "id": "frame2Tag",
+                "widget": {
+                  "top": 12,
+                  "left": 12
+                },
+                "width": 74,
+                "height": 36,
+                "skinSlot": "pg.tag",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "Frame2TagLabel",
+                    "id": "frame2TagLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "pg.label.tag"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame2Sel",
+                "id": "frame2Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "skinSlot": "pg.sel"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame3",
+            "id": "btnFrame3",
+            "widget": {
+              "top": 120,
+              "left": 891
+            },
+            "width": 250,
+            "height": 560,
+            "skinSlot": "pg.frame.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "Frame3Mask",
+                "id": "frame3Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame3Portrait",
+                    "id": "frame3Portrait",
+                    "width": 250,
+                    "height": 560,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame3Plate",
+                "id": "frame3Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 130,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame3Name",
+                "id": "frame3Name",
+                "widget": {
+                  "bottom": 46,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 52,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame3Sub",
+                "id": "frame3Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame3Tag",
+                "id": "frame3Tag",
+                "widget": {
+                  "top": 12,
+                  "left": 12
+                },
+                "width": 74,
+                "height": 36,
+                "skinSlot": "pg.tag",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "Frame3TagLabel",
+                    "id": "frame3TagLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "pg.label.tag"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame3Sel",
+                "id": "frame3Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "skinSlot": "pg.sel"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame4",
+            "id": "btnFrame4",
+            "widget": {
+              "top": 120,
+              "left": 1163
+            },
+            "width": 250,
+            "height": 560,
+            "skinSlot": "pg.frame.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "Frame4Mask",
+                "id": "frame4Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame4Portrait",
+                    "id": "frame4Portrait",
+                    "width": 250,
+                    "height": 560,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame4Plate",
+                "id": "frame4Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 130,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame4Name",
+                "id": "frame4Name",
+                "widget": {
+                  "bottom": 46,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 52,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame4Sub",
+                "id": "frame4Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame4Tag",
+                "id": "frame4Tag",
+                "widget": {
+                  "top": 12,
+                  "left": 12
+                },
+                "width": 74,
+                "height": 36,
+                "skinSlot": "pg.tag",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "Frame4TagLabel",
+                    "id": "frame4TagLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "pg.label.tag"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame4Sel",
+                "id": "frame4Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "skinSlot": "pg.sel"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnFrame5",
+            "id": "btnFrame5",
+            "widget": {
+              "top": 120,
+              "left": 1435
+            },
+            "width": 250,
+            "height": 560,
+            "skinSlot": "pg.frame.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "Frame5Mask",
+                "id": "frame5Mask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "Frame5Portrait",
+                    "id": "frame5Portrait",
+                    "width": 250,
+                    "height": 560,
+                    "skinSlot": "pg.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame5Plate",
+                "id": "frame5Plate",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 130,
+                "skinSlot": "pg.plate"
+              },
+              {
+                "type": "label",
+                "name": "Frame5Name",
+                "id": "frame5Name",
+                "widget": {
+                  "bottom": 46,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 52,
+                "text": "",
+                "styleSlot": "pg.label.name"
+              },
+              {
+                "type": "label",
+                "name": "Frame5Sub",
+                "id": "frame5Sub",
+                "widget": {
+                  "bottom": 12,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "pg.label.sub"
+              },
+              {
+                "type": "panel",
+                "name": "Frame5Tag",
+                "id": "frame5Tag",
+                "widget": {
+                  "top": 12,
+                  "left": 12
+                },
+                "width": 74,
+                "height": 36,
+                "skinSlot": "pg.tag",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "Frame5TagLabel",
+                    "id": "frame5TagLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 30,
+                    "text": "",
+                    "styleSlot": "pg.label.tag"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "Frame5Sel",
+                "id": "frame5Sel",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 250,
+                "height": 560,
+                "skinSlot": "pg.sel"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnPrev",
+            "id": "btnPrev",
+            "widget": {
+              "top": 704,
+              "left": 690
+            },
+            "width": 96,
+            "height": 56,
+            "skinSlot": "pg.page.btn",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnPrevLabel",
+                "id": "btnPrevLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 36,
+                "text": "◀",
+                "styleSlot": "pg.label.page"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "PageLabel",
+            "id": "pageLabel",
+            "widget": {
+              "top": 712,
+              "left": 800
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "pg.label.page",
+            "width": 160
+          },
+          {
+            "type": "button",
+            "name": "BtnNext",
+            "id": "btnNext",
+            "widget": {
+              "top": 704,
+              "left": 974
+            },
+            "width": 96,
+            "height": 56,
+            "skinSlot": "pg.page.btn",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnNextLabel",
+                "id": "btnNextLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 36,
+                "text": "▶",
+                "styleSlot": "pg.label.page"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DetailDivider",
+            "id": "detailDivider",
+            "widget": {
+              "top": 780,
+              "left": 75,
+              "right": 75
+            },
+            "height": 1,
+            "skinSlot": "pg.divider"
+          },
+          {
+            "type": "label",
+            "name": "DetailName",
+            "id": "detailName",
+            "widget": {
+              "top": 796,
+              "left": 75
+            },
+            "height": 52,
+            "text": "",
+            "styleSlot": "pg.label.detailName",
+            "width": 320
+          },
+          {
+            "type": "label",
+            "name": "DetailMeta",
+            "id": "detailMeta",
+            "widget": {
+              "top": 806,
+              "left": 405
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "pg.label.meta",
+            "width": 900
+          },
+          {
+            "type": "label",
+            "name": "DetailLine",
+            "id": "detailLine",
+            "widget": {
+              "top": 854,
+              "left": 75
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "pg.label.body",
+            "width": 1300
+          },
+          {
+            "type": "button",
+            "name": "BtnRecruit",
+            "id": "btnRecruit",
+            "widget": {
+              "top": 796,
+              "right": 75
+            },
+            "width": 300,
+            "height": 64,
+            "skinSlot": "recruit.button.accent",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnRecruitLabel",
+                "id": "btnRecruitLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 36,
+                "text": "",
+                "styleSlot": "recruit.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "NoticeLabel",
+            "id": "noticeLabel",
+            "widget": {
+              "top": 900,
+              "left": 75
+            },
+            "height": 34,
+            "text": "",
+            "styleSlot": "recruit.label.meta",
+            "width": 1300
+          }
+        ]
+      }
+    ]
+  }
+}

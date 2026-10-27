@@ -21,6 +21,7 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import type { MentorCard } from '../models/MentorCard';
 import { tagMentorSource } from '../systems/MentorSources';
 import { addGachaMentorCards, GachaMentorTime, SupportCatalog } from '../systems/MentorSupportCatalog';
+import type { GachaMentorDuplicateEvent } from '../systems/MentorSupportCatalog';
 import { routeRetirement } from '../systems/RetirementRouting';
 import { retireTallyGrade, type BattleRecordLike } from '../systems/BattleRecordStats';
 import { resolvePrimaryClass, type JobWiringGeneral } from '../systems/JobChangeWiring';
@@ -73,6 +74,8 @@ export interface SettleResult {
 export interface SeasonLifecycle {
     settleSeason(roster: GeneralConfig[], advance: SeasonAdvanceResult, events: AgingEvent[]): Promise<SettleResult>;
     retireGeneral(roster: GeneralConfig[], generalId: string, time: GameTimeState): Promise<RetireResult>;
+    /** 有提供 archiver 的生命週期才有（血脈灌注 PROG-2-1074 用） */
+    getArchiver?(): GeneralArchiver;
 }
 
 export interface LegacyServiceOptions {
@@ -209,11 +212,17 @@ export class LegacyService implements SeasonLifecycle {
     }
 
     /** 轉蛋抽到支援卡武將：把 Gacha 來源的教官卡寫進持有清單；沒有新增則不寫存檔 */
-    public async addGachaMentors(drawn: GeneralConfig[], catalog: SupportCatalog, time: GachaMentorTime, poolId: string | undefined): Promise<MentorCard[]> {
+    public async addGachaMentors(
+        drawn: GeneralConfig[],
+        catalog: SupportCatalog,
+        time: GachaMentorTime,
+        poolId: string | undefined,
+        onDuplicate?: (event: GachaMentorDuplicateEvent) => void,
+    ): Promise<MentorCard[]> {
         await this._ensureReady();
         const cards = await this.getMentorCards();
-        const next = addGachaMentorCards(cards, drawn, catalog, time, poolId);
-        if (next.length !== cards.length) await this._adapter.set(STORE_MENTOR_CARDS, next);
+        const next = addGachaMentorCards(cards, drawn, catalog, time, poolId, undefined, onDuplicate);
+        if (JSON.stringify(next) !== JSON.stringify(cards)) await this._adapter.set(STORE_MENTOR_CARDS, next);
         return next;
     }
 

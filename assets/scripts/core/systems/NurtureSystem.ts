@@ -624,7 +624,8 @@ export const MENTOR_CARD_STAT_PER_BONUS_POINT = 5;
 /**
  * 把退役教官卡（PROG-2-0029 的 MentorCard）換算成培育教官。
  * - 擅長科目：武官取武力 / 統率較高者、文官取智力 / 政治較高者，沒有職能就五項取最高（同分依武、智、統、政、魅）
- * - 加成：tpBonus 看退役時的 EP，擅長科目另有屬性加成；星等預設 0
+ * - 加成：tpBonus 看退役時的 EP，擅長科目另有屬性加成；星等取卡片的突破星等（沒有視為 0）
+ * 帶支援卡資料時，擅長科目取 Training_Slot_Affinity 第一格、爆發率取 Slot_Burst_Rate（§F-8），不再用推算值與預設 0.5。
  * 教官不參與血統因子遺傳，這裡不讀 gene_refs。
  */
 export function mentorFromCard(
@@ -633,15 +634,16 @@ export function mentorFromCard(
 ): TrainingMentor {
     const snapshot = card.generalSnapshot as UnveilingGeneral;
     const pool = snapshot.careerClass === 'Warrior' ? WARRIOR_KINDS : snapshot.careerClass === 'Scholar' ? SCHOLAR_KINDS : TRAINING_KINDS;
-    const specialty = pool.reduce((best, kind) => (statOf(snapshot, kind) > statOf(snapshot, best) ? kind : best), pool[0]);
+    const derived = pool.reduce((best, kind) => (statOf(snapshot, kind) > statOf(snapshot, best) ? kind : best), pool[0]);
+    const specialty = card.support?.trainingSlotAffinity?.[0] ?? derived;
     return {
         id: card.uid,
         name: card.name,
         tpBonus: Math.round(card.ep_snapshot / MENTOR_CARD_EP_PER_TP_POINT),
         statBonus: { [specialty]: Math.round(statOf(snapshot, specialty) / MENTOR_CARD_STAT_PER_BONUS_POINT) },
         specialty,
-        stars: overrides.stars ?? 0,
-        burstRate: overrides.burstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE,
+        stars: overrides.stars ?? card.stars ?? 0,
+        burstRate: overrides.burstRate ?? card.support?.slotBurstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE,
         familyName: overrides.familyName ?? (card.name ? surnameOf(card.name) : undefined),
         ...(card.support
             ? {
@@ -652,4 +654,23 @@ export function mentorFromCard(
             }
             : {}),
     };
+}
+
+/**
+ * 本場培育已觸發靈感的戰法 id（依觸發順序、去重）（PROG-2-1134）
+ * 教官系統 §F-3：36 回合內未觸發靈感的戰法不出現在結業點選清單。
+ * inspiredKeys 形如 `${mentorId}:${eventId}`，由教官的靈感事件表對回戰法。
+ */
+export function inspiredTacticIds(session: Pick<NurtureSession, 'mentors' | 'inspiredKeys'> | null | undefined): string[] {
+    const keys = session?.inspiredKeys ?? [];
+    const out: string[] = [];
+    for (const key of keys) {
+        for (const mentor of session?.mentors ?? []) {
+            const prefix = `${mentor.id}:`;
+            if (!key.startsWith(prefix)) continue;
+            const event = mentor.inspire?.events.find((e) => e.eventId === key.slice(prefix.length));
+            if (event && !out.includes(event.tacticId)) out.push(event.tacticId);
+        }
+    }
+    return out;
 }

@@ -6,7 +6,7 @@
  *   - 稀有度：SSR 3%、SR 10%、R 87%（三國名將池）。
  *   - Up：SSR 的 70%、SR 的 80% 從 Up 名單抽；其餘從常設名單抽。
  *   - 小保底：第 50 抽的倍數必出 SR+（抽到 R 時改為 SR）。
- *   - 大保底：累計 200 抽解鎖天命商店（本引擎只記計數，不發商店）。
+ *   - 大保底：累計 200 抽解鎖天命商店；兌換見 DestinyShop.ts（PROG-2-1157），這裡只記計數並保留已兌換次數。
  *   - 各池保底計數獨立（由呼叫端以 poolId 分開保存）。
  *   - 某稀有度沒有可抽的武將時，往下一階取（SSR → SR → R）。
  *
@@ -19,6 +19,8 @@
 export type GachaRarity = 'SSR' | 'SR' | 'R';
 
 export const GACHA_RARITY_RATES: Readonly<Record<GachaRarity, number>> = Object.freeze({ SSR: 0.03, SR: 0.10, R: 0.87 });
+/** 支援卡（教官）池：SSR 5%、SR 25%、R 70%（規格 §入池機率表；PROG-2-1093） */
+export const GACHA_MENTOR_RARITY_RATES: Readonly<Record<GachaRarity, number>> = Object.freeze({ SSR: 0.05, SR: 0.25, R: 0.70 });
 /** Up 占比：SSR 70%、SR 80%（規格 §入池機率表） */
 export const GACHA_UP_SHARE: Readonly<Record<'SSR' | 'SR', number>> = Object.freeze({ SSR: 0.7, SR: 0.8 });
 export const GACHA_SMALL_PITY_INTERVAL = 50;
@@ -27,12 +29,20 @@ export const GACHA_LARGE_PITY_COUNT = 200;
 export interface GachaPityState {
     /** 本池累計抽數（小保底與大保底都由它推算） */
     pullCount: number;
+    /** 天命商店已兌換次數（PROG-2-1157）；0 時不寫入，舊資料視為 0 */
+    destinyExchanges?: number;
 }
 
 /** 缺欄位或不合法的舊資料一律從 0 開始 */
 export function normalizeGachaPity(value: unknown): GachaPityState {
-    const raw = (value as { pullCount?: unknown } | null | undefined)?.pullCount;
-    return { pullCount: typeof raw === 'number' && Number.isInteger(raw) && raw >= 0 ? raw : 0 };
+    const source = value as { pullCount?: unknown; destinyExchanges?: unknown } | null | undefined;
+    const pullCount = isCount(source?.pullCount) ? source!.pullCount as number : 0;
+    const exchanges = isCount(source?.destinyExchanges) ? source!.destinyExchanges as number : 0;
+    return exchanges > 0 ? { pullCount, destinyExchanges: exchanges } : { pullCount };
+}
+
+function isCount(value: unknown): boolean {
+    return typeof value === 'number' && Number.isInteger(value) && value >= 0;
 }
 
 /** 各池保底計數（poolId → 狀態）；存檔欄位 gachaPity 的形狀 */
@@ -80,9 +90,12 @@ function pickFrom<T>(list: readonly T[], rng: () => number): T {
     return list[index];
 }
 
-/** 依稀有度從高到低找第一個有項目的桶（Up 與常設視為同一稀有度） */
+/**
+ * 依稀有度從高到低找第一個有項目的桶（Up 與常設視為同一稀有度）；
+ * 往下都沒有時再往上找（支援卡池只有 SSR/SR，擲到 R 也要抽得到，PROG-2-1085）
+ */
 function firstAvailable<T>(pool: GachaPool<T>, rarity: GachaRarity): { rarity: GachaRarity; lists: Array<readonly T[]> } | null {
-    const order: GachaRarity[] = rarity === 'SSR' ? ['SSR', 'SR', 'R'] : rarity === 'SR' ? ['SR', 'R'] : ['R'];
+    const order: GachaRarity[] = rarity === 'SSR' ? ['SSR', 'SR', 'R'] : rarity === 'SR' ? ['SR', 'R', 'SSR'] : ['R', 'SR', 'SSR'];
     for (const next of order) {
         const lists = next === 'SSR' ? [pool.ssrUp, pool.ssrOther]
             : next === 'SR' ? [pool.srUp, pool.srOther]
@@ -92,10 +105,10 @@ function firstAvailable<T>(pool: GachaPool<T>, rarity: GachaRarity): { rarity: G
     return null;
 }
 
-function rollRarity(rng: () => number): GachaRarity {
+function rollRarity(rng: () => number, rates: Readonly<Record<GachaRarity, number>>): GachaRarity {
     const roll = rng();
-    if (roll < GACHA_RARITY_RATES.SSR) return 'SSR';
-    if (roll < GACHA_RARITY_RATES.SSR + GACHA_RARITY_RATES.SR) return 'SR';
+    if (roll < rates.SSR) return 'SSR';
+    if (roll < rates.SSR + rates.SR) return 'SR';
     return 'R';
 }
 
@@ -103,9 +116,15 @@ function rollRarity(rng: () => number): GachaRarity {
  * 抽一次。池內完全沒有武將時拋錯（呼叫端應先擋住）。
  * 順序：累計抽數 +1 → 擲稀有度 → 小保底檢查 → 擲 Up → 從對應桶抽人。
  */
-export function drawGeneralOnce<T>(pool: GachaPool<T>, pity: GachaPityState, rng: () => number = Math.random): GachaDrawResult<T> {
-    const nextPity: GachaPityState = { pullCount: normalizeGachaPity(pity).pullCount + 1 };
-    let rarity = rollRarity(rng);
+export function drawGeneralOnce<T>(
+    pool: GachaPool<T>,
+    pity: GachaPityState,
+    rng: () => number = Math.random,
+    rates: Readonly<Record<GachaRarity, number>> = GACHA_RARITY_RATES,
+): GachaDrawResult<T> {
+    const current = normalizeGachaPity(pity);
+    const nextPity: GachaPityState = { ...current, pullCount: current.pullCount + 1 };
+    let rarity = rollRarity(rng, rates);
     let pityApplied = false;
     if (rarity === 'R' && nextPity.pullCount % GACHA_SMALL_PITY_INTERVAL === 0) {
         rarity = 'SR';

@@ -1,0 +1,796 @@
+{
+  "id": "rival-diplomacy-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "RivalRoot",
+    "id": "rivalRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "image",
+        "name": "RivalBackdrop",
+        "id": "rivalBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "width": 1920,
+        "height": 1080,
+        "skinSlot": "rival.backdrop"
+      },
+      {
+        "type": "panel",
+        "name": "RivalCard",
+        "id": "rivalCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1200,
+        "height": 780,
+        "skinSlot": "rival.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "RivalTitle",
+            "id": "rivalTitle",
+            "widget": {
+              "top": 22,
+              "left": 32
+            },
+            "width": 500,
+            "height": 40,
+            "text": "外交・出征",
+            "styleSlot": "rival.label.title"
+          },
+          {
+            "type": "panel",
+            "name": "TitleDivider",
+            "id": "titleDivider",
+            "widget": {
+              "top": 78,
+              "left": 32,
+              "right": 32
+            },
+            "height": 1,
+            "skinSlot": "rival.divider"
+          },
+          {
+            "type": "button",
+            "name": "BtnClose",
+            "id": "btnClose",
+            "widget": {
+              "top": 16,
+              "right": 24
+            },
+            "width": 110,
+            "height": 48,
+            "skinSlot": "rival.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseLabel",
+                "id": "btnCloseLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "rival.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "GoldLabel",
+            "id": "goldLabel",
+            "widget": {
+              "top": 30,
+              "left": 420
+            },
+            "width": 600,
+            "height": 34,
+            "text": "",
+            "styleSlot": "rival.label.meta"
+          },
+          {
+            "type": "button",
+            "name": "BtnNation0",
+            "id": "btnNation0",
+            "widget": {
+              "top": 90,
+              "left": 32
+            },
+            "width": 360,
+            "height": 64,
+            "skinSlot": "rival.button.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "RivalAvatarMask0",
+                "id": "rivalAvatarMask0",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8
+                },
+                "width": 58,
+                "height": 58,
+                "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg0",
+                    "id": "rivalAvatarBg0",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
+                  {
+                    "type": "image",
+                    "name": "RivalAvatar0",
+                    "id": "rivalAvatar0",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "BtnNation0Label",
+                "id": "btnNation0Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 76,
+                  "right": 12
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "rival.label.row"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnNation1",
+            "id": "btnNation1",
+            "widget": {
+              "top": 170,
+              "left": 32
+            },
+            "width": 360,
+            "height": 64,
+            "skinSlot": "rival.button.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "RivalAvatarMask1",
+                "id": "rivalAvatarMask1",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8
+                },
+                "width": 58,
+                "height": 58,
+                "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg1",
+                    "id": "rivalAvatarBg1",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
+                  {
+                    "type": "image",
+                    "name": "RivalAvatar1",
+                    "id": "rivalAvatar1",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "BtnNation1Label",
+                "id": "btnNation1Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 76,
+                  "right": 12
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "rival.label.row"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnNation2",
+            "id": "btnNation2",
+            "widget": {
+              "top": 250,
+              "left": 32
+            },
+            "width": 360,
+            "height": 64,
+            "skinSlot": "rival.button.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "RivalAvatarMask2",
+                "id": "rivalAvatarMask2",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8
+                },
+                "width": 58,
+                "height": 58,
+                "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg2",
+                    "id": "rivalAvatarBg2",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
+                  {
+                    "type": "image",
+                    "name": "RivalAvatar2",
+                    "id": "rivalAvatar2",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "BtnNation2Label",
+                "id": "btnNation2Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 76,
+                  "right": 12
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "rival.label.row"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnNation3",
+            "id": "btnNation3",
+            "widget": {
+              "top": 330,
+              "left": 32
+            },
+            "width": 360,
+            "height": 64,
+            "skinSlot": "rival.button.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "RivalAvatarMask3",
+                "id": "rivalAvatarMask3",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8
+                },
+                "width": 58,
+                "height": 58,
+                "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg3",
+                    "id": "rivalAvatarBg3",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
+                  {
+                    "type": "image",
+                    "name": "RivalAvatar3",
+                    "id": "rivalAvatar3",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "BtnNation3Label",
+                "id": "btnNation3Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 76,
+                  "right": 12
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "rival.label.row"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnNation4",
+            "id": "btnNation4",
+            "widget": {
+              "top": 410,
+              "left": 32
+            },
+            "width": 360,
+            "height": 64,
+            "skinSlot": "rival.button.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "RivalAvatarMask4",
+                "id": "rivalAvatarMask4",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8
+                },
+                "width": 58,
+                "height": 58,
+                "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg4",
+                    "id": "rivalAvatarBg4",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
+                  {
+                    "type": "image",
+                    "name": "RivalAvatar4",
+                    "id": "rivalAvatar4",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "BtnNation4Label",
+                "id": "btnNation4Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 76,
+                  "right": 12
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "rival.label.row"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnNation5",
+            "id": "btnNation5",
+            "widget": {
+              "top": 490,
+              "left": 32
+            },
+            "width": 360,
+            "height": 64,
+            "skinSlot": "rival.button.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "RivalAvatarMask5",
+                "id": "rivalAvatarMask5",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8
+                },
+                "width": 58,
+                "height": 58,
+                "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg5",
+                    "id": "rivalAvatarBg5",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
+                  {
+                    "type": "image",
+                    "name": "RivalAvatar5",
+                    "id": "rivalAvatar5",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "BtnNation5Label",
+                "id": "btnNation5Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 76,
+                  "right": 12
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "rival.label.row"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnNation6",
+            "id": "btnNation6",
+            "widget": {
+              "top": 570,
+              "left": 32
+            },
+            "width": 360,
+            "height": 64,
+            "skinSlot": "rival.button.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "RivalAvatarMask6",
+                "id": "rivalAvatarMask6",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8
+                },
+                "width": 58,
+                "height": 58,
+                "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg6",
+                    "id": "rivalAvatarBg6",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
+                  {
+                    "type": "image",
+                    "name": "RivalAvatar6",
+                    "id": "rivalAvatar6",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "BtnNation6Label",
+                "id": "btnNation6Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 76,
+                  "right": 12
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "rival.label.row"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnNation7",
+            "id": "btnNation7",
+            "widget": {
+              "top": 650,
+              "left": 32
+            },
+            "width": 360,
+            "height": 64,
+            "skinSlot": "rival.button.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "RivalAvatarMask7",
+                "id": "rivalAvatarMask7",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8
+                },
+                "width": 58,
+                "height": 58,
+                "children": [
+                  {
+                    "type": "panel",
+                    "name": "RivalAvatarBg7",
+                    "id": "rivalAvatarBg7",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar.bg"
+                  },
+                  {
+                    "type": "image",
+                    "name": "RivalAvatar7",
+                    "id": "rivalAvatar7",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 58,
+                    "height": 58,
+                    "skinSlot": "rival.avatar"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "BtnNation7Label",
+                "id": "btnNation7Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 76,
+                  "right": 12
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "rival.label.row"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "NationDetail",
+            "id": "nationDetail",
+            "widget": {
+              "top": 90,
+              "left": 430
+            },
+            "width": 720,
+            "height": 140,
+            "text": "",
+            "styleSlot": "rival.label.name"
+          },
+          {
+            "type": "button",
+            "name": "BtnGift",
+            "id": "btnGift",
+            "widget": {
+              "top": 250,
+              "left": 430
+            },
+            "width": 170,
+            "height": 72,
+            "skinSlot": "rival.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnGiftLabel",
+                "id": "btnGiftLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "送禮（1000 金）",
+                "styleSlot": "rival.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnAlliance",
+            "id": "btnAlliance",
+            "widget": {
+              "top": 250,
+              "left": 612
+            },
+            "width": 170,
+            "height": 72,
+            "skinSlot": "rival.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnAllianceLabel",
+                "id": "btnAllianceLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "結盟",
+                "styleSlot": "rival.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnWar",
+            "id": "btnWar",
+            "widget": {
+              "top": 250,
+              "left": 794
+            },
+            "width": 170,
+            "height": 72,
+            "skinSlot": "rival.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnWarLabel",
+                "id": "btnWarLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "宣戰",
+                "styleSlot": "rival.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnCampaign",
+            "id": "btnCampaign",
+            "widget": {
+              "top": 250,
+              "left": 976
+            },
+            "width": 170,
+            "height": 72,
+            "skinSlot": "rival.button.accent",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCampaignLabel",
+                "id": "btnCampaignLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "出征",
+                "styleSlot": "rival.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "ResultLabel",
+            "id": "resultLabel",
+            "widget": {
+              "top": 350,
+              "left": 430
+            },
+            "width": 720,
+            "height": 380,
+            "text": "",
+            "styleSlot": "rival.label.log"
+          }
+        ]
+      }
+    ]
+  }
+}

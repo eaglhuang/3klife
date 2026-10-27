@@ -4,7 +4,8 @@ import { Faction } from '../config/Constants';
 import { services } from '../managers/ServiceLoader';
 import { SyncActionType } from '../systems/SyncManager';
 import { checkWalletBalance, formatInsufficientMessage, STARTER_GACHA_WALLET } from './GachaWalletRules';
-import { drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
+import { GACHA_MENTOR_RARITY_RATES, GACHA_RARITY_RATES, drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
+import { destinyShopCredits, exchangeDestinyShop, pullsToNextDestinyCredit, type DestinyShopBlockReason } from '../systems/DestinyShop';
 import { ActionLogStore, type GachaActionType, type GachaCurrencyKey, type GachaHistoryRecord } from './ActionLogStore';
 
 export interface LocalGachaRollOptions {
@@ -33,6 +34,10 @@ export interface LocalGachaWalletSnapshot {
     bronze: number;
     /** 求籤令（定向道具，不是池幣）；PROG-2-0339 新增，舊檔補 0 */
     oracle: number;
+    /** 支援券（只用於支援卡池）；PROG-2-1085 新增，舊檔補 0 */
+    mentorTickets: number;
+    /** 積分（教官卡滿星溢出轉化）；PROG-2-1095 新增，舊檔補 0 */
+    scorePoints: number;
 }
 
 interface PerformGachaRequest {
@@ -84,6 +89,8 @@ function normalizeWalletSnapshot(value: Partial<LocalGachaWalletSnapshot>): Loca
         tickets: normalizeWalletValue(value.tickets, DEFAULT_WALLET.tickets),
         bronze: normalizeWalletValue(value.bronze, DEFAULT_WALLET.bronze),
         oracle: normalizeWalletValue(value.oracle, DEFAULT_WALLET.oracle),
+        mentorTickets: normalizeWalletValue(value.mentorTickets, DEFAULT_WALLET.mentorTickets),
+        scorePoints: normalizeWalletValue(value.scorePoints, DEFAULT_WALLET.scorePoints),
     };
 }
 
@@ -108,6 +115,10 @@ function inferRarityTier(general: GeneralConfig): GeneralDetailRarityTier {
     }
 }
 
+function isSsrTier(tier: GeneralDetailRarityTier): boolean {
+    return tier === 'legendary' || tier === 'mythic';
+}
+
 /** 候選武將分桶：legendary／mythic 為 SSR，epic 為 SR，其餘為 R；Up 名單命中者進 Up 桶 */
 function buildGachaPool(candidates: GeneralConfig[], upGeneralIds: readonly string[]): GachaPool<GeneralConfig> {
     const up = new Set(upGeneralIds);
@@ -119,7 +130,7 @@ function buildGachaPool(candidates: GeneralConfig[], upGeneralIds: readonly stri
     for (const general of candidates) {
         const tier = inferRarityTier(general);
         const isUp = up.has(general.id);
-        if (tier === 'legendary' || tier === 'mythic') (isUp ? ssrUp : ssrOther).push(general);
+        if (isSsrTier(tier)) (isUp ? ssrUp : ssrOther).push(general);
         else if (tier === 'epic') (isUp ? srUp : srOther).push(general);
         else rOther.push(general);
     }
@@ -230,13 +241,14 @@ export class LocalGachaService {
         cost: number,
         generals: GeneralConfig[],
         options: LocalGachaRollOptions = {},
+        currencyKey: 'gems' | 'bronze' = 'gems',
     ): Promise<LocalGachaResultEntry[]> {
         return this._performGacha({
             actionType: 'LOCAL_GACHA_PULL',
             poolId,
             drawCount,
             cost,
-            currencyKey: 'gems',
+            currencyKey,
             generals,
             options,
         });
@@ -276,6 +288,118 @@ export class LocalGachaService {
         });
     }
 
+    /** 指定卡池的召喚券召喚（PROG-2-1086 紅顏池）：扣召喚券，抽到的武將照常入名冊 */
+    public async performPoolTicketSummon(
+        poolId: string,
+        drawCount: number,
+        generals: GeneralConfig[],
+        options: LocalGachaRollOptions = {},
+    ): Promise<LocalGachaResultEntry[]> {
+        const resolvedCount = normalizeCount(drawCount);
+        return this._performGacha({
+            actionType: 'LOCAL_TICKET_SUMMON',
+            poolId,
+            drawCount: resolvedCount,
+            cost: resolvedCount,
+            currencyKey: 'tickets',
+            generals,
+            options,
+        });
+    }
+
+    /**
+     * 支援卡池召喚（PROG-2-1085）：扣支援券，每抽 1 張。generals 由呼叫端先篩成支援卡目錄裡的武將；
+     * 抽到的只會變成教官卡（入冊回呼端依 poolId 判斷），不進名冊。
+     */
+    public async performSupportCardSummon(
+        poolId: string,
+        drawCount: number,
+        generals: GeneralConfig[],
+        options: LocalGachaRollOptions = {},
+    ): Promise<LocalGachaResultEntry[]> {
+        const resolvedCount = normalizeCount(drawCount);
+        return this._performGacha({
+            actionType: 'LOCAL_SUPPORT_SUMMON',
+            poolId,
+            drawCount: resolvedCount,
+            cost: resolvedCount,
+            currencyKey: 'mentorTickets',
+            generals,
+            options,
+        });
+    }
+
+    /** 天命商店（PROG-2-1157）：本池目前可兌換次數（每池每滿 200 抽 1 次） */
+    public getDestinyShopCredits(poolId: string): number {
+        return destinyShopCredits(this._pityBookOf()[poolId]);
+    }
+
+    /** 天命商店（PROG-2-1157）：本池距離下一次兌換資格還差幾抽 */
+    public getPullsToNextDestinyCredit(poolId: string): number {
+        return pullsToNextDestinyCredit(this._pityBookOf()[poolId]);
+    }
+
+    /** 天命商店（PROG-2-1158）：本池可兌換的 SSR 候選；與 exchangeDestinyShop 走同一條篩選規則 */
+    public getDestinyShopCandidates(generals: GeneralConfig[]): GeneralConfig[] {
+        return this._filterCandidates(generals).filter((general) => isSsrTier(inferRarityTier(general)));
+    }
+
+    /**
+     * 天命商店兌換（PROG-2-1157）：用一次大保底資格換本池任一位 SSR。
+     * generals 是本池候選名單（與抽卡時相同）。成功時回傳 entry，入冊與保底寫回同一批存檔；
+     * 資格不足或目標不合法時 entry 為 null、回傳擋下原因，不改任何狀態。
+     */
+    public exchangeDestinyShop(
+        poolId: string,
+        generals: GeneralConfig[],
+        targetId: string,
+    ): { entry: LocalGachaResultEntry | null; reason: DestinyShopBlockReason | null } {
+        const candidates = this._filterCandidates(generals);
+        const ssrIds = this.getDestinyShopCandidates(generals).map((general) => general.id);
+        const outcome = exchangeDestinyShop(this._pityBookOf()[poolId], targetId, candidates.map((general) => general.id), ssrIds);
+        const nextPity = outcome.nextPity;
+        if (!nextPity) return { entry: null, reason: outcome.reason };
+
+        const general = cloneGeneral(candidates.find((candidate) => candidate.id === targetId)!);
+        const rarityTier = inferRarityTier(general);
+        const entry: LocalGachaResultEntry = {
+            general,
+            rarityTier,
+            drawIndex: 1,
+            displayText: `天命商店兌換 [${rarityTier}] ${general.name}`,
+            poolId,
+            actionType: 'LOCAL_DESTINY_SHOP_EXCHANGE',
+            currencyKey: 'gems',
+        };
+        const logged = services().sync.pushAction(
+            'LOCAL_DESTINY_SHOP_EXCHANGE',
+            {
+                poolId,
+                drawCount: 1,
+                cost: 0,
+                currencyKey: 'gems',
+                localOnly: true,
+                results: [{ id: general.id, name: general.name, rarityTier, displayText: entry.displayText }],
+            },
+            SyncActionType.DEFERRABLE,
+        );
+        if (!logged) {
+            throw new Error('[LocalGachaService] 天命商店兌換紀錄寫入失敗。');
+        }
+
+        const commit = (): void => {
+            this._saveStore?.enroll?.([entry]);
+            this._pityBookCache = { ...this._pityBookOf(), [poolId]: nextPity };
+            this._persistPityBook();
+        };
+        if (this._saveStore?.batch) {
+            this._saveStore.batch(commit);
+        } else {
+            commit();
+        }
+        return { entry, reason: null };
+    }
+
     private async _performGacha(request: PerformGachaRequest): Promise<LocalGachaResultEntry[]> {
         const drawCount = normalizeCount(request.drawCount);
         const cost = normalizeCost(request.cost);
@@ -290,10 +414,11 @@ export class LocalGachaService {
         const pool = buildGachaPool(candidates, request.options?.upGeneralIds ?? []);
         const rng = request.options?.rng ?? this._defaultRng;
         let pity = normalizeGachaPity(this._pityBookOf()[request.poolId]);
+        const rates = request.actionType === 'LOCAL_SUPPORT_SUMMON' ? GACHA_MENTOR_RARITY_RATES : GACHA_RARITY_RATES;
 
         const results: LocalGachaResultEntry[] = [];
         for (let index = 0; index < drawCount; index++) {
-            const drawn = drawGeneralOnce(pool, pity, rng);
+            const drawn = drawGeneralOnce(pool, pity, rng, rates);
             pity = drawn.nextPity;
             const picked = drawn.item;
             const clonedGeneral = cloneGeneral(picked);

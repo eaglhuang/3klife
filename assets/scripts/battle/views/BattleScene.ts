@@ -1,5 +1,6 @@
 
 // @spec-source → 見 docs/cross-reference-index.md
+import { DEV } from 'cc/env';
 import { _decorator, Component, Label, Node, Vec3, geometry } from "cc";
 import {
   Faction,
@@ -11,6 +12,7 @@ import { services } from "../../core/managers/ServiceLoader";
 import { bindHeldTallyInstances } from '../../core/config/TallyCardCatalog';
 import { tallyBattleInfoOf } from "../../core/systems/TigerTallyStar";
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog } from '../../shared/BattleEntryParams';
+import { SceneName } from "../../shared/CommonEnums";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { BattleController } from "../controllers/BattleController";
 import { TerrainGrid } from "../models/BattleState";
@@ -403,7 +405,8 @@ export class BattleScene extends Component {
 
       // 8. 初始背景與切換功能（Debug UI）
       this.sceneBackground = await initSceneBackground(this.node.scene!, backgroundId);
-      if (!isBattleCaptureMode) {
+      // 切換背景是開發用按鈕，正式打包不顯示（PROG-2-1086）
+      if (!isBattleCaptureMode && DEV) {
         addBackgroundSwitchUI(canvas, this.sceneBackground, this._deployPanelRuntime);
       }
 
@@ -415,6 +418,7 @@ export class BattleScene extends Component {
         onGeneralDuelRequest: () => this._onGeneralDuelRequest(),
         onBoardPlacement: (x, y) => this.turnFlowManager?.doDeployRaycast(x, y),
         onReplay: () => this.onReplay(),
+        onBack: () => this._onBackToLobby(),
       });
       this.refreshBattleViews();
 
@@ -518,6 +522,12 @@ export class BattleScene extends Component {
   private _signalCaptureErrorIfNeeded(error: unknown): void {
     if (!this._isBattleCaptureMode()) return;
     this._setBattleCaptureState('error', error);
+  }
+
+  /** 戰鬥結果彈窗「返回」：回大廳，讓結緣→培育→戰場→傳承循環能接續。 */
+  private _onBackToLobby(): void {
+    UCUFLogger.info(LogCategory.LIFECYCLE, "[BattleScene] 結果彈窗返回大廳");
+    services().scene.switchScene(SceneName.Lobby);
   }
 
   private onReplay(): void {

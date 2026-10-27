@@ -5,6 +5,8 @@ export const GACHA_ACTION_NODES = {
     previous: 'BtnPoolPrev', next: 'BtnPoolNext', history: 'GachaDs3_div_42',
     single: 'GachaDs3_div_43', ten: 'GachaDs3_div_48',
     gold: 'GachaDs3_div_55', ticket: 'GachaDs3_div_56',
+    // 左上角原「名將池說明」框改當天命商店入口（PROG-2-1158）
+    destiny: 'GachaDs3_div_35',
 } as const;
 
 type Action = keyof typeof GACHA_ACTION_NODES;

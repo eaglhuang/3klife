@@ -18,6 +18,14 @@ export const SOUL_INJECT_REASON_TEXT: Record<Extract<SoulInjectResult, { ok: fal
     'BLOODLINE_MISMATCH': '碎片與目標血脈不同，無法寄宿',
 };
 
+/** 寄宿失敗原因 → 語系 key（UI 以 i18n.t 顯示，不把原因碼直接丟給玩家；PROG-2-1070） */
+export const SOUL_INJECT_REASON_I18N_KEY: Record<Extract<SoulInjectResult, { ok: false }>['reason'] | 'TARGET_NOT_FOUND' | 'NO_FRAGMENT', string> = {
+    TARGET_NOT_FOUND: 'ui.general.soul_inject.reason.unknown',
+    NO_FRAGMENT: 'ui.general.soul_inject.reason.unknown',
+    SAME_TEMPLATE: 'ui.general.soul_inject.reason.same_template',
+    BLOODLINE_MISMATCH: 'ui.general.soul_inject.reason.bloodline_mismatch',
+};
+
 export interface SoulInjectCandidate {
     /** 亡者 uid（碎片的鍵） */
     deadUid: string;

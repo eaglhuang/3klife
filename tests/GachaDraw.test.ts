@@ -9,6 +9,7 @@ import { assert, TestSuite } from './TestRunner';
 import {
     drawGeneralOnce,
     GachaPool,
+    GACHA_MENTOR_RARITY_RATES,
     GACHA_RARITY_RATES,
     GACHA_UP_SHARE,
     normalizeGachaPity,
@@ -124,6 +125,28 @@ export function createGachaDrawSuite(): TestSuite {
     suite.test('池內完全沒有武將時拋錯', () => {
         const empty: GachaPool<string> = { ssrUp: [], ssrOther: [], srUp: [], srOther: [], rOther: [] };
         assert.throws(() => drawGeneralOnce(empty, normalizeGachaPity(undefined), () => 0.5));
+    });
+
+    suite.test('支援卡池機率表：SSR ≈ 5%，SR ≈ 25% + 小保底提升（0.70/50）（PROG-2-1093）', () => {
+        assert.isTrue(Math.abs(GACHA_MENTOR_RARITY_RATES.SSR + GACHA_MENTOR_RARITY_RATES.SR + GACHA_MENTOR_RARITY_RATES.R - 1) < 1e-9);
+        const rng = lcg(20261025);
+        let pity = normalizeGachaPity(undefined);
+        const counts: Record<string, number> = { SSR: 0, SR: 0, R: 0 };
+        const N = 200000;
+        for (let i = 0; i < N; i++) {
+            const drawn = drawGeneralOnce(pool, pity, rng, GACHA_MENTOR_RARITY_RATES);
+            pity = drawn.nextPity;
+            counts[drawn.rarity]++;
+        }
+        const expectedSr = GACHA_MENTOR_RARITY_RATES.SR + GACHA_MENTOR_RARITY_RATES.R / 50;
+        assert.isTrue(Math.abs(counts.SSR / N - 0.05) < 0.003, `SSR 實際 ${counts.SSR / N}`);
+        assert.isTrue(Math.abs(counts.SR / N - expectedSr) < 0.005, `SR 實際 ${counts.SR / N}，期望 ${expectedSr}`);
+    });
+
+    suite.test('支援卡召喚走支援卡池機率，其餘召喚維持名將池機率', () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const src = (require('fs') as typeof import('fs')).readFileSync(require('path').join(__dirname, '..', 'assets/scripts/core/services/LocalGachaService.ts'), 'utf8');
+        assert.isTrue(src.includes("'LOCAL_SUPPORT_SUMMON' ? GACHA_MENTOR_RARITY_RATES : GACHA_RARITY_RATES"));
     });
 
     return suite;

@@ -453,11 +453,165 @@
                     "styleSlot": "nurture.label.body"
                   },
                   {
+                    "type": "container",
+                    "name": "DeckRow",
+                    "widget": {
+                      "top": 86,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 110,
+                    "children": [
+                      {
+                        "type": "button",
+                        "name": "BtnDeckSlot0",
+                        "id": "btnDeckSlot0",
+                        "widget": {
+                          "top": 0,
+                          "left": 27
+                        },
+                        "width": 212,
+                        "height": 110,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "DeckSlotLabel0",
+                            "id": "deckSlotLabel0",
+                            "widget": {
+                              "vCenter": true,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 96,
+                            "styleSlot": "nurture.label.body"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "button",
+                        "name": "BtnDeckSlot1",
+                        "id": "btnDeckSlot1",
+                        "widget": {
+                          "top": 0,
+                          "left": 253
+                        },
+                        "width": 212,
+                        "height": 110,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "DeckSlotLabel1",
+                            "id": "deckSlotLabel1",
+                            "widget": {
+                              "vCenter": true,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 96,
+                            "styleSlot": "nurture.label.body"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "button",
+                        "name": "BtnDeckSlot2",
+                        "id": "btnDeckSlot2",
+                        "widget": {
+                          "top": 0,
+                          "left": 479
+                        },
+                        "width": 212,
+                        "height": 110,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "DeckSlotLabel2",
+                            "id": "deckSlotLabel2",
+                            "widget": {
+                              "vCenter": true,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 96,
+                            "styleSlot": "nurture.label.body"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "button",
+                        "name": "BtnDeckSlot3",
+                        "id": "btnDeckSlot3",
+                        "widget": {
+                          "top": 0,
+                          "left": 705
+                        },
+                        "width": 212,
+                        "height": 110,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "DeckSlotLabel3",
+                            "id": "deckSlotLabel3",
+                            "widget": {
+                              "vCenter": true,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 96,
+                            "styleSlot": "nurture.label.body"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "button",
+                        "name": "BtnDeckSlot4",
+                        "id": "btnDeckSlot4",
+                        "widget": {
+                          "top": 0,
+                          "left": 931
+                        },
+                        "width": 212,
+                        "height": 110,
+                        "skinSlot": "nurture.slot.bg",
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "DeckSlotLabel4",
+                            "id": "deckSlotLabel4",
+                            "widget": {
+                              "vCenter": true,
+                              "left": 8,
+                              "right": 8
+                            },
+                            "height": 96,
+                            "styleSlot": "nurture.label.body"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "DeckHint",
+                    "id": "deckHint",
+                    "widget": {
+                      "top": 206,
+                      "left": 27,
+                      "right": 27
+                    },
+                    "height": 56,
+                    "styleSlot": "nurture.label.meta"
+                  },
+                  {
                     "type": "button",
                     "name": "BtnStartNurture",
                     "id": "btnStartNurture",
                     "widget": {
-                      "top": 100,
+                      "top": 290,
                       "left": 360
                     },
                     "width": 420,
@@ -475,6 +629,33 @@
                         },
                         "height": 64,
                         "text": "入學開始培育",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnStartBorrow",
+                    "id": "btnStartBorrow",
+                    "widget": {
+                      "top": 290,
+                      "left": 800
+                    },
+                    "width": 325,
+                    "height": 72,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnStartBorrowLabel",
+                        "id": "startBorrowLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 64,
+                        "text": "＋ 好友借用",
                         "styleSlot": "nurture.label.button"
                       }
                     ]
@@ -834,11 +1015,11 @@
                     "name": "BtnLegendaryCard",
                     "id": "btnLegendaryCard",
                     "widget": {
-                      "top": 296,
+                      "top": 268,
                       "right": 27
                     },
                     "width": 360,
-                    "height": 52,
+                    "height": 48,
                     "skinSlot": "nurture.button.rest.bg",
                     "children": [
                       {
@@ -861,11 +1042,11 @@
                     "name": "BtnLegendaryMentor",
                     "id": "btnLegendaryMentor",
                     "widget": {
-                      "top": 360,
+                      "top": 322,
                       "right": 27
                     },
                     "width": 360,
-                    "height": 52,
+                    "height": 48,
                     "skinSlot": "nurture.button.rest.bg",
                     "children": [
                       {
@@ -885,41 +1066,14 @@
                   },
                   {
                     "type": "button",
-                    "name": "BtnMentorBorrow",
-                    "id": "btnMentorBorrow",
-                    "widget": {
-                      "top": 420,
-                      "right": 27
-                    },
-                    "width": 360,
-                    "height": 52,
-                    "skinSlot": "nurture.button.rest.bg",
-                    "children": [
-                      {
-                        "type": "label",
-                        "name": "BtnMentorBorrowLabel",
-                        "id": "mentorBorrowLabel",
-                        "widget": {
-                          "vCenter": true,
-                          "left": 0,
-                          "right": 0
-                        },
-                        "height": 44,
-                        "text": "傳道",
-                        "styleSlot": "nurture.label.button"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "button",
                     "name": "BtnRest",
                     "id": "btnRest",
                     "widget": {
-                      "top": 168,
+                      "top": 160,
                       "left": 27
                     },
                     "width": 360,
-                    "height": 52,
+                    "height": 48,
                     "skinSlot": "nurture.button.rest.bg",
                     "children": [
                       {
@@ -942,11 +1096,11 @@
                     "name": "BtnUsePill",
                     "id": "btnUsePill",
                     "widget": {
-                      "top": 296,
+                      "top": 268,
                       "left": 27
                     },
                     "width": 360,
-                    "height": 52,
+                    "height": 48,
                     "skinSlot": "nurture.button.rest.bg",
                     "children": [
                       {
@@ -969,11 +1123,11 @@
                     "name": "BtnMentorDetail",
                     "id": "btnMentorDetail",
                     "widget": {
-                      "top": 232,
+                      "top": 214,
                       "right": 27
                     },
                     "width": 360,
-                    "height": 52,
+                    "height": 48,
                     "skinSlot": "nurture.button.rest.bg",
                     "children": [
                       {
@@ -996,11 +1150,11 @@
                     "name": "BtnAutoNurture",
                     "id": "btnAutoNurture",
                     "widget": {
-                      "top": 232,
+                      "top": 214,
                       "left": 27
                     },
                     "width": 360,
-                    "height": 52,
+                    "height": 48,
                     "skinSlot": "nurture.button.rest.bg",
                     "children": [
                       {
@@ -1023,11 +1177,11 @@
                     "name": "BtnAbandon",
                     "id": "btnAbandon",
                     "widget": {
-                      "top": 168,
+                      "top": 160,
                       "right": 27
                     },
                     "width": 220,
-                    "height": 52,
+                    "height": 48,
                     "skinSlot": "nurture.button.danger.bg",
                     "children": [
                       {
@@ -1050,11 +1204,11 @@
                     "name": "NurtureLog",
                     "id": "nurtureLog",
                     "widget": {
-                      "top": 236,
-                      "left": 27,
-                      "right": 27
+                      "top": 160,
+                      "left": 400,
+                      "right": 400
                     },
-                    "height": 60,
+                    "height": 120,
                     "styleSlot": "nurture.label.log"
                   }
                 ]
@@ -1088,7 +1242,7 @@
                     "id": "btnGraduate",
                     "widget": {
                       "top": 100,
-                      "left": 360
+                      "left": 420
                     },
                     "width": 420,
                     "height": 72,
@@ -1115,7 +1269,7 @@
                     "id": "btnKeepReport",
                     "widget": {
                       "top": 180,
-                      "left": 360
+                      "left": 420
                     },
                     "width": 420,
                     "height": 64,
@@ -1142,7 +1296,7 @@
                     "id": "btnRetake",
                     "widget": {
                       "top": 260,
-                      "left": 360
+                      "left": 420
                     },
                     "width": 420,
                     "height": 64,
@@ -1169,7 +1323,7 @@
                     "id": "btnCommitReport",
                     "widget": {
                       "top": 340,
-                      "left": 360
+                      "left": 420
                     },
                     "width": 420,
                     "height": 64,
@@ -1314,6 +1468,124 @@
                         },
                         "height": 56,
                         "text": "查看紀錄",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "TacticBlock",
+                "id": "tacticBlock",
+                "widget": {
+                  "top": 518,
+                  "left": 27
+                },
+                "width": 360,
+                "height": 108,
+                "children": [
+                  {
+                    "type": "button",
+                    "name": "BtnPrevTactic",
+                    "id": "btnPrevTactic",
+                    "widget": {
+                      "top": 0,
+                      "left": 0
+                    },
+                    "width": 48,
+                    "height": 48,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnPrevTacticLabel",
+                        "id": "prevTacticLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "<",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "TacticName",
+                    "id": "tacticName",
+                    "widget": {
+                      "top": 0,
+                      "left": 54
+                    },
+                    "width": 252,
+                    "height": 26,
+                    "styleSlot": "nurture.label.body"
+                  },
+                  {
+                    "type": "label",
+                    "name": "TacticCost",
+                    "id": "tacticCost",
+                    "widget": {
+                      "top": 26,
+                      "left": 54
+                    },
+                    "width": 252,
+                    "height": 22,
+                    "styleSlot": "nurture.label.meta"
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnNextTactic",
+                    "id": "btnNextTactic",
+                    "widget": {
+                      "top": 0,
+                      "right": 0
+                    },
+                    "width": 48,
+                    "height": 48,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnNextTacticLabel",
+                        "id": "nextTacticLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": ">",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnLearnTactic",
+                    "id": "btnLearnTactic",
+                    "widget": {
+                      "top": 56,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 48,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnLearnTacticLabel",
+                        "id": "learnTacticLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "學習戰法",
                         "styleSlot": "nurture.label.button"
                       }
                     ]

@@ -60,19 +60,19 @@
 | 傭兵系統（試用）.md (doc_spec_0029) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
 | 可結緣女性來源系統.md (doc_spec_0003) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
 | 同名武將系統.md (doc_spec_0005) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 名士預言系統.md (doc_spec_0006) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 名士預言系統.md (doc_spec_0006) | BondingSetupController.ts（名士批語 3 列，PROG-2-1131） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 名詞定義文件.md (doc_spec_0008) | 尚無實作 | ✅ | ✅ | — | — | ⬜ |
-| 因子解鎖系統.md (doc_spec_0009) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 培育系統.md (doc_spec_0026) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 因子解鎖系統.md (doc_spec_0009) | AwakeningReveal.ts（戰後覺醒結算揭示，PROG-2-1133；畫面定格動畫未做） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 培育系統.md (doc_spec_0026) | NurtureSystem.ts、TacticLearning.ts、NurtureFlowController.ts（戰法列，PROG-2-1132／1134）；InspiredTacticMap.ts（靈感戰法對應戰法庫，PROG-2-1135） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 家族關係（史實相性）系統.md (doc_spec_0024) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
 | 戰場適性系統.md (doc_spec_0041) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 教官系統（支援卡）.md (doc_spec_0027) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 教官系統（支援卡）.md (doc_spec_0027) | NurtureSystem.ts（inspiredTacticIds）、GameSession.ts（learnTactic 擋法，PROG-2-1134）；InspiredTacticMap.ts（17 個靈感戰法對應現有 8 招戰法庫，PROG-2-1135；逐招獨立戰場效果未做）；NpcFriendMentor.ts（friendMentorCard）、NurtureFlowController.ts（setBorrowedMentor）、LobbyScene.ts（_onClickStartBorrow，好友借用入學前，PROG-2-1138） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 正式版劇本文案.md (doc_spec_0004) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
 | 武將壽命系統.md (doc_spec_0018) | GeneralAging.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
 | 武將戰績系統.md (doc_spec_0019) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
 | 武將背包（倉庫）系統.md (doc_spec_0017) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
 | 留存系統.md (doc_spec_0025) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 結緣系統（配種）.md (doc_spec_0028) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 結緣系統（配種）.md (doc_spec_0028) | BondingSetupController.ts（三欄重排、父母頭像，PROG-2-1130／1131） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 經濟系統.md (doc_spec_0032) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
 | 血統理論系統.md (doc_spec_0011) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
 | 資源循環系統.md (doc_spec_0033) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
@@ -196,6 +196,7 @@
 
 | 日期 | 加權總進度 | 資料來源 | 備註 |
 |---|---|---|---|
+| 2026-10-26 | 38% | 掃描實算（D-4） | 同日覆蓋最新值 |
 | 2026-04-12 | 38% | 掃描實算（D-4） | 同日覆蓋最新值 |
 | 2026-04-10 | 36% | 估算（cross-ref 壓縮與工具化） | 追蹤基礎穩定 |
 | 2026-04-05 | 34% | 估算（戰場資料與 UI 合約補齊） | 核心/主戰場提升 |

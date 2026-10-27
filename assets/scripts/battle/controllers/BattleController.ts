@@ -16,8 +16,9 @@ import { applySoloBreachAtTurnStart } from '../runtime/BattleSoloBreach';
 import { BattleState, TerrainGrid } from "../models/BattleState";
 import type { BattleResult } from "../BattleTypes";
 import { detectWeatherTransition, validateWeatherSchedule, weatherForTurn, type WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
+import { WEATHER_ITEM_TARGET, weatherItemActiveAt, type WeatherItemId, type WeatherItemOverride } from "../../core/systems/WeatherItem";
 import { EnemyAI } from "./EnemyAI";
-import { resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
+import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
 import { findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
@@ -343,7 +344,7 @@ export class BattleController {
 
   /** 本場出陣過的虎符 id，戰後結算戰鬥經驗用 */
   public get deployedTallyIds(): readonly string[] {
-    return [...this._deployedTallyIds];
+    return Array.from(this._deployedTallyIds);
   }
 
   public deployTroop(type: TroopType, lane: number, unitName?: string): TroopUnit | null {
@@ -635,7 +636,7 @@ export class BattleController {
     const general = this.state.enemyGeneral;
     if (!general) return null;
 
-    const library = [...this.tacticDefinitionMap.values()].map(def => ({ id: def.id, category: def.category }));
+    const library = Array.from(this.tacticDefinitionMap.values()).map(def => ({ id: def.id, category: def.category }));
     const candidates = buildEnemyTacticCandidates(general.tacticSlots, library);
     if (candidates.length === 0) return null;
 
@@ -705,7 +706,7 @@ export class BattleController {
   }
 
   private livingUnitsOf(faction: Faction): TroopUnit[] {
-    return [...this.state.units.values()].filter(unit => unit.faction === faction && unit.currentHp > 0);
+    return Array.from(this.state.units.values()).filter(unit => unit.faction === faction && unit.currentHp > 0);
   }
 
   public triggerPlayerSeedTactic(options: GeneralSkillCastOptions = {}): boolean {
@@ -749,6 +750,8 @@ export class BattleController {
     options: GeneralSkillCastOptions = {},
   ): boolean {
     if (!this.canUsePlayerSkills()) return false;
+    // 殼戰法效果未實作：不施放，SP／TP 都不動（PROG-2-0933）
+    if (!isBattleSkillImplemented(skillId)) return false;
 
     if (sourceType === SkillSourceType.SeedTactic) {
       return this.triggerPlayerSeedTactic({
@@ -1110,14 +1113,36 @@ export class BattleController {
     if (this.state.battleTactic === BattleTactic.FloodAttack) refreshFloodAttackTerrain(this.state);
   }
 
-  /** 依排程套用指定回合的天氣；天氣改變時發出 WeatherChanged 事件。沒有排程時不動 */
+  /** 天氣道具覆寫（PROG-2-0930）：生效中的道具天氣優先於排程；過了 3 回合即回到排程 */
+  private weatherItemOverride: WeatherItemOverride | null = null;
+  /** 本場已用過的天氣道具；每場每種只能用一次 */
+  private readonly usedWeatherItems = new Set<WeatherItemId>();
+
+  /**
+   * 使用天氣道具（APT-15 / PROG-2-0930）：立即改變本場天氣，生效 3 回合後回到排程天氣。
+   * 同一場每種道具只能用一次；重複使用時不改變天氣。
+   */
+  public useWeatherItem(item: WeatherItemId): { ok: boolean; reason?: 'ALREADY_USED'; weather: Weather } {
+    if (this.usedWeatherItems.has(item)) {
+      return { ok: false, reason: 'ALREADY_USED', weather: this.state.weather };
+    }
+    const turn = services().battle.getSnapshot().turn;
+    this.usedWeatherItems.add(item);
+    this.weatherItemOverride = { weather: WEATHER_ITEM_TARGET[item], startTurn: turn };
+    this.applyWeatherForTurn(turn);
+    return { ok: true, weather: this.state.weather };
+  }
+
+  /** 依排程套用指定回合的天氣；道具生效中時以道具天氣為準。天氣改變時發出 WeatherChanged 事件。沒有排程也沒有道具時不動 */
   private applyWeatherForTurn(turn: number): void {
     const schedule = this.state.weatherSchedule;
-    if (schedule.length === 0) return;
-    const transition = detectWeatherTransition(schedule, turn);
-    this.state.weather = transition.current;
-    if (transition.changed) {
-      services().event.emit(EVENT_NAMES.WeatherChanged, { turn, previous: transition.previous, current: transition.current });
+    if (schedule.length === 0 && !this.weatherItemOverride) return;
+    const scheduled = detectWeatherTransition(schedule, turn).current;
+    const current = weatherItemActiveAt(this.weatherItemOverride, turn) ?? scheduled;
+    const previous = this.state.weather;
+    this.state.weather = current;
+    if (current !== previous) {
+      services().event.emit(EVENT_NAMES.WeatherChanged, { turn, previous, current });
       this.refreshFloodForWeather();
     }
   }

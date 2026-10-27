@@ -12,6 +12,7 @@
  * Unity 對照：像把玩家的 SaveData 裡的 HeroInstance，轉成戰鬥場景用的 BattleUnitData，
  * 戰鬥結束再用 BattleReport 把結果寫回 HeroInstance（等同 ScriptableObject → Runtime Instance 的來回）。
  */
+import { toLibraryTacticId } from './InspiredTacticMap';
 import { tacticLoadoutCapacity } from './TacticLoadout';
 import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig, GeneralTacticSlotConfig } from '../models/GeneralUnit';
 import { CHILD_STATUS_MYSTERY } from './BreedingSystem';
@@ -181,7 +182,8 @@ function buildTacticSlots(general: BattleRosterGeneral): GeneralTacticSlotConfig
     if (general.tacticSlots && general.tacticSlots.length > 0) {
         return general.tacticSlots.slice(0, capacity).map((slot) => ({ ...slot }));
     }
-    const learned = Array.from(new Set(general.learnedTactics ?? [])).slice(0, capacity);
+    // 靈感戰法（規格 TAC_* id）轉成戰法庫 id 才查得到戰場技能；多招對到同一招只佔一槽（PROG-2-1135）
+    const learned = Array.from(new Set((general.learnedTactics ?? []).map(toLibraryTacticId))).slice(0, capacity);
     return learned.map((tacticId, index) => ({ slotId: `slot-${index + 1}`, tacticId, source: 'learned' as GeneralTacticSlotConfig['source'] }));
 }
 
@@ -312,7 +314,7 @@ export function settleBattle(roster: readonly GeneralConfig[], request: SettleBa
         };
         return updated;
     });
-    return { roster: next, entries, skippedIds: [...ids].filter((id) => !found.has(id)) };
+    return { roster: next, entries, skippedIds: Array.from(ids).filter((id) => !found.has(id)) };
 }
 
 // ── 每季精力回補 ───────────────────────────────────────────────────────────

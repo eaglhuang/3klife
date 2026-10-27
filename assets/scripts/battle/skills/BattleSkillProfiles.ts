@@ -11,6 +11,8 @@ export interface BattleSkillProfile {
   battleSkillId: string;
   /** 戰法標籤（PROG-2-0406）：例如 fire 火計，供天氣強約束判定 */
   tags?: readonly string[];
+  /** 殼：效果尚未實作（TRP-15 殼 profile），不可施放，UI 應灰掉且不扣 SP／TP */
+  pendingEffect?: boolean;
   targetMode: BattleSkillTargetMode;
   manualTargeting?: boolean;
   autoAimMode?: BattleSkillAutoAimMode;
@@ -220,6 +222,31 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     slowAmount: 1,
     statusTurns: 1,
     battleLogKey: 'skill.mentor_slow.debuff',
+  },
+  // 連擊（PROG-2-1145 靈感戰法，數值暫定）：單體敵軍連打 2 段，每段武力 ×0.6
+  'insp-combo-attack': {
+    battleSkillId: 'insp-combo-attack',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    coefficient: 0.6,
+    scalingStat: 'str',
+    maxTargets: 1,
+    hitStageMultipliers: [1.0, 1.0],
+    battleLogKey: 'skill.insp_combo_attack.hit',
+  },
+  // 挑釁（PROG-2-1145 靈感戰法，數值暫定）：單體敵軍暈眩 1 回合
+  'insp-taunt': {
+    battleSkillId: 'insp-taunt',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'control',
+    coefficient: 0,
+    maxTargets: 1,
+    statusEffect: StatusEffect.Stun,
+    statusTurns: 1,
+    battleLogKey: 'skill.insp_taunt.control',
   },
   // 威震華夏（PROG-2-0773）：單體敵軍傷害；第 1 回合 ×2，擊殺後施放者再行動 1 次（規格 戰法系統 威震華夏）
   'tally-wei-zhen-hua-xia': {
@@ -479,6 +506,7 @@ for (const battleSkillId of TIGER_TALLY_PENDING_SKILL_IDS) {
     coefficient: 0,
     scalingStat: 'str',
     maxTargets: 1,
+    pendingEffect: true,
     battleLogKey: `skill.${battleSkillId.replace(/-/g, '_')}.hit`,
   };
 }
@@ -496,6 +524,11 @@ export function resolveBattleSkillTargetMode(
   fallback: BattleSkillTargetMode,
 ): BattleSkillTargetMode {
   return resolveBattleSkillProfile(skillId)?.targetMode ?? fallback;
+}
+
+/** 技能是否可施放：殼 profile（pendingEffect）不可施放；查無 profile 時維持既有行為（可施放） */
+export function isBattleSkillImplemented(skillId: string): boolean {
+  return resolveBattleSkillProfile(skillId)?.pendingEffect !== true;
 }
 
 export function requiresBattleSkillManualTargeting(skillId: string): boolean {

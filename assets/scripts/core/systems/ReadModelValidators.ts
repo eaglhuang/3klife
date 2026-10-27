@@ -77,7 +77,7 @@ export interface ReadModelCheck {
 }
 
 function result(issues: ReadModelIssue[]): ReadModelCheck {
-    const unique = [...new Set(issues)];
+    const unique = Array.from(new Set(issues));
     return { ok: unique.length === 0, issues: unique };
 }
 

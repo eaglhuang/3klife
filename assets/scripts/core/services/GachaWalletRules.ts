@@ -5,8 +5,8 @@
  *
  * Unity 對照：像 Shop.TryPurchase()，回傳是否成功，而不是偷偷改玩家錢包。
  */
-/** gems＝靈玉（付費）、tickets＝召喚券、bronze＝銅錢符（免費，僅常設池）、oracle＝求籤令（定向道具，不是池幣） */
-export type WalletCurrencyKey = 'gems' | 'gold' | 'tickets' | 'bronze' | 'oracle';
+/** gems＝靈玉（付費）、tickets＝召喚券、bronze＝銅錢符（免費，僅常設池）、oracle＝求籤令（定向道具，不是池幣）、mentorTickets＝支援券（只用於支援卡池）、scorePoints＝積分（教官卡滿星溢出轉化，PROG-2-1095） */
+export type WalletCurrencyKey = 'gems' | 'gold' | 'tickets' | 'bronze' | 'oracle' | 'mentorTickets' | 'scorePoints';
 
 export const CURRENCY_LABELS: Record<WalletCurrencyKey, string> = {
     gems: '靈玉',
@@ -14,6 +14,8 @@ export const CURRENCY_LABELS: Record<WalletCurrencyKey, string> = {
     tickets: '召喚券',
     bronze: '銅錢符',
     oracle: '求籤令',
+    mentorTickets: '支援券',
+    scorePoints: '積分',
 };
 
 /** 新檔的起始錢包（原為 LocalGachaService 私有常數，數值不變）；存檔為 null 時的入帳基底 */
@@ -21,8 +23,12 @@ export const STARTER_GACHA_WALLET: Readonly<Record<WalletCurrencyKey, number>> =
     gems: 1280,
     gold: 128450,
     tickets: 12,
-    bronze: 0,
+    /** 開局送一次十連份的銅錢符（1500），規格十連漲到 1500 後新玩家仍抽得起（PROG-2-1094） */
+    bronze: 1500,
     oracle: 0,
+    /** 開局送 5 張支援券，讓第一次培育能抽到教官（PROG-2-1085，使用者裁定 2026-10-24） */
+    mentorTickets: 5,
+    scorePoints: 0,
 };
 
 export interface WalletCheckResult {

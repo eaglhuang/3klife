@@ -105,6 +105,28 @@
       "color": "secondaryLight",
       "isBold": true,
       "overflow": "CLAMP"
+    },
+    "bonding.avatar.ring": {
+      "kind": "color-rect",
+      "color": "#2E2422",
+      "alpha": 255,
+      "cornerRadius": 56,
+      "borderWidth": 3,
+      "borderColor": "#E8BE60"
+    },
+    "bonding.sage.ring": {
+      "kind": "color-rect",
+      "color": "#2E2422",
+      "alpha": 255,
+      "cornerRadius": 15,
+      "borderWidth": 2,
+      "borderColor": "#E8BE60"
+    },
+    "bonding.avatar": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_avatars/unknown_avatar_m",
+      "expectedWidth": 256,
+      "expectedHeight": 256
     }
   }
 }

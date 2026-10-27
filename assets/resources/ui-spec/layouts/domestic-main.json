@@ -21,6 +21,20 @@
     },
     "children": [
       {
+        "type": "image",
+        "name": "DomesticBackdrop",
+        "id": "domesticBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "width": 1920,
+        "height": 1080,
+        "skinSlot": "domestic.backdrop"
+      },
+      {
         "type": "panel",
         "name": "DomesticCard",
         "id": "domesticCard",
@@ -28,8 +42,8 @@
           "hCenter": true,
           "vCenter": true
         },
-        "width": 1200,
-        "height": 780,
+        "width": 1120,
+        "height": 740,
         "skinSlot": "domestic.card.bg",
         "children": [
           {
@@ -37,11 +51,11 @@
             "name": "DomesticTitle",
             "id": "domesticTitle",
             "widget": {
-              "top": 22,
-              "left": 32
+              "top": 34,
+              "left": 48
             },
-            "width": 400,
-            "height": 40,
+            "width": 500,
+            "height": 56,
             "text": "大廳・內政",
             "styleSlot": "domestic.label.title"
           },
@@ -50,11 +64,11 @@
             "name": "SeasonLabel",
             "id": "seasonLabel",
             "widget": {
-              "top": 30,
-              "left": 460
+              "top": 96,
+              "left": 50
             },
-            "width": 420,
-            "height": 34,
+            "width": 500,
+            "height": 30,
             "text": "",
             "styleSlot": "domestic.label.meta"
           },
@@ -63,11 +77,11 @@
             "name": "BtnClose",
             "id": "btnClose",
             "widget": {
-              "top": 16,
-              "right": 24
+              "top": 30,
+              "right": 36
             },
-            "width": 110,
-            "height": 48,
+            "width": 100,
+            "height": 44,
             "skinSlot": "domestic.button.bg",
             "children": [
               {
@@ -86,282 +100,748 @@
             ]
           },
           {
-            "type": "button",
-            "name": "BtnFarming",
-            "id": "btnFarming",
+            "type": "panel",
+            "name": "TitleDivider",
+            "id": "titleDivider",
             "widget": {
-              "top": 100,
-              "left": 32
+              "top": 140,
+              "left": 48,
+              "right": 48
             },
-            "width": 280,
-            "height": 84,
+            "height": 1,
+            "skinSlot": "domestic.divider"
+          },
+          {
+            "type": "label",
+            "name": "SectionTasks",
+            "id": "sectionTasks",
+            "widget": {
+              "top": 160,
+              "left": 48
+            },
+            "width": 300,
+            "height": 26,
+            "text": "內政任務",
+            "styleSlot": "domestic.label.section"
+          },
+          {
+            "type": "button",
+            "name": "BtnAutoGov",
+            "id": "btnAutoGov",
+            "widget": {
+              "top": 150,
+              "right": 48
+            },
+            "width": 160,
+            "height": 44,
             "skinSlot": "domestic.button.bg",
             "children": [
               {
                 "type": "label",
-                "name": "BtnFarmingLabel",
-                "id": "btnFarmingLabel",
+                "name": "BtnAutoGovLabel",
+                "id": "btnAutoGovLabel",
                 "widget": {
                   "vCenter": true,
                   "left": 0,
                   "right": 0
                 },
-                "height": 40,
-                "text": "農耕",
-                "styleSlot": "domestic.label.button"
+                "height": 30,
+                "text": "自動指派",
+                "styleSlot": "domestic.label.meta"
               }
             ]
           },
           {
-            "type": "label",
-            "name": "FarmingOutput",
-            "id": "farmingOutput",
+            "type": "button",
+            "name": "BtnAutoMode",
+            "id": "btnAutoMode",
             "widget": {
-              "top": 124,
-              "left": 340
-            },
-            "width": 320,
-            "height": 36,
-            "text": "",
-            "styleSlot": "domestic.label.name"
-          },
-          {
-            "type": "label",
-            "name": "FarmingChosen",
-            "id": "farmingChosen",
-            "widget": {
-              "top": 128,
-              "left": 700
+              "top": 150,
+              "right": 224
             },
             "width": 200,
-            "height": 30,
-            "text": "",
-            "styleSlot": "domestic.label.meta"
-          },
-          {
-            "type": "button",
-            "name": "BtnCommerce",
-            "id": "btnCommerce",
-            "widget": {
-              "top": 210,
-              "left": 32
-            },
-            "width": 280,
-            "height": 84,
+            "height": 44,
             "skinSlot": "domestic.button.bg",
             "children": [
               {
                 "type": "label",
-                "name": "BtnCommerceLabel",
-                "id": "btnCommerceLabel",
+                "name": "BtnAutoModeLabel",
+                "id": "btnAutoModeLabel",
                 "widget": {
                   "vCenter": true,
                   "left": 0,
                   "right": 0
                 },
-                "height": 40,
-                "text": "商業",
-                "styleSlot": "domestic.label.button"
+                "height": 30,
+                "text": "自動治理：關",
+                "styleSlot": "domestic.label.meta"
               }
             ]
           },
           {
-            "type": "label",
-            "name": "CommerceOutput",
-            "id": "commerceOutput",
+            "type": "container",
+            "name": "DomesticTaskGroup",
+            "id": "domesticTaskGroup",
             "widget": {
-              "top": 234,
-              "left": 340
+              "top": 200,
+              "left": 48,
+              "right": 48
             },
-            "width": 320,
-            "height": 36,
-            "text": "",
-            "styleSlot": "domestic.label.name"
+            "height": 296,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnFarming",
+                "id": "btnFarming",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 500,
+                "height": 88,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnFarmingLabel",
+                    "id": "btnFarmingLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 28,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "農耕",
+                    "styleSlot": "domestic.label.tile"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "FarmingOutput",
+                "id": "farmingOutput",
+                "widget": {
+                  "top": 12,
+                  "left": 150
+                },
+                "width": 220,
+                "height": 30,
+                "text": "",
+                "styleSlot": "domestic.label.name"
+              },
+              {
+                "type": "label",
+                "name": "FarmingChosen",
+                "id": "farmingChosen",
+                "widget": {
+                  "top": 8,
+                  "left": 390
+                },
+                "width": 100,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnCommerce",
+                "id": "btnCommerce",
+                "widget": {
+                  "top": 0,
+                  "left": 524
+                },
+                "width": 500,
+                "height": 88,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnCommerceLabel",
+                    "id": "btnCommerceLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 28,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "商業",
+                    "styleSlot": "domestic.label.tile"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "CommerceOutput",
+                "id": "commerceOutput",
+                "widget": {
+                  "top": 12,
+                  "left": 674
+                },
+                "width": 220,
+                "height": 30,
+                "text": "",
+                "styleSlot": "domestic.label.name"
+              },
+              {
+                "type": "label",
+                "name": "CommerceChosen",
+                "id": "commerceChosen",
+                "widget": {
+                  "top": 8,
+                  "left": 914
+                },
+                "width": 100,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnDiplomacy",
+                "id": "btnDiplomacy",
+                "widget": {
+                  "top": 104,
+                  "left": 0
+                },
+                "width": 500,
+                "height": 88,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnDiplomacyLabel",
+                    "id": "btnDiplomacyLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 28,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "外交",
+                    "styleSlot": "domestic.label.tile"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "DiplomacyOutput",
+                "id": "diplomacyOutput",
+                "widget": {
+                  "top": 116,
+                  "left": 150
+                },
+                "width": 220,
+                "height": 30,
+                "text": "",
+                "styleSlot": "domestic.label.name"
+              },
+              {
+                "type": "label",
+                "name": "DiplomacyChosen",
+                "id": "diplomacyChosen",
+                "widget": {
+                  "top": 112,
+                  "left": 390
+                },
+                "width": 100,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnArms",
+                "id": "btnArms",
+                "widget": {
+                  "top": 104,
+                  "left": 524
+                },
+                "width": 500,
+                "height": 88,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnArmsLabel",
+                    "id": "btnArmsLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 28,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "軍備",
+                    "styleSlot": "domestic.label.tile"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ArmsOutput",
+                "id": "armsOutput",
+                "widget": {
+                  "top": 116,
+                  "left": 674
+                },
+                "width": 220,
+                "height": 30,
+                "text": "",
+                "styleSlot": "domestic.label.name"
+              },
+              {
+                "type": "label",
+                "name": "ArmsChosen",
+                "id": "armsChosen",
+                "widget": {
+                  "top": 112,
+                  "left": 914
+                },
+                "width": 100,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnScouting",
+                "id": "btnScouting",
+                "widget": {
+                  "top": 208,
+                  "left": 0
+                },
+                "width": 500,
+                "height": 88,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnScoutingLabel",
+                    "id": "btnScoutingLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 28,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "偵查",
+                    "styleSlot": "domestic.label.tile"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ScoutingOutput",
+                "id": "scoutingOutput",
+                "widget": {
+                  "top": 220,
+                  "left": 150
+                },
+                "width": 220,
+                "height": 30,
+                "text": "",
+                "styleSlot": "domestic.label.name"
+              },
+              {
+                "type": "label",
+                "name": "ScoutingChosen",
+                "id": "scoutingChosen",
+                "widget": {
+                  "top": 216,
+                  "left": 390
+                },
+                "width": 100,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              }
+            ]
           },
           {
-            "type": "label",
-            "name": "CommerceChosen",
-            "id": "commerceChosen",
+            "type": "container",
+            "name": "DomesticGovGroup",
+            "id": "domesticGovGroup",
             "widget": {
-              "top": 238,
-              "left": 700
+              "top": 200,
+              "left": 48,
+              "right": 48
             },
-            "width": 200,
-            "height": 30,
-            "text": "",
-            "styleSlot": "domestic.label.meta"
-          },
-          {
-            "type": "button",
-            "name": "BtnDiplomacy",
-            "id": "btnDiplomacy",
-            "widget": {
-              "top": 320,
-              "left": 32
-            },
-            "width": 280,
-            "height": 84,
-            "skinSlot": "domestic.button.bg",
+            "height": 296,
             "children": [
               {
                 "type": "label",
-                "name": "BtnDiplomacyLabel",
-                "id": "btnDiplomacyLabel",
+                "name": "FarmingGovernor",
+                "id": "farmingGovernor",
                 "widget": {
-                  "vCenter": true,
-                  "left": 0,
-                  "right": 0
+                  "top": 50,
+                  "left": 150
                 },
-                "height": 40,
-                "text": "外交",
-                "styleSlot": "domestic.label.button"
-              }
-            ]
-          },
-          {
-            "type": "label",
-            "name": "DiplomacyOutput",
-            "id": "diplomacyOutput",
-            "widget": {
-              "top": 344,
-              "left": 340
-            },
-            "width": 320,
-            "height": 36,
-            "text": "",
-            "styleSlot": "domestic.label.name"
-          },
-          {
-            "type": "label",
-            "name": "DiplomacyChosen",
-            "id": "diplomacyChosen",
-            "widget": {
-              "top": 348,
-              "left": 700
-            },
-            "width": 200,
-            "height": 30,
-            "text": "",
-            "styleSlot": "domestic.label.meta"
-          },
-          {
-            "type": "button",
-            "name": "BtnArms",
-            "id": "btnArms",
-            "widget": {
-              "top": 430,
-              "left": 32
-            },
-            "width": 280,
-            "height": 84,
-            "skinSlot": "domestic.button.bg",
-            "children": [
+                "width": 230,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnGovFarming",
+                "id": "btnGovFarming",
+                "widget": {
+                  "top": 44,
+                  "left": 390
+                },
+                "width": 100,
+                "height": 36,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnGovFarmingLabel",
+                    "id": "btnGovFarmingLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 28,
+                    "text": "換將",
+                    "styleSlot": "domestic.label.meta"
+                  }
+                ]
+              },
               {
                 "type": "label",
-                "name": "BtnArmsLabel",
-                "id": "btnArmsLabel",
+                "name": "CommerceGovernor",
+                "id": "commerceGovernor",
                 "widget": {
-                  "vCenter": true,
-                  "left": 0,
-                  "right": 0
+                  "top": 50,
+                  "left": 674
                 },
-                "height": 40,
-                "text": "軍備",
-                "styleSlot": "domestic.label.button"
-              }
-            ]
-          },
-          {
-            "type": "label",
-            "name": "ArmsOutput",
-            "id": "armsOutput",
-            "widget": {
-              "top": 454,
-              "left": 340
-            },
-            "width": 320,
-            "height": 36,
-            "text": "",
-            "styleSlot": "domestic.label.name"
-          },
-          {
-            "type": "label",
-            "name": "ArmsChosen",
-            "id": "armsChosen",
-            "widget": {
-              "top": 458,
-              "left": 700
-            },
-            "width": 200,
-            "height": 30,
-            "text": "",
-            "styleSlot": "domestic.label.meta"
-          },
-          {
-            "type": "button",
-            "name": "BtnScouting",
-            "id": "btnScouting",
-            "widget": {
-              "top": 540,
-              "left": 32
-            },
-            "width": 280,
-            "height": 84,
-            "skinSlot": "domestic.button.bg",
-            "children": [
+                "width": 230,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnGovCommerce",
+                "id": "btnGovCommerce",
+                "widget": {
+                  "top": 44,
+                  "left": 914
+                },
+                "width": 100,
+                "height": 36,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnGovCommerceLabel",
+                    "id": "btnGovCommerceLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 28,
+                    "text": "換將",
+                    "styleSlot": "domestic.label.meta"
+                  }
+                ]
+              },
               {
                 "type": "label",
-                "name": "BtnScoutingLabel",
-                "id": "btnScoutingLabel",
+                "name": "DiplomacyGovernor",
+                "id": "diplomacyGovernor",
                 "widget": {
-                  "vCenter": true,
-                  "left": 0,
-                  "right": 0
+                  "top": 154,
+                  "left": 150
                 },
-                "height": 40,
-                "text": "偵查",
-                "styleSlot": "domestic.label.button"
+                "width": 230,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnGovDiplomacy",
+                "id": "btnGovDiplomacy",
+                "widget": {
+                  "top": 148,
+                  "left": 390
+                },
+                "width": 100,
+                "height": 36,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnGovDiplomacyLabel",
+                    "id": "btnGovDiplomacyLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 28,
+                    "text": "換將",
+                    "styleSlot": "domestic.label.meta"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ArmsGovernor",
+                "id": "armsGovernor",
+                "widget": {
+                  "top": 154,
+                  "left": 674
+                },
+                "width": 230,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnGovArms",
+                "id": "btnGovArms",
+                "widget": {
+                  "top": 148,
+                  "left": 914
+                },
+                "width": 100,
+                "height": 36,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnGovArmsLabel",
+                    "id": "btnGovArmsLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 28,
+                    "text": "換將",
+                    "styleSlot": "domestic.label.meta"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ScoutingGovernor",
+                "id": "scoutingGovernor",
+                "widget": {
+                  "top": 258,
+                  "left": 150
+                },
+                "width": 230,
+                "height": 26,
+                "text": "",
+                "styleSlot": "domestic.label.meta"
+              },
+              {
+                "type": "button",
+                "name": "BtnGovScouting",
+                "id": "btnGovScouting",
+                "widget": {
+                  "top": 252,
+                  "left": 390
+                },
+                "width": 100,
+                "height": 36,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnGovScoutingLabel",
+                    "id": "btnGovScoutingLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 28,
+                    "text": "換將",
+                    "styleSlot": "domestic.label.meta"
+                  }
+                ]
               }
             ]
-          },
-          {
-            "type": "label",
-            "name": "ScoutingOutput",
-            "id": "scoutingOutput",
-            "widget": {
-              "top": 564,
-              "left": 340
-            },
-            "width": 320,
-            "height": 36,
-            "text": "",
-            "styleSlot": "domestic.label.name"
-          },
-          {
-            "type": "label",
-            "name": "ScoutingChosen",
-            "id": "scoutingChosen",
-            "widget": {
-              "top": 568,
-              "left": 700
-            },
-            "width": 200,
-            "height": 30,
-            "text": "",
-            "styleSlot": "domestic.label.meta"
           },
           {
             "type": "label",
             "name": "NoticeLabel",
             "id": "noticeLabel",
             "widget": {
-              "top": 640,
-              "left": 32
+              "top": 520,
+              "left": 48
             },
-            "width": 1136,
-            "height": 36,
+            "width": 1024,
+            "height": 32,
             "text": "",
             "styleSlot": "domestic.label.log"
+          },
+          {
+            "type": "container",
+            "name": "DomesticNavGroup",
+            "id": "domesticNavGroup",
+            "widget": {
+              "top": 572,
+              "left": 48,
+              "right": 48
+            },
+            "height": 112,
+            "children": [
+              {
+                "type": "label",
+                "name": "SectionNav",
+                "id": "sectionNav",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 300,
+                "height": 26,
+                "text": "前往",
+                "styleSlot": "domestic.label.section"
+              },
+              {
+                "type": "button",
+                "name": "BtnOpenRival",
+                "id": "btnOpenRival",
+                "widget": {
+                  "top": 40,
+                  "left": 0
+                },
+                "width": 188,
+                "height": 72,
+                "skinSlot": "domestic.button.accent",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenRivalLabel",
+                    "id": "btnOpenRivalLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "外交・出征 ▶",
+                    "styleSlot": "domestic.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnOpenRecruit",
+                "id": "btnOpenRecruit",
+                "widget": {
+                  "top": 40,
+                  "left": 209
+                },
+                "width": 188,
+                "height": 72,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenRecruitLabel",
+                    "id": "btnOpenRecruitLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "招賢館 ▶",
+                    "styleSlot": "domestic.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnFastForward",
+                "id": "btnFastForward",
+                "widget": {
+                  "top": 40,
+                  "left": 418
+                },
+                "width": 188,
+                "height": 72,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnFastForwardLabel",
+                    "id": "btnFastForwardLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "快進事件 ▶▶",
+                    "styleSlot": "domestic.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnOpenWarehouse",
+                "id": "btnOpenWarehouse",
+                "widget": {
+                  "top": 40,
+                  "left": 627
+                },
+                "width": 188,
+                "height": 72,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenWarehouseLabel",
+                    "id": "btnOpenWarehouseLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "主城倉庫 ▶",
+                    "styleSlot": "domestic.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnOpenRedFace",
+                "id": "btnOpenRedFace",
+                "widget": {
+                  "top": 40,
+                  "left": 836
+                },
+                "width": 188,
+                "height": 72,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenRedFaceLabel",
+                    "id": "btnOpenRedFaceLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "紅顏 ▶",
+                    "styleSlot": "domestic.label.button"
+                  }
+                ]
+              }
+            ]
           }
         ]
       }

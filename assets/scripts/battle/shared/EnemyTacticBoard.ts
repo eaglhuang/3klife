@@ -33,7 +33,7 @@ export function hasChokePointLane(cells: readonly BoardCell[]): boolean {
     for (const cell of cells) {
         perLane.set(cell.lane, (perLane.get(cell.lane) ?? 0) + 1);
     }
-    const counts = [...perLane.values()];
+    const counts = Array.from(perLane.values());
     return counts.includes(1) && counts.some(count => count >= 2);
 }
 

@@ -34,7 +34,7 @@ export interface GalleryGroup {
  * 沒有 Display_Name 的版本退回 Template_ID；沒有 Version_Title 的版本以空字串顯示。
  */
 export function buildVersionGallery(list: GeneralVersionRecord[], owned: ReadonlySet<string>): GalleryGroup[] {
-    const bloodlineIds = [...new Set(list.map((v) => v.Bloodline_ID))].sort();
+    const bloodlineIds = Array.from(new Set(list.map((v) => v.Bloodline_ID))).sort();
     return bloodlineIds.map((bloodlineId) => {
         const versions = versionsOfBloodline(list, bloodlineId);
         const entries: GalleryEntry[] = versions.map((v) => ({

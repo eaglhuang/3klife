@@ -64,7 +64,7 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
   }
 
   // 毒箭（PROG-2-0766）：所屬陣營的中毒單位在本階段結算
-  for (const [unitId, dot] of [...context.state.unitDots]) {
+  for (const [unitId, dot] of Array.from(context.state.unitDots)) {
     const unit = context.state.units.get(unitId);
     // 單位被擊殺後會從 units 移除：記錄找不到單位就丟掉，否則會殘留到戰鬥結束（單位 id 重用時還會誤中毒）
     if (!unit) {

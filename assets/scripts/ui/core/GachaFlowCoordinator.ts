@@ -4,9 +4,9 @@ import { LocalGachaService, type LocalGachaResultEntry } from '../../core/servic
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { showGachaHistory, showGachaResults } from '../dev/GachaDevOverlay';
+import { pickGachaCurrency, quoteGachaCost } from '../../core/systems/GachaCurrency';
 
-const DEFAULT_GEMS_COST_PER_PULL = 100;
-const DEFAULT_POOL_ID = 'GENERAL_STANDARD_01';
+export const DEFAULT_POOL_ID = 'GENERAL_STANDARD_01';
 
 export const GACHA_SCREEN_ID = 'gacha-ds3';
 export const GACHA_PULL_RESULT_SCREEN_ID = 'gacha-pull-result';
@@ -87,19 +87,54 @@ export class GachaFlowCoordinator {
         }
     }
 
+    /** 紅顏池召喚（PROG-2-1086）：扣 1 張召喚券抽 1 位女性武將，入名冊後可去結緣 */
+    public async runBeautySummon(poolId: string, generals: GeneralConfig[], drawCount = 1): Promise<void> {
+        try {
+            if (generals.length === 0) throw new Error('紅顏池目前沒有可抽的武將');
+            const results = await this._options.gachaService.performPoolTicketSummon(poolId, drawCount, generals);
+            this._notifyPullSuccess(results);
+            await this._presentLocalGachaResults(drawCount, results, drawCount === 10 ? '召喚券十連' : '召喚券', () => this.runBeautySummon(poolId, generals, drawCount), 'tickets');
+        } catch (error) {
+            this._emitError(error, '紅顏池召喚失敗');
+        }
+    }
+
+    /**
+     * 支援卡池召喚（PROG-2-1085）：扣支援券、抽支援卡目錄裡的武將；抽到的只變成教官卡，不入名冊。
+     * generals 由呼叫端先篩成本池候選且有支援卡資料的武將。
+     */
+    public async runSupportSummon(poolId: string, generals: GeneralConfig[], drawCount = 1): Promise<void> {
+        try {
+            if (generals.length === 0) throw new Error('支援卡池目前沒有可抽的教官');
+            const results = await this._options.gachaService.performSupportCardSummon(poolId, drawCount, generals);
+            this._notifyPullSuccess(results);
+            await this._presentLocalGachaResults(drawCount, results, drawCount === 10 ? '支援券十連' : '支援券', () => this.runSupportSummon(poolId, generals, drawCount), 'mentorTickets');
+        } catch (error) {
+            this._emitError(error, '支援卡召喚失敗');
+        }
+    }
+
     public async runLocalGacha(drawCount: number): Promise<void> {
         const resolvedCount = Math.max(1, Math.floor(Number.isFinite(drawCount) ? drawCount : 1));
         const poolId = this._options.poolId ?? DEFAULT_POOL_ID;
-        const gemsCostPerPull = this._options.gemsCostPerPull ?? DEFAULT_GEMS_COST_PER_PULL;
-        const cost = resolvedCount * gemsCostPerPull;
+        const service = this._options.gachaService;
 
         try {
-            const results = await this._options.gachaService.performLocalGacha(
+            // 規格單抽 150、十連 1500，常設池先扣銅錢符；預覽場景有指定 gemsCostPerPull 時沿用舊的靈玉單價
+            const fixed = this._options.gemsCostPerPull;
+            const pick = fixed !== undefined
+                ? { coin: 'gems' as const, cost: resolvedCount * fixed }
+                : pickGachaCurrency('HERO', resolvedCount, { gems: service.getCurrencyAmount('gems'), bronze: service.getCurrencyAmount('bronze') });
+            if (!pick) {
+                throw new Error(`靈玉或銅錢符不足，需要 ${quoteGachaCost(resolvedCount)}`);
+            }
+            const results = await service.performLocalGacha(
                 poolId,
                 resolvedCount,
-                cost,
+                pick.cost,
                 this._options.getGenerals(),
                 { factionFilter: this._options.factionFilter },
+                pick.coin,
             );
             this._notifyPullSuccess(results);
             await this._presentLocalGachaResults(resolvedCount, results);
@@ -111,7 +146,7 @@ export class GachaFlowCoordinator {
     private async _presentLocalGachaResults(
         drawCount: number, results: LocalGachaResultEntry[],
         title = drawCount === 1 ? '單抽' : '十連抽',
-        retry?: () => Promise<void>, currency: 'gems' | 'gold' | 'tickets' = 'gems',
+        retry?: () => Promise<void>, currency: 'gems' | 'gold' | 'tickets' | 'mentorTickets' = 'gems',
     ): Promise<void> {
         const host = this._options.getHost();
         const repull = retry ?? (drawCount === 10 && this._options.onRepullTen
@@ -166,7 +201,7 @@ export class GachaFlowCoordinator {
             GachaPullResult_div_173: drawCount === 10 ? '再抽十連' : `再${title}一次`,
             GachaPullResult_div_412: '返回卡池',
             GachaPullResult_div_413: drawCount === 10 ? '再抽十連' : `再${title}一次`,
-            GachaPullResult_div_186: `${currency === 'gold' ? '金幣' : currency === 'tickets' ? '召喚券' : '玉'} ${wallet[currency].toLocaleString('zh-TW')}`,
+            GachaPullResult_div_186: `${currency === 'gold' ? '金幣' : currency === 'tickets' ? '召喚券' : currency === 'mentorTickets' ? '支援券' : '玉'} ${wallet[currency].toLocaleString('zh-TW')}`,
             GachaPullResult_span_13: `SSR+ ×${rarityStats.high}`,
             GachaPullResult_span_14: `SR ×${rarityStats.mid}`,
             GachaPullResult_span_15: `R/N ×${rarityStats.low}`,

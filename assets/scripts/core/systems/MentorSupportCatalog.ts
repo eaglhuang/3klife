@@ -17,6 +17,13 @@ import { parseSupportCard, SupportCardDef } from '../models/MentorSupportSchema'
 import type { MentorCard } from '../models/MentorCard';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { addMentorToHoldings } from './MentorSources';
+import { applyDuplicateMentorCard, clampMentorStar } from './MentorBreakthrough';
+import { overflowScoreOf } from './MentorOverflow';
+
+/** 抽到重複教官卡的結果（PROG-2-1095）：未滿星升 1 星，已滿 ★5 轉為積分 */
+export type GachaMentorDuplicateEvent =
+    | { kind: 'breakthrough'; name: string; fromStar: number; toStar: number }
+    | { kind: 'overflow'; name: string; scoreGain: number };
 
 export interface SupportCatalogProblem {
     index: number;
@@ -94,10 +101,11 @@ export function mentorCardFromGachaDraw(general: GeneralConfig, support: Support
 }
 
 /**
- * 支援卡池的 poolId 清單。PM 裁定（2026-10-14）：目前留空，支援卡池設定待企劃補。
- * 一般武將池（名將池、紅顏池）不產生教官卡，避免與分池規格衝突。
+ * 支援卡池的 poolId 清單。使用者裁定（2026-10-24，PROG-2-1085）：另開 mentor-pool 當支援卡池，
+ * 紅顏池（support-pool）維持只給武將。一般武將池不產生教官卡，避免與分池規格衝突。
  */
-export const SUPPORT_CARD_POOL_IDS: readonly string[] = [];
+export const MENTOR_POOL_ID = 'mentor-pool';
+export const SUPPORT_CARD_POOL_IDS: readonly string[] = [MENTOR_POOL_ID];
 
 /** 這個卡池是否為支援卡池（只有支援卡池抽到的支援卡武將才會產生 Gacha 教官卡） */
 export function isSupportCardPool(poolId: string | undefined, supportPoolIds: readonly string[] = SUPPORT_CARD_POOL_IDS): boolean {
@@ -106,6 +114,7 @@ export function isSupportCardPool(poolId: string | undefined, supportPoolIds: re
 
 /**
  * 把抽到的武將裡有支援卡的，加進教官持有清單（同 uid 保留舊卡與舊來源，不重複新增）。
+ * 已持有同名卡時算突破：星等 +1，滿 5 星後溢出（星等不變）。
  * 只有支援卡池才會加；一般武將池回傳原清單的副本。回傳新陣列，不改傳入的清單。
  */
 export function addGachaMentorCards(
@@ -115,13 +124,25 @@ export function addGachaMentorCards(
     time: GachaMentorTime,
     poolId: string | undefined,
     supportPoolIds: readonly string[] = SUPPORT_CARD_POOL_IDS,
+    onDuplicate?: (event: GachaMentorDuplicateEvent) => void,
 ): MentorCard[] {
     let next: MentorCard[] = [...holdings];
     if (!isSupportCardPool(poolId, supportPoolIds)) return next;
     for (const general of drawn) {
         const support = general ? catalog.byGeneralId.get(general.id) : undefined;
         if (!support) continue;
-        next = addMentorToHoldings(next, mentorCardFromGachaDraw(general, support, time), 'Gacha');
+        const card = mentorCardFromGachaDraw(general, support, time);
+        const held = next.findIndex((h) => h.uid === card.uid);
+        if (held >= 0) {
+            const fromStar = clampMentorStar(next[held].stars);
+            const result = applyDuplicateMentorCard(next[held].stars);
+            next = next.map((h, i) => (i === held ? { ...h, stars: result.star } : h));
+            onDuplicate?.(result.kind === 'overflow'
+                ? { kind: 'overflow', name: card.name, scoreGain: overflowScoreOf(support.rarity) }
+                : { kind: 'breakthrough', name: card.name, fromStar, toStar: result.star });
+            continue;
+        }
+        next = addMentorToHoldings(next, card, 'Gacha');
     }
     return next;
 }

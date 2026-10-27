@@ -60,7 +60,7 @@ export function buildSageRemarks(
     random: () => number,
     keywordSources: readonly ProphecyKeywordSource[] = [],
 ): SageRemark[] {
-    const sageIds = [...new Set(unlockedSageIds)].filter((id) => getSage(id) !== undefined).slice(0, REMARK_MAX_COUNT);
+    const sageIds = Array.from(new Set(unlockedSageIds)).filter((id) => getSage(id) !== undefined).slice(0, REMARK_MAX_COUNT);
     const candidates = pool.filter((entry) => entry.chance > 0);
     if (sageIds.length < REMARK_MIN_COUNT || candidates.length === 0) return [];
 

@@ -3,9 +3,15 @@
  * DomesticPresenter — 內政 5 大任務面板的顯示資料，純 TS，不依賴 cc。
  *
  * View 只把列資料套到按鈕與文字。能否選擇沿用 runDomesticTask 的規則：同一季只能選一項。
- * 任務名稱與資源名稱是暫定的繁中字串，正式字串表定案後改 key。
+ * 產出依指派武將屬性（§F）計算。任務名稱與資源名稱是暫定的繁中字串，正式字串表定案後改 key。
  */
-import { DOMESTIC_TASK_IDS, DOMESTIC_TASK_OUTPUT, DomesticResource, DomesticSeasonLog, DomesticTaskId } from './DomesticTasks';
+import { DOMESTIC_TASK_IDS, domesticOutputFor, DomesticResource, DomesticSeasonLog, DomesticStats, DomesticTaskId } from './DomesticTasks';
+
+/** 任務格目前指派的武將（GOV-04）；產出依其屬性計算。 */
+export interface DomesticGovernor {
+    name: string;
+    stats: DomesticStats;
+}
 
 export interface DomesticTaskRow {
     taskId: DomesticTaskId;
@@ -15,6 +21,8 @@ export interface DomesticTaskRow {
     canChoose: boolean;
     /** 本季已選的那一項。 */
     chosenThisSeason: boolean;
+    /** 指派武將名稱；未指派為 null（產出走固定表）。 */
+    governorName: string | null;
 }
 
 const TASK_LABEL: Readonly<Record<DomesticTaskId, string>> = Object.freeze({
@@ -33,16 +41,22 @@ const RESOURCE_LABEL: Readonly<Record<DomesticResource, string>> = Object.freeze
 });
 
 /** 依季數與季紀錄產生 5 列；season 與紀錄相同即表示本季已選。 */
-export function buildDomesticRows(log: Readonly<DomesticSeasonLog>, season: number): DomesticTaskRow[] {
+export function buildDomesticRows(
+    log: Readonly<DomesticSeasonLog>,
+    season: number,
+    governorOf: (taskId: DomesticTaskId) => DomesticGovernor | null = () => null,
+): DomesticTaskRow[] {
     const chosenThisSeason = log.lastSeason === season;
     return DOMESTIC_TASK_IDS.map(taskId => {
-        const output = DOMESTIC_TASK_OUTPUT[taskId];
+        const governor = governorOf(taskId);
+        const output = domesticOutputFor(taskId, governor?.stats);
         return {
             taskId,
             label: TASK_LABEL[taskId],
             outputText: `${RESOURCE_LABEL[output.resource]} +${output.amount}`,
             canChoose: !chosenThisSeason,
             chosenThisSeason: chosenThisSeason && log.lastTask === taskId,
+            governorName: governor?.name ?? null,
         };
     });
 }

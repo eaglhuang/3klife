@@ -44,4 +44,6 @@ export interface MentorCard {
     retireGrade?: RetireTallyGrade;
     /** 支援卡資料（規格 SUP_*）；有才會擲戰法靈感事件，舊卡沒有此欄位 */
     support?: SupportCardDef;
+    /** 突破星等（0~5）：重複抽到同名支援卡時 +1；舊卡沒有此欄位視為 0 */
+    stars?: number;
 }

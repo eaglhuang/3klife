@@ -1,0 +1,296 @@
+{
+  "schemaVersion": "atm.workItem.v0.2",
+  "workItemId": "PROG-2-9010",
+  "title": "PR480 opening coordination extraction and readiness integration on master1e22",
+  "status": "done",
+  "milestone": null,
+  "dependencies": [],
+  "acceptance": [
+    "Every command in `validators` passes and is recorded with `node atm.mjs evidence run`.",
+    "The change is committed with `node atm.mjs git commit --task PROG-2-9010` and closed with `node atm.mjs taskflow close --task PROG-2-9010`."
+  ],
+  "deliverables": [
+    "assets/scripts/ui/scenes/LobbyScene.ts",
+    "assets/scripts/ui/core/LobbyOpeningPanels.ts",
+    "assets/scripts/ui/core/OnboardingFlowController.ts",
+    "tests/DestinyGacha.test.ts",
+    "tests/LobbyOpeningPanels.test.ts",
+    "tests/OnboardingFlow.test.ts",
+    ".atm/catalog/registry/actors.json"
+  ],
+  "scopePaths": [
+    "assets/scripts/ui/scenes/LobbyScene.ts",
+    "assets/scripts/ui/core/LobbyOpeningPanels.ts",
+    "assets/scripts/ui/core/OnboardingFlowController.ts",
+    "tests/DestinyGacha.test.ts",
+    "tests/LobbyOpeningPanels.test.ts",
+    "tests/OnboardingFlow.test.ts",
+    ".atm/catalog/registry/actors.json"
+  ],
+  "validators": [
+    "npm test",
+    "git diff --check"
+  ],
+  "planningRepo": "3klife-pr480-1e22c43f",
+  "targetRepo": "3klife-pr480-1e22c43f",
+  "closureAuthority": "target_repo",
+  "planningReadOnlyPaths": [],
+  "planningMirrorPaths": [],
+  "planningArtifacts": [],
+  "outOfScope": [],
+  "nonGoals": [],
+  "evidenceRequired": "command-backed",
+  "rollbackStrategy": "revert-commit",
+  "rollbackNotes": "Revert the delivery commit if the change fails validation.",
+  "atomizationImpact": {
+    "ownerAtomOrMap": null,
+    "atomCid": null,
+    "mapUpdates": []
+  },
+  "legacyImportAliases": {},
+  "importDiagnostics": [
+    {
+      "code": "ATM_TASK_IMPORT_MECHANICAL_SPLIT_SCOPE_CHECKLIST",
+      "severity": "warning",
+      "field": "scopePaths",
+      "message": "Mechanical split/facade/module task appears to declare a narrow file boundary. Before the first delivery commit, review sibling files such as types.ts, shared.ts, constants.ts, registry files, and lane modules; add all expected paths once with `node atm.mjs tasks scope add --task <id> --paths <paths> --json`.",
+      "candidates": [
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/scripts/ui/core/LobbyOpeningPanels.ts",
+        "assets/scripts/ui/core/OnboardingFlowController.ts",
+        "tests/DestinyGacha.test.ts",
+        "tests/LobbyOpeningPanels.test.ts",
+        "tests/OnboardingFlow.test.ts",
+        ".atm/catalog/registry/actors.json"
+      ]
+    },
+    {
+      "code": "ATM_TASK_IMPORT_LEGACY_VALIDATOR_PROJECTION",
+      "severity": "warning",
+      "field": "validators",
+      "message": "Command-only validators were projected to 2 advisory legacy case id(s) for migration. Prefer requiredTestCaseIds / testContributions for new cards."
+    },
+    {
+      "code": "ATM_TASK_IMPORT_EXTRACTION_FIRST_CANDIDATE",
+      "severity": "warning",
+      "field": "atomizationImpact",
+      "message": "Scope touches 1 module(s) over 600 lines but the card declares no atomizationImpact.extractionCandidates. Extraction-first is the ATM default: propose an atom/atom-map extraction (see .agents/skills/atm-atom-map-refactor), or record disposition \"inline\" with an inlineReason approved by a human.",
+      "candidates": [
+        "assets/scripts/ui/scenes/LobbyScene.ts (4007 lines)"
+      ]
+    }
+  ],
+  "tags": [],
+  "notes": null,
+  "source": {
+    "planPath": "docs/agent-briefs/tasks/PROG/PROG-2-9010.md",
+    "sectionTitle": "PROG-2-9010",
+    "headingLine": 41,
+    "hash": "fcb639a08a43965c",
+    "planningSourceSeal": {
+      "schemaId": "atm.planningSourceSeal.v1",
+      "repoIdentity": "https://github.com/eaglhuang/3klife.git",
+      "repoRoot": "/workspace/3klife-pr480-1e22c43f",
+      "taskCardPath": "docs/agent-briefs/tasks/PROG/PROG-2-9010.md",
+      "planningCommitSha": null,
+      "contentDigest": "sha256:fcb639a08a43965ceeb93c9fb44a75f32ed609820359fac89324a51e30741933",
+      "amendmentEpoch": 0,
+      "sealedAt": "2026-10-24T16:18:31.922Z"
+    }
+  },
+  "importedAt": "2026-10-24T16:18:31.922Z",
+  "workAdmission": {
+    "recoveryMode": "auto",
+    "resolvedRecoveryMode": "disabled",
+    "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+  },
+  "causalGraph": {
+    "causalDependencies": [],
+    "startConditions": [],
+    "softRelations": [],
+    "changedPublicSeams": [],
+    "causalImpactEdges": [],
+    "parallelFrontierInputs": [],
+    "validatorReferences": [],
+    "phaseOwner": null
+  },
+  "testContributions": [],
+  "requiredTestCaseIds": [],
+  "phaseTestCaseIds": [],
+  "advisoryTestCaseIds": [],
+  "legacyValidatorProjection": [
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_npm.test",
+      "command": "npm test",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    },
+    {
+      "schemaId": "atm.validatorExecutionContract.v1",
+      "specVersion": "0.1.0",
+      "responsibility": "advisory",
+      "caseId": "legacy_cmd_git.diff.check",
+      "command": "git diff --check",
+      "legacyProjection": true,
+      "acceptanceIds": [],
+      "impactEdges": []
+    }
+  ],
+  "dependencyClassification": {
+    "schemaId": "atm.taskDependencyClassification.v1",
+    "semantics": "legacy",
+    "edges": []
+  },
+  "frontmatterFidelity": {
+    "schemaId": "atm.taskFrontmatterFidelity.v1",
+    "specVersion": "0.1.0",
+    "ok": true,
+    "checkedFields": [
+      "dependencies"
+    ],
+    "findings": []
+  },
+  "lastTransitionId": "2026-10-24T16-24-03-019Z-close-31f752785632",
+  "lastTransitionAt": "2026-10-24T16:24:03.019Z",
+  "ledgerContractVersion": "task-ledger/v1",
+  "owner": "codex-gpt-6",
+  "reservedAt": "2026-10-24T16:18:38.675Z",
+  "promotedAt": "2026-10-24T16:18:38.677Z",
+  "claim": {
+    "actorId": "codex-gpt-6",
+    "leaseId": "lease-b5fcca2cc728",
+    "claimedAt": "2026-10-24T16:18:38.679Z",
+    "heartbeatAt": "2026-10-24T16:24:03.017Z",
+    "ttlSeconds": 1800,
+    "files": [
+      ".atm/history/tasks/PROG-2-9010.json",
+      ".atm/catalog/registry/actors.json",
+      "assets/scripts/ui/core/LobbyOpeningPanels.ts",
+      "assets/scripts/ui/core/OnboardingFlowController.ts",
+      "assets/scripts/ui/scenes/LobbyScene.ts",
+      "tests/DestinyGacha.test.ts",
+      "tests/LobbyOpeningPanels.test.ts",
+      "tests/OnboardingFlow.test.ts"
+    ],
+    "state": "released",
+    "laneSession": {
+      "laneSessionId": "lane-20261024161838-codex-gpt-6-7e172ee858",
+      "status": "active",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261024161838-codex-gpt-6-7e172ee858\""
+    },
+    "reason": "closed"
+  },
+  "startedAt": "2026-10-24T16:18:38.679Z",
+  "startedByActor": "codex-gpt-6",
+  "workAdmissionTicket": {
+    "schemaId": "atm.workAdmissionTicket.v1",
+    "specVersion": "0.1.0",
+    "ticketId": "wat-41115aed46dea22b",
+    "ticketDigest": "sha256:41115aed46dea22bc9c18c1b9d1e738be8611278387d69dd5b1120fd3773d882",
+    "taskId": "PROG-2-9010",
+    "origin": "claim",
+    "actorId": "codex-gpt-6",
+    "laneSessionId": "lane-20261024161838-codex-gpt-6-7e172ee858",
+    "claimGeneration": "lease-b5fcca2cc728",
+    "issuedAt": "2026-10-24T16:18:38.679Z",
+    "expiresAt": "2026-10-24T16:48:38.679Z",
+    "scopeDigest": "sha256:ff89471d179167acfae015f20fd73bfa5c0c70af43c64f6c722e4fd7ffebe938",
+    "runnerSelection": {
+      "runnerKind": "frozen",
+      "runnerRef": "release/atm-onefile/atm.mjs",
+      "selectedAt": "2026-10-24T16:18:38.679Z"
+    },
+    "grants": [
+      {
+        "kind": "file-write",
+        "values": [
+          ".atm/catalog/registry/actors.json",
+          ".atm/history/evidence/PROG-2-9010.*",
+          ".atm/history/task-events/PROG-2-9010/**",
+          ".atm/history/tasks/PROG-2-9010.json",
+          "assets/scripts/ui/core/LobbyOpeningPanels.ts",
+          "assets/scripts/ui/core/OnboardingFlowController.ts",
+          "assets/scripts/ui/scenes/LobbyScene.ts",
+          "tests/DestinyGacha.test.ts",
+          "tests/LobbyOpeningPanels.test.ts",
+          "tests/OnboardingFlow.test.ts"
+        ],
+        "digest": "sha256:5f91cc5ad21a277e9847597a7d8cb9e75e2b6f111114c2bd32ec673b27fdda75"
+      },
+      {
+        "kind": "lifecycle-operation",
+        "values": [
+          "close",
+          "commit",
+          "push",
+          "stage",
+          "write"
+        ],
+        "digest": "sha256:a2f98ae20b476885ded7ed9f79b94ad99cf2b615779e9a8cc266680fc60f009f"
+      },
+      {
+        "kind": "process-manifest",
+        "values": [],
+        "digest": "sha256:706ceedd89f6ac8c08a76e915fa88ba979c4552a0890c95d8f9e01cc090afb8f"
+      }
+    ],
+    "deferredForeignResidue": [],
+    "recovery": {
+      "requestedMode": "auto",
+      "resolvedMode": "disabled",
+      "reasons": [
+        "low-risk-task"
+      ],
+      "maxSavePoints": 0,
+      "perTaskByteBudget": 0,
+      "repositoryByteBudget": 0,
+      "handoffTtlSeconds": 0,
+      "tempRoot": ".atm/runtime/work-admission-temp",
+      "policyDigest": "sha256:0dfda5eb6854c584791820720e4004b612d5ed31b9bfabd1654a9a85257c47bb"
+    }
+  },
+  "startedBySessionId": "session-20261024161838-codex-gpt-6-PROG-2-9010-bbc42e888c",
+  "taskDirectionLock": {
+    "schemaId": "atm.taskDirectionLock.v1",
+    "specVersion": "0.1.0",
+    "taskId": "PROG-2-9010",
+    "batchId": null,
+    "scopeKey": null,
+    "queueId": null,
+    "queueIndex": null,
+    "allowedFiles": [
+      ".atm/catalog/registry/actors.json",
+      ".atm/history/evidence/PROG-2-9010.*",
+      ".atm/history/task-events/PROG-2-9010/**",
+      ".atm/history/tasks/PROG-2-9010.json",
+      "assets/scripts/ui/core/LobbyOpeningPanels.ts",
+      "assets/scripts/ui/core/OnboardingFlowController.ts",
+      "assets/scripts/ui/scenes/LobbyScene.ts",
+      "tests/DestinyGacha.test.ts",
+      "tests/LobbyOpeningPanels.test.ts",
+      "tests/OnboardingFlow.test.ts"
+    ],
+    "planningReadOnlyPaths": [],
+    "planningMirrorPaths": [],
+    "allowPlanningMirror": false,
+    "promptHash": "824f9eea554050e96625eb401d9d9b0b591f1c77c52d5e796a060bd3bbb3e2cb",
+    "actorId": "codex-gpt-6",
+    "sessionId": "session-20261024161838-codex-gpt-6-PROG-2-9010-bbc42e888c",
+    "laneSession": {
+      "laneSessionId": "lane-20261024161838-codex-gpt-6-7e172ee858",
+      "status": "active",
+      "source": "minted",
+      "exportHint": "export ATM_LANE_SESSION_ID=\"lane-20261024161838-codex-gpt-6-7e172ee858\""
+    },
+    "createdAt": "2026-10-24T16:18:40.310Z",
+    "status": "active"
+  },
+  "closedAt": "2026-10-24T16:24:03.017Z",
+  "closedByActor": "codex-gpt-6",
+  "closedBySessionId": "session-20261024161838-codex-gpt-6-PROG-2-9010-bbc42e888c"
+}

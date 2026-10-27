@@ -8,7 +8,7 @@
  *   - 求籤令：定向道具，不作為抽卡幣；指定一位 SSR，最多 100 抽內必出該角色。
  *   - 單抽 150、十連 1500；餘額不足直接拒絕（不自動補款）。
  *
- * 本檔只定義規則，不碰錢包；現行錢包仍是 gems/gold/tickets，接線另開卡。
+ * 本檔只定義規則，不碰錢包；錢包接線見 GachaFlowCoordinator（PROG-2-1094）。
  *
  * Unity 對照：像 ScriptableObject 的 Shop 規則表——先查「這個幣能不能買這個櫃」，
  * 再查「錢夠不夠」，兩關都過才扣款。
@@ -90,4 +90,22 @@ export function advanceDirectedPity(state: DirectedPityState, pulledId: string):
     if (state.targetId === null) return state;
     if (pulledId === state.targetId) return createDirectedPity();
     return { targetId: state.targetId, pullsSinceTarget: state.pullsSinceTarget + 1 };
+}
+
+/** 錢包裡的抽卡幣：靈玉存在 gems、銅錢符存在 bronze */
+export type GachaWalletCoin = 'gems' | 'bronze';
+
+/**
+ * 選扣款幣別（PROG-2-1094）：池子收銅錢符且夠付時先扣免費的銅錢符，否則扣靈玉；
+ * 兩者都不夠回傳 null，呼叫端提示不足、不扣款。
+ */
+export function pickGachaCurrency(
+    pool: GachaPoolKind,
+    drawCount: number,
+    wallet: { readonly gems: number; readonly bronze: number },
+): { coin: GachaWalletCoin; cost: number } | null {
+    const cost = quoteGachaCost(drawCount);
+    if (checkGachaSpend('BRONZE_CHARM', pool, drawCount, wallet.bronze).ok) return { coin: 'bronze', cost };
+    if (checkGachaSpend('SPIRIT_JADE', pool, drawCount, wallet.gems).ok) return { coin: 'gems', cost };
+    return null;
 }
