@@ -62,6 +62,7 @@ import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoa
 import { overflowToastText } from '../../core/systems/MentorOverflow';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
 import { WarehousePanelController } from '../core/WarehousePanelController';
+import { JournalHubController } from '../core/JournalHubController';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 
 /** 倉庫擴容費用：規格（doc_spec_0017）只寫「付費或任務解鎖」，暫定每次 5000 金幣 */
@@ -270,6 +271,8 @@ export class LobbyScene extends Component {
     private _rivalHost: UIScreenPreviewHost | null = null;
     private _warehouse: WarehousePanelController | null = null;
     private _warehouseHost: UIScreenPreviewHost | null = null;
+    private _journalHub: JournalHubController | null = null;
+    private _journalHubHost: UIScreenPreviewHost | null = null;
     private _rival: RivalDiplomacyController | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
@@ -429,6 +432,7 @@ export class LobbyScene extends Component {
         await this._mountRecruitHall();
         await this._mountRivalDiplomacy();
         await this._mountWarehouse();
+        await this._mountJournalHub();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
         await this._mountGovernorHall();
@@ -1315,6 +1319,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnOpenRecruit', handler: () => { this._closeDomestic(); this._openRecruitHall(); } },
             { buttonId: 'btnOpenRival', handler: () => { this._closeDomestic(); this._openRivalDiplomacy(); } },
             { buttonId: 'btnOpenWarehouse', handler: () => { this._closeDomestic(); this._openWarehouse(); } },
+            { buttonId: 'btnOpenJournalHub', handler: () => { this._closeDomestic(); this._openJournalHub(); } },
             { buttonId: 'btnOpenRedFace', handler: () => { this._closeDomestic(); this.openRedFaceShowcase(); } },
         ]);
         this._domesticHost.node.active = false;
@@ -1362,6 +1367,33 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._warehouse.getFlowView());
+    }
+
+    /**
+     * 晨報與派遣板（JRN-06，PROG-2-1180）：晨報取今日晨報條目（已讀仍可回看），派遣列取暫定清單。
+     * 點擊派遣列選將派遣未做；入口在內政頁。
+     */
+    private async _mountJournalHub(): Promise<void> {
+        this._journalHub = new JournalHubController({
+            morningLines: () => services().session.morningReport.items.map((item) => item.summary),
+            dispatchRows: () => services().session.dispatchBoardRows(Date.now()),
+        });
+        this._journalHubHost = await this._mountPreviewScreenHost('JournalHubHost', 'journal-hub-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._journalHubHost) this._journalHubHost.node.active = false; } },
+        ]);
+        this._journalHubHost.node.active = false;
+    }
+
+    private _openJournalHub(): void {
+        const host = this._journalHubHost;
+        if (!host || !this._journalHub) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        if (host.binder) {
+            applyFlowView(host.binder, this._journalHub.getFlowView());
+        }
     }
 
     /**
