@@ -98,7 +98,7 @@ export class GearSlotPickController {
         };
         const actives: Record<string, boolean> = {};
         for (let i = 0; i < GEAR_PICK_ROW_SLOTS; i++) {
-            texts[`gearPickLabel${i}`] = rows[i]?.name ?? '';
+            texts[`gearPickLabel${i}`] = rows[i] ? (rows[i].quality ? `${rows[i].quality}｜${rows[i].name}` : rows[i].name) : '';
             actives[`btnGearPick${i}`] = rows[i] !== undefined;
         }
         const equipped = this._slot !== null && hasEquippedInSlot(this._deps.records(), this._deps.generalUid(), this._slot);

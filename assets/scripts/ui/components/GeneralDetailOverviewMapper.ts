@@ -17,6 +17,8 @@ import { deriveGeneralBackpack, gearNameOfUid } from '../../core/systems/General
 import { buildGearPageSlots, type GearSlotView } from '../../core/systems/GearPageSlots';
 import type { InventoryRecord, InventoryViews } from '../../core/systems/InventoryProjection';
 import { equippedTalismanSlot, type TalismanSlotView } from '../../core/systems/TalismanSlotView';
+import { buildGeneralTallySummary, type GeneralTallySummary } from '../../core/systems/GeneralTallySummary';
+import type { BattleRecordLike } from '../../core/systems/BattleRecordStats';
 import { resolveRarityTier } from '../../core/utils/RarityResolver';
 import { resolveCommercialBand } from '../../core/utils/CommercialRarityBand';
 
@@ -84,6 +86,8 @@ export interface GeneralDetailOverviewContentState {
     commandPanelRows: GeneralCommandRow[];
     /** 兵分頁虎符槽（PROG-2-1026）：由統一物件庫視圖推導，沒有視圖時為 EMPTY */
     tallySlot: TalismanSlotView;
+    /** 虎符戰記摘要（general-tally-summary，PROG-2-1344）：虎符、兵種傾向、近期戰績三行；畫面渲染另卡 */
+    tallySummary: GeneralTallySummary;
     /** 寶頁一般裝備 2x3 格位（PROG-2-1037）：由統一物件庫列依武將 uid 推導，沒有列時六格皆為未解鎖或空 */
     gearSlots: GearSlotView[];
     crestFaceResource?: string;
@@ -222,11 +226,20 @@ export function buildGeneralDetailOverview(config: GeneralConfig): GeneralDetail
 
 const EMPTY_INVENTORY_VIEWS: InventoryViews = { talismans: {}, spiritCards: {}, skipped: [] };
 
+/** 武將設定上的戰績（名冊武將才有；PROG-2-1345）；勝敗不是數字時視為無戰績 */
+export function battleRecordOf(config: GeneralConfig): BattleRecordLike | null {
+    const raw = (config as unknown as { battleRecord?: unknown }).battleRecord;
+    if (!raw || typeof raw !== 'object') return null;
+    const record = raw as Partial<BattleRecordLike>;
+    return typeof record.wins === 'number' && typeof record.losses === 'number' ? (record as BattleRecordLike) : null;
+}
+
 export function buildGeneralDetailOverviewContentState(
     config: GeneralConfig,
     views: InventoryViews = EMPTY_INVENTORY_VIEWS,
     records: readonly InventoryRecord[] = [],
     cityTroops: number | null = null,
+    battleRecord: BattleRecordLike | null = null,
 ): GeneralDetailOverviewContentState {
     const overview = buildGeneralDetailOverview(config);
     const storyCells = storyCellsToRecord(overview.cards.storyCells);
@@ -284,6 +297,7 @@ export function buildGeneralDetailOverviewContentState(
         commandPanelRows,
         portraitResource: portraitPathOf(config.id),
         tallySlot: equippedTalismanSlot(views, config.id),
+        tallySummary: buildGeneralTallySummary(equippedTalismanSlot(views, config.id), battleRecord ?? battleRecordOf(config)),
         gearSlots: buildGearPageSlots(deriveGeneralBackpack(records, config.id), (uid) => gearNameOfUid(records, uid)),
     };
 }

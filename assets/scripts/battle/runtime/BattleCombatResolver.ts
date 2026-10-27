@@ -15,6 +15,7 @@ import { zoneDefenseMultiplier } from '../shared/FormationZone';
 import { extraAttackHitsOf } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
+import { tacticTriggerRate } from '../../core/systems/TacticTriggerRate';
 import { tileStateRuleOf } from '../shared/TileStateRules';
 import {
   canNavalCombinedAttack,
@@ -679,6 +680,10 @@ export class BattleCombatResolver {
     }
 
     const defenderGeneral = this.context.state.getGeneral(defender.faction);
+    // 反擊屬於被動自動觸發（PROG-2-1317）：依守方武將智力擲發動率；未過不反擊，也不消耗觸發次數
+    if (defenderGeneral && this.hitRandom() >= tacticTriggerRate(defenderGeneral.int)) {
+      return;
+    }
     const defenderCell = this.context.state.getCell(defender.lane, defender.depth);
     const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
     const counterDamage = svc.formula.calculateDamage({

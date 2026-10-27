@@ -2,6 +2,7 @@
 import { _decorator, Component, Label, Node } from 'cc';
 import { BloodlineGraph } from '../../core/services/BloodlineGraph';
 import { buildBloodlineTreeSlots, BloodlineTreeSlot } from '../../core/systems/BloodlineTreeSlots';
+import { treeCardNodeName } from '../../core/systems/BloodlineTreeBinding';
 
 const { ccclass, property } = _decorator;
 
@@ -15,9 +16,9 @@ const { ccclass, property } = _decorator;
  * 以扁平的 Dictionary<uid, PersonRecord> 查表取代嵌套 ScriptableObject 樹。
  *
  * Prefab 接線：
- *   gen1Container → 曾祖父母容器（8 個子節點命名 G1_0..G1_7，各含 Txt Label）
- *   gen2Container → 祖父母容器  （4 個子節點命名 G2_0..G2_3，各含 Txt Label）
- *   gen3Container → 父母容器    （2 個子節點命名 G3_0..G3_1，各含 Txt Label）
+ *   gen1Container → 曾祖父母容器（8 個子節點命名 NodeCard_G1_0..7，各含 Txt Label）
+ *   gen2Container → 祖父母容器  （4 個子節點命名 NodeCard_G2_0..3，各含 Txt Label）
+ *   gen3Container → 父母容器    （2 個子節點命名 NodeCard_G3_0..1，各含 Txt Label）
  */
 @ccclass('BloodlineTreePanel')
 export class BloodlineTreePanel extends Component {
@@ -49,24 +50,24 @@ export class BloodlineTreePanel extends Component {
         // getAncestorChain BFS 排列：index 0-1 = 父母、2-5 = 祖父母、6-13 = 曾祖父母
         const slots = buildBloodlineTreeSlots(graph.getAncestorChain(uid, 3));
 
-        this._fillContainer(this.gen3Container, 'G3', slots.gen3, graph);
-        this._fillContainer(this.gen2Container, 'G2', slots.gen2, graph);
-        this._fillContainer(this.gen1Container, 'G1', slots.gen1, graph);
+        this._fillContainer(this.gen3Container, 3, slots.gen3, graph);
+        this._fillContainer(this.gen2Container, 2, slots.gen2, graph);
+        this._fillContainer(this.gen1Container, 1, slots.gen1, graph);
     }
 
     /** 清除所有祖先樹標籤（切換武將時呼叫） */
     clear(): void {
         const slots = buildBloodlineTreeSlots([]);
-        this._fillContainer(this.gen3Container, 'G3', slots.gen3, BloodlineGraph.getInstance());
-        this._fillContainer(this.gen2Container, 'G2', slots.gen2, BloodlineGraph.getInstance());
-        this._fillContainer(this.gen1Container, 'G1', slots.gen1, BloodlineGraph.getInstance());
+        this._fillContainer(this.gen3Container, 3, slots.gen3, BloodlineGraph.getInstance());
+        this._fillContainer(this.gen2Container, 2, slots.gen2, BloodlineGraph.getInstance());
+        this._fillContainer(this.gen1Container, 1, slots.gen1, BloodlineGraph.getInstance());
     }
 
     // ---- private ----
 
     private _fillContainer(
         container: Node | null,
-        prefix: string,
+        row: 1 | 2 | 3,
         slots: BloodlineTreeSlot[],
         graph: BloodlineGraph
     ): void {
@@ -74,7 +75,7 @@ export class BloodlineTreePanel extends Component {
         for (let i = 0; i < slots.length; i++) {
             const uid = slots[i].uid;
             const person = uid ? graph.getPerson(uid) : null;
-            const txtNode = container.getChildByPath(`${prefix}_${i}/Txt`);
+            const txtNode = container.getChildByPath(`${treeCardNodeName(row, i)}/Txt`);
             if (!txtNode) continue;
             const label = txtNode.getComponent(Label);
             if (!label) continue;

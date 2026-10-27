@@ -21,7 +21,7 @@
         "name": "WishAltarCard",
         "id": "wishAltarCard",
         "width": 1000,
-        "height": 716,
+        "height": 768,
         "skinSlot": "wa.card.bg",
         "layout": {
           "type": "vertical",
@@ -58,6 +58,15 @@
             "width": 944,
             "height": 40,
             "text": "進行中 0/5｜加速卡 ×0（每張 -2 小時）",
+            "styleSlot": "wa.label.line"
+          },
+          {
+            "type": "label",
+            "name": "WaSubsidyLabel",
+            "id": "waSubsidyLabel",
+            "width": 944,
+            "height": 40,
+            "text": "每日補貼：今日未觸發（低於門檻登入時自動補）｜地窖保底：糧草 1500、黃金 600",
             "styleSlot": "wa.label.line"
           },
           {

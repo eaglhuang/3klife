@@ -7,7 +7,7 @@ import { TestSuite, assert } from './TestRunner';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { resolveBattleTacticBehavior } from '../assets/scripts/battle/shared/BattleTacticBehavior';
 
-function createGeneral(id: string, faction: Faction, skillId: string): GeneralUnit {
+function createGeneral(id: string, faction: Faction, skillId: string, int = 90): GeneralUnit {
     return new GeneralUnit({
         id,
         name: id,
@@ -16,7 +16,7 @@ function createGeneral(id: string, faction: Faction, skillId: string): GeneralUn
         maxSp: 100,
         initialSp: 100,
         str: 100,
-        int: 90,
+        int,
         lea: 90,
         skillId,
         battlePrimarySkillId: skillId,
@@ -351,9 +351,11 @@ export function createBattleControllerSkillTargetingSuite(): TestSuite {
     suite.test('triggerPlayerBattleSkill：反擊 stance 會在近戰受擊存活後自動反擊並附加虛弱', () => {
         services().initialize();
         const ctrl = new BattleController();
-        const playerGeneral = createGeneral('guo-jia', Faction.Player, 'cao-cao-tactics');
+        // 反擊發動率（PROG-2-1317）：守方智力 300 → 發動率 70%，擲骰固定為 0 必定發動
+        const playerGeneral = createGeneral('guo-jia', Faction.Player, 'cao-cao-tactics', 300);
         const enemyGeneral = createGeneral('lu-bu', Faction.Enemy, 'lu-bu-rampage');
         ctrl.initBattle(playerGeneral, enemyGeneral);
+        (ctrl as unknown as { combatResolver: { hitRandom: () => number } }).combatResolver.hitRandom = () => 0;
         playerGeneral.currentSp = playerGeneral.maxSp;
         enemyGeneral.currentSp = 0;
 

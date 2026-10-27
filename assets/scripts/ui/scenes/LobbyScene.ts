@@ -1,4 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
+import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { UIID, LayerType } from '../../core/config/UIConfig';
@@ -144,6 +145,7 @@ import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBinding
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 import { DailyReportController } from '../core/DailyReportController';
+import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
 
 const { ccclass } = _decorator;
 
@@ -551,12 +553,24 @@ export class LobbyScene extends Component {
             UCUFLogger.info(LogCategory.DATA, loaded ? '[LobbyScene] 已讀取玩家存檔' : '[LobbyScene] 沒有玩家存檔，從新局開始');
             // 登入（連續登入 PROG-2-0987、三國日報 PROG-2-1170、離線互動 PROG-2-1193）：讀檔後記一次，當天第一次登入會生成日報
             services().session.recordLoginAt(Date.now(), (amount) => { this._localGachaService.grantCurrency('gold', amount); });
+            this._claimDailySubsidy();
             this._showDailyNews();
             return loaded;
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 讀取玩家存檔失敗，從新局開始', error);
             return false;
         }
+    }
+
+    /** 每日補貼（ECO-06，PROG-2-1340）：登入後低資源才補；黃金入錢包，有補才提示並存檔（文案暫定） */
+    private _claimDailySubsidy(): void {
+        const gacha = this._localGachaService;
+        const session = services().session;
+        const grants = session.claimDailySubsidy(Date.now(), gacha.getCurrencyAmount('gold'), (amount) => { gacha.grantCurrency('gold', amount); });
+        const text = dailySubsidyText(grants);
+        if (!text) return;
+        services().event.emit('SHOW_TOAST', { message: text, duration: 3 });
+        void session.save().catch(() => undefined);
     }
 
     /**
@@ -1486,6 +1500,7 @@ export class LobbyScene extends Component {
             play: (nowMs) => services().session.playTournament(nowMs, (cost) => gacha.spendCurrency('gold', cost)),
             generalName: (id) => this._generals.find((g) => g.id === id)?.name,
             pendingRewards: (nowMs) => services().session.pendingTournamentRewards(nowMs),
+            tallies: () => Object.values(services().session.tallyCards),
             claimRewards: (nowMs) => services().session.claimTournamentRewards(nowMs, (gold) => { gacha.grantCurrency('gold', gold); }),
         });
         this._tournament = tournament;
@@ -1525,6 +1540,7 @@ export class LobbyScene extends Component {
             startWish: (itemId, nowMs) => services().session.startWish(itemId, nowMs),
             speedUp: (wishId, cards, nowMs) => services().session.speedUpWish(wishId, cards, nowMs),
             claim: (nowMs) => services().session.claimWishes(nowMs),
+            subsidyBanner: (nowMs) => economySubsidyBannerText(services().session.dailySubsidy, nowMs),
         });
         this._wishAltar = altar;
         const afterAction = (ok: boolean): void => {
@@ -1649,7 +1665,7 @@ export class LobbyScene extends Component {
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
                 advanceOpening: event => { this._openingFlow?.advance(event); },
                 applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys),
-                openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: services().i18n.t('copy.letter.opening.body') }),
+                openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? '') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
             });
         }

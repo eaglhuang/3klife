@@ -14,4 +14,6 @@ export interface TigerTallyCard {
     stars?: number;
     /** 戰鬥經驗（TRP-10）；舊存檔缺欄位時讀回 0 */
     battleExp?: number;
+    /** 對季節 BOSS 的克制標籤（名將挑戰賽 E-10，PROG-2-1356）；新發行虎符自帶，沒有時依兵種推得 */
+    bossTags?: string[];
 }
