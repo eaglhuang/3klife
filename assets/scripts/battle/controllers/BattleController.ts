@@ -45,6 +45,8 @@ import { TurnBasedTempoController } from '../runtime/tempo/TurnBasedTempoControl
 import { BattleTurnManager } from '../runtime/BattleTurnManager';
 import { RETREAT_BASE_RISK, resolveRetreat, retreatNextStep, type RetreatResolution } from '../../core/systems/BattleRetreat';
 import { retreatRiskOf } from '../../core/systems/RetreatRisk';
+import { aptitudeDialogueLine } from '../../core/systems/AptitudeDialogue';
+import { battleAptitudeProfileOf, terrainGradeOf, weatherGradeOf } from '../../core/systems/BattleAptitude';
 import type { VitalityBand } from '../../core/systems/VitalityBattleGate';
 import type { TigerTallySkillCarrier, TigerTallyTacticRequestOptions } from '../skills/adapters/TigerTallyTacticAdapter';
 import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
@@ -1149,6 +1151,31 @@ export class BattleController {
     }
   }
 
+  /**
+   * 適性台詞（APT-14）：回合開始時依我方第一名存活部隊所在格的地形，加上當前天氣，選出本回合的一句台詞。
+   * 暫定以該部隊代表指揮武將的站位；沒有指揮武將或沒有存活部隊時不播。
+   */
+  private announceAptitudeDialogue(weatherChanged: boolean): void {
+    const general = this.state.getGeneral(Faction.Player);
+    const troop = this.combatResolver.getFactionUnits(Faction.Player).find((unit) => unit.currentHp > 0);
+    if (!general || !troop) return;
+    const terrain = this.state.getCell(troop.lane, troop.depth)?.terrain ?? null;
+    const profile = battleAptitudeProfileOf(general);
+    const line = aptitudeDialogueLine(
+      {
+        terrain,
+        weather: this.state.weather,
+        terrainGrade: terrainGradeOf(profile, terrain),
+        weatherGrade: weatherGradeOf(profile, this.state.weather),
+        weatherChanged,
+      },
+      general.name,
+      (key) => services().i18n.t(key),
+    );
+    if (line === null) return;
+    services().event.emit(EVENT_NAMES.AptitudeDialogue, { turn: services().battle.getSnapshot().turn, line });
+  }
+
   private finalizeRuntimeTurnCycle(): void {
     const svc = services();
     svc.buff.tickBuff();
@@ -1162,7 +1189,9 @@ export class BattleController {
     }
     if (this.sortie) this.sortie = regenTactic(this.sortie);
     svc.battle.nextTurn();
+    const weatherBefore = this.state.weather;
     this.applyWeatherForTurn(svc.battle.getSnapshot().turn);
+    this.announceAptitudeDialogue(weatherBefore !== this.state.weather);
     this.turnManager.refreshForNextTurn();
     this.orderRefusedThisTurn = this.rollOrderRefusal();
     applySoloBreachAtTurnStart(

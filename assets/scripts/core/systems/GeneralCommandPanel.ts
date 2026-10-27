@@ -1,4 +1,4 @@
-// @spec-source → 武將人物介面規格書 §4（將頁 Overview：名聲與官職、統領軍勢）；WBS TSK-06；PROG-2-1212
+// @spec-source → 武將人物介面規格書 §4（將頁 Overview：名聲與官職、統領軍勢）；WBS TSK-06；PROG-2-1213
 /**
  * GeneralCommandPanel — 將頁「名聲 / 官職 / 統領軍勢」區塊的列資料（純邏輯，不依賴 cc）
  *

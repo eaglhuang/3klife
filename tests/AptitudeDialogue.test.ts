@@ -11,6 +11,8 @@ import {
     aptitudeDialogueKindOf,
     aptitudeDialogueLine,
     AptitudeDialogueInput,
+    aptitudeToastPayload,
+    APTITUDE_TOAST_KEY,
     fillAptitudeName,
 } from '../assets/scripts/core/systems/AptitudeDialogue';
 
@@ -57,6 +59,13 @@ export function createAptitudeDialogueSuite(): TestSuite {
         const line = aptitudeDialogueLine(withInput({ terrain: 'WATER', terrainGrade: 'S' }), '趙雲', (k) => lines[k] ?? k);
         assert.equals('趙雲 如魚得水——水面之上，無人能敵！', line!);
         assert.isTrue(aptitudeDialogueLine(CALM, '趙雲', (k) => k) === null);
+    });
+
+    suite.test('適性台詞 Toast 參數沿用同一 key，訊息即台詞本身', () => {
+        const payload = aptitudeToastPayload('趙雲 如魚得水');
+        assert.equals('趙雲 如魚得水', payload.message);
+        assert.equals(APTITUDE_TOAST_KEY, payload.key);
+        assert.isTrue(payload.duration > 0);
     });
 
     return suite;
