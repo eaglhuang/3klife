@@ -219,6 +219,22 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
             const button = node?.getComponent(Button) ?? node?.addComponent(Button);
             if (button) button.interactable = enabled;
         }
+
+        this._bindSpiritSlotClick('SlotUnequipButton', generalId, () => services().session.unequipSpiritCard(generalId, false));
+        this._bindSpiritSlotClick('SlotSetMainButton', generalId, () => services().session.setPrimarySpiritCard(generalId, false));
+    }
+
+    /** 綁定命槽按鈕點擊；動作成功與否都重畫命槽狀態（PROG-2-1284）。 */
+    private _bindSpiritSlotClick(buttonName: string, generalId: string, act: () => unknown): void {
+        const node = this.hostNode.getChildByPath(
+            `${GeneralDetailBloodlineChild.ROOT_PATH}/BloodlineStage/BloodlineRightPanel/SpiritSlotCard/${buttonName}`,
+        );
+        if (!node) return;
+        node.off(Button.EventType.CLICK);
+        node.on(Button.EventType.CLICK, () => {
+            act();
+            this._applySpiritSlot(generalId);
+        });
     }
 
     private _label(root: Node, path: string): Label {
