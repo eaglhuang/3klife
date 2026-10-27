@@ -22,6 +22,7 @@ import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
 import { spiritSlotActions, type SpiritSlotAction } from '../../../core/systems/BloodlineRightPanelLayout';
 import { spiritSlotViewOf } from '../../../core/systems/SpiritSlotState';
+import { spiritPickerRows, type SpiritPickerRow } from '../../../core/systems/SpiritSlotFlow';
 import {
     STORY_DOCK_VISIBLE_CELLS,
     nextStoryDockState,
@@ -29,6 +30,9 @@ import {
     type StoryDockGesture,
     type StoryDockStateName,
 } from '../../../core/systems/BloodlineStoryDockLayout';
+
+/** 選卡面板最多顯示的候選卡列數（對應 gd-tab-bloodline.json 的 SpiritPickRow1..6） */
+const SPIRIT_PICK_ROW_COUNT = 6;
 
 /** 玩家發現等級；服務尚未初始化時退回 1（只顯示藍粉因子） */
 function currentDiscoveryLevel(): number {
@@ -78,6 +82,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         this._lAwakening = this._label(h, 'BloodlineStage/BloodlineRightPanel/AwakeningCard/AwakeningValue');
         this._lHiddenFactor = this._label(h, 'BloodlineStage/BloodlineRightPanel/HiddenFactorCard/HiddenFactorValue');
         this._lSpiritSlotValue = this._label(h, 'BloodlineStage/BloodlineRightPanel/SpiritSlotCard/SpiritSlotCardValue');
+        this._bindSpiritPicker();
 
         for (let i = 1; i <= 5; i++) {
             this._lGenes.push(this._label(h, `BloodlineStage/BloodlineRightPanel/GeneListCard/Gene${i}Value`));
@@ -222,6 +227,8 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
 
         this._bindSpiritSlotClick('SlotUnequipButton', generalId, () => services().session.unequipSpiritCard(generalId, false));
         this._bindSpiritSlotClick('SlotSetMainButton', generalId, () => services().session.setPrimarySpiritCard(generalId, false));
+        this._bindSpiritSlotClick('SlotInsertButton', generalId, () => this._openSpiritPicker(generalId, 'insert'));
+        this._bindSpiritSlotClick('SlotReplaceButton', generalId, () => this._openSpiritPicker(generalId, 'replace'));
     }
 
     /** 綁定命槽按鈕點擊；動作成功與否都重畫命槽狀態（PROG-2-1284）。 */
@@ -235,6 +242,82 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
             act();
             this._applySpiritSlot(generalId);
         });
+    }
+
+    /** 選卡面板的目前狀態：要插入或替換哪位武將的命槽、列表與已選的卡（PROG-2-1286）。 */
+    private _spiritPick: { generalId: string; mode: 'insert' | 'replace'; rows: SpiritPickerRow[]; selected: string | null } | null = null;
+
+    /** 一次綁定選卡面板的列、取消與確認按鈕，之後只改顯示。 */
+    private _bindSpiritPicker(): void {
+        const base = `${GeneralDetailBloodlineChild.ROOT_PATH}/BloodlineStage/SpiritPicker`;
+        for (let i = 0; i < SPIRIT_PICK_ROW_COUNT; i++) {
+            const node = this.hostNode.getChildByPath(`${base}/SpiritPickRow${i + 1}`);
+            if (!node) continue;
+            node.off(Button.EventType.CLICK);
+            node.on(Button.EventType.CLICK, () => this._selectSpiritPick(i));
+        }
+        const cancel = this.hostNode.getChildByPath(`${base}/SpiritPickActions/SpiritPickCancelButton`);
+        cancel?.off(Button.EventType.CLICK);
+        cancel?.on(Button.EventType.CLICK, () => this._closeSpiritPicker());
+        const confirm = this.hostNode.getChildByPath(`${base}/SpiritPickActions/SpiritPickConfirmButton`);
+        confirm?.off(Button.EventType.CLICK);
+        confirm?.on(Button.EventType.CLICK, () => this._commitSpiritPick());
+    }
+
+    private _openSpiritPicker(generalId: string, mode: 'insert' | 'replace'): void {
+        let records: Parameters<typeof spiritPickerRows>[0] = [];
+        try {
+            records = services().session.inventoryRecords;
+        } catch {
+            records = [];
+        }
+        this._spiritPick = { generalId, mode, rows: spiritPickerRows(records), selected: null };
+        this._renderSpiritPicker();
+    }
+
+    private _selectSpiritPick(index: number): void {
+        const pick = this._spiritPick;
+        if (!pick) return;
+        pick.selected = pick.rows[index]?.spiritId ?? null;
+        this._renderSpiritPicker();
+    }
+
+    private _closeSpiritPicker(): void {
+        this._spiritPick = null;
+        this._renderSpiritPicker();
+    }
+
+    /** 確認：插入或替換寫入 GameSession，成功或拒絕都關閉面板並重畫命槽。 */
+    private _commitSpiritPick(): void {
+        const pick = this._spiritPick;
+        if (!pick || !pick.selected) return;
+        const session = services().session;
+        if (pick.mode === 'insert') session.insertSpiritCard(pick.generalId, pick.selected, false);
+        else session.replaceSpiritCard(pick.generalId, pick.selected, false);
+        this._spiritPick = null;
+        this._renderSpiritPicker();
+        this._applySpiritSlot(pick.generalId);
+    }
+
+    private _renderSpiritPicker(): void {
+        const base = `${GeneralDetailBloodlineChild.ROOT_PATH}/BloodlineStage/SpiritPicker`;
+        const picker = this.hostNode.getChildByPath(base);
+        const pick = this._spiritPick;
+        if (picker) picker.active = pick !== null;
+        if (!pick) return;
+
+        this._set(this._label(this.hostNode, `BloodlineStage/SpiritPicker/SpiritPickTitle`), pick.mode === 'insert' ? '插入英靈卡' : '替換英靈卡');
+        const empty = this.hostNode.getChildByPath(`${base}/SpiritPickEmpty`);
+        if (empty) empty.active = pick.rows.length === 0;
+        for (let i = 0; i < SPIRIT_PICK_ROW_COUNT; i++) {
+            const row = pick.rows[i];
+            const node = this.hostNode.getChildByPath(`${base}/SpiritPickRow${i + 1}`);
+            if (node) node.active = row !== undefined;
+            const label = this.hostNode.getChildByPath(`${base}/SpiritPickRow${i + 1}/SpiritPickRow${i + 1}Label`)?.getComponent(Label) ?? null;
+            if (row) this._set(label, row.spiritId === pick.selected ? `✓ ${row.label}` : row.label);
+        }
+        const confirm = this.hostNode.getChildByPath(`${base}/SpiritPickActions/SpiritPickConfirmButton`)?.getComponent(Button);
+        if (confirm) confirm.interactable = pick.selected !== null;
     }
 
     private _label(root: Node, path: string): Label {
