@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 16:05 Claude R290：使用者授權 Codex 以 Computer use 重開隔離專案 Creator（只限 zhaoyun-cutout-polish），連續兩次重開驗收 Spine 4.2。
 - 2026-10-27 16:00 Claude R289：使用者外出，Creator 重開延到回家後；Codex 先做分件，不再催重開。
 - 2026-10-27 15:55 Claude R288：Sparkle v11 到件，AG-27 合併 MERGED（setup 對齊）；肩關節平移、後手 drawOrder、thrust 起始姿勢仍未修，另骨盆下沉過深像坐著，回饋包已交使用者轉 v12。
 - 2026-10-27 15:45 Claude R287：骨盆實心版退回小修（外輪廓內 alpha<250 仍 2,510 px，髖孔邊緣半透明環）；LoongBones 列備案，Spine 4.2 兩次重開仍失敗才啟動；Blender 3D 僅參考。
