@@ -121,21 +121,21 @@
 
 > 原 `cross-ref-ui-spec.md C-4`。
 
-| 概念 | 暫定 contract / state | 目前掛點 | 規格來源 |
-|---|---|---|---|
-| 晨報摘要 | `pending: morning-report-content` | `LobbyMain` 登入後摘要層 | 武將日誌與離線互動系統.md (doc_spec_0015)、UI 規格書.md (doc_ui_0027) |
-| 武將日誌抽屜 | `pending: general-journal-content` | `LobbyMain` / `GeneralDetail` 抽屜層 | 武將日誌與離線互動系統.md (doc_spec_0015)、武將人物介面規格書.md (doc_ui_0012) |
-| 派遣整備掛點 | `pending: dispatch-board-content` | `LobbyMain` 任務 / 生活感入口 | 武將日誌與離線互動系統.md (doc_spec_0015)、UI 規格書.md (doc_ui_0027) |
-| 挑戰賽賽季卡 | `pending: tournament-season-card` | `LobbyMain` 世界沙盤旁次卡 | 名將挑戰賽系統.md (doc_spec_0007)、UI 規格補遺_2026-04-11_大廳晨報與人物日誌pending.md (doc_ui_0030) |
-| 經濟補貼提示 | `pending: economy-subsidy-banner` | `LobbyMain` 資源列 / 許願祭壇提示條 | 經濟系統.md (doc_spec_0032)、UI 規格補遺_2026-04-11_大廳晨報與人物日誌pending.md (doc_ui_0030) |
-| 虎符戰記摘要 | `pending: general-tally-summary` | `GeneralDetail` overview 次卡 / peek | 兵種（虎符）系統.md (doc_spec_0012)、武將人物介面規格書.md (doc_ui_0012)、UI 規格補遺_2026-04-11_大廳晨報與人物日誌pending.md (doc_ui_0030) |
-| 結緣模式摘要 | `pending: bonding-lineage-mode-chip` | `BondingSetup` 父母摘要列 / 結果預估卡 | 結緣系統（配種）.md (doc_spec_0028)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 培育學年階段列 | `pending: nurture-phase-block-header` | `NurtureSession` 頂部進度列 | 培育系統.md (doc_spec_0026)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 畢業戰術標籤條 | `pending: graduation-tags-strip` | `NurtureSession` 畢業摘要 / `GeneralDetail` peek | 培育系統.md (doc_spec_0026)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 軍師 HUD 摘要 | `pending: strategist-hud-summary` | `BattleScene` Top HUD 次層 / 右側可收合抽屜 | 關卡設計系統.md (doc_spec_0049)、主戰場UI規格書.md (doc_ui_0001)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 關卡回收摘要 | `pending: stage-salvage-summary` | `BattleScene` 戰中提示條 / 戰後摘要卡 | 關卡設計系統.md (doc_spec_0049)、主戰場UI規格書.md (doc_ui_0001)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 雙池定位導覽 | `pending: gacha-pool-positioning-brief` | `GachaMain` tab header / pity 區旁說明帶 | 轉蛋系統.md (doc_spec_0042)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 轉蛋 Banner 主視覺 | `pending: gacha-banner-hero-art-policy` | `GachaMain` BannerStage 人物主視覺 / pool-specific key visual | 轉蛋系統.md (doc_spec_0042)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
+| 概念 | 暫定 contract / state | 實作狀態（PROG-2-1346 回寫，2026-10-28） | 目前掛點 | 規格來源 |
+|---|---|---|---|---|
+| 晨報摘要 | `pending: morning-report-content` | ✅ DailyReportController.ts（PROG-2-1170/1174） | `LobbyMain` 登入後摘要層 | 武將日誌與離線互動系統.md (doc_spec_0015)、UI 規格書.md (doc_ui_0027) |
+| 武將日誌抽屜 | `pending: general-journal-content` | ✅ GeneralJournalController.ts（PROG-2-1183） | `LobbyMain` / `GeneralDetail` 抽屜層 | 武將日誌與離線互動系統.md (doc_spec_0015)、武將人物介面規格書.md (doc_ui_0012) |
+| 派遣整備掛點 | `pending: dispatch-board-content` | ✅ DispatchCatalog.ts＋LobbyScene 日誌樞紐（PROG-2-1179） | `LobbyMain` 任務 / 生活感入口 | 武將日誌與離線互動系統.md (doc_spec_0015)、UI 規格書.md (doc_ui_0027) |
+| 挑戰賽賽季卡 | `pending: tournament-season-card` | ✅ TournamentPanelController.ts 賽季列（PROG-2-1191）；世界沙盤側卡未另做 | `LobbyMain` 世界沙盤旁次卡 | 名將挑戰賽系統.md (doc_spec_0007)、UI 規格補遺_2026-04-11_大廳晨報與人物日誌pending.md (doc_ui_0030) |
+| 經濟補貼提示 | `pending: economy-subsidy-banner` | ✅ 許願祭壇 waSubsidyLabel（PROG-2-1343）、登入 toast（PROG-2-1340）、戰敗地窖提示（PROG-2-1342）；大廳資源列未做 | `LobbyMain` 資源列 / 許願祭壇提示條 | 經濟系統.md (doc_spec_0032)、UI 規格補遺_2026-04-11_大廳晨報與人物日誌pending.md (doc_ui_0030) |
+| 虎符戰記摘要 | `pending: general-tally-summary` | 🟡 GeneralTallySummary.ts 純邏輯與 overview tallySummary（PROG-2-1344/1345）；畫面位置待定 | `GeneralDetail` overview 次卡 / peek | 兵種（虎符）系統.md (doc_spec_0012)、武將人物介面規格書.md (doc_ui_0012)、UI 規格補遺_2026-04-11_大廳晨報與人物日誌pending.md (doc_ui_0030) |
+| 結緣模式摘要 | `pending: bonding-lineage-mode-chip` | ✅ BondingSetupController.ts modeChip（Standard / Peace_Lineage） | `BondingSetup` 父母摘要列 / 結果預估卡 | 結緣系統（配種）.md (doc_spec_0028)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
+| 培育學年階段列 | `pending: nurture-phase-block-header` | ✅ NurtureFlowController.ts nurturePhase（Phase_Block 1-12/13-24/25-36） | `NurtureSession` 頂部進度列 | 培育系統.md (doc_spec_0026)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
+| 畢業戰術標籤條 | `pending: graduation-tags-strip` | ✅ NurtureSessionMapper.ts graduationTags | `NurtureSession` 畢業摘要 / `GeneralDetail` peek | 培育系統.md (doc_spec_0026)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
+| 軍師 HUD 摘要 | `pending: strategist-hud-summary` | 🟡 StrategistHud.ts 純邏輯（PROG-2-1313）；未接戰場，待互動物件 | `BattleScene` Top HUD 次層 / 右側可收合抽屜 | 關卡設計系統.md (doc_spec_0049)、主戰場UI規格書.md (doc_ui_0001)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
+| 關卡回收摘要 | `pending: stage-salvage-summary` | 🟡 StrategistHud.ts SalvageTotals（PROG-2-1313）；戰場互動物件與回收累計未實作 | `BattleScene` 戰中提示條 / 戰後摘要卡 | 關卡設計系統.md (doc_spec_0049)、主戰場UI規格書.md (doc_ui_0001)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
+| 雙池定位導覽 | `pending: gacha-pool-positioning-brief` | ✅ GachaPoolGuide.ts＋GachaPoolGuidePresenter.ts（PROG-2-0563/0565） | `GachaMain` tab header / pity 區旁說明帶 | 轉蛋系統.md (doc_spec_0042)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
+| 轉蛋 Banner 主視覺 | `pending: gacha-banner-hero-art-policy` | ⬜ 美術政策待定 | `GachaMain` BannerStage 人物主視覺 / pool-specific key visual | 轉蛋系統.md (doc_spec_0042)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
 
 ---
 
