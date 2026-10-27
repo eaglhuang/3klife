@@ -50,7 +50,7 @@ export function createBloodlineTreeFragmentNamingSuite(): TestSuite {
         const cards: NodeCardView[] = [];
         for (const row of [1, 2, 3] as const) {
             const count = row === 1 ? 8 : row === 2 ? 4 : 2;
-            for (let i = 0; i < count; i++) cards.push({ row, empty: true, name: '', location: '' } as NodeCardView);
+            for (let i = 0; i < count; i++) cards.push({ row, empty: true, name: '', location: '' } as unknown as NodeCardView);
         }
         const bound = bindTreeCards(cards).map((target) => target.nodeName).sort();
         const fromFragment = [
