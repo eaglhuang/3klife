@@ -12,6 +12,7 @@
 > 更新日期：2026-05-28
 
 ## P0. Context Budget
+- 2026-10-27 工作樹 context guard hard-stop 約 306k tokens，主因為大型同步 JSON、場景二進位檔與大量圖片；採 task-scoped 摘要與逐張縮圖檢視。
 - 預設先讀本摘要，不整份灌入 `docs/keep.md`、大型 notes、compare board、批次圖片。
 - 大檔一律優先讀 shard：`docs/keep-shards/keep-core.md`、`keep-workflow.md`、`keep-ui-arch.md`、`keep-status.md`。
 - 修改分片後重建索引：`node tools_node/shard-manager.js rebuild-index docs/keep-shards`
