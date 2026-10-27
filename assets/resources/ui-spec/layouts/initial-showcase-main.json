@@ -1,0 +1,131 @@
+{
+  "id": "initial-showcase-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "InitialShowcaseRoot",
+    "id": "initialShowcaseRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "ShowcaseCard",
+        "id": "showcaseCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 1400,
+        "height": 600,
+        "skinSlot": "oi.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "ShowcaseName",
+            "id": "showcaseName",
+            "widget": {
+              "top": 40,
+              "left": 60
+            },
+            "width": 900,
+            "height": 50,
+            "text": "",
+            "styleSlot": "oi.label.title"
+          },
+          {
+            "type": "label",
+            "name": "ShowcaseTitle",
+            "id": "showcaseTitle",
+            "widget": {
+              "top": 100,
+              "left": 60
+            },
+            "width": 1000,
+            "height": 30,
+            "text": "",
+            "styleSlot": "oi.label.meta"
+          },
+          {
+            "type": "label",
+            "name": "ShowcaseLine",
+            "id": "showcaseLine",
+            "widget": {
+              "top": 170,
+              "left": 60
+            },
+            "width": 1280,
+            "height": 240,
+            "text": "",
+            "styleSlot": "oi.label.body"
+          },
+          {
+            "type": "label",
+            "name": "ShowcaseFactors",
+            "id": "showcaseFactors",
+            "widget": {
+              "top": 420,
+              "left": 60
+            },
+            "width": 1000,
+            "height": 30,
+            "text": "",
+            "styleSlot": "oi.label.meta"
+          },
+          {
+            "type": "label",
+            "name": "ShowcaseStep",
+            "id": "showcaseStep",
+            "widget": {
+              "top": 480,
+              "left": 60
+            },
+            "width": 300,
+            "height": 30,
+            "text": "",
+            "styleSlot": "oi.label.meta"
+          },
+          {
+            "type": "button",
+            "name": "BtnShowcaseNext",
+            "id": "btnShowcaseNext",
+            "widget": {
+              "top": 460,
+              "left": 1060
+            },
+            "width": 280,
+            "height": 64,
+            "skinSlot": "oi.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnShowcaseNextLabel",
+                "id": "btnShowcaseNextLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "下一位",
+                "styleSlot": "oi.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
