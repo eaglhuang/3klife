@@ -66,6 +66,7 @@ import {
     type DailyNewsState, type PlayerLogEntry, type PlayerLogType,
 } from '../systems/DailyNewsEngine';
 import { shouldTriggerOfflineInteraction } from '../systems/OfflineInteractionTrigger';
+import { buildJournalEvent, type JournalEventKind, type JournalEventSubject } from '../systems/JournalEvents';
 import {
     EMPTY_MORNING_REPORT, markMorningReportRead, morningReportLines, normalizeMorningReportState, refreshMorningReport,
     unreadMorningReportCount, type MorningReportState,
@@ -1108,6 +1109,7 @@ export class GameSession {
     public recordBreedingBirth(record: BreedingBirthRecord): void {
         this._breedingBirthRecords = normalizeBreedingBirthRecords([...this._breedingBirthRecords, record]);
         this.recordPlayerLog('GENERAL_BORN');
+        this._recordEventJournal('GENERAL_BORN', this._journalSubjects([record.session.Father_UID, record.session.Mother_UID]));
     }
 
     /** 本局已記下的結緣子嗣紀錄（回傳複本，外部改動不影響內部） */
@@ -1782,6 +1784,21 @@ export class GameSession {
         });
     }
 
+    /** 名冊內的武將轉成日誌主體；名冊外（例如內建 demo 武將）略過。 */
+    private _journalSubjects(uids: readonly string[]): JournalEventSubject[] {
+        const roster = this._roster.getAll();
+        return uids.flatMap((uid) => {
+            const general = roster.find((g) => g.id === uid);
+            return general ? [{ uid, name: general.name }] : [];
+        });
+    }
+
+    /** 事件寫入日誌（PROG-2-1175）：時間沿用季度日誌的遊戲時間，ID 用目前條目數 +1。 */
+    private _recordEventJournal(kind: JournalEventKind, subjects: readonly JournalEventSubject[]): void {
+        const input = buildJournalEvent(kind, subjects, this._journal.entries.length + 1, seasonJournalTimestamp(this._clock.state));
+        if (input) this.recordJournal(input);
+    }
+
     /** 寫入武將日誌（JRN-01）；被拒絕時不改動狀態。 */
     public recordJournal(input: JournalEntryInput): JournalWriteResult {
         const result = appendJournalEntry(this._journal, input);
@@ -1834,6 +1851,7 @@ export class GameSession {
         const assigned = await this.assignHallTask(task.Task_ID, generalId);
         if (!assigned) return { ok: false, reason: 'NO_GENERAL' };
         this.settleHallMission(result.outcome);
+        this._recordEventJournal(result.outcome.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([generalId]));
         // 任務結束：同一任務若有未結算的委任紀錄，一併結清（PROG-2-1008）
         await this.settleHallAssign(task.Task_ID, result.outcome.success ? 'success' : 'failure', new Date().toISOString());
         return result;
@@ -2514,6 +2532,7 @@ export class GameSession {
         }
         const childId = options?.catalystChildId;
         if (childId !== undefined) this._assertCatalystChild(generalId, childId);
+        const retiredSubjects = this._journalSubjects([generalId]);
         const result = await this._lifecycle.retireGeneral(this._roster.getAll(), generalId, this._clock.state);
         let roster = result.roster;
         let injection: { childId: string; injectedFactorId: string | null; consumed: boolean } | null = null;
@@ -2540,6 +2559,7 @@ export class GameSession {
             await this.save();
         }
         this.recordPlayerLog('GENERAL_RETIRE');
+        this._recordEventJournal('GENERAL_RETIRE', retiredSubjects);
         this._emit(GAME_SESSION_EVENTS.GeneralRetired, result.card);
         if (injection) this._emit(GAME_SESSION_EVENTS.GeneCatalystInjected, injection);
         return result.card;
@@ -2747,7 +2767,10 @@ export class GameSession {
         const firstClear = result === 'player-win' && !this._firstBattleCleared;
         if (firstClear) this._firstBattleCleared = true;
         const tallyChanged = this._settleTallyBattleExp(options.deployedTallyIds ?? [], result);
-        if (result === 'player-win' || result === 'enemy-win') this.recordPlayerLog(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE');
+        if (result === 'player-win' || result === 'enemy-win') {
+            this.recordPlayerLog(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE');
+            this._recordEventJournal(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE', this._journalSubjects(deployedIds));
+        }
         const comradeChanged = this._recordBattleComrades(result, Boolean(options.sortie));
         const settlement = settleBattle(this._roster.getAll(), {
             deployedIds,
