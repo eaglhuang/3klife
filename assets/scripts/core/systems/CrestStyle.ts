@@ -10,10 +10,10 @@
  * Unity 對照：像一個 ScriptableObject 樣式表，輸入因子色枚舉，輸出 Material 色、Sprite 名稱與 Localization key；查不到就用預設 Material。
  */
 import { ALL_FACTOR_COLORS, type FactorColor } from './FactorInheritance';
-import { FACTOR_TAG_COLORS, FACTOR_TAG_I18N_KEYS } from './FactorTagTokens';
+import { FACTOR_NEUTRAL_TINT, FACTOR_TAG_COLORS, FACTOR_TAG_I18N_KEYS } from './FactorTagTokens';
 
-/** 中性樣式色（暫定）：無因子或未知色時使用，灰階不與六色混淆。 */
-export const CREST_NEUTRAL_TINT = '#9A9A9A';
+/** 中性樣式色：與連線共用 FACTOR_NEUTRAL_TINT，灰階不與六色混淆。 */
+export const CREST_NEUTRAL_TINT = FACTOR_NEUTRAL_TINT;
 
 /** 中性樣式的紋樣 id（暫定）。 */
 export const CREST_NEUTRAL_GLYPH_ID = 'crest_neutral';
