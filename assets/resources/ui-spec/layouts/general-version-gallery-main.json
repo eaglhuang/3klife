@@ -1035,6 +1035,72 @@
                 "text": "限定"
               }
             ]
+          },
+          {
+            "type": "panel",
+            "name": "DiffPanel",
+            "id": "diffPanel",
+            "widget": {
+              "top": 760,
+              "left": 480
+            },
+            "width": 830,
+            "height": 120,
+            "skinSlot": "nurture.card.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DiffTitle",
+                "id": "diffTitle",
+                "widget": {
+                  "top": 8,
+                  "left": 16
+                },
+                "width": 800,
+                "height": 32,
+                "text": "",
+                "styleSlot": "nurture.label.name"
+              },
+              {
+                "type": "label",
+                "name": "DiffGenes",
+                "id": "diffGenes",
+                "widget": {
+                  "top": 44,
+                  "left": 16
+                },
+                "width": 800,
+                "height": 30,
+                "text": "",
+                "styleSlot": "nurture.label.body"
+              },
+              {
+                "type": "label",
+                "name": "DiffTactics",
+                "id": "diffTactics",
+                "widget": {
+                  "top": 82,
+                  "left": 16
+                },
+                "width": 380,
+                "height": 26,
+                "text": "戰法：—",
+                "styleSlot": "nurture.label.meta"
+              },
+              {
+                "type": "label",
+                "name": "DiffPortrait",
+                "id": "diffPortrait",
+                "widget": {
+                  "top": 82,
+                  "left": 420
+                },
+                "width": 380,
+                "height": 26,
+                "text": "立繪：—",
+                "styleSlot": "nurture.label.meta"
+              }
+            ]
           }
         ]
       }
