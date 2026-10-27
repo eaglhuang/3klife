@@ -33,8 +33,7 @@ function build(adapter: MemoryStorageAdapter, roster: GeneralConfig[]): GameSess
 
 /** 鍵排序後再序列化，物件欄位順序不同不算差異 */
 function canonical(value: unknown): string {
-    // settledAt 是結算當下的現實時間（不是遊戲時間），兩次執行必然不同，不列入比較
-    return JSON.stringify(value, (key, v) => key === 'settledAt' ? undefined : (v && typeof v === 'object' && !Array.isArray(v)
+    return JSON.stringify(value, (_key, v) => (v && typeof v === 'object' && !Array.isArray(v)
         ? Object.fromEntries(Object.entries(v as Record<string, unknown>).sort(([x], [y]) => x.localeCompare(y)))
         : v));
 }
