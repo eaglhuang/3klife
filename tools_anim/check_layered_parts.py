@@ -422,6 +422,21 @@ def check_rotation_gap_leak(
     core_disk = np.array(circle_im) > 128
     disk_total = max(1, int(core_disk.sum()))
 
+    # AG-30 B: 建立半徑為 check_radius_px 的全半徑檢查圓盤
+    full_rad = float(check_radius_px)
+    circle_full_im = Image.new("L", (w, h), 0)
+    draw_full = ImageDraw.Draw(circle_full_im)
+    draw_full.ellipse(
+        [
+            pivot_pt[0] - full_rad,
+            pivot_pt[1] - full_rad,
+            pivot_pt[0] + full_rad,
+            pivot_pt[1] + full_rad,
+        ],
+        fill=255,
+    )
+    full_disk = np.array(circle_full_im) > 128
+
     # --- (A) 未加遮蔽時之指標 ---
     child_cov_raw = int((child_alpha & core_disk).sum())
     parent_cov = int((parent_alpha & core_disk).sum())
@@ -452,6 +467,10 @@ def check_rotation_gap_leak(
     seam_inside_contour_mask = core_disk & body_contour_0 & (~(parent_alpha | child_effective_alpha))
     seam_inside_contour_px = int(seam_inside_contour_mask.sum())
 
+    # AG-30 B: 全半徑輪廓內透光縫 (以全半徑圓盤統計透光像素)
+    seam_inside_contour_full_radius_mask = full_disk & body_contour_0 & (~(parent_alpha | child_effective_alpha))
+    seam_inside_contour_full_radius_px = int(seam_inside_contour_full_radius_mask.sum())
+
     # --- (C) 判定邏輯 (不改門檻數值；AG-29 B: child 覆蓋率嚴格不借用遮蔽槽) ---
     min_overlap_required = int(disk_total * 0.2)
     leak_tolerance_px = disk_total - min_overlap_required
@@ -462,6 +481,7 @@ def check_rotation_gap_leak(
 
     metrics: dict[str, Any] = {
         "coreRadiusPx": round(core_rad, 2),
+        "fullRadiusPx": round(full_rad, 2),
         "coreTotalPixels": disk_total,
         "minRequiredOverlapPixels": min_overlap_required,
         "minRequiredOverlapRatio": 0.2,
@@ -476,11 +496,10 @@ def check_rotation_gap_leak(
         "trueSeamLeakPixelsWithoutOccluders": uncovered_raw_count,
         "trueSeamLeakPixelsWithOccluders": uncovered_eff_count,
         "seamInsideContourPx": seam_inside_contour_px,
+        "seamInsideContourFullRadiusPx": seam_inside_contour_full_radius_px,
         "occludedBySlotPx": occluded_by_slot,
         "passed": passed,
     }
-
-    return passed, leak_mask, metrics
 
     return passed, leak_mask, metrics
 
@@ -1180,9 +1199,61 @@ def run_layered_parts_inspection(
         )
 
         leak_pass = leak_pos_ok and leak_neg_ok
+
+        # AG-30 C: 擬議閘門 (只並列、不取代現行 tier)
+        # 條件：parent 與 child (不含遮蔽槽) 核心覆蓋率各 >= 15%，且全半徑輪廓內縫正負角度各 <= 8 px
+        core_tot = metrics_pos["coreTotalPixels"]
+        min_cov_req = int(core_tot * 0.15)
+        p_cov_pos = metrics_pos["parentCoverageInCore"]
+        p_cov_neg = metrics_neg["parentCoverageInCore"]
+        c_cov_pos_raw = metrics_pos["childCoverageWithoutOccluders"]
+        c_cov_neg_raw = metrics_neg["childCoverageWithoutOccluders"]
+        full_seam_pos = metrics_pos["seamInsideContourFullRadiusPx"]
+        full_seam_neg = metrics_neg["seamInsideContourFullRadiusPx"]
+
+        proposed_fail_reasons: list[str] = []
+        if p_cov_pos < min_cov_req:
+            proposed_fail_reasons.append(
+                f"parentCoverageInCore(+deg)={p_cov_pos} < 15% ({min_cov_req}px)"
+            )
+        if p_cov_neg < min_cov_req:
+            proposed_fail_reasons.append(
+                f"parentCoverageInCore(-deg)={p_cov_neg} < 15% ({min_cov_req}px)"
+            )
+        if c_cov_pos_raw < min_cov_req:
+            proposed_fail_reasons.append(
+                f"childCoverageWithoutOccluders(+deg)={c_cov_pos_raw} < 15% ({min_cov_req}px)"
+            )
+        if c_cov_neg_raw < min_cov_req:
+            proposed_fail_reasons.append(
+                f"childCoverageWithoutOccluders(-deg)={c_cov_neg_raw} < 15% ({min_cov_req}px)"
+            )
+        if full_seam_pos > 8:
+            proposed_fail_reasons.append(
+                f"seamInsideContourFullRadiusPx(+deg)={full_seam_pos} > 8px"
+            )
+        if full_seam_neg > 8:
+            proposed_fail_reasons.append(
+                f"seamInsideContourFullRadiusPx(-deg)={full_seam_neg} > 8px"
+            )
+
+        proposed_pass = len(proposed_fail_reasons) == 0
+        proposed_tier = "PASS" if proposed_pass else "FAIL"
+
         leak_entry: dict[str, Any] = {
             "pass": leak_pass,
             "tier": "PASS" if leak_pass else "FAIL",
+            "proposedTier": proposed_tier,
+            "proposedGate": {
+                "pass": proposed_pass,
+                "proposedTier": proposed_tier,
+                "conditions": {
+                    "parentCoreCoverageMinRatio": 0.15,
+                    "childCoreCoverageWithoutOccludersMinRatio": 0.15,
+                    "maxFullRadiusSeamPx": 8,
+                },
+                "reasons": proposed_fail_reasons,
+            },
             "skipped": False,
             "testedAngles": [tested_deg, -tested_deg],
             "rotationOccluders": rot_occluder_names,
@@ -1193,12 +1264,18 @@ def run_layered_parts_inspection(
             "leakPixelsNegative": metrics_neg["nonOverlapPixelsWithOccluders"],
             "seamInsideContourPositivePx": metrics_pos["seamInsideContourPx"],
             "seamInsideContourNegativePx": metrics_neg["seamInsideContourPx"],
+            "seamInsideContourFullRadiusPositivePx": full_seam_pos,
+            "seamInsideContourFullRadiusNegativePx": full_seam_neg,
             "positiveAngleMetrics": {
                 "angleDeg": tested_deg,
+                "parentCoveragePx": p_cov_pos,
+                "childCoverageWithoutOccludersPx": c_cov_pos_raw,
+                "childCoverageWithOccludersPx": metrics_pos["childCoverageWithOccluders"],
                 "leakWithoutOccludersPx": metrics_pos["nonOverlapPixelsWithoutOccluders"],
                 "leakWithOccludersPx": metrics_pos["nonOverlapPixelsWithOccluders"],
                 "trueSeamLeakPx": metrics_pos["trueSeamLeakPixelsWithOccluders"],
                 "seamInsideContourPx": metrics_pos["seamInsideContourPx"],
+                "seamInsideContourFullRadiusPx": full_seam_pos,
                 "overlapPixels": metrics_pos["overlapPixelsWithOccluders"],
                 "minRequiredOverlapPx": metrics_pos["minRequiredOverlapPixels"],
                 "leakTolerancePx": metrics_pos["leakTolerancePx"],
@@ -1207,10 +1284,14 @@ def run_layered_parts_inspection(
             },
             "negativeAngleMetrics": {
                 "angleDeg": -tested_deg,
+                "parentCoveragePx": p_cov_neg,
+                "childCoverageWithoutOccludersPx": c_cov_neg_raw,
+                "childCoverageWithOccludersPx": metrics_neg["childCoverageWithOccluders"],
                 "leakWithoutOccludersPx": metrics_neg["nonOverlapPixelsWithoutOccluders"],
                 "leakWithOccludersPx": metrics_neg["nonOverlapPixelsWithOccluders"],
                 "trueSeamLeakPx": metrics_neg["trueSeamLeakPixelsWithOccluders"],
                 "seamInsideContourPx": metrics_neg["seamInsideContourPx"],
+                "seamInsideContourFullRadiusPx": full_seam_neg,
                 "overlapPixels": metrics_neg["overlapPixelsWithOccluders"],
                 "minRequiredOverlapPx": metrics_neg["minRequiredOverlapPixels"],
                 "leakTolerancePx": metrics_neg["leakTolerancePx"],

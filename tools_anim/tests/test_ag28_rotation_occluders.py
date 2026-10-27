@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import shutil
 import sys
 import tempfile
@@ -207,11 +208,24 @@ class TestAG28RotationOccluders(unittest.TestCase):
 
     def test_codex_r292_dataset_hand_and_legs_metrics(self) -> None:
         """驗收資料測試：若存在 Codex R292 趙雲資料，驗證後手與腿部旋轉檢查結果與指標一致性"""
-        scratch_r292 = TOOLS_DIR.parent / "scratch" / "r292-v38-hidden-extension"
-        parts_dir = scratch_r292 / "parts"
-        anchors_dir = scratch_r292 / "anchors"
-        if not parts_dir.exists():
-            self.skipTest(f"跳過 R292 資料測試: 找不到 {parts_dir}")
+        candidate_dirs = [
+            os.environ.get("R292_DATASET_DIR"),
+            str(TOOLS_DIR.parent / "scratch" / "r292-v38-hidden-extension"),
+            r"C:\Users\User\.codex\worktrees\zhaoyun-cutout-polish\3KLife\scratch\r292-v38-hidden-extension",
+            r"C:\Users\User\worktrees\antigravity-anim\scratch\r292-v38-hidden-extension",
+        ]
+
+        found_dir: Path | None = None
+        for cd in candidate_dirs:
+            if cd and Path(cd).exists() and (Path(cd) / "parts").exists():
+                found_dir = Path(cd)
+                break
+
+        if not found_dir:
+            self.skipTest(f"跳過 R292 資料測試: 嘗試搜尋以下路徑均不存在:\n" + "\n".join(str(d) for d in candidate_dirs if d))
+
+        parts_dir = found_dir / "parts"
+        anchors_dir = found_dir / "anchors"
 
         rep, _ = run_layered_parts_inspection(
             parts_dir=parts_dir,
