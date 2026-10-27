@@ -86,7 +86,8 @@ import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
-import { GovernorHallController } from '../core/GovernorHallController';
+import { GovernorHallController, GovernorTerritoryInfo } from '../core/GovernorHallController';
+import { planTerritoryUpgrade } from '../../core/systems/TerritoryUpgrade';
 import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceGalleryController } from '../core/RedFaceShowcaseController';
@@ -807,6 +808,7 @@ export class LobbyScene extends Component {
             jobChange: () => this._openJobChange(),
             spiritCodex: () => { void this._openSpiritCodex(); },
             domestic: () => this._openDomestic(),
+            governorHall: () => this.openGovernorHall(),
             recruitHall: () => this._openRecruitHall(),
             hallBoard: () => this._openHallBoard(),
             sandtable: () => this._onClickOpenSandtable(),
@@ -1449,9 +1451,11 @@ export class LobbyScene extends Component {
                 food: { base: 0, populationBonus: 0, policyModifier: 0 },
                 cityTroops: { current: 0, cap: 0, recruitPerTurn: 0 },
             }),
+            territory: () => this._governorTerritoryInfo(),
         });
         this._govHallHost = await this._mountPreviewScreenHost('GovernorHallHost', 'governor-hall-screen', [
             { buttonId: 'btnClose', handler: () => { this._closeGovernorHall(); } },
+            { buttonId: 'btnUpgrade', handler: () => { this._onUpgradeTerritory(); } },
         ]);
         this._govHallHost.node.active = false;
     }
@@ -1463,6 +1467,26 @@ export class LobbyScene extends Component {
         }
         host.node.active = true;
         this._bringNodeToFront(host.node);
+        this._refreshGovernorHall();
+    }
+
+    /** 太守府等級、格數與升級規劃，全部由 GameSession 推導（PROG-2-0986）。 */
+    private _governorTerritoryInfo(): GovernorTerritoryInfo {
+        const session = services().session;
+        return {
+            level: session.territoryLevel,
+            maxSlots: session.maxTaskSlots,
+            pendingLevel: session.pendingTerritoryLevel,
+            plan: planTerritoryUpgrade(session.territoryLevel, session.pendingTerritoryLevel, session.military.food),
+        };
+    }
+
+    /** 升級下單：金錢由錢包扣，糧草與待生效狀態由 GameSession 處理；成功才存檔。 */
+    private _onUpgradeTerritory(): void {
+        const session = services().session;
+        const gacha = this._localGachaService;
+        const plan = session.orderTerritoryUpgrade((amount) => gacha.spendCurrency('gold', amount));
+        if (plan.ok) void session.save().catch(() => undefined);
         this._refreshGovernorHall();
     }
 

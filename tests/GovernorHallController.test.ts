@@ -3,6 +3,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { GovernorHallController } from '../assets/scripts/ui/core/GovernorHallController';
+import { planTerritoryUpgrade } from '../assets/scripts/core/systems/TerritoryUpgrade';
 import type { GovernorSnapshot } from '../assets/scripts/core/systems/GovernorHallView';
 
 function snapshot(overrides: Partial<GovernorSnapshot> = {}): GovernorSnapshot {
@@ -45,6 +46,33 @@ export function createGovernorHallControllerSuite(): TestSuite {
             snapshot: () => snapshot({ cityTroops: { current: 100, cap: 8000, recruitPerTurn: 0 } }),
         }).getFlowView();
         assert.equals('距離回滿 無法回滿（補兵為 0）', flow.texts.govTroopRecover);
+    });
+
+    suite.test('未傳等級資訊時為 Lv1、2 格，升級按鈕不可按', () => {
+        const flow = new GovernorHallController({ snapshot: () => snapshot() }).getFlowView();
+        assert.equals('太守府 Lv1', flow.texts.govLevel);
+        assert.equals('內政任務格 2', flow.texts.govSlots);
+        assert.equals('', flow.texts.govPending);
+        assert.isFalse(flow.actives.btnUpgrade);
+    });
+
+    suite.test('可升級時顯示目標等級與費用，按鈕可按', () => {
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot(),
+            territory: () => ({ level: 1, maxSlots: 2, pendingLevel: null, plan: planTerritoryUpgrade(1, null, 5000) }),
+        }).getFlowView();
+        assert.equals('升級至 Lv2（金 4000・糧 1000）', flow.texts.btnUpgradeLabel);
+        assert.isTrue(flow.actives.btnUpgrade);
+    });
+
+    suite.test('待生效升級時顯示待生效文字，按鈕不可按並說明原因', () => {
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot(),
+            territory: () => ({ level: 1, maxSlots: 2, pendingLevel: 2, plan: planTerritoryUpgrade(1, 2, 5000) }),
+        }).getFlowView();
+        assert.equals('Lv2 將於季結生效', flow.texts.govPending);
+        assert.equals('已有待生效的升級', flow.texts.btnUpgradeLabel);
+        assert.isFalse(flow.actives.btnUpgrade);
     });
 
     return suite;

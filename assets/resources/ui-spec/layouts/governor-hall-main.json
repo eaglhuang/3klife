@@ -81,7 +81,7 @@
               "left": 32
             },
             "width": 640,
-            "height": 480,
+            "height": 690,
             "skinSlot": "mp.row.bg",
             "children": [
               {
@@ -161,6 +161,72 @@
                 "text": "",
                 "styleSlot": "mp.label.body",
                 "width": 640
+              },
+              {
+                "type": "label",
+                "name": "GovLevel",
+                "id": "govLevel",
+                "widget": {
+                  "top": 460,
+                  "left": 32
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.title",
+                "width": 640
+              },
+              {
+                "type": "label",
+                "name": "GovSlots",
+                "id": "govSlots",
+                "widget": {
+                  "top": 510,
+                  "left": 32
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 640
+              },
+              {
+                "type": "label",
+                "name": "GovPending",
+                "id": "govPending",
+                "widget": {
+                  "top": 560,
+                  "left": 32
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 640
+              },
+              {
+                "type": "button",
+                "name": "BtnUpgrade",
+                "id": "btnUpgrade",
+                "widget": {
+                  "top": 610,
+                  "left": 32
+                },
+                "width": 420,
+                "height": 56,
+                "skinSlot": "mp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnUpgradeLabel",
+                    "id": "btnUpgradeLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "",
+                    "styleSlot": "mp.label.button"
+                  }
+                ]
               }
             ]
           },
