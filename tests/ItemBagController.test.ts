@@ -6,7 +6,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { BAG_ROW_SLOTS, ItemBagController } from '../assets/scripts/ui/core/ItemBagController';
-import { ITEM_DISPLAY_NAMES, ITEM_REFRESH, ITEM_FERTILITY, PlayerInventory } from '../assets/scripts/core/systems/PlayerInventory';
+import { ITEM_DISPLAY_NAMES, ITEM_REFRESH, ITEM_FERTILITY, ITEM_WISH_SPEED_CARD, PlayerInventory } from '../assets/scripts/core/systems/PlayerInventory';
 import type { ItemUseResult } from '../assets/scripts/core/systems/ItemUseFlow';
 
 function harness(initial: PlayerInventory, result: ItemUseResult = { ok: true, inventory: {} }) {
@@ -35,12 +35,56 @@ export function createItemBagControllerSuite(): TestSuite {
         assert.equals('', view.texts.bagRowLabel1);
     });
 
-    suite.test('列數上限足以放下所有已定義道具，持有全部時不截掉任何一種', () => {
+    suite.test('持有全部已定義道具時跨頁可看到每一種，不截掉任何一種（PROG-2-1200）', () => {
         const all: Record<string, number> = {};
         for (const itemId of Object.keys(ITEM_DISPLAY_NAMES)) all[itemId] = 1;
         const { controller } = harness(all);
-        assert.isTrue(BAG_ROW_SLOTS >= Object.keys(ITEM_DISPLAY_NAMES).length);
-        assert.equals(Object.keys(ITEM_DISPLAY_NAMES).length, controller.rows().length);
+        const total = Object.keys(ITEM_DISPLAY_NAMES).length;
+        assert.equals(Math.ceil(total / BAG_ROW_SLOTS), controller.pageCount());
+        const seen: string[] = [];
+        for (let p = 0; p < controller.pageCount(); p++) {
+            assert.equals(p, controller.page);
+            seen.push(...controller.rows().map((r) => r.itemId));
+            controller.turnPage(1);
+        }
+        assert.equals(total, new Set(seen).size);
+        assert.isTrue(seen.includes(ITEM_WISH_SPEED_CARD));
+    });
+
+    suite.test('分頁：只有一頁時隱藏分頁鈕；翻頁邊界不動；選取依頁碼對應（PROG-2-1200）', () => {
+        const single = harness({ [ITEM_REFRESH]: 1 }).controller.getFlowView();
+        assert.isFalse(single.actives.btnBagPrevPage);
+        assert.isFalse(single.actives.btnBagNextPage);
+        assert.isFalse(single.actives.bagPageLabel);
+        const all: Record<string, number> = {};
+        for (const itemId of Object.keys(ITEM_DISPLAY_NAMES)) all[itemId] = 2;
+        const { controller } = harness(all);
+        controller.turnPage(-1);
+        assert.equals(0, controller.page);
+        let view = controller.getFlowView();
+        assert.equals(`第 1/${controller.pageCount()} 頁`, view.texts.bagPageLabel);
+        assert.isFalse(view.actives.btnBagPrevPage);
+        assert.isTrue(view.actives.btnBagNextPage);
+        controller.turnPage(1);
+        controller.turnPage(1);
+        assert.equals(controller.pageCount() - 1, controller.page);
+        view = controller.getFlowView();
+        assert.isTrue(view.actives.btnBagPrevPage);
+        assert.isFalse(view.actives.btnBagNextPage);
+        const first = controller.rows()[0];
+        controller.select(0);
+        assert.equals(first.name, controller.getFlowView().texts.bagDetailName);
+    });
+
+    suite.test('道具減少使總頁數變少時，頁碼夾回最後一頁（PROG-2-1200）', () => {
+        const all: Record<string, number> = {};
+        for (const itemId of Object.keys(ITEM_DISPLAY_NAMES)) all[itemId] = 1;
+        const controller = new ItemBagController({ inventory: () => all, useItem: () => ({ ok: true, inventory: {} }), now: () => 0 });
+        controller.turnPage(1);
+        assert.equals(1, controller.page);
+        for (const row of controller.rows()) delete all[row.itemId];
+        assert.equals(0, controller.page);
+        assert.isTrue(controller.rows().length > 0);
     });
 
     suite.test('未選道具時詳情顯示未選擇，按使用會提示先選道具', () => {

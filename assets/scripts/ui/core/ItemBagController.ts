@@ -3,7 +3,7 @@
  * ItemBagController — 道具背包畫面的流程（純邏輯，不依賴 cc）。
  *
  * 職責：
- *   - 列出持有的道具（最多 BAG_ROW_SLOTS 列，對應 item-bag-main.json 的固定列節點）
+ *   - 列出持有的道具，每頁 BAG_ROW_SLOTS 列（對應 item-bag-main.json 的固定列節點），超過時分頁（PROG-2-1200）
  *   - 選取道具後顯示詳情；按「使用」先進入確認，按「確定」才真的呼叫 useItem
  *   - 輸出扁平 FlowView，key 與 item-bag-main.json 的節點 id 一一對應
  *
@@ -17,7 +17,7 @@ import { ItemUseResult } from '../../core/systems/ItemUseFlow';
 import { buildItemBagRows, ItemBagRow } from '../../core/systems/ItemBagView';
 import { ITEM_DISPLAY_NAMES, itemCount, PlayerInventory } from '../../core/systems/PlayerInventory';
 
-/** item-bag-main.json 內的列節點數；超過的持有道具暫不顯示（分頁另卡）。 */
+/** item-bag-main.json 內的列節點數＝每頁列數；超過時以上一頁／下一頁翻頁（PROG-2-1200）。 */
 export const BAG_ROW_SLOTS = 13;
 
 export interface ItemBagFlowView {
@@ -46,15 +46,41 @@ export class ItemBagController {
     private _selectedId: string | null = null;
     private _pendingConfirm = false;
     private _message = '';
+    private _page = 0;
 
     constructor(private readonly _deps: ItemBagDeps) {}
 
-    /** 目前持有的道具列（只列數量大於 0 者）。 */
-    public rows(): ItemBagRow[] {
-        return buildItemBagRows(this._deps.inventory(), { onlyOwned: true }).slice(0, BAG_ROW_SLOTS);
+    /** 全部持有的道具列（只列數量大於 0 者）。 */
+    public allRows(): ItemBagRow[] {
+        return buildItemBagRows(this._deps.inventory(), { onlyOwned: true });
     }
 
-    /** 點第 index 列選取道具；取消任何待確認的使用。 */
+    /** 總頁數（至少 1）。 */
+    public pageCount(): number {
+        return Math.max(1, Math.ceil(this.allRows().length / BAG_ROW_SLOTS));
+    }
+
+    /** 目前頁碼（從 0 起）；道具用完使總頁數變少時夾回最後一頁。 */
+    public get page(): number {
+        return Math.min(this._page, this.pageCount() - 1);
+    }
+
+    /** 目前頁的道具列。 */
+    public rows(): ItemBagRow[] {
+        const start = this.page * BAG_ROW_SLOTS;
+        return this.allRows().slice(start, start + BAG_ROW_SLOTS);
+    }
+
+    /** 翻頁（delta 為 ±1）；超出範圍不動，翻頁會取消待確認的使用。 */
+    public turnPage(delta: number): void {
+        const next = this.page + delta;
+        if (next < 0 || next >= this.pageCount()) return;
+        this._page = next;
+        this._pendingConfirm = false;
+        this._message = '';
+    }
+
+    /** 點目前頁第 index 列選取道具；取消任何待確認的使用。 */
     public select(index: number): void {
         this._selectedId = this.rows()[index]?.itemId ?? null;
         this._pendingConfirm = false;
@@ -100,6 +126,11 @@ export class ItemBagController {
             actives[`btnBagRow${i}`] = row !== undefined;
         }
         const selected = this._selectedRow();
+        const pages = this.pageCount();
+        texts.bagPageLabel = `第 ${this.page + 1}/${pages} 頁`;
+        actives.bagPageLabel = pages > 1;
+        actives.btnBagPrevPage = pages > 1 && this.page > 0;
+        actives.btnBagNextPage = pages > 1 && this.page < pages - 1;
         texts.bagDetailName = selected ? selected.name : '未選擇道具';
         texts.bagDetailCount = selected ? `持有 ${selected.count}` : '';
         actives.btnBagUse = selected !== null && !this._pendingConfirm;

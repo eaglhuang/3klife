@@ -11,7 +11,7 @@
 
 import { LOGIN_DAY_OFFSET_MINUTES } from './LoginStreak';
 import {
-    ITEM_DISPLAY_NAMES, ITEM_WISH_SPEED_CARD, ITEM_ADMISSION_TOKEN, ITEM_JOB_CHANGE_ORDER, ITEM_LONGEVITY_PILL, ITEM_ORACLE_TOKEN, ITEM_TALLY_ESSENCE, ITEM_VITALITY_PILL,
+    ITEM_DISPLAY_NAMES, ITEM_ADMISSION_TOKEN, ITEM_JOB_CHANGE_ORDER, ITEM_LONGEVITY_PILL, ITEM_ORACLE_TOKEN, ITEM_TALLY_ESSENCE, ITEM_VITALITY_PILL,
 } from './PlayerInventory';
 
 const HOUR_MS = 3_600_000;
@@ -48,20 +48,9 @@ export const WISH_ITEMS: readonly WishItemDef[] = [
     { itemId: ITEM_LONGEVITY_PILL, fullAmount: 20, yieldRate: 0.05, redemptionHours: 24 },
 ];
 
-/**
- * 許願池新增道具的顯示名：背包面板只有 13 列（BAG_ROW_SLOTS），先不放進 ITEM_DISPLAY_NAMES，
- * 背包改捲動後再併入（PROG-2-1198 暫定）
- */
-export const WISH_ITEM_NAMES: Readonly<Record<string, string>> = {
-    [ITEM_ADMISSION_TOKEN]: '入學令',
-    [ITEM_TALLY_ESSENCE]: '虎符精華',
-    [ITEM_LONGEVITY_PILL]: '延壽丹',
-    [ITEM_WISH_SPEED_CARD]: '加速卡',
-};
-
-/** 許願商品顯示名（背包有名稱者沿用） */
+/** 許願商品顯示名（背包名稱表，PROG-2-1200 起含許願池新道具） */
 export function wishItemName(itemId: string): string {
-    return ITEM_DISPLAY_NAMES[itemId] ?? WISH_ITEM_NAMES[itemId] ?? itemId;
+    return ITEM_DISPLAY_NAMES[itemId] ?? itemId;
 }
 
 export interface ActiveWish {

@@ -66,6 +66,10 @@ export const ITEM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
     [ITEM_WEATHER_RAIN]: '祈雨符',
     [ITEM_REFRESH]: '刷新券',
     [ITEM_FERTILITY]: '安胎藥',
+    [ITEM_ADMISSION_TOKEN]: '入學令',
+    [ITEM_TALLY_ESSENCE]: '虎符精華',
+    [ITEM_LONGEVITY_PILL]: '延壽丹',
+    [ITEM_WISH_SPEED_CARD]: '加速卡',
 };
 
 export type PlayerInventory = Readonly<Record<string, number>>;

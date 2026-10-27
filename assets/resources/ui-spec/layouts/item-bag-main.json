@@ -438,6 +438,73 @@
             ]
           },
           {
+            "type": "button",
+            "name": "BtnBagPrevPage",
+            "id": "btnBagPrevPage",
+            "widget": {
+              "top": 800,
+              "left": 32
+            },
+            "width": 120,
+            "height": 56,
+            "skinSlot": "mp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnBagPrevPageLabel",
+                "id": "btnBagPrevPageLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "上一頁",
+                "styleSlot": "mp.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "BagPageLabel",
+            "id": "bagPageLabel",
+            "widget": {
+              "top": 810,
+              "left": 172
+            },
+            "width": 360,
+            "height": 36,
+            "text": "第 1/1 頁",
+            "styleSlot": "mp.label.meta"
+          },
+          {
+            "type": "button",
+            "name": "BtnBagNextPage",
+            "id": "btnBagNextPage",
+            "widget": {
+              "top": 800,
+              "left": 552
+            },
+            "width": 120,
+            "height": 56,
+            "skinSlot": "mp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnBagNextPageLabel",
+                "id": "btnBagNextPageLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "下一頁",
+                "styleSlot": "mp.label.button"
+              }
+            ]
+          },
+          {
             "type": "panel",
             "name": "ItemBagDetailPanel",
             "id": "itemBagDetailPanel",

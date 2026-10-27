@@ -1829,6 +1829,8 @@ export class LobbyScene extends Component {
             { buttonId: 'btnBagUse', handler: () => { this._itemBag?.requestUse(); this._refreshItemBag(); } },
             { buttonId: 'btnBagCancel', handler: () => { this._itemBag?.cancelUse(); this._refreshItemBag(); } },
             { buttonId: 'btnBagConfirm', handler: () => { this._onConfirmItemBagUse(); } },
+            { buttonId: 'btnBagPrevPage', handler: () => { this._itemBag?.turnPage(-1); this._refreshItemBag(); } },
+            { buttonId: 'btnBagNextPage', handler: () => { this._itemBag?.turnPage(1); this._refreshItemBag(); } },
             ...rowBindings,
         ]);
         this._itemBagHost.node.active = false;
