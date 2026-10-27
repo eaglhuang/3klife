@@ -225,7 +225,7 @@ function runGate(gate) {
     stdio: 'pipe',
     encoding: 'utf8',
     shell: false,
-    timeout: 60000, // 60 秒超時
+    timeout: gate.timeoutMs || 60000, // 預設 60 秒超時；gate 可用 timeoutMs 覆寫
   });
 
   if (result.error && /EPERM/i.test(String(result.error.message || result.error))) {
@@ -234,7 +234,7 @@ function runGate(gate) {
       stdio: 'pipe',
       encoding: 'utf8',
       shell: true,
-      timeout: 60000,
+      timeout: gate.timeoutMs || 60000,
     });
     if (!fallback.error) {
       fallbackMethod = 'shell-fallback-after-spawn-eperm';

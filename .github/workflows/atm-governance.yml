@@ -82,6 +82,10 @@ jobs:
           echo "head_sha=${head_sha}" >> "${GITHUB_OUTPUT}"
           echo "changed_count=$(wc -l < artifacts/ci/atm-changed-files.txt | tr -d ' ')" >> "${GITHUB_OUTPUT}"
 
+      - name: Test tsc baseline
+        shell: bash
+        run: node tools_node/check-test-tsc-baseline.js
+
       - name: Bootstrap CI task locks
         shell: bash
         run: |
