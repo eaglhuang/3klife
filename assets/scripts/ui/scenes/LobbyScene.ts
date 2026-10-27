@@ -103,7 +103,7 @@ import { RedFaceGalleryController } from '../core/RedFaceShowcaseController';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
 import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, fitPortraitInFrame } from '../core/PortraitFrameFit';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
-import { OpeningIntroController } from '../core/OpeningIntroController';
+import { INTRO_TICK_SEC, OpeningIntroController } from '../core/OpeningIntroController';
 import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE } from '../../core/systems/NewPlayerOpening';
 import { OPENING_BEAUTY_POOL_ID, openingBeautyCandidates } from '../../core/systems/OpeningBeauty';
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
@@ -315,6 +315,7 @@ export class LobbyScene extends Component {
     private _isNewPlayer = false;
     private _introHost: UIScreenPreviewHost | null = null;
     private _intro: OpeningIntroController | null = null;
+    private _introTickScheduled = false;
     private _openingFlow: OpeningFlowController | null = null;
     private _jobChange: JobChangeController | null = null;
     private _domestic: DomesticPanelController | null = null;
@@ -2038,6 +2039,27 @@ export class LobbyScene extends Component {
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshIntro();
+        this._scheduleIntroTick();
+    }
+
+    private _scheduleIntroTick(): void {
+        if (this._introTickScheduled) {
+            return;
+        }
+        this._introTickScheduled = true;
+        this.schedule(this._tickIntro, INTRO_TICK_SEC);
+    }
+
+    /** 漩渦等自動播放分鏡每步推進；非自動播放時不動作。 */
+    private _tickIntro(): void {
+        if (!this._intro?.autoPlaying) {
+            return;
+        }
+        if (this._intro.tick(INTRO_TICK_SEC * 1000)) {
+            this._finishIntro();
+            return;
+        }
+        this._refreshIntro();
     }
 
     private _onClickIntroNext(): void {
@@ -2045,7 +2067,13 @@ export class LobbyScene extends Component {
             this._refreshIntro();
             return;
         }
-        // 第一幕結束：離開 intro，進入宿命轉蛋
+        this._finishIntro();
+    }
+
+    /** 第一幕結束：停止自動播放計時，離開 intro，進入宿命轉蛋。 */
+    private _finishIntro(): void {
+        this.unschedule(this._tickIntro);
+        this._introTickScheduled = false;
         this._openingFlow?.advance({ type: OPENING_INTRO_DONE });
         if (this._introHost) {
             this._introHost.node.active = false;
