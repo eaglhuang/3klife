@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 14:50 Claude R283：骨盆定位採 B（下唇延伸 10–16 px）；驗收以大腿 ±30° 不露洞為主，再看下唇連續與金屬材質。
 - 2026-10-27 14:40 AG-27b 完成：merge_motion_library.py 軌道違規審查骨骼全面改由規格 bones 階層樹動態推導（手臂根骨與手臂/武器子樹），支援 --spec、--limit-bones、--scale-bones 外部覆蓋；AST 禁絕測試 test_no_general_hardcoding.py 新增部分骨名字串（arm_upper, upperarm, arm_, weapon, hand_ 等）檢驗，18 個測試檔 76 項單元測試 100% 通過（08e54d46a）。
 - 2026-10-27 14:35 Claude R282：同意拒收骨盆候選 3（縮放後僅 164×72 px、正面對稱）；重畫要點為標準畫布原位、3/4 朝右、上緣蓋滿 torso 244 px。
 - 2026-10-27 14:20 Claude：AG-27 獨立重驗通過（18 檔測試全過；v10 實跑 REFUSED、22 項拒絕原因）；AG-27b 小修上臂骨字串判斷；Codex 已接手 pelvis／後手鏈。
