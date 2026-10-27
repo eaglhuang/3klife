@@ -7,7 +7,7 @@ import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import type { PlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
 import {
     claimTournamentRewards, createTournamentState, normalizeTournamentState, pendingTournamentRewards, playTournamentSeries,
-    registerTournamentTeam, rolloverTournament, tournamentEloChange, tournamentVenueOf, TOURNAMENT_CUPS, TOURNAMENT_SEASON_REWARD_GOLD, tournamentStatus, TOURNAMENT_DAY_MS, TOURNAMENT_LOCAL_CONFIG, type TournamentState,
+    registerTournamentTeam, rolloverTournament, tournamentEloChange, tournamentVenueOf, bossWeaknessMultiplier, BOSS_WEAKNESS_BONUS, TOURNAMENT_BOSS_TAG_LABEL, TOURNAMENT_CUPS, TOURNAMENT_SEASON_REWARD_GOLD, tournamentStatus, TOURNAMENT_DAY_MS, TOURNAMENT_LOCAL_CONFIG, type TournamentState,
 } from '../assets/scripts/core/systems/TournamentLocal';
 
 const D = TOURNAMENT_DAY_MS;
@@ -141,6 +141,20 @@ export function createTournamentLocalSuite(): TestSuite {
         assert.equals(new Set(TOURNAMENT_CUPS.map((c) => c.cupName)).size, TOURNAMENT_CUPS.length);
         const next = rolloverTournament(createTournamentState(0), 15 * D);
         assert.equals('張飛盃', tournamentStatus(next, 15 * D).venue.cupName);
+    });
+
+    suite.test('季節 BOSS：每杯都有、弱點有中文名；命中弱點 ×1.5、副本不汙染表（PROG-2-1196）', () => {
+        for (const cup of TOURNAMENT_CUPS) {
+            assert.isTrue(cup.boss.name !== '' && cup.boss.weaknessTags.length > 0 && cup.boss.basePower > 0);
+            assert.isTrue(cup.boss.weaknessTags.every((t) => TOURNAMENT_BOSS_TAG_LABEL[t] !== undefined));
+        }
+        assert.equals(TOURNAMENT_CUPS.length, new Set(TOURNAMENT_CUPS.map((c) => c.boss.bossId)).size);
+        const boss = tournamentVenueOf(1).boss;
+        assert.equals(BOSS_WEAKNESS_BONUS, bossWeaknessMultiplier(['FIRE'], boss));
+        assert.equals(1, bossWeaknessMultiplier(['SLOW'], boss));
+        assert.equals(1, bossWeaknessMultiplier([], boss));
+        boss.weaknessTags.push('SLOW');
+        assert.equals(2, tournamentVenueOf(1).boss.weaknessTags.length);
     });
 
     suite.test('存檔正規化：壞資料回 null，缺欄位補預設', () => {
