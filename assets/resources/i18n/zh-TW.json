@@ -418,5 +418,21 @@
   "UI_HALL_SCRIPT_DAY_NIGHT": "燈火漸起，議事廳轉入夜議時分。",
   "UI_HALL_SCRIPT_FESTIVAL": "大廳換上新節慶陳設，眾將氣氛亦隨之轉暖。",
   "UI_HALL_SCRIPT_WISH_DONE": "祭壇靈光一閃，你的願望已成。",
-  "UI_HALL_COST_TROOPS": "消耗城市兵源 {0}"
+  "UI_HALL_COST_TROOPS": "消耗城市兵源 {0}",
+  "UI_REL_COUPLE": "史實夫妻",
+  "UI_REL_SWORN": "義兄弟",
+  "UI_REL_RIVAL": "宿敵",
+  "UI_REL_MASTER": "師徒",
+  "UI_REL_LORD": "主從",
+  "UI_REL_COMRADE": "戰友",
+  "UI_AFFINITY_HIGH": "相性極佳——天作之合！",
+  "UI_AFFINITY_LOW": "相性不和——宿敵之血恐生波瀾",
+  "UI_RESONANCE_TRIGGER": "血脈共鳴觸發！{0} 共享 {1} 人",
+  "UI_FAMILY_TRADITION": "【家風傳承】{0} 家：{1}",
+  "LORE_REL_EVENT_FAMOUS_MATCH": "周瑜與小喬，天作之合！爆發力大幅提升！",
+  "LORE_REL_EVENT_BLOOD_RESONANCE": "趙雲的後代與馬雲騄的後裔——白馬義從的血脈再度覺醒！",
+  "LORE_REL_EVENT_RIVAL_BREED": "諸葛亮與司馬懿的血脈交融？天意難測……",
+  "LORE_REL_EVENT_SWORN_COMBO": "桃園結義之魂，於此刻甦醒！",
+  "LORE_REL_EVENT_COLLECTION_COMPLETE": "五虎上將齊聚——蜀漢之榮光重現！",
+  "LORE_REL_EVENT_FAMILY_TRADITION": "三代忠義傳承，{0}家風已成！"
 }

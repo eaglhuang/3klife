@@ -416,5 +416,21 @@
   "UI_HALL_SCRIPT_DAY_NIGHT": "燈火漸起，議事廳轉入夜議時分。",
   "UI_HALL_SCRIPT_FESTIVAL": "大廳換上新節慶陳設，眾將氣氛亦隨之轉暖。",
   "UI_HALL_SCRIPT_WISH_DONE": "祭壇靈光一閃，你的願望已成。",
-  "UI_HALL_COST_TROOPS": "消耗城市兵源 {0}"
+  "UI_HALL_COST_TROOPS": "消耗城市兵源 {0}",
+  "UI_REL_COUPLE": "史実の夫婦",
+  "UI_REL_SWORN": "義兄弟",
+  "UI_REL_RIVAL": "宿敵",
+  "UI_REL_MASTER": "師弟",
+  "UI_REL_LORD": "主従",
+  "UI_REL_COMRADE": "戦友",
+  "UI_AFFINITY_HIGH": "相性抜群——天の配剤！",
+  "UI_AFFINITY_LOW": "相性不和——宿敵の血が波乱を招くかも",
+  "UI_RESONANCE_TRIGGER": "血脈の共鳴発動！{0} が {1} 人を共有",
+  "UI_FAMILY_TRADITION": "【家風継承】{0} 家：{1}",
+  "LORE_REL_EVENT_FAMOUS_MATCH": "周瑜と小喬、天の配剤！爆発力が大きく上昇！",
+  "LORE_REL_EVENT_BLOOD_RESONANCE": "趙雲の末裔と馬雲騄の子孫——白馬義従の血脈が再び目覚めた！",
+  "LORE_REL_EVENT_RIVAL_BREED": "諸葛亮と司馬懿の血脈が交わる？天意は測りがたい……",
+  "LORE_REL_EVENT_SWORN_COMBO": "桃園の誓いの魂が、今ここに目覚める！",
+  "LORE_REL_EVENT_COLLECTION_COMPLETE": "五虎大将が集結——蜀漢の栄光、ここに再現！",
+  "LORE_REL_EVENT_FAMILY_TRADITION": "三代にわたる忠義の継承、{0}家の家風ここに成る！"
 }
