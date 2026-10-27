@@ -1,0 +1,155 @@
+{
+  "id": "spirit-card-detail-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "SpiritCardDetailRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "DetailBackdrop",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "skinSlot": "codex.backdrop.bg"
+      },
+      {
+        "type": "panel",
+        "name": "DetailCard",
+        "id": "spiritCardDetailCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 720,
+        "height": 460,
+        "skinSlot": "codex.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "DetailTitle",
+            "id": "spiritCardDetailTitle",
+            "widget": {
+              "top": 24,
+              "left": 40,
+              "right": 40
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "codex.label.title"
+          },
+          {
+            "type": "label",
+            "name": "BloodlineLevel",
+            "id": "bloodlineLevelLabel",
+            "widget": {
+              "top": 110,
+              "left": 40,
+              "right": 40
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "codex.label.body"
+          },
+          {
+            "type": "label",
+            "name": "SpiritPower",
+            "id": "spiritPowerLabel",
+            "widget": {
+              "top": 160,
+              "left": 40,
+              "right": 40
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "codex.label.body"
+          },
+          {
+            "type": "label",
+            "name": "LinkedTally",
+            "id": "linkedTallyLabel",
+            "widget": {
+              "top": 210,
+              "left": 40,
+              "right": 40
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "codex.label.body"
+          },
+          {
+            "type": "button",
+            "name": "BtnInfuseSpiritCard",
+            "id": "btnInfuseSpiritCard",
+            "widget": {
+              "bottom": 96,
+              "hCenter": true
+            },
+            "width": 260,
+            "height": 48,
+            "skinSlot": "codex.button.confirm.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "InfuseSpiritCardLabel",
+                "id": "infuseButtonLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "",
+                "styleSlot": "codex.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnCloseSpiritCardDetail",
+            "id": "btnCloseSpiritCardDetail",
+            "widget": {
+              "bottom": 24,
+              "hCenter": true
+            },
+            "width": 200,
+            "height": 48,
+            "skinSlot": "codex.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "CloseSpiritCardDetailLabel",
+                "id": "closeSpiritCardDetailLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "",
+                "styleSlot": "codex.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

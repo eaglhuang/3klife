@@ -75,7 +75,7 @@
             "widget": {
               "top": 124,
               "left": 40,
-              "right": 40
+              "right": 160
             },
             "height": 420,
             "text": "",
@@ -94,6 +94,168 @@
             "height": 32,
             "text": "",
             "styleSlot": "codex.label.body"
+          },
+          {
+            "type": "button",
+            "name": "BtnSpiritDetail0",
+            "id": "btnSpiritDetail0",
+            "widget": {
+              "top": 124,
+              "right": 40
+            },
+            "width": 100,
+            "height": 44,
+            "skinSlot": "codex.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SpiritDetailLabel0",
+                "id": "spiritDetailLabel0",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "詳情",
+                "styleSlot": "codex.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnSpiritDetail1",
+            "id": "btnSpiritDetail1",
+            "widget": {
+              "top": 188,
+              "right": 40
+            },
+            "width": 100,
+            "height": 44,
+            "skinSlot": "codex.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SpiritDetailLabel1",
+                "id": "spiritDetailLabel1",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "詳情",
+                "styleSlot": "codex.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnSpiritDetail2",
+            "id": "btnSpiritDetail2",
+            "widget": {
+              "top": 252,
+              "right": 40
+            },
+            "width": 100,
+            "height": 44,
+            "skinSlot": "codex.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SpiritDetailLabel2",
+                "id": "spiritDetailLabel2",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "詳情",
+                "styleSlot": "codex.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnSpiritDetail3",
+            "id": "btnSpiritDetail3",
+            "widget": {
+              "top": 316,
+              "right": 40
+            },
+            "width": 100,
+            "height": 44,
+            "skinSlot": "codex.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SpiritDetailLabel3",
+                "id": "spiritDetailLabel3",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "詳情",
+                "styleSlot": "codex.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnSpiritDetail4",
+            "id": "btnSpiritDetail4",
+            "widget": {
+              "top": 380,
+              "right": 40
+            },
+            "width": 100,
+            "height": 44,
+            "skinSlot": "codex.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SpiritDetailLabel4",
+                "id": "spiritDetailLabel4",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "詳情",
+                "styleSlot": "codex.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnSpiritDetail5",
+            "id": "btnSpiritDetail5",
+            "widget": {
+              "top": 444,
+              "right": 40
+            },
+            "width": 100,
+            "height": 44,
+            "skinSlot": "codex.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "SpiritDetailLabel5",
+                "id": "spiritDetailLabel5",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 24,
+                "text": "詳情",
+                "styleSlot": "codex.label.button"
+              }
+            ]
           },
           {
             "type": "button",

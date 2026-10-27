@@ -12,10 +12,13 @@ import type { SpiritCard } from '../../core/models/SpiritCard';
 export type SpiritCardDetailLookup = (key: string, ...args: string[]) => string;
 
 export const SPIRIT_CARD_DETAIL_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
+    'ui.spirit_card.title': '{0}｜{1} 年',
+    'ui.spirit_card.year_unknown': '年份未知',
     'ui.spirit_card.bloodline_level': '血脈等級 {0}',
     'ui.spirit_card.spirit_power': '英靈濃度 {0}',
     'ui.spirit_card.linked_tally_level': '虎符層級 {0}',
     'ui.spirit_card.infuse': '血脈灌注',
+    'ui.spirit_card.close': '關閉',
 };
 
 function fillTemplate(template: string, args: readonly string[]): string {
@@ -26,6 +29,14 @@ function fillTemplate(template: string, args: readonly string[]): string {
 export function fallbackSpiritCardDetailText(key: string, ...args: string[]): string {
     const template = SPIRIT_CARD_DETAIL_FALLBACK_ZH_TW[key];
     return template === undefined ? key : fillTemplate(template, args);
+}
+
+/** 語系表未載入（回傳 key 本身）時改用 zh-TW 預設 */
+export function withSpiritCardDetailFallback(lookup: SpiritCardDetailLookup): SpiritCardDetailLookup {
+    return (key, ...args) => {
+        const localized = lookup(key, ...args);
+        return localized === key ? fallbackSpiritCardDetailText(key, ...args) : localized;
+    };
 }
 
 function countOrZero(value: number | undefined): number {
@@ -50,5 +61,27 @@ export function buildSpiritCardInfusionTexts(
             infuseButtonLabel: lookup('ui.spirit_card.infuse'),
         },
         infuseEnabled: card.isSpiritRelic === true,
+    };
+}
+
+export interface SpiritCardDetailView extends SpiritCardInfusionTexts {
+    texts: Record<string, string>;
+}
+
+/** 英靈卡詳情整頁文字，key 等於 spirit-card-detail-main.json 的節點 id；標題為「名｜死亡年 年」 */
+export function buildSpiritCardDetailView(
+    card: SpiritCard,
+    lookup: SpiritCardDetailLookup = fallbackSpiritCardDetailText,
+): SpiritCardDetailView {
+    const infusion = buildSpiritCardInfusionTexts(card, lookup);
+    const year = card.deathYear ?? card.deathContext?.year;
+    const yearText = typeof year === 'number' && Number.isFinite(year) ? String(year) : lookup('ui.spirit_card.year_unknown');
+    return {
+        texts: {
+            ...infusion.texts,
+            spiritCardDetailTitle: lookup('ui.spirit_card.title', card.name, yearText),
+            closeSpiritCardDetailLabel: lookup('ui.spirit_card.close'),
+        },
+        infuseEnabled: infusion.infuseEnabled,
     };
 }
