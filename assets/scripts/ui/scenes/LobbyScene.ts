@@ -1235,6 +1235,12 @@ export class LobbyScene extends Component {
                 void session.save().catch(() => undefined);
                 return true;
             },
+            autoMode: () => services().session.autoGovernance,
+            setAutoMode: (on: boolean) => {
+                const filled = services().session.setAutoGovernance(on);
+                void services().session.save().catch(() => undefined);
+                return filled;
+            },
         });
         this._domestic = domestic;
         this._domesticHost = await this._mountPreviewScreenHost('DomesticHost', 'domestic-screen', [
@@ -1245,6 +1251,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnArms', handler: () => { void this._onClickDomesticTask(domestic, 'arms'); } },
             { buttonId: 'btnScouting', handler: () => { void this._onClickDomesticTask(domestic, 'scouting'); } },
             { buttonId: 'btnAutoGov', handler: () => { domestic.autoAssign(); this._refreshDomestic(); } },
+            { buttonId: 'btnAutoMode', handler: () => { domestic.toggleAutoMode(); this._refreshDomestic(); } },
             ...(['farming', 'commerce', 'diplomacy', 'arms', 'scouting'] as const).map((taskId) => ({
                 buttonId: `btnGov${taskId.charAt(0).toUpperCase()}${taskId.slice(1)}`,
                 handler: () => { domestic.cycleGovernor(taskId); this._refreshDomestic(); },

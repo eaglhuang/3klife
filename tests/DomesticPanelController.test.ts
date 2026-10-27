@@ -28,6 +28,8 @@ function sessionController(session: GameSession): DomesticPanelController {
             if (uid === null) { session.unassignGovernor(taskId); return true; }
             return session.assignGovernor(taskId, uid).ok;
         },
+        autoMode: () => session.autoGovernance,
+        setAutoMode: (on) => session.setAutoGovernance(on),
     });
 }
 
@@ -218,6 +220,20 @@ export function createDomesticPanelControllerSuite(): TestSuite {
         assert.equals('主事：b', controller.getFlowView().texts.armsGovernor);
         assert.equals(0, controller.autoAssign());
         assert.equals('沒有可指派的閒置武將', controller.getFlowView().texts.noticeLabel);
+    });
+
+    suite.test('自動治理切換：鈕文字隨開關變動，開啟時補格並提示', () => {
+        const session = new GameSession();
+        session.setRosterStore(new InMemoryRosterStore([general('a', { pol: 90 })]));
+        session.setAutoSave(false);
+        const controller = sessionController(session);
+        assert.equals('自動治理：關', controller.getFlowView().texts.btnAutoModeLabel);
+        controller.toggleAutoMode();
+        assert.equals('自動治理：開', controller.getFlowView().texts.btnAutoModeLabel);
+        assert.equals('自動治理已啟用，太守府補上 1 格主事。', controller.getFlowView().texts.noticeLabel);
+        controller.toggleAutoMode();
+        assert.isFalse(session.autoGovernance);
+        assert.equals('已改回手動治理', controller.getFlowView().texts.noticeLabel);
     });
 
     return suite;

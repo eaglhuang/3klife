@@ -153,6 +153,7 @@ import {
     type GovernanceAssignment,
     type GovernanceResult,
 } from '../systems/GovernanceAssignment';
+import { planAutoGovernance } from '../systems/DomesticAutoGovernance';
 import {
     attemptTerritoryLoss,
     lastStandModifiers,
@@ -1179,6 +1180,7 @@ export class GameSession {
         this._officerState = initialOfficerState();
         this._sandtableMarkerTerritories = [];
         this._governance = [];
+        this._autoGovernance = false;
         this._territories = defaultKeepTerritories();
         this._journal = createEmptyJournal();
         this._gachaMentorJournal = [];
@@ -1493,6 +1495,36 @@ export class GameSession {
             pol: general.pol ?? general.stats?.pol ?? 0,
             cha: general.cha ?? general.stats?.cha ?? 0,
         };
+    }
+
+    // ---- 自動治理（領地治理 §E #4/#7 Auto_Mode，PROG-2-1161）----
+    private _autoGovernance = false;
+
+    /** 自動治理是否開啟；開啟時每季結算後自動補上空的內政任務格 */
+    public get autoGovernance(): boolean {
+        return this._autoGovernance;
+    }
+
+    /** 切換自動治理；開啟時立即補一次空格。回傳這次補了幾格 */
+    public setAutoGovernance(on: boolean): number {
+        this._autoGovernance = on;
+        return on ? this._fillAutoGovernance() : 0;
+    }
+
+    /** 空格依 §F 親和度補上閒置武將（PROG-2-1160 同一規則）；已有主事的格子不動 */
+    private _fillAutoGovernance(): number {
+        const candidates = this._roster.getAll()
+            .filter((general) => general.status !== 'dead')
+            .map((general) => ({ id: general.id, stats: this.domesticStatsOf(general) }));
+        const picks = planAutoGovernance(candidates, (task) => this._governance.find((a) => a.task === task)?.generalUid ?? null);
+        let filled = 0;
+        for (const pick of picks) {
+            const result = assignGovernanceGeneral(this._governance, pick.task, pick.generalUid, DEFAULT_MAX_TASK_SLOTS);
+            if (!result.ok) continue;
+            this._governance = result.assignments;
+            filled += 1;
+        }
+        return filled;
     }
 
     /** 卸下內政任務格的武將（GOV-04）。 */
@@ -2169,6 +2201,7 @@ export class GameSession {
         this._settleDeaths(deathBaseline, rosterBeforeLifecycle, advance.current.totalSeasonsElapsed);
         // 陣亡或退休的武將不再佔著內政任務格
         this._governance = this._governance.filter((a) => roster.some((general) => general.id === a.generalUid && general.status !== 'dead'));
+        if (this._autoGovernance) this._fillAutoGovernance();
         this._recordSoulFragmentsFor(beforeRoster, agingEvents);
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
@@ -2725,9 +2758,10 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'territories' | 'journalEntries'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'territories' | 'journalEntries'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'territories' | 'journalEntries'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'territories' | 'journalEntries'> = {};
         if (this._governance.length > 0) fields.governanceAssignments = this.governanceAssignments;
+        if (this._autoGovernance) fields.autoGovernance = true;
         if (JSON.stringify(this._territories) !== JSON.stringify(defaultKeepTerritories())) fields.territories = this.territories;
         if (this._journal.entries.length > 0) {
             fields.journalEntries = this._journal.entries.map(e => ({ ...e, relatedGeneralUids: [...e.relatedGeneralUids] }));
@@ -2738,6 +2772,7 @@ export class GameSession {
     /** 讀檔時還原領地治理狀態（PROG-2-0975）；缺欄位回到預設值。 */
     public restoreLifespanState(snapshot: PlayerSaveSnapshot): void {
         this._governance = normalizeGovernanceAssignments(snapshot.governanceAssignments);
+        this._autoGovernance = snapshot.autoGovernance === true;
         this._territories = normalizeKeepTerritories(snapshot.territories);
         this._journal = { entries: normalizeJournalEntries(snapshot.journalEntries) };
     }

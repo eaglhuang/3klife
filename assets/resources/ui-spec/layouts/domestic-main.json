@@ -152,6 +152,33 @@
             ]
           },
           {
+            "type": "button",
+            "name": "BtnAutoMode",
+            "id": "btnAutoMode",
+            "widget": {
+              "top": 150,
+              "right": 224
+            },
+            "width": 200,
+            "height": 44,
+            "skinSlot": "domestic.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnAutoModeLabel",
+                "id": "btnAutoModeLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 30,
+                "text": "自動治理：關",
+                "styleSlot": "domestic.label.meta"
+              }
+            ]
+          },
+          {
             "type": "container",
             "name": "DomesticTaskGroup",
             "id": "domesticTaskGroup",
