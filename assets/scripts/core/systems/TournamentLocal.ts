@@ -1,4 +1,4 @@
-// @spec-source → 名將挑戰賽系統.md (doc_spec_0007) §F 賽季週期（TOURNAMENT_CONFIG）、配對機制、賽季鏡像快照與鎖定規則、排名積分；PROG-2-1190；§E-9 賽季獎勵 PROG-2-1194；§E-2 場地屬性公告、§A 杯賽命名 PROG-2-1195
+// @spec-source → 名將挑戰賽系統.md (doc_spec_0007) §F 賽季週期（TOURNAMENT_CONFIG）、配對機制、賽季鏡像快照與鎖定規則、排名積分；PROG-2-1190；§E-9 賽季獎勵 PROG-2-1194；§E-2 場地屬性公告、§A 杯賽命名 PROG-2-1195；§E-8／§F 季節 BOSS PROG-2-1196
 /**
  * TournamentLocal — 名將挑戰賽本機最小可行（純邏輯，不依賴 cc）。
  *
@@ -8,6 +8,7 @@
  *   - 參戰：只在競賽期；每日免費 1 次，額外每次付費（呼叫端決定扣什麼），每日上限 5 次。
  *   - 對戰：對手戰力在我方 ±15% 內隨機；五戰三勝，每場雙方各帶 ±5% 地形浮動；系列賽勝負套規格 ELO（K=32）。
  *   - 場地：每季依序號輪替一個杯賽（杯名＋地形＋天氣），培育期即公告（PROG-2-1195）。
+ *   - BOSS：每個杯賽帶一個季節 BOSS 與弱點標籤，攻擊標籤命中弱點 ×1.5（PROG-2-1196；BOSS 戰需伺服器，未做）。
  *   - 獎勵：有參賽（留有鏡像快照）的已結束賽季依最終段位列為待領，領取後標記已領（PROG-2-1194）。
  *
  * 暫定：對手的排名分以「我方分數 × 對手戰力比」估算；ELO 以整個系列賽算一次；獎勵先只發金錢（稀有虎符／限定外觀待企劃）。
@@ -33,32 +34,70 @@ export const TOURNAMENT_LOCAL_CONFIG = {
     competitionReplaceLimit: 1,
 } as const;
 
-/** 杯賽場地：杯名、地形、天氣 */
+/** BOSS 弱點／攻擊標籤（規格例：SLOW、ANTI_CONTROL、FIRE；其餘為暫定） */
+export type TournamentBossTag = 'FIRE' | 'SLOW' | 'ANTI_CONTROL' | 'ANTI_CAVALRY' | 'RANGED';
+
+/** 標籤中文名（暫定） */
+export const TOURNAMENT_BOSS_TAG_LABEL: Readonly<Record<TournamentBossTag, string>> = {
+    FIRE: '火攻',
+    SLOW: '緩速',
+    ANTI_CONTROL: '破控',
+    ANTI_CAVALRY: '剋騎',
+    RANGED: '遠射',
+};
+
+/** 攻擊標籤命中 BOSS 弱點時的傷害倍率（規格 BOSS_WEAKNESS_BONUS） */
+export const BOSS_WEAKNESS_BONUS = 1.5;
+
+/** 季節 BOSS（規格 SeasonBoss） */
+export interface TournamentSeasonBoss {
+    bossId: string;
+    name: string;
+    weaknessTags: TournamentBossTag[];
+    basePower: number;
+}
+
+/** 杯賽場地：杯名、地形、天氣、季節 BOSS */
 export interface TournamentVenue {
     cupName: string;
     terrain: TerrainType;
     weather: Weather;
+    boss: TournamentSeasonBoss;
 }
 
 /**
  * 杯賽輪替表（依賽季序號循環）。赤壁／官渡／虎牢／夷陵沿用規格 §K 地形天氣；
- * 武將盃與長坂盃的場地、以及輪替順序為暫定。
+ * 武將盃與長坂盃的場地、以及輪替順序為暫定；BOSS 名稱、弱點與基礎戰力（10000）全為暫定。
  */
 export const TOURNAMENT_CUPS: readonly TournamentVenue[] = [
-    { cupName: '赤壁盃', terrain: TerrainType.River, weather: Weather.Windy },
-    { cupName: '張飛盃', terrain: TerrainType.Mountain, weather: Weather.Clear },
-    { cupName: '官渡盃', terrain: TerrainType.Plain, weather: Weather.Clear },
-    { cupName: '呂布盃', terrain: TerrainType.Fortress, weather: Weather.Thunder },
-    { cupName: '虎牢盃', terrain: TerrainType.Mountain, weather: Weather.Night },
-    { cupName: '趙雲盃', terrain: TerrainType.Plain, weather: Weather.Windy },
-    { cupName: '夷陵盃', terrain: TerrainType.Forest, weather: Weather.Rain },
-    { cupName: '長坂盃', terrain: TerrainType.Plain, weather: Weather.Fog },
+    { cupName: '赤壁盃', terrain: TerrainType.River, weather: Weather.Windy,
+        boss: { bossId: 'boss-1', name: '連環戰船', weaknessTags: ['FIRE', 'RANGED'], basePower: 10000 } },
+    { cupName: '張飛盃', terrain: TerrainType.Mountain, weather: Weather.Clear,
+        boss: { bossId: 'boss-2', name: '燕人猛將', weaknessTags: ['SLOW', 'ANTI_CONTROL'], basePower: 10000 } },
+    { cupName: '官渡盃', terrain: TerrainType.Plain, weather: Weather.Clear,
+        boss: { bossId: 'boss-3', name: '袁軍重騎', weaknessTags: ['ANTI_CAVALRY', 'FIRE'], basePower: 10000 } },
+    { cupName: '呂布盃', terrain: TerrainType.Fortress, weather: Weather.Thunder,
+        boss: { bossId: 'boss-4', name: '飛將無雙', weaknessTags: ['SLOW', 'ANTI_CAVALRY'], basePower: 10000 } },
+    { cupName: '虎牢盃', terrain: TerrainType.Mountain, weather: Weather.Night,
+        boss: { bossId: 'boss-5', name: '虎牢關守軍', weaknessTags: ['RANGED', 'ANTI_CONTROL'], basePower: 10000 } },
+    { cupName: '趙雲盃', terrain: TerrainType.Plain, weather: Weather.Windy,
+        boss: { bossId: 'boss-6', name: '白馬銀槍', weaknessTags: ['ANTI_CAVALRY', 'SLOW'], basePower: 10000 } },
+    { cupName: '夷陵盃', terrain: TerrainType.Forest, weather: Weather.Rain,
+        boss: { bossId: 'boss-7', name: '連營大軍', weaknessTags: ['FIRE', 'SLOW'], basePower: 10000 } },
+    { cupName: '長坂盃', terrain: TerrainType.Plain, weather: Weather.Fog,
+        boss: { bossId: 'boss-8', name: '虎豹騎', weaknessTags: ['ANTI_CAVALRY', 'RANGED'], basePower: 10000 } },
 ];
 
 /** 第 N 季的杯賽場地（N 從 1 起） */
 export function tournamentVenueOf(seasonIndex: number): TournamentVenue {
     const n = TOURNAMENT_CUPS.length;
-    return { ...TOURNAMENT_CUPS[(((Math.floor(seasonIndex) - 1) % n) + n) % n] };
+    const cup = TOURNAMENT_CUPS[(((Math.floor(seasonIndex) - 1) % n) + n) % n];
+    return { ...cup, boss: { ...cup.boss, weaknessTags: cup.boss.weaknessTags.slice() } };
+}
+
+/** 攻擊標籤命中 BOSS 任一弱點 → ×1.5，否則 ×1 */
+export function bossWeaknessMultiplier(attackTags: readonly string[], boss: Readonly<TournamentSeasonBoss>): number {
+    return attackTags.some((tag) => (boss.weaknessTags as readonly string[]).includes(tag)) ? BOSS_WEAKNESS_BONUS : 1;
 }
 
 /** 賽季獎勵（暫定，只發金錢）：依最終段位 */
