@@ -1308,7 +1308,8 @@ def run_layered_parts_inspection(
                 ("hand_f", "grip_A", float(grip_a[0]), float(grip_a[1])),
                 ("hand_b", "grip_B", float(grip_b[0]), float(grip_b[1])),
             ]
-            grip_radius_px = 50.0
+            # 依規格頂層 weaponRules.gripSampleHalfWidthPx，若無則預設 32.0 (v3.17)
+            grip_radius_px = float(weapon_rules.get("gripSampleHalfWidthPx", 32.0))
 
             grips_res: dict[str, Any] = {}
             all_grips_shaft_pass = True
@@ -1360,7 +1361,7 @@ def run_layered_parts_inspection(
                 }
 
             summary_msg = (
-                f"木桿中位厚度={median_shaft_t:.1f}px, 容許帶=[{shaft_min_t}, {shaft_max_t}]px; 所有握點兩側50px皆落在木桿上"
+                f"木桿中位厚度={median_shaft_t:.1f}px, 容許帶=[{shaft_min_t}, {shaft_max_t}]px; 所有握點兩側{grip_radius_px:.0f}px皆落在木桿上"
                 if all_grips_shaft_pass
                 else f"木桿中位厚度={median_shaft_t:.1f}px, 容許帶=[{shaft_min_t}, {shaft_max_t}]px; 未達標: {', '.join(grip_fail_msgs)} [ADVISORY]"
             )
@@ -1372,6 +1373,7 @@ def run_layered_parts_inspection(
                 "medianShaftThicknessPx": round(median_shaft_t, 1),
                 "allowedThicknessRangePx": [shaft_min_t, shaft_max_t],
                 "gripRadiusPx": grip_radius_px,
+                "gripSampleHalfWidthPx": grip_radius_px,
                 "grips": grips_res,
                 "detail": summary_msg,
             }

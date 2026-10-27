@@ -584,7 +584,9 @@
     "note": "任何一格槍尾不得低於地面線；雙手持槍段兩手間距 0.22–0.35H",
     "buttGroundToleranceH": 0.01,
     "twoHandGripSpacingAppliesTo": "animation",
-    "spacingNote": "twoHandGripSpacingH 只管動畫影格（後手 IK 目標 weapon_grip_rear）；setup pose 的 grip_A–grip_B 固定錨點（685px≈0.428H）是分件圖的雙手位置，不受此範圍限制。動畫中後手沿槍桿滑到 0.22–0.35H。v3.6（2026-10-27）。"
+    "spacingNote": "twoHandGripSpacingH 只管動畫影格（後手 IK 目標 weapon_grip_rear）；setup pose 的 grip_A–grip_B 固定錨點（685px≈0.428H）是分件圖的雙手位置，不受此範圍限制。動畫中後手沿槍桿滑到 0.22–0.35H。v3.6（2026-10-27）。",
+    "gripSampleHalfWidthPx": 32,
+    "gripSampleNote": "v3.17（2026-10-28）：weaponGripOnShaft 以每個握點為中心、沿槍桿方向半寬 32 px（0.02H，對齊 gripRegistration 距離門檻）量測；範圍內每欄 alpha 厚度須落在木桿自身中位數 ±30%。取代先前估計的拳頭半徑 50 px。"
   },
   "shoulderOverlapZone": {
     "joints": [
