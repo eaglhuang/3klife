@@ -29,7 +29,7 @@ function battleWith(specId: string): { ctrl: BattleController; front: TroopUnit;
     services().session.setRandomSource(() => 0.99);
     const tacticId = toLibraryTacticId(specId);
     const ctrl = new BattleController();
-    ctrl.initBattle(general('p', Faction.Player, [{ slotId: 's1', tacticId, source: 'inspired' }] as GeneralUnit['tacticSlots']), general('e', Faction.Enemy));
+    ctrl.initBattle(general('p', Faction.Player, [{ slotId: 's1', tacticId, source: 'inspired' }] as unknown as GeneralUnit['tacticSlots']), general('e', Faction.Enemy));
     const map = (ctrl as unknown as { tacticDefinitionMap: Map<string, unknown> }).tacticDefinitionMap;
     for (const row of LIBRARY.data) map.set(row.id, row);
     const front = new TroopUnit('front', TroopType.Infantry, Faction.Enemy, { hp: 5000, attack: 1, defense: 10, moveRange: 2, attackRange: 1 });

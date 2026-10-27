@@ -41,7 +41,7 @@ export function createLegacyRewardWiringSuite(): TestSuite {
 
     suite.test('已有錢包時只加靈玉，多個成就各自入帳並累加次數', async () => {
         const session = new GameSession(3);
-        session.setGachaWalletSave({ gems: 5, gold: 0, tickets: 0, bronze: 0, oracle: 0 });
+        session.setGachaWalletSave({ gems: 5, gold: 0, tickets: 0, bronze: 0, oracle: 0, mentorTickets: 0, scorePoints: 0 });
         const result = await session.applyLegacyAchievements([achievement('gene-red'), achievement('gene-green')]);
         assert.equals(2 * LEGACY_PREMIUM_REWARD, result.granted);
         assert.equals(5 + 2 * LEGACY_PREMIUM_REWARD, session.gachaWalletSave!.gems);
@@ -50,7 +50,7 @@ export function createLegacyRewardWiringSuite(): TestSuite {
 
     suite.test('空成就清單不改錢包也不改次數', async () => {
         const session = new GameSession(3);
-        session.setGachaWalletSave({ gems: 7, gold: 1, tickets: 2, bronze: 3, oracle: 4 });
+        session.setGachaWalletSave({ gems: 7, gold: 1, tickets: 2, bronze: 3, oracle: 4, mentorTickets: 0, scorePoints: 0 });
         const result = await session.applyLegacyAchievements([]);
         assert.equals(0, result.granted);
         assert.equals(7, session.gachaWalletSave!.gems);
@@ -60,7 +60,7 @@ export function createLegacyRewardWiringSuite(): TestSuite {
     suite.test('入帳後自動存檔：靈玉與 Legacy_Count 讀回保留', async () => {
         const adapter = new MemoryStorageAdapter();
         const session = sessionWith(adapter);
-        session.setGachaWalletSave({ gems: 10, gold: 0, tickets: 0, bronze: 0, oracle: 0 });
+        session.setGachaWalletSave({ gems: 10, gold: 0, tickets: 0, bronze: 0, oracle: 0, mentorTickets: 0, scorePoints: 0 });
         await session.applyLegacyAchievements([achievement('gene-red')]);
 
         const restored = sessionWith(adapter);
@@ -72,7 +72,7 @@ export function createLegacyRewardWiringSuite(): TestSuite {
     suite.test('舊檔沒有 legacyCount 欄位 → 讀回 0', async () => {
         const adapter = new MemoryStorageAdapter();
         const session = sessionWith(adapter);
-        session.setGachaWalletSave({ gems: 1, gold: 0, tickets: 0, bronze: 0, oracle: 0 });
+        session.setGachaWalletSave({ gems: 1, gold: 0, tickets: 0, bronze: 0, oracle: 0, mentorTickets: 0, scorePoints: 0 });
         await session.save();
 
         const restored = sessionWith(adapter);

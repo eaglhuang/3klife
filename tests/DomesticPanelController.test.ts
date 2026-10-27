@@ -12,7 +12,7 @@ import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/manager
 import { DomesticSeasonLog, DomesticTaskId, DomesticTaskResult, EMPTY_DOMESTIC_LOG } from '../assets/scripts/core/systems/DomesticTasks';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
-function general(id: string, stats: Record<string, number>): GeneralConfig {
+function general(id: string, stats: Record<string, number | string>): GeneralConfig {
     return { id, name: id, faction: 'shu', gender: '男', age: 40, hp: 1000, maxLifespan: 70, ...stats } as unknown as GeneralConfig;
 }
 
