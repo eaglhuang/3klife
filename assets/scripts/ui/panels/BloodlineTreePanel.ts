@@ -1,6 +1,8 @@
 // @spec-source → DC-3-0004 | 資料中心架構規格書.md §2.3
 import { _decorator, Component, Label, Node } from 'cc';
-import { BloodlineGraph } from '../../core/services/BloodlineGraph';
+import { BloodlineGraph, type Pedigree, type PedigreeSlot } from '../../core/services/BloodlineGraph';
+import { resolveFactorColor, type FactorColor } from '../../core/systems/FactorInheritance';
+import { services } from '../../core/managers/ServiceLoader';
 import { buildBloodlineTreeSlots, BloodlineTreeSlot } from '../../core/systems/BloodlineTreeSlots';
 import { treeCardNodeName } from '../../core/systems/BloodlineTreeBinding';
 import { buildNodeCards } from '../../core/systems/BloodlineNodeCards';
@@ -36,6 +38,9 @@ export class BloodlineTreePanel extends Component {
     @property(Node)
     gen3Container: Node | null = null;
 
+    /** 最近一次載入的 14 人祖譜（依位置），供連線取色（PROG-2-1279） */
+    private _pedigree: Pedigree | null = null;
+
     /**
      * 根據武將 uid 載入並渲染 3 代祖先樹。
      *
@@ -55,6 +60,7 @@ export class BloodlineTreePanel extends Component {
         this._fillContainer(this.gen3Container, 3, slots.gen3, graph);
         this._fillContainer(this.gen2Container, 2, slots.gen2, graph);
         this._fillContainer(this.gen1Container, 1, slots.gen1, graph);
+        this._pedigree = graph.getPedigree(uid);
         this._redrawLines();
     }
 
@@ -70,12 +76,26 @@ export class BloodlineTreePanel extends Component {
 
     /**
      * 依卡片實際位置重畫父子連線（PROG-2-1279）。延後一幀，等版面排好再讀座標。
-     * 子代連線顏色規則尚未定義，暫以 null 退回中性灰（PM 待裁）。
+     * 連線色：祖先格位取 gene_refs 第一個因子的色系；無因子或解析失敗為 null（中性灰）。
      */
     private _redrawLines(): void {
         this.scheduleOnce(() => {
-            redrawBloodlineTreeConnections(this.node, buildNodeCards({}), () => null);
+            redrawBloodlineTreeConnections(this.node, buildNodeCards({}), (child) => this._ancestorColor(child));
         }, 0);
+    }
+
+    private _ancestorColor(slot: PedigreeSlot): FactorColor | null {
+        const uid = this._pedigree?.[slot];
+        if (!uid) return null;
+        const factorId = BloodlineGraph.getInstance().getPerson(uid)?.gene_refs?.[0];
+        if (!factorId) return null;
+        let dictionary;
+        try {
+            dictionary = services().session.factorDictionary;
+        } catch {
+            dictionary = undefined;
+        }
+        return resolveFactorColor(factorId, dictionary);
     }
 
     private _fillContainer(
