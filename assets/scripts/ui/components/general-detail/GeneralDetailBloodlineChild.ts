@@ -8,7 +8,7 @@
  * AncestorTree 的動態渲染委託給已存在的 BloodlineTreePanel；
  * 此 ChildPanel 負責附掛元件並轉送 generalId。
  */
-import { Label } from 'cc';
+import { Label, UITransform } from 'cc';
 import type { Node } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import type { UISkinResolver } from '../../core/UISkinResolver';
@@ -20,6 +20,13 @@ import { FactorMaskPresenter } from '../../../core/systems/FactorMaskState';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
+import {
+    STORY_DOCK_VISIBLE_CELLS,
+    nextStoryDockState,
+    storyDockLayout,
+    type StoryDockGesture,
+    type StoryDockStateName,
+} from '../../../core/systems/BloodlineStoryDockLayout';
 
 /** 玩家發現等級；服務尚未初始化時退回 1（只顯示藍粉因子） */
 function currentDiscoveryLevel(): number {
@@ -47,6 +54,11 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
     private _lAwakening!: Label;
     private _lHiddenFactor!: Label;
     private _treePanel: BloodlineTreePanel | null = null;
+    /** 故事抽屜目前三態（GDUI-06）；預設收合 */
+    private _storyDockState: StoryDockStateName = 'COLLAPSED';
+    private _stageNode: Node | null = null;
+    private _storyDockNode: Node | null = null;
+    private _storyCells: Node[] = [];
     _lastData: GeneralConfig | null = null;
 
     constructor(hostNode: Node, skinResolver: UISkinResolver, binder: UITemplateBinder) {
@@ -56,19 +68,26 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
     async onMount(_spec: Record<string, unknown>): Promise<void> {
         const h = this.hostNode;
 
-        this._lEpRating  = this._label(h, 'BloodlineRightPanel/BloodlineSummaryCard/EpRatingValue');
-        this._lBloodline = this._label(h, 'BloodlineRightPanel/BloodlineSummaryCard/BloodlineValue');
-        this._lParents   = this._label(h, 'BloodlineRightPanel/BloodlineSummaryCard/ParentsValue');
-        this._lAncestors = this._label(h, 'BloodlineRightPanel/BloodlineSummaryCard/AncestorsValue');
-        this._lAwakening = this._label(h, 'BloodlineRightPanel/AwakeningCard/AwakeningValue');
-        this._lHiddenFactor = this._label(h, 'BloodlineRightPanel/HiddenFactorCard/HiddenFactorValue');
+        this._lEpRating  = this._label(h, 'BloodlineStage/BloodlineRightPanel/BloodlineSummaryCard/EpRatingValue');
+        this._lBloodline = this._label(h, 'BloodlineStage/BloodlineRightPanel/BloodlineSummaryCard/BloodlineValue');
+        this._lParents   = this._label(h, 'BloodlineStage/BloodlineRightPanel/BloodlineSummaryCard/ParentsValue');
+        this._lAncestors = this._label(h, 'BloodlineStage/BloodlineRightPanel/BloodlineSummaryCard/AncestorsValue');
+        this._lAwakening = this._label(h, 'BloodlineStage/BloodlineRightPanel/AwakeningCard/AwakeningValue');
+        this._lHiddenFactor = this._label(h, 'BloodlineStage/BloodlineRightPanel/HiddenFactorCard/HiddenFactorValue');
 
         for (let i = 1; i <= 5; i++) {
-            this._lGenes.push(this._label(h, `BloodlineRightPanel/GeneListCard/Gene${i}Value`));
+            this._lGenes.push(this._label(h, `BloodlineStage/BloodlineRightPanel/GeneListCard/Gene${i}Value`));
         }
 
         // 掛載 BloodlineTreePanel 到 AncestorTree 根節點
-        const treeRoot = this._requireNode(h, 'BloodlineLeftField/AncestorTree');
+        this._stageNode = this._requireNode(h, 'BloodlineStage');
+        this._storyDockNode = this._requireNode(h, 'StoryDock');
+        for (let i = 1; i <= 6; i++) {
+            this._storyCells.push(this._requireNode(h, `StoryDock/StoryCell${i}`));
+        }
+        this.applyStoryDockLayout();
+
+        const treeRoot = this._requireNode(h, 'BloodlineStage/BloodlineLeftField/AncestorTree');
         let panel = treeRoot.getComponent(BloodlineTreePanel);
         if (!panel) panel = treeRoot.addComponent(BloodlineTreePanel);
         panel.gen1Container = treeRoot.getChildByPath('Gen1Container');
@@ -120,7 +139,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
     private _populateLegacyTree(cfg: GeneralConfig): void {
         const tree = (cfg as any).ancestorTree;
         if (!tree) return;
-        const base = this.hostNode.getChildByPath(`${GeneralDetailBloodlineChild.ROOT_PATH}/BloodlineLeftField/AncestorTree`);
+        const base = this.hostNode.getChildByPath(`${GeneralDetailBloodlineChild.ROOT_PATH}/BloodlineStage/BloodlineLeftField/AncestorTree`);
         if (!base) return;
 
         for (let i = 0; i < 8; i++) {
@@ -140,6 +159,26 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
     private _setPath(base: Node, path: string, text: string): void {
         const lbl = base.getChildByPath(path)?.getComponent(Label);
         if (lbl) lbl.string = text;
+    }
+
+    /** 依手勢切換故事抽屜三態（拖拉把手的 cc 事件由 View 呼叫，GDUI-06） */
+    stepStoryDock(gesture: StoryDockGesture): void {
+        this._storyDockState = nextStoryDockState(this._storyDockState, gesture);
+        this.applyStoryDockLayout();
+    }
+
+    get storyDockState(): StoryDockStateName { return this._storyDockState; }
+
+    /** 依目前三態重排：抽屜高度與主血統區互相吃剩下的高度，並顯示對應格數（不 overlay） */
+    applyStoryDockLayout(): void {
+        const containerHeight = this.hostNode.getComponent(UITransform)?.height ?? 0;
+        const layout = storyDockLayout(containerHeight, 0, this._storyDockState);
+        const stageTf = this._stageNode?.getComponent(UITransform);
+        if (stageTf) stageTf.height = layout.stageHeight;
+        const dockTf = this._storyDockNode?.getComponent(UITransform);
+        if (dockTf) dockTf.height = layout.dockHeight;
+        const visible = STORY_DOCK_VISIBLE_CELLS[this._storyDockState];
+        this._storyCells.forEach((cell, i) => { cell.active = i < visible; });
     }
 
     private _label(root: Node, path: string): Label {

@@ -1,5 +1,6 @@
 {
   "ui.back": "Back",
+  "ui.item.expire": "{0} has expired and was reclaimed",
   "ui.confirm": "Confirm",
   "ui.cancel": "Cancel",
   "ui.close": "Close",

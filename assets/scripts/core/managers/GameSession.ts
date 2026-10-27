@@ -1996,7 +1996,7 @@ export class GameSession {
      */
     public startDispatchJob(job: DispatchJobDef, generalId: string, nowMs: number, auto = false): DispatchStartResult | null {
         const general = this._roster.getAll().find((g) => g.id === generalId);
-        if (!general) return null;
+        if (!general || !this._isDispatchable(general)) return null;
         const result = startDispatch(this._dispatch, job, generalId, this._dispatchGeneralOf(general), nowMs, auto);
         if (result.ok) this._dispatch = result.state;
         return result;
@@ -2014,10 +2014,15 @@ export class GameSession {
         return { roleTags, stats, journalTags };
     }
 
+    /** 已陣亡或退役（導師卡）的武將不可派遣（PROG-2-0686） */
+    private _isDispatchable(general: { status?: string }): boolean {
+        return general.status !== 'dead' && !(general as { isMentorCard?: boolean }).isMentorCard;
+    }
+
     /** 目前可派遣（不忙碌也不在冷卻）的武將，名冊順序（PROG-2-1186 選將列用） */
     public dispatchIdleGenerals(nowMs: number): { id: string; name: string }[] {
         return this._roster.getAll()
-            .filter((g) => !this._dispatch.active.some((a) => a.generalId === g.id) && (this._dispatch.cooldowns[g.id] ?? 0) <= nowMs)
+            .filter((g) => this._isDispatchable(g) && !this._dispatch.active.some((a) => a.generalId === g.id) && (this._dispatch.cooldowns[g.id] ?? 0) <= nowMs)
             .map((g) => ({ id: g.id, name: g.name }));
     }
 
