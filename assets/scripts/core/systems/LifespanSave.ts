@@ -11,6 +11,7 @@ import { isDomesticTaskId } from './DomesticTasks';
 import { GovernanceAssignment } from './GovernanceAssignment';
 import { KeepTerritory } from './HereditaryKeep';
 import { appendJournalEntry, createEmptyJournal, JournalEntry } from './JournalLog';
+import { TERRITORY_MAX_LEVEL } from './TerritoryUpgrade';
 
 /** 主城領地 id（暫定：規格未給固定 id，待領地資料定案後改由資料檔提供）。 */
 export const HOME_TERRITORY_ID = 'home-city';
@@ -26,6 +27,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isNonEmptyString(value: unknown): value is string {
     return typeof value === 'string' && value.length > 0;
+}
+
+/** 太守府等級（PROG-2-0979）：只認 1 至上限的整數，其餘回到 Lv1。 */
+export function normalizeTerritoryLevel(raw: unknown): number {
+    return typeof raw === 'number' && Number.isInteger(raw) && raw >= 1 && raw <= TERRITORY_MAX_LEVEL ? raw : 1;
+}
+
+/** 待生效的升級目標（PROG-2-0979）：只認 2 至上限的整數，其餘視為沒有待生效升級。 */
+export function normalizePendingTerritoryLevel(raw: unknown): number | undefined {
+    return typeof raw === 'number' && Number.isInteger(raw) && raw >= 2 && raw <= TERRITORY_MAX_LEVEL ? raw : undefined;
 }
 
 /** 指派清單：任務必須是五大內政之一，武將 ID 非空；同一任務格或同一武將只留第一筆。 */

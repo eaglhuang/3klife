@@ -49,6 +49,8 @@ import {
     normalizeGovernanceAssignments,
     normalizeJournalEntries,
     normalizeKeepTerritories,
+    normalizePendingTerritoryLevel,
+    normalizeTerritoryLevel,
 } from '../systems/LifespanSave';
 import type { GovernanceAssignment } from '../systems/GovernanceAssignment';
 import type { KeepTerritory } from '../systems/HereditaryKeep';
@@ -120,6 +122,10 @@ export interface PlayerSaveSnapshot {
     territories?: KeepTerritory[];
     /** 武將日誌條目（PROG-2-0975）；舊檔沒有時讀回空陣列；版號不升 */
     journalEntries?: JournalEntry[];
+    /** 太守府等級（PROG-2-0979）；只在高於 Lv1 時寫入，舊檔沒有時讀回 Lv1；版號不升 */
+    territoryLevel?: number;
+    /** 待生效的太守府升級目標等級（PROG-2-0979）；季結後生效，舊檔沒有時沒有待生效升級；版號不升 */
+    territoryUpgradePending?: number;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -473,6 +479,10 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.autoGovernance !== undefined ? { autoGovernance: snapshot.autoGovernance === true } : {}),
         ...(snapshot.territories !== undefined ? { territories: normalizeKeepTerritories(snapshot.territories) } : {}),
         ...(snapshot.journalEntries !== undefined ? { journalEntries: normalizeJournalEntries(snapshot.journalEntries) } : {}),
+        ...(snapshot.territoryLevel !== undefined ? { territoryLevel: normalizeTerritoryLevel(snapshot.territoryLevel) } : {}),
+        ...(snapshot.territoryUpgradePending !== undefined && normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) !== undefined
+            ? { territoryUpgradePending: normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) }
+            : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
