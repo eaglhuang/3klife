@@ -853,7 +853,7 @@ export class LobbyScene extends Component {
             territoryCount: session.territories.length,
             rivals: session.rivals,
             openCategory: this._cityHubCategory,
-            actionLabels: { sandtable: buildSandtableStatusLabel(session.officerUnlocks.sandtableStage, session.sandtableMarkersPlaced) },
+            actionLabels: { sandtable: buildSandtableStatusLabel(session.sandtableStage, session.sandtableMarkersPlaced) },
         });
         binder.setTexts(view.texts);
         binder.setActives(view.actives);
@@ -1784,12 +1784,12 @@ export class LobbyScene extends Component {
     /** 天下沙盤入口：官職未達沙盤階段（S1 起於階位 3）時只提示，不開牆 */
     private _onClickOpenSandtable(): void {
         const session = services().session;
-        if (!session.officerUnlocks.sandtableStage) {
+        if (!session.sandtableStage) {
             services().event.emit('SHOW_TOAST', { message: '官職尚未達沙盤階段，暫時無法進入天下沙盤', duration: 2.5 });
             return;
         }
         const payload: SandtableTerritoryOpenPayload = {
-            stage: session.officerUnlocks.sandtableStage,
+            stage: session.sandtableStage,
             markerTerritories: session.sandtableMarkerTerritories,
             nameOf: (territoryId: string) => services().i18n.t(`territory.${territoryId}.name`),
             onPlace: (territoryId: string) => this._placeSandtableMarker(territoryId),
