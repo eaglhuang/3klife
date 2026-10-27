@@ -174,6 +174,8 @@ export interface NurtureSession {
     skipRounds?: number;
     /** 開場時未鎖定的紅色因子總級數，影響休息的精力回復（舊存檔視為 0） */
     redGeneLevel?: number;
+    /** 開場時子嗣的運氣（LUK），提高好感事件率（PROG-2-1349；舊存檔視為 0） */
+    luk?: number;
     /** 即將進行的回合，每位教官站在哪一格（玩家選訓練前就看得到） */
     mentorSlots: Record<string, TrainingKind>;
     negativeFactors: string[];
@@ -321,6 +323,7 @@ export function createNurtureSession(input: CreateNurtureSessionInput): NurtureS
         affection: 0,
         skipRounds: 0,
         redGeneLevel: redGeneLevelOf(input.child.genes, input.factorDictionary),
+        luk: Math.max(0, (input.child as { luk?: number }).luk ?? 0),
         log: [],
         status: 'active',
     };
@@ -450,7 +453,7 @@ export function executeRound(
         }
 
         // 受傷 / 好感事件擲骰放在所有結算骰之後，既有的亂數順序不受影響；自動培育不觸發事件
-        const events = options.auto ? NO_ROUND_EVENTS : rollNurtureRoundEvents(true, random);
+        const events = options.auto ? NO_ROUND_EVENTS : rollNurtureRoundEvents(true, random, source.luk ?? 0);
         if (events.injured) {
             // 受傷：本回合訓練無效，實力與 TP 撤回，下一回合跳過
             session.prowess[action] -= log.statGained;
