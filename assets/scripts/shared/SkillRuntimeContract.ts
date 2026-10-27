@@ -124,6 +124,10 @@ export interface CanonicalUltimateDefinition {
     inheritanceGeneId?: string;
     battleSkillId?: string | null;
     ultimateFamily?: UltimateEffectFamily | null;
+    /** 資料檔實際使用的鍵（與 ultimateFamily 同值）；演出設定解析用（PROG-2-1320） */
+    family?: UltimateEffectFamily | null;
+    /** 明寫的演出設定檔 id；資料目前沒有，缺省退回家族預設（PROG-2-1320） */
+    cinematicProfile?: string | null;
     targetMode?: BattleSkillTargetMode;
     timing?: BattleSkillTiming;
     manualTargeting?: boolean;

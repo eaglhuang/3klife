@@ -21,6 +21,7 @@ import type {
 } from "../../shared/SkillRuntimeContract";
 import { isUltimateSlotUnlocked } from '../../core/systems/UltimateSlotUnlock';
 import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
+import { cinematicProfileOf } from '../../core/systems/UltimateCinematic';
 import { TallyCardData } from '../../shared/TallyCardContract';
 
 export interface BattleTacticSummary {
@@ -36,6 +37,8 @@ export interface UltimateSkillItem {
   ultimateId?: string;
   label: string;
   costSp: number;
+  /** 奧義演出設定檔 id（PROG-2-1320）；一般戰法項目沒有奧義，不帶 */
+  cinematicProfile?: string;
 }
 
 let tacticDefinitionMap = new Map<string, CanonicalTacticDefinition>();
@@ -398,6 +401,7 @@ export function buildUltimateSkills(general: GeneralUnit): UltimateSkillItem[] {
         ultimateId: slot.ultimateId,
         label: ultimateDef?.name ?? skillDef?.label ?? slot.ultimateId,
         costSp: skillDef?.costSp ?? general.maxSp,
+        cinematicProfile: cinematicProfileOf({ family: ultimateDef?.family, cinematicProfile: ultimateDef?.cinematicProfile }),
       } as UltimateSkillItem;
     })
     .filter((item): item is UltimateSkillItem => item !== null);
