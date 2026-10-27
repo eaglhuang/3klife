@@ -1,0 +1,22 @@
+{
+  "id": "bloodline-tree-default",
+  "version": 1,
+  "bundle": "common_ui",
+  "atlasPolicy": "common",
+  "slots": {
+    "bloodline.tree.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 230
+    },
+    "bloodline.tree.card.label": {
+      "kind": "label-style",
+      "fontSize": 18,
+      "isBold": false,
+      "color": "textPrimary",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "overflow": "SHRINK"
+    }
+  }
+}
