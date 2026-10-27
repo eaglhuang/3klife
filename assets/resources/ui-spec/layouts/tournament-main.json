@@ -1,0 +1,172 @@
+{
+  "id": "tournament-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "TournamentRoot",
+    "id": "tournamentRoot",
+    "width": 1920,
+    "height": 1080,
+    "children": [
+      {
+        "type": "panel",
+        "name": "TournamentCard",
+        "id": "tournamentCard",
+        "width": 1000,
+        "height": 560,
+        "skinSlot": "trn.card.bg",
+        "layout": {
+          "type": "vertical",
+          "justifyContent": "start",
+          "spacingY": 12,
+          "paddingTop": 28,
+          "paddingRight": 28,
+          "paddingBottom": 28,
+          "paddingLeft": 28
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "TrnTitle",
+            "id": "trnTitle",
+            "width": 944,
+            "height": 48,
+            "text": "名將挑戰賽",
+            "styleSlot": "trn.label.title"
+          },
+          {
+            "type": "label",
+            "name": "TrnSeasonLabel",
+            "id": "trnSeasonLabel",
+            "width": 944,
+            "height": 40,
+            "text": "第 1 季｜培育期｜剩 14 日",
+            "styleSlot": "trn.label.body"
+          },
+          {
+            "type": "label",
+            "name": "TrnRankLabel",
+            "id": "trnRankLabel",
+            "width": 944,
+            "height": 40,
+            "text": "積分 0｜青銅",
+            "styleSlot": "trn.label.body"
+          },
+          {
+            "type": "label",
+            "name": "TrnEntriesLabel",
+            "id": "trnEntriesLabel",
+            "width": 944,
+            "height": 40,
+            "text": "競賽期才能參戰",
+            "styleSlot": "trn.label.body"
+          },
+          {
+            "type": "label",
+            "name": "TrnTeamLabel",
+            "id": "trnTeamLabel",
+            "width": 944,
+            "height": 40,
+            "text": "尚未報名",
+            "styleSlot": "trn.label.line"
+          },
+          {
+            "type": "label",
+            "name": "TrnResultLabel",
+            "id": "trnResultLabel",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "trn.label.line"
+          },
+          {
+            "type": "container",
+            "name": "TrnButtonRow",
+            "id": "trnButtonRow",
+            "width": 944,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnRegister",
+                "id": "btnRegister",
+                "width": 240,
+                "height": 64,
+                "skinSlot": "trn.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnRegisterLabel",
+                    "id": "btnRegisterLabel",
+                    "width": 240,
+                    "height": 40,
+                    "text": "報名",
+                    "styleSlot": "trn.label.body"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnPlay",
+                "id": "btnPlay",
+                "width": 240,
+                "height": 64,
+                "skinSlot": "trn.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPlayLabel",
+                    "id": "btnPlayLabel",
+                    "width": 240,
+                    "height": 40,
+                    "text": "參戰",
+                    "styleSlot": "trn.label.body"
+                  }
+                ],
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnClose",
+                "id": "btnClose",
+                "width": 240,
+                "height": 64,
+                "skinSlot": "trn.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnCloseLabel",
+                    "id": "btnCloseLabel",
+                    "width": 240,
+                    "height": 40,
+                    "text": "關閉",
+                    "styleSlot": "trn.label.body"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
