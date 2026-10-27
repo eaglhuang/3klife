@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 09:15 AG-24 小修完成：移除內建繪製順序，drawOrder 強制讀取 JSON，缺欄或槽位集合不一致皆拋 ValueError；同步 v3.6 規格至 tools_anim/specs/；新增 3 項 drawOrder 單元測試，全套 55 項單元測試 100% 通過（b12258b9a）。
 - 2026-10-27 09:05 Claude：AG-24 v3→Spine 4.2 生成器驗收通過（17/17）；v3.6 drawOrder 核定入 JSON（pauldron_b 移到 torso 後）；R269 前手鏈 arm_upper/lower/hand_f 畫面通過，weapon 畫成方天戟且槍頭朝左，退回改長槍朝右；長槍過後用 AG-24 組半身上 Cocos。
 - 2026-10-27 08:35 AG-24 完成：實作 build_spine_from_v3.py，以 v3 骨架為唯一來源換算 Spine 4.2 JSON 與 atlas；骨骼、槽位與局部偏移全由 JSON 換算，y 翻轉對齊；attachment 偏移精確由「原位 bbox 中心 - 骨骼世界座標」算出；缺槽輸出空 slot 且標註 MISSING；套用 jointOverrides（foot 父骨改為 shin）；建議 drawOrder 順序提請核定；色塊 Setup pose 重組逐像素比對最大差 0 px（<= 1 px PASS）；1.1 倍縮放無寫死驗證通過；全套 53 項單元測試 100% 通過（c13eecdea）。
 - 2026-10-27 08:25 Claude：R268 判定 R265 Cocos 缺口根因是 v3 分件混接進 R193 舊骨架（座標/朝向不同、前後肩甲對調），停止混接，torso 不改，前手鏈照做；AG-24 派 Antigravity 從 v3 JSON 生成 Spine 4.2 骨架與分槽 atlas。
