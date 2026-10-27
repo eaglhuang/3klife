@@ -416,6 +416,17 @@ def run_layered_parts_inspection(
     slot_reports: dict[str, Any] = {}
     overall_pass = True
 
+    # AG-25: 讀取 shoulderOverlapZone 與 parentSideExtensionWaivedWhen 豁免設定
+    shoulder_overlap_cfg = spec.get("shoulderOverlapZone", {})
+    shoulder_joint_names = shoulder_overlap_cfg.get("joints", ["shoulder_f", "shoulder_b"])
+    parent_waive_prefix = shoulder_overlap_cfg.get("parentSideExtensionWaivedWhen")
+    joints_dict = spec.get("joints", {})
+    shoulder_joint_positions: dict[str, tuple[float, float]] = {}
+    for sj_name in shoulder_joint_names:
+        if sj_name in joints_dict:
+            sj_obj = joints_dict[sj_name]
+            shoulder_joint_positions[sj_name] = (float(sj_obj.get("x", 0.0)), float(sj_obj.get("y", 0.0)))
+
     # 1. 讀取並檢驗各槽基本尺寸、空槽狀態與單槽範圍 (AG-23)
     for sid in target_slots:
         p_path = parts_dir / f"{sid}.png"
@@ -613,18 +624,64 @@ def run_layered_parts_inspection(
         p_pass, p_ext = check_slot_hidden_extension(p_arr, piv_pt, dir_p, min_ext_px)
         c_pass, c_ext = check_slot_hidden_extension(c_arr, piv_pt, dir_c, min_ext_px)
 
-        conn_pass = p_pass and c_pass
-        joint_ext_reports[conn_id] = {
+        # AG-25: 肩部父側隱藏延伸豁免檢查
+        p_waived = False
+        p_waived_reason = ""
+        matched_shoulder_joint = None
+
+        if not p_pass and parent_waive_prefix:
+            # 檢查當前關節樞紐是否匹配 shoulderOverlapZone.joints 之一
+            for sj_name, sj_pos in shoulder_joint_positions.items():
+                if math.hypot(piv_pt[0] - sj_pos[0], piv_pt[1] - sj_pos[1]) <= 1.0:
+                    matched_shoulder_joint = sj_name
+                    break
+
+            if matched_shoulder_joint:
+                # 槽名前綴加 _f / _b 對應
+                suffix = "_f" if matched_shoulder_joint.endswith("_f") else ("_b" if matched_shoulder_joint.endswith("_b") else "")
+                matching_pauldron_slot = f"{parent_waive_prefix}{suffix}"
+
+                # 檢查同側 pauldron 槽是否存在且非空
+                if matching_pauldron_slot in loaded_parts and not slot_reports.get(matching_pauldron_slot, {}).get("empty", False):
+                    pauldron_img = loaded_parts[matching_pauldron_slot]
+                    if pauldron_img.ndim == 3 and pauldron_img.shape[2] == 4:
+                        p_alpha = pauldron_img[..., 3]
+                        p_ys, p_xs = np.where(p_alpha > 0)
+                        if len(p_xs) > 0:
+                            dist_to_piv = float(np.hypot(p_xs - piv_pt[0], p_ys - piv_pt[1]).min())
+                            if dist_to_piv <= 20.0:
+                                p_waived = True
+                                p_waived_reason = (
+                                    f"同側 {matching_pauldron_slot} 存在且覆蓋肩關節 (距離={dist_to_piv:.1f}px <= 20px)，"
+                                    f"父側延伸不足 ({p_ext:.1f}px < {min_ext_px:.1f}px) 依 shoulderOverlapZone 豁免"
+                                )
+
+        p_effective_pass = p_pass or p_waived
+        conn_pass = p_effective_pass and c_pass
+
+        joint_ext_entry: dict[str, Any] = {
             "pass": conn_pass,
             "tier": "PASS" if conn_pass else "FAIL",
             "skipped": False,
             "parentExtensionPx": round(p_ext, 1),
             "childExtensionPx": round(c_ext, 1),
             "minRequiredPx": round(min_ext_px, 1),
-            "detail": f"隱藏延伸: 父={p_ext:.1f}px, 子={c_ext:.1f}px (要求>={min_ext_px:.1f}px)",
+            "parentWaived": p_waived,
+            "detail": f"隱藏延伸: 父={p_ext:.1f}px{' (WAIVED)' if p_waived else ''}, 子={c_ext:.1f}px (要求>={min_ext_px:.1f}px)",
         }
+        if p_waived:
+            joint_ext_entry["parentWaivedReason"] = p_waived_reason
+        joint_ext_reports[conn_id] = joint_ext_entry
 
-        if not p_pass:
+        if p_waived:
+            slot_reports[p_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
+                "pass": True,
+                "tier": "WAIVED",
+                "parentExtensionPx": round(p_ext, 1),
+                "minRequiredPx": round(min_ext_px, 1),
+                "detail": p_waived_reason,
+            }
+        elif not p_pass:
             slot_reports[p_sid]["pass"] = False
             slot_reports[p_sid]["tier"] = "FAIL"
             slot_reports[p_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {

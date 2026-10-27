@@ -524,5 +524,101 @@ class TestCheckLayeredParts(unittest.TestCase):
         self.assertFalse(passed_paul, "平移後的帶肩甲 torso 應維持 FAIL")
 
 
+    def test_shoulder_parent_side_extension_waived_when_pauldron_present(self) -> None:
+        """測試 13 (AG-25): 肩關節處同側 pauldron 覆蓋時，torso 父側延伸不足改標 WAIVED，整體判定 PASS"""
+        parts_dir = self.tmp_dir / "pauldron_waived"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+
+        j_shoulder_f = (float(self.spec["joints"]["shoulder_f"]["x"]), float(self.spec["joints"]["shoulder_f"]["y"]))
+        j_elbow_f = (float(self.spec["joints"]["elbow_f"]["x"]), float(self.spec["joints"]["elbow_f"]["y"]))
+        j_pelvis = (float(self.spec["joints"]["pelvis"]["x"]), float(self.spec["joints"]["pelvis"]["y"]))
+        j_neck = (float(self.spec["joints"]["neck"]["x"]), float(self.spec["joints"]["neck"]["y"]))
+
+        # 1. 建立 torso：身軀主體，但在 shoulder_f 延伸僅 35px (< 48px)
+        im_torso = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
+        d_torso = ImageDraw.Draw(im_torso)
+        d_torso.line([j_pelvis, j_neck], fill=(120, 100, 80, 255), width=200)
+        # 往 shoulder_f 輕微延伸 35px (方向由 waist/pelvis 到 shoulder_f)
+        v_dir = (j_shoulder_f[0] - j_neck[0], j_shoulder_f[1] - j_neck[1])
+        norm_v = math.hypot(v_dir[0], v_dir[1]) or 1.0
+        ext_pt = (j_shoulder_f[0] + (v_dir[0] / norm_v) * 35.0, j_shoulder_f[1] + (v_dir[1] / norm_v) * 35.0)
+        d_torso.line([j_neck, ext_pt], fill=(120, 100, 80, 255), width=80)
+        im_torso.save(parts_dir / "torso.png")
+
+        # 2. 建立 arm_upper_f：子側延伸充分 (>= 48px)
+        im_arm = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
+        d_arm = ImageDraw.Draw(im_arm)
+        # 往 shoulder 延伸 55px
+        v_arm = (j_shoulder_f[0] - j_elbow_f[0], j_shoulder_f[1] - j_elbow_f[1])
+        norm_arm = math.hypot(v_arm[0], v_arm[1]) or 1.0
+        ext_arm_pt = (j_shoulder_f[0] + (v_arm[0] / norm_arm) * 55.0, j_shoulder_f[1] + (v_arm[1] / norm_arm) * 55.0)
+        d_arm.line([j_elbow_f, ext_arm_pt], fill=(80, 120, 200, 255), width=60)
+        im_arm.save(parts_dir / "arm_upper_f.png")
+
+        # 3. 建立 pauldron_f：覆蓋 shoulder_f 關節 (距離 <= 20px)
+        im_paul = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
+        d_paul = ImageDraw.Draw(im_paul)
+        d_paul.ellipse(
+            [j_shoulder_f[0] - 40, j_shoulder_f[1] - 40, j_shoulder_f[0] + 40, j_shoulder_f[1] + 40],
+            fill=(220, 190, 50, 255),
+        )
+        im_paul.save(parts_dir / "pauldron_f.png")
+
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["torso", "arm_upper_f", "pauldron_f"],
+        )
+
+        joint_rep = report["jointHiddenExtensions"]["torso_to_arm_upper_f"]
+        self.assertTrue(joint_rep.get("parentWaived"), "同側 pauldron 存在時父側應標記為 parentWaived")
+        self.assertTrue(joint_rep["pass"], "關節延伸檢查整體應 PASS")
+        self.assertEqual(report["slotReports"]["torso"]["checks"]["hidden_extension_at_torso_to_arm_upper_f"]["tier"], "WAIVED")
+        self.assertTrue(passed, "有 pauldron 豁免時整體應判定 PASS")
+
+    def test_shoulder_parent_side_extension_fails_when_pauldron_absent(self) -> None:
+        """測試 14 (AG-25): 肩關節處若無同側 pauldron，torso 父側延伸不足維持判定 FAIL"""
+        parts_dir = self.tmp_dir / "pauldron_absent"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+
+        j_shoulder_f = (float(self.spec["joints"]["shoulder_f"]["x"]), float(self.spec["joints"]["shoulder_f"]["y"]))
+        j_elbow_f = (float(self.spec["joints"]["elbow_f"]["x"]), float(self.spec["joints"]["elbow_f"]["y"]))
+        j_pelvis = (float(self.spec["joints"]["pelvis"]["x"]), float(self.spec["joints"]["pelvis"]["y"]))
+        j_neck = (float(self.spec["joints"]["neck"]["x"]), float(self.spec["joints"]["neck"]["y"]))
+
+        # 1. 建立 torso：身軀主體，但在 shoulder_f 延伸僅 35px (< 48px)
+        im_torso = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
+        d_torso = ImageDraw.Draw(im_torso)
+        d_torso.line([j_pelvis, j_neck], fill=(120, 100, 80, 255), width=200)
+        v_dir = (j_shoulder_f[0] - j_neck[0], j_shoulder_f[1] - j_neck[1])
+        norm_v = math.hypot(v_dir[0], v_dir[1]) or 1.0
+        ext_pt = (j_shoulder_f[0] + (v_dir[0] / norm_v) * 35.0, j_shoulder_f[1] + (v_dir[1] / norm_v) * 35.0)
+        d_torso.line([j_neck, ext_pt], fill=(120, 100, 80, 255), width=80)
+        im_torso.save(parts_dir / "torso.png")
+
+        # 2. 建立 arm_upper_f：子側延伸充分 (>= 48px)
+        im_arm = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
+        d_arm = ImageDraw.Draw(im_arm)
+        v_arm = (j_shoulder_f[0] - j_elbow_f[0], j_shoulder_f[1] - j_elbow_f[1])
+        norm_arm = math.hypot(v_arm[0], v_arm[1]) or 1.0
+        ext_arm_pt = (j_shoulder_f[0] + (v_arm[0] / norm_arm) * 55.0, j_shoulder_f[1] + (v_arm[1] / norm_arm) * 55.0)
+        d_arm.line([j_elbow_f, ext_arm_pt], fill=(80, 120, 200, 255), width=60)
+        im_arm.save(parts_dir / "arm_upper_f.png")
+
+        # 不提供 pauldron_f.png
+
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["torso", "arm_upper_f"],
+        )
+
+        joint_rep = report["jointHiddenExtensions"]["torso_to_arm_upper_f"]
+        self.assertFalse(joint_rep.get("parentWaived", False), "無 pauldron 時不得標記為 parentWaived")
+        self.assertFalse(joint_rep["pass"], "無 pauldron 時延伸不足應判定 FAIL")
+        self.assertEqual(report["slotReports"]["torso"]["checks"]["hidden_extension_at_torso_to_arm_upper_f"]["tier"], "FAIL")
+        self.assertFalse(passed, "無 pauldron 豁免時整體應判定 FAIL")
+
+
 if __name__ == "__main__":
     unittest.main()
