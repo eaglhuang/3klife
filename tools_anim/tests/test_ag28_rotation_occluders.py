@@ -60,11 +60,11 @@ class TestAG28RotationOccluders(unittest.TestCase):
         p_draw.rectangle([200, 256, 312, 350], fill=(100, 100, 200, 255))
         p_arr = np.array(p_im)
 
-        # 2. child 部件 (手掌)：環狀肉質，中心直徑 40px 拳孔完全挖空透明
+        # 2. child 部件 (手掌)：上半部具手腕肉質 (y: 200..260)，在旋轉交界處具空心拳孔 (250..262, 250..260)
         c_im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
         c_draw = ImageDraw.Draw(c_im)
-        c_draw.ellipse([200, 200, 312, 312], fill=(200, 100, 100, 255))
-        c_draw.ellipse([236, 236, 276, 276], fill=(0, 0, 0, 0))
+        c_draw.rectangle([200, 200, 312, 260], fill=(200, 100, 100, 255))
+        c_draw.rectangle([250, 250, 262, 260], fill=(0, 0, 0, 0))
         c_arr = np.array(c_im)
 
         # 3. weapon 部件 (武器)：垂直長條穿過拳孔中心 (x: 248..264, y: 150..350)
@@ -85,7 +85,11 @@ class TestAG28RotationOccluders(unittest.TestCase):
             occluder_arrs=None,
         )
         self.assertFalse(pass_no_occ, "無 weapon 遮蔽時，空心拳孔應導致旋轉露縫檢查判定 FAIL")
-        self.assertEqual(met_no_occ["overlapPixelsWithOccluders"], 0)
+        self.assertLess(
+            met_no_occ["overlapPixelsWithOccluders"],
+            met_no_occ["minRequiredOverlapPixels"],
+            "無遮蔽時重疊應未達門檻 (20%)",
+        )
         self.assertGreater(met_no_occ["nonOverlapPixelsWithOccluders"], met_no_occ["leakTolerancePx"])
 
         # (B) 情況 2：加入 weapon 遮蔽 -> 武器蓋住拳孔並提供充足咬合重疊，預期 PASS
@@ -122,19 +126,19 @@ class TestAG28RotationOccluders(unittest.TestCase):
             img.save(self.parts_dir / f"{sid}.png")
 
         # 為 arm_lower_b, hand_b, weapon 繪製測試圖 (對齊 hand_b 關節樞紐：腕關節約 715, 1180)
-        # arm_lower_b: 覆蓋樞紐周圍下半部
+        # arm_lower_b: 覆蓋樞紐周圍下半部 (y: 1180..1300)
         p_im = Image.new("RGBA", (2048, 2048), (0, 0, 0, 0))
         ImageDraw.Draw(p_im).rectangle([650, 1180, 780, 1300], fill=(100, 100, 200, 255))
         p_im.save(self.parts_dir / "arm_lower_b.png")
 
-        # hand_b: 環形手，中心手腕/拳孔挖空
+        # hand_b: 上半部具手腕肉質 (y: 1100..1185)，在交界處具空心拳孔 (705..725, 1170..1185)
         c_im = Image.new("RGBA", (2048, 2048), (0, 0, 0, 0))
         c_draw = ImageDraw.Draw(c_im)
-        c_draw.ellipse([650, 1120, 780, 1240], fill=(200, 100, 100, 255))
-        c_draw.ellipse([695, 1160, 735, 1200], fill=(0, 0, 0, 0))
+        c_draw.rectangle([650, 1100, 780, 1185], fill=(200, 100, 100, 255))
+        c_draw.rectangle([705, 1170, 725, 1185], fill=(0, 0, 0, 0))
         c_im.save(self.parts_dir / "hand_b.png")
 
-        # weapon: 垂直長條貫穿手腕中心
+        # weapon: 垂直長條貫穿手腕拳孔
         w_im = Image.new("RGBA", (2048, 2048), (0, 0, 0, 0))
         ImageDraw.Draw(w_im).rectangle([705, 1100, 725, 1350], fill=(220, 200, 50, 255))
         w_im.save(self.parts_dir / "weapon.png")

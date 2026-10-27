@@ -353,18 +353,47 @@ def check_rotation_gap_leak(
     w: int,
     h: int,
     occluder_arrs: dict[str, np.ndarray] | None = None,
+    grip_points: list[tuple[float, float]] | None = None,
 ) -> tuple[bool, np.ndarray, dict[str, Any]]:
     """檢驗子部件繞樞紐旋轉 angle_deg 後，關節周圍是否出現穿透露縫
-    依據工單 AG-28 規範：
+    依據工單 AG-28 與 AG-29 規範：
     1. 支援 rotationOccluders 遮蔽聯集 (跟隨 child 剛性旋轉)
-    2. 報告與判定清晰分開：咬合重疊率門檻 20%、覆蓋率門檻 15%、容許非重疊上限 (leakTolerancePx = 80%)
-    3. 分開統計未遮蔽露縫數、加遮蔽後露縫數、各遮蔽槽各蓋掉多少像素與真正透光縫隙
+    2. AG-29 A: 新增「輪廓內透光縫 (seamInsideContourPx)」：以 0° 時 parent ∪ child ∪ occluders 之
+       填實外輪廓 (保留握點拳孔中空) 為基準，僅統計肢體輪廓範圍內於旋轉後未被任何部件覆蓋之透光像素。
+    3. AG-29 B: 覆蓋率不可借遮蔽槽，child 核心覆蓋率嚴格僅以 child_cov_raw 計算 (>=15%)。
+    4. 咬合重疊率門檻 20%、容許非重疊上限 (leakTolerancePx = 80%)，分開統計各項指標。
     """
+    # 0° 實體二值圖 (用於計算 0° 肢體外輪廓)
+    parent_alpha_0 = parent_arr[..., 3] > 16
+    child_alpha_0 = child_arr[..., 3] > 16
+    union_0 = parent_alpha_0 | child_alpha_0
+    if occluder_arrs:
+        for occ_arr in occluder_arrs.values():
+            union_0 |= (occ_arr[..., 3] > 16)
+
+    # 計算 0° 填實外輪廓 (若有 grip 握點，保留拳心孔中空不可填實)
+    contours, hierarchy = cv2.findContours(union_0.astype(np.uint8), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+    body_contour_0 = np.zeros((h, w), dtype=bool)
+    if hierarchy is not None and len(contours) > 0:
+        fill_img = np.zeros((h, w), dtype=np.uint8)
+        for idx, (c, h_info) in enumerate(zip(contours, hierarchy[0])):
+            if h_info[3] == -1:  # 外輪廓填實
+                cv2.drawContours(fill_img, [c], -1, 1, thickness=-1)
+        if grip_points:
+            for idx, (c, h_info) in enumerate(zip(contours, hierarchy[0])):
+                if h_info[3] != -1:  # 內孔：若屬於握點拳孔則挖空保留
+                    is_grip_hole = any(cv2.pointPolygonTest(c, gpt, measureDist=True) >= -15.0 for gpt in grip_points)
+                    if is_grip_hole:
+                        cv2.drawContours(fill_img, [c], -1, 0, thickness=-1)
+        body_contour_0 = (fill_img > 0)
+    else:
+        body_contour_0 = union_0
+
     # 旋轉子部件
     M = cv2.getRotationMatrix2D(pivot_pt, angle_deg, 1.0)
     rotated_child = cv2.warpAffine(child_arr, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
-    parent_alpha = parent_arr[..., 3] > 16
+    parent_alpha = parent_alpha_0
     child_alpha = rotated_child[..., 3] > 16
 
     # 旋轉各 rotationOccluders 槽位 (與 child 剛性連接，以同一樞紐同一角度旋轉)
@@ -419,10 +448,14 @@ def check_rotation_gap_leak(
         occ_in_leak = int((leak_raw_non_overlap & occ_a).sum())
         occluded_by_slot[occ_name] = occ_in_leak
 
-    # --- (C) 判定邏輯 (不改門檻數值) ---
+    # AG-29 A: 輪廓內透光縫 (排除超出身體外框落入背景之無肉像素)
+    seam_inside_contour_mask = core_disk & body_contour_0 & (~(parent_alpha | child_effective_alpha))
+    seam_inside_contour_px = int(seam_inside_contour_mask.sum())
+
+    # --- (C) 判定邏輯 (不改門檻數值；AG-29 B: child 覆蓋率嚴格不借用遮蔽槽) ---
     min_overlap_required = int(disk_total * 0.2)
     leak_tolerance_px = disk_total - min_overlap_required
-    has_cov = (child_cov_eff >= int(disk_total * 0.15)) and (parent_cov >= int(disk_total * 0.15))
+    has_cov = (child_cov_raw >= int(disk_total * 0.15)) and (parent_cov >= int(disk_total * 0.15))
     passed = has_cov and (overlap_eff_count >= min_overlap_required)
 
     leak_mask = leak_eff_non_overlap
@@ -442,9 +475,12 @@ def check_rotation_gap_leak(
         "nonOverlapPixelsWithOccluders": leak_eff_count,
         "trueSeamLeakPixelsWithoutOccluders": uncovered_raw_count,
         "trueSeamLeakPixelsWithOccluders": uncovered_eff_count,
+        "seamInsideContourPx": seam_inside_contour_px,
         "occludedBySlotPx": occluded_by_slot,
         "passed": passed,
     }
+
+    return passed, leak_mask, metrics
 
     return passed, leak_mask, metrics
 
@@ -1080,6 +1116,13 @@ def run_layered_parts_inspection(
             }
             overall_pass = False
 
+    # 提取規格中所有握點座標 (供輪廓檢驗時排除拳孔填實)
+    grip_pts = [
+        (float(g["x"]), float(g["y"]))
+        for g in spec.get("grips", {}).values()
+        if isinstance(g, dict) and "x" in g and "y" in g
+    ]
+
     # 4. 旋轉露縫檢驗 (繞樞紐旋轉 +/- rotationTestDeg，剛性連接 rigid=true 略過)
     rot_leak_reports: dict[str, Any] = {}
     for j_conn in joint_connections:
@@ -1130,10 +1173,10 @@ def run_layered_parts_inspection(
                 occluder_arrs[occ_sid] = loaded_parts[occ_sid]
 
         leak_pos_ok, leak_pos_m, metrics_pos = check_rotation_gap_leak(
-            p_arr, c_arr, piv_pt, tested_deg, check_rad, exp_w, exp_h, occluder_arrs
+            p_arr, c_arr, piv_pt, tested_deg, check_rad, exp_w, exp_h, occluder_arrs, grip_pts
         )
         leak_neg_ok, leak_neg_m, metrics_neg = check_rotation_gap_leak(
-            p_arr, c_arr, piv_pt, -tested_deg, check_rad, exp_w, exp_h, occluder_arrs
+            p_arr, c_arr, piv_pt, -tested_deg, check_rad, exp_w, exp_h, occluder_arrs, grip_pts
         )
 
         leak_pass = leak_pos_ok and leak_neg_ok
@@ -1148,11 +1191,14 @@ def run_layered_parts_inspection(
             "leakTolerancePx": metrics_pos["leakTolerancePx"],
             "leakPixelsPositive": metrics_pos["nonOverlapPixelsWithOccluders"],
             "leakPixelsNegative": metrics_neg["nonOverlapPixelsWithOccluders"],
+            "seamInsideContourPositivePx": metrics_pos["seamInsideContourPx"],
+            "seamInsideContourNegativePx": metrics_neg["seamInsideContourPx"],
             "positiveAngleMetrics": {
                 "angleDeg": tested_deg,
                 "leakWithoutOccludersPx": metrics_pos["nonOverlapPixelsWithoutOccluders"],
                 "leakWithOccludersPx": metrics_pos["nonOverlapPixelsWithOccluders"],
                 "trueSeamLeakPx": metrics_pos["trueSeamLeakPixelsWithOccluders"],
+                "seamInsideContourPx": metrics_pos["seamInsideContourPx"],
                 "overlapPixels": metrics_pos["overlapPixelsWithOccluders"],
                 "minRequiredOverlapPx": metrics_pos["minRequiredOverlapPixels"],
                 "leakTolerancePx": metrics_pos["leakTolerancePx"],
@@ -1164,6 +1210,7 @@ def run_layered_parts_inspection(
                 "leakWithoutOccludersPx": metrics_neg["nonOverlapPixelsWithoutOccluders"],
                 "leakWithOccludersPx": metrics_neg["nonOverlapPixelsWithOccluders"],
                 "trueSeamLeakPx": metrics_neg["trueSeamLeakPixelsWithOccluders"],
+                "seamInsideContourPx": metrics_neg["seamInsideContourPx"],
                 "overlapPixels": metrics_neg["overlapPixelsWithOccluders"],
                 "minRequiredOverlapPx": metrics_neg["minRequiredOverlapPixels"],
                 "leakTolerancePx": metrics_neg["leakTolerancePx"],
