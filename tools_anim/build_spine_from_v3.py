@@ -34,31 +34,8 @@ import cv2
 import numpy as np
 from PIL import Image
 
-# 3/4 朝向、常規人體前後遮擋的建議繪製順序（從最底層到最上層）
-# 若 JSON 未提供 layeredSlots.drawOrder，將使用此順序並提報 Claude 總監核定
-RECOMMENDED_DRAW_ORDER: list[str] = [
-    "cape",
-    "hair_tail",
-    "arm_upper_b",
-    "arm_lower_b",
-    "hand_b",
-    "thigh_b",
-    "shin_b",
-    "foot_b",
-    "pelvis",
-    "thigh_f",
-    "shin_f",
-    "foot_f",
-    "skirt",
-    "torso",
-    "pauldron_b",
-    "head",
-    "weapon",
-    "arm_upper_f",
-    "arm_lower_f",
-    "hand_f",
-    "pauldron_f",
-]
+# drawOrder 完全依據規範 JSON 中的 layeredSlots.drawOrder，程式內無任何寫死或預設順序
+
 
 
 def load_v3_spec(spec_path: str | Path) -> dict[str, Any]:
@@ -251,16 +228,20 @@ def build_spine_from_v3(
     if not slot_names:
         raise ValueError("規範 JSON 中缺少 layeredSlots.names")
 
-    # 決定 drawOrder
+    # 決定 drawOrder（強制由 JSON 讀取，若缺直接報錯，維護 JSON 為唯一來源）
+    draw_order = layered_slots_spec.get("drawOrder")
+    if not draw_order or not isinstance(draw_order, list):
+        raise ValueError("規範 JSON 中缺少 'layeredSlots.drawOrder'，無法確定繪製順序；請先於 JSON 定義核定順序")
+
+    # 驗證 drawOrder 必須剛好是 names 的重新排列，不多不少
+    if len(draw_order) != len(slot_names) or set(draw_order) != set(slot_names):
+        missing_in_draw = set(slot_names) - set(draw_order)
+        extra_in_draw = set(draw_order) - set(slot_names)
+        raise ValueError(
+            f"layeredSlots.drawOrder 與 names 不一致！"
+            f"缺少: {list(missing_in_draw)}, 多餘: {list(extra_in_draw)}"
+        )
     draw_order_source = "json"
-    if "drawOrder" in layered_slots_spec and isinstance(layered_slots_spec["drawOrder"], list):
-        draw_order = layered_slots_spec["drawOrder"]
-    else:
-        draw_order_source = "recommended_fallback"
-        # 依照 RECOMMENDED_DRAW_ORDER 排序，若有未列入的槽位則排在最前面
-        draw_order = [s for s in RECOMMENDED_DRAW_ORDER if s in slot_names]
-        remaining = [s for s in slot_names if s not in draw_order]
-        draw_order = remaining + draw_order
 
     # 1. 計算骨骼
     bones_spine, world_coords, root_pivot = compute_spine_bones(

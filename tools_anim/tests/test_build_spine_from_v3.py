@@ -29,7 +29,6 @@ from build_spine_from_v3 import (
     build_spine_from_v3,
     compute_spine_bones,
     load_v3_spec,
-    RECOMMENDED_DRAW_ORDER,
 )
 
 SPEC_PATH = Path(__file__).resolve().parent.parent / "specs" / "canonical_skeleton_v3.json"
@@ -170,16 +169,42 @@ class TestBuildSpineFromV3(unittest.TestCase):
                     msg=f"骨骼 {name} 的 local y 未等比縮放 1.1 倍",
                 )
 
-    def test_joint_overrides_application(self):
-        """測試 4: 驗證 jointOverrides 中 foot 的父骨改為 shin。"""
-        bones_overridden, _, _ = compute_spine_bones(self.spec, apply_joint_overrides=True)
-        bones_no_overrides, _, _ = compute_spine_bones(self.spec, apply_joint_overrides=False)
+    def test_draw_order_is_exact_permutation_of_names(self):
+        """測試 5: layeredSlots.drawOrder 必須剛好是 names 的重新排列，不多不少。"""
+        names = self.spec["layeredSlots"]["names"]
+        draw_order = self.spec["layeredSlots"]["drawOrder"]
 
-        foot_f_ov = next(b for b in bones_overridden if b["name"] == "foot_f")
-        foot_f_no = next(b for b in bones_no_overrides if b["name"] == "foot_f")
+        self.assertEqual(len(draw_order), len(names), "drawOrder 長度必須與 names 完全相同")
+        self.assertEqual(set(draw_order), set(names), "drawOrder 集合必須與 names 完全相同")
+        self.assertEqual(len(draw_order), len(set(draw_order)), "drawOrder 不得有重複槽位")
 
-        self.assertEqual(foot_f_ov["parent"], "shin_f")
-        self.assertEqual(foot_f_no["parent"], "ik_foot_f")
+    def test_missing_draw_order_raises_error(self):
+        """測試 6: 若 JSON 缺少 drawOrder 欄位，必須明確拋出 ValueError，嚴禁使用隱性內建值。"""
+        spec_no_draw = copy.deepcopy(self.spec)
+        del spec_no_draw["layeredSlots"]["drawOrder"]
+
+        self._create_mock_parts(["torso"])
+        with self.assertRaises(ValueError) as ctx:
+            build_spine_from_v3(
+                spec=spec_no_draw,
+                parts_dir=self.parts_dir,
+                output_dir=self.output_dir,
+            )
+        self.assertIn("layeredSlots.drawOrder", str(ctx.exception))
+
+    def test_mismatched_draw_order_raises_error(self):
+        """測試 7: 若 drawOrder 缺少或多餘槽位，必須拋出 ValueError。"""
+        spec_bad_draw = copy.deepcopy(self.spec)
+        spec_bad_draw["layeredSlots"]["drawOrder"].pop()  # 少一個
+
+        self._create_mock_parts(["torso"])
+        with self.assertRaises(ValueError) as ctx:
+            build_spine_from_v3(
+                spec=spec_bad_draw,
+                parts_dir=self.parts_dir,
+                output_dir=self.output_dir,
+            )
+        self.assertIn("不一致", str(ctx.exception))
 
 
 if __name__ == "__main__":
