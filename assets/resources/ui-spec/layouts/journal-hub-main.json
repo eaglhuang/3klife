@@ -309,21 +309,57 @@
             ]
           },
           {
-            "type": "button",
-            "name": "BtnOpenGeneralJournal",
-            "id": "btnOpenGeneralJournal",
-            "width": 240,
+            "type": "container",
+            "name": "JournalEntryRow",
+            "id": "journalEntryRow",
+            "width": 944,
             "height": 64,
-            "skinSlot": "jh.button.bg",
             "children": [
               {
-                "type": "label",
-                "name": "BtnOpenGeneralJournalLabel",
-                "id": "btnOpenGeneralJournalLabel",
+                "type": "button",
+                "name": "BtnOpenGeneralJournal",
+                "id": "btnOpenGeneralJournal",
                 "width": 240,
-                "height": 40,
-                "text": "武將日誌 ▶",
-                "styleSlot": "jh.label.body"
+                "height": 64,
+                "skinSlot": "jh.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenGeneralJournalLabel",
+                    "id": "btnOpenGeneralJournalLabel",
+                    "width": 240,
+                    "height": 40,
+                    "text": "武將日誌 ▶",
+                    "styleSlot": "jh.label.body"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnOpenBattleReview",
+                "id": "btnOpenBattleReview",
+                "width": 240,
+                "height": 64,
+                "skinSlot": "jh.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenBattleReviewLabel",
+                    "id": "btnOpenBattleReviewLabel",
+                    "width": 240,
+                    "height": 40,
+                    "text": "戰報 ▶",
+                    "styleSlot": "jh.label.body"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
               }
             ]
           },

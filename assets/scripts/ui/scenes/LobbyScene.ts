@@ -64,6 +64,7 @@ import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplo
 import { WarehousePanelController } from '../core/WarehousePanelController';
 import { DISPATCH_MAX_ROWS, JournalHubController } from '../core/JournalHubController';
 import { GeneralJournalController } from '../core/GeneralJournalController';
+import { BattleReviewController } from '../core/BattleReviewController';
 import { dispatchClickMessage } from '../../core/systems/DispatchCatalog';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 
@@ -282,6 +283,8 @@ export class LobbyScene extends Component {
     private _journalHubHost: UIScreenPreviewHost | null = null;
     private _generalJournal: GeneralJournalController | null = null;
     private _generalJournalHost: UIScreenPreviewHost | null = null;
+    private _battleReview: BattleReviewController | null = null;
+    private _battleReviewHost: UIScreenPreviewHost | null = null;
     private _rival: RivalDiplomacyController | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
@@ -447,6 +450,7 @@ export class LobbyScene extends Component {
         await this._mountWarehouse();
         await this._mountJournalHub();
         await this._mountGeneralJournal();
+        await this._mountBattleReview();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
         await this._mountGovernorHall();
@@ -1399,6 +1403,7 @@ export class LobbyScene extends Component {
         this._journalHubHost = await this._mountPreviewScreenHost('JournalHubHost', 'journal-hub-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._journalHubHost) this._journalHubHost.node.active = false; } },
             { buttonId: 'btnOpenGeneralJournal', handler: () => { this.openGeneralJournal(); } },
+            { buttonId: 'btnOpenBattleReview', handler: () => { this._openBattleReview(); } },
             { buttonId: 'btnPrevDispatchGeneral', handler: () => { this._journalHub?.cyclePick(-1); this._openJournalHub(); } },
             { buttonId: 'btnNextDispatchGeneral', handler: () => { this._journalHub?.cyclePick(1); this._openJournalHub(); } },
             ...Array.from({ length: DISPATCH_MAX_ROWS }, (_, i) => ({ buttonId: `dispatchRow${i}`, handler: () => { this._onClickDispatchRow(i); } })),
@@ -1445,6 +1450,40 @@ export class LobbyScene extends Component {
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshGeneralJournal();
+    }
+
+    /** 戰報：離線戰鬥快照回看（doc_spec_0015 §F-4，PROG-2-1187），入口在晨報派遣板 */
+    private async _mountBattleReview(): Promise<void> {
+        const review = new BattleReviewController({
+            snapshots: () => services().session.offlineBattleSnapshots,
+            journal: () => services().session.queryJournal({ category: 'BATTLE' }),
+        });
+        this._battleReview = review;
+        this._battleReviewHost = await this._mountPreviewScreenHost('BattleReviewHost', 'battle-review-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._battleReviewHost) this._battleReviewHost.node.active = false; } },
+            { buttonId: 'btnPrevPage', handler: () => { review.prevPage(); this._refreshBattleReview(); } },
+            { buttonId: 'btnNextPage', handler: () => { review.nextPage(); this._refreshBattleReview(); } },
+        ]);
+        this._battleReviewHost.node.active = false;
+    }
+
+    private _openBattleReview(): void {
+        const host = this._battleReviewHost;
+        if (!host || !this._battleReview) {
+            return;
+        }
+        this._battleReview.reset();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshBattleReview();
+    }
+
+    private _refreshBattleReview(): void {
+        const binder = this._battleReviewHost?.binder;
+        if (!binder || !this._battleReview) {
+            return;
+        }
+        applyFlowView(binder, this._battleReview.getFlowView());
     }
 
     private _refreshGeneralJournal(): void {
