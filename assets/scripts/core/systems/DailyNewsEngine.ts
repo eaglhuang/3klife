@@ -36,6 +36,8 @@ export interface NarrativeSlot {
 
 export interface DailyNewsItem extends NarrativeSlot {
     type: DailyNewsType;
+    /** 復仇取回百分比（RET-05），只有 REVENGE 條目帶；與文字裡的百分比是同一個值 */
+    pct?: number;
 }
 
 export interface PlayerLogEntry {
@@ -75,6 +77,11 @@ export const DEFAULT_LOST_RESOURCE = '糧草';
 /** 擲一次復仇取回百分比（RET-05），範圍 5~20 */
 export function rollRevengePct(random: RandomSource): number {
     return intBetween(REVENGE_RECOVER_PCT.min, REVENGE_RECOVER_PCT.max, random);
+}
+
+/** 讀檔用：只保留 5~20 的整數百分比 */
+export function normalizeRevengePct(raw: unknown): { pct?: number } {
+    return typeof raw === 'number' && Number.isInteger(raw) && raw >= REVENGE_RECOVER_PCT.min && raw <= REVENGE_RECOVER_PCT.max ? { pct: raw } : {};
 }
 
 /** 復仇取回數量（RET-05）：損失 × 百分比，百分比夾在 5%~20%，結果向下取整。 */
@@ -147,12 +154,13 @@ export function buildNarrative(
     others: readonly DailyNewsGeneral[],
     lostResource: string,
     random: RandomSource,
+    revengePct?: number,
 ): NarrativeSlot {
     const name = general.name;
     const emotion = DAILY_NEWS_EMOTION[type];
     switch (type) {
         case 'REVENGE': {
-            const pct = intBetween(REVENGE_RECOVER_PCT.min, REVENGE_RECOVER_PCT.max, random);
+            const pct = revengePct ?? rollRevengePct(random);
             return { character: name, emotion, action: `帶隊反搶昨日失去的${lostResource}`, result: `取回了 ${pct}% 的${lostResource}！` };
         }
         case 'AUTO_TASK':
@@ -197,7 +205,10 @@ export function generateDailyNews(
         const type = pool.splice(Math.min(pool.length - 1, Math.floor(random() * pool.length)), 1)[0];
         const general = pick(generals, random);
         const others = generals.filter((g) => g !== general);
-        news.push({ type, ...buildNarrative(type, general, others, lostResource, random) });
+        // 復仇的百分比在這裡擲一次，文字與取回共用（RET-05）；只有復仇條目會多消耗一次亂數，其他條目不變
+        const pct = type === 'REVENGE' ? rollRevengePct(random) : undefined;
+        const item: DailyNewsItem = { type, ...buildNarrative(type, general, others, lostResource, random, pct) };
+        news.push(pct === undefined ? item : { ...item, pct });
     }
     return news;
 }
@@ -280,7 +291,7 @@ export function normalizeDailyNewsState(raw: unknown): DailyNewsState {
         lastLoginMs: typeof lastLoginMs === 'number' && Number.isFinite(lastLoginMs) ? lastLoginMs : null,
         news: Array.isArray(news)
             ? news.flatMap((n): StoredDailyNewsItem[] => (n && DAILY_NEWS_TYPES.includes(n.type)
-                ? [{ type: n.type, character: str(n.character), emotion: str(n.emotion), action: str(n.action), result: str(n.result), read: n.read === true }]
+                ? [{ type: n.type, character: str(n.character), emotion: str(n.emotion), action: str(n.action), result: str(n.result), ...normalizeRevengePct(n.pct), read: n.read === true }]
                 : []))
             : [],
     };

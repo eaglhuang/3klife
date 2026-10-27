@@ -145,7 +145,6 @@ import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBinding
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 import { DailyReportController } from '../core/DailyReportController';
-import { rollRevengePct } from '../../core/systems/DailyNewsEngine';
 import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
 
 const { ccclass } = _decorator;
@@ -580,8 +579,8 @@ export class LobbyScene extends Component {
      */
     private _showDailyNews(): void {
         const session = services().session;
-        // 復仇取回（RET-05）：日報有復仇且有可取回的缺糧才顯示按鈕；需在標記已讀前擷取
-        const revengeAvailable = session.revengeRecoverable > 0 && session.dailyNews.news.some((item) => item.type === 'REVENGE');
+        // 復仇取回（RET-05）：日報有帶百分比的復仇且有可取回的缺糧才顯示按鈕；需在標記已讀前擷取
+        const revengeAvailable = session.revengeRecoverable > 0 && session.dailyNews.news.some((item) => item.type === 'REVENGE' && item.pct !== undefined);
         this._dailyReport = DailyReportController.capture(session.dailyNews, session.morningReport, new Date(), revengeAvailable);
         if (!this._dailyReport) return;
         session.markDailyNewsRead();
@@ -1539,7 +1538,9 @@ export class LobbyScene extends Component {
     private _claimRevenge(): void {
         const session = services().session;
         if (!this._dailyReport) return;
-        const recovered = session.claimRevengeRecovery(rollRevengePct(session.randomSource));
+        // 百分比取日報條目裡的值，與面板文字一致
+        const pct = session.dailyNews.news.find((item) => item.type === 'REVENGE' && item.pct !== undefined)?.pct ?? 0;
+        const recovered = session.claimRevengeRecovery(pct);
         this._dailyReport = this._dailyReport.withoutRevenge();
         if (this._dailyReportHost) applyFlowView(this._dailyReportHost.binder, this._dailyReport.getFlowView());
         void session.save().catch(() => undefined);
