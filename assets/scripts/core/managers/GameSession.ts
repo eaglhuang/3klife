@@ -349,6 +349,8 @@ export interface RecordBattleOptions {
     deployedTallyIds?: readonly string[];
     /** 武將 id → 戰鬥結束時的精力（已扣奧義成本）；結算以此為基準再扣戰後精力 */
     vitalityAfterBattle?: Readonly<Record<string, number>>;
+    /** 英靈夢回教學戰的傳說英靈；勝利時產出初始虎符（OPEN-13），沒有時不做任何事 */
+    teachingSpirit?: TeachingSpiritInput | null;
 }
 
 export interface AddGeneralsResult {
@@ -2994,6 +2996,7 @@ export class GameSession {
             this._clearedStageIds = normalizeClearedStageIds([...this._clearedStageIds, options.stageId]);
         }
         const clearChanged = this._clearedStageIds.length !== clearedBefore;
+        if (result === 'player-win' && options.teachingSpirit) this.completeTeachingBattle(options.teachingSpirit);
         const firstClear = result === 'player-win' && !this._firstBattleCleared;
         if (firstClear) this._firstBattleCleared = true;
         const tallyChanged = this._settleTallyBattleExp(options.deployedTallyIds ?? [], result);
