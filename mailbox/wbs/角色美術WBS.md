@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 15:20 Claude R285：經使用者核准，只改隔離工作樹 engine.json 兩個舊 Spine 開關（3.8 關、4.2 開，未提交）；等使用者重開 Creator，Codex 連續兩次重開驗收。
 - 2026-10-27 15:10 Claude R284：骨盆 v2b 幾何原型接受；材質 v1 退件（髖孔透明露白洞、材質平淡不像 torso 同套、下唇邊鋸齒模糊）。
 - 2026-10-27 14:50 Claude R283：骨盆定位採 B（下唇延伸 10–16 px）；驗收以大腿 ±30° 不露洞為主，再看下唇連續與金屬材質。
 - 2026-10-27 14:40 AG-27b 完成：merge_motion_library.py 軌道違規審查骨骼全面改由規格 bones 階層樹動態推導（手臂根骨與手臂/武器子樹），支援 --spec、--limit-bones、--scale-bones 外部覆蓋；AST 禁絕測試 test_no_general_hardcoding.py 新增部分骨名字串（arm_upper, upperarm, arm_, weapon, hand_ 等）檢驗，18 個測試檔 76 項單元測試 100% 通過（08e54d46a）。
