@@ -1394,21 +1394,24 @@ export class LobbyScene extends Component {
         this._journalHub = new JournalHubController({
             morningLines: () => services().session.morningReport.items.map((item) => item.summary),
             dispatchRows: () => services().session.dispatchBoardRows(Date.now()),
+            dispatchGenerals: () => services().session.dispatchIdleGenerals(Date.now()),
         });
         this._journalHubHost = await this._mountPreviewScreenHost('JournalHubHost', 'journal-hub-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._journalHubHost) this._journalHubHost.node.active = false; } },
             { buttonId: 'btnOpenGeneralJournal', handler: () => { this.openGeneralJournal(); } },
+            { buttonId: 'btnPrevDispatchGeneral', handler: () => { this._journalHub?.cyclePick(-1); this._openJournalHub(); } },
+            { buttonId: 'btnNextDispatchGeneral', handler: () => { this._journalHub?.cyclePick(1); this._openJournalHub(); } },
             ...Array.from({ length: DISPATCH_MAX_ROWS }, (_, i) => ({ buttonId: `dispatchRow${i}`, handler: () => { this._onClickDispatchRow(i); } })),
         ]);
         this._journalHubHost.node.active = false;
     }
 
-    /** 點派遣列：自動挑最適合的武將派出（PROG-2-1181），提示結果並刷新面板。 */
+    /** 點派遣列：派出選將列指定的武將，未指定時自動挑最適合的（PROG-2-1181／1186），提示結果並刷新面板。 */
     private _onClickDispatchRow(index: number): void {
         const row = this._journalHub?.dispatchRows()[index];
         if (!row) return;
         const session = services().session;
-        const result = session.dispatchJobById(row.id, Date.now());
+        const result = session.dispatchJobById(row.id, Date.now(), this._journalHub?.pickedGeneralId());
         services().event.emit('SHOW_TOAST', { message: dispatchClickMessage(result), duration: 2 });
         if (result.ok) void session.save().catch(() => undefined);
         this._openJournalHub();

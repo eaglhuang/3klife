@@ -51,5 +51,23 @@ export function createDispatchClickSuite(): TestSuite {
         assert.equals('無法派遣此任務。', dispatchClickMessage(unknown));
     });
 
+    suite.test('PROG-2-1186：指定武將派出；指定武將忙碌或休整時點名回報；可派清單排除忙碌者', () => {
+        const session = new GameSession(4);
+        session.enrollGenerals([hero('weak', '弱將', 30, 'Scholar'), hero('zhao', '趙雲', 90)]);
+        assert.equals(2, session.dispatchIdleGenerals(0).length);
+        const picked = session.dispatchJobById('PATROL', 0, 'weak');
+        assert.isTrue(picked.ok);
+        assert.equals('弱將', picked.generalName ?? '');
+        assert.equals('zhao', session.dispatchIdleGenerals(0).map((g) => g.id).join(','));
+        const busy = session.dispatchJobById('FARM', 0, 'weak');
+        assert.equals('general-busy', busy.reason ?? '');
+        assert.equals('弱將正在執行其他派遣。', dispatchClickMessage(busy));
+        session.settleDispatchJobs(4 * HOUR);
+        const resting = session.dispatchJobById('FARM', 4 * HOUR, 'weak');
+        assert.equals('general-cooldown', resting.reason ?? '');
+        assert.equals('弱將尚在休整，暫不能派遣。', dispatchClickMessage(resting));
+        assert.equals('no-general', session.dispatchJobById('FARM', 4 * HOUR, 'nobody').reason ?? '');
+    });
+
     return suite;
 }

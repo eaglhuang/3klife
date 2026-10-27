@@ -1808,11 +1808,19 @@ export class GameSession {
         return { roleTags, stats, journalTags };
     }
 
+    /** 目前可派遣（不忙碌也不在冷卻）的武將，名冊順序（PROG-2-1186 選將列用） */
+    public dispatchIdleGenerals(nowMs: number): { id: string; name: string }[] {
+        return this._roster.getAll()
+            .filter((g) => !this._dispatch.active.some((a) => a.generalId === g.id) && (this._dispatch.cooldowns[g.id] ?? 0) <= nowMs)
+            .map((g) => ({ id: g.id, name: g.name }));
+    }
+
     /**
      * 派遣板點列派遣（PROG-2-1181）：從暫定清單找任務，自動挑分數最高、不忙碌也不在冷卻的武將（同分取名冊順序）。
-     * 玩家親自點選視同親自決策，高風險任務可派。選將清單待企劃定版。
+     * 帶 generalId 時改派指定武將（PROG-2-1186），忙碌或冷卻中回報原因與姓名。
+     * 玩家親自點選視同親自決策，高風險任務可派。
      */
-    public dispatchJobById(jobId: string, nowMs: number): DispatchClickResult {
+    public dispatchJobById(jobId: string, nowMs: number, generalId?: string): DispatchClickResult {
         const job = findDispatchJob(jobId);
         if (!job) return { ok: false, reason: 'unknown-job' };
         const running = this._dispatch.active.find((a) => a.jobId === jobId);
@@ -1820,8 +1828,15 @@ export class GameSession {
             const name = this._roster.getAll().find((g) => g.id === running.generalId)?.name ?? running.generalId;
             return { ok: false, reason: 'job-active', jobName: job.name, generalName: name };
         }
-        const idle = this._roster.getAll().filter((g) =>
-            !this._dispatch.active.some((a) => a.generalId === g.id) && (this._dispatch.cooldowns[g.id] ?? 0) <= nowMs);
+        if (generalId) {
+            const chosen = this._roster.getAll().find((g) => g.id === generalId);
+            if (!chosen) return { ok: false, reason: 'no-general', jobName: job.name };
+            const result = this.startDispatchJob(job, chosen.id, nowMs);
+            if (!result?.ok) return { ok: false, reason: result?.reason ?? 'no-general', jobName: job.name, generalName: chosen.name };
+            return { ok: true, jobName: job.name, generalName: chosen.name };
+        }
+        const idleIds = new Set(this.dispatchIdleGenerals(nowMs).map((g) => g.id));
+        const idle = this._roster.getAll().filter((g) => idleIds.has(g.id));
         let best: { id: string; name: string } | null = null;
         let bestScore = -1;
         for (const g of idle) {

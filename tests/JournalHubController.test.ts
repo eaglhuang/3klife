@@ -1,5 +1,6 @@
 import { assert, TestSuite } from './TestRunner';
 import {
+    DISPATCH_AUTO_PICK_LABEL,
     DISPATCH_MAX_ROWS,
     JournalHubController,
     JournalHubDeps,
@@ -55,6 +56,23 @@ export function createJournalHubControllerSuite(): TestSuite {
 
     suite.test('關閉鈕永遠可按', () => {
         assert.isTrue(new JournalHubController(makeDeps()).getFlowView().enabled.btnClose);
+    });
+
+    suite.test('PROG-2-1186：選將列在自動挑選與可派武將間循環；人選不可派時回到自動', () => {
+        let generals = [{ id: 'zhao', name: '趙雲' }, { id: 'ma', name: '馬超' }];
+        const controller = new JournalHubController(makeDeps({ dispatchGenerals: () => generals }));
+        assert.equals('派遣武將：' + DISPATCH_AUTO_PICK_LABEL, controller.getFlowView().texts.dispatchPickerLabel);
+        assert.isTrue(controller.pickedGeneralId() === undefined);
+        controller.cyclePick(1);
+        assert.equals('zhao', controller.pickedGeneralId() ?? '');
+        assert.equals('派遣武將：趙雲', controller.getFlowView().texts.dispatchPickerLabel);
+        controller.cyclePick(-1);
+        controller.cyclePick(-1);
+        assert.equals('ma', controller.pickedGeneralId() ?? '');
+        generals = [{ id: 'zhao', name: '趙雲' }];
+        assert.isTrue(controller.pickedGeneralId() === undefined);
+        assert.equals('派遣武將：' + DISPATCH_AUTO_PICK_LABEL, controller.getFlowView().texts.dispatchPickerLabel);
+        assert.isFalse(new JournalHubController(makeDeps()).getFlowView().enabled.btnNextDispatchGeneral);
     });
 
     return suite;

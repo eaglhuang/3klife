@@ -21,7 +21,7 @@
         "name": "JournalHubCard",
         "id": "journalHubCard",
         "width": 1000,
-        "height": 936,
+        "height": 1012,
         "skinSlot": "jh.card.bg",
         "layout": {
           "type": "vertical",
@@ -86,6 +86,74 @@
             "height": 48,
             "text": "派遣板",
             "styleSlot": "jh.label.title"
+          },
+          {
+            "type": "container",
+            "name": "DispatchPickerRow",
+            "id": "dispatchPickerRow",
+            "width": 944,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnPrevDispatchGeneral",
+                "id": "btnPrevDispatchGeneral",
+                "width": 120,
+                "height": 64,
+                "skinSlot": "jh.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPrevDispatchGeneralLabel",
+                    "id": "btnPrevDispatchGeneralLabel",
+                    "width": 120,
+                    "height": 40,
+                    "text": "◀",
+                    "styleSlot": "jh.label.body"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "label",
+                "name": "DispatchPickerLabel",
+                "id": "dispatchPickerLabel",
+                "width": 600,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jh.label.body",
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnNextDispatchGeneral",
+                "id": "btnNextDispatchGeneral",
+                "width": 120,
+                "height": 64,
+                "skinSlot": "jh.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnNextDispatchGeneralLabel",
+                    "id": "btnNextDispatchGeneralLabel",
+                    "width": 120,
+                    "height": 40,
+                    "text": "▶",
+                    "styleSlot": "jh.label.body"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              }
+            ]
           },
           {
             "type": "label",

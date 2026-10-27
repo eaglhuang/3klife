@@ -58,6 +58,8 @@ export function dispatchBoardRows(
 export function dispatchClickMessage(result: { ok: boolean; reason?: string; jobName?: string; generalName?: string }): string {
     if (result.ok) return `${result.generalName ?? ''}出發執行「${result.jobName ?? ''}」。`;
     if (result.reason === 'job-active') return `「${result.jobName ?? ''}」由${result.generalName ?? ''}執行中。`;
+    if (result.reason === 'general-busy' && result.generalName) return `${result.generalName}正在執行其他派遣。`;
+    if (result.reason === 'general-cooldown' && result.generalName) return `${result.generalName}尚在休整，暫不能派遣。`;
     if (result.reason === 'no-general' || result.reason === 'general-busy' || result.reason === 'general-cooldown') return '目前沒有可派遣的武將。';
     return '無法派遣此任務。';
 }
