@@ -63,6 +63,7 @@ import { overflowToastText } from '../../core/systems/MentorOverflow';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
 import { WarehousePanelController } from '../core/WarehousePanelController';
 import { DISPATCH_MAX_ROWS, JournalHubController } from '../core/JournalHubController';
+import { GeneralJournalController } from '../core/GeneralJournalController';
 import { dispatchClickMessage } from '../../core/systems/DispatchCatalog';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 
@@ -279,6 +280,8 @@ export class LobbyScene extends Component {
     private _warehouseHost: UIScreenPreviewHost | null = null;
     private _journalHub: JournalHubController | null = null;
     private _journalHubHost: UIScreenPreviewHost | null = null;
+    private _generalJournal: GeneralJournalController | null = null;
+    private _generalJournalHost: UIScreenPreviewHost | null = null;
     private _rival: RivalDiplomacyController | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
@@ -443,6 +446,7 @@ export class LobbyScene extends Component {
         await this._mountRivalDiplomacy();
         await this._mountWarehouse();
         await this._mountJournalHub();
+        await this._mountGeneralJournal();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
         await this._mountGovernorHall();
@@ -1393,6 +1397,7 @@ export class LobbyScene extends Component {
         });
         this._journalHubHost = await this._mountPreviewScreenHost('JournalHubHost', 'journal-hub-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._journalHubHost) this._journalHubHost.node.active = false; } },
+            { buttonId: 'btnOpenGeneralJournal', handler: () => { this.openGeneralJournal(); } },
             ...Array.from({ length: DISPATCH_MAX_ROWS }, (_, i) => ({ buttonId: `dispatchRow${i}`, handler: () => { this._onClickDispatchRow(i); } })),
         ]);
         this._journalHubHost.node.active = false;
@@ -1407,6 +1412,44 @@ export class LobbyScene extends Component {
         services().event.emit('SHOW_TOAST', { message: dispatchClickMessage(result), duration: 2 });
         if (result.ok) void session.save().catch(() => undefined);
         this._openJournalHub();
+    }
+
+    /**
+     * 武將日誌回看抽屜（doc_spec_0015 範圍 #6，PROG-2-1183）：名冊武將可上一位／下一位切換。
+     * 入口暫放晨報派遣板；人物頁加入口鈕後呼叫 openGeneralJournal(generalId)。
+     */
+    private async _mountGeneralJournal(): Promise<void> {
+        const journal = new GeneralJournalController({
+            generals: () => services().session.roster.map((g) => ({ id: g.id, name: g.name })),
+            entries: (generalId) => services().session.queryJournal({ generalUid: generalId }),
+        });
+        this._generalJournal = journal;
+        this._generalJournalHost = await this._mountPreviewScreenHost('GeneralJournalHost', 'general-journal-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._generalJournalHost) this._generalJournalHost.node.active = false; } },
+            { buttonId: 'btnPrevGeneral', handler: () => { journal.prev(); this._refreshGeneralJournal(); } },
+            { buttonId: 'btnNextGeneral', handler: () => { journal.next(); this._refreshGeneralJournal(); } },
+        ]);
+        this._generalJournalHost.node.active = false;
+    }
+
+    /** 打開武將日誌；指定武將時切到該武將，否則沿用上次選擇 */
+    public openGeneralJournal(generalId?: string): void {
+        const host = this._generalJournalHost;
+        if (!host || !this._generalJournal) {
+            return;
+        }
+        if (generalId) this._generalJournal.select(generalId);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshGeneralJournal();
+    }
+
+    private _refreshGeneralJournal(): void {
+        const binder = this._generalJournalHost?.binder;
+        if (!binder || !this._generalJournal) {
+            return;
+        }
+        applyFlowView(binder, this._generalJournal.getFlowView());
     }
 
     private _openJournalHub(): void {

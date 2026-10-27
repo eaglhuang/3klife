@@ -21,7 +21,7 @@
         "name": "JournalHubCard",
         "id": "journalHubCard",
         "width": 1000,
-        "height": 860,
+        "height": 936,
         "skinSlot": "jh.card.bg",
         "layout": {
           "type": "vertical",
@@ -237,6 +237,25 @@
                 "height": 40,
                 "text": "",
                 "styleSlot": "jh.label.score"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnOpenGeneralJournal",
+            "id": "btnOpenGeneralJournal",
+            "width": 240,
+            "height": 64,
+            "skinSlot": "jh.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnOpenGeneralJournalLabel",
+                "id": "btnOpenGeneralJournalLabel",
+                "width": 240,
+                "height": 40,
+                "text": "武將日誌 ▶",
+                "styleSlot": "jh.label.body"
               }
             ]
           },
