@@ -51,6 +51,19 @@ export function mentorStarEntry(star: number | undefined): MentorStarEntry {
     return MENTOR_STAR_TABLE[clampMentorStar(star)];
 }
 
+/**
+ * 爆發率隨星等成長（§F 爆發機率範圍，PROG-2-1163）：SSR ★0 40%~65%、★5 55%~80%，兩端差 15 個百分點。
+ * 暫定：每升 1 星 +3 個百分點，R／SR 同樣套用；上限取規格最高值 80%，原本就高於上限的不往下砍。
+ */
+export const MENTOR_BURST_RATE_PER_STAR = 0.03;
+export const MENTOR_BURST_RATE_CAP = 0.8;
+
+export function burstRateAtStar(baseRate: number, star: number | undefined): number {
+    const grown = Math.min(MENTOR_BURST_RATE_CAP, baseRate + MENTOR_BURST_RATE_PER_STAR * clampMentorStar(star));
+    // 四捨五入到萬分位，避免 0.4 + 0.15 的浮點尾數
+    return Math.round(Math.max(baseRate, grown) * 10000) / 10000;
+}
+
 /** 已解鎖的靈感事件組數；星等表已涵蓋，這裡只做夾取保險 */
 export function unlockedEventGroupCount(star: number | undefined): number {
     return Math.min(mentorStarEntry(star).unlockedEventGroups, MENTOR_EVENT_GROUP_COUNT);

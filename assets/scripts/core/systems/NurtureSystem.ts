@@ -23,7 +23,7 @@ import { effectiveGrowthModifier } from './Unveiling';
 import { HybridSkillSource, rollHybridTrigger } from './HybridSkill';
 import { rollNurtureRoundEvents } from './NurtureEvents';
 import { FactorDictionary, resolveFactorColor } from './FactorInheritance';
-import { MENTOR_STAR_TABLE } from './MentorBreakthrough';
+import { burstRateAtStar, MENTOR_STAR_TABLE } from './MentorBreakthrough';
 import { inspireEventsFromSupport, InspireEvent } from './MentorInspiration';
 import { surnameOf } from './VirtualAncestorGenerator';
 import { findTriggeredSynergy, synergyTpBonus } from './MentorSynergy';
@@ -626,6 +626,7 @@ export const MENTOR_CARD_STAT_PER_BONUS_POINT = 5;
  * - 擅長科目：武官取武力 / 統率較高者、文官取智力 / 政治較高者，沒有職能就五項取最高（同分依武、智、統、政、魅）
  * - 加成：tpBonus 看退役時的 EP，擅長科目另有屬性加成；星等取卡片的突破星等（沒有視為 0）
  * 帶支援卡資料時，擅長科目取 Training_Slot_Affinity 第一格、爆發率取 Slot_Burst_Rate（§F-8），不再用推算值與預設 0.5。
+ * 爆發率再依突破星等成長（burstRateAtStar，每星 +3 個百分點、上限 80%）。
  * 教官不參與血統因子遺傳，這裡不讀 gene_refs。
  */
 export function mentorFromCard(
@@ -643,7 +644,8 @@ export function mentorFromCard(
         statBonus: { [specialty]: Math.round(statOf(snapshot, specialty) / MENTOR_CARD_STAT_PER_BONUS_POINT) },
         specialty,
         stars: overrides.stars ?? card.stars ?? 0,
-        burstRate: overrides.burstRate ?? card.support?.slotBurstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE,
+        // 呼叫端明確覆寫時照用；否則卡片爆發率依突破星等成長（PROG-2-1163）
+        burstRate: overrides.burstRate ?? burstRateAtStar(card.support?.slotBurstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE, overrides.stars ?? card.stars ?? 0),
         familyName: overrides.familyName ?? (card.name ? surnameOf(card.name) : undefined),
         ...(card.support
             ? {
