@@ -23,7 +23,7 @@ import { effectiveGrowthModifier } from './Unveiling';
 import { HybridSkillSource, rollHybridTrigger } from './HybridSkill';
 import { rollNurtureRoundEvents } from './NurtureEvents';
 import { FactorDictionary, resolveFactorColor } from './FactorInheritance';
-import { burstRateAtStar, MENTOR_STAR_TABLE } from './MentorBreakthrough';
+import { burstRateAtStar, MENTOR_STAR_TABLE, mentorStarPerks } from './MentorBreakthrough';
 import { inspireEventsFromSupport, InspireEvent } from './MentorInspiration';
 import { surnameOf } from './VirtualAncestorGenerator';
 import { findTriggeredSynergy, synergyTpBonus } from './MentorSynergy';
@@ -637,15 +637,19 @@ export function mentorFromCard(
     const pool = snapshot.careerClass === 'Warrior' ? WARRIOR_KINDS : snapshot.careerClass === 'Scholar' ? SCHOLAR_KINDS : TRAINING_KINDS;
     const derived = pool.reduce((best, kind) => (statOf(snapshot, kind) > statOf(snapshot, best) ? kind : best), pool[0]);
     const specialty = card.support?.trainingSlotAffinity?.[0] ?? derived;
+    const stars = overrides.stars ?? card.stars ?? 0;
+    // 突破「其他加成」：初期情誼、擅長科目屬性倍率、TP 加成依星等累計（PROG-2-1164）
+    const perks = mentorStarPerks(stars);
     return {
         id: card.uid,
         name: card.name,
-        tpBonus: Math.round(card.ep_snapshot / MENTOR_CARD_EP_PER_TP_POINT),
-        statBonus: { [specialty]: Math.round(statOf(snapshot, specialty) / MENTOR_CARD_STAT_PER_BONUS_POINT) },
+        tpBonus: Math.round(card.ep_snapshot / MENTOR_CARD_EP_PER_TP_POINT) + perks.tpBonusAdd,
+        statBonus: { [specialty]: Math.round((statOf(snapshot, specialty) / MENTOR_CARD_STAT_PER_BONUS_POINT) * perks.statBonusMultiplier) },
         specialty,
-        stars: overrides.stars ?? card.stars ?? 0,
+        stars,
+        ...(perks.initialFriendship > 0 ? { friendship: perks.initialFriendship } : {}),
         // 呼叫端明確覆寫時照用；否則卡片爆發率依突破星等成長（PROG-2-1163）
-        burstRate: overrides.burstRate ?? burstRateAtStar(card.support?.slotBurstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE, overrides.stars ?? card.stars ?? 0),
+        burstRate: overrides.burstRate ?? burstRateAtStar(card.support?.slotBurstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE, stars),
         familyName: overrides.familyName ?? (card.name ? surnameOf(card.name) : undefined),
         ...(card.support
             ? {
