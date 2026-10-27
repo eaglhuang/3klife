@@ -163,6 +163,7 @@ import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMento
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
+import { useLongevityPill, type LongevityPillUseResult } from '../systems/LongevityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
 import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampaignStagePlayable } from '../config/CampaignStages';
@@ -818,6 +819,21 @@ export class GameSession {
         if (!result.ok) return result;
         this._inventory = result.inventory;
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? { ...g, vitality: result.vitality, maxVitality: max } : g)));
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
+    }
+
+    /** 對武將使用延壽丹（E-6，PROG-2-1347）：壽命上限 +3 寫回名冊並自動存檔；不成立時不扣道具 */
+    public async useLongevityPillOnGeneral(generalId: string): Promise<LongevityPillUseResult | { readonly ok: false; readonly reason: 'no-general' }> {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general) return { ok: false, reason: 'no-general' };
+        const result = useLongevityPill(this._inventory, general);
+        if (!result.ok) return result;
+        this._inventory = result.inventory;
+        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? { ...g, maxLifespan: result.maxLifespan } : g)));
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         if (this._autoSave && this._save) {
             await this.save();
