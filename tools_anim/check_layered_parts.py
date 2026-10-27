@@ -1282,6 +1282,99 @@ def run_layered_parts_inspection(
             }
 
     # 依據 AG-22 動態推導關節列表
+
+    # AG-37: weapon 建議級檢查 weaponGripOnShaft (握點兩側 50px 範圍內 weapon 每一欄厚度必須落在木桿厚度帶內)
+    if "weapon" in loaded_parts and not slot_reports.get("weapon", {}).get("empty"):
+        w_arr = loaded_parts["weapon"]
+        w_alpha = w_arr[..., 3]
+        w_ys, w_xs = np.where(w_alpha > 0)
+        if len(w_xs) > 0:
+            # 1. 量測 weapon 自身每一欄的垂直厚度跨度
+            col_thicks: dict[int, int] = {}
+            min_x_w = int(w_xs.min())
+            max_x_w = int(w_xs.max())
+            for cx in range(min_x_w, max_x_w + 1):
+                cys = w_ys[w_xs == cx]
+                if len(cys) > 0:
+                    col_thicks[cx] = int(cys.max() - cys.min() + 1)
+
+            all_thicks = list(col_thicks.values())
+            median_shaft_t = float(np.median(all_thicks)) if all_thicks else 20.0
+            shaft_min_t = round(median_shaft_t * 0.70, 1)
+            shaft_max_t = round(median_shaft_t * 1.30, 1)
+
+            # 2. 定義握點
+            grips_to_check = [
+                ("hand_f", "grip_A", float(grip_a[0]), float(grip_a[1])),
+                ("hand_b", "grip_B", float(grip_b[0]), float(grip_b[1])),
+            ]
+            grip_radius_px = 50.0
+
+            grips_res: dict[str, Any] = {}
+            all_grips_shaft_pass = True
+            grip_fail_msgs: list[str] = []
+
+            for hand_name, grip_id, gx, gy in grips_to_check:
+                x_start = int(round(gx - grip_radius_px))
+                x_end = int(round(gx + grip_radius_px))
+                g_col_thicks = []
+                missing_cols = 0
+                out_of_range_cols = 0
+
+                for cx in range(x_start, x_end + 1):
+                    if cx not in col_thicks:
+                        missing_cols += 1
+                    else:
+                        t = col_thicks[cx]
+                        g_col_thicks.append(t)
+                        if t < shaft_min_t or t > shaft_max_t:
+                            out_of_range_cols += 1
+
+                min_t_meas = min(g_col_thicks) if g_col_thicks else 0
+                max_t_meas = max(g_col_thicks) if g_col_thicks else 0
+                med_t_meas = float(np.median(g_col_thicks)) if g_col_thicks else 0.0
+
+                g_pass = (missing_cols == 0) and (out_of_range_cols == 0) and len(g_col_thicks) > 0
+                if not g_pass:
+                    all_grips_shaft_pass = False
+                    reason_parts = []
+                    if missing_cols > 0:
+                        reason_parts.append(f"缺像素欄數={missing_cols}")
+                    if out_of_range_cols > 0:
+                        reason_parts.append(f"超出厚度帶欄數={out_of_range_cols} (實測跨度={min_t_meas}~{max_t_meas}px, 容許={shaft_min_t}~{shaft_max_t}px)")
+                    grip_fail_msgs.append(f"{hand_name}: {'; '.join(reason_parts)}")
+
+                grips_res[hand_name] = {
+                    "gripId": grip_id,
+                    "targetGrip": [gx, gy],
+                    "pass": g_pass,
+                    "measuredThicknessRangePx": [min_t_meas, max_t_meas],
+                    "medianThicknessPx": round(med_t_meas, 1),
+                    "missingColumns": missing_cols,
+                    "outOfRangeColumns": out_of_range_cols,
+                    "detail": (
+                        f"厚度 {min_t_meas}~{max_t_meas}px 落在木桿厚度帶內 [{shaft_min_t}, {shaft_max_t}]px"
+                        if g_pass
+                        else f"未完全落在木桿帶 (實測={min_t_meas}~{max_t_meas}px, 容許=[{shaft_min_t}, {shaft_max_t}]px)"
+                    ),
+                }
+
+            summary_msg = (
+                f"木桿中位厚度={median_shaft_t:.1f}px, 容許帶=[{shaft_min_t}, {shaft_max_t}]px; 所有握點兩側50px皆落在木桿上"
+                if all_grips_shaft_pass
+                else f"木桿中位厚度={median_shaft_t:.1f}px, 容許帶=[{shaft_min_t}, {shaft_max_t}]px; 未達標: {', '.join(grip_fail_msgs)} [ADVISORY]"
+            )
+
+            slot_reports["weapon"]["checks"]["weaponGripOnShaft"] = {
+                "pass": all_grips_shaft_pass,
+                "tier": "PASS" if all_grips_shaft_pass else "ADVISORY",
+                "advisory": True,
+                "medianShaftThicknessPx": round(median_shaft_t, 1),
+                "allowedThicknessRangePx": [shaft_min_t, shaft_max_t],
+                "gripRadiusPx": grip_radius_px,
+                "grips": grips_res,
+                "detail": summary_msg,
+            }
     joint_connections = derive_joint_connections(spec)
 
     # 提取規格中所有握點座標 (供輪廓檢驗時排除拳孔填實)
