@@ -96,6 +96,8 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
             if "neckExtension" in c_seg_def and isinstance(c_seg_def["neckExtension"], dict):
                 rot_deg = float(c_seg_def["neckExtension"].get("rotationTestDeg", rot_deg))
 
+            rot_occluders = list(override.get("rotationOccluders", []))
+
             connections.append({
                 "id": f"{parent_name}_to_{child_name}",
                 "joint_name": child_name,
@@ -106,6 +108,7 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
                 "cap_rad": cap_rad,
                 "rigid": is_rigid,
                 "rotationTestDeg": rot_deg,
+                "rotationOccluders": rot_occluders,
             })
 
     return connections
@@ -349,14 +352,30 @@ def check_rotation_gap_leak(
     check_radius_px: float,
     w: int,
     h: int,
-) -> tuple[bool, np.ndarray]:
-    """檢驗子部件繞樞紐旋轉 angle_deg 後，關節周圍是否出現穿透露縫"""
+    occluder_arrs: dict[str, np.ndarray] | None = None,
+) -> tuple[bool, np.ndarray, dict[str, Any]]:
+    """檢驗子部件繞樞紐旋轉 angle_deg 後，關節周圍是否出現穿透露縫
+    依據工單 AG-28 規範：
+    1. 支援 rotationOccluders 遮蔽聯集 (跟隨 child 剛性旋轉)
+    2. 報告與判定清晰分開：咬合重疊率門檻 20%、覆蓋率門檻 15%、容許非重疊上限 (leakTolerancePx = 80%)
+    3. 分開統計未遮蔽露縫數、加遮蔽後露縫數、各遮蔽槽各蓋掉多少像素與真正透光縫隙
+    """
     # 旋轉子部件
     M = cv2.getRotationMatrix2D(pivot_pt, angle_deg, 1.0)
     rotated_child = cv2.warpAffine(child_arr, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
     parent_alpha = parent_arr[..., 3] > 16
     child_alpha = rotated_child[..., 3] > 16
+
+    # 旋轉各 rotationOccluders 槽位 (與 child 剛性連接，以同一樞紐同一角度旋轉)
+    rotated_occluders: dict[str, np.ndarray] = {}
+    occ_union = np.zeros((h, w), dtype=bool)
+    if occluder_arrs:
+        for occ_name, occ_arr in occluder_arrs.items():
+            rot_occ = cv2.warpAffine(occ_arr, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
+            occ_a = rot_occ[..., 3] > 16
+            rotated_occluders[occ_name] = occ_a
+            occ_union |= occ_a
 
     # 建立以樞紐為中心、半徑為 check_radius_px * 0.4 的核心檢查圓盤
     core_rad = check_radius_px * 0.4
@@ -374,19 +393,60 @@ def check_rotation_gap_leak(
     core_disk = np.array(circle_im) > 128
     disk_total = max(1, int(core_disk.sum()))
 
-    # 1. 關節核心覆蓋率檢驗 (容許拳心空心孔中心局部透明，但核心內必須具備充足肉質)
-    child_cov_count = int((child_alpha & core_disk).sum())
-    parent_cov_count = int((parent_alpha & core_disk).sum())
-    has_cov = (child_cov_count >= int(disk_total * 0.15)) and (parent_cov_count >= int(disk_total * 0.15))
+    # --- (A) 未加遮蔽時之指標 ---
+    child_cov_raw = int((child_alpha & core_disk).sum())
+    parent_cov = int((parent_alpha & core_disk).sum())
+    overlap_raw = core_disk & parent_alpha & child_alpha
+    overlap_raw_count = int(overlap_raw.sum())
+    leak_raw_non_overlap = core_disk & (~(parent_alpha & child_alpha))
+    leak_raw_count = int(leak_raw_non_overlap.sum())
+    uncovered_raw = core_disk & (~(parent_alpha | child_alpha))
+    uncovered_raw_count = int(uncovered_raw.sum())
 
-    # 2. 咬合重疊檢驗
-    overlap_mask = core_disk & parent_alpha & child_alpha
-    overlap_count = int(overlap_mask.sum())
+    # --- (B) 加了遮蔽後之指標 ---
+    child_effective_alpha = child_alpha | occ_union
+    child_cov_eff = int((child_effective_alpha & core_disk).sum())
+    overlap_eff = core_disk & parent_alpha & child_effective_alpha
+    overlap_eff_count = int(overlap_eff.sum())
+    leak_eff_non_overlap = core_disk & (~(parent_alpha & child_effective_alpha))
+    leak_eff_count = int(leak_eff_non_overlap.sum())
+    uncovered_eff = core_disk & (~(parent_alpha | child_effective_alpha))
+    uncovered_eff_count = int(uncovered_eff.sum())
 
-    leak_mask = core_disk & (~(parent_alpha & child_alpha))
-    passed = has_cov and (overlap_count >= int(disk_total * 0.2))
+    # 各遮蔽槽在核心圓盤內覆蓋 raw leak 之像素數
+    occluded_by_slot: dict[str, int] = {}
+    for occ_name, occ_a in rotated_occluders.items():
+        occ_in_leak = int((leak_raw_non_overlap & occ_a).sum())
+        occluded_by_slot[occ_name] = occ_in_leak
 
-    return passed, leak_mask
+    # --- (C) 判定邏輯 (不改門檻數值) ---
+    min_overlap_required = int(disk_total * 0.2)
+    leak_tolerance_px = disk_total - min_overlap_required
+    has_cov = (child_cov_eff >= int(disk_total * 0.15)) and (parent_cov >= int(disk_total * 0.15))
+    passed = has_cov and (overlap_eff_count >= min_overlap_required)
+
+    leak_mask = leak_eff_non_overlap
+
+    metrics: dict[str, Any] = {
+        "coreRadiusPx": round(core_rad, 2),
+        "coreTotalPixels": disk_total,
+        "minRequiredOverlapPixels": min_overlap_required,
+        "minRequiredOverlapRatio": 0.2,
+        "leakTolerancePx": leak_tolerance_px,
+        "parentCoverageInCore": parent_cov,
+        "childCoverageWithoutOccluders": child_cov_raw,
+        "childCoverageWithOccluders": child_cov_eff,
+        "overlapPixelsWithoutOccluders": overlap_raw_count,
+        "overlapPixelsWithOccluders": overlap_eff_count,
+        "nonOverlapPixelsWithoutOccluders": leak_raw_count,
+        "nonOverlapPixelsWithOccluders": leak_eff_count,
+        "trueSeamLeakPixelsWithoutOccluders": uncovered_raw_count,
+        "trueSeamLeakPixelsWithOccluders": uncovered_eff_count,
+        "occludedBySlotPx": occluded_by_slot,
+        "passed": passed,
+    }
+
+    return passed, leak_mask, metrics
 
 
 def compute_contour_chamfer_p95(mask_comp: np.ndarray, mask_ref: np.ndarray) -> float:
@@ -1063,11 +1123,17 @@ def run_layered_parts_inspection(
         p_arr = loaded_parts[p_sid]
         c_arr = loaded_parts[c_sid]
 
-        leak_pos_ok, leak_pos_m = check_rotation_gap_leak(
-            p_arr, c_arr, piv_pt, tested_deg, check_rad, exp_w, exp_h
+        rot_occluder_names = j_conn.get("rotationOccluders", [])
+        occluder_arrs: dict[str, np.ndarray] = {}
+        for occ_sid in rot_occluder_names:
+            if occ_sid in loaded_parts and not slot_reports.get(occ_sid, {}).get("empty", False):
+                occluder_arrs[occ_sid] = loaded_parts[occ_sid]
+
+        leak_pos_ok, leak_pos_m, metrics_pos = check_rotation_gap_leak(
+            p_arr, c_arr, piv_pt, tested_deg, check_rad, exp_w, exp_h, occluder_arrs
         )
-        leak_neg_ok, leak_neg_m = check_rotation_gap_leak(
-            p_arr, c_arr, piv_pt, -tested_deg, check_rad, exp_w, exp_h
+        leak_neg_ok, leak_neg_m, metrics_neg = check_rotation_gap_leak(
+            p_arr, c_arr, piv_pt, -tested_deg, check_rad, exp_w, exp_h, occluder_arrs
         )
 
         leak_pass = leak_pos_ok and leak_neg_ok
@@ -1076,8 +1142,34 @@ def run_layered_parts_inspection(
             "tier": "PASS" if leak_pass else "FAIL",
             "skipped": False,
             "testedAngles": [tested_deg, -tested_deg],
-            "leakPixelsPositive": int(leak_pos_m.sum()),
-            "leakPixelsNegative": int(leak_neg_m.sum()),
+            "rotationOccluders": rot_occluder_names,
+            "coreTotalPixels": metrics_pos["coreTotalPixels"],
+            "minRequiredOverlapPixels": metrics_pos["minRequiredOverlapPixels"],
+            "leakTolerancePx": metrics_pos["leakTolerancePx"],
+            "leakPixelsPositive": metrics_pos["nonOverlapPixelsWithOccluders"],
+            "leakPixelsNegative": metrics_neg["nonOverlapPixelsWithOccluders"],
+            "positiveAngleMetrics": {
+                "angleDeg": tested_deg,
+                "leakWithoutOccludersPx": metrics_pos["nonOverlapPixelsWithoutOccluders"],
+                "leakWithOccludersPx": metrics_pos["nonOverlapPixelsWithOccluders"],
+                "trueSeamLeakPx": metrics_pos["trueSeamLeakPixelsWithOccluders"],
+                "overlapPixels": metrics_pos["overlapPixelsWithOccluders"],
+                "minRequiredOverlapPx": metrics_pos["minRequiredOverlapPixels"],
+                "leakTolerancePx": metrics_pos["leakTolerancePx"],
+                "occludedBySlotPx": metrics_pos["occludedBySlotPx"],
+                "result": "PASS" if leak_pos_ok else "FAIL",
+            },
+            "negativeAngleMetrics": {
+                "angleDeg": -tested_deg,
+                "leakWithoutOccludersPx": metrics_neg["nonOverlapPixelsWithoutOccluders"],
+                "leakWithOccludersPx": metrics_neg["nonOverlapPixelsWithOccluders"],
+                "trueSeamLeakPx": metrics_neg["trueSeamLeakPixelsWithOccluders"],
+                "overlapPixels": metrics_neg["overlapPixelsWithOccluders"],
+                "minRequiredOverlapPx": metrics_neg["minRequiredOverlapPixels"],
+                "leakTolerancePx": metrics_neg["leakTolerancePx"],
+                "occludedBySlotPx": metrics_neg["occludedBySlotPx"],
+                "result": "PASS" if leak_neg_ok else "FAIL",
+            },
         }
 
         if not leak_pass and out_dir:

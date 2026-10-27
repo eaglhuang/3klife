@@ -640,6 +640,18 @@
       },
       "foot_b": {
         "parent": "shin_b"
+      },
+      "hand_f": {
+        "rotationOccluders": [
+          "weapon"
+        ],
+        "rotationOccludersNote": "v3.9：握點拳孔在 ±rotationTestDeg 檢查時以 weapon 槽 alpha 一併視為遮蔽（持槍時槍桿穿過拳孔）。三片聯集後仍露出的像素才算關節縫。非持槍時拳孔外露屬設計，不算關節縫。"
+      },
+      "hand_b": {
+        "rotationOccluders": [
+          "weapon"
+        ],
+        "rotationOccludersNote": "v3.9：握點拳孔在 ±rotationTestDeg 檢查時以 weapon 槽 alpha 一併視為遮蔽（持槍時槍桿穿過拳孔）。三片聯集後仍露出的像素才算關節縫。非持槍時拳孔外露屬設計，不算關節縫。"
       }
     },
     "note": "21 槽＝bones 去掉 root、ik_*、weapon_grip_rear、*_mid、*_tip；槽名即骨名，動作庫可直接共用。每個關節兩側部件須畫出被遮擋的延伸，至少越過關節 hiddenExtensionH×H；關節 ±rotationTestDeg 旋轉不得露縫。cape／skirt／hair_tail 可為空槽。runtime 再裁成圖集並附 offset/pivot manifest。",
