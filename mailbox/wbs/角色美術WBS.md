@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 14:20 Claude：AG-27 獨立重驗通過（18 檔測試全過；v10 實跑 REFUSED、22 項拒絕原因）；AG-27b 小修上臂骨字串判斷；Codex 已接手 pelvis／後手鏈。
 - 2026-10-27 14:15 AG-27 完成：check_layered_parts.py 實作 v3.8 頸部通用延伸豁免（replacesGenericHiddenExtension），兩側以旋轉露縫為準；實作動作庫合併比對工具 merge_motion_library.py（逐骨 setup 差比對、slot 引用檢查、手臂/武器 scale!=1 與 arm_upper 位移>16px 審核、數值原樣合併）；Sparkle v10 實測如預期拒絕合併（foot 父骨不符、20 處 setup 超差、arm_upper 位移最大 212px）；新增專屬單元測試，全套 18 個測試檔、75 項單元測試 100% 通過（cc20b7c1f）。
 - 2026-10-27 14:05 Claude R281：不採世界座標重定向，等 Sparkle v11 setup 對齊；2D 專家驗收項目整理成清單備用。
 - 2026-10-27 14:00 Claude R280：舊 R244 分件只作參考，pelvis／後手鏈重切重畫；動作庫須用規格標準 setup，AG-27 對 v10 預期改為拒絕合併；Sparkle v10 補充包已交使用者。
