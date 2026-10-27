@@ -56,34 +56,34 @@
 | **demo_playbook.md (doc_spec_0161)** | BattleScene.ts | ✅ | ✅ | ❌ | ❌ | ⬜ |
 | **demo_技術架構.md (doc_tech_0015)** | ServiceLoader.ts, PoolSystem.ts, ResourceManager.ts, EffectSystem.ts, AudioSystem.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **keep.md (doc_index_0011) §7** | MaterialUtils.ts, MaterialSystem.ts | ✅ | ✅ | ✅ | ❌ | ⬜ |
-| 俘虜處理系統.md (doc_spec_0021) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 傭兵系統（試用）.md (doc_spec_0029) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 可結緣女性來源系統.md (doc_spec_0003) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 同名武將系統.md (doc_spec_0005) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 俘虜處理系統.md (doc_spec_0021) | PrisonerOfWar.ts, PrisonerPopupController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 傭兵系統（試用）.md (doc_spec_0029) | MercenaryIllustration.ts, MercenaryPanelView.ts, MercenaryNameplateRows.ts, MercenaryPanelController.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| 可結緣女性來源系統.md (doc_spec_0003) | DaughterComingOfAge.ts, FemaleSource.ts, FemaleSourcePresenter.ts, BreedingPreviewPresenter.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| 同名武將系統.md (doc_spec_0005) | SoulTransfer.ts, BloodlineInfusion.ts, BloodlineMerge.ts, ReviveRetrain.ts, SortieDeploy.ts, SoulFragmentLedger.ts, SoulInjectCandidates.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | 名士預言系統.md (doc_spec_0006) | BondingSetupController.ts（名士批語 3 列，PROG-2-1131） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 名詞定義文件.md (doc_spec_0008) | 尚無實作 | ✅ | ✅ | — | — | ⬜ |
 | 因子解鎖系統.md (doc_spec_0009) | AwakeningReveal.ts（戰後覺醒結算揭示，PROG-2-1133；畫面定格動畫未做） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 培育系統.md (doc_spec_0026) | NurtureSystem.ts、TacticLearning.ts、NurtureFlowController.ts（戰法列，PROG-2-1132／1134）；InspiredTacticMap.ts（靈感戰法對應戰法庫，PROG-2-1135） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| 家族關係（史實相性）系統.md (doc_spec_0024) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 戰場適性系統.md (doc_spec_0041) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 家族關係（史實相性）系統.md (doc_spec_0024) | ComboAttackKin.ts, RelationEvents.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| 戰場適性系統.md (doc_spec_0041) | ArenaScore.ts, BattleAptitude.ts, BattlefieldRecon.ts, DesertVitality.ts, TerrainTroopRules.ts, WeatherSchedule.ts, WeatherTacticRestriction.ts, EnvScoutPresenter.ts, TacticAvailabilityPresenter.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | 教官系統（支援卡）.md (doc_spec_0027) | NurtureSystem.ts（inspiredTacticIds）、GameSession.ts（learnTactic 擋法，PROG-2-1134）；InspiredTacticMap.ts（17 個靈感戰法對應現有 8 招戰法庫，PROG-2-1135；逐招獨立戰場效果未做）；NpcFriendMentor.ts（friendMentorCard）、NurtureFlowController.ts（setBorrowedMentor）、LobbyScene.ts（_onClickStartBorrow，好友借用入學前，PROG-2-1138） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 正式版劇本文案.md (doc_spec_0004) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
 | 武將壽命系統.md (doc_spec_0018) | GeneralAging.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
-| 武將戰績系統.md (doc_spec_0019) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 武將背包（倉庫）系統.md (doc_spec_0017) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 留存系統.md (doc_spec_0025) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 武將戰績系統.md (doc_spec_0019) | BattleLeaderboardView.ts, BattleRecordStats.ts, BattleSnapshot.ts, HiddenFactorAwakening.ts, MilestoneRewards.ts, RetireReviewCopy.ts, SeasonReportPanel.ts, HiddenFactorText.ts, RetireReviewController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 武將背包（倉庫）系統.md (doc_spec_0017) | EquipmentBonus.ts, GeneralBackpack.ts, GeneralEquipTransfer.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| 留存系統.md (doc_spec_0025) | FarewellLetterInbox.ts, LoginStreak.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 結緣系統（配種）.md (doc_spec_0028) | BondingSetupController.ts（三欄重排、父母頭像，PROG-2-1130／1131） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| 經濟系統.md (doc_spec_0032) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 血統理論系統.md (doc_spec_0011) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 資源循環系統.md (doc_spec_0033) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 轉職與宿命系統.md (doc_spec_0043) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 轉蛋系統.md (doc_spec_0042) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 經濟系統.md (doc_spec_0032) | AccelerateCard.ts, DomesticTasks.ts, ItemShopPricing.ts, MilitaryReserve.ts, ResourceCap.ts, VitalityPill.ts, VitalityPillController.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| 血統理論系統.md (doc_spec_0011) | BloodlineGraph.ts, AwakeningTitle.ts, BloodlineBeast.ts, BreedingSystem.ts, FactorInheritance.ts, GeneCatalyst.ts, HybridSkill.ts, VirtualAncestorGenerator.ts, WildGene.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 資源循環系統.md (doc_spec_0033) | LateBloomClue.ts, LifeVitalityPresenter.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 轉職與宿命系統.md (doc_spec_0043) | UnveilingService.ts, JobChange.ts, JobChangeWiring.ts, RetirementRouting.ts, Unveiling.ts, JobChangeController.ts, NurtureFlowController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 轉蛋系統.md (doc_spec_0042) | DestinyShop.ts, GachaCurrency.ts, GachaDraw.ts, GachaPoolGuide.ts, OverflowBond.ts, Rebirth.ts, DestinyShopController.ts, GachaPoolGuidePresenter.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 遊戲時間系統.md (doc_spec_0034) | GameClock.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
-| 運氣系統.md (doc_spec_0035) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 道具系統（付費免費道具）.md (doc_spec_0036) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
-| 領地治理系統.md (doc_spec_0037) | 尚無實作 | ✅ | ❌ | — | — | ⬜ |
+| 運氣系統.md (doc_spec_0035) | FateBlessing.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 道具系統（付費免費道具）.md (doc_spec_0036) | FertilityBoost.ts, ItemBagView.ts, ItemEffectDispatcher.ts, ItemRefreshEffect.ts, PlayerInventory.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| 領地治理系統.md (doc_spec_0037) | ChildMagistrate.ts, ChildOfficialPosts.ts, DomesticAutoGovernance.ts, DomesticTasks.ts, GovernanceAssignment.ts, GovernorHallView.ts, HereditaryKeep.ts, LifespanSave.ts, TerritoryUpgrade.ts, GovernorHallController.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | **戰法場景規格書.md (doc_spec_0039)** | ActionSystem.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| 熱更新與版本控制規格書.md (doc_tech_0012) | 尚無實作 | ✅ | ✅ | — | — | ⬜ |
+| 熱更新與版本控制規格書.md (doc_tech_0012) | SaveVersion.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 
 ---
 
