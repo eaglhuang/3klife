@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-28 01:21 Claude：R313 腕口不豁免（hand_f 實際轉到 50.67°）須修前臂；領口授權估讀多邊形（scratch）；AG-38 驗收通過。
 - 2026-10-28 01:05 AG-38 完成：check_layered_parts.py 實作 gripRegistration 判定改為 8 方向射線拳孔包覆（門檻 >= 6/8，半徑 40 px，alpha >= 128），形心距離轉為參考不再阻擋，並量測握點 +/-12 px 覆蓋率（純輸出不判定）；對 R299 原版 hand_f 實測命中 0/8 方向正確判 FAIL (ADVISORY)，平移 (-65, +54) 實測命中 8/8 方向（命中距離 3~7 px 完美包覆）判定 PASS，R299 hand_b 實測命中 8/8 方向判定 PASS；更新 test_ag36_grip_registration.py，全套 114 項單元測試 100% 通過（c0dc76434）。
 - 2026-10-28 00:58 Claude：R312：head 不用生圖、不碰 GPU，被遮住的頸部用既有膚色漸層補；先帶 anchors 重跑，再判斷 16/21 是否真失敗。
 - 2026-10-28 00:41 Claude：R309 腕口暫定通過（合成最大差 4/255）；R311 釐清 head 由 Codex 依 R305 自 R299 head 改圖、重跑檢查須帶 anchors 與 02c96dc3f；AG-38 把 gripRegistration 由形心改為拳孔包覆。
