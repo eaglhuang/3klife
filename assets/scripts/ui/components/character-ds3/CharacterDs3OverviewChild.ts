@@ -70,6 +70,9 @@ const DS3_RARITY_PILL_TEXT: Record<GeneralDetailOverviewContentState['rarityTier
     mythic: [255, 255, 255],
 };
 
+/** 統領軍勢五列的值節點，依 commandPanelRows 的 key 對應（PROG-2-1213 / TSK-06） */
+const COMMAND_VALUE_NODE_PREFIX = 'CharacterDs3TabOverview_cmd_value_';
+
 const ACTIVE_STAR_COLOR = new Color(212, 175, 55, 255);
 const INACTIVE_STAR_COLOR = new Color(77, 70, 53, 255);
 
@@ -111,6 +114,7 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         this._applyRarityPill(state.rarityTier);
         this._applyRarityStars(state.rarityTier);
         this._applyAwakeningProgress(state.awakeningProgress);
+        this._applyCommandPanel(state);
 
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3OverviewChild] onDataUpdate applied', {
             name: state.headerName,
@@ -202,6 +206,12 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
 
         const ratio = Math.max(0, Math.min(1, progress / 100));
         fillTransform.width = Math.round(trackTransform.width * ratio);
+    }
+
+    private _applyCommandPanel(state: GeneralDetailOverviewContentState): void {
+        for (const row of state.commandPanelRows) {
+            this._setLabelText(`${COMMAND_VALUE_NODE_PREFIX}${row.key}`, row.value);
+        }
     }
 
     private _setLabelText(nodeName: string, text: string): void {
