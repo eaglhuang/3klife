@@ -7,7 +7,7 @@ import type { TalismanInventoryEntry } from '../assets/scripts/core/systems/Read
 import type { TalismanSlotView } from '../assets/scripts/core/systems/TalismanSlotView';
 import { deriveInventoryViews } from '../assets/scripts/core/systems/InventoryProjection';
 import { buildTallyInventoryRecords } from '../assets/scripts/core/systems/InventoryRecordBridge';
-import { buildGeneralDetailOverviewContentState } from '../assets/scripts/ui/components/GeneralDetailOverviewMapper';
+import { battleRecordOf, buildGeneralDetailOverviewContentState } from '../assets/scripts/ui/components/GeneralDetailOverviewMapper';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 function equipped(score: number, troop?: string): TalismanSlotView {
@@ -60,6 +60,18 @@ export function createGeneralTallySummarySuite(): TestSuite {
         assert.isTrue(state.tallySummary.tallyLine.startsWith('虎符：SR'));
         assert.equals('近期戰績：2 勝 0 敗｜勝率 100%', state.tallySummary.recordLine);
         assert.equals('虎符：未裝備', buildGeneralDetailOverviewContentState(config).tallySummary.tallyLine);
+    });
+
+    suite.test('PROG-2-1345：沒傳戰績時讀武將身上的 battleRecord，傳入值優先', () => {
+        const config = { id: 'liu-bei', name: '劉備', battleRecord: { wins: 5, losses: 5 } } as unknown as GeneralConfig;
+        assert.equals('近期戰績：5 勝 5 敗｜勝率 50%', buildGeneralDetailOverviewContentState(config).tallySummary.recordLine);
+        assert.equals('近期戰績：1 勝 0 敗｜勝率 100%', buildGeneralDetailOverviewContentState(config, undefined, [], null, { wins: 1, losses: 0 }).tallySummary.recordLine);
+    });
+
+    suite.test('PROG-2-1345：battleRecord 缺少或格式不對時視為無戰績', () => {
+        assert.equals(null, battleRecordOf({ id: 'a' } as unknown as GeneralConfig));
+        assert.equals(null, battleRecordOf({ id: 'a', battleRecord: { wins: '3' } } as unknown as GeneralConfig));
+        assert.equals(null, battleRecordOf({ id: 'a', battleRecord: 7 } as unknown as GeneralConfig));
     });
 
     return suite;
