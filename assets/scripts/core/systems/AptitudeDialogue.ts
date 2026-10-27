@@ -38,12 +38,17 @@ export interface AptitudeDialogueInput {
     weatherChanged: boolean;
 }
 
+/** 水域在地形列舉中是 river（BattleAptitude 也以 river 對應 WATER 欄位），兩者都算水域。 */
+function isWaterTerrain(terrain: string | null): boolean {
+    return terrain === 'WATER' || terrain === 'RIVER';
+}
+
 /** 依輸入回傳要播的台詞種類；沒有命中回傳 null。 */
 export function aptitudeDialogueKindOf(input: AptitudeDialogueInput): AptitudeDialogueKind | null {
     const terrain = input.terrain?.toUpperCase() ?? null;
     const weather = input.weather?.toUpperCase() ?? null;
     if (input.weatherChanged && weather === 'WINDY') return 'wind';
-    if (terrain === 'WATER' && input.terrainGrade === 'S') return 'water-s';
+    if (isWaterTerrain(terrain) && input.terrainGrade === 'S') return 'water-s';
     if (terrain === 'MOUNTAIN' && input.terrainGrade === 'S') return 'mountain-s';
     if (weather === 'FOG' && input.weatherGrade === 'S') return 'fog';
     if (weather === 'NIGHT' && input.weatherGrade === 'S') return 'night';

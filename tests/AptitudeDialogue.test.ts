@@ -33,6 +33,7 @@ export function createAptitudeDialogueSuite(): TestSuite {
         assert.equals('water-s', aptitudeDialogueKindOf(withInput({ terrain: 'WATER', terrainGrade: 'S' }))!);
         assert.equals('mountain-s', aptitudeDialogueKindOf(withInput({ terrain: 'MOUNTAIN', terrainGrade: 'S' }))!);
         assert.isTrue(aptitudeDialogueKindOf(withInput({ terrain: 'WATER', terrainGrade: 'A' })) === null);
+        assert.equals('water-s', aptitudeDialogueKindOf(withInput({ terrain: 'river', terrainGrade: 'S' }))!);
     });
 
     suite.test('大霧、夜戰需 S 才命中；天氣剛變為大風時優先播風向台詞', () => {
