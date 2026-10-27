@@ -60,12 +60,21 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
 
         if child_name in slot_names and parent_name in slot_names:
             p_bone = bones_dict.get(parent_name, {})
-            # 樞紐關節點：手腕關節取 wrist_f/b，其他依子骨之 pivotCanvasPx
-            pivot_key_map = {"hand_f": "wrist_f", "hand_b": "wrist_b"}
-            j_key = pivot_key_map.get(child_name)
-            if j_key and j_key in spec.get("joints", {}):
-                j_obj = spec["joints"][j_key]
-                child_pivot = (float(j_obj.get("x", 1024.0)), float(j_obj.get("y", 1024.0)))
+            # 樞紐關節點：手部取父段 to 關節 (腕部)，其他依骨骼 pivotCanvasPx
+            if child_name.startswith("hand_"):
+                seg_alias_map = {
+                    "arm_upper_f": "upperarm_f",
+                    "arm_upper_b": "upperarm_b",
+                    "arm_lower_f": "forearm_f",
+                    "arm_lower_b": "forearm_b",
+                }
+                p_seg_name = seg_alias_map.get(parent_name, parent_name)
+                p_seg_to = spec.get("segments", {}).get(p_seg_name, {}).get("to")
+                if p_seg_to and p_seg_to in spec.get("joints", {}):
+                    j_obj = spec["joints"][p_seg_to]
+                    child_pivot = (float(j_obj.get("x", 1024.0)), float(j_obj.get("y", 1024.0)))
+                else:
+                    child_pivot = tuple(b.get("pivotCanvasPx", [1024.0, 1024.0]))
             else:
                 child_pivot = tuple(b.get("pivotCanvasPx", [1024.0, 1024.0]))
 
@@ -138,20 +147,21 @@ def build_slot_scope_mask(
     if slot_name in pauldron_slots:
         rad_h = float(soz.get("radiusH", 0.06))
         rad = rad_h * h_val + ext_px
-        j_name = "shoulder_f" if slot_name.endswith("_f") else "shoulder_b"
-        c = get_j(j_name)
+        cand_j = [j for j in soz.get("joints", []) if (j.endswith("_f") if slot_name.endswith("_f") else j.endswith("_b"))]
+        c = get_j(cand_j[0]) if cand_j else (1024.0, 1024.0)
         draw.ellipse([c[0] - rad, c[1] - rad, c[0] + rad, c[1] + rad], fill=255)
         return np.array(im) > 128, f"{pauldron_prefix}_provisional_overlap_zone"
 
-    # 骨盆 (pelvis)
-    if slot_name == "pelvis":
-        c = get_j("pelvis")
+    # 骨盆：由 torso segment 的 from 關節推導
+    torso_from_joint = segments.get("torso", {}).get("from")
+    if torso_from_joint and slot_name == torso_from_joint:
+        c = get_j(torso_from_joint)
         hw_spec = segments.get("torso", {}).get("halfWidth", {})
         bt_hw = hw_spec.get(body_type, hw_spec.get("standard", [110, 145])) if isinstance(hw_spec, dict) else [110, 145]
         max_hw = float(bt_hw[1]) if isinstance(bt_hw, (list, tuple)) else float(bt_hw)
         rad = max_hw + ext_px
         draw.ellipse([c[0] - rad, c[1] - (rad * 0.7), c[0] + rad, c[1] + (rad * 0.7)], fill=255)
-        return np.array(im) > 128, "pelvis_capsule"
+        return np.array(im) > 128, f"{torso_from_joint}_capsule"
 
     # 對應 segments key
     seg_key_map = {
@@ -178,7 +188,7 @@ def build_slot_scope_mask(
     # AG-26: 若指定 zoneAppliesTo == "core" 或含有 neckExtension，採用分區遮罩 (core + extension)，不跑膠囊
     if seg_info.get("zoneAppliesTo") == "core" or "neckExtension" in seg_info:
         neck_ext = seg_info.get("neckExtension", {})
-        split_joint = neck_ext.get("joint", seg_info.get("from", "neck"))
+        split_joint = neck_ext.get("joint") or seg_info.get("from")
         split_pt = get_j(split_joint)
         split_y = split_pt[1]
 
@@ -230,14 +240,23 @@ def build_slot_scope_mask(
         rad = max_r + ext_px
         draw.ellipse([c[0] - rad, c[1] - rad, c[0] + rad, c[1] + rad], fill=255)
 
-        # 若為 hand，需涵蓋 wrist 樞紐連接通道與關節重疊延伸端蓋
-        wrist_joint_name = "wrist_f" if slot_name.endswith("_f") else "wrist_b"
-        if wrist_joint_name in joints:
+        # 若為 hand，需涵蓋父段骨骼連接通道與關節重疊延伸端蓋
+        seg_alias_map = {
+            "arm_upper_f": "upperarm_f",
+            "arm_upper_b": "upperarm_b",
+            "arm_lower_f": "forearm_f",
+            "arm_lower_b": "forearm_b",
+        }
+        parent_bone_name = next((b.get("parent") for b in spec.get("bones", []) if b.get("name") == slot_name), None)
+        p_seg_name = seg_alias_map.get(parent_bone_name, parent_bone_name)
+        parent_seg = segments.get(p_seg_name, {})
+        wrist_joint_name = parent_seg.get("to")
+        elbow_name = parent_seg.get("from")
+        if wrist_joint_name and wrist_joint_name in joints:
             w_pt = get_j(wrist_joint_name)
             draw.line([c, w_pt], fill=255, width=int(round(rad * 2)))
             draw.ellipse([w_pt[0] - rad, w_pt[1] - rad, w_pt[0] + rad, w_pt[1] + rad], fill=255)
-            elbow_name = "elbow_f" if slot_name.endswith("_f") else "elbow_b"
-            if elbow_name in joints:
+            if elbow_name and elbow_name in joints:
                 e_pt = get_j(elbow_name)
                 v_ew = (e_pt[0] - w_pt[0], e_pt[1] - w_pt[1])
                 dist_ew = math.hypot(v_ew[0], v_ew[1]) or 1.0
@@ -252,17 +271,10 @@ def build_slot_scope_mask(
     # 3. 區域矩形 (zone: [x1, y1, x2, y2])
     if "zone" in seg_info:
         zone = seg_info["zone"]
-        ref_joint = "neck" if slot_name == "head" else ("ankle_f" if slot_name.endswith("_f") else "ankle_b")
-        cur_ref = get_j(ref_joint)
-        def_refs = {"neck": (1030.0, 880.0), "ankle_f": (1135.0, 1850.0), "ankle_b": (915.0, 1850.0)}
-        d_ref = def_refs.get(ref_joint, (1024.0, 1024.0))
-        shift_x = cur_ref[0] - d_ref[0]
-        shift_y = cur_ref[1] - d_ref[1]
-
-        x1 = float(zone[0]) + shift_x - ext_px
-        y1 = float(zone[1]) + shift_y - ext_px
-        x2 = float(zone[2]) + shift_x + ext_px
-        y2 = float(zone[3]) + shift_y + ext_px
+        x1 = float(zone[0]) - ext_px
+        y1 = float(zone[1]) - ext_px
+        x2 = float(zone[2]) + ext_px
+        y2 = float(zone[3]) + ext_px
         draw.rectangle([x1, y1, x2, y2], fill=255)
         return np.array(im) > 128, "zone_box"
 
@@ -410,6 +422,8 @@ def run_layered_parts_inspection(
     composite_ref_path: Path | None = None,
     filter_slots: list[str] | None = None,
     out_dir: Path | None = None,
+    anchors_path: Path | None = None,
+    allow_estimated_anchors: bool = False,
 ) -> tuple[dict[str, Any], bool]:
     spec = load_spec(spec_path)
     h_val = float(spec.get("H", 1600))
@@ -454,7 +468,7 @@ def run_layered_parts_inspection(
 
     # AG-25: 讀取 shoulderOverlapZone 與 parentSideExtensionWaivedWhen 豁免設定
     shoulder_overlap_cfg = spec.get("shoulderOverlapZone", {})
-    shoulder_joint_names = shoulder_overlap_cfg.get("joints", ["shoulder_f", "shoulder_b"])
+    shoulder_joint_names = shoulder_overlap_cfg.get("joints", [])
     parent_waive_prefix = shoulder_overlap_cfg.get("parentSideExtensionWaivedWhen")
     joints_dict = spec.get("joints", {})
     shoulder_joint_positions: dict[str, tuple[float, float]] = {}
@@ -646,17 +660,26 @@ def run_layered_parts_inspection(
                     gated_points = reg_cfg.get("gated", [])
                     recorded_points = reg_cfg.get("recorded", [])
 
-                    # 讀取 anchor 檔案
+                    # 讀取 anchor 檔案 (支援 --anchors 指定檔，或約定 <slot>.anchors.json / anchors.json)
                     anchor_data = {}
-                    for cand_name in ["anchors.json", f"{sid}_anchors.json", "r274-normalization-and-mask-report.json", "registration_anchors.json"]:
-                        cand_p = parts_dir / cand_name
-                        if not cand_p.exists():
-                            cand_p = parts_dir.parent / cand_name
-                        if cand_p.exists():
+                    cand_paths = []
+                    if anchors_path:
+                        cand_paths.append(anchors_path)
+                    cand_paths.extend([
+                        parts_dir / f"{sid}.anchors.json",
+                        parts_dir / "anchors.json",
+                        parts_dir.parent / f"{sid}.anchors.json",
+                        parts_dir.parent / "anchors.json",
+                    ])
+                    for cand_p in cand_paths:
+                        if cand_p and cand_p.exists():
                             try:
                                 cand_json = json.loads(cand_p.read_text(encoding="utf-8"))
-                                if "anchors" in cand_json:
-                                    anchor_data = cand_json["anchors"]
+                                if isinstance(cand_json, dict):
+                                    if "anchors" in cand_json and isinstance(cand_json["anchors"], dict):
+                                        anchor_data = cand_json["anchors"]
+                                    else:
+                                        anchor_data = cand_json
                                     break
                             except Exception:
                                 pass
@@ -669,41 +692,91 @@ def run_layered_parts_inspection(
                         tol = float(joints.get(pt_name, {}).get("tol", 30.0))
 
                         reg_pt = None
+                        is_estimated = False
+                        estimate_method = None
+
                         if pt_name in anchor_data:
                             info = anchor_data[pt_name]
-                            reg_pt = info.get("registeredPx", info.get("sourcePx"))
-                        elif pt_name == ref_j_name and "neck_root" in anchor_data:
-                            reg_pt = anchor_data["neck_root"].get("registeredPx")
+                            if isinstance(info, dict):
+                                pt_val = info.get("registeredPx", info.get("sourcePx", info.get("px")))
+                                if pt_val is not None:
+                                    reg_pt = [float(pt_val[0]), float(pt_val[1])]
+                            elif isinstance(info, (list, tuple)) and len(info) >= 2:
+                                reg_pt = [float(info[0]), float(info[1])]
 
-                        if reg_pt is None:
+                        # 若無錨點且參數明確允許估算（alpha 重心不可冒充 head_center，且 gated 點不能因估算通過）
+                        if reg_pt is None and allow_estimated_anchors:
                             if pt_name == ref_j_name and ext_vis > 0:
                                 split_row = int(round(split_y))
                                 if 0 <= split_row < exp_h:
                                     row_xs = np.where(alpha[split_row, :] > 16)[0]
                                     if len(row_xs) > 0:
                                         reg_pt = [float(np.mean(row_xs)), split_y]
-                            if reg_pt is None and pt_name == "head_center" and core_vis > 0:
+                                        is_estimated = True
+                                        estimate_method = "alphaCentroid"
+                            elif core_vis > 0:
                                 reg_pt = [float(np.mean(core_xs)), float(np.mean(core_ys))]
-                            if reg_pt is None:
-                                reg_pt = list(target_pt)
+                                is_estimated = True
+                                estimate_method = "alphaCentroid"
 
-                        dx = float(reg_pt[0] - target_pt[0])
-                        dy = float(reg_pt[1] - target_pt[1])
-                        dist = math.hypot(dx, dy)
-                        pt_pass = dist <= tol
+                        if reg_pt is None:
+                            # 缺錨點：gated 點判 FAIL (tier ANCHOR_MISSING)；recorded 點記 NOT_MEASURED，不寫數字
+                            if is_gated:
+                                reg_checks[pt_name] = {
+                                    "isGated": True,
+                                    "targetPx": list(target_pt),
+                                    "registeredPx": None,
+                                    "errorPx": None,
+                                    "distancePx": None,
+                                    "tolerancePx": tol,
+                                    "pass": False,
+                                    "tier": "ANCHOR_MISSING",
+                                    "detail": "缺少錨點數據 (ANCHOR_MISSING)",
+                                }
+                                reg_pass = False
+                                overall_pass = False
+                            else:
+                                reg_checks[pt_name] = {
+                                    "isGated": False,
+                                    "targetPx": list(target_pt),
+                                    "registeredPx": None,
+                                    "errorPx": None,
+                                    "distancePx": None,
+                                    "tolerancePx": tol,
+                                    "pass": True,
+                                    "tier": "NOT_MEASURED",
+                                    "detail": "未量測 (NOT_MEASURED)",
+                                }
+                        else:
+                            dx = float(reg_pt[0] - target_pt[0])
+                            dy = float(reg_pt[1] - target_pt[1])
+                            dist = math.hypot(dx, dy)
+                            pt_pass = dist <= tol
 
-                        reg_checks[pt_name] = {
-                            "isGated": is_gated,
-                            "targetPx": list(target_pt),
-                            "registeredPx": [round(reg_pt[0], 2), round(reg_pt[1], 2)],
-                            "errorPx": [round(dx, 2), round(dy, 2)],
-                            "distancePx": round(dist, 2),
-                            "tolerancePx": tol,
-                            "pass": pt_pass if is_gated else True,
-                            "tier": ("PASS" if pt_pass else "FAIL") if is_gated else "RECORDED",
-                        }
-                        if is_gated and not pt_pass:
-                            reg_pass = False
+                            # 若使用估算，gated 點不可因估算通過
+                            if is_estimated and is_gated:
+                                pt_pass = False
+
+                            check_item = {
+                                "isGated": is_gated,
+                                "targetPx": list(target_pt),
+                                "registeredPx": [round(reg_pt[0], 2), round(reg_pt[1], 2)],
+                                "errorPx": [round(dx, 2), round(dy, 2)],
+                                "distancePx": round(dist, 2),
+                                "tolerancePx": tol,
+                                "pass": pt_pass if is_gated else True,
+                                "tier": ("PASS" if pt_pass else "FAIL") if is_gated else "RECORDED",
+                            }
+                            if is_estimated:
+                                check_item["estimated"] = estimate_method
+                                if is_gated:
+                                    check_item["tier"] = "FAIL"
+                                    check_item["detail"] = f"估算值不可用於 gated 驗收 ({estimate_method})"
+
+                            reg_checks[pt_name] = check_item
+                            if is_gated and not pt_pass:
+                                reg_pass = False
+                                overall_pass = False
 
                     partition_overall = core_pass and ext_pass and reg_pass
 
@@ -1052,6 +1125,8 @@ def main() -> None:
     ap.add_argument("--body-type", type=str, default="standard", help="體型類別")
     ap.add_argument("--composite-ref", type=Path, default=None, help="參考合成圖 (選填)")
     ap.add_argument("--slots", type=str, default=None, help="指定檢查之槽位清單 (逗號分隔)")
+    ap.add_argument("--anchors", type=Path, default=None, help="錨點 JSON 檔案路徑 (選填)")
+    ap.add_argument("--allow-estimated-anchors", action="store_true", help="允許估算未提供之錨點 (僅供記錄，gated 點仍不可因估算通過)")
     ap.add_argument("--out-dir", type=Path, default=Path("layered_check_out"), help="輸出報告目錄")
 
     args = ap.parse_args()
@@ -1065,6 +1140,8 @@ def main() -> None:
         composite_ref_path=args.composite_ref,
         filter_slots=filter_slots,
         out_dir=args.out_dir,
+        anchors_path=args.anchors,
+        allow_estimated_anchors=args.allow_estimated_anchors,
     )
 
     print(json.dumps(report, indent=2, ensure_ascii=False))

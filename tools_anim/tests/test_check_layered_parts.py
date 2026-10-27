@@ -639,6 +639,7 @@ class TestCheckLayeredParts(unittest.TestCase):
         core_box: tuple[int, int, int, int] = (800, 300, 1300, 880),
         ext_below: float = 52.0,
         ext_half_width: float = 40.0,
+        with_anchors: bool = True,
     ) -> None:
         im = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
         d = ImageDraw.Draw(im)
@@ -652,6 +653,16 @@ class TestCheckLayeredParts(unittest.TestCase):
                 fill=(210, 180, 150, 255),
             )
         im.save(parts_dir / "head.png")
+
+        if with_anchors:
+            anchors_data = {
+                "anchors": {
+                    "neck": {"registeredPx": [1030.0, 880.0]},
+                    "head_center": {"registeredPx": [1040.0, 580.0]},
+                    "nose": {"registeredPx": [1150.0, 640.0]},
+                }
+            }
+            (parts_dir / "head.anchors.json").write_text(json.dumps(anchors_data, indent=2), encoding="utf-8")
 
     def test_partitioned_head_all_pass(self) -> None:
         """測試 16 (AG-26): 合成資料 - core 在 zone 內且 neck extension 尺寸符合規範 -> 全過 PASS"""
@@ -735,10 +746,12 @@ class TestCheckLayeredParts(unittest.TestCase):
         self.assertFalse(pi["extension"]["lengthPass"])
 
     def test_codex_r2_head_regression(self) -> None:
-        """測試 21 (AG-26): Codex R2 頭部回歸實測，core 與 extension 通過，head_center 依實測合格"""
+        """測試 21 (AG-26): Codex R2 頭部回歸實測 (需待 Codex 提供 head.anchors.json 後執行)"""
         r2_dir = Path(__file__).resolve().parent.parent.parent / "scratch" / "r274-head-r2-eval"
         if not (r2_dir / "head.png").exists():
             self.skipTest(f"跳過 R2 頭部回歸: 找不到 {r2_dir / 'head.png'}")
+        if not (r2_dir / "head.anchors.json").exists() and not (r2_dir / "anchors.json").exists():
+            self.skipTest("跳過 R2 頭部回歸: 等 Codex 補檔 head.anchors.json")
 
         report, passed = run_layered_parts_inspection(
             parts_dir=r2_dir,
@@ -750,6 +763,75 @@ class TestCheckLayeredParts(unittest.TestCase):
         self.assertTrue(pi["core"]["pass"], "Core 應 PASS (0.00% 出界)")
         self.assertTrue(pi["extension"]["pass"], "Extension 應 PASS (48px <= 48~64px 且在左右範圍內)")
         self.assertTrue(pi["registration"]["pass"], "Registration gated 點應 PASS")
+
+    def test_registration_anchor_missing_gated_fails(self) -> None:
+        """測試 22 (AG-26b): 缺 anchors 檔時，gated 點判定 FAIL (tier ANCHOR_MISSING)，recorded 記 NOT_MEASURED"""
+        parts_dir = self.tmp_dir / "head_no_anchors"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+        self._create_mock_head_part(parts_dir, with_anchors=False)
+
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["head"],
+        )
+        self.assertFalse(passed, "缺 anchors 時 gated 點失敗，整體應判 FAIL")
+        pi = report["slotReports"]["head"]["checks"]["scope_capsule_bounds"]["partitionedInspection"]
+        reg = pi["registration"]
+        self.assertFalse(reg["pass"], "Registration 應為 FAIL")
+        self.assertEqual(reg["tier"], "FAIL")
+
+        # 驗證 gated 點為 ANCHOR_MISSING
+        for pt in ["neck", "head_center"]:
+            self.assertIn(pt, reg["points"])
+            pt_check = reg["points"][pt]
+            self.assertTrue(pt_check["isGated"])
+            self.assertFalse(pt_check["pass"])
+            self.assertEqual(pt_check["tier"], "ANCHOR_MISSING")
+            self.assertIsNone(pt_check["registeredPx"])
+            self.assertIsNone(pt_check["distancePx"])
+
+        # 驗證 recorded 點 (nose) 為 NOT_MEASURED
+        self.assertIn("nose", reg["points"])
+        nose_check = reg["points"]["nose"]
+        self.assertFalse(nose_check["isGated"])
+        self.assertTrue(nose_check["pass"])
+        self.assertEqual(nose_check["tier"], "NOT_MEASURED")
+        self.assertIsNone(nose_check["registeredPx"])
+        self.assertIsNone(nose_check["distancePx"])
+
+    def test_registration_wrong_key_recorded_as_not_measured(self) -> None:
+        """測試 23 (AG-26b): 錨點鍵名不符 (如 nose_tip 而非 nose) 時，recorded 點標記為 NOT_MEASURED (非 0)"""
+        parts_dir = self.tmp_dir / "head_wrong_key"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+        self._create_mock_head_part(parts_dir, with_anchors=False)
+
+        # 寫入包含 nose_tip (非規格名) 的 anchors.json
+        anchors_data = {
+            "anchors": {
+                "neck": {"registeredPx": [1030.0, 880.0]},
+                "head_center": {"registeredPx": [1040.0, 580.0]},
+                "nose_tip": {"registeredPx": [1150.0, 640.0]},
+            }
+        }
+        (parts_dir / "head.anchors.json").write_text(json.dumps(anchors_data, indent=2), encoding="utf-8")
+
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["head"],
+        )
+        self.assertTrue(passed, "gated 點合格，recorded 點缺值不應導致整體 FAIL")
+        pi = report["slotReports"]["head"]["checks"]["scope_capsule_bounds"]["partitionedInspection"]
+        reg = pi["registration"]
+        self.assertTrue(reg["pass"])
+
+        # 驗證 nose (規格名) 被記為 NOT_MEASURED，且 distancePx 不為 0
+        nose_check = reg["points"]["nose"]
+        self.assertEqual(nose_check["tier"], "NOT_MEASURED")
+        self.assertTrue(nose_check["pass"])
+        self.assertIsNone(nose_check["registeredPx"])
+        self.assertIsNone(nose_check["distancePx"])
 
 
 if __name__ == "__main__":

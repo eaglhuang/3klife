@@ -61,8 +61,8 @@ def compute_spine_bones(
     if not raw_bones:
         raise ValueError("規範 JSON 中缺少 'bones' 列表")
 
-    # 尋找 root 樞紐點
-    root_bone = next((b for b in raw_bones if b.get("name") == "root"), None)
+    # 尋找頂層骨骼樞紐點 (無 parent 者)
+    root_bone = next((b for b in raw_bones if not b.get("parent")), None)
     if root_bone and "pivotCanvasPx" in root_bone:
         root_px = float(root_bone["pivotCanvasPx"][0])
         root_py = float(root_bone["pivotCanvasPx"][1])

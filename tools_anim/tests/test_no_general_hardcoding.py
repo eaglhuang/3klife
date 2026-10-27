@@ -166,6 +166,43 @@ def check_no_canonical_slots_literal_list() -> list[str]:
     return violations
 
 
+def check_no_joint_names_in_core_scripts() -> list[str]:
+    """AG-26b: 檢查核心工具 (check_layered_parts.py, build_spine_from_v3.py) 不得出現 joints 裡任何關節名的字串字面值"""
+    import json
+    target_scripts = [
+        TOOLS_DIR / "check_layered_parts.py",
+        TOOLS_DIR / "build_spine_from_v3.py",
+    ]
+    spec_path = TOOLS_DIR / "specs" / "canonical_skeleton_v3.json"
+    if not spec_path.exists():
+        return [f"找不到規範 JSON: {spec_path}"]
+
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    joint_names = set(spec.get("joints", {}).keys())
+    if not joint_names:
+        return ["規範 JSON 中無關節定義"]
+
+    violations: list[str] = []
+    for script in target_scripts:
+        if not script.exists():
+            continue
+        text = script.read_text(encoding="utf-8")
+        try:
+            tree = ast.parse(text, filename=str(script))
+        except Exception as e:
+            violations.append(f"{script.name}: AST 解析失敗: {e}")
+            continue
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                if node.value in joint_names:
+                    violations.append(
+                        f"{script.name}:{node.lineno}: 出現 joints 關節名字串字面值 '{node.value}'，應由 JSON 規格動態推導"
+                    )
+
+    return violations
+
+
 class TestNoHardcoding(unittest.TestCase):
     def test_no_general_names(self):
         v = check_general_hardcoding()
@@ -179,19 +216,24 @@ class TestNoHardcoding(unittest.TestCase):
         v = check_no_canonical_slots_literal_list()
         self.assertEqual(len(v), 0, f"發現槽名清單硬編碼違規 (AG-25):\n" + "\n".join(v))
 
+    def test_no_joint_names_in_core_scripts(self):
+        v = check_no_joint_names_in_core_scripts()
+        self.assertEqual(len(v), 0, f"發現關節名稱硬編碼違規 (AG-26b):\n" + "\n".join(v))
+
 
 def main():
     v1 = check_general_hardcoding()
     v2 = check_slice_and_range_hardcoding()
     v3 = check_no_canonical_slots_literal_list()
-    all_v = v1 + v2 + v3
+    v4 = check_no_joint_names_in_core_scripts()
+    all_v = v1 + v2 + v3 + v4
     if all_v:
         print(f"[FAIL] 發現 {len(all_v)} 處硬編碼違規：", file=sys.stderr)
         for v in all_v:
             print(f"  - {v}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"[PASS] 驗證通過：100% 無任何武將名稱、數值 >= 200 像素切片，亦無 21 槽名字面清單！")
+    print(f"[PASS] 驗證通過：100% 無任何武將名稱、數值 >= 200 像素切片，無 21 槽名字面清單，亦無任何 joints 關節名硬編碼！")
 
 
 if __name__ == "__main__":
