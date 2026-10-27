@@ -5,7 +5,7 @@
  * 色碼六個且互不相同；查不到文案時退回 key；uid-design-tokens.json 可解析且與常數一致。
  */
 import { assert, TestSuite } from './TestRunner';
-import { FACTOR_EDGE_NEUTRAL_RGB, FACTOR_TAG_COLORS, FACTOR_TAG_I18N_KEYS, applyFactorTagTokens, factorEdgeRgb, factorTagColorOf, factorTagText, parseFactorTagColors, parseHexRgb } from '../assets/scripts/core/systems/FactorTagTokens';
+import { FACTOR_EDGE_NEUTRAL_RGB, FACTOR_NEUTRAL_TINT, FACTOR_TAG_COLORS, FACTOR_TAG_I18N_KEYS, applyFactorTagTokens, factorEdgeRgb, factorTagColorOf, factorTagText, parseFactorTagColors, parseHexRgb } from '../assets/scripts/core/systems/FactorTagTokens';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -85,6 +85,14 @@ export function createFactorTagTokensSuite(): TestSuite {
         assert.equals(FACTOR_EDGE_NEUTRAL_RGB.r, factorEdgeRgb(null).r);
         assert.equals(FACTOR_EDGE_NEUTRAL_RGB.r, factorEdgeRgb(undefined).r);
         assert.equals(FACTOR_EDGE_NEUTRAL_RGB.r, factorEdgeRgb('gold' as never).r);
+    });
+
+    suite.test('中性色只有一個來源：FACTOR_NEUTRAL_TINT 與連線 RGB 同值', () => {
+        const rgb = parseHexRgb(FACTOR_NEUTRAL_TINT);
+        assert.isTrue(rgb !== null);
+        assert.equals(FACTOR_EDGE_NEUTRAL_RGB.r, rgb?.r ?? -1);
+        assert.equals(FACTOR_EDGE_NEUTRAL_RGB.g, rgb?.g ?? -1);
+        assert.equals(FACTOR_EDGE_NEUTRAL_RGB.b, rgb?.b ?? -1);
     });
 
     return suite;

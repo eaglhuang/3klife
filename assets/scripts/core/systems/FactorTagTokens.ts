@@ -85,8 +85,14 @@ export interface FactorRgb {
     b: number;
 }
 
-/** 無因子色或未知色時連線使用的中性灰（暫定），與六色都不相同。 */
-export const FACTOR_EDGE_NEUTRAL_RGB: Readonly<FactorRgb> = { r: 154, g: 154, b: 154 };
+/**
+ * 無因子色或未知色時的中性色（暫定），與六色都不相同。祖紋命篆（CrestStyle）與連線共用這一個來源。
+ * FACTOR_EDGE_NEUTRAL_RGB 與它同值；tests/FactorTagTokens.test.ts 會比對，避免兩邊漂移。
+ */
+export const FACTOR_NEUTRAL_TINT = '#9A9A9A';
+
+/** FACTOR_NEUTRAL_TINT 的 RGB 形式，供連線繪製使用。 */
+export const FACTOR_EDGE_NEUTRAL_RGB: Readonly<FactorRgb> = { r: 0x9a, g: 0x9a, b: 0x9a };
 
 /** 解析 #RRGGBB 為 RGB；格式不合回傳 null。 */
 export function parseHexRgb(hex: string): FactorRgb | null {
