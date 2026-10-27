@@ -53,6 +53,14 @@ export interface AncestorPeekView {
     locked: boolean;
 }
 
+/**
+ * 祖先是否已揭露（暫定）：虛擬祖先是系統補全的佔位，沒有真實資料可揭露；真實祖先視為已揭露。
+ * 目前沒有逐位祖先的揭露欄位，PM 裁定前以此為準。
+ */
+export function isAncestorRevealed(person: { is_virtual: boolean }): boolean {
+    return !person.is_virtual;
+}
+
 /** 點擊祖先節點的小型 peek：未揭露只顯示鎖與問號，血脈傾向仍可見 */
 export function ancestorPeekView(source: AncestorPeekSource | null, revealed: boolean): AncestorPeekView {
     const tags = source?.core_tags ?? [];
