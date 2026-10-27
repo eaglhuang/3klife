@@ -8,6 +8,7 @@ import {
     replaceSpiritCard,
     setPrimarySpiritCard,
     unequipSpiritCard,
+    spiritPickerPage,
     spiritPickerRows,
     unequippedSpiritCards,
 } from '../assets/scripts/core/systems/SpiritSlotFlow';
@@ -210,6 +211,30 @@ export function createSpiritSlotFlowSuite(): TestSuite {
         assert.isFalse(result.ok);
         if (result.ok) return;
         assert.equals('BATTLE_LOCKED', result.reason);
+    });
+
+    suite.test('選卡分頁：每頁 6 列，最後一頁只剩餘下的列', () => {
+        const rows = Array.from({ length: 13 }, (_, i) => ({ spiritId: `sp-${i}`, label: `sp-${i}` }));
+        const first = spiritPickerPage(rows, 0);
+        assert.equals(3, first.pageCount);
+        assert.equals(6, first.rows.length);
+        assert.equals('sp-0', first.rows[0].spiritId);
+        const last = spiritPickerPage(rows, 2);
+        assert.equals(1, last.rows.length);
+        assert.equals('sp-12', last.rows[0].spiritId);
+    });
+
+    suite.test('選卡分頁：頁碼超出範圍時夾回合法範圍', () => {
+        const rows = Array.from({ length: 7 }, (_, i) => ({ spiritId: `sp-${i}`, label: `sp-${i}` }));
+        assert.equals(1, spiritPickerPage(rows, 9).page);
+        assert.equals(0, spiritPickerPage(rows, -1).page);
+    });
+
+    suite.test('選卡分頁：沒有列時仍是一頁、列表為空', () => {
+        const empty = spiritPickerPage([], 3);
+        assert.equals(1, empty.pageCount);
+        assert.equals(0, empty.page);
+        assert.equals(0, empty.rows.length);
     });
 
     return suite;
