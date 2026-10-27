@@ -358,19 +358,12 @@
       }
     },
     "lu-bu": {
-      "x": 208,
-      "y": 112,
-      "w": 171,
-      "h": 171,
-      "source": "auto",
-      "placeholder": true,
-      "face": {
-        "top": 155,
-        "chin": 220,
-        "eyeY": 180,
-        "cx": 293
-      },
-      "$note": "黑紫版重畫前暫代，不得標 reviewed"
+      "x": 140,
+      "y": 0,
+      "w": 320,
+      "h": 320,
+      "source": "reviewed",
+      "$note": "512x768立繪；含完整紅羽、頭盔、臉與頸肩，置中裁切"
     },
     "da-qiao": {
       "x": 194,
