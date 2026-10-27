@@ -416,5 +416,10 @@
   "UI_HALL_SCRIPT_DAY_NIGHT": "燈火漸起，議事廳轉入夜議時分。",
   "UI_HALL_SCRIPT_FESTIVAL": "大廳換上新節慶陳設，眾將氣氛亦隨之轉暖。",
   "UI_HALL_SCRIPT_WISH_DONE": "祭壇靈光一閃，你的願望已成。",
-  "UI_HALL_COST_TROOPS": "消耗城市兵源 {0}"
+  "UI_HALL_COST_TROOPS": "消耗城市兵源 {0}",
+  "ui.ultimate_codex.title": "奥義図鑑",
+  "ui.ultimate_codex.count": "解放済み奥義 {0} 件",
+  "ui.ultimate_codex.row": "{0}・{1}　Lv{2}",
+  "ui.ultimate_codex.empty": "まだ奥義が解放されていません。",
+  "ui.ultimate_codex.more": "ほか {0} 件は表示されていません"
 }
