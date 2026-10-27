@@ -103,7 +103,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G1_0",
+                      "name": "NodeCard_G1_0",
                       "width": 42,
                       "height": 60,
                       "skinSlot": "detail.ancestor.chip",
@@ -119,7 +119,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G1_1",
+                      "name": "NodeCard_G1_1",
                       "width": 42,
                       "height": 60,
                       "skinSlot": "detail.ancestor.chip",
@@ -135,7 +135,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G1_2",
+                      "name": "NodeCard_G1_2",
                       "width": 42,
                       "height": 60,
                       "skinSlot": "detail.ancestor.chip",
@@ -151,7 +151,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G1_3",
+                      "name": "NodeCard_G1_3",
                       "width": 42,
                       "height": 60,
                       "skinSlot": "detail.ancestor.chip",
@@ -167,7 +167,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G1_4",
+                      "name": "NodeCard_G1_4",
                       "width": 42,
                       "height": 60,
                       "skinSlot": "detail.ancestor.chip",
@@ -183,7 +183,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G1_5",
+                      "name": "NodeCard_G1_5",
                       "width": 42,
                       "height": 60,
                       "skinSlot": "detail.ancestor.chip",
@@ -199,7 +199,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G1_6",
+                      "name": "NodeCard_G1_6",
                       "width": 42,
                       "height": 60,
                       "skinSlot": "detail.ancestor.chip",
@@ -215,7 +215,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G1_7",
+                      "name": "NodeCard_G1_7",
                       "width": 42,
                       "height": 60,
                       "skinSlot": "detail.ancestor.chip",
@@ -253,7 +253,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G2_0",
+                      "name": "NodeCard_G2_0",
                       "width": 84,
                       "height": 68,
                       "skinSlot": "detail.ancestor.chip",
@@ -269,7 +269,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G2_1",
+                      "name": "NodeCard_G2_1",
                       "width": 84,
                       "height": 68,
                       "skinSlot": "detail.ancestor.chip",
@@ -285,7 +285,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G2_2",
+                      "name": "NodeCard_G2_2",
                       "width": 84,
                       "height": 68,
                       "skinSlot": "detail.ancestor.chip",
@@ -301,7 +301,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G2_3",
+                      "name": "NodeCard_G2_3",
                       "width": 84,
                       "height": 68,
                       "skinSlot": "detail.ancestor.chip",
@@ -339,7 +339,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G3_0",
+                      "name": "NodeCard_G3_0",
                       "width": 168,
                       "height": 84,
                       "skinSlot": "detail.ancestor.chip",
@@ -355,7 +355,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "G3_1",
+                      "name": "NodeCard_G3_1",
                       "width": 168,
                       "height": 84,
                       "skinSlot": "detail.ancestor.chip",
