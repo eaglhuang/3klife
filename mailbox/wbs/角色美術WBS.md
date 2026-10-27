@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 14:05 Claude R281：不採世界座標重定向，等 Sparkle v11 setup 對齊；2D 專家驗收項目整理成清單備用。
 - 2026-10-27 14:00 Claude R280：舊 R244 分件只作參考，pelvis／後手鏈重切重畫；動作庫須用規格標準 setup，AG-27 對 v10 預期改為拒絕合併；Sparkle v10 補充包已交使用者。
 - 2026-10-27 13:40 Claude：R279 torso_to_head 依規格 v3.8（neckExtension 取代通用延伸）判通過、Codex 不手寫動畫；派 AG-27（檢查器支援 v3.8＋動作庫合併工具 merge_motion_library）。
 - 2026-10-27 13:20 Claude：R278 隔離 Creator 的 engine.json 又出現 spine-3.8=true／4.2=false 矛盾（同 R243），預覽載 3.8 wasm、畫面全黑；R270 trackTime 證據作廢。待使用者在 Creator 修正並重啟；八槽手動合成版不採用，改走 AG-24 builder。
