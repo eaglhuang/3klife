@@ -72,6 +72,11 @@ export const DAILY_NEWS_LOG_WINDOW_MS = 24 * 60 * 60 * 1000;
 export const REVENGE_RECOVER_PCT = { min: 5, max: 20 } as const;
 export const DEFAULT_LOST_RESOURCE = '糧草';
 
+/** 擲一次復仇取回百分比（RET-05），範圍 5~20 */
+export function rollRevengePct(random: RandomSource): number {
+    return intBetween(REVENGE_RECOVER_PCT.min, REVENGE_RECOVER_PCT.max, random);
+}
+
 /** 復仇取回數量（RET-05）：損失 × 百分比，百分比夾在 5%~20%，結果向下取整。 */
 export function revengeRecoverAmount(lost: number, pct: number): number {
     if (!Number.isFinite(lost) || lost <= 0) return 0;
