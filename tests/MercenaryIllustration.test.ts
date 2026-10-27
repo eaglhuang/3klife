@@ -1,5 +1,5 @@
 /**
- * MercenaryIllustration.test.ts — 傭兵插畫五階段（MERC-08 / PROG-2-0968，RET-01 / PROG-2-1214）
+ * MercenaryIllustration.test.ts — 傭兵插畫五階段（MERC-08 / PROG-2-0968，RET-01 / PROG-2-1400）
  *
  * 鎖住：規格解鎖表（1 場戰鬥、戰勝 3 場、好感 ≥ 40、轉永久）、各階段邊界、插畫階段只進不退。
  *
