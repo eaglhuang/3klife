@@ -377,3 +377,12 @@ export function rollFutureReturns<T = unknown>(
     }
     return { state: { ...state, released: remaining }, returned };
 }
+
+/**
+ * 監獄擴容一次 +1 格（暫定：規格未寫步數與費用，費用由呼叫端扣）。
+ * 已達 PRISON_SLOTS_MAX 時回傳原狀態與 ok=false，不改輸入。
+ */
+export function expandPrisonSlots<T = unknown>(state: PrisonState<T>): { state: PrisonState<T>; ok: boolean } {
+    if (state.slots >= PRISON_SLOTS_MAX) return { state, ok: false };
+    return { state: { ...state, slots: state.slots + 1 }, ok: true };
+}
