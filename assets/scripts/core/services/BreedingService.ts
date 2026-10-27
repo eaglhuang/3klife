@@ -47,6 +47,8 @@ export interface BreedingServiceOptions {
     isHistoricalPair?: AffinityResolver;
     /** 史實相性配對表（KIN-04）：未指定 isHistoricalPair 時由表推得契合，並提供宿敵受孕率倍率 */
     historicalPairs?: HistoricalPairTable;
+    /** 關係事件帳本（PROG-2-1412）：session 持有並存檔；未指定時用獨立的記憶體帳本 */
+    relationLedger?: RelationEventLedger;
     /** 惰性版本：建立服務時表尚未載入（ServiceLoader），每次配種 / 預覽時再取；優先於 historicalPairs */
     getHistoricalPairs?: () => HistoricalPairTable | undefined;
     /** 目前的 totalSeasonsElapsed，寫進子嗣的 birthSeason */
@@ -80,10 +82,12 @@ export class BreedingService {
         private readonly _roster: RosterStore,
         private readonly _graph: BloodlineGraph,
         private readonly _options: BreedingServiceOptions = {},
-    ) {}
+    ) {
+        this._relationEvents = _options.relationLedger ?? new RelationEventLedger();
+    }
 
-    /** 關係事件一次性紀錄（KIN-08）；存檔接線另卡，目前以記憶體為準 */
-    private readonly _relationEvents = new RelationEventLedger();
+    /** 關係事件一次性紀錄（KIN-08）：由 session 持有並存檔，未注入時退回獨立的記憶體帳本 */
+    private readonly _relationEvents: RelationEventLedger;
 
     /**
      * 初代名將（名冊沒有父母、血統圖也沒有祖先）補齊 14 位虛擬祖先（BLT-02）。
