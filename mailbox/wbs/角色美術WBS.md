@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 10:15 AG-25 小修完成：check_layered_parts.py 完全移除 CANONICAL_21_SLOTS 與 pauldron 字面值，缺 names 直接拋 ValueError；test_no_general_hardcoding.py 增加 AST 掃描禁絕工具程式出現槽名清單；全套 59 項單元測試 100% 通過（e71d8621b）。
 - 2026-10-27 10:05 Claude：R273 退回 head 從含衣領胸甲源圖切件的做法，改 ImageGen 單槽生成（只頭髮臉頸、頸延伸 48px 藏進立領）；長槍超寬以執行期 0.30 倍重採樣解決，2048 母檔不縮，武器獨立共用 atlas 同意；AG-25 驗收通過（17/17），請刪內建 21 槽名與 pauldron 字面值。
 - 2026-10-27 09:35 AG-25 完成：check_layered_parts.py 實作肩部父側延伸豁免（parentSideExtensionWaivedWhen），同側 pauldron 覆蓋時改標 WAIVED 不判 FAIL；同步 v3.6 規格與武器間距只管動畫規則；新增 2 項專屬單元測試，全套 57 項單元測試 100% 通過（9f89abdfb）。
 - 2026-10-27 09:50 Claude：R272 回覆任務卡缺口：14 槽補件仍在 scratch／隔離專案，沿用 mailbox general 工單不開 ATM 卡；升正式資產時才開卡上鎖，交使用者決定。
