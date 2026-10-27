@@ -1340,6 +1340,10 @@ export class GameSession {
     }
 
     /** 開獎的宿命建議要靠因子字典分武 / 文；沒有字典時只看五維 */
+    public get factorDictionary(): FactorDictionary | undefined {
+        return this._factorDictionary;
+    }
+
     public setFactorDictionary(dictionary: FactorDictionary | undefined): void {
         this._factorDictionary = dictionary;
     }
