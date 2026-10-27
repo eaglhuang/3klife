@@ -116,6 +116,8 @@ import { OracleCouple, SageOracleController } from '../core/SageOracleController
 import { buildRetireReviewTexts, RETIRE_REVIEW_OPEN_EVENT, withRetireReviewFallback, type RetireReviewOpenPayload } from '../core/RetireReviewController';
 import { formatDeathNotice } from '../core/LifeVitalityPresenter';
 import { buildSpiritCodexTexts, spiritRelicsNewestFirst, SPIRIT_CODEX_MAX_ROWS, withSpiritCodexFallback } from '../core/SpiritCodexController';
+import { buildUltimateCodexTexts, withUltimateCodexFallback } from '../core/UltimateCodexTexts';
+import { buildUltimateCodex } from '../../core/systems/UltimateUpgrade';
 import { buildSpiritCardDetailView, withSpiritCardDetailFallback } from '../core/SpiritCardDetailTexts';
 import type { SpiritCard } from '../../core/models/SpiritCard';
 import { lifeScriptCopy, type LifeScriptEvent } from '../../core/systems/LifeScriptCopy';
@@ -305,6 +307,7 @@ export class LobbyScene extends Component {
     private _oracleHost: UIScreenPreviewHost | null = null;
     private _retireReviewHost: UIScreenPreviewHost | null = null;
     private _spiritCodexHost: UIScreenPreviewHost | null = null;
+    private _ultimateCodexHost: UIScreenPreviewHost | null = null;
     /** 英靈圖鑑目前列出的卡（與列上「詳情」按鈕同序） */
     private _spiritCodexShown: SpiritCard[] = [];
     private _spiritCardDetailHost: UIScreenPreviewHost | null = null;
@@ -452,6 +455,7 @@ export class LobbyScene extends Component {
         await this._mountSageOracle();
         await this._mountRetireReview();
         await this._mountSpiritCodex();
+        await this._mountUltimateCodex();
         await this._mountPrisonerPopup();
         await this._mountDestinyShop();
         await this._mountYearReport();
@@ -528,7 +532,7 @@ export class LobbyScene extends Component {
             const loaded = await services().session.load();
             UCUFLogger.info(LogCategory.DATA, loaded ? '[LobbyScene] 已讀取玩家存檔' : '[LobbyScene] 沒有玩家存檔，從新局開始');
             // 登入（連續登入 PROG-2-0987、三國日報 PROG-2-1170）：讀檔後記一次，當天第一次登入會生成日報
-            services().session.recordLoginAt(Date.now());
+            services().session.recordLoginAt(Date.now(), (amount) => { this._localGachaService.grantCurrency('gold', amount); });
             this._showDailyNews();
             // 離線互動（JRN-04）：目前尚無主互動內容，只記錄是否應觸發
             if (loaded && services().session.offlineInteractionDue(Date.now())) {
@@ -1410,6 +1414,13 @@ export class LobbyScene extends Component {
         const host = this._journalHubHost;
         if (!host || !this._journalHub) {
             return;
+        }
+        // 遊戲中到期的派遣也在開板時結算發獎（PROG-2-1182）
+        const session = services().session;
+        const done = session.settleDispatchJobs(Date.now(), (amount) => { this._localGachaService.grantCurrency('gold', amount); });
+        if (done.length > 0) {
+            services().event.emit('SHOW_TOAST', { message: `${done.length} 項派遣完成，獎勵已入帳。`, duration: 2 });
+            void session.save().catch(() => undefined);
         }
         host.node.active = true;
         this._bringNodeToFront(host.node);
@@ -2686,6 +2697,31 @@ export class LobbyScene extends Component {
         this._spiritCardDetailHost = await this._mountPreviewScreenHost('SpiritCardDetailHost', 'spirit-card-detail-screen', [
             { buttonId: 'btnCloseSpiritCardDetail', handler: () => { this._closeSpiritCardDetail(); } },
         ]);
+    }
+
+    /** 奧義圖鑑（ULT-16）：列出已解鎖奧義，資料由 buildUltimateCodex 組出（純邏輯）；入口待定，目前只有開關方法。 */
+    private async _mountUltimateCodex(): Promise<void> {
+        this._ultimateCodexHost = await this._mountPreviewScreenHost('UltimateCodexHost', 'ultimate-codex-screen', [
+            { buttonId: 'btnCloseUltimateCodex', handler: () => { this._closeUltimateCodex(); } },
+        ]);
+    }
+
+    private _openUltimateCodex(): void {
+        const host = this._ultimateCodexHost;
+        const binder = host?.binder;
+        if (!host || !binder) {
+            return;
+        }
+        const lookup = withUltimateCodexFallback((key, ...args) => services().i18n.t(key, ...args));
+        applyFlowView(binder, { texts: buildUltimateCodexTexts(buildUltimateCodex(this._generals), lookup), actives: {}, enabled: {} });
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+    }
+
+    private _closeUltimateCodex(): void {
+        if (this._ultimateCodexHost) {
+            this._ultimateCodexHost.node.active = false;
+        }
     }
 
     private async _openSpiritCodex(): Promise<void> {

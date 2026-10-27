@@ -4,7 +4,7 @@
  *
  * - 派遣當下以 §F-2 評分快照分數，結算時依分數對到品質區間，不受之後武將變動影響（確定性）。
  * - 高風險任務不得自動代勞（§F-2 規則 3），玩家手動派遣才放行。
- * - 不發獎勵：品質只決定結果區間與日誌表現（§F-2 規則 1），rewardText 只用於顯示。
+ * - 獎勵：品質決定結果區間（§F-2 規則 1），結構化獎勵依品質倍率發放（PROG-2-1182，暫定）；rewardText 為顯示用基準值。
  * - 冷卻時長、已完成紀錄上限、各品質日誌重要度為暫定。
  *
  * Unity 對照：像 Idle Dispatch Manager 的資料層，Update 不跑，登入時用時間差一次結算。
@@ -19,9 +19,28 @@ export const DISPATCH_COMPLETED_LIMIT = 20;
 /** 暫定：派遣完成寫日誌時的重要度 */
 export const DISPATCH_JOURNAL_PRIORITY: Readonly<Record<DispatchQuality, number>> = { POOR: 40, NORMAL: 50, GOOD: 60, EXCELLENT: 75 };
 
+/** 派遣獎勵可入帳的資源：糧草、金幣（交呼叫端錢包）、名聲 */
+export type DispatchRewardResource = 'food' | 'gold' | 'fame';
+
+export interface DispatchReward {
+    resource: DispatchRewardResource;
+    amount: number;
+}
+
+/** 暫定：完成品質對獎勵的倍率 */
+export const DISPATCH_REWARD_MULTIPLIER: Readonly<Record<DispatchQuality, number>> = { POOR: 0.5, NORMAL: 1, GOOD: 1.2, EXCELLENT: 1.5 };
+
 export interface DispatchJobDef extends DispatchJob {
     durationMs: number;
     rewardText: string;
+    /** 結構化獎勵（PROG-2-1182）；沒有時只寫日誌不發獎 */
+    reward?: DispatchReward;
+}
+
+/** 依完成品質算實發數量（向下取整，最少 0） */
+export function dispatchRewardAmount(reward: Readonly<DispatchReward>, quality: DispatchQuality): number {
+    if (!Number.isFinite(reward.amount) || reward.amount <= 0) return 0;
+    return Math.floor(reward.amount * DISPATCH_REWARD_MULTIPLIER[quality]);
 }
 
 export interface ActiveDispatchJob {
