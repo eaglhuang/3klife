@@ -85,6 +85,8 @@ export const EVENT_NAMES = {
   TurnPhaseChanged:  "turn-phase-changed",
   WeatherChanged:    "weather-changed",
   AptitudeDialogue:  "aptitude-dialogue",
+  /** 戰場關係事件（名將契合、義兄弟合攻，PROG-2-1420）：payload { turn, hit: RelationEventHit } */
+  RelationEventTriggered: "relation-event-triggered",
   BattleEnded:       "battle-ended",
   GameModeChanged:   "game-mode-changed",
   UnitDeployed:      "unit-deployed",
