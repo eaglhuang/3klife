@@ -30,6 +30,8 @@ export interface InventoryRecord {
     slotId?: string | null;
     /** 一般裝備的定義 id（查 GearDefinitions 取名稱與槽位）；列不存名稱本身（PROG-2-1039） */
     Gear_ID?: string | null;
+    /** 英靈卡是否為其所屬武將的主卡；缺欄位即非主卡（PM 2026-10-27 暫定） */
+    isPrimary?: boolean | null;
 }
 
 export interface InventorySkipped {
