@@ -13,6 +13,8 @@
  */
 import { _decorator, Color, Component, Graphics } from 'cc';
 import { bloodlineCurveBetween, sampleCubicBezier, type CurvePoint } from '../../core/systems/BloodlineCurve';
+import { factorEdgeRgb } from '../../core/systems/FactorTagTokens';
+import type { FactorColor } from '../../core/systems/FactorInheritance';
 
 const { ccclass, property } = _decorator;
 
@@ -20,6 +22,13 @@ export interface BloodlineEdge {
     from: CurvePoint;
     to: CurvePoint;
     color: Color;
+}
+
+/** 依子代因子色上色的父子連線；childColor 為 null 時用中性灰。 */
+export interface FactorBloodlineEdge {
+    from: CurvePoint;
+    to: CurvePoint;
+    childColor: FactorColor | null;
 }
 
 @ccclass('UIBloodlineConnections')
@@ -48,5 +57,15 @@ export class UIBloodlineConnections extends Component {
             }
             graphics.stroke();
         }
+    }
+
+    /** 依子代因子色重畫父子連線；顏色由 factorEdgeRgb 決定，與標籤色一致。 */
+    drawFactorConnections(edges: readonly FactorBloodlineEdge[]): void {
+        this.drawConnections(
+            edges.map((edge) => {
+                const rgb = factorEdgeRgb(edge.childColor);
+                return { from: edge.from, to: edge.to, color: new Color(rgb.r, rgb.g, rgb.b, 255) };
+            }),
+        );
     }
 }

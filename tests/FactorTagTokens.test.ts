@@ -5,7 +5,7 @@
  * 色碼六個且互不相同；查不到文案時退回 key；uid-design-tokens.json 可解析且與常數一致。
  */
 import { assert, TestSuite } from './TestRunner';
-import { FACTOR_TAG_COLORS, FACTOR_TAG_I18N_KEYS, applyFactorTagTokens, factorTagColorOf, factorTagText, parseFactorTagColors } from '../assets/scripts/core/systems/FactorTagTokens';
+import { FACTOR_EDGE_NEUTRAL_RGB, FACTOR_TAG_COLORS, FACTOR_TAG_I18N_KEYS, applyFactorTagTokens, factorEdgeRgb, factorTagColorOf, factorTagText, parseFactorTagColors, parseHexRgb } from '../assets/scripts/core/systems/FactorTagTokens';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -67,6 +67,24 @@ export function createFactorTagTokensSuite(): TestSuite {
         assert.equals('#000000', factorTagColorOf('red'));
         assert.isTrue(applyFactorTagTokens({ factorTagColors: FACTOR_TAG_COLORS }));
         assert.equals(FACTOR_TAG_COLORS.red, factorTagColorOf('red'));
+    });
+
+    suite.test('parseHexRgb 解析 #RRGGBB，格式不合回傳 null', () => {
+        assert.equals(0x50, parseHexRgb('#50A0FF')?.r ?? -1);
+        assert.equals(0xa0, parseHexRgb('#50A0FF')?.g ?? -1);
+        assert.equals(0xff, parseHexRgb('#50A0FF')?.b ?? -1);
+        assert.isTrue(parseHexRgb('50A0FF') === null);
+        assert.isTrue(parseHexRgb('#FFF') === null);
+    });
+
+    suite.test('factorEdgeRgb 六色依標籤色上色；null 與未知色退回中性灰', () => {
+        const red = factorEdgeRgb('red');
+        assert.equals(0xe6, red.r);
+        assert.equals(0x50, red.g);
+        assert.equals(0x46, red.b);
+        assert.equals(FACTOR_EDGE_NEUTRAL_RGB.r, factorEdgeRgb(null).r);
+        assert.equals(FACTOR_EDGE_NEUTRAL_RGB.r, factorEdgeRgb(undefined).r);
+        assert.equals(FACTOR_EDGE_NEUTRAL_RGB.r, factorEdgeRgb('gold' as never).r);
     });
 
     return suite;
