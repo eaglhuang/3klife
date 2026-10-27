@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 81,
-    "total": 117
+    "open": 82,
+    "total": 118
   },
   "tasks": [
     {
@@ -4344,6 +4344,38 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0176/**"
+      ],
+      "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 由 Claude 協調線登錄 | 阻塞: TASK-TEAM-0088 未解，派信時暫擱"
+    },
+    {
+      "id": "PROG-2-0177",
+      "title": "實機驗收：命頁 14 人樹節點命名統一（PROG-2-1273、#1127）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-27",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "命頁 14 人樹節點命名統一（無行為變更）實機驗收，確認 14 張卡全數顯示且詳情正確。",
+      "related": [
+        "PROG-2-1273",
+        "PR #1127"
+      ],
+      "depends": [
+        "PROG-2-1273",
+        "PR #1127"
+      ],
+      "acceptance": [
+        "14 張先祖卡全數顯示",
+        "點擊卡片詳情對應正確"
+      ],
+      "deliverables": [
+        "截圖",
+        "HEAD"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0177/**"
       ],
       "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 由 Claude 協調線登錄 | 阻塞: TASK-TEAM-0088 未解，派信時暫擱"
     }
