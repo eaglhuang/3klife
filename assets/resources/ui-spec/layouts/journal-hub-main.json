@@ -97,7 +97,7 @@
             "styleSlot": "jh.label.muted"
           },
           {
-            "type": "container",
+            "type": "button",
             "name": "DispatchRow0",
             "id": "dispatchRow0",
             "width": 944,
@@ -133,7 +133,7 @@
             ]
           },
           {
-            "type": "container",
+            "type": "button",
             "name": "DispatchRow1",
             "id": "dispatchRow1",
             "width": 944,
@@ -169,7 +169,7 @@
             ]
           },
           {
-            "type": "container",
+            "type": "button",
             "name": "DispatchRow2",
             "id": "dispatchRow2",
             "width": 944,
@@ -205,7 +205,7 @@
             ]
           },
           {
-            "type": "container",
+            "type": "button",
             "name": "DispatchRow3",
             "id": "dispatchRow3",
             "width": 944,
