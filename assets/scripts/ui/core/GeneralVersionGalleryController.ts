@@ -7,6 +7,7 @@
  */
 import type { GeneralVersionRecord } from '../../core/models/GeneralVersion';
 import { buildVersionGallery, GALLERY_GROUP_SLOTS, toGalleryLayoutState } from '../../core/systems/GeneralVersionGallery';
+import { pickComparePair, toVersionDiffLayoutState } from '../../core/systems/GeneralVersionDiff';
 
 export interface GeneralVersionGalleryView {
     open: boolean;
@@ -54,6 +55,14 @@ export class GeneralVersionGalleryController {
             return { open: false, texts: {}, actives: {}, selectedBloodlineId: null };
         }
         const groups = buildVersionGallery(this._table, this._owned);
-        return { open: true, ...toGalleryLayoutState(groups, this._selected), selectedBloodlineId: this._selected };
+        const layout = toGalleryLayoutState(groups, this._selected);
+        const pair = this._selected ? pickComparePair(this._table, this._selected) : null;
+        const diff = toVersionDiffLayoutState(pair);
+        return {
+            open: true,
+            texts: { ...layout.texts, ...diff.texts },
+            actives: { ...layout.actives, ...diff.actives },
+            selectedBloodlineId: this._selected,
+        };
     }
 }

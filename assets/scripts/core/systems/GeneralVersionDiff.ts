@@ -7,6 +7,8 @@
  *   - changedLevel：兩邊都有，但等級不同（before 為 A 的等級，after 為 B 的等級）。
  *   - onlyInA / onlyInB：只在其中一邊。
  *
+ * 圖鑑比對對象（PROG-2-1367）：同血源最早上架 vs 最新上架；只有一個版本時沒有可比的對象。
+ *
  * 暫定：
  *   - 規格的「戰法」「立繪」對比，版本表目前沒有對應欄位，本檔不處理；待 schema 補上再接。
  *   - 格式錯誤的因子項目（缺 Type／ID、Level 非有限數）略過，不讓整張對比失敗。
@@ -14,7 +16,7 @@
  *
  * Unity 對照：像比對兩個 ScriptableObject 的列表欄位，用 Dictionary<key, value> 找出交集與差集。
  */
-import { GeneralVersionRecord, parseInitialGenes } from '../models/GeneralVersion';
+import { GeneralVersionRecord, parseInitialGenes, versionsOfBloodline } from '../models/GeneralVersion';
 
 export interface VersionGene {
     type: string;
@@ -82,4 +84,45 @@ export function diffVersionGenes(
         if (!keysA.has(keyOf(gene))) diff.onlyInB.push(gene);
     }
     return diff;
+}
+
+export interface VersionComparePair {
+    /** 較早上架的版本（前版） */
+    before: GeneralVersionRecord;
+    /** 較晚上架的版本（後版） */
+    after: GeneralVersionRecord;
+}
+
+/** 同血源最早上架與最新上架的一組；版本少於兩個時回傳 null。 */
+export function pickComparePair(list: readonly GeneralVersionRecord[], bloodlineId: string): VersionComparePair | null {
+    const versions = versionsOfBloodline([...list], bloodlineId);
+    if (versions.length < 2) return null;
+    return { before: versions[0], after: versions[versions.length - 1] };
+}
+
+/** 版本差異面板的 FlowView 片段；戰法與立繪欄位版本表尚無資料，固定顯示「—」。 */
+export interface VersionDiffLayoutState {
+    texts: Record<string, string>;
+    actives: Record<string, boolean>;
+}
+
+export const VERSION_DIFF_PLACEHOLDER = '—';
+
+export function toVersionDiffLayoutState(pair: VersionComparePair | null): VersionDiffLayoutState {
+    const texts: Record<string, string> = {
+        diffTitle: '',
+        diffGenes: '',
+        diffTactics: `戰法：${VERSION_DIFF_PLACEHOLDER}`,
+        diffPortrait: `立繪：${VERSION_DIFF_PLACEHOLDER}`,
+    };
+    if (!pair) {
+        return { texts, actives: { diffPanel: false } };
+    }
+    const label = (record: GeneralVersionRecord) => record.Version_Title ?? record.Template_ID;
+    texts.diffTitle = `版本差異：${label(pair.before)} → ${label(pair.after)}`;
+    const diff = diffVersionGenes(pair.before, pair.after);
+    texts.diffGenes = diff
+        ? `因子：相同 ${diff.sameGenes.length} 項・等級變動 ${diff.changedLevel.length} 項・僅前版 ${diff.onlyInA.length} 項・僅後版 ${diff.onlyInB.length} 項`
+        : '因子：資料異常';
+    return { texts, actives: { diffPanel: true } };
 }
