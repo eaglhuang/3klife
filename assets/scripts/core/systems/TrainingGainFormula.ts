@@ -11,7 +11,7 @@
  * - M_Friendship = Π(1 + 觸發傾囊相授的教官加成)，全公式唯一的連乘區。
  * - M_Crowd = 1 + 5% × 未觸發傾囊的閒雜角色人數（暫定：以加法計，「額外 +5%」每人一次）。
  *
- * 暫定：本模組只算公式，尚未接進 NurtureSystem.computeStatGain（接線屬 FORM-02，待使用者裁決）。
+ * 呼叫端：NurtureSystem.computeStatGain 以中性值帶入尚無來源的運勢與人數補正（數值與舊公式一致）。
  *
  * Unity 對照：像一條 Shader 的乘法鏈，加法區先加在一起，再一個個乘上各自的 Multiplier，
  * 只有傾囊相授那一段用 Π 做連乘，其他區都是 1 + 加總 的形式。
