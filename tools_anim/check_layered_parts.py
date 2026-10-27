@@ -1208,157 +1208,6 @@ def run_layered_parts_inspection(
     # 依據 AG-22 動態推導關節列表
     joint_connections = derive_joint_connections(spec)
 
-    # 3. 關節隱藏延伸檢驗
-    joint_ext_reports: dict[str, Any] = {}
-    for j_conn in joint_connections:
-        conn_id = j_conn["id"]
-        p_sid = j_conn["parent_slot"]
-        c_sid = j_conn["child_slot"]
-
-        if filter_slots and (p_sid not in filter_slots or c_sid not in filter_slots):
-            continue
-
-        p_empty = (p_sid not in loaded_parts) or slot_reports.get(p_sid, {}).get("empty", False)
-        c_empty = (c_sid not in loaded_parts) or slot_reports.get(c_sid, {}).get("empty", False)
-
-        if p_empty or c_empty:
-            missing_info = []
-            if p_empty:
-                missing_info.append(f"{p_sid}(空)")
-            if c_empty:
-                missing_info.append(f"{c_sid}(空)")
-            joint_ext_reports[conn_id] = {
-                "pass": True,
-                "tier": "SKIPPED",
-                "skipped": True,
-                "detail": f"槽位缺失或為空 ({', '.join(missing_info)})，跳過隱藏延伸檢查",
-            }
-            continue
-
-        piv_pt = j_conn["pivot"]
-        p_start_pt = j_conn["parent_pivot"]
-
-        dir_p = (piv_pt[0] - p_start_pt[0], piv_pt[1] - p_start_pt[1])
-        dir_c = (p_start_pt[0] - piv_pt[0], p_start_pt[1] - piv_pt[1])
-
-        p_arr = loaded_parts[p_sid]
-        c_arr = loaded_parts[c_sid]
-
-        p_pass, p_ext = check_slot_hidden_extension(p_arr, piv_pt, dir_p, min_ext_px)
-        c_pass, c_ext = check_slot_hidden_extension(c_arr, piv_pt, dir_c, min_ext_px)
-
-        # AG-27: 檢查 child segment 是否定義 neckExtension.replacesGenericHiddenExtension
-        seg_alias_map = {
-            "arm_upper_f": "upperarm_f",
-            "arm_upper_b": "upperarm_b",
-            "arm_lower_f": "forearm_f",
-            "arm_lower_b": "forearm_b",
-        }
-        c_seg_name = seg_alias_map.get(c_sid, c_sid)
-        c_seg_def = spec.get("segments", {}).get(c_seg_name, {})
-        c_neck_ext = c_seg_def.get("neckExtension", {})
-        replaces_generic_ext = bool(c_neck_ext.get("replacesGenericHiddenExtension", False))
-
-        # AG-25: 肩部父側隱藏延伸豁免檢查
-        p_waived = False
-        p_waived_reason = ""
-        matched_shoulder_joint = None
-
-        c_waived = False
-        c_waived_reason = ""
-
-        if replaces_generic_ext:
-            p_waived = True
-            p_waived_reason = "子段 neckExtension.replacesGenericHiddenExtension 為 true，父側不設通用延伸長度門檻，由旋轉露縫驗收"
-            c_waived = True
-            c_waived_reason = "子段依 neckExtension 規則驗收，取代通用延伸檢查，由旋轉露縫驗收"
-        elif not p_pass and parent_waive_prefix:
-            # 檢查當前關節樞紐是否匹配 shoulderOverlapZone.joints 之一
-            for sj_name, sj_pos in shoulder_joint_positions.items():
-                if math.hypot(piv_pt[0] - sj_pos[0], piv_pt[1] - sj_pos[1]) <= 1.0:
-                    matched_shoulder_joint = sj_name
-                    break
-
-            if matched_shoulder_joint:
-                # 槽名前綴加 _f / _b 對應
-                suffix = "_f" if matched_shoulder_joint.endswith("_f") else ("_b" if matched_shoulder_joint.endswith("_b") else "")
-                matching_pauldron_slot = f"{parent_waive_prefix}{suffix}"
-
-                # 檢查同側 pauldron 槽是否存在且非空
-                if matching_pauldron_slot in loaded_parts and not slot_reports.get(matching_pauldron_slot, {}).get("empty", False):
-                    pauldron_img = loaded_parts[matching_pauldron_slot]
-                    if pauldron_img.ndim == 3 and pauldron_img.shape[2] == 4:
-                        p_alpha = pauldron_img[..., 3]
-                        p_ys, p_xs = np.where(p_alpha > 0)
-                        if len(p_xs) > 0:
-                            dist_to_piv = float(np.hypot(p_xs - piv_pt[0], p_ys - piv_pt[1]).min())
-                            if dist_to_piv <= 20.0:
-                                p_waived = True
-                                p_waived_reason = (
-                                    f"同側 {matching_pauldron_slot} 存在且覆蓋肩關節 (距離={dist_to_piv:.1f}px <= 20px)，"
-                                    f"父側延伸不足 ({p_ext:.1f}px < {min_ext_px:.1f}px) 依 shoulderOverlapZone 豁免"
-                                )
-
-        p_effective_pass = p_pass or p_waived
-        c_effective_pass = c_pass or c_waived
-        conn_pass = p_effective_pass and c_effective_pass
-
-        joint_ext_entry: dict[str, Any] = {
-            "pass": conn_pass,
-            "tier": "WAIVED" if (p_waived or c_waived) else ("PASS" if conn_pass else "FAIL"),
-            "skipped": False,
-            "pivot": list(piv_pt),
-            "pivotSource": j_conn.get("pivotSource", "bonePivot"),
-            "parentExtensionPx": round(p_ext, 1),
-            "childExtensionPx": round(c_ext, 1),
-            "minRequiredPx": round(min_ext_px, 1),
-            "parentWaived": p_waived,
-            "childWaived": c_waived,
-            "replacesGenericHiddenExtension": replaces_generic_ext,
-            "detail": f"隱藏延伸: 父={p_ext:.1f}px{' (WAIVED)' if p_waived else ''}, 子={c_ext:.1f}px{' (WAIVED)' if c_waived else ''} (要求>={min_ext_px:.1f}px)",
-        }
-        if p_waived:
-            joint_ext_entry["parentWaivedReason"] = p_waived_reason
-        if c_waived:
-            joint_ext_entry["childWaivedReason"] = c_waived_reason
-        joint_ext_reports[conn_id] = joint_ext_entry
-
-        if p_waived:
-            slot_reports[p_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
-                "pass": True,
-                "tier": "WAIVED",
-                "parentExtensionPx": round(p_ext, 1),
-                "minRequiredPx": round(min_ext_px, 1),
-                "detail": p_waived_reason,
-            }
-        elif not p_pass:
-            slot_reports[p_sid]["pass"] = False
-            slot_reports[p_sid]["tier"] = "FAIL"
-            slot_reports[p_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
-                "pass": False,
-                "tier": "FAIL",
-                "detail": f"在 {conn_id} 處越過關節延伸不足: {p_ext:.1f}px < {min_ext_px:.1f}px",
-            }
-            overall_pass = False
-
-        if c_waived:
-            slot_reports[c_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
-                "pass": True,
-                "tier": "WAIVED",
-                "childExtensionPx": round(c_ext, 1),
-                "minRequiredPx": round(min_ext_px, 1),
-                "detail": c_waived_reason,
-            }
-        elif not c_pass:
-            slot_reports[c_sid]["pass"] = False
-            slot_reports[c_sid]["tier"] = "FAIL"
-            slot_reports[c_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
-                "pass": False,
-                "tier": "FAIL",
-                "detail": f"在 {conn_id} 處越過關節延伸不足: {c_ext:.1f}px < {min_ext_px:.1f}px",
-            }
-            overall_pass = False
-
     # 提取規格中所有握點座標 (供輪廓檢驗時排除拳孔填實)
     grip_pts = [
         (float(g["x"]), float(g["y"]))
@@ -1557,9 +1406,15 @@ def run_layered_parts_inspection(
         else:
             c_cov_cond_val = 0.15
 
+        is_gate_promoted = bool(gate_cfg.get("promoted", False))
+        effective_leak_pass = proposed_pass if is_gate_promoted else leak_pass
+        effective_tier = proposed_tier if is_gate_promoted else ("PASS" if leak_pass else "FAIL")
+
         leak_entry: dict[str, Any] = {
-            "pass": leak_pass,
-            "tier": "PASS" if leak_pass else "FAIL",
+            "pass": effective_leak_pass,
+            "tier": effective_tier,
+            "promoted": is_gate_promoted,
+            "oldFullRadiusLeakPass": leak_pass,
             "proposedTier": proposed_tier,
             "proposedGate": {
                 "pass": proposed_pass,
@@ -1646,24 +1501,224 @@ def run_layered_parts_inspection(
             },
         }
 
-        if not leak_pass and out_dir:
-            leak_vis_path = out_dir / f"gap_leak_{c_sid}_{conn_id}.png"
-            leak_vis_arr = np.zeros((exp_h, exp_w, 4), dtype=np.uint8)
-            leak_vis_arr[leak_pos_m | leak_neg_m] = [255, 0, 0, 255]
-            Image.fromarray(leak_vis_arr).save(leak_vis_path)
-            leak_entry["leakImagePath"] = str(leak_vis_path)
+        if not effective_leak_pass:
+            if out_dir:
+                leak_vis_path = out_dir / f"gap_leak_{c_sid}_{conn_id}.png"
+                leak_vis_arr = np.zeros((exp_h, exp_w, 4), dtype=np.uint8)
+                leak_vis_arr[leak_pos_m | leak_neg_m] = [255, 0, 0, 255]
+                Image.fromarray(leak_vis_arr).save(leak_vis_path)
+                leak_entry["leakImagePath"] = str(leak_vis_path)
 
             slot_reports[c_sid]["pass"] = False
             slot_reports[c_sid]["tier"] = "FAIL"
+            fail_detail = (
+                f"關節 +/-{tested_deg}° 旋轉擬議閘門未通過: {'; '.join(proposed_fail_reasons)}"
+                if is_gate_promoted
+                else f"關節 +/-{tested_deg}° 旋轉在關節周圍出現露縫"
+            )
             slot_reports[c_sid]["checks"][f"rotation_leak_at_{conn_id}"] = {
                 "pass": False,
                 "tier": "FAIL",
-                "detail": f"關節旋轉 +/-{tested_deg}° 時在關節周圍出現露縫",
-                "leakImage": str(leak_vis_path),
+                "detail": fail_detail,
+                "reasons": proposed_fail_reasons,
+            }
+            if out_dir:
+                slot_reports[c_sid]["checks"][f"rotation_leak_at_{conn_id}"]["leakImage"] = str(leak_vis_path)
+            overall_pass = False
+        else:
+            detail_msg = f"關節 +/-{tested_deg}° 旋轉閘門通過" + (" (promoted)" if is_gate_promoted else "")
+            if not leak_pass:
+                detail_msg += f" [舊全半徑露縫(+{full_seam_pos}px/-{full_seam_neg}px)已轉為只報告]"
+            slot_reports[c_sid]["checks"][f"rotation_leak_at_{conn_id}"] = {
+                "pass": True,
+                "tier": "PASS",
+                "detail": detail_msg,
+            }
+
+        rot_leak_reports[conn_id] = leak_entry
+
+    # 3. 關節隱藏延伸檢驗
+    joint_ext_reports: dict[str, Any] = {}
+    for j_conn in joint_connections:
+        conn_id = j_conn["id"]
+        p_sid = j_conn["parent_slot"]
+        c_sid = j_conn["child_slot"]
+
+        if filter_slots and (p_sid not in filter_slots or c_sid not in filter_slots):
+            continue
+
+        p_empty = (p_sid not in loaded_parts) or slot_reports.get(p_sid, {}).get("empty", False)
+        c_empty = (c_sid not in loaded_parts) or slot_reports.get(c_sid, {}).get("empty", False)
+
+        if p_empty or c_empty:
+            missing_info = []
+            if p_empty:
+                missing_info.append(f"{p_sid}(空)")
+            if c_empty:
+                missing_info.append(f"{c_sid}(空)")
+            joint_ext_reports[conn_id] = {
+                "pass": True,
+                "tier": "SKIPPED",
+                "skipped": True,
+                "detail": f"槽位缺失或為空 ({', '.join(missing_info)})，跳過隱藏延伸檢查",
+            }
+            continue
+
+        piv_pt = j_conn["pivot"]
+        p_start_pt = j_conn["parent_pivot"]
+
+        dir_p = (piv_pt[0] - p_start_pt[0], piv_pt[1] - p_start_pt[1])
+        dir_c = (p_start_pt[0] - piv_pt[0], p_start_pt[1] - piv_pt[1])
+
+        p_arr = loaded_parts[p_sid]
+        c_arr = loaded_parts[c_sid]
+
+        p_pass, p_ext = check_slot_hidden_extension(p_arr, piv_pt, dir_p, min_ext_px)
+        c_pass, c_ext = check_slot_hidden_extension(c_arr, piv_pt, dir_c, min_ext_px)
+
+        # AG-27: 檢查 child segment 是否定義 neckExtension.replacesGenericHiddenExtension
+        seg_alias_map = {
+            "arm_upper_f": "upperarm_f",
+            "arm_upper_b": "upperarm_b",
+            "arm_lower_f": "forearm_f",
+            "arm_lower_b": "forearm_b",
+        }
+        c_seg_name = seg_alias_map.get(c_sid, c_sid)
+        c_seg_def = spec.get("segments", {}).get(c_seg_name, {})
+        c_neck_ext = c_seg_def.get("neckExtension", {})
+        replaces_generic_ext = bool(c_neck_ext.get("replacesGenericHiddenExtension", False))
+
+        # AG-25: 肩部父側隱藏延伸豁免檢查
+        p_waived = False
+        p_waived_reason = ""
+        matched_shoulder_joint = None
+
+        c_waived = False
+        c_waived_reason = ""
+
+        if replaces_generic_ext:
+            p_waived = True
+            p_waived_reason = "子段 neckExtension.replacesGenericHiddenExtension 為 true，父側不設通用延伸長度門檻，由旋轉露縫驗收"
+            c_waived = True
+            c_waived_reason = "子段依 neckExtension 規則驗收，取代通用延伸檢查，由旋轉露縫驗收"
+        elif not p_pass and parent_waive_prefix:
+            # 檢查當前關節樞紐是否匹配 shoulderOverlapZone.joints 之一
+            for sj_name, sj_pos in shoulder_joint_positions.items():
+                if math.hypot(piv_pt[0] - sj_pos[0], piv_pt[1] - sj_pos[1]) <= 1.0:
+                    matched_shoulder_joint = sj_name
+                    break
+
+            if matched_shoulder_joint:
+                # 槽名前綴加 _f / _b 對應
+                suffix = "_f" if matched_shoulder_joint.endswith("_f") else ("_b" if matched_shoulder_joint.endswith("_b") else "")
+                matching_pauldron_slot = f"{parent_waive_prefix}{suffix}"
+
+                # 檢查同側 pauldron 槽是否存在且非空
+                if matching_pauldron_slot in loaded_parts and not slot_reports.get(matching_pauldron_slot, {}).get("empty", False):
+                    pauldron_img = loaded_parts[matching_pauldron_slot]
+                    if pauldron_img.ndim == 3 and pauldron_img.shape[2] == 4:
+                        p_alpha = pauldron_img[..., 3]
+                        p_ys, p_xs = np.where(p_alpha > 0)
+                        if len(p_xs) > 0:
+                            dist_to_piv = float(np.hypot(p_xs - piv_pt[0], p_ys - piv_pt[1]).min())
+                            if dist_to_piv <= 20.0:
+                                p_waived = True
+                                p_waived_reason = (
+                                    f"同側 {matching_pauldron_slot} 存在且覆蓋肩關節 (距離={dist_to_piv:.1f}px <= 20px)，"
+                                    f"父側延伸不足 ({p_ext:.1f}px < {min_ext_px:.1f}px) 依 shoulderOverlapZone 豁免"
+                                )
+
+                # AG-35: coverageRule.hiddenExtensionWaivers 豁免檢查
+        cov_rule = layered_cfg.get("coverageRule", {})
+        hidden_ext_waivers = cov_rule.get("hiddenExtensionWaivers", {})
+        child_alone_waiver = hidden_ext_waivers.get("childAloneSufficient")
+        grip_ext_waiver = hidden_ext_waivers.get("gripJoint")
+
+        if not p_pass and not p_waived:
+            conn_rot = rot_leak_reports.get(conn_id, {})
+            conn_prop = conn_rot.get("proposedGate", {})
+            conn_conds = conn_prop.get("conditions", {})
+            conn_is_marked_child_alone = (conn_conds.get("parentCoreCoverageMinRatio") == "childAloneSufficient")
+            conn_crack_ok = (
+                conn_rot.get("jointCrackPositivePx", 999.0) <= conn_rot.get("maxJointCrackThresholdPx", 0.0) and
+                conn_rot.get("jointCrackNegativePx", 999.0) <= conn_rot.get("maxJointCrackThresholdPx", 0.0)
+            )
+            conn_is_grip = bool(conn_rot.get("gripHoleSource", "none") != "none")
+
+            # 1. childAloneSufficient: 父骨隱藏延伸不要求 (pelvis_to_torso)
+            if child_alone_waiver == "parentExtensionNotRequired" and conn_is_marked_child_alone:
+                p_waived = True
+                p_waived_reason = (
+                    f"關節符合 childAloneSufficient，依 coverageRule.hiddenExtensionWaivers.childAloneSufficient "
+                    f"豁免父骨側隱藏延伸 ({p_ext:.1f}px < {min_ext_px:.1f}px)"
+                )
+            # 2. gripJoint: 握孔關節在裂縫達標時，父骨延伸改為 advisory 只報告
+            elif grip_ext_waiver == "advisoryWhenCrackPasses" and conn_is_grip and conn_crack_ok:
+                p_waived = True
+                p_waived_reason = (
+                    f"握孔關節裂縫達標，依 coverageRule.hiddenExtensionWaivers.gripJoint "
+                    f"父骨側隱藏延伸改為 advisory 只報告 ({p_ext:.1f}px < {min_ext_px:.1f}px)"
+                )
+
+        p_effective_pass = p_pass or p_waived
+        c_effective_pass = c_pass or c_waived
+        conn_pass = p_effective_pass and c_effective_pass
+
+        joint_ext_entry: dict[str, Any] = {
+            "pass": conn_pass,
+            "tier": "WAIVED" if (p_waived or c_waived) else ("PASS" if conn_pass else "FAIL"),
+            "skipped": False,
+            "pivot": list(piv_pt),
+            "pivotSource": j_conn.get("pivotSource", "bonePivot"),
+            "parentExtensionPx": round(p_ext, 1),
+            "childExtensionPx": round(c_ext, 1),
+            "minRequiredPx": round(min_ext_px, 1),
+            "parentWaived": p_waived,
+            "childWaived": c_waived,
+            "replacesGenericHiddenExtension": replaces_generic_ext,
+            "detail": f"隱藏延伸: 父={p_ext:.1f}px{' (WAIVED)' if p_waived else ''}, 子={c_ext:.1f}px{' (WAIVED)' if c_waived else ''} (要求>={min_ext_px:.1f}px)",
+        }
+        if p_waived:
+            joint_ext_entry["parentWaivedReason"] = p_waived_reason
+        if c_waived:
+            joint_ext_entry["childWaivedReason"] = c_waived_reason
+        joint_ext_reports[conn_id] = joint_ext_entry
+
+        if p_waived:
+            slot_reports[p_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
+                "pass": True,
+                "tier": "WAIVED",
+                "parentExtensionPx": round(p_ext, 1),
+                "minRequiredPx": round(min_ext_px, 1),
+                "detail": p_waived_reason,
+            }
+        elif not p_pass:
+            slot_reports[p_sid]["pass"] = False
+            slot_reports[p_sid]["tier"] = "FAIL"
+            slot_reports[p_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
+                "pass": False,
+                "tier": "FAIL",
+                "detail": f"在 {conn_id} 處越過關節延伸不足: {p_ext:.1f}px < {min_ext_px:.1f}px",
             }
             overall_pass = False
 
-        rot_leak_reports[conn_id] = leak_entry
+        if c_waived:
+            slot_reports[c_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
+                "pass": True,
+                "tier": "WAIVED",
+                "childExtensionPx": round(c_ext, 1),
+                "minRequiredPx": round(min_ext_px, 1),
+                "detail": c_waived_reason,
+            }
+        elif not c_pass:
+            slot_reports[c_sid]["pass"] = False
+            slot_reports[c_sid]["tier"] = "FAIL"
+            slot_reports[c_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
+                "pass": False,
+                "tier": "FAIL",
+                "detail": f"在 {conn_id} 處越過關節延伸不足: {c_ext:.1f}px < {min_ext_px:.1f}px",
+            }
+            overall_pass = False
 
     # 5. 重組比對 (若有提供參考圖，比對輪廓位置位移 p95 <= 2.0px)
     reassembly_report: dict[str, Any] | None = None

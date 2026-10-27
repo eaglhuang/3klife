@@ -153,9 +153,14 @@ class TestAG29ContourSeamAndOccluders(unittest.TestCase):
         if not found_dir:
             self.skipTest(f"跳過 R292 實資料測試：嘗試搜尋以下路徑均不存在:\n" + "\n".join(str(d) for d in candidate_dirs if d))
 
+        spec_legacy = json.loads(DEFAULT_SPEC_PATH.read_text(encoding="utf-8"))
+        spec_legacy.setdefault("layeredSlots", {}).setdefault("rotationCrack", {}).setdefault("gate", {})["promoted"] = False
+        tmp_spec = Path(tempfile.gettempdir()) / "spec_ag29_legacy.json"
+        tmp_spec.write_text(json.dumps(spec_legacy, indent=2, ensure_ascii=False), encoding="utf-8")
+
         rep, _ = run_layered_parts_inspection(
             parts_dir=found_dir / "parts",
-            spec_path=DEFAULT_SPEC_PATH,
+            spec_path=tmp_spec,
             body_type="standard",
             anchors_path=found_dir / "anchors",
         )

@@ -137,7 +137,7 @@ class TestAG31RotationCrackAndDetachedChild(unittest.TestCase):
 
             ht_res = rep["rotationLeakChecks"]["head_to_hair_tail"]
             # 由於 v3.11 中 hair_tail 的 detachedChild: true，免檢 child 覆蓋率，且 jointCrack = 0
-            self.assertEqual(ht_res["tier"], "FAIL", "現行 tier 仍保持 FAIL (不咬合)")
+            self.assertEqual(ht_res["tier"], "PASS", "擬議閘門轉正後 tier 應為 PASS")
             self.assertEqual(ht_res["proposedTier"], "PASS", "擬議閘門對 detachedChild 應判定 PASS")
             self.assertTrue(ht_res["proposedGate"]["pass"])
         finally:

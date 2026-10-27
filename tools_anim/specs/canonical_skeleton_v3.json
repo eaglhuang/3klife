@@ -635,7 +635,9 @@
         "referenceDisplayHeightPx": 360,
         "maxCrackAreaDisplayPx2": 4,
         "derivedMaxCrackCanvasPx": 79,
-        "note": "v3.13（2026-10-27）：戰場顯示高約 180 px，取 2 倍餘裕 360 px 為參考。jointCrackPx 正負角度各 ≤ maxCrackAreaDisplayPx2 ×(H／referenceDisplayHeightPx)² ＝ 4 ×(1600／360)² ≈ 79 canvas px。程式須由 H 與本節數值計算，不可寫死 79。立繪特寫不播骨架動畫，不適用。"
+        "note": "v3.13（2026-10-27）：戰場顯示高約 180 px，取 2 倍餘裕 360 px 為參考。jointCrackPx 正負角度各 ≤ maxCrackAreaDisplayPx2 ×(H／referenceDisplayHeightPx)² ＝ 4 ×(1600／360)² ≈ 79 canvas px。程式須由 H 與本節數值計算，不可寫死 79。立繪特寫不播骨架動畫，不適用。",
+        "promoted": true,
+        "promotedNote": "v3.16（2026-10-27）：擬議閘門（裂縫量＋覆蓋規則）升為正式 rotation_leak 判定，舊的全半徑露縫只留報告不擋。理由：AG-28～34 逐步驗證，R299 候選 20 關節在擬議閘門下全數判讀與人工看圖一致。"
       },
       "note": "v3.11（2026-10-27）：旋轉露縫只認『片與片之間的窄裂縫』：在 check_radius 圓盤內，對旋轉後 parent ∪ child ∪ 遮蔽槽做 maxWidthPx 閉運算，閉運算補上、原本透明的像素；再扣掉 0° 時同樣算法已存在的天然凹口與握點拳孔。子件轉走後留下的空位是正常動作，不算縫。"
     },
@@ -734,7 +736,12 @@
     "coverageRule": {
       "childAloneSufficientPct": 90,
       "note": "v3.14（2026-10-27）：(1) 有握孔的關節（gripHoleSource 為 enclosedHole 或 radiusFallback，即 arm_lower_*_to_hand_*）覆蓋條件一律標 notApplicable，只看裂縫：手繞握點轉，握點永遠有槍桿穿過，可見縫由含 weapon 遮蔽的裂縫檢查負責。(2) 若 child 側（含 rotationOccluders）在 ±rotationTestDeg 各自蓋住核心 ≥ childAloneSufficientPct%，且裂縫達標，parent 覆蓋不足不擋，報告標 childAloneSufficient（pelvis_to_torso 用）。",
-      "gripJointCoverage": "notApplicable"
+      "gripJointCoverage": "notApplicable",
+      "hiddenExtensionWaivers": {
+        "childAloneSufficient": "parentExtensionNotRequired",
+        "gripJoint": "advisoryWhenCrackPasses",
+        "note": "v3.16（2026-10-27）：(1) 關節標 childAloneSufficient 時，parent 側隱藏延伸不要求（pelvis_to_torso：軀幹自己蓋住核心 100%）。(2) 握孔關節（arm_lower_*_to_hand_*）隱藏延伸改為只報告，條件是該關節裂縫達標；裂縫不達標時照舊要求延伸。child 側與其他關節不變。"
+      }
     }
   },
   "standingCenter": 1024,

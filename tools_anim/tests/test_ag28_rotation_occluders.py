@@ -47,6 +47,11 @@ class TestAG28RotationOccluders(unittest.TestCase):
         self.parts_dir = self.tmp_dir / "parts"
         self.parts_dir.mkdir(parents=True, exist_ok=True)
         self.spec = json.loads(DEFAULT_SPEC_PATH.read_text(encoding="utf-8"))
+        # AG-28 時代閘門未轉正、握孔使用標準覆蓋率檢查
+        self.spec.setdefault("layeredSlots", {}).setdefault("rotationCrack", {}).setdefault("gate", {})["promoted"] = False
+        self.spec.setdefault("layeredSlots", {}).setdefault("coverageRule", {})["gripJointCoverage"] = "standard"
+        self.spec_path = self.tmp_dir / "spec_ag28.json"
+        self.spec_path.write_text(json.dumps(self.spec, indent=2, ensure_ascii=False), encoding="utf-8")
 
     def tearDown(self) -> None:
         shutil.rmtree(self.tmp_dir, ignore_errors=True)
@@ -152,7 +157,7 @@ class TestAG28RotationOccluders(unittest.TestCase):
         # (A) 使用 v3.9 規格 (hand_b 含有 rotationOccluders: ["weapon"])
         rep_with_occ, _ = run_layered_parts_inspection(
             parts_dir=self.parts_dir,
-            spec_path=DEFAULT_SPEC_PATH,
+            spec_path=self.spec_path,
             body_type="standard",
             filter_slots=["arm_lower_b", "hand_b", "weapon"],
         )
@@ -194,7 +199,7 @@ class TestAG28RotationOccluders(unittest.TestCase):
 
         rep, _ = run_layered_parts_inspection(
             parts_dir=self.parts_dir,
-            spec_path=DEFAULT_SPEC_PATH,
+            spec_path=self.spec_path,
             body_type="standard",
             filter_slots=["thigh_f", "shin_f"],
         )
@@ -234,7 +239,7 @@ class TestAG28RotationOccluders(unittest.TestCase):
 
         rep, _ = run_layered_parts_inspection(
             parts_dir=parts_dir,
-            spec_path=DEFAULT_SPEC_PATH,
+            spec_path=self.spec_path,
             body_type="standard",
             anchors_path=anchors_dir,
             filter_slots=["arm_lower_b", "hand_b", "weapon", "thigh_f", "shin_f", "foot_f", "thigh_b", "shin_b", "foot_b"],
