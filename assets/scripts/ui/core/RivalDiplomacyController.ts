@@ -12,7 +12,7 @@
 import {
     GIFT_GOLD_COST, NATION_DEFS, RELATION_TIER_LABEL,
     autoResolveBattle, declareWar, nationDef, proposeAlliance, relationTier, sendGift,
-    type BattleGeneral, type RivalWorld,
+    type AutoBattleResult, type BattleGeneral, type RivalWorld,
 } from '../../core/systems/RivalNations';
 
 export interface RivalDiplomacyFlowView {
@@ -32,6 +32,8 @@ export interface RivalDiplomacyDeps {
     random: () => number;
     /** 君主 id → 中文名（找不到就顯示 id） */
     leaderName?: (generalId: string) => string | undefined;
+    /** 出征結算留離線戰鬥快照（GameSession.recordRivalCampaign，PROG-2-1189）；在 setWorld 存檔前呼叫 */
+    recordBattle?: (squad: readonly BattleGeneral[], nationId: string, battle: AutoBattleResult) => void;
 }
 
 export const RIVAL_NATION_SLOTS = NATION_DEFS.length;
@@ -74,8 +76,10 @@ export class RivalDiplomacyController {
     }
 
     public async campaign(): Promise<void> {
-        const battle = autoResolveBattle(this._deps.world(), this.selectedId, this._deps.squad(), this._deps.random);
+        const squad = this._deps.squad();
+        const battle = autoResolveBattle(this._deps.world(), this.selectedId, squad, this._deps.random);
         if (battle.goldReward > 0) this._deps.grantGold(battle.goldReward);
+        this._deps.recordBattle?.(squad, this.selectedId, battle);
         await this._deps.setWorld(battle.world);
         this._lines = ['【出征結算】', ...battle.lines];
     }

@@ -6,7 +6,9 @@
  */
 import { TestSuite, assert } from './TestRunner';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../assets/scripts/ui/core/RivalDiplomacyController';
-import { GIFT_GOLD_COST, createRivalWorld, declareWar, normalizeRivalWorld } from '../assets/scripts/core/systems/RivalNations';
+import { GIFT_GOLD_COST, createRivalWorld, declareWar, nationDef, normalizeRivalWorld } from '../assets/scripts/core/systems/RivalNations';
+import { GameSession } from '../assets/scripts/core/managers/GameSession';
+import { verifyOfflineBattleChain } from '../assets/scripts/core/systems/OfflineBattleSnapshot';
 import type { RivalWorld } from '../assets/scripts/core/systems/RivalNations';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -83,6 +85,29 @@ export function createRivalDiplomacySuite(): TestSuite {
         const war = declareWar(createRivalWorld(), 'wei').world;
         const loaded = normalizeRivalWorld(JSON.parse(JSON.stringify(war)));
         assert.equals(true, loaded.nations.find((n) => n.id === 'wei')!.atWar);
+    });
+
+    suite.test('PROG-2-1189：出征結算留快照與日誌（含勢力名），與既有快照同鏈', async () => {
+        const session = new GameSession(5);
+        const squad = [{ name: '關羽', str: 97, int: 75, lea: 95 }, { name: '張飛', str: 98, int: 30, lea: 85 }];
+        const controller = new RivalDiplomacyController({
+            world: () => session.rivals,
+            setWorld: (w) => session.setRivals(w),
+            squad: () => squad,
+            gold: () => 0,
+            spendGold: () => false,
+            grantGold: () => undefined,
+            random: () => 0.5,
+            recordBattle: (sq, nationId, battle) => { session.recordRivalCampaign(sq, nationId, battle); },
+        });
+        await controller.campaign();
+        await controller.campaign();
+        const snapshots = session.offlineBattleSnapshots;
+        assert.equals(2, snapshots.length);
+        assert.equals(-1, verifyOfflineBattleChain(snapshots));
+        const entry = session.queryJournal({ category: 'BATTLE' }).find((e) => e.snapshotRef === snapshots[0].snapshotId)!;
+        const nation = nationDef(controller.selectedId)!.name;
+        assert.isTrue(entry.summary.includes('出征' + nation), entry.summary);
     });
 
     return suite;
