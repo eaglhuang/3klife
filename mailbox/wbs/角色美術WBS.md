@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 10:30 Claude：R275 頭部驗收採 A（core 依 zone、頸延伸 48–64px 另驗），規格升 v3.7（segments.head neckExtension／registration）；待 Codex 補 neck 定位下 head_center；派 AG-26 實作分區檢查。
 - 2026-10-27 10:10 Claude：R274 頭部 R2 美術方向通過（Q 萌眼、3/4 朝右、無領甲），待錨點註冊／頸部延伸 ≥48px／疊圖／AG-23；AG-25 小修 e71d8621b 驗收 17/17 結案。
 - 2026-10-27 10:15 AG-25 小修完成：check_layered_parts.py 完全移除 CANONICAL_21_SLOTS 與 pauldron 字面值，缺 names 直接拋 ValueError；test_no_general_hardcoding.py 增加 AST 掃描禁絕工具程式出現槽名清單；全套 59 項單元測試 100% 通過（e71d8621b）。
 - 2026-10-27 10:05 Claude：R273 退回 head 從含衣領胸甲源圖切件的做法，改 ImageGen 單槽生成（只頭髮臉頸、頸延伸 48px 藏進立領）；長槍超寬以執行期 0.30 倍重採樣解決，2048 母檔不縮，武器獨立共用 atlas 同意；AG-25 驗收通過（17/17），請刪內建 21 槽名與 pauldron 字面值。
