@@ -10,6 +10,7 @@
  * 每筆事件帶 Timestamp 與來源 ID，UI 只讀取、不直接改寫。
  */
 
+import { canAcceptReactionLine, type JournalReaction } from './JournalReaction';
 export const JOURNAL_CATEGORIES = ['BATTLE', 'DISPATCH', 'INTERACTION', 'GROWTH', 'SYSTEM'] as const;
 export type JournalCategory = typeof JOURNAL_CATEGORIES[number];
 
@@ -31,6 +32,8 @@ export interface JournalEntry {
     sourceActionSeqRange?: [number, number];
     /** 對應的離線戰鬥快照或派遣快照 ID。 */
     snapshotRef?: string;
+    /** 選填：一句武將反應（JRN-04，PROG-2-1404）；沒有或不合法時不寫入，不影響條目本身。 */
+    reaction?: JournalReaction;
 }
 
 export interface JournalState {
@@ -96,6 +99,7 @@ export function appendJournalEntry(state: JournalState, input: JournalEntryInput
         relatedGeneralUids: [...input.relatedGeneralUids],
         visibility: input.visibility ?? 'VISIBLE',
         sourceActionSeqRange: input.sourceActionSeqRange ? [input.sourceActionSeqRange[0], input.sourceActionSeqRange[1]] : undefined,
+        reaction: validReaction(input.reaction),
     };
     return { ok: true, state: { entries: [...cloneJournal(state).entries, entry] } };
 }
@@ -116,12 +120,20 @@ export function findJournalEntriesByActionSeq(state: Readonly<JournalState>, seq
         .map(e => ({ ...e, relatedGeneralUids: [...e.relatedGeneralUids] }));
 }
 
+/** 反應只保留合法的文字與來源；不合法時整段省略。 */
+function validReaction(reaction: JournalReaction | undefined): JournalReaction | undefined {
+    if (!reaction || typeof reaction.text !== 'string' || !canAcceptReactionLine(reaction.text)) return undefined;
+    if (reaction.source !== 'TEMPLATE' && reaction.source !== 'FALLBACK') return undefined;
+    return { text: reaction.text, source: reaction.source };
+}
+
 function cloneJournal(state: Readonly<JournalState>): JournalState {
     return {
         entries: state.entries.map(e => ({
             ...e,
             relatedGeneralUids: [...e.relatedGeneralUids],
             sourceActionSeqRange: e.sourceActionSeqRange ? [e.sourceActionSeqRange[0], e.sourceActionSeqRange[1]] : undefined,
+            reaction: validReaction(e.reaction),
         })),
     };
 }

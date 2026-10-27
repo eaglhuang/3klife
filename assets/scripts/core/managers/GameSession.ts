@@ -77,6 +77,7 @@ import {
     type OfflineInteractionCandidate,
 } from '../systems/OfflineInteractionEvents';
 import { buildJournalEvent, type JournalEventKind, type JournalEventSubject } from '../systems/JournalEvents';
+import { journalReactionLine } from '../systems/JournalReaction';
 import {
     EMPTY_MORNING_REPORT, markMorningReportRead, morningReportLines, normalizeMorningReportState, refreshMorningReport,
     unreadMorningReportCount, type MorningReportState,
@@ -2273,8 +2274,12 @@ export class GameSession {
 
     /** 事件寫入日誌（PROG-2-1175）：時間沿用季度日誌的遊戲時間，ID 用目前條目數 +1。 */
     private _recordEventJournal(kind: JournalEventKind, subjects: readonly JournalEventSubject[]): void {
-        const input = buildJournalEvent(kind, subjects, this._journal.entries.length + 1, seasonJournalTimestamp(this._clock.state));
-        if (input) this.recordJournal(input);
+        const seq = this._journal.entries.length + 1;
+        const input = buildJournalEvent(kind, subjects, seq, seasonJournalTimestamp(this._clock.state));
+        if (!input) return;
+        // 日誌反應（JRN-04，PROG-2-1404）：以第一位相關武將的名字與條目序號決定台詞，失敗時回退
+        const reaction = journalReactionLine(input, subjects[0].name ?? '', seq);
+        this.recordJournal({ ...input, reaction });
     }
 
     /** 寫入武將日誌（JRN-01）；被拒絕時不改動狀態。 */
