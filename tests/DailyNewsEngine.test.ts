@@ -4,7 +4,7 @@
 
 import { assert, TestSuite } from './TestRunner';
 import {
-    buildNarrative, candidateNewsTypes, dailyNewsTitle, DAILY_NEWS_LOG_WINDOW_MS, generateDailyNews, NEWS_TRIGGER_TABLE,
+    buildNarrative, candidateNewsTypes, duelLogType, dailyNewsTitle, DAILY_NEWS_LOG_WINDOW_MS, generateDailyNews, NEWS_TRIGGER_TABLE,
     recentLogs, type PlayerLogEntry,
 } from '../assets/scripts/core/systems/DailyNewsEngine';
 
@@ -67,6 +67,13 @@ export function createDailyNewsEngineSuite(): TestSuite {
 
     suite.test('名冊為空回傳空陣列', () => {
         assert.equals(0, generateDailyNews([{ type: 'BATTLE_WIN', at: NOW }], [], NOW, seq([0.5])).length);
+    });
+
+    suite.test('單挑成立分出勝負才記；拒絕或平手不記（PROG-2-1172）', () => {
+        assert.equals('DUEL_WIN', duelLogType('player-win', true));
+        assert.equals('DUEL_LOSE', duelLogType('enemy-win', true));
+        assert.equals(null, duelLogType('player-win', false));
+        assert.equals(null, duelLogType('draw', true));
     });
 
     suite.test('頭條格式', () => {

@@ -95,6 +95,14 @@ function intBetween(min: number, max: number, random: RandomSource): number {
     return min + Math.min(max - min, Math.floor(random() * (max - min + 1)));
 }
 
+/** 單挑結果轉行為紀錄（PROG-2-1172）：單挑成立且分出勝負才記；拒絕單挑或平手回 null */
+export function duelLogType(duelResult: string, accepted: boolean): PlayerLogType | null {
+    if (!accepted) return null;
+    if (duelResult === 'player-win') return 'DUEL_WIN';
+    if (duelResult === 'enemy-win') return 'DUEL_LOSE';
+    return null;
+}
+
 /** 頭條：「三國日報 —— {Date}」，Date 為 YYYY-MM-DD（本地時間） */
 export function dailyNewsTitle(date: Date): string {
     const pad = (n: number) => String(n).padStart(2, '0');
