@@ -11,9 +11,11 @@
 
 import { formatAwakeningReveal } from './AwakeningReveal';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
+import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
 import { applyOpeningWinGuarantee, autoResolveOutcome } from '../runtime/BattleAutoResolve';
+import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
 import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance, localizedMilestoneName } from '../../core/systems/BattleRecordStats';
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
@@ -78,6 +80,8 @@ export interface BattleSceneContext {
   eg:                GeneralUnit | null;
   /** 本場的關卡 id（連環破，勝利時記入通關紀錄） */
   encounterId:       string | null;
+  /** 教學戰的傳說英靈（OPEN-13）；沒有時為 null */
+  teachingSpirit:    TeachingSpiritInput | null;
   isAdvancingTurn:   boolean;
   isDuelPanelActive: boolean;
   combatVisualQueue: CombatVisualTask[];
@@ -104,7 +108,7 @@ export function createBattleSceneContext(): BattleSceneContext {
     hud: null, deployRuntime: null, battleLogPanel: null,
     battleScenePanel: null, boardRenderer: null, unitRenderer: null,
     resultPopup: null, duelChallengePanel: null,
-    ctrl: null, pg: null, eg: null, encounterId: null,
+    ctrl: null, pg: null, eg: null, encounterId: null, teachingSpirit: null,
     isAdvancingTurn: false, isDuelPanelActive: false,
     combatVisualQueue: [], isDrainingCombatVisual: false,
     combatVisualTaskId: 0,
@@ -563,8 +567,33 @@ export class BattleUIBridge {
       services().session.firstBattleCleared,
     );
     this.appendLog(`自動模擬：我方戰力 ${outcome.playerPower}，敵方戰力 ${outcome.enemyPower}`);
+    this._recordAutoBattleSnapshot(outcome.result, outcome.playerPower, outcome.enemyPower);
     state.battleEndAnnounced = true;
     services().event.emit(EVENT_NAMES.BattleEnded, { result: outcome.result });
+  }
+
+  /** 自動鈕結算留 AUTO_RESOLVE 快照與日誌（doc_spec_0015 §F-4，PROG-2-1185）；在 BattleEnded 前寫入，由戰後存檔一併帶走 */
+  private _recordAutoBattleSnapshot(result: 'player-win' | 'enemy-win' | 'draw', playerPower: number, enemyPower: number): void {
+    const state = this.ctx.ctrl?.state;
+    if (!state) return;
+    const session = services().session;
+    const clock = session.gameTime;
+    const general = state.getGeneral(Faction.Player);
+    const troops = Array.from(state.units.values())
+      .filter((u) => u.faction === Faction.Player && !u.isDead())
+      .map((u) => ({ type: u.type, currentHp: u.currentHp, attack: u.attack }));
+    const kind = result === 'player-win' ? 'win' : result === 'enemy-win' ? 'lose' : 'draw';
+    const pgId = this.ctx.pg?.id;
+    session.recordAutoResolveBattle({
+      battleType: 'AUTO_RESOLVE',
+      seed: `${clock.currentYear}-${clock.currentSeason}-${this.ctx.encounterId ?? 'field'}`,
+      lineup: [general ? { id: general.id, str: general.str, int: general.int, lea: general.lea, currentHp: general.currentHp, maxHp: general.maxHp } : null, ...troops],
+      tileState: { playerFortressHp: state.playerFortressHp, enemyFortressHp: state.enemyFortressHp },
+      tactics: [],
+      win: result === 'player-win',
+      playerStrength: playerPower,
+      enemyStrength: enemyPower,
+    }, FIELD_AUTO_BATTLE_JOURNAL[kind], pgId ? [pgId] : []);
   }
 
   private _onBattleEnded(data: { result: string }): void {
@@ -622,7 +651,7 @@ export class BattleUIBridge {
     // 戰鬥結束時主將的精力（已扣奧義成本）是結算的基準，戰後再扣 30（PM 裁定，2026-10-14）
     const battleVitality = this.ctx.ctrl?.state.playerGeneral?.vitality;
     const vitalityAfterBattle = battleVitality !== undefined ? { [pgId]: battleVitality } : undefined;
-    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle }).then((settlement) => {
+    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, teachingSpirit: this.ctx.teachingSpirit }).then((settlement) => {
       const entry = settlement.entries[0];
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);

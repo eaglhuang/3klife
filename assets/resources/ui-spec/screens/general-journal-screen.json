@@ -1,0 +1,17 @@
+{
+  "id": "general-journal-screen",
+  "version": 1,
+  "uiId": "GeneralJournalPanel",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "general-journal-main",
+  "skin": "general-journal-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

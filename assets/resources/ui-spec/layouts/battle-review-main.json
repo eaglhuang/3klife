@@ -1,0 +1,208 @@
+{
+  "id": "battle-review-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "BattleReviewRoot",
+    "id": "battleReviewRoot",
+    "width": 1920,
+    "height": 1080,
+    "children": [
+      {
+        "type": "panel",
+        "name": "BattleReviewCard",
+        "id": "battleReviewCard",
+        "width": 1000,
+        "height": 860,
+        "skinSlot": "br.card.bg",
+        "layout": {
+          "type": "vertical",
+          "justifyContent": "start",
+          "spacingY": 12,
+          "paddingTop": 28,
+          "paddingRight": 28,
+          "paddingBottom": 28,
+          "paddingLeft": 28
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "ReviewTitle",
+            "id": "reviewTitle",
+            "width": 944,
+            "height": 48,
+            "text": "戰報",
+            "styleSlot": "br.label.title"
+          },
+          {
+            "type": "container",
+            "name": "ReviewNavRow",
+            "id": "reviewNavRow",
+            "width": 944,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnPrevPage",
+                "id": "btnPrevPage",
+                "width": 160,
+                "height": 64,
+                "skinSlot": "br.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPrevPageLabel",
+                    "id": "btnPrevPageLabel",
+                    "width": 160,
+                    "height": 40,
+                    "text": "◀ 上一頁",
+                    "styleSlot": "br.label.body"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "label",
+                "name": "ReviewPageLabel",
+                "id": "reviewPageLabel",
+                "width": 400,
+                "height": 40,
+                "text": "",
+                "styleSlot": "br.label.body",
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnNextPage",
+                "id": "btnNextPage",
+                "width": 160,
+                "height": 64,
+                "skinSlot": "br.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnNextPageLabel",
+                    "id": "btnNextPageLabel",
+                    "width": 160,
+                    "height": 40,
+                    "text": "下一頁 ▶",
+                    "styleSlot": "br.label.body"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "ReviewChainLabel",
+            "id": "reviewChainLabel",
+            "width": 944,
+            "height": 36,
+            "text": "",
+            "styleSlot": "br.label.line"
+          },
+          {
+            "type": "label",
+            "name": "ReviewEmptyLabel",
+            "id": "reviewEmptyLabel",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "br.label.body"
+          },
+          {
+            "type": "label",
+            "name": "ReviewLine0",
+            "id": "reviewLine0",
+            "width": 944,
+            "height": 56,
+            "text": "",
+            "styleSlot": "br.label.line"
+          },
+          {
+            "type": "label",
+            "name": "ReviewLine1",
+            "id": "reviewLine1",
+            "width": 944,
+            "height": 56,
+            "text": "",
+            "styleSlot": "br.label.line"
+          },
+          {
+            "type": "label",
+            "name": "ReviewLine2",
+            "id": "reviewLine2",
+            "width": 944,
+            "height": 56,
+            "text": "",
+            "styleSlot": "br.label.line"
+          },
+          {
+            "type": "label",
+            "name": "ReviewLine3",
+            "id": "reviewLine3",
+            "width": 944,
+            "height": 56,
+            "text": "",
+            "styleSlot": "br.label.line"
+          },
+          {
+            "type": "label",
+            "name": "ReviewLine4",
+            "id": "reviewLine4",
+            "width": 944,
+            "height": 56,
+            "text": "",
+            "styleSlot": "br.label.line"
+          },
+          {
+            "type": "label",
+            "name": "ReviewLine5",
+            "id": "reviewLine5",
+            "width": 944,
+            "height": 56,
+            "text": "",
+            "styleSlot": "br.label.line"
+          },
+          {
+            "type": "button",
+            "name": "BtnClose",
+            "id": "btnClose",
+            "width": 200,
+            "height": 64,
+            "skinSlot": "br.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseLabel",
+                "id": "btnCloseLabel",
+                "width": 200,
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "br.label.body"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

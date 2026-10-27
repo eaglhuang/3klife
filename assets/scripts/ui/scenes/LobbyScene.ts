@@ -63,6 +63,10 @@ import { overflowToastText } from '../../core/systems/MentorOverflow';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
 import { WarehousePanelController } from '../core/WarehousePanelController';
 import { DISPATCH_MAX_ROWS, JournalHubController } from '../core/JournalHubController';
+import { GeneralJournalController } from '../core/GeneralJournalController';
+import { BattleReviewController } from '../core/BattleReviewController';
+import { TournamentPanelController } from '../core/TournamentPanelController';
+import { WishAltarController, WISH_ALTAR_SLOTS } from '../core/WishAltarController';
 import { dispatchClickMessage } from '../../core/systems/DispatchCatalog';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 
@@ -83,7 +87,7 @@ import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
 import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
-import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
+import { officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
 import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import { HALL_EMPTY_THEME_CATALOG, resolveHallTheme, type HallThemeFrame } from '../../core/systems/LobbyThemeResolver';
@@ -106,7 +110,7 @@ import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { isDescendant } from '../../core/systems/ChildMagistrate';
-import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET } from '../../core/systems/PlayerInventory';
+import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD } from '../../core/systems/PlayerInventory';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { DestinyShopController, destinyBriefTexts } from '../core/DestinyShopController';
@@ -130,6 +134,7 @@ import { ToastMessage } from '../components/ToastMessage';
 import { applyUIPreviewBinderState } from '../core/UIPreviewStateApplicator';
 import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPayload } from '../core/SpiritFamilyOverviewRoute';
 import { familyOverviewHotspotVisible } from '../../core/systems/FamilyOverviewHotspot';
+import { provisionalTeachingSpirit } from '../../core/systems/TeachingSpiritProvisional';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
@@ -138,10 +143,7 @@ import { buildGachaPoolGuideLines } from '../core/GachaPoolGuidePresenter';
 import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
-import { dailyNewsToastLines } from '../../core/systems/DailyNewsEngine';
-
-/** 三國日報每則 toast 顯示秒數（暫定） */
-const DAILY_NEWS_TOAST_SECONDS = 3;
+import { DailyReportController } from '../core/DailyReportController';
 
 const { ccclass } = _decorator;
 
@@ -279,6 +281,17 @@ export class LobbyScene extends Component {
     private _warehouseHost: UIScreenPreviewHost | null = null;
     private _journalHub: JournalHubController | null = null;
     private _journalHubHost: UIScreenPreviewHost | null = null;
+    private _generalJournal: GeneralJournalController | null = null;
+    private _generalJournalHost: UIScreenPreviewHost | null = null;
+    private _battleReview: BattleReviewController | null = null;
+    private _battleReviewHost: UIScreenPreviewHost | null = null;
+    private _tournament: TournamentPanelController | null = null;
+    private _wishAltar: WishAltarController | null = null;
+    private _wishAltarHost: UIScreenPreviewHost | null = null;
+    private _tournamentHost: UIScreenPreviewHost | null = null;
+    /** 登入讀檔時擷取的未讀日報／晨報；面板掛好後開啟（PROG-2-1192） */
+    private _dailyReport: DailyReportController | null = null;
+    private _dailyReportHost: UIScreenPreviewHost | null = null;
     private _rival: RivalDiplomacyController | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
@@ -443,6 +456,11 @@ export class LobbyScene extends Component {
         await this._mountRivalDiplomacy();
         await this._mountWarehouse();
         await this._mountJournalHub();
+        await this._mountGeneralJournal();
+        await this._mountBattleReview();
+        await this._mountTournament();
+        await this._mountWishAltar();
+        await this._mountDailyReport();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
         await this._mountGovernorHall();
@@ -451,6 +469,7 @@ export class LobbyScene extends Component {
         await this._mountDestinyOpening();
         await this._mountOpeningIntro();
         await this._mountOnboardingTutorial();
+        await this._mountOpeningLetter();
         await this._mountSageOracle();
         await this._mountRetireReview();
         await this._mountSpiritCodex();
@@ -530,13 +549,9 @@ export class LobbyScene extends Component {
         try {
             const loaded = await services().session.load();
             UCUFLogger.info(LogCategory.DATA, loaded ? '[LobbyScene] 已讀取玩家存檔' : '[LobbyScene] 沒有玩家存檔，從新局開始');
-            // 登入（連續登入 PROG-2-0987、三國日報 PROG-2-1170）：讀檔後記一次，當天第一次登入會生成日報
+            // 登入（連續登入 PROG-2-0987、三國日報 PROG-2-1170、離線互動 PROG-2-1193）：讀檔後記一次，當天第一次登入會生成日報
             services().session.recordLoginAt(Date.now(), (amount) => { this._localGachaService.grantCurrency('gold', amount); });
             this._showDailyNews();
-            // 離線互動（JRN-04）：目前尚無主互動內容，只記錄是否應觸發
-            if (loaded && services().session.offlineInteractionDue(Date.now())) {
-                UCUFLogger.info(LogCategory.DATA, '[LobbyScene] 離線互動事件待觸發');
-            }
             return loaded;
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 讀取玩家存檔失敗，從新局開始', error);
@@ -545,16 +560,13 @@ export class LobbyScene extends Component {
     }
 
     /**
-     * 三國日報（PROG-2-1173）與晨報（PROG-2-1174）：toast 會互相覆蓋，所以日報在前、晨報在後，
-     * 每行間隔數秒依序顯示；顯示後兩者都標記已讀並存檔
+     * 三國日報（PROG-2-1173）與晨報（PROG-2-1174）：讀檔時擷取未讀內容，改由 UCUF 面板顯示（PROG-2-1192）；
+     * 擷取後兩者都標記已讀並存檔，面板在 _mountDailyReport 掛好後開啟
      */
     private _showDailyNews(): void {
         const session = services().session;
-        const lines = [...dailyNewsToastLines(session.dailyNews, new Date()), ...session.morningReportLines];
-        if (lines.length === 0) return;
-        lines.forEach((message, index) => {
-            this.scheduleOnce(() => services().event.emit('SHOW_TOAST', { message, duration: DAILY_NEWS_TOAST_SECONDS }), index * (DAILY_NEWS_TOAST_SECONDS + 0.4));
-        });
+        this._dailyReport = DailyReportController.capture(session.dailyNews, session.morningReport, new Date());
+        if (!this._dailyReport) return;
         session.markDailyNewsRead();
         session.markMorningReportRead();
         void session.save().catch(() => undefined);
@@ -574,6 +586,9 @@ export class LobbyScene extends Component {
             services().event.on(GAME_SESSION_EVENTS.Loaded, refresh),
             services().event.on(GAME_SESSION_EVENTS.OfficerPromoted, (payload: { tiers: number[] }) => {
                 refresh();
+                // 晉升一次性獎勵（PROG-2-1197）：同一階只會發一次晉升事件
+                const gold = officerPromotionRewardTotal(payload.tiers);
+                if (gold > 0) this._localGachaService.grantCurrency('gold', gold);
                 for (const message of officerPromotionNoticeOf(payload.tiers)) {
                     services().event.emit('SHOW_TOAST', { message, duration: 2 });
                 }
@@ -1389,24 +1404,208 @@ export class LobbyScene extends Component {
     private async _mountJournalHub(): Promise<void> {
         this._journalHub = new JournalHubController({
             morningLines: () => services().session.morningReport.items.map((item) => item.summary),
-            dispatchRows: () => services().session.dispatchBoardRows(Date.now()),
+            dispatchRows: () => services().session.dispatchBoardRows(Date.now(), { preview: true, generalId: this._journalHub?.pickedGeneralId() }),
+            dispatchGenerals: () => services().session.dispatchIdleGenerals(Date.now()),
         });
         this._journalHubHost = await this._mountPreviewScreenHost('JournalHubHost', 'journal-hub-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._journalHubHost) this._journalHubHost.node.active = false; } },
+            { buttonId: 'btnOpenGeneralJournal', handler: () => { this.openGeneralJournal(); } },
+            { buttonId: 'btnOpenBattleReview', handler: () => { this._openBattleReview(); } },
+            { buttonId: 'btnOpenTournament', handler: () => { this._openTournament(); } },
+            { buttonId: 'btnOpenWishAltar', handler: () => { this._openWishAltar(); } },
+            { buttonId: 'btnPrevDispatchGeneral', handler: () => { this._journalHub?.cyclePick(-1); this._openJournalHub(); } },
+            { buttonId: 'btnNextDispatchGeneral', handler: () => { this._journalHub?.cyclePick(1); this._openJournalHub(); } },
             ...Array.from({ length: DISPATCH_MAX_ROWS }, (_, i) => ({ buttonId: `dispatchRow${i}`, handler: () => { this._onClickDispatchRow(i); } })),
         ]);
         this._journalHubHost.node.active = false;
     }
 
-    /** 點派遣列：自動挑最適合的武將派出（PROG-2-1181），提示結果並刷新面板。 */
+    /** 點派遣列：派出選將列指定的武將，未指定時自動挑最適合的（PROG-2-1181／1186），提示結果並刷新面板。 */
     private _onClickDispatchRow(index: number): void {
         const row = this._journalHub?.dispatchRows()[index];
         if (!row) return;
         const session = services().session;
-        const result = session.dispatchJobById(row.id, Date.now());
+        const result = session.dispatchJobById(row.id, Date.now(), this._journalHub?.pickedGeneralId());
         services().event.emit('SHOW_TOAST', { message: dispatchClickMessage(result), duration: 2 });
         if (result.ok) void session.save().catch(() => undefined);
         this._openJournalHub();
+    }
+
+    /**
+     * 武將日誌回看抽屜（doc_spec_0015 範圍 #6，PROG-2-1183）：名冊武將可上一位／下一位切換。
+     * 入口暫放晨報派遣板；人物頁加入口鈕後呼叫 openGeneralJournal(generalId)。
+     */
+    private async _mountGeneralJournal(): Promise<void> {
+        const journal = new GeneralJournalController({
+            generals: () => services().session.roster.map((g) => ({ id: g.id, name: g.name })),
+            entries: (generalId) => services().session.queryJournal({ generalUid: generalId }),
+        });
+        this._generalJournal = journal;
+        this._generalJournalHost = await this._mountPreviewScreenHost('GeneralJournalHost', 'general-journal-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._generalJournalHost) this._generalJournalHost.node.active = false; } },
+            { buttonId: 'btnPrevGeneral', handler: () => { journal.prev(); this._refreshGeneralJournal(); } },
+            { buttonId: 'btnNextGeneral', handler: () => { journal.next(); this._refreshGeneralJournal(); } },
+        ]);
+        this._generalJournalHost.node.active = false;
+    }
+
+    /** 打開武將日誌；指定武將時切到該武將，否則沿用上次選擇 */
+    public openGeneralJournal(generalId?: string): void {
+        const host = this._generalJournalHost;
+        if (!host || !this._generalJournal) {
+            return;
+        }
+        if (generalId) this._generalJournal.select(generalId);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshGeneralJournal();
+    }
+
+    /** 戰報：離線戰鬥快照回看（doc_spec_0015 §F-4，PROG-2-1187），入口在晨報派遣板 */
+    private async _mountBattleReview(): Promise<void> {
+        const review = new BattleReviewController({
+            snapshots: () => services().session.offlineBattleSnapshots,
+            journal: () => services().session.queryJournal({ category: 'BATTLE' }),
+        });
+        this._battleReview = review;
+        this._battleReviewHost = await this._mountPreviewScreenHost('BattleReviewHost', 'battle-review-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._battleReviewHost) this._battleReviewHost.node.active = false; } },
+            { buttonId: 'btnPrevPage', handler: () => { review.prevPage(); this._refreshBattleReview(); } },
+            { buttonId: 'btnNextPage', handler: () => { review.nextPage(); this._refreshBattleReview(); } },
+        ]);
+        this._battleReviewHost.node.active = false;
+    }
+
+    /** 名將挑戰賽彈窗（doc_spec_0007，PROG-2-1191）：入口暫放晨報派遣板；額外參戰扣錢包金錢，賽季獎勵入錢包金錢（PROG-2-1194）；成功後存檔 */
+    private async _mountTournament(): Promise<void> {
+        const gacha = this._localGachaService;
+        const tournament = new TournamentPanelController({
+            now: () => Date.now(),
+            status: (nowMs) => services().session.tournamentStatus(nowMs),
+            register: (nowMs) => services().session.registerTournament(nowMs),
+            play: (nowMs) => services().session.playTournament(nowMs, (cost) => gacha.spendCurrency('gold', cost)),
+            generalName: (id) => this._generals.find((g) => g.id === id)?.name,
+            pendingRewards: (nowMs) => services().session.pendingTournamentRewards(nowMs),
+            claimRewards: (nowMs) => services().session.claimTournamentRewards(nowMs, (gold) => { gacha.grantCurrency('gold', gold); }),
+        });
+        this._tournament = tournament;
+        const afterAction = (ok: boolean): void => {
+            if (ok) void services().session.save().catch(() => undefined);
+            this._refreshTournament();
+        };
+        this._tournamentHost = await this._mountPreviewScreenHost('TournamentHost', 'tournament-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._tournamentHost) this._tournamentHost.node.active = false; } },
+            { buttonId: 'btnRegister', handler: () => { afterAction(tournament.register()); } },
+            { buttonId: 'btnPlay', handler: () => { afterAction(tournament.play()); } },
+            { buttonId: 'btnClaim', handler: () => { afterAction(tournament.claim()); } },
+        ]);
+        this._tournamentHost.node.active = false;
+    }
+
+    /** 日報／晨報登入面板（PROG-2-1192）：有未讀才開；「晨報派遣板」直接切到派遣板 */
+    private async _mountDailyReport(): Promise<void> {
+        const close = (): void => { if (this._dailyReportHost) this._dailyReportHost.node.active = false; };
+        this._dailyReportHost = await this._mountPreviewScreenHost('DailyReportHost', 'daily-report-screen', [
+            { buttonId: 'btnClose', handler: close },
+            { buttonId: 'btnOpenJournalHub', handler: () => { close(); this._openJournalHub(); } },
+        ]);
+        const report = this._dailyReport;
+        this._dailyReportHost.node.active = report !== null;
+        if (!report) return;
+        this._bringNodeToFront(this._dailyReportHost.node);
+        applyFlowView(this._dailyReportHost.binder, report.getFlowView());
+    }
+
+    /** 大廳許願祭壇（doc_spec_0002 §E-7，PROG-2-1199）：入口暫放晨報派遣板；許願／加速／領取成功後存檔 */
+    private async _mountWishAltar(): Promise<void> {
+        const altar = new WishAltarController({
+            now: () => Date.now(),
+            pool: () => services().session.wishPool,
+            speedCards: () => services().session.itemCount(ITEM_WISH_SPEED_CARD),
+            startWish: (itemId, nowMs) => services().session.startWish(itemId, nowMs),
+            speedUp: (wishId, cards, nowMs) => services().session.speedUpWish(wishId, cards, nowMs),
+            claim: (nowMs) => services().session.claimWishes(nowMs),
+        });
+        this._wishAltar = altar;
+        const afterAction = (ok: boolean): void => {
+            if (ok) void services().session.save().catch(() => undefined);
+            this._refreshWishAltar();
+        };
+        const slotHandlers = Array.from({ length: WISH_ALTAR_SLOTS }, (_, i) => ({ buttonId: `waSlot${i}`, handler: () => { afterAction(altar.tapSlot(i)); } }));
+        this._wishAltarHost = await this._mountPreviewScreenHost('WishAltarHost', 'wish-altar-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._wishAltarHost) this._wishAltarHost.node.active = false; } },
+            { buttonId: 'btnPrevItem', handler: () => { altar.prevItem(); this._refreshWishAltar(); } },
+            { buttonId: 'btnNextItem', handler: () => { altar.nextItem(); this._refreshWishAltar(); } },
+            { buttonId: 'btnWish', handler: () => { afterAction(altar.wish()); } },
+            { buttonId: 'btnClaim', handler: () => { afterAction(altar.claim()); } },
+            ...slotHandlers,
+        ]);
+        this._wishAltarHost.node.active = false;
+    }
+
+    private _openWishAltar(): void {
+        const host = this._wishAltarHost;
+        if (!host || !this._wishAltar) {
+            return;
+        }
+        this._wishAltar.reset();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshWishAltar();
+    }
+
+    private _refreshWishAltar(): void {
+        const binder = this._wishAltarHost?.binder;
+        if (!binder || !this._wishAltar) {
+            return;
+        }
+        applyFlowView(binder, this._wishAltar.getFlowView());
+    }
+
+    private _openTournament(): void {
+        const host = this._tournamentHost;
+        if (!host || !this._tournament) {
+            return;
+        }
+        this._tournament.reset();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshTournament();
+    }
+
+    private _refreshTournament(): void {
+        const binder = this._tournamentHost?.binder;
+        if (!binder || !this._tournament) {
+            return;
+        }
+        applyFlowView(binder, this._tournament.getFlowView());
+    }
+
+    private _openBattleReview(): void {
+        const host = this._battleReviewHost;
+        if (!host || !this._battleReview) {
+            return;
+        }
+        this._battleReview.reset();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshBattleReview();
+    }
+
+    private _refreshBattleReview(): void {
+        const binder = this._battleReviewHost?.binder;
+        if (!binder || !this._battleReview) {
+            return;
+        }
+        applyFlowView(binder, this._battleReview.getFlowView());
+    }
+
+    private _refreshGeneralJournal(): void {
+        const binder = this._generalJournalHost?.binder;
+        if (!binder || !this._generalJournal) {
+            return;
+        }
+        applyFlowView(binder, this._generalJournal.getFlowView());
     }
 
     private _openJournalHub(): void {
@@ -1450,6 +1649,7 @@ export class LobbyScene extends Component {
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
                 advanceOpening: event => { this._openingFlow?.advance(event); },
                 applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys),
+                openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: services().i18n.t('copy.letter.opening.body') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
             });
         }
@@ -1458,6 +1658,10 @@ export class LobbyScene extends Component {
 
     private async _mountOnboardingTutorial(): Promise<void> {
         await this._getOpeningPanels().mountOnboarding();
+    }
+
+    private async _mountOpeningLetter(): Promise<void> {
+        await this._getOpeningPanels().mountOpeningLetter();
     }
 
     /**
@@ -2223,6 +2427,7 @@ export class LobbyScene extends Component {
             grantGold: (amount) => { gacha.grantCurrency('gold', amount); },
             random: Math.random,
             leaderName: (id) => this._generals.find((g) => g.id === id)?.name,
+            recordBattle: (squad, nationId, battle) => { services().session.recordRivalCampaign(squad, nationId, battle); },
         });
         this._rival = rival;
         const act = (run: () => Promise<void>): void => {
@@ -4947,6 +5152,7 @@ export class LobbyScene extends Component {
             backgroundId: battleTactic === BattleTactic.FloodAttack ? undefined : encounter.backgroundId,
             campaignStageId: services().session.resolveCampaignStage(encounter.campaignStage).id,
             tutorial: isTutorialBattle(services().session.clearedStageIds),
+            teachingSpirit: isTutorialBattle(services().session.clearedStageIds) ? provisionalTeachingSpirit() : null,
         };
     }
 }

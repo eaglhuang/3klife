@@ -7,6 +7,7 @@
       "title": "鄉里義士",
       "expToReach": 0,
       "questCap": "basic",
+      "promotionRewardGold": 0,
       "unlockedFeatures": ["HALL_BASIC_ENTRY", "DOMESTIC_WALL_LOW"]
     },
     {
@@ -15,6 +16,7 @@
       "title": "縣府佐官",
       "expToReach": 100,
       "questCap": "normal",
+      "promotionRewardGold": 200,
       "unlockedFeatures": ["BOARD_DOMESTIC_FULL", "BOARD_MILITARY_FULL"]
     },
     {
@@ -23,6 +25,7 @@
       "title": "郡守",
       "expToReach": 260,
       "questCap": "elite",
+      "promotionRewardGold": 400,
       "unlockedFeatures": ["WORLD_SANDTABLE_S1"]
     },
     {
@@ -31,6 +34,7 @@
       "title": "州牧",
       "expToReach": 520,
       "questCap": "advanced",
+      "promotionRewardGold": 800,
       "unlockedFeatures": ["WORLD_SANDTABLE_S2", "ALLIANCE_DOCS"]
     },
     {
@@ -39,6 +43,7 @@
       "title": "霸府重臣",
       "expToReach": 920,
       "questCap": "hell",
+      "promotionRewardGold": 1500,
       "unlockedFeatures": ["WORLD_SANDTABLE_S3", "ANTI_HEGEMONY_SUMMIT"]
     }
   ]

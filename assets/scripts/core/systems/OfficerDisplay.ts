@@ -14,7 +14,7 @@ import type { OfficerState } from './OfficerState';
 import { OFFICER_TIER_MAX, OFFICER_TIER_EXP_THRESHOLDS } from './OfficerState';
 
 /** 顯示用階位名稱（F-2）；資料檔未載入時的備援，與 officer-tiers.json 的 title 一致 */
-const OFFICER_TIER_TITLES: readonly string[] = ['鄉里義士', '縣府佐官', '郡守', '州牧', '霸府重臣'];
+export const OFFICER_TIER_TITLES: readonly string[] = ['鄉里義士', '縣府佐官', '郡守', '州牧', '霸府重臣'];
 
 export interface OfficerDisplayRow {
     tier: number;

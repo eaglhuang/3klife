@@ -1,0 +1,199 @@
+{
+  "id": "general-journal-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "GeneralJournalRoot",
+    "id": "generalJournalRoot",
+    "width": 1920,
+    "height": 1080,
+    "children": [
+      {
+        "type": "panel",
+        "name": "GeneralJournalCard",
+        "id": "generalJournalCard",
+        "width": 1000,
+        "height": 820,
+        "skinSlot": "gj.card.bg",
+        "layout": {
+          "type": "vertical",
+          "justifyContent": "start",
+          "spacingY": 12,
+          "paddingTop": 28,
+          "paddingRight": 28,
+          "paddingBottom": 28,
+          "paddingLeft": 28
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "JournalTitle",
+            "id": "journalTitle",
+            "width": 944,
+            "height": 48,
+            "text": "武將日誌",
+            "styleSlot": "gj.label.title"
+          },
+          {
+            "type": "container",
+            "name": "JournalNavRow",
+            "id": "journalNavRow",
+            "width": 944,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnPrevGeneral",
+                "id": "btnPrevGeneral",
+                "width": 160,
+                "height": 64,
+                "skinSlot": "gj.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPrevGeneralLabel",
+                    "id": "btnPrevGeneralLabel",
+                    "width": 160,
+                    "height": 40,
+                    "text": "◀ 上一位",
+                    "styleSlot": "gj.label.body"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "label",
+                "name": "JournalPageLabel",
+                "id": "journalPageLabel",
+                "width": 300,
+                "height": 40,
+                "text": "",
+                "styleSlot": "gj.label.body",
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnNextGeneral",
+                "id": "btnNextGeneral",
+                "width": 160,
+                "height": 64,
+                "skinSlot": "gj.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnNextGeneralLabel",
+                    "id": "btnNextGeneralLabel",
+                    "width": 160,
+                    "height": 40,
+                    "text": "下一位 ▶",
+                    "styleSlot": "gj.label.body"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "JournalEmptyLabel",
+            "id": "journalEmptyLabel",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "gj.label.body"
+          },
+          {
+            "type": "label",
+            "name": "JournalLine0",
+            "id": "journalLine0",
+            "width": 944,
+            "height": 56,
+            "text": "",
+            "styleSlot": "gj.label.line"
+          },
+          {
+            "type": "label",
+            "name": "JournalLine1",
+            "id": "journalLine1",
+            "width": 944,
+            "height": 56,
+            "text": "",
+            "styleSlot": "gj.label.line"
+          },
+          {
+            "type": "label",
+            "name": "JournalLine2",
+            "id": "journalLine2",
+            "width": 944,
+            "height": 56,
+            "text": "",
+            "styleSlot": "gj.label.line"
+          },
+          {
+            "type": "label",
+            "name": "JournalLine3",
+            "id": "journalLine3",
+            "width": 944,
+            "height": 56,
+            "text": "",
+            "styleSlot": "gj.label.line"
+          },
+          {
+            "type": "label",
+            "name": "JournalLine4",
+            "id": "journalLine4",
+            "width": 944,
+            "height": 56,
+            "text": "",
+            "styleSlot": "gj.label.line"
+          },
+          {
+            "type": "label",
+            "name": "JournalLine5",
+            "id": "journalLine5",
+            "width": 944,
+            "height": 56,
+            "text": "",
+            "styleSlot": "gj.label.line"
+          },
+          {
+            "type": "button",
+            "name": "BtnClose",
+            "id": "btnClose",
+            "width": 200,
+            "height": 64,
+            "skinSlot": "gj.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseLabel",
+                "id": "btnCloseLabel",
+                "width": 200,
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "gj.label.body"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

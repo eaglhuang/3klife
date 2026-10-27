@@ -15,16 +15,14 @@ export const LUK_REVEAL_LEVEL = 46;
 export const LUK_VALUE_CEILING = 100;
 
 export interface LukVisibilityInput {
-    /** 武將等級（Lv） */
-    level: number;
-    /** 資料欄位 Is_Visible；缺值時依等級判定 */
+    /** 資料欄位 Is_Visible；缺值視為隱藏（PM 裁決 B，對齊運氣系統 §I Data Schema） */
     isVisible?: boolean;
+    // TODO: 之後有武將等級欄位時，缺 Is_Visible 的情況改依 Lv46（LUK_REVEAL_LEVEL）判定
 }
 
-/** LUK 是否對玩家可見：Is_Visible 有值時以它為準，否則看等級是否達 Lv46。 */
+/** LUK 是否對玩家可見：只看 Is_Visible，缺值即隱藏。 */
 export function isLukVisible(input: LukVisibilityInput): boolean {
-    if (typeof input.isVisible === 'boolean') return input.isVisible;
-    return Number.isFinite(input.level) && input.level >= LUK_REVEAL_LEVEL;
+    return input.isVisible === true;
 }
 
 /** 把 LUK 數值夾到 0..100 並取整；非有限數視為 0（存檔髒值保護）。 */

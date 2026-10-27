@@ -1,0 +1,337 @@
+{
+  "id": "wish-altar-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "WishAltarRoot",
+    "id": "wishAltarRoot",
+    "width": 1920,
+    "height": 1080,
+    "children": [
+      {
+        "type": "panel",
+        "name": "WishAltarCard",
+        "id": "wishAltarCard",
+        "width": 1000,
+        "height": 716,
+        "skinSlot": "wa.card.bg",
+        "layout": {
+          "type": "vertical",
+          "justifyContent": "start",
+          "spacingY": 12,
+          "paddingTop": 28,
+          "paddingRight": 28,
+          "paddingBottom": 28,
+          "paddingLeft": 28
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "WaTitle",
+            "id": "waTitle",
+            "width": 944,
+            "height": 48,
+            "text": "許願祭壇",
+            "styleSlot": "wa.label.title"
+          },
+          {
+            "type": "label",
+            "name": "WaRoundLabel",
+            "id": "waRoundLabel",
+            "width": 944,
+            "height": 40,
+            "text": "許願池——第 1 巡（06:00）｜本巡剩 3 項",
+            "styleSlot": "wa.label.body"
+          },
+          {
+            "type": "label",
+            "name": "WaStatusLabel",
+            "id": "waStatusLabel",
+            "width": 944,
+            "height": 40,
+            "text": "進行中 0/5｜加速卡 ×0（每張 -2 小時）",
+            "styleSlot": "wa.label.line"
+          },
+          {
+            "type": "button",
+            "name": "WaSlot0",
+            "id": "waSlot0",
+            "width": 944,
+            "height": 48,
+            "skinSlot": "wa.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "WaSlotLabel0",
+                "id": "waSlotLabel0",
+                "width": 900,
+                "height": 40,
+                "text": "空位",
+                "styleSlot": "wa.label.line",
+                "widget": {
+                  "left": 16,
+                  "vCenter": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "WaSlot1",
+            "id": "waSlot1",
+            "width": 944,
+            "height": 48,
+            "skinSlot": "wa.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "WaSlotLabel1",
+                "id": "waSlotLabel1",
+                "width": 900,
+                "height": 40,
+                "text": "空位",
+                "styleSlot": "wa.label.line",
+                "widget": {
+                  "left": 16,
+                  "vCenter": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "WaSlot2",
+            "id": "waSlot2",
+            "width": 944,
+            "height": 48,
+            "skinSlot": "wa.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "WaSlotLabel2",
+                "id": "waSlotLabel2",
+                "width": 900,
+                "height": 40,
+                "text": "空位",
+                "styleSlot": "wa.label.line",
+                "widget": {
+                  "left": 16,
+                  "vCenter": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "WaSlot3",
+            "id": "waSlot3",
+            "width": 944,
+            "height": 48,
+            "skinSlot": "wa.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "WaSlotLabel3",
+                "id": "waSlotLabel3",
+                "width": 900,
+                "height": 40,
+                "text": "空位",
+                "styleSlot": "wa.label.line",
+                "widget": {
+                  "left": 16,
+                  "vCenter": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "WaSlot4",
+            "id": "waSlot4",
+            "width": 944,
+            "height": 48,
+            "skinSlot": "wa.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "WaSlotLabel4",
+                "id": "waSlotLabel4",
+                "width": 900,
+                "height": 40,
+                "text": "空位",
+                "styleSlot": "wa.label.line",
+                "widget": {
+                  "left": 16,
+                  "vCenter": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "WaPickRow",
+            "id": "waPickRow",
+            "width": 944,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnPrevItem",
+                "id": "btnPrevItem",
+                "width": 120,
+                "height": 64,
+                "skinSlot": "wa.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPrevItemLabel",
+                    "id": "btnPrevItemLabel",
+                    "width": 120,
+                    "height": 40,
+                    "text": "◀",
+                    "styleSlot": "wa.label.body"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "label",
+                "name": "WaPickLabel",
+                "id": "waPickLabel",
+                "width": 640,
+                "height": 40,
+                "text": "補元散 ×1｜8 小時",
+                "styleSlot": "wa.label.body",
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnNextItem",
+                "id": "btnNextItem",
+                "width": 120,
+                "height": 64,
+                "skinSlot": "wa.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnNextItemLabel",
+                    "id": "btnNextItemLabel",
+                    "width": 120,
+                    "height": 40,
+                    "text": "▶",
+                    "styleSlot": "wa.label.body"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "WaResultLabel",
+            "id": "waResultLabel",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "wa.label.line"
+          },
+          {
+            "type": "container",
+            "name": "WaButtonRow",
+            "id": "waButtonRow",
+            "width": 944,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnWish",
+                "id": "btnWish",
+                "width": 280,
+                "height": 64,
+                "skinSlot": "wa.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnWishLabel",
+                    "id": "btnWishLabel",
+                    "width": 280,
+                    "height": 40,
+                    "text": "許願",
+                    "styleSlot": "wa.label.body"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnClaim",
+                "id": "btnClaim",
+                "width": 280,
+                "height": 64,
+                "skinSlot": "wa.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnClaimLabel",
+                    "id": "btnClaimLabel",
+                    "width": 280,
+                    "height": 40,
+                    "text": "領取",
+                    "styleSlot": "wa.label.body"
+                  }
+                ],
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnClose",
+                "id": "btnClose",
+                "width": 280,
+                "height": 64,
+                "skinSlot": "wa.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnCloseLabel",
+                    "id": "btnCloseLabel",
+                    "width": 280,
+                    "height": 40,
+                    "text": "關閉",
+                    "styleSlot": "wa.label.body"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
