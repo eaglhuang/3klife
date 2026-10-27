@@ -232,6 +232,13 @@ export function refreshDailyNews(
     return { lastGeneratedDay: day, lastLoginMs: nowMs, news };
 }
 
+/** 大廳 toast 用的日報文字（PROG-2-1173）：有未讀才回傳 [頭條, 每條「{角色}（{情緒}）：{行為}，{結果}」] */
+export function dailyNewsToastLines(state: Readonly<DailyNewsState>, date: Date): string[] {
+    const unread = state.news.filter((n) => !n.read);
+    if (unread.length === 0) return [];
+    return [dailyNewsTitle(date), ...unread.map((n) => `${n.character}（${n.emotion}）：${n.action}，${n.result}`)];
+}
+
 export function markDailyNewsRead(state: Readonly<DailyNewsState>): DailyNewsState {
     return { lastGeneratedDay: state.lastGeneratedDay, lastLoginMs: state.lastLoginMs, news: state.news.map((n) => ({ ...n, read: true })) };
 }
