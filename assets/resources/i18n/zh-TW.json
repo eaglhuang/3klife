@@ -1,5 +1,6 @@
 {
   "_comment": "繁體中文（台灣）語系字串。key 格式：{namespace}.{context}.{id}",
+  "ui.item.expire": "{0} 已過期並回收",
   "ui.back": "返回",
   "ui.confirm": "確認",
   "ui.cancel": "取消",
