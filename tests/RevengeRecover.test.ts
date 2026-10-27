@@ -6,7 +6,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { GameSession } from '../assets/scripts/core/managers/GameSession';
-import { normalizePlayerLogs, revengeRecoverAmount, rollRevengePct } from '../assets/scripts/core/systems/DailyNewsEngine';
+import { generateDailyNews, normalizeDailyNewsState, normalizePlayerLogs, revengeRecoverAmount, rollRevengePct } from '../assets/scripts/core/systems/DailyNewsEngine';
 import { DailyReportController } from '../assets/scripts/ui/core/DailyReportController';
 import type { PlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
 
@@ -72,6 +72,25 @@ export function createRevengeRecoverSuite(): TestSuite {
         assert.equals(5, values[0]);
         assert.equals(20, values[1]);
         assert.isTrue(rollRevengePct(() => 0.5) >= 5 && rollRevengePct(() => 0.5) <= 20);
+    });
+
+    suite.test('日報復仇條目帶百分比，文字與數值一致；讀檔時只保留 5~20 的整數', () => {
+        const logs = [{ type: 'RESOURCE_LOW' as const, at: 1000, resource: '糧草', amount: 30 }];
+        const news = generateDailyNews(logs, [{ name: '張飛' }], 1000, () => 0);
+        assert.equals('REVENGE', news[0].type);
+        assert.equals(5, news[0].pct!);
+        assert.isTrue(news[0].result.includes('取回了 5%'));
+
+        const state = normalizeDailyNewsState({
+            lastGeneratedDay: '2026-10-27',
+            lastLoginMs: 1000,
+            news: [
+                { type: 'REVENGE', character: '張飛', emotion: '憤怒', action: '反搶', result: '取回', read: false, pct: 12 },
+                { type: 'REVENGE', character: '張飛', emotion: '憤怒', action: '反搶', result: '取回', read: false, pct: 3 },
+            ],
+        });
+        assert.equals(12, state.news[0].pct!);
+        assert.isTrue(state.news[1].pct === undefined);
     });
 
     suite.test('面板：有可取回時顯示復仇按鈕，取回後隱藏；沒有可取回時不顯示', () => {
