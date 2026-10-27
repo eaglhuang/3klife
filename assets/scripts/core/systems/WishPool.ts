@@ -10,6 +10,7 @@
  */
 
 import { LOGIN_DAY_OFFSET_MINUTES } from './LoginStreak';
+import { ACCELERATE_CARD_HOURS, accelerateRemaining } from './AccelerateCard';
 import {
     ITEM_DISPLAY_NAMES, ITEM_ADMISSION_TOKEN, ITEM_JOB_CHANGE_ORDER, ITEM_LONGEVITY_PILL, ITEM_ORACLE_TOKEN, ITEM_TALLY_ESSENCE, ITEM_VITALITY_PILL,
 } from './PlayerInventory';
@@ -24,7 +25,7 @@ export const WISH_POOL_CONFIG = {
 } as const;
 
 /** 加速卡：每張縮短 2h；精元 5 購買 1 張（購買不在本卡） */
-export const SPEED_CARD_HOURS = 2;
+export const SPEED_CARD_HOURS = ACCELERATE_CARD_HOURS;
 export const SPEED_CARD_PRICE = 5;
 
 export interface WishItemDef {
@@ -139,9 +140,7 @@ export function startWish(state: WishPoolState, itemId: string, nowMs: number): 
 export function speedCardsNeeded(state: WishPoolState, wishId: string, cards: number, nowMs: number): number {
     const wish = state.activeWishes.find((w) => w.wishId === wishId);
     if (!wish || cards <= 0) return 0;
-    const remaining = wish.endMs - nowMs;
-    if (remaining <= 0) return 0;
-    return Math.min(Math.floor(cards), Math.ceil(remaining / (SPEED_CARD_HOURS * HOUR_MS)));
+    return accelerateRemaining(wish.endMs - nowMs, cards).cardsUsed;
 }
 
 /** 使用加速卡：每張 -2h，結束時間不早於許願開始 */
