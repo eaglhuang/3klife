@@ -167,6 +167,7 @@ import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
 import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampaignStagePlayable } from '../config/CampaignStages';
 import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
+import { protectedAfterLoss, CELLAR_PROTECTION } from '../systems/CellarProtection';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { buildEraResetEvent } from '../systems/EraReset';
 import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
@@ -1732,6 +1733,13 @@ export class GameSession {
 
     public get military(): MilitaryReserve {
         return { ...this._military };
+    }
+
+    /** 最近一場出征結算被地窖保護保住的糧草（PROG-2-1341）；沒觸發為 0，不存檔 */
+    private _lastCellarProtectedFood = 0;
+
+    public get lastCellarProtectedFood(): number {
+        return this._lastCellarProtectedFood;
     }
 
     /**
@@ -3330,7 +3338,15 @@ export class GameSession {
             return { ...settlement, awakenings: [] };
         }
         if (options.sortie) {
+            const foodBefore = this._military.food;
             this._military = applySortieResult(this._military, options.sortie);
+            // 地窖保護（ECO-06，PROG-2-1341）：戰敗時糧草不扣到 min(戰前, 保底) 以下
+            this._lastCellarProtectedFood = 0;
+            if (result === 'enemy-win' && CELLAR_PROTECTION.triggerAfterFailedDefense) {
+                const kept = protectedAfterLoss(foodBefore, this._military.food, CELLAR_PROTECTION.foodFloor);
+                this._military = { ...this._military, food: kept.after };
+                this._lastCellarProtectedFood = kept.saved;
+            }
         }
 
         const source = battleExpSource(result);
