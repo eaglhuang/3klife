@@ -69,7 +69,7 @@ function makeSession(random: () => number, generals: GeneralConfig[] = [person('
 export function createSageProphecySuite(): TestSuite {
     const suite = new TestSuite('SageProphecy (預言子嗣 / 名士解鎖)');
 
-    suite.test('因子池預覽：父母 100%，祖父母兩位都帶同因子 → 1 − 0.5 × 0.5 = 75%', () => {
+    suite.test('因子池預覽：父母 100%，祖父母兩位帶同因子 → 1 − (1 − 0.5×1.4)² = 91%（父母 LUK 40 與實際繼承同一套修正）', () => {
         const graph = new BloodlineGraph();
         const node = (uid: string, gene_refs: string[] = []) => ({ uid, template_id: null, name: uid, gene_refs, ep_base: 50, faction: 'shu', is_virtual: false });
         graph.loadFromData({
@@ -90,7 +90,7 @@ export function createSageProphecySuite(): TestSuite {
         ]);
         const service = new BreedingService(store, graph, { random: () => 0, dictionary: loadDictionary() });
         const pool = service.previewFactorPool('dad', 'mom');
-        assert.equals('gene_naval:1,gene_strategy:1,gene_command:0.75', pool.map((e) => `${e.id}:${e.chance}`).join(','));
+        assert.equals('gene_naval:100,gene_strategy:100,gene_command:91', pool.map((e) => `${e.id}:${Math.round(e.chance * 100)}`).join(','));
         assert.equals('號令', pool[2].displayName);
         assert.equals(2, store.getAll().length, '預覽不改名冊');
     });

@@ -31,6 +31,7 @@ import {
     resolveFactorColor,
     toGeneConfigs,
 } from './FactorInheritance';
+import { expectedChildFactorPool } from './ChildFactorExpectation';
 import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
 import { analyzeTagResonance, KIN_RESONANCE_MIN_COUNT } from './KinRelation';
 import { baseVitalityMaxOf } from './VitalityCap';
@@ -571,31 +572,25 @@ export interface FactorPoolEntry {
 }
 
 /**
- * 預覽子嗣的因子池（名士預言用），不消耗亂數也不改任何資料。
- * 依祖譜位置的進池率（G1 100% / G2 50% / G3 25%）計算每個因子至少進池一次的機率，機率高的在前。
+ * 預覽子嗣的因子池（名士預言與結緣預覽用），不消耗亂數也不改任何資料。
+ * 進池機率交給 ChildFactorExpectation（與實際繼承 inheritFactors 同一套規則，含父母平均 LUK）。
  */
-export function previewFactorPool(
+export function expectedFactorPool(
     request: Omit<BreedingRequest, 'random' | 'childId'>,
 ): FactorPoolEntry[] {
     const pedigree = buildChildPedigree(request.father.id, request.mother.id, request.pedigree);
     const sources = buildFactorSources(pedigree, collectProfiles(pedigree, request));
-    const enabled = new Set(request.enabledColors ?? DEFAULT_ENABLED_FACTOR_COLORS);
-    const miss = new Map<string, { color: FactorColor; miss: number }>();
-    for (const source of sources) {
-        for (const factorId of Array.from(new Set(source.factorIds))) {
-            if (!factorId) continue;
-            const gene = source.genes?.find((g) => g.id === factorId);
-            const color = resolveFactorColor(factorId, request.dictionary, gene);
-            if (!color || !enabled.has(color)) continue;
-            const entry = miss.get(factorId) ?? { color, miss: 1 };
-            entry.miss *= 1 - FACTOR_POOL_RATE[source.generation];
-            miss.set(factorId, entry);
-        }
-    }
-    // Cocos Web 轉譯的 loose spread 不會展開 Map iterator，一律用 Array.from（同 PROG-2-0062）
-    return Array.from(miss.entries())
-        .map(([id, { color, miss: m }]) => ({ id, color, chance: 1 - m, displayName: request.dictionary?.get(id)?.displayName }))
-        .sort((a, b) => b.chance - a.chance || a.id.localeCompare(b.id));
+    const { factors } = expectedChildFactorPool(sources, {
+        dictionary: request.dictionary,
+        enabledColors: request.enabledColors,
+        parentAvgLuk: (statOf(request.father, 'luk') + statOf(request.mother, 'luk')) / 2,
+    });
+    return factors.map((factor) => ({
+        id: factor.factorId,
+        color: factor.color,
+        chance: factor.chance,
+        displayName: request.dictionary?.get(factor.factorId)?.displayName,
+    }));
 }
 
 function collectProfiles(
