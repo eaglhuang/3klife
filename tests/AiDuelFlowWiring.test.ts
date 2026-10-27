@@ -28,7 +28,7 @@ function troop(id: string, faction: Faction, lane: number, depth: number): Troop
     return unit;
 }
 
-/** 3 對 3 兵力、雙方主將半血（E-7 血量項 0.5，兵力與戰力勢均），單挑分數恰為 0.5；難度與骰子由呼叫端設定 */
+/** 3 對 3 兵力、雙方主將與兵力皆半血（血量項與兵力項皆 0.5、戰力勢均），單挑分數恰為 0.5；難度與骰子由呼叫端設定 */
 function evenBattle(difficulty: AiDifficulty, roll: number): BattleController {
     services().initialize();
     // 骰子必須在 [0, 1)，1 會讓亂數索引越界並污染後續測試
@@ -42,6 +42,8 @@ function evenBattle(difficulty: AiDifficulty, roll: number): BattleController {
     ctrl.state.aiDifficulty = difficulty;
     for (let i = 0; i < 3; i += 1) ctrl.state.addUnit(troop(`p-${i}`, Faction.Player, 2, 1 + i));
     for (let i = 0; i < 3; i += 1) ctrl.state.addUnit(troop(`e-${i}`, Faction.Enemy, 2, 6 - i));
+    // 兵力半血：E-7 兵力項為現存 / 最大，與血量項同為 0.5
+    for (const unit of ctrl.state.units.values()) unit.currentHp = unit.maxHp / 2;
     return ctrl;
 }
 
