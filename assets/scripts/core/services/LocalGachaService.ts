@@ -5,6 +5,7 @@ import { services } from '../managers/ServiceLoader';
 import { SyncActionType } from '../systems/SyncManager';
 import { checkWalletBalance, formatInsufficientMessage, STARTER_GACHA_WALLET } from './GachaWalletRules';
 import { GACHA_MENTOR_RARITY_RATES, GACHA_RARITY_RATES, drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
+import { destinyShopCredits, exchangeDestinyShop, pullsToNextDestinyCredit, type DestinyShopBlockReason } from '../systems/DestinyShop';
 import { ActionLogStore, type GachaActionType, type GachaCurrencyKey, type GachaHistoryRecord } from './ActionLogStore';
 
 export interface LocalGachaRollOptions {
@@ -114,6 +115,10 @@ function inferRarityTier(general: GeneralConfig): GeneralDetailRarityTier {
     }
 }
 
+function isSsrTier(tier: GeneralDetailRarityTier): boolean {
+    return tier === 'legendary' || tier === 'mythic';
+}
+
 /** 候選武將分桶：legendary／mythic 為 SSR，epic 為 SR，其餘為 R；Up 名單命中者進 Up 桶 */
 function buildGachaPool(candidates: GeneralConfig[], upGeneralIds: readonly string[]): GachaPool<GeneralConfig> {
     const up = new Set(upGeneralIds);
@@ -125,7 +130,7 @@ function buildGachaPool(candidates: GeneralConfig[], upGeneralIds: readonly stri
     for (const general of candidates) {
         const tier = inferRarityTier(general);
         const isUp = up.has(general.id);
-        if (tier === 'legendary' || tier === 'mythic') (isUp ? ssrUp : ssrOther).push(general);
+        if (isSsrTier(tier)) (isUp ? ssrUp : ssrOther).push(general);
         else if (tier === 'epic') (isUp ? srUp : srOther).push(general);
         else rOther.push(general);
     }
@@ -322,6 +327,72 @@ export class LocalGachaService {
             generals,
             options,
         });
+    }
+
+    /** 天命商店（PROG-2-1157）：本池目前可兌換次數（每池每滿 200 抽 1 次） */
+    public getDestinyShopCredits(poolId: string): number {
+        return destinyShopCredits(this._pityBookOf()[poolId]);
+    }
+
+    /** 天命商店（PROG-2-1157）：本池距離下一次兌換資格還差幾抽 */
+    public getPullsToNextDestinyCredit(poolId: string): number {
+        return pullsToNextDestinyCredit(this._pityBookOf()[poolId]);
+    }
+
+    /**
+     * 天命商店兌換（PROG-2-1157）：用一次大保底資格換本池任一位 SSR。
+     * generals 是本池候選名單（與抽卡時相同）。成功時回傳 entry，入冊與保底寫回同一批存檔；
+     * 資格不足或目標不合法時 entry 為 null、回傳擋下原因，不改任何狀態。
+     */
+    public exchangeDestinyShop(
+        poolId: string,
+        generals: GeneralConfig[],
+        targetId: string,
+    ): { entry: LocalGachaResultEntry | null; reason: DestinyShopBlockReason | null } {
+        const candidates = this._filterCandidates(generals);
+        const ssrIds = candidates.filter((general) => isSsrTier(inferRarityTier(general))).map((general) => general.id);
+        const outcome = exchangeDestinyShop(this._pityBookOf()[poolId], targetId, candidates.map((general) => general.id), ssrIds);
+        const nextPity = outcome.nextPity;
+        if (!nextPity) return { entry: null, reason: outcome.reason };
+
+        const general = cloneGeneral(candidates.find((candidate) => candidate.id === targetId)!);
+        const rarityTier = inferRarityTier(general);
+        const entry: LocalGachaResultEntry = {
+            general,
+            rarityTier,
+            drawIndex: 1,
+            displayText: `天命商店兌換 [${rarityTier}] ${general.name}`,
+            poolId,
+            actionType: 'LOCAL_DESTINY_SHOP_EXCHANGE',
+            currencyKey: 'gems',
+        };
+        const logged = services().sync.pushAction(
+            'LOCAL_DESTINY_SHOP_EXCHANGE',
+            {
+                poolId,
+                drawCount: 1,
+                cost: 0,
+                currencyKey: 'gems',
+                localOnly: true,
+                results: [{ id: general.id, name: general.name, rarityTier, displayText: entry.displayText }],
+            },
+            SyncActionType.DEFERRABLE,
+        );
+        if (!logged) {
+            throw new Error('[LocalGachaService] 天命商店兌換紀錄寫入失敗。');
+        }
+
+        const commit = (): void => {
+            this._saveStore?.enroll?.([entry]);
+            this._pityBookCache = { ...this._pityBookOf(), [poolId]: nextPity };
+            this._persistPityBook();
+        };
+        if (this._saveStore?.batch) {
+            this._saveStore.batch(commit);
+        } else {
+            commit();
+        }
+        return { entry, reason: null };
     }
 
     private async _performGacha(request: PerformGachaRequest): Promise<LocalGachaResultEntry[]> {

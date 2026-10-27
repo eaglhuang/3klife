@@ -6,7 +6,7 @@
  *   - 稀有度：SSR 3%、SR 10%、R 87%（三國名將池）。
  *   - Up：SSR 的 70%、SR 的 80% 從 Up 名單抽；其餘從常設名單抽。
  *   - 小保底：第 50 抽的倍數必出 SR+（抽到 R 時改為 SR）。
- *   - 大保底：累計 200 抽解鎖天命商店（本引擎只記計數，不發商店）。
+ *   - 大保底：累計 200 抽解鎖天命商店；兌換見 DestinyShop.ts（PROG-2-1157），這裡只記計數並保留已兌換次數。
  *   - 各池保底計數獨立（由呼叫端以 poolId 分開保存）。
  *   - 某稀有度沒有可抽的武將時，往下一階取（SSR → SR → R）。
  *
@@ -29,12 +29,20 @@ export const GACHA_LARGE_PITY_COUNT = 200;
 export interface GachaPityState {
     /** 本池累計抽數（小保底與大保底都由它推算） */
     pullCount: number;
+    /** 天命商店已兌換次數（PROG-2-1157）；0 時不寫入，舊資料視為 0 */
+    destinyExchanges?: number;
 }
 
 /** 缺欄位或不合法的舊資料一律從 0 開始 */
 export function normalizeGachaPity(value: unknown): GachaPityState {
-    const raw = (value as { pullCount?: unknown } | null | undefined)?.pullCount;
-    return { pullCount: typeof raw === 'number' && Number.isInteger(raw) && raw >= 0 ? raw : 0 };
+    const source = value as { pullCount?: unknown; destinyExchanges?: unknown } | null | undefined;
+    const pullCount = isCount(source?.pullCount) ? source!.pullCount as number : 0;
+    const exchanges = isCount(source?.destinyExchanges) ? source!.destinyExchanges as number : 0;
+    return exchanges > 0 ? { pullCount, destinyExchanges: exchanges } : { pullCount };
+}
+
+function isCount(value: unknown): boolean {
+    return typeof value === 'number' && Number.isInteger(value) && value >= 0;
 }
 
 /** 各池保底計數（poolId → 狀態）；存檔欄位 gachaPity 的形狀 */
@@ -114,7 +122,8 @@ export function drawGeneralOnce<T>(
     rng: () => number = Math.random,
     rates: Readonly<Record<GachaRarity, number>> = GACHA_RARITY_RATES,
 ): GachaDrawResult<T> {
-    const nextPity: GachaPityState = { pullCount: normalizeGachaPity(pity).pullCount + 1 };
+    const current = normalizeGachaPity(pity);
+    const nextPity: GachaPityState = { ...current, pullCount: current.pullCount + 1 };
     let rarity = rollRarity(rng, rates);
     let pityApplied = false;
     if (rarity === 'R' && nextPity.pullCount % GACHA_SMALL_PITY_INTERVAL === 0) {
