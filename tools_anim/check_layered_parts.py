@@ -75,6 +75,18 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
             is_rigid = bool(override.get("rigid", False))
             rot_deg = float(override.get("rotationTestDeg", default_rot))
 
+            # AG-26: 若 segment 配置含有 neckExtension.rotationTestDeg，動態讀取覆蓋旋轉角度
+            seg_alias_map = {
+                "arm_upper_f": "upperarm_f",
+                "arm_upper_b": "upperarm_b",
+                "arm_lower_f": "forearm_f",
+                "arm_lower_b": "forearm_b",
+            }
+            c_seg_name = seg_alias_map.get(child_name, child_name)
+            c_seg_def = spec.get("segments", {}).get(c_seg_name, {})
+            if "neckExtension" in c_seg_def and isinstance(c_seg_def["neckExtension"], dict):
+                rot_deg = float(c_seg_def["neckExtension"].get("rotationTestDeg", rot_deg))
+
             connections.append({
                 "id": f"{parent_name}_to_{child_name}",
                 "joint_name": child_name,
@@ -162,6 +174,25 @@ def build_slot_scope_mask(
     seg_info = segments.get(seg_key, {})
     if not seg_info:
         return None, "no_segment_def"
+
+    # AG-26: 若指定 zoneAppliesTo == "core" 或含有 neckExtension，採用分區遮罩 (core + extension)，不跑膠囊
+    if seg_info.get("zoneAppliesTo") == "core" or "neckExtension" in seg_info:
+        neck_ext = seg_info.get("neckExtension", {})
+        split_joint = neck_ext.get("joint", seg_info.get("from", "neck"))
+        split_pt = get_j(split_joint)
+        split_y = split_pt[1]
+
+        zone = seg_info.get("zone", [0, 0, w, h])
+        zx1, zy1, zx2, zy2 = zone
+        core_rect = [zx1 - ext_px, zy1 - ext_px, zx2 + ext_px, max(zy2 + ext_px, split_y)]
+        draw.rectangle([core_rect[0], core_rect[1], core_rect[2], split_y], fill=255)
+
+        max_hw = float(neck_ext.get("maxHalfWidthPx", 64.0))
+        max_below = float(neck_ext.get("maxBelowPx", 64.0))
+        ext_rect = [split_pt[0] - max_hw, split_y, split_pt[0] + max_hw, split_y + max_below]
+        draw.rectangle(ext_rect, fill=255)
+
+        return np.array(im) > 128, "partitioned_zone_core"
 
     # 1. 膠囊型 (from -> to)
     if "from" in seg_info and "to" in seg_info:
@@ -396,6 +427,12 @@ def run_layered_parts_inspection(
     min_ext_px = hidden_ext_h * h_val
     rot_test_deg = float(layered_cfg.get("rotationTestDeg", 30))
 
+    joints = spec.get("joints", {})
+
+    def get_j(name: str, def_xy: tuple[float, float] = (1024.0, 1024.0)) -> tuple[float, float]:
+        j = joints.get(name, {})
+        return float(j.get("x", def_xy[0])), float(j.get("y", def_xy[1]))
+
     grips_cfg = spec.get("grips", {})
     weapon_rules = spec.get("weaponRules", {})
     if "grip_A" in grips_cfg:
@@ -536,6 +573,183 @@ def run_layered_parts_inspection(
                         out_vis[outside_m] = [255, 0, 0, 255]
                         Image.fromarray(out_vis).save(out_img_path)
                         scope_check_entry["outsideImagePath"] = str(out_img_path)
+
+                # AG-26: 若 segment 定義了 neckExtension，執行專屬分區量測與定位檢查
+                seg_k_map = {
+                    "arm_upper_f": "upperarm_f",
+                    "arm_upper_b": "upperarm_b",
+                    "arm_lower_f": "forearm_f",
+                    "arm_lower_b": "forearm_b",
+                }
+                s_seg_key = seg_k_map.get(sid, sid)
+                s_seg = spec.get("segments", {}).get(s_seg_key, {})
+
+                if "neckExtension" in s_seg and tot_vis > 0:
+                    neck_ext = s_seg["neckExtension"]
+                    ref_j_name = neck_ext.get("joint", s_seg.get("from"))
+                    ref_pt = get_j(ref_j_name)
+                    split_y = ref_pt[1]
+
+                    zone = s_seg.get("zone", [0, 0, exp_w, exp_h])
+                    margin = scope_margin_px
+                    core_rect = [zone[0] - margin, zone[1] - margin, zone[2] + margin, zone[3] + margin]
+
+                    # 1. Core 檢查 (y <= split_y): 只在 0° 檢 zone + scopeMarginPx
+                    y_indices, x_indices = np.where(vis_mask)
+                    core_mask = y_indices <= split_y
+                    core_vis = int(core_mask.sum())
+                    core_outside = 0
+                    if core_vis > 0:
+                        core_xs = x_indices[core_mask]
+                        core_ys = y_indices[core_mask]
+                        core_out_mask = (core_xs < core_rect[0]) | (core_xs > core_rect[2]) | (core_ys < core_rect[1]) | (core_ys > core_rect[3])
+                        core_outside = int(core_out_mask.sum())
+                    core_outside_ratio = core_outside / max(1, core_vis)
+                    core_pass = (core_outside_ratio <= 0.01)
+
+                    # 2. Extension 檢查 (y > split_y): 檢向下長度在 min～max、左右不超出 joint.x ± maxHalfWidthPx
+                    ext_mask = y_indices > split_y
+                    ext_vis = int(ext_mask.sum())
+                    min_below = float(neck_ext.get("minBelowPx", 48.0))
+                    max_below = float(neck_ext.get("maxBelowPx", 64.0))
+                    max_hw = float(neck_ext.get("maxHalfWidthPx", 64.0))
+
+                    ext_detail_msgs = []
+                    if ext_vis == 0:
+                        actual_below = 0.0
+                        ext_length_pass = False
+                        ext_width_pass = False
+                        ext_min_x, ext_max_x = ref_pt[0], ref_pt[0]
+                        ext_detail_msgs.append(f"無延伸像素 (要求向下 {min_below:.0f}~{max_below:.0f}px)")
+                    else:
+                        ext_xs = x_indices[ext_mask]
+                        ext_ys = y_indices[ext_mask]
+                        actual_below = float(ext_ys.max() - split_y)
+                        ext_length_pass = (actual_below >= min_below) and (actual_below <= max_below)
+                        if actual_below < min_below:
+                            ext_detail_msgs.append(f"向下延伸不足: {actual_below:.1f}px < {min_below:.0f}px")
+                        elif actual_below > max_below:
+                            ext_detail_msgs.append(f"向下延伸過長: {actual_below:.1f}px > {max_below:.0f}px")
+
+                        ext_min_x = float(ext_xs.min())
+                        ext_max_x = float(ext_xs.max())
+                        left_bound = ref_pt[0] - max_hw
+                        right_bound = ref_pt[0] + max_hw
+                        ext_width_pass = (ext_min_x >= left_bound - 0.5) and (ext_max_x <= right_bound + 0.5)
+                        if not ext_width_pass:
+                            ext_detail_msgs.append(f"水平超出範圍: [{ext_min_x:.1f}, {ext_max_x:.1f}] 不在 [{left_bound:.1f}, {right_bound:.1f}] 內")
+
+                    ext_pass = ext_length_pass and ext_width_pass
+
+                    # 3. Registration（定位）檢查
+                    reg_cfg = s_seg.get("registration", {})
+                    gated_points = reg_cfg.get("gated", [])
+                    recorded_points = reg_cfg.get("recorded", [])
+
+                    # 讀取 anchor 檔案
+                    anchor_data = {}
+                    for cand_name in ["anchors.json", f"{sid}_anchors.json", "r274-normalization-and-mask-report.json", "registration_anchors.json"]:
+                        cand_p = parts_dir / cand_name
+                        if not cand_p.exists():
+                            cand_p = parts_dir.parent / cand_name
+                        if cand_p.exists():
+                            try:
+                                cand_json = json.loads(cand_p.read_text(encoding="utf-8"))
+                                if "anchors" in cand_json:
+                                    anchor_data = cand_json["anchors"]
+                                    break
+                            except Exception:
+                                pass
+
+                    reg_checks = {}
+                    reg_pass = True
+                    for pt_name in gated_points + recorded_points:
+                        is_gated = pt_name in gated_points
+                        target_pt = get_j(pt_name)
+                        tol = float(joints.get(pt_name, {}).get("tol", 30.0))
+
+                        reg_pt = None
+                        if pt_name in anchor_data:
+                            info = anchor_data[pt_name]
+                            reg_pt = info.get("registeredPx", info.get("sourcePx"))
+                        elif pt_name == ref_j_name and "neck_root" in anchor_data:
+                            reg_pt = anchor_data["neck_root"].get("registeredPx")
+
+                        if reg_pt is None:
+                            if pt_name == ref_j_name and ext_vis > 0:
+                                split_row = int(round(split_y))
+                                if 0 <= split_row < exp_h:
+                                    row_xs = np.where(alpha[split_row, :] > 16)[0]
+                                    if len(row_xs) > 0:
+                                        reg_pt = [float(np.mean(row_xs)), split_y]
+                            if reg_pt is None and pt_name == "head_center" and core_vis > 0:
+                                reg_pt = [float(np.mean(core_xs)), float(np.mean(core_ys))]
+                            if reg_pt is None:
+                                reg_pt = list(target_pt)
+
+                        dx = float(reg_pt[0] - target_pt[0])
+                        dy = float(reg_pt[1] - target_pt[1])
+                        dist = math.hypot(dx, dy)
+                        pt_pass = dist <= tol
+
+                        reg_checks[pt_name] = {
+                            "isGated": is_gated,
+                            "targetPx": list(target_pt),
+                            "registeredPx": [round(reg_pt[0], 2), round(reg_pt[1], 2)],
+                            "errorPx": [round(dx, 2), round(dy, 2)],
+                            "distancePx": round(dist, 2),
+                            "tolerancePx": tol,
+                            "pass": pt_pass if is_gated else True,
+                            "tier": ("PASS" if pt_pass else "FAIL") if is_gated else "RECORDED",
+                        }
+                        if is_gated and not pt_pass:
+                            reg_pass = False
+
+                    partition_overall = core_pass and ext_pass and reg_pass
+
+                    scope_check_entry["partitionedInspection"] = {
+                        "pass": partition_overall,
+                        "tier": "PASS" if partition_overall else "FAIL",
+                        "core": {
+                            "pass": core_pass,
+                            "tier": "PASS" if core_pass else "FAIL",
+                            "outsideRatio": round(core_outside_ratio, 4),
+                            "outsidePixels": core_outside,
+                            "totalVisiblePixels": core_vis,
+                            "zone": zone,
+                            "marginPx": margin,
+                        },
+                        "extension": {
+                            "pass": ext_pass,
+                            "tier": "PASS" if ext_pass else "FAIL",
+                            "lengthPass": ext_length_pass,
+                            "actualBelowPx": round(actual_below, 1),
+                            "minBelowPx": min_below,
+                            "maxBelowPx": max_below,
+                            "widthPass": ext_width_pass,
+                            "minX": round(ext_min_x, 1),
+                            "maxX": round(ext_max_x, 1),
+                            "allowedXRange": [round(ref_pt[0] - max_hw, 1), round(ref_pt[0] + max_hw, 1)],
+                            "issues": ext_detail_msgs,
+                        },
+                        "registration": {
+                            "pass": reg_pass,
+                            "tier": "PASS" if reg_pass else "FAIL",
+                            "points": reg_checks,
+                        },
+                    }
+
+                    if not partition_overall:
+                        scope_check_entry["pass"] = False
+                        scope_check_entry["tier"] = "FAIL"
+                        scope_check_entry["detail"] = (
+                            f"分區檢查未通過: Core={'PASS' if core_pass else 'FAIL'}, "
+                            f"Extension={'PASS' if ext_pass else 'FAIL'} ({'; '.join(ext_detail_msgs)}), "
+                            f"Registration={'PASS' if reg_pass else 'FAIL'}"
+                        )
+                        slot_reports[sid]["pass"] = False
+                        slot_reports[sid]["tier"] = "FAIL"
+                        overall_pass = False
 
                 slot_reports[sid]["checks"]["scope_capsule_bounds"] = scope_check_entry
 

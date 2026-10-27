@@ -633,6 +633,124 @@ class TestCheckLayeredParts(unittest.TestCase):
             )
         self.assertIn("layeredSlots.names", str(ctx.exception))
 
+    def _create_mock_head_part(
+        self,
+        parts_dir: Path,
+        core_box: tuple[int, int, int, int] = (800, 300, 1300, 880),
+        ext_below: float = 52.0,
+        ext_half_width: float = 40.0,
+    ) -> None:
+        im = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
+        d = ImageDraw.Draw(im)
+        # 繪製 core (y <= 880)
+        d.rectangle(core_box, fill=(210, 180, 150, 255))
+        # 繪製 neck extension (y > 880)
+        jx, jy = 1030.0, 880.0
+        if ext_below > 0:
+            d.rectangle(
+                [jx - ext_half_width, jy, jx + ext_half_width, jy + ext_below],
+                fill=(210, 180, 150, 255),
+            )
+        im.save(parts_dir / "head.png")
+
+    def test_partitioned_head_all_pass(self) -> None:
+        """測試 16 (AG-26): 合成資料 - core 在 zone 內且 neck extension 尺寸符合規範 -> 全過 PASS"""
+        parts_dir = self.tmp_dir / "head_all_pass"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+        self._create_mock_head_part(parts_dir, ext_below=52.0, ext_half_width=40.0)
+
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["head"],
+        )
+        self.assertTrue(passed, "合規合成頭部應 PASS")
+        pi = report["slotReports"]["head"]["checks"]["scope_capsule_bounds"]["partitionedInspection"]
+        self.assertTrue(pi["pass"])
+        self.assertTrue(pi["core"]["pass"])
+        self.assertTrue(pi["extension"]["pass"])
+
+    def test_partitioned_head_core_out_of_bounds_fails(self) -> None:
+        """測試 17 (AG-26): 合成資料 - core 區域大幅出界超出 zone -> FAIL"""
+        parts_dir = self.tmp_dir / "head_core_out"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+        # zone[2] = 1340, scopeMargin = 12, 最大 1352; 此處畫到 1500
+        self._create_mock_head_part(parts_dir, core_box=(800, 300, 1500, 880))
+
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["head"],
+        )
+        self.assertFalse(passed, "Core 出界應判 FAIL")
+        pi = report["slotReports"]["head"]["checks"]["scope_capsule_bounds"]["partitionedInspection"]
+        self.assertFalse(pi["core"]["pass"])
+
+    def test_partitioned_head_extension_too_short_fails(self) -> None:
+        """測試 18 (AG-26): 合成資料 - extension 向下長度不足 (例如 30px < 48px) -> FAIL"""
+        parts_dir = self.tmp_dir / "head_ext_short"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+        self._create_mock_head_part(parts_dir, ext_below=30.0)
+
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["head"],
+        )
+        self.assertFalse(passed, "Extension 太短應判 FAIL")
+        pi = report["slotReports"]["head"]["checks"]["scope_capsule_bounds"]["partitionedInspection"]
+        self.assertFalse(pi["extension"]["pass"])
+        self.assertFalse(pi["extension"]["lengthPass"])
+
+    def test_partitioned_head_extension_too_wide_fails(self) -> None:
+        """測試 19 (AG-26): 合成資料 - extension 左右半寬超出 (例如 80px > 64px) -> FAIL"""
+        parts_dir = self.tmp_dir / "head_ext_wide"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+        self._create_mock_head_part(parts_dir, ext_half_width=80.0)
+
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["head"],
+        )
+        self.assertFalse(passed, "Extension 太寬應判 FAIL")
+        pi = report["slotReports"]["head"]["checks"]["scope_capsule_bounds"]["partitionedInspection"]
+        self.assertFalse(pi["extension"]["pass"])
+        self.assertFalse(pi["extension"]["widthPass"])
+
+    def test_partitioned_head_extension_too_long_fails(self) -> None:
+        """測試 20 (AG-26): 合成資料 - extension 向下過長 (例如 80px > 64px) -> FAIL"""
+        parts_dir = self.tmp_dir / "head_ext_long"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+        self._create_mock_head_part(parts_dir, ext_below=80.0)
+
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["head"],
+        )
+        self.assertFalse(passed, "Extension 過長應判 FAIL")
+        pi = report["slotReports"]["head"]["checks"]["scope_capsule_bounds"]["partitionedInspection"]
+        self.assertFalse(pi["extension"]["pass"])
+        self.assertFalse(pi["extension"]["lengthPass"])
+
+    def test_codex_r2_head_regression(self) -> None:
+        """測試 21 (AG-26): Codex R2 頭部回歸實測，core 與 extension 通過，head_center 依實測合格"""
+        r2_dir = Path(__file__).resolve().parent.parent.parent / "scratch" / "r274-head-r2-eval"
+        if not (r2_dir / "head.png").exists():
+            self.skipTest(f"跳過 R2 頭部回歸: 找不到 {r2_dir / 'head.png'}")
+
+        report, passed = run_layered_parts_inspection(
+            parts_dir=r2_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["head"],
+        )
+        self.assertTrue(passed, "Codex R2 頭部應通過 AG-26 分區驗收")
+        pi = report["slotReports"]["head"]["checks"]["scope_capsule_bounds"]["partitionedInspection"]
+        self.assertTrue(pi["core"]["pass"], "Core 應 PASS (0.00% 出界)")
+        self.assertTrue(pi["extension"]["pass"], "Extension 應 PASS (48px <= 48~64px 且在左右範圍內)")
+        self.assertTrue(pi["registration"]["pass"], "Registration gated 點應 PASS")
+
 
 if __name__ == "__main__":
     unittest.main()

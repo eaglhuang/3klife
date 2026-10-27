@@ -140,7 +140,27 @@
         260,
         1340,
         900
-      ]
+      ],
+      "zoneAppliesTo": "core",
+      "neckExtension": {
+        "joint": "neck",
+        "minBelowPx": 48,
+        "maxBelowPx": 64,
+        "maxHalfWidthPx": 64,
+        "rotationTestDeg": 15,
+        "note": "v3.7（2026-10-27）：head 槽以 neck 關節水平線分為 core（線上）與 neck extension（線下）。core 只在 0° 設定姿勢檢 zone＋scopeMarginPx；extension 須向下延伸 minBelowPx～maxBelowPx、左右不超出 neck.x±maxHalfWidthPx，藏入 torso 衣領，以 ±rotationTestDeg 疊圖不露縫驗收。旋轉後 core 移出靜態 zone 屬預期，不計失敗。"
+      },
+      "registration": {
+        "pivot": "neck",
+        "gated": [
+          "neck",
+          "head_center"
+        ],
+        "recorded": [
+          "nose"
+        ],
+        "note": "v3.7：頭部以 neck 單點定位、等比縮放；head_center 為閘門（沿用 joints 容差），nose 只記錄實測值不當閘門——Q 版髮量不同，臉在頭區內的高度因武將而異。"
+      }
     },
     "torso": {
       "from": "pelvis",
