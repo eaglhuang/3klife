@@ -32,7 +32,7 @@ import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
 import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
 import type { HallBoardKey, HallGateTask, HallPlayerState } from '../systems/HallMissionBoard';
-import { battleIntelligenceOf } from '../systems/BattleRoster';
+import { battleIntelligenceOf, outcomeOf } from '../systems/BattleRoster';
 import { pvpSeasonIdOf } from '../systems/BattleSeasonStats';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
@@ -60,6 +60,7 @@ import { bondMercenaryToRoster, statsOfTemplate, type RosterBondResult } from '.
 import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } from '../systems/MercenaryTrialTicket';
 import { createUpkeepState } from '../systems/MercenaryUpkeep';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
+import { recordTrialBattle } from '../systems/MercenaryBattleRecord';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
 import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
 import { EMPTY_LOGIN_STREAK, LoginStreakState, recordLogin } from '../systems/LoginStreak';
@@ -3230,6 +3231,21 @@ export class GameSession {
         return checkDeployable(general, { nurturingIds: this._nurturingIds() });
     }
 
+    /** 試用傭兵出戰：deployedIds 內的試用傭兵寫入場數與勝場；結義或到期的傭兵不動，ongoing 不計。 */
+    private _recordTrialMercenaryBattles(deployedIds: readonly string[], result: BattleResult): boolean {
+        const outcome = outcomeOf(result);
+        if (!outcome) return false;
+        let changed = false;
+        const mercenaries = this._mercenaries.mercenaries.map((m) => {
+            if (!deployedIds.includes(m.uid)) return m;
+            const next = recordTrialBattle(m, outcome);
+            if (next !== m) changed = true;
+            return next;
+        });
+        if (changed) this._mercenaries = { ...this._mercenaries, mercenaries };
+        return changed;
+    }
+
     /**
      * 戰後結算：出戰武將扣精力、記戰績與功勳，給玩家覺醒經驗，再為每位出戰武將擲一次戰場覺醒；
      * 寫回名冊並存檔。名冊裡找不到的 id（例如內建 demo 武將）略過；ongoing 不結算。
@@ -3256,6 +3272,7 @@ export class GameSession {
             this._recordEventJournal(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE', this._journalSubjects(deployedIds));
         }
         const comradeChanged = this._recordBattleComrades(result, Boolean(options.sortie));
+        const mercenaryChanged = this._recordTrialMercenaryBattles(deployedIds, result);
         const settlement = settleBattle(this._roster.getAll(), {
             deployedIds,
             result,
@@ -3274,7 +3291,7 @@ export class GameSession {
         }
         this._inventory = grantTacticNotes(this._inventory, milestoneRewards);
         if (settlement.entries.length === 0) {
-            if ((clearChanged || firstClear || tallyChanged || comradeChanged) && this._autoSave && this._save) {
+            if ((clearChanged || firstClear || tallyChanged || comradeChanged || mercenaryChanged) && this._autoSave && this._save) {
                 await this.save();
             }
             if (firstClear) this._emit(GAME_SESSION_EVENTS.FirstBattleCleared, undefined);
