@@ -10,11 +10,11 @@ const HOUR_MS = 60 * 60 * 1000;
 
 /** 暫定任務清單：時長、需求、回報文字皆為暫定 */
 export const DISPATCH_JOB_CATALOG: readonly DispatchJobDef[] = [
-    { jobId: 'PATROL', name: '邊境巡查', tags: ['Warrior'], requiredStats: { lea: 60 }, storyTags: ['BATTLE'], durationMs: 4 * HOUR_MS, rewardText: '糧草 50' },
-    { jobId: 'FARM', name: '屯田督導', tags: ['Scholar'], requiredStats: { pol: 60 }, storyTags: ['GROWTH'], durationMs: 6 * HOUR_MS, rewardText: '糧草 120' },
-    { jobId: 'ESCORT', name: '商路護送', tags: ['Combat'], requiredStats: { str: 60 }, storyTags: ['DISPATCH'], durationMs: 3 * HOUR_MS, rewardText: '銅錢 200' },
-    { jobId: 'PERSUADE', name: '遊說名士', tags: ['Scholar'], requiredStats: { cha: 65, int: 60 }, storyTags: ['INTERACTION'], durationMs: 8 * HOUR_MS, rewardText: '聲望 10' },
-    { jobId: 'RAID', name: '夜探敵營', tags: ['Scout'], requiredStats: { int: 70 }, storyTags: ['BATTLE'], durationMs: 2 * HOUR_MS, rewardText: '敵情一份', highRisk: true },
+    { jobId: 'PATROL', name: '邊境巡查', tags: ['Warrior'], requiredStats: { lea: 60 }, storyTags: ['BATTLE'], durationMs: 4 * HOUR_MS, rewardText: '糧草 50', reward: { resource: 'food', amount: 50 } },
+    { jobId: 'FARM', name: '屯田督導', tags: ['Scholar'], requiredStats: { pol: 60 }, storyTags: ['GROWTH'], durationMs: 6 * HOUR_MS, rewardText: '糧草 120', reward: { resource: 'food', amount: 120 } },
+    { jobId: 'ESCORT', name: '商路護送', tags: ['Combat'], requiredStats: { str: 60 }, storyTags: ['DISPATCH'], durationMs: 3 * HOUR_MS, rewardText: '金幣 200', reward: { resource: 'gold', amount: 200 } },
+    { jobId: 'PERSUADE', name: '遊說名士', tags: ['Scholar'], requiredStats: { cha: 65, int: 60 }, storyTags: ['INTERACTION'], durationMs: 8 * HOUR_MS, rewardText: '名聲 10', reward: { resource: 'fame', amount: 10 } },
+    { jobId: 'RAID', name: '夜探敵營', tags: ['Scout'], requiredStats: { int: 70 }, storyTags: ['BATTLE'], durationMs: 2 * HOUR_MS, rewardText: '敵情一份、名聲 15', reward: { resource: 'fame', amount: 15 }, highRisk: true },
 ];
 
 /** 派遣板列；與 JournalHubController 的 DispatchBoardRow 同形 */

@@ -74,7 +74,7 @@ import {
     unreadMorningReportCount, type MorningReportState,
 } from '../systems/MorningReport';
 import {
-    DISPATCH_JOURNAL_PRIORITY, EMPTY_DISPATCH_STATE, normalizeDispatchState, settleDueDispatches, startDispatch,
+    DISPATCH_JOURNAL_PRIORITY, dispatchRewardAmount, EMPTY_DISPATCH_STATE, normalizeDispatchState, settleDueDispatches, startDispatch,
     type CompletedDispatchJob, type DispatchJobDef, type DispatchStartReason, type DispatchStartResult, type DispatchState,
 } from '../systems/DispatchJobs';
 import { dispatchCompleteLine, getDispatchScore, type DispatchGeneral, type DispatchStatKey } from '../systems/DispatchQuality';
@@ -1667,12 +1667,12 @@ export class GameSession {
     }
 
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
-    public recordLoginAt(epochMs: number): void {
+    public recordLoginAt(epochMs: number, grantGold: (amount: number) => void = () => {}): void {
         this._loginStreak = recordLogin(this._loginStreak, epochMs);
         // 三國日報：當天第一次登入依前 24h 行為紀錄生成（PROG-2-1170）
         this._dailyNews = refreshDailyNews(this._dailyNews, this._playerLogs, this._roster.getAll().map((g) => ({ name: g.name })), epochMs, this._random);
         // 派遣：離線期間到期的任務先結算寫日誌，才會進這次晨報（PROG-2-1178）
-        this.settleDispatchJobs(epochMs);
+        this.settleDispatchJobs(epochMs, grantGold);
         // 晨報：上次登入後新增的日誌挑高優先條目（PROG-2-1174）
         this._morningReport = refreshMorningReport(this._morningReport, this._journal.entries, this._officerState.currentTier);
     }
@@ -1744,7 +1744,7 @@ export class GameSession {
     }
 
     /** 結算到期的派遣，每筆寫 DISPATCH 日誌（§G 完成句）；回傳本次完成的任務。 */
-    public settleDispatchJobs(nowMs: number): CompletedDispatchJob[] {
+    public settleDispatchJobs(nowMs: number, grantGold: (amount: number) => void = () => {}): CompletedDispatchJob[] {
         const settled = settleDueDispatches(this._dispatch, nowMs);
         this._dispatch = settled.state;
         const roster = this._roster.getAll();
@@ -1758,8 +1758,24 @@ export class GameSession {
                 priority: DISPATCH_JOURNAL_PRIORITY[job.quality],
                 summary: dispatchCompleteLine(name, job.name, job.rewardText),
             });
+            this._grantDispatchReward(job, grantGold);
         }
         return settled.completed;
+    }
+
+    /** 派遣完成發獎（PROG-2-1182）：糧草、名聲有上限直接入帳；金幣交呼叫端錢包（同內政任務）。 */
+    private _grantDispatchReward(job: CompletedDispatchJob, grantGold: (amount: number) => void): void {
+        const reward = findDispatchJob(job.jobId)?.reward;
+        if (!reward) return;
+        const amount = dispatchRewardAmount(reward, job.quality);
+        if (amount <= 0) return;
+        if (reward.resource === 'food') {
+            this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + amount) };
+        } else if (reward.resource === 'fame') {
+            this._fame = Math.min(BASE_RESOURCE_CAPS.fame, this._fame + amount);
+        } else {
+            grantGold(amount);
+        }
     }
 
     /** 記一筆玩家行為（三國日報的素材，只留 24h 內）；其他系統的採集點也走這裡。時間預設為最近一次登入時間（未登入為 0）。 */
