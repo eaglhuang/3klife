@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 21:15 AG-34 完成：check_layered_parts.py 實作規格 v3.15 scopeGate（advisory 模式膠囊越界不擋，8 連通小島分三級：<16px 列清單、16~400px 游離雜片 FAIL、>=400px 設計分塊不擋）與 coverageRule（握孔關節覆蓋 notApplicable，child 覆蓋 >=90% 標記 childAloneSufficient 豁免 parent）；實測 Codex R299 候選 21 槽單槽膠囊雜片全為 0，20 關節擬議閘門全數 100% 通過（18 個 PASS、2 個 SKIPPED），全身幾何阻擋全數解除；新增 test_ag34_scope_gate_and_coverage_rule.py 4 項測試，全套 105 項單元測試 100% 通過（b88cf710c）。
 - 2026-10-27 20:49 Claude：R276 瀏覽器預覽證據收下（trackTime 推進、8 個有效附件、槍角度有變；僅探針）；規格 v3.15 小島分三級（<16 列、16～399 在外 FAIL、≥400 設計分塊），補給 AG-34。
 - 2026-10-27 20:31 Claude：AG-33 收下（後手 0/0 PASS）；規格 v3.14：scope 膠囊改只報告、擋 ≥16 px 外部小島、握點關節覆蓋 notApplicable、child 覆蓋 ≥90% 可免 parent；派 AG-34；R302：R276 暫停改在預覽端執行期解，攻擊動畫等 21 槽定稿後用 Sparkle v11。
 - 2026-10-27 20:15 AG-33 完成：check_layered_parts.py 實作手部握孔「封閉孔 enclosedHole」檢測與核心覆蓋分母扣除；arm_lower_b 成功識別 1650px 封閉孔，裂縫降為 0/0 px，核心扣除後 <30px 標記 notApplicable，擬議閘門順利翻轉為 PASS；開口拳 (hand_f) 自動退回 radiusFallback；一般肢段不受影響 (none)；回答 pelvis_to_torso 覆蓋為 0 係幾何未覆蓋 (skirt 確實已被計入) 與 skipped 測試差異說明；新增 test_ag33_enclosed_grip_hole.py 3 項測試，全套 101 項單元測試 100% 通過（8d72e387b）。
