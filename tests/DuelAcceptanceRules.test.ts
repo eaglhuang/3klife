@@ -1,7 +1,7 @@
 /**
  * DuelAcceptanceRules — 單挑接受判定與拒絕懲罰（WBS NUM-02，PROG-2-0922）
  *
- * 規格：score = 0.45 × 防守方主將血量（currentHP / maxHP）+ 0.35 × 防守方現存兵力（現存 / 最大）+ 0.2 × 戰力優勢（E-7 字面），score ≥ 0.58 接受；
+ * 規格：score = 0.45 × 防守方主將血量（currentHP / maxHP）+ 0.35 × 防守方現存兵力占比+ 0.2 × 戰力優勢（E-7 字面），score ≥ 0.58 接受；
  * 拒絕則防守方全軍攻擊與最大 HP 減半、HP 減半。
  */
 import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
@@ -53,7 +53,7 @@ export function createDuelAcceptanceRulesSuite(): TestSuite {
         assert.equals(Faction.Enemy, result.defenderFaction);
     });
 
-    suite.test('接受判定：防守方主將與兵力都過半 → score < 0.58 拒絕（E-7 血量項與兵力項皆為防守方自身比例）', () => {
+    suite.test('接受判定：防守方主將與兵力都過半 → score < 0.58 拒絕（血量項為防守方自身比例，兵力項為雙方占比）', () => {
         const ctrl = duelBattle(3, 3, 1, 0.5);
         for (const unit of ctrl.state.units.values()) {
             if (unit.faction === Faction.Enemy) unit.currentHp = unit.maxHp / 2;

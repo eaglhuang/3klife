@@ -198,7 +198,7 @@ export class BattleGeneralDuelFlow {
 
   /**
    * 單挑接受決策（由防守方視角評估）：
-   * score = 0.45 * 防守方主將血量（currentHP / maxHP）+ 0.35 * 防守方現存兵力（現存 / 最大）+ 0.2 * 總戰力優勢（PROG-2-1323，E-7 字面）
+   * score = 0.45 * 防守方主將血量（currentHP / maxHP）+ 0.35 * 防守方現存兵力占比 + 0.2 * 總戰力優勢（PROG-2-1323）
    */
   public evaluateDuelAcceptance(challengerFaction: Faction): {
     accepted: boolean;
@@ -218,10 +218,10 @@ export class BattleGeneralDuelFlow {
 
     const challengerUnits = this.collectFactionUnits(challengerFaction);
     const defenderUnits = this.collectFactionUnits(defenderFaction);
-    // E-7 字面：兵力項為防守方現存分隊兵力 / 防守方分隊最大兵力（同血量項的自身比例）
+    // 兵力項（雙方占比）：防守方現存兵力 /（雙方現存兵力和），暫定，待企劃確認
+    const challengerTroopHp = challengerUnits.reduce((sum, u) => sum + Math.max(0, u.currentHp), 0);
     const defenderTroopHp = defenderUnits.reduce((sum, u) => sum + Math.max(0, u.currentHp), 0);
-    const defenderTroopMaxHp = defenderUnits.reduce((sum, u) => sum + u.getEffectiveMaxHp(), 0);
-    const squadRatio = defenderTroopHp / Math.max(1, defenderTroopMaxHp);
+    const squadRatio = defenderTroopHp / Math.max(1, challengerTroopHp + defenderTroopHp);
 
     const calcPower = (units: TroopUnit[], general: GeneralUnit | null): number => {
       const unitPower = units.reduce((sum, u) => {
