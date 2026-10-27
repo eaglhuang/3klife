@@ -25,7 +25,12 @@ export function advanceTrialDay(source: Readonly<MercenaryState>): TrialDayResul
         return { ...advanced, affectionGained: 0 };
     }
     const affection = applyDailyAffection(source.affection ?? 0);
-    const illustrationStage = advanceIllustrationStage(source.illustrationStage ?? 1, affection.affection);
+    const illustrationStage = advanceIllustrationStage(source.illustrationStage ?? 1, {
+        battles: source.battles ?? 0,
+        wins: source.wins ?? 0,
+        affection: affection.affection,
+        bonded: advanced.state.status === 'Bonded',
+    });
     return {
         ...advanced,
         state: { ...advanced.state, affection: affection.affection, illustrationStage },

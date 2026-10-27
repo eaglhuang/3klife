@@ -1,35 +1,57 @@
-// @spec-source → 傭兵系統（試用）.md §H 插畫進度（Illustration_Stage 1~5）、§F 6 日數值（Bond_Max = 60）；PROG-2-0968（MERC-08）
+// @spec-source → 留存系統.md §F 插畫解鎖條件（1 見面 / 2 交手 1場戰鬥 / 3 認同 戰勝3場 / 4 信任 Bond≥40 / 5 結義 轉永久）；傭兵系統（試用）.md §H；PROG-2-0968（MERC-08）；PROG-2-1215（RET-01）
 /**
- * MercenaryIllustration — 傭兵插畫進度（純邏輯，不依賴 cc）
+ * MercenaryIllustration — 傭兵插畫五階段（純邏輯，不依賴 cc）
  *
- * 好感度 0~60（6 日滿）分成五段，每段 12 點，對應插畫階段 1~5。
- * 規格範例：Bond 30 → Illustration_Stage 3，與此分段一致。
+ * 依規格表的觸發條件推進階段，單一標準：
+ * - 階段 1 見面：傭兵獲得即達成。
+ * - 階段 2 交手：參與過 1 場戰鬥。
+ * - 階段 3 認同：戰勝 3 場。
+ * - 階段 4 信任：好感（規格的 Bond）≥ 40。
+ * - 階段 5 結義：轉為永久（status = Bonded）。
  *
- * 暫定：五段等分 12 點是依規格範例推出的分段，規格沒有寫明門檻；待企劃定案後改常數即可。
- * 插畫資產與 D3/D4 文案不在本卡，只回傳階段數。
+ * 暫定：
+ * - 各階段的條件獨立判斷，取達成條件中最高的階段（規格表沒有寫先後依賴，所以不要求逐階達成）。
+ * - 好感度沿用 MercenaryAffection 的 0~60，規格寫的 Bond 指的就是這個值。
+ * - 戰鬥次數與勝場目前由呼叫端傳入，傭兵狀態尚未記錄，需另卡接戰鬥結算。
  *
- * Unity 對照：像 Animator 的狀態機，好感度決定目前播到第幾張插圖，不回退。
+ * Unity 對照：像 Animator 的狀態機，每個條件是一條 Transition，條件滿足才往下跳，不回退。
  */
 
 export const ILLUSTRATION_STAGE_MIN = 1;
 export const ILLUSTRATION_STAGE_MAX = 5;
 /** 好感度滿值（Bond_Max，規格 F 節 6 日滿） */
 export const ILLUSTRATION_BOND_MAX = 60;
-/** 每階段需要的好感度（暫定：60 ÷ 5） */
-export const ILLUSTRATION_BOND_PER_STAGE = ILLUSTRATION_BOND_MAX / ILLUSTRATION_STAGE_MAX;
 
-/** 好感度 → 插畫階段（1~5）；好感度為負、非有限時視為 1，超過滿值視為 5 */
-export function illustrationStageOf(bond: number): number {
-    if (!Number.isFinite(bond) || bond < 0) return ILLUSTRATION_STAGE_MIN;
-    const stage = Math.floor(bond / ILLUSTRATION_BOND_PER_STAGE) + 1;
-    return Math.min(ILLUSTRATION_STAGE_MAX, stage);
+/** 規格門檻 */
+export const ILLUSTRATION_BATTLES_FOR_STAGE_2 = 1;
+export const ILLUSTRATION_WINS_FOR_STAGE_3 = 3;
+export const ILLUSTRATION_AFFECTION_FOR_STAGE_4 = 40;
+
+export interface IllustrationProgress {
+    /** 參與過的戰鬥場數 */
+    battles: number;
+    /** 戰勝場數 */
+    wins: number;
+    /** 好感度（Bond）0~60 */
+    affection: number;
+    /** 是否已轉為永久（結義） */
+    bonded: boolean;
+}
+
+/** 由目前進度推出的插畫階段（1~5）：取各階段條件達成者中最高的一階 */
+export function illustrationStageOf(progress: Readonly<IllustrationProgress>): number {
+    if (progress.bonded) return 5;
+    if (progress.affection >= ILLUSTRATION_AFFECTION_FOR_STAGE_4) return 4;
+    if (progress.wins >= ILLUSTRATION_WINS_FOR_STAGE_3) return 3;
+    if (progress.battles >= ILLUSTRATION_BATTLES_FOR_STAGE_2) return 2;
+    return ILLUSTRATION_STAGE_MIN;
 }
 
 /**
- * 插畫階段只進不退：取目前已解鎖階段與好感度推出的階段中較大者。
- * 例如結義後好感度不會下降，但若存檔的階段已大於好感度推出的階段，仍保留較大值。
+ * 插畫階段只進不退：取目前已解鎖階段與進度推出的階段中較大者。
+ * 舊存檔的階段依舊有效；進度不足時不會被降階。
  */
-export function advanceIllustrationStage(current: number, bond: number): number {
+export function advanceIllustrationStage(current: number, progress: Readonly<IllustrationProgress>): number {
     const safeCurrent = Number.isFinite(current) ? Math.min(ILLUSTRATION_STAGE_MAX, Math.max(ILLUSTRATION_STAGE_MIN, Math.floor(current))) : ILLUSTRATION_STAGE_MIN;
-    return Math.max(safeCurrent, illustrationStageOf(bond));
+    return Math.max(safeCurrent, illustrationStageOf(progress));
 }
