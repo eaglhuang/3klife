@@ -31,10 +31,33 @@ export interface JournalHubDeps {
     morningLines: () => readonly string[];
     /** 派遣板列（JRN-03 產出，未實作前回傳空陣列）。 */
     dispatchRows: () => readonly DispatchBoardRow[];
+    /** 可派遣的武將（PROG-2-1186 選將列）；未提供時只有「自動挑選」。 */
+    dispatchGenerals?: () => readonly { id: string; name: string }[];
 }
 
+export const DISPATCH_AUTO_PICK_LABEL = '自動挑選';
+
 export class JournalHubController {
+    /** 選將列目前人選；null 表示自動挑選 */
+    private _pickedId: string | null = null;
+
     constructor(private readonly _deps: JournalHubDeps) {}
+
+    private _generals(): readonly { id: string; name: string }[] {
+        return this._deps.dispatchGenerals?.() ?? [];
+    }
+
+    /** 目前指定的武將 id；自動挑選或人選已不可派時回傳 undefined */
+    public pickedGeneralId(): string | undefined {
+        return this._generals().find((g) => g.id === this._pickedId)?.id;
+    }
+
+    /** 在「自動挑選」與可派武將間循環：step 1 下一位、-1 上一位 */
+    public cyclePick(step: 1 | -1): void {
+        const ids: (string | null)[] = [null, ...this._generals().map((g) => g.id)];
+        const current = Math.max(0, ids.indexOf(this.pickedGeneralId() ?? null));
+        this._pickedId = ids[(current + step + ids.length) % ids.length];
+    }
 
     /** 晨報行（最多 MORNING_MAX_LINES）。 */
     public morningLines(): string[] {
@@ -72,6 +95,9 @@ export class JournalHubController {
             texts[`dispatchRow${i}Name`] = row?.title ?? '';
             texts[`dispatchRow${i}Score`] = row?.scoreText ?? '';
         }
-        return { texts, actives, enabled: { btnClose: true } };
+        const picked = this._generals().find((g) => g.id === this._pickedId);
+        texts.dispatchPickerLabel = `派遣武將：${picked?.name ?? DISPATCH_AUTO_PICK_LABEL}`;
+        const canPick = this._generals().length > 0;
+        return { texts, actives, enabled: { btnClose: true, btnPrevDispatchGeneral: canPick, btnNextDispatchGeneral: canPick } };
     }
 }
