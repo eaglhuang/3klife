@@ -31,6 +31,7 @@ import { executeBattleSpecialResolvePhase } from '../runtime/phases/BattleSpecia
 import { executeBattleTileEffectPhase } from '../runtime/phases/BattleTileEffectPhase';
 import { desertVitalityDrain } from '../../core/systems/DesertVitality';
 import { combatRelationsBetween, type HistoricalPairTable } from '../../core/systems/HistoricalPairs';
+import { detectRelationEvents, RelationEventLedger, type RelationEventHit } from '../../core/systems/RelationEvents';
 import type { HistoricalRelation } from '../../core/systems/KinRelation';
 import { BattleCombatResolver } from '../runtime/BattleCombatResolver';
 import { BattleGeneralDuelFlow } from '../runtime/BattleGeneralDuelFlow';
@@ -316,6 +317,36 @@ export class BattleController {
     return combatRelationsBetween(this.historicalPairs, this.sourceTemplateOfUnit(attackerId), this.sourceTemplateOfUnit(helperId));
   }
 
+  /** 本場戰役已觸發的關係事件（KIN-08 戰場端，PROG-2-1420）；一場一份，不存檔 */
+  private readonly _relationLedger = new RelationEventLedger();
+  private readonly _relationEventHits: RelationEventHit[] = [];
+
+  public get relationEventHits(): readonly RelationEventHit[] {
+    return [...this._relationEventHits];
+  }
+
+  /**
+   * 我方主將與在場我方部隊的虎符來源武將兩兩比對史實配對表；新命中的事件送出 RelationEventTriggered。
+   * 同一事件同一對本場只觸發一次。沒有配對表時不做事。
+   */
+  public checkBattleRelationEvents(): RelationEventHit[] {
+    if (!this.historicalPairs) return [];
+    const ids: string[] = [];
+    const general = this.state.getGeneral(Faction.Player);
+    if (general) ids.push(general.id);
+    for (const unit of this.state.units.values()) {
+      if (unit.faction !== Faction.Player || unit.currentHp <= 0) continue;
+      const template = this.sourceTemplateOfUnit(unit.id);
+      if (template) ids.push(template);
+    }
+    const hits = this._relationLedger.takeNew('battle', detectRelationEvents(this.historicalPairs, { scene: 'battle', templateIds: ids }));
+    if (hits.length === 0) return hits;
+    this._relationEventHits.push(...hits);
+    const turn = services().battle.getSnapshot().turn;
+    for (const hit of hits) services().event.emit(EVENT_NAMES.RelationEventTriggered, { turn, hit });
+    return hits;
+  }
+
   /** 部隊的來源武將模板 id：由出陣虎符的 sourceTemplateId 取得 */
   private sourceTemplateOfUnit(unitId: string): string | null {
     const tallyId = this.state.units.get(unitId)?.tallyId;
@@ -395,6 +426,7 @@ export class BattleController {
     unit.factorEffects = factorBattleEffectsOf(unit.factorGenes, this.factorEffectMap);
     if (options.tally) this.bindTallyAffinity(unit, options.tally);
     this.turnManager.notePlayerDeployment();
+    this.checkBattleRelationEvents();
     if (this.sortie) {
       const applied = applyDeploy(this.sortie, unit.id, { troopType: type, militia: options.militia });
       this.sortie = applied.state;
