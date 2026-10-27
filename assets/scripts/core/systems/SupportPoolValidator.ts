@@ -18,7 +18,7 @@ export interface PoolConfigLike {
 export interface SupportCardLike {
     id: string;
     previewLine?: string;
-    effectTags?: string[];
+    effectTags?: readonly string[];
     portraitKey?: string;
 }
 
