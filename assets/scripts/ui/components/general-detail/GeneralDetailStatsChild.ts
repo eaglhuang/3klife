@@ -12,6 +12,8 @@ import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { GeneralConfig, GeneralStatsConfig } from '../../../core/models/GeneralUnit';
 import { resolveStat } from './GeneralDetailFormatters';
+import { isLukVisible } from '../../../core/systems/LuckVisibility';
+import { lukHiddenText, withLuckFallback } from '../../core/LuckTexts';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
 
@@ -292,12 +294,18 @@ export class GeneralDetailStatsChild extends ChildPanelBase {
 
             this._setLabel(row.label, def.chineseLabel, this._tokenColor(def.colorToken));
             this._setLabel(row.english, def.englishLabel, this._tokenColor('gdv3TextMetaDim'));
-            this._setLabel(row.talent, `${Math.round(talentCurrent)}`, this._tokenColor('accent.gold.light'));
+            // LUK 未設為可見時（LUK-08）不洩漏數值：列內改顯示「???」與解鎖提示，條長歸零
+            const lukHidden = def.key === 'luk' && !isLukVisible({ isVisible: cfg.lukVisible });
+            this._setLabel(row.talent, lukHidden ? '???' : `${Math.round(talentCurrent)}`, this._tokenColor('accent.gold.light'));
             this._setLabel(row.arrow, '→', this._tokenColor('outline'));
-            this._setLabel(row.prowess, prowess.toLocaleString(), this._tokenColor('gdv3NumProwess'));
+            this._setLabel(
+                row.prowess,
+                lukHidden ? lukHiddenText(withLuckFallback((key, ...args) => services().i18n.t(key, ...args))) : prowess.toLocaleString(),
+                this._tokenColor('gdv3NumProwess'),
+            );
             this._setBarWidth(
                 row.barFill,
-                Math.min(this._metrics.statBarMaxWidth, prowess / 20 * this._metrics.statBarMaxWidth / 100),
+                lukHidden ? 0 : Math.min(this._metrics.statBarMaxWidth, prowess / 20 * this._metrics.statBarMaxWidth / 100),
                 this._tokenColor(def.colorToken),
                 this._metrics.statBarHeight,
                 this._metrics.statBarFillAlpha,

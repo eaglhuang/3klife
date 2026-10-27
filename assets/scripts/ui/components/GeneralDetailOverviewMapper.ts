@@ -10,6 +10,7 @@ import type {
 } from '../../core/models/GeneralUnit';
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
 import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
+import { isLukVisible } from '../../core/systems/LuckVisibility';
 import { mapGeneralReadModel, type GeneralReadModel } from '../../core/systems/GeneralReadModel';
 import { deriveGeneralBackpack, gearNameOfUid } from '../../core/systems/GeneralBackpackView';
 import { buildGearPageSlots, type GearSlotView } from '../../core/systems/GearPageSlots';
@@ -197,7 +198,7 @@ export function buildGeneralDetailOverview(config: GeneralConfig): GeneralDetail
                 `魅 ${formatStatValue(cha)}`,
                 `智 ${formatStatValue(int)}`,
                 `政 ${formatStatValue(pol)}`,
-                `運 ${formatStatValue(luk)}`,
+                `運 ${isLukVisible({ isVisible: config.lukVisible }) ? formatStatValue(luk) : '???'}`,
             ].join(' / '),
             roleSummary: buildRoleSummary(str, int, lea),
             traitSummary: buildTraitSummary(config, currentSp, maxSp),
