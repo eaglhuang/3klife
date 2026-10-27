@@ -199,6 +199,18 @@
       "description": "確保所有 _deprecated/ 引用已清除；有引用即視為潛在技術債，不阻擋但發出警告"
     },
     {
+      "id": "test-tsc",
+      "label": "測試型別檢查基準",
+      "cmd": "node",
+      "args": [
+        "tools_node/check-test-tsc-baseline.js"
+      ],
+      "priority": 12.5,
+      "failAction": "block",
+      "timeoutMs": 180000,
+      "description": "tsc -p tsconfig.test.json 的錯誤數不得超過 tools_node/test-tsc-baseline.json 的基準（4）；超過即阻擋"
+    },
+    {
       "id": "atm-police",
       "label": "ATM Police Gate",
       "cmd": "node",
@@ -245,7 +257,8 @@
         "task-scope",
         "doc-shard-health",
         "import-boundary",
-        "dead-code"
+        "dead-code",
+        "test-tsc"
       ]
     },
     "atm": {
@@ -276,7 +289,8 @@
         "doc-shard-health",
         "import-boundary",
         "approved-fixtures",
-        "dead-code"
+        "dead-code",
+        "test-tsc"
       ]
     }
   },
