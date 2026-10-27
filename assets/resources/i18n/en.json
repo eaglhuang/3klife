@@ -416,5 +416,21 @@
   "UI_HALL_SCRIPT_DAY_NIGHT": "燈火漸起，議事廳轉入夜議時分。",
   "UI_HALL_SCRIPT_FESTIVAL": "大廳換上新節慶陳設，眾將氣氛亦隨之轉暖。",
   "UI_HALL_SCRIPT_WISH_DONE": "祭壇靈光一閃，你的願望已成。",
-  "UI_HALL_COST_TROOPS": "消耗城市兵源 {0}"
+  "UI_HALL_COST_TROOPS": "消耗城市兵源 {0}",
+  "UI_REL_COUPLE": "Historical Couple",
+  "UI_REL_SWORN": "Sworn Brothers",
+  "UI_REL_RIVAL": "Rivals",
+  "UI_REL_MASTER": "Master & Disciple",
+  "UI_REL_LORD": "Lord & Vassal",
+  "UI_REL_COMRADE": "Comrades",
+  "UI_AFFINITY_HIGH": "Excellent affinity — a match made in heaven!",
+  "UI_AFFINITY_LOW": "Clashing affinity — rival blood may stir trouble",
+  "UI_RESONANCE_TRIGGER": "Blood resonance triggered! {0} shares {1} members",
+  "UI_FAMILY_TRADITION": "[Family Tradition] House of {0}: {1}",
+  "LORE_REL_EVENT_FAMOUS_MATCH": "Zhou Yu and Xiao Qiao — a match made in heaven! Burst power greatly increased!",
+  "LORE_REL_EVENT_BLOOD_RESONANCE": "Descendants of Zhao Yun and Ma Yunlu — the White Horse Vanguard's blood awakens once more!",
+  "LORE_REL_EVENT_RIVAL_BREED": "Blood of Zhuge Liang and Sima Yi mingling? Heaven's will is hard to read...",
+  "LORE_REL_EVENT_SWORN_COMBO": "The spirit of the Peach Garden Oath awakens at this moment!",
+  "LORE_REL_EVENT_COLLECTION_COMPLETE": "The Five Tiger Generals gather — Shu Han's glory returns!",
+  "LORE_REL_EVENT_FAMILY_TRADITION": "Three generations of loyalty passed down — the House of {0} tradition is formed!"
 }
