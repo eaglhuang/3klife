@@ -467,6 +467,8 @@ export class LobbyScene extends Component {
             );
             // 武將資料格式檢查（MVP-01）：只警告，不中斷大廳載入
             warnGeneralSchemaOnLoad(this._generals, 'LobbyScene data/generals');
+            // 俘虜來投需要依 uid 查回武將配置（POW-07）
+            services().session.setGeneralTemplates(this._generals);
             const encounterEnvelope = await services().resource.loadJson<{ encounters: EncounterConfig[] }>(
                 'data/encounters', { tags: ['LobbyScene'] }
             );
