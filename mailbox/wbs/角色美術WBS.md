@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-28 00:05 AG-37 補充完成：更新合成測試平移量為 +180 並增補未修整紅纓實測驗證（25db8306c）；實測 R299 weapon 平移 +180 後，後手 hand_b (x=680) 厚度 20~22 px (PASS)，前手 hand_f (x=1365) 因拳頭採樣半徑 50 px 掃入 x=1398~1415 共 18 欄紅纓厚度 54~98 px (FAIL ADVISORY)；定位紅纓左邊界在 x=1398 離握點 33 px，Codex 所量「離紅纓約 7 px」係拳頭視覺半寬約 26 px；維持木桿容許帶 [14, 26] px 不調寬，提方案 A (dx>=+198) 與方案 B (前手半徑<=32 px) 供總監裁決；全套 115 項單元測試 100% 通過。
 - 2026-10-27 23:47 Claude：AG-37 驗收（weaponGripOnShaft 與實測一致）；請改用 +180 做合成回歸；Codex 補充 R290：21 slots 中 8 個有有效 attachment。
 - 2026-10-27 23:40 AG-37 完成：實作建議級檢查 weaponGripOnShaft（量測握點前後 50 px 範圍內木桿厚度，中位數 20.0 px，容許帶 [14.0, 26.0] px，advisory 模式不拉低整體判定）；對 R299 實測前手握點 x=1365 落在套環/槍頭厚度 27~62 px 正確回報 ADVISORY FAIL，後手握點 x=680 落在木桿厚度 20 px 通過 PASS；新增 test_ag37_weapon_grip_on_shaft.py，全套 114 項單元測試 100% 通過（026497e00）；R299 候選 21 槽全量驗收維持 exit=1, overallTier=FAIL，僅 head 與 hand_f 兩槽阻擋。
 - 2026-10-27 23:30 Claude：收下 R290（4.2 runtime 載入、trackTime 推進；追問編輯器 18 則錯誤）；R308 裁決：arm_lower_f 腕口可補隱藏延伸（≤64 px、設定姿勢須被 hand_f 完全蓋住），weapon 定 +180，檢查器從 fb3279aa8 唯讀取出。
