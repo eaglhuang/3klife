@@ -7,6 +7,10 @@
  *   node tools_node/build-progress-matrix.js            # 重寫 D-1 表（可重複執行）
  *   node tools_node/build-progress-matrix.js --check    # 只檢查，不寫檔（有落差回傳 1）
  *
+ * 五欄表模式（PROG-2-1165）：表已是五欄時，只重算「對應代碼檔」為「尚無實作」的列，
+ *   代碼檔改從 assets/scripts 檔頭的 `@spec-source … <規格書名>` 標註掃出；其他列原樣保留。
+ *   找到代碼檔的列邏輯標 🟡（只證明有程式，不代表規格全數落地）。
+ *
  * 五欄的判定都是「可重算」的，不靠人工估百分比（Unity 類比：像 Test Runner 的綠燈，而不是工程師自評進度）：
  *   規格  ✅ 規格書 doc_id 在 registry 內且檔案存在；❌ 否
  *   邏輯  ✅ 對應代碼檔全部存在於 assets/scripts；🟡 部分存在；❌ 沒有（沿用 MANUAL_LOGIC 覆寫人工判斷）
@@ -30,6 +34,10 @@ const MANUAL_LOGIC = {
 const MANUAL_CODE = {
   doc_spec_0034: ['GameClock.ts'],
   doc_spec_0018: ['GeneralAging.ts'],
+};
+// 五欄模式不從 @spec-source 補登的規格（key = doc_id → 原因）
+const SPEC_SOURCE_SKIP = {
+  doc_spec_0008: '名詞定義文件是名詞表，不是系統',
 };
 // 只有登記了 headless / Playwright 證據才可標 ✅（key = doc_id → 證據說明）
 const RUNTIME_EVIDENCE = {};
@@ -109,7 +117,10 @@ for (const l of lines.slice(headerIdx + 2, end)) {
   if (!r) { console.error('無法解析：', l.slice(0, 80)); process.exit(2); }
   rows.push(r);
 }
-if (isFive) { console.error('D-1 已是五欄表；此工具以舊四欄表為輸入（保留原資料請從 git 還原）'); process.exit(0); }
+if (isFive) {
+  refreshUnimplementedRows();
+  process.exit(0);
+}
 
 const out = ['| 規格書 | 對應代碼檔 | 規格 | 邏輯 | 接線 | 測試 | runtime 驗收 |', '|---|---|:-:|:-:|:-:|:-:|:-:|'];
 const tally = { spec: 0, logic: 0, wiring: 0, test: 0, runtime: 0 };
@@ -122,4 +133,37 @@ console.log(`D-1 共 ${rows.length} 列；✅ 數：規格 ${tally.spec} / 邏�
 if (!checkOnly) {
   lines.splice(headerIdx, end - headerIdx, ...out);
   fs.writeFileSync(progressPath, lines.join('\n'), 'utf8');
+}
+
+/** 規格書檔名（不含 .md）→ 檔頭 @spec-source 指向它的 assets/scripts 檔名 */
+function specSourceFiles(specPath) {
+  const stem = path.basename(specPath || '', '.md');
+  if (!stem) return [];
+  const names = [];
+  for (const [f, text] of scriptText) {
+    const tags = text.match(/@spec-source[^\n]*/g) || [];
+    if (tags.some((t) => t.includes(stem))) names.push(path.basename(f));
+  }
+  return [...new Set(names)];
+}
+
+function refreshUnimplementedRows() {
+  let changed = 0;
+  for (let i = headerIdx + 2; i < end; i++) {
+    const cells = lines[i].split('|').slice(1, -1).map((c) => c.trim());
+    const r = parseRow(lines[i]);
+    if (cells[1] !== '尚無實作' || SPEC_SOURCE_SKIP[r.id]) continue;
+    const entry = regGet(r.id);
+    const found = specSourceFiles(entry && entry.path);
+    if (!found.length) continue;
+    const wired = found.filter((n) => byBase.get(n).some(isImported));
+    const wiring = wired.length === found.length ? '✅' : wired.length ? '🟡' : '❌';
+    const hasTest = found.some((n) => tests.some((x) => path.basename(x) === `${path.basename(n, '.ts')}.test.ts`));
+    lines[i] = `| ${cells[0]} | ${found.join(', ')} | ${cells[2]} | 🟡 | ${wiring} | ${hasTest ? '✅' : '❌'} | ${cells[6]} |`;
+    changed++;
+    console.log(`補登：${cells[0]} → ${found.length} 個代碼檔`);
+  }
+  console.log(`五欄模式：${changed} 列「尚無實作」可依 @spec-source 補登`);
+  if (checkOnly) process.exit(changed ? 1 : 0);
+  if (changed) fs.writeFileSync(progressPath, lines.join('\n'), 'utf8');
 }
