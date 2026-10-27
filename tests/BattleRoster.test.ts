@@ -317,6 +317,9 @@ export function createBattleRosterSuite(): TestSuite {
         assert.equals(1, last.page);
         assert.equals(2, last.rows.length);
         assert.isFalse(last.rows.some((r) => r.selected));
+        assert.equals('b（A）', last.leadLabel, '主將在第 0 頁、看第 1 頁仍查得到名字');
+        assert.equals(undefined, buildLeadSelectView(list, 'zz', 0).leadLabel);
+        assert.equals(null, buildLeadSelectView(list, null, 0).leadLabel);
         const empty = buildLeadSelectView([], null, 3);
         assert.equals(1, empty.pageCount);
         assert.equals(0, empty.rows.length);

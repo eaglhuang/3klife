@@ -26,6 +26,8 @@ export interface LobbyOpeningPanelPorts {
     refreshSeasonHud: () => void;
     notifyBeauty: (name: string) => void;
     advanceOpening: (event: OpeningFlowEvent) => void;
+    /** 宿命轉蛋六框載立繪（與招賢館同一套擺位，PROG-2-1147）；keys 依框序 */
+    applyFramePortraits?: (binder: NonNullable<LobbyOpeningPanelHost['binder']>, keys: readonly string[]) => void;
     warn: (message: string, error?: unknown) => void;
 }
 
@@ -35,6 +37,8 @@ export class LobbyOpeningPanels {
     private _onboardingHost: LobbyOpeningPanelHost | null = null;
     private _destiny: DestinyOpeningController | null = null;
     private _destinyHost: LobbyOpeningPanelHost | null = null;
+    /** 上次載入的立繪順序；沒變就不重載，避免每次點選都閃一下 */
+    private _destinyPortraitKeys = '';
 
     constructor(private readonly _ports: LobbyOpeningPanelPorts) {}
 
@@ -99,7 +103,7 @@ export class LobbyOpeningPanels {
             void Promise.resolve(task()).then(() => { this.afterDestinyAction(); });
         };
         const rowBindings = Array.from({ length: DESTINY_OPENING_MAX_ROWS }, (_, i) => ({
-            buttonId: `btnDestinyRow${i}`,
+            buttonId: `btnFrame${i}`,
             handler: act(() => this._destiny?.select(i)),
         }));
         this._destinyHost = await this._ports.mountHost('DestinyOpeningHost', 'destiny-opening-screen', [
@@ -134,5 +138,10 @@ export class LobbyOpeningPanels {
         const binder = this._destinyHost?.binder;
         if (!binder || !this._destiny) return;
         applyFlowView(binder, this._destiny.getFlowView());
+        const keys = this._destiny.framePortraitKeys();
+        if (keys.join(',') !== this._destinyPortraitKeys) {
+            this._destinyPortraitKeys = keys.join(',');
+            this._ports.applyFramePortraits?.(binder, keys);
+        }
     }
 }

@@ -44,11 +44,13 @@ export function createSpiritCodexLayoutSuite(): TestSuite {
         assert.equals('SpiritCodex', screen.uiId);
     });
 
-    suite.test('季度 HUD 版面有英靈圖鑑入口按鈕 btnOpenSpiritCodex', () => {
-        const hud = readJson<{ root: unknown }>('assets/resources/ui-spec/layouts/lobby-season-hud-main.json');
+    suite.test('大廳「武將」收納列有英靈圖鑑入口（PROG-2-1148）', () => {
+        const hub = readJson<{ root: unknown }>('assets/resources/ui-spec/layouts/lobby-city-hub-main.json');
         const ids = new Set<string>();
-        collect(hud.root as never, ids, new Set<string>());
-        assert.isTrue(ids.has('btnOpenSpiritCodex'));
+        collect(hub.root as never, ids, new Set<string>());
+        assert.isTrue(ids.has('btnCatGenerals'));
+        const lobby = fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
+        assert.isTrue(lobby.includes('spiritCodex: () => { void this._openSpiritCodex(); }'));
     });
 
     suite.test('四個語系都有 ui.spirit_codex.* 同一組 key', () => {

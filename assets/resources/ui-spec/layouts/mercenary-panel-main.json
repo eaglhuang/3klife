@@ -527,6 +527,33 @@
                 ]
               }
             ]
+          },
+          {
+            "type": "button",
+            "name": "BtnMercHire",
+            "id": "btnMercHire",
+            "widget": {
+              "top": 760,
+              "left": 32
+            },
+            "width": 560,
+            "height": 64,
+            "skinSlot": "mp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnMercHireLabel",
+                "id": "btnMercHireLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.button"
+              }
+            ]
           }
         ]
       }

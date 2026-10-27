@@ -278,6 +278,8 @@ export interface SeasonAdvancedPayload {
     quarterlyReports?: QuarterlyBattleReportRow[];
     /** 本季他國 AI 來犯、以名冊前 3 強自動迎戰的結算（PROG-2-1088） */
     rivalBattles?: AutoBattleResult[];
+    /** 本季（＝傭兵一日，MVP 定案）試用期滿未結義而離隊的傭兵 uid（PROG-2-1154） */
+    mercenaryDepartures?: string[];
 }
 
 /** 進行中的培育會話存取介面；正式環境為 NurtureService，讓存檔帶著培育進度 */
@@ -618,9 +620,18 @@ export class GameSession {
     /**
      * 推進一個遊戲日：試用中傭兵倒數 −1、好感 +10。
      * 倒數已在前一日歸零且仍未結義者，本日離隊、寫入告別事件並開始 30 天冷卻。
-     * 遊戲日的觸發入口（時間軸）尚未定案，由呼叫端決定何時呼叫。
+     * 遊戲日觸發：MVP 定案每推進一季過一日（PROG-2-1154，2026-10-27 使用者裁定；規格原為真實每日登入，改版只需換觸發點）。
      */
     public async advanceMercenaryDay(): Promise<MercenaryDayReport> {
+        const report = this._tickMercenaryDay();
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return report;
+    }
+
+    /** 傭兵日推進的狀態變更（不存檔）；advanceMercenaryDay 與季度推進共用 */
+    private _tickMercenaryDay(): MercenaryDayReport {
         const today = this.mercenaryDay + 1;
         const events: DepartureEvent[] = [];
         const departed = new Set<string>();
@@ -642,9 +653,6 @@ export class GameSession {
             cooldowns,
             day: today,
         };
-        if (this._autoSave && this._save) {
-            await this.save();
-        }
         return { day: today, events };
     }
 
@@ -2161,7 +2169,9 @@ export class GameSession {
         const quarterlyReports = buildQuarterlyBattleReportRows(this._roster.getAll());
         this.recordSeasonJournal(advance.previous, quarterlyReports);
         const rivalBattles = this._tickRivals();
-        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}) };
+        // MVP 定案：一季＝傭兵一日（PROG-2-1154，使用者裁定）
+        const departedUids = this._tickMercenaryDay().events.filter((e) => e.type === 'departed').map((e) => e.uid);
+        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }

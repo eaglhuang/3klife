@@ -314,6 +314,310 @@
       "timing": "active-cast",
       "manualTargeting": false,
       "autoAimMode": "densest-line"
+    },
+    {
+      "id": "tactic-insp-lance-thrust",
+      "displayName": "長槍突刺",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str",
+        "lea"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "guan-yu-slash",
+      "sourceType": "inspired-tactic",
+      "targetMode": "line",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "densest-line"
+    },
+    {
+      "id": "tactic-insp-cavalry-charge",
+      "displayName": "騎兵衝鋒",
+      "category": "charge",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str",
+        "lea"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-charge",
+      "sourceType": "inspired-tactic",
+      "targetMode": "line",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "densest-line"
+    },
+    {
+      "id": "tactic-insp-dragon-gall",
+      "displayName": "龍膽",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str",
+        "luk"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-defense-pierce",
+      "sourceType": "inspired-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-insp-zhao-spear",
+      "displayName": "趙家槍法",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str",
+        "lea"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "zhao-yun-pierce",
+      "sourceType": "inspired-tactic",
+      "targetMode": "line",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "densest-line"
+    },
+    {
+      "id": "tactic-insp-lone-rider",
+      "displayName": "單騎破陣",
+      "category": "charge",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str",
+        "lea"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-wushuang",
+      "sourceType": "inspired-tactic",
+      "targetMode": "around-self",
+      "timing": "active-cast",
+      "manualTargeting": false
+    },
+    {
+      "id": "tactic-insp-combo-attack",
+      "displayName": "連擊",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str",
+        "luk"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "insp-combo-attack",
+      "sourceType": "inspired-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-insp-haste",
+      "displayName": "疾行",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "lea",
+        "int"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "wei-zhen-reset",
+      "sourceType": "inspired-tactic",
+      "targetMode": "ally-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-allies"
+    },
+    {
+      "id": "tactic-insp-shield",
+      "displayName": "堅盾",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "lea",
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-counter-weak",
+      "sourceType": "inspired-tactic",
+      "targetMode": "ally-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-allies"
+    },
+    {
+      "id": "tactic-insp-slow",
+      "displayName": "緩速",
+      "category": "control",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int",
+        "lea"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "mentor-slow",
+      "sourceType": "inspired-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-insp-taunt",
+      "displayName": "挑釁",
+      "category": "control",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str",
+        "cha"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "insp-taunt",
+      "sourceType": "inspired-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-insp-sworn-fury",
+      "displayName": "結義之怒",
+      "category": "charge",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str",
+        "cha"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "lu-bu-rampage",
+      "sourceType": "inspired-tactic",
+      "targetMode": "fan",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "densest-fan"
+    },
+    {
+      "id": "tactic-insp-wei-might",
+      "displayName": "威震華夏",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str",
+        "lea"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-wei-zhen-hua-xia",
+      "sourceType": "inspired-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-insp-empty-fort",
+      "displayName": "空城計",
+      "category": "scheme",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int",
+        "pol"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "empty-fort",
+      "sourceType": "inspired-tactic",
+      "targetMode": "self",
+      "timing": "active-cast",
+      "manualTargeting": false
+    },
+    {
+      "id": "tactic-insp-fire-attack",
+      "displayName": "火攻",
+      "category": "scheme",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int",
+        "lea"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "zhou-yu-inferno",
+      "sourceType": "inspired-tactic",
+      "targetMode": "tile",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "occupied-tile"
+    },
+    {
+      "id": "tactic-insp-red-cliff",
+      "displayName": "赤壁烈焰",
+      "category": "scheme",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int",
+        "lea"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-fire-chain",
+      "sourceType": "inspired-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-insp-chain-link",
+      "displayName": "連環計",
+      "category": "scheme",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int",
+        "pol"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "lian-huan-chain",
+      "sourceType": "inspired-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-insp-night-raid",
+      "displayName": "夜襲",
+      "category": "ambush",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int",
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "sima-yi-shadow",
+      "sourceType": "inspired-tactic",
+      "targetMode": "enemy-all",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-enemies"
     }
   ]
 }

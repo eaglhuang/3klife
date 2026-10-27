@@ -49,7 +49,8 @@ export const ITEM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
 export type PlayerInventory = Readonly<Record<string, number>>;
 
 /** 新遊戲 / 舊存檔的起始庫存（暫定） */
-export const STARTER_INVENTORY: PlayerInventory = { [ITEM_ORACLE_TOKEN]: 3 };
+/** 起始背包：求籤令 3、試用券 2（試用券暫定，讓新局能體驗傭兵試用→結義，PROG-2-1152） */
+export const STARTER_INVENTORY: PlayerInventory = { [ITEM_ORACLE_TOKEN]: 3, [ITEM_TRIAL_TICKET]: 2 };
 
 /** 每季免費發放的求籤令數量與免費產出上限（暫定） */
 export const ORACLE_TOKEN_PER_SEASON = 1;

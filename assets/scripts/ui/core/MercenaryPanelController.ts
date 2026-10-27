@@ -35,6 +35,10 @@ export interface MercenaryPanelDeps {
     bondPoints: () => number;
     /** 結義：回傳是否成功；失敗時由畫面提示。 */
     bond: (uid: string) => Promise<boolean>;
+    /** 背包試用券數量；未提供時不顯示招募（PROG-2-1152） */
+    trialTickets?: () => number;
+    /** 用 1 張試用券招募試用傭兵：成功回傳武將名，失敗回傳 null */
+    hire?: () => Promise<string | null>;
 }
 
 export class MercenaryPanelController {
@@ -85,6 +89,23 @@ export class MercenaryPanelController {
         });
     }
 
+    /** 試用招募：成功後選中新傭兵並提示；無券或無可招武將時只設提示 */
+    public async hireTrial(): Promise<boolean> {
+        if (!this._deps.hire || (this._deps.trialTickets?.() ?? 0) <= 0) {
+            this._notice = '試用券不足';
+            return false;
+        }
+        const name = await this._deps.hire();
+        if (!name) {
+            this._notice = '目前沒有可試用的武將';
+            return false;
+        }
+        const rows = this.rows();
+        this._selectedUid = rows[rows.length - 1]?.uid ?? this._selectedUid;
+        this._notice = `${name} 願為主公效力六日`;
+        return true;
+    }
+
     /** 結義選中的傭兵；按鈕不可用或點數不足時只設提示，不呼叫 bond。 */
     public async bondSelected(): Promise<boolean> {
         const state = this.selected();
@@ -119,6 +140,7 @@ export class MercenaryPanelController {
             mercNotice: this._notice ?? (view?.insufficientPoints ? '結義點數不足' : ''),
             btnMercBondLabel: view ? `結義（${view.bondPointCost} 點）` : '結義',
             btnCloseLabel: '關閉',
+            btnMercHireLabel: `試用招募（試用券 ${this._deps.trialTickets?.() ?? 0}）`,
         };
         const actives: Record<string, boolean> = {
             mercEmptyLabel: rows.length === 0,
@@ -126,10 +148,12 @@ export class MercenaryPanelController {
             mercConfirm: view?.confirmText != null,
             mercFarewell: view?.farewellText != null,
             mercNotice: texts.mercNotice !== '',
+            btnMercHire: this._deps.hire !== undefined,
         };
         const enabled: Record<string, boolean> = {
             btnClose: true,
             btnMercBond: view?.bondEnabled ?? false,
+            btnMercHire: (this._deps.trialTickets?.() ?? 0) > 0 && rows.length < MERC_PANEL_MAX_ROWS,
         };
         for (let i = 0; i < MERC_PANEL_MAX_ROWS; i++) {
             const row = rows[i];

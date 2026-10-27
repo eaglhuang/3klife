@@ -1,0 +1,17 @@
+{
+  "id": "lobby-city-hub-screen",
+  "version": 1,
+  "uiId": "LobbyCityHub",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "lobby-city-hub-main",
+  "skin": "lobby-city-hub-default",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
