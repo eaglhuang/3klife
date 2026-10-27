@@ -4,6 +4,7 @@
 import { assert, TestSuite } from './TestRunner';
 import {
     buildStartingSpiritTalisman,
+    normalizeStartingTalisman,
     TEACHING_STARTING_GENE_LIMIT,
     type TeachingSpiritInput,
 } from '../assets/scripts/core/systems/TeachingSpiritTalisman';
@@ -42,6 +43,25 @@ export function createTeachingSpiritTalismanSuite(): TestSuite {
         const talisman = buildStartingSpiritTalisman(input, true)!;
         assert.isTrue(!('generalUid' in talisman));
         assert.equals(3, input.geneIds.length);
+    });
+
+    suite.test('讀檔時結構正確的虎符原樣保留，基因超過上限會截斷', () => {
+        const talisman = normalizeStartingTalisman({ kind: 'TALISMAN', sourceSpiritId: 'SPIRIT_ZHAOYUN', sourceName: '趙雲', geneIds: ['GENE_A', 'GENE_B', 'GENE_C'] })!;
+        assert.equals('SPIRIT_ZHAOYUN', talisman.sourceSpiritId);
+        assert.equals('GENE_A,GENE_B', talisman.geneIds.join(','));
+    });
+
+    suite.test('讀檔時缺來源、種類不符或非物件的虎符一律丟棄', () => {
+        assert.isTrue(normalizeStartingTalisman(null) === null);
+        assert.isTrue(normalizeStartingTalisman('TALISMAN') === null);
+        assert.isTrue(normalizeStartingTalisman({ kind: 'OTHER', sourceSpiritId: 'X', sourceName: 'X', geneIds: [] }) === null);
+        assert.isTrue(normalizeStartingTalisman({ kind: 'TALISMAN', sourceName: '趙雲', geneIds: [] }) === null);
+        assert.isTrue(normalizeStartingTalisman({ kind: 'TALISMAN', sourceSpiritId: 'X', sourceName: 'X', geneIds: 'GENE_A' }) === null);
+    });
+
+    suite.test('讀檔時基因陣列內的非字串元素被過濾', () => {
+        const talisman = normalizeStartingTalisman({ kind: 'TALISMAN', sourceSpiritId: 'X', sourceName: 'X', geneIds: [1, 'GENE_B', null] })!;
+        assert.equals('GENE_B', talisman.geneIds.join(','));
     });
 
     return suite;
