@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 74,
-    "total": 110
+    "open": 75,
+    "total": 111
   },
   "tasks": [
     {
@@ -4130,6 +4130,40 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0169/**"
+      ],
+      "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0170",
+      "title": "實機驗收：寶頁六格裝備、血統樹連線與主角區、道具背包（一批四區）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-27",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "寶頁六格裝備、血統樹父子貝茲連線（多螢幕比例）、血統樹主角區綁定、道具背包與使用確認需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-1037",
+        "PR #990",
+        "PROG-2-1300",
+        "PR #1025",
+        "PROG-2-1301",
+        "PR #1034",
+        "PROG-2-1041",
+        "PR #1038"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0170.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0170/**"
       ],
       "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     }
