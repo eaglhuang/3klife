@@ -13,6 +13,7 @@
  * 畫面層拿 getFlowView() 一次刷新 Text 與 Button.interactable。
  */
 import { domesticOutputFor, DomesticSeasonLog, DomesticStats, DomesticTaskId, DomesticTaskResult } from '../../core/systems/DomesticTasks';
+import { planAutoGovernance } from '../../core/systems/DomesticAutoGovernance';
 import { buildDomesticRows, DomesticGovernor, DomesticTaskRow } from '../../core/systems/DomesticPresenter';
 
 /** 可指派到內政任務格的武將 */
@@ -96,6 +97,18 @@ export class DomesticPanelController {
         this._notice = next ? `指派「${next.name}」：每季產出 +${output.amount}` : '已卸下武將，產出改回基本值';
     }
 
+    /** 自動治理（§F）：空格依親和度補上閒置武將；已指派的格子不動。回傳新指派幾格 */
+    public autoAssign(): number {
+        const { candidates, assignedUid, assign } = this._deps;
+        if (!candidates || !assignedUid || !assign) return 0;
+        const picks = planAutoGovernance(candidates(), assignedUid);
+        const done = picks.filter((pick) => assign(pick.task, pick.generalUid)).length;
+        this._notice = done > 0
+            ? '太守府已自動安排武將執行內政。'
+            : (NODE_TASKS.every((t) => assignedUid(t)) ? '任務格皆已有主事' : '沒有可指派的閒置武將');
+        return done;
+    }
+
     private _governorOf(taskId: DomesticTaskId): DomesticGovernor | null {
         const uid = this._deps.assignedUid?.(taskId);
         if (!uid) return null;
@@ -145,6 +158,9 @@ export class DomesticPanelController {
             enabled[`btnGov${name}`] = canAssign;
         }
         enabled.btnClose = true;
+        texts.btnAutoGovLabel = '自動指派';
+        actives.btnAutoGov = canAssign;
+        enabled.btnAutoGov = canAssign;
         return { texts, actives, enabled };
     }
 }

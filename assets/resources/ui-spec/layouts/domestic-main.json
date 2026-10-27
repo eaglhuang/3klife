@@ -125,6 +125,33 @@
             "styleSlot": "domestic.label.section"
           },
           {
+            "type": "button",
+            "name": "BtnAutoGov",
+            "id": "btnAutoGov",
+            "widget": {
+              "top": 150,
+              "right": 48
+            },
+            "width": 160,
+            "height": 44,
+            "skinSlot": "domestic.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnAutoGovLabel",
+                "id": "btnAutoGovLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 30,
+                "text": "自動指派",
+                "styleSlot": "domestic.label.meta"
+              }
+            ]
+          },
+          {
             "type": "container",
             "name": "DomesticTaskGroup",
             "id": "domesticTaskGroup",
