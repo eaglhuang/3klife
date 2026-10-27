@@ -137,6 +137,9 @@ import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFlow';
+import { equipGear as equipGearFlow, unequipGear as unequipGearFlow, type GearEquipResult } from '../systems/GearEquipFlow';
+import { gearDefinitionOf } from '../systems/GearDefinitions';
+import type { EquipSlot } from '../systems/GeneralBackpack';
 import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
@@ -939,6 +942,20 @@ export class GameSession {
     /** 統一物件庫的原始列（唯讀副本）；寶頁依武將 uid 篩出一般裝備 */
     public get inventoryRecords(): readonly InventoryRecord[] {
         return this._inventoryRecords.map((record) => ({ ...record }));
+    }
+
+    /** 穿戴一般裝備（PROG-2-1040）：可否放入由一般裝備定義表的槽位判斷；成功才寫回物件庫列 */
+    public equipGear(gearUid: string, generalUid: string, slotId: EquipSlot): GearEquipResult {
+        const result = equipGearFlow(this._inventoryRecords, gearUid, generalUid, slotId, (record, slot) => gearDefinitionOf(record.Gear_ID)?.slot === slot);
+        if (result.ok) this._inventoryRecords = result.records;
+        return result;
+    }
+
+    /** 卸下武將指定格的一般裝備（PROG-2-1040）；裝備回到倉庫 */
+    public unequipGear(generalUid: string, slotId: EquipSlot): GearEquipResult {
+        const result = unequipGearFlow(this._inventoryRecords, generalUid, slotId);
+        if (result.ok) this._inventoryRecords = result.records;
+        return result;
     }
 
     /** 使用道具（PROG-2-1038）：刷新券寫回傭兵池與救美冷卻；安胎藥記下 armed，等下一次結緣才生效 */
