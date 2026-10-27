@@ -4,7 +4,7 @@
 
 import { assert, TestSuite } from './TestRunner';
 import {
-    buildNarrative, candidateNewsTypes, duelLogType, dailyNewsTitle, DAILY_NEWS_LOG_WINDOW_MS, generateDailyNews, NEWS_TRIGGER_TABLE,
+    buildNarrative, candidateNewsTypes, dailyNewsToastLines, duelLogType, dailyNewsTitle, DAILY_NEWS_LOG_WINDOW_MS, generateDailyNews, NEWS_TRIGGER_TABLE,
     recentLogs, type PlayerLogEntry,
 } from '../assets/scripts/core/systems/DailyNewsEngine';
 
@@ -74,6 +74,13 @@ export function createDailyNewsEngineSuite(): TestSuite {
         assert.equals('DUEL_LOSE', duelLogType('enemy-win', true));
         assert.equals(null, duelLogType('player-win', false));
         assert.equals(null, duelLogType('draw', true));
+    });
+
+    suite.test('大廳 toast 文字：只列未讀，沒有未讀回空陣列（PROG-2-1173）', () => {
+        const item = { type: 'REVENGE' as const, character: '張飛', emotion: '憤怒', action: '帶隊反搶昨日失去的糧草', result: '取回了 15% 的糧草！' };
+        const lines = dailyNewsToastLines({ lastGeneratedDay: '2026-03-28', lastLoginMs: 0, news: [{ ...item, read: false }, { ...item, character: '關羽', read: true }] }, new Date(2026, 2, 28));
+        assert.equals(JSON.stringify(['三國日報 —— 2026-03-28', '張飛（憤怒）：帶隊反搶昨日失去的糧草，取回了 15% 的糧草！']), JSON.stringify(lines));
+        assert.equals(0, dailyNewsToastLines({ lastGeneratedDay: null, lastLoginMs: null, news: [{ ...item, read: true }] }, new Date()).length);
     });
 
     suite.test('頭條格式', () => {
