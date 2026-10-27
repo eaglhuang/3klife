@@ -134,7 +134,7 @@ import { buildBattleSnapshot, type BattleSnapshot } from '../systems/BattleSnaps
 import { leaderboardEntryOf, rankLeaderboard, type LeaderboardMetric, type LeaderboardEntry } from '../systems/BattleLeaderboard';
 import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
 import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
-import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
+import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { drawFemalePool, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
@@ -492,6 +492,8 @@ export class GameSession {
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
+    /** 來投時依 uid 查回的武將配置（generals.json）；大廳載入後由 setGeneralTemplates 注入 */
+    private _generalTemplates: readonly GeneralConfig[] = [];
     /** 名聲（暫定：存於 resources.fame） */
     private _fame = 0;
     /** 點數（溢出轉化積分，MENT-07）；存於 resources.scorePoints */
@@ -1305,6 +1307,13 @@ export class GameSession {
                 }]
                 : this._prison.prisoners,
             fame: this._prison.fame + resolution.fameGained,
+            released: resolution.released
+                ? [...this._prison.released, {
+                    targetUid,
+                    targetName: pending.record.targetName,
+                    releasedSeason: this._clock.state.totalSeasonsElapsed,
+                }]
+                : this._prison.released,
         };
         if (resolution.cityTroopsSpent > 0) {
             this._military = { ...this._military, cityTroops: Math.max(0, this._military.cityTroops - resolution.cityTroopsSpent) };
@@ -1322,6 +1331,11 @@ export class GameSession {
             await this.save();
         }
         return resolution;
+    }
+
+    /** 注入武將配置（generals.json），供俘虜來投時依 uid 重建武將 */
+    public setGeneralTemplates(generals: readonly GeneralConfig[]): void {
+        this._generalTemplates = generals;
     }
 
     /** 城市兵源與糧草儲備（PROG-2-0072） */
@@ -2314,6 +2328,16 @@ export class GameSession {
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
         this._prison = { ...this._prison, intel: this._prison.intel + prisonYield.intel };
         this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + prisonYield.resource) };
+        // 放走俘虜的未來來投（5%）：依 uid 查配置以初始狀態入冊；查不到配置就略過並記警告
+        const futureReturns = rollFutureReturns(this._prison, advance.current.totalSeasonsElapsed, this._random);
+        this._prison = futureReturns.state;
+        const returning: GeneralConfig[] = [];
+        for (const entry of futureReturns.returned) {
+            const template = this._generalTemplates.find((general) => general.id === entry.targetUid);
+            if (template) returning.push({ ...template });
+            else console.warn(`[prison] 來投武將 ${entry.targetUid} 查無配置，略過`);
+        }
+        if (returning.length > 0) this.enrollGenerals(returning);
 
         this._yearAgingEvents.push(...agingEvents);
         let yearReport: YearReport | undefined;
