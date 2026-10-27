@@ -11,7 +11,7 @@ import type {
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
 import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
 import { mapGeneralReadModel, type GeneralReadModel } from '../../core/systems/GeneralReadModel';
-import { deriveGeneralBackpack } from '../../core/systems/GeneralBackpackView';
+import { deriveGeneralBackpack, gearNameOfUid } from '../../core/systems/GeneralBackpackView';
 import { buildGearPageSlots, type GearSlotView } from '../../core/systems/GearPageSlots';
 import type { InventoryRecord, InventoryViews } from '../../core/systems/InventoryProjection';
 import { equippedTalismanSlot, type TalismanSlotView } from '../../core/systems/TalismanSlotView';
@@ -271,7 +271,7 @@ export function buildGeneralDetailOverviewContentState(
         readModel: mapGeneralReadModel(config as unknown as Readonly<Record<string, unknown>>),
         portraitResource: portraitPathOf(config.id),
         tallySlot: equippedTalismanSlot(views, config.id),
-        gearSlots: buildGearPageSlots(deriveGeneralBackpack(records, config.id)),
+        gearSlots: buildGearPageSlots(deriveGeneralBackpack(records, config.id), (uid) => gearNameOfUid(records, uid)),
     };
 }
 
