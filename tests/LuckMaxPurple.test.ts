@@ -12,7 +12,7 @@ function parent(id: string, gender: '男' | '女', luk: number): BreedingGeneral
     return {
         id, name: id, faction: 'shu', gender, age: 30, hp: 1000, vitality: 100, maxVitality: 100,
         str: 80, int: 60, lea: 70, pol: 50, cha: 60, luk,
-    } as BreedingGeneral;
+    } as unknown as BreedingGeneral;
 }
 
 function child(luk: number, purpleLevel: number): BreedingGeneral {
