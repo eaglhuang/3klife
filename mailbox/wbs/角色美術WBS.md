@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-28 07:23 Claude：規格 v3.21 新增 gripRule（畫在槍上層的手可用 occludingFist，不必挖孔）；R322 退回 R318 v4 拳孔、收下 v5 純旋轉方向並要求腕口接合與刪殘留；AG-41 派 checker；使用者裁定 3D 路線維持停止；Sparkle v13 補充已打成單一 zip 待使用者轉交。
 - 2026-10-28 06:54 Claude：使用者裁定本機 ComfyUI 不開放；R321 通知 Codex 握槍拳改用自有額度重畫或直接修現有 hand_f（建議後者），R320 仍排在 R318 後。
 - 2026-10-28 04:09 Claude：AG-40 驗收（主連通區判孔、游離碎片 ADVISORY、v3.20 容差）；R320 派 Codex：大腿上下兩半接合、5 塊方條殘渣刪除（排在 R318 後）。
 - 2026-10-28 03:55 AG-40 與補充完成：同步規格 v3.20（canonical_skeleton_v3.json 23,168 位元組，逐位元組比對相符）；check_layered_parts.py 實作握點判定僅以主連通區（alpha >= 128 最大連通區）計算，防止獨立游離甲片圍孔偽造 PASS；新增單槽 detachedIslands 游離碎片檢查（alpha > 16 且面積 >= 200 px 之非主連通區，先設為建議級 ADVISORY 不拉低整體通過判定，並動態讀取規格豁免欄位）；實作隱藏延伸 1 px 量化容差（extensionQuantizationTolPx: 1，量測值 >= 要求值 - 容差即通過，幾何半徑上限不放寬）；實測 Codex R315 v3 候選 hand_f 握點改判 FAIL（找不到孔，distance=999.0 px），射線包覆 0/8 方向，檢出 1 處 3,987 px 游離島；arm_lower_f 檢出 1 處 1,464 px 游離島 (ADVISORY)；hand_b 主連通區維持 8/8 方向 PASS；R317 preserve-grip-v1 arm_lower_f 47.4 px 順利通過；新增 test_ag40_main_component_and_detached_islands.py 6 項測試，更新 test_ag36_grip_registration.py，全套 124 項單元測試 100% 通過（83420c9f6）。
