@@ -46,9 +46,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Test tsc baseline
-        run: node tools_node/check-test-tsc-baseline.js
-
       - name: Collect changed files for ATM flow
         id: changed
         shell: bash
@@ -84,6 +81,10 @@ jobs:
           echo "base_sha=${base_sha}" >> "${GITHUB_OUTPUT}"
           echo "head_sha=${head_sha}" >> "${GITHUB_OUTPUT}"
           echo "changed_count=$(wc -l < artifacts/ci/atm-changed-files.txt | tr -d ' ')" >> "${GITHUB_OUTPUT}"
+
+      - name: Test tsc baseline
+        shell: bash
+        run: node tools_node/check-test-tsc-baseline.js
 
       - name: Bootstrap CI task locks
         shell: bash
