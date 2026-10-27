@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-28 00:36 AG-37 補充裁決完成：同步規格 v3.17（canonical_skeleton_v3.json 21,711 位元組，逐位元組比對相符）；check_layered_parts.py 實作動態讀取頂層 weaponRules.gripSampleHalfWidthPx（預設 32.0 px，水平直徑 64 px），木桿容許帶 [14, 26] px 維持不變；對 R299 原版實測前手 27~59 px (FAIL ADVISORY)、後手 20 px (PASS)；對真實 R299 平移 +180 px 實測前手均勻 20 px 完美落在木桿段 (PASS)、後手 20~21 px (PASS)，雙手皆握在木桿段 weaponGripOnShaft 全體判定 PASS；更新 test_ag37_weapon_grip_on_shaft.py，全套 114 項單元測試 100% 通過（02c96dc3f）。
 - 2026-10-28 00:22 Claude：AG-37 補充裁決採方案 B（拳頭採樣半寬 32 px，weapon 維持 +180）；R310 請 Codex 先完成 R309，3D 路線維持停止。
 - 2026-10-28 00:05 Claude：Console 結案（只有 MCP ECONNRESET 雜訊）；R309 改腕口規則為「合成差異 ≤ 4/255、只在 hand_f 底下」，採 alpha 250–254 方案，並請 Codex 組 R305 全套跑 AG-37 21 槽表。
 - 2026-10-28 00:05 AG-37 補充完成：更新合成測試平移量為 +180 並增補未修整紅纓實測驗證（25db8306c）；實測 R299 weapon 平移 +180 後，後手 hand_b (x=680) 厚度 20~22 px (PASS)，前手 hand_f (x=1365) 因拳頭採樣半徑 50 px 掃入 x=1398~1415 共 18 欄紅纓厚度 54~98 px (FAIL ADVISORY)；定位紅纓左邊界在 x=1398 離握點 33 px，Codex 所量「離紅纓約 7 px」係拳頭視覺半寬約 26 px；維持木桿容許帶 [14, 26] px 不調寬，提方案 A (dx>=+198) 與方案 B (前手半徑<=32 px) 供總監裁決；全套 115 項單元測試 100% 通過。
