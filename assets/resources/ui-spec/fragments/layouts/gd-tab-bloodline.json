@@ -66,6 +66,18 @@
               },
               "children": [
                 {
+                  "type": "panel",
+                  "name": "LineGraphics",
+                  "widget": {
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0
+                  },
+                  "width": "100%",
+                  "height": "100%"
+                },
+                {
                   "type": "label",
                   "name": "TreeTitle",
                   "width": "100%",
@@ -370,6 +382,15 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "type": "panel",
+                  "name": "TargetPortrait",
+                  "widget": {
+                    "hCenter": true
+                  },
+                  "width": 120,
+                  "height": 120
                 }
               ]
             }

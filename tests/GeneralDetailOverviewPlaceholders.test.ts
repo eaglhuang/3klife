@@ -1,12 +1,12 @@
 /**
- * PersonPagePlaceholders.test.ts — 人物頁分頁空欄位規劃（GDUI-13，PROG-2-1025）
+ * GeneralDetailOverviewPlaceholders.test.ts — 人物頁分頁空欄位規劃（已併入 GeneralDetailOverviewMapper）（GDUI-13，PROG-2-1025）
  *
  * 鎖住：對照表涵蓋 §10 除 defaultTab 外的 15 個欄位；General_Fame 同時屬於將與命；
  * 空武將時每頁列出正確欄位；完整武將時每頁為空。
  */
 import { TestSuite, assert } from './TestRunner';
 import { mapGeneralReadModel, PERSON_PAGE_TABS, type GeneralReadModel } from '../assets/scripts/core/systems/GeneralReadModel';
-import { PERSON_PAGE_FIELD_TABS, listEmptyFieldsByTab } from '../assets/scripts/core/systems/PersonPagePlaceholders';
+import { PERSON_PAGE_FIELD_TABS, listEmptyFieldsByTab } from '../assets/scripts/ui/components/GeneralDetailOverviewMapper';
 
 const FULL_RAW: Record<string, unknown> = {
     Profile_Presentation: { Default_Tab: 'Bloodline', Story_Strip_Cells: ['a', 'b', 'c', 'd', 'e'], Bloodline_StoryDock_State: 'HALF' },
@@ -25,8 +25,8 @@ const FULL_RAW: Record<string, unknown> = {
     Aptitudes: [1],
 };
 
-export function createPersonPagePlaceholdersSuite(): TestSuite {
-    const suite = new TestSuite('PersonPagePlaceholders (人物頁分頁空欄位規劃 GDUI-13)');
+export function createGeneralDetailOverviewPlaceholdersSuite(): TestSuite {
+    const suite = new TestSuite('GeneralDetailOverviewMapper 空欄位規劃 (GDUI-13)');
 
     suite.test('對照表涵蓋 §10 除 defaultTab 外的 15 個欄位', () => {
         const fields = Object.keys(PERSON_PAGE_FIELD_TABS);

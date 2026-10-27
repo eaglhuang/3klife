@@ -8,7 +8,8 @@
  * 照規格：觸發表、每次 1~3 條、復仇取回 5%~20%、代勞情緒「得意」、復仇情緒「憤怒」。
  * 暫定：其餘事件的情緒、代勞任務名、團購物品、特訓屬性與 +1~3、離線社交對象字串；
  *       同一次登入不重複出同類事件；24h 內沒有任何 Log 視為 IDLE_LONG。
- * 不做：結果只是文字，不發獎勵；不接 UI 與 Daily_News 存檔。
+ * 復仇取回（RET-05）：只提供換算函式；發獎與消耗紀錄在 GameSession.claimRevengeRecovery。
+ * 不做：不接 UI 與 Daily_News 存檔。
  *
  * Unity 對照：像登入時跑一次的 static 事件生成器，吃 Log 清單與亂數，回傳日報資料，不改輸入。
  */
@@ -43,6 +44,8 @@ export interface PlayerLogEntry {
     at: number;
     /** RESOURCE_LOW 等事件損失的資源名，例如「糧草」 */
     resource?: string;
+    /** 損失數量（RET-05）：RESOURCE_LOW 為當時的缺口，沒有數量的舊紀錄不帶此欄 */
+    amount?: number;
 }
 
 export interface DailyNewsGeneral {
@@ -68,6 +71,13 @@ export const DAILY_NEWS_COUNT = { min: 1, max: 3 } as const;
 export const DAILY_NEWS_LOG_WINDOW_MS = 24 * 60 * 60 * 1000;
 export const REVENGE_RECOVER_PCT = { min: 5, max: 20 } as const;
 export const DEFAULT_LOST_RESOURCE = '糧草';
+
+/** 復仇取回數量（RET-05）：損失 × 百分比，百分比夾在 5%~20%，結果向下取整。 */
+export function revengeRecoverAmount(lost: number, pct: number): number {
+    if (!Number.isFinite(lost) || lost <= 0) return 0;
+    const safePct = Number.isFinite(pct) ? Math.min(REVENGE_RECOVER_PCT.max, Math.max(REVENGE_RECOVER_PCT.min, pct)) : REVENGE_RECOVER_PCT.min;
+    return Math.floor(lost * safePct / 100);
+}
 
 /** 各事件的情緒（AUTO_TASK、REVENGE 照規格，其餘暫定） */
 export const DAILY_NEWS_EMOTION: Readonly<Record<DailyNewsType, string>> = {
@@ -247,9 +257,12 @@ export function normalizePlayerLogs(raw: unknown): PlayerLogEntry[] {
     if (!Array.isArray(raw)) return [];
     return raw.flatMap((item): PlayerLogEntry[] => {
         if (!item || typeof item !== 'object') return [];
-        const { type, at, resource } = item as Partial<PlayerLogEntry>;
+        const { type, at, resource, amount } = item as Partial<PlayerLogEntry>;
         if (!PLAYER_LOG_TYPES.includes(type as PlayerLogType) || typeof at !== 'number' || !Number.isFinite(at)) return [];
-        return [typeof resource === 'string' && resource ? { type: type as PlayerLogType, at, resource } : { type: type as PlayerLogType, at }];
+        const entry: PlayerLogEntry = { type: type as PlayerLogType, at };
+        if (typeof resource === 'string' && resource) entry.resource = resource;
+        if (typeof amount === 'number' && Number.isInteger(amount) && amount > 0) entry.amount = amount;
+        return [entry];
     }).slice(-PLAYER_LOG_LIMIT);
 }
 
