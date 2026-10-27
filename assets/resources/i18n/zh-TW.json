@@ -430,7 +430,7 @@
   "UI_AFFINITY_LOW": "相性不和——宿敵之血恐生波瀾",
   "UI_RESONANCE_TRIGGER": "血脈共鳴觸發！{0} 共享 {1} 人",
   "UI_FAMILY_TRADITION": "【家風傳承】{0} 家：{1}",
-  "LORE_REL_EVENT_FAMOUS_MATCH": "周瑜與小喬，天作之合！爆發力大幅提升！",
+  "LORE_REL_EVENT_FAMOUS_MATCH": "{0}與{1}，天作之合！",
   "LORE_REL_EVENT_BLOOD_RESONANCE": "趙雲的後代與馬雲騄的後裔——白馬義從的血脈再度覺醒！",
   "LORE_REL_EVENT_RIVAL_BREED": "諸葛亮與司馬懿的血脈交融？天意難測……",
   "LORE_REL_EVENT_SWORN_COMBO": "桃園結義之魂，於此刻甦醒！",

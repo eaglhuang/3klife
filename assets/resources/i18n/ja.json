@@ -428,7 +428,7 @@
   "UI_AFFINITY_LOW": "相性不和——宿敵の血が波乱を招くかも",
   "UI_RESONANCE_TRIGGER": "血脈の共鳴発動！{0} が {1} 人を共有",
   "UI_FAMILY_TRADITION": "【家風継承】{0} 家：{1}",
-  "LORE_REL_EVENT_FAMOUS_MATCH": "周瑜と小喬、天の配剤！爆発力が大きく上昇！",
+  "LORE_REL_EVENT_FAMOUS_MATCH": "{0}と{1}、天の配剤！",
   "LORE_REL_EVENT_BLOOD_RESONANCE": "趙雲の末裔と馬雲騄の子孫——白馬義従の血脈が再び目覚めた！",
   "LORE_REL_EVENT_RIVAL_BREED": "諸葛亮と司馬懿の血脈が交わる？天意は測りがたい……",
   "LORE_REL_EVENT_SWORN_COMBO": "桃園の誓いの魂が、今ここに目覚める！",

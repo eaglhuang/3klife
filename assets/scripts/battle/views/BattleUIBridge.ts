@@ -21,6 +21,8 @@ import { BattlePerformanceTracker, formatPerformance, localizedMilestoneName } f
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
 import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
 import { cellarProtectionText } from '../../ui/core/DailySubsidyNotice';
+import { generalNameMapOf, relationEventLogLine } from '../../ui/core/RelationEventLogText';
+import type { RelationEventHit } from '../../core/systems/RelationEvents';
 import { buildTacticSummary, loadGeneralConfig } from './BattleSceneLoader';
 import { buildTacticAvailability } from '../../ui/core/TacticAvailabilityPresenter';
 import { resolveBattleSkillProfile } from '../skills/BattleSkillProfiles';
@@ -171,6 +173,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.UnitDamaged,             this._onUnitDamaged.bind(this)),
       svc.event.on(EVENT_NAMES.UnitAttackMissed,        this._onUnitAttackMissed.bind(this)),
       svc.event.on(EVENT_NAMES.KinComboAttack,          this._onKinComboAttack.bind(this)),
+      svc.event.on(EVENT_NAMES.RelationEventTriggered,  this._onRelationEventTriggered.bind(this)),
       svc.event.on(EVENT_NAMES.UnitHealed,              this._onUnitHealed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitMoved,               this._onUnitMoved.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDied,                this._onUnitDied.bind(this)),
@@ -386,6 +389,25 @@ export class BattleUIBridge {
         UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] unit-damage end unit=${data.unitId}`);
       });
     }
+  }
+
+  /** generals-index 名稱表（關係事件戰報用）；第一次觸發才載入，失敗時為空表 */
+  private _generalNames: Promise<Map<string, string>> | null = null;
+
+  /** 戰場關係事件（PROG-2-1421）：名將契合、義兄弟合攻寫一行戰報；我方主將用戰場名字，其餘查 generals-index */
+  private _onRelationEventTriggered(data?: { hit: RelationEventHit }): void {
+    if (!data?.hit) return;
+    const hit = data.hit;
+    if (!this._generalNames) {
+      this._generalNames = services().resource.loadJson<unknown>('data/generals-index')
+        .then(generalNameMapOf)
+        .catch(() => new Map<string, string>());
+    }
+    void this._generalNames.then((names) => {
+      const player = this.ctx.ctrl?.state.getGeneral(Faction.Player);
+      const nameOf = (id: string): string | null => (player && player.id === id ? player.name : names.get(id) ?? null);
+      this.appendLog(relationEventLogLine(hit, nameOf, (key, ...args) => services().i18n.t(key, ...args)));
+    });
   }
 
   /** 史實合攻觸發（KIN-09 演出）：記一行戰報，助攻方撲向目標 */
