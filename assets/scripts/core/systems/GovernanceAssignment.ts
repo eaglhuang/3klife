@@ -12,7 +12,7 @@
 import { DomesticTaskId, isDomesticTaskId } from './DomesticTasks';
 
 /** 規格範例的 Max_Task_Slots，呼叫端未指定時使用。 */
-export const DEFAULT_MAX_TASK_SLOTS = 5;
+export const DEFAULT_MAX_TASK_SLOTS = 2;
 
 export interface GovernanceAssignment {
     task: DomesticTaskId;
