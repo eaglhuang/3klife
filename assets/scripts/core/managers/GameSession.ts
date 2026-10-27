@@ -67,7 +67,7 @@ import { EMPTY_LOGIN_STREAK, LoginStreakState, loginDayOf, recordLogin } from '.
 import { dailySubsidyOf, type SubsidyResourceKey } from '../systems/DailySubsidy';
 import { activateMonthlyCard, claimMonthlyCardDaily, isMonthlyCardExpiring, monthlyCardDaysLeft, normalizeMonthlyCard, type MonthlyCardState } from '../systems/MonthlyCard';
 import {
-    appendPlayerLog, EMPTY_DAILY_NEWS, markDailyNewsRead, normalizeDailyNewsState, normalizePlayerLogs, refreshDailyNews,
+    appendPlayerLog, EMPTY_DAILY_NEWS, markDailyNewsRead, normalizeDailyNewsState, normalizePlayerLogs, refreshDailyNews, revengeRecoverAmount,
     type DailyNewsState, type PlayerLogEntry, type PlayerLogType,
 } from '../systems/DailyNewsEngine';
 import { shouldTriggerOfflineInteraction } from '../systems/OfflineInteractionTrigger';
@@ -2182,8 +2182,31 @@ export class GameSession {
     }
 
     /** 記一筆玩家行為（三國日報的素材，只留 24h 內）；其他系統的採集點也走這裡。時間預設為最近一次登入時間（未登入為 0）。 */
-    public recordPlayerLog(type: PlayerLogType, resource?: string, atMs: number = this._dailyNews.lastLoginMs ?? 0): void {
-        this._playerLogs = appendPlayerLog(this._playerLogs, resource ? { type, at: atMs, resource } : { type, at: atMs });
+    public recordPlayerLog(type: PlayerLogType, resource?: string, atMs: number = this._dailyNews.lastLoginMs ?? 0, amount?: number): void {
+        const entry: PlayerLogEntry = { type, at: atMs };
+        if (resource) entry.resource = resource;
+        if (amount !== undefined && amount > 0) entry.amount = Math.floor(amount);
+        this._playerLogs = appendPlayerLog(this._playerLogs, entry);
+    }
+
+    /**
+     * 復仇取回（RET-05）：消耗最近一筆帶數量的缺糧紀錄，依 pct（5~20）取回糧草，不超過糧草上限。
+     * 沒有可取回的紀錄時回傳 0；被消耗的紀錄不會再取回第二次。
+     */
+    public claimRevengeRecovery(pct: number): number {
+        let index = -1;
+        for (let i = this._playerLogs.length - 1; i >= 0; i--) {
+            const log = this._playerLogs[i];
+            if (log.type === 'RESOURCE_LOW' && log.amount !== undefined) {
+                index = i;
+                break;
+            }
+        }
+        if (index < 0) return 0;
+        const recovered = revengeRecoverAmount(this._playerLogs[index].amount ?? 0, pct);
+        this._playerLogs = this._playerLogs.filter((_, i) => i !== index);
+        this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + recovered) };
+        return recovered;
     }
 
     /** 前 24h 的行為紀錄（複本） */
@@ -3044,7 +3067,8 @@ export class GameSession {
         this._inventory = tokens.inventory;
         this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
         // 三國日報素材：缺糧（與虎符缺糧同一門檻，暫定）
-        if (this._tallyFoodDiscountArmed) this.recordPlayerLog('RESOURCE_LOW', '糧草');
+        // 缺口 = 門檻 − 目前糧草（RET-05 復仇取回的基數，暫定）
+        if (this._tallyFoodDiscountArmed) this.recordPlayerLog('RESOURCE_LOW', '糧草', undefined, TALLY_SHORTAGE_FOOD_THRESHOLD - this._military.food);
         this._military = regenMilitaryOneSeason(this._military, 1, seasonModifiersOf(advance.previous.currentSeason).foodMultiplier);
         // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
