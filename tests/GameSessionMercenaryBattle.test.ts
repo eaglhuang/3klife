@@ -1,5 +1,5 @@
 /**
- * GameSessionMercenaryBattle.test.ts — 試用傭兵出戰的會話接線（RET-01 後續，PROG-2-1216）
+ * GameSessionMercenaryBattle.test.ts — 試用傭兵出戰的會話接線（RET-01 後續，PROG-2-1401）
  *
  * 多回合流程：同一位試用傭兵連續出戰，確認場數、勝場與插畫階段逐場累加，敗北與 ongoing 不增加勝場。
  * 出戰的名冊武將不受影響（試用傭兵不在名冊，settleBattle 會略過其 id）。

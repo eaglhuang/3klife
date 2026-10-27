@@ -1,4 +1,4 @@
-// @spec-source → 留存系統.md §F 插畫解鎖條件（1 見面 / 2 交手 1場戰鬥 / 3 認同 戰勝3場 / 4 信任 Bond≥40 / 5 結義 轉永久）；傭兵系統（試用）.md §H；PROG-2-0968（MERC-08）；PROG-2-1215（RET-01）
+// @spec-source → 留存系統.md §F 插畫解鎖條件（1 見面 / 2 交手 1場戰鬥 / 3 認同 戰勝3場 / 4 信任 Bond≥40 / 5 結義 轉永久）；傭兵系統（試用）.md §H；PROG-2-0968（MERC-08）；PROG-2-1400（RET-01）
 /**
  * MercenaryIllustration — 傭兵插畫五階段（純邏輯，不依賴 cc）
  *

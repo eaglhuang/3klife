@@ -1,5 +1,5 @@
 /**
- * MercenaryBattleRecord.test.ts — 試用傭兵出戰的場數、勝場與插畫階段（RET-01 後續，PROG-2-1216）
+ * MercenaryBattleRecord.test.ts — 試用傭兵出戰的場數、勝場與插畫階段（RET-01 後續，PROG-2-1401）
  *
  * 鎖住：只有試用中的傭兵會計數、勝場只計戰勝、ongoing 不計、插畫階段依規格推進、存檔保留計數。
  *
