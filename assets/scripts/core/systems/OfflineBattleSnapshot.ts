@@ -115,6 +115,17 @@ export function verifyOfflineBattleChain(snapshots: readonly OfflineBattleSnapsh
     return -1;
 }
 
+/**
+ * 驗證存檔保留的那一段鏈（PROG-2-1187）：從 OBS_0001 起完整保留時從空雜湊驗起；
+ * 最舊幾筆已被截掉時，第一筆的前一筆 link 無從重算，改以第一筆 link 為起點驗證其後各筆。
+ */
+export function verifyRetainedOfflineBattleChain(snapshots: readonly OfflineBattleSnapshot[]): number {
+    if (snapshots.length === 0) return -1;
+    if (/(^|_)0*1$/.test(snapshots[0].snapshotId)) return verifyOfflineBattleChain(snapshots);
+    const rest = verifyOfflineBattleChain(snapshots.slice(1), snapshots[0].syncHashLink);
+    return rest < 0 ? -1 : rest + 1;
+}
+
 const isText = (v: unknown): v is string => typeof v === 'string' && v.length > 0;
 
 export function normalizeOfflineBattleSnapshots(raw: unknown): OfflineBattleSnapshot[] {

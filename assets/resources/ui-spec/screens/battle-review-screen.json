@@ -1,0 +1,17 @@
+{
+  "id": "battle-review-screen",
+  "version": 1,
+  "uiId": "BattleReviewPanel",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "battle-review-main",
+  "skin": "battle-review-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
