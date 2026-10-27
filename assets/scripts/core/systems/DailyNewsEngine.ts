@@ -14,6 +14,7 @@
  */
 
 import type { RandomSource } from './GeneralAging';
+import { loginDayOf } from './LoginStreak';
 
 export type PlayerLogType =
     | 'BATTLE_WIN' | 'BATTLE_LOSE' | 'RESOURCE_LOW'
@@ -176,4 +177,78 @@ export function generateDailyNews(
         news.push({ type, ...buildNarrative(type, general, others, lostResource, random) });
     }
     return news;
+}
+
+// ── 接線用狀態（PROG-2-1170）──────────────────────────────
+
+/** 行為紀錄最多保留筆數（暫定） */
+export const PLAYER_LOG_LIMIT = 50;
+
+const PLAYER_LOG_TYPES = Object.keys(NEWS_TRIGGER_TABLE) as PlayerLogType[];
+const DAILY_NEWS_TYPES: readonly DailyNewsType[] = Object.keys(DAILY_NEWS_EMOTION) as DailyNewsType[];
+
+export interface StoredDailyNewsItem extends DailyNewsItem {
+    read: boolean;
+}
+
+export interface DailyNewsState {
+    /** 上次生成的日曆日（YYYY-MM-DD，UTC+8，與連續登入同一切日）；從未生成為 null */
+    lastGeneratedDay: string | null;
+    /** 最近一次登入的時間（ms）；行為紀錄以此為時間戳，存讀檔與重播都確定（不用牆鐘）；從未登入為 null */
+    lastLoginMs: number | null;
+    news: StoredDailyNewsItem[];
+}
+
+export const EMPTY_DAILY_NEWS: Readonly<DailyNewsState> = { lastGeneratedDay: null, lastLoginMs: null, news: [] };
+
+/** 加一筆紀錄，丟掉超過 24h 的舊紀錄，最多留 PLAYER_LOG_LIMIT 筆 */
+export function appendPlayerLog(logs: readonly PlayerLogEntry[], entry: PlayerLogEntry): PlayerLogEntry[] {
+    const kept = [...logs, { ...entry }].filter((log) => entry.at - log.at <= DAILY_NEWS_LOG_WINDOW_MS);
+    return kept.slice(-PLAYER_LOG_LIMIT);
+}
+
+/**
+ * 記錄登入時間；當天第一次登入才生成日報（同日或名冊為空時日報不變）。
+ * 行為紀錄的時間戳是「上次登入時間」：上次登入超過 24h，紀錄自然被濾掉，視為 IDLE_LONG。
+ */
+export function refreshDailyNews(
+    state: Readonly<DailyNewsState>,
+    logs: readonly PlayerLogEntry[],
+    generals: readonly DailyNewsGeneral[],
+    nowMs: number,
+    random: RandomSource = Math.random,
+): DailyNewsState {
+    const day = loginDayOf(nowMs);
+    if (state.lastGeneratedDay === day || generals.length === 0) return { lastGeneratedDay: state.lastGeneratedDay, lastLoginMs: nowMs, news: state.news.map((n) => ({ ...n })) };
+    const news = generateDailyNews(logs, generals, nowMs, random).map((item) => ({ ...item, read: false }));
+    return { lastGeneratedDay: day, lastLoginMs: nowMs, news };
+}
+
+export function markDailyNewsRead(state: Readonly<DailyNewsState>): DailyNewsState {
+    return { lastGeneratedDay: state.lastGeneratedDay, lastLoginMs: state.lastLoginMs, news: state.news.map((n) => ({ ...n, read: true })) };
+}
+
+export function normalizePlayerLogs(raw: unknown): PlayerLogEntry[] {
+    if (!Array.isArray(raw)) return [];
+    return raw.flatMap((item): PlayerLogEntry[] => {
+        if (!item || typeof item !== 'object') return [];
+        const { type, at, resource } = item as Partial<PlayerLogEntry>;
+        if (!PLAYER_LOG_TYPES.includes(type as PlayerLogType) || typeof at !== 'number' || !Number.isFinite(at)) return [];
+        return [typeof resource === 'string' && resource ? { type: type as PlayerLogType, at, resource } : { type: type as PlayerLogType, at }];
+    }).slice(-PLAYER_LOG_LIMIT);
+}
+
+export function normalizeDailyNewsState(raw: unknown): DailyNewsState {
+    if (!raw || typeof raw !== 'object') return { lastGeneratedDay: null, lastLoginMs: null, news: [] };
+    const { lastGeneratedDay, lastLoginMs, news } = raw as Partial<DailyNewsState>;
+    const str = (v: unknown) => (typeof v === 'string' ? v : '');
+    return {
+        lastGeneratedDay: typeof lastGeneratedDay === 'string' && lastGeneratedDay ? lastGeneratedDay : null,
+        lastLoginMs: typeof lastLoginMs === 'number' && Number.isFinite(lastLoginMs) ? lastLoginMs : null,
+        news: Array.isArray(news)
+            ? news.flatMap((n): StoredDailyNewsItem[] => (n && DAILY_NEWS_TYPES.includes(n.type)
+                ? [{ type: n.type, character: str(n.character), emotion: str(n.emotion), action: str(n.action), result: str(n.result), read: n.read === true }]
+                : []))
+            : [],
+    };
 }
