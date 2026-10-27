@@ -62,7 +62,8 @@ import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoa
 import { overflowToastText } from '../../core/systems/MentorOverflow';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
 import { WarehousePanelController } from '../core/WarehousePanelController';
-import { JournalHubController } from '../core/JournalHubController';
+import { DISPATCH_MAX_ROWS, JournalHubController } from '../core/JournalHubController';
+import { dispatchClickMessage } from '../../core/systems/DispatchCatalog';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 
 /** 倉庫擴容費用：規格（doc_spec_0017）只寫「付費或任務解鎖」，暫定每次 5000 金幣 */
@@ -1382,8 +1383,20 @@ export class LobbyScene extends Component {
         });
         this._journalHubHost = await this._mountPreviewScreenHost('JournalHubHost', 'journal-hub-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._journalHubHost) this._journalHubHost.node.active = false; } },
+            ...Array.from({ length: DISPATCH_MAX_ROWS }, (_, i) => ({ buttonId: `dispatchRow${i}`, handler: () => { this._onClickDispatchRow(i); } })),
         ]);
         this._journalHubHost.node.active = false;
+    }
+
+    /** 點派遣列：自動挑最適合的武將派出（PROG-2-1181），提示結果並刷新面板。 */
+    private _onClickDispatchRow(index: number): void {
+        const row = this._journalHub?.dispatchRows()[index];
+        if (!row) return;
+        const session = services().session;
+        const result = session.dispatchJobById(row.id, Date.now());
+        services().event.emit('SHOW_TOAST', { message: dispatchClickMessage(result), duration: 2 });
+        if (result.ok) void session.save().catch(() => undefined);
+        this._openJournalHub();
     }
 
     private _openJournalHub(): void {
