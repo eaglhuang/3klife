@@ -65,6 +65,7 @@ import { WarehousePanelController } from '../core/WarehousePanelController';
 import { DISPATCH_MAX_ROWS, JournalHubController } from '../core/JournalHubController';
 import { GeneralJournalController } from '../core/GeneralJournalController';
 import { BattleReviewController } from '../core/BattleReviewController';
+import { TournamentPanelController } from '../core/TournamentPanelController';
 import { dispatchClickMessage } from '../../core/systems/DispatchCatalog';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 
@@ -285,6 +286,8 @@ export class LobbyScene extends Component {
     private _generalJournalHost: UIScreenPreviewHost | null = null;
     private _battleReview: BattleReviewController | null = null;
     private _battleReviewHost: UIScreenPreviewHost | null = null;
+    private _tournament: TournamentPanelController | null = null;
+    private _tournamentHost: UIScreenPreviewHost | null = null;
     private _rival: RivalDiplomacyController | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
@@ -451,6 +454,7 @@ export class LobbyScene extends Component {
         await this._mountJournalHub();
         await this._mountGeneralJournal();
         await this._mountBattleReview();
+        await this._mountTournament();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
         await this._mountGovernorHall();
@@ -1404,6 +1408,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnClose', handler: () => { if (this._journalHubHost) this._journalHubHost.node.active = false; } },
             { buttonId: 'btnOpenGeneralJournal', handler: () => { this.openGeneralJournal(); } },
             { buttonId: 'btnOpenBattleReview', handler: () => { this._openBattleReview(); } },
+            { buttonId: 'btnOpenTournament', handler: () => { this._openTournament(); } },
             { buttonId: 'btnPrevDispatchGeneral', handler: () => { this._journalHub?.cyclePick(-1); this._openJournalHub(); } },
             { buttonId: 'btnNextDispatchGeneral', handler: () => { this._journalHub?.cyclePick(1); this._openJournalHub(); } },
             ...Array.from({ length: DISPATCH_MAX_ROWS }, (_, i) => ({ buttonId: `dispatchRow${i}`, handler: () => { this._onClickDispatchRow(i); } })),
@@ -1465,6 +1470,48 @@ export class LobbyScene extends Component {
             { buttonId: 'btnNextPage', handler: () => { review.nextPage(); this._refreshBattleReview(); } },
         ]);
         this._battleReviewHost.node.active = false;
+    }
+
+    /** 名將挑戰賽彈窗（doc_spec_0007，PROG-2-1191）：入口暫放晨報派遣板；額外參戰扣錢包金錢，報名／參戰成功後存檔 */
+    private async _mountTournament(): Promise<void> {
+        const gacha = this._localGachaService;
+        const tournament = new TournamentPanelController({
+            now: () => Date.now(),
+            status: (nowMs) => services().session.tournamentStatus(nowMs),
+            register: (nowMs) => services().session.registerTournament(nowMs),
+            play: (nowMs) => services().session.playTournament(nowMs, (cost) => gacha.spendCurrency('gold', cost)),
+            generalName: (id) => this._generals.find((g) => g.id === id)?.name,
+        });
+        this._tournament = tournament;
+        const afterAction = (ok: boolean): void => {
+            if (ok) void services().session.save().catch(() => undefined);
+            this._refreshTournament();
+        };
+        this._tournamentHost = await this._mountPreviewScreenHost('TournamentHost', 'tournament-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._tournamentHost) this._tournamentHost.node.active = false; } },
+            { buttonId: 'btnRegister', handler: () => { afterAction(tournament.register()); } },
+            { buttonId: 'btnPlay', handler: () => { afterAction(tournament.play()); } },
+        ]);
+        this._tournamentHost.node.active = false;
+    }
+
+    private _openTournament(): void {
+        const host = this._tournamentHost;
+        if (!host || !this._tournament) {
+            return;
+        }
+        this._tournament.reset();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshTournament();
+    }
+
+    private _refreshTournament(): void {
+        const binder = this._tournamentHost?.binder;
+        if (!binder || !this._tournament) {
+            return;
+        }
+        applyFlowView(binder, this._tournament.getFlowView());
     }
 
     private _openBattleReview(): void {

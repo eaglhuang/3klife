@@ -360,6 +360,29 @@
                   "right": 0,
                   "vCenter": true
                 }
+              },
+              {
+                "type": "button",
+                "name": "BtnOpenTournament",
+                "id": "btnOpenTournament",
+                "width": 240,
+                "height": 64,
+                "skinSlot": "jh.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenTournamentLabel",
+                    "id": "btnOpenTournamentLabel",
+                    "width": 240,
+                    "height": 40,
+                    "text": "挑戰賽 ▶",
+                    "styleSlot": "jh.label.body"
+                  }
+                ],
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                }
               }
             ]
           },
