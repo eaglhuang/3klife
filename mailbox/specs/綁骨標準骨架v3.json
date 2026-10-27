@@ -722,7 +722,17 @@
       "hand_f",
       "pauldron_f"
     ],
-    "drawOrderNote": "由後到前。遠側（_b）整條手臂與 pauldron_b 都在 torso 後；近側肩甲蓋住近側上臂。雙手持槍時後手在 torso 後、槍在 torso 前，此類遮擋由動畫的 drawOrder 關鍵格調整，不改本預設。v3.6（2026-10-27）。"
+    "drawOrderNote": "由後到前。遠側（_b）整條手臂與 pauldron_b 都在 torso 後；近側肩甲蓋住近側上臂。雙手持槍時後手在 torso 後、槍在 torso 前，此類遮擋由動畫的 drawOrder 關鍵格調整，不改本預設。v3.6（2026-10-27）。",
+    "scopeGate": {
+      "mode": "advisory",
+      "looseIslandMinAreaPx": 16,
+      "note": "v3.14（2026-10-27）：R301 量測 19 槽中 12 槽 scope_capsule_bounds 超過 1%（含已驗收的 hand_f、arm_upper_f），甲片與 Q 版剪影本來就寬於標準膠囊，此門檻無法區分好壞。改為只報告不擋（advisory）：報告仍列各槽超界百分比。擋的條件改為：(1) 與主體不相連的 alpha 小島，面積 ≥ looseIslandMinAreaPx 且位在 scope 外者 FAIL；< looseIslandMinAreaPx（戰場 360 px 參考下 < 1 顯示像素）只列清單；(2) rotationCrack 與 hiddenExtension 照舊。不加逐槽例外。"
+    },
+    "coverageRule": {
+      "childAloneSufficientPct": 90,
+      "note": "v3.14（2026-10-27）：(1) 有握孔的關節（gripHoleSource 為 enclosedHole 或 radiusFallback，即 arm_lower_*_to_hand_*）覆蓋條件一律標 notApplicable，只看裂縫：手繞握點轉，握點永遠有槍桿穿過，可見縫由含 weapon 遮蔽的裂縫檢查負責。(2) 若 child 側（含 rotationOccluders）在 ±rotationTestDeg 各自蓋住核心 ≥ childAloneSufficientPct%，且裂縫達標，parent 覆蓋不足不擋，報告標 childAloneSufficient（pelvis_to_torso 用）。",
+      "gripJointCoverage": "notApplicable"
+    }
   },
   "standingCenter": 1024,
   "standingCenterTol": 25
