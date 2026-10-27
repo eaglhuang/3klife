@@ -62,6 +62,7 @@ import type { LoginStreakState } from '../systems/LoginStreak';
 import { normalizeDailyNewsState, normalizePlayerLogs, type DailyNewsState, type PlayerLogEntry } from '../systems/DailyNewsEngine';
 import { normalizeMorningReportState, type MorningReportState } from '../systems/MorningReport';
 import { normalizeDispatchState, type DispatchState } from '../systems/DispatchJobs';
+import { normalizeUnlockHistory, type SandtableStageId } from '../systems/SandtableProgress';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
@@ -147,6 +148,8 @@ export interface PlayerSaveSnapshot {
     morningReport?: MorningReportState;
     /** 派遣整備：進行中、已完成、冷卻（PROG-2-1178）；只在有資料時寫入；舊檔沒有時為空；版號不升 */
     generalDispatch?: DispatchState;
+    /** 世界沙盤解鎖歷史（HALL-08）：只增不減，天下重組後不倒退；只在有紀錄時寫入；舊檔沒有時為空；版號不升 */
+    sandtableUnlockHistory?: SandtableStageId[];
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -511,6 +514,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.dailyNews !== undefined ? { dailyNews: normalizeDailyNewsState(snapshot.dailyNews) } : {}),
         ...(snapshot.morningReport !== undefined ? { morningReport: normalizeMorningReportState(snapshot.morningReport) } : {}),
         ...(snapshot.generalDispatch !== undefined ? { generalDispatch: normalizeDispatchState(snapshot.generalDispatch) } : {}),
+        ...(snapshot.sandtableUnlockHistory !== undefined ? { sandtableUnlockHistory: normalizeUnlockHistory(snapshot.sandtableUnlockHistory) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
