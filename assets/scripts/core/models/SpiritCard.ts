@@ -62,4 +62,13 @@ export interface SpiritCard {
     deathYear?: number;
     /** 英靈死亡快照（英勇事蹟 / 最終屬性 / 技能）；舊快照沒有此欄位，不做遷移 */
     archiveSnapshot?: SpiritArchiveSnapshot;
+
+    // --- 2026-10-21 血脈灌注欄位（PROG-2-1074）：選填，只由灌注寫入；舊卡缺欄位視為 0 ---
+
+    /** 血脈等級（Bloodline_Level） */
+    bloodlineLevel?: number;
+    /** 英靈濃度（Spirit_Power） */
+    spiritPower?: number;
+    /** 虎符層級（Linked_Tally_Level） */
+    linkedTallyLevel?: number;
 }
