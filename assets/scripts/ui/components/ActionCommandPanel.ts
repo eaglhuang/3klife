@@ -17,6 +17,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { _decorator, Button, Label, Node, Sprite } from 'cc';
 import { EVENT_NAMES, Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
+import { aptitudeToastPayload } from '../../core/systems/AptitudeDialogue';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UltimateSelectPopup, UltimateSkillItem } from './UltimateSelectPopup';
@@ -135,7 +136,14 @@ export class ActionCommandPanel extends UIPreviewBuilder {
     private _subscribeEvents(): void {
         this._unsubs.push(
             services().event.on(EVENT_NAMES.GeneralSpChanged, this._onSpChanged.bind(this)),
+            services().event.on(EVENT_NAMES.AptitudeDialogue, this._onAptitudeDialogue.bind(this)),
         );
+    }
+
+    /** 適性台詞（APT-14）：回合開始時以全域 Toast 顯示一句，沿用 ToastMessage 事件。 */
+    private _onAptitudeDialogue(data?: { turn: number; line: string }): void {
+        if (!data) return;
+        services().event.emit('SHOW_TOAST', aptitudeToastPayload(data.line));
     }
 
     /** GeneralSpChanged handler — 只更新玩家方 SP 環 */

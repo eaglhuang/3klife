@@ -56,6 +56,14 @@ export function aptitudeDialogueKindOf(input: AptitudeDialogueInput): AptitudeDi
     return null;
 }
 
+/** 適性台詞顯示用的全域 Toast 參數；同一 key 的台詞只保留最新一句。 */
+export const APTITUDE_TOAST_KEY = 'battle.aptitude.toast';
+export const APTITUDE_TOAST_DURATION_S = 2.5;
+
+export function aptitudeToastPayload(line: string): { message: string; duration: number; key: string } {
+    return { message: line, duration: APTITUDE_TOAST_DURATION_S, key: APTITUDE_TOAST_KEY };
+}
+
 /** 把台詞模板中的 {Name} 全部換成武將名；模板沒有佔位時原樣回傳。 */
 export function fillAptitudeName(template: string, name: string): string {
     return template.split('{Name}').join(name);
