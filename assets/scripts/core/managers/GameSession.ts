@@ -79,7 +79,7 @@ import {
 } from '../systems/DispatchJobs';
 import { dispatchCompleteLine, getDispatchScore, type DispatchGeneral, type DispatchStatKey } from '../systems/DispatchQuality';
 import {
-    appendOfflineBattleSnapshot, nextOfflineBattleSnapshotId, normalizeOfflineBattleSnapshots, OFFLINE_BATTLE_JOURNAL, type OfflineBattleSnapshot,
+    appendOfflineBattleSnapshot, nextOfflineBattleSnapshotId, normalizeOfflineBattleSnapshots, OFFLINE_BATTLE_JOURNAL, type OfflineBattleInput, type OfflineBattleSnapshot,
 } from '../systems/OfflineBattleSnapshot';
 import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type DispatchCatalogRow } from '../systems/DispatchCatalog';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
@@ -1528,8 +1528,7 @@ export class GameSession {
     /** 敵襲自動迎戰：留 AUTO_RESOLVE 快照並寫 BATTLE 日誌，日誌以 snapshotRef 指向快照（§F-4，PROG-2-1184） */
     private _recordOfflineBattle(squad: readonly unknown[], nationId: string, battle: AutoBattleResult, order: number): void {
         const clock = this._clock.state;
-        const id = nextOfflineBattleSnapshotId(this._offlineBattleSnapshots);
-        const appended = appendOfflineBattleSnapshot(this._offlineBattleSnapshots, id, {
+        this.recordAutoResolveBattle({
             battleType: 'AUTO_RESOLVE',
             seed: `${clock.currentYear}-${clock.currentSeason}-${order}`,
             lineup: squad,
@@ -1538,18 +1537,27 @@ export class GameSession {
             win: battle.win,
             playerStrength: battle.playerStrength,
             enemyStrength: battle.enemyStrength,
-        });
+        }, battle.win ? OFFLINE_BATTLE_JOURNAL.win : OFFLINE_BATTLE_JOURNAL.lose, []);
+    }
+
+    /**
+     * 自動解決的戰果：快照接到同一條鏈尾，再寫一筆 BATTLE 日誌以 snapshotRef 指向快照（§F-4）。
+     * 季度敵襲與戰場「自動」鈕（PROG-2-1185）共用；不自動存檔，由呼叫端的既有存檔帶走。
+     */
+    public recordAutoResolveBattle(input: Readonly<OfflineBattleInput>, journal: { priority: number; summary: string }, relatedGeneralUids: readonly string[]): OfflineBattleSnapshot {
+        const id = nextOfflineBattleSnapshotId(this._offlineBattleSnapshots);
+        const appended = appendOfflineBattleSnapshot(this._offlineBattleSnapshots, id, input);
         this._offlineBattleSnapshots = appended.snapshots;
-        const rule = battle.win ? OFFLINE_BATTLE_JOURNAL.win : OFFLINE_BATTLE_JOURNAL.lose;
         this.recordJournal({
             entryId: `OFFLINE_BATTLE-${this._journal.entries.length + 1}`,
-            timestamp: seasonJournalTimestamp(clock),
+            timestamp: seasonJournalTimestamp(this._clock.state),
             category: 'BATTLE',
-            relatedGeneralUids: [],
-            priority: rule.priority,
-            summary: rule.summary,
+            relatedGeneralUids: Array.from(relatedGeneralUids),
+            priority: journal.priority,
+            summary: journal.summary,
             snapshotRef: appended.snapshot.snapshotId,
         });
+        return { ...appended.snapshot };
     }
 
     public get domesticLog(): Readonly<DomesticSeasonLog> {
