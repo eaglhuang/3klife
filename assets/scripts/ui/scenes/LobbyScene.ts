@@ -1,4 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
+import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { UIID, LayerType } from '../../core/config/UIConfig';
@@ -1649,7 +1650,7 @@ export class LobbyScene extends Component {
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
                 advanceOpening: event => { this._openingFlow?.advance(event); },
                 applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys),
-                openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: services().i18n.t('copy.letter.opening.body') }),
+                openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? '') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
             });
         }
