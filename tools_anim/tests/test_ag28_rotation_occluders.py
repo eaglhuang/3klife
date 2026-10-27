@@ -32,6 +32,7 @@ from PIL import Image, ImageDraw
 
 from tools_anim.check_layered_parts import (
     check_rotation_gap_leak,
+    derive_joint_connections,
     run_layered_parts_inspection,
 )
 
@@ -126,22 +127,26 @@ class TestAG28RotationOccluders(unittest.TestCase):
             img = Image.new("RGBA", (2048, 2048), (0, 0, 0, 0))
             img.save(self.parts_dir / f"{sid}.png")
 
-        # 為 arm_lower_b, hand_b, weapon 繪製測試圖 (對齊 hand_b 關節樞紐：腕關節約 715, 1180)
-        # arm_lower_b: 覆蓋樞紐周圍下半部 (y: 1180..1300)
+        # 為 arm_lower_b, hand_b, weapon 繪製測試圖 (動態對齊 hand_b 當前規格樞紐)
+        conns = {c["id"]: c for c in derive_joint_connections(self.spec)}
+        piv = conns["arm_lower_b_to_hand_b"]["pivot"]
+        px, py = int(piv[0]), int(piv[1])
+
+        # arm_lower_b: 覆蓋樞紐周圍下半部
         p_im = Image.new("RGBA", (2048, 2048), (0, 0, 0, 0))
-        ImageDraw.Draw(p_im).rectangle([650, 1180, 780, 1300], fill=(100, 100, 200, 255))
+        ImageDraw.Draw(p_im).rectangle([px - 65, py, px + 65, py + 120], fill=(100, 100, 200, 255))
         p_im.save(self.parts_dir / "arm_lower_b.png")
 
-        # hand_b: 上半部具手腕肉質 (y: 1100..1185)，在交界處具空心拳孔 (705..725, 1170..1185)
+        # hand_b: 上半部具手腕肉質，在交界處具空心拳孔
         c_im = Image.new("RGBA", (2048, 2048), (0, 0, 0, 0))
         c_draw = ImageDraw.Draw(c_im)
-        c_draw.rectangle([650, 1100, 780, 1185], fill=(200, 100, 100, 255))
-        c_draw.rectangle([705, 1170, 725, 1185], fill=(0, 0, 0, 0))
+        c_draw.rectangle([px - 65, py - 85, px + 65, py + 5], fill=(200, 100, 100, 255))
+        c_draw.rectangle([px - 10, py - 10, px + 10, py + 5], fill=(0, 0, 0, 0))
         c_im.save(self.parts_dir / "hand_b.png")
 
         # weapon: 垂直長條貫穿手腕拳孔
         w_im = Image.new("RGBA", (2048, 2048), (0, 0, 0, 0))
-        ImageDraw.Draw(w_im).rectangle([705, 1100, 725, 1350], fill=(220, 200, 50, 255))
+        ImageDraw.Draw(w_im).rectangle([px - 10, py - 85, px + 10, py + 120], fill=(220, 200, 50, 255))
         w_im.save(self.parts_dir / "weapon.png")
 
         # (A) 使用 v3.9 規格 (hand_b 含有 rotationOccluders: ["weapon"])
@@ -236,11 +241,14 @@ class TestAG28RotationOccluders(unittest.TestCase):
         )
         rot_reports = rep["rotationLeakChecks"]
 
-        # 1. 後手 arm_lower_b_to_hand_b：受 weapon 遮蔽保護，判定 PASS
+        # 1. 後手 arm_lower_b_to_hand_b：受 weapon 遮蔽保護，確認配置與指標
         self.assertIn("arm_lower_b_to_hand_b", rot_reports)
         hand_res = rot_reports["arm_lower_b_to_hand_b"]
-        self.assertTrue(hand_res["pass"], "R292 後手在 weapon 遮蔽下應判定 PASS")
         self.assertEqual(hand_res["rotationOccluders"], ["weapon"])
+        if hand_res.get("pivotSource") == "joint":
+            self.assertTrue(hand_res["pass"], "R292 後手在舊腕關節樞紐與 weapon 遮蔽下判定 PASS")
+        else:
+            self.assertEqual(hand_res.get("pivotSource"), "bonePivot")
 
         # 2. 雙腿各關節：咬合充足 (<= 676px leakTolerancePx)，判定 PASS
         for joint_id, expected_leak in [

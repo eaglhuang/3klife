@@ -49,6 +49,8 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
     slot_names = set(raw_names)
     joint_overrides = layered_cfg.get("jointOverrides", {})
     default_rot = float(layered_cfg.get("rotationTestDeg", 30))
+    joint_geo = layered_cfg.get("jointGeometry", {})
+    rot_piv_rule = joint_geo.get("rotationPivot")
 
     connections = []
     for b in bones_list:
@@ -60,8 +62,14 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
 
         if child_name in slot_names and parent_name in slot_names:
             p_bone = bones_dict.get(parent_name, {})
-            # 樞紐關節點：手部取父段 to 關節 (腕部)，其他依骨骼 pivotCanvasPx
-            if child_name.startswith("hand_"):
+
+            # AG-31b: 若 jointGeometry.rotationPivot == "childBonePivot"，一律取骨點 bones[].pivotCanvasPx
+            pivot_source = "bonePivot"
+            if rot_piv_rule == "childBonePivot":
+                child_pivot = tuple(b.get("pivotCanvasPx", [1024.0, 1024.0]))
+                pivot_source = "bonePivot"
+            elif child_name.startswith("hand_"):
+                # 缺鍵時維持舊行為：手部取父段 to 關節 (腕部)
                 seg_alias_map = {
                     "arm_upper_f": "upperarm_f",
                     "arm_upper_b": "upperarm_b",
@@ -73,10 +81,13 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
                 if p_seg_to and p_seg_to in spec.get("joints", {}):
                     j_obj = spec["joints"][p_seg_to]
                     child_pivot = (float(j_obj.get("x", 1024.0)), float(j_obj.get("y", 1024.0)))
+                    pivot_source = "joint"
                 else:
                     child_pivot = tuple(b.get("pivotCanvasPx", [1024.0, 1024.0]))
+                    pivot_source = "bonePivot"
             else:
                 child_pivot = tuple(b.get("pivotCanvasPx", [1024.0, 1024.0]))
+                pivot_source = "bonePivot"
 
             parent_pivot = tuple(p_bone.get("pivotCanvasPx", [1024.0, 1024.0]))
 
@@ -107,6 +118,7 @@ def derive_joint_connections(spec: dict[str, Any]) -> list[dict[str, Any]]:
                 "child_slot": child_name,
                 "pivot": child_pivot,
                 "parent_pivot": parent_pivot,
+                "pivotSource": pivot_source,
                 "cap_rad": cap_rad,
                 "rigid": is_rigid,
                 "rotationTestDeg": rot_deg,
@@ -213,8 +225,25 @@ def build_slot_scope_mask(
 
     # 1. 膠囊型 (from -> to)
     if "from" in seg_info and "to" in seg_info:
-        p1 = get_j(seg_info["from"])
-        p2 = get_j(seg_info["to"])
+        joint_geo = layered_cfg.get("jointGeometry", {})
+        capsule_axis_mode = joint_geo.get("scopeCapsuleAxis")
+        p1 = None
+        p2 = None
+        if capsule_axis_mode == "boneToChildBonePivot":
+            # 肢段膠囊軸 = 自身骨點 -> 子骨點
+            bones_list = spec.get("bones", [])
+            bones_dict = {b["name"]: b for b in bones_list if isinstance(b, dict) and "name" in b}
+            self_bone = bones_dict.get(slot_name)
+            child_bone = next((b for b in bones_list if isinstance(b, dict) and b.get("parent") == slot_name), None)
+            if self_bone and "pivotCanvasPx" in self_bone:
+                p1 = tuple(self_bone["pivotCanvasPx"])
+            if child_bone and "pivotCanvasPx" in child_bone:
+                p2 = tuple(child_bone["pivotCanvasPx"])
+
+        if p1 is None or p2 is None:
+            p1 = get_j(seg_info["from"])
+            p2 = get_j(seg_info["to"])
+
         hw_spec = seg_info.get("halfWidth", {})
         if isinstance(hw_spec, str) and "upperarm_f" in hw_spec:
             hw_spec = segments.get("upperarm_f", {}).get("halfWidth", {})
@@ -1136,6 +1165,8 @@ def run_layered_parts_inspection(
             "pass": conn_pass,
             "tier": "WAIVED" if (p_waived or c_waived) else ("PASS" if conn_pass else "FAIL"),
             "skipped": False,
+            "pivot": list(piv_pt),
+            "pivotSource": j_conn.get("pivotSource", "bonePivot"),
             "parentExtensionPx": round(p_ext, 1),
             "childExtensionPx": round(c_ext, 1),
             "minRequiredPx": round(min_ext_px, 1),
@@ -1325,6 +1356,8 @@ def run_layered_parts_inspection(
                 "reasons": proposed_fail_reasons,
             },
             "skipped": False,
+            "pivot": list(piv_pt),
+            "pivotSource": j_conn.get("pivotSource", "bonePivot"),
             "testedAngles": [tested_deg, -tested_deg],
             "detachedChild": is_detached_child,
             "rotationOccluders": rot_occluder_names,

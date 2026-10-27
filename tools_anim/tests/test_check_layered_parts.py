@@ -92,10 +92,11 @@ class TestCheckLayeredParts(unittest.TestCase):
         d_upper.ellipse([ext_el_upper[0] - 15, ext_el_upper[1] - 15, ext_el_upper[0] + 15, ext_el_upper[1] + 15], fill=(120, 140, 200, 255))
         im_upper.save(parts_dir / "arm_upper_f.png")
 
-        # 2. arm_lower_f: elbow 到 wrist
+        # 2. arm_lower_f: elbow 到 wrist 與 hand 骨點 (grip)
         im_lower = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
         d_lower = ImageDraw.Draw(im_lower)
         d_lower.line([el, wr], fill=(130, 150, 210, 255), width=48)
+        d_lower.line([wr, grip], fill=(130, 150, 210, 255), width=48)
 
         # 肘部向上延伸 (朝 shoulder 方向)
         v_le = (sh[0] - el[0], sh[1] - el[1])
@@ -120,13 +121,15 @@ class TestCheckLayeredParts(unittest.TestCase):
             d_lower.ellipse([ext_el_lower[0] - 15, ext_el_lower[1] - 15, ext_el_lower[0] + 15, ext_el_lower[1] + 15], fill=(130, 150, 210, 255))
             d_lower.ellipse([el[0] - 35, el[1] - 35, el[0] + 35, el[1] + 35], fill=(130, 150, 210, 255))
 
-        # 腕部向下延伸 (朝 hand 方向延伸 48px)
-        v_lw = (wr[0] - el[0], wr[1] - el[1])
+        # 腕部/手部向下延伸 (朝 hand 方向越過骨點延伸 48px)
+        v_lw = (grip[0] - el[0], grip[1] - el[1])
         mag_lw = math.hypot(v_lw[0], v_lw[1]) or 1.0
         u_lw = (v_lw[0] / mag_lw, v_lw[1] / mag_lw)
-        ext_wr_lower = (wr[0] + u_lw[0] * 48, wr[1] + u_lw[1] * 48)
-        d_lower.line([wr, ext_wr_lower], fill=(130, 150, 210, 255), width=48)
+        ext_wr_lower = (grip[0] + u_lw[0] * 48, grip[1] + u_lw[1] * 48)
+        d_lower.line([wr, grip], fill=(130, 150, 210, 255), width=48)
+        d_lower.line([grip, ext_wr_lower], fill=(130, 150, 210, 255), width=48)
         d_lower.ellipse([wr[0] - 35, wr[1] - 35, wr[0] + 35, wr[1] + 35], fill=(130, 150, 210, 255))
+        d_lower.ellipse([grip[0] - 35, grip[1] - 35, grip[0] + 35, grip[1] + 35], fill=(130, 150, 210, 255))
         d_lower.ellipse([ext_wr_lower[0] - 15, ext_wr_lower[1] - 15, ext_wr_lower[0] + 15, ext_wr_lower[1] + 15], fill=(130, 150, 210, 255))
 
         if leak_on_rotate:
@@ -484,6 +487,10 @@ class TestCheckLayeredParts(unittest.TestCase):
         for j_name, j_data in shifted_spec.get("joints", {}).items():
             j_data["x"] = float(j_data["x"]) + ox
             j_data["y"] = float(j_data["y"]) + oy
+
+        for b in shifted_spec.get("bones", []):
+            if "pivotCanvasPx" in b:
+                b["pivotCanvasPx"] = [b["pivotCanvasPx"][0] + ox, b["pivotCanvasPx"][1] + oy]
 
         spec_file = self.tmp_dir / "shifted_torso_spec.json"
         spec_file.write_text(json.dumps(shifted_spec, indent=2, ensure_ascii=False), encoding="utf-8")
