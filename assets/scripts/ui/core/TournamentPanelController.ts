@@ -18,6 +18,8 @@ import {
     TOURNAMENT_BOSS_TAG_LABEL, TOURNAMENT_LOCAL_CONFIG, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeasonReward,
     type TournamentSeriesResult, type TournamentStatus,
 } from '../../core/systems/TournamentLocal';
+import type { TigerTallyCard } from '../../core/models/TigerTallyCard';
+import { tallyBossMatch, tallyBossMatchText } from '../../core/systems/TallyBossTags';
 
 export const TOURNAMENT_PHASE_LABEL: Record<TournamentPhase, string> = {
     PREPARATION: '培育期',
@@ -52,6 +54,8 @@ export interface TournamentPanelDeps {
     play: (nowMs: number) => { ok: boolean; reason?: TournamentEntryReason; result?: TournamentSeriesResult };
     generalName: (generalId: string) => string | undefined;
     pendingRewards: (nowMs: number) => TournamentSeasonReward[];
+    /** 持有的虎符；有提供時 BOSS 列附命中弱點張數（E-10，PROG-2-1356） */
+    tallies?: () => readonly TigerTallyCard[];
     claimRewards: (nowMs: number) => TournamentSeasonReward[];
 }
 
@@ -110,12 +114,14 @@ export class TournamentPanelController {
         const team = status.team
             ? `出戰：${status.team.generals.map((id) => this._deps.generalName(id) ?? id).join('、')}（戰力 ${status.team.totalPower}）`
             : '尚未報名（競賽期首次參戰自動報名）';
+        const bossLine = `賽季 BOSS：${status.venue.boss.name}（弱點：${status.venue.boss.weaknessTags.map((t) => TOURNAMENT_BOSS_TAG_LABEL[t]).join('、')}）`;
+        const bossMatch = this._deps.tallies ? `｜${tallyBossMatchText(tallyBossMatch(this._deps.tallies(), status.venue.boss))}` : '';
         return {
             texts: {
                 trnTitle: '名將挑戰賽',
                 trnSeasonLabel: `第 ${status.seasonIndex} 屆【${status.venue.cupName}】｜${TOURNAMENT_PHASE_LABEL[status.phase]}｜剩 ${status.daysLeft} 日`,
                 trnVenueLabel: `地形：${TERRAIN_LABEL[status.venue.terrain]}、天氣：${WEATHER_LABEL[status.venue.weather]}`,
-                trnBossLabel: `賽季 BOSS：${status.venue.boss.name}（弱點：${status.venue.boss.weaknessTags.map((t) => TOURNAMENT_BOSS_TAG_LABEL[t]).join('、')}）`,
+                trnBossLabel: `${bossLine}${bossMatch}`,
                 trnRankLabel: `積分 ${status.points}｜${TOURNAMENT_TIER_LABEL[status.tier]}`,
                 trnEntriesLabel: entries,
                 trnTeamLabel: team,

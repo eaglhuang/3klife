@@ -1500,6 +1500,7 @@ export class LobbyScene extends Component {
             play: (nowMs) => services().session.playTournament(nowMs, (cost) => gacha.spendCurrency('gold', cost)),
             generalName: (id) => this._generals.find((g) => g.id === id)?.name,
             pendingRewards: (nowMs) => services().session.pendingTournamentRewards(nowMs),
+            tallies: () => Object.values(services().session.tallyCards),
             claimRewards: (nowMs) => services().session.claimTournamentRewards(nowMs, (gold) => { gacha.grantCurrency('gold', gold); }),
         });
         this._tournament = tournament;
