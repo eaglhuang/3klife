@@ -44,6 +44,13 @@ export function createInitialGeneralShowcaseSuite(): TestSuite {
         }
     });
 
+    suite.test('每位名將有出生地，主因子是因子標籤之一', () => {
+        for (const entry of INITIAL_SHOWCASE_ENTRIES) {
+            assert.isTrue(entry.originRegion.length > 0);
+            assert.isTrue(entry.factorTags.includes(entry.coreFactorTag));
+        }
+    });
+
     suite.test('依 generalId 查詢：六位內回傳資料，之外回傳 null', () => {
         assert.equals('孫策', initialShowcaseOf('sun-ce')!.name);
         assert.isTrue(initialShowcaseOf('cao-cao') === null);
