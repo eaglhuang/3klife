@@ -1,0 +1,68 @@
+{
+  "id": "gear-slot-picker-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "GearSlotPickerRoot",
+    "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 },
+    "children": [
+      {
+        "type": "panel",
+        "name": "gearPickPanel",
+        "id": "gearPickPanel",
+        "widget": { "hCenter": 0, "vCenter": 0 },
+        "width": 520,
+        "height": 640,
+        "layout": { "type": "vertical", "alignItems": "stretch", "justifyContent": "start", "spacingY": 10, "paddingTop": 20, "paddingBottom": 20, "paddingLeft": 20, "paddingRight": 20 },
+        "children": [
+          {
+            "type": "label",
+            "name": "gearPickTitle",
+            "id": "gearPickTitle",
+            "height": 44,
+            "styleSlot": "gear.picker.title"
+          },
+          {
+            "type": "label",
+            "name": "gearPickMessage",
+            "id": "gearPickMessage",
+            "height": 36,
+            "styleSlot": "gear.picker.message"
+          },
+          {
+            "type": "container",
+            "name": "gearPickList",
+            "id": "gearPickList",
+            "layout": { "type": "vertical", "alignItems": "stretch", "justifyContent": "start", "spacingY": 8 },
+            "children": [
+              { "type": "button", "name": "btnGearPick0", "id": "btnGearPick0", "height": 52, "onClick": "pickGear0", "children": [{ "type": "label", "name": "gearPickLabel0", "id": "gearPickLabel0", "styleSlot": "gear.picker.row" }] },
+              { "type": "button", "name": "btnGearPick1", "id": "btnGearPick1", "height": 52, "onClick": "pickGear1", "children": [{ "type": "label", "name": "gearPickLabel1", "id": "gearPickLabel1", "styleSlot": "gear.picker.row" }] },
+              { "type": "button", "name": "btnGearPick2", "id": "btnGearPick2", "height": 52, "onClick": "pickGear2", "children": [{ "type": "label", "name": "gearPickLabel2", "id": "gearPickLabel2", "styleSlot": "gear.picker.row" }] },
+              { "type": "button", "name": "btnGearPick3", "id": "btnGearPick3", "height": 52, "onClick": "pickGear3", "children": [{ "type": "label", "name": "gearPickLabel3", "id": "gearPickLabel3", "styleSlot": "gear.picker.row" }] },
+              { "type": "button", "name": "btnGearPick4", "id": "btnGearPick4", "height": 52, "onClick": "pickGear4", "children": [{ "type": "label", "name": "gearPickLabel4", "id": "gearPickLabel4", "styleSlot": "gear.picker.row" }] },
+              { "type": "button", "name": "btnGearPick5", "id": "btnGearPick5", "height": 52, "onClick": "pickGear5", "children": [{ "type": "label", "name": "gearPickLabel5", "id": "gearPickLabel5", "styleSlot": "gear.picker.row" }] },
+              { "type": "button", "name": "btnGearPick6", "id": "btnGearPick6", "height": 52, "onClick": "pickGear6", "children": [{ "type": "label", "name": "gearPickLabel6", "id": "gearPickLabel6", "styleSlot": "gear.picker.row" }] },
+              { "type": "button", "name": "btnGearPick7", "id": "btnGearPick7", "height": 52, "onClick": "pickGear7", "children": [{ "type": "label", "name": "gearPickLabel7", "id": "gearPickLabel7", "styleSlot": "gear.picker.row" }] }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "btnGearUnequip",
+            "id": "btnGearUnequip",
+            "height": 52,
+            "onClick": "unequipGear",
+            "children": [{ "type": "label", "name": "gearUnequipLabel", "id": "gearUnequipLabel", "text": "卸下", "styleSlot": "gear.picker.row" }]
+          }
+        ]
+      }
+    ]
+  }
+}
