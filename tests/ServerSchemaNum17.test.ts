@@ -1,5 +1,5 @@
 /**
- * ServerSchemaNum17 — 數值配置 Server 列與熱更新比對（NUM-17 / PROG-2-0980）
+ * ServerSchemaNum17 — 數值配置 Server 列與熱更新比對（NUM-17 / PROG-2-0935）
  *
  * 驗證重點：
  *   1. 合法列沒有問題；鍵名格式、小數位、範圍、類別、版本號的壞列會被擋下

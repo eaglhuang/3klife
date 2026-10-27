@@ -1,4 +1,4 @@
-// @spec-source → 數值系統.md §I「Server 端」（NUM-17，PROG-2-0980）
+// @spec-source → 數值系統.md §I「Server 端」（NUM-17，PROG-2-0935）
 /**
  * num17-config-row — 數值配置 Server 列的驗證與熱更新比對（純 TS，不連資料庫）
  *

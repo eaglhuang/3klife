@@ -1,4 +1,4 @@
--- @spec-source → 數值系統.md §I「Server 端」（NUM-17，PROG-2-0980）
+-- @spec-source → 數值系統.md §I「Server 端」（NUM-17，PROG-2-0935）
 -- 僅定義、未部署、未執行。
 --
 -- 每列是一個數值配置鍵；version 用於客戶端熱更新比對（版本較新才套用）。
