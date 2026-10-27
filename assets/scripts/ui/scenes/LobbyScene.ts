@@ -66,6 +66,7 @@ import { DISPATCH_MAX_ROWS, JournalHubController } from '../core/JournalHubContr
 import { GeneralJournalController } from '../core/GeneralJournalController';
 import { BattleReviewController } from '../core/BattleReviewController';
 import { TournamentPanelController } from '../core/TournamentPanelController';
+import { WishAltarController, WISH_ALTAR_SLOTS } from '../core/WishAltarController';
 import { dispatchClickMessage } from '../../core/systems/DispatchCatalog';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 
@@ -109,7 +110,7 @@ import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { isDescendant } from '../../core/systems/ChildMagistrate';
-import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET } from '../../core/systems/PlayerInventory';
+import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD } from '../../core/systems/PlayerInventory';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { DestinyShopController, destinyBriefTexts } from '../core/DestinyShopController';
@@ -285,6 +286,8 @@ export class LobbyScene extends Component {
     private _battleReview: BattleReviewController | null = null;
     private _battleReviewHost: UIScreenPreviewHost | null = null;
     private _tournament: TournamentPanelController | null = null;
+    private _wishAltar: WishAltarController | null = null;
+    private _wishAltarHost: UIScreenPreviewHost | null = null;
     private _tournamentHost: UIScreenPreviewHost | null = null;
     /** 登入讀檔時擷取的未讀日報／晨報；面板掛好後開啟（PROG-2-1192） */
     private _dailyReport: DailyReportController | null = null;
@@ -456,6 +459,7 @@ export class LobbyScene extends Component {
         await this._mountGeneralJournal();
         await this._mountBattleReview();
         await this._mountTournament();
+        await this._mountWishAltar();
         await this._mountDailyReport();
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
@@ -1408,6 +1412,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnOpenGeneralJournal', handler: () => { this.openGeneralJournal(); } },
             { buttonId: 'btnOpenBattleReview', handler: () => { this._openBattleReview(); } },
             { buttonId: 'btnOpenTournament', handler: () => { this._openTournament(); } },
+            { buttonId: 'btnOpenWishAltar', handler: () => { this._openWishAltar(); } },
             { buttonId: 'btnPrevDispatchGeneral', handler: () => { this._journalHub?.cyclePick(-1); this._openJournalHub(); } },
             { buttonId: 'btnNextDispatchGeneral', handler: () => { this._journalHub?.cyclePick(1); this._openJournalHub(); } },
             ...Array.from({ length: DISPATCH_MAX_ROWS }, (_, i) => ({ buttonId: `dispatchRow${i}`, handler: () => { this._onClickDispatchRow(i); } })),
@@ -1509,6 +1514,52 @@ export class LobbyScene extends Component {
         if (!report) return;
         this._bringNodeToFront(this._dailyReportHost.node);
         applyFlowView(this._dailyReportHost.binder, report.getFlowView());
+    }
+
+    /** 大廳許願祭壇（doc_spec_0002 §E-7，PROG-2-1199）：入口暫放晨報派遣板；許願／加速／領取成功後存檔 */
+    private async _mountWishAltar(): Promise<void> {
+        const altar = new WishAltarController({
+            now: () => Date.now(),
+            pool: () => services().session.wishPool,
+            speedCards: () => services().session.itemCount(ITEM_WISH_SPEED_CARD),
+            startWish: (itemId, nowMs) => services().session.startWish(itemId, nowMs),
+            speedUp: (wishId, cards, nowMs) => services().session.speedUpWish(wishId, cards, nowMs),
+            claim: (nowMs) => services().session.claimWishes(nowMs),
+        });
+        this._wishAltar = altar;
+        const afterAction = (ok: boolean): void => {
+            if (ok) void services().session.save().catch(() => undefined);
+            this._refreshWishAltar();
+        };
+        const slotHandlers = Array.from({ length: WISH_ALTAR_SLOTS }, (_, i) => ({ buttonId: `waSlot${i}`, handler: () => { afterAction(altar.tapSlot(i)); } }));
+        this._wishAltarHost = await this._mountPreviewScreenHost('WishAltarHost', 'wish-altar-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._wishAltarHost) this._wishAltarHost.node.active = false; } },
+            { buttonId: 'btnPrevItem', handler: () => { altar.prevItem(); this._refreshWishAltar(); } },
+            { buttonId: 'btnNextItem', handler: () => { altar.nextItem(); this._refreshWishAltar(); } },
+            { buttonId: 'btnWish', handler: () => { afterAction(altar.wish()); } },
+            { buttonId: 'btnClaim', handler: () => { afterAction(altar.claim()); } },
+            ...slotHandlers,
+        ]);
+        this._wishAltarHost.node.active = false;
+    }
+
+    private _openWishAltar(): void {
+        const host = this._wishAltarHost;
+        if (!host || !this._wishAltar) {
+            return;
+        }
+        this._wishAltar.reset();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshWishAltar();
+    }
+
+    private _refreshWishAltar(): void {
+        const binder = this._wishAltarHost?.binder;
+        if (!binder || !this._wishAltar) {
+            return;
+        }
+        applyFlowView(binder, this._wishAltar.getFlowView());
     }
 
     private _openTournament(): void {
