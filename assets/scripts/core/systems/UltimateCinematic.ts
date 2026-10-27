@@ -21,7 +21,11 @@ export const DEFAULT_CINEMATIC_PROFILE: Readonly<Record<UltimateEffectFamily, st
     [UltimateEffectFamily.SpecialRule]: 'cinematic-special-rule',
 };
 
-export function cinematicProfileOf(definition: { family: UltimateEffectFamily; cinematicProfile?: string | null }): string {
+/**
+ * 缺 family 且沒明寫時退回 special-rule 家族預設（暫定，PROG-2-1320）：資料目前每個奧義都有 family，這條只是保險。
+ */
+export function cinematicProfileOf(definition: { family?: UltimateEffectFamily | null; cinematicProfile?: string | null }): string {
     const explicit = definition.cinematicProfile?.trim();
-    return explicit ? explicit : DEFAULT_CINEMATIC_PROFILE[definition.family];
+    if (explicit) return explicit;
+    return DEFAULT_CINEMATIC_PROFILE[definition.family ?? UltimateEffectFamily.SpecialRule];
 }
