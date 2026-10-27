@@ -259,6 +259,8 @@ export type CharacterCategory =
   | 'titled';
 
 export interface GeneralConfig {
+  /** 運氣可見欄位（Is_Visible，運氣系統 §I）；缺值視為隱藏，見 isLukVisible */
+  lukVisible?: boolean;
   id: string;
   name: string;
   alias?: string[];
