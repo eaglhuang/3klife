@@ -11,7 +11,7 @@ import type {
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
 import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
 import { isLukVisible } from '../../core/systems/LuckVisibility';
-import { mapGeneralReadModel, type GeneralReadModel } from '../../core/systems/GeneralReadModel';
+import { PERSON_PAGE_TABS, mapGeneralReadModel, type GeneralReadModel, type PersonPageTab } from '../../core/systems/GeneralReadModel';
 import { buildGeneralCommandRows, type GeneralCommandRow } from '../../core/systems/GeneralCommandPanel';
 import { deriveGeneralBackpack, gearNameOfUid } from '../../core/systems/GeneralBackpackView';
 import { buildGearPageSlots, type GearSlotView } from '../../core/systems/GearPageSlots';
@@ -731,4 +731,39 @@ function translateBloodlineToken(token: string): string {
         ZHAO: '昭',
     };
     return table[token] ?? token.slice(0, 1);
+}
+
+// @spec-source → 武將人物介面規格書 §10 Data Read Model（顯示頁欄）、§12 NO_DATA；WBS GDUI-13（PROG-2-1025 併入）
+/** 人物頁 §10 讀取模型欄位（不含 defaultTab，那是外層 chrome）。 */
+export type PersonPageField = Exclude<keyof GeneralReadModel, 'defaultTab'>;
+
+/** 每個 readModel 欄位對應的分頁；General_Fame 同時屬於將與命。 */
+export const PERSON_PAGE_FIELD_TABS: Readonly<Record<PersonPageField, readonly PersonPageTab[]>> = {
+    storyStripCells: ['Bloodline'],
+    storyDockState: ['Bloodline'],
+    ancestors: ['Bloodline'],
+    bloodlineBeast: ['Bloodline'],
+    bloodlineUltimate: ['Bloodline'],
+    equippedSpiritUid: ['Bloodline'],
+    generalFame: ['Overview', 'Bloodline'],
+    generalRank: ['Overview'],
+    commandCapacity: ['Overview'],
+    talentStats: ['Stats'],
+    prowessStats: ['Stats'],
+    learnedTactics: ['Tactics'],
+    equipmentLoadout: ['Equip'],
+    equippedTallyUid: ['Aptitude'],
+    aptitudes: ['Aptitude'],
+};
+
+export type EmptyFieldsByTab = Record<PersonPageTab, PersonPageField[]>;
+
+/** 每個分頁中狀態為 NO_DATA 的欄位；全部有資料時每頁為空陣列。畫面用來決定哪裡顯示空狀態佔位。 */
+export function listEmptyFieldsByTab(model: GeneralReadModel): EmptyFieldsByTab {
+    const result = Object.fromEntries(PERSON_PAGE_TABS.map((tab) => [tab, [] as PersonPageField[]])) as EmptyFieldsByTab;
+    for (const field of Object.keys(PERSON_PAGE_FIELD_TABS) as PersonPageField[]) {
+        if (model[field].state !== 'NO_DATA') continue;
+        for (const tab of PERSON_PAGE_FIELD_TABS[field]) result[tab].push(field);
+    }
+    return result;
 }
