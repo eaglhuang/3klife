@@ -1,0 +1,10 @@
+{
+  "_comment": "AI 難度表（AIS-01 / PROG-2-1314）。數值依 AI武將強度系統.md E-1、E-7、F-2、F-3；deploy 與轉生共用 difficultyBonus。",
+  "difficulties": [
+    { "difficultyId": "easy", "statScale": 0.7, "aiIq": "LOW", "difficultyBonus": 0, "canUseTactics": true, "canUseUltimate": false, "spGainModifier": 0.8, "duelAcceptThreshold": 0.45 },
+    { "difficultyId": "normal", "statScale": 1.0, "aiIq": "MEDIUM", "difficultyBonus": 0, "canUseTactics": true, "canUseUltimate": true, "spGainModifier": 1.0, "duelAcceptThreshold": 0.58 },
+    { "difficultyId": "hard", "statScale": 1.3, "aiIq": "HIGH", "difficultyBonus": 1, "canUseTactics": true, "canUseUltimate": true, "spGainModifier": 1.2, "duelAcceptThreshold": 0.58 },
+    { "difficultyId": "nightmare", "statScale": 1.6, "aiIq": "EXTREME", "difficultyBonus": 1, "canUseTactics": true, "canUseUltimate": true, "spGainModifier": 1.3, "duelAcceptThreshold": 0.58 },
+    { "difficultyId": "hell", "statScale": 2.0, "aiIq": "PERFECT", "difficultyBonus": 2, "canUseTactics": true, "canUseUltimate": true, "spGainModifier": 1.5, "duelAcceptThreshold": 0.58 }
+  ]
+}
