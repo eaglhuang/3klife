@@ -28,6 +28,8 @@ export interface InventoryRecord {
     equippedBy?: string | null;
     /** 裝在武將背包的哪一格（GeneralBackpack 六槽 ID）；缺欄位即未裝備 */
     slotId?: string | null;
+    /** 一般裝備的定義 id（查 GearDefinitions 取名稱與槽位）；列不存名稱本身（PROG-2-1039） */
+    Gear_ID?: string | null;
 }
 
 export interface InventorySkipped {
