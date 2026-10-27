@@ -91,7 +91,7 @@ class TestAG37WeaponGripOnShaft(unittest.TestCase):
 
     def test_ag37_shifted_weapon_both_grips_pass(self) -> None:
         """
-        測試 2: 水平平移後的合成版本 (雙手皆握在純木桿段)，
+        測試 2: 水平平移 +180 px 後的合成版本 (雙手皆握在純木桿段)，
         前手握點與後手握點都應該 PASS，整體 weaponGripOnShaft 應為 PASS。
         """
         candidate_dirs = [
@@ -116,16 +116,16 @@ class TestAG37WeaponGripOnShaft(unittest.TestCase):
         w_arr = np.array(orig_w)
         shifted_arr = np.zeros_like(w_arr)
 
-        # 水平平移 +170 px (並確保 1365 +/- 50 處為純木桿厚度 20 px)
-        dx = 170
+        # 水平平移 +180 px (依總監 R308 裁決與 2347 工單)
+        dx = 180
         shifted_arr[:, dx:, :] = w_arr[:, :-dx, :]
         
-        # 確保握點周圍 50 px 內為標準木桿 (y=1216..1235)
+        # 確保雙手握點周圍 50 px 內皆為標準木桿 (y=1216..1235)
         gx_a = 1365
         gx_b = 680
         for gx in (gx_a, gx_b):
             for x in range(gx - 50, gx + 51):
-                # 清除可能延伸出的飄帶，保持木桿主體 20 px
+                # 清除可能延伸出的飄帶/套環，保持木桿主體 20 px
                 shifted_arr[:1216, x, :] = 0
                 shifted_arr[1236:, x, :] = 0
                 shifted_arr[1216:1236, x, :] = [180, 140, 80, 255]
@@ -146,6 +146,53 @@ class TestAG37WeaponGripOnShaft(unittest.TestCase):
         self.assertEqual(w_shaft["tier"], "PASS")
         self.assertTrue(w_shaft["grips"]["hand_f"]["pass"], "平移後 hand_f 應 PASS")
         self.assertTrue(w_shaft["grips"]["hand_b"]["pass"], "平移後 hand_b 應 PASS")
+
+    def test_ag37_r299_shifted_180_raw_tassel_overlap_report(self) -> None:
+        """
+        測試 3: 真實 R299 weapon.png 直接平移 +180 px（不修整紅纓）的實測狀況：
+        - 後手 hand_b (x=680 +/- 50): 厚度 20~22 px -> PASS
+        - 前手 hand_f (x=1365 +/- 50): x=1398~1415 共 18 欄掃到紅纓 (厚度 54~98 px) -> FAIL (ADVISORY)
+        驗證檢查器在未修整紅纓時能正確捕獲超標欄位並記錄於報告中。
+        """
+        candidate_dirs = [
+            r"C:\Users\User\.codex\worktrees\zhaoyun-cutout-polish\3KLife\scratch\r299-ankle-f-round\parts",
+            r"C:\Users\User\3KLife\scratch\r299-ankle-f-round\parts",
+        ]
+        r299_dir: Path | None = None
+        for cd in candidate_dirs:
+            if Path(cd).exists() and (Path(cd) / "weapon.png").exists():
+                r299_dir = Path(cd)
+                break
+
+        if not r299_dir:
+            self.skipTest("無 R299 候選零件目錄，跳過回歸測試")
+
+        parts_dir = self.tmp_dir / "parts_raw180"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+
+        orig_w = Image.open(r299_dir / "weapon.png").convert("RGBA")
+        w_arr = np.array(orig_w)
+        shifted_arr = np.zeros_like(w_arr)
+        dx = 180
+        shifted_arr[:, dx:, :] = w_arr[:, :-dx, :]
+        Image.fromarray(shifted_arr).save(parts_dir / "weapon.png")
+
+        rep, _ = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["weapon"],
+        )
+
+        w_shaft = rep["slotReports"]["weapon"]["checks"]["weaponGripOnShaft"]
+        grips = w_shaft["grips"]
+        # hand_b 握在木桿
+        self.assertTrue(grips["hand_b"]["pass"])
+        self.assertEqual(grips["hand_b"]["measuredThicknessRangePx"], [20, 22])
+        # hand_f 掃到紅纓 18 欄
+        self.assertFalse(grips["hand_f"]["pass"])
+        self.assertEqual(grips["hand_f"]["measuredThicknessRangePx"], [20, 98])
+        self.assertFalse(w_shaft["pass"])
+        self.assertEqual(w_shaft["tier"], "ADVISORY")
 
 
 if __name__ == "__main__":
