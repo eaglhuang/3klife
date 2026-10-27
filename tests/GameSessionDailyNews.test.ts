@@ -13,7 +13,7 @@ function at(day: string): number {
 }
 
 function hero(id: string, name: string): GeneralConfig {
-    return { id, name, faction: 'shu', hp: 1000, str: 80, int: 70, lea: 80, pol: 60, cha: 70 } as GeneralConfig;
+    return { id, name, faction: 'shu', hp: 1000, str: 80, int: 70, lea: 80, pol: 60, cha: 70 } as unknown as GeneralConfig;
 }
 
 function sessionWithRoster(): GameSession {

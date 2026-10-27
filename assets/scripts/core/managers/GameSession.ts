@@ -26,6 +26,7 @@ import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from 
 import { addOfficerExp, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
 import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/SandtableMarkers';
+import { effectiveSandtableStage, normalizeUnlockHistory, recordSandtableUnlock, sandtableShortCodeOf, sandtableStageIdOf, type SandtableStageId } from '../systems/SandtableProgress';
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
 import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
@@ -133,7 +134,8 @@ import { emptySoulFragmentLedger, injectFromLedger, normalizeSoulFragmentLedger,
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFlow';
 import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
@@ -491,6 +493,8 @@ export class GameSession {
     private _officerState: OfficerState = initialOfficerState();
     /** 世界沙盤標記所在的領地 id（OFC-06 / PROG-2-0965）；每領地最多一個，數量上限由官職階段決定 */
     private _sandtableMarkerTerritories: readonly string[] = [];
+    /** 世界沙盤解鎖歷史（HALL-08）：只增不減，天下重組後不倒退 */
+    private _sandtableUnlockHistory: SandtableStageId[] = [];
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔 */
     private _gachaMentorJournal: GachaMentorJournalEntry[] = [];
     /** 大廳任務 AI 委任紀錄（PROG-2-1006） */
@@ -921,11 +925,32 @@ export class GameSession {
         return { ...this._tallyCards };
     }
 
-    /** 統一物件庫推導的虎符與英靈卡視圖（DS-08）；讀取一律走這裡，不直接讀 _tallyCards */
     /** 統一物件庫的原始列（唯讀副本）；寶頁依武將 uid 篩出一般裝備 */
     public get inventoryRecords(): readonly InventoryRecord[] {
         return this._inventoryRecords.map((record) => ({ ...record }));
     }
+
+    /** 使用道具（PROG-2-1038）：刷新券寫回傭兵池與救美冷卻；安胎藥記下 armed，等下一次結緣才生效 */
+    public useItem(itemId: string, nowMs: number): ItemUseResult {
+        const result = useItemFlow(this._inventory, itemId, nowMs);
+        if (!result.ok) return result;
+        this._inventory = result.inventory;
+        if (result.refresh) {
+            this._femaleSystem = {
+                ...this._femaleSystem,
+                poolRefreshedAtMs: result.refresh.femalePoolLastRefreshMs,
+                rescueRefreshedAtMs: result.refresh.dungeonRescueLastRefreshMs,
+            };
+        }
+        return result;
+    }
+
+    /** 結緣實際執行後清除安胎藥的 armed 標記（PROG-2-1038）；沒有標記時不動背包 */
+    public clearFertilityArm(): void {
+        this._inventory = consumeItem(this._inventory, ITEM_FERTILITY_ARMED, 1) ?? this._inventory;
+    }
+
+    /** 統一物件庫推導的虎符與英靈卡視圖（DS-08）；讀取一律走這裡，不直接讀 _tallyCards */
 
     public get inventoryViews(): InventoryViews {
         return deriveInventoryViews(this._inventoryRecords);
@@ -1231,6 +1256,7 @@ export class GameSession {
         this._breedingBirthRecords = [];
         this._officerState = initialOfficerState();
         this._sandtableMarkerTerritories = [];
+        this._sandtableUnlockHistory = [];
         this._governance = [];
         this._autoGovernance = false;
         this._magistrateUid = null;
@@ -1518,18 +1544,42 @@ export class GameSession {
     }
 
     /** 已放置標記的領地 id（PROG-2-0965） */
+    /** 世界沙盤解鎖歷史（HALL-08）：回傳複本，只增不減。 */
+    public get sandtableUnlockHistory(): readonly SandtableStageId[] {
+        return [...this._sandtableUnlockHistory];
+    }
+
+    /** 沙盤有效階段代碼（HALL-08）：官職階段與解鎖歷史中較高者，天下重組後不倒退。 */
+    public get sandtableEffectiveStage(): SandtableStageId | null {
+        const official = this.officerUnlocks.sandtableStage;
+        return effectiveSandtableStage(official ? sandtableStageIdOf(official) : null, this._sandtableUnlockHistory);
+    }
+
+    /** 沙盤有效階段短代碼（S1/S2/S3）：標記上限、按鈕文字與開牆判定都讀這個，不讀官職原值。 */
+    public get sandtableStage(): OfficerUnlocks['sandtableStage'] {
+        const effective = this.sandtableEffectiveStage;
+        return effective ? sandtableShortCodeOf(effective) : null;
+    }
+
+    /** 官職階段達到時寫入解鎖歷史；只增不減，重複呼叫不會產生重複階段。 */
+    private _recordSandtableUnlockReached(): void {
+        const official = this.officerUnlocks.sandtableStage;
+        if (!official) return;
+        this._sandtableUnlockHistory = recordSandtableUnlock(this._sandtableUnlockHistory, sandtableStageIdOf(official));
+    }
+
     public get sandtableMarkerTerritories(): readonly string[] {
         return this._sandtableMarkerTerritories;
     }
 
     /** 世界沙盤還能再放的標記數（OFC-06）；未解鎖沙盤時為 0。 */
     public get sandtableRemaining(): number {
-        return remainingSandtableMarkers(this.sandtableMarkersPlaced, this.officerUnlocks.sandtableStage);
+        return remainingSandtableMarkers(this.sandtableMarkersPlaced, this.sandtableStage);
     }
 
     /** 在指定領地放置一個標記（OFC-06 / PROG-2-0965）；上限已滿、未解鎖、領地不存在或已有標記時回傳 false，不改動狀態。 */
     public placeSandtableMarker(territoryId: string): boolean {
-        if (!canPlaceSandtableMarker(this.sandtableMarkersPlaced, this.officerUnlocks.sandtableStage)) return false;
+        if (!canPlaceSandtableMarker(this.sandtableMarkersPlaced, this.sandtableStage)) return false;
         if (!isSandtableTerritory(territoryId)) return false;
         if (this._sandtableMarkerTerritories.includes(territoryId)) return false;
         this._sandtableMarkerTerritories = [...this._sandtableMarkerTerritories, territoryId];
@@ -1877,6 +1927,7 @@ export class GameSession {
     public gainOfficerExp(task: OfficerTaskResult): number[] {
         const result = addOfficerExp(this._officerState, calcOfficerExpGain(task));
         this._officerState = result.state;
+        this._recordSandtableUnlockReached();
         return result.promotedTiers;
     }
 
@@ -2537,6 +2588,7 @@ export class GameSession {
         if (eraReset) {
             // 天下大亂：官職階位、經驗與解鎖歷史保留（OFC-09，F-3）
             this._officerState = applyEraShiftToOfficerState(this._officerState);
+            this._recordSandtableUnlockReached();
             this._emit(GAME_SESSION_EVENTS.EraReset, eraReset);
         }
         for (const event of unveil.events) {
@@ -3080,8 +3132,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3099,6 +3151,7 @@ export class GameSession {
         if (this._dispatch.active.length > 0 || this._dispatch.completed.length > 0 || Object.keys(this._dispatch.cooldowns).length > 0) {
             fields.generalDispatch = this.dispatchState;
         }
+        if (this._sandtableUnlockHistory.length > 0) fields.sandtableUnlockHistory = [...this._sandtableUnlockHistory];
         return fields;
     }
 
@@ -3117,6 +3170,8 @@ export class GameSession {
         this._dailyNews = normalizeDailyNewsState(snapshot.dailyNews);
         this._morningReport = normalizeMorningReportState(snapshot.morningReport);
         this._dispatch = normalizeDispatchState(snapshot.generalDispatch);
+        this._sandtableUnlockHistory = normalizeUnlockHistory(snapshot.sandtableUnlockHistory);
+        this._recordSandtableUnlockReached();
     }
 
     /**

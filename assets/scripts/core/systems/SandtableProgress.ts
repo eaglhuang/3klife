@@ -32,6 +32,11 @@ export function sandtableStageIdOf(short: 'S1' | 'S2' | 'S3'): SandtableStageId 
     return SHORT_TO_ID[short];
 }
 
+/** 階段代碼轉回官職快照的短代碼，供沙盤按鈕文字使用。 */
+export function sandtableShortCodeOf(stage: SandtableStageId): 'S1' | 'S2' | 'S3' {
+    return stage === 'S1_CENTRAL' ? 'S1' : stage === 'S2_BORDER' ? 'S2' : 'S3';
+}
+
 /** 過濾未知值與重複，依階段順序排好；不改輸入。 */
 export function normalizeUnlockHistory(raw: unknown): SandtableStageId[] {
     if (!Array.isArray(raw)) return [];

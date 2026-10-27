@@ -18,7 +18,7 @@ function hero(): GeneralConfig {
     return {
         id: 'zhao-yun', name: '趙雲', faction: 'shu', hp: 1000, str: 90, int: 70, lea: 80, pol: 60, cha: 80,
         tacticSlots: [{ slotId: 'slot-1', tacticId: 'tactic-dragon-pierce', source: 'inborn' }],
-    } as GeneralConfig;
+    } as unknown as GeneralConfig;
 }
 
 export function createTacticRandomizationSuite(): TestSuite {
