@@ -1,5 +1,5 @@
 /**
- * LobbyThemeResolver.test.ts — 大廳晝夜與節慶三層解析（PROG-2-1038，HALL-09）
+ * LobbyThemeResolver.test.ts — 大廳晝夜與節慶三層解析（PROG-2-1143，HALL-09）
  */
 import { assert, TestSuite } from './TestRunner';
 import {
@@ -38,7 +38,7 @@ const SPRING_CATALOG: HallThemeCatalog = {
 };
 
 export function createLobbyThemeResolverSuite(): TestSuite {
-    const suite = new TestSuite('LobbyThemeResolver (PROG-2-1038 晝夜與節慶主題)');
+    const suite = new TestSuite('LobbyThemeResolver (PROG-2-1143 晝夜與節慶主題)');
 
     suite.test('無節慶時沿用基礎背景與色調，節慶層為空，節慶插槽隱藏', () => {
         const frame = resolveHallTheme(dayTheme());
