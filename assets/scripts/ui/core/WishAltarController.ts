@@ -33,6 +33,8 @@ export interface WishAltarDeps {
     startWish: (itemId: string, nowMs: number) => { ok: boolean; reason?: WishStartReason; wish?: ActiveWish };
     speedUp: (wishId: string, cards: number, nowMs: number) => number;
     claim: (nowMs: number) => ActiveWish[];
+    /** 經濟補貼提示條（PROG-2-1343）；沒給或回空字串時隱藏 */
+    subsidyBanner?: (nowMs: number) => string;
 }
 
 export interface WishAltarFlowView {
@@ -128,7 +130,9 @@ export class WishAltarController {
             texts[`waSlotLabel${i}`] = wish ? slotText(wish, nowMs) : '空位';
             enabled[`waSlot${i}`] = !!wish && (isWishReady(wish, nowMs) || cards > 0);
         }
-        return { texts, actives: { waResultLabel: this._message !== '' }, enabled };
+        const banner = this._deps.subsidyBanner?.(nowMs) ?? '';
+        texts.waSubsidyLabel = banner;
+        return { texts, actives: { waResultLabel: this._message !== '', waSubsidyLabel: banner !== '' }, enabled };
     }
 }
 

@@ -145,7 +145,7 @@ import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBinding
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 import { DailyReportController } from '../core/DailyReportController';
-import { dailySubsidyText } from '../core/DailySubsidyNotice';
+import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
 
 const { ccclass } = _decorator;
 
@@ -1539,6 +1539,7 @@ export class LobbyScene extends Component {
             startWish: (itemId, nowMs) => services().session.startWish(itemId, nowMs),
             speedUp: (wishId, cards, nowMs) => services().session.speedUpWish(wishId, cards, nowMs),
             claim: (nowMs) => services().session.claimWishes(nowMs),
+            subsidyBanner: (nowMs) => economySubsidyBannerText(services().session.dailySubsidy, nowMs),
         });
         this._wishAltar = altar;
         const afterAction = (ok: boolean): void => {

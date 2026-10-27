@@ -7,6 +7,8 @@
  */
 import type { SubsidyResourceKey } from '../../core/systems/DailySubsidy';
 import { CELLAR_PROTECTION } from '../../core/systems/CellarProtection';
+import { loginDayOf } from '../../core/systems/LoginStreak';
+import type { DailySubsidyRecord } from '../../core/services/PlayerSaveService';
 
 /** 顯示順序與名稱（沿用經濟系統 UI_RES_* 的資源名） */
 export const DAILY_SUBSIDY_LABELS: readonly { key: SubsidyResourceKey; label: string }[] = [
@@ -23,4 +25,15 @@ export function dailySubsidyText(grants: Partial<Record<SubsidyResourceKey, numb
 /** 戰敗地窖保護提示（PROG-2-1342，文案暫定）：「地窖保護：保住糧草 N（保底 F）」；沒觸發回空字串 */
 export function cellarProtectionText(savedFood: number, floor: number = CELLAR_PROTECTION.foodFloor): string {
     return savedFood > 0 ? `地窖保護：保住糧草 ${savedFood}（保底 ${floor}）` : '';
+}
+
+/**
+ * 許願祭壇經濟補貼提示條（economy-subsidy-banner，PROG-2-1343，文案暫定）：
+ * 今日已補列出補量，否則「今日未觸發」；後接地窖保底線。
+ */
+export function economySubsidyBannerText(record: DailySubsidyRecord | null, nowMs: number): string {
+    const floor = `地窖保底：糧草 ${CELLAR_PROTECTION.foodFloor}、黃金 ${CELLAR_PROTECTION.goldFloor}`;
+    if (!record || record.lastClaimDay !== loginDayOf(nowMs)) return `每日補貼：今日未觸發（低於門檻登入時自動補）｜${floor}`;
+    const granted = dailySubsidyText({ food: record.foodGranted, gold: record.goldGranted, troops: record.troopsGranted });
+    return `${granted ? granted.replace('每日補貼：', '每日補貼：今日已補 ') : '每日補貼：今日已補'}｜${floor}`;
 }
