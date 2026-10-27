@@ -1,4 +1,4 @@
-// @spec-source → 戰場部署系統.md §I「Server 端」、§33-34 出征編制規則；DEP-13（PROG-2-0977）
+// @spec-source → 戰場部署系統.md §I「Server 端」、§33-34 出征編制規則；DEP-13（PROG-2-0937）
 /**
  * dep13-row-validators — 戰場部署紀錄的 Server 列驗證（純 TS，不連資料庫）
  *

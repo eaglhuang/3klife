@@ -1,5 +1,5 @@
 /**
- * ServerSchemaDep13 — 戰場部署紀錄 Server 列（DEP-13 / PROG-2-0977）
+ * ServerSchemaDep13 — 戰場部署紀錄 Server 列（DEP-13 / PROG-2-0937）
  *
  * 驗證重點：
  *   1. 合法列沒有任何問題
