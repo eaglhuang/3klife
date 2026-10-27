@@ -112,6 +112,7 @@ import { BASE_RESOURCE_CAPS, clampResource } from '../systems/ResourceCap';
 import { computeDeathBattleScore, settleDeathTallies, TALLY_DEATH_SCORE_TUNING } from '../systems/TallyDeathSettlement';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../systems/TigerTallyStar';
+import { resolveTallyBreakthrough, type TallyBreakthroughResult } from '../systems/TigerTallyBreakthrough';
 import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
 import { deriveInventoryViews, type InventoryRecord, type InventoryViews } from '../systems/InventoryProjection';
 import { buildTallyInventoryRecords, normalizeInventoryRecords } from '../systems/InventoryRecordBridge';
@@ -1121,6 +1122,34 @@ export class GameSession {
         if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
         const result = equipTally(this._tallyHoldings, cardUid, generalId);
         return this._commitTallyResult(result);
+    }
+
+    /**
+     * 虎符精華突破（TRP-11 / PROG-2-1318）：3★→4★、4★→5★，成敗由外部傳入的 roll 決定。
+     * 金幣與精華由呼叫端依回傳的 goldSpent、essenceSpent 扣款（失敗時扣一半材料，星級不變）。
+     * 只要突破判定有效（ok:true）就存檔，包含失敗扣材料的情況，避免重新載入後材料回復；
+     * 成功才寫回星級。卡不存在或條件不合時回傳 null 或 ok:false，不改動資料。
+     */
+    public async breakthroughTally(
+        cardUid: string,
+        roll: number,
+        wallet: { gold: number; essence: number; guaranteeTokens: number },
+    ): Promise<TallyBreakthroughResult | null> {
+        const card = this._tallyCards[cardUid];
+        if (!card) return null;
+        const result = resolveTallyBreakthrough({
+            quality: card.quality,
+            star: readCardStarState(card).star,
+            gold: wallet.gold,
+            essence: wallet.essence,
+            guaranteeTokens: wallet.guaranteeTokens,
+            roll,
+        });
+        if (!result.ok) return result;
+        if (result.success) this._tallyCards = { ...this._tallyCards, [cardUid]: { ...card, stars: result.star } };
+        this._syncInventoryRecords();
+        await this._autoSaveAfterTallyChange();
+        return result;
     }
 
     /**
