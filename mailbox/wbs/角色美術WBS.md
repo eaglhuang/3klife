@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-28 03:10 AG-39 完成：同步規格 v3.19（canonical_skeleton_v3.json 22,739 位元組，逐位元組比對相符）；check_layered_parts.py 實作剛性掛點 (rigid=true) 隱藏延伸與旋轉裂縫標記 NOT_APPLICABLE (豁免: rigidAttachment)，不計入 FAIL/PASS；實測 R314 neck-v1 head 核心超界由 12,266 px (4.40%) 歸零至 0 px (0.00%)，head Core/Extension 轉為 PASS；Codex R315 v3 候選 21 槽實測達 20 槽 PASS（僅 head 因 registration 缺 anchors 待補為 FAIL，hand_f 與 weapon 順利翻轉為 PASS）；新增 test_ag39_rigid_hidden_extension.py，全套 118 項測試 100% 通過（441d140b1）。
 - 2026-10-28 02:55 Claude：腕口圓形關節 v3 裂縫 49/43 px 通過，但 hand_f／arm_lower_f 有浮空殘片、hand_f 未套 R306 平移（R317）；規格 v3.19：head zone 左緣 670、rigidAttachment 免隱藏延伸；派 AG-39。
 - 2026-10-28 02:34 Claude：R316 領口 neck-v1 形狀通過，v2 補下巴陰影與 y=880 接縫；head 核心超界 4.34% 先出分布圖再定；手腕沿用 R315。
 - 2026-10-28 02:15 Claude：R315 腕口改重畫圓形關節＋hand_f 限 ±30°（待告知 Sparkle 由肘分擔）；3D Blender 試做暫停；R276 4.2 可載入收悉；AG v3.18 確認收悉。
