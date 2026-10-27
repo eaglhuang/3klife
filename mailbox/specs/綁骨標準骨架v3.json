@@ -623,6 +623,12 @@
     "canvas": "與本檔 canvas 相同（2048²），每槽一張全畫布透明 PNG，原位不裁切",
     "hiddenExtensionH": 0.03,
     "rotationTestDeg": 30,
+    "jointGeometry": {
+      "rotationPivot": "childBonePivot",
+      "scopeCapsuleAxis": "boneToChildBonePivot",
+      "hiddenExtensionFrom": "childBonePivot",
+      "note": "v3.12（2026-10-27）：旋轉檢查、隱藏延伸、範圍膠囊一律以 bones[].pivotCanvasPx 為準（Spine 實際繞此點旋轉），joints 只用於姿勢容差。手部骨點即拳心握點（grip_A／grip_B），比 wrist 遠約 56 px；前臂膠囊軸改為 arm_lower 骨點→hand 骨點，延伸須越過 hand 骨點 ≥ hiddenExtensionH×H，形狀為沿軸圓頭短樁，±rotationTestDeg 繞 hand 骨點旋轉後不得露在 hand ∪ weapon 之外。其他關節的 joints 與骨點重合，結果不變。"
+    },
     "rotationCrack": {
       "maxWidthPx": 12,
       "note": "v3.11（2026-10-27）：旋轉露縫只認『片與片之間的窄裂縫』：在 check_radius 圓盤內，對旋轉後 parent ∪ child ∪ 遮蔽槽做 maxWidthPx 閉運算，閉運算補上、原本透明的像素；再扣掉 0° 時同樣算法已存在的天然凹口與握點拳孔。子件轉走後留下的空位是正常動作，不算縫。"
