@@ -26,6 +26,8 @@ export interface GearSlotView {
     state: GearSlotState;
     /** 只有 EQUIPPED 時才有值 */
     equippedUid?: string;
+    /** 已裝備時的裝備名稱（查不到定義時不設值） */
+    equippedName?: string;
 }
 
 /** 槽位的顯示名稱，對應《武將裝備道具系統》一般裝備六類 */
@@ -43,11 +45,14 @@ export function gearSlotText(view: Readonly<GearSlotView>): string {
     const name = GEAR_SLOT_NAMES[view.slot];
     if (view.state === 'LOCKED') return `${name}：未解鎖`;
     if (view.state === 'EMPTY') return `${name}：空`;
-    return `${name}：已裝備`;
+    return `${name}：${view.equippedName ?? '已裝備'}`;
 }
 
 /** 依 2x3 格位排序，回傳六個格位的檢視模型。 */
-export function buildGearPageSlots(backpack: Readonly<GeneralBackpack>): GearSlotView[] {
+export function buildGearPageSlots(
+    backpack: Readonly<GeneralBackpack>,
+    nameOfUid: (uid: string) => string | undefined = () => undefined,
+): GearSlotView[] {
     const unlocked = new Set<EquipSlot>(backpack.unlocked);
     const views: GearSlotView[] = [];
     GEAR_PAGE_GRID.forEach((rowSlots, row) => {
@@ -56,7 +61,8 @@ export function buildGearPageSlots(backpack: Readonly<GeneralBackpack>): GearSlo
             if (!unlocked.has(slot)) {
                 views.push({ slot, row, col, state: 'LOCKED' });
             } else if (equippedUid) {
-                views.push({ slot, row, col, state: 'EQUIPPED', equippedUid });
+                const equippedName = nameOfUid(equippedUid);
+                views.push({ slot, row, col, state: 'EQUIPPED', equippedUid, ...(equippedName ? { equippedName } : {}) });
             } else {
                 views.push({ slot, row, col, state: 'EMPTY' });
             }

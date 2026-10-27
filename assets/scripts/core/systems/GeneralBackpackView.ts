@@ -12,9 +12,16 @@
  */
 import { BASIC_EQUIP_SLOTS, ADVANCED_EQUIP_SLOTS, EQUIP_SLOTS, EquipSlot, GeneralBackpack } from './GeneralBackpack';
 import type { InventoryRecord } from './InventoryProjection';
+import { gearDefinitionOf } from './GearDefinitions';
 
 function isGearSlot(value: unknown): value is EquipSlot {
     return typeof value === 'string' && (EQUIP_SLOTS as readonly string[]).includes(value);
+}
+
+/** 依背包裡的 uid（即 Inventory_ID）查出裝備顯示名稱；列不存在或定義 id 查無則回傳 undefined。 */
+export function gearNameOfUid(records: readonly InventoryRecord[], uid: string): string | undefined {
+    const record = records.find((r) => r.Inventory_ID === uid);
+    return gearDefinitionOf(record?.Gear_ID)?.name;
 }
 
 /** 依武將 uid 從統一物件庫篩出一般裝備背包；物件庫不會因此被修改。 */
