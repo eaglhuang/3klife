@@ -527,7 +527,7 @@ export class LobbyScene extends Component {
             const loaded = await services().session.load();
             UCUFLogger.info(LogCategory.DATA, loaded ? '[LobbyScene] 已讀取玩家存檔' : '[LobbyScene] 沒有玩家存檔，從新局開始');
             // 登入（連續登入 PROG-2-0987、三國日報 PROG-2-1170）：讀檔後記一次，當天第一次登入會生成日報
-            services().session.recordLoginAt(Date.now());
+            services().session.recordLoginAt(Date.now(), (amount) => { this._localGachaService.grantCurrency('gold', amount); });
             this._showDailyNews();
             // 離線互動（JRN-04）：目前尚無主互動內容，只記錄是否應觸發
             if (loaded && services().session.offlineInteractionDue(Date.now())) {
@@ -1409,6 +1409,13 @@ export class LobbyScene extends Component {
         const host = this._journalHubHost;
         if (!host || !this._journalHub) {
             return;
+        }
+        // 遊戲中到期的派遣也在開板時結算發獎（PROG-2-1182）
+        const session = services().session;
+        const done = session.settleDispatchJobs(Date.now(), (amount) => { this._localGachaService.grantCurrency('gold', amount); });
+        if (done.length > 0) {
+            services().event.emit('SHOW_TOAST', { message: `${done.length} 項派遣完成，獎勵已入帳。`, duration: 2 });
+            void session.save().catch(() => undefined);
         }
         host.node.active = true;
         this._bringNodeToFront(host.node);
