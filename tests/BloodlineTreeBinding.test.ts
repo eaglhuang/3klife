@@ -50,6 +50,12 @@ export function createBloodlineTreeBindingSuite(): TestSuite {
         assert.equals('關羽\n幽州', treeCardText(f!));
     });
 
+    suite.test('每張卡的 slot 位數 = 4 − 排數：第 1 排三代、第 2 排兩代、第 3 排父母', () => {
+        for (const card of buildNodeCards({})) {
+            assert.equals(4 - card.row, card.slot.length);
+        }
+    });
+
     suite.test('節點名稱格式固定：NodeCard_G{排}_{序號}', () => {
         assert.equals('NodeCard_G2_3', treeCardNodeName(2, 3));
     });
