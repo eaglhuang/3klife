@@ -429,6 +429,33 @@
                 ]
               },
               {
+                "type": "button",
+                "name": "BtnOpenJournalHub",
+                "id": "btnOpenJournalHub",
+                "widget": {
+                  "top": 208,
+                  "left": 524
+                },
+                "width": 500,
+                "height": 88,
+                "skinSlot": "domestic.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenJournalHubLabel",
+                    "id": "btnOpenJournalHubLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 28,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "晨報・派遣板 ▶",
+                    "styleSlot": "domestic.label.tile"
+                  }
+                ]
+              },
+              {
                 "type": "label",
                 "name": "ScoutingOutput",
                 "id": "scoutingOutput",
