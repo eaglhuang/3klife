@@ -21,7 +21,7 @@
         "name": "TournamentCard",
         "id": "tournamentCard",
         "width": 1000,
-        "height": 560,
+        "height": 612,
         "skinSlot": "trn.card.bg",
         "layout": {
           "type": "vertical",
@@ -80,6 +80,15 @@
           },
           {
             "type": "label",
+            "name": "TrnRewardLabel",
+            "id": "trnRewardLabel",
+            "width": 944,
+            "height": 40,
+            "text": "賽季獎勵：無待領取",
+            "styleSlot": "trn.label.line"
+          },
+          {
+            "type": "label",
             "name": "TrnResultLabel",
             "id": "trnResultLabel",
             "width": 944,
@@ -98,7 +107,7 @@
                 "type": "button",
                 "name": "BtnRegister",
                 "id": "btnRegister",
-                "width": 240,
+                "width": 220,
                 "height": 64,
                 "skinSlot": "trn.button.bg",
                 "children": [
@@ -106,7 +115,7 @@
                     "type": "label",
                     "name": "BtnRegisterLabel",
                     "id": "btnRegisterLabel",
-                    "width": 240,
+                    "width": 220,
                     "height": 40,
                     "text": "報名",
                     "styleSlot": "trn.label.body"
@@ -121,7 +130,7 @@
                 "type": "button",
                 "name": "BtnPlay",
                 "id": "btnPlay",
-                "width": 240,
+                "width": 220,
                 "height": 64,
                 "skinSlot": "trn.button.bg",
                 "children": [
@@ -129,14 +138,37 @@
                     "type": "label",
                     "name": "BtnPlayLabel",
                     "id": "btnPlayLabel",
-                    "width": 240,
+                    "width": 220,
                     "height": 40,
                     "text": "參戰",
                     "styleSlot": "trn.label.body"
                   }
                 ],
                 "widget": {
-                  "hCenter": true,
+                  "left": 241,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnClaim",
+                "id": "btnClaim",
+                "width": 220,
+                "height": 64,
+                "skinSlot": "trn.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnClaimLabel",
+                    "id": "btnClaimLabel",
+                    "width": 220,
+                    "height": 40,
+                    "text": "領獎",
+                    "styleSlot": "trn.label.body"
+                  }
+                ],
+                "widget": {
+                  "right": 241,
                   "vCenter": true
                 }
               },
@@ -144,7 +176,7 @@
                 "type": "button",
                 "name": "BtnClose",
                 "id": "btnClose",
-                "width": 240,
+                "width": 220,
                 "height": 64,
                 "skinSlot": "trn.button.bg",
                 "children": [
@@ -152,7 +184,7 @@
                     "type": "label",
                     "name": "BtnCloseLabel",
                     "id": "btnCloseLabel",
-                    "width": 240,
+                    "width": 220,
                     "height": 40,
                     "text": "關閉",
                     "styleSlot": "trn.label.body"

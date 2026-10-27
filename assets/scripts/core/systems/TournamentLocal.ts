@@ -1,4 +1,4 @@
-// @spec-source → 名將挑戰賽系統.md (doc_spec_0007) §F 賽季週期（TOURNAMENT_CONFIG）、配對機制、賽季鏡像快照與鎖定規則、排名積分；PROG-2-1190
+// @spec-source → 名將挑戰賽系統.md (doc_spec_0007) §F 賽季週期（TOURNAMENT_CONFIG）、配對機制、賽季鏡像快照與鎖定規則、排名積分；PROG-2-1190；§E-9 賽季獎勵 PROG-2-1194
 /**
  * TournamentLocal — 名將挑戰賽本機最小可行（純邏輯，不依賴 cc）。
  *
@@ -7,8 +7,9 @@
  *   - 報名：第一次參戰時凍結出戰陣容為鏡像快照；培育期每日可重登錄 1 次，競賽期整季只可替換 1 次。
  *   - 參戰：只在競賽期；每日免費 1 次，額外每次付費（呼叫端決定扣什麼），每日上限 5 次。
  *   - 對戰：對手戰力在我方 ±15% 內隨機；五戰三勝，每場雙方各帶 ±5% 地形浮動；系列賽勝負套規格 ELO（K=32）。
+ *   - 獎勵：有參賽（留有鏡像快照）的已結束賽季依最終段位列為待領，領取後標記已領（PROG-2-1194）。
  *
- * 暫定：對手的排名分以「我方分數 × 對手戰力比」估算；ELO 以整個系列賽算一次；獎勵發放（TRN-10）未做。
+ * 暫定：對手的排名分以「我方分數 × 對手戰力比」估算；ELO 以整個系列賽算一次；獎勵先只發金錢（稀有虎符／限定外觀待企劃）。
  * Unity 對照：像一個存檔用的 ScriptableObject 狀態 + 純函式 reducer。
  */
 import { rankTierOf, softResetPoints, tournamentPhaseOf, TOURNAMENT_SEASON_DAYS, type RankTier, type TournamentPhase } from './TournamentSeason';
@@ -30,6 +31,16 @@ export const TOURNAMENT_LOCAL_CONFIG = {
     competitionReplaceLimit: 1,
 } as const;
 
+/** 賽季獎勵（暫定，只發金錢）：依最終段位 */
+export const TOURNAMENT_SEASON_REWARD_GOLD: Readonly<Record<RankTier, number>> = {
+    BRONZE: 100,
+    SILVER: 200,
+    GOLD: 400,
+    PLATINUM: 700,
+    DIAMOND: 1000,
+    LEGEND: 1500,
+};
+
 export interface TournamentTeamSnapshot {
     snapshotId: string;
     seasonIndex: number;
@@ -44,6 +55,14 @@ export interface TournamentSeasonHistory {
     finalTier: RankTier;
     bestWinStreak: number;
     snapshotId: string | null;
+    /** 賽季獎勵已領（PROG-2-1194） */
+    rewardClaimed: boolean;
+}
+
+export interface TournamentSeasonReward {
+    seasonIndex: number;
+    tier: RankTier;
+    gold: number;
 }
 
 export interface TournamentState {
@@ -96,7 +115,7 @@ export function rolloverTournament(state: Readonly<TournamentState>, nowMs: numb
     while (tournamentDayOf(next, nowMs) >= TOURNAMENT_SEASON_DAYS) {
         next.history.push({
             seasonIndex: next.seasonIndex, finalPoints: next.points, finalTier: rankTierOf(next.points),
-            bestWinStreak: next.bestWinStreak, snapshotId: next.team?.snapshotId ?? null,
+            bestWinStreak: next.bestWinStreak, snapshotId: next.team?.snapshotId ?? null, rewardClaimed: false,
         });
         next = {
             ...next,
@@ -112,6 +131,21 @@ export function rolloverTournament(state: Readonly<TournamentState>, nowMs: numb
 
 function entriesUsedToday(state: Readonly<TournamentState>, day: number): number {
     return state.entryDay === day ? state.entriesToday : 0;
+}
+
+/** 待領的賽季獎勵：已結束、有參賽（有鏡像快照）、尚未領 */
+export function pendingTournamentRewards(state: Readonly<TournamentState>): TournamentSeasonReward[] {
+    return state.history
+        .filter((h) => h.snapshotId !== null && !h.rewardClaimed)
+        .map((h) => ({ seasonIndex: h.seasonIndex, tier: h.finalTier, gold: TOURNAMENT_SEASON_REWARD_GOLD[h.finalTier] }));
+}
+
+/** 領取全部待領獎勵；回傳新狀態與領到的清單 */
+export function claimTournamentRewards(state: Readonly<TournamentState>): { state: TournamentState; rewards: TournamentSeasonReward[] } {
+    const rewards = pendingTournamentRewards(state);
+    if (rewards.length === 0) return { state: { ...state, history: state.history.slice() }, rewards };
+    const history = state.history.map((h) => (h.snapshotId !== null && !h.rewardClaimed ? { ...h, rewardClaimed: true } : h));
+    return { state: { ...state, history }, rewards };
 }
 
 export function tournamentStatus(state: Readonly<TournamentState>, nowMs: number): TournamentStatus {
@@ -253,7 +287,8 @@ export function normalizeTournamentState(raw: unknown): TournamentState | null {
     const history = Array.isArray(s.history)
         ? s.history.filter((h): h is TournamentSeasonHistory => !!h && isNum(h.seasonIndex) && isNum(h.finalPoints))
             .map((h) => ({ seasonIndex: h.seasonIndex, finalPoints: h.finalPoints, finalTier: rankTierOf(h.finalPoints),
-                bestWinStreak: isNum(h.bestWinStreak) ? h.bestWinStreak : 0, snapshotId: typeof h.snapshotId === 'string' ? h.snapshotId : null }))
+                bestWinStreak: isNum(h.bestWinStreak) ? h.bestWinStreak : 0, snapshotId: typeof h.snapshotId === 'string' ? h.snapshotId : null,
+                rewardClaimed: h.rewardClaimed === true }))
         : [];
     return {
         seasonIndex: s.seasonIndex, seasonStartMs: s.seasonStartMs, points: Math.max(0, s.points), team,

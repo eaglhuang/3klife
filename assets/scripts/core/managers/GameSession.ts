@@ -86,8 +86,8 @@ import {
     appendOfflineBattleSnapshot, nextOfflineBattleSnapshotId, normalizeOfflineBattleSnapshots, OFFLINE_BATTLE_JOURNAL, CAMPAIGN_BATTLE_JOURNAL, type OfflineBattleInput, type OfflineBattleSnapshot,
 } from '../systems/OfflineBattleSnapshot';
 import {
-    createTournamentState, normalizeTournamentState, playTournamentSeries, registerTournamentTeam, rolloverTournament, tournamentStatus,
-    type TournamentEntrant, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeasonHistory, type TournamentSeriesResult,
+    claimTournamentRewards, createTournamentState, normalizeTournamentState, pendingTournamentRewards, playTournamentSeries, registerTournamentTeam,
+    rolloverTournament, tournamentStatus, type TournamentEntrant, type TournamentSeasonReward, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeasonHistory, type TournamentSeriesResult,
     type TournamentState, type TournamentStatus,
 } from '../systems/TournamentLocal';
 import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type DispatchCatalogRow, type DispatchPreview } from '../systems/DispatchCatalog';
@@ -1555,6 +1555,20 @@ export class GameSession {
 
     public get tournamentHistory(): TournamentSeasonHistory[] {
         return (this._tournament?.history ?? []).map((h) => ({ ...h }));
+    }
+
+    /** 待領賽季獎勵（PROG-2-1194） */
+    public pendingTournamentRewards(nowMs: number): TournamentSeasonReward[] {
+        return pendingTournamentRewards(this._tournamentAt(nowMs));
+    }
+
+    /** 領取賽季獎勵：每季金錢交給 grant 入帳；不自動存檔 */
+    public claimTournamentRewards(nowMs: number, grant: (gold: number) => void): TournamentSeasonReward[] {
+        const claimed = claimTournamentRewards(this._tournamentAt(nowMs));
+        if (claimed.rewards.length === 0) return [];
+        this._tournament = claimed.state;
+        for (const reward of claimed.rewards) grant(reward.gold);
+        return claimed.rewards;
     }
 
     /** 報名／重登錄：凍結目前陣容為鏡像快照（培育期每日 1 次、競賽期整季可替換 1 次）；不自動存檔 */

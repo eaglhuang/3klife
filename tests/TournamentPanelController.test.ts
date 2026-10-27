@@ -1,11 +1,11 @@
 /**
- * TournamentPanelController.test.ts — 名將挑戰賽彈窗：賽季卡文字、按鈕可用、報名與參戰訊息（PROG-2-1191）
+ * TournamentPanelController.test.ts — 名將挑戰賽彈窗：賽季卡文字、按鈕可用、報名與參戰訊息（PROG-2-1191）、賽季獎勵（PROG-2-1194）
  */
 import { assert, TestSuite } from './TestRunner';
 import { GameSession } from '../assets/scripts/core/managers/GameSession';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { TOURNAMENT_DAY_MS } from '../assets/scripts/core/systems/TournamentLocal';
-import { seriesText, TournamentPanelController } from '../assets/scripts/ui/core/TournamentPanelController';
+import { rewardsText, seriesText, TournamentPanelController } from '../assets/scripts/ui/core/TournamentPanelController';
 
 const D = TOURNAMENT_DAY_MS;
 
@@ -29,6 +29,8 @@ function setup(gold: number): { panel: TournamentPanelController; clock: { now: 
             return true;
         }),
         generalName: (id) => names[id],
+        pendingRewards: (nowMs) => session.pendingTournamentRewards(nowMs),
+        claimRewards: (nowMs) => session.claimTournamentRewards(nowMs, (g) => { wallet.gold += g; }),
     });
     return { panel, clock, wallet };
 }
@@ -68,6 +70,33 @@ export function createTournamentPanelControllerSuite(): TestSuite {
         assert.equals('金錢不足，無法額外參戰。', panel.message);
         panel.reset();
         assert.equals('', panel.getFlowView().texts.trnResultLabel);
+    });
+
+    suite.test('賽季獎勵：參賽過季後顯示待領，領獎入帳並停用按鈕', () => {
+        const { panel, clock, wallet } = setup(0);
+        let view = panel.getFlowView();
+        assert.equals('賽季獎勵：無待領取', view.texts.trnRewardLabel);
+        assert.isTrue(!view.enabled.btnClaim);
+        clock.now = 7 * D;
+        assert.isTrue(panel.play());
+        wallet.gold = 0;
+        clock.now = 14 * D;
+        view = panel.getFlowView();
+        assert.isTrue(view.enabled.btnClaim && /^賽季獎勵：第 1 季 /.test(view.texts.trnRewardLabel));
+        assert.isTrue(panel.claim());
+        assert.isTrue(wallet.gold >= 100);
+        assert.isTrue(/^已領取：第 1 季 /.test(panel.message));
+        view = panel.getFlowView();
+        assert.equals('賽季獎勵：無待領取', view.texts.trnRewardLabel);
+        assert.isTrue(!view.enabled.btnClaim);
+        assert.isTrue(!panel.claim());
+        assert.equals('沒有可領取的賽季獎勵。', panel.message);
+    });
+
+    suite.test('獎勵清單文字', () => {
+        assert.equals('第 1 季 黃金 金錢 400、第 2 季 青銅 金錢 100', rewardsText([
+            { seasonIndex: 1, tier: 'GOLD', gold: 400 }, { seasonIndex: 2, tier: 'BRONZE', gold: 100 },
+        ]));
     });
 
     suite.test('系列賽結果文字：勝負、比分、積分變化與花費', () => {

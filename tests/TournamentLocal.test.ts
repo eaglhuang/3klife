@@ -6,8 +6,8 @@ import { GameSession } from '../assets/scripts/core/managers/GameSession';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import type { PlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
 import {
-    createTournamentState, normalizeTournamentState, playTournamentSeries, registerTournamentTeam, rolloverTournament,
-    tournamentEloChange, tournamentStatus, TOURNAMENT_DAY_MS, TOURNAMENT_LOCAL_CONFIG, type TournamentState,
+    claimTournamentRewards, createTournamentState, normalizeTournamentState, pendingTournamentRewards, playTournamentSeries,
+    registerTournamentTeam, rolloverTournament, tournamentEloChange, TOURNAMENT_SEASON_REWARD_GOLD, tournamentStatus, TOURNAMENT_DAY_MS, TOURNAMENT_LOCAL_CONFIG, type TournamentState,
 } from '../assets/scripts/core/systems/TournamentLocal';
 
 const D = TOURNAMENT_DAY_MS;
@@ -99,6 +99,38 @@ export function createTournamentLocalSuite(): TestSuite {
         assert.equals(1850, next.history[1].finalPoints);
         assert.isTrue(next.team === null && next.entriesToday === 0);
         assert.equals(2 * D, 30 * D - next.seasonStartMs);
+    });
+
+    suite.test('賽季獎勵：只發有參賽的已結束賽季，依最終段位；領後清空（PROG-2-1194）', () => {
+        const state: TournamentState = { ...played(createTournamentState(0), 7 * D, even), points: 2000 };
+        const next = rolloverTournament(state, 30 * D);
+        const pending = pendingTournamentRewards(next);
+        assert.equals(1, pending.length);
+        assert.equals(1, pending[0].seasonIndex);
+        assert.equals('PLATINUM', pending[0].tier);
+        assert.equals(TOURNAMENT_SEASON_REWARD_GOLD.PLATINUM, pending[0].gold);
+        const claimed = claimTournamentRewards(next);
+        assert.equals(1, claimed.rewards.length);
+        assert.equals(0, pendingTournamentRewards(claimed.state).length);
+        assert.equals(1, pendingTournamentRewards(next).length);
+        assert.equals(0, claimTournamentRewards(claimed.state).rewards.length);
+        assert.equals(0, pendingTournamentRewards(createTournamentState(0)).length);
+    });
+
+    suite.test('GameSession：領賽季獎勵入帳、存讀檔保留已領（PROG-2-1194）', () => {
+        const session = new GameSession(1);
+        session.enrollGenerals([hero('x', '甲', 90)]);
+        session.tournamentStatus(0);
+        assert.isTrue(session.playTournament(7 * D).ok);
+        assert.equals(1, session.pendingTournamentRewards(14 * D).length);
+        const reloaded = new GameSession(1);
+        reloaded.restoreLifespanState(JSON.parse(JSON.stringify(session.createSnapshot(new Date(0)))) as PlayerSaveSnapshot);
+        let gold = 0;
+        assert.equals(1, reloaded.claimTournamentRewards(14 * D, (g) => { gold += g; }).length);
+        assert.isTrue(gold >= TOURNAMENT_SEASON_REWARD_GOLD.BRONZE);
+        const again = new GameSession(1);
+        again.restoreLifespanState(JSON.parse(JSON.stringify(reloaded.createSnapshot(new Date(0)))) as PlayerSaveSnapshot);
+        assert.equals(0, again.pendingTournamentRewards(14 * D).length);
     });
 
     suite.test('存檔正規化：壞資料回 null，缺欄位補預設', () => {
