@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 17:25 Claude AG-29／R294：AG-28 合成測試與報告欄位收下（80 項 OK）；R292 實資料重跑後手不靠 weapon 即 PASS、weapon 蓋 0 px，回報的 845/632 無法重現；腳踝 trueSeam 329/340 px 待新增輪廓內透光縫判讀；後手 112 px 在核心圓盤外，Codex 直接補底色（不填拳孔）。
 - 2026-10-27 17:15 AG-28 完成：check_layered_parts.py 實作 rotationOccluders 剛性旋轉遮蔽聯集（零硬編碼，自 v3.9 規格讀取）；完成 PASS 與漏縫數一致性說明與報告輸出改進（明確輸出 leakTolerancePx、minRequiredOverlapPixels 與各角度 metrics）；Codex R292 趙雲後手加 weapon 遮蔽重疊達 844px 順利判 PASS、雙腿漏縫 285~495px 在容許上限 676px 內一致判定 PASS；全套 19 個測試檔、80 項單元測試 100% 通過（be9d72dac）。
 - 2026-10-27 16:50 Claude R293／AG-28／規格 v3.9：握點拳孔旋轉檢查納入 weapon 遮蔽；腿部延伸候選收下但 PASS 與漏縫數不一致待 AG-28 說明；後手剩 112 px 待新版檢查器後補；Codex 須使用者直接授權才重開 Creator。
 - 2026-10-27 16:30 Claude R292：骨盆候選通過；後手／腳不開 v3.2，照前手做法把 arm_lower_b、shin_b、thigh_f 延伸補到 ≥48px；要求 Codex 立即執行 R290 或明說無法執行。
