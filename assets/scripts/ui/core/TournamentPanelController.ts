@@ -1,10 +1,11 @@
-// @spec-source → 名將挑戰賽系統.md (doc_spec_0007)；PROG-2-1191（挑戰賽彈窗）
+// @spec-source → 名將挑戰賽系統.md (doc_spec_0007)；PROG-2-1191（挑戰賽彈窗）；§H UI_TOURNAMENT_REWARD 賽季獎勵 PROG-2-1194
 /**
  * TournamentPanelController — 名將挑戰賽彈窗：賽季卡、報名、參戰（純邏輯，不依賴 cc）。
  *
  * 職責：
  *   - 顯示賽季、相位、剩餘日、積分與段位、今日剩餘次數（含免費／付費）、出戰陣容
  *   - 報名／參戰後顯示結果或拒絕原因
+ *   - 顯示待領賽季獎勵，「領獎」一次領完（PROG-2-1194）
  *   - 輸出扁平 FlowView，key 與 tournament-main 版面節點 id 一一對應
  *
  * 暫定：段位與相位中文名、拒絕原因文案待企劃定版；額外參戰幣別為金錢。
@@ -12,8 +13,8 @@
  */
 import type { RankTier, TournamentPhase } from '../../core/systems/TournamentSeason';
 import {
-    TOURNAMENT_LOCAL_CONFIG, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeriesResult,
-    type TournamentStatus,
+    TOURNAMENT_LOCAL_CONFIG, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeasonReward,
+    type TournamentSeriesResult, type TournamentStatus,
 } from '../../core/systems/TournamentLocal';
 
 export const TOURNAMENT_PHASE_LABEL: Record<TournamentPhase, string> = {
@@ -48,6 +49,8 @@ export interface TournamentPanelDeps {
     register: (nowMs: number) => { ok: boolean; reason?: TournamentRegisterReason };
     play: (nowMs: number) => { ok: boolean; reason?: TournamentEntryReason; result?: TournamentSeriesResult };
     generalName: (generalId: string) => string | undefined;
+    pendingRewards: (nowMs: number) => TournamentSeasonReward[];
+    claimRewards: (nowMs: number) => TournamentSeasonReward[];
 }
 
 export interface TournamentPanelFlowView {
@@ -78,13 +81,22 @@ export class TournamentPanelController {
         return played.ok;
     }
 
+    /** 領取全部待領賽季獎勵；有領到回 true */
+    public claim(): boolean {
+        const rewards = this._deps.claimRewards(this._deps.now());
+        this._message = rewards.length > 0 ? `已領取：${rewardsText(rewards)}` : '沒有可領取的賽季獎勵。';
+        return rewards.length > 0;
+    }
+
     public get message(): string {
         return this._message;
     }
 
     public getFlowView(): TournamentPanelFlowView {
         const cfg = TOURNAMENT_LOCAL_CONFIG;
-        const status = this._deps.status(this._deps.now());
+        const nowMs = this._deps.now();
+        const status = this._deps.status(nowMs);
+        const pending = this._deps.pendingRewards(nowMs);
         const competing = status.phase === 'COMPETITION';
         const used = cfg.maxDailyEntries - status.entriesLeftToday;
         const freeLeft = Math.max(0, cfg.dailyFreeEntries - used);
@@ -103,19 +115,27 @@ export class TournamentPanelController {
                 trnRankLabel: `積分 ${status.points}｜${TOURNAMENT_TIER_LABEL[status.tier]}`,
                 trnEntriesLabel: entries,
                 trnTeamLabel: team,
+                trnRewardLabel: `賽季獎勵：${pending.length > 0 ? rewardsText(pending) : '無待領取'}`,
                 trnResultLabel: this._message,
                 btnRegisterLabel: status.team ? '重新報名' : '報名',
                 btnPlayLabel: competing && status.entriesLeftToday > 0 && freeLeft === 0 ? `參戰（${cfg.extraEntryCost} 金）` : '參戰',
+                btnClaimLabel: '領獎',
                 btnCloseLabel: '關閉',
             },
             actives: { trnResultLabel: this._message !== '' },
             enabled: {
                 btnRegister: status.phase !== 'ENDED',
                 btnPlay: competing && status.entriesLeftToday > 0,
+                btnClaim: pending.length > 0,
                 btnClose: true,
             },
         };
     }
+}
+
+/** 獎勵清單一句話：「第 N 季 段位 金錢 X」以「、」相接 */
+export function rewardsText(rewards: readonly TournamentSeasonReward[]): string {
+    return rewards.map((r) => `第 ${r.seasonIndex} 季 ${TOURNAMENT_TIER_LABEL[r.tier]} 金錢 ${r.gold}`).join('、');
 }
 
 /** 系列賽結果一句話：勝負、比分、積分變化 */

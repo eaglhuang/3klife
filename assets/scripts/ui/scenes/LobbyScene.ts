@@ -1466,7 +1466,7 @@ export class LobbyScene extends Component {
         this._battleReviewHost.node.active = false;
     }
 
-    /** 名將挑戰賽彈窗（doc_spec_0007，PROG-2-1191）：入口暫放晨報派遣板；額外參戰扣錢包金錢，報名／參戰成功後存檔 */
+    /** 名將挑戰賽彈窗（doc_spec_0007，PROG-2-1191）：入口暫放晨報派遣板；額外參戰扣錢包金錢，賽季獎勵入錢包金錢（PROG-2-1194）；成功後存檔 */
     private async _mountTournament(): Promise<void> {
         const gacha = this._localGachaService;
         const tournament = new TournamentPanelController({
@@ -1475,6 +1475,8 @@ export class LobbyScene extends Component {
             register: (nowMs) => services().session.registerTournament(nowMs),
             play: (nowMs) => services().session.playTournament(nowMs, (cost) => gacha.spendCurrency('gold', cost)),
             generalName: (id) => this._generals.find((g) => g.id === id)?.name,
+            pendingRewards: (nowMs) => services().session.pendingTournamentRewards(nowMs),
+            claimRewards: (nowMs) => services().session.claimTournamentRewards(nowMs, (gold) => { gacha.grantCurrency('gold', gold); }),
         });
         this._tournament = tournament;
         const afterAction = (ok: boolean): void => {
@@ -1485,6 +1487,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnClose', handler: () => { if (this._tournamentHost) this._tournamentHost.node.active = false; } },
             { buttonId: 'btnRegister', handler: () => { afterAction(tournament.register()); } },
             { buttonId: 'btnPlay', handler: () => { afterAction(tournament.play()); } },
+            { buttonId: 'btnClaim', handler: () => { afterAction(tournament.claim()); } },
         ]);
         this._tournamentHost.node.active = false;
     }
