@@ -1295,9 +1295,26 @@ def run_layered_parts_inspection(
 
         leak_pass = leak_pos_ok and leak_neg_ok
 
-        # AG-31 D: 擬議閘門 (只並列、不取代現行 tier)
+        # AG-32 / AG-31: 擬議閘門 (只並列、不取代現行 tier)
         # 條件：parent 核心覆蓋率 >= 15%；child (不含遮蔽槽) 核心覆蓋率 >= 15% (detachedChild 免除)；
-        # 且關節裂縫 jointCrackPx 正負角度各 <= 8 px
+        # 且關節裂縫 jointCrackPx 正負角度各 <= 動態計算門檻 (依戰場顯示高換算)
+        gate_cfg = rot_crack_cfg.get("gate", {})
+        ref_disp_h = float(gate_cfg.get("referenceDisplayHeightPx", 360))
+        max_crack_disp = float(gate_cfg.get("maxCrackAreaDisplayPx2", 4))
+        derived_max_crack = gate_cfg.get("derivedMaxCrackCanvasPx")
+        spec_H = float(spec.get("H", 1600))
+
+        # 門檻 = maxCrackAreaDisplayPx2 * (H / referenceDisplayHeightPx)^2
+        calc_crack_threshold = max_crack_disp * ((spec_H / ref_disp_h) ** 2)
+
+        derived_diff_warn: str | None = None
+        if derived_max_crack is not None:
+            if abs(float(derived_max_crack) - calc_crack_threshold) > 1.0:
+                derived_diff_warn = (
+                    f"derivedMaxCrackCanvasPx ({derived_max_crack}) differs from "
+                    f"calculated threshold ({calc_crack_threshold:.2f}) by > 1px"
+                )
+
         core_tot = metrics_pos["coreTotalPixels"]
         min_cov_req = int(core_tot * 0.15)
         p_cov_pos = metrics_pos["parentCoverageInCore"]
@@ -1329,13 +1346,13 @@ def run_layered_parts_inspection(
                 proposed_fail_reasons.append(
                     f"childCoverageWithoutOccluders(-deg)={c_cov_neg_raw} < 15% ({min_cov_req}px)"
                 )
-        if crack_pos > 8:
+        if crack_pos > calc_crack_threshold:
             proposed_fail_reasons.append(
-                f"jointCrackPx(+deg)={crack_pos} > 8px"
+                f"jointCrackPx(+deg)={crack_pos} > {calc_crack_threshold:.2f}px"
             )
-        if crack_neg > 8:
+        if crack_neg > calc_crack_threshold:
             proposed_fail_reasons.append(
-                f"jointCrackPx(-deg)={crack_neg} > 8px"
+                f"jointCrackPx(-deg)={crack_neg} > {calc_crack_threshold:.2f}px"
             )
 
         proposed_pass = len(proposed_fail_reasons) == 0
@@ -1351,10 +1368,19 @@ def run_layered_parts_inspection(
                 "conditions": {
                     "parentCoreCoverageMinRatio": 0.15,
                     "childCoreCoverageWithoutOccludersMinRatio": 0.15 if not is_detached_child else "WAIVED (detachedChild)",
-                    "maxJointCrackPx": 8,
+                    "maxJointCrackPx": round(calc_crack_threshold, 2),
+                    "crackGateSource": {
+                        "H": spec_H,
+                        "referenceDisplayHeightPx": ref_disp_h,
+                        "maxCrackAreaDisplayPx2": max_crack_disp,
+                        "calculatedThresholdPx": round(calc_crack_threshold, 2),
+                        "derivedMaxCrackCanvasPx": derived_max_crack,
+                        "derivedDiffWarning": derived_diff_warn,
+                    },
                 },
                 "reasons": proposed_fail_reasons,
             },
+            "maxJointCrackThresholdPx": round(calc_crack_threshold, 2),
             "skipped": False,
             "pivot": list(piv_pt),
             "pivotSource": j_conn.get("pivotSource", "bonePivot"),
