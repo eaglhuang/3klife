@@ -79,7 +79,7 @@ import {
 } from '../systems/DispatchJobs';
 import { dispatchCompleteLine, getDispatchScore, type DispatchGeneral, type DispatchStatKey } from '../systems/DispatchQuality';
 import {
-    appendOfflineBattleSnapshot, nextOfflineBattleSnapshotId, normalizeOfflineBattleSnapshots, OFFLINE_BATTLE_JOURNAL, type OfflineBattleInput, type OfflineBattleSnapshot,
+    appendOfflineBattleSnapshot, nextOfflineBattleSnapshotId, normalizeOfflineBattleSnapshots, OFFLINE_BATTLE_JOURNAL, CAMPAIGN_BATTLE_JOURNAL, type OfflineBattleInput, type OfflineBattleSnapshot,
 } from '../systems/OfflineBattleSnapshot';
 import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type DispatchCatalogRow, type DispatchPreview } from '../systems/DispatchCatalog';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
@@ -207,7 +207,7 @@ import {
     type JournalWriteResult,
 } from '../systems/JournalLog';
 import type { DomesticTaskId } from '../systems/DomesticTasks';
-import { advanceRivalSeason, autoResolveBattle, createRivalWorld, generalPower, normalizeRivalWorld, type AutoBattleResult, type BattleGeneral, type RivalWorld } from '../systems/RivalNations';
+import { advanceRivalSeason, autoResolveBattle, createRivalWorld, generalPower, nationDef, normalizeRivalWorld, type AutoBattleResult, type BattleGeneral, type RivalWorld } from '../systems/RivalNations';
 import {
     defaultKeepTerritories,
     normalizeGovernanceAssignments,
@@ -1538,6 +1538,22 @@ export class GameSession {
             playerStrength: battle.playerStrength,
             enemyStrength: battle.enemyStrength,
         }, battle.win ? OFFLINE_BATTLE_JOURNAL.win : OFFLINE_BATTLE_JOURNAL.lose, []);
+    }
+
+    /** 外交出征結算：留 AUTO_RESOLVE 快照並寫 BATTLE 日誌（§F-4，PROG-2-1189）；不自動存檔，由出征後的 setRivals 帶走 */
+    public recordRivalCampaign(squad: readonly unknown[], nationId: string, battle: AutoBattleResult): OfflineBattleSnapshot {
+        const clock = this._clock.state;
+        const rule = battle.win ? CAMPAIGN_BATTLE_JOURNAL.win : CAMPAIGN_BATTLE_JOURNAL.lose;
+        return this.recordAutoResolveBattle({
+            battleType: 'AUTO_RESOLVE',
+            seed: `${clock.currentYear}-${clock.currentSeason}-C${nationId}`,
+            lineup: squad,
+            tileState: { nationId },
+            tactics: [],
+            win: battle.win,
+            playerStrength: battle.playerStrength,
+            enemyStrength: battle.enemyStrength,
+        }, { priority: rule.priority, summary: rule.summary.replace('{Nation}', nationDef(nationId)?.name ?? nationId) }, []);
     }
 
     /**

@@ -2308,6 +2308,7 @@ export class LobbyScene extends Component {
             grantGold: (amount) => { gacha.grantCurrency('gold', amount); },
             random: Math.random,
             leaderName: (id) => this._generals.find((g) => g.id === id)?.name,
+            recordBattle: (squad, nationId, battle) => { services().session.recordRivalCampaign(squad, nationId, battle); },
         });
         this._rival = rival;
         const act = (run: () => Promise<void>): void => {

@@ -148,6 +148,12 @@ export const OFFLINE_BATTLE_JOURNAL = {
     lose: { priority: 65, summary: '邊境來犯，我軍自動迎戰失利。' },
 } as const;
 
+/** 暫定：外交出征結算寫日誌的重要度與摘要，{Nation} 換成勢力名（PROG-2-1189） */
+export const CAMPAIGN_BATTLE_JOURNAL = {
+    win: { priority: 70, summary: '我軍出征{Nation}告捷。' },
+    lose: { priority: 65, summary: '我軍出征{Nation}失利。' },
+} as const;
+
 /** 暫定：戰場「自動」鈕結算寫日誌的重要度與摘要（PROG-2-1185） */
 export const FIELD_AUTO_BATTLE_JOURNAL = {
     win: { priority: 60, summary: '戰場改由自動結算，我軍告捷。' },
