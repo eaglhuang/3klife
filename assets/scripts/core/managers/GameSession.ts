@@ -108,6 +108,7 @@ import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance
 import { visibleFactorColors as factorColorsVisibleAtLevel } from '../systems/FactorMask';
 import { specialActionFactorTags } from '../systems/BattleSpecialActions';
 import { applyDuplicatePull, RebirthPullResult } from '../systems/Rebirth';
+import { randomizePulledTactics } from '../systems/TacticRandomization';
 import { withUltimateUnlockState } from '../systems/UltimateSlotUnlock';
 import { MentorDuplicateOutcome, overflowToastText, resolveMentorDuplicate } from '../systems/MentorOverflow';
 import { normalizeBondPoints, overflowBondPoints, overflowRarityOf } from '../systems/OverflowBond';
@@ -2605,7 +2606,7 @@ export class GameSession {
                 continue;
             }
             owned.add(general.id);
-            added.push({ ...general });
+            added.push(options.rebirthOnDuplicate ? this._withPulledTactics({ ...general }) : { ...general });
         }
 
         if (options.rebirthOnDuplicate && duplicates.length > 0) {
@@ -2618,7 +2619,7 @@ export class GameSession {
                 if (!target) continue;
                 const pull = applyDuplicatePull(target.rebirthCount);
                 byId.set(duplicate.id, {
-                    ...target,
+                    ...this._withPulledTactics(target),
                     rebirthCount: pull.rebirthCount,
                     ultimateSlots: withUltimateUnlockState(target.ultimateSlots ?? [], pull.rebirthCount),
                 });
@@ -2641,6 +2642,12 @@ export class GameSession {
             this._emit(GAME_SESSION_EVENTS.RosterChanged, added);
         }
         return { added, duplicates, rebirths, bondPointsGained };
+    }
+
+    /** 轉蛋戰法隨機化（PROG-2-1168）：每次抽到同名武將擲第 2、第 3 戰法，重複轉戰法經驗 */
+    private _withPulledTactics(general: GeneralConfig): GeneralConfig {
+        const pulled = randomizePulledTactics(general, this._random);
+        return { ...general, tacticSlots: pulled.tacticSlots, tacticExp: pulled.tacticExp };
     }
 
     /** 目前名冊中可以出戰的武將（排除死亡、退役教官、未畢業子嗣、精力不足、培育中） */
