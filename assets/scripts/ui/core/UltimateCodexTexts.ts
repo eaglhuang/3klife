@@ -23,6 +23,7 @@ export const ULTIMATE_CODEX_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>
     'ui.ultimate_codex.row': '{0}・{1}　Lv{2}',
     'ui.ultimate_codex.empty': '尚未解鎖任何奧義。',
     'ui.ultimate_codex.more': '另有 {0} 項未列出',
+    'ui.ultimate_codex.close': '關閉',
 };
 
 export type UltimateCodexTextLookup = (key: string, ...args: string[]) => string;
@@ -66,5 +67,23 @@ export function buildUltimateCodexView(
             ? [lookup('ui.ultimate_codex.empty')]
             : shown.map((row) => lookup('ui.ultimate_codex.row', row.generalId, row.ultimateId, String(row.level))),
         more: hidden > 0 ? lookup('ui.ultimate_codex.more', String(hidden)) : null,
+    };
+}
+
+/**
+ * 畫面 Label 用的文字表：key 等於 ultimate-codex-main.json 的節點 id（與 buildSpiritCodexTexts 同一做法）。
+ * 列文字以換行串成一個 Label。
+ */
+export function buildUltimateCodexTexts(
+    rows: readonly UltimateCodexRow[],
+    lookup: UltimateCodexTextLookup = fallbackUltimateCodexText,
+): Record<string, string> {
+    const view = buildUltimateCodexView(rows, lookup);
+    return {
+        ultimateCodexTitle: view.title,
+        ultimateCodexCount: view.count,
+        ultimateCodexList: view.lines.join('\n'),
+        ultimateCodexMore: view.more ?? '',
+        closeUltimateCodexLabel: lookup('ui.ultimate_codex.close'),
     };
 }
