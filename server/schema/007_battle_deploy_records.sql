@@ -1,4 +1,4 @@
--- @spec-source → 戰場部署系統.md §I「Server 端」（DEP-13，PROG-2-0977）
+-- @spec-source → 戰場部署系統.md §I「Server 端」（DEP-13，PROG-2-0937）
 -- 僅定義、未部署、未執行。
 --
 -- 每場戰鬥寫入一列；欄位與戰場部署系統 §I 表一致。

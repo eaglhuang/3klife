@@ -1,5 +1,5 @@
 /**
- * KinComboPresentation.test.ts — 史實合攻觸發時發出演出事件（KIN-09 演出，PROG-2-0978）headless 測試
+ * KinComboPresentation.test.ts — 史實合攻觸發時發出演出事件（KIN-09 演出，PROG-2-0938）headless 測試
  *
  * 鎖住：有義兄弟且擲中觸發率時，於追加傷害前發出 KinComboAttack（攻方、助攻方、目標 id）；
  * 沒有史實關係時不發。cc 端的戰報與撲擊動畫由 BattleUIBridge 接聽，不在本測試範圍。
@@ -89,7 +89,7 @@ function fightAndCollect(linked: boolean, roll: number): KinComboPayload[] {
 }
 
 export function createKinComboPresentationSuite(): TestSuite {
-    const suite = new TestSuite('KinComboPresentation (史實合攻演出事件 KIN-09 PROG-2-0978)');
+    const suite = new TestSuite('KinComboPresentation (史實合攻演出事件 KIN-09 PROG-2-0938)');
 
     suite.test('義兄弟相鄰且擲中觸發率：發出一次事件，帶攻方、助攻方、目標 id', () => {
         const received = fightAndCollect(true, 0);
