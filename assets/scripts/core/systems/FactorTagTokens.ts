@@ -78,3 +78,32 @@ export function factorTagText(color: FactorColor, lookup: (key: string) => strin
     const key = FACTOR_TAG_I18N_KEYS[color];
     return lookup(key) ?? key;
 }
+
+export interface FactorRgb {
+    r: number;
+    g: number;
+    b: number;
+}
+
+/** 無因子色或未知色時連線使用的中性灰（暫定），與六色都不相同。 */
+export const FACTOR_EDGE_NEUTRAL_RGB: Readonly<FactorRgb> = { r: 154, g: 154, b: 154 };
+
+/** 解析 #RRGGBB 為 RGB；格式不合回傳 null。 */
+export function parseHexRgb(hex: string): FactorRgb | null {
+    if (!HEX_COLOR.test(hex)) return null;
+    return {
+        r: parseInt(hex.slice(1, 3), 16),
+        g: parseInt(hex.slice(3, 5), 16),
+        b: parseInt(hex.slice(5, 7), 16),
+    };
+}
+
+/**
+ * 父子連線的顏色，依子代的因子色決定；null、未知色或色碼壞掉都退回中性灰。
+ *
+ * Unity 對照：像 LineRenderer 依子物件的 Material 上色，沒有 Material 就用預設灰。
+ */
+export function factorEdgeRgb(color: FactorColor | null | undefined): FactorRgb {
+    if (!color || !FACTOR_COLORS.includes(color)) return { ...FACTOR_EDGE_NEUTRAL_RGB };
+    return parseHexRgb(factorTagColorOf(color)) ?? { ...FACTOR_EDGE_NEUTRAL_RGB };
+}
