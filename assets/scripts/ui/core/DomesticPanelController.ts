@@ -43,6 +43,9 @@ export interface DomesticPanelDeps {
     assignedUid?: (taskId: DomesticTaskId) => string | null;
     /** uid = null 表示卸下；回傳是否成功 */
     assign?: (taskId: DomesticTaskId, uid: string | null) => boolean;
+    /** 自動治理開關（§E #7，PROG-2-1161）；setAutoMode 回傳開啟時補了幾格 */
+    autoMode?: () => boolean;
+    setAutoMode?: (on: boolean) => number;
 }
 
 /** 任務 id → 節點名稱片段（layout 節點 id 用 btn<Name> / <name>Output / <name>Chosen） */
@@ -109,6 +112,17 @@ export class DomesticPanelController {
         return done;
     }
 
+    /** 手動／自動治理切換；開啟時立即補空格 */
+    public toggleAutoMode(): void {
+        const { autoMode, setAutoMode } = this._deps;
+        if (!autoMode || !setAutoMode) return;
+        const on = !autoMode();
+        const filled = setAutoMode(on);
+        this._notice = on
+            ? (filled > 0 ? `自動治理已啟用，太守府補上 ${filled} 格主事。` : '自動治理已啟用')
+            : '已改回手動治理';
+    }
+
     private _governorOf(taskId: DomesticTaskId): DomesticGovernor | null {
         const uid = this._deps.assignedUid?.(taskId);
         if (!uid) return null;
@@ -159,6 +173,10 @@ export class DomesticPanelController {
         }
         enabled.btnClose = true;
         texts.btnAutoGovLabel = '自動指派';
+        const hasMode = !!(this._deps.autoMode && this._deps.setAutoMode);
+        texts.btnAutoModeLabel = this._deps.autoMode?.() ? '自動治理：開' : '自動治理：關';
+        actives.btnAutoMode = hasMode;
+        enabled.btnAutoMode = hasMode;
         actives.btnAutoGov = canAssign;
         enabled.btnAutoGov = canAssign;
         return { texts, actives, enabled };
