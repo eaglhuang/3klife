@@ -75,7 +75,7 @@ export function createGeneralJournalControllerSuite(): TestSuite {
 
     suite.test('接 GameSession：戰鬥日誌出現在該武將日誌', () => {
         const session = new GameSession(1);
-        session.enrollGenerals([{ id: 'zhao', name: '趙雲', faction: 'shu', hp: 1000, str: 80, int: 70, lea: 80, pol: 60, cha: 70 } as GeneralConfig]);
+        session.enrollGenerals([{ id: 'zhao', name: '趙雲', faction: 'shu', hp: 1000, str: 80, int: 70, lea: 80, pol: 60, cha: 70 } as unknown as GeneralConfig]);
         session.startDispatchJob({ jobId: 'J', name: '巡查', tags: [], requiredStats: {}, storyTags: [], durationMs: 1000, rewardText: '無' }, 'zhao', 0);
         session.settleDispatchJobs(1000);
         const c = new GeneralJournalController({

@@ -16,7 +16,7 @@ const INPUT: OfflineBattleInput = {
 };
 
 function hero(id: string): GeneralConfig {
-    return { id, name: id, faction: 'shu', hp: 1000, str: 90, int: 70, lea: 90, pol: 60, cha: 70 } as GeneralConfig;
+    return { id, name: id, faction: 'shu', hp: 1000, str: 90, int: 70, lea: 90, pol: 60, cha: 70 } as unknown as GeneralConfig;
 }
 
 export function createOfflineBattleSnapshotSuite(): TestSuite {
