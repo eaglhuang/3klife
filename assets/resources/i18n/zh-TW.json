@@ -439,5 +439,6 @@
   "ui.ultimate_codex.count": "已解鎖奧義 {0} 項",
   "ui.ultimate_codex.row": "{0}・{1}　Lv{2}",
   "ui.ultimate_codex.empty": "尚未解鎖任何奧義。",
-  "ui.ultimate_codex.more": "另有 {0} 項未列出"
+  "ui.ultimate_codex.more": "另有 {0} 項未列出",
+  "ui.ultimate_codex.close": "關閉"
 }
