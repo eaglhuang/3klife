@@ -4,7 +4,7 @@
  * Unity 對照：等同 EditMode Test，用固定亂數序列驗證 EventRoller 的閘門與機率，不開 Scene。
  */
 import { assert, TestSuite } from './TestRunner';
-import { inspireBlockReasons, inspireChance, InspireContext, InspireEvent, rollInspireRound } from '../assets/scripts/core/systems/MentorInspiration';
+import { INSPIRE_BURST_RATE_BONUS, inspireBlockReasons, inspireChance, InspireContext, InspireEvent, rollInspireRound } from '../assets/scripts/core/systems/MentorInspiration';
 
 const zhaoSpear: InspireEvent = {
     eventId: 'EVT_ZHAO_06',
@@ -61,6 +61,15 @@ export function createMentorInspirationSuite(): TestSuite {
         const triggered = rollInspireRound([lanceThrust], 3, ctx(), new Set(['EVT_ZHAO_01']), random);
         assert.equals(0, draws);
         assert.equals(0, triggered.length);
+    });
+
+    suite.test('爆發（擅長格）：觸發率相對 +5%，與友情、LUK 同為乘算；基礎率 0 仍為 0（§F-8）', () => {
+        assert.equals(0.05, INSPIRE_BURST_RATE_BONUS);
+        assert.inRange(inspireChance(lanceThrust, ctx({ burstRateBonus: INSPIRE_BURST_RATE_BONUS })), 0.2624, 0.2626);
+        assert.inRange(inspireChance(lanceThrust, ctx({ burstRateBonus: INSPIRE_BURST_RATE_BONUS, friendshipBonus: 0.2, childLuk: 100 })), 0.4724, 0.4726);
+        assert.equals(0, inspireChance({ ...lanceThrust, baseRate: 0 }, ctx({ burstRateBonus: INSPIRE_BURST_RATE_BONUS })));
+        assert.equals(0.25, inspireChance(lanceThrust, ctx({ burstRateBonus: 0 })));
+        assert.equals(0.25, inspireChance(lanceThrust, ctx({ burstRateBonus: -1 })));
     });
 
     suite.test('基礎觸發率非法時拋 RangeError', () => {
