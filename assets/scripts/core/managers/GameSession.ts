@@ -2200,19 +2200,27 @@ export class GameSession {
         this._playerLogs = appendPlayerLog(this._playerLogs, entry);
     }
 
+    /** 目前可復仇取回的缺口數量（RET-05）；沒有可取回的紀錄時為 0 */
+    public get revengeRecoverable(): number {
+        const index = this._shortageLogIndex();
+        return index < 0 ? 0 : this._playerLogs[index].amount ?? 0;
+    }
+
+    /** 最近一筆帶數量的缺糧紀錄索引（RET-05），沒有時回 -1 */
+    private _shortageLogIndex(): number {
+        for (let i = this._playerLogs.length - 1; i >= 0; i--) {
+            const log = this._playerLogs[i];
+            if (log.type === 'RESOURCE_LOW' && log.amount !== undefined) return i;
+        }
+        return -1;
+    }
+
     /**
      * 復仇取回（RET-05）：消耗最近一筆帶數量的缺糧紀錄，依 pct（5~20）取回糧草，不超過糧草上限。
      * 沒有可取回的紀錄時回傳 0；被消耗的紀錄不會再取回第二次。
      */
     public claimRevengeRecovery(pct: number): number {
-        let index = -1;
-        for (let i = this._playerLogs.length - 1; i >= 0; i--) {
-            const log = this._playerLogs[i];
-            if (log.type === 'RESOURCE_LOW' && log.amount !== undefined) {
-                index = i;
-                break;
-            }
-        }
+        const index = this._shortageLogIndex();
         if (index < 0) return 0;
         const recovered = revengeRecoverAmount(this._playerLogs[index].amount ?? 0, pct);
         this._playerLogs = this._playerLogs.filter((_, i) => i !== index);
