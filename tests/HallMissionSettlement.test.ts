@@ -6,7 +6,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { GameSession, GAME_SESSION_EVENTS } from '../assets/scripts/core/managers/GameSession';
-import { hallMissionToOfficerTask, officerPromotionNoticeOf } from '../assets/scripts/core/systems/HallMissionSettlement';
+import { hallMissionToOfficerTask, officerPromotionNoticeOf, officerPromotionRewardTotal } from '../assets/scripts/core/systems/HallMissionSettlement';
 
 export function createHallMissionSettlementSuite(): TestSuite {
     const suite = new TestSuite('HallMissionSettlement (大廳任務結算 OFC-08)');
@@ -53,9 +53,13 @@ export function createHallMissionSettlementSuite(): TestSuite {
 
     suite.test('晉升文案逐階一行，附階位名稱', () => {
         const lines = officerPromotionNoticeOf([2, 3], [{ tier: 2, title: '縣府佐官' }, { tier: 3, title: '郡守' }]);
-        assert.equals('晉升 縣府佐官', lines[0] ?? '');
-        assert.equals('晉升 郡守', lines[1] ?? '');
+        assert.equals('晉升 縣府佐官（金錢 +200）', lines[0] ?? '');
+        assert.equals('晉升 郡守（金錢 +400）', lines[1] ?? '');
         assert.equals(0, officerPromotionNoticeOf([]).length);
+        // 沒帶階位表時用內建官名（PROG-2-1197）
+        assert.equals('晉升 州牧（金錢 +800）', officerPromotionNoticeOf([4])[0] ?? '');
+        assert.equals(600, officerPromotionRewardTotal([2, 3]));
+        assert.equals(0, officerPromotionRewardTotal([]));
     });
 
     return suite;
