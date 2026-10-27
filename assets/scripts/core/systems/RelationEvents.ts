@@ -136,6 +136,12 @@ export class RelationEventLedger {
  * 結緣（治理場景）觸發的關係事件：父母的史實關係命中治理事件（例如宿敵配種）時回傳新觸發的事件。
  * scopeKey 通常是季度，同一季同一對只播一次；沒有配對表時回傳空陣列。
  */
+/** 存檔讀回：只保留非空字串，重複的只留一筆（RELATION-LEDGER，PROG-2-1412） */
+export function normalizeRelationEventKeys(raw: unknown): string[] {
+    if (!Array.isArray(raw)) return [];
+    return Array.from(new Set(raw.filter((item): item is string => typeof item === 'string' && item.length > 0)));
+}
+
 export function relationEventsForBreeding(
     table: HistoricalPairTable | null | undefined,
     ledger: RelationEventLedger,

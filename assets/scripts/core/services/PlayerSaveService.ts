@@ -85,6 +85,7 @@ import { normalizeOfflineBattleSnapshots, type OfflineBattleSnapshot } from '../
 import { normalizeTournamentState, type TournamentState } from '../systems/TournamentLocal';
 import { normalizeWishPoolState, type WishPoolState } from '../systems/WishPool';
 import { normalizeOfflineInteractionLog } from '../systems/OfflineInteractionEvents';
+import { normalizeRelationEventKeys } from '../systems/RelationEvents';
 import { normalizeUnlockHistory, type SandtableStageId } from '../systems/SandtableProgress';
 import { normalizeStartingTalisman, type StartingSpiritTalisman } from '../systems/TeachingSpiritTalisman';
 
@@ -136,6 +137,8 @@ export interface PlayerSaveSnapshot {
     hallAssignments?: Record<string, string>;
     /** 動態關係（KIN-06 / KIN-10）：親密度與關係清單；後加的選填欄位，舊檔讀回為空陣列 */
     dynamicRelations?: DynamicRelation[];
+    /** 關係事件已播紀錄（PROG-2-1412，鍵為 scope#eventId#pairKey）；後加的選填欄位，舊檔讀回為空，版號不升 */
+    relationEventKeys?: string[];
     /** Legacy_Count（跨世代成就次數，RET-07）；後加的選填欄位，舊檔讀回為 0 */
     legacyCount?: number;
     /** 已傳道過的名將 id（MENT-15 一生一次）；後加的選填欄位，舊檔讀回為空陣列 */
@@ -538,6 +541,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.favoriteGeneralIds !== undefined ? { favoriteGeneralIds: normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds) } : {}),
         ...(snapshot.hallAssignments !== undefined ? { hallAssignments: normalizeHallAssignments(snapshot.hallAssignments) } : {}),
         ...(snapshot.dynamicRelations !== undefined ? { dynamicRelations: normalizeDynamicRelations(snapshot.dynamicRelations) } : {}),
+        ...(snapshot.relationEventKeys !== undefined ? { relationEventKeys: normalizeRelationEventKeys(snapshot.relationEventKeys) } : {}),
         ...(snapshot.legacyCount !== undefined ? { legacyCount: normalizeLegacyCount(snapshot.legacyCount) } : {}),
         ...(snapshot.officerState !== undefined ? { officerState: normalizeOfficerState(snapshot.officerState) } : {}),
         ...(snapshot.sandtableMarkersPlaced !== undefined ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced) } : {}),
