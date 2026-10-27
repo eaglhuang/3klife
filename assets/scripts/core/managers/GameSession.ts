@@ -149,13 +149,17 @@ import type { DynamicRelation } from '../systems/KinRelation';
 import { normalizeRosterRoles } from '../systems/RosterRoleLoad';
 import {
     assignGovernanceGeneral,
-    DEFAULT_MAX_TASK_SLOTS,
     removeGovernanceAssignment,
     type GovernanceAssignment,
     type GovernanceResult,
 } from '../systems/GovernanceAssignment';
 import { planAutoGovernance } from '../systems/DomesticAutoGovernance';
 import { isDescendant, magistrateGoldBonus } from '../systems/ChildMagistrate';
+import {
+    maxTaskSlotsForLevel,
+    planTerritoryUpgrade,
+    type TerritoryUpgradePlan,
+} from '../systems/TerritoryUpgrade';
 import {
     attemptTerritoryLoss,
     lastStandModifiers,
@@ -180,6 +184,8 @@ import {
     normalizeGovernanceAssignments,
     normalizeJournalEntries,
     normalizeKeepTerritories,
+    normalizePendingTerritoryLevel,
+    normalizeTerritoryLevel,
 } from '../systems/LifespanSave';
 import {
     BattleResult,
@@ -1184,6 +1190,8 @@ export class GameSession {
         this._governance = [];
         this._autoGovernance = false;
         this._magistrateUid = null;
+        this._territoryLevel = 1;
+        this._pendingTerritoryLevel = null;
         this._territories = defaultKeepTerritories();
         this._journal = createEmptyJournal();
         this._gachaMentorJournal = [];
@@ -1468,6 +1476,10 @@ export class GameSession {
 
     // ---- 領地治理接線（GOV-04 指派 / GOV-09 主城保護 / JRN-01 日誌，PROG-2-0974）：指派隨 lifespanSaveFields 寫入存檔 ----
     private _governance: GovernanceAssignment[] = [];
+    /** 太守府等級（GOV-08，Lv1–5） */
+    private _territoryLevel = 1;
+    /** 已下單、等季結生效的升級目標等級（GOV-08） */
+    private _pendingTerritoryLevel: number | null = null;
     private _territories: KeepTerritory[] = defaultKeepTerritories();
     private _journal: JournalState = createEmptyJournal();
 
@@ -1477,7 +1489,7 @@ export class GameSession {
     }
 
     /** 指派武將到內政任務格（GOV-04）；被拒絕時不改動狀態。 */
-    public assignGovernor(task: string, generalUid: string, maxSlots: number = DEFAULT_MAX_TASK_SLOTS): GovernanceResult {
+    public assignGovernor(task: string, generalUid: string, maxSlots: number = this.maxTaskSlots): GovernanceResult {
         if (!this._roster.getAll().some((general) => general.id === generalUid)) return { ok: false, reason: 'invalid-general', assignments: this.governanceAssignments };
         const result = assignGovernanceGeneral(this._governance, task, generalUid, maxSlots);
         if (result.ok) this._governance = result.assignments;
@@ -1549,7 +1561,7 @@ export class GameSession {
         const picks = planAutoGovernance(candidates, (task) => this._governance.find((a) => a.task === task)?.generalUid ?? null);
         let filled = 0;
         for (const pick of picks) {
-            const result = assignGovernanceGeneral(this._governance, pick.task, pick.generalUid, DEFAULT_MAX_TASK_SLOTS);
+            const result = assignGovernanceGeneral(this._governance, pick.task, pick.generalUid, this.maxTaskSlots);
             if (!result.ok) continue;
             this._governance = result.assignments;
             filled += 1;
@@ -1560,6 +1572,41 @@ export class GameSession {
     /** 卸下內政任務格的武將（GOV-04）。 */
     public unassignGovernor(task: DomesticTaskId): void {
         this._governance = removeGovernanceAssignment(this._governance, task).assignments;
+    }
+
+    /** 太守府等級（GOV-08）。 */
+    public get territoryLevel(): number {
+        return this._territoryLevel;
+    }
+
+    /** 已下單、季結後生效的升級目標等級；沒有時為 null（GOV-08）。 */
+    public get pendingTerritoryLevel(): number | null {
+        return this._pendingTerritoryLevel;
+    }
+
+    /** 目前等級的內政任務格數（GOV-08）。 */
+    public get maxTaskSlots(): number {
+        return maxTaskSlotsForLevel(this._territoryLevel);
+    }
+
+    /**
+     * 太守府升級下單（GOV-08）：先檢查等級、待生效與糧草，再請呼叫端錢包扣金錢；
+     * 全部成功才扣糧草並記為待生效，季結時升級。被拒絕時不改動狀態。
+     */
+    public orderTerritoryUpgrade(spendGold: (amount: number) => boolean): TerritoryUpgradePlan {
+        const plan = planTerritoryUpgrade(this._territoryLevel, this._pendingTerritoryLevel, this._military.food);
+        if (!plan.ok) return plan;
+        if (!spendGold(plan.cost.gold)) return { ...plan, ok: false, reason: 'insufficient-gold' };
+        this._military = { ...this._military, food: this._military.food - plan.cost.food };
+        this._pendingTerritoryLevel = plan.targetLevel;
+        return plan;
+    }
+
+    /** 季結時套用待生效的升級（GOV-08）。 */
+    private applyPendingTerritoryUpgrade(): void {
+        if (this._pendingTerritoryLevel === null) return;
+        this._territoryLevel = this._pendingTerritoryLevel;
+        this._pendingTerritoryLevel = null;
     }
 
     /** 設定領地清單（含主城），供領地資料載入或測試使用（GOV-09）。 */
@@ -2249,6 +2296,7 @@ export class GameSession {
             yearReport = buildYearReport(advance.previous.currentYear, this._yearAgingEvents);
             this._yearAgingEvents = [];
         }
+        this.applyPendingTerritoryUpgrade();
         const quarterlyReports = buildQuarterlyBattleReportRows(this._roster.getAll());
         this.recordSeasonJournal(advance.previous, quarterlyReports);
         const rivalBattles = this._tickRivals();
@@ -2789,9 +2837,11 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
+        if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
+        if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
         if (this._governance.length > 0) fields.governanceAssignments = this.governanceAssignments;
         if (this._autoGovernance) fields.autoGovernance = true;
         if (JSON.stringify(this._territories) !== JSON.stringify(defaultKeepTerritories())) fields.territories = this.territories;
@@ -2808,6 +2858,8 @@ export class GameSession {
         this._magistrateUid = typeof snapshot.magistrateUid === 'string' && snapshot.magistrateUid ? snapshot.magistrateUid : null;
         this._territories = normalizeKeepTerritories(snapshot.territories);
         this._journal = { entries: normalizeJournalEntries(snapshot.journalEntries) };
+        this._territoryLevel = normalizeTerritoryLevel(snapshot.territoryLevel);
+        this._pendingTerritoryLevel = normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) ?? null;
     }
 
     /**
