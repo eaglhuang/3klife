@@ -112,6 +112,7 @@ import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { isDescendant } from '../../core/systems/ChildMagistrate';
+import { validateInitialHeroes } from '../../core/systems/InitialHeroTable';
 import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD } from '../../core/systems/PlayerInventory';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
@@ -2092,6 +2093,7 @@ export class LobbyScene extends Component {
     private async _showInitialShowcase(): Promise<void> {
         this._showcase = new InitialShowcaseController();
         if (!this._showcaseHost) {
+            void this._warnInitialHeroDataIssues();
             this._showcaseHost = await this._mountPreviewScreenHost('InitialShowcaseHost', 'initial-showcase-screen', [
                 { buttonId: 'btnShowcaseNext', handler: () => { this._onClickShowcaseNext(); } },
             ]);
@@ -2099,6 +2101,17 @@ export class LobbyScene extends Component {
         this._showcaseHost.node.active = true;
         this._bringNodeToFront(this._showcaseHost.node);
         this._refreshShowcase();
+    }
+
+    /** 初始六名將資料檢查（OPEN-02）：只警告，不擋名將登場幕。 */
+    private async _warnInitialHeroDataIssues(): Promise<void> {
+        const raw = await this._loadDataJson<unknown>('data/initial-heroes');
+        const knownIds = new Set(this._generals.map(general => general.id));
+        const result = validateInitialHeroes(raw, knownIds);
+        if (result.ok) return;
+        for (const issue of result.issues) {
+            UCUFLogger.warn(LogCategory.DATA, `[InitialHeroTable] ${issue.path}: ${issue.message}`);
+        }
     }
 
     private _onClickShowcaseNext(): void {
