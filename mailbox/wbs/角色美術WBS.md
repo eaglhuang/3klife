@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 19:35 AG-31b 完成：check_layered_parts.py 實作規格 v3.12 動態驅動幾何（rotationPivot: "childBonePivot"、scopeCapsuleAxis: "boneToChildBonePivot"、hiddenExtensionFrom: "childBonePivot"），手部旋轉與裂縫檢查改繞拳心握點（bones.hand 骨點）旋轉，膠囊軸沿骨點向量構建徹底解除前臂延伸外逸衝突；缺鍵時向後相容 fallback 至舊 joints 行為；輸出樞紐座標 pivot 與來源標記 pivotSource；新增 test_ag31b_joint_geometry_bone_pivot.py 4 項單元測試，全套 95 項單元測試 100% 通過（be1f6fcd3）。
 - 2026-10-27 19:25 Claude AG-32／R299／規格 v3.13：AG-31 裂縫量法收下（獨立重現一致）；裂縫門檻改依戰場顯示換算（360 px 顯示高 ≤ 4 顯示像素² ≈ 79 canvas px），R292 只剩前腳踝 180/166 px 不過，排在前臂短樁之後圓化；圖集試排收下（非實測）。
 - 2026-10-27 19:20 Claude R298／AG-31b／規格 v3.12：前臂延伸裁定以 hand 骨點（拳心握點）為基準，膠囊軸改骨點→骨點、延伸做沿軸圓頭短樁（現況繞骨點 ±30° 仍露 202/32 px）；旋轉樞紐一律用骨點；R290 第二輪因 Computer Use 只能控瀏覽器暫停，等使用者重開；記憶體估算收下。
 - 2026-10-27 19:00 Claude AG-31／R297／規格 v3.11：R290 第一輪通過（4.2 wasm 200、骨架 JSON 200、畫面可見），進第二輪；AG-30 全半徑縫九成是子件轉走空位，改用片間裂縫量法 jointCrackPx；hair_tail／pauldron 設 detachedChild、torso 以 skirt 為 parent 側遮蔽；2D 評估收下，3D 維持停止。
