@@ -13,6 +13,7 @@
  * Unity 對照：像一個 EventRoller，每回合呼叫一次，只回傳「這回合發生了哪些事件」，不直接改武將。
  */
 import type { RandomSource } from './GeneralAging';
+import { luckEventRate } from './LuckEventRate';
 
 export const NURTURE_INJURY_CHANCE = 0.03;
 export const NURTURE_AFFECTION_CHANCE = 0.05;
@@ -27,11 +28,12 @@ export interface NurtureRoundEvents {
 /**
  * 每回合擲一次。休息回合（isTraining = false）不擲任何事件，不消耗亂數。
  * 擲骰順序固定：先受傷，未受傷才擲好感。
+ * 好感機率依子嗣 LUK 修正（運氣系統 E-5，PROG-2-1349）；受傷不受 LUK 影響（暫定）。
  */
-export function rollNurtureRoundEvents(isTraining: boolean, random: RandomSource): NurtureRoundEvents {
+export function rollNurtureRoundEvents(isTraining: boolean, random: RandomSource, luk = 0): NurtureRoundEvents {
     if (!isTraining) return { injured: false, affection: false };
     const injured = random() < NURTURE_INJURY_CHANCE;
     if (injured) return { injured: true, affection: false };
-    const affection = random() < NURTURE_AFFECTION_CHANCE;
+    const affection = random() < luckEventRate(NURTURE_AFFECTION_CHANCE, luk);
     return { injured: false, affection };
 }

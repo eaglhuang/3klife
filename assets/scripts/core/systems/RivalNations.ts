@@ -45,6 +45,10 @@ export interface NationState {
     readonly relation: number;
     readonly allied: boolean;
     readonly atWar: boolean;
+    /** 最近一次交易的季序號（E-6 每季上限，PROG-2-1358） */
+    readonly tradeSeason?: number;
+    /** 該季已交易次數 */
+    readonly tradeCount?: number;
 }
 
 export interface RivalWorld {
@@ -273,6 +277,9 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
                 relation: clampRelation(num(s.relation, n.relation)),
                 allied: s.allied === true,
                 atWar: s.atWar === true,
+                ...(typeof s.tradeSeason === 'number' && Number.isFinite(s.tradeSeason)
+                    ? { tradeSeason: Math.floor(s.tradeSeason), tradeCount: Math.max(0, Math.floor(num(s.tradeCount, 0))) }
+                    : {}),
             };
         }),
     };

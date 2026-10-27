@@ -1,0 +1,61 @@
+{
+  "_comment": "AI Profile 行為模板（AIS-03 / PROG-2-1316）。數值與路線依 AI武將強度系統.md E-3、E-4；戰法傾向為規格文字的標籤；BALANCED 與 ARCHER_FOCUS 的路線策略規格未定，暫為 null。",
+  "profiles": [
+    {
+      "profileId": "AGGRESSIVE",
+      "deployTendency": { "preferredTroops": ["CAVALRY", "INFANTRY"], "preferCounter": false, "preferLowQuality": false, "preferSpecialTroops": false },
+      "tacticTendency": ["charge", "assault"],
+      "laneStrategy": "FOCUS_2_3",
+      "historicalExamples": ["曹操", "呂布", "張飛"]
+    },
+    {
+      "profileId": "DEFENSIVE",
+      "deployTendency": { "preferredTroops": ["SHIELD", "PIKE"], "preferCounter": false, "preferLowQuality": false, "preferSpecialTroops": false },
+      "tacticTendency": ["counter", "taunt", "bastion"],
+      "laneStrategy": "SPREAD_5",
+      "historicalExamples": ["司馬懿", "陸遜"]
+    },
+    {
+      "profileId": "STRATEGIC",
+      "deployTendency": { "preferredTroops": [], "preferCounter": true, "preferLowQuality": false, "preferSpecialTroops": false },
+      "tacticTendency": ["scheme", "control"],
+      "laneStrategy": "SCOUT_WEAK",
+      "historicalExamples": ["諸葛亮", "周瑜", "龐統"]
+    },
+    {
+      "profileId": "CAVALRY_RUSH",
+      "deployTendency": { "preferredTroops": ["CAVALRY"], "preferCounter": false, "preferLowQuality": false, "preferSpecialTroops": false },
+      "tacticTendency": ["charge", "evade"],
+      "laneStrategy": "CAVALRY_CHARGE_1",
+      "historicalExamples": ["馬超", "趙雲", "呂布"]
+    },
+    {
+      "profileId": "ARCHER_FOCUS",
+      "deployTendency": { "preferredTroops": ["ARCHER"], "preferCounter": false, "preferLowQuality": false, "preferSpecialTroops": false },
+      "tacticTendency": ["volley", "fire"],
+      "laneStrategy": null,
+      "historicalExamples": ["黃忠", "甘寧"]
+    },
+    {
+      "profileId": "SWARM",
+      "deployTendency": { "preferredTroops": [], "preferCounter": false, "preferLowQuality": true, "preferSpecialTroops": false },
+      "tacticTendency": ["low-tp"],
+      "laneStrategy": "ALL_5",
+      "historicalExamples": ["袁紹", "劉璋"]
+    },
+    {
+      "profileId": "ELITE_FEW",
+      "deployTendency": { "preferredTroops": [], "preferCounter": false, "preferLowQuality": false, "preferSpecialTroops": true },
+      "tacticTendency": ["high-tp", "ultimate"],
+      "laneStrategy": "EMPTIEST_1_2",
+      "historicalExamples": ["關羽", "典韋"]
+    },
+    {
+      "profileId": "BALANCED",
+      "deployTendency": { "preferredTroops": [], "preferCounter": false, "preferLowQuality": false, "preferSpecialTroops": false },
+      "tacticTendency": ["mixed"],
+      "laneStrategy": null,
+      "historicalExamples": ["劉備", "孫權"]
+    }
+  ]
+}

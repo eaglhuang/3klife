@@ -20,6 +20,7 @@ import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance, localizedMilestoneName } from '../../core/systems/BattleRecordStats';
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
 import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
+import { cellarProtectionText } from '../../ui/core/DailySubsidyNotice';
 import { buildTacticSummary, loadGeneralConfig } from './BattleSceneLoader';
 import { buildTacticAvailability } from '../../ui/core/TacticAvailabilityPresenter';
 import { resolveBattleSkillProfile } from '../skills/BattleSkillProfiles';
@@ -663,6 +664,12 @@ export class BattleUIBridge {
         this.appendLog(`【覺醒】${awakened.displayName}！`);
       }
       this.ctx.resultPopup?.appendDetails?.(formatAwakeningReveal(settlement.awakenings));
+      // 地窖保護（ECO-06，PROG-2-1342）：戰敗時糧草被保底，寫日誌並加進結算細項
+      const cellar = cellarProtectionText(services().session.lastCellarProtectedFood);
+      if (cellar) {
+        this.appendLog(cellar);
+        this.ctx.resultPopup?.appendDetails?.([cellar]);
+      }
     }).catch((error) => {
       UCUFLogger.warn(LogCategory.BATTLE, '[BattleUIBridge] 戰後結算寫回名冊失敗', error);
     });

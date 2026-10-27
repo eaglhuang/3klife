@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 79,
-    "total": 115
+    "open": 80,
+    "total": 116
   },
   "tasks": [
     {
@@ -4280,6 +4280,39 @@
         "artifacts/PROG-2-0174/**"
       ],
       "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0175",
+      "title": "實機驗收：將頁統領軍勢區塊座標（PROG-2-1402、#1131）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-27",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "將頁 overview 統領軍勢區塊（五列）實機驗收，確認座標與文字可讀性。",
+      "related": [
+        "PROG-2-1402",
+        "PR #1131"
+      ],
+      "depends": [
+        "PROG-2-1402",
+        "PR #1131"
+      ],
+      "acceptance": [
+        "五列都有顯示且數值不被裁切",
+        "官職顯示 — 屬預期"
+      ],
+      "deliverables": [
+        "截圖",
+        "座標與寬高量測",
+        "HEAD"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0175/**"
+      ],
+      "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 由 Claude 協調線登錄 | 阻塞: TASK-TEAM-0088 未解，派信時暫擱"
     }
   ]
 }

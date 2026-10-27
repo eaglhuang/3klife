@@ -51,3 +51,21 @@ export function funLinesFor(scene: FunLineScene, speakerId?: string): FunLine[] 
         return line.speakerId === speakerId;
     });
 }
+
+/**
+ * 開場信固定一句：依存檔識別碼（uid）的字元碼總和取模，同一份存檔每次開信都是同一句（暫定）。
+ * 沒有可用的候選句時回傳 null。
+ */
+export function openingLetterFunLine(uid: string): FunLine | null {
+    const lines = funLinesFor('opening-letter');
+    if (lines.length === 0) return null;
+    let sum = 0;
+    for (let i = 0; i < uid.length; i += 1) sum = (sum + uid.charCodeAt(i)) % 100000;
+    return lines[sum % lines.length];
+}
+
+/** 開場信本文接上一句趣味台詞（另起一段）；沒有候選句時原樣回傳本文。 */
+export function openingLetterBodyWithFunLine(body: string, uid: string): string {
+    const line = openingLetterFunLine(uid);
+    return line ? `${body}\n\n${line.text}` : body;
+}

@@ -32,7 +32,7 @@ import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
 import { resolveHallDispatch, type HallDispatchResult } from '../systems/HallMissionDispatch';
 import type { HallBoardKey, HallGateTask, HallPlayerState } from '../systems/HallMissionBoard';
-import { battleIntelligenceOf } from '../systems/BattleRoster';
+import { battleIntelligenceOf, outcomeOf } from '../systems/BattleRoster';
 import { pvpSeasonIdOf } from '../systems/BattleSeasonStats';
 import { hasMatchingGreenFactor, learnTacticInto, type TacticLearnCheck } from '../systems/TacticLearning';
 import { canStartAutoNurture, consumeAutoNurtureTicket, isAutoNurtureUnlocked, resolveAutoSchedule, runAutoNurtureSeason, type AutoNurtureBlockReason } from '../systems/AutoNurture';
@@ -60,9 +60,11 @@ import { bondMercenaryToRoster, statsOfTemplate, type RosterBondResult } from '.
 import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } from '../systems/MercenaryTrialTicket';
 import { createUpkeepState } from '../systems/MercenaryUpkeep';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
+import { recordTrialBattle } from '../systems/MercenaryBattleRecord';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
 import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
-import { EMPTY_LOGIN_STREAK, LoginStreakState, recordLogin } from '../systems/LoginStreak';
+import { EMPTY_LOGIN_STREAK, LoginStreakState, loginDayOf, recordLogin } from '../systems/LoginStreak';
+import { dailySubsidyOf, type SubsidyResourceKey } from '../systems/DailySubsidy';
 import {
     appendPlayerLog, EMPTY_DAILY_NEWS, markDailyNewsRead, normalizeDailyNewsState, normalizePlayerLogs, refreshDailyNews,
     type DailyNewsState, type PlayerLogEntry, type PlayerLogType,
@@ -102,7 +104,7 @@ import { FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterStat
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
-import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
+import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, settleOpenAssignsForSeason, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult, type HallAutoAssignTaskInput } from '../systems/HallAutoAssign';
 import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
 import { estimateSortiePower } from '../systems/SortiePrediction';
@@ -162,10 +164,12 @@ import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMento
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
+import { useLongevityPill, type LongevityPillUseResult } from '../systems/LongevityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
 import { Faction } from '../config/Constants';
 import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampaignStagePlayable } from '../config/CampaignStages';
 import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
+import { protectedAfterLoss, CELLAR_PROTECTION } from '../systems/CellarProtection';
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { buildEraResetEvent } from '../systems/EraReset';
 import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
@@ -221,6 +225,7 @@ import {
     type JournalWriteResult,
 } from '../systems/JournalLog';
 import type { DomesticTaskId } from '../systems/DomesticTasks';
+import { TRADE_RESOURCE_NAMES, tradeWithRival as tradeWithRivalPure, type TradeResult } from '../systems/RivalTrade';
 import { advanceRivalSeason, autoResolveBattle, createRivalWorld, generalPower, nationDef, normalizeRivalWorld, type AutoBattleResult, type BattleGeneral, type RivalWorld } from '../systems/RivalNations';
 import {
     defaultKeepTerritories,
@@ -823,6 +828,21 @@ export class GameSession {
         return result;
     }
 
+    /** 對武將使用延壽丹（E-6，PROG-2-1347）：壽命上限 +3 寫回名冊並自動存檔；不成立時不扣道具 */
+    public async useLongevityPillOnGeneral(generalId: string): Promise<LongevityPillUseResult | { readonly ok: false; readonly reason: 'no-general' }> {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general) return { ok: false, reason: 'no-general' };
+        const result = useLongevityPill(this._inventory, general);
+        if (!result.ok) return result;
+        this._inventory = result.inventory;
+        this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === generalId ? { ...g, maxLifespan: result.maxLifespan } : g)));
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        return result;
+    }
+
     /**
      * 結義傭兵成功（KIN-06 / 事件 mercenary-oath）：與出戰主將記為義兄弟（DYNAMIC_SWORN）。
      * 暫定：規格未寫結義對象，先以出戰主將為對象；沒有主將或就是同一人時回傳 null。有新增才自動存檔。
@@ -1354,6 +1374,7 @@ export class GameSession {
         this._journal = createEmptyJournal();
         this._farewellLetters = [];
         this._loginStreak = { ...EMPTY_LOGIN_STREAK };
+        this._dailySubsidy = null;
         this._playerLogs = [];
         this._dailyNews = { ...EMPTY_DAILY_NEWS, news: [] };
         this._morningReport = { ...EMPTY_MORNING_REPORT, items: [] };
@@ -1508,6 +1529,29 @@ export class GameSession {
         if (this._save) {
             await this.save();
         }
+    }
+
+    /**
+     * 與他國交易（治理模式 E-6，PROG-2-1358）：付出資源先扣，收到資源入帳；黃金走錢包（gold 為餘額、spend／grant 為扣入）。
+     * 收到後超過倉庫上限則拒絕、不變動任何資源。成功時寫回交易計數並存檔（若有開啟）。
+     */
+    public async tradeWithRival(nationId: string, routeId: string, amount: number, wallet: { gold: number; spend: (n: number) => void; grant: (n: number) => void }): Promise<TradeResult> {
+        const stock = { food: this._military.food, gold: wallet.gold, troops: this._military.cityTroops, fame: this._fame };
+        const result = tradeWithRivalPure(this._rivals, nationId, routeId, amount, stock, this._clock.state.totalSeasonsElapsed);
+        if (!result.ok || !result.give || !result.get) return result;
+        const caps = { food: this._military.foodCap, gold: Infinity, troops: this._military.cityTroopsCap, fame: BASE_RESOURCE_CAPS.fame };
+        const after = { ...stock, [result.give.resource]: stock[result.give.resource] - result.give.amount };
+        after[result.get.resource] += result.get.amount;
+        if (after[result.get.resource] > caps[result.get.resource]) {
+            return { ok: false, world: this._rivals, message: `${TRADE_RESOURCE_NAMES[result.get.resource]}倉庫已滿，無法收下` };
+        }
+        this._military = { ...this._military, food: after.food, cityTroops: after.troops };
+        this._fame = after.fame;
+        if (result.give.resource === 'gold') wallet.spend(result.give.amount);
+        if (result.get.resource === 'gold') wallet.grant(result.get.amount);
+        this._rivals = result.world;
+        if (this._autoSave && this._save) await this.save();
+        return result;
     }
 
     /** 名冊中戰力最高的 3 位在世武將：出征與迎戰的預設陣容 */
@@ -1732,6 +1776,13 @@ export class GameSession {
         return { ...this._military };
     }
 
+    /** 最近一場出征結算被地窖保護保住的糧草（PROG-2-1341）；沒觸發為 0，不存檔 */
+    private _lastCellarProtectedFood = 0;
+
+    public get lastCellarProtectedFood(): number {
+        return this._lastCellarProtectedFood;
+    }
+
     /**
      * 名冊武將出戰的出征帳本設定：帶兵上限由戰場統率推算，城市兵源與糧草取目前儲備。
      * 不在名冊或不能出戰時回傳 null（戰場維持舊版不扣軍勢）。
@@ -1907,6 +1958,36 @@ export class GameSession {
         if (!event || !this.recordJournal(event.entry).ok) return null;
         this._offlineInteractionLog = event.log;
         return event.entry.summary;
+    }
+
+    /** 每日補貼紀錄（PROG-2-1340）；從未領過為 null */
+    private _dailySubsidy: DailySubsidyRecord | null = null;
+
+    public get dailySubsidy(): DailySubsidyRecord | null {
+        return this._dailySubsidy ? { ...this._dailySubsidy } : null;
+    }
+
+    /**
+     * 每日補貼（ECO-06，PROG-2-1340）：UTC+8 切日，同日只領一次；糧草、城市兵源寫進軍備（依軍備上限夾制），
+     * 黃金交給 grantGold（錢包）。沒有資源低於門檻時不算領取。回傳本次各項補量（沒補為空物件）；不自動存檔。
+     */
+    public claimDailySubsidy(epochMs: number, goldBalance: number, grantGold: (amount: number) => void = () => {}): Partial<Record<SubsidyResourceKey, number>> {
+        const day = loginDayOf(epochMs);
+        const dayIndex = (d: string): number => Math.floor(Date.parse(`${d}T00:00:00Z`) / 86_400_000);
+        const last = this._dailySubsidy ? dayIndex(this._dailySubsidy.lastClaimDay) : null;
+        const result = dailySubsidyOf({ food: this._military.food, gold: goldBalance, troops: this._military.cityTroops }, last, dayIndex(day));
+        if (!result.claimed) return {};
+        const food = Math.max(0, Math.min(this._military.foodCap, result.resources.food) - this._military.food);
+        const troops = Math.max(0, Math.min(this._military.cityTroopsCap, result.resources.troops) - this._military.cityTroops);
+        const gold = result.grants.gold ?? 0;
+        this._military = { ...this._military, food: this._military.food + food, cityTroops: this._military.cityTroops + troops };
+        if (gold > 0) grantGold(gold);
+        this._dailySubsidy = { lastClaimDay: day, foodGranted: food, goldGranted: gold, troopsGranted: troops };
+        const grants: Partial<Record<SubsidyResourceKey, number>> = {};
+        if (food > 0) grants.food = food;
+        if (gold > 0) grants.gold = gold;
+        if (troops > 0) grants.troops = troops;
+        return grants;
     }
 
     /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
@@ -3235,6 +3316,21 @@ export class GameSession {
         return checkDeployable(general, { nurturingIds: this._nurturingIds() });
     }
 
+    /** 試用傭兵出戰：deployedIds 內的試用傭兵寫入場數與勝場；結義或到期的傭兵不動，ongoing 不計。 */
+    private _recordTrialMercenaryBattles(deployedIds: readonly string[], result: BattleResult): boolean {
+        const outcome = outcomeOf(result);
+        if (!outcome) return false;
+        let changed = false;
+        const mercenaries = this._mercenaries.mercenaries.map((m) => {
+            if (!deployedIds.includes(m.uid)) return m;
+            const next = recordTrialBattle(m, outcome);
+            if (next !== m) changed = true;
+            return next;
+        });
+        if (changed) this._mercenaries = { ...this._mercenaries, mercenaries };
+        return changed;
+    }
+
     /**
      * 戰後結算：出戰武將扣精力、記戰績與功勳，給玩家覺醒經驗，再為每位出戰武將擲一次戰場覺醒；
      * 寫回名冊並存檔。名冊裡找不到的 id（例如內建 demo 武將）略過；ongoing 不結算。
@@ -3261,6 +3357,7 @@ export class GameSession {
             this._recordEventJournal(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE', this._journalSubjects(deployedIds));
         }
         const comradeChanged = this._recordBattleComrades(result, Boolean(options.sortie));
+        const mercenaryChanged = this._recordTrialMercenaryBattles(deployedIds, result);
         const settlement = settleBattle(this._roster.getAll(), {
             deployedIds,
             result,
@@ -3279,14 +3376,22 @@ export class GameSession {
         }
         this._inventory = grantTacticNotes(this._inventory, milestoneRewards);
         if (settlement.entries.length === 0) {
-            if ((clearChanged || firstClear || tallyChanged || comradeChanged) && this._autoSave && this._save) {
+            if ((clearChanged || firstClear || tallyChanged || comradeChanged || mercenaryChanged) && this._autoSave && this._save) {
                 await this.save();
             }
             if (firstClear) this._emit(GAME_SESSION_EVENTS.FirstBattleCleared, undefined);
             return { ...settlement, awakenings: [] };
         }
         if (options.sortie) {
+            const foodBefore = this._military.food;
             this._military = applySortieResult(this._military, options.sortie);
+            // 地窖保護（ECO-06，PROG-2-1341）：戰敗時糧草不扣到 min(戰前, 保底) 以下
+            this._lastCellarProtectedFood = 0;
+            if (result === 'enemy-win' && CELLAR_PROTECTION.triggerAfterFailedDefense) {
+                const kept = protectedAfterLoss(foodBefore, this._military.food, CELLAR_PROTECTION.foodFloor);
+                this._military = { ...this._military, food: kept.after };
+                this._lastCellarProtectedFood = kept.saved;
+            }
         }
 
         const source = battleExpSource(result);
@@ -3510,8 +3615,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3523,6 +3628,7 @@ export class GameSession {
         }
         if (this._farewellLetters.length > 0) fields.farewellLetters = this.farewellLetters;
         if (this._loginStreak.lastLoginDay !== null) fields.loginStreak = this.loginStreak;
+        if (this._dailySubsidy) fields.dailySubsidy = this.dailySubsidy!;
         if (this._playerLogs.length > 0) fields.playerLogs = this.playerLogs;
         if (this._dailyNews.lastLoginMs !== null) fields.dailyNews = this.dailyNews;
         if (this._morningReport.journalMark > 0 || this._morningReport.items.length > 0) fields.morningReport = this.morningReport;
@@ -3550,6 +3656,7 @@ export class GameSession {
         this._pendingTerritoryLevel = normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) ?? null;
         this._farewellLetters = normalizeFarewellLetters(snapshot.farewellLetters);
         this._loginStreak = normalizeLoginStreak(snapshot.loginStreak);
+        this._dailySubsidy = normalizeDailySubsidyRecord(snapshot.dailySubsidy);
         this._playerLogs = normalizePlayerLogs(snapshot.playerLogs);
         this._dailyNews = normalizeDailyNewsState(snapshot.dailyNews);
         this._morningReport = normalizeMorningReportState(snapshot.morningReport);
