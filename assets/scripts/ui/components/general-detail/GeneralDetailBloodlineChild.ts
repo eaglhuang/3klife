@@ -8,7 +8,7 @@
  * AncestorTree 的動態渲染委託給已存在的 BloodlineTreePanel；
  * 此 ChildPanel 負責附掛元件並轉送 generalId。
  */
-import { Label, UITransform } from 'cc';
+import { Button, Label, UITransform } from 'cc';
 import type { Node } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import type { UISkinResolver } from '../../core/UISkinResolver';
@@ -20,6 +20,8 @@ import { FactorMaskPresenter } from '../../../core/systems/FactorMaskState';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
+import { spiritSlotActions, type SpiritSlotAction } from '../../../core/systems/BloodlineRightPanelLayout';
+import { spiritSlotViewOf } from '../../../core/systems/SpiritSlotState';
 import {
     STORY_DOCK_VISIBLE_CELLS,
     nextStoryDockState,
@@ -53,6 +55,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
     get justRevealedSlots(): readonly number[] { return this._justRevealed; }
     private _lAwakening!: Label;
     private _lHiddenFactor!: Label;
+    private _lSpiritSlotValue!: Label;
     private _treePanel: BloodlineTreePanel | null = null;
     /** 故事抽屜目前三態（GDUI-06）；預設收合 */
     private _storyDockState: StoryDockStateName = 'COLLAPSED';
@@ -74,6 +77,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         this._lAncestors = this._label(h, 'BloodlineStage/BloodlineRightPanel/BloodlineSummaryCard/AncestorsValue');
         this._lAwakening = this._label(h, 'BloodlineStage/BloodlineRightPanel/AwakeningCard/AwakeningValue');
         this._lHiddenFactor = this._label(h, 'BloodlineStage/BloodlineRightPanel/HiddenFactorCard/HiddenFactorValue');
+        this._lSpiritSlotValue = this._label(h, 'BloodlineStage/BloodlineRightPanel/SpiritSlotCard/SpiritSlotCardValue');
 
         for (let i = 1; i <= 5; i++) {
             this._lGenes.push(this._label(h, `BloodlineStage/BloodlineRightPanel/GeneListCard/Gene${i}Value`));
@@ -116,6 +120,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
 
         this._set(this._lAwakening, `${this.t('ui.general.bloodline.awakening')}${mask(cfg.awakeningTitle, this.t('ui.general.bloodline.awakening_locked'))}`);
         this._set(this._lHiddenFactor, hiddenFactorLine(cfg.genes, (key) => this.t(key)));
+        this._applySpiritSlot(cfg.id);
 
         // AncestorTree 動態載入
         if (this._treePanel) {
@@ -179,6 +184,41 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         if (dockTf) dockTf.height = layout.dockHeight;
         const visible = STORY_DOCK_VISIBLE_CELLS[this._storyDockState];
         this._storyCells.forEach((cell, i) => { cell.active = i < visible; });
+    }
+
+    /**
+     * 命槽五按鈕的可用性與裝配狀態（GDUI-05 接線，PROG-2-1277）。
+     * 戰鬥鎖定暫傳 false：大廳命頁不會在戰鬥中開啟（PM 2026-10-27 裁定 a）。
+     */
+    private _applySpiritSlot(generalId: string): void {
+        let records: Parameters<typeof spiritSlotViewOf>[0] = [];
+        try {
+            records = services().session.inventoryRecords;
+        } catch {
+            records = [];
+        }
+        const view = spiritSlotViewOf(records, generalId, false);
+        const plan = spiritSlotActions(view.state);
+
+        const valueText = view.state.occupied
+            ? (view.state.isMain ? '已裝配（主卡）' : '已裝配')
+            : '未裝配';
+        this._set(this._lSpiritSlotValue, valueText);
+
+        const buttonNames: Record<SpiritSlotAction, string> = {
+            insert: 'SlotInsertButton',
+            replace: 'SlotReplaceButton',
+            unequip: 'SlotUnequipButton',
+            setMain: 'SlotSetMainButton',
+            detail: 'SlotDetailButton',
+        };
+        for (const { action, enabled } of plan.actions) {
+            const node = this.hostNode.getChildByPath(
+                `${GeneralDetailBloodlineChild.ROOT_PATH}/BloodlineStage/BloodlineRightPanel/SpiritSlotCard/${buttonNames[action]}`,
+            );
+            const button = node?.getComponent(Button) ?? node?.addComponent(Button);
+            if (button) button.interactable = enabled;
+        }
     }
 
     private _label(root: Node, path: string): Label {
