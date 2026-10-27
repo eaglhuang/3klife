@@ -19,6 +19,7 @@
 |---|---|---|
 | NurtureSystem.ts | doc_spec_0026, doc_spec_0027 | F/概: `inspiredTacticIds()` 取得本場教官靈感觸發戰法清單（PROG-2-1134 畢業區戰法來源）|
 | TacticLearning.ts | doc_spec_0026, doc_spec_0038 | F/概: 培育戰法學習判定（`hasMatchingGreenFactor`、`learnTacticInto`、`tacticLearnThreshold`），綠因子半價（PROG-2-1132）|
+| InspiredTacticMap.ts | doc_spec_0027, doc_spec_0038 | D/概: `INSPIRED_TACTIC_MAP`（17 個靈感戰法 TAC_* → 中文名＋現有 8 招戰法庫 id）、`toLibraryTacticId`、`inspiredTacticName`；戰場組槽與畢業兌換名稱共用（PROG-2-1135）；測試 `tests/InspiredTacticMap.test.ts` |
 | FormulaSystem.ts | doc_data_0001, doc_spec_0012 | F: calculateDamage, getCounterMultiplier, calculateHeal, calculateGeneralAttack, getCritChance, getDodgeChance, rollCrit, rollDodge; D: DamageContext, GeneralCombatParams; C: COUNTER_MULTIPLIER, GENERAL_BASE_CRIT_CHANCE, GENERAL_MAX_CRIT_CHANCE, GENERAL_CRIT_DAMAGE_MULTIPLIER, GENERAL_BASE_DODGE_CHANCE, GENERAL_MAX_DODGE_CHANCE |
 | BattleSystem.ts | doc_spec_0040, doc_data_0001 | D: TurnSnapshot, TurnPhase; C: INITIAL_DP, DP_PER_TURN, GRID_LANES, GRID_DEPTH |
 | BuffSystem.ts | doc_spec_0010 | D: BuffEntry, StatusEffect; 概: 狀態效果管理 |

@@ -15,19 +15,14 @@ import {
 export function createLuckVisibilitySuite(): TestSuite {
     const suite = new TestSuite('LuckVisibility (運氣屬性前期隱藏 LUK-01)');
 
-    suite.test('Lv46 解鎖：Lv45 隱藏、Lv46 可見', () => {
+    suite.test('Lv46 解鎖常數維持規格值（Lv46 規則待有等級欄位後接回）', () => {
         assert.equals(46, LUK_REVEAL_LEVEL);
-        assert.isFalse(isLukVisible({ level: 45 }));
-        assert.isTrue(isLukVisible({ level: 46 }));
     });
 
-    suite.test('Is_Visible 有值時優先於等級（可強制隱藏或顯示）', () => {
-        assert.isTrue(isLukVisible({ level: 1, isVisible: true }));
-        assert.isFalse(isLukVisible({ level: 99, isVisible: false }));
-    });
-
-    suite.test('等級非有限數時視為隱藏', () => {
-        assert.isFalse(isLukVisible({ level: Number.NaN }));
+    suite.test('Is_Visible 為 true 才可見，false 或缺值一律隱藏（PM 裁決 B）', () => {
+        assert.isTrue(isLukVisible({ isVisible: true }));
+        assert.isFalse(isLukVisible({ isVisible: false }));
+        assert.isFalse(isLukVisible({}));
     });
 
     suite.test('數值夾制：0..100 並取整，非有限數為 0', () => {

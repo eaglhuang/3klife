@@ -1,0 +1,87 @@
+assets/scripts/battle/views/BattleFlowVfx.ts(84,33): error TS2339: Property 'clone' does not exist on type 'Vec3'.
+assets/scripts/battle/views/BattleUIBridge.ts(14,28): error TS2305: Module '"cc"' has no exported member 'EventKeyboard'.
+assets/scripts/battle/views/BattleUIBridge.ts(14,43): error TS2305: Module '"cc"' has no exported member 'EventMouse'.
+assets/scripts/battle/views/BattleUIBridge.ts(14,55): error TS2305: Module '"cc"' has no exported member 'EventTouch'.
+assets/scripts/battle/views/BattleUIBridge.ts(14,67): error TS2305: Module '"cc"' has no exported member 'Input'.
+assets/scripts/battle/views/BattleUIBridge.ts(14,74): error TS2305: Module '"cc"' has no exported member 'KeyCode'.
+assets/scripts/battle/views/BattleUIBridge.ts(14,89): error TS2305: Module '"cc"' has no exported member 'input'.
+assets/scripts/battle/views/BattleUIBridge.ts(154,69): error TS2345: Argument of type '(request: { faction?: Faction; }) => void' is not assignable to parameter of type 'EventHandler<{ faction?: Faction | undefined; }>'.
+  Types of parameters 'request' and 'payload' are incompatible.
+    Type '{ faction?: Faction | undefined; } | undefined' is not assignable to type '{ faction?: Faction | undefined; }'.
+      Type 'undefined' is not assignable to type '{ faction?: Faction | undefined; }'.
+assets/scripts/battle/views/BattleUIBridge.ts(164,57): error TS2345: Argument of type '(snap: { turn: number; playerFood: number; phase?: TurnPhase | undefined; }) => void' is not assignable to parameter of type 'EventHandler<{ turn: number; playerFood: number; phase?: TurnPhase | undefined; }>'.
+  Types of parameters 'snap' and 'payload' are incompatible.
+    Type '{ turn: number; playerFood: number; phase?: TurnPhase | undefined; } | undefined' is not assignable to type '{ turn: number; playerFood: number; phase?: TurnPhase | undefined; }'.
+      Type 'undefined' is not assignable to type '{ turn: number; playerFood: number; phase?: TurnPhase | undefined; }'.
+assets/scripts/battle/views/BattleUIBridge.ts(165,57): error TS2345: Argument of type '(data: { unitId: string; faction: Faction; type: TroopType; lane: number; unitName?: string | undefined; }) => void' is not assignable to parameter of type 'EventHandler<{ unitId: string; faction: Faction; type: TroopType; lane: number; unitName?: string | undefined; }>'.
+  Types of parameters 'data' and 'payload' are incompatible.
+    Type '{ unitId: string; faction: Faction; type: TroopType; lane: number; unitName?: string | undefined; } | undefined' is not assignable to type '{ unitId: string; faction: Faction; type: TroopType; lane: number; unitName?: string | undefined; }'.
+      Type 'undefined' is not assignable to type '{ unitId: string; faction: Faction; type: TroopType; lane: number; unitName?: string | undefined; }'.
+assets/scripts/battle/views/BattleUIBridge.ts(166,57): error TS2345: Argument of type '(data: { unitId: string; damage: number; hp: number; attackerId: string | null; attackerLane: number | null; attackerDepth: number | null; defenderLane: number | null; defenderDepth: number | null; attackerFaction: Faction | null; damageSource?: string | undefined; }) => void' is not assignable to parameter of type 'EventHandler<{ unitId: string; damage: number; hp: number; attackerId: string | null; attackerLane: number | null; attackerDepth: number | null; defenderLane: number | null; defenderDepth: number | null; attackerFaction: Faction | null; damageSource?: string | undefined; }>'.
+  Types of parameters 'data' and 'payload' are incompatible.
+    Type '{ unitId: string; damage: number; hp: number; attackerId: string | null; attackerLane: number | null; attackerDepth: number | null; defenderLane: number | null; defenderDepth: number | null; attackerFaction: Faction | null; damageSource?: string | undefined; } | undefined' is not assignable to type '{ unitId: string; damage: number; hp: number; attackerId: string | null; attackerLane: number | null; attackerDepth: number | null; defenderLane: number | null; defenderDepth: number | null; attackerFaction: Faction | null; damageSource?: string | undefined; }'.
+      Type 'undefined' is not assignable to type '{ unitId: string; damage: number; hp: number; attackerId: string | null; attackerLane: number | null; attackerDepth: number | null; defenderLane: number | null; defenderDepth: number | null; attackerFaction: Faction | null; damageSource?: string | undefined; }'.
+assets/scripts/battle/views/BattleUIBridge.ts(168,57): error TS2345: Argument of type '(data: { unitId: string; amount: number; hp: number; }) => void' is not assignable to parameter of type 'EventHandler<{ unitId: string; amount: number; hp: number; }>'.
+  Types of parameters 'data' and 'payload' are incompatible.
+    Type '{ unitId: string; amount: number; hp: number; } | undefined' is not assignable to type '{ unitId: string; amount: number; hp: number; }'.
+      Type 'undefined' is not assignable to type '{ unitId: string; amount: number; hp: number; }'.
+assets/scripts/battle/views/BattleUIBridge.ts(169,57): error TS2345: Argument of type '(data: { unitId: string; lane: number; depth: number; fromLane: number; fromDepth: number; swapWithUnitId?: string | undefined; swapDuration?: number | undefined; isSwapPassenger?: boolean | undefined; ... 6 more ...; forcedMoveReason?: string | undefined; }) => void' is not assignable to parameter of type 'EventHandler<{ unitId: string; lane: number; depth: number; fromLane: number; fromDepth: number; swapWithUnitId?: string | undefined; swapDuration?: number | undefined; isSwapPassenger?: boolean | undefined; ... 6 more ...; forcedMoveReason?: string | undefined; }>'.
+  Types of parameters 'data' and 'payload' are incompatible.
+    Type '{ unitId: string; lane: number; depth: number; fromLane: number; fromDepth: number; swapWithUnitId?: string | undefined; swapDuration?: number | undefined; isSwapPassenger?: boolean | undefined; ... 6 more ...; forcedMoveReason?: string | undefined; } | undefined' is not assignable to type '{ unitId: string; lane: number; depth: number; fromLane: number; fromDepth: number; swapWithUnitId?: string | undefined; swapDuration?: number | undefined; isSwapPassenger?: boolean | undefined; ... 6 more ...; forcedMoveReason?: string | undefined; }'.
+      Type 'undefined' is not assignable to type '{ unitId: string; lane: number; depth: number; fromLane: number; fromDepth: number; swapWithUnitId?: string | undefined; swapDuration?: number | undefined; isSwapPassenger?: boolean | undefined; ... 6 more ...; forcedMoveReason?: string | undefined; }'.
+assets/scripts/battle/views/BattleUIBridge.ts(170,57): error TS2345: Argument of type '(data: { unitId: string; lane: number; depth: number; faction: Faction; type: TroopType; }) => void' is not assignable to parameter of type 'EventHandler<{ unitId: string; lane: number; depth: number; faction: Faction; type: TroopType; }>'.
+  Types of parameters 'data' and 'payload' are incompatible.
+    Type '{ unitId: string; lane: number; depth: number; faction: Faction; type: TroopType; } | undefined' is not assignable to type '{ unitId: string; lane: number; depth: number; faction: Faction; type: TroopType; }'.
+      Type 'undefined' is not assignable to type '{ unitId: string; lane: number; depth: number; faction: Faction; type: TroopType; }'.
+assets/scripts/battle/views/BattleUIBridge.ts(171,57): error TS2345: Argument of type '(data: { faction: Faction; hp: number; damage?: number | undefined; attackerId?: string | null | undefined; isCrit?: boolean | undefined; wasDodged?: boolean | undefined; }) => void' is not assignable to parameter of type 'EventHandler<{ faction: Faction; hp: number; damage?: number | undefined; attackerId?: string | null | undefined; isCrit?: boolean | undefined; wasDodged?: boolean | undefined; }>'.
+  Types of parameters 'data' and 'payload' are incompatible.
+    Type '{ faction: Faction; hp: number; damage?: number | undefined; attackerId?: string | null | undefined; isCrit?: boolean | undefined; wasDodged?: boolean | undefined; } | undefined' is not assignable to type '{ faction: Faction; hp: number; damage?: number | undefined; attackerId?: string | null | undefined; isCrit?: boolean | undefined; wasDodged?: boolean | undefined; }'.
+      Type 'undefined' is not assignable to type '{ faction: Faction; hp: number; damage?: number | undefined; attackerId?: string | null | undefined; isCrit?: boolean | undefined; wasDodged?: boolean | undefined; }'.
+assets/scripts/battle/views/BattleUIBridge.ts(172,57): error TS2345: Argument of type '(data: { faction: Faction; skillId?: string | undefined; skillName?: string | undefined; sourceType?: SkillSourceType | undefined; }) => void' is not assignable to parameter of type 'EventHandler<{ faction: Faction; skillId?: string | undefined; skillName?: string | undefined; sourceType?: SkillSourceType | undefined; }>'.
+  Types of parameters 'data' and 'payload' are incompatible.
+    Type '{ faction: Faction; skillId?: string | undefined; skillName?: string | undefined; sourceType?: SkillSourceType | undefined; } | undefined' is not assignable to type '{ faction: Faction; skillId?: string | undefined; skillName?: string | undefined; sourceType?: SkillSourceType | undefined; }'.
+      Type 'undefined' is not assignable to type '{ faction: Faction; skillId?: string | undefined; skillName?: string | undefined; sourceType?: SkillSourceType | undefined; }'.
+assets/scripts/battle/views/BattleUIBridge.ts(174,57): error TS2345: Argument of type '(data: { unitId: string; faction: Faction; lane: number; depth: number; buffText: string; attackDelta: number; hpDelta: number; }) => void' is not assignable to parameter of type 'EventHandler<{ unitId: string; faction: Faction; lane: number; depth: number; buffText: string; attackDelta: number; hpDelta: number; }>'.
+  Types of parameters 'data' and 'payload' are incompatible.
+    Type '{ unitId: string; faction: Faction; lane: number; depth: number; buffText: string; attackDelta: number; hpDelta: number; } | undefined' is not assignable to type '{ unitId: string; faction: Faction; lane: number; depth: number; buffText: string; attackDelta: number; hpDelta: number; }'.
+      Type 'undefined' is not assignable to type '{ unitId: string; faction: Faction; lane: number; depth: number; buffText: string; attackDelta: number; hpDelta: number; }'.
+assets/scripts/battle/views/BattleUIBridge.ts(175,57): error TS2345: Argument of type '(data: { result: string; }) => void' is not assignable to parameter of type 'EventHandler<{ result: string; }>'.
+  Types of parameters 'data' and 'payload' are incompatible.
+    Type '{ result: string; } | undefined' is not assignable to type '{ result: string; }'.
+      Type 'undefined' is not assignable to type '{ result: string; }'.
+assets/scripts/battle/views/BattleUIBridge.ts(176,57): error TS2345: Argument of type '(enabled: boolean) => void' is not assignable to parameter of type 'EventHandler<boolean>'.
+  Types of parameters 'enabled' and 'payload' are incompatible.
+    Type 'boolean | undefined' is not assignable to type 'boolean'.
+      Type 'undefined' is not assignable to type 'boolean'.
+assets/scripts/battle/views/BattleUIBridge.ts(177,57): error TS2345: Argument of type '(req: { side: "player" | "enemy"; isEnemy: boolean; }) => void' is not assignable to parameter of type 'EventHandler<{ side: "player" | "enemy"; isEnemy: boolean; }>'.
+  Types of parameters 'req' and 'payload' are incompatible.
+    Type '{ side: "player" | "enemy"; isEnemy: boolean; } | undefined' is not assignable to type '{ side: "player" | "enemy"; isEnemy: boolean; }'.
+      Type 'undefined' is not assignable to type '{ side: "player" | "enemy"; isEnemy: boolean; }'.
+assets/scripts/battle/views/BattleUIBridge.ts(178,57): error TS2345: Argument of type '(data: { skillId?: string | null | undefined; ultimateId?: string | null | undefined; }) => void' is not assignable to parameter of type 'EventHandler<{ skillId?: string | null | undefined; ultimateId?: string | null | undefined; }>'.
+  Types of parameters 'data' and 'payload' are incompatible.
+    Type '{ skillId?: string | null | undefined; ultimateId?: string | null | undefined; } | undefined' is not assignable to type '{ skillId?: string | null | undefined; ultimateId?: string | null | undefined; }'.
+      Type 'undefined' is not assignable to type '{ skillId?: string | null | undefined; ultimateId?: string | null | undefined; }'.
+assets/scripts/ui/core/CssClipPathMask.ts(43,26): error TS2339: Property 'Type' does not exist on type 'typeof Mask'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(194,38): error TS2339: Property 'Type' does not exist on type 'typeof Mask'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(249,45): error TS2339: Property 'Direction' does not exist on type 'typeof ScrollBar'.
+assets/scripts/ui/core/UIPreviewNodeFactory.ts(377,30): error TS2339: Property 'Type' does not exist on type 'typeof Mask'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(395,44): error TS2339: Property 'cacheMode' does not exist on type 'Label'.
+assets/scripts/ui/core/UIPreviewStyleBuilder.ts(395,62): error TS2339: Property 'CacheMode' does not exist on type 'typeof Label'.
+tests/BattleHudScreenAnchors.test.ts(32,29): error TS18048: 'ut' is possibly 'undefined'.
+tests/BattleHudScreenAnchors.test.ts(33,29): error TS18048: 'ut' is possibly 'undefined'.
+tests/GachaPityStorage.test.ts(61,163): error TS2345: Argument of type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is not assignable to parameter of type 'Readonly<GachaWalletSave>'.
+  Type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is missing the following properties from type 'Readonly<GachaWalletSave>': mentorTickets, scorePoints
+tests/GachaPityStorage.test.ts(77,160): error TS2345: Argument of type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is not assignable to parameter of type 'Readonly<GachaWalletSave>'.
+  Type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is missing the following properties from type 'Readonly<GachaWalletSave>': mentorTickets, scorePoints
+tests/LegacyAchievement.test.ts(108,56): error TS2345: Argument of type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is not assignable to parameter of type 'Readonly<GachaWalletSave>'.
+  Type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is missing the following properties from type 'Readonly<GachaWalletSave>': mentorTickets, scorePoints
+tests/LegacyRewardWiring.test.ts(44,36): error TS2345: Argument of type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is not assignable to parameter of type 'Readonly<GachaWalletSave>'.
+  Type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is missing the following properties from type 'Readonly<GachaWalletSave>': mentorTickets, scorePoints
+tests/LegacyRewardWiring.test.ts(53,36): error TS2345: Argument of type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is not assignable to parameter of type 'Readonly<GachaWalletSave>'.
+  Type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is missing the following properties from type 'Readonly<GachaWalletSave>': mentorTickets, scorePoints
+tests/LegacyRewardWiring.test.ts(63,36): error TS2345: Argument of type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is not assignable to parameter of type 'Readonly<GachaWalletSave>'.
+  Type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is missing the following properties from type 'Readonly<GachaWalletSave>': mentorTickets, scorePoints
+tests/LegacyRewardWiring.test.ts(75,36): error TS2345: Argument of type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is not assignable to parameter of type 'Readonly<GachaWalletSave>'.
+  Type '{ gems: number; gold: number; tickets: number; bronze: number; oracle: number; }' is missing the following properties from type 'Readonly<GachaWalletSave>': mentorTickets, scorePoints
+tests/NurtureReportBookLifecycle.test.ts(37,25): error TS2304: Cannot find name 'MentorCard'.
+tests/NurtureReportBookLifecycle.test.ts(43,21): error TS2304: Cannot find name 'MentorCard'.

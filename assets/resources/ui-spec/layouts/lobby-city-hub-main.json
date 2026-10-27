@@ -1,0 +1,617 @@
+{
+  "id": "lobby-city-hub-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "LobbyCityHubRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "LordPanel",
+        "widget": {
+          "top": 12,
+          "left": 24
+        },
+        "width": 470,
+        "height": 88,
+        "skinSlot": "hub.panel.bg",
+        "children": [
+          {
+            "type": "container",
+            "name": "LordAvatarMask",
+            "id": "lordAvatarMask",
+            "widget": {
+              "top": 8,
+              "left": 8
+            },
+            "width": 72,
+            "height": 72,
+            "children": [
+              {
+                "type": "image",
+                "name": "LordAvatar",
+                "id": "lordAvatar",
+                "width": 72,
+                "height": 72,
+                "skinSlot": "hub.avatar"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "LordFaction",
+            "id": "lordFaction",
+            "widget": {
+              "top": 8,
+              "left": 94,
+              "right": 12
+            },
+            "height": 38,
+            "text": "蜀漢舊部",
+            "styleSlot": "hub.label.title"
+          },
+          {
+            "type": "label",
+            "name": "LordSub",
+            "id": "lordSub",
+            "widget": {
+              "top": 50,
+              "left": 94,
+              "right": 12
+            },
+            "height": 28,
+            "text": "白身　主將 未定",
+            "styleSlot": "hub.label.sub"
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "name": "ResourceBar",
+        "widget": {
+          "top": 22,
+          "right": 24
+        },
+        "width": 630,
+        "height": 56,
+        "children": [
+          {
+            "type": "panel",
+            "name": "ResGoldChip",
+            "widget": {
+              "top": 0,
+              "left": 0
+            },
+            "width": 150,
+            "height": 56,
+            "skinSlot": "hub.chip.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ResGold",
+                "id": "resGold",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 56,
+                "text": "金 0",
+                "styleSlot": "hub.label.res"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "ResGemChip",
+            "widget": {
+              "top": 0,
+              "left": 160
+            },
+            "width": 150,
+            "height": 56,
+            "skinSlot": "hub.chip.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ResGem",
+                "id": "resGem",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 56,
+                "text": "玉 0",
+                "styleSlot": "hub.label.res"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "ResFoodChip",
+            "widget": {
+              "top": 0,
+              "left": 320
+            },
+            "width": 150,
+            "height": 56,
+            "skinSlot": "hub.chip.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ResFood",
+                "id": "resFood",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 56,
+                "text": "糧 0",
+                "styleSlot": "hub.label.res"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "ResTroopsChip",
+            "widget": {
+              "top": 0,
+              "left": 480
+            },
+            "width": 150,
+            "height": 56,
+            "skinSlot": "hub.chip.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ResTroops",
+                "id": "resTroops",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 56,
+                "text": "兵 0",
+                "styleSlot": "hub.label.res"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "panel",
+        "name": "CityCard",
+        "widget": {
+          "top": 584,
+          "right": 32
+        },
+        "width": 360,
+        "height": 252,
+        "skinSlot": "hub.panel.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "CityName",
+            "id": "cityName",
+            "widget": {
+              "top": 10,
+              "left": 16
+            },
+            "width": 120,
+            "height": 46,
+            "text": "新野",
+            "styleSlot": "hub.label.city"
+          },
+          {
+            "type": "label",
+            "name": "CityRegion",
+            "id": "cityRegion",
+            "widget": {
+              "top": 22,
+              "left": 136,
+              "right": 16
+            },
+            "height": 28,
+            "text": "荊州・主城",
+            "styleSlot": "hub.label.sub"
+          },
+          {
+            "type": "label",
+            "name": "CityPopulation",
+            "id": "cityPopulation",
+            "widget": {
+              "top": 66,
+              "left": 16
+            },
+            "width": 160,
+            "height": 30,
+            "text": "人口 8 萬",
+            "styleSlot": "hub.label.stat"
+          },
+          {
+            "type": "label",
+            "name": "CityMorale",
+            "id": "cityMorale",
+            "widget": {
+              "top": 66,
+              "left": 184,
+              "right": 16
+            },
+            "height": 30,
+            "text": "民心 60",
+            "styleSlot": "hub.label.stat"
+          },
+          {
+            "type": "label",
+            "name": "CityGarrison",
+            "id": "cityGarrison",
+            "widget": {
+              "top": 102,
+              "left": 16,
+              "right": 16
+            },
+            "height": 30,
+            "text": "守軍 0 / 0",
+            "styleSlot": "hub.label.stat"
+          },
+          {
+            "type": "label",
+            "name": "CityFaction",
+            "id": "cityFaction",
+            "widget": {
+              "top": 138,
+              "left": 16,
+              "right": 16
+            },
+            "height": 30,
+            "text": "陣營　蜀漢舊部",
+            "styleSlot": "hub.label.stat"
+          },
+          {
+            "type": "label",
+            "name": "CityRivals",
+            "id": "cityRivals",
+            "widget": {
+              "top": 178,
+              "left": 16,
+              "right": 16
+            },
+            "height": 60,
+            "text": "天下 8 方勢力",
+            "styleSlot": "hub.label.small"
+          }
+        ]
+      },
+      {
+        "type": "panel",
+        "name": "SubMenu",
+        "id": "subMenu",
+        "widget": {
+          "bottom": 120,
+          "left": 520,
+          "right": 520
+        },
+        "height": 116,
+        "skinSlot": "hub.panel.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "SubMenuTitle",
+            "id": "subMenuTitle",
+            "widget": {
+              "top": 6,
+              "left": 16,
+              "right": 16
+            },
+            "height": 28,
+            "text": "",
+            "styleSlot": "hub.label.sub"
+          },
+          {
+            "type": "button",
+            "name": "BtnSub0",
+            "id": "btnSub0",
+            "widget": {
+              "top": 40,
+              "left": 16
+            },
+            "width": 160,
+            "height": 64,
+            "skinSlot": "hub.sub.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "Sub0Label",
+                "id": "sub0Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 32,
+                "text": "",
+                "styleSlot": "hub.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnSub1",
+            "id": "btnSub1",
+            "widget": {
+              "top": 40,
+              "left": 188
+            },
+            "width": 160,
+            "height": 64,
+            "skinSlot": "hub.sub.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "Sub1Label",
+                "id": "sub1Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 32,
+                "text": "",
+                "styleSlot": "hub.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnSub2",
+            "id": "btnSub2",
+            "widget": {
+              "top": 40,
+              "left": 360
+            },
+            "width": 160,
+            "height": 64,
+            "skinSlot": "hub.sub.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "Sub2Label",
+                "id": "sub2Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 32,
+                "text": "",
+                "styleSlot": "hub.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnSub3",
+            "id": "btnSub3",
+            "widget": {
+              "top": 40,
+              "left": 532
+            },
+            "width": 160,
+            "height": 64,
+            "skinSlot": "hub.sub.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "Sub3Label",
+                "id": "sub3Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 32,
+                "text": "",
+                "styleSlot": "hub.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnSub4",
+            "id": "btnSub4",
+            "widget": {
+              "top": 40,
+              "left": 704
+            },
+            "width": 160,
+            "height": 64,
+            "skinSlot": "hub.sub.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "Sub4Label",
+                "id": "sub4Label",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 32,
+                "text": "",
+                "styleSlot": "hub.label.button"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "name": "CategoryBar",
+        "widget": {
+          "bottom": 24,
+          "left": 360,
+          "right": 360
+        },
+        "height": 84,
+        "children": [
+          {
+            "type": "button",
+            "name": "BtnCatSortie",
+            "id": "btnCatSortie",
+            "widget": {
+              "top": 2,
+              "left": 0
+            },
+            "width": 220,
+            "height": 80,
+            "skinSlot": "hub.cat.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCatSortieLabel",
+                "id": "btnCatSortieLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "出征",
+                "styleSlot": "hub.label.cat"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnCatGenerals",
+            "id": "btnCatGenerals",
+            "widget": {
+              "top": 2,
+              "left": 245
+            },
+            "width": 220,
+            "height": 80,
+            "skinSlot": "hub.cat.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCatGeneralsLabel",
+                "id": "btnCatGeneralsLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "武將",
+                "styleSlot": "hub.label.cat"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnCatDomestic",
+            "id": "btnCatDomestic",
+            "widget": {
+              "top": 2,
+              "left": 490
+            },
+            "width": 220,
+            "height": 80,
+            "skinSlot": "hub.cat.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCatDomesticLabel",
+                "id": "btnCatDomesticLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "內政",
+                "styleSlot": "hub.label.cat"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnCatNurture",
+            "id": "btnCatNurture",
+            "widget": {
+              "top": 2,
+              "left": 735
+            },
+            "width": 220,
+            "height": 80,
+            "skinSlot": "hub.cat.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCatNurtureLabel",
+                "id": "btnCatNurtureLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "培育",
+                "styleSlot": "hub.label.cat"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnCatShop",
+            "id": "btnCatShop",
+            "widget": {
+              "top": 2,
+              "left": 980
+            },
+            "width": 220,
+            "height": 80,
+            "skinSlot": "hub.cat.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCatShopLabel",
+                "id": "btnCatShopLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "商城",
+                "styleSlot": "hub.label.cat"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

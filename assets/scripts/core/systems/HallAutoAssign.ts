@@ -120,8 +120,8 @@ export function settleLatestAssign(
 
 export interface HallSeasonSettleResult {
     log: HallAutoAssignRecord[];
-    /** 本次新結算的紀錄：難度與任務牆（可能缺省）與成敗，供呼叫端入帳官職經驗。 */
-    settled: { difficulty?: string; board?: HallBoardKey; success: boolean }[];
+    /** 本次新結算的紀錄：武將、難度與任務牆（可能缺省）與成敗，供呼叫端入帳官職經驗與寫日誌。 */
+    settled: { generalId: string; difficulty?: string; board?: HallBoardKey; success: boolean }[];
 }
 
 /**
@@ -138,7 +138,7 @@ export function settleOpenAssignsForSeason(
     const next = log.map((record): HallAutoAssignRecord => {
         if (record.outcome !== undefined) return { ...record };
         const success = judgeHallMissionSuccess(record.difficulty ?? '', powerOf(record.generalId));
-        settled.push({ difficulty: record.difficulty, board: record.board, success });
+        settled.push({ generalId: record.generalId, difficulty: record.difficulty, board: record.board, success });
         return { ...record, outcome: success ? 'success' : 'failure', settledAt };
     });
     return { log: next, settled };

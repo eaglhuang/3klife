@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 72,
-    "total": 108
+    "open": 75,
+    "total": 111
   },
   "tasks": [
     {
@@ -4038,6 +4038,134 @@
         "artifacts/PROG-2-0168/**"
       ],
       "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "doc_id": "doc_task_0406",
+      "id": "PROG-2-1146",
+      "title": "結緣出生紀錄跨重開保存",
+      "owner": "codex-gpt-6",
+      "priority": "P1",
+      "status": "blocked",
+      "type": "implementation",
+      "phase": "M3",
+      "created": "2026-10-26",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "2026-10-26T15:06:32+00:00",
+      "started_by_agent": "codex-gpt-6",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "沿用既有 PlayerSaveSnapshot 保存出生紀錄；舊檔為空、child.UID 去重、深層複本與重置清空。不新增畫面，不改出生紀錄結構。",
+      "related": [
+        "PROG-2-0872",
+        "PROG-2-0853"
+      ],
+      "depends": [],
+      "acceptance": [
+        "紀錄存讀完整還原",
+        "舊檔欄位缺省為空",
+        "重複寫入與重複載入只保留一筆",
+        "新遊戲重置清空",
+        "輸入與回傳巢狀資料不影響內部",
+        "全部測試與 tsc 通過",
+        "standard gate 9/9"
+      ],
+      "deliverables": [
+        "assets/scripts/core/managers/GameSession.ts",
+        "assets/scripts/core/services/PlayerSaveService.ts",
+        "assets/scripts/core/systems/BreedingBirthRecordSave.ts",
+        "assets/scripts/core/systems/BreedingBirthRecordSave.ts.meta",
+        "tests/BreedingBirthRecordSave.test.ts"
+      ],
+      "notes": "2026-10-26 | 狀態: blocked | 驗證: headless 3766 passed/3 既有 skipped；新增 10/10；npm test pass；standard 9/9；tsc exit 2，38 個診斷與 d44d6de 基線逐位元組相同 | 變更: 出生紀錄存讀檔與深層複本完成；child.UID 去重，首筆有效紀錄優先，同鍵衝突不覆寫，讀檔替換清單；無效筆忽略且不臆造舊紀錄；schema 結構未改；四個禁止檔案未改 | 阻塞: 既存 tsc 錯誤使全過驗收與合併條件未滿足，維持 draft，未標 done | revision-2: 獨立唯讀 review 未發現 bug，focused 10/10；重跑 headless 3766/3舊skip、npm test pass、standard 9/9；兩次 tsc 38 診斷逐位元組相同仍 blocked；最終不可覆寫輸出與收據見 evidence/PROG-2-1146/revision-2/；未重建或查詢PR，未合併。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "id": "PROG-2-0169",
+      "title": "實機驗收：太守府入口、英靈圖鑑詳情、結緣求籤令（一批三區）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-27",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "太守府大廳入口與升級、英靈圖鑑詳情按鈕、結緣求籤令標籤與占卜入口三區需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-0986",
+        "PR #975",
+        "PR #988",
+        "PROG-2-1142",
+        "PR #984",
+        "PROG-2-1140",
+        "PR #960"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0169.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0169/**"
+      ],
+      "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0170",
+      "title": "實機驗收：寶頁六格裝備、血統樹連線與主角區、道具背包（一批四區）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-27",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "寶頁六格裝備、血統樹父子貝茲連線（多螢幕比例）、血統樹主角區綁定、道具背包與使用確認需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-1037",
+        "PR #990",
+        "PROG-2-1300",
+        "PR #1025",
+        "PROG-2-1301",
+        "PR #1034",
+        "PROG-2-1041",
+        "PR #1038"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0170.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0170/**"
+      ],
+      "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     }
   ]
 }

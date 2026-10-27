@@ -1,4 +1,6 @@
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
+import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
+import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
 import { normalizeTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { readCardStarState } from '../systems/TigerTallyStar';
 import { normalizeDomesticLog, type DomesticSeasonLog } from '../systems/DomesticTasks';
@@ -16,6 +18,7 @@ import { normalizeRivalWorld, type RivalWorld } from '../systems/RivalNations';
 import { normalizeInventory, PlayerInventory } from '../systems/PlayerInventory';
 import { normalizeBondPoints } from '../systems/OverflowBond';
 import { normalizeOnboardingState, OnboardingState } from '../systems/OnboardingTutorial';
+import { normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { normalizeMilitaryReserve, MilitaryReserve } from '../systems/MilitaryReserve';
 import { normalizePrisonState, type PrisonState } from '../systems/PrisonerOfWar';
 import { normalizeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
@@ -45,12 +48,26 @@ import { normalizeBorrowLedger, type BorrowLedger } from '../systems/FriendBorro
 import { normalizeSoulFragmentLedger, type SoulFragmentLedger } from '../systems/SoulFragmentLedger';
 import {
     normalizeGovernanceAssignments,
+    normalizeFarewellLetters,
     normalizeJournalEntries,
+    normalizeLoginStreak,
     normalizeKeepTerritories,
+    normalizePendingTerritoryLevel,
+    normalizeTerritoryLevel,
 } from '../systems/LifespanSave';
 import type { GovernanceAssignment } from '../systems/GovernanceAssignment';
 import type { KeepTerritory } from '../systems/HereditaryKeep';
 import type { JournalEntry } from '../systems/JournalLog';
+import type { FarewellLetter } from '../systems/FarewellLetterInbox';
+import type { LoginStreakState } from '../systems/LoginStreak';
+import { normalizeDailyNewsState, normalizePlayerLogs, type DailyNewsState, type PlayerLogEntry } from '../systems/DailyNewsEngine';
+import { normalizeMorningReportState, type MorningReportState } from '../systems/MorningReport';
+import { normalizeDispatchState, type DispatchState } from '../systems/DispatchJobs';
+import { normalizeOfflineBattleSnapshots, type OfflineBattleSnapshot } from '../systems/OfflineBattleSnapshot';
+import { normalizeTournamentState, type TournamentState } from '../systems/TournamentLocal';
+import { normalizeOfflineInteractionLog } from '../systems/OfflineInteractionEvents';
+import { normalizeUnlockHistory, type SandtableStageId } from '../systems/SandtableProgress';
+import { normalizeStartingTalisman, type StartingSpiritTalisman } from '../systems/TeachingSpiritTalisman';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
@@ -112,10 +129,42 @@ export interface PlayerSaveSnapshot {
     sandtableMarkerTerritories?: string[];
     /** 內政任務格的武將指派（PROG-2-0975）；舊檔沒有時讀回空陣列；版號不升 */
     governanceAssignments?: GovernanceAssignment[];
+    /** 自動治理開關（領地治理 Auto_Mode，PROG-2-1161）；舊檔沒有時讀回關閉；版號不升 */
+    autoGovernance?: boolean;
+    /** 擔任郡城縣令的子嗣 id（PROG-2-1162）；舊檔沒有時讀回無；版號不升 */
+    magistrateUid?: string;
     /** 領地清單含主城（PROG-2-0975）；舊檔沒有時讀回只有主城的預設清單；版號不升 */
     territories?: KeepTerritory[];
     /** 武將日誌條目（PROG-2-0975）；舊檔沒有時讀回空陣列；版號不升 */
     journalEntries?: JournalEntry[];
+    /** 太守府等級（PROG-2-0983）；只在高於 Lv1 時寫入，舊檔沒有時讀回 Lv1；版號不升 */
+    territoryLevel?: number;
+    /** 待生效的太守府升級目標等級（PROG-2-0983）；季結後生效，舊檔沒有時沒有待生效升級；版號不升 */
+    territoryUpgradePending?: number;
+    /** 傭兵告別信收件匣（PROG-2-0985）；舊檔沒有時讀回空陣列；版號不升 */
+    farewellLetters?: FarewellLetter[];
+    /** 連續登入統計（PROG-2-0987）：只在有登入紀錄時寫入；舊檔沒有時為從未登入；版號不升 */
+    loginStreak?: LoginStreakState;
+    /** 三國日報素材：前 24h 玩家行為紀錄（PROG-2-1170）；只在有紀錄時寫入，舊檔沒有時讀回空陣列；版號不升 */
+    playerLogs?: PlayerLogEntry[];
+    /** 三國日報：當日生成的日報與已讀狀態（PROG-2-1170）；舊檔沒有時為從未生成；版號不升 */
+    dailyNews?: DailyNewsState;
+    /** 晨報：時間窗標記、當次摘要與已讀（PROG-2-1174）；舊檔沒有時從頭算；版號不升 */
+    morningReport?: MorningReportState;
+    /** 派遣整備：進行中、已完成、冷卻（PROG-2-1178）；只在有資料時寫入；舊檔沒有時為空；版號不升 */
+    generalDispatch?: DispatchState;
+    /** 離線戰鬥快照（PROG-2-1184，JRN-05）：只在有資料時寫入；舊檔沒有時為空；版號不升 */
+    offlineBattleSnapshots?: OfflineBattleSnapshot[];
+    /** 名將挑戰賽本機賽季（PROG-2-1190，TRN）：開季後才寫入；舊檔沒有時為空；版號不升 */
+    tournament?: TournamentState;
+    /** 離線互動紀錄 key（PROG-2-1193，JRN-04）：同一登入窗同一對角色只排 1 則；有紀錄才寫入；版號不升 */
+    offlineInteractionLog?: string[];
+    /** 世界沙盤解鎖歷史（HALL-08）：只增不減，天下重組後不倒退；只在有紀錄時寫入；舊檔沒有時為空；版號不升 */
+    sandtableUnlockHistory?: SandtableStageId[];
+    /** 英靈夢回教學戰產出的初始虎符（OPEN-13）：只在教學戰完成後寫入一次；舊檔沒有時為空；版號不升 */
+    startingTalisman?: StartingSpiritTalisman;
+    /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生後寫入；只寫 true；舊檔沒有時為未解鎖 */
+    familySystemUnlocked?: boolean;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -150,6 +199,8 @@ export interface PlayerSaveSnapshot {
     femaleSystem?: FemaleSystemState;
     /** 新手 3 段式引導進度；後加的選填欄位，舊檔讀回視為從頭開始（PROG-2-0229） */
     onboarding?: OnboardingState;
+    /** 開場信件已讀狀態；後加的選填欄位，舊檔讀回視為未讀（PROG-2-1304） */
+    openingLetter?: OpeningLetterState;
     /** 結義點數餘額；後加的選填欄位，舊檔讀回為 0（GCH-06） */
     bondPoints?: number;
     /** 好友借用帳本；後加的選填欄位，舊檔讀回為空帳本（MENT-14，PROG-2-0745） */
@@ -160,6 +211,8 @@ export interface PlayerSaveSnapshot {
     travelCountdown?: TravelCountdown;
     /** 編制預設（DEP-14）：主將 id → 參謀官 / 後勤官；舊檔沒有此欄位時視為空 */
     sortiePresets?: Readonly<Record<string, { strategistUid: string | null; deputyUid: string | null }>>;
+    /** 出生紀錄（PROG-2-1146）：child.UID 去重；舊檔缺省為空，不回填歷史資料。 */
+    breedingBirthRecords?: BreedingBirthRecord[];
 }
 
 /** 讀回編制預設：只保留格式正確的條目；缺欄位、非物件一律丟棄（舊存檔視為空） */
@@ -427,6 +480,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         savedAt: snapshot.savedAt,
         gameTime: GameClock.normalize(snapshot.gameTime as GameTimeState),
         roster: snapshot.roster,
+        ...(snapshot.breedingBirthRecords !== undefined ? { breedingBirthRecords: normalizeBreedingBirthRecords(snapshot.breedingBirthRecords) } : {}),
         ...(snapshot.nurture ? { nurture: snapshot.nurture } : {}),
         deck: normalizeDeck(snapshot.deck),
         ...(snapshot.leadGeneralId ? { leadGeneralId: snapshot.leadGeneralId } : {}),
@@ -448,6 +502,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.rivals !== undefined ? { rivals: normalizeRivalWorld(snapshot.rivals) } : {}),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
+        ...(snapshot.openingLetter !== undefined ? { openingLetter: normalizeOpeningLetterState(snapshot.openingLetter) } : {}),
         ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),
         ...(snapshot.friendBorrowLedger !== undefined ? { friendBorrowLedger: normalizeBorrowLedger(snapshot.friendBorrowLedger) } : {}),
         ...(snapshot.soulFragments !== undefined ? { soulFragments: normalizeSoulFragmentLedger(snapshot.soulFragments) } : {}),
@@ -463,8 +518,26 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.sandtableMarkersPlaced !== undefined ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced) } : {}),
         ...(snapshot.sandtableMarkerTerritories !== undefined ? { sandtableMarkerTerritories: normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories) } : {}),
         ...(snapshot.governanceAssignments !== undefined ? { governanceAssignments: normalizeGovernanceAssignments(snapshot.governanceAssignments) } : {}),
+        ...(snapshot.autoGovernance !== undefined ? { autoGovernance: snapshot.autoGovernance === true } : {}),
+        ...(typeof snapshot.magistrateUid === 'string' && snapshot.magistrateUid ? { magistrateUid: snapshot.magistrateUid } : {}),
         ...(snapshot.territories !== undefined ? { territories: normalizeKeepTerritories(snapshot.territories) } : {}),
         ...(snapshot.journalEntries !== undefined ? { journalEntries: normalizeJournalEntries(snapshot.journalEntries) } : {}),
+        ...(snapshot.territoryLevel !== undefined ? { territoryLevel: normalizeTerritoryLevel(snapshot.territoryLevel) } : {}),
+        ...(snapshot.territoryUpgradePending !== undefined && normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) !== undefined
+            ? { territoryUpgradePending: normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) }
+            : {}),
+        ...(snapshot.farewellLetters !== undefined ? { farewellLetters: normalizeFarewellLetters(snapshot.farewellLetters) } : {}),
+        ...(snapshot.loginStreak !== undefined ? { loginStreak: normalizeLoginStreak(snapshot.loginStreak) } : {}),
+        ...(snapshot.playerLogs !== undefined ? { playerLogs: normalizePlayerLogs(snapshot.playerLogs) } : {}),
+        ...(snapshot.dailyNews !== undefined ? { dailyNews: normalizeDailyNewsState(snapshot.dailyNews) } : {}),
+        ...(snapshot.morningReport !== undefined ? { morningReport: normalizeMorningReportState(snapshot.morningReport) } : {}),
+        ...(snapshot.generalDispatch !== undefined ? { generalDispatch: normalizeDispatchState(snapshot.generalDispatch) } : {}),
+        ...(snapshot.offlineBattleSnapshots !== undefined ? { offlineBattleSnapshots: normalizeOfflineBattleSnapshots(snapshot.offlineBattleSnapshots) } : {}),
+        ...(normalizeTournamentState(snapshot.tournament) ? { tournament: normalizeTournamentState(snapshot.tournament)! } : {}),
+        ...(snapshot.offlineInteractionLog !== undefined ? { offlineInteractionLog: normalizeOfflineInteractionLog(snapshot.offlineInteractionLog) } : {}),
+        ...(snapshot.sandtableUnlockHistory !== undefined ? { sandtableUnlockHistory: normalizeUnlockHistory(snapshot.sandtableUnlockHistory) } : {}),
+        ...(normalizeStartingTalisman(snapshot.startingTalisman) !== null ? { startingTalisman: normalizeStartingTalisman(snapshot.startingTalisman)! } : {}),
+        ...(snapshot.familySystemUnlocked === true ? { familySystemUnlocked: true } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),

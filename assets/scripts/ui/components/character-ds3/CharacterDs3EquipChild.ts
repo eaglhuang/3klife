@@ -5,20 +5,51 @@
 // CharacterDs3EquipChild — UCUF ChildPanel for tab "Equip".
 // Wire this into the CompositePanel's _switchToTab routing table.
 
+import { Button } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
+import { gearSlotText } from '../../../core/systems/GearPageSlots';
+import { EQUIP_SLOTS, type EquipSlot } from '../../../core/systems/GeneralBackpack';
+import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
 
 export class CharacterDs3EquipChild extends ChildPanelBase {
     override dataSource = 'config';
     private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
+    private _onSlotTap: ((slot: EquipSlot) => void) | null = null;
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3EquipChild] onMount', { rootPath: CharacterDs3EquipChild.ROOT_PATH });
-        // TODO(B-stage4): 一般裝備 / 傳家寶 / 道具槽。
+        // 傳家寶 / 道具摘要尚未接線（另卡）。
+        for (const slot of EQUIP_SLOTS) this._bindSlotTap(slot);
     }
 
-    public override onDataUpdate(_data: unknown): void {
-        // TODO(B-stage4): 把 GeneralConfig.equipment / heirloom / inventory 映到槽位。
+    /** 註冊點擊一格時的回呼（開啟選取面板，PROG-2-1066）；沒註冊時點擊不做事。 */
+    public setSlotTapHandler(handler: ((slot: EquipSlot) => void) | null): void {
+        this._onSlotTap = handler;
+    }
+
+    /** 每格的文字節點本身就是點擊區；節點沒有 Button 時補一個（與 GeneralDetailSkillsChild 相同做法）。 */
+    private _bindSlotTap(slot: EquipSlot): void {
+        const label = this.binder.getLabel(`EquipSlot_${slot}`);
+        if (!label) return;
+        const button = label.node.getComponent(Button) ?? label.node.addComponent(Button);
+        button.node.on(Button.EventType.CLICK, () => this._onSlotTap?.(slot), this);
+    }
+
+    /** 把六格一般裝備寫進具名格位節點 EquipSlot_<槽 ID>（PROG-2-1037）；節點不存在時略過。 */
+    public override onDataUpdate(data: unknown): void {
+        if (!data || typeof data !== 'object') return;
+        const slots = (data as GeneralDetailOverviewContentState).gearSlots;
+        if (!Array.isArray(slots)) return;
+        for (const view of slots) {
+            this._setLabelText(`EquipSlot_${view.slot}`, gearSlotText(view));
+        }
+    }
+
+    private _setLabelText(nodeName: string, text: string): void {
+        const label = this.binder.getLabel(nodeName);
+        if (!label) return;
+        label.string = text;
     }
 
     public override validateDataFormat(data: unknown): string | null {

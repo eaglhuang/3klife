@@ -1,0 +1,17 @@
+{
+  "id": "daily-report-screen",
+  "version": 1,
+  "uiId": "DailyReportPanel",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "daily-report-main",
+  "skin": "daily-report-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

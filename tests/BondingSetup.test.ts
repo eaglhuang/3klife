@@ -338,13 +338,13 @@ export function createBondingSetupSuite(): TestSuite {
         assert.equals('', [...used].filter((slot) => !(slot in skin.slots)).join(','));
     });
 
-    suite.test('大廳季度 HUD 有「結緣」入口，LobbyScene 綁了它；HUD / 選卡 / 選主將卡片不重疊', () => {
-        const hud = readJson<{ root: { id?: string; children?: unknown[] } }>('assets/resources/ui-spec/layouts/lobby-season-hud-main.json');
+    suite.test('大廳「武將」收納列有「結緣」入口，LobbyScene 接到它；HUD / 選卡 / 選主將卡片不重疊', () => {
+        const hub = readJson<{ root: { id?: string; children?: unknown[] } }>('assets/resources/ui-spec/layouts/lobby-city-hub-main.json');
         const ids = new Set<string>();
-        collectLayoutIds(hud.root, ids);
-        assert.isTrue(ids.has('btnOpenBonding'));
+        collectLayoutIds(hub.root, ids);
+        assert.isTrue(ids.has('btnCatGenerals'));
         const lobby = fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
-        assert.isTrue(lobby.includes("buttonId: 'btnOpenBonding'"));
+        assert.isTrue(lobby.includes('bonding: () => { void this._openBondingSetup(); }'));
         assert.isTrue(lobby.includes("'bonding-setup-screen'"));
         assert.isTrue(lobby.includes('services().breeding'));
 

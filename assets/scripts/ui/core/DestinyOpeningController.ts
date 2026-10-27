@@ -1,4 +1,5 @@
 // @spec-source → 新手開場規格書.md §6（宿命轉蛋：六位初始名將，選誰誰當核心）；WBS OPEN-05；PROG-2-0645
+// @spec-source → 新手開場規格書.md §4 分鏡 6、§5.2（六框立繪＋登場台詞）；PROG-2-1147
 /**
  * DestinyOpeningController — 新局宿命轉蛋畫面的流程（純邏輯，不依賴 cc）。
  *
@@ -6,6 +7,7 @@
  *   - 持有 DestinyGachaState，轉蛋（roll）、重置（reset）、選定（select）、確認（confirm）
  *   - 鎖定後呼叫 startNewGameFromDestiny 開新局，並把結果交給呼叫端存檔
  *   - 輸出扁平的 FlowView，key 與 destiny-opening-main.json 的節點 id 一一對應
+ *   - 六框立繪（與招賢館同一套 btnFrame{i}／frame{i}* 節點，PROG-2-1147）：未轉蛋也列出六位，點選只選中，確認才開局
  *
  * Unity 對照：Presenter。按鈕 onClick 只呼叫這裡的方法，畫面層拿 getFlowView() 一次刷新。
  */
@@ -23,6 +25,16 @@ import type { StarterGeneralId } from '../../core/services/StarterRosterService'
 
 /** 候選列最多六格（宿命池就是六位）。 */
 export const DESTINY_OPENING_MAX_ROWS = DESTINY_POOL_IDS.length;
+
+/** 六位初始名將的稱號與登場台詞（新手開場規格書 §6 建議稱號、§5.2 登場台詞） */
+export const DESTINY_INTRO: Readonly<Record<StarterGeneralId, { title: string; quote: string }>> = {
+    'zhang-fei': { title: '萬人敵', quote: '主公！俺老張等這封信等得嗓子都乾了！' },
+    'wei-yan': { title: '漢中鎮守', quote: '他們都說我有反骨，只有你願意給我這封信。' },
+    'xiahou-dun': { title: '魏武元勳', quote: '雙眼尚在，戰魂未冷。' },
+    'zhang-he': { title: '巧變之將', quote: '在這渾沌的亂世中，唯有主公的選擇，才配得上我這華麗的謝幕。' },
+    'sun-ce': { title: '江東小霸王', quote: '江東的風吹到了現代，還是這麼燙人。' },
+    'gan-ning': { title: '錦帆賊', quote: '這長江水，往後就歸主公管，我負責開路！' },
+};
 
 export interface DestinyOpeningFlowView {
     texts: Record<string, string>;
@@ -62,7 +74,14 @@ export class DestinyOpeningController {
     /** 開局抽到的紅顏武將 id（未開局或沒有時為 null）。 */
     public get beautyId(): string | null { return this._beautyId; }
 
-    private _options() { return destinyOptionsFromConfig(this._deps.config()); }
+    /** 六框立繪先選中、看完台詞再按確認（PROG-2-1147），不論設定都要確認 */
+    private _options() { return { ...destinyOptionsFromConfig(this._deps.config()), confirmRequired: true }; }
+
+    /** 目前畫面上的六位：未轉蛋依宿命池順序，轉蛋後依抽出順序 */
+    private _shown(): readonly string[] { return this._state.phase === 'idle' ? DESTINY_POOL_IDS : this._state.rolled; }
+
+    /** 六框立繪 key（與畫面順序一致），給畫面層載立繪 */
+    public framePortraitKeys(): string[] { return [...this._shown()]; }
 
     private _apply(result: DestinyGachaResult): boolean {
         this._lastMessage = result.ok ? '' : `無法操作（${result.reason}）`;
@@ -86,10 +105,7 @@ export class DestinyOpeningController {
         return this._apply(resetDestinyGacha(this._state, this._options()));
     }
 
-    /**
-     * 點候選列。confirmRequired 為 false 時選定即鎖定並開新局；
-     * 為 true 時只標記選中，等 confirm()。
-     */
+    /** 點第 index 框：只標記選中，等 confirm() 才開新局。 */
     public async select(index: number): Promise<boolean> {
         if (this._busy) return false;
         const id = this._state.rolled[index];
@@ -132,7 +148,7 @@ export class DestinyOpeningController {
         const rolled = s.phase === 'rolled';
         const texts: Record<string, string> = {
             destinyTitle: '宿命轉蛋',
-            destinyHint: idle ? '抽出你的初始名將，選中的人就是核心主將' : rolled ? '點選一位名將作為核心主將' : '',
+            destinyHint: idle ? '六位名將等你召喚：轉蛋決定登場順序，選中的人就是核心主將' : rolled ? (s.selected ? '確認後，這位名將就是你的核心主將' : '點選一位名將，聽完台詞再按確認') : '',
             destinyMessage: this._lastMessage,
             destinyResetCount: `重置 ${s.resets} 次`,
             btnDestinyRollLabel: '轉蛋',
@@ -145,12 +161,16 @@ export class DestinyOpeningController {
             btnDestinyReset: rolled && !this._busy,
             btnDestinyConfirm: rolled && s.selected !== null && !this._busy,
         };
+        const shown = this._shown();
         for (let i = 0; i < DESTINY_OPENING_MAX_ROWS; i++) {
-            const id = s.rolled[i];
-            actives[`destinyRow${i}`] = id !== undefined;
-            texts[`destinyRow${i}Name`] = id !== undefined ? this._nameOf(id) : '';
-            texts[`btnDestinyRow${i}Label`] = id !== undefined && id === s.selected ? '已選' : '選擇';
-            enabled[`btnDestinyRow${i}`] = id !== undefined && rolled && !this._busy;
+            const id = shown[i];
+            const intro = id !== undefined ? DESTINY_INTRO[id as StarterGeneralId] : undefined;
+            actives[`btnFrame${i}`] = id !== undefined;
+            texts[`frame${i}Name`] = id !== undefined ? this._nameOf(id) : '';
+            texts[`frame${i}Sub`] = intro?.title ?? '';
+            texts[`frame${i}Quote`] = intro ? `「${intro.quote}」` : '';
+            actives[`frame${i}Sel`] = id !== undefined && id === s.selected;
+            enabled[`btnFrame${i}`] = id !== undefined && rolled && !this._busy;
         }
         return { texts, actives, enabled };
     }

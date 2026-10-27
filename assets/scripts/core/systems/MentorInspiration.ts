@@ -13,6 +13,7 @@
  *   - 機率上限封頂 1；LUK 小於 0 視為 0。
  *   - 每回合對每個合格事件擲一次；一旦確認就不再擲（同一場培育只會觸發一次）。
  *   - 不合格的事件不消耗亂數，避免閘門變動改變其他事件的擲骰結果。
+ *   - 爆發（教官本回合站在擅長格，§F-8）：觸發率再乘 (1 + INSPIRE_BURST_RATE_BONUS)（規格「基礎 +5%」，暫定解讀為相對 +5%，與友情加成同為乘算，基礎率 0 仍為 0）。
  *
  * Unity 對照：像一組 EventRoller，每回合呼叫一次，只回傳「這回合新觸發的靈感 ID」，不改教官或武將資料。
  */
@@ -20,6 +21,8 @@ import type { RandomSource } from './GeneralAging';
 import type { SupportCardDef } from '../models/MentorSupportSchema';
 
 export const INSPIRE_LUK_DIVISOR = 200;
+/** 爆發時靈感觸發率加成（§F-8「基礎 +5%」，相對加成：×1.05） */
+export const INSPIRE_BURST_RATE_BONUS = 0.05;
 
 export interface InspireEvent {
     eventId: string;
@@ -41,6 +44,8 @@ export interface InspireContext {
     childLuk: number;
     /** 子嗣具備的血統代碼 */
     childBloodlines: readonly string[];
+    /** 爆發加成（小數，0.05 = +5%，乘算）；不在擅長格時為 0 或省略 */
+    burstRateBonus?: number;
 }
 
 /**
@@ -79,11 +84,12 @@ export function inspireBlockReasons(event: InspireEvent, round: number, ctx: Ins
     return reasons;
 }
 
-/** P(靈感) = Base_Rate × (1 + Friendship_Bonus) × (1 + LUK/200)，封頂 1；不看閘門 */
+/** P(靈感) = Base_Rate × (1 + 爆發加成) × (1 + Friendship_Bonus) × (1 + LUK/200)，封頂 1；不看閘門 */
 export function inspireChance(event: InspireEvent, ctx: InspireContext): number {
     assertBaseRate(event);
     const luk = Number.isFinite(ctx.childLuk) ? Math.max(0, ctx.childLuk) : 0;
-    const raw = event.baseRate * (1 + ctx.friendshipBonus) * (1 + luk / INSPIRE_LUK_DIVISOR);
+    const burst = Number.isFinite(ctx.burstRateBonus) ? Math.max(0, ctx.burstRateBonus!) : 0;
+    const raw = event.baseRate * (1 + burst) * (1 + ctx.friendshipBonus) * (1 + luk / INSPIRE_LUK_DIVISOR);
     return Math.min(1, raw);
 }
 

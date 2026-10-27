@@ -34,7 +34,7 @@ import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
 import { analyzeTagResonance, KIN_RESONANCE_MIN_COUNT } from './KinRelation';
 import { baseVitalityMaxOf } from './VitalityCap';
 import { rollWildGene, STAR_JUMP_MAX_LEVEL, STAR_JUMP_STEP } from './WildGene';
-import { luckThresholdEffects, type LuckThresholdEffects } from './LuckThresholds';
+import { lukMaxForGenes, luckThresholdEffects, type LuckThresholdEffects } from './LuckThresholds';
 import { forceFatherTacticCopy } from './LuckTacticCopy';
 import { applyFateInheritance } from './LuckFateInheritance';
 import { applyBloodlineMutation } from './LuckBloodlineMutation';
@@ -462,6 +462,9 @@ export function createChild(input: CreateChildInput): BreedingGeneral {
     for (const key of STAT_KEYS) {
         stats[key] = childBaseStat(statOf(father, key), statOf(mother, key), ep.ep);
     }
+    const genes = toGeneConfigs(input.factors, input.dictionary);
+    // LUK 上限依子嗣自身的紫因子計算（LUK-03，PROG-2-1166）
+    stats.luk = Math.min(stats.luk ?? 0, lukMaxForGenes(genes));
     const inbred = isSameBloodline(father, mother);
     const maxVitality = Math.round(((maxVigorOf(father) + maxVigorOf(mother)) / 2) * (inbred ? INBREEDING_VITALITY_MULTIPLIER : 1));
     const hp = Math.max(1, Math.round(((father.hp + mother.hp) / 2) * (ep.ep / 100)));
@@ -484,7 +487,7 @@ export function createChild(input: CreateChildInput): BreedingGeneral {
         bloodlineId: father.bloodlineId,
         role: childRoleOf(father.role, mother.role),
         parentsSummary: `父：${father.name} / 母：${mother.name}`,
-        genes: toGeneConfigs(input.factors, input.dictionary),
+        genes,
         ancestor_chain: PEDIGREE_SLOTS.map((slot) => input.pedigree[slot]).filter((uid): uid is string => !!uid),
         hiddenFlags: inbred ? ['mystery-phase', 'inbreeding-penalty'] : ['mystery-phase'],
         negativeTraitRateBonus: inbred ? INBREEDING_NEGATIVE_TRAIT_BONUS : 0,
@@ -514,6 +517,8 @@ export interface BreedingRequest {
     historicalConceptionMod?: number;
     /** 選填：季節受孕率倍率（冬季結緣佳期 +10%，TIME-08）；不傳視為 1 */
     seasonConceptionMod?: number;
+    /** 選填：道具受孕率倍率（安胎藥 ×1.5，ITM-04b）；不傳視為 1 */
+    itemConceptionMod?: number;
     pedigree: PedigreeSource;
     random: RandomSource;
     childId: string;
@@ -617,7 +622,7 @@ export function breed(request: BreedingRequest): BreedingResult {
 
 function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMode'> {
     const eligibility = checkBreedingEligibility(request.father, request.mother, request.pedigree);
-    const conceptionMod = (request.motherConceptionMod ?? 1) * (request.historicalConceptionMod ?? 1) * (request.seasonConceptionMod ?? 1);
+    const conceptionMod = (request.motherConceptionMod ?? 1) * (request.historicalConceptionMod ?? 1) * (request.seasonConceptionMod ?? 1) * (request.itemConceptionMod ?? 1);
     const rate = applyConceptionMod(conceptionRate(request.father, request.mother), conceptionMod);
     if (!eligibility.ok) {
         return { outcome: 'blocked', reasons: eligibility.reasons, conceptionRate: rate, father: request.father, mother: request.mother };

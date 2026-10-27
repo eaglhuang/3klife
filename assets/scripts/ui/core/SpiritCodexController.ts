@@ -49,14 +49,19 @@ export function spiritCodexRowText(card: SpiritCard, lookup?: SpiritCodexTextLoo
     return `${card.name}｜${yearText}｜${legacyEssenceLine(card.legacyEssence, lookup)}`;
 }
 
+/** 正式英靈卡（isSpiritRelic）依歸檔時間新到舊排序；圖鑑列與列上的「詳情」按鈕都以這個順序對應 */
+export function spiritRelicsNewestFirst(cards: readonly SpiritCard[]): SpiritCard[] {
+    return cards
+        .filter((card) => card.isSpiritRelic === true)
+        .sort((a, b) => (b.archivedAt ?? 0) - (a.archivedAt ?? 0));
+}
+
 /** 英靈圖鑑面板的全部文字，key 等於 spirit-codex-main.json 的節點 id */
 export function buildSpiritCodexTexts(
     cards: readonly SpiritCard[],
     lookup: SpiritCodexTextLookup = fallbackSpiritCodexText,
 ): Record<string, string> {
-    const relics = cards
-        .filter((card) => card.isSpiritRelic === true)
-        .sort((a, b) => (b.archivedAt ?? 0) - (a.archivedAt ?? 0));
+    const relics = spiritRelicsNewestFirst(cards);
     const shown = relics.slice(0, SPIRIT_CODEX_MAX_ROWS);
     const overflow = relics.length - shown.length;
     return {

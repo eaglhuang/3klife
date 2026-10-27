@@ -462,6 +462,24 @@ export const TACTIC_LIBRARY_TO_SPEC_ID: Readonly<Record<string, string>> = {
     'tactic-river-ambush': 'TAC_AMBUSH',
     'tactic-spear-phalanx': 'TAC_LANCE_THRUST',
     'tactic-dragon-pierce': 'TAC_LONE_RIDER',
+    // 靈感戰法（PROG-2-1145）：戰法庫 tactic-insp-* 對回規格 id
+'tactic-insp-lance-thrust': 'TAC_LANCE_THRUST',
+    'tactic-insp-cavalry-charge': 'TAC_CAVALRY_CHARGE',
+    'tactic-insp-dragon-gall': 'TAC_DRAGON_GALL',
+    'tactic-insp-zhao-spear': 'TAC_ZHAO_SPEAR',
+    'tactic-insp-lone-rider': 'TAC_LONE_RIDER',
+    'tactic-insp-combo-attack': 'TAC_COMBO_ATTACK',
+    'tactic-insp-haste': 'TAC_HASTE',
+    'tactic-insp-shield': 'TAC_SHIELD',
+    'tactic-insp-slow': 'TAC_SLOW',
+    'tactic-insp-taunt': 'TAC_TAUNT',
+    'tactic-insp-sworn-fury': 'TAC_SWORN_FURY',
+    'tactic-insp-wei-might': 'TAC_WEI_MIGHT',
+    'tactic-insp-empty-fort': 'TAC_EMPTY_FORT',
+    'tactic-insp-fire-attack': 'TAC_FIRE_ATTACK',
+    'tactic-insp-red-cliff': 'TAC_RED_CLIFF',
+    'tactic-insp-chain-link': 'TAC_CHAIN_LINK',
+    'tactic-insp-night-raid': 'TAC_NIGHT_RAID',
 };
 
 /** 戰場 id 先經對照轉成規格 id；本來就是規格 id 或查無對照時原樣回傳 */

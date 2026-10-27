@@ -1,0 +1,176 @@
+{
+  "id": "daily-report-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "DailyReportRoot",
+    "id": "dailyReportRoot",
+    "width": 1920,
+    "height": 1080,
+    "children": [
+      {
+        "type": "panel",
+        "name": "DailyReportCard",
+        "id": "dailyReportCard",
+        "width": 1000,
+        "height": 700,
+        "skinSlot": "dr.card.bg",
+        "layout": {
+          "type": "vertical",
+          "justifyContent": "start",
+          "spacingY": 10,
+          "paddingTop": 28,
+          "paddingRight": 28,
+          "paddingBottom": 28,
+          "paddingLeft": 28
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "ReportTitle",
+            "id": "reportTitle",
+            "width": 944,
+            "height": 48,
+            "text": "三國日報",
+            "styleSlot": "dr.label.title"
+          },
+          {
+            "type": "label",
+            "name": "NewsHeader",
+            "id": "newsHeader",
+            "width": 944,
+            "height": 40,
+            "text": "三國日報",
+            "styleSlot": "dr.label.body"
+          },
+          {
+            "type": "label",
+            "name": "NewsLine0",
+            "id": "newsLine0",
+            "width": 944,
+            "height": 36,
+            "text": "",
+            "styleSlot": "dr.label.line"
+          },
+          {
+            "type": "label",
+            "name": "NewsLine1",
+            "id": "newsLine1",
+            "width": 944,
+            "height": 36,
+            "text": "",
+            "styleSlot": "dr.label.line"
+          },
+          {
+            "type": "label",
+            "name": "NewsLine2",
+            "id": "newsLine2",
+            "width": 944,
+            "height": 36,
+            "text": "",
+            "styleSlot": "dr.label.line"
+          },
+          {
+            "type": "label",
+            "name": "MorningHeader",
+            "id": "morningHeader",
+            "width": 944,
+            "height": 40,
+            "text": "晨報",
+            "styleSlot": "dr.label.body"
+          },
+          {
+            "type": "label",
+            "name": "MorningLine0",
+            "id": "morningLine0",
+            "width": 944,
+            "height": 36,
+            "text": "",
+            "styleSlot": "dr.label.line"
+          },
+          {
+            "type": "label",
+            "name": "MorningLine1",
+            "id": "morningLine1",
+            "width": 944,
+            "height": 36,
+            "text": "",
+            "styleSlot": "dr.label.line"
+          },
+          {
+            "type": "label",
+            "name": "MorningLine2",
+            "id": "morningLine2",
+            "width": 944,
+            "height": 36,
+            "text": "",
+            "styleSlot": "dr.label.line"
+          },
+          {
+            "type": "container",
+            "name": "ReportButtonRow",
+            "id": "reportButtonRow",
+            "width": 944,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnOpenJournalHub",
+                "id": "btnOpenJournalHub",
+                "width": 280,
+                "height": 64,
+                "skinSlot": "dr.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenJournalHubLabel",
+                    "id": "btnOpenJournalHubLabel",
+                    "width": 280,
+                    "height": 40,
+                    "text": "晨報派遣板 ▶",
+                    "styleSlot": "dr.label.body"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnClose",
+                "id": "btnClose",
+                "width": 280,
+                "height": 64,
+                "skinSlot": "dr.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnCloseLabel",
+                    "id": "btnCloseLabel",
+                    "width": 280,
+                    "height": 40,
+                    "text": "知道了",
+                    "styleSlot": "dr.label.body"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

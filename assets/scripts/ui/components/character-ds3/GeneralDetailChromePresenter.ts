@@ -20,6 +20,7 @@ import { CharacterDs3OverviewChild } from './CharacterDs3OverviewChild';
 import { Button, Color, Label, Node, Sprite, UIOpacity, UITransform } from 'cc';
 import type { GeneralConfig, GeneralDetailDefaultTab, GeneralDetailRarityTier } from '../../../core/models/GeneralUnit';
 import { services } from '../../../core/managers/ServiceLoader';
+import { branchShortcutVisible } from '../../../core/systems/FamilyOverviewHotspot';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { applyPortraitSoftMask, fitPortraitSpriteToLogicalFrame, getOrCreatePortraitArtworkSprite } from '../portrait/PortraitSoftMask';
 
@@ -415,7 +416,7 @@ export class GeneralDetailChromePresenter {
         }
 
         const spiritFamilyState = this._resolveSpiritFamilyState(this.host.currentConfig());
-        const shouldShow = this.host.activeTab() === 'Bloodline' && spiritFamilyState.hasFamilyBranch;
+        const shouldShow = this.host.activeTab() === 'Bloodline' && branchShortcutVisible(spiritFamilyState.hasFamilyBranch);
         shortcutRoot.active = shouldShow;
         if (!shouldShow) {
             return;
@@ -443,7 +444,7 @@ export class GeneralDetailChromePresenter {
 
     private _onSpiritFamilyShortcutClick(): void {
         const spiritFamilyState = this._resolveSpiritFamilyState(this.host.currentConfig());
-        if (!spiritFamilyState.hasFamilyBranch) {
+        if (!branchShortcutVisible(spiritFamilyState.hasFamilyBranch)) {
             return;
         }
 

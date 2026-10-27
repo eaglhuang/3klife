@@ -339,13 +339,13 @@ export function createNurtureFlowSuite(): TestSuite {
         assert.equals('', undefinedSlots.join(','));
     });
 
-    suite.test('大廳季度 HUD 有「開獎・培育」入口按鈕，且 LobbyScene 綁了它', () => {
-        const hud = readJson<{ root: { id?: string; children?: unknown[] } }>('assets/resources/ui-spec/layouts/lobby-season-hud-main.json');
+    suite.test('大廳「培育」收納列有「開獎・培育」入口，且 LobbyScene 接到培育流程', () => {
+        const hub = readJson<{ root: { id?: string; children?: unknown[] } }>('assets/resources/ui-spec/layouts/lobby-city-hub-main.json');
         const ids = new Set<string>();
-        collectLayoutIds(hud.root, ids);
-        assert.isTrue(ids.has('btnOpenNurture'));
+        collectLayoutIds(hub.root, ids);
+        assert.isTrue(ids.has('btnCatNurture'));
         const lobby = fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
-        assert.isTrue(lobby.includes("buttonId: 'btnOpenNurture'"));
+        assert.isTrue(lobby.includes('nurture: () => this._openNurtureFlow()'));
         assert.isTrue(lobby.includes("'nurture-flow-screen'"));
         assert.isTrue(lobby.includes('GAME_SESSION_EVENTS.GeneralUnveiled'));
     });
@@ -449,6 +449,51 @@ export function createNurtureFlowSuite(): TestSuite {
         await rig.flow.startNurture();
         assert.isTrue(rig.nurture.getSession('alpha') === null);
         assert.isTrue(rig.flow.getView().texts.flowNotice!.includes('至少需帶 1 位教官'));
+    });
+
+    suite.test('好友借用在入學前選（§L-2，PROG-2-1138）：借用教官佔第 6 槽，入學成功後才寫借用紀錄', async () => {
+        const commits: string[] = [];
+        const own = ['a', 'b', 'c', 'd', 'e'].map(card);
+        const rig = makeRig([unveiled('alpha')], {
+            mode: GameTimeMode.Nurture,
+            cards: own,
+            extra: { commitFriendBorrow: async (friendId, sessionId) => { commits.push(`${friendId}@${sessionId}`); return { ok: true }; } },
+        });
+        await rig.flow.chooseFate('accept');
+        await rig.flow.loadDeck();
+        let view = rig.flow.getView();
+        assert.isTrue(view.enabled.btnStartBorrow);
+        assert.equals('＋ 好友借用', view.texts.startBorrowLabel);
+        rig.flow.setBorrowedMentor('npc_friend_01', { ...card('zhao'), uid: 'borrow-npc_friend_01', stars: 3 });
+        view = rig.flow.getView();
+        assert.isTrue(view.texts.startBorrowLabel.includes('zhao ★3'));
+        assert.equals(0, commits.length, '選好友時不寫紀錄');
+        await rig.flow.startNurture();
+        const session = rig.nurture.getSession('alpha')!;
+        assert.equals(6, session.mentors.length);
+        assert.equals('borrow-npc_friend_01', session.mentors[5].id);
+        assert.equals(3, session.mentors[5].stars);
+        assert.equals(`npc_friend_01@${session.sessionId}`, commits.join(','));
+        assert.isTrue(rig.flow.borrowedMentor === null, '入學後清空借用選擇');
+        assert.isFalse(rig.flow.getView().enabled.btnStartBorrow, '入學後不能再借');
+    });
+
+    suite.test('只有好友借用教官也可入學；未接借用依賴時按鈕停用；取消借用後回到未選', async () => {
+        const rig = makeRig([unveiled('alpha')], { mode: GameTimeMode.Nurture, cards: [], extra: { commitFriendBorrow: async () => ({ ok: false, message: '今日已借過' }) } });
+        await rig.flow.chooseFate('accept');
+        await rig.flow.loadDeck();
+        rig.flow.setBorrowedMentor('f', card('zhao'));
+        assert.isTrue(rig.flow.getView().enabled.btnStartNurture);
+        rig.flow.setBorrowedMentor(null);
+        assert.isFalse(rig.flow.getView().enabled.btnStartNurture);
+        rig.flow.setBorrowedMentor('f', card('zhao'));
+        await rig.flow.startNurture();
+        assert.equals(1, rig.nurture.getSession('alpha')!.mentors.length);
+        assert.isTrue(rig.flow.getView().texts.flowNotice!.includes('今日已借過'));
+
+        const bare = makeRig([unveiled('beta')], { mode: GameTimeMode.Nurture });
+        await bare.flow.chooseFate('accept');
+        assert.isFalse(bare.flow.getView().enabled.btnStartBorrow);
     });
 
     suite.test('戰法列只在結業顯示，清單為本場靈感觸發的戰法（PROG-2-1134）', async () => {

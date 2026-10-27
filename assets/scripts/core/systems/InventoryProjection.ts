@@ -24,6 +24,12 @@ export interface InventoryRecord {
     Display_Bucket: string;
     Is_Displayed: boolean;
     Attributes: Readonly<Record<string, unknown>>;
+    /** 一般裝備被哪位武將裝上（武將 uid）；舊檔缺欄位即未裝備（PM 2026-10-27 裁定） */
+    equippedBy?: string | null;
+    /** 裝在武將背包的哪一格（GeneralBackpack 六槽 ID）；缺欄位即未裝備 */
+    slotId?: string | null;
+    /** 一般裝備的定義 id（查 GearDefinitions 取名稱與槽位）；列不存名稱本身（PROG-2-1039） */
+    Gear_ID?: string | null;
 }
 
 export interface InventorySkipped {

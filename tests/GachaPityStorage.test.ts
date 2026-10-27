@@ -58,7 +58,7 @@ export function createGachaPityStorageSuite(): TestSuite {
     });
 
     suite.test('錢包存檔往返；舊檔沒有錢包欄位時讀回為 undefined', () => {
-        const withWallet = createPlayerSaveSnapshot(TIME, [], new Date(0), undefined, [], null, 1, undefined, 0, undefined, 0, [], {}, {}, {}, undefined, {}, {}, { gems: 1200, gold: 5000, tickets: 7, bronze: 0, oracle: 0 });
+        const withWallet = createPlayerSaveSnapshot(TIME, [], new Date(0), undefined, [], null, 1, undefined, 0, undefined, 0, [], {}, {}, {}, undefined, {}, {}, { gems: 1200, gold: 5000, tickets: 7, bronze: 0, oracle: 0, mentorTickets: 0, scorePoints: 0 });
         const restored = validatePlayerSaveSnapshot(JSON.parse(JSON.stringify(withWallet)));
         assert.equals(1200, restored.gachaWallet?.gems ?? -1);
         assert.equals(7, restored.gachaWallet?.tickets ?? -1);
@@ -74,7 +74,7 @@ export function createGachaPityStorageSuite(): TestSuite {
     });
 
     suite.test('錢包新增銅錢符與求籤令：存讀往返；舊檔缺欄位補 0', () => {
-        const withNew = createPlayerSaveSnapshot(TIME, [], new Date(0), undefined, [], null, 1, undefined, 0, undefined, 0, [], {}, {}, {}, undefined, {}, {}, { gems: 10, gold: 20, tickets: 3, bronze: 150, oracle: 2 });
+        const withNew = createPlayerSaveSnapshot(TIME, [], new Date(0), undefined, [], null, 1, undefined, 0, undefined, 0, [], {}, {}, {}, undefined, {}, {}, { gems: 10, gold: 20, tickets: 3, bronze: 150, oracle: 2, mentorTickets: 0, scorePoints: 0 });
         const restored = validatePlayerSaveSnapshot(JSON.parse(JSON.stringify(withNew)));
         assert.equals(150, restored.gachaWallet?.bronze ?? -1);
         assert.equals(2, restored.gachaWallet?.oracle ?? -1);

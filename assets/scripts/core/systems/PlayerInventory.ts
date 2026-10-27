@@ -30,6 +30,16 @@ export const ITEM_PREMIUM_VITALITY_PILL = 'ITEM_VITALITY_PILL_PREMIUM';
 export const ITEM_MERGE_TOKEN = 'ITEM_MERGE_TOKEN';
 /** 傳道令（名將傳道消耗 1 張，MENT-15；PROG-2-0868 接線）。起始庫存為 0，取得來源待使用者裁決。 */
 export const ITEM_LEGENDARY_MENTORING_TICKET = 'ITEM_LEGENDARY_MENTORING_TICKET';
+/** 祈風令（戰場天氣道具，改為大風；PROG-2-0932，PM 暫定 id）。起始庫存為 0，取得來源待商業裁決。 */
+export const ITEM_WEATHER_WIND = 'item-weather-wind';
+/** 祈雨符（戰場天氣道具，改為雨天；PROG-2-0932，PM 暫定 id）。起始庫存為 0，取得來源待商業裁決。 */
+export const ITEM_WEATHER_RAIN = 'item-weather-rain';
+/** 刷新券（手動刷新傭兵池與地下城，ITM-04b REFRESH；PROG-2-1038 接線）。取得來源為商城，不在本卡。 */
+export const ITEM_REFRESH = 'ITEM_REFRESH';
+/** 安胎藥（結緣受孕率 ×1.5，ITM-04b BOOST_CONCEPTION；PROG-2-1038 接線）。取得來源為商城，不在本卡。 */
+export const ITEM_FERTILITY = 'ITEM_FERTILITY';
+/** 安胎藥已使用、等待下一次結緣的標記（PM 2026-10-27 裁定）：不在背包顯示，成功結緣後清除。 */
+export const ITEM_FERTILITY_ARMED = 'ITEM_FERTILITY_ARMED';
 /** 歸宗令不足的提示（暫定，PM 2026-10-20 裁定）：語系 key 先用此名，文案待企劃定稿。 */
 export const MERGE_TOKEN_SHORTAGE_KEY = 'UI_MERGE_TOKEN_SHORTAGE';
 export const MERGE_TOKEN_SHORTAGE_TEXT = '歸宗令不足';
@@ -44,12 +54,17 @@ export const ITEM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
     [ITEM_PREMIUM_VITALITY_PILL]: '高級補元散',
     [ITEM_MERGE_TOKEN]: '歸宗令',
     [ITEM_LEGENDARY_MENTORING_TICKET]: '傳道令',
+    [ITEM_WEATHER_WIND]: '祈風令',
+    [ITEM_WEATHER_RAIN]: '祈雨符',
+    [ITEM_REFRESH]: '刷新券',
+    [ITEM_FERTILITY]: '安胎藥',
 };
 
 export type PlayerInventory = Readonly<Record<string, number>>;
 
 /** 新遊戲 / 舊存檔的起始庫存（暫定） */
-export const STARTER_INVENTORY: PlayerInventory = { [ITEM_ORACLE_TOKEN]: 3 };
+/** 起始背包：求籤令 3、試用券 2（試用券暫定，讓新局能體驗傭兵試用→結義，PROG-2-1152） */
+export const STARTER_INVENTORY: PlayerInventory = { [ITEM_ORACLE_TOKEN]: 3, [ITEM_TRIAL_TICKET]: 2 };
 
 /** 每季免費發放的求籤令數量與免費產出上限（暫定） */
 export const ORACLE_TOKEN_PER_SEASON = 1;

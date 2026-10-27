@@ -14,6 +14,7 @@ import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
 import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../core/config/Constants';
 import { applyOpeningWinGuarantee, autoResolveOutcome } from '../runtime/BattleAutoResolve';
+import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
 import { services } from '../../core/managers/ServiceLoader';
 import { BattlePerformanceTracker, formatPerformance, localizedMilestoneName } from '../../core/systems/BattleRecordStats';
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
@@ -165,6 +166,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.UnitDeployed,            this._onUnitDeployed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDamaged,             this._onUnitDamaged.bind(this)),
       svc.event.on(EVENT_NAMES.UnitAttackMissed,        this._onUnitAttackMissed.bind(this)),
+      svc.event.on(EVENT_NAMES.KinComboAttack,          this._onKinComboAttack.bind(this)),
       svc.event.on(EVENT_NAMES.UnitHealed,              this._onUnitHealed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitMoved,               this._onUnitMoved.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDied,                this._onUnitDied.bind(this)),
@@ -382,6 +384,21 @@ export class BattleUIBridge {
     }
   }
 
+  /** 史實合攻觸發（KIN-09 演出）：記一行戰報，助攻方撲向目標 */
+  private _onKinComboAttack(data?: { attackerId: string; helperId: string; targetId: string }): void {
+    if (!data) return;
+    const c = this.ctx;
+    const attacker = c.ctrl?.state.units.get(data.attackerId);
+    const helper = c.ctrl?.state.units.get(data.helperId);
+    const target = c.ctrl?.state.units.get(data.targetId);
+    if (!attacker || !helper || !target) return;
+    const side = helper.faction === Faction.Player ? '我方' : '敵方';
+    this.appendLog(`${side}${helper.name} 與${attacker.name}史實合攻，追擊${target.name}`);
+    this._enqueueCombatVisual(`kin-combo:${data.helperId}`, async () => {
+      await (c.unitRenderer?.playAttackAnimationAsync(data.helperId, target.lane, target.depth) ?? Promise.resolve());
+    });
+  }
+
   /** 適性命中落空：記一行戰報、攻方照樣撲上去（PROG-2-0080） */
   private _onUnitAttackMissed(data?: { attackerId: string; targetId: string; hitRate: number }): void {
     if (!data) return;
@@ -547,8 +564,33 @@ export class BattleUIBridge {
       services().session.firstBattleCleared,
     );
     this.appendLog(`自動模擬：我方戰力 ${outcome.playerPower}，敵方戰力 ${outcome.enemyPower}`);
+    this._recordAutoBattleSnapshot(outcome.result, outcome.playerPower, outcome.enemyPower);
     state.battleEndAnnounced = true;
     services().event.emit(EVENT_NAMES.BattleEnded, { result: outcome.result });
+  }
+
+  /** 自動鈕結算留 AUTO_RESOLVE 快照與日誌（doc_spec_0015 §F-4，PROG-2-1185）；在 BattleEnded 前寫入，由戰後存檔一併帶走 */
+  private _recordAutoBattleSnapshot(result: 'player-win' | 'enemy-win' | 'draw', playerPower: number, enemyPower: number): void {
+    const state = this.ctx.ctrl?.state;
+    if (!state) return;
+    const session = services().session;
+    const clock = session.gameTime;
+    const general = state.getGeneral(Faction.Player);
+    const troops = Array.from(state.units.values())
+      .filter((u) => u.faction === Faction.Player && !u.isDead())
+      .map((u) => ({ type: u.type, currentHp: u.currentHp, attack: u.attack }));
+    const kind = result === 'player-win' ? 'win' : result === 'enemy-win' ? 'lose' : 'draw';
+    const pgId = this.ctx.pg?.id;
+    session.recordAutoResolveBattle({
+      battleType: 'AUTO_RESOLVE',
+      seed: `${clock.currentYear}-${clock.currentSeason}-${this.ctx.encounterId ?? 'field'}`,
+      lineup: [general ? { id: general.id, str: general.str, int: general.int, lea: general.lea, currentHp: general.currentHp, maxHp: general.maxHp } : null, ...troops],
+      tileState: { playerFortressHp: state.playerFortressHp, enemyFortressHp: state.enemyFortressHp },
+      tactics: [],
+      win: result === 'player-win',
+      playerStrength: playerPower,
+      enemyStrength: enemyPower,
+    }, FIELD_AUTO_BATTLE_JOURNAL[kind], pgId ? [pgId] : []);
   }
 
   private _onBattleEnded(data: { result: string }): void {

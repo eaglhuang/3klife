@@ -28,3 +28,19 @@ export function applyWeatherItem(current: Weather, item: WeatherItemId): Weather
     const weather = WEATHER_ITEM_TARGET[item];
     return { weather, changed: weather !== current };
 }
+
+/** PM 裁定（2026-10-21）：道具天氣生效 3 回合，之後回到排程天氣 */
+export const WEATHER_ITEM_DURATION_TURNS = 3;
+
+/** 一次道具使用的生效紀錄；startTurn 為使用當回合 */
+export interface WeatherItemOverride {
+    weather: Weather;
+    startTurn: number;
+}
+
+/** 指定回合是否仍在道具生效期間內（startTurn 起算 3 回合，含起始回合）；不在則回傳 null */
+export function weatherItemActiveAt(override: WeatherItemOverride | null, turn: number): Weather | null {
+    if (!override) return null;
+    const inWindow = turn >= override.startTurn && turn < override.startTurn + WEATHER_ITEM_DURATION_TURNS;
+    return inWindow ? override.weather : null;
+}

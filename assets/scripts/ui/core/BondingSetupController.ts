@@ -69,6 +69,12 @@ export const SAGE_LINE_COUNT = 3;
 
 const FACTOR_COLOR_NAME: Record<FactorColor, string> = { blue: '藍', pink: '粉', green: '綠', purple: '紫', white: '白', red: '紅' };
 
+/** 求籤令數量標籤（ORAC-05）：負數與非有限數當 0，小數無條件捨去 */
+export function oracleTokenText(count: number): string {
+    const safe = Number.isFinite(count) && count > 0 ? Math.floor(count) : 0;
+    return `求籤令 ×${safe}`;
+}
+
 export interface BondingView {
     fatherId: string | null;
     motherId: string | null;
@@ -87,6 +93,8 @@ export interface BondingSetupDeps {
     roster: { getAll(): GeneralConfig[] };
     /** 名士批語（BRD-09）：已解鎖名士的方向性批語；未提供時不顯示批語 */
     sageRemarks?: (fatherId: string, motherId: string) => SageRemark[];
+    /** 求籤令數量（ORAC-05）；未提供時顯示 ×0 */
+    oracleTokens?: () => number;
     breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'>;
     /** 開畫面前的準備（載入血統圖、補回已出生子嗣）；失敗只提示，不擋畫面 */
     prepare?: () => Promise<unknown>;
@@ -281,6 +289,7 @@ export class BondingSetupController {
         const sage = this._sageRemarks(father.id, mother.id);
         texts.sageRemarkLines = sage.hint;
         sage.lines.forEach((line, i) => { texts[`sageLine${i}`] = line; actives[`sageRow${i}`] = true; });
+        texts.oracleTokenLabel = oracleTokenText(this._deps.oracleTokens?.() ?? 0);
         texts.costLabel = this._t('ui.breed.confirm', father.name, String(FATHER_VIGOR_COST), mother.name, String(MOTHER_VIGOR_COST));
         texts.eligibilityLabel = eligibility.ok
             ? `${father.name} 與 ${mother.name} 良緣天成，可以結緣`

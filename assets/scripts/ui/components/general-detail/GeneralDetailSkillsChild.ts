@@ -24,6 +24,8 @@ import { services } from '../../../core/managers/ServiceLoader';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { buildIdMap } from '../../../shared/SkillRuntimeContract';
 import { tacticLoadoutCapacity } from '../../../core/systems/TacticLoadout';
+import { buildTacticsTabView, type TacticDefinitionView } from '../../../core/systems/TacticsTabView';
+import { getTacticTpCost } from '../../../core/systems/SortieDeploy';
 import type {
     JsonListEnvelope,
     CanonicalTacticDefinition,
@@ -220,8 +222,27 @@ export class GeneralDetailSkillsChild extends ChildPanelBase {
             return cfg.tacticSlots.map((slot, index) => this._formatTacticSlotLine(slot, index));
         }
 
-        const legacy = cfg.learnedTactics ?? [];
-        return legacy.map((name) => name);
+        const view = buildTacticsTabView({
+            mainTacticId: null,
+            learned: cfg.learnedTactics ?? [],
+            learnable: [],
+            locked: [],
+            lookup: (tacticId) => this._tacticDefinitionView(tacticId),
+        });
+        return view.learned.map((row) => (row.meta ? `${row.name}［${row.meta}］` : row.name));
+    }
+
+    /** 把戰法庫定義轉成技頁檢視所需欄位；TP 消耗沿用 SortieDeploy 的表，查無定義時顯示 id。 */
+    private _tacticDefinitionView(tacticId: string): TacticDefinitionView | undefined {
+        const tactic = this._tacticsById.get(tacticId);
+        if (!tactic) return undefined;
+        return {
+            name: tactic.displayName,
+            level: null,
+            tpCost: getTacticTpCost(tacticId),
+            type: formatTacticCategory(tactic.category),
+            summary: '',
+        };
     }
 
     private _buildUnlockedUltimateLines(cfg: GeneralConfig): string[] {

@@ -5,7 +5,9 @@
  * （未知好友、非 SSR、每日上限），成功時寫入紀錄並回傳原主結義點數 1。
  */
 import { assert, TestSuite } from './TestRunner';
-import { borrowCandidateOf, parseNpcFriendMentors } from '../assets/scripts/core/systems/NpcFriendMentor';
+import { borrowCandidateOf, friendMentorCard, parseNpcFriendMentors } from '../assets/scripts/core/systems/NpcFriendMentor';
+import { parseSupportCatalog } from '../assets/scripts/core/systems/MentorSupportCatalog';
+import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
@@ -82,6 +84,19 @@ export function createNpcFriendMentorSuite(): TestSuite {
         assert.isTrue(await reloaded.load());
         assert.equals(1, reloaded.bondPoints);
         assert.equals('DAILY_LIMIT', (await reloaded.borrowFriendMentor({ sessionId: 'sess-2', friendId: 'npc_friend_01', recordId: 'r1' }) as { blocked: string }).blocked);
+    });
+
+    suite.test('好友教官卡（PROG-2-1138）：依 Support_ID 找武將與支援卡，星等用好友當下星等，uid 不與自有卡衝突', () => {
+        const catalog = parseSupportCatalog(JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/mentor-support-cards.json'), 'utf8')));
+        const list = parseNpcFriendMentors(JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/npc-friend-mentors.json'), 'utf8')));
+        const generals = [{ id: 'zhao-yun', name: '趙雲', faction: 'shu' }, { id: 'zhuge-liang', name: '諸葛亮', faction: 'shu' }] as unknown as GeneralConfig[];
+        const zhao = friendMentorCard(list[0], catalog, generals)!;
+        assert.equals('borrow-npc_friend_01', zhao.uid);
+        assert.equals('趙雲', zhao.name);
+        assert.equals(3, zhao.stars!);
+        assert.equals('SUP_ZHAO_SSR_01', zhao.support!.supportId);
+        assert.isTrue(friendMentorCard(list[0], catalog, []) === null, '武將資料缺漏時回傳 null');
+        assert.isTrue(friendMentorCard({ ...list[0], supportTemplateId: 'SUP_NONE' }, catalog, generals) === null);
     });
 
     return suite;

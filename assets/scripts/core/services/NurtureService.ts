@@ -43,7 +43,7 @@ import {
     type ChildUltimateParent,
     type InheritedUltimate,
 } from '../systems/ChildUltimateAwaken';
-import { InspireContext, rollInspireRound } from '../systems/MentorInspiration';
+import { INSPIRE_BURST_RATE_BONUS, InspireContext, rollInspireRound } from '../systems/MentorInspiration';
 import { isBloodlineGuaranteedRound, isBloodlineMatch } from '../systems/BloodlineGuarantee';
 import { GENERAL_STATUS_DEAD } from '../systems/GeneralAging';
 import { FactorAwakenedEvent, rollNurtureAwakening } from '../systems/FactorAwakening';
@@ -280,7 +280,7 @@ export class NurtureService {
             trainingVigorMultiplier: this._options.seasonTrainingVigorMod?.(),
         });
         const genesBefore = this._roster.getAll().find((g) => g.id === childId)?.genes;
-        const inspired = action === 'rest' ? { session: result.session, triggered: [] } : this._rollInspirations(childId, result.session);
+        const inspired = action === 'rest' ? { session: result.session, triggered: [] } : this._rollInspirations(childId, result.session, current.mentorSlots);
         result.session = inspired.session;
         if (inspired.triggered.length > 0) result.inspirations = inspired.triggered;
         const violations = mentorBoundaryViolations(genesBefore, this._roster.getAll().find((g) => g.id === childId)?.genes);
@@ -447,8 +447,9 @@ export class NurtureService {
     /**
      * 本回合戰法靈感：只有帶支援卡資料的教官才擲骰；沒有就不碰亂數，行為與舊版相同。
      * 觸發鍵寫回會話的 inspiredKeys，同場同一事件不會再次觸發。
+     * trainedSlots 是剛訓練那一回合的站格（executeRound 已替下一回合重骰），站在擅長格即爆發，靈感率加成（§F-8）。
      */
-    private _rollInspirations(childId: string, session: NurtureSession): { session: NurtureSession; triggered: NurtureInspiration[] } {
+    private _rollInspirations(childId: string, session: NurtureSession, trainedSlots: NurtureSession['mentorSlots']): { session: NurtureSession; triggered: NurtureInspiration[] } {
         const mentors = session.mentors.filter((m) => m.inspire);
         if (mentors.length === 0) return { session, triggered: [] };
         const child = this._roster.getAll().find((g) => g.id === childId) as UnveilingGeneral | undefined;
@@ -468,6 +469,7 @@ export class NurtureService {
                 friendshipBonus: inspire.friendshipBonusByStar[star] ?? 0,
                 childLuk,
                 childBloodlines,
+                burstRateBonus: trainedSlots[mentor.id] === mentor.specialty ? INSPIRE_BURST_RATE_BONUS : 0,
             };
             const guaranteed = isBloodlineMatch(child?.name, mentor.familyName) && isBloodlineGuaranteedRound(session.round);
             for (const key of rollInspireRound(keyed, session.round, ctx, confirmed, random, { guaranteed })) {

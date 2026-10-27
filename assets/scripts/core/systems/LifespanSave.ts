@@ -11,6 +11,34 @@ import { isDomesticTaskId } from './DomesticTasks';
 import { GovernanceAssignment } from './GovernanceAssignment';
 import { KeepTerritory } from './HereditaryKeep';
 import { appendJournalEntry, createEmptyJournal, JournalEntry } from './JournalLog';
+import { TERRITORY_MAX_LEVEL } from './TerritoryUpgrade';
+import { appendFarewellLetter, FarewellLetter, FarewellTier } from './FarewellLetterInbox';
+import { EMPTY_LOGIN_STREAK, LoginStreakState } from './LoginStreak';
+
+/** 連續登入統計（PROG-2-0987）：日期格式不對或天數非正整數時回到從未登入。 */
+export function normalizeLoginStreak(raw: unknown): LoginStreakState {
+    if (!isRecord(raw)) return { ...EMPTY_LOGIN_STREAK };
+    const { lastLoginDay, consecutiveDays } = raw;
+    if (typeof lastLoginDay !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(lastLoginDay)) return { ...EMPTY_LOGIN_STREAK };
+    if (typeof consecutiveDays !== 'number' || !Number.isInteger(consecutiveDays) || consecutiveDays < 1) return { ...EMPTY_LOGIN_STREAK };
+    return { lastLoginDay, consecutiveDays };
+}
+
+/** 告別信收件匣（PROG-2-0985）：逐筆檢查欄位，壞資料丟棄；同 ID 只留第一筆。 */
+export function normalizeFarewellLetters(raw: unknown): FarewellLetter[] {
+    if (!Array.isArray(raw)) return [];
+    let inbox: FarewellLetter[] = [];
+    for (const item of raw) {
+        if (!isRecord(item)) continue;
+        const { id, uid, generalName, affection, tier, body, day, read } = item;
+        if (!isNonEmptyString(id) || !isNonEmptyString(uid) || typeof generalName !== 'string') continue;
+        if (typeof affection !== 'number' || !Number.isInteger(affection) || affection < 0) continue;
+        if (tier !== 'normal' && tier !== 'moving') continue;
+        if (typeof body !== 'string' || !Number.isInteger(day) || (day as number) < 0 || typeof read !== 'boolean') continue;
+        inbox = appendFarewellLetter(inbox, { id, uid, generalName, affection, tier: tier as FarewellTier, body, day: day as number, read });
+    }
+    return inbox;
+}
 
 /** 主城領地 id（暫定：規格未給固定 id，待領地資料定案後改由資料檔提供）。 */
 export const HOME_TERRITORY_ID = 'home-city';
@@ -26,6 +54,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isNonEmptyString(value: unknown): value is string {
     return typeof value === 'string' && value.length > 0;
+}
+
+/** 太守府等級（PROG-2-0983）：只認 1 至上限的整數，其餘回到 Lv1。 */
+export function normalizeTerritoryLevel(raw: unknown): number {
+    return typeof raw === 'number' && Number.isInteger(raw) && raw >= 1 && raw <= TERRITORY_MAX_LEVEL ? raw : 1;
+}
+
+/** 待生效的升級目標（PROG-2-0983）：只認 2 至上限的整數，其餘視為沒有待生效升級。 */
+export function normalizePendingTerritoryLevel(raw: unknown): number | undefined {
+    return typeof raw === 'number' && Number.isInteger(raw) && raw >= 2 && raw <= TERRITORY_MAX_LEVEL ? raw : undefined;
 }
 
 /** 指派清單：任務必須是五大內政之一，武將 ID 非空；同一任務格或同一武將只留第一筆。 */

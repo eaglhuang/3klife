@@ -19,6 +19,8 @@ export interface LeadSelectView {
     rows: LeadSelectRow[];
     page: number;
     pageCount: number;
+    /** 目前主將的顯示名（跨頁查找）；未指定為 null，已指定但不在可出戰名單為 undefined */
+    leadLabel: string | null | undefined;
 }
 
 function labelOf(general: GeneralConfig): string {
@@ -40,7 +42,9 @@ export function buildLeadSelectView(
         label: labelOf(general),
         selected: general.id === leadId,
     }));
-    return { rows, page: safePage, pageCount };
+    const lead = leadId ? deployable.find((general) => general.id === leadId) : undefined;
+    const leadLabel = leadId ? (lead ? labelOf(lead) : undefined) : null;
+    return { rows, page: safePage, pageCount, leadLabel };
 }
 
 /** 點到已是主將的那列 → 取消指定（回到遭遇戰預設）；否則改選該武將 */

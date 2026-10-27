@@ -150,6 +150,11 @@ export interface NurtureFlowDeps {
     showToast?: (message: string) => void;
     /** 戰法 id → 中文名（tactic-library）；未提供或查不到時顯示 id（PROG-2-1096） */
     tacticName?: (tacticId: string) => string | undefined;
+    /**
+     * 好友借用（教官系統 §L-2，PROG-2-1138）：入學成功後寫入借用紀錄；正式環境接 GameSession.borrowFriendMentor。
+     * 未提供時開始頁不顯示「好友借用」。回傳 ok=false 時 message 為擋下原因文案。
+     */
+    commitFriendBorrow?: (friendId: string, sessionId: string) => Promise<{ ok: boolean; message?: string }>;
     /** 結業兌換戰法：正式環境接 GameSession.learnTactic；清單為本場靈感觸發的戰法（PROG-2-1134） */
     learnTactic?: (childId: string, tacticId: string) => Promise<TacticLearnCheck>;
     /** 名將傳道（MENT-15）；正式環境接 GameSession.performLegendaryMentoringFor，未提供時入口不可用 */
@@ -200,6 +205,8 @@ export class NurtureFlowController {
     private _legendaryCardUid: string | null = null;
     /** 入場編成（PROG-2-1085）：null 表示還沒整理過，第一次讀卡時帶預設最強 5 位 */
     private _deck: MentorDeck | null = null;
+    /** 入學前選好的好友借用教官（第 6 槽）；入學後清空 */
+    private _borrowed: { friendId: string; card: MentorCard } | null = null;
     /** 目前可帶入的教官卡（未被別場培育鎖定）；loadDeck 時更新 */
     private _deckCandidates: MentorCard[] = [];
     /** 戰法列目前指到的戰法（本場靈感戰法清單的索引） */
@@ -283,16 +290,31 @@ export class NurtureFlowController {
         return mentorDeckCards(this.deck, this._deckCandidates);
     }
 
-    /** 入學：帶入場編成裡的教官（最多 5 位，未編成過時用預設最強 5 位） */
+    /** 入學前選好友借用教官（§L-2）：佔第 6 槽；傳 null 取消 */
+    setBorrowedMentor(friendId: string | null, card: MentorCard | null = null): void {
+        this._borrowed = friendId && card ? { friendId, card } : null;
+    }
+
+    get borrowedMentor(): MentorCard | null {
+        return this._borrowed?.card ?? null;
+    }
+
+    /** 入學：帶入場編成裡的教官（最多 5 位，未編成過時用預設最強 5 位），加上好友借用的第 6 位 */
     async startNurture(): Promise<void> {
         const child = this._requireSelected();
-        const cards = await this._deckCards();
+        const borrowed = this._borrowed;
+        const cards = [...(await this._deckCards()), ...(borrowed ? [borrowed.card] : [])];
         if (cards.length < MIN_ENROLL_MENTORS) {
             this._notice = NO_MENTOR_HINT;
             return;
         }
-        this._deps.nurture.startWithCards(child.id, cards);
+        const session = this._deps.nurture.startWithCards(child.id, cards);
+        this._borrowed = null;
         this._notice = `入學完成，${cards.length} 位教官任教`;
+        if (borrowed && this._deps.commitFriendBorrow) {
+            const result = await this._deps.commitFriendBorrow(borrowed.friendId, session.sessionId);
+            if (!result.ok) this._notice += `（借用紀錄未寫入：${result.message ?? '借用失敗'}）`;
+        }
         await this._persist();
     }
 
@@ -309,13 +331,6 @@ export class NurtureFlowController {
 
     get legendaryCard(): MentorCard | null {
         return this._legendaryCards.find((c) => c.uid === this._legendaryCardUid) ?? null;
-    }
-
-    /** 借將入口：目前養成中的 sessionId；沒有進行中的培育時回傳 null */
-    mentorBorrowSessionId(): string | null {
-        const child = this._resolveSelected();
-        const session = child ? this._deps.nurture.getSession(child.id) : null;
-        return session && session.status === 'active' ? session.sessionId : null;
     }
 
     async legendaryMentor(): Promise<boolean> {
@@ -509,7 +524,7 @@ export class NurtureFlowController {
         enabled.btnMentorDetail = false;
         enabled.btnLegendaryCard = false;
         enabled.btnLegendaryMentor = false;
-        enabled.btnMentorBorrow = false;
+        enabled.btnStartBorrow = false;
         actives.tacticBlock = false;
         enabled.btnPrevTactic = false;
         enabled.btnNextTactic = false;
@@ -545,8 +560,11 @@ export class NurtureFlowController {
         if (!session) {
             actives.startBlock = true;
             const check = this._deps.nurture.checkStart(child.id);
-            const hasMentor = this.deck.some((uid) => uid !== null);
+            const borrowed = this.borrowedMentor;
+            const hasMentor = this.deck.some((uid) => uid !== null) || borrowed !== null;
             enabled.btnStartNurture = check.eligible && hasMentor;
+            enabled.btnStartBorrow = !!this._deps.commitFriendBorrow;
+            texts.startBorrowLabel = borrowed ? `好友：${borrowed.name} ★${borrowed.stars ?? 0}（點擊取消）` : '＋ 好友借用';
             texts.startHint = !check.eligible
                 ? check.reasons.map((r) => BLOCK_REASON_TEXT[r]).join('、')
                 : hasMentor
@@ -585,8 +603,6 @@ export class NurtureFlowController {
         texts.legendaryCardLabel = legendary ? `英靈：${legendary.name}` : '英靈：未選';
         enabled.btnLegendaryMentor = !!this._deps.performLegendaryMentoring && !!legendary && session.status === 'active';
         texts.legendaryMentorLabel = '傳道';
-        enabled.btnMentorBorrow = session.status === 'active';
-        texts.mentorBorrowLabel = '借將';
         texts.autoNurtureLabel = '自動培育整季';
         return { mode: 'train', childId: child.id, texts, actives, enabled };
     }

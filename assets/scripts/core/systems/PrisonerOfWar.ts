@@ -303,6 +303,13 @@ export interface PendingPrisoner<T = unknown> {
     target: T;
 }
 
+/** 被放走的俘虜：之後每季有機率主動來投（規格 §F Future_Return_Chance） */
+export interface PrisonReleaseEntry {
+    targetUid: string;
+    targetName: string;
+    releasedSeason: number;
+}
+
 export interface PrisonState<T = unknown> {
     pending: PendingPrisoner<T>[];
     prisoners: PrisonEntry[];
@@ -311,10 +318,12 @@ export interface PrisonState<T = unknown> {
     fame: number;
     /** 累積情報（監獄產出） */
     intel: number;
+    /** 已放走、尚未來投的俘虜 */
+    released: PrisonReleaseEntry[];
 }
 
 export function createPrisonState<T = unknown>(): PrisonState<T> {
-    return { pending: [], prisoners: [], slots: PRISON_SLOTS_INITIAL, fame: 0, intel: 0 };
+    return { pending: [], prisoners: [], slots: PRISON_SLOTS_INITIAL, fame: 0, intel: 0, released: [] };
 }
 
 function nonNegInt(value: unknown, fallback: number): number {
@@ -331,11 +340,49 @@ export function normalizePrisonState<T = unknown>(raw: unknown): PrisonState<T> 
     const prisoners = Array.isArray(r.prisoners)
         ? r.prisoners.filter((p): p is PrisonEntry => Boolean(p && typeof p.targetUid === 'string' && p.yieldPerSeason))
         : [];
+    const released = Array.isArray(r.released)
+        ? r.released.filter((p): p is PrisonReleaseEntry => Boolean(p && typeof p.targetUid === 'string'))
+        : [];
     return {
         pending,
         prisoners,
         slots: Math.min(PRISON_SLOTS_MAX, Math.max(PRISON_SLOTS_INITIAL, nonNegInt(r.slots, PRISON_SLOTS_INITIAL))),
         fame: nonNegInt(r.fame, 0),
         intel: nonNegInt(r.intel, 0),
+        released,
     };
+}
+
+/** 放走俘虜：加入未來來投名單（回傳新狀態，不改原物件） */
+export function addReleasedPrisoner<T = unknown>(state: PrisonState<T>, entry: PrisonReleaseEntry): PrisonState<T> {
+    return { ...state, released: [...state.released, entry] };
+}
+
+/**
+ * 每季擲一次未來來投：只看放走於「更早的季」的俘虜，每人 FUTURE_RETURN_CHANCE 機率來投。
+ * 來投者從 released 名單移除並回傳，由呼叫端決定如何加回名冊。亂數可注入。
+ * 暫定：每季各擲一次（規格只寫「未來某季」與 5%）。
+ */
+export function rollFutureReturns<T = unknown>(
+    state: PrisonState<T>,
+    season: number,
+    random: () => number,
+): { state: PrisonState<T>; returned: PrisonReleaseEntry[] } {
+    const returned: PrisonReleaseEntry[] = [];
+    const remaining: PrisonReleaseEntry[] = [];
+    for (const entry of state.released) {
+        const eligible = entry.releasedSeason < season;
+        if (eligible && random() < FUTURE_RETURN_CHANCE) returned.push(entry);
+        else remaining.push(entry);
+    }
+    return { state: { ...state, released: remaining }, returned };
+}
+
+/**
+ * 監獄擴容一次 +1 格（暫定：規格未寫步數與費用，費用由呼叫端扣）。
+ * 已達 PRISON_SLOTS_MAX 時回傳原狀態與 ok=false，不改輸入。
+ */
+export function expandPrisonSlots<T = unknown>(state: PrisonState<T>): { state: PrisonState<T>; ok: boolean } {
+    if (state.slots >= PRISON_SLOTS_MAX) return { state, ok: false };
+    return { state: { ...state, slots: state.slots + 1 }, ok: true };
 }

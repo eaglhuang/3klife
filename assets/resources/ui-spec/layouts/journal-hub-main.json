@@ -1,0 +1,412 @@
+{
+  "id": "journal-hub-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "JournalHubRoot",
+    "id": "journalHubRoot",
+    "width": 1920,
+    "height": 1080,
+    "children": [
+      {
+        "type": "panel",
+        "name": "JournalHubCard",
+        "id": "journalHubCard",
+        "width": 1000,
+        "height": 1012,
+        "skinSlot": "jh.card.bg",
+        "layout": {
+          "type": "vertical",
+          "justifyContent": "start",
+          "spacingY": 12,
+          "paddingTop": 28,
+          "paddingRight": 28,
+          "paddingBottom": 28,
+          "paddingLeft": 28
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "MorningTitle",
+            "id": "morningTitle",
+            "width": 944,
+            "height": 48,
+            "text": "晨報",
+            "styleSlot": "jh.label.title"
+          },
+          {
+            "type": "label",
+            "name": "MorningEmptyLabel",
+            "id": "morningEmptyLabel",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "jh.label.muted"
+          },
+          {
+            "type": "label",
+            "name": "MorningLine0",
+            "id": "morningLine0",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "jh.label.body"
+          },
+          {
+            "type": "label",
+            "name": "MorningLine1",
+            "id": "morningLine1",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "jh.label.body"
+          },
+          {
+            "type": "label",
+            "name": "MorningLine2",
+            "id": "morningLine2",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "jh.label.body"
+          },
+          {
+            "type": "label",
+            "name": "DispatchTitle",
+            "id": "dispatchTitle",
+            "width": 944,
+            "height": 48,
+            "text": "派遣板",
+            "styleSlot": "jh.label.title"
+          },
+          {
+            "type": "container",
+            "name": "DispatchPickerRow",
+            "id": "dispatchPickerRow",
+            "width": 944,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnPrevDispatchGeneral",
+                "id": "btnPrevDispatchGeneral",
+                "width": 120,
+                "height": 64,
+                "skinSlot": "jh.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPrevDispatchGeneralLabel",
+                    "id": "btnPrevDispatchGeneralLabel",
+                    "width": 120,
+                    "height": 40,
+                    "text": "◀",
+                    "styleSlot": "jh.label.body"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "label",
+                "name": "DispatchPickerLabel",
+                "id": "dispatchPickerLabel",
+                "width": 600,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jh.label.body",
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnNextDispatchGeneral",
+                "id": "btnNextDispatchGeneral",
+                "width": 120,
+                "height": 64,
+                "skinSlot": "jh.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnNextDispatchGeneralLabel",
+                    "id": "btnNextDispatchGeneralLabel",
+                    "width": 120,
+                    "height": 40,
+                    "text": "▶",
+                    "styleSlot": "jh.label.body"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "DispatchEmptyLabel",
+            "id": "dispatchEmptyLabel",
+            "width": 944,
+            "height": 40,
+            "text": "",
+            "styleSlot": "jh.label.muted"
+          },
+          {
+            "type": "button",
+            "name": "DispatchRow0",
+            "id": "dispatchRow0",
+            "width": 944,
+            "height": 48,
+            "skinSlot": "jh.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DispatchRow0Name",
+                "id": "dispatchRow0Name",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16
+                },
+                "width": 420,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jh.label.body"
+              },
+              {
+                "type": "label",
+                "name": "DispatchRow0Score",
+                "id": "dispatchRow0Score",
+                "widget": {
+                  "vCenter": true,
+                  "right": 16
+                },
+                "width": 480,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jh.label.score"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "DispatchRow1",
+            "id": "dispatchRow1",
+            "width": 944,
+            "height": 48,
+            "skinSlot": "jh.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DispatchRow1Name",
+                "id": "dispatchRow1Name",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16
+                },
+                "width": 420,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jh.label.body"
+              },
+              {
+                "type": "label",
+                "name": "DispatchRow1Score",
+                "id": "dispatchRow1Score",
+                "widget": {
+                  "vCenter": true,
+                  "right": 16
+                },
+                "width": 480,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jh.label.score"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "DispatchRow2",
+            "id": "dispatchRow2",
+            "width": 944,
+            "height": 48,
+            "skinSlot": "jh.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DispatchRow2Name",
+                "id": "dispatchRow2Name",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16
+                },
+                "width": 420,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jh.label.body"
+              },
+              {
+                "type": "label",
+                "name": "DispatchRow2Score",
+                "id": "dispatchRow2Score",
+                "widget": {
+                  "vCenter": true,
+                  "right": 16
+                },
+                "width": 480,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jh.label.score"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "DispatchRow3",
+            "id": "dispatchRow3",
+            "width": 944,
+            "height": 48,
+            "skinSlot": "jh.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DispatchRow3Name",
+                "id": "dispatchRow3Name",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16
+                },
+                "width": 420,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jh.label.body"
+              },
+              {
+                "type": "label",
+                "name": "DispatchRow3Score",
+                "id": "dispatchRow3Score",
+                "widget": {
+                  "vCenter": true,
+                  "right": 16
+                },
+                "width": 480,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jh.label.score"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "JournalEntryRow",
+            "id": "journalEntryRow",
+            "width": 944,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnOpenGeneralJournal",
+                "id": "btnOpenGeneralJournal",
+                "width": 240,
+                "height": 64,
+                "skinSlot": "jh.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenGeneralJournalLabel",
+                    "id": "btnOpenGeneralJournalLabel",
+                    "width": 240,
+                    "height": 40,
+                    "text": "武將日誌 ▶",
+                    "styleSlot": "jh.label.body"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnOpenBattleReview",
+                "id": "btnOpenBattleReview",
+                "width": 240,
+                "height": 64,
+                "skinSlot": "jh.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenBattleReviewLabel",
+                    "id": "btnOpenBattleReviewLabel",
+                    "width": 240,
+                    "height": 40,
+                    "text": "戰報 ▶",
+                    "styleSlot": "jh.label.body"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnOpenTournament",
+                "id": "btnOpenTournament",
+                "width": 240,
+                "height": 64,
+                "skinSlot": "jh.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnOpenTournamentLabel",
+                    "id": "btnOpenTournamentLabel",
+                    "width": 240,
+                    "height": 40,
+                    "text": "挑戰賽 ▶",
+                    "styleSlot": "jh.label.body"
+                  }
+                ],
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnClose",
+            "id": "btnClose",
+            "width": 200,
+            "height": 64,
+            "skinSlot": "jh.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCloseLabel",
+                "id": "btnCloseLabel",
+                "width": 200,
+                "height": 40,
+                "text": "關閉",
+                "styleSlot": "jh.label.body"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 import type { ActionRecord } from '../../../../shared/protocols';
 import { services } from '../managers/ServiceLoader';
 
-export type GachaActionType = 'LOCAL_GACHA_PULL' | 'LOCAL_GOLD_SUMMON' | 'LOCAL_TICKET_SUMMON' | 'LOCAL_SUPPORT_SUMMON';
+export type GachaActionType = 'LOCAL_GACHA_PULL' | 'LOCAL_GOLD_SUMMON' | 'LOCAL_TICKET_SUMMON' | 'LOCAL_SUPPORT_SUMMON' | 'LOCAL_DESTINY_SHOP_EXCHANGE';
 export type GachaCurrencyKey = 'gems' | 'gold' | 'tickets' | 'mentorTickets' | 'bronze' | 'scorePoints';
 
 export interface GachaResultSummary {
@@ -38,6 +38,7 @@ const GACHA_ACTION_SET = new Set<GachaActionType>([
     'LOCAL_GOLD_SUMMON',
     'LOCAL_TICKET_SUMMON',
     'LOCAL_SUPPORT_SUMMON',
+    'LOCAL_DESTINY_SHOP_EXCHANGE',
 ]);
 
 function toRecordMap(payload: unknown): Record<string, unknown> {

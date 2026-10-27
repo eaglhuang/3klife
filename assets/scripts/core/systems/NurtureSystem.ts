@@ -23,7 +23,7 @@ import { effectiveGrowthModifier } from './Unveiling';
 import { HybridSkillSource, rollHybridTrigger } from './HybridSkill';
 import { rollNurtureRoundEvents } from './NurtureEvents';
 import { FactorDictionary, resolveFactorColor } from './FactorInheritance';
-import { MENTOR_STAR_TABLE } from './MentorBreakthrough';
+import { burstRateAtStar, MENTOR_STAR_TABLE, mentorStarPerks } from './MentorBreakthrough';
 import { inspireEventsFromSupport, InspireEvent } from './MentorInspiration';
 import { surnameOf } from './VirtualAncestorGenerator';
 import { findTriggeredSynergy, synergyTpBonus } from './MentorSynergy';
@@ -221,6 +221,16 @@ export function failureRateForVigor(vigor: number): number {
     return 0.2 + ((30 - Math.max(0, vigor)) / 30) * 0.4;
 }
 
+/**
+ * 訓練失敗率（含教官突破 ★2「訓練機率 +3%」，PROG-2-1167）：
+ * 站在本回合訓練格的教官取最高的成功率加成，從體力失敗率扣掉，最低 0。
+ * 暫定：多位教官不疊加。
+ */
+export function trainingFailureRate(vigor: number, mentorsOnSlot: readonly TrainingMentor[]): number {
+    const bonus = mentorsOnSlot.reduce((best, mentor) => Math.max(best, mentorStarPerks(mentor.stars).trainingSuccessBonus), 0);
+    return Math.max(0, failureRateForVigor(vigor) - bonus);
+}
+
 function mentorStarEffect(mentor: TrainingMentor): number {
     const stars = Math.max(0, Math.min(5, Math.floor(mentor.stars ?? 0)));
     return MENTOR_STAR_EFFECT[stars];
@@ -409,7 +419,7 @@ export function executeRound(
         const redBoost = 1 + RED_VIGOR_RECOVER_PER_LEVEL * (source.redGeneLevel ?? 0);
         session.vigor = Math.min(VIGOR_MAX, vigorBefore + Math.round(recovered * redBoost));
     } else {
-        const failureRate = failureRateForVigor(vigorBefore);
+        const failureRate = trainingFailureRate(vigorBefore, source.mentors.filter((mentor) => source.mentorSlots[mentor.id] === action));
         const failed = failureRate > 0 && random() < failureRate;
         const cost = Math.round(randInt(random, TRAINING_VIGOR_COST[0], TRAINING_VIGOR_COST[1]) * (options.trainingVigorMultiplier ?? 1));
         session.vigor = Math.max(0, vigorBefore - cost);
@@ -625,6 +635,8 @@ export const MENTOR_CARD_STAT_PER_BONUS_POINT = 5;
  * 把退役教官卡（PROG-2-0029 的 MentorCard）換算成培育教官。
  * - 擅長科目：武官取武力 / 統率較高者、文官取智力 / 政治較高者，沒有職能就五項取最高（同分依武、智、統、政、魅）
  * - 加成：tpBonus 看退役時的 EP，擅長科目另有屬性加成；星等取卡片的突破星等（沒有視為 0）
+ * 帶支援卡資料時，擅長科目取 Training_Slot_Affinity 第一格、爆發率取 Slot_Burst_Rate（§F-8），不再用推算值與預設 0.5。
+ * 爆發率再依突破星等成長（burstRateAtStar，每星 +3 個百分點、上限 80%）。
  * 教官不參與血統因子遺傳，這裡不讀 gene_refs。
  */
 export function mentorFromCard(
@@ -633,15 +645,21 @@ export function mentorFromCard(
 ): TrainingMentor {
     const snapshot = card.generalSnapshot as UnveilingGeneral;
     const pool = snapshot.careerClass === 'Warrior' ? WARRIOR_KINDS : snapshot.careerClass === 'Scholar' ? SCHOLAR_KINDS : TRAINING_KINDS;
-    const specialty = pool.reduce((best, kind) => (statOf(snapshot, kind) > statOf(snapshot, best) ? kind : best), pool[0]);
+    const derived = pool.reduce((best, kind) => (statOf(snapshot, kind) > statOf(snapshot, best) ? kind : best), pool[0]);
+    const specialty = card.support?.trainingSlotAffinity?.[0] ?? derived;
+    const stars = overrides.stars ?? card.stars ?? 0;
+    // 突破「其他加成」：初期情誼、擅長科目屬性倍率、TP 加成依星等累計（PROG-2-1164）
+    const perks = mentorStarPerks(stars);
     return {
         id: card.uid,
         name: card.name,
-        tpBonus: Math.round(card.ep_snapshot / MENTOR_CARD_EP_PER_TP_POINT),
-        statBonus: { [specialty]: Math.round(statOf(snapshot, specialty) / MENTOR_CARD_STAT_PER_BONUS_POINT) },
+        tpBonus: Math.round(card.ep_snapshot / MENTOR_CARD_EP_PER_TP_POINT) + perks.tpBonusAdd,
+        statBonus: { [specialty]: Math.round((statOf(snapshot, specialty) / MENTOR_CARD_STAT_PER_BONUS_POINT) * perks.statBonusMultiplier) },
         specialty,
-        stars: overrides.stars ?? card.stars ?? 0,
-        burstRate: overrides.burstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE,
+        stars,
+        ...(perks.initialFriendship > 0 ? { friendship: perks.initialFriendship } : {}),
+        // 呼叫端明確覆寫時照用；否則卡片爆發率依突破星等成長（PROG-2-1163）
+        burstRate: overrides.burstRate ?? burstRateAtStar(card.support?.slotBurstRate ?? MENTOR_CARD_DEFAULT_BURST_RATE, stars),
         familyName: overrides.familyName ?? (card.name ? surnameOf(card.name) : undefined),
         ...(card.support
             ? {

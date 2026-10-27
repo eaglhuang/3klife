@@ -6,6 +6,7 @@
 import { _decorator, Node, tween, UIOpacity } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
+import { isLukVisible } from '../../core/systems/LuckVisibility';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 
 const { ccclass } = _decorator;
@@ -70,7 +71,7 @@ export class GeneralQuickViewComposite extends CompositePanel {
             LeaText: String(general.lea ?? 0),
             PolText: String(general.pol ?? 0),
             ChaText: String(general.cha ?? 0),
-            LukText: String(general.luk ?? 0),
+            LukText: isLukVisible({ isVisible: general.lukVisible }) ? String(general.luk ?? 0) : '???',
         });
     }
 
