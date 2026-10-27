@@ -136,7 +136,7 @@
       "from": "neck",
       "to": "head_center",
       "zone": [
-        760,
+        670,
         260,
         1340,
         900
@@ -162,7 +162,8 @@
           "nose"
         ],
         "note": "v3.7：頭部以 neck 單點定位、等比縮放；head_center 為閘門（沿用 joints 容差），nose 只記錄實測值不當閘門——Q 版髮量不同，臉在頭區內的高度因武將而異。"
-      }
+      },
+      "zoneNote": "v3.19（2026-10-28）：zone 左緣 760→670。R316 分布圖證實核心外 12,064 px 是單一連通區 bbox [681,549,747,835]，為左側鬢髮（正常美術，非殘渣）。新左緣含 scopeMarginPx 12 後為 658，涵蓋 681 並留餘裕。"
     },
     "torso": {
       "from": "pelvis",
@@ -744,7 +745,9 @@
       "hiddenExtensionWaivers": {
         "childAloneSufficient": "parentExtensionNotRequired",
         "gripJoint": "advisoryWhenCrackPasses",
-        "note": "v3.16（2026-10-27）：(1) 關節標 childAloneSufficient 時，parent 側隱藏延伸不要求（pelvis_to_torso：軀幹自己蓋住核心 100%）。(2) 握孔關節（arm_lower_*_to_hand_*）隱藏延伸改為只報告，條件是該關節裂縫達標；裂縫不達標時照舊要求延伸。child 側與其他關節不變。"
+        "note": "v3.16（2026-10-27）：(1) 關節標 childAloneSufficient 時，parent 側隱藏延伸不要求（pelvis_to_torso：軀幹自己蓋住核心 100%）。(2) 握孔關節（arm_lower_*_to_hand_*）隱藏延伸改為只報告，條件是該關節裂縫達標；裂縫不達標時照舊要求延伸。child 側與其他關節不變。",
+        "rigidAttachment": "notApplicable",
+        "rigidNote": "v3.19（2026-10-28）：runtime 為 rigid=true 的掛點（例如 hand_f→weapon）父子同轉、無相對旋轉，隱藏延伸與旋轉裂縫均不適用，標 NOT_APPLICABLE、不擋驗收。握點位置仍由 gripRegistration 與 weaponGripOnShaft 檢查。"
       }
     }
   },
