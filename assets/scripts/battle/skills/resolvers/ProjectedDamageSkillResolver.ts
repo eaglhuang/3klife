@@ -83,7 +83,7 @@ export class ProjectedDamageSkillResolver implements BattleSkillResolver {
           continue;
         }
 
-        const damage = this.damageResolver.resolveDamage(profile, caster, unit, context, hitCount, stage);
+        const damage = this.damageResolver.resolveDamage(profile, caster, unit, context, hitCount, stage, request.ultimateAttack);
         hitCount += 1;
         context.applyDamage(unit, damage, casterFaction);
         deltas.push({ unitUid: unit.id, deltaHp: -damage });
