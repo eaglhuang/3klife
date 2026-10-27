@@ -1,0 +1,117 @@
+{
+  "id": "bloodline-tree-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "BloodlineTreeRoot",
+    "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 },
+    "layout": { "type": "vertical", "alignItems": "stretch", "justifyContent": "start" },
+    "children": [
+      {
+        "type": "label",
+        "name": "HeaderTitle",
+        "id": "bloodlineTreeHeader",
+        "height": 56,
+        "text": "家族血統關係(十四人)",
+        "styleSlot": "bloodline.tree.header",
+        "_textKey": "ui.bloodline.title"
+      },
+      {
+        "type": "panel",
+        "name": "TreeArea",
+        "id": "bloodlineTreeArea",
+        "height": 560,
+        "layout": { "type": "vertical", "alignItems": "center", "justifyContent": "start", "spacingY": 24 },
+        "children": [
+          {
+            "type": "container",
+            "name": "Gen1Container",
+            "id": "bloodlineGen1",
+            "layout": { "type": "horizontal", "alignItems": "center", "justifyContent": "center", "spacingX": 12 },
+            "children": [
+              { "type": "panel", "name": "NodeCard_G1_0", "id": "bloodlineG1Card0", "width": 150, "height": 120, "_contract": "bloodline.node.card" },
+              { "type": "panel", "name": "NodeCard_G1_1", "id": "bloodlineG1Card1", "width": 150, "height": 120, "_contract": "bloodline.node.card" },
+              { "type": "panel", "name": "NodeCard_G1_2", "id": "bloodlineG1Card2", "width": 150, "height": 120, "_contract": "bloodline.node.card" },
+              { "type": "panel", "name": "NodeCard_G1_3", "id": "bloodlineG1Card3", "width": 150, "height": 120, "_contract": "bloodline.node.card" },
+              { "type": "panel", "name": "NodeCard_G1_4", "id": "bloodlineG1Card4", "width": 150, "height": 120, "_contract": "bloodline.node.card" },
+              { "type": "panel", "name": "NodeCard_G1_5", "id": "bloodlineG1Card5", "width": 150, "height": 120, "_contract": "bloodline.node.card" },
+              { "type": "panel", "name": "NodeCard_G1_6", "id": "bloodlineG1Card6", "width": 150, "height": 120, "_contract": "bloodline.node.card" },
+              { "type": "panel", "name": "NodeCard_G1_7", "id": "bloodlineG1Card7", "width": 150, "height": 120, "_contract": "bloodline.node.card" }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "Gen2Container",
+            "id": "bloodlineGen2",
+            "layout": { "type": "horizontal", "alignItems": "center", "justifyContent": "center", "spacingX": 24 },
+            "children": [
+              { "type": "panel", "name": "NodeCard_G2_0", "id": "bloodlineG2Card0", "width": 150, "height": 120, "_contract": "bloodline.node.card" },
+              { "type": "panel", "name": "NodeCard_G2_1", "id": "bloodlineG2Card1", "width": 150, "height": 120, "_contract": "bloodline.node.card" },
+              { "type": "panel", "name": "NodeCard_G2_2", "id": "bloodlineG2Card2", "width": 150, "height": 120, "_contract": "bloodline.node.card" },
+              { "type": "panel", "name": "NodeCard_G2_3", "id": "bloodlineG2Card3", "width": 150, "height": 120, "_contract": "bloodline.node.card" }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "Gen3Container",
+            "id": "bloodlineGen3",
+            "layout": { "type": "horizontal", "alignItems": "center", "justifyContent": "center", "spacingX": 260 },
+            "children": [
+              { "type": "panel", "name": "NodeCard_G3_0", "id": "bloodlineG3Card0", "width": 180, "height": 150, "_contract": "bloodline.node.card" },
+              { "type": "panel", "name": "NodeCard_G3_1", "id": "bloodlineG3Card1", "width": 180, "height": 150, "_contract": "bloodline.node.card" }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "LineGraphics",
+            "id": "bloodlineLines",
+            "widget": { "top": 0, "bottom": 0, "left": 0, "right": 0 },
+            "_contract": "bloodline.lines.graphics"
+          }
+        ]
+      },
+      {
+        "type": "panel",
+        "name": "BottomInfoArea",
+        "id": "bloodlineBottomInfo",
+        "height": 440,
+        "layout": { "type": "horizontal", "alignItems": "stretch", "justifyContent": "space-between" },
+        "children": [
+          {
+            "type": "panel",
+            "name": "LegendPanel",
+            "id": "bloodlineLegend",
+            "width": 360,
+            "_contract": "bloodline.legend"
+          },
+          {
+            "type": "panel",
+            "name": "MainTargetPanel",
+            "id": "bloodlineMainTarget",
+            "width": 520,
+            "layout": { "type": "vertical", "alignItems": "center", "justifyContent": "center", "spacingY": 12 },
+            "children": [
+              { "type": "image", "name": "TargetPortrait", "id": "bloodlineTargetPortrait", "width": 320, "height": 360, "_contract": "bloodline.target.portrait" },
+              { "type": "label", "name": "TargetRarity", "id": "bloodlineTargetRarity", "height": 36, "styleSlot": "bloodline.target.rarity" }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "SkillDetails",
+            "id": "bloodlineSkillDetails",
+            "width": 480,
+            "_contract": "bloodline.target.details"
+          }
+        ]
+      }
+    ]
+  }
+}
