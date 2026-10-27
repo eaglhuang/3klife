@@ -110,6 +110,7 @@ import { OPENING_BEAUTY_POOL_ID, openingBeautyCandidates } from '../../core/syst
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
+import { validateSupportPool } from '../../core/systems/SupportPoolValidator';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { isDescendant } from '../../core/systems/ChildMagistrate';
 import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD } from '../../core/systems/PlayerInventory';
@@ -231,6 +232,7 @@ interface ScreenButtonBinding {
 }
 
 interface GachaPoolConfigLike {
+    poolId: string;
     poolType: string;
     candidateIds?: string[];
 }
@@ -1965,6 +1967,11 @@ export class LobbyScene extends Component {
         const heroPoolIds = pools
             .filter(pool => pool.poolType === 'hero')
             .flatMap(pool => pool.candidateIds ?? []);
+        // 資料檢查只列警告不擋畫面：紅顏池資料有缺時，玩家仍能看到已能顯示的卡
+        const poolConfigs = pools.map(pool => ({ poolId: pool.poolId, poolType: pool.poolType, candidateIds: pool.candidateIds ?? [] }));
+        for (const issue of validateSupportPool(poolConfigs, supportCards ?? [])) {
+            console.warn(`[SupportPoolValidator] ${issue.path}: ${issue.message}`);
+        }
         this._redFace = new RedFaceGalleryController({
             pool: () => (supportPool ? { candidateIds: supportPool.candidateIds ?? [] } : null),
             cards: () => supportCards ?? [],
