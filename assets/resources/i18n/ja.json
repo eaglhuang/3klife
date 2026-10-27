@@ -439,5 +439,11 @@
   "ui.ultimate_codex.empty": "まだ奥義が解放されていません。",
   "ui.ultimate_codex.more": "ほか {0} 件は表示されていません",
   "ui.ultimate_codex.close": "閉じる",
-  "copy.letter.opening.title": "あなたへの一通の手紙（暫定タイトル）"
+  "copy.letter.opening.title": "あなたへの一通の手紙（暫定タイトル）",
+  "battle.aptitude.line.wind": "風向きが急変——{Name}：大風が来るぞ！火攻めの威力が増す！",
+  "battle.aptitude.line.water-s": "{Name}は水を得た魚——水上では無敵だ！",
+  "battle.aptitude.line.mountain-s": "{Name}は山に拠って戦う。一人いれば関所は守れる！",
+  "battle.aptitude.line.fog": "霧の中の行軍——{Name}は霧に惑わされず、百発百中！",
+  "battle.aptitude.line.night": "月黒く風高し、まさに{Name}の戦場！",
+  "battle.aptitude.line.insufficient": "{Name}はこの地形に非常に不向き——動きは鈍く、攻めも阻まれる。"
 }

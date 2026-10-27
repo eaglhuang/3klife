@@ -439,5 +439,11 @@
   "ui.ultimate_codex.empty": "尚未解锁任何奥义。",
   "ui.ultimate_codex.more": "另有 {0} 项未列出",
   "ui.ultimate_codex.close": "关闭",
-  "copy.letter.opening.title": "致你的一封信（暫定标题）"
+  "copy.letter.opening.title": "致你的一封信（暫定标题）",
+  "battle.aptitude.line.wind": "风向突变——{Name}：大风来袭！火攻将更具威力！",
+  "battle.aptitude.line.water-s": "{Name} 如鱼得水——水面之上，无人能敌！",
+  "battle.aptitude.line.mountain-s": "{Name} 倚山而战，一夫当关！",
+  "battle.aptitude.line.fog": "雾中行军——{Name} 不受大雾影响，百步穿杨！",
+  "battle.aptitude.line.night": "月黑风高，正是{Name}的战场！",
+  "battle.aptitude.line.insufficient": "{Name} 对此地形十分不适——行动迟缓、攻势受阻。"
 }
