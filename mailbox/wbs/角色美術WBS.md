@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 20:10 Claude：R299 前腳踝裂縫 46/15 收為候選（整體 QC 未過）；膠囊範圍裁決 B，待 2D 專家量值後寫 v3.14；R290 卡 Cocos 登入頁，等使用者處理。
 - 2026-10-27 19:50 Claude：收下 AG-31b／AG-32（規格同 v3.13、98 測試 OK）；R296 前臂短樁收為候選；後手 171/159 是封閉握孔，派 AG-33；R300 裁決 pelvis_to_torso 暫不補、前手採握孔規則、hair_tail／pauldron_b 不擋。
 - 2026-10-27 19:40 AG-32 完成：check_layered_parts.py 實作規格 v3.13 戰場顯示高度換算裂縫門檻（maxCrackAreaDisplayPx2 * (H / referenceDisplayHeightPx)^2 = 79.01 px），完全零硬編碼，報告輸出來源資訊並與 derivedMaxCrackCanvasPx (79) 核對；R292 20 個關節全表重新評估，全身純裂縫超標關節僅剩 shin_f_to_foot_f (180/166 px)，其餘關節裂縫全數 <= 61 px 達標；新增 test_ag32_crack_gate_display_height.py 3 項單元測試，全套 98 項單元測試 100% 通過（884afb08e）。
 - 2026-10-27 19:35 AG-31b 完成：check_layered_parts.py 實作規格 v3.12 動態驅動幾何（rotationPivot: "childBonePivot"、scopeCapsuleAxis: "boneToChildBonePivot"、hiddenExtensionFrom: "childBonePivot"），手部旋轉與裂縫檢查改繞拳心握點（bones.hand 骨點）旋轉，膠囊軸沿骨點向量構建徹底解除前臂延伸外逸衝突；缺鍵時向後相容 fallback 至舊 joints 行為；輸出樞紐座標 pivot 與來源標記 pivotSource；新增 test_ag31b_joint_geometry_bone_pivot.py 4 項單元測試，全套 95 項單元測試 100% 通過（be1f6fcd3）。
