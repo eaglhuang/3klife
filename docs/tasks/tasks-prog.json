@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 75,
-    "total": 111
+    "open": 76,
+    "total": 112
   },
   "tasks": [
     {
@@ -4164,6 +4164,35 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0170/**"
+      ],
+      "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0171",
+      "title": "實機驗收：開場信件面板大廳掛載與版面（PROG-2-1305、#1064）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-27",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "新局首次進大廳自動開啟開場信件、版面座標與關閉後不再開啟需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-1305",
+        "PR #1064",
+        "PROG-2-1302"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0171.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0171/**"
       ],
       "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     }
