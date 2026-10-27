@@ -31,7 +31,7 @@ export function createLobbyCityHubControllerSuite(): TestSuite {
 
     suite.test('五類收納涵蓋大廳所有功能入口，不重複', () => {
         const actions = LOBBY_CATEGORIES.flatMap(c => c.items.map(i => i.id));
-        assert.equals(18, actions.length);
+        assert.equals(19, actions.length);
         assert.equals(actions.length, new Set(actions).size);
         assert.equals(5, LOBBY_SUB_SLOTS);
     });
@@ -60,7 +60,8 @@ export function createLobbyCityHubControllerSuite(): TestSuite {
         assert.equals('▲ 武將', open.texts.btnCatGeneralsLabel);
         const shop = buildLobbyCityHubView(input({ openCategory: 'shop' }));
         assert.isTrue(shop.actives.btnSub2);
-        assert.isFalse(shop.actives.btnSub3);
+        assert.isTrue(shop.actives.btnSub3, '商城第四項為背包（ITM-10）');
+        assert.isFalse(shop.actives.btnSub4);
     });
 
     suite.test('子功能可帶動態文字（天下沙盤開放狀態）', () => {

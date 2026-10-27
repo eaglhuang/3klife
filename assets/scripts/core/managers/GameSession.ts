@@ -75,10 +75,10 @@ import {
 } from '../systems/MorningReport';
 import {
     DISPATCH_JOURNAL_PRIORITY, EMPTY_DISPATCH_STATE, normalizeDispatchState, settleDueDispatches, startDispatch,
-    type CompletedDispatchJob, type DispatchJobDef, type DispatchStartResult, type DispatchState,
+    type CompletedDispatchJob, type DispatchJobDef, type DispatchStartReason, type DispatchStartResult, type DispatchState,
 } from '../systems/DispatchJobs';
-import { dispatchCompleteLine, type DispatchStatKey } from '../systems/DispatchQuality';
-import { DISPATCH_JOB_CATALOG, dispatchBoardRows, type DispatchCatalogRow } from '../systems/DispatchCatalog';
+import { dispatchCompleteLine, getDispatchScore, type DispatchGeneral, type DispatchStatKey } from '../systems/DispatchQuality';
+import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type DispatchCatalogRow } from '../systems/DispatchCatalog';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
@@ -137,6 +137,9 @@ import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFlow';
+import { equipGear as equipGearFlow, unequipGear as unequipGearFlow, type GearEquipResult } from '../systems/GearEquipFlow';
+import { gearDefinitionOf } from '../systems/GearDefinitions';
+import type { EquipSlot } from '../systems/GeneralBackpack';
 import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
@@ -423,6 +426,14 @@ export type HireTrialResult = Omit<TrialTicketResult, 'reason'> & { reason?: Tri
 export interface MercenaryDayReport {
     day: number;
     events: DepartureEvent[];
+}
+
+/** 派遣板點列派遣結果（PROG-2-1181） */
+export interface DispatchClickResult {
+    ok: boolean;
+    reason?: DispatchStartReason | 'unknown-job' | 'no-general';
+    jobName?: string;
+    generalName?: string;
 }
 
 export class GameSession {
@@ -931,6 +942,20 @@ export class GameSession {
     /** 統一物件庫的原始列（唯讀副本）；寶頁依武將 uid 篩出一般裝備 */
     public get inventoryRecords(): readonly InventoryRecord[] {
         return this._inventoryRecords.map((record) => ({ ...record }));
+    }
+
+    /** 穿戴一般裝備（PROG-2-1040）：可否放入由一般裝備定義表的槽位判斷；成功才寫回物件庫列 */
+    public equipGear(gearUid: string, generalUid: string, slotId: EquipSlot): GearEquipResult {
+        const result = equipGearFlow(this._inventoryRecords, gearUid, generalUid, slotId, (record, slot) => gearDefinitionOf(record.Gear_ID)?.slot === slot);
+        if (result.ok) this._inventoryRecords = result.records;
+        return result;
+    }
+
+    /** 卸下武將指定格的一般裝備（PROG-2-1040）；裝備回到倉庫 */
+    public unequipGear(generalUid: string, slotId: EquipSlot): GearEquipResult {
+        const result = unequipGearFlow(this._inventoryRecords, generalUid, slotId);
+        if (result.ok) this._inventoryRecords = result.records;
+        return result;
     }
 
     /** 使用道具（PROG-2-1038）：刷新券寫回傭兵池與救美冷卻；安胎藥記下 armed，等下一次結緣才生效 */
@@ -1675,16 +1700,47 @@ export class GameSession {
     public startDispatchJob(job: DispatchJobDef, generalId: string, nowMs: number, auto = false): DispatchStartResult | null {
         const general = this._roster.getAll().find((g) => g.id === generalId);
         if (!general) return null;
+        const result = startDispatch(this._dispatch, job, generalId, this._dispatchGeneralOf(general), nowMs, auto);
+        if (result.ok) this._dispatch = result.state;
+        return result;
+    }
+
+    /** 派遣評分用的武將資料：角色標籤取 careerClass／role，日誌標籤取該武將日誌類別（暫定） */
+    private _dispatchGeneralOf(general: { id: string }): DispatchGeneral {
         const raw = general as unknown as Record<string, unknown>;
         const stats: Partial<Record<DispatchStatKey, number>> = {};
         for (const key of ['str', 'int', 'lea', 'pol', 'cha'] as DispatchStatKey[]) {
             if (typeof raw[key] === 'number') stats[key] = raw[key] as number;
         }
         const roleTags = [raw.careerClass, raw.role].filter((t): t is string => typeof t === 'string' && t.length > 0);
-        const journalTags = Array.from(new Set(queryJournal(this._journal, { generalUid: generalId }).map((e) => e.category as string)));
-        const result = startDispatch(this._dispatch, job, generalId, { roleTags, stats, journalTags }, nowMs, auto);
-        if (result.ok) this._dispatch = result.state;
-        return result;
+        const journalTags = Array.from(new Set(queryJournal(this._journal, { generalUid: general.id }).map((e) => e.category as string)));
+        return { roleTags, stats, journalTags };
+    }
+
+    /**
+     * 派遣板點列派遣（PROG-2-1181）：從暫定清單找任務，自動挑分數最高、不忙碌也不在冷卻的武將（同分取名冊順序）。
+     * 玩家親自點選視同親自決策，高風險任務可派。選將清單待企劃定版。
+     */
+    public dispatchJobById(jobId: string, nowMs: number): DispatchClickResult {
+        const job = findDispatchJob(jobId);
+        if (!job) return { ok: false, reason: 'unknown-job' };
+        const running = this._dispatch.active.find((a) => a.jobId === jobId);
+        if (running) {
+            const name = this._roster.getAll().find((g) => g.id === running.generalId)?.name ?? running.generalId;
+            return { ok: false, reason: 'job-active', jobName: job.name, generalName: name };
+        }
+        const idle = this._roster.getAll().filter((g) =>
+            !this._dispatch.active.some((a) => a.generalId === g.id) && (this._dispatch.cooldowns[g.id] ?? 0) <= nowMs);
+        let best: { id: string; name: string } | null = null;
+        let bestScore = -1;
+        for (const g of idle) {
+            const score = getDispatchScore(job, this._dispatchGeneralOf(g));
+            if (score > bestScore) { best = g; bestScore = score; }
+        }
+        if (!best) return { ok: false, reason: 'no-general', jobName: job.name };
+        const result = this.startDispatchJob(job, best.id, nowMs);
+        if (!result?.ok) return { ok: false, reason: result?.reason ?? 'no-general', jobName: job.name };
+        return { ok: true, jobName: job.name, generalName: best.name };
     }
 
     /** 結算到期的派遣，每筆寫 DISPATCH 日誌（§G 完成句）；回傳本次完成的任務。 */

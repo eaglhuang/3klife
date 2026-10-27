@@ -62,7 +62,8 @@ import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoa
 import { overflowToastText } from '../../core/systems/MentorOverflow';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
 import { WarehousePanelController } from '../core/WarehousePanelController';
-import { JournalHubController } from '../core/JournalHubController';
+import { DISPATCH_MAX_ROWS, JournalHubController } from '../core/JournalHubController';
+import { dispatchClickMessage } from '../../core/systems/DispatchCatalog';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 
 /** 倉庫擴容費用：規格（doc_spec_0017）只寫「付費或任務解鎖」，暫定每次 5000 金幣 */
@@ -89,6 +90,7 @@ import { HALL_EMPTY_THEME_CATALOG, resolveHallTheme, type HallThemeFrame } from 
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
 import { GovernorHallController, GovernorTerritoryInfo } from '../core/GovernorHallController';
+import { BAG_ROW_SLOTS, ItemBagController } from '../core/ItemBagController';
 import { planTerritoryUpgrade } from '../../core/systems/TerritoryUpgrade';
 import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
@@ -281,6 +283,8 @@ export class LobbyScene extends Component {
     private _mercPanel: MercenaryPanelController | null = null;
     private _govHallHost: UIScreenPreviewHost | null = null;
     private _govHall: GovernorHallController | null = null;
+    private _itemBagHost: UIScreenPreviewHost | null = null;
+    private _itemBag: ItemBagController | null = null;
     /** 太守府升級因金錢不足被拒（PROG-2-0991）；重新開啟太守府時清除。 */
     private _territoryGoldShortage = false;
     /** 名將池武將 id（gacha-config hero-pool）；招賢館與傭兵試用招募共用 */
@@ -438,6 +442,7 @@ export class LobbyScene extends Component {
         await this._mountHallBoard();
         await this._mountMercenaryPanel();
         await this._mountGovernorHall();
+        await this._mountItemBag();
         await this._mountRedFaceShowcase();
         await this._mountDestinyOpening();
         await this._mountOpeningIntro();
@@ -851,6 +856,7 @@ export class LobbyScene extends Component {
             spiritCodex: () => { void this._openSpiritCodex(); },
             domestic: () => this._openDomestic(),
             governorHall: () => this.openGovernorHall(),
+            itemBag: () => this.openItemBag(),
             recruitHall: () => this._openRecruitHall(),
             hallBoard: () => this._openHallBoard(),
             sandtable: () => this._onClickOpenSandtable(),
@@ -1382,8 +1388,20 @@ export class LobbyScene extends Component {
         });
         this._journalHubHost = await this._mountPreviewScreenHost('JournalHubHost', 'journal-hub-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._journalHubHost) this._journalHubHost.node.active = false; } },
+            ...Array.from({ length: DISPATCH_MAX_ROWS }, (_, i) => ({ buttonId: `dispatchRow${i}`, handler: () => { this._onClickDispatchRow(i); } })),
         ]);
         this._journalHubHost.node.active = false;
+    }
+
+    /** 點派遣列：自動挑最適合的武將派出（PROG-2-1181），提示結果並刷新面板。 */
+    private _onClickDispatchRow(index: number): void {
+        const row = this._journalHub?.dispatchRows()[index];
+        if (!row) return;
+        const session = services().session;
+        const result = session.dispatchJobById(row.id, Date.now());
+        services().event.emit('SHOW_TOAST', { message: dispatchClickMessage(result), duration: 2 });
+        if (result.ok) void session.save().catch(() => undefined);
+        this._openJournalHub();
     }
 
     private _openJournalHub(): void {
@@ -1577,6 +1595,58 @@ export class LobbyScene extends Component {
         }
         // 太守府沒有按鈕可按與否的狀態，enabled 給空表
         applyFlowView(binder, { enabled: {}, ...this._govHall.getFlowView() });
+    }
+
+    /** 道具背包（ITM-10）：大廳內政區的「背包」入口；隱藏掛載，對外提供 openItemBag()。 */
+    private async _mountItemBag(): Promise<void> {
+        this._itemBag = new ItemBagController({
+            inventory: () => services().session.inventory,
+            useItem: (itemId, nowMs) => services().session.useItem(itemId, nowMs),
+            now: () => Date.now(),
+        });
+        const rowBindings = Array.from({ length: BAG_ROW_SLOTS }, (_, index) => ({
+            buttonId: `btnBagRow${index}`,
+            handler: () => { this._itemBag?.select(index); this._refreshItemBag(); },
+        }));
+        this._itemBagHost = await this._mountPreviewScreenHost('ItemBagHost', 'item-bag-screen', [
+            { buttonId: 'btnClose', handler: () => { this._closeItemBag(); } },
+            { buttonId: 'btnBagUse', handler: () => { this._itemBag?.requestUse(); this._refreshItemBag(); } },
+            { buttonId: 'btnBagCancel', handler: () => { this._itemBag?.cancelUse(); this._refreshItemBag(); } },
+            { buttonId: 'btnBagConfirm', handler: () => { this._onConfirmItemBagUse(); } },
+            ...rowBindings,
+        ]);
+        this._itemBagHost.node.active = false;
+    }
+
+    public openItemBag(): void {
+        const host = this._itemBagHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshItemBag();
+    }
+
+    private _closeItemBag(): void {
+        if (this._itemBagHost) {
+            this._itemBagHost.node.active = false;
+        }
+    }
+
+    /** 確定使用：成功才存檔；失敗的提示已由 ItemBagController 寫入畫面。 */
+    private _onConfirmItemBagUse(): void {
+        const result = this._itemBag?.confirmUse();
+        if (result?.ok) void services().session.save().catch(() => undefined);
+        this._refreshItemBag();
+    }
+
+    private _refreshItemBag(): void {
+        const binder = this._itemBagHost?.binder;
+        if (!binder || !this._itemBag) {
+            return;
+        }
+        applyFlowView(binder, { enabled: {}, ...this._itemBag.getFlowView() });
     }
 
     public openMercenaryPanel(): void {

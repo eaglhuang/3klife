@@ -53,3 +53,11 @@ export function dispatchBoardRows(
     }
     return activeRows.concat(idleRows);
 }
+
+/** 點列派遣結果的提示文字（PROG-2-1181，暫定字串） */
+export function dispatchClickMessage(result: { ok: boolean; reason?: string; jobName?: string; generalName?: string }): string {
+    if (result.ok) return `${result.generalName ?? ''}出發執行「${result.jobName ?? ''}」。`;
+    if (result.reason === 'job-active') return `「${result.jobName ?? ''}」由${result.generalName ?? ''}執行中。`;
+    if (result.reason === 'no-general' || result.reason === 'general-busy' || result.reason === 'general-cooldown') return '目前沒有可派遣的武將。';
+    return '無法派遣此任務。';
+}
