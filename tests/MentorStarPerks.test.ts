@@ -23,10 +23,10 @@ export function createMentorStarPerksSuite(): TestSuite {
     const suite = new TestSuite('MentorStarPerks');
 
     suite.test('mentorStarPerks：依星等累計', () => {
-        assert.equals(JSON.stringify({ initialFriendship: 0, statBonusMultiplier: 1, tpBonusAdd: 0 }), JSON.stringify(mentorStarPerks(0)));
-        assert.equals(JSON.stringify({ initialFriendship: 5, statBonusMultiplier: 1, tpBonusAdd: 0 }), JSON.stringify(mentorStarPerks(2)));
-        assert.equals(JSON.stringify({ initialFriendship: 5, statBonusMultiplier: 1.1, tpBonusAdd: 0 }), JSON.stringify(mentorStarPerks(3)));
-        assert.equals(JSON.stringify({ initialFriendship: 5, statBonusMultiplier: 1.1, tpBonusAdd: 10 }), JSON.stringify(mentorStarPerks(5)));
+        assert.equals(JSON.stringify({ initialFriendship: 0, statBonusMultiplier: 1, tpBonusAdd: 0, trainingSuccessBonus: 0 }), JSON.stringify(mentorStarPerks(0)));
+        assert.equals(JSON.stringify({ initialFriendship: 5, statBonusMultiplier: 1, tpBonusAdd: 0, trainingSuccessBonus: 0.03 }), JSON.stringify(mentorStarPerks(2)));
+        assert.equals(JSON.stringify({ initialFriendship: 5, statBonusMultiplier: 1.1, tpBonusAdd: 0, trainingSuccessBonus: 0.03 }), JSON.stringify(mentorStarPerks(3)));
+        assert.equals(JSON.stringify({ initialFriendship: 5, statBonusMultiplier: 1.1, tpBonusAdd: 10, trainingSuccessBonus: 0.03 }), JSON.stringify(mentorStarPerks(5)));
         assert.equals(JSON.stringify(mentorStarPerks(5)), JSON.stringify(mentorStarPerks(99)), '超過上限夾到 ★5');
         assert.equals(JSON.stringify(mentorStarPerks(0)), JSON.stringify(mentorStarPerks(undefined)));
     });
