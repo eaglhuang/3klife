@@ -38,6 +38,8 @@ import { IndexedDbAdapter } from "../storage/IndexedDbAdapter";
 import { MemoryStorageAdapter } from "../storage/MemoryStorageAdapter";
 import { UIManager } from "./UIManager";
 import { UISpecLoader } from "../../ui/core/UISpecLoader";
+import { fertilityConceptionMod } from "../systems/FertilityBoost";
+import { ITEM_FERTILITY_ARMED } from "../systems/PlayerInventory";
 import { UCUFLogger, LogCategory } from "../utils/UCUFLogger";
 import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
 import { normalizeSeasonModifiers, seasonModifiersOf, setActiveSeasonModifiers } from "../systems/SeasonModifiers";
@@ -96,6 +98,8 @@ export class ServiceLoader {
         getDictionary: () => this.factorDictionary,
         getFemaleSource: (uid) => this.session.femaleSources[uid] ?? null,
         getHistoricalPairs: () => this.historicalPairs,
+        itemConceptionMod: () => fertilityConceptionMod(this.session.itemCount(ITEM_FERTILITY_ARMED) > 0),
+        onBreedPerformed: () => this.session.clearFertilityArm(),
     });
     /** 退役教官卡 / 英靈卡來源；init() 之後才有（共用存檔後端）。培育畫面用它挑教官 */
     public legacy: LegacyService | null = null;

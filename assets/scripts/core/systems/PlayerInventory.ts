@@ -34,6 +34,12 @@ export const ITEM_LEGENDARY_MENTORING_TICKET = 'ITEM_LEGENDARY_MENTORING_TICKET'
 export const ITEM_WEATHER_WIND = 'item-weather-wind';
 /** 祈雨符（戰場天氣道具，改為雨天；PROG-2-0932，PM 暫定 id）。起始庫存為 0，取得來源待商業裁決。 */
 export const ITEM_WEATHER_RAIN = 'item-weather-rain';
+/** 刷新券（手動刷新傭兵池與地下城，ITM-04b REFRESH；PROG-2-1038 接線）。取得來源為商城，不在本卡。 */
+export const ITEM_REFRESH = 'ITEM_REFRESH';
+/** 安胎藥（結緣受孕率 ×1.5，ITM-04b BOOST_CONCEPTION；PROG-2-1038 接線）。取得來源為商城，不在本卡。 */
+export const ITEM_FERTILITY = 'ITEM_FERTILITY';
+/** 安胎藥已使用、等待下一次結緣的標記（PM 2026-10-27 裁定）：不在背包顯示，成功結緣後清除。 */
+export const ITEM_FERTILITY_ARMED = 'ITEM_FERTILITY_ARMED';
 /** 歸宗令不足的提示（暫定，PM 2026-10-20 裁定）：語系 key 先用此名，文案待企劃定稿。 */
 export const MERGE_TOKEN_SHORTAGE_KEY = 'UI_MERGE_TOKEN_SHORTAGE';
 export const MERGE_TOKEN_SHORTAGE_TEXT = '歸宗令不足';
@@ -50,6 +56,8 @@ export const ITEM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
     [ITEM_LEGENDARY_MENTORING_TICKET]: '傳道令',
     [ITEM_WEATHER_WIND]: '祈風令',
     [ITEM_WEATHER_RAIN]: '祈雨符',
+    [ITEM_REFRESH]: '刷新券',
+    [ITEM_FERTILITY]: '安胎藥',
 };
 
 export type PlayerInventory = Readonly<Record<string, number>>;

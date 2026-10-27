@@ -117,7 +117,8 @@ import { emptySoulFragmentLedger, injectFromLedger, normalizeSoulFragmentLedger,
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFlow';
 import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
@@ -905,11 +906,32 @@ export class GameSession {
         return { ...this._tallyCards };
     }
 
-    /** 統一物件庫推導的虎符與英靈卡視圖（DS-08）；讀取一律走這裡，不直接讀 _tallyCards */
     /** 統一物件庫的原始列（唯讀副本）；寶頁依武將 uid 篩出一般裝備 */
     public get inventoryRecords(): readonly InventoryRecord[] {
         return this._inventoryRecords.map((record) => ({ ...record }));
     }
+
+    /** 使用道具（PROG-2-1038）：刷新券寫回傭兵池與救美冷卻；安胎藥記下 armed，等下一次結緣才生效 */
+    public useItem(itemId: string, nowMs: number): ItemUseResult {
+        const result = useItemFlow(this._inventory, itemId, nowMs);
+        if (!result.ok) return result;
+        this._inventory = result.inventory;
+        if (result.refresh) {
+            this._femaleSystem = {
+                ...this._femaleSystem,
+                poolRefreshedAtMs: result.refresh.femalePoolLastRefreshMs,
+                rescueRefreshedAtMs: result.refresh.dungeonRescueLastRefreshMs,
+            };
+        }
+        return result;
+    }
+
+    /** 結緣實際執行後清除安胎藥的 armed 標記（PROG-2-1038）；沒有標記時不動背包 */
+    public clearFertilityArm(): void {
+        this._inventory = consumeItem(this._inventory, ITEM_FERTILITY_ARMED, 1) ?? this._inventory;
+    }
+
+    /** 統一物件庫推導的虎符與英靈卡視圖（DS-08）；讀取一律走這裡，不直接讀 _tallyCards */
 
     public get inventoryViews(): InventoryViews {
         return deriveInventoryViews(this._inventoryRecords);
