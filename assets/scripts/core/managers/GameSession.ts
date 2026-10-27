@@ -2623,6 +2623,7 @@ export class GameSession {
         );
         this._hallAssignLog = settled.log;
         for (const entry of settled.settled) {
+            this._recordEventJournal(entry.success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([entry.generalId]));
             if (entry.difficulty === undefined || entry.board === undefined) continue;
             this.settleHallMission({ difficulty: entry.difficulty, board: entry.board, success: entry.success });
         }
