@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 13:20 Claude：R278 隔離 Creator 的 engine.json 又出現 spine-3.8=true／4.2=false 矛盾（同 R243），預覽載 3.8 wasm、畫面全黑；R270 trackTime 證據作廢。待使用者在 Creator 修正並重啟；八槽手動合成版不採用，改走 AG-24 builder。
 - 2026-10-27 13:05 Claude：R277 給 Codex AG-24 builder 入口（git archive 6ba307d6f tools_anim），停止把 head 手動接進 R267 骨架；8 槽改用 builder 重建並在新 scratch scene 截圖；槍纓保留 A 原位；R270 idle trackTime 前進僅記 runtime 有更新，兩次重啟條件仍待驗。
 - 2026-10-27 11:20 Claude：AG-26b（6ba307d6f）複驗 17/17、核心工具零關節名字面值、規格同步 v3.7，結案；R2 頭部工具回歸待 Codex 補 head.anchors.json。
 - 2026-10-27 11:15 AG-26b 完成：check_layered_parts.py 實作定位小修，gated 缺值判 FAIL (ANCHOR_MISSING)、recorded 缺值記 NOT_MEASURED (不寫數字假資料)；支援 CLI --anchors 與 <slot>.anchors.json；完全移除 r274 scratch 檔名、neck_root 與關節名硬編碼；消除 alphaCentroid 冒充；test_no_general_hardcoding.py 擴充 AST 掃描禁絕 check_layered_parts.py 與 build_spine_from_v3.py 出現 joints 關節名字串字面值；更正測試檔數計數，全套 17 個測試檔、68 項單元測試 100% 通過 (6ba307d6f)。
