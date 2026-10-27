@@ -27,6 +27,17 @@ export const OFFICER_TIER_EXP_THRESHOLDS: Record<number, number> = {
     5: 920,
 };
 
+/**
+ * 各階晉升一次性獎勵金錢（§E-6；暫定，規格未給數額）。內建值只是備援；
+ * 遊戲啟動時由 installOfficerTierTable 依 officer-tiers.json 的 promotionRewardGold 覆寫（PROG-2-1197）。
+ */
+export const OFFICER_PROMOTION_REWARD_GOLD: Record<number, number> = {
+    2: 200,
+    3: 400,
+    4: 800,
+    5: 1500,
+};
+
 export type OfficerDifficulty = 'EASY' | 'NORMAL' | 'ELITE' | 'HIGH' | 'HELL';
 export type OfficerBoardType = 'MILITARY' | 'DOMESTIC' | 'EXPEDITION';
 

@@ -8,15 +8,19 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
 import { installOfficerTierTable, parseOfficerTierTable } from '../assets/scripts/core/systems/OfficerTierTable';
-import { OFFICER_TIER_EXP_THRESHOLDS, tierForExp } from '../assets/scripts/core/systems/OfficerState';
+import { OFFICER_PROMOTION_REWARD_GOLD, OFFICER_TIER_EXP_THRESHOLDS, tierForExp } from '../assets/scripts/core/systems/OfficerState';
 
 const DATA_PATH = path.resolve(__dirname, '..', 'assets/resources/data/officer-tiers.json');
 const readTable = (): unknown => JSON.parse(fs.readFileSync(DATA_PATH, 'utf8'));
 const BUILT_IN = { 2: 100, 3: 260, 4: 520, 5: 920 };
+const BUILT_IN_REWARD = { 2: 200, 3: 400, 4: 800, 5: 1500 };
 
 function restoreBuiltIn(): void {
     for (const [tier, exp] of Object.entries(BUILT_IN)) {
         OFFICER_TIER_EXP_THRESHOLDS[Number(tier)] = exp;
+    }
+    for (const [tier, gold] of Object.entries(BUILT_IN_REWARD)) {
+        OFFICER_PROMOTION_REWARD_GOLD[Number(tier)] = gold;
     }
 }
 
@@ -29,6 +33,7 @@ export function createOfficerTierTableSuite(): TestSuite {
         if (!result.ok) return;
         for (const row of result.rows) {
             assert.equals(BUILT_IN[row.tier as keyof typeof BUILT_IN] ?? 0, row.expToReach);
+            assert.equals(BUILT_IN_REWARD[row.tier as keyof typeof BUILT_IN_REWARD] ?? 0, row.promotionRewardGold ?? -1);
         }
     });
 
@@ -52,6 +57,29 @@ export function createOfficerTierTableSuite(): TestSuite {
         assert.isFalse(installOfficerTierTable(broken).ok);
         assert.equals(920, OFFICER_TIER_EXP_THRESHOLDS[5]);
         restoreBuiltIn();
+    });
+
+    suite.test('晉升獎勵：資料檔覆寫、省略沿用內建、負數與階位 1 非 0 會擋（PROG-2-1197）', () => {
+        const table = readTable() as { tiers: Array<Record<string, unknown>> };
+        const tuned = JSON.parse(JSON.stringify(table)) as typeof table;
+        tuned.tiers[2].promotionRewardGold = 999;
+        delete tuned.tiers[3].promotionRewardGold;
+        try {
+            assert.isTrue(installOfficerTierTable(tuned).ok);
+            assert.equals(999, OFFICER_PROMOTION_REWARD_GOLD[3]);
+            assert.equals(800, OFFICER_PROMOTION_REWARD_GOLD[4]);
+        } finally {
+            restoreBuiltIn();
+        }
+        const bad = JSON.parse(JSON.stringify(table)) as typeof table;
+        bad.tiers[0].promotionRewardGold = 50;
+        bad.tiers[1].promotionRewardGold = -1;
+        const result = parseOfficerTierTable(bad);
+        assert.isFalse(result.ok);
+        if (result.ok) return;
+        assert.isTrue(result.issues.some((i) => i.includes('階位 1 的 promotionRewardGold')));
+        assert.isTrue(result.issues.some((i) => i.includes('階位 2 的 promotionRewardGold')));
+        assert.equals(200, OFFICER_PROMOTION_REWARD_GOLD[2]);
     });
 
     suite.test('驗證通過後套用門檻：晉升判定跟著資料檔走', () => {

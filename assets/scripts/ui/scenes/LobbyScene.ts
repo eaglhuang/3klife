@@ -86,7 +86,7 @@ import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
 import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
 import { installOfficerTierTable } from '../../core/systems/OfficerTierTable';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
-import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
+import { officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
 import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import { HALL_EMPTY_THEME_CATALOG, resolveHallTheme, type HallThemeFrame } from '../../core/systems/LobbyThemeResolver';
@@ -580,6 +580,9 @@ export class LobbyScene extends Component {
             services().event.on(GAME_SESSION_EVENTS.Loaded, refresh),
             services().event.on(GAME_SESSION_EVENTS.OfficerPromoted, (payload: { tiers: number[] }) => {
                 refresh();
+                // 晉升一次性獎勵（PROG-2-1197）：同一階只會發一次晉升事件
+                const gold = officerPromotionRewardTotal(payload.tiers);
+                if (gold > 0) this._localGachaService.grantCurrency('gold', gold);
                 for (const message of officerPromotionNoticeOf(payload.tiers)) {
                     services().event.emit('SHOW_TOAST', { message, duration: 2 });
                 }

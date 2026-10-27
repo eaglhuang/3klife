@@ -1,14 +1,15 @@
-// @spec-source → 官職系統.md（F-2 階位表）；WBS OFC-01
+// @spec-source → 官職系統.md（F-2 階位表；§E-6 晉升獎勵 PROG-2-1197）；WBS OFC-01
 /**
  * OfficerTierTable — 官職階位資料檔的驗證與安裝（純邏輯，不依賴 cc）
  *
  * 遊戲啟動時由 LobbyScene 讀 data/officer-tiers.json，交給這裡驗證；
- * 驗證通過才覆寫 OfficerState 的晉升門檻，失敗則保留內建備援並留下 issues。
+ * 驗證通過才覆寫 OfficerState 的晉升門檻與晉升獎勵，失敗則保留內建備援並留下 issues。
+ * promotionRewardGold 可省略（省略時沿用內建獎勵）；階位 1 沒有晉升，必須是 0。
  *
  * Unity 對照：像 ScriptableObject 資料表在 Awake 時做 OnValidate，
  * 格式錯就不套用，沿用上一版預設值。
  */
-import { OFFICER_TIER_EXP_THRESHOLDS, OFFICER_TIER_MAX, OFFICER_TIER_MIN } from './OfficerState';
+import { OFFICER_PROMOTION_REWARD_GOLD, OFFICER_TIER_EXP_THRESHOLDS, OFFICER_TIER_MAX, OFFICER_TIER_MIN } from './OfficerState';
 import type { QuestDifficultyCap } from './OfficerSnapshot';
 
 export interface OfficerTierRow {
@@ -18,6 +19,8 @@ export interface OfficerTierRow {
     expToReach: number;
     questCap: QuestDifficultyCap;
     unlockedFeatures: string[];
+    /** 晉升到此階的一次性獎勵金錢；資料檔省略時為 undefined */
+    promotionRewardGold?: number;
 }
 
 export type ParseOfficerTierResult =
@@ -56,6 +59,12 @@ export function parseOfficerTierTable(raw: unknown): ParseOfficerTierResult {
         if (!Array.isArray(row.unlockedFeatures) || row.unlockedFeatures.some((f) => typeof f !== 'string')) {
             issues.push(`階位 ${tier} 的 unlockedFeatures 必須是字串陣列`);
         }
+        const reward = row.promotionRewardGold;
+        if (reward !== undefined && (typeof reward !== 'number' || !Number.isInteger(reward) || reward < 0)) {
+            issues.push(`階位 ${tier} 的 promotionRewardGold 必須是非負整數`);
+        } else if (index === 0 && reward !== undefined && reward !== 0) {
+            issues.push('階位 1 的 promotionRewardGold 必須是 0');
+        }
         rows.push({
             tier,
             code: String(row.code),
@@ -63,17 +72,21 @@ export function parseOfficerTierTable(raw: unknown): ParseOfficerTierResult {
             expToReach: Number(row.expToReach),
             questCap: row.questCap as QuestDifficultyCap,
             unlockedFeatures: Array.isArray(row.unlockedFeatures) ? row.unlockedFeatures.map(String) : [],
+            ...(typeof reward === 'number' ? { promotionRewardGold: reward } : {}),
         });
     });
     return issues.length === 0 ? { ok: true, rows } : { ok: false, issues };
 }
 
-/** 驗證通過才覆寫晉升門檻；回傳是否套用 */
+/** 驗證通過才覆寫晉升門檻與晉升獎勵；回傳是否套用 */
 export function installOfficerTierTable(raw: unknown): ParseOfficerTierResult {
     const result = parseOfficerTierTable(raw);
     if (result.ok) {
         for (const row of result.rows) {
             OFFICER_TIER_EXP_THRESHOLDS[row.tier] = row.expToReach;
+            if (row.tier > OFFICER_TIER_MIN && row.promotionRewardGold !== undefined) {
+                OFFICER_PROMOTION_REWARD_GOLD[row.tier] = row.promotionRewardGold;
+            }
         }
     }
     return result;
