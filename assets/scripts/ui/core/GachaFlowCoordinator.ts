@@ -6,7 +6,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { showGachaHistory, showGachaResults } from '../dev/GachaDevOverlay';
 import { pickGachaCurrency, quoteGachaCost } from '../../core/systems/GachaCurrency';
 
-const DEFAULT_POOL_ID = 'GENERAL_STANDARD_01';
+export const DEFAULT_POOL_ID = 'GENERAL_STANDARD_01';
 
 export const GACHA_SCREEN_ID = 'gacha-ds3';
 export const GACHA_PULL_RESULT_SCREEN_ID = 'gacha-pull-result';

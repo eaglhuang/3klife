@@ -339,6 +339,11 @@ export class LocalGachaService {
         return pullsToNextDestinyCredit(this._pityBookOf()[poolId]);
     }
 
+    /** 天命商店（PROG-2-1158）：本池可兌換的 SSR 候選；與 exchangeDestinyShop 走同一條篩選規則 */
+    public getDestinyShopCandidates(generals: GeneralConfig[]): GeneralConfig[] {
+        return this._filterCandidates(generals).filter((general) => isSsrTier(inferRarityTier(general)));
+    }
+
     /**
      * 天命商店兌換（PROG-2-1157）：用一次大保底資格換本池任一位 SSR。
      * generals 是本池候選名單（與抽卡時相同）。成功時回傳 entry，入冊與保底寫回同一批存檔；
@@ -350,7 +355,7 @@ export class LocalGachaService {
         targetId: string,
     ): { entry: LocalGachaResultEntry | null; reason: DestinyShopBlockReason | null } {
         const candidates = this._filterCandidates(generals);
-        const ssrIds = candidates.filter((general) => isSsrTier(inferRarityTier(general))).map((general) => general.id);
+        const ssrIds = this.getDestinyShopCandidates(generals).map((general) => general.id);
         const outcome = exchangeDestinyShop(this._pityBookOf()[poolId], targetId, candidates.map((general) => general.id), ssrIds);
         const nextPity = outcome.nextPity;
         if (!nextPity) return { entry: null, reason: outcome.reason };

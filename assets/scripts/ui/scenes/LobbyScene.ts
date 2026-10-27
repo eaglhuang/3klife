@@ -102,6 +102,7 @@ import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET } from '../../core/systems/PlayerInventory';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
+import { DestinyShopController, destinyBriefTexts } from '../core/DestinyShopController';
 import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
@@ -120,9 +121,9 @@ import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPay
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
-import { GachaFlowCoordinator, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
+import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { buildGachaPoolGuideLines } from '../core/GachaPoolGuidePresenter';
-import { bindGachaActions } from '../core/GachaActionBindings';
+import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 
@@ -286,6 +287,8 @@ export class LobbyScene extends Component {
     private _prisonerHost: UIScreenPreviewHost | null = null;
     private _yearReportHost: UIScreenPreviewHost | null = null;
     private _prisoner: PrisonerPopupController | null = null;
+    private _destinyShopHost: UIScreenPreviewHost | null = null;
+    private _destinyShop: DestinyShopController | null = null;
     private _sortieHost: UIScreenPreviewHost | null = null;
     private _sortie: SortieSetupController | null = null;
     private _deckSelectHost: UIScreenPreviewHost | null = null;
@@ -420,6 +423,7 @@ export class LobbyScene extends Component {
         await this._mountRetireReview();
         await this._mountSpiritCodex();
         await this._mountPrisonerPopup();
+        await this._mountDestinyShop();
         await this._mountYearReport();
         await this._mountDeckSelect();
         await this._mountLeadSelect();
@@ -2242,6 +2246,76 @@ export class LobbyScene extends Component {
         }
     }
 
+    /**
+     * 天命商店（轉蛋系統 §E #7，PROG-2-1158）：轉蛋頁左上角入口開啟，本池每累計 200 抽可任選一位 SSR。
+     * 選人、兩段確認、資格計算都在 DestinyShopController（純邏輯），這裡只綁按鈕、套 view。
+     */
+    private async _mountDestinyShop(): Promise<void> {
+        const gacha = this._localGachaService;
+        const shop = new DestinyShopController({
+            credits: (poolId) => gacha.getDestinyShopCredits(poolId),
+            pullsToNext: (poolId) => gacha.getPullsToNextDestinyCredit(poolId),
+            exchange: (poolId, targetId) => {
+                const { entry, reason } = gacha.exchangeDestinyShop(poolId, this._destinyPoolGenerals.get(poolId) ?? [], targetId);
+                if (entry) {
+                    void this._onGachaPullSuccess([entry]);
+                    this._refreshWalletPreviewState();
+                }
+                return { reason };
+            },
+        });
+        this._destinyShop = shop;
+        this._destinyShopHost = await this._mountPreviewScreenHost('DestinyShopHost', 'destiny-shop-screen', [
+            { buttonId: 'btnCloseDestiny', handler: () => { if (this._destinyShopHost) this._destinyShopHost.node.active = false; } },
+            { buttonId: 'btnPrevDestiny', handler: () => { shop.cycle(-1); this._refreshDestinyShop(); } },
+            { buttonId: 'btnNextDestiny', handler: () => { shop.cycle(1); this._refreshDestinyShop(); } },
+            { buttonId: 'btnExchangeDestiny', handler: () => { shop.exchange(); this._refreshDestinyShop(); } },
+        ]);
+    }
+
+    /** 各池兌換用的候選名單（與抽卡同一份），開店時填入 */
+    private readonly _destinyPoolGenerals = new Map<string, GeneralConfig[]>();
+
+    /** 轉蛋輪播序號 → 天命商店池；紅顏池（召喚券）不累計天命值 */
+    private _destinyPoolOf(index: number): { poolId: string; title: string } | null {
+        if (index === 0) return { poolId: GACHA_GENERAL_POOL_ID, title: '名將池' };
+        if (index === 2) return { poolId: MENTOR_POOL_ID, title: '教官池' };
+        return null;
+    }
+
+    private async _openDestinyShop(): Promise<void> {
+        const host = this._destinyShopHost;
+        const pool = this._destinyPoolOf(this._gachaPoolIndex);
+        if (!host || !this._destinyShop) return;
+        if (!pool) {
+            this._showToast('紅顏池不累計天命值，請切到名將池或教官池。');
+            return;
+        }
+        const generals = pool.poolId === MENTOR_POOL_ID ? await this._supportPoolGenerals() : this._generals;
+        this._destinyPoolGenerals.set(pool.poolId, generals);
+        const candidates = this._localGachaService.getDestinyShopCandidates(generals).map((g) => ({ id: g.id, name: g.name }));
+        this._destinyShop.open(pool.poolId, pool.title, candidates);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshDestinyShop();
+    }
+
+    private _refreshDestinyShop(): void {
+        const binder = this._destinyShopHost?.binder;
+        if (binder && this._destinyShop) applyFlowView(binder, this._destinyShop.getView());
+        this._refreshDestinyBrief();
+    }
+
+    /** 轉蛋頁左上角入口：顯示目前輪播池的天命值（UI_PITY_BIG） */
+    private _refreshDestinyBrief(): void {
+        const pool = this._destinyPoolOf(this._gachaPoolIndex);
+        const gacha = this._localGachaService;
+        const brief = pool
+            ? destinyBriefTexts(gacha.getDestinyShopCredits(pool.poolId), gacha.getPullsToNextDestinyCredit(pool.poolId), true)
+            : destinyBriefTexts(0, 0, false);
+        this._gachaHost?.binder?.setTexts({ GachaDs3_div_36: brief.tag, GachaDs3_strong_1: brief.line });
+    }
+
     /** 年報畫面（UI_YEAR_REPORT，TIME-07）：年末 YearEnded 時彈出，文字走 zh-TW 預設退回 */
     private async _mountYearReport(): Promise<void> {
         this._yearReportHost = await this._mountPreviewScreenHost('YearReportHost', 'year-report-screen', [
@@ -3475,6 +3549,7 @@ export class LobbyScene extends Component {
                 actives[`BannerSlide_${pools[i]}`] = (i === idx);
             }
             host.binder!.setActives(actives);
+            this._refreshDestinyBrief();
         };
 
         showPool(this._gachaPoolIndex);
@@ -3492,11 +3567,29 @@ export class LobbyScene extends Component {
                 showPool(this._gachaPoolIndex);
             },
             history: () => { void this._showGachaHistory(); },
+            destiny: () => { void this._openDestinyShop(); },
             single: () => { void this._runGachaAction(() => this._runLocalGacha(1), 1); },
             ten: () => { void this._runGachaAction(() => this._runLocalGacha(10), 10); },
             gold: () => { void this._runGachaAction(() => this._runGoldSummon()); },
             ticket: () => { void this._runGachaAction(() => this._runTicketSummon()); },
         }, this, Button.EventType.CLICK);
+        // 「‹ 返回大廳」是宿主後加的鈕，會蓋住左上角的天命商店入口；入口往下移一列並放大字（原稿字高 12px 看不清，PROG-2-1158）
+        const destinyEntry = host.binder.getNode(GACHA_ACTION_NODES.destiny);
+        const destinyWidget = destinyEntry?.getComponent(Widget);
+        if (destinyEntry && destinyWidget) {
+            destinyWidget.isAlignBottom = false;
+            destinyWidget.isAlignRight = false;
+            destinyWidget.top = 92;
+            destinyEntry.getComponent(UITransform)?.setContentSize(280, 88);
+            for (const [name, size] of [['GachaDs3_div_36', 22], ['GachaDs3_strong_1', 20]] as const) {
+                const label = host.binder.getNode(name)?.getComponent(Label);
+                if (!label) continue;
+                label.fontSize = size;
+                label.lineHeight = size + 6;
+                label.node.getComponent(UITransform)?.setContentSize(248, size + 8);
+            }
+            destinyWidget.updateAlignment();
+        }
         const guideLines = buildGachaPoolGuideLines();
         host.binder.setTexts({
             GachaDs3_div_8: guideLines.generalSeries,
@@ -3599,6 +3692,8 @@ export class LobbyScene extends Component {
             CostBalanceValue: gachaBalanceText,
             GachaDs3TabGeneral_div_48: gachaBalanceText,
         });
+        // 抽完、回轉蛋頁都會走這裡；天命值跟著刷新（PROG-2-1158）
+        this._refreshDestinyBrief();
     }
 
     private _createLobbyMainController(): IUIManagedController {
@@ -4206,12 +4301,16 @@ export class LobbyScene extends Component {
     }
 
     private async _runSupportSummon(drawCount = 1): Promise<void> {
+        await this._getGachaFlowCoordinator().runSupportSummon(MENTOR_POOL_ID, await this._supportPoolGenerals(), drawCount);
+    }
+
+    /** 支援卡池候選：池設定 candidateIds 且在教官卡目錄內（抽卡與天命商店共用） */
+    private async _supportPoolGenerals(): Promise<GeneralConfig[]> {
         const gachaConfig = await this._loadDataJson<GachaConfig[]>('data/gacha-config');
         const pool = (Array.isArray(gachaConfig) ? gachaConfig : []).find((entry) => entry.poolId === MENTOR_POOL_ID);
         const catalog = await this._loadSupportCatalog();
         const ids = new Set(pool?.candidateIds ?? []);
-        const generals = this._generals.filter((general) => ids.has(general.id) && catalog.byGeneralId.has(general.id));
-        await this._getGachaFlowCoordinator().runSupportSummon(MENTOR_POOL_ID, generals, drawCount);
+        return this._generals.filter((general) => ids.has(general.id) && catalog.byGeneralId.has(general.id));
     }
 
     private async _runTicketSummon(): Promise<void> {
