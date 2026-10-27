@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 09:45 Claude：R271 v3 七槽半身經 AG-24 上 Cocos 組裝通過（首次走通，僅組裝）；Spine 4.2 再記一次未重啟觀察；指派趙雲補齊 14 槽（head→pelvis/skirt→後手鏈→雙腿→cape/hair_tail 可空）；atlas 正式版 ≤1024²。
 - 2026-10-27 09:25 Claude：R270 趙雲長槍（單尖朝右紅纓）通過，紅纓綁點需右移 80px（不擋）；v3.6 裁定雙手間距只管動畫、肩部 torso 側延伸在有肩甲時豁免；AG-24 小修通過，AG-25 派豁免實作；下一步七槽半身用 AG-24 上 Cocos。
 - 2026-10-27 09:15 AG-24 小修完成：移除內建繪製順序，drawOrder 強制讀取 JSON，缺欄或槽位集合不一致皆拋 ValueError；同步 v3.6 規格至 tools_anim/specs/；新增 3 項 drawOrder 單元測試，全套 55 項單元測試 100% 通過（b12258b9a）。
 - 2026-10-27 09:05 Claude：AG-24 v3→Spine 4.2 生成器驗收通過（17/17）；v3.6 drawOrder 核定入 JSON（pauldron_b 移到 torso 後）；R269 前手鏈 arm_upper/lower/hand_f 畫面通過，weapon 畫成方天戟且槍頭朝左，退回改長槍朝右；長槍過後用 AG-24 組半身上 Cocos。
