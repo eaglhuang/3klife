@@ -216,5 +216,60 @@ class TestAG40MainComponentAndDetachedIslands(unittest.TestCase):
             self.assertEqual(gr["raysHit"], 8)
 
 
+    def test_extension_quantization_tolerance_r317_arm_lower_f_passes(self):
+        """AG-40 補充：R317 preserve-grip-v1 的 arm_lower_f 實測 47.4 px 在 1 px 容差內應判 PASS"""
+        from tools_anim.check_layered_parts import derive_joint_connections, check_slot_hidden_extension
+
+        spec_path = Path("tools_anim/specs/canonical_skeleton_v3.json")
+        with open(spec_path, encoding="utf-8") as sf:
+            spec = json.load(sf)
+
+        conns = derive_joint_connections(spec)
+        target_conn = [c for c in conns if c["id"] == "arm_lower_f_to_hand_f"][0]
+
+        piv_pt = target_conn["pivot"]
+        p_start_pt = target_conn["parent_pivot"]
+        dir_p = (piv_pt[0] - p_start_pt[0], piv_pt[1] - p_start_pt[1])
+
+        r317_arm_path = Path(r"C:\Users\User\.codex\worktrees\zhaoyun-cutout-polish\3KLife\scratch\r305-final-candidate\parts-r317-preserve-grip-v1\arm_lower_f.png")
+        if not r317_arm_path.exists():
+            self.skipTest("無 R317 候選部件目錄，跳過此項測試")
+
+        im = Image.open(r317_arm_path).convert("RGBA")
+        arr = np.array(im)
+
+        # 規格要求 48.0 px，未帶容差時判定為 FAIL (47.376 px < 48.0 px)
+        passed_raw, ext_val = check_slot_hidden_extension(arr, piv_pt, dir_p, min_ext_px=48.0, quantization_tol_px=0.0)
+        self.assertFalse(passed_raw)
+        self.assertAlmostEqual(ext_val, 47.376, delta=0.1)
+
+        # 套用 v3.20 容差 1.0 px (實質門檻 47.0 px) 後，應順利判定為 PASS
+        passed_tol, ext_val = check_slot_hidden_extension(arr, piv_pt, dir_p, min_ext_px=48.0, quantization_tol_px=1.0)
+        self.assertTrue(passed_tol)
+
+    def test_extension_quantization_tolerance_boundary_fail(self):
+        """AG-40 補充：人造案例 46.9 px (超出 1 px 容差) 必須判定為 FAIL，47.1 px 判定為 PASS"""
+        from tools_anim.check_layered_parts import check_slot_hidden_extension
+
+        piv_pt = (100.0, 100.0)
+        dir_p = (1.0, 0.0)  # 向右延伸
+        min_ext_px = 48.0
+        tol_px = 1.0  # 門檻 47.0 px
+
+        # 建立人造圖 1: 延伸 46.9 px (x 最大為 146.9)
+        arr_fail = np.zeros((200, 200, 4), dtype=np.uint8)
+        arr_fail[100, int(100 + 46.9)] = [255, 255, 255, 255]
+        p_fail, ext_fail = check_slot_hidden_extension(arr_fail, piv_pt, dir_p, min_ext_px, tol_px)
+        self.assertFalse(p_fail)
+        self.assertAlmostEqual(ext_fail, 46.0, delta=1.0)
+
+        # 建立人造圖 2: 延伸 47.2 px (x 最大為 147.2)
+        arr_pass = np.zeros((200, 200, 4), dtype=np.uint8)
+        arr_pass[100, int(100 + 47.2)] = [255, 255, 255, 255]
+        p_pass, ext_pass = check_slot_hidden_extension(arr_pass, piv_pt, dir_p, min_ext_px, tol_px)
+        self.assertTrue(p_pass)
+        self.assertAlmostEqual(ext_pass, 47.0, delta=1.0)
+
+
 if __name__ == "__main__":
     unittest.main()

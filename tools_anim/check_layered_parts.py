@@ -413,8 +413,9 @@ def check_slot_hidden_extension(
     pivot_pt: tuple[float, float],
     dir_vec: tuple[float, float],
     min_ext_px: float,
+    quantization_tol_px: float = 0.0,
 ) -> tuple[bool, float]:
-    """檢驗部件越過關節樞紐沿指定向量方向之延伸長度"""
+    """檢驗部件越過關節樞紐沿指定向量方向之延伸長度 (支援規格量化容差 quantization_tol_px)"""
     alpha = part_arr[..., 3]
     ys, xs = np.where(alpha > 16)
     if len(ys) == 0:
@@ -432,7 +433,8 @@ def check_slot_hidden_extension(
     projections = dx * ux + dy * uy
     max_proj = float(projections.max())
 
-    passed = max_proj >= min_ext_px
+    effective_min = min_ext_px - quantization_tol_px
+    passed = max_proj >= effective_min
     return passed, max_proj
 
 
@@ -1985,8 +1987,11 @@ def run_layered_parts_inspection(
         p_arr = loaded_parts[p_sid]
         c_arr = loaded_parts[c_sid]
 
-        p_pass, p_ext = check_slot_hidden_extension(p_arr, piv_pt, dir_p, min_ext_px)
-        c_pass, c_ext = check_slot_hidden_extension(c_arr, piv_pt, dir_c, min_ext_px)
+        cov_rule = layered_cfg.get("coverageRule", {})
+        ext_quant_tol_px = float(cov_rule.get("extensionQuantizationTolPx", 0.0))
+
+        p_pass, p_ext = check_slot_hidden_extension(p_arr, piv_pt, dir_p, min_ext_px, ext_quant_tol_px)
+        c_pass, c_ext = check_slot_hidden_extension(c_arr, piv_pt, dir_c, min_ext_px, ext_quant_tol_px)
 
         # AG-27: 檢查 child segment 是否定義 neckExtension.replacesGenericHiddenExtension
         seg_alias_map = {
@@ -2076,6 +2081,11 @@ def run_layered_parts_inspection(
         c_effective_pass = c_pass or c_waived
         conn_pass = p_effective_pass and c_effective_pass
 
+        req_tol_desc = (
+            f"要求>={min_ext_px:.1f}px (容差={ext_quant_tol_px:.1f}px, 實質門檻>={min_ext_px - ext_quant_tol_px:.1f}px)"
+            if ext_quant_tol_px > 0
+            else f"要求>={min_ext_px:.1f}px"
+        )
         joint_ext_entry: dict[str, Any] = {
             "pass": conn_pass,
             "tier": "WAIVED" if (p_waived or c_waived) else ("PASS" if conn_pass else "FAIL"),
@@ -2085,10 +2095,12 @@ def run_layered_parts_inspection(
             "parentExtensionPx": round(p_ext, 1),
             "childExtensionPx": round(c_ext, 1),
             "minRequiredPx": round(min_ext_px, 1),
+            "quantizationTolPx": round(ext_quant_tol_px, 1),
+            "effectiveMinRequiredPx": round(min_ext_px - ext_quant_tol_px, 1),
             "parentWaived": p_waived,
             "childWaived": c_waived,
             "replacesGenericHiddenExtension": replaces_generic_ext,
-            "detail": f"隱藏延伸: 父={p_ext:.1f}px{' (WAIVED)' if p_waived else ''}, 子={c_ext:.1f}px{' (WAIVED)' if c_waived else ''} (要求>={min_ext_px:.1f}px)",
+            "detail": f"隱藏延伸: 父={p_ext:.1f}px{' (WAIVED)' if p_waived else ''}, 子={c_ext:.1f}px{' (WAIVED)' if c_waived else ''} ({req_tol_desc})",
         }
         if p_waived:
             joint_ext_entry["parentWaivedReason"] = p_waived_reason
@@ -2110,7 +2122,7 @@ def run_layered_parts_inspection(
             slot_reports[p_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
                 "pass": False,
                 "tier": "FAIL",
-                "detail": f"在 {conn_id} 處越過關節延伸不足: {p_ext:.1f}px < {min_ext_px:.1f}px",
+                "detail": f"在 {conn_id} 處越過關節延伸不足: {p_ext:.1f}px < {min_ext_px - ext_quant_tol_px:.1f}px (要求 {min_ext_px:.1f}px − 容差 {ext_quant_tol_px:.1f}px)",
             }
             overall_pass = False
 
@@ -2128,7 +2140,7 @@ def run_layered_parts_inspection(
             slot_reports[c_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
                 "pass": False,
                 "tier": "FAIL",
-                "detail": f"在 {conn_id} 處越過關節延伸不足: {c_ext:.1f}px < {min_ext_px:.1f}px",
+                "detail": f"在 {conn_id} 處越過關節延伸不足: {c_ext:.1f}px < {min_ext_px - ext_quant_tol_px:.1f}px (要求 {min_ext_px:.1f}px − 容差 {ext_quant_tol_px:.1f}px)",
             }
             overall_pass = False
 
