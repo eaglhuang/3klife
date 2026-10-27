@@ -11,7 +11,7 @@ import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 const HOUR = 60 * 60 * 1000;
 
 function hero(id: string, careerClass: string, stats: Partial<Record<'str' | 'int' | 'lea' | 'pol' | 'cha', number>>): GeneralConfig {
-    return { id, name: id, faction: 'shu', hp: 1000, str: 60, int: 60, lea: 60, pol: 60, cha: 60, careerClass, ...stats } as GeneralConfig;
+    return { id, name: id, faction: 'shu', hp: 1000, str: 60, int: 60, lea: 60, pol: 60, cha: 60, careerClass, ...stats } as unknown as GeneralConfig;
 }
 
 function sessionWith(general: GeneralConfig): GameSession {
