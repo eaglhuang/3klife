@@ -148,7 +148,9 @@
         "maxBelowPx": 64,
         "maxHalfWidthPx": 64,
         "rotationTestDeg": 15,
-        "note": "v3.7（2026-10-27）：head 槽以 neck 關節水平線分為 core（線上）與 neck extension（線下）。core 只在 0° 設定姿勢檢 zone＋scopeMarginPx；extension 須向下延伸 minBelowPx～maxBelowPx、左右不超出 neck.x±maxHalfWidthPx，藏入 torso 衣領，以 ±rotationTestDeg 疊圖不露縫驗收。旋轉後 core 移出靜態 zone 屬預期，不計失敗。"
+        "note": "v3.7（2026-10-27）：head 槽以 neck 關節水平線分為 core（線上）與 neck extension（線下）。core 只在 0° 設定姿勢檢 zone＋scopeMarginPx；extension 須向下延伸 minBelowPx～maxBelowPx、左右不超出 neck.x±maxHalfWidthPx，藏入 torso 衣領，以 ±rotationTestDeg 疊圖不露縫驗收。旋轉後 core 移出靜態 zone 屬預期，不計失敗。",
+        "replacesGenericHiddenExtension": true,
+        "replaceNote": "v3.8（2026-10-27）：此關節（parent torso ↔ child head）不再套用 layeredSlots.hiddenExtensionH 的雙側通用延伸檢查；child 側以本規則 minBelowPx～maxBelowPx 驗收，parent 側不設長度門檻，兩側改以 ±rotationTestDeg 旋轉露縫為準。"
       },
       "registration": {
         "pivot": "neck",

@@ -23,6 +23,7 @@ CORE_SCRIPTS = [
     TOOLS_DIR / "generate_rigpose_templates.py",
     TOOLS_DIR / "check_layered_parts.py",
     TOOLS_DIR / "build_spine_from_v3.py",
+    TOOLS_DIR / "merge_motion_library.py",
 ]
 
 # 任何武將拼音或中文作為變數、字串判斷均為違規
@@ -114,10 +115,11 @@ def check_slice_and_range_hardcoding() -> list[str]:
 
 
 def check_no_canonical_slots_literal_list() -> list[str]:
-    """AG-25 小修: 檢查 check_layered_parts.py 與 build_spine_from_v3.py 中不得出現 21 槽名的字面清單"""
+    """AG-25 小修: 檢查 check_layered_parts.py、build_spine_from_v3.py 與 merge_motion_library.py 中不得出現 21 槽名的字面清單"""
     target_scripts = [
         TOOLS_DIR / "check_layered_parts.py",
         TOOLS_DIR / "build_spine_from_v3.py",
+        TOOLS_DIR / "merge_motion_library.py",
     ]
     violations: list[str] = []
     known_slots = {
@@ -167,11 +169,12 @@ def check_no_canonical_slots_literal_list() -> list[str]:
 
 
 def check_no_joint_names_in_core_scripts() -> list[str]:
-    """AG-26b: 檢查核心工具 (check_layered_parts.py, build_spine_from_v3.py) 不得出現 joints 裡任何關節名的字串字面值"""
+    """AG-26b: 檢查核心工具 (check_layered_parts.py, build_spine_from_v3.py, merge_motion_library.py) 不得出現 joints 裡任何關節名的字串字面值"""
     import json
     target_scripts = [
         TOOLS_DIR / "check_layered_parts.py",
         TOOLS_DIR / "build_spine_from_v3.py",
+        TOOLS_DIR / "merge_motion_library.py",
     ]
     spec_path = TOOLS_DIR / "specs" / "canonical_skeleton_v3.json"
     if not spec_path.exists():

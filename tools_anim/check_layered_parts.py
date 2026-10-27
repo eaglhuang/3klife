@@ -910,12 +910,32 @@ def run_layered_parts_inspection(
         p_pass, p_ext = check_slot_hidden_extension(p_arr, piv_pt, dir_p, min_ext_px)
         c_pass, c_ext = check_slot_hidden_extension(c_arr, piv_pt, dir_c, min_ext_px)
 
+        # AG-27: 檢查 child segment 是否定義 neckExtension.replacesGenericHiddenExtension
+        seg_alias_map = {
+            "arm_upper_f": "upperarm_f",
+            "arm_upper_b": "upperarm_b",
+            "arm_lower_f": "forearm_f",
+            "arm_lower_b": "forearm_b",
+        }
+        c_seg_name = seg_alias_map.get(c_sid, c_sid)
+        c_seg_def = spec.get("segments", {}).get(c_seg_name, {})
+        c_neck_ext = c_seg_def.get("neckExtension", {})
+        replaces_generic_ext = bool(c_neck_ext.get("replacesGenericHiddenExtension", False))
+
         # AG-25: 肩部父側隱藏延伸豁免檢查
         p_waived = False
         p_waived_reason = ""
         matched_shoulder_joint = None
 
-        if not p_pass and parent_waive_prefix:
+        c_waived = False
+        c_waived_reason = ""
+
+        if replaces_generic_ext:
+            p_waived = True
+            p_waived_reason = "子段 neckExtension.replacesGenericHiddenExtension 為 true，父側不設通用延伸長度門檻，由旋轉露縫驗收"
+            c_waived = True
+            c_waived_reason = "子段依 neckExtension 規則驗收，取代通用延伸檢查，由旋轉露縫驗收"
+        elif not p_pass and parent_waive_prefix:
             # 檢查當前關節樞紐是否匹配 shoulderOverlapZone.joints 之一
             for sj_name, sj_pos in shoulder_joint_positions.items():
                 if math.hypot(piv_pt[0] - sj_pos[0], piv_pt[1] - sj_pos[1]) <= 1.0:
@@ -943,20 +963,25 @@ def run_layered_parts_inspection(
                                 )
 
         p_effective_pass = p_pass or p_waived
-        conn_pass = p_effective_pass and c_pass
+        c_effective_pass = c_pass or c_waived
+        conn_pass = p_effective_pass and c_effective_pass
 
         joint_ext_entry: dict[str, Any] = {
             "pass": conn_pass,
-            "tier": "PASS" if conn_pass else "FAIL",
+            "tier": "WAIVED" if (p_waived or c_waived) else ("PASS" if conn_pass else "FAIL"),
             "skipped": False,
             "parentExtensionPx": round(p_ext, 1),
             "childExtensionPx": round(c_ext, 1),
             "minRequiredPx": round(min_ext_px, 1),
             "parentWaived": p_waived,
-            "detail": f"隱藏延伸: 父={p_ext:.1f}px{' (WAIVED)' if p_waived else ''}, 子={c_ext:.1f}px (要求>={min_ext_px:.1f}px)",
+            "childWaived": c_waived,
+            "replacesGenericHiddenExtension": replaces_generic_ext,
+            "detail": f"隱藏延伸: 父={p_ext:.1f}px{' (WAIVED)' if p_waived else ''}, 子={c_ext:.1f}px{' (WAIVED)' if c_waived else ''} (要求>={min_ext_px:.1f}px)",
         }
         if p_waived:
             joint_ext_entry["parentWaivedReason"] = p_waived_reason
+        if c_waived:
+            joint_ext_entry["childWaivedReason"] = c_waived_reason
         joint_ext_reports[conn_id] = joint_ext_entry
 
         if p_waived:
@@ -977,7 +1002,15 @@ def run_layered_parts_inspection(
             }
             overall_pass = False
 
-        if not c_pass:
+        if c_waived:
+            slot_reports[c_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {
+                "pass": True,
+                "tier": "WAIVED",
+                "childExtensionPx": round(c_ext, 1),
+                "minRequiredPx": round(min_ext_px, 1),
+                "detail": c_waived_reason,
+            }
+        elif not c_pass:
             slot_reports[c_sid]["pass"] = False
             slot_reports[c_sid]["tier"] = "FAIL"
             slot_reports[c_sid]["checks"][f"hidden_extension_at_{conn_id}"] = {

@@ -833,6 +833,67 @@ class TestCheckLayeredParts(unittest.TestCase):
         self.assertIsNone(nose_check["registeredPx"])
         self.assertIsNone(nose_check["distancePx"])
 
+    def test_neck_extension_replaces_generic_hidden_extension_true(self) -> None:
+        """測試 24 (AG-27): 當 replacesGenericHiddenExtension 為 True 時，torso 側延伸不足仍通過 (WAIVED)"""
+        parts_dir = self.tmp_dir / "neck_waived_true"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+
+        # 建立 head (52px 延伸，在 zone 內，附合規 anchors)
+        self._create_mock_head_part(parts_dir, ext_below=52.0, ext_half_width=40.0, with_anchors=True)
+
+        # 建立 torso (向上延伸僅 35px < 48px)
+        im_torso = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
+        d_torso = ImageDraw.Draw(im_torso)
+        j_neck = (float(self.spec["joints"]["neck"]["x"]), float(self.spec["joints"]["neck"]["y"]))
+        j_pelvis = (float(self.spec["joints"]["pelvis"]["x"]), float(self.spec["joints"]["pelvis"]["y"]))
+        d_torso.line([j_pelvis, j_neck], fill=(120, 100, 80, 255), width=200)
+        # 向上僅延伸 35px (朝 y 負方向)
+        d_torso.rectangle([j_neck[0] - 80, j_neck[1] - 35, j_neck[0] + 80, j_neck[1]], fill=(120, 100, 80, 255))
+        im_torso.save(parts_dir / "torso.png")
+
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=DEFAULT_SPEC_PATH,
+            filter_slots=["torso", "head"],
+        )
+        self.assertTrue(passed, "replacesGenericHiddenExtension 為 true 時整體應判定 PASS")
+        joint_rep = report["jointHiddenExtensions"]["torso_to_head"]
+        self.assertTrue(joint_rep["pass"])
+        self.assertEqual(joint_rep["tier"], "WAIVED")
+        self.assertTrue(joint_rep["replacesGenericHiddenExtension"])
+        self.assertEqual(report["slotReports"]["torso"]["checks"]["hidden_extension_at_torso_to_head"]["tier"], "WAIVED")
+
+    def test_neck_extension_replaces_generic_hidden_extension_false(self) -> None:
+        """測試 25 (AG-27): 當 replacesGenericHiddenExtension 為 False 時，維持舊行為 (torso 側不足判 FAIL)"""
+        parts_dir = self.tmp_dir / "neck_waived_false"
+        parts_dir.mkdir(parents=True, exist_ok=True)
+
+        self._create_mock_head_part(parts_dir, ext_below=52.0, ext_half_width=40.0, with_anchors=True)
+
+        im_torso = Image.new("RGBA", (self.canvas_w, self.canvas_h), (0, 0, 0, 0))
+        d_torso = ImageDraw.Draw(im_torso)
+        j_neck = (float(self.spec["joints"]["neck"]["x"]), float(self.spec["joints"]["neck"]["y"]))
+        j_pelvis = (float(self.spec["joints"]["pelvis"]["x"]), float(self.spec["joints"]["pelvis"]["y"]))
+        d_torso.line([j_pelvis, j_neck], fill=(120, 100, 80, 255), width=200)
+        d_torso.rectangle([j_neck[0] - 80, j_neck[1] - 35, j_neck[0] + 80, j_neck[1]], fill=(120, 100, 80, 255))
+        im_torso.save(parts_dir / "torso.png")
+
+        spec_false = copy.deepcopy(load_spec(DEFAULT_SPEC_PATH))
+        spec_false["segments"]["head"]["neckExtension"]["replacesGenericHiddenExtension"] = False
+        spec_file = self.tmp_dir / "spec_false.json"
+        spec_file.write_text(json.dumps(spec_false, indent=2, ensure_ascii=False), encoding="utf-8")
+
+        report, passed = run_layered_parts_inspection(
+            parts_dir=parts_dir,
+            spec_path=spec_file,
+            filter_slots=["torso", "head"],
+        )
+        self.assertFalse(passed, "replacesGenericHiddenExtension 為 false 時 torso 延伸不足應判 FAIL")
+        joint_rep = report["jointHiddenExtensions"]["torso_to_head"]
+        self.assertFalse(joint_rep["pass"])
+        self.assertEqual(joint_rep["tier"], "FAIL")
+        self.assertEqual(report["slotReports"]["torso"]["checks"]["hidden_extension_at_torso_to_head"]["tier"], "FAIL")
+
 
 if __name__ == "__main__":
     unittest.main()
