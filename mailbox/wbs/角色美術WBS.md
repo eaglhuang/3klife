@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 22:05 Claude：AG-35 驗收（規格只差 ownerApproved）；查出 hand_f 拳頭浮在槍桿上方約 100 px，派 R306（只平移到握點、量 weapon）與 AG-36（建議級 gripRegistration）。
 - 2026-10-27 22:00 Claude：R305 頭部裁決 A 修正版（head 只留臉髮頸，移除立繪自帶白內領／披巾／領片，torso 不改，頸部沿立領內緣收 ≤64 px）；後手定稿用 R296 前臂；請 Codex 建 r305 合併集，待 AG-35 後全表驗收。Sparkle v11 確認與 15:49 已審版相同，回饋包待使用者轉交。
 - 2026-10-27 21:58 AG-35 完成：同步規格 v3.16（canonical_skeleton_v3.json 逐位元組相同）；實作 rotationCrack.gate.promoted: true 轉正正式判定，舊全半徑改為報告欄位不擋；實作 coverageRule.hiddenExtensionWaivers（pelvis 獲 childAloneSufficient 豁免、arm_lower_f 獲 gripJoint advisory 豁免）；新增 test_ag35_promoted_gate_and_extension_waivers.py，全套 109 項單元測試 100% 通過（a66794bb7）；重跑 R299 候選 21 槽嚴格驗收，exit=1, overallTier=FAIL，20 關節全數 PASS，阻擋槽位由 8 槽收斂至僅剩 head（缺 anchors）與 hand_f（握點 84.8px）；完成 hand_f 找孔矛盾調查並產出疊圖附件（hand_f_grip_hole_investigation.png），骨點位於像素下邊界外 40px 透明區。
 - 2026-10-27 21:40 Claude：使用者確認裂縫門檻 360 px 參考顯示高（畫布 79 px）照用，記入規格 rotationCrack.gate.ownerApproved。
