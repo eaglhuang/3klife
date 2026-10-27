@@ -27,7 +27,7 @@ import {
     EpBreakdown,
     FactorPoolEntry,
     previewBreedingEp,
-    previewFactorPool,
+    expectedFactorPool,
     toPersonRecord,
 } from '../systems/BreedingSystem';
 import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
@@ -142,7 +142,7 @@ export class BreedingService {
     /** 名士預言用：子嗣可能繼承的因子池與機率（不改資料、不擲骰） */
     previewFactorPool(fatherId: string, motherId: string): FactorPoolEntry[] {
         const { father, mother } = this._findPair(fatherId, motherId);
-        return previewFactorPool({
+        return expectedFactorPool({
             father,
             mother,
             pedigree: this._graph,
