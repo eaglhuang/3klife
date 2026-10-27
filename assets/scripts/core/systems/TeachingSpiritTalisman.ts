@@ -42,3 +42,14 @@ export function buildStartingSpiritTalisman(
         geneIds,
     };
 }
+
+/** 讀檔時驗證初始虎符；結構不合或來源缺失回傳 null，基因超過上限會截斷。 */
+export function normalizeStartingTalisman(raw: unknown): StartingSpiritTalisman | null {
+    if (typeof raw !== 'object' || raw === null) return null;
+    const value = raw as Partial<Record<keyof StartingSpiritTalisman, unknown>>;
+    if (value.kind !== 'TALISMAN') return null;
+    if (typeof value.sourceSpiritId !== 'string' || typeof value.sourceName !== 'string') return null;
+    if (!Array.isArray(value.geneIds)) return null;
+    const geneIds = value.geneIds.filter((id): id is string => typeof id === 'string').slice(0, TEACHING_STARTING_GENE_LIMIT);
+    return { kind: 'TALISMAN', sourceSpiritId: value.sourceSpiritId, sourceName: value.sourceName, geneIds };
+}

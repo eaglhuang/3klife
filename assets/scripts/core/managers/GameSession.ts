@@ -26,6 +26,7 @@ import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from 
 import { addOfficerExp, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
 import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/SandtableMarkers';
+import { buildStartingSpiritTalisman, normalizeStartingTalisman, type StartingSpiritTalisman, type TeachingSpiritInput } from '../systems/TeachingSpiritTalisman';
 import { effectiveSandtableStage, normalizeUnlockHistory, recordSandtableUnlock, sandtableShortCodeOf, sandtableStageIdOf, type SandtableStageId } from '../systems/SandtableProgress';
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
@@ -495,6 +496,8 @@ export class GameSession {
     private _sandtableMarkerTerritories: readonly string[] = [];
     /** 世界沙盤解鎖歷史（HALL-08）：只增不減，天下重組後不倒退 */
     private _sandtableUnlockHistory: SandtableStageId[] = [];
+    /** 英靈夢回教學戰的初始虎符（OPEN-13）：只寫一次，之後的教學戰完成不覆蓋 */
+    private _startingTalisman: StartingSpiritTalisman | null = null;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔 */
     private _gachaMentorJournal: GachaMentorJournalEntry[] = [];
     /** 大廳任務 AI 委任紀錄（PROG-2-1006） */
@@ -1257,6 +1260,7 @@ export class GameSession {
         this._officerState = initialOfficerState();
         this._sandtableMarkerTerritories = [];
         this._sandtableUnlockHistory = [];
+        this._startingTalisman = null;
         this._governance = [];
         this._autoGovernance = false;
         this._magistrateUid = null;
@@ -1544,6 +1548,21 @@ export class GameSession {
     }
 
     /** 已放置標記的領地 id（PROG-2-0965） */
+    /** 初始虎符（OPEN-13）：回傳複本，沒有時為 null。 */
+    public get startingTalisman(): StartingSpiritTalisman | null {
+        return this._startingTalisman === null ? null : { ...this._startingTalisman, geneIds: [...this._startingTalisman.geneIds] };
+    }
+
+    /**
+     * 英靈夢回教學戰完成（OPEN-13）：產出初始虎符並寫入會話；已有虎符時不覆蓋，回傳既有的那一張。
+     * 教學戰未完成時不產生，回傳 null。
+     */
+    public completeTeachingBattle(spirit: TeachingSpiritInput): StartingSpiritTalisman | null {
+        if (this._startingTalisman !== null) return this.startingTalisman;
+        this._startingTalisman = buildStartingSpiritTalisman(spirit, true);
+        return this.startingTalisman;
+    }
+
     /** 世界沙盤解鎖歷史（HALL-08）：回傳複本，只增不減。 */
     public get sandtableUnlockHistory(): readonly SandtableStageId[] {
         return [...this._sandtableUnlockHistory];
@@ -3132,8 +3151,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory' | 'startingTalisman'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'sandtableUnlockHistory' | 'startingTalisman'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3152,6 +3171,7 @@ export class GameSession {
             fields.generalDispatch = this.dispatchState;
         }
         if (this._sandtableUnlockHistory.length > 0) fields.sandtableUnlockHistory = [...this._sandtableUnlockHistory];
+        if (this._startingTalisman !== null) fields.startingTalisman = this.startingTalisman!;
         return fields;
     }
 
@@ -3172,6 +3192,7 @@ export class GameSession {
         this._dispatch = normalizeDispatchState(snapshot.generalDispatch);
         this._sandtableUnlockHistory = normalizeUnlockHistory(snapshot.sandtableUnlockHistory);
         this._recordSandtableUnlockReached();
+        this._startingTalisman = normalizeStartingTalisman(snapshot.startingTalisman);
     }
 
     /**
