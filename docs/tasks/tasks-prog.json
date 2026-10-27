@@ -26,8 +26,8 @@
   "summary": {
     "done": 34,
     "in_progress": 2,
-    "open": 78,
-    "total": 114
+    "open": 79,
+    "total": 115
   },
   "tasks": [
     {
@@ -4249,6 +4249,35 @@
       ],
       "scopePaths": [
         "artifacts/PROG-2-0173/**"
+      ],
+      "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+    },
+    {
+      "id": "PROG-2-0174",
+      "title": "實機驗收：適性台詞全域 Toast（PROG-2-1311、#1108）",
+      "owner": "Codex",
+      "priority": "P1",
+      "status": "open",
+      "type": "acceptance",
+      "phase": "M9",
+      "created": "2026-10-27",
+      "created_by_agent": "claude-haiku-5-5",
+      "description": "適性台詞全域 Toast 的出現時機、停留秒數、位置與連續顯示需實機驗收。",
+      "related": [],
+      "depends": [
+        "PROG-2-1311",
+        "PROG-2-1310",
+        "PR #1108"
+      ],
+      "acceptance": [
+        "依任務卡步驟完成實機驗收，PR 說明寫明 Before/After",
+        "任務卡與 tasks-prog 欄位一致"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/PROG-2-0174.md"
+      ],
+      "scopePaths": [
+        "artifacts/PROG-2-0174/**"
       ],
       "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
     }
