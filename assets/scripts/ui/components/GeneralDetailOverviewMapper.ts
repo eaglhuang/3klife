@@ -226,6 +226,14 @@ export function buildGeneralDetailOverview(config: GeneralConfig): GeneralDetail
 
 const EMPTY_INVENTORY_VIEWS: InventoryViews = { talismans: {}, spiritCards: {}, skipped: [] };
 
+/** 武將設定上的戰績（名冊武將才有；PROG-2-1345）；勝敗不是數字時視為無戰績 */
+export function battleRecordOf(config: GeneralConfig): BattleRecordLike | null {
+    const raw = (config as unknown as { battleRecord?: unknown }).battleRecord;
+    if (!raw || typeof raw !== 'object') return null;
+    const record = raw as Partial<BattleRecordLike>;
+    return typeof record.wins === 'number' && typeof record.losses === 'number' ? (record as BattleRecordLike) : null;
+}
+
 export function buildGeneralDetailOverviewContentState(
     config: GeneralConfig,
     views: InventoryViews = EMPTY_INVENTORY_VIEWS,
@@ -289,7 +297,7 @@ export function buildGeneralDetailOverviewContentState(
         commandPanelRows,
         portraitResource: portraitPathOf(config.id),
         tallySlot: equippedTalismanSlot(views, config.id),
-        tallySummary: buildGeneralTallySummary(equippedTalismanSlot(views, config.id), battleRecord),
+        tallySummary: buildGeneralTallySummary(equippedTalismanSlot(views, config.id), battleRecord ?? battleRecordOf(config)),
         gearSlots: buildGearPageSlots(deriveGeneralBackpack(records, config.id), (uid) => gearNameOfUid(records, uid)),
     };
 }
