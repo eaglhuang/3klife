@@ -1081,9 +1081,11 @@ export class GameSession {
             .map((g) => g.id));
         let changed = false;
         const next = this._inventoryRecords.map((record): InventoryRecord => {
-            if (record.Item_Type !== 'OTHER' || !record.equippedBy || active.has(record.equippedBy)) return record;
+            if ((record.Item_Type !== 'OTHER' && record.Item_Type !== 'SPIRIT_CARD') || !record.equippedBy || active.has(record.equippedBy)) return record;
             changed = true;
-            return { ...record, equippedBy: null, slotId: null };
+            return record.Item_Type === 'SPIRIT_CARD'
+                ? { ...record, equippedBy: null, slotId: null, isPrimary: null }
+                : { ...record, equippedBy: null, slotId: null };
         });
         if (changed) this._inventoryRecords = next;
     }
