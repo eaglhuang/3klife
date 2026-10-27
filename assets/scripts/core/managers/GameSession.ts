@@ -59,6 +59,7 @@ import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } 
 import { createUpkeepState } from '../systems/MercenaryUpkeep';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
+import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
@@ -182,6 +183,7 @@ import { advanceRivalSeason, autoResolveBattle, createRivalWorld, generalPower, 
 import {
     defaultKeepTerritories,
     normalizeGovernanceAssignments,
+    normalizeFarewellLetters,
     normalizeJournalEntries,
     normalizeKeepTerritories,
     normalizePendingTerritoryLevel,
@@ -644,6 +646,7 @@ export class GameSession {
         const today = this.mercenaryDay + 1;
         const events: DepartureEvent[] = [];
         const departed = new Set<string>();
+        const letters: FarewellLetter[] = [];
         let cooldowns = this._mercenaries.cooldowns;
         const mercenaries = this._mercenaries.mercenaries.map((merc) => {
             const settled = settleTrialRollover(merc, today, cooldowns);
@@ -651,10 +654,13 @@ export class GameSession {
             if (settled.departed) {
                 departed.add(merc.uid);
                 events.push(...settled.events);
+                const letter = createFarewellLetter({ uid: merc.uid, generalName: this.generalNameOf(merc.generalId, merc.uid), affection: merc.affection ?? 0, day: today });
+                if (letter) letters.push(letter);
                 return { ...merc, status: settled.record.status };
             }
             return advanceTrialDay(merc).state;
         });
+        for (const letter of letters) this._farewellLetters = appendFarewellLetter(this._farewellLetters, letter);
         this._mercenaries = {
             ...this._mercenaries,
             mercenaries,
@@ -663,6 +669,12 @@ export class GameSession {
             day: today,
         };
         return { day: today, events };
+    }
+
+    /** 告別信用的武將名：名冊查得到用名字，否則用傭兵 uid。 */
+    private generalNameOf(generalId: string | undefined, fallback: string): string {
+        if (!generalId) return fallback;
+        return this._roster.getAll().find(g => g.id === generalId)?.name ?? fallback;
     }
 
     /** 傭兵池可出現的武將：過濾掉 30 天冷卻中的武將 id，保留原順序。 */
@@ -1194,6 +1206,7 @@ export class GameSession {
         this._pendingTerritoryLevel = null;
         this._territories = defaultKeepTerritories();
         this._journal = createEmptyJournal();
+        this._farewellLetters = [];
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
         // 上一局的進度不能帶進新局（PROG-2-0660）
@@ -1482,6 +1495,18 @@ export class GameSession {
     private _pendingTerritoryLevel: number | null = null;
     private _territories: KeepTerritory[] = defaultKeepTerritories();
     private _journal: JournalState = createEmptyJournal();
+    // ---- 傭兵告別信收件匣（RET-03 接線，PROG-2-0985）：離隊時寫入，隨 lifespanSaveFields 存檔 ----
+    private _farewellLetters: FarewellLetter[] = [];
+
+    /** 告別信收件匣（唯讀副本）。 */
+    public get farewellLetters(): FarewellLetter[] {
+        return this._farewellLetters.map(l => ({ ...l }));
+    }
+
+    /** 標記告別信已讀；找不到 ID 時不變動。 */
+    public readFarewellLetter(id: string): void {
+        this._farewellLetters = markFarewellLetterRead(this._farewellLetters, id);
+    }
 
     /** 內政任務格的武將指派（唯讀副本，GOV-04）。 */
     public get governanceAssignments(): GovernanceAssignment[] {
@@ -2837,8 +2862,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -2848,6 +2873,7 @@ export class GameSession {
         if (this._journal.entries.length > 0) {
             fields.journalEntries = this._journal.entries.map(e => ({ ...e, relatedGeneralUids: [...e.relatedGeneralUids] }));
         }
+        if (this._farewellLetters.length > 0) fields.farewellLetters = this.farewellLetters;
         return fields;
     }
 
@@ -2860,6 +2886,7 @@ export class GameSession {
         this._journal = { entries: normalizeJournalEntries(snapshot.journalEntries) };
         this._territoryLevel = normalizeTerritoryLevel(snapshot.territoryLevel);
         this._pendingTerritoryLevel = normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) ?? null;
+        this._farewellLetters = normalizeFarewellLetters(snapshot.farewellLetters);
     }
 
     /**

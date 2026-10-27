@@ -47,6 +47,7 @@ import { normalizeBorrowLedger, type BorrowLedger } from '../systems/FriendBorro
 import { normalizeSoulFragmentLedger, type SoulFragmentLedger } from '../systems/SoulFragmentLedger';
 import {
     normalizeGovernanceAssignments,
+    normalizeFarewellLetters,
     normalizeJournalEntries,
     normalizeKeepTerritories,
     normalizePendingTerritoryLevel,
@@ -55,6 +56,7 @@ import {
 import type { GovernanceAssignment } from '../systems/GovernanceAssignment';
 import type { KeepTerritory } from '../systems/HereditaryKeep';
 import type { JournalEntry } from '../systems/JournalLog';
+import type { FarewellLetter } from '../systems/FarewellLetterInbox';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
@@ -128,6 +130,8 @@ export interface PlayerSaveSnapshot {
     territoryLevel?: number;
     /** 待生效的太守府升級目標等級（PROG-2-0983）；季結後生效，舊檔沒有時沒有待生效升級；版號不升 */
     territoryUpgradePending?: number;
+    /** 傭兵告別信收件匣（PROG-2-0985）；舊檔沒有時讀回空陣列；版號不升 */
+    farewellLetters?: FarewellLetter[];
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -486,6 +490,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.territoryUpgradePending !== undefined && normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) !== undefined
             ? { territoryUpgradePending: normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) }
             : {}),
+        ...(snapshot.farewellLetters !== undefined ? { farewellLetters: normalizeFarewellLetters(snapshot.farewellLetters) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),

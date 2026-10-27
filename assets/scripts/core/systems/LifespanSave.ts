@@ -12,6 +12,23 @@ import { GovernanceAssignment } from './GovernanceAssignment';
 import { KeepTerritory } from './HereditaryKeep';
 import { appendJournalEntry, createEmptyJournal, JournalEntry } from './JournalLog';
 import { TERRITORY_MAX_LEVEL } from './TerritoryUpgrade';
+import { appendFarewellLetter, FarewellLetter, FarewellTier } from './FarewellLetterInbox';
+
+/** 告別信收件匣（PROG-2-0985）：逐筆檢查欄位，壞資料丟棄；同 ID 只留第一筆。 */
+export function normalizeFarewellLetters(raw: unknown): FarewellLetter[] {
+    if (!Array.isArray(raw)) return [];
+    let inbox: FarewellLetter[] = [];
+    for (const item of raw) {
+        if (!isRecord(item)) continue;
+        const { id, uid, generalName, affection, tier, body, day, read } = item;
+        if (!isNonEmptyString(id) || !isNonEmptyString(uid) || typeof generalName !== 'string') continue;
+        if (typeof affection !== 'number' || !Number.isInteger(affection) || affection < 0) continue;
+        if (tier !== 'normal' && tier !== 'moving') continue;
+        if (typeof body !== 'string' || !Number.isInteger(day) || (day as number) < 0 || typeof read !== 'boolean') continue;
+        inbox = appendFarewellLetter(inbox, { id, uid, generalName, affection, tier: tier as FarewellTier, body, day: day as number, read });
+    }
+    return inbox;
+}
 
 /** 主城領地 id（暫定：規格未給固定 id，待領地資料定案後改由資料檔提供）。 */
 export const HOME_TERRITORY_ID = 'home-city';
