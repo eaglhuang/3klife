@@ -10,7 +10,7 @@ import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 const HOUR = 60 * 60 * 1000;
 
 function hero(id: string, name: string, lea: number, careerClass = 'Warrior'): GeneralConfig {
-    return { id, name, faction: 'shu', hp: 1000, str: 60, int: 60, lea, pol: 60, cha: 60, careerClass } as GeneralConfig;
+    return { id, name, faction: 'shu', hp: 1000, str: 60, int: 60, lea, pol: 60, cha: 60, careerClass } as unknown as GeneralConfig;
 }
 
 export function createDispatchClickSuite(): TestSuite {
