@@ -11,10 +11,12 @@ import {
     bezierBetween,
     bloodlineEdges,
     buildConnectionPaths,
+    factorConnectionEdges,
     sampleBezier,
     type ConnectionNode,
     type Point,
 } from '../assets/scripts/core/systems/BloodlineConnections';
+import type { PedigreeSlot } from '../assets/scripts/core/services/BloodlineGraph';
 
 const EPS = 1e-9;
 
@@ -100,6 +102,27 @@ export function createBloodlineConnectionsSuite(): TestSuite {
                 assert.isTrue(near(big[i].points[j].y, base[i].points[j].y * 3));
             }
         }
+    });
+
+    suite.test('factorConnectionEdges：完整位置產生 14 條，顏色依子代決定', () => {
+        const positions = allPositions();
+        const edges = factorConnectionEdges(positions, (child) => (child === 'F' ? 'red' : null));
+        assert.equals(14, edges.length);
+        const fEdge = edges.find((e) => e.from === positions.F);
+        assert.isTrue(fEdge !== undefined);
+        assert.equals('red', fEdge?.childColor ?? null);
+        assert.isTrue(edges.filter((e) => e.childColor === null).length === 13);
+    });
+
+    suite.test('factorConnectionEdges：缺位置的連線略過，且不呼叫 childColorOf', () => {
+        const seen: PedigreeSlot[] = [];
+        const edges = factorConnectionEdges({ '': { x: 0.5, y: 0.9 }, F: { x: 0.4, y: 0.6 } }, (child) => {
+            seen.push(child);
+            return 'blue';
+        });
+        assert.equals(1, edges.length);
+        assert.equals(1, seen.length);
+        assert.equals('F', seen[0]);
     });
 
     return suite;

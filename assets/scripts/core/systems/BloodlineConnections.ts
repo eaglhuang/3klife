@@ -10,6 +10,7 @@
  * Unity 對照：像 LineRenderer 的 Bezier 工具，輸入是兩個 Transform 的位置，每幀依位置重算曲線點，不是固定貼圖。
  */
 import { PEDIGREE_SLOTS, type PedigreeSlot } from '../services/BloodlineGraph';
+import type { FactorColor } from './FactorInheritance';
 
 /** 連線端點：先祖位置代碼，或子代（空字串） */
 export type ConnectionNode = PedigreeSlot | '';
@@ -88,4 +89,31 @@ export function buildConnectionPaths(
         paths.push({ child: edge.child, parent: edge.parent, points: sampleBezier(bezierBetween(from, to), steps) });
     }
     return paths;
+}
+
+/** 連線端點與上色用的因子色，供 UIBloodlineConnections.drawFactorConnections 使用。 */
+export interface FactorConnectionEdge {
+    from: Point;
+    to: Point;
+    childColor: FactorColor | null;
+}
+
+/**
+ * 依節點座標組出連線資料，每條線的顏色由 childColorOf(child) 決定。
+ * 缺少任一端位置的連線略過；childColorOf 回傳 null 時由呼叫端的繪製層退回中性灰。
+ *
+ * Unity 對照：像在佈局完成後，把每條 LineRenderer 的兩端 Transform 與材質指定好，再交給繪製元件。
+ */
+export function factorConnectionEdges(
+    positions: Partial<Record<ConnectionNode, Point>>,
+    childColorOf: (child: PedigreeSlot) => FactorColor | null,
+): FactorConnectionEdge[] {
+    const edges: FactorConnectionEdge[] = [];
+    for (const edge of bloodlineEdges()) {
+        const from = positions[edge.child];
+        const to = positions[edge.parent];
+        if (!from || !to) continue;
+        edges.push({ from, to, childColor: childColorOf(edge.child) });
+    }
+    return edges;
 }
