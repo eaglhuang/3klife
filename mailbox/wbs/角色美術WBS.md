@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 22:38 AG-36 完成：同步規格 canonical_skeleton_v3.json 至 21,388 位元組（補齊 ownerApproved 欄位）；實作建議級檢查 gripRegistration（手部形心到握點距離門檻 0.02H=32px，量測握點周圍 24px 半徑覆蓋率，advisory 模式不拉低整體判定）；對 R299 實測 hand_f 形心 (1353.7, 1081.8) 距離握點 143.6 px，24px 覆蓋率 0.0%，正確回報 ADVISORY，hand_b 形心距離 23.0 px 通過 PASS；新增 test_ag36_grip_registration.py，全套 112 項單元測試 100% 通過（fb3279aa8）；R299 候選 21 槽重跑 exit=1, overallTier=FAIL，維持僅 head 與 hand_f 兩槽阻擋。
 - 2026-10-27 22:18 Claude：使用者已重開 Cocos 編輯器、Sparkle v11 回饋已轉交；派 R307 請 Codex 續做 R290 剩下的編輯器只讀檢查。
 - 2026-10-27 22:05 Claude：AG-35 驗收（規格只差 ownerApproved）；查出 hand_f 拳頭浮在槍桿上方約 100 px，派 R306（只平移到握點、量 weapon）與 AG-36（建議級 gripRegistration）。
 - 2026-10-27 22:00 Claude：R305 頭部裁決 A 修正版（head 只留臉髮頸，移除立繪自帶白內領／披巾／領片，torso 不改，頸部沿立領內緣收 ≤64 px）；後手定稿用 R296 前臂；請 Codex 建 r305 合併集，待 AG-35 後全表驗收。Sparkle v11 確認與 15:49 已審版相同，回饋包待使用者轉交。
