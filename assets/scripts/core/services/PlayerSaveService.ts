@@ -153,6 +153,8 @@ export interface PlayerSaveSnapshot {
     sandtableUnlockHistory?: SandtableStageId[];
     /** 英靈夢回教學戰產出的初始虎符（OPEN-13）：只在教學戰完成後寫入一次；舊檔沒有時為空；版號不升 */
     startingTalisman?: StartingSpiritTalisman;
+    /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生後寫入；只寫 true；舊檔沒有時為未解鎖 */
+    familySystemUnlocked?: boolean;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -519,6 +521,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.generalDispatch !== undefined ? { generalDispatch: normalizeDispatchState(snapshot.generalDispatch) } : {}),
         ...(snapshot.sandtableUnlockHistory !== undefined ? { sandtableUnlockHistory: normalizeUnlockHistory(snapshot.sandtableUnlockHistory) } : {}),
         ...(normalizeStartingTalisman(snapshot.startingTalisman) !== null ? { startingTalisman: normalizeStartingTalisman(snapshot.startingTalisman)! } : {}),
+        ...(snapshot.familySystemUnlocked === true ? { familySystemUnlocked: true } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
