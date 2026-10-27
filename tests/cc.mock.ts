@@ -2,7 +2,12 @@
  * cc.mock.ts — Cocos Creator 引擎 API 的最小 Mock
  */
 
-export class Vec3 { constructor(public x = 0, public y = 0, public z = 0) {} }
+export class Vec3 {
+    constructor(public x = 0, public y = 0, public z = 0) {}
+    clone(): Vec3 {
+        return new Vec3(this.x, this.y, this.z);
+    }
+}
 export class Color {
     constructor(public r = 255, public g = 255, public b = 255, public a = 255) {}
     declare static WHITE: Color;
@@ -344,3 +349,28 @@ export class Vec2 { constructor(public x = 0, public y = 0) {} }
 export class Mask { [key: string]: any; }
 export class ScrollView { [key: string]: any; }
 export class ScrollBar { [key: string]: any; }
+
+// ─── 輸入事件（BattleUIBridge 全域點擊／鍵盤監聽用）────────────────────────────
+export class EventTouch {
+    getLocation(): { x: number; y: number } {
+        return { x: 0, y: 0 };
+    }
+}
+export class EventMouse {
+    getLocation(): { x: number; y: number } {
+        return { x: 0, y: 0 };
+    }
+}
+export class EventKeyboard {
+    keyCode = 0;
+}
+export enum KeyCode {
+    ESCAPE = 27,
+}
+export const Input = {
+    EventType: { TOUCH_END: 'touch-end', MOUSE_UP: 'mouse-up', KEY_UP: 'key-up' },
+} as const;
+export const input = {
+    on(_type: string, _callback: (...args: any[]) => void, _target?: unknown): void {},
+    off(_type: string, _callback?: (...args: any[]) => void, _target?: unknown): void {},
+};
