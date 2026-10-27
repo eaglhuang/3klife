@@ -580,7 +580,9 @@ export class LobbyScene extends Component {
      */
     private _showDailyNews(): void {
         const session = services().session;
-        this._dailyReport = DailyReportController.capture(session.dailyNews, session.morningReport, new Date());
+        // 復仇取回（RET-05）：日報有帶百分比的復仇且有可取回的缺糧才顯示按鈕；需在標記已讀前擷取
+        const revengeAvailable = session.revengeRecoverable > 0 && session.dailyNews.news.some((item) => item.type === 'REVENGE' && item.pct !== undefined);
+        this._dailyReport = DailyReportController.capture(session.dailyNews, session.morningReport, new Date(), revengeAvailable);
         if (!this._dailyReport) return;
         session.markDailyNewsRead();
         session.markMorningReportRead();
@@ -1524,12 +1526,26 @@ export class LobbyScene extends Component {
         this._dailyReportHost = await this._mountPreviewScreenHost('DailyReportHost', 'daily-report-screen', [
             { buttonId: 'btnClose', handler: close },
             { buttonId: 'btnOpenJournalHub', handler: () => { close(); this._openJournalHub(); } },
+            { buttonId: 'btnRevenge', handler: () => { this._claimRevenge(); } },
         ]);
         const report = this._dailyReport;
         this._dailyReportHost.node.active = report !== null;
         if (!report) return;
         this._bringNodeToFront(this._dailyReportHost.node);
         applyFlowView(this._dailyReportHost.binder, report.getFlowView());
+    }
+
+    /** 復仇取回（RET-05）：扣掉缺糧紀錄、依擲出的百分比加回糧草，存檔後按鈕隱藏 */
+    private _claimRevenge(): void {
+        const session = services().session;
+        if (!this._dailyReport) return;
+        // 百分比取日報條目裡的值，與面板文字一致
+        const pct = session.dailyNews.news.find((item) => item.type === 'REVENGE' && item.pct !== undefined)?.pct ?? 0;
+        const recovered = session.claimRevengeRecovery(pct);
+        this._dailyReport = this._dailyReport.withoutRevenge();
+        if (this._dailyReportHost) applyFlowView(this._dailyReportHost.binder, this._dailyReport.getFlowView());
+        void session.save().catch(() => undefined);
+        this._showToast(recovered > 0 ? `復仇取回糧草 ${recovered}` : '沒有可取回的糧草');
     }
 
     /** 大廳許願祭壇（doc_spec_0002 §E-7，PROG-2-1199）：入口暫放晨報派遣板；許願／加速／領取成功後存檔 */

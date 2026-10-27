@@ -28,14 +28,20 @@ export class DailyReportController {
         private readonly _news: readonly string[],
         private readonly _morningOpening: string,
         private readonly _morning: readonly string[],
+        private readonly _revengeAvailable: boolean,
     ) {}
 
-    /** 擷取未讀內容；日報與晨報都沒有未讀時回 null（不開面板） */
-    public static capture(news: Readonly<DailyNewsState>, morning: Readonly<MorningReportState>, date: Date): DailyReportController | null {
+    /** 擷取未讀內容；日報與晨報都沒有未讀時回 null（不開面板）。revengeAvailable：日報有復仇且有可取回的缺糧（RET-05） */
+    public static capture(news: Readonly<DailyNewsState>, morning: Readonly<MorningReportState>, date: Date, revengeAvailable = false): DailyReportController | null {
         const [newsTitle = '', ...newsLines] = dailyNewsToastLines(news, date);
         const [opening = '', ...morningItems] = morningReportLines(morning);
         if (newsLines.length === 0 && morningItems.length === 0) return null;
-        return new DailyReportController(newsTitle, newsLines, opening, morningItems);
+        return new DailyReportController(newsTitle, newsLines, opening, morningItems, revengeAvailable);
+    }
+
+    /** 復仇取回後不再顯示按鈕（RET-05） */
+    public withoutRevenge(): DailyReportController {
+        return new DailyReportController(this._newsTitle, this._news, this._morningOpening, this._morning, false);
     }
 
     public get hasNews(): boolean {
@@ -52,11 +58,13 @@ export class DailyReportController {
             newsHeader: '三國日報',
             morningHeader: this._morningOpening || '晨報',
             btnOpenJournalHubLabel: '晨報派遣板 ▶',
+            btnRevengeLabel: '復仇取回 ▶',
             btnCloseLabel: '知道了',
         };
         const actives: Record<string, boolean> = {
             newsHeader: this.hasNews,
             morningHeader: this.hasMorningReport,
+            btnRevenge: this._revengeAvailable,
         };
         for (let i = 0; i < DAILY_REPORT_MAX_LINES; i++) {
             texts[`newsLine${i}`] = this._news[i] ?? '';
@@ -64,6 +72,6 @@ export class DailyReportController {
             texts[`morningLine${i}`] = this._morning[i] ?? '';
             actives[`morningLine${i}`] = this._morning[i] !== undefined;
         }
-        return { texts, actives, enabled: { btnOpenJournalHub: true, btnClose: true } };
+        return { texts, actives, enabled: { btnOpenJournalHub: true, btnRevenge: true, btnClose: true } };
     }
 }
