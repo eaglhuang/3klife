@@ -56,19 +56,19 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
     async onMount(_spec: Record<string, unknown>): Promise<void> {
         const h = this.hostNode;
 
-        this._lEpRating  = this._label(h, 'BloodlineRightPanel/BloodlineSummaryCard/EpRatingValue');
-        this._lBloodline = this._label(h, 'BloodlineRightPanel/BloodlineSummaryCard/BloodlineValue');
-        this._lParents   = this._label(h, 'BloodlineRightPanel/BloodlineSummaryCard/ParentsValue');
-        this._lAncestors = this._label(h, 'BloodlineRightPanel/BloodlineSummaryCard/AncestorsValue');
-        this._lAwakening = this._label(h, 'BloodlineRightPanel/AwakeningCard/AwakeningValue');
-        this._lHiddenFactor = this._label(h, 'BloodlineRightPanel/HiddenFactorCard/HiddenFactorValue');
+        this._lEpRating  = this._label(h, 'BloodlineSummaryCard/EpRatingValue');
+        this._lBloodline = this._label(h, 'BloodlineSummaryCard/BloodlineValue');
+        this._lParents   = this._label(h, 'BloodlineSummaryCard/ParentsValue');
+        this._lAncestors = this._label(h, 'BloodlineSummaryCard/AncestorsValue');
+        this._lAwakening = this._label(h, 'AwakeningCard/AwakeningValue');
+        this._lHiddenFactor = this._label(h, 'HiddenFactorCard/HiddenFactorValue');
 
         for (let i = 1; i <= 5; i++) {
-            this._lGenes.push(this._label(h, `BloodlineRightPanel/GeneListCard/Gene${i}Value`));
+            this._lGenes.push(this._label(h, `GeneListCard/Gene${i}Value`));
         }
 
         // 掛載 BloodlineTreePanel 到 AncestorTree 根節點
-        const treeRoot = this._requireNode(h, 'BloodlineLeftField/AncestorTree');
+        const treeRoot = this._requireNode(h, 'AncestorTree');
         let panel = treeRoot.getComponent(BloodlineTreePanel);
         if (!panel) panel = treeRoot.addComponent(BloodlineTreePanel);
         panel.gen1Container = treeRoot.getChildByPath('Gen1Container');
@@ -120,7 +120,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
     private _populateLegacyTree(cfg: GeneralConfig): void {
         const tree = (cfg as any).ancestorTree;
         if (!tree) return;
-        const base = this.hostNode.getChildByPath(`${GeneralDetailBloodlineChild.ROOT_PATH}/BloodlineLeftField/AncestorTree`);
+        const base = this.hostNode.getChildByPath(`${GeneralDetailBloodlineChild.ROOT_PATH}/AncestorTree`);
         if (!base) return;
 
         for (let i = 0; i < 8; i++) {
