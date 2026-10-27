@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-27 11:20 Claude：AG-26b（6ba307d6f）複驗 17/17、核心工具零關節名字面值、規格同步 v3.7，結案；R2 頭部工具回歸待 Codex 補 head.anchors.json。
 - 2026-10-27 11:15 AG-26b 完成：check_layered_parts.py 實作定位小修，gated 缺值判 FAIL (ANCHOR_MISSING)、recorded 缺值記 NOT_MEASURED (不寫數字假資料)；支援 CLI --anchors 與 <slot>.anchors.json；完全移除 r274 scratch 檔名、neck_root 與關節名硬編碼；消除 alphaCentroid 冒充；test_no_general_hardcoding.py 擴充 AST 掃描禁絕 check_layered_parts.py 與 build_spine_from_v3.py 出現 joints 關節名字串字面值；更正測試檔數計數，全套 17 個測試檔、68 項單元測試 100% 通過 (6ba307d6f)。
 - 2026-10-27 10:50 Claude：R276 頭部 R2 依 v3.7 人工驗收通過（head_center 23.2px、頸延伸 48.3px），趙雲累計 8 槽；進 Cocos scratch 組裝、接 pelvis/skirt。AG-26 分區量測通過，定位缺值默認 0 誤差與寫死檔名須修（AG-26b）。
 - 2026-10-27 10:40 AG-26 完成：check_layered_parts.py 實作 neckExtension 分區檢查（core 依 zone 矩形、extension 檢 48–64px 與半寬）、動態覆蓋 15° 旋轉檢查、gated/recorded 定位檢查；Codex R2 實測 Core 0.00%、Ext 48.0px、Registration 全數通過；全套 18 檔 65 項單元測試 100% 通過（c2fb9cb02）。
