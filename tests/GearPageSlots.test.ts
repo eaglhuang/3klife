@@ -6,7 +6,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { createBackpack, EquipSlot, GeneralBackpack } from '../assets/scripts/core/systems/GeneralBackpack';
-import { buildGearPageSlots, GEAR_PAGE_GRID } from '../assets/scripts/core/systems/GearPageSlots';
+import { buildGearPageSlots, gearSlotText, GEAR_PAGE_GRID } from '../assets/scripts/core/systems/GearPageSlots';
 
 export function createGearPageSlotsSuite(): TestSuite {
     const suite = new TestSuite('GearPageSlots (寶頁 2x3 格位 GDUI-11)');
@@ -42,6 +42,17 @@ export function createGearPageSlotsSuite(): TestSuite {
         assert.equals('EQUIPPED', views[3].state);
         assert.equals('EMPTY', views[1].state);
         assert.equals('LOCKED', views[4].state);
+    });
+
+    suite.test('格位文字依狀態顯示槽名加未解鎖、空或已裝備', () => {
+        const views = buildGearPageSlots({
+            unlocked: ['WEAPON', 'MOUNT'],
+            equipped: { WEAPON: 'eq-1' } as Partial<Record<EquipSlot, string>>,
+        });
+        assert.equals('武器：已裝備', gearSlotText(views[0]));
+        assert.equals('防具：未解鎖', gearSlotText(views[1]));
+        assert.equals('名馬：空', gearSlotText(views[3]));
+        assert.equals('古書：未解鎖', gearSlotText(views[4]));
     });
 
     suite.test('建立檢視模型不改動 backpack 資料', () => {
