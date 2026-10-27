@@ -22,6 +22,7 @@ CORE_SCRIPTS = [
     TOOLS_DIR / "check_rigpose.py",
     TOOLS_DIR / "generate_rigpose_templates.py",
     TOOLS_DIR / "check_layered_parts.py",
+    TOOLS_DIR / "build_spine_from_v3.py",
 ]
 
 # 任何武將拼音或中文作為變數、字串判斷均為違規

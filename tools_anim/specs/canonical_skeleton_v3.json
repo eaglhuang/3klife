@@ -562,8 +562,6 @@
     "note": "任何一格槍尾不得低於地面線；雙手持槍段兩手間距 0.22–0.35H",
     "buttGroundToleranceH": 0.01
   },
-  "standingCenter": 1024,
-  "standingCenterTol": 25,
   "shoulderOverlapZone": {
     "joints": [
       "shoulder_f",
@@ -599,7 +597,6 @@
     "canvas": "與本檔 canvas 相同（2048²），每槽一張全畫布透明 PNG，原位不裁切",
     "hiddenExtensionH": 0.03,
     "rotationTestDeg": 30,
-    "note": "21 槽＝bones 去掉 root、ik_*、weapon_grip_rear、*_mid、*_tip；槽名即骨名，動作庫可直接共用。每個關節兩側部件須畫出被遮擋的延伸，至少越過關節 hiddenExtensionH×H；關節 ±rotationTestDeg 旋轉不得露縫。cape／skirt／hair_tail 可為空槽。runtime 再裁成圖集並附 offset/pivot manifest。",
     "jointOverrides": {
       "weapon": {
         "rigid": true,
@@ -612,13 +609,17 @@
         "rotationTestDeg": 15
       },
       "foot_f": {
-        "parent": "shin_f"
+        "parent": "shin_f",
+        "note": "foot 骨父為 ik_foot，分槽關節改接 shin"
       },
       "foot_b": {
         "parent": "shin_b"
       }
     },
+    "note": "21 槽＝bones 去掉 root、ik_*、weapon_grip_rear、*_mid、*_tip；槽名即骨名，動作庫可直接共用。每個關節兩側部件須畫出被遮擋的延伸，至少越過關節 hiddenExtensionH×H；關節 ±rotationTestDeg 旋轉不得露縫。cape／skirt／hair_tail 可為空槽。runtime 再裁成圖集並附 offset/pivot manifest。",
     "scopeMarginPx": 12,
     "gripTolerancePx": 12
-  }
+  },
+  "standingCenter": 1024,
+  "standingCenterTol": 25
 }
