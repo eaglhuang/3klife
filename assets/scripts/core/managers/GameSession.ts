@@ -195,6 +195,7 @@ import { unveilDueGenerals, UnveilingEvent, UnveilingGeneral, UNVEILING_AGE, GEN
 import { injectCatalystFactor, markCatalystUsed, type CatalystGeneral } from '../systems/GeneCatalyst';
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
+import { RelationEventLedger } from '../systems/RelationEvents';
 import { grantLegacyRewards, normalizeLegacyCount, type LegacyAchievement } from '../systems/LegacyAchievement';
 import { STARTER_GACHA_WALLET } from '../services/GachaWalletRules';
 import type { DynamicRelation } from '../systems/KinRelation';
@@ -473,6 +474,8 @@ export class GameSession {
     private _lastBattleSnapshots: BattleSnapshot[] = [];
     /** 動態關係表（KIN-10）：目前只在記憶體中，存檔欄位另卡接線 */
     public readonly dynamicRelations = new DynamicRelationBook();
+    /** 關係組合事件一次性紀錄（KIN-08，PROG-2-1412）：同季同對只播一次，隨存檔保存 */
+    public readonly relationEvents = new RelationEventLedger();
     private _roster: RosterStore = new InMemoryRosterStore();
     private _save: PlayerSaveService | null = null;
     private _events: SessionEventEmitter | null = null;
@@ -1437,6 +1440,7 @@ export class GameSession {
         this._favoriteGeneralIds = [];
         this._hallAssignments = {};
         this.dynamicRelations.restore([]);
+        this.relationEvents.restore([]);
         this._tallyLoyalty = {};
         this._tallyHoldings = createTallyHoldings([]);
         this._tallyCards = {};
@@ -3763,7 +3767,8 @@ export class GameSession {
         const withHallLog = this._hallAssignLog.length > 0 ? { ...withJournal, hallAssignLog: normalizeHallAssignLog(this._hallAssignLog) } : withJournal;
         // 統一物件庫列只在非空時寫入；舊檔與空狀態不多一個欄位（PROG-2-1021）
         const withInventory = this._inventoryRecords.length > 0 ? { ...withHallLog, inventoryRecords: normalizeInventoryRecords(this._inventoryRecords) } : withHallLog;
-        return { ...withInventory, ...this.lifespanSaveFields() };
+        const relationEventKeys = this.relationEvents.snapshot();
+        return { ...withInventory, ...this.lifespanSaveFields(), ...(relationEventKeys.length > 0 ? { relationEventKeys } : {}) };
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
@@ -3914,6 +3919,7 @@ export class GameSession {
         this._favoriteGeneralIds = normalizeFavoriteGeneralIds(snapshot.favoriteGeneralIds);
         this._hallAssignments = normalizeHallAssignments(snapshot.hallAssignments);
         this.dynamicRelations.restore(snapshot.dynamicRelations ?? []);
+        this.relationEvents.restore(snapshot.relationEventKeys);
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
         this._officerState = normalizeOfficerState(snapshot.officerState);
         this._sandtableMarkerTerritories = normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories);

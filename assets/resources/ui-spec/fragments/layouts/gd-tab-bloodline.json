@@ -844,6 +844,224 @@
               ]
             }
           ]
+        },
+        {
+          "type": "panel",
+          "name": "SpiritPicker",
+          "active": false,
+          "widget": {
+            "hCenter": true,
+            "vCenter": true
+          },
+          "width": 320,
+          "height": 300,
+          "skinSlot": "detail.awakening.card",
+          "layout": {
+            "type": "vertical",
+            "spacing": 6,
+            "paddingTop": 10,
+            "paddingBottom": 10,
+            "paddingLeft": 14,
+            "paddingRight": 14
+          },
+          "children": [
+            {
+              "type": "label",
+              "name": "SpiritPickTitle",
+              "width": "100%",
+              "height": 20,
+              "styleSlot": "detail.label.meta",
+              "text": "選擇英靈卡"
+            },
+            {
+              "type": "label",
+              "name": "SpiritPickEmpty",
+              "width": "100%",
+              "height": 18,
+              "styleSlot": "detail.label.meta",
+              "text": "倉庫沒有未裝配的英靈卡"
+            },
+            {
+              "type": "button",
+              "name": "SpiritPickRow1",
+              "width": "100%",
+              "height": 28,
+              "skinSlot": "detail.button.primary",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "SpiritPickRow1Label",
+                  "widget": {
+                    "vCenter": true,
+                    "left": 0,
+                    "right": 0
+                  },
+                  "height": 16,
+                  "styleSlot": "detail.label.button",
+                  "text": "第 1 張"
+                }
+              ]
+            },
+            {
+              "type": "button",
+              "name": "SpiritPickRow2",
+              "width": "100%",
+              "height": 28,
+              "skinSlot": "detail.button.primary",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "SpiritPickRow2Label",
+                  "widget": {
+                    "vCenter": true,
+                    "left": 0,
+                    "right": 0
+                  },
+                  "height": 16,
+                  "styleSlot": "detail.label.button",
+                  "text": "第 2 張"
+                }
+              ]
+            },
+            {
+              "type": "button",
+              "name": "SpiritPickRow3",
+              "width": "100%",
+              "height": 28,
+              "skinSlot": "detail.button.primary",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "SpiritPickRow3Label",
+                  "widget": {
+                    "vCenter": true,
+                    "left": 0,
+                    "right": 0
+                  },
+                  "height": 16,
+                  "styleSlot": "detail.label.button",
+                  "text": "第 3 張"
+                }
+              ]
+            },
+            {
+              "type": "button",
+              "name": "SpiritPickRow4",
+              "width": "100%",
+              "height": 28,
+              "skinSlot": "detail.button.primary",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "SpiritPickRow4Label",
+                  "widget": {
+                    "vCenter": true,
+                    "left": 0,
+                    "right": 0
+                  },
+                  "height": 16,
+                  "styleSlot": "detail.label.button",
+                  "text": "第 4 張"
+                }
+              ]
+            },
+            {
+              "type": "button",
+              "name": "SpiritPickRow5",
+              "width": "100%",
+              "height": 28,
+              "skinSlot": "detail.button.primary",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "SpiritPickRow5Label",
+                  "widget": {
+                    "vCenter": true,
+                    "left": 0,
+                    "right": 0
+                  },
+                  "height": 16,
+                  "styleSlot": "detail.label.button",
+                  "text": "第 5 張"
+                }
+              ]
+            },
+            {
+              "type": "button",
+              "name": "SpiritPickRow6",
+              "width": "100%",
+              "height": 28,
+              "skinSlot": "detail.button.primary",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "SpiritPickRow6Label",
+                  "widget": {
+                    "vCenter": true,
+                    "left": 0,
+                    "right": 0
+                  },
+                  "height": 16,
+                  "styleSlot": "detail.label.button",
+                  "text": "第 6 張"
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "SpiritPickActions",
+              "width": "100%",
+              "height": 32,
+              "layout": {
+                "type": "horizontal",
+                "spacing": 8
+              },
+              "children": [
+                {
+                  "type": "button",
+                  "name": "SpiritPickCancelButton",
+                  "width": "50%",
+                  "height": 32,
+                  "skinSlot": "detail.button.primary",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "SpiritPickCancelButtonLabel",
+                      "widget": {
+                        "vCenter": true,
+                        "left": 0,
+                        "right": 0
+                      },
+                      "height": 16,
+                      "styleSlot": "detail.label.button",
+                      "text": "取消"
+                    }
+                  ]
+                },
+                {
+                  "type": "button",
+                  "name": "SpiritPickConfirmButton",
+                  "width": "50%",
+                  "height": 32,
+                  "skinSlot": "detail.button.primary",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "SpiritPickConfirmButtonLabel",
+                      "widget": {
+                        "vCenter": true,
+                        "left": 0,
+                        "right": 0
+                      },
+                      "height": 16,
+                      "styleSlot": "detail.label.button",
+                      "text": "確認"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     },
