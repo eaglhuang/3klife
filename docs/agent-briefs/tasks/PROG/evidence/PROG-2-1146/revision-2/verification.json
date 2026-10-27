@@ -1,0 +1,135 @@
+{
+  "schemaId": "prog1146.verification.v2",
+  "task": "PROG-2-1146",
+  "status": "blocked",
+  "generatedAt": "2026-10-26T15:22:56.979820+00:00",
+  "baseCommit": "d44d6dec34037b5006e646269827ed5e685e02ad",
+  "validatedSourceCommit": "788f6be2efcd989ca477232a3be03b1adb2fa2e8",
+  "sourceManifest": {
+    "path": "source-manifest.json",
+    "sha256": "65d28ec4e9085c9fae19abb04a7fb7ba84bfd2d247db523742ac6b53041076ed"
+  },
+  "independentReview": {
+    "reviewer": "/root/prog1146_readonly_review",
+    "sourceCommit": "788f6be2efcd989ca477232a3be03b1adb2fa2e8",
+    "result": "No reproducible task-scoped product bug found; no source changes requested.",
+    "focusedTests": {
+      "passed": 10,
+      "failed": 0,
+      "exitCode": 0,
+      "toolOutputChunk": "78b501"
+    },
+    "reportPath": "review.md",
+    "reportSha256": "a4a413b19c05af93e515eb4b991ed2b330c1f4df1bf66bf78f2a3c06a74ee368"
+  },
+  "commands": [
+    {
+      "command": [
+        "./node_modules/.bin/tsc",
+        "--noEmit",
+        "--project",
+        "tsconfig.test.json"
+      ],
+      "cwd": "/tmp/prog1146-baseline-review2",
+      "sourceCommit": "d44d6dec34037b5006e646269827ed5e685e02ad",
+      "startedAt": "2026-10-26T15:19:59.714345+00:00",
+      "finishedAt": "2026-10-26T15:20:04.721216+00:00",
+      "exitCode": 2,
+      "outputPath": "baseline-tsc.txt",
+      "outputBytes": 16498,
+      "outputSha256": "bc174db3c696d438dbd5e65d131000b5d9b046d4211164f15bec37a63b1e0b4d"
+    },
+    {
+      "command": [
+        "./node_modules/.bin/ts-node",
+        "--transpile-only",
+        "-r",
+        "./tests/register-cc-test-stub.js",
+        "-r",
+        "./tests/register-tsconfig-test-paths.js",
+        "--project",
+        "tsconfig.test.json",
+        "tests/run-cli.ts"
+      ],
+      "cwd": "/workspace/3klife-research-20261026",
+      "sourceCommit": "788f6be2efcd989ca477232a3be03b1adb2fa2e8",
+      "startedAt": "2026-10-26T15:21:25.743721+00:00",
+      "finishedAt": "2026-10-26T15:21:32.889834+00:00",
+      "exitCode": 0,
+      "outputPath": "headless.txt.gz",
+      "outputBytes": 343314,
+      "outputSha256": "63167f8150a3df1f69e18ab869fe48e3306853539fe7347d8eba8c1b301096d2",
+      "encoding": "gzip",
+      "storedBytes": 124267,
+      "storedSha256": "f7b35cf7d84c697b0d0815479e64eb194134da8be0b9a1e5270bb120f85fb689",
+      "hashMeaning": "outputBytes/outputSha256 describe exact uncompressed stdout+stderr; storedBytes/storedSha256 describe the gzip file. gzip decompression was verified byte-identical."
+    },
+    {
+      "command": [
+        "./node_modules/.bin/tsc",
+        "--noEmit",
+        "--project",
+        "tsconfig.test.json"
+      ],
+      "cwd": "/workspace/3klife-research-20261026",
+      "sourceCommit": "788f6be2efcd989ca477232a3be03b1adb2fa2e8",
+      "startedAt": "2026-10-26T15:21:27.102332+00:00",
+      "finishedAt": "2026-10-26T15:21:31.743927+00:00",
+      "exitCode": 2,
+      "outputPath": "final-tsc.txt",
+      "outputBytes": 16498,
+      "outputSha256": "bc174db3c696d438dbd5e65d131000b5d9b046d4211164f15bec37a63b1e0b4d"
+    },
+    {
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "/workspace/3klife-research-20261026",
+      "sourceCommit": "788f6be2efcd989ca477232a3be03b1adb2fa2e8",
+      "startedAt": "2026-10-26T15:21:45.978808+00:00",
+      "finishedAt": "2026-10-26T15:21:50.027492+00:00",
+      "exitCode": 0,
+      "outputPath": "npm-test.txt",
+      "outputBytes": 1367789,
+      "outputSha256": "dabf78390b0220c92f90c1b40ef35a87320d997d1e17bb082ecf934becb1c197"
+    },
+    {
+      "command": [
+        "node",
+        "tools_node/compute-gate.js",
+        "--profile",
+        "standard",
+        "--agent-feedback"
+      ],
+      "cwd": "/workspace/3klife-research-20261026",
+      "sourceCommit": "788f6be2efcd989ca477232a3be03b1adb2fa2e8",
+      "startedAt": "2026-10-26T15:22:19.362932+00:00",
+      "finishedAt": "2026-10-26T15:22:22.442412+00:00",
+      "exitCode": 0,
+      "outputPath": "standard-gate.txt",
+      "outputBytes": 1089,
+      "outputSha256": "69263ab1f8466195da64cb8bde448f3e947a8e558371bcfdd44cf5aafbabd41e"
+    }
+  ],
+  "tscComparison": {
+    "command": [
+      "cmp",
+      "baseline-tsc.txt",
+      "final-tsc.txt"
+    ],
+    "exitCode": 0,
+    "identical": true,
+    "diagnosticCount": 38,
+    "sha256": "bc174db3c696d438dbd5e65d131000b5d9b046d4211164f15bec37a63b1e0b4d",
+    "baselineSourceChanges": "No tracked modifications; shared node_modules symlink is the only untracked baseline worktree item."
+  },
+  "immutableOutputPolicy": "Raw files created exclusively; never reused or overwritten. Future runs must use a new revision directory. Headless stdout is losslessly gzipped to preserve its trailing blank lines without weakening git diff whitespace checks.",
+  "finalCommitBinding": "The following evidence-only commit must retain every source-manifest Git object ID. Final HEAD is verified after commit; it cannot be embedded self-referentially.",
+  "mergeBlocked": true,
+  "limitations": [
+    "tsc exits 2 with 38 baseline diagnostics; not a passing typecheck.",
+    "Independent review covered source flow and the new focused suite, not Cocos or actual IndexedDB/browser restarts.",
+    "PR creation remains uncertain; no denied endpoint was queried and no PR creation or merge was attempted in revision-2."
+  ]
+}

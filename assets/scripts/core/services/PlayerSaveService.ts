@@ -1,4 +1,6 @@
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
+import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
+import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
 import { normalizeTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { readCardStarState } from '../systems/TigerTallyStar';
 import { normalizeDomesticLog, type DomesticSeasonLog } from '../systems/DomesticTasks';
@@ -160,6 +162,8 @@ export interface PlayerSaveSnapshot {
     travelCountdown?: TravelCountdown;
     /** 編制預設（DEP-14）：主將 id → 參謀官 / 後勤官；舊檔沒有此欄位時視為空 */
     sortiePresets?: Readonly<Record<string, { strategistUid: string | null; deputyUid: string | null }>>;
+    /** 出生紀錄（PROG-2-1146）：child.UID 去重；舊檔缺省為空，不回填歷史資料。 */
+    breedingBirthRecords?: BreedingBirthRecord[];
 }
 
 /** 讀回編制預設：只保留格式正確的條目；缺欄位、非物件一律丟棄（舊存檔視為空） */
@@ -427,6 +431,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         savedAt: snapshot.savedAt,
         gameTime: GameClock.normalize(snapshot.gameTime as GameTimeState),
         roster: snapshot.roster,
+        ...(snapshot.breedingBirthRecords !== undefined ? { breedingBirthRecords: normalizeBreedingBirthRecords(snapshot.breedingBirthRecords) } : {}),
         ...(snapshot.nurture ? { nurture: snapshot.nurture } : {}),
         deck: normalizeDeck(snapshot.deck),
         ...(snapshot.leadGeneralId ? { leadGeneralId: snapshot.leadGeneralId } : {}),

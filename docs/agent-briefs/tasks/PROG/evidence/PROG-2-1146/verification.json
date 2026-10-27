@@ -1,0 +1,10 @@
+{
+  "schemaId": "prog1146.verificationIndex.v2",
+  "task": "PROG-2-1146",
+  "status": "blocked",
+  "authoritativeReceipt": "revision-2/verification.json",
+  "supersededReceiptCommit": "788f6be2efcd989ca477232a3be03b1adb2fa2e8",
+  "reason": "Original headless/gate receipts preceded the final rerun. Revision-2 preserves raw final outputs with matching hashes.",
+  "mergeBlocked": true,
+  "authoritativeReceiptSha256": "90b446adb74a0413fa6264d6fa5755bb2a52f185853b724a726d87826f27c2c0"
+}

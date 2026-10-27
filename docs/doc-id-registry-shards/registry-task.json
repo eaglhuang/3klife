@@ -2380,5 +2380,11 @@
     "path": "docs/agent-briefs/tasks/ATM/ATM-0-0026.md",
     "title": "[ATM-0-0026] 把 Review001 改成產品方向校準器而非逐行找錯",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0406",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-1146.md",
+    "title": "[PROG-2-1146] 結緣出生紀錄跨重開保存",
+    "category": "task"
   }
 ]
