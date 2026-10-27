@@ -13,6 +13,16 @@ import { KeepTerritory } from './HereditaryKeep';
 import { appendJournalEntry, createEmptyJournal, JournalEntry } from './JournalLog';
 import { TERRITORY_MAX_LEVEL } from './TerritoryUpgrade';
 import { appendFarewellLetter, FarewellLetter, FarewellTier } from './FarewellLetterInbox';
+import { EMPTY_LOGIN_STREAK, LoginStreakState } from './LoginStreak';
+
+/** 連續登入統計（PROG-2-0987）：日期格式不對或天數非正整數時回到從未登入。 */
+export function normalizeLoginStreak(raw: unknown): LoginStreakState {
+    if (!isRecord(raw)) return { ...EMPTY_LOGIN_STREAK };
+    const { lastLoginDay, consecutiveDays } = raw;
+    if (typeof lastLoginDay !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(lastLoginDay)) return { ...EMPTY_LOGIN_STREAK };
+    if (typeof consecutiveDays !== 'number' || !Number.isInteger(consecutiveDays) || consecutiveDays < 1) return { ...EMPTY_LOGIN_STREAK };
+    return { lastLoginDay, consecutiveDays };
+}
 
 /** 告別信收件匣（PROG-2-0985）：逐筆檢查欄位，壞資料丟棄；同 ID 只留第一筆。 */
 export function normalizeFarewellLetters(raw: unknown): FarewellLetter[] {

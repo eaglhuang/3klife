@@ -60,6 +60,7 @@ import { createUpkeepState } from '../systems/MercenaryUpkeep';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
 import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
+import { EMPTY_LOGIN_STREAK, LoginStreakState, recordLogin } from '../systems/LoginStreak';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
@@ -185,6 +186,7 @@ import {
     normalizeGovernanceAssignments,
     normalizeFarewellLetters,
     normalizeJournalEntries,
+    normalizeLoginStreak,
     normalizeKeepTerritories,
     normalizePendingTerritoryLevel,
     normalizeTerritoryLevel,
@@ -1207,6 +1209,7 @@ export class GameSession {
         this._territories = defaultKeepTerritories();
         this._journal = createEmptyJournal();
         this._farewellLetters = [];
+        this._loginStreak = { ...EMPTY_LOGIN_STREAK };
         this._gachaMentorJournal = [];
         this._hallAssignLog = [];
         // 上一局的進度不能帶進新局（PROG-2-0660）
@@ -1497,6 +1500,18 @@ export class GameSession {
     private _journal: JournalState = createEmptyJournal();
     // ---- 傭兵告別信收件匣（RET-03 接線，PROG-2-0985）：離隊時寫入，隨 lifespanSaveFields 存檔 ----
     private _farewellLetters: FarewellLetter[] = [];
+    // ---- 連續登入統計（RET-09，PROG-2-0987）：隨 lifespanSaveFields 存檔 ----
+    private _loginStreak: LoginStreakState = { ...EMPTY_LOGIN_STREAK };
+
+    /** 連續登入統計（唯讀副本）。 */
+    public get loginStreak(): LoginStreakState {
+        return { ...this._loginStreak };
+    }
+
+    /** 記錄一次登入（UTC+8 切日）；同日重複登入不增加天數。 */
+    public recordLoginAt(epochMs: number): void {
+        this._loginStreak = recordLogin(this._loginStreak, epochMs);
+    }
 
     /** 告別信收件匣（唯讀副本）。 */
     public get farewellLetters(): FarewellLetter[] {
@@ -2862,8 +2877,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -2874,6 +2889,7 @@ export class GameSession {
             fields.journalEntries = this._journal.entries.map(e => ({ ...e, relatedGeneralUids: [...e.relatedGeneralUids] }));
         }
         if (this._farewellLetters.length > 0) fields.farewellLetters = this.farewellLetters;
+        if (this._loginStreak.lastLoginDay !== null) fields.loginStreak = this.loginStreak;
         return fields;
     }
 
@@ -2887,6 +2903,7 @@ export class GameSession {
         this._territoryLevel = normalizeTerritoryLevel(snapshot.territoryLevel);
         this._pendingTerritoryLevel = normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) ?? null;
         this._farewellLetters = normalizeFarewellLetters(snapshot.farewellLetters);
+        this._loginStreak = normalizeLoginStreak(snapshot.loginStreak);
     }
 
     /**
