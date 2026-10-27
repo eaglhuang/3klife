@@ -84,6 +84,7 @@ import { installSandtableTerritories } from '../../core/systems/SandtableTerrito
 import { officerPromotionNoticeOf } from '../../core/systems/HallMissionSettlement';
 import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
+import { HALL_EMPTY_THEME_CATALOG, resolveHallTheme, type HallThemeFrame } from '../../core/systems/LobbyThemeResolver';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
 import { GovernorHallController, GovernorTerritoryInfo } from '../core/GovernorHallController';
@@ -312,6 +313,7 @@ export class LobbyScene extends Component {
     private _leadSelectPage = 0;
     private readonly _sessionEventUnsubscribers: Array<() => void> = [];
     private _spiritFamilyOverviewHost: UIScreenPreviewHost | null = null;
+    private _hallThemeFrame: HallThemeFrame | null = null;
     private _bloodlineMirrorLoadingHost: UIScreenPreviewHost | null = null;
     private _bloodlineMirrorAwakeningHost: UIScreenPreviewHost | null = null;
     private _characterDs3Host: UIScreenPreviewHost | null = null;
@@ -1408,6 +1410,7 @@ export class LobbyScene extends Component {
             return;
         }
         this._lobbyHub = hub;
+        this._applyHallThemeFrame(resolveHallTheme(hub.Current_Theme, HALL_EMPTY_THEME_CATALOG));
         this._hallBoard = new HallBoardPanelController({
             hub: () => hub,
             player: () => hallPlayerOf(services().session.officerUnlocks),
@@ -1769,6 +1772,15 @@ export class LobbyScene extends Component {
                 resolve();
             });
         });
+    }
+
+    /** 大廳主題（HALL-09）：節慶未啟用時維持預設畫面；節慶層的節點掛載待美術卡。 */
+    private _applyHallThemeFrame(frame: HallThemeFrame): void {
+        this._hallThemeFrame = frame;
+        if (!frame.festivalActive) {
+            return;
+        }
+        UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 節慶主題已啟用，但節慶層節點尚未掛載', frame.layers);
     }
 
     private _loadLobbyHub(): Promise<LobbyHub | null> {
