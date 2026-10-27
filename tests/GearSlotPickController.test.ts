@@ -72,7 +72,7 @@ export function createGearSlotPickControllerSuite(): TestSuite {
         controller.open('WEAPON' as EquipSlot);
         const view = controller.getFlowView();
         assert.equals('選擇武器', view.texts.gearPickTitle);
-        assert.equals('武器（占位）', view.texts.gearPickLabel0);
+        assert.equals('R｜武器（占位）', view.texts.gearPickLabel0);
         assert.isTrue(view.actives.btnGearPick0);
         assert.isFalse(view.actives.btnGearPick1);
         assert.isTrue(view.actives.gearPickPanel);
