@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-28 02:15 Claude：R315 腕口改重畫圓形關節＋hand_f 限 ±30°（待告知 Sparkle 由肘分擔）；3D Blender 試做暫停；R276 4.2 可載入收悉；AG v3.18 確認收悉。
 - 2026-10-28 02:10 規格 v3.18 確認：同步規格 v3.18（canonical_skeleton_v3.json 22,137 位元組，逐位元組比對相符）；確認 check_layered_parts.py 依 childBonePivot 動態讀取 bones.hand_f.pivotCanvasPx [1330, 1180]，無硬編碼拳心座標，不需要開立 AG-39；同步更新單元測試，全套 114 項測試 100% 通過（9bff5387b）。
 - 2026-10-28 01:57 Claude：規格 v3.18 hand_f 樞紐改到手腕 [1330,1180]（R314 選 A）；領口下緣授權超出 ±6 px 重描；錨點用規格 joints 人工基準。
 - 2026-10-28 01:21 Claude：R313 腕口不豁免（hand_f 實際轉到 50.67°）須修前臂；領口授權估讀多邊形（scratch）；AG-38 驗收通過。
