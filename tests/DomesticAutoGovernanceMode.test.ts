@@ -35,11 +35,11 @@ export function createDomesticAutoGovernanceModeSuite(): TestSuite {
         session.startNewGame(3);
         assert.isFalse(session.autoGovernance);
         assert.isTrue(session.assignGovernor('farming', 'a').ok);
-        assert.equals(2, session.setAutoGovernance(true));
+        assert.equals(1, session.setAutoGovernance(true), 'Lv1 只有 2 格，手動的農耕佔一格，只補上 1 格');
         assert.isTrue(session.autoGovernance);
         assert.equals('a', governorOf(session, 'farming'), '手動指派不被覆蓋');
         assert.equals('b', governorOf(session, 'arms'));
-        assert.equals(3, session.governanceAssignments.length);
+        assert.equals(2, session.governanceAssignments.length);
     });
 
     suite.test('自動治理開啟時，季結算後補上陣亡空出的格子', async () => {
