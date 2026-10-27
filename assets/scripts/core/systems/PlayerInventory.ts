@@ -40,6 +40,14 @@ export const ITEM_REFRESH = 'ITEM_REFRESH';
 export const ITEM_FERTILITY = 'ITEM_FERTILITY';
 /** 安胎藥已使用、等待下一次結緣的標記（PM 2026-10-27 裁定）：不在背包顯示，成功結緣後清除。 */
 export const ITEM_FERTILITY_ARMED = 'ITEM_FERTILITY_ARMED';
+/** 入學令（許願池商品，名詞表 Admission_Token；PROG-2-1198，PM 暫定 id）。用途待接線。 */
+export const ITEM_ADMISSION_TOKEN = 'ITEM_ADMISSION_TOKEN';
+/** 虎符精華（許願池商品，名詞表 Tally_Essence；PROG-2-1198，PM 暫定 id）。用途待接線。 */
+export const ITEM_TALLY_ESSENCE = 'ITEM_TALLY_ESSENCE';
+/** 延壽丹（許願池商品，名詞表 Longevity_Pill；PROG-2-1198，PM 暫定 id）。用途待接線。 */
+export const ITEM_LONGEVITY_PILL = 'ITEM_LONGEVITY_PILL';
+/** 加速卡（許願池每張縮短 2h；PROG-2-1198，PM 暫定 id）。來源（月卡、精元購買）不在本卡。 */
+export const ITEM_WISH_SPEED_CARD = 'ITEM_WISH_SPEED_CARD';
 /** 歸宗令不足的提示（暫定，PM 2026-10-20 裁定）：語系 key 先用此名，文案待企劃定稿。 */
 export const MERGE_TOKEN_SHORTAGE_KEY = 'UI_MERGE_TOKEN_SHORTAGE';
 export const MERGE_TOKEN_SHORTAGE_TEXT = '歸宗令不足';
