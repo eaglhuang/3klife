@@ -62,6 +62,12 @@ export const ITEM_LONGEVITY_PILL = 'ITEM_LONGEVITY_PILL';
 export const ITEM_WISH_SPEED_CARD = 'ITEM_WISH_SPEED_CARD';
 /** 無期徒刑囚犯交出的傳家寶物（俘虜處理 K 節；可裝備或販賣，EQP-09） */
 export const ITEM_TREASURE = 'ITEM_TREASURE';
+/** 戰場撿拾（Stage_Salvage）戰後入帳的材料（PROG-2-1571，暫定 id） */
+export const ITEM_STONE = 'ITEM_STONE';
+export const ITEM_WOOD = 'ITEM_WOOD';
+export const ITEM_INTEL = 'ITEM_INTEL';
+export const ITEM_WEAPON_MATERIAL = 'ITEM_WEAPON_MATERIAL';
+export const ITEM_INSTRUCTOR_EXP = 'ITEM_INSTRUCTOR_EXP';
 
 /** 順序即背包顯示順序（ItemBagView 依 ITEM_DISPLAY_NAMES 的 key 順序列出），調換前先確認 UI 影響 */
 export const ITEM_DEFS: readonly ItemDef[] = [
@@ -83,6 +89,11 @@ export const ITEM_DEFS: readonly ItemDef[] = [
     { id: ITEM_LONGEVITY_PILL, name: '延壽丹', category: '消耗品', rarity: 1 },
     { id: ITEM_WISH_SPEED_CARD, name: '加速卡', category: '消耗品', rarity: 1 },
     { id: ITEM_TREASURE, name: '傳家寶物', category: '寶物', rarity: 1 },
+    { id: ITEM_STONE, name: '石材', category: '材料', rarity: 1 },
+    { id: ITEM_WOOD, name: '木材', category: '材料', rarity: 1 },
+    { id: ITEM_INTEL, name: '情報', category: '材料', rarity: 1 },
+    { id: ITEM_WEAPON_MATERIAL, name: '武器材料', category: '材料', rarity: 1 },
+    { id: ITEM_INSTRUCTOR_EXP, name: '教官心得', category: '材料', rarity: 1 },
 ];
 
 /** 依道具 ID 查定義；沒有定義時回傳 null（例如舊存檔的未知 key） */
