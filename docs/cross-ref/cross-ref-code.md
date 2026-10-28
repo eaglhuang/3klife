@@ -602,7 +602,6 @@
 | GeneralQuickViewPanel.ts  | doc_ui_0003 §v3-5                                                  | 概: Zone1 頭像點擊觸發武將快覽彈窗（名稱/HP/攻防/戰法，敵方遮蔽）✅ UIPreviewBuilder → general-quickview-{main/default/screen}.json |
 | ChildPanelBase.ts | doc_ui_0049 | 概: UCUF 子面板基類 |
 | CompositePanel.ts | doc_ui_0049 | 概: UCUF 複合面板容器 |
-| UILayoutConfig.ts | doc_ui_0049 | 概: UI 佈局設定資料結構 |
 | UIPreviewTextCatalog.ts | doc_ui_0049 | 概: 預覽文字目錄（佔位文字字典）|
 | UIRarityMark.ts | doc_ui_0049 | 概: 稀有度標記元件 |
 | UIRarityMarkVisual.ts | doc_ui_0049 | 概: 稀有度標記視覺渲染器 |
