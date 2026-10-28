@@ -713,26 +713,7 @@ export class BattleController {
       null,
     );
     if (weakest) {
-      const formula = new FormulaSystem();
-      const attackerInt = general.int > general.str;
-      const attackerAttack = formula.calculateGeneralAttack(
-        attackerInt
-          ? { int: general.int, lea: general.lea, maxHp: general.maxHp }
-          : { str: general.str, lea: general.lea, maxHp: general.maxHp },
-      );
-      const damage = estimateTacticDamage(
-        {
-          attackerAttack,
-          defenderDefense: weakest.getEffectiveDefense(),
-          attackerType: attackerInt ? TroopType.Archer : TroopType.Infantry,
-          defenderType: weakest.type,
-          attackerTerrain: TerrainType.Plain,
-          defenderTerrain: TerrainType.Plain,
-          attackBonus: general.attackBonus,
-        },
-        1,
-        formula,
-      );
+      const damage = this.estimateEnemyStrikeDamage(general, weakest);
       for (const candidate of candidates) {
         if (candidate.category === 'single-damage') {
           metrics[candidate.tacticId] = { estimatedDamage: damage };
@@ -763,9 +744,34 @@ export class BattleController {
     return battleSkillId ? { tacticId, battleSkillId } : null;
   }
 
+  /** 敵將單次攻擊對指定我方單位的預估傷害（倍率 1、平原；敵方選技與奧義擊殺估算共用） */
+  private estimateEnemyStrikeDamage(general: GeneralUnit, defender: TroopUnit): number {
+    const formula = new FormulaSystem();
+    const attackerInt = general.int > general.str;
+    const attackerAttack = formula.calculateGeneralAttack(
+      attackerInt
+        ? { int: general.int, lea: general.lea, maxHp: general.maxHp }
+        : { str: general.str, lea: general.lea, maxHp: general.maxHp },
+    );
+    return estimateTacticDamage(
+      {
+        attackerAttack,
+        defenderDefense: defender.getEffectiveDefense(),
+        attackerType: attackerInt ? TroopType.Archer : TroopType.Infantry,
+        defenderType: defender.type,
+        attackerTerrain: TerrainType.Plain,
+        defenderTerrain: TerrainType.Plain,
+        attackBonus: general.attackBonus,
+      },
+      1,
+      formula,
+    );
+  }
+
   /**
    * 敵方奧義決策（AIS-07）：難度表允許、精力已滿、有解鎖奧義，且 aiShouldUseUltimate 判定施放時，回傳奧義組合。
-   * 數值暫定：estimatedKills 規格未定義 estimateUltKills，暫以 0 傳入（PM 待裁）；isLosing＝敵方存活單位少於玩家。
+   * 數值暫定（PM 裁定）：estimatedKills＝目前存活、兵力 ≤ 敵將單次預估傷害的我方單位數（範圍暫以全體我方計）；
+   * isLosing＝敵方存活單位少於玩家。
    */
   public chooseEnemyUltimate(): { battleSkillId: string; ultimateId: string } | null {
     const general = this.state.getGeneral(Faction.Enemy);
@@ -780,7 +786,8 @@ export class BattleController {
       iq: this.state.aiIq,
       vitality: general.vitality,
       enemyCount: playerCount,
-      estimatedKills: 0,
+      estimatedKills: this.livingUnitsOf(Faction.Player)
+        .filter(unit => unit.currentHp <= this.estimateEnemyStrikeDamage(general, unit)).length,
       isLosing: enemyCount < playerCount,
     });
     return shouldUse ? { battleSkillId: general.skillId, ultimateId } : null;

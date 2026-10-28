@@ -29,7 +29,7 @@ const TEST_ULTIMATE_ID = 'test-ultimate';
 /** 玩家兵放的格子（避開武將所在的 lane 2） */
 const PLAYER_TROOP_LANES = [0, 1, 3, 4];
 
-function tableEntry(difficulty: 'easy' | 'normal'): AiDifficultyEntry {
+function tableEntry(difficulty: 'easy' | 'normal' | 'hard'): AiDifficultyEntry {
     const { table, errors } = parseAiDifficultyTable(JSON.parse(fs.readFileSync(DIFFICULTY_PATH, 'utf8')));
     assert.equals(0, errors.length);
     return aiDifficultyEntryOf(table!, difficulty);
@@ -53,7 +53,15 @@ function playerTroop(lane: number): TroopUnit {
 }
 
 /** 建立戰場：敵方帶奧義、精力滿；玩家兵取 PLAYER_TROOP_LANES 前 playerTroopCount 格 */
-function battle(entry: AiDifficultyEntry, playerTroopCount: number, unlockReincarnation = 1): { ctrl: BattleController; enemy: GeneralUnit } {
+function enemyTroop(lane: number): TroopUnit {
+    const unit = new TroopUnit(`e-troop-${lane}`, TroopType.Infantry, Faction.Enemy, {
+        hp: 100000, attack: 1, defense: 1, moveRange: 0, attackRange: 0,
+    });
+    unit.moveTo(lane, 6);
+    return unit;
+}
+
+function battle(entry: AiDifficultyEntry, playerTroopCount: number, unlockReincarnation = 1): { ctrl: BattleController; enemy: GeneralUnit; playerTroops: TroopUnit[] } {
     services().initialize();
     services().session.setRandomSource(() => 0.99);
     const enemy = general('e', Faction.Enemy, true, unlockReincarnation);
@@ -62,10 +70,9 @@ function battle(entry: AiDifficultyEntry, playerTroopCount: number, unlockReinca
     ctrl.configureAiDifficulty(entry);
     ctrl.placeGeneralOnBoard(2, 2);
     enemy.currentSp = enemy.maxSp;
-    for (const lane of PLAYER_TROOP_LANES.slice(0, playerTroopCount)) {
-        ctrl.state.addUnit(playerTroop(lane));
-    }
-    return { ctrl, enemy };
+    const playerTroops = PLAYER_TROOP_LANES.slice(0, playerTroopCount).map(playerTroop);
+    playerTroops.forEach(unit => ctrl.state.addUnit(unit));
+    return { ctrl, enemy, playerTroops };
 }
 
 /** 跑一個完整回合，回傳期間敵方奧義施放次數 */
@@ -103,7 +110,18 @@ export function createAiEnemyUltimateFlowSuite(): TestSuite {
         assert.equals(0, runTurnCountingEnemyUltimates(ctrl));
     });
 
-    suite.test('NORMAL：奧義槽未解鎖（需 5 轉）時不施放', () => {
+    suite.test('HARD（HIGH）：兩支我方兵力 ≤ 敵將單次傷害即可擊殺 2，成立施放；只剩 1 支不放', () => {
+        const { ctrl, playerTroops } = battle(tableEntry('hard'), 4);
+        PLAYER_TROOP_LANES.forEach(lane => ctrl.state.addUnit(enemyTroop(lane)));
+        playerTroops.forEach(unit => { unit.currentHp = 100000; });
+        playerTroops[0].currentHp = 1;
+        playerTroops[1].currentHp = 1;
+        assert.isTrue(ctrl.chooseEnemyUltimate() !== null);
+        playerTroops[1].currentHp = 100000;
+        assert.equals(null, ctrl.chooseEnemyUltimate());
+    });
+
+    suite.test('NORMAL（MEDIUM）：奧義槽未解鎖（需 5 轉）時不施放', () => {
         const { ctrl } = battle(tableEntry('normal'), 4, 5);
         assert.equals(null, ctrl.chooseEnemyUltimate());
         assert.equals(0, runTurnCountingEnemyUltimates(ctrl));
