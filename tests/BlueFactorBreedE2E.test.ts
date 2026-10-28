@@ -1,5 +1,5 @@
 /**
- * BlueFactorBreedE2E.test.ts — 藍色 3 星機率 × 真實結緣端到端（FORM-08，PROG-2-1276）headless 測試
+ * BlueFactorBreedE2E.test.ts — 藍色 3 星機率 × 真實結緣端到端（FORM-08，PROG-2-1292）headless 測試
  *
  * Unity 對照：像 PlayMode 測試，跑真正的 breed()，並在繼承入口攔截參數。
  * 鎖住：父母六維合計 < 600 時 breed() 交給繼承的藍色機率為 0；合計 ≥ 1100 時為 10%。
@@ -79,7 +79,7 @@ function runWith(stats: Stats, seed: number) {
 }
 
 export function createBlueFactorBreedE2ESuite(): TestSuite {
-    const suite = new TestSuite('BlueFactorBreedE2E (藍色 3 星 × 真實結緣 FORM-08 PROG-2-1276)');
+    const suite = new TestSuite('BlueFactorBreedE2E (藍色 3 星 × 真實結緣 FORM-08 PROG-2-1292)');
 
     /**
      * 掃種子直到受孕成功，回傳 breed() 實際交給 inheritFactors 的藍色機率。
