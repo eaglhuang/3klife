@@ -52,6 +52,8 @@ export interface AncestorPeekView {
     title: string;
     /** 祖紋命篆色調（#RRGGBB），來自 CrestStyle；無因子色為中性灰（BUI-08） */
     crestTint: string;
+    /** 徽記的語系 key（ui.gene.tag.*）；無因子色為 null，不顯示徽記字（BUI-08） */
+    badgeKey: string | null;
     /** 血脈傾向；沒有標籤時為「—」，不補假資料 */
     tendency: string;
     lines: string[];
@@ -70,13 +72,14 @@ export function isAncestorRevealed(person: { is_virtual: boolean }): boolean {
 export function ancestorPeekView(source: AncestorPeekSource | null, revealed: boolean, color: FactorColor | null = null): AncestorPeekView {
     const tags = source?.core_tags ?? [];
     const tendency = tags.length > 0 ? tags.join('、') : '—';
-    const crestTint = resolveCrestStyle(color).tint;
+    const crest = resolveCrestStyle(color);
     if (!source || !revealed) {
-        return { title: '？？？', crestTint, tendency, lines: ['鎖定：尚未揭露'], locked: true };
+        return { title: '？？？', crestTint: crest.tint, badgeKey: crest.badgeKey, tendency, lines: ['鎖定：尚未揭露'], locked: true };
     }
     return {
         title: source.name,
-        crestTint,
+        crestTint: crest.tint,
+        badgeKey: crest.badgeKey,
         tendency,
         lines: [`勢力：${source.faction}`],
         locked: false,

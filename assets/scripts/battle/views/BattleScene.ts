@@ -215,6 +215,8 @@ export class BattleScene extends Component {
       await services().material.warmupCritical(this.node);
 
       // 5. 開始第一場戰鬥（含地形、天氣、戰法）
+      // 戰場關係事件帳本（PROG-2-1415）：同一關只觸發一次，已播紀錄隨存檔保存
+      this.ctrl.bindRelationEvents(`battle:${this.currentEncounterId}`, services().session.relationEvents);
       this.ctrl.initBattle(
         pg,
         eg,
@@ -224,6 +226,7 @@ export class BattleScene extends Component {
         difficulty,
         enemyScale?.difficulty.difficultyBonus ?? 0,
       );
+      if (enemyScale) this.ctrl.configureAiDifficulty(enemyScale.difficulty);
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;
       if (weatherSchedule) this.ctrl.setWeatherSchedule(weatherSchedule);

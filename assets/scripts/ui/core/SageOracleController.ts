@@ -27,6 +27,7 @@ import { ITEM_DISPLAY_NAMES, ITEM_ORACLE_TOKEN } from '../../core/systems/Player
 import type { FactorPoolEntry } from '../../core/systems/BreedingSystem';
 import { previewLockedFactorDirections } from '../../core/systems/SageFactorPreview';
 import { ProphecyResult, SAGES, SageDefinition, SageDivinationResult, SageId } from '../../core/systems/SageDivination';
+import { oracleLockedText } from './OracleLockedText';
 
 export const SAGE_ORDER: readonly SageId[] = ['zhuge-liang', 'pang-tong', 'hua-tuo', 'xu-shao', 'sima-hui', 'zuo-ci'];
 
@@ -175,7 +176,7 @@ export class SageOracleController {
 
         const unlocked = this._deps.session.isSageUnlocked(sage.id);
         const couple = this._resolveCouple();
-        const lockText = `此名士尚未解鎖（需累計占卜 ${sage.unlockDivinations} 次，目前 ${this._deps.session.oracleCount} 次）`;
+        const lockText = oracleLockedText(sage.unlockDivinations);
         const texts: Record<string, string> = {
             oracleTitle: '名士占卜',
             oracleNotice: this._notice,

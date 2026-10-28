@@ -85,11 +85,13 @@ import { normalizeOfflineBattleSnapshots, type OfflineBattleSnapshot } from '../
 import { normalizeTournamentState, type TournamentState } from '../systems/TournamentLocal';
 import { normalizeWishPoolState, type WishPoolState } from '../systems/WishPool';
 import { normalizeOfflineInteractionLog } from '../systems/OfflineInteractionEvents';
+import { normalizeCountdownState, type CountdownState } from '../systems/CountdownManager';
 import { normalizeRelationEventKeys } from '../systems/RelationEvents';
 import { normalizeUnlockHistory, type SandtableStageId } from '../systems/SandtableProgress';
 import { normalizeStartingTalisman, type StartingSpiritTalisman } from '../systems/TeachingSpiritTalisman';
 import { normalizeOpeningPhaseId } from '../systems/OpeningProgress';
 import { normalizeAiAdaptiveStreak, type AiAdaptiveStreak } from '../systems/AiAdaptiveDifficulty';
+import { normalizeEnrollGrantDay } from '../systems/DailyFreeEnroll';
 
 export const PLAYER_SAVE_KEY = 'player.save';
 /** 備份槽的 key 後綴（DS-14）：主檔為 `<key>`，上一份有效存檔為 `<key>.bak` */
@@ -199,6 +201,8 @@ export interface PlayerSaveSnapshot {
     openingPhase?: string;
     /** 玩家連勝／連敗計數（AIS-11 E-8）；後加的選填欄位，舊檔缺值視為 0；版號不升 */
     aiAdaptiveStreak?: AiAdaptiveStreak;
+    /** 免費入學令已發放的最大登入日（YYYY-MM-DD，ITM-06 高水位）：只在有發過時寫入；回撥時鐘不重領（PROG-2-1374 修正） */
+    enrollGrantDay?: string;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
     gachaMentorJournal?: GachaMentorJournalEntry[];
     /** 大廳任務 AI 委任紀錄（HALL-05，PROG-2-1006）：只增不改（結算除外）；舊檔沒有時讀回空陣列 */
@@ -243,6 +247,8 @@ export interface PlayerSaveSnapshot {
     soulFragments?: SoulFragmentLedger;
     /** 趕路（回合制）；後加的選填欄位，舊檔讀回為沒有趕路（PROG-2-0475） */
     travelCountdown?: TravelCountdown;
+    /** 新手開場趕路倒數（OPEN-11）：絕對時間戳，離線時間自動計入；只在趕路中寫入，舊檔沒有時為 null */
+    countdown?: CountdownState;
     /** 編制預設（DEP-14）：主將 id → 參謀官 / 後勤官；舊檔沒有此欄位時視為空 */
     sortiePresets?: Readonly<Record<string, { strategistUid: string | null; deputyUid: string | null }>>;
     /** 出生紀錄（PROG-2-1146）：child.UID 去重；舊檔缺省為空，不回填歷史資料。 */
@@ -541,6 +547,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.friendBorrowLedger !== undefined ? { friendBorrowLedger: normalizeBorrowLedger(snapshot.friendBorrowLedger) } : {}),
         ...(snapshot.soulFragments !== undefined ? { soulFragments: normalizeSoulFragmentLedger(snapshot.soulFragments) } : {}),
         ...(normalizeTravelCountdown(snapshot.travelCountdown) ? { travelCountdown: normalizeTravelCountdown(snapshot.travelCountdown)! } : {}),
+        ...(normalizeCountdownState(snapshot.countdown) ? { countdown: normalizeCountdownState(snapshot.countdown)! } : {}),
         ...(snapshot.gachaPity !== undefined ? { gachaPity: normalizeGachaPityBook(snapshot.gachaPity) } : {}),
         ...(snapshot.gachaWallet !== undefined ? { gachaWallet: normalizeGachaWalletSave(snapshot.gachaWallet) } : {}),
         ...(snapshot.femaleSystem !== undefined ? { femaleSystem: normalizeFemaleSystemState(snapshot.femaleSystem) } : {}),
@@ -578,6 +585,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.familySystemUnlocked === true ? { familySystemUnlocked: true } : {}),
         ...(normalizeOpeningPhaseId(snapshot.openingPhase) !== null ? { openingPhase: normalizeOpeningPhaseId(snapshot.openingPhase)! } : {}),
         ...(snapshot.aiAdaptiveStreak !== undefined ? { aiAdaptiveStreak: normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak) } : {}),
+        ...(normalizeEnrollGrantDay(snapshot.enrollGrantDay) !== null ? { enrollGrantDay: normalizeEnrollGrantDay(snapshot.enrollGrantDay)! } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
         ...(snapshot.hallAssignLog !== undefined ? { hallAssignLog: normalizeHallAssignLog(snapshot.hallAssignLog) } : {}),
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
