@@ -26,6 +26,8 @@
   "ui.general.skill": "General Skill",
   "ui.general.details": "Details",
   "ui.general.vitality": "Vitality",
+  "ui.general.loyalty": "Loyalty",
+  "ui.general.loyalty.locked": "Locked",
   "ui.general.age": "Age",
   "ui.general.ep": "Burst Power",
   "ui.general.skill_ready": "Main Skill",

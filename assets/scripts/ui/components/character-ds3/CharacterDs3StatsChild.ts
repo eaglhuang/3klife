@@ -8,6 +8,18 @@ import { resolveStat } from '../general-detail/GeneralDetailFormatters';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
 import { describeLifespan, describeVitality } from '../../core/LifeVitalityPresenter';
+import { loyaltyGaugeOf, type LoyaltyTier } from '../../../core/systems/LoyaltyGauge';
+
+/** 忠誠度條（HUM-04）顏色：正常沿用金色，低於 60 橙色、低於 30 紅色 */
+const LOYALTY_TIER_HEX: Record<LoyaltyTier, string> = {
+    normal: '#FFE088',
+    warn: '#F0A040',
+    danger: '#E05050',
+};
+/** 忠誠度條與精力條之間的間距、條高與數字行高（執行期建立，版位由 Codex 實機微調） */
+const LOYALTY_ROW_GAP = 8;
+const LOYALTY_BAR_HEIGHT = 8;
+const LOYALTY_LABEL_HEIGHT = 16;
 
 type StatKey = keyof GeneralStatsConfig;
 
@@ -131,6 +143,9 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
     private _hp!: VitalBinding;
     private _sp!: VitalBinding;
     private _vitality!: VitalBinding;
+    private _loyaltyTrack: Node | null = null;
+    private _loyaltyFill: Node | null = null;
+    private _loyaltyLabel: Label | null = null;
     private _age!: Label;
     private _vitalityProfile!: Label;
     private _status!: Label;
@@ -159,6 +174,7 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         this._hp = this._bindVital(VITAL_BINDINGS.hp);
         this._sp = this._bindVital(VITAL_BINDINGS.sp);
         this._vitality = this._bindVital(VITAL_BINDINGS.vitality);
+        this._ensureLoyaltyRow();
         this._age = this._label('CharacterDs3TabStats_span_46');
         this._vitalityProfile = this._label('CharacterDs3TabStats_span_48');
         this._status = this._label('CharacterDs3TabStats_span_50');
@@ -186,6 +202,7 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         void this._syncRadar(cfg);
         this._syncStatsRows(cfg);
         this._syncVitals(cfg);
+        this._syncLoyalty(cfg.id);
         this._syncProfile(cfg);
         this._syncTotalRank(cfg);
     }
@@ -348,6 +365,60 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         const vit = describeVitality(cfg);
         this._syncVital(this._vitality, vit.current, vit.max, 'accent.gold.light');
         this._setBarColorHex(this._vitality.barFill, vit.color);
+    }
+
+    /**
+     * 依忠誠紀錄更新忠誠度條與數字（HUM-04）。轉蛋武將鎖定為 100 並顯示鎖定字樣。
+     * 沒有紀錄時用開局初值，見 LoyaltyGauge。
+     */
+    private _syncLoyalty(generalId: string): void {
+        if (!this._loyaltyTrack || !this._loyaltyFill || !this._loyaltyLabel) return;
+        const view = loyaltyGaugeOf(services().session.tallyLoyalty[generalId]);
+        this._setBarRatio(this._loyaltyTrack, this._loyaltyFill, view.ratio, 'accent.gold.light', LOYALTY_BAR_HEIGHT, 255);
+        this._setBarColorHex(this._loyaltyFill, LOYALTY_TIER_HEX[view.tier]);
+
+        const valueText = view.locked
+            ? `${view.value} ${this.t('ui.general.loyalty.locked')}`
+            : `${view.value} / 100`;
+        this._loyaltyLabel.string = `${this.t('ui.general.loyalty')} ${valueText}`;
+        this._loyaltyLabel.color = this._hexToColor(LOYALTY_TIER_HEX[view.tier]);
+    }
+
+    /**
+     * 在精力條正下方建立忠誠度條與數字（HUM-04）。布局 JSON 沒有這一列，所以執行期建立；
+     * 位置以精力條推算，沿用精力條的寬度，填充以左緣對齊。
+     */
+    private _ensureLoyaltyRow(): void {
+        const vitalTrack = this._vitality.barTrack;
+        const parent = vitalTrack.parent;
+        if (!parent || this._loyaltyTrack) return;
+
+        const width = vitalTrack.getComponent(UITransform)?.width ?? 255;
+        const trackY = vitalTrack.position.y - LOYALTY_ROW_GAP - LOYALTY_BAR_HEIGHT / 2;
+
+        const track = new Node('LoyaltyBarTrack');
+        parent.addChild(track);
+        track.addComponent(UITransform).setContentSize(width, LOYALTY_BAR_HEIGHT);
+        track.setPosition(vitalTrack.position.x, trackY, vitalTrack.position.z);
+        track.addComponent(SolidBackground).color = new Color(0, 0, 0, 120);
+
+        const fill = new Node('LoyaltyBarFill');
+        track.addChild(fill);
+        const fillTf = fill.addComponent(UITransform);
+        fillTf.anchorX = 0;
+        fillTf.setContentSize(0, LOYALTY_BAR_HEIGHT);
+        fill.setPosition(-width / 2, 0, 0);
+
+        const labelNode = new Node('LoyaltyValue');
+        parent.addChild(labelNode);
+        labelNode.setPosition(vitalTrack.position.x, trackY - LOYALTY_LABEL_HEIGHT, vitalTrack.position.z);
+        const label = labelNode.addComponent(Label);
+        label.fontSize = 14;
+        label.lineHeight = LOYALTY_LABEL_HEIGHT;
+
+        this._loyaltyTrack = track;
+        this._loyaltyFill = fill;
+        this._loyaltyLabel = label;
     }
 
     private _syncVital(binding: VitalBinding, value: number, max: number, colorToken: string): void {
