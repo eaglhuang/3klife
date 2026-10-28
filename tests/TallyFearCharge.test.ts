@@ -43,5 +43,13 @@ export function createTallyFearChargeSuite(): TestSuite {
         assert.equals(0, applyFearCharge(unitAt('p', Faction.Player, 2, 3), [near]).length);
     });
 
+    suite.test('大喬士氣不降（PROG-2-1525）：恐懼衝鋒不扣士氣', () => {
+        const tieQi = unitAt('t', Faction.Player, 2, 3, 'tiger-tally-tie-qi');
+        const daQiao = unitAt('d', Faction.Enemy, 2, 4, 'tiger-tally-da-qiao');
+        daQiao.morale = 30;
+        assert.equals(0, applyFearCharge(tieQi, [daQiao]).length);
+        assert.equals(30, daQiao.morale);
+    });
+
     return suite;
 }
