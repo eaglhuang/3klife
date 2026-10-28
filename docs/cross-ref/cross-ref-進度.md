@@ -31,12 +31,12 @@
 |---|---|:-:|:-:|:-:|:-:|:-:|
 | **數值系統.md (doc_data_0001)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, GeneralUnit.ts, BattleController.ts, BattleState.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **兵種（虎符）系統.md (doc_spec_0012)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, BattleController.ts, EnemyAI.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **戰場部署系統.md (doc_spec_0040)** | BattleSystem.ts, BattleState.ts, BattleController.ts, BattleScene.ts, BoardRenderer.ts, DeployPanel.ts, ResultPopup.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
+| **戰場部署系統.md (doc_spec_0040)** | BattleSystem.ts, BattleState.ts, BattleController.ts, BattleScene.ts, BoardRenderer.ts, DeployPanel.ts, ResultPopup.ts, SortieDeploy.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | **武將系統.md (doc_spec_0016)** | GeneralUnit.ts, GeneralDetailComposite.ts, GeneralListPanel.ts, LobbyScene.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | **武將人物介面規格書.md (doc_ui_0012)** | GeneralDetailComposite.ts, GeneralDetailOverviewChild.ts, GeneralListPanel.ts, LobbyScene.ts, GeneralUnit.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
 | **戰法系統.md (doc_spec_0038)** | ActionSystem.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **奧義系統.md (doc_spec_0030)** | ActionSystem.ts, UltimateDamage.ts, UltimateUpgrade.ts, BloodlineTransmissionUltimate.ts, ChildUltimateAwaken.ts, VitalityBattleGate.ts, BattleSkillDispatcher.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **因子爆發系統.md (doc_spec_0010)** | BuffSystem.ts, BuffGainEffectPool.ts, BuffEffectPrefabController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| **因子爆發系統.md (doc_spec_0010)** | BuffSystem.ts, BuffGainEffectPool.ts, BuffEffectPrefabController.ts, GeneObject.ts, FactorInheritance.ts, FactorTacticLinkage.ts, HiddenFactorAwakening.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **治理模式他國AI系統.md (doc_spec_0020)** | EnemyAI.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **大廳系統.md (doc_spec_0002)** | LobbyScene.ts, UIConfig.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **官職系統.md (doc_spec_0014)** | UIConfig.ts, LobbyScene.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
@@ -82,7 +82,7 @@
 | 運氣系統.md (doc_spec_0035) | FateBlessing.ts, LuckVisibility.ts（E-1 前期隱藏、E-4 Lv46 解鎖）, BreedingSystem.ts（E-2 天命波動）, LuckThresholds.ts（E-3 紫因子 LUK 上限）, LuckEventRate.ts（E-5 事件率，PROG-2-1349）, FactorAwakening.ts（E-6 覺醒速度） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | 道具系統（付費免費道具）.md (doc_spec_0036) | FertilityBoost.ts, ItemBagView.ts, ItemEffectDispatcher.ts, ItemRefreshEffect.ts, PlayerInventory.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 領地治理系統.md (doc_spec_0037) | ChildMagistrate.ts, ChildOfficialPosts.ts, DomesticAutoGovernance.ts, DomesticTasks.ts, GovernanceAssignment.ts, GovernorHallView.ts, HereditaryKeep.ts, LifespanSave.ts, TerritoryUpgrade.ts, GovernorHallController.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
-| **戰法場景規格書.md (doc_spec_0039)** | ActionSystem.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| **戰法場景規格書.md (doc_spec_0039)** | ActionSystem.ts, SceneGambitTrigger.ts, SceneGambitAdapter.ts, TileStateRules.ts, StealthTile.ts, BattleTacticBehavior.ts, WisdomMeter.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | 熱更新與版本控制規格書.md (doc_tech_0012) | SaveVersion.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 
 #### D-1a. 邏輯欄重判紀錄（逐份對照規格條目）
@@ -94,6 +94,9 @@
 | 戰法系統.md (doc_spec_0038) | 🟡（維持） | G-1 虎符 14 招、G-2 教官 6 招、G-3 趙家槍法、G-4 場景戰法（火攻／水淹／落石／伏兵／夜襲）都有效果：BattleSkillProfiles、各 resolver、TallyPassive（騎射合一、結姻連射、七進七出）、BattleTactic；H-1 天氣禁用已做（PROG-2-0406） | H-2 SSR／UR 英靈面閃現、火計格 VFX、水計流向與 H-3 掠奪金色飄字：TacticVfxHooks.ts 只有純邏輯，沒有任何檔案 import，未接畫面；`assets/fx/tactics/` 資源目錄不存在 | PROG-2-1432 |
 | 兵種（虎符）系統.md (doc_spec_0012) | ✅→🟡 | 「特殊兵種列表」34 條特殊戰法：11 條沿用既有 profile、9 條以被動實作（白馬、梟姬、龍膽；解煩、丹陽、吳國由 PROG-2-1433、止啼符、藤甲由 PROG-2-1437、虎痴符由 PROG-2-1444 補上）；錦帆、工甲符、白耳、元戎、常山女以暫定數字部分實作（PROG-2-1457），其餘 9 條是 `pendingEffect` 殼（不可施放、無效果） | 9 條特殊戰法未實作：鐵騎（恐懼衝鋒）、先登（攻城 ×2、免恐懼）、大喬（全隊魅力、士氣不降）、南蠻（巨型踐踏）、都督符（火燒連營）、神威符（強擊突刺）、惡來符（捨命護主）、奉孝符（遺計定遼）、狼顧符（鷹視狼顧）；5 條部分實作（數字暫定）待補：常山女治療友軍、白耳替主將承傷與斷後防禦 ×2、元戎範圍傷害、工甲符連擊時傷害提升；另 TallyCardCatalog 只有 6 種虎符卡，龍膽符等名將專屬虎符尚無卡片模板，玩家拿不到（解煩、丹陽、吳國、止啼符、藤甲、虎痴符、錦帆、工甲符、白耳、元戎、常山女亦同） | PROG-2-1432、PROG-2-1433、PROG-2-1437、PROG-2-1444、PROG-2-1457 |
 | 奧義系統.md (doc_spec_0030) | 🟡（維持） | E 製作功能清單 10 項：資料表、轉生解鎖欄位、精力消耗（VitalityBattleGate.spendUltimateVitality）、專屬綁定、子嗣覺醒（ChildUltimateAwaken）、奧義升級與圖鑑（UltimateUpgrade）已落地；F-0 血脈五階解鎖（BloodlineTransmissionUltimate）、傷害公式（UltimateDamage）已落地 | ~~① 每場限用 1 次~~、~~② 升級等級進戰鬥傷害~~（PROG-2-1451 補上；奧義選單尚未灰化已用奧義）；③ E-10 組合奧義（P2）未做；④「英靈附體」（兵力劣勢時召喚祖先虛影同步施放成名奧義）未做 | PROG-2-1447、PROG-2-1451 |
+| 因子爆發系統.md (doc_spec_0010) | 🟡（維持） | E 製作清單 8 項都有代碼：基因物件（GeneObject）、遺傳（FactorInheritance）、發現度與隱性覺醒（HiddenFactorAwakening）、因子戰法聯動（FactorTacticLinkage）、因子遮罩、EP 計算（BreedingSystem.computeEpMvp）、標籤池；水戰／大霧／林地因子有戰場效果 | 1. 白色因子「抗性、性格」沒有遊戲效果；2. K 段揭露順序（新手藍粉綠／中期白紅／後期紫）與 UnlockPhase.phaseFactorColors（藍粉／綠白／紫紅）不一致，也沒接進培育可參與顏色，需人工裁定；3. EP「精力滿載 +10」加成（規格標建議值）未進 computeEpMvp | PROG-2-1458 |
+| 戰場部署系統.md (doc_spec_0040) | ✅→🟡 | 出陣部署（SortieDeploy）、委任 AI、預備隊、雙方部署深度、勝敗結算都有代碼 | 1. 攻城戰場景 SCENE_SIEGE 不存在：BattleSceneMode 只有 normal／flood／fire／rock／ambush／night，沒有城牆、護城河、器械通道格；SortieDeploy 只做了攻城精英上限加成 | PROG-2-1458 |
+| 戰法場景規格書.md (doc_spec_0039) | 🟡（維持） | B-2 成功率公式（SceneGambitTrigger：min 95%、50%+(INT−門檻)×2%）、場景戰法轉接（SceneGambitAdapter）、Tile 狀態（TileStateRules、StealthTile）、夜襲命中 −25%／暴擊 +20%、營帳格（BattleTacticBehavior）已落地 | 1. 軍師智謀能量（WisdomMeter，每回合 INT×0.5、滿 100 觸發）只有純邏輯，沒接進戰鬥，也沒有全局增幅與 HUD；2. 攻城戰（SCENE_SIEGE：衝車、雲梯、投石機、城牆地利）未做；3. 落石／火攻掉落與火抗 +50% 等場景附帶規則找不到代碼；4. F 段 P1 計謀格子掉落未做 | PROG-2-1458 |
 
 ---
 
