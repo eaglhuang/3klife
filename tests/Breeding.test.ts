@@ -331,9 +331,9 @@ export function createBreedingSuite(): TestSuite {
         assert.equals(0, child.age);
         assert.equals('Mystery', child.status);
         assert.equals('男', child.gender);
-        assert.equals(50, child.ep, '祖先不明：沒有共鳴與異脈');
-        assert.equals(childBaseStat(90, 70, 50), child.str);
-        assert.equals(40, child.str);
+        assert.equals(60, child.ep, '祖先不明：沒有共鳴與異脈；父母精力滿格 → 精力滿載 +10（PROG-2-1511）');
+        assert.equals(childBaseStat(90, 70, 60), child.str);
+        assert.equals(48, child.str);
         assert.equals('f', child.fatherId);
         assert.equals(7, child.birthSeason);
         assert.equals('gene_cavalry,gene_command,gene_honor', (child.genes ?? []).map((g) => g.id).sort().join(','), '六色全開：白色 gene_honor 也繼承');
@@ -416,7 +416,7 @@ export function createBreedingSuite(): TestSuite {
         const service = new BreedingService(store, graph, { random: () => 0.01, dictionary, currentSeason: () => 3 });
 
         const preview = service.previewEp('guan-yu', 'diao-chan');
-        assert.equals(85, preview.ep, '真實祖譜 14 人不重複 → 異脈 +20，同因子 ≥ 3 → 共鳴 +15');
+        assert.equals(95, preview.ep, '真實祖譜 14 人不重複 → 異脈 +20，同因子 ≥ 3 → 共鳴 +15，精力滿載 +10（PROG-2-1511）');
 
         const result = service.breed('guan-yu', 'diao-chan');
         assert.equals('conceived', result.outcome);
@@ -425,7 +425,7 @@ export function createBreedingSuite(): TestSuite {
         const child = roster.find((g) => g.id === 'child-guan-yu-diao-chan-1')!;
         assert.equals(0, child.age);
         // 子嗣 EP = 預覽基礎分 + 天命波動（PROG-2-0511）；波動依父母 LUK 與亂數而定
-        assert.equals(85 + result.ep!.fate, child.ep);
+        assert.equals(95 + result.ep!.fate, child.ep);
         assert.equals(14, (child.ancestor_chain ?? []).length);
 
         const pedigree = graph.getPedigree(child.id);
