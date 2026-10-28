@@ -25,6 +25,7 @@ import {
   tallyPhysicalDamageTakenOf,
   tallyTroopTypeDamageMultiplierOf,
   applyFearCharge,
+  tallySplashTargetsOf,
 } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
@@ -300,12 +301,34 @@ export class BattleCombatResolver {
       damageSource: damageAdjustment.damageSource,
       allowDamageLink: true,
     });
+    this.resolveTallySplash(attacker, defender, damage, svc);
 
     if (!defender.isDead()) {
       this.tryTriggerCounterReaction(defender, attacker, svc);
     }
     this.resolveNavalCombinedFollowUp(attacker, defender, svc);
     this.resolveKinComboFollowUp(attacker, defender, svc);
+  }
+
+  /** 南蠻巨型踐踏濺射（PROG-2-1527）：目標周圍敵軍受主傷害比例傷害，不反擊、不連結；打死照常結算 */
+  private resolveTallySplash(attacker: TroopUnit, defender: TroopUnit, damage: number, svc: ReturnType<typeof services>): void {
+    const { targets, ratio } = tallySplashTargetsOf(attacker, defender, this.context.state.units.values());
+    for (const target of targets) {
+      this.applyUnitDamage(target, Math.max(1, Math.floor(damage * ratio)), attacker.faction, {
+        attackerId: attacker.id,
+        attackerLane: attacker.lane,
+        attackerDepth: attacker.depth,
+        damageSource: 'tally-splash',
+        allowDamageLink: false,
+      });
+      if (!target.isDead()) continue;
+      if (target.id === this.context.getPlayerGeneralUnitId()) {
+        this.onGeneralUnitKilled(Faction.Player, svc);
+      } else if (target.id === this.context.getEnemyGeneralUnitId()) {
+        this.onGeneralUnitKilled(Faction.Enemy, svc);
+      }
+      this.onUnitKilled(target, attacker, svc);
+    }
   }
 
   /**

@@ -55,6 +55,8 @@ export interface TallyPassiveSpec {
   moraleNoDecrease?: boolean;
   /** 治療友軍（常山女）：自己陣營回合沿用醫療兵治療（PROG-2-1526） */
   healsAllies?: boolean;
+  /** 濺射（南蠻巨型踐踏）：目標周圍 radius 格內其他敵軍受主傷害 × ratio（PROG-2-1527） */
+  splash?: { radius: number; ratio: number };
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -108,6 +110,8 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   'tiger-tally-tie-qi': { fearCharge: { radius: 1, moralePenalty: 20 } },
   // 大喬：士氣不降（PROG-2-1525）；全隊魅力 +20 因戰場部隊沒有魅力屬性未做
   'tiger-tally-da-qiao': { moraleNoDecrease: true },
+  // 南蠻：巨型踐踏濺射，目標周圍 1 格敵軍受 50%（PROG-2-1527 暫定數字）；無視輕型步兵阻擋未做
+  'tiger-tally-nan-man': { splash: { radius: 1, ratio: 0.5 } },
 };
 
 /** 各陣營出兵列（後排起點）：我方由 depth 0 出兵、敵方由最後一列出兵 */
@@ -166,6 +170,18 @@ export function applyFearCharge(attacker: TroopUnit, units: Iterable<TroopUnit>)
     affected.push(other);
   }
   return affected;
+}
+
+/** 濺射：回傳要波及的敵軍與傷害比例；沒有此被動時 ratio 為 0、targets 為空 */
+export function tallySplashTargetsOf(attacker: TroopUnit, defender: TroopUnit, units: Iterable<TroopUnit>): { targets: TroopUnit[]; ratio: number } {
+  const splash = passiveOf(attacker)?.splash;
+  if (!splash) return { targets: [], ratio: 0 };
+  const targets: TroopUnit[] = [];
+  for (const other of units) {
+    if (other === defender || other.faction === attacker.faction || other.isDead()) continue;
+    if (Math.max(Math.abs(other.lane - defender.lane), Math.abs(other.depth - defender.depth)) <= splash.radius) targets.push(other);
+  }
+  return { targets, ratio: splash.ratio };
 }
 
 /** 此部隊是否帶治療友軍被動（常山女）；沒有時為 false */
