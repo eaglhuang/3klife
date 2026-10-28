@@ -2386,5 +2386,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-1146.md",
     "title": "[PROG-2-1146] 結緣出生紀錄跨重開保存",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0407",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9012.md",
+    "title": "[PROG-2-9012] 他國招募品質門檻與 RNG 邊界回歸測試",
+    "category": "task"
   }
 ]

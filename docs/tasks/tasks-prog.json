@@ -25,9 +25,9 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 34,
-    "in_progress": 2,
+    "in_progress": 3,
     "open": 82,
-    "total": 118
+    "total": 119
   },
   "tasks": [
     {
@@ -4378,6 +4378,59 @@
         "artifacts/PROG-2-0177/**"
       ],
       "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 由 Claude 協調線登錄 | 阻塞: TASK-TEAM-0088 未解，派信時暫擱"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9012",
+      "title": "他國招募品質門檻與 RNG 邊界回歸測試",
+      "owner": "codex-gpt-6",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "test",
+      "phase": "M6",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "2026-10-28T13:11:32+00:00",
+      "started_by_agent": "codex-gpt-6",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依治理模式他國AI系統 E-7 補齊名聲三段分布與累加機率邊界；僅補測試，不改產品公式。",
+      "related": [
+        "PROG-2-1474"
+      ],
+      "depends": [],
+      "acceptance": [
+        "名聲799/800/801/1499/1500/1501分布符合E-7",
+        "各累加機率界線前正好後品質符合roll小於acc",
+        "每次roll僅呼叫RNG一次",
+        "focused/full/tsconfig.test與standard gate通過"
+      ],
+      "deliverables": [
+        "tests/RivalGovernance.test.ts"
+      ],
+      "notes": "2026-10-28 | 狀態: in-progress | 驗證: quick gate 3/3；其餘pending | 變更: codex-gpt-6開始tests-only回歸補強；基底c731aceab；官方next allocator回傳9011但該號已有外部存檔交接工作，故排除已知占用9011，透過官方explicit reservation fence保留9012 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
