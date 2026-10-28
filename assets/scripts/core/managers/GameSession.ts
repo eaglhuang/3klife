@@ -200,6 +200,7 @@ import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSy
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
 import { RelationEventLedger } from '../systems/RelationEvents';
 import { cloneNpcMemory, createNpcMemory, normalizeNpcMemory, normalizeNpcPlayerId, npcPlayerIdFromSeed, type NpcMemoryRecord } from '../systems/NpcMemoryReadModel';
+import { NpcInteractionLimiter } from '../systems/NpcUtilityAI';
 import { grantLegacyRewards, normalizeLegacyCount, type LegacyAchievement } from '../systems/LegacyAchievement';
 import { STARTER_GACHA_WALLET } from '../services/GachaWalletRules';
 import type { DynamicRelation } from '../systems/KinRelation';
@@ -483,6 +484,8 @@ export class GameSession {
     /** NPC 記憶擁有者 id 與 NPC_Memory read model（NPC-09）：新局由種子決定，讀檔缺欄位時補產 */
     private _npcPlayerId: string | null = null;
     private _npcMemory: NpcMemoryRecord | null = null;
+    /** 離線互動的高權重限流（F-1 第 3 點）：同一登入窗內每位武將只排一則高權重互動；本次不寫入存檔 */
+    private readonly _npcInteractionLimiter = new NpcInteractionLimiter();
     /** 目前 NPC_Memory read model（唯讀；寫入由之後的 NPC 對話線負責） */
     public get npcMemory(): Readonly<NpcMemoryRecord> | null {
         return this._npcMemory;
@@ -2089,7 +2092,7 @@ export class GameSession {
     public runOfflineInteraction(nowMs: number): string | null {
         if (!this.offlineInteractionDue(nowMs)) return null;
         const event = pickOfflineInteraction(this._offlineInteractionCandidates(), this._offlineInteractionLog, `W${this._loadedSavedAtMs}`,
-            this._random, this._journal.entries.length + 1, seasonJournalTimestamp(this._clock.state));
+            this._random, this._journal.entries.length + 1, seasonJournalTimestamp(this._clock.state), this._npcInteractionLimiter);
         if (!event || !this.recordJournal(event.entry).ok) return null;
         this._offlineInteractionLog = event.log;
         return event.entry.summary;

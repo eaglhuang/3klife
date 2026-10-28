@@ -67,5 +67,31 @@ export function createNpcUtilityAISuite(): TestSuite {
         assert.isTrue(limiter.tryClaim('login-2', 'g1', high), '換登入窗重新計算');
     });
 
+    suite.test('高權重門檻嚴格大於 1：分數等於 1 不限流', () => {
+        const limiter = new NpcInteractionLimiter();
+        assert.isTrue(limiter.tryClaim('W1', 'g1', 1));
+        assert.isTrue(limiter.tryClaim('W1', 'g1', 1), '等於門檻不算高權重');
+        assert.isTrue(limiter.tryClaim('W1', 'g1', 1.5));
+        assert.isTrue(!limiter.tryClaim('W1', 'g1', 1.5), '第二則高權重被擋');
+    });
+
+    suite.test('限流接上離線互動挑選：同窗同將高權重只排一次，換窗重算', () => {
+        const heavy = { COMRADE: 2, DYNAMIC_SWORN: 2, SPOUSE: 2, PARENT_CHILD: 2 };
+        const limiter = new NpcInteractionLimiter();
+        const first = pickOfflineInteraction(offlineInteractionCandidates([relation('g1', 'g2', 'COMRADE')], GENERALS), [], 'W1', () => 0, 1, 'T', limiter, heavy);
+        assert.isTrue(first !== null, '第一則可排');
+        const blocked = pickOfflineInteraction(offlineInteractionCandidates([relation('g1', 'g3', 'COMRADE')], GENERALS), [], 'W1', () => 0, 2, 'T', limiter, heavy);
+        assert.isTrue(blocked === null, 'g1 在同一窗已排過高權重互動');
+        const otherWindow = pickOfflineInteraction(offlineInteractionCandidates([relation('g1', 'g3', 'COMRADE')], GENERALS), [], 'W2', () => 0, 2, 'T', limiter, heavy);
+        assert.isTrue(otherWindow !== null, '換登入窗重新計算');
+    });
+
+    suite.test('預設權重下帶限流的挑選與不帶限流結果相同', () => {
+        const candidates = offlineInteractionCandidates([relation('g1', 'g2', 'COMRADE'), relation('g2', 'g3', 'PARENT_CHILD')], GENERALS);
+        const plain = pickOfflineInteraction(candidates, [], 'W1', () => 0.99, 1, 'T');
+        const limited = pickOfflineInteraction(candidates, [], 'W1', () => 0.99, 1, 'T', new NpcInteractionLimiter());
+        assert.equals(JSON.stringify(plain), JSON.stringify(limited));
+    });
+
     return suite;
 }
