@@ -1,8 +1,8 @@
 /**
- * PrisonSlotExpansion.test.ts — 監獄格數與擴容 headless 測試（POW-06 / PROG-2-0942）
+ * PrisonSlotExpansion.test.ts — 監獄格數與每季產出 headless 測試（POW-06 / PROG-2-0942）
  *
- * 鎖住：格數滿了關押被拒（PRISON_FULL）；擴容後同一關押生效；擴容到上限為止；
- * 每季產出依關押中的俘虜加總。
+ * 鎖住：格數滿了關押被拒（PRISON_FULL）；每季產出依關押中的俘虜加總。
+ * 擴容（expandPrisonSlots）已由主城等級容量表取代並移除（ECO-14，PROG-2-1416）。
  *
  * Unity 對照：像 Inventory 的格子數上限，滿格時 AddItem 回傳失敗，
  * 擴充背包後同一個 AddItem 就能成功。
@@ -11,9 +11,7 @@ import { TestSuite, assert } from './TestRunner';
 import {
     createPowRecord,
     createPrisonState,
-    expandPrisonSlots,
     PRISON_SLOTS_INITIAL,
-    PRISON_SLOTS_MAX,
     prisonYieldOneSeason,
     resolvePowDecision,
     type PowRecord,
@@ -59,35 +57,6 @@ export function createPrisonSlotExpansionSuite(): TestSuite {
         assert.isTrue(!rejected.ok);
         assert.isTrue(rejected.reasons.includes('PRISON_FULL'));
         assert.isTrue(!rejected.imprisoned);
-    });
-
-    suite.test('擴容一次 +1 格，擴容後同一關押成功', () => {
-        const state = createPrisonState();
-        let used = 0;
-        for (let i = 0; i < PRISON_SLOTS_INITIAL; i += 1) used = imprisonOne(state, used, `p${i}`).prisonUsed;
-
-        const expanded = expandPrisonSlots(state);
-        assert.isTrue(expanded.ok);
-        assert.equals(PRISON_SLOTS_INITIAL + 1, expanded.state.slots);
-        assert.equals(PRISON_SLOTS_INITIAL, state.slots, '原狀態不被改寫');
-
-        const next = imprisonOne(expanded.state, used, 'after-expand');
-        assert.isTrue(next.ok);
-    });
-
-    suite.test('擴容到上限 PRISON_SLOTS_MAX 為止，之後擴容被拒且狀態不變', () => {
-        let state = createPrisonState();
-        while (state.slots < PRISON_SLOTS_MAX) {
-            const step = expandPrisonSlots(state);
-            assert.isTrue(step.ok);
-            state = step.state;
-        }
-        assert.equals(PRISON_SLOTS_MAX, state.slots);
-
-        const capped = expandPrisonSlots(state);
-        assert.isTrue(!capped.ok);
-        assert.equals(PRISON_SLOTS_MAX, capped.state.slots);
-        assert.equals(state, capped.state);
     });
 
     suite.test('每季產出依關押中的俘虜加總（情報與資源）', () => {
