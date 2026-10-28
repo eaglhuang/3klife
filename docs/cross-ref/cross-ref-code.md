@@ -37,6 +37,317 @@
 | NetworkService.ts | doc_tech_0013 | 概: Web/Native 離線網路狀態偵測 |
 | SyncManager.ts | doc_tech_0013 | 概: 離線 Action Log 佇列與 HMAC 背景同步 |
 | **server/src/index.ts** | doc_tech_0013 | 概: 後端驗證引擎 (Event Replay) 原型 |
+| AccelerateCard.ts | doc_spec_0032 | 概: 加速卡縮短剩餘時間（純邏輯，不依賴 cc）。 |
+| AiDifficultyTable.ts | doc_data_0002 | 概: AI 難度表的解析與驗證（純邏輯，不依賴 cc） |
+| AiDuelDecision.ts | doc_data_0002 | 概: 防守方是否接受單挑（純邏輯，不依賴 cc） |
+| AiProfiles.ts | doc_data_0002 | 概: AI Profile 八種行為模板的解析與驗證（純邏輯，不依賴 cc） |
+| AiSpCharge.ts | doc_data_0001, doc_data_0002 | 概: AI 武將擊殺充能的難度倍率（純邏輯，不依賴 cc） |
+| AiStatScaling.ts | doc_data_0001, doc_data_0002 | 概: AI 武將屬性、EP、精力與轉生次數的縮放（純邏輯，不依賴 cc） |
+| AncestorTreeLayout.ts | doc_ui_0012 | 概: 命頁左半區 14 人祖先圖的節點位置與 detail peek 文字（純邏輯，不依賴 cc） |
+| AptitudeDialogue.ts | doc_spec_0041 | 概: 適性台詞選擇與佔位替換（純邏輯，不依賴 cc） |
+| ArenaScore.ts | doc_spec_0007, doc_spec_0041 | 概: 競技場參考戰力積分（純邏輯，不依賴 cc） |
+| AutoNurture.ts | 未標出處 | 概: 自動培育（NUR-14，純邏輯，不依賴 cc） |
+| AwakeningTitle.ts | doc_spec_0011 | 概: 覺醒名號判定（純邏輯，不依賴 cc） |
+| BagDomain.ts | doc_spec_0174 | 概: 統一物件庫的顯示分域（純邏輯，不依賴 cc）。 |
+| BattleAptitude.ts | doc_spec_0041, doc_data_0001 | 概: 戰場適性修正引擎（純邏輯，不依賴 cc） |
+| BattleLeaderboard.ts | 未標出處 | 概: 武將戰績排行榜：依傷害、擊殺或守護力排序（純邏輯，不依賴 cc） |
+| BattleLeaderboardView.ts | doc_spec_0019 | 概: 戰績排行榜的列資料與文字（純邏輯，不依賴 cc）（PROG-2-0957） |
+| BattleModifiers.ts | doc_spec_0012, doc_data_0001 | 概: 總戰力的地形、天氣攻防查表與虎符適性修正（純邏輯，不依賴 cc） |
+| BattlePowerPrediction.ts | doc_data_0001 | 概: 雙方總戰力比值的勝率預判（純邏輯，不依賴 cc） |
+| BattlePowerRating.ts | doc_data_0001 | 概: 主將帶隊總戰力 calculateBattlePowerRating（純邏輯，不依賴 cc） |
+| BattleRecordStats.ts | doc_spec_0019 | 概: 武將戰績：單場表現統計、勝率、里程碑、退役評分、戰績面板資料（純邏輯，不依賴 cc） |
+| BattleRetreat.ts | doc_spec_0018 | 概: 部隊撤退的擲骰結算（純邏輯，不依賴 cc） |
+| BattleRoster.ts | doc_spec_0016, doc_spec_0025, doc_spec_0026, doc_spec_0045, doc_data_0001 | 概: 名冊武將出戰、戰後結算（純邏輯，不依賴 cc） |
+| BattleSeasonStats.ts | 未標出處 | 概: 武將賽季戰績：賽季分段累加與切換重置（純邏輯，不依賴 cc） |
+| BattleSnapshot.ts | doc_spec_0019 | 概: 單場戰報快照與單場 MVP、最高傷害（純邏輯，不依賴 cc） |
+| BattleSpecialActions.ts | doc_spec_0009, doc_spec_0010 | 概: 戰場「特定動作」偵測，純邏輯，不依賴 cc |
+| BattlefieldRecon.ts | doc_spec_0041 | 概: 出戰前環境偵察（純邏輯，不依賴 cc） |
+| BloodlineBeast.ts | doc_spec_0008, doc_spec_0011, doc_ui_0012 | 概: 命紋靈獸的資料結構與覺醒傾向判定（純邏輯，不依賴 cc） |
+| BloodlineConnections.ts | doc_ui_0009 | 概: 血統樹先祖連線的幾何計算（純邏輯，不依賴 cc）。 |
+| BloodlineCurve.ts | doc_ui_0009 | 概: 血統樹父子連線的貝茲曲線計算（純邏輯，不依賴 cc） |
+| BloodlineGuarantee.ts | doc_spec_0026 | 概: 世家血脈保底（純邏輯，不依賴 cc） |
+| BloodlineInfusion.ts | doc_spec_0005, doc_spec_0023 | 概: 血脈灌注（純邏輯，不依賴 cc） |
+| BloodlineMerge.ts | doc_spec_0005 | 概: 血脈歸宗的因子移植（純邏輯，不依賴 cc） |
+| BloodlineNodeCards.ts | doc_ui_0009 | 概: 血統樹 14 位先祖的節點卡資料映射（純邏輯，不依賴 cc）。 |
+| BloodlineRightPanelLayout.ts | doc_spec_0022, doc_ui_0012 | 概: 命頁右半區六塊資訊欄的固定順序與英靈卡命槽操作（純邏輯，不依賴 cc） |
+| BloodlineStoryDockLayout.ts | doc_ui_0012 | 概: 命頁故事抽屜（StoryDock）的三態切換與版面高度（純邏輯，不依賴 cc） |
+| BloodlineTransmissionUltimate.ts | doc_ui_0012 | 概: 五階血脈傳承奧義的階段邏輯（純邏輯，不依賴 cc） |
+| BloodlineTreeBinding.ts | doc_ui_0009 | 概: 把 14 張先祖卡對應到 bloodline-tree-main.json 的節點名稱（純邏輯，不依賴 cc）。 |
+| BloodlineTreeSlots.ts | doc_spec_0028, doc_ui_0031 | 概: 結緣畫面 14 人血統樹的格位排列（純邏輯，不依賴 cc） |
+| BloodlineUltimateRoster.ts | doc_ui_0012 | 概: 把五階血脈傳承奧義套回名冊武將的純函式（不依賴 cc） |
+| BlueFactorInheritance.ts | doc_spec_0180 | 概: 藍色 3 星因子的繼承機率（純邏輯，不依賴 cc） |
+| BossGuardSummon.ts | 未標出處 | 概: Boss 親衛隊召喚觸發判定（WBS v7 LVL-11，PROG-2-0599） |
+| BreedingBirthRecord.ts | doc_spec_0028 | 概: 結緣成功時產生本機端紀錄（BRD-12，純函式，不依賴 cc） |
+| BreedingBirthRecordSave.ts | 未登錄：結緣系統-shards/shard-b.md §I；PROG-2-1146 出生 | 概: （無檔頭說明） |
+| BreedingSystem.ts | doc_spec_0028, doc_spec_0045, doc_spec_0011, doc_data_0001 | 概: 結緣（配種）規則與子嗣生成（純邏輯，不依賴 cc） |
+| CellarProtection.ts | doc_spec_0032 | 概: 地窖保護（純邏輯，不依賴 cc） |
+| ChildFactorExpectation.ts | doc_spec_0006, doc_spec_0010 | 概: 父母因子推得子嗣的預期因子分布（純邏輯，不依賴 cc） |
+| ChildMagistrate.ts | doc_spec_0037 | 概: 子嗣擔任郡城縣令的加成規則（純邏輯，不依賴 cc） |
+| ChildOfficialPosts.ts | doc_spec_0037 | 概: 非培育子嗣內政職位的產出公式（純邏輯，不依賴 cc）。 |
+| ChildUltimateAwaken.ts | doc_spec_0030 | 概: 子嗣奧義覺醒的機率與繼承紀錄（純邏輯，不依賴 cc） |
+| CombatCrit.ts | doc_spec_0039 | 概: 暴擊判定與暴擊傷害（純邏輯，不依賴 cc） |
+| ComboAttackKin.ts | doc_spec_0024 | 概: 相鄰格有義兄弟時，合攻觸發率的計算（純邏輯，不依賴 cc） |
+| CountdownIconView.ts | doc_spec_0031 | 概: 主畫面趕路倒數圖示的文字與按鈕狀態（純邏輯，不依賴 cc）。 |
+| CountdownManager.ts | doc_spec_0031, doc_tech_0008 | 概: 趕路倒數的純邏輯，不依賴 cc。 |
+| CrestStyle.ts | doc_ui_0009 | 概: 祖紋命篆的視覺樣式解析（純邏輯，不依賴 cc）。 |
+| DailyNewsEngine.ts | doc_spec_0025 | 概: 三國日報（純邏輯，不依賴 cc） |
+| DailySubsidy.ts | doc_spec_0032 | 概: 每日補貼的判定與入帳（純邏輯，不依賴 cc） |
+| DaughterComingOfAge.ts | doc_spec_0003 | 概: 子嗣女兒 14 歲及笄分流（純邏輯，不依賴 cc） |
+| DelegateAi.ts | doc_spec_0040 | 概: 委任 AI 四級部署策略（純邏輯，不依賴 cc） |
+| DesertVitality.ts | doc_spec_0041 | 概: 沙漠地形的每回合精力消耗（純邏輯，不依賴 cc） |
+| DestinyGacha.ts | 未登錄：WBS v5 OPEN-05（宿命轉蛋：無限重置十連抽、初始名將鎖定與確認）；G | 概: 宿命轉蛋的純狀態機，不依賴 cc。 |
+| DestinyOpening.ts | 未登錄：WBS v5 OPEN-05 接 OPEN-01（宿命轉蛋接上新手開場流程）；P | 概: 把宿命轉蛋接上開場流程控制器，純 TS，不依賴 cc。 |
+| DestinyPool.ts | doc_spec_0031 | 概: 宿命轉蛋的專用六人池與接新局入口，純 TS，不依賴 cc。 |
+| DestinyShop.ts | doc_spec_0042 | 概: 天命商店：大保底兌換（純邏輯，不依賴 cc） |
+| DiscoveryProgress.ts | doc_spec_0009 | 概: 玩家 discoveryLevel 的經驗值與升級（純邏輯，不依賴 cc） |
+| DiscoveryThresholds.ts | doc_spec_0009 | 概: 發現等級門檻設定的解析器（純邏輯，不依賴 cc） |
+| DispatchCatalog.ts | 未標出處 | 概: 暫定派遣任務清單與派遣板列（JRN-03 第三段，PROG-2-1179） |
+| DispatchJobs.ts | doc_spec_0015 | 概: 派遣任務狀態：派遣、到期結算、冷卻（純邏輯，不依賴 cc）。 |
+| DispatchQuality.ts | doc_spec_0015 | 概: 派遣品質評分與品質區間（純邏輯，不依賴 cc）。 |
+| DomesticAutoGovernance.ts | doc_spec_0037 | 概: 內政任務格的自動指派（純邏輯，不依賴 cc） |
+| DomesticPresenter.ts | 未登錄：WBS v3 MVP-10 與 MVP 內政 5 大任務 UI 顯示；Domes | 概: 內政 5 大任務面板的顯示資料，純 TS，不依賴 cc。 |
+| DomesticTasks.ts | doc_spec_0008, doc_spec_0032, doc_spec_0037, doc_spec_0045 | 概: 基礎內政 5 大任務（每季選一項，產出資源）純邏輯，不依賴 cc。 |
+| DungeonRescue.ts | doc_spec_0151 | 概: 地下城救美任務結果（純邏輯，不依賴 cc） |
+| EquipmentBonus.ts | doc_spec_0017 | 概: 裝備的品質加成範圍與合入武將面板數值（純邏輯，不依賴 cc）。 |
+| EraReset.ts | doc_spec_0020, doc_spec_0034 | 概: 時代更迭觸發與保留/重置清單（純邏輯，不依賴 cc） |
+| ExtremeTaskDrop.ts | doc_spec_0036 | 概: 極限任務掉落表與抽樣（純邏輯，不依賴 cc）。 |
+| FactorAwakening.ts | doc_spec_0013, doc_spec_0010, doc_spec_0009 | 概: 因子覺醒（解鎖）規則，純邏輯，不依賴 cc |
+| FactorHexPanel.ts | doc_spec_0031 | 概: 六色因子六角圖與解鎖特效的資料（純邏輯，不依賴 cc） |
+| FactorInheritance.ts | doc_spec_0010, doc_spec_0011, doc_spec_0045 | 概: 子嗣從 14 人祖譜繼承因子（純邏輯，不依賴 cc） |
+| FactorMask.ts | doc_spec_0009, doc_spec_0010 | 概: 因子視覺遮罩與發現等級（純邏輯，不依賴 cc） |
+| FactorMaskState.ts | doc_spec_0009 | 概: locked 是尚不可見，並非覺醒旗標。沿用 FactorMask 的文字與未知色系規則。 |
+| FactorTacticLinkage.ts | doc_spec_0010 | 概: 因子與戰法／地形的連動規則（純邏輯，不依賴 cc） |
+| FactorTagTokens.ts | doc_spec_0010 | 概: 六色因子標籤的字串 key 與色碼 token（純資料，不依賴 cc） |
+| FactorVisibility.ts | doc_spec_0009 | 概: 單因子的發現門檻，全專案共用這一條規則（FactorMask 與 FactorVisibility 都呼叫它）： |
+| FamilyOverviewHotspot.ts | doc_spec_0002, doc_spec_0022 | 概: 世家總覽熱點與分支捷徑的顯示規則與分組（純邏輯，不依賴 cc）。 |
+| FarewellLetterInbox.ts | doc_spec_0025 | 概: 傭兵告別信與收件匣（純邏輯，不依賴 cc）。 |
+| FateBlessing.ts | doc_spec_0010, doc_spec_0035 | 概: 紫色因子戰場效果「天命加護」（純邏輯，不依賴 cc） |
+| FatigueFailureRate.ts | doc_spec_0180 | 概: 體力比例對應的失敗率（純邏輯，不依賴 cc） |
+| FemalePoolRefresh.ts | doc_spec_0131 | 概: 傭兵池女武將 8 小時刷新與抽取（純邏輯，不依賴 cc） |
+| FemaleSource.ts | doc_spec_0003 | 概: 女性武將的來源與品質欄位（純邏輯，不依賴 cc） |
+| FemaleSourcePresenter.ts | doc_spec_0003 | 概: 女武將資訊頁的來源標籤（純邏輯，不依賴 cc） |
+| FemaleSystemState.ts | doc_spec_0151 | 概: 女性來源系統的存檔狀態（純邏輯，不依賴 cc） |
+| FertilityBoost.ts | doc_spec_0036 | 概: 安胎藥的受孕率倍率（純邏輯，不依賴 cc）。 |
+| FirstBattleTutorial.ts | doc_spec_0031 | 概: 首戰教學戰的提示順序（純邏輯，不依賴 cc） |
+| FriendBorrow.ts | 未標出處 | 概: 好友借用教官（MENT-14，純邏輯，不依賴 cc） |
+| FunLineLibrary.ts | doc_spec_0004 | 概: 趣味台詞彩蛋庫與使用規則（純資料與查詢，不依賴 cc） |
+| GachaCurrency.ts | doc_spec_0042 | 概: 轉蛋貨幣分流與扣款規則（純邏輯，不依賴 cc） |
+| GachaDraw.ts | doc_spec_0042 | 概: 轉蛋抽取引擎：依規格稀有度機率抽一位武將（純邏輯，不依賴 cc） |
+| GachaPoolGuide.ts | doc_spec_0042 | 概: 雙池定位文案與死亡傳承提示（純邏輯，不依賴 cc） |
+| GachaSyncRecord.ts | doc_spec_0042 | 概: 各池抽卡記錄的伺服端形狀與同步校驗（純邏輯，不依賴 cc，不連線） |
+| GameClock.ts | doc_spec_0034 | 概: 季度制遊戲時鐘（純邏輯，不依賴 cc） |
+| GearDefinitions.ts | doc_spec_0174 | 概: 一般裝備定義表（provisional，純資料，不依賴 cc）。 |
+| GearEquipFlow.ts | doc_spec_0174 | 概: 一般裝備穿戴與卸下的純邏輯（不依賴 cc）。 |
+| GearPageSlots.ts | doc_spec_0174, doc_ui_0012 | 概: 寶頁一般裝備 2x3 格位的檢視模型（純邏輯，不依賴 cc）。 |
+| GearPickerView.ts | doc_spec_0174, doc_ui_0012 | 概: 寶頁格位點擊後的選取清單檢視模型（純邏輯，不依賴 cc）。 |
+| GeneCatalyst.ts | doc_spec_0011 | 概: 呼叫端負責提供已退役武將與對應因子的機率；不挑因子、不消耗媒介。 |
+| GeneralAging.ts | doc_spec_0034, doc_spec_0018 | 概: 武將每季增齡與壽命結算（純邏輯，不依賴 cc） |
+| GeneralArtPaths.ts | 未登錄：使用者裁定 2026-10-25（頭像要能隨立繪迭代、立繪走標準路徑）；PROG | 概: 武將立繪／頭像的資源路徑規則（純邏輯，不依賴 cc） |
+| GeneralBackpack.ts | doc_spec_0017, doc_spec_0174 | 概: 武將個人背包的六個裝備欄位、解鎖狀態與放入檢查，純邏輯，不依賴 cc。 |
+| GeneralBackpackView.ts | doc_spec_0174 | 概: 由統一物件庫推導單一武將的一般裝備背包（純邏輯，不依賴 cc）。 |
+| GeneralCommandPanel.ts | doc_ui_0012 | 概: 將頁「名聲 / 官職 / 統領軍勢」區塊的列資料（純邏輯，不依賴 cc） |
+| GeneralCoreFields.ts | doc_tech_0011 | 概: 武將 25 核心欄位的覆蓋檢查（純邏輯，不依賴 cc） |
+| GeneralReadModel.ts | doc_ui_0012 | 概: 人物頁 Data Read Model 映射層（純邏輯，不依賴 cc）。 |
+| GeneralStage.ts | doc_spec_0016, doc_spec_0018 | 概: 武將生命週期狀態機（出生→開獎→成年→巔峰→衰老→退役）純邏輯，不依賴 cc。 |
+| GeneralTallySummary.ts | doc_spec_0012, doc_ui_0030 | 概: 人物頁「虎符戰記摘要」次卡的三行文字（純邏輯，不依賴 cc） |
+| GeneralVersionDiff.ts | doc_spec_0005 | 概: 同名版本的初始因子對比（純邏輯，不依賴 cc） |
+| GeneralVersionGallery.ts | 未標出處 | 概: 同名武將版本圖鑑（SAME-01 項 5 / PROG-2-0707，純邏輯，不依賴 cc） |
+| GiftAffection.ts | 未登錄：傭兵系統規格書／遊戲系統：結緣與送禮（送禮增加好感，好感越高轉化機率越高）；FE | 概: 送禮好感度與轉化機率加成（純邏輯，不依賴 cc） |
+| GovernanceAssignment.ts | doc_spec_0037 | 概: 太守府內政任務的武將指派服務（純邏輯，不依賴 cc）。 |
+| GovernorHallView.ts | doc_spec_0037 | 概: 太守府治理頁的文字與數值（純邏輯，不依賴 cc）。 |
+| HallAutoAssign.ts | doc_spec_0002 | 概: 委任流程與委任回看紀錄（純邏輯，不依賴 cc）。 |
+| HallCharacterPresenter.ts | 未登錄：WBS v5 HALL-07（武將點位刷新池）；HallCharacterRol | 概: 大廳武將點位的刷新狀態與列資料，純 TS，不依賴 cc。 |
+| HallCharacterRoll.ts | 未登錄：WBS v3 HALL-07（武將點位刷新池：rollHallCharacter | 概: 大廳武將點位的加權抽樣與刷新間隔判斷，純 TS，不依賴 cc。 |
+| HallMissionBoard.ts | doc_spec_0002 | 概: 大廳雙牆任務板的可見性過濾、已接取置頂與重算時機，純邏輯，不依賴 cc。 |
+| HallMissionBoardPresenter.ts | 未登錄：WBS v3 HALL-01（大廳資料模型）、HALL-03（雙牆任務板可見性與 | 概: 大廳任務牆的顯示資料，純 TS，不依賴 cc。 |
+| HallMissionDispatch.ts | doc_spec_0002 | 概: 大廳任務派遣條件與成敗判定（純邏輯，不依賴 cc） |
+| HallMissionSettlement.ts | doc_spec_0002, doc_spec_0014 | 概: 大廳任務結算轉官職經驗、晉升提示文案（純邏輯，不依賴 cc） |
+| HallSyncSnapshot.ts | doc_spec_0002 | 概: 大廳狀態的伺服端同步列（純邏輯，不依賴 cc，不連線） |
+| HallTaskIntel.ts | doc_spec_0002 | 概: 任務情報度與委任狀態的判斷（純邏輯，不依賴 cc）。 |
+| HallVolunteer.ts | doc_spec_0002 | 概: 大廳「自告奮勇」彩蛋的判定、排序與成功率加成，純 TS，不依賴 cc。 |
+| HereditaryKeep.ts | doc_spec_0037 | 概: 世襲主城保護與背水一戰（純邏輯，不依賴 cc）。 |
+| HiddenFactorAwakening.ts | doc_spec_0019 | 概: 里程碑達成時把隱藏因子寫進武將基因（純邏輯，不依賴 cc） |
+| HistoricalPairs.ts | 未標出處 | 概: 史實相性配對表（KIN-02）與爆發力／受孕率接線（KIN-04）。 |
+| HybridSkill.ts | doc_spec_0011 | 概: 混種戰法觸發判定（純邏輯，不依賴 cc） |
+| InitialGeneralShowcase.ts | doc_spec_0031 | 概: 六位初始名將的展示卡與登場台詞資料（純邏輯，不依賴 cc）。 |
+| InitialHeroTable.ts | doc_tech_0008 | 概: 初始六名將資料表的驗證與鍵值推導，純 TS，不依賴 cc。 |
+| InventoryProjection.ts | 未登錄：Data Schema 文件 §2-2 #11 與 §2-1a（統一物件庫為 c | 概: 統一物件庫 Inventory_Service 推導虎符與英靈卡視圖（純邏輯，不依賴 cc）。 |
+| InventoryRecordBridge.ts | 未登錄：Data Schema 文件 §2-1a（統一物件庫為 canonical）；W | 概: 虎符卡轉成統一物件庫的 TALLY 列，並讀回存檔的列（純邏輯，不依賴 cc）。 |
+| ItemBagView.ts | doc_spec_0036 | 概: 道具背包的檢視模型（純邏輯，不依賴 cc）。 |
+| ItemEffectDispatcher.ts | doc_spec_0036 | 概: 道具效果派發（純邏輯，不依賴 cc）。 |
+| ItemExpiry.ts | doc_spec_0036 | 概: 限時道具到期判定與回收（純 TS，不依賴 cc）。 |
+| ItemRefreshEffect.ts | doc_spec_0036 | 概: 刷新券的效果（純邏輯，不依賴 cc）。 |
+| ItemShopPricing.ts | doc_spec_0032 | 概: 道具購買的定價與餘額判斷，純 TS，不依賴 cc。 |
+| ItemUseFlow.ts | doc_spec_0036 | 概: 道具使用流程（純邏輯，不依賴 cc）。 |
+| JobChange.ts | doc_spec_0043 | 概: 20 歲轉職（追加副職）純邏輯，不依賴 cc。 |
+| JobChangeWiring.ts | doc_spec_0043 | 概: 20 歲轉職的名冊接線（純邏輯，不依賴 cc） |
+| JournalEvents.ts | doc_spec_0015 | 概: 遊戲事件轉成武將日誌條目（純邏輯，不依賴 cc）。 |
+| JournalLog.ts | doc_spec_0015 | 概: 武將日誌主檔的寫入與查詢（純邏輯，不依賴 cc）。 |
+| JournalReaction.ts | doc_spec_0176 | 概: 日誌條目的一句武將反應（離線模板，純邏輯，不依賴 cc）。 |
+| KinDynamicRelations.ts | 未標出處 | 概: 家族關係（動態關係）：事件建立與存檔快照（KIN-06）。 |
+| KinRelation.ts | 未標出處 | 概: 家族關係（史實相性）系統：關係 Schema（KIN-01）與相性標籤引擎（KIN-03）。 |
+| LateBloomClue.ts | doc_spec_0033 | 概: 大器晚成線索（純邏輯，不依賴 cc） |
+| LegacyAchievement.ts | 未標出處 | 概: 世代成就判定（RET-07）。純邏輯，不依賴 cc。 |
+| LegacyArena.ts | doc_spec_0018 | 概: 演武聖境：死亡名將的精華快照與付費復活（純邏輯，不依賴 cc） |
+| LegendaryMentoring.ts | 未標出處 | 概: 名將傳道（MENT-15，純邏輯，不依賴 cc） |
+| LifeScriptCopy.ts | doc_spec_0018 | 概: 壽命與階段劇本文案的 Key 與參數（LIFE-13，純邏輯，不依賴 cc） |
+| LifespanCost.ts | doc_spec_0018 | 概: 回傳新狀態與事件，不改輸入、不用亂數、不寫入存檔。 |
+| LifespanSave.ts | doc_spec_0015, doc_spec_0037 | 概: 領地治理（指派、領地、日誌）的讀檔校正（純邏輯，不依賴 cc）。 |
+| LifespanWiring.ts | doc_spec_0018 | 概: 主動指令的壽命消耗接線與超齡隨機死亡（純邏輯，不依賴 cc） |
+| LimitedPoolSchedule.ts | doc_spec_0042 | 概: 限定池的上下架時間窗與本期限定角色（純邏輯，不依賴 cc）。 |
+| LoadoutCheck.ts | 未標出處 | 概: 推薦戰法三態檢核（WBS v7 LVL-04，PROG-2-0598） |
+| LobbyHubSchema.ts | doc_spec_0002 | 概: 大廳資料（Lobby_Hub）的型別與結構驗證，純邏輯，不依賴 cc。 |
+| LobbyThemeResolver.ts | doc_spec_0002 | 概: 大廳晝夜與節慶三層的解析（純邏輯，不依賴 cc）。 |
+| LoginStreak.ts | doc_spec_0025 | 概: 連續登入統計（純邏輯，不依賴 cc）。 |
+| LongevityPill.ts | doc_spec_0018, doc_spec_0032 | 概: 延壽丹延長武將壽命上限與扣道具（純邏輯，不依賴 cc） |
+| LuckBloodlineMutation.ts | 未標出處 | 概: 運氣 ≥95 的「血統變異」（LUK-06 效果 2，PROG-2-0877，純邏輯，不依賴 cc） |
+| LuckEventRate.ts | doc_spec_0035 | 概: 運氣（LUK）對隨機事件觸發率的修正（純邏輯，不依賴 cc） |
+| LuckFateInheritance.ts | 未標出處 | 概: 運氣 =100 的「天命傳承」（LUK-06 效果 3，PROG-2-0878，純邏輯，不依賴 cc） |
+| LuckTacticCopy.ts | 未標出處 | 概: 運氣 ≥80 的「戰法強制複製」（LUK-06 效果，PROG-2-0874，純邏輯，不依賴 cc） |
+| LuckThresholds.ts | 未標出處 | 概: 運氣特殊門檻判定（LUK-06）。 |
+| LuckVisibility.ts | 未標出處 | 概: 運氣（LUK）屬性的前期隱藏與顯示文字（LUK-01，純邏輯，不依賴 cc） |
+| MainTargetPanelText.ts | doc_ui_0009 | 概: 主角區詞條列的文字格式（純邏輯，不依賴 cc） |
+| MainTargetPanelView.ts | doc_spec_0009, doc_ui_0009 | 概: 血統樹底部主角區的資料整理（純邏輯，不依賴 cc） |
+| MentorBoundary.ts | doc_spec_0027 | 概: 教學職能邊界的執行期檢查（MENT-11，純函式，不依賴 cc） |
+| MentorBreakthrough.ts | doc_spec_0027 | 概: 教官卡星等突破與重複卡判定（純邏輯，不依賴 cc） |
+| MentorCardTabs.ts | 未標出處 | 概: 教官卡詳情三頁籤與星等鎖頭（MENT-13，純邏輯，不依賴 cc） |
+| MentorDeck.ts | doc_spec_0027 | 概: 培育入場的教官編成：最多 5 格，每格放一張教官卡或留空。純 TS，不依賴 cc。 |
+| MentorInspiration.ts | doc_spec_0027 | 概: 戰法靈感事件觸發引擎（純邏輯，不依賴 cc） |
+| MentorOverflow.ts | doc_spec_0027 | 概: 教官卡溢出轉化（純邏輯，不依賴 cc） |
+| MentorSources.ts | doc_spec_0027, doc_spec_0151 | 概: 教官卡五來源標記與持有清單（純邏輯，不依賴 cc） |
+| MentorSupportCatalog.ts | doc_spec_0027 | 概: 教官支援卡目錄（純邏輯，不依賴 cc） |
+| MentorSynergy.ts | 未標出處 | 概: 師友羈絆（MENT-12，純邏輯，不依賴 cc） |
+| MercenaryAffection.ts | doc_spec_0132 | 概: 傭兵試用期間的每日好感（結義進度的一部分）純邏輯，不依賴 cc。 |
+| MercenaryBattleRecord.ts | doc_spec_0025, doc_spec_0029 | 概: 試用傭兵出戰後的進度寫入（純邏輯，不依賴 cc） |
+| MercenaryBond.ts | doc_spec_0045, doc_spec_0132 | 概: 推進一天：每日 bond +1、daysLeft −1；第 6 天結束時發 trial-complete。 |
+| MercenaryBondPermanent.ts | doc_spec_0132 | 概: 傭兵結義後轉為永久武將的點數扣除與數值快照，純邏輯，不依賴 cc。 |
+| MercenaryDeparture.ts | doc_spec_0132 | 概: 傭兵試用到期的退場與 30 天冷卻純邏輯，不依賴 cc。 |
+| MercenaryFarewellPresenter.ts | 未登錄：WBS v3 MERC-05（退場流程與告別信）；文字鍵 UI_MERC_FAR | 概: 傭兵離隊告別信的文字組裝，純邏輯，不依賴 cc。 |
+| MercenaryIllustration.ts | doc_spec_0025, doc_spec_0029 | 概: 傭兵插畫五階段（純邏輯，不依賴 cc） |
+| MercenaryPanelView.ts | doc_spec_0029 | 概: 傭兵面板的文字與按鈕狀態（純邏輯，不依賴 cc）。 |
+| MercenaryPoolPresenter.ts | doc_spec_0132 | 概: 傭兵列表的顯示資料（倒數、結義進度、按鈕可否），純 TS，不依賴 cc。 |
+| MercenaryRoster.ts | 未登錄：WBS v3 MERC-04（結義轉永久）、MERC-12（數值快照）；PM 修 | 概: 傭兵結義後寫入武將名冊的純邏輯計算，不依賴 cc。 |
+| MercenarySaveModel.ts | doc_spec_0132 | 概: 傭兵存檔包（試用狀態、薪水狀態、冷卻紀錄）的序列化與讀檔校正，純邏輯，不依賴 cc。 |
+| MercenaryTrialDay.ts | doc_spec_0132 | 概: 試用中傭兵的單日推進：倒數 −1、結義進度 +1，同日好感 +10（上限 60），純邏輯，不依賴 cc。 |
+| MercenaryTrialTicket.ts | doc_spec_0132 | 概: 使用試用券產生 Trial 傭兵，純邏輯，不依賴 cc。 |
+| MercenaryUpkeep.ts | doc_spec_0132 | 概: 傭兵每日薪水（黃金＋美酒）與欠薪凍結純邏輯，不依賴 cc。 |
+| MilestoneRewards.ts | doc_spec_0019 | 概: 里程碑達成後的獎勵內容（純邏輯，不依賴 cc） |
+| MilitaryReserve.ts | doc_spec_0040, doc_spec_0032, doc_data_0001 | 概: 玩家城市兵源與糧草儲備（純邏輯，不依賴 cc） |
+| MonthlyCard.ts | 未標出處 | 概: （無檔頭說明） |
+| MorningReport.ts | doc_spec_0015 | 概: 晨報摘要：每次登入把上次登入後新增的日誌挑 1~3 則高優先條目（純邏輯，不依賴 cc）。 |
+| NewPlayerOpening.ts | doc_spec_0031 | 概: 新玩家開場的幕序與第一幕文字，純 TS，不依賴 cc。 |
+| NpcDialogueHook.ts | doc_spec_0176 | 概: RAG 對話 hook 與未命中情境收集（純邏輯，不依賴 cc，不連中台） |
+| NpcFriendMentor.ts | doc_spec_0027 | 概: MVP 版「好友」：從資料表讀一組 NPC 好友教官（純邏輯，不依賴 cc） |
+| NpcGoldenLine.ts | doc_spec_0176 | 概: 核心武將錨點台詞（Golden_Lines）不可被覆蓋的執行規則（純邏輯，不依賴 cc） |
+| NpcMemoryReadModel.ts | doc_tech_0013 | 概: 本機 NPC_Memory 最小 read model（純邏輯，不依賴 cc）。 |
+| NpcPersonaCard.ts | doc_spec_0176 | 概: 武將 Persona Card 的資料結構與結構驗證（純邏輯，不依賴 cc）。 |
+| NurtureEvents.ts | doc_spec_0026 | 概: 培育回合的受傷與好感事件擲骰（純邏輯，不依賴 cc） |
+| NurtureRecordRow.ts | doc_spec_0026 | 概: 畢業時把培育會話轉成「培育紀錄」一列（純邏輯，不依賴 cc） |
+| OfficerDisplay.ts | doc_spec_0014 | 概: 大廳官職區塊的顯示資料（純邏輯，不依賴 cc） |
+| OfficerPermissions.ts | doc_spec_0014 | 概: 官職權限快照（純邏輯，不依賴 cc） |
+| OfficerSnapshot.ts | doc_spec_0002, doc_spec_0014 | 概: 大廳讀取官職快照後的權限解讀（純邏輯，不依賴 cc） |
+| OfficerState.ts | doc_spec_0014 | 概: 官職階位表、經驗計算、晉升判定（純邏輯，不依賴 cc） |
+| OfficerTierTable.ts | doc_spec_0014 | 概: 官職階位資料檔的驗證與安裝（純邏輯，不依賴 cc） |
+| OfflineBattleSnapshot.ts | doc_spec_0015 | 概: 離線戰鬥快照：自動解決／代勞結果的摘要與驗證鉤點（純邏輯，不依賴 cc）。 |
+| OfflineInteractionEvents.ts | doc_spec_0015 | 概: 離線互動事件內容（純邏輯，不依賴 cc）。 |
+| OfflineInteractionTrigger.ts | doc_spec_0015 | 概: 離線互動事件的觸發條件與每登入窗去重（純邏輯，不依賴 cc）。 |
+| OfflineTemplateEngine.ts | doc_spec_0176 | 概: 離線模板台詞產生（STATIC_TEMPLATE slot filling），純邏輯，不依賴 cc。 |
+| OnboardingTutorial.ts | doc_spec_0031, doc_spec_0045 | 概: 新手 3 段式引導（首次進入依序出現）純邏輯，不依賴 cc。 |
+| OpeningBeauty.ts | doc_spec_0031 | 概: 開局紅顏：從紅顏池（gacha-config 的 support-pool）抽 1 位，轉成可入名冊的武將 id。純 TS，不依賴 cc。 |
+| OpeningFlowController.ts | doc_tech_0008 | 概: （無檔頭說明） |
+| OpeningLetter.ts | doc_spec_0002, doc_spec_0004 | 概: 開場信件的已讀狀態與段落切分（純邏輯，不依賴 cc） |
+| OverflowBond.ts | doc_spec_0042, doc_data_0001 | 概: 滿轉溢出轉結義點數（純邏輯，不依賴 cc） |
+| PersonalityDriftGuard.ts | doc_spec_0176 | 概: 生成台詞的性格漂移檢查（純邏輯，不依賴 cc）。 |
+| PlayerInventory.ts | doc_spec_0006, doc_spec_0036 | 概: 玩家道具庫存（純邏輯，不依賴 cc） |
+| PrisonerOfWar.ts | doc_spec_0021 | 概: 俘虜產生與四選一處置（純邏輯，不依賴 cc） |
+| ProvisionalGeneralVersions.ts | 未標出處 | 概: 暫定版本表（PROG-2-0709，純邏輯，不依賴 cc） |
+| ReadModelValidators.ts | doc_tech_0013 | 概: 虎符 / 英靈卡 / 出征編制 / 戰場狀態的最小 read model 型別與唯一性驗證（純邏輯，不依賴 cc） |
+| Rebirth.ts | doc_spec_0042, doc_spec_0155 | 概: 重複抽到同名武將的轉生規則（純邏輯，不依賴 cc） |
+| RedFaceCopy.ts | doc_spec_0004 | 概: 紅顏趕路與商業化提示的文案表（純邏輯，不依賴 cc）。 |
+| RedFaceShowcase.ts | doc_spec_0031 | 概: 紅顏池展示列資料（純邏輯，不依賴 cc）。 |
+| RelationEvents.ts | doc_spec_0024 | 概: 關係組合在戰場／治理場景觸發專屬事件（純邏輯，不依賴 cc） |
+| ReportCardBook.ts | doc_spec_0026 | 概: 畢業成績單的保留與定型（純邏輯，不依賴 cc） |
+| ResourceCap.ts | doc_spec_0032 | 概: 基礎資源的存儲上限夾制與不足提示（純邏輯，不依賴 cc）。 |
+| RetireReviewCopy.ts | doc_spec_0019 | 概: 退役戰績回顧與季度戰損報告的文字（純邏輯，不依賴 cc） |
+| RetirementRouting.ts | doc_spec_0043 | 概: 只讀已選定職能，不從屬性猜宿命、不呼叫退役、不產卡。 |
+| RetreatRisk.ts | doc_spec_0018 | 概: 精力狀態對撤退風險的影響（純邏輯，不依賴 cc） |
+| ReviveRetrain.ts | doc_spec_0005, doc_spec_0023 | 概: 復生重練（純邏輯，不依賴 cc） |
+| RivalNations.ts | doc_spec_0020 | 概: 他國 AI 勢力的純邏輯：勢力清單、與玩家的邦交、外交指令、季度行動、自動模擬戰鬥。 |
+| RivalTrade.ts | 未標出處 | 概: （無檔頭說明） |
+| RosterRoleLoad.ts | doc_spec_0016 | 概: 讀檔時把名冊的舊職能值正規化（純邏輯，不依賴 cc） |
+| SageDivination.ts | doc_spec_0006, doc_spec_0009 | 概: 名士占卜觸發因子覺醒，純邏輯，不依賴 cc |
+| SageFactorPreview.ts | doc_spec_0009 | 概: 名士提前預覽鎖住的因子方向（純邏輯，不依賴 cc） |
+| SageRegistry.ts | doc_spec_0006 | 概: 名士表的載入與 schema 驗證（純邏輯，不依賴 cc） |
+| SageRemarks.ts | doc_spec_0008, doc_spec_0028 | 概: 結緣介面的名士批語與天象異變（純邏輯，不依賴 cc） |
+| SandtableMarkers.ts | 未標出處 | 概: 世界沙盤標記數量上限（純邏輯，不依賴 cc） |
+| SandtableProgress.ts | doc_spec_0002 | 概: 世界沙盤的解鎖歷史與階段顯示（純邏輯，不依賴 cc）。 |
+| SandtableStatus.ts | doc_spec_0014 | 概: 天下沙盤入口的狀態文字（純邏輯，不依賴 cc） |
+| SandtableTerritories.ts | doc_spec_0014 | 概: 世界沙盤的領地清單與驗證（純邏輯，不依賴 cc） |
+| SandtableTerritoryPicker.ts | doc_spec_0014 | 概: 天下沙盤領地選擇的列資料與文字（純邏輯，不依賴 cc） |
+| SeasonFastForward.ts | doc_spec_0045 | 概: 連續推進季度，遇到要玩家處理的事件就停（純 TS，不依賴 cc）。 |
+| SeasonModifiers.ts | doc_spec_0034 | 概: 四季特色修正表（純邏輯，不依賴 cc） |
+| SeasonReportPanel.ts | doc_spec_0019 | 概: 季結戰報彈窗的列資料與文字（純邏輯，不依賴 cc） |
+| SeededRandom.ts | 未標出處 | 概: （無檔頭說明） |
+| SortieDeploy.ts | doc_spec_0040, doc_spec_0005, doc_spec_0012, doc_data_0001 | 概: 出征編制、出征軍勢與糧草部署帳本（純邏輯，不依賴 cc） |
+| SortieLoadoutPreset.ts | doc_spec_0040 | 概: 出征編制預設與推薦（純邏輯，不依賴 cc） |
+| SortiePrediction.ts | doc_data_0001 | 概: 出征編制畫面的戰前粗估勝率（純邏輯，不依賴 cc） |
+| SoulFragmentLedger.ts | doc_spec_0005 | 概: 戰魂碎片帳本（純邏輯，不依賴 cc） |
+| SoulInjectCandidates.ts | doc_spec_0005 | 概: 武將詳情頁「寄宿戰魂」面板的資料（純邏輯，不依賴 cc） |
+| SpiritArchiveSnapshot.ts | doc_spec_0022 | 概: 英靈死亡快照（純邏輯，不依賴 cc） |
+| SpiritInsertSequence.ts | doc_spec_0012 | 概: 英靈插卡四段演出的時間軸（純邏輯，不依賴 cc） |
+| SpiritSlotFlow.ts | doc_spec_0022 | 概: 命槽卸下與設為主卡的純邏輯（不依賴 cc）。 |
+| SpiritSlotState.ts | doc_spec_0022, doc_ui_0012 | 概: 從統一物件庫推導命頁「命槽」的狀態（純邏輯，不依賴 cc）。 |
+| StageChainNodes.ts | doc_spec_0049 | 概: 連環破主鏈的關卡節點表（純邏輯，不依賴 cc） |
+| StageChainProgress.ts | doc_spec_0049 | 概: 連環破主鏈的順序解鎖判定（純邏輯，不依賴 cc） |
+| StageLoadoutSlots.ts | doc_spec_0026, doc_spec_0049 | 概: 關卡推薦對策槽位數與出征槽位缺口（純邏輯，不依賴 cc） |
+| StarUpMaterial.ts | doc_ui_0012 | 概: 升星素材路由（純邏輯，不依賴 cc） |
+| StatRevelation.ts | doc_spec_0026 | 概: 子嗣屬性的分層揭露（純邏輯，不依賴 cc） |
+| StoryStripCells.ts | doc_tech_0011 | 概: 故事條 6 格的結構檢查（純邏輯，不依賴 cc） |
+| StrategistHud.ts | doc_spec_0049 | 概: 軍師 HUD 四摘要欄的文字組成（純邏輯，不依賴 cc） |
+| SupportPoolValidator.ts | doc_spec_0031 | 概: 紅顏池資料的一致性檢查，純 TS，不依賴 cc。 |
+| SyncHash.ts | 未標出處 | 概: SyncHash.ts |
+| TacticCondition.ts | doc_spec_0038 | 概: 戰法 TCOND 條件評估（純邏輯，不依賴 cc） |
+| TacticLoadout.ts | 未標出處 | 概: 戰法槽位（NUR-10 部分）。純邏輯，不依賴 cc。 |
+| TacticRandomization.ts | doc_spec_0042, doc_spec_0155 | 概: 轉蛋戰法隨機化（純邏輯，不依賴 cc） |
+| TacticTriggerRate.ts | doc_spec_0180 | 概: 戰法發動率（INT 檢核器，純邏輯，不依賴 cc） |
+| TacticsTabView.ts | doc_ui_0012 | 概: 武將技頁的檢視模型（純邏輯，不依賴 cc）。 |
+| TalismanSlotView.ts | doc_ui_0012 | 概: 兵分頁虎符槽的讀取（純邏輯，不依賴 cc）。 |
+| TallyBossTags.ts | doc_spec_0007 | 概: 虎符的 BOSS 克制標籤與本季 BOSS 弱點命中統計（純邏輯，不依賴 cc） |
+| TallyDeathSettlement.ts | doc_spec_0012 | 概: 陣亡事件的虎符結算（純邏輯，不依賴 cc） |
+| TallyDeployAffinity.ts | doc_spec_0012 | 概: 虎符部隊出陣時的適性乘數（TRP-13，純邏輯，不依賴 cc） |
+| TeachingSpiritProvisional.ts | doc_spec_0031 | 概: 教學戰使用的傳說英靈（PM 暫定，純邏輯，不依賴 cc）。 |
+| TeachingSpiritTalisman.ts | doc_spec_0031 | 概: 英靈夢回教學戰結束後，傳說英靈轉成初始虎符的規則（純邏輯，不依賴 cc）。 |
+| TerrainTroopRules.ts | doc_spec_0041 | 概: 兵種站在特定地形上的固定強弱勢（純邏輯，不依賴 cc） |
+| TerritoryUpgrade.ts | doc_spec_0037 | 概: 太守府（領地）升級的等級、格數與費用（純邏輯，不依賴 cc）。 |
+| TigerTally.ts | doc_spec_0012 | 概: 正式名將保守門檻：明確 isHistorical === true 的武將，或性別為女、具非空 |
+| TigerTallyBreakthrough.ts | doc_spec_0012, doc_data_0001 | 概: 虎符精華突破：3★→4★、4★→5★（純邏輯，不依賴 cc） |
+| TigerTallyHoldings.ts | doc_spec_0012 | 概: 虎符持有關係（純邏輯，不依賴 cc） |
+| TigerTallyLoyalty.ts | doc_spec_0012 | 概: 虎符拔除 / 裝上對武將忠誠度的影響，與反洗機制（純邏輯，不依賴 cc） |
+| TigerTallySetBonus.ts | doc_spec_0012 | 概: 虎符陣容 Set 羈絆判定與攻防加成（純邏輯，不依賴 cc） |
+| TigerTallyStar.ts | doc_spec_0012 | 概: 虎符 1~3★ 戰鬥經驗升星（純邏輯，不依賴 cc） |
+| TournamentLocal.ts | doc_spec_0007 | 概: 名將挑戰賽本機最小可行（純邏輯，不依賴 cc）。 |
+| TournamentSeason.ts | doc_spec_0007 | 概: 名將挑戰賽的賽季相位、段位與賽季結束軟重置（純邏輯，不依賴 cc）。 |
+| TrainingGainFormula.ts | doc_spec_0180 | 概: 培育單次屬性增長的總公式與各乘區（純邏輯，不依賴 cc，不擲骰）。 |
+| TravelCountdown.ts | doc_spec_0031 | 概: 趕路倒數（回合制）的純邏輯，不依賴 cc。 |
+| UltimateCinematic.ts | doc_spec_0030 | 概: 奧義演出設定檔的解析（純邏輯，不依賴 cc） |
+| UltimateDamage.ts | doc_spec_0030, doc_data_0001 | 概: 奧義傷害純公式（純邏輯，不依賴 cc） |
+| UltimateProgress.ts | doc_ui_0012 | 概: 五階奧義的名聲與事蹟讀取（純邏輯，不依賴 cc） |
+| UltimateSlotUnlock.ts | doc_spec_0030 | 概: 依轉生次數解鎖奧義欄位（純邏輯，不依賴 cc） |
+| UltimateUpgrade.ts | doc_spec_0030 | 概: 奧義升級與奧義圖鑑（純邏輯，不依賴 cc） |
+| UnlockPhase.ts | doc_spec_0009 | 概: 玩家等級與因子解鎖階段（純 TS，不連資料庫；FUL-06 core 端，Server 端 re-export） |
+| Unveiling.ts | doc_spec_0025, doc_spec_0043, doc_spec_0045, doc_spec_0026, doc_spec_0016 | 概: 子嗣 5 歲開獎與宿命分流（純邏輯，不依賴 cc） |
+| VirtualAncestorGenerator.ts | doc_spec_0072, doc_spec_0011, doc_spec_0031 | 概: 初代名將的 14 位虛擬祖先（始祖溯源），純邏輯，不依賴 cc |
+| VitalityBattleGate.ts | doc_spec_0018, doc_spec_0148 | 概: 戰場精力軟懲罰判定（LIFE-10，純邏輯，不依賴 cc） |
+| VitalityCap.ts | doc_spec_0016, doc_data_0001 | 概: 男女精力上限基礎值（純邏輯，不依賴 cc） |
+| VitalityPill.ts | doc_spec_0032, doc_data_0001 | 概: 補元散的精力回復與扣道具（純邏輯，不依賴 cc） |
+| VortexTransition.ts | doc_spec_0031 | 概: 漩渦吸入與白閃轉場的階段時序（純邏輯，不依賴 cc）。 |
+| WarehouseCapacity.ts | 未登錄：WBS v3 BAG-02（主城倉庫：50 格、擴容 +20、上限 200） | 概: 主城倉庫的容量與存入判斷，純邏輯，不依賴 cc。 |
+| WeatherItem.ts | 未標出處 | 概: 天氣道具改變戰場天氣（APT-15，PROG-2-0929） |
+| WeatherSchedule.ts | doc_spec_0041 | 概: 戰場天氣排程（純邏輯，不依賴 cc） |
+| WeatherTacticRestriction.ts | doc_spec_0041 | 概: 天氣對戰法的強約束（純邏輯，不依賴 cc） |
+| WildGene.ts | doc_spec_0011 | 概: 獨立的基礎機率 Star Jump 判定：成功只提升 level，保留其餘欄位與輸入。 |
+| WishPool.ts | 未標出處 | 概: 許願池免費許願軌（doc_spec_0032 §E-6，PROG-2-1198） |
+| YearReport.ts | doc_spec_0034 | 概: 年終年報的資料與文字（純邏輯，不依賴 cc） |
 
 #### Core Models (`assets/scripts/core/models/`)
 
