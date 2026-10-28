@@ -6,12 +6,15 @@
 // CharacterDs3EquipChild — UCUF ChildPanel for tab "Equip".
 // Wire this into the CompositePanel's _switchToTab routing table.
 
-import { Button } from 'cc';
+import { Button, Color, Label, Node, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { gearSlotText } from '../../../core/systems/GearPageSlots';
 import { EQUIP_SLOTS, type EquipSlot } from '../../../core/systems/GeneralBackpack';
 import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
+import type { HeirloomCardView } from '../../../core/systems/HeirloomCardView';
+
+const HEIRLOOM_CARD_NODE = 'HeirloomCard';
 
 export class CharacterDs3EquipChild extends ChildPanelBase {
     override dataSource = 'config';
@@ -40,11 +43,35 @@ export class CharacterDs3EquipChild extends ChildPanelBase {
     /** 把六格一般裝備寫進具名格位節點 EquipSlot_<槽 ID>（PROG-2-1037）；節點不存在時略過。 */
     public override onDataUpdate(data: unknown): void {
         if (!data || typeof data !== 'object') return;
-        const slots = (data as GeneralDetailOverviewContentState).gearSlots;
-        if (!Array.isArray(slots)) return;
-        for (const view of slots) {
-            this._setLabelText(`EquipSlot_${view.slot}`, gearSlotText(view));
+        const content = data as GeneralDetailOverviewContentState;
+        const slots = content.gearSlots;
+        if (Array.isArray(slots)) {
+            for (const view of slots) {
+                this._setLabelText(`EquipSlot_${view.slot}`, gearSlotText(view));
+            }
         }
+        if (content.heirloomCard) this._setHeirloomCard(content.heirloomCard);
+    }
+
+    /**
+     * 傳家寶卡（TSK-04，PROG-2-1389）：執行期在寶頁根節點下建立一個文字節點，
+     * 內容為 HeirloomCardView 的標題與數量。掛在根節點而非既有格位，避免動到 layout JSON。
+     */
+    private _setHeirloomCard(card: HeirloomCardView): void {
+        const root = this.hostNode;
+        let node = root.getChildByName(HEIRLOOM_CARD_NODE);
+        if (!node) {
+            node = new Node(HEIRLOOM_CARD_NODE);
+            node.layer = root.layer;
+            root.addChild(node);
+            node.addComponent(UITransform).setContentSize(420, 36);
+            const label = node.addComponent(Label);
+            label.fontSize = 20;
+            label.lineHeight = 24;
+            label.color = Color.WHITE;
+        }
+        const label = node.getComponent(Label);
+        if (label) label.string = `${card.title}　${card.countLine}`;
     }
 
     private _setLabelText(nodeName: string, text: string): void {
