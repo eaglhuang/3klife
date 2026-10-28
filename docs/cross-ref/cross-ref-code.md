@@ -805,7 +805,6 @@
 | BattleSkillResolverFactory.ts | doc_spec_0038 | 概: （無檔頭說明） |
 | BattleSkillTargetSelector.ts | doc_spec_0038 | 概: 技能射程（G-1 百步穿楊）：施放者部隊的攻擊射程 ＋ rangeBonus。 |
 | SkillEffectFormulas.ts | doc_spec_0038 | 概: 戰法效果純公式（WBS v8 TAC-10／TAC-11 前置，PROG-2-0751） |
-| SkillEffectRegistry.ts | doc_index_0007 | 概: @spec-source → 見 docs/cross-reference-index.md |
 | SkillGridGeometry.ts | doc_spec_0038 | 概: 戰法格子幾何純函式（PROG-2-0754） |
 | SkillStatusTicks.ts | doc_spec_0038 | 概: 戰法狀態回合遞減純函式（PROG-2-0753） |
 
