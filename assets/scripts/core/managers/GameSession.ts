@@ -1813,7 +1813,7 @@ export class GameSession {
         this._wishPool = result.state;
         const beforeWish = this._inventory;
         for (const wish of result.claimed) this._inventory = addItem(this._inventory, wish.itemId, wish.amount);
-        this._recordGain(beforeWish, 'UNKNOWN');
+        this._recordGain(beforeWish, 'EVENT');
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         return result.claimed.map((w) => ({ ...w }));
     }
@@ -2185,7 +2185,7 @@ export class GameSession {
         if (isNewEnrollGrantDay(this._enrollGrantDay, today)) {
             const beforeEnroll = this._inventory;
             this._inventory = addItem(this._inventory, ITEM_ADMISSION_TOKEN, dailyFreeEnrollCount(this._territoryLevel));
-            this._recordGain(beforeEnroll, 'UNKNOWN');
+            this._recordGain(beforeEnroll, 'TASK');
             this._enrollGrantDay = today;
         }
         // 限時道具：登入切日時回收已過期的物件庫列（PROG-2-1364）
