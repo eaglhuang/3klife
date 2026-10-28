@@ -25,7 +25,7 @@ import { EnemyAI } from "./EnemyAI";
 import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
-import { findUltBasePowerTable, findUltimateDamageDef, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
+import { findUltBasePowerTable, findUltimateBattleSkillId, findUltimateDamageDef, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
 import { BattleFlowStateMachine } from './BattleFlowStateMachine';
 import { BattleRuntimeOrchestrator } from '../orchestrators/BattleRuntimeOrchestrator';
 import { executeBattleCombatPhase } from '../runtime/phases/BattleCombatPhase';
@@ -807,10 +807,15 @@ export class BattleController {
    */
   public chooseEnemyUltimate(): { battleSkillId: string; ultimateId: string } | null {
     const general = this.state.getGeneral(Faction.Enemy);
-    if (!general || !this.state.aiCanUseUltimate || !general.canUseSkill() || !general.skillId) return null;
+    if (!general || !this.state.aiCanUseUltimate || !general.canUseSkill()) return null;
 
     const ultimateId = general.ultimateSlots.find(slot => isUltimateSlotUnlocked(slot, general.rebirthCount))?.ultimateId;
     if (!ultimateId) return null;
+    // 奧義綁定了已實作的戰法（PROG-2-1339）就施放它本身的效果；否則沿用武將主技能（舊路徑）
+    const linkedSkillId = findUltimateBattleSkillId(ultimateId);
+    const linked = linkedSkillId && resolveBattleSkillProfile(linkedSkillId) && isBattleSkillImplemented(linkedSkillId) ? linkedSkillId : null;
+    const battleSkillId = linked ?? general.skillId;
+    if (!battleSkillId) return null;
 
     const playerCount = this.livingUnitsOf(Faction.Player).length;
     const enemyCount = this.livingUnitsOf(Faction.Enemy).length;
@@ -829,7 +834,7 @@ export class BattleController {
       allyHpRatio: this.hpRatioOf(Faction.Enemy),
       isLosing: enemyCount < playerCount,
     });
-    return shouldUse ? { battleSkillId: general.skillId, ultimateId } : null;
+    return shouldUse ? { battleSkillId, ultimateId } : null;
   }
 
   /** 敵方施放奧義：生效後才清空精力並發事件（與玩家奧義同一套 SP 規則） */
