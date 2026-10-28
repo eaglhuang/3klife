@@ -11,8 +11,10 @@
  * Unity 對照：Presenter。
  */
 import { DAILY_NEWS_EMOTION_KEY, type DailyNewsState } from '../../core/systems/DailyNewsEngine';
+import {
+    MORNING_REPORT_OPENING, MORNING_REPORT_OPENING_KEY, morningReportLines, type MorningReportState,
+} from '../../core/systems/MorningReport';
 import { journalSummaryText } from './JournalTexts';
-import { morningReportLines, type MorningReportState } from '../../core/systems/MorningReport';
 import { dailyReportDateText, dailyReportText, type DailyReportTextLookup } from './DailyReportTexts';
 
 /** 面板每區最多列數（日報 DAILY_NEWS_COUNT.max、晨報 MORNING_REPORT_SLOTS.highTier 皆為 3） */
@@ -34,6 +36,15 @@ function unreadNewsLines(news: Readonly<DailyNewsState>, lookup: DailyReportText
     });
 }
 
+/** 未讀晨報的開場與各則文字（PROG-2-1500）：依查表取譯文，缺譯文退回 zh-TW；已讀或沒有條目時為空。 */
+function morningPanelLines(morning: Readonly<MorningReportState>, lookup: DailyReportTextLookup | undefined): { opening: string; items: string[] } {
+    if (morningReportLines(morning).length === 0) return { opening: '', items: [] };
+    return {
+        opening: journalSummaryText(lookup, { summary: MORNING_REPORT_OPENING, summaryKey: MORNING_REPORT_OPENING_KEY }),
+        items: morning.items.map((item) => journalSummaryText(lookup, item)),
+    };
+}
+
 export class DailyReportController {
     private constructor(
         private readonly _newsTitle: string,
@@ -51,10 +62,10 @@ export class DailyReportController {
     public static capture(news: Readonly<DailyNewsState>, morning: Readonly<MorningReportState>, date: Date, revengeAvailable = false, lookup?: DailyReportTextLookup): DailyReportController | null {
         // 日報各則逐條查表（PROG-2-1501）；標題由查表組出，不用核心的 zh-TW 標題行
         const newsLines = unreadNewsLines(news, lookup);
-        const [opening = '', ...morningItems] = morningReportLines(morning);
-        if (newsLines.length === 0 && morningItems.length === 0) return null;
+        const morningPanel = morningPanelLines(morning, lookup);
+        if (newsLines.length === 0 && morningPanel.items.length === 0) return null;
         const newsTitle = dailyReportText(lookup, 'UI_DAILY_NEWS_TITLE', dailyReportDateText(date));
-        return new DailyReportController(newsTitle, newsLines, opening, morningItems, revengeAvailable, lookup);
+        return new DailyReportController(newsTitle, newsLines, morningPanel.opening, morningPanel.items, revengeAvailable, lookup);
     }
 
     /** 復仇取回後不再顯示按鈕（RET-05） */
