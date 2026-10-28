@@ -19,7 +19,11 @@ import type { NationProfile } from './RivalNations';
 
 export const MIN_TROOPS_FOR_ATTACK = 1500;
 export const FOOD_FOR_CAMPAIGN = 3000;
-export const EXPANSION_ATTACK_SCORE = 0.6;
+/**
+ * 出征分數門檻。規格寫 0.6，但 PROG-2-1505 模擬（20 seed × 60 季、全國交戰）下 0.6 約 44 次出征、
+ * 0.77 以上為 0，與「約每 8–12 季出征一次」不符。暫定取 0.75（約 28 次／60 季），可逆，待企劃裁定。
+ */
+export const EXPANSION_ATTACK_SCORE = 0.75;
 
 /** 規格 E-4 出征意願；RAIDER 為暫定值 */
 export const EXPANSION_WILLINGNESS: Readonly<Record<NationProfile, number>> = Object.freeze({

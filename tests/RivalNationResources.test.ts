@@ -57,6 +57,12 @@ export function createRivalNationResourcesSuite(): TestSuite {
         assert.isTrue(after.troops > Math.round(before.troops * 1.04));
     });
 
+    suite.test('次要任務：軍備型勢力每季也種田，糧草不會卡在開局值（PROG-2-1505）', () => {
+        const world = createRivalWorld();
+        const after = nationOf(advanceRivalSeason(world, CALM).world, 'lvbu');
+        assert.equals(AI_STARTING_RESOURCES.food + 220, after.resources?.food ?? -1);
+    });
+
     suite.test('舊存檔缺 resources：讀檔補初始值，不影響其他欄位', () => {
         const legacy = { nations: [{ id: 'wei', troops: 7000, territories: 4, relation: -10, allied: false, atWar: false }] };
         const restored = normalizeRivalWorld(legacy);

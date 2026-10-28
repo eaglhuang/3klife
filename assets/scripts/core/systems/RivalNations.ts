@@ -15,7 +15,7 @@ export type NationProfile =
     | 'EXPANSIONIST' | 'PASSIVE' | 'CAVALRY_LORD' | 'RAIDER';
 
 import {
-    AI_STARTING_RESOURCES, INTEL_CAP, NATION_PRIMARY_TASK, RULER_GOVERNANCE_STATS, aiGovernanceTick,
+    AI_STARTING_RESOURCES, INTEL_CAP, NATION_PRIMARY_TASK, NATION_SECONDARY_TASK, RULER_GOVERNANCE_STATS, aiGovernanceTick,
     rollRecruitQuality, shouldRecruitThisSeason, type NationResources, type RecruitQuality,
 } from './RivalGovernance';
 import { clampResource } from './ResourceCap';
@@ -221,7 +221,10 @@ export function advanceRivalSeason(
         const governed = aiGovernanceTick(
             { ...(n.resources ?? AI_STARTING_RESOURCES), troops: 0 },
             profile,
-            [{ type: NATION_PRIMARY_TASK[profile], general: RULER_GOVERNANCE_STATS }],
+            [
+                { type: NATION_PRIMARY_TASK[profile], general: RULER_GOVERNANCE_STATS },
+                { type: NATION_SECONDARY_TASK[profile], general: RULER_GOVERNANCE_STATS },
+            ],
         );
         let relation = n.relation;
         if (!n.atWar && !n.allied) {
