@@ -26,6 +26,7 @@ import {
   tallyTroopTypeDamageMultiplierOf,
   applyFearCharge,
   tallySplashTargetsOf,
+  tallyGeneralGuardOf,
 } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
@@ -494,6 +495,13 @@ export class BattleCombatResolver {
     const svc = services();
     // 無敵（白馬銀槍·不滅，PM 裁定）：有無敵狀態的單位本次結算傷害歸零，不扣血、不發傷害事件
     if (svc.buff.hasBuff(unit.id, StatusEffect.Invincible)) return;
+    // 白耳替主將承傷（PROG-2-1529）：主將部隊受傷改由相鄰白耳兵承受，白耳陣亡照常結算
+    const guard = tallyGeneralGuardOf(unit, this.context.state.units.values());
+    if (guard && this.isGeneralUnit(unit.id)) {
+      this.applyUnitDamage(guard, damage, attackerFaction, { ...options, damageSource: 'tally-guard' });
+      if (guard.isDead()) this.onUnitKilled(guard, null, svc);
+      return;
+    }
     unit.takeDamage(damage);
     svc.event.emit(EVENT_NAMES.UnitDamaged, {
       unitId: unit.id,
