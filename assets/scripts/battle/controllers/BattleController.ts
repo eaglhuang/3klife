@@ -96,7 +96,8 @@ import {
 } from '../../core/systems/DelegateAi';
 import { FormulaSystem } from '../../core/systems/FormulaSystem';
 import { buildEnemyTacticCandidates } from '../shared/EnemyTacticCandidates';
-import { pickEnemyTactic, type TacticMetrics } from '../shared/EnemyTacticNumbers';
+import { fillTacticNumbers, type TacticMetrics } from '../shared/EnemyTacticNumbers';
+import { aiHoldsTactic, pickTacticByIq } from '../shared/AiTacticDecision';
 import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
@@ -271,6 +272,8 @@ export class BattleController {
     this.state.aiDifficultyBonus = aiDifficultyBonus;
     this.state.aiIq = 'LOW';
     this.state.aiCanUseUltimate = false;
+    this.state.aiTacticIq = null;
+    this.state.aiCanUseTactics = true;
     this.duelFlow.resetForBattle();
     this.skillDispatcher.resetUltimateUsage();
     // 敵將 Profile 路線策略（PROG-2-1463）：沒有時 EnemyAI 隨機選路
@@ -527,6 +530,8 @@ export class BattleController {
     this.state.aiDuelAcceptThreshold = entry.duelAcceptThreshold;
     this.state.aiIq = entry.aiIq;
     this.state.aiCanUseUltimate = entry.canUseUltimate;
+    this.state.aiTacticIq = entry.aiIq;
+    this.state.aiCanUseTactics = entry.canUseTactics;
     this.state.aiSpGainModifier = entry.spGainModifier;
   }
 
@@ -743,10 +748,25 @@ export class BattleController {
       }
     }
 
-    const tacticId = pickEnemyTactic(candidates, metrics, situation);
+    // 依 AI 智力分級挑技（PROG-2-1466）：低 IQ 隨機、中 IQ 最高傷害、高 IQ 以上與未套難度表走情境打分
+    const tacticId = pickTacticByIq(
+      this.state.aiTacticIq,
+      fillTacticNumbers(candidates, metrics),
+      situation,
+      () => services().session.randomSource(),
+    );
     if (!tacticId) return null;
     const battleSkillId = this.tacticDefinitionMap.get(tacticId)?.battleSkillId;
     return battleSkillId ? { tacticId, battleSkillId } : null;
+  }
+
+  /**
+   * 敵方本回合是否不放戰法（PROG-2-1466）：難度表禁用戰法，或低 IQ 沒抽中 30%。
+   * 不出手時 SP 保留，下回合再判斷。
+   */
+  public shouldEnemyHoldTactic(): boolean {
+    if (!this.state.aiCanUseTactics) return true;
+    return aiHoldsTactic(this.state.aiTacticIq, () => services().session.randomSource());
   }
 
   /** 敵將單次攻擊對指定我方單位的預估傷害（倍率 1、平原；敵方選技與奧義擊殺估算共用） */
@@ -1206,6 +1226,7 @@ export class BattleController {
           turnManager: this.turnManager,
           castEnemySeedTactic: (battleSkillId, tacticId) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId }),
           chooseEnemyTactic: () => this.chooseEnemyTactic(),
+          shouldEnemyHoldTactic: () => this.shouldEnemyHoldTactic(),
         });
         if (phaseName === 'enemy-special-resolve' && this.state.battleTactic === BattleTactic.FloodAttack) {
           resolveBattleTacticBehavior(this.state.battleTactic).advanceTurn(this.state, {
