@@ -405,6 +405,8 @@ export interface AddGeneralsResult {
 export interface AddGeneralsOptions {
     /** 轉蛋抽到重複同名武將時改為轉生（+1 轉）；預設關閉，俘虜招募等來源維持原行為 */
     rebirthOnDuplicate?: boolean;
+    /** 轉蛋入冊：新武將寫入轉蛋旗標（忠誠鎖定 100）；已有忠誠紀錄的武將不覆寫；舊存檔無此紀錄時維持原值 */
+    fromGacha?: boolean;
 }
 
 /** 季結日誌的排序優先級（PROG-2-0976）；低於戰鬥與派駐條目，不會擠掉它們 */
@@ -3618,6 +3620,12 @@ export class GameSession {
             this._bondPoints += bondPointsGained;
         }
 
+        if (options.fromGacha) {
+            for (const general of added) {
+                if (this._tallyLoyalty[general.id]) continue;
+                this._tallyLoyalty = { ...this._tallyLoyalty, [general.id]: createTallyLoyaltyState(TALLY_LOYALTY_INITIAL, true) };
+            }
+        }
         if (added.length > 0) {
             this._roster.replaceAll([...this._roster.getAll(), ...added]);
         }
