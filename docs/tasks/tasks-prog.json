@@ -24,8 +24,8 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 34,
-    "in_progress": 3,
+    "done": 35,
+    "in_progress": 2,
     "open": 82,
     "total": 119
   },
@@ -4380,18 +4380,18 @@
       "notes": "2026-10-27 | 狀態: open | 驗證: pending | 變更: 由 Claude 協調線登錄 | 阻塞: TASK-TEAM-0088 未解，派信時暫擱"
     },
     {
-      "doc_id": "",
+      "doc_id": "doc_task_0407",
       "id": "PROG-2-9012",
       "title": "他國招募品質門檻與 RNG 邊界回歸測試",
       "owner": "codex-gpt-6",
       "priority": "P2",
-      "status": "in-progress",
+      "status": "done",
       "type": "test",
       "phase": "M6",
       "created": "2026-10-28",
       "created_by_agent": "codex-gpt-6",
-      "started_at": "2026-10-28T13:11:32+00:00",
-      "started_by_agent": "codex-gpt-6",
+      "started_at": "",
+      "started_by_agent": "",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -4409,7 +4409,7 @@
       "deliverables": [
         "tests/RivalGovernance.test.ts"
       ],
-      "notes": "2026-10-28 | 狀態: in-progress | 驗證: quick gate 3/3；其餘pending | 變更: codex-gpt-6開始tests-only回歸補強；基底c731aceab；官方next allocator回傳9011但該號已有外部存檔交接工作，故排除已知占用9011，透過官方explicit reservation fence保留9012 | 阻塞: none",
+      "notes": "2026-10-28 | 狀態: done | 驗證: RivalGovernance 17/17（新增12）；full run-cli 5213 passed/3 skipped；tsc -p tsconfig.test.json --noEmit exit0零錯誤；standard gate 11/11；encoding與diff-check通過 | 變更: 固定E-7三段分布；六個門檻名聲各測累加界線前正好後及RNG一次；界線由規格分布累加避免硬寫0.9；未改產品公式。基底c731aceab，開工commit315581d18。官方allocator曾回傳9011但已有外部存檔交接工作，排除該已知占號並由官方explicit reservation fence保留9012 | 阻塞: none；未push或開PR",
       "brief": {
         "style": "classic",
         "label": "",
