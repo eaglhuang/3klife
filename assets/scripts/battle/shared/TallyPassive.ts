@@ -59,6 +59,10 @@ export interface TallyPassiveSpec {
   splash?: { radius: number; ratio: number };
   /** 替主將承傷（白耳）：主將部隊受傷時，周圍 radius 格內的此部隊代為承受（PROG-2-1529） */
   guardsGeneral?: { radius: number };
+  /** 捨命護主（惡來符）：周圍 radius 格內友軍受傷時由此部隊代為承受（PROG-2-1530） */
+  guardsAllies?: { radius: number };
+  /** 血低防高（惡來符）：防禦乘數 × (1 + bonus × 已損血比例) */
+  lowHpDefenseBonus?: number;
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -118,6 +122,8 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   'tiger-tally-da-qiao': { moraleNoDecrease: true },
   // 南蠻：巨型踐踏濺射，目標周圍 1 格敵軍受 50%（PROG-2-1527 暫定數字）；無視輕型步兵阻擋未做
   'tiger-tally-nan-man': { splash: { radius: 1, ratio: 0.5 } },
+  // 惡來符：捨命護主，替周圍 1 格友軍承傷；血低防高，空血時防禦 ×2（PROG-2-1530 暫定數字）
+  'tiger-tally-e-lai-fu': { guardsAllies: { radius: 1 }, lowHpDefenseBonus: 1 },
 };
 
 /** 各陣營出兵列（後排起點）：我方由 depth 0 出兵、敵方由最後一列出兵 */
@@ -190,13 +196,22 @@ export function tallySplashTargetsOf(attacker: TroopUnit, defender: TroopUnit, u
   return { targets, ratio: splash.ratio };
 }
 
-/** 替主將承傷：回傳主將周圍可代為承傷的同陣營存活部隊（取第一個）；沒有時為 null */
-export function tallyGeneralGuardOf(general: TroopUnit, units: Iterable<TroopUnit>): TroopUnit | null {
+/**
+ * 代為承傷：回傳 unit 周圍可代為承傷的同陣營存活部隊（取第一個）；沒有時為 null。
+ * 白耳（guardsGeneral）只護主將，主將判定由 isGeneral 延遲呼叫；惡來（guardsAllies）護任何友軍。
+ */
+export function tallyDamageGuardOf(unit: TroopUnit, units: Iterable<TroopUnit>, isGeneral: () => boolean): TroopUnit | null {
+  let general: boolean | null = null;
   for (const other of units) {
-    if (other === general || other.faction !== general.faction || other.isDead()) continue;
-    const guard = passiveOf(other)?.guardsGeneral;
-    if (!guard) continue;
-    if (Math.max(Math.abs(other.lane - general.lane), Math.abs(other.depth - general.depth)) <= guard.radius) return other;
+    if (other === unit || other.faction !== unit.faction || other.isDead()) continue;
+    const spec = passiveOf(other);
+    if (!spec?.guardsAllies && !spec?.guardsGeneral) continue;
+    const distance = Math.max(Math.abs(other.lane - unit.lane), Math.abs(other.depth - unit.depth));
+    if (spec.guardsAllies && distance <= spec.guardsAllies.radius) return other;
+    if (spec.guardsGeneral && distance <= spec.guardsGeneral.radius) {
+      general ??= isGeneral();
+      if (general) return other;
+    }
   }
   return null;
 }
@@ -224,7 +239,12 @@ export function tallyEvasionBonusOf(unit: TroopUnit): number {
 
 /** 虎符被動的防禦乘數；沒有此被動時為 1 */
 export function tallyDefenseMultiplierOf(unit: TroopUnit): number {
-  return passiveOf(unit)?.defenseMultiplier ?? 1;
+  const spec = passiveOf(unit);
+  const base = spec?.defenseMultiplier ?? 1;
+  if (!spec?.lowHpDefenseBonus) return base;
+  const maxHp = unit.getEffectiveMaxHp();
+  const lostRatio = maxHp > 0 ? Math.min(1, Math.max(0, 1 - unit.currentHp / maxHp)) : 0;
+  return base * (1 + spec.lowHpDefenseBonus * lostRatio);
 }
 
 /** 突襲止啼：目標在其陣營後排 rows 列內時回傳傷害乘數，否則為 1 */

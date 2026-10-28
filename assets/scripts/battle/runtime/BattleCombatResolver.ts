@@ -26,7 +26,7 @@ import {
   tallyTroopTypeDamageMultiplierOf,
   applyFearCharge,
   tallySplashTargetsOf,
-  tallyGeneralGuardOf,
+  tallyDamageGuardOf,
 } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
@@ -490,15 +490,17 @@ export class BattleCombatResolver {
       attackerDepth: number | null;
       damageSource?: string;
       allowDamageLink: boolean;
+      /** 已被代為承傷轉移過，不再轉移（PROG-2-1530） */
+      skipGuard?: boolean;
     },
   ): void {
     const svc = services();
     // 無敵（白馬銀槍·不滅，PM 裁定）：有無敵狀態的單位本次結算傷害歸零，不扣血、不發傷害事件
     if (svc.buff.hasBuff(unit.id, StatusEffect.Invincible)) return;
-    // 白耳替主將承傷（PROG-2-1529）：主將部隊受傷改由相鄰白耳兵承受，白耳陣亡照常結算
-    const guard = tallyGeneralGuardOf(unit, this.context.state.units.values());
-    if (guard && this.isGeneralUnit(unit.id)) {
-      this.applyUnitDamage(guard, damage, attackerFaction, { ...options, damageSource: 'tally-guard' });
+    // 代為承傷（白耳護主將 PROG-2-1529、惡來護友軍 PROG-2-1530）：改由相鄰護衛承受，護衛陣亡照常結算
+    const guard = options.skipGuard ? null : tallyDamageGuardOf(unit, this.context.state.units.values(), () => this.isGeneralUnit(unit.id));
+    if (guard) {
+      this.applyUnitDamage(guard, damage, attackerFaction, { ...options, damageSource: 'tally-guard', skipGuard: true });
       if (guard.isDead()) this.onUnitKilled(guard, null, svc);
       return;
     }

@@ -3,7 +3,7 @@
  */
 import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { applyFearCharge, tallyGeneralGuardOf, tallyHealsAllies, tallySplashTargetsOf } from '../assets/scripts/battle/shared/TallyPassive';
+import { applyFearCharge, tallyDamageGuardOf, tallyDefenseMultiplierOf, tallyHealsAllies, tallySplashTargetsOf } from '../assets/scripts/battle/shared/TallyPassive';
 import { MORALE_DURATION_TURNS } from '../assets/scripts/battle/shared/Morale';
 import { TestSuite, assert } from './TestRunner';
 
@@ -84,8 +84,19 @@ export function createTallyFearChargeSuite(): TestSuite {
         const baiEr = unitAt('b', Faction.Player, 3, 1, 'tiger-tally-bai-er');
         const farBaiEr = unitAt('fb', Faction.Player, 2, 3, 'tiger-tally-bai-er');
         const enemyBaiEr = unitAt('eb', Faction.Enemy, 1, 0, 'tiger-tally-bai-er');
-        assert.equals('b', tallyGeneralGuardOf(general, [general, enemyBaiEr, farBaiEr, baiEr])?.id);
-        assert.equals(null, tallyGeneralGuardOf(general, [general, enemyBaiEr, farBaiEr]));
+        assert.equals('b', tallyDamageGuardOf(general, [general, enemyBaiEr, farBaiEr, baiEr], () => true)?.id);
+        assert.equals(null, tallyDamageGuardOf(general, [general, enemyBaiEr, farBaiEr], () => true));
+        assert.equals(null, tallyDamageGuardOf(general, [general, baiEr], () => false), '非主將不受白耳保護');
+    });
+
+    suite.test('惡來捨命護主（PROG-2-1530）：替周圍友軍承傷、自己不轉移；血低防高', () => {
+        const eLai = unitAt('e', Faction.Player, 2, 2, 'tiger-tally-e-lai-fu');
+        const ally = unitAt('a', Faction.Player, 3, 3);
+        assert.equals('e', tallyDamageGuardOf(ally, [ally, eLai], () => false)?.id);
+        assert.equals(null, tallyDamageGuardOf(eLai, [ally, eLai], () => false));
+        assert.equals(1, tallyDefenseMultiplierOf(eLai));
+        eLai.takeDamage(50);
+        assert.equals(1.5, tallyDefenseMultiplierOf(eLai));
     });
 
     return suite;
