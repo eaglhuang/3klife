@@ -82,6 +82,7 @@ export class BattleSceneFlow {
       battleParams?.weather,
       battleParams?.battleTactic,
       difficulty,
+      enemyScale.difficulty.difficultyBonus,
     );
     // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
     const weatherSchedule = battleParams?.weatherSchedule ?? encounter?.weatherSchedule;
