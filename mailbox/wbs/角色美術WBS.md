@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-28 08:01 Claude：AG-41 驗收通過（bf060e554，規格 SHA e68ff572 一致，drawOrder 動態判斷）；R324 給 Codex：腕部裂縫改用圓心在腕點的圓形腕甲帽、灰弧整片刪除、殘色只改 RGB。
 - 2026-10-28 07:45 Antigravity：AG-41 前手 occludingFist 雙模式判定與規格 v3.21 落地完成（commit bf060e554）；支援主連通區判定、8方向12px內縮、長兵器動態軸向兩側露出；全量單元測試 130 tests 100% OK；實測 R318 v5.2 握點 occludingFist 順利通過。
 - 2026-10-28 07:43 Claude：R318 v5.2 occludingFist 量測通過（握點在主元件、兩側露桿、單一大元件）；R323 要求刪除腕部多圈灰弧改單條實心腕甲帶、清指節三角碎片與低 alpha 殘影。
 - 2026-10-28 07:23 Claude：規格 v3.21 新增 gripRule（畫在槍上層的手可用 occludingFist，不必挖孔）；R322 退回 R318 v4 拳孔、收下 v5 純旋轉方向並要求腕口接合與刪殘留；AG-41 派 checker；使用者裁定 3D 路線維持停止；Sparkle v13 補充已打成單一 zip 待使用者轉交。
