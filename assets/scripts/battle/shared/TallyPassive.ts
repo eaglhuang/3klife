@@ -51,6 +51,8 @@ export interface TallyPassiveSpec {
   fearImmune?: boolean;
   /** 恐懼衝鋒（鐵騎）：發動部隊攻擊時，周圍 radius 格內（含斜角）敵軍士氣 -moralePenalty（PROG-2-1514） */
   fearCharge?: { radius: number; moralePenalty: number };
+  /** 士氣不降（大喬）：敵方扣士氣效果對此部隊不生效（PROG-2-1525） */
+  moraleNoDecrease?: boolean;
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -102,6 +104,8 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   'tiger-tally-xian-deng': { fearImmune: true },
   // 鐵騎：恐懼衝鋒，攻擊時周圍 1 格敵軍士氣 -20（PROG-2-1514；範圍暫定 1 格）
   'tiger-tally-tie-qi': { fearCharge: { radius: 1, moralePenalty: 20 } },
+  // 大喬：士氣不降（PROG-2-1525）；全隊魅力 +20 因戰場部隊沒有魅力屬性未做
+  'tiger-tally-da-qiao': { moraleNoDecrease: true },
 };
 
 /** 各陣營出兵列（後排起點）：我方由 depth 0 出兵、敵方由最後一列出兵 */
@@ -152,7 +156,8 @@ export function applyFearCharge(attacker: TroopUnit, units: Iterable<TroopUnit>)
   if (!charge) return [];
   const affected: TroopUnit[] = [];
   for (const other of units) {
-    if (other.faction === attacker.faction || other.isDead() || passiveOf(other)?.fearImmune) continue;
+    const otherSpec = passiveOf(other);
+    if (other.faction === attacker.faction || other.isDead() || otherSpec?.fearImmune || otherSpec?.moraleNoDecrease) continue;
     if (Math.max(Math.abs(other.lane - attacker.lane), Math.abs(other.depth - attacker.depth)) > charge.radius) continue;
     other.morale -= charge.moralePenalty;
     if (other.moraleTurns <= 0) other.moraleTurns = MORALE_DURATION_TURNS;
