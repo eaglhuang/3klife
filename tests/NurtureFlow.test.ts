@@ -100,6 +100,27 @@ function collectLayoutIds(node: { id?: string; children?: unknown[] }, out: Set<
     for (const c of node.children ?? []) collectLayoutIds(c as { id?: string; children?: unknown[] }, out);
 }
 
+/** 行程版面（nurture-session-main）的節點以 name 命名，沒有 id */
+function collectLayoutNames(node: { name?: string; children?: unknown[] }, out: Set<string>): void {
+    if (node.name) out.add(node.name);
+    for (const c of node.children ?? []) collectLayoutNames(c as { name?: string; children?: unknown[] }, out);
+}
+
+/** 行程畫面的文字節點 id：NurtureSessionMapper 產出的 15 段文字 */
+const SESSION_TEXT_NODES = [
+    'SessionTitle', 'SessionSubtitle', 'TurnLabel', 'SessionSummary',
+    'PhaseBlockTitle', 'PhaseBlockBody', 'MentorModeLabel',
+    'MainCourseTitle', 'MainCourseBody',
+    'SupportWindowTitle', 'SupportWindowBody',
+    'RiskWindowTitle', 'RiskWindowBody',
+    'GraduationTagsTitle', 'GraduationTagsBody',
+];
+
+/** 訓練重點名稱（與 NurtureFlowController 的 SESSION_FOCUS_LABEL 一致） */
+const SESSION_FOCUS_TEXT: Record<string, string> = {
+    str: '校場操練', int: '講武堂研經', lea: '沙盤推演', pol: '市集巡視', cha: '名士清談',
+};
+
 export function createNurtureFlowSuite(): TestSuite {
     const suite = new TestSuite('NurtureFlow (開獎 / 培育畫面流程)');
 
@@ -312,9 +333,17 @@ export function createNurtureFlowSuite(): TestSuite {
         await full.flow.graduate();
         views.push(full.flow.getView());
 
+        // 行程畫面的文字節點在 nurture-session-main.json，另外比對
+        const sessionLayout = readJson<{ root: { name?: string; children?: unknown[] } }>('assets/resources/ui-spec/layouts/nurture-session-main.json');
+        const sessionNames = new Set<string>();
+        collectLayoutNames(sessionLayout.root, sessionNames);
+
         const missing = new Set<string>();
         for (const view of views) {
-            for (const key of [...Object.keys(view.texts), ...Object.keys(view.actives), ...Object.keys(view.enabled)]) {
+            for (const key of Object.keys(view.texts)) {
+                if (!ids.has(key) && !sessionNames.has(key)) missing.add(key);
+            }
+            for (const key of [...Object.keys(view.actives), ...Object.keys(view.enabled)]) {
                 if (!ids.has(key)) missing.add(key);
             }
         }
@@ -323,6 +352,51 @@ export function createNurtureFlowSuite(): TestSuite {
         const screen = readJson<{ layout: string; skin: string }>('assets/resources/ui-spec/screens/nurture-flow-screen.json');
         assert.equals('nurture-flow-main', screen.layout);
         assert.isTrue(fs.existsSync(path.join(ROOT, `assets/resources/ui-spec/skins/${screen.skin}.json`)));
+    });
+
+    suite.test('培育行程畫面：訓練中與畢業後都有 15 段文字，節點對得到 nurture-session-main.json', async () => {
+        const sessionLayout = readJson<{ root: { name?: string; children?: unknown[] } }>('assets/resources/ui-spec/layouts/nurture-session-main.json');
+        const names = new Set<string>();
+        collectLayoutNames(sessionLayout.root, names);
+        for (const node of SESSION_TEXT_NODES) assert.isTrue(names.has(node), `版面缺節點 ${node}`);
+
+        const rig = makeRig([unveiled('alpha')], { mode: GameTimeMode.Nurture, cards: [card('guan')] });
+        await rig.flow.chooseFate('accept');
+        await rig.flow.startNurture();
+
+        const training = rig.flow.getView();
+        assert.equals('train', training.mode);
+        for (const node of SESSION_TEXT_NODES) {
+            assert.isTrue(typeof training.texts[node] === 'string' && training.texts[node].length > 0, `訓練中缺文字 ${node}`);
+        }
+        assert.equals('培育行程', training.texts.SessionTitle);
+        assert.equals('第 1 回合', training.texts.TurnLabel);
+        assert.isTrue(training.texts.PhaseBlockTitle.includes('前期啟蒙'));
+        assert.equals('教官模式：TeachingOnly', training.texts.MentorModeLabel);
+        assert.isTrue(training.texts.SupportWindowBody.includes('guan'));
+        assert.isTrue(training.texts.RiskWindowBody.includes('精力 100 / 100'));
+
+        const full = makeRig([unveiled('alpha')], { mode: GameTimeMode.Nurture, cards: [card('guan')] });
+        await runToCompleted(full, 'alpha');
+        const graduated = full.flow.getView();
+        assert.equals('graduate', graduated.mode);
+        assert.isTrue(graduated.texts.PhaseBlockTitle.includes('畢業總結'));
+        assert.equals('第 36 回合', graduated.texts.TurnLabel);
+        assert.isTrue(graduated.texts.GraduationTagsBody.includes('待定型'));
+    });
+
+    suite.test('培育行程畫面：推薦重點取資質最高的兩項，隨回合更新', async () => {
+        const rig = makeRig([unveiled('alpha')], { mode: GameTimeMode.Nurture, cards: [card('guan')] });
+        await rig.flow.chooseFate('accept');
+        await rig.flow.startNurture();
+        await rig.flow.train('str');
+
+        const session = rig.nurture.getSession('alpha')!;
+        const kinds = ['str', 'int', 'lea', 'pol', 'cha'] as const;
+        const [first, second] = [...kinds].sort((left, right) => session.talent[right] - session.talent[left]);
+        const view = rig.flow.getView();
+        assert.equals('第 2 回合', view.texts.TurnLabel);
+        assert.isTrue(view.texts.MainCourseBody.includes(`${SESSION_FOCUS_TEXT[first]} + ${SESSION_FOCUS_TEXT[second]}`));
     });
 
     suite.test('每個 skinSlot / styleSlot 都在 nurture-flow-default.json 有定義', () => {

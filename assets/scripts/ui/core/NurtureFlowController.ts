@@ -56,6 +56,12 @@ import {
     sanitizeMentorDeck,
 } from '../../core/systems/MentorDeck';
 import { describeLifecycle } from './GeneralLifecyclePresenter';
+import {
+    buildNurtureSessionContentState,
+    fillSessionTemplate,
+    type NurtureSessionCanonicalContentState,
+    type SessionTextLookup,
+} from '../components/NurtureSessionMapper';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
 import { getTacticTpCost } from '../../core/systems/SortieDeploy';
 import { learnTpCost } from '../../core/systems/FactorTacticLinkage';
@@ -620,6 +626,7 @@ export class NurtureFlowController {
         const lookup = this._deps.text ?? fallbackBreedText;
         Object.assign(texts, buildSlotTexts(child, session, lookup));
         Object.assign(texts, buildSessionTexts(session, this._notice, lookup));
+        Object.assign(texts, buildSessionScreenTexts(session, sessionTextOf(this._deps.text ?? fallbackBreedText)));
         enabled.btnAbandon = session.status === 'active';
         if (session.status === 'completed') {
             this._applyTacticRow(child, session, texts, actives, enabled);
@@ -821,6 +828,102 @@ function buildSessionTexts(session: NurtureSession, notice: string, t: BreedText
         nurtureFactors: session.negativeFactors.length > 0 ? `負面因子：${session.negativeFactors.join('、')}` : '負面因子：無',
         nurtureLog: notice || lateBloomClueText(session.vigor, VIGOR_MAX) || (last ? describeRound(last, t) : '選擇本回合的訓練，或休息回復精力'),
     };
+}
+
+type SessionStats = NurtureSessionCanonicalContentState['dualLayerStats'];
+type SessionStatKey = keyof SessionStats;
+
+/** 培育行程畫面（nurture-session-main）的訓練重點名稱，與 GeneralDetailOverviewMapper 的五格標籤一致 */
+const SESSION_FOCUS_LABEL: Record<TrainingKind, string> = {
+    str: '校場操練',
+    int: '講武堂研經',
+    lea: '沙盤推演',
+    pol: '市集巡視',
+    cha: '名士清談',
+};
+
+const SESSION_PHASE_BLOCK: Record<PhaseBlock, string> = {
+    Foundation: 'BEGIN',
+    Midterm: 'MID',
+    Sprint: 'LATE',
+};
+
+function isTrainingKind(key: SessionStatKey): key is TrainingKind {
+    return (TRAINING_KINDS as readonly string[]).includes(key);
+}
+
+/** 行程畫面的五維：訓練五格有資質（區間揭露）與實力；氣運沒有訓練來源，維持封存 */
+function sessionStatOf(session: NurtureSession, key: SessionStatKey): SessionStats[SessionStatKey] {
+    if (!isTrainingKind(key)) {
+        return { talent: { base: null, current: null, maxPotential: null, revelationLevel: 'HIDDEN' }, prowess: null };
+    }
+    const talent = session.talent[key];
+    return {
+        talent: { base: talent, current: talent, maxPotential: talent, revelationLevel: 'RANGE' },
+        prowess: session.prowess[key],
+    };
+}
+
+/** 把 BreedTextLookup 包成行程畫面用的查詢：查不到鍵時用 zh-TW 退回模板 */
+function sessionTextOf(lookup: BreedTextLookup): SessionTextLookup {
+    return (key, fallback, ...args) => labelOf(lookup, key, fillSessionTemplate(fallback, args), ...args);
+}
+
+function buildSessionCanonical(session: NurtureSession, t: SessionTextLookup): NurtureSessionCanonicalContentState {
+    const round = Math.min(Math.max(session.round + 1, 1), NURTURE_TOTAL_ROUNDS);
+    const phaseBlock = session.status === 'completed' ? 'GRADUATION' : SESSION_PHASE_BLOCK[phaseOfRound(round)];
+    const failure = Math.round(failureRateForVigor(session.vigor) * 100);
+    const statKeys: SessionStatKey[] = ['str', 'int', 'lea', 'pol', 'cha', 'luk'];
+    const focus = [...TRAINING_KINDS]
+        .sort((left, right) => session.talent[right] - session.talent[left])
+        .slice(0, 2)
+        .map((kind) => t(`ui.nurture.session.focus.${kind}`, SESSION_FOCUS_LABEL[kind]));
+
+    return {
+        sessionInfo: {
+            title: t('ui.nurture.session.title', '培育行程'),
+            subtitle: t('ui.nurture.session.subtitle', '三階段學年 / {0} 回合', String(NURTURE_TOTAL_ROUNDS)),
+            turnLabel: t('ui.nurture.session.turn', '第 {0} 回合', String(round)),
+        },
+        dualLayerStats: Object.fromEntries(statKeys.map((key) => [key, sessionStatOf(session, key)])) as SessionStats,
+        profilePresentation: {
+            defaultTab: 'Overview',
+            crestState: 'revealed',
+            storyStripCells: { origin: '', faction: '', role: '', awakening: '', bloodline: '', future: '' },
+        },
+        trainingProfile: {
+            sourceSessionId: session.sessionId,
+            phaseBlock,
+            // 教官模式沿用版面預設的英文代號；沒有教官時改為自主培育
+            mentorModeLabel: session.mentors.length > 0 ? 'TeachingOnly' : 'SelfTraining',
+            recommendedFocus: focus,
+            // 畢業標籤要等畢業結算才定，目前只給占位候選，正式標籤見待辦
+            graduationTags: [t('ui.nurture.session.grad_placeholder', '待定型')],
+        },
+        supportPlan: {
+            mentors: session.mentors.map((mentor) => mentor.name),
+            lineageBoundary: t('ui.nurture.session.lineage', '英靈傳道屬教學支援，不會轉回血脈親傳'),
+        },
+        riskPlan: {
+            pressureTags: session.negativeFactors,
+            recoveryHint: t('ui.nurture.session.recovery', '精力 {0} / {1}，訓練失敗率 {2}%，休息可回復精力', String(session.vigor), String(VIGOR_MAX), String(failure)),
+            concealExactYield: true,
+        },
+    };
+}
+
+/**
+ * 培育行程畫面的文字（SessionTitle、PhaseBlockBody…）：NurtureSessionMapper 產出 camelCase，
+ * 這裡轉成版面節點 id（PascalCase），才能和 nurture-session-main.json 對上。
+ */
+function buildSessionScreenTexts(session: NurtureSession, t: SessionTextLookup): Record<string, string> {
+    const content = buildNurtureSessionContentState(buildSessionCanonical(session, t), t);
+    const texts: Record<string, string> = {};
+    for (const [key, value] of Object.entries(content)) {
+        if (typeof value !== 'string') continue;
+        texts[key.charAt(0).toUpperCase() + key.slice(1)] = value;
+    }
+    return texts;
 }
 
 /** 教官觸發提示：羈絆名稱與戰法靈感（沒有觸發回傳空字串） */
