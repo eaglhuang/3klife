@@ -226,6 +226,9 @@ export class BattleState {
     if (!unit) return;
     const cell = this.getCell(unit.lane, unit.depth);
     if (cell?.occupantId === unitId) cell.occupantId = null;
+    // 受控兵離場：陣營換回原陣營，陣亡紀錄才不會把敵兵當成我方陣亡兵（PROG-2-1482）
+    const control = this.controlledUnits.get(unitId);
+    if (control) unit.faction = control.originalFaction;
     // 只有陣亡（血量歸零）才進紀錄；撤退脫離不算陣亡
     if (unit.currentHp <= 0) this.fallenUnits.push(unit);
     this.units.delete(unitId);
