@@ -24,7 +24,8 @@ export function resolveBattleVictory(state: BattleState): BattleResult {
   // 勝負一經分出就鎖定：同一局重複判定只發一次 BattleEnded（PROG-2-0207）
   if (result !== 'ongoing' && !state.battleEndAnnounced) {
     state.battleEndAnnounced = true;
-    svc.event.emit(EVENT_NAMES.BattleEnded, { result });
+    // 關卡級回收（PROG-2-1462）：戰後摘要依此結算，帶快照避免後續改動
+    svc.event.emit(EVENT_NAMES.BattleEnded, { result, salvage: { ...state.stageSalvage } });
   }
 
   return result;

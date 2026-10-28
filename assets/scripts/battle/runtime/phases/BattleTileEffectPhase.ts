@@ -1,5 +1,5 @@
 // @spec-source → 戰場格子系統.md (doc_spec_0044)、戰場適性系統.md (doc_spec_0041)；PROG-2-1429 依建檔紀錄補標出處
-import { Faction } from '../../../core/config/Constants';
+import { BattleTactic, Faction } from '../../../core/config/Constants';
 import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
@@ -8,6 +8,7 @@ import { advanceMoraleOf } from '../../shared/Morale';
 import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
 import { sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
+import { addStageSalvage, FIRE_RAID_TILE_NOTE, rollFirePlunderSupply } from '../../shared/StageSalvage';
 
 export interface BattleTileEffectPhaseContext {
   readonly state: BattleState;
@@ -30,6 +31,8 @@ export interface BattleTileEffectPhaseContext {
   onUnitKilled(unit: TroopUnit, killer: TroopUnit | null, svc: ReturnType<typeof services>): void;
   /** 沙漠每回合精力消耗（APT-05，PROG-2-0785）：單位本回合要扣主將的精力；不提供時為 0 */
   getTerrainVitalityDrain?(unit: TroopUnit): number;
+  /** 掠奪擲骰亂數源（PROG-2-1462）；不提供時用 session 亂數 */
+  random?(): number;
 }
 
 export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseContext): void {
@@ -41,6 +44,8 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
   advanceMoraleOf(context.state.units.values(), context.actingFaction);
   const killed: TroopUnit[] = [];
   const killedIds = new Set<string>();
+
+  plunderFireRaidTiles(context, svc);
 
   for (const [, unit] of context.state.units) {
     if (unit.faction !== context.actingFaction) {
@@ -115,5 +120,23 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
       context.onGeneralUnitKilled(Faction.Enemy, svc);
     }
     context.onUnitKilled(dead, null, svc);
+  }
+}
+
+/**
+ * 火燒偷襲戰掠奪（戰法場景規格書 B-3，PROG-2-1462）：我方回合結束時站在火攻格 = 佔領 = 掠奪成功，
+ * 每格一次，補給寫入 Stage_Salvage。場景戰法只由玩家發動（B-1），敵方不掠奪。
+ */
+function plunderFireRaidTiles(context: BattleTileEffectPhaseContext, svc: ReturnType<typeof services>): void {
+  if (context.actingFaction !== Faction.Player || context.state.battleTactic !== BattleTactic.FireAttack) return;
+  const random = context.random ?? (() => svc.session.randomSource());
+  for (const [, unit] of context.state.units) {
+    if (unit.faction !== Faction.Player || unit.isDead()) continue;
+    const effect = context.state.getTileEffect(unit.lane, unit.depth);
+    if (effect?.state !== 'hazard-fire' || effect.notes !== FIRE_RAID_TILE_NOTE) continue;
+    const key = `${unit.lane},${unit.depth}`;
+    if (context.state.plunderedTiles.has(key)) continue;
+    context.state.plunderedTiles.add(key);
+    addStageSalvage(context.state.stageSalvage, { supply: rollFirePlunderSupply(random) });
   }
 }
