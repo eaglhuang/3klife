@@ -1,3 +1,4 @@
+// @spec-source → 資源循環系統.md (doc_spec_0033)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * 精力劇本文案（PROG-2-0729，承接 VIT-09 / PROG-2-0728）。純邏輯，不依賴 cc。
  * 代入與 BreedingTexts 共用 fillBreedText。

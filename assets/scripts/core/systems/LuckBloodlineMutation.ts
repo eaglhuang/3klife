@@ -1,3 +1,4 @@
+// @spec-source → 運氣系統.md (doc_spec_0035)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * LuckBloodlineMutation — 運氣 ≥95 的「血統變異」（LUK-06 效果 2，PROG-2-0877，純邏輯，不依賴 cc）
  *

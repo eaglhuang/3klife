@@ -1,3 +1,4 @@
+// @spec-source → 戰法場景規格書.md (doc_spec_0039)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * 場景戰法發動判定（WBS v7 SCN-03，PROG-2-0596）
  *

@@ -1,3 +1,4 @@
+// @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
 /** gacha-ds3 的互動節點原本是 label/panel；由宿主補上 Button。
  * Unity 對照：為既有 RectTransform 加 Button，並重設本 Presenter 的 onClick。
  */

@@ -1,3 +1,4 @@
+// @spec-source → 戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
 import { TerrainType, TroopType, Weather } from '../../core/config/Constants';
 import { fireDamageMultiplier, isFireTactic } from '../../core/systems/WeatherTacticRestriction';
 import { fateBlessingLevel, fateDamageMultiplier } from '../../core/systems/FateBlessing';

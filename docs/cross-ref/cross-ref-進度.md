@@ -192,6 +192,8 @@
 
 > ✅ PROG-2-1427（2026-10-28）：`rebuild-crossref.js --rebuild-progress` 改為同時掃 assets/scripts 與 shared/（原本把 shared/ 的 skill-runtime.ts、protocols.ts 誤判為已消失），重跑後代碼覆蓋摘要如上。上方加權總表（規格書實作狀態）仍是 2026-04-12 的人工判定，工具不會重算。
 
+> ✅ PROG-2-1429（2026-10-28）：B-1 標「未標出處」的 166 檔中 164 檔補上檔頭 @spec-source（依建檔提交訊息的任務卡與 WBS 代號、資料夾推定，逐檔審過），B-1 同步改成 doc_id。BattleUIInitializer.ts（BAT-1-0001 鎖定中）與 GachaPreviewStateRoute.ts（PR #856 改動檔頭，避免衝突）暫不動。
+
 > 上述 14 檔尚未納入 B-1 映射。建議依上表分類，優先補入「武將資料模型」一組（合計 8 檔）再接葵育/血統與 UI 面板兩組。
 
 > ✅ DC 架構 17 檔與 UCUF 框架 17 檔（合計 34 檔）已於 2026-04-12 補入 B-1（`doc_tech_0009` / `doc_ui_0049`）。剩餘 14 檔建議優先補入「武將資料模型」8 檔，再接培育/血統 3 檔與 UI 面板 3 檔。

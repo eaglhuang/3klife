@@ -1,3 +1,4 @@
+// @spec-source → 運氣系統.md (doc_spec_0035)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * LuckTacticCopy — 運氣 ≥80 的「戰法強制複製」（LUK-06 效果，PROG-2-0874，純邏輯，不依賴 cc）
  *

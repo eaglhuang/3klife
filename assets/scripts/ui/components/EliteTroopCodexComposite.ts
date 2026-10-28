@@ -1,3 +1,4 @@
+// @spec-source → 兵種（虎符）系統.md (doc_spec_0012)；PROG-2-1429 依建檔紀錄補標出處
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { _decorator, Button, Color, ImageAsset, Label, Node, Rect, ScrollView, Sprite, SpriteFrame, Texture2D } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';

@@ -1,3 +1,4 @@
+// @spec-source → 戰法系統.md (doc_spec_0038)、戰場部署系統.md (doc_spec_0040)；PROG-2-1429 依建檔紀錄補標出處
 import {
   EVENT_NAMES,
   Faction,

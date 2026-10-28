@@ -1,3 +1,4 @@
+// @spec-source → 治理模式他國AI系統.md (doc_spec_0020)；PROG-2-1429 依建檔紀錄補標出處
 import { nationDef, type NationState, type RivalWorld } from './RivalNations';
 
 /** 可交易的資源（黃金在錢包，其餘在軍備與名聲） */

@@ -1,3 +1,4 @@
+// @spec-source → 戰法場景規格書.md (doc_spec_0039)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * WisdomMeter — 軍師智謀能量累積（WBS v7 SCN-10 純邏輯，PROG-2-0616）
  *

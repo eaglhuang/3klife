@@ -1,3 +1,4 @@
+// @spec-source → 戰法場景規格書.md (doc_spec_0039)；PROG-2-1429 依建檔紀錄補標出處
 import { BattleTactic } from '../../../core/config/Constants';
 import {
   BattleSkillTargetMode,

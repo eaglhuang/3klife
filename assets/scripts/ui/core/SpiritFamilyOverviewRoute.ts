@@ -1,3 +1,4 @@
+// @spec-source → 英靈世家系統.md (doc_spec_0022)；PROG-2-1429 依建檔紀錄補標出處
 export type SpiritFamilyOverviewOrigin = 'lobby' | 'general-detail';
 
 export interface SpiritFamilyOverviewOpenPayload {

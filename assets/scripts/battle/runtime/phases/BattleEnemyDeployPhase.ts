@@ -1,3 +1,4 @@
+// @spec-source → 戰場部署系統.md (doc_spec_0040)、demo_技術架構.md (doc_tech_0015)；PROG-2-1429 依建檔紀錄補標出處
 import { GAME_CONFIG, TROOP_DEPLOY_COST, type TroopType } from '../../../core/config/Constants';
 import type { EnemyAI } from '../../controllers/EnemyAI';
 import type { BattleState } from '../../models/BattleState';

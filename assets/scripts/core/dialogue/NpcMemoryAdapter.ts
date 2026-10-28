@@ -1,3 +1,4 @@
+// @spec-source → NPC人性化規格書.md (doc_spec_0176)、三國大腦中台規格書.md (doc_spec_0177)；PROG-2-1429 依建檔紀錄補標出處
 import { EventSystem } from '../systems/EventSystem';
 import { SyncManager } from '../systems/SyncManager';
 import { NpcDialogueService } from '../services/NpcDialogueService';

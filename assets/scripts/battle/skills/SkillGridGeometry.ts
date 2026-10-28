@@ -1,3 +1,4 @@
+// @spec-source → 戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * SkillGridGeometry — 戰法格子幾何純函式（PROG-2-0754）
  *

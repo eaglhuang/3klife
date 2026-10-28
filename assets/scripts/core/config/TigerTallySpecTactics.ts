@@ -1,3 +1,4 @@
+// @spec-source → 兵種（虎符）系統.md (doc_spec_0012)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * TigerTallySpecTactics — 虎符特殊戰法對照表（PROG-2-0928，TRP-15）
  *

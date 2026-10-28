@@ -1,3 +1,4 @@
+// @spec-source → 經濟系統.md (doc_spec_0032)；PROG-2-1429 依建檔紀錄補標出處
 import { loginDayOf } from './LoginStreak';
 
 /** 月卡效期天數（經濟系統 E #5：30 天每日加成） */

@@ -1,3 +1,4 @@
+// @spec-source → Data Schema文件（本機端與Server端）.md (doc_tech_0013)、MVP遊戲驗證規格書.md (doc_spec_0045)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * PlayerSaveTableRows — 存檔快照 → 六表列的映射與驗證（MVP-12，PROG-2-0880，純 TS，不連線）
  *

@@ -1,3 +1,4 @@
+// @spec-source → 家族關係（史實相性）系統.md (doc_spec_0024)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * RelationEventLogText — 戰場關係事件的戰報文字（PROG-2-1421，純邏輯，不依賴 cc）
  *

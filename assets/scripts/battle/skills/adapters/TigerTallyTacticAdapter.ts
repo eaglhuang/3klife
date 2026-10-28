@@ -1,3 +1,4 @@
+// @spec-source → 兵種（虎符）系統.md (doc_spec_0012)、戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
 import {
   BattleSkillTargetMode,
   BattleSkillTiming,

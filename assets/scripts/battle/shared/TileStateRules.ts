@@ -1,3 +1,4 @@
+// @spec-source → 戰場格子系統.md (doc_spec_0044)；PROG-2-1429 依建檔紀錄補標出處
 import type { TileEffect, TileEffectState } from '../models/BattleState';
 
 /**

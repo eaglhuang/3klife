@@ -1,3 +1,4 @@
+// @spec-source → 育成與戰鬥公式基準手冊.md (doc_spec_0180)；PROG-2-1429 依建檔紀錄補標出處
 // 數值常數集中化（NUM-04）：對應 assets/resources/data/numerical-config.json。
 // 純 TS，不依賴 cc；解析只做結構與有限數字檢查，不改寫輸入。
 

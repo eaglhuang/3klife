@@ -1,3 +1,4 @@
+// @spec-source → 培育系統.md (doc_spec_0026)；PROG-2-1429 依建檔紀錄補標出處
 /** 養成共用亂數游標；演算法版本不可原地替換，以免既有存檔改變結果。 */
 export interface RandomState {
     algorithm: 'mulberry32-v1';

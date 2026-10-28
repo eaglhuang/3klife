@@ -1,3 +1,4 @@
+// @spec-source → 戰場適性系統.md (doc_spec_0041)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * WeatherItem — 天氣道具改變戰場天氣（APT-15，PROG-2-0929）
  *

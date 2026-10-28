@@ -1,3 +1,4 @@
+// @spec-source → 武將系統.md (doc_spec_0016)、MVP遊戲驗證規格書.md (doc_spec_0045)；PROG-2-1429 依建檔紀錄補標出處
 import { sys } from 'cc';
 import type { GeneralConfig } from '../models/GeneralUnit';
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';

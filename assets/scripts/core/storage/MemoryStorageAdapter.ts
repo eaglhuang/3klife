@@ -1,3 +1,4 @@
+// @spec-source → Data Schema文件（本機端與Server端）.md (doc_tech_0013)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * MemoryStorageAdapter — 記憶體版 DataStorageAdapter
  *

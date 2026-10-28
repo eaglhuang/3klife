@@ -1,3 +1,4 @@
+// @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
 import { sys } from 'cc';
 import type { GeneralConfig, GeneralDetailRarityTier } from '../models/GeneralUnit';
 import { Faction } from '../config/Constants';

@@ -1,3 +1,4 @@
+// @spec-source → 培育系統.md (doc_spec_0026)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * AutoNurture — 自動培育（NUR-14，純邏輯，不依賴 cc）
  *

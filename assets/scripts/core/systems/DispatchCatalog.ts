@@ -1,3 +1,4 @@
+// @spec-source → 武將日誌與離線互動系統.md (doc_spec_0015)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * DispatchCatalog — 暫定派遣任務清單與派遣板列（JRN-03 第三段，PROG-2-1179）
  *

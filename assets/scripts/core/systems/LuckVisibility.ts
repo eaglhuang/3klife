@@ -1,3 +1,4 @@
+// @spec-source → 運氣系統.md (doc_spec_0035)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * LuckVisibility — 運氣（LUK）屬性的前期隱藏與顯示文字（LUK-01，純邏輯，不依賴 cc）
  *

@@ -1,3 +1,4 @@
+// @spec-source → 教官系統（支援卡）.md (doc_spec_0027)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * FriendBorrow — 好友借用教官（MENT-14，純邏輯，不依賴 cc）
  *

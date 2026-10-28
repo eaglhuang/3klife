@@ -1,3 +1,4 @@
+// @spec-source → 關卡設計系統.md (doc_spec_0049)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * LoadoutCheck — 推薦戰法三態檢核（WBS v7 LVL-04，PROG-2-0598）
  *

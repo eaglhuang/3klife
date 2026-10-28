@@ -1,3 +1,4 @@
+// @spec-source → 戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * SkillEffectFormulas — 戰法效果純公式（WBS v8 TAC-10／TAC-11 前置，PROG-2-0751）
  *
