@@ -22,6 +22,7 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
+import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
 import { addOfficerExp, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
@@ -578,6 +579,7 @@ export class GameSession {
     /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生時寫入；舊檔以出生紀錄推導。 */
     private _familySystemUnlockedFlag = false;
     /** 新玩家開場進行中的幕 id（PROG-2-1371）；開場結束為 null */
+    private _postLoadHook: (() => void | Promise<void>) | null = null;
     private _openingPhase: string | null = null;
     /** 已發放免費入學令的最大登入日（YYYY-MM-DD，高水位）；從未發過為 null（PROG-2-1374 修正，PM 裁定） */
     private _enrollGrantDay: string | null = null;
@@ -1412,6 +1414,14 @@ export class GameSession {
 
     public setLifecycle(lifecycle: SeasonLifecycle | null): void {
         this._lifecycle = lifecycle;
+    }
+
+    /**
+     * 讀檔完成後要補做的事（例如把名冊裡的子嗣補回血統圖）：任何讀檔入口都會經過，呼叫端不必記得另外補。
+     * 失敗只記警告，不讓讀檔失敗。
+     */
+    public setPostLoadHook(hook: (() => void | Promise<void>) | null): void {
+        this._postLoadHook = hook;
     }
 
     public setSaveService(service: PlayerSaveService | null): void {
@@ -4026,6 +4036,13 @@ export class GameSession {
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._rivals = normalizeRivalWorld(snapshot.rivals);
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
+        if (this._postLoadHook) {
+            try {
+                await this._postLoadHook();
+            } catch (error) {
+                UCUFLogger.warn(LogCategory.DATA, '[GameSession] 讀檔後處理失敗，略過:', error);
+            }
+        }
         if (npcIdBackfilled) {
             await this.save();
         }
