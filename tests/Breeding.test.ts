@@ -25,7 +25,7 @@ import {
     resolveAncestorProfile,
     AncestorProfile,
     applyWildGeneMutation,
-    bestBaseStatOf,
+    baseStatTotalOf,
 } from '../assets/scripts/core/systems/BreedingSystem';
 import {
     buildFactorDictionary,
@@ -40,6 +40,7 @@ import { BreedingService } from '../assets/scripts/core/services/BreedingService
 import { InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import type { PersonRegistryData } from '../assets/scripts/core/models/PersonRegistry';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
+import { blueFactorInheritChance } from '../assets/scripts/core/systems/BlueFactorInheritance';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
@@ -508,11 +509,22 @@ export function createBreedingSuite(): TestSuite {
         assert.equals(3, input[0].level);
     });
 
-    suite.test('藍色 3 星機率的數值：父母六維基礎屬性取最高值（FORM-08 暫定）', () => {
-        const father = makeGeneral('f', '男', { int: 1100 });
-        const mother = makeGeneral('m', '女', { str: 300 });
-        assert.equals(1100, bestBaseStatOf(father, mother));
-        assert.equals(300, bestBaseStatOf(makeGeneral('f2', '男', { str: 10, int: 20, lea: 30, pol: 40, cha: 50, luk: 60 }), mother));
+    suite.test('藍色 3 星機率的數值：父母雙方六維基礎屬性總和（FORM-08 PM 暫定）', () => {
+        // makeGeneral 預設六維 80+60+70+50+60+40 = 360；前者六維 10+20+30+40+50+60 = 210
+        const weak = makeGeneral('f2', '男', { str: 10, int: 20, lea: 30, pol: 40, cha: 50, luk: 60 });
+        assert.equals(570, baseStatTotalOf(weak, makeGeneral('m', '女')));
+        assert.equals(720, baseStatTotalOf(makeGeneral('f', '男'), makeGeneral('m', '女')));
+    });
+
+    suite.test('藍色 3 星機率：真實武將（generals.json）父母總和達門檻，機率不為 0', () => {
+        // QA 指出單項最高屬性約 100 永遠碰不到 600；這裡用正式資料的最強兩位武將確認總和真的進得了門檻
+        const generals = readJson<GeneralConfig[]>('assets/resources/data/generals.json');
+        const sixStatSum = (general: GeneralConfig): number => baseStatTotalOf(general, general) / 2;
+        const ranked = [...generals].sort((a, b) => sixStatSum(b) - sixStatSum(a));
+        const [top, second] = ranked;
+        const total = baseStatTotalOf(top, second);
+        assert.isTrue(total >= 600, `真實武將父母總和應達 600，實際 ${total}`);
+        assert.isTrue(blueFactorInheritChance(total) > 0);
     });
 
     return suite;

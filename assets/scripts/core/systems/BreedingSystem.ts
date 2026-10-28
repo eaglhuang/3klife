@@ -135,9 +135,9 @@ function isDead(general: GeneralConfig): boolean {
     return (general.status ?? '').toLowerCase() === GENERAL_STATUS_DEAD;
 }
 
-/** 父母六維基礎屬性中的最高值（藍色 3 星因子機率的數值，FORM-08 暫定：兩方取大） */
-export function bestBaseStatOf(father: GeneralConfig, mother: GeneralConfig): number {
-    return Math.max(...[father, mother].flatMap((general) => STAT_KEYS.map((key) => statOf(general, key))));
+/** 父母雙方六維基礎屬性的總和（藍色 3 星因子機率的數值，FORM-08 PM 暫定：雙方合計，最大約 1200） */
+export function baseStatTotalOf(father: GeneralConfig, mother: GeneralConfig): number {
+    return [father, mother].reduce((total, general) => total + STAT_KEYS.reduce((sum, key) => sum + statOf(general, key), 0), 0);
 }
 
 function statOf(general: GeneralConfig, key: keyof GeneralStatsConfig): number {
@@ -652,7 +652,7 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         enabledColors: request.enabledColors,
         maxFactors: request.maxFactors,
         parentAvgLuk: (statOf(request.father, 'luk') + statOf(request.mother, 'luk')) / 2,
-        blueFactorChance: blueFactorInheritChance(bestBaseStatOf(request.father, request.mother)),
+        blueFactorChance: blueFactorInheritChance(baseStatTotalOf(request.father, request.mother)),
     });
     const inbred = isSameBloodline(request.father, request.mother);
     const purified = inbred ? applyInbreedingPurification(factors, request.random, request.dictionary) : factors;
