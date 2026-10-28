@@ -90,7 +90,7 @@
 ### D-2. 待建 UI Spec 檔案（待辦）
 
 > 原 `cross-ref-ui-spec.md C-3`。優先級：P0 = 阻擋功能開發 / P1 = 下週目標 / P2 = 月底目標。
-> 狀態欄（PROG-2-1355，2026-10-28 依 repo 檔案回寫）：✅ 已建 11 個、⬜ 待建 10 個；PROG-2-1422（2026-10-28）查出其中 4 個已用其他檔名建成，改標 ✅，實際已建 15 個、待建 6 個。
+> 狀態欄（PROG-2-1355，2026-10-28 依 repo 檔案回寫）：✅ 已建 11 個、⬜ 待建 10 個；PROG-2-1422（2026-10-28）查出其中 4 個已用其他檔名建成，改標 ✅，實際已建 15 個、待建 6 個；PROG-2-1424 建成 rank-progress 三件後為已建 18 個、待建 3 個。
 
 | 優先級 | 檔案 | 依賴規格書 | 狀態 |
 |---|---|---|:-:|
@@ -107,9 +107,9 @@
 | P2 | `layouts/world-sandtable-main.json` | 大廳系統.md (doc_spec_0002)、官職系統.md (doc_spec_0014) | ✅ 已建（實際檔名 `layouts/sandtable-territory-main.json`，PROG-2-0967） |
 | P2 | `skins/world-sandtable-default.json` | 大廳系統.md (doc_spec_0002)、UI 規格書.md (doc_ui_0027) | ✅ 已建（實際檔名 `skins/sandtable-territory-default.json`，PROG-2-0967） |
 | P2 | `screens/world-sandtable-screen.json` | 大廳系統.md (doc_spec_0002)、官職系統.md (doc_spec_0014) | ✅ 已建（實際檔名 `screens/sandtable-territory-screen.json`，PROG-2-0967） |
-| P2 | `layouts/rank-progress-main.json` | 官職系統.md (doc_spec_0014) | ⬜（階位／經驗／進度／權限已由 `lobby-officer-hud`、`lobby-officer-page` 顯示；獨立階位總覽規格未定） |
-| P2 | `skins/rank-progress-default.json` | 官職系統.md (doc_spec_0014)、UI 規格書.md (doc_ui_0027) | ⬜（階位／經驗／進度／權限已由 `lobby-officer-hud`、`lobby-officer-page` 顯示；獨立階位總覽規格未定） |
-| P2 | `screens/rank-progress-screen.json` | 官職系統.md (doc_spec_0014)、UI 規格書.md (doc_ui_0027) | ⬜（階位／經驗／進度／權限已由 `lobby-officer-hud`、`lobby-officer-page` 顯示；獨立階位總覽規格未定） |
+| P2 | `layouts/rank-progress-main.json` | 官職系統.md (doc_spec_0014) | ✅ 已建（PROG-2-1424 官職進度小開窗，由官職頁「階位總覽」打開） |
+| P2 | `skins/rank-progress-default.json` | 官職系統.md (doc_spec_0014)、UI 規格書.md (doc_ui_0027) | ✅ 已建（PROG-2-1424 官職進度小開窗，由官職頁「階位總覽」打開） |
+| P2 | `screens/rank-progress-screen.json` | 官職系統.md (doc_spec_0014)、UI 規格書.md (doc_ui_0027) | ✅ 已建（PROG-2-1424 官職進度小開窗，由官職頁「階位總覽」打開） |
 | P2 | `layouts/bloodline-mirror-loading-main.json` | 血脈命鏡過場載入規格書.md (doc_ui_0005)、UI 規格書.md (doc_ui_0027) | ✅ 已建 |
 | P2 | `skins/bloodline-mirror-loading-default.json` | 血脈命鏡過場載入規格書.md (doc_ui_0005)、UI 規格書.md (doc_ui_0027) | ✅ 已建 |
 | P2 | `screens/bloodline-mirror-loading-screen.json` | 血脈命鏡過場載入規格書.md (doc_ui_0005)、UI 規格書.md (doc_ui_0027) | ✅ 已建 |
