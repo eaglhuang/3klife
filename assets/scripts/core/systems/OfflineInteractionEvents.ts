@@ -12,6 +12,7 @@
 import type { DynamicRelation, DynamicRelationType } from './KinRelation';
 import type { JournalEntryInput } from './JournalLog';
 import { canStartOfflineInteraction, offlineInteractionKey, recordOfflineInteraction } from './OfflineInteractionTrigger';
+import { scoreOfflineRelation } from './NpcUtilityAI';
 
 /** §G 離線互動劇本句 */
 export const OFFLINE_INTERACTION_OPENING = '{GeneralA} 與 {GeneralB} 在你離席時發生了一段插曲。';
@@ -78,7 +79,11 @@ export function pickOfflineInteraction(
 ): OfflineInteractionEvent | null {
     const open = candidates.filter((c) => canStartOfflineInteraction(log, offlineInteractionKey(windowId, c.a.id, c.b.id)));
     if (open.length === 0) return null;
-    const chosen = open[Math.min(open.length - 1, Math.floor(random() * open.length))];
+    // Utility AI 排序（PROG-2-1379）：只保留最高分那一群，再用原本的亂數挑；權重全相等時與未評分結果相同。
+    const scores = open.map((c) => scoreOfflineRelation(c.type));
+    const best = Math.max(...scores);
+    const top = open.filter((_, i) => scores[i] === best);
+    const chosen = top[Math.min(top.length - 1, Math.floor(random() * top.length))];
     const details = OFFLINE_INTERACTION_DETAILS[chosen.type];
     const detail = details[Math.min(details.length - 1, Math.floor(random() * details.length))];
     const key = offlineInteractionKey(windowId, chosen.a.id, chosen.b.id);
