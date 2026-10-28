@@ -128,6 +128,8 @@ export class BattleState {
   public aiTacticIq: AiIqLevel | null = null;
   /** AI 是否可用戰法（ai-difficulty.json canUseTactics）；預設 true */
   public aiCanUseTactics = true;
+  /** 挾天子令控制中的兵（PROG-2-1335）：unitId → 原陣營與剩餘回合 */
+  public controlledUnits = new Map<string, { originalFaction: Faction; turnsLeft: number }>();
 
   constructor() {
     for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
@@ -167,6 +169,7 @@ export class BattleState {
     this.weatherSchedule = [];
     this.battleTactic = battleTactic ?? BattleTactic.Normal;
     this.sceneFlags = { stealthOpenTurns: 0, nightRaid: false, nightRaidOpenTurns: 0 };
+    this.controlledUnits.clear();
     this.battleEndAnnounced = false;
     this.stageSalvage = { stone: 0, wood: 0, supply: 0, intel: 0 };
     this.plunderedTiles = new Set<string>();
@@ -215,9 +218,29 @@ export class BattleState {
     const cell = this.getCell(unit.lane, unit.depth);
     if (cell?.occupantId === unitId) cell.occupantId = null;
     this.units.delete(unitId);
+    this.controlledUnits.delete(unitId);
     this.removeDamageLinksForUnit(unitId);
     this.removeCounterReaction(unitId);
     this.removeActionReset(unitId);
+  }
+
+  /** 控制敵兵 turns 回合（PROG-2-1335 挾天子令）：陣營改為施放者陣營，期滿由 tickControlledUnits 換回 */
+  public controlUnit(unit: TroopUnit, casterFaction: Faction, turns: number): boolean {
+    if (unit.faction === casterFaction || this.controlledUnits.has(unit.id)) return false;
+    this.controlledUnits.set(unit.id, { originalFaction: unit.faction, turnsLeft: turns });
+    unit.faction = casterFaction;
+    return true;
+  }
+
+  /** 每回合結束呼叫：剩餘回合減 1，歸零的單位換回原陣營（若已陣亡則只清紀錄） */
+  public tickControlledUnits(): void {
+    for (const [unitId, record] of this.controlledUnits) {
+      record.turnsLeft -= 1;
+      if (record.turnsLeft > 0) continue;
+      this.controlledUnits.delete(unitId);
+      const unit = this.units.get(unitId);
+      if (unit) unit.faction = record.originalFaction;
+    }
   }
 
   public setTileBuff(buff: TileBuff): void {
