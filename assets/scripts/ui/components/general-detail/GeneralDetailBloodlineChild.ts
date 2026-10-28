@@ -9,7 +9,7 @@
  * AncestorTree 的動態渲染委託給已存在的 BloodlineTreePanel；
  * 此 ChildPanel 負責附掛元件並轉送 generalId。
  */
-import { Button, Label, UITransform } from 'cc';
+import { Button, Color, Label, UITransform } from 'cc';
 import type { Node } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import type { UISkinResolver } from '../../core/UISkinResolver';
@@ -262,6 +262,7 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         if (!this._peekNode) return;
         this._peekNode.active = true;
         this._set(this._peekTitle, view.title);
+        this._peekTitle.color = Color.fromHEX(new Color(), view.crestTint);
         this._set(this._peekTendency, view.tendency);
         this._set(this._peekLine, view.lines.join(' · '));
     }

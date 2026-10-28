@@ -6,6 +6,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { ANCESTOR_TREE_SLOTS, ancestorPeekView, isAncestorRevealed } from '../assets/scripts/core/systems/AncestorTreeLayout';
+import { CREST_NEUTRAL_TINT, resolveCrestStyle } from '../assets/scripts/core/systems/CrestStyle';
 
 export function createAncestorTreeLayoutSuite(): TestSuite {
     const suite = new TestSuite('AncestorTreeLayout (命頁祖先圖與 peek GDUI-04 PROG-2-1265)');
@@ -51,6 +52,19 @@ export function createAncestorTreeLayoutSuite(): TestSuite {
     suite.test('虛擬祖先未揭露，真實祖先已揭露（暫定規則）', () => {
         assert.isFalse(isAncestorRevealed({ is_virtual: true }));
         assert.isTrue(isAncestorRevealed({ is_virtual: false }));
+    });
+
+    suite.test('peek 色調：有因子色時用命紋色，無因子色為中性灰（BUI-08）', () => {
+        const source = { name: '趙雲', faction: 'shu' };
+        assert.equals(resolveCrestStyle('red').tint, ancestorPeekView(source, true, 'red').crestTint);
+        assert.equals(CREST_NEUTRAL_TINT, ancestorPeekView(source, true).crestTint);
+        assert.equals(CREST_NEUTRAL_TINT, ancestorPeekView(source, true, null).crestTint);
+    });
+
+    suite.test('peek 色調：未揭露時仍帶色調，鎖定文字不變', () => {
+        const locked = ancestorPeekView({ name: '趙雲', faction: 'shu' }, false, 'blue');
+        assert.equals(resolveCrestStyle('blue').tint, locked.crestTint);
+        assert.isTrue(locked.locked);
     });
 
     return suite;
