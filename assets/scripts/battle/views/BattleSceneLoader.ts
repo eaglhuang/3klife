@@ -24,6 +24,7 @@ import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
 import { cinematicProfileOf } from '../../core/systems/UltimateCinematic';
 import { TallyCardData } from '../../shared/TallyCardContract';
 import { parseAiDifficultyTable, aiDifficultyEntryOf, type AiDifficultyEntry } from '../../core/systems/AiDifficultyTable';
+import { EMPTY_AI_ADAPTIVE_STREAK, adaptiveHintOf, adaptiveScaleOf, type AiAdaptiveStreak } from '../../core/systems/AiAdaptiveDifficulty';
 import type { AiDifficulty } from '../../core/systems/AiSpCharge';
 import { scaleAiEnemyConfig } from '../../core/systems/AiStatScaling';
 import { buildStageChainNodes, stageChapterOf, type EncounterChainSource } from '../../core/systems/StageChainNodes';
@@ -256,8 +257,11 @@ export async function loadGeneralConfig(id: string): Promise<GeneralConfig | nul
 
 /** 開戰敵將的 AI 縮放設定（PROG-2-1319）：難度列與關卡章節序位 */
 export interface EnemyScaleSetting {
+  /** 已套用玩家連勝連敗自適應後的難度列（statScale 已調整） */
   difficulty: AiDifficultyEntry;
   chapter: number;
+  /** 自適應上調或下調時的開戰提示文案（AIS-11 G-2）；沒有變化為 null */
+  adaptiveHint: string | null;
 }
 
 /**
@@ -265,13 +269,20 @@ export interface EnemyScaleSetting {
  * 章節 = 關卡所屬主鏈在關卡資料中的序位（stageChapterOf）。
  * Unity 對照：Difficulty 與 Chapter 的 ScriptableObject，開戰前查出來交給 Spawner。
  */
-export async function loadEnemyScale(encounterId: string, difficulty: AiDifficulty): Promise<EnemyScaleSetting | undefined> {
+export async function loadEnemyScale(
+  encounterId: string,
+  difficulty: AiDifficulty,
+  streak: AiAdaptiveStreak = EMPTY_AI_ADAPTIVE_STREAK,
+): Promise<EnemyScaleSetting | undefined> {
   try {
     const { table } = parseAiDifficultyTable(await services().resource.loadJson<unknown>("data/ai-difficulty"));
     if (!table) return undefined;
     const data = await services().resource.loadJson<{ encounters: EncounterChainSource[] }>("data/encounters");
     const chapter = stageChapterOf(buildStageChainNodes(data.encounters), encounterId);
-    return { difficulty: aiDifficultyEntryOf(table, difficulty), chapter };
+    const base = aiDifficultyEntryOf(table, difficulty);
+    // E-8：玩家連勝連敗微調敵方 statScale；沒有連勝連敗時等於基礎值
+    const scale = adaptiveScaleOf(base.statScale, streak);
+    return { difficulty: { ...base, statScale: scale }, chapter, adaptiveHint: adaptiveHintOf(base.statScale, scale) };
   } catch {
     return undefined;
   }
