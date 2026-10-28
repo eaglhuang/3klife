@@ -203,6 +203,7 @@ import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } f
 import { RelationEventLedger } from '../systems/RelationEvents';
 import { cloneNpcMemory, createNpcMemory, normalizeNpcMemory, normalizeNpcPlayerId, npcPlayerIdFromSeed, type NpcMemoryRecord } from '../systems/NpcMemoryReadModel';
 import { NpcInteractionLimiter } from '../systems/NpcUtilityAI';
+import { advanceSevenDayJourney, createSevenDayJourneyState, DEFAULT_JOURNEY_TRACK, journeyFactsOf, normalizeSevenDayJourney, SEVEN_DAY_JOURNAL_PRIORITY, type SevenDayJourneyState } from '../systems/SevenDayJourney';
 import { grantLegacyRewards, normalizeLegacyCount, type LegacyAchievement } from '../systems/LegacyAchievement';
 import { STARTER_GACHA_WALLET } from '../services/GachaWalletRules';
 import type { DynamicRelation } from '../systems/KinRelation';
@@ -488,6 +489,11 @@ export class GameSession {
     private _npcMemory: NpcMemoryRecord | null = null;
     /** 離線互動的高權重限流（F-1 第 3 點）：同一登入窗內每位武將只排一則高權重互動；本次不寫入存檔 */
     private readonly _npcInteractionLimiter = new NpcInteractionLimiter();
+    /** 七天歷程進度（RET-12）：首次登入日與已觸發的觸發點；寫入存檔 */
+    private _sevenDayJourney: SevenDayJourneyState = createSevenDayJourneyState();
+    public get sevenDayJourney(): SevenDayJourneyState {
+        return { firstLoginDay: this._sevenDayJourney.firstLoginDay, firedIds: [...this._sevenDayJourney.firedIds] };
+    }
     /** 目前 NPC_Memory read model（唯讀；寫入由之後的 NPC 對話線負責） */
     public get npcMemory(): Readonly<NpcMemoryRecord> | null {
         return this._npcMemory;
@@ -1513,6 +1519,7 @@ export class GameSession {
         this._enrollGrantDay = null;
         this._itemAcquisitionLog = [];
         this._aiAdaptiveStreak = { ...EMPTY_AI_ADAPTIVE_STREAK };
+        this._sevenDayJourney = createSevenDayJourneyState();
         this._officerState = initialOfficerState();
         this._sandtableMarkerTerritories = [];
         this._sandtableUnlockHistory = [];
@@ -2205,6 +2212,22 @@ export class GameSession {
         this.sweepExpiredInventory(epochMs);
         // 三國日報：當天第一次登入依前 24h 行為紀錄生成（PROG-2-1170）
         this._dailyNews = refreshDailyNews(this._dailyNews, this._playerLogs, this._roster.getAll().map((g) => ({ name: g.name })), epochMs, this._random);
+        // 七天歷程（RET-12）：依登入日與事實寫入觸發點日誌；每個觸發點只寫一次
+        const journey = advanceSevenDayJourney(this._sevenDayJourney, today, {
+            DAILY_NEWS: this._dailyNews.lastGeneratedDay !== null,
+            ...journeyFactsOf(this.breedingBirthRecords()),
+        }, DEFAULT_JOURNEY_TRACK);
+        this._sevenDayJourney = journey.state;
+        for (const trigger of journey.fired) {
+            this.recordJournal({
+                entryId: `SEVEN_DAY-${this._journal.entries.length + 1}`,
+                timestamp: seasonJournalTimestamp(this._clock.state),
+                category: 'SYSTEM',
+                relatedGeneralUids: [],
+                priority: SEVEN_DAY_JOURNAL_PRIORITY,
+                summary: trigger.summary,
+            });
+        }
         // 派遣：離線期間到期的任務先結算寫日誌，才會進這次晨報（PROG-2-1178）
         this.settleDispatchJobs(epochMs, grantGold);
         // 離線互動：寫進日誌後才產生晨報，讓晨報可挑到（PROG-2-1193）
@@ -3886,8 +3909,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3903,6 +3926,7 @@ export class GameSession {
         if (this._monthlyCard) fields.monthlyCard = { ...this._monthlyCard };
         if (this._playerLogs.length > 0) fields.playerLogs = this.playerLogs;
         if (this._dailyNews.lastLoginMs !== null) fields.dailyNews = this.dailyNews;
+        if (this._sevenDayJourney.firstLoginDay !== null) fields.sevenDayJourney = this.sevenDayJourney;
         if (this._morningReport.journalMark > 0 || this._morningReport.items.length > 0) fields.morningReport = this.morningReport;
         if (this._dispatch.active.length > 0 || this._dispatch.completed.length > 0 || Object.keys(this._dispatch.cooldowns).length > 0) {
             fields.generalDispatch = this.dispatchState;
@@ -3932,6 +3956,7 @@ export class GameSession {
         this._pendingTerritoryLevel = normalizePendingTerritoryLevel(snapshot.territoryUpgradePending) ?? null;
         this._farewellLetters = normalizeFarewellLetters(snapshot.farewellLetters);
         this._loginStreak = normalizeLoginStreak(snapshot.loginStreak);
+        this._sevenDayJourney = normalizeSevenDayJourney(snapshot.sevenDayJourney);
         this._dailySubsidy = normalizeDailySubsidyRecord(snapshot.dailySubsidy);
         this._monthlyCard = normalizeMonthlyCard(snapshot.monthlyCard);
         this._playerLogs = normalizePlayerLogs(snapshot.playerLogs);
