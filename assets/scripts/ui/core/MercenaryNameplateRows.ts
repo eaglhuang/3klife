@@ -8,12 +8,17 @@
  * Unity 對照：ViewModel。名牌 Prefab 只吃 nameText / statusText，點擊時送出 uid。
  */
 import type { MercenaryState } from '../../core/systems/MercenaryBond';
-import { MERC_PANEL_MAX_ROWS, MercenaryDisplayInfo } from './MercenaryPanelController';
+import type { MercenaryDisplayInfo } from './MercenaryPanelController';
+
+/** 傭兵面板列數；定義在本檔，避免與 MercenaryPanelController 互相 import。 */
+export const MERC_PANEL_MAX_ROWS = 6;
 
 export interface MercenaryNameplateRow {
     uid: string;
     nameText: string;
     statusText: string;
+    /** 原主與稀有度，例如「原主未定・R」 */
+    metaText: string;
 }
 
 /** 狀態文字：試用中顯示剩餘天數，已結義與其他狀態各自一句。 */
@@ -28,9 +33,13 @@ export function buildMercenaryNameplateRows(
     mercenaries: readonly MercenaryState[],
     info: (state: Readonly<MercenaryState>) => MercenaryDisplayInfo,
 ): MercenaryNameplateRow[] {
-    return mercenaries.slice(0, MERC_PANEL_MAX_ROWS).map(state => ({
-        uid: state.uid,
-        nameText: info(state).generalName,
-        statusText: mercenaryNameplateStatusText(state),
-    }));
+    return mercenaries.slice(0, MERC_PANEL_MAX_ROWS).map(state => {
+        const display = info(state);
+        return {
+            uid: state.uid,
+            nameText: display.generalName,
+            statusText: mercenaryNameplateStatusText(state),
+            metaText: `${display.originalOwnerName}・${display.rarity}`,
+        };
+    });
 }

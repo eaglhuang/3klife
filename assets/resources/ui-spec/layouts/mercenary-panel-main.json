@@ -111,6 +111,19 @@
                 "width": 360
               },
               {
+                "type": "label",
+                "name": "MercRow0Meta",
+                "id": "mercRow0Meta",
+                "widget": {
+                  "top": 62,
+                  "left": 24
+                },
+                "height": 24,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 360
+              },
+              {
                 "type": "button",
                 "name": "BtnMercRow0",
                 "id": "btnMercRow0",
@@ -162,6 +175,19 @@
                 "height": 40,
                 "text": "",
                 "styleSlot": "mp.label.name",
+                "width": 360
+              },
+              {
+                "type": "label",
+                "name": "MercRow1Meta",
+                "id": "mercRow1Meta",
+                "widget": {
+                  "top": 62,
+                  "left": 24
+                },
+                "height": 24,
+                "text": "",
+                "styleSlot": "mp.label.body",
                 "width": 360
               },
               {
@@ -219,6 +245,19 @@
                 "width": 360
               },
               {
+                "type": "label",
+                "name": "MercRow2Meta",
+                "id": "mercRow2Meta",
+                "widget": {
+                  "top": 62,
+                  "left": 24
+                },
+                "height": 24,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 360
+              },
+              {
                 "type": "button",
                 "name": "BtnMercRow2",
                 "id": "btnMercRow2",
@@ -270,6 +309,19 @@
                 "height": 40,
                 "text": "",
                 "styleSlot": "mp.label.name",
+                "width": 360
+              },
+              {
+                "type": "label",
+                "name": "MercRow3Meta",
+                "id": "mercRow3Meta",
+                "widget": {
+                  "top": 62,
+                  "left": 24
+                },
+                "height": 24,
+                "text": "",
+                "styleSlot": "mp.label.body",
                 "width": 360
               },
               {
@@ -327,6 +379,19 @@
                 "width": 360
               },
               {
+                "type": "label",
+                "name": "MercRow4Meta",
+                "id": "mercRow4Meta",
+                "widget": {
+                  "top": 62,
+                  "left": 24
+                },
+                "height": 24,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 360
+              },
+              {
                 "type": "button",
                 "name": "BtnMercRow4",
                 "id": "btnMercRow4",
@@ -378,6 +443,19 @@
                 "height": 40,
                 "text": "",
                 "styleSlot": "mp.label.name",
+                "width": 360
+              },
+              {
+                "type": "label",
+                "name": "MercRow5Meta",
+                "id": "mercRow5Meta",
+                "widget": {
+                  "top": 62,
+                  "left": 24
+                },
+                "height": 24,
+                "text": "",
+                "styleSlot": "mp.label.body",
                 "width": 360
               },
               {
