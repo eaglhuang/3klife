@@ -16,6 +16,10 @@ export interface InitialShowcaseEntry {
     title: string;
     /** 核心因子標籤（規格 §6） */
     factorTags: readonly string[];
+    /** 出生地（史實） */
+    originRegion: string;
+    /** 主因子，必須是 factorTags 之一 */
+    coreFactorTag: string;
     /** 登場台詞（規格 §5.2） */
     line: string;
 }
@@ -26,6 +30,8 @@ export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.
         name: '張飛',
         title: '萬人敵、燕門咆哮',
         factorTags: ['燕人', '蛇矛', '北境血脈'],
+        originRegion: '幽州涿郡',
+        coreFactorTag: '燕人',
         line: '主公！俺老張等這封信等得嗓子都乾了！',
     },
     {
@@ -33,6 +39,8 @@ export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.
         name: '魏延',
         title: '奇策長史、漢中鎮守',
         factorTags: ['義陽', '狂骨', '孤軍'],
+        originRegion: '義陽',
+        coreFactorTag: '義陽',
         line: '他們都說我有反骨，只有你願意給我這封信。',
     },
     {
@@ -40,6 +48,8 @@ export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.
         name: '夏侯惇',
         title: '拔矢啖睛、魏武元勳',
         factorTags: ['譙縣', '獨眼', '宗親'],
+        originRegion: '豫州沛國譙縣',
+        coreFactorTag: '譙縣',
         line: '雙眼尚在，戰魂未冷。',
     },
     {
@@ -47,6 +57,8 @@ export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.
         name: '張郃',
         title: '巧變之將、破敵先鋒',
         factorTags: ['河間', '巧變', '宿將'],
+        originRegion: '冀州河間國',
+        coreFactorTag: '河間',
         line: '在這渾沌的亂世中，唯有主公的選擇，才配得上我這華麗的謝幕。',
     },
     {
@@ -54,6 +66,8 @@ export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.
         name: '孫策',
         title: '江東小霸王',
         factorTags: ['富春', '霸王', '水鄉血脈'],
+        originRegion: '揚州吳郡富春',
+        coreFactorTag: '富春',
         line: '江東的風吹到了現代，還是這麼燙人。',
     },
     {
@@ -61,6 +75,8 @@ export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.
         name: '甘寧',
         title: '錦帆賊、折衝將軍',
         factorTags: ['巴郡', '鈴聲', '游俠'],
+        originRegion: '益州巴郡臨江',
+        coreFactorTag: '巴郡',
         line: '這長江水，往後就歸主公管，我負責開路！',
     },
 ]);
