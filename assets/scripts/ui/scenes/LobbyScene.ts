@@ -1466,6 +1466,7 @@ export class LobbyScene extends Component {
             morningLines: () => services().session.morningReport.items.map((item) => item.summary),
             dispatchRows: () => services().session.dispatchBoardRows(Date.now(), { preview: true, generalId: this._journalHub?.pickedGeneralId() }),
             dispatchGenerals: () => services().session.dispatchIdleGenerals(Date.now()),
+            lookup: (key) => services().i18n.t(key),
         });
         this._journalHubHost = await this._mountPreviewScreenHost('JournalHubHost', 'journal-hub-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._journalHubHost) this._journalHubHost.node.active = false; } },
@@ -1499,6 +1500,7 @@ export class LobbyScene extends Component {
         const journal = new GeneralJournalController({
             generals: () => services().session.roster.map((g) => ({ id: g.id, name: g.name })),
             entries: (generalId) => services().session.queryJournal({ generalUid: generalId }),
+            lookup: (key) => services().i18n.t(key),
         });
         this._generalJournal = journal;
         this._generalJournalHost = await this._mountPreviewScreenHost('GeneralJournalHost', 'general-journal-screen', [

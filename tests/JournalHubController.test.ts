@@ -31,7 +31,7 @@ export function createJournalHubControllerSuite(): TestSuite {
 
     suite.test('晨報與派遣資料都為空時顯示空狀態字串', () => {
         const view = new JournalHubController(makeDeps({ morningLines: () => [], dispatchRows: () => [] })).getFlowView();
-        assert.equals('今日尚無晨報', view.texts.morningEmptyLabel);
+        assert.equals('昨夜風平浪靜，暫無要事。', view.texts.morningEmptyLabel);
         assert.equals('目前沒有可派遣的任務', view.texts.dispatchEmptyLabel);
         assert.isTrue(view.actives.morningEmptyLabel);
         assert.isTrue(view.actives.dispatchEmptyLabel);
