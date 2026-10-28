@@ -5,6 +5,8 @@ import { Faction } from '../config/Constants';
 import { services } from '../managers/ServiceLoader';
 import { SyncActionType } from '../systems/SyncManager';
 import { buildGachaSyncRecord } from '../systems/GachaSyncRecord';
+import { featuredGeneralsOf, isLimitedPoolOpen, limitedPoolAcceptsCurrency, type LimitedPoolWindow } from '../systems/LimitedPoolSchedule';
+import type { GachaCurrencyType } from '../systems/GachaCurrency';
 import { checkWalletBalance, formatInsufficientMessage, STARTER_GACHA_WALLET } from './GachaWalletRules';
 import { GACHA_MENTOR_RARITY_RATES, GACHA_RARITY_RATES, drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
 import { destinyShopCredits, exchangeDestinyShop, pullsToNextDestinyCredit, type DestinyShopBlockReason } from '../systems/DestinyShop';
@@ -16,7 +18,15 @@ export interface LocalGachaRollOptions {
     upGeneralIds?: readonly string[];
     /** 測試用隨機來源；沒指定時用建構時的預設亂數源 */
     rng?: () => number;
+    /** 測試用時間點（毫秒）；沒指定時用現在時間，限定池開放與否以此判斷 */
+    nowMs?: number;
 }
+
+/** 服務層的貨幣鍵對應 GachaCurrency 的貨幣種類；沒有對應的鍵不做限定池貨幣檢查。 */
+const SERVICE_CURRENCY_TYPE: Partial<Record<GachaCurrencyKey, GachaCurrencyType>> = {
+    gems: 'SPIRIT_JADE',
+    bronze: 'BRONZE_CHARM',
+};
 
 export interface LocalGachaResultEntry {
     general: GeneralConfig;
@@ -168,6 +178,7 @@ export class LocalGachaService {
     private _walletCache: LocalGachaWalletSnapshot | null = null;
     /** 各池保底計數（poolId → 狀態）；各池獨立計數（轉蛋系統 §保底計算）；第一次用到才讀取，避免建構時就碰存檔 */
     private _pityBookCache: GachaPityBook | null = null;
+    private _limitedWindows: readonly LimitedPoolWindow[] = [];
     /** 快取對應的存檔版本號；和存檔端現在的版本不同就代表快取過期 */
     private _syncedRevision: number | undefined;
 
@@ -176,6 +187,11 @@ export class LocalGachaService {
         private readonly _saveStore: GachaSaveStore | null = null,
         private readonly _defaultRng: () => number = Math.random,
     ) {}
+
+    /** 設定限定池排程（由 data/limited-pool-schedule.json 解析而來）；沒有設定時沒有任何限定池。 */
+    public setLimitedPoolWindows(windows: readonly LimitedPoolWindow[]): void {
+        this._limitedWindows = [...windows];
+    }
 
     public isSinglePlayerModeEnabled(): boolean {
         return this._singlePlayerModeEnabled;
@@ -413,7 +429,14 @@ export class LocalGachaService {
 
         this._assertSufficientCurrency(request.currencyKey, cost);
 
-        const pool = buildGachaPool(candidates, request.options?.upGeneralIds ?? []);
+        const nowMs = request.options?.nowMs ?? Date.now();
+        const windows = this._limitedWindows;
+        const poolWindows = windows.filter((window) => window.poolId === request.poolId);
+        if (poolWindows.length > 0) {
+            this._assertLimitedPool(poolWindows, request.currencyKey, nowMs);
+        }
+        const featured = request.options?.upGeneralIds ?? featuredGeneralsOf(windows, request.poolId, nowMs);
+        const pool = buildGachaPool(candidates, featured);
         const rng = request.options?.rng ?? this._defaultRng;
         let pity = normalizeGachaPity(this._pityBookOf()[request.poolId]);
         const rates = request.actionType === 'LOCAL_SUPPORT_SUMMON' ? GACHA_MENTOR_RARITY_RATES : GACHA_RARITY_RATES;
@@ -504,6 +527,17 @@ export class LocalGachaService {
 
     private _persistSinglePlayerModeEnabled(): void {
         sys.localStorage.setItem(SINGLE_PLAYER_MODE_KEY, this._singlePlayerModeEnabled ? 'true' : 'false');
+    }
+
+    /** 限定池：時間窗外不能抽；貨幣不被限定池接受（例如銅錢符）時也不能抽。 */
+    private _assertLimitedPool(windows: readonly LimitedPoolWindow[], currencyKey: GachaCurrencyKey, nowMs: number): void {
+        if (!windows.some((window) => isLimitedPoolOpen(window, nowMs))) {
+            throw new Error('[LocalGachaService] 限定池目前未開放。');
+        }
+        const currency = SERVICE_CURRENCY_TYPE[currencyKey];
+        if (currency !== undefined && !limitedPoolAcceptsCurrency(currency)) {
+            throw new Error(`[LocalGachaService] 限定池不接受 ${currencyKey}。`);
+        }
     }
 
     private _assertSufficientCurrency(currencyKey: GachaCurrencyKey, cost: number): void {
