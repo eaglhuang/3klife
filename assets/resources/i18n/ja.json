@@ -296,6 +296,7 @@
   "ui.ultimate.unassigned_toast": "発動可能な奥義が未設定です",
   "ui.battle.skill.source_tactic": "戦法",
   "ui.battle.skill.charging": "{0}チャージ中、SPが不足しています",
+  "ui.battle.last_spurt.entered": "{0}ターン・ラストスパート！",
   "ui.battle.skill.cast_done": "{0}を発動した",
   "ui.battle.skill.cast_failed": "{0}の発動に失敗",
   "ui.battle.skill.cast_failed_target": "{0}の発動に失敗、別の対象を選んでください",
