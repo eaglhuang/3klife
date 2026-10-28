@@ -121,7 +121,7 @@ export class TurnFlowManager {
       this.ctx.deployRuntime?.showToast('計謀點不足或尚未配置戰法');
       return;
     }
-    this.ctx.skillTargetingFlow?.beginPlayerSkillFlow(descriptor.skillId, SkillSourceType.SeedTactic, '戰法');
+    this.ctx.skillTargetingFlow?.beginPlayerSkillFlow(descriptor.skillId, SkillSourceType.SeedTactic, services().i18n.t('ui.battle.skill.source_tactic'));
   }
 
   // ── 武將出陣請求 ──────────────────────────────────────────────────────────

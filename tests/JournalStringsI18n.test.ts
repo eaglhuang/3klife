@@ -73,6 +73,14 @@ export function createJournalStringsI18nSuite(): TestSuite {
         }
     });
 
+    suite.test('譯文不含規格表的外層「」記號（規格表用來標示引文，不是畫面字）', () => {
+        for (const locale of LOCALES) {
+            const dict = loadLocale(locale);
+            for (const key of [...UI_KEYS, ...STORY_KEYS]) {
+                assert.isFalse(dict[key].startsWith('「') && dict[key].endsWith('」'), `${locale} ${key} 帶有外層引號`);
+            }
+        }
+    });
     suite.test('zh-TW 的 G 章文案與核心模組常數逐字相同', () => {
         const base = loadLocale('zh-TW');
         assert.equals(MORNING_REPORT_OPENING, base.UI_JOURNAL_STORY_MORNING_OPENING);

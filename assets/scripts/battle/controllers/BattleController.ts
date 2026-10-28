@@ -12,6 +12,7 @@ import { GeneralUnit } from "../../core/models/GeneralUnit";
 import type { AiDifficulty } from "../../core/systems/AiSpCharge";
 import type { AiDifficultyEntry } from "../../core/systems/AiDifficultyTable";
 import { aiShouldUseUltimate } from '../../core/systems/AiUltimateDecision';
+import { aiUltimateFamilyPermits } from '../../core/systems/AiUltimateFamilyRule';
 import { isUltimateSlotUnlocked } from '../../core/systems/UltimateSlotUnlock';
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleUnitSpawner, type TroopDataTable } from '../runtime/BattleUnitSpawner';
@@ -24,7 +25,7 @@ import { EnemyAI } from "./EnemyAI";
 import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
-import { findUltBasePowerTable, findUltimateDamageDef, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
+import { findUltBasePowerTable, findUltimateDamageDef, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
 import { BattleFlowStateMachine } from './BattleFlowStateMachine';
 import { BattleRuntimeOrchestrator } from '../orchestrators/BattleRuntimeOrchestrator';
 import { executeBattleCombatPhase } from '../runtime/phases/BattleCombatPhase';
@@ -812,12 +813,19 @@ export class BattleController {
 
     const playerCount = this.livingUnitsOf(Faction.Player).length;
     const enemyCount = this.livingUnitsOf(Faction.Enemy).length;
+    const estimatedKills = this.livingUnitsOf(Faction.Player)
+      .filter(unit => unit.currentHp <= this.estimateEnemyStrikeDamage(general, unit)).length;
     const shouldUse = aiShouldUseUltimate({
       iq: this.state.aiIq,
       vitality: general.vitality,
       enemyCount: playerCount,
-      estimatedKills: this.livingUnitsOf(Faction.Player)
-        .filter(unit => unit.currentHp <= this.estimateEnemyStrikeDamage(general, unit)).length,
+      estimatedKills,
+      isLosing: enemyCount < playerCount,
+    }) && aiUltimateFamilyPermits(findUltimateFamily(ultimateId), {
+      estimatedKills,
+      enemyCount: playerCount,
+      selfHpRatio: general.maxHp > 0 ? general.currentHp / general.maxHp : 0,
+      allyHpRatio: this.hpRatioOf(Faction.Enemy),
       isLosing: enemyCount < playerCount,
     });
     return shouldUse ? { battleSkillId: general.skillId, ultimateId } : null;
@@ -850,6 +858,14 @@ export class BattleController {
       sourceType: SkillSourceType.Ultimate,
       generalName: general.name,
     });
+  }
+
+  /** 某陣營存活兵力的血量比例（0~1）；沒有存活單位時回傳 0 */
+  private hpRatioOf(faction: Faction): number {
+    const units = this.livingUnitsOf(faction);
+    const maxHp = units.reduce((sum, unit) => sum + unit.maxHp, 0);
+    const currentHp = units.reduce((sum, unit) => sum + unit.currentHp, 0);
+    return maxHp > 0 ? currentHp / maxHp : 0;
   }
 
   private livingUnitsOf(faction: Faction): TroopUnit[] {

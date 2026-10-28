@@ -11,6 +11,8 @@
  * Unity 對照：Presenter。晨報與派遣板是同一個大廳入口的兩個區塊，各自吃注入的資料。
  */
 
+import { journalText, type JournalTextLookup } from './JournalTexts';
+
 export const MORNING_MAX_LINES = 3;
 export const DISPATCH_MAX_ROWS = 4;
 
@@ -33,6 +35,8 @@ export interface JournalHubDeps {
     dispatchRows: () => readonly DispatchBoardRow[];
     /** 可派遣的武將（PROG-2-1186 選將列）；未提供時只有「自動挑選」。 */
     dispatchGenerals?: () => readonly { id: string; name: string }[];
+    /** 畫面文字查表（JRN-07）；未提供時用 zh-TW 預設 */
+    lookup?: JournalTextLookup;
 }
 
 export const DISPATCH_AUTO_PICK_LABEL = '自動挑選';
@@ -74,9 +78,9 @@ export class JournalHubController {
         const morning = this.morningLines();
         const dispatch = this.dispatchRows();
         const texts: Record<string, string> = {
-            morningTitle: '晨報',
-            morningEmptyLabel: morning.length === 0 ? '今日尚無晨報' : '',
-            dispatchTitle: '派遣板',
+            morningTitle: journalText(this._deps.lookup, 'UI_MORNING_REPORT_TITLE'),
+            morningEmptyLabel: morning.length === 0 ? journalText(this._deps.lookup, 'UI_MORNING_REPORT_EMPTY') : '',
+            dispatchTitle: journalText(this._deps.lookup, 'UI_DISPATCH_BOARD_TITLE'),
             dispatchEmptyLabel: dispatch.length === 0 ? '目前沒有可派遣的任務' : '',
             btnCloseLabel: '關閉',
         };

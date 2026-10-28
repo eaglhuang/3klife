@@ -11,6 +11,8 @@
  * Unity 對照：Presenter，日誌資料由呼叫端注入。
  */
 
+import { journalText, type JournalTextLookup } from './JournalTexts';
+
 export const GENERAL_JOURNAL_MAX_LINES = 6;
 const SEASON_NAMES = ['春', '夏', '秋', '冬'];
 
@@ -30,6 +32,8 @@ export interface GeneralJournalDeps {
     generals: () => readonly GeneralJournalSubject[];
     /** 該武將的日誌條目，最新在前（GameSession.queryJournal 的排序） */
     entries: (generalId: string) => readonly GeneralJournalLine[];
+    /** 畫面文字查表（JRN-07）；未提供時用 zh-TW 預設 */
+    lookup?: JournalTextLookup;
 }
 
 export interface GeneralJournalFlowView {
@@ -88,9 +92,9 @@ export class GeneralJournalController {
         const general = this.currentGeneral;
         const lines = this.lines();
         const texts: Record<string, string> = {
-            journalTitle: general ? `${general.name}的日誌` : '武將日誌',
+            journalTitle: general ? `${general.name}的日誌` : journalText(this._deps.lookup, 'UI_JOURNAL_TITLE'),
             journalPageLabel: general ? `${Math.min(this._index, generals.length - 1) + 1}／${generals.length}` : '',
-            journalEmptyLabel: lines.length === 0 ? (general ? '尚無日誌記錄' : '名冊中沒有武將') : '',
+            journalEmptyLabel: lines.length === 0 ? (general ? journalText(this._deps.lookup, 'UI_JOURNAL_EMPTY') : '名冊中沒有武將') : '',
             btnCloseLabel: '關閉',
         };
         const actives: Record<string, boolean> = { journalEmptyLabel: lines.length === 0 };

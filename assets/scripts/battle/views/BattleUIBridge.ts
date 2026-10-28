@@ -726,7 +726,7 @@ export class BattleUIBridge {
       return;
     }
 
-    this.ctx.skillTargetingFlow?.beginPlayerSkillFlow(skillId, SkillSourceType.Ultimate, '奧義', data.ultimateId ?? undefined);
+    this.ctx.skillTargetingFlow?.beginPlayerSkillFlow(skillId, SkillSourceType.Ultimate, services().i18n.t('ui.ultimate.label'), data.ultimateId ?? undefined);
   }
 
   private _onGlobalBoardTouchEnd(ev: EventTouch): void {

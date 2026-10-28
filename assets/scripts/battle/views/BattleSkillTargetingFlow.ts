@@ -12,6 +12,7 @@ import {
 import { BattleSkillTargetMode, SkillSourceType } from '../../shared/SkillRuntimeContract';
 import { WEATHER_RESTRICTION_TOAST, checkTacticWeather } from '../../core/systems/WeatherTacticRestriction';
 import { Faction, GAME_CONFIG } from '../../core/config/Constants';
+import { services } from '../../core/managers/ServiceLoader';
 
 /** 待確認目標的技能狀態 */
 export interface PendingSkillTargeting {
@@ -68,7 +69,7 @@ export class BattleSkillTargetingFlow {
     }
     const general = ctrl.state.playerGeneral;
     if (!general?.canUseSkill()) {
-      this.ctx.showToast(`${sourceLabel}蓄力中，SP 不足`, 1.5);
+      this.ctx.showToast(services().i18n.t('ui.battle.skill.charging', sourceLabel), 1.5);
       return;
     }
 
@@ -91,10 +92,10 @@ export class BattleSkillTargetingFlow {
     if (!this._requiresExplicitTarget(skillId, targetMode)) {
       const didCast = ctrl.triggerPlayerBattleSkill(skillId, sourceType, { targetMode, ultimateId });
       if (didCast) {
-        this.ctx.showToast(`${sourceLabel}已發動`, 1.2);
+        this.ctx.showToast(services().i18n.t('ui.battle.skill.cast_done', sourceLabel), 1.2);
         this.ctx.refreshBattleViews();
       } else {
-        this.ctx.showToast(`${sourceLabel}發動失敗`, 1.5);
+        this.ctx.showToast(services().i18n.t('ui.battle.skill.cast_failed', sourceLabel), 1.5);
       }
       return;
     }
@@ -113,7 +114,9 @@ export class BattleSkillTargetingFlow {
     const ctrl = this.ctx.getCtrl();
     if (!ctrl) return;
 
-    const sourceLabel = this.pendingSkillTargeting.sourceType === SkillSourceType.Ultimate ? '奧義' : '戰法';
+    const sourceLabel = this.pendingSkillTargeting.sourceType === SkillSourceType.Ultimate
+      ? services().i18n.t('ui.ultimate.label')
+      : services().i18n.t('ui.battle.skill.source_tactic');
     const cell = this.ctx.raycastBoardCell(screenX, screenY);
     if (!cell) return;
 
@@ -124,7 +127,7 @@ export class BattleSkillTargetingFlow {
 
     if (this._requiresEnemyUnitTarget(targetMode)) {
       if (!targetUnit || targetUnit.faction !== Faction.Enemy) {
-        this.ctx.showToast(`請點選敵方單位作為${sourceLabel}目標`, 1.5);
+        this.ctx.showToast(services().i18n.t('ui.battle.skill.pick_enemy', sourceLabel), 1.5);
         return;
       }
 
@@ -134,11 +137,11 @@ export class BattleSkillTargetingFlow {
         { targetMode, targetUnitUid: targetUnit.id, ultimateId: this.pendingSkillTargeting.ultimateId },
       );
       if (!didCast) {
-        this.ctx.showToast(`${sourceLabel}發動失敗，請重新選擇目標`, 1.5);
+        this.ctx.showToast(services().i18n.t('ui.battle.skill.cast_failed_target', sourceLabel), 1.5);
         return;
       }
 
-      this.ctx.showToast(`${sourceLabel}已發動`, 1.2);
+      this.ctx.showToast(services().i18n.t('ui.battle.skill.cast_done', sourceLabel), 1.2);
       this.cancelPendingSkillTargeting(false);
       this.ctx.refreshBattleViews();
       return;
@@ -150,11 +153,11 @@ export class BattleSkillTargetingFlow {
       { targetMode, targetTileId: `${cell.lane},${cell.depth}`, ultimateId: this.pendingSkillTargeting.ultimateId },
     );
     if (!didCast) {
-      this.ctx.showToast(`${sourceLabel}發動失敗，請重新選擇格位`, 1.5);
+      this.ctx.showToast(services().i18n.t('ui.battle.skill.cast_failed_cell', sourceLabel), 1.5);
       return;
     }
 
-    this.ctx.showToast(`${sourceLabel}已發動`, 1.2);
+    this.ctx.showToast(services().i18n.t('ui.battle.skill.cast_done', sourceLabel), 1.2);
     this.cancelPendingSkillTargeting(false);
     this.ctx.refreshBattleViews();
   }
@@ -197,21 +200,22 @@ export class BattleSkillTargetingFlow {
 
   private _buildTargetingPrompt(skillId: string, targetMode: BattleSkillTargetMode): string {
     const baseName = getBattleSkillPresentation(skillId).name;
+    const i18n = services().i18n;
     switch (targetMode) {
       case BattleSkillTargetMode.EnemySingle:
-        return `請點選敵方單位施放 ${baseName}，按 Esc 取消`;
+        return i18n.t('ui.battle.skill.aim.enemy', baseName);
       case BattleSkillTargetMode.Line:
-        return `請點選直線錨點敵軍施放 ${baseName}，按 Esc 取消`;
+        return i18n.t('ui.battle.skill.aim.line', baseName);
       case BattleSkillTargetMode.Fan:
-        return `請點選扇形中心敵軍施放 ${baseName}，按 Esc 取消`;
+        return i18n.t('ui.battle.skill.aim.fan', baseName);
       case BattleSkillTargetMode.Area:
-        return `請點選範圍中心格位施放 ${baseName}，按 Esc 取消`;
+        return i18n.t('ui.battle.skill.aim.area', baseName);
       case BattleSkillTargetMode.Tile:
-        return `請點選目標格位施放 ${baseName}，按 Esc 取消`;
+        return i18n.t('ui.battle.skill.aim.tile', baseName);
       case BattleSkillTargetMode.AdjacentTiles:
-        return `請點選相鄰範圍中心格位施放 ${baseName}，按 Esc 取消`;
+        return i18n.t('ui.battle.skill.aim.adjacent', baseName);
       default:
-        return `請點選目標格位施放 ${baseName}，按 Esc 取消`;
+        return i18n.t('ui.battle.skill.aim.tile', baseName);
     }
   }
 

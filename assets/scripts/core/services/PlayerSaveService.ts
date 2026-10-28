@@ -60,6 +60,7 @@ import type { KeepTerritory } from '../systems/HereditaryKeep';
 import type { JournalEntry } from '../systems/JournalLog';
 import type { FarewellLetter } from '../systems/FarewellLetterInbox';
 import type { LoginStreakState } from '../systems/LoginStreak';
+import { normalizeSevenDayJourney, type SevenDayJourneyState } from '../systems/SevenDayJourney';
 import { normalizeMonthlyCard, type MonthlyCardState } from '../systems/MonthlyCard';
 
 /** 每日補貼紀錄：上次領取日（YYYY-MM-DD，UTC+8）與該日各項補量 */
@@ -177,6 +178,8 @@ export interface PlayerSaveSnapshot {
     farewellLetters?: FarewellLetter[];
     /** 連續登入統計（PROG-2-0987）：只在有登入紀錄時寫入；舊檔沒有時為從未登入；版號不升 */
     loginStreak?: LoginStreakState;
+    /** 七天歷程進度（RET-12）：只在有首次登入日時寫入；舊檔沒有時為從未登入；版號不升 */
+    sevenDayJourney?: SevenDayJourneyState;
     /** 每日補貼（Player_Economy.Daily_Subsidy，PROG-2-1340）：領過才寫入；版號不升 */
     dailySubsidy?: DailySubsidyRecord;
     /** 月卡（Player_Economy.Monthly_Card，PROG-2-1359）：開通過才寫入；版號不升 */
@@ -587,6 +590,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
             : {}),
         ...(snapshot.farewellLetters !== undefined ? { farewellLetters: normalizeFarewellLetters(snapshot.farewellLetters) } : {}),
         ...(snapshot.loginStreak !== undefined ? { loginStreak: normalizeLoginStreak(snapshot.loginStreak) } : {}),
+        ...(snapshot.sevenDayJourney !== undefined ? { sevenDayJourney: normalizeSevenDayJourney(snapshot.sevenDayJourney) } : {}),
         ...(normalizeDailySubsidyRecord(snapshot.dailySubsidy) ? { dailySubsidy: normalizeDailySubsidyRecord(snapshot.dailySubsidy)! } : {}),
         ...(normalizeMonthlyCard(snapshot.monthlyCard) ? { monthlyCard: normalizeMonthlyCard(snapshot.monthlyCard)! } : {}),
         ...(snapshot.playerLogs !== undefined ? { playerLogs: normalizePlayerLogs(snapshot.playerLogs) } : {}),
