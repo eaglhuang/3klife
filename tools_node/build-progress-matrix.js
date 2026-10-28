@@ -17,6 +17,10 @@
  *   接線  ✅ 代碼檔被 assets/scripts 內其他檔案 import（= 有被場景/系統接上）；❌ 只有孤立檔案；— 無代碼
  *   測試  ✅ tests/ 內存在對應 *.test.ts；❌ 沒有
  *   runtime 驗收  一律 ⬜，除非 RUNTIME_EVIDENCE 有登記 headless / Playwright 驗收證據
+ *
+ * 五欄模式另外重算（PROG-2-1430）：
+ *   有代碼的列一律依代碼檔重算接線、測試欄（測試＝有同名 *.test.ts 或有測試檔 import 它）；邏輯欄維持人工標記，代碼檔不見時才降級
+ *   D-4 加權總表與狀態分布由 D-1 推出：🟢 邏輯／接線／測試全 ✅、🟡 有代碼、🔴 無代碼或邏輯 ❌、🔷 不需代碼；數字有變時順帶寫 D-5 當日一列
  */
 const fs = require('fs');
 const path = require('path');
@@ -41,6 +45,22 @@ const SPEC_SOURCE_SKIP = {
 };
 // 只有登記了 headless / Playwright 證據才可標 ✅（key = doc_id → 證據說明）
 const RUNTIME_EVIDENCE = {};
+// D-4 加權分類（PROG-2-1430）：依序比對，都不中歸最後一類
+const D4_CATEGORIES = [
+  {
+    label: '核心戰場系統（數值 / 兵種 / 戰場部署 / 戰法 / 奧義 / 因子爆發 / AI 強度）',
+    weight: 3,
+    ids: ['doc_data_0001', 'doc_spec_0012', 'doc_spec_0040', 'doc_spec_0038', 'doc_spec_0030', 'doc_spec_0010', 'doc_data_0002', 'doc_spec_0039'],
+  },
+  { label: 'UI 系統（doc_ui_*）', weight: 2, idPattern: /^doc_ui_/ },
+  { label: '其他系統（大廳 / 養成 / 經濟 / 技術文件等）', weight: 1 },
+];
+// D-4 不需代碼、直接計滿分的規格（key = doc_id → 原因）
+const D4_DOC_ONLY = { ...SPEC_SOURCE_SKIP };
+// D-4 狀態分數，沿用 2026-04 公式：完整 / 不需代碼 1.0、進行中 0.5、未實作 0
+const D4_POINTS = { '🟢': 1, '🔷': 1, '🟡': 0.5, '🔴': 0 };
+const pctOf = (got, max) => (max ? Math.round((got / max) * 100) : 0);
+const fmt = (n) => (Number.isInteger(n) ? n.toFixed(1) : String(Math.round(n * 10) / 10));
 
 function git(args) {
   return execSync(`git ${args}`, { cwd: root, maxBuffer: 1 << 28 }).toString().split('\n').filter(Boolean);
@@ -118,7 +138,11 @@ for (const l of lines.slice(headerIdx + 2, end)) {
   rows.push(r);
 }
 if (isFive) {
-  refreshUnimplementedRows();
+  let changed = refreshUnimplementedRows();
+  changed += refreshWiringAndTests();
+  changed += rebuildD4();
+  if (checkOnly) process.exit(changed ? 1 : 0);
+  if (changed) fs.writeFileSync(progressPath, lines.join('\n'), 'utf8');
   process.exit(0);
 }
 
@@ -164,6 +188,110 @@ function refreshUnimplementedRows() {
     console.log(`補登：${cells[0]} → ${found.length} 個代碼檔`);
   }
   console.log(`五欄模式：${changed} 列「尚無實作」可依 @spec-source 補登`);
-  if (checkOnly) process.exit(changed ? 1 : 0);
-  if (changed) fs.writeFileSync(progressPath, lines.join('\n'), 'utf8');
+  return changed;
+}
+/** 有代碼檔的列：依代碼檔重算接線、測試欄（PROG-2-1430）；代碼檔不見時邏輯欄降級，其餘欄與代碼欄註記原樣保留 */
+function refreshWiringAndTests() {
+  let changed = 0;
+  for (let i = headerIdx + 2; i < end; i++) {
+    const cells = lines[i].split('|').slice(1, -1).map((c) => c.trim());
+    const names = [...new Set(cells[1].match(/[A-Za-z0-9_\-]+\.ts/g) || [])];
+    if (!names.length) continue;
+    const found = names.filter((n) => byBase.has(n));
+    let logic = cells[3];
+    if (found.length < names.length) logic = found.length ? (logic === '❌' ? '❌' : '🟡') : '❌';
+    let wiring = '❌';
+    let test = '❌';
+    if (found.length) {
+      const wired = found.filter((n) => byBase.get(n).some(isImported));
+      wiring = wired.length === found.length ? '✅' : wired.length ? '🟡' : '❌';
+      test = found.some((n) => hasTestFor(path.basename(n, '.ts'))) ? '✅' : '❌';
+    }
+    const next = `| ${cells[0]} | ${cells[1]} | ${cells[2]} | ${logic} | ${wiring} | ${test} | ${cells[6]} |`;
+    if (next !== lines[i]) {
+      console.log(`重算：${cells[0]}　邏輯 ${cells[3]}→${logic}　接線 ${cells[4]}→${wiring}　測試 ${cells[5]}→${test}`);
+      lines[i] = next;
+      changed++;
+    }
+  }
+  console.log(`五欄模式：${changed} 列接線／測試欄依代碼重算後有變`);
+  return changed;
+}
+
+/** tests/ 內有 <stem>.test.ts，或有測試檔 import 這個代碼檔 */
+function hasTestFor(stem) {
+  if (tests.some((x) => path.basename(x) === `${stem}.test.ts`)) return true;
+  return new RegExp(`from\\s+['"][^'"]*\\/${stem}['"]`).test(testText);
+}
+
+/** 規格書狀態：🔷 不需代碼；🟢 邏輯／接線／測試全 ✅；🟡 有代碼；🔴 無代碼或邏輯 ❌ */
+function specStatus(id, cells) {
+  if (D4_DOC_ONLY[id]) return '🔷';
+  if (cells[1] === '尚無實作' || cells[3] === '❌') return '🔴';
+  if (cells[3] === '✅' && cells[4] === '✅' && cells[5] === '✅') return '🟢';
+  return '🟡';
+}
+
+
+/** 依 D-1 五欄重寫 D-4 加權總表、狀態分布、計算日期與 D-5 當日一列（PROG-2-1430） */
+function rebuildD4() {
+  const groups = D4_CATEGORIES.map((c) => ({ ...c, count: 0, got: 0 }));
+  const byStatus = { '🟢': [], '🔷': [], '🟡': [], '🔴': [] };
+  for (let i = headerIdx + 2; i < end; i++) {
+    const cells = lines[i].split('|').slice(1, -1).map((c) => c.trim());
+    const r = parseRow(lines[i]);
+    const status = specStatus(r.id, cells);
+    const g = groups.find((c) => (c.ids && c.ids.includes(r.id)) || (c.idPattern && c.idPattern.test(r.id))) || groups[groups.length - 1];
+    g.count++;
+    g.got += D4_POINTS[status] * g.weight;
+    byStatus[status].push(cells[0].replace(/\*/g, '').replace(/\.md\s*\(doc_[a-z]+_\d{4}\)/, '').trim());
+  }
+  const max = groups.reduce((n, g) => n + g.count * g.weight, 0);
+  const got = groups.reduce((n, g) => n + g.got, 0);
+  const pct = pctOf(got, max);
+  const totalMark = pct >= 60 ? '🟢' : pct >= 20 ? '🟡' : '🔴';
+  const total = groups.reduce((n, g) => n + g.count, 0);
+  const statusRows = [
+    ['🟢 完整（邏輯／接線／測試皆 ✅）', '🟢'],
+    ['🔷 名詞表類（不需代碼）', '🔷'],
+    ['🟡 進行中（有代碼，三欄未全 ✅）', '🟡'],
+    ['🔴 尚無代碼或邏輯 ❌', '🔴'],
+  ];
+  const body = [
+    '#### 加權進度總表',
+    '',
+    '| 分類 | 計分權重 | 規格書數 | 最高得分 | 實得分 | 完成率 |',
+    '|---|---|---|---|---|---|',
+    ...groups.map((g) => `| ${g.label} | ×${g.weight} | ${g.count} | ${g.count * g.weight} | ${fmt(g.got)} | **${pctOf(g.got, g.count * g.weight)}%** |`),
+    `| **合計（加權）** | — | **${total}** | **${max}** | **${fmt(got)}** | **${totalMark} ${pct}%** |`,
+    '',
+    '#### 規格書實作狀態分布',
+    '',
+    '| 狀態 | 規格書 | 規格書數 |',
+    '|---|---|---|',
+    ...statusRows.map(([label, k]) => `| ${label} | ${byStatus[k].join('、') || '—'} | ${byStatus[k].length} |`),
+    `| **合計** | | **${total}** |`,
+    '',
+  ];
+  const start = lines.findIndex((l) => l === '#### 加權進度總表');
+  const stop = lines.findIndex((l, i) => i > start && /^#### 代碼覆蓋摘要/.test(l));
+  const dateIdx = lines.findIndex((l) => /^> 最後由 .*自動計算：\*\*\d{4}-\d{2}-\d{2}\*\*/.test(l));
+  if (start < 0 || stop < 0 || dateIdx < 0) { console.error('找不到 D-4 加權總表區段'); process.exit(2); }
+  const same = lines.slice(start, stop).join('\n') === body.join('\n');
+  console.log(`D-4：${total} 份規格書，加權 ${fmt(got)}／${max} = ${pct}%（🟢 ${byStatus['🟢'].length}／🔷 ${byStatus['🔷'].length}／🟡 ${byStatus['🟡'].length}／🔴 ${byStatus['🔴'].length}）${same ? '，與表內一致' : '，表內需更新'}`);
+  if (same) return 0;
+  const today = new Date().toISOString().slice(0, 10);
+  lines.splice(start, stop - start, ...body);
+  lines[dateIdx] = `> 最後由 \`node tools_node/build-progress-matrix.js\` 依 D-1 五欄自動計算：**${today}**。`;
+  upsertHistory(today, pct);
+  return 1;
+}
+
+function upsertHistory(date, pct) {
+  const head = lines.findIndex((l) => /^\| 日期 \| 加權總進度 \|/.test(l));
+  if (head < 0) return;
+  const row = `| ${date} | ${pct}% | 工具重算（D-4，build-progress-matrix.js） | 同日覆蓋最新值 |`;
+  const existing = lines.findIndex((l, i) => i > head && l.startsWith(`| ${date} |`));
+  if (existing > 0) lines[existing] = row;
+  else lines.splice(head + 2, 0, row);
 }
