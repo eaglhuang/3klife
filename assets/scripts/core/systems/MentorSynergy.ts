@@ -1,3 +1,4 @@
+// @spec-source → 教官系統（支援卡）.md (doc_spec_0027)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * MentorSynergy — 師友羈絆（MENT-12，純邏輯，不依賴 cc）
  *

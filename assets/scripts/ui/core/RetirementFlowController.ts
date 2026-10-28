@@ -1,3 +1,4 @@
+// @spec-source → 武將壽命系統.md (doc_spec_0018)；PROG-2-1429 依建檔紀錄補標出處
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { GENERAL_STATUS_DEAD, RETIREMENT_AGE } from '../../core/systems/GeneralAging';
 import { GENERAL_STATUS_UNVEILED, UNVEILING_AGE } from '../../core/systems/Unveiling';

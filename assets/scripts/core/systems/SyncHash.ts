@@ -1,3 +1,4 @@
+// @spec-source → 同步API規格書.md (doc_tech_0010)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * SyncHash.ts
  *

@@ -1,3 +1,4 @@
+// @spec-source → Data Schema文件（本機端與Server端）.md (doc_tech_0013)；PROG-2-1429 依建檔紀錄補標出處
 import { _decorator, BlockInputEvents, Button, Color, Component, Label, Layout, Mask, Node, ScrollView, UITransform, Widget } from 'cc';
 import { DEV } from 'cc/env';
 import { services } from '../../core/managers/ServiceLoader';

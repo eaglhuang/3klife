@@ -1,3 +1,4 @@
+// @spec-source → 運氣系統.md (doc_spec_0035)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * LuckFateInheritance — 運氣 =100 的「天命傳承」（LUK-06 效果 3，PROG-2-0878，純邏輯，不依賴 cc）
  *

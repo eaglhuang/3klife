@@ -1,3 +1,4 @@
+// @spec-source → 主戰場UI規格書.md (doc_ui_0001)、戰場部署系統.md (doc_spec_0040)；PROG-2-1429 依建檔紀錄補標出處
 import { IBattleHUDLike, IBattleLogLike, IDeployRuntimeLike } from '../../shared/interfaces/IBattleUIComponents';
 import { Color } from 'cc';
 import { Faction } from '../../core/config/Constants';

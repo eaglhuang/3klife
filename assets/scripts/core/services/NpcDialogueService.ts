@@ -1,3 +1,4 @@
+// @spec-source → NPC人性化規格書.md (doc_spec_0176)；PROG-2-1429 依建檔紀錄補標出處
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 
 export interface NpcKeywordOption {

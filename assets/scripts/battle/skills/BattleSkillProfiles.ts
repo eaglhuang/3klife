@@ -1,3 +1,4 @@
+// @spec-source → 戰法系統.md (doc_spec_0038)、兵種（虎符）系統.md (doc_spec_0012)；PROG-2-1429 依建檔紀錄補標出處
 import { StatusEffect } from '../../core/config/Constants';
 import { TIGER_TALLY_PENDING_SKILL_IDS } from '../../core/config/TigerTallySpecTactics';
 import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } from '../../shared/SkillRuntimeContract';

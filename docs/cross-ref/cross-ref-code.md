@@ -46,11 +46,11 @@
 | AncestorTreeLayout.ts | doc_ui_0012 | 概: 命頁左半區 14 人祖先圖的節點位置與 detail peek 文字（純邏輯，不依賴 cc） |
 | AptitudeDialogue.ts | doc_spec_0041 | 概: 適性台詞選擇與佔位替換（純邏輯，不依賴 cc） |
 | ArenaScore.ts | doc_spec_0007, doc_spec_0041 | 概: 競技場參考戰力積分（純邏輯，不依賴 cc） |
-| AutoNurture.ts | 未標出處 | 概: 自動培育（NUR-14，純邏輯，不依賴 cc） |
+| AutoNurture.ts | doc_spec_0026 | 概: 自動培育（NUR-14，純邏輯，不依賴 cc） |
 | AwakeningTitle.ts | doc_spec_0011 | 概: 覺醒名號判定（純邏輯，不依賴 cc） |
 | BagDomain.ts | doc_spec_0174 | 概: 統一物件庫的顯示分域（純邏輯，不依賴 cc）。 |
 | BattleAptitude.ts | doc_spec_0041, doc_data_0001 | 概: 戰場適性修正引擎（純邏輯，不依賴 cc） |
-| BattleLeaderboard.ts | 未標出處 | 概: 武將戰績排行榜：依傷害、擊殺或守護力排序（純邏輯，不依賴 cc） |
+| BattleLeaderboard.ts | doc_spec_0019 | 概: 武將戰績排行榜：依傷害、擊殺或守護力排序（純邏輯，不依賴 cc） |
 | BattleLeaderboardView.ts | doc_spec_0019 | 概: 戰績排行榜的列資料與文字（純邏輯，不依賴 cc）（PROG-2-0957） |
 | BattleModifiers.ts | doc_spec_0012, doc_data_0001 | 概: 總戰力的地形、天氣攻防查表與虎符適性修正（純邏輯，不依賴 cc） |
 | BattlePowerPrediction.ts | doc_data_0001 | 概: 雙方總戰力比值的勝率預判（純邏輯，不依賴 cc） |
@@ -58,7 +58,7 @@
 | BattleRecordStats.ts | doc_spec_0019 | 概: 武將戰績：單場表現統計、勝率、里程碑、退役評分、戰績面板資料（純邏輯，不依賴 cc） |
 | BattleRetreat.ts | doc_spec_0018 | 概: 部隊撤退的擲骰結算（純邏輯，不依賴 cc） |
 | BattleRoster.ts | doc_spec_0016, doc_spec_0025, doc_spec_0026, doc_spec_0045, doc_data_0001 | 概: 名冊武將出戰、戰後結算（純邏輯，不依賴 cc） |
-| BattleSeasonStats.ts | 未標出處 | 概: 武將賽季戰績：賽季分段累加與切換重置（純邏輯，不依賴 cc） |
+| BattleSeasonStats.ts | doc_spec_0019 | 概: 武將賽季戰績：賽季分段累加與切換重置（純邏輯，不依賴 cc） |
 | BattleSnapshot.ts | doc_spec_0019 | 概: 單場戰報快照與單場 MVP、最高傷害（純邏輯，不依賴 cc） |
 | BattleSpecialActions.ts | doc_spec_0009, doc_spec_0010 | 概: 戰場「特定動作」偵測，純邏輯，不依賴 cc |
 | BattlefieldRecon.ts | doc_spec_0041 | 概: 出戰前環境偵察（純邏輯，不依賴 cc） |
@@ -76,7 +76,7 @@
 | BloodlineTreeSlots.ts | doc_spec_0028, doc_ui_0031 | 概: 結緣畫面 14 人血統樹的格位排列（純邏輯，不依賴 cc） |
 | BloodlineUltimateRoster.ts | doc_ui_0012 | 概: 把五階血脈傳承奧義套回名冊武將的純函式（不依賴 cc） |
 | BlueFactorInheritance.ts | doc_spec_0180 | 概: 藍色 3 星因子的繼承機率（純邏輯，不依賴 cc） |
-| BossGuardSummon.ts | 未標出處 | 概: Boss 親衛隊召喚觸發判定（WBS v7 LVL-11，PROG-2-0599） |
+| BossGuardSummon.ts | doc_spec_0049 | 概: Boss 親衛隊召喚觸發判定（WBS v7 LVL-11，PROG-2-0599） |
 | BreedingBirthRecord.ts | doc_spec_0028 | 概: 結緣成功時產生本機端紀錄（BRD-12，純函式，不依賴 cc） |
 | BreedingBirthRecordSave.ts | 未登錄：結緣系統-shards/shard-b.md §I；PROG-2-1146 出生 | 概: （無檔頭說明） |
 | BreedingSystem.ts | doc_spec_0028, doc_spec_0045, doc_spec_0011, doc_data_0001 | 概: 結緣（配種）規則與子嗣生成（純邏輯，不依賴 cc） |
@@ -101,7 +101,7 @@
 | DestinyShop.ts | doc_spec_0042 | 概: 天命商店：大保底兌換（純邏輯，不依賴 cc） |
 | DiscoveryProgress.ts | doc_spec_0009 | 概: 玩家 discoveryLevel 的經驗值與升級（純邏輯，不依賴 cc） |
 | DiscoveryThresholds.ts | doc_spec_0009 | 概: 發現等級門檻設定的解析器（純邏輯，不依賴 cc） |
-| DispatchCatalog.ts | 未標出處 | 概: 暫定派遣任務清單與派遣板列（JRN-03 第三段，PROG-2-1179） |
+| DispatchCatalog.ts | doc_spec_0015 | 概: 暫定派遣任務清單與派遣板列（JRN-03 第三段，PROG-2-1179） |
 | DispatchJobs.ts | doc_spec_0015 | 概: 派遣任務狀態：派遣、到期結算、冷卻（純邏輯，不依賴 cc）。 |
 | DispatchQuality.ts | doc_spec_0015 | 概: 派遣品質評分與品質區間（純邏輯，不依賴 cc）。 |
 | DomesticAutoGovernance.ts | doc_spec_0037 | 概: 內政任務格的自動指派（純邏輯，不依賴 cc） |
@@ -129,7 +129,7 @@
 | FemaleSystemState.ts | doc_spec_0151 | 概: 女性來源系統的存檔狀態（純邏輯，不依賴 cc） |
 | FertilityBoost.ts | doc_spec_0036 | 概: 安胎藥的受孕率倍率（純邏輯，不依賴 cc）。 |
 | FirstBattleTutorial.ts | doc_spec_0031 | 概: 首戰教學戰的提示順序（純邏輯，不依賴 cc） |
-| FriendBorrow.ts | 未標出處 | 概: 好友借用教官（MENT-14，純邏輯，不依賴 cc） |
+| FriendBorrow.ts | doc_spec_0027 | 概: 好友借用教官（MENT-14，純邏輯，不依賴 cc） |
 | FunLineLibrary.ts | doc_spec_0004 | 概: 趣味台詞彩蛋庫與使用規則（純資料與查詢，不依賴 cc） |
 | GachaCurrency.ts | doc_spec_0042 | 概: 轉蛋貨幣分流與扣款規則（純邏輯，不依賴 cc） |
 | GachaDraw.ts | doc_spec_0042 | 概: 轉蛋抽取引擎：依規格稀有度機率抽一位武將（純邏輯，不依賴 cc） |
@@ -151,7 +151,7 @@
 | GeneralStage.ts | doc_spec_0016, doc_spec_0018 | 概: 武將生命週期狀態機（出生→開獎→成年→巔峰→衰老→退役）純邏輯，不依賴 cc。 |
 | GeneralTallySummary.ts | doc_spec_0012, doc_ui_0030 | 概: 人物頁「虎符戰記摘要」次卡的三行文字（純邏輯，不依賴 cc） |
 | GeneralVersionDiff.ts | doc_spec_0005 | 概: 同名版本的初始因子對比（純邏輯，不依賴 cc） |
-| GeneralVersionGallery.ts | 未標出處 | 概: 同名武將版本圖鑑（SAME-01 項 5 / PROG-2-0707，純邏輯，不依賴 cc） |
+| GeneralVersionGallery.ts | doc_spec_0005, doc_spec_0016 | 概: 同名武將版本圖鑑（SAME-01 項 5 / PROG-2-0707，純邏輯，不依賴 cc） |
 | GiftAffection.ts | 未登錄：傭兵系統規格書／遊戲系統：結緣與送禮（送禮增加好感，好感越高轉化機率越高）；FE | 概: 送禮好感度與轉化機率加成（純邏輯，不依賴 cc） |
 | GovernanceAssignment.ts | doc_spec_0037 | 概: 太守府內政任務的武將指派服務（純邏輯，不依賴 cc）。 |
 | GovernorHallView.ts | doc_spec_0037 | 概: 太守府治理頁的文字與數值（純邏輯，不依賴 cc）。 |
@@ -167,7 +167,7 @@
 | HallVolunteer.ts | doc_spec_0002 | 概: 大廳「自告奮勇」彩蛋的判定、排序與成功率加成，純 TS，不依賴 cc。 |
 | HereditaryKeep.ts | doc_spec_0037 | 概: 世襲主城保護與背水一戰（純邏輯，不依賴 cc）。 |
 | HiddenFactorAwakening.ts | doc_spec_0019 | 概: 里程碑達成時把隱藏因子寫進武將基因（純邏輯，不依賴 cc） |
-| HistoricalPairs.ts | 未標出處 | 概: 史實相性配對表（KIN-02）與爆發力／受孕率接線（KIN-04）。 |
+| HistoricalPairs.ts | doc_spec_0024 | 概: 史實相性配對表（KIN-02）與爆發力／受孕率接線（KIN-04）。 |
 | HybridSkill.ts | doc_spec_0011 | 概: 混種戰法觸發判定（純邏輯，不依賴 cc） |
 | InitialGeneralShowcase.ts | doc_spec_0031 | 概: 六位初始名將的展示卡與登場台詞資料（純邏輯，不依賴 cc）。 |
 | InitialHeroTable.ts | doc_tech_0008 | 概: 初始六名將資料表的驗證與鍵值推導，純 TS，不依賴 cc。 |
@@ -184,39 +184,39 @@
 | JournalEvents.ts | doc_spec_0015 | 概: 遊戲事件轉成武將日誌條目（純邏輯，不依賴 cc）。 |
 | JournalLog.ts | doc_spec_0015 | 概: 武將日誌主檔的寫入與查詢（純邏輯，不依賴 cc）。 |
 | JournalReaction.ts | doc_spec_0176 | 概: 日誌條目的一句武將反應（離線模板，純邏輯，不依賴 cc）。 |
-| KinDynamicRelations.ts | 未標出處 | 概: 家族關係（動態關係）：事件建立與存檔快照（KIN-06）。 |
-| KinRelation.ts | 未標出處 | 概: 家族關係（史實相性）系統：關係 Schema（KIN-01）與相性標籤引擎（KIN-03）。 |
+| KinDynamicRelations.ts | doc_spec_0024 | 概: 家族關係（動態關係）：事件建立與存檔快照（KIN-06）。 |
+| KinRelation.ts | doc_spec_0024 | 概: 家族關係（史實相性）系統：關係 Schema（KIN-01）與相性標籤引擎（KIN-03）。 |
 | LateBloomClue.ts | doc_spec_0033 | 概: 大器晚成線索（純邏輯，不依賴 cc） |
-| LegacyAchievement.ts | 未標出處 | 概: 世代成就判定（RET-07）。純邏輯，不依賴 cc。 |
+| LegacyAchievement.ts | doc_spec_0025 | 概: 世代成就判定（RET-07）。純邏輯，不依賴 cc。 |
 | LegacyArena.ts | doc_spec_0018 | 概: 演武聖境：死亡名將的精華快照與付費復活（純邏輯，不依賴 cc） |
-| LegendaryMentoring.ts | 未標出處 | 概: 名將傳道（MENT-15，純邏輯，不依賴 cc） |
+| LegendaryMentoring.ts | doc_spec_0027 | 概: 名將傳道（MENT-15，純邏輯，不依賴 cc） |
 | LifeScriptCopy.ts | doc_spec_0018 | 概: 壽命與階段劇本文案的 Key 與參數（LIFE-13，純邏輯，不依賴 cc） |
 | LifespanCost.ts | doc_spec_0018 | 概: 回傳新狀態與事件，不改輸入、不用亂數、不寫入存檔。 |
 | LifespanSave.ts | doc_spec_0015, doc_spec_0037 | 概: 領地治理（指派、領地、日誌）的讀檔校正（純邏輯，不依賴 cc）。 |
 | LifespanWiring.ts | doc_spec_0018 | 概: 主動指令的壽命消耗接線與超齡隨機死亡（純邏輯，不依賴 cc） |
 | LimitedPoolSchedule.ts | doc_spec_0042 | 概: 限定池的上下架時間窗與本期限定角色（純邏輯，不依賴 cc）。 |
-| LoadoutCheck.ts | 未標出處 | 概: 推薦戰法三態檢核（WBS v7 LVL-04，PROG-2-0598） |
+| LoadoutCheck.ts | doc_spec_0049 | 概: 推薦戰法三態檢核（WBS v7 LVL-04，PROG-2-0598） |
 | LobbyHubSchema.ts | doc_spec_0002 | 概: 大廳資料（Lobby_Hub）的型別與結構驗證，純邏輯，不依賴 cc。 |
 | LobbyThemeResolver.ts | doc_spec_0002 | 概: 大廳晝夜與節慶三層的解析（純邏輯，不依賴 cc）。 |
 | LoginStreak.ts | doc_spec_0025 | 概: 連續登入統計（純邏輯，不依賴 cc）。 |
 | LongevityPill.ts | doc_spec_0018, doc_spec_0032 | 概: 延壽丹延長武將壽命上限與扣道具（純邏輯，不依賴 cc） |
-| LuckBloodlineMutation.ts | 未標出處 | 概: 運氣 ≥95 的「血統變異」（LUK-06 效果 2，PROG-2-0877，純邏輯，不依賴 cc） |
+| LuckBloodlineMutation.ts | doc_spec_0035 | 概: 運氣 ≥95 的「血統變異」（LUK-06 效果 2，PROG-2-0877，純邏輯，不依賴 cc） |
 | LuckEventRate.ts | doc_spec_0035 | 概: 運氣（LUK）對隨機事件觸發率的修正（純邏輯，不依賴 cc） |
-| LuckFateInheritance.ts | 未標出處 | 概: 運氣 =100 的「天命傳承」（LUK-06 效果 3，PROG-2-0878，純邏輯，不依賴 cc） |
-| LuckTacticCopy.ts | 未標出處 | 概: 運氣 ≥80 的「戰法強制複製」（LUK-06 效果，PROG-2-0874，純邏輯，不依賴 cc） |
-| LuckThresholds.ts | 未標出處 | 概: 運氣特殊門檻判定（LUK-06）。 |
-| LuckVisibility.ts | 未標出處 | 概: 運氣（LUK）屬性的前期隱藏與顯示文字（LUK-01，純邏輯，不依賴 cc） |
+| LuckFateInheritance.ts | doc_spec_0035 | 概: 運氣 =100 的「天命傳承」（LUK-06 效果 3，PROG-2-0878，純邏輯，不依賴 cc） |
+| LuckTacticCopy.ts | doc_spec_0035 | 概: 運氣 ≥80 的「戰法強制複製」（LUK-06 效果，PROG-2-0874，純邏輯，不依賴 cc） |
+| LuckThresholds.ts | doc_spec_0035 | 概: 運氣特殊門檻判定（LUK-06）。 |
+| LuckVisibility.ts | doc_spec_0035 | 概: 運氣（LUK）屬性的前期隱藏與顯示文字（LUK-01，純邏輯，不依賴 cc） |
 | MainTargetPanelText.ts | doc_ui_0009 | 概: 主角區詞條列的文字格式（純邏輯，不依賴 cc） |
 | MainTargetPanelView.ts | doc_spec_0009, doc_ui_0009 | 概: 血統樹底部主角區的資料整理（純邏輯，不依賴 cc） |
 | MentorBoundary.ts | doc_spec_0027 | 概: 教學職能邊界的執行期檢查（MENT-11，純函式，不依賴 cc） |
 | MentorBreakthrough.ts | doc_spec_0027 | 概: 教官卡星等突破與重複卡判定（純邏輯，不依賴 cc） |
-| MentorCardTabs.ts | 未標出處 | 概: 教官卡詳情三頁籤與星等鎖頭（MENT-13，純邏輯，不依賴 cc） |
+| MentorCardTabs.ts | doc_spec_0027 | 概: 教官卡詳情三頁籤與星等鎖頭（MENT-13，純邏輯，不依賴 cc） |
 | MentorDeck.ts | doc_spec_0027 | 概: 培育入場的教官編成：最多 5 格，每格放一張教官卡或留空。純 TS，不依賴 cc。 |
 | MentorInspiration.ts | doc_spec_0027 | 概: 戰法靈感事件觸發引擎（純邏輯，不依賴 cc） |
 | MentorOverflow.ts | doc_spec_0027 | 概: 教官卡溢出轉化（純邏輯，不依賴 cc） |
 | MentorSources.ts | doc_spec_0027, doc_spec_0151 | 概: 教官卡五來源標記與持有清單（純邏輯，不依賴 cc） |
 | MentorSupportCatalog.ts | doc_spec_0027 | 概: 教官支援卡目錄（純邏輯，不依賴 cc） |
-| MentorSynergy.ts | 未標出處 | 概: 師友羈絆（MENT-12，純邏輯，不依賴 cc） |
+| MentorSynergy.ts | doc_spec_0027 | 概: 師友羈絆（MENT-12，純邏輯，不依賴 cc） |
 | MercenaryAffection.ts | doc_spec_0132 | 概: 傭兵試用期間的每日好感（結義進度的一部分）純邏輯，不依賴 cc。 |
 | MercenaryBattleRecord.ts | doc_spec_0025, doc_spec_0029 | 概: 試用傭兵出戰後的進度寫入（純邏輯，不依賴 cc） |
 | MercenaryBond.ts | doc_spec_0045, doc_spec_0132 | 概: 推進一天：每日 bond +1、daysLeft −1；第 6 天結束時發 trial-complete。 |
@@ -233,7 +233,7 @@
 | MercenaryUpkeep.ts | doc_spec_0132 | 概: 傭兵每日薪水（黃金＋美酒）與欠薪凍結純邏輯，不依賴 cc。 |
 | MilestoneRewards.ts | doc_spec_0019 | 概: 里程碑達成後的獎勵內容（純邏輯，不依賴 cc） |
 | MilitaryReserve.ts | doc_spec_0040, doc_spec_0032, doc_data_0001 | 概: 玩家城市兵源與糧草儲備（純邏輯，不依賴 cc） |
-| MonthlyCard.ts | 未標出處 | 概: （無檔頭說明） |
+| MonthlyCard.ts | doc_spec_0032 | 概: （無檔頭說明） |
 | MorningReport.ts | doc_spec_0015 | 概: 晨報摘要：每次登入把上次登入後新增的日誌挑 1~3 則高優先條目（純邏輯，不依賴 cc）。 |
 | NewPlayerOpening.ts | doc_spec_0031 | 概: 新玩家開場的幕序與第一幕文字，純 TS，不依賴 cc。 |
 | NpcDialogueHook.ts | doc_spec_0176 | 概: RAG 對話 hook 與未命中情境收集（純邏輯，不依賴 cc，不連中台） |
@@ -260,7 +260,7 @@
 | PersonalityDriftGuard.ts | doc_spec_0176 | 概: 生成台詞的性格漂移檢查（純邏輯，不依賴 cc）。 |
 | PlayerInventory.ts | doc_spec_0006, doc_spec_0036 | 概: 玩家道具庫存（純邏輯，不依賴 cc） |
 | PrisonerOfWar.ts | doc_spec_0021 | 概: 俘虜產生與四選一處置（純邏輯，不依賴 cc） |
-| ProvisionalGeneralVersions.ts | 未標出處 | 概: 暫定版本表（PROG-2-0709，純邏輯，不依賴 cc） |
+| ProvisionalGeneralVersions.ts | doc_spec_0005 | 概: 暫定版本表（PROG-2-0709，純邏輯，不依賴 cc） |
 | ReadModelValidators.ts | doc_tech_0013 | 概: 虎符 / 英靈卡 / 出征編制 / 戰場狀態的最小 read model 型別與唯一性驗證（純邏輯，不依賴 cc） |
 | Rebirth.ts | doc_spec_0042, doc_spec_0155 | 概: 重複抽到同名武將的轉生規則（純邏輯，不依賴 cc） |
 | RedFaceCopy.ts | doc_spec_0004 | 概: 紅顏趕路與商業化提示的文案表（純邏輯，不依賴 cc）。 |
@@ -273,13 +273,13 @@
 | RetreatRisk.ts | doc_spec_0018 | 概: 精力狀態對撤退風險的影響（純邏輯，不依賴 cc） |
 | ReviveRetrain.ts | doc_spec_0005, doc_spec_0023 | 概: 復生重練（純邏輯，不依賴 cc） |
 | RivalNations.ts | doc_spec_0020 | 概: 他國 AI 勢力的純邏輯：勢力清單、與玩家的邦交、外交指令、季度行動、自動模擬戰鬥。 |
-| RivalTrade.ts | 未標出處 | 概: （無檔頭說明） |
+| RivalTrade.ts | doc_spec_0020 | 概: （無檔頭說明） |
 | RosterRoleLoad.ts | doc_spec_0016 | 概: 讀檔時把名冊的舊職能值正規化（純邏輯，不依賴 cc） |
 | SageDivination.ts | doc_spec_0006, doc_spec_0009 | 概: 名士占卜觸發因子覺醒，純邏輯，不依賴 cc |
 | SageFactorPreview.ts | doc_spec_0009 | 概: 名士提前預覽鎖住的因子方向（純邏輯，不依賴 cc） |
 | SageRegistry.ts | doc_spec_0006 | 概: 名士表的載入與 schema 驗證（純邏輯，不依賴 cc） |
 | SageRemarks.ts | doc_spec_0008, doc_spec_0028 | 概: 結緣介面的名士批語與天象異變（純邏輯，不依賴 cc） |
-| SandtableMarkers.ts | 未標出處 | 概: 世界沙盤標記數量上限（純邏輯，不依賴 cc） |
+| SandtableMarkers.ts | doc_spec_0014 | 概: 世界沙盤標記數量上限（純邏輯，不依賴 cc） |
 | SandtableProgress.ts | doc_spec_0002 | 概: 世界沙盤的解鎖歷史與階段顯示（純邏輯，不依賴 cc）。 |
 | SandtableStatus.ts | doc_spec_0014 | 概: 天下沙盤入口的狀態文字（純邏輯，不依賴 cc） |
 | SandtableTerritories.ts | doc_spec_0014 | 概: 世界沙盤的領地清單與驗證（純邏輯，不依賴 cc） |
@@ -287,7 +287,7 @@
 | SeasonFastForward.ts | doc_spec_0045 | 概: 連續推進季度，遇到要玩家處理的事件就停（純 TS，不依賴 cc）。 |
 | SeasonModifiers.ts | doc_spec_0034 | 概: 四季特色修正表（純邏輯，不依賴 cc） |
 | SeasonReportPanel.ts | doc_spec_0019 | 概: 季結戰報彈窗的列資料與文字（純邏輯，不依賴 cc） |
-| SeededRandom.ts | 未標出處 | 概: （無檔頭說明） |
+| SeededRandom.ts | doc_spec_0026 | 概: （無檔頭說明） |
 | SortieDeploy.ts | doc_spec_0040, doc_spec_0005, doc_spec_0012, doc_data_0001 | 概: 出征編制、出征軍勢與糧草部署帳本（純邏輯，不依賴 cc） |
 | SortieLoadoutPreset.ts | doc_spec_0040 | 概: 出征編制預設與推薦（純邏輯，不依賴 cc） |
 | SortiePrediction.ts | doc_data_0001 | 概: 出征編制畫面的戰前粗估勝率（純邏輯，不依賴 cc） |
@@ -305,9 +305,9 @@
 | StoryStripCells.ts | doc_tech_0011 | 概: 故事條 6 格的結構檢查（純邏輯，不依賴 cc） |
 | StrategistHud.ts | doc_spec_0049 | 概: 軍師 HUD 四摘要欄的文字組成（純邏輯，不依賴 cc） |
 | SupportPoolValidator.ts | doc_spec_0031 | 概: 紅顏池資料的一致性檢查，純 TS，不依賴 cc。 |
-| SyncHash.ts | 未標出處 | 概: SyncHash.ts |
+| SyncHash.ts | doc_tech_0010 | 概: SyncHash.ts |
 | TacticCondition.ts | doc_spec_0038 | 概: 戰法 TCOND 條件評估（純邏輯，不依賴 cc） |
-| TacticLoadout.ts | 未標出處 | 概: 戰法槽位（NUR-10 部分）。純邏輯，不依賴 cc。 |
+| TacticLoadout.ts | doc_spec_0026 | 概: 戰法槽位（NUR-10 部分）。純邏輯，不依賴 cc。 |
 | TacticRandomization.ts | doc_spec_0042, doc_spec_0155 | 概: 轉蛋戰法隨機化（純邏輯，不依賴 cc） |
 | TacticTriggerRate.ts | doc_spec_0180 | 概: 戰法發動率（INT 檢核器，純邏輯，不依賴 cc） |
 | TacticsTabView.ts | doc_ui_0012 | 概: 武將技頁的檢視模型（純邏輯，不依賴 cc）。 |
@@ -342,11 +342,11 @@
 | VitalityPill.ts | doc_spec_0032, doc_data_0001 | 概: 補元散的精力回復與扣道具（純邏輯，不依賴 cc） |
 | VortexTransition.ts | doc_spec_0031 | 概: 漩渦吸入與白閃轉場的階段時序（純邏輯，不依賴 cc）。 |
 | WarehouseCapacity.ts | 未登錄：WBS v3 BAG-02（主城倉庫：50 格、擴容 +20、上限 200） | 概: 主城倉庫的容量與存入判斷，純邏輯，不依賴 cc。 |
-| WeatherItem.ts | 未標出處 | 概: 天氣道具改變戰場天氣（APT-15，PROG-2-0929） |
+| WeatherItem.ts | doc_spec_0041 | 概: 天氣道具改變戰場天氣（APT-15，PROG-2-0929） |
 | WeatherSchedule.ts | doc_spec_0041 | 概: 戰場天氣排程（純邏輯，不依賴 cc） |
 | WeatherTacticRestriction.ts | doc_spec_0041 | 概: 天氣對戰法的強約束（純邏輯，不依賴 cc） |
 | WildGene.ts | doc_spec_0011 | 概: 獨立的基礎機率 Star Jump 判定：成功只提升 level，保留其餘欄位與輸入。 |
-| WishPool.ts | 未標出處 | 概: 許願池免費許願軌（doc_spec_0032 §E-6，PROG-2-1198） |
+| WishPool.ts | doc_spec_0032 | 概: 許願池免費許願軌（doc_spec_0032 §E-6，PROG-2-1198） |
 | YearReport.ts | doc_spec_0034 | 概: 年終年報的資料與文字（純邏輯，不依賴 cc） |
 
 #### Core Models (`assets/scripts/core/models/`)
@@ -369,13 +369,13 @@
 | GeneralRole.ts | doc_spec_0008, doc_spec_0016 | 概: 職能雙軌分流（純邏輯，不依賴 cc） |
 | GeneralSchema.ts | doc_spec_0008, doc_spec_0016 | 概: 武將最小資料結構驗證（純邏輯，不依賴 cc） |
 | GeneralTitle.ts | doc_spec_0016 | 概: 稱號顯示格式與同名辨識（純邏輯，不依賴 cc） |
-| GeneralVersion.ts | 未標出處 | 概: 同名武將版本表（SAME-01 / PROG-2-0422） |
+| GeneralVersion.ts | doc_spec_0005, doc_spec_0016 | 概: 同名武將版本表（SAME-01 / PROG-2-0422） |
 | HeroBase.ts | 未登錄：程式規格書.md §3.1 | 概: @spec-source → 程式規格書.md §3.1 |
-| MentorCard.ts | 未標出處 | 概: MentorCard.ts |
+| MentorCard.ts | doc_spec_0027 | 概: MentorCard.ts |
 | MentorSupportSchema.ts | doc_spec_0027 | 概: 教官支援卡（SUP_*）資料結構與解析（純邏輯，不依賴 cc） |
 | SoulTransfer.ts | doc_spec_0005 | 概: 同名武將死亡後的戰魂寄宿（純邏輯，不依賴 cc） |
 | SupportCardBase.ts | 未登錄：程式規格書.md §3.2 | 概: @spec-source → 程式規格書.md §3.2 |
-| TigerTallyCard.ts | 未標出處 | 概: （無檔頭說明） |
+| TigerTallyCard.ts | doc_spec_0012 | 概: （無檔頭說明） |
 
 #### Shared Contracts (`shared/`)
 
@@ -399,11 +399,11 @@
 | UnitAssetCatalog.ts | doc_art_0003 | D: TroopUnitAssetEntry, HeroUnitAssetEntry; C: TROOP_UNIT_ASSET_CATALOG, HERO_UNIT_ASSET_CATALOG |
 | VfxEffectConfig.ts | doc_tech_0015 | D: VfxEffectDef; C: DEFAULT_VFX_EFFECTS |
 | CampaignStages.ts | doc_spec_0045 | 概: 全球征途三階段的列舉預留（純資料，不依賴 cc） |
-| NumericalConfig.ts | 未標出處 | 概: 數值常數集中化（NUM-04）：對應 assets/resources/data/numerical-config.json。 |
+| NumericalConfig.ts | doc_spec_0180 | 概: 數值常數集中化（NUM-04）：對應 assets/resources/data/numerical-config.json。 |
 | OpeningFlowConfig.ts | doc_task_0153 | 概: @spec-source → PROG-2-0109 OPEN-01；docs/tasks/prog-opening-flow-tasks… |
 | TallyCardCatalog.ts | doc_spec_0045 | 概: 虎符卡片目錄（不依賴 cc） |
-| TerrainConfig.ts | 未標出處 | 概: 地形修正值（REV-02）：對應 assets/resources/data/terrain.json。 |
-| TigerTallySpecTactics.ts | 未標出處 | 概: 虎符特殊戰法對照表（PROG-2-0928，TRP-15） |
+| TerrainConfig.ts | doc_spec_0044 | 概: 地形修正值（REV-02）：對應 assets/resources/data/terrain.json。 |
+| TigerTallySpecTactics.ts | doc_spec_0012 | 概: 虎符特殊戰法對照表（PROG-2-0928，TRP-15） |
 
 #### Core Utils (`assets/scripts/core/utils/`)
 
@@ -437,7 +437,7 @@
 | GeneralSearch.ts | doc_tech_0009 | 概: 武將全文搜索（IndexedDB 查詢 + JS 過濾）|
 | SchemaMigration.ts | doc_tech_0009 | 概: 資料 Schema 版本控制與漸進式遷移機制 |
 | DataMounts.ts | doc_tech_0013 | 概: Root Save 的 `Data.*` 頂層掛載點骨架（純邏輯，不依賴 cc） |
-| MemoryStorageAdapter.ts | 未標出處 | 概: 記憶體版 DataStorageAdapter |
+| MemoryStorageAdapter.ts | doc_tech_0013 | 概: 記憶體版 DataStorageAdapter |
 | SaveVersion.ts | doc_tech_0012, doc_tech_0013 | 概: 存檔的 semver 版號、逐版遷移鏈與規格 envelope（純邏輯，不依賴 cc） |
 
 #### Core Services (`assets/scripts/core/services/`)
@@ -455,19 +455,19 @@
 | BloodlineGraph.ts | doc_spec_0011 §E, doc_spec_0028 §K | 概: 祖先查詢、14 人祖譜、共同祖先距離、子嗣登記 |
 | BranchCompactor.ts | doc_tech_0009 §2.6 | 概: 已滅絕支系壓縮（年底由 DataLifecycleScheduler 觸發）|
 | BreedingQuotaEnforcer.ts | doc_tech_0009 §2.6 | 概: AI 繁殖配額（IBreedingGate hook、支系與全局人口預算）|
-| ActionLogStore.ts | 未標出處 | 概: （無檔頭說明） |
+| ActionLogStore.ts | doc_tech_0013 | 概: （無檔頭說明） |
 | BreedingService.ts | doc_spec_0028 | 概: 結緣與名冊 / 血統圖的接線（純邏輯，不依賴 cc） |
-| GachaWalletRules.ts | 未標出處 | 概: 轉蛋扣款規則（純邏輯，不依賴 cc） |
+| GachaWalletRules.ts | doc_spec_0042 | 概: 轉蛋扣款規則（純邏輯，不依賴 cc） |
 | LeadGeneralSelectRules.ts | doc_spec_0045 | 概: 大廳「選主將」清單分頁（純邏輯，不依賴 cc） |
 | LegacyService.ts | doc_spec_0018, doc_spec_0027 | 概: 退役、死亡歸檔與季結資料生命週期的接線（純邏輯，不依賴 cc） |
-| LocalGachaService.ts | 未標出處 | 概: 轉蛋的存放處（保底表與錢包，由呼叫端接到存檔）；沒有時只存在記憶體中，例如載入畫面的預覽服務。 |
+| LocalGachaService.ts | doc_spec_0042 | 概: 轉蛋的存放處（保底表與錢包，由呼叫端接到存檔）；沒有時只存在記憶體中，例如載入畫面的預覽服務。 |
 | LoreCache.ts | doc_spec_0008 | 概: 武將故事的 LRU 快取（純邏輯，不依賴 cc）。 |
-| NpcDialogueService.ts | 未標出處 | 概: （無檔頭說明） |
+| NpcDialogueService.ts | doc_spec_0176 | 概: （無檔頭說明） |
 | NurtureService.ts | doc_spec_0026, doc_spec_0027 | 概: 培育會話管理與名冊接線（純邏輯，不依賴 cc） |
 | PlayerDeckRules.ts | doc_spec_0045 | 概: 玩家出戰卡組的純規則（不依賴 cc） |
-| PlayerRosterService.ts | 未標出處 | 概: （無檔頭說明） |
+| PlayerRosterService.ts | doc_spec_0016, doc_spec_0045 | 概: （無檔頭說明） |
 | PlayerSaveService.ts | doc_spec_0034, doc_tech_0013 | 概: 玩家長局存檔快照（純邏輯，不依賴 cc） |
-| PlayerSaveTableRows.ts | 未標出處 | 概: 存檔快照 → 六表列的映射與驗證（MVP-12，PROG-2-0880，純 TS，不連線） |
+| PlayerSaveTableRows.ts | doc_tech_0013, doc_spec_0045 | 概: 存檔快照 → 六表列的映射與驗證（MVP-12，PROG-2-0880，純 TS，不連線） |
 | StarterRosterService.ts | doc_spec_0031 | 概: @spec-source → 新手開場規格書.md §6、§7.2、§8 |
 | UnveilingService.ts | doc_spec_0043 | 概: 宿命分流的玩家選擇（純邏輯，不依賴 cc） |
 
@@ -484,8 +484,8 @@
 |---|---|---|
 | BattleController.ts | doc_spec_0040, doc_data_0001, doc_spec_0012 | D: BattleResult, DeployOutcome; F: 部署驗證、戰鬥結算、TileBuff 計算; C: DEFAULT_STATS |
 | EnemyAI.ts | doc_spec_0020, doc_data_0002 | F: decideDeploy（35% 剋制偏向） |
-| BattleFlowStateMachine.ts | 未標出處 | 概: （無檔頭說明） |
-| WeatherItemUseFlow.ts | 未標出處 | 概: 戰場天氣道具的庫存扣除流程（PROG-2-0932 / APT-15） |
+| BattleFlowStateMachine.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
+| WeatherItemUseFlow.ts | doc_spec_0041 | 概: 戰場天氣道具的庫存扣除流程（PROG-2-0932 / APT-15） |
 
 #### Battle Models (`assets/scripts/battle/models/`)
 
@@ -505,15 +505,15 @@
 | UnitRenderer.ts | doc_art_0003 | D: UnitView, GeneralView; 概: GLB 動態載入 |
 | SceneBackground.ts | doc_tech_0015 | 概: 分層相機（BG/3D/UI） |
 | SpriteFrameAnimator.ts | — | 概: 幀動畫工具（無直接規格書對應） |
-| BattleFlowVfx.ts | 未標出處 | 概: （無檔頭說明） |
-| BattlePresentationTiming.ts | 未標出處 | 概: BattlePresentationTiming.ts |
-| BattleSceneCapture.ts | 未標出處 | 概: （無檔頭說明） |
-| BattleSceneFlow.ts | 未標出處 | 概: 管理 BattleScene 的場景級流程。 |
-| BattleSceneGambitSummary.ts | 未標出處 | 概: （無檔頭說明） |
+| BattleFlowVfx.ts | doc_ui_0001 | 概: （無檔頭說明） |
+| BattlePresentationTiming.ts | doc_ui_0001 | 概: BattlePresentationTiming.ts |
+| BattleSceneCapture.ts | doc_ui_0001 | 概: （無檔頭說明） |
+| BattleSceneFlow.ts | doc_ui_0001, doc_spec_0040 | 概: 管理 BattleScene 的場景級流程。 |
+| BattleSceneGambitSummary.ts | doc_spec_0039, doc_ui_0001 | 概: （無檔頭說明） |
 | BattleSceneSetup.ts | doc_index_0007 | 概: 將 TroopType enum 轉換為繁體中文兵種名稱。 |
-| BattleSkillTargetingFlow.ts | 未標出處 | 概: 管理「技能選目標」的互動狀態機。 |
+| BattleSkillTargetingFlow.ts | doc_ui_0001 | 概: 管理「技能選目標」的互動狀態機。 |
 | BattleTutorialHint.ts | doc_spec_0031 | 概: 首戰教學的提示浮窗（薄 View） |
-| BattleUIBridge.ts | 未標出處 | 概: 戰鬥 UI 連結器 |
+| BattleUIBridge.ts | doc_ui_0001, doc_spec_0015 | 概: 戰鬥 UI 連結器 |
 | BattleUIInitializer.ts | 未標出處 | 概: 戰鬥 UI 元件自動建立輔助函式 |
 
 #### Battle Views / Effects (`assets/scripts/battle/views/effects/`)
@@ -548,12 +548,12 @@
 | BattleHUDComposite.ts | doc_index_0007 | 概: 戰鬥 HUD（CompositePanel 版） |
 | BattleHudOverlayCompositePanel.ts | doc_index_0007 | 概: composite-panel family Panel（M10 scaffold --ucuf 自動生成骨架） |
 | BattleLogComposite.ts | doc_index_0007 | 概: 右側面板（控制列 + 戰鬥日誌）（CompositePanel 版） |
-| BattleUIDiag.ts | 未標出處 | 概: 戰場 UI 診斷工具 |
+| BattleUIDiag.ts | doc_ui_0001 | 概: 戰場 UI 診斷工具 |
 | BloodlineTreeLines.ts | doc_ui_0009 | 概: 血統樹的樣式載入與父子連線重畫（共用 cc 模組，不綁定特定畫面）。 |
 | DeployComposite.ts | doc_index_0007 | 概: 玩家部署操作面板（CompositePanel 版） |
-| DeployDragDebug.ts | 未標出處 | 概: 拖曳 debug 薄 shim |
+| DeployDragDebug.ts | doc_spec_0040 | 概: 拖曳 debug 薄 shim |
 | DuelChallengeComposite.ts | doc_index_0007 | 概: 武將單挑確認面板（CompositePanel 版） |
-| EliteTroopCodexComposite.ts | 未標出處 | 概: （無檔頭說明） |
+| EliteTroopCodexComposite.ts | doc_spec_0012 | 概: （無檔頭說明） |
 | FactorHexGraphic.ts | doc_spec_0031 | 概: 六色六角圖的繪製與解鎖特效（cc 端，資料由 FactorHexPanel 提供） |
 | GeneralListComposite.ts | doc_index_0007 | 概: 武將列表面板（CompositePanel 版） |
 | GeneralPortraitComposite.ts | doc_index_0007 | 概: 武將立繪顯示面板（Composite 版） |
@@ -562,10 +562,10 @@
 | LobbyLeaderboardComposite.ts | doc_index_0007 | 概: 戰績排行榜彈窗（PROG-2-0960） |
 | LobbyMissionDetailDialogComposite.ts | doc_index_0007 | 概: @spec-source docs/cross-reference-index.md |
 | ResultPopupComposite.ts | doc_index_0007 | 概: 戰鬥結果彈窗（Composite 版） |
-| RoundedRectBackground.ts | 未標出處 | 概: （無檔頭說明） |
+| RoundedRectBackground.ts | doc_ui_0049 | 概: （無檔頭說明） |
 | SandtableTerritoryComposite.ts | doc_index_0007 | 概: 天下沙盤領地選擇彈窗（PROG-2-0967） |
 | SeasonReportComposite.ts | doc_index_0007 | 概: 季結戰報彈窗（PROG-2-0963） |
-| ShadowBackground.ts | 未標出處 | 概: （無檔頭說明） |
+| ShadowBackground.ts | doc_ui_0049 | 概: （無檔頭說明） |
 | TigerTallyComposite.ts | doc_index_0007 | 概: 虎符卡片區（Composite 版） |
 | TigerTallyDetailComposite.ts | doc_index_0007 | 概: 戰鬥場景右側虎符詳情抽屜（第一版） |
 | ToastMessageComposite.ts | doc_index_0007 | 概: 全域吐司提示系統（Composite 版） |
@@ -611,8 +611,8 @@
 | AssetRegistryEntry.ts | doc_ui_0026 | 概: UCUF 資源登記簿型別定義 |
 | BattleReviewController.ts | doc_spec_0015 | 概: 戰報彈窗：離線戰鬥快照回看（純邏輯，不依賴 cc）。 |
 | BreedingPreviewPresenter.ts | doc_spec_0003 | 概: 結緣介面的 EP 預覽文字（純邏輯，不依賴 cc） |
-| BreedingTexts.ts | 未標出處 | 概: 結緣畫面文案（PROG-2-0526）。純邏輯，不依賴 cc。 |
-| CssClipPathMask.ts | 未標出處 | 概: （無檔頭說明） |
+| BreedingTexts.ts | doc_spec_0028 | 概: 結緣畫面文案（PROG-2-0526）。純邏輯，不依賴 cc。 |
+| CssClipPathMask.ts | doc_ui_0049 | 概: （無檔頭說明） |
 | DailyReportController.ts | doc_spec_0015 | 概: 登入面板：三國日報與晨報（純邏輯，不依賴 cc）。 |
 | DailySubsidyNotice.ts | doc_spec_0032 | 概: 每日補貼的大廳提示文字（純邏輯，不依賴 cc）。 |
 | DataBindingValidator.ts | doc_ui_0026 | 概: UCUF 資料綁定驗證器 |
@@ -620,17 +620,17 @@
 | DestinyShopController.ts | doc_spec_0042 | 概: 天命商店兌換畫面的流程（純邏輯，不依賴 cc） |
 | DomesticPanelController.ts | 未登錄：WBS v3 MVP-10 大廳內政畫面；DomesticTasks.ts 產出 | 概: 大廳內政 5 大任務面板的流程（純邏輯，不依賴 cc） |
 | EnvScoutPresenter.ts | doc_spec_0041 | 概: 環境偵察面板的文字（純邏輯，不依賴 cc） |
-| FateScriptTexts.ts | 未標出處 | 概: 宿命揭曉文案（PROG-2-0735，承接 FATE-11 / PROG-2-0734）。純邏輯，不依賴 cc。 |
-| FixedSlotPager.ts | 未標出處 | 概: 固定格式列表的分頁切片（純邏輯，不依賴 cc） |
-| GachaActionBindings.ts | 未標出處 | 概: （無檔頭說明） |
-| GachaFlowCoordinator.ts | 未標出處 | 概: 支援卡池召喚（PROG-2-1085）：扣支援券、抽支援卡目錄裡的武將；抽到的只變成教官卡，不入名冊。 |
+| FateScriptTexts.ts | doc_spec_0043 | 概: 宿命揭曉文案（PROG-2-0735，承接 FATE-11 / PROG-2-0734）。純邏輯，不依賴 cc。 |
+| FixedSlotPager.ts | doc_ui_0049 | 概: 固定格式列表的分頁切片（純邏輯，不依賴 cc） |
+| GachaActionBindings.ts | doc_spec_0042 | 概: （無檔頭說明） |
+| GachaFlowCoordinator.ts | doc_spec_0042 | 概: 支援卡池召喚（PROG-2-1085）：扣支援券、抽支援卡目錄裡的武將；抽到的只變成教官卡，不入名冊。 |
 | GachaPoolGuidePresenter.ts | doc_spec_0042 | 概: 卡池頁與名將詳情的定位文字（純邏輯，不依賴 cc） |
 | GachaPreviewStateRoute.ts | 未標出處 | 概: （無檔頭說明） |
 | GearSlotPickController.ts | doc_spec_0174, doc_ui_0012 | 概: 寶頁格位點擊後的選取面板流程（純邏輯，不依賴 cc）。 |
 | GeneralAvatarLoader.ts | 未登錄：PROG-2-1107（武將小人頭；路徑規則見 data/general-art | 概: 依 GeneralArtPaths 的候選順序載入武將頭像／立繪 SpriteFrame。 |
 | GeneralJournalController.ts | doc_spec_0015 | 概: 武將日誌回看抽屜的畫面流程（純邏輯，不依賴 cc）。 |
 | GeneralLifecyclePresenter.ts | doc_spec_0016, doc_spec_0018 | 概: 武將詳情與培育畫面的生命週期文字（純邏輯，不依賴 cc） |
-| GeneralVersionGalleryController.ts | 未標出處 | 概: 同名武將版本圖鑑畫面的狀態（PROG-2-0708 cc 接線，純邏輯，不依賴 cc） |
+| GeneralVersionGalleryController.ts | doc_spec_0005 | 概: 同名武將版本圖鑑畫面的狀態（PROG-2-0708 cc 接線，純邏輯，不依賴 cc） |
 | GovernorHallController.ts | doc_spec_0037 | 概: 太守府畫面的流程（純邏輯，不依賴 cc）。 |
 | HallBoardPanelController.ts | doc_spec_0002, doc_spec_0039 | 概: 大廳任務牆與武將點位的畫面流程（純邏輯，不依賴 cc）。 |
 | HallDetailActionStates.ts | doc_spec_0002 | 概: 任務詳情彈窗四顆行動按鈕（再探 / 執行 / 等待 / 委任）的啟用狀態，純邏輯，不依賴 cc。 |
@@ -647,8 +647,8 @@
 | LongevityPillController.ts | doc_spec_0018, doc_spec_0032 | 概: 延壽丹使用鈕的流程（純邏輯，不依賴 cc） |
 | LuckTexts.ts | doc_spec_0035 | 概: 運氣（LUK）的 UI 字串、天命波動顯示與劇本文案（純邏輯，不依賴 cc） |
 | MentorBorrowView.ts | doc_spec_0026 | 概: 好友借用教官的選擇列（純邏輯，不依賴 cc） |
-| MentorCardDetailController.ts | 未標出處 | 概: 教官卡詳情畫面的狀態（MENT-13 cc 接線，純邏輯，不依賴 cc） |
-| MentorHoldingRows.ts | 未標出處 | 概: 「我的教官卡」列表的列資料（PROG-2-1097，純邏輯，不依賴 cc） |
+| MentorCardDetailController.ts | doc_spec_0027 | 概: 教官卡詳情畫面的狀態（MENT-13 cc 接線，純邏輯，不依賴 cc） |
+| MentorHoldingRows.ts | doc_spec_0027 | 概: 「我的教官卡」列表的列資料（PROG-2-1097，純邏輯，不依賴 cc） |
 | MercenaryNameplateRows.ts | doc_spec_0029 | 概: 傭兵名牌列的純資料（不依賴 cc）。 |
 | MercenaryPanelController.ts | doc_spec_0029 | 概: 傭兵面板的畫面流程（純邏輯，不依賴 cc）。 |
 | NurtureFlowViewApplier.ts | doc_ui_0031 | 概: 把 NurtureFlowController / BondingSetupController 吐出的 view 套到 UCUF 組出來… |
@@ -664,33 +664,33 @@
 | BloodlineVignetteText.ts | doc_ui_0012, doc_spec_0011 | 概: 血統小傳開窗的文字（純邏輯，不依賴 cc）；暫定解鎖規則：取得開 1 格、每轉多 1 格、命紋覺醒全開（PROG-2-1428） |
 | RecruitHallController.ts | 未登錄：使用者裁定 2026-10-25（MVP 至少 20 位武將可選）；gacha- | 概: 大廳「招賢館」畫面的流程（純邏輯，不依賴 cc） |
 | RedFaceShowcaseController.ts | doc_spec_0031 | 概: 紅顏展示畫面的流程（純邏輯，不依賴 cc）。 |
-| RelationEventLogText.ts | 未標出處 | 概: 戰場關係事件的戰報文字（PROG-2-1421，純邏輯，不依賴 cc） |
+| RelationEventLogText.ts | doc_spec_0024 | 概: 戰場關係事件的戰報文字（PROG-2-1421，純邏輯，不依賴 cc） |
 | RelationTexts.ts | doc_spec_0024 | 概: 相性關係的劇本與標籤字串（純邏輯，不依賴 cc） |
 | RetireReviewController.ts | doc_spec_0019 | 概: 退役戰績回顧與季度戰損報告的畫面流程（純邏輯，不依賴 cc） |
-| RetirementFlowController.ts | 未標出處 | 概: （無檔頭說明） |
+| RetirementFlowController.ts | doc_spec_0018 | 概: （無檔頭說明） |
 | RivalDiplomacyController.ts | doc_spec_0020 | 概: 大廳「外交／出征」畫面的流程（純邏輯，不依賴 cc） |
 | RuntimeRuleChecker.ts | doc_ui_0026 | 概: UCUF Runtime 規則檢查器 |
 | SageOracleController.ts | doc_spec_0006, doc_spec_0009 | 概: 名士占卜畫面的流程（純邏輯，不依賴 cc） |
 | SameNameTexts.ts | doc_spec_0005 | 概: 同名武將的劇本與字串（純邏輯，不依賴 cc） |
-| SeasonTexts.ts | 未標出處 | 概: 大廳季節文案（PROG-2-0730，承接 TIME-09 / PROG-2-0727）。純邏輯，不依賴 cc。 |
+| SeasonTexts.ts | doc_spec_0034 | 概: 大廳季節文案（PROG-2-0730，承接 TIME-09 / PROG-2-0727）。純邏輯，不依賴 cc。 |
 | SortieSetupController.ts | doc_spec_0040 | 概: 出征編制畫面的流程（純邏輯，不依賴 cc） |
 | SpiritCardDetailTexts.ts | doc_spec_0023 | 概: 英靈卡詳情的血脈灌注區文字（純邏輯，不依賴 cc） |
 | SpiritCodexController.ts | doc_spec_0018 | 概: 英靈圖鑑：列出已死武將的英靈卡與精華快照（純邏輯，不依賴 cc） |
-| SpiritFamilyOverviewRoute.ts | 未標出處 | 概: （無檔頭說明） |
+| SpiritFamilyOverviewRoute.ts | doc_spec_0022 | 概: （無檔頭說明） |
 | TacticAvailabilityPresenter.ts | doc_spec_0041 | 概: 每個戰法目前能不能施放、不能的話原因是什麼（純邏輯，不依賴 cc） |
 | TournamentPanelController.ts | doc_spec_0007 | 概: 名將挑戰賽彈窗：賽季卡、報名、參戰（純邏輯，不依賴 cc）。 |
 | UCUFRuleRegistry.ts | doc_ui_0026 | 概: 動態規則注冊器 |
-| UIEvents.ts | 未標出處 | 概: UI 內部事件總線常數 |
+| UIEvents.ts | doc_ui_0049 | 概: UI 內部事件總線常數 |
 | UILabelText.ts | doc_index_0007 | 概: layout label 的顯示文字解析（純邏輯，不依賴 cc） |
-| UINodePool.ts | 未標出處 | 概: Fragment Node 物件池 |
-| UIScreenRuntimeStateRegistry.ts | 未標出處 | 概: （無檔頭說明） |
-| UIVariantRouter.ts | 未標出處 | 概: Apply runtime-route.json sidecars produced by |
-| UltimateActionView.ts | 未標出處 | 概: 五階血脈傳承奧義的操作區文字與按鈕狀態（PROG-2-0720；PROG-2-0743 文案改走語系表；PROG-2-0749 升星素材說… |
+| UINodePool.ts | doc_ui_0049 | 概: Fragment Node 物件池 |
+| UIScreenRuntimeStateRegistry.ts | doc_ui_0049 | 概: （無檔頭說明） |
+| UIVariantRouter.ts | doc_ui_0049 | 概: Apply runtime-route.json sidecars produced by |
+| UltimateActionView.ts | doc_ui_0012 | 概: 五階血脈傳承奧義的操作區文字與按鈕狀態（PROG-2-0720；PROG-2-0743 文案改走語系表；PROG-2-0749 升星素材說… |
 | UltimateCodexTexts.ts | doc_spec_0030 | 概: 奧義圖鑑的列表文字（純邏輯，不依賴 cc） |
-| UltimateStageSummary.ts | 未標出處 | 概: 五階血脈傳承奧義的摘要文字（PROG-2-0740，五階三步之三；PROG-2-0743 文案改走語系表）。純邏輯，不依賴 cc。 |
+| UltimateStageSummary.ts | doc_ui_0012 | 概: 五階血脈傳承奧義的摘要文字（PROG-2-0740，五階三步之三；PROG-2-0743 文案改走語系表）。純邏輯，不依賴 cc。 |
 | UltimateTexts.ts | doc_ui_0012 | 概: 五階血脈傳承奧義操作區與摘要的文案（純邏輯，不依賴 cc） |
 | VitalityPillController.ts | doc_spec_0032 | 概: 補元散使用鈕的流程（純邏輯，不依賴 cc） |
-| VitalityScriptTexts.ts | 未標出處 | 概: 精力劇本文案（PROG-2-0729，承接 VIT-09 / PROG-2-0728）。純邏輯，不依賴 cc。 |
+| VitalityScriptTexts.ts | doc_spec_0033 | 概: 精力劇本文案（PROG-2-0729，承接 VIT-09 / PROG-2-0728）。純邏輯，不依賴 cc。 |
 | WarehousePanelController.ts | 未登錄：WBS v3 BAG-02（主城倉庫：50 格、擴容 +20、上限 200）；B | 概: 倉庫面板的畫面流程（純邏輯，不依賴 cc）。 |
 | WishAltarController.ts | doc_spec_0002, doc_spec_0032 | 概: 大廳許願祭壇彈窗（純邏輯，不依賴 cc）。 |
 
@@ -711,7 +711,7 @@
 |---|---|---|
 | BloodlineTreePanel.ts | doc_tech_0009 §2.3 | 概: 祖先樹 UI，從 PersonRegistry / BloodlineGraph 讀資料 |
 | GeneralDataDebugPanel.ts | doc_tech_0009 §5 M7 | 概: DEV 模式武將資料偵錯面板（uid / 名稱搜尋 DSL）|
-| ActionLogDebugPanel.ts | 未標出處 | 概: （無檔頭說明） |
+| ActionLogDebugPanel.ts | doc_tech_0013 | 概: （無檔頭說明） |
 
 #### UI Layers & Scenes (`assets/scripts/ui/`)
 
@@ -732,42 +732,42 @@
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| BattleRuntimeOrchestrator.ts | 未標出處 | 概: （無檔頭說明） |
+| BattleRuntimeOrchestrator.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
 
 #### Battle / Runtime (`assets/scripts/battle/runtime/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
 | BattleAutoResolve.ts | 未登錄：使用者裁定 2026-10-25（戰鬥先用自動模擬數值結果直接跳結算）；PROG | 概: 戰鬥「自動」鈕的數值結算（純 TS，不依賴 cc）。 |
-| BattleCombatResolver.ts | 未標出處 | 概: 水域合攻（PM 暫定，PROG-2-0584）：攻擊方站在河流格且有 naval-combined-attack 時， |
-| BattleDuelResolver.ts | 未標出處 | 概: （無檔頭說明） |
+| BattleCombatResolver.ts | doc_spec_0040, doc_tech_0015, doc_spec_0041 | 概: 水域合攻（PM 暫定，PROG-2-0584）：攻擊方站在河流格且有 naval-combined-attack 時， |
+| BattleDuelResolver.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
 | BattleGeneralDuelFlow.ts | doc_index_0007 | 概: 單挑最多交手回合數（暫定，規格未定義）。達上限仍雙方存活 → 平局，單挑結束、不產生死亡、不套用懲罰。 |
-| BattleRuntimeContext.ts | 未標出處 | 概: （無檔頭說明） |
-| BattleRuntimeContract.ts | 未標出處 | 概: （無檔頭說明） |
-| BattleSkillDispatcher.ts | 未標出處 | 概: 根據武將的 skillId 分發至具體技能實作。 |
+| BattleRuntimeContext.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
+| BattleRuntimeContract.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
+| BattleSkillDispatcher.ts | doc_spec_0038, doc_spec_0040 | 概: 根據武將的 skillId 分發至具體技能實作。 |
 | BattleSoloBreach.ts | doc_spec_0038 | 概: 回合開始重算單騎破陣：帶者（武將化身單位）正交 1 格無存活友軍則 ATK ×1.3，否則 ×1。 |
 | BattleTileBuffLifecycleManager.ts | doc_index_0007 | 概: @spec-source → 見 docs/cross-reference-index.md |
-| BattleTurnManager.ts | 未標出處 | 概: （無檔頭說明） |
-| BattleUnitSpawner.ts | 未標出處 | 概: （無檔頭說明） |
-| BattleVictoryResolver.ts | 未標出處 | 概: 營帳佔領（夜襲／埋伏場景，PM 暫定）：回合結束時，我方任一存活單位站在營帳格上即勝利。 |
+| BattleTurnManager.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
+| BattleUnitSpawner.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
+| BattleVictoryResolver.ts | doc_spec_0040, doc_tech_0015 | 概: 營帳佔領（夜襲／埋伏場景，PM 暫定）：回合結束時，我方任一存活單位站在營帳格上即勝利。 |
 
 #### Battle / Runtime / Phases (`assets/scripts/battle/runtime/phases/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| BattleAutoMovePhase.ts | 未標出處 | 概: 七進七出（Ghost_Move）：沿前進方向找最遠的有效終點，穿過敵軍不停下，每個穿過的敵軍各扣一次傷害。 |
-| BattleCombatPhase.ts | 未標出處 | 概: （無檔頭說明） |
-| BattleEnemyDeployPhase.ts | 未標出處 | 概: （無檔頭說明） |
-| BattlePhaseExecutor.ts | 未標出處 | 概: （無檔頭說明） |
-| BattleSpecialResolvePhase.ts | 未標出處 | 概: （無檔頭說明） |
-| BattleTileEffectPhase.ts | 未標出處 | 概: （無檔頭說明） |
+| BattleAutoMovePhase.ts | doc_spec_0040, doc_tech_0015 | 概: 七進七出（Ghost_Move）：沿前進方向找最遠的有效終點，穿過敵軍不停下，每個穿過的敵軍各扣一次傷害。 |
+| BattleCombatPhase.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
+| BattleEnemyDeployPhase.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
+| BattlePhaseExecutor.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
+| BattleSpecialResolvePhase.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
+| BattleTileEffectPhase.ts | doc_spec_0044, doc_spec_0041 | 概: （無檔頭說明） |
 
 #### Battle / Runtime / Tempo (`assets/scripts/battle/runtime/tempo/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| BattleTempoController.ts | 未標出處 | 概: （無檔頭說明） |
-| TurnBasedTempoController.ts | 未標出處 | 概: （無檔頭說明） |
+| BattleTempoController.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
+| TurnBasedTempoController.ts | doc_spec_0040, doc_tech_0015 | 概: （無檔頭說明） |
 
 #### Battle / Shared (`assets/scripts/battle/shared/`)
 
@@ -775,156 +775,156 @@
 |---|---|---|
 | BattleAudio.ts | doc_index_0007 | 概: 戰鬥音效邏輯鍵。 |
 | BattleSceneMode.ts | doc_index_0007 | 概: @spec-source → 見 docs/cross-reference-index.md |
-| BattleTacticBehavior.ts | 未標出處 | 概: 依目前天氣重算水攻淹沒範圍（PROG-2-0407）： |
+| BattleTacticBehavior.ts | doc_spec_0038 | 概: 依目前天氣重算水攻淹沒範圍（PROG-2-0407）： |
 | EnemyTacticBoard.ts | doc_spec_0038 | 概: 敵方選技的戰場數值來源（純邏輯，不依賴 cc） |
 | EnemyTacticCandidates.ts | doc_spec_0038 | 概: 敵方戰法候選來源（純邏輯，不依賴 cc） |
 | EnemyTacticNumbers.ts | doc_spec_0038 | 概: 敵方戰法數值填入與選技（純邏輯，不依賴 cc） |
 | ForcedMoveTile.ts | doc_spec_0044 | 概: 位移格的推移判定（純邏輯，不依賴 cc） |
-| FormationZone.ts | 未標出處 | 概: 八陣圖持續防禦區（PROG-2-0760／0761）。 |
+| FormationZone.ts | doc_spec_0038 | 概: 八陣圖持續防禦區（PROG-2-0760／0761）。 |
 | GhostMovePath.ts | doc_spec_0038 | 概: 七進七出的穿透路徑規則（純邏輯，不依賴 cc） |
 | HazardVisualSkin.ts | doc_spec_0044 | 概: Hazard 格子的 Decal 與 VFX 換皮掛點（純邏輯，不依賴 cc） |
-| Morale.ts | 未標出處 | 概: 士氣持續回合（PROG-2-0770，暫定值，記在待辦檔）。 |
-| PushMove.ts | 未標出處 | 概: 戰法位移（push，PROG-2-0767）純邏輯。 |
-| SceneGambitTrigger.ts | 未標出處 | 概: 場景戰法發動判定（WBS v7 SCN-03，PROG-2-0596） |
+| Morale.ts | doc_spec_0038 | 概: 士氣持續回合（PROG-2-0770，暫定值，記在待辦檔）。 |
+| PushMove.ts | doc_spec_0038 | 概: 戰法位移（push，PROG-2-0767）純邏輯。 |
+| SceneGambitTrigger.ts | doc_spec_0039 | 概: 場景戰法發動判定（WBS v7 SCN-03，PROG-2-0596） |
 | StealthTile.ts | doc_spec_0044 | 概: 掩體格的隱蔽判定（純邏輯，不依賴 cc） |
 | TacticAiRules.ts | doc_spec_0038, doc_data_0002 | 概: 戰法 AI 選技規則（純邏輯，不依賴 cc） |
 | TacticDamageEstimate.ts | doc_spec_0038 | 概: 戰法預估傷害（純邏輯，不依賴 cc） |
 | TacticVfxHooks.ts | doc_spec_0038 | 概: 戰法特效與掠奪飄字的程式掛點（純邏輯，不依賴 cc） |
 | TallyPassive.ts | doc_spec_0012 | 概: 虎符被動的通用掛點（不依賴 cc） |
-| TileStateRules.ts | 未標出處 | 概: 格子狀態分類（WBS GRD-01，血統與戰場格子規格；PROG-2-0589 依實際時機校正）。 |
-| UnitDot.ts | 未標出處 | 概: 單位持續傷害（毒箭，PROG-2-0766）。 |
-| WisdomMeter.ts | 未標出處 | 概: 軍師智謀能量累積（WBS v7 SCN-10 純邏輯，PROG-2-0616） |
+| TileStateRules.ts | doc_spec_0044 | 概: 格子狀態分類（WBS GRD-01，血統與戰場格子規格；PROG-2-0589 依實際時機校正）。 |
+| UnitDot.ts | doc_spec_0038 | 概: 單位持續傷害（毒箭，PROG-2-0766）。 |
+| WisdomMeter.ts | doc_spec_0039 | 概: 軍師智謀能量累積（WBS v7 SCN-10 純邏輯，PROG-2-0616） |
 
 #### Battle / Skills (`assets/scripts/battle/skills/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| BattleSkillDamageResolver.ts | 未標出處 | 概: 精銳突擊衝鋒（PROG-2-0756）：施放者與目標在同一直線上時，基礎傷害 × chargeMultiplier。 |
-| BattleSkillExecutor.ts | 未標出處 | 概: （無檔頭說明） |
-| BattleSkillModuleTags.ts | 未標出處 | 概: 戰法傷害投射模組代號（戰法系統規格 G-6-1）。 |
-| BattleSkillProfiles.ts | 未標出處 | 概: --- 虎符特殊戰法殼（PROG-2-0928，TRP-15）：規格 34 條中尚未實作效果的 23 條 --- |
-| BattleSkillResolver.ts | 未標出處 | 概: （無檔頭說明） |
-| BattleSkillResolverFactory.ts | 未標出處 | 概: （無檔頭說明） |
-| BattleSkillTargetSelector.ts | 未標出處 | 概: 技能射程（G-1 百步穿楊）：施放者部隊的攻擊射程 ＋ rangeBonus。 |
-| SkillEffectFormulas.ts | 未標出處 | 概: 戰法效果純公式（WBS v8 TAC-10／TAC-11 前置，PROG-2-0751） |
+| BattleSkillDamageResolver.ts | doc_spec_0038 | 概: 精銳突擊衝鋒（PROG-2-0756）：施放者與目標在同一直線上時，基礎傷害 × chargeMultiplier。 |
+| BattleSkillExecutor.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| BattleSkillModuleTags.ts | doc_spec_0038 | 概: 戰法傷害投射模組代號（戰法系統規格 G-6-1）。 |
+| BattleSkillProfiles.ts | doc_spec_0038, doc_spec_0012 | 概: --- 虎符特殊戰法殼（PROG-2-0928，TRP-15）：規格 34 條中尚未實作效果的 23 條 --- |
+| BattleSkillResolver.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| BattleSkillResolverFactory.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| BattleSkillTargetSelector.ts | doc_spec_0038 | 概: 技能射程（G-1 百步穿楊）：施放者部隊的攻擊射程 ＋ rangeBonus。 |
+| SkillEffectFormulas.ts | doc_spec_0038 | 概: 戰法效果純公式（WBS v8 TAC-10／TAC-11 前置，PROG-2-0751） |
 | SkillEffectRegistry.ts | doc_index_0007 | 概: @spec-source → 見 docs/cross-reference-index.md |
-| SkillGridGeometry.ts | 未標出處 | 概: 戰法格子幾何純函式（PROG-2-0754） |
-| SkillStatusTicks.ts | 未標出處 | 概: 戰法狀態回合遞減純函式（PROG-2-0753） |
+| SkillGridGeometry.ts | doc_spec_0038 | 概: 戰法格子幾何純函式（PROG-2-0754） |
+| SkillStatusTicks.ts | doc_spec_0038 | 概: 戰法狀態回合遞減純函式（PROG-2-0753） |
 
 #### Battle / Skills / Adapters (`assets/scripts/battle/skills/adapters/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| BattleSkillSourceTranslator.ts | 未標出處 | 概: （無檔頭說明） |
-| BloodlineTacticAdapter.ts | 未標出處 | 概: （無檔頭說明） |
-| MentorTacticAdapter.ts | 未標出處 | 概: （無檔頭說明） |
-| SceneGambitAdapter.ts | 未標出處 | 概: （無檔頭說明） |
-| SeedTacticAdapter.ts | 未標出處 | 概: （無檔頭說明） |
-| TigerTallyTacticAdapter.ts | 未標出處 | 概: （無檔頭說明） |
+| BattleSkillSourceTranslator.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| BloodlineTacticAdapter.ts | doc_spec_0038, doc_spec_0011 | 概: （無檔頭說明） |
+| MentorTacticAdapter.ts | doc_spec_0027, doc_spec_0038 | 概: （無檔頭說明） |
+| SceneGambitAdapter.ts | doc_spec_0039 | 概: （無檔頭說明） |
+| SeedTacticAdapter.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| TigerTallyTacticAdapter.ts | doc_spec_0012, doc_spec_0038 | 概: （無檔頭說明） |
 
 #### Battle / Skills / Resolvers (`assets/scripts/battle/skills/resolvers/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| BuffDebuffSkillResolver.ts | 未標出處 | 概: （無檔頭說明） |
-| CounterSkillResolver.ts | 未標出處 | 概: （無檔頭說明） |
-| DotSkillResolver.ts | 未標出處 | 概: （無檔頭說明） |
-| FireGodHuntSkillResolver.ts | 未標出處 | 概: 火神狩獵（push-fire，PROG-2-0771）：單體敵軍遠離施放者 pushSteps 格， |
-| FormationZoneSkillResolver.ts | 未標出處 | 概: 八陣圖（PROG-2-0761）：以施放者腳下為中心，3x3 區域成為持續防禦區。 |
-| HealSkillResolver.ts | 未標出處 | 概: （無檔頭說明） |
-| LinkSkillResolver.ts | 未標出處 | 概: （無檔頭說明） |
-| MoraleSkillResolver.ts | 未標出處 | 概: （無檔頭說明） |
-| ProjectedDamageSkillResolver.ts | 未標出處 | 概: （無檔頭說明） |
-| PushSkillResolver.ts | 未標出處 | 概: 位移（push）：以施放者為中心 pushRadius（預設 3x3）內的敵軍遠離施放者 pushSteps 格（PROG-2-0767）。 |
-| ResetSkillResolver.ts | 未標出處 | 概: （無檔頭說明） |
-| RootSkillResolver.ts | 未標出處 | 概: 定身（root）：以施放者為中心的 3x3 內所有敵軍施加 Rooted（PROG-2-0764）。 |
-| SlowSkillResolver.ts | 未標出處 | 概: 緩速（slow）：目標施加 Slow，下一回合移動力減少（PROG-2-0765）。 |
+| BuffDebuffSkillResolver.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| CounterSkillResolver.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| DotSkillResolver.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| FireGodHuntSkillResolver.ts | doc_spec_0038 | 概: 火神狩獵（push-fire，PROG-2-0771）：單體敵軍遠離施放者 pushSteps 格， |
+| FormationZoneSkillResolver.ts | doc_spec_0038 | 概: 八陣圖（PROG-2-0761）：以施放者腳下為中心，3x3 區域成為持續防禦區。 |
+| HealSkillResolver.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| LinkSkillResolver.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| MoraleSkillResolver.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| ProjectedDamageSkillResolver.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| PushSkillResolver.ts | doc_spec_0038 | 概: 位移（push）：以施放者為中心 pushRadius（預設 3x3）內的敵軍遠離施放者 pushSteps 格（PROG-2-0767）。 |
+| ResetSkillResolver.ts | doc_spec_0038 | 概: （無檔頭說明） |
+| RootSkillResolver.ts | doc_spec_0038 | 概: 定身（root）：以施放者為中心的 3x3 內所有敵軍施加 Rooted（PROG-2-0764）。 |
+| SlowSkillResolver.ts | doc_spec_0038 | 概: 緩速（slow）：目標施加 Slow，下一回合移動力減少（PROG-2-0765）。 |
 
 #### Core / Dialogue (`assets/scripts/core/dialogue/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| NpcMemoryAdapter.ts | 未標出處 | 概: （無檔頭說明） |
+| NpcMemoryAdapter.ts | doc_spec_0176, doc_spec_0177 | 概: （無檔頭說明） |
 
 #### Shared (`assets/scripts/shared/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
 | BattleEntryParams.ts | doc_index_0007 | 概: 統一的戰場入口參數。 |
-| BattleSkillPresentation.ts | 未標出處 | 概: （無檔頭說明） |
-| CommonEnums.ts | 未標出處 | 概: 全域共享的基礎列舉 |
-| SkillRuntimeContract.ts | 未標出處 | 概: Shared skill runtime draft contracts. |
-| TallyCardContract.ts | 未標出處 | 概: 虎符適性資料（TRP-13，全部選填；缺的欄位用預設：地形 B、無家族、無性別偏好、無史實羈絆）。 |
+| BattleSkillPresentation.ts | doc_spec_0038, doc_ui_0001 | 概: （無檔頭說明） |
+| CommonEnums.ts | doc_spec_0040, doc_tech_0015 | 概: 全域共享的基礎列舉 |
+| SkillRuntimeContract.ts | doc_spec_0038, doc_spec_0030 | 概: Shared skill runtime draft contracts. |
+| TallyCardContract.ts | doc_spec_0012 | 概: 虎符適性資料（TRP-13，全部選填；缺的欄位用預設：地形 B、無家族、無性別偏好、無史實羈絆）。 |
 
 #### Shared / Interfaces (`assets/scripts/shared/interfaces/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| IBattleUIBridge.ts | 未標出處 | 概: 戰場與 UI 通信介面（shared 層） |
-| IBattleUIComponents.ts | 未標出處 | 概: 戰場相關 UI 元件的抽象介面集合，用於解除 Battle 模組對 UI 具體實作的依賴。 |
-| IUIInterfaces.ts | 未標出處 | 概: 通用 UI 管理介面，用於解除 Core 對 UI 具體實作的依賴。 |
+| IBattleUIBridge.ts | doc_ui_0001 | 概: 戰場與 UI 通信介面（shared 層） |
+| IBattleUIComponents.ts | doc_ui_0001 | 概: 戰場相關 UI 元件的抽象介面集合，用於解除 Battle 模組對 UI 具體實作的依賴。 |
+| IUIInterfaces.ts | doc_ui_0049 | 概: 通用 UI 管理介面，用於解除 Core 對 UI 具體實作的依賴。 |
 
 #### Ui / Components / Character-Ds3 (`assets/scripts/ui/components/character-ds3/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| CharacterDs3AptitudeChild.ts | 未標出處 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
-| CharacterDs3BloodlineChild.ts | 未標出處 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
-| CharacterDs3EquipChild.ts | 未標出處 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
-| CharacterDs3OverviewChild.ts | 未標出處 | 概: （無檔頭說明） |
-| CharacterDs3StatsChild.ts | 未標出處 | 概: （無檔頭說明） |
-| CharacterDs3TacticsChild.ts | 未標出處 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
-| GeneralDetailChromePresenter.ts | 未標出處 | 概: 依當前 tab 同步 PortraitImage 可見性。 |
+| CharacterDs3AptitudeChild.ts | doc_ui_0012 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
+| CharacterDs3BloodlineChild.ts | doc_ui_0012 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
+| CharacterDs3EquipChild.ts | doc_ui_0012 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
+| CharacterDs3OverviewChild.ts | doc_ui_0012 | 概: （無檔頭說明） |
+| CharacterDs3StatsChild.ts | doc_ui_0012 | 概: （無檔頭說明） |
+| CharacterDs3TacticsChild.ts | doc_ui_0012 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
+| GeneralDetailChromePresenter.ts | doc_ui_0012 | 概: 依當前 tab 同步 PortraitImage 可見性。 |
 
 #### Ui / Components / Gacha-Ds3 (`assets/scripts/ui/components/gacha-ds3/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| GachaDs3GeneralChild.ts | 未標出處 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
-| GachaDs3LegendaryChild.ts | 未標出處 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
+| GachaDs3GeneralChild.ts | doc_spec_0042 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
+| GachaDs3LegendaryChild.ts | doc_spec_0042 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
 | GachaDs3SupportChild.ts | 未登錄：WBS v6 OPEN-10（紅顏池展示畫面，接在轉蛋 Support 分頁下方 | 概: doc_other_0009 — generated by generate-tab-childpanels.js (M33) |
 
 #### Ui / Components / General-Detail (`assets/scripts/ui/components/general-detail/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| GeneralDetailAptitudeChild.ts | 未標出處 | 概: GeneralDetailAptitudeChild |
-| GeneralDetailBasicsChild.ts | 未標出處 | 概: GeneralDetailBasicsChild |
-| GeneralDetailBloodlineChild.ts | 未標出處 | 概: GeneralDetailBloodlineChild |
-| GeneralDetailExtendedChild.ts | 未標出處 | 概: GeneralDetailExtendedChild |
-| GeneralDetailFormatters.ts | 未標出處 | 概: GeneralDetailFormatters |
-| GeneralDetailOverviewBindPathPolicy.ts | 未標出處 | 概: （無檔頭說明） |
-| GeneralDetailOverviewVisuals.ts | 未標出處 | 概: GeneralDetailOverviewVisuals |
-| GeneralDetailRecordChild.ts | 未標出處 | 概: GeneralDetailRecordChild |
-| GeneralDetailSkillsChild.ts | 未標出處 | 概: GeneralDetailSkillsChild |
-| GeneralDetailStatsChild.ts | 未標出處 | 概: GeneralDetailStatsChild |
-| TabBindPathPolicy.ts | 未標出處 | 概: TabBindPathPolicy |
+| GeneralDetailAptitudeChild.ts | doc_ui_0012 | 概: GeneralDetailAptitudeChild |
+| GeneralDetailBasicsChild.ts | doc_ui_0012 | 概: GeneralDetailBasicsChild |
+| GeneralDetailBloodlineChild.ts | doc_ui_0012, doc_spec_0011 | 概: GeneralDetailBloodlineChild |
+| GeneralDetailExtendedChild.ts | doc_ui_0012 | 概: GeneralDetailExtendedChild |
+| GeneralDetailFormatters.ts | doc_ui_0012 | 概: GeneralDetailFormatters |
+| GeneralDetailOverviewBindPathPolicy.ts | doc_ui_0012 | 概: （無檔頭說明） |
+| GeneralDetailOverviewVisuals.ts | doc_ui_0012 | 概: GeneralDetailOverviewVisuals |
+| GeneralDetailRecordChild.ts | doc_ui_0012, doc_spec_0019 | 概: GeneralDetailRecordChild |
+| GeneralDetailSkillsChild.ts | doc_ui_0012 | 概: GeneralDetailSkillsChild |
+| GeneralDetailStatsChild.ts | doc_ui_0012 | 概: GeneralDetailStatsChild |
+| TabBindPathPolicy.ts | doc_ui_0012 | 概: TabBindPathPolicy |
 
 #### Ui / Components / Portrait (`assets/scripts/ui/components/portrait/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| PortraitSoftMask.ts | 未標出處 | 概: （無檔頭說明） |
+| PortraitSoftMask.ts | doc_ui_0012 | 概: （無檔頭說明） |
 
 #### Ui / Dev (`assets/scripts/ui/dev/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| GachaDevOverlay.ts | 未標出處 | 概: disable-next-line @typescript-eslint/no-unused-vars |
+| GachaDevOverlay.ts | doc_spec_0042 | 概: disable-next-line @typescript-eslint/no-unused-vars |
 
 #### Ui / Platform / Cocos (`assets/scripts/ui/platform/cocos/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| CocosCompositeRenderer.ts | 未標出處 | 概: （無檔頭說明） |
-| CocosNodeFactory.ts | 未標出處 | 概: CocosNodeFactory |
+| CocosCompositeRenderer.ts | doc_ui_0049 | 概: （無檔頭說明） |
+| CocosNodeFactory.ts | doc_ui_0049 | 概: CocosNodeFactory |
 | CocosScrollVirtualizer.ts | doc_index_0007 | 概: CocosScrollVirtualizer |
 
 #### Ui / Platform / Unity (`assets/scripts/ui/platform/unity/`)
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| UnityNodeFactory.ts | 未標出處 | 概: UnityNodeFactory (stub) |
+| UnityNodeFactory.ts | doc_ui_0049 | 概: UnityNodeFactory (stub) |
 
 #### UI Spec JSON（三層 JSON 系統；由 `node tools_node/rebuild-crossref.js --rebuild-screens` 自動產生）
 

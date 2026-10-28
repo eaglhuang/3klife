@@ -1,3 +1,4 @@
+// @spec-source → 武將戰績系統.md (doc_spec_0019)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * BattleSeasonStats — 武將賽季戰績：賽季分段累加與切換重置（純邏輯，不依賴 cc）
  *

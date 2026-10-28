@@ -1,3 +1,4 @@
+// @spec-source → UI技術規格書.md (doc_ui_0049)；PROG-2-1429 依建檔紀錄補標出處
 import { _decorator, Color, Component, Node, Rect, Sprite, SpriteFrame, Texture2D, UITransform } from 'cc';
 
 const { ccclass, executeInEditMode, requireComponent } = _decorator;

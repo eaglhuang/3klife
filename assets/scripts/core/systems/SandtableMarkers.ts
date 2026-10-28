@@ -1,3 +1,4 @@
+// @spec-source → 官職系統.md (doc_spec_0014)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * SandtableMarkers — 世界沙盤標記數量上限（純邏輯，不依賴 cc）
  *

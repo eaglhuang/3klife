@@ -1,3 +1,4 @@
+// @spec-source → 武將人物介面規格書.md (doc_ui_0012)、血統理論系統.md (doc_spec_0011)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * GeneralDetailBloodlineChild
  *

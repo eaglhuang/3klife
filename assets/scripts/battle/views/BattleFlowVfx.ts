@@ -1,3 +1,4 @@
+// @spec-source → 主戰場UI規格書.md (doc_ui_0001)；PROG-2-1429 依建檔紀錄補標出處
 import { Vec3 } from "cc";
 import { SkillSourceType } from "../../shared/SkillRuntimeContract";
 

@@ -1,3 +1,4 @@
+// @spec-source → 戰場格子系統.md (doc_spec_0044)；PROG-2-1429 依建檔紀錄補標出處
 // 地形修正值（REV-02）：對應 assets/resources/data/terrain.json。
 // runtime 仍以 Constants.ts 的 TERRAIN_ATTACK_MOD / TERRAIN_DEFENSE_MOD 為準，
 // 本檔只負責驗證資料檔結構，並由 tests/TerrainConfig.test.ts 與 Constants.ts 交叉比對。

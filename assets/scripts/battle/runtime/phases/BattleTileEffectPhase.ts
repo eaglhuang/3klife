@@ -1,3 +1,4 @@
+// @spec-source → 戰場格子系統.md (doc_spec_0044)、戰場適性系統.md (doc_spec_0041)；PROG-2-1429 依建檔紀錄補標出處
 import { Faction } from '../../../core/config/Constants';
 import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';

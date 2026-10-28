@@ -1,3 +1,4 @@
+// @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
 import { BlockInputEvents, Button, Canvas, Color, Director, director, Label, Layout, Mask, Node, ScrollView, UITransform, Widget } from 'cc';
 import { DEV } from 'cc/env';
 import { services } from '../../core/managers/ServiceLoader';

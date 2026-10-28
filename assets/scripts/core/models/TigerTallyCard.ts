@@ -1,3 +1,4 @@
+// @spec-source → 兵種（虎符）系統.md (doc_spec_0012)；PROG-2-1429 依建檔紀錄補標出處
 /** 虎符為可移交的獨立卡片；來源異動不改寫原始產出季節。 */
 export type TigerTallyQuality = 'R' | 'SR' | 'SSR' | 'UR';
 

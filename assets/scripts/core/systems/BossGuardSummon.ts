@@ -1,3 +1,4 @@
+// @spec-source → 關卡設計系統.md (doc_spec_0049)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * BossGuardSummon — Boss 親衛隊召喚觸發判定（WBS v7 LVL-11，PROG-2-0599）
  *

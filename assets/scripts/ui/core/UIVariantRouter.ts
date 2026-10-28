@@ -1,3 +1,4 @@
+// @spec-source → UI技術規格書.md (doc_ui_0049)；PROG-2-1429 依建檔紀錄補標出處
 // doc_id: doc_other_0009 — UCUF Variant Router (M31)
 //
 // Purpose:

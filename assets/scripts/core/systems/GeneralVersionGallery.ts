@@ -1,3 +1,4 @@
+// @spec-source → 同名武將系統.md (doc_spec_0005)、武將系統.md (doc_spec_0016)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * GeneralVersionGallery — 同名武將版本圖鑑（SAME-01 項 5 / PROG-2-0707，純邏輯，不依賴 cc）
  *

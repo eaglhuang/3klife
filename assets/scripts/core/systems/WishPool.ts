@@ -1,3 +1,4 @@
+// @spec-source → 經濟系統.md (doc_spec_0032)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * WishPool — 許願池免費許願軌（doc_spec_0032 §E-6，PROG-2-1198）
  *

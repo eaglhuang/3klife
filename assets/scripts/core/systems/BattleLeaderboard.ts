@@ -1,3 +1,4 @@
+// @spec-source → 武將戰績系統.md (doc_spec_0019)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * BattleLeaderboard — 武將戰績排行榜：依傷害、擊殺或守護力排序（純邏輯，不依賴 cc）
  *

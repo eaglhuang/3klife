@@ -1,3 +1,4 @@
+// @spec-source → 同名武將系統.md (doc_spec_0005)；PROG-2-1429 依建檔紀錄補標出處
 /**
  * GeneralVersionGalleryController — 同名武將版本圖鑑畫面的狀態（PROG-2-0708 cc 接線，純邏輯，不依賴 cc）
  *

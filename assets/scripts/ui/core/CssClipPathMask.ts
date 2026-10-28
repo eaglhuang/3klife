@@ -1,3 +1,4 @@
+// @spec-source → UI技術規格書.md (doc_ui_0049)；PROG-2-1429 依建檔紀錄補標出處
 import { _decorator, Color, Component, Graphics, Mask, Node, UITransform } from 'cc';
 
 const { ccclass, executeInEditMode, property, requireComponent } = _decorator;

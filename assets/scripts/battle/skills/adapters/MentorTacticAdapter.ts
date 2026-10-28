@@ -1,3 +1,4 @@
+// @spec-source → 教官系統（支援卡）.md (doc_spec_0027)、戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
 import type { GeneralUnit } from '../../../core/models/GeneralUnit';
 import { SkillSourceType, type CanonicalTacticDefinition } from '../../../shared/SkillRuntimeContract';
 import { SeedTacticAdapter, type SeedTacticRequestOptions } from './SeedTacticAdapter';

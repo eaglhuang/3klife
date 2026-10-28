@@ -1,3 +1,4 @@
+// @spec-source → 戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
 import { Faction, GAME_CONFIG } from '../../../core/config/Constants';
 import type { BattleSkillRequest, SkillExecutionResult } from '../../../shared/SkillRuntimeContract';
 import { FORMATION_ZONE_TURNS, FORMATION_ZONE_MULTIPLIER, type FormationZone } from '../../shared/FormationZone';
