@@ -143,6 +143,7 @@ import { provisionalTeachingSpirit } from '../../core/systems/TeachingSpiritProv
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { warnGeneralSchemaOnLoad } from '../../core/models/GeneralSchema';
+import { coreFieldCoverage, formatCoreFieldCoverage } from '../../core/systems/GeneralCoreFields';
 import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { buildGachaPoolGuideLines } from '../core/GachaPoolGuidePresenter';
 import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
@@ -527,6 +528,8 @@ export class LobbyScene extends Component {
             );
             // 武將資料格式檢查（MVP-01）：只警告，不中斷大廳載入
             warnGeneralSchemaOnLoad(this._generals, 'LobbyScene data/generals');
+            // 核心欄位覆蓋率（GDP-05）：只記一行摘要，不擋大廳載入
+            UCUFLogger.info(LogCategory.DATA, `[GeneralCoreFields] ${formatCoreFieldCoverage(coreFieldCoverage(this._generals))}`);
             // 俘虜來投需要依 uid 查回武將配置（POW-07）
             services().session.setGeneralTemplates(this._generals);
             const encounterEnvelope = await services().resource.loadJson<{ encounters: EncounterConfig[] }>(

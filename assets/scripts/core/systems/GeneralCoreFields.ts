@@ -27,8 +27,9 @@ function isEmptyValue(value: unknown): boolean {
 }
 
 /** 回傳這位武將缺少值的核心欄位（依規格順序） */
-export function missingCoreFields(general: Record<string, unknown>): string[] {
-    return GENERAL_CORE_FIELDS.filter((field) => isEmptyValue(general[field]));
+export function missingCoreFields(general: object): string[] {
+    const record = general as Record<string, unknown>;
+    return GENERAL_CORE_FIELDS.filter((field) => isEmptyValue(record[field]));
 }
 
 export interface CoreFieldCoverage {
@@ -39,7 +40,7 @@ export interface CoreFieldCoverage {
 }
 
 /** 統計一批武將的核心欄位覆蓋率 */
-export function coreFieldCoverage(generals: readonly Record<string, unknown>[]): CoreFieldCoverage {
+export function coreFieldCoverage(generals: readonly object[]): CoreFieldCoverage {
     const missingByField: Record<string, number> = {};
     let complete = 0;
     for (const general of generals) {
@@ -48,4 +49,14 @@ export function coreFieldCoverage(generals: readonly Record<string, unknown>[]):
         for (const field of missing) missingByField[field] = (missingByField[field] ?? 0) + 1;
     }
     return { total: generals.length, complete, missingByField };
+}
+
+/** 覆蓋率摘要的一行文字：完整數／總數，缺值最多的前三個欄位；全部完整時只顯示完整數（PROG-2-1372）。 */
+export function formatCoreFieldCoverage(coverage: CoreFieldCoverage): string {
+    const head = `核心欄位完整 ${coverage.complete}/${coverage.total}`;
+    const worst = Object.entries(coverage.missingByField)
+        .sort((a, b) => b[1] - a[1] || GENERAL_CORE_FIELDS.indexOf(a[0]) - GENERAL_CORE_FIELDS.indexOf(b[0]))
+        .slice(0, 3)
+        .map(([field, count]) => `${field}×${count}`);
+    return worst.length === 0 ? head : `${head}，缺值最多：${worst.join(' ')}`;
 }
