@@ -94,8 +94,15 @@ export function buildBattleSkillUsedMessage(
   skillId: string,
   faction: Faction,
   sourceType?: SkillSourceType,
+  generalName?: string,
 ): string {
   const presentation = getBattleSkillPresentation(skillId);
+  // AI武將強度 G-2（PROG-2-1469）：敵將有名字時改用敵將發動文案，奧義加全軍警示
+  if (faction === Faction.Enemy && generalName) {
+    return sourceType === SkillSourceType.Ultimate
+      ? `危急！敵將 ${generalName} 發動奧義——${presentation.name}！全軍戒備！`
+      : `敵將 ${generalName} 發動戰法——${presentation.name}！`;
+  }
   const who = faction === Faction.Player ? '我方' : '敵方';
   const sourceLabel = sourceType === SkillSourceType.Ultimate ? '奧義' : '戰法';
   return `${who}${sourceLabel}【${presentation.categoryTag}】：${presentation.name}`;

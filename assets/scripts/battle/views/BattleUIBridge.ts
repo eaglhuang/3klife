@@ -552,11 +552,11 @@ export class BattleUIBridge {
     });
   }
 
-  private _onGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType }): void {
+  private _onGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {
     this.refreshBattleViews();
     const skillId = data.skillId ?? data.skillName ?? null;
     if (!skillId) return;
-    this.appendLog(buildBattleSkillUsedMessage(skillId, data.faction, data.sourceType));
+    this.appendLog(buildBattleSkillUsedMessage(skillId, data.faction, data.sourceType, data.generalName));
 
     const effectKey = resolveBattleGeneralSkillEffectKey(data.sourceType);
     playBattleFlowEffectAtBoardCenter(services().effect, this.ctx.boardRenderer, effectKey, 1.35);

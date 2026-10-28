@@ -847,6 +847,7 @@ export class BattleController {
       skillName: choice.battleSkillId,
       skillId: choice.battleSkillId,
       sourceType: SkillSourceType.Ultimate,
+      generalName: general.name,
     });
   }
 
