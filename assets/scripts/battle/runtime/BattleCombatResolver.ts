@@ -13,7 +13,7 @@ import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
-import { extraAttackHitsOf } from '../shared/TallyPassive';
+import { extraAttackHitsOf, tallyAttackMultiplierOf } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import { tacticTriggerRate } from '../../core/systems/TacticTriggerRate';
@@ -51,10 +51,12 @@ export class BattleCombatResolver {
   constructor(private readonly context: BattleCombatResolverContext) {}
 
   /** 部隊所在格的適性修正：取同陣營主將的兵種 / 地形 / 天氣適性（PROG-2-0071） */
-  /** 虎符部隊的攻擊乘數：星級 × 同陣營在場 Set 的攻擊加成（PROG-2-0574）；非虎符單位恆為 1 */
+  /** 虎符部隊的攻擊乘數：星級 × 同陣營在場 Set 的攻擊加成（PROG-2-0574）× 被動地形加成（PROG-2-1433）；非虎符單位恆為 1 */
   public getTallyAttackMod(unit: TroopUnit): number {
     if (!unit.tallyId) return 1;
-    return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).atkMod;
+    // 虎符被動攻擊加成（解煩／丹陽／吳國，PROG-2-1433）：依部隊所站地形判定
+    const terrain = this.context.state.getCell(unit.lane, unit.depth)?.terrain ?? TerrainType.Plain;
+    return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).atkMod * tallyAttackMultiplierOf(unit, terrain);
   }
 
   /** 虎符部隊的防禦乘數：星級 × 同陣營在場 Set 的防禦加成（PROG-2-0574）；非虎符單位恆為 1 */
