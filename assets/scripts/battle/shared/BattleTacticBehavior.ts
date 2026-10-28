@@ -56,6 +56,8 @@ export interface BattleTacticBehavior {
   getAccuracyDelta?(attacker: TroopUnit, state: BattleState): number;
   /** 場景對攻擊方暴擊率的加成（個百分點，SCN-06）；沒有則為 0 */
   getCritBonus?(attacker: TroopUnit, state: BattleState): number;
+  /** 場景對單位承受火焰傷害的倍率（火格、火計）；沒有則為 1 */
+  getFireDamageTakenMultiplier?(unit: TroopUnit, state: BattleState): number;
 }
 
 const FLOOD_DEPTH_START = 2;
@@ -66,6 +68,8 @@ const FIRE_DAMAGE_PER_TURN = 15;
 /** 夜襲全局命中 -25%、暴擊 +20%（戰法場景規格書；PM 裁定 (a)，以規格為準，取代先制增傷） */
 const NIGHT_RAID_HIT_DELTA = -0.25;
 const NIGHT_RAID_CRIT_BONUS = 0.2;
+/** 火燒偷襲戰我方火抗 +50%（戰法場景規格書 B-3；PROG-2-1459）：承受火焰傷害 ×0.5 */
+export const FIRE_RAID_PLAYER_FIRE_DAMAGE_TAKEN = 0.5;
 
 /** 目前天氣下水攻應淹沒的格子（PROG-2-0406 雨天擴大；PROG-2-0407 依天氣即時重算） */
 function floodAttackCells(weather: BattleState['weather']): Array<{ lane: number; depth: number }> {
@@ -356,6 +360,10 @@ export const BATTLE_TACTIC_BEHAVIOR_REGISTRY: Readonly<Record<BattleSceneMode, B
   fire: {
     ...DEFAULT_BATTLE_TACTIC_BEHAVIOR,
     applyStartOfBattle: applyFireAttackTerrain,
+    // 場景戰法只由玩家接軍事任務發動（B-1），「我方」即玩家陣營
+    getFireDamageTakenMultiplier: (unit: TroopUnit) => (
+      unit.faction === Faction.Player ? FIRE_RAID_PLAYER_FIRE_DAMAGE_TAKEN : 1
+    ),
   },
   rock: {
     ...DEFAULT_BATTLE_TACTIC_BEHAVIOR,
@@ -402,4 +410,9 @@ export const BATTLE_TACTIC_BEHAVIOR_REGISTRY: Readonly<Record<BattleSceneMode, B
 
 export function resolveBattleTacticBehavior(battleTactic: BattleTactic): BattleTacticBehavior {
   return BATTLE_TACTIC_BEHAVIOR_REGISTRY[resolveBattleSceneMode(battleTactic)];
+}
+
+/** 目前場景下單位承受火焰傷害的倍率（PROG-2-1459）；場景沒有規則時為 1 */
+export function sceneFireDamageTakenOf(unit: TroopUnit, state: BattleState): number {
+  return resolveBattleTacticBehavior(state.battleTactic).getFireDamageTakenMultiplier?.(unit, state) ?? 1;
 }

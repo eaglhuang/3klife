@@ -27,6 +27,8 @@ export interface BattleSkillExecutionContext {
   getCasterUnitId?(casterFaction: Faction): string | null;
   /** 站位上的持續防禦區倍率（PROG-2-0761）；舊測試 context 可不提供，視為 1 */
   getDefenseZoneMultiplier?(unit: TroopUnit): number;
+  /** 場景對目標承受火計傷害的倍率（火燒偷襲戰我方火抗，PROG-2-1459）；舊測試 context 可不提供，視為 1 */
+  getSceneFireDamageTakenMultiplier?(unit: TroopUnit): number;
   /** 新增持續防禦區（PROG-2-0761） */
   addFormationZone?(zone: FormationZone): void;
   /** 位移：目標格是否可站立（PROG-2-0767）；舊測試 context 可不提供，視為不可位移 */
