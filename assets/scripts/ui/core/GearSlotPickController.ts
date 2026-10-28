@@ -178,6 +178,8 @@ export class GearSlotPickController {
         actives.btnGearManage = this._slot !== null;
         actives.btnGearLock = selected !== null;
         actives.btnGearDecompose = selected !== null;
+        actives.btnGearPickClose = this._slot !== null;
+        texts.gearPickCloseLabel = '關閉';
         return { texts, actives };
     }
 

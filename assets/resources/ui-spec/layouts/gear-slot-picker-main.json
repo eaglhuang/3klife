@@ -84,6 +84,14 @@
             "height": 52,
             "onClick": "decomposeGear",
             "children": [{ "type": "label", "name": "gearDecomposeLabel", "id": "gearDecomposeLabel", "styleSlot": "gear.picker.row" }]
+          },
+          {
+            "type": "button",
+            "name": "btnGearPickClose",
+            "id": "btnGearPickClose",
+            "height": 52,
+            "onClick": "closeGearPick",
+            "children": [{ "type": "label", "name": "gearPickCloseLabel", "id": "gearPickCloseLabel", "styleSlot": "gear.picker.row" }]
           }
         ]
       }

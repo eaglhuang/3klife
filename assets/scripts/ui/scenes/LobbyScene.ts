@@ -140,6 +140,7 @@ import { SolidBackground } from '../components/SolidBackground';
 import { ToastMessage } from '../components/ToastMessage';
 import { applyUIPreviewBinderState } from '../core/UIPreviewStateApplicator';
 import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPayload } from '../core/SpiritFamilyOverviewRoute';
+import { buildMirrorFateStrip, type MirrorFateCell } from '../../core/systems/MirrorFateStrip';
 import { familyOverviewHotspotVisible } from '../../core/systems/FamilyOverviewHotspot';
 import { BLOODLINE_MIRROR_LOADING_TIPS_PATH, LoadingTipsContent, pickLoadingTips } from '../../core/systems/LoadingTips';
 import { provisionalTeachingSpirit } from '../../core/systems/TeachingSpiritProvisional';
@@ -4450,13 +4451,27 @@ export class LobbyScene extends Component {
             future: 'StoryStrip/StoryCellFuture',
         } as const;
 
-        for (const [key, basePath] of Object.entries(storyPathMap) as Array<[keyof typeof storyPathMap, string]>) {
-            const storyCell = displayModel.storyCells[key];
+        // 從武將命頁進入且武將有故事條時，改用該武將的 5 格命運帶（STORY-04）；否則維持世家預設文字
+        const fateCells = this._fateStripOf(payload?.generalId);
+        Object.entries(storyPathMap).forEach(([key, basePath], index) => {
+            const storyCell = fateCells?.[index] ?? displayModel.storyCells[key as keyof typeof storyPathMap];
             binder.setTextsByPath({
                 [`${basePath}/StoryTitle`]: storyCell.title,
                 [`${basePath}/StoryBody`]: storyCell.body,
             });
+        });
+    }
+
+    /** 依武將 id 取 5 格命運帶；找不到武將或沒有故事條時回傳 null。 */
+    private _fateStripOf(generalId: string | undefined): MirrorFateCell[] | null {
+        if (!generalId) {
+            return null;
         }
+        const config = services().session.roster.find((general) => general.id === generalId);
+        if (!config?.storyStripCells?.length) {
+            return null;
+        }
+        return buildMirrorFateStrip(config.storyStripCells);
     }
 
     /**
