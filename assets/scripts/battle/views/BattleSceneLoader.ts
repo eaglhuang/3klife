@@ -8,6 +8,7 @@ import { assetManager, AudioClip } from "cc";
 import { services } from "../../core/managers/ServiceLoader";
 import { GeneralUnit, GeneralConfig } from "../../core/models/GeneralUnit";
 import { Faction } from "../../core/config/Constants";
+import type { UltimateEffectFamily } from "../../shared/SkillRuntimeContract";
 import type { CreateSortieInput } from '../../core/systems/SortieDeploy';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 
@@ -57,6 +58,12 @@ let ultBasePowerTable: Readonly<Record<string, number>> | undefined;
 /** 奧義的精力成本比例（例如 0.05 = 5%）；定義尚未載入或查不到時回傳 undefined（PROG-2-0429） */
 export function findUltimateVitalityCostPct(ultimateId: string): number | undefined {
   return ultimateDefinitionMap.get(ultimateId)?.vitalityCostPct;
+}
+
+/** 奧義的效果家族（ULT-13，敵方 AI 依家族決定施放時機）；定義查不到或沒填時回傳 undefined */
+export function findUltimateFamily(ultimateId: string): UltimateEffectFamily | null | undefined {
+  const def = ultimateDefinitionMap.get(ultimateId);
+  return def?.ultimateFamily ?? def?.family;
 }
 
 /** 奧義的槽位與主屬性（奧義攻擊基準用，PROG-2-0927）；查不到時回傳 undefined */
