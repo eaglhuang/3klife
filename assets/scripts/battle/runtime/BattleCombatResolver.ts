@@ -27,11 +27,13 @@ import {
   applyFearCharge,
   tallySplashTargetsOf,
   tallyDamageGuardOf,
+  tallyIgniteCellsOf,
 } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import { tacticTriggerRate } from '../../core/systems/TacticTriggerRate';
-import { tileStateRuleOf } from '../shared/TileStateRules';
+import { isFixedTileState, tileStateRuleOf } from '../shared/TileStateRules';
+import { FIRE_HAZARD_DAMAGE_PER_TURN } from '../skills/SkillEffectFormulas';
 import {
   canNavalCombinedAttack,
   hasNavalAptitude,
@@ -303,12 +305,30 @@ export class BattleCombatResolver {
       allowDamageLink: true,
     });
     this.resolveTallySplash(attacker, defender, damage, svc);
+    this.resolveTallyIgnite(attacker, defender);
 
     if (!defender.isDead()) {
       this.tryTriggerCounterReaction(defender, attacker, svc);
     }
     this.resolveNavalCombinedFollowUp(attacker, defender, svc);
     this.resolveKinComboFollowUp(attacker, defender, svc);
+  }
+
+  /** 都督符火燒連營（PROG-2-1531）：目標及周圍格設為火場；固定地形格不覆蓋（同技能火場） */
+  private resolveTallyIgnite(attacker: TroopUnit, defender: TroopUnit): void {
+    const state = this.context.state;
+    for (const cell of tallyIgniteCellsOf(attacker, defender)) {
+      const existing = state.getTileEffect(cell.lane, cell.depth);
+      if (existing && isFixedTileState(existing.state)) continue;
+      state.setTileEffect({
+        id: `tally-fire-${cell.lane}-${cell.depth}`,
+        lane: cell.lane,
+        depth: cell.depth,
+        state: 'hazard-fire',
+        damagePerTurn: FIRE_HAZARD_DAMAGE_PER_TURN,
+        notes: 'tally:du-du-fu',
+      });
+    }
   }
 
   /** 南蠻巨型踐踏濺射（PROG-2-1527）：目標周圍敵軍受主傷害比例傷害，不反擊、不連結；打死照常結算 */
