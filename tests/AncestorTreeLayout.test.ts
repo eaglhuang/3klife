@@ -67,5 +67,12 @@ export function createAncestorTreeLayoutSuite(): TestSuite {
         assert.isTrue(locked.locked);
     });
 
+    suite.test('peek 徽記：有因子色時給對應的語系 key，無因子色為 null（BUI-08）', () => {
+        const source = { name: '趙雲', faction: 'shu' };
+        assert.equals('ui.gene.tag.red', ancestorPeekView(source, true, 'red').badgeKey);
+        assert.equals(null, ancestorPeekView(source, true).badgeKey);
+        assert.equals('ui.gene.tag.blue', ancestorPeekView(source, false, 'blue').badgeKey);
+    });
+
     return suite;
 }
