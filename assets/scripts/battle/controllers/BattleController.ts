@@ -267,6 +267,7 @@ export class BattleController {
     this.state.reset(playerGeneral, enemyGeneral, terrainGrid, weather, battleTactic);
     this.state.aiDifficulty = aiDifficulty;
     this.state.aiDuelAcceptThreshold = null;
+    this.state.aiSpGainModifier = 1;
     this.state.aiDifficultyBonus = aiDifficultyBonus;
     this.state.aiIq = 'LOW';
     this.state.aiCanUseUltimate = false;
@@ -523,6 +524,7 @@ export class BattleController {
     this.state.aiDuelAcceptThreshold = entry.duelAcceptThreshold;
     this.state.aiIq = entry.aiIq;
     this.state.aiCanUseUltimate = entry.canUseUltimate;
+    this.state.aiSpGainModifier = entry.spGainModifier;
   }
 
   public configureSortie(input: CreateSortieInput): SortieState {

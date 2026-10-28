@@ -252,6 +252,7 @@
   "ui.gene.tag.white": "⚪ 天赋因子",
   "ui.gene.tag.red": "🔴 体魄因子",
   "ui.vit.script.exhausted": "{0} 已精疲力竭，暂无法行动。",
+  "ui.oracle.locked": "此名士尚未解锁（需累计占卜 {N} 次）",
   "ui.vit.script.pill_used": "{0} 服下补元散，精力恢复！",
   "ui.vit.script.pregnancy_lock": "{0} 正在待产中，精力恢复暂停…",
   "ui.vit.script.hint_late_bloomer": "{0} 虽然虚弱，但眼中似有异光…",

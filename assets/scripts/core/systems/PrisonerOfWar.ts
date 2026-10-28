@@ -79,6 +79,30 @@ export const FUTURE_RETURN_CHANCE = 0.05;
 export const PRISON_SLOTS_INITIAL = 3;
 export const PRISON_SLOTS_MAX = 10;
 
+/**
+ * 監獄容量表（ECO-14，依主城等級；PM 暫定，企劃可改此表）：
+ * 等級 1–2 為 3、每兩級 +1、等級 15 起封頂 10，即 min(10, 3 + floor((Lv − 1) / 2))。
+ */
+export const PRISON_CAPACITY_BY_LEVEL: readonly { fromLevel: number; capacity: number }[] = [
+    { fromLevel: 1, capacity: 3 },
+    { fromLevel: 3, capacity: 4 },
+    { fromLevel: 5, capacity: 5 },
+    { fromLevel: 7, capacity: 6 },
+    { fromLevel: 9, capacity: 7 },
+    { fromLevel: 11, capacity: 8 },
+    { fromLevel: 13, capacity: 9 },
+    { fromLevel: 15, capacity: PRISON_SLOTS_MAX },
+];
+
+/** 主城等級對應的監獄容量；等級低於表內第一列時取第一列 */
+export function prisonCapacityOf(territoryLevel: number): number {
+    let capacity = PRISON_CAPACITY_BY_LEVEL[0].capacity;
+    for (const row of PRISON_CAPACITY_BY_LEVEL) {
+        if (territoryLevel >= row.fromLevel) capacity = row.capacity;
+    }
+    return capacity;
+}
+
 /** 試用傭兵旗標（傭兵系統 Template.Flag） */
 export const MERC_TRIAL_FLAG = 'MERC_TRIAL';
 
@@ -376,13 +400,4 @@ export function rollFutureReturns<T = unknown>(
         else remaining.push(entry);
     }
     return { state: { ...state, released: remaining }, returned };
-}
-
-/**
- * 監獄擴容一次 +1 格（暫定：規格未寫步數與費用，費用由呼叫端扣）。
- * 已達 PRISON_SLOTS_MAX 時回傳原狀態與 ok=false，不改輸入。
- */
-export function expandPrisonSlots<T = unknown>(state: PrisonState<T>): { state: PrisonState<T>; ok: boolean } {
-    if (state.slots >= PRISON_SLOTS_MAX) return { state, ok: false };
-    return { state: { ...state, slots: state.slots + 1 }, ok: true };
 }

@@ -8,6 +8,7 @@
  *
  * Unity 對照：像一個 ScriptableObject 文案表，Prefab 只綁定欄位名，內容從資料來。
  */
+import { countdownStatus, OPENING_TRAVEL_TARGET_ID, type CountdownState } from './CountdownManager';
 
 export const RED_FACE_COPY_SEGMENTS = ['travel', 'price099', 'price2999', 'countdown'] as const;
 
@@ -50,4 +51,28 @@ export function parseRedFaceCopy(json: unknown): RedFaceCopyParseResult {
 /** 取得某段的段落文字；回傳新陣列，避免外部改到表內資料。 */
 export function redFaceCopyLines(table: Readonly<Record<RedFaceCopySegment, readonly string[]>>, segment: RedFaceCopySegment): string[] {
     return [...table[segment]];
+}
+
+export interface RedFaceTravelCopy {
+    /** 趕路段落，段落之間空一行 */
+    travel: string;
+    /** 倒數提示 */
+    countdown: string;
+}
+
+/**
+ * 開場紅顏趕路中的文案（OPEN-11 倒數來源）：只有開場趕路倒數正在進行時回傳；
+ * 沒有倒數、倒數不是開場趕路、或已到達，都回傳 null，畫面就不顯示趕路文案。
+ */
+export function redFaceTravelCopy(
+    table: Readonly<Record<RedFaceCopySegment, readonly string[]>>,
+    countdown: Readonly<CountdownState> | null,
+    now: number,
+): RedFaceTravelCopy | null {
+    if (!countdown || countdown.targetId !== OPENING_TRAVEL_TARGET_ID) return null;
+    if (countdownStatus(countdown, now).status !== 'traveling') return null;
+    return {
+        travel: redFaceCopyLines(table, 'travel').join('\n\n'),
+        countdown: redFaceCopyLines(table, 'countdown').join('\n'),
+    };
 }

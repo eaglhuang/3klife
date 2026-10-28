@@ -15,7 +15,8 @@
  */
 import { ItemUseResult } from '../../core/systems/ItemUseFlow';
 import { buildItemBagRows, ItemBagRow } from '../../core/systems/ItemBagView';
-import { ITEM_DISPLAY_NAMES, itemCount, PlayerInventory } from '../../core/systems/PlayerInventory';
+import { type ItemCategory, itemDefOf } from '../../core/systems/ItemDef';
+import { itemCount, PlayerInventory } from '../../core/systems/PlayerInventory';
 
 /** item-bag-main.json 內的列節點數＝每頁列數；超過時以上一頁／下一頁翻頁（PROG-2-1200）。 */
 export const BAG_ROW_SLOTS = 13;
@@ -47,12 +48,27 @@ export class ItemBagController {
     private _pendingConfirm = false;
     private _message = '';
     private _page = 0;
+    private _category: ItemCategory | null = null;
 
     constructor(private readonly _deps: ItemBagDeps) {}
 
-    /** 全部持有的道具列（只列數量大於 0 者）。 */
+    /** 目前的分類篩選；null 為全部分類（ITM-02）。 */
+    public get category(): ItemCategory | null {
+        return this._category;
+    }
+
+    /** 切換分類篩選：回到第一頁並取消選取與待確認的使用。 */
+    public setCategory(category: ItemCategory | null): void {
+        this._category = category;
+        this._page = 0;
+        this._selectedId = null;
+        this._pendingConfirm = false;
+        this._message = '';
+    }
+
+    /** 全部持有的道具列（只列數量大於 0 者，套用目前的分類篩選）。 */
     public allRows(): ItemBagRow[] {
-        return buildItemBagRows(this._deps.inventory(), { onlyOwned: true });
+        return buildItemBagRows(this._deps.inventory(), { onlyOwned: true, category: this._category });
     }
 
     /** 總頁數（至少 1）。 */
@@ -145,6 +161,8 @@ export class ItemBagController {
         const inventory = this._deps.inventory();
         const count = itemCount(inventory, this._selectedId);
         if (count <= 0) return null;
-        return { itemId: this._selectedId, name: ITEM_DISPLAY_NAMES[this._selectedId] ?? this._selectedId, count };
+        const def = itemDefOf(this._selectedId);
+        if (!def) return null;
+        return { itemId: def.id, name: def.name, count, category: def.category, rarity: def.rarity };
     }
 }

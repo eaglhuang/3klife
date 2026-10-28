@@ -253,7 +253,7 @@ export function createSageProphecySuite(): TestSuite {
         flow.cycleSage(1); // 龐統
         const view = flow.getView();
         assert.equals('龐統（未解鎖）', view.texts.sageName);
-        assert.equals('此名士尚未解鎖（需累計占卜 50 次，目前 0 次）', view.texts.sageInfo);
+        assert.equals('此名士尚未解鎖（需累計占卜 50 次）', view.texts.sageInfo);
         assert.equals(view.texts.sageInfo, view.texts.costLabel);
         assert.isFalse(view.enabled.btnDivine);
         assert.isFalse(view.enabled.btnPredict);

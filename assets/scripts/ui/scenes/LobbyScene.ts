@@ -112,6 +112,7 @@ import { OPENING_BEAUTY_POOL_ID, openingBeautyCandidates } from '../../core/syst
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
+import { parseRedFaceCopy, redFaceTravelCopy } from '../../core/systems/RedFaceCopy';
 import { validateSupportPool } from '../../core/systems/SupportPoolValidator';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { isDescendant } from '../../core/systems/ChildMagistrate';
@@ -139,6 +140,7 @@ import { ToastMessage } from '../components/ToastMessage';
 import { applyUIPreviewBinderState } from '../core/UIPreviewStateApplicator';
 import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPayload } from '../core/SpiritFamilyOverviewRoute';
 import { familyOverviewHotspotVisible } from '../../core/systems/FamilyOverviewHotspot';
+import { BLOODLINE_MIRROR_LOADING_TIPS_PATH, LoadingTipsContent, pickLoadingTips } from '../../core/systems/LoadingTips';
 import { provisionalTeachingSpirit } from '../../core/systems/TeachingSpiritProvisional';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
@@ -2008,10 +2010,15 @@ export class LobbyScene extends Component {
         for (const issue of validateSupportPool(poolConfigs, supportCards ?? [])) {
             console.warn(`[SupportPoolValidator] ${issue.path}: ${issue.message}`);
         }
+        const redFaceCopy = parseRedFaceCopy(await this._loadDataJson<unknown>('data/copy/red-face-copy'));
+        if (redFaceCopy.ok === false) {
+            console.warn(`[RedFaceCopy] ${redFaceCopy.reason}`);
+        }
         this._redFace = new RedFaceGalleryController({
             pool: () => (supportPool ? { candidateIds: supportPool.candidateIds ?? [] } : null),
             cards: () => supportCards ?? [],
             generalPoolIds: () => heroPoolIds,
+            travelCopy: () => (redFaceCopy.ok ? redFaceTravelCopy(redFaceCopy.table, services().session.countdown, Date.now()) : null),
         });
         const redFace = this._redFace;
         const frameBindings = Array.from({ length: PORTRAIT_GALLERY_PAGE_SIZE }, (_, i) => ({
@@ -4202,7 +4209,9 @@ export class LobbyScene extends Component {
                 host.node.active = true;
                 this._bringNodeToFront(host.node);
                 await host.showScreen('bloodline-mirror-loading-screen');
-                this._applySpiritFamilyOverviewState(host.binder, payload as SpiritFamilyOverviewOpenPayload | undefined);
+                const overviewPayload = payload as SpiritFamilyOverviewOpenPayload | undefined;
+                this._applySpiritFamilyOverviewState(host.binder, overviewPayload);
+                await this._applyBloodlineMirrorTip(host.binder, overviewPayload);
             },
             hide: () => {
                 this._spiritFamilyOverviewHost!.node.active = false;
@@ -4438,6 +4447,32 @@ export class LobbyScene extends Component {
                 [`${basePath}/StoryTitle`]: storyCell.title,
                 [`${basePath}/StoryBody`]: storyCell.body,
             });
+        }
+    }
+
+    /**
+     * 血脈命鏡提示（PROG-2-1378，LT-03 暫接）：從 TipBody 位置抽一條提示。
+     * 暫定：payload 為 general-detail（指定已持有的武將分支）視為已持有，否則視為未持有。
+     * 讀檔失敗時保留版面原本的文字，只記 warn，不影響畫面開啟。
+     */
+    private async _applyBloodlineMirrorTip(binder: UITemplateBinder | null, payload?: SpiritFamilyOverviewOpenPayload): Promise<void> {
+        if (!binder) {
+            return;
+        }
+        try {
+            const content = await services().resource.loadJson<LoadingTipsContent>(BLOODLINE_MIRROR_LOADING_TIPS_PATH, {
+                tags: ['BloodlineMirrorLoading'],
+            });
+            const [tip] = pickLoadingTips(content, {
+                owned: payload?.origin === 'general-detail',
+                count: 1,
+                random: Math.random,
+            });
+            if (tip) {
+                binder.setTexts({ TipBody: tip });
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 血脈命鏡提示載入失敗，保留預設文字', error);
         }
     }
 
