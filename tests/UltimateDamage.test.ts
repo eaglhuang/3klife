@@ -4,7 +4,7 @@
  * 規格：ult_damage = base_power × (1 + ult_level × 0.15) × stat_modifier；
  * base_power：奧義 1~5 = 200、300、400、500、700。stat_modifier 由呼叫端傳入（規格未定）。
  */
-import { ultBasePowerOf, ultDamage, ultimateAttackOf } from '../assets/scripts/core/systems/UltimateDamage';
+import { battleUltLevelOf, ultBasePowerOf, ultDamage, ultimateAttackOf } from '../assets/scripts/core/systems/UltimateDamage';
 import { TestSuite, assert } from './TestRunner';
 
 const SPEC_BASE_POWER: Readonly<Record<string, number>> = { '1': 200, '2': 300, '3': 400, '4': 500, '5': 700 };
@@ -62,6 +62,18 @@ export function createUltimateDamageSuite(): TestSuite {
         assert.equals(null, ultimateAttackOf(1, SPEC_BASE_POWER, null, stats));
         assert.equals(null, ultimateAttackOf(1, {}, 'str', stats));
         assert.equals(null, ultimateAttackOf(6, SPEC_BASE_POWER, 'str', stats));
+    });
+
+    suite.test('槽位與升級等級分開（PROG-2-1451）：base_power 依槽位，加成依 ult_level', () => {
+        const stats = { str: 100, int: 50 };
+        // 奧義 2（base 300）Lv 1：300 × 1.15 × 1.0 = 345
+        assert.equals(345, ultimateAttackOf(2, { '1': 200, '2': 300, '3': 400, '4': 500, '5': 700 }, 'str', stats));
+        // 奧義 1（base 200）Lv 4：200 × 1.6 × 1.0 = 320
+        assert.equals(320, ultimateAttackOf(1, { '1': 200, '2': 300, '3': 400, '4': 500, '5': 700 }, 'str', stats, 4));
+        assert.equals(1, battleUltLevelOf(undefined));
+        assert.equals(1, battleUltLevelOf(0));
+        assert.equals(3, battleUltLevelOf(3.7));
+        assert.equals(5, battleUltLevelOf(9));
     });
 
     return suite;

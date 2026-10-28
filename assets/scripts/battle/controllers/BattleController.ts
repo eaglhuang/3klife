@@ -272,6 +272,7 @@ export class BattleController {
     this.state.aiIq = 'LOW';
     this.state.aiCanUseUltimate = false;
     this.duelFlow.resetForBattle();
+    this.skillDispatcher.resetUltimateUsage();
     this.flowStateMachine.reset();
     this.flowStateMachine.startBattle();
     this.turnManager.resetForBattle();

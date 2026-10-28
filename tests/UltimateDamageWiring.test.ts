@@ -184,5 +184,51 @@ export function createUltimateDamageWiringSuite(): TestSuite {
         }
     });
 
+    suite.test('奧義升級等級進傷害（PROG-2-1451）：依武將 ultimateSlots 的 ultLevel 計算', () => {
+        services().initialize();
+        const ctrl = new BattleController();
+        const player = new GeneralUnit({
+            id: 'p', name: 'p', faction: Faction.Player, hp: 1000, maxSp: 100, initialSp: 0, str: 90, int: 60, lea: 80,
+            skillId: 'cao-cao-tactics', battlePrimarySkillId: 'cao-cao-tactics',
+            ultimateSlots: [{ slot: 1, ultimateId: 'test-ult-1', unlockReincarnation: 1, ultLevel: 3 }],
+        });
+        ctrl.initBattle(player, general('e', Faction.Enemy));
+        const { dispatcher, captured } = dispatcherWith(ctrl, { slot: 1, scalingStat: 'str' }, BASE_POWER_TABLE);
+
+        dispatcher.executeBattleSkillRequest(ultimateRequest());
+
+        const expected = ultimateAttackOf(1, BASE_POWER_TABLE, 'str', { str: 90, int: 60 }, 3);
+        assert.equals(expected, captured.request!.ultimateAttack);
+        assert.isTrue(expected! > ultimateAttackOf(1, BASE_POWER_TABLE, 'str', { str: 90, int: 60 })!, 'Lv 3 應高於 Lv 1');
+    });
+
+    suite.test('每場戰鬥每個奧義限用 1 次（E-9，PROG-2-1451）：同場重放被擋、另一陣營不受影響、新一局重置', () => {
+        services().initialize();
+        const ctrl = new BattleController();
+        ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
+        const dispatcher = ctrl['skillDispatcher'] as BattleSkillDispatcher;
+        let executed = 0;
+        (dispatcher as unknown as { skillExecutor: unknown }).skillExecutor = {
+            execute: (request: BattleSkillRequest) => {
+                executed += 1;
+                return { requestId: 'spy', battleSkillId: request.battleSkillId, applied: true, deltas: [], battleLogLines: [] };
+            },
+        };
+
+        assert.isTrue(dispatcher.executeBattleSkillRequest(ultimateRequest()).applied);
+        const again = dispatcher.executeBattleSkillRequest(ultimateRequest());
+        assert.isFalse(again.applied);
+        assert.equals('ultimate-used', again.blockedReason);
+        assert.equals(1, executed, '被擋下時不應進執行器');
+
+        assert.isTrue(dispatcher.executeBattleSkillRequest({ ...ultimateRequest(), ownerUid: Faction.Enemy }).applied, '敵方同 id 奧義另計');
+        assert.isTrue(dispatcher.executeBattleSkillRequest({ ...ultimateRequest(), ultimateId: 'test-ult-2' }).applied, '同陣營不同奧義另計');
+        assert.isTrue(dispatcher.executeBattleSkillRequest({ ...ultimateRequest(), sourceType: SkillSourceType.SeedTactic, ultimateId: null }).applied, '戰法不受限');
+        assert.isTrue(dispatcher.executeBattleSkillRequest({ ...ultimateRequest(), sourceType: SkillSourceType.SeedTactic, ultimateId: null }).applied, '戰法可重複');
+
+        ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
+        assert.isTrue(dispatcher.executeBattleSkillRequest(ultimateRequest()).applied, '新一局應重置');
+    });
+
     return suite;
 }

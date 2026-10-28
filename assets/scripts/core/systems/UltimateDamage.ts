@@ -3,7 +3,7 @@
  * UltimateDamage — 奧義傷害純公式（純邏輯，不依賴 cc）
  *
  * 規格：ult_damage = base_power × (1 + ult_level × 0.15) × stat_modifier
- * - base_power 依奧義等級查表（1=200、2=300、3=400、4=500、5=700），數值來自 NumericalConfig.Ult_Base_Power。
+ * - base_power 依奧義槽位查表（奧義1~5），ult_level 為奧義升級等級（PROG-2-1451 拆開）；base_power 查表（1=200、2=300、3=400、4=500、5=700），數值來自 NumericalConfig.Ult_Base_Power。
  * - stat_modifier 依武力／智力等主屬性決定，規格未給公式，由呼叫端傳入（待 PM 裁定）。
  *
  * Unity 對照：像 ScriptableObject 上的數值欄位加上一個計算函式，資料與公式分開放，
@@ -45,14 +45,24 @@ export const ULT_STAT_DIVISOR = 100;
  * 基礎表查不到或等級超界也回 null。結果至少為 1。
  */
 export function ultimateAttackOf(
-    ultLevel: number,
+    slot: number,
     basePowerTable: Readonly<Record<string, number>>,
     scalingStat: string | null | undefined,
     stats: { str: number; int: number },
+    ultLevel = ULT_LEVEL_MIN,
 ): number | null {
-    const basePower = ultBasePowerOf(ultLevel, basePowerTable);
+    const basePower = ultBasePowerOf(slot, basePowerTable);
     if (basePower === null) return null;
     const stat = scalingStat === 'str' ? stats.str : scalingStat === 'int' ? stats.int : null;
     if (stat === null) return null;
-    return Math.max(1, Math.floor(ultDamage(basePower, ultLevel, stat / ULT_STAT_DIVISOR)));
+    return Math.max(1, Math.floor(ultDamage(basePower, battleUltLevelOf(ultLevel), stat / ULT_STAT_DIVISOR)));
+}
+
+/**
+ * 奧義升級等級換成傷害公式用的 ult_level（PROG-2-1451）：缺值或小於 1 視為 Lv 1；
+ * 升級上限規格未寫，超過 ULT_LEVEL_MAX 時以上限計（沿用 ultDamage 的等級範圍）。
+ */
+export function battleUltLevelOf(level: number | undefined): number {
+    if (typeof level !== 'number' || !Number.isFinite(level) || level < ULT_LEVEL_MIN) return ULT_LEVEL_MIN;
+    return Math.min(ULT_LEVEL_MAX, Math.floor(level));
 }
