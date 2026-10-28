@@ -3258,7 +3258,9 @@ export class GameSession {
         // 無期徒刑傳家寶物掉落（EQP-09，機率暫定）
         const treasures = rollPrisonTreasures(this._prison.prisoners, this._random);
         if (treasures > 0) {
+            const beforeTreasure = this._inventory;
             this._inventory = addItem(this._inventory, ITEM_TREASURE, treasures);
+            this._recordGain(beforeTreasure, 'DROP');
         }
         // 放走俘虜的未來來投（5%）：依 uid 查配置以初始狀態入冊；查不到配置就略過並記警告
         const futureReturns = rollFutureReturns(this._prison, advance.current.totalSeasonsElapsed, this._random);
