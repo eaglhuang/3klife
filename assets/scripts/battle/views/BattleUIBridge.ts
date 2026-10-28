@@ -407,7 +407,10 @@ export class BattleUIBridge {
     void this._generalNames.then((names) => {
       const player = this.ctx.ctrl?.state.getGeneral(Faction.Player);
       const nameOf = (id: string): string | null => (player && player.id === id ? player.name : names.get(id) ?? null);
-      this.appendLog(relationEventLogLine(hit, nameOf, (key, ...args) => services().i18n.t(key, ...args)));
+      const line = relationEventLogLine(hit, nameOf, (key, ...args) => services().i18n.t(key, ...args));
+      this.appendLog(line);
+      // 觸發當下浮一條 Toast，玩家不必翻戰報也看得到（與回合開始橫幅同一套 deployRuntime）
+      this.ctx.deployRuntime?.showToast(line, 2.5);
     });
   }
 
