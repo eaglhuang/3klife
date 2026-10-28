@@ -958,6 +958,7 @@ export class BattleController {
       skillName: skillId,
       skillId,
       sourceType,
+      ...(options.ultimateId ? { ultimateId: options.ultimateId } : {}),
     });
     return true;
   }

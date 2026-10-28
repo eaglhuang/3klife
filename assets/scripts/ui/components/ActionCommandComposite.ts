@@ -27,7 +27,7 @@ import { CompositePanel } from '../core/CompositePanel';
 import { TACTIC_REASON_WEATHER } from '../core/TacticAvailabilityPresenter';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UltimateSelectPopup, UltimateSkillItem } from './UltimateSelectPopup';
-import { markUsedUltimates } from '../core/UltimateUsage';
+import { markUsedUltimates, ultimateUsageKey } from '../core/UltimateUsage';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
 import { logBattleUIPosition } from './BattleUIDiag';
 
@@ -200,9 +200,9 @@ export class ActionCommandComposite extends CompositePanel {
     }
 
     /** 玩家奧義生效後記下 skillId，選單灰化（PROG-2-1512） */
-    private _onSkillUsed(data: { faction: Faction; skillId?: string; sourceType?: SkillSourceType }): void {
+    private _onSkillUsed(data: { faction: Faction; skillId?: string; ultimateId?: string; sourceType?: SkillSourceType }): void {
         if (data.faction !== Faction.Player || data.sourceType !== SkillSourceType.Ultimate || !data.skillId) return;
-        this._usedUltimateSkillIds.add(data.skillId);
+        this._usedUltimateSkillIds.add(ultimateUsageKey({ skillId: data.skillId, ultimateId: data.ultimateId }));
     }
 
     /** GeneralSpChanged handler — 只更新玩家方 SP 環 */
