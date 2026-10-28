@@ -20,6 +20,7 @@ import {
 } from './RivalGovernance';
 import { clampResource } from './ResourceCap';
 import { SeededRandom } from './SeededRandom';
+import { bondStep, type AiGeneral, type BondPair } from './RivalBonding';
 
 export interface NationDef {
     readonly id: string;
@@ -62,6 +63,10 @@ export interface NationState {
     readonly governedSeasons?: number;
     /** 累計招募品質數（E-7，各品質一次一名） */
     readonly recruits?: Readonly<Record<RecruitQuality, number>>;
+    /** 待命池：招募後尚未結緣的武將（RAI-08，PROG-2-1507） */
+    readonly roster?: readonly AiGeneral[];
+    /** 已結緣的配對紀錄（RAI-08，PROG-2-1507） */
+    readonly bonds?: readonly BondPair[];
 }
 
 /** 招募擲骰的獨立亂數（依勢力與季數定種子），不消耗局內亂數流，免得改動其他既有擲骰結果 */
@@ -99,7 +104,7 @@ export function createRivalWorld(defs: readonly NationDef[] = NATION_DEFS): Riva
         nations: defs.map((def) => ({
             id: def.id, troops: def.troops, territories: def.territories,
             relation: def.relation, allied: false, atWar: false, resources: { ...AI_STARTING_RESOURCES },
-            governedSeasons: 0, recruits: { ...EMPTY_RECRUITS },
+            governedSeasons: 0, recruits: { ...EMPTY_RECRUITS }, roster: [], bonds: [],
         })),
     };
 }
@@ -219,11 +224,15 @@ export function advanceRivalSeason(world: RivalWorld, random: () => number): Sea
         const resources = { food: governed.food, gold: governed.gold, fame: governed.fame, intel: governed.intel };
         const governedSeasons = (n.governedSeasons ?? 0) + 1;
         const recruits = { ...(n.recruits ?? EMPTY_RECRUITS) };
-        // E-7 每 2 季招募 1 名，品質依名聲擲骰
+        const roster = [...(n.roster ?? [])];
+        // E-7 每 2 季招募 1 名，品質依名聲擲骰；新武將進待命池
         if (shouldRecruitThisSeason(governedSeasons)) {
             const quality = rollRecruitQuality(resources.fame, recruitRandom(n.id, governedSeasons));
             recruits[quality] += 1;
+            roster.push({ id: `${n.id}-${governedSeasons}`, quality, recruitedSeason: governedSeasons });
         }
+        // E-7 結緣：糧草達門檻時從待命池配對（RAI-08 最小切片）
+        const bonded = bondStep(roster, n.bonds ?? [], resources.food, governedSeasons);
         return {
             ...n,
             troops: troops + governed.troops,
@@ -231,6 +240,8 @@ export function advanceRivalSeason(world: RivalWorld, random: () => number): Sea
             resources,
             governedSeasons,
             recruits,
+            roster: bonded.roster,
+            bonds: bonded.bonds,
         };
     });
     return { world: { nations }, events };
@@ -317,6 +328,12 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
         const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
         return { S: count(r.S), A: count(r.A), B: count(r.B), C: count(r.C) };
     };
+    const rosterOf = (raw: unknown): AiGeneral[] => (Array.isArray(raw) ? raw : [])
+        .filter((g): g is AiGeneral => !!g && typeof g.id === 'string' && ['S', 'A', 'B', 'C'].includes(g.quality))
+        .map((g) => ({ id: g.id, quality: g.quality, recruitedSeason: count(g.recruitedSeason) }));
+    const bondsOf = (raw: unknown): BondPair[] => (Array.isArray(raw) ? raw : [])
+        .filter((b): b is BondPair => !!b && typeof b.first === 'string' && typeof b.second === 'string')
+        .map((b) => ({ first: b.first, second: b.second, season: count(b.season) }));
     const resourcesOf = (raw: unknown): NationResources => {
         const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
         const whole = (v: unknown, fallback: number): number => Math.max(0, Math.round(num(v, fallback)));
@@ -341,6 +358,8 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
                 resources: resourcesOf(s.resources),
                 governedSeasons: count(s.governedSeasons),
                 recruits: recruitsOf(s.recruits),
+                roster: rosterOf(s.roster),
+                bonds: bondsOf(s.bonds),
                 ...(typeof s.tradeSeason === 'number' && Number.isFinite(s.tradeSeason)
                     ? { tradeSeason: Math.floor(s.tradeSeason), tradeCount: Math.max(0, Math.floor(num(s.tradeCount, 0))) }
                     : {}),
