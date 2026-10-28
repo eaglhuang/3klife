@@ -1441,6 +1441,25 @@ for (const filePath of listCanonicalSpecFiles(screenDir)) {
     }
 }
 
+// GDART-10：武將人物介面美術接線清單的 icon 槽位（格式判失敗；未落地的圖只列 warning）
+{
+    const artWiringPath = path.join(projectRoot, 'docs', '遊戲規格文件', '系統規格書', '武將人物介面美術接線清單.md');
+    if (fs.existsSync(artWiringPath)) {
+        const { checkArtWiringIcons, makeResourceResolver } = require('./validate-art-wiring');
+        const resourcesRoot = path.join(projectRoot, 'assets', 'resources');
+        const result = checkArtWiringIcons(
+            fs.readFileSync(artWiringPath, 'utf8'),
+            makeResourceResolver(resourcesRoot, fs.existsSync)
+        );
+        for (const slot of result.malformed) {
+            fail(`${relative(artWiringPath)} - icon 槽位路徑格式錯誤：${slot}`, failures);
+        }
+        if (result.missing.length > 0) {
+            warn(`${relative(artWiringPath)} - ${result.missing.length}/${result.slots.length} 個 icon 槽位尚未落地（placeholder 允許）`, warnings);
+        }
+    }
+}
+
 if (failures.length > 0) {
     console.error('❌ UI Spec 驗證失敗\n');
     for (const failure of failures) {
