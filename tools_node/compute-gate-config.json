@@ -59,6 +59,17 @@
       "description": "驗證 generals.json 資料正確性（圖片路徑、屬性值域、稀有度規則）"
     },
     {
+      "id": "story-layers",
+      "label": "角色雙故事層檢核",
+      "cmd": "node",
+      "args": [
+        "tools_node/validate-story-layers.js"
+      ],
+      "priority": 5.1,
+      "failAction": "warn",
+      "description": "檢查武將六格故事帶順序、文字非空，歷史趣聞與血脈傳聞非空且無 ??? 佔位字（STORY-05，先以警告接入）"
+    },
+    {
       "id": "skin-contracts",
       "label": "Skin 契約驗證",
       "cmd": "node",
@@ -258,7 +269,8 @@
         "doc-shard-health",
         "import-boundary",
         "dead-code",
-        "test-tsc"
+        "test-tsc",
+        "story-layers"
       ]
     },
     "atm": {
@@ -283,6 +295,7 @@
         "ui-spec-contract",
         "general-detail-ui",
         "general-data",
+        "story-layers",
         "skin-contracts",
         "crossref-integrity",
         "task-scope",
