@@ -136,6 +136,10 @@ export class BattleState {
   public lastSpurtMode = false;
   /** 戰場上出現過的最高合計兵力（FORM-10 存活比例分母） */
   public peakTroopCount = 0;
+  /** 軍師智謀能量（SCN-10，WisdomMeter）：每回合 INT×0.5 累積，滿 100 觸發後歸零 */
+  public wisdomMeter = 0;
+  /** 智謀能量本場觸發次數 */
+  public wisdomTriggerCount = 0;
 
   constructor() {
     for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
@@ -179,6 +183,8 @@ export class BattleState {
     this.fallenUnits = [];
     this.lastSpurtMode = false;
     this.peakTroopCount = 0;
+    this.wisdomMeter = 0;
+    this.wisdomTriggerCount = 0;
     this.battleEndAnnounced = false;
     this.stageSalvage = { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 };
     this.plunderedTiles = new Set<string>();
