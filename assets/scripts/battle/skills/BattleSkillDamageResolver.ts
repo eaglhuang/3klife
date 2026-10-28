@@ -51,8 +51,10 @@ export class BattleSkillDamageResolver {
     const fateMultiplier = isFireTactic(profile.tags ?? [])
       ? fateDamageMultiplier(fateBlessingLevel(caster.genes))
       : 1;
-    // 藤甲（PROG-2-1437）：目標承受火計傷害 ×3
-    const fireTaken = isFireTactic(profile.tags ?? []) ? tallyFireDamageTakenOf(target) : 1;
+    // 藤甲（PROG-2-1437）：目標承受火計傷害 ×3；火燒偷襲戰我方火抗 ×0.5（PROG-2-1459）
+    const fireTaken = isFireTactic(profile.tags ?? [])
+      ? tallyFireDamageTakenOf(target) * (context.getSceneFireDamageTakenMultiplier?.(target) ?? 1)
+      : 1;
     const fated = fateMultiplier * fireTaken === 1 ? weathered : Math.max(1, Math.floor(weathered * fateMultiplier * fireTaken));
 
     // 爆擊率加成（百步穿楊 +50%）：以基礎爆擊率加成後擲骰，爆擊 ×1.5；沒有亂數源的測試 context 視為不爆擊

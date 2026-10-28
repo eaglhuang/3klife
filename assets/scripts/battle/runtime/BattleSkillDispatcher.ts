@@ -29,6 +29,7 @@ import {
 } from '../../shared/SkillRuntimeContract';
 import { services } from '../../core/managers/ServiceLoader';
 import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
+import { sceneFireDamageTakenOf } from '../shared/BattleTacticBehavior';
 
 export interface GeneralSkillCastOptions {
   tacticId?: string | null;
@@ -383,6 +384,7 @@ export class BattleSkillDispatcher {
         ? this.context.getPlayerGeneralUnitId()
         : this.context.getEnemyGeneralUnitId()),
       getDefenseZoneMultiplier: (unit: TroopUnit) => zoneDefenseMultiplier(state.getFormationZone(unit.lane, unit.depth), unit.faction),
+      getSceneFireDamageTakenMultiplier: (unit: TroopUnit) => sceneFireDamageTakenOf(unit, state),
       addFormationZone: (zone: FormationZone) => state.setFormationZone(zone),
       addUnitDot: (unit: TroopUnit, ratio: number, turns: number) => {
         state.unitDots.set(unit.id, { unitId: unit.id, ratio, remainingTurns: turns });

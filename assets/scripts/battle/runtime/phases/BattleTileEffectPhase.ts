@@ -7,6 +7,7 @@ import { advanceFormationZonesOf } from '../../shared/FormationZone';
 import { advanceMoraleOf } from '../../shared/Morale';
 import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
+import { sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
 
 export interface BattleTileEffectPhaseContext {
   readonly state: BattleState;
@@ -50,7 +51,10 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
       continue;
     }
 
-    context.applyUnitDamage(unit, effect.damagePerTurn, null, {
+    // 火燒偷襲戰我方火抗（PROG-2-1459）：火格傷害依場景倍率減免
+    const fireTaken = effect.state === 'hazard-fire' ? sceneFireDamageTakenOf(unit, context.state) : 1;
+    const tileDamage = fireTaken === 1 ? effect.damagePerTurn : Math.max(1, Math.floor(effect.damagePerTurn * fireTaken));
+    context.applyUnitDamage(unit, tileDamage, null, {
       attackerId: null,
       attackerLane: null,
       attackerDepth: null,
