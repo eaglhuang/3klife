@@ -8,7 +8,8 @@
 import type { MentorCard } from '../../core/models/MentorCard';
 import { mentorFromCard } from '../../core/systems/NurtureSystem';
 import { mentorToCardData, type MentorCardData } from '../../core/systems/MentorCardTabs';
-import { STAT_LABELS } from './NurtureFlowController';
+import { statLabelOf } from './NurtureFlowController';
+import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
 
 export interface MentorHoldingRow {
     uid: string;
@@ -19,13 +20,13 @@ export interface MentorHoldingRow {
 
 const RARITY_ORDER: Record<string, number> = { SSR: 0, SR: 1, R: 2 };
 
-export function mentorHoldingRows(cards: readonly MentorCard[]): MentorHoldingRow[] {
+export function mentorHoldingRows(cards: readonly MentorCard[], t: BreedTextLookup = fallbackBreedText): MentorHoldingRow[] {
     return cards
         .map((card) => {
             const mentor = mentorFromCard(card);
             const rarity = card.support?.rarity ?? '';
             const stars = mentor.stars ?? 0;
-            const specialty = STAT_LABELS[mentor.specialty] ?? mentor.specialty;
+            const specialty = statLabelOf(t, mentor.specialty);
             const head = [card.name, rarity, `★${stars}`].filter(Boolean).join('　');
             return {
                 uid: card.uid,

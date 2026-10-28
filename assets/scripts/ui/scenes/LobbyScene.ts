@@ -754,7 +754,7 @@ export class LobbyScene extends Component {
         const host = this._mentorHoldingsHost;
         if (!host) return;
         const cards = attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog());
-        this._mentorHoldingsRows = mentorHoldingRows(cards);
+        this._mentorHoldingsRows = mentorHoldingRows(cards, breedText());
         if (this._mentorHoldingsRows.length === 0) {
             services().event.emit('SHOW_TOAST', { message: '尚無教官卡：可在轉蛋的支援卡池抽取，或由武將退役轉為教官', duration: 2.5 });
             return;
