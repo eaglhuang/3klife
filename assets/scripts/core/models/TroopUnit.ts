@@ -24,7 +24,8 @@ export interface TroopStats {
 export class TroopUnit {
   public readonly id: string;
   public readonly type: TroopType;
-  public readonly faction: Faction;
+  /** 可變：挾天子令控制期間陣營會暫時切換（PROG-2-1335），結束後換回原陣營 */
+  public faction: Faction;
   public readonly name: string;
   public readonly maxHp: number;
   public readonly attack: number;

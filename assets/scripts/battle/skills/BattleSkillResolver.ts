@@ -48,6 +48,8 @@ export interface BattleSkillExecutionContext {
   registerCounterReaction(targetUnit: TroopUnit, battleSkillId: string, counterRatio: number, statusTurns: number, triggers: number, meleeOnly: boolean): void;
   registerActionReset(targetUnit: TroopUnit, battleSkillId: string, firstHitMultiplier: number, extraActions: number): void;
   emitSkillEffect(skillId: string, casterFaction: Faction): void;
+  /** 把敵兵控制為施放者陣營 turns 回合（PROG-2-1335 挾天子令）；舊測試 context 可不提供 */
+  controlUnit?(unit: TroopUnit, casterFaction: Faction, turns: number): boolean;
   /** 復活施放者陣營的一名陣亡兵（PROG-2-1334 唯才是舉）；沒有可復活的兵或沒有空格時回 null；舊測試 context 可不提供 */
   reviveFallenFriendly?(casterFaction: Faction, hpRatio: number): TroopUnit | null;
 }

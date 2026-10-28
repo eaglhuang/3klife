@@ -6,7 +6,7 @@ import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } 
 export type BattleSkillFalloffRule = 'none' | 'linear-step';
 export type BattleSkillEffectKind =
   | 'damage' | 'heal' | 'control' | 'link' | 'counter' | 'reset'
-  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack' | 'vitality' | 'revive';
+  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack' | 'vitality' | 'control-override' | 'revive';
 
 export interface BattleSkillProfile {
   battleSkillId: string;
@@ -81,6 +81,8 @@ export interface BattleSkillProfile {
   counterTriggers?: number;
   counterMeleeOnly?: boolean;
   resetFirstHitMultiplier?: number;
+  /** 控制敵兵的回合數（PROG-2-1335 挾天子令，規格 2 回合） */
+  controlTurns?: number;
   /** 復活陣亡友軍的血量比例（PROG-2-1334 唯才是舉，規格 50%） */
   reviveHpRatio?: number;
   resetExtraActions?: number;
@@ -358,6 +360,15 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     effectKind: 'heal',
     coefficient: 0,
     healMissingRatio: 0.25,
+  },
+  'cao-cao-ult-control': {
+    battleSkillId: 'cao-cao-ult-control',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'control-override',
+    coefficient: 0,
+    controlTurns: 2,
   },
   'cao-cao-ult-revive': {
     battleSkillId: 'cao-cao-ult-revive',
