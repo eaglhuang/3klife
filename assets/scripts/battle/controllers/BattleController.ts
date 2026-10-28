@@ -10,6 +10,7 @@ import {
 } from "../../core/config/Constants";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import type { AiDifficulty } from "../../core/systems/AiSpCharge";
+import type { AiDifficultyEntry } from "../../core/systems/AiDifficultyTable";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleUnitSpawner, type TroopDataTable } from '../runtime/BattleUnitSpawner';
 import { applySoloBreachAtTurnStart } from '../runtime/BattleSoloBreach';
@@ -263,6 +264,7 @@ export class BattleController {
   ): void {
     this.state.reset(playerGeneral, enemyGeneral, terrainGrid, weather, battleTactic);
     this.state.aiDifficulty = aiDifficulty;
+    this.state.aiDuelAcceptThreshold = null;
     this.state.aiDifficultyBonus = aiDifficultyBonus;
     this.duelFlow.resetForBattle();
     this.flowStateMachine.reset();
@@ -512,6 +514,11 @@ export class BattleController {
    * 啟用出征帳本（PROG-2-0070）：必須在 initBattle() 之後呼叫。
    * 我方部署改扣出征軍勢與糧草，HUD 糧草改顯示本場糧草（不再每回合補）。
    */
+  /** 套用 AI 難度表列（ai-difficulty.json）：單挑接受閾值由此讀取（PROG-2-1325）。需在 initBattle() 之後呼叫。 */
+  public configureAiDifficulty(entry: AiDifficultyEntry): void {
+    this.state.aiDuelAcceptThreshold = entry.duelAcceptThreshold;
+  }
+
   public configureSortie(input: CreateSortieInput): SortieState {
     this.sortie = createSortieState(input);
     services().battle.configureFood({ initial: this.sortie.food, max: this.sortie.maxFood, perTurn: 0 });

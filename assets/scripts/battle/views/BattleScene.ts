@@ -226,6 +226,7 @@ export class BattleScene extends Component {
         difficulty,
         enemyScale.difficulty.difficultyBonus,
       );
+      if (enemyScale) this.ctrl.configureAiDifficulty(enemyScale.difficulty);
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;
       if (weatherSchedule) this.ctrl.setWeatherSchedule(weatherSchedule);
