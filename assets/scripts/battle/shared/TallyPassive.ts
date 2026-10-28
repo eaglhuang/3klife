@@ -1,4 +1,4 @@
-// @spec-source → 兵種（虎符）系統.md：死亡傳承虎符（白馬 / 騎射合一；解煩、丹陽、吳國數值被動 PROG-2-1433）
+// @spec-source → 兵種（虎符）系統.md：死亡傳承虎符（白馬 / 騎射合一；解煩、丹陽、吳國數值被動 PROG-2-1433；止啼符、藤甲 PROG-2-1437）
 /**
  * TallyPassive — 虎符被動的通用掛點（不依賴 cc）
  *
@@ -8,7 +8,7 @@
  *
  * Unity 對照：ScriptableObject 上的被動欄位，部署時 Instantiate 後依資料套用到角色上。
  */
-import { TerrainType } from '../../core/config/Constants';
+import { Faction, GAME_CONFIG, TerrainType } from '../../core/config/Constants';
 import type { TroopUnit } from '../../core/models/TroopUnit';
 
 /** 弓兵射程（BattleUnitSpawner 弓兵 attackRange = 2） */
@@ -28,6 +28,12 @@ export interface TallyPassiveSpec {
   attackTerrains?: readonly TerrainType[];
   /** 地形移動加成：站在指定地形時移動力 +bonus（丹陽山地、吳國水域 +2） */
   terrainMoveBonus?: { terrains: readonly TerrainType[]; bonus: number };
+  /** 突襲止啼：目標站在其陣營後排 rows 列內時，部隊攻擊傷害 × multiplier（PROG-2-1437） */
+  backRowDamage?: { rows: number; multiplier: number };
+  /** 藤甲：承受部隊攻擊（物理）傷害的乘數 */
+  physicalDamageTaken?: number;
+  /** 藤甲：承受火計傷害的乘數 */
+  fireDamageTaken?: number;
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -53,6 +59,16 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
     attackTerrains: [TerrainType.River],
     terrainMoveBonus: { terrains: [TerrainType.River], bonus: 2 },
   },
+  // 止啼符（逍遙精騎）：對敵方後排兩列傷害 +50%
+  'tiger-tally-zhi-ti-fu': { backRowDamage: { rows: 2, multiplier: 1.5 } },
+  // 藤甲：物理減傷 50%，但火攻 ×3
+  'tiger-tally-teng-jia': { physicalDamageTaken: 0.5, fireDamageTaken: 3 },
+};
+
+/** 各陣營出兵列（後排起點）：我方由 depth 0 出兵、敵方由最後一列出兵 */
+const DEPLOY_DEPTH: Record<Faction, number> = {
+  [Faction.Player]: 0,
+  [Faction.Enemy]: GAME_CONFIG.GRID_DEPTH - 1,
 };
 
 function passiveOf(unit: TroopUnit): TallyPassiveSpec | undefined {
@@ -71,6 +87,23 @@ export function tallyAttackMultiplierOf(unit: TroopUnit, terrain: TerrainType): 
 export function tallyTerrainMoveBonusOf(unit: TroopUnit, terrain: TerrainType): number {
   const bonus = passiveOf(unit)?.terrainMoveBonus;
   return bonus && bonus.terrains.includes(terrain) ? bonus.bonus : 0;
+}
+
+/** 突襲止啼：目標在其陣營後排 rows 列內時回傳傷害乘數，否則為 1 */
+export function tallyBackRowDamageMultiplierOf(attacker: TroopUnit, target: TroopUnit): number {
+  const spec = passiveOf(attacker)?.backRowDamage;
+  if (!spec) return 1;
+  return Math.abs(target.depth - DEPLOY_DEPTH[target.faction]) < spec.rows ? spec.multiplier : 1;
+}
+
+/** 承受部隊攻擊（物理）傷害的乘數；沒有此被動時為 1 */
+export function tallyPhysicalDamageTakenOf(unit: TroopUnit): number {
+  return passiveOf(unit)?.physicalDamageTaken ?? 1;
+}
+
+/** 承受火計傷害的乘數；沒有此被動時為 1 */
+export function tallyFireDamageTakenOf(unit: TroopUnit): number {
+  return passiveOf(unit)?.fireDamageTaken ?? 1;
 }
 
 /** 此部隊是否帶七進七出（移動穿透敵格）；沒有模板 id 或沒有該被動時為 false */

@@ -13,7 +13,7 @@ import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
-import { extraAttackHitsOf, tallyAttackMultiplierOf } from '../shared/TallyPassive';
+import { extraAttackHitsOf, tallyAttackMultiplierOf, tallyBackRowDamageMultiplierOf, tallyPhysicalDamageTakenOf } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import { tacticTriggerRate } from '../../core/systems/TacticTriggerRate';
@@ -57,6 +57,16 @@ export class BattleCombatResolver {
     // 虎符被動攻擊加成（解煩／丹陽／吳國，PROG-2-1433）：依部隊所站地形判定
     const terrain = this.context.state.getCell(unit.lane, unit.depth)?.terrain ?? TerrainType.Plain;
     return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).atkMod * tallyAttackMultiplierOf(unit, terrain);
+  }
+
+  /** 部隊攻擊（物理）傷害的虎符被動乘數：攻方止啼符打後排 × 守方藤甲減傷（PROG-2-1437）；普攻、合攻、反擊共用 */
+  public getTallyPhysicalDamageMod(attacker: TroopUnit, defender: TroopUnit): number {
+    return tallyBackRowDamageMultiplierOf(attacker, defender) * tallyPhysicalDamageTakenOf(defender);
+  }
+
+  private applyTallyPhysicalDamageMod(damage: number, attacker: TroopUnit, defender: TroopUnit): number {
+    const mod = this.getTallyPhysicalDamageMod(attacker, defender);
+    return mod === 1 ? damage : Math.max(1, Math.floor(damage * mod));
   }
 
   /** 虎符部隊的防禦乘數：星級 × 同陣營在場 Set 的防禦加成（PROG-2-0574）；非虎符單位恆為 1 */
@@ -247,7 +257,7 @@ export class BattleCombatResolver {
       baseDamage: damage,
       state: this.context.state,
     });
-    damage = damageAdjustment.damage;
+    damage = this.applyTallyPhysicalDamageMod(damageAdjustment.damage, attacker, defender);
     const actionReset = this.context.state.getActionReset(attacker.id);
     if (actionReset?.firstHitPending) {
       damage = Math.max(1, Math.floor(damage * actionReset.firstHitMultiplier));
@@ -327,7 +337,7 @@ export class BattleCombatResolver {
       attackerAptitudeMultiplier: this.getUnitAptitude(helper).attackMultiplier,
       defenderAptitudeMultiplier: this.getUnitAptitude(defender).defenseMultiplier,
     });
-    const damage = Math.max(1, Math.floor(baseDamage * NAVAL_COMBINED_DAMAGE_RATIO));
+    const damage = this.applyTallyPhysicalDamageMod(Math.max(1, Math.floor(baseDamage * NAVAL_COMBINED_DAMAGE_RATIO)), helper, defender);
 
     this.applyUnitDamage(defender, damage, helper.faction, {
       attackerId: helper.id,
@@ -701,7 +711,7 @@ export class BattleCombatResolver {
       defenderAptitudeMultiplier: this.getUnitAptitude(attacker).defenseMultiplier,
     });
 
-    this.applyUnitDamage(attacker, counterDamage, defender.faction, {
+    this.applyUnitDamage(attacker, this.applyTallyPhysicalDamageMod(counterDamage, defender, attacker), defender.faction, {
       attackerId: defender.id,
       attackerLane: defender.lane,
       attackerDepth: defender.depth,
