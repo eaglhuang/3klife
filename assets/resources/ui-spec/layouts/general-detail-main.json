@@ -642,6 +642,7 @@
           {
             "type": "button",
             "name": "BtnClose",
+            "active": true,
             "width": 97,
             "height": 60,
             "skinSlot": "detail.close.btn",
@@ -1410,6 +1411,7 @@
               {
                 "type": "button",
                 "name": "BtnFavorite",
+                "active": false,
                 "width": 128,
                 "height": 56,
                 "skinSlot": "common.button.primary",
@@ -1419,6 +1421,7 @@
               {
                 "type": "button",
                 "name": "BtnLock",
+                "active": false,
                 "width": 128,
                 "height": 56,
                 "skinSlot": "common.button.primary",
@@ -1428,6 +1431,7 @@
               {
                 "type": "button",
                 "name": "BtnCompare",
+                "active": false,
                 "width": 128,
                 "height": 56,
                 "skinSlot": "common.button.primary",
@@ -1437,6 +1441,7 @@
               {
                 "type": "button",
                 "name": "BtnShare",
+                "active": false,
                 "width": 128,
                 "height": 56,
                 "skinSlot": "common.button.primary",

@@ -102,6 +102,51 @@ export function mapNonEmptyList<T>(raw: Raw, key: string): ReadModelValue<T[]> {
     return Array.isArray(value) && value.length > 0 ? valueOf(value as T[]) : { state: 'NO_DATA' };
 }
 
+/** 五階奧義（命頁右側五階奧義軌）：階數上限（暫定，與名詞定義「覺醒階／星階上限」一致） */
+export const BLOODLINE_ULTIMATE_MAX_STAGE = 5;
+/** 血脈性格註記：2~3 個短標籤（名詞定義文件） */
+export const PERSONA_TAG_MIN_COUNT = 2;
+export const PERSONA_TAG_MAX_COUNT = 3;
+
+export interface BloodlineUltimateStages {
+    beast: ReadModelValue<string>;
+    personaTags: ReadModelValue<string[]>;
+    stageCurrent: ReadModelValue<number>;
+    stageCap: ReadModelValue<number>;
+    stageProgress: ReadModelValue<number>;
+    stageRequirements: ReadModelValue<string[]>;
+}
+
+function isStageNumber(value: unknown): value is number {
+    return Number.isInteger(value) && (value as number) >= 0 && (value as number) <= BLOODLINE_ULTIMATE_MAX_STAGE;
+}
+
+/**
+ * Bloodline_Ultimate 子欄位（TSK-10）：供命頁五階奧義軌直接讀取。
+ * 階數上限 1~5；目前階數不得超過上限；進度為 0~1；性格標籤 2~3 個非空字串；缺值或不合規都回 NO_DATA。
+ */
+export function mapBloodlineUltimateStages(raw: Raw): BloodlineUltimateStages {
+    const ultimate = isRecord(raw.Bloodline_Ultimate) ? raw.Bloodline_Ultimate : {};
+    const cap = isStageNumber(ultimate.Stage_Cap) && ultimate.Stage_Cap >= 1 ? valueOf(ultimate.Stage_Cap) : { state: 'NO_DATA' as const };
+    const current = isStageNumber(ultimate.Stage_Current) && cap.state === 'VALUE' && ultimate.Stage_Current <= cap.value
+        ? valueOf(ultimate.Stage_Current)
+        : { state: 'NO_DATA' as const };
+    const progress = isFiniteNumber(ultimate.Stage_Progress) && ultimate.Stage_Progress >= 0 && ultimate.Stage_Progress <= 1
+        ? valueOf(ultimate.Stage_Progress)
+        : { state: 'NO_DATA' as const };
+    const beast = typeof ultimate.Bloodline_Beast === 'string' && ultimate.Bloodline_Beast.length > 0
+        ? valueOf(ultimate.Bloodline_Beast)
+        : { state: 'NO_DATA' as const };
+    const tags = ultimate.Persona_Tags;
+    const personaTags = isStringArray(tags) && tags.length >= PERSONA_TAG_MIN_COUNT && tags.length <= PERSONA_TAG_MAX_COUNT && tags.every((t) => t.length > 0)
+        ? valueOf(tags)
+        : { state: 'NO_DATA' as const };
+    const requirements = isStringArray(ultimate.Stage_Requirements) && ultimate.Stage_Requirements.length > 0
+        ? valueOf(ultimate.Stage_Requirements)
+        : { state: 'NO_DATA' as const };
+    return { beast, personaTags, stageCurrent: current, stageCap: cap, stageProgress: progress, stageRequirements: requirements };
+}
+
 /** 整包人物頁讀取模型：§10 的 16 個欄位逐一對應 */
 export interface GeneralReadModel {
     defaultTab: ReadModelValue<PersonPageTab>;
