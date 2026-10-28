@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-28 08:46 Claude：Sparkle v14 驗收（weapon 本地 0°、hand_f ≤27.8°、translate 0、35/35）；輸出放 artifacts/art-direction/sparkle-handoff/sparkle-v14-output-42，R328 請 Codex 播放改用 v14。
 - 2026-10-28 08:42 Claude：使用者核准一天內做出可播放結果；唯讀確認 zhaoyun-cutout-polish 引擎模組已為 Spine 4.2；R327 請 Codex 直接預覽並錄四個動作的影片。
 - 2026-10-28 08:40 Claude：優先順序改為先在 Cocos 播放（r40＋Sparkle v13，醜可接受），腿部 IK 研究暫停；R320 三處接點補畫核准；R325 腕甲帽改程式繪製；規格 v3.22 隱藏延伸只量主連通區，AG-42 派 checker（r40 大腿 68 px 為游離方條假通過）。
 - 2026-10-28 08:22 Claude：R318 r40 全套 21 槽 PASS（裂縫 0/0、單一連通區）幾何收下；R325 退回腕甲帽畫法（平灰球→描邊金屬／袖口），拳面局部重畫不授權（戰場約 11 px 看不出）。Sparkle v13 驗收 hand_f 樞紐與 ±30°，v14 必修 weapon 不可在拳內轉（idle 18～24°、thrust −15.5°），回饋已打包給使用者轉交。
