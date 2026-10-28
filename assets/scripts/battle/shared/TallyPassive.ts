@@ -46,6 +46,8 @@ export interface TallyPassiveSpec {
   extraHits?: number;
   /** 迴避（常山女 +30%）：攻擊此部隊的命中率減少值 */
   evasionBonus?: number;
+  /** 免疫恐懼（先登）：敵方恐懼光環對此部隊不生效（PROG-2-1513） */
+  fearImmune?: boolean;
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -93,6 +95,8 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   'tiger-tally-yuan-rong': { extraHits: 1, damageVsTroopTypes: { types: [TroopType.Infantry], multiplier: 1.5 } },
   // 常山女：迴避 +30%（規格數字；治療友軍未做）
   'tiger-tally-changshan-nu': { evasionBonus: 0.3 },
+  // 先登：免疫恐懼（PROG-2-1513）；攻城傷害 ×2 待攻城戰落地再接
+  'tiger-tally-xian-deng': { fearImmune: true },
 };
 
 /** 各陣營出兵列（後排起點）：我方由 depth 0 出兵、敵方由最後一列出兵 */
@@ -121,6 +125,7 @@ export function tallyTerrainMoveBonusOf(unit: TroopUnit, terrain: TerrainType): 
 
 /** 恐懼光環：unit 周圍有帶光環的敵方部隊時，unit 的攻擊乘數（多個光環相乘）；沒有時為 1 */
 export function tallyEnemyAuraAttackMultiplierOf(unit: TroopUnit, units: Iterable<TroopUnit>): number {
+  if (passiveOf(unit)?.fearImmune) return 1;
   let multiplier = 1;
   for (const other of units) {
     if (other.faction === unit.faction || other.isDead()) continue;
