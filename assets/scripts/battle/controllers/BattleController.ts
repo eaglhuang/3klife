@@ -319,9 +319,16 @@ export class BattleController {
     return combatRelationsBetween(this.historicalPairs, this.sourceTemplateOfUnit(attackerId), this.sourceTemplateOfUnit(helperId));
   }
 
-  /** 本場戰役已觸發的關係事件（KIN-08 戰場端，PROG-2-1420）；一場一份，不存檔 */
-  private readonly _relationLedger = new RelationEventLedger();
+  /** 本場戰役已觸發的關係事件（KIN-08 戰場端，PROG-2-1420）；預設一場一份，場景可綁定 session 帳本以存檔（PROG-2-1415） */
+  private _relationLedger = new RelationEventLedger();
+  private _relationScopeKey = 'battle';
   private readonly _relationEventHits: RelationEventHit[] = [];
+
+  /** 綁定關係事件帳本與戰役實例 key：同一場戰役的已播紀錄存進 session 後，讀檔再進同一關不重播；需在部署前呼叫 */
+  public bindRelationEvents(scopeKey: string, ledger: RelationEventLedger): void {
+    this._relationScopeKey = scopeKey;
+    this._relationLedger = ledger;
+  }
 
   public get relationEventHits(): readonly RelationEventHit[] {
     return [...this._relationEventHits];
@@ -341,7 +348,7 @@ export class BattleController {
       const template = this.sourceTemplateOfUnit(unit.id);
       if (template) ids.push(template);
     }
-    const hits = this._relationLedger.takeNew('battle', detectRelationEvents(this.historicalPairs, { scene: 'battle', templateIds: ids }));
+    const hits = this._relationLedger.takeNew(this._relationScopeKey, detectRelationEvents(this.historicalPairs, { scene: 'battle', templateIds: ids }));
     if (hits.length === 0) return hits;
     this._relationEventHits.push(...hits);
     const turn = services().battle.getSnapshot().turn;

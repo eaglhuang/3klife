@@ -215,6 +215,8 @@ export class BattleScene extends Component {
       await services().material.warmupCritical(this.node);
 
       // 5. 開始第一場戰鬥（含地形、天氣、戰法）
+      // 戰場關係事件帳本（PROG-2-1415）：同一關只觸發一次，已播紀錄隨存檔保存
+      this.ctrl.bindRelationEvents(`battle:${this.currentEncounterId}`, services().session.relationEvents);
       this.ctrl.initBattle(
         pg,
         eg,
