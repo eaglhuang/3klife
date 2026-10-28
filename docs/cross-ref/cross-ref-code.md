@@ -858,7 +858,6 @@
 
 | 代碼檔 | 對應規格書 | 引用類型 |
 |---|---|---|
-| IBattleUIBridge.ts | doc_ui_0001 | 概: 戰場與 UI 通信介面（shared 層） |
 | IBattleUIComponents.ts | doc_ui_0001 | 概: 戰場相關 UI 元件的抽象介面集合，用於解除 Battle 模組對 UI 具體實作的依賴。 |
 | IUIInterfaces.ts | doc_ui_0049 | 概: 通用 UI 管理介面，用於解除 Core 對 UI 具體實作的依賴。 |
 
