@@ -187,7 +187,7 @@ import { buildBattleSnapshot, type BattleSnapshot } from '../systems/BattleSnaps
 import { leaderboardEntryOf, rankLeaderboard, type LeaderboardMetric, type LeaderboardEntry } from '../systems/BattleLeaderboard';
 import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
 import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
-import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
+import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonCapacityOf, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { drawFemalePool, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
@@ -1569,7 +1569,7 @@ export class GameSession {
             gold: options.gold ?? 0,
             cityTroops: this._military.cityTroops,
             prisonUsed: this._prison.prisoners.length,
-            prisonSlots: this._prison.slots,
+            prisonSlots: prisonCapacityOf(this._territoryLevel),
         });
         const others = this._prison.pending.filter((p) => p !== pending);
         const done = resolution.joined || resolution.imprisoned || resolution.released;
