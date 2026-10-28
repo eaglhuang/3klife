@@ -465,5 +465,19 @@
   "battle.aptitude.line.mountain-s": "{Name} 倚山而戰，一夫當關！",
   "battle.aptitude.line.fog": "霧中行軍——{Name} 不受大霧影響，百步穿楊！",
   "battle.aptitude.line.night": "月黑風高，正是{Name}的戰場！",
-  "battle.aptitude.line.insufficient": "{Name} 對此地形十分不適——行動遲緩、攻勢受阻。"
+  "battle.aptitude.line.insufficient": "{Name} 對此地形十分不適——行動遲緩、攻勢受阻。",
+  "ui.bloodline.vignette.open": "血統小傳",
+  "ui.bloodline.vignette.title": "血統小傳　{0}",
+  "ui.bloodline.vignette.close": "關閉",
+  "ui.bloodline.vignette.progress": "已解鎖 {0}/{1}",
+  "ui.bloodline.vignette.cell": "{0}．{1}　{2}",
+  "ui.bloodline.vignette.locked": "（{0} 轉或命紋覺醒後解鎖）",
+  "ui.bloodline.vignette.no_rumor": "血脈傳聞尚未流傳。",
+  "ui.bloodline.vignette.empty": "這位武將的逸事尚未記載。",
+  "ui.bloodline.vignette.slot.origin": "出身",
+  "ui.bloodline.vignette.slot.faction": "陣營",
+  "ui.bloodline.vignette.slot.role": "定位",
+  "ui.bloodline.vignette.slot.awakening": "覺醒",
+  "ui.bloodline.vignette.slot.bloodline": "血脈",
+  "ui.bloodline.vignette.slot.future": "未來"
 }

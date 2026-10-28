@@ -463,5 +463,19 @@
   "battle.aptitude.line.mountain-s": "{Name} fights on the mountain — one man holds the pass!",
   "battle.aptitude.line.fog": "Marching through fog — {Name} is unaffected by the mist and never misses!",
   "battle.aptitude.line.night": "Dark and windy night — this is {Name}'s battlefield!",
-  "battle.aptitude.line.insufficient": "{Name} is ill-suited to this terrain — slow to act and blocked in attack."
+  "battle.aptitude.line.insufficient": "{Name} is ill-suited to this terrain — slow to act and blocked in attack.",
+  "ui.bloodline.vignette.open": "Lineage Tale",
+  "ui.bloodline.vignette.title": "Lineage Tale: {0}",
+  "ui.bloodline.vignette.close": "Close",
+  "ui.bloodline.vignette.progress": "Unlocked {0}/{1}",
+  "ui.bloodline.vignette.cell": "{0}. {1}  {2}",
+  "ui.bloodline.vignette.locked": "(Unlocks at rebirth {0} or crest awakening)",
+  "ui.bloodline.vignette.no_rumor": "No bloodline rumor has spread yet.",
+  "ui.bloodline.vignette.empty": "No tales recorded for this general yet.",
+  "ui.bloodline.vignette.slot.origin": "Origin",
+  "ui.bloodline.vignette.slot.faction": "Faction",
+  "ui.bloodline.vignette.slot.role": "Role",
+  "ui.bloodline.vignette.slot.awakening": "Awakening",
+  "ui.bloodline.vignette.slot.bloodline": "Bloodline",
+  "ui.bloodline.vignette.slot.future": "Future"
 }

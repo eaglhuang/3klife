@@ -1,0 +1,17 @@
+{
+  "id": "general-bloodline-vignette-screen",
+  "version": 1,
+  "uiId": "BloodlineVignette",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "general-bloodline-vignette-main",
+  "skin": "general-bloodline-vignette-default",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
