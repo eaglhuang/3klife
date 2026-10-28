@@ -2,13 +2,15 @@
  * DailyFreeEnroll.test.ts — 掛機產出每日免費入學令（PROG-2-1374，ITM-06）
  *
  * 鎖住：公式 floor(等級/5)+1 在 1–9 級給 1–2 張；非法等級視為 1；
- * 登入切日才發一次，同日重登不重複發。
+ * 登入切日才發一次，同日重登不重複發；以已發放的最大日為高水位，時鐘回撥不重領，存讀後仍有效。
  *
  * Unity 對照：像 Idle 遊戲的每日領取按鈕，每天第一次開遊戲才可領，重開遊戲不能重領。
  */
 import { assert, TestSuite } from './TestRunner';
-import { GameSession } from '../assets/scripts/core/managers/GameSession';
-import { dailyFreeEnrollCount } from '../assets/scripts/core/systems/DailyFreeEnroll';
+import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
+import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
+import { dailyFreeEnrollCount, isNewEnrollGrantDay, normalizeEnrollGrantDay } from '../assets/scripts/core/systems/DailyFreeEnroll';
 import { ITEM_ADMISSION_TOKEN } from '../assets/scripts/core/systems/PlayerInventory';
 
 const HOUR_MS = 60 * 60 * 1000;
@@ -45,6 +47,48 @@ export function createDailyFreeEnrollSuite(): TestSuite {
         session.recordLoginAt(DAY_ONE);
         session.recordLoginAt(DAY_ONE + 24 * HOUR_MS);
         assert.equals(2, session.itemCount(ITEM_ADMISSION_TOKEN));
+    });
+
+    suite.test('時鐘回撥後再登入：已發過的日期不重領（高水位）', () => {
+        const session = new GameSession();
+        session.recordLoginAt(DAY_ONE + 24 * HOUR_MS);
+        assert.equals(1, session.itemCount(ITEM_ADMISSION_TOKEN));
+        session.recordLoginAt(DAY_ONE);
+        assert.equals(1, session.itemCount(ITEM_ADMISSION_TOKEN));
+        session.recordLoginAt(DAY_ONE + 24 * HOUR_MS);
+        assert.equals(1, session.itemCount(ITEM_ADMISSION_TOKEN));
+        session.recordLoginAt(DAY_ONE + 48 * HOUR_MS);
+        assert.equals(2, session.itemCount(ITEM_ADMISSION_TOKEN));
+    });
+
+    suite.test('存讀後高水位保留：讀檔後時鐘回撥仍不重領', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const make = (): GameSession => {
+            const s = new GameSession();
+            s.setRosterStore(new InMemoryRosterStore([]));
+            s.setSaveService(new PlayerSaveService(adapter));
+            return s;
+        };
+        const first = make();
+        first.recordLoginAt(DAY_ONE);
+        await first.save();
+
+        const second = make();
+        assert.isTrue(await second.load());
+        second.recordLoginAt(DAY_ONE - 24 * HOUR_MS);
+        assert.equals(1, second.itemCount(ITEM_ADMISSION_TOKEN));
+        second.recordLoginAt(DAY_ONE + 24 * HOUR_MS);
+        assert.equals(2, second.itemCount(ITEM_ADMISSION_TOKEN));
+    });
+
+    suite.test('高水位判斷：從未發過或今天晚於已發放日才發；讀檔值不合格視為 null', () => {
+        assert.isTrue(isNewEnrollGrantDay(null, '2026-10-28'));
+        assert.isTrue(isNewEnrollGrantDay('2026-10-27', '2026-10-28'));
+        assert.isFalse(isNewEnrollGrantDay('2026-10-28', '2026-10-28'));
+        assert.isFalse(isNewEnrollGrantDay('2026-10-28', '2026-10-27'));
+        assert.equals('2026-10-28', normalizeEnrollGrantDay('2026-10-28'));
+        assert.isTrue(normalizeEnrollGrantDay('10/28') === null);
+        assert.isTrue(normalizeEnrollGrantDay(20261028) === null);
     });
 
     return suite;
