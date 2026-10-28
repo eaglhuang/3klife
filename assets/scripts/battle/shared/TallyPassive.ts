@@ -65,6 +65,10 @@ export interface TallyPassiveSpec {
   lowHpDefenseBonus?: number;
   /** 火燒連營（都督符）：普攻後把目標及周圍 radius 格設為火場（PROG-2-1531） */
   igniteOnAttack?: { radius: number };
+  /** 遺計定遼（奉孝符）：此部隊陣亡時全場敵軍混亂（暈眩）turns 回合（PROG-2-1572） */
+  deathConfusion?: { turns: number };
+  /** 鷹視狼顧（狼顧符）：己方回合開始時，隨機一支血量比例 ≤ hpRatioMax 的敵軍（非主將部隊）叛變到我方（PROG-2-1572） */
+  defectEachTurn?: { hpRatioMax: number };
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -128,6 +132,10 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   // 都督符：火燒連營，普攻引燃目標及周圍 1 格（PROG-2-1531）
   'tiger-tally-du-du-fu': { igniteOnAttack: { radius: 1 } },
   'tiger-tally-e-lai-fu': { guardsAllies: { radius: 1 }, lowHpDefenseBonus: 1 },
+  // 遺計定遼（暫定 1 回合，PROG-2-1572）
+  'tiger-tally-feng-xiao-fu': { deathConfusion: { turns: 1 } },
+  // 鷹視狼顧（暫定：只策反血量 ≤ 30% 的殘兵，避免每回合白拿一支滿血部隊，PROG-2-1572）
+  'tiger-tally-lang-gu-fu': { defectEachTurn: { hpRatioMax: 0.3 } },
 };
 
 /** 各陣營出兵列（後排起點）：我方由 depth 0 出兵、敵方由最後一列出兵 */
@@ -309,4 +317,41 @@ export function extraAttackHitsOf(unit: TroopUnit, adjacentToMaleGeneral: boolea
   if (!spec) return 0;
   const conditional = spec.extraHitWhenAdjacentMale && adjacentToMaleGeneral ? spec.extraHitWhenAdjacentMale : 0;
   return (spec.extraHits ?? 0) + conditional;
+}
+
+/** 遺計定遼：回傳混亂回合數與受影響的敵軍；沒有此被動時回傳 null */
+export function tallyDeathConfusionOf(dead: TroopUnit, units: Iterable<TroopUnit>): { turns: number; targets: TroopUnit[] } | null {
+  const spec = dead.tallyTemplateId ? TALLY_PASSIVE_BY_TEMPLATE[dead.tallyTemplateId]?.deathConfusion : undefined;
+  if (!spec) return null;
+  const targets: TroopUnit[] = [];
+  for (const unit of units) {
+    if (unit.faction !== dead.faction && !unit.isDead()) targets.push(unit);
+  }
+  return { turns: spec.turns, targets };
+}
+
+/**
+ * 鷹視狼顧：行動陣營每支狼顧符部隊各策反一支敵軍，改為行動陣營。
+ * 候選為血量比例 ≤ 門檻、未陣亡、不是主將部隊的敵軍；沒有候選時不策反。回傳被策反的部隊。
+ */
+export function applyTallyDefection(
+  units: Iterable<TroopUnit>,
+  actingFaction: Faction,
+  isGeneralUnit: (unit: TroopUnit) => boolean,
+  random: () => number,
+): TroopUnit[] {
+  const all = [...units];
+  const defected: TroopUnit[] = [];
+  for (const owner of all) {
+    if (owner.faction !== actingFaction || owner.isDead()) continue;
+    const spec = owner.tallyTemplateId ? TALLY_PASSIVE_BY_TEMPLATE[owner.tallyTemplateId]?.defectEachTurn : undefined;
+    if (!spec) continue;
+    const candidates = all.filter((u) => u.faction !== actingFaction && !u.isDead() && !isGeneralUnit(u)
+      && u.maxHp > 0 && u.currentHp / u.maxHp <= spec.hpRatioMax);
+    if (candidates.length === 0) continue;
+    const target = candidates[Math.min(candidates.length - 1, Math.floor(random() * candidates.length))];
+    target.faction = actingFaction;
+    defected.push(target);
+  }
+  return defected;
 }

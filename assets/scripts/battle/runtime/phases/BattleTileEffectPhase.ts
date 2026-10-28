@@ -8,6 +8,7 @@ import { advanceMoraleOf } from '../../shared/Morale';
 import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
 import { sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
+import { applyTallyDefection } from '../../shared/TallyPassive';
 import { addStageSalvage, FIRE_RAID_TILE_NOTE, rollFirePlunderGain } from '../../shared/StageSalvage';
 
 export interface BattleTileEffectPhaseContext {
@@ -42,6 +43,13 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
     return !!caster && !caster.isDead();
   });
   advanceMoraleOf(context.state.units.values(), context.actingFaction);
+  // 鷹視狼顧（狼顧符，PROG-2-1572）：己方回合開始策反一支殘血敵軍，主將部隊不會被策反
+  applyTallyDefection(
+    context.state.units.values(),
+    context.actingFaction,
+    (unit) => unit.id === context.playerGeneralUnitId || unit.id === context.enemyGeneralUnitId,
+    context.random ?? (() => svc.session.randomSource()),
+  );
   const killed: TroopUnit[] = [];
   const killedIds = new Set<string>();
 
