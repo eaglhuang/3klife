@@ -515,5 +515,11 @@
   "UI_JOURNAL_STORY_DISPATCH_DONE": "{0} 已完成『{1}』，帶回 {2}。",
   "UI_JOURNAL_STORY_OFFLINE_INTERACTION": "{0} 與 {1} 在你離席時發生了一段插曲。",
   "UI_JOURNAL_STORY_OFFLINE_SUPPORT": "{0} 代你鎮住局面，留下了一份戰況摘要。",
-  "UI_JOURNAL_STORY_LOG_REVIEW": "卷軸展開，往日行止歷歷在目。"
+  "UI_JOURNAL_STORY_LOG_REVIEW": "卷軸展開，往日行止歷歷在目。",
+  "UI_DAILY_NEWS_TITLE": "三國日報 —— {0}",
+  "UI_DAILY_REPORT_NEWS_HEADER": "三國日報",
+  "UI_DAILY_REPORT_MORNING_TITLE": "晨報",
+  "UI_DAILY_REPORT_OPEN_HUB": "晨報派遣板 ▶",
+  "UI_DAILY_REPORT_REVENGE": "復仇取回 ▶",
+  "UI_DAILY_REPORT_CLOSE": "知道了"
 }

@@ -513,5 +513,11 @@
   "UI_JOURNAL_STORY_DISPATCH_DONE": "「{0} は『{1}』を完了し、{2} を持ち帰りました。」",
   "UI_JOURNAL_STORY_OFFLINE_INTERACTION": "「あなたの留守中に、{0} と {1} の間で一幕がありました。」",
   "UI_JOURNAL_STORY_OFFLINE_SUPPORT": "「{0} があなたに代わって場を治め、戦況の要約を残しました。」",
-  "UI_JOURNAL_STORY_LOG_REVIEW": "「巻物を開けば、過ぎし日の行いがありありと蘇る。」"
+  "UI_JOURNAL_STORY_LOG_REVIEW": "「巻物を開けば、過ぎし日の行いがありありと蘇る。」",
+  "UI_DAILY_NEWS_TITLE": "三国日報 —— {0}",
+  "UI_DAILY_REPORT_NEWS_HEADER": "三国日報",
+  "UI_DAILY_REPORT_MORNING_TITLE": "朝報",
+  "UI_DAILY_REPORT_OPEN_HUB": "朝報・派遣板 ▶",
+  "UI_DAILY_REPORT_REVENGE": "損失を取り戻す ▶",
+  "UI_DAILY_REPORT_CLOSE": "了解"
 }

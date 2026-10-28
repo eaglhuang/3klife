@@ -598,7 +598,7 @@ export class LobbyScene extends Component {
         const session = services().session;
         // 復仇取回（RET-05）：日報有帶百分比的復仇且有可取回的缺糧才顯示按鈕；需在標記已讀前擷取
         const revengeAvailable = session.revengeRecoverable > 0 && session.dailyNews.news.some((item) => item.type === 'REVENGE' && item.pct !== undefined);
-        this._dailyReport = DailyReportController.capture(session.dailyNews, session.morningReport, new Date(), revengeAvailable);
+        this._dailyReport = DailyReportController.capture(session.dailyNews, session.morningReport, new Date(), revengeAvailable, (key, ...args) => services().i18n.t(key, ...args));
         if (!this._dailyReport) return;
         session.markDailyNewsRead();
         session.markMorningReportRead();
