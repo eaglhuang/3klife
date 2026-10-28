@@ -105,6 +105,18 @@ export function createPrisonerTallyFlowSuite(): TestSuite {
         assert.equals('lead', a.tallyHoldings[TALLY_UID]);
     });
 
+    suite.test('勸降成功但虎符已由我方武將持有：不轉移，武將仍持有', async () => {
+        const adapter = new MemoryStorageAdapter();
+        const a = newSession(adapter, () => 0);
+        await a.registerTallyCards([tallyCard(TALLY_UID)]);
+        await a.equipTally(TALLY_UID, 'lead');
+        await a.capturePrisoner(general('gao-shun'), TALLY_UID);
+        await a.advanceSeason();
+        const resolution = await a.resolvePrisoner('gao-shun', 'persuade');
+        assert.isTrue(resolution !== null && resolution.joined);
+        assert.equals('lead', a.tallyHoldings[TALLY_UID]);
+    });
+
     suite.test('沒有記錄虎符的俘虜：勸降成功或放走都不轉移任何虎符', async () => {
         const adapter = new MemoryStorageAdapter();
         const a = newSession(adapter, () => 0);
