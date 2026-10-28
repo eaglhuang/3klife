@@ -6,17 +6,19 @@
  * 戰中不改帳號經濟（§I-2）。
  *
  * 火燒偷襲戰：我方佔領火攻格 = 掠奪成功，規格「糧草 +200~500」記為補給（Stage_Salvage 沒有糧草類，補給即糧草）。
- * 規格另列的武器材料 +10、教官經驗 +20 不在 Stage_Salvage 四類內，暫不記。
+ * 規格另列的武器材料 +10、教官經驗 +20 依使用者裁定（2026-10-29）加為 Stage_Salvage 新類別（PROG-2-1509）。
  */
 import type { SalvageTotals } from '../../core/systems/StrategistHud';
 
 export const FIRE_RAID_PLUNDER_SUPPLY_MIN = 200;
 export const FIRE_RAID_PLUNDER_SUPPLY_MAX = 500;
+export const FIRE_RAID_PLUNDER_WEAPON_MATERIAL = 10;
+export const FIRE_RAID_PLUNDER_INSTRUCTOR_EXP = 20;
 /** 火攻場景開局鋪的火格標記（BattleTacticBehavior.applyFireAttackTerrain） */
 export const FIRE_RAID_TILE_NOTE = 'scene-gambit:fire-attack';
 
 export function emptyStageSalvage(): SalvageTotals {
-    return { stone: 0, wood: 0, supply: 0, intel: 0 };
+    return { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 };
 }
 
 export function addStageSalvage(total: SalvageTotals, gain: Partial<SalvageTotals>): void {
@@ -24,6 +26,17 @@ export function addStageSalvage(total: SalvageTotals, gain: Partial<SalvageTotal
     total.wood += gain.wood ?? 0;
     total.supply += gain.supply ?? 0;
     total.intel += gain.intel ?? 0;
+    total.weaponMaterial += gain.weaponMaterial ?? 0;
+    total.instructorExp += gain.instructorExp ?? 0;
+}
+
+/** 掠奪一格火攻格的全部收益：補給擲骰＋固定武器材料與教官經驗 */
+export function rollFirePlunderGain(random: () => number): Partial<SalvageTotals> {
+    return {
+        supply: rollFirePlunderSupply(random),
+        weaponMaterial: FIRE_RAID_PLUNDER_WEAPON_MATERIAL,
+        instructorExp: FIRE_RAID_PLUNDER_INSTRUCTOR_EXP,
+    };
 }
 
 /** 掠奪一格火攻格的補給：200~500 均勻整數 */

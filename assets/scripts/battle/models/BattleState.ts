@@ -109,7 +109,7 @@ export class BattleState {
   /** 本局是否已對外發出 BattleEnded（勝負判定可重複呼叫，事件只發一次） */
   public battleEndAnnounced = false;
   /** 關卡級回收累計（關卡設計系統 §I，PROG-2-1462）：戰中只累計，戰鬥結束隨 BattleEnded 帶出 */
-  public stageSalvage: SalvageTotals = { stone: 0, wood: 0, supply: 0, intel: 0 };
+  public stageSalvage: SalvageTotals = { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 };
   /** 已被掠奪的火攻格（"lane,depth"），每格只掠奪一次 */
   public plunderedTiles = new Set<string>();
   /** AI 擊殺充能難度（PROG-2-0920）；只影響敵方擊殺的 SP，玩家擊殺仍是固定值 */
@@ -180,7 +180,7 @@ export class BattleState {
     this.lastSpurtMode = false;
     this.peakTroopCount = 0;
     this.battleEndAnnounced = false;
-    this.stageSalvage = { stone: 0, wood: 0, supply: 0, intel: 0 };
+    this.stageSalvage = { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 };
     this.plunderedTiles = new Set<string>();
 
     // 重置武將狀態

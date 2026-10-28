@@ -70,8 +70,11 @@ export function createStageSalvageSuite(): TestSuite {
         addUnit(ctrl, 'p1', Faction.Player, 2, 3);
         tick(ctrl, Faction.Player);
         assert.equals(200, ctrl.state.stageSalvage.supply);
+        assert.equals(10, ctrl.state.stageSalvage.weaponMaterial, 'PROG-2-1509 武器材料 +10');
+        assert.equals(20, ctrl.state.stageSalvage.instructorExp, 'PROG-2-1509 教官經驗 +20');
         tick(ctrl, Faction.Player);
         assert.equals(200, ctrl.state.stageSalvage.supply, '同一格只掠奪一次');
+        assert.equals(10, ctrl.state.stageSalvage.weaponMaterial, '同一格不重複給武器材料');
     });
 
     suite.test('兩格各掠奪一次', () => {
@@ -80,6 +83,8 @@ export function createStageSalvageSuite(): TestSuite {
         addUnit(ctrl, 'p2', Faction.Player, 3, 4);
         tick(ctrl, Faction.Player, () => 0.9999);
         assert.equals(FIRE_RAID_PLUNDER_SUPPLY_MAX * 2, ctrl.state.stageSalvage.supply);
+        assert.equals(20, ctrl.state.stageSalvage.weaponMaterial);
+        assert.equals(40, ctrl.state.stageSalvage.instructorExp);
     });
 
     suite.test('敵方站火攻格不掠奪；非火攻格不掠奪', () => {
@@ -107,6 +112,8 @@ export function createStageSalvageSuite(): TestSuite {
             undefined, Weather.Clear, BattleTactic.FireAttack,
         );
         assert.equals(0, ctrl.state.stageSalvage.supply);
+        assert.equals(0, ctrl.state.stageSalvage.weaponMaterial);
+        assert.equals(0, ctrl.state.stageSalvage.instructorExp);
         assert.equals(0, ctrl.state.plunderedTiles.size);
     });
 
