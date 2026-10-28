@@ -102,6 +102,7 @@ import { fillTacticNumbers, type TacticMetrics } from '../shared/EnemyTacticNumb
 import { aiHoldsTactic, pickTacticByIq } from '../shared/AiTacticDecision';
 import { aiShouldInitiateDuel } from '../../core/systems/AiDuelDecision';
 import { lastSpurtReasonOf } from '../../core/systems/LastSpurtJudge';
+import { advanceWisdomMeter } from '../shared/WisdomMeter';
 import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
@@ -892,6 +893,15 @@ export class BattleController {
   }
 
   /** 殘局判斷（FORM-10）：每回合切換時更新合計兵力峰值，達條件就進入殘局模式並只發一次事件 */
+  /** 軍師智謀能量（SCN-10，PROG-2-1553）：每回合依我方主將智力累積，滿了記一次觸發（效果與 HUD 未做） */
+  private updateWisdomMeter(): void {
+    const player = this.state.playerGeneral;
+    if (!player) return;
+    const step = advanceWisdomMeter(this.state.wisdomMeter, player.int);
+    this.state.wisdomMeter = step.meter;
+    if (step.triggered) this.state.wisdomTriggerCount += 1;
+  }
+
   private updateLastSpurtMode(): void {
     const living = this.livingUnitsOf(Faction.Player).length + this.livingUnitsOf(Faction.Enemy).length;
     this.state.peakTroopCount = Math.max(this.state.peakTroopCount, living);
@@ -1386,6 +1396,7 @@ export class BattleController {
     svc.battle.nextTurn();
     this.state.tickControlledUnits();
     this.updateLastSpurtMode();
+    this.updateWisdomMeter();
     const weatherBefore = this.state.weather;
     this.applyWeatherForTurn(svc.battle.getSnapshot().turn);
     this.announceAptitudeDialogue(weatherBefore !== this.state.weather);
