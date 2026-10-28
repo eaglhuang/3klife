@@ -253,6 +253,14 @@
   "ui.gene.tag.red": "🔴 Physique Gene",
   "ui.vit.script.exhausted": "{0} is exhausted and cannot act for now.",
   "ui.oracle.locked": "This sage is locked (needs {N} divinations in total).",
+  "ui.ultimate.unlock": "Ultimate #{N} 【{UltName}】unlocked!",
+  "ui.ultimate.cast": "Activate ultimate 【{UltName}】",
+  "ui.ultimate.cost": "Vitality cost: {Cost}%",
+  "ui.ultimate.cooldown": "Once per battle",
+  "ui.ultimate.locked": "Requires {N} rebirth(s) to unlock",
+  "ui.ultimate.level": "Ultimate level: {Level}",
+  "ui.ultimate.inherited": "【Inherited ultimate】 from {ParentName}",
+  "ui.ultimate.upgrade": "Ultimate 【{UltName}】 upgraded to Lv.{Level}!",
   "ui.oracle.sage_locked": "{Name} is still locked.",
   "ui.vit.script.pill_used": "{0} took a Vitality Pill. Vitality restored!",
   "ui.vit.script.pregnancy_lock": "{0} is pregnant. Vitality recovery is paused…",
@@ -479,5 +487,12 @@
   "ui.bloodline.vignette.slot.role": "Role",
   "ui.bloodline.vignette.slot.awakening": "Awakening",
   "ui.bloodline.vignette.slot.bloodline": "Bloodline",
-  "ui.bloodline.vignette.slot.future": "Future"
+  "ui.bloodline.vignette.slot.future": "Future",
+  "UI_NPC_DIALOGUE_TITLE": "General's Thoughts",
+  "UI_NPC_CONTEXT_SELECT": "Context",
+  "UI_NPC_SPEAK_BUTTON": "Hear Them Out",
+  "UI_NPC_LOADING": "Recalling the past...",
+  "UI_NPC_FALLBACK": "Let me think on that.",
+  "UI_NPC_OFFLINE_MODE": "Offline template",
+  "UI_NPC_SOURCE_HINT": "Source: {0}"
 }

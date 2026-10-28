@@ -32,6 +32,16 @@ export interface NpcMemoryRecord {
     Template_Slot_Values: Record<string, string>;
 }
 
+/** 新局的 NPC 擁有者 id：由開局種子決定，同一種子永遠同一個 id。 */
+export function npcPlayerIdFromSeed(seed: number): string {
+    return `npc-${(seed >>> 0).toString(36)}`;
+}
+
+/** 讀回存檔中的擁有者 id；缺欄位或空白回傳 null，呼叫端負責補產。 */
+export function normalizeNpcPlayerId(raw: unknown): string | null {
+    return nonEmptyString(raw);
+}
+
 /** 建立空的 NPC 記憶；Player_ID 為空時回傳 null。 */
 export function createNpcMemory(playerId: string): NpcMemoryRecord | null {
     const id = playerId.trim();
@@ -49,10 +59,10 @@ export function createNpcMemory(playerId: string): NpcMemoryRecord | null {
 /** 寫入一筆回憶：同一 Vector_ID 會先移除舊的再放到尾端；超過上限丟最舊。回傳新物件，不改原值。 */
 export function appendRecallContext(record: NpcMemoryRecord, entry: RecallEntry): NpcMemoryRecord {
     const clean = sanitizeRecallEntry(entry);
-    if (clean === null) return copyRecord(record);
+    if (clean === null) return cloneNpcMemory(record);
     const kept = record.Recall_Context.filter((item) => item.Vector_ID !== clean.Vector_ID);
     const next = [...kept, clean].slice(-RECALL_CONTEXT_LIMIT);
-    return { ...copyRecord(record), Recall_Context: next };
+    return { ...cloneNpcMemory(record), Recall_Context: next };
 }
 
 /** 讀取某位武將的回憶，最新的在前，供離線模板選句使用。 */
@@ -111,7 +121,8 @@ function sanitizeRecallEntry(raw: unknown): RecallEntry | null {
     };
 }
 
-function copyRecord(record: NpcMemoryRecord): NpcMemoryRecord {
+/** 深拷貝一份記憶，寫入存檔前用，避免快照與原值互相影響。 */
+export function cloneNpcMemory(record: NpcMemoryRecord): NpcMemoryRecord {
     return {
         ...record,
         Recall_Context: record.Recall_Context.map((item) => ({ ...item })),

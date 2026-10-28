@@ -1,5 +1,6 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import type { AiDifficulty } from '../../core/systems/AiSpCharge';
+import type { AiIqLevel } from '../../core/systems/AiDifficultyTable';
 import { Faction, GAME_CONFIG, Weather, BattleTactic } from "../../core/config/Constants";
 import { TerrainType, TerrainGrid } from "../../shared/CommonEnums";
 export type { TerrainGrid };
@@ -114,6 +115,10 @@ export class BattleState {
   public aiSpGainModifier = 1;
   /** AI 難度加成（ai-difficulty.json difficultyBonus）：敵方每回合部署數（F-2）用；預設 0 = 普通 */
   public aiDifficultyBonus = 0;
+  /** AI 智力等級（ai-difficulty.json aiIq）：敵方奧義施放決策用（AIS-07） */
+  public aiIq: AiIqLevel = 'LOW';
+  /** AI 是否可施放奧義（ai-difficulty.json canUseUltimate）；預設 false，未設定難度表時敵方不放奧義（AIS-07） */
+  public aiCanUseUltimate = false;
 
   constructor() {
     for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {

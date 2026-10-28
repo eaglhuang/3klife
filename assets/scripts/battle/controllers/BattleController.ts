@@ -11,6 +11,8 @@ import {
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import type { AiDifficulty } from "../../core/systems/AiSpCharge";
 import type { AiDifficultyEntry } from "../../core/systems/AiDifficultyTable";
+import { aiShouldUseUltimate } from '../../core/systems/AiUltimateDecision';
+import { isUltimateSlotUnlocked } from '../../core/systems/UltimateSlotUnlock';
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleUnitSpawner, type TroopDataTable } from '../runtime/BattleUnitSpawner';
 import { applySoloBreachAtTurnStart } from '../runtime/BattleSoloBreach';
@@ -267,6 +269,8 @@ export class BattleController {
     this.state.aiDuelAcceptThreshold = null;
     this.state.aiSpGainModifier = 1;
     this.state.aiDifficultyBonus = aiDifficultyBonus;
+    this.state.aiIq = 'LOW';
+    this.state.aiCanUseUltimate = false;
     this.duelFlow.resetForBattle();
     this.flowStateMachine.reset();
     this.flowStateMachine.startBattle();
@@ -518,6 +522,8 @@ export class BattleController {
   /** 套用 AI 難度表列（ai-difficulty.json）：單挑接受閾值由此讀取（PROG-2-1325）。需在 initBattle() 之後呼叫。 */
   public configureAiDifficulty(entry: AiDifficultyEntry): void {
     this.state.aiDuelAcceptThreshold = entry.duelAcceptThreshold;
+    this.state.aiIq = entry.aiIq;
+    this.state.aiCanUseUltimate = entry.canUseUltimate;
     this.state.aiSpGainModifier = entry.spGainModifier;
   }
 
@@ -709,26 +715,7 @@ export class BattleController {
       null,
     );
     if (weakest) {
-      const formula = new FormulaSystem();
-      const attackerInt = general.int > general.str;
-      const attackerAttack = formula.calculateGeneralAttack(
-        attackerInt
-          ? { int: general.int, lea: general.lea, maxHp: general.maxHp }
-          : { str: general.str, lea: general.lea, maxHp: general.maxHp },
-      );
-      const damage = estimateTacticDamage(
-        {
-          attackerAttack,
-          defenderDefense: weakest.getEffectiveDefense(),
-          attackerType: attackerInt ? TroopType.Archer : TroopType.Infantry,
-          defenderType: weakest.type,
-          attackerTerrain: TerrainType.Plain,
-          defenderTerrain: TerrainType.Plain,
-          attackBonus: general.attackBonus,
-        },
-        1,
-        formula,
-      );
+      const damage = this.estimateEnemyStrikeDamage(general, weakest);
       for (const candidate of candidates) {
         if (candidate.category === 'single-damage') {
           metrics[candidate.tacticId] = { estimatedDamage: damage };
@@ -757,6 +744,83 @@ export class BattleController {
     if (!tacticId) return null;
     const battleSkillId = this.tacticDefinitionMap.get(tacticId)?.battleSkillId;
     return battleSkillId ? { tacticId, battleSkillId } : null;
+  }
+
+  /** 敵將單次攻擊對指定我方單位的預估傷害（倍率 1、平原；敵方選技與奧義擊殺估算共用） */
+  private estimateEnemyStrikeDamage(general: GeneralUnit, defender: TroopUnit): number {
+    const formula = new FormulaSystem();
+    const attackerInt = general.int > general.str;
+    const attackerAttack = formula.calculateGeneralAttack(
+      attackerInt
+        ? { int: general.int, lea: general.lea, maxHp: general.maxHp }
+        : { str: general.str, lea: general.lea, maxHp: general.maxHp },
+    );
+    return estimateTacticDamage(
+      {
+        attackerAttack,
+        defenderDefense: defender.getEffectiveDefense(),
+        attackerType: attackerInt ? TroopType.Archer : TroopType.Infantry,
+        defenderType: defender.type,
+        attackerTerrain: TerrainType.Plain,
+        defenderTerrain: TerrainType.Plain,
+        attackBonus: general.attackBonus,
+      },
+      1,
+      formula,
+    );
+  }
+
+  /**
+   * 敵方奧義決策（AIS-07）：難度表允許、精力已滿、有解鎖奧義，且 aiShouldUseUltimate 判定施放時，回傳奧義組合。
+   * 數值暫定（PM 裁定）：estimatedKills＝目前存活、兵力 ≤ 敵將單次預估傷害的我方單位數（範圍暫以全體我方計）；
+   * isLosing＝敵方存活單位少於玩家。
+   */
+  public chooseEnemyUltimate(): { battleSkillId: string; ultimateId: string } | null {
+    const general = this.state.getGeneral(Faction.Enemy);
+    if (!general || !this.state.aiCanUseUltimate || !general.canUseSkill() || !general.skillId) return null;
+
+    const ultimateId = general.ultimateSlots.find(slot => isUltimateSlotUnlocked(slot, general.rebirthCount))?.ultimateId;
+    if (!ultimateId) return null;
+
+    const playerCount = this.livingUnitsOf(Faction.Player).length;
+    const enemyCount = this.livingUnitsOf(Faction.Enemy).length;
+    const shouldUse = aiShouldUseUltimate({
+      iq: this.state.aiIq,
+      vitality: general.vitality,
+      enemyCount: playerCount,
+      estimatedKills: this.livingUnitsOf(Faction.Player)
+        .filter(unit => unit.currentHp <= this.estimateEnemyStrikeDamage(general, unit)).length,
+      isLosing: enemyCount < playerCount,
+    });
+    return shouldUse ? { battleSkillId: general.skillId, ultimateId } : null;
+  }
+
+  /** 敵方施放奧義：生效後才清空精力並發事件（與玩家奧義同一套 SP 規則） */
+  private tryEnemyUltimate(): void {
+    const choice = this.chooseEnemyUltimate();
+    if (!choice) return;
+
+    const result = this.castBattleSkill(
+      Faction.Enemy,
+      { battleSkillId: choice.battleSkillId, ultimateId: choice.ultimateId },
+      SkillSourceType.Ultimate,
+    );
+    if (!result.applied) return;
+
+    const general = this.state.getGeneral(Faction.Enemy);
+    if (!general) return;
+    general.currentSp = 0;
+    services().event.emit(EVENT_NAMES.GeneralSpChanged, {
+      faction: Faction.Enemy,
+      sp: general.currentSp,
+      maxSp: general.maxSp,
+    });
+    services().event.emit(EVENT_NAMES.GeneralSkillUsed, {
+      faction: Faction.Enemy,
+      skillName: choice.battleSkillId,
+      skillId: choice.battleSkillId,
+      sourceType: SkillSourceType.Ultimate,
+    });
   }
 
   private livingUnitsOf(faction: Faction): TroopUnit[] {
@@ -1132,6 +1196,7 @@ export class BattleController {
         return {};
       case 'enemy-special-resolve':
       case 'special-resolve':
+        this.tryEnemyUltimate();
         executeBattleSpecialResolvePhase({
           state: this.state,
           actingFaction: Faction.Enemy,

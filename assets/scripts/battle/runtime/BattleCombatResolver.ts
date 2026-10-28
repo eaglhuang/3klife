@@ -13,7 +13,7 @@ import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
-import { extraAttackHitsOf, tallyAttackMultiplierOf, tallyBackRowDamageMultiplierOf, tallyPhysicalDamageTakenOf } from '../shared/TallyPassive';
+import { extraAttackHitsOf, tallyAttackMultiplierOf, tallyDefenseMultiplierOf, tallyBackRowDamageMultiplierOf, tallyPhysicalDamageTakenOf } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import { tacticTriggerRate } from '../../core/systems/TacticTriggerRate';
@@ -69,10 +69,10 @@ export class BattleCombatResolver {
     return mod === 1 ? damage : Math.max(1, Math.floor(damage * mod));
   }
 
-  /** 虎符部隊的防禦乘數：星級 × 同陣營在場 Set 的防禦加成（PROG-2-0574）；非虎符單位恆為 1 */
+  /** 虎符部隊的防禦乘數：星級 × 同陣營在場 Set 的防禦加成（PROG-2-0574）× 被動防禦乘數（虎痴符，PROG-2-1444）；非虎符單位恆為 1 */
   public getTallyDefenseMod(unit: TroopUnit): number {
     if (!unit.tallyId) return 1;
-    return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).defMod;
+    return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).defMod * tallyDefenseMultiplierOf(unit);
   }
 
   private tallySetMods(faction: Faction): { atkMod: number; defMod: number } {
