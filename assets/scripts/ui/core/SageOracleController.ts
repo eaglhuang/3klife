@@ -27,7 +27,7 @@ import { ITEM_DISPLAY_NAMES, ITEM_ORACLE_TOKEN } from '../../core/systems/Player
 import type { FactorPoolEntry } from '../../core/systems/BreedingSystem';
 import { previewLockedFactorDirections } from '../../core/systems/SageFactorPreview';
 import { ProphecyResult, SAGES, SageDefinition, SageDivinationResult, SageId } from '../../core/systems/SageDivination';
-import { oracleLockedText } from './OracleLockedText';
+import { oracleLockedText, sageLockedOutcomeText } from './OracleLockedText';
 
 export const SAGE_ORDER: readonly SageId[] = ['zhuge-liang', 'pang-tong', 'hua-tuo', 'xu-shao', 'sima-hui', 'zuo-ci'];
 
@@ -267,7 +267,7 @@ export class SageOracleController {
             case 'no-token':
                 return `${TOKEN_NAME}不足，無法預言`;
             case 'sage-locked':
-                return `${sage.name}尚未解鎖`;
+                return sageLockedOutcomeText(sage.name);
             case 'no-candidate':
                 return `${father.name} 與 ${mother.name} 的祖譜沒有可預言的因子（未消耗${TOKEN_NAME}）`;
             default:
@@ -290,7 +290,7 @@ export class SageOracleController {
             case 'no-token':
                 return `${TOKEN_NAME}不足，無法占卜`;
             case 'sage-locked':
-                return `${sage.name}尚未解鎖`;
+                return sageLockedOutcomeText(sage.name);
             case 'no-candidate':
                 return `${target.name} 目前沒有可占卜的因子（未消耗${TOKEN_NAME}）`;
             default:
