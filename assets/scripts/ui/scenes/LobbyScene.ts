@@ -1897,6 +1897,7 @@ export class LobbyScene extends Component {
     private async _mountItemBag(): Promise<void> {
         this._itemBag = new ItemBagController({
             inventory: () => services().session.inventory,
+            acquisitionLog: () => services().session.itemAcquisitionLog,
             useItem: (itemId, nowMs) => services().session.useItem(itemId, nowMs),
             now: () => Date.now(),
         });
