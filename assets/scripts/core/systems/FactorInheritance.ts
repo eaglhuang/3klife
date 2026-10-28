@@ -171,11 +171,23 @@ export interface FactorInheritanceOptions {
     maxFactors?: number;
     /** 父母平均 LUK（PROG-2-0510）；缺省為 0，行為與舊版相同 */
     parentAvgLuk?: number;
+    /** 藍色 3 星因子機率（FORM-08，§5.1）；缺省或 0 = 不啟用，行為與舊版相同 */
+    blueFactorChance?: number;
 }
 
 export function rollFactorStar(generation: 1 | 2 | 3, random: RandomSource): number {
     const dist = FACTOR_STAR_DISTRIBUTION[generation];
     return random() < dist.highRate ? dist.high : dist.low;
+}
+
+/**
+ * 藍色因子至少升到 3 星（FORM-08，§5.1）：機率由呼叫端給，未啟用時原樣回傳且不消耗亂數。
+ * 只抬升、不降星；3 星的上限仍由各因子的 maxLevel 夾住。
+ */
+function blueStarFloor(color: FactorColor, star: number, options: FactorInheritanceOptions): number {
+    const chance = options.blueFactorChance ?? 0;
+    if (color !== 'blue' || chance <= 0) return star;
+    return options.random() < chance ? Math.max(star, 3) : star;
 }
 
 /**
@@ -201,7 +213,7 @@ export function inheritFactors(sources: AncestorFactorSource[], options: FactorI
             if (options.random() >= poolRate) continue;
 
             const maxLevel = options.dictionary?.get(factorId)?.maxLevel ?? 5;
-            const level = Math.min(maxLevel, rollFactorStar(source.generation, options.random));
+            const level = Math.min(maxLevel, blueStarFloor(color, rollFactorStar(source.generation, options.random), options));
             const existing = merged.get(factorId);
             if (!existing) {
                 merged.set(factorId, { id: factorId, color, level, generation: source.generation, sourceUids: [source.uid] });
