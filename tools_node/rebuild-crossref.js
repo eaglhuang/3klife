@@ -271,7 +271,8 @@ function upsertProgressHistorySection(progressMd, date, percent) {
 
 // ── Rebuild progress: scan .ts files vs B-1 ─────────────────────────────────
 function rebuildProgress() {
-  const scriptsDir = path.join(ROOT, 'assets', 'scripts');
+  // B-1 also lists shared/ contracts (PROG-2-1427), so scan both roots
+  const scriptsDirs = [path.join(ROOT, 'assets', 'scripts'), path.join(ROOT, 'shared')];
   const testsDir   = path.join(ROOT, 'tests');
 
   function walkTs(dir, acc) {
@@ -285,7 +286,7 @@ function rebuildProgress() {
 
   const scriptFiles = new Set();
   const testFiles   = new Set();
-  walkTs(scriptsDir, scriptFiles);
+  scriptsDirs.forEach(dir => walkTs(dir, scriptFiles));
   walkTs(testsDir,   testFiles);
 
   const codeRefPath = path.join(ROOT, 'docs', 'cross-ref', 'cross-ref-code.md');
@@ -310,7 +311,7 @@ function rebuildProgress() {
 
   console.log('\n[rebuild-progress] B-1 .ts coverage:');
   console.log(`  Referenced in B-1: ${referencedTs.length}`);
-  console.log(`  Present in assets/scripts: ${present.length}`);
+  console.log(`  Present in assets/scripts + shared: ${present.length}`);
   console.log(`  STALE (not found): ${stale.length}`);
   if (stale.length > 0) stale.forEach(f => console.log(`    - ${f}`));
 
