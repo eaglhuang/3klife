@@ -102,7 +102,7 @@ import { fillTacticNumbers, type TacticMetrics } from '../shared/EnemyTacticNumb
 import { aiHoldsTactic, pickTacticByIq } from '../shared/AiTacticDecision';
 import { aiShouldInitiateDuel } from '../../core/systems/AiDuelDecision';
 import { lastSpurtReasonOf } from '../../core/systems/LastSpurtJudge';
-import { advanceWisdomMeter } from '../shared/WisdomMeter';
+import { advanceWisdomMeter, applyWisdomSurge } from '../shared/WisdomMeter';
 import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
@@ -893,13 +893,17 @@ export class BattleController {
   }
 
   /** 殘局判斷（FORM-10）：每回合切換時更新合計兵力峰值，達條件就進入殘局模式並只發一次事件 */
-  /** 軍師智謀能量（SCN-10，PROG-2-1553）：每回合依我方主將智力累積，滿了記一次觸發（效果與 HUD 未做） */
+  /** 軍師智謀能量（SCN-10，PROG-2-1553）：每回合依我方主將智力累積，滿了觸發全軍鼓舞（HUD 未做） */
   private updateWisdomMeter(): void {
     const player = this.state.playerGeneral;
     if (!player) return;
     const step = advanceWisdomMeter(this.state.wisdomMeter, player.int);
     this.state.wisdomMeter = step.meter;
-    if (step.triggered) this.state.wisdomTriggerCount += 1;
+    if (step.triggered) {
+      this.state.wisdomTriggerCount += 1;
+      // 全局增幅（PROG-2-1574，暫定）：我方全軍士氣 +20
+      applyWisdomSurge(this.state.units.values(), Faction.Player);
+    }
   }
 
   private updateLastSpurtMode(): void {
