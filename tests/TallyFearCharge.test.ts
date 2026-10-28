@@ -3,7 +3,7 @@
  */
 import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { applyFearCharge, tallyDamageGuardOf, tallyDefenseMultiplierOf, tallyHealsAllies, tallySplashTargetsOf } from '../assets/scripts/battle/shared/TallyPassive';
+import { applyFearCharge, tallyDamageGuardOf, tallyDefenseMultiplierOf, tallyHealsAllies, tallyIgniteCellsOf, tallySplashTargetsOf } from '../assets/scripts/battle/shared/TallyPassive';
 import { MORALE_DURATION_TURNS } from '../assets/scripts/battle/shared/Morale';
 import { TestSuite, assert } from './TestRunner';
 
@@ -97,6 +97,13 @@ export function createTallyFearChargeSuite(): TestSuite {
         assert.equals(1, tallyDefenseMultiplierOf(eLai));
         eLai.takeDamage(50);
         assert.equals(1.5, tallyDefenseMultiplierOf(eLai));
+    });
+
+    suite.test('都督符火燒連營（PROG-2-1531）：目標及周圍 1 格，棋盤外不算', () => {
+        const duDu = unitAt('d', Faction.Player, 2, 2, 'tiger-tally-du-du-fu');
+        assert.equals(9, tallyIgniteCellsOf(duDu, unitAt('t', Faction.Enemy, 2, 4)).length);
+        assert.equals(4, tallyIgniteCellsOf(duDu, unitAt('c', Faction.Enemy, 0, 0)).length);
+        assert.equals(0, tallyIgniteCellsOf(unitAt('p', Faction.Player, 2, 2), unitAt('t2', Faction.Enemy, 2, 4)).length);
     });
 
     return suite;

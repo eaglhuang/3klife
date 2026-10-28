@@ -63,6 +63,8 @@ export interface TallyPassiveSpec {
   guardsAllies?: { radius: number };
   /** 血低防高（惡來符）：防禦乘數 × (1 + bonus × 已損血比例) */
   lowHpDefenseBonus?: number;
+  /** 火燒連營（都督符）：普攻後把目標及周圍 radius 格設為火場（PROG-2-1531） */
+  igniteOnAttack?: { radius: number };
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -123,6 +125,8 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   // 南蠻：巨型踐踏濺射，目標周圍 1 格敵軍受 50%（PROG-2-1527 暫定數字）；無視輕型步兵阻擋未做
   'tiger-tally-nan-man': { splash: { radius: 1, ratio: 0.5 } },
   // 惡來符：捨命護主，替周圍 1 格友軍承傷；血低防高，空血時防禦 ×2（PROG-2-1530 暫定數字）
+  // 都督符：火燒連營，普攻引燃目標及周圍 1 格（PROG-2-1531）
+  'tiger-tally-du-du-fu': { igniteOnAttack: { radius: 1 } },
   'tiger-tally-e-lai-fu': { guardsAllies: { radius: 1 }, lowHpDefenseBonus: 1 },
 };
 
@@ -214,6 +218,20 @@ export function tallyDamageGuardOf(unit: TroopUnit, units: Iterable<TroopUnit>, 
     }
   }
   return null;
+}
+
+/** 火燒連營：回傳要引燃的格（目標及周圍，限棋盤內）；沒有此被動時為空 */
+export function tallyIgniteCellsOf(attacker: TroopUnit, defender: TroopUnit): Array<{ lane: number; depth: number }> {
+  const ignite = passiveOf(attacker)?.igniteOnAttack;
+  if (!ignite) return [];
+  const cells: Array<{ lane: number; depth: number }> = [];
+  for (let lane = defender.lane - ignite.radius; lane <= defender.lane + ignite.radius; lane += 1) {
+    for (let depth = defender.depth - ignite.radius; depth <= defender.depth + ignite.radius; depth += 1) {
+      if (lane < 0 || lane >= GAME_CONFIG.GRID_LANES || depth < 0 || depth >= GAME_CONFIG.GRID_DEPTH) continue;
+      cells.push({ lane, depth });
+    }
+  }
+  return cells;
 }
 
 /** 此部隊是否帶治療友軍被動（常山女）；沒有時為 false */
