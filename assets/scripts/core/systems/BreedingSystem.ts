@@ -36,6 +36,7 @@ import { blueFactorInheritChance } from './BlueFactorInheritance';
 import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
 import { analyzeTagResonance, KIN_RESONANCE_MIN_COUNT } from './KinRelation';
 import { baseVitalityMaxOf } from './VitalityCap';
+import { VITALITY_HIGH_THRESHOLD_PCT } from './VitalityBattleGate';
 import { rollWildGene, STAR_JUMP_MAX_LEVEL, STAR_JUMP_STEP } from './WildGene';
 import { lukMaxForGenes, luckThresholdEffects, type LuckThresholdEffects } from './LuckThresholds';
 import { forceFatherTacticCopy } from './LuckTacticCopy';
@@ -57,6 +58,8 @@ export const EP_BASE = 50;
 export const EP_RESONANCE_BONUS = 15;
 export const EP_OUTCROSS_BONUS = 20;
 export const EP_AFFINITY_BONUS = 25;
+/** 精力滿載：父母結緣時精力都高於上限 50%（因子爆發系統 爆發力加分因子，PROG-2-1511） */
+export const EP_VITALITY_FULL_BONUS = 10;
 /** 14 人中同一標籤至少出現在幾位祖先身上才算共鳴 */
 export const EP_RESONANCE_MIN_COUNT = KIN_RESONANCE_MIN_COUNT;
 
@@ -152,6 +155,13 @@ function vigorOf(general: GeneralConfig): number {
 
 function maxVigorOf(general: GeneralConfig): number {
     return general.maxVitality ?? general.vitality ?? baseVitalityMaxOf(general.gender);
+}
+
+/** 精力在高段（> 上限 50%，與 VitalityBattleGate 同一門檻）；上限無效視為未達 */
+export function isVitalityFull(general: GeneralConfig): boolean {
+    const max = maxVigorOf(general);
+    if (!Number.isFinite(max) || max <= 0) return false;
+    return (Math.max(0, vigorOf(general)) / max) * 100 > VITALITY_HIGH_THRESHOLD_PCT;
 }
 
 /**
@@ -298,6 +308,8 @@ export interface EpBreakdown {
     resonance: number;
     outcross: number;
     affinity: number;
+    /** 精力滿載加成（PROG-2-1511）；未達標為 0 */
+    vitalityFull: number;
     /** 天命波動（PROG-2-0511）；預覽不擲骰時為 0 */
     fate: number;
     /** 出現在最多位祖先身上的標籤與次數 */
@@ -313,11 +325,13 @@ export interface EpBreakdown {
  * - 共鳴：同一標籤（因子 id 或 core tag）出現在 ≥ 3 位祖先身上
  * - 異脈：14 個位置都已知且沒有任何重複的人
  * - 契合：史實 / 宿敵配對
+ * - 精力滿載：父母結緣時精力都在高段（PROG-2-1511）
  */
 export function computeEpMvp(
     pedigree: Pedigree,
     profiles: Map<string, AncestorProfile>,
     isHistoricalPair: boolean,
+    parentsVitalityFull = false,
 ): EpBreakdown {
     // 標籤統計統一走 KinRelation.analyzeTagResonance（KIN-03），與相性引擎同一份計法
     const ancestorTags = PEDIGREE_SLOTS.flatMap((slot) => {
@@ -332,8 +346,9 @@ export function computeEpMvp(
     const resonance = hasResonance ? EP_RESONANCE_BONUS : 0;
     const outcross = allKnown && new Set(uids).size === PEDIGREE_SLOTS.length ? EP_OUTCROSS_BONUS : 0;
     const affinity = isHistoricalPair ? EP_AFFINITY_BONUS : 0;
-    const ep = EP_BASE + resonance + outcross + affinity;
-    return { ep, resonance, outcross, affinity, fate: 0, topTag, topTagCount, familyTradition, rating: epRatingLabel(ep) };
+    const vitalityFull = parentsVitalityFull ? EP_VITALITY_FULL_BONUS : 0;
+    const ep = EP_BASE + resonance + outcross + affinity + vitalityFull;
+    return { ep, resonance, outcross, affinity, vitalityFull, fate: 0, topTag, topTagCount, familyTradition, rating: epRatingLabel(ep) };
 }
 
 /** 天命波動小區間（PM 裁定 2026-10-14，運氣屬性加入爆發力公式）：運氣平均 > 80 → +5～+15；< 40 → -5～-10；其餘 0 */
@@ -565,7 +580,8 @@ export function previewBreedingEp(request: Omit<BreedingRequest, 'random' | 'chi
     const pedigree = buildChildPedigree(request.father.id, request.mother.id, request.pedigree);
     const profiles = collectProfiles(pedigree, request);
     const historical = request.isHistoricalPair?.(request.father, request.mother) ?? false;
-    return { pedigree, ep: computeEpMvp(pedigree, profiles, historical) };
+    const vitalityFull = isVitalityFull(request.father) && isVitalityFull(request.mother);
+    return { pedigree, ep: computeEpMvp(pedigree, profiles, historical, vitalityFull) };
 }
 
 /** 子嗣可能繼承的一個因子：至少一位祖先進池的機率（不含星等與 5 格上限） */
