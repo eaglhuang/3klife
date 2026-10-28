@@ -1,4 +1,4 @@
-// @spec-source → 治理模式他國AI系統.md（doc_spec_0020）E-1、E-2、E-5、E-12；PROG-2-1087
+// @spec-source → 治理模式他國AI系統.md（doc_spec_0020）E-1、E-2、E-3、E-5、E-7、E-12；PROG-2-1087、PROG-2-1502、PROG-2-1503
 /**
  * RivalNations — 他國 AI 勢力的純邏輯：勢力清單、與玩家的邦交、外交指令、季度行動、自動模擬戰鬥。
  * 不依賴 cc；狀態是可序列化的純資料，所有函式都回傳新狀態，不改輸入。
@@ -13,6 +13,13 @@
 export type NationProfile =
     | 'MILITARIST' | 'DIPLOMAT' | 'GUARDIAN' | 'WARLORD'
     | 'EXPANSIONIST' | 'PASSIVE' | 'CAVALRY_LORD' | 'RAIDER';
+
+import {
+    AI_STARTING_RESOURCES, INTEL_CAP, NATION_PRIMARY_TASK, RULER_GOVERNANCE_STATS, aiGovernanceTick,
+    rollRecruitQuality, shouldRecruitThisSeason, type NationResources, type RecruitQuality,
+} from './RivalGovernance';
+import { clampResource } from './ResourceCap';
+import { SeededRandom } from './SeededRandom';
 
 export interface NationDef {
     readonly id: string;
@@ -49,7 +56,23 @@ export interface NationState {
     readonly tradeSeason?: number;
     /** 該季已交易次數 */
     readonly tradeCount?: number;
+    /** 內政資源（RAI-01）；舊存檔缺漏時補 AI_STARTING_RESOURCES */
+    readonly resources?: NationResources;
+    /** 已完成的內政季數（RAI-03 招募每 2 季一次的計數） */
+    readonly governedSeasons?: number;
+    /** 累計招募品質數（E-7，各品質一次一名） */
+    readonly recruits?: Readonly<Record<RecruitQuality, number>>;
 }
+
+/** 招募擲骰的獨立亂數（依勢力與季數定種子），不消耗局內亂數流，免得改動其他既有擲骰結果 */
+function recruitRandom(id: string, seasons: number): () => number {
+    let seed = seasons;
+    for (const ch of id) seed = (Math.imul(seed, 31) + ch.charCodeAt(0)) >>> 0;
+    const rng = new SeededRandom(seed);
+    return () => rng.next();
+}
+
+export const EMPTY_RECRUITS: Readonly<Record<RecruitQuality, number>> = Object.freeze({ S: 0, A: 0, B: 0, C: 0 });
 
 export interface RivalWorld {
     readonly nations: readonly NationState[];
@@ -75,7 +98,8 @@ export function createRivalWorld(defs: readonly NationDef[] = NATION_DEFS): Riva
     return {
         nations: defs.map((def) => ({
             id: def.id, troops: def.troops, territories: def.territories,
-            relation: def.relation, allied: false, atWar: false,
+            relation: def.relation, allied: false, atWar: false, resources: { ...AI_STARTING_RESOURCES },
+            governedSeasons: 0, recruits: { ...EMPTY_RECRUITS },
         })),
     };
 }
@@ -170,13 +194,20 @@ export interface SeasonTickResult {
     readonly events: SeasonEvent[];
 }
 
-/** 季度推進：兵力成長、邦交向 0 回歸（交戰中不回歸）、敵對勢力依性格擲骰進攻玩家 */
+/** 季度推進：兵力成長、內政結算（RAI-03）、邦交向 0 回歸（交戰中不回歸）、敵對勢力依性格擲骰進攻玩家 */
 export function advanceRivalSeason(world: RivalWorld, random: () => number): SeasonTickResult {
     const events: SeasonEvent[] = [];
     const nations = world.nations.map((n) => {
         const def = nationDef(n.id);
-        const tuning = PROFILE_TUNING[def?.profile ?? 'PASSIVE'];
+        const profile = def?.profile ?? 'PASSIVE';
+        const tuning = PROFILE_TUNING[profile];
         const troops = Math.round(n.troops * (1 + tuning.growth));
+        // 兵力傳 0 作為基底，只取內政產出的增量，封頂不會誤砍既有兵力
+        const governed = aiGovernanceTick(
+            { ...(n.resources ?? AI_STARTING_RESOURCES), troops: 0 },
+            profile,
+            [{ type: NATION_PRIMARY_TASK[profile], general: RULER_GOVERNANCE_STATS }],
+        );
         let relation = n.relation;
         if (!n.atWar && !n.allied) {
             relation = relation > 0 ? Math.max(0, relation - RELATION_DRIFT) : Math.min(0, relation + RELATION_DRIFT);
@@ -185,7 +216,22 @@ export function advanceRivalSeason(world: RivalWorld, random: () => number): Sea
         if (hostile && !n.allied && random() < tuning.attack) {
             events.push({ nationId: n.id, kind: 'attack', message: `${def?.name ?? n.id} 率軍來犯！` });
         }
-        return { ...n, troops, relation };
+        const resources = { food: governed.food, gold: governed.gold, fame: governed.fame, intel: governed.intel };
+        const governedSeasons = (n.governedSeasons ?? 0) + 1;
+        const recruits = { ...(n.recruits ?? EMPTY_RECRUITS) };
+        // E-7 每 2 季招募 1 名，品質依名聲擲骰
+        if (shouldRecruitThisSeason(governedSeasons)) {
+            const quality = rollRecruitQuality(resources.fame, recruitRandom(n.id, governedSeasons));
+            recruits[quality] += 1;
+        }
+        return {
+            ...n,
+            troops: troops + governed.troops,
+            relation,
+            resources,
+            governedSeasons,
+            recruits,
+        };
     });
     return { world: { nations }, events };
 }
@@ -266,6 +312,21 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
         }
     }
     const num = (v: unknown, fallback: number): number => (typeof v === 'number' && Number.isFinite(v) ? v : fallback);
+    const count = (v: unknown): number => Math.max(0, Math.floor(num(v, 0)));
+    const recruitsOf = (raw: unknown): Record<RecruitQuality, number> => {
+        const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
+        return { S: count(r.S), A: count(r.A), B: count(r.B), C: count(r.C) };
+    };
+    const resourcesOf = (raw: unknown): NationResources => {
+        const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
+        const whole = (v: unknown, fallback: number): number => Math.max(0, Math.round(num(v, fallback)));
+        return {
+            food: clampResource('food', whole(r.food, AI_STARTING_RESOURCES.food)),
+            gold: clampResource('gold', whole(r.gold, AI_STARTING_RESOURCES.gold)),
+            fame: clampResource('fame', whole(r.fame, AI_STARTING_RESOURCES.fame)),
+            intel: Math.min(INTEL_CAP, whole(r.intel, AI_STARTING_RESOURCES.intel)),
+        };
+    };
     return {
         nations: base.nations.map((n) => {
             const s = saved.get(n.id);
@@ -277,6 +338,9 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
                 relation: clampRelation(num(s.relation, n.relation)),
                 allied: s.allied === true,
                 atWar: s.atWar === true,
+                resources: resourcesOf(s.resources),
+                governedSeasons: count(s.governedSeasons),
+                recruits: recruitsOf(s.recruits),
                 ...(typeof s.tradeSeason === 'number' && Number.isFinite(s.tradeSeason)
                     ? { tradeSeason: Math.floor(s.tradeSeason), tradeCount: Math.max(0, Math.floor(num(s.tradeCount, 0))) }
                     : {}),

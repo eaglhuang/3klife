@@ -128,6 +128,10 @@ export class BattleState {
   public aiTacticIq: AiIqLevel | null = null;
   /** AI 是否可用戰法（ai-difficulty.json canUseTactics）；預設 true */
   public aiCanUseTactics = true;
+  /** 殘局模式（FORM-10）：第 5 回合或存活低於 50% 時進入，進入後不退出 */
+  public lastSpurtMode = false;
+  /** 戰場上出現過的最高合計兵力（FORM-10 存活比例分母） */
+  public peakTroopCount = 0;
 
   constructor() {
     for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
@@ -167,6 +171,8 @@ export class BattleState {
     this.weatherSchedule = [];
     this.battleTactic = battleTactic ?? BattleTactic.Normal;
     this.sceneFlags = { stealthOpenTurns: 0, nightRaid: false, nightRaidOpenTurns: 0 };
+    this.lastSpurtMode = false;
+    this.peakTroopCount = 0;
     this.battleEndAnnounced = false;
     this.stageSalvage = { stone: 0, wood: 0, supply: 0, intel: 0 };
     this.plunderedTiles = new Set<string>();

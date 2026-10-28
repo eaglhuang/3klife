@@ -6,7 +6,7 @@ import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } 
 export type BattleSkillFalloffRule = 'none' | 'linear-step';
 export type BattleSkillEffectKind =
   | 'damage' | 'heal' | 'control' | 'link' | 'counter' | 'reset'
-  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack';
+  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack' | 'vitality';
 
 export interface BattleSkillProfile {
   battleSkillId: string;
@@ -56,6 +56,8 @@ export interface BattleSkillProfile {
   maximizeMoraleOnAllies?: boolean;
   /** 施放者自身獲得無敵的回合數（白馬銀槍·不滅 1 回合）；無敵期間受到的傷害歸零 */
   selfInvincibleTurns?: number;
+  /** 精力回復：占武將精力上限的比例（規格 對酒當歌 20%），封頂為精力上限 */
+  vitalityRestoreRatio?: number;
   /** 結姻連射：額外攻擊次數（規格 +1） */
   extraHits?: number;
   /** 強制位移的格數（規格 1～2） */
@@ -182,6 +184,14 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     scalingStat: 'str',
     maximizeMoraleOnAllies: true,
     selfInvincibleTurns: 1,
+  },
+  // 對酒當歌（曹操 4，ULT-08 補缺）：全軍精力回復 20%；提升攻速規格未給幅度，待裁決，本次未實作
+  'cao-cao-revelry': {
+    battleSkillId: 'cao-cao-revelry',
+    targetMode: BattleSkillTargetMode.AllyAll,
+    effectKind: 'vitality',
+    coefficient: 0,
+    vitalityRestoreRatio: 0.2,
   },
   // 空城計（教官，PROG-2-0777）：施放者智力高於敵方武將時，半徑 2 內敵軍沿反向直線後退 2 格（規格 戰法系統 空城計）
   'empty-fort': {

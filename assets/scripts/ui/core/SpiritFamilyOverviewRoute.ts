@@ -3,6 +3,8 @@ export type SpiritFamilyOverviewOrigin = 'lobby' | 'general-detail';
 
 export interface SpiritFamilyOverviewOpenPayload {
     origin?: SpiritFamilyOverviewOrigin;
+    /** 從武將命頁進入時帶入的武將 id，命鏡頁據此讀取 5 格命運帶（STORY-04） */
+    generalId?: string;
     generalName?: string;
     branchUid?: string;
     entryLabel?: string;

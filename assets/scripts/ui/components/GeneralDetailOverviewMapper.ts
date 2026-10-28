@@ -19,6 +19,7 @@ import type { InventoryRecord, InventoryViews } from '../../core/systems/Invento
 import { equippedTalismanSlot, type TalismanSlotView } from '../../core/systems/TalismanSlotView';
 import { buildGeneralTallySummary, type GeneralTallySummary } from '../../core/systems/GeneralTallySummary';
 import type { BattleRecordLike } from '../../core/systems/BattleRecordStats';
+import { buildEquipPageSegments, type EquipPageSegments } from '../../core/systems/EquipPageSegments';
 import { buildHeirloomCardView, type HeirloomCardView } from '../../core/systems/HeirloomCardView';
 import type { PlayerInventory } from '../../core/systems/PlayerInventory';
 import { resolveRarityTier } from '../../core/utils/RarityResolver';
@@ -94,6 +95,7 @@ export interface GeneralDetailOverviewContentState {
     gearSlots: GearSlotView[];
     /** 寶頁傳家寶卡（TSK-04，PROG-2-1389）；倉庫數量，尚未綁定到單一武將 */
     heirloomCard: HeirloomCardView;
+    equipSegments: EquipPageSegments;
     crestFaceResource?: string;
     crestGlyphPrimary: string;
     crestGlyphSecondary: string;
@@ -257,6 +259,7 @@ export function buildGeneralDetailOverviewContentState(
         commandCapacity: readModel.commandCapacity.state === 'VALUE' ? readModel.commandCapacity.value : null,
         cityTroops,
     });
+    const gearSlots = buildGearPageSlots(deriveGeneralBackpack(records, config.id), (uid) => gearNameOfUid(records, uid));
     return {
         headerTitle: overview.header.title,
         headerName: overview.header.name,
@@ -304,8 +307,9 @@ export function buildGeneralDetailOverviewContentState(
         portraitResource: portraitPathOf(config.id),
         tallySlot: equippedTalismanSlot(views, config.id),
         tallySummary: buildGeneralTallySummary(equippedTalismanSlot(views, config.id), battleRecord ?? battleRecordOf(config)),
-        gearSlots: buildGearPageSlots(deriveGeneralBackpack(records, config.id), (uid) => gearNameOfUid(records, uid)),
+        gearSlots,
         heirloomCard: buildHeirloomCardView(inventory),
+        equipSegments: buildEquipPageSegments(gearSlots, inventory),
     };
 }
 
