@@ -7,6 +7,8 @@ import {
   TROOP_DEPLOY_COST,
 } from "../../core/config/Constants";
 import { BattleState } from "../models/BattleState";
+import { pickDeployLane } from "../../core/systems/AiLaneStrategy";
+import type { AiLaneStrategy } from "../../core/systems/AiProfiles";
 
 export interface DeployDecision {
   type: TroopType;
@@ -26,6 +28,9 @@ export class EnemyAI {
   /** random：部署位置與兵種的擲骰來源；正式環境傳存檔亂數源（Q25） */
   constructor(private readonly _random: () => number = Math.random) {}
 
+  /** Profile 路線策略（E-4，PROG-2-1463）；null 時隨機選路 */
+  public laneStrategy: AiLaneStrategy | null = null;
+
   /**
    * 根據當前棋盤狀態與可用 DP 決定本回合部署。
    * deployCount：本回合部署數上限，由呼叫端依 getAIDeployCount（F-2）算出。
@@ -35,6 +40,7 @@ export class EnemyAI {
     const decisions: DeployDecision[] = [];
     const deployDepth = GAME_CONFIG.GRID_DEPTH - 1;
     const chosenLanes = new Set<number>();
+    const occupancy = this.getLaneOccupancy(state);
     let remaining = availableDp;
 
     for (let i = 0; i < deployCount; i++) {
@@ -49,8 +55,9 @@ export class EnemyAI {
       if (remaining < cost) break;
       remaining -= cost;
 
-      const lane = freeLanes[Math.floor(this._random() * freeLanes.length)];
+      const lane = pickDeployLane(this.laneStrategy, freeLanes, occupancy, this._random)!;
       chosenLanes.add(lane);
+      occupancy.own[lane] += 1;
       decisions.push({ type, lane });
     }
 
@@ -87,6 +94,18 @@ export class EnemyAI {
 
     // 無法剋制時隨機選
     return affordable[Math.floor(this._random() * affordable.length)];
+  }
+
+  /** 各線部隊數（AI 己方 / 玩家），同回合已決定的部署會再累加到 own */
+  private getLaneOccupancy(state: BattleState): { own: number[]; opponent: number[] } {
+    const own = new Array<number>(GAME_CONFIG.GRID_LANES).fill(0);
+    const opponent = new Array<number>(GAME_CONFIG.GRID_LANES).fill(0);
+    state.units.forEach((unit) => {
+      if (unit.isDead() || unit.lane < 0 || unit.lane >= GAME_CONFIG.GRID_LANES) return;
+      if (unit.faction === Faction.Enemy) own[unit.lane] += 1;
+      else opponent[unit.lane] += 1;
+    });
+    return { own, opponent };
   }
 
   private getFreeLanes(state: BattleState, deployDepth: number): number[] {

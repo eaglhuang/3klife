@@ -57,5 +57,17 @@
       "laneStrategy": null,
       "historicalExamples": ["劉備", "孫權"]
     }
-  ]
+  ],
+  "_generalProfilesComment": "E-6 AI 武將模板示例的武將 → Profile（PROG-2-1463）；開戰時敵將依此取得路線策略，未列出的武將沿用隨機選路。",
+  "generalProfiles": {
+    "cao-cao": "AGGRESSIVE",
+    "liu-bei": "BALANCED",
+    "sun-quan": "DEFENSIVE",
+    "zhuge-liang": "STRATEGIC",
+    "lu-bu": "CAVALRY_RUSH",
+    "zhou-yu": "STRATEGIC",
+    "guan-yu": "ELITE_FEW",
+    "yuan-shao": "SWARM",
+    "sima-yi": "DEFENSIVE"
+  }
 }
