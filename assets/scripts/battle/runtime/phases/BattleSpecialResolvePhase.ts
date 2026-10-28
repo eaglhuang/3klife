@@ -63,6 +63,7 @@ export function executeBattleSpecialResolvePhase(context: BattleSpecialResolvePh
       svc.event.emit(EVENT_NAMES.GeneralSkillUsed, {
         faction: Faction.Enemy,
         skillName: result.battleSkillId,
+        generalName: enemyGeneral.name,
       });
     }
   }
