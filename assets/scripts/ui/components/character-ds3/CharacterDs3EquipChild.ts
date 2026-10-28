@@ -12,11 +12,11 @@ import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { gearSlotText } from '../../../core/systems/GearPageSlots';
 import { EQUIP_SLOTS, type EquipSlot } from '../../../core/systems/GeneralBackpack';
 import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
-import type { HeirloomCardView } from '../../../core/systems/HeirloomCardView';
+import type { HeirloomCardView, ItemSummaryView } from '../../../core/systems/HeirloomCardView';
+import { EQUIP_GEAR_NODE_PREFIX, EQUIP_HEIRLOOM_NODE, EQUIP_ITEM_SUMMARY_NODE } from './EquipBindPathPolicy';
 import { GearSlotPickController, type GearSlotPickFlowView } from '../../core/GearSlotPickController';
 import { GearPickPanelView, type GearPickClick } from './GearPickPanelView';
 
-const HEIRLOOM_CARD_NODE = 'HeirloomCard';
 
 export class CharacterDs3EquipChild extends ChildPanelBase {
     override dataSource = 'config';
@@ -42,7 +42,7 @@ export class CharacterDs3EquipChild extends ChildPanelBase {
 
     /** 每格的文字節點本身就是點擊區；節點沒有 Button 時補一個（與 GeneralDetailSkillsChild 相同做法）。 */
     private _bindSlotTap(slot: EquipSlot): void {
-        const label = this.binder.getLabel(`EquipSlot_${slot}`);
+        const label = this.binder.getLabel(`${EQUIP_GEAR_NODE_PREFIX}${slot}`);
         if (!label) return;
         const button = label.node.getComponent(Button) ?? label.node.addComponent(Button);
         button.node.on(Button.EventType.CLICK, () => this._openGearPick(slot), this);
@@ -84,10 +84,11 @@ export class CharacterDs3EquipChild extends ChildPanelBase {
         const slots = content.gearSlots;
         if (Array.isArray(slots)) {
             for (const view of slots) {
-                this._setLabelText(`EquipSlot_${view.slot}`, gearSlotText(view));
+                this._setLabelText(`${EQUIP_GEAR_NODE_PREFIX}${view.slot}`, gearSlotText(view));
             }
         }
         if (content.heirloomCard) this._setHeirloomCard(content.heirloomCard);
+        this._setItemSummary(content.equipSegments?.items ?? null);
     }
 
     /**
@@ -96,9 +97,9 @@ export class CharacterDs3EquipChild extends ChildPanelBase {
      */
     private _setHeirloomCard(card: HeirloomCardView): void {
         const root = this.hostNode;
-        let node = root.getChildByName(HEIRLOOM_CARD_NODE);
+        let node = root.getChildByName(EQUIP_HEIRLOOM_NODE);
         if (!node) {
-            node = new Node(HEIRLOOM_CARD_NODE);
+            node = new Node(EQUIP_HEIRLOOM_NODE);
             node.layer = root.layer;
             root.addChild(node);
             node.addComponent(UITransform).setContentSize(420, 36);
@@ -109,6 +110,11 @@ export class CharacterDs3EquipChild extends ChildPanelBase {
         }
         const label = node.getComponent(Label);
         if (label) label.string = `${card.title}　${card.countLine}`;
+    }
+
+    /** 道具摘要（TSK-08）：版型內的 EquipItemSummary 節點；沒有持有道具時顯示提示。 */
+    private _setItemSummary(item: ItemSummaryView | null): void {
+        this._setLabelText(EQUIP_ITEM_SUMMARY_NODE, item ? `${item.name}　${item.countLine}` : '尚未持有道具');
     }
 
     private _setLabelText(nodeName: string, text: string): void {
