@@ -55,6 +55,11 @@ let tacticDefinitionMap = new Map<string, CanonicalTacticDefinition>();
 let ultimateDefinitionMap = new Map<string, CanonicalUltimateDefinition>();
 let ultBasePowerTable: Readonly<Record<string, number>> | undefined;
 
+/** 奧義綁定的戰法 id（ultimate-definitions.battleSkillId）；定義沒有綁定或查不到時為 null／undefined（敵方奧義決策用） */
+export function findUltimateBattleSkillId(ultimateId: string): string | null | undefined {
+  return ultimateDefinitionMap.get(ultimateId)?.battleSkillId;
+}
+
 /** 奧義的精力成本比例（例如 0.05 = 5%）；定義尚未載入或查不到時回傳 undefined（PROG-2-0429） */
 export function findUltimateVitalityCostPct(ultimateId: string): number | undefined {
   return ultimateDefinitionMap.get(ultimateId)?.vitalityCostPct;

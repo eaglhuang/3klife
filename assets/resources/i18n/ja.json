@@ -26,6 +26,8 @@
   "ui.general.skill": "武将スキル",
   "ui.general.details": "詳細情報",
   "ui.general.vitality": "精力",
+  "ui.general.loyalty": "忠誠",
+  "ui.general.loyalty.locked": "ロック",
   "ui.general.age": "年齢",
   "ui.general.ep": "爆発力",
   "ui.general.skill_ready": "主スキル",

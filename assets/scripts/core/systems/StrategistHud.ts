@@ -26,6 +26,10 @@ export interface SalvageTotals {
     wood: number;
     supply: number;
     intel: number;
+    /** 武器材料（火燒偷襲戰掠奪，PROG-2-1509） */
+    weaponMaterial: number;
+    /** 教官經驗（火燒偷襲戰掠奪，PROG-2-1509） */
+    instructorExp: number;
 }
 
 export interface StrategistHudInput {
@@ -64,6 +68,8 @@ const SALVAGE_LABEL: Readonly<Record<keyof SalvageTotals, string>> = {
     wood: '木材',
     supply: '補給',
     intel: '情報',
+    weaponMaterial: '武器材料',
+    instructorExp: '教官經驗',
 };
 
 export function buildStrategistHudSummary(input: StrategistHudInput): StrategistHudSummary {

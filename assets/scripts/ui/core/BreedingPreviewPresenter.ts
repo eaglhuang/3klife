@@ -12,7 +12,7 @@ import type { EpBreakdown } from '../../core/systems/BreedingSystem';
 export interface BreedingPreviewLines {
     /** 「預計爆發力 EP 128 · 優良」 */
     epLine: string;
-    /** 「共鳴 +20　異脈 +8　契合 +10」；天命不為 0 時才附加「天命 ±N」 */
+    /** 「共鳴 +20　異脈 +8　契合 +10」；精力、天命不為 0 時才附加「精力 +N」「天命 ±N」 */
     breakdownLine: string;
     /** 「最多共鳴標籤：勇 ×4」或「無共鳴標籤」 */
     tagLine: string;
@@ -24,6 +24,7 @@ export function buildBreedingPreviewLines(ep: EpBreakdown): BreedingPreviewLines
         `異脈 ${signed(ep.outcross)}`,
         `契合 ${signed(ep.affinity)}`,
     ];
+    if (ep.vitalityFull !== 0) breakdownParts.push(`精力 ${signed(ep.vitalityFull)}`);
     if (ep.fate !== 0) breakdownParts.push(`天命 ${signed(ep.fate)}`);
 
     return {

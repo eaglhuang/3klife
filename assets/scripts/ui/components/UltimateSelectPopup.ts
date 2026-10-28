@@ -33,6 +33,8 @@ export interface UltimateSkillItem {
     label: string;
     /** SP 消耗（通常 = maxSp） */
     costSp: number;
+    /** 本場已施放過（E-9 每場限 1 次）→ 選單灰化不可點（PROG-2-1512） */
+    used?: boolean;
 }
 
 @ccclass('UltimateSelectPopup')
@@ -180,10 +182,11 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
             rowTransform.setContentSize(200, 48);
 
             const background = rowNode.addComponent(SolidBackground);
-            background.color = new Color(26, 32, 42, 216);
+            background.color = skill.used ? new Color(26, 32, 42, 110) : new Color(26, 32, 42, 216);
 
             const button = rowNode.addComponent(Button);
             button.target = rowNode;
+            button.interactable = !skill.used;
 
             const rowLayout = rowNode.addComponent(Layout);
             rowLayout.type = Layout.Type.HORIZONTAL;
@@ -197,13 +200,15 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
             const iconNode = this._createSkillLabel(rowNode, `Icon_${skill.skillId}`, 32, this._iconForSkill(skill.skillId), 18, new Color(212, 175, 55, 255));
             iconNode.getComponent(Label)!.horizontalAlign = Label.HorizontalAlign.CENTER;
 
-            const nameNode = this._createSkillLabel(rowNode, `Name_${skill.skillId}`, 104, skill.label, 16, new Color(232, 228, 220, 255));
+            const nameNode = this._createSkillLabel(rowNode, `Name_${skill.skillId}`, 104, skill.used ? `${skill.label}（已用）` : skill.label, 16,
+                skill.used ? new Color(128, 128, 128, 255) : new Color(232, 228, 220, 255));
             nameNode.getComponent(Label)!.horizontalAlign = Label.HorizontalAlign.LEFT;
 
             const costNode = this._createSkillLabel(rowNode, `Cost_${skill.skillId}`, 44, `${skill.costSp}`, 14, new Color(126, 200, 247, 255));
             costNode.getComponent(Label)!.horizontalAlign = Label.HorizontalAlign.RIGHT;
 
             rowNode.on(Button.EventType.CLICK, () => {
+                if (skill.used) return;
                 services().event.emit(EVENT_NAMES.UltimateSkillSelected, { skillId: skill.skillId, ultimateId: skill.ultimateId });
                 this.hide();
             }, this);

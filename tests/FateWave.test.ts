@@ -107,7 +107,7 @@ export function createFateWaveSuite(): TestSuite {
         assert.equals('conceived', high.outcome);
         assert.isTrue((high.ep?.fate ?? 0) !== 0, '高 LUK 父母的子嗣有天命波動');
         const ep = high.ep!;
-        assert.equals(50 + ep.resonance + ep.outcross + ep.affinity + ep.fate, ep.ep, '總分 = 基礎 + 波動');
+        assert.equals(50 + ep.resonance + ep.outcross + ep.affinity + ep.vitalityFull + ep.fate, ep.ep, '總分 = 基礎 + 波動');
     });
 
     return suite;
