@@ -105,3 +105,10 @@ export function dispatchCompleteLine(generalName: string, jobName: string, rewar
         .replace('{JobName}', jobName)
         .replace('{RewardText}', rewardText);
 }
+
+/** 派遣完成劇本句的查表 key（PROG-2-1448），參數順序與 zh-TW 模板的 {0}{1}{2} 一致。 */
+export const DISPATCH_COMPLETE_KEY = 'UI_JOURNAL_STORY_DISPATCH_DONE';
+
+export function dispatchCompleteArgs(generalName: string, jobName: string, rewardText: string): string[] {
+    return [generalName, jobName, rewardText];
+}

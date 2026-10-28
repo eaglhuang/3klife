@@ -94,7 +94,9 @@ import {
     DISPATCH_JOURNAL_PRIORITY, dispatchRewardAmount, EMPTY_DISPATCH_STATE, normalizeDispatchState, settleDueDispatches, startDispatch,
     type CompletedDispatchJob, type DispatchJobDef, type DispatchStartReason, type DispatchStartResult, type DispatchState,
 } from '../systems/DispatchJobs';
-import { dispatchCompleteLine, getDispatchScore, type DispatchGeneral, type DispatchStatKey } from '../systems/DispatchQuality';
+import {
+    DISPATCH_COMPLETE_KEY, dispatchCompleteArgs, dispatchCompleteLine, getDispatchScore, type DispatchGeneral, type DispatchStatKey,
+} from '../systems/DispatchQuality';
 import {
     appendOfflineBattleSnapshot, nextOfflineBattleSnapshotId, normalizeOfflineBattleSnapshots, OFFLINE_BATTLE_JOURNAL, CAMPAIGN_BATTLE_JOURNAL, type OfflineBattleInput, type OfflineBattleSnapshot,
 } from '../systems/OfflineBattleSnapshot';
@@ -2350,6 +2352,8 @@ export class GameSession {
                 relatedGeneralUids: [job.generalId],
                 priority: DISPATCH_JOURNAL_PRIORITY[job.quality],
                 summary: dispatchCompleteLine(name, job.name, job.rewardText),
+                summaryKey: DISPATCH_COMPLETE_KEY,
+                summaryArgs: dispatchCompleteArgs(name, job.name, job.rewardText),
             });
             this._grantDispatchReward(job, grantGold);
         }
