@@ -170,6 +170,7 @@ import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ADMISSION_TOKEN, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_TREASURE, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFlow';
 import { equipGear as equipGearFlow, unequipGear as unequipGearFlow, transferGearToHeir, type GearEquipResult } from '../systems/GearEquipFlow';
+import { decomposeGearRecord, setRecordLocked, type GearDecomposeResult } from '../systems/GearLockDecompose';
 import { gearDefinitionOf } from '../systems/GearDefinitions';
 import type { EquipSlot } from '../systems/GeneralBackpack';
 import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
@@ -1085,6 +1086,25 @@ export class GameSession {
     public unequipGear(generalUid: string, slotId: EquipSlot): GearEquipResult {
         const result = unequipGearFlow(this._inventoryRecords, generalUid, slotId);
         if (result.ok) this._inventoryRecords = result.records;
+        return result;
+    }
+
+    /** 鎖定或解鎖一件物件庫列（BAG-07）；鎖定列不可分解，不影響穿戴 */
+    public setInventoryLocked(inventoryId: string, locked: boolean): boolean {
+        const result = setRecordLocked(this._inventoryRecords, inventoryId, locked);
+        if (result.ok) this._inventoryRecords = result.records;
+        return result.ok;
+    }
+
+    /** 分解一件未鎖定、未裝備的一般裝備（BAG-07）：移除該列並給 1 件竹簡（來源暫記 UNKNOWN） */
+    public decomposeGear(inventoryId: string): GearDecomposeResult {
+        const before = this._inventory;
+        const result = decomposeGearRecord(this._inventoryRecords, this._inventory, inventoryId);
+        if (!result.ok) return result;
+        this._inventoryRecords = result.records;
+        this._inventory = result.inventory;
+        this._recordGain(before, 'UNKNOWN');
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         return result;
     }
 
