@@ -3,7 +3,7 @@
  */
 import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { applyFearCharge } from '../assets/scripts/battle/shared/TallyPassive';
+import { applyFearCharge, tallyHealsAllies } from '../assets/scripts/battle/shared/TallyPassive';
 import { MORALE_DURATION_TURNS } from '../assets/scripts/battle/shared/Morale';
 import { TestSuite, assert } from './TestRunner';
 
@@ -49,6 +49,12 @@ export function createTallyFearChargeSuite(): TestSuite {
         daQiao.morale = 30;
         assert.equals(0, applyFearCharge(tieQi, [daQiao]).length);
         assert.equals(30, daQiao.morale);
+    });
+
+    suite.test('常山女治療友軍（PROG-2-1526）：只有常山女騎帶治療被動', () => {
+        assert.isTrue(tallyHealsAllies(unitAt('c', Faction.Player, 0, 0, 'tiger-tally-changshan-nu')));
+        assert.isTrue(!tallyHealsAllies(unitAt('t', Faction.Player, 0, 0, 'tiger-tally-tie-qi')));
+        assert.isTrue(!tallyHealsAllies(unitAt('p', Faction.Player, 0, 0)));
     });
 
     return suite;
