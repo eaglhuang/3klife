@@ -31,6 +31,7 @@ import { executeBattleSpecialResolvePhase } from '../runtime/phases/BattleSpecia
 import { executeBattleTileEffectPhase } from '../runtime/phases/BattleTileEffectPhase';
 import { desertVitalityDrain } from '../../core/systems/DesertVitality';
 import { combatRelationsBetween, type HistoricalPairTable } from '../../core/systems/HistoricalPairs';
+import { relationEventsForBattle, type RelationEventHit, type RelationEventLedger } from '../../core/systems/RelationEvents';
 import type { HistoricalRelation } from '../../core/systems/KinRelation';
 import { BattleCombatResolver } from '../runtime/BattleCombatResolver';
 import { BattleGeneralDuelFlow } from '../runtime/BattleGeneralDuelFlow';
@@ -169,6 +170,10 @@ export class BattleController {
   public tallyInfoOf: (tallyId: string) => { star: number; templateId: string; sourceTemplateId?: string | null } | null = () => null;
   /** 史實配對表（KIN-02）；合攻判定讀它，未設定時不觸發史實合攻（PROG-2-1065） */
   public historicalPairs: HistoricalPairTable | null = null;
+  /** 本場開場判定到的關係事件（PROG-2-1413）；未綁定帳本時為空 */
+  public relationEventHits: RelationEventHit[] = [];
+  private relationLedger: RelationEventLedger | null = null;
+  private relationScopeKey = '';
   /** 本場出陣過的虎符 id（PROG-2-0573：戰後依此結算戰鬥經驗） */
   private readonly _deployedTallyIds = new Set<string>();
   /** 出征軍勢 / 糧草帳本；null = 舊版 demo 戰鬥（不扣軍勢） */
@@ -272,8 +277,17 @@ export class BattleController {
     this.sortie = null;
     services().buff.clearAll(); // 清除上一場的狀態效果
     services().battle.beginBattle();
+    this.relationEventHits = this.relationLedger
+        ? relationEventsForBattle(this.historicalPairs, this.relationLedger, this.relationScopeKey, playerGeneral.id, enemyGeneral.id)
+        : [];
     this.applyStartOfBattleSceneGambit();
     this.tileBuffLifecycleManager.spawnTileBuffsForTurn();
+  }
+
+  /** 綁定關係事件帳本與戰役實例 key（同一場戰役只觸發一次）；需在 initBattle() 之前呼叫 */
+  public bindRelationEvents(scopeKey: string, ledger: RelationEventLedger): void {
+    this.relationScopeKey = scopeKey;
+    this.relationLedger = ledger;
   }
 
   /** 從 resources/data/troops.json 載入兵種數值表 */

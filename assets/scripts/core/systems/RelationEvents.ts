@@ -153,3 +153,16 @@ export function relationEventsForBreeding(
     const hits = detectRelationEvents(table, { scene: 'governance', templateIds: [fatherId, motherId] });
     return ledger.takeNew(scopeKey, hits);
 }
+
+/** 戰場開場：出陣雙方的關係事件；同一場戰役（scopeKey）同一對只觸發一次（PROG-2-1413） */
+export function relationEventsForBattle(
+    table: HistoricalPairTable | null | undefined,
+    ledger: RelationEventLedger,
+    scopeKey: string,
+    playerId: string,
+    enemyId: string,
+): RelationEventHit[] {
+    if (!table) return [];
+    const hits = detectRelationEvents(table, { scene: 'battle', templateIds: [playerId, enemyId] });
+    return ledger.takeNew(scopeKey, hits);
+}
