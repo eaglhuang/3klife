@@ -693,7 +693,7 @@
       "scalingStat": "pol",
       "exclusive": true,
       "inheritanceGeneId": "gene_politics",
-      "battleSkillId": null,
+      "battleSkillId": "cao-cao-ult-revive",
       "family": "special-rule"
     },
     {

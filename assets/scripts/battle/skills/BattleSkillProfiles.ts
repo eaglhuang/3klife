@@ -6,7 +6,7 @@ import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } 
 export type BattleSkillFalloffRule = 'none' | 'linear-step';
 export type BattleSkillEffectKind =
   | 'damage' | 'heal' | 'control' | 'link' | 'counter' | 'reset'
-  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack' | 'vitality';
+  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack' | 'vitality' | 'revive';
 
 export interface BattleSkillProfile {
   battleSkillId: string;
@@ -77,6 +77,8 @@ export interface BattleSkillProfile {
   counterTriggers?: number;
   counterMeleeOnly?: boolean;
   resetFirstHitMultiplier?: number;
+  /** 復活陣亡友軍的血量比例（PROG-2-1334 唯才是舉，規格 50%） */
+  reviveHpRatio?: number;
   resetExtraActions?: number;
   battleLogKey?: string;
 }
@@ -340,6 +342,14 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     effectKind: 'heal',
     coefficient: 0,
     healMissingRatio: 0.25,
+  },
+  'cao-cao-ult-revive': {
+    battleSkillId: 'cao-cao-ult-revive',
+    targetMode: BattleSkillTargetMode.Self,
+    manualTargeting: false,
+    effectKind: 'revive',
+    coefficient: 0,
+    reviveHpRatio: 0.5,
   },
   'diao-chan-charm': {
     battleSkillId: 'diao-chan-charm',
