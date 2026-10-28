@@ -1,4 +1,4 @@
-// @spec-source → 治理模式他國AI系統.md（doc_spec_0020）E-1、E-2、E-3、E-5、E-7、E-12；PROG-2-1087、PROG-2-1502、PROG-2-1503
+// @spec-source → 治理模式他國AI系統.md（doc_spec_0020）E-1、E-2、E-3、E-4、E-5、E-7、E-12；PROG-2-1087、PROG-2-1502、PROG-2-1503、PROG-2-1505
 /**
  * RivalNations — 他國 AI 勢力的純邏輯：勢力清單、與玩家的邦交、外交指令、季度行動、自動模擬戰鬥。
  * 不依賴 cc；狀態是可序列化的純資料，所有函式都回傳新狀態，不改輸入。
@@ -15,11 +15,12 @@ export type NationProfile =
     | 'EXPANSIONIST' | 'PASSIVE' | 'CAVALRY_LORD' | 'RAIDER';
 
 import {
-    AI_STARTING_RESOURCES, INTEL_CAP, NATION_PRIMARY_TASK, RULER_GOVERNANCE_STATS, aiGovernanceTick,
+    AI_STARTING_RESOURCES, INTEL_CAP, NATION_PRIMARY_TASK, NATION_SECONDARY_TASK, RULER_GOVERNANCE_STATS, aiGovernanceTick,
     rollRecruitQuality, shouldRecruitThisSeason, type NationResources, type RecruitQuality,
 } from './RivalGovernance';
 import { clampResource } from './ResourceCap';
 import { SeededRandom } from './SeededRandom';
+import { evaluateExpansion } from './RivalExpansion';
 
 export interface NationDef {
     readonly id: string;
@@ -194,8 +195,22 @@ export interface SeasonTickResult {
     readonly events: SeasonEvent[];
 }
 
-/** 季度推進：兵力成長、內政結算（RAI-03）、邦交向 0 回歸（交戰中不回歸）、敵對勢力依性格擲骰進攻玩家 */
-export function advanceRivalSeason(world: RivalWorld, random: () => number): SeasonTickResult {
+/** 玩家的出征判定數值（RAI-05）：兵力取城防兵，金幣暫由呼叫端傳入（沒有就傳 0） */
+export interface RivalPlayerStats {
+    readonly troops: number;
+    readonly food: number;
+    readonly gold: number;
+}
+
+/**
+ * 季度推進：兵力成長、內政結算（RAI-03）、邦交向 0 回歸（交戰中不回歸）、敵對勢力進攻玩家。
+ * 進攻要過兩關（RAI-05 方案 b，暫定）：先擲性格的固定機率，再由 E-4 出征判定（兵力、糧草門檻與效用分數）給 ATTACK。
+ */
+export function advanceRivalSeason(
+    world: RivalWorld,
+    random: () => number,
+    player: RivalPlayerStats = { troops: 0, food: 0, gold: 0 },
+): SeasonTickResult {
     const events: SeasonEvent[] = [];
     const nations = world.nations.map((n) => {
         const def = nationDef(n.id);
@@ -206,7 +221,10 @@ export function advanceRivalSeason(world: RivalWorld, random: () => number): Sea
         const governed = aiGovernanceTick(
             { ...(n.resources ?? AI_STARTING_RESOURCES), troops: 0 },
             profile,
-            [{ type: NATION_PRIMARY_TASK[profile], general: RULER_GOVERNANCE_STATS }],
+            [
+                { type: NATION_PRIMARY_TASK[profile], general: RULER_GOVERNANCE_STATS },
+                { type: NATION_SECONDARY_TASK[profile], general: RULER_GOVERNANCE_STATS },
+            ],
         );
         let relation = n.relation;
         if (!n.atWar && !n.allied) {
@@ -214,7 +232,14 @@ export function advanceRivalSeason(world: RivalWorld, random: () => number): Sea
         }
         const hostile = n.atWar || relation <= -40;
         if (hostile && !n.allied && random() < tuning.attack) {
-            events.push({ nationId: n.id, kind: 'attack', message: `${def?.name ?? n.id} 率軍來犯！` });
+            const decision = evaluateExpansion(
+                { troops, food: governed.food, intel: governed.intel, profile },
+                [{ id: 'player', troops: player.troops, food: player.food, gold: player.gold, hatred: Math.max(0, -relation), relation }],
+                random,
+            );
+            if (decision.kind === 'ATTACK') {
+                events.push({ nationId: n.id, kind: 'attack', message: `${def?.name ?? n.id} 率軍來犯！` });
+            }
         }
         const resources = { food: governed.food, gold: governed.gold, fame: governed.fame, intel: governed.intel };
         const governedSeasons = (n.governedSeasons ?? 0) + 1;

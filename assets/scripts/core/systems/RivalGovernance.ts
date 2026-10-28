@@ -87,6 +87,21 @@ export const NATION_PRIMARY_TASK: Readonly<Record<NationProfile, GovernanceTaskT
     RAIDER: 'MILITARY',
 });
 
+/**
+ * RAI-02 次要任務（PROG-2-1505 調整，暫定）：E-2 內政偏好排第二的一項。
+ * 只有主要任務的勢力（軍備型）糧草才會成長，否則糧草卡在開局值，出征門檻永遠過不了。
+ */
+export const NATION_SECONDARY_TASK: Readonly<Record<NationProfile, GovernanceTaskType>> = Object.freeze({
+    MILITARIST: 'FARMING',
+    DIPLOMAT: 'DIPLOMACY',
+    GUARDIAN: 'COMMERCE',
+    WARLORD: 'FARMING',
+    EXPANSIONIST: 'FARMING',
+    PASSIVE: 'COMMERCE',
+    CAVALRY_LORD: 'FARMING',
+    RAIDER: 'FARMING',
+});
+
 /** 暫定：君主武將屬性尚無資料來源（RAI-08 之前），四項一律 60 */
 export const RULER_GOVERNANCE_STATS: GovernanceGeneralStats = Object.freeze({ str: 60, int: 60, pol: 60, cha: 60 });
 
