@@ -68,6 +68,11 @@ export function createAiProfilesSuite(): TestSuite {
         badLane.profiles[0].laneStrategy = 'NORTH_ONLY';
         assert.isTrue(parseAiProfileTable(badLane).table === null);
 
+        // TSK-01：SMART 已移出正式兵種入口，資料再填也不可通過
+        const smartTroop = cloneRaw();
+        smartTroop.profiles[0].deployTendency.preferredTroops = ['SMART'];
+        assert.isTrue(parseAiProfileTable(smartTroop).table === null);
+
         const emptyTactic = cloneRaw();
         emptyTactic.profiles[0].tacticTendency = [];
         const emptyResult = parseAiProfileTable(emptyTactic);

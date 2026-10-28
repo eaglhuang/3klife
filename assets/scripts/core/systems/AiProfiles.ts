@@ -25,7 +25,7 @@ export const AI_PROFILE_IDS = [
 export type AiProfileId = (typeof AI_PROFILE_IDS)[number];
 
 /** 兵種代碼（與 AI 特殊兵種公式的 STAT_MAPPING 同一組） */
-export const AI_TROOP_CODES = ['CAVALRY', 'INFANTRY', 'SHIELD', 'PIKE', 'ARCHER', 'SIEGE', 'SMART', 'NAVY'] as const;
+export const AI_TROOP_CODES = ['CAVALRY', 'INFANTRY', 'SHIELD', 'PIKE', 'ARCHER', 'SIEGE', 'NAVY'] as const;
 export type AiTroopCode = (typeof AI_TROOP_CODES)[number];
 
 /** 路線策略（規格 E-4 路線選擇表） */
