@@ -5,6 +5,8 @@
  *
  * Unity 對照：像 AI Ability 的 Tag 條件，同一個通用判斷，Tag 不同就看不同的場景量。
  */
+import * as fs from 'fs';
+import * as path from 'path';
 import { UltimateEffectFamily } from '../assets/scripts/shared/SkillRuntimeContract';
 import { aiUltimateFamilyPermits, type AiUltimateFamilyInput } from '../assets/scripts/core/systems/AiUltimateFamilyRule';
 import { TestSuite, assert } from './TestRunner';
@@ -42,6 +44,14 @@ export function createAiUltimateFamilyRuleSuite(): TestSuite {
         assert.isTrue(aiUltimateFamilyPermits(UltimateEffectFamily.SpecialRule, CALM));
         assert.isTrue(aiUltimateFamilyPermits(undefined, CALM));
         assert.isTrue(aiUltimateFamilyPermits(null, CALM));
+    });
+
+    suite.test('正式奧義資料的 family 欄位都對得上家族列舉（避免鍵名或值寫錯讓條件失效）', () => {
+        const file = path.join(__dirname, '..', 'assets', 'resources', 'data', 'master', 'ultimate-definitions.json');
+        const rows: Array<{ family?: string }> = JSON.parse(fs.readFileSync(file, 'utf8')).data;
+        const known = new Set<string>(Object.values(UltimateEffectFamily));
+        const unknown = rows.map(row => row.family).filter(family => !family || !known.has(family));
+        assert.equals(0, unknown.length);
     });
 
     return suite;
