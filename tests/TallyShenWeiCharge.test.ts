@@ -3,7 +3,7 @@
  */
 import { Faction, TerrainType, TroopType } from '../assets/scripts/core/config/Constants';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { tallyAttackMultiplierOf, tallyChargeMultiplierOf } from '../assets/scripts/battle/shared/TallyPassive';
+import { tallyAttackMultiplierOf, tallyChargeMultiplierOf, tallyTileMoveDeltaOf } from '../assets/scripts/battle/shared/TallyPassive';
 import { TestSuite, assert } from './TestRunner';
 
 function cavalry(template?: string): TroopUnit {
@@ -33,6 +33,13 @@ export function createTallyShenWeiChargeSuite(): TestSuite {
         const u = cavalry();
         u.chargeCells = 3;
         assert.equals(1, tallyChargeMultiplierOf(u));
+    });
+
+    suite.test('無視地形：減移動格子無效，加成照吃；一般部隊照常（PROG-2-1576）', () => {
+        const sw = cavalry('tiger-tally-shen-wei-fu');
+        assert.equals(0, tallyTileMoveDeltaOf(sw, -1));
+        assert.equals(1, tallyTileMoveDeltaOf(sw, 1));
+        assert.equals(-1, tallyTileMoveDeltaOf(cavalry(), -1));
     });
 
     return suite;

@@ -71,6 +71,8 @@ export interface TallyPassiveSpec {
   defectEachTurn?: { hpRatioMax: number };
   /** 強擊突刺（神威符）：本回合每前進一格攻擊 +perCell，最多累計 maxCells 格（PROG-2-1573） */
   chargeDamage?: { perCell: number; maxCells: number };
+  /** 無視地形（神威符）：格子的減移動效果（泥濘、陷阱等）對此部隊無效（PROG-2-1576） */
+  ignoresTerrainSlow?: boolean;
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -139,7 +141,7 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   // 鷹視狼顧（暫定：只策反血量 ≤ 30% 的殘兵，避免每回合白拿一支滿血部隊，PROG-2-1572）
   'tiger-tally-lang-gu-fu': { defectEachTurn: { hpRatioMax: 0.3 } },
   // 強擊突刺（暫定：每格 +15%，最多 4 格 = +60%，PROG-2-1573）
-  'tiger-tally-shen-wei-fu': { chargeDamage: { perCell: 0.15, maxCells: 4 } },
+  'tiger-tally-shen-wei-fu': { chargeDamage: { perCell: 0.15, maxCells: 4 }, ignoresTerrainSlow: true },
 };
 
 /** 各陣營出兵列（後排起點）：我方由 depth 0 出兵、敵方由最後一列出兵 */
@@ -369,4 +371,9 @@ export function applyTallyDefection(
     defected.push(target);
   }
   return defected;
+}
+
+/** 格子移動修正：無視地形的部隊只吃加成、不吃減速 */
+export function tallyTileMoveDeltaOf(unit: TroopUnit, delta: number): number {
+  return passiveOf(unit)?.ignoresTerrainSlow ? Math.max(0, delta) : delta;
 }
