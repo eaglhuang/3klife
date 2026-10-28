@@ -81,6 +81,29 @@ const PHASE_LABELS: Record<PhaseBlock, string> = {
 
 const CAREER_LABELS: Record<string, string> = { Warrior: '武官', Scholar: '文官' };
 
+/** 職業與階段的語系鍵；查不到時退回上面的 zh-TW 文字（與舊畫面一致） */
+const CAREER_LABEL_KEYS: Record<string, string> = {
+    Warrior: 'ui.nurture.career.warrior',
+    Scholar: 'ui.nurture.career.scholar',
+};
+const PHASE_LABEL_KEYS: Record<PhaseBlock, string> = {
+    Foundation: 'ui.nurture.phase.foundation',
+    Midterm: 'ui.nurture.phase.midterm',
+    Sprint: 'ui.nurture.phase.sprint',
+};
+
+/** 查語系鍵；查無時（lookup 回傳鍵本身）用 fallback，避免畫面出現鍵名 */
+function labelOf(t: BreedTextLookup, key: string, fallback: string): string {
+    const text = t(key);
+    return text === key ? fallback : text;
+}
+
+function careerLabelOf(t: BreedTextLookup, careerClass: string | undefined, fallback: string): string {
+    const career = careerClass ?? '';
+    const key = CAREER_LABEL_KEYS[career];
+    return key === undefined ? fallback : labelOf(t, key, CAREER_LABELS[career] ?? fallback);
+}
+
 /** 自動培育被擋下時的提示（NUR-14 接線；LOCKED / NO_TICKET 文案由 cc 畫面直接顯示） */
 const AUTO_BLOCK_TEXT: Record<string, string> = {
     LOCKED: '尚未解鎖自動培育：需先通過一次主線培育季',
@@ -263,7 +286,7 @@ export class NurtureFlowController {
         const child = this._requireSelected();
         const updated = this._deps.unveiling.choose(child.id, choice);
         this._notice = choice === 'accept'
-            ? `${child.name} 順應天命，成為${CAREER_LABELS[updated.careerClass ?? ''] ?? '？'}`
+            ? `${child.name} 順應天命，成為${careerLabelOf(this._t.bind(this), updated.careerClass, '？')}`
             : `${fateText(this._t.bind(this), 'ui.fate.script.defy', child.name)}　${child.name} 逆天而行${updated.fate?.lateBloomer ? `，${this._t('ui.breed.daqi')}` : '，成長率 ×0.8'}`;
         await this._persist();
     }
@@ -555,7 +578,7 @@ export class NurtureFlowController {
 
         actives.nurturePanel = true;
         const session = this._deps.nurture.getSession(child.id);
-        Object.assign(texts, buildHeaderTexts(child, session));
+        Object.assign(texts, buildHeaderTexts(child, session, this._deps.text ?? fallbackBreedText));
 
         if (!session) {
             actives.startBlock = true;
@@ -680,25 +703,25 @@ function buildFateTexts(child: UnveilingGeneral, t: BreedTextLookup): Record<str
         fateFactors: factors.length > 0
             ? `初始因子：${factors.map((gene) => gene.displayName ?? gene.id ?? '？').join('、')}`
             : '初始因子：尚未顯現',
-        fateRecommend: fateText(t, 'ui.fate.reveal', CAREER_LABELS[recommended]),
-        fateScript: fateText(t, 'ui.fate.script.reveal', child.name, recommended === 'Warrior' ? '武骨' : '文才', CAREER_LABELS[recommended]),
+        fateRecommend: fateText(t, 'ui.fate.reveal', careerLabelOf(t, recommended, '')),
+        fateScript: fateText(t, 'ui.fate.script.reveal', child.name, recommended === 'Warrior' ? '武骨' : '文才', careerLabelOf(t, recommended, '')),
         fateAcceptLabel: fateText(t, 'ui.fate.accept'),
         fateDefyLabel: fateText(t, 'ui.fate.defy'),
         fateDefyHint: `逆天：成長率 ×${FATE_DEFY_GROWTH_MODIFIER}，有 ${Math.round(LATE_BLOOMER_CHANCE * 100)}% 機率大器晚成。選擇後不可更改。`,
     };
 }
 
-function buildHeaderTexts(child: UnveilingGeneral, session: NurtureSession | null): Record<string, string> {
+function buildHeaderTexts(child: UnveilingGeneral, session: NurtureSession | null, t: BreedTextLookup): Record<string, string> {
     const round = session ? session.round : 0;
     const phase = phaseOfRound(Math.min(Math.max(round + 1, 1), NURTURE_TOTAL_ROUNDS));
     const growth = child.growthModifier ?? 1;
     return {
-        nurtureName: `${child.name}（${CAREER_LABELS[child.careerClass ?? ''] ?? '未定'}）`,
+        nurtureName: `${child.name}（${careerLabelOf(t, child.careerClass, '未定')}）`,
         nurturePhase: session
             ? session.status === 'completed'
-                ? '培育完成'
-                : `${PHASE_LABELS[phase]} · ${phaseRangeText(phase)}`
-            : '尚未入學',
+                ? labelOf(t, 'ui.nurture.header.completed', '培育完成')
+                : `${labelOf(t, PHASE_LABEL_KEYS[phase], PHASE_LABELS[phase])} · ${phaseRangeText(phase)}`
+            : labelOf(t, 'ui.nurture.header.not_enrolled', '尚未入學'),
         nurtureRound: `回合 ${session ? session.round : 0} / ${NURTURE_TOTAL_ROUNDS}`,
         nurtureGrowth: `成長率 ×${growth}`,
     };
