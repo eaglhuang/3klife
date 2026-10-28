@@ -35,12 +35,12 @@
 | **武將系統.md (doc_spec_0016)** | GeneralUnit.ts, GeneralDetailComposite.ts, GeneralListPanel.ts, LobbyScene.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | **武將人物介面規格書.md (doc_ui_0012)** | GeneralDetailComposite.ts, GeneralDetailOverviewChild.ts, GeneralListPanel.ts, LobbyScene.ts, GeneralUnit.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
 | **戰法系統.md (doc_spec_0038)** | ActionSystem.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **奧義系統.md (doc_spec_0030)** | ActionSystem.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| **奧義系統.md (doc_spec_0030)** | ActionSystem.ts, UltimateDamage.ts, UltimateUpgrade.ts, BloodlineTransmissionUltimate.ts, ChildUltimateAwaken.ts, VitalityBattleGate.ts, BattleSkillDispatcher.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **因子爆發系統.md (doc_spec_0010)** | BuffSystem.ts, BuffGainEffectPool.ts, BuffEffectPrefabController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **治理模式他國AI系統.md (doc_spec_0020)** | EnemyAI.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
+| **治理模式他國AI系統.md (doc_spec_0020)** | EnemyAI.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **大廳系統.md (doc_spec_0002)** | LobbyScene.ts, UIConfig.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **官職系統.md (doc_spec_0014)** | UIConfig.ts, LobbyScene.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **AI武將強度系統.md (doc_data_0002)** | EnemyAI.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
+| **AI武將強度系統.md (doc_data_0002)** | EnemyAI.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **名將挑戰賽系統.md (doc_spec_0007)** | DuelChallengePanel.ts | ✅ | 🟡 | ❌ | ❌ | ⬜ |
 | **關卡設計系統.md (doc_spec_0049)** | BattleScene.ts, BattleHUD.ts, DeployPanel.ts | ✅ | 🟡 | 🟡 | ❌ | ⬜ |
 | **武將日誌與離線互動系統.md (doc_spec_0015)** | LobbyScene.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
@@ -93,6 +93,7 @@
 |---|:-:|---|---|---|
 | 戰法系統.md (doc_spec_0038) | 🟡（維持） | G-1 虎符 14 招、G-2 教官 6 招、G-3 趙家槍法、G-4 場景戰法（火攻／水淹／落石／伏兵／夜襲）都有效果：BattleSkillProfiles、各 resolver、TallyPassive（騎射合一、結姻連射、七進七出）、BattleTactic；H-1 天氣禁用已做（PROG-2-0406） | H-2 SSR／UR 英靈面閃現、火計格 VFX、水計流向與 H-3 掠奪金色飄字：TacticVfxHooks.ts 只有純邏輯，沒有任何檔案 import，未接畫面；`assets/fx/tactics/` 資源目錄不存在 | PROG-2-1432 |
 | 兵種（虎符）系統.md (doc_spec_0012) | ✅→🟡 | 「特殊兵種列表」34 條特殊戰法：11 條沿用既有 profile、9 條以被動實作（白馬、梟姬、龍膽；解煩、丹陽、吳國由 PROG-2-1433、止啼符、藤甲由 PROG-2-1437、虎痴符由 PROG-2-1444 補上），其餘 14 條是 `pendingEffect` 殼（不可施放、無效果） | 14 條特殊戰法未實作：鐵騎（恐懼衝鋒）、常山女（迴避＋治療）、先登（攻城 ×2、免恐懼）、大喬（全隊魅力、士氣不降）、錦帆（恐懼光環）、白耳（精銳護衛）、元戎（連弩齊射）、南蠻（巨型踐踏）、都督符（火燒連營）、神威符（強擊突刺）、惡來符（捨命護主）、奉孝符（遺計定遼）、狼顧符（鷹視狼顧）、工甲符（工甲連弩）；另 TallyCardCatalog 只有 6 種虎符卡，龍膽符等名將專屬虎符尚無卡片模板，玩家拿不到（解煩、丹陽、吳國、止啼符、藤甲、虎痴符亦同） | PROG-2-1432、PROG-2-1433、PROG-2-1437、PROG-2-1444 |
+| 奧義系統.md (doc_spec_0030) | 🟡（維持） | E 製作功能清單 10 項：資料表、轉生解鎖欄位、精力消耗（VitalityBattleGate.spendUltimateVitality）、專屬綁定、子嗣覺醒（ChildUltimateAwaken）、奧義升級與圖鑑（UltimateUpgrade）已落地；F-0 血脈五階解鎖（BloodlineTransmissionUltimate）、傷害公式（UltimateDamage）已落地 | ① E-9「每場戰鬥每個奧義限用 1 次」未強制：SP 再次集滿即可重放同一奧義；② 奧義升級等級未進戰鬥：`ultimateAttackOf` 以槽位當 ult_level，UltimateUpgrade 的等級不影響傷害；③ E-10 組合奧義（P2）未做；④「英靈附體」（兵力劣勢時召喚祖先虛影同步施放成名奧義）未做 | PROG-2-1447 |
 
 ---
 
