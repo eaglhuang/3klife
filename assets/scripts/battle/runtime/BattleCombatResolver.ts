@@ -28,6 +28,7 @@ import {
   tallySplashTargetsOf,
   tallyDamageGuardOf,
   tallyIgniteCellsOf,
+  tallyDeathConfusionOf,
 } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
@@ -607,6 +608,14 @@ export class BattleCombatResolver {
     svc.buff.clearUnit(unit.id);
     clearMorale(unit);
     svc.event.emit(EVENT_NAMES.UnitDied, { unitId: unit.id, lane, depth, faction, type });
+    // 遺計定遼（奉孝符，PROG-2-1572）：陣亡時全場敵軍混亂（暈眩）
+    const confusion = tallyDeathConfusionOf(unit, this.context.state.units.values());
+    if (confusion) {
+      for (const target of confusion.targets) {
+        svc.buff.applyBuff(target.id, StatusEffect.Stun, confusion.turns);
+        target.isShieldWallActive = false;
+      }
+    }
 
     if (killer) {
       const general = this.context.state.getGeneral(killer.faction);
