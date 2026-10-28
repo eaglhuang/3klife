@@ -14,8 +14,13 @@
  *   - Pity_Counter 與 Total_Pulls 的關係規格範例本身不一致（範例 Pity 147 > Pull 47），所以不設「保底 ≤ 總抽數」的規則。
  *   - Bonding_Points 可被消耗，不要求單調遞增。
  *
+ * 暫定（規格缺，可逆）：
+ *   - 客戶端 pityCounter 取「本池累計抽數 mod 小保底間隔」，即距上次小保底的抽數。
+ *   - bondingPoints 取玩家結義點數（bondPoints）；同一份點數對每個池都相同。
+ *
  * Unity 對照：像一份有 Schema 的 ScriptableObject 存檔，載入時 Validate()，同步時只接受「只增不減」的計數。
  */
+import { GACHA_SMALL_PITY_INTERVAL, normalizeGachaPity, type GachaPityState } from './GachaDraw';
 
 export interface GachaSyncRecord {
     totalPulls: number;
@@ -49,6 +54,17 @@ export function validateGachaSyncRecord(record: GachaSyncRecord): string[] {
     }
     if (record.lastSsrPull > record.totalPulls) errors.push('lastSsrPull 不可大於 totalPulls');
     return errors;
+}
+
+/** 由一池的保底狀態與結義點數組出同步列（抽卡結算後呼叫）。 */
+export function buildGachaSyncRecord(pity: GachaPityState, bondingPoints: number): GachaSyncRecord {
+    const state = normalizeGachaPity(pity);
+    return normalizeGachaSyncRecord({
+        totalPulls: state.pullCount,
+        pityCounter: state.pullCount % GACHA_SMALL_PITY_INTERVAL,
+        bondingPoints,
+        lastSsrPull: state.lastSsrPull ?? 0,
+    });
 }
 
 export type GachaSyncResult =

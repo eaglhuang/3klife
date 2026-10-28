@@ -4,6 +4,7 @@ import type { GeneralConfig, GeneralDetailRarityTier } from '../models/GeneralUn
 import { Faction } from '../config/Constants';
 import { services } from '../managers/ServiceLoader';
 import { SyncActionType } from '../systems/SyncManager';
+import { buildGachaSyncRecord } from '../systems/GachaSyncRecord';
 import { checkWalletBalance, formatInsufficientMessage, STARTER_GACHA_WALLET } from './GachaWalletRules';
 import { GACHA_MENTOR_RARITY_RATES, GACHA_RARITY_RATES, drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
 import { destinyShopCredits, exchangeDestinyShop, pullsToNextDestinyCredit, type DestinyShopBlockReason } from '../systems/DestinyShop';
@@ -444,6 +445,7 @@ export class LocalGachaService {
                 cost,
                 currencyKey: request.currencyKey,
                 localOnly: true,
+                gachaSync: buildGachaSyncRecord(pity, services().session.bondPoints),
                 results: results.map((entry) => ({
                     id: entry.general.id,
                     name: entry.general.name,
