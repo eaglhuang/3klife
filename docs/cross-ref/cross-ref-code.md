@@ -661,6 +661,7 @@
 | PortraitGallery.ts | 未登錄：使用者裁定 2026-10-26（紅顏、名將池一頁六框全身立繪，超過六位翻頁）； | 概: 「一頁六框立繪」的分頁與選取（純邏輯，不依賴 cc） |
 | PrisonerPopupController.ts | doc_spec_0021 | 概: 俘虜四選一彈窗的流程（純邏輯，不依賴 cc） |
 | RankProgressText.ts | doc_spec_0014 | 概: 官職進度開窗的文字（純邏輯，不依賴 cc） |
+| BloodlineVignetteText.ts | doc_ui_0012, doc_spec_0011 | 概: 血統小傳開窗的文字（純邏輯，不依賴 cc）；暫定解鎖規則：取得開 1 格、每轉多 1 格、命紋覺醒全開（PROG-2-1428） |
 | RecruitHallController.ts | 未登錄：使用者裁定 2026-10-25（MVP 至少 20 位武將可選）；gacha- | 概: 大廳「招賢館」畫面的流程（純邏輯，不依賴 cc） |
 | RedFaceShowcaseController.ts | doc_spec_0031 | 概: 紅顏展示畫面的流程（純邏輯，不依賴 cc）。 |
 | RelationEventLogText.ts | 未標出處 | 概: 戰場關係事件的戰報文字（PROG-2-1421，純邏輯，不依賴 cc） |

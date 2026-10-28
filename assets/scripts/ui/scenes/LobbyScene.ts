@@ -87,6 +87,7 @@ import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView
 import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
 import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
 import { RANK_PROGRESS_ROW_COUNT, rankProgressOpenLabel, rankProgressViewOf } from '../core/RankProgressText';
+import { BLOODLINE_VIGNETTE_CELL_COUNT, bloodlineVignetteOpenLabel, bloodlineVignetteViewOf } from '../core/BloodlineVignetteText';
 import { installOfficerTierTable, type OfficerTierRow } from '../../core/systems/OfficerTierTable';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
 import { officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
@@ -255,6 +256,7 @@ export class LobbyScene extends Component {
     private _officerHudHost: UIScreenPreviewHost | null = null;
     private _officerPageHost: UIScreenPreviewHost | null = null;
     private _rankProgressHost: UIScreenPreviewHost | null = null;
+    private _bloodlineVignetteHost: UIScreenPreviewHost | null = null;
     /** officer-tiers.json 驗證通過的階位列（官職進度開窗用）；未載入時開窗用內建備援 */
     private _officerTierRows: OfficerTierRow[] | null = null;
     private _graduationHost: UIScreenPreviewHost | null = null;
@@ -3691,6 +3693,49 @@ export class LobbyScene extends Component {
     private async _mountCharacterDs3Host(): Promise<void> {
         this._characterDs3Host = await this._mountPreviewScreenHost('CharacterDs3Host', 'character-ds3-main');
         this._bindCharacterDs3PreviewTabRouting();
+        this._bloodlineVignetteHost = await this._mountPreviewScreenHost('BloodlineVignetteHost', 'general-bloodline-vignette-screen', [
+            { buttonId: 'btnCloseVignette', handler: () => this._setBloodlineVignetteOpen(false) },
+        ]);
+    }
+
+    /** 血統小傳按鈕（PROG-2-1428）：在人物頁 Overview 分頁，切回 Overview 都重綁 */
+    private _bindCharacterDs3BloodlineVignette(): void {
+        const button = this._characterDs3Host?.binder?.getButton('btnBloodlineVignette');
+        if (!button) {
+            UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 bloodline vignette button missing', { buttonNode: 'btnBloodlineVignette' });
+            return;
+        }
+        button.node.off(Button.EventType.CLICK, this._onBloodlineVignetteClick, this);
+        button.node.on(Button.EventType.CLICK, this._onBloodlineVignetteClick, this);
+        const label = this._characterDs3Host?.binder?.getLabel('bloodlineVignetteLabel');
+        if (label) label.string = bloodlineVignetteOpenLabel((key, ...args) => services().i18n.t(key, ...args));
+    }
+
+    private _onBloodlineVignetteClick(): void {
+        this._setBloodlineVignetteOpen(true);
+    }
+
+    /** 血統小傳開窗：疊在人物頁上；內容每次打開都依目前武將重算 */
+    private _setBloodlineVignetteOpen(open: boolean): void {
+        const host = this._bloodlineVignetteHost;
+        if (!host) return;
+        if (open) {
+            const general = this._characterDs3General;
+            if (!general) return;
+            const view = bloodlineVignetteViewOf(general, (key, ...args) => services().i18n.t(key, ...args));
+            const texts: Record<string, string> = {
+                vignetteTitle: view.title,
+                vignetteRumor: view.rumor,
+                vignetteProgress: view.progress,
+                closeVignetteLabel: view.closeLabel,
+            };
+            for (let i = 0; i < BLOODLINE_VIGNETTE_CELL_COUNT; i++) {
+                texts[`vignetteCell${i}`] = view.cells[i]?.line ?? '';
+            }
+            host.binder?.setTexts(texts);
+            this._bringNodeToFront(host.node);
+        }
+        host.node.active = open;
     }
 
     private _bindCharacterDs3PreviewTabRouting(): void {
@@ -3781,6 +3826,7 @@ export class LobbyScene extends Component {
 
             this._characterDs3ActiveTab = tab;
             this._syncCharacterDs3PreviewTabVisualState();
+            if (tab === 'Overview') this._bindCharacterDs3BloodlineVignette();
 
             UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 tab switched', {
                 tab,
@@ -4531,6 +4577,7 @@ export class LobbyScene extends Component {
         }
         this._characterDs3General = config;
         this._soulInjectArmedDeadUid = null;
+        this._setBloodlineVignetteOpen(false);
 
         if (services().ui.isOpen(UIID.GeneralList)) {
             await services().ui.closeCurrentUI();
@@ -4581,6 +4628,7 @@ export class LobbyScene extends Component {
         if (resetSlotId) {
             this._characterDs3ActiveTab = 'Overview';
             this._syncCharacterDs3PreviewTabVisualState();
+            this._bindCharacterDs3BloodlineVignette();
         } else {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 default tab reset failed', {
                 tab: 'Overview',

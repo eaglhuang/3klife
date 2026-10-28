@@ -966,6 +966,33 @@
             },
             {
               "type": "button",
+              "name": "BtnBloodlineVignette",
+              "id": "btnBloodlineVignette",
+              "widget": {
+                "bottom": 72,
+                "left": 80
+              },
+              "width": 360,
+              "height": 52,
+              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "BtnBloodlineVignetteLabel",
+                  "id": "bloodlineVignetteLabel",
+                  "widget": {
+                    "vCenter": true,
+                    "left": 0,
+                    "right": 0
+                  },
+                  "height": 44,
+                  "text": "血統小傳",
+                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject"
+                }
+              ]
+            },
+            {
+              "type": "button",
               "name": "BtnSoulInject",
               "id": "btnSoulInject",
               "widget": {

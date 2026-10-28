@@ -463,5 +463,19 @@
   "battle.aptitude.line.mountain-s": "{Name}は山に拠って戦う。一人いれば関所は守れる！",
   "battle.aptitude.line.fog": "霧の中の行軍——{Name}は霧に惑わされず、百発百中！",
   "battle.aptitude.line.night": "月黒く風高し、まさに{Name}の戦場！",
-  "battle.aptitude.line.insufficient": "{Name}はこの地形に非常に不向き——動きは鈍く、攻めも阻まれる。"
+  "battle.aptitude.line.insufficient": "{Name}はこの地形に非常に不向き——動きは鈍く、攻めも阻まれる。",
+  "ui.bloodline.vignette.open": "血統小伝",
+  "ui.bloodline.vignette.title": "血統小伝　{0}",
+  "ui.bloodline.vignette.close": "閉じる",
+  "ui.bloodline.vignette.progress": "解放 {0}/{1}",
+  "ui.bloodline.vignette.cell": "{0}．{1}　{2}",
+  "ui.bloodline.vignette.locked": "（{0} 転または命紋覚醒で解放）",
+  "ui.bloodline.vignette.no_rumor": "血脈の噂はまだ広まっていない。",
+  "ui.bloodline.vignette.empty": "この武将の逸話はまだ記されていない。",
+  "ui.bloodline.vignette.slot.origin": "出自",
+  "ui.bloodline.vignette.slot.faction": "陣営",
+  "ui.bloodline.vignette.slot.role": "役割",
+  "ui.bloodline.vignette.slot.awakening": "覚醒",
+  "ui.bloodline.vignette.slot.bloodline": "血脈",
+  "ui.bloodline.vignette.slot.future": "未来"
 }

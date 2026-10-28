@@ -90,7 +90,7 @@
 ### D-2. 待建 UI Spec 檔案（待辦）
 
 > 原 `cross-ref-ui-spec.md C-3`。優先級：P0 = 阻擋功能開發 / P1 = 下週目標 / P2 = 月底目標。
-> 狀態欄（PROG-2-1355，2026-10-28 依 repo 檔案回寫）：✅ 已建 11 個、⬜ 待建 10 個；PROG-2-1422（2026-10-28）查出其中 4 個已用其他檔名建成，改標 ✅，實際已建 15 個、待建 6 個；PROG-2-1424 建成 rank-progress 三件後為已建 18 個、待建 3 個。
+> 狀態欄（PROG-2-1355，2026-10-28 依 repo 檔案回寫）：✅ 已建 11 個、⬜ 待建 10 個；PROG-2-1422（2026-10-28）查出其中 4 個已用其他檔名建成，改標 ✅，實際已建 15 個、待建 6 個；PROG-2-1424 建成 rank-progress 三件後為已建 18 個、待建 3 個；PROG-2-1428 建成血統小傳三件後全部 21 個已建。
 
 | 優先級 | 檔案 | 依賴規格書 | 狀態 |
 |---|---|---|:-:|
@@ -98,9 +98,9 @@
 | P1 | `skins/nurture-session-default.json` | 培育系統.md (doc_spec_0026) | ✅ 已建 |
 | P1 | `screens/nurture-session-screen.json` | 培育系統.md (doc_spec_0026)、教官系統（支援卡）.md (doc_spec_0027) | ✅ 已建 |
 | P2 | `layouts/general-detail.json` | 武將人物介面規格書.md (doc_ui_0012) | ✅ 已建（實際檔名 `general-detail-main` / `general-detail-unified-main` / `character-ds3-main`） |
-| P2 | `layouts/general-bloodline-vignette-main.json` | 武將人物介面規格書.md (doc_ui_0012)、血統理論系統.md (doc_spec_0011) | ⬜（規格書 2.0 已無 §8.4 抽屜；美術契約在 UI-2-0054／UI-2-0057，待使用者裁定） |
-| P2 | `skins/general-bloodline-vignette-default.json` | 武將人物介面規格書.md (doc_ui_0012)、UI 規格書.md (doc_ui_0027) | ⬜（規格書 2.0 已無 §8.4 抽屜；美術契約在 UI-2-0054／UI-2-0057，待使用者裁定） |
-| P2 | `screens/general-bloodline-vignette-screen.json` | 武將人物介面規格書.md (doc_ui_0012)、UI 規格書.md (doc_ui_0027) | ⬜（規格書 2.0 已無 §8.4 抽屜；美術契約在 UI-2-0054／UI-2-0057，待使用者裁定） |
+| P2 | `layouts/general-bloodline-vignette-main.json` | 武將人物介面規格書.md (doc_ui_0012)、血統理論系統.md (doc_spec_0011) | ✅ 已建（PROG-2-1428 血統小傳開窗，由人物頁總覽「血統小傳」打開；使用者 2026-10-28 裁定做） |
+| P2 | `skins/general-bloodline-vignette-default.json` | 武將人物介面規格書.md (doc_ui_0012)、UI 規格書.md (doc_ui_0027) | ✅ 已建（PROG-2-1428 血統小傳開窗，由人物頁總覽「血統小傳」打開；使用者 2026-10-28 裁定做） |
+| P2 | `screens/general-bloodline-vignette-screen.json` | 武將人物介面規格書.md (doc_ui_0012)、UI 規格書.md (doc_ui_0027) | ✅ 已建（PROG-2-1428 血統小傳開窗，由人物頁總覽「血統小傳」打開；使用者 2026-10-28 裁定做） |
 | P2 | `layouts/spirit-tally-detail-main.json` | 兵種（虎符）系統.md (doc_spec_0012)、武將人物介面規格書.md (doc_ui_0012) | ✅ 已建 |
 | P2 | `skins/spirit-tally-detail-default.json` | 兵種（虎符）系統.md (doc_spec_0012)、UI 規格書.md (doc_ui_0027) | ✅ 已建 |
 | P2 | `screens/spirit-tally-detail-screen.json` | 兵種（虎符）系統.md (doc_spec_0012)、UI 規格書.md (doc_ui_0027) | ✅ 已建 |
