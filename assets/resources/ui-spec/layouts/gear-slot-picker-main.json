@@ -60,6 +60,30 @@
             "height": 52,
             "onClick": "unequipGear",
             "children": [{ "type": "label", "name": "gearUnequipLabel", "id": "gearUnequipLabel", "text": "卸下", "styleSlot": "gear.picker.row" }]
+          },
+          {
+            "type": "button",
+            "name": "btnGearManage",
+            "id": "btnGearManage",
+            "height": 52,
+            "onClick": "toggleGearManage",
+            "children": [{ "type": "label", "name": "gearManageLabel", "id": "gearManageLabel", "styleSlot": "gear.picker.row" }]
+          },
+          {
+            "type": "button",
+            "name": "btnGearLock",
+            "id": "btnGearLock",
+            "height": 52,
+            "onClick": "lockGear",
+            "children": [{ "type": "label", "name": "gearLockLabel", "id": "gearLockLabel", "styleSlot": "gear.picker.row" }]
+          },
+          {
+            "type": "button",
+            "name": "btnGearDecompose",
+            "id": "btnGearDecompose",
+            "height": 52,
+            "onClick": "decomposeGear",
+            "children": [{ "type": "label", "name": "gearDecomposeLabel", "id": "gearDecomposeLabel", "styleSlot": "gear.picker.row" }]
           }
         ]
       }
