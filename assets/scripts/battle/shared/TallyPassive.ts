@@ -1,4 +1,4 @@
-// @spec-source → 兵種（虎符）系統.md：死亡傳承虎符（白馬 / 騎射合一）
+// @spec-source → 兵種（虎符）系統.md：死亡傳承虎符（白馬 / 騎射合一；解煩、丹陽、吳國數值被動 PROG-2-1433）
 /**
  * TallyPassive — 虎符被動的通用掛點（不依賴 cc）
  *
@@ -8,6 +8,7 @@
  *
  * Unity 對照：ScriptableObject 上的被動欄位，部署時 Instantiate 後依資料套用到角色上。
  */
+import { TerrainType } from '../../core/config/Constants';
 import type { TroopUnit } from '../../core/models/TroopUnit';
 
 /** 弓兵射程（BattleUnitSpawner 弓兵 attackRange = 2） */
@@ -22,6 +23,11 @@ export interface TallyPassiveSpec {
   moveRangeBonus?: number;
   /** 七進七出：移動穿透敵格（Ghost_Move），由移動階段依穿透規則結算（PROG-2-0776） */
   ghostMove?: boolean;
+  /** 攻擊乘數（解煩／丹陽／吳國 +20%，PROG-2-1433）；有 attackTerrains 時只在這些地形生效 */
+  attackMultiplier?: number;
+  attackTerrains?: readonly TerrainType[];
+  /** 地形移動加成：站在指定地形時移動力 +bonus（丹陽山地、吳國水域 +2） */
+  terrainMoveBonus?: { terrains: readonly TerrainType[]; bonus: number };
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -33,7 +39,39 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   'tiger-tally-jiao-ji': { extraHitWhenAdjacentMale: 1 },
   // 七進七出（龍膽符）：暫定 id，龍膽符尚未進 TallyCardCatalog，出陣前不會有單位帶到
   'tiger-tally-long-dan': { ghostMove: true },
+  // 解煩（突擊步兵）：移動 +2、攻擊 +20%，不限地形。以下三條模板 id 沿用規格表 tacticId，尚未進 TallyCardCatalog
+  'tiger-tally-jie-fan': { moveRangeBonus: 2, attackMultiplier: 1.2 },
+  // 丹陽（山地特化）：站在山地時移動 +2、攻擊 +20%
+  'tiger-tally-dan-yang': {
+    attackMultiplier: 1.2,
+    attackTerrains: [TerrainType.Mountain],
+    terrainMoveBonus: { terrains: [TerrainType.Mountain], bonus: 2 },
+  },
+  // 吳國（水域特化）：站在河道時移動 +2、攻擊 +20%
+  'tiger-tally-wu-guo': {
+    attackMultiplier: 1.2,
+    attackTerrains: [TerrainType.River],
+    terrainMoveBonus: { terrains: [TerrainType.River], bonus: 2 },
+  },
 };
+
+function passiveOf(unit: TroopUnit): TallyPassiveSpec | undefined {
+  return unit.tallyTemplateId ? TALLY_PASSIVE_BY_TEMPLATE[unit.tallyTemplateId] : undefined;
+}
+
+/** 虎符被動的攻擊乘數；不在指定地形或沒有此被動時為 1 */
+export function tallyAttackMultiplierOf(unit: TroopUnit, terrain: TerrainType): number {
+  const spec = passiveOf(unit);
+  if (!spec?.attackMultiplier) return 1;
+  if (spec.attackTerrains && !spec.attackTerrains.includes(terrain)) return 1;
+  return spec.attackMultiplier;
+}
+
+/** 虎符被動的地形移動加成；站的地形不符或沒有此被動時為 0 */
+export function tallyTerrainMoveBonusOf(unit: TroopUnit, terrain: TerrainType): number {
+  const bonus = passiveOf(unit)?.terrainMoveBonus;
+  return bonus && bonus.terrains.includes(terrain) ? bonus.bonus : 0;
+}
 
 /** 此部隊是否帶七進七出（移動穿透敵格）；沒有模板 id 或沒有該被動時為 false */
 export function hasGhostMove(unit: TroopUnit): boolean {

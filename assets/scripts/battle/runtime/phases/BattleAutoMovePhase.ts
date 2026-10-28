@@ -9,7 +9,7 @@ import { applyAptitudeMove } from '../../../core/systems/BattleAptitude';
 import { forestMoveBonusFor } from '../../../core/systems/FactorTacticLinkage';
 import { forcedMoveBlockedDamageRatio, resolveForcedMove } from '../../shared/ForcedMoveTile';
 import { resolveGhostPath, type GhostPathCell } from '../../shared/GhostMovePath';
-import { hasGhostMove } from '../../shared/TallyPassive';
+import { hasGhostMove, tallyTerrainMoveBonusOf } from '../../shared/TallyPassive';
 
 const FORWARD_DIR: Record<Faction, number> = {
   [Faction.Player]: 1,
@@ -73,6 +73,8 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
     // 林地適性（PROG-2-0584）：站在林地且有 forest-move-bonus 的部隊移動力 +1
     const cell = context.state.getCell(unit.lane, unit.depth);
     remainingMoveBudget += forestMoveBonusFor(cell?.terrain ?? TerrainType.Plain, unit.factorEffects);
+    // 虎符地形特化（丹陽山地、吳國水域，PROG-2-1433）：站在指定地形時移動力 +2
+    remainingMoveBudget += tallyTerrainMoveBonusOf(unit, cell?.terrain ?? TerrainType.Plain);
   }
 
   if (hasGhostMove(unit)) {
