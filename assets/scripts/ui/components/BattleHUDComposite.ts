@@ -22,8 +22,17 @@ import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { SolidBackground } from './SolidBackground';
+import { isVitalityBarGrayed, vitalityBarRatio } from '../../core/systems/VitalityBarView';
 
 const { ccclass } = _decorator;
+
+/** 精力條（FORM-11）在血條正下方的高度與間距 */
+const VITALITY_BAR_HEIGHT = 6;
+const VITALITY_BAR_GAP = 4;
+const VITALITY_FILL_COLOR = new Color(240, 200, 60, 255);
+const VITALITY_TRACK_COLOR = new Color(0, 0, 0, 160);
+/** 體力歸零時底板變灰，表示已無法發動大招 */
+const VITALITY_TRACK_GRAYED_COLOR = new Color(90, 90, 90, 200);
 
 @ccclass('BattleHUDComposite')
 export class BattleHUDComposite extends CompositePanel {
@@ -66,6 +75,11 @@ export class BattleHUDComposite extends CompositePanel {
     private _enemyFortressTotalW  = 691;
     private _playerPortraitNode:  Node | null = null;
     private _enemyPortraitNode:   Node | null = null;
+    // 體力條（FORM-11）：玩家血條下方的細條，執行期建立；值先存起來，建好後再套用
+    private _playerVitalityTrack: Node | null = null;
+    private _playerVitalityFill:  Node | null = null;
+    private _playerVitality = 0;
+    private _playerMaxVitality = 0;
 
     // ── 生命週期 ─────────────────────────────────────────────
 
@@ -133,11 +147,24 @@ export class BattleHUDComposite extends CompositePanel {
         if (playerBarTf) this._playerFortressTotalW = playerBarTf.contentSize.width;
         if (enemyBarTf)  this._enemyFortressTotalW  = enemyBarTf.contentSize.width;
 
+        this._ensureVitalityBar(rootNode);
+        this._renderPlayerVitality();
+
         this._buildCompleted = true;
         this._flushReadyWaiters(true);
     }
 
     // ── 公開 API（與原 BattleHUD 完全相同）──────────────────
+
+    /**
+     * 更新玩家精力條（FORM-11）。精力歸零時底板變灰；畫面未建好前只暫存數值。
+     * Unity 對照：Slider.value 的 setter，值變時直接更新 fillAmount 與顏色。
+     */
+    public setPlayerVitality(vitality: number, maxVitality: number): void {
+        this._playerVitality = vitality;
+        this._playerMaxVitality = maxVitality;
+        this._renderPlayerVitality();
+    }
 
     /**
      * 刷新 HUD 所有數據欄位。
@@ -238,6 +265,41 @@ export class BattleHUDComposite extends CompositePanel {
      * 確保 HP bar 容器下存在 SolidBackground 填充子節點。
      * 若已存在則直接回傳；若不存在則建立。
      */
+    /**
+     * 在玩家血條正下方建立精力條（底板 + 填充），沿用血條的 SolidBackground 做法。
+     * 布局 JSON 沒有這個節點，所以執行期建立；位置以血條中心為錨點推算。
+     */
+    private _ensureVitalityBar(root: Node): void {
+        const hpBar = root.getChildByPath('PlayerFortressBar');
+        if (!hpBar) return;
+
+        if (!root.getChildByPath('PlayerVitalityBar')) {
+            const hpTf = hpBar.getComponent(UITransform);
+            const hpHeight = hpTf?.contentSize.height ?? 20;
+            const trackNode = new Node('PlayerVitalityBar');
+            trackNode.layer = hpBar.layer;
+            root.addChild(trackNode);
+            const trackTf = trackNode.addComponent(UITransform);
+            trackTf.setContentSize(hpTf?.contentSize.width ?? 691, VITALITY_BAR_HEIGHT);
+            const trackY = hpBar.position.y - hpHeight / 2 - VITALITY_BAR_GAP - VITALITY_BAR_HEIGHT / 2;
+            trackNode.setPosition(hpBar.position.x, trackY, hpBar.position.z);
+            trackNode.addComponent(SolidBackground).color = VITALITY_TRACK_COLOR;
+        }
+
+        this._playerVitalityTrack = root.getChildByPath('PlayerVitalityBar');
+        this._playerVitalityFill = this._ensureBarFill(root, 'PlayerVitalityBar', VITALITY_FILL_COLOR);
+    }
+
+    private _renderPlayerVitality(): void {
+        if (!this._playerVitalityFill) return;
+        const ratio = vitalityBarRatio(this._playerVitality, this._playerMaxVitality);
+        this._setBarFillRatio(this._playerVitalityFill, this._playerFortressTotalW, ratio);
+
+        const grayed = isVitalityBarGrayed(this._playerVitality);
+        const trackBg = this._playerVitalityTrack?.getComponent(SolidBackground);
+        if (trackBg) trackBg.color = grayed ? VITALITY_TRACK_GRAYED_COLOR : VITALITY_TRACK_COLOR;
+    }
+
     private _ensureBarFill(root: Node, barPath: string, color: Color): Node | null {
         const barNode = root.getChildByPath(barPath);
         if (!barNode) return null;
