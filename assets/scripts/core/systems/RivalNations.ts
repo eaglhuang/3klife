@@ -1,4 +1,4 @@
-// @spec-source → 治理模式他國AI系統.md（doc_spec_0020）E-1、E-2、E-5、E-12；PROG-2-1087
+// @spec-source → 治理模式他國AI系統.md（doc_spec_0020）E-1、E-2、E-3、E-5、E-12；PROG-2-1087、PROG-2-1502
 /**
  * RivalNations — 他國 AI 勢力的純邏輯：勢力清單、與玩家的邦交、外交指令、季度行動、自動模擬戰鬥。
  * 不依賴 cc；狀態是可序列化的純資料，所有函式都回傳新狀態，不改輸入。
@@ -13,6 +13,12 @@
 export type NationProfile =
     | 'MILITARIST' | 'DIPLOMAT' | 'GUARDIAN' | 'WARLORD'
     | 'EXPANSIONIST' | 'PASSIVE' | 'CAVALRY_LORD' | 'RAIDER';
+
+import {
+    AI_STARTING_RESOURCES, INTEL_CAP, NATION_PRIMARY_TASK, RULER_GOVERNANCE_STATS, aiGovernanceTick,
+    type NationResources,
+} from './RivalGovernance';
+import { clampResource } from './ResourceCap';
 
 export interface NationDef {
     readonly id: string;
@@ -49,6 +55,8 @@ export interface NationState {
     readonly tradeSeason?: number;
     /** 該季已交易次數 */
     readonly tradeCount?: number;
+    /** 內政資源（RAI-01）；舊存檔缺漏時補 AI_STARTING_RESOURCES */
+    readonly resources?: NationResources;
 }
 
 export interface RivalWorld {
@@ -75,7 +83,7 @@ export function createRivalWorld(defs: readonly NationDef[] = NATION_DEFS): Riva
     return {
         nations: defs.map((def) => ({
             id: def.id, troops: def.troops, territories: def.territories,
-            relation: def.relation, allied: false, atWar: false,
+            relation: def.relation, allied: false, atWar: false, resources: { ...AI_STARTING_RESOURCES },
         })),
     };
 }
@@ -170,13 +178,20 @@ export interface SeasonTickResult {
     readonly events: SeasonEvent[];
 }
 
-/** 季度推進：兵力成長、邦交向 0 回歸（交戰中不回歸）、敵對勢力依性格擲骰進攻玩家 */
+/** 季度推進：兵力成長、內政結算（RAI-03）、邦交向 0 回歸（交戰中不回歸）、敵對勢力依性格擲骰進攻玩家 */
 export function advanceRivalSeason(world: RivalWorld, random: () => number): SeasonTickResult {
     const events: SeasonEvent[] = [];
     const nations = world.nations.map((n) => {
         const def = nationDef(n.id);
-        const tuning = PROFILE_TUNING[def?.profile ?? 'PASSIVE'];
+        const profile = def?.profile ?? 'PASSIVE';
+        const tuning = PROFILE_TUNING[profile];
         const troops = Math.round(n.troops * (1 + tuning.growth));
+        // 兵力傳 0 作為基底，只取內政產出的增量，封頂不會誤砍既有兵力
+        const governed = aiGovernanceTick(
+            { ...(n.resources ?? AI_STARTING_RESOURCES), troops: 0 },
+            profile,
+            [{ type: NATION_PRIMARY_TASK[profile], general: RULER_GOVERNANCE_STATS }],
+        );
         let relation = n.relation;
         if (!n.atWar && !n.allied) {
             relation = relation > 0 ? Math.max(0, relation - RELATION_DRIFT) : Math.min(0, relation + RELATION_DRIFT);
@@ -185,7 +200,12 @@ export function advanceRivalSeason(world: RivalWorld, random: () => number): Sea
         if (hostile && !n.allied && random() < tuning.attack) {
             events.push({ nationId: n.id, kind: 'attack', message: `${def?.name ?? n.id} 率軍來犯！` });
         }
-        return { ...n, troops, relation };
+        return {
+            ...n,
+            troops: troops + governed.troops,
+            relation,
+            resources: { food: governed.food, gold: governed.gold, fame: governed.fame, intel: governed.intel },
+        };
     });
     return { world: { nations }, events };
 }
@@ -266,6 +286,16 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
         }
     }
     const num = (v: unknown, fallback: number): number => (typeof v === 'number' && Number.isFinite(v) ? v : fallback);
+    const resourcesOf = (raw: unknown): NationResources => {
+        const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
+        const whole = (v: unknown, fallback: number): number => Math.max(0, Math.round(num(v, fallback)));
+        return {
+            food: clampResource('food', whole(r.food, AI_STARTING_RESOURCES.food)),
+            gold: clampResource('gold', whole(r.gold, AI_STARTING_RESOURCES.gold)),
+            fame: clampResource('fame', whole(r.fame, AI_STARTING_RESOURCES.fame)),
+            intel: Math.min(INTEL_CAP, whole(r.intel, AI_STARTING_RESOURCES.intel)),
+        };
+    };
     return {
         nations: base.nations.map((n) => {
             const s = saved.get(n.id);
@@ -277,6 +307,7 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
                 relation: clampRelation(num(s.relation, n.relation)),
                 allied: s.allied === true,
                 atWar: s.atWar === true,
+                resources: resourcesOf(s.resources),
                 ...(typeof s.tradeSeason === 'number' && Number.isFinite(s.tradeSeason)
                     ? { tradeSeason: Math.floor(s.tradeSeason), tradeCount: Math.max(0, Math.floor(num(s.tradeCount, 0))) }
                     : {}),
