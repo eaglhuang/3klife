@@ -7,11 +7,22 @@ import type { Faction } from '../../core/config/Constants';
  */
 export const MORALE_DURATION_TURNS = 3;
 
+/** 士氣上限（PM 裁定 2026-10-28）：全體士氣最大化時套用的值 */
+export const MORALE_MAX = 100;
+
 /** 可被鼓舞的單位最小介面，方便純函式測試 */
 export interface MoraleCarrier {
   readonly faction: Faction;
   morale: number;
   moraleTurns: number;
+}
+
+/**
+ * 士氣拉滿（白馬銀槍·不滅）：不看目前是否生效，直接設為士氣上限並重新計時。
+ */
+export function maximizeMorale(unit: MoraleCarrier): void {
+  unit.morale = MORALE_MAX;
+  unit.moraleTurns = MORALE_DURATION_TURNS;
 }
 
 /**

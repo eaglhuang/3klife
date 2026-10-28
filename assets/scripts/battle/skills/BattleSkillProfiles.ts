@@ -52,6 +52,10 @@ export interface BattleSkillProfile {
   slowAmount?: number;
   /** 鼓舞：士氣加成（規格 +20） */
   moraleBonus?: number;
+  /** 全體友軍士氣拉滿至上限（白馬銀槍·不滅）；與傷害同一次結算 */
+  maximizeMoraleOnAllies?: boolean;
+  /** 施放者自身獲得無敵的回合數（白馬銀槍·不滅 1 回合）；無敵期間受到的傷害歸零 */
+  selfInvincibleTurns?: number;
   /** 精力回復：占武將精力上限的比例（規格 對酒當歌 20%），封頂為精力上限 */
   vitalityRestoreRatio?: number;
   /** 結姻連射：額外攻擊次數（規格 +1） */
@@ -170,6 +174,18 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     coefficient: 0,
     moraleBonus: 20,
     battleLogKey: 'skill.mentor_morale.buff',
+  },
+  // 白馬銀槍·不滅（趙雲 5，ULT-08 補缺）：全屏 AOE 傷害係數 0.72（全屏／全場傷害奧義中最常用的係數），
+  // 施放後全體友軍士氣拉滿、施放者獲得 1 回合無敵
+  'zhao-yun-immortal': {
+    battleSkillId: 'zhao-yun-immortal',
+    targetMode: BattleSkillTargetMode.EnemyAll,
+    manualTargeting: false,
+    autoAimMode: 'all-enemies',
+    coefficient: 0.72,
+    scalingStat: 'str',
+    maximizeMoraleOnAllies: true,
+    selfInvincibleTurns: 1,
   },
   // 對酒當歌（曹操 4，ULT-08 補缺）：全軍精力回復 20%；提升攻速規格未給幅度，待裁決，本次未實作
   'cao-cao-revelry': {
