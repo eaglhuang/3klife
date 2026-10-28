@@ -34,6 +34,20 @@ export const TOURNAMENT_LOCAL_CONFIG = {
     competitionReplaceLimit: 1,
 } as const;
 
+/**
+ * 單機對戰樹（PROG-2-1575，暫定 4 輪）：初賽、複賽、準決賽五戰三勝，決賽一場定勝負。
+ * 贏一輪晉級；輸了回到初賽；奪冠後記一次冠軍並從初賽重來。
+ */
+export const TOURNAMENT_BRACKET_ROUNDS = ['初賽', '複賽', '準決賽', '決賽'] as const;
+export const TOURNAMENT_FINAL_ROUND = TOURNAMENT_BRACKET_ROUNDS.length - 1;
+
+/** 該輪的局數與勝場門檻：決賽單場，其餘五戰三勝 */
+export function bracketSeriesRule(round: number): { bestOf: number; winNeeded: number } {
+    return round >= TOURNAMENT_FINAL_ROUND
+        ? { bestOf: 1, winNeeded: 1 }
+        : { bestOf: TOURNAMENT_LOCAL_CONFIG.bestOf, winNeeded: TOURNAMENT_LOCAL_CONFIG.winNeeded };
+}
+
 /** BOSS 弱點／攻擊標籤（規格例：SLOW、ANTI_CONTROL、FIRE；其餘為暫定） */
 export type TournamentBossTag = 'FIRE' | 'SLOW' | 'ANTI_CONTROL' | 'ANTI_CAVALRY' | 'RANGED';
 
@@ -148,6 +162,9 @@ export interface TournamentState {
     winStreak: number;
     bestWinStreak: number;
     history: TournamentSeasonHistory[];
+    /** 對戰樹目前輪次（0=初賽 … 3=決賽）與本季奪冠次數（PROG-2-1575） */
+    bracketRound: number;
+    championships: number;
 }
 
 export interface TournamentEntrant {
@@ -171,7 +188,7 @@ export function createTournamentState(nowMs: number): TournamentState {
     return {
         seasonIndex: 1, seasonStartMs: nowMs, points: 0, team: null,
         entryDay: 0, entriesToday: 0, lastPrepRegisterDay: -1, competitionReplaces: 0,
-        winStreak: 0, bestWinStreak: 0, history: [],
+        winStreak: 0, bestWinStreak: 0, history: [], bracketRound: 0, championships: 0,
     };
 }
 
@@ -193,7 +210,7 @@ export function rolloverTournament(state: Readonly<TournamentState>, nowMs: numb
             seasonStartMs: next.seasonStartMs + TOURNAMENT_SEASON_DAYS * TOURNAMENT_DAY_MS,
             points: softResetPoints(next.points),
             team: null, entryDay: 0, entriesToday: 0, lastPrepRegisterDay: -1, competitionReplaces: 0,
-            winStreak: 0, bestWinStreak: 0,
+            winStreak: 0, bestWinStreak: 0, bracketRound: 0, championships: 0,
         };
     }
     return next;
@@ -282,6 +299,9 @@ export interface TournamentSeriesResult {
     pointsAfter: number;
     tierAfter: RankTier;
     paidExtra: boolean;
+    /** 本場所在輪次、是否因此奪冠 */
+    round: number;
+    champion: boolean;
 }
 
 /**
@@ -315,14 +335,17 @@ export function playTournamentSeries(
     const games: boolean[] = [];
     let wins = 0;
     let losses = 0;
-    while (wins < cfg.winNeeded && losses < cfg.winNeeded && games.length < cfg.bestOf) {
+    const round = Math.min(TOURNAMENT_FINAL_ROUND, Math.max(0, next.bracketRound));
+    const rule = bracketSeriesRule(round);
+    while (wins < rule.winNeeded && losses < rule.winNeeded && games.length < rule.bestOf) {
         const mine = myPower * (1 - cfg.terrainVariance + random() * cfg.terrainVariance * 2);
         const theirs = opponentPower * (1 - cfg.terrainVariance + random() * cfg.terrainVariance * 2);
         const won = mine >= theirs;
         games.push(won);
         if (won) wins++; else losses++;
     }
-    const win = wins >= cfg.winNeeded;
+    const win = wins >= rule.winNeeded;
+    const champion = win && round === TOURNAMENT_FINAL_ROUND;
     const pointsDelta = tournamentEloChange(next.points, opponentPoints, win);
     const pointsAfter = Math.max(0, next.points + pointsDelta);
     const winStreak = win ? next.winStreak + 1 : 0;
@@ -333,11 +356,13 @@ export function playTournamentSeries(
         entriesToday: used + 1,
         winStreak,
         bestWinStreak: Math.max(next.bestWinStreak, winStreak),
+        bracketRound: win && !champion ? round + 1 : 0,
+        championships: next.championships + (champion ? 1 : 0),
     };
     return {
         ok: true,
         state: next,
-        result: { win, games, opponentPower, opponentPoints, pointsDelta, pointsAfter: pointsAfter, tierAfter: rankTierOf(pointsAfter), paidExtra },
+        result: { win, games, opponentPower, opponentPoints, pointsDelta, pointsAfter: pointsAfter, tierAfter: rankTierOf(pointsAfter), paidExtra, round, champion },
     };
 }
 
@@ -368,5 +393,7 @@ export function normalizeTournamentState(raw: unknown): TournamentState | null {
         competitionReplaces: isNum(s.competitionReplaces) ? s.competitionReplaces : 0,
         winStreak: isNum(s.winStreak) ? s.winStreak : 0, bestWinStreak: isNum(s.bestWinStreak) ? s.bestWinStreak : 0,
         history,
+        bracketRound: isNum(s.bracketRound) ? Math.min(TOURNAMENT_FINAL_ROUND, Math.max(0, Math.floor(s.bracketRound))) : 0,
+        championships: isNum(s.championships) ? Math.max(0, Math.floor(s.championships)) : 0,
     };
 }
