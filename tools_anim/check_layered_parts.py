@@ -554,9 +554,15 @@ def check_slot_hidden_extension(
     dir_vec: tuple[float, float],
     min_ext_px: float,
     quantization_tol_px: float = 0.0,
+    measure_on: str = "all",
 ) -> tuple[bool, float]:
-    """檢驗部件越過關節樞紐沿指定向量方向之延伸長度 (支援規格量化容差 quantization_tol_px)"""
-    alpha = part_arr[..., 3]
+    """檢驗部件越過關節樞紐沿指定向量方向之延伸長度 (支援規格量化容差 quantization_tol_px 與主連通區量測 measure_on)"""
+    if measure_on == "mainComponent":
+        target_arr, _ = extract_main_component_128(part_arr)
+    else:
+        target_arr = part_arr
+
+    alpha = target_arr[..., 3]
     ys, xs = np.where(alpha > 16)
     if len(ys) == 0:
         return False, 0.0
@@ -1718,6 +1724,20 @@ def run_layered_parts_inspection(
 
     # 4. 旋轉露縫檢驗 (繞樞紐旋轉 +/- rotationTestDeg，剛性連接 rigid=true 略過)
     rot_leak_reports: dict[str, Any] = {}
+    # AG-42: 讀取 coverageRule.extensionMeasureOn (規格 v3.22 預設 mainComponent)
+    cov_rule = layered_cfg.get("coverageRule", {})
+    ext_measure_on = cov_rule.get("extensionMeasureOn", "all")
+    ext_quant_tol_px = float(cov_rule.get("extensionQuantizationTolPx", 0.0))
+
+    # 若 extensionMeasureOn == "mainComponent"，關節延伸與旋轉覆蓋只量該槽主連通區 (alpha >= 128)
+    joint_eval_parts: dict[str, np.ndarray] = {}
+    for sid, arr in loaded_parts.items():
+        if ext_measure_on == "mainComponent":
+            m_arr, _ = extract_main_component_128(arr)
+            joint_eval_parts[sid] = m_arr
+        else:
+            joint_eval_parts[sid] = arr
+
     for j_conn in joint_connections:
         conn_id = j_conn["id"]
         p_sid = j_conn["parent_slot"]
@@ -2101,14 +2121,15 @@ def run_layered_parts_inspection(
         dir_p = (piv_pt[0] - p_start_pt[0], piv_pt[1] - p_start_pt[1])
         dir_c = (p_start_pt[0] - piv_pt[0], p_start_pt[1] - piv_pt[1])
 
-        p_arr = loaded_parts[p_sid]
-        c_arr = loaded_parts[c_sid]
+        p_arr = joint_eval_parts[p_sid]
+        c_arr = joint_eval_parts[c_sid]
 
-        cov_rule = layered_cfg.get("coverageRule", {})
-        ext_quant_tol_px = float(cov_rule.get("extensionQuantizationTolPx", 0.0))
-
-        p_pass, p_ext = check_slot_hidden_extension(p_arr, piv_pt, dir_p, min_ext_px, ext_quant_tol_px)
-        c_pass, c_ext = check_slot_hidden_extension(c_arr, piv_pt, dir_c, min_ext_px, ext_quant_tol_px)
+        p_pass, p_ext = check_slot_hidden_extension(
+            p_arr, piv_pt, dir_p, min_ext_px, ext_quant_tol_px, measure_on=ext_measure_on
+        )
+        c_pass, c_ext = check_slot_hidden_extension(
+            c_arr, piv_pt, dir_c, min_ext_px, ext_quant_tol_px, measure_on=ext_measure_on
+        )
 
         # AG-27: 檢查 child segment 是否定義 neckExtension.replacesGenericHiddenExtension
         seg_alias_map = {
@@ -2214,6 +2235,7 @@ def run_layered_parts_inspection(
             "minRequiredPx": round(min_ext_px, 1),
             "quantizationTolPx": round(ext_quant_tol_px, 1),
             "effectiveMinRequiredPx": round(min_ext_px - ext_quant_tol_px, 1),
+            "measureOn": ext_measure_on,
             "parentWaived": p_waived,
             "childWaived": c_waived,
             "replacesGenericHiddenExtension": replaces_generic_ext,
