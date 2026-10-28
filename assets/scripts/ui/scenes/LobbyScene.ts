@@ -1,6 +1,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
+import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
@@ -440,6 +441,7 @@ export class LobbyScene extends Component {
     async start() {
         // 讀存檔前先備妥服務（存檔後端、名冊、生命週期）；否則 load() 因未設定存檔服務而失敗，每次重開都被當成新玩家
         services().initialize(this.node);
+        void this._loadLimitedPoolSchedule();
         // 為 LobbyScene 大背板生成穩定的組件背景
         const bgNode = this.node.getChildByName('Background');
         if (bgNode) {
@@ -989,6 +991,16 @@ export class LobbyScene extends Component {
                 });
             }
         }
+    }
+
+    /** 限定池排程（data/limited-pool-schedule.json）：讀取失敗或沒有設定時沒有任何限定池（GCH-12） */
+    private async _loadLimitedPoolSchedule(): Promise<void> {
+        const raw = await new Promise<unknown>((resolve) => {
+            resources.load<JsonAsset>('data/limited-pool-schedule', JsonAsset, (err, asset) => {
+                resolve(err || !asset ? null : asset.json);
+            });
+        });
+        this._localGachaService.setLimitedPoolWindows(parseLimitedPoolWindows(raw));
     }
 
     /** 教官支援卡目錄（mentor-support-cards.json）：只讀一次；讀取失敗視為空目錄，不擋培育 */

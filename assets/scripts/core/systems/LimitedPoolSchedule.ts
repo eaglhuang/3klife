@@ -48,3 +48,24 @@ export function featuredGeneralsOf(windows: readonly LimitedPoolWindow[], poolId
 export function limitedPoolAcceptsCurrency(currency: GachaCurrencyType): boolean {
     return isPoolAcceptingCurrency(currency, 'LIMITED');
 }
+
+/**
+ * 讀取排程設定（已解析的 JSON 物件，格式為 { windows: [...] }）。
+ * 欄位不合的項目略過，不讓整份排程失效；時間窗無效（結束不晚於開始）也略過。
+ */
+export function parseLimitedPoolWindows(raw: unknown): LimitedPoolWindow[] {
+    const list = (raw as { windows?: unknown } | null | undefined)?.windows;
+    if (!Array.isArray(list)) return [];
+    const result: LimitedPoolWindow[] = [];
+    for (const item of list) {
+        const entry = item as Partial<Record<keyof LimitedPoolWindow, unknown>> | null;
+        if (entry === null || typeof entry !== 'object') continue;
+        const { poolId, startMs, endMs, featuredGeneralIds } = entry;
+        if (typeof poolId !== 'string' || poolId.length === 0) continue;
+        if (typeof startMs !== 'number' || typeof endMs !== 'number') continue;
+        if (!Array.isArray(featuredGeneralIds) || !featuredGeneralIds.every((id) => typeof id === 'string')) continue;
+        const window: LimitedPoolWindow = { poolId, startMs, endMs, featuredGeneralIds: [...(featuredGeneralIds as string[])] };
+        if (isValidWindow(window)) result.push(window);
+    }
+    return result;
+}
