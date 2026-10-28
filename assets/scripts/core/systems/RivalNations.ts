@@ -20,6 +20,7 @@ import {
 } from './RivalGovernance';
 import { clampResource } from './ResourceCap';
 import { SeededRandom } from './SeededRandom';
+import { shouldEvaluateStanding, shouldTriggerEraShift, strongestDomainRatioOf } from './RivalRiseFall';
 import { bondStep, type AiGeneral, type BondPair } from './RivalBonding';
 import { evaluateExpansion } from './RivalExpansion';
 
@@ -205,6 +206,21 @@ export interface RivalPlayerStats {
     readonly troops: number;
     readonly food: number;
     readonly gold: number;
+}
+
+/**
+ * RAI-12 天下大亂重組（E-10 最小版）：每年評估一次，最強勢力（含玩家）領土佔比 ≥ 0.9 即觸發，
+ * AI 國家回到新局初始值；玩家資產不在本函式內，不受影響。玩家崩潰分支延後。
+ */
+export function applyEraShift(world: RivalWorld, season: number, playerTerritories: number): RivalWorld {
+    if (!shouldEvaluateStanding(season)) return world;
+    const territoryCounts = [...world.nations.map((n) => n.territories), playerTerritories];
+    const triggered = shouldTriggerEraShift({
+        strongestDomainRatio: strongestDomainRatioOf(territoryCounts),
+        playerTerritories,
+        playerCollapseSeasons: 0,
+    });
+    return triggered ? createRivalWorld() : world;
 }
 
 /**
