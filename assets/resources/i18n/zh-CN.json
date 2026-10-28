@@ -533,5 +533,12 @@
   "ui.bloodline.vignette.slot.role": "定位",
   "ui.bloodline.vignette.slot.awakening": "觉醒",
   "ui.bloodline.vignette.slot.bloodline": "血脉",
-  "ui.bloodline.vignette.slot.future": "未来"
+  "ui.bloodline.vignette.slot.future": "未来",
+  "ui.battle.tally.pick_target": "选武将",
+  "ui.battle.tally.target": "目标：{0}",
+  "ui.battle.tally.insert": "插卡",
+  "ui.battle.tally.stage_sigil_ignite": "祖纹亮起",
+  "ui.battle.tally.stage_beast_shadow": "灵兽虚影",
+  "ui.battle.tally.stage_spirit_face": "英灵面",
+  "ui.battle.tally.stage_army_enter": "军势进场"
 }

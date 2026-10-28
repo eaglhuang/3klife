@@ -101,6 +101,7 @@ export const EVENT_NAMES = {
   GeneralDamagedVisualCommitted: "general-damaged-visual-committed",
   GeneralSpChanged:  "general-sp-changed",
   GeneralSkillUsed:  "general-skill-used",
+  TallySpiritInserted: "tally-spirit-inserted",
   GeneralSkillEffect:"general-skill-effect",
   FortressDamaged:   "fortress-damaged",
   UiBackRequested:   "ui-back-requested",

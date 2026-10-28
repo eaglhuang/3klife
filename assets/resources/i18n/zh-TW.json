@@ -562,5 +562,12 @@
   "UI_DAILY_REPORT_MORNING_TITLE": "晨報",
   "UI_DAILY_REPORT_OPEN_HUB": "晨報派遣板 ▶",
   "UI_DAILY_REPORT_REVENGE": "復仇取回 ▶",
-  "UI_DAILY_REPORT_CLOSE": "知道了"
+  "UI_DAILY_REPORT_CLOSE": "知道了",
+  "ui.battle.tally.pick_target": "選武將",
+  "ui.battle.tally.target": "目標：{0}",
+  "ui.battle.tally.insert": "插卡",
+  "ui.battle.tally.stage_sigil_ignite": "祖紋亮起",
+  "ui.battle.tally.stage_beast_shadow": "靈獸虛影",
+  "ui.battle.tally.stage_spirit_face": "英靈面",
+  "ui.battle.tally.stage_army_enter": "軍勢進場"
 }
