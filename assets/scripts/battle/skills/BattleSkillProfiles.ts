@@ -378,6 +378,17 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     counterMeleeOnly: true,
     battleLogKey: 'skill.you_qi_counter.reaction',
   },
+  // 漢室餘暉（劉備 4，ULT-10 特殊規則）：立即重置 1 名友軍行動條；規格未給倍率與再行動次數，取重置預設值（首擊 ×1、再行動 1）
+  'liu-bei-reset': {
+    battleSkillId: 'liu-bei-reset',
+    targetMode: BattleSkillTargetMode.AllySingle,
+    manualTargeting: false,
+    autoAimMode: 'all-allies',
+    effectKind: 'reset',
+    coefficient: 0,
+    resetFirstHitMultiplier: 1,
+    resetExtraActions: 1,
+  },
   'wei-zhen-reset': {
     battleSkillId: 'wei-zhen-reset',
     targetMode: BattleSkillTargetMode.AllySingle,
