@@ -110,6 +110,8 @@ export class BattleState {
   public aiDifficulty: AiDifficulty = 'normal';
   /** AI 單挑接受閾值（ai-difficulty.json duelAcceptThreshold）；null 表示未設定難度表，退回一般閾值（PROG-2-1325） */
   public aiDuelAcceptThreshold: number | null = null;
+  /** AI 擊殺充能倍率（ai-difficulty.json spGainModifier）；預設 1.0 = 普通（AIS-12） */
+  public aiSpGainModifier = 1;
   /** AI 難度加成（ai-difficulty.json difficultyBonus）：敵方每回合部署數（F-2）用；預設 0 = 普通 */
   public aiDifficultyBonus = 0;
 
