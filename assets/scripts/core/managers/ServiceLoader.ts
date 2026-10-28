@@ -196,6 +196,12 @@ export class ServiceLoader {
             () => this.resource.loadJson<PersonRegistryData>('data/person-registry'),
         );
 
+        // 讀檔完成處統一補血統圖：先載 person-registry（只載一次），再把名冊子嗣補回圖
+        this.session.setPostLoadHook(async () => {
+            await BloodlineGraph.getInstance().loadRegistry();
+            this.breeding.syncGraphFromRoster();
+        });
+
         this.initialized = true;
     }
 
@@ -263,7 +269,7 @@ export class ServiceLoader {
 
     /**
      * 結緣畫面開啟前呼叫：載入因子字典與 person-registry.json，再把名冊裡已出生的子嗣補回血統圖。
-     * 讀檔後名冊可能多出前幾輪生下的子嗣，所以每次開啟都同步一次（重複呼叫不會重複登記）。
+     * 讀檔時已由 session 的讀檔後處理補過一次；這裡再同步是給新局（沒有讀檔）的初代武將補虛擬祖先，重複呼叫不會重複登記。
      */
     public async prepareBreeding(): Promise<void> {
         if (!this.factorDictionary) {
