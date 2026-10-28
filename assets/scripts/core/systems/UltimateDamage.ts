@@ -10,7 +10,7 @@
  * 公式本身不寫死任何一張表。
  */
 
-/** 奧義等級上限（規格：奧義 1~5） */
+/** 奧義槽位範圍（規格：奧義 1~5，base_power 查表用）；升級等級只有下限、不設上限（PROG-2-1453） */
 export const ULT_LEVEL_MIN = 1;
 export const ULT_LEVEL_MAX = 5;
 /** 每級奧義的傷害加成係數（規格：1 + ult_level × 0.15） */
@@ -31,7 +31,7 @@ export function ultBasePowerOf(ultLevel: number, basePowerTable: Readonly<Record
  */
 export function ultDamage(basePower: number, ultLevel: number, statModifier: number): number {
     if (!Number.isFinite(basePower) || basePower < 0) return 0;
-    if (!Number.isInteger(ultLevel) || ultLevel < ULT_LEVEL_MIN || ultLevel > ULT_LEVEL_MAX) return 0;
+    if (!Number.isInteger(ultLevel) || ultLevel < ULT_LEVEL_MIN) return 0;
     if (!Number.isFinite(statModifier) || statModifier < 0) return 0;
     return basePower * (1 + ultLevel * ULT_LEVEL_DAMAGE_STEP) * statModifier;
 }
@@ -60,9 +60,9 @@ export function ultimateAttackOf(
 
 /**
  * 奧義升級等級換成傷害公式用的 ult_level（PROG-2-1451）：缺值或小於 1 視為 Lv 1；
- * 升級上限規格未寫，超過 ULT_LEVEL_MAX 時以上限計（沿用 ultDamage 的等級範圍）。
+ * 升級等級不設上限（使用者裁定 2026-10-28，PROG-2-1453），小數無條件捨去。
  */
 export function battleUltLevelOf(level: number | undefined): number {
     if (typeof level !== 'number' || !Number.isFinite(level) || level < ULT_LEVEL_MIN) return ULT_LEVEL_MIN;
-    return Math.min(ULT_LEVEL_MAX, Math.floor(level));
+    return Math.floor(level);
 }
