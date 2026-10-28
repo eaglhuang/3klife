@@ -27,6 +27,8 @@ import { CompositePanel } from '../core/CompositePanel';
 import { TACTIC_REASON_WEATHER } from '../core/TacticAvailabilityPresenter';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UltimateSelectPopup, UltimateSkillItem } from './UltimateSelectPopup';
+import { markUsedUltimates } from '../core/UltimateUsage';
+import { SkillSourceType } from '../../shared/SkillRuntimeContract';
 import { logBattleUIPosition } from './BattleUIDiag';
 
 const { ccclass, property } = _decorator;
@@ -49,6 +51,8 @@ export class ActionCommandComposite extends CompositePanel {
     private _ultimateBtnNode: Node | null = null;
     private _ultimatePopupHost: Node | null = null;
     private _ultimateSkills: UltimateSkillItem[] = [];
+    /** 本場玩家已施放的奧義 skillId（PROG-2-1512） */
+    private readonly _usedUltimateSkillIds = new Set<string>();
     private _tacticsSummaryLabel = '計謀';
 
     // ── 目前 SP 狀態 ──────────────────────────────────────────
@@ -104,6 +108,7 @@ export class ActionCommandComposite extends CompositePanel {
 
     public setUltimateSkills(skills: UltimateSkillItem[]): void {
         this._ultimateSkills = [...skills];
+        this._usedUltimateSkillIds.clear();
     }
 
     public setTacticSummary(label: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null): void {
@@ -190,7 +195,14 @@ export class ActionCommandComposite extends CompositePanel {
     private _subscribeEvents(): void {
         this._unsubs.push(
             services().event.on(EVENT_NAMES.GeneralSpChanged, this._onSpChanged.bind(this)),
+            services().event.on(EVENT_NAMES.GeneralSkillUsed, this._onSkillUsed.bind(this)),
         );
+    }
+
+    /** 玩家奧義生效後記下 skillId，選單灰化（PROG-2-1512） */
+    private _onSkillUsed(data: { faction: Faction; skillId?: string; sourceType?: SkillSourceType }): void {
+        if (data.faction !== Faction.Player || data.sourceType !== SkillSourceType.Ultimate || !data.skillId) return;
+        this._usedUltimateSkillIds.add(data.skillId);
     }
 
     /** GeneralSpChanged handler — 只更新玩家方 SP 環 */
@@ -246,7 +258,7 @@ export class ActionCommandComposite extends CompositePanel {
         }
 
         const skills = this._ultimateSkills.length > 0
-            ? this._ultimateSkills
+            ? markUsedUltimates(this._ultimateSkills, this._usedUltimateSkillIds)
             : [{ skillId: 'unassigned-ultimate', label: services().i18n.t('ui.ultimate.unassigned'), costSp: this._maxSp }];
 
         this.ultimateSelectPopup.show(skills, this._ultimateBtnNode ?? undefined);
