@@ -36,6 +36,38 @@ export function scoreNpcAction(input: NpcActionScoreInput): number {
     return input.eventWeight * input.personalityWeight * input.relationshipModifier * input.moodModifier * input.cooldownModifier;
 }
 
+/** 高權重門檻（PM 暫定 1）：分數嚴格大於門檻才算高權重互動，受登入窗限流；預設權重全為 1 時不會有任何互動被限流。 */
+export const NPC_HIGH_WEIGHT_THRESHOLD = 1;
+
+/**
+ * 登入窗限流：同一武將在同一登入窗內只允許 1 則高權重互動（F-1 第 3 點）。
+ * 低權重互動不計入也不受限；換登入窗就重新計算。
+ */
+export class NpcInteractionLimiter {
+    private readonly _claimed = new Set<string>();
+
+    constructor(private readonly _threshold: number = NPC_HIGH_WEIGHT_THRESHOLD) {}
+
+    /** 不登記，只查這則互動此武將是否還能排；低權重永遠可以。 */
+    canClaim(windowId: string, generalId: string, score: number): boolean {
+        if (score <= this._threshold) return true;
+        return !this._claimed.has(`${windowId}#${generalId}`);
+    }
+
+    /** 登記一則已決定要發生的互動；低權重不登記。 */
+    claim(windowId: string, generalId: string, score: number): void {
+        if (score <= this._threshold) return;
+        this._claimed.add(`${windowId}#${generalId}`);
+    }
+
+    /** 查並登記；回傳 true 表示允許。 */
+    tryClaim(windowId: string, generalId: string, score: number): boolean {
+        if (!this.canClaim(windowId, generalId, score)) return false;
+        this.claim(windowId, generalId, score);
+        return true;
+    }
+}
+
 /** 離線互動候選的分數：只帶性格權重，其餘修正為 1。 */
 export function scoreOfflineRelation(type: DynamicRelationType, weights: Readonly<Record<DynamicRelationType, number>> = NPC_RELATION_WEIGHTS): number {
     return scoreNpcAction({
