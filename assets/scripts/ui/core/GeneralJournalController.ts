@@ -11,7 +11,7 @@
  * Unity 對照：Presenter，日誌資料由呼叫端注入。
  */
 
-import { journalText, type JournalTextLookup } from './JournalTexts';
+import { journalSummaryText, journalText, type JournalTextLookup } from './JournalTexts';
 
 export const GENERAL_JOURNAL_MAX_LINES = 6;
 const SEASON_NAMES = ['春', '夏', '秋', '冬'];
@@ -25,6 +25,8 @@ export interface GeneralJournalLine {
     timestamp: string;
     summary: string;
     visibility?: string;
+    summaryKey?: string;
+    summaryArgs?: string[];
 }
 
 export interface GeneralJournalDeps {
@@ -84,7 +86,7 @@ export class GeneralJournalController {
         return this._deps.entries(general.id)
             .filter((e) => e.visibility !== 'HIDDEN')
             .slice(0, GENERAL_JOURNAL_MAX_LINES)
-            .map((e) => `${formatJournalSeason(e.timestamp)}　${e.summary}`);
+            .map((e) => `${formatJournalSeason(e.timestamp)}　${journalSummaryText(this._deps.lookup, e)}`);
     }
 
     public getFlowView(): GeneralJournalFlowView {

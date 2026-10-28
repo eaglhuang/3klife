@@ -64,6 +64,7 @@ import { overflowToastText } from '../../core/systems/MentorOverflow';
 import { RIVAL_NATION_SLOTS, RivalDiplomacyController } from '../core/RivalDiplomacyController';
 import { WarehousePanelController } from '../core/WarehousePanelController';
 import { DISPATCH_MAX_ROWS, JournalHubController } from '../core/JournalHubController';
+import { journalSummaryText, type JournalTextLookup } from '../core/JournalTexts';
 import { GeneralJournalController } from '../core/GeneralJournalController';
 import { BattleReviewController } from '../core/BattleReviewController';
 import { TournamentPanelController, tournamentSeasonCardLines } from '../core/TournamentPanelController';
@@ -1462,11 +1463,12 @@ export class LobbyScene extends Component {
      * 點擊派遣列選將派遣未做；入口在內政頁。
      */
     private async _mountJournalHub(): Promise<void> {
+        const lookupJournal: JournalTextLookup = (key, ...args) => services().i18n.t(key, ...args);
         this._journalHub = new JournalHubController({
-            morningLines: () => services().session.morningReport.items.map((item) => item.summary),
+            morningLines: () => services().session.morningReport.items.map((item) => journalSummaryText(lookupJournal, item)),
             dispatchRows: () => services().session.dispatchBoardRows(Date.now(), { preview: true, generalId: this._journalHub?.pickedGeneralId() }),
             dispatchGenerals: () => services().session.dispatchIdleGenerals(Date.now()),
-            lookup: (key) => services().i18n.t(key),
+            lookup: lookupJournal,
         });
         this._journalHubHost = await this._mountPreviewScreenHost('JournalHubHost', 'journal-hub-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._journalHubHost) this._journalHubHost.node.active = false; } },
@@ -1500,7 +1502,7 @@ export class LobbyScene extends Component {
         const journal = new GeneralJournalController({
             generals: () => services().session.roster.map((g) => ({ id: g.id, name: g.name })),
             entries: (generalId) => services().session.queryJournal({ generalUid: generalId }),
-            lookup: (key) => services().i18n.t(key),
+            lookup: (key, ...args) => services().i18n.t(key, ...args),
         });
         this._generalJournal = journal;
         this._generalJournalHost = await this._mountPreviewScreenHost('GeneralJournalHost', 'general-journal-screen', [

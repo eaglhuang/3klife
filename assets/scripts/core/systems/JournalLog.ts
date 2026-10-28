@@ -34,6 +34,10 @@ export interface JournalEntry {
     snapshotRef?: string;
     /** 選填：一句武將反應（JRN-04，PROG-2-1404）；沒有或不合法時不寫入，不影響條目本身。 */
     reaction?: JournalReaction;
+    /** 選填：劇本句的查表 key（PROG-2-1448）；畫面用 key＋參數取譯文，缺譯文時退回 summary（zh-TW）。 */
+    summaryKey?: string;
+    /** 選填：summaryKey 的位置參數，依序填入 {0}、{1}。 */
+    summaryArgs?: string[];
 }
 
 export interface JournalState {
@@ -95,11 +99,12 @@ export function appendJournalEntry(state: JournalState, input: JournalEntryInput
     if (!isValidActionRange(input.sourceActionSeqRange)) return reject('invalid-action-range');
 
     const entry: JournalEntry = {
-        ...input,
+        ...stripSummaryKey(input),
         relatedGeneralUids: [...input.relatedGeneralUids],
         visibility: input.visibility ?? 'VISIBLE',
         sourceActionSeqRange: input.sourceActionSeqRange ? [input.sourceActionSeqRange[0], input.sourceActionSeqRange[1]] : undefined,
         reaction: validReaction(input.reaction),
+        ...validSummaryKey(input),
     };
     return { ok: true, state: { entries: [...cloneJournal(state).entries, entry] } };
 }
@@ -127,13 +132,27 @@ function validReaction(reaction: JournalReaction | undefined): JournalReaction |
     return { text: reaction.text, source: reaction.source };
 }
 
+/** 去掉原始的查表欄位，之後一律用 validSummaryKey 重新寫入，避免非法值漏進存檔。 */
+function stripSummaryKey<T extends { summaryKey?: unknown; summaryArgs?: unknown }>(entry: T): Omit<T, 'summaryKey' | 'summaryArgs'> {
+    const { summaryKey: _key, summaryArgs: _args, ...rest } = entry;
+    return rest;
+}
+
+/** 查表 key 與參數只在合法時才寫入；不合法就整組省略，條目仍靠 summary 顯示。 */
+function validSummaryKey(input: { summaryKey?: unknown; summaryArgs?: unknown }): { summaryKey?: string; summaryArgs?: string[] } {
+    if (typeof input.summaryKey !== 'string' || input.summaryKey.length === 0) return {};
+    if (!Array.isArray(input.summaryArgs) || !input.summaryArgs.every((a) => typeof a === 'string')) return { summaryKey: input.summaryKey };
+    return { summaryKey: input.summaryKey, summaryArgs: [...input.summaryArgs] };
+}
+
 function cloneJournal(state: Readonly<JournalState>): JournalState {
     return {
         entries: state.entries.map(e => ({
-            ...e,
+            ...stripSummaryKey(e),
             relatedGeneralUids: [...e.relatedGeneralUids],
             sourceActionSeqRange: e.sourceActionSeqRange ? [e.sourceActionSeqRange[0], e.sourceActionSeqRange[1]] : undefined,
             reaction: validReaction(e.reaction),
+            ...validSummaryKey(e),
         })),
     };
 }

@@ -20,6 +20,9 @@ export const MORNING_REPORT_SLOTS = { base: 2, highTier: 3, highTierMin: 4 } as 
 export interface MorningReportItem {
     entryId: string;
     summary: string;
+    /** 選填：劇本句查表 key 與參數（PROG-2-1448），從日誌條目帶過來。 */
+    summaryKey?: string;
+    summaryArgs?: string[];
 }
 
 export interface MorningReportState {
@@ -54,7 +57,12 @@ export function buildMorningReport(candidates: readonly JournalEntry[], officerT
 /** 登入時更新晨報：標記之後新增的日誌才是候選；沒有新條目時清空並視為已讀。 */
 export function refreshMorningReport(state: Readonly<MorningReportState>, entries: readonly JournalEntry[], officerTier: number): MorningReportState {
     const mark = Math.min(state.journalMark, entries.length);
-    const items = buildMorningReport(entries.slice(mark), officerTier).map((e) => ({ entryId: e.entryId, summary: e.summary }));
+    const items = buildMorningReport(entries.slice(mark), officerTier).map((e) => ({
+        entryId: e.entryId,
+        summary: e.summary,
+        ...(e.summaryKey !== undefined ? { summaryKey: e.summaryKey } : {}),
+        ...(e.summaryArgs !== undefined ? { summaryArgs: [...e.summaryArgs] } : {}),
+    }));
     return { journalMark: entries.length, items, read: items.length === 0 };
 }
 
@@ -79,7 +87,13 @@ export function normalizeMorningReportState(raw: unknown): MorningReportState {
     const items = Array.isArray(value.items)
         ? value.items
             .filter((i): i is MorningReportItem => !!i && typeof i.entryId === 'string' && typeof i.summary === 'string')
-            .map((i) => ({ entryId: i.entryId, summary: i.summary }))
+            .map((i) => ({
+                entryId: i.entryId,
+                summary: i.summary,
+                ...(typeof i.summaryKey === 'string' && i.summaryKey.length > 0 ? { summaryKey: i.summaryKey } : {}),
+                ...(typeof i.summaryKey === 'string' && Array.isArray(i.summaryArgs) && i.summaryArgs.every((a) => typeof a === 'string')
+                    ? { summaryArgs: [...i.summaryArgs] } : {}),
+            }))
         : [];
     return { journalMark, items, read: value.read !== false || items.length === 0 };
 }
