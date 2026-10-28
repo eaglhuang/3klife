@@ -27,6 +27,7 @@ import { addOfficerExp, applyEraShiftToOfficerState, calcOfficerExpGain, initial
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
 import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/SandtableMarkers';
 import { buildStartingSpiritTalisman, normalizeStartingTalisman, type StartingSpiritTalisman, type TeachingSpiritInput } from '../systems/TeachingSpiritTalisman';
+import { normalizeOpeningPhaseId } from '../systems/OpeningProgress';
 import { effectiveSandtableStage, normalizeUnlockHistory, recordSandtableUnlock, sandtableShortCodeOf, sandtableStageIdOf, type SandtableStageId } from '../systems/SandtableProgress';
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
@@ -566,6 +567,8 @@ export class GameSession {
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生時寫入；舊檔以出生紀錄推導。 */
     private _familySystemUnlockedFlag = false;
+    /** 新玩家開場進行中的幕 id（PROG-2-1371）；開場結束為 null */
+    private _openingPhase: string | null = null;
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 來投時依 uid 查回的武將配置（generals.json）；大廳載入後由 setGeneralTemplates 注入 */
@@ -1455,6 +1458,7 @@ export class GameSession {
         this._legendaryMentoringUsedIds = [];
         this._breedingBirthRecords = [];
         this._familySystemUnlockedFlag = false;
+        this._openingPhase = null;
         this._officerState = initialOfficerState();
         this._sandtableMarkerTerritories = [];
         this._sandtableUnlockHistory = [];
@@ -1939,6 +1943,17 @@ export class GameSession {
 
     /** 已放置標記的領地 id（PROG-2-0965） */
     /** 初始虎符（OPEN-13）：回傳複本，沒有時為 null。 */
+    /** 新玩家開場進行中的幕 id（PROG-2-1371）：讀檔後從該幕接續；開場結束為 null。 */
+    public get openingPhase(): string | null {
+        return this._openingPhase;
+    }
+
+    /** 記下目前開場幕（PROG-2-1371）；有存檔服務時自動存檔，關遊戲後才接得回來。 */
+    public async setOpeningPhase(phaseId: string | null): Promise<void> {
+        this._openingPhase = normalizeOpeningPhaseId(phaseId);
+        if (this._autoSave && this._save) await this.save();
+    }
+
     public get startingTalisman(): StartingSpiritTalisman | null {
         return this._startingTalisman === null ? null : { ...this._startingTalisman, geneIds: [...this._startingTalisman.geneIds] };
     }
@@ -3772,8 +3787,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3800,6 +3815,7 @@ export class GameSession {
         if (this._sandtableUnlockHistory.length > 0) fields.sandtableUnlockHistory = [...this._sandtableUnlockHistory];
         if (this._startingTalisman !== null) fields.startingTalisman = this.startingTalisman!;
         if (this._familySystemUnlockedFlag) fields.familySystemUnlocked = true;
+        if (this._openingPhase !== null) fields.openingPhase = this._openingPhase;
         return fields;
     }
 
@@ -3828,6 +3844,7 @@ export class GameSession {
         this._familySystemUnlockedFlag = snapshot.familySystemUnlocked === true;
         this._recordSandtableUnlockReached();
         this._startingTalisman = normalizeStartingTalisman(snapshot.startingTalisman);
+        this._openingPhase = normalizeOpeningPhaseId(snapshot.openingPhase);
     }
 
     /**

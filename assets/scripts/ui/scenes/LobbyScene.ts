@@ -1718,7 +1718,7 @@ export class LobbyScene extends Component {
                 bringToFront: node => this._bringNodeToFront(node),
                 refreshSeasonHud: () => this._refreshSeasonHud(),
                 notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
-                advanceOpening: event => { this._openingFlow?.advance(event); this._onOpeningPhaseAdvanced(); },
+                advanceOpening: event => { this._advanceOpening(event); },
                 applyFramePortraits: (binder, keys) => this._applyFramePortraits(binder as NonNullable<UIScreenPreviewHost['binder']>, 'destiny', keys),
                 openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? '') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
@@ -2086,7 +2086,46 @@ export class LobbyScene extends Component {
         ]);
         if (this._isNewPlayer) {
             this._openingFlow.start();
+            this._recordOpeningPhase();
             this._showIntro();
+        } else {
+            this._resumeOpening();
+        }
+    }
+
+    /** 推進新玩家開場並記下目前幕（PROG-2-1371），之後才處理該幕的畫面。 */
+    private _advanceOpening(event: { type: string }): void {
+        this._openingFlow?.advance(event);
+        this._recordOpeningPhase();
+        this._onOpeningPhaseAdvanced();
+    }
+
+    /** 把目前幕寫進存檔；開場結束時寫入 null，讀檔後就不再接續。 */
+    private _recordOpeningPhase(): void {
+        void services().session.setOpeningPhase(this._openingFlow?.current()?.id ?? null).catch(() => undefined);
+    }
+
+    /**
+     * 讀檔後有未完成的開場幕：接回該幕，不從頭播（PROG-2-1371）。
+     * 幕 id 認不得時視為開場已結束，存檔欄位會清成 null。
+     */
+    private _resumeOpening(): void {
+        const phaseId = services().session.openingPhase;
+        if (phaseId === null) return;
+        if (!this._openingFlow?.restoreAt(phaseId)) {
+            this._recordOpeningPhase();
+            return;
+        }
+        switch (phaseId) {
+            case 'intro':
+                this._showIntro();
+                break;
+            case 'destiny':
+                this.openDestinyOpening();
+                break;
+            case 'showcase':
+                void this._showInitialShowcase();
+                break;
         }
     }
 
@@ -2150,7 +2189,7 @@ export class LobbyScene extends Component {
         if (this._showcaseHost) {
             this._showcaseHost.node.active = false;
         }
-        this._openingFlow?.advance({ type: SHOWCASE_DONE_EVENT });
+        this._advanceOpening({ type: SHOWCASE_DONE_EVENT });
     }
 
     private _refreshShowcase(): void {
@@ -2173,7 +2212,7 @@ export class LobbyScene extends Component {
     private _finishIntro(): void {
         this.unschedule(this._tickIntro);
         this._introTickScheduled = false;
-        this._openingFlow?.advance({ type: OPENING_INTRO_DONE });
+        this._advanceOpening({ type: OPENING_INTRO_DONE });
         if (this._introHost) {
             this._introHost.node.active = false;
         }

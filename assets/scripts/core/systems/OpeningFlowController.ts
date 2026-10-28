@@ -52,6 +52,15 @@ export class OpeningFlowController {
         return this.current();
     }
 
+    /** 讀檔後把流程接回指定幕（PROG-2-1371）：紀錄清空；幕 id 不在幕序內時不動，回傳 false。 */
+    restoreAt(phaseId: string): boolean {
+        const at = this.phases.findIndex(phase => phase.id === phaseId);
+        if (at < 0) return false;
+        this.index = at;
+        this.records = [];
+        return true;
+    }
+
     current(): { id: string } | null {
         const phase = this.phases[this.index];
         return phase ? { id: phase.id } : null;
