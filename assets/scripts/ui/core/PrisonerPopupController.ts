@@ -15,9 +15,9 @@
  */
 import type { MilitaryReserve } from '../../core/systems/MilitaryReserve';
 import {
-    PRISON_SLOTS_INITIAL,
     powOptionLabels,
     powResultLine,
+    prisonCapacityOf,
     type PendingPrisoner,
     type PowDecision,
     type PowResolution,
@@ -35,6 +35,8 @@ export interface PrisonerPopupDeps {
     session: {
         readonly prison: PrisonState;
         readonly military: MilitaryReserve;
+        /** 主城等級，決定監獄容量（ECO-14）；未提供時視為第 1 級 */
+        readonly territoryLevel?: number;
         resolvePrisoner(targetUid: string, decision: PowDecision, options?: { gold?: number }): Promise<PowResolution | null>;
     };
     wallet: {
@@ -94,7 +96,7 @@ export class PrisonerPopupController {
         const prison = this._deps.session.prison;
         const military = this._deps.session.military;
         const gold = this._deps.wallet.gold();
-        const slots = prison.slots ?? PRISON_SLOTS_INITIAL;
+        const slots = prisonCapacityOf(this._deps.session.territoryLevel ?? 1);
 
         const texts: Record<string, string> = {
             powTitle: '俘虜處置',
