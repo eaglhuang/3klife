@@ -93,7 +93,7 @@ export function createGearHeirTransferSuite(): TestSuite {
         services().initialize();
         sys.localStorage.removeItem('CLIENT_DEVICE_ID');
         const adapter = new MemoryStorageAdapter();
-        const a = build(adapter, [gen(RETIREE, 66), gen(HEIR, 30)]);
+        const a = build(adapter, [gen(RETIREE, 66), gen(HEIR, 30, { fatherId: RETIREE })]);
         a.startNewGame(3);
         (a as unknown as { _inventoryRecords: InventoryRecord[] })._inventoryRecords = [gear('W1', 'WEAPON', null, null)];
         assert.isTrue(a.equipGear('W1', RETIREE, 'WEAPON').ok);
@@ -109,7 +109,7 @@ export function createGearHeirTransferSuite(): TestSuite {
     suite.test('退役不帶 heirChildId：行為與原本相同，裝備回倉庫', async () => {
         services().initialize();
         sys.localStorage.removeItem('CLIENT_DEVICE_ID');
-        const a = build(new MemoryStorageAdapter(), [gen(RETIREE, 66), gen(HEIR, 30)]);
+        const a = build(new MemoryStorageAdapter(), [gen(RETIREE, 66), gen(HEIR, 30, { fatherId: RETIREE })]);
         a.startNewGame(3);
         (a as unknown as { _inventoryRecords: InventoryRecord[] })._inventoryRecords = [gear('W1', 'WEAPON', null, null)];
         assert.isTrue(a.equipGear('W1', RETIREE, 'WEAPON').ok);
@@ -117,12 +117,12 @@ export function createGearHeirTransferSuite(): TestSuite {
         assert.isTrue(!byId(a.inventoryRecords as InventoryRecord[], 'W1').equippedBy);
     });
 
-    suite.test('子嗣不合法（就是退役者本人、不存在、已是導師卡）：拋錯，名冊與裝備都不變', async () => {
+    suite.test('子嗣不合法（就是退役者本人、不存在、導師卡、非親生子嗣）：拋錯，名冊與裝備都不變', async () => {
         services().initialize();
         sys.localStorage.removeItem('CLIENT_DEVICE_ID');
-        const cases = [RETIREE, 'nobody', 'mentor'];
+        const cases = [RETIREE, 'nobody', 'mentor', 'stranger'];
         for (const heir of cases) {
-            const a = build(new MemoryStorageAdapter(), [gen(RETIREE, 66), gen('mentor', 40, { isMentorCard: true })]);
+            const a = build(new MemoryStorageAdapter(), [gen(RETIREE, 66), gen('mentor', 40, { isMentorCard: true, fatherId: RETIREE }), gen('stranger', 30)]);
             a.startNewGame(3);
             (a as unknown as { _inventoryRecords: InventoryRecord[] })._inventoryRecords = [gear('W1', 'WEAPON', null, null)];
             assert.isTrue(a.equipGear('W1', RETIREE, 'WEAPON').ok);

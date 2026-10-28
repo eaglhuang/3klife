@@ -3413,14 +3413,15 @@ export class GameSession {
         return result.card;
     }
 
-    /** 因子媒介的子嗣必須存在、不是退役武將本人、年齡 0~UNVEILING_AGE 且尚未開獎；不合法時拋錯，不改任何狀態 */
-    /** 裝備傳承的接收者：名冊內存活、非退役者本人、非導師卡（父子關係模型尚未建立，暫不驗證血緣） */
+    /** 裝備傳承的接收者：名冊內存活、非導師卡，且 fatherId／motherId 指向退役者（與血統圖同源） */
     private _assertHeir(generalId: string, heirId: string): void {
-        const heir = this._roster.getAll().find((g) => g.id === heirId) as (GeneralConfig & { isMentorCard?: boolean }) | undefined;
-        const eligible = !!heir && heirId !== generalId && !heir.isMentorCard && !isGeneralDead(heir);
-        if (!eligible) throw new Error('[GameSession] 裝備只能傳給名冊內存活、非退役的武將');
+        const heir = this._roster.getAll().find((g) => g.id === heirId) as (GeneralConfig & { isMentorCard?: boolean; fatherId?: string; motherId?: string }) | undefined;
+        const eligible = !!heir && heirId !== generalId && !heir.isMentorCard && !isGeneralDead(heir)
+            && (heir.fatherId === generalId || heir.motherId === generalId);
+        if (!eligible) throw new Error('[GameSession] 裝備只能傳給退役武將的存活子嗣');
     }
 
+    /** 因子媒介的子嗣必須存在、不是退役武將本人、年齡 0~UNVEILING_AGE 且尚未開獎；不合法時拋錯，不改任何狀態 */
     private _assertCatalystChild(generalId: string, childId: string): void {
         const child = this._roster.getAll().find((g) => g.id === childId);
         const eligible = !!child
