@@ -124,6 +124,10 @@ export class BattleState {
   public aiIq: AiIqLevel = 'LOW';
   /** AI 是否可施放奧義（ai-difficulty.json canUseUltimate）；預設 false，未設定難度表時敵方不放奧義（AIS-07） */
   public aiCanUseUltimate = false;
+  /** AI 戰法用的智力等級（PROG-2-1466）；null = 未套難度表，沿用情境打分 */
+  public aiTacticIq: AiIqLevel | null = null;
+  /** AI 是否可用戰法（ai-difficulty.json canUseTactics）；預設 true */
+  public aiCanUseTactics = true;
 
   constructor() {
     for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
