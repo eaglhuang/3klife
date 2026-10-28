@@ -10,6 +10,7 @@ import type { SkillScalingStat } from '../../shared/SkillRuntimeContract';
 import type { BattleSkillExecutionContext } from './BattleSkillResolver';
 import type { BattleSkillProfile } from './BattleSkillProfiles';
 import { isStraightLine } from './SkillGridGeometry';
+import { tallyFireDamageTakenOf } from '../shared/TallyPassive';
 
 export class BattleSkillDamageResolver {
   constructor(private readonly formula = new FormulaSystem()) {}
@@ -50,7 +51,9 @@ export class BattleSkillDamageResolver {
     const fateMultiplier = isFireTactic(profile.tags ?? [])
       ? fateDamageMultiplier(fateBlessingLevel(caster.genes))
       : 1;
-    const fated = fateMultiplier === 1 ? weathered : Math.max(1, Math.floor(weathered * fateMultiplier));
+    // 藤甲（PROG-2-1437）：目標承受火計傷害 ×3
+    const fireTaken = isFireTactic(profile.tags ?? []) ? tallyFireDamageTakenOf(target) : 1;
+    const fated = fateMultiplier * fireTaken === 1 ? weathered : Math.max(1, Math.floor(weathered * fateMultiplier * fireTaken));
 
     // 爆擊率加成（百步穿楊 +50%）：以基礎爆擊率加成後擲骰，爆擊 ×1.5；沒有亂數源的測試 context 視為不爆擊
     if (profile.critRateBonus && context.randomSource) {

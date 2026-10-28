@@ -1,7 +1,10 @@
 import { TroopType, Faction, TerrainType } from '../assets/scripts/core/config/Constants';
 import { buildTallyCardCatalog } from '../assets/scripts/core/config/TallyCardCatalog';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { applyTallyPassive, extraAttackHitsOf, tallyAttackMultiplierOf, tallyTerrainMoveBonusOf } from '../assets/scripts/battle/shared/TallyPassive';
+import { applyTallyPassive, extraAttackHitsOf, tallyAttackMultiplierOf, tallyBackRowDamageMultiplierOf, tallyPhysicalDamageTakenOf, tallyTerrainMoveBonusOf } from '../assets/scripts/battle/shared/TallyPassive';
+import { BattleSkillDamageResolver } from '../assets/scripts/battle/skills/BattleSkillDamageResolver';
+import { resolveBattleSkillProfile } from '../assets/scripts/battle/skills/BattleSkillProfiles';
+import { createBattleSkillTestContext, createTestGeneral, createTestUnit } from './BattleSkillTestUtils';
 import { BattleCombatResolver } from '../assets/scripts/battle/runtime/BattleCombatResolver';
 import { GAME_CONFIG } from '../assets/scripts/core/config/Constants';
 import { TestSuite, assert } from './TestRunner';
@@ -118,6 +121,57 @@ export function createTallyPassiveSuite(): TestSuite {
     assert.equals(1, resolverOn(TerrainType.Plain).getTallyAttackMod(unit));
     const plain = cavalry(1);
     assert.equals(1, resolverOn(TerrainType.Mountain).getTallyAttackMod(plain));
+  });
+
+  suite.test('止啼符（PROG-2-1437）：目標在其陣營後排兩列時傷害 ×1.5', () => {
+    const zhangLiao = cavalry(1);
+    zhangLiao.tallyTemplateId = 'tiger-tally-zhi-ti-fu';
+    const enemyAt = (depth: number) => {
+      const u = new TroopUnit(`e${depth}`, TroopType.Infantry, Faction.Enemy, { hp: 100, attack: 30, defense: 20, moveRange: 1, attackRange: 1 });
+      u.depth = depth;
+      return u;
+    };
+    const last = GAME_CONFIG.GRID_DEPTH - 1;
+    assert.equals(1.5, tallyBackRowDamageMultiplierOf(zhangLiao, enemyAt(last)));
+    assert.equals(1.5, tallyBackRowDamageMultiplierOf(zhangLiao, enemyAt(last - 1)));
+    assert.equals(1, tallyBackRowDamageMultiplierOf(zhangLiao, enemyAt(last - 2)));
+    // 我方由 depth 0 出兵：敵方止啼符打我方 depth 0、1
+    const enemyZhiTi = enemyAt(3);
+    enemyZhiTi.tallyTemplateId = 'tiger-tally-zhi-ti-fu';
+    const mine = cavalry(1);
+    mine.depth = 1;
+    assert.equals(1.5, tallyBackRowDamageMultiplierOf(enemyZhiTi, mine));
+    mine.depth = 2;
+    assert.equals(1, tallyBackRowDamageMultiplierOf(enemyZhiTi, mine));
+  });
+
+  suite.test('藤甲（PROG-2-1437）：部隊攻擊傷害 ×0.5，接進 getTallyPhysicalDamageMod', () => {
+    const tengJia = cavalry(1);
+    tengJia.tallyTemplateId = 'tiger-tally-teng-jia';
+    assert.equals(0.5, tallyPhysicalDamageTakenOf(tengJia));
+    const attacker = new TroopUnit('e1', TroopType.Infantry, Faction.Enemy, { hp: 100, attack: 30, defense: 20, moveRange: 1, attackRange: 1 });
+    const resolver = new BattleCombatResolver({ state: { units: new Map(), getCell: () => ({ terrain: TerrainType.Plain }) } } as any);
+    assert.equals(0.5, resolver.getTallyPhysicalDamageMod(attacker, tengJia));
+    assert.equals(1, resolver.getTallyPhysicalDamageMod(tengJia, attacker));
+  });
+
+  suite.test('藤甲（PROG-2-1437）：承受火計傷害 ×3，非火計不變', () => {
+    const base = resolveBattleSkillProfile('cao-cao-tactics');
+    assert.isDefined(base);
+    const fireProfile = { ...base!, tags: ['fire'] };
+    const caster = createTestGeneral('cao-cao', Faction.Player, { str: 40, int: 110, lea: 80 });
+    const target = createTestUnit('enemy', Faction.Enemy, 2, 3, { defense: 40 });
+    const bundle = createBattleSkillTestContext({
+      playerGeneral: caster,
+      enemyGeneral: createTestGeneral('enemy-general', Faction.Enemy),
+      units: [target],
+    });
+    const resolver = new BattleSkillDamageResolver();
+    const plainFire = resolver.resolveDamage(fireProfile, caster, target, bundle.context, 0);
+    const plainSkill = resolver.resolveDamage(base!, caster, target, bundle.context, 0);
+    target.tallyTemplateId = 'tiger-tally-teng-jia';
+    assert.equals(Math.floor(plainFire * 3), resolver.resolveDamage(fireProfile, caster, target, bundle.context, 0));
+    assert.equals(plainSkill, resolver.resolveDamage(base!, caster, target, bundle.context, 0));
   });
 
   return suite;
