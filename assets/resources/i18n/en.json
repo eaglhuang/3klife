@@ -551,5 +551,20 @@
   "UI_DAILY_REPORT_MORNING_TITLE": "Morning Report",
   "UI_DAILY_REPORT_OPEN_HUB": "Morning Report & Dispatch ▶",
   "UI_DAILY_REPORT_REVENGE": "Recover Losses ▶",
-  "UI_DAILY_REPORT_CLOSE": "Got it"
+  "UI_DAILY_REPORT_CLOSE": "Got it",
+  "UI_DAILY_NEWS_REVENGE_ACTION": "led troops to strike back and recover yesterday's lost {0}",
+  "UI_DAILY_NEWS_REVENGE_RESULT": "recovered {0}% of the {1}!",
+  "UI_DAILY_NEWS_AUTO_TASK_ACTION": "finished \"{0}\" on your behalf",
+  "UI_DAILY_NEWS_AUTO_TASK_RESULT": "The lord has much to attend to; leave the small matters to me.",
+  "UI_DAILY_NEWS_OFFLINE_SOCIAL_ACTION": "ran into {0}'s {1} on the road",
+  "UI_DAILY_NEWS_OFFLINE_SOCIAL_RESULT": "Sparred and gained experience!",
+  "UI_DAILY_NEWS_TRAINING_ACTION": "trained on his own while you were away",
+  "UI_DAILY_NEWS_TRAINING_RESULT": "{0} +{1}!",
+  "UI_DAILY_NEWS_GOSSIP_ACTION": "chatted with {0} in camp",
+  "UI_DAILY_NEWS_GOSSIP_RESULT": "Passed on an interesting bit of gossip.",
+  "UI_DAILY_NEWS_EMOTION_REVENGE": "Angry",
+  "UI_DAILY_NEWS_EMOTION_AUTO_TASK": "Proud",
+  "UI_DAILY_NEWS_EMOTION_OFFLINE_SOCIAL": "Happy",
+  "UI_DAILY_NEWS_EMOTION_TRAINING": "Calm",
+  "UI_DAILY_NEWS_EMOTION_GOSSIP": "Happy"
 }

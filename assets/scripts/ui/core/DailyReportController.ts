@@ -10,7 +10,8 @@
  * 暫定：分區標題、按鈕文案、空分區提示待企劃定版。
  * Unity 對照：Presenter。
  */
-import { dailyNewsToastLines, type DailyNewsState } from '../../core/systems/DailyNewsEngine';
+import { DAILY_NEWS_EMOTION_KEY, type DailyNewsState } from '../../core/systems/DailyNewsEngine';
+import { journalSummaryText } from './JournalTexts';
 import { morningReportLines, type MorningReportState } from '../../core/systems/MorningReport';
 import { dailyReportDateText, dailyReportText, type DailyReportTextLookup } from './DailyReportTexts';
 
@@ -21,6 +22,16 @@ export interface DailyReportFlowView {
     texts: Record<string, string>;
     actives: Record<string, boolean>;
     enabled: Record<string, boolean>;
+}
+
+/** 未讀日報各則的面板文字（PROG-2-1501）：情緒、行為、結果各自查譯文，缺譯文退回 zh-TW，格式與核心 dailyNewsToastLines 相同。 */
+function unreadNewsLines(news: Readonly<DailyNewsState>, lookup: DailyReportTextLookup | undefined): string[] {
+    return news.news.filter((n) => !n.read).map((n) => {
+        const emotion = journalSummaryText(lookup, { summary: n.emotion, summaryKey: DAILY_NEWS_EMOTION_KEY[n.type] });
+        const action = journalSummaryText(lookup, { summary: n.action, summaryKey: n.actionKey, summaryArgs: n.actionArgs });
+        const result = journalSummaryText(lookup, { summary: n.result, summaryKey: n.resultKey, summaryArgs: n.resultArgs });
+        return `${n.character}（${emotion}）：${action}，${result}`;
+    });
 }
 
 export class DailyReportController {
@@ -38,8 +49,8 @@ export class DailyReportController {
      * revengeAvailable：日報有復仇且有可取回的缺糧（RET-05）；lookup：面板文字查表（RET-06），未提供時用 zh-TW 預設。
      */
     public static capture(news: Readonly<DailyNewsState>, morning: Readonly<MorningReportState>, date: Date, revengeAvailable = false, lookup?: DailyReportTextLookup): DailyReportController | null {
-        // 核心的第一行是 zh-TW 標題，這裡只取日報各則，標題改由查表組出
-        const [, ...newsLines] = dailyNewsToastLines(news, date);
+        // 日報各則逐條查表（PROG-2-1501）；標題由查表組出，不用核心的 zh-TW 標題行
+        const newsLines = unreadNewsLines(news, lookup);
         const [opening = '', ...morningItems] = morningReportLines(morning);
         if (newsLines.length === 0 && morningItems.length === 0) return null;
         const newsTitle = dailyReportText(lookup, 'UI_DAILY_NEWS_TITLE', dailyReportDateText(date));
