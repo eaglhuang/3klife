@@ -356,7 +356,7 @@
       "scalingStat": "lea",
       "exclusive": true,
       "inheritanceGeneId": "gene_command",
-      "battleSkillId": "liu-bei-rally",
+      "battleSkillId": "liu-bei-reset",
       "sourceType": "ultimate",
       "targetMode": "ally-all",
       "timing": "active-cast",
@@ -565,7 +565,7 @@
       "scalingStat": "str",
       "exclusive": true,
       "inheritanceGeneId": "gene_hidden_02",
-      "battleSkillId": null,
+      "battleSkillId": "zhao-yun-immortal",
       "family": "area-burst"
     },
     {
@@ -693,7 +693,7 @@
       "scalingStat": "pol",
       "exclusive": true,
       "inheritanceGeneId": "gene_politics",
-      "battleSkillId": null,
+      "battleSkillId": "cao-cao-ult-revive",
       "family": "special-rule"
     },
     {
@@ -707,7 +707,7 @@
       "scalingStat": "int",
       "exclusive": true,
       "inheritanceGeneId": "gene_strategy",
-      "battleSkillId": null,
+      "battleSkillId": "cao-cao-ult-control",
       "family": "control-override"
     },
     {

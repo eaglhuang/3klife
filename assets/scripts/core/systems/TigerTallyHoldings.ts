@@ -70,6 +70,18 @@ export function transferTally(state: TallyHoldings, cardUid: string, toGeneralId
     return { ok: true, state: withHolder(state, cardUid, toGeneralId) };
 }
 
+/**
+ * 放走俘虜時虎符跟著他離開（POW-08 暫定）：只有君主持有（null）的卡能被帶走，帶走後從持有關係移除。
+ * 已被武將持有的卡不動，回 NOT_HELD。
+ */
+export function takeTallyAway(state: TallyHoldings, cardUid: string): TallyHoldingsResult {
+    if (!(cardUid in state.holders)) return { ok: false, reason: 'UNKNOWN_TALLY', state };
+    if (state.holders[cardUid] !== null) return { ok: false, reason: 'NOT_HELD', state };
+    const holders = { ...state.holders };
+    delete holders[cardUid];
+    return { ok: true, state: { holders } };
+}
+
 /** 陣亡：該武將持有的虎符退回君主，回傳退回的 uid 清單 */
 export function onGeneralDeath(state: TallyHoldings, generalId: string): { state: TallyHoldings; returned: string[] } {
     const returned = Object.entries(state.holders).filter(([, holder]) => holder === generalId).map(([uid]) => uid);

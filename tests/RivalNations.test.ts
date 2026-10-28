@@ -67,8 +67,10 @@ export function createRivalNationsSuite(): TestSuite {
         assert.equals(-28, nation(tick.world, 'wei').relation);
         assert.equals(18, nation(tick.world, 'shu').relation);
         assert.equals(0, tick.events.length, '擲 0.99 不觸發進攻');
+        // RAI-05：進攻還要過 E-4 門檻，糧草 ≥ 3000 才會出兵
         const war = declareWar(world, 'lvbu').world;
-        const attacked = advanceRivalSeason(war, fixed(0.1));
+        const rich = { ...war, nations: war.nations.map((n) => (n.id === 'lvbu' ? { ...n, resources: { food: 5000, gold: 5000, fame: 0, intel: 0 } } : n)) };
+        const attacked = advanceRivalSeason(rich, fixed(0.1));
         assert.equals(true, attacked.events.some((e) => e.nationId === 'lvbu'));
         assert.equals(-100, nation(attacked.world, 'lvbu').relation, '交戰中不回歸');
         assert.equals(false, attacked.events.some((e) => e.nationId === 'shu'));

@@ -333,6 +333,8 @@ export function powResultLine(resolution: PowResolution): string {
 export interface PendingPrisoner<T = unknown> {
     record: PowRecord;
     target: T;
+    /** 俘虜身上的虎符 uid（POW-08 暫定）；沒有記錄就不轉移，勸降／招募成功轉給他，放走則帶走 */
+    tallyId?: string;
 }
 
 /** 被放走的俘虜：之後每季有機率主動來投（規格 §F Future_Return_Chance） */

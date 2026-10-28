@@ -128,6 +128,10 @@ export class BattleState {
   public aiTacticIq: AiIqLevel | null = null;
   /** AI 是否可用戰法（ai-difficulty.json canUseTactics）；預設 true */
   public aiCanUseTactics = true;
+  /** 挾天子令控制中的兵（PROG-2-1335）：unitId → 原陣營與剩餘回合 */
+  public controlledUnits = new Map<string, { originalFaction: Faction; turnsLeft: number }>();
+  /** 陣亡兵紀錄（PROG-2-1334 唯才是舉復活用）：依陣亡先後排序，只保留單位參照 */
+  public fallenUnits: TroopUnit[] = [];
   /** 殘局模式（FORM-10）：第 5 回合或存活低於 50% 時進入，進入後不退出 */
   public lastSpurtMode = false;
   /** 戰場上出現過的最高合計兵力（FORM-10 存活比例分母） */
@@ -171,6 +175,8 @@ export class BattleState {
     this.weatherSchedule = [];
     this.battleTactic = battleTactic ?? BattleTactic.Normal;
     this.sceneFlags = { stealthOpenTurns: 0, nightRaid: false, nightRaidOpenTurns: 0 };
+    this.controlledUnits.clear();
+    this.fallenUnits = [];
     this.lastSpurtMode = false;
     this.peakTroopCount = 0;
     this.battleEndAnnounced = false;
@@ -220,10 +226,64 @@ export class BattleState {
     if (!unit) return;
     const cell = this.getCell(unit.lane, unit.depth);
     if (cell?.occupantId === unitId) cell.occupantId = null;
+    // 只有陣亡（血量歸零）才進紀錄；撤退脫離不算陣亡
+    if (unit.currentHp <= 0) this.fallenUnits.push(unit);
     this.units.delete(unitId);
+    this.controlledUnits.delete(unitId);
     this.removeDamageLinksForUnit(unitId);
     this.removeCounterReaction(unitId);
     this.removeActionReset(unitId);
+  }
+
+  /** 控制敵兵 turns 回合（PROG-2-1335 挾天子令）：陣營改為施放者陣營，期滿由 tickControlledUnits 換回 */
+  public controlUnit(unit: TroopUnit, casterFaction: Faction, turns: number): boolean {
+    if (unit.faction === casterFaction || this.controlledUnits.has(unit.id)) return false;
+    this.controlledUnits.set(unit.id, { originalFaction: unit.faction, turnsLeft: turns });
+    unit.faction = casterFaction;
+    return true;
+  }
+
+  /** 每回合結束呼叫：剩餘回合減 1，歸零的單位換回原陣營（若已陣亡則只清紀錄） */
+  public tickControlledUnits(): void {
+    for (const [unitId, record] of this.controlledUnits) {
+      record.turnsLeft -= 1;
+      if (record.turnsLeft > 0) continue;
+      this.controlledUnits.delete(unitId);
+      const unit = this.units.get(unitId);
+      if (unit) unit.faction = record.originalFaction;
+    }
+  }
+
+  /**
+   * 復活一名指定陣營的陣亡兵（PROG-2-1334）：依陣亡先後取第一個，放回原格；原格被占就放最近的空格。
+   * 沒有可復活的兵或沒有空格時回傳 null，紀錄保留。
+   */
+  public reviveFallenUnit(faction: Faction, hpRatio: number): TroopUnit | null {
+    const index = this.fallenUnits.findIndex(unit => unit.faction === faction);
+    if (index < 0) return null;
+    const unit = this.fallenUnits[index];
+    const cell = this.nearestEmptyCell(unit.lane, unit.depth);
+    if (!cell) return null;
+    this.fallenUnits.splice(index, 1);
+    unit.moveTo(cell.lane, cell.depth);
+    unit.currentHp = Math.max(1, Math.floor(unit.maxHp * hpRatio));
+    this.addUnit(unit);
+    return unit;
+  }
+
+  /** 以曼哈頓距離找最近的空格（原格若空則就是原格） */
+  private nearestEmptyCell(lane: number, depth: number): { lane: number; depth: number } | null {
+    let best: { lane: number; depth: number } | null = null;
+    let bestDistance = Infinity;
+    for (const cell of this.cells) {
+      if (cell.occupantId !== null) continue;
+      const distance = Math.abs(cell.lane - lane) + Math.abs(cell.depth - depth);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = { lane: cell.lane, depth: cell.depth };
+      }
+    }
+    return best;
   }
 
   public setTileBuff(buff: TileBuff): void {

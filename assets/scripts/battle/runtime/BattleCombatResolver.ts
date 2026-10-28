@@ -466,6 +466,8 @@ export class BattleCombatResolver {
     },
   ): void {
     const svc = services();
+    // 無敵（白馬銀槍·不滅，PM 裁定）：有無敵狀態的單位本次結算傷害歸零，不扣血、不發傷害事件
+    if (svc.buff.hasBuff(unit.id, StatusEffect.Invincible)) return;
     unit.takeDamage(damage);
     svc.event.emit(EVENT_NAMES.UnitDamaged, {
       unitId: unit.id,

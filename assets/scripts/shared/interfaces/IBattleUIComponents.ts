@@ -13,6 +13,8 @@ export interface IBattleHUDLike {
     setPlayerName(name: string): void;
     /** 玩家在場 Set 的提示文字（PROG-2-0580）；舊 HUD 不實作 */
     setPlayerTallySetLabels?(labels: string[]): void;
+    /** 玩家精力條（FORM-11）；舊 HUD 不實作 */
+    setPlayerVitality?(vitality: number, maxVitality: number): void;
     setEnemyName(name: string): void;
     refresh(turn: number, food: number, maxFood: number, playerHp: number, playerMaxHp: number, enemyHp: number, enemyMaxHp: number): void;
     waitUntilReady(timeoutMs?: number): Promise<boolean>;

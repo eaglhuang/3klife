@@ -1,9 +1,10 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
-import { Faction } from '../../../core/config/Constants';
+import { Faction, StatusEffect } from '../../../core/config/Constants';
 import { BattleSkillTargetMode, type BattleSkillRequest, type SkillExecutionResult } from '../../../shared/SkillRuntimeContract';
 import { GAME_CONFIG } from '../../../core/config/Constants';
 import { BattleSkillDamageResolver } from '../BattleSkillDamageResolver';
 import { resolveBattleSkillProfile } from '../BattleSkillProfiles';
+import { maximizeMorale } from '../../shared/Morale';
 import type { BattleSkillExecutionContext, BattleSkillResolver } from '../BattleSkillResolver';
 import { BattleSkillTargetSelector } from '../BattleSkillTargetSelector';
 import { crossCellsForAll } from '../SkillGridGeometry';
@@ -110,6 +111,20 @@ export class ProjectedDamageSkillResolver implements BattleSkillResolver {
         deltas: [],
         battleLogLines: [`${request.battleSkillId} skipped because all targets were dead`],
       };
+    }
+
+    // 白馬銀槍·不滅（趙雲 5）：全體友軍士氣拉滿、施放者獲得無敵；與傷害同一次結算
+    if (profile.maximizeMoraleOnAllies) {
+      for (const ally of context.getFactionUnits(casterFaction)) {
+        maximizeMorale(ally);
+      }
+    }
+    if (profile.selfInvincibleTurns) {
+      const casterUnit = context.getUnit(request.ownerUid);
+      if (casterUnit && !casterUnit.isDead() && context.applyBuff) {
+        context.applyBuff(casterUnit, StatusEffect.Invincible, profile.selfInvincibleTurns);
+        deltas.push({ unitUid: casterUnit.id, addBuffs: [StatusEffect.Invincible], notes: `duration:${profile.selfInvincibleTurns}` });
+      }
     }
 
     // 火計連環（PROG-2-0757）：每個目標的十字相鄰格（含自身）化為火場

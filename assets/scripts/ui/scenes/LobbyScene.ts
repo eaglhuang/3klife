@@ -129,7 +129,8 @@ import { formatDeathNotice } from '../core/LifeVitalityPresenter';
 import { buildSpiritCodexTexts, spiritRelicsNewestFirst, SPIRIT_CODEX_MAX_ROWS, withSpiritCodexFallback } from '../core/SpiritCodexController';
 import { buildUltimateCodexTexts, withUltimateCodexFallback } from '../core/UltimateCodexTexts';
 import { buildUltimateCodex } from '../../core/systems/UltimateUpgrade';
-import { buildSpiritCardDetailView, withSpiritCardDetailFallback } from '../core/SpiritCardDetailTexts';
+import { withSpiritCardDetailFallback } from '../core/SpiritCardDetailTexts';
+import { SPIRIT_TALLY_DETAIL_SCREEN_ID, spiritTallyDetailOfSpirit } from '../core/SpiritTallyDetailView';
 import type { SpiritCard } from '../../core/models/SpiritCard';
 import { lifeScriptCopy, type LifeScriptEvent } from '../../core/systems/LifeScriptCopy';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
@@ -3101,7 +3102,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnCloseSpiritCodex', handler: () => { this._closeSpiritCodex(); } },
             ...detailButtons,
         ]);
-        this._spiritCardDetailHost = await this._mountPreviewScreenHost('SpiritCardDetailHost', 'spirit-card-detail-screen', [
+        this._spiritCardDetailHost = await this._mountPreviewScreenHost('SpiritCardDetailHost', SPIRIT_TALLY_DETAIL_SCREEN_ID, [
             { buttonId: 'btnCloseSpiritCardDetail', handler: () => { this._closeSpiritCardDetail(); } },
         ]);
     }
@@ -3164,7 +3165,7 @@ export class LobbyScene extends Component {
             return;
         }
         const lookup = withSpiritCardDetailFallback((key, ...args) => services().i18n.t(key, ...args));
-        const view = buildSpiritCardDetailView(card, lookup);
+        const view = spiritTallyDetailOfSpirit(card, lookup);
         applyFlowView(binder, { texts: view.texts, actives: {}, enabled: { btnInfuseSpiritCard: view.infuseEnabled } });
         host.node.active = true;
         this._bringNodeToFront(host.node);

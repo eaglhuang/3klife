@@ -1365,6 +1365,7 @@ export class BattleController {
     }
     if (this.sortie) this.sortie = regenTactic(this.sortie);
     svc.battle.nextTurn();
+    this.state.tickControlledUnits();
     this.updateLastSpurtMode();
     const weatherBefore = this.state.weather;
     this.applyWeatherForTurn(svc.battle.getSnapshot().turn);

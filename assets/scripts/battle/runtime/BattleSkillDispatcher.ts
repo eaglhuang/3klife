@@ -393,6 +393,8 @@ export class BattleSkillDispatcher {
       getDefenseZoneMultiplier: (unit: TroopUnit) => zoneDefenseMultiplier(state.getFormationZone(unit.lane, unit.depth), unit.faction),
       getSceneFireDamageTakenMultiplier: (unit: TroopUnit) => sceneFireDamageTakenOf(unit, state),
       addFormationZone: (zone: FormationZone) => state.setFormationZone(zone),
+      controlUnit: (unit: TroopUnit, casterFaction: Faction, turns: number) => state.controlUnit(unit, casterFaction, turns),
+      reviveFallenFriendly: (casterFaction: Faction, hpRatio: number) => state.reviveFallenUnit(casterFaction, hpRatio),
       addUnitDot: (unit: TroopUnit, ratio: number, turns: number) => {
         state.unitDots.set(unit.id, { unitId: unit.id, ratio, remainingTurns: turns });
       },
