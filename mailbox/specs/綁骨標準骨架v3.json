@@ -770,5 +770,54 @@
     }
   },
   "standingCenter": 1024,
-  "standingCenterTol": 25
+  "standingCenterTol": 25,
+  "weaponAnchors": {
+    "status": "advisory",
+    "note": "v3.23（2026-10-29）：v3.23 建議欄位；僅報告，不作正式擋關。待第二把武器完成動作、方向與換裝驗證並由美術總監審核後再決定升級。",
+    "coordinateSpace": {
+      "origin": "original-image-top-left",
+      "xAxis": "right",
+      "yAxis": "down",
+      "unit": "pixel",
+      "note": "記錄原始圖片尺寸；裁切、縮放、atlas 打包旋轉和引擎座標轉換須可還原。"
+    },
+    "requiredMarkers": [
+      "grip_A",
+      "grip_B",
+      "tip"
+    ],
+    "markerMeaning": {
+      "grip_A": "前手握點，作為武器定位點。",
+      "grip_B": "武器上後手參考點，用於檢查滑動範圍與槍桿接觸，不參與剛體定位。",
+      "tip": "有效刃尖；與 grip_A 決定武器方向。"
+    },
+    "placement": {
+      "translationAnchor": "grip_A",
+      "directionFrom": "grip_A",
+      "directionTo": "tip",
+      "frontGripTolerancePx": 12,
+      "frontGripToleranceReferenceH": 1600,
+      "rearGripConstraint": "依 weaponRules.twoHandGripSpacingH 動畫範圍及 v3.17 weaponGripOnShaft 量測；setup pose 不適用動畫範圍。",
+      "missingMarkerPolicy": "report-invalid-do-not-infer",
+      "degenerateDirectionPolicy": "report-invalid-do-not-infer"
+    },
+    "scale": {
+      "mode": "uniform",
+      "default": 1.0,
+      "perWeaponFixed": true,
+      "animatedScaleAllowed": false,
+      "nonUniformAllowed": false,
+      "note": "比例與數值由美術裁定。"
+    },
+    "assetFields": [
+      "imageWidth",
+      "imageHeight",
+      "grip_A",
+      "grip_B",
+      "tip",
+      "uniformScale",
+      "markerReviewStatus"
+    ],
+    "validationNote": "逐格驗證前手握點、後手沿槍桿滑動、刃尖及特效位置；檢查鏡像、遮擋、裝備切換與缺點負例。傷害判定依遊戲戰鬥事件。"
+  }
 }
