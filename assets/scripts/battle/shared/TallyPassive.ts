@@ -100,8 +100,12 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   'tiger-tally-gong-jia-fu': { defensePenetration: 0.3 },
   // 白耳：剋制弓兵，對弓兵傷害 ×1.5（替主將承傷、斷後防禦 ×2 未做）
   'tiger-tally-bai-er': { damageVsTroopTypes: { types: [TroopType.Archer], multiplier: 1.5 } },
-  // 元戎：連弩齊射，每次攻擊多打 1 下；壓制步兵，對步兵傷害 ×1.5（範圍傷害未做）
-  'tiger-tally-yuan-rong': { extraHits: 1, damageVsTroopTypes: { types: [TroopType.Infantry], multiplier: 1.5 } },
+  // 元戎：連弩齊射，每次攻擊多打 1 下；壓制步兵，對步兵傷害 ×1.5；範圍傷害沿用濺射 1 格 50%（PROG-2-1528 暫定）
+  'tiger-tally-yuan-rong': {
+    extraHits: 1,
+    damageVsTroopTypes: { types: [TroopType.Infantry], multiplier: 1.5 },
+    splash: { radius: 1, ratio: 0.5 },
+  },
   // 常山女：迴避 +30%（規格數字；治療友軍未做）
   'tiger-tally-changshan-nu': { evasionBonus: 0.3, healsAllies: true },
   // 先登：免疫恐懼（PROG-2-1513）；攻城傷害 ×2 待攻城戰落地再接
