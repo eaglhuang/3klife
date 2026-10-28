@@ -252,6 +252,7 @@
   "ui.gene.tag.white": "⚪ Talent Gene",
   "ui.gene.tag.red": "🔴 Physique Gene",
   "ui.vit.script.exhausted": "{0} is exhausted and cannot act for now.",
+  "ui.oracle.locked": "This sage is locked (needs {N} divinations in total).",
   "ui.vit.script.pill_used": "{0} took a Vitality Pill. Vitality restored!",
   "ui.vit.script.pregnancy_lock": "{0} is pregnant. Vitality recovery is paused…",
   "ui.vit.script.hint_late_bloomer": "{0} is frail, yet there is a strange light in their eyes…",
