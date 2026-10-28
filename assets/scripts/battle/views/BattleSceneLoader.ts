@@ -28,7 +28,9 @@ import { deployPreferenceOfGeneral, laneStrategyOfGeneral, parseAiProfileTable, 
 import type { AiDeployPreference } from '../../core/systems/AiDeployTroopPick';
 import { EMPTY_AI_ADAPTIVE_STREAK, adaptiveHintOf, adaptiveScaleOf, type AiAdaptiveStreak } from '../../core/systems/AiAdaptiveDifficulty';
 import type { AiDifficulty } from '../../core/systems/AiSpCharge';
-import { scaleAiEnemyConfig } from '../../core/systems/AiStatScaling';
+import { aiAgeStageOf, scaleAiEnemyConfig } from '../../core/systems/AiStatScaling';
+import { evaluateAiPower, matchAiScaleToPlayerPower } from '../../core/systems/AiPowerMatch';
+import { getTacticTpCost } from '../../core/systems/SortieDeploy';
 import { buildStageChainNodes, stageChapterOf, type EncounterChainSource } from '../../core/systems/StageChainNodes';
 
 export interface BattleTacticSummary {
@@ -271,10 +273,34 @@ export interface EnemyScaleSetting {
  * 章節 = 關卡所屬主鏈在關卡資料中的序位（stageChapterOf）。
  * Unity 對照：Difficulty 與 Chapter 的 ScriptableObject，開戰前查出來交給 Spawner。
  */
+/** 未縮放的模板戰力（AIS-09 F-1，供 ±20% 匹配用）；找不到武將回傳 null */
+export async function templatePowerOf(generalId: string): Promise<number | null> {
+  try {
+    const list = await services().resource.loadJson<GeneralConfig[]>("data/generals");
+    const general = list.find(g => g.id === generalId);
+    if (!general) return null;
+    return evaluateAiPower({
+      str: general.str ?? 0,
+      int: general.int ?? 0,
+      lea: general.lea ?? 0,
+      pol: general.pol ?? 0,
+      cha: general.cha ?? 0,
+      luk: general.luk ?? 0,
+      ageStage: aiAgeStageOf(general.age ?? 30),
+      tacticTpCosts: (general.tacticSlots ?? []).map(slot => getTacticTpCost(slot.tacticId)),
+      reincarnation: general.rebirthCount ?? 1,
+    });
+  } catch {
+    return null;
+  }
+}
+
 export async function loadEnemyScale(
   encounterId: string,
   difficulty: AiDifficulty,
   streak: AiAdaptiveStreak = EMPTY_AI_ADAPTIVE_STREAK,
+  playerGeneralId?: string,
+  enemyGeneralId?: string,
 ): Promise<EnemyScaleSetting | undefined> {
   try {
     const { table } = parseAiDifficultyTable(await services().resource.loadJson<unknown>("data/ai-difficulty"));
@@ -283,8 +309,14 @@ export async function loadEnemyScale(
     const chapter = stageChapterOf(buildStageChainNodes(data.encounters), encounterId);
     const base = aiDifficultyEntryOf(table, difficulty);
     // E-8：玩家連勝連敗微調敵方 statScale；沒有連勝連敗時等於基礎值
-    const scale = adaptiveScaleOf(base.statScale, streak);
-    return { difficulty: { ...base, statScale: scale }, chapter, adaptiveHint: adaptiveHintOf(base.statScale, scale) };
+    const adaptive = adaptiveScaleOf(base.statScale, streak);
+    // AIS-09：敵我模板戰力差超過 ±20% 時拉回邊界；沒傳武將 id 就不匹配
+    const playerPower = playerGeneralId ? await templatePowerOf(playerGeneralId) : null;
+    const enemyPower = enemyGeneralId ? await templatePowerOf(enemyGeneralId) : null;
+    const scale = playerPower !== null && enemyPower !== null
+      ? matchAiScaleToPlayerPower(enemyPower, adaptive, playerPower)
+      : adaptive;
+    return { difficulty: { ...base, statScale: scale }, chapter, adaptiveHint: adaptiveHintOf(base.statScale, adaptive) };
   } catch {
     return undefined;
   }

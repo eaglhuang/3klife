@@ -69,7 +69,7 @@ export class BattleSceneFlow {
     const terrain: TerrainGrid | undefined = encounter?.terrain;
 
     const difficulty = resolveAiDifficulty(battleParams?.aiDifficulty, encounter?.difficulty);
-    const enemyScale = await loadEnemyScale(this.ctx.getCurrentEncounterId(), difficulty, services().session.aiAdaptiveStreak);
+    const enemyScale = await loadEnemyScale(this.ctx.getCurrentEncounterId(), difficulty, services().session.aiAdaptiveStreak, pgId, egId);
 
     const pg = await createGeneral(pgId, Faction.Player);
     const eg = await createGeneral(egId, Faction.Enemy, enemyScale);

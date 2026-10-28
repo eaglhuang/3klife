@@ -201,7 +201,7 @@ export class BattleScene extends Component {
 
       // 4. 從 JSON 讀取武將設定（失敗時使用預設值）
       const difficulty = resolveAiDifficulty(battleParams.aiDifficulty, encounter?.difficulty);
-      const enemyScale = await loadEnemyScale(this.currentEncounterId, difficulty, services().session.aiAdaptiveStreak);
+      const enemyScale = await loadEnemyScale(this.currentEncounterId, difficulty, services().session.aiAdaptiveStreak, pgId, egId);
       const pg = await createGeneral(pgId, Faction.Player);
       const eg = await createGeneral(egId, Faction.Enemy, enemyScale);
       // 存為類別欄位，供 RequestGeneralQuickView 事件轉接層查詢
