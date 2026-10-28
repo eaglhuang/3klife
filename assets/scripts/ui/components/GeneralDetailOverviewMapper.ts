@@ -19,6 +19,8 @@ import type { InventoryRecord, InventoryViews } from '../../core/systems/Invento
 import { equippedTalismanSlot, type TalismanSlotView } from '../../core/systems/TalismanSlotView';
 import { buildGeneralTallySummary, type GeneralTallySummary } from '../../core/systems/GeneralTallySummary';
 import type { BattleRecordLike } from '../../core/systems/BattleRecordStats';
+import { buildHeirloomCardView, type HeirloomCardView } from '../../core/systems/HeirloomCardView';
+import type { PlayerInventory } from '../../core/systems/PlayerInventory';
 import { resolveRarityTier } from '../../core/utils/RarityResolver';
 import { resolveCommercialBand } from '../../core/utils/CommercialRarityBand';
 
@@ -90,6 +92,8 @@ export interface GeneralDetailOverviewContentState {
     tallySummary: GeneralTallySummary;
     /** 寶頁一般裝備 2x3 格位（PROG-2-1037）：由統一物件庫列依武將 uid 推導，沒有列時六格皆為未解鎖或空 */
     gearSlots: GearSlotView[];
+    /** 寶頁傳家寶卡（TSK-04，PROG-2-1389）；倉庫數量，尚未綁定到單一武將 */
+    heirloomCard: HeirloomCardView;
     crestFaceResource?: string;
     crestGlyphPrimary: string;
     crestGlyphSecondary: string;
@@ -225,6 +229,7 @@ export function buildGeneralDetailOverview(config: GeneralConfig): GeneralDetail
 }
 
 const EMPTY_INVENTORY_VIEWS: InventoryViews = { talismans: {}, spiritCards: {}, skipped: [] };
+const EMPTY_PLAYER_INVENTORY: PlayerInventory = {};
 
 /** 武將設定上的戰績（名冊武將才有；PROG-2-1345）；勝敗不是數字時視為無戰績 */
 export function battleRecordOf(config: GeneralConfig): BattleRecordLike | null {
@@ -240,6 +245,7 @@ export function buildGeneralDetailOverviewContentState(
     records: readonly InventoryRecord[] = [],
     cityTroops: number | null = null,
     battleRecord: BattleRecordLike | null = null,
+    inventory: PlayerInventory = EMPTY_PLAYER_INVENTORY,
 ): GeneralDetailOverviewContentState {
     const overview = buildGeneralDetailOverview(config);
     const storyCells = storyCellsToRecord(overview.cards.storyCells);
@@ -299,6 +305,7 @@ export function buildGeneralDetailOverviewContentState(
         tallySlot: equippedTalismanSlot(views, config.id),
         tallySummary: buildGeneralTallySummary(equippedTalismanSlot(views, config.id), battleRecord ?? battleRecordOf(config)),
         gearSlots: buildGearPageSlots(deriveGeneralBackpack(records, config.id), (uid) => gearNameOfUid(records, uid)),
+        heirloomCard: buildHeirloomCardView(inventory),
     };
 }
 
