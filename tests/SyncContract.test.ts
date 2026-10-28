@@ -108,7 +108,7 @@ export function createSyncContractSuite() {
 
     suite.test('/sync/full + /sync/delta：存檔快照與行動紀錄一起同步', async () => {
         (globalThis as any).fetch = realFetch;
-        const base = { year: 1, generals: [{ id: 'G001', age: 16 }] };
+        const base = { discoveryLevel: 1, roster: [{ id: 'G001', age: 16 }] };
         await sync.syncFull(base);
         assert.equals(JSON.stringify(base), JSON.stringify(player().Save_Snapshot), 'full sync 應覆蓋伺服器快照');
         assert.equals(player().Last_Sync_Hash, sync.getAnchorHash());
@@ -117,7 +117,7 @@ export function createSyncContractSuite() {
         sync.pushAction('BATTLE_WIN', { Gold: 15 });
         setOnline(true);
 
-        const current = { year: 2, generals: [{ id: 'G001', age: 17 }, { id: 'G002', age: 0 }] };
+        const current = { discoveryLevel: 2, roster: [{ id: 'G001', age: 17 }, { id: 'G002', age: 0 }] };
         await sync.syncDelta(base, current);
         assert.equals(JSON.stringify(current), JSON.stringify(player().Save_Snapshot), 'delta patch 應套用到伺服器快照');
         assert.equals(1100, player().Assets.Gold, 'delta 夾帶的行動紀錄應被重演');

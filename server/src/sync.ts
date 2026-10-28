@@ -12,6 +12,7 @@ import {
     SyncRequest,
     SyncResponse
 } from '../../shared/protocols';
+import { validateSyncPatchPaths } from '../schema/sync06-patch-whitelist';
 
 /**
  * 同步契約（伺服器端）。
@@ -213,11 +214,18 @@ export function registerSyncRoutes(app: Express, store: PlayerStore, options: Sy
             return endpointError(res, 409, 'baseHash does not match server anchor; full sync required.');
         }
 
+        if (body.patches !== undefined && !Array.isArray(body.patches)) {
+            return endpointError(res, 400, 'patches must be an array.');
+        }
         const records = Array.isArray(body.actionRecords) ? body.actionRecords : [];
         const patches = Array.isArray(body.patches) ? body.patches : [];
         const chain = verifyActionChain(records, body.baseHash, player.Session_Secret);
         if (chain.ok === false) {
             return endpointError(res, 400, `Hash chain broken at Seq #${chain.seq}.`);
+        }
+        const pathIssue = validateSyncPatchPaths(patches);
+        if (pathIssue !== null) {
+            return endpointError(res, 400, pathIssue);
         }
 
         let nextSnapshot: unknown;
