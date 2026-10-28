@@ -9,7 +9,7 @@ import { applyAptitudeMove } from '../../../core/systems/BattleAptitude';
 import { forestMoveBonusFor } from '../../../core/systems/FactorTacticLinkage';
 import { forcedMoveBlockedDamageRatio, resolveForcedMove } from '../../shared/ForcedMoveTile';
 import { resolveGhostPath, type GhostPathCell } from '../../shared/GhostMovePath';
-import { hasGhostMove, tallyTerrainMoveBonusOf } from '../../shared/TallyPassive';
+import { hasGhostMove, tallyTerrainMoveBonusOf, tallyTileMoveDeltaOf } from '../../shared/TallyPassive';
 
 const FORWARD_DIR: Record<Faction, number> = {
   [Faction.Player]: 1,
@@ -70,7 +70,8 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
     : applyAptitudeMove(tacticMoveRange, context.getAptitudeMoveDelta?.(unit) ?? 0, context.getAptitudeMoveSetTo?.(unit) ?? null);
   let remainingMoveBudget = Math.max(0, baseMoveRange - slowPenalty);
   if (!isFloodBattle) {
-    remainingMoveBudget += resolveTileMoveRangeDelta(context.state, unit.lane, unit.depth);
+    // 神威符無視地形（PROG-2-1576）：減移動的格子效果對它無效
+    remainingMoveBudget += tallyTileMoveDeltaOf(unit, resolveTileMoveRangeDelta(context.state, unit.lane, unit.depth));
     // 林地適性（PROG-2-0584）：站在林地且有 forest-move-bonus 的部隊移動力 +1
     const cell = context.state.getCell(unit.lane, unit.depth);
     remainingMoveBudget += forestMoveBonusFor(cell?.terrain ?? TerrainType.Plain, unit.factorEffects);
