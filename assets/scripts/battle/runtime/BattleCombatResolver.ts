@@ -1,5 +1,5 @@
 // @spec-source → 戰場部署系統.md (doc_spec_0040)、demo_技術架構.md (doc_tech_0015)、戰場適性系統.md (doc_spec_0041)；PROG-2-1429 依建檔紀錄補標出處
-import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER } from '../../core/config/Constants';
+import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER, Weather } from '../../core/config/Constants';
 import { aiSpGainPerKill } from '../../core/systems/AiSpCharge';
 import { comboChanceOfPair } from '../../core/systems/ComboAttackKin';
 import type { HistoricalRelation } from '../../core/systems/KinRelation';
@@ -9,7 +9,8 @@ import { fieldTallySetMods, type TallySetMember } from '../../core/systems/Tiger
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from './BattleTurnManager';
 import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
-import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
+import { canTargetUnderStealth, isHiddenOnTile, isRangedAttack } from '../shared/StealthTile';
+import { weatherRangedHitDelta, weatherRangedRangeDelta } from '../../core/systems/WeatherTacticRestriction';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
@@ -239,7 +240,9 @@ export class BattleCombatResolver {
     // 林地 S 迴避 +30%（PROG-2-0788）：防守方在林地且林地適性 S 時，攻擊方命中率再 −30%
     const defenderEvasion = terrainEvasionBonusOf(defenderCell?.terrain ?? TerrainType.Plain, this.getUnitAptitude(defender).terrain);
     // 常山女迴避（PROG-2-1457）：防守方虎符迴避加成再降低命中率
-    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth - defenderEvasion - tallyEvasionBonusOf(defender) + sceneAccuracy;
+    // 天氣強約束（PROG-2-1460）：遠程攻擊命中雨 -20%／霧 -30%／夜 -25%；夜襲場景已有全局 -25%，夜戰不再疊加（暫定）
+    const weatherAccuracy = this.getWeatherRangedHitDelta(attacker);
+    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth - defenderEvasion - tallyEvasionBonusOf(defender) + sceneAccuracy + weatherAccuracy;
     // 大霧免疫（PROG-2-0584）：大霧天氣下攻擊方有此效果時命中必中，略過擲骰
     const fogGuaranteed = isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects);
     if (!fogGuaranteed && !rollHit(attackerAccuracy, this.hitRandom)) {
@@ -676,12 +679,21 @@ export class BattleCombatResolver {
   }
 
   /** 戰術修正後的射程 + 兵種 × 地形射程修正（弓兵水域 −1，PROG-2-0201）；有射程的兵種至少保留 1 */
+  private getWeatherRangedHitDelta(attacker: TroopUnit): number {
+    if (!isRangedAttack(attacker.attackRange)) return 0;
+    const weather = this.context.state.weather;
+    if (weather === Weather.Night && this.context.state.sceneFlags.nightRaid) return 0;
+    return weatherRangedHitDelta(weather);
+  }
+
   private getEffectiveAttackRange(unit: TroopUnit): number {
     const baseRange = resolveBattleTacticBehavior(this.context.state.battleTactic).getEffectiveAttackRange(unit, this.context.state);
     if (baseRange === 0) return 0;
     const cell = this.context.state.getCell(unit.lane, unit.depth);
     const terrain = cell?.terrain ?? TerrainType.Plain;
-    const range = Math.max(1, baseRange + getTerrainTroopEffect(unit.type, terrain).attackRangeDelta);
+    // 天氣強約束（PROG-2-1460）：大風遠程射程 -2，最少留 1 格
+    const weatherRange = isRangedAttack(unit.attackRange) ? weatherRangedRangeDelta(this.context.state.weather) : 0;
+    const range = Math.max(1, baseRange + getTerrainTroopEffect(unit.type, terrain).attackRangeDelta + weatherRange);
     // 林地 D 視野受限（PROG-2-0789）：射程上限 1，只打相鄰格
     const cap = terrainAttackRangeCapOf(terrain, this.getUnitAptitude(unit).terrain);
     return cap === null ? range : Math.min(range, cap);

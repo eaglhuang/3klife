@@ -49,6 +49,28 @@ export function fireDamageMultiplier(tags: readonly string[], weather: Weather):
     return weather === Weather.Windy ? 2 : 1;
 }
 
+/** 遠程攻擊命中修正（強約束表「遠程攻擊命中」列，PROG-2-1460）：雨 -20%、霧 -30%、夜 -25% */
+export const WEATHER_RANGED_HIT_DELTA: Readonly<Partial<Record<Weather, number>>> = {
+    [Weather.Rain]: -0.2,
+    [Weather.Fog]: -0.3,
+    [Weather.Night]: -0.25,
+};
+
+/** 遠程射程修正（強約束表「遠程射程」列，PROG-2-1460）：大風 -2 */
+export const WEATHER_RANGED_RANGE_DELTA: Readonly<Partial<Record<Weather, number>>> = {
+    [Weather.Windy]: -2,
+};
+
+/** 遠程攻擊在此天氣下的命中加減（個百分點）；近戰呼叫端自行略過 */
+export function weatherRangedHitDelta(weather: Weather): number {
+    return WEATHER_RANGED_HIT_DELTA[weather] ?? 0;
+}
+
+/** 遠程攻擊在此天氣下的射程加減；近戰呼叫端自行略過 */
+export function weatherRangedRangeDelta(weather: Weather): number {
+    return WEATHER_RANGED_RANGE_DELTA[weather] ?? 0;
+}
+
 /** 水攻範圍的額外深度格數：雨天擴大，其他天氣為 0 */
 export function floodDepthBonus(weather: Weather): number {
     return weather === Weather.Rain ? RAIN_FLOOD_DEPTH_BONUS : 0;
