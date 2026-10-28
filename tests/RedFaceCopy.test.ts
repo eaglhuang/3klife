@@ -10,8 +10,10 @@ import { assert, TestSuite } from './TestRunner';
 import {
     parseRedFaceCopy,
     redFaceCopyLines,
+    redFaceTravelCopy,
     RED_FACE_COPY_SEGMENTS,
 } from '../assets/scripts/core/systems/RedFaceCopy';
+import { createCountdown, OPENING_TRAVEL_DURATION_MS, OPENING_TRAVEL_TARGET_ID } from '../assets/scripts/core/systems/CountdownManager';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
@@ -71,6 +73,23 @@ export function createRedFaceCopySuite(): TestSuite {
         const lines = redFaceCopyLines(result.table, 'countdown');
         lines.push('被改動');
         assert.equals(1, redFaceCopyLines(result.table, 'countdown').length);
+    });
+
+    suite.test('開場趕路倒數進行中：回傳趕路段落與倒數提示；到達、非開場倒數、沒有倒數都回傳 null', () => {
+        const result = parseRedFaceCopy(readConfig());
+        if (result.ok !== true) throw new Error(result.reason);
+        const start = 1_000_000;
+        const traveling = createCountdown(OPENING_TRAVEL_TARGET_ID, start, OPENING_TRAVEL_DURATION_MS, true);
+        const copy = redFaceTravelCopy(result.table, traveling, start + 1);
+        assert.isTrue(copy !== null);
+        assert.equals(redFaceCopyLines(result.table, 'travel').join('\n\n'), copy!.travel);
+        assert.equals(redFaceCopyLines(result.table, 'countdown')[0], copy!.countdown);
+
+        const arrived = redFaceTravelCopy(result.table, traveling, start + OPENING_TRAVEL_DURATION_MS);
+        assert.isTrue(arrived === null, '到點後不再顯示趕路文案');
+        const other = createCountdown('guan-yu', start, OPENING_TRAVEL_DURATION_MS, true);
+        assert.isTrue(redFaceTravelCopy(result.table, other, start + 1) === null, '非開場趕路目標不顯示');
+        assert.isTrue(redFaceTravelCopy(result.table, null, start + 1) === null, '沒有倒數不顯示');
     });
 
     return suite;

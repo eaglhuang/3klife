@@ -112,6 +112,7 @@ import { OPENING_BEAUTY_POOL_ID, openingBeautyCandidates } from '../../core/syst
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
 import type { RedFaceCardLike } from '../../core/systems/RedFaceShowcase';
+import { parseRedFaceCopy, redFaceTravelCopy } from '../../core/systems/RedFaceCopy';
 import { validateSupportPool } from '../../core/systems/SupportPoolValidator';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { isDescendant } from '../../core/systems/ChildMagistrate';
@@ -2008,10 +2009,15 @@ export class LobbyScene extends Component {
         for (const issue of validateSupportPool(poolConfigs, supportCards ?? [])) {
             console.warn(`[SupportPoolValidator] ${issue.path}: ${issue.message}`);
         }
+        const redFaceCopy = parseRedFaceCopy(await this._loadDataJson<unknown>('data/copy/red-face-copy'));
+        if (redFaceCopy.ok === false) {
+            console.warn(`[RedFaceCopy] ${redFaceCopy.reason}`);
+        }
         this._redFace = new RedFaceGalleryController({
             pool: () => (supportPool ? { candidateIds: supportPool.candidateIds ?? [] } : null),
             cards: () => supportCards ?? [],
             generalPoolIds: () => heroPoolIds,
+            travelCopy: () => (redFaceCopy.ok ? redFaceTravelCopy(redFaceCopy.table, services().session.countdown, Date.now()) : null),
         });
         const redFace = this._redFace;
         const frameBindings = Array.from({ length: PORTRAIT_GALLERY_PAGE_SIZE }, (_, i) => ({

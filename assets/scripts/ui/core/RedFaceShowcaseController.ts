@@ -9,6 +9,8 @@
  *
  * Unity 對照：Presenter。列的 Button onClick 只呼叫 select()，畫面層拿 getFlowView() 一次刷新。
  */
+import { OPENING_TRAVEL_TARGET_ID } from '../../core/systems/CountdownManager';
+import { RedFaceTravelCopy } from '../../core/systems/RedFaceCopy';
 import {
     buildRedFaceShowcase,
     RedFaceCardLike,
@@ -32,6 +34,8 @@ export interface RedFaceShowcaseDeps {
     cards: () => readonly RedFaceCardLike[];
     /** 名將池的武將 id，展示時排除。 */
     generalPoolIds: () => readonly string[];
+    /** 開場趕路中的文案；沒有趕路時回傳 null（COPY-04）。未提供時不顯示趕路文案。 */
+    travelCopy?: () => RedFaceTravelCopy | null;
 }
 
 const CORE_TAG_TEXT = '核心';
@@ -173,6 +177,12 @@ export class RedFaceGalleryController {
         view.texts.detailLine = row?.previewLine ? `「${row.previewLine}」` : '';
         view.texts.emptyLabel = row ? '' : '目前沒有可展示的紅顏';
         view.actives.emptyLabel = !row;
+        // 趕路中的紅顏（甄姬／甄宓對應的開場趕路目標）詳情區改顯示趕路文案
+        const travel = row ? this._deps.travelCopy?.() ?? null : null;
+        if (row && travel && (RED_FACE_PORTRAIT_ALIASES[row.id] ?? row.id) === OPENING_TRAVEL_TARGET_ID) {
+            view.texts.detailLine = travel.travel;
+            view.texts.detailMeta = travel.countdown;
+        }
         view.enabled.btnClose = true;
         return view;
     }
