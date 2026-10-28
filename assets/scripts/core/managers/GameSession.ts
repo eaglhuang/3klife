@@ -199,6 +199,7 @@ import { injectCatalystFactor, markCatalystUsed, type CatalystGeneral } from '..
 import { advanceBreedingSeason, holdPregnancyVigor } from '../systems/BreedingSystem';
 import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } from '../systems/KinDynamicRelations';
 import { RelationEventLedger } from '../systems/RelationEvents';
+import { cloneNpcMemory, createNpcMemory, normalizeNpcMemory, normalizeNpcPlayerId, npcPlayerIdFromSeed, type NpcMemoryRecord } from '../systems/NpcMemoryReadModel';
 import { grantLegacyRewards, normalizeLegacyCount, type LegacyAchievement } from '../systems/LegacyAchievement';
 import { STARTER_GACHA_WALLET } from '../services/GachaWalletRules';
 import type { DynamicRelation } from '../systems/KinRelation';
@@ -479,6 +480,13 @@ export class GameSession {
     public readonly dynamicRelations = new DynamicRelationBook();
     /** 關係組合事件一次性紀錄（KIN-08，PROG-2-1412）：同季同對只播一次，隨存檔保存 */
     public readonly relationEvents = new RelationEventLedger();
+    /** NPC 記憶擁有者 id 與 NPC_Memory read model（NPC-09）：新局由種子決定，讀檔缺欄位時補產 */
+    private _npcPlayerId: string | null = null;
+    private _npcMemory: NpcMemoryRecord | null = null;
+    /** 目前 NPC_Memory read model（唯讀；寫入由之後的 NPC 對話線負責） */
+    public get npcMemory(): Readonly<NpcMemoryRecord> | null {
+        return this._npcMemory;
+    }
     private _roster: RosterStore = new InMemoryRosterStore();
     private _save: PlayerSaveService | null = null;
     private _events: SessionEventEmitter | null = null;
@@ -601,6 +609,8 @@ export class GameSession {
 
     constructor(seed: number = Math.floor(Math.random() * 4294967296)) {
         this._seeded = new SeededRandom(seed);
+        this._npcPlayerId = npcPlayerIdFromSeed(seed);
+        this._npcMemory = createNpcMemory(this._npcPlayerId);
     }
 
     public get gameTime(): GameTimeState {
@@ -1450,6 +1460,8 @@ export class GameSession {
         this._hallAssignments = {};
         this.dynamicRelations.restore([]);
         this.relationEvents.restore([]);
+        this._npcPlayerId = npcPlayerIdFromSeed(seed);
+        this._npcMemory = createNpcMemory(this._npcPlayerId);
         this._tallyLoyalty = {};
         this._tallyHoldings = createTallyHoldings([]);
         this._tallyCards = {};
@@ -3814,6 +3826,8 @@ export class GameSession {
             ...withInventory,
             ...this.lifespanSaveFields(),
             ...(relationEventKeys.length > 0 ? { relationEventKeys } : {}),
+            ...(this._npcPlayerId ? { npcPlayerId: this._npcPlayerId } : {}),
+            ...(this._npcMemory ? { npcMemory: cloneNpcMemory(this._npcMemory) } : {}),
             ...(this._countdown ? { countdown: { ...this._countdown } } : {}),
         };
     }
@@ -3973,6 +3987,11 @@ export class GameSession {
         this._hallAssignments = normalizeHallAssignments(snapshot.hallAssignments);
         this.dynamicRelations.restore(snapshot.dynamicRelations ?? []);
         this.relationEvents.restore(snapshot.relationEventKeys);
+        // 舊檔沒有擁有者 id：先補產，讀檔尾端存回，之後每次讀檔都是同一個 id
+        const savedNpcPlayerId = normalizeNpcPlayerId(snapshot.npcPlayerId);
+        const npcIdBackfilled = savedNpcPlayerId === null;
+        this._npcPlayerId = savedNpcPlayerId ?? npcPlayerIdFromSeed(Math.floor(Math.random() * 4294967296));
+        this._npcMemory = normalizeNpcMemory(snapshot.npcMemory, this._npcPlayerId) ?? createNpcMemory(this._npcPlayerId);
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
         this._officerState = normalizeOfficerState(snapshot.officerState);
         this._sandtableMarkerTerritories = normalizeSandtableMarkerTerritories(snapshot.sandtableMarkerTerritories);
@@ -4007,6 +4026,9 @@ export class GameSession {
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._rivals = normalizeRivalWorld(snapshot.rivals);
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
+        if (npcIdBackfilled) {
+            await this.save();
+        }
         this._emit(GAME_SESSION_EVENTS.Loaded, snapshot);
         if (this._requireSave().lastLoadRecoveredFromBackup()) {
             this._emit(GAME_SESSION_EVENTS.LoadRecoveredFromBackup, snapshot);

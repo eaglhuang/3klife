@@ -481,5 +481,12 @@
   "ui.bloodline.vignette.slot.role": "定位",
   "ui.bloodline.vignette.slot.awakening": "覺醒",
   "ui.bloodline.vignette.slot.bloodline": "血脈",
-  "ui.bloodline.vignette.slot.future": "未來"
+  "ui.bloodline.vignette.slot.future": "未來",
+  "UI_NPC_DIALOGUE_TITLE": "「武將心聲」",
+  "UI_NPC_CONTEXT_SELECT": "「情境」",
+  "UI_NPC_SPEAK_BUTTON": "「聽他說」",
+  "UI_NPC_LOADING": "「正在回想往事...」",
+  "UI_NPC_FALLBACK": "「此事容我再想想。」",
+  "UI_NPC_OFFLINE_MODE": "「離線模板」",
+  "UI_NPC_SOURCE_HINT": "「依據：{0}」"
 }

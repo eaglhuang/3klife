@@ -479,5 +479,12 @@
   "ui.bloodline.vignette.slot.role": "役割",
   "ui.bloodline.vignette.slot.awakening": "覚醒",
   "ui.bloodline.vignette.slot.bloodline": "血脈",
-  "ui.bloodline.vignette.slot.future": "未来"
+  "ui.bloodline.vignette.slot.future": "未来",
+  "UI_NPC_DIALOGUE_TITLE": "武将の心の声",
+  "UI_NPC_CONTEXT_SELECT": "状況",
+  "UI_NPC_SPEAK_BUTTON": "話を聞く",
+  "UI_NPC_LOADING": "昔を思い出しています...",
+  "UI_NPC_FALLBACK": "その件は、少し考えさせてください。",
+  "UI_NPC_OFFLINE_MODE": "オフラインテンプレート",
+  "UI_NPC_SOURCE_HINT": "出典：{0}"
 }

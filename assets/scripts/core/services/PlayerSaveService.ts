@@ -87,6 +87,7 @@ import { normalizeWishPoolState, type WishPoolState } from '../systems/WishPool'
 import { normalizeOfflineInteractionLog } from '../systems/OfflineInteractionEvents';
 import { normalizeCountdownState, type CountdownState } from '../systems/CountdownManager';
 import { normalizeRelationEventKeys } from '../systems/RelationEvents';
+import { normalizeNpcMemory, normalizeNpcPlayerId, type NpcMemoryRecord } from '../systems/NpcMemoryReadModel';
 import { normalizeUnlockHistory, type SandtableStageId } from '../systems/SandtableProgress';
 import { normalizeStartingTalisman, type StartingSpiritTalisman } from '../systems/TeachingSpiritTalisman';
 import { normalizeOpeningPhaseId } from '../systems/OpeningProgress';
@@ -143,6 +144,10 @@ export interface PlayerSaveSnapshot {
     dynamicRelations?: DynamicRelation[];
     /** 關係事件已播紀錄（PROG-2-1412，鍵為 scope#eventId#pairKey）；後加的選填欄位，舊檔讀回為空，版號不升 */
     relationEventKeys?: string[];
+    /** NPC 記憶的擁有者 id（NPC-09）；舊檔缺欄位時讀檔補產並存回，版號不升 */
+    npcPlayerId?: string;
+    /** NPC_Memory 本地 read model（NPC-09）；只保存與 npcPlayerId 相符的記憶，版號不升 */
+    npcMemory?: NpcMemoryRecord;
     /** Legacy_Count（跨世代成就次數，RET-07）；後加的選填欄位，舊檔讀回為 0 */
     legacyCount?: number;
     /** 已傳道過的名將 id（MENT-15 一生一次）；後加的選填欄位，舊檔讀回為空陣列 */
@@ -480,6 +485,14 @@ export function createPlayerSaveSnapshot(
 }
 
 /** 驗證讀回的資料；格式不符時拋錯，避免壞檔被當成新遊戲默默覆蓋 */
+/** NPC 記憶欄位（NPC-09）：沒有合法擁有者 id 就都不寫；記憶與擁有者不符時只保留 id，記憶由讀檔端重建 */
+function npcSaveFields(snapshot: Partial<PlayerSaveSnapshot>): Pick<PlayerSaveSnapshot, 'npcPlayerId' | 'npcMemory'> {
+    const owner = normalizeNpcPlayerId(snapshot.npcPlayerId);
+    if (owner === null) return {};
+    const memory = normalizeNpcMemory(snapshot.npcMemory, owner);
+    return memory ? { npcPlayerId: owner, npcMemory: memory } : { npcPlayerId: owner };
+}
+
 export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
     if (!raw || typeof raw !== 'object') {
         throw new Error('[PlayerSaveService] 存檔格式錯誤：不是物件');
@@ -555,6 +568,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.hallAssignments !== undefined ? { hallAssignments: normalizeHallAssignments(snapshot.hallAssignments) } : {}),
         ...(snapshot.dynamicRelations !== undefined ? { dynamicRelations: normalizeDynamicRelations(snapshot.dynamicRelations) } : {}),
         ...(snapshot.relationEventKeys !== undefined ? { relationEventKeys: normalizeRelationEventKeys(snapshot.relationEventKeys) } : {}),
+        ...npcSaveFields(snapshot),
         ...(snapshot.legacyCount !== undefined ? { legacyCount: normalizeLegacyCount(snapshot.legacyCount) } : {}),
         ...(snapshot.officerState !== undefined ? { officerState: normalizeOfficerState(snapshot.officerState) } : {}),
         ...(snapshot.sandtableMarkersPlaced !== undefined ? { sandtableMarkersPlaced: normalizeSandtableMarkersPlaced(snapshot.sandtableMarkersPlaced) } : {}),

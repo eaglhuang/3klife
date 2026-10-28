@@ -479,5 +479,12 @@
   "ui.bloodline.vignette.slot.role": "Role",
   "ui.bloodline.vignette.slot.awakening": "Awakening",
   "ui.bloodline.vignette.slot.bloodline": "Bloodline",
-  "ui.bloodline.vignette.slot.future": "Future"
+  "ui.bloodline.vignette.slot.future": "Future",
+  "UI_NPC_DIALOGUE_TITLE": "General's Thoughts",
+  "UI_NPC_CONTEXT_SELECT": "Context",
+  "UI_NPC_SPEAK_BUTTON": "Hear Them Out",
+  "UI_NPC_LOADING": "Recalling the past...",
+  "UI_NPC_FALLBACK": "Let me think on that.",
+  "UI_NPC_OFFLINE_MODE": "Offline template",
+  "UI_NPC_SOURCE_HINT": "Source: {0}"
 }
