@@ -38,6 +38,8 @@ export function createGearSlotPickerLayoutSuite(): TestSuite {
             generalUid: () => 'general-1',
             equip: () => ({ ok: false, reason: 'NOT_FOUND' }),
             unequip: () => ({ ok: false, reason: 'NOT_FOUND' }),
+            setLocked: () => false,
+            decompose: () => ({ ok: false, reason: 'NOT_FOUND' }),
         });
         controller.open(EQUIP_SLOTS[0]);
         const view = controller.getFlowView();

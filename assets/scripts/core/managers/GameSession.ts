@@ -1096,14 +1096,14 @@ export class GameSession {
         return result.ok;
     }
 
-    /** 分解一件未鎖定、未裝備的一般裝備（BAG-07）：移除該列並給 1 件竹簡（來源暫記 UNKNOWN） */
+    /** 分解一件未鎖定、未裝備的一般裝備（BAG-07）：移除該列並給 1 件竹簡（取得來源記 DECOMPOSE） */
     public decomposeGear(inventoryId: string): GearDecomposeResult {
         const before = this._inventory;
         const result = decomposeGearRecord(this._inventoryRecords, this._inventory, inventoryId);
         if (!result.ok) return result;
         this._inventoryRecords = result.records;
         this._inventory = result.inventory;
-        this._recordGain(before, 'UNKNOWN');
+        this._recordGain(before, 'DECOMPOSE');
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         return result;
     }

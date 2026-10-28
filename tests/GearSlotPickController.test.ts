@@ -33,6 +33,8 @@ function harness(records: InventoryRecord[], equipResult: GearEquipResult = { ok
         generalUid: () => GENERAL,
         equip: (...args) => { calls.push({ kind: 'equip', args: [...args] }); return equipResult; },
         unequip: (...args) => { calls.push({ kind: 'unequip', args: [...args] }); return { ok: true, records }; },
+        setLocked: () => false,
+        decompose: () => ({ ok: false, reason: 'NOT_FOUND' }),
     });
     return { controller, calls };
 }

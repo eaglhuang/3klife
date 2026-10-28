@@ -123,6 +123,7 @@ export function createGearLockDecomposeSuite(): TestSuite {
         assert.isTrue(a.decomposeGear('W1').ok);
         assert.isTrue(!byId(a.inventoryRecords as InventoryRecord[], 'W1'));
         assert.equals(before + DECOMPOSE_MATERIAL_AMOUNT, itemCount(a.inventory, ITEM_BAMBOO_SLIP));
+        assert.equals(DECOMPOSE_MATERIAL_AMOUNT, a.queryItemAcquisitions({ source: 'DECOMPOSE' })[0]?.amount ?? 0);
     });
 
     suite.test('GameSession：鎖定旗標存讀檔後保留，鎖定中的裝備分解仍被擋', async () => {
