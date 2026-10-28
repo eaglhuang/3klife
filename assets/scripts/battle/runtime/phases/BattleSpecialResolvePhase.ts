@@ -4,6 +4,7 @@ import { BATTLE_FRONT_DEPTH } from '../../BattleTypes';
 import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
+import { tallyHealsAllies } from '../../shared/TallyPassive';
 import { BattleTurnManager } from '../BattleTurnManager';
 import type { SkillExecutionResult } from '../../../shared/SkillRuntimeContract';
 
@@ -32,7 +33,8 @@ export function executeBattleSpecialResolvePhase(context: BattleSpecialResolvePh
     if (unit.faction !== context.actingFaction) {
       continue;
     }
-    if (unit.type === TroopType.Medic) {
+    // 常山女騎（PROG-2-1526）沿用醫療兵治療
+    if (unit.type === TroopType.Medic || tallyHealsAllies(unit)) {
       resolveMedic(unit, context.state, svc);
     }
     if (unit.type === TroopType.Engineer) {

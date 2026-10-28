@@ -53,6 +53,8 @@ export interface TallyPassiveSpec {
   fearCharge?: { radius: number; moralePenalty: number };
   /** 士氣不降（大喬）：敵方扣士氣效果對此部隊不生效（PROG-2-1525） */
   moraleNoDecrease?: boolean;
+  /** 治療友軍（常山女）：自己陣營回合沿用醫療兵治療（PROG-2-1526） */
+  healsAllies?: boolean;
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -99,7 +101,7 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   // 元戎：連弩齊射，每次攻擊多打 1 下；壓制步兵，對步兵傷害 ×1.5（範圍傷害未做）
   'tiger-tally-yuan-rong': { extraHits: 1, damageVsTroopTypes: { types: [TroopType.Infantry], multiplier: 1.5 } },
   // 常山女：迴避 +30%（規格數字；治療友軍未做）
-  'tiger-tally-changshan-nu': { evasionBonus: 0.3 },
+  'tiger-tally-changshan-nu': { evasionBonus: 0.3, healsAllies: true },
   // 先登：免疫恐懼（PROG-2-1513）；攻城傷害 ×2 待攻城戰落地再接
   'tiger-tally-xian-deng': { fearImmune: true },
   // 鐵騎：恐懼衝鋒，攻擊時周圍 1 格敵軍士氣 -20（PROG-2-1514；範圍暫定 1 格）
@@ -164,6 +166,11 @@ export function applyFearCharge(attacker: TroopUnit, units: Iterable<TroopUnit>)
     affected.push(other);
   }
   return affected;
+}
+
+/** 此部隊是否帶治療友軍被動（常山女）；沒有時為 false */
+export function tallyHealsAllies(unit: TroopUnit): boolean {
+  return passiveOf(unit)?.healsAllies === true;
 }
 
 /** 部隊攻擊時無視目標防禦的比例；沒有此被動時為 0 */
