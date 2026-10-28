@@ -21,7 +21,7 @@ export function createStrategistHudSuite(): TestSuite {
                 { kind: 'Camp_Target', state: 'recovered' },
                 { kind: 'Floodgate', state: 'triggered' },
             ],
-            salvage: { stone: 0, wood: 0, supply: 120, intel: 0 },
+            salvage: { stone: 0, wood: 0, supply: 120, intel: 0, weaponMaterial: 0, instructorExp: 0 },
             missingCounters: [],
         });
         assert.equals('落石預警', summary.themeHazard);
@@ -32,7 +32,7 @@ export function createStrategistHudSuite(): TestSuite {
         const summary = buildStrategistHudSummary({
             hazardsThisTurn: [],
             interactiveObjects: [],
-            salvage: { stone: 0, wood: 0, supply: 0, intel: 0 },
+            salvage: { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 },
             missingCounters: [],
         });
         assert.equals('本回合無主題危害', summary.themeHazard);
@@ -44,7 +44,7 @@ export function createStrategistHudSuite(): TestSuite {
         const short = buildStrategistHudSummary({
             hazardsThisTurn: [],
             interactiveObjects: [],
-            salvage: { stone: 10, wood: 0, supply: 0, intel: 3 },
+            salvage: { stone: 10, wood: 0, supply: 0, intel: 3, weaponMaterial: 0, instructorExp: 0 },
             missingCounters: ['抗混亂', '反隱'],
         });
         assert.equals('缺少抗混亂、反隱', short.recommendedLoadoutGap);
@@ -52,10 +52,20 @@ export function createStrategistHudSuite(): TestSuite {
         const full = buildStrategistHudSummary({
             hazardsThisTurn: [],
             interactiveObjects: [],
-            salvage: { stone: 0, wood: 0, supply: 0, intel: 0 },
+            salvage: { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 },
             missingCounters: [],
         });
         assert.equals('對策槽無缺口', full.recommendedLoadoutGap);
+    });
+
+    suite.test('戰後摘要列出武器材料與教官經驗（PROG-2-1509）', () => {
+        const plunder = buildStrategistHudSummary({
+            hazardsThisTurn: [],
+            interactiveObjects: [],
+            salvage: { stone: 0, wood: 0, supply: 300, intel: 0, weaponMaterial: 10, instructorExp: 20 },
+            missingCounters: [],
+        });
+        assert.equals('補給 300、武器材料 10、教官經驗 20', plunder.stageSalvageSummary);
     });
 
     return suite;
