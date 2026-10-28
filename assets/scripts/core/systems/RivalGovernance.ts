@@ -62,6 +62,34 @@ export const GOVERNANCE_EFFICIENCY: Readonly<Record<NationProfile, Readonly<Reco
     RAIDER: NEUTRAL_EFFICIENCY,
 });
 
+/** RAI-01：他國國家的內政資源（糧、金、名聲、情報；兵力沿用 NationState.troops） */
+export interface NationResources {
+    readonly food: number;
+    readonly gold: number;
+    readonly fame: number;
+    readonly intel: number;
+}
+
+/** RAI-01 初始資源（暫定）：糧同玩家新局 300；金取 AI 金幣上限 5000；名聲、情報從 0 開始 */
+export const AI_STARTING_RESOURCES: Readonly<NationResources> = Object.freeze({
+    food: 300, gold: 5000, fame: 0, intel: 0,
+});
+
+/** RAI-02：每季代表國家執行內政的主要任務，取 E-2 內政偏好最高的一項 */
+export const NATION_PRIMARY_TASK: Readonly<Record<NationProfile, GovernanceTaskType>> = Object.freeze({
+    MILITARIST: 'MILITARY',
+    DIPLOMAT: 'FARMING',
+    GUARDIAN: 'MILITARY',
+    WARLORD: 'MILITARY',
+    EXPANSIONIST: 'MILITARY',
+    PASSIVE: 'FARMING',
+    CAVALRY_LORD: 'MILITARY',
+    RAIDER: 'MILITARY',
+});
+
+/** 暫定：君主武將屬性尚無資料來源（RAI-08 之前），四項一律 60 */
+export const RULER_GOVERNANCE_STATS: GovernanceGeneralStats = Object.freeze({ str: 60, int: 60, pol: 60, cha: 60 });
+
 /** 單一任務的基礎產出（未套性格效率） */
 export function governanceTaskOutput(type: GovernanceTaskType, g: GovernanceGeneralStats): number {
     switch (type) {
