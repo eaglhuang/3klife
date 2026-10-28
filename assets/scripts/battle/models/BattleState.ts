@@ -128,6 +128,8 @@ export class BattleState {
   public aiTacticIq: AiIqLevel | null = null;
   /** AI 是否可用戰法（ai-difficulty.json canUseTactics）；預設 true */
   public aiCanUseTactics = true;
+  /** 陣亡兵紀錄（PROG-2-1334 唯才是舉復活用）：依陣亡先後排序，只保留單位參照 */
+  public fallenUnits: TroopUnit[] = [];
 
   constructor() {
     for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
@@ -167,6 +169,7 @@ export class BattleState {
     this.weatherSchedule = [];
     this.battleTactic = battleTactic ?? BattleTactic.Normal;
     this.sceneFlags = { stealthOpenTurns: 0, nightRaid: false, nightRaidOpenTurns: 0 };
+    this.fallenUnits = [];
     this.battleEndAnnounced = false;
     this.stageSalvage = { stone: 0, wood: 0, supply: 0, intel: 0 };
     this.plunderedTiles = new Set<string>();
@@ -214,10 +217,44 @@ export class BattleState {
     if (!unit) return;
     const cell = this.getCell(unit.lane, unit.depth);
     if (cell?.occupantId === unitId) cell.occupantId = null;
+    // 只有陣亡（血量歸零）才進紀錄；撤退脫離不算陣亡
+    if (unit.currentHp <= 0) this.fallenUnits.push(unit);
     this.units.delete(unitId);
     this.removeDamageLinksForUnit(unitId);
     this.removeCounterReaction(unitId);
     this.removeActionReset(unitId);
+  }
+
+  /**
+   * 復活一名指定陣營的陣亡兵（PROG-2-1334）：依陣亡先後取第一個，放回原格；原格被占就放最近的空格。
+   * 沒有可復活的兵或沒有空格時回傳 null，紀錄保留。
+   */
+  public reviveFallenUnit(faction: Faction, hpRatio: number): TroopUnit | null {
+    const index = this.fallenUnits.findIndex(unit => unit.faction === faction);
+    if (index < 0) return null;
+    const unit = this.fallenUnits[index];
+    const cell = this.nearestEmptyCell(unit.lane, unit.depth);
+    if (!cell) return null;
+    this.fallenUnits.splice(index, 1);
+    unit.moveTo(cell.lane, cell.depth);
+    unit.currentHp = Math.max(1, Math.floor(unit.maxHp * hpRatio));
+    this.addUnit(unit);
+    return unit;
+  }
+
+  /** 以曼哈頓距離找最近的空格（原格若空則就是原格） */
+  private nearestEmptyCell(lane: number, depth: number): { lane: number; depth: number } | null {
+    let best: { lane: number; depth: number } | null = null;
+    let bestDistance = Infinity;
+    for (const cell of this.cells) {
+      if (cell.occupantId !== null) continue;
+      const distance = Math.abs(cell.lane - lane) + Math.abs(cell.depth - depth);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = { lane: cell.lane, depth: cell.depth };
+      }
+    }
+    return best;
   }
 
   public setTileBuff(buff: TileBuff): void {
