@@ -188,6 +188,8 @@
 
 > ✅ PROG-2-1425（2026-10-28）：core/systems 311 檔補入 B-1 Core Systems 表（268 檔由 @spec-source 對應到 doc_id；14 檔出處只寫 WBS 等未登錄名稱，29 檔未標出處）。此時 B-1 收錄 452 個檔名，未收錄剩 281 個（ui/core 85、ui/components 系列約 50、battle 系列約 85 等）。
 
+> ✅ PROG-2-1426（2026-10-28）：其餘 279 檔補入 B-1（130 檔對到 doc_id、12 檔未登錄、137 檔未標出處；新增 19 個小節，如 Battle / Runtime、Battle / Skills / Resolvers、UI / Components / General-Detail）。assets/scripts 全部 .ts 檔名都已收錄。上表 14 檔與下方加權數字仍是 2026-04-12 舊值；未標出處的檔待補檔頭出處。
+
 > 上述 14 檔尚未納入 B-1 映射。建議依上表分類，優先補入「武將資料模型」一組（合計 8 檔）再接葵育/血統與 UI 面板兩組。
 
 > ✅ DC 架構 17 檔與 UCUF 框架 17 檔（合計 34 檔）已於 2026-04-12 補入 B-1（`doc_tech_0009` / `doc_ui_0049`）。剩餘 14 檔建議優先補入「武將資料模型」8 檔，再接培育/血統 3 檔與 UI 面板 3 檔。
