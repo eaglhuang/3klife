@@ -13,8 +13,9 @@
 import type { BondRarity } from '../../core/systems/MercenaryBondPermanent';
 import { MercenaryState } from '../../core/systems/MercenaryBond';
 import { buildMercenaryPanelView, MercenaryPanelView } from '../../core/systems/MercenaryPanelView';
+import { buildMercenaryNameplateRows, MERC_PANEL_MAX_ROWS } from './MercenaryNameplateRows';
 
-export const MERC_PANEL_MAX_ROWS = 6;
+export { MERC_PANEL_MAX_ROWS };
 
 export interface MercenaryPanelFlowView {
     texts: Record<string, string>;
@@ -155,12 +156,14 @@ export class MercenaryPanelController {
             btnMercBond: view?.bondEnabled ?? false,
             btnMercHire: (this._deps.trialTickets?.() ?? 0) > 0 && rows.length < MERC_PANEL_MAX_ROWS,
         };
+        const nameplates = buildMercenaryNameplateRows(rows, this._deps.info);
         for (let i = 0; i < MERC_PANEL_MAX_ROWS; i++) {
-            const row = rows[i];
-            actives[`mercRow${i}`] = row !== undefined;
-            texts[`mercRow${i}Name`] = row ? this._deps.info(row).generalName : '';
-            texts[`btnMercRow${i}Label`] = row && row.uid === selected?.uid ? '檢視中' : '選取';
-            enabled[`btnMercRow${i}`] = row !== undefined;
+            const plate = nameplates[i];
+            actives[`mercRow${i}`] = plate !== undefined;
+            texts[`mercRow${i}Name`] = plate?.nameText ?? '';
+            texts[`mercRow${i}Meta`] = plate?.metaText ?? '';
+            texts[`btnMercRow${i}Label`] = plate && plate.uid === selected?.uid ? '檢視中' : '選取';
+            enabled[`btnMercRow${i}`] = plate !== undefined;
         }
         return { texts, actives, enabled };
     }
