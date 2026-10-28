@@ -265,6 +265,7 @@ export class BattleController {
     this.state.reset(playerGeneral, enemyGeneral, terrainGrid, weather, battleTactic);
     this.state.aiDifficulty = aiDifficulty;
     this.state.aiDuelAcceptThreshold = null;
+    this.state.aiSpGainModifier = 1;
     this.state.aiDifficultyBonus = aiDifficultyBonus;
     this.duelFlow.resetForBattle();
     this.flowStateMachine.reset();
@@ -517,6 +518,7 @@ export class BattleController {
   /** 套用 AI 難度表列（ai-difficulty.json）：單挑接受閾值由此讀取（PROG-2-1325）。需在 initBattle() 之後呼叫。 */
   public configureAiDifficulty(entry: AiDifficultyEntry): void {
     this.state.aiDuelAcceptThreshold = entry.duelAcceptThreshold;
+    this.state.aiSpGainModifier = entry.spGainModifier;
   }
 
   public configureSortie(input: CreateSortieInput): SortieState {

@@ -2,7 +2,10 @@
  * AiSpCharge — AI 擊殺充能難度倍率（PROG-2-0920，規格 AI武將強度系統 F-3）
  */
 import { Faction, SP_PER_KILL, TroopType } from '../assets/scripts/core/config/Constants';
-import { AI_DIFFICULTY_SP_MOD, aiSpGainPerKill, resolveAiDifficulty } from '../assets/scripts/core/systems/AiSpCharge';
+import { aiSpGainPerKill, resolveAiDifficulty } from '../assets/scripts/core/systems/AiSpCharge';
+import { aiDifficultyEntryOf, parseAiDifficultyTable, type AiDifficultyEntry } from '../assets/scripts/core/systems/AiDifficultyTable';
+import * as fs from 'fs';
+import * as path from 'path';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
@@ -24,31 +27,38 @@ function troop(id: string, faction: Faction, lane: number, depth: number): Troop
     return unit;
 }
 
+/** 從真實難度表（ai-difficulty.json）取一列，與場景入口讀表的做法一致 */
+function tableEntry(difficulty: 'easy' | 'normal' | 'hard' | 'nightmare' | 'hell'): AiDifficultyEntry {
+    const raw = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'assets', 'resources', 'data', 'ai-difficulty.json'), 'utf8'));
+    const table = parseAiDifficultyTable(raw).table;
+    if (!table) throw new Error('ai-difficulty.json 解析失敗');
+    return aiDifficultyEntryOf(table, difficulty);
+}
+
 export function createAiSpChargeSuite(): TestSuite {
     const suite = new TestSuite('AiSpCharge (AI 擊殺充能難度 PROG-2-0920)');
 
-    suite.test('規格 F-3 倍率表：EASY 0.8、NORMAL 1.0、HARD 1.2、NIGHTMARE 1.3、HELL 1.5', () => {
-        assert.equals(0.8, AI_DIFFICULTY_SP_MOD.easy);
-        assert.equals(1.0, AI_DIFFICULTY_SP_MOD.normal);
-        assert.equals(1.2, AI_DIFFICULTY_SP_MOD.hard);
-        assert.equals(1.3, AI_DIFFICULTY_SP_MOD.nightmare);
-        assert.equals(1.5, AI_DIFFICULTY_SP_MOD.hell);
+    suite.test('難度表 spGainModifier（規格 F-3）：EASY 0.8、NORMAL 1.0、HARD 1.2、NIGHTMARE 1.3、HELL 1.5', () => {
+        assert.equals(0.8, tableEntry('easy').spGainModifier);
+        assert.equals(1.0, tableEntry('normal').spGainModifier);
+        assert.equals(1.2, tableEntry('hard').spGainModifier);
+        assert.equals(1.3, tableEntry('nightmare').spGainModifier);
+        assert.equals(1.5, tableEntry('hell').spGainModifier);
     });
 
     suite.test('AI 每次擊殺 SP：NORMAL 等於 SP_PER_KILL；其他難度為 floor(SP_PER_KILL × 倍率)', () => {
-        assert.equals(SP_PER_KILL, aiSpGainPerKill('normal'));
-        assert.equals(16, aiSpGainPerKill('easy'));
-        assert.equals(24, aiSpGainPerKill('hard'));
-        assert.equals(26, aiSpGainPerKill('nightmare'));
-        assert.equals(30, aiSpGainPerKill('hell'));
-        assert.equals(SP_PER_KILL, aiSpGainPerKill());
+        assert.equals(SP_PER_KILL, aiSpGainPerKill(tableEntry('normal').spGainModifier));
+        assert.equals(16, aiSpGainPerKill(tableEntry('easy').spGainModifier));
+        assert.equals(24, aiSpGainPerKill(tableEntry('hard').spGainModifier));
+        assert.equals(26, aiSpGainPerKill(tableEntry('nightmare').spGainModifier));
+        assert.equals(30, aiSpGainPerKill(tableEntry('hell').spGainModifier));
     });
 
-    suite.test('戰鬥中：敵方擊殺按 aiDifficulty 充能，玩家擊殺仍是固定 SP_PER_KILL', () => {
+    suite.test('戰鬥中：敵方擊殺按難度表 spGainModifier 充能，玩家擊殺仍是固定 SP_PER_KILL', () => {
         services().initialize();
         const ctrl = new BattleController();
         ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
-        ctrl.state.aiDifficulty = 'hell';
+        ctrl.configureAiDifficulty(tableEntry('hell'));
         const enemyKiller = troop('enemy-killer', Faction.Enemy, 1, 3);
         const playerKiller = troop('player-killer', Faction.Player, 3, 3);
         const victimOfPlayer = troop('victim-a', Faction.Enemy, 2, 2);
@@ -70,6 +80,17 @@ export function createAiSpChargeSuite(): TestSuite {
         assert.equals('normal', resolveAiDifficulty(undefined, undefined));
         assert.equals('normal', resolveAiDifficulty('Hell', null));
         assert.equals('nightmare', resolveAiDifficulty('typo', 'nightmare'));
+    });
+
+    suite.test('未套用難度表時 SP 倍率為 1.0；重開戰鬥會清回 1.0', () => {
+        services().initialize();
+        const ctrl = new BattleController();
+        ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
+        assert.equals(1, ctrl.state.aiSpGainModifier);
+        ctrl.configureAiDifficulty(tableEntry('hell'));
+        assert.equals(1.5, ctrl.state.aiSpGainModifier);
+        ctrl.initBattle(general('p', Faction.Player), general('e', Faction.Enemy));
+        assert.equals(1, ctrl.state.aiSpGainModifier);
     });
 
     suite.test('戰鬥入口：initBattle 傳入的難度寫進 state，未傳則 NORMAL', () => {

@@ -525,7 +525,7 @@ export class BattleCombatResolver {
     if (killer) {
       const general = this.context.state.getGeneral(killer.faction);
       if (general) {
-        general.addSp(killer.faction === Faction.Enemy ? aiSpGainPerKill(this.context.state.aiDifficulty) : SP_PER_KILL);
+        general.addSp(killer.faction === Faction.Enemy ? aiSpGainPerKill(this.context.state.aiSpGainModifier) : SP_PER_KILL);
         svc.event.emit(EVENT_NAMES.GeneralSpChanged, {
           faction: killer.faction,
           sp: general.currentSp,
