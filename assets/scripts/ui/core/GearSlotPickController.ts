@@ -17,6 +17,7 @@ import { buildGearPickerRows, GearPickerRow, hasEquippedInSlot } from '../../cor
 import type { GearEquipRejectReason, GearEquipResult } from '../../core/systems/GearEquipFlow';
 import type { InventoryRecord } from '../../core/systems/InventoryProjection';
 import { GEAR_SLOT_NAMES } from '../../core/systems/GearPageSlots';
+import type { GearDecomposeResult } from '../../core/systems/GearLockDecompose';
 
 /** 選取面板的列節點數（與 layout 固定列對應，之後接 layout 時使用）。 */
 export const GEAR_PICK_ROW_SLOTS = 8;
@@ -26,12 +27,23 @@ export interface GearSlotPickDeps {
     generalUid: () => string;
     equip: (gearUid: string, generalUid: string, slotId: EquipSlot) => GearEquipResult;
     unequip: (generalUid: string, slotId: EquipSlot) => GearEquipResult;
+    /** 設定鎖定（BAG-07，GameSession.setInventoryLocked）；回傳是否找到該列 */
+    setLocked: (gearUid: string, locked: boolean) => boolean;
+    /** 分解一件一般裝備（BAG-07，GameSession.decomposeGear） */
+    decompose: (gearUid: string) => GearDecomposeResult;
 }
 
 export interface GearSlotPickFlowView {
     texts: Record<string, string>;
     actives: Record<string, boolean>;
 }
+
+const DECOMPOSE_REJECT_TEXT: Record<Extract<GearDecomposeResult, { ok: false }>['reason'], string> = {
+    NOT_FOUND: '找不到這件裝備',
+    NOT_GEAR: '這不是一般裝備',
+    LOCKED: '已鎖定，請先解鎖再分解',
+    EQUIPPED: '裝備中，請先卸下再分解',
+};
 
 const REJECT_TEXT: Record<GearEquipRejectReason, string> = {
     NOT_FOUND: '找不到這件裝備',
@@ -45,6 +57,9 @@ export class GearSlotPickController {
     private _slot: EquipSlot | null = null;
     private _rows: GearPickerRow[] = [];
     private _message = '';
+    /** 管理模式：點列是選取（供鎖定／分解），不是穿戴（BAG-07 暫定 UI） */
+    private _manage = false;
+    private _selectedGearUid: string | null = null;
 
     constructor(private readonly _deps: GearSlotPickDeps) {}
 
@@ -57,6 +72,7 @@ export class GearSlotPickController {
     public open(slot: EquipSlot): void {
         this._slot = slot;
         this._message = '';
+        this._selectedGearUid = null;
         this._refreshRows();
     }
 
@@ -64,6 +80,52 @@ export class GearSlotPickController {
         this._slot = null;
         this._rows = [];
         this._message = '';
+        this._manage = false;
+        this._selectedGearUid = null;
+    }
+
+    /** 切換管理模式；切換時清掉選取與提示。 */
+    public toggleManage(): void {
+        this._manage = !this._manage;
+        this._selectedGearUid = null;
+        this._message = '';
+    }
+
+    /** 目前選取的裝備列（管理模式才會有）。 */
+    public selectedRow(): GearPickerRow | null {
+        return this._rows.find((row) => row.gearUid === this._selectedGearUid) ?? null;
+    }
+
+    /** 鎖定或解鎖目前選取的裝備；沒有選取回傳 false。 */
+    public toggleLockSelected(): boolean {
+        const row = this.selectedRow();
+        if (!row) {
+            this._message = '請先選擇裝備';
+            return false;
+        }
+        const locked = this._isLocked(row.gearUid);
+        const ok = this._deps.setLocked(row.gearUid, !locked);
+        this._message = ok ? (locked ? `已解鎖 ${row.name}` : `已鎖定 ${row.name}`) : '找不到這件裝備';
+        this._refreshRows();
+        return ok;
+    }
+
+    /** 分解目前選取的裝備；成功後關閉選取並提示拿到的材料。 */
+    public decomposeSelected(): GearDecomposeResult | null {
+        const row = this.selectedRow();
+        if (!row) {
+            this._message = '請先選擇裝備';
+            return null;
+        }
+        const result = this._deps.decompose(row.gearUid);
+        if (result.ok === true) {
+            this._selectedGearUid = null;
+            this._message = `已分解 ${row.name}，獲得 ${result.material.amount} 件竹簡`;
+            this._refreshRows();
+        } else {
+            this._message = DECOMPOSE_REJECT_TEXT[result.reason];
+        }
+        return result;
     }
 
     /** 目前列表（未開啟時為空）。 */
@@ -76,6 +138,11 @@ export class GearSlotPickController {
         if (this._slot === null) return null;
         const row = this.rows()[index];
         if (!row) return null;
+        if (this._manage) {
+            this._selectedGearUid = row.gearUid;
+            this._message = '';
+            return null;
+        }
         const result = this._deps.equip(row.gearUid, this._deps.generalUid(), this._slot);
         this._finish(result, `已穿上 ${row.name}`);
         return result;
@@ -104,6 +171,15 @@ export class GearSlotPickController {
         const equipped = this._slot !== null && hasEquippedInSlot(this._deps.records(), this._deps.generalUid(), this._slot);
         actives.btnGearUnequip = equipped;
         actives.gearPickPanel = this._slot !== null;
+        const selected = this.selectedRow();
+        texts.gearManageLabel = this._manage ? '管理：開' : '管理：關';
+        texts.gearLockLabel = selected && this._isLocked(selected.gearUid) ? '解鎖' : '鎖定';
+        texts.gearDecomposeLabel = '分解';
+        actives.btnGearManage = this._slot !== null;
+        actives.btnGearLock = selected !== null;
+        actives.btnGearDecompose = selected !== null;
+        actives.btnGearPickClose = this._slot !== null;
+        texts.gearPickCloseLabel = '關閉';
         return { texts, actives };
     }
 
@@ -115,6 +191,10 @@ export class GearSlotPickController {
         }
         this._message = REJECT_TEXT[result.reason];
         this._refreshRows();
+    }
+
+    private _isLocked(gearUid: string): boolean {
+        return this._deps.records().find((record) => record.Inventory_ID === gearUid)?.isLocked === true;
     }
 
     private _refreshRows(): void {

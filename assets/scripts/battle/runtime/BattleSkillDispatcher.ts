@@ -337,6 +337,13 @@ export class BattleSkillDispatcher {
       },
       getUnit: (unitId: string) => state.units.get(unitId) ?? null,
       getCasterGeneral: (casterFaction: Faction) => state.getGeneral(casterFaction),
+      restoreFactionVitality: (faction: Faction, ratio: number) => {
+        // 對酒當歌（ULT-08 補缺）：精力回復取整數，封頂精力上限
+        const general = state.getGeneral(faction);
+        if (!general) return false;
+        general.vitality = Math.min(general.maxVitality, general.vitality + Math.round(general.maxVitality * ratio));
+        return true;
+      },
       getTerrain: (lane: number, depth: number) => state.getCell(lane, depth)?.terrain ?? TerrainType.Plain,
       getCasterCell: (casterFaction: Faction) => {
         // 武將資料沒有格子座標，改由武將的戰場單位取位置（同 PROG-2-0755 的做法）

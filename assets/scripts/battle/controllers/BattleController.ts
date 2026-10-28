@@ -100,6 +100,7 @@ import { buildEnemyTacticCandidates } from '../shared/EnemyTacticCandidates';
 import { fillTacticNumbers, type TacticMetrics } from '../shared/EnemyTacticNumbers';
 import { aiHoldsTactic, pickTacticByIq } from '../shared/AiTacticDecision';
 import { aiShouldInitiateDuel } from '../../core/systems/AiDuelDecision';
+import { lastSpurtReasonOf } from '../../core/systems/LastSpurtJudge';
 import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
@@ -872,6 +873,18 @@ export class BattleController {
     return Array.from(this.state.units.values()).filter(unit => unit.faction === faction && unit.currentHp > 0);
   }
 
+  /** 殘局判斷（FORM-10）：每回合切換時更新合計兵力峰值，達條件就進入殘局模式並只發一次事件 */
+  private updateLastSpurtMode(): void {
+    const living = this.livingUnitsOf(Faction.Player).length + this.livingUnitsOf(Faction.Enemy).length;
+    this.state.peakTroopCount = Math.max(this.state.peakTroopCount, living);
+    if (this.state.lastSpurtMode) return;
+    const turn = services().battle.getSnapshot().turn;
+    const reason = lastSpurtReasonOf({ turn, livingTroops: living, peakTroops: this.state.peakTroopCount });
+    if (reason === null) return;
+    this.state.lastSpurtMode = true;
+    services().event.emit(EVENT_NAMES.LastSpurtEntered, { turn, reason });
+  }
+
   public triggerPlayerSeedTactic(options: GeneralSkillCastOptions = {}): boolean {
     if (!this.canUsePlayerSkills()) return false;
 
@@ -1352,6 +1365,7 @@ export class BattleController {
     }
     if (this.sortie) this.sortie = regenTactic(this.sortie);
     svc.battle.nextTurn();
+    this.updateLastSpurtMode();
     const weatherBefore = this.state.weather;
     this.applyWeatherForTurn(svc.battle.getSnapshot().turn);
     this.announceAptitudeDialogue(weatherBefore !== this.state.weather);

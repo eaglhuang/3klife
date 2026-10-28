@@ -175,6 +175,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.UnitAttackMissed,        this._onUnitAttackMissed.bind(this)),
       svc.event.on(EVENT_NAMES.KinComboAttack,          this._onKinComboAttack.bind(this)),
       svc.event.on(EVENT_NAMES.RelationEventTriggered,  this._onRelationEventTriggered.bind(this)),
+      svc.event.on(EVENT_NAMES.LastSpurtEntered,        this._onLastSpurtEntered.bind(this)),
       svc.event.on(EVENT_NAMES.UnitHealed,              this._onUnitHealed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitMoved,               this._onUnitMoved.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDied,                this._onUnitDied.bind(this)),
@@ -396,6 +397,12 @@ export class BattleUIBridge {
   private _generalNames: Promise<Map<string, string>> | null = null;
 
   /** 戰場關係事件（PROG-2-1421）：名將契合、義兄弟合攻寫一行戰報；我方主將用戰場名字，其餘查 generals-index */
+  /** 殘局判斷器進入殘局（FORM-10）：浮一條 Toast 提示玩家戰況已切換 */
+  private _onLastSpurtEntered(data?: { turn: number; reason: 'turn' | 'attrition' }): void {
+    if (!data) return;
+    this.ctx.deployRuntime?.showToast(services().i18n.t('ui.battle.last_spurt.entered', String(data.turn)), 2.5);
+  }
+
   private _onRelationEventTriggered(data?: { hit: RelationEventHit }): void {
     if (!data?.hit) return;
     const hit = data.hit;

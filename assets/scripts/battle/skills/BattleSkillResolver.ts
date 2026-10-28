@@ -12,6 +12,8 @@ export interface BattleSkillExecutionContext {
   getBoardCells(): BattleSkillCellRef[];
   getUnit(unitId: string): TroopUnit | null;
   getCasterGeneral(casterFaction: Faction): GeneralUnit | null;
+  /** 回復所屬陣營武將的精力（對酒當歌）：回復精力上限 × ratio，封頂；有武將回 true。舊測試 context 可不提供 */
+  restoreFactionVitality?(faction: Faction, ratio: number): boolean;
   getTerrain(lane: number, depth: number): TerrainType;
   /** 施放者所在格（PROG-2-0756：衝鋒判定直線用）；舊測試 context 可不提供，視為無衝鋒 */
   getCasterCell?(casterFaction: Faction): { lane: number; depth: number } | null;
