@@ -1,4 +1,4 @@
-// @spec-source → 兵種（虎符）系統.md：死亡傳承虎符（白馬 / 騎射合一；解煩、丹陽、吳國數值被動 PROG-2-1433；止啼符、藤甲 PROG-2-1437）
+// @spec-source → 兵種（虎符）系統.md：死亡傳承虎符（白馬 / 騎射合一；解煩、丹陽、吳國數值被動 PROG-2-1433；止啼符、藤甲 PROG-2-1437；虎痴符 PROG-2-1444）
 /**
  * TallyPassive — 虎符被動的通用掛點（不依賴 cc）
  *
@@ -30,6 +30,8 @@ export interface TallyPassiveSpec {
   terrainMoveBonus?: { terrains: readonly TerrainType[]; bonus: number };
   /** 突襲止啼：目標站在其陣營後排 rows 列內時，部隊攻擊傷害 × multiplier（PROG-2-1437） */
   backRowDamage?: { rows: number; multiplier: number };
+  /** 防禦乘數（虎痴符裸衣決鬥 ×0.5，PROG-2-1444） */
+  defenseMultiplier?: number;
   /** 藤甲：承受部隊攻擊（物理）傷害的乘數 */
   physicalDamageTaken?: number;
   /** 藤甲：承受火計傷害的乘數 */
@@ -63,6 +65,8 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   'tiger-tally-zhi-ti-fu': { backRowDamage: { rows: 2, multiplier: 1.5 } },
   // 藤甲：物理減傷 50%，但火攻 ×3
   'tiger-tally-teng-jia': { physicalDamageTaken: 0.5, fireDamageTaken: 3 },
+  // 虎痴符（裸衣決鬥）：防禦減半，攻擊力翻倍
+  'tiger-tally-hu-chi-fu': { attackMultiplier: 2, defenseMultiplier: 0.5 },
 };
 
 /** 各陣營出兵列（後排起點）：我方由 depth 0 出兵、敵方由最後一列出兵 */
@@ -87,6 +91,11 @@ export function tallyAttackMultiplierOf(unit: TroopUnit, terrain: TerrainType): 
 export function tallyTerrainMoveBonusOf(unit: TroopUnit, terrain: TerrainType): number {
   const bonus = passiveOf(unit)?.terrainMoveBonus;
   return bonus && bonus.terrains.includes(terrain) ? bonus.bonus : 0;
+}
+
+/** 虎符被動的防禦乘數；沒有此被動時為 1 */
+export function tallyDefenseMultiplierOf(unit: TroopUnit): number {
+  return passiveOf(unit)?.defenseMultiplier ?? 1;
 }
 
 /** 突襲止啼：目標在其陣營後排 rows 列內時回傳傷害乘數，否則為 1 */
