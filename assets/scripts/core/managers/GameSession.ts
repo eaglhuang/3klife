@@ -30,6 +30,7 @@ import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/S
 import { buildStartingSpiritTalisman, normalizeStartingTalisman, type StartingSpiritTalisman, type TeachingSpiritInput } from '../systems/TeachingSpiritTalisman';
 import { normalizeOpeningPhaseId } from '../systems/OpeningProgress';
 import { dailyFreeEnrollCount, isNewEnrollGrantDay, normalizeEnrollGrantDay } from '../systems/DailyFreeEnroll';
+import { appendAcquisitions, diffAcquisitions, normalizeAcquisitionLog, queryAcquisitions, type ItemAcquisitionQuery, type ItemAcquisitionRecord, type ItemSource } from '../systems/ItemAcquisitionLog';
 import { EMPTY_AI_ADAPTIVE_STREAK, nextAiAdaptiveStreak, normalizeAiAdaptiveStreak, type AiAdaptiveStreak } from '../systems/AiAdaptiveDifficulty';
 import { effectiveSandtableStage, normalizeUnlockHistory, recordSandtableUnlock, sandtableShortCodeOf, sandtableStageIdOf, type SandtableStageId } from '../systems/SandtableProgress';
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
@@ -586,6 +587,18 @@ export class GameSession {
     private _openingPhase: string | null = null;
     /** 已發放免費入學令的最大登入日（YYYY-MM-DD，高水位）；從未發過為 null（PROG-2-1374 修正，PM 裁定） */
     private _enrollGrantDay: string | null = null;
+    // ---- 道具取得來源紀錄（ITM-05，PROG-2-1383）：與數量分開存放，隨 lifespanSaveFields 存檔 ----
+    private _itemAcquisitionLog: ItemAcquisitionRecord[] = [];
+
+    /** 道具取得來源紀錄（唯讀副本）；沒有紀錄為空陣列。 */
+    public get itemAcquisitionLog(): ItemAcquisitionRecord[] {
+        return this._itemAcquisitionLog.slice();
+    }
+
+    /** 依道具與來源查詢取得紀錄（ITM-05）。 */
+    public queryItemAcquisitions(query: ItemAcquisitionQuery = {}): ItemAcquisitionRecord[] {
+        return queryAcquisitions(this._itemAcquisitionLog, query);
+    }
     /** 玩家連勝／連敗計數（AIS-11 E-8）：敵方自適應縮放用；讀檔缺值為 0 */
     private _aiAdaptiveStreak: AiAdaptiveStreak = { ...EMPTY_AI_ADAPTIVE_STREAK };
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
@@ -1393,9 +1406,16 @@ export class GameSession {
         return flat + countGeneralBagSlots(stored);
     }
 
-    /** 增加道具（商城購買、活動獎勵）並自動存檔 */
-    public async addItem(itemId: string, amount: number): Promise<number> {
+    /** 入庫後把數量增加的部分寫進取得紀錄（ITM-05）；只記增加，不記扣除。 */
+    private _recordGain(before: PlayerInventory, source: ItemSource): void {
+        this._itemAcquisitionLog = appendAcquisitions(this._itemAcquisitionLog, diffAcquisitions(before, this._inventory, source));
+    }
+
+    /** 增加道具（商城購買、活動獎勵）並自動存檔；source 為取得來源（ITM-05），不給為 UNKNOWN */
+    public async addItem(itemId: string, amount: number, source: ItemSource = 'UNKNOWN'): Promise<number> {
+        const before = this._inventory;
         this._inventory = addItem(this._inventory, itemId, amount);
+        this._recordGain(before, source);
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -1491,6 +1511,7 @@ export class GameSession {
         this._familySystemUnlockedFlag = false;
         this._openingPhase = null;
         this._enrollGrantDay = null;
+        this._itemAcquisitionLog = [];
         this._aiAdaptiveStreak = { ...EMPTY_AI_ADAPTIVE_STREAK };
         this._officerState = initialOfficerState();
         this._sandtableMarkerTerritories = [];
@@ -1803,7 +1824,9 @@ export class GameSession {
         const result = claimReadyWishes(this._wishPool, nowMs);
         if (result.claimed.length === 0) return [];
         this._wishPool = result.state;
+        const beforeWish = this._inventory;
         for (const wish of result.claimed) this._inventory = addItem(this._inventory, wish.itemId, wish.amount);
+        this._recordGain(beforeWish, 'EVENT');
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
         return result.claimed.map((w) => ({ ...w }));
     }
@@ -2161,7 +2184,9 @@ export class GameSession {
         const claim = claimMonthlyCardDaily(this._monthlyCard, epochMs);
         if (claim.speedCards <= 0) return 0;
         this._monthlyCard = claim.state;
+        const beforeMonthlyCard = this._inventory;
         this._inventory = addItem(this._inventory, ITEM_WISH_SPEED_CARD, claim.speedCards);
+        this._recordGain(beforeMonthlyCard, 'SHOP');
         return claim.speedCards;
     }
 
@@ -2171,7 +2196,9 @@ export class GameSession {
         // 掛機產出：今天的登入日超過已發放的最大日才發一次免費入學令（PROG-2-1374，張數依太守府等級；高水位防止回撥時鐘重領）
         const today = loginDayOf(epochMs);
         if (isNewEnrollGrantDay(this._enrollGrantDay, today)) {
+            const beforeEnroll = this._inventory;
             this._inventory = addItem(this._inventory, ITEM_ADMISSION_TOKEN, dailyFreeEnrollCount(this._territoryLevel));
+            this._recordGain(beforeEnroll, 'TASK');
             this._enrollGrantDay = today;
         }
         // 限時道具：登入切日時回收已過期的物件庫列（PROG-2-1364）
@@ -3215,8 +3242,10 @@ export class GameSession {
         if (this._autoGovernance) this._fillAutoGovernance();
         if (this._magistrateUid && !roster.some((general) => general.id === this._magistrateUid && general.status !== 'dead')) this._magistrateUid = null;
         this._recordSoulFragmentsFor(beforeRoster, agingEvents);
+        const beforeTokens = this._inventory;
         const tokens = grantSeasonalOracleTokens(this._inventory);
         this._inventory = tokens.inventory;
+        this._recordGain(beforeTokens, 'EVENT');
         this._tallyFoodDiscountArmed = this._military.food < TALLY_SHORTAGE_FOOD_THRESHOLD;
         // 三國日報素材：缺糧（與虎符缺糧同一門檻，暫定）
         // 缺口 = 門檻 − 目前糧草（RET-05 復仇取回的基數，暫定）
@@ -3335,7 +3364,9 @@ export class GameSession {
         const reason = result.card.mentorRoute?.reason;
         if (reason === 'SCHOLAR' || reason === 'DUAL_CLASS') {
             // 文職與雙職能退役發 1 份竹簡（PM 暫定）；虎符只在死亡結算發，退役不發
+            const beforeSlip = this._inventory;
             this._inventory = addItem(this._inventory, ITEM_BAMBOO_SLIP, 1);
+            this._recordGain(beforeSlip, 'DROP');
         }
         // 退役不產虎符（規格 Q61=C 明文禁止，PROG-2-1020）；虎符只在陣亡結算產生
         if (this._autoSave && this._save) {
@@ -3593,7 +3624,9 @@ export class GameSession {
             this._lastBattleSnapshots = settlement.entries.map((entry) =>
                 buildBattleSnapshot(battleId, entry.generalId, entry.performance ?? EMPTY_PERFORMANCE, entry.outcome === 'win', battleDate));
         }
+        const beforeMilestone = this._inventory;
         this._inventory = grantTacticNotes(this._inventory, milestoneRewards);
+        this._recordGain(beforeMilestone, 'TASK');
         if (settlement.entries.length === 0) {
             if ((clearChanged || firstClear || tallyChanged || comradeChanged || mercenaryChanged) && this._autoSave && this._save) {
                 await this.save();
@@ -3846,8 +3879,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3876,6 +3909,7 @@ export class GameSession {
         if (this._familySystemUnlockedFlag) fields.familySystemUnlocked = true;
         if (this._openingPhase !== null) fields.openingPhase = this._openingPhase;
         if (this._enrollGrantDay !== null) fields.enrollGrantDay = this._enrollGrantDay;
+        if (this._itemAcquisitionLog.length > 0) fields.itemAcquisitionLog = this._itemAcquisitionLog.slice();
         if (this._aiAdaptiveStreak.consecutiveWins > 0 || this._aiAdaptiveStreak.consecutiveLosses > 0) fields.aiAdaptiveStreak = { ...this._aiAdaptiveStreak };
         return fields;
     }
@@ -3907,6 +3941,7 @@ export class GameSession {
         this._startingTalisman = normalizeStartingTalisman(snapshot.startingTalisman);
         this._openingPhase = normalizeOpeningPhaseId(snapshot.openingPhase);
         this._enrollGrantDay = normalizeEnrollGrantDay(snapshot.enrollGrantDay);
+        this._itemAcquisitionLog = normalizeAcquisitionLog(snapshot.itemAcquisitionLog);
         this._aiAdaptiveStreak = normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak);
     }
 
