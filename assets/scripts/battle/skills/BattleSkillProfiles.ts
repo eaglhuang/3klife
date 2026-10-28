@@ -52,6 +52,10 @@ export interface BattleSkillProfile {
   slowAmount?: number;
   /** 鼓舞：士氣加成（規格 +20） */
   moraleBonus?: number;
+  /** 全體友軍士氣拉滿至上限（白馬銀槍·不滅）；與傷害同一次結算 */
+  maximizeMoraleOnAllies?: boolean;
+  /** 施放者自身獲得無敵的回合數（白馬銀槍·不滅 1 回合）；無敵期間受到的傷害歸零 */
+  selfInvincibleTurns?: number;
   /** 結姻連射：額外攻擊次數（規格 +1） */
   extraHits?: number;
   /** 強制位移的格數（規格 1～2） */
@@ -166,6 +170,18 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     coefficient: 0,
     moraleBonus: 20,
     battleLogKey: 'skill.mentor_morale.buff',
+  },
+  // 白馬銀槍·不滅（趙雲 5，ULT-08 補缺）：全屏 AOE 傷害係數 0.72（全屏／全場傷害奧義中最常用的係數），
+  // 施放後全體友軍士氣拉滿、施放者獲得 1 回合無敵
+  'zhao-yun-immortal': {
+    battleSkillId: 'zhao-yun-immortal',
+    targetMode: BattleSkillTargetMode.EnemyAll,
+    manualTargeting: false,
+    autoAimMode: 'all-enemies',
+    coefficient: 0.72,
+    scalingStat: 'str',
+    maximizeMoraleOnAllies: true,
+    selfInvincibleTurns: 1,
   },
   // 空城計（教官，PROG-2-0777）：施放者智力高於敵方武將時，半徑 2 內敵軍沿反向直線後退 2 格（規格 戰法系統 空城計）
   'empty-fort': {
