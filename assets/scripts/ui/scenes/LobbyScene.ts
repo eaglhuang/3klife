@@ -1332,7 +1332,7 @@ export class LobbyScene extends Component {
             buyOrder: async () => {
                 const gacha = this._localGachaService;
                 if (!gacha.spendCurrency('gems', JOB_CHANGE_ORDER_OFFER.price)) return false;
-                await services().session.addItem(ITEM_JOB_CHANGE_ORDER, 1);
+                await services().session.addItem(ITEM_JOB_CHANGE_ORDER, 1, 'SHOP');
                 return true;
             },
         });
@@ -1427,7 +1427,7 @@ export class LobbyScene extends Component {
                     services().event.emit('SHOW_TOAST', { message: `金幣不足：擴容需要 ${WAREHOUSE_EXPAND_GOLD_COST} 金幣`, duration: 2 });
                     return false;
                 }
-                void services().session.addItem(WAREHOUSE_EXPANSION_ITEM, 1);
+                void services().session.addItem(WAREHOUSE_EXPANSION_ITEM, 1, 'SHOP');
                 return true;
             },
         });

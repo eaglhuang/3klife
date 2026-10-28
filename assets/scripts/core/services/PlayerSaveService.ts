@@ -92,6 +92,7 @@ import { normalizeUnlockHistory, type SandtableStageId } from '../systems/Sandta
 import { normalizeStartingTalisman, type StartingSpiritTalisman } from '../systems/TeachingSpiritTalisman';
 import { normalizeOpeningPhaseId } from '../systems/OpeningProgress';
 import { normalizeEnrollGrantDay } from '../systems/DailyFreeEnroll';
+import { normalizeAcquisitionLog, type ItemAcquisitionRecord } from '../systems/ItemAcquisitionLog';
 import { normalizeAiAdaptiveStreak, type AiAdaptiveStreak } from '../systems/AiAdaptiveDifficulty';
 
 export const PLAYER_SAVE_KEY = 'player.save';
@@ -206,6 +207,8 @@ export interface PlayerSaveSnapshot {
     openingPhase?: string;
     /** 免費入學令已發放的最大登入日（YYYY-MM-DD，ITM-06 高水位）：只在有發過時寫入；回撥時鐘不重領（PROG-2-1374 修正） */
     enrollGrantDay?: string;
+    /** 道具取得來源紀錄（ITM-05）；選填，舊檔沒有此欄位時來源視為 UNKNOWN，版號不升 */
+    itemAcquisitionLog?: ItemAcquisitionRecord[];
     /** 玩家連勝／連敗計數（AIS-11 E-8）；後加的選填欄位，舊檔缺值視為 0；版號不升 */
     aiAdaptiveStreak?: AiAdaptiveStreak;
     /** 抽卡待補教官卡日誌（PROG-2-1004）：與扣款、入冊同批存檔，教官卡寫入後移除；舊檔沒有時讀回空陣列 */
@@ -598,6 +601,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(normalizeStartingTalisman(snapshot.startingTalisman) !== null ? { startingTalisman: normalizeStartingTalisman(snapshot.startingTalisman)! } : {}),
         ...(snapshot.familySystemUnlocked === true ? { familySystemUnlocked: true } : {}),
         ...(normalizeOpeningPhaseId(snapshot.openingPhase) !== null ? { openingPhase: normalizeOpeningPhaseId(snapshot.openingPhase)! } : {}),
+        ...(snapshot.itemAcquisitionLog !== undefined ? { itemAcquisitionLog: normalizeAcquisitionLog(snapshot.itemAcquisitionLog) } : {}),
         ...(normalizeEnrollGrantDay(snapshot.enrollGrantDay) !== null ? { enrollGrantDay: normalizeEnrollGrantDay(snapshot.enrollGrantDay)! } : {}),
         ...(snapshot.aiAdaptiveStreak !== undefined ? { aiAdaptiveStreak: normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak) } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
