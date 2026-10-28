@@ -89,6 +89,17 @@ export function createGeneralVersionDiffPanelSuite(): TestSuite {
         assert.isFalse(controller.getView().actives.diffPanel);
     });
 
+    suite.test('圖鑑 Controller：有兩版的血源帶同名血脈歸一台詞，單版血源台詞為空', () => {
+        const controller = new GeneralVersionGalleryController();
+        controller.open([v1, v2, v3, solo], new Set());
+        controller.selectBloodline('BL_LuBu');
+        assert.equals('', controller.getView().texts.sameNameLore);
+        controller.selectBloodline(bloodline);
+        const lore = controller.getView().texts.sameNameLore;
+        assert.isTrue(lore.startsWith('血脈歸一，'));
+        assert.isTrue(lore.endsWith('！'));
+    });
+
     suite.test('gallery layout 含版本差異面板所有 key，skin slot 齊全', () => {
         const layout = readJson<any>('assets/resources/ui-spec/layouts/general-version-gallery-main.json');
         const ids = new Set<string>();
