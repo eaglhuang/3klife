@@ -16,6 +16,7 @@ import type { GeneralUnit } from '../../core/models/GeneralUnit';
 
 import type { BoardRenderer } from './BoardRenderer';
 import { resolveAiDifficulty } from '../../core/systems/AiSpCharge';
+import { openingAiLogLinesOf } from '../../core/systems/AiEntranceLines';
 
 export interface BattleSceneFlowContext {
   getCtrl(): BattleController | null;
@@ -119,6 +120,7 @@ export class BattleSceneFlow {
     const battleLogPanel = this.ctx.getBattleLogPanel();
     battleLogPanel?.clear();
     battleLogPanel?.append(`重新開始：第 ${snap.turn} 回合，糧草 ${snap.playerFood}`);
+    for (const line of openingAiLogLinesOf(egId, eg.name, difficulty)) battleLogPanel?.append(line);
     this.presentSceneGambitFeedback();
     this.ctx.getBoardRenderer()?.setDeployHintFaction(Faction.Player);
 
