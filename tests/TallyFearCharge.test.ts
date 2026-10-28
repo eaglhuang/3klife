@@ -3,7 +3,7 @@
  */
 import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { applyFearCharge, tallyHealsAllies, tallySplashTargetsOf } from '../assets/scripts/battle/shared/TallyPassive';
+import { applyFearCharge, tallyGeneralGuardOf, tallyHealsAllies, tallySplashTargetsOf } from '../assets/scripts/battle/shared/TallyPassive';
 import { MORALE_DURATION_TURNS } from '../assets/scripts/battle/shared/Morale';
 import { TestSuite, assert } from './TestRunner';
 
@@ -77,6 +77,15 @@ export function createTallyFearChargeSuite(): TestSuite {
         const { targets, ratio } = tallySplashTargetsOf(yuanRong, target, [target, side]);
         assert.equals(0.5, ratio);
         assert.equals(1, targets.length);
+    });
+
+    suite.test('白耳替主將承傷（PROG-2-1529）：主將周圍 1 格同陣營白耳才代傷', () => {
+        const general = unitAt('g', Faction.Player, 2, 0);
+        const baiEr = unitAt('b', Faction.Player, 3, 1, 'tiger-tally-bai-er');
+        const farBaiEr = unitAt('fb', Faction.Player, 2, 3, 'tiger-tally-bai-er');
+        const enemyBaiEr = unitAt('eb', Faction.Enemy, 1, 0, 'tiger-tally-bai-er');
+        assert.equals('b', tallyGeneralGuardOf(general, [general, enemyBaiEr, farBaiEr, baiEr])?.id);
+        assert.equals(null, tallyGeneralGuardOf(general, [general, enemyBaiEr, farBaiEr]));
     });
 
     return suite;

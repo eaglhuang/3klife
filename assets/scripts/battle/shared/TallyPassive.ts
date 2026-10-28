@@ -57,6 +57,8 @@ export interface TallyPassiveSpec {
   healsAllies?: boolean;
   /** 濺射（南蠻巨型踐踏）：目標周圍 radius 格內其他敵軍受主傷害 × ratio（PROG-2-1527） */
   splash?: { radius: number; ratio: number };
+  /** 替主將承傷（白耳）：主將部隊受傷時，周圍 radius 格內的此部隊代為承受（PROG-2-1529） */
+  guardsGeneral?: { radius: number };
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -99,7 +101,7 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   // 工甲符：可穿透防禦，無視 30% 防禦（「連擊時傷害提升」需連擊來源，未做）
   'tiger-tally-gong-jia-fu': { defensePenetration: 0.3 },
   // 白耳：剋制弓兵，對弓兵傷害 ×1.5（替主將承傷、斷後防禦 ×2 未做）
-  'tiger-tally-bai-er': { damageVsTroopTypes: { types: [TroopType.Archer], multiplier: 1.5 } },
+  'tiger-tally-bai-er': { damageVsTroopTypes: { types: [TroopType.Archer], multiplier: 1.5 }, guardsGeneral: { radius: 1 } },
   // 元戎：連弩齊射，每次攻擊多打 1 下；壓制步兵，對步兵傷害 ×1.5；範圍傷害沿用濺射 1 格 50%（PROG-2-1528 暫定）
   'tiger-tally-yuan-rong': {
     extraHits: 1,
@@ -186,6 +188,17 @@ export function tallySplashTargetsOf(attacker: TroopUnit, defender: TroopUnit, u
     if (Math.max(Math.abs(other.lane - defender.lane), Math.abs(other.depth - defender.depth)) <= splash.radius) targets.push(other);
   }
   return { targets, ratio: splash.ratio };
+}
+
+/** 替主將承傷：回傳主將周圍可代為承傷的同陣營存活部隊（取第一個）；沒有時為 null */
+export function tallyGeneralGuardOf(general: TroopUnit, units: Iterable<TroopUnit>): TroopUnit | null {
+  for (const other of units) {
+    if (other === general || other.faction !== general.faction || other.isDead()) continue;
+    const guard = passiveOf(other)?.guardsGeneral;
+    if (!guard) continue;
+    if (Math.max(Math.abs(other.lane - general.lane), Math.abs(other.depth - general.depth)) <= guard.radius) return other;
+  }
+  return null;
 }
 
 /** 此部隊是否帶治療友軍被動（常山女）；沒有時為 false */
