@@ -4,6 +4,7 @@
 import {
     advanceRivalSeason, createRivalWorld, normalizeRivalWorld, type RivalWorld,
 } from '../assets/scripts/core/systems/RivalNations';
+import { BOND_FOOD_GATE } from '../assets/scripts/core/systems/RivalBonding';
 import { TestSuite, assert } from './TestRunner';
 
 const CALM = (): number => 0.99;
@@ -57,10 +58,12 @@ export function createRivalRecruitRosterSuite(): TestSuite {
     });
 
     suite.test('多季流程：糧不足時武將只留在待命池，不結緣', () => {
+        // 開局糧 300，四季後糧草仍未達門檻（季內政每季約 +220）
         let world = createRivalWorld();
-        for (let i = 0; i < 8; i++) world = advanceRivalSeason(world, CALM).world;
+        for (let i = 0; i < 4; i++) world = advanceRivalSeason(world, CALM).world;
         const lvbu = nationOf(world, 'lvbu');
-        assert.equals(4, lvbu.roster?.length ?? -1);
+        assert.isTrue((lvbu.resources?.food ?? 0) <= BOND_FOOD_GATE);
+        assert.equals(2, lvbu.roster?.length ?? -1);
         assert.equals(0, lvbu.bonds?.length ?? -1);
     });
 

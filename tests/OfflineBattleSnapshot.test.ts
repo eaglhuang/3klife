@@ -64,7 +64,8 @@ export function createOfflineBattleSnapshotSuite(): TestSuite {
     suite.test('GameSession：季度敵襲自動迎戰留快照、寫日誌指向快照、跨存讀檔保留', async () => {
         const session = new GameSession(7);
         session.enrollGenerals([hero('zhao'), hero('zhang'), hero('guan')]);
-        await session.setRivals({ ...session.rivals, nations: session.rivals.nations.map((n) => ({ ...n, atWar: true, allied: false })) });
+        // RAI-05：進攻要過 E-4 門檻（糧草 ≥ 3000），測試只驗證敵襲迎戰的接線，所以先給足糧草
+        await session.setRivals({ ...session.rivals, nations: session.rivals.nations.map((n) => ({ ...n, atWar: true, allied: false, resources: { food: 5000, gold: 5000, fame: 0, intel: 0 } })) });
         for (let i = 0; i < 60 && session.offlineBattleSnapshots.length === 0; i++) {
             await session.advanceSeason();
         }

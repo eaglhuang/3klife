@@ -6,6 +6,7 @@ import { HealSkillResolver } from './resolvers/HealSkillResolver';
 import { LinkSkillResolver } from './resolvers/LinkSkillResolver';
 import { ProjectedDamageSkillResolver } from './resolvers/ProjectedDamageSkillResolver';
 import { ResetSkillResolver } from './resolvers/ResetSkillResolver';
+import { ControlOverrideSkillResolver } from './resolvers/ControlOverrideSkillResolver';
 import { ReviveSkillResolver } from './resolvers/ReviveSkillResolver';
 import { MoraleSkillResolver } from './resolvers/MoraleSkillResolver';
 import { PushSkillResolver } from './resolvers/PushSkillResolver';
@@ -23,6 +24,7 @@ export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
     new HealSkillResolver(),
     new LinkSkillResolver(),
     new ResetSkillResolver(),
+    new ControlOverrideSkillResolver(),
     new ReviveSkillResolver(),
     new ProjectedDamageSkillResolver(),
     new MoraleSkillResolver(),

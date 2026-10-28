@@ -31,6 +31,8 @@ export interface GachaPityState {
     pullCount: number;
     /** 天命商店已兌換次數（PROG-2-1157）；0 時不寫入，舊資料視為 0 */
     destinyExchanges?: number;
+    /** 最後一次出 SSR 時的本池累計抽數（GCH-14）；沒出過或舊資料缺欄位時不寫入 */
+    lastSsrPull?: number;
 }
 
 /** 缺欄位或不合法的舊資料一律從 0 開始 */
@@ -38,7 +40,11 @@ export function normalizeGachaPity(value: unknown): GachaPityState {
     const source = value as { pullCount?: unknown; destinyExchanges?: unknown } | null | undefined;
     const pullCount = isCount(source?.pullCount) ? source!.pullCount as number : 0;
     const exchanges = isCount(source?.destinyExchanges) ? source!.destinyExchanges as number : 0;
-    return exchanges > 0 ? { pullCount, destinyExchanges: exchanges } : { pullCount };
+    const lastSsr = (source as { lastSsrPull?: unknown } | null | undefined)?.lastSsrPull;
+    const withSsr = isCount(lastSsr) && (lastSsr as number) > 0 && (lastSsr as number) <= pullCount
+        ? { pullCount, lastSsrPull: lastSsr as number }
+        : { pullCount };
+    return exchanges > 0 ? { ...withSsr, destinyExchanges: exchanges } : withSsr;
 }
 
 function isCount(value: unknown): boolean {
@@ -136,6 +142,7 @@ export function drawGeneralOnce<T>(
         throw new Error('[GachaDraw] 池內沒有可抽的武將');
     }
     const finalRarity = available.rarity;
+    const stateAfter: GachaPityState = finalRarity === 'SSR' ? { ...nextPity, lastSsrPull: nextPity.pullCount } : nextPity;
     let item: T;
     if (finalRarity === 'R') {
         item = pickFrom(pool.rOther, rng);
@@ -147,5 +154,5 @@ export function drawGeneralOnce<T>(
         else if (other.length > 0) item = pickFrom(other, rng);
         else item = pickFrom(up, rng);
     }
-    return { item, rarity: finalRarity, pityApplied, nextPity };
+    return { item, rarity: finalRarity, pityApplied, nextPity: stateAfter };
 }

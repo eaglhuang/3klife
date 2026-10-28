@@ -1768,7 +1768,8 @@ export class GameSession {
 
     /** 季度推進：勢力成長、邦交回歸；來犯的勢力用名冊前 3 強自動迎戰 */
     private _tickRivals(): AutoBattleResult[] {
-        const tick = advanceRivalSeason(this._rivals, this._random);
+        // 玩家金幣不在 GameSession 內（錢包由呼叫端持有），RAI-05 暫傳 0（暫定）
+        const tick = advanceRivalSeason(this._rivals, this._random, { troops: this._military.cityTroops, food: this._military.food, gold: 0 });
         let world = tick.world;
         const battles: AutoBattleResult[] = [];
         for (const event of tick.events) {

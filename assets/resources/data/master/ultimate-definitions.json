@@ -707,7 +707,7 @@
       "scalingStat": "int",
       "exclusive": true,
       "inheritanceGeneId": "gene_strategy",
-      "battleSkillId": null,
+      "battleSkillId": "cao-cao-ult-control",
       "family": "control-override"
     },
     {
