@@ -13,6 +13,7 @@ import { RootSkillResolver } from './resolvers/RootSkillResolver';
 import { SlowSkillResolver } from './resolvers/SlowSkillResolver';
 import { FireGodHuntSkillResolver } from './resolvers/FireGodHuntSkillResolver';
 import { FormationZoneSkillResolver } from './resolvers/FormationZoneSkillResolver';
+import { VitalityRestoreSkillResolver } from './resolvers/VitalityRestoreSkillResolver';
 
 export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
   return new BattleSkillExecutor([
@@ -23,6 +24,7 @@ export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
     new ResetSkillResolver(),
     new ProjectedDamageSkillResolver(),
     new MoraleSkillResolver(),
+    new VitalityRestoreSkillResolver(),
     new PushSkillResolver(),
     new DotSkillResolver(),
     new RootSkillResolver(),

@@ -13,13 +13,17 @@ import { gearSlotText } from '../../../core/systems/GearPageSlots';
 import { EQUIP_SLOTS, type EquipSlot } from '../../../core/systems/GeneralBackpack';
 import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
 import type { HeirloomCardView } from '../../../core/systems/HeirloomCardView';
+import { GearSlotPickController, type GearSlotPickFlowView } from '../../core/GearSlotPickController';
+import { GearPickPanelView, type GearPickClick } from './GearPickPanelView';
 
 const HEIRLOOM_CARD_NODE = 'HeirloomCard';
 
 export class CharacterDs3EquipChild extends ChildPanelBase {
     override dataSource = 'config';
     private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
-    private _onSlotTap: ((slot: EquipSlot) => void) | null = null;
+    private _gearPick: GearSlotPickController | null = null;
+    private _gearPickChanged: (() => void) | null = null;
+    private _gearPickView: GearPickPanelView | null = null;
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3EquipChild] onMount', { rootPath: CharacterDs3EquipChild.ROOT_PATH });
@@ -27,9 +31,13 @@ export class CharacterDs3EquipChild extends ChildPanelBase {
         for (const slot of EQUIP_SLOTS) this._bindSlotTap(slot);
     }
 
-    /** 註冊點擊一格時的回呼（開啟選取面板，PROG-2-1066）；沒註冊時點擊不做事。 */
-    public setSlotTapHandler(handler: ((slot: EquipSlot) => void) | null): void {
-        this._onSlotTap = handler;
+    /**
+     * 綁定寶頁選取面板（PROG-2-1392）：點格位開啟面板；面板內穿戴、卸下、鎖定、分解成功後呼叫 onChanged，
+     * 由呼叫端重新套用武將資料（格位文字與倉庫狀態）。傳 null 解除綁定。
+     */
+    public setGearPick(controller: GearSlotPickController | null, onChanged: (() => void) | null): void {
+        this._gearPick = controller;
+        this._gearPickChanged = onChanged;
     }
 
     /** 每格的文字節點本身就是點擊區；節點沒有 Button 時補一個（與 GeneralDetailSkillsChild 相同做法）。 */
@@ -37,7 +45,36 @@ export class CharacterDs3EquipChild extends ChildPanelBase {
         const label = this.binder.getLabel(`EquipSlot_${slot}`);
         if (!label) return;
         const button = label.node.getComponent(Button) ?? label.node.addComponent(Button);
-        button.node.on(Button.EventType.CLICK, () => this._onSlotTap?.(slot), this);
+        button.node.on(Button.EventType.CLICK, () => this._openGearPick(slot), this);
+    }
+
+    private _openGearPick(slot: EquipSlot): void {
+        if (!this._gearPick) return;
+        this._gearPick.open(slot);
+        this._renderGearPick();
+    }
+
+    private _onGearPickClick(kind: GearPickClick, index: number): void {
+        const controller = this._gearPick;
+        if (!controller) return;
+        let changed = false;
+        if (kind === 'pick') changed = controller.choose(index)?.ok === true;
+        else if (kind === 'unequip') changed = controller.unequip()?.ok === true;
+        else if (kind === 'manage') controller.toggleManage();
+        else if (kind === 'lock') controller.toggleLockSelected();
+        else if (kind === 'decompose') changed = controller.decomposeSelected()?.ok === true;
+        else controller.close();
+        this._renderGearPick();
+        if (changed) this._gearPickChanged?.();
+    }
+
+    private _renderGearPick(): void {
+        if (!this._gearPick) return;
+        if (!this._gearPickView) {
+            this._gearPickView = new GearPickPanelView(this.hostNode, (kind, index) => this._onGearPickClick(kind, index));
+        }
+        const view: GearSlotPickFlowView = this._gearPick.getFlowView();
+        this._gearPickView.render(view);
     }
 
     /** 把六格一般裝備寫進具名格位節點 EquipSlot_<槽 ID>（PROG-2-1037）；節點不存在時略過。 */

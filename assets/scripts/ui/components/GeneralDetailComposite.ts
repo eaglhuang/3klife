@@ -10,6 +10,8 @@ import {
     type GeneralDetailOverviewContentState,
 } from './GeneralDetailOverviewMapper';
 import { GeneralDetailChromePresenter, TAB_ORDER, OPTIONAL_TABS, DS3_TAB_BUTTON_NODE, type TabKey } from './character-ds3/GeneralDetailChromePresenter';
+import { CharacterDs3EquipChild } from './character-ds3/CharacterDs3EquipChild';
+import { GearSlotPickController } from '../core/GearSlotPickController';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { CocosCompositeRenderer } from '../platform/cocos/CocosCompositeRenderer';
 import { UIVariantRouter } from '../core/UIVariantRouter';
@@ -305,8 +307,23 @@ export class GeneralDetailComposite extends CompositePanel {
         }
 
         const created = this._chrome.createDs3Child(tab, slotNode, binder, this.skinResolver);
+        if (created instanceof CharacterDs3EquipChild) {
+            created.setGearPick(this._createGearPickController(), () => this._applyCurrentData());
+        }
         this._ds3TabChildren.set(tab, created);
         return created;
+    }
+
+    /** 寶頁選取面板的流程：寫入一律經 GameSession（PROG-2-1392）。 */
+    private _createGearPickController(): GearSlotPickController {
+        return new GearSlotPickController({
+            records: () => services().session.inventoryRecords,
+            generalUid: () => this._currentConfig?.id ?? '',
+            equip: (gearUid, generalUid, slotId) => services().session.equipGear(gearUid, generalUid, slotId),
+            unequip: (generalUid, slotId) => services().session.unequipGear(generalUid, slotId),
+            setLocked: (gearUid, locked) => services().session.setInventoryLocked(gearUid, locked),
+            decompose: (gearUid) => services().session.decomposeGear(gearUid),
+        });
     }
 
     private _syncDs3TabVisualState(): void {

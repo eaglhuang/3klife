@@ -451,6 +451,7 @@ export class GeneralDetailChromePresenter {
 
         const payload: SpiritFamilyOverviewOpenPayload = {
             origin: 'general-detail',
+            generalId: this.host.currentConfig()?.id,
             generalName: this.host.currentConfig()?.name,
             branchUid: spiritFamilyState.activeBranchUid ?? undefined,
             entryLabel: spiritFamilyState.entryLabel,
