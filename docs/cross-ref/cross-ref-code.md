@@ -435,7 +435,7 @@
 | DataCatalog.ts | doc_tech_0009 | 概: L0 資料目錄，啟動時載入 generals-index.json |
 | DataPageLoader.ts | doc_tech_0009 | 概: 分頁查詢器，L1–L5 分層載入 |
 | GeneralSearch.ts | doc_tech_0009 | 概: 武將全文搜索（IndexedDB 查詢 + JS 過濾）|
-| SchemaMigration.ts | doc_tech_0009 | 概: 資料 Schema 版本控制與漸進式遷移機制 |
+| SchemaMigration.ts | doc_tech_0009 | 已退役（PROG-2-1373）：與 SaveVersion 重複，存檔遷移改用 SaveVersion |
 | DataMounts.ts | doc_tech_0013 | 概: Root Save 的 `Data.*` 頂層掛載點骨架（純邏輯，不依賴 cc） |
 | MemoryStorageAdapter.ts | doc_tech_0013 | 概: 記憶體版 DataStorageAdapter |
 | SaveVersion.ts | doc_tech_0012, doc_tech_0013 | 概: 存檔的 semver 版號、逐版遷移鏈與規格 envelope（純邏輯，不依賴 cc） |
