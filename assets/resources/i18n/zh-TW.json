@@ -577,5 +577,12 @@
   "UI_DAILY_NEWS_EMOTION_AUTO_TASK": "得意",
   "UI_DAILY_NEWS_EMOTION_OFFLINE_SOCIAL": "開心",
   "UI_DAILY_NEWS_EMOTION_TRAINING": "淡定",
-  "UI_DAILY_NEWS_EMOTION_GOSSIP": "開心"
+  "UI_DAILY_NEWS_EMOTION_GOSSIP": "開心",
+  "ui.battle.tally.pick_target": "選武將",
+  "ui.battle.tally.target": "目標：{0}",
+  "ui.battle.tally.insert": "插卡",
+  "ui.battle.tally.stage_sigil_ignite": "祖紋亮起",
+  "ui.battle.tally.stage_beast_shadow": "靈獸虛影",
+  "ui.battle.tally.stage_spirit_face": "英靈面",
+  "ui.battle.tally.stage_army_enter": "軍勢進場"
 }
