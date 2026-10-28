@@ -32,6 +32,11 @@ export interface NarrativeSlot {
     emotion: string;
     action: string;
     result: string;
+    /** 選填：行為／結果的查表 key 與參數（PROG-2-1501）；畫面用 key＋參數取譯文，缺譯文退回 action／result（zh-TW）。 */
+    actionKey?: string;
+    actionArgs?: string[];
+    resultKey?: string;
+    resultArgs?: string[];
 }
 
 export interface DailyNewsItem extends NarrativeSlot {
@@ -73,6 +78,56 @@ export const DAILY_NEWS_COUNT = { min: 1, max: 3 } as const;
 export const DAILY_NEWS_LOG_WINDOW_MS = 24 * 60 * 60 * 1000;
 export const REVENGE_RECOVER_PCT = { min: 5, max: 20 } as const;
 export const DEFAULT_LOST_RESOURCE = '糧草';
+
+/** 日報插槽句型的 zh-TW 原文（PROG-2-1501）；{0}、{1} 為位置參數，與 zh-TW.json 的 UI_DAILY_NEWS_* 同名 key 一致。 */
+export const DAILY_NEWS_TEMPLATE = {
+    REVENGE_ACTION: '帶隊反搶昨日失去的{0}',
+    REVENGE_RESULT: '取回了 {0}% 的{1}！',
+    AUTO_TASK_ACTION: '自動幫你完成了「{0}」',
+    AUTO_TASK_RESULT: '主公日理萬機，小事就交給我吧。',
+    OFFLINE_SOCIAL_ACTION: '在路邊遇到了{0}的 {1}',
+    OFFLINE_SOCIAL_RESULT: '切磋後獲得經驗！',
+    TRAINING_ACTION: '離線期間自行練功',
+    TRAINING_RESULT: '{0} +{1}！',
+    GOSSIP_ACTION: '和{0}在營中閒聊',
+    GOSSIP_RESULT: '傳出了一則趣聞。',
+} as const;
+
+/** 情緒的查表 key；只列有 key 化的類型，其餘仍是 zh-TW（PROG-2-1501） */
+export const DAILY_NEWS_EMOTION_KEY: Partial<Readonly<Record<DailyNewsType, string>>> = {
+    REVENGE: 'UI_DAILY_NEWS_EMOTION_REVENGE',
+    AUTO_TASK: 'UI_DAILY_NEWS_EMOTION_AUTO_TASK',
+    OFFLINE_SOCIAL: 'UI_DAILY_NEWS_EMOTION_OFFLINE_SOCIAL',
+    TRAINING: 'UI_DAILY_NEWS_EMOTION_TRAINING',
+    GOSSIP: 'UI_DAILY_NEWS_EMOTION_GOSSIP',
+};
+
+/** 依序把 {0}、{1} 換成參數；參數不足時保留原佔位符 */
+function fillTemplate(template: string, args: readonly string[]): string {
+    return args.reduce((text, arg, i) => text.split(`{${i}}`).join(arg), template);
+}
+
+/** 有 key 化的插槽：文字由句型加參數組成，同時回傳 key 與參數給畫面查表 */
+function keyedNarrative(
+    character: string,
+    emotion: string,
+    prefix: 'REVENGE' | 'AUTO_TASK' | 'OFFLINE_SOCIAL' | 'TRAINING' | 'GOSSIP',
+    actionArgs: string[],
+    resultArgs: string[],
+): NarrativeSlot {
+    const actionKey = `UI_DAILY_NEWS_${prefix}_ACTION`;
+    const resultKey = `UI_DAILY_NEWS_${prefix}_RESULT`;
+    return {
+        character,
+        emotion,
+        action: fillTemplate(DAILY_NEWS_TEMPLATE[`${prefix}_ACTION`], actionArgs),
+        result: fillTemplate(DAILY_NEWS_TEMPLATE[`${prefix}_RESULT`], resultArgs),
+        actionKey,
+        actionArgs,
+        resultKey,
+        resultArgs,
+    };
+}
 
 /** 擲一次復仇取回百分比（RET-05），範圍 5~20 */
 export function rollRevengePct(random: RandomSource): number {
@@ -161,22 +216,22 @@ export function buildNarrative(
     switch (type) {
         case 'REVENGE': {
             const pct = revengePct ?? rollRevengePct(random);
-            return { character: name, emotion, action: `帶隊反搶昨日失去的${lostResource}`, result: `取回了 ${pct}% 的${lostResource}！` };
+            return keyedNarrative(name, emotion, 'REVENGE', [lostResource], [String(pct), lostResource]);
         }
         case 'AUTO_TASK':
-            return { character: name, emotion, action: `自動幫你完成了「${pick(AUTO_TASK_NAMES, random)}」`, result: '主公日理萬機，小事就交給我吧。' };
+            return keyedNarrative(name, emotion, 'AUTO_TASK', [pick(AUTO_TASK_NAMES, random)], []);
         case 'OFFLINE_SOCIAL': {
             const other = others.length > 0 ? pick(others, random).name : '無名小將';
-            return { character: name, emotion, action: `在路邊遇到了${OFFLINE_SOCIAL_OTHER_PLAYER}的 ${other}`, result: '切磋後獲得經驗！' };
+            return keyedNarrative(name, emotion, 'OFFLINE_SOCIAL', [OFFLINE_SOCIAL_OTHER_PLAYER, other], []);
         }
         case 'TRAINING': {
             const stat = pick(TRAINING_STATS, random);
             const value = intBetween(TRAINING_VALUE.min, TRAINING_VALUE.max, random);
-            return { character: name, emotion, action: '離線期間自行練功', result: `${stat} +${value}！` };
+            return keyedNarrative(name, emotion, 'TRAINING', [], [stat, String(value)]);
         }
         case 'GOSSIP': {
             const other = others.length > 0 ? pick(others, random).name : '營中眾將';
-            return { character: name, emotion, action: `和${other}在營中閒聊`, result: '傳出了一則趣聞。' };
+            return keyedNarrative(name, emotion, 'GOSSIP', [other], []);
         }
         case 'SHOPPING':
             return { character: name, emotion, action: '去市場淘寶', result: `帶回了${pick(SHOPPING_ITEMS, random)}。` };
@@ -286,12 +341,19 @@ export function normalizeDailyNewsState(raw: unknown): DailyNewsState {
     if (!raw || typeof raw !== 'object') return { lastGeneratedDay: null, lastLoginMs: null, news: [] };
     const { lastGeneratedDay, lastLoginMs, news } = raw as Partial<DailyNewsState>;
     const str = (v: unknown) => (typeof v === 'string' ? v : '');
+    const strs = (v: unknown): v is string[] => Array.isArray(v) && v.every((x) => typeof x === 'string');
     return {
         lastGeneratedDay: typeof lastGeneratedDay === 'string' && lastGeneratedDay ? lastGeneratedDay : null,
         lastLoginMs: typeof lastLoginMs === 'number' && Number.isFinite(lastLoginMs) ? lastLoginMs : null,
         news: Array.isArray(news)
             ? news.flatMap((n): StoredDailyNewsItem[] => (n && DAILY_NEWS_TYPES.includes(n.type)
-                ? [{ type: n.type, character: str(n.character), emotion: str(n.emotion), action: str(n.action), result: str(n.result), ...normalizeRevengePct(n.pct), read: n.read === true }]
+                ? [{
+                    type: n.type, character: str(n.character), emotion: str(n.emotion), action: str(n.action), result: str(n.result),
+                    ...(typeof n.actionKey === 'string' && n.actionKey ? { actionKey: n.actionKey, ...(strs(n.actionArgs) ? { actionArgs: [...n.actionArgs] } : {}) } : {}),
+                    ...(typeof n.resultKey === 'string' && n.resultKey ? { resultKey: n.resultKey, ...(strs(n.resultArgs) ? { resultArgs: [...n.resultArgs] } : {}) } : {}),
+                    ...normalizeRevengePct(n.pct),
+                    read: n.read === true,
+                }]
                 : []))
             : [],
     };
