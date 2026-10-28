@@ -565,7 +565,7 @@
       "scalingStat": "str",
       "exclusive": true,
       "inheritanceGeneId": "gene_hidden_02",
-      "battleSkillId": null,
+      "battleSkillId": "zhao-yun-immortal",
       "family": "area-burst"
     },
     {
@@ -693,7 +693,7 @@
       "scalingStat": "pol",
       "exclusive": true,
       "inheritanceGeneId": "gene_politics",
-      "battleSkillId": null,
+      "battleSkillId": "cao-cao-ult-revive",
       "family": "special-rule"
     },
     {

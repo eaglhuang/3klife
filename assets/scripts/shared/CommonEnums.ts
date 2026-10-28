@@ -84,6 +84,8 @@ export enum StatusEffect {
     Rooted = "rooted",
     Slow = "slow",
     Weak = "weak",
+    /** 無敵（白馬銀槍·不滅）：本回合結算的傷害歸零 */
+    Invincible = "invincible",
 }
 
 export enum SceneName {
