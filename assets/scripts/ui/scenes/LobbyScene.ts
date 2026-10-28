@@ -97,7 +97,7 @@ import { HALL_EMPTY_THEME_CATALOG, resolveHallTheme, type HallThemeFrame } from 
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
 import { GovernorHallController, GovernorTerritoryInfo } from '../core/GovernorHallController';
-import { BAG_ROW_SLOTS, ItemBagController } from '../core/ItemBagController';
+import { BAG_CATEGORY_TABS, BAG_ROW_SLOTS, ItemBagController } from '../core/ItemBagController';
 import { planTerritoryUpgrade } from '../../core/systems/TerritoryUpgrade';
 import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
@@ -1900,6 +1900,10 @@ export class LobbyScene extends Component {
             buttonId: `btnBagRow${index}`,
             handler: () => { this._itemBag?.select(index); this._refreshItemBag(); },
         }));
+        const categoryTabBindings = BAG_CATEGORY_TABS.map((_, index) => ({
+            buttonId: `btnBagTab${index}`,
+            handler: () => { this._itemBag?.selectCategoryTab(index); this._refreshItemBag(); },
+        }));
         this._itemBagHost = await this._mountPreviewScreenHost('ItemBagHost', 'item-bag-screen', [
             { buttonId: 'btnClose', handler: () => { this._closeItemBag(); } },
             { buttonId: 'btnBagUse', handler: () => { this._itemBag?.requestUse(); this._refreshItemBag(); } },
@@ -1908,6 +1912,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnBagPrevPage', handler: () => { this._itemBag?.turnPage(-1); this._refreshItemBag(); } },
             { buttonId: 'btnBagNextPage', handler: () => { this._itemBag?.turnPage(1); this._refreshItemBag(); } },
             ...rowBindings,
+            ...categoryTabBindings,
         ]);
         this._itemBagHost.node.active = false;
     }
