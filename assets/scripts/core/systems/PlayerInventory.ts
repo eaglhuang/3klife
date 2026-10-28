@@ -33,6 +33,7 @@ export {
     ITEM_TALLY_ESSENCE,
     ITEM_LONGEVITY_PILL,
     ITEM_WISH_SPEED_CARD,
+    ITEM_TREASURE,
 } from './ItemDef';
 
 /** 安胎藥已使用、等待下一次結緣的標記（PM 2026-10-27 裁定）：不在背包顯示，成功結緣後清除。 */

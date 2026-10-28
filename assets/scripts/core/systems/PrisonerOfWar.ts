@@ -280,6 +280,14 @@ export interface PrisonEntry {
     yieldPerSeason: { intel: number; resource: number };
 }
 
+/** 暫定：無期徒刑每位囚犯每季交出傳家寶物的機率（企劃未定，PM 暫定） */
+export const PRISON_TREASURE_DROP_RATE = 0.05;
+
+/** 無期徒刑每季傳家寶物掉落數：每位關押中的俘虜各擲一次（EQP-09） */
+export function rollPrisonTreasures(prisoners: readonly PrisonEntry[], random: () => number): number {
+    return prisoners.reduce((count, _prisoner) => count + (random() < PRISON_TREASURE_DROP_RATE ? 1 : 0), 0);
+}
+
 /** 關押中的俘虜每季產出合計 */
 export function prisonYieldOneSeason(prisoners: readonly PrisonEntry[]): { intel: number; resource: number } {
     return prisoners.reduce(
