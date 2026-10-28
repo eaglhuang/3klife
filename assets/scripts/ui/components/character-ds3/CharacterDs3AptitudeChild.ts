@@ -17,6 +17,7 @@ import { EVENT_NAMES } from '../../../core/config/Constants';
 import { buildSpiritInsertPlan, type SpiritInsertPlan, type SpiritInsertStageId } from '../../../core/systems/SpiritInsertSequence';
 import { firstUnequippedTallyUid, nextInsertTargetIndex } from '../../../core/systems/TallyInsertTarget';
 import { buildAptitudeView, type AptitudeView } from '../../../core/systems/AptitudeView';
+import { TALLY_CONFISCATE_LOYALTY_DROP } from '../../../core/systems/TigerTallyLoyalty';
 
 /** 演出各段的語系鍵（文字暫定，待企劃定稿） */
 const SPIRIT_INSERT_STAGE_KEY: Readonly<Record<SpiritInsertStageId, string>> = {
@@ -35,6 +36,9 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
     private _targetLabel: Label | null = null;
     private _sequenceNode: Node | null = null;
     private _sequenceLabel: Label | null = null;
+    private _confiscateLabel: Label | null = null;
+    /** 沒收需要二段確認：第一次點擊只顯示提示，第二次才真的沒收（HUM-05） */
+    private _confiscateArmed = false;
     private _offSpiritInserted: (() => void) | null = null;
     private _timers: ReturnType<typeof setTimeout>[] = [];
 
@@ -83,13 +87,56 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
         const confirm = this._makeLabelNode('BtnInsertConfirm', 220, 40, this.t('ui.battle.tally.insert'));
         confirm.on(Button.EventType.CLICK, () => { void this._onConfirmInsert(); });
 
+        const confiscate = this._makeLabelNode('BtnConfiscate', 220, 40, this.t('ui.general.tally.confiscate'));
+        confiscate.on(Button.EventType.CLICK, () => { void this._onConfiscateClick(); });
+        this._confiscateLabel = confiscate.getComponent(Label);
+
         this._sequenceNode = this._makeLabelNode('InsertSequence', 320, 48, '');
         this._sequenceNode.active = false;
         this._sequenceLabel = this._sequenceNode.getComponent(Label);
 
         this.hostNode.addChild(cycle);
         this.hostNode.addChild(confirm);
+        this.hostNode.addChild(confiscate);
         this.hostNode.addChild(this._sequenceNode);
+    }
+
+    /**
+     * 沒收（HUM-05）：第一次點擊彈出提示「沒收此虎符將導致 [武將] 忠誠度下降 30 點」，
+     * 第二次點擊才呼叫 GameSession.confiscateTally。目標武將沒有虎符時不做事。
+     */
+    private async _onConfiscateClick(): Promise<void> {
+        const session = services().session;
+        const target = session.roster[this._insertTargetIndex];
+        if (!target || session.tallyOf(target.id) === null) {
+            this._disarmConfiscate();
+            return;
+        }
+        if (!this._confiscateArmed) {
+            this._armConfiscate(target.name ?? target.id);
+            return;
+        }
+        this._disarmConfiscate();
+        const result = await session.confiscateTally(target.id);
+        if (!result) {
+            UCUFLogger.warn(LogCategory.LIFECYCLE, '[CharacterDs3AptitudeChild] 沒收失敗', { generalId: target.id });
+        }
+    }
+
+    private _armConfiscate(targetName: string): void {
+        this._confiscateArmed = true;
+        if (this._confiscateLabel) this._confiscateLabel.string = this.t('ui.general.tally.confiscate_confirm');
+        if (this._sequenceNode && this._sequenceLabel) {
+            this._sequenceLabel.string = this.t('ui.general.tally.confiscate_warn', targetName, String(TALLY_CONFISCATE_LOYALTY_DROP));
+            this._sequenceNode.active = true;
+        }
+    }
+
+    private _disarmConfiscate(): void {
+        if (!this._confiscateArmed) return;
+        this._confiscateArmed = false;
+        if (this._confiscateLabel) this._confiscateLabel.string = this.t('ui.general.tally.confiscate');
+        if (this._sequenceNode) this._sequenceNode.active = false;
     }
 
     private _makeLabelNode(name: string, width: number, height: number, text: string): Node {
@@ -104,6 +151,7 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
     private _onCycleTarget(): void {
         const roster = services().session.roster;
         this._insertTargetIndex = nextInsertTargetIndex(this._insertTargetIndex, roster.length);
+        this._disarmConfiscate();
         this._refreshTargetLabel();
     }
 

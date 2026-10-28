@@ -1276,7 +1276,7 @@ export class GameSession {
         if (cardUid === null) return null;
         const quality = this._tallyCards[cardUid]?.quality ?? 'R';
         const current = this._tallyLoyalty[generalId] ?? createTallyLoyaltyState(TALLY_LOYALTY_INITIAL, isGachaHero);
-        const next = applyTallyConfiscation(current, quality);
+        const next = applyTallyConfiscation(current);
         this._tallyLoyalty = { ...this._tallyLoyalty, [generalId]: next };
         if (next.loyalty < current.loyalty) this.recordPlayerLog('LOYALTY_DROP');
         this._tallyHoldings = confiscateFrom(this._tallyHoldings, generalId).state;
