@@ -69,7 +69,7 @@ export class BattleSceneFlow {
     const terrain: TerrainGrid | undefined = encounter?.terrain;
 
     const difficulty = resolveAiDifficulty(battleParams?.aiDifficulty, encounter?.difficulty);
-    const enemyScale = await loadEnemyScale(this.ctx.getCurrentEncounterId(), difficulty);
+    const enemyScale = await loadEnemyScale(this.ctx.getCurrentEncounterId(), difficulty, services().session.aiAdaptiveStreak);
 
     const pg = await createGeneral(pgId, Faction.Player);
     const eg = await createGeneral(egId, Faction.Enemy, enemyScale);
@@ -83,7 +83,7 @@ export class BattleSceneFlow {
       battleParams?.weather,
       battleParams?.battleTactic,
       difficulty,
-      enemyScale.difficulty.difficultyBonus,
+      enemyScale?.difficulty.difficultyBonus ?? 0,
     );
     // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
     const weatherSchedule = battleParams?.weatherSchedule ?? encounter?.weatherSchedule;
