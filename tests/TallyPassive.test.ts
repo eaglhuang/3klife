@@ -1,7 +1,7 @@
-import { TroopType, Faction } from '../assets/scripts/core/config/Constants';
+import { TroopType, Faction, TerrainType } from '../assets/scripts/core/config/Constants';
 import { buildTallyCardCatalog } from '../assets/scripts/core/config/TallyCardCatalog';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { applyTallyPassive, extraAttackHitsOf } from '../assets/scripts/battle/shared/TallyPassive';
+import { applyTallyPassive, extraAttackHitsOf, tallyAttackMultiplierOf, tallyTerrainMoveBonusOf } from '../assets/scripts/battle/shared/TallyPassive';
 import { BattleCombatResolver } from '../assets/scripts/battle/runtime/BattleCombatResolver';
 import { GAME_CONFIG } from '../assets/scripts/core/config/Constants';
 import { TestSuite, assert } from './TestRunner';
@@ -77,6 +77,47 @@ export function createTallyPassiveSuite(): TestSuite {
     assert.isFalse(male.isAdjacentToMaleGeneral(archer(GAME_CONFIG.GRID_DEPTH - 2)));
     const female = resolver({ gender: '女' }) as any;
     assert.isFalse(female.isAdjacentToMaleGeneral(archer(GAME_CONFIG.GRID_DEPTH - 1)));
+  });
+
+  suite.test('解煩（PROG-2-1433）：出陣移動 +2，任何地形攻擊 ×1.2', () => {
+    const unit = cavalry(1);
+    const baseMove = unit.getEffectiveMoveRange();
+    applyTallyPassive(unit, 'tiger-tally-jie-fan');
+    unit.tallyTemplateId = 'tiger-tally-jie-fan';
+    assert.equals(baseMove + 2, unit.getEffectiveMoveRange());
+    assert.equals(1.2, tallyAttackMultiplierOf(unit, TerrainType.Plain));
+    assert.equals(1.2, tallyAttackMultiplierOf(unit, TerrainType.River));
+    assert.equals(0, tallyTerrainMoveBonusOf(unit, TerrainType.Mountain));
+  });
+
+  suite.test('丹陽／吳國（PROG-2-1433）：只在山地／河道時攻擊 ×1.2、移動 +2', () => {
+    const danYang = cavalry(1);
+    const baseMove = danYang.getEffectiveMoveRange();
+    applyTallyPassive(danYang, 'tiger-tally-dan-yang');
+    danYang.tallyTemplateId = 'tiger-tally-dan-yang';
+    assert.equals(baseMove, danYang.getEffectiveMoveRange());
+    assert.equals(1.2, tallyAttackMultiplierOf(danYang, TerrainType.Mountain));
+    assert.equals(1, tallyAttackMultiplierOf(danYang, TerrainType.Plain));
+    assert.equals(2, tallyTerrainMoveBonusOf(danYang, TerrainType.Mountain));
+    assert.equals(0, tallyTerrainMoveBonusOf(danYang, TerrainType.River));
+    const wuGuo = cavalry(1);
+    wuGuo.tallyTemplateId = 'tiger-tally-wu-guo';
+    assert.equals(1.2, tallyAttackMultiplierOf(wuGuo, TerrainType.River));
+    assert.equals(1, tallyAttackMultiplierOf(wuGuo, TerrainType.Mountain));
+    assert.equals(2, tallyTerrainMoveBonusOf(wuGuo, TerrainType.River));
+  });
+
+  suite.test('攻擊乘數接進 getTallyAttackMod（PROG-2-1433）：依所站格地形', () => {
+    const unit = cavalry(1);
+    unit.tallyId = 'card-1';
+    unit.tallyTemplateId = 'tiger-tally-dan-yang';
+    const resolverOn = (terrain: TerrainType) => new BattleCombatResolver({
+      state: { units: new Map([[unit.id, unit]]), getCell: () => ({ terrain }) },
+    } as any);
+    assert.equals(1.2, resolverOn(TerrainType.Mountain).getTallyAttackMod(unit));
+    assert.equals(1, resolverOn(TerrainType.Plain).getTallyAttackMod(unit));
+    const plain = cavalry(1);
+    assert.equals(1, resolverOn(TerrainType.Mountain).getTallyAttackMod(plain));
   });
 
   return suite;
