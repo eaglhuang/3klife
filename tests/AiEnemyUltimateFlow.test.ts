@@ -20,7 +20,8 @@ import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { aiDifficultyEntryOf, parseAiDifficultyTable, type AiDifficultyEntry } from '../assets/scripts/core/systems/AiDifficultyTable';
-import { SkillSourceType } from '../assets/scripts/shared/SkillRuntimeContract';
+import { SkillSourceType, UltimateEffectFamily } from '../assets/scripts/shared/SkillRuntimeContract';
+import { seedUltimateDataForHeadless } from '../assets/scripts/battle/views/BattleSceneLoader';
 import { TestSuite, assert } from './TestRunner';
 
 const DIFFICULTY_PATH = path.join(__dirname, '..', 'assets', 'resources', 'data', 'ai-difficulty.json');
@@ -125,6 +126,27 @@ export function createAiEnemyUltimateFlowSuite(): TestSuite {
         const { ctrl } = battle(tableEntry('normal'), 4, 5);
         assert.equals(null, ctrl.chooseEnemyUltimate());
         assert.equals(0, runTurnCountingEnemyUltimates(ctrl));
+    });
+
+    suite.test('NORMAL + 敵將定點家族（SingleExecute）：沒有最優擊殺時不施放（ULT-13）', () => {
+        seedUltimateDataForHeadless([{ id: TEST_ULTIMATE_ID, name: 'test', slot: 1, unlockReincarnation: 1, ultimateFamily: UltimateEffectFamily.SingleExecute }], {});
+        try {
+            const { ctrl } = battle(tableEntry('normal'), 4);
+            assert.equals(0, runTurnCountingEnemyUltimates(ctrl));
+        } finally {
+            seedUltimateDataForHeadless([], {});
+        }
+    });
+
+    suite.test('NORMAL + 敵將定點家族（SingleExecute）：有可斬殺的玩家兵時施放一次（ULT-13）', () => {
+        seedUltimateDataForHeadless([{ id: TEST_ULTIMATE_ID, name: 'test', slot: 1, unlockReincarnation: 1, ultimateFamily: UltimateEffectFamily.SingleExecute }], {});
+        try {
+            const { ctrl, playerTroops } = battle(tableEntry('normal'), 4);
+            playerTroops[0].currentHp = 1;
+            assert.equals(1, runTurnCountingEnemyUltimates(ctrl));
+        } finally {
+            seedUltimateDataForHeadless([], {});
+        }
     });
 
     return suite;
