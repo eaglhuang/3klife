@@ -12,6 +12,7 @@
  */
 import { dailyNewsToastLines, type DailyNewsState } from '../../core/systems/DailyNewsEngine';
 import { morningReportLines, type MorningReportState } from '../../core/systems/MorningReport';
+import { dailyReportDateText, dailyReportText, type DailyReportTextLookup } from './DailyReportTexts';
 
 /** 面板每區最多列數（日報 DAILY_NEWS_COUNT.max、晨報 MORNING_REPORT_SLOTS.highTier 皆為 3） */
 export const DAILY_REPORT_MAX_LINES = 3;
@@ -29,19 +30,25 @@ export class DailyReportController {
         private readonly _morningOpening: string,
         private readonly _morning: readonly string[],
         private readonly _revengeAvailable: boolean,
+        private readonly _lookup: DailyReportTextLookup | undefined,
     ) {}
 
-    /** 擷取未讀內容；日報與晨報都沒有未讀時回 null（不開面板）。revengeAvailable：日報有復仇且有可取回的缺糧（RET-05） */
-    public static capture(news: Readonly<DailyNewsState>, morning: Readonly<MorningReportState>, date: Date, revengeAvailable = false): DailyReportController | null {
-        const [newsTitle = '', ...newsLines] = dailyNewsToastLines(news, date);
+    /**
+     * 擷取未讀內容；日報與晨報都沒有未讀時回 null（不開面板）。
+     * revengeAvailable：日報有復仇且有可取回的缺糧（RET-05）；lookup：面板文字查表（RET-06），未提供時用 zh-TW 預設。
+     */
+    public static capture(news: Readonly<DailyNewsState>, morning: Readonly<MorningReportState>, date: Date, revengeAvailable = false, lookup?: DailyReportTextLookup): DailyReportController | null {
+        // 核心的第一行是 zh-TW 標題，這裡只取日報各則，標題改由查表組出
+        const [, ...newsLines] = dailyNewsToastLines(news, date);
         const [opening = '', ...morningItems] = morningReportLines(morning);
         if (newsLines.length === 0 && morningItems.length === 0) return null;
-        return new DailyReportController(newsTitle, newsLines, opening, morningItems, revengeAvailable);
+        const newsTitle = dailyReportText(lookup, 'UI_DAILY_NEWS_TITLE', dailyReportDateText(date));
+        return new DailyReportController(newsTitle, newsLines, opening, morningItems, revengeAvailable, lookup);
     }
 
     /** 復仇取回後不再顯示按鈕（RET-05） */
     public withoutRevenge(): DailyReportController {
-        return new DailyReportController(this._newsTitle, this._news, this._morningOpening, this._morning, false);
+        return new DailyReportController(this._newsTitle, this._news, this._morningOpening, this._morning, false, this._lookup);
     }
 
     public get hasNews(): boolean {
@@ -54,12 +61,12 @@ export class DailyReportController {
 
     public getFlowView(): DailyReportFlowView {
         const texts: Record<string, string> = {
-            reportTitle: this.hasNews ? this._newsTitle : '晨報',
-            newsHeader: '三國日報',
-            morningHeader: this._morningOpening || '晨報',
-            btnOpenJournalHubLabel: '晨報派遣板 ▶',
-            btnRevengeLabel: '復仇取回 ▶',
-            btnCloseLabel: '知道了',
+            reportTitle: this.hasNews ? this._newsTitle : dailyReportText(this._lookup, 'UI_DAILY_REPORT_MORNING_TITLE'),
+            newsHeader: dailyReportText(this._lookup, 'UI_DAILY_REPORT_NEWS_HEADER'),
+            morningHeader: this._morningOpening || dailyReportText(this._lookup, 'UI_DAILY_REPORT_MORNING_TITLE'),
+            btnOpenJournalHubLabel: dailyReportText(this._lookup, 'UI_DAILY_REPORT_OPEN_HUB'),
+            btnRevengeLabel: dailyReportText(this._lookup, 'UI_DAILY_REPORT_REVENGE'),
+            btnCloseLabel: dailyReportText(this._lookup, 'UI_DAILY_REPORT_CLOSE'),
         };
         const actives: Record<string, boolean> = {
             newsHeader: this.hasNews,

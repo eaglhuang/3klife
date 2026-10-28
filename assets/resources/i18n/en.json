@@ -526,5 +526,11 @@
   "UI_JOURNAL_STORY_DISPATCH_DONE": "{0} has completed \"{1}\" and brought back {2}.",
   "UI_JOURNAL_STORY_OFFLINE_INTERACTION": "{0} and {1} got into a bit of trouble while you were away.",
   "UI_JOURNAL_STORY_OFFLINE_SUPPORT": "{0} held the line in your absence and left a battle summary.",
-  "UI_JOURNAL_STORY_LOG_REVIEW": "The scroll unfolds; past deeds stand clear before the eye."
+  "UI_JOURNAL_STORY_LOG_REVIEW": "The scroll unfolds; past deeds stand clear before the eye.",
+  "UI_DAILY_NEWS_TITLE": "Three Kingdoms Daily —— {0}",
+  "UI_DAILY_REPORT_NEWS_HEADER": "Daily News",
+  "UI_DAILY_REPORT_MORNING_TITLE": "Morning Report",
+  "UI_DAILY_REPORT_OPEN_HUB": "Morning Report & Dispatch ▶",
+  "UI_DAILY_REPORT_REVENGE": "Recover Losses ▶",
+  "UI_DAILY_REPORT_CLOSE": "Got it"
 }
