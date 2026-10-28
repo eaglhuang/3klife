@@ -13,7 +13,17 @@ import { canTargetUnderStealth, isHiddenOnTile } from '../shared/StealthTile';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
-import { extraAttackHitsOf, tallyAttackMultiplierOf, tallyDefenseMultiplierOf, tallyBackRowDamageMultiplierOf, tallyPhysicalDamageTakenOf } from '../shared/TallyPassive';
+import {
+  extraAttackHitsOf,
+  tallyAttackMultiplierOf,
+  tallyBackRowDamageMultiplierOf,
+  tallyDefenseMultiplierOf,
+  tallyDefensePenetrationOf,
+  tallyEnemyAuraAttackMultiplierOf,
+  tallyEvasionBonusOf,
+  tallyPhysicalDamageTakenOf,
+  tallyTroopTypeDamageMultiplierOf,
+} from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import { tacticTriggerRate } from '../../core/systems/TacticTriggerRate';
@@ -53,15 +63,19 @@ export class BattleCombatResolver {
   /** 部隊所在格的適性修正：取同陣營主將的兵種 / 地形 / 天氣適性（PROG-2-0071） */
   /** 虎符部隊的攻擊乘數：星級 × 同陣營在場 Set 的攻擊加成（PROG-2-0574）× 被動地形加成（PROG-2-1433）；非虎符單位恆為 1 */
   public getTallyAttackMod(unit: TroopUnit): number {
-    if (!unit.tallyId) return 1;
+    // 錦帆恐懼光環（PROG-2-1457）：周圍有帶光環的敵方虎符部隊時，任何部隊（含非虎符）攻擊下降
+    const aura = tallyEnemyAuraAttackMultiplierOf(unit, this.context.state.units.values());
+    if (!unit.tallyId) return aura;
     // 虎符被動攻擊加成（解煩／丹陽／吳國，PROG-2-1433）：依部隊所站地形判定
     const terrain = this.context.state.getCell(unit.lane, unit.depth)?.terrain ?? TerrainType.Plain;
-    return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).atkMod * tallyAttackMultiplierOf(unit, terrain);
+    return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).atkMod * tallyAttackMultiplierOf(unit, terrain) * aura;
   }
 
-  /** 部隊攻擊（物理）傷害的虎符被動乘數：攻方止啼符打後排 × 守方藤甲減傷（PROG-2-1437）；普攻、合攻、反擊共用 */
+  /** 部隊攻擊（物理）傷害的虎符被動乘數：攻方止啼符打後排 × 兵種剋制（白耳、元戎，PROG-2-1457）× 守方藤甲減傷（PROG-2-1437）；普攻、合攻、反擊共用 */
   public getTallyPhysicalDamageMod(attacker: TroopUnit, defender: TroopUnit): number {
-    return tallyBackRowDamageMultiplierOf(attacker, defender) * tallyPhysicalDamageTakenOf(defender);
+    return tallyBackRowDamageMultiplierOf(attacker, defender)
+      * tallyTroopTypeDamageMultiplierOf(attacker, defender)
+      * tallyPhysicalDamageTakenOf(defender);
   }
 
   private applyTallyPhysicalDamageMod(damage: number, attacker: TroopUnit, defender: TroopUnit): number {
@@ -224,7 +238,8 @@ export class BattleCombatResolver {
     const sceneAccuracy = tacticBehavior.getAccuracyDelta?.(attacker, this.context.state) ?? 0;
     // 林地 S 迴避 +30%（PROG-2-0788）：防守方在林地且林地適性 S 時，攻擊方命中率再 −30%
     const defenderEvasion = terrainEvasionBonusOf(defenderCell?.terrain ?? TerrainType.Plain, this.getUnitAptitude(defender).terrain);
-    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth - defenderEvasion + sceneAccuracy;
+    // 常山女迴避（PROG-2-1457）：防守方虎符迴避加成再降低命中率
+    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth - defenderEvasion - tallyEvasionBonusOf(defender) + sceneAccuracy;
     // 大霧免疫（PROG-2-0584）：大霧天氣下攻擊方有此效果時命中必中，略過擲骰
     const fogGuaranteed = isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects);
     if (!fogGuaranteed && !rollHit(attackerAccuracy, this.hitRandom)) {
@@ -237,7 +252,7 @@ export class BattleCombatResolver {
     }
 
     // 盾牆：防禦力加倍
-    const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender);
+    const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender) * (1 - tallyDefensePenetrationOf(attacker));
 
     let damage = svc.formula.calculateDamage({
       attackerAttack: attacker.getEffectiveAttack() * this.getTallyAttackMod(attacker),
@@ -329,7 +344,7 @@ export class BattleCombatResolver {
     const dCell = this.context.state.getCell(defender.lane, defender.depth);
     const baseDamage = svc.formula.calculateDamage({
       attackerAttack: helper.getEffectiveAttack() * this.getTallyAttackMod(helper),
-      defenderDefense: defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender),
+      defenderDefense: defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender) * (1 - tallyDefensePenetrationOf(helper)),
       attackerType: helper.type,
       defenderType: defender.type,
       attackerTerrain: helperCell?.terrain ?? TerrainType.Plain,
@@ -701,7 +716,7 @@ export class BattleCombatResolver {
     const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
     const counterDamage = svc.formula.calculateDamage({
       attackerAttack: Math.max(1, Math.floor(defender.getEffectiveAttack() * this.getTallyAttackMod(defender) * reaction.counterRatio)),
-      defenderDefense: attacker.getEffectiveDefense() * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker) * this.getTallyDefenseMod(attacker),
+      defenderDefense: attacker.getEffectiveDefense() * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker) * this.getTallyDefenseMod(attacker) * (1 - tallyDefensePenetrationOf(defender)),
       attackerType: defender.type,
       defenderType: attacker.type,
       attackerTerrain: defenderCell?.terrain ?? TerrainType.Plain,

@@ -1,4 +1,4 @@
-// @spec-source → 兵種（虎符）系統.md：死亡傳承虎符（白馬 / 騎射合一；解煩、丹陽、吳國數值被動 PROG-2-1433；止啼符、藤甲 PROG-2-1437；虎痴符 PROG-2-1444）
+// @spec-source → 兵種（虎符）系統.md：死亡傳承虎符（白馬 / 騎射合一；解煩、丹陽、吳國數值被動 PROG-2-1433；止啼符、藤甲 PROG-2-1437；虎痴符 PROG-2-1444；錦帆、工甲符、白耳、元戎、常山女暫定數字 PROG-2-1457）
 /**
  * TallyPassive — 虎符被動的通用掛點（不依賴 cc）
  *
@@ -8,7 +8,7 @@
  *
  * Unity 對照：ScriptableObject 上的被動欄位，部署時 Instantiate 後依資料套用到角色上。
  */
-import { Faction, GAME_CONFIG, TerrainType } from '../../core/config/Constants';
+import { Faction, GAME_CONFIG, TerrainType, TroopType } from '../../core/config/Constants';
 import type { TroopUnit } from '../../core/models/TroopUnit';
 
 /** 弓兵射程（BattleUnitSpawner 弓兵 attackRange = 2） */
@@ -36,6 +36,16 @@ export interface TallyPassiveSpec {
   physicalDamageTaken?: number;
   /** 藤甲：承受火計傷害的乘數 */
   fireDamageTaken?: number;
+  /** 恐懼光環（錦帆）：周圍 radius 格內（含斜角）敵軍部隊攻擊 × multiplier（PROG-2-1457） */
+  enemyAttackAura?: { radius: number; multiplier: number };
+  /** 穿透（工甲符）：部隊攻擊時無視目標此比例的防禦 */
+  defensePenetration?: number;
+  /** 兵種剋制（白耳剋弓、元戎壓制步兵）：目標兵種符合時部隊攻擊傷害 × multiplier */
+  damageVsTroopTypes?: { types: readonly TroopType[]; multiplier: number };
+  /** 連擊（元戎）：每次攻擊固定多打的次數 */
+  extraHits?: number;
+  /** 迴避（常山女 +30%）：攻擊此部隊的命中率減少值 */
+  evasionBonus?: number;
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -67,6 +77,22 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   'tiger-tally-teng-jia': { physicalDamageTaken: 0.5, fireDamageTaken: 3 },
   // 虎痴符（裸衣決鬥）：防禦減半，攻擊力翻倍
   'tiger-tally-hu-chi-fu': { attackMultiplier: 2, defenseMultiplier: 0.5 },
+  // 以下五條規格未寫數字，使用者裁定先用暫定數字（PROG-2-1457），調整只改這裡
+  // 錦帆：恐懼光環，周圍 1 格敵軍攻擊 ×0.8；水上（河道）移動 +1、攻擊 ×1.2
+  'tiger-tally-jin-fan': {
+    enemyAttackAura: { radius: 1, multiplier: 0.8 },
+    attackMultiplier: 1.2,
+    attackTerrains: [TerrainType.River],
+    terrainMoveBonus: { terrains: [TerrainType.River], bonus: 1 },
+  },
+  // 工甲符：可穿透防禦，無視 30% 防禦（「連擊時傷害提升」需連擊來源，未做）
+  'tiger-tally-gong-jia-fu': { defensePenetration: 0.3 },
+  // 白耳：剋制弓兵，對弓兵傷害 ×1.5（替主將承傷、斷後防禦 ×2 未做）
+  'tiger-tally-bai-er': { damageVsTroopTypes: { types: [TroopType.Archer], multiplier: 1.5 } },
+  // 元戎：連弩齊射，每次攻擊多打 1 下；壓制步兵，對步兵傷害 ×1.5（範圍傷害未做）
+  'tiger-tally-yuan-rong': { extraHits: 1, damageVsTroopTypes: { types: [TroopType.Infantry], multiplier: 1.5 } },
+  // 常山女：迴避 +30%（規格數字；治療友軍未做）
+  'tiger-tally-changshan-nu': { evasionBonus: 0.3 },
 };
 
 /** 各陣營出兵列（後排起點）：我方由 depth 0 出兵、敵方由最後一列出兵 */
@@ -91,6 +117,36 @@ export function tallyAttackMultiplierOf(unit: TroopUnit, terrain: TerrainType): 
 export function tallyTerrainMoveBonusOf(unit: TroopUnit, terrain: TerrainType): number {
   const bonus = passiveOf(unit)?.terrainMoveBonus;
   return bonus && bonus.terrains.includes(terrain) ? bonus.bonus : 0;
+}
+
+/** 恐懼光環：unit 周圍有帶光環的敵方部隊時，unit 的攻擊乘數（多個光環相乘）；沒有時為 1 */
+export function tallyEnemyAuraAttackMultiplierOf(unit: TroopUnit, units: Iterable<TroopUnit>): number {
+  let multiplier = 1;
+  for (const other of units) {
+    if (other.faction === unit.faction || other.isDead()) continue;
+    const aura = passiveOf(other)?.enemyAttackAura;
+    if (!aura) continue;
+    if (Math.max(Math.abs(other.lane - unit.lane), Math.abs(other.depth - unit.depth)) <= aura.radius) {
+      multiplier *= aura.multiplier;
+    }
+  }
+  return multiplier;
+}
+
+/** 部隊攻擊時無視目標防禦的比例；沒有此被動時為 0 */
+export function tallyDefensePenetrationOf(unit: TroopUnit): number {
+  return passiveOf(unit)?.defensePenetration ?? 0;
+}
+
+/** 兵種剋制：目標兵種符合時的傷害乘數；否則為 1 */
+export function tallyTroopTypeDamageMultiplierOf(attacker: TroopUnit, target: TroopUnit): number {
+  const spec = passiveOf(attacker)?.damageVsTroopTypes;
+  return spec && spec.types.includes(target.type) ? spec.multiplier : 1;
+}
+
+/** 攻擊此部隊的命中率減少值；沒有此被動時為 0 */
+export function tallyEvasionBonusOf(unit: TroopUnit): number {
+  return passiveOf(unit)?.evasionBonus ?? 0;
 }
 
 /** 虎符被動的防禦乘數；沒有此被動時為 1 */
@@ -138,7 +194,8 @@ export function applyTallyPassive(unit: TroopUnit, templateId: string | null): v
  * 相鄰判定由戰鬥解算端算好傳入（武將不在格子上，要看所屬陣營的主將位置）。
  */
 export function extraAttackHitsOf(unit: TroopUnit, adjacentToMaleGeneral: boolean): number {
-  const spec = unit.tallyTemplateId ? TALLY_PASSIVE_BY_TEMPLATE[unit.tallyTemplateId] : undefined;
-  if (!spec?.extraHitWhenAdjacentMale || !adjacentToMaleGeneral) return 0;
-  return spec.extraHitWhenAdjacentMale;
+  const spec = passiveOf(unit);
+  if (!spec) return 0;
+  const conditional = spec.extraHitWhenAdjacentMale && adjacentToMaleGeneral ? spec.extraHitWhenAdjacentMale : 0;
+  return (spec.extraHits ?? 0) + conditional;
 }
