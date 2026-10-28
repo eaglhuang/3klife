@@ -15,11 +15,18 @@
  */
 import { ItemUseResult } from '../../core/systems/ItemUseFlow';
 import { buildItemBagRows, ItemBagRow } from '../../core/systems/ItemBagView';
-import { type ItemCategory, itemDefOf } from '../../core/systems/ItemDef';
+import { ITEM_CATEGORIES, type ItemCategory, itemDefOf } from '../../core/systems/ItemDef';
 import { itemCount, PlayerInventory } from '../../core/systems/PlayerInventory';
 
 /** item-bag-main.json 內的列節點數＝每頁列數；超過時以上一頁／下一頁翻頁（PROG-2-1200）。 */
 export const BAG_ROW_SLOTS = 13;
+
+/** 分類頁籤（ITM-02 掛載，PROG-2-1381）：第 0 格為全部（null），之後依五大分類順序；對應 item-bag-main.json 的 btnBagTab 節點。 */
+export const BAG_CATEGORY_TABS: readonly (ItemCategory | null)[] = [null, ...ITEM_CATEGORIES];
+
+function bagTabLabel(tab: ItemCategory | null): string {
+    return tab === null ? '全部' : tab;
+}
 
 export interface ItemBagFlowView {
     texts: Record<string, string>;
@@ -64,6 +71,12 @@ export class ItemBagController {
         this._selectedId = null;
         this._pendingConfirm = false;
         this._message = '';
+    }
+
+    /** 點第 index 個分類頁籤；超出範圍不動。 */
+    public selectCategoryTab(index: number): void {
+        if (index < 0 || index >= BAG_CATEGORY_TABS.length) return;
+        this.setCategory(BAG_CATEGORY_TABS[index]);
     }
 
     /** 全部持有的道具列（只列數量大於 0 者，套用目前的分類篩選）。 */
@@ -152,6 +165,11 @@ export class ItemBagController {
         actives.btnBagUse = selected !== null && !this._pendingConfirm;
         actives.btnBagConfirm = this._pendingConfirm;
         actives.btnBagCancel = this._pendingConfirm;
+        BAG_CATEGORY_TABS.forEach((tab, index) => {
+            const current = tab === this._category;
+            texts[`bagTabLabel${index}`] = `${current ? '● ' : ''}${bagTabLabel(tab)}`;
+            actives[`btnBagTab${index}`] = true;
+        });
         return { texts, actives };
     }
 
