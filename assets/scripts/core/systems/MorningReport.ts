@@ -14,6 +14,8 @@ import type { JournalEntry } from './JournalLog';
 
 /** §G 晨報開頭 */
 export const MORNING_REPORT_OPENING = '晨鼓既響，昨夜諸事已整理成報。';
+/** 晨報開場的查表 key（PROG-2-1500），對應 zh-TW.json 的 UI_JOURNAL_STORY_MORNING_OPENING */
+export const MORNING_REPORT_OPENING_KEY = 'UI_JOURNAL_STORY_MORNING_OPENING';
 /** §F-1：官職階位達門檻給 3 則，否則 2 則 */
 export const MORNING_REPORT_SLOTS = { base: 2, highTier: 3, highTierMin: 4 } as const;
 
