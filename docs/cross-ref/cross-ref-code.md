@@ -100,7 +100,6 @@
 | DestinyPool.ts | doc_spec_0031 | 概: 宿命轉蛋的專用六人池與接新局入口，純 TS，不依賴 cc。 |
 | DestinyShop.ts | doc_spec_0042 | 概: 天命商店：大保底兌換（純邏輯，不依賴 cc） |
 | DiscoveryProgress.ts | doc_spec_0009 | 概: 玩家 discoveryLevel 的經驗值與升級（純邏輯，不依賴 cc） |
-| DiscoveryThresholds.ts | doc_spec_0009 | 概: 發現等級門檻設定的解析器（純邏輯，不依賴 cc） |
 | DispatchCatalog.ts | doc_spec_0015 | 概: 暫定派遣任務清單與派遣板列（JRN-03 第三段，PROG-2-1179） |
 | DispatchJobs.ts | doc_spec_0015 | 概: 派遣任務狀態：派遣、到期結算、冷卻（純邏輯，不依賴 cc）。 |
 | DispatchQuality.ts | doc_spec_0015 | 概: 派遣品質評分與品質區間（純邏輯，不依賴 cc）。 |
