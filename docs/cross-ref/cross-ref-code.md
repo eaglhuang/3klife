@@ -460,7 +460,6 @@
 | LeadGeneralSelectRules.ts | doc_spec_0045 | 概: 大廳「選主將」清單分頁（純邏輯，不依賴 cc） |
 | LegacyService.ts | doc_spec_0018, doc_spec_0027 | 概: 退役、死亡歸檔與季結資料生命週期的接線（純邏輯，不依賴 cc） |
 | LocalGachaService.ts | doc_spec_0042 | 概: 轉蛋的存放處（保底表與錢包，由呼叫端接到存檔）；沒有時只存在記憶體中，例如載入畫面的預覽服務。 |
-| LoreCache.ts | doc_spec_0008 | 概: 武將故事的 LRU 快取（純邏輯，不依賴 cc）。 |
 | NpcDialogueService.ts | doc_spec_0176 | 概: （無檔頭說明） |
 | NurtureService.ts | doc_spec_0026, doc_spec_0027 | 概: 培育會話管理與名冊接線（純邏輯，不依賴 cc） |
 | PlayerDeckRules.ts | doc_spec_0045 | 概: 玩家出戰卡組的純規則（不依賴 cc） |
