@@ -45,7 +45,8 @@ export function createUltimateDamageSuite(): TestSuite {
     suite.test('奧義傷害：無效輸入回 0，不猜測', () => {
         assert.equals(0, ultDamage(Number.NaN, 1, 1));
         assert.equals(0, ultDamage(200, 0, 1));
-        assert.equals(0, ultDamage(200, 6, 1));
+        // 升級等級不設上限（PROG-2-1453）：Lv 6 = 200 × 1.9
+        nearly(380, ultDamage(200, 6, 1), '升級 Lv 6');
         assert.equals(0, ultDamage(200, 1, -0.5));
         assert.equals(0, ultDamage(200, 1, Number.POSITIVE_INFINITY));
     });
@@ -73,7 +74,7 @@ export function createUltimateDamageSuite(): TestSuite {
         assert.equals(1, battleUltLevelOf(undefined));
         assert.equals(1, battleUltLevelOf(0));
         assert.equals(3, battleUltLevelOf(3.7));
-        assert.equals(5, battleUltLevelOf(9));
+        assert.equals(9, battleUltLevelOf(9));
     });
 
     return suite;
