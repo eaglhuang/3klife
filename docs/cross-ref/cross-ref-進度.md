@@ -165,17 +165,17 @@
 | 🔴 尚無 / 極少實作（<20%） | 戰法/奧義/因子爆發/AI 戰場 + 36 個「尚無實作」規格 | 36 |
 | **合計** | | **55** |
 
-#### 代碼覆蓋摘要（來自 B-1 × scripts 掃描）
+#### 代碼覆蓋摘要（來自 B-1 × scripts 掃描，PROG-2-1427 於 2026-10-28 重跑）
 
 | 項目 | 數量 |
 |---|---|
-| B-1 已記錄 `.ts` 檔 | 124 |
-| B-1 ∩ 磁碟一致（present） | 124 |
+| B-1 已記錄 `.ts` 檔 | 734 |
+| B-1 ∩ 磁碟一致（present，assets/scripts 732＋shared 2） | 734 |
 | B-1 中已消失（stale） | **0** ✅ |
-| `assets/scripts/` 尚未收錄（uncovered） | **14** ⚠️ |
-| `tests/` 測試檔數目 | 26 |
+| `assets/scripts/` 尚未收錄（uncovered） | **0** ✅ |
+| `tests/` 測試檔數目 | 826 |
 
-#### 14 個未收錄 `.ts` 分類（待補 B-1）
+#### 14 個未收錄 `.ts` 分類（2026-04-12 舊表，已全部補入）
 
 | 分類 | 主要檔案 | 數量 |
 |---|---|---|
@@ -188,7 +188,9 @@
 
 > ✅ PROG-2-1425（2026-10-28）：core/systems 311 檔補入 B-1 Core Systems 表（268 檔由 @spec-source 對應到 doc_id；14 檔出處只寫 WBS 等未登錄名稱，29 檔未標出處）。此時 B-1 收錄 452 個檔名，未收錄剩 281 個（ui/core 85、ui/components 系列約 50、battle 系列約 85 等）。
 
-> ✅ PROG-2-1426（2026-10-28）：其餘 279 檔補入 B-1（130 檔對到 doc_id、12 檔未登錄、137 檔未標出處；新增 19 個小節，如 Battle / Runtime、Battle / Skills / Resolvers、UI / Components / General-Detail）。assets/scripts 全部 .ts 檔名都已收錄。上表 14 檔與下方加權數字仍是 2026-04-12 舊值；未標出處的檔待補檔頭出處。
+> ✅ PROG-2-1426（2026-10-28）：其餘 279 檔補入 B-1（130 檔對到 doc_id、12 檔未登錄、137 檔未標出處；新增 19 個小節，如 Battle / Runtime、Battle / Skills / Resolvers、UI / Components / General-Detail）。assets/scripts 全部 .ts 檔名都已收錄。未標出處的檔待補檔頭出處。
+
+> ✅ PROG-2-1427（2026-10-28）：`rebuild-crossref.js --rebuild-progress` 改為同時掃 assets/scripts 與 shared/（原本把 shared/ 的 skill-runtime.ts、protocols.ts 誤判為已消失），重跑後代碼覆蓋摘要如上。上方加權總表（規格書實作狀態）仍是 2026-04-12 的人工判定，工具不會重算。
 
 > 上述 14 檔尚未納入 B-1 映射。建議依上表分類，優先補入「武將資料模型」一組（合計 8 檔）再接葵育/血統與 UI 面板兩組。
 
