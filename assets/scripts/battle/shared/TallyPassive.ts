@@ -69,6 +69,8 @@ export interface TallyPassiveSpec {
   deathConfusion?: { turns: number };
   /** 鷹視狼顧（狼顧符）：己方回合開始時，隨機一支血量比例 ≤ hpRatioMax 的敵軍（非主將部隊）叛變到我方（PROG-2-1572） */
   defectEachTurn?: { hpRatioMax: number };
+  /** 強擊突刺（神威符）：本回合每前進一格攻擊 +perCell，最多累計 maxCells 格（PROG-2-1573） */
+  chargeDamage?: { perCell: number; maxCells: number };
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -136,6 +138,8 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   'tiger-tally-feng-xiao-fu': { deathConfusion: { turns: 1 } },
   // 鷹視狼顧（暫定：只策反血量 ≤ 30% 的殘兵，避免每回合白拿一支滿血部隊，PROG-2-1572）
   'tiger-tally-lang-gu-fu': { defectEachTurn: { hpRatioMax: 0.3 } },
+  // 強擊突刺（暫定：每格 +15%，最多 4 格 = +60%，PROG-2-1573）
+  'tiger-tally-shen-wei-fu': { chargeDamage: { perCell: 0.15, maxCells: 4 } },
 };
 
 /** 各陣營出兵列（後排起點）：我方由 depth 0 出兵、敵方由最後一列出兵 */
@@ -151,6 +155,17 @@ function passiveOf(unit: TroopUnit): TallyPassiveSpec | undefined {
 /** 虎符被動的攻擊乘數；不在指定地形或沒有此被動時為 1 */
 export function tallyAttackMultiplierOf(unit: TroopUnit, terrain: TerrainType): number {
   const spec = passiveOf(unit);
+  return tallyTerrainAttackMultiplierOf(spec, terrain) * tallyChargeMultiplierOf(unit);
+}
+
+/** 強擊突刺：本回合前進格數 × 每格加成（有上限）；沒有此被動或沒移動時為 1 */
+export function tallyChargeMultiplierOf(unit: TroopUnit): number {
+  const charge = passiveOf(unit)?.chargeDamage;
+  if (!charge) return 1;
+  return 1 + charge.perCell * Math.min(charge.maxCells, Math.max(0, unit.chargeCells));
+}
+
+function tallyTerrainAttackMultiplierOf(spec: TallyPassiveSpec | undefined, terrain: TerrainType): number {
   if (!spec?.attackMultiplier) return 1;
   if (spec.attackTerrains && !spec.attackTerrains.includes(terrain)) return 1;
   return spec.attackMultiplier;
