@@ -240,6 +240,13 @@
       "description": "Freeform skill note or lore text",
       "bindPath": "config.skillNote"
     },
+    "equipSegments": {
+      "type": "object",
+      "required": false,
+      "fieldGroup": "equip",
+      "description": "寶頁三段資料：gear（一般裝備六槽）、heirloom（傳家寶卡）、items（道具摘要，可為 null）",
+      "bindPath": "overviewState.equipSegments"
+    },
     "troopAptitude": {
       "type": "string",
       "required": false,
