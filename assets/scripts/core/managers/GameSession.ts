@@ -122,7 +122,7 @@ import type { TigerTallyCard } from '../models/TigerTallyCard';
 import { applyBattleExpToCard, readCardStarState, tallyBattleOutcome } from '../systems/TigerTallyStar';
 import { resolveTallyBreakthrough, type TallyBreakthroughResult } from '../systems/TigerTallyBreakthrough';
 import { countGeneralBagSlots } from '../systems/BagDomain';
-import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, tallyOfGeneral, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
+import { confiscateFrom, createTallyHoldings, equipTally, onGeneralDeath, takeTallyAway, tallyOfGeneral, transferTally, unequipTally, type TallyHoldingsResult, type TallyHoldings } from '../systems/TigerTallyHoldings';
 import { deriveInventoryViews, type InventoryRecord, type InventoryViews } from '../systems/InventoryProjection';
 import { buildTallyInventoryRecords, normalizeInventoryRecords } from '../systems/InventoryRecordBridge';
 import { sweepExpiredRecords } from '../systems/ItemExpiry';
@@ -1611,7 +1611,7 @@ export class GameSession {
     public get prison(): PrisonState<GeneralConfig> {
         return {
             ...this._prison,
-            pending: this._prison.pending.map((p) => ({ record: { ...p.record }, target: { ...p.target } })),
+            pending: this._prison.pending.map((p) => ({ record: { ...p.record }, target: { ...p.target }, ...(p.tallyId ? { tallyId: p.tallyId } : {}) })),
             prisoners: this._prison.prisoners.map((p) => ({ ...p })),
         };
     }
@@ -1621,7 +1621,7 @@ export class GameSession {
      * 試用傭兵豁免、已在名冊 / 已被俘 / 已關押的武將不重複俘虜，回傳 null。
      * 勸降率以出戰主將（沒有時用名冊第一位可出戰武將）的魅力與運氣計算。
      */
-    public async capturePrisoner(target: GeneralConfig): Promise<PowRecord | null> {
+    public async capturePrisoner(target: GeneralConfig, tallyId?: string): Promise<PowRecord | null> {
         const taken = new Set([
             ...this._roster.getAll().map((g) => g.id),
             ...this._prison.pending.map((p) => p.record.targetUid),
@@ -1635,7 +1635,7 @@ export class GameSession {
             { cha: persuader?.cha ?? persuader?.stats?.cha ?? 0, luk: persuader?.luk ?? persuader?.stats?.luk ?? 0 },
         );
         if (!record) return null;
-        this._prison = { ...this._prison, pending: [...this._prison.pending, { record, target: { ...target } }] };
+        this._prison = { ...this._prison, pending: [...this._prison.pending, { record, target: { ...target }, ...(tallyId ? { tallyId } : {}) }] };
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -1681,6 +1681,20 @@ export class GameSession {
         };
         if (resolution.cityTroopsSpent > 0) {
             this._military = { ...this._military, cityTroops: Math.max(0, this._military.cityTroops - resolution.cityTroopsSpent) };
+        }
+        // 虎符轉移（POW-08 暫定）：勸降／招募成功 → 轉給俘虜；放走 → 虎符跟著他離開。沒有 tallyId 不動
+        if (pending.tallyId && (resolution.joined || resolution.released)) {
+            const moved = resolution.joined
+                ? transferTally(this._tallyHoldings, pending.tallyId, targetUid)
+                : takeTallyAway(this._tallyHoldings, pending.tallyId);
+            if (moved.ok) {
+                this._tallyHoldings = moved.state;
+                if (resolution.released) {
+                    const { [pending.tallyId]: _gone, ...rest } = this._tallyCards;
+                    this._tallyCards = rest;
+                }
+                this._syncInventoryRecords();
+            }
         }
         if (resolution.joined) {
             // 女俘虜歸入名冊時記下 CAPTIVE 來源（FEM-05 / FEM-01）
