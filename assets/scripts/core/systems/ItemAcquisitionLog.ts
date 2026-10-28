@@ -11,7 +11,8 @@
  * Unity 對照：像 Inventory 旁邊掛一條 Transaction Log，每次 Add 都寫一筆來源，數量本身仍在 Model 的字典裡。
  */
 
-export const ITEM_SOURCES = ['SHOP', 'TASK', 'DROP', 'EVENT', 'UNKNOWN'] as const;
+/** DECOMPOSE：一般裝備分解回收的材料（BAG-07，PM／QA 2026-10-28 要求明確來源，不再記 UNKNOWN） */
+export const ITEM_SOURCES = ['SHOP', 'TASK', 'DROP', 'EVENT', 'DECOMPOSE', 'UNKNOWN'] as const;
 export type ItemSource = (typeof ITEM_SOURCES)[number];
 
 /** 暫定：存檔保留的取得紀錄筆數 */

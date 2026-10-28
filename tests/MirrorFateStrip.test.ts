@@ -6,7 +6,7 @@
  * Unity 對照：6 欄 DataTable 重新 Pack 成 5 欄 ViewModel，合併欄位用 Join，原表不動。
  */
 import { assert, TestSuite } from './TestRunner';
-import { buildMirrorFateStrip, MIRROR_FATE_TITLES } from '../assets/scripts/core/systems/MirrorFateStrip';
+import { buildMirrorFateStrip, MIRROR_FATE_TITLE_KEYS } from '../assets/scripts/core/systems/MirrorFateStrip';
 import type { GeneralDetailStoryCellConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 function cells(...slots: Array<[GeneralDetailStoryCellConfig['slot'], string]>): GeneralDetailStoryCellConfig[] {
@@ -44,10 +44,11 @@ export function createMirrorFateStripSuite(): TestSuite {
         for (const cell of strip) assert.equals('', cell.body);
     });
 
-    suite.test('標題依命鏡頁節點順序固定', () => {
+    suite.test('標題為語系鍵，依命鏡頁節點順序固定', () => {
         const strip = buildMirrorFateStrip([]);
-        assert.equals(MIRROR_FATE_TITLES.join('|'), strip.map((cell) => cell.title).join('|'));
-        assert.equals(5, MIRROR_FATE_TITLES.length);
+        assert.equals(MIRROR_FATE_TITLE_KEYS.join('|'), strip.map((cell) => cell.titleKey).join('|'));
+        assert.equals(5, MIRROR_FATE_TITLE_KEYS.length);
+        assert.isTrue(MIRROR_FATE_TITLE_KEYS.every((key) => key.startsWith('ui.mirror.fate.')));
     });
 
     return suite;

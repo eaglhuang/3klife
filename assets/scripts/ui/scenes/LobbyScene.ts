@@ -139,8 +139,8 @@ import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { SolidBackground } from '../components/SolidBackground';
 import { ToastMessage } from '../components/ToastMessage';
 import { applyUIPreviewBinderState } from '../core/UIPreviewStateApplicator';
-import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPayload } from '../core/SpiritFamilyOverviewRoute';
-import { buildMirrorFateStrip, type MirrorFateCell } from '../../core/systems/MirrorFateStrip';
+import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPayload, type SpiritFamilyOverviewStoryCell } from '../core/SpiritFamilyOverviewRoute';
+import { buildMirrorFateStrip } from '../../core/systems/MirrorFateStrip';
 import { familyOverviewHotspotVisible } from '../../core/systems/FamilyOverviewHotspot';
 import { BLOODLINE_MIRROR_LOADING_TIPS_PATH, LoadingTipsContent, pickLoadingTips } from '../../core/systems/LoadingTips';
 import { provisionalTeachingSpirit } from '../../core/systems/TeachingSpiritProvisional';
@@ -4463,7 +4463,7 @@ export class LobbyScene extends Component {
     }
 
     /** 依武將 id 取 5 格命運帶；找不到武將或沒有故事條時回傳 null。 */
-    private _fateStripOf(generalId: string | undefined): MirrorFateCell[] | null {
+    private _fateStripOf(generalId: string | undefined): SpiritFamilyOverviewStoryCell[] | null {
         if (!generalId) {
             return null;
         }
@@ -4471,7 +4471,7 @@ export class LobbyScene extends Component {
         if (!config?.storyStripCells?.length) {
             return null;
         }
-        return buildMirrorFateStrip(config.storyStripCells);
+        return buildMirrorFateStrip(config.storyStripCells).map((cell) => ({ title: services().i18n.t(cell.titleKey), body: cell.body }));
     }
 
     /**
