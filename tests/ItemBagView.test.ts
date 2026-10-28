@@ -5,17 +5,21 @@
  * 數量不足回傳含商城導向的提示，足夠（含相等）回傳 null。
  */
 import { assert, TestSuite } from './TestRunner';
-import { buildItemBagRows, itemLackPrompt, UI_ITEM_LACK_KEY } from '../assets/scripts/core/systems/ItemBagView';
+import { buildItemBagRows, compareBagRows, itemLackPrompt, UI_ITEM_LACK_KEY } from '../assets/scripts/core/systems/ItemBagView';
+import { ITEM_CATEGORIES } from '../assets/scripts/core/systems/ItemDef';
 import { ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET } from '../assets/scripts/core/systems/PlayerInventory';
 
 export function createItemBagViewSuite(): TestSuite {
     const suite = new TestSuite('ItemBagView (道具背包 ITM-10)');
 
-    suite.test('列表依 ID 排序，數量取自背包，未持有顯示 0', () => {
+    suite.test('列表依分類（五大分類順序）→ 稀有度高到低 → ID 排序，數量取自背包，未持有顯示 0', () => {
         const rows = buildItemBagRows({ [ITEM_ORACLE_TOKEN]: 3 });
-        const ids = rows.map((row) => row.itemId);
-        const sorted = [...ids].sort();
-        assert.equals(sorted.join(','), ids.join(','));
+        for (let i = 1; i < rows.length; i++) {
+            const prev = rows[i - 1];
+            const next = rows[i];
+            const byCategory = ITEM_CATEGORIES.indexOf(prev.category) - ITEM_CATEGORIES.indexOf(next.category);
+            assert.isTrue(byCategory < 0 || (byCategory === 0 && (prev.rarity > next.rarity || (prev.rarity === next.rarity && prev.itemId <= next.itemId))));
+        }
         const oracle = rows.find((row) => row.itemId === ITEM_ORACLE_TOKEN);
         assert.equals(3, oracle?.count ?? -1);
         const ticket = rows.find((row) => row.itemId === ITEM_TRIAL_TICKET);
@@ -34,6 +38,16 @@ export function createItemBagViewSuite(): TestSuite {
         assert.equals(UI_ITEM_LACK_KEY, short?.key ?? '');
         assert.equals('求籤令 不足，是否前往商城？', short?.text ?? '');
         assert.isTrue(itemLackPrompt({ [ITEM_ORACLE_TOKEN]: 2 }, ITEM_ORACLE_TOKEN, 2) === null);
+    });
+
+    suite.test('稀有度高的排前面，同稀有度才比 ID（BAG-05）', () => {
+        const base = { name: '', count: 1, category: '材料' as const };
+        const rows = [
+            { ...base, itemId: 'b', rarity: 1 },
+            { ...base, itemId: 'c', rarity: 3 },
+            { ...base, itemId: 'a', rarity: 1 },
+        ].sort(compareBagRows);
+        assert.equals('c,a,b', rows.map((row) => row.itemId).join(','));
     });
 
     return suite;

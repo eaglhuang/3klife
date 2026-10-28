@@ -274,6 +274,7 @@
   "ui.ultimate.level": "奧義等級：{Level}",
   "ui.ultimate.inherited": "【家傳奧義】繼承自 {ParentName}",
   "ui.ultimate.upgrade": "奧義【{UltName}】升級至 Lv.{Level}！",
+  "ui.oracle.sage_locked": "{Name}尚未解鎖",
   "ui.vit.script.pill_used": "{0} 服下補元散，精力恢復！",
   "ui.vit.script.pregnancy_lock": "{0} 正在待產中，精力回復暫停…",
   "ui.vit.script.hint_late_bloomer": "{0} 雖然虛弱，但眼中似有異光…",

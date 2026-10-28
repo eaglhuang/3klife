@@ -261,6 +261,7 @@
   "ui.ultimate.level": "Ultimate level: {Level}",
   "ui.ultimate.inherited": "【Inherited ultimate】 from {ParentName}",
   "ui.ultimate.upgrade": "Ultimate 【{UltName}】 upgraded to Lv.{Level}!",
+  "ui.oracle.sage_locked": "{Name} is still locked.",
   "ui.vit.script.pill_used": "{0} took a Vitality Pill. Vitality restored!",
   "ui.vit.script.pregnancy_lock": "{0} is pregnant. Vitality recovery is paused…",
   "ui.vit.script.hint_late_bloomer": "{0} is frail, yet there is a strange light in their eyes…",

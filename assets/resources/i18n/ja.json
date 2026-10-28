@@ -261,6 +261,7 @@
   "ui.ultimate.level": "奥義レベル：{Level}",
   "ui.ultimate.inherited": "【家伝奥義】{ParentName}から継承",
   "ui.ultimate.upgrade": "奥義【{UltName}】がLv.{Level}に強化された！",
+  "ui.oracle.sage_locked": "{Name}はまだ解放されていません",
   "ui.vit.script.pill_used": "{0}は補元散を服用し、精力が回復した！",
   "ui.vit.script.pregnancy_lock": "{0}は懐妊中のため、精力の回復が止まっている…",
   "ui.vit.script.hint_late_bloomer": "{0}は弱っているが、その瞳には不思議な光が宿っている…",

@@ -97,7 +97,7 @@ import { HALL_EMPTY_THEME_CATALOG, resolveHallTheme, type HallThemeFrame } from 
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';
 import { GovernorHallController, GovernorTerritoryInfo } from '../core/GovernorHallController';
-import { BAG_ROW_SLOTS, ItemBagController } from '../core/ItemBagController';
+import { BAG_CATEGORY_TABS, BAG_ROW_SLOTS, ItemBagController } from '../core/ItemBagController';
 import { planTerritoryUpgrade } from '../../core/systems/TerritoryUpgrade';
 import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
@@ -140,6 +140,7 @@ import { ToastMessage } from '../components/ToastMessage';
 import { applyUIPreviewBinderState } from '../core/UIPreviewStateApplicator';
 import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPayload } from '../core/SpiritFamilyOverviewRoute';
 import { familyOverviewHotspotVisible } from '../../core/systems/FamilyOverviewHotspot';
+import { BLOODLINE_MIRROR_LOADING_TIPS_PATH, LoadingTipsContent, pickLoadingTips } from '../../core/systems/LoadingTips';
 import { provisionalTeachingSpirit } from '../../core/systems/TeachingSpiritProvisional';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
@@ -1899,6 +1900,10 @@ export class LobbyScene extends Component {
             buttonId: `btnBagRow${index}`,
             handler: () => { this._itemBag?.select(index); this._refreshItemBag(); },
         }));
+        const categoryTabBindings = BAG_CATEGORY_TABS.map((_, index) => ({
+            buttonId: `btnBagTab${index}`,
+            handler: () => { this._itemBag?.selectCategoryTab(index); this._refreshItemBag(); },
+        }));
         this._itemBagHost = await this._mountPreviewScreenHost('ItemBagHost', 'item-bag-screen', [
             { buttonId: 'btnClose', handler: () => { this._closeItemBag(); } },
             { buttonId: 'btnBagUse', handler: () => { this._itemBag?.requestUse(); this._refreshItemBag(); } },
@@ -1907,6 +1912,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnBagPrevPage', handler: () => { this._itemBag?.turnPage(-1); this._refreshItemBag(); } },
             { buttonId: 'btnBagNextPage', handler: () => { this._itemBag?.turnPage(1); this._refreshItemBag(); } },
             ...rowBindings,
+            ...categoryTabBindings,
         ]);
         this._itemBagHost.node.active = false;
     }
@@ -4208,7 +4214,9 @@ export class LobbyScene extends Component {
                 host.node.active = true;
                 this._bringNodeToFront(host.node);
                 await host.showScreen('bloodline-mirror-loading-screen');
-                this._applySpiritFamilyOverviewState(host.binder, payload as SpiritFamilyOverviewOpenPayload | undefined);
+                const overviewPayload = payload as SpiritFamilyOverviewOpenPayload | undefined;
+                this._applySpiritFamilyOverviewState(host.binder, overviewPayload);
+                await this._applyBloodlineMirrorTip(host.binder, overviewPayload);
             },
             hide: () => {
                 this._spiritFamilyOverviewHost!.node.active = false;
@@ -4444,6 +4452,32 @@ export class LobbyScene extends Component {
                 [`${basePath}/StoryTitle`]: storyCell.title,
                 [`${basePath}/StoryBody`]: storyCell.body,
             });
+        }
+    }
+
+    /**
+     * 血脈命鏡提示（PROG-2-1378，LT-03 暫接）：從 TipBody 位置抽一條提示。
+     * 暫定：payload 為 general-detail（指定已持有的武將分支）視為已持有，否則視為未持有。
+     * 讀檔失敗時保留版面原本的文字，只記 warn，不影響畫面開啟。
+     */
+    private async _applyBloodlineMirrorTip(binder: UITemplateBinder | null, payload?: SpiritFamilyOverviewOpenPayload): Promise<void> {
+        if (!binder) {
+            return;
+        }
+        try {
+            const content = await services().resource.loadJson<LoadingTipsContent>(BLOODLINE_MIRROR_LOADING_TIPS_PATH, {
+                tags: ['BloodlineMirrorLoading'],
+            });
+            const [tip] = pickLoadingTips(content, {
+                owned: payload?.origin === 'general-detail',
+                count: 1,
+                random: Math.random,
+            });
+            if (tip) {
+                binder.setTexts({ TipBody: tip });
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 血脈命鏡提示載入失敗，保留預設文字', error);
         }
     }
 

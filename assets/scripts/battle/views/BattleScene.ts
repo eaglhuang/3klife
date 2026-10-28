@@ -201,7 +201,7 @@ export class BattleScene extends Component {
 
       // 4. 從 JSON 讀取武將設定（失敗時使用預設值）
       const difficulty = resolveAiDifficulty(battleParams.aiDifficulty, encounter?.difficulty);
-      const enemyScale = await loadEnemyScale(this.currentEncounterId, difficulty);
+      const enemyScale = await loadEnemyScale(this.currentEncounterId, difficulty, services().session.aiAdaptiveStreak);
       const pg = await createGeneral(pgId, Faction.Player);
       const eg = await createGeneral(egId, Faction.Enemy, enemyScale);
       // 存為類別欄位，供 RequestGeneralQuickView 事件轉接層查詢
@@ -224,7 +224,7 @@ export class BattleScene extends Component {
         battleParams.weather,
         battleParams.battleTactic,
         difficulty,
-        enemyScale.difficulty.difficultyBonus,
+        enemyScale?.difficulty.difficultyBonus ?? 0,
       );
       if (enemyScale) this.ctrl.configureAiDifficulty(enemyScale.difficulty);
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
@@ -266,6 +266,7 @@ export class BattleScene extends Component {
       this.hud           = (hudResult.hud          ?? this.hud)         as any;
       this.resultPopup   = (hudResult.resultPopup  ?? this.resultPopup) as any;
       this.battleLogPanel   = (ensureBattleLogPanel(this.battleLogPanel, canvas) ?? this.battleLogPanel) as any;
+      if (enemyScale?.adaptiveHint) this.battleLogPanel?.append(enemyScale.adaptiveHint);
       this.battleScenePanel = (ensureBattleScenePanel(this.battleScenePanel, canvas) ?? this.battleScenePanel) as any;
       this.boardRenderer    = (ensureBoardRenderer(this.boardRenderer, this.node.scene, this.boardGapRatio, this.boardTargetDepth) ?? this.boardRenderer) as BoardRenderer;
       if (this.boardRenderer) {

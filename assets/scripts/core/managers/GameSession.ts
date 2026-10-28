@@ -29,6 +29,7 @@ import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/S
 import { buildStartingSpiritTalisman, normalizeStartingTalisman, type StartingSpiritTalisman, type TeachingSpiritInput } from '../systems/TeachingSpiritTalisman';
 import { normalizeOpeningPhaseId } from '../systems/OpeningProgress';
 import { dailyFreeEnrollCount, isNewEnrollGrantDay, normalizeEnrollGrantDay } from '../systems/DailyFreeEnroll';
+import { EMPTY_AI_ADAPTIVE_STREAK, nextAiAdaptiveStreak, normalizeAiAdaptiveStreak, type AiAdaptiveStreak } from '../systems/AiAdaptiveDifficulty';
 import { effectiveSandtableStage, normalizeUnlockHistory, recordSandtableUnlock, sandtableShortCodeOf, sandtableStageIdOf, type SandtableStageId } from '../systems/SandtableProgress';
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import { hallMissionToOfficerTask, type HallMissionOutcome } from '../systems/HallMissionSettlement';
@@ -572,6 +573,8 @@ export class GameSession {
     private _openingPhase: string | null = null;
     /** 已發放免費入學令的最大登入日（YYYY-MM-DD，高水位）；從未發過為 null（PROG-2-1374 修正，PM 裁定） */
     private _enrollGrantDay: string | null = null;
+    /** 玩家連勝／連敗計數（AIS-11 E-8）：敵方自適應縮放用；讀檔缺值為 0 */
+    private _aiAdaptiveStreak: AiAdaptiveStreak = { ...EMPTY_AI_ADAPTIVE_STREAK };
     private _military: MilitaryReserve = { ...STARTER_MILITARY };
     private _prison: PrisonState<GeneralConfig> = createPrisonState<GeneralConfig>();
     /** 來投時依 uid 查回的武將配置（generals.json）；大廳載入後由 setGeneralTemplates 注入 */
@@ -1463,6 +1466,7 @@ export class GameSession {
         this._familySystemUnlockedFlag = false;
         this._openingPhase = null;
         this._enrollGrantDay = null;
+        this._aiAdaptiveStreak = { ...EMPTY_AI_ADAPTIVE_STREAK };
         this._officerState = initialOfficerState();
         this._sandtableMarkerTerritories = [];
         this._sandtableUnlockHistory = [];
@@ -1950,6 +1954,11 @@ export class GameSession {
     /** 新玩家開場進行中的幕 id（PROG-2-1371）：讀檔後從該幕接續；開場結束為 null。 */
     public get openingPhase(): string | null {
         return this._openingPhase;
+    }
+
+    /** 玩家連勝／連敗計數（AIS-11）：回傳複本，開戰時給 loadEnemyScale 算自適應倍率。 */
+    public get aiAdaptiveStreak(): AiAdaptiveStreak {
+        return { ...this._aiAdaptiveStreak };
     }
 
     /** 記下目前開場幕（PROG-2-1371）；有存檔服務時自動存檔，關遊戲後才接得回來。 */
@@ -3522,6 +3531,10 @@ export class GameSession {
         result: BattleResult,
         options: RecordBattleOptions = {},
     ): Promise<BattleRecordResult> {
+        // 連勝連敗計數（AIS-11）：每場正式戰鬥結算一次
+        if (result === 'player-win' || result === 'enemy-win' || result === 'draw') {
+            this._aiAdaptiveStreak = nextAiAdaptiveStreak(this._aiAdaptiveStreak, result);
+        }
         // 勝利才記通關；同一關重複通關不會重複記入
         const clearedBefore = this._clearedStageIds.length;
         const beforeRoster = this._roster.getAll();
@@ -3806,8 +3819,8 @@ export class GameSession {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         if (this._pendingTerritoryLevel !== null) fields.territoryUpgradePending = this._pendingTerritoryLevel;
@@ -3836,6 +3849,7 @@ export class GameSession {
         if (this._familySystemUnlockedFlag) fields.familySystemUnlocked = true;
         if (this._openingPhase !== null) fields.openingPhase = this._openingPhase;
         if (this._enrollGrantDay !== null) fields.enrollGrantDay = this._enrollGrantDay;
+        if (this._aiAdaptiveStreak.consecutiveWins > 0 || this._aiAdaptiveStreak.consecutiveLosses > 0) fields.aiAdaptiveStreak = { ...this._aiAdaptiveStreak };
         return fields;
     }
 
@@ -3866,6 +3880,7 @@ export class GameSession {
         this._startingTalisman = normalizeStartingTalisman(snapshot.startingTalisman);
         this._openingPhase = normalizeOpeningPhaseId(snapshot.openingPhase);
         this._enrollGrantDay = normalizeEnrollGrantDay(snapshot.enrollGrantDay);
+        this._aiAdaptiveStreak = normalizeAiAdaptiveStreak(snapshot.aiAdaptiveStreak);
     }
 
     /**
