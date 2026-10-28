@@ -163,6 +163,6 @@ export class ItemBagController {
         if (count <= 0) return null;
         const def = itemDefOf(this._selectedId);
         if (!def) return null;
-        return { itemId: def.id, name: def.name, count, category: def.category };
+        return { itemId: def.id, name: def.name, count, category: def.category, rarity: def.rarity };
     }
 }
