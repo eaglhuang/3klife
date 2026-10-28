@@ -78,3 +78,25 @@ export function rushCountdown(state: Readonly<CountdownState>, now: number): Cou
 export function shouldShowResidentIcon(state: Readonly<CountdownState>, now: number): boolean {
     return countdownStatus(state, now).status === 'traveling';
 }
+
+/** 新手開場第四幕：首戰後紅顏趕來的倒數（新手引導規格 4.3，暫定 03:00:00、甄姬、可加速） */
+export const OPENING_TRAVEL_TARGET_ID = 'zhen-ji';
+export const OPENING_TRAVEL_DURATION_MS = 3 * 60 * 60 * 1000;
+
+/** 存檔讀回：欄位不合法（缺欄、目標為空、終點早於起點）回傳 null，不猜測補值（OPEN-11） */
+export function normalizeCountdownState(raw: unknown): CountdownState | null {
+    if (typeof raw !== 'object' || raw === null) return null;
+    const value = raw as Partial<Record<keyof CountdownState, unknown>>;
+    if (typeof value.targetId !== 'string' || value.targetId.length === 0) return null;
+    if (typeof value.startTimestamp !== 'number' || !Number.isFinite(value.startTimestamp)) return null;
+    if (typeof value.finishTimestamp !== 'number' || !Number.isFinite(value.finishTimestamp)) return null;
+    if (value.finishTimestamp < value.startTimestamp) return null;
+    if (typeof value.canAccelerate !== 'boolean' || typeof value.accelerated !== 'boolean') return null;
+    return {
+        targetId: value.targetId,
+        startTimestamp: value.startTimestamp,
+        finishTimestamp: value.finishTimestamp,
+        canAccelerate: value.canAccelerate,
+        accelerated: value.accelerated,
+    };
+}

@@ -44,7 +44,7 @@ import { advanceDaughtersOneYear, assignDaughterRoute, type AssignDaughterResult
 import { formatSeasonLabel, GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
 import { buildYearReport, normalizeYearAgingEvents, YearReport } from '../systems/YearReport';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
-import type { CountdownState } from '../systems/CountdownManager';
+import { normalizeCountdownState, createCountdown, OPENING_TRAVEL_DURATION_MS, OPENING_TRAVEL_TARGET_ID, type CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { ageGeneralsOneSeason, AgingEvent, isGeneralDead, RandomSource } from '../systems/GeneralAging';
 import { applyActiveLifespanToRoster, ActiveLifespanResult, preLifespanBaseline } from '../systems/LifespanWiring';
@@ -3648,9 +3648,13 @@ export class GameSession {
     }
 
     /** 第四幕紅顏已展示：記下並存檔，之後不再自動彈出 */
-    public async markOpeningRedFaceShown(): Promise<void> {
+    public async markOpeningRedFaceShown(now: number = Date.now()): Promise<void> {
         if (this._openingRedFaceShown) return;
         this._openingRedFaceShown = true;
+        // 紅顏趕來：首次展示時開始趕路倒數（OPEN-11），之後離線也照常計時
+        if (!this._countdown) {
+            this.startCountdown(createCountdown(OPENING_TRAVEL_TARGET_ID, now, OPENING_TRAVEL_DURATION_MS, true));
+        }
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -3783,7 +3787,12 @@ export class GameSession {
         // 統一物件庫列只在非空時寫入；舊檔與空狀態不多一個欄位（PROG-2-1021）
         const withInventory = this._inventoryRecords.length > 0 ? { ...withHallLog, inventoryRecords: normalizeInventoryRecords(this._inventoryRecords) } : withHallLog;
         const relationEventKeys = this.relationEvents.snapshot();
-        return { ...withInventory, ...this.lifespanSaveFields(), ...(relationEventKeys.length > 0 ? { relationEventKeys } : {}) };
+        return {
+            ...withInventory,
+            ...this.lifespanSaveFields(),
+            ...(relationEventKeys.length > 0 ? { relationEventKeys } : {}),
+            ...(this._countdown ? { countdown: { ...this._countdown } } : {}),
+        };
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
@@ -3925,7 +3934,7 @@ export class GameSession {
         this._sortiePresets = normalizeSortiePresets(snapshot.sortiePresets);
         this._breedingBirthRecords = normalizeBreedingBirthRecords(snapshot.breedingBirthRecords);
         this._travel = normalizeTravelCountdown(snapshot.travelCountdown);
-        this._countdown = null;
+        this._countdown = normalizeCountdownState(snapshot.countdown);
         const progress = normalizeDiscoveryProgress(snapshot.discoveryLevel, snapshot.discoveryExp);
         this._discoveryLevel = progress.level;
         this._discoveryExp = progress.exp;
