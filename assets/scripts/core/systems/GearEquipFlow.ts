@@ -74,3 +74,29 @@ export function unequipGear(
     );
     return { ok: true, records: next };
 }
+
+/**
+ * 退役武將的一般裝備傳給指定子嗣（EQP-07，PM 暫定）。
+ * 子嗣的格位已解鎖且為空時保留原格；否則裝備回倉庫（兩欄清為 null），不會留在沒有格位的狀態。
+ * 只處理一般裝備（Item_Type OTHER）；英靈卡與虎符不在此轉移。
+ */
+export function transferGearToHeir(
+    records: readonly InventoryRecord[],
+    fromGeneralUid: string,
+    toGeneralUid: string,
+): InventoryRecord[] {
+    const gears = records.filter((record) => record.Item_Type === 'OTHER' && record.equippedBy === fromGeneralUid);
+    let next = [...records];
+    for (const gear of gears) {
+        const slot = gear.slotId as EquipSlot | null | undefined;
+        const heirBackpack = deriveGeneralBackpack(next, toGeneralUid);
+        const slotFree = !next.some((record) =>
+            record.Item_Type === 'OTHER' && record.equippedBy === toGeneralUid && record.slotId === slot,
+        );
+        const keepSlot = !!slot && heirBackpack.unlocked.includes(slot) && slotFree;
+        next = next.map((record): InventoryRecord => record.Inventory_ID === gear.Inventory_ID
+            ? { ...record, equippedBy: keepSlot ? toGeneralUid : null, slotId: keepSlot ? slot : null }
+            : record);
+    }
+    return next;
+}
