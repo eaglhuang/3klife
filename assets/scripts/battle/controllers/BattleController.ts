@@ -278,6 +278,9 @@ export class BattleController {
     this.skillDispatcher.resetUltimateUsage();
     // 敵將 Profile 路線策略（PROG-2-1463）：沒有時 EnemyAI 隨機選路
     this.enemyAi.laneStrategy = enemyGeneral.aiLaneStrategy ?? null;
+    // 敵將 Profile 部署兵種偏好與 IQ（PROG-2-1468）：IQ 由 configureAiDifficulty 寫入
+    this.enemyAi.deployPreference = enemyGeneral.aiDeployPreference ?? null;
+    this.enemyAi.iq = null;
     this.flowStateMachine.reset();
     this.flowStateMachine.startBattle();
     this.turnManager.resetForBattle();
@@ -531,6 +534,7 @@ export class BattleController {
     this.state.aiIq = entry.aiIq;
     this.state.aiCanUseUltimate = entry.canUseUltimate;
     this.state.aiTacticIq = entry.aiIq;
+    this.enemyAi.iq = entry.aiIq;
     this.state.aiCanUseTactics = entry.canUseTactics;
     this.state.aiSpGainModifier = entry.spGainModifier;
   }

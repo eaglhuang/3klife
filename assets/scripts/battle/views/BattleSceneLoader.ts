@@ -24,7 +24,8 @@ import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
 import { cinematicProfileOf } from '../../core/systems/UltimateCinematic';
 import { TallyCardData } from '../../shared/TallyCardContract';
 import { parseAiDifficultyTable, aiDifficultyEntryOf, type AiDifficultyEntry } from '../../core/systems/AiDifficultyTable';
-import { laneStrategyOfGeneral, parseAiProfileTable, type AiLaneStrategy } from '../../core/systems/AiProfiles';
+import { deployPreferenceOfGeneral, laneStrategyOfGeneral, parseAiProfileTable, type AiLaneStrategy } from '../../core/systems/AiProfiles';
+import type { AiDeployPreference } from '../../core/systems/AiDeployTroopPick';
 import { EMPTY_AI_ADAPTIVE_STREAK, adaptiveHintOf, adaptiveScaleOf, type AiAdaptiveStreak } from '../../core/systems/AiAdaptiveDifficulty';
 import type { AiDifficulty } from '../../core/systems/AiSpCharge';
 import { scaleAiEnemyConfig } from '../../core/systems/AiStatScaling';
@@ -296,7 +297,10 @@ export async function loadEnemyScale(
  */
 export async function createGeneral(id: string, faction: Faction, enemyScale?: EnemyScaleSetting): Promise<GeneralUnit> {
   const general = await createGeneralUnit(id, faction, enemyScale);
-  if (faction === Faction.Enemy) general.aiLaneStrategy = await loadAiLaneStrategy(id);
+  if (faction === Faction.Enemy) {
+    general.aiLaneStrategy = await loadAiLaneStrategy(id);
+    general.aiDeployPreference = await loadAiDeployPreference(id);
+  }
   return general;
 }
 
@@ -306,6 +310,17 @@ export async function createGeneral(id: string, faction: Faction, enemyScale?: E
 export async function loadAiLaneStrategy(generalId: string): Promise<AiLaneStrategy | null> {
   try {
     return laneStrategyOfGeneral(parseAiProfileTable(await services().resource.loadJson<unknown>("data/ai-profiles")), generalId);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * 敵將的 Profile 部署兵種偏好（AI武將強度 E-3／E-6，PROG-2-1468）；讀不到或武將未列出時回傳 null（全兵種隨機）。
+ */
+export async function loadAiDeployPreference(generalId: string): Promise<AiDeployPreference | null> {
+  try {
+    return deployPreferenceOfGeneral(parseAiProfileTable(await services().resource.loadJson<unknown>("data/ai-profiles")), generalId);
   } catch {
     return null;
   }

@@ -150,6 +150,17 @@ export function laneStrategyOfGeneral(parsed: AiProfileParseResult, generalId: s
     return parsed.table[profileId].laneStrategy;
 }
 
+/** 武將的部署兵種偏好（E-6 → E-3，PROG-2-1468）；未列出的武將回傳 null（沿用全兵種隨機） */
+export function deployPreferenceOfGeneral(
+    parsed: AiProfileParseResult,
+    generalId: string,
+): { preferredTroops: AiTroopCode[]; preferCounter: boolean } | null {
+    const profileId = parsed.generalProfiles[generalId];
+    if (!parsed.table || !profileId) return null;
+    const tendency = parsed.table[profileId].deployTendency;
+    return { preferredTroops: [...tendency.preferredTroops], preferCounter: tendency.preferCounter };
+}
+
 /** 依 profileId 取出模板；未知代號回傳 null，不拋例外。 */
 export function aiProfileOf(table: AiProfileTable, profileId: string): AiProfile | null {
     return isProfileId(profileId) ? table[profileId] : null;
