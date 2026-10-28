@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-28 09:38 Claude：AG-42（主連通區延伸）獨立重驗通過，SHA 與 135 測試一致；發現 r40 大腿本體斷成上下兩塊，轉知 Codex 補接點時先接合。
 - 2026-10-28 09:15 Antigravity：AG-42 隱藏延伸只量主連通區與規格 v3.22 落地完成（commit a400477c7）；支援 coverageRule.extensionMeasureOn="mainComponent"，杜絕游離碎片虛增延伸；R324 r40 三項大腿延伸正確改判 FAIL（~33.6 / ~31.2 / ~39.7 px）；全量單元測試 135 tests 100% OK。
 - 2026-10-28 08:58 Claude：R327 預覽灰畫面（4.2 wasm 已確認）；離線查出 Sparkle 輸出與合併檔缺頂層 events 定義，thrust 的 hit 事件使 spine-ts 解析失敗；R329 請 Codex 補 "events": {"hit": {}} 後重試，Sparkle v15 同步修正。
 - 2026-10-28 08:46 Claude：Sparkle v14 驗收（weapon 本地 0°、hand_f ≤27.8°、translate 0、35/35）；輸出放 artifacts/art-direction/sparkle-handoff/sparkle-v14-output-42，R328 請 Codex 播放改用 v14。
