@@ -84,6 +84,12 @@ export interface TallyUnitData {
     unitName: string;
     /** 糧草費用字串（bind: tally[n].cost） */
     cost: string;
+    /** 兵種副標題（bind: tally[n].unitSub） */
+    unitSub: string;
+    /** 稀有度文字（bind: tally[n].rarity） */
+    rarity: string;
+    /** 星等字串（bind: tally[n].stars） */
+    stars: string;
 }
 
 // ─── 行動指令資料（action-command-main.json / battle.xxx）──────────────────
@@ -109,3 +115,38 @@ export interface BattleLogData {
     /** 戰鬥日誌訊息（bind: battleLog.message） */
     message: string;
 }
+
+// ─── 契約路徑清單（執行期比對用）────────────────────────────────────────────
+
+/**
+ * 所有合法的 bind 路徑；tally 以 `tally[n]` 表示 0~3 任一索引。
+ * 測試會比對 battle 系列 layout JSON 的 bind 欄位是否都在此清單內，避免新欄位漏登錄。
+ */
+export const BATTLE_BIND_PATHS: readonly string[] = Object.freeze([
+    'battleState.playerName',
+    'battleState.playerFortressHp',
+    'battleState.turnCount',
+    'battleState.food',
+    'battleState.statusMessage',
+    'battleState.enemyFortressHp',
+    'battleState.enemyName',
+    'unit.name',
+    'unit.unitSub',
+    'unit.atk',
+    'unit.def',
+    'unit.hp',
+    'unit.spd',
+    'unit.cost',
+    'unit.desc',
+    'tally[n].atk',
+    'tally[n].hp',
+    'tally[n].unitTypeBadge',
+    'tally[n].unitName',
+    'tally[n].cost',
+    'tally[n].unitSub',
+    'tally[n].rarity',
+    'tally[n].stars',
+    'battle.ultName',
+    'battle.spPct',
+    'battleLog.message',
+]);
