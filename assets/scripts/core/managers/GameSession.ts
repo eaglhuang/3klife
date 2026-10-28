@@ -244,7 +244,7 @@ import {
 } from '../systems/JournalLog';
 import type { DomesticTaskId } from '../systems/DomesticTasks';
 import { TRADE_RESOURCE_NAMES, tradeWithRival as tradeWithRivalPure, type TradeResult } from '../systems/RivalTrade';
-import { advanceRivalSeason, autoResolveBattle, createRivalWorld, generalPower, nationDef, normalizeRivalWorld, type AutoBattleResult, type BattleGeneral, type RivalWorld } from '../systems/RivalNations';
+import { advanceRivalSeason, applyEraShift, autoResolveBattle, createRivalWorld, generalPower, nationDef, normalizeRivalWorld, type AutoBattleResult, type BattleGeneral, type RivalWorld } from '../systems/RivalNations';
 import {
     defaultKeepTerritories,
     normalizeGovernanceAssignments,
@@ -1764,7 +1764,8 @@ export class GameSession {
             battles.push(battle);
             this._recordOfflineBattle(squad, event.nationId, battle, battles.length);
         }
-        this._rivals = world;
+        // RAI-12：年度天下大亂評估；玩家領土數取守城領地清單長度
+        this._rivals = applyEraShift(world, this._clock.state.totalSeasonsElapsed, this._territories.length);
         return battles;
     }
 

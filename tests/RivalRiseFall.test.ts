@@ -2,7 +2,7 @@
  * RivalRiseFall.test.ts — 他國 AI 勢力興衰與時代更迭觸發（E-9、E-10，PROG-2-1475）
  */
 import {
-    NATION_STANDING_EFFECTS, nationPowerScore, nationStandingOf, shouldEvaluateStanding, shouldTriggerEraShift,
+    NATION_STANDING_EFFECTS, nationPowerScore, nationStandingOf, shouldEvaluateStanding, shouldTriggerEraShift, strongestDomainRatioOf,
 } from '../assets/scripts/core/systems/RivalRiseFall';
 import { TestSuite, assert } from './TestRunner';
 
@@ -19,6 +19,13 @@ export function createRivalRiseFallSuite(): TestSuite {
         assert.equals('STABLE', nationStandingOf(6000));
         assert.equals('DECLINING', nationStandingOf(3000));
         assert.equals('COLLAPSING', nationStandingOf(1000));
+    });
+
+    suite.test('E-10 最強勢力領土佔比：最多者除以總和；無領土或全 0 為 0；負數夾成 0', () => {
+        assert.equals(0.9, strongestDomainRatioOf([9, 1]));
+        assert.equals(0, strongestDomainRatioOf([]));
+        assert.equals(0, strongestDomainRatioOf([0, 0]));
+        assert.equals(1, strongestDomainRatioOf([-5, 5]));
     });
 
     suite.test('E-9 等級效果與每年評估', () => {

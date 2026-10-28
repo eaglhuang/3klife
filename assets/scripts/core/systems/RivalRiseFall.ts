@@ -88,6 +88,13 @@ export interface EraShiftInput {
     readonly playerCollapseSeasons: number;
 }
 
+/** E-10 最強勢力領土佔比：所有勢力（含玩家）中領土最多者的比例；無領土時為 0 */
+export function strongestDomainRatioOf(territoryCounts: readonly number[]): number {
+    const total = territoryCounts.reduce((sum, t) => sum + Math.max(0, t), 0);
+    if (total <= 0) return 0;
+    return Math.max(0, ...territoryCounts) / total;
+}
+
 /** E-10：是否觸發天下大亂重組 */
 export function shouldTriggerEraShift(input: EraShiftInput): boolean {
     if (input.strongestDomainRatio >= ERA_SHIFT_DOMAIN_RATIO) return true;
