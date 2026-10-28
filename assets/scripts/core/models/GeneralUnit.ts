@@ -48,6 +48,7 @@ export interface GeneralBloodlineProfileConfig {
 // @spec-source → 見 docs/cross-reference-index.md
 import { Faction, TerrainType } from "../config/Constants";
 import type { HeroElement, HeroInitialRole } from './HeroBase';
+import type { AiLaneStrategy } from '../systems/AiProfiles';
 
 /**
  * 武將資料模型 — 純資料，不依賴 Cocos 節點。
@@ -97,6 +98,8 @@ export class GeneralUnit {
 
   /** 該武將提供給同陣營兵種的攻擊加成比例（例如 0.1 = +10%） */
   public readonly attackBonus: number;
+  /** AI 敵將部署的路線策略（AI武將強度 E-4／E-6，PROG-2-1463）；建立敵將時由 BattleSceneLoader 填入，null 為隨機 */
+  public aiLaneStrategy: AiLaneStrategy | null = null;
   /** 該武將擅長的地形，在此地形上額外提供防禦加成 */
   public readonly preferredTerrain: TerrainType;
   /** 擅長地形上的額外防禦加成比例 */

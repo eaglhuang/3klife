@@ -62,6 +62,8 @@ export type AiProfileTable = Readonly<Record<AiProfileId, AiProfile>>;
 export interface AiProfileParseResult {
     table: AiProfileTable | null;
     errors: string[];
+    /** E-6 武將 → Profile（generalProfiles，PROG-2-1463）；沒有此欄時為空 */
+    generalProfiles: Readonly<Record<string, AiProfileId>>;
 }
 
 function isProfileId(value: unknown): value is AiProfileId {
@@ -91,7 +93,7 @@ function checkDeployTendency(profileId: string, tendency: unknown, errors: strin
 export function parseAiProfileTable(raw: unknown): AiProfileParseResult {
     const errors: string[] = [];
     const list = (raw as { profiles?: unknown } | null)?.profiles;
-    if (!Array.isArray(list)) return { table: null, errors: ['缺少 profiles 陣列'] };
+    if (!Array.isArray(list)) return { table: null, errors: ['缺少 profiles 陣列'], generalProfiles: {} };
 
     const found = new Map<string, AiProfile>();
     for (const item of list as Partial<AiProfile>[]) {
@@ -117,10 +119,35 @@ export function parseAiProfileTable(raw: unknown): AiProfileParseResult {
     for (const id of AI_PROFILE_IDS) {
         if (!found.has(id)) errors.push(`缺少 profileId "${id}"`);
     }
-    if (errors.length > 0) return { table: null, errors };
+    const generalProfiles = parseGeneralProfiles((raw as { generalProfiles?: unknown }).generalProfiles, errors);
+    if (errors.length > 0) return { table: null, errors, generalProfiles: {} };
 
     const table = Object.fromEntries(AI_PROFILE_IDS.map((id) => [id, found.get(id)!])) as AiProfileTable;
-    return { table, errors };
+    return { table, errors, generalProfiles };
+}
+
+function parseGeneralProfiles(raw: unknown, errors: string[]): Record<string, AiProfileId> {
+    if (raw === undefined) return {};
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+        errors.push('generalProfiles 必須是物件');
+        return {};
+    }
+    const result: Record<string, AiProfileId> = {};
+    for (const [generalId, profileId] of Object.entries(raw as Record<string, unknown>)) {
+        if (!isProfileId(profileId)) {
+            errors.push(`generalProfiles.${generalId}: 未知 profileId "${String(profileId)}"`);
+            continue;
+        }
+        result[generalId] = profileId;
+    }
+    return result;
+}
+
+/** 武將的路線策略（E-6 → E-4）；未列出的武將或規格未定義路線的 Profile 回傳 null（沿用隨機） */
+export function laneStrategyOfGeneral(parsed: AiProfileParseResult, generalId: string): AiLaneStrategy | null {
+    const profileId = parsed.generalProfiles[generalId];
+    if (!parsed.table || !profileId) return null;
+    return parsed.table[profileId].laneStrategy;
 }
 
 /** 依 profileId 取出模板；未知代號回傳 null，不拋例外。 */

@@ -24,6 +24,7 @@ import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
 import { cinematicProfileOf } from '../../core/systems/UltimateCinematic';
 import { TallyCardData } from '../../shared/TallyCardContract';
 import { parseAiDifficultyTable, aiDifficultyEntryOf, type AiDifficultyEntry } from '../../core/systems/AiDifficultyTable';
+import { laneStrategyOfGeneral, parseAiProfileTable, type AiLaneStrategy } from '../../core/systems/AiProfiles';
 import { EMPTY_AI_ADAPTIVE_STREAK, adaptiveHintOf, adaptiveScaleOf, type AiAdaptiveStreak } from '../../core/systems/AiAdaptiveDifficulty';
 import type { AiDifficulty } from '../../core/systems/AiSpCharge';
 import { scaleAiEnemyConfig } from '../../core/systems/AiStatScaling';
@@ -294,6 +295,23 @@ export async function loadEnemyScale(
  * Unity 對照：GeneralFactory.Create(id, faction)
  */
 export async function createGeneral(id: string, faction: Faction, enemyScale?: EnemyScaleSetting): Promise<GeneralUnit> {
+  const general = await createGeneralUnit(id, faction, enemyScale);
+  if (faction === Faction.Enemy) general.aiLaneStrategy = await loadAiLaneStrategy(id);
+  return general;
+}
+
+/**
+ * 敵將的 Profile 路線策略（AI武將強度 E-4／E-6，PROG-2-1463）；ai-profiles.json 讀不到或武將未列出時回傳 null（隨機選路）。
+ */
+export async function loadAiLaneStrategy(generalId: string): Promise<AiLaneStrategy | null> {
+  try {
+    return laneStrategyOfGeneral(parseAiProfileTable(await services().resource.loadJson<unknown>("data/ai-profiles")), generalId);
+  } catch {
+    return null;
+  }
+}
+
+async function createGeneralUnit(id: string, faction: Faction, enemyScale?: EnemyScaleSetting): Promise<GeneralUnit> {
   // 我軍主將若是名冊裡可出戰的武將（培育畢業 / 抽卡），用名冊數值（實力層、因子、戰法）建立
   if (faction === Faction.Player) {
     const rosterConfig = services().session.getBattleConfig(id, faction);

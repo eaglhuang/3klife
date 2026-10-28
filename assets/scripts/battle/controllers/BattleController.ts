@@ -273,6 +273,8 @@ export class BattleController {
     this.state.aiCanUseUltimate = false;
     this.duelFlow.resetForBattle();
     this.skillDispatcher.resetUltimateUsage();
+    // 敵將 Profile 路線策略（PROG-2-1463）：沒有時 EnemyAI 隨機選路
+    this.enemyAi.laneStrategy = enemyGeneral.aiLaneStrategy ?? null;
     this.flowStateMachine.reset();
     this.flowStateMachine.startBattle();
     this.turnManager.resetForBattle();
