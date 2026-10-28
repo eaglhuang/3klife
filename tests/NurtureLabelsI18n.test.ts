@@ -1,7 +1,7 @@
 /**
- * NurtureLabelsI18n.test.ts — 培育畫面職業／階段／標頭狀態的語系鍵 headless 測試
+ * NurtureLabelsI18n.test.ts — 培育畫面職業／階段／標頭／屬性／回合的語系鍵 headless 測試
  *
- * 鎖住：ui.nurture.career.* / phase.* / header.* 九個鍵在四個語系表內都有值；
+ * 鎖住：ui.nurture.career.* / phase.* / header.* / stat.* / round.* / fate.trait_* 等十九個鍵在四個語系表內都有值；
  * zh-TW 的值與 NurtureFlowController 內建的 zh-TW 退回文字一致（查不到鍵時畫面仍顯示原字）。
  */
 import { assert, TestSuite } from './TestRunner';
@@ -21,6 +21,16 @@ const NURTURE_LABEL_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     'ui.nurture.phase.sprint': '衝刺期',
     'ui.nurture.header.completed': '培育完成',
     'ui.nurture.header.not_enrolled': '尚未入學',
+    'ui.nurture.stat.str': '武力',
+    'ui.nurture.stat.int': '智力',
+    'ui.nurture.stat.lea': '統率',
+    'ui.nurture.stat.pol': '政治',
+    'ui.nurture.stat.cha': '魅力',
+    'ui.nurture.stat.luk': '運氣',
+    'ui.nurture.round.format': '回合 {0} / {1}',
+    'ui.nurture.round.range': '回合 {0}-{1}',
+    'ui.nurture.fate.trait_warrior': '武骨',
+    'ui.nurture.fate.trait_scholar': '文才',
 };
 
 const LOCALES = ['zh-TW', 'zh-CN', 'en', 'ja'] as const;
@@ -33,7 +43,7 @@ function localeTable(locale: string): Record<string, string> {
 export function createNurtureLabelsI18nSuite(): TestSuite {
     const suite = new TestSuite('NurtureLabelsI18n (培育畫面職業／階段／標頭語系鍵)');
 
-    suite.test('四個語系都有九個 ui.nurture 標籤鍵，且有值', () => {
+    suite.test('四個語系都有十九個 ui.nurture 標籤鍵，且有值', () => {
         for (const locale of LOCALES) {
             const table = localeTable(locale);
             for (const key of Object.keys(NURTURE_LABEL_FALLBACK_ZH_TW)) {

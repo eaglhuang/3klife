@@ -73,6 +73,22 @@ export const STAT_LABELS: Record<string, string> = {
     luk: '運氣',
 };
 
+const STAT_LABEL_KEYS: Record<string, string> = {
+    str: 'ui.nurture.stat.str',
+    int: 'ui.nurture.stat.int',
+    lea: 'ui.nurture.stat.lea',
+    pol: 'ui.nurture.stat.pol',
+    cha: 'ui.nurture.stat.cha',
+    luk: 'ui.nurture.stat.luk',
+};
+
+/** 六維屬性名走語系鍵；未知屬性原樣回傳 key（與舊行為一致） */
+export function statLabelOf(t: BreedTextLookup, statKey: string): string {
+    const fallback = STAT_LABELS[statKey] ?? statKey;
+    const key = STAT_LABEL_KEYS[statKey];
+    return key === undefined ? fallback : labelOf(t, key, fallback);
+}
+
 const PHASE_LABELS: Record<PhaseBlock, string> = {
     Foundation: '啟蒙期',
     Midterm: '發奮期',
@@ -92,9 +108,9 @@ const PHASE_LABEL_KEYS: Record<PhaseBlock, string> = {
     Sprint: 'ui.nurture.phase.sprint',
 };
 
-/** 查語系鍵；查無時（lookup 回傳鍵本身）用 fallback，避免畫面出現鍵名 */
-function labelOf(t: BreedTextLookup, key: string, fallback: string): string {
-    const text = t(key);
+/** 查語系鍵（可帶佔位參數）；查無時（lookup 回傳鍵本身）用 fallback，避免畫面出現鍵名 */
+function labelOf(t: BreedTextLookup, key: string, fallback: string, ...args: string[]): string {
+    const text = t(key, ...args);
     return text === key ? fallback : text;
 }
 
@@ -383,7 +399,8 @@ export class NurtureFlowController {
         const child = this._requireSelected();
         const { log, awakening, inspirations, session } = this._deps.nurture.train(child.id, action);
         // 因子解鎖系統 §H UI_AWAKENING：「【覺醒】{GeneName}！」
-        this._notice = awakening ? `${describeRound(log)}　【覺醒】${awakening.displayName}！` : describeRound(log);
+        const lookup = this._deps.text ?? fallbackBreedText;
+        this._notice = awakening ? `${describeRound(log, lookup)}　【覺醒】${awakening.displayName}！` : describeRound(log, lookup);
         // 教官系統 §E：靈感與羈絆觸發要讓玩家看得到（PROG-2-1096）
         const mentorNotes = describeMentorTriggers(log.synergyId, inspirations, session?.mentors ?? [], this._deps.tacticName);
         if (mentorNotes) this._notice += `　${mentorNotes}`;
@@ -564,7 +581,7 @@ export class NurtureFlowController {
             actives.reportBlock = true;
             enabled.btnDismissReport = true;
             enabled.btnViewGraduationRecord = true;
-            Object.assign(texts, buildReportTexts(this._report));
+            Object.assign(texts, buildReportTexts(this._report, this._deps.text ?? fallbackBreedText));
             return { mode: 'report', childId: child.id, texts, actives, enabled };
         }
 
@@ -593,14 +610,16 @@ export class NurtureFlowController {
                 : hasMentor
                     ? `入學將消耗 1 張入學令（本季剩 ${this._deps.nurture.admissionsLeft()} 張），帶上下方編成的教官（自有最多 ${MENTOR_DECK_SIZE} 位＋好友借用 1 位）`
                     : NO_MENTOR_HINT;
-            Object.assign(texts, buildDeckTexts(this.deck, this._deckCandidates));
+            const lookup = this._deps.text ?? fallbackBreedText;
+            Object.assign(texts, buildDeckTexts(this.deck, this._deckCandidates, lookup));
             for (let i = 0; i < MENTOR_DECK_SIZE; i++) enabled[`btnDeckSlot${i}`] = this._deckCandidates.length > 0;
-            Object.assign(texts, buildSlotTexts(child, null));
+            Object.assign(texts, buildSlotTexts(child, null, lookup));
             return { mode: 'start', childId: child.id, texts, actives, enabled };
         }
 
-        Object.assign(texts, buildSlotTexts(child, session));
-        Object.assign(texts, buildSessionTexts(session, this._notice));
+        const lookup = this._deps.text ?? fallbackBreedText;
+        Object.assign(texts, buildSlotTexts(child, session, lookup));
+        Object.assign(texts, buildSessionTexts(session, this._notice, lookup));
         enabled.btnAbandon = session.status === 'active';
         if (session.status === 'completed') {
             this._applyTacticRow(child, session, texts, actives, enabled);
@@ -699,12 +718,12 @@ function buildFateTexts(child: UnveilingGeneral, t: BreedTextLookup): Record<str
     return {
         fateName: t('ui.breed.unveil_5', child.name),
         fateAge: `${child.age ?? 5} 歲 · ${describeLifecycle(child).summary} · 開獎於第 ${(child.unveiledSeason ?? 0) + 1} 季`,
-        fateStats: UNVEILED_STAT_KEYS.map((key) => `${STAT_LABELS[key]} ${statOf(child, key)}`).join('　'),
+        fateStats: UNVEILED_STAT_KEYS.map((key) => `${statLabelOf(t, key)} ${statOf(child, key)}`).join('　'),
         fateFactors: factors.length > 0
             ? `初始因子：${factors.map((gene) => gene.displayName ?? gene.id ?? '？').join('、')}`
             : '初始因子：尚未顯現',
         fateRecommend: fateText(t, 'ui.fate.reveal', careerLabelOf(t, recommended, '')),
-        fateScript: fateText(t, 'ui.fate.script.reveal', child.name, recommended === 'Warrior' ? '武骨' : '文才', careerLabelOf(t, recommended, '')),
+        fateScript: fateText(t, 'ui.fate.script.reveal', child.name, traitOf(t, recommended), careerLabelOf(t, recommended, '')),
         fateAcceptLabel: fateText(t, 'ui.fate.accept'),
         fateDefyLabel: fateText(t, 'ui.fate.defy'),
         fateDefyHint: `逆天：成長率 ×${FATE_DEFY_GROWTH_MODIFIER}，有 ${Math.round(LATE_BLOOMER_CHANCE * 100)}% 機率大器晚成。選擇後不可更改。`,
@@ -720,22 +739,40 @@ function buildHeaderTexts(child: UnveilingGeneral, session: NurtureSession | nul
         nurturePhase: session
             ? session.status === 'completed'
                 ? labelOf(t, 'ui.nurture.header.completed', '培育完成')
-                : `${labelOf(t, PHASE_LABEL_KEYS[phase], PHASE_LABELS[phase])} · ${phaseRangeText(phase)}`
+                : `${labelOf(t, PHASE_LABEL_KEYS[phase], PHASE_LABELS[phase])} · ${phaseRangeText(phase, t)}`
             : labelOf(t, 'ui.nurture.header.not_enrolled', '尚未入學'),
-        nurtureRound: `回合 ${session ? session.round : 0} / ${NURTURE_TOTAL_ROUNDS}`,
+        nurtureRound: roundText(t, session ? session.round : 0, NURTURE_TOTAL_ROUNDS),
         nurtureGrowth: `成長率 ×${growth}`,
     };
 }
 
-function phaseRangeText(phase: PhaseBlock): string {
-    return phase === 'Foundation' ? '回合 1-12' : phase === 'Midterm' ? '回合 13-24' : '回合 25-36';
+/** 武骨／文才：依推薦職業取的特質詞，走語系鍵 */
+function traitOf(t: BreedTextLookup, recommended: string): string {
+    return recommended === 'Warrior'
+        ? labelOf(t, 'ui.nurture.fate.trait_warrior', '武骨')
+        : labelOf(t, 'ui.nurture.fate.trait_scholar', '文才');
+}
+
+function roundText(t: BreedTextLookup, round: number, total: number): string {
+    return labelOf(t, 'ui.nurture.round.format', `回合 ${round} / ${total}`, String(round), String(total));
+}
+
+const PHASE_ROUND_RANGE: Record<PhaseBlock, readonly [number, number]> = {
+    Foundation: [1, 12],
+    Midterm: [13, 24],
+    Sprint: [25, 36],
+};
+
+function phaseRangeText(phase: PhaseBlock, t: BreedTextLookup): string {
+    const [from, to] = PHASE_ROUND_RANGE[phase];
+    return labelOf(t, 'ui.nurture.round.range', `回合 ${from}-${to}`, String(from), String(to));
 }
 
 /** 五個訓練格各一行：資質 / 實力 / 站在這一格的教官 */
 const STAR_TEXT = (stars: number): string => (stars > 0 ? '★'.repeat(stars) : '☆0');
 
 /** 入場編成五格的文字：教官名、星等、擅長科目；空格提示可點選 */
-function buildDeckTexts(deck: MentorDeck, candidates: readonly MentorCard[]): Record<string, string> {
+function buildDeckTexts(deck: MentorDeck, candidates: readonly MentorCard[], t: BreedTextLookup): Record<string, string> {
     const byUid = new Map(candidates.map((card) => [card.uid, card]));
     const texts: Record<string, string> = {};
     let filled = 0;
@@ -744,7 +781,7 @@ function buildDeckTexts(deck: MentorDeck, candidates: readonly MentorCard[]): Re
         if (card) {
             filled++;
             const mentor = mentorFromCard(card);
-            texts[`deckSlotLabel${i}`] = `${card.name}\n${STAT_LABELS[mentor.specialty]}擅長 ${STAR_TEXT(mentor.stars ?? 0)}`;
+            texts[`deckSlotLabel${i}`] = `${card.name}\n${statLabelOf(t, mentor.specialty)}擅長 ${STAR_TEXT(mentor.stars ?? 0)}`;
         } else {
             texts[`deckSlotLabel${i}`] = candidates.length > 0 ? '空格\n點此選教官' : '空格';
         }
@@ -755,14 +792,14 @@ function buildDeckTexts(deck: MentorDeck, candidates: readonly MentorCard[]): Re
     return texts;
 }
 
-function buildSlotTexts(child: UnveilingGeneral, session: NurtureSession | null): Record<string, string> {
+function buildSlotTexts(child: UnveilingGeneral, session: NurtureSession | null, t: BreedTextLookup): Record<string, string> {
     const texts: Record<string, string> = {};
     for (const kind of TRAINING_KINDS) {
         const talent = session ? session.talent[kind] : statOf(child, kind);
         const prowess = session ? session.prowess[kind] : 0;
         const onSlot = session ? session.mentors.filter((m) => session.mentorSlots[m.id] === kind) : [];
         const burst = onSlot.some((m) => m.specialty === kind);
-        texts[`trainLabel_${kind}`] = `${STAT_LABELS[kind]}訓練`;
+        texts[`trainLabel_${kind}`] = `${statLabelOf(t, kind)}訓練`;
         texts[`slotStat_${kind}`] = `資質 ${talent} · 實力 ${prowess}`;
         texts[`slotMentors_${kind}`] = onSlot.length > 0
             ? `${burst ? '★爆發 ' : ''}${onSlot.map((m) => m.name).join('、')}`
@@ -771,7 +808,7 @@ function buildSlotTexts(child: UnveilingGeneral, session: NurtureSession | null)
     return texts;
 }
 
-function buildSessionTexts(session: NurtureSession, notice: string): Record<string, string> {
+function buildSessionTexts(session: NurtureSession, notice: string, t: BreedTextLookup): Record<string, string> {
     const failure = Math.round(failureRateForVigor(session.vigor) * 100);
     const last = session.log[session.log.length - 1];
     return {
@@ -782,7 +819,7 @@ function buildSessionTexts(session: NurtureSession, notice: string): Record<stri
             ? `教官：${session.mentors.map((m) => m.name).join('、')}`
             : '教官：無',
         nurtureFactors: session.negativeFactors.length > 0 ? `負面因子：${session.negativeFactors.join('、')}` : '負面因子：無',
-        nurtureLog: notice || lateBloomClueText(session.vigor, VIGOR_MAX) || (last ? describeRound(last) : '選擇本回合的訓練，或休息回復精力'),
+        nurtureLog: notice || lateBloomClueText(session.vigor, VIGOR_MAX) || (last ? describeRound(last, t) : '選擇本回合的訓練，或休息回復精力'),
     };
 }
 
@@ -805,7 +842,7 @@ export function describeMentorTriggers(
     return parts.join('　');
 }
 
-export function describeRound(log: NurtureRoundLog): string {
+export function describeRound(log: NurtureRoundLog, t: BreedTextLookup = fallbackBreedText): string {
     const head = `第 ${log.round} 回合`;
     // 受傷事件（NUR-09）：跳過回合與受傷回合的動作都不生效，不能顯示成「訓練失敗」或「+0」
     if (log.skipped) return `${head}：傷勢未癒，本回合無法行動`;
@@ -814,23 +851,23 @@ export function describeRound(log: NurtureRoundLog): string {
     if (log.action === 'rest') {
         return `${head}：休息，精力 ${log.vigorBefore} → ${log.vigorAfter}${affection}`;
     }
-    const label = STAT_LABELS[log.action];
+    const label = statLabelOf(t, log.action);
     if (!log.success) {
         return `${head}：${label}訓練失敗${log.negativeFactor ? `，獲得「${log.negativeFactor}」` : ''}${affection}`;
     }
     return `${head}：${label} +${log.statGained}，TP +${log.tpGained}${log.burst ? '（教官爆發！）' : ''}${affection}`;
 }
 
-function buildReportTexts(report: GraduationReport): Record<string, string> {
+function buildReportTexts(report: GraduationReport, t: BreedTextLookup): Record<string, string> {
     const { result } = report;
     return {
         nurtureName: `${report.name} 畢業`,
         nurturePhase: '畢業結算',
-        nurtureRound: `回合 ${NURTURE_TOTAL_ROUNDS} / ${NURTURE_TOTAL_ROUNDS}`,
+        nurtureRound: roundText(t, NURTURE_TOTAL_ROUNDS, NURTURE_TOTAL_ROUNDS),
         nurtureGrowth: '',
         reportRating: `評級 ${result.rating}`,
         reportScore: `五維評分 ${Math.round(result.ratingScore)}`,
         reportTags: result.tags.length > 0 ? `畢業標籤：${result.tags.join(' / ')}` : '畢業標籤：無',
-        reportProwess: TRAINING_KINDS.map((k: TrainingKind) => `${STAT_LABELS[k]} ${result.general.prowess?.[k] ?? 0}`).join('　'),
+        reportProwess: TRAINING_KINDS.map((k: TrainingKind) => `${statLabelOf(t, k)} ${result.general.prowess?.[k] ?? 0}`).join('　'),
     };
 }
