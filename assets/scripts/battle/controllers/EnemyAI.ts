@@ -18,7 +18,7 @@ export interface DeployDecision {
 }
 
 /** AI 可使用的兵種池（從 MVP 三兵種開始） */
-const AI_USABLE_TYPES: TroopType[] = [
+export const AI_USABLE_TYPES: TroopType[] = [
   TroopType.Cavalry,
   TroopType.Infantry,
   TroopType.Shield,
@@ -36,6 +36,8 @@ export class EnemyAI {
   public iq: AiIqLevel | null = null;
   /** Profile 部署兵種偏好（E-3，PROG-2-1468）；null 時全兵種隨機 */
   public deployPreference: AiDeployPreference | null = null;
+  /** AI 持有的虎符兵種（PROG-2-1337，AiTallyPool 配發）；可部署時優先出這些兵種，無則照舊 */
+  public tallyTroopTypes: readonly TroopType[] = [];
 
   /**
    * 根據當前棋盤狀態與可用 DP 決定本回合部署。
@@ -74,6 +76,10 @@ export class EnemyAI {
   private pickCounterType(state: BattleState, availableDp: number): TroopType | null {
     const affordable = AI_USABLE_TYPES.filter((t) => TROOP_DEPLOY_COST[t] <= availableDp);
     if (affordable.length === 0) return null;
+
+    // 持有虎符的兵種先出（PROG-2-1337）：依配發順序取第一個買得起且可用的兵種
+    const tallyType = this.tallyTroopTypes.find((t) => affordable.includes(t));
+    if (tallyType) return tallyType;
 
     // 統計玩家各兵種數量
     const counts = new Map<TroopType, number>();

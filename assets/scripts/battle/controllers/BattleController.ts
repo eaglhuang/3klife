@@ -21,7 +21,7 @@ import { BattleState, TerrainGrid } from "../models/BattleState";
 import type { BattleResult } from "../BattleTypes";
 import { detectWeatherTransition, validateWeatherSchedule, weatherForTurn, type WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import { WEATHER_ITEM_TARGET, weatherItemActiveAt, type WeatherItemId, type WeatherItemOverride } from "../../core/systems/WeatherItem";
-import { EnemyAI } from "./EnemyAI";
+import { EnemyAI, AI_USABLE_TYPES } from "./EnemyAI";
 import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
@@ -58,6 +58,7 @@ import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
 import { factorBattleEffectsOf, type FactorBattleEffectMap } from '../../core/systems/FactorTacticLinkage';
 import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
 import { buildTallyCardCatalog, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
+import { buildAiTallyPool, allocateAiTallies } from '../../core/systems/AiTallyPool';
 import { starStatMultiplier } from '../../core/systems/TigerTallyStar';
 import { applyTallyPassive } from '../shared/TallyPassive';
 import { describeActiveTallySets } from '../../core/systems/TigerTallySetBonus';
@@ -284,6 +285,7 @@ export class BattleController {
     // 敵將 Profile 部署兵種偏好與 IQ（PROG-2-1468）：IQ 由 configureAiDifficulty 寫入
     this.enemyAi.deployPreference = enemyGeneral.aiDeployPreference ?? null;
     this.enemyAi.iq = null;
+    this.enemyAi.tallyTroopTypes = [];
     this.flowStateMachine.reset();
     this.flowStateMachine.startBattle();
     this.turnManager.resetForBattle();
@@ -540,6 +542,17 @@ export class BattleController {
     this.enemyAi.iq = entry.aiIq;
     this.state.aiCanUseTactics = entry.canUseTactics;
     this.state.aiSpGainModifier = entry.spGainModifier;
+    this.allocateEnemyTallies(entry.difficultyId);
+  }
+
+  /** AI 虎符配發（PROG-2-1337）：虎符模板全表中，只留 AI 會出的兵種，依敵將適性與難度配發 */
+  private allocateEnemyTallies(difficulty: AiDifficulty): void {
+    const enemy = this.state.getGeneral(Faction.Enemy);
+    if (!enemy) return;
+    const pool = buildAiTallyPool(buildTallyCardCatalog())
+      .filter(tally => AI_USABLE_TYPES.includes(tally.troopType as TroopType));
+    const tallies = allocateAiTallies({ templateId: enemy.id, troopAptitude: enemy.troopAptitude }, pool, difficulty);
+    this.enemyAi.tallyTroopTypes = tallies.map(tally => tally.troopType as TroopType);
   }
 
   public configureSortie(input: CreateSortieInput): SortieState {
