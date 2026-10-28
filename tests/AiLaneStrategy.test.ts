@@ -1,7 +1,7 @@
 /**
  * AI 部署依 Profile 路線策略選路（AI武將強度 E-4／E-6，PROG-2-1463）headless 測試
  *
- * 覆蓋：六種策略的暫定挑線規則、同分隨機、null 隨機；
+ * 覆蓋：六種策略的挑線規則（使用者確認）、同分隨機、null 隨機；
  * ai-profiles.json 的 generalProfiles 解析與武將 → 路線策略查詢；
  * EnemyAI 依策略部署、BattleController 開戰把敵將策略交給 EnemyAI。
  */
