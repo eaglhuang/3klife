@@ -102,6 +102,7 @@ export const EVENT_NAMES = {
   GeneralSpChanged:  "general-sp-changed",
   GeneralSkillUsed:  "general-skill-used",
   LastSpurtEntered: "last-spurt-entered",
+  TallySpiritInserted: "tally-spirit-inserted",
   GeneralSkillEffect:"general-skill-effect",
   FortressDamaged:   "fortress-damaged",
   UiBackRequested:   "ui-back-requested",

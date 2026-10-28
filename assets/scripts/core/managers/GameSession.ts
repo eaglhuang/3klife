@@ -170,6 +170,7 @@ import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ADMISSION_TOKEN, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_TREASURE, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFlow';
 import { equipGear as equipGearFlow, unequipGear as unequipGearFlow, transferGearToHeir, type GearEquipResult } from '../systems/GearEquipFlow';
+import { decomposeGearRecord, setRecordLocked, type GearDecomposeResult } from '../systems/GearLockDecompose';
 import { gearDefinitionOf } from '../systems/GearDefinitions';
 import type { EquipSlot } from '../systems/GeneralBackpack';
 import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
@@ -178,7 +179,8 @@ import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSav
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
 import { useLongevityPill, type LongevityPillUseResult } from '../systems/LongevityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
-import { Faction } from '../config/Constants';
+import { EVENT_NAMES, Faction } from '../config/Constants';
+import { services } from './ServiceLoader';
 import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampaignStagePlayable } from '../config/CampaignStages';
 import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
 import { protectedAfterLoss, CELLAR_PROTECTION } from '../systems/CellarProtection';
@@ -1087,6 +1089,25 @@ export class GameSession {
         return result;
     }
 
+    /** 鎖定或解鎖一件物件庫列（BAG-07）；鎖定列不可分解，不影響穿戴 */
+    public setInventoryLocked(inventoryId: string, locked: boolean): boolean {
+        const result = setRecordLocked(this._inventoryRecords, inventoryId, locked);
+        if (result.ok) this._inventoryRecords = result.records;
+        return result.ok;
+    }
+
+    /** 分解一件未鎖定、未裝備的一般裝備（BAG-07）：移除該列並給 1 件竹簡（來源暫記 UNKNOWN） */
+    public decomposeGear(inventoryId: string): GearDecomposeResult {
+        const before = this._inventory;
+        const result = decomposeGearRecord(this._inventoryRecords, this._inventory, inventoryId);
+        if (!result.ok) return result;
+        this._inventoryRecords = result.records;
+        this._inventory = result.inventory;
+        this._recordGain(before, 'UNKNOWN');
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        return result;
+    }
+
     /** 卸下命槽英靈卡回倉庫（PROG-2-1280）；戰鬥鎖定由呼叫端傳入 */
     public unequipSpiritCard(generalUid: string, battleLocked: boolean): SpiritSlotFlowResult {
         const result = unequipSpiritCard(this._inventoryRecords, generalUid, battleLocked);
@@ -1205,8 +1226,14 @@ export class GameSession {
     /** 把君主持有的虎符裝到武將身上；武將不在名冊、虎符不存在、已被持有或武將已有虎符時回傳失敗 */
     public async equipTally(cardUid: string, generalId: string): Promise<TallyHoldingsResult | null> {
         if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        const card = this._tallyCards[cardUid];
         const result = equipTally(this._tallyHoldings, cardUid, generalId);
-        return this._commitTallyResult(result);
+        const committed = await this._commitTallyResult(result);
+        // 插卡演出（TRP-18）：紋樣 id 暫定用虎符 templateId；只有真的插上才發事件
+        if (committed.ok && card) {
+            services().event.emit(EVENT_NAMES.TallySpiritInserted, { cardUid, generalId, sigilPatternId: card.templateId });
+        }
+        return committed;
     }
 
     /**

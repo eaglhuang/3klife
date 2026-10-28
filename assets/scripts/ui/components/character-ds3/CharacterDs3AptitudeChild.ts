@@ -5,24 +5,51 @@
 //
 // CharacterDs3AptitudeChild — UCUF ChildPanel for tab "Aptitude".
 // Wire this into the CompositePanel's _switchToTab routing table.
+//
+// 插卡按鈕（TRP-18）：兵頁的虎符槽裝備段。循環選目標武將，確定後呼叫 GameSession.equipTally，
+// 成功後由 TallySpiritInserted 事件播放英靈插卡演出。按鈕建在 hostNode 下，不改 layout JSON。
 
+import { Button, Label, Node, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
+import { services } from '../../../core/managers/ServiceLoader';
+import { EVENT_NAMES } from '../../../core/config/Constants';
+import { buildSpiritInsertPlan, type SpiritInsertPlan, type SpiritInsertStageId } from '../../../core/systems/SpiritInsertSequence';
+import { firstUnequippedTallyUid, nextInsertTargetIndex } from '../../../core/systems/TallyInsertTarget';
 import { buildAptitudeView, type AptitudeView } from '../../../core/systems/AptitudeView';
+
+/** 演出各段的語系鍵（文字暫定，待企劃定稿） */
+const SPIRIT_INSERT_STAGE_KEY: Readonly<Record<SpiritInsertStageId, string>> = {
+    'sigil-ignite': 'ui.battle.tally.stage_sigil_ignite',
+    'beast-shadow': 'ui.battle.tally.stage_beast_shadow',
+    'spirit-face': 'ui.battle.tally.stage_spirit_face',
+    'army-enter': 'ui.battle.tally.stage_army_enter',
+};
 
 export class CharacterDs3AptitudeChild extends ChildPanelBase {
     override dataSource = 'config';
     private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
+
     private _view: AptitudeView = buildAptitudeView(undefined);
+    private _insertTargetIndex = 0;
+    private _targetLabel: Label | null = null;
+    private _sequenceNode: Node | null = null;
+    private _sequenceLabel: Label | null = null;
+    private _offSpiritInserted: (() => void) | null = null;
+    private _timers: ReturnType<typeof setTimeout>[] = [];
+
+    public override async onMount(_spec: Record<string, unknown>): Promise<void> {
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3AptitudeChild] onMount', { rootPath: CharacterDs3AptitudeChild.ROOT_PATH });
+        this._buildInsertControls();
+        this._offSpiritInserted = services().event.on(EVENT_NAMES.TallySpiritInserted, (data?: unknown) => {
+            this._onSpiritInserted(data);
+        });
+        this._refreshTargetLabel();
+    }
 
     /** 最後一次 onDataUpdate 整理好的兵頁資料（PROG-2-1449） */
     public get view(): AptitudeView {
         return this._view;
-    }
-
-    public override async onMount(_spec: Record<string, unknown>): Promise<void> {
-        UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3AptitudeChild] onMount', { rootPath: CharacterDs3AptitudeChild.ROOT_PATH });
-        // TODO(B-stage4): 地形／天氣適性資料、虎符槽接線、五段 layout 綁定（cc 畫面另卡）。
     }
 
     public override onDataUpdate(data: unknown): void {
@@ -37,5 +64,87 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
         return null;
     }
 
-    public override onUnmount(): void { /* no-op */ }
+    public override onUnmount(): void {
+        this._offSpiritInserted?.();
+        this._offSpiritInserted = null;
+        for (const timer of this._timers) clearTimeout(timer);
+        this._timers = [];
+        this._sequenceNode?.destroy();
+        this._sequenceNode = null;
+        this._sequenceLabel = null;
+    }
+
+    /** 建立「選武將」「插上」兩個按鈕與演出文字（執行期建立，不改 layout） */
+    private _buildInsertControls(): void {
+        const cycle = this._makeLabelNode('BtnInsertCycle', 220, 40, this.t('ui.battle.tally.pick_target'));
+        cycle.on(Button.EventType.CLICK, () => this._onCycleTarget());
+        this._targetLabel = cycle.getComponent(Label);
+
+        const confirm = this._makeLabelNode('BtnInsertConfirm', 220, 40, this.t('ui.battle.tally.insert'));
+        confirm.on(Button.EventType.CLICK, () => { void this._onConfirmInsert(); });
+
+        this._sequenceNode = this._makeLabelNode('InsertSequence', 320, 48, '');
+        this._sequenceNode.active = false;
+        this._sequenceLabel = this._sequenceNode.getComponent(Label);
+
+        this.hostNode.addChild(cycle);
+        this.hostNode.addChild(confirm);
+        this.hostNode.addChild(this._sequenceNode);
+    }
+
+    private _makeLabelNode(name: string, width: number, height: number, text: string): Node {
+        const node = new Node(name);
+        node.addComponent(UITransform).setContentSize(width, height);
+        node.addComponent(Button);
+        const label = node.addComponent(Label);
+        label.string = text;
+        return node;
+    }
+
+    private _onCycleTarget(): void {
+        const roster = services().session.roster;
+        this._insertTargetIndex = nextInsertTargetIndex(this._insertTargetIndex, roster.length);
+        this._refreshTargetLabel();
+    }
+
+    private async _onConfirmInsert(): Promise<void> {
+        const session = services().session;
+        const target = session.roster[this._insertTargetIndex];
+        if (!target) return;
+        const cardUid = firstUnequippedTallyUid(session.tallyCards, session.tallyHoldings);
+        if (!cardUid) {
+            UCUFLogger.warn(LogCategory.LIFECYCLE, '[CharacterDs3AptitudeChild] 沒有可插的虎符');
+            return;
+        }
+        const result = await session.equipTally(cardUid, target.id);
+        if (!result?.ok) {
+            UCUFLogger.warn(LogCategory.LIFECYCLE, '[CharacterDs3AptitudeChild] 插卡失敗', { cardUid, generalId: target.id });
+        }
+    }
+
+    private _refreshTargetLabel(): void {
+        const target = services().session.roster[this._insertTargetIndex];
+        if (this._targetLabel) this._targetLabel.string = target ? this.t('ui.battle.tally.target', target.name ?? target.id) : this.t('ui.battle.tally.pick_target');
+    }
+
+    private _onSpiritInserted(data: unknown): void {
+        const sigilPatternId = (data as { sigilPatternId?: string } | undefined)?.sigilPatternId ?? '';
+        const plan = buildSpiritInsertPlan(sigilPatternId);
+        if (!plan) return;
+        this._playSequence(plan);
+    }
+
+    /** 依時間軸逐段換文字；播完隱藏。不用 cc 的排程，直接用 setTimeout，方便無頭測試替換。 */
+    private _playSequence(plan: SpiritInsertPlan): void {
+        const node = this._sequenceNode;
+        const label = this._sequenceLabel;
+        if (!node || !label) return;
+        for (const timer of this._timers) clearTimeout(timer);
+        this._timers = [];
+        node.active = true;
+        for (const stage of plan.stages) {
+            this._timers.push(setTimeout(() => { label.string = this.t(SPIRIT_INSERT_STAGE_KEY[stage.id]); }, stage.startMs));
+        }
+        this._timers.push(setTimeout(() => { node.active = false; }, plan.totalMs));
+    }
 }

@@ -34,6 +34,8 @@ export interface InventoryRecord {
     expiresAt?: number | null;
     /** 英靈卡是否為其所屬武將的主卡；缺欄位即非主卡（PM 2026-10-27 暫定） */
     isPrimary?: boolean | null;
+    /** 物品鎖定（BAG-07，暫定）：鎖定的列不可分解；缺欄位即未鎖定，舊檔不補值 */
+    isLocked?: boolean | null;
 }
 
 export interface InventorySkipped {

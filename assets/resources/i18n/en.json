@@ -561,5 +561,12 @@
   "UI_DAILY_REPORT_MORNING_TITLE": "Morning Report",
   "UI_DAILY_REPORT_OPEN_HUB": "Morning Report & Dispatch ▶",
   "UI_DAILY_REPORT_REVENGE": "Recover Losses ▶",
-  "UI_DAILY_REPORT_CLOSE": "Got it"
+  "UI_DAILY_REPORT_CLOSE": "Got it",
+  "ui.battle.tally.pick_target": "Pick general",
+  "ui.battle.tally.target": "Target: {0}",
+  "ui.battle.tally.insert": "Insert",
+  "ui.battle.tally.stage_sigil_ignite": "Ancestral sigil ignites",
+  "ui.battle.tally.stage_beast_shadow": "Spirit beast shadow",
+  "ui.battle.tally.stage_spirit_face": "Spirit face",
+  "ui.battle.tally.stage_army_enter": "The army advances"
 }
