@@ -32,6 +32,7 @@ import {
     toGeneConfigs,
 } from './FactorInheritance';
 import { expectedChildFactorPool } from './ChildFactorExpectation';
+import { blueFactorInheritChance } from './BlueFactorInheritance';
 import { GENERAL_STATUS_DEAD, RandomSource } from './GeneralAging';
 import { analyzeTagResonance, KIN_RESONANCE_MIN_COUNT } from './KinRelation';
 import { baseVitalityMaxOf } from './VitalityCap';
@@ -132,6 +133,11 @@ export function isFemale(general: GeneralConfig): boolean {
 
 function isDead(general: GeneralConfig): boolean {
     return (general.status ?? '').toLowerCase() === GENERAL_STATUS_DEAD;
+}
+
+/** 父母六維基礎屬性中的最高值（藍色 3 星因子機率的數值，FORM-08 暫定：兩方取大） */
+export function bestBaseStatOf(father: GeneralConfig, mother: GeneralConfig): number {
+    return Math.max(...[father, mother].flatMap((general) => STAT_KEYS.map((key) => statOf(general, key))));
 }
 
 function statOf(general: GeneralConfig, key: keyof GeneralStatsConfig): number {
@@ -646,6 +652,7 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         enabledColors: request.enabledColors,
         maxFactors: request.maxFactors,
         parentAvgLuk: (statOf(request.father, 'luk') + statOf(request.mother, 'luk')) / 2,
+        blueFactorChance: blueFactorInheritChance(bestBaseStatOf(request.father, request.mother)),
     });
     const inbred = isSameBloodline(request.father, request.mother);
     const purified = inbred ? applyInbreedingPurification(factors, request.random, request.dictionary) : factors;

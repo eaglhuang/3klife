@@ -25,6 +25,7 @@ import {
     resolveAncestorProfile,
     AncestorProfile,
     applyWildGeneMutation,
+    bestBaseStatOf,
 } from '../assets/scripts/core/systems/BreedingSystem';
 import {
     buildFactorDictionary,
@@ -505,6 +506,13 @@ export function createBreedingSuite(): TestSuite {
         const input = [f('gene_charge', 3, 2)];
         applyWildGeneMutation(input, seq(0.05));
         assert.equals(3, input[0].level);
+    });
+
+    suite.test('藍色 3 星機率的數值：父母六維基礎屬性取最高值（FORM-08 暫定）', () => {
+        const father = makeGeneral('f', '男', { int: 1100 });
+        const mother = makeGeneral('m', '女', { str: 300 });
+        assert.equals(1100, bestBaseStatOf(father, mother));
+        assert.equals(300, bestBaseStatOf(makeGeneral('f2', '男', { str: 10, int: 20, lea: 30, pol: 40, cha: 50, luk: 60 }), mother));
     });
 
     return suite;
