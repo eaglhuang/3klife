@@ -1684,8 +1684,10 @@ export class GameSession {
         if (resolution.cityTroopsSpent > 0) {
             this._military = { ...this._military, cityTroops: Math.max(0, this._military.cityTroops - resolution.cityTroopsSpent) };
         }
-        // 虎符轉移（POW-08 暫定）：勸降／招募成功 → 轉給俘虜；放走 → 虎符跟著他離開。沒有 tallyId 不動
-        if (pending.tallyId && (resolution.joined || resolution.released)) {
+        // 虎符轉移（POW-08 暫定）：勸降／招募成功 → 轉給俘虜；放走 → 虎符跟著他離開。沒有 tallyId 不動。
+        // 已被我方武將持有的虎符兩者都不動（PROG-2-1336）
+        const tallyHeldByGeneral = pending.tallyId !== undefined && this._tallyHoldings.holders[pending.tallyId] != null;
+        if (pending.tallyId && !tallyHeldByGeneral && (resolution.joined || resolution.released)) {
             const moved = resolution.joined
                 ? transferTally(this._tallyHoldings, pending.tallyId, targetUid)
                 : takeTallyAway(this._tallyHoldings, pending.tallyId);
