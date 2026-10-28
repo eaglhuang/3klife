@@ -2,7 +2,7 @@
  * RivalExpansion.test.ts — 他國 AI 擴張決策與軍事任務品質（E-4、F-2、E-11、F-6，PROG-2-1473）
  */
 import {
-    evaluateExpansion, evaluateExpansionTarget, militaryMissionTierOf, missionIntelBandOf,
+    EXPANSION_WILLINGNESS, evaluateExpansion, evaluateExpansionTarget, militaryMissionTierOf, missionIntelBandOf,
     type ExpansionAttacker, type ExpansionTarget,
 } from '../assets/scripts/core/systems/RivalExpansion';
 import { TestSuite, assert } from './TestRunner';
@@ -30,8 +30,9 @@ export function createRivalExpansionSuite(): TestSuite {
     });
 
     suite.test('擲骰超過性格意願不出征；PASSIVE 幾乎不出征', () => {
-        assert.equals('willingness', (evaluateExpansion(ATTACKER, [WEAK], () => 0.71) as { reason: string }).reason);
-        assert.equals('ATTACK', evaluateExpansion(ATTACKER, [WEAK], () => 0.7).kind);
+        const willing = EXPANSION_WILLINGNESS.MILITARIST;
+        assert.equals('willingness', (evaluateExpansion(ATTACKER, [WEAK], () => willing + 0.01) as { reason: string }).reason);
+        assert.equals('ATTACK', evaluateExpansion(ATTACKER, [WEAK], () => willing).kind);
         assert.equals('HOLD', evaluateExpansion({ ...ATTACKER, profile: 'PASSIVE' }, [WEAK], () => 0.06).kind);
     });
 
