@@ -50,9 +50,9 @@ export function parseDiscoveryThresholds(raw: unknown): DiscoveryThresholdsResul
     return { ok: true, value };
 }
 
-/** 由程式常數推出的門檻（綠白 = Phase2、紫紅 = Phase3）。 */
+/** 由程式常數推出的門檻（白紅 = Phase2、紫 = Phase3；§K 順序，PROG-2-1465）。 */
 export function discoveryThresholdsFromConstants(): DiscoveryThresholds {
-    return { phase2: FACTOR_DISCOVERY_LEVEL.green, phase3: FACTOR_DISCOVERY_LEVEL.purple };
+    return { phase2: FACTOR_DISCOVERY_LEVEL.white, phase3: FACTOR_DISCOVERY_LEVEL.purple };
 }
 
 /** 設定值是否與程式常數一致；不一致時代表設定檔與常數要對齊。 */

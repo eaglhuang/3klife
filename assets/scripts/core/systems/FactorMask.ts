@@ -6,7 +6,7 @@
  *   - revealed（看得到）：玩家等級 > 因子的 Discovery_Level 門檻（LUK-04）；看不到時顯示「??? (Lv N 解鎖)」，N = 門檻 + 1
  *   - active（生效）：Is_Locked 為 false；看得到但仍鎖住的因子不會生效，要靠覺醒事件點亮
  *
- * 門檻沿用 FactorInheritance 的 FACTOR_DISCOVERY_LEVEL（藍粉 1、綠白 20、紫紅 45）。
+ * 門檻沿用 FactorInheritance 的 FACTOR_DISCOVERY_LEVEL（§K 順序：藍粉綠 1、白紅 20、紫 45）。
  * 規格 config/gameplay.json 的 DiscoveryThresholds 鍵名（Phase1: 20 / Phase2: 45）與階段表語義不一致，
  * 本檔先不讀設定檔，等設計確認鍵名後再接。
  *
@@ -45,7 +45,7 @@ export function factorMaskLabels(genes: readonly GeneralGeneConfig[], playerLeve
     return genes.map((gene) => factorMaskView(gene, playerLevel).label);
 }
 
-/** 玩家等級已開放的因子色系，依 ALL_FACTOR_COLORS 順序（Lv1 只有藍粉） */
+/** 玩家等級已開放的因子色系，依 ALL_FACTOR_COLORS 順序（Lv1 藍粉綠） */
 export function visibleFactorColors(playerLevel: number): FactorColor[] {
     return ALL_FACTOR_COLORS.filter((color) => isFactorLevelUnlocked(playerLevel, FACTOR_DISCOVERY_LEVEL[color]));
 }

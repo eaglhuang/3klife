@@ -30,11 +30,11 @@ export function createSageOracleDirectionHintSuite(): TestSuite {
     suite.test('等級不足時顯示未解鎖方向（面板用語），且節點啟用', () => {
         const g = person([
             { id: 'a', type: 'blue', isLocked: true },
-            { id: 'b', type: 'green', isLocked: true },
+            { id: 'b', type: 'white', isLocked: true },
             { id: 'c', type: 'red', isLocked: true },
         ]);
         const view = controllerFor(g, 1).getView();
-        assert.equals('未解鎖方向：戰法、體魄', view.texts.directionHint);
+        assert.equals('未解鎖方向：天賦、體魄', view.texts.directionHint);
         assert.isTrue(view.actives.directionHint);
     });
 

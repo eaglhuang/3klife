@@ -13,7 +13,7 @@
  * 跨過門檻就觸發一次解鎖事件（OnLevelUp 裡判斷 phase 有沒有變）。
  */
 
-import type { FactorColor } from './FactorInheritance';
+import { ALL_FACTOR_COLORS, FACTOR_DISCOVERY_LEVEL, type FactorColor } from './FactorInheritance';
 
 export const UNLOCK_PHASES = [1, 2, 3] as const;
 export type UnlockPhase = (typeof UNLOCK_PHASES)[number];
@@ -121,13 +121,18 @@ export function validatePlayerUnlockStateRow(
     return errors;
 }
 
+/** 各階段對應的發現門檻（Phase 1 從 Lv1 起，Phase 2 = 白紅門檻，Phase 3 = 紫門檻） */
+const PHASE_DISCOVERY_LEVEL: Record<UnlockPhase, number> = {
+    1: 1,
+    2: FACTOR_DISCOVERY_LEVEL.white,
+    3: FACTOR_DISCOVERY_LEVEL.purple,
+};
+
 /**
- * 各階段解鎖的因子色（規格 §F 三階段解鎖表）：Phase 1 藍／粉，Phase 2 加綠／白，Phase 3 加紫／紅。
- * 回傳新陣列；目前只提供查詢，尚未接到結緣參與色（見 PROG-2-0881 未涵蓋）。
+ * 各階段解鎖的因子色（因子爆發系統 §K，PROG-2-1465）：Phase 1 藍／粉／綠，Phase 2 加白／紅，Phase 3 加紫。
+ * 由 FACTOR_DISCOVERY_LEVEL 推導，依 ALL_FACTOR_COLORS 順序回傳新陣列；尚未接到結緣參與色（見 PROG-2-0881 未涵蓋）。
  */
 export function phaseFactorColors(phase: UnlockPhase): FactorColor[] {
-    const colors: FactorColor[] = ['blue', 'pink'];
-    if (phase >= 2) colors.push('green', 'white');
-    if (phase >= 3) colors.push('purple', 'red');
-    return colors;
+    const ceiling = PHASE_DISCOVERY_LEVEL[phase];
+    return ALL_FACTOR_COLORS.filter((color) => FACTOR_DISCOVERY_LEVEL[color] <= ceiling);
 }

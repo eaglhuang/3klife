@@ -10,11 +10,11 @@ import type { GeneralGeneConfig } from '../assets/scripts/core/models/GeneralUni
 export function createFactorMaskSuite(): TestSuite {
     const suite = new TestSuite('FactorMask');
 
-    suite.test('三階段色系（> 門檻）：Lv1 只見藍粉，Lv21 開綠白，Lv46 開紫紅', () => {
-        assert.equals('blue,pink', visibleFactorColors(1).join(','));
-        assert.equals('blue,pink', visibleFactorColors(20).join(','));
-        assert.equals('blue,pink,green,white', visibleFactorColors(21).join(','));
-        assert.equals('blue,pink,green,white', visibleFactorColors(45).join(','));
+    suite.test('三階段色系（> 門檻，§K 順序）：Lv1 見藍粉綠，Lv21 開白紅，Lv46 開紫', () => {
+        assert.equals('blue,pink,green', visibleFactorColors(1).join(','));
+        assert.equals('blue,pink,green', visibleFactorColors(20).join(','));
+        assert.equals('blue,pink,green,white,red', visibleFactorColors(21).join(','));
+        assert.equals('blue,pink,green,white,red', visibleFactorColors(45).join(','));
         assert.equals('blue,pink,green,purple,white,red', visibleFactorColors(46).join(','));
     });
 
