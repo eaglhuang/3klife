@@ -93,7 +93,12 @@ export class BloodlineTreePanel extends Component {
     private _ancestorColor(slot: PedigreeSlot): FactorColor | null {
         const uid = this._pedigree?.[slot];
         if (!uid) return null;
-        const factorId = BloodlineGraph.getInstance().getPerson(uid)?.gene_refs?.[0];
+        return this._colorOfPerson(BloodlineGraph.getInstance().getPerson(uid));
+    }
+
+    /** 人物的因子色：取 gene_refs 第一個因子的色系；沒有因子或解析失敗為 null（中性灰）。 */
+    private _colorOfPerson(person: { gene_refs?: string[] } | null | undefined): FactorColor | null {
+        const factorId = person?.gene_refs?.[0];
         if (!factorId) return null;
         let dictionary;
         try {
@@ -115,7 +120,7 @@ export class BloodlineTreePanel extends Component {
             const uid = slots[i].uid;
             const person = uid ? graph.getPerson(uid) : null;
             const cardNode = container.getChildByPath(treeCardNodeName(row, i));
-            if (cardNode) this._bindPeek(cardNode, person);
+            if (cardNode) this._bindPeek(cardNode, person, this._colorOfPerson(person));
             const txtNode = container.getChildByPath(`${treeCardNodeName(row, i)}/Txt`);
             if (!txtNode) continue;
             const label = txtNode.getComponent(Label);
@@ -125,18 +130,18 @@ export class BloodlineTreePanel extends Component {
     }
 
     /** 點擊卡片發出 peek；removeAll 避免重新填充時疊加多個回呼 */
-    private _bindPeek(cardNode: Node, person: PeekPerson | null): void {
+    private _bindPeek(cardNode: Node, person: PeekPerson | null, color: FactorColor | null): void {
         const button = cardNode.getComponent(Button) ?? cardNode.addComponent(Button);
         button.node.off(Button.EventType.CLICK);
-        button.node.on(Button.EventType.CLICK, () => this._emitPeek(person));
+        button.node.on(Button.EventType.CLICK, () => this._emitPeek(person, color));
     }
 
-    private _emitPeek(person: PeekPerson | null): void {
+    private _emitPeek(person: PeekPerson | null, color: FactorColor | null): void {
         if (!this.onCardPeek) return;
         const source = person
             ? { name: person.name, faction: this._formatFaction(person.faction), core_tags: person.core_tags }
             : null;
-        this.onCardPeek(ancestorPeekView(source, person ? isAncestorRevealed(person) : false));
+        this.onCardPeek(ancestorPeekView(source, person ? isAncestorRevealed(person) : false, color));
     }
 
     private _formatAncestorLabel(person: { name: string; faction: string; gene_refs: string[]; is_virtual: boolean }): string {

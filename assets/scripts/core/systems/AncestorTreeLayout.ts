@@ -12,6 +12,9 @@
  * Unity 對照：像一個固定的 Grid 版面加上 Tooltip，點擊時只打開小面板。
  */
 
+import type { FactorColor } from './FactorInheritance';
+import { resolveCrestStyle } from './CrestStyle';
+
 export interface AncestorSlot {
     /** 0 = 父母；1 = 祖父母；2 = 曾祖輩 */
     generation: 0 | 1 | 2;
@@ -47,6 +50,8 @@ export interface AncestorPeekSource {
 
 export interface AncestorPeekView {
     title: string;
+    /** 祖紋命篆色調（#RRGGBB），來自 CrestStyle；無因子色為中性灰（BUI-08） */
+    crestTint: string;
     /** 血脈傾向；沒有標籤時為「—」，不補假資料 */
     tendency: string;
     lines: string[];
@@ -62,14 +67,16 @@ export function isAncestorRevealed(person: { is_virtual: boolean }): boolean {
 }
 
 /** 點擊祖先節點的小型 peek：未揭露只顯示鎖與問號，血脈傾向仍可見 */
-export function ancestorPeekView(source: AncestorPeekSource | null, revealed: boolean): AncestorPeekView {
+export function ancestorPeekView(source: AncestorPeekSource | null, revealed: boolean, color: FactorColor | null = null): AncestorPeekView {
     const tags = source?.core_tags ?? [];
     const tendency = tags.length > 0 ? tags.join('、') : '—';
+    const crestTint = resolveCrestStyle(color).tint;
     if (!source || !revealed) {
-        return { title: '？？？', tendency, lines: ['鎖定：尚未揭露'], locked: true };
+        return { title: '？？？', crestTint, tendency, lines: ['鎖定：尚未揭露'], locked: true };
     }
     return {
         title: source.name,
+        crestTint,
         tendency,
         lines: [`勢力：${source.faction}`],
         locked: false,

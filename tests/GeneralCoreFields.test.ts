@@ -5,7 +5,7 @@
  * 覆蓋統計正確計算完整人數與每欄缺數。
  */
 import { assert, TestSuite } from './TestRunner';
-import { GENERAL_CORE_FIELDS, missingCoreFields, coreFieldCoverage } from '../assets/scripts/core/systems/GeneralCoreFields';
+import { GENERAL_CORE_FIELDS, missingCoreFields, coreFieldCoverage, formatCoreFieldCoverage } from '../assets/scripts/core/systems/GeneralCoreFields';
 
 function fullGeneral(): Record<string, unknown> {
     const general: Record<string, unknown> = {};
@@ -48,6 +48,15 @@ export function createGeneralCoreFieldsSuite(): TestSuite {
         assert.equals(2, coverage.missingByField.genes);
         assert.equals(2, coverage.missingByField.skillId);
         assert.isTrue(coverage.missingByField.title === undefined);
+    });
+
+    suite.test('覆蓋率摘要：全部完整只顯示完整數；有缺時列出缺最多的欄位', () => {
+        assert.equals('核心欄位完整 1/1', formatCoreFieldCoverage(coreFieldCoverage([fullGeneral()])));
+        const incomplete = fullGeneral();
+        incomplete.genes = [];
+        incomplete.skillId = '';
+        const line = formatCoreFieldCoverage(coreFieldCoverage([fullGeneral(), incomplete, incomplete]));
+        assert.equals('核心欄位完整 1/3，缺值最多：genes×2 skillId×2', line);
     });
 
     return suite;

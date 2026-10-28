@@ -222,6 +222,7 @@ export class BattleScene extends Component {
         battleParams.weather,
         battleParams.battleTactic,
         difficulty,
+        enemyScale.difficulty.difficultyBonus,
       );
       this.ctrl.configureAiDifficulty(enemyScale.difficulty);
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
