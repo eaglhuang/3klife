@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-28 11:02 Claude：Sparkle v15 獨立驗收通過（頂層 events、引用完整、動作與 v14 零差異、37/37）；R331 請 Codex 改讀 v15 輸出並依 R330 錄四動作。
 - 2026-10-28 09:55 Claude：R330 確認補頂層 events 後 4.2 runtime 已畫出趙雲（灰畫面根因確認）；取景過大頭被切，請 Codex 調取景後錄四動作影片。
 - 2026-10-28 09:38 Claude：AG-42（主連通區延伸）獨立重驗通過，SHA 與 135 測試一致；發現 r40 大腿本體斷成上下兩塊，轉知 Codex 補接點時先接合。
 - 2026-10-28 09:15 Antigravity：AG-42 隱藏延伸只量主連通區與規格 v3.22 落地完成（commit a400477c7）；支援 coverageRule.extensionMeasureOn="mainComponent"，杜絕游離碎片虛增延伸；R324 r40 三項大腿延伸正確改判 FAIL（~33.6 / ~31.2 / ~39.7 px）；全量單元測試 135 tests 100% OK。
