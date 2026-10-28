@@ -22,7 +22,7 @@ export interface AiDeployPreference {
     preferCounter: boolean;
 }
 
-/** AI 兵種代碼 → 戰場兵種；不在 AI 可部署範圍的代碼（SIEGE、SMART、NAVY）不列 */
+/** AI 兵種代碼 → 戰場兵種；不在 AI 可部署範圍的代碼（SIEGE、NAVY）不列 */
 export const AI_TROOP_CODE_TO_TYPE: Partial<Record<AiTroopCode, TroopType>> = {
     CAVALRY: TroopType.Cavalry,
     INFANTRY: TroopType.Infantry,
