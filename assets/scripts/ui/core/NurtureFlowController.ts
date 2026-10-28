@@ -58,7 +58,9 @@ import {
 import { describeLifecycle } from './GeneralLifecyclePresenter';
 import {
     buildNurtureSessionContentState,
+    fillSessionTemplate,
     type NurtureSessionCanonicalContentState,
+    type SessionTextLookup,
 } from '../components/NurtureSessionMapper';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
 import { getTacticTpCost } from '../../core/systems/SortieDeploy';
@@ -624,7 +626,7 @@ export class NurtureFlowController {
         const lookup = this._deps.text ?? fallbackBreedText;
         Object.assign(texts, buildSlotTexts(child, session, lookup));
         Object.assign(texts, buildSessionTexts(session, this._notice, lookup));
-        Object.assign(texts, buildSessionScreenTexts(session));
+        Object.assign(texts, buildSessionScreenTexts(session, sessionTextOf(this._deps.text ?? fallbackBreedText)));
         enabled.btnAbandon = session.status === 'active';
         if (session.status === 'completed') {
             this._applyTacticRow(child, session, texts, actives, enabled);
@@ -862,7 +864,12 @@ function sessionStatOf(session: NurtureSession, key: SessionStatKey): SessionSta
     };
 }
 
-function buildSessionCanonical(session: NurtureSession): NurtureSessionCanonicalContentState {
+/** 把 BreedTextLookup 包成行程畫面用的查詢：查不到鍵時用 zh-TW 退回模板 */
+function sessionTextOf(lookup: BreedTextLookup): SessionTextLookup {
+    return (key, fallback, ...args) => labelOf(lookup, key, fillSessionTemplate(fallback, args), ...args);
+}
+
+function buildSessionCanonical(session: NurtureSession, t: SessionTextLookup): NurtureSessionCanonicalContentState {
     const round = Math.min(Math.max(session.round + 1, 1), NURTURE_TOTAL_ROUNDS);
     const phaseBlock = session.status === 'completed' ? 'GRADUATION' : SESSION_PHASE_BLOCK[phaseOfRound(round)];
     const failure = Math.round(failureRateForVigor(session.vigor) * 100);
@@ -870,13 +877,13 @@ function buildSessionCanonical(session: NurtureSession): NurtureSessionCanonical
     const focus = [...TRAINING_KINDS]
         .sort((left, right) => session.talent[right] - session.talent[left])
         .slice(0, 2)
-        .map((kind) => SESSION_FOCUS_LABEL[kind]);
+        .map((kind) => t(`ui.nurture.session.focus.${kind}`, SESSION_FOCUS_LABEL[kind]));
 
     return {
         sessionInfo: {
-            title: '培育行程',
-            subtitle: `三階段學年 / ${NURTURE_TOTAL_ROUNDS} 回合`,
-            turnLabel: `第 ${round} 回合`,
+            title: t('ui.nurture.session.title', '培育行程'),
+            subtitle: t('ui.nurture.session.subtitle', '三階段學年 / {0} 回合', String(NURTURE_TOTAL_ROUNDS)),
+            turnLabel: t('ui.nurture.session.turn', '第 {0} 回合', String(round)),
         },
         dualLayerStats: Object.fromEntries(statKeys.map((key) => [key, sessionStatOf(session, key)])) as SessionStats,
         profilePresentation: {
@@ -891,15 +898,15 @@ function buildSessionCanonical(session: NurtureSession): NurtureSessionCanonical
             mentorModeLabel: session.mentors.length > 0 ? 'TeachingOnly' : 'SelfTraining',
             recommendedFocus: focus,
             // 畢業標籤要等畢業結算才定，目前只給占位候選，正式標籤見待辦
-            graduationTags: ['待定型'],
+            graduationTags: [t('ui.nurture.session.grad_placeholder', '待定型')],
         },
         supportPlan: {
             mentors: session.mentors.map((mentor) => mentor.name),
-            lineageBoundary: '英靈傳道屬教學支援，不會轉回血脈親傳',
+            lineageBoundary: t('ui.nurture.session.lineage', '英靈傳道屬教學支援，不會轉回血脈親傳'),
         },
         riskPlan: {
             pressureTags: session.negativeFactors,
-            recoveryHint: `精力 ${session.vigor} / ${VIGOR_MAX}，訓練失敗率 ${failure}%，休息可回復精力`,
+            recoveryHint: t('ui.nurture.session.recovery', '精力 {0} / {1}，訓練失敗率 {2}%，休息可回復精力', String(session.vigor), String(VIGOR_MAX), String(failure)),
             concealExactYield: true,
         },
     };
@@ -909,8 +916,8 @@ function buildSessionCanonical(session: NurtureSession): NurtureSessionCanonical
  * 培育行程畫面的文字（SessionTitle、PhaseBlockBody…）：NurtureSessionMapper 產出 camelCase，
  * 這裡轉成版面節點 id（PascalCase），才能和 nurture-session-main.json 對上。
  */
-function buildSessionScreenTexts(session: NurtureSession): Record<string, string> {
-    const content = buildNurtureSessionContentState(buildSessionCanonical(session));
+function buildSessionScreenTexts(session: NurtureSession, t: SessionTextLookup): Record<string, string> {
+    const content = buildNurtureSessionContentState(buildSessionCanonical(session, t), t);
     const texts: Record<string, string> = {};
     for (const [key, value] of Object.entries(content)) {
         if (typeof value !== 'string') continue;
