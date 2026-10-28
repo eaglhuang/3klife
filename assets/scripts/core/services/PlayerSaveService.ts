@@ -85,6 +85,7 @@ import { normalizeOfflineBattleSnapshots, type OfflineBattleSnapshot } from '../
 import { normalizeTournamentState, type TournamentState } from '../systems/TournamentLocal';
 import { normalizeWishPoolState, type WishPoolState } from '../systems/WishPool';
 import { normalizeOfflineInteractionLog } from '../systems/OfflineInteractionEvents';
+import { normalizeCountdownState, type CountdownState } from '../systems/CountdownManager';
 import { normalizeRelationEventKeys } from '../systems/RelationEvents';
 import { normalizeUnlockHistory, type SandtableStageId } from '../systems/SandtableProgress';
 import { normalizeStartingTalisman, type StartingSpiritTalisman } from '../systems/TeachingSpiritTalisman';
@@ -243,6 +244,8 @@ export interface PlayerSaveSnapshot {
     soulFragments?: SoulFragmentLedger;
     /** 趕路（回合制）；後加的選填欄位，舊檔讀回為沒有趕路（PROG-2-0475） */
     travelCountdown?: TravelCountdown;
+    /** 新手開場趕路倒數（OPEN-11）：絕對時間戳，離線時間自動計入；只在趕路中寫入，舊檔沒有時為 null */
+    countdown?: CountdownState;
     /** 編制預設（DEP-14）：主將 id → 參謀官 / 後勤官；舊檔沒有此欄位時視為空 */
     sortiePresets?: Readonly<Record<string, { strategistUid: string | null; deputyUid: string | null }>>;
     /** 出生紀錄（PROG-2-1146）：child.UID 去重；舊檔缺省為空，不回填歷史資料。 */
@@ -541,6 +544,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.friendBorrowLedger !== undefined ? { friendBorrowLedger: normalizeBorrowLedger(snapshot.friendBorrowLedger) } : {}),
         ...(snapshot.soulFragments !== undefined ? { soulFragments: normalizeSoulFragmentLedger(snapshot.soulFragments) } : {}),
         ...(normalizeTravelCountdown(snapshot.travelCountdown) ? { travelCountdown: normalizeTravelCountdown(snapshot.travelCountdown)! } : {}),
+        ...(normalizeCountdownState(snapshot.countdown) ? { countdown: normalizeCountdownState(snapshot.countdown)! } : {}),
         ...(snapshot.gachaPity !== undefined ? { gachaPity: normalizeGachaPityBook(snapshot.gachaPity) } : {}),
         ...(snapshot.gachaWallet !== undefined ? { gachaWallet: normalizeGachaWalletSave(snapshot.gachaWallet) } : {}),
         ...(snapshot.femaleSystem !== undefined ? { femaleSystem: normalizeFemaleSystemState(snapshot.femaleSystem) } : {}),

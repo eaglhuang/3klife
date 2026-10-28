@@ -264,7 +264,8 @@ export class GeneralDetailBloodlineChild extends ChildPanelBase {
         this._set(this._peekTitle, view.title);
         this._peekTitle.color = Color.fromHEX(new Color(), view.crestTint);
         this._set(this._peekTendency, view.tendency);
-        this._set(this._peekLine, view.lines.join(' · '));
+        const badge = view.badgeKey ? this.t(view.badgeKey) : null;
+        this._set(this._peekLine, [badge, ...view.lines].filter((part): part is string => !!part).join(' · '));
     }
 
     /** 選卡面板的目前狀態：要插入或替換哪位武將的命槽、列表與已選的卡（PROG-2-1286）。 */
