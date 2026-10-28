@@ -685,7 +685,9 @@ export class BattleUIBridge {
     // 戰鬥結束時主將的精力（已扣奧義成本）是結算的基準，戰後再扣 30（PM 裁定，2026-10-14）
     const battleVitality = this.ctx.ctrl?.state.playerGeneral?.vitality;
     const vitalityAfterBattle = battleVitality !== undefined ? { [pgId]: battleVitality } : undefined;
-    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, teachingSpirit: this.ctx.teachingSpirit }).then((settlement) => {
+    const pgUnit = this.ctx.ctrl?.state.playerGeneral;
+    const hpRatioAfterBattle = pgUnit && pgUnit.maxHp > 0 ? { [pgId]: pgUnit.currentHp / pgUnit.maxHp } : undefined;
+    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, hpRatioAfterBattle, teachingSpirit: this.ctx.teachingSpirit }).then((settlement) => {
       const entry = settlement.entries[0];
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);

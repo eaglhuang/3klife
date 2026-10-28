@@ -51,6 +51,7 @@ import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally'
 import { normalizeCountdownState, createCountdown, OPENING_TRAVEL_DURATION_MS, OPENING_TRAVEL_TARGET_ID, type CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { ageGeneralsOneSeason, AgingEvent, isGeneralDead, RandomSource } from '../systems/GeneralAging';
+import { applyWarInjury } from '../systems/WarInjury';
 import { applyActiveLifespanToRoster, ActiveLifespanResult, preLifespanBaseline } from '../systems/LifespanWiring';
 import { applyJobChangeToRoster, JobWiringGeneral } from '../systems/JobChangeWiring';
 import type { JobChangeResult, JobClass } from '../systems/JobChange';
@@ -389,6 +390,8 @@ export interface RecordBattleOptions {
     deployedTallyIds?: readonly string[];
     /** 武將 id → 戰鬥結束時的精力（已扣奧義成本）；結算以此為基準再扣戰後精力 */
     vitalityAfterBattle?: Readonly<Record<string, number>>;
+    /** 武將 id → 戰鬥結束時的血量比例（0~1）；重傷扣壽命上限（戰傷減損，PROG-2-1570） */
+    hpRatioAfterBattle?: Readonly<Record<string, number>>;
     /** 英靈夢回教學戰的傳說英靈；勝利時產出初始虎符（OPEN-13），沒有時不做任何事 */
     teachingSpirit?: TeachingSpiritInput | null;
 }
@@ -3757,6 +3760,11 @@ export class GameSession {
             const entry = settlement.entries.find((e) => e.generalId === g.id);
             return entry ? awakenHiddenFactors(g, entry.newMilestones) : g;
         });
+        // 戰傷減損（武將壽命系統 §E-1，PROG-2-1570）：重傷的出陣武將壽命上限扣 1 年
+        const hpRatios = options.hpRatioAfterBattle;
+        if (hpRatios) {
+            roster = roster.map((g) => (g.id in hpRatios ? applyWarInjury(g, hpRatios[g.id]) : g));
+        }
         for (const entry of settlement.entries) {
             const index = roster.findIndex((g) => g.id === entry.generalId);
             const actions = options.specialActions?.[entry.generalId] ?? [];
