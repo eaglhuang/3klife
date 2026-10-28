@@ -20,6 +20,11 @@ const ULT_UI_KEYS = [
     'ui.ultimate.level',
     'ui.ultimate.inherited',
     'ui.ultimate.upgrade',
+    'ui.ultimate.label',
+    'ui.ultimate.ready',
+    'ui.ultimate.charging',
+    'ui.ultimate.unassigned',
+    'ui.ultimate.unassigned_toast',
 ] as const;
 
 function localeTable(locale: string): Record<string, string> {

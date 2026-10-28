@@ -31,6 +31,7 @@ import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
 import { TurnFlowManager } from './TurnFlowManager';
 import { setupCameraForBoard, initSceneBackground, addBackgroundSwitchUI, resolveSceneBackgroundId } from './BattleSceneSetup';
 import { resolveAiDifficulty } from '../../core/systems/AiSpCharge';
+import { openingAiLogLinesOf } from '../../core/systems/AiEntranceLines';
 import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureBattleScenePanel, ensureBoardRenderer, ensureUnitRenderer } from './BattleUIInitializer';
 
 const { ccclass, property } = _decorator;
@@ -267,6 +268,7 @@ export class BattleScene extends Component {
       this.resultPopup   = (hudResult.resultPopup  ?? this.resultPopup) as any;
       this.battleLogPanel   = (ensureBattleLogPanel(this.battleLogPanel, canvas) ?? this.battleLogPanel) as any;
       if (enemyScale?.adaptiveHint) this.battleLogPanel?.append(enemyScale.adaptiveHint);
+      for (const line of openingAiLogLinesOf(egId, eg.name, difficulty)) this.battleLogPanel?.append(line);
       this.battleScenePanel = (ensureBattleScenePanel(this.battleScenePanel, canvas) ?? this.battleScenePanel) as any;
       this.boardRenderer    = (ensureBoardRenderer(this.boardRenderer, this.node.scene, this.boardGapRatio, this.boardTargetDepth) ?? this.boardRenderer) as BoardRenderer;
       if (this.boardRenderer) {

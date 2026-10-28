@@ -722,7 +722,7 @@ export class BattleUIBridge {
     if (!this.ctx.ctrl || this.ctx.isAdvancingTurn) return;
     const skillId = data.skillId ?? null;
     if (!skillId) {
-      this.ctx.deployRuntime?.showToast('尚未配置可施放奧義', 1.5);
+      this.ctx.deployRuntime?.showToast(services().i18n.t('ui.ultimate.unassigned_toast'), 1.5);
       return;
     }
 

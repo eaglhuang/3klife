@@ -211,7 +211,7 @@ export class ActionCommandComposite extends CompositePanel {
 
         // 更新奧義標籤（SP滿→發動，SP未滿→奧義）
         if (this._ultLabel) {
-            this._ultLabel.string = isReady ? '發動' : '奧義';
+            this._ultLabel.string = services().i18n.t(isReady ? 'ui.ultimate.ready' : 'ui.ultimate.label');
         }
 
         // 更新 SP 百分比數字（SP 滿時隱藏）
@@ -233,7 +233,7 @@ export class ActionCommandComposite extends CompositePanel {
     private _onUltimateClick(): void {
         const isReady = this._maxSp > 0 && this._currentSp >= this._maxSp;
         if (!isReady) {
-            services().event.emit(EVENT_NAMES.ShowToast, { text: '奧義蓄力中，SP 不足' });
+            services().event.emit(EVENT_NAMES.ShowToast, { text: services().i18n.t('ui.ultimate.charging') });
             return;
         }
 
@@ -247,7 +247,7 @@ export class ActionCommandComposite extends CompositePanel {
 
         const skills = this._ultimateSkills.length > 0
             ? this._ultimateSkills
-            : [{ skillId: 'unassigned-ultimate', label: '未配置奧義', costSp: this._maxSp }];
+            : [{ skillId: 'unassigned-ultimate', label: services().i18n.t('ui.ultimate.unassigned'), costSp: this._maxSp }];
 
         this.ultimateSelectPopup.show(skills, this._ultimateBtnNode ?? undefined);
     }
