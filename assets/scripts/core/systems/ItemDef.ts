@@ -60,6 +60,8 @@ export const ITEM_TALLY_ESSENCE = 'ITEM_TALLY_ESSENCE';
 export const ITEM_LONGEVITY_PILL = 'ITEM_LONGEVITY_PILL';
 /** 加速卡（許願池每張縮短 2h；PROG-2-1198，PM 暫定 id）。來源（月卡、精元購買）不在本卡。 */
 export const ITEM_WISH_SPEED_CARD = 'ITEM_WISH_SPEED_CARD';
+/** 無期徒刑囚犯交出的傳家寶物（俘虜處理 K 節；可裝備或販賣，EQP-09） */
+export const ITEM_TREASURE = 'ITEM_TREASURE';
 
 /** 順序即背包顯示順序（ItemBagView 依 ITEM_DISPLAY_NAMES 的 key 順序列出），調換前先確認 UI 影響 */
 export const ITEM_DEFS: readonly ItemDef[] = [
@@ -80,6 +82,7 @@ export const ITEM_DEFS: readonly ItemDef[] = [
     { id: ITEM_TALLY_ESSENCE, name: '虎符精華', category: '材料', rarity: 1 },
     { id: ITEM_LONGEVITY_PILL, name: '延壽丹', category: '消耗品', rarity: 1 },
     { id: ITEM_WISH_SPEED_CARD, name: '加速卡', category: '消耗品', rarity: 1 },
+    { id: ITEM_TREASURE, name: '傳家寶物', category: '寶物', rarity: 1 },
 ];
 
 /** 依道具 ID 查定義；沒有定義時回傳 null（例如舊存檔的未知 key） */

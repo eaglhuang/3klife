@@ -165,7 +165,7 @@ import { emptySoulFragmentLedger, injectFromLedger, normalizeSoulFragmentLedger,
 import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';
 import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
-import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ADMISSION_TOKEN, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
+import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ADMISSION_TOKEN, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_TREASURE, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFlow';
 import { equipGear as equipGearFlow, unequipGear as unequipGearFlow, type GearEquipResult } from '../systems/GearEquipFlow';
 import { gearDefinitionOf } from '../systems/GearDefinitions';
@@ -190,7 +190,7 @@ import { buildBattleSnapshot, type BattleSnapshot } from '../systems/BattleSnaps
 import { leaderboardEntryOf, rankLeaderboard, type LeaderboardMetric, type LeaderboardEntry } from '../systems/BattleLeaderboard';
 import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
 import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
-import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonCapacityOf, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
+import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonCapacityOf, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, rollPrisonTreasures, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { drawFemalePool, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
@@ -3255,6 +3255,13 @@ export class GameSession {
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
         this._prison = { ...this._prison, intel: this._prison.intel + prisonYield.intel };
         this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + prisonYield.resource) };
+        // 無期徒刑傳家寶物掉落（EQP-09，機率暫定）
+        const treasures = rollPrisonTreasures(this._prison.prisoners, this._random);
+        if (treasures > 0) {
+            const beforeTreasure = this._inventory;
+            this._inventory = addItem(this._inventory, ITEM_TREASURE, treasures);
+            this._recordGain(beforeTreasure, 'DROP');
+        }
         // 放走俘虜的未來來投（5%）：依 uid 查配置以初始狀態入冊；查不到配置就略過並記警告
         const futureReturns = rollFutureReturns(this._prison, advance.current.totalSeasonsElapsed, this._random);
         this._prison = futureReturns.state;
