@@ -66,7 +66,7 @@ import { WarehousePanelController } from '../core/WarehousePanelController';
 import { DISPATCH_MAX_ROWS, JournalHubController } from '../core/JournalHubController';
 import { GeneralJournalController } from '../core/GeneralJournalController';
 import { BattleReviewController } from '../core/BattleReviewController';
-import { TournamentPanelController } from '../core/TournamentPanelController';
+import { TournamentPanelController, tournamentSeasonCardLines } from '../core/TournamentPanelController';
 import { WishAltarController, WISH_ALTAR_SLOTS } from '../core/WishAltarController';
 import { dispatchClickMessage } from '../../core/systems/DispatchCatalog';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
@@ -2293,6 +2293,7 @@ export class LobbyScene extends Component {
             markerTerritories: session.sandtableMarkerTerritories,
             nameOf: (territoryId: string) => services().i18n.t(`territory.${territoryId}.name`),
             onPlace: (territoryId: string) => this._placeSandtableMarker(territoryId),
+            seasonCard: tournamentSeasonCardLines(session.tournamentStatus(Date.now()), (id) => this._generals.find((g) => g.id === id)?.name),
         };
         void services().ui.open(UIID.SandtableTerritory, payload);
     }

@@ -2,7 +2,7 @@
  * SandtableTerritoryPicker.test.ts — 天下沙盤領地選擇的列狀態與文字（PROG-2-0967）
  *
  * 鎖住：已放置／可放置／不可放置三種狀態、上限已滿時全部不可放置、未解鎖時全部不可放置，
- * 以及彈窗文字的路徑都存在於 sandtable-territory-main.json。
+ * 以及彈窗文字的路徑都存在於 sandtable-territory-main.json；右側挑戰賽賽季次卡（PROG-2-1431）。
  *
  * Unity 對照：Presenter 的 EditMode 測試，只驗列狀態與 Label 字串。
  */
@@ -70,6 +70,17 @@ export function createSandtableTerritoryPickerSuite(): TestSuite {
         const names = layoutNamePaths();
         const missing = Object.keys(buildSandtableTerritoryPickerTexts(rows, nameOf, 'S1', 0)).filter(key => !names.has(key));
         assert.equals(0, missing.length);
+    });
+
+    suite.test('右側賽季次卡（PROG-2-1431）：有資料寫三行，沒給時顯示「—」', () => {
+        const rows = sandtableTerritoryRowStates(sandtableTerritories(), [], 'S1');
+        const card = { season: '第 1 屆【赤壁盃】｜培育期｜剩 14 日', venue: '地形：水域、天氣：大風', team: '尚未報名' };
+        const texts = buildSandtableTerritoryPickerTexts(rows, nameOf, 'S1', 0, card);
+        assert.equals('名將挑戰賽・本季', texts['SeasonCard/SeasonTitleLabel']);
+        assert.equals(card.season, texts['SeasonCard/SeasonLineLabel']);
+        assert.equals(card.venue, texts['SeasonCard/VenueLineLabel']);
+        assert.equals(card.team, texts['SeasonCard/TeamLineLabel']);
+        assert.equals('—', buildSandtableTerritoryPickerTexts(rows, nameOf, 'S1', 0)['SeasonCard/TeamLineLabel']);
     });
 
     return suite;

@@ -1,11 +1,11 @@
 /**
- * TournamentPanelController.test.ts — 名將挑戰賽彈窗：賽季卡文字、按鈕可用、報名與參戰訊息（PROG-2-1191）、賽季獎勵（PROG-2-1194）、場地公告（PROG-2-1195）、BOSS 公告（PROG-2-1196）
+ * TournamentPanelController.test.ts — 名將挑戰賽彈窗：賽季卡文字、按鈕可用、報名與參戰訊息（PROG-2-1191）、賽季獎勵（PROG-2-1194）、場地公告（PROG-2-1195）、BOSS 公告（PROG-2-1196）、天下沙盤側卡共用文字（PROG-2-1431）
  */
 import { assert, TestSuite } from './TestRunner';
 import { GameSession } from '../assets/scripts/core/managers/GameSession';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { TOURNAMENT_DAY_MS } from '../assets/scripts/core/systems/TournamentLocal';
-import { rewardsText, seriesText, TournamentPanelController } from '../assets/scripts/ui/core/TournamentPanelController';
+import { rewardsText, seriesText, TournamentPanelController, tournamentSeasonCardLines } from '../assets/scripts/ui/core/TournamentPanelController';
 
 const D = TOURNAMENT_DAY_MS;
 
@@ -110,6 +110,19 @@ export function createTournamentPanelControllerSuite(): TestSuite {
             win: false, games: [false, false, false], opponentPower: 100, opponentPoints: 0,
             pointsDelta: -16, pointsAfter: 0, tierAfter: 'BRONZE', paidExtra: false,
         }));
+    });
+
+    suite.test('天下沙盤側卡三行與彈窗同字（PROG-2-1431）：未報名→報名後顯示出戰', () => {
+        const session = new GameSession(1);
+        session.enrollGenerals([hero('x', '甲', 90)]);
+        const names: Record<string, string> = { x: '甲' };
+        let card = tournamentSeasonCardLines(session.tournamentStatus(0), (id) => names[id]);
+        assert.equals('第 1 屆【赤壁盃】｜培育期｜剩 14 日', card.season);
+        assert.equals('地形：水域、天氣：大風', card.venue);
+        assert.equals('尚未報名（競賽期首次參戰自動報名）', card.team);
+        assert.isTrue(session.registerTournament(0).ok);
+        card = tournamentSeasonCardLines(session.tournamentStatus(0), (id) => names[id]);
+        assert.isTrue(card.team.startsWith('出戰：甲（戰力 '));
     });
 
     return suite;

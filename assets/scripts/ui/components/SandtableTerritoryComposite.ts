@@ -14,6 +14,7 @@ import {
     buildSandtableTerritoryPickerTexts,
     sandtableTerritoryRowStates,
     SANDTABLE_PICKER_ROWS,
+    type SandtableSeasonCard,
 } from '../../core/systems/SandtableTerritoryPicker';
 import { sandtableTerritories, type SandtableTerritory } from '../../core/systems/SandtableTerritories';
 import type { OfficerUnlocks } from '../../core/systems/OfficerSnapshot';
@@ -30,6 +31,8 @@ export interface SandtableTerritoryOpenPayload {
     onPlace: (territoryId: string) => boolean;
     /** 語系查詢：key 為 territory.<id>.name */
     nameOf: (territoryId: string) => string;
+    /** 右側挑戰賽賽季次卡（PROG-2-1431）；沒給時三行顯示「—」 */
+    seasonCard?: SandtableSeasonCard | null;
     onRequestClose?: () => void;
 }
 
@@ -93,7 +96,7 @@ export class SandtableTerritoryComposite extends CompositePanel {
         const payload = this._payload;
         if (!payload) return;
         const rows = this._rowStates();
-        this._templateBinder?.setTextsByPath(buildSandtableTerritoryPickerTexts(rows, payload.nameOf, payload.stage, this._markers.length));
+        this._templateBinder?.setTextsByPath(buildSandtableTerritoryPickerTexts(rows, payload.nameOf, payload.stage, this._markers.length, payload.seasonCard ?? null));
     }
 
     private _close(): void {

@@ -607,6 +607,59 @@
             ]
           }
         ]
+      },
+      {
+        "type": "panel",
+        "name": "SeasonCard",
+        "widget": {
+          "hCenter": 620,
+          "vCenter": -280
+        },
+        "width": 400,
+        "height": 300,
+        "skinSlot": "sandtable-picker.card.bg",
+        "layout": {
+          "type": "vertical",
+          "spacing": 12,
+          "paddingTop": 20,
+          "paddingBottom": 20,
+          "paddingLeft": 20,
+          "paddingRight": 20
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "SeasonTitleLabel",
+            "width": 360,
+            "height": 44,
+            "skinSlot": "sandtable-picker.text.primary",
+            "text": ""
+          },
+          {
+            "type": "label",
+            "name": "SeasonLineLabel",
+            "width": 360,
+            "height": 52,
+            "skinSlot": "sandtable-picker.text.secondary",
+            "text": ""
+          },
+          {
+            "type": "label",
+            "name": "VenueLineLabel",
+            "width": 360,
+            "height": 52,
+            "skinSlot": "sandtable-picker.text.secondary",
+            "text": ""
+          },
+          {
+            "type": "label",
+            "name": "TeamLineLabel",
+            "width": 360,
+            "height": 52,
+            "skinSlot": "sandtable-picker.text.secondary",
+            "text": ""
+          }
+        ]
       }
     ]
   }

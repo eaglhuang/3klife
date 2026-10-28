@@ -1,4 +1,4 @@
-// @spec-source → 官職系統.md §功能清單 #4「世界沙盤解鎖」；PROG-2-0967（領地選擇畫面的列與文字）
+// @spec-source → 官職系統.md §功能清單 #4「世界沙盤解鎖」；PROG-2-0967（領地選擇畫面的列與文字）；UI 規格補遺 (doc_ui_0030) tournament-season-card 側卡 PROG-2-1431
 /**
  * SandtableTerritoryPicker — 天下沙盤領地選擇的列資料與文字（純邏輯，不依賴 cc）
  *
@@ -36,6 +36,13 @@ export function sandtableTerritoryRowStates(
     });
 }
 
+/** 右側挑戰賽賽季次卡的三行文字（tournament-season-card，PROG-2-1431）；由 UI 層格式化後傳入 */
+export interface SandtableSeasonCard {
+    readonly season: string;
+    readonly venue: string;
+    readonly team: string;
+}
+
 /**
  * 領地選擇畫面的全部文字，key 為相對 screen 根節點的路徑。
  * name 由呼叫端以語系查詢傳入（nameOf），這裡不依賴 i18n。
@@ -45,6 +52,7 @@ export function buildSandtableTerritoryPickerTexts(
     nameOf: (territoryId: string) => string,
     stage: OfficerUnlocks['sandtableStage'],
     placedCount: number,
+    seasonCard: SandtableSeasonCard | null = null,
 ): Record<string, string> {
     const limit = stage ? SANDTABLE_MARKER_LIMIT[stage] : 0;
     const texts: Record<string, string> = {
@@ -53,6 +61,10 @@ export function buildSandtableTerritoryPickerTexts(
             ? `階段 ${stage}｜標記 ${placedCount}/${limit}，每領地最多一個`
             : '官職尚未達沙盤階段',
     };
+    texts['SeasonCard/SeasonTitleLabel'] = '名將挑戰賽・本季';
+    texts['SeasonCard/SeasonLineLabel'] = seasonCard?.season ?? '—';
+    texts['SeasonCard/VenueLineLabel'] = seasonCard?.venue ?? '—';
+    texts['SeasonCard/TeamLineLabel'] = seasonCard?.team ?? '—';
     for (let i = 0; i < SANDTABLE_PICKER_ROWS; i += 1) {
         const row = rows[i];
         const base = `DialogCard/ScrollView/ScrollContent/Row${i}`;

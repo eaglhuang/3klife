@@ -1,4 +1,4 @@
-// @spec-source → 名將挑戰賽系統.md (doc_spec_0007)；PROG-2-1191（挑戰賽彈窗）；§H UI_TOURNAMENT_REWARD 賽季獎勵 PROG-2-1194；§E-2 場地公告 PROG-2-1195；§H UI_TOURNAMENT_BOSS PROG-2-1196
+// @spec-source → 名將挑戰賽系統.md (doc_spec_0007)；PROG-2-1191（挑戰賽彈窗）；§H UI_TOURNAMENT_REWARD 賽季獎勵 PROG-2-1194；§E-2 場地公告 PROG-2-1195；§H UI_TOURNAMENT_BOSS PROG-2-1196；天下沙盤側卡 PROG-2-1431
 /**
  * TournamentPanelController — 名將挑戰賽彈窗：賽季卡、報名、參戰（純邏輯，不依賴 cc）。
  *
@@ -65,6 +65,26 @@ export interface TournamentPanelFlowView {
     enabled: Record<string, boolean>;
 }
 
+/** 賽季導覽三行：屆次／盃名／階段／剩餘天數、場地、報名快照（彈窗與天下沙盤側卡共用，PROG-2-1431） */
+export interface TournamentSeasonCardLines {
+    season: string;
+    venue: string;
+    team: string;
+}
+
+export function tournamentSeasonCardLines(
+    status: TournamentStatus,
+    generalName: (generalId: string) => string | undefined,
+): TournamentSeasonCardLines {
+    return {
+        season: `第 ${status.seasonIndex} 屆【${status.venue.cupName}】｜${TOURNAMENT_PHASE_LABEL[status.phase]}｜剩 ${status.daysLeft} 日`,
+        venue: `地形：${TERRAIN_LABEL[status.venue.terrain]}、天氣：${WEATHER_LABEL[status.venue.weather]}`,
+        team: status.team
+            ? `出戰：${status.team.generals.map((id) => generalName(id) ?? id).join('、')}（戰力 ${status.team.totalPower}）`
+            : '尚未報名（競賽期首次參戰自動報名）',
+    };
+}
+
 export class TournamentPanelController {
     private _message = '';
 
@@ -111,20 +131,18 @@ export class TournamentPanelController {
             : status.entriesLeftToday === 0
                 ? '今日參戰次數已用完'
                 : `今日剩 ${status.entriesLeftToday} 次（${freeLeft > 0 ? `免費 ${freeLeft} 次` : `每次 ${cfg.extraEntryCost} 金`}）`;
-        const team = status.team
-            ? `出戰：${status.team.generals.map((id) => this._deps.generalName(id) ?? id).join('、')}（戰力 ${status.team.totalPower}）`
-            : '尚未報名（競賽期首次參戰自動報名）';
+        const card = tournamentSeasonCardLines(status, this._deps.generalName);
         const bossLine = `賽季 BOSS：${status.venue.boss.name}（弱點：${status.venue.boss.weaknessTags.map((t) => TOURNAMENT_BOSS_TAG_LABEL[t]).join('、')}）`;
         const bossMatch = this._deps.tallies ? `｜${tallyBossMatchText(tallyBossMatch(this._deps.tallies(), status.venue.boss))}` : '';
         return {
             texts: {
                 trnTitle: '名將挑戰賽',
-                trnSeasonLabel: `第 ${status.seasonIndex} 屆【${status.venue.cupName}】｜${TOURNAMENT_PHASE_LABEL[status.phase]}｜剩 ${status.daysLeft} 日`,
-                trnVenueLabel: `地形：${TERRAIN_LABEL[status.venue.terrain]}、天氣：${WEATHER_LABEL[status.venue.weather]}`,
+                trnSeasonLabel: card.season,
+                trnVenueLabel: card.venue,
                 trnBossLabel: `${bossLine}${bossMatch}`,
                 trnRankLabel: `積分 ${status.points}｜${TOURNAMENT_TIER_LABEL[status.tier]}`,
                 trnEntriesLabel: entries,
-                trnTeamLabel: team,
+                trnTeamLabel: card.team,
                 trnRewardLabel: `賽季獎勵：${pending.length > 0 ? rewardsText(pending) : '無待領取'}`,
                 trnResultLabel: this._message,
                 btnRegisterLabel: status.team ? '重新報名' : '報名',
