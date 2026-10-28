@@ -52,6 +52,8 @@ import { normalizeCountdownState, createCountdown, OPENING_TRAVEL_DURATION_MS, O
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { ageGeneralsOneSeason, AgingEvent, isGeneralDead, RandomSource } from '../systems/GeneralAging';
 import { applyWarInjury } from '../systems/WarInjury';
+import { settleStageSalvage } from '../systems/StageSalvageSettlement';
+import type { SalvageTotals } from '../systems/StrategistHud';
 import { applyActiveLifespanToRoster, ActiveLifespanResult, preLifespanBaseline } from '../systems/LifespanWiring';
 import { applyJobChangeToRoster, JobWiringGeneral } from '../systems/JobChangeWiring';
 import type { JobChangeResult, JobClass } from '../systems/JobChange';
@@ -392,6 +394,8 @@ export interface RecordBattleOptions {
     vitalityAfterBattle?: Readonly<Record<string, number>>;
     /** 武將 id → 戰鬥結束時的血量比例（0~1）；重傷扣壽命上限（戰傷減損，PROG-2-1570） */
     hpRatioAfterBattle?: Readonly<Record<string, number>>;
+    /** 本場戰場撿拾累計（Stage_Salvage）；勝利或平手時戰後一次入帳（PROG-2-1571） */
+    stageSalvage?: Readonly<SalvageTotals>;
     /** 英靈夢回教學戰的傳說英靈；勝利時產出初始虎符（OPEN-13），沒有時不做任何事 */
     teachingSpirit?: TeachingSpiritInput | null;
 }
@@ -3746,6 +3750,16 @@ export class GameSession {
                 this._military = { ...this._military, food: kept.after };
                 this._lastCellarProtectedFood = kept.saved;
             }
+        }
+
+        // 戰場撿拾戰後入帳（關卡設計 §I-2，PROG-2-1571）：補給轉糧草、其餘轉背包材料，戰敗不入帳
+        if (options.stageSalvage) {
+            const beforeSalvage = this._inventory;
+            const salvage = settleStageSalvage(options.stageSalvage, result !== 'enemy-win',
+                this._military.food, this._military.foodCap, this._inventory);
+            this._military = { ...this._military, food: salvage.food };
+            this._inventory = salvage.inventory;
+            this._recordGain(beforeSalvage, 'TASK');
         }
 
         const source = battleExpSource(result);
