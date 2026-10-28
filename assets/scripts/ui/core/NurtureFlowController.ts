@@ -843,19 +843,26 @@ export function describeMentorTriggers(
 }
 
 export function describeRound(log: NurtureRoundLog, t: BreedTextLookup = fallbackBreedText): string {
-    const head = `第 ${log.round} 回合`;
+    const head = labelOf(t, 'ui.nurture.log.head', `第 ${log.round} 回合`, String(log.round));
     // 受傷事件（NUR-09）：跳過回合與受傷回合的動作都不生效，不能顯示成「訓練失敗」或「+0」
-    if (log.skipped) return `${head}：傷勢未癒，本回合無法行動`;
-    if (log.injured) return `${head}：訓練時受傷，本回合成果作廢，下回合無法行動`;
-    const affection = log.affectionGained ? '　好感 +1' : '';
+    if (log.skipped) return `${head}：${labelOf(t, 'ui.nurture.log.skipped', '傷勢未癒，本回合無法行動')}`;
+    if (log.injured) return `${head}：${labelOf(t, 'ui.nurture.log.injured', '訓練時受傷，本回合成果作廢，下回合無法行動')}`;
+    const affection = log.affectionGained ? `　${labelOf(t, 'ui.nurture.log.affection', '好感 +1')}` : '';
     if (log.action === 'rest') {
-        return `${head}：休息，精力 ${log.vigorBefore} → ${log.vigorAfter}${affection}`;
+        const rest = labelOf(t, 'ui.nurture.log.rest', `休息，精力 ${log.vigorBefore} → ${log.vigorAfter}`, String(log.vigorBefore), String(log.vigorAfter));
+        return `${head}：${rest}${affection}`;
     }
     const label = statLabelOf(t, log.action);
     if (!log.success) {
-        return `${head}：${label}訓練失敗${log.negativeFactor ? `，獲得「${log.negativeFactor}」` : ''}${affection}`;
+        const failed = labelOf(t, 'ui.nurture.log.train_failed', `${label}訓練失敗`, label);
+        const factor = log.negativeFactor
+            ? labelOf(t, 'ui.nurture.log.factor_gained', `，獲得「${log.negativeFactor}」`, log.negativeFactor)
+            : '';
+        return `${head}：${failed}${factor}${affection}`;
     }
-    return `${head}：${label} +${log.statGained}，TP +${log.tpGained}${log.burst ? '（教官爆發！）' : ''}${affection}`;
+    const gain = labelOf(t, 'ui.nurture.log.gain', `${label} +${log.statGained}，TP +${log.tpGained}`, label, String(log.statGained), String(log.tpGained));
+    const burst = log.burst ? labelOf(t, 'ui.nurture.log.burst', '（教官爆發！）') : '';
+    return `${head}：${gain}${burst}${affection}`;
 }
 
 function buildReportTexts(report: GraduationReport, t: BreedTextLookup): Record<string, string> {
