@@ -11,6 +11,9 @@ import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import type { AiDifficulty } from '../assets/scripts/core/systems/AiSpCharge';
+import { aiDifficultyEntryOf, parseAiDifficultyTable } from '../assets/scripts/core/systems/AiDifficultyTable';
+import * as fs from 'fs';
+import * as path from 'path';
 import { TestSuite, assert } from './TestRunner';
 
 function general(id: string, faction: Faction): GeneralUnit {
@@ -40,6 +43,11 @@ function evenBattle(difficulty: AiDifficulty, roll: number): BattleController {
     challenger.currentHp = challenger.maxHp / 2;
     defender.currentHp = defender.maxHp / 2;
     ctrl.state.aiDifficulty = difficulty;
+    // 閾值讀真實難度表（ai-difficulty.json），與場景入口的做法一致
+    const raw = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'assets', 'resources', 'data', 'ai-difficulty.json'), 'utf8'));
+    const table = parseAiDifficultyTable(raw).table;
+    if (!table) throw new Error('ai-difficulty.json 解析失敗');
+    ctrl.configureAiDifficulty(aiDifficultyEntryOf(table, difficulty));
     for (let i = 0; i < 3; i += 1) ctrl.state.addUnit(troop(`p-${i}`, Faction.Player, 2, 1 + i));
     for (let i = 0; i < 3; i += 1) ctrl.state.addUnit(troop(`e-${i}`, Faction.Enemy, 2, 6 - i));
     // 兵力半血：E-7 兵力項為現存 / 最大，與血量項同為 0.5

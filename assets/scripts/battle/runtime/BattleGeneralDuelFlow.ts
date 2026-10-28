@@ -243,7 +243,7 @@ export class BattleGeneralDuelFlow {
       ? decideDuelAccept(
         { hpRatio: defenderHpPct, squadRatio, powerRatio: powerAdvantage },
         services().session.randomSource(),
-        this.context.state.aiDifficulty,
+        this.context.state.aiDuelAcceptThreshold ?? DUEL_ACCEPT_THRESHOLD,
       )
       : score >= DUEL_ACCEPT_THRESHOLD;
 

@@ -3,14 +3,12 @@
  * AiDuelDecision — 防守方是否接受單挑（純邏輯，不依賴 cc）
  *
  * 公式：duel_score = 0.45 × HP 比 + 0.35 × 分隊兵力比 + 0.20 × 總戰力比，再加上 ±0.05 抖動。
- * 一般難度閾值 0.58；EASY 降到 0.45，即使處境不利也較容易接受。
+ * 接受閾值由難度表 duelAcceptThreshold 提供（EASY 0.45、其餘 0.58）。
  *
  * 暫定：HARD 以上「有利時主動發起」不在這裡，屬發起判定，另開卡。
  *
  * Unity 對照：像 AI 的 Decision Score 元件，權重寫在 ScriptableObject 裡，隨機抖動由外部 Random seed 注入。
  */
-import type { AiDifficulty } from './AiSpCharge';
-
 /** 規格 E-7 各項權重；三項相加為 1 */
 export const DUEL_SCORE_WEIGHT = Object.freeze({
     hp: 0.45,
@@ -18,11 +16,11 @@ export const DUEL_SCORE_WEIGHT = Object.freeze({
     power: 0.2,
 });
 
-/** 規格 E-7：一般難度接受閾值 */
+/**
+ * 規格 E-7：一般閾值 0.58。玩家防守沿用此值；敵方 AI 防守的閾值讀難度表 duelAcceptThreshold（PROG-2-1325），
+ * 只有未設定難度表時才退回此值。
+ */
 export const DUEL_ACCEPT_THRESHOLD = 0.58;
-
-/** 規格 E-7：EASY 接受閾值 */
-export const DUEL_ACCEPT_THRESHOLD_EASY = 0.45;
 
 /** 規格 E-7：抖動幅度，roll 0 對應 −0.05、roll 1 對應 +0.05 */
 const DUEL_JITTER = 0.05;
@@ -53,12 +51,7 @@ export function duelScoreWithJitter(input: DuelScoreInput, roll: number): number
     return duelScoreOf(input) + jitter;
 }
 
-/** 接受閾值：EASY 為 0.45，其餘為 0.58。 */
-export function duelAcceptThresholdOf(difficulty: AiDifficulty): number {
-    return difficulty === 'easy' ? DUEL_ACCEPT_THRESHOLD_EASY : DUEL_ACCEPT_THRESHOLD;
-}
-
-/** 防守方是否接受單挑；分數達閾值即接受，拒絕時全軍攻防與武將 HP 減半（規格 E-7）。 */
-export function decideDuelAccept(input: DuelScoreInput, roll: number, difficulty: AiDifficulty): boolean {
-    return duelScoreWithJitter(input, roll) >= duelAcceptThresholdOf(difficulty);
+/** 防守方是否接受單挑；分數達閾值即接受，拒絕時全軍攻防與武將 HP 減半（規格 E-7）。閾值由呼叫端傳入（難度表）。 */
+export function decideDuelAccept(input: DuelScoreInput, roll: number, threshold: number): boolean {
+    return duelScoreWithJitter(input, roll) >= threshold;
 }

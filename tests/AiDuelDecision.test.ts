@@ -7,7 +7,6 @@
 import { assert, TestSuite } from './TestRunner';
 import {
     decideDuelAccept,
-    duelAcceptThresholdOf,
     duelScoreOf,
     duelScoreWithJitter,
 } from '../assets/scripts/core/systems/AiDuelDecision';
@@ -35,24 +34,24 @@ export function createAiDuelDecisionSuite(): TestSuite {
         assert.isTrue(Math.abs(duelScoreWithJitter(input, 0.5) - base) < 1e-9);
     });
 
-    suite.test('閾值：一般 0.58、EASY 0.45', () => {
-        assert.equals(0.58, duelAcceptThresholdOf('normal'));
-        assert.equals(0.58, duelAcceptThresholdOf('hell'));
-        assert.equals(0.45, duelAcceptThresholdOf('easy'));
+    suite.test('閾值由呼叫端傳入：分數剛好等於閾值時接受', () => {
+        const input = { hpRatio: 0.5, squadRatio: 0.5, powerRatio: 0.5 };
+        assert.isTrue(decideDuelAccept(input, 0.5, 0.5));
+        assert.isFalse(decideDuelAccept(input, 0.5, 0.51));
     });
 
     suite.test('一般難度：分數達 0.58 接受，低於則拒絕', () => {
         const strong = { hpRatio: 1, squadRatio: 1, powerRatio: 1 };
         const weak = { hpRatio: 0.2, squadRatio: 0.2, powerRatio: 0.2 };
-        assert.isTrue(decideDuelAccept(strong, 0.5, 'normal'));
-        assert.isFalse(decideDuelAccept(weak, 0.5, 'normal'));
+        assert.isTrue(decideDuelAccept(strong, 0.5, 0.58));
+        assert.isFalse(decideDuelAccept(weak, 0.5, 0.58));
     });
 
     suite.test('EASY 閾值較低：同一組輸入在 EASY 接受、一般拒絕', () => {
         // base = 0.5；roll=0.5 不抖動，0.5 介於 0.45 與 0.58 之間
         const input = { hpRatio: 0.5, squadRatio: 0.5, powerRatio: 0.5 };
-        assert.isFalse(decideDuelAccept(input, 0.5, 'normal'));
-        assert.isTrue(decideDuelAccept(input, 0.5, 'easy'));
+        assert.isFalse(decideDuelAccept(input, 0.5, 0.58));
+        assert.isTrue(decideDuelAccept(input, 0.5, 0.45));
     });
 
     return suite;
