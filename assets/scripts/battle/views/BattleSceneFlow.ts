@@ -4,7 +4,7 @@ import { Color } from 'cc';
 import { Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import type { BattleController } from '../controllers/BattleController';
-import { buildOrderLoyalty, buildRosterSortieInput, createGeneral, loadEncounter, loadEnemyScale } from './BattleSceneLoader';
+import { buildOrderLoyalty, buildRosterSortieInput, createGeneral, loadEncounter, loadEnemyScale, playerPowerOfGeneral } from './BattleSceneLoader';
 import { buildSceneGambitSummary } from './BattleSceneGambitSummary';
 import { BATTLE_TURN_FLOW_TIMING } from './BattlePresentationTiming';
 import type { IBattleEntryParams } from '../../shared/BattleEntryParams';
@@ -69,9 +69,9 @@ export class BattleSceneFlow {
     const terrain: TerrainGrid | undefined = encounter?.terrain;
 
     const difficulty = resolveAiDifficulty(battleParams?.aiDifficulty, encounter?.difficulty);
-    const enemyScale = await loadEnemyScale(this.ctx.getCurrentEncounterId(), difficulty, services().session.aiAdaptiveStreak, pgId, egId);
-
     const pg = await createGeneral(pgId, Faction.Player);
+    const enemyScale = await loadEnemyScale(this.ctx.getCurrentEncounterId(), difficulty, services().session.aiAdaptiveStreak, playerPowerOfGeneral(pg), egId);
+
     const eg = await createGeneral(egId, Faction.Enemy, enemyScale);
     this.ctx.setPlayerGeneral(pg);
     this.ctx.setEnemyGeneral(eg);

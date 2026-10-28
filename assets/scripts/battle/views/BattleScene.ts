@@ -21,7 +21,7 @@ import { BoardRenderer } from "./BoardRenderer";
 import { UnitRenderer } from "./UnitRenderer";
 import { SceneBackground } from "./SceneBackground";
 import { Camera, view } from "cc";
-import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, loadEnemyScale, createGeneral, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput, buildOrderLoyalty } from './BattleSceneLoader';
+import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, loadEnemyScale, createGeneral, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput, buildOrderLoyalty, playerPowerOfGeneral } from './BattleSceneLoader';
 import { BattleSkillTargetingFlow } from './BattleSkillTargetingFlow';
 import { BattleSceneFlow } from './BattleSceneFlow';
 import { validateBattleStateReadModel, validateSortieLoadoutReadModel } from '../../core/systems/ReadModelValidators';
@@ -201,8 +201,8 @@ export class BattleScene extends Component {
 
       // 4. 從 JSON 讀取武將設定（失敗時使用預設值）
       const difficulty = resolveAiDifficulty(battleParams.aiDifficulty, encounter?.difficulty);
-      const enemyScale = await loadEnemyScale(this.currentEncounterId, difficulty, services().session.aiAdaptiveStreak, pgId, egId);
       const pg = await createGeneral(pgId, Faction.Player);
+      const enemyScale = await loadEnemyScale(this.currentEncounterId, difficulty, services().session.aiAdaptiveStreak, playerPowerOfGeneral(pg), egId);
       const eg = await createGeneral(egId, Faction.Enemy, enemyScale);
       // 存為類別欄位，供 RequestGeneralQuickView 事件轉接層查詢
       this._pg = pg;

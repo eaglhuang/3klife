@@ -295,12 +295,30 @@ export async function templatePowerOf(generalId: string): Promise<number | null>
   }
 }
 
+/**
+ * 出征武將的實際戰力（AIS-09 F-1）：用玩家實際武將的六維、轉生與戰法計算。
+ * 年齡目前未在 GeneralUnit 上，暫以壯年（Prime）計。
+ */
+export function playerPowerOfGeneral(general: GeneralUnit): number {
+  return evaluateAiPower({
+    str: general.str,
+    int: general.int,
+    lea: general.lea,
+    pol: general.pol,
+    cha: general.cha,
+    luk: general.luk,
+    ageStage: 'Prime',
+    tacticTpCosts: general.tacticSlots.map(slot => getTacticTpCost(slot.tacticId)),
+    reincarnation: general.rebirthCount ?? 1,
+  });
+}
+
 export async function loadEnemyScale(
   encounterId: string,
   difficulty: AiDifficulty,
   streak: AiAdaptiveStreak = EMPTY_AI_ADAPTIVE_STREAK,
-  playerGeneralId?: string,
-  enemyGeneralId?: string,
+  playerPower: number | null = null,
+  enemyGeneralId: string | null = null,
 ): Promise<EnemyScaleSetting | undefined> {
   try {
     const { table } = parseAiDifficultyTable(await services().resource.loadJson<unknown>("data/ai-difficulty"));
@@ -311,7 +329,6 @@ export async function loadEnemyScale(
     // E-8：玩家連勝連敗微調敵方 statScale；沒有連勝連敗時等於基礎值
     const adaptive = adaptiveScaleOf(base.statScale, streak);
     // AIS-09：敵我模板戰力差超過 ±20% 時拉回邊界；沒傳武將 id 就不匹配
-    const playerPower = playerGeneralId ? await templatePowerOf(playerGeneralId) : null;
     const enemyPower = enemyGeneralId ? await templatePowerOf(enemyGeneralId) : null;
     const scale = playerPower !== null && enemyPower !== null
       ? matchAiScaleToPlayerPower(enemyPower, adaptive, playerPower)
