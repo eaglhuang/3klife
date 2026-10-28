@@ -98,6 +98,7 @@ import { FormulaSystem } from '../../core/systems/FormulaSystem';
 import { buildEnemyTacticCandidates } from '../shared/EnemyTacticCandidates';
 import { fillTacticNumbers, type TacticMetrics } from '../shared/EnemyTacticNumbers';
 import { aiHoldsTactic, pickTacticByIq } from '../shared/AiTacticDecision';
+import { aiShouldInitiateDuel } from '../../core/systems/AiDuelDecision';
 import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
@@ -1462,6 +1463,14 @@ export class BattleController {
 
   public isDuelChallengeResolved(): boolean {
     return this.duelFlow.isDuelChallengeResolved();
+  }
+
+  /**
+   * 敵將推進到我將面前時是否發起單挑（AI武將強度 E-7，PROG-2-1470）：
+   * HARD 以上只在有利時發起；我方防守的評估不吃亂數，可在發起前先算。
+   */
+  public shouldEnemyInitiateDuel(): boolean {
+    return aiShouldInitiateDuel(this.state.aiTacticIq, this.duelFlow.evaluateDuelAcceptance(Faction.Enemy).score);
   }
 
   /**

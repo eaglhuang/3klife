@@ -249,7 +249,8 @@ export class TurnFlowManager {
     if (c.ctrl.isGeneralFacingEnemyGeneral(Faction.Player)) {
       challengerFaction = Faction.Player;
       c.battleLogPanel?.append('我方武將已推進到敵將面前，發起單挑邀請！');
-    } else if (c.ctrl.isGeneralFacingEnemyGeneral(Faction.Enemy)) {
+    } else if (c.ctrl.isGeneralFacingEnemyGeneral(Faction.Enemy) && c.ctrl.shouldEnemyInitiateDuel()) {
+      // E-7（PROG-2-1470）：HARD 以上敵將局勢不利時先不發起，之後回合再判斷
       challengerFaction = Faction.Enemy;
       c.battleLogPanel?.append('敵方武將已推進到我將面前，發起單挑邀請！');
     }
