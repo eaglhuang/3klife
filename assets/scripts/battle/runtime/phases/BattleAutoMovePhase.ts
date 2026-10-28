@@ -52,6 +52,7 @@ export function executeBattleAutoMovePhase(context: BattleAutoMovePhaseContext):
 }
 
 function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context: BattleAutoMovePhaseContext): void {
+  unit.chargeCells = 0;
   if (svc.buff.hasBuff(unit.id, StatusEffect.Stun)) {
     unit.isShieldWallActive = false;
     return;
@@ -105,6 +106,7 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
 
         blocker.moveTo(previousLane, previousDepth);
         unit.moveTo(unit.lane, nextDepth);
+        unit.chargeCells += 1;
         context.turnManager.markGeneralSwapUsed(unit.faction);
 
         svc.event.emit(EVENT_NAMES.UnitMoved, {
@@ -150,6 +152,7 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
     context.state.getCell(unit.lane, unit.depth)!.occupantId = null;
     unit.moveTo(unit.lane, nextDepth);
     nextCell.occupantId = unit.id;
+    unit.chargeCells += 1;
     svc.event.emit(EVENT_NAMES.UnitMoved, {
       unitId: unit.id,
       lane: unit.lane,
