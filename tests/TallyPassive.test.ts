@@ -201,6 +201,10 @@ export function createTallyPassiveSuite(): TestSuite {
     assert.equals(0.8, tallyEnemyAuraAttackMultiplierOf(diagonal, all));
     assert.equals(1, tallyEnemyAuraAttackMultiplierOf(far, all));
     assert.equals(1, tallyEnemyAuraAttackMultiplierOf(jinFan, all), '光環不影響友軍與自己');
+    // 先登免疫恐懼（PROG-2-1513）：同樣站在光環內不受影響
+    const xianDeng = enemyAt('e3', 2, 4);
+    xianDeng.tallyTemplateId = 'tiger-tally-xian-deng';
+    assert.equals(1, tallyEnemyAuraAttackMultiplierOf(xianDeng, [...all, xianDeng]));
     const resolver = new BattleCombatResolver({
       state: { units: new Map(all.map((u) => [u.id, u])), getCell: () => ({ terrain: TerrainType.Plain }) },
     } as any);
