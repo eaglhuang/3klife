@@ -1,7 +1,7 @@
 import { TroopType, Faction, TerrainType } from '../assets/scripts/core/config/Constants';
 import { buildTallyCardCatalog } from '../assets/scripts/core/config/TallyCardCatalog';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { applyTallyPassive, extraAttackHitsOf, tallyAttackMultiplierOf, tallyBackRowDamageMultiplierOf, tallyPhysicalDamageTakenOf, tallyTerrainMoveBonusOf } from '../assets/scripts/battle/shared/TallyPassive';
+import { applyTallyPassive, extraAttackHitsOf, tallyAttackMultiplierOf, tallyBackRowDamageMultiplierOf, tallyDefensePenetrationOf, tallyEnemyAuraAttackMultiplierOf, tallyEvasionBonusOf, tallyPhysicalDamageTakenOf, tallyTerrainMoveBonusOf, tallyTroopTypeDamageMultiplierOf } from '../assets/scripts/battle/shared/TallyPassive';
 import { BattleSkillDamageResolver } from '../assets/scripts/battle/skills/BattleSkillDamageResolver';
 import { resolveBattleSkillProfile } from '../assets/scripts/battle/skills/BattleSkillProfiles';
 import { createBattleSkillTestContext, createTestGeneral, createTestUnit } from './BattleSkillTestUtils';
@@ -184,6 +184,52 @@ export function createTallyPassiveSuite(): TestSuite {
     const star = unit.tallyStarMultiplier;
     assert.equals(2 * star, resolver.getTallyAttackMod(unit));
     assert.equals(0.5 * star, resolver.getTallyDefenseMod(unit));
+  });
+
+  suite.test('錦帆（PROG-2-1457 暫定）：周圍 1 格敵軍攻擊 ×0.8（非虎符也受影響），河道攻擊 ×1.2、移動 +1', () => {
+    const jinFan = new TroopUnit('jf', TroopType.Navy, Faction.Player, { hp: 100, attack: 30, defense: 20, moveRange: 2, attackRange: 1 });
+    jinFan.tallyTemplateId = 'tiger-tally-jin-fan';
+    jinFan.moveTo(2, 3);
+    const enemyAt = (id: string, lane: number, depth: number) => {
+      const u = new TroopUnit(id, TroopType.Infantry, Faction.Enemy, { hp: 100, attack: 30, defense: 20, moveRange: 1, attackRange: 1 });
+      u.moveTo(lane, depth);
+      return u;
+    };
+    const diagonal = enemyAt('e1', 3, 4);
+    const far = enemyAt('e2', 2, 5);
+    const all = [jinFan, diagonal, far];
+    assert.equals(0.8, tallyEnemyAuraAttackMultiplierOf(diagonal, all));
+    assert.equals(1, tallyEnemyAuraAttackMultiplierOf(far, all));
+    assert.equals(1, tallyEnemyAuraAttackMultiplierOf(jinFan, all), '光環不影響友軍與自己');
+    const resolver = new BattleCombatResolver({
+      state: { units: new Map(all.map((u) => [u.id, u])), getCell: () => ({ terrain: TerrainType.Plain }) },
+    } as any);
+    assert.equals(0.8, resolver.getTallyAttackMod(diagonal));
+    assert.equals(1.2, tallyAttackMultiplierOf(jinFan, TerrainType.River));
+    assert.equals(1, tallyAttackMultiplierOf(jinFan, TerrainType.Plain));
+    assert.equals(1, tallyTerrainMoveBonusOf(jinFan, TerrainType.River));
+  });
+
+  suite.test('工甲符／白耳／元戎／常山女（PROG-2-1457 暫定）：穿透、兵種剋制、連擊、迴避', () => {
+    const make = (id: string, type: TroopType, template?: string) => {
+      const u = new TroopUnit(id, type, Faction.Player, { hp: 100, attack: 30, defense: 20, moveRange: 1, attackRange: 1 });
+      if (template) u.tallyTemplateId = template;
+      return u;
+    };
+    const archer = make('a', TroopType.Archer);
+    const infantry = make('i', TroopType.Infantry);
+    assert.equals(0.3, tallyDefensePenetrationOf(make('g', TroopType.Engineer, 'tiger-tally-gong-jia-fu')));
+    assert.equals(0, tallyDefensePenetrationOf(archer));
+    const baiEr = make('b', TroopType.Shield, 'tiger-tally-bai-er');
+    assert.equals(1.5, tallyTroopTypeDamageMultiplierOf(baiEr, archer));
+    assert.equals(1, tallyTroopTypeDamageMultiplierOf(baiEr, infantry));
+    const yuanRong = make('y', TroopType.Archer, 'tiger-tally-yuan-rong');
+    assert.equals(1.5, tallyTroopTypeDamageMultiplierOf(yuanRong, infantry));
+    assert.equals(1, extraAttackHitsOf(yuanRong, false));
+    const resolver = new BattleCombatResolver({ state: { units: new Map(), getCell: () => ({ terrain: TerrainType.Plain }) } } as any);
+    assert.equals(1.5, resolver.getTallyPhysicalDamageMod(baiEr, archer));
+    assert.equals(0.3, tallyEvasionBonusOf(make('c', TroopType.Medic, 'tiger-tally-changshan-nu')));
+    assert.equals(0, tallyEvasionBonusOf(archer));
   });
 
   return suite;
