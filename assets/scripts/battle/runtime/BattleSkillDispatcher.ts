@@ -60,6 +60,8 @@ export interface BattleSkillDispatcherContext {
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
 export class BattleSkillDispatcher {
   private readonly skillExecutor: BattleSkillExecutor = createDefaultBattleSkillExecutor();
+  /** 本場已生效的奧義（陣營:ultimateId）；E-9 每場戰鬥每個奧義限用 1 次（PROG-2-1451） */
+  private readonly usedUltimates = new Set<string>();
 
   constructor(
     private readonly context: BattleSkillDispatcherContext,
@@ -183,6 +185,18 @@ export class BattleSkillDispatcher {
         battleLogLines: ['戰法條件未達成，無法發動'],
       };
     }
+    // 每場戰鬥每個奧義限用 1 次（E-9，PROG-2-1451）：已生效過的奧義擋下，不扣資源
+    const usedKey = this.usedUltimateKey(request);
+    if (usedKey && this.usedUltimates.has(usedKey)) {
+      return {
+        requestId: `${request.ownerUid}:${request.battleSkillId}`,
+        battleSkillId: request.battleSkillId,
+        applied: false,
+        blockedReason: 'ultimate-used',
+        deltas: [],
+        battleLogLines: ['此奧義本場已施放過'],
+      };
+    }
     // 撤退失敗鎖回合（PROG-2-0441）：本回合撤退失敗的部隊不能發動戰法或奧義，不扣資源
     if (this.context.isUnitActionBlocked?.(request.ownerUid)) {
       return {
@@ -209,6 +223,7 @@ export class BattleSkillDispatcher {
     const result = this.skillExecutor.execute(this.withUltimateAttack(request), this.buildBattleSkillExecutionContext());
     if (result.applied && request.sourceType === SkillSourceType.Ultimate) {
       this.spendUltimateCost(request);
+      if (usedKey) this.usedUltimates.add(usedKey);
     }
     return result;
   }
@@ -223,8 +238,21 @@ export class BattleSkillDispatcher {
     const table = this.context.getUltBasePowerTable?.();
     const caster = this.resolveCasterGeneral(request);
     if (!def || def.slot === undefined || !table || !caster) return request;
-    const attack = ultimateAttackOf(def.slot, table, def.scalingStat, { str: caster.str, int: caster.int });
+    // 奧義升級等級（PROG-2-1251）進傷害公式的 ult_level（PROG-2-1451）
+    const ultLevel = caster.ultimateSlots.find((slot) => slot.ultimateId === request.ultimateId)?.ultLevel;
+    const attack = ultimateAttackOf(def.slot, table, def.scalingStat, { str: caster.str, int: caster.int }, ultLevel);
     return attack === null ? request : { ...request, ultimateAttack: attack };
+  }
+
+  /** 新一局戰鬥開始時清空已施放奧義紀錄（BattleController.initBattle 呼叫） */
+  public resetUltimateUsage(): void {
+    this.usedUltimates.clear();
+  }
+
+  private usedUltimateKey(request: BattleSkillRequest): string | null {
+    if (request.sourceType !== SkillSourceType.Ultimate || !request.ultimateId) return null;
+    const general = this.resolveCasterGeneral(request);
+    return general ? `${general.faction}:${request.ultimateId}` : null;
   }
 
   /** 奧義生效後扣精力（PROG-2-0429）：只在 applied 時扣，被擋或沒有目標不扣 */
