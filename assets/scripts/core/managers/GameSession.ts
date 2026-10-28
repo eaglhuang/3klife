@@ -167,7 +167,7 @@ import type { FactorPoolEntry } from '../systems/BreedingSystem';
 import { planBloodlineMergeForGenerals, type BloodlineMergeRejectReason } from '../systems/BloodlineMerge';
 import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ADMISSION_TOKEN, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_TREASURE, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';
 import { useItem as useItemFlow, type ItemUseResult } from '../systems/ItemUseFlow';
-import { equipGear as equipGearFlow, unequipGear as unequipGearFlow, type GearEquipResult } from '../systems/GearEquipFlow';
+import { equipGear as equipGearFlow, unequipGear as unequipGearFlow, transferGearToHeir, type GearEquipResult } from '../systems/GearEquipFlow';
 import { gearDefinitionOf } from '../systems/GearDefinitions';
 import type { EquipSlot } from '../systems/GeneralBackpack';
 import { checkLegendaryMentoring, LegendaryMentoringBlock, performLegendaryMentoring } from '../systems/LegendaryMentoring';
@@ -3366,13 +3366,16 @@ export class GameSession {
     /**
      * 玩家讓 65 歲以上的武將退役，轉成教官傳承資料並立即存檔。
      * 可選擇一位 0~5 歲、尚未開獎的子嗣，退役時注入因子媒介（PROG-2-0865）；不選則行為與原本相同。
+     * 可選擇一位存活的子嗣接收一般裝備（EQP-07，PM 暫定）；不選時裝備照舊回倉庫。
      */
-    public async retireGeneral(generalId: string, options?: { catalystChildId?: string }): Promise<MentorCard> {
+    public async retireGeneral(generalId: string, options?: { catalystChildId?: string; heirChildId?: string }): Promise<MentorCard> {
         if (!this._lifecycle) {
             throw new Error('[GameSession] 尚未設定 SeasonLifecycle（setLifecycle）');
         }
         const childId = options?.catalystChildId;
         if (childId !== undefined) this._assertCatalystChild(generalId, childId);
+        const heirId = options?.heirChildId;
+        if (heirId !== undefined) this._assertHeir(generalId, heirId);
         const retiredSubjects = this._journalSubjects([generalId]);
         const result = await this._lifecycle.retireGeneral(this._roster.getAll(), generalId, this._clock.state);
         let roster = result.roster;
@@ -3390,6 +3393,7 @@ export class GameSession {
         }
         this._roster.replaceAll(roster);
         this._clearLeadIfGone();
+        if (heirId !== undefined) this._inventoryRecords = transferGearToHeir(this._inventoryRecords, generalId, heirId);
         this._releaseGearOfInactiveGenerals();
         const reason = result.card.mentorRoute?.reason;
         if (reason === 'SCHOLAR' || reason === 'DUAL_CLASS') {
@@ -3407,6 +3411,13 @@ export class GameSession {
         this._emit(GAME_SESSION_EVENTS.GeneralRetired, result.card);
         if (injection) this._emit(GAME_SESSION_EVENTS.GeneCatalystInjected, injection);
         return result.card;
+    }
+
+    /** 裝備傳承的接收者：名冊內存活、非退役者本人、非導師卡（父子關係模型尚未建立，暫不驗證血緣） */
+    private _assertHeir(generalId: string, heirId: string): void {
+        const heir = this._roster.getAll().find((g) => g.id === heirId) as (GeneralConfig & { isMentorCard?: boolean }) | undefined;
+        const eligible = !!heir && heirId !== generalId && !heir.isMentorCard && !isGeneralDead(heir);
+        if (!eligible) throw new Error('[GameSession] 裝備只能傳給名冊內存活、非退役的武將');
     }
 
     /** 因子媒介的子嗣必須存在、不是退役武將本人、年齡 0~UNVEILING_AGE 且尚未開獎；不合法時拋錯，不改任何狀態 */
