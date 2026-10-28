@@ -3,7 +3,7 @@
  */
 import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { applyFearCharge, tallyHealsAllies } from '../assets/scripts/battle/shared/TallyPassive';
+import { applyFearCharge, tallyHealsAllies, tallySplashTargetsOf } from '../assets/scripts/battle/shared/TallyPassive';
 import { MORALE_DURATION_TURNS } from '../assets/scripts/battle/shared/Morale';
 import { TestSuite, assert } from './TestRunner';
 
@@ -55,6 +55,19 @@ export function createTallyFearChargeSuite(): TestSuite {
         assert.isTrue(tallyHealsAllies(unitAt('c', Faction.Player, 0, 0, 'tiger-tally-changshan-nu')));
         assert.isTrue(!tallyHealsAllies(unitAt('t', Faction.Player, 0, 0, 'tiger-tally-tie-qi')));
         assert.isTrue(!tallyHealsAllies(unitAt('p', Faction.Player, 0, 0)));
+    });
+
+    suite.test('南蠻濺射（PROG-2-1527）：目標周圍 1 格其他敵軍、50%；友軍與遠處不波及', () => {
+        const nanMan = unitAt('m', Faction.Player, 2, 3, 'tiger-tally-nan-man');
+        const target = unitAt('t', Faction.Enemy, 2, 4);
+        const side = unitAt('s', Faction.Enemy, 3, 5);
+        const far = unitAt('f', Faction.Enemy, 2, 6);
+        const ally = unitAt('a', Faction.Player, 1, 4);
+        const { targets, ratio } = tallySplashTargetsOf(nanMan, target, [nanMan, target, side, far, ally]);
+        assert.equals(0.5, ratio);
+        assert.equals(1, targets.length);
+        assert.equals('s', targets[0].id);
+        assert.equals(0, tallySplashTargetsOf(unitAt('p', Faction.Player, 2, 3), target, [side]).targets.length);
     });
 
     return suite;
