@@ -2,7 +2,9 @@
  * NpcUtilityAI.test.ts — Utility AI 評分（PROG-2-1379，NPC-05）：評分相乘、排序只取最高分群、權重全相等時結果不變。
  */
 import { assert, TestSuite } from './TestRunner';
-import { NPC_RELATION_WEIGHTS, scoreNpcAction, scoreOfflineRelation } from '../assets/scripts/core/systems/NpcUtilityAI';
+import {
+    NPC_HIGH_WEIGHT_THRESHOLD, NPC_RELATION_WEIGHTS, NpcInteractionLimiter, scoreNpcAction, scoreOfflineRelation,
+} from '../assets/scripts/core/systems/NpcUtilityAI';
 import {
     offlineInteractionCandidates, OFFLINE_INTERACTION_DETAILS, pickOfflineInteraction,
 } from '../assets/scripts/core/systems/OfflineInteractionEvents';
@@ -52,6 +54,17 @@ export function createNpcUtilityAISuite(): TestSuite {
         const event = pickOfflineInteraction(candidates, [], 'W1', () => 0.99, 1, 'T')!;
         assert.equals('g2,g3', event.entry.relatedGeneralUids.join(','));
         assert.equals(`張飛 與 趙雲 在你離席時發生了一段插曲。${OFFLINE_INTERACTION_DETAILS.PARENT_CHILD[1]}`, event.entry.summary);
+    });
+
+    suite.test('登入窗限流：同一武將同一窗只放行一則高權重互動；低權重不受限；換窗重算', () => {
+        const limiter = new NpcInteractionLimiter();
+        const high = NPC_HIGH_WEIGHT_THRESHOLD + 0.1;
+        const low = NPC_HIGH_WEIGHT_THRESHOLD - 0.1;
+        assert.isTrue(limiter.tryClaim('login-1', 'g1', high));
+        assert.isTrue(!limiter.tryClaim('login-1', 'g1', high), '同窗同將第二則高權重被擋');
+        assert.isTrue(limiter.tryClaim('login-1', 'g2', high), '不同武將不受限');
+        assert.isTrue(limiter.tryClaim('login-1', 'g1', low), '低權重不受限');
+        assert.isTrue(limiter.tryClaim('login-2', 'g1', high), '換登入窗重新計算');
     });
 
     return suite;

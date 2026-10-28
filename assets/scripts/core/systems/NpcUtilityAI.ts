@@ -36,6 +36,28 @@ export function scoreNpcAction(input: NpcActionScoreInput): number {
     return input.eventWeight * input.personalityWeight * input.relationshipModifier * input.moodModifier * input.cooldownModifier;
 }
 
+/** 高權重門檻（暫定 0.5，規格未給數字）：分數達到才算高權重互動，受登入窗限流。 */
+export const NPC_HIGH_WEIGHT_THRESHOLD = 0.5;
+
+/**
+ * 登入窗限流：同一武將在同一登入窗內只允許 1 則高權重互動（F-1 第 3 點）。
+ * 低權重互動不計入也不受限；換登入窗就重新計算。尚未接呼叫端。
+ */
+export class NpcInteractionLimiter {
+    private readonly _claimed = new Set<string>();
+
+    constructor(private readonly _threshold: number = NPC_HIGH_WEIGHT_THRESHOLD) {}
+
+    /** 嘗試登記一則互動；回傳 true 表示允許。 */
+    tryClaim(windowId: string, generalId: string, score: number): boolean {
+        if (score < this._threshold) return true;
+        const key = `${windowId}#${generalId}`;
+        if (this._claimed.has(key)) return false;
+        this._claimed.add(key);
+        return true;
+    }
+}
+
 /** 離線互動候選的分數：只帶性格權重，其餘修正為 1。 */
 export function scoreOfflineRelation(type: DynamicRelationType, weights: Readonly<Record<DynamicRelationType, number>> = NPC_RELATION_WEIGHTS): number {
     return scoreNpcAction({
