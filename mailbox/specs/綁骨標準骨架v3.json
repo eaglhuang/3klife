@@ -750,7 +750,9 @@
         "rigidNote": "v3.19（2026-10-28）：runtime 為 rigid=true 的掛點（例如 hand_f→weapon）父子同轉、無相對旋轉，隱藏延伸與旋轉裂縫均不適用，標 NOT_APPLICABLE、不擋驗收。握點位置仍由 gripRegistration 與 weaponGripOnShaft 檢查。"
       },
       "extensionQuantizationTolPx": 1,
-      "extensionQuantizationNote": "v3.20（2026-10-28）：隱藏延伸長度比較時容許 1 px 像素格量化誤差（例如要求 48 px，量得 ≥47 px 即通過）。理由：Codex R317 證明 R48 圓內 45° 方向最大可達投影為 47.376 px，下一格點 (34,34) 投影 48.083 px 但半徑也超出 R48。幾何像素仍不得超出允許半徑，半徑上限不放寬。"
+      "extensionQuantizationNote": "v3.20（2026-10-28）：隱藏延伸長度比較時容許 1 px 像素格量化誤差（例如要求 48 px，量得 ≥47 px 即通過）。理由：Codex R317 證明 R48 圓內 45° 方向最大可達投影為 47.376 px，下一格點 (34,34) 投影 48.083 px 但半徑也超出 R48。幾何像素仍不得超出允許半徑，半徑上限不放寬。",
+      "extensionMeasureOn": "mainComponent",
+      "extensionMeasureNote": "v3.22（2026-10-28）：隱藏延伸與核心覆蓋只量該槽主連通區（alpha >= 128 最大 8 鄰接連通區，與 AG-40 握點一致），游離碎片不計。起因：R324 r40 三處大腿延伸 68 px 的最大投影點全落在 R320 要刪的游離方條上，主體實際只有 31～40 px。"
     },
     "gripRule": {
       "modes": [
