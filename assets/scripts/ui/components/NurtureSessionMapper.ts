@@ -248,8 +248,11 @@ function buildTopStatsSummary(dualLayerStats: NurtureDualLayerStatRecord): strin
 }
 
 function buildSupportWindowBody(plan: NurtureSupportPlan): string {
-    const mentorLabel = plan.mentors.length > 0 ? plan.mentors.join(' / ') : '教官群';
     const summary = plan.supportSummary?.trim();
+    if (plan.mentors.length === 0) {
+        return `本場未配置教官；${summary || plan.lineageBoundary}。`;
+    }
+    const mentorLabel = plan.mentors.join(' / ');
     if (summary) {
         return `${mentorLabel}提供訓練線加成；${summary}`;
     }
