@@ -714,6 +714,14 @@
                   ]
                 }
               ]
+            },
+            {
+              "type": "label",
+              "name": "EquipItemSummary",
+              "id": "EquipItemSummary",
+              "height": 36,
+              "text": "",
+              "styleSlot": "auto.character-ds3-tab-equip.equipitemsummary"
             }
           ]
         }
