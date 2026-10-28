@@ -39,10 +39,10 @@ export const TALLY_EQUIP_LOYALTY_BONUS: Readonly<Record<TigerTallyQuality, numbe
 export const TALLY_LOYALTY_LOCK_VALUE = 100;
 export const TALLY_CONSECUTIVE_PENALTY_MULT = 1.5;
 /**
- * 沒收的忠誠降低倍率（PM 2026-10-13 暫定）：規格寫「大幅下降」，未給數值。
- * 以拔除的降低量乘 2 計；定案後只改這裡並更新待辦文件。
+ * 沒收虎符的忠誠固定降低量（規格：武將人物介面規格補遺 §2.2「沒收此虎符將導致忠誠度下降 30 點」）。
+ * 規格與程式衝突時以規格為準，因此不再依品質計算。
  */
-export const TALLY_CONFISCATE_MULT = 2;
+export const TALLY_CONFISCATE_LOYALTY_DROP = 30;
 
 export interface TallyLoyaltyState {
     loyalty: number;
@@ -151,11 +151,10 @@ export function applyTallyTransferSeason(
 }
 
 /**
- * 君主沒收虎符的忠誠降低（TRP-08 / PROG-2-0239）：依品質的拔除降低量 × TALLY_CONFISCATE_MULT。
+ * 君主沒收虎符的忠誠降低（TRP-08 / PROG-2-0239；HUM-05 改為規格的固定 30 點）。
  * 不受每季一次與連續倍率限制，也不改季數計數；轉蛋名將仍鎖 100。
  */
-export function applyTallyConfiscation(state: TallyLoyaltyState, quality: TigerTallyQuality): TallyLoyaltyState {
+export function applyTallyConfiscation(state: TallyLoyaltyState): TallyLoyaltyState {
     if (state.isGachaHero) return { ...state, loyalty: TALLY_LOYALTY_LOCK_VALUE };
-    const delta = Math.floor(TALLY_REMOVE_LOYALTY_PENALTY[quality] * TALLY_CONFISCATE_MULT);
-    return { ...state, loyalty: clampLoyalty(state.loyalty + delta) };
+    return { ...state, loyalty: clampLoyalty(state.loyalty - TALLY_CONFISCATE_LOYALTY_DROP) };
 }
