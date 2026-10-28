@@ -1429,6 +1429,18 @@ for (const filePath of listCanonicalSpecFiles(screenDir)) {
     }
 }
 
+// LT-05：血脈命鏡 Loading Tips 內容檢核（四池結構、權重鍵一致）
+{
+    const tipsPath = path.join(uiSpecRoot, 'content', 'bloodline-mirror-loading-tips-v1.json');
+    const tips = readJsonIfExists(tipsPath);
+    if (tips) {
+        const { checkLoadingTips } = require('./validate-loading-tips');
+        for (const issue of checkLoadingTips(tips)) {
+            fail(`${relative(tipsPath)} - ${issue}`, failures);
+        }
+    }
+}
+
 if (failures.length > 0) {
     console.error('❌ UI Spec 驗證失敗\n');
     for (const failure of failures) {
