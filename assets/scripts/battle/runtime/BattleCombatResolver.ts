@@ -24,6 +24,7 @@ import {
   tallyEvasionBonusOf,
   tallyPhysicalDamageTakenOf,
   tallyTroopTypeDamageMultiplierOf,
+  applyFearCharge,
 } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
@@ -211,6 +212,8 @@ export class BattleCombatResolver {
   public resolveCombat(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
     // 結姻連射（PROG-2-0775）：攻擊次數 = 1 + 額外次數；每一下都是完整的命中、傷害、反擊解算
     const hits = 1 + extraAttackHitsOf(attacker, this.isAdjacentToMaleGeneral(attacker));
+    // 恐懼衝鋒（鐵騎，PROG-2-1514）：每次發動攻擊時周圍敵軍士氣扣減
+    applyFearCharge(attacker, this.context.state.units.values());
     for (let hit = 0; hit < hits; hit += 1) {
       if (attacker.isDead() || defender.isDead()) return;
       this.resolveHit(attacker, defender, svc);

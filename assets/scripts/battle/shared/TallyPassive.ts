@@ -10,6 +10,7 @@
  */
 import { Faction, GAME_CONFIG, TerrainType, TroopType } from '../../core/config/Constants';
 import type { TroopUnit } from '../../core/models/TroopUnit';
+import { MORALE_DURATION_TURNS } from './Morale';
 
 /** 弓兵射程（BattleUnitSpawner 弓兵 attackRange = 2） */
 const ARCHER_ATTACK_RANGE = 2;
@@ -48,6 +49,8 @@ export interface TallyPassiveSpec {
   evasionBonus?: number;
   /** 免疫恐懼（先登）：敵方恐懼光環對此部隊不生效（PROG-2-1513） */
   fearImmune?: boolean;
+  /** 恐懼衝鋒（鐵騎）：發動部隊攻擊時，周圍 radius 格內（含斜角）敵軍士氣 -moralePenalty（PROG-2-1514） */
+  fearCharge?: { radius: number; moralePenalty: number };
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -97,6 +100,8 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   'tiger-tally-changshan-nu': { evasionBonus: 0.3 },
   // 先登：免疫恐懼（PROG-2-1513）；攻城傷害 ×2 待攻城戰落地再接
   'tiger-tally-xian-deng': { fearImmune: true },
+  // 鐵騎：恐懼衝鋒，攻擊時周圍 1 格敵軍士氣 -20（PROG-2-1514；範圍暫定 1 格）
+  'tiger-tally-tie-qi': { fearCharge: { radius: 1, moralePenalty: 20 } },
 };
 
 /** 各陣營出兵列（後排起點）：我方由 depth 0 出兵、敵方由最後一列出兵 */
@@ -136,6 +141,24 @@ export function tallyEnemyAuraAttackMultiplierOf(unit: TroopUnit, units: Iterabl
     }
   }
   return multiplier;
+}
+
+/**
+ * 恐懼衝鋒：attacker 帶 fearCharge 時，周圍敵軍（免疫恐懼者除外）士氣扣減。
+ * 降士氣若本來沒在計時，開始計時，到期由 advanceMorale 歸零（不留永久負士氣）。回傳受影響的部隊。
+ */
+export function applyFearCharge(attacker: TroopUnit, units: Iterable<TroopUnit>): TroopUnit[] {
+  const charge = passiveOf(attacker)?.fearCharge;
+  if (!charge) return [];
+  const affected: TroopUnit[] = [];
+  for (const other of units) {
+    if (other.faction === attacker.faction || other.isDead() || passiveOf(other)?.fearImmune) continue;
+    if (Math.max(Math.abs(other.lane - attacker.lane), Math.abs(other.depth - attacker.depth)) > charge.radius) continue;
+    other.morale -= charge.moralePenalty;
+    if (other.moraleTurns <= 0) other.moraleTurns = MORALE_DURATION_TURNS;
+    affected.push(other);
+  }
+  return affected;
 }
 
 /** 部隊攻擊時無視目標防禦的比例；沒有此被動時為 0 */
