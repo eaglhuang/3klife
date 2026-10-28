@@ -46,14 +46,17 @@ export const FACTOR_STAR_DISTRIBUTION: Record<1 | 2 | 3, { low: number; high: nu
     3: { low: 1, high: 2, highRate: 0.1 },
 };
 
-/** 因子覺醒門檻（因子爆發系統 §F「因子覺醒觸發」） */
+/**
+ * 因子覺醒門檻（因子爆發系統 §F「因子覺醒觸發」）。
+ * 揭露順序照 §K（使用者 2026-10-28 裁定，PROG-2-1465）：新手藍粉綠、中期白紅、後期紫。
+ */
 export const FACTOR_DISCOVERY_LEVEL: Record<FactorColor, number> = {
     blue: 1,
     pink: 1,
-    green: 20,
+    green: 1,
     white: 20,
+    red: 20,
     purple: 45,
-    red: 45,
 };
 
 /**

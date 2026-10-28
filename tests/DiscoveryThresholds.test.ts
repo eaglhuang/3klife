@@ -21,8 +21,8 @@ export function createDiscoveryThresholdsSuite(): TestSuite {
         assert.equals(20, result.value.phase2);
         assert.equals(45, result.value.phase3);
         assert.isTrue(matchesFactorConstants(result.value));
-        assert.equals(20, factorRequiredLevel({ type: 'green', id: 'g' }));
-        assert.equals(45, factorRequiredLevel({ type: 'red', id: 'r' }));
+        assert.equals(20, factorRequiredLevel({ type: 'white', id: 'w' }));
+        assert.equals(45, factorRequiredLevel({ type: 'purple', id: 'p' }));
     });
 
     suite.test('讀取相容：舊示例 { Phase1: 20, Phase2: 45 } 被拒，不會把 20 誤讀成階段 1', () => {

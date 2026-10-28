@@ -647,7 +647,7 @@ export class GameSession {
         return this._discoveryLevel;
     }
 
-    /** 目前玩家層級已開放的因子色（LUK-04），依 ALL_FACTOR_COLORS 順序；Lv1 只有藍粉 */
+    /** 目前玩家層級已開放的因子色（LUK-04），依 ALL_FACTOR_COLORS 順序；Lv1 藍粉綠 */
     public visibleFactorColors(): FactorColor[] {
         return factorColorsVisibleAtLevel(this._discoveryLevel);
     }

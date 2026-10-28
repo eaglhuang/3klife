@@ -14,15 +14,16 @@ const general = (genes: Array<{ id: string; type: string; isLocked?: boolean; di
 export function createSageFactorPreviewSuite(): TestSuite {
     const suite = new TestSuite('SageFactorPreview (名士提前預覽方向 FUL-07)');
 
-    suite.test('只列出鎖住且等級還看不到的色系：Lv1 時綠、紅、紫都列出，藍粉不列', () => {
+    suite.test('只列出鎖住且等級還看不到的色系：Lv1 時白、紅、紫都列出，藍粉綠不列', () => {
         const g = general([
             { id: 'a', type: 'blue', isLocked: true },
-            { id: 'b', type: 'green', isLocked: true },
+            { id: 'b', type: 'white', isLocked: true },
+            { id: 'f', type: 'green', isLocked: true },
             { id: 'c', type: 'red', isLocked: true },
             { id: 'd', type: 'pink', isLocked: true },
             { id: 'e', type: 'purple', isLocked: true },
         ]);
-        assert.equals('green,purple,red', previewLockedFactorDirections(g, 1).slice().sort().join(','));
+        assert.equals('purple,red,white', previewLockedFactorDirections(g, 1).slice().sort().join(','));
     });
 
     suite.test('已解鎖的因子不列出', () => {
@@ -31,7 +32,7 @@ export function createSageFactorPreviewSuite(): TestSuite {
     });
 
     suite.test('等級超過門檻後，該色系不再列為提前預覽（> 門檻）', () => {
-        const g = general([{ id: 'b', type: 'green', isLocked: true }]);
+        const g = general([{ id: 'b', type: 'white', isLocked: true }]);
         assert.equals(0, previewLockedFactorDirections(g, 21).length);
         assert.equals(1, previewLockedFactorDirections(g, 20).length);
     });
@@ -46,10 +47,10 @@ export function createSageFactorPreviewSuite(): TestSuite {
     suite.test('方向去重、依基因順序；沒有武將回傳空陣列', () => {
         const g = general([
             { id: 'a', type: 'red', isLocked: true },
-            { id: 'b', type: 'green', isLocked: true },
+            { id: 'b', type: 'white', isLocked: true },
             { id: 'c', type: 'red', isLocked: true },
         ]);
-        assert.equals('red,green', previewLockedFactorDirections(g, 1).join(','));
+        assert.equals('red,white', previewLockedFactorDirections(g, 1).join(','));
         assert.equals(0, previewLockedFactorDirections(undefined, 1).length);
     });
 

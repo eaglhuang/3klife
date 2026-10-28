@@ -97,56 +97,56 @@ export function createWiringBatch0513Suite(): TestSuite {
         assert.isTrue(factorMaskView(unknown, 1).revealed);
     });
 
-    suite.test('FUL-01 階段摘要：Lv1 只開放藍粉，Lv45 紫紅仍鎖，Lv46 全開', () => {
+    suite.test('FUL-01 階段摘要（§K）：Lv1 開放藍粉綠，Lv45 紫仍鎖，Lv46 全開', () => {
         const low = factorStageSummary(1);
-        assert.equals('blue,pink', low.visibleTypes.join(','));
-        assert.equals('green,purple,white,red', low.lockedTypes.join(','));
+        assert.equals('blue,pink,green', low.visibleTypes.join(','));
+        assert.equals('purple,white,red', low.lockedTypes.join(','));
         const mid = factorStageSummary(45);
-        assert.equals('purple,red', mid.lockedTypes.join(','));
+        assert.equals('purple', mid.lockedTypes.join(','));
         const high = factorStageSummary(46);
         assert.equals(6, high.visibleTypes.length);
         assert.equals(0, high.lockedTypes.length);
     });
 
     suite.test('FUL-01 結緣階段文字：由摘要產生，全開時未開放顯示「無」', () => {
-        assert.equals('已開放：藍 · 粉｜未開放：綠 · 紫 · 白 · 紅', factorStageText(1));
-        assert.isTrue(factorStageText(21).startsWith('已開放：藍 · 粉 · 綠 · 白'));
-        assert.isTrue(factorStageText(45).endsWith('未開放：紫 · 紅'));
+        assert.equals('已開放：藍 · 粉 · 綠｜未開放：紫 · 白 · 紅', factorStageText(1));
+        assert.isTrue(factorStageText(21).startsWith('已開放：藍 · 粉 · 綠 · 白 · 紅'));
+        assert.isTrue(factorStageText(45).endsWith('未開放：紫'));
         assert.isTrue(factorStageText(46).endsWith('未開放：無'));
     });
 
     // ── FUL-02 ──────────────────────────────────────────────────────────
 
     suite.test('FUL-02 剛解鎖差異：前一次鎖住、這一次看見的槽位才回報', () => {
-        const genes = [gene('blue'), gene('green'), gene('purple')];
+        const genes = [gene('blue'), gene('white'), gene('purple')];
         const before = genes.map((g) => buildFactorMaskView(g, 1));
         const after = genes.map((g) => buildFactorMaskView(g, 21));
-        assert.equals('1', newlyUnlockedSlots(before, after).join(','), '綠因子（槽 1）剛解鎖；紫仍鎖住');
+        assert.equals('1', newlyUnlockedSlots(before, after).join(','), '白因子（槽 1）剛解鎖；紫仍鎖住');
         assert.equals('', newlyUnlockedSlots(undefined, after).join(','), '首次載入不回報');
         assert.equals('', newlyUnlockedSlots(after, after).join(','), '沒變化不回報');
     });
 
     suite.test('FUL-02 詳情 Presenter：保存上一次 view，剛解鎖旗標只出現一次', () => {
         const presenter = new FactorMaskPresenter();
-        const genes = [gene('blue'), gene('green')];
+        const genes = [gene('blue'), gene('white')];
         const first = presenter.update('alpha', genes, 1);
         assert.equals('', first.justRevealed.join(','), '首次不亮起');
         const second = presenter.update('alpha', genes, 21);
-        assert.equals('1', second.justRevealed.join(','), '升到 Lv21，綠因子剛解鎖');
+        assert.equals('1', second.justRevealed.join(','), '升到 Lv21，白因子剛解鎖');
         const third = presenter.update('alpha', genes, 21);
         assert.equals('', third.justRevealed.join(','), '同一等級不重複亮起');
     });
 
     suite.test('FUL-02 換人時不沿用舊狀態，避免誤判為剛解鎖', () => {
         const presenter = new FactorMaskPresenter();
-        const genes = [gene('green')];
+        const genes = [gene('white')];
         presenter.update('alpha', genes, 1);
         const other = presenter.update('beta', genes, 20);
         assert.equals('', other.justRevealed.join(','), '換武將從頭計算');
     });
 
     suite.test('FUL-02 差異函式不修改輸入', () => {
-        const genes = Object.freeze([gene('green')]);
+        const genes = Object.freeze([gene('white')]);
         const views = Object.freeze([buildFactorMaskView(genes[0], 1)]);
         const next = [buildFactorMaskView(genes[0], 20)];
         newlyUnlockedSlots(views, next);

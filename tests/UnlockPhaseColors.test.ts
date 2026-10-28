@@ -15,10 +15,10 @@ import { GameSession } from '../assets/scripts/core/managers/GameSession';
 export function createUnlockPhaseColorsSuite(): TestSuite {
     const suite = new TestSuite('UnlockPhaseColors (因子解鎖階段色 FUL-06)');
 
-    suite.test('各階段解鎖色與規格一致：Phase 1 藍粉、Phase 2 加綠白、Phase 3 加紫紅', () => {
-        assert.equals(JSON.stringify(['blue', 'pink']), JSON.stringify(phaseFactorColors(1)));
-        assert.equals(JSON.stringify(['blue', 'pink', 'green', 'white']), JSON.stringify(phaseFactorColors(2)));
-        assert.equals(JSON.stringify(['blue', 'pink', 'green', 'white', 'purple', 'red']), JSON.stringify(phaseFactorColors(3)));
+    suite.test('各階段解鎖色與規格一致（§K）：Phase 1 藍粉綠、Phase 2 加白紅、Phase 3 加紫', () => {
+        assert.equals(JSON.stringify(['blue', 'pink', 'green']), JSON.stringify(phaseFactorColors(1)));
+        assert.equals(JSON.stringify(['blue', 'pink', 'green', 'white', 'red']), JSON.stringify(phaseFactorColors(2)));
+        assert.equals(JSON.stringify(['blue', 'pink', 'green', 'purple', 'white', 'red']), JSON.stringify(phaseFactorColors(3)));
     });
 
     suite.test('等級換算：Lv1 與 Lv20 為 Phase 1，Lv21 進 Phase 2，Lv46 進 Phase 3', () => {
@@ -34,10 +34,10 @@ export function createUnlockPhaseColorsSuite(): TestSuite {
         }
     });
 
-    suite.test('GameSession 新局為 Lv1：階段 1，解鎖藍粉', () => {
+    suite.test('GameSession 新局為 Lv1：階段 1，解鎖藍粉綠', () => {
         const session = new GameSession();
         assert.equals(1, session.unlockPhase);
-        assert.equals(JSON.stringify(['blue', 'pink']), JSON.stringify(session.unlockedFactorColors()));
+        assert.equals(JSON.stringify(['blue', 'pink', 'green']), JSON.stringify(session.unlockedFactorColors()));
     });
 
     return suite;

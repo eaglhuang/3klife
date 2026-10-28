@@ -4,8 +4,8 @@
  *
  * 規格重點：
  * - 子嗣開獎時只解鎖 Discovery_Level 1 的藍 / 粉；其餘因子保持灰色鎖頭，之後靠覺醒事件逐個點亮
- * - 三階段：Phase 1（Discovery_Level 1）藍粉、Phase 2（20）綠白、Phase 3（45）紫紅
- * - 觸發方式：藍/粉 = 培育窺探或戰場；綠/白 = 教官觸發或戰場特定動作；紫/紅 = 高等級戰場特殊條件；
+ * - 三階段（因子爆發系統 §K，PROG-2-1465）：Phase 1（Discovery_Level 1）藍粉綠、Phase 2（20）白紅、Phase 3（45）紫
+ * - 觸發方式（照 §F 依顏色，揭露順序改動後未變）：藍/粉 = 培育窺探或戰場；綠/白 = 教官觸發或戰場特定動作；紫/紅 = 高等級戰場特殊條件；
  *   名士占卜三個階段都可用（因子解鎖系統「三種途徑」）
  *
  * 決策（PROG-2-0037，規格未定的部分）：
@@ -34,7 +34,7 @@ export const AWAKENING_TRIGGERS_BY_COLOR: Record<FactorColor, readonly Awakening
 /** 依 discoveryLevel 回傳目前所在階段 1 / 2 / 3 */
 export function discoveryPhase(discoveryLevel: number): 1 | 2 | 3 {
     if (isFactorLevelUnlocked(discoveryLevel, FACTOR_DISCOVERY_LEVEL.purple)) return 3;
-    if (isFactorLevelUnlocked(discoveryLevel, FACTOR_DISCOVERY_LEVEL.green)) return 2;
+    if (isFactorLevelUnlocked(discoveryLevel, FACTOR_DISCOVERY_LEVEL.white)) return 2;
     return 1;
 }
 
