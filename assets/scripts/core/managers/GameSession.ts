@@ -178,7 +178,8 @@ import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSav
 import { useVitalityPill, type VitalityPillKind, type VitalityPillUseResult } from '../systems/VitalityPill';
 import { useLongevityPill, type LongevityPillUseResult } from '../systems/LongevityPill';
 import { baseVitalityMaxOf } from '../systems/VitalityCap';
-import { Faction } from '../config/Constants';
+import { EVENT_NAMES, Faction } from '../config/Constants';
+import { services } from './ServiceLoader';
 import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampaignStagePlayable } from '../config/CampaignStages';
 import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
 import { protectedAfterLoss, CELLAR_PROTECTION } from '../systems/CellarProtection';
@@ -1205,8 +1206,14 @@ export class GameSession {
     /** 把君主持有的虎符裝到武將身上；武將不在名冊、虎符不存在、已被持有或武將已有虎符時回傳失敗 */
     public async equipTally(cardUid: string, generalId: string): Promise<TallyHoldingsResult | null> {
         if (!this._roster.getAll().some((g) => g.id === generalId)) return null;
+        const card = this._tallyCards[cardUid];
         const result = equipTally(this._tallyHoldings, cardUid, generalId);
-        return this._commitTallyResult(result);
+        const committed = await this._commitTallyResult(result);
+        // 插卡演出（TRP-18）：紋樣 id 暫定用虎符 templateId；只有真的插上才發事件
+        if (committed.ok && card) {
+            services().event.emit(EVENT_NAMES.TallySpiritInserted, { cardUid, generalId, sigilPatternId: card.templateId });
+        }
+        return committed;
     }
 
     /**
