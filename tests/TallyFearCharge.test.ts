@@ -70,5 +70,14 @@ export function createTallyFearChargeSuite(): TestSuite {
         assert.equals(0, tallySplashTargetsOf(unitAt('p', Faction.Player, 2, 3), target, [side]).targets.length);
     });
 
+    suite.test('元戎範圍傷害（PROG-2-1528）：沿用濺射 1 格 50%', () => {
+        const yuanRong = unitAt('y', Faction.Player, 2, 3, 'tiger-tally-yuan-rong');
+        const target = unitAt('t', Faction.Enemy, 2, 4);
+        const side = unitAt('s', Faction.Enemy, 1, 4);
+        const { targets, ratio } = tallySplashTargetsOf(yuanRong, target, [target, side]);
+        assert.equals(0.5, ratio);
+        assert.equals(1, targets.length);
+    });
+
     return suite;
 }
