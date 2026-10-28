@@ -3,11 +3,11 @@ import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { GENERAL_STATUS_DEAD, RETIREMENT_AGE } from '../../core/systems/GeneralAging';
 import { GENERAL_STATUS_UNVEILED, UNVEILING_AGE } from '../../core/systems/Unveiling';
 
-type RetirementGeneral = GeneralConfig & { isMentorCard?: boolean };
+type RetirementGeneral = GeneralConfig & { isMentorCard?: boolean; fatherId?: string; motherId?: string };
 export interface RetirementFlowDeps {
     /** Must return the owned session roster, never the template catalogue. */
     roster(): GeneralConfig[];
-    retireGeneral(id: string, options?: { catalystChildId?: string }): Promise<unknown>;
+    retireGeneral(id: string, options?: { catalystChildId?: string; heirChildId?: string }): Promise<unknown>;
 }
 export type RetirementOutcome = 'confirmation-required' | 'retired' | 'unavailable' | 'busy' | 'failed';
 
@@ -15,6 +15,7 @@ export type RetirementOutcome = 'confirmation-required' | 'retired' | 'unavailab
 export class RetirementFlowController {
     private _selectedId: string | null = null;
     private _catalystChildId: string | null = null;
+    private _heirChildId: string | null = null;
     private _confirmId: string | null = null;
     private _busy = false;
     private _notice = '';
@@ -35,6 +36,30 @@ export class RetirementFlowController {
             && (g.age ?? 0) >= 0 && (g.age ?? 0) <= UNVEILING_AGE
             && g.status !== GENERAL_STATUS_UNVEILED
             && (g.status ?? '').toLowerCase() !== GENERAL_STATUS_DEAD);
+    }
+
+    /** 可接收裝備的子嗣：roster 上 fatherId／motherId 指向退役目標，且存活、非導師卡（與 GameSession 的驗證一致）。 */
+    heirChildren(): RetirementGeneral[] {
+        const target = this.selected;
+        if (!target) return [];
+        return this._deps.roster().filter((g: RetirementGeneral) =>
+            g.id !== target.id
+            && (g.fatherId === target.id || g.motherId === target.id)
+            && !g.isMentorCard
+            && (g.status ?? '').toLowerCase() !== GENERAL_STATUS_DEAD);
+    }
+
+    /** 目前選中的裝備接收子嗣；沒有選或已不合法時為 null。 */
+    get heirChild(): RetirementGeneral | null {
+        return this.heirChildren().find(g => g.id === this._heirChildId) ?? null;
+    }
+
+    /** 循環選擇裝備接收者：無 → 子嗣1 → … → 無。 */
+    selectNextHeirChild(): void {
+        if (this._busy) return;
+        const children = this.heirChildren();
+        const index = children.findIndex(g => g.id === this._heirChildId);
+        this._heirChildId = index + 1 < children.length ? children[index + 1].id : null;
     }
 
     /** 目前選中的媒介子嗣；沒有選或已不合法時為 null。 */
@@ -59,6 +84,7 @@ export class RetirementFlowController {
         const index = candidates.findIndex(g => g.id === selected?.id);
         this._selectedId = candidates.length ? candidates[(index + 1) % candidates.length].id : null;
         this._catalystChildId = null;
+        this._heirChildId = null;
         this.cancel();
     }
 
@@ -91,8 +117,12 @@ export class RetirementFlowController {
         }
         this._busy = true;
         const child = this.catalystChild;
+        const heir = this.heirChild;
+        const options: { catalystChildId?: string; heirChildId?: string } = {};
+        if (child) options.catalystChildId = child.id;
+        if (heir) options.heirChildId = heir.id;
         try {
-            if (child) await this._deps.retireGeneral(target.id, { catalystChildId: child.id });
+            if (child || heir) await this._deps.retireGeneral(target.id, options);
             else await this._deps.retireGeneral(target.id);
             this._notice = `${target.name} 已退役，教官卡已保存`;
             return 'retired';

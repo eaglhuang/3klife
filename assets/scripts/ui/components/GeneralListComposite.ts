@@ -617,16 +617,19 @@ export class GeneralListComposite extends CompositePanel {
             const layout = controls.addComponent(Layout);
             layout.type = Layout.Type.HORIZONTAL;
             layout.resizeMode = Layout.ResizeMode.NONE;
-            layout.spacingX = 16;
-            this._addToolbarLabel(controls, 'RetirementTarget', 290, 48, 0, 0, '', 19, HorizontalTextAlignment.LEFT);
-            this._addToolbarButton(controls, 'RetirementNext', 120, 48, 0, 0, '下一位', () => {
+            layout.spacingX = 10;
+            this._addToolbarLabel(controls, 'RetirementTarget', 200, 48, 0, 0, '', 19, HorizontalTextAlignment.LEFT);
+            this._addToolbarButton(controls, 'RetirementNext', 100, 48, 0, 0, '下一位', () => {
                 this._retirementFlow.selectNext(); this._refreshRetirementToolbar();
             });
-            this._addToolbarButton(controls, 'RetirementCatalyst', 160, 48, 0, 0, '媒介：無', () => {
+            this._addToolbarButton(controls, 'RetirementCatalyst', 150, 48, 0, 0, '媒介：無', () => {
                 this._retirementFlow.selectNextCatalystChild(); this._refreshRetirementToolbar();
             });
-            this._addToolbarButton(controls, 'RetirementConfirm', 180, 48, 0, 0, '退役轉教官', () => { void this._retireSelected(); });
-            this._addToolbarButton(controls, 'RetirementCancel', 120, 48, 0, 0, '取消', () => {
+            this._addToolbarButton(controls, 'RetirementHeir', 150, 48, 0, 0, '接收：無', () => {
+                this._retirementFlow.selectNextHeirChild(); this._refreshRetirementToolbar();
+            });
+            this._addToolbarButton(controls, 'RetirementConfirm', 170, 48, 0, 0, '退役轉教官', () => { void this._retireSelected(); });
+            this._addToolbarButton(controls, 'RetirementCancel', 100, 48, 0, 0, '取消', () => {
                 this._retirementFlow.cancel(); this._refreshRetirementToolbar();
             });
             const notice = this._addToolbarLabel(toolbar, 'RetirementNotice', 940, 44, 0, 0, '', 17, HorizontalTextAlignment.LEFT);
@@ -667,7 +670,10 @@ export class GeneralListComposite extends CompositePanel {
         const catalyst = flow.catalystChild;
         const catalystLabel = controls?.getChildByName('RetirementCatalyst')?.getComponent(Label);
         if (catalystLabel) catalystLabel.string = catalyst ? `媒介：${catalyst.name}` : '媒介：無';
-        for (const name of ['RetirementNext', 'RetirementCatalyst', 'RetirementConfirm', 'RetirementCancel']) {
+        const heir = flow.heirChild;
+        const heirLabel = controls?.getChildByName('RetirementHeir')?.getComponent(Label);
+        if (heirLabel) heirLabel.string = heir ? `接收：${heir.name}` : '接收：無';
+        for (const name of ['RetirementNext', 'RetirementCatalyst', 'RetirementHeir', 'RetirementConfirm', 'RetirementCancel']) {
             const button = controls?.getChildByName(name)?.getComponent(Button);
             if (button) {
                 button.interactable = !flow.busy && !!target && (name !== 'RetirementCancel' || flow.confirming);
