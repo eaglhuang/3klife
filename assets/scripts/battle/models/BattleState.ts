@@ -9,6 +9,7 @@ import { TroopUnit } from "../../core/models/TroopUnit";
 import type { FormationZone } from "../shared/FormationZone";
 import type { UnitDot } from "../shared/UnitDot";
 import type { WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
+import type { SalvageTotals } from "../../core/systems/StrategistHud";
 
 export interface GridCell {
   lane: number;
@@ -107,6 +108,10 @@ export class BattleState {
   public sceneCampPosition: { lane: number; depth: number } | null = null;
   /** 本局是否已對外發出 BattleEnded（勝負判定可重複呼叫，事件只發一次） */
   public battleEndAnnounced = false;
+  /** 關卡級回收累計（關卡設計系統 §I，PROG-2-1462）：戰中只累計，戰鬥結束隨 BattleEnded 帶出 */
+  public stageSalvage: SalvageTotals = { stone: 0, wood: 0, supply: 0, intel: 0 };
+  /** 已被掠奪的火攻格（"lane,depth"），每格只掠奪一次 */
+  public plunderedTiles = new Set<string>();
   /** AI 擊殺充能難度（PROG-2-0920）；只影響敵方擊殺的 SP，玩家擊殺仍是固定值 */
   public aiDifficulty: AiDifficulty = 'normal';
   /** AI 單挑接受閾值（ai-difficulty.json duelAcceptThreshold）；null 表示未設定難度表，退回一般閾值（PROG-2-1325） */
@@ -159,6 +164,8 @@ export class BattleState {
     this.battleTactic = battleTactic ?? BattleTactic.Normal;
     this.sceneFlags = { stealthOpenTurns: 0, nightRaid: false, nightRaidOpenTurns: 0 };
     this.battleEndAnnounced = false;
+    this.stageSalvage = { stone: 0, wood: 0, supply: 0, intel: 0 };
+    this.plunderedTiles = new Set<string>();
 
     // 重置武將狀態
     playerGeneral.currentHp = playerGeneral.maxHp;
