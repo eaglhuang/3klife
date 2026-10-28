@@ -28,15 +28,18 @@ export class EnemyAI {
 
   /**
    * 根據當前棋盤狀態與可用 DP 決定本回合部署。
+   * deployCount：本回合部署數上限，由呼叫端依 getAIDeployCount（F-2）算出。
    * 策略：以計數器兵種對抗玩家最多的兵種；無對手時隨機。
    */
-  public decideDeploy(state: BattleState, availableDp: number): DeployDecision[] {
+  public decideDeploy(state: BattleState, availableDp: number, deployCount: number): DeployDecision[] {
     const decisions: DeployDecision[] = [];
     const deployDepth = GAME_CONFIG.GRID_DEPTH - 1;
+    const chosenLanes = new Set<number>();
     let remaining = availableDp;
 
-    for (let i = 0; i < GAME_CONFIG.MAX_ENEMY_DEPLOY_PER_TURN; i++) {
-      const freeLanes = this.getFreeLanes(state, deployDepth);
+    for (let i = 0; i < deployCount; i++) {
+      // 決定階段尚未真正生成，同回合已選過的線要排除，否則多支會擠在同一條線
+      const freeLanes = this.getFreeLanes(state, deployDepth).filter((lane) => !chosenLanes.has(lane));
       if (freeLanes.length === 0) break;
 
       const type = this.pickCounterType(state, remaining);
@@ -47,6 +50,7 @@ export class EnemyAI {
       remaining -= cost;
 
       const lane = freeLanes[Math.floor(this._random() * freeLanes.length)];
+      chosenLanes.add(lane);
       decisions.push({ type, lane });
     }
 

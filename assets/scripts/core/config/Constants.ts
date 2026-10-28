@@ -11,7 +11,6 @@ export const GAME_CONFIG = {
   /** 技能狀態提示（閃現）顯示毫秒數；原本漏定義，HUD 用它算 scheduleOnce 延遲 */
   SKILL_STATUS_DISPLAY_MS: 2000,
   MAX_PLAYER_DEPLOY_PER_TURN: 1,
-  MAX_ENEMY_DEPLOY_PER_TURN: 1,
   TURN_LIMIT: 50,
   AI_COUNTER_STRATEGY_CHANCE: 0.35,
   // 武將化身單挑：暴擊與閃躲參數（對應 E-11/E-14）

@@ -108,6 +108,8 @@ export class BattleState {
   public battleEndAnnounced = false;
   /** AI 擊殺充能難度（PROG-2-0920）；只影響敵方擊殺的 SP，玩家擊殺仍是固定值 */
   public aiDifficulty: AiDifficulty = 'normal';
+  /** AI 難度加成（ai-difficulty.json difficultyBonus）：敵方每回合部署數（F-2）用；預設 0 = 普通 */
+  public aiDifficultyBonus = 0;
 
   constructor() {
     for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {

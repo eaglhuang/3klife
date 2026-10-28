@@ -259,9 +259,11 @@ export class BattleController {
     weather?: Weather,
     battleTactic?: BattleTactic,
     aiDifficulty: AiDifficulty = 'normal',
+    aiDifficultyBonus = 0,
   ): void {
     this.state.reset(playerGeneral, enemyGeneral, terrainGrid, weather, battleTactic);
     this.state.aiDifficulty = aiDifficulty;
+    this.state.aiDifficultyBonus = aiDifficultyBonus;
     this.duelFlow.resetForBattle();
     this.flowStateMachine.reset();
     this.flowStateMachine.startBattle();
@@ -1005,6 +1007,8 @@ export class BattleController {
           state: this.state,
           enemyAi: this.enemyAi,
           turnManager: this.turnManager,
+          turn: services().battle.getSnapshot().turn,
+          difficultyBonus: this.state.aiDifficultyBonus,
           spawnEnemyUnit: (type, lane, depth) => this.unitSpawner.spawnUnit(type, Faction.Enemy, lane, depth),
           isCellMovementBlocked: (lane, depth) => this.combatResolver.isCellMovementBlocked(lane, depth),
         });
