@@ -1,5 +1,5 @@
 /**
- * RivalHegemonyWiring.test.ts — 霸權判定接進季推進的邦交衰減（E-8、F-4，PROG-2-1517）
+ * RivalHegemonyWiring.test.ts — 霸權判定接進季推進的邦交衰減（E-8、F-4，PROG-2-1551）
  *
  * 鎖住：
  * - 沒有霸主（佔比都未達 30%）：邦交每季向 0 回歸 2，與舊行為一致。
@@ -43,7 +43,7 @@ function weiHegemonWorld(): RivalWorld {
 }
 
 export function createRivalHegemonyWiringSuite(): TestSuite {
-    const suite = new TestSuite('RivalHegemonyWiring (霸權判定接進邦交衰減 E-8 F-4 PROG-2-1517)');
+    const suite = new TestSuite('RivalHegemonyWiring (霸權判定接進邦交衰減 E-8 F-4 PROG-2-1551)');
 
     suite.test('沒有霸主：正邦交每季回歸 2（與舊行為一致）', () => {
         const world = createRivalWorld();

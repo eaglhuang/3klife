@@ -207,7 +207,7 @@ export interface RivalPlayerStats {
     readonly troops: number;
     readonly food: number;
     readonly gold: number;
-    /** 玩家領土數（計入霸權佔比，PROG-2-1517；暫定：與他國領土同一把尺） */
+    /** 玩家領土數（計入霸權佔比，PROG-2-1551；暫定：與他國領土同一把尺） */
     readonly territories?: number;
 }
 
@@ -236,7 +236,7 @@ export function advanceRivalSeason(
     player: RivalPlayerStats = { troops: 0, food: 0, gold: 0 },
 ): SeasonTickResult {
     const events: SeasonEvent[] = [];
-    // 霸權判定（E-8 PROG-2-1517）：本季開始時的領土佔比；非霸主的勢力成為反霸權聯盟成員，邦交衰減加快
+    // 霸權判定（E-8 PROG-2-1551）：本季開始時的領土佔比；非霸主的勢力成為反霸權聯盟成員，邦交衰減加快
     const holders: DomainHolder[] = [
         { id: 'player', territories: player.territories ?? 0 },
         ...world.nations.map((n) => ({ id: n.id, territories: n.territories })),
