@@ -8,18 +8,26 @@
 
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
+import { buildAptitudeView, type AptitudeView } from '../../../core/systems/AptitudeView';
 
 export class CharacterDs3AptitudeChild extends ChildPanelBase {
     override dataSource = 'config';
     private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
+    private _view: AptitudeView = buildAptitudeView(undefined);
+
+    /** 最後一次 onDataUpdate 整理好的兵頁資料（PROG-2-1449） */
+    public get view(): AptitudeView {
+        return this._view;
+    }
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3AptitudeChild] onMount', { rootPath: CharacterDs3AptitudeChild.ROOT_PATH });
-        // TODO(B-stage4): 戰場適性條 / 虎符槽。
+        // TODO(B-stage4): 地形／天氣適性資料、虎符槽接線、五段 layout 綁定（cc 畫面另卡）。
     }
 
-    public override onDataUpdate(_data: unknown): void {
-        // TODO(B-stage4): 把 GeneralConfig.aptitude / tigerTallySlots 映到槽位。
+    public override onDataUpdate(data: unknown): void {
+        const troopAptitude = data && typeof data === 'object' ? (data as { troopAptitude?: Record<string, unknown> }).troopAptitude : undefined;
+        this._view = buildAptitudeView(troopAptitude);
     }
 
     public override validateDataFormat(data: unknown): string | null {
