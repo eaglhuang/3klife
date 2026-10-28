@@ -356,7 +356,7 @@
       "scalingStat": "lea",
       "exclusive": true,
       "inheritanceGeneId": "gene_command",
-      "battleSkillId": "liu-bei-rally",
+      "battleSkillId": "liu-bei-reset",
       "sourceType": "ultimate",
       "targetMode": "ally-all",
       "timing": "active-cast",
