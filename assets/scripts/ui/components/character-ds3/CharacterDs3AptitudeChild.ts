@@ -9,7 +9,7 @@
 // 插卡按鈕（TRP-18）：兵頁的虎符槽裝備段。循環選目標武將，確定後呼叫 GameSession.equipTally，
 // 成功後由 TallySpiritInserted 事件播放英靈插卡演出。按鈕建在 hostNode 下，不改 layout JSON。
 
-import { Label, Node, UITransform } from 'cc';
+import { Button, Label, Node, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
@@ -77,11 +77,11 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
     /** 建立「選武將」「插上」兩個按鈕與演出文字（執行期建立，不改 layout） */
     private _buildInsertControls(): void {
         const cycle = this._makeLabelNode('BtnInsertCycle', 220, 40, this.t('ui.battle.tally.pick_target'));
-        cycle.on(Node.EventType.TOUCH_END, () => this._onCycleTarget());
+        cycle.on(Button.EventType.CLICK, () => this._onCycleTarget());
         this._targetLabel = cycle.getComponent(Label);
 
         const confirm = this._makeLabelNode('BtnInsertConfirm', 220, 40, this.t('ui.battle.tally.insert'));
-        confirm.on(Node.EventType.TOUCH_END, () => { void this._onConfirmInsert(); });
+        confirm.on(Button.EventType.CLICK, () => { void this._onConfirmInsert(); });
 
         this._sequenceNode = this._makeLabelNode('InsertSequence', 320, 48, '');
         this._sequenceNode.active = false;
@@ -95,6 +95,7 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
     private _makeLabelNode(name: string, width: number, height: number, text: string): Node {
         const node = new Node(name);
         node.addComponent(UITransform).setContentSize(width, height);
+        node.addComponent(Button);
         const label = node.addComponent(Label);
         label.string = text;
         return node;
