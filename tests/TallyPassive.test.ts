@@ -174,5 +174,17 @@ export function createTallyPassiveSuite(): TestSuite {
     assert.equals(plainSkill, resolver.resolveDamage(base!, caster, target, bundle.context, 0));
   });
 
+  suite.test('虎痴符（PROG-2-1444）：攻擊 ×2、防禦 ×0.5，接進 getTallyAttackMod／getTallyDefenseMod', () => {
+    const unit = cavalry(1);
+    unit.tallyId = 'card-1';
+    unit.tallyTemplateId = 'tiger-tally-hu-chi-fu';
+    const resolver = new BattleCombatResolver({
+      state: { units: new Map([[unit.id, unit]]), getCell: () => ({ terrain: TerrainType.Plain }) },
+    } as any);
+    const star = unit.tallyStarMultiplier;
+    assert.equals(2 * star, resolver.getTallyAttackMod(unit));
+    assert.equals(0.5 * star, resolver.getTallyDefenseMod(unit));
+  });
+
   return suite;
 }
