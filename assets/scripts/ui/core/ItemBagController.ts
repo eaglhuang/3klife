@@ -17,6 +17,8 @@ import { ItemUseResult } from '../../core/systems/ItemUseFlow';
 import { buildItemBagRows, ItemBagRow } from '../../core/systems/ItemBagView';
 import { ITEM_CATEGORIES, type ItemCategory, itemDefOf } from '../../core/systems/ItemDef';
 import { itemCount, PlayerInventory } from '../../core/systems/PlayerInventory';
+import { buildTreasureCodex } from '../../core/systems/TreasureCodex';
+import type { ItemAcquisitionRecord } from '../../core/systems/ItemAcquisitionLog';
 
 /** item-bag-main.json 內的列節點數＝每頁列數；超過時以上一頁／下一頁翻頁（PROG-2-1200）。 */
 export const BAG_ROW_SLOTS = 13;
@@ -35,6 +37,8 @@ export interface ItemBagFlowView {
 
 export interface ItemBagDeps {
     inventory: () => PlayerInventory;
+    /** 取得紀錄（BAG-08 寶物圖鑑摘要用）；未給視為空紀錄 */
+    acquisitionLog?: () => readonly ItemAcquisitionRecord[];
     useItem: (itemId: string, nowMs: number) => ItemUseResult;
     now: () => number;
 }
@@ -147,7 +151,7 @@ export class ItemBagController {
     /** 扁平 FlowView：key 與 item-bag-main.json 的節點 id 對應。 */
     public getFlowView(): ItemBagFlowView {
         const rows = this.rows();
-        const texts: Record<string, string> = { bagMessage: this._message };
+        const texts: Record<string, string> = { bagMessage: this._message || this._codexLine() };
         const actives: Record<string, boolean> = {};
         for (let i = 0; i < BAG_ROW_SLOTS; i++) {
             const row = rows[i];
@@ -171,6 +175,12 @@ export class ItemBagController {
             actives[`btnBagTab${index}`] = true;
         });
         return { texts, actives };
+    }
+
+    /** 寶物分類下才顯示圖鑑摘要（BAG-08），其他分類回空字串。 */
+    private _codexLine(): string {
+        if (this._category !== '寶物') return '';
+        return buildTreasureCodex(this._deps.acquisitionLog?.() ?? [], this._deps.inventory()).summaryLine;
     }
 
     /** 目前選取的道具；已經用完（數量為 0）時視為沒選。 */
