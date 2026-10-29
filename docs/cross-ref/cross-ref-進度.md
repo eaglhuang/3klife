@@ -41,7 +41,7 @@
 | **大廳系統.md (doc_spec_0002)** | LobbyScene.ts, UIConfig.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **官職系統.md (doc_spec_0014)** | UIConfig.ts, LobbyScene.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **AI武將強度系統.md (doc_data_0002)** | EnemyAI.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **名將挑戰賽系統.md (doc_spec_0007)** | DuelChallengePanel.ts、MonthlyScenarioCup.ts（月度場景賽 1~4 月場景、積分、歷史，PROG-2-1609；其餘月份規格未定、規則尚未接進戰鬥） | ✅ | 🟡 | ❌ | ❌ | ⬜ |
+| **名將挑戰賽系統.md (doc_spec_0007)** | DuelChallengePanel.ts、MonthlyScenarioCup.ts（月度場景賽 1~4 月場景、積分、歷史，PROG-2-1609；參賽資格〔禁騎兵戰法、水軍／弓兵適性 A 以上〕PROG-2-1610 已補；威力類規則與其餘月份未定） | ✅ | 🟡 | ❌ | ❌ | ⬜ |
 | **關卡設計系統.md (doc_spec_0049)** | BattleScene.ts, BattleHUD.ts, DeployPanel.ts | ✅ | 🟡 | 🟡 | ❌ | ⬜ |
 | **武將日誌與離線互動系統.md (doc_spec_0015)** | LobbyScene.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
 | **MVP遊戲驗證規格書.md (doc_spec_0045)** | GameManager.ts | ✅ | ✅ | ✅ | ❌ | ⬜ |
