@@ -459,6 +459,58 @@
       "autoAimMode": "all-allies"
     },
     {
+      "id": "tactic-insp-eight-array",
+      "displayName": "八陣圖",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int",
+        "lea"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "eight-formation",
+      "sourceType": "inspired-tactic",
+      "targetMode": "self",
+      "timing": "active-cast",
+      "manualTargeting": false
+    },
+    {
+      "id": "tactic-insp-heal",
+      "displayName": "醫療",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int",
+        "pol"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "medical-aid",
+      "sourceType": "inspired-tactic",
+      "targetMode": "ally-single",
+      "timing": "active-cast",
+      "manualTargeting": false
+    },
+    {
+      "id": "tactic-insp-inspire",
+      "displayName": "鼓舞",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "cha",
+        "lea"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "mentor-morale",
+      "sourceType": "inspired-tactic",
+      "targetMode": "ally-all",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-allies"
+    },
+    {
       "id": "tactic-insp-slow",
       "displayName": "緩速",
       "category": "control",

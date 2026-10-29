@@ -50,7 +50,7 @@ export function createInspiredTacticMapSuite(): TestSuite {
         assert.equals('tactic-insp-lance-thrust,tactic-insp-fire-attack', slots.map((s) => s.tacticId).join(','));
     });
 
-    suite.test('17 招各有自己的戰法庫條目，戰場技能可施放、不進武將自動配招（PROG-2-1145）', () => {
+    suite.test('20 招各有自己的戰法庫條目，戰場技能可施放、不進武將自動配招（PROG-2-1145）', () => {
         const library = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/master/tactic-library.json'), 'utf8'));
         const byId = new Map((library.data as Array<{ id: string; battleSkillId: string; rarityAccess: string[] }>).map((t) => [t.id, t]));
         const libraryIds = new Set<string>();
@@ -61,7 +61,18 @@ export function createInspiredTacticMapSuite(): TestSuite {
             assert.equals(0, row!.rarityAccess.length);
             libraryIds.add(entry.libraryId);
         }
-        assert.equals(17, libraryIds.size);
+        assert.equals(20, libraryIds.size);
+    });
+
+    suite.test('G-2 教官靈感 6 招全數登記：八陣圖 tile-buff、醫療補已損 25%、鼓舞士氣 +20（PROG-2-1615）', () => {
+        const library = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/master/tactic-library.json'), 'utf8'));
+        const skillOf = (specId: string) => resolveBattleSkillProfile((library.data as Array<{ id: string; battleSkillId: string }>).find((t) => t.id === toLibraryTacticId(specId))!.battleSkillId)!;
+        for (const id of ['TAC_LONE_RIDER', 'TAC_EIGHT_ARRAY', 'TAC_EMPTY_FORT', 'TAC_HEAL', 'TAC_INSPIRE', 'TAC_SLOW']) {
+            assert.isTrue(!!INSPIRED_TACTIC_MAP[id], `${id} 未登記`);
+        }
+        assert.equals('tile-buff', skillOf('TAC_EIGHT_ARRAY').effectKind);
+        assert.equals(0.25, skillOf('TAC_HEAL').healMissingRatio);
+        assert.equals(20, skillOf('TAC_INSPIRE').moraleBonus);
     });
 
     suite.test('招名與效果一致：緩速是減速、挑釁是單體暈眩、連擊兩段；TP 照數值表', () => {

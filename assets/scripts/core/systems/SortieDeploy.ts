@@ -485,6 +485,9 @@ export const TACTIC_LIBRARY_TO_SPEC_ID: Readonly<Record<string, string>> = {
     'tactic-insp-red-cliff': 'TAC_RED_CLIFF',
     'tactic-insp-chain-link': 'TAC_CHAIN_LINK',
     'tactic-insp-night-raid': 'TAC_NIGHT_RAID',
+    'tactic-insp-eight-array': 'TAC_EIGHT_ARRAY',
+    'tactic-insp-heal': 'TAC_HEAL',
+    'tactic-insp-inspire': 'TAC_INSPIRE',
 };
 
 /** 戰場 id 先經對照轉成規格 id；本來就是規格 id 或查無對照時原樣回傳 */
