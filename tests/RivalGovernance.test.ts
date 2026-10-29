@@ -2,8 +2,8 @@
  * RivalGovernance.test.ts — 他國 AI 季度內政結算與招募品質（E-3、E-7、F-3，PROG-2-1474）
  */
 import {
-    aiGovernanceTick, governanceTaskOutput, rollRecruitQuality, shouldRecruitThisSeason,
-    type GovernanceGeneralStats, type GovernanceResources,
+    aiGovernanceTick, governanceTaskOutput, recruitQualityOdds, rollRecruitQuality, shouldRecruitThisSeason,
+    type GovernanceGeneralStats, type GovernanceResources, type RecruitQuality,
 } from '../assets/scripts/core/systems/RivalGovernance';
 import { TestSuite, assert } from './TestRunner';
 
@@ -63,6 +63,48 @@ export function createRivalGovernanceSuite(): TestSuite {
         assert.equals('C', rollRecruitQuality(800, () => 0.75));
         assert.equals('B', rollRecruitQuality(0, () => 0.5));
     });
+
+    // E-7 的固定期待值；不得從受測函式取得期待分布，避免公式一起改錯仍過測。
+    const lowOdds = [['A', 0.1], ['B', 0.6], ['C', 0.3]] as const;
+    const middleOdds = [['A', 0.2], ['B', 0.7], ['C', 0.1]] as const;
+    const highOdds = [['S', 0.1], ['A', 0.3], ['B', 0.6]] as const;
+    const fameCases = [
+        { fame: 799, odds: lowOdds },
+        { fame: 800, odds: lowOdds },
+        { fame: 801, odds: middleOdds },
+        { fame: 1499, odds: middleOdds },
+        { fame: 1500, odds: middleOdds },
+        { fame: 1501, odds: highOdds },
+    ];
+
+    for (const { fame, odds } of fameCases) {
+        suite.test(`E-7 名聲 ${fame} 的完整品質分布符合嚴格大於門檻`, () => {
+            assert.equals(JSON.stringify(odds), JSON.stringify(recruitQualityOdds(fame)));
+        });
+
+        suite.test(`E-7 名聲 ${fame} 的 RNG 累加邊界與單次取樣`, () => {
+            const checkRoll = (roll: number, expected: RecruitQuality): void => {
+                let calls = 0;
+                const actual = rollRecruitQuality(fame, () => {
+                    calls++;
+                    return roll;
+                });
+                assert.equals(expected, actual, `fame=${fame}, roll=${roll}: 品質應為 ${expected}，實際 ${actual}`);
+                assert.equals(1, calls, `fame=${fame}, roll=${roll}: RNG 必須只呼叫一次`);
+            };
+
+            checkRoll(0, odds[0][0]);
+            checkRoll(1 - Number.EPSILON, odds[odds.length - 1][0]);
+            let boundary = 0;
+            for (let i = 0; i < odds.length - 1; i++) {
+                // 從規格分布累加，保留 0.2 + 0.7 的浮點表示，不硬寫 0.9。
+                boundary += odds[i][1];
+                checkRoll(boundary - Number.EPSILON, odds[i][0]);
+                checkRoll(boundary, odds[i + 1][0]);
+                checkRoll(boundary + Number.EPSILON, odds[i + 1][0]);
+            }
+        });
+    }
 
     return suite;
 }
