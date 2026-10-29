@@ -174,6 +174,21 @@ export class LobbyOpeningPanels {
             return;
         }
         this.refreshDestiny();
+        this._scheduleReveal();
+    }
+
+    /** 盲盒逐字浮現：每 60ms 露一個字，露完停（PROG-2-1621） */
+    private _revealTimer: ReturnType<typeof setInterval> | null = null;
+    private _scheduleReveal(): void {
+        if (this._revealTimer || !this._destiny?.revealing) return;
+        this._revealTimer = setInterval(() => {
+            this._destiny?.tickReveal();
+            this.refreshDestiny();
+            if (!this._destiny?.revealing && this._revealTimer) {
+                clearInterval(this._revealTimer);
+                this._revealTimer = null;
+            }
+        }, 60);
     }
 
     private refreshDestiny(): void {
