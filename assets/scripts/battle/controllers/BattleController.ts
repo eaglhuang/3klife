@@ -25,7 +25,7 @@ import { EnemyAI, AI_USABLE_TYPES } from "./EnemyAI";
 import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
-import { findUltBasePowerTable, findUltimateBattleSkillId, findUltimateDamageDef, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
+import { findAncestorSignatureSkillId, findUltBasePowerTable, findUltimateBattleSkillId, findUltimateDamageDef, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
 import { BattleFlowStateMachine } from './BattleFlowStateMachine';
 import { BattleRuntimeOrchestrator } from '../orchestrators/BattleRuntimeOrchestrator';
 import { executeBattleCombatPhase } from '../runtime/phases/BattleCombatPhase';
@@ -215,6 +215,7 @@ export class BattleController {
       getUltimateVitalityCostPct: (ultimateId) => findUltimateVitalityCostPct(ultimateId),
       getUltimateDamageDef: (ultimateId) => findUltimateDamageDef(ultimateId),
       getUltBasePowerTable: () => findUltBasePowerTable(),
+      getAncestorSignatureSkillId: (ancestorTemplateId) => findAncestorSignatureSkillId(ancestorTemplateId),
       isUnitActionBlocked: (unitId) => this.turnManager.isUnitActionBlockedThisTurn(unitId),
       getUnitSourceGeneralId: (unitId) => this.sourceTemplateOfUnit(unitId),
     },
