@@ -4,7 +4,7 @@
  *
  * 每回合累積 INT × 0.5，滿 100 觸發一次後歸零。
  * 滿格觸發「全局增幅」（PROG-2-1574，暫定）：我方全軍鼓舞士氣 +20（沿用士氣系統，+20% 攻擊、3 回合不疊加）。
- * HUD 不在本檔範圍。
+ * 戰場顯示：每回合在戰鬥紀錄列出「智謀 N/100」，觸發時另列一行（PROG-2-1577）。
  */
 import type { Faction } from '../../core/config/Constants';
 import { castMorale, MoraleCarrier } from './Morale';
@@ -38,3 +38,11 @@ export function applyWisdomSurge(units: Iterable<MoraleCarrier & { isDead(): boo
     }
     return count;
 }
+
+/** 回合紀錄用的智謀能量文字，例如「智謀 45/100」 */
+export function wisdomMeterText(meter: number): string {
+    return `智謀 ${Math.floor(Math.max(0, Math.min(WISDOM_METER_MAX, meter)))}/${WISDOM_METER_MAX}`;
+}
+
+/** 智謀觸發時的戰鬥紀錄文字 */
+export const WISDOM_SURGE_LOG = `智謀滿格：我方全軍鼓舞，士氣 +${WISDOM_SURGE_MORALE}`;

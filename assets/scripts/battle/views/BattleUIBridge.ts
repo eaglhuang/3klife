@@ -10,6 +10,7 @@
  *             + UIEventHandler (純事件轉接，無業務邏輯)
  */
 
+import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
 import { formatAwakeningReveal } from './AwakeningReveal';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
@@ -123,6 +124,8 @@ export function createBattleSceneContext(): BattleSceneContext {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export class BattleUIBridge {
+  /** 已寫進戰鬥紀錄的智謀觸發次數（PROG-2-1577） */
+  private _wisdomTriggersLogged = 0;
   private readonly unsubs: (() => void)[] = [];
   /** 本場我方的戰場特定動作（騎兵衝鋒、背刺…），戰後交給覺醒判定 */
   private readonly specialActions = new BattleSpecialActionTracker();
@@ -317,7 +320,15 @@ export class BattleUIBridge {
   private _onTurnPhaseChanged(snap: { turn: number; playerFood: number; phase?: TurnPhase }): void {
     const c = this.ctx;
     c.deployRuntime?.updateDp(snap.playerFood);
-    this.appendLog(`回合更新：第 ${snap.turn} 回合，糧草 ${snap.playerFood}`);
+    // 軍師智謀能量（PROG-2-1577）：回合紀錄附上能量，觸發次數增加時另列一行
+    const state = c.ctrl?.state;
+    const wisdom = state ? `，${wisdomMeterText(state.wisdomMeter)}` : '';
+    this.appendLog(`回合更新：第 ${snap.turn} 回合，糧草 ${snap.playerFood}${wisdom}`);
+    if (state && state.wisdomTriggerCount < this._wisdomTriggersLogged) this._wisdomTriggersLogged = 0;
+    if (state && state.wisdomTriggerCount > this._wisdomTriggersLogged) {
+      this._wisdomTriggersLogged = state.wisdomTriggerCount;
+      this.appendLog(WISDOM_SURGE_LOG);
+    }
     // 若仍在回合推進或單挑面板開啟中，暫時不要顯示我方回合提示或切回 deployHint
     if (!c.isAdvancingTurn && !c.isDuelPanelActive) {
       c.boardRenderer?.setDeployHintFaction(Faction.Player);

@@ -3,7 +3,7 @@
  */
 import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { applyWisdomSurge, WISDOM_SURGE_MORALE } from '../assets/scripts/battle/shared/WisdomMeter';
+import { applyWisdomSurge, wisdomMeterText, WISDOM_SURGE_LOG, WISDOM_SURGE_MORALE } from '../assets/scripts/battle/shared/WisdomMeter';
 import { MORALE_DURATION_TURNS } from '../assets/scripts/battle/shared/Morale';
 import { TestSuite, assert } from './TestRunner';
 
@@ -25,6 +25,13 @@ export function createWisdomSurgeSuite(): TestSuite {
         assert.equals(MORALE_DURATION_TURNS, a.moraleTurns);
         assert.equals(0, dead.morale);
         assert.equals(0, e.morale);
+    });
+
+    suite.test('回合紀錄文字：取整、夾在 0~100（PROG-2-1577）', () => {
+        assert.equals('智謀 45/100', wisdomMeterText(45.5));
+        assert.equals('智謀 0/100', wisdomMeterText(-3));
+        assert.equals('智謀 100/100', wisdomMeterText(120));
+        assert.equals('智謀滿格：我方全軍鼓舞，士氣 +20', WISDOM_SURGE_LOG);
     });
 
     return suite;
