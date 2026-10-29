@@ -60,6 +60,8 @@ export interface BattleSkillDispatcherContext {
   getUltBasePowerTable?(): Readonly<Record<string, number>> | undefined;
   /** 部隊的來源武將模板 id（虎符 sourceTemplateId）；組合奧義判定搭檔用（PROG-2-1588） */
   getUnitSourceGeneralId?(unitId: string): string | null;
+  /** 祖先成名奧義的戰法 id（英靈附體，PROG-2-1603）；查不到回 null，沿用本體奧義 */
+  getAncestorSignatureSkillId?(ancestorTemplateId: string | null): string | null;
 }
 
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
@@ -284,7 +286,8 @@ export class BattleSkillDispatcher {
     const spiritAttack = ancestralSpiritAttackOf(request.ultimateAttack);
     if (spiritAttack === null) return result;
     this.ancestralSpiritUsed.add(general.faction);
-    const echo = this.skillExecutor.execute({ ...request, ultimateAttack: spiritAttack }, this.buildBattleSkillExecutionContext());
+    const ancestorSkillId = this.context.getAncestorSignatureSkillId?.(general.ancestorTemplateId ?? null) ?? null;
+    const echo = this.skillExecutor.execute({ ...request, ultimateAttack: spiritAttack, battleSkillId: ancestorSkillId ?? request.battleSkillId }, this.buildBattleSkillExecutionContext());
     return {
       ...result,
       deltas: [...result.deltas, ...echo.deltas],

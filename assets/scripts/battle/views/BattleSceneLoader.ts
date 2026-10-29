@@ -4,6 +4,7 @@
 // 本模組所有函數均無 BattleScene 實例依賴（不使用 this）。
 // Unity 對照：BattleDataLoader + BattleHandBuilder 靜態工具類別
 
+import { ancestorSignatureSkillOf } from '../shared/AncestralSpirit';
 import { assetManager, AudioClip } from "cc";
 import { services } from "../../core/managers/ServiceLoader";
 import { GeneralUnit, GeneralConfig } from "../../core/models/GeneralUnit";
@@ -61,6 +62,11 @@ export function findUltimateBattleSkillId(ultimateId: string): string | null | u
 }
 
 /** 奧義的精力成本比例（例如 0.05 = 5%）；定義尚未載入或查不到時回傳 undefined（PROG-2-0429） */
+/** 祖先成名奧義的戰法 id（英靈附體，PROG-2-1603）；查不到回 null */
+export function findAncestorSignatureSkillId(ancestorTemplateId: string | null | undefined): string | null {
+  return ancestorSignatureSkillOf(ancestorTemplateId, ultimateDefinitionMap.values());
+}
+
 export function findUltimateVitalityCostPct(ultimateId: string): number | undefined {
   return ultimateDefinitionMap.get(ultimateId)?.vitalityCostPct;
 }

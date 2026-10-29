@@ -1,5 +1,5 @@
 import { Faction } from '../assets/scripts/core/config/Constants';
-import { ancestralSpiritAttackOf, isOutnumbered } from '../assets/scripts/battle/shared/AncestralSpirit';
+import { ancestorSignatureSkillOf, ancestralSpiritAttackOf, isOutnumbered } from '../assets/scripts/battle/shared/AncestralSpirit';
 import { TestSuite, assert } from './TestRunner';
 
 const u = (faction: Faction, dead = false) => ({ faction, isDead: () => dead });
@@ -24,6 +24,18 @@ export function createAncestralSpiritSuite(): TestSuite {
   suite.test('虛影攻擊基準 50%，本體沒有基準不觸發', () => {
     assert.equals(60, ancestralSpiritAttackOf(120) ?? -1);
     assert.equals(null, ancestralSpiritAttackOf(undefined));
+  });
+
+  suite.test('祖先成名奧義：取祖先模板的專屬奧義、槽位最小者（PROG-2-1603）', () => {
+    const defs = [
+      { templateId: 'guan-yu', slot: 2, exclusive: true, battleSkillId: 'second' },
+      { templateId: 'guan-yu', slot: 1, exclusive: true, battleSkillId: 'guan-yu-slash' },
+      { templateId: 'guan-yu', slot: 0, exclusive: false, battleSkillId: 'shared' },
+      { templateId: 'zhang-fei', slot: 1, exclusive: true, battleSkillId: 'roar' },
+    ];
+    assert.equals('guan-yu-slash', ancestorSignatureSkillOf('guan-yu', defs) ?? '');
+    assert.equals(null, ancestorSignatureSkillOf('liu-bei', defs));
+    assert.equals(null, ancestorSignatureSkillOf(null, defs));
   });
 
   return suite;

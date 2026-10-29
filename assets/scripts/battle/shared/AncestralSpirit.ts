@@ -29,3 +29,21 @@ export function ancestralSpiritAttackOf(ultimateAttack: number | null | undefine
   if (ultimateAttack === null || ultimateAttack === undefined) return null;
   return Math.max(1, Math.floor(ultimateAttack * ANCESTRAL_SPIRIT_POWER));
 }
+
+interface SignatureUltimateDef {
+  templateId?: string;
+  slot?: number;
+  exclusive?: boolean;
+  battleSkillId?: string | null;
+}
+
+/** 祖先的成名奧義戰法（PROG-2-1603）：取祖先模板的專屬奧義、槽位最小者；查不到回 null，沿用本體奧義 */
+export function ancestorSignatureSkillOf(ancestorTemplateId: string | null | undefined, defs: Iterable<SignatureUltimateDef>): string | null {
+  if (!ancestorTemplateId) return null;
+  let best: SignatureUltimateDef | null = null;
+  for (const def of defs) {
+    if (def.templateId !== ancestorTemplateId || def.exclusive !== true || !def.battleSkillId) continue;
+    if (!best || (def.slot ?? 99) < (best.slot ?? 99)) best = def;
+  }
+  return best?.battleSkillId ?? null;
+}

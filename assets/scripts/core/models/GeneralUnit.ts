@@ -113,6 +113,8 @@ export class GeneralUnit {
   public readonly weatherAptitude: Readonly<Record<string, string>>;
   /** 遺傳因子（粉色地形因子影響戰場地形適性，APT-09）；複本 */
   public readonly genes: GeneralGeneConfig[];
+  /** 培育繼承的祖先模板 id（bloodlineProfile.ancestorTemplateId）；英靈附體施放祖先成名奧義用（PROG-2-1603） */
+  public readonly ancestorTemplateId: string | null;
 
   constructor(config: GeneralConfig) {
     this.id = config.id;
@@ -144,6 +146,7 @@ export class GeneralUnit {
     this.terrainAptitude = { ...(config.terrainAptitude ?? {}) };
     this.weatherAptitude = { ...(config.weatherAptitude ?? {}) };
     this.genes = (config.genes ?? []).map((gene) => ({ ...gene }));
+    this.ancestorTemplateId = config.bloodlineProfile?.ancestorTemplateId ?? null;
   }
 
   public takeDamage(value: number): void {
