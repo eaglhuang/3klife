@@ -4603,6 +4603,9 @@ export class LobbyScene extends Component {
                     this._bringNodeToFront(this._leadSelectHost.node);
                     this._refreshLeadSelect();
                 }
+                // 大廳 HUD 拉到最前後，新手教學／開場信件要再壓回最上層，不能被大廳蓋住（PROG-2-1624）
+                this._openingPanels?.refreshOnboarding();
+                this._openingPanels?.refreshOpeningLetter();
             },
             hide: () => {
                 this._lobbyMainHost!.node.active = false;
