@@ -6,7 +6,7 @@
  * 積分公式與競技場相同（ArenaScore），場景克制係數由後台每月設定，預設 1.0。
  * 規格只列 1~4 月，其餘月份「…」未定，查不到時回 null（不開賽）。
  */
-import { arenaScoreOfTeam, type ArenaMember } from './ArenaScore';
+import { arenaScoreOfTeam, counterOf, survivalFactorOf, terrainMultiplierOf, type ArenaMember } from './ArenaScore';
 
 export type MonthlyScenarioRule =
     | { kind: 'ban-tactic-tag'; tag: string }
@@ -89,4 +89,29 @@ export function filterMonthlyScenarioTeam<T extends MonthlyScenarioEntrant>(scen
         else accepted.push(entrant);
     }
     return { accepted, rejected };
+}
+
+/** 威力類規則需要的欄位：主戰法的主屬性（int / str …） */
+export type MonthlyScenarioMember = ArenaMember & MonthlyScenarioEntrant & { tacticScalingStat?: string };
+
+/**
+ * 套用場景威力規則的單人積分（PROG-2-1611 暫定）：
+ * - 春耕奇謀 tactic-power：主戰法主屬性符合時，戰法點數 × 倍率
+ * - 山地奇兵 aptitude-bonus：該兵種適性等級符合時，地形倍率的加成部分 × 倍率（S 1.5 → 2.0）
+ * 其餘規則同競技場公式。
+ */
+export function monthlyScenarioMemberScore(scenario: Readonly<MonthlyScenario> | null, member: Readonly<MonthlyScenarioMember>, sceneCounter = DEFAULT_SCENE_COUNTER): number {
+    const rule = scenario?.rule;
+    const attributeSum = (member.str || 0) + (member.int || 0) + (member.lea || 0) + (member.luk || 0);
+    let terrain = terrainMultiplierOf(member.terrain);
+    if (rule?.kind === 'aptitude-bonus' && member.troopAptitude?.[rule.troop] === rule.rank) {
+        terrain = 1 + (terrain - 1) * rule.multiplier;
+    }
+    let tactic = (member.tacticPoints || 0) * counterOf(sceneCounter);
+    if (rule?.kind === 'tactic-power' && member.tacticScalingStat === rule.stat) tactic *= rule.multiplier;
+    return (attributeSum * terrain + tactic) * survivalFactorOf(member.hp, member.maxHp);
+}
+
+export function monthlyScenarioTeamScore(scenario: Readonly<MonthlyScenario> | null, members: readonly MonthlyScenarioMember[], sceneCounter = DEFAULT_SCENE_COUNTER): number {
+    return members.reduce((sum, m) => sum + monthlyScenarioMemberScore(scenario, m, sceneCounter), 0);
 }
