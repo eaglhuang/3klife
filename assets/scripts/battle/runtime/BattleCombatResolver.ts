@@ -65,6 +65,9 @@ export interface BattleCombatResolverContext {
   relationsBetween?(attackerId: string, helperId: string): readonly HistoricalRelation[];
 }
 
+/** 堅盾（靈感戰法，PROG-2-1600 暫定）：防禦 ×1.2 */
+export const FORTIFIED_DEFENSE_MULTIPLIER = 1.2;
+
 export class BattleCombatResolver {
   /** 命中判定用亂數；測試可換成固定序列（PROG-2-0080） */
   /** 命中與暴擊的擲骰走戰場種子亂數源（Q25），不用 Math.random */
@@ -103,7 +106,8 @@ export class BattleCombatResolver {
   public getTallyDefenseMod(unit: TroopUnit): number {
     // 暴躁（PROG-2-1586 暫定）：防禦 −3%/級，對全隊生效
     const furyBase = furyModifiersOf(this.context.state.getGeneral?.(unit.faction)?.genes).defense;
-    const fury = furyBase * sceneDefenseMultiplierOf(unit, this.context.state);
+    const fury = furyBase * sceneDefenseMultiplierOf(unit, this.context.state)
+      * (services().buff.hasBuff(unit.id, StatusEffect.Fortified) ? FORTIFIED_DEFENSE_MULTIPLIER : 1);
     if (!unit.tallyId) return fury;
     return fury * unit.tallyStarMultiplier * this.tallySetMods(unit.faction).defMod * tallyDefenseMultiplierOf(unit)
       * tallyRearguardDefenseMultiplierOf(unit, this.context.state.units.values());

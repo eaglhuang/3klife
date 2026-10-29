@@ -63,12 +63,14 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
 
   const dir = FORWARD_DIR[unit.faction];
   const slowPenalty = svc.buff.hasBuff(unit.id, StatusEffect.Slow) ? 1 : 0;
+  // 疾行（PROG-2-1600 暫定）：移動 +1，以負懲罰計
+  const hasteBonus = svc.buff.hasBuff(unit.id, StatusEffect.Haste) ? 1 : 0;
   const tacticMoveRange = resolveBattleTacticBehavior(context.state.battleTactic).getEffectiveMoveRange(unit, context.state);
   const isFloodBattle = context.state.battleTactic === BattleTactic.FloodAttack;
   const baseMoveRange = isFloodBattle
     ? 1
     : applyAptitudeMove(tacticMoveRange, context.getAptitudeMoveDelta?.(unit) ?? 0, context.getAptitudeMoveSetTo?.(unit) ?? null);
-  let remainingMoveBudget = Math.max(0, baseMoveRange - slowPenalty);
+  let remainingMoveBudget = Math.max(0, baseMoveRange - slowPenalty + hasteBonus);
   if (!isFloodBattle) {
     // 神威符無視地形（PROG-2-1576）：減移動的格子效果對它無效
     remainingMoveBudget += tallyTileMoveDeltaOf(unit, resolveTileMoveRangeDelta(context.state, unit.lane, unit.depth));
