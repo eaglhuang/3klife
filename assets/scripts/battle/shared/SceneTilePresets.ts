@@ -12,6 +12,16 @@ export interface SceneTilePresetTable {
   presets: Record<string, SceneTilePreset>;
 }
 
+/** 內建配置表：與 assets/resources/data/scene-tile-presets.json 一致（測試比對），戰場開場同步取用 */
+export const SCENE_TILE_PRESETS: SceneTilePresetTable = {
+  version: 1,
+  presets: {
+    SCENE_FOREST_AMBUSH: { stealth: 60, hazard: 20, normal: 20 },
+    SCENE_CANYON_ROCK: { hazard: 40, normal: 30, forceMove: 30 },
+    SCENE_FLOOD: { forceMove: 50, hazard: 30, normal: 20 },
+  },
+};
+
 /** 檢查配置表：比例須為非負整數且每個場景合計 100；回傳錯誤訊息清單（空陣列代表通過） */
 export function validateSceneTilePresets(table: SceneTilePresetTable): string[] {
   const errors: string[] = [];
