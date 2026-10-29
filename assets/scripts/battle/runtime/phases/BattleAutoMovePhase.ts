@@ -9,7 +9,7 @@ import { applyAptitudeMove } from '../../../core/systems/BattleAptitude';
 import { forestMoveBonusFor } from '../../../core/systems/FactorTacticLinkage';
 import { forcedMoveBlockedDamageRatio, resolveForcedMove } from '../../shared/ForcedMoveTile';
 import { resolveGhostPath, type GhostPathCell } from '../../shared/GhostMovePath';
-import { hasGhostMove, tallyTerrainMoveBonusOf, tallyTileMoveDeltaOf } from '../../shared/TallyPassive';
+import { hasGhostMove, tallyTerrainMoveBonusOf, tallyTileMoveDeltaOf, canTrampleOver } from '../../shared/TallyPassive';
 
 const FORWARD_DIR: Record<Faction, number> = {
   [Faction.Player]: 1,
@@ -92,6 +92,33 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
 
     if (nextCell.occupantId) {
       const blocker = context.state.units.get(nextCell.occupantId)!;
+
+      // 巨型踐踏（南蠻，PROG-2-1578）：越過敵方步兵，落在後一格（需空著且可通行），花 1 點移動力
+      if (canTrampleOver(unit, blocker)) {
+        const landDepth = nextDepth + dir;
+        const landCell = context.state.getCell(unit.lane, landDepth);
+        if (landCell && !landCell.occupantId && !context.isCellMovementBlocked(unit.lane, landDepth)) {
+          const fromDepth = unit.depth;
+          context.state.getCell(unit.lane, fromDepth)!.occupantId = null;
+          unit.moveTo(unit.lane, landDepth);
+          landCell.occupantId = unit.id;
+          unit.chargeCells += 2;
+          svc.event.emit(EVENT_NAMES.UnitMoved, {
+            unitId: unit.id,
+            lane: unit.lane,
+            depth: landDepth,
+            fromLane: unit.lane,
+            fromDepth,
+            ghostMove: true,
+          });
+          context.turnManager.markUnitMoved(unit.id);
+          context.consumeTileBuff(unit);
+          remainingMoveBudget -= 1;
+          remainingMoveBudget += applyTileEffectOnEnter(unit, dir, svc, context);
+          if (unit.isDead()) return;
+          continue;
+        }
+      }
 
       if (
         blocker.faction === unit.faction
