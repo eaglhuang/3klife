@@ -6,7 +6,7 @@
  */
 import { TestSuite, assert } from './TestRunner';
 import { produceDeathTally } from '../assets/scripts/core/systems/TigerTally';
-import { NAMED_TALLY_BY_GENERAL_TEMPLATE, resolveTallyTemplateId } from '../assets/scripts/core/config/TigerTallySpecTactics';
+import { LEGACY_TALLY_BY_GENERAL_TEMPLATE, NAMED_TALLY_BY_GENERAL_TEMPLATE, resolveTallyTemplateId } from '../assets/scripts/core/config/TigerTallySpecTactics';
 import { applyTallyPassive } from '../assets/scripts/battle/shared/TallyPassive';
 import type { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 import { buildTallyCardCatalog } from '../assets/scripts/core/config/TallyCardCatalog';
@@ -35,12 +35,18 @@ export function createNamedTallyDeathSuite(): TestSuite {
     });
 
     suite.test('非名將專屬：查表維持原 id', () => {
-        assert.equals('cao-ren', resolveTallyTemplateId('cao-ren'));
+        assert.equals('xu-huang', resolveTallyTemplateId('xu-huang'));
+    });
+
+    suite.test('死亡傳承：曹仁→虎豹、甘寧→錦帆；馬超以專屬神威符為準（PROG-2-1594）', () => {
+        assert.equals('tiger-tally-hu-bao', resolveTallyTemplateId('cao-ren'));
+        assert.equals('tiger-tally-jin-fan', resolveTallyTemplateId('gan-ning'));
+        assert.equals('tiger-tally-shen-wei-fu', resolveTallyTemplateId('ma-chao'));
     });
 
     suite.test('對照表的虎符都在卡片目錄', () => {
         const catalog = buildTallyCardCatalog();
-        const missing = Object.values(NAMED_TALLY_BY_GENERAL_TEMPLATE).filter((id) => !catalog.has(id));
+        const missing = [...Object.values(NAMED_TALLY_BY_GENERAL_TEMPLATE), ...Object.values(LEGACY_TALLY_BY_GENERAL_TEMPLATE)].filter((id) => !catalog.has(id));
         assert.equals(0, missing.length, missing.join(','));
     });
 
