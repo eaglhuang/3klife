@@ -1,12 +1,14 @@
 /**
  * 攻城戰最小版（PROG-2-1589，暫定）headless 測試
  *
- * 覆蓋：戰法對應 siege 場景；敵方城牆區（depth ≤ 1）防禦 ×1.5、城外不加；
+ * 覆蓋：戰法對應 siege 場景；敵方城牆區（depth ≥ 6）防禦 ×1.5、城外不加；投石機轟擊城牆區不致死；
  * 我方工兵攻城傷害 ×2、敵方不加；非攻城場景倍率皆為 1。
  */
 import { TestSuite, assert } from './TestRunner';
 import {
+    SIEGE_CATAPULT_DAMAGE,
     SIEGE_RAM_MULTIPLIER,
+    applySceneCatapult,
     SIEGE_WALL_DEFENSE_MULTIPLIER,
     sceneDefenseMultiplierOf,
     sceneSiegeDamageMultiplierOf,
@@ -28,11 +30,12 @@ export function createSiegeSceneSuite(): TestSuite {
         assert.equals('siege', resolveBattleSceneMode(BattleTactic.Siege));
     });
 
-    suite.test('城牆地利：敵方 depth ≤ 1 防禦 ×1.5，城外與我方不加', () => {
-        assert.equals(SIEGE_WALL_DEFENSE_MULTIPLIER, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 0), siege));
-        assert.equals(SIEGE_WALL_DEFENSE_MULTIPLIER, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 1), siege));
-        assert.equals(1, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 2), siege));
-        assert.equals(1, sceneDefenseMultiplierOf(unitAt(Faction.Player, 0), siege));
+    suite.test('城牆地利：敵方 depth ≥ 6（城池在最後兩列）防禦 ×1.5，城外與我方不加（PROG-2-1596 修正）', () => {
+        assert.equals(SIEGE_WALL_DEFENSE_MULTIPLIER, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 7), siege));
+        assert.equals(SIEGE_WALL_DEFENSE_MULTIPLIER, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 6), siege));
+        assert.equals(1, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 5), siege));
+        assert.equals(1, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 0), siege));
+        assert.equals(1, sceneDefenseMultiplierOf(unitAt(Faction.Player, 7), siege));
     });
 
     suite.test('衝車：我方工兵攻城 ×2，敵方不加', () => {
@@ -40,8 +43,23 @@ export function createSiegeSceneSuite(): TestSuite {
         assert.equals(1, sceneSiegeDamageMultiplierOf(unitAt(Faction.Enemy, 7), siege));
     });
 
+    suite.test('投石機：我方工兵轟擊城牆區敵軍 10 傷、最少留 1 血，城外與非攻城場景不受影響（PROG-2-1596）', () => {
+        const mk = (id: string, faction: Faction, depth: number, hp: number) => ({ id, faction, depth, lane: 1, currentHp: hp, isDead: () => hp <= 0 }) as unknown as TroopUnit;
+        const wall = mk('w', Faction.Enemy, 7, 100);
+        const weak = mk('k', Faction.Enemy, 6, 5);
+        const field = mk('f', Faction.Enemy, 3, 100);
+        const engineer = mk('e', Faction.Player, 2, 100);
+        const units = new Map([[wall.id, wall], [weak.id, weak], [field.id, field], [engineer.id, engineer]]);
+        const hit = applySceneCatapult(engineer, { battleTactic: BattleTactic.Siege, units } as never);
+        assert.equals('w,k', hit.join(','));
+        assert.equals(100 - SIEGE_CATAPULT_DAMAGE, wall.currentHp);
+        assert.equals(1, weak.currentHp);
+        assert.equals(100, field.currentHp);
+        assert.equals(0, applySceneCatapult(engineer, { battleTactic: BattleTactic.Normal, units } as never).length);
+    });
+
     suite.test('非攻城場景倍率皆為 1', () => {
-        assert.equals(1, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 0), normal));
+        assert.equals(1, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 7), normal));
         assert.equals(1, sceneSiegeDamageMultiplierOf(unitAt(Faction.Player, 0), normal));
     });
 
