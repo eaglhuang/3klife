@@ -19,6 +19,7 @@ import {
   tallyAttackMultiplierOf,
   tallyBackRowDamageMultiplierOf,
   tallyDefenseMultiplierOf,
+  tallyRearguardDefenseMultiplierOf,
   tallyDefensePenetrationOf,
   tallyEnemyAuraAttackMultiplierOf,
   tallyEvasionBonusOf,
@@ -93,7 +94,8 @@ export class BattleCombatResolver {
   /** 虎符部隊的防禦乘數：星級 × 同陣營在場 Set 的防禦加成（PROG-2-0574）× 被動防禦乘數（虎痴符，PROG-2-1444）；非虎符單位恆為 1 */
   public getTallyDefenseMod(unit: TroopUnit): number {
     if (!unit.tallyId) return 1;
-    return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).defMod * tallyDefenseMultiplierOf(unit);
+    return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).defMod * tallyDefenseMultiplierOf(unit)
+      * tallyRearguardDefenseMultiplierOf(unit, this.context.state.units.values());
   }
 
   private tallySetMods(faction: Faction): { atkMod: number; defMod: number } {

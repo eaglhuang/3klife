@@ -61,6 +61,8 @@ export interface TallyPassiveSpec {
   splash?: { radius: number; ratio: number };
   /** 替主將承傷（白耳）：主將部隊受傷時，周圍 radius 格內的此部隊代為承受（PROG-2-1529） */
   guardsGeneral?: { radius: number };
+  /** 斷後（白耳，PROG-2-1580 暫定）：同列前方有友軍、後方沒有友軍時防禦 × 此倍率 */
+  rearguardDefenseMultiplier?: number;
   /** 捨命護主（惡來符）：周圍 radius 格內友軍受傷時由此部隊代為承受（PROG-2-1530） */
   guardsAllies?: { radius: number };
   /** 血低防高（惡來符）：防禦乘數 × (1 + bonus × 已損血比例) */
@@ -119,7 +121,7 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   // 工甲符：可穿透防禦，無視 30% 防禦（「連擊時傷害提升」需連擊來源，未做）
   'tiger-tally-gong-jia-fu': { defensePenetration: 0.3 },
   // 白耳：剋制弓兵，對弓兵傷害 ×1.5（替主將承傷、斷後防禦 ×2 未做）
-  'tiger-tally-bai-er': { damageVsTroopTypes: { types: [TroopType.Archer], multiplier: 1.5 }, guardsGeneral: { radius: 1 } },
+  'tiger-tally-bai-er': { damageVsTroopTypes: { types: [TroopType.Archer], multiplier: 1.5 }, guardsGeneral: { radius: 1 }, rearguardDefenseMultiplier: 2 },
   // 元戎：連弩齊射，每次攻擊多打 1 下；壓制步兵，對步兵傷害 ×1.5；範圍傷害沿用濺射 1 格 50%（PROG-2-1528 暫定）
   'tiger-tally-yuan-rong': {
     extraHits: 1,
@@ -287,6 +289,24 @@ export function tallyTroopTypeDamageMultiplierOf(attacker: TroopUnit, target: Tr
 /** 攻擊此部隊的命中率減少值；沒有此被動時為 0 */
 export function tallyEvasionBonusOf(unit: TroopUnit): number {
   return passiveOf(unit)?.evasionBonus ?? 0;
+}
+
+/**
+ * 斷後（白耳，PROG-2-1580 暫定）：同列有存活友軍在前方（較靠敵陣）且後方沒有友軍時，
+ * 回傳 rearguardDefenseMultiplier；否則為 1。前方以陣營推進方向判定（我方 depth 遞增、敵方遞減）。
+ */
+export function tallyRearguardDefenseMultiplierOf(unit: TroopUnit, units: Iterable<TroopUnit>): number {
+  const multiplier = passiveOf(unit)?.rearguardDefenseMultiplier;
+  if (!multiplier) return 1;
+  const forward = unit.faction === Faction.Player ? 1 : -1;
+  let hasAllyAhead = false;
+  for (const other of units) {
+    if (other === unit || other.faction !== unit.faction || other.lane !== unit.lane || other.isDead()) continue;
+    const offset = (other.depth - unit.depth) * forward;
+    if (offset < 0) return 1;
+    if (offset > 0) hasAllyAhead = true;
+  }
+  return hasAllyAhead ? multiplier : 1;
 }
 
 /** 虎符被動的防禦乘數；沒有此被動時為 1 */
