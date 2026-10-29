@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-30 07:25 更正 0720 給 Antigravity 信中 atlas 雜湊的引用值（我方誤引），結論不變。
 - 2026-10-30 07:20 Antigravity 副本回覆：兩邊確實一致，但信中 SHA 後段為補造，已退回並立規；請其做 v5r 512×512 單頁圖集候選（骨架不改）；回覆 Codex 512 圖集更正收到。
 - 2026-10-30 06:52 依使用者指示寫信問 Antigravity：主工作樹 scratch/zhaoyun-v5*-spine 與 artifacts/art-direction/zhaoyun-health-fix 內副本去留，請其列清單與對照，不得自行刪除。
 - 2026-10-30 02:15 趙雲 v5r（腿骨／後臂換基）離線驗收通過，成為目前基準；IK 膝蓋朝向與 Cocos 實機播放待 Codex 額度。
