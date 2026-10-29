@@ -10,7 +10,12 @@ export function createMonthlyScenarioCupSuite(): TestSuite {
     suite.test('1~4 月依規格表開賽，未定月份回 null', () => {
         assert.equals('冰天雪地', monthlyScenarioOf(1)?.name ?? '');
         assert.equals('山地奇兵', monthlyScenarioOf(4)?.name ?? '');
-        assert.equals(null, monthlyScenarioOf(7));
+        assert.equals('酷暑烽火', monthlyScenarioOf(7)?.name ?? '');
+        assert.equals(null, monthlyScenarioOf(13));
+        // 5~12 月暫定表（PROG-2-1616）：12 個月都有場景，且月份不重複
+        for (let m = 1; m <= 12; m++) assert.isTrue(!!monthlyScenarioOf(m), `${m} 月沒有場景`);
+        assert.equals('banned-tactic', monthlyScenarioViolationOf(monthlyScenarioOf(5)!, { tacticTags: ['fire'] }) ?? '');
+        assert.equals(null, monthlyScenarioViolationOf(monthlyScenarioOf(10)!, { troopAptitude: { ENGINEER: 'A' } }));
     });
 
     suite.test('積分與競技場公式相同；場景克制係數放大戰法點數', () => {
