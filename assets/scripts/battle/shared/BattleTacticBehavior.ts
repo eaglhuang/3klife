@@ -73,9 +73,14 @@ export interface BattleTacticBehavior {
   getDefenseMultiplier?(unit: TroopUnit, state: BattleState): number;
   /** 場景對工兵攻城傷害的倍率（攻城戰衝車）；沒有則為 1 */
   getSiegeDamageMultiplier?(unit: TroopUnit, state: BattleState): number;
+  /** 場景投石機：工兵每回合對城牆區敵軍的範圍傷害；沒有則為 0 */
+  getCatapultDamage?(unit: TroopUnit, state: BattleState): number;
 }
 
-export const SIEGE_WALL_MAX_DEPTH = 1;
+/** 城牆區：敵方城池在最後兩列（敵方由 depth 7 出兵，我方工兵到 depth 7 攻城，PROG-2-1596 修正） */
+export const SIEGE_WALL_MIN_DEPTH = GAME_CONFIG.GRID_DEPTH - 2;
+/** 投石機：我方工兵每回合對城牆區敵軍造成的傷害（PROG-2-1596 暫定，不致死） */
+export const SIEGE_CATAPULT_DAMAGE = 10;
 export const SIEGE_WALL_DEFENSE_MULTIPLIER = 1.5;
 export const SIEGE_RAM_MULTIPLIER = 2;
 /** 水淹深水格每回合傷害（PROG-2-1591，暫定） */
@@ -447,14 +452,15 @@ export const BATTLE_TACTIC_BEHAVIOR_REGISTRY: Readonly<Record<BattleSceneMode, B
       && state.sceneFlags.stealthOpenTurns > 0
     ),
   },
-  // 攻城戰最小版（PROG-2-1589，暫定）：敵方守城（城牆區 depth ≤ 1）防禦 ×1.5、我方工兵衝車攻城 ×2。
-  // 城牆不阻擋移動：敵方前線 depth 為 0，阻擋格會讓守軍也無法出城而卡死
+  // 攻城戰最小版（PROG-2-1589，暫定）：敵方守城（城牆區 depth ≥ 6）防禦 ×1.5、我方工兵衝車攻城 ×2、投石機 AOE（PROG-2-1596）。
+  // 城牆不阻擋移動：敵方由城牆區出兵，阻擋格會讓守軍也無法出城而卡死
   siege: {
     ...DEFAULT_BATTLE_TACTIC_BEHAVIOR,
     getDefenseMultiplier: (unit: TroopUnit) => (
-      unit.faction === Faction.Enemy && unit.depth <= SIEGE_WALL_MAX_DEPTH ? SIEGE_WALL_DEFENSE_MULTIPLIER : 1
+      isSiegeWallDefender(unit) ? SIEGE_WALL_DEFENSE_MULTIPLIER : 1
     ),
     getSiegeDamageMultiplier: (unit: TroopUnit) => (unit.faction === Faction.Player ? SIEGE_RAM_MULTIPLIER : 1),
+    getCatapultDamage: (unit: TroopUnit) => (unit.faction === Faction.Player ? SIEGE_CATAPULT_DAMAGE : 0),
   },
   night: {
     ...DEFAULT_BATTLE_TACTIC_BEHAVIOR,
@@ -497,4 +503,25 @@ export function sceneDefenseMultiplierOf(unit: TroopUnit, state: BattleState): n
 /** 目前場景下工兵攻城傷害倍率（攻城戰衝車，PROG-2-1589）；場景沒有規則時為 1 */
 export function sceneSiegeDamageMultiplierOf(unit: TroopUnit, state: BattleState): number {
   return resolveBattleTacticBehavior(state.battleTactic).getSiegeDamageMultiplier?.(unit, state) ?? 1;
+}
+
+/** 攻城戰城牆區的守軍（敵方、在最後兩列） */
+export function isSiegeWallDefender(unit: TroopUnit): boolean {
+  return unit.faction === Faction.Enemy && unit.depth >= SIEGE_WALL_MIN_DEPTH;
+}
+
+/**
+ * 投石機（攻城戰，PROG-2-1596 暫定）：工兵每回合對所有城牆區敵軍造成固定傷害，最少留 1 血（不致死，陣亡結算交給一般戰鬥）。
+ * 回傳受擊部隊 id。
+ */
+export function applySceneCatapult(engineer: TroopUnit, state: BattleState): string[] {
+  const damage = resolveBattleTacticBehavior(state.battleTactic).getCatapultDamage?.(engineer, state) ?? 0;
+  if (damage <= 0) return [];
+  const hit: string[] = [];
+  for (const unit of state.units.values()) {
+    if (unit.isDead() || !isSiegeWallDefender(unit)) continue;
+    unit.currentHp = Math.max(1, unit.currentHp - damage);
+    hit.push(unit.id);
+  }
+  return hit;
 }
