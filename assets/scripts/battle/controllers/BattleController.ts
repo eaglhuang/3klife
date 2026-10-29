@@ -215,6 +215,7 @@ export class BattleController {
       getUltimateDamageDef: (ultimateId) => findUltimateDamageDef(ultimateId),
       getUltBasePowerTable: () => findUltBasePowerTable(),
       isUnitActionBlocked: (unitId) => this.turnManager.isUnitActionBlockedThisTurn(unitId),
+      getUnitSourceGeneralId: (unitId) => this.sourceTemplateOfUnit(unitId),
     },
     this.skillSourceTranslator,
   );
