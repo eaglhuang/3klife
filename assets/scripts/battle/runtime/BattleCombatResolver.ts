@@ -9,7 +9,7 @@ import type { TroopUnit } from '../../core/models/TroopUnit';
 import { fieldTallySetMods, type TallySetMember } from '../../core/systems/TigerTallySetBonus';
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from './BattleTurnManager';
-import { resolveBattleTacticBehavior, sceneDefenseMultiplierOf } from '../shared/BattleTacticBehavior';
+import { resolveBattleTacticBehavior, sceneDefenseMultiplierOf, sceneLadderDefenseBypassOf } from '../shared/BattleTacticBehavior';
 import { canTargetUnderStealth, isHiddenOnTile, isRangedAttack } from '../shared/StealthTile';
 import { weatherRangedHitDelta, weatherRangedRangeDelta } from '../../core/systems/WeatherTacticRestriction';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
@@ -279,7 +279,9 @@ export class BattleCombatResolver {
     }
 
     // 盾牆：防禦力加倍
-    const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender) * (1 - tallyDefensePenetrationOf(attacker));
+    const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender) * (1 - tallyDefensePenetrationOf(attacker))
+      // 雲梯（攻城戰，PROG-2-1597）：我方步兵攀城，抵銷城牆地利
+      * sceneLadderDefenseBypassOf(attacker, defender, this.context.state);
 
     let damage = svc.formula.calculateDamage({
       attackerAttack: attacker.getEffectiveAttack() * this.getTallyAttackMod(attacker),

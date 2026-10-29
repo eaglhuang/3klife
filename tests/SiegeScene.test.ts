@@ -1,7 +1,7 @@
 /**
  * 攻城戰最小版（PROG-2-1589，暫定）headless 測試
  *
- * 覆蓋：戰法對應 siege 場景；敵方城牆區（depth ≥ 6）防禦 ×1.5、城外不加；投石機轟擊城牆區不致死；
+ * 覆蓋：戰法對應 siege 場景；敵方城牆區（depth ≥ 6）防禦 ×1.5、城外不加；投石機轟擊城牆區不致死；雲梯讓我方步兵抵銷城牆地利；
  * 我方工兵攻城傷害 ×2、敵方不加；非攻城場景倍率皆為 1。
  */
 import { TestSuite, assert } from './TestRunner';
@@ -9,12 +9,13 @@ import {
     SIEGE_CATAPULT_DAMAGE,
     SIEGE_RAM_MULTIPLIER,
     applySceneCatapult,
+    sceneLadderDefenseBypassOf,
     SIEGE_WALL_DEFENSE_MULTIPLIER,
     sceneDefenseMultiplierOf,
     sceneSiegeDamageMultiplierOf,
 } from '../assets/scripts/battle/shared/BattleTacticBehavior';
 import { resolveBattleSceneMode } from '../assets/scripts/battle/shared/BattleSceneMode';
-import { BattleTactic, Faction } from '../assets/scripts/core/config/Constants';
+import { BattleTactic, Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import type { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 
 function unitAt(faction: Faction, depth: number): TroopUnit {
@@ -56,6 +57,17 @@ export function createSiegeSceneSuite(): TestSuite {
         assert.equals(1, weak.currentHp);
         assert.equals(100, field.currentHp);
         assert.equals(0, applySceneCatapult(engineer, { battleTactic: BattleTactic.Normal, units } as never).length);
+    });
+
+    suite.test('雲梯：我方步兵打城牆區守軍抵銷城牆地利，騎兵與城外不抵銷（PROG-2-1597）', () => {
+        const mk = (faction: Faction, type: TroopType, depth: number) => ({ faction, type, depth, lane: 1 }) as unknown as TroopUnit;
+        const wall = mk(Faction.Enemy, TroopType.Shield, 7);
+        const infantry = mk(Faction.Player, TroopType.Infantry, 6);
+        const bypass = sceneLadderDefenseBypassOf(infantry, wall, siege);
+        assert.equals(1, Math.round(bypass * sceneDefenseMultiplierOf(wall, siege) * 1000) / 1000);
+        assert.equals(1, sceneLadderDefenseBypassOf(mk(Faction.Player, TroopType.Cavalry, 6), wall, siege));
+        assert.equals(1, sceneLadderDefenseBypassOf(infantry, mk(Faction.Enemy, TroopType.Shield, 3), siege));
+        assert.equals(1, sceneLadderDefenseBypassOf(infantry, wall, normal));
     });
 
     suite.test('非攻城場景倍率皆為 1', () => {
