@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "type": "auto-parts",
+  "source": "../cross-ref-進度.md",
+  "partFormat": "markdown",
+  "_thresholdKB": 30,
+  "_note": "PROG-2-1614：入口保留 D-1／D-4／D-5（build-progress-matrix、rebuild-crossref 直接讀寫），D-1a 與 D-2／D-3 拆至本目錄",
+  "shards": [ { "name": "d1a-rejudge" }, { "name": "d2-d3-pending-ui" } ]
+}
