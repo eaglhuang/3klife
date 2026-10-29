@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "type": "auto-parts",
+  "source": "../cross-ref-code.md",
+  "partFormat": "markdown",
+  "_thresholdKB": 30,
+  "_note": "PROG-2-1613：cross-ref-code.md 為入口，B-1/B-2 表格依主題拆在本目錄；rebuild-crossref.js 直接讀寫分片",
+  "shards": [
+    { "name": "core-systems-1" }, { "name": "core-systems-2" }, { "name": "core-shared" },
+    { "name": "battle" }, { "name": "ui" }, { "name": "ui-spec-json" }, { "name": "tools" }
+  ]
+}
