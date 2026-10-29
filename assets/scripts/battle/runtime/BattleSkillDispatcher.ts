@@ -422,6 +422,10 @@ export class BattleSkillDispatcher {
         const cell = state.getCell(lane, depth);
         return !!cell && !cell.occupantId && !tileStateRuleOf(state.getTileEffect(lane, depth)).blocksOnEnter;
       },
+      isHazardCell: (lane: number, depth: number) => {
+        const effect = state.getTileEffect(lane, depth);
+        return !!effect?.damagePerTurn && tileStateRuleOf(effect).damagesOnTurnEnd;
+      },
       pushUnitTo: (unit: TroopUnit, lane: number, depth: number) => {
         const fromLane = unit.lane;
         const fromDepth = unit.depth;

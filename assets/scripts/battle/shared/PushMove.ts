@@ -41,3 +41,25 @@ export function pushAway(
   }
   return { lane, depth, movedSteps, blocked: false };
 }
+
+/**
+ * 力量推入危險地形（戰場部署系統「高力量角色更適合擊退、破陣與把敵方推入 Hazard Tile」，PROG-2-1608 暫定）：
+ * 施放者主將力量達門檻、擊退沒受阻，且再推 1 格就是可站立的危險地形時，多推那 1 格。
+ */
+export const STRENGTH_PUSH_THRESHOLD = 90;
+
+export function extendPushIntoHazard(
+  plan: PushPlan,
+  origin: { lane: number; depth: number },
+  casterStr: number | null | undefined,
+  isFree: (lane: number, depth: number) => boolean,
+  isHazard: (lane: number, depth: number) => boolean,
+): PushPlan {
+  if ((casterStr ?? 0) < STRENGTH_PUSH_THRESHOLD || plan.blocked || plan.movedSteps === 0) return plan;
+  const stepLane = Math.sign(plan.lane - origin.lane);
+  const stepDepth = Math.sign(plan.depth - origin.depth);
+  const lane = plan.lane + stepLane;
+  const depth = plan.depth + stepDepth;
+  if (!isFree(lane, depth) || !isHazard(lane, depth)) return plan;
+  return { lane, depth, movedSteps: plan.movedSteps + 1, blocked: false };
+}

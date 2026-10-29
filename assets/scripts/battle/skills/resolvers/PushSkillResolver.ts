@@ -2,7 +2,7 @@
 import { Faction, GAME_CONFIG } from '../../../core/config/Constants';
 import type { BattleSkillRequest, SkillExecutionResult } from '../../../shared/SkillRuntimeContract';
 import { forcedMoveBlockedDamageRatio } from '../../shared/ForcedMoveTile';
-import { pushAway } from '../../shared/PushMove';
+import { extendPushIntoHazard, pushAway } from '../../shared/PushMove';
 import { BattleSkillDamageResolver } from '../BattleSkillDamageResolver';
 import { resolveBattleSkillProfile } from '../BattleSkillProfiles';
 import type { BattleSkillExecutionContext, BattleSkillResolver } from '../BattleSkillResolver';
@@ -64,7 +64,11 @@ export class PushSkillResolver implements BattleSkillResolver {
           continue;
         }
       }
-      const plan = pushAway(unit, center, steps, context.isCellFreeForPush);
+      let plan = pushAway(unit, center, steps, context.isCellFreeForPush);
+      // 力量推入危險地形（PROG-2-1608 暫定）
+      if (context.isHazardCell) {
+        plan = extendPushIntoHazard(plan, unit, context.getCasterGeneral(casterFaction)?.str, context.isCellFreeForPush, context.isHazardCell);
+      }
       if (plan.movedSteps > 0) {
         context.pushUnitTo(unit, plan.lane, plan.depth);
         deltas.push({ unitUid: unit.id, notes: `push:${plan.movedSteps}` });
