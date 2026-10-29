@@ -2398,5 +2398,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9013.md",
     "title": "[PROG-2-9013] 他國興衰門檻與效果表回歸測試",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0409",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9014.md",
+    "title": "[PROG-2-9014] 月度場景賽威力積分交互回歸測試",
+    "category": "task"
   }
 ]
