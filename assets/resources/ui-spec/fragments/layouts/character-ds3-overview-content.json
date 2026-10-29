@@ -898,7 +898,7 @@
               "type": "panel",
               "name": "CharacterDs3TabOverview_div_42",
               "width": 520,
-              "height": 246,
+              "height": 216,
               "layout": {
                 "type": "vertical",
                 "paddingTop": 14,
@@ -950,7 +950,7 @@
                   "type": "label",
                   "name": "CharacterDs3TabOverview_div_45",
                   "width": 482,
-                  "height": 180,
+                  "height": 150,
                   "text": "張飛，字翼德，幽州涿郡人。少年以屠豬賣酒為業，後於桃園與劉備、關羽義結金蘭，誓同生死。性烈如火，勇猛無雙——長坂橋前單槍匹馬，一聲怒吼令曹軍百萬退散；義釋嚴顏一事，足見其粗中有細，智勇兼備。然酒後失德，醉鞭督卒，終命喪部將之手，令千古扼腕。其一生豪烈，血脈中燕地武人的剛猛之氣，至今仍在後裔身上延燃。",
                   "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_45"
                 }
@@ -969,10 +969,10 @@
               "name": "BtnBloodlineVignette",
               "id": "btnBloodlineVignette",
               "widget": {
-                "bottom": 72,
-                "left": 80
+                "bottom": 12,
+                "left": 0
               },
-              "width": 360,
+              "width": 170,
               "height": 52,
               "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
               "children": [
@@ -997,9 +997,9 @@
               "id": "btnSoulInject",
               "widget": {
                 "bottom": 12,
-                "left": 80
+                "left": 180
               },
-              "width": 360,
+              "width": 170,
               "height": 52,
               "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
               "children": [
@@ -1024,9 +1024,9 @@
               "id": "totalTpLabel",
               "widget": {
                 "bottom": 16,
-                "left": 460
+                "left": 360
               },
-              "width": 300,
+              "width": 160,
               "height": 44,
               "text": "總 TP 0",
               "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_total_tp"

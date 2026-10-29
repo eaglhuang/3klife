@@ -82,6 +82,9 @@ export class UIPreviewNodeFactory {
         }
 
         const label = node.addComponent(Label);
+        // 預設 NONE 溢出會依字串把節點寬度撐開；spec 有寫死寬度時，套完樣式要還原（人物傳記被撐到 2384px、整段變一行，PROG-2-1625）
+        const transform = node.getComponent(UITransform);
+        const specWidth = typeof spec.width === 'number' ? spec.width : null;
 
         // 文字優先順序：textKey > text > bind > 空字串
         if (spec.textKey) {
@@ -112,6 +115,9 @@ export class UIPreviewNodeFactory {
             // 無 styleSlot 的 label，一律 SHRINK 防溢出
             // Unity 對照：TextMeshPro AutoSize 預設行為
             label.overflow = Label.Overflow.SHRINK;
+        }
+        if (specWidth !== null && transform && transform.width !== specWidth && label.overflow !== Label.Overflow.NONE) {
+            transform.width = specWidth;
         }
     }
 
