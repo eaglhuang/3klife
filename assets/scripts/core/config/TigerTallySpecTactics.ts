@@ -77,3 +77,32 @@ export const TIGER_TALLY_SPEC_TACTICS: readonly TigerTallySpecTactic[] = [
 export const TIGER_TALLY_PENDING_SKILL_IDS: readonly string[] = TIGER_TALLY_SPEC_TACTICS
     .filter(tactic => !tactic.reusesProfile)
     .map(tactic => tactic.battleSkillId);
+
+/**
+ * 名將專屬虎符：原名將的武將模板 id → 虎符 tacticId（PROG-2-1593）。
+ * 死亡虎符的 templateId 仍是武將 id（史實合攻要用），查被動／卡面時才經 resolveTallyTemplateId 換成專屬虎符。
+ */
+export const NAMED_TALLY_BY_GENERAL_TEMPLATE: Readonly<Record<string, string>> = {
+    'zhao-yun': 'tiger-tally-long-dan',
+    'zhou-yu': 'tiger-tally-du-du-fu',
+    'guan-yu': 'tiger-tally-zhong-yi-fu',
+    'zhang-fei': 'tiger-tally-dang-yang-fu',
+    'huang-zhong': 'tiger-tally-lie-gong-fu',
+    'ma-chao': 'tiger-tally-shen-wei-fu',
+    'jiang-wei': 'tiger-tally-qi-lin-fu',
+    'xu-zhu': 'tiger-tally-hu-chi-fu',
+    'dian-wei': 'tiger-tally-e-lai-fu',
+    'zhang-liao': 'tiger-tally-zhi-ti-fu',
+    'lu-bu': 'tiger-tally-wu-shuang-fu',
+    'pang-tong': 'tiger-tally-lian-huan-fu',
+    'guo-jia': 'tiger-tally-feng-xiao-fu',
+    'sima-yi': 'tiger-tally-lang-gu-fu',
+    'sun-shang-xiang': 'tiger-tally-jiao-ji',
+    'zhu-rong': 'tiger-tally-huo-shen-fu',
+    'huang-yue-ying': 'tiger-tally-gong-jia-fu',
+};
+
+/** 虎符模板 id → 查被動／卡面用的 id：名將專屬換成專屬虎符，其餘原樣 */
+export function resolveTallyTemplateId(templateId: string): string {
+    return NAMED_TALLY_BY_GENERAL_TEMPLATE[templateId] ?? templateId;
+}

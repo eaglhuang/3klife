@@ -10,6 +10,7 @@
  */
 import { Faction, GAME_CONFIG, TerrainType, TroopType } from '../../core/config/Constants';
 import type { TroopUnit } from '../../core/models/TroopUnit';
+import { resolveTallyTemplateId } from '../../core/config/TigerTallySpecTactics';
 import { castMorale, MORALE_DURATION_TURNS } from './Morale';
 
 /** 弓兵射程（BattleUnitSpawner 弓兵 attackRange = 2） */
@@ -160,8 +161,13 @@ const DEPLOY_DEPTH: Record<Faction, number> = {
   [Faction.Enemy]: GAME_CONFIG.GRID_DEPTH - 1,
 };
 
+/** 被動查表：名將死亡產出的虎符模板是武將 id，先換成專屬虎符 id（PROG-2-1593） */
+function passiveByTemplate(templateId: string | null): TallyPassiveSpec | undefined {
+  return templateId ? TALLY_PASSIVE_BY_TEMPLATE[resolveTallyTemplateId(templateId)] : undefined;
+}
+
 function passiveOf(unit: TroopUnit): TallyPassiveSpec | undefined {
-  return unit.tallyTemplateId ? TALLY_PASSIVE_BY_TEMPLATE[unit.tallyTemplateId] : undefined;
+  return passiveByTemplate(unit.tallyTemplateId);
 }
 
 /** 虎符被動的攻擊乘數；不在指定地形或沒有此被動時為 1 */
@@ -348,7 +354,7 @@ export function hasGhostMove(unit: TroopUnit): boolean {
 
 /** 把虎符被動套到部隊上；沒有被動或沒有模板 id 時什麼都不做 */
 export function applyTallyPassive(unit: TroopUnit, templateId: string | null): void {
-  const spec = templateId ? TALLY_PASSIVE_BY_TEMPLATE[templateId] : undefined;
+  const spec = passiveByTemplate(templateId);
   if (!spec) return;
   if (spec.attackRangeFloor !== undefined) {
     unit.attackRange = Math.max(unit.attackRange, spec.attackRangeFloor);

@@ -57,6 +57,7 @@ import type { TigerTallySkillCarrier, TigerTallyTacticRequestOptions } from '../
 import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
 import { factorBattleEffectsOf, type FactorBattleEffectMap } from '../../core/systems/FactorTacticLinkage';
 import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
+import { resolveTallyTemplateId } from '../../core/config/TigerTallySpecTactics';
 import { buildTallyCardCatalog, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { buildAiTallyPool, allocateAiTallies } from '../../core/systems/AiTallyPool';
 import { starStatMultiplier } from '../../core/systems/TigerTallyStar';
@@ -386,7 +387,7 @@ export class BattleController {
   }
 
   private bindTallyAffinity(unit: TroopUnit, ref: TallyDeployRef): void {
-    const profile = buildTallyCardCatalog().get(ref.templateId)?.affinity ?? null;
+    const profile = buildTallyCardCatalog().get(resolveTallyTemplateId(ref.templateId))?.affinity ?? null;
     const general = this.state.getGeneral(Faction.Player);
     const commander: TallyCommanderInfo | null = general ? toTallyCommander(general.id, general.gender) : null;
     unit.tallyId = ref.cardUid;
