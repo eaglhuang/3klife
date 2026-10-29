@@ -1,4 +1,5 @@
 // @spec-source → 戰場部署系統.md (doc_spec_0040)、demo_技術架構.md (doc_tech_0015)、戰場適性系統.md (doc_spec_0041)；PROG-2-1429 依建檔紀錄補標出處
+import { calmAdjustedAura, calmReductionOf, furyModifiersOf } from '../../core/systems/WhiteFactorTraits';
 import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER, Weather } from '../../core/config/Constants';
 import { aiSpGainPerKill } from '../../core/systems/AiSpCharge';
 import { comboChanceOfPair } from '../../core/systems/ComboAttackKin';
@@ -74,7 +75,10 @@ export class BattleCombatResolver {
   /** 虎符部隊的攻擊乘數：星級 × 同陣營在場 Set 的攻擊加成（PROG-2-0574）× 被動地形加成（PROG-2-1433）；非虎符單位恆為 1 */
   public getTallyAttackMod(unit: TroopUnit): number {
     // 錦帆恐懼光環（PROG-2-1457）：周圍有帶光環的敵方虎符部隊時，任何部隊（含非虎符）攻擊下降
-    const aura = tallyEnemyAuraAttackMultiplierOf(unit, this.context.state.units.values());
+    // 白色因子（PROG-2-1586 暫定）：主將冷靜減輕恐懼懲罰、暴躁攻擊 +3%/級，對全隊生效
+    const genes = this.context.state.getGeneral?.(unit.faction)?.genes;
+    const aura = calmAdjustedAura(tallyEnemyAuraAttackMultiplierOf(unit, this.context.state.units.values()), genes)
+      * furyModifiersOf(genes).attack;
     if (!unit.tallyId) return aura;
     // 虎符被動攻擊加成（解煩／丹陽／吳國，PROG-2-1433）：依部隊所站地形判定
     const terrain = this.context.state.getCell(unit.lane, unit.depth)?.terrain ?? TerrainType.Plain;
@@ -96,8 +100,10 @@ export class BattleCombatResolver {
 
   /** 虎符部隊的防禦乘數：星級 × 同陣營在場 Set 的防禦加成（PROG-2-0574）× 被動防禦乘數（虎痴符，PROG-2-1444）；非虎符單位恆為 1 */
   public getTallyDefenseMod(unit: TroopUnit): number {
-    if (!unit.tallyId) return 1;
-    return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).defMod * tallyDefenseMultiplierOf(unit)
+    // 暴躁（PROG-2-1586 暫定）：防禦 −3%/級，對全隊生效
+    const fury = furyModifiersOf(this.context.state.getGeneral?.(unit.faction)?.genes).defense;
+    if (!unit.tallyId) return fury;
+    return fury * unit.tallyStarMultiplier * this.tallySetMods(unit.faction).defMod * tallyDefenseMultiplierOf(unit)
       * tallyRearguardDefenseMultiplierOf(unit, this.context.state.units.values());
   }
 
@@ -223,7 +229,7 @@ export class BattleCombatResolver {
     // 結姻連射（PROG-2-0775）：攻擊次數 = 1 + 額外次數；每一下都是完整的命中、傷害、反擊解算
     const hits = 1 + extraAttackHitsOf(attacker, this.isAdjacentToMaleGeneral(attacker));
     // 恐懼衝鋒（鐵騎，PROG-2-1514）：每次發動攻擊時周圍敵軍士氣扣減
-    applyFearCharge(attacker, this.context.state.units.values());
+    applyFearCharge(attacker, this.context.state.units.values(), (u) => 1 - calmReductionOf(this.context.state.getGeneral?.(u.faction)?.genes));
     // 工甲連弩（PROG-2-1581）：連續攻擊同一目標累積連擊層數
     advanceTallyCombo(attacker, defender);
     for (let hit = 0; hit < hits; hit += 1) {
