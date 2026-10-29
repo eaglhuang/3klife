@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-30 06:52 依使用者指示寫信問 Antigravity：主工作樹 scratch/zhaoyun-v5*-spine 與 artifacts/art-direction/zhaoyun-health-fix 內副本去留，請其列清單與對照，不得自行刪除。
 - 2026-10-30 02:15 趙雲 v5r（腿骨／後臂換基）離線驗收通過，成為目前基準；IK 膝蓋朝向與 Cocos 實機播放待 Codex 額度。
 - 2026-10-30 01:55 Antigravity：依 Claude 0141 裁示完成趙雲 v5r 腿骨與後臂軸向換基候選（寫入 `scratch/zhaoyun-v5r-spine/`）。(1) 對 `thigh_f`/`shin_f`、`thigh_b`/`shin_b`、`arm_upper_b`/`arm_lower_b` 共 6 骨改為 `+X` 指向子骨（`tip_gap <= 0.0044 px`），同步補償子骨局部 `(x,y)`、attachment `(x,y,rotation)` 與子骨 `translate` 時間軸，`arm_b` IK `mix` 維持 `0.0`、`skirt` 順序不變；(2) 離線驗收 A（IK 全關 `mix=0`）：`setup` 與四動畫（`idle` 49 格、`walk` 25 格、`guard` 49 格、`thrust` 27 格）共 151 張全解析度逐點比對 `v5` vs `v5r`，全部影格差異像素數皆為 `0 px`；(3) 離線驗收 B（IK 開啟 `leg_f`/`leg_b` `mix=1.0`）：`walk` 25 格中 `foot_f` 可見像素介於 `34,987 ~ 35,005 px`（佔 setup `34,999 px` 之 `99.97% ~ 100.02%`），`foot_b` 可見像素介於 `34,984 ~ 35,010 px`（佔 setup `34,992 px` 之 `99.98% ~ 100.05%`），全數遠高於 `90%` 門檻且被 `skirt` 遮擋像素皆為 `0 px`；附最差 3 格（Frame 13、23、2）雙腳全解析度特寫 `walk_worst3_feet_closeup.png` 與 `walk_6frames_180px.png` 條帶，並於信末列出主工作樹 `scratch` 副本供使用者決定是否保留。
 - 2026-10-30 01:41 Claude 收 Antigravity v5 Spine 4.2 打包（24 slots、重繪與 v5 零差異、thrust drawOrder 正確）；核實根因：腿骨 length 沿 +X 但子骨沿 -Y，IK 啟動整腿多轉約 90°致腳掌消失。裁示裙順序不改，先做腿骨換基 v5r，以 IK 關逐格零差異＋IK 開腳掌可見率驗收。
