@@ -1,5 +1,5 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
-import { BattleTactic, EVENT_NAMES, Faction, GAME_CONFIG, TerrainType } from '../../core/config/Constants';
+import { BattleTactic, EVENT_NAMES, Faction, GAME_CONFIG, TerrainType, TroopType } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../core/models/TroopUnit';
 import type { BattleState } from '../models/BattleState';
@@ -524,4 +524,15 @@ export function applySceneCatapult(engineer: TroopUnit, state: BattleState): str
     hit.push(unit.id);
   }
   return hit;
+}
+
+/**
+ * 雲梯（攻城戰，PROG-2-1597 暫定）：我方步兵攀城，普攻城牆區守軍時抵銷城牆地利。
+ * 回傳乘在守方防禦上的倍率；不適用時為 1。
+ */
+export function sceneLadderDefenseBypassOf(attacker: TroopUnit, defender: TroopUnit, state: BattleState): number {
+  if (attacker.faction !== Faction.Player || attacker.type !== TroopType.Infantry) return 1;
+  if (!isSiegeWallDefender(defender)) return 1;
+  const wall = sceneDefenseMultiplierOf(defender, state);
+  return wall > 0 ? 1 / wall : 1;
 }
