@@ -78,6 +78,8 @@ export interface BattleTacticBehavior {
 export const SIEGE_WALL_MAX_DEPTH = 1;
 export const SIEGE_WALL_DEFENSE_MULTIPLIER = 1.5;
 export const SIEGE_RAM_MULTIPLIER = 2;
+/** 水淹深水格每回合傷害（PROG-2-1591，暫定） */
+export const FLOOD_DEEP_WATER_DAMAGE_PER_TURN = 10;
 const FLOOD_DEPTH_START = 2;
 const FLOOD_DEPTH_END = 4;
 export const FLOOD_ATTACK_PUSH_LANE_DELTA = -1;
@@ -126,20 +128,29 @@ export function refreshFloodAttackTerrain(state: BattleState): void {
     state.floodOriginalTerrain.delete(key);
   }
 
-  for (const { lane, depth } of targets) {
+  // 水淹七軍 Tile 比例（SCENE_FLOOD，PROG-2-1591）：淹沒區依比例分成水流（推移）／深水（扣血）／淺灘（無效果）。
+  // 下游（depth 大）先放水流，其次深水，上游剩餘格是淺灘；全部地形仍是河流
+  const ordered = [...targets].sort((a, b) => b.depth - a.depth || a.lane - b.lane);
+  const counts = allocateSceneTiles(SCENE_TILE_PRESETS, 'SCENE_FLOOD', ordered.length);
+  ordered.forEach(({ lane, depth }, index) => {
     const cell = state.getCell(lane, depth);
-    if (!cell) continue;
+    if (!cell) return;
     const key = `${lane},${depth}`;
     if (!state.floodOriginalTerrain.has(key)) state.floodOriginalTerrain.set(key, cell.terrain);
     cell.terrain = TerrainType.River;
+    if (index >= counts.forceMove + counts.hazard) {
+      state.removeTileEffect(lane, depth);
+      return;
+    }
     state.setTileEffect({
       id: `flood-${lane}-${depth}`,
       lane,
       depth,
       state: 'river-current',
+      ...(index >= counts.forceMove ? { damagePerTurn: FLOOD_DEEP_WATER_DAMAGE_PER_TURN } : {}),
       notes: 'scene-gambit:flood-attack',
     });
-  }
+  });
 }
 
 function applyFloodAttackTerrain(state: BattleState): void {
