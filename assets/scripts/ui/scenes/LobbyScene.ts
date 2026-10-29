@@ -4014,6 +4014,14 @@ export class LobbyScene extends Component {
     }
 
     private _syncCharacterDs3PreviewTabVisualState(): void {
+        // 命紋靈獸摘要、因子六角圖、版本圖鑑入口是程式掛在 host 上的暫定節點，放在總覽會壓到立繪與右欄；
+        // 只在血脈分頁顯示（PROG-2-1625）
+        const hostNode = this._characterDs3Host?.node;
+        const onBloodline = this._characterDs3ActiveTab === 'Bloodline';
+        for (const name of [BEAST_SUMMARY_NODE_NAME, FACTOR_HEX_NODE_NAME, GALLERY_ENTRY_NODE_NAME]) {
+            const extra = hostNode?.getChildByName(name);
+            if (extra) extra.active = onBloodline;
+        }
         const binder = this._characterDs3Host?.binder;
         if (!binder) {
             return;
@@ -4603,6 +4611,8 @@ export class LobbyScene extends Component {
                     this._bringNodeToFront(this._leadSelectHost.node);
                     this._refreshLeadSelect();
                 }
+                // 進場時先掛好的日報面板（有未讀才開）也要壓回大廳之上，不然字會疊在大廳上（PROG-2-1625）
+                if (this._dailyReportHost?.node.active) this._bringNodeToFront(this._dailyReportHost.node);
                 // 大廳 HUD 拉到最前後，新手教學／開場信件要再壓回最上層，不能被大廳蓋住（PROG-2-1624）
                 this._openingPanels?.refreshOnboarding();
                 this._openingPanels?.refreshOpeningLetter();

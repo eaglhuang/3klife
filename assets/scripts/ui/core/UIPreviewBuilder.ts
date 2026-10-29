@@ -252,6 +252,9 @@ export class UIPreviewBuilder extends Component {
         // Content.width 在 Layout.CONTAINER 且尚未建立子節點時，可能只剩 paddingLeft + paddingRight。
         // viewPort（view）本身是 Widget(all=0) 撐滿 DataList，post-Widget 後尺寸會更可靠。
         const viewNode = listNode.getChildByName('view');
+        // 祖先的 Widget（例如 __safeArea 把寬度夾到 1920）可能還沒重算，view 會沿用 Canvas 寬，
+        // 列寬被撐成 2700+、欄位整排錯位（PROG-2-1625）。先由上而下重算一次對齊再讀寬度。
+        UIPreviewBuilder._realignAncestors(viewNode ?? listNode, this.node);
         const viewT    = viewNode?.getComponent(UITransform);
         const listT    = listNode.getComponent(UITransform);
         const availableW = (viewT?.width ?? 0) > 0 ? viewT!.width
@@ -269,6 +272,16 @@ export class UIPreviewBuilder extends Component {
             }
         }
         UIPreviewDiagnostics.populateListComplete(content.children.length);
+    }
+
+    /** 由 root 往下到 node，依序重算每一層的 Widget 對齊，讓 node 的尺寸反映目前的父層 */
+    private static _realignAncestors(node: Node, root: Node): void {
+        const chain: Node[] = [];
+        for (let n: Node | null = node; n; n = n.parent) {
+            chain.push(n);
+            if (n === root) break;
+        }
+        for (let i = chain.length - 1; i >= 0; i--) chain[i].getComponent(Widget)?.updateAlignment();
     }
 
     // ─── 節點建構核心 ─────────────────────────────────────────────────────────
