@@ -433,9 +433,9 @@
       ],
       "aptitudeRules": [],
       "sourceGeneIds": [],
-      "battleSkillId": "wei-zhen-reset",
+      "battleSkillId": "insp-haste",
       "sourceType": "inspired-tactic",
-      "targetMode": "ally-single",
+      "targetMode": "ally-all",
       "timing": "active-cast",
       "manualTargeting": false,
       "autoAimMode": "all-allies"
@@ -451,9 +451,9 @@
       ],
       "aptitudeRules": [],
       "sourceGeneIds": [],
-      "battleSkillId": "tally-counter-weak",
+      "battleSkillId": "insp-shield",
       "sourceType": "inspired-tactic",
-      "targetMode": "ally-single",
+      "targetMode": "ally-all",
       "timing": "active-cast",
       "manualTargeting": false,
       "autoAimMode": "all-allies"

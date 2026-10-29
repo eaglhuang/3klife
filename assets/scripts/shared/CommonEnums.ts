@@ -88,6 +88,10 @@ export enum StatusEffect {
     Weak = "weak",
     /** 無敵（白馬銀槍·不滅）：本回合結算的傷害歸零 */
     Invincible = "invincible",
+    /** 疾行（靈感戰法，PROG-2-1600 暫定）：移動力 +1 */
+    Haste = "haste",
+    /** 堅盾（靈感戰法，PROG-2-1600 暫定）：防禦 ×1.2 */
+    Fortified = "fortified",
 }
 
 export enum SceneName {

@@ -266,6 +266,30 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     hitStageMultipliers: [1.0, 1.0],
     battleLogKey: 'skill.insp_combo_attack.hit',
   },
+  // 疾行（PROG-2-1600 靈感戰法，數值暫定）：全體友軍下一回合移動 +1
+  'insp-haste': {
+    battleSkillId: 'insp-haste',
+    targetMode: BattleSkillTargetMode.AllyAll,
+    manualTargeting: false,
+    autoAimMode: 'all-allies',
+    effectKind: 'control',
+    coefficient: 0,
+    statusEffect: StatusEffect.Haste,
+    statusTurns: 1,
+    battleLogKey: 'skill.insp_haste.buff',
+  },
+  // 堅盾（PROG-2-1600 靈感戰法，數值暫定）：全體友軍 1 回合防禦 ×1.2
+  'insp-shield': {
+    battleSkillId: 'insp-shield',
+    targetMode: BattleSkillTargetMode.AllyAll,
+    manualTargeting: false,
+    autoAimMode: 'all-allies',
+    effectKind: 'control',
+    coefficient: 0,
+    statusEffect: StatusEffect.Fortified,
+    statusTurns: 1,
+    battleLogKey: 'skill.insp_shield.buff',
+  },
   // 挑釁（PROG-2-1145 靈感戰法，數值暫定）：單體敵軍暈眩 1 回合
   'insp-taunt': {
     battleSkillId: 'insp-taunt',
