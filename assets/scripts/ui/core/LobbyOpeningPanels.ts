@@ -80,8 +80,8 @@ export class LobbyOpeningPanels {
     }
 
     /**
-     * 開場信件面板（PROG-2-1305）。就緒條件與新手引導相同：新局要等宿命開局開始後才開，
-     * 已讀後不再自動開；關閉時記為已讀並存檔。
+     * 開場信件面板（PROG-2-1305）。新局在宿命轉蛋「之前」開（PROG-2-1622：先讀劇情再選將），
+     * 由 openDestiny 先開信、關信後才進轉蛋；舊玩家未讀照常顯示。已讀後不再自動開；關閉時記為已讀並存檔。
      */
     public async mountOpeningLetter(): Promise<void> {
         this._openingLetterHost = await this._ports.mountHost('OpeningLetterHost', 'opening-letter-screen', [
@@ -93,7 +93,7 @@ export class LobbyOpeningPanels {
     public refreshOpeningLetter(): void {
         const host = this._openingLetterHost;
         if (!host) return;
-        const ready = !this._ports.isNewPlayer() || this._destiny?.started === true;
+        const ready = !this._ports.isNewPlayer() || this._destinyAfterLetter;
         const show = ready && shouldShowOpeningLetter(this._ports.session().openingLetter);
         host.node.active = show;
         if (!show) return;
@@ -111,6 +111,10 @@ export class LobbyOpeningPanels {
             await this._ports.session().markOpeningLetterSeen();
         } catch (error) {
             this._ports.warn('[LobbyScene] 開場信件已讀存檔失敗', error);
+        }
+        if (this._destinyAfterLetter) {
+            this._destinyAfterLetter = false;
+            this._showDestiny();
         }
     }
 
@@ -155,12 +159,26 @@ export class LobbyOpeningPanels {
 
     /** 打開宿命轉蛋；轉蛋設定載入失敗、面板沒掛上時回 false */
     public openDestiny(): boolean {
+        if (!this._destinyHost) return false;
+        // 先開信件（劇情描述），讀完關掉才進轉蛋
+        if (this._openingLetterHost && shouldShowOpeningLetter(this._ports.session().openingLetter)) {
+            this._destinyAfterLetter = true;
+            this.refreshOpeningLetter();
+            return true;
+        }
+        this._showDestiny();
+        return true;
+    }
+
+    /** 新局信件讀完後要接著開宿命轉蛋 */
+    private _destinyAfterLetter = false;
+
+    private _showDestiny(): void {
         const host = this._destinyHost;
-        if (!host) return false;
+        if (!host) return;
         host.node.active = true;
         this._ports.bringToFront(host.node);
         this.refreshDestiny();
-        return true;
     }
 
     private afterDestinyAction(): void {
