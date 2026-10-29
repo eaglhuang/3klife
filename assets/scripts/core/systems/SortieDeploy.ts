@@ -152,6 +152,8 @@ export interface SortieUnitRecord {
     currentTroops: number;
     isElite: boolean;
     retired: boolean;
+    /** 攻城器械（工兵）；器械保留槽判定用（PROG-2-1604），舊紀錄缺欄位視為否 */
+    isSiegeEngine?: boolean;
 }
 
 export interface SortieState {
@@ -163,6 +165,8 @@ export interface SortieState {
     maxFood: number;
     foodSpent: number;
     eliteCap: number;
+    /** 器械保留槽（攻城戰 SCENE_SIEGE，PROG-2-1604）：精銳名額中保留給攻城器械的格數，未被器械佔用時一般精銳不可用 */
+    siegeEngineReserve?: number;
     /** 所有場上部隊上限；規格只要求精銳上限，預設不限（Infinity） */
     fieldUnitLimit: number;
     units: Readonly<Record<string, SortieUnitRecord>>;
@@ -391,6 +395,7 @@ export function createSortieState(input: CreateSortieInput): SortieState {
         maxFood: food,
         foodSpent: 0,
         eliteCap: getEliteDeployCap(input.scenePresetId, input.officerTierDeployBonus),
+        siegeEngineReserve: input.scenePresetId === SCENE_PRESET_SIEGE ? ELITE_DEPLOY_LIMIT.siegeSceneBonus : 0,
         fieldUnitLimit: typeof input.fieldUnitLimit === 'number' && input.fieldUnitLimit > 0 ? Math.floor(input.fieldUnitLimit) : Infinity,
         units: {},
         militiaDeployed: 0,
@@ -510,11 +515,26 @@ export function discountedDeployCost(cost: DeployCost, request: DeployRequest, s
     return { ...cost, foodCost: Math.floor(cost.foodCost * TALLY_SHORTAGE_FOOD_RATE) };
 }
 
+/** 攻城器械：工兵（戰場兵種代碼 SIEGE） */
+export function isSiegeEngineRequest(request: DeployRequest): boolean {
+    return troopCodeOf(request.troopType) === 'SIEGE';
+}
+
+/** 精銳名額是否已滿；攻城戰時未被器械佔用的保留槽只給器械（PROG-2-1604） */
+function isEliteSlotFull(state: SortieState, active: readonly SortieUnitRecord[], siegeEngine: boolean): boolean {
+    const elites = active.filter((u) => u.isElite);
+    if (elites.length >= state.eliteCap) return true;
+    if (siegeEngine) return false;
+    const engines = elites.filter((u) => u.isSiegeEngine === true).length;
+    const unfilledReserve = Math.max(0, (state.siegeEngineReserve ?? 0) - engines);
+    return elites.length >= state.eliteCap - unfilledReserve;
+}
+
 export function checkDeploy(state: SortieState, request: DeployRequest): SortieDeployCheck {
     const cost = discountedDeployCost(getDeployCost(request), request, state);
     const active = activeUnits(state);
     const reasons: SortieDeployBlockReason[] = [];
-    const eliteFull = cost.isElite && active.filter((u) => u.isElite).length >= state.eliteCap;
+    const eliteFull = cost.isElite && isEliteSlotFull(state, active, isSiegeEngineRequest(request));
     if (eliteFull || active.length >= state.fieldUnitLimit) reasons.push('FIELD_UNIT_LIMIT');
     if (state.poolCurrent < cost.troopCost) reasons.push('TROOPS_SHORT');
     if (state.food < cost.foodCost) reasons.push('FOOD_SHORT');
@@ -611,7 +631,7 @@ export function applyDeploy(state: SortieState, unitId: string, request: DeployR
             poolCurrent: state.poolCurrent - troopCost,
             food: state.food - foodCost,
             foodSpent: state.foodSpent + foodCost,
-            units: { ...state.units, [unitId]: { unitId, troopCost, currentTroops: troopCost, isElite, retired: false } },
+            units: { ...state.units, [unitId]: { unitId, troopCost, currentTroops: troopCost, isElite, retired: false, isSiegeEngine: isSiegeEngineRequest(request) } },
             militiaDeployed: state.militiaDeployed + (request.militia ? 1 : 0),
             eliteDeployed: state.eliteDeployed + (isElite ? 1 : 0),
         },
