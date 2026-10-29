@@ -25,9 +25,9 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 35,
-    "in_progress": 2,
+    "in_progress": 3,
     "open": 82,
-    "total": 119
+    "total": 120
   },
   "tasks": [
     {
@@ -4410,6 +4410,60 @@
         "tests/RivalGovernance.test.ts"
       ],
       "notes": "2026-10-28 | 狀態: done | 驗證: RivalGovernance 17/17（新增12）；full run-cli 5213 passed/3 skipped；tsc -p tsconfig.test.json --noEmit exit0零錯誤；standard gate 11/11；encoding與diff-check通過 | 變更: 固定E-7三段分布；六個門檻名聲各測累加界線前正好後及RNG一次；界線由規格分布累加避免硬寫0.9；未改產品公式。基底c731aceab，開工commit315581d18。官方allocator曾回傳9011但已有外部存檔交接工作，排除該已知占號並由官方explicit reservation fence保留9012 | 阻塞: none；未push或開PR",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9013",
+      "title": "他國興衰門檻與效果表回歸測試",
+      "owner": "codex-gpt-6",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "test",
+      "phase": "M6",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "2026-10-29T06:51:20+00:00",
+      "started_by_agent": "codex-gpt-6",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依E-9固定規格補四門檻前正好後、隔離國力權重、五級三效果及0至9季評估節奏。僅新增獨立測試，不改產品碼。",
+      "related": [
+        "PROG-2-1475"
+      ],
+      "depends": [],
+      "acceptance": [
+        "四門檻各T-1/T/T+1符合嚴格大於",
+        "零值與兵力武將領地名聲隔離權重符合1/200/500/1",
+        "五級三效果完整固定矩陣",
+        "0至9季僅0/4/8評估",
+        "focused/full/測試與cc-check型別/standard gate通過"
+      ],
+      "deliverables": [
+        "tests/RivalRiseFallBoundary.test.ts"
+      ],
+      "notes": "2026-10-29 | 狀態: in-progress | 驗證: quick3/3其餘pending | 變更: codex-gpt-6從最新9ae968724開工；官方reserveNextTaskId共用fence分配9013；9011外部交接占用不碰、9012已合併不改 | 阻塞: none",
       "brief": {
         "style": "classic",
         "label": "",

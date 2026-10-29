@@ -2392,5 +2392,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9012.md",
     "title": "[PROG-2-9012] 他國招募品質門檻與 RNG 邊界回歸測試",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0408",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9013.md",
+    "title": "[PROG-2-9013] 他國興衰門檻與效果表回歸測試",
+    "category": "task"
   }
 ]
