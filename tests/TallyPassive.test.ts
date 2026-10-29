@@ -1,7 +1,7 @@
 import { TroopType, Faction, TerrainType } from '../assets/scripts/core/config/Constants';
 import { buildTallyCardCatalog } from '../assets/scripts/core/config/TallyCardCatalog';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
-import { applyTallyPassive, extraAttackHitsOf, tallyAttackMultiplierOf, tallyBackRowDamageMultiplierOf, tallyDefensePenetrationOf, tallyEnemyAuraAttackMultiplierOf, tallyEvasionBonusOf, tallyPhysicalDamageTakenOf, tallyTerrainMoveBonusOf, tallyTroopTypeDamageMultiplierOf } from '../assets/scripts/battle/shared/TallyPassive';
+import { applyTallyPassive, extraAttackHitsOf, tallyAttackMultiplierOf, tallyBackRowDamageMultiplierOf, tallyDefensePenetrationOf, tallyEnemyAuraAttackMultiplierOf, tallyEvasionBonusOf, tallyPhysicalDamageTakenOf, tallySiegeMultiplierOf, tallyTerrainMoveBonusOf, tallyTroopTypeDamageMultiplierOf } from '../assets/scripts/battle/shared/TallyPassive';
 import { BattleSkillDamageResolver } from '../assets/scripts/battle/skills/BattleSkillDamageResolver';
 import { resolveBattleSkillProfile } from '../assets/scripts/battle/skills/BattleSkillProfiles';
 import { createBattleSkillTestContext, createTestGeneral, createTestUnit } from './BattleSkillTestUtils';
@@ -15,6 +15,13 @@ function cavalry(attackRange: number): TroopUnit {
 
 export function createTallyPassiveSuite(): TestSuite {
   const suite = new TestSuite('TallyPassive (虎符被動掛點 PROG-2-0774)');
+
+  suite.test('先登攻城 ×2（PROG-2-1579 暫定），無虎符為 1', () => {
+    const unit = cavalry(1);
+    assert.equals(1, tallySiegeMultiplierOf(unit));
+    unit.tallyTemplateId = 'tiger-tally-xian-deng';
+    assert.equals(2, tallySiegeMultiplierOf(unit));
+  });
 
   suite.test('騎射合一：白馬騎兵攻擊射程提高為弓兵射程，移動力 +1', () => {
     const unit = cavalry(1);

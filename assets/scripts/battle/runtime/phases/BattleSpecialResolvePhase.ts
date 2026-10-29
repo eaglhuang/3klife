@@ -4,7 +4,7 @@ import { BATTLE_FRONT_DEPTH } from '../../BattleTypes';
 import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
-import { tallyHealsAllies } from '../../shared/TallyPassive';
+import { tallyHealsAllies, tallySiegeMultiplierOf } from '../../shared/TallyPassive';
 import { BattleTurnManager } from '../BattleTurnManager';
 import type { SkillExecutionResult } from '../../../shared/SkillRuntimeContract';
 
@@ -37,7 +37,8 @@ export function executeBattleSpecialResolvePhase(context: BattleSpecialResolvePh
     if (unit.type === TroopType.Medic || tallyHealsAllies(unit)) {
       resolveMedic(unit, context.state, svc);
     }
-    if (unit.type === TroopType.Engineer) {
+    // 先登（PROG-2-1579 暫定）：非工兵也能在前線攻城，傷害 × 攻城倍率
+    if (unit.type === TroopType.Engineer || tallySiegeMultiplierOf(unit) > 1) {
       resolveEngineer(unit, context.state, svc);
     }
   }
@@ -102,7 +103,7 @@ function resolveMedic(medic: TroopUnit, state: BattleState, svc: ReturnType<type
 function resolveEngineer(engineer: TroopUnit, state: BattleState, svc: ReturnType<typeof services>): void {
   if (engineer.depth !== BATTLE_FRONT_DEPTH[engineer.faction]) return;
 
-  const FORTRESS_DMG = 30;
+  const FORTRESS_DMG = 30 * tallySiegeMultiplierOf(engineer);
   if (engineer.faction === Faction.Player) {
     state.enemyFortressHp = Math.max(0, state.enemyFortressHp - FORTRESS_DMG);
     svc.event.emit(EVENT_NAMES.FortressDamaged, { faction: Faction.Enemy, hp: state.enemyFortressHp });
