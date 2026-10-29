@@ -10,7 +10,7 @@
  */
 import { Faction, GAME_CONFIG, TerrainType, TroopType } from '../../core/config/Constants';
 import type { TroopUnit } from '../../core/models/TroopUnit';
-import { MORALE_DURATION_TURNS } from './Morale';
+import { castMorale, MORALE_DURATION_TURNS } from './Morale';
 
 /** 弓兵射程（BattleUnitSpawner 弓兵 attackRange = 2） */
 const ARCHER_ATTACK_RANGE = 2;
@@ -57,6 +57,8 @@ export interface TallyPassiveSpec {
   fearCharge?: { radius: number; moralePenalty: number };
   /** 士氣不降（大喬）：敵方扣士氣效果對此部隊不生效（PROG-2-1525） */
   moraleNoDecrease?: boolean;
+  /** 全隊魅力（大喬 +20，PROG-2-1582 暫定）：戰場沒有魅力屬性，換算為己方回合開始全隊士氣 +此值（已有士氣者不覆蓋） */
+  teamMoraleAura?: number;
   /** 治療友軍（常山女）：自己陣營回合沿用醫療兵治療（PROG-2-1526） */
   healsAllies?: boolean;
   /** 濺射（南蠻巨型踐踏）：目標周圍 radius 格內其他敵軍受主傷害 × ratio（PROG-2-1527） */
@@ -137,7 +139,7 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   // 鐵騎：恐懼衝鋒，攻擊時周圍 1 格敵軍士氣 -20（PROG-2-1514；範圍暫定 1 格）
   'tiger-tally-tie-qi': { fearCharge: { radius: 1, moralePenalty: 20 } },
   // 大喬：士氣不降（PROG-2-1525）；全隊魅力 +20 因戰場部隊沒有魅力屬性未做
-  'tiger-tally-da-qiao': { moraleNoDecrease: true },
+  'tiger-tally-da-qiao': { moraleNoDecrease: true, teamMoraleAura: 20 },
   // 南蠻：巨型踐踏濺射，目標周圍 1 格敵軍受 50%（PROG-2-1527 暫定數字）；無視輕型步兵阻擋未做
   'tiger-tally-nan-man': { splash: { radius: 1, ratio: 0.5 }, tramplesInfantry: true },
   // 惡來符：捨命護主，替周圍 1 格友軍承傷；血低防高，空血時防禦 ×2（PROG-2-1530 暫定數字）
@@ -365,6 +367,24 @@ export function extraAttackHitsOf(unit: TroopUnit, adjacentToMaleGeneral: boolea
   if (!spec) return 0;
   const conditional = spec.extraHitWhenAdjacentMale && adjacentToMaleGeneral ? spec.extraHitWhenAdjacentMale : 0;
   return (spec.extraHits ?? 0) + conditional;
+}
+
+/**
+ * 全隊魅力（大喬，PROG-2-1582 暫定）：actingFaction 有存活的帶光環部隊時，
+ * 己方沒有士氣的部隊獲得士氣 +teamMoraleAura（多支取最大值）。回傳受惠部隊數。
+ */
+export function applyTallyTeamMoraleAura(units: Iterable<TroopUnit>, actingFaction: Faction): number {
+  const own = [...units].filter((u) => u.faction === actingFaction && !u.isDead());
+  let bonus = 0;
+  for (const u of own) bonus = Math.max(bonus, passiveOf(u)?.teamMoraleAura ?? 0);
+  if (bonus <= 0) return 0;
+  let count = 0;
+  for (const u of own) {
+    if (u.moraleTurns > 0) continue;
+    castMorale(u, bonus);
+    count += 1;
+  }
+  return count;
 }
 
 /** 連擊記錄：每次發動攻擊時呼叫，同一目標層數 +1（第一次為 0 層），換目標重算（PROG-2-1581） */
