@@ -17,6 +17,15 @@ export const FIRE_RAID_PLUNDER_INSTRUCTOR_EXP = 20;
 /** 火攻場景開局鋪的火格標記（BattleTacticBehavior.applyFireAttackTerrain） */
 export const FIRE_RAID_TILE_NOTE = 'scene-gambit:fire-attack';
 
+/** 峽谷落石擊破掉落（戰法場景規格書 SCENE_CANYON_ROCK，PROG-2-1583 暫定）：石材或木材 100~300 */
+export const ROCK_BREAK_MATERIAL_MIN = 100;
+export const ROCK_BREAK_MATERIAL_MAX = 300;
+/** 規格「隨機防具材料 +5」：背包尚無防具材料，暫記入武器材料 */
+export const ROCK_BREAK_ARMOR_MATERIAL = 5;
+/** 規格「武將經驗 +50」：結算尚無武將經驗欄位，暫記入教官經驗 */
+export const ROCK_BREAK_GENERAL_EXP = 50;
+export const ROCK_SLIDE_TILE_NOTE = 'scene-gambit:rock-slide';
+
 export function emptyStageSalvage(): SalvageTotals {
     return { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 };
 }
@@ -36,6 +45,18 @@ export function rollFirePlunderGain(random: () => number): Partial<SalvageTotals
         supply: rollFirePlunderSupply(random),
         weaponMaterial: FIRE_RAID_PLUNDER_WEAPON_MATERIAL,
         instructorExp: FIRE_RAID_PLUNDER_INSTRUCTOR_EXP,
+    };
+}
+
+/** 擊破一塊落石的掉落：石材／木材二選一 100~300，加防具材料（暫記武器材料）與武將經驗（暫記教官經驗） */
+export function rollRockBreakGain(random: () => number): Partial<SalvageTotals> {
+    const span = ROCK_BREAK_MATERIAL_MAX - ROCK_BREAK_MATERIAL_MIN + 1;
+    const amount = ROCK_BREAK_MATERIAL_MIN + Math.min(span - 1, Math.floor(random() * span));
+    const material = random() < 0.5 ? { stone: amount } : { wood: amount };
+    return {
+        ...material,
+        weaponMaterial: ROCK_BREAK_ARMOR_MATERIAL,
+        instructorExp: ROCK_BREAK_GENERAL_EXP,
     };
 }
 
