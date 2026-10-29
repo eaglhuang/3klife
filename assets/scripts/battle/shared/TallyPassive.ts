@@ -208,7 +208,7 @@ export function tallyEnemyAuraAttackMultiplierOf(unit: TroopUnit, units: Iterabl
  * 恐懼衝鋒：attacker 帶 fearCharge 時，周圍敵軍（免疫恐懼者除外）士氣扣減。
  * 降士氣若本來沒在計時，開始計時，到期由 advanceMorale 歸零（不留永久負士氣）。回傳受影響的部隊。
  */
-export function applyFearCharge(attacker: TroopUnit, units: Iterable<TroopUnit>): TroopUnit[] {
+export function applyFearCharge(attacker: TroopUnit, units: Iterable<TroopUnit>, penaltyScaleOf?: (unit: TroopUnit) => number): TroopUnit[] {
   const charge = passiveOf(attacker)?.fearCharge;
   if (!charge) return [];
   const affected: TroopUnit[] = [];
@@ -216,7 +216,7 @@ export function applyFearCharge(attacker: TroopUnit, units: Iterable<TroopUnit>)
     const otherSpec = passiveOf(other);
     if (other.faction === attacker.faction || other.isDead() || otherSpec?.fearImmune || otherSpec?.moraleNoDecrease) continue;
     if (Math.max(Math.abs(other.lane - attacker.lane), Math.abs(other.depth - attacker.depth)) > charge.radius) continue;
-    other.morale -= charge.moralePenalty;
+    other.morale -= charge.moralePenalty * (penaltyScaleOf?.(other) ?? 1);
     if (other.moraleTurns <= 0) other.moraleTurns = MORALE_DURATION_TURNS;
     affected.push(other);
   }
