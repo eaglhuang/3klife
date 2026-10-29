@@ -490,6 +490,12 @@ export class LobbyScene extends Component {
         await this._mountGovernorHall();
         await this._mountItemBag();
         await this._mountRedFaceShowcase();
+        // 語系字串從沒被載入過，信件/教學等 t(key) 都回傳鍵名（PROG-2-1623）；開場面板前先載好
+        try {
+            await services().i18n.setLocale(services().i18n.locale);
+        } catch (error) {
+            console.warn('[LobbyScene] 語系字串載入失敗', error);
+        }
         await this._mountDestinyOpening();
         await this._mountOpeningIntro();
         await this._mountOnboardingTutorial();
