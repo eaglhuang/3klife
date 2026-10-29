@@ -1,7 +1,7 @@
 /**
  * 攻城戰最小版（PROG-2-1589，暫定）headless 測試
  *
- * 覆蓋：戰法對應 siege 場景；敵方城牆區（depth ≥ 6）防禦 ×1.5、城外不加；投石機轟擊城牆區不致死；雲梯讓我方步兵抵銷城牆地利；
+ * 覆蓋：戰法對應 siege 場景；敵方城牆區（depth ≥ 6）防禦 ×1.5、城外不加；投石機轟擊城牆區不致死；雲梯讓我方步兵抵銷城牆地利；護城河鋪在城牆前一列；
  * 我方工兵攻城傷害 ×2、敵方不加；非攻城場景倍率皆為 1。
  */
 import { TestSuite, assert } from './TestRunner';
@@ -9,6 +9,10 @@ import {
     SIEGE_CATAPULT_DAMAGE,
     SIEGE_RAM_MULTIPLIER,
     applySceneCatapult,
+    resolveBattleTacticBehavior,
+    SIEGE_MOAT_DEPTH,
+    SIEGE_MOAT_MOVE_DELTA,
+    SIEGE_MOAT_TILE_NOTE,
     sceneLadderDefenseBypassOf,
     SIEGE_WALL_DEFENSE_MULTIPLIER,
     sceneDefenseMultiplierOf,
@@ -16,6 +20,8 @@ import {
 } from '../assets/scripts/battle/shared/BattleTacticBehavior';
 import { resolveBattleSceneMode } from '../assets/scripts/battle/shared/BattleSceneMode';
 import { BattleTactic, Faction, TroopType } from '../assets/scripts/core/config/Constants';
+import { BattleState } from '../assets/scripts/battle/models/BattleState';
+import { tileStateRuleOf } from '../assets/scripts/battle/shared/TileStateRules';
 import type { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 
 function unitAt(faction: Faction, depth: number): TroopUnit {
@@ -68,6 +74,20 @@ export function createSiegeSceneSuite(): TestSuite {
         assert.equals(1, sceneLadderDefenseBypassOf(mk(Faction.Player, TroopType.Cavalry, 6), wall, siege));
         assert.equals(1, sceneLadderDefenseBypassOf(infantry, mk(Faction.Enemy, TroopType.Shield, 3), siege));
         assert.equals(1, sceneLadderDefenseBypassOf(infantry, wall, normal));
+    });
+
+    suite.test('護城河：城牆前一列全部鋪上，移動 -1，不擋路也不推移（PROG-2-1598）', () => {
+        const state = new BattleState();
+        state.battleTactic = BattleTactic.Siege;
+        resolveBattleTacticBehavior(BattleTactic.Siege).applyStartOfBattle(state, { casterGenes: [], random: () => 0 } as never);
+        assert.equals(5, SIEGE_MOAT_DEPTH);
+        for (let lane = 0; lane < 5; lane++) {
+            const moat = state.getTileEffect(lane, SIEGE_MOAT_DEPTH);
+            assert.equals(SIEGE_MOAT_TILE_NOTE, moat?.notes);
+            assert.equals(SIEGE_MOAT_MOVE_DELTA, moat?.moveRangeDelta);
+            assert.isFalse(tileStateRuleOf(moat).blocksOnEnter);
+        }
+        assert.equals(null, state.getTileEffect(2, 4));
     });
 
     suite.test('非攻城場景倍率皆為 1', () => {

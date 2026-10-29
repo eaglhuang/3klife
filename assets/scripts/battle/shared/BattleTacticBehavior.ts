@@ -81,6 +81,10 @@ export interface BattleTacticBehavior {
 export const SIEGE_WALL_MIN_DEPTH = GAME_CONFIG.GRID_DEPTH - 2;
 /** 投石機：我方工兵每回合對城牆區敵軍造成的傷害（PROG-2-1596 暫定，不致死） */
 export const SIEGE_CATAPULT_DAMAGE = 10;
+/** 護城河：城牆區前一列（PROG-2-1598 暫定），站上去的部隊移動力 -1，不擋路、不推移 */
+export const SIEGE_MOAT_DEPTH = SIEGE_WALL_MIN_DEPTH - 1;
+export const SIEGE_MOAT_MOVE_DELTA = -1;
+export const SIEGE_MOAT_TILE_NOTE = 'scene-gambit:siege-moat';
 export const SIEGE_WALL_DEFENSE_MULTIPLIER = 1.5;
 export const SIEGE_RAM_MULTIPLIER = 2;
 /** 水淹深水格每回合傷害（PROG-2-1591，暫定） */
@@ -156,6 +160,19 @@ export function refreshFloodAttackTerrain(state: BattleState): void {
       notes: 'scene-gambit:flood-attack',
     });
   });
+}
+
+function applySiegeMoat(state: BattleState): void {
+  for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
+    state.setTileEffect({
+      id: `siege-moat-${lane}-${SIEGE_MOAT_DEPTH}`,
+      lane,
+      depth: SIEGE_MOAT_DEPTH,
+      state: 'river-current',
+      moveRangeDelta: SIEGE_MOAT_MOVE_DELTA,
+      notes: SIEGE_MOAT_TILE_NOTE,
+    });
+  }
 }
 
 function applyFloodAttackTerrain(state: BattleState): void {
@@ -456,6 +473,7 @@ export const BATTLE_TACTIC_BEHAVIOR_REGISTRY: Readonly<Record<BattleSceneMode, B
   // 城牆不阻擋移動：敵方由城牆區出兵，阻擋格會讓守軍也無法出城而卡死
   siege: {
     ...DEFAULT_BATTLE_TACTIC_BEHAVIOR,
+    applyStartOfBattle: applySiegeMoat,
     getDefenseMultiplier: (unit: TroopUnit) => (
       isSiegeWallDefender(unit) ? SIEGE_WALL_DEFENSE_MULTIPLIER : 1
     ),
