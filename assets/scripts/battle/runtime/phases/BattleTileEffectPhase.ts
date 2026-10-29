@@ -8,7 +8,7 @@ import { advanceMoraleOf } from '../../shared/Morale';
 import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
 import { sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
-import { applyTallyDefection } from '../../shared/TallyPassive';
+import { applyTallyDefection, applyTallyTeamMoraleAura } from '../../shared/TallyPassive';
 import { addStageSalvage, FIRE_RAID_TILE_NOTE, rollFirePlunderGain } from '../../shared/StageSalvage';
 
 export interface BattleTileEffectPhaseContext {
@@ -43,6 +43,8 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
     return !!caster && !caster.isDead();
   });
   advanceMoraleOf(context.state.units.values(), context.actingFaction);
+  // 全隊魅力（大喬，PROG-2-1582 暫定）：換算為己方回合開始全隊士氣 +20
+  applyTallyTeamMoraleAura(context.state.units.values(), context.actingFaction);
   // 鷹視狼顧（狼顧符，PROG-2-1572）：己方回合開始策反一支殘血敵軍，主將部隊不會被策反
   applyTallyDefection(
     context.state.units.values(),
