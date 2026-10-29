@@ -9,7 +9,7 @@ import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
 import { sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
 import { applyTallyDefection, applyTallyTeamMoraleAura } from '../../shared/TallyPassive';
-import { addStageSalvage, FIRE_RAID_TILE_NOTE, rollFirePlunderGain } from '../../shared/StageSalvage';
+import { addStageSalvage, FIRE_RAID_TILE_NOTE, ROCK_SLIDE_TILE_NOTE, rollFirePlunderGain, rollRockBreakGain } from '../../shared/StageSalvage';
 
 export interface BattleTileEffectPhaseContext {
   readonly state: BattleState;
@@ -56,6 +56,7 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
   const killedIds = new Set<string>();
 
   plunderFireRaidTiles(context, svc);
+  breakRockSlideTiles(context, svc);
 
   for (const [, unit] of context.state.units) {
     if (unit.faction !== context.actingFaction) {
@@ -137,6 +138,24 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
  * 火燒偷襲戰掠奪（戰法場景規格書 B-3，PROG-2-1462）：我方回合結束時站在火攻格 = 佔領 = 掠奪成功，
  * 每格一次，補給、武器材料、教官經驗寫入 Stage_Salvage（PROG-2-1509）。場景戰法只由玩家發動（B-1），敵方不掠奪。
  */
+/**
+ * 擊破落石（峽谷落石戰，PROG-2-1583 暫定）：我方回合開始，我方部隊同列前後相鄰的落石格被擊破，
+ * 移除封鎖並把掉落寫入 Stage_Salvage。
+ */
+function breakRockSlideTiles(context: BattleTileEffectPhaseContext, svc: ReturnType<typeof services>): void {
+  if (context.actingFaction !== Faction.Player) return;
+  const random = context.random ?? (() => svc.session.randomSource());
+  for (const [, unit] of context.state.units) {
+    if (unit.faction !== Faction.Player || unit.isDead()) continue;
+    for (const depth of [unit.depth - 1, unit.depth + 1]) {
+      const effect = context.state.getTileEffect(unit.lane, depth);
+      if (effect?.state !== 'hazard-rock' || effect.notes !== ROCK_SLIDE_TILE_NOTE) continue;
+      context.state.removeTileEffect(unit.lane, depth);
+      addStageSalvage(context.state.stageSalvage, rollRockBreakGain(random));
+    }
+  }
+}
+
 function plunderFireRaidTiles(context: BattleTileEffectPhaseContext, svc: ReturnType<typeof services>): void {
   if (context.actingFaction !== Faction.Player || context.state.battleTactic !== BattleTactic.FireAttack) return;
   const random = context.random ?? (() => svc.session.randomSource());

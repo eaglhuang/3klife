@@ -8,6 +8,7 @@ import { resolveBattleSceneMode, type BattleSceneMode } from './BattleSceneMode'
 import { floodDepthBonus } from '../../core/systems/WeatherTacticRestriction';
 import { tileStateRuleOf } from './TileStateRules';
 import { fateBlessingLevel, fateSuccessChance, rollEventSuccess, ROCK_SLIDE_BASE_SUCCESS, type FateHeldGene } from '../../core/systems/FateBlessing';
+import { ROCK_SLIDE_TILE_NOTE } from './StageSalvage';
 
 export interface BattleDamageAdjustment {
   damage: number;
@@ -267,7 +268,7 @@ function applyRockSlideTerrain(state: BattleState, context: BattleStartContext):
       blocksMovement: true,
       forcedMoveDirection: 'backward',
       forcedMoveSteps: 1,
-      notes: 'scene-gambit:rock-slide',
+      notes: ROCK_SLIDE_TILE_NOTE,
     });
   }
 }
