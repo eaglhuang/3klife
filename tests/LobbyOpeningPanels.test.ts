@@ -322,5 +322,18 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             assert.isFalse(service.lastLoadRecoveredFromBackup());
         });
     }
+    suite.test('新局：開宿命轉蛋時先開信件，關信後才進轉蛋（PROG-2-1622）', async () => {
+        const f = fixture();
+        await f.panels.mountOpeningLetter();
+        await f.panels.mountDestiny();
+        assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
+        assert.isTrue(f.panels.openDestiny());
+        assert.isTrue(f.hosts.get('OpeningLetterHost')!.node.active);
+        assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
+        await f.panels.closeOpeningLetter();
+        assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
+        assert.isTrue(f.hosts.get('DestinyOpeningHost')!.node.active);
+    });
+
     return suite;
 }
