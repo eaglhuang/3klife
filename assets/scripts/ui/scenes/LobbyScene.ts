@@ -331,6 +331,8 @@ export class LobbyScene extends Component {
     private _isNewPlayer = false;
     private _introHost: UIScreenPreviewHost | null = null;
     private _intro: OpeningIntroController | null = null;
+    /** 宿命轉蛋面板開不起來時為 true，此時開場不再擋住大廳 */
+    private _openingUnavailable = false;
     private _introTickScheduled = false;
     private _showcase: InitialShowcaseController | null = null;
     private _showcaseHost: UIScreenPreviewHost | null = null;
@@ -2105,7 +2107,10 @@ export class LobbyScene extends Component {
     }
 
     public openDestinyOpening(): void {
-        this._openingPanels?.openDestiny();
+        if (this._openingPanels?.openDestiny()) return;
+        // 宿命轉蛋開不起來（例如轉蛋設定缺失）：不讓玩家卡在空畫面，照舊顯示大廳（PROG-2-1620）
+        this._openingUnavailable = true;
+        void services().ui.open(UIID.LobbyMain);
     }
 
     /**
@@ -2129,9 +2134,17 @@ export class LobbyScene extends Component {
 
     /** 推進新玩家開場並記下目前幕（PROG-2-1371），之後才處理該幕的畫面。 */
     private _advanceOpening(event: { type: string }): void {
+        const wasInProgress = this._isOpeningInProgress();
         this._openingFlow?.advance(event);
         this._recordOpeningPhase();
         this._onOpeningPhaseAdvanced();
+        // 開場最後一幕結束才把大廳打開（PROG-2-1620）
+        if (wasInProgress && !this._isOpeningInProgress()) void services().ui.open(UIID.LobbyMain);
+    }
+
+    /** 新玩家開場是否還在某一幕（intro／destiny／showcase）；大廳主畫面在此期間不顯示 */
+    private _isOpeningInProgress(): boolean {
+        return !this._openingUnavailable && (this._openingFlow?.current() ?? null) !== null;
     }
 
     /** 把目前幕寫進存檔；開場結束時寫入 null，讀檔後就不再接續。 */
@@ -4549,6 +4562,11 @@ export class LobbyScene extends Component {
         return {
             node: this._lobbyMainHost.node,
             show: async () => {
+                // 新玩家開場（intro／宿命轉蛋／名將登場）未走完前不顯示大廳，開場面板維持最上層；走完由 _advanceOpening 再開（PROG-2-1620）
+                if (this._isOpeningInProgress()) {
+                    this._lobbyMainHost!.node.active = false;
+                    return;
+                }
                 this._lobbyMainHost!.node.active = true;
                 this._bringNodeToFront(this._lobbyMainHost!.node);
                 await this._lobbyMainHost!.showScreen('lobby-main-screen');

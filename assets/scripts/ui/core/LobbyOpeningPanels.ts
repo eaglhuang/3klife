@@ -153,12 +153,14 @@ export class LobbyOpeningPanels {
         ]);
     }
 
-    public openDestiny(): void {
+    /** 打開宿命轉蛋；轉蛋設定載入失敗、面板沒掛上時回 false */
+    public openDestiny(): boolean {
         const host = this._destinyHost;
-        if (!host) return;
+        if (!host) return false;
         host.node.active = true;
         this._ports.bringToFront(host.node);
         this.refreshDestiny();
+        return true;
     }
 
     private afterDestinyAction(): void {
