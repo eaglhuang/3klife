@@ -102,7 +102,32 @@ export const NAMED_TALLY_BY_GENERAL_TEMPLATE: Readonly<Record<string, string>> =
     'huang-yue-ying': 'tiger-tally-gong-jia-fu',
 };
 
-/** 虎符模板 id → 查被動／卡面用的 id：名將專屬換成專屬虎符，其餘原樣 */
+/**
+ * 死亡傳承虎符（通用型）：來源武將模板 id → 虎符 tacticId（PROG-2-1594）。
+ * 規格「來源」欄一張虎符可對應多位武將；同時是名將專屬來源者（馬超、周瑜）以專屬虎符為準。
+ * 孟獲同時列在藤甲與南蠻，暫定歸藤甲；高順、麴義、「趙雲系女性名將」名冊中沒有對應武將，暫不對照。
+ */
+export const LEGACY_TALLY_BY_GENERAL_TEMPLATE: Readonly<Record<string, string>> = {
+    'gongsun-zan': 'tiger-tally-bai-ma',
+    'cao-cao': 'tiger-tally-hu-bao',
+    'cao-ren': 'tiger-tally-hu-bao',
+    'sun-ce': 'tiger-tally-dan-yang',
+    'taishi-ci': 'tiger-tally-dan-yang',
+    'ma-teng': 'tiger-tally-tie-qi',
+    'wang-ping': 'tiger-tally-wu-dang',
+    'meng-huo': 'tiger-tally-teng-jia',
+    'yuan-shao': 'tiger-tally-xian-deng',
+    'sun-quan': 'tiger-tally-jie-fan',
+    'da-qiao': 'tiger-tally-da-qiao',
+    'zhou-tai': 'tiger-tally-wu-guo',
+    'han-dang': 'tiger-tally-wu-guo',
+    'gan-ning': 'tiger-tally-jin-fan',
+    'chen-dao': 'tiger-tally-bai-er',
+    'zhuge-liang': 'tiger-tally-yuan-rong',
+    'mu-lu-da-wang': 'tiger-tally-nan-man',
+};
+
+/** 虎符模板 id → 查被動／卡面用的 id：名將專屬優先，其次死亡傳承，其餘原樣 */
 export function resolveTallyTemplateId(templateId: string): string {
-    return NAMED_TALLY_BY_GENERAL_TEMPLATE[templateId] ?? templateId;
+    return NAMED_TALLY_BY_GENERAL_TEMPLATE[templateId] ?? LEGACY_TALLY_BY_GENERAL_TEMPLATE[templateId] ?? templateId;
 }
