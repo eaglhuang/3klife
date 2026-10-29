@@ -24,8 +24,8 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 35,
-    "in_progress": 3,
+    "done": 36,
+    "in_progress": 2,
     "open": 82,
     "total": 120
   },
@@ -4433,18 +4433,18 @@
       }
     },
     {
-      "doc_id": "",
+      "doc_id": "doc_task_0408",
       "id": "PROG-2-9013",
       "title": "他國興衰門檻與效果表回歸測試",
       "owner": "codex-gpt-6",
       "priority": "P2",
-      "status": "in-progress",
+      "status": "done",
       "type": "test",
       "phase": "M6",
       "created": "2026-10-29",
       "created_by_agent": "codex-gpt-6",
-      "started_at": "2026-10-29T06:51:20+00:00",
-      "started_by_agent": "codex-gpt-6",
+      "started_at": "",
+      "started_by_agent": "",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -4463,7 +4463,7 @@
       "deliverables": [
         "tests/RivalRiseFallBoundary.test.ts"
       ],
-      "notes": "2026-10-29 | 狀態: in-progress | 驗證: quick3/3其餘pending | 變更: codex-gpt-6從最新9ae968724開工；官方reserveNextTaskId共用fence分配9013；9011外部交接占用不碰、9012已合併不改 | 阻塞: none",
+      "notes": "2026-10-29 | 狀態: done | 驗證: focused32/32；full run-cli5341 passed/3既有Cocos runtime skipped；tsc tsconfig.test與cc-check皆exit0零錯誤；standard11/11；encoding與diff-check通過 | 變更: 新增獨立E-9規格固定表格測試；12門檻案例、5國力隔離輸入、5級三效果、10季節奏；未改產品碼。基底9ae968724，開工commit c7790c8fb；官方reserveNextTaskId共用fence分配9013；9011外部交接及已合併9012均未碰。驗證前及提交前fetch確認master未變；未push/PR/merge | 阻塞: none",
       "brief": {
         "style": "classic",
         "label": "",
