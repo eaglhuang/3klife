@@ -47,6 +47,9 @@ export interface OfficerTaskResult {
     success: boolean;
 }
 
+/** 戰功（官職系統 E-2「戰功」來源，PROG-2-1619 暫定）：每場正式戰鬥視為一般難度軍事任務 */
+export const BATTLE_MERIT_OFFICER_TASK: Readonly<Omit<OfficerTaskResult, 'success'>> = { difficulty: 'NORMAL', boardType: 'MILITARY' };
+
 const DIFFICULTY_BASE: Readonly<Record<OfficerDifficulty, number>> = {
     EASY: 10,
     NORMAL: 18,
