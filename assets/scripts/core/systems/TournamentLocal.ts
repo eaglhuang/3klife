@@ -77,6 +77,8 @@ export interface TournamentVenue {
     terrain: TerrainType;
     weather: Weather;
     boss: TournamentSeasonBoss;
+    /** 九州盃特殊規則（規格 §K，PROG-2-1612）：攻擊標籤 → 戰力倍率；規則文字供畫面顯示 */
+    specialRule?: { label: string; tagMultipliers: Readonly<Record<string, number>> };
 }
 
 /**
@@ -85,18 +87,22 @@ export interface TournamentVenue {
  */
 export const TOURNAMENT_CUPS: readonly TournamentVenue[] = [
     { cupName: '赤壁盃', terrain: TerrainType.River, weather: Weather.Windy,
+        specialRule: { label: '火攻傷害 ×2', tagMultipliers: { FIRE: 2 } },
         boss: { bossId: 'boss-1', name: '連環戰船', weaknessTags: ['FIRE', 'RANGED'], basePower: 10000 } },
     { cupName: '張飛盃', terrain: TerrainType.Mountain, weather: Weather.Clear,
         boss: { bossId: 'boss-2', name: '燕人猛將', weaknessTags: ['SLOW', 'ANTI_CONTROL'], basePower: 10000 } },
     { cupName: '官渡盃', terrain: TerrainType.Plain, weather: Weather.Clear,
+        specialRule: { label: '騎兵衝鋒傷害 ×1.8', tagMultipliers: { CAVALRY: 1.8 } },
         boss: { bossId: 'boss-3', name: '袁軍重騎', weaknessTags: ['ANTI_CAVALRY', 'FIRE'], basePower: 10000 } },
     { cupName: '呂布盃', terrain: TerrainType.Fortress, weather: Weather.Thunder,
         boss: { bossId: 'boss-4', name: '飛將無雙', weaknessTags: ['SLOW', 'ANTI_CAVALRY'], basePower: 10000 } },
     { cupName: '虎牢盃', terrain: TerrainType.Mountain, weather: Weather.Night,
+        specialRule: { label: '單挑武力直接結算', tagMultipliers: {} },
         boss: { bossId: 'boss-5', name: '虎牢關守軍', weaknessTags: ['RANGED', 'ANTI_CONTROL'], basePower: 10000 } },
     { cupName: '趙雲盃', terrain: TerrainType.Plain, weather: Weather.Windy,
         boss: { bossId: 'boss-6', name: '白馬銀槍', weaknessTags: ['ANTI_CAVALRY', 'SLOW'], basePower: 10000 } },
     { cupName: '夷陵盃', terrain: TerrainType.Forest, weather: Weather.Rain,
+        specialRule: { label: '弓兵射程減半；谷地陷阱觸發率 ×2', tagMultipliers: { RANGED: 0.5, TRAP: 2 } },
         boss: { bossId: 'boss-7', name: '連營大軍', weaknessTags: ['FIRE', 'SLOW'], basePower: 10000 } },
     { cupName: '長坂盃', terrain: TerrainType.Plain, weather: Weather.Fog,
         boss: { bossId: 'boss-8', name: '虎豹騎', weaknessTags: ['ANTI_CAVALRY', 'RANGED'], basePower: 10000 } },
@@ -107,6 +113,15 @@ export function tournamentVenueOf(seasonIndex: number): TournamentVenue {
     const n = TOURNAMENT_CUPS.length;
     const cup = TOURNAMENT_CUPS[(((Math.floor(seasonIndex) - 1) % n) + n) % n];
     return { ...cup, boss: { ...cup.boss, weaknessTags: cup.boss.weaknessTags.slice() } };
+}
+
+/**
+ * 九州盃特殊規則戰力倍率（PROG-2-1612 暫定）：武將攻擊標籤命中規則的標籤時相乘；沒有規則或沒命中為 1。
+ * 虎牢盃「單挑武力直接結算」目前只顯示規則，不改戰力。
+ */
+export function cupSpecialPowerMultiplier(venue: Readonly<TournamentVenue>, attackTags: readonly string[] | undefined): number {
+    const table = venue.specialRule?.tagMultipliers ?? {};
+    return (attackTags ?? []).reduce((mult, tag) => mult * (table[tag] ?? 1), 1);
 }
 
 /** 攻擊標籤命中 BOSS 任一弱點 → ×1.5，否則 ×1 */
@@ -170,6 +185,8 @@ export interface TournamentState {
 export interface TournamentEntrant {
     id: string;
     power: number;
+    /** 攻擊標籤（FIRE／CAVALRY／RANGED／TRAP…）；九州盃特殊規則用（PROG-2-1612），缺省不套 */
+    attackTags?: readonly string[];
 }
 
 export interface TournamentStatus {
@@ -272,12 +289,13 @@ export function registerTournamentTeam(
         }
     }
     if (phase === 'PREPARATION') next.lastPrepRegisterDay = day;
+    const venue = tournamentVenueOf(state.seasonIndex);
     next.team = {
         snapshotId: `TRN_S${state.seasonIndex}_${nowMs}`,
         seasonIndex: state.seasonIndex,
         registeredAtMs: nowMs,
         generals: entrants.map((e) => e.id),
-        totalPower: entrants.reduce((sum, e) => sum + Math.max(0, e.power), 0),
+        totalPower: Math.round(entrants.reduce((sum, e) => sum + Math.max(0, e.power) * cupSpecialPowerMultiplier(venue, e.attackTags), 0)),
     };
     return { ok: true, state: next };
 }
