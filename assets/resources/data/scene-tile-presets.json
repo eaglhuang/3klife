@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "$source": "戰法場景規格書.md (doc_spec_0039) C 段各場景「Tile 預設」；F 段 P0 Tile-State 預設配置表",
+  "presets": {
+    "SCENE_FOREST_AMBUSH": { "stealth": 60, "hazard": 20, "normal": 20 },
+    "SCENE_CANYON_ROCK": { "hazard": 40, "normal": 30, "forceMove": 30 },
+    "SCENE_FLOOD": { "forceMove": 50, "hazard": 30, "normal": 20 }
+  }
+}
