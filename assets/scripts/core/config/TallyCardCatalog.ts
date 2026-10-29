@@ -15,6 +15,7 @@ import type {
 } from '../../shared/SkillRuntimeContract';
 import type { TallyAffinityProfile, TallyCardData } from '../../shared/TallyCardContract';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
+import { TIGER_TALLY_SPEC_TACTICS, type TigerTallySpecTactic } from './TigerTallySpecTactics';
 
 const TALLY_CARD_ART_RESOURCE_FALLBACK = 'ui/tiger-tally/card-art/troops';
 const TALLY_CARD_ART_RESOURCE_BY_TYPE: Record<TroopType, string> = {
@@ -307,7 +308,7 @@ export function buildTallyCardCatalog(): Map<string, TallyCardData> {
   };
   const troopData: Record<string, any> = TROOP_DEFAULTS;
 
-  return new Map(slots.map((s): [string, TallyCardData] => {
+  const catalog = new Map(slots.map((s): [string, TallyCardData] => {
     const stats = troopData[s.type as string] || {};
     return [s.tacticMeta.tacticId, {
       unitType:    s.type as string,
@@ -338,6 +339,105 @@ export function buildTallyCardCatalog(): Map<string, TallyCardData> {
       affinity:    s.affinity,
     } as TallyCardData];
   }));
+
+  // 規格表 34 張虎符（PROG-2-1592）：手寫卡沒有的才補上，排在後面，不影響 demo 預設卡組（取前幾張）
+  for (const spec of TIGER_TALLY_SPEC_TACTICS) {
+    if (catalog.has(spec.tacticId) || SPEC_TALLY_HAND_WRITTEN_ALIAS[spec.tacticId]) continue;
+    catalog.set(spec.tacticId, buildSpecTallyCard(spec, troopData));
+  }
+  return catalog;
+}
+
+/** 規格表 id 與既有手寫卡 id 不同、但其實是同一張虎符的對照（避免重複） */
+const SPEC_TALLY_HAND_WRITTEN_ALIAS: Readonly<Record<string, string>> = {
+  'tiger-tally-bai-ma-yi-cong': 'tiger-tally-bai-ma',
+  'tiger-tally-xiao-ji-fu': 'tiger-tally-jiao-ji',
+};
+
+/** 規格表「基礎兵種」欄（兵種（虎符）系統.md §特殊兵種列表；機械 = 工兵） */
+export const SPEC_TALLY_TROOP_TYPE: Readonly<Record<string, TroopType>> = {
+  'tiger-tally-bai-ma-yi-cong': TroopType.Cavalry,
+  'tiger-tally-xian-zhen': TroopType.Infantry,
+  'tiger-tally-hu-bao': TroopType.Cavalry,
+  'tiger-tally-dan-yang': TroopType.Infantry,
+  'tiger-tally-tie-qi': TroopType.Cavalry,
+  'tiger-tally-wu-dang': TroopType.Archer,
+  'tiger-tally-changshan-nu': TroopType.Cavalry,
+  'tiger-tally-teng-jia': TroopType.Infantry,
+  'tiger-tally-xian-deng': TroopType.Archer,
+  'tiger-tally-jie-fan': TroopType.Infantry,
+  'tiger-tally-da-qiao': TroopType.Archer,
+  'tiger-tally-wu-guo': TroopType.Navy,
+  'tiger-tally-du-du': TroopType.Archer,
+  'tiger-tally-jin-fan': TroopType.Infantry,
+  'tiger-tally-bai-er': TroopType.Shield,
+  'tiger-tally-yuan-rong': TroopType.Archer,
+  'tiger-tally-nan-man': TroopType.Cavalry,
+  'tiger-tally-long-dan': TroopType.Cavalry,
+  'tiger-tally-du-du-fu': TroopType.Archer,
+  'tiger-tally-zhong-yi-fu': TroopType.Infantry,
+  'tiger-tally-dang-yang-fu': TroopType.Cavalry,
+  'tiger-tally-lie-gong-fu': TroopType.Archer,
+  'tiger-tally-shen-wei-fu': TroopType.Cavalry,
+  'tiger-tally-qi-lin-fu': TroopType.Pikeman,
+  'tiger-tally-hu-chi-fu': TroopType.Infantry,
+  'tiger-tally-e-lai-fu': TroopType.Infantry,
+  'tiger-tally-zhi-ti-fu': TroopType.Cavalry,
+  'tiger-tally-wu-shuang-fu': TroopType.Cavalry,
+  'tiger-tally-lian-huan-fu': TroopType.Archer,
+  'tiger-tally-feng-xiao-fu': TroopType.Archer,
+  'tiger-tally-lang-gu-fu': TroopType.Archer,
+  'tiger-tally-xiao-ji-fu': TroopType.Archer,
+  'tiger-tally-huo-shen-fu': TroopType.Cavalry,
+  'tiger-tally-gong-jia-fu': TroopType.Engineer,
+};
+
+const SPEC_TALLY_RARITY: Record<TigerTallySpecTactic['quality'], { rarity: TallyCardData['rarity']; stars: string }> = {
+  R: { rarity: 'normal', stars: '★' },
+  SR: { rarity: 'rare', stars: '★★' },
+  SSR: { rarity: 'epic', stars: '★★★' },
+  UR: { rarity: 'legendary', stars: '★★★★' },
+};
+
+/** 由規格表一列建出虎符卡（文案取規格欄位，卡圖用兵種通用圖；暫定） */
+function buildSpecTallyCard(spec: TigerTallySpecTactic, troopData: Record<string, any>): TallyCardData {
+  const type = SPEC_TALLY_TROOP_TYPE[spec.tacticId] ?? TroopType.Infantry;
+  const stats = troopData[type as string] || {};
+  const [skillName, skillDetail] = spec.effect.split('：');
+  const grade = SPEC_TALLY_RARITY[spec.quality];
+  const sourceType = spec.group === 'named' ? '名將專屬虎符' : '死亡傳承虎符';
+  return {
+    unitType:    type as string,
+    unitName:    spec.unitName,
+    unitSub:     spec.tallyName,
+    atk:         stats.attack    ?? 0,
+    def:         stats.defense   ?? 0,
+    hp:          stats.hp        ?? 0,
+    spd:         stats.moveRange ?? 1,
+    cost:        TROOP_DEPLOY_COST[type],
+    rarity:      grade.rarity,
+    rarityLabel: spec.quality,
+    stars:       grade.stars,
+    artResource: resolveTallyCardArtResource(type),
+    traits:      [],
+    traitDetails: [],
+    abilities:   [skillName],
+    abilityDetails: [{ name: skillName, detail: skillDetail ?? spec.effect }],
+    source: {
+      faction: '',
+      origin: spec.sourceGeneral,
+      sourceType,
+      obtainHint: `${spec.sourceGeneral}死亡結算後取得。`,
+    },
+    lore: { title: spec.tallyName, summary: spec.effect, body: spec.effect },
+    tacticId:    spec.tacticId,
+    battleSkillId: spec.battleSkillId,
+    battleSkillSourceType: 'tiger-tally' as SkillSourceType,
+    targetMode: 'self' as BattleSkillTargetMode,
+    timing: 'start-of-battle' as BattleSkillTiming,
+    desc:        spec.effect,
+    isDisabled:  false,
+  } as TallyCardData;
 }
 
 /** 選卡 UI 用的卡片摘要（ID 與顯示名稱），順序同目錄 */
