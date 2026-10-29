@@ -41,6 +41,8 @@ export interface TallyPassiveSpec {
   enemyAttackAura?: { radius: number; multiplier: number };
   /** 穿透（工甲符）：部隊攻擊時無視目標此比例的防禦 */
   defensePenetration?: number;
+  /** 連擊增傷（工甲符，PROG-2-1581 暫定）：連續攻擊同一目標每層 +perStack，最多 maxStacks 層 */
+  comboDamage?: { perStack: number; maxStacks: number };
   /** 兵種剋制（白耳剋弓、元戎壓制步兵）：目標兵種符合時部隊攻擊傷害 × multiplier */
   damageVsTroopTypes?: { types: readonly TroopType[]; multiplier: number };
   /** 連擊（元戎）：每次攻擊固定多打的次數 */
@@ -119,7 +121,7 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
     terrainMoveBonus: { terrains: [TerrainType.River], bonus: 1 },
   },
   // 工甲符：可穿透防禦，無視 30% 防禦（「連擊時傷害提升」需連擊來源，未做）
-  'tiger-tally-gong-jia-fu': { defensePenetration: 0.3 },
+  'tiger-tally-gong-jia-fu': { defensePenetration: 0.3, comboDamage: { perStack: 0.2, maxStacks: 3 } },
   // 白耳：剋制弓兵，對弓兵傷害 ×1.5（替主將承傷、斷後防禦 ×2 未做）
   'tiger-tally-bai-er': { damageVsTroopTypes: { types: [TroopType.Archer], multiplier: 1.5 }, guardsGeneral: { radius: 1 }, rearguardDefenseMultiplier: 2 },
   // 元戎：連弩齊射，每次攻擊多打 1 下；壓制步兵，對步兵傷害 ×1.5；範圍傷害沿用濺射 1 格 50%（PROG-2-1528 暫定）
@@ -363,6 +365,20 @@ export function extraAttackHitsOf(unit: TroopUnit, adjacentToMaleGeneral: boolea
   if (!spec) return 0;
   const conditional = spec.extraHitWhenAdjacentMale && adjacentToMaleGeneral ? spec.extraHitWhenAdjacentMale : 0;
   return (spec.extraHits ?? 0) + conditional;
+}
+
+/** 連擊記錄：每次發動攻擊時呼叫，同一目標層數 +1（第一次為 0 層），換目標重算（PROG-2-1581） */
+export function advanceTallyCombo(attacker: TroopUnit, target: TroopUnit): void {
+  if (!passiveOf(attacker)?.comboDamage) return;
+  attacker.comboStreak = attacker.comboTargetId === target.id ? attacker.comboStreak + 1 : 0;
+  attacker.comboTargetId = target.id;
+}
+
+/** 連擊增傷乘數：1 + perStack × min(層數, maxStacks)；目標不是連擊目標或無此被動時為 1 */
+export function tallyComboDamageMultiplierOf(attacker: TroopUnit, target: TroopUnit): number {
+  const combo = passiveOf(attacker)?.comboDamage;
+  if (!combo || attacker.comboTargetId !== target.id) return 1;
+  return 1 + combo.perStack * Math.min(attacker.comboStreak, combo.maxStacks);
 }
 
 /** 遺計定遼：回傳混亂回合數與受影響的敵軍；沒有此被動時回傳 null */

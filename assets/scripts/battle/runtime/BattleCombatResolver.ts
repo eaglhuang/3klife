@@ -16,6 +16,8 @@ import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf }
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
 import {
   extraAttackHitsOf,
+  advanceTallyCombo,
+  tallyComboDamageMultiplierOf,
   tallyAttackMultiplierOf,
   tallyBackRowDamageMultiplierOf,
   tallyDefenseMultiplierOf,
@@ -83,7 +85,8 @@ export class BattleCombatResolver {
   public getTallyPhysicalDamageMod(attacker: TroopUnit, defender: TroopUnit): number {
     return tallyBackRowDamageMultiplierOf(attacker, defender)
       * tallyTroopTypeDamageMultiplierOf(attacker, defender)
-      * tallyPhysicalDamageTakenOf(defender);
+      * tallyPhysicalDamageTakenOf(defender)
+      * tallyComboDamageMultiplierOf(attacker, defender);
   }
 
   private applyTallyPhysicalDamageMod(damage: number, attacker: TroopUnit, defender: TroopUnit): number {
@@ -221,6 +224,8 @@ export class BattleCombatResolver {
     const hits = 1 + extraAttackHitsOf(attacker, this.isAdjacentToMaleGeneral(attacker));
     // 恐懼衝鋒（鐵騎，PROG-2-1514）：每次發動攻擊時周圍敵軍士氣扣減
     applyFearCharge(attacker, this.context.state.units.values());
+    // 工甲連弩（PROG-2-1581）：連續攻擊同一目標累積連擊層數
+    advanceTallyCombo(attacker, defender);
     for (let hit = 0; hit < hits; hit += 1) {
       if (attacker.isDead() || defender.isDead()) return;
       this.resolveHit(attacker, defender, svc);
