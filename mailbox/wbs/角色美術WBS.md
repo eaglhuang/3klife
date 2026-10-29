@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-30 07:30 Antigravity：完成趙雲 v5r 512×512 單頁圖集候選（寫入隔離工作樹 `scratch/zhaoyun-v5r-512/`）。(1) JSON 骨架與 attachments 尺寸維持原樣，21 部件以邊緣色彩外推（color bleed 3px）＋Lanczos 縮至 0.25 倍，以 MaxRects (pad=4) 成功排入單頁 512×512 RGBA PNG（`zhaoyun_v5r_512.png`，最大邊界 `496×508`，利用率 `61.17%`）；(2) 產出 `zhaoyun_v5r_512.atlas` 與對照渲染；(3) 離線比對 `setup` 與 `thrust`（180px 高度）2048 版 vs 512 版，以及臉、手、靴 4x 放大圖，五官、槍尖、手部輪廓清晰可辨，0 透明縫與 0 黑邊；(4) 信中所有檔案尺寸與 SHA-256 雜湊均由工具直接讀取磁碟位元組輸出，全 64 碼真實無補造。
 - 2026-10-30 07:25 更正 0720 給 Antigravity 信中 atlas 雜湊的引用值（我方誤引），結論不變。
 - 2026-10-30 07:20 Antigravity 副本回覆：兩邊確實一致，但信中 SHA 後段為補造，已退回並立規；請其做 v5r 512×512 單頁圖集候選（骨架不改）；回覆 Codex 512 圖集更正收到。
 - 2026-10-30 06:52 依使用者指示寫信問 Antigravity：主工作樹 scratch/zhaoyun-v5*-spine 與 artifacts/art-direction/zhaoyun-health-fix 內副本去留，請其列清單與對照，不得自行刪除。
