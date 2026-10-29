@@ -98,6 +98,9 @@ export class TroopUnit {
   public comboTargetId: string | null = null;
   public comboStreak = 0;
 
+  /** 受控抵抗率（虎符特性「韌性」，PROG-2-1627）：被控制戰法選中時依此機率抵抗；預設 0 不影響既有行為 */
+  public controlResistChance = 0;
+
   /** 單騎破陣（PROG-2-0794）：回合開始重算，無相鄰友軍時 ×1.3；預設 1 不影響既有數值 */
   public soloBreachMultiplier = 1;
 
