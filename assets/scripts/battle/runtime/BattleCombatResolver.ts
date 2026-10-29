@@ -26,6 +26,7 @@ import {
   tallyDefensePenetrationOf,
   tallyEnemyAuraAttackMultiplierOf,
   tallyEvasionBonusOf,
+  tallyEvadeCounterRatioOf,
   tallyPhysicalDamageTakenOf,
   tallyTroopTypeDamageMultiplierOf,
   applyFearCharge,
@@ -273,6 +274,7 @@ export class BattleCombatResolver {
         targetId: defender.id,
         hitRate: hitRateOf(attackerAccuracy),
       });
+      this.tryTallyEvadeCounter(defender, attacker, svc);
       return;
     }
 
@@ -782,6 +784,39 @@ export class BattleCombatResolver {
 
   private getForwardDirection(unit: TroopUnit): number {
     return unit.faction === Faction.Player ? 1 : -1;
+  }
+
+  /** 閃避後反擊（龍膽符七進七出，PROG-2-1595）：攻擊落空且攻方在守方射程內時回擊一次；不擲命中、不連結 */
+  private tryTallyEvadeCounter(defender: TroopUnit, attacker: TroopUnit, svc: ReturnType<typeof services>): void {
+    const ratio = tallyEvadeCounterRatioOf(defender);
+    if (ratio <= 0 || defender.isDead() || attacker.isDead()) return;
+    const distance = Math.abs(defender.lane - attacker.lane) + Math.abs(defender.depth - attacker.depth);
+    if (distance > defender.attackRange) return;
+    const defenderCell = this.context.state.getCell(defender.lane, defender.depth);
+    const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
+    const damage = svc.formula.calculateDamage({
+      attackerAttack: Math.max(1, Math.floor(defender.getEffectiveAttack() * this.getTallyAttackMod(defender) * ratio)),
+      defenderDefense: attacker.getEffectiveDefense() * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker) * this.getTallyDefenseMod(attacker),
+      attackerType: defender.type,
+      defenderType: attacker.type,
+      attackerTerrain: defenderCell?.terrain ?? TerrainType.Plain,
+      defenderTerrain: attackerCell?.terrain ?? TerrainType.Plain,
+    });
+    this.applyUnitDamage(attacker, damage, defender.faction, {
+      attackerId: defender.id,
+      attackerLane: defender.lane,
+      attackerDepth: defender.depth,
+      damageSource: 'counter:tally-evade',
+      allowDamageLink: false,
+    });
+    if (attacker.isDead()) {
+      if (attacker.id === this.context.getPlayerGeneralUnitId()) {
+        this.onGeneralUnitKilled(Faction.Player, svc);
+      } else if (attacker.id === this.context.getEnemyGeneralUnitId()) {
+        this.onGeneralUnitKilled(Faction.Enemy, svc);
+      }
+      this.onUnitKilled(attacker, defender, svc);
+    }
   }
 
   private tryTriggerCounterReaction(

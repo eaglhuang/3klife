@@ -25,6 +25,8 @@ export interface TallyPassiveSpec {
   moveRangeBonus?: number;
   /** 七進七出：移動穿透敵格（Ghost_Move），由移動階段依穿透規則結算（PROG-2-0776） */
   ghostMove?: boolean;
+  /** 閃避後反擊（龍膽符七進七出，PROG-2-1595）：攻擊落空且攻方在射程內時，以攻擊力 × ratio 回擊一次 */
+  evadeCounter?: { ratio: number };
   /** 攻擊乘數（解煩／丹陽／吳國 +20%，PROG-2-1433）；有 attackTerrains 時只在這些地形生效 */
   attackMultiplier?: number;
   attackTerrains?: readonly TerrainType[];
@@ -94,7 +96,8 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   // 結姻連射：與男性武將相鄰時攻擊次數 +1（每次攻擊判定，不是出陣時套用）
   'tiger-tally-jiao-ji': { extraHitWhenAdjacentMale: 1 },
   // 七進七出（龍膽符）：暫定 id，龍膽符尚未進 TallyCardCatalog，出陣前不會有單位帶到
-  'tiger-tally-long-dan': { ghostMove: true },
+  // 七進七出：移動穿透阻擋；閃避後反擊 50%（PROG-2-1595 暫定）
+  'tiger-tally-long-dan': { ghostMove: true, evadeCounter: { ratio: 0.5 } },
   // 解煩（突擊步兵）：移動 +2、攻擊 +20%，不限地形。以下三條模板 id 沿用規格表 tacticId，尚未進 TallyCardCatalog
   'tiger-tally-jie-fan': { moveRangeBonus: 2, attackMultiplier: 1.2 },
   // 丹陽（山地特化）：站在山地時移動 +2、攻擊 +20%
@@ -452,4 +455,9 @@ export function tallyTileMoveDeltaOf(unit: TroopUnit, delta: number): number {
 /** 巨型踐踏：此部隊能否越過擋在前方的這支部隊（敵方步兵才行） */
 export function canTrampleOver(unit: TroopUnit, blocker: TroopUnit): boolean {
   return passiveOf(unit)?.tramplesInfantry === true && blocker.faction !== unit.faction && blocker.type === TroopType.Infantry;
+}
+
+/** 閃避後反擊的攻擊力比例（龍膽符，PROG-2-1595）；沒有此被動時為 0 */
+export function tallyEvadeCounterRatioOf(unit: TroopUnit): number {
+  return passiveOf(unit)?.evadeCounter?.ratio ?? 0;
 }
