@@ -4,7 +4,7 @@
  *
  * 每月一場指定地形／天氣條件的場景賽；不計入主賽 rank points，成績另存 Monthly_Scenario_History。
  * 積分公式與競技場相同（ArenaScore），場景克制係數由後台每月設定，預設 1.0。
- * 規格只列 1~4 月，其餘月份「…」未定，查不到時回 null（不開賽）。
+ * 規格只列 1~4 月；5~12 月依使用者裁定（PROG-2-1616）按季節主題推算，皆暫定待審。月份不在 1~12 回 null。
  */
 import { arenaScoreOfTeam, counterOf, survivalFactorOf, terrainMultiplierOf, type ArenaMember } from './ArenaScore';
 
@@ -20,15 +20,24 @@ export interface MonthlyScenario {
     rule: MonthlyScenarioRule;
 }
 
-/** 規格表（1~4 月）；資料欄位依規格文字轉成規則碼 */
+/** 1~4 月照規格表；5~12 月為暫定推算；兵種碼照 generals troopAptitude（INFANTRY／ARCHER／CAVALRY／NAVY／SIEGE／ENGINEER） */
 export const MONTHLY_SCENARIOS: readonly MonthlyScenario[] = [
     { month: 1, name: '冰天雪地', rule: { kind: 'ban-tactic-tag', tag: 'cavalry' } },
     { month: 2, name: '赤壁水戰', rule: { kind: 'require-aptitude', aptitudes: ['NAVY', 'ARCHER'] } },
     { month: 3, name: '春耕奇謀', rule: { kind: 'tactic-power', stat: 'int', multiplier: 1.5 } },
     { month: 4, name: '山地奇兵', rule: { kind: 'aptitude-bonus', troop: 'INFANTRY', rank: 'S', multiplier: 2 } },
+    // 以下 5~12 月暫定（PROG-2-1616）
+    { month: 5, name: '梅雨泥濘', rule: { kind: 'ban-tactic-tag', tag: 'fire' } },
+    { month: 6, name: '長坂疾馳', rule: { kind: 'aptitude-bonus', troop: 'CAVALRY', rank: 'S', multiplier: 2 } },
+    { month: 7, name: '酷暑烽火', rule: { kind: 'tactic-power', stat: 'str', multiplier: 1.5 } },
+    { month: 8, name: '中秋月射', rule: { kind: 'aptitude-bonus', troop: 'ARCHER', rank: 'S', multiplier: 2 } },
+    { month: 9, name: '秋高馬肥', rule: { kind: 'require-aptitude', aptitudes: ['CAVALRY'] } },
+    { month: 10, name: '霜降攻城', rule: { kind: 'require-aptitude', aptitudes: ['SIEGE', 'ENGINEER'] } },
+    { month: 11, name: '江霧伏弩', rule: { kind: 'require-aptitude', aptitudes: ['ARCHER', 'INFANTRY'] } },
+    { month: 12, name: '歲末決戰', rule: { kind: 'tactic-power', stat: 'lea', multiplier: 1.5 } },
 ];
 
-/** 月份（1~12）對應的場景賽；規格未定的月份回 null */
+/** 月份（1~12）對應的場景賽；超出範圍回 null */
 export function monthlyScenarioOf(month: number): MonthlyScenario | null {
     return MONTHLY_SCENARIOS.find((s) => s.month === month) ?? null;
 }
