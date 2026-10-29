@@ -30,6 +30,7 @@ import {
 import { services } from '../../core/managers/ServiceLoader';
 import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
 import { sceneFireDamageTakenOf } from '../shared/BattleTacticBehavior';
+import { ANCESTRAL_SPIRIT_LOG, ancestralSpiritAttackOf, isOutnumbered } from '../shared/AncestralSpirit';
 
 export interface GeneralSkillCastOptions {
   tacticId?: string | null;
@@ -63,6 +64,8 @@ export class BattleSkillDispatcher {
   private readonly skillExecutor: BattleSkillExecutor = createDefaultBattleSkillExecutor();
   /** 本場已生效的奧義（陣營:ultimateId）；E-9 每場戰鬥每個奧義限用 1 次（PROG-2-1451） */
   private readonly usedUltimates = new Set<string>();
+  /** 本場已發動英靈附體的陣營（PROG-2-1587，每場一次） */
+  private readonly ancestralSpiritUsed = new Set<Faction>();
 
   constructor(
     private readonly context: BattleSkillDispatcherContext,
@@ -221,10 +224,12 @@ export class BattleSkillDispatcher {
         battleLogLines: [vitalityCheck.reason],
       };
     }
-    const result = this.skillExecutor.execute(this.withUltimateAttack(request), this.buildBattleSkillExecutionContext());
+    const ultimateRequest = this.withUltimateAttack(request);
+    const result = this.skillExecutor.execute(ultimateRequest, this.buildBattleSkillExecutionContext());
     if (result.applied && request.sourceType === SkillSourceType.Ultimate) {
       this.spendUltimateCost(request);
       if (usedKey) this.usedUltimates.add(usedKey);
+      return this.tryAncestralSpirit(ultimateRequest, result);
     }
     return result;
   }
@@ -245,9 +250,29 @@ export class BattleSkillDispatcher {
     return attack === null ? request : { ...request, ultimateAttack: attack };
   }
 
+  /**
+   * 英靈附體（PROG-2-1587 暫定）：奧義生效後，若施放方兵力劣勢（存活部隊 < 敵方 70%）且本場未發動，
+   * 祖先虛影以 50% 奧義攻擊基準同步再施放一次；不再扣精力。
+   */
+  private tryAncestralSpirit(request: BattleSkillRequest, result: SkillExecutionResult): SkillExecutionResult {
+    const general = this.resolveCasterGeneral(request);
+    if (!general || this.ancestralSpiritUsed.has(general.faction)) return result;
+    if (!isOutnumbered(this.context.state.units.values(), general.faction)) return result;
+    const spiritAttack = ancestralSpiritAttackOf(request.ultimateAttack);
+    if (spiritAttack === null) return result;
+    this.ancestralSpiritUsed.add(general.faction);
+    const echo = this.skillExecutor.execute({ ...request, ultimateAttack: spiritAttack }, this.buildBattleSkillExecutionContext());
+    return {
+      ...result,
+      deltas: [...result.deltas, ...echo.deltas],
+      battleLogLines: [...result.battleLogLines, ANCESTRAL_SPIRIT_LOG, ...echo.battleLogLines],
+    };
+  }
+
   /** 新一局戰鬥開始時清空已施放奧義紀錄（BattleController.initBattle 呼叫） */
   public resetUltimateUsage(): void {
     this.usedUltimates.clear();
+    this.ancestralSpiritUsed.clear();
   }
 
   private usedUltimateKey(request: BattleSkillRequest): string | null {
