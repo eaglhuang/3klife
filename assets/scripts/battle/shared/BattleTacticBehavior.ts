@@ -322,20 +322,42 @@ function applySceneCamp(state: BattleState): void {
   });
 }
 
-function applyAmbushAttackDecorations(state: BattleState): void {
-  for (const cell of state.cells) {
-    if (cell.terrain !== TerrainType.Forest) {
-      continue;
-    }
+export const AMBUSH_TRAP_TILE_NOTE = 'scene-gambit:ambush-trap';
+/** 埋伏陷阱每回合傷害（PROG-2-1590，暫定） */
+export const AMBUSH_TRAP_DAMAGE_PER_TURN = 10;
 
-    state.setTileEffect({
-      id: `ambush-${cell.lane}-${cell.depth}`,
-      lane: cell.lane,
-      depth: cell.depth,
-      state: 'ambush-field',
-      notes: 'scene-gambit:ambush-attack',
-    });
-  }
+/**
+ * 森林埋伏 Tile 比例（SCENE_FOREST_AMBUSH，PROG-2-1590）：林地格依比例分成陷阱／掩體／一般。
+ * 陷阱優先放在最靠敵方的林地（depth 小），其次掩體，剩下維持一般地形。
+ */
+function applyAmbushAttackDecorations(state: BattleState): void {
+  const forest = state.cells
+    .filter((cell) => cell.terrain === TerrainType.Forest)
+    .sort((a, b) => a.depth - b.depth || a.lane - b.lane);
+  const counts = allocateSceneTiles(SCENE_TILE_PRESETS, 'SCENE_FOREST_AMBUSH', forest.length);
+  forest.forEach((cell, index) => {
+    if (index < counts.hazard) {
+      state.setTileEffect({
+        id: `ambush-trap-${cell.lane}-${cell.depth}`,
+        lane: cell.lane,
+        depth: cell.depth,
+        state: 'hazard-rock',
+        blocksMovement: false,
+        damagePerTurn: AMBUSH_TRAP_DAMAGE_PER_TURN,
+        notes: AMBUSH_TRAP_TILE_NOTE,
+      });
+      return;
+    }
+    if (index < counts.hazard + counts.stealth) {
+      state.setTileEffect({
+        id: `ambush-${cell.lane}-${cell.depth}`,
+        lane: cell.lane,
+        depth: cell.depth,
+        state: 'ambush-field',
+        notes: 'scene-gambit:ambush-attack',
+      });
+    }
+  });
 }
 
 function applyNightRaidDecorations(state: BattleState): void {
