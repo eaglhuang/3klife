@@ -35,6 +35,8 @@ export interface BattleSkillExecutionContext {
   addFormationZone?(zone: FormationZone): void;
   /** 位移：目標格是否可站立（PROG-2-0767）；舊測試 context 可不提供，視為不可位移 */
   isCellFreeForPush?(lane: number, depth: number): boolean;
+  /** 位移：格子是否為每回合扣血的危險地形（力量推入，PROG-2-1608）；舊測試 context 可不提供 */
+  isHazardCell?(lane: number, depth: number): boolean;
   /** 位移：把單位搬到新格（PROG-2-0767） */
   pushUnitTo?(unit: TroopUnit, lane: number, depth: number): void;
   /** 對單位施加持續傷害（毒箭，PROG-2-0766）；舊測試 context 可不提供 */
