@@ -1,5 +1,5 @@
 import { arenaScoreOfTeam } from '../assets/scripts/core/systems/ArenaScore';
-import { filterMonthlyScenarioTeam, monthlyScenarioOf, monthlyScenarioScore, monthlyScenarioViolationOf, recordMonthlyScenario } from '../assets/scripts/core/systems/MonthlyScenarioCup';
+import { filterMonthlyScenarioTeam, monthlyScenarioMemberScore, monthlyScenarioTeamScore, monthlyScenarioOf, monthlyScenarioScore, monthlyScenarioViolationOf, recordMonthlyScenario } from '../assets/scripts/core/systems/MonthlyScenarioCup';
 import { TestSuite, assert } from './TestRunner';
 
 const member = { str: 80, int: 70, lea: 60, luk: 50, tacticPoints: 10, terrain: 'A', hp: 100, maxHp: 100 };
@@ -39,6 +39,18 @@ export function createMonthlyScenarioCupSuite(): TestSuite {
         const team = filterMonthlyScenarioTeam(feb, [{ troopAptitude: { NAVY: 'S' } }, { troopAptitude: {} }]);
         assert.equals(1, team.accepted.length);
         assert.equals('missing-aptitude', team.rejected[0].reason);
+    });
+
+    suite.test('威力規則：春耕奇謀智力戰法 ×1.5、山地奇兵步兵 S 地形加成翻倍（PROG-2-1611）', () => {
+        assert.equals(monthlyScenarioScore([member]), monthlyScenarioTeamScore(null, [member]));
+        const spring = monthlyScenarioOf(3)!;
+        const intMember = { ...member, tacticScalingStat: 'int' };
+        assert.equals(monthlyScenarioMemberScore(null, intMember) + 5, monthlyScenarioMemberScore(spring, intMember));
+        assert.equals(monthlyScenarioMemberScore(null, member), monthlyScenarioMemberScore(spring, member));
+        const mountain = monthlyScenarioOf(4)!;
+        const sInfantry = { ...member, terrain: 'S', troopAptitude: { INFANTRY: 'S' } };
+        assert.equals(260 * 2 + 10, monthlyScenarioMemberScore(mountain, sInfantry));
+        assert.equals(260 * 1.5 + 10, monthlyScenarioMemberScore(mountain, { ...sInfantry, troopAptitude: { INFANTRY: 'A' } }));
     });
 
     return suite;
