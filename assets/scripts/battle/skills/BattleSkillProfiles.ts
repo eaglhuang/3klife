@@ -1,6 +1,6 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)、兵種（虎符）系統.md (doc_spec_0012)；PROG-2-1429 依建檔紀錄補標出處
 import { StatusEffect } from '../../core/config/Constants';
-import { TIGER_TALLY_PENDING_SKILL_IDS } from '../../core/config/TigerTallySpecTactics';
+import { RULED_EXTRA_TALLY_SKILL_IDS, TIGER_TALLY_PENDING_SKILL_IDS } from '../../core/config/TigerTallySpecTactics';
 import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } from '../../shared/SkillRuntimeContract';
 
 export type BattleSkillFalloffRule = 'none' | 'linear-step';
@@ -580,7 +580,8 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
 
 // --- 虎符特殊戰法殼（PROG-2-0928，TRP-15）：規格 34 條中尚未實作效果的 23 條 ---
 // coefficient 0、無效果欄位，只讓 battleSkillId 能解析進管線；效果待各戰法另卡補上，此時不造成傷害
-for (const battleSkillId of TIGER_TALLY_PENDING_SKILL_IDS) {
+// 裁定追加虎符（南蠻勇士／豹騎，PROG-2-1617）同樣只有殼
+for (const battleSkillId of [...TIGER_TALLY_PENDING_SKILL_IDS, ...RULED_EXTRA_TALLY_SKILL_IDS]) {
   PROFILE_BY_SKILL_ID[battleSkillId] = {
     battleSkillId,
     targetMode: BattleSkillTargetMode.EnemySingle,

@@ -79,6 +79,22 @@ export const TIGER_TALLY_PENDING_SKILL_IDS: readonly string[] = TIGER_TALLY_SPEC
     .map(tactic => tactic.battleSkillId);
 
 /**
+ * 裁定追加虎符（規格表外，PROG-2-1617）：MCQ Q56 選項 A「孟獲產出南蠻勇士、祝融產出南蠻豹騎」，
+ * 兩者規格沒有數值；依使用者裁定參照步兵／騎兵基礎值 ×1.1，暫定。特殊戰法未定，技能走待實作殼（不可施放）。
+ */
+export interface RuledExtraTally extends TigerTallySpecTactic {
+    /** 卡面攻防血相對基礎兵種的倍率 */
+    statMultiplier: number;
+}
+
+export const RULED_EXTRA_TALLIES: readonly RuledExtraTally[] = [
+    { tacticId: 'tiger-tally-nan-man-yong-shi', battleSkillId: 'tally-nan-man-yong-shi', group: 'general', tallyName: '虎符：南蠻勇士', unitName: '南蠻勇士', sourceGeneral: '孟獲', quality: 'SR', effect: '蠻勇：基礎攻防血較步兵高 10%（暫定，特殊戰法待定）', reusesProfile: false, statMultiplier: 1.1 },
+    { tacticId: 'tiger-tally-nan-man-bao-qi', battleSkillId: 'tally-nan-man-bao-qi', group: 'general', tallyName: '虎符：南蠻豹騎', unitName: '南蠻豹騎', sourceGeneral: '祝融夫人', quality: 'SR', effect: '豹突：基礎攻防血較騎兵高 10%（暫定，特殊戰法待定）', reusesProfile: false, statMultiplier: 1.1 },
+];
+
+export const RULED_EXTRA_TALLY_SKILL_IDS: readonly string[] = RULED_EXTRA_TALLIES.map(tactic => tactic.battleSkillId);
+
+/**
  * 名將專屬虎符：原名將的武將模板 id → 虎符 tacticId（PROG-2-1593）。
  * 死亡虎符的 templateId 仍是武將 id（史實合攻要用），查被動／卡面時才經 resolveTallyTemplateId 換成專屬虎符。
  */
@@ -115,8 +131,10 @@ export const LEGACY_TALLY_BY_GENERAL_TEMPLATE: Readonly<Record<string, string>> 
     'taishi-ci': 'tiger-tally-dan-yang',
     'ma-teng': 'tiger-tally-tie-qi',
     'wang-ping': 'tiger-tally-wu-dang',
-    // 規格裁決（選項 A）：藤甲兵歸兀突骨；孟獲改產南蠻勇士（尚無卡片，暫不對照）（PROG-2-1602）
+    // 規格裁決（選項 A）：藤甲兵歸兀突骨；孟獲改產南蠻勇士、祝融夫人產南蠻豹騎（PROG-2-1602／1617，裁定追加卡）
     'wu-tu-gu': 'tiger-tally-teng-jia',
+    'meng-huo': 'tiger-tally-nan-man-yong-shi',
+    'zhu-rong-furen': 'tiger-tally-nan-man-bao-qi',
     'yuan-shao': 'tiger-tally-xian-deng',
     'sun-quan': 'tiger-tally-jie-fan',
     'da-qiao': 'tiger-tally-da-qiao',

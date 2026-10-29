@@ -14,7 +14,7 @@ export function createSpecTallyCardsSuite(): TestSuite {
 
     suite.test('規格表 34 張虎符：32 張新卡＋2 張沿用手寫卡', () => {
         const catalog = buildTallyCardCatalog();
-        assert.equals(6 + 32, catalog.size);
+        assert.equals(6 + 32 + 2, catalog.size); // +2 裁定追加南蠻勇士／豹騎（PROG-2-1617）
         const missing = TIGER_TALLY_SPEC_TACTICS.filter((s) => !catalog.has(s.tacticId)).map((s) => s.tacticId).sort();
         assert.equals('tiger-tally-bai-ma-yi-cong,tiger-tally-xiao-ji-fu', missing.join(','));
     });

@@ -15,7 +15,7 @@ import type {
 } from '../../shared/SkillRuntimeContract';
 import type { TallyAffinityProfile, TallyCardData } from '../../shared/TallyCardContract';
 import type { TigerTallyCard } from '../models/TigerTallyCard';
-import { TIGER_TALLY_SPEC_TACTICS, type TigerTallySpecTactic } from './TigerTallySpecTactics';
+import { RULED_EXTRA_TALLIES, TIGER_TALLY_SPEC_TACTICS, type TigerTallySpecTactic } from './TigerTallySpecTactics';
 
 const TALLY_CARD_ART_RESOURCE_FALLBACK = 'ui/tiger-tally/card-art/troops';
 const TALLY_CARD_ART_RESOURCE_BY_TYPE: Record<TroopType, string> = {
@@ -345,6 +345,10 @@ export function buildTallyCardCatalog(): Map<string, TallyCardData> {
     if (catalog.has(spec.tacticId) || SPEC_TALLY_HAND_WRITTEN_ALIAS[spec.tacticId]) continue;
     catalog.set(spec.tacticId, buildSpecTallyCard(spec, troopData));
   }
+  // 裁定追加虎符（PROG-2-1617）：規格表外，數值以基礎兵種 ×statMultiplier 推算（暫定）
+  for (const extra of RULED_EXTRA_TALLIES) {
+    catalog.set(extra.tacticId, buildSpecTallyCard(extra, troopData, extra.statMultiplier));
+  }
   return catalog;
 }
 
@@ -390,6 +394,9 @@ export const SPEC_TALLY_TROOP_TYPE: Readonly<Record<string, TroopType>> = {
   'tiger-tally-xiao-ji-fu': TroopType.Archer,
   'tiger-tally-huo-shen-fu': TroopType.Cavalry,
   'tiger-tally-gong-jia-fu': TroopType.Engineer,
+  // 裁定追加（PROG-2-1617）
+  'tiger-tally-nan-man-yong-shi': TroopType.Infantry,
+  'tiger-tally-nan-man-bao-qi': TroopType.Cavalry,
 };
 
 const SPEC_TALLY_RARITY: Record<TigerTallySpecTactic['quality'], { rarity: TallyCardData['rarity']; stars: string }> = {
@@ -400,7 +407,7 @@ const SPEC_TALLY_RARITY: Record<TigerTallySpecTactic['quality'], { rarity: Tally
 };
 
 /** 由規格表一列建出虎符卡（文案取規格欄位，卡圖用兵種通用圖；暫定） */
-function buildSpecTallyCard(spec: TigerTallySpecTactic, troopData: Record<string, any>): TallyCardData {
+function buildSpecTallyCard(spec: TigerTallySpecTactic, troopData: Record<string, any>, statMultiplier = 1): TallyCardData {
   const type = SPEC_TALLY_TROOP_TYPE[spec.tacticId] ?? TroopType.Infantry;
   const stats = troopData[type as string] || {};
   const [skillName, skillDetail] = spec.effect.split('：');
@@ -410,9 +417,9 @@ function buildSpecTallyCard(spec: TigerTallySpecTactic, troopData: Record<string
     unitType:    type as string,
     unitName:    spec.unitName,
     unitSub:     spec.tallyName,
-    atk:         stats.attack    ?? 0,
-    def:         stats.defense   ?? 0,
-    hp:          stats.hp        ?? 0,
+    atk:         Math.round((stats.attack  ?? 0) * statMultiplier),
+    def:         Math.round((stats.defense ?? 0) * statMultiplier),
+    hp:          Math.round((stats.hp      ?? 0) * statMultiplier),
     spd:         stats.moveRange ?? 1,
     cost:        TROOP_DEPLOY_COST[type],
     rarity:      grade.rarity,
