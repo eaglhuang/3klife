@@ -11,6 +11,7 @@
 import { Faction, GAME_CONFIG, TerrainType, TroopType } from '../../core/config/Constants';
 import type { TroopUnit } from '../../core/models/TroopUnit';
 import { resolveTallyTemplateId } from '../../core/config/TigerTallySpecTactics';
+import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
 import { castMorale, MORALE_DURATION_TURNS } from './Morale';
 
 /** 弓兵射程（BattleUnitSpawner 弓兵 attackRange = 2） */
@@ -356,7 +357,19 @@ export function hasGhostMove(unit: TroopUnit): boolean {
 }
 
 /** 把虎符被動套到部隊上；沒有被動或沒有模板 id 時什麼都不做 */
+/** 虎符特性「韌性」：受控時 50% 機率抵抗（使用者裁定 Q2，PROG-2-1627，暫定） */
+export const RESILIENCE_TRAIT = '韌性';
+export const RESILIENCE_CONTROL_RESIST_CHANCE = 0.5;
+
+export function tallyTraitsOf(templateId: string | null): readonly string[] {
+  if (!templateId) return [];
+  return buildTallyCardCatalog().get(resolveTallyTemplateId(templateId))?.traits ?? [];
+}
+
 export function applyTallyPassive(unit: TroopUnit, templateId: string | null): void {
+  if (tallyTraitsOf(templateId).includes(RESILIENCE_TRAIT)) {
+    unit.controlResistChance = RESILIENCE_CONTROL_RESIST_CHANCE;
+  }
   const spec = passiveByTemplate(templateId);
   if (!spec) return;
   if (spec.attackRangeFloor !== undefined) {
