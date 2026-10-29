@@ -13,11 +13,11 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 1626
-- done: 1202
+- Total: 1673
+- done: 1237
 - completed: 8
 - in-progress: 41
-- in-review: 244
+- in-review: 256
 - open: 99
 - not-started: 1
 - blocked: 4
