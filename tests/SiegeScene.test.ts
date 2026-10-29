@@ -1,0 +1,49 @@
+/**
+ * 攻城戰最小版（PROG-2-1589，暫定）headless 測試
+ *
+ * 覆蓋：戰法對應 siege 場景；敵方城牆區（depth ≤ 1）防禦 ×1.5、城外不加；
+ * 我方工兵攻城傷害 ×2、敵方不加；非攻城場景倍率皆為 1。
+ */
+import { TestSuite, assert } from './TestRunner';
+import {
+    SIEGE_RAM_MULTIPLIER,
+    SIEGE_WALL_DEFENSE_MULTIPLIER,
+    sceneDefenseMultiplierOf,
+    sceneSiegeDamageMultiplierOf,
+} from '../assets/scripts/battle/shared/BattleTacticBehavior';
+import { resolveBattleSceneMode } from '../assets/scripts/battle/shared/BattleSceneMode';
+import { BattleTactic, Faction } from '../assets/scripts/core/config/Constants';
+import type { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
+
+function unitAt(faction: Faction, depth: number): TroopUnit {
+    return { faction, depth, lane: 1 } as unknown as TroopUnit;
+}
+
+export function createSiegeSceneSuite(): TestSuite {
+    const suite = new TestSuite('SiegeScene (攻城戰最小版 PROG-2-1589)');
+    const siege = { battleTactic: BattleTactic.Siege } as never;
+    const normal = { battleTactic: BattleTactic.Normal } as never;
+
+    suite.test('攻城戰對應 siege 場景', () => {
+        assert.equals('siege', resolveBattleSceneMode(BattleTactic.Siege));
+    });
+
+    suite.test('城牆地利：敵方 depth ≤ 1 防禦 ×1.5，城外與我方不加', () => {
+        assert.equals(SIEGE_WALL_DEFENSE_MULTIPLIER, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 0), siege));
+        assert.equals(SIEGE_WALL_DEFENSE_MULTIPLIER, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 1), siege));
+        assert.equals(1, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 2), siege));
+        assert.equals(1, sceneDefenseMultiplierOf(unitAt(Faction.Player, 0), siege));
+    });
+
+    suite.test('衝車：我方工兵攻城 ×2，敵方不加', () => {
+        assert.equals(SIEGE_RAM_MULTIPLIER, sceneSiegeDamageMultiplierOf(unitAt(Faction.Player, 0), siege));
+        assert.equals(1, sceneSiegeDamageMultiplierOf(unitAt(Faction.Enemy, 7), siege));
+    });
+
+    suite.test('非攻城場景倍率皆為 1', () => {
+        assert.equals(1, sceneDefenseMultiplierOf(unitAt(Faction.Enemy, 0), normal));
+        assert.equals(1, sceneSiegeDamageMultiplierOf(unitAt(Faction.Player, 0), normal));
+    });
+
+    return suite;
+}

@@ -9,7 +9,7 @@ import type { TroopUnit } from '../../core/models/TroopUnit';
 import { fieldTallySetMods, type TallySetMember } from '../../core/systems/TigerTallySetBonus';
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from './BattleTurnManager';
-import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
+import { resolveBattleTacticBehavior, sceneDefenseMultiplierOf } from '../shared/BattleTacticBehavior';
 import { canTargetUnderStealth, isHiddenOnTile, isRangedAttack } from '../shared/StealthTile';
 import { weatherRangedHitDelta, weatherRangedRangeDelta } from '../../core/systems/WeatherTacticRestriction';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
@@ -101,7 +101,8 @@ export class BattleCombatResolver {
   /** 虎符部隊的防禦乘數：星級 × 同陣營在場 Set 的防禦加成（PROG-2-0574）× 被動防禦乘數（虎痴符，PROG-2-1444）；非虎符單位恆為 1 */
   public getTallyDefenseMod(unit: TroopUnit): number {
     // 暴躁（PROG-2-1586 暫定）：防禦 −3%/級，對全隊生效
-    const fury = furyModifiersOf(this.context.state.getGeneral?.(unit.faction)?.genes).defense;
+    const furyBase = furyModifiersOf(this.context.state.getGeneral?.(unit.faction)?.genes).defense;
+    const fury = furyBase * sceneDefenseMultiplierOf(unit, this.context.state);
     if (!unit.tallyId) return fury;
     return fury * unit.tallyStarMultiplier * this.tallySetMods(unit.faction).defMod * tallyDefenseMultiplierOf(unit)
       * tallyRearguardDefenseMultiplierOf(unit, this.context.state.units.values());

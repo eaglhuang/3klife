@@ -69,6 +69,8 @@ export enum BattleTactic {
     RockSlide    = "rock-slide",
     AmbushAttack = "ambush-attack",
     NightRaid    = "night-raid",
+    /** 攻城戰（PROG-2-1589 最小版，暫定） */
+    Siege        = "siege",
 }
 
 export enum TurnPhase {
