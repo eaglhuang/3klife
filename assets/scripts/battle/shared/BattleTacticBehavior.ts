@@ -69,8 +69,15 @@ export interface BattleTacticBehavior {
   getCritBonus?(attacker: TroopUnit, state: BattleState): number;
   /** 場景對單位承受火焰傷害的倍率（火格、火計）；沒有則為 1 */
   getFireDamageTakenMultiplier?(unit: TroopUnit, state: BattleState): number;
+  /** 場景對單位防禦的倍率（攻城戰城牆地利）；沒有則為 1 */
+  getDefenseMultiplier?(unit: TroopUnit, state: BattleState): number;
+  /** 場景對工兵攻城傷害的倍率（攻城戰衝車）；沒有則為 1 */
+  getSiegeDamageMultiplier?(unit: TroopUnit, state: BattleState): number;
 }
 
+export const SIEGE_WALL_MAX_DEPTH = 1;
+export const SIEGE_WALL_DEFENSE_MULTIPLIER = 1.5;
+export const SIEGE_RAM_MULTIPLIER = 2;
 const FLOOD_DEPTH_START = 2;
 const FLOOD_DEPTH_END = 4;
 export const FLOOD_ATTACK_PUSH_LANE_DELTA = -1;
@@ -407,6 +414,15 @@ export const BATTLE_TACTIC_BEHAVIOR_REGISTRY: Readonly<Record<BattleSceneMode, B
       && state.sceneFlags.stealthOpenTurns > 0
     ),
   },
+  // 攻城戰最小版（PROG-2-1589，暫定）：敵方守城（城牆區 depth ≤ 1）防禦 ×1.5、我方工兵衝車攻城 ×2。
+  // 城牆不阻擋移動：敵方前線 depth 為 0，阻擋格會讓守軍也無法出城而卡死
+  siege: {
+    ...DEFAULT_BATTLE_TACTIC_BEHAVIOR,
+    getDefenseMultiplier: (unit: TroopUnit) => (
+      unit.faction === Faction.Enemy && unit.depth <= SIEGE_WALL_MAX_DEPTH ? SIEGE_WALL_DEFENSE_MULTIPLIER : 1
+    ),
+    getSiegeDamageMultiplier: (unit: TroopUnit) => (unit.faction === Faction.Player ? SIEGE_RAM_MULTIPLIER : 1),
+  },
   night: {
     ...DEFAULT_BATTLE_TACTIC_BEHAVIOR,
     applyStartOfBattle: (state: BattleState) => {
@@ -439,4 +455,13 @@ export function resolveBattleTacticBehavior(battleTactic: BattleTactic): BattleT
 /** 目前場景下單位承受火焰傷害的倍率（PROG-2-1459）；場景沒有規則時為 1 */
 export function sceneFireDamageTakenOf(unit: TroopUnit, state: BattleState): number {
   return resolveBattleTacticBehavior(state.battleTactic).getFireDamageTakenMultiplier?.(unit, state) ?? 1;
+}
+/** 目前場景下單位防禦倍率（攻城戰城牆地利，PROG-2-1589）；場景沒有規則時為 1 */
+export function sceneDefenseMultiplierOf(unit: TroopUnit, state: BattleState): number {
+  return resolveBattleTacticBehavior(state.battleTactic).getDefenseMultiplier?.(unit, state) ?? 1;
+}
+
+/** 目前場景下工兵攻城傷害倍率（攻城戰衝車，PROG-2-1589）；場景沒有規則時為 1 */
+export function sceneSiegeDamageMultiplierOf(unit: TroopUnit, state: BattleState): number {
+  return resolveBattleTacticBehavior(state.battleTactic).getSiegeDamageMultiplier?.(unit, state) ?? 1;
 }
