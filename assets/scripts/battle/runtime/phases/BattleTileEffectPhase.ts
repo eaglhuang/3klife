@@ -9,7 +9,7 @@ import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
 import { sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
 import { applyTallyDefection, applyTallyTeamMoraleAura } from '../../shared/TallyPassive';
-import { addStageSalvage, FIRE_RAID_TILE_NOTE, ROCK_SLIDE_TILE_NOTE, rollFirePlunderGain, rollRockBreakGain } from '../../shared/StageSalvage';
+import { addStageSalvage, FIRE_RAID_TILE_NOTE, luckSalvageMultiplierOf, ROCK_SLIDE_TILE_NOTE, rollFirePlunderGain, rollRockBreakGain, scaleSalvageGain } from '../../shared/StageSalvage';
 
 export interface BattleTileEffectPhaseContext {
   readonly state: BattleState;
@@ -151,9 +151,14 @@ function breakRockSlideTiles(context: BattleTileEffectPhaseContext, svc: ReturnT
       const effect = context.state.getTileEffect(unit.lane, depth);
       if (effect?.state !== 'hazard-rock' || effect.notes !== ROCK_SLIDE_TILE_NOTE) continue;
       context.state.removeTileEffect(unit.lane, depth);
-      addStageSalvage(context.state.stageSalvage, rollRockBreakGain(random));
+      addStageSalvage(context.state.stageSalvage, scaleSalvageGain(rollRockBreakGain(random), playerLuckMultiplier(context)));
     }
   }
+}
+
+/** 我方主將運勢的掠奪倍率（PROG-2-1606） */
+function playerLuckMultiplier(context: BattleTileEffectPhaseContext): number {
+  return luckSalvageMultiplierOf(context.state.getGeneral?.(Faction.Player)?.luk);
 }
 
 function plunderFireRaidTiles(context: BattleTileEffectPhaseContext, svc: ReturnType<typeof services>): void {
@@ -166,6 +171,6 @@ function plunderFireRaidTiles(context: BattleTileEffectPhaseContext, svc: Return
     const key = `${unit.lane},${unit.depth}`;
     if (context.state.plunderedTiles.has(key)) continue;
     context.state.plunderedTiles.add(key);
-    addStageSalvage(context.state.stageSalvage, rollFirePlunderGain(random));
+    addStageSalvage(context.state.stageSalvage, scaleSalvageGain(rollFirePlunderGain(random), playerLuckMultiplier(context)));
   }
 }

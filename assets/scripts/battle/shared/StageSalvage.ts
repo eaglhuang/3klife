@@ -26,6 +26,25 @@ export const ROCK_BREAK_ARMOR_MATERIAL = 5;
 export const ROCK_BREAK_GENERAL_EXP = 50;
 export const ROCK_SLIDE_TILE_NOTE = 'scene-gambit:rock-slide';
 
+/** 運勢掠奪加成（戰場部署系統「高運勢角色更適合承接掠奪、寶物與事件型戰利品掉落」，PROG-2-1606 暫定）：每點 +0.2%，運勢上限 100 → +20% */
+export const LUCK_SALVAGE_BONUS_PER_POINT = 0.002;
+export const LUCK_SALVAGE_MAX_LUCK = 100;
+
+export function luckSalvageMultiplierOf(luk: number | null | undefined): number {
+    const clamped = Math.max(0, Math.min(LUCK_SALVAGE_MAX_LUCK, luk ?? 0));
+    return 1 + clamped * LUCK_SALVAGE_BONUS_PER_POINT;
+}
+
+/** 掉落依倍率放大（無條件捨去）；倍率 1 原樣回傳 */
+export function scaleSalvageGain(gain: Partial<SalvageTotals>, multiplier: number): Partial<SalvageTotals> {
+    if (multiplier === 1) return gain;
+    const scaled: Partial<SalvageTotals> = {};
+    for (const key of Object.keys(gain) as (keyof SalvageTotals)[]) {
+        scaled[key] = Math.floor((gain[key] ?? 0) * multiplier);
+    }
+    return scaled;
+}
+
 export function emptyStageSalvage(): SalvageTotals {
     return { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 };
 }
