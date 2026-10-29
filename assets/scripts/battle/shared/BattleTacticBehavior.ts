@@ -9,6 +9,16 @@ import { floodDepthBonus } from '../../core/systems/WeatherTacticRestriction';
 import { tileStateRuleOf } from './TileStateRules';
 import { fateBlessingLevel, fateSuccessChance, rollEventSuccess, ROCK_SLIDE_BASE_SUCCESS, type FateHeldGene } from '../../core/systems/FateBlessing';
 import { ROCK_SLIDE_TILE_NOTE } from './StageSalvage';
+import { allocateSceneTiles, SCENE_TILE_PRESETS } from './SceneTilePresets';
+
+/**
+ * 峽谷落石的 Tile 鋪設（PROG-2-1585 暫定）：比例只套用中間兩排（depth 3–4，共 10 格），兩側出生區不鋪。
+ * 落石依序放在 depth 4 中央三列、再往兩側；第 5 列（lane 4）保留通道。碎石格（強制後退）放在落石前一排。
+ */
+const ROCK_SLIDE_ZONE_CELLS = 10;
+const ROCK_SLIDE_ROCK_ORDER: ReadonlyArray<readonly [number, number]> = [[1, 4], [2, 4], [3, 4], [0, 4], [0, 3], [4, 3]];
+const ROCK_SLIDE_DEBRIS_ORDER: ReadonlyArray<readonly [number, number]> = [[1, 3], [2, 3], [3, 3], [4, 4]];
+export const ROCK_DEBRIS_TILE_NOTE = 'scene-gambit:rock-debris';
 
 export interface BattleDamageAdjustment {
   damage: number;
@@ -259,16 +269,29 @@ function applyRockSlideTerrain(state: BattleState, context: BattleStartContext):
   // 天命加護（FBR-10）：落石成功率 = 基礎 85% + 施放者天命加成，上限 100%；亂數走戰場亂數源
   const fateLevel = fateBlessingLevel(context.casterGenes);
   if (!rollEventSuccess(fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, fateLevel), context.random())) return;
-  for (let lane = 1; lane <= 3; lane++) {
+  const counts = allocateSceneTiles(SCENE_TILE_PRESETS, 'SCENE_CANYON_ROCK', ROCK_SLIDE_ZONE_CELLS);
+  for (const [lane, depth] of ROCK_SLIDE_ROCK_ORDER.slice(0, counts.hazard)) {
     state.setTileEffect({
-      id: `rock-${lane}-4`,
+      id: `rock-${lane}-${depth}`,
       lane,
-      depth: 4,
+      depth,
       state: 'hazard-rock',
       blocksMovement: true,
       forcedMoveDirection: 'backward',
       forcedMoveSteps: 1,
       notes: ROCK_SLIDE_TILE_NOTE,
+    });
+  }
+  for (const [lane, depth] of ROCK_SLIDE_DEBRIS_ORDER.slice(0, counts.forceMove)) {
+    state.setTileEffect({
+      id: `rock-debris-${lane}-${depth}`,
+      lane,
+      depth,
+      state: 'hazard-rock',
+      blocksMovement: false,
+      forcedMoveDirection: 'backward',
+      forcedMoveSteps: 1,
+      notes: ROCK_DEBRIS_TILE_NOTE,
     });
   }
 }

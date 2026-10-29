@@ -1,6 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { allocateSceneTiles, validateSceneTilePresets, type SceneTilePresetTable } from '../assets/scripts/battle/shared/SceneTilePresets';
+import { allocateSceneTiles, SCENE_TILE_PRESETS, validateSceneTilePresets, type SceneTilePresetTable } from '../assets/scripts/battle/shared/SceneTilePresets';
+import { BattleState } from '../assets/scripts/battle/models/BattleState';
+import { resolveBattleTacticBehavior } from '../assets/scripts/battle/shared/BattleTacticBehavior';
+import { BattleTactic } from '../assets/scripts/core/config/Constants';
 import { TestSuite, assert } from './TestRunner';
 
 function loadTable(): SceneTilePresetTable {
@@ -17,6 +20,21 @@ export function createSceneTilePresetsSuite(): TestSuite {
     assert.equals(60, table.presets.SCENE_FOREST_AMBUSH.stealth ?? 0);
     assert.equals(40, table.presets.SCENE_CANYON_ROCK.hazard ?? 0);
     assert.equals(50, table.presets.SCENE_FLOOD.forceMove ?? 0);
+  });
+
+  suite.test('內建表與 JSON 檔一致', () => {
+    assert.equals(JSON.stringify(loadTable().presets), JSON.stringify(SCENE_TILE_PRESETS.presets));
+  });
+
+  suite.test('峽谷落石開場：中間兩排 4 塊落石（阻擋）＋ 3 格碎石（不阻擋、強制後退），lane 4 depth 4 保持通行', () => {
+    const state = new BattleState();
+    resolveBattleTacticBehavior(BattleTactic.RockSlide).applyStartOfBattle(state, { random: () => 0, casterGenes: [] });
+    const rocks = [[1, 4], [2, 4], [3, 4], [0, 4]].filter(([l, d]) => state.getTileEffect(l, d)?.blocksMovement === true);
+    assert.equals(4, rocks.length);
+    const debris = [[1, 3], [2, 3], [3, 3]].filter(([l, d]) => state.getTileEffect(l, d)?.blocksMovement === false);
+    assert.equals(3, debris.length);
+    assert.equals(null, state.getTileEffect(4, 4));
+    assert.equals(null, state.getTileEffect(0, 3));
   });
 
   suite.test('驗證抓出合計不為 100 與未知種類', () => {
