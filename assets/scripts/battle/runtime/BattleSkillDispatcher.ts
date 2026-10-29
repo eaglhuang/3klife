@@ -30,6 +30,7 @@ import {
 import { services } from '../../core/managers/ServiceLoader';
 import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
 import { sceneFireDamageTakenOf } from '../shared/BattleTacticBehavior';
+import { COMBO_ULTIMATE_MULTIPLIER, findComboUltimate } from '../shared/ComboUltimate';
 import { ANCESTRAL_SPIRIT_LOG, ancestralSpiritAttackOf, isOutnumbered } from '../shared/AncestralSpirit';
 
 export interface GeneralSkillCastOptions {
@@ -57,6 +58,8 @@ export interface BattleSkillDispatcherContext {
   getUltimateDamageDef?(ultimateId: string): { slot?: number; scalingStat?: string | null } | undefined;
   /** 奧義 base_power 表（NumericalConfig.Ult_Base_Power）；未載入時不套用（PROG-2-0927） */
   getUltBasePowerTable?(): Readonly<Record<string, number>> | undefined;
+  /** 部隊的來源武將模板 id（虎符 sourceTemplateId）；組合奧義判定搭檔用（PROG-2-1588） */
+  getUnitSourceGeneralId?(unitId: string): string | null;
 }
 
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
@@ -224,8 +227,15 @@ export class BattleSkillDispatcher {
         battleLogLines: [vitalityCheck.reason],
       };
     }
-    const ultimateRequest = this.withUltimateAttack(request);
-    const result = this.skillExecutor.execute(ultimateRequest, this.buildBattleSkillExecutionContext());
+    const combo = this.findCombo(request);
+    const baseRequest = this.withUltimateAttack(request);
+    const ultimateRequest = combo && baseRequest.ultimateAttack != null
+      ? { ...baseRequest, ultimateAttack: Math.floor(baseRequest.ultimateAttack * COMBO_ULTIMATE_MULTIPLIER) }
+      : baseRequest;
+    const executed = this.skillExecutor.execute(ultimateRequest, this.buildBattleSkillExecutionContext());
+    const result = combo && ultimateRequest !== baseRequest && executed.applied
+      ? { ...executed, battleLogLines: [`組合奧義：${combo.name}（威力 ×${COMBO_ULTIMATE_MULTIPLIER}）`, ...executed.battleLogLines] }
+      : executed;
     if (result.applied && request.sourceType === SkillSourceType.Ultimate) {
       this.spendUltimateCost(request);
       if (usedKey) this.usedUltimates.add(usedKey);
@@ -248,6 +258,19 @@ export class BattleSkillDispatcher {
     const ultLevel = caster.ultimateSlots.find((slot) => slot.ultimateId === request.ultimateId)?.ultLevel;
     const attack = ultimateAttackOf(def.slot, table, def.scalingStat, { str: caster.str, int: caster.int }, ultLevel);
     return attack === null ? request : { ...request, ultimateAttack: attack };
+  }
+
+  /** 組合奧義（PROG-2-1588 暫定）：施放者是主將，且己方存活部隊的來源武將是組合搭檔 */
+  private findCombo(request: BattleSkillRequest) {
+    if (request.sourceType !== SkillSourceType.Ultimate || !this.context.getUnitSourceGeneralId) return null;
+    const general = this.resolveCasterGeneral(request);
+    if (!general) return null;
+    const allies: Array<string | null> = [];
+    for (const unit of this.context.state.units.values()) {
+      if (unit.faction !== general.faction || unit.isDead()) continue;
+      allies.push(this.context.getUnitSourceGeneralId(unit.id));
+    }
+    return findComboUltimate(general.id, allies);
   }
 
   /**
