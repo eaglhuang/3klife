@@ -49,6 +49,8 @@ export interface TallyPassiveSpec {
   evasionBonus?: number;
   /** 免疫恐懼（先登）：敵方恐懼光環對此部隊不生效（PROG-2-1513） */
   fearImmune?: boolean;
+  /** 攻城倍率（先登 ×2，PROG-2-1579 暫定）：位於前線時每回合攻城，傷害為基礎攻城值 × 此倍率 */
+  siegeMultiplier?: number;
   /** 恐懼衝鋒（鐵騎）：發動部隊攻擊時，周圍 radius 格內（含斜角）敵軍士氣 -moralePenalty（PROG-2-1514） */
   fearCharge?: { radius: number; moralePenalty: number };
   /** 士氣不降（大喬）：敵方扣士氣效果對此部隊不生效（PROG-2-1525） */
@@ -127,7 +129,7 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   // 常山女：迴避 +30%（規格數字；治療友軍未做）
   'tiger-tally-changshan-nu': { evasionBonus: 0.3, healsAllies: true },
   // 先登：免疫恐懼（PROG-2-1513）；攻城傷害 ×2 待攻城戰落地再接
-  'tiger-tally-xian-deng': { fearImmune: true },
+  'tiger-tally-xian-deng': { fearImmune: true, siegeMultiplier: 2 },
   // 鐵騎：恐懼衝鋒，攻擊時周圍 1 格敵軍士氣 -20（PROG-2-1514；範圍暫定 1 格）
   'tiger-tally-tie-qi': { fearCharge: { radius: 1, moralePenalty: 20 } },
   // 大喬：士氣不降（PROG-2-1525）；全隊魅力 +20 因戰場部隊沒有魅力屬性未做
@@ -262,6 +264,11 @@ export function tallyIgniteCellsOf(attacker: TroopUnit, defender: TroopUnit): Ar
 }
 
 /** 此部隊是否帶治療友軍被動（常山女）；沒有時為 false */
+/** 攻城倍率：先登回 2；無此被動回 1（PROG-2-1579 暫定） */
+export function tallySiegeMultiplierOf(unit: TroopUnit): number {
+  return passiveOf(unit)?.siegeMultiplier ?? 1;
+}
+
 export function tallyHealsAllies(unit: TroopUnit): boolean {
   return passiveOf(unit)?.healsAllies === true;
 }
