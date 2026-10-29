@@ -115,7 +115,8 @@ export const LEGACY_TALLY_BY_GENERAL_TEMPLATE: Readonly<Record<string, string>> 
     'taishi-ci': 'tiger-tally-dan-yang',
     'ma-teng': 'tiger-tally-tie-qi',
     'wang-ping': 'tiger-tally-wu-dang',
-    'meng-huo': 'tiger-tally-teng-jia',
+    // 規格裁決（選項 A）：藤甲兵歸兀突骨；孟獲改產南蠻勇士（尚無卡片，暫不對照）（PROG-2-1602）
+    'wu-tu-gu': 'tiger-tally-teng-jia',
     'yuan-shao': 'tiger-tally-xian-deng',
     'sun-quan': 'tiger-tally-jie-fan',
     'da-qiao': 'tiger-tally-da-qiao',
