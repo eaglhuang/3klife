@@ -94,6 +94,9 @@ export class TroopUnit {
   public moraleTurns = 0;
   /** 本回合自動前進的格數（神威符強擊突刺，PROG-2-1573）；每次移動階段開始歸零 */
   public chargeCells = 0;
+  /** 連擊目標與層數（工甲符工甲連弩，PROG-2-1581）：連續攻擊同一目標時累加，換目標歸零 */
+  public comboTargetId: string | null = null;
+  public comboStreak = 0;
 
   /** 單騎破陣（PROG-2-0794）：回合開始重算，無相鄰友軍時 ×1.3；預設 1 不影響既有數值 */
   public soloBreachMultiplier = 1;
