@@ -45,6 +45,18 @@ export function scaleSalvageGain(gain: Partial<SalvageTotals>, multiplier: numbe
     return scaled;
 }
 
+/**
+ * 統率抗地形懲罰（戰場部署系統「高意志／韌性角色更適合抵抗地圖型 Debuff 與特殊環境懲罰」，PROG-2-1607 暫定）：
+ * 武將沒有意志／韌性屬性，暫以統率代表；每點減 0.2% 地形傷害，統率 100 封頂 −20%。
+ */
+export const LEADERSHIP_HAZARD_RESIST_PER_POINT = 0.002;
+export const LEADERSHIP_HAZARD_MAX = 100;
+
+export function hazardDamageTakenOf(lea: number | null | undefined): number {
+    const clamped = Math.max(0, Math.min(LEADERSHIP_HAZARD_MAX, lea ?? 0));
+    return 1 - clamped * LEADERSHIP_HAZARD_RESIST_PER_POINT;
+}
+
 export function emptyStageSalvage(): SalvageTotals {
     return { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 };
 }

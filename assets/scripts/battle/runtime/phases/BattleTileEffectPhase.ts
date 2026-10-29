@@ -9,7 +9,7 @@ import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
 import { sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
 import { applyTallyDefection, applyTallyTeamMoraleAura } from '../../shared/TallyPassive';
-import { addStageSalvage, FIRE_RAID_TILE_NOTE, luckSalvageMultiplierOf, ROCK_SLIDE_TILE_NOTE, rollFirePlunderGain, rollRockBreakGain, scaleSalvageGain } from '../../shared/StageSalvage';
+import { addStageSalvage, FIRE_RAID_TILE_NOTE, hazardDamageTakenOf, luckSalvageMultiplierOf, ROCK_SLIDE_TILE_NOTE, rollFirePlunderGain, rollRockBreakGain, scaleSalvageGain } from '../../shared/StageSalvage';
 
 export interface BattleTileEffectPhaseContext {
   readonly state: BattleState;
@@ -69,7 +69,9 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
 
     // 火燒偷襲戰我方火抗（PROG-2-1459）：火格傷害依場景倍率減免
     const fireTaken = effect.state === 'hazard-fire' ? sceneFireDamageTakenOf(unit, context.state) : 1;
-    const tileDamage = fireTaken === 1 ? effect.damagePerTurn : Math.max(1, Math.floor(effect.damagePerTurn * fireTaken));
+    // 統率抗地形懲罰（PROG-2-1607 暫定）：所屬陣營主將統率越高，地形傷害越低
+    const taken = fireTaken * hazardDamageTakenOf(context.state.getGeneral?.(unit.faction)?.lea);
+    const tileDamage = taken === 1 ? effect.damagePerTurn : Math.max(1, Math.floor(effect.damagePerTurn * taken));
     context.applyUnitDamage(unit, tileDamage, null, {
       attackerId: null,
       attackerLane: null,
