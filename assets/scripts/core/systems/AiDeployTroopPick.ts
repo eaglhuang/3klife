@@ -13,7 +13,7 @@
  *
  * Unity 對照：像 Spawner 的兵種挑選器，先問「要不要針對玩家」，不針對就從自己的偏好清單抽。
  */
-import { TroopType } from '../../shared/CommonEnums';
+import { BattleTactic, TroopType } from '../../shared/CommonEnums';
 import type { AiIqLevel } from './AiDifficultyTable';
 import type { AiTroopCode } from './AiProfiles';
 
@@ -65,4 +65,27 @@ export function pickAiDeployTroop(input: AiDeployTroopInput): TroopType | null {
         .filter((type): type is TroopType => type !== undefined);
     const preferred = affordable.filter(type => preferredTypes.includes(type));
     return pickRandom(preferred.length > 0 ? preferred : affordable, random);
+}
+
+/**
+ * 場景部署偏好（戰場部署系統 Tile-State preset 權威表「對部署的直接影響」，PROG-2-1605，兵種對應暫定）。
+ * 敵將沒有 Profile 部署偏好時才套用；剋制判定照舊優先。
+ */
+export const SCENE_DEPLOY_PREFERENCE: Readonly<Partial<Record<BattleTactic, AiDeployPreference>>> = {
+    // 森林埋伏：優先機動與伏擊單位，不鼓勵早交遠程
+    [BattleTactic.AmbushAttack]: { preferredTroops: ['CAVALRY', 'INFANTRY'], preferCounter: false },
+    // 夜襲：保留高爆發兵給營帳與主將擊殺窗口
+    [BattleTactic.NightRaid]: { preferredTroops: ['CAVALRY', 'PIKE'], preferCounter: false },
+    // 峽谷落石：耐打前排與擊退單位
+    [BattleTactic.RockSlide]: { preferredTroops: ['SHIELD', 'PIKE'], preferCounter: false },
+    // 水淹七軍：減少低適性騎兵投入
+    [BattleTactic.FloodAttack]: { preferredTroops: ['INFANTRY', 'SHIELD', 'ARCHER'], preferCounter: false },
+    // 火燒偷襲：高機動單位，避免低韌性精銳一次壓上
+    [BattleTactic.FireAttack]: { preferredTroops: ['CAVALRY', 'ARCHER'], preferCounter: false },
+};
+
+/** 敵將 Profile 偏好優先；沒有時用場景偏好；都沒有回 null */
+export function resolveAiDeployPreference(profile: AiDeployPreference | null | undefined, battleTactic: BattleTactic | null | undefined): AiDeployPreference | null {
+    if (profile) return profile;
+    return (battleTactic ? SCENE_DEPLOY_PREFERENCE[battleTactic] : undefined) ?? null;
 }

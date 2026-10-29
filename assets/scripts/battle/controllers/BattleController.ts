@@ -1,4 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
+import { resolveAiDeployPreference } from '../../core/systems/AiDeployTroopPick';
 import {
   EVENT_NAMES,
   Faction,
@@ -287,7 +288,8 @@ export class BattleController {
     // 敵將 Profile 路線策略（PROG-2-1463）：沒有時 EnemyAI 隨機選路
     this.enemyAi.laneStrategy = enemyGeneral.aiLaneStrategy ?? null;
     // 敵將 Profile 部署兵種偏好與 IQ（PROG-2-1468）：IQ 由 configureAiDifficulty 寫入
-    this.enemyAi.deployPreference = enemyGeneral.aiDeployPreference ?? null;
+    // 沒有 Profile 偏好時依場景偏好出兵（PROG-2-1605）
+    this.enemyAi.deployPreference = resolveAiDeployPreference(enemyGeneral.aiDeployPreference, battleTactic);
     this.enemyAi.iq = null;
     this.enemyAi.tallyTroopTypes = [];
     this.flowStateMachine.reset();
