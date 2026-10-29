@@ -73,6 +73,8 @@ export interface TallyPassiveSpec {
   chargeDamage?: { perCell: number; maxCells: number };
   /** 無視地形（神威符）：格子的減移動效果（泥濘、陷阱等）對此部隊無效（PROG-2-1576） */
   ignoresTerrainSlow?: boolean;
+  /** 巨型踐踏（南蠻）：前方是敵方步兵且後一格空著時直接越過（PROG-2-1578） */
+  tramplesInfantry?: boolean;
 }
 
 /** 虎符模板 id → 被動規格；暫定數字，規格未寫的欄位以此為準 */
@@ -131,7 +133,7 @@ export const TALLY_PASSIVE_BY_TEMPLATE: Readonly<Record<string, TallyPassiveSpec
   // 大喬：士氣不降（PROG-2-1525）；全隊魅力 +20 因戰場部隊沒有魅力屬性未做
   'tiger-tally-da-qiao': { moraleNoDecrease: true },
   // 南蠻：巨型踐踏濺射，目標周圍 1 格敵軍受 50%（PROG-2-1527 暫定數字）；無視輕型步兵阻擋未做
-  'tiger-tally-nan-man': { splash: { radius: 1, ratio: 0.5 } },
+  'tiger-tally-nan-man': { splash: { radius: 1, ratio: 0.5 }, tramplesInfantry: true },
   // 惡來符：捨命護主，替周圍 1 格友軍承傷；血低防高，空血時防禦 ×2（PROG-2-1530 暫定數字）
   // 都督符：火燒連營，普攻引燃目標及周圍 1 格（PROG-2-1531）
   'tiger-tally-du-du-fu': { igniteOnAttack: { radius: 1 } },
@@ -376,4 +378,9 @@ export function applyTallyDefection(
 /** 格子移動修正：無視地形的部隊只吃加成、不吃減速 */
 export function tallyTileMoveDeltaOf(unit: TroopUnit, delta: number): number {
   return passiveOf(unit)?.ignoresTerrainSlow ? Math.max(0, delta) : delta;
+}
+
+/** 巨型踐踏：此部隊能否越過擋在前方的這支部隊（敵方步兵才行） */
+export function canTrampleOver(unit: TroopUnit, blocker: TroopUnit): boolean {
+  return passiveOf(unit)?.tramplesInfantry === true && blocker.faction !== unit.faction && blocker.type === TroopType.Infantry;
 }
