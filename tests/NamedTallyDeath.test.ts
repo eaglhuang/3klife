@@ -53,7 +53,7 @@ export function createNamedTallyDeathSuite(): TestSuite {
     suite.test('南蠻系依規格裁決：兀突骨→藤甲、木鹿大王→南蠻，孟獲不產藤甲（PROG-2-1602）', () => {
         assert.equals('tiger-tally-teng-jia', resolveTallyTemplateId('wu-tu-gu'));
         assert.equals('tiger-tally-nan-man', resolveTallyTemplateId('mu-lu-da-wang'));
-        assert.equals('meng-huo', resolveTallyTemplateId('meng-huo'));
+        assert.equals('tiger-tally-nan-man-yong-shi', resolveTallyTemplateId('meng-huo')); // PROG-2-1617 改產南蠻勇士
     });
 
     return suite;
