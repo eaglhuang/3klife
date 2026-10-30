@@ -23,10 +23,10 @@ import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from 
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS, type AddGeneralsResult } from '../../core/managers/GameSession';
-import { formatModeLabel } from '../../core/systems/GameClock';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
-import { seasonDisplayText, seasonEffectHintText } from '../core/SeasonTexts';
+import { seasonDisplayText } from '../core/SeasonTexts';
+import { SeasonHudController } from '../core/SeasonHudController';
 import { buildSandtableStatusLabel } from '../../core/systems/SandtableStatus';
 import { buildYearReportTexts, withYearReportFallback, type YearReport } from '../../core/systems/YearReport';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
@@ -52,7 +52,6 @@ import { buildFactorHexView, factorHexInputsFromGenes, newlyLitFactorColors, typ
 import { FactorHexGraphic } from '../components/FactorHexGraphic';
 import type { MentorCardData, MentorCardTab } from '../../core/systems/MentorCardTabs';
 import { applyFlowView, applyNurtureFlowView } from '../core/NurtureFlowViewApplier';
-import { buildCountdownIconFlowView } from '../../core/systems/CountdownIconView';
 import { BondingSetupController } from '../core/BondingSetupController';
 import { withBreedFallback, type BreedTextLookup } from '../core/BreedingTexts';
 import { BloodlineTreePanel } from '../panels/BloodlineTreePanel';
@@ -257,7 +256,7 @@ export class LobbyScene extends Component {
     private _lobbyMainHost: UIScreenPreviewHost | null = null;
     private _shopMainHost: UIScreenPreviewHost | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
-    private _seasonHudHost: UIScreenPreviewHost | null = null;
+    private _seasonHud: SeasonHudController<UIScreenPreviewHost> | null = null;
     private _cityHubHost: UIScreenPreviewHost | null = null;
     private _cityHubCategory: LobbyCategoryId | null = null;
     private _cityHubAvatarId: string | null = null;
@@ -726,10 +725,16 @@ export class LobbyScene extends Component {
 
     /** 季度 HUD：以 UCUF JSON（lobby-season-hud-screen）執行期組裝，顯示「第 N 年 M 季」與推進入口 */
     private async _mountSeasonHud(): Promise<void> {
-        this._seasonHudHost = await this._mountPreviewScreenHost('SeasonHudHost', 'lobby-season-hud-screen', [
-            { buttonId: 'btnAdvanceSeason', handler: () => { void this._onClickAdvanceSeason(); } },
-        ]);
-        this._refreshSeasonHud();
+        this._seasonHud = new SeasonHudController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('SeasonHudHost', 'lobby-season-hud-screen', bindings),
+            gameTime: () => services().session.gameTime,
+            countdown: () => services().session.countdown,
+            now: () => Date.now(),
+            lookup: (key: string, ...args: string[]): string => services().i18n.t(key, ...args),
+            onAdvance: () => { void this._onClickAdvanceSeason(); },
+            afterRefresh: () => this._refreshCityHub(),
+        });
+        await this._seasonHud.mount();
 
         const refresh = (): void => { this._refreshSeasonHud(); };
         const event = services().event;
@@ -751,16 +756,7 @@ export class LobbyScene extends Component {
     }
 
     private _refreshSeasonHud(): void {
-        const time = services().session.gameTime;
-        this._seasonHudHost?.binder?.setTexts({
-            seasonLabel: seasonText(time),
-            modeLabel: formatModeLabel(time.currentMode),
-            seasonEffectLabel: seasonEffectHintText((key, ...args) => services().i18n.t(key, ...args), time.currentSeason),
-        });
-        const countdownIcon = buildCountdownIconFlowView(services().session.countdown, Date.now());
-        this._seasonHudHost?.binder?.setTexts(countdownIcon.texts);
-        this._seasonHudHost?.binder?.setActives(countdownIcon.actives);
-        this._refreshCityHub();
+        this._seasonHud?.refresh();
     }
 
     /**
@@ -4446,9 +4442,10 @@ export class LobbyScene extends Component {
                     GameplayNavigation: false, LobbyMainScreen_div_3: false, LobbyMainScreen_div_47: false,
                     LobbyMainScreen_nav_1: false, LobbyMainScreen_div_43: false,
                 });
-                if (this._seasonHudHost) {
-                    this._seasonHudHost.node.active = true;
-                    this._bringNodeToFront(this._seasonHudHost.node);
+                const seasonHudHost = this._seasonHud?.host;
+                if (seasonHudHost) {
+                    seasonHudHost.node.active = true;
+                    this._bringNodeToFront(seasonHudHost.node);
                     this._refreshSeasonHud();
                 }
                 if (this._cityHubHost) {
@@ -4474,8 +4471,9 @@ export class LobbyScene extends Component {
             },
             hide: () => {
                 this._lobbyMainHost!.node.active = false;
-                if (this._seasonHudHost) {
-                    this._seasonHudHost.node.active = false;
+                const seasonHudHost = this._seasonHud?.host;
+                if (seasonHudHost) {
+                    seasonHudHost.node.active = false;
                 }
                 if (this._cityHubHost) {
                     this._cityHubCategory = null;
