@@ -14,7 +14,7 @@ import { _decorator, Component, Label, Node, Sprite, UITransform,
          UIOpacity, Color, tween, Font, Widget, Layout } from 'cc';
 import { UISkinResolver, ResolvedButtonSkin } from './UISkinResolver';
 import { services } from '../../core/managers/ServiceLoader';
-import { resolveSize, DEFAULT_TRANSITION } from './UISpecTypes';
+import { resolveSize, widgetStretchSize, DEFAULT_TRANSITION } from './UISpecTypes';
 import type { UILayoutNodeSpec, UILayoutSpec, UISkinManifest, TransitionDef,
                SkinLayerDef } from './UISpecTypes';
 import { UIPreviewDiagnostics } from './UIPreviewDiagnostics';
@@ -97,8 +97,10 @@ export class UIPreviewBuilder extends Component {
         // 每次 buildScreen 前同步 i18nStrings 給 nodeFactory
         this.nodeFactory.i18nStrings = this.i18nStrings;
 
-        const designWidth  = layout.canvas.designWidth  ?? 1920;
-        const designHeight = layout.canvas.designHeight ?? 1080;
+        // 實際尺寸優先 (PROG-2-1628)
+        const hostT = this.node.getComponent(UITransform);
+        const designWidth  = hostT && hostT.width  > 0 ? hostT.width  : (layout.canvas.designWidth  ?? 1920);
+        const designHeight = hostT && hostT.height > 0 ? hostT.height : (layout.canvas.designHeight ?? 1080);
         const _tBuildScreen = UCUFLogger.perfBegin('UIPreviewBuilder.buildScreen');
 
         let rootNode: Node;
@@ -336,24 +338,7 @@ export class UIPreviewBuilder extends Component {
             case 'scroll-view': {
                 let scrollW = w;
                 let scrollH = h;
-                if (widgetDef) {
-                    if (widgetDef.left !== undefined && widgetDef.right !== undefined) {
-                        scrollW = Math.max(
-                            parentWidth
-                            - resolveSize(widgetDef.left, parentWidth)
-                            - resolveSize(widgetDef.right, parentWidth),
-                            0,
-                        );
-                    }
-                    if (widgetDef.top !== undefined && widgetDef.bottom !== undefined) {
-                        scrollH = Math.max(
-                            parentHeight
-                            - resolveSize(widgetDef.top, parentHeight)
-                            - resolveSize(widgetDef.bottom, parentHeight),
-                            0,
-                        );
-                    }
-                }
+                ({ width: scrollW, height: scrollH } = widgetStretchSize(widgetDef, parentWidth, parentHeight, scrollW, scrollH));
                 await this.nodeFactory.buildScrollList(node, spec, scrollW, scrollH);
                 break;
             }
@@ -397,24 +382,7 @@ export class UIPreviewBuilder extends Component {
             const nodeT      = node.getComponent(UITransform);
             let effectiveW = nodeT && nodeT.width  > 0 ? nodeT.width  : w;
             let effectiveH = nodeT && nodeT.height > 0 ? nodeT.height : h;
-            if (widgetDef) {
-                if (widgetDef.left !== undefined && widgetDef.right !== undefined) {
-                    effectiveW = Math.max(
-                        parentWidth
-                        - resolveSize(widgetDef.left, parentWidth)
-                        - resolveSize(widgetDef.right, parentWidth),
-                        0,
-                    );
-                }
-                if (widgetDef.top !== undefined && widgetDef.bottom !== undefined) {
-                    effectiveH = Math.max(
-                        parentHeight
-                        - resolveSize(widgetDef.top, parentHeight)
-                        - resolveSize(widgetDef.bottom, parentHeight),
-                        0,
-                    );
-                }
-            }
+            ({ width: effectiveW, height: effectiveH } = widgetStretchSize(widgetDef, parentWidth, parentHeight, effectiveW, effectiveH));
             const layoutDef = spec.layout;
             if (layoutDef) {
                 effectiveW = Math.max(

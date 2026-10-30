@@ -647,6 +647,32 @@ export function resolveSize(value: number | string | undefined, parentSize: numb
     return parentSize;
 }
 
+/** "12.5%" -> 0.125; otherwise null */
+export function percentFraction(value: number | string | undefined): number | null {
+    if (typeof value !== 'string' || !value.endsWith('%')) return null;
+    const pct = parseFloat(value);
+    return Number.isFinite(pct) ? pct / 100 : null;
+}
+
+/** Stretched size when both edges align; shared by builder and Widget (PROG-2-1628). */
+export function widgetStretchSize(
+    widgetDef: { top?: number | string; bottom?: number | string; left?: number | string; right?: number | string } | undefined,
+    parentWidth: number,
+    parentHeight: number,
+    fallbackWidth: number,
+    fallbackHeight: number,
+): { width: number; height: number } {
+    let width = fallbackWidth;
+    let height = fallbackHeight;
+    if (widgetDef?.left !== undefined && widgetDef.right !== undefined) {
+        width = Math.max(parentWidth - resolveSize(widgetDef.left, parentWidth) - resolveSize(widgetDef.right, parentWidth), 0);
+    }
+    if (widgetDef?.top !== undefined && widgetDef.bottom !== undefined) {
+        height = Math.max(parentHeight - resolveSize(widgetDef.top, parentHeight) - resolveSize(widgetDef.bottom, parentHeight), 0);
+    }
+    return { width, height };
+}
+
 // ═══════════════════════════════════════════════════════════════
 // 5. Template 型別（UI Template + Composable Widget 架構）
 // ═══════════════════════════════════════════════════════════════

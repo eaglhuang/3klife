@@ -1,6 +1,6 @@
 import { Node, Layout, Size, UITransform, Widget, Button } from 'cc';
 import type { UILayoutNodeSpec } from './UISpecTypes';
-import { resolveSize } from './UISpecTypes';
+import { resolveSize, percentFraction } from './UISpecTypes';
 
 /**
  * UIPreviewLayoutBuilder
@@ -32,10 +32,17 @@ export class UIPreviewLayoutBuilder {
     ): void {
         if (!widgetDef) return;
         const widget = node.getComponent(Widget) || node.addComponent(Widget);
-        if (widgetDef.top    !== undefined) { widget.isAlignTop    = true; widget.top    = resolveSize(widgetDef.top, parentHeight); }
-        if (widgetDef.bottom !== undefined) { widget.isAlignBottom = true; widget.bottom = resolveSize(widgetDef.bottom, parentHeight); }
-        if (widgetDef.left   !== undefined) { widget.isAlignLeft   = true; widget.left   = resolveSize(widgetDef.left, parentWidth); }
-        if (widgetDef.right  !== undefined) { widget.isAlignRight  = true; widget.right  = resolveSize(widgetDef.right, parentWidth); }
+        // 百分比交給 Widget 以比例保存（isAbsolute* = false），畫面尺寸改變時由引擎重算，
+        // 不再於建置時換成固定像素（PROG-2-1628）。
+        const edge = (value: number | string, parentSize: number, setAbs: (abs: boolean) => void): number => {
+            const frac = percentFraction(value);
+            setAbs(frac === null);
+            return frac ?? resolveSize(value, parentSize);
+        };
+        if (widgetDef.top    !== undefined) { widget.isAlignTop    = true; widget.top    = edge(widgetDef.top, parentHeight, a => { widget.isAbsoluteTop = a; }); }
+        if (widgetDef.bottom !== undefined) { widget.isAlignBottom = true; widget.bottom = edge(widgetDef.bottom, parentHeight, a => { widget.isAbsoluteBottom = a; }); }
+        if (widgetDef.left   !== undefined) { widget.isAlignLeft   = true; widget.left   = edge(widgetDef.left, parentWidth, a => { widget.isAbsoluteLeft = a; }); }
+        if (widgetDef.right  !== undefined) { widget.isAlignRight  = true; widget.right  = edge(widgetDef.right, parentWidth, a => { widget.isAbsoluteRight = a; }); }
 
         // 水平置中：hCenter = true（偏移 0）或 hCenter = number（帶偏移）
         const hc = (widgetDef as any).hCenter;
