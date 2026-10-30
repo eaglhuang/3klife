@@ -352,7 +352,7 @@ export function tallyFireDamageTakenOf(unit: TroopUnit): number {
 
 /** 此部隊是否帶七進七出（移動穿透敵格）；沒有模板 id 或沒有該被動時為 false */
 export function hasGhostMove(unit: TroopUnit): boolean {
-  const spec = unit.tallyTemplateId ? TALLY_PASSIVE_BY_TEMPLATE[unit.tallyTemplateId] : undefined;
+  const spec = passiveOf(unit);
   return spec?.ghostMove === true;
 }
 
@@ -425,7 +425,7 @@ export function tallyComboDamageMultiplierOf(attacker: TroopUnit, target: TroopU
 
 /** 遺計定遼：回傳混亂回合數與受影響的敵軍；沒有此被動時回傳 null */
 export function tallyDeathConfusionOf(dead: TroopUnit, units: Iterable<TroopUnit>): { turns: number; targets: TroopUnit[] } | null {
-  const spec = dead.tallyTemplateId ? TALLY_PASSIVE_BY_TEMPLATE[dead.tallyTemplateId]?.deathConfusion : undefined;
+  const spec = passiveOf(dead)?.deathConfusion;
   if (!spec) return null;
   const targets: TroopUnit[] = [];
   for (const unit of units) {
@@ -448,7 +448,7 @@ export function applyTallyDefection(
   const defected: TroopUnit[] = [];
   for (const owner of all) {
     if (owner.faction !== actingFaction || owner.isDead()) continue;
-    const spec = owner.tallyTemplateId ? TALLY_PASSIVE_BY_TEMPLATE[owner.tallyTemplateId]?.defectEachTurn : undefined;
+    const spec = passiveOf(owner)?.defectEachTurn;
     if (!spec) continue;
     const candidates = all.filter((u) => u.faction !== actingFaction && !u.isDead() && !isGeneralUnit(u)
       && u.maxHp > 0 && u.currentHp / u.maxHp <= spec.hpRatioMax);

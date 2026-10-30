@@ -24,8 +24,8 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 37,
-    "in_progress": 3,
+    "done": 38,
+    "in_progress": 2,
     "open": 82,
     "total": 122
   },
@@ -4543,22 +4543,22 @@
       }
     },
     {
-      "doc_id": "",
+      "doc_id": "doc_task_0410",
       "id": "PROG-2-9015",
       "title": "名將死亡虎符三項被動 ID 查表修正",
       "owner": "codex-gpt-6",
       "priority": "P2",
-      "status": "in-progress",
+      "status": "done",
       "type": "bug",
       "phase": "M6",
       "created": "2026-10-30",
       "created_by_agent": "codex-gpt-6",
-      "started_at": "2026-10-30T00:29:46+00:00",
-      "started_by_agent": "codex-gpt-6",
+      "started_at": "",
+      "started_by_agent": "",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "先以produceDeathTally與tallyBattleInfoOf產出原始名將ID重現三個真實效果入口漏接，再於hasGhostMove、tallyDeathConfusionOf、applyTallyDefection統一既有passiveOf。保持ID、數值、候選規則與亂數次數。",
+      "description": "以produceDeathTally與tallyBattleInfoOf產出原始名將ID重現三個真實效果入口漏接，再於hasGhostMove、tallyDeathConfusionOf、applyTallyDefection統一既有passiveOf。保持ID、數值、候選規則與亂數次數。",
       "related": [
         "PROG-2-1593",
         "PROG-2-1572",
@@ -4576,7 +4576,7 @@
         "assets/scripts/battle/shared/TallyPassive.ts",
         "tests/NamedTallyPassiveAlias.test.ts"
       ],
-      "notes": "2026-10-30 | 狀態: in-progress | 驗證: quick3/3紅綠pending | 變更: 基底22e50e241，codex-gpt-6官方fence分配9015；僅三處改既有passiveOf與回歸，不碰1627韌性或其他規則 | 阻塞: none",
+      "notes": "2026-10-30 | 狀態: done | 驗證: 原版紅4failed/7passed，修正綠11/11；full串行重查5458passed/3既有Cocos skipped；test及cc-check tsc均exit0零錯誤；standard11/11；scope/encoding/diff-check通過。前兩次full有SyncContract5失敗，未修改同步；原始22e50e241基底full5447passed/3skipped，單獨SyncContract9/9，時序原因尚未確證，保留日誌 | 變更: 僅三行改既有passiveOf及新增回歸；基底22e50e241，開工17d03127f；fetch確認無相關前進；不碰1627韌性或其他規則 | 阻塞: none；僅本地交付未push/PR/merge",
       "brief": {
         "style": "classic",
         "label": "",
