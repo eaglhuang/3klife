@@ -1,0 +1,61 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0123",
+      "title": "黃權武將立繪：蜀綠與石青副色謀士辨識",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為缺少正式立繪的黃權製作512×768透明全身立繪，保留蜀綠勢力主色並採未重複石青灰副色；以中年方額、寬頰、整齊短鬚與方形文官冠區隔其他蜀將。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA透明背景全身立繪，頭冠到鞋履完整",
+        "黃權採寬頰方額、中年短鬚、沉穩凝視與方形低文冠，明確區別法正寬下頜傷痕和彭羕尖臉",
+        "蜀松綠 #3C604A為基底，石青灰綠 #77837D為副色",
+        "衣袍結構清楚、避免長飄帶",
+        "頭像裁切和尺寸／alpha驗證通過"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/huang_quan_portrait.png",
+        "assets/resources/sprites/generals/avatars/huang_quan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md"
+      ],
+      "notes": "2026-10-28 | 狀態: done | 驗證: 512×768 RGBA立繪、256×256頭像與generate-general-avatars --verify 1/1通過；眼線比例0.398、臉高比例0.380 | 變更: 黃權寬頰短鬚、方形低文冠；蜀松綠#3C604A與石青灰綠#77837D登錄GNR-SHU-HQ-01 | 阻塞: Cocos Asset DB待正確工作樹刷新匯入",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

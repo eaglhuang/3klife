@@ -21,6 +21,10 @@
 - 爆量事件紀錄格式：日期、估算 token 量級、疑似原因、已採取的縮減策略、是否列為 P0。不要把整份分析全文再寫回 keep，避免二次膨脹。
 - 詳細規範文件：`docs/agent-context-budget.md (doc_ai_0025)` (doc_ai_0025)
 - 2026-04-06 現況掃描：`node tools_node/check-context-budget.js --scan-default --emit-keep-note` 估算約 `791656 tokens`，`--changed` 估算約 `429502 tokens`，兩者皆為 `hard-stop`。疑似主因：compare board / screenshot / QA 圖片被納入、`keep.md` (doc_index_0011) / `ui-quality-todo.json` / 大型 docs 被整份讀入、changed files 含大量 binary 與大型資料檔。這件事維持 P0，直到 handoff 全面改成摘要卡與路徑索引為止。
+- 2026-10-27 工作樹 `--changed` 掃描再度 `hard-stop`（估算約 40.9k tokens），風險集中於累積中的二進位立繪與大型索引；後續先改用 `--files` 限定本次必要卡片與資產，再繼續判讀。
+- 2026-10-29 立繪續製工作樹 `--changed` 掃描達 `hard-stop`（估算約 164k tokens），主要風險為既有與新增立繪 PNG 累積、大型任務/registry 檔；本輪改採 125→250px 單圖漸進檢視、結構化 diff、只讀必要任務卡與定向編碼驗證，避免把圖片或大型檔案內容載入對話；此批影像量產仍是 P0 context 風險。
+
+- 2026-10-30 立繪續製工作樹再達 `hard-stop`；精準檔案預檢發現 `assets/resources/data/generals.json` 被估算為約 `231k tokens` 的單一風險來源，後續只可用 `rg` / 定向節錄確認名冊，不可整檔讀入；影像檢查維持單張縮圖漸進流程。
 
 ## 0. UI 任務 Shard 入口（2026-04-05）
 

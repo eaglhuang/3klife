@@ -1,0 +1,61 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0410",
+      "id": "UI-1-0018",
+      "title": "拉開魏國第二批五位武將的臉部與個人配色",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-26",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-27T01:15:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "盤點典韋、許褚、張遼、司馬懿、荀彧的臉型、髮型、輪廓與色票差異；魏藍作為共同陣營錨點，為每人分配不同第二色，並讓典韋深色鐵甲保有明確魏藍識別。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "五人臉型、髮型、服裝輪廓各有明確差異",
+        "五人均以低飽和魏藍作陣營錨點，第二色配置彼此可辨",
+        "典韋保留暗鐵甲與雙戟身份，同時有清楚魏藍色塊",
+        "武將衣帶收束，不新增冗長飄帶",
+        "五人頭像裁切有效且全名冊40/40驗證通過",
+        "若有立繪或頭像檔案變更，需成功刷新 Cocos Asset DB；本輪未修改圖像資產"
+      ],
+      "deliverables": [
+        "典韋正式立繪與頭像",
+        "五位魏將的角色色票及辨識方向",
+        "UI 任務卡、shard 與名冊更新"
+      ],
+      "notes": "2026-10-27 | 狀態: in-progress | 驗證: 五張立繪512×768透明、五張頭像256×256、全名冊40/40通過；125px全身與頭部對照確認典韋、許褚、張遼、司馬懿、荀彧的臉型髮型及剪影各異 | 變更: 五人以魏藍為錨點，鐵紅、皮革麻布、銀金、冷銀炭灰、鼠尾草象牙白分流；無需重畫 | 待辦: ATM 任務卡正式收口；本卡未改圖，不需 Cocos 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

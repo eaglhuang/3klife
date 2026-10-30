@@ -1,0 +1,86 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0202",
+      "title": "廖立立繪與頭像：蘆綠與墨青蜀國文官配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T09:34:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為廖立補齊正式全身立繪與武將列表頭像。採蘆綠為主色、墨青及舊紙白為副色，設計瘦長高額臉、偏鋒濃眉、薄唇與短而尖的下巴鬚，黑髮收在高而窄的蜀式文官巾冠內，手持簡牘；避免複製霍弋的黝膚倒梯形臉、軍巾短馬尾與札甲。服裝為簡潔收袖長袍，不用過多衣帶或飄帶。",
+      "related": [
+        "UI-2-0201"
+      ],
+      "depends": [
+        "UI-2-0201"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "苇綠主色搭墨青與舊紙白且和近期蜀將配色明顯不同",
+        "瘦長高額臉偏鋒眉薄唇短尖鬍型及高窄文官巾冠與霍弋明顯不同",
+        "收袖文官長袍無繁複衣帶與長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/liao_li_portrait.png",
+        "assets/resources/sprites/generals/avatars/liao_li_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/liao-li/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA立繪、256×256 RGBA頭像、reviewed crop verify 1/0、alpha透明、Cocos Asset DB 200 | 變更: 正式立繪/頭像與蘆綠墨青配色條目完成 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "node tools_node/generate-general-avatars.js liao-li\\nnode tools_node/generate-general-avatars.js liao-li --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除廖立本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+        "execution_steps": [
+          "盤點蜀國文臣近期臉型髮式與配色",
+          "生成候選並從125px縮圖起審",
+          "必要時升級至250px檢查臉部與簡牘",
+          "定稿立繪與reviewed頭像",
+          "驗證並刷新Cocos資產",
+          "回報隊長後接續下一位"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/liao-li/prompt.txt",
+          "artifacts/ui-generated/liao-li/liao-li-candidate-v1.png",
+          "artifacts/_view_image/liao-li-candidate-v1.view-125.png"
+        ],
+        "validation_evidence": [
+          "candidate v1 dimensions 1024x1536",
+          "alpha checked; visual review pending",
+          "candidate v1 alpha extrema 255..255: opaque background detected, visual review and transparent-background correction pending",
+          "portrait 512x768 RGBA",
+          "avatar 256x256 RGBA",
+          "generate-general-avatars.js liao-li --verify: 1 success, 0 failure",
+          "v2 alpha extrema 0..254 and preserved-character thumbnail reviewed",
+          "Cocos Asset DB refresh HTTP 200"
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

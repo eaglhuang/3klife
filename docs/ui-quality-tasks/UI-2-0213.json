@@ -1,0 +1,95 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0213",
+      "title": "傅彤立繪與頭像：蜀綠、赤陶與舊銀護陣將領配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T17:00:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為傅彤補齊正式立繪與武將列表頭像。蜀綠為主色，赤陶紅與舊銀作第二色。定位為四十餘歲蜀將，寬而較短的矩形臉、濃眉、窄深眼、鼻梁略寬、左眉尾短傷，兩頰短鬚與修整上唇鬍；黑髮短束藏於簡易護額。穿蜀綠輕札甲、單肩護具，持長柄短戟與小圓盾，避免與張翼、句扶、朱褒的方臉重甲輪廓重合。",
+      "related": [
+        "UI-2-0207"
+      ],
+      "depends": [
+        "UI-2-0212"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "蜀綠主色搭赤陶紅與舊銀且與近期人物色盤不同",
+        "寬短矩形臉、濃眉窄眼、左眉尾短傷、短鬚與簡易護額具個人辨識度",
+        "輕札甲、單肩護具、短戟和小圓盾姿勢自然，無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/fu_tong_portrait.png",
+        "assets/resources/sprites/generals/avatars/fu_tong_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/fu-tong/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA透明立繪、256×256 reviewed頭像、verify 1/0、Cocos刷新200 | 變更: 傅彤蜀綠赤陶舊銀立繪與列表頭像正式入庫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "node tools_node/generate-general-avatars.js liu-chen\\nnode tools_node/generate-general-avatars.js liu-chen --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除劉諶本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+        "execution_steps": [
+          "盤點近期青年武將與宗室臉型髮冠配色",
+          "生成候選並從125px縮圖起審",
+          "必要時升級至250px檢查臉部與儀劍",
+          "定稿立繪與reviewed頭像",
+          "驗證並刷新Cocos資產",
+          "回報隊長後接續下一位"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/fu-tong/prompt.txt",
+          "artifacts/ui-generated/fu-tong/fu-tong-candidate-v1.png"
+        ],
+        "validation_evidence": [
+          "candidate v1 dimensions 1024x1536 RGBA, alpha extrema 0..254",
+          "portrait 512x768 RGBA, alpha extrema 0..255",
+          "cropped and formal avatar 256x256 RGBA, alpha extrema 0..255",
+          "avatar verify: 1 success, 0 failures",
+          "Cocos Asset DB refresh: HTTP 200"
+        ]
+      },
+      "validation_evidence": [
+        "candidate v2 dimensions 1024x1536 RGBA, alpha extrema 0..254",
+        "portrait 512x768 RGBA, alpha extrema 0..255",
+        "cropped and formal avatar 256x256 RGBA, alpha extrema 0..255",
+        "avatar verify: 1 success, 0 failures",
+        "Cocos Asset DB refresh: HTTP 200"
+      ],
+      "validation_cmd": "node tools_node/generate-general-avatars.js fu-tong\nnode tools_node/generate-general-avatars.js fu-tong --verify\nnode tools_node/build-ui-task-manifest.js\nRefresh Cocos Asset DB on this worktree",
+      "rollback_hint": "移除本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+      "execution_steps": [
+        "檢視近期蜀將臉型與裝備，設計朱褒獨特輪廓",
+        "生成候選並從125px縮圖起審",
+        "必要時升級至250px檢查面部與手持物",
+        "定稿立繪、reviewed裁切頭像與色盤台帳",
+        "驗證資產並刷新Cocos Asset DB"
+      ]
+    }
+  ]
+}

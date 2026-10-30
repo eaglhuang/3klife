@@ -1,0 +1,95 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0217",
+      "title": "陳武立繪與頭像：吳紅、深海藍與銅金水軍配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T21:00:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為吳將陳武補齊正式立繪與列表頭像。吳朱紅為主色，深海藍與少量銅金作副色。塑造三十餘歲強健水軍前鋒：寬鼻、厚下頜、濃直眉、深眼，左臉頰短舊傷、短黑鬍；黑髮束成後頸短辮，戴低矮水軍皮盔。穿收袖短甲與海軍防水肩披，持短柄鉤槍與繫繩圓盾；不用文官長袍、長披帶，避免徐盛重甲與甘寧披巾輪廓。",
+      "related": [
+        "UI-2-0207"
+      ],
+      "depends": [
+        "UI-2-0216"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "吳朱紅主色搭深海藍與少量銅金",
+        "寬鼻厚下頜、左臉頰短傷、短鬍、後頸短辮與低矮皮盔具陳武辨識度",
+        "收袖水軍短甲、鉤槍與繫繩圓盾姿勢自然，無長披帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/chen_wu_portrait.png",
+        "assets/resources/sprites/generals/avatars/chen_wu_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/chen-wu/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA透明立繪、256×256 reviewed頭像、verify 1/0、Cocos刷新200 | 變更: 陳武吳紅深海藍水軍立繪與列表頭像正式入庫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "node tools_node/generate-general-avatars.js liu-chen\\nnode tools_node/generate-general-avatars.js liu-chen --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除劉諶本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+        "execution_steps": [
+          "盤點近期青年武將與宗室臉型髮冠配色",
+          "生成候選並從125px縮圖起審",
+          "必要時升級至250px檢查臉部與儀劍",
+          "定稿立繪與reviewed頭像",
+          "驗證並刷新Cocos資產",
+          "回報隊長後接續下一位"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/chen-wu/prompt.txt",
+          "artifacts/ui-generated/chen-wu/chen-wu-candidate-v1.png"
+        ],
+        "validation_evidence": [
+          "candidate v1 dimensions 1024x1536 RGBA, alpha extrema 0..254",
+          "portrait 512x768 RGBA, alpha extrema 0..255",
+          "cropped and formal avatar 256x256 RGBA, alpha extrema 0..255",
+          "avatar verify: 1 success, 0 failures",
+          "Cocos Asset DB refresh: HTTP 200"
+        ]
+      },
+      "validation_evidence": [
+        "candidate v2 dimensions 1024x1536 RGBA, alpha extrema 0..254",
+        "portrait 512x768 RGBA, alpha extrema 0..255",
+        "cropped and formal avatar 256x256 RGBA, alpha extrema 0..255",
+        "avatar verify: 1 success, 0 failures",
+        "Cocos Asset DB refresh: HTTP 200"
+      ],
+      "validation_cmd": "node tools_node/generate-general-avatars.js chen-wu\nnode tools_node/generate-general-avatars.js chen-wu --verify\nnode tools_node/build-ui-task-manifest.js\nRefresh Cocos Asset DB on this worktree",
+      "rollback_hint": "移除本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+      "execution_steps": [
+        "檢視近期蜀將臉型與裝備，設計朱褒獨特輪廓",
+        "生成候選並從125px縮圖起審",
+        "必要時升級至250px檢查面部與手持物",
+        "定稿立繪、reviewed裁切頭像與色盤台帳",
+        "驗證資產並刷新Cocos Asset DB"
+      ]
+    }
+  ]
+}

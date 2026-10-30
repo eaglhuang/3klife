@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0439",
+      "id": "UI-2-0147",
+      "title": "朱治武將立繪：吳紅與舊苔橄欖灰的老將",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T07:07:36+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為朱治建立 512×768 透明全身立繪與 256×256 頭像。以吳紅搭配舊苔橄欖灰，用長額瘦方臉、灰鬢、低鐵盔與收束短甲塑造資深老將。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "吳紅基底搭配舊苔橄欖灰副色，避免紅銅與紅藍灰近作組合",
+        "長額瘦方臉、灰鬢、低鐵盔與收束短甲可辨",
+        "服裝緊湊，無盾牌、長飄帶或垂布"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/zhu_jun_portrait.png",
+        "assets/resources/sprites/generals/avatars/zhu_jun_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/zhu-jun/"
+      ],
+      "notes": "已完成並通過立繪、頭像裁切驗證；Cocos Asset DB 尚待在本工作樹所屬 Editor Refresh Assets。以風霜瘦方臉、灰鬢與低鐵盔表現吳國資深老將；與黃蓋圓盾白鬚、徐盛厚甲長槍分流。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0241",
+      "title": "傅肜深蜀綠鐵鏽紅宿將立繪與列表頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T16:47:24+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為蜀將傅肜補齊正式立繪與列表頭像。採深蜀綠、鐵鏽紅與骨白，塑造五十餘歲寬下頜戰場宿將：粗直眉、深陷眼、灰鬢短鬍與鼻梁舊傷；戴開面鐵盔及短鏽紅盔纓，穿重層札甲，佩直刃長劍，另一手持小圓盾。姿態沉穩護衛。與張南青年無鬚、灰橄欖輕甲、綠頭帶與長槍剪影明確不同；不畫長披風或飄帶。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/fu_shou_portrait.png"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768與256×256 RGBA、alpha 0..255；reviewed crop；avatar verify 成功；Cocos Asset DB HTTP 200 | 變更: 傅肜差異化立繪與列表頭像已入庫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/fu_shou_portrait.png",
+          "assets/resources/sprites/ui_avatars/cropped/fu_shou_avatar.png",
+          "assets/resources/sprites/generals/avatars/fu_shou_avatar.png",
+          "artifacts/ui-generated/fu-rong/fu-rong-candidate-v2.png"
+        ],
+        "validation_evidence": [
+          "RGBA size 512×768 portrait and 256×256 avatar, alpha 0..255",
+          "node tools_node/generate-general-avatars.js fu-shou --verify: 1 success, 0 failures",
+          "Cocos asset-db refresh HTTP 200"
+        ],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

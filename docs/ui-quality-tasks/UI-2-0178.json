@@ -1,0 +1,75 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0470",
+      "id": "UI-2-0178",
+      "title": "劉豹立繪：靛灰鞣革邊地首領",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T12:40:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為名冊 ID liu-bao 建立 512×768 透明全身立繪與 256×256 頭像；採深靛灰與鞣革金棕的邊地首領色組，使用毛氈低冠、編辮短鬚與短弓剪影，和中原敵將區隔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 liu-bao 名冊 ID",
+        "採深靛灰 #3D4F59、鞣革金棕 #A37C49、骨白 #CCC3AC",
+        "高顴骨、低毛氈冠、短鬚與短弓具辨識度",
+        "皮甲固定收束，無長披風與飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/liu_bao_portrait.png",
+        "assets/resources/sprites/generals/avatars/liu_bao_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/liu-bao/"
+      ],
+      "notes": "2026-10-29 | 狀態: done | 驗證: avatar verify 通過；encoding/build manifest 通過 | 變更: 劉豹立繪頭像完成，毛氈低冠、短弓與邊地札甲具辨識度 | 阻塞: Cocos Asset DB 待 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/liu_bao_portrait.png",
+          "assets/resources/sprites/generals/avatars/liu_bao_avatar.png",
+          "artifacts/ui-generated/liu-bao/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA transparent",
+          "Avatar generated with reviewed crop and copied to generals/avatars",
+          "generate-general-avatars --verify pending final run",
+          "Cocos Asset DB refresh pending"
+        ],
+        "handoff_diff_status": "pending Cocos Asset DB refresh",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 6F5456ACFE5BC96548290FD820AB515152DC103CB027372B8C45284163CBB3D3",
+          "avatar SHA-256 7F92F76BD5A4C63E418BD80138C2274EDDC21F79E327AB579E87ED4C3F67DB2A"
+        ]
+      }
+    }
+  ]
+}

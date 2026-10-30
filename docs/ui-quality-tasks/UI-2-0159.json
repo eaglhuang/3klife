@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0451",
+      "id": "UI-2-0159",
+      "title": "趙範武將立繪：中立銅褐與月石灰的桂陽郡守",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T07:35:46+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為趙範建立 512×768 透明全身立繪與 256×256 頭像；名冊勢力為 neutral，採中立銅褐與月石灰，塑造狹長心形臉和謹慎郡守氣質。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "中立角色採銅褐與月石灰，不套用蜀吳魏陣營色",
+        "狹長心形臉、側分低束髮與分叉短鬚可辨",
+        "窄袖直袍俐落，無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/zhao_fan_portrait.png",
+        "assets/resources/sprites/generals/avatars/zhao_fan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/zhao-fan/"
+      ],
+      "notes": "趙範名冊勢力為 neutral，採銅褐 #77533F、月石灰 #9C9E98 與墨鐵。狹長心形臉、窄眼、分叉細短鬚；黑髮側分低束並以銅褐窄頭帶固定，無高冠與側翼；中立郡守直袍以月石灰作短內襟、銅褐作窄肩襟與固定腰帶，持官印筒及摺奏。避免劉度灰鬢低圓帽長臉及金旋尖顴低弧官冠。 已完成；正式立繪 SHA-256 C1005FFF3EFEA24BB743982C8890B776EB0C5BC6EFE0A084C76832D02604BC45，頭像 SHA-256 14193B10972A436CDFB1840D34B5A21446ADCE71C9B01C5F14D469B288BAB2EC。Cocos Asset DB Refresh 尚待正確 Editor。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

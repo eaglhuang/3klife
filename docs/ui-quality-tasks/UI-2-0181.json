@@ -1,0 +1,74 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0473",
+      "id": "UI-2-0181",
+      "title": "祝融立繪：南中赤陶與炭黑女將",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-30T09:00:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "建立祝融全身立繪與頭像，採赤陶紅、炭黑與少量銅色，使用高辨識女將臉型、緊編髮與南中短甲，避免與孟獲同臉同裝。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪 512×768 RGBA，透明背景",
+        "頭像 256×256，裁切與 generator verify 通過",
+        "赤陶紅 #A64C3A、炭黑 #303238、舊銅 #A77B48",
+        "心形偏窄臉、高顴骨、銳眼與緊編髮；與孟獲及其他女性角色有辨識差異",
+        "南中短甲輪廓俐落，不使用長飄帶、複雜衣帶或披風"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/zhu_rong_portrait.png",
+        "assets/resources/sprites/generals/avatars/zhu_rong_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/zhu-rong/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 138/138 avatar verify 通過、立繪與頭像尺寸核對 | 變更: 祝融赤陶紅炭黑立繪及頭像完成 | 阻塞: 此 worktree 的 Cocos Asset DB 尚待正確 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/zhu_rong_portrait.png",
+          "assets/resources/sprites/generals/avatars/zhu_rong_avatar.png",
+          "artifacts/ui-generated/zhu-rong/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA with transparent background; resampled using actual 1086×1448 source dimensions",
+          "Avatar is 256×256; reviewed manual crop (151,0)+220×220",
+          "generate-general-avatars --verify: 138 success, 0 failures",
+          "Cocos Asset DB refresh pending for ui-portrait-review worktree"
+        ],
+        "handoff_diff_status": "pending correct-worktree Cocos Asset DB refresh",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 F8D41067CDDDC36EB14FC121F2FE351474586FF12FF000F285A72E1031934D60",
+          "avatar SHA-256 2810A22864002E10FB808DCA3E77ECEB0434B70889B78C1F07C76DF01FA11378"
+        ]
+      }
+    }
+  ]
+}

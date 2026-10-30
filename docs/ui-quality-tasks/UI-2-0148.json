@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0440",
+      "id": "UI-2-0148",
+      "title": "呂範武將立繪：吳紅與煙紫灰的沉穩督運官",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T07:10:33+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為呂範建立 512×768 透明全身立繪與 256×256 頭像。以吳紅搭配煙紫灰副色，用成熟窄長臉、低弧官帽與軍印匣建立穩健督運官辨識。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "吳紅基底搭配煙紫灰副色，區別已完成吳將紅配色",
+        "成熟窄長臉、低弧官帽、短整鬚與軍印匣可辨",
+        "短直袍與袖口收束，無長飄帶或垂布"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/lv_fan_portrait.png",
+        "assets/resources/sprites/generals/avatars/lv_fan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/lv-fan/"
+      ],
+      "notes": "已完成並通過立繪、頭像裁切驗證；Cocos Asset DB 尚待在本工作樹所屬 Editor Refresh Assets。以穩健的吳國督運官與軍事幕僚形象呈現；避免孫邵、顧雍、朱治的臉型、冠帽和副色色組。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

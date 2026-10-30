@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0423",
+      "id": "UI-2-0131",
+      "title": "曹彰武將立繪：魏藍與舊金副色金鬚猛將辨識",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T00:00:14+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為曹彰建立 512×768 透明全身立繪與 256×256 頭像。使用魏藍基底和舊金副色，以金褐短鬚、高束髮與年輕猛將輪廓呈現個人特徵。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "魏藍基底搭配舊金副色",
+        "金褐短鬚、高束髮和年輕強悍輪廓與曹洪明確不同",
+        "戰甲緊湊、衣襬固定、無飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/cao_zhang_portrait.png",
+        "assets/resources/sprites/generals/avatars/cao_zhang_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/cao-zhang/"
+      ],
+      "notes": "魏國藍為基色；曹彰金鬚作個人識別，避免與曹洪的低軍帽窄臉重複。；已完成，Cocos Asset DB 待正確工作樹的 Editor 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

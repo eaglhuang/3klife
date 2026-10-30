@@ -1,0 +1,86 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0189",
+      "title": "高覽立繪與頭像：魏藍主色與青銅副色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T07:54:08+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為高覽補齊高辨識度全身正式立繪與正方形武將列表頭像；主色以魏藍搭配青銅，成年剛毅方臉、厚直眉、寬鼻、短鬚，束髮與甲型需和袁氏兄弟及曹魏現有立繪區分；衣甲收束，避免過量長飄帶。",
+      "related": [
+        "UI-2-0188"
+      ],
+      "depends": [
+        "UI-2-0188"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "魏藍主色配青銅副色，臉型髮式甲型與現有武將可辨識區隔",
+        "雙手及道具姿勢自然，衣甲收束無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/gao_lan_portrait.png",
+        "assets/resources/sprites/generals/avatars/gao_lan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/gao-lan/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA立繪、256×256 RGBA頭像；reviewed crop與verify通過；Cocos刷新成功 | 變更: 高覽v1定稿並接入正式武將美術目錄 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "為高覽建立可在武將列表使用的正式立繪與頭像。",
+        "position": "M6 武將正式美術目錄補齊",
+        "prereq": "UI-2-0188 已完成；正式路徑沿用 sprites/generals/{id}_portrait 與 avatars/{id}_avatar。"
+      },
+      "contracts": {
+        "input": [
+          "使用現有武將名冊與美術路徑規則；候選立繪需全身透明底且不得覆用其他武將五官/髮式；魏藍為主色並配青銅副色。"
+        ],
+        "output": [
+          "產出 512×768 RGBA 透明立繪與 256×256 RGBA reviewed 裁切頭像；高覽臉型、束髮、盔甲輪廓與鄰近武將具明確差異；無不自然手指或道具姿勢；正式美術路徑可由武將列表 loader 載入。"
+        ],
+        "validation_cmd": "node tools_node/generate-general-avatars.js gao-lan\\nnode tools_node/generate-general-avatars.js gao-lan --verify\\nnode tools_node/build-ui-task-manifest.js\\nnpm run check:encoding:touched -- --files docs/agent-briefs/tasks/UI/UI-2-0189.md docs/ui-quality-tasks/UI-2-0189.json assets/resources/data/general-avatar-crops.json docs/art/character-palette-ledger.md\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除本卡新增的立繪/頭像/候選目錄與配色列，還原 general-avatar-crops.json 中 gao-lan 座標並重建任務 manifest。",
+        "execution_steps": [
+          "盤點造型差異與配色",
+          "生成候選並縮圖審核",
+          "定稿512×768立繪與reviewed頭像裁切",
+          "驗證、刷新Asset DB並回報"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/gao-lan/prompt.txt",
+          "artifacts/ui-generated/gao-lan/gao-lan-candidate-v1.png",
+          "assets/resources/sprites/generals/gao_lan_portrait.png",
+          "assets/resources/sprites/generals/avatars/gao_lan_avatar.png"
+        ],
+        "validation_evidence": [
+          "Candidate reviewed at 125px for full-body silhouette and 250px for face and detail; mature square face, heavy brows, short beard, and single nape braid distinct from Yuan Tan.",
+          "Formal portrait verified as 512×768 RGBA with transparent margins.",
+          "Formal avatar verified as 256×256 RGBA using reviewed crop (146,0)+220×220; generate-general-avatars --verify passed.",
+          "Cocos Asset DB refresh on assigned worktree endpoint returned HTTP 200."
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completion": 100,
+      "completed": "2026-10-30"
+    }
+  ]
+}

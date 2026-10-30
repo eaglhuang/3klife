@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0435",
+      "id": "UI-2-0143",
+      "title": "程昱武將立繪：魏藍與煙燻銅棕的軍師",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T06:59:20+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為程昱建立 512×768 透明全身立繪與 256×256 頭像。以魏藍搭配煙燻銅棕副色，用高額長方臉、深眼、兩鬢灰髮與分叉短鬚建立沉毅軍師辨識。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "魏藍搭配煙燻銅棕副色且和近期色組分流",
+        "高額長方臉、深眼、兩鬢灰髮與分叉短鬚可辨",
+        "短甲袍與固定甲裙俐落，沒有長飄帶或垂布"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/cheng_yu_portrait.png",
+        "assets/resources/sprites/generals/avatars/cheng_yu_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/cheng-yu/"
+      ],
+      "notes": "已完成並通過立繪、頭像裁切驗證；Cocos Asset DB 尚待在本工作樹所屬 Editor Refresh Assets。以沉毅老練軍師形象呈現；不重複荀攸窄顴扁冠、王朗圓臉白長鬚或李典持圖冠形。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

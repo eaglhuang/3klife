@@ -1,0 +1,89 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1416",
+      "id": "UI-2-0227",
+      "title": "公孫淵立繪與頭像：深青、骨白與鏽紅遼東割據者配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-31T13:00:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為公孫淵補齊正式立繪與列表頭像。作為敵對遼東割據者，以深青為主色，骨白毛領與少量鏽紅作第二色。定位四十歲左右北地統治者：高額窄長臉、突出的鼻梁、稍尖下巴、細長審視眼、修短偏斜的鬍髭；黑髮高束並編細辮，戴帶窄骨白毛邊的扁平北地帽。穿收袖深青短甲袍與短毛肩領，腰帶整齊；持收鞘直刀和青銅印信，不畫長披風、飄帶或弓箭。避免胡遵魏藍重甲與孫禮頭巾弓騎。",
+      "related": [
+        "UI-2-0207"
+      ],
+      "depends": [
+        "UI-2-0226"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "敵對陣營深青主色搭骨白、少量鏽紅",
+        "高額窄長臉、突出鼻梁、細長審視眼、偏斜短鬍與北地扁帽具公孫淵辨識度",
+        "收袖短甲袍、短毛肩領、收鞘刀與青銅印信姿勢自然，無長披風飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/gongsun_yuan_portrait.png",
+        "assets/resources/sprites/generals/avatars/gongsun_yuan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/gongsun-yuan/"
+      ],
+      "notes": "2026-10-31 | done | portrait/avatar dimensions and alpha verified; reviewed crop verify 1/0; Cocos refresh HTTP 200.",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "node tools_node/generate-general-avatars.js gongsun-yuan\\nnode tools_node/generate-general-avatars.js gongsun-yuan --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "Remove this task portrait, avatar and candidate; restore crop metadata and palette ledger, then rebuild the UI task manifest.",
+        "execution_steps": [
+          "確認候選與臉部、輪廓差異",
+          "完成512×768透明正式立繪與reviewed頭像",
+          "驗證尺寸、alpha、頭像與Cocos資產載入",
+          "完成配色台帳與任務證據"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/gongsun-yuan/prompt.txt",
+          "artifacts/ui-generated/gongsun-yuan/gongsun-yuan-candidate-v1.png"
+        ],
+        "validation_evidence": [
+          "task locked before implementation"
+        ]
+      },
+      "validation_evidence": [
+        "Candidate v1 1024x1536 RGBA, alpha extrema 0..254",
+        "Formal portrait 512x768 RGBA, alpha extrema 0..255",
+        "Cropped and mirrored avatar 256x256 RGBA, alpha extrema 0..255",
+        "Reviewed crop avatar verify: 1 success, 0 failures",
+        "Cocos Asset DB refresh: HTTP 200"
+      ],
+      "validation_cmd": "node tools_node/generate-general-avatars.js gongsun-yuan\nnode tools_node/generate-general-avatars.js gongsun-yuan --verify\nnode tools_node/build-ui-task-manifest.js\nRefresh Cocos Asset DB on this worktree",
+      "rollback_hint": "移除本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+      "execution_steps": [
+        "檢視近期蜀將臉型與裝備，設計朱褒獨特輪廓",
+        "生成候選並從125px縮圖起審",
+        "必要時升級至250px檢查面部與手持物",
+        "定稿立繪、reviewed裁切頭像與色盤台帳",
+        "驗證資產並刷新Cocos Asset DB"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0458",
+      "id": "UI-2-0166",
+      "title": "麋竺立繪：蜀綠商賈文臣與素雅儀容",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T12:13:24+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為名冊 ID mi-zhu 建立 512×768 透明全身立繪與 256×256 頭像；以蜀綠為基底，搭配商賈文臣的暖金棕色，剪影端正且不使用繁複衣帶。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 mi-zhu 名冊 ID",
+        "以蜀綠為基底並搭配辨識第二色",
+        "成熟溫雅文臣臉、商賈身份服飾與簡冊/算籌等道具可辨",
+        "衣襬袖口收束、無長飄帶與武將重甲"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/mi_zhu_portrait.png",
+        "assets/resources/sprites/generals/avatars/mi_zhu_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/mi-zhu/"
+      ],
+      "notes": "2026-10-29 | 狀態: done | 驗證: 頭像生成與全量 verify 通過，編碼檢查與 manifest 通過 | 變更: 立繪/頭像完成，使用蜀綠基底搭配金棕襟飾，衣袍收束無長飄帶 | 阻塞: Cocos Asset DB 待 Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/mi_zhu_portrait.png",
+          "assets/resources/sprites/generals/avatars/mi_zhu_avatar.png",
+          "artifacts/ui-generated/mi-zhu/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA transparent",
+          "Avatar generated with reviewed crop and copied to generals/avatars",
+          "generate-general-avatars --verify pending final run",
+          "Cocos Asset DB refresh pending"
+        ],
+        "handoff_diff_status": "pending Cocos Editor Refresh Assets",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 63729CB8EFB860257737F40441E6E5BA5B2BAE743B14A61EF1FBA5FC697FE227",
+          "avatar SHA-256 3DC6AFA7C7899F78B1C3B58431436025AAB8B1E3F2596050B6A045D5E4C82B9F"
+        ]
+      }
+    }
+  ]
+}

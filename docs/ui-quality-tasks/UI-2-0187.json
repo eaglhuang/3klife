@@ -1,0 +1,79 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1376",
+      "id": "UI-2-0187",
+      "title": "袁尚立繪與頭像：海松青與燒陶赭",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T07:35:37+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為袁尚補齊差異化全身立繪與頭像，以海松青、燒陶赭、骨白與夜鐵建立不同於袁譚鈷藍霜銀的色彩識別；採年輕寬橢圓臉、無鬚與低位扁平編髻。",
+      "related": [
+        "UI-2-0186"
+      ],
+      "depends": [
+        "UI-2-0186"
+      ],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明全身圖",
+        "頭像為 256×256，採 reviewed 裁切且 generate-general-avatars verify 通過",
+        "海松青 #3F6C66、燒陶赭 #A96A4D、骨白 #D4C7B1、夜鐵 #353A3D，與袁譚鈷藍霜銀及既有魏藍色票區隔",
+        "年輕寬橢圓臉、較飽滿下顎、直眉、清潔無鬚，不複用袁譚長心形窄下頜、鷹鉤鼻與垂尾細鬚",
+        "黑髮低位束成單一扁平橫向編髻，以海松青玉梳與短銅扣固定，不使用高折髻、三環後髻或羽冠",
+        "肩甲、腰甲與衣襟固定收束，不加長飄帶與鬆垂衣帶，雙手自然且全身完整"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/yuan_shang_portrait.png",
+        "assets/resources/sprites/generals/avatars/yuan_shang_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/yuan-shang/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 立繪512×768 RGBA透明、頭像256×256；全體avatar verify 144成功0失敗；正確worktree Asset DB刷新成功 | 變更: reviewed立繪與頭像、海松青／燒陶赭色票登錄，袁譚對照確認臉型髮式及配色區隔 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/yuan-shang/prompt.txt",
+          "artifacts/ui-generated/yuan-shang/yuan-shang-candidate.png",
+          "artifacts/ui-generated/yuan-shang/yuan-shang-portrait-512x768.png",
+          "assets/resources/sprites/generals/yuan_shang_portrait.png",
+          "assets/resources/sprites/generals/avatars/yuan_shang_avatar.png"
+        ],
+        "validation_evidence": [
+          "Candidate reviewed at 125px, 250px, and 500px: full figure, hands, footwear and transparent corners are intact; 125px comparison confirms a distinct face, hairstyle and palette from Yuan Tan.",
+          "Formal portrait is 512×768 RGBA, scaled from a transparent 1024×1536 source and centered with transparent margins.",
+          "Avatar and cropped avatar are both 256×256 from reviewed crop (146,0)+220×220.",
+          "generate-general-avatars.js yuan-shang --verify: 1 success, 0 failures; full --verify: 144 success, 0 failures.",
+          "Cocos Creator 3.8.8 running against the ui-portrait-review worktree; Asset DB refresh succeeded and portrait/avatar/cropped PNG metadata counts are 144 each."
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

@@ -1,14 +1,14 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-07-19
-> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 1/3 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 生成日期: 2026-10-30
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 1/6 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
 ## 遊戲規格類 (`doc_spec`)
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_spec_0001` | docs/遊戲規格文件/正式規格矛盾審查.md | 正式規格矛盾審查 |
+| `doc_spec_0001` | docs/遊戲規格文件/正式規格矛盾審查-shards/s1.md | 正式規格矛盾審查 — 1. 本輪已修正 |
 | `doc_spec_0002` | docs/遊戲規格文件/系統規格書/大廳系統.md | 大廳系統規格書 |
 | `doc_spec_0003` | docs/遊戲規格文件/系統規格書/可結緣女性來源系統.md | 可結緣女性來源系統規格書 |
 | `doc_spec_0004` | docs/遊戲規格文件/系統規格書/正式版劇本文案.md | 正式版劇本文案 |
@@ -31,11 +31,11 @@
 | `doc_spec_0021` | docs/遊戲規格文件/系統規格書/俘虜處理系統.md | 俘虜處理系統規格書 |
 | `doc_spec_0022` | docs/遊戲規格文件/系統規格書/英靈世家系統.md | 英靈世家系統規格書 |
 | `doc_spec_0023` | docs/遊戲規格文件/系統規格書/重複卡分流與血脈灌注補遺_2026-04-04.md | 重複卡分流與血脈灌注補遺 2026-04-04 |
-| `doc_spec_0024` | docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md | 家族關係（史實相性）系統規格書 |
+| `doc_spec_0024` | docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/ab.md | 家族關係（史實相性）系統 — A–E |
 | `doc_spec_0025` | docs/遊戲規格文件/系統規格書/留存系統.md | 留存系統規格書 |
-| `doc_spec_0026` | docs/遊戲規格文件/系統規格書/培育系統.md | 培育系統規格書 |
+| `doc_spec_0026` | docs/遊戲規格文件/系統規格書/培育系統-shards/shard-a.md | 培育系統規格（分片索引） — A–E 系統描述／目的／套路／TA／功能清單 |
 | `doc_spec_0027` | docs/遊戲規格文件/系統規格書/教官系統（支援卡）.md | 教官系統（支援卡）規格書 |
-| `doc_spec_0028` | docs/遊戲規格文件/系統規格書/結緣系統（配種）.md | 結緣系統（配種）規格書 |
+| `doc_spec_0028` | docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-a.md | 結緣系統（配種）規格（分片索引） — A–E 系統描述／目的／套路／TA／功能清單 |
 | `doc_spec_0029` | docs/遊戲規格文件/系統規格書/傭兵系統（試用）.md | 傭兵系統（試用）規格書 |
 | `doc_spec_0030` | docs/遊戲規格文件/系統規格書/奧義系統.md | 奧義系統規格書 |
 | `doc_spec_0031` | docs/遊戲規格文件/系統規格書/新手開場規格書.md | 新手開場規格書 |
@@ -45,8 +45,8 @@
 | `doc_spec_0035` | docs/遊戲規格文件/系統規格書/運氣系統.md | 運氣系統規格書 |
 | `doc_spec_0036` | docs/遊戲規格文件/系統規格書/道具系統（付費免費道具）.md | 道具系統（付費免費道具）規格書 |
 | `doc_spec_0037` | docs/遊戲規格文件/系統規格書/領地治理系統.md | 領地治理系統規格書 |
-| `doc_spec_0038` | docs/遊戲規格文件/系統規格書/戰法系統.md | 戰法系統規格書 |
-| `doc_spec_0039` | docs/遊戲規格文件/系統規格書/戰法場景規格書.md | 戰法場景規格書 |
+| `doc_spec_0038` | docs/遊戲規格文件/系統規格書/戰法系統-shards/a.md | 戰法系統 — A 系統描述 |
+| `doc_spec_0039` | docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/ac.md | 戰法場景規格書 — A–C |
 | `doc_spec_0040` | docs/遊戲規格文件/系統規格書/戰場部署系統.md | 戰場部署系統規格書 |
 | `doc_spec_0041` | docs/遊戲規格文件/系統規格書/戰場適性系統.md | 戰場適性系統規格書 |
 | `doc_spec_0042` | docs/遊戲規格文件/系統規格書/轉蛋系統.md | 轉蛋系統規格書 |
@@ -166,7 +166,7 @@
 | `doc_spec_0157` | docs/遊戲規格文件/討論來源/鏡像時空育才系統設計.md | --- |
 | `doc_spec_0158` | docs/遊戲規格文件/討論來源/MVP 遊戲驗證規格書.md | --- |
 | `doc_spec_0159` | docs/遊戲規格文件/討論來源整併狀態.md | 討論來源整併狀態 |
-| `doc_spec_0160` | docs/遊戲規格文件/整併疑問書.md | 整併疑問書 |
+| `doc_spec_0160` | docs/遊戲規格文件/整併疑問書-shards/meta.md | 整併疑問書 — 其他（掃描紀錄、回寫落點、補記） |
 | `doc_spec_0161` | docs/demo_playbook.md | Demo Playbook |
 | `doc_spec_0162` | docs/遊戲規格文件/doc-consolidation-flow-implementation-plan.md | doc-consolidation-flow 實作計畫書 |
 | `doc_spec_0163` | docs/遊戲規格文件/doc-consolidation-flow-quick-start.md | doc-consolidation-flow 快速開始指南 |
@@ -186,6 +186,37 @@
 | `doc_spec_0178` | docs/遊戲規格文件/系統規格書/武將個性卡規格.md | 武將個性卡規格 |
 | `doc_spec_0179` | docs/遊戲規格文件/討論來源/比較舊的/遊戲機制優化與策略建議.md | --- |
 | `doc_spec_0180` | docs/遊戲規格文件/設計參考/育成與戰鬥公式基準手冊.md | 育成與戰鬥公式基準手冊 |
+| `doc_spec_0181` | docs/遊戲規格文件/正式規格矛盾審查-shards/s2.md | 正式規格矛盾審查 — 2. 仍待處理 |
+| `doc_spec_0182` | docs/遊戲規格文件/正式規格矛盾審查-shards/s3.md | 正式規格矛盾審查 — 3. 審查結論 |
+| `doc_spec_0183` | docs/遊戲規格文件/正式規格矛盾審查.md | 正式規格矛盾審查 |
+| `doc_spec_0184` | docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md | 家族關係（史實相性）系統 — F–J |
+| `doc_spec_0185` | docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md | 家族關係（史實相性）系統 |
+| `doc_spec_0186` | docs/遊戲規格文件/系統規格書/培育系統-shards/shard-b.md | 培育系統規格（分片索引） — F 數值模型與公式（含 F-7 戰法槽位） |
+| `doc_spec_0187` | docs/遊戲規格文件/系統規格書/培育系統-shards/shard-c.md | 培育系統規格（分片索引） — G–J 劇本／字串／Data Schema／名詞 |
+| `doc_spec_0188` | docs/遊戲規格文件/系統規格書/培育系統-shards/shard-d.md | 培育系統規格（分片索引） — N 血脈補遺／MCQ 決策／雙層數值 |
+| `doc_spec_0189` | docs/遊戲規格文件/系統規格書/培育系統.md | 培育系統規格（分片索引） |
+| `doc_spec_0190` | docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-b.md | 結緣系統（配種）規格（分片索引） — F–J 公式／劇本／字串／Data Schema／名詞 |
+| `doc_spec_0191` | docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md | 結緣系統（配種）規格（分片索引） — K–L 近親繁殖範圍／精力值與生育限制 |
+| `doc_spec_0192` | docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-d.md | 結緣系統（配種）規格（分片索引） — M 血統模擬器／MCQ 決策記錄 |
+| `doc_spec_0193` | docs/遊戲規格文件/系統規格書/結緣系統（配種）.md | 結緣系統（配種）規格（分片索引） |
+| `doc_spec_0194` | docs/遊戲規格文件/系統規格書/戰法系統-shards/fh.md | 戰法系統 — F、H 公式與 UI 約束 |
+| `doc_spec_0195` | docs/遊戲規格文件/系統規格書/戰法系統-shards/g.md | 戰法系統 — G 戰法大清單 |
+| `doc_spec_0196` | docs/遊戲規格文件/系統規格書/戰法系統-shards/g5.md | 戰法系統 — G-5 天賦戰法初始庫 |
+| `doc_spec_0197` | docs/遊戲規格文件/系統規格書/戰法系統.md | 戰法系統 |
+| `doc_spec_0198` | docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/df.md | 戰法場景規格書 — D–F |
+| `doc_spec_0199` | docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/meta.md | 戰法場景規格書 — MCQ 與實作紀錄 |
+| `doc_spec_0200` | docs/遊戲規格文件/系統規格書/戰法場景規格書.md | 戰法場景規格書 |
+| `doc_spec_0201` | docs/遊戲規格文件/整併疑問書-shards/q01-13.md | 整併疑問書 — Q1–Q13 與已裁決紀錄 |
+| `doc_spec_0202` | docs/遊戲規格文件/整併疑問書-shards/q14-30.md | 整併疑問書 — Q14–Q30 |
+| `doc_spec_0203` | docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-1.md | 整併疑問書 — Q14–Q30 |
+| `doc_spec_0204` | docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-2.md | Q21. EP 評級門檻要以哪一套為正式標準？ C |
+| `doc_spec_0205` | docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-3.md | Q27. 近親判定要以 `Bloodline_ID` 還是「共同祖先代數」作為正式權威？ C |
+| `doc_spec_0206` | docs/遊戲規格文件/整併疑問書-shards/q31-40.md | 整併疑問書 — Q31–Q40 |
+| `doc_spec_0207` | docs/遊戲規格文件/整併疑問書-shards/q41-52.md | 整併疑問書 — Q41–Q52 |
+| `doc_spec_0208` | docs/遊戲規格文件/整併疑問書-shards/q53-63.md | 整併疑問書 — Q53–Q63 |
+| `doc_spec_0209` | docs/遊戲規格文件/整併疑問書-shards/q64-74.md | 整併疑問書 — Q64–Q74 |
+| `doc_spec_0210` | docs/遊戲規格文件/整併疑問書-shards/q75-plus.md | 整併疑問書 — Q75 起 |
+| `doc_spec_0211` | docs/遊戲規格文件/整併疑問書.md | 整併疑問書 |
 
 ## 索引類 (`doc_index`)
 
@@ -193,7 +224,7 @@
 |--------|------|------|
 | `doc_index_0001` | docs/cross-ref/cross-ref-code.md | Cross-Reference: 代碼索引（代碼 ↔ 規格書 雙向映射） |
 | `doc_index_0002` | docs/cross-ref/cross-ref-specs.md | Cross-Reference: 規格書索引（文件 → 相關文件） |
-| `doc_index_0003` | docs/cross-ref/cross-ref-ui-spec.md | Cross-Reference: UI Spec JSON 鞈蝝Ｗ? |
+| `doc_index_0003` | docs/cross-ref/cross-ref-ui-spec.md | Cross-Reference: UI Spec JSON 資產索引 |
 | `doc_index_0004` | docs/cross-ref/README.md | cross-ref/ |
 | `doc_index_0006` | docs/keep-shards/keep-core.md | Keep Consensus — Core（P0 · §0–§2c） |
 | `doc_index_0007` | docs/cross-reference-index.md | 交叉索引表 (Cross-Reference Index) |
@@ -202,7 +233,7 @@
 | `doc_index_0010` | docs/keep-shards/README.md | keep-shards/ |
 | `doc_index_0011` | docs/keep-shards/keep-workflow.md | Keep Consensus — Workflow（§3–§6 · §13） |
 | `doc_index_0012` | docs/keep.summary.md | P0 ATM Bug / Optimization Backlog |
-| `doc_index_0013` | docs/keep.md | P0 ATM Bug / Optimization Backlog |
+| `doc_index_0013` | docs/keep.md | Keep Consensus |
 | `doc_index_0014` | docs/ui-quality-tasks/README.md | UI Quality Task Shards |
 | `doc_index_0015` | docs/tasks/README.md | tasks/ |
 | `doc_index_0016` | docs/UI品質參考圖/UI-2-0060_血脈命鏡過場/README.md | UI-2-0060 血脈命鏡過場 Canonical Reference |

@@ -1,0 +1,75 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0461",
+      "id": "UI-2-0169",
+      "title": "尹默立繪：蜀綠灰紫清面學者",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T12:22:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為名冊 ID yin-mo 建立 512×768 透明全身立繪與 256×256 頭像；採蜀綠基底、灰紫副色，設計清面瘦長學者臉與簡約文士冠，和孫乾使節官冠、簡雍軟巾及麋竺商賈冠分流。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 yin-mo 名冊 ID",
+        "以蜀綠為基底並配灰紫與紙白",
+        "清面瘦長臉、高額與簡約文士冠具辨識度",
+        "袖口衣襬收束，無長飄帶與武將重甲"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/yin_mo_portrait.png",
+        "assets/resources/sprites/generals/avatars/yin_mo_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/yin-mo/"
+      ],
+      "notes": "2026-10-29 | 狀態: done | 驗證: avatar verify 通過；encoding/build manifest 通過 | 變更: 尹默立繪頭像完成，冠頂補留白且袍服收束 | 阻塞: Cocos Asset DB 待 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/yin_mo_portrait.png",
+          "assets/resources/sprites/generals/avatars/yin_mo_avatar.png",
+          "artifacts/ui-generated/yin-mo/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA transparent",
+          "Avatar generated with reviewed crop and copied to generals/avatars",
+          "generate-general-avatars --verify pending final run",
+          "Cocos Asset DB refresh pending"
+        ],
+        "handoff_diff_status": "pending Cocos Editor Refresh Assets",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 BA062A6201FDEBE752F6FEDE79CD1DBB28BA1195F8A6C15819D5B4FBE18F9CFE",
+          "avatar SHA-256 FB80522B49E9E15976053B040F29E40BB034FB2E53E0664620E1B8EBB72424C4"
+        ]
+      }
+    }
+  ]
+}

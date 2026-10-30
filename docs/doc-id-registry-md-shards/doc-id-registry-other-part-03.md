@@ -1,14 +1,13 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-07-19
-> 這是 `doc-id-registry.md` 的「其它類」分片，第 3/6 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
+> 生成日期: 2026-10-30
+> 這是 `doc-id-registry.md` 的「其它類」分片，第 3/7 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 其它類 (`doc_other`) — Part 3/6
+## 其它類 (`doc_other`) — Part 3/7
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_other_1299` | docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md | 拆解大型功能優化原子 Map 計畫書 v2-r2 |
 | `doc_other_1300` | docs/ai_atomic_framework/map-replacement-protocol/IMPLEMENTATION-HANDOFF.md | Map Replacement Protocol v2 — Implementation Handoff |
 | `doc_other_1301` | docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0011-semantic-fingerprint-monitor.task.md | TASK-MRP-0011 — Atom Semantic Fingerprint 持續監控 |
 | `doc_other_1302` | docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0012-edge-contract-auto-test.task.md | TASK-MRP-0012 — Map Edge Contract 自動合約測試 |
@@ -201,7 +200,6 @@
 | `doc_other_1490` | docs/ai_atomic_framework/arxiv-paper-v1/paper-hotfile-collision-tasks.md | TASK-PAPER-HOTFILE-POS-A |
 | `doc_other_1491` | docs/ai_atomic_framework/arxiv-paper-v1/paper.md | 採用器導向原子化：多代理 LLM 程式碼合成的並發治理框架 |
 | `doc_other_1492` | docs/ai_atomic_framework/arxiv-paper-v1/paper.v2.md | 採用器導向原子化：多代理 LLM 程式碼合成的並發治理框架 |
-| `doc_other_1493` | docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.corrupted-backup-20260625.md | ATM嚗???靘???LLM 蝔?蝣澆?????∠?典???摮???CID Broker |
 | `doc_other_1494` | docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.en.md | ATM: Adapter-Guided Atomization and CID-Brokered Admission for Single-Domain Multi-Vendor LLM Code Co-Synthesis |
 | `doc_other_1495` | docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.md | ATM：同域多供應商 LLM 程式碼共同合成的採用器導向原子化與 CID Broker |
 | `doc_other_1496` | docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.md | 採用器導向原子化：多代理 LLM 程式碼合成的寫入前准入治理框架 |
@@ -295,3 +293,5 @@
 | `doc_other_1584` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0195-team-plan-readonly-projection.task.md | TASK-AAO-0195 Add read-only team plan projection without broker side effects |
 | `doc_other_1585` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0196-team-execute-fail-closed-zero-providers.task.md | TASK-AAO-0196 Fail-closed team start --execute when zero providers run |
 | `doc_other_1586` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0197-team-execute-defaults-all-roles.task.md | TASK-AAO-0197 Apply top-level team execute provider defaults to all roster roles |
+| `doc_other_1587` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0198-team-runtime-mode-precedence.task.md | TASK-AAO-0198 Honor CLI --runtime-mode over repo-default broker-only |
+| `doc_other_1588` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0199-task-ledger-fixture-isolation.task.md | TASK-AAO-0199 Isolate task-ledger governance validator fixtures per case |

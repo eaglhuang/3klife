@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0430",
+      "id": "UI-2-0138",
+      "title": "李典武將立繪：魏藍與古卷石米的清秀文武將",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T00:42:08+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為李典建立 512×768 透明全身立繪與 256×256 頭像。以魏藍搭配古卷石米副色，用清瘦高直體態、長卵臉、乾淨面容與高方文武冠建立沉著辨識。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "魏藍基底搭配不重複近作的古卷石米副色",
+        "清瘦高直體態、長卵臉、乾淨面容與高方文武冠可辨",
+        "直袍與短甲收束俐落，沒有長飄帶或垂布"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/li_dian_portrait.png",
+        "assets/resources/sprites/generals/avatars/li_dian_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/li-dian/"
+      ],
+      "notes": "已完成並通過立繪、頭像裁切驗證；Cocos Asset DB 尚待在本工作樹所屬 Editor Refresh Assets。以李典儒雅沉著、文武兼備的將領意象建立辨識；避免短身低額盔、濃鬚重甲與長飄帶。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

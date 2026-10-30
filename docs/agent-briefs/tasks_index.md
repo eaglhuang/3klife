@@ -1,6 +1,6 @@
 ---
 title: UI Quality Tasks Index
-generated: 2026-10-26
+generated: 2026-10-30
 manifest: ../ui-quality-todo.json
 ---
 
@@ -13,9 +13,9 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 59
-- done: 38
-- in-progress: 4
+- Total: 189
+- done: 164
+- in-progress: 8
 - open: 17
 
 ## Tasks
@@ -78,6 +78,144 @@ manifest: ../ui-quality-todo.json
 | PROG-1-0015 | Agent1 | open | P2 | P | validation | [PROG-1-0015](./tasks/PROG-1-0015.md) |
 | PROG-1-0016 | Agent1 | open | P2 | P | validation | [PROG-1-0016](./tasks/PROG-1-0016.md) |
 | TASK-UI-9001 | codex-gpt-6 | in-progress | P1 | M6 | refactor | [TASK-UI-9001](./tasks/TASK-UI-9001.md) |
+| UI-1-0017 | codex-gpt-6.1 | in-progress | P1 | M6 | art | [UI-1-0017](./tasks/UI-1-0017.md) |
+| UI-1-0018 | codex-gpt-6.1 | in-progress | P1 | M6 | art | [UI-1-0018](./tasks/UI-1-0018.md) |
+| UI-1-0019 | codex-gpt-6.1 | in-progress | P1 | M6 | art | [UI-1-0019](./tasks/UI-1-0019.md) |
 | UI-2-0117 | codex-gpt-6.1 | done | P1 | M6 | art | [UI-2-0117](./tasks/UI-2-0117.md) |
 | UI-2-0118 | codex-gpt-6.1 | done | P1 | M6 | art | [UI-2-0118](./tasks/UI-2-0118.md) |
 | UI-2-0119 | codex-gpt-6.1 | done | P1 | M6 | art | [UI-2-0119](./tasks/UI-2-0119.md) |
+| UI-2-0120 | codex-gpt-6.1 | done | P1 | M6 | art | [UI-2-0120](./tasks/UI-2-0120.md) |
+| UI-2-0121 | codex-gpt-6.1 | in-progress | P1 | M6 | art | [UI-2-0121](./tasks/UI-2-0121.md) |
+| UI-2-0122 | codex-gpt-6.1 | done | P1 | M6 | art | [UI-2-0122](./tasks/UI-2-0122.md) |
+| UI-2-0123 | codex-gpt-6.1 | done | P1 | M6 | art | [UI-2-0123](./tasks/UI-2-0123.md) |
+| UI-2-0124 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0124](./tasks/UI-2-0124.md) |
+| UI-2-0125 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0125](./tasks/UI-2-0125.md) |
+| UI-2-0126 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0126](./tasks/UI-2-0126.md) |
+| UI-2-0127 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0127](./tasks/UI-2-0127.md) |
+| UI-2-0128 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0128](./tasks/UI-2-0128.md) |
+| UI-2-0129 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0129](./tasks/UI-2-0129.md) |
+| UI-2-0130 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0130](./tasks/UI-2-0130.md) |
+| UI-2-0131 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0131](./tasks/UI-2-0131.md) |
+| UI-2-0132 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0132](./tasks/UI-2-0132.md) |
+| UI-2-0133 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0133](./tasks/UI-2-0133.md) |
+| UI-2-0134 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0134](./tasks/UI-2-0134.md) |
+| UI-2-0135 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0135](./tasks/UI-2-0135.md) |
+| UI-2-0136 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0136](./tasks/UI-2-0136.md) |
+| UI-2-0137 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0137](./tasks/UI-2-0137.md) |
+| UI-2-0138 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0138](./tasks/UI-2-0138.md) |
+| UI-2-0139 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0139](./tasks/UI-2-0139.md) |
+| UI-2-0140 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0140](./tasks/UI-2-0140.md) |
+| UI-2-0141 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0141](./tasks/UI-2-0141.md) |
+| UI-2-0142 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0142](./tasks/UI-2-0142.md) |
+| UI-2-0143 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0143](./tasks/UI-2-0143.md) |
+| UI-2-0144 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0144](./tasks/UI-2-0144.md) |
+| UI-2-0145 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0145](./tasks/UI-2-0145.md) |
+| UI-2-0146 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0146](./tasks/UI-2-0146.md) |
+| UI-2-0147 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0147](./tasks/UI-2-0147.md) |
+| UI-2-0148 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0148](./tasks/UI-2-0148.md) |
+| UI-2-0149 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0149](./tasks/UI-2-0149.md) |
+| UI-2-0150 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0150](./tasks/UI-2-0150.md) |
+| UI-2-0151 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0151](./tasks/UI-2-0151.md) |
+| UI-2-0152 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0152](./tasks/UI-2-0152.md) |
+| UI-2-0153 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0153](./tasks/UI-2-0153.md) |
+| UI-2-0154 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0154](./tasks/UI-2-0154.md) |
+| UI-2-0155 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0155](./tasks/UI-2-0155.md) |
+| UI-2-0156 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0156](./tasks/UI-2-0156.md) |
+| UI-2-0157 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0157](./tasks/UI-2-0157.md) |
+| UI-2-0158 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0158](./tasks/UI-2-0158.md) |
+| UI-2-0159 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0159](./tasks/UI-2-0159.md) |
+| UI-2-0160 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0160](./tasks/UI-2-0160.md) |
+| UI-2-0161 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0161](./tasks/UI-2-0161.md) |
+| UI-2-0162 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0162](./tasks/UI-2-0162.md) |
+| UI-2-0163 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0163](./tasks/UI-2-0163.md) |
+| UI-2-0164 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0164](./tasks/UI-2-0164.md) |
+| UI-2-0165 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0165](./tasks/UI-2-0165.md) |
+| UI-2-0166 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0166](./tasks/UI-2-0166.md) |
+| UI-2-0167 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0167](./tasks/UI-2-0167.md) |
+| UI-2-0168 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0168](./tasks/UI-2-0168.md) |
+| UI-2-0169 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0169](./tasks/UI-2-0169.md) |
+| UI-2-0170 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0170](./tasks/UI-2-0170.md) |
+| UI-2-0171 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0171](./tasks/UI-2-0171.md) |
+| UI-2-0172 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0172](./tasks/UI-2-0172.md) |
+| UI-2-0173 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0173](./tasks/UI-2-0173.md) |
+| UI-2-0174 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0174](./tasks/UI-2-0174.md) |
+| UI-2-0175 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0175](./tasks/UI-2-0175.md) |
+| UI-2-0176 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0176](./tasks/UI-2-0176.md) |
+| UI-2-0177 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0177](./tasks/UI-2-0177.md) |
+| UI-2-0178 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0178](./tasks/UI-2-0178.md) |
+| UI-2-0179 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0179](./tasks/UI-2-0179.md) |
+| UI-2-0180 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0180](./tasks/UI-2-0180.md) |
+| UI-2-0181 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0181](./tasks/UI-2-0181.md) |
+| UI-2-0182 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0182](./tasks/UI-2-0182.md) |
+| UI-2-0183 | codex-gpt-6.1 | done | P1 | M0 | implementation | [UI-2-0183](./tasks/UI-2-0183.md) |
+| UI-2-0184 | codex-gpt-6.1 | done | P1 | M6 | implementation | [UI-2-0184](./tasks/UI-2-0184.md) |
+| UI-2-0185 | codex-gpt-6.1 | done | P1 | M6 | implementation | [UI-2-0185](./tasks/UI-2-0185.md) |
+| UI-2-0186 | codex-gpt-6.1 | done | P1 | M6 | implementation | [UI-2-0186](./tasks/UI-2-0186.md) |
+| UI-2-0187 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0187](./tasks/UI-2-0187.md) |
+| UI-2-0188 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0188](./tasks/UI-2-0188.md) |
+| UI-2-0189 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0189](./tasks/UI-2-0189.md) |
+| UI-2-0190 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0190](./tasks/UI-2-0190.md) |
+| UI-2-0191 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0191](./tasks/UI-2-0191.md) |
+| UI-2-0192 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0192](./tasks/UI-2-0192.md) |
+| UI-2-0193 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0193](./tasks/UI-2-0193.md) |
+| UI-2-0194 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0194](./tasks/UI-2-0194.md) |
+| UI-2-0195 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0195](./tasks/UI-2-0195.md) |
+| UI-2-0196 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0196](./tasks/UI-2-0196.md) |
+| UI-2-0197 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0197](./tasks/UI-2-0197.md) |
+| UI-2-0198 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0198](./tasks/UI-2-0198.md) |
+| UI-2-0199 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0199](./tasks/UI-2-0199.md) |
+| UI-2-0200 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0200](./tasks/UI-2-0200.md) |
+| UI-2-0201 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0201](./tasks/UI-2-0201.md) |
+| UI-2-0202 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0202](./tasks/UI-2-0202.md) |
+| UI-2-0203 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0203](./tasks/UI-2-0203.md) |
+| UI-2-0204 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0204](./tasks/UI-2-0204.md) |
+| UI-2-0205 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0205](./tasks/UI-2-0205.md) |
+| UI-2-0206 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0206](./tasks/UI-2-0206.md) |
+| UI-2-0207 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0207](./tasks/UI-2-0207.md) |
+| UI-2-0208 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0208](./tasks/UI-2-0208.md) |
+| UI-2-0209 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0209](./tasks/UI-2-0209.md) |
+| UI-2-0210 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0210](./tasks/UI-2-0210.md) |
+| UI-2-0211 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0211](./tasks/UI-2-0211.md) |
+| UI-2-0212 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0212](./tasks/UI-2-0212.md) |
+| UI-2-0213 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0213](./tasks/UI-2-0213.md) |
+| UI-2-0214 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0214](./tasks/UI-2-0214.md) |
+| UI-2-0215 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0215](./tasks/UI-2-0215.md) |
+| UI-2-0216 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0216](./tasks/UI-2-0216.md) |
+| UI-2-0217 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0217](./tasks/UI-2-0217.md) |
+| UI-2-0218 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0218](./tasks/UI-2-0218.md) |
+| UI-2-0219 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0219](./tasks/UI-2-0219.md) |
+| UI-2-0220 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0220](./tasks/UI-2-0220.md) |
+| UI-2-0221 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0221](./tasks/UI-2-0221.md) |
+| UI-2-0222 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0222](./tasks/UI-2-0222.md) |
+| UI-2-0223 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0223](./tasks/UI-2-0223.md) |
+| UI-2-0224 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0224](./tasks/UI-2-0224.md) |
+| UI-2-0225 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0225](./tasks/UI-2-0225.md) |
+| UI-2-0226 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0226](./tasks/UI-2-0226.md) |
+| UI-2-0227 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0227](./tasks/UI-2-0227.md) |
+| UI-2-0228 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0228](./tasks/UI-2-0228.md) |
+| UI-2-0229 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0229](./tasks/UI-2-0229.md) |
+| UI-2-0230 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0230](./tasks/UI-2-0230.md) |
+| UI-2-0231 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0231](./tasks/UI-2-0231.md) |
+| UI-2-0232 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0232](./tasks/UI-2-0232.md) |
+| UI-2-0233 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0233](./tasks/UI-2-0233.md) |
+| UI-2-0234 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0234](./tasks/UI-2-0234.md) |
+| UI-2-0235 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0235](./tasks/UI-2-0235.md) |
+| UI-2-0236 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0236](./tasks/UI-2-0236.md) |
+| UI-2-0237 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0237](./tasks/UI-2-0237.md) |
+| UI-2-0238 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0238](./tasks/UI-2-0238.md) |
+| UI-2-0239 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0239](./tasks/UI-2-0239.md) |
+| UI-2-0240 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0240](./tasks/UI-2-0240.md) |
+| UI-2-0241 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0241](./tasks/UI-2-0241.md) |
+| UI-2-0242 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0242](./tasks/UI-2-0242.md) |
+| UI-2-0243 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0243](./tasks/UI-2-0243.md) |
+| UI-2-0244 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0244](./tasks/UI-2-0244.md) |
+| UI-2-0245 | codex-gpt-6.1-sol | done | P1 | M6 | implementation | [UI-2-0245](./tasks/UI-2-0245.md) |
+| UI-2-0246 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0246](./tasks/UI-2-0246.md) |
+| UI-2-0247 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0247](./tasks/UI-2-0247.md) |
+| UI-2-0248 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0248](./tasks/UI-2-0248.md) |
+| UI-2-0249 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0249](./tasks/UI-2-0249.md) |
+| UI-2-0250 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0250](./tasks/UI-2-0250.md) |
+| UI-2-0251 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0251](./tasks/UI-2-0251.md) |
+| UI-2-0252 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0252](./tasks/UI-2-0252.md) |
+| UI-2-0253 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0253](./tasks/UI-2-0253.md) |
+| UI-2-0254 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0254](./tasks/UI-2-0254.md) |

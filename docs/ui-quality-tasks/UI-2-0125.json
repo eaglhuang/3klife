@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0417",
+      "id": "UI-2-0125",
+      "title": "王平武將立繪：蜀綠與赭金邊將辨識",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-28T23:34:49+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為王平建立 512×768 透明全身立繪與 256×256 頭像。以蜀綠為基底、赭金與黑化銅為副色，呈現實戰型邊將輪廓，以短束髮額帶、老將面容和緊湊札甲建立辨識度。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "主色使用蜀綠，赭金與黑化銅作副色且色組有辨識度",
+        "短束髮額帶、老將面容與李嚴等蜀將明確區隔",
+        "札甲與袖口實用俐落，無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/wang_ping_portrait.png",
+        "assets/resources/sprites/generals/avatars/wang_ping_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/wang-ping/"
+      ],
+      "notes": "避免高髻文冠與長鬍，突出王平前線邊將氣質；服裝以短片札甲、貼腕袖口為主。；已完成，Cocos Asset DB 待正確工作樹的 Editor 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

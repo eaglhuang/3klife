@@ -1,0 +1,74 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0475",
+      "id": "UI-2-0183",
+      "title": "阿會喃立繪：雲母藍灰與灰玫瑰赭",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-30T09:45:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為阿會喃建立獨特全身立繪與頭像；以圓方臉、眉缺與低側結繩髮區隔兀突骨和孟獲，配雲母藍灰與灰玫瑰赭南中皮甲。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪 512×768 RGBA，透明背景",
+        "頭像 256×256，裁切與 generator verify 通過",
+        "雲母藍灰 #626E78、灰玫瑰赭 #A77B6C、石麻 #D4C6AC",
+        "圓方臉、寬鼻、眉缺、短鬍；低側結繩髮配單枚骨環，與兀突骨高瘦長臉繩辮區隔",
+        "南中皮札甲與固定短片，無披風、長飄帶或鬆垂腰帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/ahui_nan_portrait.png",
+        "assets/resources/sprites/generals/avatars/ahui_nan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/ahui-nan/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 140/140 avatar verify 通過；立繪 512×768、頭像 256×256 | 變更: 阿會喃雲母藍灰灰玫瑰赭立繪完成 | 阻塞: 此 worktree 的 Cocos Asset DB 尚待正確 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/ahui_nan_portrait.png",
+          "assets/resources/sprites/generals/avatars/ahui_nan_avatar.png",
+          "artifacts/ui-generated/ahui-nan/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA; source 1024×1536 preserved aspect ratio",
+          "Avatar is 256×256; manual crop (197,0)+220×220",
+          "generate-general-avatars --verify: 140 success, 0 failures",
+          "Cocos Asset DB refresh pending for ui-portrait-review worktree"
+        ],
+        "handoff_diff_status": "pending correct-worktree Cocos Asset DB refresh",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 F05455CF4E1EBA56896DB0DAD59606A406C2E3369455ABD4A9F54F3578FE5151",
+          "avatar SHA-256 DCBBF9C43EE067A4EA4DA4C458FF78DAB60BD948A899E8C8F915FE5B842C3459"
+        ]
+      }
+    }
+  ]
+}

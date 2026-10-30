@@ -1,0 +1,97 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0224",
+      "title": "孫禮立繪與頭像：魏藍、暗赤與鐵灰邊地騎將配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-31T10:00:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為魏將孫禮補齊正式立繪與列表頭像。魏藍為主色，暗赤與鐵灰作第二色。定位四十歲左右的魏國弓騎軍官：結實短身、寬方臉、粗眉、略下壓的眼角、短寬鼻，右眉上有小舊傷，留修整短鬍；黑髮束低髻，以暗赤頭巾束住。穿魏藍收袖騎兵札甲、鐵灰護具與暗赤橫向甲繫；持短弓並配腰側箭囊，和胡遵高盔長戟重甲剪影區隔。無披風、無長飄帶。",
+      "related": [
+        "UI-2-0207"
+      ],
+      "depends": [
+        "UI-2-0223"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "魏藍主色搭暗赤與鐵灰",
+        "結實短身、寬方臉、短鬍、暗赤頭巾與低束髮具孫禮辨識度",
+        "收袖騎兵札甲、短弓握法與腰側箭囊自然，無披風長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/sun_li_portrait.png",
+        "assets/resources/sprites/generals/avatars/sun_li_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/sun-li/"
+      ],
+      "notes": "2026-10-31 | 狀態: done | 驗證: 512×768 RGBA透明立繪、256×256 reviewed頭像、verify 1/0、Cocos刷新200 | 變更: 孫禮魏藍弓騎立繪與列表頭像正式入庫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "node tools_node/generate-general-avatars.js liu-chen\\nnode tools_node/generate-general-avatars.js liu-chen --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除劉諶本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+        "execution_steps": [
+          "盤點近期青年武將與宗室臉型髮冠配色",
+          "生成候選並從125px縮圖起審",
+          "必要時升級至250px檢查臉部與儀劍",
+          "定稿立繪與reviewed頭像",
+          "驗證並刷新Cocos資產",
+          "回報隊長後接續下一位"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/sun-li/prompt.txt",
+          "artifacts/ui-generated/sun-li/sun-li-candidate-v1.png",
+          "artifacts/ui-generated/sun-li/sun-li-candidate-v3.png"
+        ],
+        "validation_evidence": [
+          "candidate v3 dimensions 1024x1536 RGBA, alpha extrema 0..254",
+          "portrait 512x768 RGBA, alpha extrema 0..255",
+          "cropped and formal avatar 256x256 RGBA, alpha extrema 0..255",
+          "reviewed avatar retains headwrap, face and armor distinct from Hu Zun",
+          "avatar verify: 1 success, 0 failures",
+          "Cocos Asset DB refresh: HTTP 200"
+        ]
+      },
+      "validation_evidence": [
+        "candidate v2 dimensions 1024x1536 RGBA, alpha extrema 0..254",
+        "portrait 512x768 RGBA, alpha extrema 0..255",
+        "cropped and formal avatar 256x256 RGBA, alpha extrema 0..255",
+        "avatar verify: 1 success, 0 failures",
+        "Cocos Asset DB refresh: HTTP 200"
+      ],
+      "validation_cmd": "node tools_node/generate-general-avatars.js sun-li\nnode tools_node/generate-general-avatars.js sun-li --verify\nnode tools_node/build-ui-task-manifest.js\nRefresh Cocos Asset DB on this worktree",
+      "rollback_hint": "移除本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+      "execution_steps": [
+        "檢視近期蜀將臉型與裝備，設計朱褒獨特輪廓",
+        "生成候選並從125px縮圖起審",
+        "必要時升級至250px檢查面部與手持物",
+        "定稿立繪、reviewed裁切頭像與色盤台帳",
+        "驗證資產並刷新Cocos Asset DB"
+      ]
+    }
+  ]
+}

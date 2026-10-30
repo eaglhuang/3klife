@@ -1,0 +1,75 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0464",
+      "id": "UI-2-0172",
+      "title": "費禕立繪：蜀綠霧青藍溫雅官臣",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T12:26:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為名冊 ID fei-yi 建立 512×768 透明全身立繪與 256×256 頭像；採蜀綠基底與霧青藍副色，以溫雅圓長臉、微笑眼和輕便官帽區分同系列蜀臣。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 fei-yi 名冊 ID",
+        "以蜀綠為基底並配霧青藍與紙白",
+        "溫雅圓長臉、微笑眼及輕便官帽具辨識度",
+        "衣袖衣襬收束，無長飄帶與武將重甲"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/fei_yi_portrait.png",
+        "assets/resources/sprites/generals/avatars/fei_yi_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/fei-yi/"
+      ],
+      "notes": "2026-10-29 | 狀態: done | 驗證: avatar verify 通過；encoding/build manifest 通過 | 變更: 費禕立繪頭像完成，溫和臉型與霧青藍襟飾具辨識度 | 阻塞: Cocos Asset DB 待 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/fei_yi_portrait.png",
+          "assets/resources/sprites/generals/avatars/fei_yi_avatar.png",
+          "artifacts/ui-generated/fei-yi/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA transparent",
+          "Avatar generated with reviewed crop and copied to generals/avatars",
+          "generate-general-avatars --verify pending final run",
+          "Cocos Asset DB refresh pending"
+        ],
+        "handoff_diff_status": "pending Cocos Editor Refresh Assets",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 EEC72D6D4F403685398F40F04403726592E1FF43D8D107F4FBC81ED6DBFC4DF8",
+          "avatar SHA-256 0F3D8529AD039B2C06558A4F5DF08E105DB915E4D57279B0DDAF9AE5FEA5AE0E"
+        ]
+      }
+    }
+  ]
+}

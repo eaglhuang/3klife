@@ -1,0 +1,63 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0234",
+      "title": "左慈深靛暗青方士立繪與列表頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T16:22:42+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為方士左慈補齊正式立繪與列表頭像。採深靛、暗青與赭金配色，塑造五十餘歲清瘦高顴臉、深眼與短整鬚，束髮道冠與簡潔道袍；姿勢靈動但克制，持小型葫蘆與短拂塵，不使用管寧的白眉長白鬚、素灰藍頭巾與雙手收袖站姿。衣帶短而收束，不加長飄帶。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/zuo_ci_portrait.png"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768與256×256 RGBA、alpha 0..255；reviewed crop；avatar verify 成功；Cocos Asset DB HTTP 200 | 變更: 左慈差異化立繪與列表頭像已入庫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/zuo_ci_portrait.png",
+          "assets/resources/sprites/ui_avatars/cropped/zuo_ci_avatar.png",
+          "assets/resources/sprites/generals/avatars/zuo_ci_avatar.png",
+          "artifacts/ui-generated/zuo-ci/zuo-ci-candidate-v2.png"
+        ],
+        "validation_evidence": [
+          "RGBA size 512×768 portrait and 256×256 avatar, alpha 0..255",
+          "node tools_node/generate-general-avatars.js zuo-ci --verify: 1 success, 0 failures",
+          "Cocos asset-db refresh HTTP 200"
+        ],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

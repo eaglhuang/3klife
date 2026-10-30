@@ -1,0 +1,63 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0235",
+      "title": "于吉蒼青丹霞方士立繪與列表頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T16:26:52+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為方士于吉補齊正式立繪與列表頭像。避開左慈深靛道袍、束髮小道冠、短鬚持葫蘆與拂塵的視覺組合，改用六十餘歲圓潤寬額臉、鬆散灰髮與短白鬍、青灰布巾、蒼青與砂岩白色盤；持一枚小竹簡與小藥囊，不使用長柄道具，站姿平和而親切。服裝無長飄帶。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/yu_ji_portrait.png"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768與256×256 RGBA、alpha 0..255；reviewed crop；avatar verify 成功；Cocos Asset DB HTTP 200 | 變更: 于吉差異化立繪與列表頭像已入庫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/yu_ji_portrait.png",
+          "assets/resources/sprites/ui_avatars/cropped/yu_ji_avatar.png",
+          "assets/resources/sprites/generals/avatars/yu_ji_avatar.png",
+          "artifacts/ui-generated/yu-ji/yu-ji-candidate-v2.png"
+        ],
+        "validation_evidence": [
+          "RGBA size 512×768 portrait and 256×256 avatar, alpha 0..255",
+          "node tools_node/generate-general-avatars.js yu-ji --verify: 1 success, 0 failures",
+          "Cocos asset-db refresh HTTP 200"
+        ],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

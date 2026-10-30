@@ -1,0 +1,83 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1375",
+      "id": "UI-2-0186",
+      "title": "袁譚立繪與頭像：北境鈷藍與霜銀",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-30T07:21:38+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為敵軍袁譚補齊正式全身立繪與頭像，採北境鈷藍、霜銀與少量暗梅紅；以長心形窄下頜、鷹鉤直鼻、垂尾細鬚與單一高位折髻建立與其他武將不同的臉型、髮式和配色。",
+      "related": [
+        "UI-2-0185"
+      ],
+      "depends": [
+        "UI-2-0185"
+      ],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256，裁切設定及 generator verify 通過",
+        "北境鈷藍 #3F5E87、霜銀 #B9B5AA、暗梅紅 #7D4D53，並以鈷藍呼應魏系藍色基底、霜銀作主次對比",
+        "長心形窄下頜、直鷹鉤鼻、細長眼、垂尾短鬚，不複用既有寬方臉、圓方臉或高顴歪鼻",
+        "長髮梳後束成單一高位折髻，以霜銀方扣與藍織繩固定，不使用三環後髻、雙辮、冠辮或羽冠",
+        "甲片及內襟收束固定，避免長飄帶與鬆垂衣帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/yuan_tan_portrait.png",
+        "assets/resources/sprites/generals/avatars/yuan_tan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/yuan-tan/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 立繪 512×768 RGBA、頭像 256×256；全體 avatar verify 143 成功 0 失敗 | 變更: v1 長布尾修正為固定短甲片，鈷藍霜銀立繪與 reviewed 裁切完成 | 阻塞: 正確 worktree 的 Cocos Asset DB 刷新待處理",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/yuan-tan/prompt.txt",
+          "artifacts/ui-generated/yuan-tan/revision-prompt.txt",
+          "artifacts/ui-generated/yuan-tan/yuan-tan-candidate.png",
+          "artifacts/ui-generated/yuan-tan/yuan-tan-candidate-v2.png",
+          "assets/resources/sprites/generals/yuan_tan_portrait.png",
+          "assets/resources/sprites/generals/avatars/yuan_tan_avatar.png"
+        ],
+        "validation_evidence": [
+          "Candidate v1 was rejected after thumbnail review because plum fabric tails reached the knees; candidate v2 removes them and uses fixed short lamellar panels.",
+          "Formal portrait is 512×768 RGBA with transparent margin; 1024×1536 source was area-downsampled to 493×740 and centered without cropping.",
+          "Avatar is 256×256 from reviewed crop (171,0)+220×220.",
+          "generate-general-avatars.js --verify: 143 success, 0 failures.",
+          "Cocos Asset DB refresh remains pending for the ui-portrait-review worktree."
+        ],
+        "handoff_diff_status": "pending correct-worktree Cocos Asset DB refresh",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 BE2C9C76A1B7095B2BC3C874ABFD71C8646316067A9779C7E151BACE87A1CF4E",
+          "avatar SHA-256 83070327FE66D0E6B1F29B7E108189053C189F633A38A14B607F617BAC5F5BEA"
+        ]
+      }
+    }
+  ]
+}

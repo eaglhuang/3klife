@@ -1,0 +1,89 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0192",
+      "title": "沮授立繪與頭像：蒼松綠與砂金謀臣甲",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T08:06:33+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為沮授補齊正式全身立繪與武將列表頭像。以中年寬顴方下頜、濃鬚、短舊疤、緊束高髻與輕型謀臣甲建立辨識；與田豐灰鬚軟冠文士、近期魏藍甲將分流。採蒼松綠配砂金，衣料與甲裙收束，不加長飄帶。",
+      "related": [
+        "UI-2-0191"
+      ],
+      "depends": [
+        "UI-2-0191"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "蒼松綠主色配砂金副色",
+        "中年寬顴方下頜、濃鬚、短舊疤、緊束高髻與近期人物不同",
+        "簡牘道具及雙手自然，衣甲固定無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/ju_shou_portrait.png",
+        "assets/resources/sprites/generals/avatars/ju_shou_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/ju-shou/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA立繪、256×256 RGBA頭像；reviewed crop與全量verify通過；Cocos刷新成功 | 變更: 沮授v1定稿接入正式目錄 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "為沮授建立辨識度高的正式謀臣立繪與頭像。",
+        "position": "M6 武將正式美術目錄補齊",
+        "prereq": "UI-2-0191 已完成；沿用 GeneralArtPaths 正式美術路徑。"
+      },
+      "contracts": {
+        "input": [
+          "依沮授謀臣兼軍事角色設定；避免複用田豐衣冠與近期魏藍甲將；蒼松綠搭砂金。"
+        ],
+        "output": [
+          "產出512×768透明全身立繪、256×256 reviewed頭像、配色台帳列與正式路徑可載入資產。"
+        ],
+        "validation_cmd": "node tools_node/generate-general-avatars.js ju-shou\\nnode tools_node/generate-general-avatars.js ju-shou --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除沮授本卡新增正式立繪、頭像與候選素材，還原crop設定及配色台帳列並重建manifest。",
+        "execution_steps": [
+          "盤點近期人物臉型與配色",
+          "生成候選並按125px縮圖起審",
+          "必要時升級檢視五官道具",
+          "定稿立繪與reviewed頭像crop",
+          "驗證並刷新Cocos資產",
+          "回報隊長後接續名冊下一位"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/ju-shou/prompt.txt",
+          "artifacts/ui-generated/ju-shou/ju-shou-candidate-v1.png",
+          "assets/resources/sprites/generals/ju_shou_portrait.png",
+          "assets/resources/sprites/generals/avatars/ju_shou_avatar.png"
+        ],
+        "validation_evidence": [
+          "Candidate reviewed at 125px for full-body silhouette and 250px face/hand detail against Guan Yu; high compact knot, short dense beard and dispatch-scroll stance differ from Guan Yu long beard and from the recent scholar portraits.",
+          "Formal portrait verified as 512×768 RGBA with transparent margins.",
+          "Formal avatar verified as 256×256 RGBA using reviewed crop (146,0)+220×220; single and full avatar verification passed (149 success, 0 failures).",
+          "Cocos Asset DB refresh on assigned worktree returned HTTP 200."
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completion": 100,
+      "completed": "2026-10-30"
+    }
+  ]
+}

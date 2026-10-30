@@ -1,0 +1,79 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1422",
+      "id": "UI-2-0232",
+      "title": "田疇立繪與頭像：苔灰、麻白與栗棕隱士色盤",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T16:11:35+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為中立人物田疇補齊正式立繪與列表頭像。以苔灰、麻白和栗棕呈現避世田野文士色盤。塑造四十餘歲風霜感男性：中寬卵形臉、平緩眉、沉著深眼、鼻梁略寬、短灰黑鬍與鬢角霜白；黑灰髮束低髻，以簡單麻巾固定。穿麻白交領、苔灰短外袍與栗棕腰帶，袖口收束、不穿甲；持一卷簡圖和短木杖，姿勢平和警醒。避免禰衡清瘦菱形臉、單簪高髻、墨紫長袍與木擊節板；不畫長披帛或複雜衣帶。",
+      "related": [
+        "UI-2-0231"
+      ],
+      "depends": [
+        "UI-2-0231"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "苔灰／麻白／栗棕形成中立隱士色盤",
+        "四十餘歲中寬卵形臉平眉深眼短灰黑鬍與霜白鬢角清楚可辨",
+        "麻布短外袍收袖短杖簡圖姿勢自然且無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/tian_chou_portrait.png",
+        "assets/resources/sprites/generals/avatars/tian_chou_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/tian-chou/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768與256×256 RGBA、alpha 0..255；reviewed crop；avatar verify 成功；Cocos Asset DB HTTP 200 | 變更: 田疇正式立繪與列表頭像已入庫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "node tools_node/generate-general-avatars.js tian-chou\\nnode tools_node/generate-general-avatars.js tian-chou --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+        "execution_steps": [
+          "與禰衡等文士比較年齡臉型與衣裝，設定田疇樸素山野輪廓",
+          "生成候選並從125px縮圖起審，必要時升到250px",
+          "定稿512×768透明立繪與reviewed頭像",
+          "驗證尺寸／alpha／列表頭像並刷新Cocos資產"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/tian_chou_portrait.png",
+          "assets/resources/sprites/ui_avatars/cropped/tian_chou_avatar.png",
+          "assets/resources/sprites/generals/avatars/tian_chou_avatar.png"
+        ],
+        "validation_evidence": [
+          "RGBA size 512×768 portrait and 256×256 avatar, alpha 0..255",
+          "node tools_node/generate-general-avatars.js tian-chou --verify: 1 success, 0 failures",
+          "Cocos asset-db refresh HTTP 200"
+        ],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0122",
+      "title": "法正武將立繪：蜀綠與赭棕謀士識別",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為缺少正式立繪的法正製作512×768透明背景全身立繪，確立蜀綠基底與獨特赭棕副色，並讓臉部、髮束與服裝明確區別現有蜀將。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "輸出512×768 RGBA透明背景完整全身立繪，頭髮到鞋履不裁切",
+        "法正採寬梯形下頜、右額細疤、深陷眼與寬短鬚，和彭羕尖臉細鬚等現有蜀將區隔",
+        "主色蜀深苔綠 #3F654B，副色燒赭棕 #A45F3D，不套用五虎將特例",
+        "低盤髻配水平古銅簪；衣袍俐落、飄帶克制，文士袖型收束",
+        "完成頭像裁切、尺寸與 alpha 驗證"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/fa_zheng_portrait.png",
+        "assets/resources/sprites/generals/avatars/fa_zheng_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md"
+      ],
+      "notes": "2026-10-28 | 狀態: done | 驗證: 512×768 RGBA立繪、256×256頭像與generate-general-avatars --verify 1/1通過；與姜維、劉封、彭羕確認臉型及色彩區辨 | 變更: v1因接近彭羕退回；v2改寬下頜、寬短鬚及低盤髻；配色登錄GNR-SHU-FZ-01 | 阻塞: Cocos Asset DB待正確工作樹刷新匯入",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

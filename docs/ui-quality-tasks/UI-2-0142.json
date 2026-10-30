@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0434",
+      "id": "UI-2-0142",
+      "title": "荀攸武將立繪：魏藍與舊卷砂金的沉著謀士",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T06:57:30+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為荀攸建立 512×768 透明全身立繪與 256×256 頭像。以魏藍搭配舊卷砂金副色，用深眼窄顴臉、低束髮與扁平銅環文士冠建立謀士辨識。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "魏藍基底搭配舊卷砂金副色且不套用荀彧青綠色",
+        "深眼窄顴臉、低束髮、扁平銅環文士冠與束簡可辨",
+        "短直袍收束俐落，沒有長飄帶或垂布"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/xun_you_portrait.png",
+        "assets/resources/sprites/generals/avatars/xun_you_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/xun-you/"
+      ],
+      "notes": "已完成並通過立繪、頭像裁切驗證；Cocos Asset DB 尚待在本工作樹所屬 Editor Refresh Assets。與荀彧分開：荀彧維持清秀文士魏藍/鼠尾草青；荀攸用深眼窄顴、低束髮和砂金副色，不沿用荀彧冠帽造型。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

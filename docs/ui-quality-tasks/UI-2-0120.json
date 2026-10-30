@@ -1,0 +1,61 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0411",
+      "id": "UI-2-0120",
+      "title": "延長蔡文姬古琴並修正抱持姿勢",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-27",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-27T00:42:05+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依使用者回饋，延長蔡文姬古琴並修正雙手支撐與演奏位置，保留角色既有臉型、髮型、服裝辨識與透明背景。",
+      "related": [
+        "UI-2-0118"
+      ],
+      "depends": [],
+      "acceptance": [
+        "古琴呈完整長身七弦琴比例，清楚長於原稿",
+        "一手從琴身下方承托琴尾，另一手自然搭在琴弦上",
+        "臉型、髮型、服裝主色與全身構圖維持蔡文姬原有辨識",
+        "立繪 512x768 且背景透明",
+        "頭像裁切更新，40 位頭像驗證通過"
+      ],
+      "deliverables": [
+        "蔡文姬正式立繪與頭像",
+        "更新裁切資料與驗收紀錄"
+      ],
+      "notes": "2026-10-27 | 狀態: done | 驗證: 512×768透明立繪、256×256頭像、40/40頭像驗證通過 | 變更: 延長古琴並修正琴尾托手與搭弦姿勢，保留臉型及藍白主色 | 後續: Cocos Asset DB 待編輯器切回本工作樹後刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "type": "scratch-only candidate review",
+  "reference": {
+    "markedCount": 9,
+    "eyeRatioMedian": 0.401,
+    "eyeRatioRange": [
+      0.398,
+      0.403
+    ],
+    "faceHeightRatioMedian": 0.38,
+    "faceCenterXMedian": 0.498,
+    "landmarkMethod": "six unmarked eye positions estimated manually from 500px contact board; approximate, medium/low confidence"
+  },
+  "items": [
+    {
+      "id": "gan-ning",
+      "source": "assets/resources/sprites/generals/gan_ning_portrait.png",
+      "baseline": "C:/Users/User/.codex/worktrees/portrait-delivery/3KLife/scratch/portrait-review-20261028/selected-right-snapshot/gan_ning_avatar.png",
+      "candidate": "scratch\\portrait-review-20261028\\unmarked-candidates\\gan_ning_candidate.png",
+      "baselineCrop": {
+        "x": 170,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "candidateCrop": {
+        "x": 170,
+        "y": 18,
+        "w": 224,
+        "h": 224
+      },
+      "estimatedBaselineEyeYOutputPx": 123,
+      "estimatedSourceEyeY": 107.6,
+      "candidateEyeRatio": 0.4,
+      "referenceEyeRatio": 0.401,
+      "confidence": "medium",
+      "note": "髮頂與高束髮可保留；小幅下移裁框以對齊眼線",
+      "baselinePreview": "baseline-gan_ning.png",
+      "candidatePreview": "gan_ning_candidate.png"
+    },
+    {
+      "id": "liu-bei",
+      "source": "assets/resources/sprites/generals/liu_bei_portrait.png",
+      "baseline": "C:/Users/User/.codex/worktrees/portrait-delivery/3KLife/scratch/portrait-review-20261028/selected-right-snapshot/liu_bei_avatar.png",
+      "candidate": "scratch\\portrait-review-20261028\\unmarked-candidates\\liu_bei_candidate.png",
+      "baselineCrop": {
+        "x": 176,
+        "y": 5,
+        "w": 180,
+        "h": 180
+      },
+      "candidateCrop": {
+        "x": 176,
+        "y": -7,
+        "w": 180,
+        "h": 180
+      },
+      "estimatedBaselineEyeYOutputPx": 85,
+      "estimatedSourceEyeY": 64.8,
+      "candidateEyeRatio": 0.399,
+      "referenceEyeRatio": 0.401,
+      "confidence": "medium",
+      "note": "冠飾完整；上移裁框以將眼線下移至參考比例",
+      "baselinePreview": "baseline-liu_bei.png",
+      "candidatePreview": "liu_bei_candidate.png"
+    },
+    {
+      "id": "lu-bu",
+      "source": "assets/resources/sprites/generals/lu_bu_portrait.png",
+      "baseline": "C:/Users/User/.codex/worktrees/portrait-delivery/3KLife/scratch/portrait-review-20261028/selected-right-snapshot/lu_bu_avatar.png",
+      "candidate": "scratch\\portrait-review-20261028\\unmarked-candidates\\lu_bu_candidate.png",
+      "baselineCrop": {
+        "x": 142,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "candidateCrop": {
+        "x": 142,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "estimatedBaselineEyeYOutputPx": 160,
+      "estimatedSourceEyeY": 160,
+      "candidateEyeRatio": 0.625,
+      "referenceEyeRatio": 0.401,
+      "confidence": "low",
+      "note": "保留雙長羽冠的推薦候選；比例例外。標準眼線版本需 y≈57，會截斷羽冠，不推薦",
+      "alternative": {
+        "candidateCrop": {
+          "x": 142,
+          "y": 57,
+          "w": 256,
+          "h": 256
+        },
+        "candidateEyeRatio": 0.402,
+        "file": "scratch\\portrait-review-20261028\\unmarked-candidates\\lu_bu_standard-eye-clips-plume.png",
+        "review": "達到參考眼線但明顯裁掉雙長羽冠；不推薦",
+        "preview": "lu_bu_standard-eye-clips-plume.png"
+      },
+      "baselinePreview": "baseline-lu_bu.png",
+      "candidatePreview": "lu_bu_candidate.png"
+    },
+    {
+      "id": "lu-xun",
+      "source": "assets/resources/sprites/generals/lu_xun_portrait.png",
+      "baseline": "C:/Users/User/.codex/worktrees/portrait-delivery/3KLife/scratch/portrait-review-20261028/selected-right-snapshot/lu_xun_avatar.png",
+      "candidate": "scratch\\portrait-review-20261028\\unmarked-candidates\\lu_xun_candidate.png",
+      "baselineCrop": {
+        "x": 156,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "candidateCrop": {
+        "x": 156,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "estimatedBaselineEyeYOutputPx": 113,
+      "estimatedSourceEyeY": 88.3,
+      "candidateEyeRatio": 0.441,
+      "referenceEyeRatio": 0.401,
+      "confidence": "medium",
+      "note": "保留髮髻頂部；眼線略低於參考，但下移裁框約8px會切到髮髻",
+      "baselinePreview": "baseline-lu_xun.png",
+      "candidatePreview": "lu_xun_candidate.png"
+    },
+    {
+      "id": "sun-quan",
+      "source": "assets/resources/sprites/generals/sun_quan_portrait.png",
+      "baseline": "C:/Users/User/.codex/worktrees/portrait-delivery/3KLife/scratch/portrait-review-20261028/selected-right-snapshot/sun_quan_avatar.png",
+      "candidate": "scratch\\portrait-review-20261028\\unmarked-candidates\\sun_quan_candidate.png",
+      "baselineCrop": {
+        "x": 156,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "candidateCrop": {
+        "x": 156,
+        "y": 1,
+        "w": 200,
+        "h": 200
+      },
+      "estimatedBaselineEyeYOutputPx": 103,
+      "estimatedSourceEyeY": 80.5,
+      "candidateEyeRatio": 0.397,
+      "referenceEyeRatio": 0.401,
+      "confidence": "medium",
+      "note": "冠飾保持完整；微調1px即可對齊參考眼線",
+      "baselinePreview": "baseline-sun_quan.png",
+      "candidatePreview": "sun_quan_candidate.png"
+    },
+    {
+      "id": "zhou-yu",
+      "source": "assets/resources/sprites/generals/zhou_yu_portrait.png",
+      "baseline": "C:/Users/User/.codex/worktrees/portrait-delivery/3KLife/scratch/portrait-review-20261028/selected-right-snapshot/zhou_yu_avatar.png",
+      "candidate": "scratch\\portrait-review-20261028\\unmarked-candidates\\zhou_yu_candidate.png",
+      "baselineCrop": {
+        "x": 154,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "candidateCrop": {
+        "x": 154,
+        "y": 9,
+        "w": 224,
+        "h": 224
+      },
+      "estimatedBaselineEyeYOutputPx": 113,
+      "estimatedSourceEyeY": 98.9,
+      "candidateEyeRatio": 0.401,
+      "referenceEyeRatio": 0.401,
+      "confidence": "medium",
+      "note": "保留束髮飾物；小幅下移裁框以對齊眼線",
+      "baselinePreview": "baseline-zhou_yu.png",
+      "candidatePreview": "zhou_yu_candidate.png"
+    }
+  ]
+}

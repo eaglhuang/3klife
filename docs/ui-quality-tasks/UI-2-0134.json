@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0426",
+      "id": "UI-2-0134",
+      "title": "郭淮武將立繪：魏藍與暗酒紅副色邊防老將",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T00:16:11+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為郭淮建立 512×768 透明全身立繪與 256×256 頭像。以魏藍搭配暗酒紅副色，呈現灰鬢短鬚、護頰邊防盔與沉著老將輪廓。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "魏藍基底搭配獨立暗酒紅副色",
+        "灰鬢、短鬚與護頰盔區隔曹洪低軍帽、王雙頭帶",
+        "衣袍與甲裙固定俐落，沒有長垂帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/guo_huai_portrait.png",
+        "assets/resources/sprites/generals/avatars/guo_huai_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/guo-huai/"
+      ],
+      "notes": "角色定位為多年邊防老將；使用護頰盔和灰鬢，不重複近作頭部配件。；已完成，Cocos Asset DB 待正確工作樹的 Editor 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

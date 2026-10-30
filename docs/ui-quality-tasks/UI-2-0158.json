@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0450",
+      "id": "UI-2-0158",
+      "title": "劉度武將立繪：中立石青灰與霧骨白的沉穩郡守",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T07:33:47+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為劉度建立 512×768 透明全身立繪與 256×256 頭像；名冊勢力為 neutral，採石青灰搭配霧骨白，呈現老成長臉與郡守官員身分。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "中立角色採石青灰與霧骨白，不套用蜀吳魏陣營色",
+        "老成長臉、下垂眼、灰鬢和低圓官帽明確可辨",
+        "袍服窄袖收束，無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/liu_du_portrait.png",
+        "assets/resources/sprites/generals/avatars/liu_du_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/liu-du/"
+      ],
+      "notes": "劉度名冊勢力為 neutral，採石青灰 #5D7076、霧骨白 #C9C5B9、暗鐵。老成瘦長臉、下垂眼、灰鬢與灰短鬚；低圓黑官帽配一枚霧骨白扣。石青灰直袍、霧骨白短前襟和固定袖口，持郡守文牒及木笏；窄袖、無披風飄帶，避免韓玄寬方臉、金旋高顴尖臉。 已完成；正式立繪 SHA-256 BB642B1E7EC4DE1879EFE80BF43F44F2E180501CB136899961F132CD7039DBEB，頭像 SHA-256 214D54E905A53AAA8189D1AE0F4CD9C977935A4AE74AE2F4713D25979D549964。Cocos Asset DB Refresh 尚待正確 Editor。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

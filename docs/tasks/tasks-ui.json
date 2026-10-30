@@ -24,10 +24,10 @@
   "shard": "UI",
   "generated": "2026-04-06",
   "summary": {
-    "done": 71,
-    "in_progress": 21,
+    "done": 78,
+    "in_progress": 22,
     "open": 14,
-    "total": 106
+    "total": 114
   },
   "tasks": [
     {
@@ -2738,6 +2738,510 @@
         "task card 與文件回寫"
       ],
       "notes": "2026-04-20 | open | 參考圖已確認；目前 frame pieces 與 formal type icons 資源已存在。 | none"
+    },
+    {
+      "doc_id": "doc_task_1437",
+      "id": "UI-2-0247",
+      "title": "潘浚差異化立繪與正方頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "完成吳將潘浚的正式立繪與同比例頭像。角色以暗磚吳紅配深青綠、紙白與舊銅，採長菱形高顴骨臉、狹長眼、短分叉鬍與高窄黑紗官帽，與朱異及其他吳將區隔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪512×768 RGBA，三角落 alpha 為透明",
+        "generals與ui_avatars/cropped頭像各256×256 RGBA",
+        "裁切設定source=reviewed，125px預覽確認臉和官帽完整置中",
+        "character-palette-ledger登錄GNR-WU-PJ-01",
+        "全量頭像驗證203成功0失敗，7458 Asset DB刷新成功，三個PNG皆有Cocos meta"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/pan_jun_portrait.png",
+        "assets/resources/sprites/generals/avatars/pan_jun_avatar.png",
+        "assets/resources/sprites/ui_avatars/cropped/pan_jun_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA；雙頭像256×256 RGBA；reviewed crop；203 success/0 fail；7458 refresh success；三份 meta 存在 | 變更: 完成潘浚暗磚紅/深青綠立繪、短鬚高窄官帽差異化與正式頭像 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_1438",
+      "id": "UI-2-0248",
+      "title": "呂凱南中軍政官立繪與正方頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "完成蜀將呂凱正式全身立繪與同比例頭像。以柔蕨蜀綠搭赭紅、紙白、炭灰和舊銅；使用南中日曬膚色、長窄臉、粗平眉、短鬍和纏布頭巾，手持地圖與竹製路標，與既有蜀將區隔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪512×768 RGBA且三角透明",
+        "generals與ui_avatars/cropped頭像各256×256 RGBA",
+        "reviewed crop且125px預覽保留頭巾臉部",
+        "character-palette-ledger登錄GNR-SHU-LK-01",
+        "全量頭像驗證204成功0失敗，7458 Asset DB刷新成功，三個PNG都有Cocos meta"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/lv_kai_portrait.png",
+        "assets/resources/sprites/generals/avatars/lv_kai_avatar.png",
+        "assets/resources/sprites/ui_avatars/cropped/lv_kai_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA透明；雙頭像256×256 RGBA；reviewed crop；204 success/0 fail；7458 refresh success；三份 meta 存在 | 變更: 完成呂凱柔蕨綠/赭紅南中軍政官立繪與頭像 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_1439",
+      "id": "UI-2-0249",
+      "title": "陳到蜀綠赭橙護衛將領立繪與頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "完成蜀將陳到正式全身立繪與同比例頭像。以松針蜀綠、暗赭橙、骨白和暗鐵灰呈現緊實護衛將領；窄梯形臉、左眉舊傷、短鬚、低矮札盔與盾短刀姿態，腰帶尾收束，與趙雲及張飛區隔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA立繪且透明",
+        "雙路徑256×256 RGBA頭像",
+        "reviewed crop並經125px預覽",
+        "character-palette-ledger登錄GNR-SHU-CD-01",
+        "全量驗證205成功0失敗，7458 Asset DB刷新成功，三個PNG皆有meta"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/chen_dao_portrait.png",
+        "assets/resources/sprites/generals/avatars/chen_dao_avatar.png",
+        "assets/resources/sprites/ui_avatars/cropped/chen_dao_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA透明；雙頭像256×256 RGBA；reviewed crop；205 success/0 fail；7458 refresh success；三份 meta 存在 | 變更: 完成陳到松針綠暗赭橙護衛將領立繪與頭像，收束腰帶垂尾 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_1440",
+      "id": "UI-2-0250",
+      "title": "吳班柳葉綠輕裝弓將立繪與正方頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "完成蜀將吳班正式全身立繪與同比例頭像。以柳葉蜀綠、溫赭金、骨白與深棕呈現輕裝弓手；較寬橢圓臉、高束髮、短鬍髭及短反曲弓，與陳到重甲盾劍和呂凱地圖軍政官區隔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA立繪且透明",
+        "雙路徑256×256 RGBA頭像",
+        "reviewed crop並經125px確認",
+        "character-palette-ledger登錄GNR-SHU-WB-01",
+        "全量驗證206成功0失敗、7458 Asset DB刷新成功、三個PNG均有Cocos meta"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/wu_ban_portrait.png",
+        "assets/resources/sprites/generals/avatars/wu_ban_avatar.png",
+        "assets/resources/sprites/ui_avatars/cropped/wu_ban_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA透明；雙頭像256×256 RGBA；reviewed crop；206 success/0 fail；7458 refresh success；三份 meta 存在 | 變更: 完成吳班柳葉綠/溫赭金輕裝弓將立繪與頭像 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_1441",
+      "id": "UI-2-0251",
+      "title": "孫皓酒紅舊金帝王立繪與頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "完成吳末君主孫皓的正式全身立繪與同比例頭像。使用帝王酒紅、舊金、墨黑和象牙白；冷峻清瘦長臉、高直黑漆冠與玉笏，和呂布紫黑戰甲及吳國武將群明確區隔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA立繪且透明",
+        "雙路徑256×256 RGBA頭像",
+        "reviewed crop並經125px確認冠冕及臉部完整",
+        "palette ledger登錄GNR-ENEMY-SH-01",
+        "全量驗證207成功0失敗，7458 Asset DB刷新成功，三個PNG有Cocos meta"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/sun_hao_portrait.png",
+        "assets/resources/sprites/generals/avatars/sun_hao_avatar.png",
+        "assets/resources/sprites/ui_avatars/cropped/sun_hao_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA透明；雙頭像256×256 RGBA；reviewed crop；207 success/0 fail；7458 refresh success；三份 meta 存在 | 變更: 完成孫皓帝王酒紅舊金立繪與正式頭像 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_1442",
+      "id": "UI-2-0252",
+      "title": "孫尚香吳紅青綠女將立繪與正方頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "完成吳國孫尚香正式全身立繪與同比例頭像。以朱砂吳紅、深青玉、暖象牙與舊銅呈現；寬心形臉、自然妝容、單束高環髻和短劍，與二喬、蔡文姬及男性弓手區隔。衣物腰束固定，無長飄帶與拖尾。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA立繪且透明",
+        "雙路徑256×256 RGBA頭像",
+        "reviewed crop並經125px確認",
+        "palette ledger登錄GNR-WU-SSX-01",
+        "全量驗證208成功0失敗，7458刷新成功，三個PNG皆有Cocos meta"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/sun_shang_xiang_portrait.png",
+        "assets/resources/sprites/generals/avatars/sun_shang_xiang_avatar.png",
+        "assets/resources/sprites/ui_avatars/cropped/sun_shang_xiang_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA透明；雙頭像256×256 RGBA；reviewed crop；208 success/0 fail；7458 refresh success；三份 meta 存在 | 變更: 完成孫尚香朱砂紅/深青玉女將立繪與正式頭像 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_1443",
+      "id": "UI-2-0253",
+      "title": "蔡琰灰玉赭褐女文官立繪與正方頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "完成名冊角色蔡琰正式立繪與同比例頭像。採灰玉、赭褐、紙白配色與圓菱形臉、左側低髻、短闔竹簡，刻意避開蔡文姬既有高編髻、深墨藍長窄臉和七弦琴造型。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA立繪且透明",
+        "雙路徑256×256 RGBA頭像",
+        "reviewed crop並經125px確認",
+        "palette ledger登錄GNR-ENEMY-CY-01",
+        "全量驗證209成功0失敗、7458刷新成功、三個PNG皆有meta"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/cai_yan_portrait.png",
+        "assets/resources/sprites/generals/avatars/cai_yan_avatar.png",
+        "assets/resources/sprites/ui_avatars/cropped/cai_yan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA透明；雙頭像256×256 RGBA；reviewed crop；209 success/0 fail；7458 refresh success；三份 meta 存在 | 變更: 完成蔡琰灰玉/赭褐女文官立繪與頭像，區隔蔡文姬 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_1444",
+      "id": "UI-2-0254",
+      "title": "黃月英武將 ID 正式立繪與頭像路徑對齊",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T17:54:28+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把既有黃月英立繪和頭像接到名冊 canonical id huang-yue-ying 對應的正式美術路徑，保留原有差異化美術和 reviewed crop，確保 general-art-paths 可按 ID 載入。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "canonical huang_yue_ying_portrait.png 為512×768 RGBA",
+        "canonical正式與裁切頭像為256×256",
+        "canonical crop source=reviewed",
+        "全量頭像驗證通過並刷新7458",
+        "既有美術內容不重畫、不改色票",
+        "既有美術內容不重畫、不改色票"
+      ],
+      "deliverables": [
+        "canonical portrait",
+        "formal avatar",
+        "cropped avatar",
+        "crop alias and task record"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: reviewed crop、全量頭像驗證通過、7458 refresh success | 變更: 對齊黃月英canonical ID立繪與雙頭像路徑，保留原圖 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_1445",
+      "id": "UI-2-0255",
+      "title": "張春華魏藍素雅女文官立繪與列表頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T18:20:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "製作張春華差異化魏藍立繪與武將列表頭像，依成熟女文官特色設計獨立五官、低位盤髮與細窄銀簪。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "透明背景 512×768 RGBA 正式立繪",
+        "正式與列表頭像均為 256×256 RGBA",
+        "reviewed crop 並經縮圖檢查",
+        "全量 avatar verify 通過並刷新7458 Asset DB",
+        "色票符合魏國藍色基底且造型與既有女角可辨識"
+      ],
+      "deliverables": [
+        "portrait",
+        "formal avatar",
+        "cropped avatar",
+        "reviewed crop",
+        "palette ledger"
+      ],
+      "notes": "2026-10-30 | 狀態: in-progress | 驗證: pending | 變更: 製作張春華差異化魏藍立繪及列表頭像 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

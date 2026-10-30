@@ -1,0 +1,63 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0240",
+      "title": "張南松綠赭皮青年槍將立繪與列表頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T16:41:24+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為蜀將張南補齊正式立繪與列表頭像。採灰橄欖綠主色搭赭棕皮革與舊象牙色；塑造三十歲左右短寬臉、斷眉小疤、鼻樑略寬、無鬚、側髮短而後束成小馬尾，神情堅毅。穿輕便層甲與收袖短袍，持直柄長槍，槍纓短結。避免張飛寬方臉全鬍紅黑重甲、張苞散束長髮與張飛相似臉型；衣帶無長飄帶。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/zhang_nan_portrait.png"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768與256×256 RGBA、alpha 0..255；reviewed crop；avatar verify 成功；Cocos Asset DB HTTP 200 | 變更: 張南差異化立繪與列表頭像已入庫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/zhang_nan_portrait.png",
+          "assets/resources/sprites/ui_avatars/cropped/zhang_nan_avatar.png",
+          "assets/resources/sprites/generals/avatars/zhang_nan_avatar.png",
+          "artifacts/ui-generated/zhang-nan/zhang-nan-candidate-v3.png"
+        ],
+        "validation_evidence": [
+          "RGBA size 512×768 portrait and 256×256 avatar, alpha 0..255",
+          "node tools_node/generate-general-avatars.js zhang-nan --verify: 1 success, 0 failures",
+          "Cocos asset-db refresh HTTP 200"
+        ],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

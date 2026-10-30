@@ -1,0 +1,80 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1374",
+      "id": "UI-2-0185",
+      "title": "金環三結立繪與頭像：霧玉綠與鐵莓紫",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-30T07:16:43+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為金環三結補齊正式全身立繪與頭像，使用霧玉綠、鐵莓紫、鹽麻與少量霧金，塑造三枚環扣後束短髮、窄下頜與分叉短鬚，和前列南中人物區隔。",
+      "related": [
+        "UI-2-0184"
+      ],
+      "depends": [
+        "UI-2-0184"
+      ],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256，裁切設定及 generator verify 通過",
+        "霧玉綠 #6C8677、鐵莓紫 #72525F、鹽麻 #D0C4AC 與前列南中人物色票區隔，霧金 #AF9864 僅少量用於環扣",
+        "短髮於後腦收成三枚小環結並固定於低位，不使用辮冠、雙粗辮、單頂髻或羽飾",
+        "窄下頜、細長眼、鼻樑直、分叉短鬚與中等身形，區隔董荼那歪鼻高顴、兀突骨長臉、孟獲寬方臉及阿會喃圓方臉",
+        "短甲輪廓緊束，不使用披風、長衣帶或鬆垂腰帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/jin_huan_san_jie_portrait.png",
+        "assets/resources/sprites/generals/avatars/jin_huan_san_jie_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/jin-huan-san-jie/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 立繪 512×768 RGBA、頭像 256×256；全體 avatar verify 142 成功 0 失敗 | 變更: 霧玉綠與鐵莓紫立繪、reviewed 裁切、色票登錄完成 | 阻塞: Cocos Asset DB 尚待在正確 worktree 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/jin_huan_san_jie_portrait.png",
+          "assets/resources/sprites/generals/avatars/jin_huan_san_jie_avatar.png",
+          "artifacts/ui-generated/jin-huan-san-jie/prompt.txt",
+          "artifacts/ui-generated/jin-huan-san-jie/jin-huan-san-jie-candidate.png"
+        ],
+        "validation_evidence": [
+          "Formal portrait is 512×768 RGBA; 1024×1536 source was transparent and area-downsampled without cropping.",
+          "Avatar is 256×256 from reviewed crop (180,0)+220×220.",
+          "generate-general-avatars.js --verify: 142 success, 0 failures.",
+          "Cocos Asset DB refresh remains pending for the ui-portrait-review worktree."
+        ],
+        "handoff_diff_status": "pending correct-worktree Cocos Asset DB refresh",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 050710F6D43E9EEC17521809C61EF7368D81779A7D428C461730B21533139982",
+          "avatar SHA-256 B24F3D6F7FDDBA98814C7AEC52350B11A2456E3D98E0C6587B0BCB3ABAA3B7E1"
+        ]
+      }
+    }
+  ]
+}

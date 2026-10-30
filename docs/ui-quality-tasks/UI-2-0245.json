@@ -1,0 +1,55 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1435",
+      "id": "UI-2-0245",
+      "title": "武將列表接入正式人物頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T17:13:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "將已完成正式立繪與同比例頭像接入遊戲武將列表。每列顯示正方形頭像，首屏預載確保列表初次顯示完整，缺圖沿用性別剪影 fallback。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "武將列表首屏可見列均顯示頭像；缺圖者保留剪影 fallback；頭像不變形且欄位對齊；7458 實際預覽通過"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/components/GeneralListComposite.ts",
+        "assets/resources/ui-spec/layouts/general-list-main.json"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 202 success/0 fail；UI spec strict 通過；Compute Gate quick 3/3；Asset DB 7458 HTTP 200；GeneralList capture 7458 pass-with-minor-residuals，首屏可見列皆有頭像 | 變更: 正式頭像欄和首屏預載完成 | 阻塞: snapshot baseline 有全域既存差異；scope guard 受工作樹先前大量未提交變更影響",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

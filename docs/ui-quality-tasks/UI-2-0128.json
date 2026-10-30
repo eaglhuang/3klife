@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0420",
+      "id": "UI-2-0128",
+      "title": "關興武將立繪：蜀綠與月石灰青年將領辨識",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-28T23:42:54+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為關興建立 512×768 透明全身立繪與 256×256 頭像。以蜀綠基底、月石灰副色呈現年輕將領輪廓，採無鬚心形臉與半束高馬尾，和關羽及其他蜀將區隔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "蜀綠基底搭配月石灰副色，與既有色組不同",
+        "無鬚心形臉、半束高馬尾，避免關羽長髯形象",
+        "青年武將甲袍俐落，無多餘飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/guan_xing_portrait.png",
+        "assets/resources/sprites/generals/avatars/guan_xing_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/guan-xing/"
+      ],
+      "notes": "關興不可複製關羽長鬚、寬臉與成熟威嚴；明確呈現青年面貌和不同髮式。；已完成，Cocos Asset DB 待正確工作樹的 Editor 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

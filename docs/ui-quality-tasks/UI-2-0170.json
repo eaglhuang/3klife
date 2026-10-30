@@ -1,0 +1,75 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0462",
+      "id": "UI-2-0170",
+      "title": "鄧芝立繪：蜀綠燒赭外交文臣",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T12:24:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為名冊 ID deng-zhi 建立 512×768 透明全身立繪與 256×256 頭像；採蜀綠基底與燒赭銅棕副色，強化灰鬢挺直長臉與外交官冠袍剪影，與孫乾、麋竺等文臣分流。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 deng-zhi 名冊 ID",
+        "以蜀綠為基底並配燒赭銅棕與紙白",
+        "灰鬢長臉、短灰鬚、正式外交官冠與國書具辨識度",
+        "服裝收束、無長飄帶與武將重甲"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/deng_zhi_portrait.png",
+        "assets/resources/sprites/generals/avatars/deng_zhi_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/deng-zhi/"
+      ],
+      "notes": "2026-10-29 | 狀態: done | 驗證: avatar verify 通過；encoding/build manifest 通過 | 變更: 鄧芝立繪頭像完成，蜀綠搭燒赭銅棕使節造型 | 阻塞: Cocos Asset DB 待 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/deng_zhi_portrait.png",
+          "assets/resources/sprites/generals/avatars/deng_zhi_avatar.png",
+          "artifacts/ui-generated/deng-zhi/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA transparent",
+          "Avatar generated with reviewed crop and copied to generals/avatars",
+          "generate-general-avatars --verify pending final run",
+          "Cocos Asset DB refresh pending"
+        ],
+        "handoff_diff_status": "pending Cocos Editor Refresh Assets",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 FC67F83E1ADECFE6910C57358DC167507CB2AC48C613E0BD1FE0CB8E7075EAE8",
+          "avatar SHA-256 2EB9138DD60F6AB42F33DA105836A6580B708E755D80BC6546D3DC0515D270E2"
+        ]
+      }
+    }
+  ]
+}

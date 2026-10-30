@@ -1,0 +1,84 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1421",
+      "id": "UI-2-0231",
+      "title": "禰衡立繪與頭像：墨紫、紙白與青玉士人配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T16:08:02+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為中立勢力名士禰衡補齊正式立繪與列表頭像。以墨紫、紙白和少量青玉作士人專屬色盤。定位三十歲左右清瘦名士：窄菱形長臉、銳利細眼、高而直的鼻梁、微挑眉與克制的不屑神情，清剃無鬚；黑髮束成略鬆的單髻，以一支青玉短簪固定。著收束袖口的簡潔墨紫短外袍、紙白交領與少量青玉佩飾；手持短簡和一枚木質擊節板，姿態自然。可留一層短垂袖褶呈文士感，但不畫長披帛、複雜衣帶或武將甲胄。",
+      "related": [
+        "UI-2-0230"
+      ],
+      "depends": [
+        "UI-2-0230"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "墨紫／紙白／青玉形成文士專屬色盤",
+        "清瘦窄菱形臉銳眼高直鼻微挑眉且清剃無鬚",
+        "短外袍收袖短簡與木擊節板自然且無長披帛"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/mi_heng_portrait.png",
+        "assets/resources/sprites/generals/avatars/mi_heng_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/mi-heng/"
+      ],
+      "notes": "2026-10-31 | done | portrait 512x768 RGBA; avatar 256x256 RGBA; reviewed crop verify 1/0; Cocos refresh HTTP 200.",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "node tools_node/generate-general-avatars.js mi-heng\\nnode tools_node/generate-general-avatars.js mi-heng --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+        "execution_steps": [
+          "比較其他文士人物，設計禰衡清瘦銳利臉型、單髻及短袍色盤",
+          "生成候選並從125px縮圖起審，必要時升到250px",
+          "定稿512×768透明立繪與reviewed頭像",
+          "驗證尺寸／alpha／列表頭像並刷新Cocos資產"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/mi-heng/prompt.txt",
+          "artifacts/ui-generated/mi-heng/mi-heng-candidate-v1.png",
+          "assets/resources/sprites/generals/mi_heng_portrait.png",
+          "assets/resources/sprites/ui_avatars/cropped/mi_heng_avatar.png"
+        ],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "validation_evidence": [
+        "Candidate v1 1024x1536 RGBA, alpha extrema 0..254",
+        "Formal portrait 512x768 RGBA, alpha extrema 0..255",
+        "Cropped and mirrored avatar 256x256 RGBA, alpha extrema 0..255",
+        "Reviewed crop avatar verify: 1 success, 0 failures",
+        "Cocos Asset DB refresh: HTTP 200",
+        "Compared face and color against Guo Jia; clean-shaven diamond face, ink-plum and paper-white scheme remain distinct"
+      ]
+    }
+  ]
+}

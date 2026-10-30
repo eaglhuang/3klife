@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0427",
+      "id": "UI-2-0135",
+      "title": "陳泰武將立繪：魏藍與暖灰米副色文武官辨識",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T00:22:17+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為陳泰建立 512×768 透明全身立繪與 256×256 頭像。使用魏藍搭配暖灰米副色，呈現沉穩中年文武官形象，以圓卵臉、短黑鬚與無護頰平冠建立辨識。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "魏藍基底搭配暖灰米副色",
+        "圓卵臉、短黑鬚與無護頰平冠區別郭淮及滿寵",
+        "衣裝端正、袖口收束，無長垂帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/chen_tai_portrait.png",
+        "assets/resources/sprites/generals/avatars/chen_tai_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/chen-tai/"
+      ],
+      "notes": "陳泰走文武兼備的端正文官甲袍；避免護頰盔、頭巾和繁複飄帶。；已完成，Cocos Asset DB 待正確工作樹的 Editor 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

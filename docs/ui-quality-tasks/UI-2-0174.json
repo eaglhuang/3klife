@@ -1,0 +1,75 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0466",
+      "id": "UI-2-0174",
+      "title": "徐庶立繪：蜀綠墨梅文武策士",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T12:31:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為名冊 ID xu-shu 建立 512×768 透明全身立繪與 256×256 頭像；採蜀綠基底與墨梅副色，呈現文武兼備策士的無冠束髮、修長臉與腰佩短劍，和官帽文臣區分。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 xu-shu 名冊 ID",
+        "以蜀綠為基底並配墨梅紫與紙白",
+        "修長策士臉、簡單束髮與文武兼備道具具辨識度",
+        "衣袍窄袖收束，無長飄帶與寬披風"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/xu_shu_portrait.png",
+        "assets/resources/sprites/generals/avatars/xu_shu_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/xu-shu/"
+      ],
+      "notes": "2026-10-29 | 狀態: done | 驗證: avatar verify 通過；encoding/build manifest 通過 | 變更: 徐庶立繪頭像完成，取消長腰垂巾並收直袍襬 | 阻塞: Cocos Asset DB 待 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/xu_shu_portrait.png",
+          "assets/resources/sprites/generals/avatars/xu_shu_avatar.png",
+          "artifacts/ui-generated/xu-shu/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA transparent",
+          "Avatar generated with reviewed crop and copied to generals/avatars",
+          "generate-general-avatars --verify pending final run",
+          "Cocos Asset DB refresh pending"
+        ],
+        "handoff_diff_status": "pending Cocos Editor Refresh Assets",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 864C85C7AF5246510919797DAE0F08954C0E632E0194A9687E3F154739DF0EA5",
+          "avatar SHA-256 DBE1C241B9AD9B5B0EDCE5ED4DE4C73A74E3D89CAC8C77DC6600F2A21714165C"
+        ]
+      }
+    }
+  ]
+}

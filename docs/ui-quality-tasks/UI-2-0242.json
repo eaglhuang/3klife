@@ -1,0 +1,63 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0242",
+      "title": "孫盛朱紅青瓷天文地理文士立繪與列表頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T16:51:05+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為吳系文士孫盛補齊正式立繪與列表頭像。按吳國紅色基底，採低飽和朱紅、青瓷藍綠與舊銅。塑造四十餘歲高額窄三角臉、顴骨較高、尖下巴、略瞇的觀察眼、細短鬍與低髻軟巾；穿收袖文士袍。一手持展開的天文地理圖卷，另一手托小型銅製測影圭尺，姿勢沉靜而專注。避免一般武將甲胄與近期角色的方士／竹簡姿態，衣帶簡潔無長飄帶。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/sun_sheng_portrait.png"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768與256×256 RGBA、alpha 0..255；reviewed crop；avatar verify 成功；Cocos Asset DB HTTP 200 | 變更: 孫盛差異化立繪與列表頭像已入庫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/sun_sheng_portrait.png",
+          "assets/resources/sprites/ui_avatars/cropped/sun_sheng_avatar.png",
+          "assets/resources/sprites/generals/avatars/sun_sheng_avatar.png",
+          "artifacts/ui-generated/sun-sheng/sun-sheng-candidate-v3.png"
+        ],
+        "validation_evidence": [
+          "RGBA size 512×768 portrait and 256×256 avatar, alpha 0..255",
+          "node tools_node/generate-general-avatars.js sun-sheng --verify: 1 success, 0 failures",
+          "Cocos asset-db refresh HTTP 200"
+        ],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

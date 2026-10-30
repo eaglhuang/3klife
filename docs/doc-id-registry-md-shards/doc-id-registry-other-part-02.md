@@ -1,14 +1,13 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-07-19
-> 這是 `doc-id-registry.md` 的「其它類」分片，第 2/6 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
+> 生成日期: 2026-10-30
+> 這是 `doc-id-registry.md` 的「其它類」分片，第 2/7 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 其它類 (`doc_other`) — Part 2/6
+## 其它類 (`doc_other`) — Part 2/7
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_other_0675` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0034-evidence-evolution-signal-policy.task.md | TASK-APF-0034 — Evidence evolution signal policy |
 | `doc_other_0676` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0035-evolution-police-named-scanner.task.md | TASK-APF-0035 — Evolution Police named scanner |
 | `doc_other_0677` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0036-suppression-recurrence-stale-base-safeguards.task.md | TASK-APF-0036 — Suppression, recurrence, and stale-base safeguards |
 | `doc_other_0678` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0037-orchestrator-profile-cli-wiring-decomposition-evolution.task.md | TASK-APF-0037 — Orchestrator, profile, and CLI wiring for Decomposition/Evolution Police |
@@ -295,3 +294,4 @@
 | `doc_other_1296` | docs/ai_atomic_framework/framework-drafts/release-trust-ops.md | Release Trust Continuous Verification |
 | `doc_other_1297` | docs/ai_atomic_framework/governance-overview/governance-overview.md | ATM 框架治理機制全景 (zh-TW) |
 | `doc_other_1298` | docs/ai_atomic_framework/governance-overview/PLAN.md | Plan: ATM 框架治理機制完整解釋文件 (zh-TW) |
+| `doc_other_1299` | docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書v2.md | 拆解大型功能優化原子 Map 計畫書 v2-r2 |

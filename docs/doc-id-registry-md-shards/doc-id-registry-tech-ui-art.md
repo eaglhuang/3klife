@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Tech / UI / Art / Data
 
-> 生成日期: 2026-07-19
+> 生成日期: 2026-10-30
 > 這是 `doc-id-registry.md` 的「Tech / UI / Art / Data」分片。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -78,11 +78,15 @@
 | `doc_ui_0047` | docs/ui/UI-factory-baseline-and-gates.md | UI Factory Baseline And Gates |
 | `doc_ui_0048` | docs/ui/UI-factory-agent-entry.md | UI Factory Agent Entry (Moved) |
 | `doc_ui_0049` | docs/UI技術規格書.md | UI 技術規格書 (UI Technical Specification) |
-| `doc_ui_0050` | docs/ui/UI-vibe-pipeline.md | UI Vibe Coding 自動化生產藍圖 |
+| `doc_ui_0050` | docs/ui-vibe-pipeline-shards/ui-core.md | UI Vibe Pipeline — Core（TL;DR · §1–§3 · §3.1） |
 | `doc_ui_0051` | docs/UI參考圖品質分析.md | UI 參考圖品質分析 — 九宮格框體與視覺層次拆解 |
 | `doc_ui_0052` | docs/UCUF規劃書.md | Universal Composite UI Framework (UCUF) — 規劃書 |
 | `doc_ui_0090` | docs/遊戲規格文件/系統規格書/英靈虎符與特種軍隊視覺契約補遺_2026-04-04.md | 英靈虎符與特種軍隊視覺契約補遺 2026-04-04 |
 | `doc_ui_0091` | docs/UI品質檢核表.md | UI 品質檢核表（v0） |
+| `doc_ui_0092` | docs/i18n/general-detail-overflow-report-batch2.md | ui.general 武將詳情 — 寬度風險摘要（第 2 批，40 鍵） |
+| `doc_ui_0093` | docs/i18n/general-detail-overflow-report-batch3.md | ui.general 武將詳情 — 寬度風險摘要（第 3 批，40 鍵） |
+| `doc_ui_0094` | docs/i18n/general-detail-overflow-report-batch4.md | ui.general 武將詳情 — 寬度風險摘要（第 4 批，10 鍵，收尾） |
+| `doc_ui_0095` | docs/ui/UI-vibe-pipeline.md | UI Vibe Pipeline |
 
 ## 美術非UI類 (`doc_art`)
 

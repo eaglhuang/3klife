@@ -1,0 +1,90 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0197",
+      "title": "王異立繪與頭像：魏藍與桃木朱紅女將配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T08:26:21+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為王異補齊正式全身立繪與武將列表頭像。以成熟窄下頜、警覺深眼、左頰淡舊傷和低位側束髮建立女性將領辨識；使用魏藍基底、桃木朱紅副色，穿收束短甲、妝容樸素，不加繁複衣帶或長飄帶。",
+      "related": [
+        "UI-2-0196"
+      ],
+      "depends": [
+        "UI-2-0196"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "魏藍主色配桃木朱紅副色，與藍玉綠/藍紫紅/藍陶橙區隔",
+        "成熟窄下頜、警覺深眼、左頰淡舊傷、低位側束髮與已完成女角不同",
+        "短甲與持刀手勢自然，妝容樸素、衣帶簡潔無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/wang_yi_portrait.png",
+        "assets/resources/sprites/generals/avatars/wang_yi_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/wang-yi/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA立繪、256×256 RGBA頭像；reviewed crop與全量verify通過；Cocos刷新成功 | 變更: 王異v1定稿接入正式目錄 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "依名冊順序為王異補齊正式全身立繪與武將列表頭像。以成熟窄下頜、警覺深眼、左頰淡舊傷和低位側束髮建立女性將領辨識；使用魏藍基底、桃木朱紅副色，穿收束短甲、妝容樸素，不加繁複衣帶或長飄帶。",
+        "position": "M6 武將正式美術目錄補齊",
+        "prereq": "UI-2-0196 韓浩已完成；沿用GeneralArtPaths正式美術路徑。"
+      },
+      "contracts": {
+        "input": [
+          "魏國女性軍事角色；魏藍基底與桃木朱紅第二色，避免複用大喬/蔡文姬/黃月英的臉型及髮式。",
+          "衣帶簡化，短甲和武器持姿需合乎邏輯。"
+        ],
+        "output": [
+          "產出512×768透明全身立繪、256×256 reviewed頭像及配色台帳列；正式路徑可由武將列表載入。"
+        ],
+        "validation_cmd": "node tools_node/generate-general-avatars.js wang-yi\\nnode tools_node/generate-general-avatars.js wang-yi --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除王異本卡新增正式立繪、頭像與候選，還原crop設定與台帳列後重建manifest。",
+        "execution_steps": [
+          "檢查既有女性武將臉髮妝容差異",
+          "生成王異候選並從125px起審",
+          "必要時升級檢查臉部與手持短刀",
+          "定稿立繪和reviewed頭像",
+          "驗證資產並刷新Cocos",
+          "回報隊長後接下一位"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/wang-yi/prompt.txt",
+          "artifacts/ui-generated/wang-yi/wang-yi-candidate-v1.png",
+          "assets/resources/sprites/generals/wang_yi_portrait.png",
+          "assets/resources/sprites/generals/avatars/wang_yi_avatar.png"
+        ],
+        "validation_evidence": [
+          "Candidate reviewed at 125px silhouette and 250px against Da Qiao; mature narrow face, faint cheek scar, low side knot, practical armor and Wei-blue/peachwood-vermilion palette differ from Da Qiao long curls and flowing pink costume.",
+          "Formal portrait verified as 512×768 RGBA with transparent margins.",
+          "Formal avatar verified as 256×256 RGBA using reviewed crop (146,0)+220×220; single and full avatar verification passed (154 success, 0 failures).",
+          "Cocos Asset DB refresh on assigned worktree returned HTTP 200."
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completion": 100,
+      "completed": "2026-10-30"
+    }
+  ]
+}

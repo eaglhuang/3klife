@@ -1,0 +1,89 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0191",
+      "title": "田豐立繪與頭像：墨灰青與舊米金文士配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T08:02:49+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為田豐補齊正式全身立繪與武將列表頭像。以年長直額、銳利深眼、灰鬚與簡潔文士冠辨識；和高覽、高幹軍甲造型分流。採墨灰青配舊米金，服裝為克制的文士外袍，可有少量固定衣褶，不加長飄帶。",
+      "related": [
+        "UI-2-0190"
+      ],
+      "depends": [
+        "UI-2-0190"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "墨灰青搭舊米金，與鄰近武將配色不同",
+        "年長深眼灰鬚文士臉與鄰近武將造型不同",
+        "持卷姿態自然、衣帶少而固定"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/tian_feng_portrait.png",
+        "assets/resources/sprites/generals/avatars/tian_feng_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/tian-feng/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA立繪、256×256 RGBA頭像；reviewed crop與全量verify通過；Cocos刷新成功 | 變更: 田豐文士型v1定稿接入正式目錄 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "為田豐建立文士型正式立繪與武將列表頭像。",
+        "position": "M6 武將正式美術目錄補齊",
+        "prereq": "UI-2-0190 已完成；沿用 GeneralArtPaths 標準路徑。"
+      },
+      "contracts": {
+        "input": [
+          "依人物設定採文士造型；三國陣營基底色規則作參考，選用與既有相鄰人物不同的墨灰青與米金組合；衣帶僅少量固定褶皺。"
+        ],
+        "output": [
+          "產出512×768透明立繪、256×256 reviewed頭像、配色台帳資料與可由武將列表載入的正式路徑。"
+        ],
+        "validation_cmd": "node tools_node/generate-general-avatars.js tian-feng\\nnode tools_node/generate-general-avatars.js tian-feng --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除田豐本卡新增正式圖與候選素材，還原頭像裁切座標與配色列，再重建UI任務manifest。",
+        "execution_steps": [
+          "盤點既有武將文士臉型與配色",
+          "生成田豐候選並依125px起審",
+          "必要時升至250px檢查臉部與道具",
+          "定稿立繪並設定reviewed裁切",
+          "驗證正式頭像和Cocos資產載入",
+          "更新卡片並回報隊長"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/tian-feng/prompt.txt",
+          "artifacts/ui-generated/tian-feng/tian-feng-candidate-v1.png",
+          "assets/resources/sprites/generals/tian_feng_portrait.png",
+          "assets/resources/sprites/generals/avatars/tian_feng_avatar.png"
+        ],
+        "validation_evidence": [
+          "Candidate reviewed at 125px for full-body silhouette and scroll and at 250px for face/hand detail; elder gray beard, soft scholar cap, and scroll stance are distinct from Zhuge Liang and the recent armor-clad generals.",
+          "Formal portrait verified as 512×768 RGBA with transparent margins.",
+          "Formal avatar verified as 256×256 RGBA using reviewed crop (146,0)+220×220; single and full avatar verification passed (148 success, 0 failures).",
+          "Cocos Asset DB refresh on assigned worktree returned HTTP 200."
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completion": 100,
+      "completed": "2026-10-30"
+    }
+  ]
+}

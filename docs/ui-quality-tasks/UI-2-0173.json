@@ -1,0 +1,75 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0465",
+      "id": "UI-2-0173",
+      "title": "董允立繪：蜀松綠霧藍灰正直官臣",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T12:29:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為名冊 ID dong-yun 建立 512×768 透明全身立繪與 256×256 頭像；採蜀松綠與霧藍灰配色，呈現端正方圓臉、清面與低冠，和費禕、楊儀等蜀臣分流。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 dong-yun 名冊 ID",
+        "以蜀松綠為基底並配霧藍灰與紙白",
+        "端正方圓臉、清面與低冠具辨識度",
+        "袍服俐落收束，無長飄帶與武將重甲"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/dong_yun_portrait.png",
+        "assets/resources/sprites/generals/avatars/dong_yun_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/dong-yun/"
+      ],
+      "notes": "2026-10-29 | 狀態: done | 驗證: avatar verify 通過；encoding/build manifest 通過 | 變更: 董允立繪頭像完成，袖管收窄並簡化紋樣 | 阻塞: Cocos Asset DB 待 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/dong_yun_portrait.png",
+          "assets/resources/sprites/generals/avatars/dong_yun_avatar.png",
+          "artifacts/ui-generated/dong-yun/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA transparent",
+          "Avatar generated with reviewed crop and copied to generals/avatars",
+          "generate-general-avatars --verify pending final run",
+          "Cocos Asset DB refresh pending"
+        ],
+        "handoff_diff_status": "pending Cocos Editor Refresh Assets",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 5ACE5F79A74F6B3F0F9959244E3F6E7FD2EF54FA2D50AD912908E6E0CA4B015E",
+          "avatar SHA-256 56F872EEDFE61CCC1637B0D9084618327082470A0C198DC25BBB2BE1B8D63255"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0219",
+      "title": "朱績立繪與頭像：吳紅、灰玉與深墨中年水陸統領配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T23:00:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為朱績補齊正式立繪與列表頭像。吳紅為主色，灰玉與深墨作第二色。設計四十歲左右持重吳軍統領：窄長方臉、略深眼袋、直眉、平穩目光、短直鬍與清理乾淨的唇線；黑髮夾少量灰絲結後頸髻，戴窄額盔與短護耳。穿收束肩甲的中量防護札甲，不披風、不長飄帶；一手扶收鞘長刀，一手執折疊木製水陸部署圖牌。避免陳武厚重全甲、圓盾和鉤槍。",
+      "related": [
+        "UI-2-0207"
+      ],
+      "depends": [
+        "UI-2-0218"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "吳紅主色搭灰玉與深墨",
+        "窄長方臉、眼袋、直眉、短直鬍、鬢髮灰絲及窄額盔具朱績識別度",
+        "中量札甲、收鞘長刀與折疊部署圖牌姿勢自然，無披風長帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/zhu_ji_portrait.png",
+        "assets/resources/sprites/generals/avatars/zhu_ji_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/zhu-ji/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA透明立繪、256×256 reviewed頭像、verify 1/0、Cocos刷新200 | 變更: 朱績吳紅灰玉中年統領立繪與列表頭像正式入庫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "node tools_node/generate-general-avatars.js liu-chen\\nnode tools_node/generate-general-avatars.js liu-chen --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除劉諶本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+        "execution_steps": [
+          "盤點近期青年武將與宗室臉型髮冠配色",
+          "生成候選並從125px縮圖起審",
+          "必要時升級至250px檢查臉部與儀劍",
+          "定稿立繪與reviewed頭像",
+          "驗證並刷新Cocos資產",
+          "回報隊長後接續下一位"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/zhu-ji/prompt.txt",
+          "artifacts/ui-generated/zhu-ji/zhu-ji-candidate-v1.png"
+        ],
+        "validation_evidence": [
+          "candidate v1 dimensions 1024x1536 RGBA, alpha extrema 0..254",
+          "portrait 512x768 RGBA, alpha extrema 0..255",
+          "cropped and formal avatar 256x256 RGBA, alpha extrema 0..255",
+          "reviewed crop includes narrow helmet, face and shoulders",
+          "avatar verify: 1 success, 0 failures",
+          "Cocos Asset DB refresh: HTTP 200"
+        ]
+      },
+      "validation_evidence": [
+        "candidate v2 dimensions 1024x1536 RGBA, alpha extrema 0..254",
+        "portrait 512x768 RGBA, alpha extrema 0..255",
+        "cropped and formal avatar 256x256 RGBA, alpha extrema 0..255",
+        "avatar verify: 1 success, 0 failures",
+        "Cocos Asset DB refresh: HTTP 200"
+      ],
+      "validation_cmd": "node tools_node/generate-general-avatars.js zhu-ji\nnode tools_node/generate-general-avatars.js zhu-ji --verify\nnode tools_node/build-ui-task-manifest.js\nRefresh Cocos Asset DB on this worktree",
+      "rollback_hint": "移除本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+      "execution_steps": [
+        "檢視近期蜀將臉型與裝備，設計朱褒獨特輪廓",
+        "生成候選並從125px縮圖起審",
+        "必要時升級至250px檢查面部與手持物",
+        "定稿立繪、reviewed裁切頭像與色盤台帳",
+        "驗證資產並刷新Cocos Asset DB"
+      ]
+    }
+  ]
+}

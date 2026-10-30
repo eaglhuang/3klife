@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0442",
+      "id": "UI-2-0150",
+      "title": "孫峻武將立繪：吳紅與墨青藍灰的冷峻權臣",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T07:14:29+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為孫峻建立 512×768 透明全身立繪與 256×256 頭像。以吳紅搭配墨青藍灰副色，用尖削青年臉、垂直高冠與窄肩直袍塑造冷峻權臣辨識。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "吳紅基底搭配墨青藍灰副色，與孫桓銀紫色組區隔",
+        "尖削青年臉、垂直高冠、窄肩直袍與玉柄短劍可辨",
+        "衣袍俐落，沒有長飄帶或垂布"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/sun_jun_portrait.png",
+        "assets/resources/sprites/generals/avatars/sun_jun_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/sun-jun/"
+      ],
+      "notes": "已完成並通過立繪、頭像裁切驗證；Cocos Asset DB 尚待在本工作樹所屬 Editor Refresh Assets。以冷峻權臣氣質呈現孫峻；與孫桓青年圓方臉、小鐵盔、短刀裝束區分。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

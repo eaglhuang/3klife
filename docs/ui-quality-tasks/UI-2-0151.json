@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0443",
+      "id": "UI-2-0151",
+      "title": "賀齊武將立繪：吳紅與深青藍灰的邊地戰將",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T07:16:20+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為賀齊建立 512×768 透明全身立繪與 256×256 頭像。以吳紅搭配深青藍灰副色，用日曬斜顴臉、不對稱肩甲與短刀塑造邊地戰將辨識。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "吳紅基底搭配深青藍灰副色，與既有吳將組合分流",
+        "日曬斜顴臉、邊盔、不對稱肩甲與短刀可辨",
+        "甲裙固定俐落，無長飄帶或垂布"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/he_qi_portrait.png",
+        "assets/resources/sprites/generals/avatars/he_qi_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/he-qi/"
+      ],
+      "notes": "已完成並通過立繪、頭像裁切驗證；Cocos Asset DB 尚待在本工作樹所屬 Editor Refresh Assets。呈現賀齊邊地作戰的老練與獨特不對稱甲片；避免孫桓低盔銀紫、朱治灰鬢橄欖灰與徐盛寬身長槍。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

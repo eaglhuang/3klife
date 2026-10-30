@@ -11,11 +11,12 @@
  *
  * Unity 對照：GeneralRosterPanel，排序可重複點擊欄頭切換升降冪
  */
-import { _decorator, Node, Label, Button, UITransform, Layout, Widget, HorizontalTextAlignment, VerticalTextAlignment, Color } from 'cc';
+import { _decorator, Node, Label, Button, Sprite, UITransform, Layout, Widget, HorizontalTextAlignment, VerticalTextAlignment, Color } from 'cc';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { NpcContextOption, NpcDialogueKeywordSelection, NpcDialogueLocale, NpcDialogueModelPreset, NpcDialogueResponse, NpcDialogueSpeechContextMode } from '../../core/services/NpcDialogueService';
 import { EVENT_NPC_INTERACTION_COMPLETED } from '../../core/dialogue/NpcMemoryAdapter';
 import { services } from '../../core/managers/ServiceLoader';
+import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
@@ -51,6 +52,7 @@ const COL_SORT_MAP: Record<string, SortKey> = {
 };
 
 const HEADER_TO_ROW_MAP: Record<string, string> = {
+    ColAvatar: 'Avatar',
     ColName: 'Name',
     ColGender: 'Gender',
     ColAge: 'Age',
@@ -291,6 +293,8 @@ export class GeneralListComposite extends CompositePanel {
     /** 清空並重新填入列表 */
     private async _repopulate(): Promise<void> {
         const sorted = this._sortedList();
+        // 先載入首屏可見頭像，避免列表顯示後只出現第一張、其他列短暫留白。
+        await Promise.all(sorted.slice(0, 12).map((general) => loadGeneralAvatar(general.id)));
         this._renderedRowsByGeneralId.clear();
         const content = this.node.getChildByPath(this._mainPath(CONTENT_REL_PATH));
         if (content) {
@@ -307,6 +311,15 @@ export class GeneralListComposite extends CompositePanel {
             filterMode: this._filterMode,
         });
         await this.populateList(this._mainPath(LIST_REL_PATH), sorted, (g: GeneralConfig, row: Node) => {
+            const avatar = row.getChildByName('Avatar')?.getComponent(Sprite);
+            if (avatar) {
+                void loadGeneralAvatar(g.id).then((frame) => {
+                    if (frame && row.isValid && avatar.isValid) {
+                        avatar.spriteFrame = frame;
+                        avatar.sizeMode = Sprite.SizeMode.CUSTOM;
+                    }
+                });
+            }
             const set = (name: string, val: string | number) => {
                 const lbl = this._getRowLabel(row, name);
                 if (lbl) lbl.string = String(val);

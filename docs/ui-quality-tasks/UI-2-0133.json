@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0425",
+      "id": "UI-2-0133",
+      "title": "王雙武將立繪：魏藍與冷青灰副色重甲辨識",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T00:10:08+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為王雙建立 512×768 透明全身立繪與 256×256 頭像。以魏藍搭配冷青灰，採短束髮、斜眉傷痕與局部重甲輪廓，與曹洪和曹彰區隔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "魏藍基底搭配冷青灰副色",
+        "斜眉傷痕、短束髮與曹洪/曹彰有明顯辨識差異",
+        "重甲服裝固定俐落，無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/wang_shuang_portrait.png",
+        "assets/resources/sprites/generals/avatars/wang_shuang_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/wang-shuang/"
+      ],
+      "notes": "王雙採局部重甲與斜眉傷痕；避免圓盾、金鬚、高髮髻等近作元素。；已完成，Cocos Asset DB 待正確工作樹的 Editor 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

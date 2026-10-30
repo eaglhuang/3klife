@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0428",
+      "id": "UI-2-0136",
+      "title": "文聘武將立繪：魏藍與霧杉灰綠守城弩將",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T00:28:55+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為文聘建立 512×768 透明全身立繪與 256×256 頭像。以魏藍搭配霧杉灰綠副色，呈現沉穩守城將領輪廓，以短耳罩盔、厚眉與持弩姿勢建立辨識。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "魏藍基底搭配霧杉灰綠且色組不重複近作",
+        "短耳罩盔、厚眉和守城弩姿勢與曹洪/王雙/郭淮明顯不同",
+        "甲袍固定俐落，沒有長飄帶或垂布"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/wen_pin_portrait.png",
+        "assets/resources/sprites/generals/avatars/wen_pin_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/wen-pin/"
+      ],
+      "notes": "已完成並通過立繪、頭像裁切驗證；Cocos Asset DB 尚待在本工作樹所屬 Editor Refresh Assets。採守城弩將形象，不用盾牌、戰斧、護頰盔等近作識別物。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

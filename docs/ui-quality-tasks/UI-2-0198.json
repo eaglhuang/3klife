@@ -1,0 +1,85 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1387",
+      "id": "UI-2-0198",
+      "title": "戲志才立繪與頭像：魏藍與霧紫灰謀士配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T08:31:04+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為戲志才補齊正式全身立繪與武將列表頭像。採青年清瘦、深眼窩、窄三角臉與細短鬚、低位窄束髮，避免重複田豐/郭圖的年長灰鬚或董昭的官冠。魏藍主色配霧紫灰，穿收袖簡潔謀士袍、不加長飄帶。",
+      "related": [
+        "UI-2-0197"
+      ],
+      "depends": [
+        "UI-2-0197"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "魏藍主色搭霧紫灰副色，與近期色盤有差異",
+        "青年清瘦窄三角臉、深眼窩、細短鬚和低位窄束髮與既有謀士不同",
+        "收袖簡潔袍服，手持小冊自然，無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/xi_zhi_cai_portrait.png",
+        "assets/resources/sprites/generals/avatars/xi_zhi_cai_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/xi-zhi-cai/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA立繪、256×256 RGBA頭像、reviewed crop verify 1/0、Cocos Asset DB 200 | 變更: 正式立繪/頭像與魏藍霧紫灰色盤條目完成 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "為戲志才建立青年清瘦、魏藍霧紫灰配色的正式謀士立繪與頭像。",
+        "position": "M6 武將正式美術目錄補齊",
+        "prereq": "UI-2-0197 王異已完成；沿用GeneralArtPaths正式路徑。"
+      },
+      "contracts": {
+        "input": [
+          "魏國謀士，魏藍為基底色、霧紫灰為第二色；臉型年齡髮式需避開田豐、郭圖、董昭。"
+        ],
+        "output": [
+          "產出512×768透明立繪、256×256 reviewed頭像及獨立配色台帳條目，可由武將列表路徑載入。"
+        ],
+        "validation_cmd": "node tools_node/generate-general-avatars.js xi-zhi-cai\\nnode tools_node/generate-general-avatars.js xi-zhi-cai --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除戲志才本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+        "execution_steps": [
+          "盤點既有謀士臉型髮式與配色",
+          "生成候選並從125px縮圖起審",
+          "必要時升級至250px檢查臉部和持物",
+          "定稿立繪與reviewed頭像",
+          "驗證並刷新Cocos資產",
+          "回報隊長後接續下一位"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/xi-zhi-cai/prompt.txt",
+          "artifacts/ui-generated/xi-zhi-cai/xi-zhi-cai-candidate-v1.png"
+        ],
+        "validation_evidence": [
+          "portrait 512x768 RGBA",
+          "avatar 256x256 RGBA",
+          "generate-general-avatars.js xi-zhi-cai --verify: 1 success, 0 failure",
+          "Cocos Asset DB refresh HTTP 200"
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

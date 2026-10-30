@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0448",
+      "id": "UI-2-0156",
+      "title": "韓玄武將立繪：中立深梅褐與舊金石色的長沙太守",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T07:29:07+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為韓玄建立 512×768 透明全身立繪與 256×256 頭像；名冊勢力為 neutral，採獨立深梅褐與舊金石色，突出寬圓方臉與嚴峻太守氣質。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "中立角色採獨立配色，不套蜀吳魏陣營色",
+        "寬圓方臉、緊抿嘴、短鬚與側翼官冠辨識清楚",
+        "官袍結構俐落，無多層飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/han_xuan_portrait.png",
+        "assets/resources/sprites/generals/avatars/han_xuan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/han-xuan/"
+      ],
+      "notes": "韓玄名冊勢力為 neutral，採深梅褐 #65515C、舊金石 #A38B68 與墨鐵。寬圓方臉、厚眉、緊抿嘴、修短上翹鬍與短下巴鬚；黑髮束於帶側翼的炭黑太守冠，單枚舊金石扣；深梅褐官袍配舊金石窄肩襟、固定腰封，手持太守印與奏牘。無戰盔、不加飄帶，與吳紅文臣及吳戰將區隔。 已完成；正式立繪 SHA-256 4DA3BF4FFADE336A4883C96D81A8BD8BCC15ACA9BE8692CFD8BB7B227C00ACF2，頭像 SHA-256 5572331F40AEE342324AFE92A534FD586DC69FF4128EC9279BEE178A9D4C54DB。Cocos Asset DB Refresh 尚待正確 Editor。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

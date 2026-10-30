@@ -1,0 +1,89 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0195",
+      "title": "董昭立繪與頭像：魏藍與灰玉綠官員配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T08:17:19+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為董昭補齊正式全身立繪與武將列表頭像。魏國人物以魏藍為基底，搭配灰玉綠；年長高額瘦長臉、修短灰鬚和簡潔進賢冠形成官員辨識，與田豐的灰鬚軟冠竹簡文士形象區隔。衣袍收束不加長飄帶。",
+      "related": [
+        "UI-2-0194"
+      ],
+      "depends": [
+        "UI-2-0194"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "魏藍主色搭灰玉綠副色並與近期人物色組不同",
+        "高額瘦長臉、短灰鬚/細鬍髭、進賢冠與田豐/郭圖不同",
+        "官牘持握自然且衣著無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/dong_zhao_portrait.png",
+        "assets/resources/sprites/generals/avatars/dong_zhao_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/dong-zhao/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA立繪、256×256 RGBA頭像；reviewed crop與全量verify通過；Cocos刷新成功 | 變更: 董昭v1定稿接入正式目錄 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "為董昭建立魏國官員型正式立繪與武將列表頭像。",
+        "position": "M6 武將正式美術目錄補齊",
+        "prereq": "UI-2-0194 已完成；沿用GeneralArtPaths正式美術路徑。"
+      },
+      "contracts": {
+        "input": [
+          "董昭定位為魏國官員/謀臣；魏藍為基底色，灰玉綠為第二色，避免複用近期文士臉型和持卷姿勢。"
+        ],
+        "output": [
+          "產出512×768透明立繪、256×256 reviewed頭像、配色台帳和可由武將列表載入的正式資產。"
+        ],
+        "validation_cmd": "node tools_node/generate-general-avatars.js dong-zhao\\nnode tools_node/generate-general-avatars.js dong-zhao --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除董昭本卡新增立繪、頭像與候選，還原crop設定及配色台帳後重建UI manifest。",
+        "execution_steps": [
+          "比對近期謀臣臉型髮冠和持物姿勢",
+          "生成候選並按125px縮圖起審",
+          "必要時升級檢查臉部手勢",
+          "定稿正式立繪和reviewed頭像",
+          "驗證並刷新Cocos資產",
+          "回報隊長後接續下一位"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/dong-zhao/prompt.txt",
+          "artifacts/ui-generated/dong-zhao/dong-zhao-candidate-v1.png",
+          "assets/resources/sprites/generals/dong_zhao_portrait.png",
+          "assets/resources/sprites/generals/avatars/dong_zhao_avatar.png"
+        ],
+        "validation_evidence": [
+          "Candidate reviewed at 125px silhouette and 250px facial/headwear comparison against Tian Feng; narrow high-forehead face, short facial hair, winged jin-xian cap and official tablet differentiate him.",
+          "Formal portrait verified as 512×768 RGBA with transparent margins.",
+          "Formal avatar verified as 256×256 RGBA using reviewed crop (146,0)+220×220; single and full avatar verification passed (152 success, 0 failures).",
+          "Cocos Asset DB refresh on assigned worktree returned HTTP 200."
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completion": 100,
+      "completed": "2026-10-30"
+    }
+  ]
+}

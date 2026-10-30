@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0449",
+      "id": "UI-2-0157",
+      "title": "金旋武將立繪：中立石松灰綠與乾陶赭的郡守",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T07:31:39+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為金旋建立 512×768 透明全身立繪與 256×256 頭像；名冊勢力為 neutral，採石松灰綠搭配乾陶赭，突出削尖顴骨與地方官員氣質。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "中立角色採石松灰綠與乾陶赭，不套用蜀吳魏陣營色",
+        "削尖顴骨、側分低束髮與短鬚可辨",
+        "衣襬袖口收束，無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/jin_xuan_portrait.png",
+        "assets/resources/sprites/generals/avatars/jin_xuan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/jin-xuan/"
+      ],
+      "notes": "金旋名冊勢力為 neutral，採石松灰綠 #586655、乾陶赭 #A96F58、暗鐵。削尖顴骨、窄下頜、斜長眼與細短鬚；黑髮側分低束於低弧石松官冠，單陶赭扣；中立郡守短直袍配固定肩片與窄袖，持官印盒與短令杖。避免韓玄圓方臉側翼太守冠與梅褐金石袍。 已完成；正式立繪 SHA-256 5986CBD915CA5E497A2E6D289F0E83EDC1B489DF5CB2DA3B7CF448D352E78822，頭像 SHA-256 84C978C51141BCDA24D1807BB037182567B4195C2998E57158E79D1A4F57FE54。Cocos Asset DB Refresh 尚待正確 Editor。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

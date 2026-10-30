@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0452",
+      "id": "UI-2-0160",
+      "title": "文醜武將立繪：敵將暗鐵紫褐與鈍銀銅的破陣猛將",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T07:37:55+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為文醜建立 512×768 透明全身立繪與 256×256 頭像；名冊勢力為 enemy，採暗鐵紫褐與鈍銀銅，突出斜削長方臉、鼻傷和重甲猛將氣勢。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "敵將採暗鐵紫褐與鈍銀銅，不複製蜀吳魏基色特例",
+        "斜削長方臉、鼻樑舊傷、短編鬚和高束髮具辨識度",
+        "重甲輪廓俐落，無長披風與飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/wen_chou_portrait.png",
+        "assets/resources/sprites/generals/avatars/wen_chou_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/wen-chou/"
+      ],
+      "notes": "文醜名冊勢力為 enemy，採暗鐵紫褐 #51464F、鈍銀銅 #99836B 與煙灰。斜削長方臉、斷鼻舊傷、深眼、短粗分叉鬍鬚；兩側削短的黑髮束成高馬尾，以暗銅環固定，不做張飛式圓臉濃密長鬚。暗鐵重札甲配紫褐固定肩片，持短柄長刀；甲裙短固定、無披風飄帶。 已完成；正式立繪 SHA-256 900C7A63C87E3022BABEB7998B2CD861DDF76E3656353F44025B449CB68540D6，頭像 SHA-256 25565C96CBB0481513E4CE669F7696A64CF531C5BC07A258D3627FB2E0763EBD。Cocos Asset DB Refresh 尚待正確 Editor。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

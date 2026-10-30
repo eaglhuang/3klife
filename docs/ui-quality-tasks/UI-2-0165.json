@@ -1,0 +1,75 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0457",
+      "id": "UI-2-0165",
+      "title": "華佗立繪重製：中立草藥綠醫者設計",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T12:07:51+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為名冊 ID hua-tuo 建立辨識度高的 512×768 透明全身立繪與 256×256 頭像；依既有中立草藥綠、暖麻布白、胡桃木色票，表現醫者身份並避免武將重甲與長飄帶。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 hua-tuo 名冊 ID",
+        "沿用草藥綠 #526B4D、暖麻布白 #D7CFBA、胡桃木 #79634D",
+        "醫者袍服、藥囊與藥材明確可辨",
+        "無武將重甲與長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/hua_tuo_portrait.png",
+        "assets/resources/sprites/generals/avatars/hua_tuo_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/hua-tuo/"
+      ],
+      "notes": "2026-10-29 | 狀態: done | 驗證: 頭像生成與全量 verify 通過，編碼檢查與 manifest 通過 | 變更: 立繪/頭像重製，收束衣帶並保留草藥綠、暖麻布白、胡桃木職能配色 | 阻塞: Cocos Asset DB 待 Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/hua_tuo_portrait.png",
+          "assets/resources/sprites/generals/avatars/hua_tuo_avatar.png",
+          "artifacts/ui-generated/hua-tuo/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA with transparent background",
+          "Avatar generated with reviewed crop and copied to generals/avatars",
+          "generate-general-avatars --verify pending final run",
+          "Cocos Asset DB refresh pending"
+        ],
+        "handoff_diff_status": "pending Cocos Editor Refresh Assets",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 FD1565536AA27CF7E5E610783D89004E112D8206EC864372EB038B3AB417716F",
+          "avatar SHA-256 5EC37174EFEF9F44DD3D7A9BEAB8683DFBD67DC0E31243F5D284CADA609E1133"
+        ]
+      }
+    }
+  ]
+}

@@ -1,5 +1,41 @@
-<!-- doc_id: doc_ai_0022 -->
+| P1 | [UI-2-0231](tasks/UI/UI-2-0231.md (doc_task_1421)) (doc_task_1421) | 禰衡墨紫士人立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
 # Agent Briefs CheckList
+
+| P1 | [UI-2-0244](tasks/UI/UI-2-0244.md (doc_task_1434)) (doc_task_1434) | 薛綜酒紅柔金文臣立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0245](tasks/UI/UI-2-0245.md (doc_task_1435)) (doc_task_1435) | 武將列表接入正式人物頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0246](tasks/UI/UI-2-0246.md (doc_task_1436)) (doc_task_1436) | 朱異紅黑銀甲立繪與正方頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0247](tasks/UI/UI-2-0247.md (doc_task_1437)) (doc_task_1437) | 潘浚差異化立繪與正方頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0248](tasks/UI/UI-2-0248.md (doc_task_1438)) (doc_task_1438) | 呂凱南中軍政官立繪與正方頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0249](tasks/UI/UI-2-0249.md (doc_task_1439)) (doc_task_1439) | 陳到蜀綠赭橙護衛將領立繪與頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0250](tasks/UI/UI-2-0250.md (doc_task_1440)) (doc_task_1440) | 吳班柳葉綠輕裝弓將立繪與正方頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0251](tasks/UI/UI-2-0251.md (doc_task_1441)) (doc_task_1441) | 孫皓酒紅舊金帝王立繪與頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0252](tasks/UI/UI-2-0252.md (doc_task_1442)) (doc_task_1442) | 孫尚香吳紅青綠女將立繪與正方頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0253](tasks/UI/UI-2-0253.md (doc_task_1443)) (doc_task_1443) | 蔡琰灰玉赭褐女文官立繪與正方頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0254](tasks/UI/UI-2-0254.md (doc_task_1444)) (doc_task_1444) | 黃月英武將 ID 正式立繪與頭像路徑對齊 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-2-0243](tasks/UI/UI-2-0243.md (doc_task_1433)) (doc_task_1433) | 韋昭墨黑朱紅史官文臣立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-2-0242](tasks/UI/UI-2-0242.md (doc_task_1432)) (doc_task_1432) | 孫盛朱紅青瓷天文地理文士立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-2-0241](tasks/UI/UI-2-0241.md (doc_task_1431)) (doc_task_1431) | 傅肜深蜀綠鐵鏽紅宿將立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-2-0240](tasks/UI/UI-2-0240.md (doc_task_1430)) (doc_task_1430) | 張南松綠赭皮青年槍將立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-2-0239](tasks/UI/UI-2-0239.md (doc_task_1429)) (doc_task_1429) | 費詩松綠銅棕典簿文臣立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-2-0238](tasks/UI/UI-2-0238.md (doc_task_1428)) (doc_task_1428) | 伊籍橄欖青石板藍使臣立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-2-0237](tasks/UI/UI-2-0237.md (doc_task_1427)) (doc_task_1427) | 秦宓竹青赭紅辯士立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-2-0236](tasks/UI/UI-2-0236.md (doc_task_1426)) (doc_task_1426) | 劉巴松綠墨灰文臣立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-2-0235](tasks/UI/UI-2-0235.md (doc_task_1425)) (doc_task_1425) | 于吉蒼青丹霞方士立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-2-0234](tasks/UI/UI-2-0234.md (doc_task_1424)) (doc_task_1424) | 左慈深靛暗青方士立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-2-0233](tasks/UI/UI-2-0233.md (doc_task_1423)) (doc_task_1423) | 管寧灰藍陶白隱士立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-2-0232](tasks/UI/UI-2-0232.md (doc_task_1422)) (doc_task_1422) | 田疇苔灰麻白立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
 
 ## ATM 獨立審核減負試行（2026-09-16）
 
@@ -76,11 +112,28 @@
 | P2 | [UI-2-0005](tasks/UI-2-0005.md (doc_task_0029)) (doc_task_0029) | button-skin 新增 selected 第四態 | done | 100% | Agent1 |
 | P2 | [UI-1-0009](tasks/UI-1-0009.md (doc_task_0017)) (doc_task_0017) | 產生 diamond_tab sprites | done | 100% | Agent2 |
 
-| P1 | [UI-2-0117](tasks/UI/UI-2-0117.md (doc_task_0406)) (doc_task_0406) | 修正蔡文姬、黃月英臉型、髮型與配色辨識 | done | 100% | codex-gpt-6.1 |
+| P1 | [UI-2-0117](tasks/UI/UI-2-0117.md (doc_task_0406)) (doc_task_0406) | 修正蔡文姬、黃月英臉型、髮型與配色辨識 | in-progress | 100% | codex-gpt-6.1 |
 
 | P1 | [UI-2-0118](tasks/UI/UI-2-0118.md (doc_task_0407)) (doc_task_0407) | 簡化女角衣帶並校正手指與道具 | done | 100% | codex-gpt-6.1 |
 
 | P1 | [UI-2-0119](tasks/UI/UI-2-0119.md (doc_task_0408)) (doc_task_0408) | 拉開五位吳將五官辨識度並收束衣帶 | done | 100% | codex-gpt-6.1 |
+
+| P1 | [UI-2-0120](tasks/UI/UI-2-0120.md (doc_task_0411)) (doc_task_0411) | 延長蔡文姬古琴並修正抱持姿勢 | done | 85% | codex-gpt-6.1 |
+
+| P1 | [UI-2-0223](tasks/UI/UI-2-0223.md (doc_task_1412)) (doc_task_1412) | 王基魏藍軍政官立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0224](tasks/UI/UI-2-0224.md (doc_task_1413)) (doc_task_1413) | 孫禮魏藍弓騎立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0225](tasks/UI/UI-2-0225.md (doc_task_1414)) (doc_task_1414) | 王渾魏藍年長都督立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0226](tasks/UI/UI-2-0226.md (doc_task_1415)) (doc_task_1415) | 文欽魏藍暗朱前線將領立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0227](tasks/UI/UI-2-0227.md (doc_task_1416)) (doc_task_1416) | 公孫淵深青骨白遼東割據者立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0228](tasks/UI/UI-2-0228.md (doc_task_1418)) (doc_task_1418) | 木鹿大王青銅赭金象兵統領立繪與列表頭像 | in-progress | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0229](tasks/UI/UI-2-0229.md (doc_task_1419)) (doc_task_1419) | 鄂煥鐵紫前線勇將立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0230](tasks/UI/UI-2-0230.md (doc_task_1420)) (doc_task_1420) | 沙摩柯青黛神射立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+
+| P1 | [UI-1-0017](tasks/UI/UI-1-0017.md (doc_task_0409)) (doc_task_0409) | 校正魏國五位武將立繪構圖與個人色票 | in-progress | 70% | codex-gpt-6.1 |
+
+| P1 | [UI-1-0018](tasks/UI/UI-1-0018.md (doc_task_0410)) (doc_task_0410) | 拉開魏國第二批五位武將的臉部與個人配色 | in-progress | 95% | codex-gpt-6.1 |
+
+| P1 | [UI-1-0019](tasks/UI/UI-1-0019.md (doc_task_0412)) (doc_task_0412) | 審核蜀國七位武將立繪辨識與個人色票 | in-progress | 15% | codex-gpt-6.1 |
 
 ## HTML-to-UCUF Plan5 Tooling
 

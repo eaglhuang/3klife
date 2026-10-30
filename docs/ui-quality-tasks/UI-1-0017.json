@@ -1,0 +1,61 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0409",
+      "id": "UI-1-0017",
+      "title": "校正魏國五位武將立繪構圖與個人色票",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-27",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-27T00:20:46+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依全體立繪辨識度目標，處理曹操、曹仁、曹植、郭嘉、賈詡。修正曹操方形畫布比例並拉開賈詡與其他魏國文士的藍色基底及第二色，為五人登錄個別臉型、髮型與色票。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "五人臉型、髮型、服飾輪廓各自可辨",
+        "無既定特例角色以魏藍為主色，五人第二色配置互不重複且登錄色票",
+        "曹操全身立繪為透明 512×768 直幅",
+        "賈詡使用低飽和靛藍基底並與郭嘉區分",
+        "五人頭像裁切重生且驗證通過",
+        "Cocos Asset DB 刷新成功"
+      ],
+      "deliverables": [
+        "五位武將正式立繪與頭像",
+        "character-palette-ledger 五人資料",
+        "UI 任務卡與 shard 更新"
+      ],
+      "notes": "2026-10-27 | 狀態: in-progress | 驗證: 五張立繪512×768透明、五張頭像256×256、全名冊40/40通過；125px/250px對照確認五人臉型、髮型及剪影各異，五人色票已分流 | 變更: 曹操暗紅黑、曹仁冷鋼藍銀、曹植青灰藍與鼠尾草、郭嘉魏藍象牙白、賈詡暗靛藍梅紫 | 待辦: Cocos Asset DB 刷新；目前 Editor 指向另一工作樹",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

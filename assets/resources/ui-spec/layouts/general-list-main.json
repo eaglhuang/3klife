@@ -99,8 +99,15 @@
                 "children": [
                   {
                     "type": "label",
+                    "name": "ColAvatar",
+                    "width": 40,
+                    "text": "頭像",
+                    "styleSlot": "general.label.headerCenter"
+                  },
+                  {
+                    "type": "label",
                     "name": "ColName",
-                    "width": "18%",
+                    "width": "16%",
                     "text": "武將姓名",
                     "styleSlot": "general.label.header"
                   },
@@ -208,9 +215,15 @@
                   },
                   "children": [
                     {
+                      "type": "image",
+                      "name": "Avatar",
+                      "width": 40,
+                      "height": 40
+                    },
+                    {
                       "type": "label",
                       "name": "Name",
-                      "width": "18%",
+                      "width": "16%",
                       "bind": "name",
                       "styleSlot": "general.label.name"
                     },

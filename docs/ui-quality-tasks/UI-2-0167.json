@@ -1,0 +1,74 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0459",
+      "id": "UI-2-0167",
+      "title": "簡雍立繪：蜀綠逸士與墨藍副色",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T12:14:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為名冊 ID jian-yong 建立 512×768 透明全身立繪與 256×256 頭像；以蜀綠為基底，配墨藍灰呈現談辯逸士氣質，與麋竺官商袍冠及其他蜀國文臣分流。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 jian-yong 名冊 ID",
+        "以蜀綠為基底並採墨藍灰副色",
+        "窄長臉、挑眉、俐落短鬚與輕便文士巾冠具辨識度",
+        "袖口衣襬收束，無長飄帶與武將重甲"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/jian_yong_portrait.png",
+        "assets/resources/sprites/generals/avatars/jian_yong_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/jian-yong/"
+      ],
+      "notes": "2026-10-29 | 狀態: done | 驗證: avatar verify 通過；encoding/build manifest 通過 | 變更: 簡雍立繪與頭像完成，袍服層次收束為固定短襟片 | 阻塞: Cocos Asset DB 待 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/jian_yong_portrait.png",
+          "artifacts/ui-generated/jian-yong/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA transparent",
+          "Avatar generated with reviewed crop and copied to generals/avatars",
+          "generate-general-avatars --verify passed 124/124",
+          "Cocos Asset DB refresh pending"
+        ],
+        "handoff_diff_status": "pending Cocos Editor Refresh Assets",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 58321F222534F44DC98B9A41DAA2AFE9EFB13B9EFA566DBD2D19CDF35656EB7D",
+          "avatar SHA-256 3EFFED0553E131CD9FC26904388A0A4C285BC9D8336578B7BC588F2D24443743"
+        ]
+      }
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 [
   {
     "id": "doc_spec_0001",
-    "path": "docs/遊戲規格文件/正式規格矛盾審查.md",
-    "title": "正式規格矛盾審查",
+    "path": "docs/遊戲規格文件/正式規格矛盾審查-shards/s1.md",
+    "title": "正式規格矛盾審查 — 1. 本輪已修正",
     "category": "spec"
   },
   {
@@ -139,8 +139,8 @@
   },
   {
     "id": "doc_spec_0024",
-    "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md",
-    "title": "家族關係（史實相性）系統規格書",
+    "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/ab.md",
+    "title": "家族關係（史實相性）系統 — A–E",
     "category": "spec"
   },
   {
@@ -151,8 +151,8 @@
   },
   {
     "id": "doc_spec_0026",
-    "path": "docs/遊戲規格文件/系統規格書/培育系統.md",
-    "title": "培育系統規格書",
+    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-a.md",
+    "title": "培育系統規格（分片索引） — A–E 系統描述／目的／套路／TA／功能清單",
     "category": "spec"
   },
   {
@@ -163,8 +163,8 @@
   },
   {
     "id": "doc_spec_0028",
-    "path": "docs/遊戲規格文件/系統規格書/結緣系統（配種）.md",
-    "title": "結緣系統（配種）規格書",
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-a.md",
+    "title": "結緣系統（配種）規格（分片索引） — A–E 系統描述／目的／套路／TA／功能清單",
     "category": "spec"
   },
   {
@@ -223,14 +223,14 @@
   },
   {
     "id": "doc_spec_0038",
-    "path": "docs/遊戲規格文件/系統規格書/戰法系統.md",
-    "title": "戰法系統規格書",
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/a.md",
+    "title": "戰法系統 — A 系統描述",
     "category": "spec"
   },
   {
     "id": "doc_spec_0039",
-    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書.md",
-    "title": "戰法場景規格書",
+    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/ac.md",
+    "title": "戰法場景規格書 — A–C",
     "category": "spec"
   },
   {
@@ -949,8 +949,8 @@
   },
   {
     "id": "doc_spec_0160",
-    "path": "docs/遊戲規格文件/整併疑問書.md",
-    "title": "整併疑問書",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/meta.md",
+    "title": "整併疑問書 — 其他（掃描紀錄、回寫落點、補記）",
     "category": "spec"
   },
   {
@@ -1065,6 +1065,192 @@
     "id": "doc_spec_0180",
     "path": "docs/遊戲規格文件/設計參考/育成與戰鬥公式基準手冊.md",
     "title": "育成與戰鬥公式基準手冊",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0181",
+    "path": "docs/遊戲規格文件/正式規格矛盾審查-shards/s2.md",
+    "title": "正式規格矛盾審查 — 2. 仍待處理",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0182",
+    "path": "docs/遊戲規格文件/正式規格矛盾審查-shards/s3.md",
+    "title": "正式規格矛盾審查 — 3. 審查結論",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0183",
+    "path": "docs/遊戲規格文件/正式規格矛盾審查.md",
+    "title": "正式規格矛盾審查",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0184",
+    "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md",
+    "title": "家族關係（史實相性）系統 — F–J",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0185",
+    "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md",
+    "title": "家族關係（史實相性）系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0186",
+    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-b.md",
+    "title": "培育系統規格（分片索引） — F 數值模型與公式（含 F-7 戰法槽位）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0187",
+    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-c.md",
+    "title": "培育系統規格（分片索引） — G–J 劇本／字串／Data Schema／名詞",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0188",
+    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-d.md",
+    "title": "培育系統規格（分片索引） — N 血脈補遺／MCQ 決策／雙層數值",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0189",
+    "path": "docs/遊戲規格文件/系統規格書/培育系統.md",
+    "title": "培育系統規格（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0190",
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-b.md",
+    "title": "結緣系統（配種）規格（分片索引） — F–J 公式／劇本／字串／Data Schema／名詞",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0191",
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md",
+    "title": "結緣系統（配種）規格（分片索引） — K–L 近親繁殖範圍／精力值與生育限制",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0192",
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-d.md",
+    "title": "結緣系統（配種）規格（分片索引） — M 血統模擬器／MCQ 決策記錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0193",
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統（配種）.md",
+    "title": "結緣系統（配種）規格（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0194",
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/fh.md",
+    "title": "戰法系統 — F、H 公式與 UI 約束",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0195",
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/g.md",
+    "title": "戰法系統 — G 戰法大清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0196",
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/g5.md",
+    "title": "戰法系統 — G-5 天賦戰法初始庫",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0197",
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統.md",
+    "title": "戰法系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0198",
+    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/df.md",
+    "title": "戰法場景規格書 — D–F",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0199",
+    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/meta.md",
+    "title": "戰法場景規格書 — MCQ 與實作紀錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0200",
+    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書.md",
+    "title": "戰法場景規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0201",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q01-13.md",
+    "title": "整併疑問書 — Q1–Q13 與已裁決紀錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0202",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30.md",
+    "title": "整併疑問書 — Q14–Q30",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0203",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-1.md",
+    "title": "整併疑問書 — Q14–Q30",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0204",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-2.md",
+    "title": "Q21. EP 評級門檻要以哪一套為正式標準？ C",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0205",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-3.md",
+    "title": "Q27. 近親判定要以 `Bloodline_ID` 還是「共同祖先代數」作為正式權威？ C",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0206",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q31-40.md",
+    "title": "整併疑問書 — Q31–Q40",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0207",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q41-52.md",
+    "title": "整併疑問書 — Q41–Q52",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0208",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q53-63.md",
+    "title": "整併疑問書 — Q53–Q63",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0209",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q64-74.md",
+    "title": "整併疑問書 — Q64–Q74",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0210",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q75-plus.md",
+    "title": "整併疑問書 — Q75 起",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0211",
+    "path": "docs/遊戲規格文件/整併疑問書.md",
+    "title": "整併疑問書",
     "category": "spec"
   }
 ]

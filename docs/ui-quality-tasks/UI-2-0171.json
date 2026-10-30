@@ -1,0 +1,75 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0463",
+      "id": "UI-2-0171",
+      "title": "楊儀立繪：蜀綠灰梅棕嚴整官袍",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T12:25:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為名冊 ID yang-yi 建立 512×768 透明全身立繪與 256×256 頭像；採蜀綠基底及灰梅棕副色，呈現嚴整棱角臉、緊束髮與行政官員剪影。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 yang-yi 名冊 ID",
+        "以蜀綠為基底並配灰梅棕與紙白",
+        "棱角長臉、嚴肅眼神及緊束官髻具辨識度",
+        "衣襟袖口俐落固定，無長飄帶與武將重甲"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/yang_yi_portrait.png",
+        "assets/resources/sprites/generals/avatars/yang_yi_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/yang-yi/"
+      ],
+      "notes": "2026-10-29 | 狀態: done | 驗證: avatar verify 通過；encoding/build manifest 通過 | 變更: 楊儀立繪頭像完成，灰梅棕窄襟嚴整官袍 | 阻塞: Cocos Asset DB 待 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/yang_yi_portrait.png",
+          "assets/resources/sprites/generals/avatars/yang_yi_avatar.png",
+          "artifacts/ui-generated/yang-yi/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA transparent",
+          "Avatar generated with reviewed crop and copied to generals/avatars",
+          "generate-general-avatars --verify pending final run",
+          "Cocos Asset DB refresh pending"
+        ],
+        "handoff_diff_status": "pending Cocos Editor Refresh Assets",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 7B6B23A872F069A44871191ABF23C755DD032F4CAB76B0A50448741C55B0792F",
+          "avatar SHA-256 C681BD6002249D0850877FA039B4D6A4B68EFB0D91DB24211D57629C76E29325"
+        ]
+      }
+    }
+  ]
+}

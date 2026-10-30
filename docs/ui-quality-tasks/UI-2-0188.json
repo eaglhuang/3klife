@@ -1,0 +1,80 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1377",
+      "id": "UI-2-0188",
+      "title": "袁熙立繪與頭像：枯山橄欖灰與沉香紅褐",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T07:43:34+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為袁熙補齊差異化全身立繪與頭像；採成熟矩形臉、貼頜短整鬚與低位窄束髮，使用枯山橄欖灰、沉香紅褐與骨白，和袁譚、袁尚兩位兄長清楚區隔。",
+      "related": [
+        "UI-2-0187"
+      ],
+      "depends": [
+        "UI-2-0187"
+      ],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明全身圖",
+        "頭像為 256×256，採 reviewed 裁切且 generate-general-avatars verify 通過",
+        "枯山橄欖灰 #686D5E、沉香紅褐 #8C555B、骨白 #D1C6B4、暗鐵 #36383B，與袁譚鈷藍霜銀、袁尚海松青燒陶赭及既有主色組合區隔",
+        "成熟矩形臉、寬顴骨、平直略濃眉、短寬直鼻、貼頜短整鬚與淡右頰舊痕，不複用袁譚長心形窄下頜鷹鉤鼻垂尾細鬚或袁尚寬橢圓清面青年相",
+        "黑髮由右側梳後收為單一低位窄束短尾，以暗鐵長方髮扣固定，不用袁譚高折髻或袁尚橫向扁髻、玉梳",
+        "短甲裙和腕長收袖，無披風、長飄帶或鬆垂衣帶，全身與雙手完整自然"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/yuan_xi_portrait.png",
+        "assets/resources/sprites/generals/avatars/yuan_xi_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/yuan-xi/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA立繪、256×256 RGBA正式頭像；reviewed crop與單人verify通過；Cocos Asset DB刷新成功 | 變更: 袁熙v2定稿並接入正式武將美術目錄 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/yuan-xi/prompt.txt",
+          "artifacts/ui-generated/yuan-xi/yuan-xi-candidate.png",
+          "artifacts/ui-generated/yuan-xi/revision-prompt.txt",
+          "artifacts/ui-generated/yuan-xi/yuan-xi-candidate-v2.png"
+        ],
+        "validation_evidence": [
+          "Candidate v1 rejected after review because the robe fell to the calves and dark iron dominated the olive-gray palette.",
+          "Candidate v2 accepted at 125px silhouette review and 250px face/detail review; compact armor, full figure, mature rectangular face, short jaw beard, and low narrow tied hair remain distinct from Yuan Tan and Yuan Shang.",
+          "Formal portrait assets/resources/sprites/generals/yuan_xi_portrait.png verified as 512×768 RGBA with transparent margins.",
+          "Formal avatar assets/resources/sprites/generals/avatars/yuan_xi_avatar.png verified as 256×256 RGBA; reviewed crop (146,0)+220×220; generate-general-avatars --verify passed.",
+          "Cocos Asset DB refresh on the assigned worktree endpoint returned HTTP 200."
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completion": 100,
+      "completed": "2026-10-30"
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-07-19
-> 這是 `doc-id-registry.md` 的「其它類」分片，第 1/6 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
+> 生成日期: 2026-10-30
+> 這是 `doc-id-registry.md` 的「其它類」分片，第 1/7 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 其它類 (`doc_other`) — Part 1/6
+## 其它類 (`doc_other`) — Part 1/7
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
@@ -85,7 +85,6 @@
 | `doc_other_0080` | docs/windows-wsl-cli-routing.md | Windows / WSL CLI Routing Rules |
 | `doc_other_0081` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/html-to-ucuf-case-study.md | html-to-ucuf Reference Case Study |
 | `doc_other_0082` | docs/ai_atomic_framework/3klife-atm-triangle-strategy/h2u-regression-matrix.md | H2U Regression Matrix |
-| `doc_other_0084` | docs/學習文件/The Anatomy of an Agent Harness.md | Key Takeaways |
 | `doc_other_0085` | docs/tech/npc-brain-武將互動記憶系統.md | NPC Brain Memory System |
 | `doc_other_0086` | docs/tech/npc-brain-memory/api-contract.md | NPC Brain Memory System — API & Contract（§6-§8） |
 | `doc_other_0087` | docs/tech/npc-brain-memory/data-model.md | NPC Brain Memory System — Data Model（§4-§5） |
@@ -295,3 +294,4 @@
 | `doc_other_0672` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0031-source-inventory-large-surface-scanner-contract.task.md | TASK-APF-0031 — Source inventory and large-surface scanner contract |
 | `doc_other_0673` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0032-decomposition-police-named-scanner.task.md | TASK-APF-0032 — Decomposition Police named scanner |
 | `doc_other_0674` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0033-decomposition-plan-atomic-map-recommendation-bridge.task.md | TASK-APF-0033 — Decomposition plan to atomic-map recommendation bridge |
+| `doc_other_0675` | docs/ai_atomic_framework/atomic-police-family/tasks/TASK-APF-0034-evidence-evolution-signal-policy.task.md | TASK-APF-0034 — Evidence evolution signal policy |

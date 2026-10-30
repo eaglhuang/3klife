@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0447",
+      "id": "UI-2-0155",
+      "title": "程秉武將立繪：吳紅與古竹褐的經學長者",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T07:27:16+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為程秉建立 512×768 透明全身立繪與 256×256 頭像；以吳紅搭配古竹褐，塑造寬額方頰、灰白長鬚與雙翼儒冠的經學長者。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "吳紅基底搭配古竹褐，與其他吳將副色區隔",
+        "寬額方頰、灰白長鬚、雙翼儒冠清楚可辨",
+        "長袍結構收束，無多層飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/cheng_bing_portrait.png",
+        "assets/resources/sprites/generals/avatars/cheng_bing_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/cheng-bing/"
+      ],
+      "notes": "程秉配色：吳紅 #91464B 搭配古竹褐 #8D795D、骨白與墨鐵。寬額方頰、厚灰白長鬚；黑髮束在低方形雙翼儒冠下，配小竹節玉扣；吳紅端正長直袍，以古竹褐作窄前襟與袖口，手持竹簡與木笏；衣袖不過寬，無飄帶。避免陸胤清面高直冠與陸抗高髻短鬚。 已完成；正式立繪 SHA-256 AD1A795356FDDE35AFC48D9B43A4FA92446A394DDC6A8BC693F015C69395471E，頭像 SHA-256 11B591FB01329B6C3AD06841D28F3511753FA4E52FE6D93564D5F6855F5E134C。Cocos Asset DB Refresh 尚待正確 Editor。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

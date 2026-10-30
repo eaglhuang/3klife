@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0446",
+      "id": "UI-2-0154",
+      "title": "陸胤武將立繪：吳紅與瓷青灰綠的端直文臣",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T07:25:22+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為陸胤建立 512×768 透明全身立繪與 256×256 頭像；以吳紅搭配瓷青灰綠，呈現高額瘦長臉、無鬚面容與端直文官姿態。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "吳紅基底搭配瓷青灰綠，與其他吳將副色區隔",
+        "高額瘦長臉、無鬚、窄直官冠具辨識度",
+        "直袍收束，無多層飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/lu_yin_portrait.png",
+        "assets/resources/sprites/generals/avatars/lu_yin_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/lu-yin/"
+      ],
+      "notes": "陸胤配色：吳紅 #91464B 搭配瓷青灰綠 #91A99D、墨鐵。高額瘦長臉、清面無鬚、窄直黑官冠加單玉扣；吳紅端直文官袍配青灰綠短襟片和固定腰帶，手持封奏與木笏。避免文袍飄帶、陸抗高髻與朱桓札甲。 已完成；正式立繪 SHA-256 5334E715391BF7D80061A22047403B604C1AB638F3989DDA689F684224114F5E，頭像 SHA-256 DE2A40B6227C40748B06153A8065CB61F55B7A511B4EC1D3C448DA01161CE46F。Cocos Asset DB Refresh 尚待正確 Editor。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

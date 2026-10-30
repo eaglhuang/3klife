@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0418",
+      "id": "UI-2-0126",
+      "title": "張嶷武將立繪：蜀綠與石青灰山地戰將辨識",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-28T23:37:16+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為張嶷建立 512×768 透明全身立繪與 256×256 頭像。使用蜀綠基底搭配冷石青灰，呈現瘦削堅毅的山地戰將輪廓，以低束髮、窄長臉和短鬚與蜀將區隔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "使用蜀綠基底及獨立石青灰副色",
+        "瘦削窄長臉、低束髮與短鬚和王平、李嚴有辨識差異",
+        "山地戰裝緊湊，沒有長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/zhang_yi_portrait.png",
+        "assets/resources/sprites/generals/avatars/zhang_yi_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/zhang-yi/"
+      ],
+      "notes": "臉型避免王平寬方臉與李嚴長方臉；不使用高髻文冠或長鬚。；已完成，Cocos Asset DB 待正確工作樹的 Editor 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

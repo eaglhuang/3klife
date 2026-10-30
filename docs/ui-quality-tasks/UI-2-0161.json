@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0453",
+      "id": "UI-2-0161",
+      "title": "顏良武將立繪：敵將鈍鐵銀與乾銅金的鋒銳戰將",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T07:40:32+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為顏良建立 512×768 透明全身立繪與 256×256 頭像；名冊勢力為 enemy，採鈍鐵銀與乾銅金，透過額甲戰盔和菱形臉區別文醜。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "敵將採鈍鐵銀與乾銅金，不複製文醜暗鐵紫褐配色",
+        "額甲戰盔、菱形臉與編束尖鬚具辨識度",
+        "甲裙短而固定，無長披風飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/yan_liang_portrait.png",
+        "assets/resources/sprites/generals/avatars/yan_liang_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/yan-liang/"
+      ],
+      "notes": "顏良名冊勢力為 enemy，採鈍鐵銀 #92999A、乾銅金 #97764E 與煙黑。菱形臉、突出顴骨、直鼻、濃眉；短編束尖鬚與整齊短髭；黑髮藏在低額甲戰盔內，只有短黑纓，不用文醜高髻。鈍鐵銀札甲配乾銅金窄肩片，持長柄斬刀；輪廓比文醜更修長，無長披風飄帶。 已完成；正式立繪 SHA-256 DAB11A966E947AC7FE498B8331FCF70A034C80E3522EE40CF7E97A2E68912A6F，頭像 SHA-256 B73E6AA76E8729CF931D9CFDD60A2183EF9A852B86F1296CB3CD3155A0020F65。Cocos Asset DB Refresh 尚待正確 Editor。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

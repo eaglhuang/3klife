@@ -1,0 +1,11 @@
+{
+  "schemaId": "atm.taskIntent.v1",
+  "userPrompt": "持續完成所有武將立繪，確保每張人物特徵與顏色分配不同；接續 UI-2-0121 名冊稽核",
+  "mentionedTaskIds": ["UI-2-0121"],
+  "mentionedPlanPaths": ["docs/agent-briefs/tasks/UI/UI-2-0121.md"],
+  "taskRootHints": ["docs/agent-briefs/tasks/UI"],
+  "targetRepoHints": ["3KLife"],
+  "requestedAction": "implement",
+  "confidence": 0.96,
+  "source": "atm-skill"
+}

@@ -1,0 +1,74 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0474",
+      "id": "UI-2-0182",
+      "title": "兀突骨立繪：玄武岩紫與苔金鱗甲",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-30T09:20:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為兀突骨製作差異化全身立繪與頭像；以高大骨架、狹長硬朗臉型、繩辮髮與密鱗重甲，配玄武岩紫、苔金與礦骨色，和孟獲、祝融區隔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪 512×768 RGBA，透明背景",
+        "頭像 256×256，裁切與 generator verify 通過",
+        "玄武岩紫 #514B5D、苔金 #A1A06C、礦骨 #D2C7B0",
+        "高大身形、狹長硬朗臉、重眉與短額疤；繩辮髮，不用孟獲雙側粗辮或祝融紅羽冠",
+        "密鱗短甲與固定護片，無披風、長飄帶或鬆垂腰帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/wu_tugu_portrait.png",
+        "assets/resources/sprites/generals/avatars/wu_tugu_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/wu-tugu/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 139/139 avatar verify 通過；立繪 512×768、頭像 256×256 | 變更: 兀突骨玄武岩紫苔金密鱗甲立繪完成 | 阻塞: 此 worktree 的 Cocos Asset DB 尚待正確 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/wu_tugu_portrait.png",
+          "assets/resources/sprites/generals/avatars/wu_tugu_avatar.png",
+          "artifacts/ui-generated/wu-tugu/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA with transparent padding; source 1086×1448 was fitted to preserve the full silhouette",
+          "Avatar is 256×256; reviewed manual crop (191,24)+220×220",
+          "generate-general-avatars --verify: 139 success, 0 failures",
+          "Cocos Asset DB refresh pending for ui-portrait-review worktree"
+        ],
+        "handoff_diff_status": "pending correct-worktree Cocos Asset DB refresh",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 5F1CE5D9827288C1899653115DA4501BD378A3F90728580F4F49FCDD5E1AE3D0",
+          "avatar SHA-256 0190A2FC1B19E07763308412DDADBA169A659959B6E0B9E01B9B20DD704CD57A"
+        ]
+      }
+    }
+  ]
+}

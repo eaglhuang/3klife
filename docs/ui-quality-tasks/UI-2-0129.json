@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0421",
+      "id": "UI-2-0129",
+      "title": "馬岱武將立繪：蜀綠與砂岩金副色騎將辨識",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-28T23:49:28+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為馬岱建立 512×768 透明全身立繪與 256×256 頭像。以蜀綠搭配砂岩金米色，描繪中生代騎將的側分束髮、窄長臉與短分叉鬍。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "蜀綠基底搭配砂岩金米色副色",
+        "側分束髮、窄長臉與短分叉鬍區隔關興、張嶷及王平",
+        "騎將服裝貼身俐落，無長飄帶或多餘衣帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/ma_dai_portrait.png",
+        "assets/resources/sprites/generals/avatars/ma_dai_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/ma-dai/"
+      ],
+      "notes": "避免關興高馬尾無鬚、張嶷頭巾窄臉、王平寬方臉額帶造型。；已完成，Cocos Asset DB 待正確工作樹的 Editor 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0467",
+      "id": "UI-2-0175",
+      "title": "龐德立繪：鐵灰暗棗紅敵將",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T12:33:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為名冊 ID pang-de 建立 512×768 透明全身立繪與 256×256 頭像；採鐵灰與暗棗紅敵將色組，使用高額戰盔、窄髭清下巴與短甲裙，和文醜、顏良及張飛分流。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 pang-de 名冊 ID",
+        "採鐵灰 #777B7E 與暗棗紅 #794F52",
+        "高額戰盔、窄髭清下巴、長柄兵器具辨識度",
+        "甲裙固定短收，無長披風或飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/pang_de_portrait.png",
+        "assets/resources/sprites/generals/avatars/pang_de_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/pang-de/"
+      ],
+      "notes": "2026-10-29 | 狀態: done | 驗證: avatar verify 通過；encoding/build manifest 通過 | 變更: 龐德立繪頭像完成，高額戰盔與窄髭清面分流其他敵將 | 阻塞: Cocos Asset DB 待 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/pang_de_portrait.png",
+          "assets/resources/sprites/generals/avatars/pang_de_avatar.png",
+          "artifacts/ui-generated/pang-de/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA transparent",
+          "Avatar generated with reviewed crop and copied to generals/avatars",
+          "generate-general-avatars --verify pending final run",
+          "Cocos Asset DB refresh pending"
+        ],
+        "handoff_diff_status": "pending Cocos Asset DB refresh",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 A6220119F856C55DC5B0D9C775EA09170CC2BA501A6776AB6A5FBEE93DF32594",
+          "avatar SHA-256 F7795D8C690D5CD71B9FB0260482E5CDCDF7766B9BA0197D3BB82FA988FA39F8"
+        ]
+      }
+    }
+  ]
+}

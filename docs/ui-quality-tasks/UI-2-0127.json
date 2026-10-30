@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0419",
+      "id": "UI-2-0127",
+      "title": "廖化武將立繪：蜀綠與舊卡其白鬚老將辨識",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-28T23:40:29+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為廖化建立 512×768 透明全身立繪與 256×256 頭像。使用蜀綠基底、舊卡其銅棕副色，刻畫銀白眉鬚與飽經戰陣的老將輪廓。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "蜀綠基底配舊卡其銅棕副色且不複製既有色組",
+        "銀白眉鬚、深紋老臉與低束白髮明顯區分王平和張嶷",
+        "衣甲實用簡潔、無長垂飾帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/liao_hua_portrait.png",
+        "assets/resources/sprites/generals/avatars/liao_hua_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/liao-hua/"
+      ],
+      "notes": "老將需呈現高齡與戰陣磨耗；避免與王平的鹽黑方鬚、張嶷的窄臉短尖鬚相似。；已完成，Cocos Asset DB 待正確工作樹的 Editor 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

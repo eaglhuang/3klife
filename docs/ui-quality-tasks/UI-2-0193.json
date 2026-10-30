@@ -1,0 +1,89 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0193",
+      "title": "郭圖立繪與頭像：赭紅與麻紙米白謀士配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T08:10:11+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為郭圖補齊正式全身立繪與武將列表頭像。以中年窄長臉、銳利上挑眉、薄鬍髭與分叉短鬚、偏斜文士巾帽建立辨識；和沮授寬顴高髻、田豐灰鬚軟冠分流。採赭紅配麻紙米白，不穿重甲，文士衣著固定簡潔。",
+      "related": [
+        "UI-2-0192"
+      ],
+      "depends": [
+        "UI-2-0192"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "赭紅主色配麻紙米白且與近期色盤區隔",
+        "窄長臉、上挑眉、薄鬍髭、分叉短鬚、偏斜文士巾帽與近期謀臣不同",
+        "文士衣褶簡潔，持卷姿勢自然"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/guo_tu_portrait.png",
+        "assets/resources/sprites/generals/avatars/guo_tu_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/guo-tu/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA立繪、256×256 RGBA頭像；reviewed crop與全量verify通過；Cocos刷新成功 | 變更: 郭圖v1定稿接入正式目錄 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "為郭圖建立辨識度高的文士型正式立繪與頭像。",
+        "position": "M6 武將正式美術目錄補齊",
+        "prereq": "UI-2-0192 已完成；使用 GeneralArtPaths 正式資產路徑。"
+      },
+      "contracts": {
+        "input": [
+          "選取不同於近期武將的新配色及臉髮特徵；不將其畫成重甲武將，文士配件與道具需符合人物定位。"
+        ],
+        "output": [
+          "產出512×768透明立繪、256×256 reviewed頭像、色彩台帳紀錄及可由武將列表載入的正式資產。"
+        ],
+        "validation_cmd": "node tools_node/generate-general-avatars.js guo-tu\\nnode tools_node/generate-general-avatars.js guo-tu --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除郭圖本卡新增立繪、頭像及候選，還原crop設定與配色列後重建UI任務manifest。",
+        "execution_steps": [
+          "比對近期謀臣的臉髮輪廓與配色",
+          "生成候選並依125px起審",
+          "必要時放大檢查五官/手勢/道具",
+          "定稿立繪及reviewed頭像",
+          "驗證資產與刷新Cocos",
+          "回報隊長後處理下一位"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/guo-tu/prompt.txt",
+          "artifacts/ui-generated/guo-tu/guo-tu-candidate-v1.png",
+          "assets/resources/sprites/generals/guo_tu_portrait.png",
+          "assets/resources/sprites/generals/avatars/guo_tu_avatar.png"
+        ],
+        "validation_evidence": [
+          "Candidate reviewed at 125px for silhouette and 250px against Ju Shou; narrow face, tilted scholar headwrap, thin moustache, forked short beard and bound-scroll stance distinguish him from recent advisers.",
+          "Formal portrait verified as 512×768 RGBA with transparent margins.",
+          "Formal avatar verified as 256×256 RGBA using reviewed crop (146,0)+220×220; single and full avatar verification passed (150 success, 0 failures).",
+          "Cocos Asset DB refresh on assigned worktree returned HTTP 200."
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completion": 100,
+      "completed": "2026-10-30"
+    }
+  ]
+}

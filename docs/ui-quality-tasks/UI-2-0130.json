@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0422",
+      "id": "UI-2-0130",
+      "title": "曹洪武將立繪：魏藍與磚棕副色厚重守將",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-28T23:54:57+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為曹洪建立 512×768 透明全身立繪與 256×256 頭像。以魏國藍色為基底，搭配磚棕副色，呈現厚實果決的守將氣質和獨特臉部、髮冠輪廓。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "魏藍基底搭配磚棕副色",
+        "寬厚顴頰、粗直眉與短方鬚及低軍冠清楚辨識",
+        "守將甲袍緊湊，無長飄帶或繁複衣帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/cao_hong_portrait.png",
+        "assets/resources/sprites/generals/avatars/cao_hong_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/cao-hong/"
+      ],
+      "notes": "陣營色遵循魏藍；避免曹操式長鬚與文冠，採厚重短鬚守將形象。；已完成，Cocos Asset DB 待正確工作樹的 Editor 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

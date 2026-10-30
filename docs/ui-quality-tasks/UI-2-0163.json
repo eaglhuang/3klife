@@ -1,0 +1,63 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0455",
+      "id": "UI-2-0163",
+      "title": "張角敵將立繪：灰松綠與骨白的黃巾教主",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T11:59:20+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為張角建立 512×768 透明全身立繪與 256×256 頭像；採灰松綠、骨白和少量褪赭黃巾色，與張寶敵將區分。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 zhang-jue 正確名冊 ID",
+        "灰松綠骨白為主並以少量褪赭黃巾色作辨識，不複製張寶赭金煙紫",
+        "寬額沉靜臉、銀白長鬚、分層頭巾與長節杖可辨",
+        "衣袖收束、無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/zhang_jue_portrait.png",
+        "assets/resources/sprites/generals/avatars/zhang_jue_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/zhang-jue/"
+      ],
+      "notes": "張角名冊勢力 enemy；採灰松綠 #788579、骨白 #D7D1C3、褪赭黃巾 #A18D5B 與暗鐵。比張寶寬的額頭與圓卵臉、銀白長鬚及平靜眼神；分層灰綠頭巾只以窄褪赭帶固定，不用張寶側結黃頭巾。穿貼身灰松綠教主直袍，骨白窄內襟，持長節杖與短經卷。袖口衣襬收束，無長帶或飄布。 已完成；正式立繪 SHA-256 07ED1BCB572862A7FCBED2069B46E364654C0BD2ED14953605FE0797CB2694F6，頭像 SHA-256 3BEC0FC1589BF1681F096B3323C570A89A6FC3D4373864BEE113BF82EF834942。Cocos Asset DB Refresh 尚待正確 Editor。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

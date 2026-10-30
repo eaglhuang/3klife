@@ -1,0 +1,75 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0471",
+      "id": "UI-2-0179",
+      "title": "軻比能立繪：暗梅紫麂皮色鮮卑首領",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-29",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-29T12:41:00+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為名冊 ID ke-bi-neng 建立 512×768 透明全身立繪與 256×256 頭像；採暗梅紫與淺麂皮色的邊地色組，以高束辮髮、織帶頭箍與短複合弓和劉豹區分。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256 且 crop generator verify 通過",
+        "使用 ke-bi-neng 名冊 ID",
+        "採暗梅紫 #624A57、淺麂皮 #C1AF8C、暗鐵 #35363A",
+        "高束辮髮、織帶頭箍與短複合弓具辨識度",
+        "札甲與衣襬收束，無披風長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/ke_bi_neng_portrait.png",
+        "assets/resources/sprites/generals/avatars/ke_bi_neng_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/ke-bi-neng/"
+      ],
+      "notes": "2026-10-29 | 狀態: done | 驗證: avatar verify 通過；encoding/build manifest 通過 | 變更: 軻比能立繪頭像完成，高束辮髮、織帶頭箍及暗梅札甲 | 阻塞: Cocos Asset DB 待 Editor Refresh Assets",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/ke_bi_neng_portrait.png",
+          "assets/resources/sprites/generals/avatars/ke_bi_neng_avatar.png",
+          "artifacts/ui-generated/ke-bi-neng/prompt.txt"
+        ],
+        "validation_evidence": [
+          "Portrait is 512×768 RGBA transparent",
+          "Avatar generated with reviewed crop and copied to generals/avatars",
+          "generate-general-avatars --verify pending final run",
+          "Cocos Asset DB refresh pending"
+        ],
+        "handoff_diff_status": "pending Cocos Asset DB refresh",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 8E52E389567874B09DC205D11165A2B619166FDA21BE3BA15E3DE834D35F0FB6",
+          "avatar SHA-256 2307B05CF235C8D3A361A584B009E6A247CC1742D97D92DEE882000B25CC092D"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1418",
+      "id": "UI-2-0228",
+      "title": "木鹿大王立繪與頭像：象兵統領的青銅、赭金與骨白",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T10:30:14+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序補齊南蠻將領木鹿大王的正式全身立繪與列表頭像。塑造高額窄長臉、突出的鼻梁、深膚、清剃下頜與高顴的成熟南方山地統領，長髮編成高束髮髻加兩側細辮，配不對稱骨雕額飾；短袖收束皮革與青銅片甲，少量赭金、深林綠及骨白作色彩層次。手持短柄象兵令杖，配象牙雕刻護符；不使用長飄帶、誇張羽毛，避開孟獲的寬厚鬍面、低位頭巾、厚重重甲與大斧輪廓。",
+      "related": [
+        "UI-2-0227"
+      ],
+      "depends": [
+        "UI-2-0227"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "青銅／赭金／骨白搭配少量深林綠",
+        "高額窄長臉、突出鼻梁、清剃下頜與不對稱骨雕額飾辨識度明確，與孟獲寬鬍重甲不同",
+        "短袖緊束山地皮甲姿態自然且無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/mu_lu_da_wang_portrait.png",
+        "assets/resources/sprites/generals/avatars/mu_lu_da_wang_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/mu-lu-da-wang/"
+      ],
+      "notes": "2026-10-31 | done | portrait 512x768 RGBA; avatar 256x256 RGBA; reviewed crop verify 1/0; Cocos refresh HTTP 200.",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "node tools_node/generate-general-avatars.js mu-lu-da-wang\\nnode tools_node/generate-general-avatars.js mu-lu-da-wang --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+        "execution_steps": [
+          "盤點名冊中已完成的南蠻人物，設計木鹿大王獨特臉型與輪廓",
+          "生成候選並從125px縮圖起審，必要時升級250px",
+          "定稿512×768立繪與reviewed頭像",
+          "驗證alpha／尺寸／頭像並刷新Cocos資產"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/mu-lu-da-wang/prompt.txt",
+          "artifacts/ui-generated/mu-lu-da-wang/mu-lu-da-wang-candidate-v1.png",
+          "assets/resources/sprites/generals/mu_lu_da_wang_portrait.png",
+          "assets/resources/sprites/ui_avatars/cropped/mu_lu_da_wang_avatar.png"
+        ],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "validation_evidence": [
+        "Candidate v1 1024x1536 RGBA, alpha extrema 0..254",
+        "Formal portrait 512x768 RGBA, alpha extrema 0..255",
+        "Cropped and mirrored avatar 256x256 RGBA, alpha extrema 0..255",
+        "Reviewed crop avatar verify: 1 success, 0 failures",
+        "Cocos Asset DB refresh: HTTP 200",
+        "Compared with Meng Huo at 125px; narrow clean-shaven face and command staff remain distinct"
+      ]
+    }
+  ]
+}

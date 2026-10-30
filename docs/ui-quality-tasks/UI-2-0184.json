@@ -1,0 +1,79 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1373",
+      "id": "UI-2-0184",
+      "title": "董荼那立繪與頭像：蒼藍石色與莓褐",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-30T07:11:06+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為董荼那補齊可供武將列表與戰鬥介面載入的正式全身立繪與頭像；採有別於孟獲、祝融、兀突骨、阿會喃的蒼藍石色與莓褐搭配，並設計獨立臉型、短髮固定方式及緊束南中甲。",
+      "related": [
+        "UI-2-0183"
+      ],
+      "depends": [
+        "UI-2-0183"
+      ],
+      "acceptance": [
+        "立繪為 512×768 RGBA 透明背景",
+        "頭像為 256×256，裁切標記存在且 generator verify 通過",
+        "蒼藍石色 #435F72、莓褐 #875A50、骨麻 #D4C6AC 與鄰近南中人物明確區隔",
+        "採短削髮及不對稱骨扣髮束、窄額寬顴面與單側短鬚，避免孟獲雙粗辮寬方臉、兀突骨高瘦繩辮臉、阿會喃圓方臉與祝融冠式辮髮",
+        "服裝為收束短甲與固定裙片，不使用披風或長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/dong_tu_na_portrait.png",
+        "assets/resources/sprites/generals/avatars/dong_tu_na_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/dong-tu-na/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 立繪 512×768 RGBA、頭像 256×256；全體 avatar verify 141 成功 0 失敗 | 變更: 蒼藍石色與莓褐立繪、reviewed 裁切、色票登錄完成 | 阻塞: Cocos Asset DB 尚待在正確 worktree 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/dong_tu_na_portrait.png",
+          "assets/resources/sprites/generals/avatars/dong_tu_na_avatar.png",
+          "artifacts/ui-generated/dong-tu-na/prompt.txt",
+          "artifacts/ui-generated/dong-tu-na/dong-tu-na-candidate.png"
+        ],
+        "validation_evidence": [
+          "Formal portrait is 512×768 RGBA; generated source is 1024×1536 with transparent alpha corners and was area-downsampled without cropping.",
+          "Avatar is 256×256 from reviewed crop (174,0)+220×220.",
+          "generate-general-avatars.js --verify: 141 success, 0 failures.",
+          "Cocos Asset DB refresh remains pending for the ui-portrait-review worktree."
+        ],
+        "handoff_diff_status": "pending correct-worktree Cocos Asset DB refresh",
+        "trace_artifacts": [],
+        "metrics_summary": [
+          "portrait SHA-256 285B45544CA1F7AF177AA364EF6720B7C835BF78D682A8DDC0F31A7D7489710C",
+          "avatar SHA-256 35AC7622C2F5F24A4A5B3C56FC77A97D5DDD554D669338A2800A837703F5490C"
+        ]
+      }
+    }
+  ]
+}

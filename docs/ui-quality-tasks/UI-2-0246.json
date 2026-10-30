@@ -1,0 +1,58 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1436",
+      "id": "UI-2-0246",
+      "title": "朱異紅黑銀甲立繪與正方頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T17:11:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為吳國朱異補齊差異化正式全身立繪、同比例正方頭像與 reviewed 臉部裁切。採低飽和吳紅、煤黑與舊銀；窄長稜角臉、低髻扁額帶，與其他武將分開。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA透明立繪；256×256 RGBA同比例頭像；crop source=reviewed；頭像列表可按 ID 載入"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/zhu_yi_portrait.png",
+        "assets/resources/sprites/generals/avatars/zhu_yi_avatar.png",
+        "assets/resources/sprites/ui_avatars/cropped/zhu_yi_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768與256×256 RGBA、alpha corners透明；reviewed crop；202 success/0 fail；Asset DB 7458 HTTP 200 | 變更: 朱異吳紅煤黑舊銀差異化立繪與正式頭像完成 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

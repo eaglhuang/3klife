@@ -1,0 +1,95 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0209",
+      "title": "朱褒立繪與頭像：蜀綠與赭紅山地軍政官配色",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T13:00:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為朱褒補齊正式全身立繪與武將列表頭像。以蜀綠為陣營主色，配赭紅與炭黑；定位為蜀南山地軍政官，採寬額三角臉、粗眉、深眼窩、短鬍與低束髮，穿收袖山地短甲與簡潔披肩，手持短槍/令牌，避開句扶與羅憲的臉型盔甲剪影。",
+      "related": [
+        "UI-2-0207"
+      ],
+      "depends": [
+        "UI-2-0208"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "蜀綠主色搭赭紅、炭黑且與近期人物配色有區隔",
+        "朱褒山地軍政官外觀具寬額三角臉、粗眉深眼窩、短鬍、低束髮辨識點",
+        "短甲收束、無長飄帶，持械或令牌姿勢自然"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/zhu_bao_portrait.png",
+        "assets/resources/sprites/generals/avatars/zhu_bao_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/zhu-bao/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA透明立繪、256×256 reviewed頭像、verify 1/0、Cocos刷新200 | 變更: 朱褒蜀綠赭紅立繪與列表頭像正式入庫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "node tools_node/generate-general-avatars.js liu-chen\\nnode tools_node/generate-general-avatars.js liu-chen --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除劉諶本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+        "execution_steps": [
+          "盤點近期青年武將與宗室臉型髮冠配色",
+          "生成候選並從125px縮圖起審",
+          "必要時升級至250px檢查臉部與儀劍",
+          "定稿立繪與reviewed頭像",
+          "驗證並刷新Cocos資產",
+          "回報隊長後接續下一位"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/zhu-bao/prompt.txt",
+          "artifacts/ui-generated/zhu-bao/zhu-bao-candidate-v1.png"
+        ],
+        "validation_evidence": [
+          "candidate v1 dimensions 1024x1536 RGBA, alpha extrema 0..254",
+          "portrait 512x768 RGBA, alpha extrema 0..255",
+          "cropped and formal avatar 256x256 RGBA, alpha extrema 0..255",
+          "avatar verify: 1 success, 0 failures",
+          "Cocos Asset DB refresh: HTTP 200"
+        ]
+      },
+      "validation_evidence": [
+        "candidate v2 dimensions 1024x1536 RGBA, alpha extrema 0..254",
+        "portrait 512x768 RGBA, alpha extrema 0..255",
+        "cropped and formal avatar 256x256 RGBA, alpha extrema 0..255",
+        "avatar verify: 1 success, 0 failures",
+        "Cocos Asset DB refresh: HTTP 200"
+      ],
+      "validation_cmd": "node tools_node/generate-general-avatars.js zhu-bao\nnode tools_node/generate-general-avatars.js zhu-bao --verify\nnode tools_node/build-ui-task-manifest.js\nRefresh Cocos Asset DB on this worktree",
+      "rollback_hint": "移除本卡新增立繪、頭像與候選，還原crop資料和配色台帳後重建UI manifest。",
+      "execution_steps": [
+        "檢視近期蜀將臉型與裝備，設計朱褒獨特輪廓",
+        "生成候選並從125px縮圖起審",
+        "必要時升級至250px檢查面部與手持物",
+        "定稿立繪、reviewed裁切頭像與色盤台帳",
+        "驗證資產並刷新Cocos Asset DB"
+      ]
+    }
+  ]
+}

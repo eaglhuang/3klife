@@ -1,0 +1,63 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0244",
+      "title": "薛綜酒紅柔金文臣立繪與列表頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T16:58:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為吳系文臣薛綜補齊正式立繪與列表頭像。以吳國酒紅為主色，搭柔金、暖灰與麻白，不沿用孫盛的朱紅青瓷或韋昭的墨黑朱紅配色。塑造五十餘歲圓潤寬橢圓臉、飽滿面頰、細長微垂眼、柔和眉與短整灰黑鬍；黑髮高束於圓頂軟冠，無橫翼。身穿酒紅文臣袍、柔金窄襟與暖灰內層，一手持短玉笏，一手托繫好封緘的文書袋，氣質圓融而機敏。衣帶收束無長飄帶。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/xue_zong_portrait.png"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768與256×256 RGBA、alpha 0..255；reviewed crop；avatar verify 成功；Cocos Asset DB HTTP 200 | 變更: 薛綜差異化立繪與列表頭像已入庫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/xue_zong_portrait.png",
+          "assets/resources/sprites/ui_avatars/cropped/xue_zong_avatar.png",
+          "assets/resources/sprites/generals/avatars/xue_zong_avatar.png",
+          "artifacts/ui-generated/xue-zong/xue-zong-candidate-v2.png"
+        ],
+        "validation_evidence": [
+          "RGBA size 512×768 portrait and 256×256 avatar, alpha 0..255",
+          "node tools_node/generate-general-avatars.js xue-zong --verify: 1 success, 0 failures",
+          "Cocos asset-db refresh HTTP 200"
+        ],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}

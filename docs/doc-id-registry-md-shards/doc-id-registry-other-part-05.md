@@ -1,15 +1,13 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-07-19
-> 這是 `doc-id-registry.md` 的「其它類」分片，第 5/6 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
+> 生成日期: 2026-10-30
+> 這是 `doc-id-registry.md` 的「其它類」分片，第 5/7 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 其它類 (`doc_other`) — Part 5/6
+## 其它類 (`doc_other`) — Part 5/7
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_other_1874` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0186-real-shared-delivery-commit-executor.task.md | ATM-GOV-0186 - Real Shared Delivery Commit Executor |
-| `doc_other_1875` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0187-real-build-projection-runner-sync-executor.task.md | ATM-GOV-0187 - Real Build、Projection 與 Runner-Sync Executor |
 | `doc_other_1876` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0188-atomic-wave-checkpoint-closeback-saga.task.md | ATM-GOV-0188 - Atomic Wave Checkpoint 與 Cross-Repo Closeback Saga |
 | `doc_other_1877` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0189-plan-level-executor-recovery-cli.task.md | ATM-GOV-0189 - Plan-Level Executor 主迴圈、收單策略與復原 CLI |
 | `doc_other_1878` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0190-real-paired-ab-analyzer-v3.task.md | ATM-GOV-0190 - Real Paired A/B、Analyzer v3 與 Rollout Verdict |
@@ -295,3 +293,5 @@
 | `doc_other_2160` | docs/reports/3klife-stale-claim-and-lock-cleanup.md | 3KLife Stale Claim And Lock Cleanup |
 | `doc_other_2161` | docs/reports/3klife-stale-runtime-lock-cleanup-closeout.md | 3KLife Stale Runtime Lock Cleanup Closeout |
 | `doc_other_2162` | docs/reports/3klife-task-audit-debt-triage.md | 3KLife Task Audit Debt Triage |
+| `doc_other_2163` | docs/reports/3klife-transition-event-missing-backfill.md | 3KLife Transition Event Missing Backfill |
+| `doc_other_2164` | docs/reports/3klife-transition-evidence-missing-backfill.md | 3KLife transition evidence missing backfill |

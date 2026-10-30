@@ -1,0 +1,89 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0190",
+      "title": "高幹立繪與頭像：風暴藍與沉香紅紫",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-10-30T07:58:55+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依名冊順序為高幹補齊高辨識度全身正式立繪與武將列表頭像。主色採魏藍、第二色沉香紅紫；以瘦長高顴骨臉、細長眼、窄直鼻、短尖鬚與低平官武冠形成辨識，和高覽寬方臉、後辮及厚重青銅甲分流。衣袍與短甲收束，不使用長飄帶。",
+      "related": [
+        "UI-2-0189"
+      ],
+      "depends": [
+        "UI-2-0189"
+      ],
+      "acceptance": [
+        "512×768 RGBA透明全身立繪",
+        "256×256 RGBA reviewed頭像且verify通過",
+        "魏藍搭配沉香紅紫並與高覽藍銅區隔",
+        "瘦長高顴骨臉、低平束冠、短尖鬚與高覽明確不同",
+        "雙手/武器自然完整，服裝收束無長飄帶"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/gao_gan_portrait.png",
+        "assets/resources/sprites/generals/avatars/gao_gan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md",
+        "artifacts/ui-generated/gao-gan/"
+      ],
+      "notes": "2026-10-30 | 狀態: done | 驗證: 512×768 RGBA立繪、256×256 RGBA頭像；reviewed crop與全量verify通過；Cocos刷新成功 | 變更: 高幹v1定稿接入正式目錄 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "為高幹建立可在武將列表查看的正式立繪與頭像。",
+        "position": "M6 武將正式美術目錄補齊",
+        "prereq": "UI-2-0189 已完成；正式立繪/頭像沿用 GeneralArtPaths 標準路徑。"
+      },
+      "contracts": {
+        "input": [
+          "從現有武將資料及角色配色台帳延伸；魏藍基底、沉香紅紫第二色；不得複用高覽臉型、後辮與青銅甲輪廓。"
+        ],
+        "output": [
+          "產出高辨識度512×768全身立繪與256×256 reviewed頭像；正式資產可由武將列表 loader 載入。"
+        ],
+        "validation_cmd": "node tools_node/generate-general-avatars.js gao-gan\\nnode tools_node/generate-general-avatars.js gao-gan --verify\\nnode tools_node/build-ui-task-manifest.js\\nRefresh Cocos Asset DB on this worktree",
+        "rollback_hint": "移除高幹本卡新增的正式立繪、頭像、候選和配色列，還原 crop 座標後重建任務 manifest。",
+        "execution_steps": [
+          "盤點鄰近人物臉型和配色",
+          "生成差異化候選並用125px縮圖起審",
+          "逐級放大只在必要時驗收五官與手部",
+          "定稿正式立繪與reviewed裁切",
+          "驗證頭像並刷新資產索引",
+          "回報隊長後接下一位"
+        ]
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "artifacts/ui-generated/gao-gan/prompt.txt",
+          "artifacts/ui-generated/gao-gan/gao-gan-candidate-v1.png",
+          "assets/resources/sprites/generals/gao_gan_portrait.png",
+          "assets/resources/sprites/generals/avatars/gao_gan_avatar.png"
+        ],
+        "validation_evidence": [
+          "Candidate reviewed at 125px silhouette and 250px face/detail against Gao Lan; long narrow face, low flat cap and short pointed beard distinguish him from Gao Lan.",
+          "Formal portrait verified as 512×768 RGBA with transparent margins.",
+          "Formal avatar verified as 256×256 RGBA using reviewed crop (146,0)+220×220; single and full avatar verification passed (147 success, 0 failures).",
+          "Cocos Asset DB refresh on assigned worktree returned HTTP 200."
+        ],
+        "handoff_diff_status": "complete",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completion": 100,
+      "completed": "2026-10-30"
+    }
+  ]
+}

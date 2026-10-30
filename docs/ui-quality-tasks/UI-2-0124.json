@@ -1,0 +1,62 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_0416",
+      "id": "UI-2-0124",
+      "title": "李嚴武將立繪：蜀綠與灰梅副色軍政官辨識",
+      "owner": "codex-gpt-6.1",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-10-28",
+      "created_by_agent": "codex-gpt-6.1",
+      "started_at": "2026-10-28T23:27:08+08:00",
+      "started_by_agent": "codex-gpt-6.1",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "為李嚴建立 512×768 透明全身立繪與 256×256 頭像。使用蜀國綠色基底、低飽和灰梅副色，以沉穩軍政官輪廓與獨特臉型、髮束、鬍鬚建立辨識度。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "立繪為 512×768 RGBA 且背景透明",
+        "頭像裁切符合 generator 驗證，產出 256×256",
+        "主色使用蜀綠，副色採灰梅並與既有配色區隔",
+        "臉型、髮束、鬍鬚與法正、黃權等蜀將有明確差異",
+        "服裝輪廓穩重、男性衣帶節制"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/li_yan_portrait.png",
+        "assets/resources/sprites/generals/avatars/li_yan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json 更新",
+        "docs/art/character-palette-ledger.md 更新",
+        "候選圖與 prompt 存放於 artifacts/ui-generated/li-yan/"
+      ],
+      "notes": "遵循三國陣營基底色：蜀綠；避免與既有蜀將同臉、同髮式、同色組。；已完成，Cocos Asset DB 待正確工作樹的 Editor 刷新",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}
