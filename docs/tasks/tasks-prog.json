@@ -25,9 +25,9 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 37,
-    "in_progress": 2,
+    "in_progress": 3,
     "open": 82,
-    "total": 121
+    "total": 122
   },
   "tasks": [
     {
@@ -4520,6 +4520,63 @@
         "tests/MonthlyScenarioCupScoring.test.ts"
       ],
       "notes": "2026-10-29 | 狀態: done | 驗證: focused33/33；full5437 passed/3既有Cocos runtime skipped；test及cc-check tsc均exit0零錯誤；standard11/11；scope/encoding/diff-check通過 | 變更: 固定手算主屬性/適性加成與counter1.5/半血交互、不同血量逐人加總、空隊與輸入不變；僅新增獨立測試。基底87b31ad28，開工8efe427dc；開工、驗證與提交前fetch皆確認master未變；沿用1611/1616暫定規則不改產品 | 阻塞: none；僅本地交付，未push/PR/merge",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9015",
+      "title": "名將死亡虎符三項被動 ID 查表修正",
+      "owner": "codex-gpt-6",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "bug",
+      "phase": "M6",
+      "created": "2026-10-30",
+      "created_by_agent": "codex-gpt-6",
+      "started_at": "2026-10-30T00:29:46+00:00",
+      "started_by_agent": "codex-gpt-6",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "先以produceDeathTally與tallyBattleInfoOf產出原始名將ID重現三個真實效果入口漏接，再於hasGhostMove、tallyDeathConfusionOf、applyTallyDefection統一既有passiveOf。保持ID、數值、候選規則與亂數次數。",
+      "related": [
+        "PROG-2-1593",
+        "PROG-2-1572",
+        "PROG-2-1627"
+      ],
+      "depends": [],
+      "acceptance": [
+        "趙雲穿透郭嘉混亂司馬懿策反各先紅後綠",
+        "原虎符ID效果與名將ID一致且未知null無效",
+        "策反過濾友軍死人主將超門檻且無候選不取亂數",
+        "來源卡片與部隊模板ID不改寫",
+        "focused/full/兩套tsc/standard通過"
+      ],
+      "deliverables": [
+        "assets/scripts/battle/shared/TallyPassive.ts",
+        "tests/NamedTallyPassiveAlias.test.ts"
+      ],
+      "notes": "2026-10-30 | 狀態: in-progress | 驗證: quick3/3紅綠pending | 變更: 基底22e50e241，codex-gpt-6官方fence分配9015；僅三處改既有passiveOf與回歸，不碰1627韌性或其他規則 | 阻塞: none",
       "brief": {
         "style": "classic",
         "label": "",
