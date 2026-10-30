@@ -135,7 +135,7 @@ import { SPIRIT_TALLY_DETAIL_SCREEN_ID, spiritTallyDetailOfSpirit } from '../cor
 import type { SpiritCard } from '../../core/models/SpiritCard';
 import { lifeScriptCopy, type LifeScriptEvent } from '../../core/systems/LifeScriptCopy';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
-import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
+import { DeckSelectController } from '../core/DeckSelectController';
 import { buildLeadSelectView, LEAD_SELECT_PAGE_SIZE, nextLeadId } from '../../core/services/LeadGeneralSelectRules';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { SolidBackground } from '../components/SolidBackground';
@@ -216,8 +216,6 @@ interface GeneralListOpenPayload {
     };
 }
 
-/** 選卡畫面的卡片按鈕數（對應 lobby-deck-select-main.json 的 btnDeckCard0..3，目前卡片目錄只有 4 張） */
-const DECK_SELECT_SLOTS = 4;
 
 /** 結緣與開獎文案：走 i18n，語系表未載入時退回 zh-TW 預設（PROG-2-0526 / 0527） */
 function breedText(): BreedTextLookup {
@@ -349,7 +347,7 @@ export class LobbyScene extends Component {
     private _destinyShop: DestinyShopController | null = null;
     private _sortieHost: UIScreenPreviewHost | null = null;
     private _sortie: SortieSetupController | null = null;
-    private _deckSelectHost: UIScreenPreviewHost | null = null;
+    private _deckSelect: DeckSelectController<UIScreenPreviewHost> | null = null;
     private _leadSelectHost: UIScreenPreviewHost | null = null;
     private _leadSelectPage = 0;
     private readonly _sessionEventUnsubscribers: Array<() => void> = [];
@@ -3096,12 +3094,15 @@ export class LobbyScene extends Component {
 
     /** 最小選卡 UI：以 UCUF JSON（lobby-deck-select-screen）執行期組裝，點卡加入 / 移除出戰卡組 */
     private async _mountDeckSelect(): Promise<void> {
-        const bindings: ScreenButtonBinding[] = Array.from({ length: DECK_SELECT_SLOTS }, (_, slot) => ({
-            buttonId: `btnDeckCard${slot}`,
-            handler: () => { void this._onClickDeckCard(slot); },
-        }));
-        this._deckSelectHost = await this._mountPreviewScreenHost('DeckSelectHost', 'lobby-deck-select-screen', bindings);
-        this._refreshDeckSelect();
+        this._deckSelect = new DeckSelectController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('DeckSelectHost', 'lobby-deck-select-screen', bindings),
+            deck: () => services().session.deck,
+            cards: () => getTallyCardSummaries(),
+            toggle: (cardId, catalogIds) => services().session.toggleDeckCard(cardId, catalogIds),
+            toast: (message, duration) => services().event.emit('SHOW_TOAST', { message, duration }),
+            warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
+        });
+        await this._deckSelect.mount();
         const refresh = (): void => { this._refreshDeckSelect(); };
         const event = services().event;
         this._sessionEventUnsubscribers.push(
@@ -3111,40 +3112,7 @@ export class LobbyScene extends Component {
     }
 
     private _refreshDeckSelect(): void {
-        const binder = this._deckSelectHost?.binder;
-        if (!binder) {
-            return;
-        }
-        const deck = services().session.deck;
-        const cards = getTallyCardSummaries();
-        const texts: Record<string, string> = {
-            deckTitleLabel: `出戰卡組 ${deck.length}/${PLAYER_DECK_MAX_SIZE}`,
-        };
-        const actives: Record<string, boolean> = {};
-        for (let slot = 0; slot < DECK_SELECT_SLOTS; slot++) {
-            const card = cards[slot];
-            texts[`deckCardLabel${slot}`] = card ? `${deck.includes(card.id) ? '✓' : '　'} ${card.name}（${card.sub}）` : '－';
-            actives[`btnDeckCard${slot}`] = card !== undefined;
-        }
-        binder.setTexts(texts);
-        binder.setActives(actives);
-    }
-
-    private async _onClickDeckCard(slot: number): Promise<void> {
-        const cards = getTallyCardSummaries();
-        const card = cards[slot];
-        if (!card) {
-            return;
-        }
-        try {
-            const outcome = await services().session.toggleDeckCard(card.id, cards.map((entry) => entry.id));
-            if (outcome === 'full') {
-                services().event.emit('SHOW_TOAST', { message: `卡組已滿（上限 ${PLAYER_DECK_MAX_SIZE} 張）`, duration: 1.8 });
-            }
-        } catch (error) {
-            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 卡組存檔失敗', error);
-            services().event.emit('SHOW_TOAST', { message: '卡組存檔失敗，請稍後再試', duration: 2 });
-        }
+        this._deckSelect?.refresh();
     }
 
     /** 選主將 UI：以 UCUF JSON（lobby-lead-select-screen）執行期組裝，列出可出戰武將，點選指定 / 再點取消 */
@@ -4429,9 +4397,10 @@ export class LobbyScene extends Component {
                     this._bringNodeToFront(this._cityHubHost.node);
                     this._refreshCityHub();
                 }
-                if (this._deckSelectHost) {
-                    this._deckSelectHost.node.active = true;
-                    this._bringNodeToFront(this._deckSelectHost.node);
+                const deckSelectHost = this._deckSelect?.host;
+                if (deckSelectHost) {
+                    deckSelectHost.node.active = true;
+                    this._bringNodeToFront(deckSelectHost.node);
                     this._refreshDeckSelect();
                 }
                 if (this._leadSelectHost) {
@@ -4460,8 +4429,9 @@ export class LobbyScene extends Component {
                 this._closeSageOracle();
                 this._closeRetireReview();
                 this._closeSortieSetup();
-                if (this._deckSelectHost) {
-                    this._deckSelectHost.node.active = false;
+                const deckSelectHost = this._deckSelect?.host;
+                if (deckSelectHost) {
+                    deckSelectHost.node.active = false;
                 }
                 if (this._leadSelectHost) {
                     this._leadSelectHost.node.active = false;
