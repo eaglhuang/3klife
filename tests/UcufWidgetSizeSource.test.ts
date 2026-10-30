@@ -4,9 +4,10 @@
  * Unity 對照：像 RectTransform 的 anchor 用比例保存，不在 Instantiate 時換成固定像素。
  */
 import { assert, TestSuite } from './TestRunner';
-import { Node, Widget } from 'cc';
+import { Label, Node, Widget } from 'cc';
 import { percentFraction, widgetStretchSize } from '../assets/scripts/ui/core/UISpecTypes';
 import { UIPreviewLayoutBuilder } from '../assets/scripts/ui/core/UIPreviewLayoutBuilder';
+import { UIPreviewBuilder } from '../assets/scripts/ui/core/UIPreviewBuilder';
 
 export function createUcufWidgetSizeSourceSuite(): TestSuite {
     const suite = new TestSuite('UCUF 尺寸單一來源');
@@ -30,6 +31,25 @@ export function createUcufWidgetSizeSourceSuite(): TestSuite {
         assert.equals(0.25, w.left);
         assert.equals(true, w.isAbsoluteTop);
         assert.equals(30, w.top);
+    });
+
+    suite.test('流式 Label 在自決尺寸模式下實測，其餘沿用估寬（PROG-2-1630）', () => {
+        const measure = (UIPreviewBuilder.prototype as any)._measureFlowLabel;
+        const run = (overflow: number, spec: any, flow = true): boolean => {
+            const node = new Node('l');
+            const lbl = node.addComponent(Label) as any;
+            let called = false;
+            lbl.overflow = overflow;
+            lbl.updateRenderData = () => { called = true; };
+            measure.call({}, node, spec, flow);
+            return called;
+        };
+        const O = (Label as any).Overflow;
+        assert.equals(true, run(O.NONE, { type: 'label' }));
+        assert.equals(true, run(O.RESIZE_HEIGHT, { type: 'label', width: 200 }));
+        assert.equals(false, run(O.SHRINK, { type: 'label' }));
+        assert.equals(false, run(O.NONE, { type: 'label' }, false));
+        assert.equals(false, run(O.NONE, { type: 'label', width: 10, height: 10 }));
     });
 
     return suite;

@@ -320,7 +320,7 @@ export class UIPreviewBuilder extends Component {
                 if (spec.skinSlot) await this.styleBuilder.applyBackgroundSkin(node, spec.skinSlot);
                 break;
             case 'panel':           await this.nodeFactory.buildPanel(node, spec);        break;
-            case 'label':           await this.nodeFactory.buildLabel(node, spec);        break;
+            case 'label':           await this.nodeFactory.buildLabel(node, spec);        this._measureFlowLabel(node, spec, flowChildInLayout); break;
             case 'button':          await this.nodeFactory.buildButton(node, spec);       break;
             case 'toggle':          await this.nodeFactory.buildToggle(node, spec);       break;
             case 'scroll-list':
@@ -332,7 +332,7 @@ export class UIPreviewBuilder extends Component {
                 break;
             }
             case 'image':           await this.nodeFactory.buildImage(node, spec);        break;
-            case 'resource-counter': await this.nodeFactory.buildLabel(node, spec);       break;
+            case 'resource-counter': await this.nodeFactory.buildLabel(node, spec);       this._measureFlowLabel(node, spec, flowChildInLayout); break;
             case 'spacer': break;  // 空白佔位，無需掛載元件
             case 'composite-image': await this._buildCompositeImage(node, spec); break;
         }
@@ -569,6 +569,16 @@ export class UIPreviewBuilder extends Component {
         }
 
         return estimatedWidth;
+    }
+
+    /** 估寬只是後備；Label 自己決定尺寸的模式下改用實測 (PROG-2-1630) */
+    private _measureFlowLabel(node: Node, spec: UILayoutNodeSpec, flowChildInLayout: boolean): void {
+        if (!flowChildInLayout || (spec.width !== undefined && spec.height !== undefined)) return;
+        const lbl = node.getComponent(Label);
+        if (!lbl) return;
+        const measured = lbl.overflow === Label.Overflow.NONE
+            || (lbl.overflow === Label.Overflow.RESIZE_HEIGHT && spec.height === undefined);
+        if (measured) (lbl as Label & { updateRenderData?: (force?: boolean) => void }).updateRenderData?.(true);
     }
 
     private _resolveSpecText(spec: UILayoutNodeSpec): string {
