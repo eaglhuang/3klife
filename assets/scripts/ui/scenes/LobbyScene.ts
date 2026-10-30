@@ -1740,7 +1740,8 @@ export class LobbyScene extends Component {
             this._openingPanels = new LobbyOpeningPanels({
                 session: () => services().session,
                 generals: () => this._generals,
-                isNewPlayer: () => this._isNewPlayer,
+                // 讀檔接回未播完的開場也算：信件與教學要等開場走到該幕才出現，不疊在開場上（PROG-2-1635）
+                isNewPlayer: () => this._isNewPlayer || this._isOpeningInProgress(),
                 loadGachaConfig: async () => await this._loadDataJson<GachaConfig[]>('data/gacha-config') ?? [],
                 mountHost: async (name, screen, bindings) => {
                     const host = await this._mountPreviewScreenHost(name, screen, bindings);

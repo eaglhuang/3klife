@@ -20,6 +20,7 @@ export interface LobbyOpeningPanelHost {
 export interface LobbyOpeningPanelPorts {
     session: () => GameSession;
     generals: () => readonly GeneralConfig[];
+    /** 新局，或讀檔後開場尚未播完 */
     isNewPlayer: () => boolean;
     loadGachaConfig: () => Promise<GachaConfig[]>;
     mountHost: (name: string, screen: string, bindings: { buttonId: string; handler: () => void }[]) => Promise<LobbyOpeningPanelHost>;
