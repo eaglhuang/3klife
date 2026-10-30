@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-30 08:50 Cocos A/B（3.8 相容 harness）確認臉部亮橫紋為 PMA 錯配；裁定 512 採 PMA 圖集＋premultipliedAlpha=true。延遲 IK 方案採用、握點不改。待辦：隔離工作樹 Cocos 視窗開啟後以 Spine 4.2 runtime 重測（MCP 目前指向主工作樹，已禁止操作）。
 - 2026-10-30 08:45 Antigravity：交付修訂版趙雲 v5r 512 混色重現對照圖（寫入隔離工作樹 `scratch/zhaoyun-v5r-512/`）。(1) 臉部裁切擴展至下巴（涵蓋 Y=500..980，包含雙眼、嘴部、jaw 下巴與 head 淡出底緣），並以紅虛線精確標註橫紋所在排（Y=188）；(2) 字型修復為微軟正黑體（`C:/Windows/Fonts/msjhbd.ttc`），消除亂碼方塊；(3) 保留後手拳頭持槍邊緣白圈光暈對照；(4) 用詞嚴格修正為「離線重現支持此推測，待 Cocos B 組實機確認」；(5) 重新輸出 `compare_pma_reproduction.png`（64,079 bytes，SHA-256: `600bdfff1aaf367630ebd68885c32f54c8980fbea6ad50badab549b4005d68f6`）與 `hashes_sha256.json`。
 - 2026-10-30 08:30 v5r 轉場：已無大角度急翻，剩 walk→guard 手部位移（IK 目標超出手臂可達），裁定 walk 期間 arm_b IK 關、進 guard 後再開；PMA 512 圖集數學核過，對照圖因未含嘴部退回，待 Cocos A/B。
 - 2026-10-30 08:20 Antigravity：完成趙雲 v5r 512×512 預乘 Alpha（PMA）圖集交付與混色重現報告（寫入隔離工作樹 `scratch/zhaoyun-v5r-512/`）。(1) 依 Spine 預乘混色公式（color = src_rgb * 1.0 + dst_rgb * (1.0 - src_a)）離線精準重現臉部亮橫紋（1,632 px）與零件邊緣亮點（4,448 px），PMA 版在同公式下過亮像素數為 0，100% 消除亮線；(2) 產出 `zhaoyun_v5r_512_pma.png`（243,815 bytes，SHA-256: `31dffbdeffe72cf45a912ca874a323738544d3a11c8e23347ad91b4a8cfbd21a`）與 `zhaoyun_v5r_512_pma.atlas`（885 bytes，含 `pma: true`）；(3) 附對照圖 `compare_pma_reproduction.png`（27,499 bytes）；(4) 所有檔案大小與 64 碼 SHA-256 均由腳本直接讀取磁碟位元組輸出，嚴格無補造。
