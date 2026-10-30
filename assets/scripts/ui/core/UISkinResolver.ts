@@ -27,6 +27,8 @@ export interface ResolvedLabelStyle {
     letterSpacing: number;
     horizontalAlign: number;   // Label.HorizontalAlign 的數值
     verticalAlign: number;     // Label.VerticalAlign 的數值
+    /** skin 有明寫對齊才為 true；未寫時由建置端依情境給預設 */
+    alignExplicit?: { horizontal: boolean; vertical: boolean };
     overflow: number;          // Label.Overflow 的數值
     outlineColor?: Color;
     outlineWidth?: number;
@@ -135,6 +137,7 @@ export class UISkinResolver {
             letterSpacing: typeof s.letterSpacing === 'number' && !Number.isNaN(s.letterSpacing) ? s.letterSpacing : 0,
             horizontalAlign: this._parseHAlign(s.horizontalAlign),
             verticalAlign: this._parseVAlign(s.verticalAlign),
+            alignExplicit: { horizontal: s.horizontalAlign !== undefined, vertical: s.verticalAlign !== undefined },
             overflow: this._parseOverflow(s.overflow),
             outlineColor: outlineColor ? this.resolveColor(outlineColor) : undefined,
             outlineWidth,
