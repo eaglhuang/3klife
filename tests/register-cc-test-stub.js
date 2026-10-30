@@ -183,7 +183,7 @@ const baseCcStub = {
   Vec4: class { constructor(x = 0, y = 0, z = 0, w = 0) { this.x = x; this.y = y; this.z = z; this.w = w; } },
   Rect: class { constructor(x = 0, y = 0, width = 0, height = 0) { this.x = x; this.y = y; this.width = width; this.height = height; } },
   UITransform: class extends DummyComponent {},
-  Widget: class extends DummyComponent {},
+  Widget: class extends DummyComponent { static AlignMode = { ONCE: 0, ALWAYS: 1, ON_WINDOW_RESIZE: 2 }; },
   Button: class extends DummyComponent {},
   Label: class extends DummyComponent { constructor() { super(); this.string = ''; } },
   Sprite: class extends DummyComponent {},

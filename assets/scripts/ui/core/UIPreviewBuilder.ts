@@ -782,10 +782,7 @@ export class UIPreviewBuilder extends Component {
         const t = UCUFLogger.perfBegin('UIPreviewBuilder._postBuildPass');
         this._realignAllWidgets(root);
         this._updateAllLayouts(root);
-        this.layoutBuilder.applyPostLayoutAlignment(root);
-        this._realignAllWidgets(root);
         this._enforceContainerBounds(root);
-        this._updateAllLayouts(root);
         this.layoutBuilder.applyPostLayoutAlignment(root);
         this._realignAllWidgets(root);
         UCUFLogger.perfEnd('UIPreviewBuilder._postBuildPass', t);
@@ -805,7 +802,6 @@ export class UIPreviewBuilder extends Component {
     private _realignAllWidgets(node: Node): void {
         const widget = node.getComponent(Widget);
         if (widget) {
-            widget.alignMode = Widget.AlignMode.ALWAYS;
             widget.updateAlignment();
         }
         for (const child of node.children) {
