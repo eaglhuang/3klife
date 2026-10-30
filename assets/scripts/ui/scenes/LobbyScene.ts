@@ -129,8 +129,7 @@ import { OracleCouple, SageOracleController } from '../core/SageOracleController
 import { buildRetireReviewTexts, RETIRE_REVIEW_OPEN_EVENT, withRetireReviewFallback, type RetireReviewOpenPayload } from '../core/RetireReviewController';
 import { formatDeathNotice } from '../core/LifeVitalityPresenter';
 import { buildSpiritCodexTexts, spiritRelicsNewestFirst, SPIRIT_CODEX_MAX_ROWS, withSpiritCodexFallback } from '../core/SpiritCodexController';
-import { buildUltimateCodexTexts, withUltimateCodexFallback } from '../core/UltimateCodexTexts';
-import { buildUltimateCodex } from '../../core/systems/UltimateUpgrade';
+import { UltimateCodexController } from '../core/UltimateCodexController';
 import { withSpiritCardDetailFallback } from '../core/SpiritCardDetailTexts';
 import { SPIRIT_TALLY_DETAIL_SCREEN_ID, spiritTallyDetailOfSpirit } from '../core/SpiritTallyDetailView';
 import type { SpiritCard } from '../../core/models/SpiritCard';
@@ -338,7 +337,7 @@ export class LobbyScene extends Component {
     private _oracleHost: UIScreenPreviewHost | null = null;
     private _retireReviewHost: UIScreenPreviewHost | null = null;
     private _spiritCodexHost: UIScreenPreviewHost | null = null;
-    private _ultimateCodexHost: UIScreenPreviewHost | null = null;
+    private _ultimateCodex: UltimateCodexController<UIScreenPreviewHost> | null = null;
     /** 英靈圖鑑目前列出的卡（與列上「詳情」按鈕同序） */
     private _spiritCodexShown: SpiritCard[] = [];
     private _spiritCardDetailHost: UIScreenPreviewHost | null = null;
@@ -2978,27 +2977,17 @@ export class LobbyScene extends Component {
 
     /** 奧義圖鑑（ULT-16）：列出已解鎖奧義，資料由 buildUltimateCodex 組出（純邏輯）；入口待定，目前只有開關方法。 */
     private async _mountUltimateCodex(): Promise<void> {
-        this._ultimateCodexHost = await this._mountPreviewScreenHost('UltimateCodexHost', 'ultimate-codex-screen', [
-            { buttonId: 'btnCloseUltimateCodex', handler: () => { this._closeUltimateCodex(); } },
-        ]);
+        this._ultimateCodex = new UltimateCodexController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('UltimateCodexHost', 'ultimate-codex-screen', bindings),
+            generals: () => this._generals,
+            lookup: (key: string, ...args: string[]): string => services().i18n.t(key, ...args),
+            bringToFront: (host) => this._bringNodeToFront(host.node),
+        });
+        await this._ultimateCodex.mount();
     }
 
     private _openUltimateCodex(): void {
-        const host = this._ultimateCodexHost;
-        const binder = host?.binder;
-        if (!host || !binder) {
-            return;
-        }
-        const lookup = withUltimateCodexFallback((key, ...args) => services().i18n.t(key, ...args));
-        applyFlowView(binder, { texts: buildUltimateCodexTexts(buildUltimateCodex(this._generals), lookup), actives: {}, enabled: {} });
-        host.node.active = true;
-        this._bringNodeToFront(host.node);
-    }
-
-    private _closeUltimateCodex(): void {
-        if (this._ultimateCodexHost) {
-            this._ultimateCodexHost.node.active = false;
-        }
+        this._ultimateCodex?.open();
     }
 
     private async _openSpiritCodex(): Promise<void> {
