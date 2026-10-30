@@ -20,7 +20,7 @@
  *
  * Unity 對照：ContentSwitcher + TabController + SubPanelManager 的組合
  */
-import { Node, tween, UIOpacity, UITransform, Widget } from 'cc';
+import { Node, tween, UIOpacity, UITransform } from 'cc';
 import { UIPreviewBuilder }   from './UIPreviewBuilder';
 import { UITemplateBinder }   from './UITemplateBinder';
 import { ChildPanelBase, PanelServices } from './ChildPanelBase';
@@ -135,57 +135,23 @@ export abstract class CompositePanel extends UIPreviewBuilder {
             await this.skinResolver.preloadSlots(Object.keys(skin.slots));
         }
 
-        // R29 runtime fix: canvas.safeAreaConstrained
-        // 若 layout 宣告 safeAreaConstrained:true，表示此面板的 Widget 計算須以設計解析度為基準。
-        // 問題根源：buildScreen 的 _postBuildPass 將所有 Widget 設為 AlignMode.ALWAYS，
-        //           這使 TigerTallyRoot/ActionCommandRoot 等 Widget 每幀以實際 Canvas 寬
-        //           （寬螢幕下 3063px）重新計算，把節點推到設計解析度範圍外。
-        // 修復策略：buildScreen 完成後，找到宿主的第一個子節點（layout root），
-        //           暫時將宿主 UITransform 設為 designWidth×designHeight，
-        //           對整個子樹重跑一次 widget.updateAlignment()，
-        //           然後把所有 Widget 設為 AlignMode.ONCE，使其不再因 ALWAYS 模式重算。
-        const _safeAreaConstrained = layout.canvas?.safeAreaConstrained === true;
-        const _safeDesignW = layout.canvas?.designWidth ?? 1920;
-        const _safeDesignH = layout.canvas?.designHeight ?? 1080;
-        UCUFLogger.info(LogCategory.LIFECYCLE, '[CompositePanel] mount safeArea flags', {
-            panel: this.constructor.name,
-            screenId,
-            safeAreaConstrained: _safeAreaConstrained,
-            designWidth: _safeDesignW,
-            designHeight: _safeDesignH,
-        });
-
-        await this.buildScreen(layout, skin, i18nStrings, tokens);
-
-        // R29 post-build: 若 safeAreaConstrained，插入一個固定 designWidth×designHeight 的
-        // 中介容器 (__safeArea)，使 layout root 子節點的 Widget 計算以設計解析度為基準。
-        //
-        // 問題根源：宿主（例如 TigerTallyPanel）有 Widget.left=0,right=0 撐到 Canvas 寬
-        //           (FIXED_HEIGHT 模式下 1151px 視窗 → 3063px Canvas)，所有子節點 Widget
-        //           以 3063px 計算，把設計解析度（1920px）左右邊的 UI 推到螢幕外。
-        // 修復策略：在宿主與 layout root 之間插入一個 __safeArea 節點（UITransform=1920×1080，
-        //           localPos=0,0，無 Widget），Widget 子節點以 1920px 對齊，永遠正確。
-        //           宿主可繼續展寬至 3063px，不影響 __safeArea 的固定尺寸。
-        if (_safeAreaConstrained) {
-            const rootName = layout.root?.name;
-            const rootChild = (rootName ? this.node.getChildByName(rootName) : null)
-                ?? this.node.children[this.node.children.length - 1]
-                ?? null;
-            if (rootChild && rootChild.parent === this.node && rootChild.name !== '__safeArea') {
-                const safeArea = new Node('__safeArea');
-                safeArea.layer = this.node.layer;
-                this.node.addChild(safeArea);                  // 先加入宿主
-                const safeUT = safeArea.addComponent(UITransform);
-                safeUT.setContentSize(_safeDesignW, _safeDesignH);
-                safeArea.setPosition(0, 0, 0);                 // 掛於宿主中心（anchor=0.5,0.5）
-                safeArea.addChild(rootChild);                  // 將 layout root 移入 __safeArea
-                // 強制以 1920px parent 重跑一次 Widget 對齊
-                const rootWidget = rootChild.getComponent(Widget);
-                if (rootWidget) { rootWidget.updateAlignment(); }
-                UCUFLogger.debug(LogCategory.LIFECYCLE,
-                    `[CompositePanel] safeAreaConstrained: inserted __safeArea ${_safeDesignW}×${_safeDesignH} under "${this.node.name}", moved "${rootChild.name}" inside`);
+        // safeAreaConstrained：先建固定設計尺寸的 __safeArea，再在裡面建畫面，
+        // 對齊一次就以設計解析度為準，不需事後搬移與重算（PROG-2-1636）。
+        const safeAreaConstrained = layout.canvas?.safeAreaConstrained === true;
+        let host = this.node;
+        if (safeAreaConstrained) {
+            host = this.node.getChildByName('__safeArea') ?? new Node('__safeArea');
+            if (!host.parent) {
+                host.layer = this.node.layer;
+                this.node.addChild(host);
+                host.addComponent(UITransform);
             }
+            host.getComponent(UITransform)!.setContentSize(
+                layout.canvas?.designWidth ?? 1920, layout.canvas?.designHeight ?? 1080);
+            host.setPosition(0, 0, 0);
         }
+
+        await this.buildScreen(layout, skin, i18nStrings, tokens, host);
 
         // 填入各 lazySlot 的 defaultFragment
         for (const [slotId, entry] of this._lazySlots) {
