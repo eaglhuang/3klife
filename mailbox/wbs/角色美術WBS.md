@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-30 08:30 v5r 轉場：已無大角度急翻，剩 walk→guard 手部位移（IK 目標超出手臂可達），裁定 walk 期間 arm_b IK 關、進 guard 後再開；PMA 512 圖集數學核過，對照圖因未含嘴部退回，待 Cocos A/B。
 - 2026-10-30 08:20 Antigravity：完成趙雲 v5r 512×512 預乘 Alpha（PMA）圖集交付與混色重現報告（寫入隔離工作樹 `scratch/zhaoyun-v5r-512/`）。(1) 依 Spine 預乘混色公式（color = src_rgb * 1.0 + dst_rgb * (1.0 - src_a)）離線精準重現臉部亮橫紋（1,632 px）與零件邊緣亮點（4,448 px），PMA 版在同公式下過亮像素數為 0，100% 消除亮線；(2) 產出 `zhaoyun_v5r_512_pma.png`（243,815 bytes，SHA-256: `31dffbdeffe72cf45a912ca874a323738544d3a11c8e23347ad91b4a8cfbd21a`）與 `zhaoyun_v5r_512_pma.atlas`（885 bytes，含 `pma: true`）；(3) 附對照圖 `compare_pma_reproduction.png`（27,499 bytes）；(4) 所有檔案大小與 64 碼 SHA-256 均由腳本直接讀取磁碟位元組輸出，嚴格無補造。
 - 2026-10-30 08:10 v5r 512 在 Cocos 3.8.8 Browser Preview 可載入、四動畫可設 track；但畫面有臉部亮橫紋與零件邊緣亮點，畫質退件。推測為預乘 alpha 不一致，已請 2D 專家做 A/B、Antigravity 交 PMA 版。
 - 2026-10-30 07:45 v5r 512×512 圖集候選離線通過（SHA、region 對齊、180 px 對照皆核過）；R334 轉場仍有後手跳變與約 170° 反轉，建議改在 v5r 上測並排查 arm_b IK 分支。
