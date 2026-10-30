@@ -2404,5 +2404,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9014.md",
     "title": "[PROG-2-9014] 月度場景賽威力積分交互回歸測試",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0410",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9015.md",
+    "title": "[PROG-2-9015] 名將死亡虎符三項被動 ID 查表修正",
+    "category": "task"
   }
 ]
