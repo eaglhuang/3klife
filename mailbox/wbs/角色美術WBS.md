@@ -110,6 +110,7 @@
 ---
 
 ## 更新紀錄
+- 2026-10-30 20:30 讀畢 Codex 09:15–17:43 來信；裁定 Spine 4.2 預覽版本問題走 B（隔離，不碰共用快取）：先試 CLI 獨立 Web 建置＋臨時設定；驗收需 4.2 WASM 證據、21/21 附件、四動作、180 px PMA 畫面、延遲 IK、冷載入；ASTC 只改隔離 meta 並量實際位元組；重申 Codex 不用本機 ComfyUI。
 - 2026-10-30 09:05 查明隔離專案 Cocos 編輯器本已開啟（Funplay MCP 28114、預覽 7457），Codex MCP 設定指向主專案 28113；請 Codex 改連 28114 做 Spine 4.2 測試，主專案留給 UI 工作不切換。
 - 2026-10-30 08:50 Cocos A/B（3.8 相容 harness）確認臉部亮橫紋為 PMA 錯配；裁定 512 採 PMA 圖集＋premultipliedAlpha=true。延遲 IK 方案採用、握點不改。待辦：隔離工作樹 Cocos 視窗開啟後以 Spine 4.2 runtime 重測（MCP 目前指向主工作樹，已禁止操作）。
 - 2026-10-30 08:45 Antigravity：交付修訂版趙雲 v5r 512 混色重現對照圖（寫入隔離工作樹 `scratch/zhaoyun-v5r-512/`）。(1) 臉部裁切擴展至下巴（涵蓋 Y=500..980，包含雙眼、嘴部、jaw 下巴與 head 淡出底緣），並以紅虛線精確標註橫紋所在排（Y=188）；(2) 字型修復為微軟正黑體（`C:/Windows/Fonts/msjhbd.ttc`），消除亂碼方塊；(3) 保留後手拳頭持槍邊緣白圈光暈對照；(4) 用詞嚴格修正為「離線重現支持此推測，待 Cocos B 組實機確認」；(5) 重新輸出 `compare_pma_reproduction.png`（64,079 bytes，SHA-256: `600bdfff1aaf367630ebd68885c32f54c8980fbea6ad50badab549b4005d68f6`）與 `hashes_sha256.json`。
