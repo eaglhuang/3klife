@@ -85,7 +85,7 @@ import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
 import { LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, categoryButtonId, toggleCategory, type LobbyActionId, type LobbyCategoryId } from '../core/LobbyCityHubController';
 import { nurtureGraduationRows } from '../core/NurtureGraduationView';
 import { pageSliceOf } from '../core/FixedSlotPager';
-import { mentorHoldingRows, type MentorHoldingRow } from '../core/MentorHoldingRows';
+import { MentorHoldingsController } from '../core/MentorHoldingsController';
 import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView';
 import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
 import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
@@ -272,9 +272,7 @@ export class LobbyScene extends Component {
     private _mentorBorrowHost: UIScreenPreviewHost | null = null;
     private _mentorBorrowPage = 0;
     /** 「我的教官卡」列表（PROG-2-1097）：重用 mentor-borrow-screen 版面 */
-    private _mentorHoldingsHost: UIScreenPreviewHost | null = null;
-    private _mentorHoldingsRows: MentorHoldingRow[] = [];
-    private _mentorHoldingsPage = 0;
+    private _mentorHoldings: MentorHoldingsController<UIScreenPreviewHost> | null = null;
     /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
     private _nurtureFlowHost: UIScreenPreviewHost | null = null;
     private _nurtureFlow: NurtureFlowController | null = null;
@@ -748,54 +746,15 @@ export class LobbyScene extends Component {
     }
 
     private async _mountMentorHoldings(): Promise<void> {
-        const rowBindings = Array.from({ length: 5 }, (_, i) => ({
-            buttonId: `btnBorrowRow${i}`,
-            handler: () => {
-                const row = pageSliceOf(this._mentorHoldingsRows, this._mentorHoldingsPage).items[i];
-                if (row) this.openMentorCardDetail(row.card, row.name);
-            },
-        }));
-        this._mentorHoldingsHost = await this._mountPreviewScreenHost('MentorHoldingsHost', 'mentor-borrow-screen', [
-            { buttonId: 'btnBorrowClose', handler: () => { if (this._mentorHoldingsHost) this._mentorHoldingsHost.node.active = false; } },
-            { buttonId: 'btnBorrowPrev', handler: () => { this._mentorHoldingsPage -= 1; this._refreshMentorHoldings(); } },
-            { buttonId: 'btnBorrowNext', handler: () => { this._mentorHoldingsPage += 1; this._refreshMentorHoldings(); } },
-            ...rowBindings,
-        ]);
-        if (this._mentorHoldingsHost) this._mentorHoldingsHost.node.active = false;
-    }
-
-    /** 大廳「支援」：列出持有教官卡；沒有卡時提示去支援卡池抽 */
-    private async _openMentorHoldings(): Promise<void> {
-        const host = this._mentorHoldingsHost;
-        if (!host) return;
-        const cards = attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog());
-        this._mentorHoldingsRows = mentorHoldingRows(cards, breedText());
-        if (this._mentorHoldingsRows.length === 0) {
-            services().event.emit('SHOW_TOAST', { message: '尚無教官卡：可在轉蛋的支援卡池抽取，或由武將退役轉為教官', duration: 2.5 });
-            return;
-        }
-        this._mentorHoldingsPage = 0;
-        host.node.active = true;
-        this._bringNodeToFront(host.node);
-        this._refreshMentorHoldings();
-    }
-
-    private _refreshMentorHoldings(): void {
-        const slice = pageSliceOf(this._mentorHoldingsRows, this._mentorHoldingsPage);
-        this._mentorHoldingsPage = slice.page;
-        const texts: Record<string, string> = {
-            borrowTitle: `我的教官卡（${this._mentorHoldingsRows.length} 張）`,
-            borrowPage: `${slice.page + 1} / ${slice.pageCount}`,
-        };
-        const actives: Record<string, boolean> = { btnBorrowRecord: false };
-        for (let i = 0; i < 5; i++) {
-            const row = slice.items[i];
-            actives[`borrowRow${i}Box`] = row !== undefined;
-            texts[`borrowRow${i}`] = row ? row.text : '';
-            texts[`borrowRow${i}Btn`] = row ? '詳情' : '';
-        }
-        this._mentorHoldingsHost?.binder?.setTexts(texts);
-        this._mentorHoldingsHost?.binder?.setActives(actives);
+        this._mentorHoldings = new MentorHoldingsController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('MentorHoldingsHost', 'mentor-borrow-screen', bindings),
+            loadCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
+            breedText,
+            openDetail: (card, title) => this.openMentorCardDetail(card, title),
+            bringToFront: (host) => this._bringNodeToFront(host.node),
+            toast: (message) => services().event.emit('SHOW_TOAST', { message, duration: 2.5 }),
+        });
+        await this._mentorHoldings.mount();
     }
 
     /** 入學前的好友借用（§L-2，PROG-2-1138）：已選時再點一次取消，否則開借將清單 */
@@ -5243,7 +5202,7 @@ export class LobbyScene extends Component {
     /** 「支援卡」按鈕 */
     /** 「支援」：開我的教官卡列表（ui/support-card 預製件不存在，PROG-2-1097） */
     public onClickSupportCard() {
-        this.scheduleOnce(() => { void this._openMentorHoldings(); }, 0);
+        this.scheduleOnce(() => { void this._mentorHoldings?.open(); }, 0);
     }
 
     public onClickSpiritFamilyOverview() {
