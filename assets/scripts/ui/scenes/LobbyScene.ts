@@ -136,7 +136,7 @@ import type { SpiritCard } from '../../core/models/SpiritCard';
 import { lifeScriptCopy, type LifeScriptEvent } from '../../core/systems/LifeScriptCopy';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { DeckSelectController } from '../core/DeckSelectController';
-import { buildLeadSelectView, LEAD_SELECT_PAGE_SIZE, nextLeadId } from '../../core/services/LeadGeneralSelectRules';
+import { LeadSelectController } from '../core/LeadSelectController';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { SolidBackground } from '../components/SolidBackground';
 import { ToastMessage } from '../components/ToastMessage';
@@ -348,8 +348,7 @@ export class LobbyScene extends Component {
     private _sortieHost: UIScreenPreviewHost | null = null;
     private _sortie: SortieSetupController | null = null;
     private _deckSelect: DeckSelectController<UIScreenPreviewHost> | null = null;
-    private _leadSelectHost: UIScreenPreviewHost | null = null;
-    private _leadSelectPage = 0;
+    private _leadSelect: LeadSelectController<UIScreenPreviewHost> | null = null;
     private readonly _sessionEventUnsubscribers: Array<() => void> = [];
     private _spiritFamilyOverviewHost: UIScreenPreviewHost | null = null;
     private _hallThemeFrame: HallThemeFrame | null = null;
@@ -3117,16 +3116,16 @@ export class LobbyScene extends Component {
 
     /** 選主將 UI：以 UCUF JSON（lobby-lead-select-screen）執行期組裝，列出可出戰武將，點選指定 / 再點取消 */
     private async _mountLeadSelect(): Promise<void> {
-        const bindings: ScreenButtonBinding[] = [
-            ...Array.from({ length: LEAD_SELECT_PAGE_SIZE }, (_, slot) => ({
-                buttonId: `btnLeadGeneral${slot}`,
-                handler: () => { void this._onClickLeadGeneral(slot); },
-            })),
-            { buttonId: 'btnLeadPage', handler: () => { this._leadSelectPage += 1; this._refreshLeadSelect(); } },
-            { buttonId: 'btnOpenSortie', handler: () => { this._openSortieSetup(); } },
-        ];
-        this._leadSelectHost = await this._mountPreviewScreenHost('LeadSelectHost', 'lobby-lead-select-screen', bindings);
-        this._refreshLeadSelect();
+        this._leadSelect = new LeadSelectController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('LeadSelectHost', 'lobby-lead-select-screen', bindings),
+            deployable: () => services().session.getDeployableGenerals(),
+            leadId: () => services().session.leadGeneralId,
+            setLead: (id) => services().session.setLeadGeneral(id),
+            openSortie: () => this._openSortieSetup(),
+            toast: (message, duration) => services().event.emit('SHOW_TOAST', { message, duration }),
+            warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
+        });
+        await this._leadSelect.mount();
         const refresh = (): void => { this._refreshLeadSelect(); };
         const event = services().event;
         this._sessionEventUnsubscribers.push(
@@ -3204,44 +3203,8 @@ export class LobbyScene extends Component {
         applyFlowView(binder, this._sortie.getView());
     }
 
-    private _currentLeadView(): ReturnType<typeof buildLeadSelectView> {
-        const session = services().session;
-        return buildLeadSelectView(session.getDeployableGenerals(), session.leadGeneralId, this._leadSelectPage);
-    }
-
     private _refreshLeadSelect(): void {
-        const binder = this._leadSelectHost?.binder;
-        if (!binder) {
-            return;
-        }
-        let view = this._currentLeadView();
-        this._leadSelectPage = view.page;
-        const leadName = view.leadLabel === undefined ? '（不可出戰）' : (view.leadLabel ?? '預設');
-        const texts: Record<string, string> = {
-            leadTitleLabel: `出戰主將：${leadName}`,
-            leadPageLabel: `換頁 ▶ ${view.page + 1}/${view.pageCount}`,
-        };
-        const actives: Record<string, boolean> = { btnLeadPage: view.pageCount > 1 };
-        for (let slot = 0; slot < LEAD_SELECT_PAGE_SIZE; slot++) {
-            const row = view.rows[slot];
-            texts[`leadGeneralLabel${slot}`] = row ? `${row.selected ? '✓' : '　'} ${row.label}` : '－';
-            actives[`btnLeadGeneral${slot}`] = row !== undefined;
-        }
-        binder.setTexts(texts);
-        binder.setActives(actives);
-    }
-
-    private async _onClickLeadGeneral(slot: number): Promise<void> {
-        const row = this._currentLeadView().rows[slot];
-        if (!row) {
-            return;
-        }
-        try {
-            await services().session.setLeadGeneral(nextLeadId(services().session.leadGeneralId, row.id));
-        } catch (error) {
-            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 主將存檔失敗', error);
-            services().event.emit('SHOW_TOAST', { message: '主將存檔失敗，請稍後再試', duration: 2 });
-        }
+        this._leadSelect?.refresh();
     }
 
     /**
@@ -4403,9 +4366,10 @@ export class LobbyScene extends Component {
                     this._bringNodeToFront(deckSelectHost.node);
                     this._refreshDeckSelect();
                 }
-                if (this._leadSelectHost) {
-                    this._leadSelectHost.node.active = true;
-                    this._bringNodeToFront(this._leadSelectHost.node);
+                const leadSelectHost = this._leadSelect?.host;
+                if (leadSelectHost) {
+                    leadSelectHost.node.active = true;
+                    this._bringNodeToFront(leadSelectHost.node);
                     this._refreshLeadSelect();
                 }
                 // 進場時先掛好的日報面板（有未讀才開）也要壓回大廳之上，不然字會疊在大廳上（PROG-2-1625）
@@ -4433,8 +4397,9 @@ export class LobbyScene extends Component {
                 if (deckSelectHost) {
                     deckSelectHost.node.active = false;
                 }
-                if (this._leadSelectHost) {
-                    this._leadSelectHost.node.active = false;
+                const leadSelectHost = this._leadSelect?.host;
+                if (leadSelectHost) {
+                    leadSelectHost.node.active = false;
                 }
             },
         };
