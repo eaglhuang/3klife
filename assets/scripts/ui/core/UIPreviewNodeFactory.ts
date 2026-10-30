@@ -107,6 +107,11 @@ export class UIPreviewNodeFactory {
             if (style) {
                 this.styleBuilder.applyLabelStyle(label, style);
                 // applyLabelStyle 已保證 overflow ≥ SHRINK，不再硬蓋
+                // 按鈕文字未指定對齊時置中（開場「繼續」卡在按鈕左上角）
+                if (node.parent?.getComponent(Button)) {
+                    if (!style.alignExplicit?.horizontal) label.horizontalAlign = Label.HorizontalAlign.CENTER;
+                    if (!style.alignExplicit?.vertical) label.verticalAlign = Label.VerticalAlign.CENTER;
+                }
             } else {
                 // styleSlot 找不到時，仍保障 SHRINK
                 label.overflow = Label.Overflow.SHRINK;
