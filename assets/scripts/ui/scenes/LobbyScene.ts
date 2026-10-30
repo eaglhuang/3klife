@@ -89,9 +89,7 @@ import { MentorHoldingsController } from '../core/MentorHoldingsController';
 import { MentorBorrowController } from '../core/MentorBorrowController';
 import { GraduationRecordController } from '../core/GraduationRecordController';
 import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView';
-import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
-import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
-import { RANK_PROGRESS_ROW_COUNT, rankProgressOpenLabel, rankProgressViewOf } from '../core/RankProgressText';
+import { OfficerPanelsController } from '../core/OfficerPanelsController';
 import { BLOODLINE_VIGNETTE_CELL_COUNT, bloodlineVignetteOpenLabel, bloodlineVignetteViewOf } from '../core/BloodlineVignetteText';
 import { installOfficerTierTable, type OfficerTierRow } from '../../core/systems/OfficerTierTable';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
@@ -263,9 +261,7 @@ export class LobbyScene extends Component {
     private _cityHubHost: UIScreenPreviewHost | null = null;
     private _cityHubCategory: LobbyCategoryId | null = null;
     private _cityHubAvatarId: string | null = null;
-    private _officerHudHost: UIScreenPreviewHost | null = null;
-    private _officerPageHost: UIScreenPreviewHost | null = null;
-    private _rankProgressHost: UIScreenPreviewHost | null = null;
+    private _officerPanels: OfficerPanelsController<UIScreenPreviewHost> | null = null;
     private _bloodlineVignetteHost: UIScreenPreviewHost | null = null;
     /** officer-tiers.json 驗證通過的階位列（官職進度開窗用）；未載入時開窗用內建備援 */
     private _officerTierRows: OfficerTierRow[] | null = null;
@@ -620,17 +616,13 @@ export class LobbyScene extends Component {
 
     /** 官職區塊（OFC-08 顯示段）：以 UCUF JSON（lobby-officer-hud-screen）顯示階位與經驗，資料來自 officerDisplayOf */
     private async _mountOfficerHud(): Promise<void> {
-        this._officerPageHost = await this._mountPreviewScreenHost('OfficerPageHost', 'lobby-officer-page-screen', [
-            { buttonId: 'btnCloseOfficerPage', handler: () => this._setOfficerPageOpen(false) },
-            { buttonId: 'btnOpenRankProgress', handler: () => this._setRankProgressOpen(true) },
-        ]);
-        this._rankProgressHost = await this._mountPreviewScreenHost('RankProgressHost', 'rank-progress-screen', [
-            { buttonId: 'btnCloseRankProgress', handler: () => this._setRankProgressOpen(false) },
-        ]);
-        this._officerHudHost = await this._mountPreviewScreenHost('OfficerHudHost', 'lobby-officer-hud-screen', [
-            { buttonId: 'btnOpenOfficerPage', handler: () => this._setOfficerPageOpen(true) },
-        ]);
-        this._refreshOfficerHud();
+        this._officerPanels = new OfficerPanelsController<UIScreenPreviewHost>({
+            mountHost: (hostName, screenId, bindings) => this._mountPreviewScreenHost(hostName, screenId, bindings),
+            officerState: () => services().session.officerState,
+            tierRows: () => this._officerTierRows,
+            lookup: (key: string, ...args: string[]): string => services().i18n.t(key, ...args),
+        });
+        await this._officerPanels.mount();
         const refresh = (): void => { this._refreshOfficerHud(); };
         this._sessionEventUnsubscribers.push(
             services().event.on(GAME_SESSION_EVENTS.Loaded, refresh),
@@ -647,47 +639,7 @@ export class LobbyScene extends Component {
     }
 
     private _refreshOfficerHud(): void {
-        const state = services().session.officerState;
-        const display = officerDisplayOf(state);
-        this._officerHudHost?.binder?.setTexts({
-            officerTitle: display.sectionTitle,
-            officerRank: display.rankName,
-            officerExp: display.expLabel,
-        });
-        const lookup = (key: string, ...args: string[]): string => services().i18n.t(key, ...args);
-        this._officerPageHost?.binder?.setTexts({
-            officerPageTitle: officerPageTitleText(lookup, display.rankName),
-            officerPermissionText: officerPermissionLinesOf(officerPermissionsOf(state), lookup).join('\n'),
-            openRankProgressLabel: rankProgressOpenLabel(lookup),
-        });
-    }
-
-    /** 官職詳情頁：由官職區塊的按鈕打開，關閉鈕收起；頁面內容每次打開前都依最新官職狀態重算 */
-    private _setOfficerPageOpen(open: boolean): void {
-        if (open) this._refreshOfficerHud();
-        if (this._officerPageHost) this._officerPageHost.node.active = open;
-        if (!open) this._setRankProgressOpen(false);
-    }
-
-    /** 官職進度開窗（PROG-2-1424）：官職頁「階位總覽」打開；五列階位依最新官職狀態重算 */
-    private _setRankProgressOpen(open: boolean): void {
-        if (open) this._refreshRankProgress();
-        if (this._rankProgressHost) this._rankProgressHost.node.active = open;
-    }
-
-    private _refreshRankProgress(): void {
-        const lookup = (key: string, ...args: string[]): string => services().i18n.t(key, ...args);
-        const view = rankProgressViewOf(services().session.officerState, this._officerTierRows, lookup);
-        const texts: Record<string, string> = {
-            rankTitle: view.title,
-            rankExp: view.expLine,
-            closeRankProgressLabel: view.closeLabel,
-        };
-        for (let i = 0; i < RANK_PROGRESS_ROW_COUNT; i++) {
-            const row = view.rows[i];
-            texts[`rankRow${i}`] = row ? `${row.headline}\n${row.unlockLine}` : '';
-        }
-        this._rankProgressHost?.binder?.setTexts(texts);
+        this._officerPanels?.refresh();
     }
 
     /** 畢業紀錄畫面（PROG-2-0746）：固定 5 列、分頁按鈕；資料來自培育服務的畢業紀錄，每次打開都重算 */
