@@ -87,6 +87,7 @@ import { nurtureGraduationRows } from '../core/NurtureGraduationView';
 import { pageSliceOf } from '../core/FixedSlotPager';
 import { MentorHoldingsController } from '../core/MentorHoldingsController';
 import { MentorBorrowController } from '../core/MentorBorrowController';
+import { GraduationRecordController } from '../core/GraduationRecordController';
 import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView';
 import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
 import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
@@ -268,8 +269,7 @@ export class LobbyScene extends Component {
     private _bloodlineVignetteHost: UIScreenPreviewHost | null = null;
     /** officer-tiers.json 驗證通過的階位列（官職進度開窗用）；未載入時開窗用內建備援 */
     private _officerTierRows: OfficerTierRow[] | null = null;
-    private _graduationHost: UIScreenPreviewHost | null = null;
-    private _graduationPage = 0;
+    private _graduation: GraduationRecordController<UIScreenPreviewHost> | null = null;
     private _mentorBorrow: MentorBorrowController<UIScreenPreviewHost> | null = null;
     /** 「我的教官卡」列表（PROG-2-1097）：重用 mentor-borrow-screen 版面 */
     private _mentorHoldings: MentorHoldingsController<UIScreenPreviewHost> | null = null;
@@ -692,41 +692,15 @@ export class LobbyScene extends Component {
 
     /** 畢業紀錄畫面（PROG-2-0746）：固定 5 列、分頁按鈕；資料來自培育服務的畢業紀錄，每次打開都重算 */
     private async _mountGraduationRecord(): Promise<void> {
-        this._graduationHost = await this._mountPreviewScreenHost('GraduationRecordHost', 'nurture-graduation-screen', [
-            { buttonId: 'btnGradClose', handler: () => this._setGraduationOpen(false) },
-            { buttonId: 'btnGradPrev', handler: () => this._turnGraduationPage(-1) },
-            { buttonId: 'btnGradNext', handler: () => this._turnGraduationPage(1) },
-        ]);
-        this._setGraduationOpen(false);
+        this._graduation = new GraduationRecordController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('GraduationRecordHost', 'nurture-graduation-screen', bindings),
+            rows: () => nurtureGraduationRows(services().nurture.getState().graduationRecords ?? [], (key: string): string => services().i18n.t(key)),
+        });
+        await this._graduation.mount();
     }
 
     private _setGraduationOpen(open: boolean): void {
-        if (open) {
-            this._graduationPage = 0;
-            this._refreshGraduationRecord();
-        }
-        if (this._graduationHost) this._graduationHost.node.active = open;
-    }
-
-    private _turnGraduationPage(delta: number): void {
-        this._graduationPage += delta;
-        this._refreshGraduationRecord();
-    }
-
-    private _refreshGraduationRecord(): void {
-        const lookup = (key: string): string => services().i18n.t(key);
-        const records = services().nurture.getState().graduationRecords ?? [];
-        const slice = pageSliceOf(nurtureGraduationRows(records, lookup), this._graduationPage);
-        this._graduationPage = slice.page;
-        const texts: Record<string, string> = { graduationPage: `${slice.page + 1} / ${slice.pageCount}` };
-        const actives: Record<string, boolean> = {};
-        for (let i = 0; i < 5; i++) {
-            const row = slice.items[i];
-            actives[`graduationRow${i}Box`] = row !== undefined;
-            texts[`graduationRow${i}`] = row ? `${row.periodText}　${row.ratingText}\n${row.tagsText}　${row.tpText}　${row.revelationText}` : '';
-        }
-        this._graduationHost?.binder?.setTexts(texts);
-        this._graduationHost?.binder?.setActives(actives);
+        this._graduation?.setOpen(open);
     }
 
     /** 借將畫面（PROG-2-0726，PM 裁定採 A）：從養成流程的借將按鈕打開，固定 5 列加分頁；選列後呼叫 borrowFriendMentor */
