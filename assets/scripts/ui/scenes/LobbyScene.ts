@@ -86,6 +86,7 @@ import { LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, cat
 import { nurtureGraduationRows } from '../core/NurtureGraduationView';
 import { pageSliceOf } from '../core/FixedSlotPager';
 import { MentorHoldingsController } from '../core/MentorHoldingsController';
+import { MentorBorrowController } from '../core/MentorBorrowController';
 import { mentorBorrowRows, type MentorBorrowRow } from '../core/MentorBorrowView';
 import { officerPermissionsOf } from '../../core/systems/OfficerPermissions';
 import { officerPageTitleText, officerPermissionLinesOf } from '../core/OfficerPermissionText';
@@ -269,8 +270,7 @@ export class LobbyScene extends Component {
     private _officerTierRows: OfficerTierRow[] | null = null;
     private _graduationHost: UIScreenPreviewHost | null = null;
     private _graduationPage = 0;
-    private _mentorBorrowHost: UIScreenPreviewHost | null = null;
-    private _mentorBorrowPage = 0;
+    private _mentorBorrow: MentorBorrowController<UIScreenPreviewHost> | null = null;
     /** 「我的教官卡」列表（PROG-2-1097）：重用 mentor-borrow-screen 版面 */
     private _mentorHoldings: MentorHoldingsController<UIScreenPreviewHost> | null = null;
     /** 趕路倒數（時間單位為毫秒）；目前尚無趕路來源接入，為 null 時圖示隱藏（PROG-2-0469） */
@@ -731,18 +731,13 @@ export class LobbyScene extends Component {
 
     /** 借將畫面（PROG-2-0726，PM 裁定採 A）：從養成流程的借將按鈕打開，固定 5 列加分頁；選列後呼叫 borrowFriendMentor */
     private async _mountMentorBorrow(): Promise<void> {
-        this._mentorBorrowHost = await this._mountPreviewScreenHost('MentorBorrowHost', 'mentor-borrow-screen', [
-            { buttonId: 'btnBorrowClose', handler: () => this._setMentorBorrowOpen(false) },
-            { buttonId: 'btnBorrowPrev', handler: () => this._turnMentorBorrowPage(-1) },
-            { buttonId: 'btnBorrowNext', handler: () => this._turnMentorBorrowPage(1) },
-            { buttonId: 'btnBorrowRecord', handler: () => { this._setMentorBorrowOpen(false); this._setGraduationOpen(true); } },
-            { buttonId: 'btnBorrowRow0', handler: () => { void this._borrowRow(0); } },
-            { buttonId: 'btnBorrowRow1', handler: () => { void this._borrowRow(1); } },
-            { buttonId: 'btnBorrowRow2', handler: () => { void this._borrowRow(2); } },
-            { buttonId: 'btnBorrowRow3', handler: () => { void this._borrowRow(3); } },
-            { buttonId: 'btnBorrowRow4', handler: () => { void this._borrowRow(4); } },
-        ]);
-        this._setMentorBorrowOpen(false);
+        this._mentorBorrow = new MentorBorrowController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('MentorBorrowHost', 'mentor-borrow-screen', bindings),
+            rows: () => this._mentorBorrowRowsNow(),
+            select: (row) => this._selectBorrowedMentor(row),
+            openRecord: () => this._setGraduationOpen(true),
+        });
+        await this._mentorBorrow.mount();
     }
 
     private async _mountMentorHoldings(): Promise<void> {
@@ -766,18 +761,7 @@ export class LobbyScene extends Component {
             this._refreshNurtureFlow();
             return;
         }
-        this._mentorBorrowPage = 0;
-        this._setMentorBorrowOpen(true);
-    }
-
-    private _setMentorBorrowOpen(open: boolean): void {
-        if (open) this._refreshMentorBorrow();
-        if (this._mentorBorrowHost) this._mentorBorrowHost.node.active = open;
-    }
-
-    private _turnMentorBorrowPage(delta: number): void {
-        this._mentorBorrowPage += delta;
-        this._refreshMentorBorrow();
+        this._mentorBorrow?.open();
     }
 
     /** 目前的借將列表（全部好友，依借用檢查結果標示）；每次刷新都重算，避免打開後狀態過期 */
@@ -787,36 +771,19 @@ export class LobbyScene extends Component {
         return mentorBorrowRows(services().session.npcFriendMentors, (friend) => services().session.borrowBlockFor(friend, ''), lookup);
     }
 
-    private _refreshMentorBorrow(): void {
-        const slice = pageSliceOf(this._mentorBorrowRowsNow(), this._mentorBorrowPage);
-        this._mentorBorrowPage = slice.page;
-        const texts: Record<string, string> = { borrowPage: `${slice.page + 1} / ${slice.pageCount}` };
-        const actives: Record<string, boolean> = {};
-        for (let i = 0; i < 5; i++) {
-            const row = slice.items[i];
-            actives[`borrowRow${i}Box`] = row !== undefined;
-            texts[`borrowRow${i}`] = row ? `${row.name}　${row.rankText}\n${row.statusText}` : '';
-            texts[`borrowRow${i}Btn`] = row?.enabled ? '借用' : '—';
-        }
-        this._mentorBorrowHost?.binder?.setTexts(texts);
-        this._mentorBorrowHost?.binder?.setActives(actives);
-    }
-
-    /** 選第 i 列：設為入學的第 6 位教官（借用紀錄等入學成功才寫） */
-    private async _borrowRow(index: number): Promise<void> {
-        const slice = pageSliceOf(this._mentorBorrowRowsNow(), this._mentorBorrowPage);
-        const row = slice.items[index];
-        const friend = row ? services().session.npcFriendMentors.find((f) => f.friendId === row.friendId) : undefined;
-        if (!row || !row.enabled || !friend || !this._nurtureFlow) return;
+    /** 選定好友教官：設為入學的第 6 位教官（借用紀錄等入學成功才寫） */
+    private async _selectBorrowedMentor(row: MentorBorrowRow): Promise<boolean> {
+        const friend = services().session.npcFriendMentors.find((f) => f.friendId === row.friendId);
+        if (!friend || !this._nurtureFlow) return false;
         const card = friendMentorCard(friend, await this._loadSupportCatalog(), this._generals);
         if (!card) {
             services().event.emit('SHOW_TOAST', { message: '找不到這位好友教官的支援卡資料', duration: 2 });
-            return;
+            return false;
         }
         this._nurtureFlow.setBorrowedMentor(friend.friendId, card);
         services().event.emit('SHOW_TOAST', { message: `${card.name} ★${card.stars ?? 0} 將作為第 6 位教官入學`, duration: 2 });
-        this._setMentorBorrowOpen(false);
         this._refreshNurtureFlow();
+        return true;
     }
 
     /** 入學成功後寫入借用紀錄（每日 1 張），原主結義點數入帳 */
