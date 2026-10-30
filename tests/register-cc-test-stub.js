@@ -185,7 +185,7 @@ const baseCcStub = {
   UITransform: class extends DummyComponent {},
   Widget: class extends DummyComponent { static AlignMode = { ONCE: 0, ALWAYS: 1, ON_WINDOW_RESIZE: 2 }; },
   Button: class extends DummyComponent {},
-  Label: class extends DummyComponent { constructor() { super(); this.string = ''; } },
+  Label: class extends DummyComponent { static Overflow = { NONE: 0, CLAMP: 1, SHRINK: 2, RESIZE_HEIGHT: 3 }; constructor() { super(); this.string = ''; } },
   Sprite: class extends DummyComponent {},
   SpriteFrame: class {},
   Prefab: class {},
