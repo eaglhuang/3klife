@@ -31,10 +31,8 @@ export interface CanvasDef {
     designHeight?: number;
     /**
      * R29: 單邊 Widget 錨點的寬螢幕安全模式。
-     * 設為 true 時，CompositePanel.mount() 會在 buildScreen 後：
-     * 1. 將宿主節點 UITransform 鎖定為 designWidth × designHeight
-     * 2. 重新執行 Widget 計算
-     * 3. 將所有子 Widget 設為 AlignMode.ONCE（不再 ALWAYS 重算）
+     * 設為 true 時，CompositePanel.mount() 先在宿主下建 designWidth × designHeight 的
+     * __safeArea，再把畫面建在裡面（PROG-2-1636）。
      * 避免 FIXED_HEIGHT 策略下 Canvas 比設計寬導致 left=0 / right=X 把節點推到螢幕外。
      */
     safeAreaConstrained?: boolean;

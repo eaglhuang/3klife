@@ -14,7 +14,7 @@ export function createCompositePanelI18nSuite(): TestSuite {
     suite.test('mount 載入目前語系字典並傳給 buildScreen', () => {
         const src = fs.readFileSync(path.join(__dirname, '..', 'assets/scripts/ui/core/CompositePanel.ts'), 'utf8');
         assert.equals(true, src.includes('specLoader.loadI18n(locale)'));
-        assert.equals(true, src.includes('buildScreen(layout, skin, i18nStrings, tokens)'));
+        assert.equals(true, src.includes('buildScreen(layout, skin, i18nStrings, tokens, host)'));
         assert.equals(false, src.includes('buildScreen(layout, skin, undefined, tokens)'));
     });
 

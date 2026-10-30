@@ -61,12 +61,14 @@ export class UIPreviewBuilder extends Component {
      * @param skin    Skin Manifest；傳 null 時使用 SolidBackground fallback
      * @param i18n    i18n 字串對照表；傳 null 時顯示 key 作為 placeholder
      * @param tokens  Design Tokens（顏色與 elevation 等變數）
+     * @param host    掛載父節點，預設 this.node
      */
     public async buildScreen(
         layout: UILayoutSpec,
         skin: UISkinManifest | null,
         i18n?: Record<string, string>,
         tokens?: any,
+        host: Node = this.node,
     ): Promise<Node> {
         // ⚠️ 防禦：layout 或 layout.root 為 null 時提前拋出有意義的錯誤
         // 這可讓 BattleHUD catch 區段印出詳細來源，而不是神秘的 "reading 'root'"
@@ -98,14 +100,14 @@ export class UIPreviewBuilder extends Component {
         this.nodeFactory.i18nStrings = this.i18nStrings;
 
         // 實際尺寸優先 (PROG-2-1628)
-        const hostT = this.node.getComponent(UITransform);
+        const hostT = host.getComponent(UITransform);
         const designWidth  = hostT && hostT.width  > 0 ? hostT.width  : (layout.canvas.designWidth  ?? 1920);
         const designHeight = hostT && hostT.height > 0 ? hostT.height : (layout.canvas.designHeight ?? 1080);
         const _tBuildScreen = UCUFLogger.perfBegin('UIPreviewBuilder.buildScreen');
 
         let rootNode: Node;
         try {
-            rootNode = await this._buildNode(layout.root, this.node, designWidth, designHeight);
+            rootNode = await this._buildNode(layout.root, host, designWidth, designHeight);
         } catch (e) {
             UIPreviewDiagnostics.buildScreenError(layout.id ?? '?', e as Error);
             throw e;
@@ -254,9 +256,6 @@ export class UIPreviewBuilder extends Component {
         // Content.width 在 Layout.CONTAINER 且尚未建立子節點時，可能只剩 paddingLeft + paddingRight。
         // viewPort（view）本身是 Widget(all=0) 撐滿 DataList，post-Widget 後尺寸會更可靠。
         const viewNode = listNode.getChildByName('view');
-        // 祖先的 Widget（例如 __safeArea 把寬度夾到 1920）可能還沒重算，view 會沿用 Canvas 寬，
-        // 列寬被撐成 2700+、欄位整排錯位（PROG-2-1625）。先由上而下重算一次對齊再讀寬度。
-        UIPreviewBuilder._realignAncestors(viewNode ?? listNode, this.node);
         const viewT    = viewNode?.getComponent(UITransform);
         const listT    = listNode.getComponent(UITransform);
         const availableW = (viewT?.width ?? 0) > 0 ? viewT!.width
@@ -274,16 +273,6 @@ export class UIPreviewBuilder extends Component {
             }
         }
         UIPreviewDiagnostics.populateListComplete(content.children.length);
-    }
-
-    /** 由 root 往下到 node，依序重算每一層的 Widget 對齊，讓 node 的尺寸反映目前的父層 */
-    private static _realignAncestors(node: Node, root: Node): void {
-        const chain: Node[] = [];
-        for (let n: Node | null = node; n; n = n.parent) {
-            chain.push(n);
-            if (n === root) break;
-        }
-        for (let i = chain.length - 1; i >= 0; i--) chain[i].getComponent(Widget)?.updateAlignment();
     }
 
     // ─── 節點建構核心 ─────────────────────────────────────────────────────────
