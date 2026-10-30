@@ -28,7 +28,8 @@ import { SAGES } from '../../core/systems/SageDivination';
 import { seasonDisplayText } from '../core/SeasonTexts';
 import { SeasonHudController } from '../core/SeasonHudController';
 import { buildSandtableStatusLabel } from '../../core/systems/SandtableStatus';
-import { buildYearReportTexts, withYearReportFallback, type YearReport } from '../../core/systems/YearReport';
+import type { YearReport } from '../../core/systems/YearReport';
+import { YearReportController } from '../core/YearReportController';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
@@ -343,7 +344,7 @@ export class LobbyScene extends Component {
     private _spiritCardDetailHost: UIScreenPreviewHost | null = null;
     private _oracle: SageOracleController | null = null;
     private _prisonerHost: UIScreenPreviewHost | null = null;
-    private _yearReportHost: UIScreenPreviewHost | null = null;
+    private _yearReport: YearReportController<UIScreenPreviewHost> | null = null;
     private _prisoner: PrisonerPopupController | null = null;
     private _destinyShopHost: UIScreenPreviewHost | null = null;
     private _destinyShop: DestinyShopController | null = null;
@@ -2887,31 +2888,17 @@ export class LobbyScene extends Component {
 
     /** 年報畫面（UI_YEAR_REPORT，TIME-07）：年末 YearEnded 時彈出，文字走 zh-TW 預設退回 */
     private async _mountYearReport(): Promise<void> {
-        this._yearReportHost = await this._mountPreviewScreenHost('YearReportHost', 'year-report-screen', [
-            { buttonId: 'btnCloseYearReport', handler: () => { this._closeYearReport(); } },
-        ]);
+        this._yearReport = new YearReportController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('YearReportHost', 'year-report-screen', bindings),
+            lookup: (key: string, ...args: string[]): string => services().i18n.t(key, ...args),
+            bringToFront: (host) => this._bringNodeToFront(host.node),
+        });
+        await this._yearReport.mount();
         this._sessionEventUnsubscribers.push(
             services().event.on(GAME_SESSION_EVENTS.YearEnded, (payload?: unknown) => {
-                this._openYearReport(payload as YearReport | undefined);
+                this._yearReport?.open(payload as YearReport | undefined);
             }),
         );
-    }
-
-    private _openYearReport(report: YearReport | undefined): void {
-        const host = this._yearReportHost;
-        if (!host || !report) {
-            return;
-        }
-        const lookup = withYearReportFallback((key, ...args) => services().i18n.t(key, ...args));
-        host.binder.setTexts(buildYearReportTexts(report, lookup));
-        host.node.active = true;
-        this._bringNodeToFront(host.node);
-    }
-
-    private _closeYearReport(): void {
-        if (this._yearReportHost) {
-            this._yearReportHost.node.active = false;
-        }
     }
 
     private _refreshPrisonerPopup(): void {
