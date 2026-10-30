@@ -32,6 +32,8 @@ export class UIPreviewLayoutBuilder {
     ): void {
         if (!widgetDef) return;
         const widget = node.getComponent(Widget) || node.addComponent(Widget);
+        // 只在視窗尺寸改變時重算，建置後由 _postBuildPass 排一次版（PROG-2-1629）
+        widget.alignMode = Widget.AlignMode.ON_WINDOW_RESIZE;
         // 百分比交給 Widget 以比例保存（isAbsolute* = false），畫面尺寸改變時由引擎重算，
         // 不再於建置時換成固定像素（PROG-2-1628）。
         const edge = (value: number | string, parentSize: number, setAbs: (abs: boolean) => void): number => {
