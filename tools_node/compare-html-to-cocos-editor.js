@@ -3,6 +3,7 @@
 'use strict';
 
 const fs = require('fs');
+const { resolveExisting } = require('./lib/ui-spec-sidecars');
 const path = require('path');
 const _os = require('os');
 const crypto = require('crypto');
@@ -568,7 +569,7 @@ function loadZoneTraceCatalogForCompare(args) {
   const screenId = args && args.screenId ? String(args.screenId) : null;
   if (!screenId) return { bakeManifestPath: null, layoutPath: null, entries: [] };
   const bakeManifestPath = firstExistingPath([
-    path.join(ROOT, 'assets', 'resources', 'ui-spec', 'layouts', `${screenId}.layout.bake-manifest.json`),
+    resolveExisting(path.join(ROOT, 'assets', 'resources', 'ui-spec', 'layouts', `${screenId}.layout.bake-manifest.json`)),
   ]);
   const layoutPath = firstExistingPath([
     path.join(ROOT, 'assets', 'resources', 'ui-spec', 'layouts', `${screenId}.json`),

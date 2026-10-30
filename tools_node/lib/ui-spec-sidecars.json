@@ -1,0 +1,13 @@
+{
+  "_comment": "PROG-2-1638：assets/resources/ui-spec 只放遊戲執行期會讀的檔；其餘轉換證據放 ui-spec-evidence/（同子路徑）。",
+  "runtimeRoot": "assets/resources/ui-spec",
+  "evidenceRoot": "ui-spec-evidence",
+  "runtimeSidecars": ["local-tokens", "interaction", "tab-routing", "runtime-version"],
+  "evidenceSidecars": [
+    "screen", "preload", "performance", "composite", "bundle-suggestion", "motion",
+    "fragment-routes", "logic-inventory", "logic-guard", "r-guard", "visual-review",
+    "readiness", "zone-ownership", "final-capture-protocol", "art-authority-waivers",
+    "bake-manifest", "css-coverage", "optimizer-scan", "image-waivers", "token-suggestions",
+    "geometry-correction-log", "compare-meta", "pixel-diff", "font-audit", "sync-report"
+  ]
+}
