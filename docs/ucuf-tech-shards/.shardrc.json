@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "source": "../UCUF技術文件.md",
+  "indexTitle": "UCUF 技術文件",
+  "indexPath": "docs/UCUF技術文件.md",
+  "type": "markdown-h2",
+  "preambleShard": "ucuf-core",
+  "defaultShard": "ucuf-core",
+  "_comment": "Sections routed by the text following '## '.",
+  "shards": [
+    {
+      "name": "ucuf-core",
+      "title": "現況與核心（實作現況 · 目錄 · §1–§6）",
+      "pattern": "^(實作現況|目錄|[1-6]\\.)"
+    },
+    {
+      "name": "ucuf-infra",
+      "title": "遷移、規格、資源、日誌、診斷、測試（§7–§12）",
+      "pattern": "^([7-9]|1[0-2])\\."
+    },
+    {
+      "name": "ucuf-runtime",
+      "title": "記憶體、資料綁定、語系、效能（§13–§16）",
+      "pattern": "^1[3-6]\\."
+    },
+    {
+      "name": "ucuf-evolution",
+      "title": "演進建議、遷移方案、規則引擎（§17–§19）",
+      "pattern": "^1[7-9]\\."
+    }
+  ]
+}
