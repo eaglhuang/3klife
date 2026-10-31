@@ -2,6 +2,8 @@
 // 對應 §3 / §6 / §7 / §8 / §27
 'use strict';
 
+const nodeFs = require('fs');
+const nodePath = require('path');
 const { parseHtml, parseStylesheets, parseInlineStyle } = require('./html-parser');
 const { loadTokenRegistry, normalizeHex } = require('./token-registry');
 const { extractInteraction, buildInteractionDraft } = require('./interaction-translator');
@@ -18,6 +20,7 @@ const {
   resolveTypographyToken,
   isBoldWeight,
   applyTextTransformGeneral,
+  normalizeCssColorToHex,
 } = require('./draft-builder/typography');
 const ENGINE = require('./engine-profiles').active;
 const { draftBuilderStageRules: DRAFT_BUILDER_STAGE_RULES } = require('../html-to-ucuf/rule-registry.json');
@@ -465,20 +468,28 @@ function processElement(el, ctx, depth) {
   const childNodes = [];
   const hasElementChildren = (el.children || []).some(child => child.type === 'element');
   const beforePseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'before', hasElementChildren);
+  // 自帶文字的框：按鈕，或只有文字的 panel
+  const wrapsOwnText = nodeType === 'button' || (nodeType === 'panel' && !hasElementChildren);
   for (const child of el.children) {
     // 混合內容：容器內直接寫的文字（旁邊另有子元素）包成匿名文字節點，否則會被丟掉（PROG-2-1647）
     // 按鈕只有文字（如 ‹ ›）時同理，按鈕本身不帶字（PROG-2-1649）
-    const source = child.type === 'text' && (hasElementChildren || nodeType === 'button') && String(child.value || '').trim()
+    const source = child.type === 'text' && (hasElementChildren || wrapsOwnText) && String(child.value || '').trim()
       ? wrapLooseTextNode(child, style, nodeType === 'button')
       : child;
     if (source.type !== 'element') continue;
     const sub = processElement(source, ctx, depth + 1);
     // 匿名文字沒有量到寬度：用容器內容寬（扣左右內距），否則引擎不知在哪換行
     if (source !== child && sub && sub.type === 'label' && sub.width == null && typeof node.width === 'number') {
-      const layout = node.layout || {};
+      const layout = node.layout || boxPaddingFromStyle(style);
       sub.width = Math.max(1, node.width - (layout.paddingLeft || 0) - (layout.paddingRight || 0));
       // 按鈕文字在瀏覽器預設上下置中：撐滿按鈕高度
       if (nodeType === 'button' && sub.height == null && typeof node.height === 'number') sub.height = node.height;
+      // 只有文字的 panel：文字撐滿內容區（扣上下內距）
+      if (nodeType === 'panel' && wrapsOwnText && sub.height == null && typeof node.height === 'number') {
+        sub.height = Math.max(1, node.height - (layout.paddingTop || 0) - (layout.paddingBottom || 0));
+        // 沒有 layout 的框不會自動套內距：文字直接定位在內容區
+        if (!node.layout) sub.widget = { left: layout.paddingLeft || 0, top: layout.paddingTop || 0 };
+      }
     }
     appendNodeWithGeneratedSiblings(childNodes, sub);
   }
@@ -846,12 +857,16 @@ function inferStoryStripHints(el, tag, attrs, cls, ctx) {
   const ownerTab = inferOwnerTabFromElement(attrs, cls, el, ctx) || 'unknown';
   const screenId = String((ctx && ctx.opts && ctx.opts.screenId) || '').trim();
   const prefix = screenId ? screenId.replace(/-main$/i, '') : 'screen';
-  if (ctx) ctx._hasStoryStripSlot = true;
+  const defaultFragment = `fragments/layouts/${prefix}-story-strip-collapsed`;
+  if (ctx) {
+    ctx._hasStoryStripSlot = true;
+    ctx._storyStripDefaultFragment = defaultFragment;
+  }
 
   return {
     dataSlot: 'slot.story-strip',
     dataContract: `tab.owner.${ownerTab}`,
-    defaultFragment: `fragments/layouts/${prefix}-story-strip-collapsed`,
+    defaultFragment,
     fragments: [`fragments/layouts/${prefix}-story-strip-open`],
     warmupHint: 'manual',
     deferredReason: `${ownerTab}-tab-owned-story-strip`,
@@ -900,8 +915,17 @@ function parseFragmentList(raw) {
     .filter(Boolean);
 }
 
+const UI_SPEC_ROOT = nodePath.resolve(__dirname, '../../../assets/resources/ui-spec');
+
+// 切換鈕只在「預設收合片段已存在」時交給片段提供；片段不存在就保留原位，否則畫面會少一顆鈕。
+function storyStripFragmentExists(fragmentPath) {
+  if (!fragmentPath) return false;
+  return nodeFs.existsSync(nodePath.join(UI_SPEC_ROOT, `${fragmentPath}.json`));
+}
+
 function shouldPruneStandaloneStoryStripLabel(text, attrs, ctx) {
   if (!ctx || !ctx._hasStoryStripSlot) return false;
+  if (!storyStripFragmentExists(ctx._storyStripDefaultFragment)) return false;
   const rawText = String(text || '').replace(/\s+/g, '').toLowerCase();
   const id = String((attrs && attrs.id) || '').toLowerCase();
   const cls = String((attrs && attrs.class) || '').toLowerCase();
@@ -1140,7 +1164,8 @@ function inferNodeType(tag, cls, style, attrs, el) {
     if (isVisualOnlyInlinePrimitive(tag, style, attrs, el, hasBg)) return 'panel';
     return 'label';
   }
-  if (hasOnlyTextContent(el)) return 'label';
+  // 只有文字但帶底色或邊框（如帶框的切換鈕）：轉成 panel，文字另包節點，否則底框會被丟掉
+  if (hasOnlyTextContent(el)) return (hasBg || hasRenderableBorder(style)) ? 'panel' : 'label';
 
   if (hasBg) return 'panel';
   return 'container';
@@ -1865,6 +1890,19 @@ const LOOSE_TEXT_INHERITED_PROPS = [
 ];
 
 // parentStyle 為容器已解析樣式（含 class 規則，camelCase 鍵）；按鈕文字瀏覽器預設水平置中
+function boxPaddingFromStyle(style) {
+  const px = (v) => {
+    const n = Number.parseFloat(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+  return {
+    paddingLeft: px(style && style.paddingLeft),
+    paddingRight: px(style && style.paddingRight),
+    paddingTop: px(style && style.paddingTop),
+    paddingBottom: px(style && style.paddingBottom),
+  };
+}
+
 function wrapLooseTextNode(textNode, parentStyle, centerByDefault) {
   const inherited = {};
   for (const [key, value] of Object.entries(parentStyle || {})) {
@@ -1940,15 +1978,22 @@ function ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint) {
   // color rect
   const bg = pickBackgroundFill(style);
   if (bg) {
-    const { color, opacity, warning, tokenSource } = parseColor(bg, ctx.tokenRegistry);
+    let { color, opacity, warning, tokenSource } = parseColor(bg, ctx.tokenRegistry);
     if (warning) ctx.warnings.push({ code: warning, slotId });
     if (!color) {
-      ctx.skinSlots[slotId] = {
-        kind: 'transparent',
-        _unmappedBackground: bg,
-      };
-      ctx.warnings.push({ code: 'unmapped-color', detail: bg });
-      return;
+      // 對不到色票：照網頁原色畫（引擎吃 #rrggbb），警告保留讓色票缺口可追；轉不出色碼才退回透明
+      const literal = normalizeCssColorToHex(String(bg));
+      if (!literal) {
+        ctx.skinSlots[slotId] = {
+          kind: 'transparent',
+          _unmappedBackground: bg,
+        };
+        ctx.warnings.push({ code: 'unmapped-color', detail: bg });
+        return;
+      }
+      ctx.warnings.push({ code: 'unmapped-color-literal', detail: bg });
+      color = literal.slice(0, 7);
+      if (opacity == null) opacity = parseInt(literal.slice(7, 9), 16) / 255;
     }
     if (color) recordTokenUsage(ctx, 'colors', color, `${slotId}.color${tokenSource ? ':' + tokenSource : ''}`);
     const slot = {
