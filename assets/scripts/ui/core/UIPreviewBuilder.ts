@@ -27,6 +27,8 @@ import { UITemplateBinder } from './UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { CssClipPathMask } from './CssClipPathMask';
 import { resolveLabelText, type LabelTextSpec } from './UILabelText';
+import type { ICompositeRenderer, RadarSourceSvgGeometry } from './interfaces/ICompositeRenderer';
+import { radarConfigFromSourceSvg } from './RadarSvgConfig';
 
 const { ccclass } = _decorator;
 
@@ -351,6 +353,12 @@ export class UIPreviewBuilder extends Component {
         }
         if (compositeSpec.svgMeta) {
             (node as Node & { __ucufSvgMeta?: Record<string, unknown> }).__ucufSvgMeta = compositeSpec.svgMeta;
+            // Draw converted SVG radar through the engine-neutral renderer.
+            const renderer = compositeSpec.rendererHint === 'svg-radar-chart' ? this._getSvgCompositeRenderer() : undefined;
+            const radar = renderer
+                ? radarConfigFromSourceSvg(compositeSpec.svgMeta as unknown as RadarSourceSvgGeometry, w, h)
+                : null;
+            if (renderer && radar) await renderer.drawRadarChart(node, radar);
         }
 
         this._applySpecOpacity(node, spec.opacity);
@@ -403,6 +411,11 @@ export class UIPreviewBuilder extends Component {
     protected _onLazySlotCreated(_spec: UILayoutNodeSpec, _node: Node, _w: number, _h: number): void { /* no-op */ }
 
     /** Restyle a node built from `target` with the looks of a same-shaped `source` spec (e.g. tab active/inactive). */
+    /** Renderer for converted SVG composites; subclasses supply one. */
+    protected _getSvgCompositeRenderer(): ICompositeRenderer | undefined {
+        return undefined;
+    }
+
     protected async _restyleFromSpec(node: Node, target: UILayoutNodeSpec, source: UILayoutNodeSpec): Promise<void> {
         if (source.type === 'label') {
             const label = node.getComponent(Label);
