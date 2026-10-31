@@ -25,7 +25,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/奧義系統.md (doc_spec_0030)
   - docs/主戰場UI規格書.md (doc_ui_0001)
-notes: "2026-10-31 | 狀態: 進行中 | 驗證: SelfBurstWindow 5＋SelfBurstBattleWiring 2 測試過 | 變更: 第 1 片純邏輯窗口；第 2 片接戰場——奧義施放成功開窗（BattleSkillDispatcher）、施放陣營回合倒數（TileEffectPhase）、普攻攻擊倍率與暴擊加成（BattleCombatResolver）、窗口期擋定身／緩速／暈眩；窗口以陣營為單位全軍共用（PM 暫定） | 阻塞: 再行動尚未接回合流程；爆發 icon 與開始／結束提示待 UI；司馬懿韜光養晦屬特殊規則"
+notes: "2026-10-31 | 狀態: 進行中 | 驗證: SelfBurstWindow 6＋SelfBurstBattleWiring 2 測試過 | 變更: 第 1 片純邏輯窗口；第 2 片接戰場——奧義施放成功開窗（BattleSkillDispatcher）、施放陣營回合倒數（TileEffectPhase）、普攻攻擊倍率與暴擊加成（BattleCombatResolver）、窗口期擋定身／緩速／暈眩；窗口以陣營為單位全軍共用（PM 暫定）；第 3 片戰報提示——SelfBurstChanged 事件，開始寫效果與回合、結束寫回退 | 阻塞: 再行動尚未接回合流程；爆發 icon 待美術；司馬懿韜光養晦屬特殊規則"
 ---
 
 # [SYS-SKILL-ULT-0001] 奧義自身爆發家族

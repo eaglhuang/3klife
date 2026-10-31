@@ -10,6 +10,7 @@ import {
     isSelfBurstControlImmune,
     selfBurstAttackMultiplier,
     selfBurstCritBonus,
+    selfBurstNoticeText,
     selfBurstPhaseOf,
     startSelfBurst,
     tickSelfBurst,
@@ -71,6 +72,15 @@ export function createSelfBurstWindowSuite(): TestSuite {
         for (const id of Object.keys(SELF_BURST_PARAMS)) {
             assert.equals('self-burst', list.find((u) => u.id === id)?.family, id);
         }
+    });
+
+    suite.test('戰報提示：開始寫效果與回合，結束寫回退', () => {
+        assert.equals('我方進入爆發：攻擊 ×2（3 回合）',
+            selfBurstNoticeText({ faction: 'player', phase: 'started', ultimateId: 'ult-guan-yu-5', turns: 3 }, true));
+        assert.equals('敵方爆發結束，能力回復原狀',
+            selfBurstNoticeText({ faction: 'enemy', phase: 'ended', ultimateId: 'ult-guan-yu-5', turns: 0 }, false));
+        const zy = selfBurstNoticeText({ faction: 'player', phase: 'started', ultimateId: 'ult-zhao-yun-1', turns: 2 }, true);
+        assert.isTrue(zy.includes('免控'));
     });
 
     return suite;

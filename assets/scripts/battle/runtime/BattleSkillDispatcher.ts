@@ -124,7 +124,14 @@ export class BattleSkillDispatcher {
     // 自身爆發家族奧義施放成功後開窗（SYS-SKILL-ULT-0001）；非爆發奧義 startSelfBurst 原樣回傳
     if (result.applied && options.ultimateId) {
       const state = this.context.state;
-      state.setSelfBurst(casterFaction, startSelfBurst(state.getSelfBurst(casterFaction), options.ultimateId));
+      const before = state.getSelfBurst(casterFaction);
+      const after = startSelfBurst(before, options.ultimateId);
+      state.setSelfBurst(casterFaction, after);
+      if (after && after !== before) {
+        services().event.emit(EVENT_NAMES.SelfBurstChanged, {
+          faction: casterFaction, phase: 'started', ultimateId: after.ultimateId, turns: after.remainingTurns,
+        });
+      }
     }
     return result;
   }

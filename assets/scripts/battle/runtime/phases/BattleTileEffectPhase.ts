@@ -1,6 +1,7 @@
 // @spec-source → 戰場格子系統.md (doc_spec_0044)、戰場適性系統.md (doc_spec_0041)；PROG-2-1429 依建檔紀錄補標出處
 import { BattleTactic, Faction } from '../../../core/config/Constants';
 import { services } from '../../../core/managers/ServiceLoader';
+import { EVENT_NAMES } from '../../../core/config/Constants';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
 import { advanceFormationZonesOf } from '../../shared/FormationZone';
@@ -47,7 +48,14 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
   // 自身爆發窗口在施放陣營自己的回合倒數（SYS-SKILL-ULT-0001）
   // 測試用的精簡 state 沒有爆發窗口時略過
   if (context.state.getSelfBurst) {
-    context.state.setSelfBurst(context.actingFaction, tickSelfBurst(context.state.getSelfBurst(context.actingFaction)).window);
+    const before = context.state.getSelfBurst(context.actingFaction);
+    const ticked = tickSelfBurst(before);
+    context.state.setSelfBurst(context.actingFaction, ticked.window);
+    if (ticked.phase === 'ended' && before) {
+      svc.event.emit(EVENT_NAMES.SelfBurstChanged, {
+        faction: context.actingFaction, phase: 'ended', ultimateId: before.ultimateId, turns: 0,
+      });
+    }
   }
   // 全隊魅力（大喬，PROG-2-1582 暫定）：換算為己方回合開始全隊士氣 +20
   applyTallyTeamMoraleAura(context.state.units.values(), context.actingFaction);

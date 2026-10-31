@@ -11,6 +11,7 @@
  */
 
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
+import { selfBurstNoticeText, type SelfBurstChangedEvent } from '../shared/SelfBurstWindow';
 import { formatAwakeningReveal } from './AwakeningReveal';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
@@ -184,6 +185,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.UnitDied,                this._onUnitDied.bind(this)),
       svc.event.on(EVENT_NAMES.GeneralDamaged,          this._onGeneralDamaged.bind(this)),
       svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._onGeneralSkillUsed.bind(this)),
+      svc.event.on(EVENT_NAMES.SelfBurstChanged,        this._onSelfBurstChanged.bind(this)),
       svc.event.on(EVENT_NAMES.TileBuffSpawned,         this._onTileBuffSpawned.bind(this)),
       svc.event.on(EVENT_NAMES.TileBuffConsumed,        this._onTileBuffConsumed.bind(this)),
       svc.event.on(EVENT_NAMES.BattleEnded,             this._onBattleEnded.bind(this)),
@@ -578,6 +580,12 @@ export class BattleUIBridge {
 
     const effectKey = resolveBattleGeneralSkillEffectKey(data.sourceType);
     playBattleFlowEffectAtBoardCenter(services().effect, this.ctx.boardRenderer, effectKey, 1.35);
+  }
+
+  /** 自身爆發開始／結束寫進戰報（SYS-SKILL-ULT-0001）；爆發 icon 待美術 */
+  private _onSelfBurstChanged(data: SelfBurstChangedEvent): void {
+    this.appendLog(selfBurstNoticeText(data, data.faction === Faction.Player));
+    this.refreshBattleViews();
   }
 
   private _onTileBuffSpawned(): void { this.refreshBattleViews(); }
