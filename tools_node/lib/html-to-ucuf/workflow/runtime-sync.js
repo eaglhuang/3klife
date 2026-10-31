@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const uiSpecSidecars = require('../../ui-spec-sidecars');
 const path = require('path');
 
 function readFinalTabRouting(paths, helpers) {
@@ -89,19 +90,19 @@ function syncFinalArtifactsToRuntime(args) {
   ];
   if (paths.zoneOwnership && fs.existsSync(paths.zoneOwnership)) {
     const destZone = path.join(runtime.screensDir, `${opts.screenId}.zone-ownership.json`);
-    const zoneCopied = helpers.copyJsonFile(paths.zoneOwnership, destZone);
+    const zoneCopied = helpers.copyJsonFile(paths.zoneOwnership, uiSpecSidecars.destinationFor(destZone));
     if (zoneCopied) copied.zoneOwnership = zoneCopied;
   }
   const bakeManifestSource = helpers.firstExistingPath([helpers.sidecarPath(paths.finalLayout, '.bake-manifest.json')]);
   if (bakeManifestSource) {
     const bakeDest = path.join(runtime.layoutsDir, `${opts.screenId}.layout.bake-manifest.json`);
-    const bakeCopied = helpers.copyJsonFile(bakeManifestSource, bakeDest);
+    const bakeCopied = helpers.copyJsonFile(bakeManifestSource, uiSpecSidecars.destinationFor(bakeDest));
     if (bakeCopied) copied.bakeManifest = bakeCopied;
   }
   copied.sidecars = [];
   for (const [suffix, fileName] of sidecars) {
     const sourcePath = helpers.firstExistingPath([helpers.sidecarPath(paths.finalLayout, suffix)]);
-    const copiedPath = helpers.copyJsonFile(sourcePath, path.join(runtime.screensDir, fileName));
+    const copiedPath = helpers.copyJsonFile(sourcePath, uiSpecSidecars.destinationFor(path.join(runtime.screensDir, fileName)));
     if (copiedPath) copied.sidecars.push(copiedPath);
   }
 
