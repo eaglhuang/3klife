@@ -33,6 +33,8 @@ export interface EnemyMassDebuffParams {
     targetCount?: number;
     /** 驅散正面狀態 */
     dispel?: boolean;
+    /** 每驅散 1 個增益，施放方全體得到最大 HP × 此比例的護盾 */
+    shieldPerDispelPct?: number;
 }
 
 export const ENEMY_MASS_DEBUFF_CAPS = {
@@ -41,6 +43,7 @@ export const ENEMY_MASS_DEBUFF_CAPS = {
     minAttackMultiplier: 0.5,
     maxDamageTakenMultiplier: 1.5,
     dotPct: 0.15,
+    dispelShieldPct: 0.3,
 } as const;
 
 /** 可被驅散的正面狀態（無敵不可驅散） */
@@ -63,8 +66,8 @@ export const ENEMY_MASS_DEBUFF_PARAMS: Readonly<Record<string, EnemyMassDebuffPa
     'ult-guo-jia-3': { ...BASE, statuses: [StatusEffect.Slow, StatusEffect.Weak, StatusEffect.Rooted], statusTurns: 2, rotateStatuses: true, targetCount: 3 },
     // 崩解：易傷 2 回合
     'ult-guo-jia-5': { ...BASE, durationTurns: 2, damageTakenMultiplier: 1.25 },
-    // 清除敵方全體增益（轉護盾待後續片）
-    'ult-sima-yi-4': { ...BASE, dispel: true },
+    // 清除敵方全體增益，每清 1 個轉化 5% 最大 HP 護盾給我方全體
+    'ult-sima-yi-4': { ...BASE, dispel: true, shieldPerDispelPct: 0.05 },
     // 火傷印記 2 回合
     'ult-zhou-yu-1': { ...BASE, durationTurns: 2, dotPct: 0.04 },
 };
@@ -135,6 +138,11 @@ export function tickEnemyMassDebuff(debuff: EnemyMassDebuff | null): { debuff: E
     const turnsLeft = debuff.turnsLeft - 1;
     if (turnsLeft <= 0) return { debuff: null, phase: 'ended' };
     return { debuff: { ...debuff, turnsLeft }, phase: 'active' };
+}
+
+/** 驅散轉護盾比例（受上限約束） */
+export function dispelShieldPct(params: EnemyMassDebuffParams, dispelledCount: number): number {
+    return Math.min(ENEMY_MASS_DEBUFF_CAPS.dispelShieldPct, (params.shieldPerDispelPct ?? 0) * Math.max(0, dispelledCount));
 }
 
 export function massDebuffDotDamage(debuff: EnemyMassDebuff | null, maxHp: number): number {

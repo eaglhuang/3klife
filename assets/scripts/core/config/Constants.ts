@@ -113,6 +113,8 @@ export const EVENT_NAMES = {
   TeamAuraChanged:   "team-aura-changed",
   /** 奧義團隊回復結算（SYS-SKILL-ULT-0003）：{ faction, ultimateId, outcomes } */
   TeamRecovered:     "team-recovered",
+  /** 奧義敵方全體減益開始／結束（SYS-SKILL-ULT-0004）：{ faction（被減益方）, phase, debuff } */
+  MassDebuffChanged: "mass-debuff-changed",
   TileBuffSpawned:   "tile-buff-spawned",
   TileBuffConsumed:  "tile-buff-consumed",
   // 武將單挑系統

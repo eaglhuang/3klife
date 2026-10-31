@@ -3,7 +3,7 @@
  *
  * 用真實 BattleSkillDispatcher：群體減益奧義施放後敵方陣營掛持續層、附加狀態、驅散增益。
  */
-import { Faction, StatusEffect, TroopType } from '../assets/scripts/core/config/Constants';
+import { EVENT_NAMES, Faction, StatusEffect, TroopType } from '../assets/scripts/core/config/Constants';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
@@ -63,11 +63,21 @@ export function createEnemyMassDebuffBattleWiringSuite(): TestSuite {
     });
 
     suite.test('司馬懿高平陵變：驅散敵方堅盾，不掛持續層', () => {
-        const { ctrl, dispatcher } = setup();
+        const { ctrl, mine, dispatcher } = setup();
         services().buff.applyBuff('e-0', StatusEffect.Fortified, 3);
         cast(dispatcher, 'ult-sima-yi-4');
         assert.isTrue(!services().buff.hasBuff('e-0', StatusEffect.Fortified));
         assert.equals(null, ctrl.state.getMassDebuff(Faction.Enemy));
+        // 驅散 1 個 → 我方護盾 5% 最大 HP
+        assert.equals(Math.floor(mine.getEffectiveMaxHp() * 0.05), mine.shield);
+    });
+
+    suite.test('掛上減益時發戰報事件', () => {
+        const { dispatcher } = setup();
+        const seen: string[] = [];
+        services().event.on(EVENT_NAMES.MassDebuffChanged, (d: { faction: string; phase: string }) => seen.push(`${d.faction}:${d.phase}`));
+        cast(dispatcher, 'ult-guo-jia-5');
+        assert.equals('enemy:started', seen.join(','));
     });
 
     return suite;

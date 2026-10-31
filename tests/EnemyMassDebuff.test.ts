@@ -6,6 +6,7 @@ import { TestSuite, assert } from './TestRunner';
 import {
     ENEMY_MASS_DEBUFF_PARAMS,
     dispelPick,
+    dispelShieldPct,
     enemyMassDebuffNoticeText,
     massDebuffAccuracyDelta,
     massDebuffDotDamage,
@@ -60,6 +61,13 @@ export function createEnemyMassDebuffSuite(): TestSuite {
     suite.test('驅散只清白名單正面狀態，不碰無敵與負面', () => {
         const out = dispelPick([StatusEffect.Invincible, StatusEffect.Weak, StatusEffect.Fortified, StatusEffect.Haste]);
         assert.equals('haste,fortified', out.join(','));
+    });
+
+    suite.test('驅散轉護盾：每個 5%，上限 30%', () => {
+        const p = ENEMY_MASS_DEBUFF_PARAMS['ult-sima-yi-4'];
+        assert.equals(0.1, dispelShieldPct(p, 2));
+        assert.equals(0.3, dispelShieldPct(p, 10));
+        assert.equals(0, dispelShieldPct(ENEMY_MASS_DEBUFF_PARAMS['ult-zhou-yu-1'], 3));
     });
 
     suite.test('戰報摘要', () => {

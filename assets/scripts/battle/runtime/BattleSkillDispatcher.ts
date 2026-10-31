@@ -32,7 +32,7 @@ import { selfBurstBlocksEffect, startSelfBurst } from '../shared/SelfBurstWindow
 import { startTeamAura, teamAuraResistsDebuff } from '../shared/TeamAura';
 import { resolveTeamRecover } from '../shared/TeamRecover';
 import { MORALE_DURATION_TURNS } from '../shared/Morale';
-import { dispelPick, enemyMassDebuffParamsOf, massDebuffStatusesFor, massDebuffTargets, startEnemyMassDebuff } from '../shared/EnemyMassDebuff';
+import { dispelPick, dispelShieldPct, enemyMassDebuffParamsOf, massDebuffStatusesFor, massDebuffTargets, startEnemyMassDebuff } from '../shared/EnemyMassDebuff';
 import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
 import { sceneFireDamageTakenOf } from '../shared/BattleTacticBehavior';
 import { COMBO_ULTIMATE_MULTIPLIER, findComboUltimate } from '../shared/ComboUltimate';
@@ -163,8 +163,14 @@ export class BattleSkillDispatcher {
       .filter((u) => u.faction === opponent)
       .map((u) => ({ id: u.id, unit: u, isDead: () => u.isDead(), effects: svc.buff.getBuffs(u.id).map((b) => b.effect) }));
     const targets = massDebuffTargets(foes, params, params.targetCount !== undefined ? svc.session.randomSource() : 0);
+    let dispelled = 0;
     targets.forEach((t, i) => {
-      if (params.dispel) for (const effect of dispelPick(t.effects)) svc.buff.removeBuff(t.id, effect);
+      if (params.dispel) {
+        for (const effect of dispelPick(t.effects)) {
+          svc.buff.removeBuff(t.id, effect);
+          dispelled++;
+        }
+      }
       for (const effect of massDebuffStatusesFor(params, i)) {
         // 與單體 debuff 同規則：爆發免控、全隊抗性先判
         if (selfBurstBlocksEffect(state.getSelfBurst(opponent), effect)) continue;
@@ -173,7 +179,20 @@ export class BattleSkillDispatcher {
         svc.event.emit(EVENT_NAMES.BuffApplied, { unitId: t.id, effect, turns: params.statusTurns });
       }
     });
-    state.setMassDebuff(opponent, startEnemyMassDebuff(state.getMassDebuff(opponent), ultimateId));
+    // 司馬懿高平陵變：驅散數轉為我方全體護盾，護盾不疊加取較大者
+    const shieldPct = dispelShieldPct(params, dispelled);
+    if (shieldPct > 0) {
+      for (const ally of Array.from(state.units.values())) {
+        if (ally.faction !== casterFaction || ally.isDead()) continue;
+        ally.shield = Math.max(ally.shield, Math.floor(ally.getEffectiveMaxHp() * shieldPct));
+      }
+    }
+    const before = state.getMassDebuff(opponent);
+    const after = startEnemyMassDebuff(before, ultimateId);
+    state.setMassDebuff(opponent, after);
+    if (after && after !== before) {
+      svc.event.emit(EVENT_NAMES.MassDebuffChanged, { faction: opponent, phase: 'started', debuff: after });
+    }
   }
 
   private applyTeamRecover(casterFaction: Faction, ultimateId: string): void {
