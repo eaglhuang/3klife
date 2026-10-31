@@ -10,7 +10,7 @@
  *
  * Unity 對照：Prefab Variant Builder + EditorWindow 動態生成 UI 的組合
  */
-import { _decorator, Component, Label, Node, Sprite, UITransform,
+import { _decorator, Button, Component, Label, Node, Sprite, UITransform,
          UIOpacity, Color, tween, Font, Widget, Layout } from 'cc';
 import { UISkinResolver, ResolvedButtonSkin } from './UISkinResolver';
 import { services } from '../../core/managers/ServiceLoader';
@@ -401,6 +401,27 @@ export class UIPreviewBuilder extends Component {
      * Unity 對照：Component.OnEnable() 虛函式鉤子模式。
      */
     protected _onLazySlotCreated(_spec: UILayoutNodeSpec, _node: Node, _w: number, _h: number): void { /* no-op */ }
+
+    /** Restyle a node built from `target` with the looks of a same-shaped `source` spec (e.g. tab active/inactive). */
+    protected async _restyleFromSpec(node: Node, target: UILayoutNodeSpec, source: UILayoutNodeSpec): Promise<void> {
+        if (source.type === 'label') {
+            const label = node.getComponent(Label);
+            const style = source.styleSlot ? this.skinResolver.getLabelStyle(source.styleSlot) : null;
+            if (label && style) this.styleBuilder.applyLabelStyle(label, style);
+        } else if (source.skinSlot) {
+            // Same fallback as buildButton: gradient skins are not button skins
+            const button = node.getComponent(Button);
+            const applied = button ? await this.styleBuilder.applyButtonSkin(node, source.skinSlot, button) : false;
+            if (!applied) await this.styleBuilder.applyBackgroundSkin(node, source.skinSlot);
+        }
+        const targetChildren = target.children ?? [];
+        const sourceChildren = source.children ?? [];
+        for (let i = 0; i < targetChildren.length && i < sourceChildren.length; i++) {
+            // Match children by name: style helpers may add extra nodes such as Background
+            const child = node.getChildByName(targetChildren[i].name ?? '');
+            if (child) await this._restyleFromSpec(child, targetChildren[i], sourceChildren[i]);
+        }
+    }
 
     private _dedupeTabSwitchNodes(rootNode: Node): void {
         const seenContracts = new Set<string>();

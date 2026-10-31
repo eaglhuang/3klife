@@ -70,6 +70,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
     private readonly _sidecarInteractionHooks: Array<{ node: Node; callback: () => void }> = [];
     private _interactionSmokeResults: PreviewInteractionSmokeResult[] = [];
     private _interactionActionsBound = 0;
+    private _layoutRoot: UILayoutNodeSpec | null = null;
 
     public get binder(): UITemplateBinder | null {
         return this._binder;
@@ -170,6 +171,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             this._specLoader.invalidateScreen(screenId);
 
             const { screen, layout, skin } = await this._specLoader.loadFullScreen(screenId);
+            this._layoutRoot = layout.root;
             const i18n = await this._specLoader.loadI18n(this.locale);
             const tokens = await this._specLoader.loadDesignTokensForScreen(screenId);
 
@@ -229,8 +231,55 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         for (const action of interaction.actions) {
             this._bindSidecarInteractionAction(action, routeMap);
         }
+        this._bindTabActiveStyles(interaction.actions, routeMap);
 
         UCUFLogger.info(LogCategory.UI, `[UIScreenPreviewHost] interaction sidecar bound ${this._interactionActionsBound}/${interaction.actions.length}`);
+    }
+
+    /**
+     * 分頁鈕的啟用外觀：轉換器只看得到開場狀態（一顆啟用、其餘未啟用）。
+     * 同一插槽的分頁鈕成一組，點擊時把開場啟用鈕的樣式套到被點的鈕，其餘套未啟用鈕的樣式。
+     * 只收語意直達的分頁（prev／next 這類相對切換不算分頁鈕）。
+     */
+    private _bindTabActiveStyles(actions: PreviewInteractionAction[], routeMap: Map<string, TabRoute>): void {
+        const groups = new Map<string, Array<{ node: Node; spec: UILayoutNodeSpec; fragment: string }>>();
+        for (const action of actions) {
+            if (action.type !== 'tabSwitch') continue;
+            const route = routeMap.get(this._normalizeRouteKey(action.target || action.smoke?.expectActiveTab || ''));
+            const node = action.trigger ? this._binder?.getButton(action.trigger)?.node : null;
+            const spec = action.trigger ? this._findLayoutSpec(action.trigger) : null;
+            if (!route || !node || !spec) continue;
+            const group = groups.get(route.slotId) ?? [];
+            group.push({ node, spec, fragment: route.fragment });
+            groups.set(route.slotId, group);
+        }
+
+        for (const [slotId, group] of groups) {
+            const current = this._lazySlots.get(slotId)?.currentFragmentId;
+            const activeTemplate = group.find(tab => tab.fragment === current);
+            const inactiveTemplate = group.find(tab => tab !== activeTemplate);
+            if (group.length < 2 || !activeTemplate || !inactiveTemplate) continue;
+            for (const clicked of group) {
+                const callback = () => {
+                    for (const tab of group) {
+                        const source = tab === clicked ? activeTemplate.spec : inactiveTemplate.spec;
+                        void this._restyleFromSpec(tab.node, tab.spec, source);
+                    }
+                };
+                clicked.node.on(Node.EventType.TOUCH_END, callback, this);
+                this._sidecarInteractionHooks.push({ node: clicked.node, callback });
+            }
+        }
+    }
+
+    private _findLayoutSpec(name: string): UILayoutNodeSpec | null {
+        const stack = this._layoutRoot ? [this._layoutRoot] : [];
+        while (stack.length > 0) {
+            const spec = stack.pop()!;
+            if (spec.name === name) return spec;
+            stack.push(...(spec.children ?? []));
+        }
+        return null;
     }
 
     private _buildTabRouteMap(screen: UIScreenSpec, tabSidecar: PreviewTabRoutingSidecar | null): Map<string, TabRoute> {
