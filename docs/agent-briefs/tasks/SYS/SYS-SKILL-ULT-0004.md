@@ -6,7 +6,9 @@ phase: M1-E
 created: 2026-04-15
 created_by_agent: GitHubCopilot
 owner: Agent1
-status: open
+status: in-progress
+started_at: 2026-10-31T12:00:00+08:00
+started_by_agent: ClaudeCode_opus-5-5
 type: ultimate-family
 related_cards:
   - SYS-SKILL-CORE-0001
@@ -23,7 +25,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/奧義系統.md (doc_spec_0030)
   - docs/主戰場UI規格書.md (doc_ui_0001)
-notes: "覆蓋諸葛亮4、周瑜1、張飛4、郭嘉3/5、曹植5、貂蟬3/5。"
+notes: "覆蓋諸葛亮4、周瑜1、張飛4、郭嘉3/5、曹植5、貂蟬3/5（資料實際為貂蟬3/5、張飛4、郭嘉3/5、司馬懿4、周瑜1；諸葛亮4、曹植5 不屬此家族）。第 1 片：純邏輯 EnemyMassDebuff.ts（目標列舉排除死亡/無敵且與順序無關、郭嘉3 輪流減益、刷新取較強值+上限、倒數、驅散白名單、戰報摘要）。魅惑/沉默暫以暈眩近似；待接線：dispatcher 套用、CombatResolver 倍率、回合 DOT、司馬懿轉護盾、HUD。"
 ---
 
 # [SYS-SKILL-ULT-0004] 奧義敵方全體減益家族
