@@ -66,5 +66,19 @@ export function createSelfBurstBattleWiringSuite(): TestSuite {
         assert.isTrue(services().buff.hasBuff(mine.id, StatusEffect.Stun));
     });
 
+    suite.test('趙雲爆發再行動：窗口內首次出手追加一次攻擊，第二次不再連鎖', () => {
+        const { ctrl, mine, dispatcher } = setup();
+        ctrl.state.addUnit(troop('e-near', Faction.Enemy, 0, 2));
+        dispatcher.dispatchDirectBattleSkill('zhao-yun-pierce', SkillSourceType.Ultimate, Faction.Player, { ultimateId: 'ult-zhao-yun-1' });
+        const resolver = (ctrl as unknown as { combatResolver: { resolveActionResetAfterAttack(a: TroopUnit, k: boolean, acts: unknown[]): void } }).combatResolver;
+        const first: unknown[] = [];
+        resolver.resolveActionResetAfterAttack(mine, false, first);
+        assert.equals(1, first.length);
+        assert.equals(0, ctrl.state.getSelfBurst(Faction.Player)?.extraActionsLeft);
+        const second: unknown[] = [];
+        resolver.resolveActionResetAfterAttack(mine, false, second);
+        assert.equals(0, second.length);
+    });
+
     return suite;
 }
