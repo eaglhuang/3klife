@@ -2053,9 +2053,17 @@ function ensureTabButtonSkinSlot(ctx, slotId, attrs, style, sizeHint) {
 function attachBoxShapeMetadata(ctx, slot, style, slotId) {
   const radius = resolveUniformCornerRadius(style);
   if (radius > 0) slot.cornerRadius = radius;
+  const radii = resolveCornerRadii(style);
+  if (radii) slot.cornerRadii = radii;
 
-  const borderWidth = resolveUniformBorderWidth(style);
-  if (borderWidth <= 0) return;
+  let borderWidth = resolveUniformBorderWidth(style);
+  if (borderWidth <= 0) {
+    // 各邊不同（如底邊 none）：記下每邊寬度，引擎端分邊畫框
+    const sides = resolveBorderSides(style);
+    if (!sides) return;
+    slot.borderSides = sides;
+    borderWidth = Math.max(sides.top, sides.right, sides.bottom, sides.left);
+  }
 
   slot.borderWidth = borderWidth;
   const borderColor = resolveUniformBorderColor(ctx, style, slotId);
@@ -2064,6 +2072,16 @@ function attachBoxShapeMetadata(ctx, slot, style, slotId) {
   } else {
     ctx.warnings.push({ code: 'unmapped-border-color', slotId, detail: style && (style.borderColor || style.border) });
   }
+}
+
+function resolveBorderSides(style) {
+  if (!style) return null;
+  const side = (name) => {
+    if (/^(none|hidden)$/i.test(String(style[`border${name}Style`] || '').trim())) return 0;
+    return parseBorderWidthValue(style[`border${name}Width`]);
+  };
+  const sides = { top: side('Top'), right: side('Right'), bottom: side('Bottom'), left: side('Left') };
+  return (sides.top || sides.right || sides.bottom || sides.left) ? sides : null;
 }
 
 function hasRenderableBorder(style) {
@@ -2349,6 +2367,25 @@ function expandWidgetForEffect(widget, padding) {
   if (typeof out.hCenter === 'number') out.hCenter = out.hCenter + (padding.right - padding.left) * 0.5;
   if (typeof out.vCenter === 'number') out.vCenter = out.vCenter + (padding.top - padding.bottom) * 0.5;
   return out;
+}
+
+// 四角不同時回 [左上, 右上, 右下, 左下]；四角相同回 null（用 cornerRadius 即可）
+function resolveCornerRadii(style) {
+  if (!style) return null;
+  let values = [
+    style.borderTopLeftRadius,
+    style.borderTopRightRadius,
+    style.borderBottomRightRadius,
+    style.borderBottomLeftRadius,
+  ].map(value => resolveRadiusValue(value, style));
+  if (values.some(value => value == null)) {
+    const raw = String(style.borderRadius || '').split('/')[0].trim();
+    const parts = raw ? raw.split(/\s+/).map(item => resolveRadiusValue(item, style)) : [];
+    if (parts.length === 0 || parts.some(item => item == null)) return null;
+    const [a, b = a, c = a, d = b] = parts;
+    values = [a, b, c, d];
+  }
+  return values.every(value => value === values[0]) ? null : values;
 }
 
 function resolveUniformCornerRadius(style) {
