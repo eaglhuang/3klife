@@ -19,6 +19,7 @@ const {
   isBoldWeight,
   applyTextTransformGeneral,
 } = require('./draft-builder/typography');
+const ENGINE = require('./engine-profiles').active;
 const { draftBuilderStageRules: DRAFT_BUILDER_STAGE_RULES } = require('../html-to-ucuf/rule-registry.json');
 
 const ANCHOR_MAP = {
@@ -2698,7 +2699,7 @@ function ensureLabelStyle(ctx, slotId, style, attrs, text = '') {
     // §37.2 鐵律 1：黑色輪廓 + 寬度 2，沒明確指定就自動填
     outlineColor: 'colorOutlineDark',
     outlineWidth: 2,
-    horizontalAlign: (style.textAlign || 'LEFT').toUpperCase(),
+    horizontalAlign: ENGINE.textAlign(style.textAlign),
   };
   const overflow = inferLabelOverflow(style, text);
   if (overflow) slot.overflow = overflow;
