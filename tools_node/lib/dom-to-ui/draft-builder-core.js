@@ -352,8 +352,7 @@ function processElement(el, ctx, depth) {
       : pickDim(style.height, attrs.height);
     if (width != null) node.width = width;
     if (height != null) node.height = height;
-    const layoutSpec = inferLayout(style, ctx, name, el);
-    if (layoutSpec) node.layout = layoutSpec;
+    // 延後掛載的宿主沒有自己的子節點：排版與內距已複製到片段根節點，宿主再套一次會讓內容位移兩倍內距
     collectBehavior(el, node, style, ctx);
     if (nodeType === 'panel' && hasMeaningfulBackground(style)) {
       const skinLayers = emitSkinLayers(ctx, name, style, attrs);
