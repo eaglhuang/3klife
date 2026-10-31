@@ -13,6 +13,7 @@
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
 import { selfBurstNoticeText, type SelfBurstChangedEvent } from '../shared/SelfBurstWindow';
 import { teamAuraNoticeText, type TeamAuraChangedEvent } from '../shared/TeamAura';
+import { teamRecoverNoticeText, type TeamRecoveredEvent } from '../shared/TeamRecover';
 import { formatAwakeningReveal } from './AwakeningReveal';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
@@ -188,6 +189,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._onGeneralSkillUsed.bind(this)),
       svc.event.on(EVENT_NAMES.SelfBurstChanged,        this._onSelfBurstChanged.bind(this)),
       svc.event.on(EVENT_NAMES.TeamAuraChanged,         this._onTeamAuraChanged.bind(this)),
+      svc.event.on(EVENT_NAMES.TeamRecovered,           this._onTeamRecovered.bind(this)),
       svc.event.on(EVENT_NAMES.TileBuffSpawned,         this._onTileBuffSpawned.bind(this)),
       svc.event.on(EVENT_NAMES.TileBuffConsumed,        this._onTileBuffConsumed.bind(this)),
       svc.event.on(EVENT_NAMES.BattleEnded,             this._onBattleEnded.bind(this)),
@@ -585,6 +587,13 @@ export class BattleUIBridge {
   }
 
   /** 自身爆發開始／結束寫進戰報（SYS-SKILL-ULT-0001）；爆發 icon 待美術 */
+  /** 團隊回復結算寫進戰報並刷新血條與狀態 icon（SYS-SKILL-ULT-0003） */
+  private _onTeamRecovered(data: TeamRecoveredEvent): void {
+    const text = teamRecoverNoticeText(data, data.faction === Faction.Player);
+    if (text) this.appendLog(text);
+    this.refreshBattleViews();
+  }
+
   /** 全隊增益開始／結束寫進戰報（SYS-SKILL-ULT-0002） */
   private _onTeamAuraChanged(data: TeamAuraChangedEvent): void {
     this.appendLog(teamAuraNoticeText(data, data.faction === Faction.Player));

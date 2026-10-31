@@ -60,6 +60,28 @@ export interface RecoverOutcome {
     cleansed: StatusEffect[];
 }
 
+export interface TeamRecoveredEvent {
+    faction: string;
+    ultimateId: string;
+    outcomes: readonly RecoverOutcome[];
+}
+
+/** 戰報文字：寫出實際受惠的單位數與總量，不讓玩家誤讀成全隊滿血；沒有任何效果時回空字串 */
+export function teamRecoverNoticeText(event: TeamRecoveredEvent, isPlayer: boolean): string {
+    const side = isPlayer ? '我軍' : '敵軍';
+    const healed = event.outcomes.filter((o) => o.healed > 0);
+    const cleansed = event.outcomes.reduce((n, o) => n + o.cleansed.length, 0);
+    const morale = event.outcomes.filter((o) => o.moraleGained > 0).length;
+    const shielded = event.outcomes.filter((o) => o.shield > 0).length;
+    const parts = [
+        healed.length ? `${healed.length} 支部隊回復 ${healed.reduce((n, o) => n + o.healed, 0)} HP` : '',
+        cleansed ? `解除 ${cleansed} 個負面狀態` : '',
+        morale ? `${morale} 支部隊士氣提升` : '',
+        shielded ? `${shielded} 支部隊獲得護盾` : '',
+    ].filter(Boolean);
+    return parts.length ? `${side}團隊回復：${parts.join('、')}` : '';
+}
+
 /** 瀕死優先的處理順序：血量比例低者先，同比例依 id */
 export function recoverOrder<T extends RecoverTarget>(targets: readonly T[]): T[] {
     const ratio = (t: RecoverTarget) => (t.maxHp > 0 ? t.currentHp / t.maxHp : 1);
