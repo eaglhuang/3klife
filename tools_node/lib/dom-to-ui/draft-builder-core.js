@@ -777,24 +777,26 @@ function inferTabSemanticHints(el, tag, attrs, cls, style, ctx) {
   return hints;
 }
 
+// 分頁鍵文字 → 分頁 key；轉換與分頁重播共用同一份對照（PROG-2-1645）
+const TAB_TEXT_HINTS = [
+  ['將', 'overview'],
+  ['GEN', 'overview'],
+  ['屬', 'stats'],
+  ['STAT', 'stats'],
+  ['技', 'tactics'],
+  ['TACT', 'tactics'],
+  ['命', 'bloodline'],
+  ['FATE', 'bloodline'],
+  ['寶', 'equip'],
+  ['GEAR', 'equip'],
+  ['適', 'aptitude'],
+  ['APT', 'aptitude'],
+];
+
 function inferTabIdFromElement(el, attrs) {
   const raw = String(collectText(el) || '').replace(/\s+/g, '').toUpperCase();
   if (!raw) return null;
-  const map = [
-    ['將', 'overview'],
-    ['GEN', 'overview'],
-    ['屬', 'stats'],
-    ['STAT', 'stats'],
-    ['技', 'tactics'],
-    ['TACT', 'tactics'],
-    ['命', 'bloodline'],
-    ['FATE', 'bloodline'],
-    ['寶', 'equip'],
-    ['GEAR', 'equip'],
-    ['適', 'aptitude'],
-    ['APT', 'aptitude'],
-  ];
-  for (const [hint, tabId] of map) {
+  for (const [hint, tabId] of TAB_TEXT_HINTS) {
     if (raw.includes(hint)) return tabId;
   }
   const dataTab = attrs && typeof attrs['data-tab'] === 'string' ? attrs['data-tab'].trim().toLowerCase() : '';
@@ -3077,6 +3079,7 @@ module.exports = {
   buildDraftFromHtml,
   collectBehavior,
   inferTabSemanticHints,
+  TAB_TEXT_HINTS,
   parseFragmentList,
   // exported for unit tests
   inferNodeType,

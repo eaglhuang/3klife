@@ -9,6 +9,7 @@ const {
   toFileUrl,
   waitForPageSettle,
 } = require('./render-html-snapshot');
+const { TAB_TEXT_HINTS } = require('./lib/dom-to-ui/draft-builder-core');
 
 function parseArgs(argv) {
   const opts = {
@@ -237,7 +238,7 @@ async function main() {
 
     for (let index = 0; index < tabs.length; index += 1) {
       const tab = tabs[index];
-      const result = await page.evaluate(async ({ tabKey, tabId, index, tabSelector, contentSelector, rootNamePrefix, allowLegacyContentFallback }) => {
+      const result = await page.evaluate(async ({ tabKey, tabId, index, tabSelector, contentSelector, rootNamePrefix, allowLegacyContentFallback, tabTextHints }) => {
         const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
         const normalize = value => String(value || '').trim().toLowerCase();
         const queryAll = selector => {
@@ -262,6 +263,46 @@ async function main() {
               && (!rect || (rect.width > 0 && rect.height > 0));
           });
           return visible || candidates[0] || null;
+        };
+        // 依分頁鍵文字推回分頁 key（原稿沒有 data-tab / aria-controls 時使用）
+        const textTabKey = button => {
+          const raw = String(button && button.textContent || '').replace(/\s+/g, '').toUpperCase();
+          if (!raw) return null;
+          const hit = tabTextHints.find(([hint]) => raw.includes(hint));
+          return hit ? hit[1] : null;
+        };
+        // 原稿沒有標記內容區時：切到另一個分頁，比對前後文字有變的元素，取其最近共同祖先當內容區
+        const inferHostByTabDiff = async (button, allButtons) => {
+          const other = allButtons.find(candidate => candidate !== button && textTabKey(candidate) && textTabKey(candidate) !== textTabKey(button));
+          if (!button || !other) return null;
+          const snapshot = () => {
+            const map = new Map();
+            for (const element of document.body.querySelectorAll('*')) {
+              if (element.children.length === 0) map.set(element, element.textContent || '');
+            }
+            return map;
+          };
+          const before = snapshot();
+          other.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+          await wait(350);
+          const after = snapshot();
+          // React 等框架切分頁會整批換節點：在另一分頁的狀態下取變動葉節點的共同祖先鏈
+          const changed = [];
+          for (const [element, text] of after) {
+            if (!before.has(element) || before.get(element) !== text) changed.push(element);
+          }
+          const inButtons = element => allButtons.some(candidate => candidate.contains(element));
+          const leaves = changed.filter(element => element.isConnected && !inButtons(element));
+          let lca = leaves.length > 0 ? leaves[0].parentElement : null;
+          while (lca && !leaves.every(element => lca.contains(element))) lca = lca.parentElement;
+          const chain = [];
+          for (let node = lca; node && node !== document.body; node = node.parentElement) chain.push(node);
+          button.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+          await wait(350);
+          // 切回目標分頁後，沿祖先鏈取第一個仍存在的容器
+          const host = chain.find(node => node.isConnected) || null;
+          if (!host || host === document.documentElement) return null;
+          return host;
         };
         const resolveContentHost = (button, preferredSelector, key, id, allowLegacy) => {
           const preferred = queryAll(preferredSelector).find(Boolean);
@@ -308,7 +349,7 @@ async function main() {
             button.id,
           ].map(normalize);
           return dataValues.includes(tabKey) || dataValues.includes(tabId.toLowerCase());
-        }) || buttons[index] || null;
+        }) || buttons.find(button => textTabKey(button) === tabKey) || buttons[index] || null;
 
         if (target) {
           target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
@@ -317,7 +358,11 @@ async function main() {
         if (document.fonts && document.fonts.ready) await document.fonts.ready;
         await wait(150);
 
-        const resolvedHost = resolveContentHost(target, contentSelector, tabKey, tabId, allowLegacyContentFallback);
+        let resolvedHost = resolveContentHost(target, contentSelector, tabKey, tabId, allowLegacyContentFallback);
+        if (!resolvedHost.element) {
+          const inferred = await inferHostByTabDiff(target, buttons);
+          if (inferred) resolvedHost = { element: inferred, source: 'inferred-tab-diff', legacy: false };
+        }
         const source = resolvedHost && resolvedHost.element;
         if (!source) {
           return {
@@ -385,6 +430,7 @@ async function main() {
         contentSelector: opts.contentSelector,
         rootNamePrefix: opts.rootNamePrefix || toPascal(opts.screenId),
         allowLegacyContentFallback: opts.allowLegacyContentFallback,
+        tabTextHints: TAB_TEXT_HINTS,
       });
 
       const fragmentPath = path.join(outputDir, `${opts.screenId}.${tab.key}.right-content.html`);
