@@ -6,7 +6,9 @@ phase: M1-E
 created: 2026-04-15
 created_by_agent: GitHubCopilot
 owner: Agent1
-status: open
+status: in-progress
+started_at: 2026-10-31T12:00:00+08:00
+started_by_agent: ClaudeCode_opus-5-5
 type: ultimate-family
 related_cards:
   - SYS-SKILL-CORE-0001
@@ -23,7 +25,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/奧義系統.md (doc_spec_0030)
   - docs/主戰場UI規格書.md (doc_ui_0001)
-notes: "覆蓋趙雲4、曹操1、關羽4、劉備2/5、孫權2/4、周瑜4、司馬懿5、郭嘉2、曹植3。"
+notes: "2026-10-31 | 狀態: 進行中 | 驗證: TeamAura 5 測試過 | 變更: 第 1 片純邏輯 TeamAura——8 個 team-buff 奧義參數表、同家族逐欄取高不疊加且有上限、存活單位目標選取、減傷→護盾→HP 結算順序、陣營為鍵使中途加入單位自動吃到加成 | 阻塞: 尚未接戰場與 HUD；條件型（曹操對酒當歌、郭嘉十勝定論、孫權坐斷東南）與首輪必暴擊、嘲諷待後續片；原 notes 覆蓋名單含孫權4，但其資料 family 為 team-heal"
 ---
 
 # [SYS-SKILL-ULT-0002] 奧義全隊增益家族
