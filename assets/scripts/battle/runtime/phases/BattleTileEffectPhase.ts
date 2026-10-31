@@ -60,7 +60,14 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
   }
   // 全隊增益 aura 同樣在施放陣營自己的回合倒數（SYS-SKILL-ULT-0002）
   if (context.state.getTeamAura) {
-    context.state.setTeamAura(context.actingFaction, tickTeamAura(context.state.getTeamAura(context.actingFaction)).aura);
+    const auraBefore = context.state.getTeamAura(context.actingFaction);
+    const auraTicked = tickTeamAura(auraBefore);
+    context.state.setTeamAura(context.actingFaction, auraTicked.aura);
+    if (auraTicked.phase === 'ended' && auraBefore) {
+      svc.event.emit(EVENT_NAMES.TeamAuraChanged, {
+        faction: context.actingFaction, phase: 'ended', ultimateId: auraBefore.ultimateId, turns: 0,
+      });
+    }
   }
   // 全隊魅力（大喬，PROG-2-1582 暫定）：換算為己方回合開始全隊士氣 +20
   applyTallyTeamMoraleAura(context.state.units.values(), context.actingFaction);

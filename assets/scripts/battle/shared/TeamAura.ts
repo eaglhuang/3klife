@@ -47,6 +47,28 @@ export interface TeamAura extends TeamAuraParams {
     remainingTurns: number;
 }
 
+export interface TeamAuraChangedEvent {
+    faction: string;
+    phase: 'started' | 'ended';
+    ultimateId: string;
+    turns: number;
+}
+
+/** 戰報文字：開始寫全隊效果與回合，結束寫回退提示（Battle / UI 共用同一份 aura 結果） */
+export function teamAuraNoticeText(event: TeamAuraChangedEvent, isPlayer: boolean): string {
+    const side = isPlayer ? '我軍' : '敵軍';
+    if (event.phase === 'ended') return `${side}全隊增益結束`;
+    const p = teamAuraParamsOf(event.ultimateId);
+    const pct = (v: number) => `${Math.round(v * 100)}%`;
+    const parts = p ? [
+        p.attackMultiplier > 1 ? `攻擊 +${pct(p.attackMultiplier - 1)}` : '',
+        p.defenseMultiplier > 1 ? `防禦 +${pct(p.defenseMultiplier - 1)}` : '',
+        p.damageReduction > 0 ? `減傷 ${pct(p.damageReduction)}` : '',
+        p.controlImmune ? '免控' : '',
+    ].filter(Boolean) : [];
+    return `${side}全隊增益：${parts.join('、') || '能力提升'}（${event.turns} 回合）`;
+}
+
 export function teamAuraParamsOf(ultimateId: string | null | undefined): TeamAuraParams | null {
     return ultimateId ? TEAM_AURA_PARAMS[ultimateId] ?? null : null;
 }

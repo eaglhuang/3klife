@@ -11,6 +11,7 @@ import {
     startTeamAura,
     teamAuraAttackMultiplier,
     teamAuraDefenseMultiplier,
+    teamAuraNoticeText,
     teamAuraShieldFor,
     teamAuraTargets,
     tickTeamAura,
@@ -63,6 +64,15 @@ export function createTeamAuraSuite(): TestSuite {
         for (const id of Object.keys(TEAM_AURA_PARAMS)) {
             assert.equals('team-buff', list.find((u) => u.id === id)?.family, id);
         }
+    });
+
+    suite.test('戰報提示：開始寫全隊效果與回合，結束寫回退', () => {
+        assert.equals('我軍全隊增益：攻擊 +30%（3 回合）',
+            teamAuraNoticeText({ faction: 'player', phase: 'started', ultimateId: 'ult-cao-cao-1', turns: 3 }, true));
+        assert.equals('敵軍全隊增益：攻擊 +100%、免控（2 回合）',
+            teamAuraNoticeText({ faction: 'enemy', phase: 'started', ultimateId: 'ult-guan-yu-4', turns: 2 }, false));
+        assert.equals('我軍全隊增益結束',
+            teamAuraNoticeText({ faction: 'player', phase: 'ended', ultimateId: 'ult-cao-cao-1', turns: 0 }, true));
     });
 
     return suite;
