@@ -15,7 +15,7 @@ import { weatherRangedHitDelta, weatherRangedRangeDelta } from '../../core/syste
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
-import { applyTeamAuraToDamage, teamAuraAttackMultiplier, teamAuraDefenseMultiplier } from '../shared/TeamAura';
+import { TEAM_AURA_DEBUFF_EFFECTS, applyTeamAuraToDamage, teamAuraAttackMultiplier, teamAuraDefenseMultiplier, teamAuraVsDebuffedMultiplier } from '../shared/TeamAura';
 import { consumeSelfBurstExtraAction, selfBurstAttackMultiplier, selfBurstBlocksEffect, selfBurstCritBonus } from '../shared/SelfBurstWindow';
 import {
   extraAttackHitsOf,
@@ -325,6 +325,9 @@ export class BattleCombatResolver {
     if (rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);
     }
+    // 全隊增益條件型增傷（郭嘉十勝定論，SYS-SKILL-ULT-0002）：目標身上有負面狀態才生效
+    const defenderDebuffed = TEAM_AURA_DEBUFF_EFFECTS.some((effect) => svc.buff.hasBuff(defender.id, effect));
+    damage = Math.floor(damage * teamAuraVsDebuffedMultiplier(this.context.state.getTeamAura(attacker.faction), defenderDebuffed));
     // 全隊增益減傷（SYS-SKILL-ULT-0002）：護盾尚未接，先只套減傷
     damage = Math.max(1, applyTeamAuraToDamage(this.context.state.getTeamAura(defender.faction), damage, 0).hpDamage);
 
