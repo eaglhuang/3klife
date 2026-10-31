@@ -216,6 +216,8 @@ export class GradientBackground extends Component {
         const texture = new Texture2D();
         texture.reset({ width: textureWidth, height: textureHeight, format: Texture2D.PixelFormat.RGBA8888 });
         texture.uploadData(data);
+        // 1:1 邊緣貼圖已自行反鋸齒；線性過濾會在未預乘的邊框與半透明填色之間內插出灰白色
+        if (hasEdge) texture.setFilters(Texture2D.Filter.NEAREST, Texture2D.Filter.NEAREST);
         (texture as any).loaded = true;
 
         const frame = new SpriteFrame();
@@ -336,12 +338,16 @@ export class GradientBackground extends Component {
     private _mixColor(outer: Color, inner: Color, innerWeight: number): Color {
         if (innerWeight >= 1) return inner;
         if (innerWeight <= 0) return outer;
-        const k = 1 - innerWeight;
+        // 依透明度加權混色：近乎透明的填色不能把邊框的 RGB 拉向自己
+        const wo = outer.a * (1 - innerWeight);
+        const wi = inner.a * innerWeight;
+        const a = wo + wi;
+        if (a <= 0) return new Color(0, 0, 0, 0);
         return new Color(
-            Math.round(outer.r * k + inner.r * innerWeight),
-            Math.round(outer.g * k + inner.g * innerWeight),
-            Math.round(outer.b * k + inner.b * innerWeight),
-            Math.round(outer.a * k + inner.a * innerWeight),
+            Math.round((outer.r * wo + inner.r * wi) / a),
+            Math.round((outer.g * wo + inner.g * wi) / a),
+            Math.round((outer.b * wo + inner.b * wi) / a),
+            Math.round(a),
         );
     }
 

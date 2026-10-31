@@ -187,8 +187,9 @@ export class UIPreviewStyleBuilder {
             const cornerRadii = (slot as any).cornerRadii;
             const borderSides = (slot as any).borderSides;
 
-            // 四角或各邊不同：RoundedRectBackground 只能畫均一形狀，改用 GradientBackground 單色填滿
-            if (Array.isArray(cornerRadii) || borderSides) {
+            // 有圓角或邊框一律改用 GradientBackground 單色填滿：它以覆蓋率反鋸齒並支援四角／各邊不同；
+            // RoundedRectBackground 的 Graphics 描線在 1px 時落在像素中間，邊框被抹淡
+            if (usesRoundedRect || Array.isArray(cornerRadii) || borderSides) {
                 const sprite = node.getComponent(Sprite);
                 if (sprite) sprite.enabled = true;
                 const solid = node.getComponent(SolidBackground);
