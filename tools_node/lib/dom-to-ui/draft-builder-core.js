@@ -1224,7 +1224,8 @@ function inferCompositeGeometrySummary(tag, el, attrs) {
 }
 
 function extractSvgRadarChartMeta(el, attrs) {
-  const viewBox = parseSvgViewBox(attrs && attrs.viewBox);
+  // HTML 解析器會把屬性名轉小寫（viewbox）
+  const viewBox = parseSvgViewBox(attrs && (attrs.viewBox || attrs.viewbox));
   const fallbackWidth = parseSvgNumber(attrs && attrs.width) || 0;
   const fallbackHeight = parseSvgNumber(attrs && attrs.height) || fallbackWidth || 0;
   const resolvedViewBox = viewBox || { x: 0, y: 0, width: fallbackWidth, height: fallbackHeight };

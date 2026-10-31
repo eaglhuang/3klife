@@ -1,6 +1,8 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { _decorator, Node } from 'cc';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
+import type { ICompositeRenderer } from '../core/interfaces/ICompositeRenderer';
+import { CocosCompositeRenderer } from '../platform/cocos/CocosCompositeRenderer';
 import { services } from '../../core/managers/ServiceLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { applyUIScreenRuntimeState } from '../core/UIScreenRuntimeStateRegistry';
@@ -145,6 +147,12 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
         UCUFLogger.debug(LogCategory.UI, `[UIScreenPreviewHost-DIAG] installTabSwitchHook 完成：boundCount=${boundCount}/${Object.keys(buttonFragmentMap).length}`);
         return boundCount;
+    }
+
+    private _svgRenderer: ICompositeRenderer | undefined;
+
+    protected override _getSvgCompositeRenderer(): ICompositeRenderer {
+        return this._svgRenderer ??= new CocosCompositeRenderer();
     }
 
     public async showScreen(screenId: string): Promise<void> {

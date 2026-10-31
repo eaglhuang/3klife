@@ -157,7 +157,7 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
             const outlineColor = cssToColor(layer.color ?? (layerIndex === 0 ? '#4488FF' : '#FFAA22'));
             outlineColor.a = 230;
             gfx.strokeColor = outlineColor;
-            gfx.lineWidth = outlineWidth;
+            gfx.lineWidth = this._sourceStrokePx(outlineWidth, sourceSvg, size);
             gfx.moveTo(firstX, firstY);
             for (let i = 1; i < axisCount; i += 1) {
                 const [x, y] = this._radarValuePoint(i, layer.values[i] * size, axisCount, sourceVectors);
@@ -342,7 +342,7 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
     ): void {
         for (const polygon of sourceSvg.gridPolygons ?? []) {
             if (!polygon.points || polygon.points.length < 3) continue;
-            gfx.lineWidth = polygon.strokeWidth ?? fallbackGridLineWidth;
+            gfx.lineWidth = this._sourceStrokePx(polygon.strokeWidth ?? fallbackGridLineWidth, sourceSvg, size);
             gfx.strokeColor = polygon.stroke ? cssToColor(polygon.stroke) : fallbackGridColor;
             const [firstX, firstY] = this._mapSourcePoint(polygon.points[0], sourceSvg, size);
             gfx.moveTo(firstX, firstY);
@@ -355,7 +355,7 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
         }
 
         for (const line of sourceSvg.axisLines ?? []) {
-            gfx.lineWidth = line.strokeWidth ?? fallbackAxisLineWidth;
+            gfx.lineWidth = this._sourceStrokePx(line.strokeWidth ?? fallbackAxisLineWidth, sourceSvg, size);
             gfx.strokeColor = line.stroke ? cssToColor(line.stroke) : fallbackGridColor;
             const [x1, y1] = this._mapSourcePoint({ x: line.x1, y: line.y1 }, sourceSvg, size);
             const [x2, y2] = this._mapSourcePoint({ x: line.x2, y: line.y2 }, sourceSvg, size);
@@ -429,6 +429,16 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
             }
         }
         return radius;
+    }
+
+    /**
+     * SVG 線寬換算成畫布像素：依原稿縮放比例放大；Graphics 不像瀏覽器會把次像素線以覆蓋率畫出，
+     * 故最少 1px，避免 0.7 這類格線消失。
+     */
+    private _sourceStrokePx(width: number, sourceSvg: RadarSourceSvgGeometry | null, targetRadius: number): number {
+        const sourceRadius = sourceSvg ? this._resolveSourceOuterRadius(sourceSvg) : 0;
+        const scale = sourceRadius > 0 ? targetRadius / sourceRadius : 1;
+        return Math.max(1, width * scale);
     }
 
     private _mapSourcePoint(point: RadarPoint, sourceSvg: RadarSourceSvgGeometry | null, targetRadius: number): [number, number] {
