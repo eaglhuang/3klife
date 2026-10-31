@@ -457,8 +457,9 @@ function processElement(el, ctx, depth) {
   const beforePseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'before', hasElementChildren);
   for (const child of el.children) {
     // 混合內容：容器內直接寫的文字（旁邊另有子元素）包成匿名文字節點，否則會被丟掉（PROG-2-1647）
-    const source = child.type === 'text' && hasElementChildren && String(child.value || '').trim()
-      ? wrapLooseTextNode(child, attrs)
+    // 按鈕只有文字（如 ‹ ›）時同理，按鈕本身不帶字（PROG-2-1649）
+    const source = child.type === 'text' && (hasElementChildren || nodeType === 'button') && String(child.value || '').trim()
+      ? wrapLooseTextNode(child, style, nodeType === 'button')
       : child;
     if (source.type !== 'element') continue;
     const sub = processElement(source, ctx, depth + 1);
@@ -466,6 +467,8 @@ function processElement(el, ctx, depth) {
     if (source !== child && sub && sub.type === 'label' && sub.width == null && typeof node.width === 'number') {
       const layout = node.layout || {};
       sub.width = Math.max(1, node.width - (layout.paddingLeft || 0) - (layout.paddingRight || 0));
+      // 按鈕文字在瀏覽器預設上下置中：撐滿按鈕高度
+      if (nodeType === 'button' && sub.height == null && typeof node.height === 'number') sub.height = node.height;
     }
     appendNodeWithGeneratedSiblings(childNodes, sub);
   }
@@ -1848,14 +1851,15 @@ const LOOSE_TEXT_INHERITED_PROPS = [
   'line-height', 'letter-spacing', 'text-align', 'text-transform', 'white-space',
 ];
 
-function wrapLooseTextNode(textNode, parentAttrs) {
-  const declarations = String((parentAttrs && parentAttrs.style) || '')
-    .split(';')
-    .map(part => part.trim())
-    .filter(part => {
-      const prop = part.split(':')[0].trim().toLowerCase();
-      return LOOSE_TEXT_INHERITED_PROPS.includes(prop);
-    });
+// parentStyle 為容器已解析樣式（含 class 規則，camelCase 鍵）；按鈕文字瀏覽器預設水平置中
+function wrapLooseTextNode(textNode, parentStyle, centerByDefault) {
+  const inherited = {};
+  for (const [key, value] of Object.entries(parentStyle || {})) {
+    const prop = key.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
+    if (LOOSE_TEXT_INHERITED_PROPS.includes(prop) && value != null && value !== '') inherited[prop] = value;
+  }
+  if (centerByDefault && !inherited['text-align']) inherited['text-align'] = 'center';
+  const declarations = Object.entries(inherited).map(([prop, value]) => `${prop}: ${value}`);
   return {
     type: 'element',
     tag: 'span',
