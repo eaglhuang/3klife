@@ -15,7 +15,7 @@ import { weatherRangedHitDelta, weatherRangedRangeDelta } from '../../core/syste
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
-import { TEAM_AURA_DEBUFF_EFFECTS, applyTeamAuraToDamage, teamAuraAttackMultiplier, teamAuraDefenseMultiplier, teamAuraVsDebuffedMultiplier } from '../shared/TeamAura';
+import { TEAM_AURA_DEBUFF_EFFECTS, applyTeamAuraToDamage, teamAuraAccuracyDelta, teamAuraAttackMultiplier, teamAuraDefenseMultiplier, teamAuraVsDebuffedMultiplier } from '../shared/TeamAura';
 import { consumeSelfBurstExtraAction, selfBurstAttackMultiplier, selfBurstBlocksEffect, selfBurstCritBonus } from '../shared/SelfBurstWindow';
 import {
   extraAttackHitsOf,
@@ -271,7 +271,9 @@ export class BattleCombatResolver {
     // 常山女迴避（PROG-2-1457）：防守方虎符迴避加成再降低命中率
     // 天氣強約束（PROG-2-1460）：遠程攻擊命中雨 -20%／霧 -30%／夜 -25%；夜襲場景已有全局 -25%，夜戰不再疊加（暫定）
     const weatherAccuracy = this.getWeatherRangedHitDelta(attacker);
-    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth - defenderEvasion - tallyEvasionBonusOf(defender) + sceneAccuracy + weatherAccuracy;
+    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth - defenderEvasion - tallyEvasionBonusOf(defender) + sceneAccuracy + weatherAccuracy
+      // 全隊增益條件型命中（孫權坐斷東南，SYS-SKILL-ULT-0002）
+      + teamAuraAccuracyDelta(this.context.state.getTeamAura(attacker.faction), attacker.type);
     // 大霧免疫（PROG-2-0584）：大霧天氣下攻擊方有此效果時命中必中，略過擲骰
     const fogGuaranteed = isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects);
     if (!fogGuaranteed && !rollHit(attackerAccuracy, this.hitRandom)) {

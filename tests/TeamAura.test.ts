@@ -9,6 +9,7 @@ import {
     TEAM_AURA_PARAMS,
     applyTeamAuraToDamage,
     startTeamAura,
+    teamAuraAccuracyDelta,
     teamAuraAttackMultiplier,
     teamAuraDefenseMultiplier,
     teamAuraNoticeText,
@@ -83,6 +84,16 @@ export function createTeamAuraSuite(): TestSuite {
         assert.equals(1, teamAuraAttackMultiplier(a));
         let t = tickTeamAura(a); t = tickTeamAura(t.aura); t = tickTeamAura(t.aura);
         assert.equals(1, teamAuraVsDebuffedMultiplier(t.aura, true));
+    });
+
+    suite.test('孫權坐斷東南：只有弓兵與水軍命中 +25%，與其他增益合併不丟失', () => {
+        const a = startTeamAura(null, 'ult-sun-quan-2');
+        assert.equals(0.25, teamAuraAccuracyDelta(a, 'archer'));
+        assert.equals(0.25, teamAuraAccuracyDelta(a, 'navy'));
+        assert.equals(0, teamAuraAccuracyDelta(a, 'cavalry'));
+        const merged = startTeamAura(a, 'ult-cao-cao-1');
+        assert.equals(0.25, teamAuraAccuracyDelta(merged, 'archer'));
+        assert.equals(1.3, teamAuraAttackMultiplier(merged));
     });
 
     return suite;
