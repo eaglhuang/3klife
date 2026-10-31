@@ -85,8 +85,17 @@ export function teamAuraNoticeText(event: TeamAuraChangedEvent, isPlayer: boolea
     return `${side}全隊增益：${parts.join('、') || '能力提升'}（${event.turns} 回合）`;
 }
 
+/**
+ * 團隊回復家族的持續附帶效果（SYS-SKILL-ULT-0003）：瞬間回復之外再掛一段 aura，
+ * 與全隊增益共用同一份 aura 結果與上限，不另做一套持續狀態。
+ */
+export const TEAM_AURA_RIDERS: Readonly<Record<string, TeamAuraParams>> = {
+    // 昭烈仁政：回復 20% HP 外，獲得 2 回合減傷；暫定減傷 20%
+    'ult-liu-bei-3': { durationTurns: 2, attackMultiplier: 1, defenseMultiplier: 1, damageReduction: 0.2, shieldPct: 0, controlImmune: false },
+};
+
 export function teamAuraParamsOf(ultimateId: string | null | undefined): TeamAuraParams | null {
-    return ultimateId ? TEAM_AURA_PARAMS[ultimateId] ?? null : null;
+    return ultimateId ? TEAM_AURA_PARAMS[ultimateId] ?? TEAM_AURA_RIDERS[ultimateId] ?? null : null;
 }
 
 /** 施放：非全隊增益奧義原樣回傳；已有 aura 時逐欄取高（受上限約束） */
