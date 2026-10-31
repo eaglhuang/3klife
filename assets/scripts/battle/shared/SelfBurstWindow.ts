@@ -96,6 +96,26 @@ export function isSelfBurstControlImmune(window: SelfBurstWindow | null): boolea
     return selfBurstPhaseOf(window) === 'active' && window!.controlImmune;
 }
 
+export interface SelfBurstChangedEvent {
+    faction: string;
+    phase: 'started' | 'ended';
+    ultimateId: string;
+    turns: number;
+}
+
+/** 戰報文字：開始寫出效果與回合，結束寫回退提示 */
+export function selfBurstNoticeText(event: SelfBurstChangedEvent, isPlayer: boolean): string {
+    const side = isPlayer ? '我方' : '敵方';
+    if (event.phase === 'ended') return `${side}爆發結束，能力回復原狀`;
+    const params = selfBurstParamsOf(event.ultimateId);
+    const parts = params ? [
+        params.attackMultiplier !== 1 ? `攻擊 ×${params.attackMultiplier}` : '',
+        params.critRateBonus > 0 ? `暴擊 +${Math.round(params.critRateBonus * 100)}%` : '',
+        params.controlImmune ? '免控' : '',
+    ].filter(Boolean) : [];
+    return `${side}進入爆發：${parts.join('、') || '能力提升'}（${event.turns} 回合）`;
+}
+
 /** 免控擋下的控制類狀態（定身、緩速、暈眩）；虛弱屬減益不擋 */
 const CONTROL_EFFECTS: ReadonlySet<StatusEffect> = new Set([StatusEffect.Stun, StatusEffect.Rooted, StatusEffect.Slow]);
 

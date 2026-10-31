@@ -107,6 +107,8 @@ export const EVENT_NAMES = {
   FortressDamaged:   "fortress-damaged",
   UiBackRequested:   "ui-back-requested",
   BuffApplied:       "buff-applied",
+  /** 奧義自身爆發開始／結束（SYS-SKILL-ULT-0001）：{ faction, phase, ultimateId, turns } */
+  SelfBurstChanged:  "self-burst-changed",
   TileBuffSpawned:   "tile-buff-spawned",
   TileBuffConsumed:  "tile-buff-consumed",
   // 武將單挑系統
