@@ -28,6 +28,7 @@ import {
   type SkillExecutionResult,
 } from '../../shared/SkillRuntimeContract';
 import { services } from '../../core/managers/ServiceLoader';
+import { selfBurstBlocksEffect, startSelfBurst } from '../shared/SelfBurstWindow';
 import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
 import { sceneFireDamageTakenOf } from '../shared/BattleTacticBehavior';
 import { COMBO_ULTIMATE_MULTIPLIER, findComboUltimate } from '../shared/ComboUltimate';
@@ -109,7 +110,7 @@ export class BattleSkillDispatcher {
       };
     }
 
-    return this.executeBattleSkillRequest({
+    const result = this.executeBattleSkillRequest({
       sourceType,
       ownerUid: casterFaction,
       generalTemplateId: general.id,
@@ -120,6 +121,12 @@ export class BattleSkillDispatcher {
       targetUnitUid: options.targetUnitUid ?? null,
       targetTileId: options.targetTileId ?? null,
     });
+    // 自身爆發家族奧義施放成功後開窗（SYS-SKILL-ULT-0001）；非爆發奧義 startSelfBurst 原樣回傳
+    if (result.applied && options.ultimateId) {
+      const state = this.context.state;
+      state.setSelfBurst(casterFaction, startSelfBurst(state.getSelfBurst(casterFaction), options.ultimateId));
+    }
+    return result;
   }
 
   public dispatchSeedTactic(
@@ -496,6 +503,8 @@ export class BattleSkillDispatcher {
         });
       },
       applyBuff: (unit: TroopUnit, effect: StatusEffect, turns: number) => {
+        // 自身爆發免控（SYS-SKILL-ULT-0001）：窗口期間擋下控制類狀態
+        if (selfBurstBlocksEffect(state.getSelfBurst(unit.faction), effect)) return;
         const svc = services();
         svc.buff.applyBuff(unit.id, effect, turns);
         svc.event.emit(EVENT_NAMES.BuffApplied, {

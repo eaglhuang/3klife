@@ -15,6 +15,7 @@ import { weatherRangedHitDelta, weatherRangedRangeDelta } from '../../core/syste
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
+import { selfBurstAttackMultiplier, selfBurstBlocksEffect, selfBurstCritBonus } from '../shared/SelfBurstWindow';
 import {
   extraAttackHitsOf,
   advanceTallyCombo,
@@ -287,8 +288,9 @@ export class BattleCombatResolver {
       // 雲梯（攻城戰，PROG-2-1597）：我方步兵攀城，抵銷城牆地利
       * sceneLadderDefenseBypassOf(attacker, defender, this.context.state);
 
+    const attackerBurst = this.context.state.getSelfBurst(attacker.faction);
     let damage = svc.formula.calculateDamage({
-      attackerAttack: attacker.getEffectiveAttack() * this.getTallyAttackMod(attacker),
+      attackerAttack: attacker.getEffectiveAttack() * this.getTallyAttackMod(attacker) * selfBurstAttackMultiplier(attackerBurst),
       defenderDefense: effectiveDef,
       attackerType: attacker.type,
       defenderType: defender.type,
@@ -315,7 +317,7 @@ export class BattleCombatResolver {
     }
 
     // 暴擊（SCN-06）：基礎 5% + 場景加成，暴擊時傷害 ×1.5；擲骰走戰場亂數源
-    const critRate = critRateOf(tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0);
+    const critRate = critRateOf((tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0) + selfBurstCritBonus(attackerBurst));
     if (rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);
     }
@@ -634,6 +636,7 @@ export class BattleCombatResolver {
     const confusion = tallyDeathConfusionOf(unit, this.context.state.units.values());
     if (confusion) {
       for (const target of confusion.targets) {
+        if (selfBurstBlocksEffect(this.context.state.getSelfBurst(target.faction), StatusEffect.Stun)) continue;
         svc.buff.applyBuff(target.id, StatusEffect.Stun, confusion.turns);
         target.isShieldWallActive = false;
       }
