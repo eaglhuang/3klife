@@ -7,7 +7,7 @@
  * 目標只取存活單位；入場補掛與中途加入的單位因 aura 以陣營為鍵，自動吃到加成。
  *
  * PM 暫定（可逆）：規格只給文字的欄位，數字集中在 TEAM_AURA_PARAMS。
- * 郭嘉十勝定論為條件型：只對身上有負面狀態的目標增傷。曹操對酒當歌、孫權坐斷東南待後續片處理，不在本表；孫權碧眼統軍屬 team-heal 家族。
+ * 郭嘉十勝定論為條件型：只對身上有負面狀態的目標增傷。孫權坐斷東南為條件型：只有指定兵種命中提升。曹操對酒當歌待後續片處理，不在本表；孫權碧眼統軍屬 team-heal 家族。
  */
 
 import { StatusEffect } from '../../shared/CommonEnums';
@@ -23,6 +23,9 @@ export interface TeamAuraParams {
     controlImmune: boolean;
     /** 對身上有負面狀態的目標增傷比例（條件型），缺省 0 */
     vsDebuffedDamageBonus?: number;
+    /** 命中率加成（條件型），只套用在 accuracyTroopTypes 列出的兵種，缺省 0 */
+    accuracyBonus?: number;
+    accuracyTroopTypes?: readonly string[];
 }
 
 /** 視為負面狀態的效果（條件型增傷用） */
@@ -45,6 +48,8 @@ export const TEAM_AURA_PARAMS: Readonly<Record<string, TeamAuraParams>> = {
     'ult-cao-cao-1': { durationTurns: 3, attackMultiplier: 1.3, defenseMultiplier: 1, damageReduction: 0, shieldPct: 0, controlImmune: false },
     // 我軍全體對 debuff 目標增傷 30%；回合暫定 3
     'ult-guo-jia-2': { durationTurns: 3, attackMultiplier: 1, defenseMultiplier: 1, damageReduction: 0, shieldPct: 0, controlImmune: false, vsDebuffedDamageBonus: 0.3 },
+    // 我軍水戰與弓兵單位命中率 +25% 持續 3 回合
+    'ult-sun-quan-2': { durationTurns: 3, attackMultiplier: 1, defenseMultiplier: 1, damageReduction: 0, shieldPct: 0, controlImmune: false, accuracyBonus: 0.25, accuracyTroopTypes: ['archer', 'navy'] },
     // 智傷與減傷雙重加成 3 回合：暫定攻擊 +20%、減傷 20%
     'ult-sima-yi-5': { durationTurns: 3, attackMultiplier: 1.2, defenseMultiplier: 1, damageReduction: 0.2, shieldPct: 0, controlImmune: false },
     // 攻速與智傷加成 3 回合：暫定攻擊 +20%
@@ -74,6 +79,7 @@ export function teamAuraNoticeText(event: TeamAuraChangedEvent, isPlayer: boolea
         p.defenseMultiplier > 1 ? `防禦 +${pct(p.defenseMultiplier - 1)}` : '',
         p.damageReduction > 0 ? `減傷 ${pct(p.damageReduction)}` : '',
         p.controlImmune ? '免控' : '',
+        (p.accuracyBonus ?? 0) > 0 ? `指定兵種命中 +${pct(p.accuracyBonus!)}` : '',
         (p.vsDebuffedDamageBonus ?? 0) > 0 ? `對負面狀態目標增傷 ${pct(p.vsDebuffedDamageBonus!)}` : '',
     ].filter(Boolean) : [];
     return `${side}全隊增益：${parts.join('、') || '能力提升'}（${event.turns} 回合）`;
@@ -97,6 +103,10 @@ export function startTeamAura(current: TeamAura | null, ultimateId: string): Tea
         damageReduction: Math.min(TEAM_AURA_CAPS.damageReduction, Math.max(p.damageReduction, base?.damageReduction ?? 0)),
         shieldPct: Math.min(TEAM_AURA_CAPS.shieldPct, Math.max(p.shieldPct, base?.shieldPct ?? 0)),
         controlImmune: p.controlImmune || !!base?.controlImmune,
+        // 命中加成取較高者，兵種限制跟著取高的那一方
+        ...((p.accuracyBonus ?? 0) >= (base?.accuracyBonus ?? 0)
+            ? { accuracyBonus: p.accuracyBonus ?? 0, accuracyTroopTypes: p.accuracyTroopTypes }
+            : { accuracyBonus: base!.accuracyBonus, accuracyTroopTypes: base!.accuracyTroopTypes }),
         vsDebuffedDamageBonus: Math.min(TEAM_AURA_CAPS.vsDebuffedDamageBonus, Math.max(p.vsDebuffedDamageBonus ?? 0, base?.vsDebuffedDamageBonus ?? 0)),
     };
 }
@@ -119,6 +129,12 @@ export function teamAuraAttackMultiplier(aura: TeamAura | null): number {
 
 export function teamAuraDefenseMultiplier(aura: TeamAura | null): number {
     return active(aura) ? aura.defenseMultiplier : 1;
+}
+
+/** 條件型命中加成：攻擊方兵種在名單內才生效 */
+export function teamAuraAccuracyDelta(aura: TeamAura | null, troopType: string): number {
+    if (!active(aura) || !aura.accuracyBonus) return 0;
+    return aura.accuracyTroopTypes?.includes(troopType) ? aura.accuracyBonus : 0;
 }
 
 /** 條件型增傷倍率：目標身上有負面狀態才生效 */
