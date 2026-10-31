@@ -3,7 +3,7 @@
  *
  * 用真實 BattleSkillDispatcher：全隊增益奧義施放成功才開 aura；施放陣營回合倒數到期。
  */
-import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
+import { Faction, StatusEffect, TroopType } from '../assets/scripts/core/config/Constants';
 import { startTeamAura, tickTeamAura } from '../assets/scripts/battle/shared/TeamAura';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
@@ -68,6 +68,19 @@ export function createTeamAuraBattleWiringSuite(): TestSuite {
         for (let i = 0; i < 3; i++) a = tickTeamAura(a).aura;
         ctrl.state.setTeamAura(Faction.Player, a);
         assert.equals(base, hit());
+    });
+
+    suite.test('郭嘉十勝定論：我軍普攻對被削弱的目標傷害較高', () => {
+        const { ctrl, mine } = setup();
+        const near = troop('e-near', Faction.Enemy, 0, 2);
+        ctrl.state.addUnit(near);
+        const resolver = (ctrl as unknown as { combatResolver: { resolveCombat(a: TroopUnit, d: TroopUnit, svc: ReturnType<typeof services>): void } }).combatResolver;
+        const hit = () => { const hp = near.currentHp; resolver.resolveCombat(mine, near, services()); return hp - near.currentHp; };
+        ctrl.state.setTeamAura(Faction.Player, startTeamAura(null, 'ult-guo-jia-2'));
+        const plain = hit();
+        services().buff.applyBuff(near.id, StatusEffect.Slow, 2);
+        const debuffed = hit();
+        assert.isTrue(debuffed > plain, `${debuffed} > ${plain}`);
     });
 
     return suite;

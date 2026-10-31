@@ -14,6 +14,7 @@ import {
     teamAuraNoticeText,
     teamAuraShieldFor,
     teamAuraTargets,
+    teamAuraVsDebuffedMultiplier,
     tickTeamAura,
 } from '../assets/scripts/battle/shared/TeamAura';
 
@@ -73,6 +74,15 @@ export function createTeamAuraSuite(): TestSuite {
             teamAuraNoticeText({ faction: 'enemy', phase: 'started', ultimateId: 'ult-guan-yu-4', turns: 2 }, false));
         assert.equals('我軍全隊增益結束',
             teamAuraNoticeText({ faction: 'player', phase: 'ended', ultimateId: 'ult-cao-cao-1', turns: 0 }, true));
+    });
+
+    suite.test('郭嘉十勝定論：只對有負面狀態的目標增傷 30%，到期失效', () => {
+        const a = startTeamAura(null, 'ult-guo-jia-2');
+        assert.equals(1.3, teamAuraVsDebuffedMultiplier(a, true));
+        assert.equals(1, teamAuraVsDebuffedMultiplier(a, false));
+        assert.equals(1, teamAuraAttackMultiplier(a));
+        let t = tickTeamAura(a); t = tickTeamAura(t.aura); t = tickTeamAura(t.aura);
+        assert.equals(1, teamAuraVsDebuffedMultiplier(t.aura, true));
     });
 
     return suite;
