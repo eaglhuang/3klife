@@ -21,6 +21,9 @@ import { GradientBackground, GradientColorStop } from '../components/GradientBac
 import { ShadowBackground, ShadowLayerDef } from '../components/ShadowBackground';
 import { UISkinResolver, ResolvedButtonSkin, ResolvedLabelStyle } from './UISkinResolver';
 
+/** 文字陰影模糊上限＝字級 × 此比例；實測字級 48 模糊 20 被切、8 完整 */
+const LABEL_SHADOW_BLUR_MAX_RATIO = 1 / 6;
+
 /** 按鈕視覺狀態（對照 Unity Selectable.SelectionState） */
 export type ButtonVisualState = 'normal' | 'pressed' | 'hover' | 'disabled' | 'selected';
 
@@ -412,7 +415,9 @@ export class UIPreviewStyleBuilder {
             label.enableShadow = true;
             label.shadowColor  = style.shadow.color;
             label.shadowOffset = new Vec2(style.shadow.offsetX, style.shadow.offsetY);
-            label.shadowBlur   = style.shadow.blur || 0;
+            // Cocos 字貼圖不替模糊留邊距，模糊過大會把字本身切掉（PROG-2-1648），依字級設上限
+            const maxBlur = Math.max(1, Math.round((style.fontSize || label.fontSize) * LABEL_SHADOW_BLUR_MAX_RATIO));
+            label.shadowBlur   = Math.min(style.shadow.blur || 0, maxBlur);
         }
         label.isBold = !!style.isBold;
         label.isItalic = !!style.isItalic;
