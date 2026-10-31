@@ -4,6 +4,7 @@
 // 由 draft-builder-core 搬出（PROG-2-1651），純函式、與節點遍歷無關。
 
 const { extractFontFaceMappings } = require('../css-capability-matrix');
+const ENGINE = require('../engine-profiles').active;
 
 // R-9 (general rule): offline `text-transform` for Label text. Exported as a
 // pure helper so the same general rule applies to every UI source going through
@@ -32,7 +33,7 @@ function inferLabelOverflow(style, text) {
   const textAlign = String(style.textAlign || '').trim().toLowerCase();
   const longText = Array.from(normalizedText).length >= 48;
   if (textAlign === 'justify' || longText || /[。！？.!?]\s*/.test(normalizedText)) {
-    return 'RESIZE_HEIGHT';
+    return ENGINE.labelOverflow('wrap-height');
   }
   return null;
 }
@@ -59,19 +60,19 @@ function computeLetterSpacing(value, fontSize) {
 // font 都打成同一份資產。Registry 為資料導向，加新字型只需要在此加一筆。
 const PROJECT_FONT_REGISTRY = [
   // 具名專案字型（exact / alias）
-  { match: /^newsreader$/i,                            asset: 'fonts/newsreader/font' },
-  { match: /^manrope$/i,                               asset: 'fonts/manrope/font' },
-  { match: /^notosans[\s_-]?tc$|^noto sans tc$|^noto sans cjk tc$/i, asset: 'fonts/notosans_tc/font' },
+  { match: /^newsreader$/i,                            asset: ENGINE.fontAssetByKey('newsreader') },
+  { match: /^manrope$/i,                               asset: ENGINE.fontAssetByKey('manrope') },
+  { match: /^notosans[\s_-]?tc$|^noto sans tc$|^noto sans cjk tc$/i, asset: ENGINE.fontAssetByKey('notosans_tc') },
   // 系統 CJK（落到 NotoSansTC，runtime 字模幾何最接近）
-  { match: /^pingfang tc$|^microsoft jhengHei$|^microsoft yahei$|^hiragino sans gb$|^思源黑體$|^蘋方$/i, asset: 'fonts/notosans_tc/font' },
+  { match: /^pingfang tc$|^microsoft jhengHei$|^microsoft yahei$|^hiragino sans gb$|^思源黑體$|^蘋方$/i, asset: ENGINE.fontAssetByKey('notosans_tc') },
   // 系統 serif（落到 Newsreader）
-  { match: /^songti tc$|^stsong$|^playfair display$|^merriweather$/i, asset: 'fonts/newsreader/font' },
+  { match: /^songti tc$|^stsong$|^playfair display$|^merriweather$/i, asset: ENGINE.fontAssetByKey('newsreader') },
   // CSS generic family（最後一道保險）
-  { match: /^serif$/i,                                 asset: 'fonts/newsreader/font' },
-  { match: /^sans-serif$|^system-ui$|^ui-sans-serif$/i, asset: 'fonts/notosans_tc/font' },
+  { match: /^serif$/i,                                 asset: ENGINE.fontAssetByKey('newsreader') },
+  { match: /^sans-serif$|^system-ui$|^ui-sans-serif$/i, asset: ENGINE.fontAssetByKey('notosans_tc') },
 ];
 
-const PROJECT_FONT_DEFAULT = 'fonts/notosans_tc/font';
+const PROJECT_FONT_DEFAULT = ENGINE.fontAssetByKey(ENGINE.defaultFontKey);
 
 // 字族字元涵蓋（與引擎無關的字型屬性）：瀏覽器遇到字族沒有的字會逐字往堆疊下一個字族退，
 // 引擎 Label 只能掛一份字型，所以文字含某文字系統時要跳過不涵蓋它的字族（PROG-2-1650）。
@@ -156,7 +157,7 @@ function resolveFontAssetByConvention(family, _src) {
     .replace(/[^a-z0-9]+/g, '_')
     .replace(/^_+|_+$/g, '');
   if (!sanitized) return null;
-  return `fonts/${sanitized}/font`;
+  return ENGINE.fontAssetByKey(sanitized);
 }
 
 // R-11 (general rule): `text-shadow` simple single-shadow form is natively
