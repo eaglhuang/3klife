@@ -2770,6 +2770,15 @@ function isTransparentCssColor(value) {
   return !!slash;
 }
 
+// 文字色對不到色票：與色塊同規則，照網頁原色（#rrggbb）並留警告；轉不出色碼才退回預設文字色
+function labelColorLiteral(ctx, slotId, cssColor) {
+  if (!cssColor) return null;
+  const literal = normalizeCssColorToHex(String(cssColor));
+  if (!literal) return null;
+  ctx.warnings.push({ code: 'unmapped-color-literal', slotId, detail: cssColor });
+  return literal.slice(0, 7);
+}
+
 function ensureLabelStyle(ctx, slotId, style, attrs, text = '') {
   if (ctx.skinSlots[slotId]) return;
   const fontSizeResolved = resolveLength(style.fontSize, ctx.tokenRegistry);
@@ -2785,7 +2794,7 @@ function ensureLabelStyle(ctx, slotId, style, attrs, text = '') {
     fontSize,
     lineHeight,
     letterSpacing,
-    color: colorParsed.color || 'textPrimary',
+    color: colorParsed.color || labelColorLiteral(ctx, slotId, style.color) || 'textPrimary',
     // §37.2 鐵律 1：黑色輪廓 + 寬度 2，沒明確指定就自動填
     outlineColor: 'colorOutlineDark',
     outlineWidth: 2,
