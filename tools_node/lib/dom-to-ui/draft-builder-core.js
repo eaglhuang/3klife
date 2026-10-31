@@ -2424,10 +2424,11 @@ function mergeComputedStyle(style, attrs, ctx) {
   assignComputed(out, 'color', computed.color, meaningfulCssColor);
   assignComputed(out, 'width', computed.width, meaningfulCssLength);
   assignComputed(out, 'height', computed.height, meaningfulCssLength);
-  assignComputed(out, 'top', computed.top, meaningfulCssLength);
-  assignComputed(out, 'right', computed.right, meaningfulCssLength);
-  assignComputed(out, 'bottom', computed.bottom, meaningfulCssLength);
-  assignComputed(out, 'left', computed.left, meaningfulCssLength);
+  // 定位四邊只換算作者原本有寫的邊（PROG-2-1641）：瀏覽器對絕對定位元素會把四邊全算成 px，
+  // 全抄會讓 widget 同時釘住左右/上下，畫布寬高一偏離設計尺寸元件就被拉長
+  for (const key of ['top', 'right', 'bottom', 'left']) {
+    if (style[key] != null && style[key] !== 'auto') assignComputed(out, key, computed[key], meaningfulCssLength);
+  }
   assignComputed(out, 'marginTop', computed['margin-top'], meaningfulCssLength);
   assignComputed(out, 'marginRight', computed['margin-right'], meaningfulCssLength);
   assignComputed(out, 'marginBottom', computed['margin-bottom'], meaningfulCssLength);
