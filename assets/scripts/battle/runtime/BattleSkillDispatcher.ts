@@ -172,6 +172,9 @@ export class BattleSkillDispatcher {
       unit.shield = Math.max(unit.shield, o.shield);
       for (const effect of o.cleansed) buff.removeBuff(unit.id, effect);
     }
+    if (outcomes.length) {
+      services().event.emit(EVENT_NAMES.TeamRecovered, { faction: casterFaction, ultimateId, outcomes });
+    }
   }
 
   public dispatchSeedTactic(

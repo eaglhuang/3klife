@@ -111,6 +111,8 @@ export const EVENT_NAMES = {
   SelfBurstChanged:  "self-burst-changed",
   /** 奧義全隊增益開始／結束（SYS-SKILL-ULT-0002）：{ faction, phase, ultimateId, turns } */
   TeamAuraChanged:   "team-aura-changed",
+  /** 奧義團隊回復結算（SYS-SKILL-ULT-0003）：{ faction, ultimateId, outcomes } */
+  TeamRecovered:     "team-recovered",
   TileBuffSpawned:   "tile-buff-spawned",
   TileBuffConsumed:  "tile-buff-consumed",
   // 武將單挑系統

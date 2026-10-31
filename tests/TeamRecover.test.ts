@@ -10,6 +10,7 @@ import {
     cleansePick,
     recoverOrder,
     resolveTeamRecover,
+    teamRecoverNoticeText,
     type RecoverTarget,
 } from '../assets/scripts/battle/shared/TeamRecover';
 
@@ -53,6 +54,16 @@ export function createTeamRecoverSuite(): TestSuite {
         for (const id of Object.keys(TEAM_RECOVER_PARAMS)) {
             assert.equals('team-heal', list.find((u) => u.id === id)?.family, id);
         }
+    });
+
+    suite.test('戰報提示：寫出實際受惠部隊數與總量；沒有效果時不寫', () => {
+        const outcomes = resolveTeamRecover('ult-liu-bei-3', [t('a', 500), t('b', 950), t('c', 1000)]);
+        assert.equals('我軍團隊回復：2 支部隊回復 250 HP',
+            teamRecoverNoticeText({ faction: 'player', ultimateId: 'ult-liu-bei-3', outcomes }, true));
+        const cleanse = resolveTeamRecover('ult-liu-bei-1', [t('a', 500, 1000, 50, [StatusEffect.Stun])]);
+        assert.equals('敵軍團隊回復：解除 1 個負面狀態、1 支部隊士氣提升',
+            teamRecoverNoticeText({ faction: 'enemy', ultimateId: 'ult-liu-bei-1', outcomes: cleanse }, false));
+        assert.equals('', teamRecoverNoticeText({ faction: 'player', ultimateId: 'ult-liu-bei-3', outcomes: resolveTeamRecover('ult-liu-bei-3', [t('a', 1000)]) }, true));
     });
 
     return suite;
