@@ -338,6 +338,7 @@ async function runPerTabReplay(args) {
     }
   }
   result.ok = result.fragments.length > 0 && result.fragments.every(fragment => fragment.ok);
+  result.unresolvedLazySlots = dropUnresolvedLazySlots(paths.finalLayout, runtime.fragmentsDir, helpers).dropped;
   if (result.ok) {
     const nextRouting = writePerTabReplayRouting(paths, opts, routing, result.fragments, helpers);
     const lazySlotUpdate = updateLazySlotDefaultFragments(paths.finalLayout, nextRouting, helpers);
@@ -346,6 +347,33 @@ async function runPerTabReplay(args) {
     result.lazySlotDefaultUpdated = lazySlotUpdate.changed;
   }
   return result;
+}
+
+// 延遲插槽指向的內容檔若沒有任何步驟產生，執行期會直接載入失敗：
+// 改回一般容器並移除找不到的內容檔引用，避免執行期報錯（PROG-2-1646）
+function dropUnresolvedLazySlots(layoutPath, fragmentsDir, helpers) {
+  const layout = helpers.readJsonIfExists(layoutPath);
+  if (!layout || !layout.root || !fragmentsDir) return { dropped: [] };
+  const exists = ref => typeof ref === 'string'
+    && fs.existsSync(path.join(fragmentsDir, `${path.basename(ref)}.json`));
+  const dropped = [];
+  const walk = (node) => {
+    if (!node || typeof node !== 'object') return;
+    if (node.lazySlot && node.defaultFragment && !exists(node.defaultFragment)) {
+      dropped.push({ slot: node.name, fragment: node.defaultFragment, inlineChildren: (node.children || []).length });
+      delete node.lazySlot;
+      delete node.defaultFragment;
+      delete node.fragments;
+      delete node.warmupHint;
+    } else if (node.lazySlot && Array.isArray(node.fragments)) {
+      node.fragments = node.fragments.filter(exists);
+      if (node.fragments.length === 0) delete node.fragments;
+    }
+    for (const child of node.children || []) walk(child);
+  };
+  walk(layout.root);
+  if (dropped.length > 0) helpers.writeJson(layoutPath, layout);
+  return { dropped };
 }
 
 module.exports = {
