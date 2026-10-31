@@ -106,6 +106,8 @@ export class UIPreviewStyleBuilder {
                 && (slot as any).backgroundLayers.some((layer: any) => layer?.kind === 'gradient' && layer.gradient?.repeating === true);
             const gradientShape = {
                 cornerRadius,
+                cornerRadii: (slot as any).cornerRadii,
+                borderSides: (slot as any).borderSides,
                 borderWidth,
                 borderColor: typeof borderColorKey === 'string'
                     ? this.skinResolver.resolveColor(borderColorKey)
@@ -182,6 +184,33 @@ export class UIPreviewStyleBuilder {
             const cornerRadius = this._resolveCornerRadius(slot);
             const borderColorKey = (slot as any).borderColor ?? (slot as any).strokeColor;
             const usesRoundedRect = cornerRadius > 0 || borderWidth > 0 || typeof borderColorKey === 'string';
+            const cornerRadii = (slot as any).cornerRadii;
+            const borderSides = (slot as any).borderSides;
+
+            // 四角或各邊不同：RoundedRectBackground 只能畫均一形狀，改用 GradientBackground 單色填滿
+            if (Array.isArray(cornerRadii) || borderSides) {
+                const sprite = node.getComponent(Sprite);
+                if (sprite) sprite.enabled = true;
+                const solid = node.getComponent(SolidBackground);
+                if (solid) solid.enabled = false;
+                const rounded = node.getComponent(RoundedRectBackground);
+                if (rounded) rounded.enabled = false;
+                const background = node.getComponent(GradientBackground) || node.addComponent(GradientBackground);
+                background.enabled = true;
+                background.setLinearGradient(180, [
+                    { color: resolvedColor, offset: 0 },
+                    { color: resolvedColor, offset: 1 },
+                ], {
+                    cornerRadius,
+                    cornerRadii,
+                    borderSides,
+                    borderWidth,
+                    borderColor: typeof borderColorKey === 'string'
+                        ? this.skinResolver.resolveColor(borderColorKey)
+                        : new Color(0, 0, 0, 0),
+                });
+                return true;
+            }
 
             if (usesRoundedRect) {
                 const sprite = node.getComponent(Sprite);
