@@ -1161,10 +1161,9 @@ function inferNodeType(tag, cls, style, attrs, el) {
   if (isEmptyFlexSpacer(tag, style, attrs, el, hasBg)) return 'container';
   if (TEXT_TAGS.has(tag)) {
     if (isVisualOnlyInlinePrimitive(tag, style, attrs, el, hasBg)) return 'panel';
-    return 'label';
   }
-  // 只有文字但帶底色或邊框（如帶框的切換鈕）：轉成 panel，文字另包節點，否則底框會被丟掉
-  if (hasOnlyTextContent(el)) return (hasBg || hasRenderableBorder(style)) ? 'panel' : 'label';
+  // 只有文字但帶底色或邊框（如帶框的切換鈕、稀有度徽章）：轉成 panel，文字另包節點，否則底框會被丟掉
+  if (TEXT_TAGS.has(tag) || hasOnlyTextContent(el)) return (hasBg || hasRenderableBorder(style)) ? 'panel' : 'label';
 
   if (hasBg) return 'panel';
   return 'container';
