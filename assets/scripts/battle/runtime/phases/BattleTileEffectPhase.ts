@@ -6,6 +6,7 @@ import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
 import { advanceFormationZonesOf } from '../../shared/FormationZone';
 import { tickSelfBurst } from '../../shared/SelfBurstWindow';
+import { tickTeamAura } from '../../shared/TeamAura';
 import { advanceMoraleOf } from '../../shared/Morale';
 import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
@@ -56,6 +57,10 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
         faction: context.actingFaction, phase: 'ended', ultimateId: before.ultimateId, turns: 0,
       });
     }
+  }
+  // 全隊增益 aura 同樣在施放陣營自己的回合倒數（SYS-SKILL-ULT-0002）
+  if (context.state.getTeamAura) {
+    context.state.setTeamAura(context.actingFaction, tickTeamAura(context.state.getTeamAura(context.actingFaction)).aura);
   }
   // 全隊魅力（大喬，PROG-2-1582 暫定）：換算為己方回合開始全隊士氣 +20
   applyTallyTeamMoraleAura(context.state.units.values(), context.actingFaction);

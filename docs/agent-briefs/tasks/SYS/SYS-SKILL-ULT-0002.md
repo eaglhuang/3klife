@@ -25,7 +25,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/奧義系統.md (doc_spec_0030)
   - docs/主戰場UI規格書.md (doc_ui_0001)
-notes: "2026-10-31 | 狀態: 進行中 | 驗證: TeamAura 5 測試過 | 變更: 第 1 片純邏輯 TeamAura——8 個 team-buff 奧義參數表、同家族逐欄取高不疊加且有上限、存活單位目標選取、減傷→護盾→HP 結算順序、陣營為鍵使中途加入單位自動吃到加成 | 阻塞: 尚未接戰場與 HUD；條件型（曹操對酒當歌、郭嘉十勝定論、孫權坐斷東南）與首輪必暴擊、嘲諷待後續片；原 notes 覆蓋名單含孫權4，但其資料 family 為 team-heal"
+notes: "2026-10-31 | 狀態: 進行中 | 驗證: TeamAura 5＋TeamAuraBattleWiring 2 測試過 | 變更: 第 1 片純邏輯 TeamAura——8 個 team-buff 奧義參數表、同家族逐欄取高不疊加且有上限、存活單位目標選取、減傷→護盾→HP 結算順序、陣營為鍵使中途加入單位自動吃到加成；第 2 片接戰場——奧義施放成功開 aura、施放陣營回合倒數、普攻攻擊／防禦倍率與減傷 | 阻塞: 護盾扣量與 HUD 摘要未接；條件型（曹操對酒當歌、郭嘉十勝定論、孫權坐斷東南）與首輪必暴擊、嘲諷待後續片；原 notes 覆蓋名單含孫權4，但其資料 family 為 team-heal"
 ---
 
 # [SYS-SKILL-ULT-0002] 奧義全隊增益家族
