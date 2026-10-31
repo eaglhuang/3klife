@@ -86,5 +86,13 @@ export function createTeamRecoverBattleWiringSuite(): TestSuite {
         assert.equals(0.2, ctrl.state.getTeamAura(Faction.Player)?.damageReduction);
     });
 
+    suite.test('曹植建安風骨施放後掛抗性 aura：擲骰低於 30% 時擋下敵方暈眩', () => {
+        const { mine, dispatcher } = setup();
+        cast(dispatcher, 'ult-cao-zhi-3');
+        services().session.setRandomSource(() => 0.1);
+        dispatcher.dispatchDirectBattleSkill('zhang-fei-roar', SkillSourceType.Ultimate, Faction.Enemy);
+        assert.isFalse(services().buff.hasBuff(mine.id, StatusEffect.Stun));
+    });
+
     return suite;
 }
