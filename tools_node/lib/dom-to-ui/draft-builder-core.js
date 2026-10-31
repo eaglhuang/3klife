@@ -2695,7 +2695,7 @@ function ensureLabelStyle(ctx, slotId, style, attrs, text = '') {
   const typographyToken = resolveTypographyToken(ctx.tokenRegistry, fontSize, lineHeight);
   const slot = {
     kind: 'label-style',
-    font: attrs['data-font'] || pickFontByTag(style, ctx),
+    font: attrs['data-font'] || pickFontByTag(style, ctx, text),
     fontSize,
     lineHeight,
     letterSpacing,
@@ -2778,7 +2778,29 @@ const PROJECT_FONT_REGISTRY = [
 
 const PROJECT_FONT_DEFAULT = 'fonts/notosans_tc/font';
 
-function resolveFontFamilyToAsset(fontFamilyValue, registry, defaultAsset) {
+// 字族字元涵蓋（與引擎無關的字型屬性）：瀏覽器遇到字族沒有的字會逐字往堆疊下一個字族退，
+// 引擎 Label 只能掛一份字型，所以文字含某文字系統時要跳過不涵蓋它的字族（PROG-2-1650）。
+// 未列出的字族視為涵蓋全部。
+const FONT_SCRIPT_COVERAGE = [
+  { match: /^newsreader$|^manrope$/i, scripts: ['latin'] },
+];
+
+const TEXT_SCRIPT_PATTERNS = [
+  { script: 'cjk', pattern: /[　-〿㐀-䶿一-鿿豈-﫿＀-￯]/ },
+];
+
+function requiredTextScripts(text) {
+  const value = String(text || '');
+  return TEXT_SCRIPT_PATTERNS.filter(entry => entry.pattern.test(value)).map(entry => entry.script);
+}
+
+function familyCoversScripts(family, scripts) {
+  if (!scripts.length) return true;
+  const entry = FONT_SCRIPT_COVERAGE.find(item => item.match.test(family));
+  return !entry || scripts.every(script => entry.scripts.includes(script));
+}
+
+function resolveFontFamilyToAsset(fontFamilyValue, registry, defaultAsset, text = '') {
   const reg = Array.isArray(registry) ? registry : PROJECT_FONT_REGISTRY;
   const def = typeof defaultAsset === 'string' ? defaultAsset : PROJECT_FONT_DEFAULT;
   if (!fontFamilyValue || typeof fontFamilyValue !== 'string') return def;
@@ -2786,7 +2808,9 @@ function resolveFontFamilyToAsset(fontFamilyValue, registry, defaultAsset) {
     .split(',')
     .map(s => s.trim().replace(/^["']|["']$/g, '').trim())
     .filter(Boolean);
+  const scripts = requiredTextScripts(text);
   for (const fam of families) {
+    if (!familyCoversScripts(fam, scripts)) continue;
     for (const entry of reg) {
       if (entry.match.test(fam)) return entry.asset;
     }
@@ -2794,11 +2818,11 @@ function resolveFontFamilyToAsset(fontFamilyValue, registry, defaultAsset) {
   return def;
 }
 
-function pickFontByTag(style, ctx) {
+function pickFontByTag(style, ctx, text = '') {
   const extra = (ctx && Array.isArray(ctx.fontFaceRegistry)) ? ctx.fontFaceRegistry : [];
   // Layered registry: source-CSS @font-face mappings win over project defaults.
   const layered = extra.length > 0 ? extra.concat(PROJECT_FONT_REGISTRY) : PROJECT_FONT_REGISTRY;
-  return resolveFontFamilyToAsset(style && style.fontFamily, layered, PROJECT_FONT_DEFAULT);
+  return resolveFontFamilyToAsset(style && style.fontFamily, layered, PROJECT_FONT_DEFAULT, text);
 }
 
 // R-12: build per-conversion font registry from `@font-face` blocks in the

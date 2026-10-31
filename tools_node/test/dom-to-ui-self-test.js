@@ -977,6 +977,13 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     if (resolveFontFamilyToAsset('"Manrope", "Newsreader", serif') !== 'fonts/manrope/font') {
       fail('R-10 num stack must resolve to manrope');
     }
+    // 字元涵蓋：中文跳過只涵蓋拉丁字的字族，照瀏覽器逐字退字族的結果（PROG-2-1650）
+    if (resolveFontFamilyToAsset('"Newsreader", "NotoSansTC", serif', null, null, '張飛') !== 'fonts/notosans_tc/font') {
+      fail('R-10 CJK text must skip latin-only newsreader');
+    }
+    if (resolveFontFamilyToAsset('"Newsreader", "NotoSansTC", serif', null, null, 'Vanguard') !== 'fonts/newsreader/font') {
+      fail('R-10 latin text must keep newsreader');
+    }
     // System CJK aliases 落到 notosans_tc
     if (resolveFontFamilyToAsset('"PingFang TC"') !== 'fonts/notosans_tc/font') {
       fail('R-10 PingFang TC alias must resolve to notosans_tc');
