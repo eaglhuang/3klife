@@ -29,7 +29,7 @@ import {
 } from '../../shared/SkillRuntimeContract';
 import { services } from '../../core/managers/ServiceLoader';
 import { selfBurstBlocksEffect, startSelfBurst } from '../shared/SelfBurstWindow';
-import { startTeamAura } from '../shared/TeamAura';
+import { startTeamAura, teamAuraResistsDebuff } from '../shared/TeamAura';
 import { resolveTeamRecover } from '../shared/TeamRecover';
 import { MORALE_DURATION_TURNS } from '../shared/Morale';
 import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
@@ -554,6 +554,8 @@ export class BattleSkillDispatcher {
         // 自身爆發免控（SYS-SKILL-ULT-0001）：窗口期間擋下控制類狀態
         if (selfBurstBlocksEffect(state.getSelfBurst(unit.faction), effect)) return;
         const svc = services();
+        // 全隊抗性（曹植建安風骨，SYS-SKILL-ULT-0003）：負面狀態依機率抵抗，擲骰走戰場亂數源
+        if (teamAuraResistsDebuff(state.getTeamAura(unit.faction), effect, svc.session.randomSource())) return;
         svc.buff.applyBuff(unit.id, effect, turns);
         svc.event.emit(EVENT_NAMES.BuffApplied, {
           unitId: unit.id,

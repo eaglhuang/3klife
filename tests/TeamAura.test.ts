@@ -3,6 +3,7 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
+import { StatusEffect } from '../assets/scripts/shared/CommonEnums';
 import { TestSuite, assert } from './TestRunner';
 import {
     TEAM_AURA_CAPS,
@@ -13,6 +14,7 @@ import {
     teamAuraAttackMultiplier,
     teamAuraDefenseMultiplier,
     teamAuraNoticeText,
+    teamAuraResistsDebuff,
     teamAuraShieldFor,
     teamAuraTargets,
     teamAuraVsDebuffedMultiplier,
@@ -94,6 +96,14 @@ export function createTeamAuraSuite(): TestSuite {
         const merged = startTeamAura(a, 'ult-cao-cao-1');
         assert.equals(0.25, teamAuraAccuracyDelta(merged, 'archer'));
         assert.equals(1.3, teamAuraAttackMultiplier(merged));
+    });
+
+    suite.test('曹植建安風骨抗性：負面狀態依 30% 機率抵抗，正面狀態不受影響', () => {
+        const a = startTeamAura(null, 'ult-cao-zhi-3');
+        assert.isTrue(teamAuraResistsDebuff(a, StatusEffect.Stun, 0.1));
+        assert.isFalse(teamAuraResistsDebuff(a, StatusEffect.Stun, 0.5));
+        assert.isFalse(teamAuraResistsDebuff(a, StatusEffect.Fortified, 0.1));
+        assert.isFalse(teamAuraResistsDebuff(null, StatusEffect.Stun, 0));
     });
 
     return suite;

@@ -26,13 +26,15 @@ export interface TeamAuraParams {
     /** 命中率加成（條件型），只套用在 accuracyTroopTypes 列出的兵種，缺省 0 */
     accuracyBonus?: number;
     accuracyTroopTypes?: readonly string[];
+    /** 負面狀態抵抗機率 0..1（抗性），缺省 0 */
+    debuffResistChance?: number;
 }
 
 /** 視為負面狀態的效果（條件型增傷用） */
 export const TEAM_AURA_DEBUFF_EFFECTS: readonly StatusEffect[] = [StatusEffect.Stun, StatusEffect.Rooted, StatusEffect.Slow, StatusEffect.Weak];
 
 /** 單一 aura 的上限，防止同家族疊出爆表結果 */
-export const TEAM_AURA_CAPS = { attackMultiplier: 2, defenseMultiplier: 2, damageReduction: 0.5, shieldPct: 0.5, vsDebuffedDamageBonus: 0.5 } as const;
+export const TEAM_AURA_CAPS = { attackMultiplier: 2, defenseMultiplier: 2, damageReduction: 0.5, shieldPct: 0.5, vsDebuffedDamageBonus: 0.5, debuffResistChance: 0.6 } as const;
 
 /** 奧義 id → aura 參數（資料表，數值暫定） */
 export const TEAM_AURA_PARAMS: Readonly<Record<string, TeamAuraParams>> = {
@@ -79,6 +81,7 @@ export function teamAuraNoticeText(event: TeamAuraChangedEvent, isPlayer: boolea
         p.defenseMultiplier > 1 ? `防禦 +${pct(p.defenseMultiplier - 1)}` : '',
         p.damageReduction > 0 ? `減傷 ${pct(p.damageReduction)}` : '',
         p.controlImmune ? '免控' : '',
+        (p.debuffResistChance ?? 0) > 0 ? `抗性 +${pct(p.debuffResistChance!)}` : '',
         (p.accuracyBonus ?? 0) > 0 ? `指定兵種命中 +${pct(p.accuracyBonus!)}` : '',
         (p.vsDebuffedDamageBonus ?? 0) > 0 ? `對負面狀態目標增傷 ${pct(p.vsDebuffedDamageBonus!)}` : '',
     ].filter(Boolean) : [];
@@ -92,6 +95,8 @@ export function teamAuraNoticeText(event: TeamAuraChangedEvent, isPlayer: boolea
 export const TEAM_AURA_RIDERS: Readonly<Record<string, TeamAuraParams>> = {
     // 昭烈仁政：回復 20% HP 外，獲得 2 回合減傷；暫定減傷 20%
     'ult-liu-bei-3': { durationTurns: 2, attackMultiplier: 1, defenseMultiplier: 1, damageReduction: 0.2, shieldPct: 0, controlImmune: false },
+    // 建安風骨：移除負面狀態外，我軍全體抗性提升；暫定 3 回合、負面狀態抵抗 30%
+    'ult-cao-zhi-3': { durationTurns: 3, attackMultiplier: 1, defenseMultiplier: 1, damageReduction: 0, shieldPct: 0, controlImmune: false, debuffResistChance: 0.3 },
 };
 
 export function teamAuraParamsOf(ultimateId: string | null | undefined): TeamAuraParams | null {
@@ -116,6 +121,7 @@ export function startTeamAura(current: TeamAura | null, ultimateId: string): Tea
         ...((p.accuracyBonus ?? 0) >= (base?.accuracyBonus ?? 0)
             ? { accuracyBonus: p.accuracyBonus ?? 0, accuracyTroopTypes: p.accuracyTroopTypes }
             : { accuracyBonus: base!.accuracyBonus, accuracyTroopTypes: base!.accuracyTroopTypes }),
+        debuffResistChance: Math.min(TEAM_AURA_CAPS.debuffResistChance, Math.max(p.debuffResistChance ?? 0, base?.debuffResistChance ?? 0)),
         vsDebuffedDamageBonus: Math.min(TEAM_AURA_CAPS.vsDebuffedDamageBonus, Math.max(p.vsDebuffedDamageBonus ?? 0, base?.vsDebuffedDamageBonus ?? 0)),
     };
 }
@@ -138,6 +144,12 @@ export function teamAuraAttackMultiplier(aura: TeamAura | null): number {
 
 export function teamAuraDefenseMultiplier(aura: TeamAura | null): number {
     return active(aura) ? aura.defenseMultiplier : 1;
+}
+
+/** 抗性：負面狀態施加時依機率抵抗；roll 為 0..1 亂數，正面狀態不受影響 */
+export function teamAuraResistsDebuff(aura: TeamAura | null, effect: StatusEffect, roll: number): boolean {
+    if (!active(aura) || !aura.debuffResistChance) return false;
+    return TEAM_AURA_DEBUFF_EFFECTS.includes(effect) && roll < aura.debuffResistChance;
 }
 
 /** 條件型命中加成：攻擊方兵種在名單內才生效 */
