@@ -79,8 +79,13 @@ export class TroopUnit {
     this.depth = depth;
   }
 
+  /** 護盾（SYS-SKILL-ULT-0003）：受到傷害時先扣護盾再扣 HP，預設 0 不影響既有數值 */
+  public shield = 0;
+
   public takeDamage(value: number): void {
-    this.currentHp = Math.max(0, this.currentHp - value);
+    const absorbed = Math.min(this.shield, Math.max(0, value));
+    this.shield -= absorbed;
+    this.currentHp = Math.max(0, this.currentHp - (value - absorbed));
   }
 
   public heal(value: number): void {
