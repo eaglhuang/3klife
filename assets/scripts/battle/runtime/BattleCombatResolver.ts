@@ -15,7 +15,7 @@ import { weatherRangedHitDelta, weatherRangedRangeDelta } from '../../core/syste
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
-import { selfBurstAttackMultiplier, selfBurstBlocksEffect, selfBurstCritBonus } from '../shared/SelfBurstWindow';
+import { consumeSelfBurstExtraAction, selfBurstAttackMultiplier, selfBurstBlocksEffect, selfBurstCritBonus } from '../shared/SelfBurstWindow';
 import {
   extraAttackHitsOf,
   advanceTallyCombo,
@@ -458,6 +458,7 @@ export class BattleCombatResolver {
     didKill: boolean,
     actions: BattleCombatAction[],
   ): void {
+    this.resolveSelfBurstExtraAction(attacker, actions);
     const actionReset = this.context.state.getActionReset(attacker.id);
     if (!actionReset) {
       return;
@@ -489,6 +490,16 @@ export class BattleCombatResolver {
     }
 
     this.context.state.setActionReset(nextState);
+  }
+
+  /** 自身爆發再行動（SYS-SKILL-ULT-0001）：窗口內首位出手者追加一次攻擊，次數用完不再連鎖 */
+  private resolveSelfBurstExtraAction(attacker: TroopUnit, actions: BattleCombatAction[]): void {
+    if (attacker.isDead() || !this.context.state.getSelfBurst) return;
+    const consumed = consumeSelfBurstExtraAction(this.context.state.getSelfBurst(attacker.faction));
+    if (!consumed.allowed) return;
+    this.context.state.setSelfBurst(attacker.faction, consumed.window);
+    const followUpAction = this.buildAttackAction(attacker, { ignoreDeadOccupants: true });
+    if (followUpAction) actions.push(followUpAction);
   }
 
   public advanceAfterKill(attacker: TroopUnit, svc: ReturnType<typeof services>): void {
