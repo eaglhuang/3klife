@@ -527,14 +527,13 @@ function resolveFillChildWidths(node, childNodes) {
 
   // Sum up widths of fixed children (those without _flexFill already removed).
   let fixedSum = 0;
-  let _fixedCount = 0;
   for (const child of childNodes) {
     if (!child || typeof child !== 'object') continue;
-    if (typeof child.width === 'number') { fixedSum += child.width; fixedCount++; }
+    if (typeof child.width === 'number') { fixedSum += child.width; }
   }
   // Subtract fill children that might already have a width assigned.
   for (const child of fillChildren) {
-    if (typeof child.width === 'number') { fixedSum -= child.width; _fixedCount--; }
+    if (typeof child.width === 'number') { fixedSum -= child.width; }
   }
 
   const spacingX = typeof node.layout.spacingX === 'number' ? node.layout.spacingX : 0;
