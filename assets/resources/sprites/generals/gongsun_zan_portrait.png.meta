@@ -1,0 +1,157 @@
+{
+  "ver": "1.0.27",
+  "importer": "image",
+  "imported": true,
+  "uuid": "eb54ba7d-3ec4-4eae-a3d0-b8ab47ca793d",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "eb54ba7d-3ec4-4eae-a3d0-b8ab47ca793d@6c48a",
+      "displayName": "gongsun_zan_portrait",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "eb54ba7d-3ec4-4eae-a3d0-b8ab47ca793d",
+        "isUuid": true,
+        "visible": false,
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "ver": "1.0.12",
+      "importer": "sprite-frame",
+      "imported": true,
+      "uuid": "eb54ba7d-3ec4-4eae-a3d0-b8ab47ca793d@f9941",
+      "displayName": "gongsun_zan_portrait",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "pixelsPerUnit": 100,
+        "extrude": 1,
+        "meshType": 0,
+        "pivot": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "originalSize": {
+          "width": 512,
+          "height": 768
+        },
+        "trimSize": {
+          "width": 512,
+          "height": 768
+        },
+        "trimOffset": {
+          "x": 0,
+          "y": 0
+        },
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 1.5,
+        "offsetY": 1.5,
+        "trimX": 46,
+        "trimY": 48,
+        "width": 423,
+        "height": 669,
+        "rawWidth": 512,
+        "rawHeight": 768,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "vertices": {
+          "rawPosition": [
+            -211.5,
+            -334.5,
+            0,
+            211.5,
+            -334.5,
+            0,
+            -211.5,
+            334.5,
+            0,
+            211.5,
+            334.5,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            46,
+            720,
+            469,
+            720,
+            46,
+            51,
+            469,
+            51
+          ],
+          "nuv": [
+            0.08984375,
+            0.06640625,
+            0.916015625,
+            0.06640625,
+            0.08984375,
+            0.9375,
+            0.916015625,
+            0.9375
+          ],
+          "minPos": [
+            -211.5,
+            -334.5,
+            0
+          ],
+          "maxPos": [
+            211.5,
+            334.5,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "eb54ba7d-3ec4-4eae-a3d0-b8ab47ca793d@6c48a",
+        "atlasUuid": "",
+        "trimType": "auto"
+      },
+      "readonly": false,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "sprite-frame",
+    "fixAlphaTransparencyArtifacts": false,
+    "hasAlpha": true,
+    "redirect": "eb54ba7d-3ec4-4eae-a3d0-b8ab47ca793d@6c48a"
+  }
+}
