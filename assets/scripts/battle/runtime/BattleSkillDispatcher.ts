@@ -30,6 +30,8 @@ import {
 import { services } from '../../core/managers/ServiceLoader';
 import { selfBurstBlocksEffect, startSelfBurst } from '../shared/SelfBurstWindow';
 import { startTeamAura } from '../shared/TeamAura';
+import { resolveTeamRecover } from '../shared/TeamRecover';
+import { MORALE_DURATION_TURNS } from '../shared/Morale';
 import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
 import { sceneFireDamageTakenOf } from '../shared/BattleTacticBehavior';
 import { COMBO_ULTIMATE_MULTIPLIER, findComboUltimate } from '../shared/ComboUltimate';
@@ -134,6 +136,8 @@ export class BattleSkillDispatcher {
         });
       }
       // 全隊增益家族（SYS-SKILL-ULT-0002）：同家族逐欄取高不疊加
+      // 團隊回復家族（SYS-SKILL-ULT-0003）：施放當下對我方存活單位補血、淨化、回士氣、加護盾
+      this.applyTeamRecover(casterFaction, options.ultimateId);
       const auraBefore = state.getTeamAura(casterFaction);
       const auraAfter = startTeamAura(auraBefore, options.ultimateId);
       state.setTeamAura(casterFaction, auraAfter);
@@ -144,6 +148,30 @@ export class BattleSkillDispatcher {
       }
     }
     return result;
+  }
+
+  private applyTeamRecover(casterFaction: Faction, ultimateId: string): void {
+    const buff = services().buff;
+    const allies = Array.from(this.context.state.units.values()).filter((u) => u.faction === casterFaction && !u.isDead());
+    const byId = new Map(allies.map((u) => [u.id, u]));
+    const outcomes = resolveTeamRecover(ultimateId, allies.map((u) => ({
+      id: u.id,
+      currentHp: u.currentHp,
+      maxHp: u.getEffectiveMaxHp(),
+      morale: u.morale,
+      effects: buff.getBuffs(u.id).map((b) => b.effect),
+    })));
+    for (const o of outcomes) {
+      const unit = byId.get(o.id)!;
+      if (o.healed > 0) unit.heal(o.healed);
+      if (o.moraleGained > 0) {
+        unit.morale += o.moraleGained;
+        unit.moraleTurns = MORALE_DURATION_TURNS;
+      }
+      // 護盾不疊加：取較大者
+      unit.shield = Math.max(unit.shield, o.shield);
+      for (const effect of o.cleansed) buff.removeBuff(unit.id, effect);
+    }
   }
 
   public dispatchSeedTactic(
