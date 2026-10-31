@@ -456,8 +456,17 @@ function processElement(el, ctx, depth) {
   const hasElementChildren = (el.children || []).some(child => child.type === 'element');
   const beforePseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'before', hasElementChildren);
   for (const child of el.children) {
-    if (child.type !== 'element') continue;
-    const sub = processElement(child, ctx, depth + 1);
+    // 混合內容：容器內直接寫的文字（旁邊另有子元素）包成匿名文字節點，否則會被丟掉（PROG-2-1647）
+    const source = child.type === 'text' && hasElementChildren && String(child.value || '').trim()
+      ? wrapLooseTextNode(child, attrs)
+      : child;
+    if (source.type !== 'element') continue;
+    const sub = processElement(source, ctx, depth + 1);
+    // 匿名文字沒有量到寬度：用容器內容寬（扣左右內距），否則引擎不知在哪換行
+    if (source !== child && sub && sub.type === 'label' && sub.width == null && typeof node.width === 'number') {
+      const layout = node.layout || {};
+      sub.width = Math.max(1, node.width - (layout.paddingLeft || 0) - (layout.paddingRight || 0));
+    }
     appendNodeWithGeneratedSiblings(childNodes, sub);
   }
   const afterPseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'after', hasElementChildren);
@@ -1831,6 +1840,28 @@ function matchesSimpleStyleRule(rule, classSet, attrs = {}, tag = '') {
   if (rule.id && String(attrs.id || '') !== rule.id) return false;
   const classes = Array.isArray(rule.classes) ? rule.classes : [];
   return classes.every(className => classSet.has(className));
+}
+
+// 匿名文字只繼承容器的文字相關樣式（字型、字級、顏色等），不帶邊框、底色與內距
+const LOOSE_TEXT_INHERITED_PROPS = [
+  'font-family', 'font-size', 'font-weight', 'font-style', 'color',
+  'line-height', 'letter-spacing', 'text-align', 'text-transform', 'white-space',
+];
+
+function wrapLooseTextNode(textNode, parentAttrs) {
+  const declarations = String((parentAttrs && parentAttrs.style) || '')
+    .split(';')
+    .map(part => part.trim())
+    .filter(part => {
+      const prop = part.split(':')[0].trim().toLowerCase();
+      return LOOSE_TEXT_INHERITED_PROPS.includes(prop);
+    });
+  return {
+    type: 'element',
+    tag: 'span',
+    attrs: declarations.length > 0 ? { style: declarations.join('; ') } : {},
+    children: [textNode],
+  };
 }
 
 function collectText(el) {
