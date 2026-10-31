@@ -6,7 +6,9 @@ phase: M1-E
 created: 2026-04-15
 created_by_agent: GitHubCopilot
 owner: Agent1
-status: open
+status: in-progress
+started_at: 2026-10-31T01:53:03Z
+started_by_agent: ClaudeCode_opus-5-5
 type: ultimate-family
 related_cards:
   - SYS-SKILL-CORE-0001
@@ -23,7 +25,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/奧義系統.md (doc_spec_0030)
   - docs/主戰場UI規格書.md (doc_ui_0001)
-notes: "覆蓋趙雲1、關羽5、呂布3、張飛2/5、司馬懿2 等自身爆發奧義。"
+notes: "2026-10-31 | 狀態: 進行中 | 驗證: SelfBurstWindow 5 測試過 | 變更: 第 1 片新增純邏輯爆發窗口 assets/scripts/battle/shared/SelfBurstWindow.ts（開始/持續/結束、再行動上限不連鎖、免控限窗口期、參數表暫定值） | 阻塞: 尚未接戰場傷害／免控與 UI 爆發 icon；司馬懿韜光養晦屬特殊規則不在表"
 ---
 
 # [SYS-SKILL-ULT-0001] 奧義自身爆發家族
