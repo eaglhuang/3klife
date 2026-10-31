@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
+// PROG-2-1640：recipe 直出 JSON 已退役，正式路徑為 HTML 工作流（run-html-to-ucuf-workflow.js）。
+console.warn('[deprecated] recipe → ui-spec 直出已退役；新畫面請改走 html-to-ucuf（node tools_node/run-html-to-ucuf-workflow.js）。');
+
 const fs = require('fs');
 const path = require('path');
 const {
