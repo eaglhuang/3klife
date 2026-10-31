@@ -81,7 +81,11 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
         });
       }
     }
-    context.state.setMassDebuff(context.actingFaction, tickEnemyMassDebuff(debuff).debuff);
+    const ticked = tickEnemyMassDebuff(debuff);
+    context.state.setMassDebuff(context.actingFaction, ticked.debuff);
+    if (ticked.phase === 'ended') {
+      svc.event.emit(EVENT_NAMES.MassDebuffChanged, { faction: context.actingFaction, phase: 'ended', debuff: null });
+    }
   }
   // 全隊魅力（大喬，PROG-2-1582 暫定）：換算為己方回合開始全隊士氣 +20
   applyTallyTeamMoraleAura(context.state.units.values(), context.actingFaction);
