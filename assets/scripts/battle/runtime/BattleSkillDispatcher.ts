@@ -134,7 +134,14 @@ export class BattleSkillDispatcher {
         });
       }
       // 全隊增益家族（SYS-SKILL-ULT-0002）：同家族逐欄取高不疊加
-      state.setTeamAura(casterFaction, startTeamAura(state.getTeamAura(casterFaction), options.ultimateId));
+      const auraBefore = state.getTeamAura(casterFaction);
+      const auraAfter = startTeamAura(auraBefore, options.ultimateId);
+      state.setTeamAura(casterFaction, auraAfter);
+      if (auraAfter && auraAfter !== auraBefore) {
+        services().event.emit(EVENT_NAMES.TeamAuraChanged, {
+          faction: casterFaction, phase: 'started', ultimateId: auraAfter.ultimateId, turns: auraAfter.remainingTurns,
+        });
+      }
     }
     return result;
   }
