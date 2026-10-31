@@ -26,7 +26,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/戰法系統.md (doc_spec_0038)
   - docs/主戰場UI規格書.md (doc_ui_0001)
-notes: "位移、推擠、地格狀態是 battle board 的核心差異化能力，必須先把 path、blocker、tile ownership 鎖死。2026-04-16 已完成：fire/river/rock TileState 骨架、阻擋格、進格推移、standing tile tick 已接進 BattleController；MovementResolver 全路徑邏輯、ForcedMoveResolver 拉扯與騎射合一/精銳突擊/七進七出等主要 G-1 戰法的完整落地仍待完成。"
+notes: "2026-10-31 | 狀態: open | 驗證: 程式審核 | 變更: 列名戰法全數有實作（無雙亂舞 PROG-2-0799、八陣圖 FormationZoneSkillResolver、空城計 PushSkillResolver、七進七出 Ghost 移動、騎射合一 MoveThenAttack） | 阻塞: 卡上畫面表演驗收需人工實機確認"
 ---
 
 # [SYS-SKILL-TAC-0003] 戰法位移與棋盤控制模組包

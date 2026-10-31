@@ -26,7 +26,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/戰法系統.md (doc_spec_0038)
   - docs/主戰場UI規格書.md (doc_ui_0001)
-notes: "覆蓋單體、直線、扇形投射傷害；以單一 target resolver 支援多種選區，不為每招各寫一個戰鬥流程。2026-04-20 更新：無視防禦/百步穿楊/箭雨齊發/龍魂突刺已落地並通過 smoke；趙家槍法進行中；其餘 G-1 虎符戰法 TDIR/TLINE/TFAN 段待實作。"
+notes: "2026-10-31 | 狀態: open | 驗證: 程式審核 | 變更: 13/14 列名戰法已在 BattleSkillProfiles／resolver 落地，箭雨齊發走 G-5 tactic-library＋BattleSkillSourceTranslator（有測試） | 阻塞: 卡上畫面表演驗收需人工實機確認"
 ---
 
 # [SYS-SKILL-TAC-0001] 戰法傷害投射模組包
