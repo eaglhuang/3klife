@@ -15,7 +15,7 @@ import { weatherRangedHitDelta, weatherRangedRangeDelta } from '../../core/syste
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
-import { TEAM_AURA_DEBUFF_EFFECTS, applyTeamAuraToDamage, teamAuraAccuracyDelta, teamAuraAttackMultiplier, teamAuraDefenseMultiplier, teamAuraVsDebuffedMultiplier } from '../shared/TeamAura';
+import { TEAM_AURA_DEBUFF_EFFECTS, applyTeamAuraToDamage, teamAuraAccuracyDelta, teamAuraAttackMultiplier, teamAuraCounterRate, teamAuraDefenseMultiplier, teamAuraVsDebuffedMultiplier } from '../shared/TeamAura';
 import { consumeSelfBurstExtraAction, selfBurstAttackMultiplier, selfBurstBlocksEffect, selfBurstCritBonus } from '../shared/SelfBurstWindow';
 import {
   extraAttackHitsOf,
@@ -868,7 +868,8 @@ export class BattleCombatResolver {
 
     const defenderGeneral = this.context.state.getGeneral(defender.faction);
     // 反擊屬於被動自動觸發（PROG-2-1317）：依守方武將智力擲發動率；未過不反擊，也不消耗觸發次數
-    if (defenderGeneral && this.hitRandom() >= tacticTriggerRate(defenderGeneral.int)) {
+    // 全隊反擊率（孫權碧眼統軍，SYS-SKILL-ULT-0003）加在發動率上
+    if (defenderGeneral && this.hitRandom() >= teamAuraCounterRate(this.context.state.getTeamAura(defender.faction), tacticTriggerRate(defenderGeneral.int))) {
       return;
     }
     const defenderCell = this.context.state.getCell(defender.lane, defender.depth);

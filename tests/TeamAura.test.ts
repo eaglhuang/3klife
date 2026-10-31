@@ -12,6 +12,7 @@ import {
     startTeamAura,
     teamAuraAccuracyDelta,
     teamAuraAttackMultiplier,
+    teamAuraCounterRate,
     teamAuraDefenseMultiplier,
     teamAuraNoticeText,
     teamAuraResistsDebuff,
@@ -104,6 +105,15 @@ export function createTeamAuraSuite(): TestSuite {
         assert.isFalse(teamAuraResistsDebuff(a, StatusEffect.Stun, 0.5));
         assert.isFalse(teamAuraResistsDebuff(a, StatusEffect.Fortified, 0.1));
         assert.isFalse(teamAuraResistsDebuff(null, StatusEffect.Stun, 0));
+    });
+
+    suite.test('孫權碧眼統軍反擊率：加在既有發動率上、不超過 100%、到期失效', () => {
+        const a = startTeamAura(null, 'ult-sun-quan-4');
+        assert.equals(0.8, Math.round(teamAuraCounterRate(a, 0.5) * 100) / 100);
+        assert.equals(1, teamAuraCounterRate(a, 0.9));
+        assert.equals(0.5, teamAuraCounterRate(null, 0.5));
+        let t = tickTeamAura(a); t = tickTeamAura(t.aura);
+        assert.equals(0.5, teamAuraCounterRate(t.aura, 0.5));
     });
 
     return suite;
