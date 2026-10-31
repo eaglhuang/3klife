@@ -1165,7 +1165,7 @@ function inferNodeType(tag, cls, style, attrs, el) {
   // 只有文字但帶底色或邊框（如帶框的切換鈕、稀有度徽章）：轉成 panel，文字另包節點，否則底框會被丟掉
   if (TEXT_TAGS.has(tag) || hasOnlyTextContent(el)) return (hasBg || hasRenderableBorder(style)) ? 'panel' : 'label';
 
-  if (hasBg) return 'panel';
+  if (hasBg || hasRenderableBorder(style)) return 'panel';
   return 'container';
 }
 
@@ -2083,7 +2083,8 @@ function resolveBorderSides(style) {
 }
 
 function hasRenderableBorder(style) {
-  return resolveUniformBorderWidth(style) > 0;
+  // 單邊框（如 border-bottom 分隔線）其餘各邊 style 為 none，均一寬度會判成 0，須再看各邊
+  return resolveUniformBorderWidth(style) > 0 || !!resolveBorderSides(style);
 }
 
 function resolveUniformBorderWidth(style) {
@@ -2121,7 +2122,13 @@ function parseBorderWidthValue(value) {
 
 function resolveUniformBorderColor(ctx, style, slotId) {
   if (!style) return null;
+  // 先取有寬度那幾邊的顏色：單邊框時簡寫與其他邊的顏色只是預設的文字色
+  const sides = resolveBorderSides(style);
+  const drawnSideColors = sides
+    ? ['Top', 'Right', 'Bottom', 'Left'].filter(n => sides[n.toLowerCase()] > 0).map(n => style[`border${n}Color`])
+    : [];
   const candidate = firstMeaningfulBorderColor([
+    ...drawnSideColors,
     style.borderColor,
     style.borderTopColor,
     style.borderRightColor,
