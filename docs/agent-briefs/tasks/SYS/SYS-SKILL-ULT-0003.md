@@ -25,7 +25,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/奧義系統.md (doc_spec_0030)
   - docs/主戰場UI規格書.md (doc_ui_0001)
-notes: "2026-10-31 | 狀態: 進行中 | 驗證: TeamRecover 6＋TeamRecoverBattleWiring 3 測試過 | 變更: 第 1 片純邏輯 TeamRecover——4 個 team-heal 奧義參數表（劉備1/3、曹植3、孫權4）、群補不越最大 HP、士氣不越 100、白名單淨化（控制類優先、不誤刪正面狀態）、瀕死優先順序、護盾量；第 2 片接戰場——奧義施放成功對我方存活單位補血、淨化（BuffSystem.removeBuff）、士氣回復、護盾（TroopUnit.shield 受傷先扣、重複施放取大不疊加）；第 3 片戰報提示——TeamRecovered 事件，寫實際受惠部隊數與回復總量、淨化數，並刷新血條與狀態 icon | 阻塞: 單位頭上補血跳字未接；減傷、抗性、反擊率等持續附帶效果待後續片；原 notes 列的趙雲2、曹操4 在資料中不屬 team-heal 家族"
+notes: "2026-10-31 | 狀態: 進行中 | 驗證: TeamRecover 6＋TeamRecoverBattleWiring 4 測試過 | 變更: 第 1 片純邏輯 TeamRecover——4 個 team-heal 奧義參數表（劉備1/3、曹植3、孫權4）、群補不越最大 HP、士氣不越 100、白名單淨化（控制類優先、不誤刪正面狀態）、瀕死優先順序、護盾量；第 2 片接戰場——奧義施放成功對我方存活單位補血、淨化（BuffSystem.removeBuff）、士氣回復、護盾（TroopUnit.shield 受傷先扣、重複施放取大不疊加）；第 3 片戰報提示——TeamRecovered 事件，寫實際受惠部隊數與回復總量、淨化數，並刷新血條與狀態 icon；第 4 片持續附帶效果——昭烈仁政 2 回合減傷 20%，以 TEAM_AURA_RIDERS 掛進全隊 aura 共用同一份結果 | 阻塞: 單位頭上補血跳字未接；曹植抗性、孫權反擊率附帶效果待後續片；原 notes 列的趙雲2、曹操4 在資料中不屬 team-heal 家族"
 ---
 
 # [SYS-SKILL-ULT-0003] 奧義團隊回復家族

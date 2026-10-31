@@ -76,5 +76,15 @@ export function createTeamRecoverBattleWiringSuite(): TestSuite {
         assert.equals(95000, mine.currentHp);
     });
 
+    suite.test('昭烈仁政附帶 2 回合減傷：與全隊增益共用同一份 aura', () => {
+        const { ctrl, dispatcher } = setup();
+        cast(dispatcher, 'ult-liu-bei-3');
+        const aura = ctrl.state.getTeamAura(Faction.Player);
+        assert.equals(0.2, aura?.damageReduction);
+        assert.equals(2, aura?.remainingTurns);
+        cast(dispatcher, 'ult-sun-quan-4');
+        assert.equals(0.2, ctrl.state.getTeamAura(Faction.Player)?.damageReduction);
+    });
+
     return suite;
 }
