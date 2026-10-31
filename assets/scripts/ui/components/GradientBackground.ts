@@ -24,6 +24,8 @@ export interface GradientBackgroundRadialOptions extends GradientBackgroundShape
 
 type GradientBackgroundType = 'linear' | 'radial';
 
+const EDGE_TEXTURE_MAX_SIDE = 1024;
+
 @ccclass('GradientBackground')
 @requireComponent(UITransform)
 @executeInEditMode
@@ -145,7 +147,11 @@ export class GradientBackground extends Component {
         const transform = this.getComponent(UITransform);
         const width = Math.max(1, transform?.width || 1);
         const height = Math.max(1, transform?.height || 1);
-        const maxTextureSide = Math.max(64, Math.min(256, Math.round(Math.max(width, height) / 6)));
+        // 有圓角或邊框時邊緣需逐像素反鋸齒，貼圖改 1:1；純漸層可低解析度放大。
+        const hasEdge = this._cornerRadius > 0 || this._borderWidth > 0;
+        const maxTextureSide = hasEdge
+            ? Math.max(2, Math.min(EDGE_TEXTURE_MAX_SIDE, Math.ceil(Math.max(width, height))))
+            : Math.max(64, Math.min(256, Math.round(Math.max(width, height) / 6)));
         const aspect = width / height;
         const textureWidth = aspect >= 1 ? maxTextureSide : Math.max(2, Math.round(maxTextureSide * aspect));
         const textureHeight = aspect >= 1 ? Math.max(2, Math.round(maxTextureSide / aspect)) : maxTextureSide;
@@ -252,41 +258,53 @@ export class GradientBackground extends Component {
         const halfWidth = width * 0.5;
         const halfHeight = height * 0.5;
         const outerRadius = Math.min(this._cornerRadius, halfWidth, halfHeight);
-        if (!this._isInsideRoundedRect(uiX, uiY, halfWidth, halfHeight, outerRadius)) {
+        // 以有號距離算邊緣覆蓋率（約 1 像素過渡），取代二值內外判斷避免鋸齒。
+        const outerCoverage = this._edgeCoverage(this._roundedRectDistance(uiX, uiY, halfWidth, halfHeight, outerRadius));
+        if (outerCoverage <= 0) {
             return new Color(0, 0, 0, 0);
         }
 
+        let color = this._sampleColor(t);
         const borderWidth = Math.min(this._borderWidth, halfWidth, halfHeight);
         if (borderWidth > 0 && this._borderColor.a > 0) {
-            const innerHalfWidth = Math.max(0, halfWidth - borderWidth);
-            const innerHalfHeight = Math.max(0, halfHeight - borderWidth);
-            const innerRadius = Math.max(0, outerRadius - borderWidth);
-            if (!this._isInsideRoundedRect(uiX, uiY, innerHalfWidth, innerHalfHeight, innerRadius)) {
-                return this._borderColor;
-            }
+            const innerDistance = this._roundedRectDistance(
+                uiX, uiY,
+                Math.max(0, halfWidth - borderWidth),
+                Math.max(0, halfHeight - borderWidth),
+                Math.max(0, outerRadius - borderWidth),
+            );
+            color = this._mixColor(this._borderColor, color, this._edgeCoverage(innerDistance));
         }
-
-        return this._sampleColor(t);
+        return outerCoverage >= 1
+            ? color
+            : new Color(color.r, color.g, color.b, Math.round(color.a * outerCoverage));
     }
 
-    private _isInsideRoundedRect(x: number, y: number, halfWidth: number, halfHeight: number, radius: number): boolean {
+    private _roundedRectDistance(x: number, y: number, halfWidth: number, halfHeight: number, radius: number): number {
         if (halfWidth <= 0 || halfHeight <= 0) {
-            return false;
+            return Number.POSITIVE_INFINITY;
         }
-        if (Math.abs(x) > halfWidth || Math.abs(y) > halfHeight) {
-            return false;
-        }
-        if (radius <= 0) {
-            return true;
-        }
-        const innerX = halfWidth - radius;
-        const innerY = halfHeight - radius;
-        const dx = Math.abs(x) - innerX;
-        const dy = Math.abs(y) - innerY;
-        if (dx <= 0 || dy <= 0) {
-            return true;
-        }
-        return dx * dx + dy * dy <= radius * radius;
+        const r = Math.min(radius, halfWidth, halfHeight);
+        const qx = Math.abs(x) - (halfWidth - r);
+        const qy = Math.abs(y) - (halfHeight - r);
+        const outside = Math.hypot(Math.max(qx, 0), Math.max(qy, 0));
+        return outside + Math.min(Math.max(qx, qy), 0) - r;
+    }
+
+    private _edgeCoverage(distance: number): number {
+        return Math.max(0, Math.min(1, 0.5 - distance));
+    }
+
+    private _mixColor(outer: Color, inner: Color, innerWeight: number): Color {
+        if (innerWeight >= 1) return inner;
+        if (innerWeight <= 0) return outer;
+        const k = 1 - innerWeight;
+        return new Color(
+            Math.round(outer.r * k + inner.r * innerWeight),
+            Math.round(outer.g * k + inner.g * innerWeight),
+            Math.round(outer.b * k + inner.b * innerWeight),
+            Math.round(outer.a * k + inner.a * innerWeight),
+        );
     }
 
     private _sampleColor(t: number): Color {
