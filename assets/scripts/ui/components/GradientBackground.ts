@@ -217,7 +217,9 @@ export class GradientBackground extends Component {
         texture.reset({ width: textureWidth, height: textureHeight, format: Texture2D.PixelFormat.RGBA8888 });
         texture.uploadData(data);
         // 1:1 邊緣貼圖已自行反鋸齒；線性過濾會在未預乘的邊框與半透明填色之間內插出灰白色
-        if (hasEdge) texture.setFilters(Texture2D.Filter.NEAREST, Texture2D.Filter.NEAREST);
+        // 測試用 cc 型別樁沒有 Filter 列舉，經 any 取用
+        const nearest = (Texture2D as any).Filter?.NEAREST;
+        if (hasEdge && nearest !== undefined) texture.setFilters(nearest, nearest);
         (texture as any).loaded = true;
 
         const frame = new SpriteFrame();
