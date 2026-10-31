@@ -6,7 +6,9 @@ phase: M1-E
 created: 2026-04-15
 created_by_agent: GitHubCopilot
 owner: Agent1
-status: open
+status: in-progress
+started_at: 2026-10-31T16:00:00+08:00
+started_by_agent: ClaudeCode_opus-5-5
 type: ultimate-family
 related_cards:
   - SYS-SKILL-CORE-0001
@@ -23,7 +25,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/奧義系統.md (doc_spec_0030)
   - docs/主戰場UI規格書.md (doc_ui_0001)
-notes: "覆蓋趙雲2、曹操4、劉備1/3 等群補、淨化、精力回補家族。"
+notes: "2026-10-31 | 狀態: 進行中 | 驗證: TeamRecover 5 測試過 | 變更: 第 1 片純邏輯 TeamRecover——4 個 team-heal 奧義參數表（劉備1/3、曹植3、孫權4）、群補不越最大 HP、士氣不越 100、白名單淨化（控制類優先、不誤刪正面狀態）、瀕死優先順序、護盾量 | 阻塞: 尚未接戰場與 HUD 跳字；減傷、抗性、反擊率等持續附帶效果待後續片；原 notes 列的趙雲2、曹操4 在資料中不屬 team-heal 家族"
 ---
 
 # [SYS-SKILL-ULT-0003] 奧義團隊回復家族
