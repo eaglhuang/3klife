@@ -7,6 +7,7 @@ import type { BattleState } from '../../models/BattleState';
 import { advanceFormationZonesOf } from '../../shared/FormationZone';
 import { tickSelfBurst } from '../../shared/SelfBurstWindow';
 import { tickTeamAura } from '../../shared/TeamAura';
+import { massDebuffDotDamage, tickEnemyMassDebuff } from '../../shared/EnemyMassDebuff';
 import { advanceMoraleOf } from '../../shared/Morale';
 import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
@@ -68,6 +69,19 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
         faction: context.actingFaction, phase: 'ended', ultimateId: auraBefore.ultimateId, turns: 0,
       });
     }
+  }
+  // 敵方全體減益（SYS-SKILL-ULT-0004）：被減益陣營自己的回合先吃 DOT 再倒數
+  if (context.state.getMassDebuff) {
+    const debuff = context.state.getMassDebuff(context.actingFaction);
+    if (debuff && debuff.dotPct > 0) {
+      for (const unit of Array.from(context.state.units.values())) {
+        if (unit.faction !== context.actingFaction || unit.isDead()) continue;
+        context.applyUnitDamage(unit, massDebuffDotDamage(debuff, unit.maxHp), null, {
+          attackerId: null, attackerLane: null, attackerDepth: null, damageSource: 'mass-debuff-dot', allowDamageLink: false,
+        });
+      }
+    }
+    context.state.setMassDebuff(context.actingFaction, tickEnemyMassDebuff(debuff).debuff);
   }
   // 全隊魅力（大喬，PROG-2-1582 暫定）：換算為己方回合開始全隊士氣 +20
   applyTallyTeamMoraleAura(context.state.units.values(), context.actingFaction);

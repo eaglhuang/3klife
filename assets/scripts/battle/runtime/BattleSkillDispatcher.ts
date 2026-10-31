@@ -32,6 +32,7 @@ import { selfBurstBlocksEffect, startSelfBurst } from '../shared/SelfBurstWindow
 import { startTeamAura, teamAuraResistsDebuff } from '../shared/TeamAura';
 import { resolveTeamRecover } from '../shared/TeamRecover';
 import { MORALE_DURATION_TURNS } from '../shared/Morale';
+import { dispelPick, enemyMassDebuffParamsOf, massDebuffStatusesFor, massDebuffTargets, startEnemyMassDebuff } from '../shared/EnemyMassDebuff';
 import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
 import { sceneFireDamageTakenOf } from '../shared/BattleTacticBehavior';
 import { COMBO_ULTIMATE_MULTIPLIER, findComboUltimate } from '../shared/ComboUltimate';
@@ -146,8 +147,33 @@ export class BattleSkillDispatcher {
           faction: casterFaction, phase: 'started', ultimateId: auraAfter.ultimateId, turns: auraAfter.remainingTurns,
         });
       }
+      // 敵方全體減益家族（SYS-SKILL-ULT-0004）：對敵方陣營掛持續層、附加狀態、驅散增益
+      this.applyEnemyMassDebuff(casterFaction, options.ultimateId);
     }
     return result;
+  }
+
+  private applyEnemyMassDebuff(casterFaction: Faction, ultimateId: string): void {
+    const params = enemyMassDebuffParamsOf(ultimateId);
+    if (!params) return;
+    const state = this.context.state;
+    const svc = services();
+    const opponent = casterFaction === Faction.Player ? Faction.Enemy : Faction.Player;
+    const foes = Array.from(state.units.values())
+      .filter((u) => u.faction === opponent)
+      .map((u) => ({ id: u.id, unit: u, isDead: () => u.isDead(), effects: svc.buff.getBuffs(u.id).map((b) => b.effect) }));
+    const targets = massDebuffTargets(foes, params, params.targetCount !== undefined ? svc.session.randomSource() : 0);
+    targets.forEach((t, i) => {
+      if (params.dispel) for (const effect of dispelPick(t.effects)) svc.buff.removeBuff(t.id, effect);
+      for (const effect of massDebuffStatusesFor(params, i)) {
+        // 與單體 debuff 同規則：爆發免控、全隊抗性先判
+        if (selfBurstBlocksEffect(state.getSelfBurst(opponent), effect)) continue;
+        if (teamAuraResistsDebuff(state.getTeamAura(opponent), effect, svc.session.randomSource())) continue;
+        svc.buff.applyBuff(t.id, effect, params.statusTurns);
+        svc.event.emit(EVENT_NAMES.BuffApplied, { unitId: t.id, effect, turns: params.statusTurns });
+      }
+    });
+    state.setMassDebuff(opponent, startEnemyMassDebuff(state.getMassDebuff(opponent), ultimateId));
   }
 
   private applyTeamRecover(casterFaction: Faction, ultimateId: string): void {

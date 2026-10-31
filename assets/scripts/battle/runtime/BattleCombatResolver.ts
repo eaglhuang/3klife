@@ -15,6 +15,7 @@ import { weatherRangedHitDelta, weatherRangedRangeDelta } from '../../core/syste
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
+import { massDebuffAccuracyDelta, massDebuffAttackMultiplier, massDebuffCritDelta, massDebuffDamageTakenMultiplier } from '../shared/EnemyMassDebuff';
 import { TEAM_AURA_DEBUFF_EFFECTS, applyTeamAuraToDamage, teamAuraAccuracyDelta, teamAuraAttackMultiplier, teamAuraCounterRate, teamAuraDefenseMultiplier, teamAuraVsDebuffedMultiplier } from '../shared/TeamAura';
 import { consumeSelfBurstExtraAction, selfBurstAttackMultiplier, selfBurstBlocksEffect, selfBurstCritBonus } from '../shared/SelfBurstWindow';
 import {
@@ -273,7 +274,9 @@ export class BattleCombatResolver {
     const weatherAccuracy = this.getWeatherRangedHitDelta(attacker);
     const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth - defenderEvasion - tallyEvasionBonusOf(defender) + sceneAccuracy + weatherAccuracy
       // 全隊增益條件型命中（孫權坐斷東南，SYS-SKILL-ULT-0002）
-      + teamAuraAccuracyDelta(this.context.state.getTeamAura(attacker.faction), attacker.type);
+      + teamAuraAccuracyDelta(this.context.state.getTeamAura(attacker.faction), attacker.type)
+      // 敵方全體減益命中下降（貂蟬貂影惑心，SYS-SKILL-ULT-0004）
+      + massDebuffAccuracyDelta(this.context.state.getMassDebuff(attacker.faction));
     // 大霧免疫（PROG-2-0584）：大霧天氣下攻擊方有此效果時命中必中，略過擲骰
     const fogGuaranteed = isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects);
     if (!fogGuaranteed && !rollHit(attackerAccuracy, this.hitRandom)) {
@@ -296,7 +299,8 @@ export class BattleCombatResolver {
     const attackerBurst = this.context.state.getSelfBurst(attacker.faction);
     let damage = svc.formula.calculateDamage({
       attackerAttack: attacker.getEffectiveAttack() * this.getTallyAttackMod(attacker) * selfBurstAttackMultiplier(attackerBurst)
-        * teamAuraAttackMultiplier(this.context.state.getTeamAura(attacker.faction)),
+        * teamAuraAttackMultiplier(this.context.state.getTeamAura(attacker.faction))
+        * massDebuffAttackMultiplier(this.context.state.getMassDebuff(attacker.faction)),
       defenderDefense: effectiveDef,
       attackerType: attacker.type,
       defenderType: defender.type,
@@ -323,13 +327,16 @@ export class BattleCombatResolver {
     }
 
     // 暴擊（SCN-06）：基礎 5% + 場景加成，暴擊時傷害 ×1.5；擲骰走戰場亂數源
-    const critRate = critRateOf((tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0) + selfBurstCritBonus(attackerBurst));
+    const critRate = critRateOf((tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0) + selfBurstCritBonus(attackerBurst)
+      + massDebuffCritDelta(this.context.state.getMassDebuff(attacker.faction)));
     if (rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);
     }
     // 全隊增益條件型增傷（郭嘉十勝定論，SYS-SKILL-ULT-0002）：目標身上有負面狀態才生效
     const defenderDebuffed = TEAM_AURA_DEBUFF_EFFECTS.some((effect) => svc.buff.hasBuff(defender.id, effect));
     damage = Math.floor(damage * teamAuraVsDebuffedMultiplier(this.context.state.getTeamAura(attacker.faction), defenderDebuffed));
+    // 敵方全體減益易傷（郭嘉奉孝天機崩解，SYS-SKILL-ULT-0004）
+    damage = Math.floor(damage * massDebuffDamageTakenMultiplier(this.context.state.getMassDebuff(defender.faction)));
     // 全隊增益減傷（SYS-SKILL-ULT-0002）：護盾尚未接，先只套減傷
     damage = Math.max(1, applyTeamAuraToDamage(this.context.state.getTeamAura(defender.faction), damage, 0).hpDamage);
 

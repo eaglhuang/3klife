@@ -9,6 +9,7 @@ import { TroopUnit } from "../../core/models/TroopUnit";
 import type { FormationZone } from "../shared/FormationZone";
 import type { SelfBurstWindow } from "../shared/SelfBurstWindow";
 import type { TeamAura } from "../shared/TeamAura";
+import type { EnemyMassDebuff } from "../shared/EnemyMassDebuff";
 import type { UnitDot } from "../shared/UnitDot";
 import type { WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import type { SalvageTotals } from "../../core/systems/StrategistHud";
@@ -91,6 +92,8 @@ export class BattleState {
   public readonly selfBursts = new Map<Faction, SelfBurstWindow>();
   /** 奧義全隊增益 aura（SYS-SKILL-ULT-0002）：以施放者陣營為鍵，中途加入單位自動吃到 */
   public readonly teamAuras = new Map<Faction, TeamAura>();
+  /** 奧義敵方全體減益（SYS-SKILL-ULT-0004）：以被減益陣營為鍵 */
+  public readonly massDebuffs = new Map<Faction, EnemyMassDebuff>();
   public readonly damageLinks = new Map<string, DamageLinkState>();
   public readonly counterReactions = new Map<string, CounterReactionState>();
   public readonly actionResets = new Map<string, ActionResetState>();
@@ -170,6 +173,7 @@ export class BattleState {
     this.formationZones.clear();
     this.selfBursts.clear();
     this.teamAuras.clear();
+    this.massDebuffs.clear();
     this.damageLinks.clear();
     this.counterReactions.clear();
     this.actionResets.clear();
@@ -322,6 +326,15 @@ export class BattleState {
 
   public setFormationZone(zone: FormationZone): void {
     this.formationZones.set(`${zone.lane},${zone.depth}`, zone);
+  }
+
+  public getMassDebuff(faction: Faction): EnemyMassDebuff | null {
+    return this.massDebuffs.get(faction) ?? null;
+  }
+
+  public setMassDebuff(faction: Faction, debuff: EnemyMassDebuff | null): void {
+    if (debuff) this.massDebuffs.set(faction, debuff);
+    else this.massDebuffs.delete(faction);
   }
 
   public getTeamAura(faction: Faction): TeamAura | null {
