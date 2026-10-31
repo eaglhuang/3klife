@@ -6,7 +6,9 @@ phase: M1-E
 created: 2026-04-15
 created_by_agent: GitHubCopilot
 owner: Agent1
-status: open
+status: in-progress
+started_at: 2026-10-31T15:00:00+08:00
+started_by_agent: ClaudeCode_opus-5-5
 type: ultimate-family
 related_cards:
   - SYS-SKILL-CORE-0001
@@ -23,7 +25,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/奧義系統.md (doc_spec_0030)
   - docs/主戰場UI規格書.md (doc_ui_0001)
-notes: "覆蓋趙雲3、關羽2、呂布1/2/5、孫權1、司馬懿1 等單體重創與斬殺家族。"
+notes: "覆蓋趙雲3、關羽2、呂布1/2/5、孫權1、司馬懿1 等單體重創與斬殺家族（資料實際為貂蟬4、呂布1/2/5、關羽2、趙雲3、曹植4、司馬懿1；孫權1 不屬此家族）。第 1 片：純邏輯 SingleExecute.ts（目標鎖定與換目標、斬殺門檻、純傷害、逐擊必暴、標記增傷、擊殺回血、吸攻護盾、戰報三分支）。數值暫定；待接線：dispatcher／CombatResolver、標記狀態、戰報事件、target lock UI。"
 ---
 
 # [SYS-SKILL-ULT-0005] 奧義敵將定點傷害家族
