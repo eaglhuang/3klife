@@ -8,6 +8,7 @@ import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import type { FormationZone } from "../shared/FormationZone";
 import type { SelfBurstWindow } from "../shared/SelfBurstWindow";
+import type { TeamAura } from "../shared/TeamAura";
 import type { UnitDot } from "../shared/UnitDot";
 import type { WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import type { SalvageTotals } from "../../core/systems/StrategistHud";
@@ -88,6 +89,8 @@ export class BattleState {
   public readonly formationZones = new Map<string, FormationZone>();
   /** 奧義自身爆發窗口（SYS-SKILL-ULT-0001）：以施放者陣營為鍵，整支軍隊共用（PM 暫定） */
   public readonly selfBursts = new Map<Faction, SelfBurstWindow>();
+  /** 奧義全隊增益 aura（SYS-SKILL-ULT-0002）：以施放者陣營為鍵，中途加入單位自動吃到 */
+  public readonly teamAuras = new Map<Faction, TeamAura>();
   public readonly damageLinks = new Map<string, DamageLinkState>();
   public readonly counterReactions = new Map<string, CounterReactionState>();
   public readonly actionResets = new Map<string, ActionResetState>();
@@ -166,6 +169,7 @@ export class BattleState {
     this.unitDots.clear();
     this.formationZones.clear();
     this.selfBursts.clear();
+    this.teamAuras.clear();
     this.damageLinks.clear();
     this.counterReactions.clear();
     this.actionResets.clear();
@@ -318,6 +322,15 @@ export class BattleState {
 
   public setFormationZone(zone: FormationZone): void {
     this.formationZones.set(`${zone.lane},${zone.depth}`, zone);
+  }
+
+  public getTeamAura(faction: Faction): TeamAura | null {
+    return this.teamAuras.get(faction) ?? null;
+  }
+
+  public setTeamAura(faction: Faction, aura: TeamAura | null): void {
+    if (aura) this.teamAuras.set(faction, aura);
+    else this.teamAuras.delete(faction);
   }
 
   public getSelfBurst(faction: Faction): SelfBurstWindow | null {

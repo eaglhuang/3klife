@@ -29,6 +29,7 @@ import {
 } from '../../shared/SkillRuntimeContract';
 import { services } from '../../core/managers/ServiceLoader';
 import { selfBurstBlocksEffect, startSelfBurst } from '../shared/SelfBurstWindow';
+import { startTeamAura } from '../shared/TeamAura';
 import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
 import { sceneFireDamageTakenOf } from '../shared/BattleTacticBehavior';
 import { COMBO_ULTIMATE_MULTIPLIER, findComboUltimate } from '../shared/ComboUltimate';
@@ -132,6 +133,8 @@ export class BattleSkillDispatcher {
           faction: casterFaction, phase: 'started', ultimateId: after.ultimateId, turns: after.remainingTurns,
         });
       }
+      // 全隊增益家族（SYS-SKILL-ULT-0002）：同家族逐欄取高不疊加
+      state.setTeamAura(casterFaction, startTeamAura(state.getTeamAura(casterFaction), options.ultimateId));
     }
     return result;
   }

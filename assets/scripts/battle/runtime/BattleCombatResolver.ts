@@ -15,6 +15,7 @@ import { weatherRangedHitDelta, weatherRangedRangeDelta } from '../../core/syste
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
+import { applyTeamAuraToDamage, teamAuraAttackMultiplier, teamAuraDefenseMultiplier } from '../shared/TeamAura';
 import { consumeSelfBurstExtraAction, selfBurstAttackMultiplier, selfBurstBlocksEffect, selfBurstCritBonus } from '../shared/SelfBurstWindow';
 import {
   extraAttackHitsOf,
@@ -286,11 +287,14 @@ export class BattleCombatResolver {
     // 盾牆：防禦力加倍
     const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender) * (1 - tallyDefensePenetrationOf(attacker))
       // 雲梯（攻城戰，PROG-2-1597）：我方步兵攀城，抵銷城牆地利
-      * sceneLadderDefenseBypassOf(attacker, defender, this.context.state);
+      * sceneLadderDefenseBypassOf(attacker, defender, this.context.state)
+      // 全隊增益 aura 防禦倍率（SYS-SKILL-ULT-0002）
+      * teamAuraDefenseMultiplier(this.context.state.getTeamAura(defender.faction));
 
     const attackerBurst = this.context.state.getSelfBurst(attacker.faction);
     let damage = svc.formula.calculateDamage({
-      attackerAttack: attacker.getEffectiveAttack() * this.getTallyAttackMod(attacker) * selfBurstAttackMultiplier(attackerBurst),
+      attackerAttack: attacker.getEffectiveAttack() * this.getTallyAttackMod(attacker) * selfBurstAttackMultiplier(attackerBurst)
+        * teamAuraAttackMultiplier(this.context.state.getTeamAura(attacker.faction)),
       defenderDefense: effectiveDef,
       attackerType: attacker.type,
       defenderType: defender.type,
@@ -321,6 +325,8 @@ export class BattleCombatResolver {
     if (rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);
     }
+    // 全隊增益減傷（SYS-SKILL-ULT-0002）：護盾尚未接，先只套減傷
+    damage = Math.max(1, applyTeamAuraToDamage(this.context.state.getTeamAura(defender.faction), damage, 0).hpDamage);
 
     this.applyUnitDamage(defender, damage, attacker.faction, {
       attackerId: attacker.id,
