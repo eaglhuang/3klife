@@ -3,6 +3,7 @@
  */
 import { TestSuite, assert } from './TestRunner';
 import { mentorHoldingRows } from '../assets/scripts/ui/core/MentorHoldingRows';
+import { MentorHoldingsController, type MentorHoldingsButtonBinding } from '../assets/scripts/ui/core/MentorHoldingsController';
 import type { MentorCard } from '../assets/scripts/core/models/MentorCard';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -35,8 +36,57 @@ export function createMentorHoldingRowsSuite(): TestSuite {
 
     suite.test('大廳「支援」改開教官卡列表，不再開不存在的預製件', () => {
         const src = fs.readFileSync(path.join(__dirname, '..', 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
-        assert.isTrue(src.includes('void this._openMentorHoldings()'));
+        assert.isTrue(src.includes('void this._mentorHoldings?.open()'));
         assert.isTrue(!src.includes('openAsync(UIID.SupportCard)'));
+    });
+
+    function harness(cards: MentorCard[]) {
+        const log = { toasts: [] as string[], opened: [] as string[], texts: {} as Record<string, string>, actives: {} as Record<string, boolean>, front: 0 };
+        let bindings: MentorHoldingsButtonBinding[] = [];
+        const host = {
+            node: { active: true },
+            binder: {
+                setTexts: (t: Record<string, string>) => { Object.assign(log.texts, t); },
+                setActives: (a: Record<string, boolean>) => { Object.assign(log.actives, a); },
+            },
+        };
+        const ctrl = new MentorHoldingsController({
+            mountHost: async (b) => { bindings = b; return host; },
+            loadCards: async () => cards,
+            breedText: () => ((key: string) => key) as never,
+            openDetail: (_card, title) => { log.opened.push(title); },
+            bringToFront: () => { log.front++; },
+            toast: (m) => { log.toasts.push(m); },
+        });
+        const click = (id: string) => bindings.find((b) => b.buttonId === id)?.handler();
+        return { ctrl, host, log, click };
+    }
+
+    suite.test('控制器：掛載後隱藏，沒卡時只提示不開畫面', async () => {
+        const h = harness([]);
+        await h.ctrl.mount();
+        assert.isFalse(h.host.node.active);
+        await h.ctrl.open();
+        assert.isFalse(h.host.node.active);
+        assert.equals(1, h.log.toasts.length);
+    });
+
+    suite.test('控制器：有卡時開畫面、置頂、分頁並點列開詳情', async () => {
+        const cards = Array.from({ length: 7 }, (_, i) => card(`u${i}`, `將${i}`, 'R', i));
+        const h = harness(cards);
+        await h.ctrl.mount();
+        await h.ctrl.open();
+        assert.isTrue(h.host.node.active);
+        assert.equals(1, h.log.front);
+        assert.equals('我的教官卡（7 張）', h.log.texts.borrowTitle);
+        assert.equals('1 / 2', h.log.texts.borrowPage);
+        h.click('btnBorrowNext');
+        assert.equals('2 / 2', h.log.texts.borrowPage);
+        assert.isFalse(h.log.actives.borrowRow2Box);
+        h.click('btnBorrowRow0');
+        assert.equals(1, h.log.opened.length);
+        h.click('btnBorrowClose');
+        assert.isFalse(h.host.node.active);
     });
 
     return suite;
