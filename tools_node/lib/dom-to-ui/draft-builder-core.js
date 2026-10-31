@@ -45,8 +45,6 @@ const RICH_TEXT_INNER_TAGS = new Set(['strong', 'em', 'a', 'small']);
 const NINESLICE_FAMILY_HINTS = ['parchment', 'dark_metal', 'dark-metal', 'gold_cta', 'gold-cta'];
 
 const PLACEHOLDER_SPRITE = 'sprites/ui_common/placeholder/missing_sprite';
-const TAB_BUTTON_SKIN_NORMAL = 'sprites/ui_families/general_detail/tab_active_button';
-const TAB_BUTTON_SKIN_SELECTED = 'sprites/ui_families/general_detail/detail_tab_active_frame';
 
 const SIMPLIFIED_CHINESE_HINTS = ['国', '将', '历', '战', '门', '画', '员']; // partial set; warn only
 
@@ -451,7 +449,7 @@ function processElement(el, ctx, depth) {
     const slotId = attrs['data-skin'] || autoSlotId(ctx, name);
     node.skinSlot = slotId;
     if (isTabSwitchContract(node._contract)) {
-      ensureTabButtonSkinSlot(ctx, slotId, attrs, style);
+      ensureTabButtonSkinSlot(ctx, slotId, attrs, style, { width, height });
     } else {
       ensureSpriteOrColorSlot(ctx, slotId, style, attrs, { width, height });
     }
@@ -1971,13 +1969,18 @@ function ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint) {
   }
 }
 
-function ensureTabButtonSkinSlot(ctx, slotId, attrs, style) {
+function ensureTabButtonSkinSlot(ctx, slotId, attrs, style, sizeHint) {
   if (ctx.skinSlots[slotId]) return;
 
   const explicitNormal = attrs['data-tab-normal'] || attrs['data-sprite'] || null;
   const explicitSelected = attrs['data-tab-selected'] || null;
-  const normalPath = guardSpritePath(ctx, explicitNormal || TAB_BUTTON_SKIN_NORMAL, `${slotId}.normal`, !!explicitNormal).path;
-  const selectedPath = guardSpritePath(ctx, explicitSelected || TAB_BUTTON_SKIN_SELECTED, `${slotId}.selected`, !!explicitSelected).path;
+  // 原稿沒指定貼圖時照 HTML 的框與底色產生，不套舊畫面的分頁貼圖（PROG-2-1652）
+  if (!explicitNormal && !explicitSelected) {
+    ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint);
+    return;
+  }
+  const normalPath = guardSpritePath(ctx, explicitNormal || explicitSelected, `${slotId}.normal`, true).path;
+  const selectedPath = guardSpritePath(ctx, explicitSelected || explicitNormal, `${slotId}.selected`, true).path;
 
   const slot = {
     kind: 'button-skin',
