@@ -208,7 +208,10 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         if (!spec.name) {
             throw new Error('[UIScreenPreviewHost] lazySlot 缺少 spec.name，無法載入 defaultFragment');
         }
-        this._lazySlots.set(spec.name, { spec, node, parentW: w, parentH: h });
+        const entry = { spec, node, parentW: w, parentH: h };
+        this._lazySlots.set(spec.name, entry);
+        // 互動路由以語意 id（如 right-content）指定插槽，節點名是轉換器產生的流水號，兩者都要查得到
+        if (spec.id && spec.id !== spec.name) this._lazySlots.set(spec.id, entry);
     }
 
     private async _installSyncedInteractionSidecars(screenId: string, screen: UIScreenSpec): Promise<void> {
@@ -352,7 +355,8 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
     private async _loadDefaultFragments(screen: UIScreenSpec): Promise<void> {
         const previewFragments = screen.preview?.lazySlotFragments ?? {};
-        for (const entry of this._lazySlots.values()) {
+        // 同一插槽可能以節點名與 id 各登記一次，去重後再載入
+        for (const entry of new Set(this._lazySlots.values())) {
             const fragmentId = previewFragments[entry.spec.name] ?? entry.spec.defaultFragment;
             if (!fragmentId) {
                 continue;
