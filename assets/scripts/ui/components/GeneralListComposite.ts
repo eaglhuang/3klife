@@ -113,6 +113,10 @@ const NPC_DIALOGUE_MODEL_OPTIONS: Array<{ value: NpcDialogueModelPreset; label: 
     { value: 'local_llama_env', label: 'Local Env' },
 ];
 
+/** 退役列字色：深墨與停用色（PROG-2-1643） */
+const RETIRE_INK = new Color(45, 41, 38, 255);
+const RETIRE_INK_DISABLED = new Color(45, 41, 38, 110);
+
 @ccclass('GeneralListComposite')
 export class GeneralListComposite extends CompositePanel {
 
@@ -634,12 +638,12 @@ export class GeneralListComposite extends CompositePanel {
                 this._retirementFlow.cancel(); this._refreshRetirementToolbar();
             });
             const notice = this._addToolbarLabel(toolbar, 'RetirementNotice', 940, 44, 0, 0, '', 17, HorizontalTextAlignment.LEFT);
-            // The existing dialogue helper uses dark ink for its paper toolbar; this footer has a dark background.
+            // 底部列放在淺色羊皮紙上，字一律用深墨色（白字會看不見）
             for (const child of controls.children) {
                 const label = child.getComponent(Label);
-                if (label) label.color = Color.WHITE;
+                if (label) label.color = RETIRE_INK;
             }
-            notice.color = Color.WHITE;
+            notice.color = RETIRE_INK;
             const noticeWidget = notice.node.addComponent(Widget);
             noticeWidget.isAlignLeft = noticeWidget.isAlignRight = noticeWidget.isAlignBottom = true;
             noticeWidget.left = noticeWidget.right = noticeWidget.bottom = 0;
@@ -679,7 +683,7 @@ export class GeneralListComposite extends CompositePanel {
             if (button) {
                 button.interactable = !flow.busy && !!target && (name !== 'RetirementCancel' || flow.confirming);
                 const label = button.node.getComponent(Label);
-                if (label) label.color = button.interactable ? Color.WHITE : Color.GRAY;
+                if (label) label.color = button.interactable ? RETIRE_INK : RETIRE_INK_DISABLED;
             }
         }
     }
