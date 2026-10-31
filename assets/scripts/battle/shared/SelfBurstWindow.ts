@@ -9,6 +9,7 @@
  * PM 暫定（可逆）：規格只給「大幅提升」等文字的欄位，數字為暫定值，集中在 SELF_BURST_PARAMS。
  * 司馬懿「韜光養晦」是隱匿＋回滿 SP，屬特殊規則，不在本表。
  */
+import { StatusEffect } from '../../shared/CommonEnums';
 
 export interface SelfBurstParams {
     durationTurns: number;
@@ -93,6 +94,13 @@ export function selfBurstCritBonus(window: SelfBurstWindow | null): number {
 /** 免控只在窗口期間生效 */
 export function isSelfBurstControlImmune(window: SelfBurstWindow | null): boolean {
     return selfBurstPhaseOf(window) === 'active' && window!.controlImmune;
+}
+
+/** 免控擋下的控制類狀態（定身、緩速、暈眩）；虛弱屬減益不擋 */
+const CONTROL_EFFECTS: ReadonlySet<StatusEffect> = new Set([StatusEffect.Stun, StatusEffect.Rooted, StatusEffect.Slow]);
+
+export function selfBurstBlocksEffect(window: SelfBurstWindow | null, effect: StatusEffect): boolean {
+    return isSelfBurstControlImmune(window) && CONTROL_EFFECTS.has(effect);
 }
 
 /** 嘗試消耗一次再行動；次數用完或窗口不在時不允許（避免無限連鎖） */

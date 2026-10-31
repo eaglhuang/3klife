@@ -7,6 +7,7 @@ export type { TerrainGrid };
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import type { FormationZone } from "../shared/FormationZone";
+import type { SelfBurstWindow } from "../shared/SelfBurstWindow";
 import type { UnitDot } from "../shared/UnitDot";
 import type { WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import type { SalvageTotals } from "../../core/systems/StrategistHud";
@@ -85,6 +86,8 @@ export class BattleState {
   public readonly unitDots = new Map<string, UnitDot>();
   /** 持續防禦區獨立成表：可與同格的火場等格子狀態共存（PROG-2-0761） */
   public readonly formationZones = new Map<string, FormationZone>();
+  /** 奧義自身爆發窗口（SYS-SKILL-ULT-0001）：以施放者陣營為鍵，整支軍隊共用（PM 暫定） */
+  public readonly selfBursts = new Map<Faction, SelfBurstWindow>();
   public readonly damageLinks = new Map<string, DamageLinkState>();
   public readonly counterReactions = new Map<string, CounterReactionState>();
   public readonly actionResets = new Map<string, ActionResetState>();
@@ -162,6 +165,7 @@ export class BattleState {
     this.tileEffects.clear();
     this.unitDots.clear();
     this.formationZones.clear();
+    this.selfBursts.clear();
     this.damageLinks.clear();
     this.counterReactions.clear();
     this.actionResets.clear();
@@ -314,6 +318,15 @@ export class BattleState {
 
   public setFormationZone(zone: FormationZone): void {
     this.formationZones.set(`${zone.lane},${zone.depth}`, zone);
+  }
+
+  public getSelfBurst(faction: Faction): SelfBurstWindow | null {
+    return this.selfBursts.get(faction) ?? null;
+  }
+
+  public setSelfBurst(faction: Faction, window: SelfBurstWindow | null): void {
+    if (window) this.selfBursts.set(faction, window);
+    else this.selfBursts.delete(faction);
   }
 
   public getFormationZone(lane: number, depth: number): FormationZone | null {

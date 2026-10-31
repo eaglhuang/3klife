@@ -4,6 +4,7 @@ import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
 import { advanceFormationZonesOf } from '../../shared/FormationZone';
+import { tickSelfBurst } from '../../shared/SelfBurstWindow';
 import { advanceMoraleOf } from '../../shared/Morale';
 import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
@@ -43,6 +44,11 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
     return !!caster && !caster.isDead();
   });
   advanceMoraleOf(context.state.units.values(), context.actingFaction);
+  // 自身爆發窗口在施放陣營自己的回合倒數（SYS-SKILL-ULT-0001）
+  // 測試用的精簡 state 沒有爆發窗口時略過
+  if (context.state.getSelfBurst) {
+    context.state.setSelfBurst(context.actingFaction, tickSelfBurst(context.state.getSelfBurst(context.actingFaction)).window);
+  }
   // 全隊魅力（大喬，PROG-2-1582 暫定）：換算為己方回合開始全隊士氣 +20
   applyTallyTeamMoraleAura(context.state.units.values(), context.actingFaction);
   // 鷹視狼顧（狼顧符，PROG-2-1572）：己方回合開始策反一支殘血敵軍，主將部隊不會被策反
