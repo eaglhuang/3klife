@@ -813,6 +813,9 @@ const TAB_TEXT_HINTS = [
   ['GEAR', 'equip'],
   ['適', 'aptitude'],
   ['APT', 'aptitude'],
+  // 正式六分頁「兵」即兵種適性（doc_ui_0012 §0）
+  ['兵', 'aptitude'],
+  ['ARMY', 'aptitude'],
 ];
 
 function inferTabIdFromElement(el, attrs) {
