@@ -1,0 +1,22 @@
+{
+  "$comment": "全螢幕背景圖設定（ScreenBackdrop.ts）。screens：畫面 id（layout id）→ backdrops 的 id；default：未列出的畫面用哪張（null＝維持原本底色）。背景圖取代覆蓋畫面比例 ≥ replaceFillCoverRatio 的容器不透明底色，半透明修飾層保留。",
+  "version": 1,
+  "default": null,
+  "screens": {},
+  "backdrops": {
+    "general_detail_martial": {
+      "sprite": "sprites/ui_families/general_detail/generated/general_detail_bg_v10_martial",
+      "replaceFillCoverRatio": 0.5
+    },
+    "general_detail_civil": {
+      "sprite": "sprites/ui_families/general_detail/generated/general_detail_bg_v5_civil",
+      "replaceFillCoverRatio": 0.5
+    },
+    "lobby": {
+      "sprite": "sprites/lobby/bg_lobby"
+    },
+    "ink": {
+      "sprite": "sprites/common/bg_ink"
+    }
+  }
+}
