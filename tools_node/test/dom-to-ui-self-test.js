@@ -640,6 +640,20 @@ function main() {
     if (JSON.stringify(stackOrder) !== JSON.stringify(expectedStack)) fail(`pseudo + children should follow CSS stacking order: ${JSON.stringify(stackOrder)}`);
     if ((stackCell.children || []).some(n => '_cssZIndex' in n || '_cssPosition' in n)) fail('stacking hints should not leak into layout');
     ok('::before/::after with element children follow CSS stacking order');
+    const gridTextDraft = buildDraftFromHtml(`
+      <div data-name="GridRoot">
+        <div data-name="Badge" style="width:30px;height:30px;display:grid;place-items:center;font-size:15px">S</div>
+        <div data-name="Pill" style="width:80px;height:20px;display:flex;justify-content:flex-end;font-size:12px">tag</div>
+      </div>`, { screenId: 'grid-text-align', bundle: 'ui_test' });
+    const alignOf = name => {
+      const host = findNode(gridTextDraft.layoutDraft, n => n.name === name);
+      const label = host && (host.type === 'label' ? host : (host.children || []).find(n => n.type === 'label'));
+      const slot = label && gridTextDraft.skinDraft.slots[label.styleSlot];
+      return slot && slot.horizontalAlign;
+    };
+    if (alignOf('Badge') !== 'CENTER') fail(`grid place-items:center text should center: ${alignOf('Badge')}`);
+    if (alignOf('Pill') !== 'RIGHT') fail(`flex justify-content:flex-end text should align right: ${alignOf('Pill')}`);
+    ok('loose text in grid/flex containers follows the container box alignment');
 
     const shadowDraft = buildDraftFromHtml(`
       <div data-name="ShadowRoot">
