@@ -9,14 +9,32 @@
 import { Button, Color, Label, Node, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
-import { gearSlotText } from '../../../core/systems/GearPageSlots';
+import { gearSlotText, type GearSlotView } from '../../../core/systems/GearPageSlots';
 import { EQUIP_SLOTS, type EquipSlot } from '../../../core/systems/GeneralBackpack';
 import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
 import type { HeirloomCardView, ItemSummaryView } from '../../../core/systems/HeirloomCardView';
-import { EQUIP_GEAR_NODE_PREFIX, EQUIP_HEIRLOOM_NODE, EQUIP_ITEM_SUMMARY_NODE } from './EquipBindPathPolicy';
+import { EQUIP_GEAR_NODE_PREFIX, EQUIP_HEIRLOOM_NODE, EQUIP_ITEM_SUMMARY_NODE, buildDs3EquipCards } from './EquipBindPathPolicy';
 import { GearSlotPickController, type GearSlotPickFlowView } from '../../core/GearSlotPickController';
 import { GearPickPanelView, type GearPickClick } from './GearPickPanelView';
 
+
+const E = 'CharacterDs3TabEquip_';
+
+/** 片段六張裝備卡的節點（PROG-2-1694）；後兩張只有圖示字。clear 為資料尚未提供的強化值／稀有度欄 */
+const DS3_EQUIP_CARDS: ReadonlyArray<{ glyph: string; name?: string; clear: string[] }> = [
+    { glyph: `${E}span_3`, name: `${E}span_4`, clear: [`${E}span_5`, `${E}span_6`] },
+    { glyph: `${E}span_7`, name: `${E}span_8`, clear: [`${E}span_9`, `${E}span_10`] },
+    { glyph: `${E}span_11`, name: `${E}span_12`, clear: [`${E}span_13`, `${E}span_14`] },
+    { glyph: `${E}span_15`, name: `${E}span_16`, clear: [`${E}span_17`, `${E}span_18`] },
+    { glyph: `${E}span_19`, clear: [] },
+    { glyph: `${E}span_20`, clear: [] },
+];
+
+/** 武將資料沒有等級／經驗欄位前，等級區顯示 —（PROG-2-1694） */
+const DS3_EQUIP_LEVEL_NODES = [`${E}span_23`, `${E}span_26`];
+const DS3_EQUIP_EXP_FILL = `${E}div_18`;
+const DS3_EQUIP_CONTENT_COLUMN = `${E}div_1`;
+const DS3_EQUIP_EMPTY = '—';
 
 export class CharacterDs3EquipChild extends ChildPanelBase {
     override dataSource = 'overview';
@@ -87,6 +105,10 @@ export class CharacterDs3EquipChild extends ChildPanelBase {
                 this._setLabelText(`${EQUIP_GEAR_NODE_PREFIX}${view.slot}`, gearSlotText(view));
             }
         }
+        this._applyEquipCards(Array.isArray(slots) ? slots : []);
+        for (const node of DS3_EQUIP_LEVEL_NODES) this._setLabelText(node, DS3_EQUIP_EMPTY);
+        const expFill = this.binder.getNode(DS3_EQUIP_EXP_FILL)?.getComponent(UITransform);
+        if (expFill) expFill.width = 0;
         if (content.heirloomCard) this._setHeirloomCard(content.heirloomCard);
         this._setItemSummary(content.equipSegments?.items ?? null);
     }
@@ -95,8 +117,19 @@ export class CharacterDs3EquipChild extends ChildPanelBase {
      * 傳家寶卡（TSK-04，PROG-2-1389）：執行期在寶頁根節點下建立一個文字節點，
      * 內容為 HeirloomCardView 的標題與數量。掛在根節點而非既有格位，避免動到 layout JSON。
      */
+    private _applyEquipCards(slots: readonly GearSlotView[]): void {
+        const cards = buildDs3EquipCards(slots);
+        DS3_EQUIP_CARDS.forEach((slot, i) => {
+            const card = cards[i];
+            this._setLabelText(slot.glyph, card?.glyph ?? '');
+            if (slot.name) this._setLabelText(slot.name, card?.name ?? '');
+            slot.clear.forEach((n) => this._setLabelText(n, ''));
+        });
+    }
+
     private _setHeirloomCard(card: HeirloomCardView): void {
-        const root = this.hostNode;
+        // 掛在內容欄、隨直向排版排在內容後，避免壓到經驗條（PROG-2-1694）
+        const root = this.binder.getNode(DS3_EQUIP_CONTENT_COLUMN) ?? this.hostNode;
         let node = root.getChildByName(EQUIP_HEIRLOOM_NODE);
         if (!node) {
             node = new Node(EQUIP_HEIRLOOM_NODE);
