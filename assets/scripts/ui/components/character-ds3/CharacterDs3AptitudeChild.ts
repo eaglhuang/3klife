@@ -9,14 +9,14 @@
 // 插卡按鈕（TRP-18）：兵頁的虎符槽裝備段。循環選目標武將，確定後呼叫 GameSession.equipTally，
 // 成功後由 TallySpiritInserted 事件播放英靈插卡演出。按鈕建在 hostNode 下，不改 layout JSON。
 
-import { Button, Label, Node, UITransform } from 'cc';
+import { Button, Color, Label, Node, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
 import { EVENT_NAMES } from '../../../core/config/Constants';
 import { buildSpiritInsertPlan, type SpiritInsertPlan, type SpiritInsertStageId } from '../../../core/systems/SpiritInsertSequence';
 import { firstUnequippedTallyUid, nextInsertTargetIndex } from '../../../core/systems/TallyInsertTarget';
-import { buildAptitudeView, type AptitudeView } from '../../../core/systems/AptitudeView';
+import { buildAptitudeView, APTITUDE_EMPTY_TEXT, type AptitudeView } from '../../../core/systems/AptitudeView';
 import { TALLY_CONFISCATE_LOYALTY_DROP } from '../../../core/systems/TigerTallyLoyalty';
 
 /** 演出各段的語系鍵（文字暫定，待企劃定稿） */
@@ -26,6 +26,47 @@ const SPIRIT_INSERT_STAGE_KEY: Readonly<Record<SpiritInsertStageId, string>> = {
     'spirit-face': 'ui.battle.tally.stage_spirit_face',
     'army-enter': 'ui.battle.tally.stage_army_enter',
 };
+
+type AptitudeSource = 'troopAptitude' | 'terrainAptitude' | 'weatherAptitude';
+
+const A = 'CharacterDs3TabAptitude_';
+
+/** 片段裡每張卡的評等節點 → 武將資料欄位與代碼（PROG-2-1693） */
+const DS3_APTITUDE_GRADE_NODES: ReadonlyArray<readonly [string, AptitudeSource, string]> = [
+    [`${A}div_7`, 'troopAptitude', 'INFANTRY'],
+    [`${A}div_10`, 'troopAptitude', 'CAVALRY'],
+    [`${A}div_13`, 'troopAptitude', 'ARCHER'],
+    [`${A}div_16`, 'troopAptitude', 'SIEGE'],
+    [`${A}div_23`, 'terrainAptitude', 'PLAIN'],
+    [`${A}div_26`, 'terrainAptitude', 'MOUNTAIN'],
+    [`${A}div_29`, 'terrainAptitude', 'WATER'],
+    [`${A}div_32`, 'terrainAptitude', 'FOREST'],
+    [`${A}div_35`, 'terrainAptitude', 'DESERT'],
+    [`${A}div_42`, 'weatherAptitude', 'SUNNY'],
+    [`${A}div_45`, 'weatherAptitude', 'RAINY'],
+    [`${A}div_48`, 'weatherAptitude', 'FOG'],
+    [`${A}div_51`, 'weatherAptitude', 'WINDY'],
+    [`${A}div_54`, 'weatherAptitude', 'NIGHT'],
+    [`${A}div_57`, 'weatherAptitude', 'THUNDER'],
+];
+
+const DS3_GRADE_COLOR: Readonly<Record<string, [number, number, number]>> = {
+    S: [212, 175, 55],
+    A: [102, 214, 140],
+    B: [100, 150, 240],
+    C: [170, 170, 160],
+    D: [230, 80, 80],
+};
+
+/** 每張適性卡的評等字；武將沒有該項資料時為 —。 */
+export function buildDs3AptitudeGrades(cfg: Partial<Record<AptitudeSource, Readonly<Record<string, unknown>>>> | null | undefined): Record<string, string> {
+    const out: Record<string, string> = {};
+    for (const [node, source, code] of DS3_APTITUDE_GRADE_NODES) {
+        const raw = cfg?.[source]?.[code];
+        out[node] = typeof raw === 'string' && raw.length > 0 ? raw : APTITUDE_EMPTY_TEXT;
+    }
+    return out;
+}
 
 export class CharacterDs3AptitudeChild extends ChildPanelBase {
     override dataSource = 'config';
@@ -59,6 +100,15 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
     public override onDataUpdate(data: unknown): void {
         const troopAptitude = data && typeof data === 'object' ? (data as { troopAptitude?: Record<string, unknown> }).troopAptitude : undefined;
         this._view = buildAptitudeView(troopAptitude);
+        if (!data || typeof data !== 'object') return;
+        const grades = buildDs3AptitudeGrades(data as Partial<Record<AptitudeSource, Readonly<Record<string, unknown>>>>);
+        for (const [node, grade] of Object.entries(grades)) {
+            const label = this.binder?.getLabel?.(node);
+            if (!label) continue;
+            label.string = grade;
+            const rgb = DS3_GRADE_COLOR[grade];
+            if (rgb) label.color = new Color(rgb[0], rgb[1], rgb[2], 255);
+        }
     }
 
     public override validateDataFormat(data: unknown): string | null {
