@@ -524,6 +524,13 @@ function processElement(el, ctx, depth) {
   dedupeIdenticalLargeChildren(node, ctx);
   stabilizeGridLayout(node);
   normalizeSingleChildFill(node, ctx);
+  // 空盒只靠 min-width／min-height 撐開時就是佔位（例：對齊上一行標籤的空欄），保留其大小
+  if (nodeType === 'container' && childNodes.length === 0 && !node.width && !node.height) {
+    const minWidth = pickDim(style.minWidth, null);
+    const minHeight = pickDim(style.minHeight, null);
+    if (minWidth != null && minWidth > 0) node.width = minWidth;
+    if (minHeight != null && minHeight > 0) node.height = minHeight;
+  }
   if (nodeType === 'container' && childNodes.length === 0 && !node.width && !node.height && !node.skinSlot && !node.skinLayers && !node.compositeImageLayers && !node._flexFill) {
     return null;
   }
@@ -1605,7 +1612,6 @@ function inferGridLayout(style, ctx, nodeName) {
 function inferBlockFlowLayout(style, ctx, nodeName, el) {
   const childElements = (el.children || []).filter(c => c.type === 'element');
   const padding = resolveBoxEdges(style, 'padding', ctx && ctx.tokenRegistry);
-  if (childElements.length < 2 && !padding) return null;
   if (childElements.length === 0) return null;
   if (childElements.some(child => childHasOutOfFlowPosition(child, ctx))) return null;
 
