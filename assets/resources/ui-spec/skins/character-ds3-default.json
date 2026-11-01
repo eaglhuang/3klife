@@ -2197,17 +2197,17 @@
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_img_1",
+          "node": "PortraitImage",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_img_1",
+          "node": "PortraitImage",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "CharacterDs3Main_img_1",
+          "node": "PortraitImage",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
@@ -2222,7 +2222,7 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_3",
+          "node": "PortraitFooterTitle",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {

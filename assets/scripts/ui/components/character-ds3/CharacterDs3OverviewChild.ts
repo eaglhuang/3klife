@@ -100,6 +100,7 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
 
         this._setLabelText('OverviewName', state.headerName);
         this._setLabelText('OverviewRoleBadge', state.headerMeta);
+        this._setLabelText('OverviewEpithet', state.headerTitle ?? '');
         this._setLabelText('OverviewRarityTier', state.rarityLabel);
         this._setLabelText('OverviewBio', state.biographyBody);
         this._setLabelText('OverviewCrestTitle', state.crestTitle);
