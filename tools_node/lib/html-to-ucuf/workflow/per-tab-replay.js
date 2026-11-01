@@ -1,4 +1,5 @@
 'use strict';
+const { bindMapPathFor } = require('../bind-map');
 
 const fs = require('fs');
 const path = require('path');
@@ -239,6 +240,7 @@ async function runPerTabReplay(args) {
   ];
   if (tabs.length > 0) renderArgs.push('--tabs', tabs.map(tab => tab.key).join(','));
   if (opts.browser) renderArgs.push('--browser', opts.browser);
+  if (fs.existsSync(bindMapPathFor(opts.screenId))) renderArgs.push('--bind-map', bindMapPathFor(opts.screenId));
   const renderProc = await helpers.runNodeStep('render-html-tab-fragments', 'render-html-tab-fragments.js', renderArgs);
 
   const manifestPath = path.join(paths.tabReplayDir, `${opts.screenId}.tab-fragments.json`);

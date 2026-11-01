@@ -1,4 +1,6 @@
 'use strict';
+const { bindMapPathFor } = require('../bind-map');
+const fs = require('fs');
 
 async function runWorkflowMain(ctx) {
   const {
@@ -85,6 +87,7 @@ async function runWorkflowMain(ctx) {
   if (detected.needsPrerender) {
     const args = ['--input', inputPath, '--output', paths.renderedHtml, '--viewport', opts.viewport, '--settle-ms', String(opts.settleMs)];
     if (opts.browser) args.push('--browser', opts.browser);
+    if (fs.existsSync(bindMapPathFor(opts.screenId))) args.push('--bind-map', bindMapPathFor(opts.screenId));
     const proc = await runNodeStep('render-html-snapshot', 'render-html-snapshot.js', args);
     steps.push({ step: 'render-html-snapshot', exitCode: proc.status ?? 1, ok: proc.status === 0 });
     if (proc.status !== 0) {

@@ -3,6 +3,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { loadBindMap, installBindMap } = require('./lib/html-to-ucuf/bind-map');
 const {
   findBrowser,
   prepareSource,
@@ -35,6 +36,7 @@ function parseArgs(argv) {
       case '--viewport': opts.viewport = next(); break;
       case '--settle-ms': opts.settleMs = parseInt(next(), 10) || 1500; break;
       case '--browser': opts.browser = next(); break;
+      case '--bind-map': opts.bindMap = next(); break;
       case '--tabs':
         opts.tabs = String(next() || '')
           .split(',')
@@ -227,6 +229,7 @@ async function main() {
     await page.setViewport({ width: vw || 1920, height: vh || 1080 });
     await page.goto(toFileUrl(preparedPath), { waitUntil: 'networkidle0', timeout: 30000 });
     await waitForPageSettle(page, opts.settleMs);
+    await installBindMap(page, loadBindMap(opts.bindMap));
 
     const tabs = opts.tabs || await discoverTabs(page, opts);
     if (!tabs || tabs.length === 0) {
