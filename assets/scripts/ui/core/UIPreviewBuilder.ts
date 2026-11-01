@@ -29,6 +29,11 @@ import { CssClipPathMask } from './CssClipPathMask';
 import { resolveLabelText, type LabelTextSpec } from './UILabelText';
 import type { ICompositeRenderer, RadarSourceSvgGeometry } from './interfaces/ICompositeRenderer';
 import { radarConfigFromSourceSvg } from './RadarSvgConfig';
+import { coverSize, resolveScreenBackdrop, SCREEN_BACKDROP_TABLE_PATH,
+         type ScreenBackdropTable } from './ScreenBackdrop';
+import { RoundedRectBackground } from '../components/RoundedRectBackground';
+import { SolidBackground } from '../components/SolidBackground';
+import { GradientBackground } from '../components/GradientBackground';
 
 const { ccclass } = _decorator;
 
@@ -126,6 +131,7 @@ export class UIPreviewBuilder extends Component {
         // ─────────────────────────────────────────────────────────────────────
         this._postBuildPass(rootNode);
         this._dedupeTabSwitchNodes(rootNode);
+        await this._applyScreenBackdrop(layout.id, host, rootNode, designWidth, designHeight);
         UCUFLogger.perfEnd('UIPreviewBuilder.buildScreen', _tBuildScreen);
 
         // 通用佔位符清除：所有 UIPreviewBuilder 子類在 onBuildComplete 鉤子前
@@ -813,6 +819,55 @@ export class UIPreviewBuilder extends Component {
      * 統一以 perfBegin/perfEnd 包裹供 UCUFLogger 監控。
      * Unity 對照：Canvas.ForceUpdateCanvases() + LayoutRebuilder 組合
      */
+    /**
+     * Table-driven full-screen backdrop (data/ui-screen-backdrops.json). A cover-fit
+     * sprite goes beneath the screen; opaque fills of containers covering at least
+     * replaceFillCoverRatio of the screen are disabled so the picture shows through.
+     * Overlay layers (__bgLayer_*, pseudo elements) stay on top as decoration.
+     */
+    private async _applyScreenBackdrop(screenId: string | undefined, host: Node, root: Node,
+                                       width: number, height: number): Promise<void> {
+        const old = host.getChildByName('__screenBackdrop');
+        if (old) { old.removeFromParent(); old.destroy(); }
+        const table = await services().resource.loadJson<ScreenBackdropTable>(SCREEN_BACKDROP_TABLE_PATH).catch(() => null);
+        const backdrop = resolveScreenBackdrop(table, screenId);
+        if (!backdrop) return;
+        const frame = await services().resource.loadSpriteFrame(backdrop.sprite, { preferTextureFallback: true }).catch(() => null);
+        if (!frame) {
+            UCUFLogger.warn(LogCategory.UI, `[UIPreviewBuilder] backdrop sprite missing: ${backdrop.sprite}`);
+            return;
+        }
+        const node = new Node('__screenBackdrop');
+        node.layer = host.layer;
+        const t = node.addComponent(UITransform);
+        const sprite = node.addComponent(Sprite);
+        sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+        sprite.spriteFrame = frame;
+        const fit = coverSize(frame.originalSize.width, frame.originalSize.height, width, height);
+        t.width = fit.width;
+        t.height = fit.height;
+        host.addChild(node);
+        node.setSiblingIndex(0);
+        const minArea = width * height * backdrop.replaceFillCoverRatio;
+        const strip = (n: Node) => {
+            const ut = n.getComponent(UITransform);
+            if (!ut || ut.width * ut.height < minArea) return;
+            let filled = false;
+            for (const C of [SolidBackground, GradientBackground, RoundedRectBackground]) {
+                const c = n.getComponent(C as any) as Component | null;
+                if (c) { c.enabled = false; filled = true; }
+            }
+            // Fill components render through the node's Sprite.
+            const fillSprite = filled ? n.getComponent(Sprite) : null;
+            if (fillSprite) fillSprite.enabled = false;
+            for (const c of n.children) {
+                if (!c.name.startsWith('__bgLayer_') && !c.name.endsWith('_PseudoAfter')
+                    && !c.name.endsWith('_PseudoBefore')) strip(c);
+            }
+        };
+        strip(root);
+    }
+
     protected _postBuildPass(root: Node): void {
         const t = UCUFLogger.perfBegin('UIPreviewBuilder._postBuildPass');
         this._realignAllWidgets(root);
