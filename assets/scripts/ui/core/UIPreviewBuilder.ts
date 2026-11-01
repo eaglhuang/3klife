@@ -868,6 +868,8 @@ export class UIPreviewBuilder extends Component {
         for (const slot of Object.values(skin.slots)) {
             if (slot.kind === 'label-style' && (slot as any).font) {
                 paths.add((slot as any).font as string);
+                const bold = (slot as any).isBold ? this.skinResolver.resolveBoldFontPath((slot as any).font) : undefined;
+                if (bold) paths.add(bold);
             }
         }
         await Promise.all(Array.from(paths).map(async (path) => {

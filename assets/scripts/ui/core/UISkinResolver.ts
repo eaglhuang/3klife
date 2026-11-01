@@ -41,6 +41,10 @@ export interface ResolvedLabelStyle {
     };
     /** 字型資源路徑（Bundle 內，空 = 系統預設字型） */
     fontPath?: string;
+    /** Real bold face for fontPath (typography.boldFonts); used instead of synthetic bold. */
+    boldFontPath?: string;
+    /** Code point ranges the bold face covers (CSS unicode-range); text outside keeps synthetic bold. */
+    boldFontRanges?: Array<[number, number]>;
 }
 
 /** 解析後的按鈕皮膚 */
@@ -148,6 +152,7 @@ export class UISkinResolver {
                 blur: s.shadow.blur || 0,
             } : undefined,
             fontPath: s.font ?? this._resolveFontPathFromStyle(s.style, preset),
+            ...this._resolveBoldFont(s.font ?? this._resolveFontPathFromStyle(s.style, preset)),
         };
     }
 
@@ -253,6 +258,20 @@ export class UISkinResolver {
         return preset as Record<string, any>;
     }
 
+    /** Bold face registered for a font path in typography.boldFonts, if any. */
+    resolveBoldFontPath(fontPath?: string): string | undefined {
+        return this._resolveBoldFont(fontPath).boldFontPath;
+    }
+
+    private _resolveBoldFont(fontPath?: string): { boldFontPath?: string; boldFontRanges?: Array<[number, number]> } {
+        const boldFonts = this._tokens?.typography?.boldFonts;
+        if (!fontPath || !boldFonts || typeof boldFonts !== 'object') return {};
+        const entry = (boldFonts as Record<string, any>)[fontPath];
+        if (typeof entry === 'string' && entry) return { boldFontPath: entry };
+        if (!entry || typeof entry.path !== 'string' || !entry.path) return {};
+        return { boldFontPath: entry.path, boldFontRanges: parseUnicodeRange(entry.unicodeRange) };
+    }
+
     private _resolveFontPathFromStyle(style?: string, preset?: Record<string, any> | null): string | undefined {
         if (preset?.font && typeof preset.font === 'string') {
             return preset.font;
@@ -292,4 +311,17 @@ export class UISkinResolver {
     async preloadSlots(slotIds: string[]): Promise<void> {
         await Promise.all(slotIds.map(id => this.getSpriteFrame(id)));
     }
+}
+
+/** "U+0020-007E,U+00A0" -> [[0x20,0x7e],[0xa0,0xa0]]; undefined when absent (covers everything). */
+function parseUnicodeRange(value: unknown): Array<[number, number]> | undefined {
+    if (typeof value !== 'string' || !value.trim()) return undefined;
+    const ranges: Array<[number, number]> = [];
+    for (const part of value.split(',')) {
+        const match = part.trim().match(/^U\+([0-9a-f]+)(?:-([0-9a-f]+))?$/i);
+        if (!match) continue;
+        const start = parseInt(match[1], 16);
+        ranges.push([start, match[2] ? parseInt(match[2], 16) : start]);
+    }
+    return ranges;
 }
