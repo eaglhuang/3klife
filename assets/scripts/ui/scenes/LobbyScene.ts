@@ -138,6 +138,7 @@ import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { DeckSelectController } from '../core/DeckSelectController';
 import { LeadSelectController } from '../core/LeadSelectController';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
+import { cyclePoolItem } from '../../core/systems/GeneralPoolCycle';
 import { SolidBackground } from '../components/SolidBackground';
 import { ToastMessage } from '../components/ToastMessage';
 import { applyUIPreviewBinderState } from '../core/UIPreviewStateApplicator';
@@ -3544,6 +3545,10 @@ export class LobbyScene extends Component {
     private async _mountCharacterDs3Host(): Promise<void> {
         this._characterDs3Host = await this._mountPreviewScreenHost('CharacterDs3Host', 'character-ds3-main');
         this._bindCharacterDs3PreviewTabRouting();
+        // 立繪左右箭頭（pool.prev／pool.next）：在武將清單中切到上一位／下一位，停留目前分頁
+        this._characterDs3Host?.node.on(UIScreenPreviewHost.EVENT_POOL_CYCLE, (step: number) => {
+            this._cycleCharacterDs3General(step);
+        });
         this._bloodlineVignetteHost = await this._mountPreviewScreenHost('BloodlineVignetteHost', 'general-bloodline-vignette-screen', [
             { buttonId: 'btnCloseVignette', handler: () => this._setBloodlineVignetteOpen(false) },
         ]);
@@ -4559,6 +4564,21 @@ export class LobbyScene extends Component {
      * 命紋靈獸摘要（GDUI-09 cc 接線）：依暫定綁定取得靈獸，以一段文字掛在 CharacterDs3Host 下。
      * 靈獸清單與綁定規則都是暫定，見 BloodlineBeast.PROVISIONAL_BEAST_CATALOG。
      */
+    private _cycleCharacterDs3General(step: number): void {
+        const next = cyclePoolItem(this._generals, this._characterDs3General?.id, step);
+        if (!next || next.id === this._characterDs3General?.id) return;
+        this._characterDs3General = next;
+        this._setBloodlineVignetteOpen(false);
+        this._refreshBeastSummary(next);
+        this._refreshGalleryEntry();
+        this._refreshFactorHex(next);
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] CharacterDs3 general cycled', {
+            step,
+            generalId: next.id,
+            generalName: next.name,
+        });
+    }
+
     private _refreshBeastSummary(config: GeneralConfig): void {
         const hostNode = this._characterDs3Host?.node;
         if (!hostNode) {
