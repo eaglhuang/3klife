@@ -664,12 +664,12 @@
       ],
       "aptitudeRules": [],
       "sourceGeneIds": [],
-      "battleSkillId": "sima-yi-shadow",
+      "battleSkillId": "insp-night-raid",
       "sourceType": "inspired-tactic",
-      "targetMode": "enemy-all",
+      "targetMode": "enemy-single",
       "timing": "active-cast",
       "manualTargeting": false,
-      "autoAimMode": "all-enemies"
+      "autoAimMode": "frontmost-enemy"
     }
   ]
 }

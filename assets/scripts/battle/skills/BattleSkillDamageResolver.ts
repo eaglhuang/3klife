@@ -12,6 +12,11 @@ import type { BattleSkillProfile } from './BattleSkillProfiles';
 import { isStraightLine } from './SkillGridGeometry';
 import { tallyFireDamageTakenOf } from '../shared/TallyPassive';
 
+/** 戰法依天氣的傷害倍率（PROG-2-1698）；未設定或該天氣未列時為 1 */
+export function weatherDamageMultiplierOf(profile: Pick<BattleSkillProfile, 'weatherDamageMultiplier'>, weather: Weather): number {
+  return profile.weatherDamageMultiplier?.[weather] ?? 1;
+}
+
 export class BattleSkillDamageResolver {
   constructor(private readonly formula = new FormulaSystem()) {}
 
@@ -43,7 +48,8 @@ export class BattleSkillDamageResolver {
     const chargedDamage = this.applyCharge(profile, context, caster, target, rawBaseDamage);
     const baseDamage = this.applyFirstTurn(profile, context, chargedDamage);
 
-    const weatherMultiplier = fireDamageMultiplier(profile.tags ?? [], context.getWeather?.() ?? Weather.Clear);
+    const weather = context.getWeather?.() ?? Weather.Clear;
+    const weatherMultiplier = fireDamageMultiplier(profile.tags ?? [], weather) * weatherDamageMultiplierOf(profile, weather);
     const stageMultiplier = profile.hitStageMultipliers?.[stageIndex] ?? 1;
     const staged = stageMultiplier === 1 ? baseDamage : Math.max(1, Math.floor(baseDamage * stageMultiplier));
     const weathered = weatherMultiplier === 1 ? staged : Math.max(1, Math.floor(staged * weatherMultiplier));
