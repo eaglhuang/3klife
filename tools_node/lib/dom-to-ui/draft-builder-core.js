@@ -465,9 +465,9 @@ function processElement(el, ctx, depth) {
 
   // ---- 7. recurse children ----
   const childNodes = [];
-  const raisedChildNodes = [];
+  const stackedChildren = [];
   const hasElementChildren = (el.children || []).some(child => child.type === 'element');
-  const beforePseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'before', hasElementChildren);
+  const beforePseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'before');
   // 自帶文字的框：按鈕，或只有文字的 panel
   const wrapsOwnText = nodeType === 'button' || (nodeType === 'panel' && !hasElementChildren);
   for (const child of el.children) {
@@ -493,13 +493,24 @@ function processElement(el, ctx, depth) {
     }
     const startIndex = childNodes.length;
     appendNodeWithGeneratedSiblings(childNodes, wrapFlexItemMainAxisMargin(sub, source, style, ctx));
-    if (paintsAbovePseudoAfter(source, ctx)) raisedChildNodes.push(...childNodes.splice(startIndex));
+    const stacking = elementStackingKey(source, ctx);
+    for (let i = startIndex; i < childNodes.length; i += 1) stackedChildren.push({ node: childNodes[i], key: stacking });
   }
-  // ::after 依 CSS 疊放：畫在一般子元素之後、z-index 為正的定位子元素之前
-  const afterPseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'after', false);
-  if (beforePseudoNodes.length > 0) childNodes.unshift(...beforePseudoNodes);
-  if (afterPseudoNodes.length > 0) childNodes.push(...afterPseudoNodes);
-  childNodes.push(...raisedChildNodes);
+  childNodes.length = 0;
+  // ::before／::after 與子元素一起依 CSS 疊放順序排序（負 z → 一般流 → 定位 auto/0 → 正 z，同層照文件順序）
+  const afterPseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'after');
+  const ordered = [
+    ...beforePseudoNodes.map(node => ({ node, key: pseudoStackingKey(node) })),
+    ...stackedChildren,
+    ...afterPseudoNodes.map(node => ({ node, key: pseudoStackingKey(node) })),
+  ];
+  ordered.forEach((item, index) => { item.index = index; });
+  ordered.sort((a, b) => a.key.bucket - b.key.bucket || a.key.z - b.key.z || a.index - b.index);
+  for (const item of ordered) {
+    delete item.node._cssPosition;
+    delete item.node._cssZIndex;
+    childNodes.push(item.node);
+  }
 
   // §7.8 color-rect 濫發防護
   enforceColorRectGuard(ctx, name, childNodes);
@@ -2673,24 +2684,29 @@ function meaningfulClipPath(value) {
   return null;
 }
 
-// 定位且 z-index 為正的子元素疊在父元素 ::after 之上（CSS 疊放順序）
-function paintsAbovePseudoAfter(el, ctx) {
-  if (!el || el.type !== 'element') return false;
-  const childStyle = collectElementStyle(el, ctx).style || {};
-  const zIndex = Number(childStyle.zIndex);
-  return /^(absolute|relative|fixed|sticky)$/i.test(String(childStyle.position || '')) && Number.isFinite(zIndex) && zIndex > 0;
+// CSS 疊放層：0 負 z、1 一般流、2 定位且 z 為 auto/0、3 正 z
+function stackingKey(position, zIndexRaw) {
+  const positioned = /^(absolute|relative|fixed|sticky)$/i.test(String(position || ''));
+  const z = Number(zIndexRaw);
+  if (!positioned || !Number.isFinite(z)) return { bucket: positioned ? 2 : 1, z: 0 };
+  if (z < 0) return { bucket: 0, z };
+  return z > 0 ? { bucket: 3, z } : { bucket: 2, z: 0 };
 }
 
-function buildPseudoVisualNodes(ctx, parentStyle, parentName, pseudoKind, hasElementChildren) {
+function elementStackingKey(el, ctx) {
+  if (!el || el.type !== 'element') return { bucket: 1, z: 0 };
+  const childStyle = collectElementStyle(el, ctx).style || {};
+  return stackingKey(childStyle.position, childStyle.zIndex);
+}
+
+function pseudoStackingKey(node) {
+  return stackingKey(node._cssPosition, node._cssZIndex);
+}
+
+function buildPseudoVisualNodes(ctx, parentStyle, parentName, pseudoKind) {
   if (!ctx || !ctx.opts || !ctx.opts.useComputedStyle || !parentStyle || !parentStyle._computedCaptureId) return [];
   const list = ctx.pseudoStyleByParentCaptureId && ctx.pseudoStyleByParentCaptureId[String(parentStyle._computedCaptureId)];
   if (!Array.isArray(list) || list.length === 0) return [];
-  if (hasElementChildren) {
-    if (pseudoKind === 'after') {
-      ctx.warnings.push({ code: 'pseudo-overlay-skipped-child-stacking-risk', detail: parentName });
-    }
-    return [];
-  }
   return list
     .filter(snapshot => snapshot.pseudo === pseudoKind)
     .map(snapshot => buildPseudoVisualNode(ctx, parentName, snapshot))
@@ -2712,6 +2728,8 @@ function buildPseudoVisualNode(ctx, parentName, snapshot) {
     widget: { top: 0, left: 0, right: 0, bottom: 0 },
     skinSlot: slotId,
     _cssPseudo: snapshot.pseudo,
+    _cssPosition: (snapshot.styles || {}).position,
+    _cssZIndex: (snapshot.styles || {})['z-index'],
   };
   const opacity = parseOpacity(style.opacity);
   if (opacity !== null) node.opacity = opacity;
