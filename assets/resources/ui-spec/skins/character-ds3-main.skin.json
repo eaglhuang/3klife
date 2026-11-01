@@ -1506,7 +1506,7 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "JUSTIFY",
-      "overflow": "RESIZE_HEIGHT"
+      "overflow": "SHRINK"
     },
     "auto.character-ds3-tab-overview.characterds3taboverview_div_46": {
       "kind": "label-style",
