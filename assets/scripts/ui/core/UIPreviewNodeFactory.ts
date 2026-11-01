@@ -124,6 +124,13 @@ export class UIPreviewNodeFactory {
         if (specWidth !== null && transform && transform.width !== specWidth && label.overflow !== Label.Overflow.NONE) {
             transform.width = specWidth;
         }
+        // Styling runs while overflow is still NONE, so Cocos shrinks the box to one line of text;
+        // a fixed-size mode must get the source height back too (e.g. 戰法等級 stacked one glyph per line).
+        const specBoxHeight = typeof spec.height === 'number' ? spec.height : null;
+        if (specBoxHeight !== null && transform && transform.height !== specBoxHeight
+            && (label.overflow === Label.Overflow.SHRINK || label.overflow === Label.Overflow.CLAMP)) {
+            transform.height = specBoxHeight;
+        }
         // A box the source laid out as one line must stay one line: glyph widths differ slightly
         // between engines, so never wrap it (e.g. "LV.7" split in two and grown to double height).
         const specHeight = typeof spec.height === 'number' ? spec.height : null;
