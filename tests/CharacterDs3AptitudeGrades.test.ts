@@ -4,7 +4,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
-import { buildDs3AptitudeGrades } from '../assets/scripts/ui/components/character-ds3/CharacterDs3AptitudeChild';
+import { buildDs3AptitudeGrades, ds3AptitudeBorderColor } from '../assets/scripts/ui/components/character-ds3/CharacterDs3AptitudeChild';
 
 const FRAGMENT = path.resolve(__dirname, '..', 'assets/resources/ui-spec/fragments/layouts/character-ds3-aptitude-content.json');
 
@@ -36,6 +36,12 @@ export function createCharacterDs3AptitudeGradesSuite(): TestSuite {
         const names = collectNames(fragment.root ?? fragment, new Set<string>());
         const missing = Object.keys(buildDs3AptitudeGrades(null)).filter((n) => !names.has(n));
         assert.equals('', missing.join(','));
+    });
+
+    suite.test('S 級卡金框，其餘暗金框', () => {
+        assert.equals('255,215,0,102', ds3AptitudeBorderColor('S').join(','));
+        assert.equals('77,70,53,255', ds3AptitudeBorderColor('A').join(','));
+        assert.equals('77,70,53,255', ds3AptitudeBorderColor('—').join(','));
     });
 
     return suite;

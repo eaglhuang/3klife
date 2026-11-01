@@ -113,6 +113,12 @@ export class GradientBackground extends Component {
             : null;
     }
 
+    /** 只換外框色，其餘形狀不變（PROG-2-1697：適分頁依評等換框） */
+    public setBorderColor(color: Color): void {
+        this._borderColor = new Color(color.r, color.g, color.b, color.a);
+        this._redraw();
+    }
+
     public setTintColor(color?: Color | null): void {
         this._tintColor = color
             ? new Color(color.r, color.g, color.b, color.a)

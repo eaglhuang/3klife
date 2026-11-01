@@ -11,6 +11,8 @@
 
 import { Button, Color, Label, Node, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
+import { RoundedRectBackground } from '../RoundedRectBackground';
+import { GradientBackground } from '../GradientBackground';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
 import { EVENT_NAMES } from '../../../core/config/Constants';
@@ -59,6 +61,14 @@ const DS3_GRADE_COLOR: Readonly<Record<string, [number, number, number]>> = {
 };
 
 /** 每張適性卡的評等字；武將沒有該項資料時為 —。 */
+/** 卡片外框：S 級用金框，其餘暗金框（取自片段範本；PROG-2-1697） */
+const DS3_APTITUDE_BORDER_TOP: [number, number, number, number] = [255, 215, 0, 102];
+const DS3_APTITUDE_BORDER_DEFAULT: [number, number, number, number] = [77, 70, 53, 255];
+
+export function ds3AptitudeBorderColor(grade: string): [number, number, number, number] {
+    return grade === 'S' ? DS3_APTITUDE_BORDER_TOP : DS3_APTITUDE_BORDER_DEFAULT;
+}
+
 export function buildDs3AptitudeGrades(cfg: Partial<Record<AptitudeSource, Readonly<Record<string, unknown>>>> | null | undefined): Record<string, string> {
     const out: Record<string, string> = {};
     for (const [node, source, code] of DS3_APTITUDE_GRADE_NODES) {
@@ -108,6 +118,14 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
             label.string = grade;
             const rgb = DS3_GRADE_COLOR[grade];
             if (rgb) label.color = new Color(rgb[0], rgb[1], rgb[2], 255);
+            const card = this.binder?.getNode?.(node)?.parent;
+            if (card) {
+                const [r, g, b, a] = ds3AptitudeBorderColor(grade);
+                const border = new Color(r, g, b, a);
+                const rounded = card.getComponent(RoundedRectBackground);
+                if (rounded) rounded.borderColor = border;
+                card.getComponent(GradientBackground)?.setBorderColor(border);
+            }
         }
     }
 
