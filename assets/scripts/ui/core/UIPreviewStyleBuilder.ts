@@ -14,7 +14,7 @@
  *
  * Unity 對照：相當於 UIStyleApplier + UILayoutHelper 的組合
  */
-import { Node, Sprite, Label, Button, Font, Color, Vec2 } from 'cc';
+import { Node, Sprite, Label, Button, Font, Color, Vec2, UITransform, Widget } from 'cc';
 import { RoundedRectBackground } from '../components/RoundedRectBackground';
 import { SolidBackground } from '../components/SolidBackground';
 import { GradientBackground, GradientColorStop } from '../components/GradientBackground';
@@ -90,12 +90,7 @@ export class UIPreviewStyleBuilder {
             }
 
             const gradient = (slot as any).gradient || {};
-            const stops: GradientColorStop[] = Array.isArray(gradient.stops)
-                ? gradient.stops.map((stop: any) => ({
-                    color: this._resolveGradientColor(stop.color, stop.opacity),
-                    offset: typeof stop.offset === 'number' ? stop.offset : 0,
-                }))
-                : [];
+            const stops = this._resolveGradientStops(gradient);
             const borderWidthRaw = (slot as any).borderWidth ?? (slot as any).strokeWidth;
             const borderWidth = typeof borderWidthRaw === 'number' && !Number.isNaN(borderWidthRaw)
                 ? Math.max(0, borderWidthRaw)
@@ -120,19 +115,9 @@ export class UIPreviewStyleBuilder {
                     ? gradient.repeatSpanRatio
                     : undefined,
             };
-            const background = node.getComponent(GradientBackground) || node.addComponent(GradientBackground);
-            background.enabled = true;
-            if (gradient.type === 'radial') {
-                background.setRadialGradient(stops, {
-                    ...gradientShape,
-                    center: this._resolveGradientPoint(gradient.center, { x: 0.5, y: 0.5 }),
-                    radius: this._resolveGradientPoint(gradient.radius, { x: 0.5, y: 0.5 }),
-                });
-            } else {
-                background.setLinearGradient(typeof gradient.angle === 'number' ? gradient.angle : 180, stops, gradientShape);
-            }
-            const alpha = resolveOpacity((slot as any).alpha ?? (slot as any).opacity);
-            background.setTintColor(new Color(255, 255, 255, alpha ?? 255));
+            const alpha = resolveOpacity((slot as any).alpha ?? (slot as any).opacity) ?? 255;
+            this._applyGradient(node, gradient, stops, gradientShape, alpha);
+            this._syncGradientOverlayLayers(node, (slot as any).backgroundLayers, gradientShape, alpha);
             return true;
         }
 
@@ -298,6 +283,86 @@ export class UIPreviewStyleBuilder {
         const color = this.skinResolver.resolveColor(raw);
         color.a = Math.round(color.a * opacity);
         return color;
+    }
+
+    /**
+     * CSS interpolates gradients in premultiplied alpha, so fading to `transparent` keeps the
+     * neighbour's hue instead of darkening. Straight-alpha interpolation gives the same result
+     * when a fully transparent stop borrows the RGB of its nearest visible neighbour.
+     */
+    private _resolveGradientStops(gradient: any): GradientColorStop[] {
+        const stops: GradientColorStop[] = Array.isArray(gradient?.stops)
+            ? gradient.stops.map((stop: any) => ({
+                color: this._resolveGradientColor(stop.color, stop.opacity),
+                offset: typeof stop.offset === 'number' ? stop.offset : 0,
+            }))
+            : [];
+        for (let i = 0; i < stops.length; i += 1) {
+            if (stops[i].color.a !== 0) continue;
+            let source: Color | null = null;
+            for (let d = 1; d < stops.length && !source; d += 1) {
+                const before = stops[i - d];
+                const after = stops[i + d];
+                if (before && before.color.a > 0) source = before.color;
+                else if (after && after.color.a > 0) source = after.color;
+            }
+            if (source) stops[i] = { ...stops[i], color: new Color(source.r, source.g, source.b, 0) };
+        }
+        return stops;
+    }
+
+    private _applyGradient(target: Node, gradient: any, stops: GradientColorStop[], shape: any, alpha: number): void {
+        const background = target.getComponent(GradientBackground) || target.addComponent(GradientBackground);
+        background.enabled = true;
+        if (gradient.type === 'radial') {
+            background.setRadialGradient(stops, {
+                ...shape,
+                center: this._resolveGradientPoint(gradient.center, { x: 0.5, y: 0.5 }),
+                radius: this._resolveGradientPoint(gradient.radius, { x: 0.5, y: 0.5 }),
+            });
+        } else {
+            background.setLinearGradient(typeof gradient.angle === 'number' ? gradient.angle : 180, stops, shape);
+        }
+        background.setTintColor(new Color(255, 255, 255, alpha));
+    }
+
+    /**
+     * CSS paints multiple background layers with the first one on top. The node itself draws the
+     * bottom layer (slot.gradient); every gradient layer above it gets a full-size child drawn
+     * before the node's real children, ordered so the first CSS layer ends up topmost.
+     */
+    private _syncGradientOverlayLayers(node: Node, backgroundLayers: any, shape: any, alpha: number): void {
+        const layers = Array.isArray(backgroundLayers) ? backgroundLayers : [];
+        const overlays = layers.slice(0, -1).filter((layer: any) => layer?.kind === 'gradient' && layer.gradient);
+        const nodeTransform = node.getComponent(UITransform);
+        const overlayShape = { ...shape, borderWidth: 0 };
+        for (let i = 0; i < overlays.length; i += 1) {
+            const name = `__bgLayer_${i}`;
+            let child = node.getChildByName(name);
+            if (!child) {
+                child = new Node(name);
+                child.layer = node.layer;
+                node.addChild(child);
+            }
+            const transform = child.getComponent(UITransform) || child.addComponent(UITransform);
+            if (nodeTransform) {
+                transform.setContentSize(nodeTransform.width, nodeTransform.height);
+                transform.setAnchorPoint(nodeTransform.anchorX, nodeTransform.anchorY);
+            }
+            const widget = child.getComponent(Widget) || child.addComponent(Widget);
+            widget.isAlignTop = widget.isAlignBottom = widget.isAlignLeft = widget.isAlignRight = true;
+            widget.top = widget.bottom = widget.left = widget.right = 0;
+            // Bottom-most overlay (last CSS layer) first; overlay 0 (first CSS layer) last.
+            child.setSiblingIndex(overlays.length - 1 - i);
+            const gradient = overlays[i].gradient;
+            this._applyGradient(child, gradient, this._resolveGradientStops(gradient), overlayShape, alpha);
+        }
+        for (let i = overlays.length; ; i += 1) {
+            const stale = node.getChildByName(`__bgLayer_${i}`);
+            if (!stale) break;
+            stale.removeFromParent();
+            stale.destroy();
+        }
     }
 
     private _resolveGradientPoint(rawPoint: unknown, fallback: { x: number; y: number }): { x: number; y: number } {

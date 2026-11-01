@@ -465,6 +465,7 @@ function processElement(el, ctx, depth) {
 
   // ---- 7. recurse children ----
   const childNodes = [];
+  const raisedChildNodes = [];
   const hasElementChildren = (el.children || []).some(child => child.type === 'element');
   const beforePseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'before', hasElementChildren);
   // 自帶文字的框：按鈕，或只有文字的 panel
@@ -490,11 +491,15 @@ function processElement(el, ctx, depth) {
         if (!node.layout) sub.widget = { left: layout.paddingLeft || 0, top: layout.paddingTop || 0 };
       }
     }
+    const startIndex = childNodes.length;
     appendNodeWithGeneratedSiblings(childNodes, wrapFlexItemMainAxisMargin(sub, source, style, ctx));
+    if (paintsAbovePseudoAfter(source, ctx)) raisedChildNodes.push(...childNodes.splice(startIndex));
   }
-  const afterPseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'after', hasElementChildren);
+  // ::after 依 CSS 疊放：畫在一般子元素之後、z-index 為正的定位子元素之前
+  const afterPseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'after', false);
   if (beforePseudoNodes.length > 0) childNodes.unshift(...beforePseudoNodes);
   if (afterPseudoNodes.length > 0) childNodes.push(...afterPseudoNodes);
+  childNodes.push(...raisedChildNodes);
 
   // §7.8 color-rect 濫發防護
   enforceColorRectGuard(ctx, name, childNodes);
@@ -2666,6 +2671,14 @@ function meaningfulClipPath(value) {
   if (!raw || raw.toLowerCase() === 'none') return null;
   if (/^(polygon|inset|circle|ellipse)\s*\(/i.test(raw)) return raw;
   return null;
+}
+
+// 定位且 z-index 為正的子元素疊在父元素 ::after 之上（CSS 疊放順序）
+function paintsAbovePseudoAfter(el, ctx) {
+  if (!el || el.type !== 'element') return false;
+  const childStyle = collectElementStyle(el, ctx).style || {};
+  const zIndex = Number(childStyle.zIndex);
+  return /^(absolute|relative|fixed|sticky)$/i.test(String(childStyle.position || '')) && Number.isFinite(zIndex) && zIndex > 0;
 }
 
 function buildPseudoVisualNodes(ctx, parentStyle, parentName, pseudoKind, hasElementChildren) {
