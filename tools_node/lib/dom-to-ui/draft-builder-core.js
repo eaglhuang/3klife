@@ -2833,6 +2833,8 @@ function ensureLabelStyle(ctx, slotId, style, attrs, text = '') {
     outlineColor: 'colorOutlineDark',
     outlineWidth: 2,
     horizontalAlign: ENGINE.textAlign(style.textAlign),
+    // CSS 行盒以半行距把字形放在行高正中；引擎預設靠上會讓字整排偏高
+    verticalAlign: 'CENTER',
   };
   const overflow = inferLabelOverflow(style, text);
   if (overflow) slot.overflow = overflow;
