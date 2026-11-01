@@ -268,6 +268,18 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     hitStageMultipliers: [1.0, 1.0],
     battleLogKey: 'skill.insp_combo_attack.hit',
   },
+  // 龍膽（PROG-2-1700 靈感戰法，數值暫定）：前排單體、爆擊率 +30%
+  'insp-dragon-gall': {
+    battleSkillId: 'insp-dragon-gall',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    coefficient: 1.0,
+    scalingStat: 'str',
+    maxTargets: 1,
+    critRateBonus: 0.3,
+    battleLogKey: 'skill.insp_dragon_gall.hit',
+  },
   // 長槍突刺（PROG-2-1699 靈感戰法，數值暫定）：直線貫穿 2 格、不衰減、無視 30% 防禦
   'insp-lance-thrust': {
     battleSkillId: 'insp-lance-thrust',
