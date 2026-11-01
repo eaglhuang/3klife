@@ -52,6 +52,8 @@ export class UITemplateBinder {
             return;
         }
         this._indexRootChildren(rootNode, layoutSpec, true);
+        // 分頁內容延後載入，名稱索引也要補；重掛時以新節點覆蓋舊的（PROG-2-1685）
+        this._walkTree(rootNode, true);
     }
 
     /** 建立 root 第一層子節點的相對路徑索引（明確排除 root 自身名稱） */
@@ -215,18 +217,20 @@ export class UITemplateBinder {
     }
 
     /** 遍歷整棵 node tree，補充未被 id 涵蓋的 name 綁定 */
-    private _walkTree(node: Node): void {
+    private _walkTree(node: Node, overwrite = false): void {
         const name = node.name;
-        // 不覆蓋已由 id 建立的映射
-        if (!this._nodeMap.has(name)) {
+        // 不覆蓋已由 id 建立的映射（lazy fragment 重掛時除外）
+        if (overwrite || !this._nodeMap.has(name)) {
             this._nodeMap.set(name, node);
             const label = node.getComponent(Label);
             if (label) this._labelMap.set(name, label);
+            else if (overwrite) this._labelMap.delete(name);
             const sprite = node.getComponent(Sprite);
             if (sprite) this._spriteMap.set(name, sprite);
+            else if (overwrite) this._spriteMap.delete(name);
         }
         for (const child of node.children) {
-            this._walkTree(child);
+            this._walkTree(child, overwrite);
         }
     }
 

@@ -1,0 +1,108 @@
+{
+  "$note": "正式武將面板（Design System 3/ui_kits/character）將分頁固定節點名；列/點/星/進度條容器尚無穩定文字，暫由片段一次改名（PROG-2-1685）",
+  "bindings": [
+    {
+      "name": "OverviewName",
+      "selector": "span",
+      "text": "張飛",
+      "index": 0
+    },
+    {
+      "name": "OverviewRoleBadge",
+      "selector": "div",
+      "text": "翼德 · 蜀 · 先鋒"
+    },
+    {
+      "name": "OverviewRarityTier",
+      "selector": "span",
+      "text": "UR",
+      "index": 0
+    },
+    {
+      "name": "OverviewStat_str",
+      "selector": "span",
+      "text": "98",
+      "index": 0
+    },
+    {
+      "name": "OverviewStat_lea",
+      "selector": "span",
+      "text": "88",
+      "index": 0
+    },
+    {
+      "name": "OverviewStat_cha",
+      "selector": "span",
+      "text": "74",
+      "index": 0
+    },
+    {
+      "name": "OverviewStat_int",
+      "selector": "span",
+      "text": "52",
+      "index": 0
+    },
+    {
+      "name": "OverviewStat_pol",
+      "selector": "span",
+      "text": "38",
+      "index": 0
+    },
+    {
+      "name": "OverviewStat_luk",
+      "selector": "span",
+      "text": "76",
+      "index": 0
+    },
+    {
+      "name": "OverviewRoleText0",
+      "selector": "span",
+      "text": "前排突破"
+    },
+    {
+      "name": "OverviewRoleText1",
+      "selector": "span",
+      "text": "破陣主攻"
+    },
+    {
+      "name": "OverviewTraitText0",
+      "selector": "span",
+      "text": "戰意特聚"
+    },
+    {
+      "name": "OverviewTraitText1",
+      "selector": "span",
+      "text": "平原適性"
+    },
+    {
+      "name": "OverviewCrestTitle",
+      "selector": "span",
+      "text": "命紋顯現"
+    },
+    {
+      "name": "OverviewBloodlineName",
+      "selector": "div",
+      "text": "燕血脈"
+    },
+    {
+      "name": "OverviewAwakeningPercent",
+      "selector": "span",
+      "text": "58%"
+    },
+    {
+      "name": "OverviewCrestHint",
+      "selector": "span",
+      "text": "已建立 14 人血統圖"
+    },
+    {
+      "name": "OverviewPersonality",
+      "selector": "span",
+      "text": "燕地酒坊流傳"
+    },
+    {
+      "name": "OverviewFooterTitle",
+      "selector": "div",
+      "text": "燕人武聖"
+    }
+  ]
+}
