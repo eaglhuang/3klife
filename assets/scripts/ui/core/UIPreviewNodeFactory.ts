@@ -124,6 +124,16 @@ export class UIPreviewNodeFactory {
         if (specWidth !== null && transform && transform.width !== specWidth && label.overflow !== Label.Overflow.NONE) {
             transform.width = specWidth;
         }
+        // A box the source laid out as one line must stay one line: glyph widths differ slightly
+        // between engines, so never wrap it (e.g. "LV.7" split in two and grown to double height).
+        const specHeight = typeof spec.height === 'number' ? spec.height : null;
+        if (specHeight !== null && label.lineHeight > 0 && specHeight < label.lineHeight * 1.5
+            && label.overflow !== Label.Overflow.NONE) {
+            // RESIZE_HEIGHT always wraps in Cocos; SHRINK keeps the measured box and scales instead.
+            label.overflow = Label.Overflow.SHRINK;
+            (label as unknown as { enableWrapText: boolean }).enableWrapText = false; // not in the test cc mock
+            if (transform) transform.height = specHeight;
+        }
     }
 
     /**
