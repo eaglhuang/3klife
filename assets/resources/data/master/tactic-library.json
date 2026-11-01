@@ -557,7 +557,7 @@
       ],
       "aptitudeRules": [],
       "sourceGeneIds": [],
-      "battleSkillId": "lu-bu-rampage",
+      "battleSkillId": "insp-sworn-fury",
       "sourceType": "inspired-tactic",
       "targetMode": "fan",
       "timing": "active-cast",

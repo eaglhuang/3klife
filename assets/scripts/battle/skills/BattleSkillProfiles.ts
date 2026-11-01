@@ -268,6 +268,20 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     hitStageMultipliers: [1.0, 1.0],
     battleLogKey: 'skill.insp_combo_attack.hit',
   },
+  // 結義之怒（PROG-2-1701 靈感戰法，數值暫定）：前方扇形 2 格、不衰減、爆擊率 +20%
+  'insp-sworn-fury': {
+    battleSkillId: 'insp-sworn-fury',
+    targetMode: BattleSkillTargetMode.Fan,
+    manualTargeting: false,
+    autoAimMode: 'densest-fan',
+    coefficient: 0.7,
+    scalingStat: 'str',
+    maxTargets: 4,
+    fanDepth: 2,
+    fanHalfWidth: 1,
+    critRateBonus: 0.2,
+    battleLogKey: 'skill.insp_sworn_fury.hit',
+  },
   // 龍膽（PROG-2-1700 靈感戰法，數值暫定）：前排單體、爆擊率 +30%
   'insp-dragon-gall': {
     battleSkillId: 'insp-dragon-gall',
