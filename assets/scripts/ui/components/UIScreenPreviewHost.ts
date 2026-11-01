@@ -61,6 +61,9 @@ interface PreviewInteractionSmokeResult {
  */
 @ccclass('UIScreenPreviewHost')
 export class UIScreenPreviewHost extends UIPreviewBuilder {
+    /** Emitted on the host node with the step (-1 / +1) when a pool.prev / pool.next action fires. */
+    public static readonly EVENT_POOL_CYCLE = 'ucuf-pool-cycle';
+
     @property({ tooltip: '預覽時使用的語系檔，預設 zh-TW。' })
     public locale = 'zh-TW';
 
@@ -351,6 +354,18 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             return;
         }
 
+        // Relative targets (pool.prev / pool.next) step through the screen's data pool, e.g. the
+        // previous/next general; they are not routes, so hand the step to whoever owns the pool.
+        const cycleStep = poolCycleStep(target);
+        if (cycleStep !== null) {
+            const cycleCallback = () => this.node.emit(UIScreenPreviewHost.EVENT_POOL_CYCLE, cycleStep);
+            button.node.on(Node.EventType.TOUCH_END, cycleCallback, this);
+            this._sidecarInteractionHooks.push({ node: button.node, callback: cycleCallback });
+            this._interactionActionsBound += 1;
+            this._interactionSmokeResults.push({ actionId, trigger, target, status: 'bound' });
+            return;
+        }
+
         const route = this._resolveInteractionRoute(routeMap, target);
         if (!route) {
             this._interactionSmokeResults.push({ actionId, trigger, target, status: 'missing-route' });
@@ -451,4 +466,11 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             tags: ['UIScreenPreviewHost'],
         });
     }
+}
+
+/** Step for a relative pool target (pool.prev / pool-next / prev / next), or null for a route target. */
+export function poolCycleStep(target: string): number | null {
+    const match = /^(?:pool[-.])?(prev|next)$/.exec(String(target || '').trim());
+    if (!match) return null;
+    return match[1] === 'prev' ? -1 : 1;
 }
