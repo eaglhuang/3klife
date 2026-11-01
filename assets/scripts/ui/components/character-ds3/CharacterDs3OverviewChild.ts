@@ -1,6 +1,7 @@
 // @spec-source → 武將人物介面規格書.md (doc_ui_0012)；PROG-2-1429 依建檔紀錄補標出處
 import { Color, Sprite, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
+import { placeDs3BarFill } from './Ds3BarFill';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
 
@@ -206,8 +207,9 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
             return;
         }
 
-        const ratio = Math.max(0, Math.min(1, progress / 100));
-        fillTransform.width = Math.round(trackTransform.width * ratio);
+        const placement = placeDs3BarFill(trackTransform.width, trackTransform.anchorX, fillTransform.anchorX, progress / 100);
+        fillTransform.width = placement.width;
+        fillNode!.setPosition(placement.x, fillNode!.position.y, fillNode!.position.z);
     }
 
     private _applyCommandPanel(state: GeneralDetailOverviewContentState): void {
