@@ -15,7 +15,7 @@ import { selfBurstNoticeText, type SelfBurstChangedEvent } from '../shared/SelfB
 import { teamAuraNoticeText, type TeamAuraChangedEvent } from '../shared/TeamAura';
 import { teamRecoverNoticeText, type TeamRecoveredEvent } from '../shared/TeamRecover';
 import { enemyMassDebuffNoticeText, type EnemyMassDebuffChangedEvent } from '../shared/EnemyMassDebuff';
-import { formatAwakeningReveal } from './AwakeningReveal';
+import { AWAKENING_FREEZE_TIMING, awakeningFreezeTitles, formatAwakeningReveal } from './AwakeningReveal';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
@@ -743,6 +743,9 @@ export class BattleUIBridge {
         this.appendLog(`【覺醒】${awakened.displayName}！`);
       }
       this.ctx.resultPopup?.appendDetails?.(formatAwakeningReveal(settlement.awakenings));
+      if (settlement.awakenings.length > 0) {
+        void this.ctx.resultPopup?.playAwakeningFreeze?.(awakeningFreezeTitles(settlement.awakenings), AWAKENING_FREEZE_TIMING);
+      }
       // 地窖保護（ECO-06，PROG-2-1342）：戰敗時糧草被保底，寫日誌並加進結算細項
       const cellar = cellarProtectionText(services().session.lastCellarProtectedFood);
       if (cellar) {

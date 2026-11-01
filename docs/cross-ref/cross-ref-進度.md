@@ -62,7 +62,7 @@
 | 同名武將系統.md (doc_spec_0005) | SoulTransfer.ts, BloodlineInfusion.ts, BloodlineMerge.ts, ReviveRetrain.ts, SortieDeploy.ts, SoulFragmentLedger.ts, SoulInjectCandidates.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | 名士預言系統.md (doc_spec_0006) | BondingSetupController.ts（名士批語 3 列，PROG-2-1131） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 名詞定義文件.md (doc_spec_0008) | 尚無實作 | ✅ | ✅ | — | — | ⬜ |
-| 因子解鎖系統.md (doc_spec_0009) | AwakeningReveal.ts（戰後覺醒結算揭示，PROG-2-1133；畫面定格動畫未做） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 因子解鎖系統.md (doc_spec_0009) | AwakeningReveal.ts（戰後覺醒結算揭示，PROG-2-1133；畫面定格動畫已補（PROG-2-1702）） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 培育系統.md (doc_spec_0026) | NurtureSystem.ts、TacticLearning.ts、NurtureFlowController.ts（戰法列，PROG-2-1132／1134）；InspiredTacticMap.ts（靈感戰法對應戰法庫，PROG-2-1135） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 家族關係（史實相性）系統.md (doc_spec_0024) | ComboAttackKin.ts, RelationEvents.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 戰場適性系統.md (doc_spec_0041) | ArenaScore.ts, BattleAptitude.ts, BattlefieldRecon.ts, DesertVitality.ts, TerrainTroopRules.ts, WeatherSchedule.ts, WeatherTacticRestriction.ts, EnvScoutPresenter.ts, TacticAvailabilityPresenter.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
