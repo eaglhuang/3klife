@@ -19,7 +19,7 @@ import { GearPickPanelView, type GearPickClick } from './GearPickPanelView';
 
 
 export class CharacterDs3EquipChild extends ChildPanelBase {
-    override dataSource = 'config';
+    override dataSource = 'overview';
     private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
     private _gearPick: GearSlotPickController | null = null;
     private _gearPickChanged: (() => void) | null = null;
