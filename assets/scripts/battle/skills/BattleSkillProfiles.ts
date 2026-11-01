@@ -268,6 +268,19 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     hitStageMultipliers: [1.0, 1.0],
     battleLogKey: 'skill.insp_combo_attack.hit',
   },
+  // 長槍突刺（PROG-2-1699 靈感戰法，數值暫定）：直線貫穿 2 格、不衰減、無視 30% 防禦
+  'insp-lance-thrust': {
+    battleSkillId: 'insp-lance-thrust',
+    targetMode: BattleSkillTargetMode.Line,
+    manualTargeting: false,
+    autoAimMode: 'densest-line',
+    coefficient: 0.9,
+    scalingStat: 'str',
+    maxTargets: 2,
+    lineLength: 2,
+    defensePenetrationRatio: 0.3,
+    battleLogKey: 'skill.insp_lance_thrust.hit',
+  },
   // 夜襲（PROG-2-1698 靈感戰法，數值暫定）：前排單體，夜晚傷害 ×1.5
   'insp-night-raid': {
     battleSkillId: 'insp-night-raid',

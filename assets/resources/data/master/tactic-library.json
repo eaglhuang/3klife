@@ -326,7 +326,7 @@
       ],
       "aptitudeRules": [],
       "sourceGeneIds": [],
-      "battleSkillId": "guan-yu-slash",
+      "battleSkillId": "insp-lance-thrust",
       "sourceType": "inspired-tactic",
       "targetMode": "line",
       "timing": "active-cast",
