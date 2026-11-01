@@ -2295,7 +2295,7 @@ function buildGradientRectSlot(ctx, backgroundImage, slotId) {
 
 function buildEffectSiblingNodes(ctx, node, style, name, width, height) {
   if (!ctx || !style || !node || !canUseGeneratedEffectSibling(node, width, height)) return [];
-  const shadows = collectOuterShadows(style);
+  const shadows = collectOuterShadows(style, { alphaShapedContent: hasAlphaShapedContent(node, style) });
   if (shadows.length === 0) return [];
 
   const padding = calculateShadowPadding(shadows);
@@ -2332,11 +2332,19 @@ function canUseGeneratedEffectSibling(node, width, height) {
   return hasHorizontalAnchor && hasVerticalAnchor;
 }
 
-function collectOuterShadows(style) {
+// 圖片內容的外形由透明度決定，不是矩形
+function hasAlphaShapedContent(node, style) {
+  if (node && (node.type === 'image' || node.type === 'composite-image')) return true;
+  return /url\(/i.test(String(style && style.backgroundImage || ''));
+}
+
+// drop-shadow 沿內容透明輪廓投影：外形非矩形時不能換成矩形陰影，略過（box-shadow 本就沿盒子，照常保留）
+function collectOuterShadows(style, options = {}) {
   const shadows = [];
   for (const shadow of parseShadowList(style.boxShadow || '')) {
     if (shadow && !shadow.inset) shadows.push(normalizeShadow(shadow));
   }
+  if (options.alphaShapedContent) return shadows.filter(Boolean);
   for (const shadow of parseDropShadowFilters(style.filter || '')) {
     if (shadow && !shadow.inset) shadows.push(normalizeShadow(shadow));
   }
