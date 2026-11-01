@@ -362,7 +362,7 @@
       ],
       "aptitudeRules": [],
       "sourceGeneIds": [],
-      "battleSkillId": "tally-defense-pierce",
+      "battleSkillId": "insp-dragon-gall",
       "sourceType": "inspired-tactic",
       "targetMode": "enemy-single",
       "timing": "active-cast",
