@@ -23,7 +23,7 @@
           "type": "container",
           "name": "CharacterDs3TabOverview_div_1",
           "width": 520,
-          "height": 778,
+          "height": 812,
           "layout": {
             "type": "vertical",
             "justifyContent": "start",
@@ -965,71 +965,73 @@
               "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_46"
             },
             {
-              "type": "button",
-              "name": "BtnBloodlineVignette",
-              "id": "btnBloodlineVignette",
-              "widget": {
-                "bottom": 12,
-                "left": 0
-              },
-              "width": 170,
+              "type": "container",
+              "name": "OverviewActionRow",
+              "width": 520,
               "height": 52,
-              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "justifyContent": "start",
+                "spacingX": 10
+              },
               "children": [
                 {
-                  "type": "label",
-                  "name": "BtnBloodlineVignetteLabel",
-                  "id": "bloodlineVignetteLabel",
-                  "widget": {
-                    "vCenter": true,
-                    "left": 0,
-                    "right": 0
-                  },
-                  "height": 44,
-                  "text": "血統小傳",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject"
-                }
-              ]
-            },
-            {
-              "type": "button",
-              "name": "BtnSoulInject",
-              "id": "btnSoulInject",
-              "widget": {
-                "bottom": 12,
-                "left": 180
-              },
-              "width": 170,
-              "height": 52,
-              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
-              "children": [
+                  "type": "button",
+                  "name": "BtnBloodlineVignette",
+                  "id": "btnBloodlineVignette",
+                  "width": 170,
+                  "height": 52,
+                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "BtnBloodlineVignetteLabel",
+                      "id": "bloodlineVignetteLabel",
+                      "widget": {
+                        "vCenter": true,
+                        "left": 0,
+                        "right": 0
+                      },
+                      "height": 44,
+                      "text": "血統小傳",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject"
+                    }
+                  ]
+                },
+                {
+                  "type": "button",
+                  "name": "BtnSoulInject",
+                  "id": "btnSoulInject",
+                  "width": 170,
+                  "height": 52,
+                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "BtnSoulInjectLabel",
+                      "id": "soulInjectLabel",
+                      "widget": {
+                        "vCenter": true,
+                        "left": 0,
+                        "right": 0
+                      },
+                      "height": 44,
+                      "text": "寄宿戰魂",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject"
+                    }
+                  ]
+                },
                 {
                   "type": "label",
-                  "name": "BtnSoulInjectLabel",
-                  "id": "soulInjectLabel",
-                  "widget": {
-                    "vCenter": true,
-                    "left": 0,
-                    "right": 0
-                  },
+                  "name": "TotalTpLabel",
+                  "id": "totalTpLabel",
+                  "width": 160,
                   "height": 44,
-                  "text": "寄宿戰魂",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject"
+                  "text": "總 TP 0",
+                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_total_tp"
                 }
               ]
-            },
-            {
-              "type": "label",
-              "name": "TotalTpLabel",
-              "id": "totalTpLabel",
-              "widget": {
-                "bottom": 16,
-                "left": 360
-              },
-              "width": 160,
-              "height": 44,
-              "text": "總 TP 0",
-              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_total_tp"
             }
           ]
         },
