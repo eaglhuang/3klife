@@ -143,6 +143,7 @@ export class GeneralDetailComposite extends CompositePanel {
             const overview = buildGeneralDetailOverviewContentState(config, services().session.inventoryViews, services().session.inventoryRecords, services().session.military.cityTroops, null, services().session.inventory);
             const entryTab = this._chrome.resolveEntryTab(config);
             await this._switchToDs3Tab(entryTab, overview);
+            this._applyDs3PortraitChrome(overview);
             (this.node as Node & { __generalDetailReadyTab?: string }).__generalDetailReadyTab = entryTab;
             UCUFLogger.info(LogCategory.LIFECYCLE, '[GeneralDetailComposite] DS3 show complete', {
                 generalId: config.id,
@@ -399,6 +400,19 @@ export class GeneralDetailComposite extends CompositePanel {
         this._syncSpiritFamilyShortcut();
     }
 
+    /** DS3 左欄：立繪與立繪下方稱號隨武將更換（PROG-2-1687） */
+    private _applyDs3PortraitChrome(state: UnifiedOverviewContentState): void {
+        void this._chrome.loadPortrait(state.portraitResource).catch(() => undefined);
+        // 版型轉換時烘進去的示意立繪會疊在實際立繪後面，關掉
+        const placeholder = this._gdBinder?.getSprite('PortraitImage_ImageContent');
+        if (placeholder) placeholder.enabled = false;
+        const footer = this._gdBinder?.getLabel('PortraitFooterTitle');
+        if (footer) {
+            // 原稿字距以空格呈現
+            footer.string = [...(state.footerTitle ?? '').replace(/[【】]/g, '')].join(' ');
+        }
+    }
+
     private _applyOverviewChrome(state: UnifiedOverviewContentState): void {
         void this._chrome.loadBackground(state.backgroundResource);
         void this._chrome.loadPortrait(state.portraitResource);
@@ -466,7 +480,9 @@ export class GeneralDetailComposite extends CompositePanel {
 
     private _requireNode(path: string): Node {
         const fullPath = this._mainPath(path);
-        const node = this.node.getChildByPath(fullPath);
+        // DS3 版型節點不在固定路徑下，單一名稱改以綁定器依節點名查找（PROG-2-1687）
+        const node = this.node.getChildByPath(fullPath)
+            ?? (path.includes('/') ? null : this._gdBinder?.getNode(path) ?? null);
         if (!node) {
             UCUFLogger.error(LogCategory.LIFECYCLE, `[GeneralDetailComposite] 缺少必要節點 ${fullPath}`);
             throw new Error(`[GeneralDetailComposite] 缺少必要節點 ${fullPath}`);
