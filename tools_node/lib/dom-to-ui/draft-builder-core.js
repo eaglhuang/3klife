@@ -493,7 +493,11 @@ function processElement(el, ctx, depth) {
     }
     const startIndex = childNodes.length;
     appendNodeWithGeneratedSiblings(childNodes, wrapFlexItemMainAxisMargin(sub, source, style, ctx));
-    const stacking = elementStackingKey(source, ctx);
+    // 排版容器靠子項順序定位：留在流內的子項（含 relative）維持文件順序，只有脫離流的子項依疊放順序排
+    const flowLayout = node.layout && /^(horizontal|vertical|grid)$/.test(String(node.layout.type || ''));
+    const stacking = flowLayout && !childHasOutOfFlowPosition(source, ctx)
+      ? { bucket: 1, z: 0 }
+      : elementStackingKey(source, ctx);
     for (let i = startIndex; i < childNodes.length; i += 1) stackedChildren.push({ node: childNodes[i], key: stacking });
   }
   childNodes.length = 0;
@@ -1244,13 +1248,36 @@ function inferCompositeRendererHint(tag, el, attrs) {
   if (polygonCount >= 3 && lineCount >= 4 && (circleCount > 0 || groupCount > 0) && textCount + groupCount >= 4) {
     return 'svg-radar-chart';
   }
+  if (lineCount + groupCount > 0 && polygonCount + circleCount + textCount === 0) {
+    const shapes = { polygons: [], lines: [], circles: [], labels: [] };
+    collectSvgShapes(el, {}, shapes);
+    if (shapes.lines.length > 0 && shapes.polygons.length + shapes.circles.length + shapes.labels.length === 0) {
+      return 'svg-line-art';
+    }
+  }
   return null;
 }
 
 function inferCompositeGeometrySummary(tag, el, attrs) {
   const rendererHint = inferCompositeRendererHint(tag, el, attrs);
+  if (rendererHint === 'svg-line-art') return extractSvgLineArtMeta(el, attrs);
   if (rendererHint !== 'svg-radar-chart') return null;
   return extractSvgRadarChartMeta(el, attrs);
+}
+
+// 純線條 SVG（連接線、分隔線）：保留 viewBox 與縮放方式，由引擎端依節點尺寸畫線
+function extractSvgLineArtMeta(el, attrs) {
+  const viewBox = parseSvgViewBox(attrs && (attrs.viewBox || attrs.viewbox));
+  const width = parseSvgNumber(attrs && attrs.width) || 0;
+  const height = parseSvgNumber(attrs && attrs.height) || 0;
+  const shapes = { polygons: [], lines: [], circles: [], labels: [] };
+  collectSvgShapes(el, {}, shapes);
+  return {
+    kind: 'line-art',
+    viewBox: viewBox || { x: 0, y: 0, width, height },
+    preserveAspectRatio: (attrs && (attrs.preserveAspectRatio || attrs.preserveaspectratio)) || 'xMidYMid meet',
+    lines: shapes.lines,
+  };
 }
 
 function extractSvgRadarChartMeta(el, attrs) {
@@ -1733,19 +1760,33 @@ function wrapFlexItemMainAxisMargin(sub, childEl, parentStyle, ctx) {
     return Number.isFinite(value) && value > 0 ? value : 0;
   };
   const column = String(parentStyle.flexDirection || '').trim().toLowerCase().startsWith('column');
-  const before = column ? side('marginTop', box.top) : side('marginLeft', box.left);
-  const after = column ? side('marginBottom', box.bottom) : side('marginRight', box.right);
-  if (before === 0 && after === 0) return sub;
+  const top = side('marginTop', box.top);
+  const bottom = side('marginBottom', box.bottom);
+  const left = side('marginLeft', box.left);
+  const right = side('marginRight', box.right);
+  if (top + bottom + left + right === 0) return sub;
   const along = column ? sub.height : sub.width;
   if (typeof along !== 'number' || !Number.isFinite(along)) return sub;
+  const before = column ? top : left;
+  const after = column ? bottom : right;
+  // 交叉軸外距（如直排中的 margin-left）也轉成容器內距，子項靠起點對齊
+  const crossBefore = column ? left : top;
+  const crossAfter = column ? right : bottom;
+  const across = column ? sub.width : sub.height;
   const layout = column
     ? { type: 'vertical', paddingTop: before, paddingBottom: after }
     : { type: 'horizontal', paddingLeft: before, paddingRight: after };
+  if (crossBefore + crossAfter > 0) {
+    if (column) { layout.paddingLeft = crossBefore; layout.paddingRight = crossAfter; }
+    else { layout.paddingTop = crossBefore; layout.paddingBottom = crossAfter; }
+    layout.alignItems = 'start';
+  }
+  const acrossTotal = typeof across === 'number' && Number.isFinite(across) ? across + crossBefore + crossAfter : across;
   return {
     type: 'container',
     name: `${sub.name || 'node'}_margin`,
-    width: column ? sub.width : along + before + after,
-    height: column ? along + before + after : sub.height,
+    width: column ? acrossTotal : along + before + after,
+    height: column ? along + before + after : acrossTotal,
     layout,
     children: [sub],
   };

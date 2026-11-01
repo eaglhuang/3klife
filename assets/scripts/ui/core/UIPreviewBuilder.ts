@@ -11,7 +11,7 @@
  * Unity 對照：Prefab Variant Builder + EditorWindow 動態生成 UI 的組合
  */
 import { _decorator, Button, Component, Label, Node, Sprite, UITransform,
-         UIOpacity, Color, tween, Font, Widget, Layout } from 'cc';
+         UIOpacity, Color, tween, Font, Widget, Layout, Graphics } from 'cc';
 import { UISkinResolver, ResolvedButtonSkin } from './UISkinResolver';
 import { services } from '../../core/managers/ServiceLoader';
 import { resolveSize, widgetStretchSize, DEFAULT_TRANSITION } from './UISpecTypes';
@@ -29,6 +29,7 @@ import { CssClipPathMask } from './CssClipPathMask';
 import { resolveLabelText, type LabelTextSpec } from './UILabelText';
 import type { ICompositeRenderer, RadarSourceSvgGeometry } from './interfaces/ICompositeRenderer';
 import { radarConfigFromSourceSvg } from './RadarSvgConfig';
+import { isSvgLineArtMeta, layoutSvgLineArt } from './SvgLineArt';
 import { coverSize, resolveScreenBackdrop, SCREEN_BACKDROP_TABLE_PATH,
          type ScreenBackdropTable } from './ScreenBackdrop';
 import { RoundedRectBackground } from '../components/RoundedRectBackground';
@@ -365,6 +366,7 @@ export class UIPreviewBuilder extends Component {
                 ? radarConfigFromSourceSvg(compositeSpec.svgMeta as unknown as RadarSourceSvgGeometry, w, h)
                 : null;
             if (renderer && radar) await renderer.drawRadarChart(node, radar);
+            if (isSvgLineArtMeta(compositeSpec.svgMeta)) this._drawSvgLineArt(node, compositeSpec.svgMeta, w, h);
         }
 
         this._applySpecOpacity(node, spec.opacity);
@@ -417,6 +419,26 @@ export class UIPreviewBuilder extends Component {
     protected _onLazySlotCreated(_spec: UILayoutNodeSpec, _node: Node, _w: number, _h: number): void { /* no-op */ }
 
     /** Restyle a node built from `target` with the looks of a same-shaped `source` spec (e.g. tab active/inactive). */
+    /** Draw converted line-only SVG (e.g. family-tree connectors) stretched to the node box. */
+    private _drawSvgLineArt(node: Node, meta: Parameters<typeof layoutSvgLineArt>[0], w: number, h: number): void {
+        const t = node.getComponent(UITransform);
+        const bw = t && t.width > 0 ? t.width : w;
+        const bh = t && t.height > 0 ? t.height : h;
+        const segments = layoutSvgLineArt(meta, bw, bh);
+        if (segments.length === 0) return;
+        const g = node.getComponent(Graphics) ?? node.addComponent(Graphics);
+        g.clear();
+        const left = -bw * (t ? t.anchorX : 0.5);
+        const top = bh * (1 - (t ? t.anchorY : 0.5));
+        for (const seg of segments) {
+            g.lineWidth = seg.width;
+            g.strokeColor = new Color(seg.rgba[0], seg.rgba[1], seg.rgba[2], seg.rgba[3]);
+            g.moveTo(left + seg.x1, top - seg.y1);
+            g.lineTo(left + seg.x2, top - seg.y2);
+            g.stroke();
+        }
+    }
+
     /** Renderer for converted SVG composites; subclasses supply one. */
     protected _getSvgCompositeRenderer(): ICompositeRenderer | undefined {
         return undefined;
