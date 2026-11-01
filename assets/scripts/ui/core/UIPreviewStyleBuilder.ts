@@ -514,11 +514,23 @@ export class UIPreviewStyleBuilder {
             const maxBlur = Math.max(1, Math.round((style.fontSize || label.fontSize) * LABEL_SHADOW_BLUR_MAX_RATIO));
             label.shadowBlur   = Math.min(style.shadow.blur || 0, maxBlur);
         }
-        label.isBold = !!style.isBold;
         label.isItalic = !!style.isItalic;
-        if (style.fontPath) {
-            const font = this.fontCache.get(style.fontPath);
-            if (font) label.font = font;
-        }
+        // A real bold face replaces synthetic bold, like the browser picking an @font-face weight 700.
+        // Text the bold face cannot cover falls back to system glyphs, which only synthetic bold thickens.
+        const boldFont = style.isBold && style.boldFontPath && textInRanges(label.string, style.boldFontRanges)
+            ? this.fontCache.get(style.boldFontPath)
+            : null;
+        label.isBold = !!style.isBold && !boldFont;
+        const font = boldFont || (style.fontPath ? this.fontCache.get(style.fontPath) : null);
+        if (font) label.font = font;
     }
+}
+
+function textInRanges(text: string, ranges?: Array<[number, number]>): boolean {
+    if (!ranges) return true;
+    for (const ch of text || '') {
+        const code = ch.codePointAt(0) as number;
+        if (!ranges.some(([start, end]) => code >= start && code <= end)) return false;
+    }
+    return true;
 }
