@@ -3556,14 +3556,14 @@ export class LobbyScene extends Component {
 
     /** 血統小傳按鈕（PROG-2-1428）：在人物頁 Overview 分頁，切回 Overview 都重綁 */
     private _bindCharacterDs3BloodlineVignette(): void {
-        const button = this._characterDs3Host?.binder?.getButton('btnBloodlineVignette');
+        const button = this._characterDs3Surface()?.binder?.getButton('btnBloodlineVignette');
         if (!button) {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 bloodline vignette button missing', { buttonNode: 'btnBloodlineVignette' });
             return;
         }
         button.node.off(Button.EventType.CLICK, this._onBloodlineVignetteClick, this);
         button.node.on(Button.EventType.CLICK, this._onBloodlineVignetteClick, this);
-        const label = this._characterDs3Host?.binder?.getLabel('bloodlineVignetteLabel');
+        const label = this._characterDs3Surface()?.binder?.getLabel('bloodlineVignetteLabel');
         if (label) label.string = bloodlineVignetteOpenLabel((key, ...args) => services().i18n.t(key, ...args));
     }
 
@@ -3706,7 +3706,7 @@ export class LobbyScene extends Component {
 
     /** 寄宿戰魂按鈕：綁定點按，並依可否寄宿設定灰階（PROG-2-1058） */
     private _bindCharacterDs3SoulInject(): void {
-        const button = this._characterDs3Host?.binder?.getButton('btnSoulInject');
+        const button = this._characterDs3Surface()?.binder?.getButton('btnSoulInject');
         if (!button) {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 soul inject button missing', { buttonNode: 'btnSoulInject' });
             return;
@@ -3717,7 +3717,7 @@ export class LobbyScene extends Component {
     }
 
     private _refreshCharacterDs3SoulInject(): void {
-        const button = this._characterDs3Host?.binder?.getButton('btnSoulInject');
+        const button = this._characterDs3Surface()?.binder?.getButton('btnSoulInject');
         if (!button) return;
         button.interactable = canOpenSoulInject(this._soulInjectCandidates());
         this._refreshCharacterDs3TotalTp();
@@ -3725,7 +3725,7 @@ export class LobbyScene extends Component {
 
     /** 人物頁總 TP（寄宿戰魂會加總到 totalTp）；寄宿後重讀名冊，避免顯示舊值（PROG-2-1070） */
     private _refreshCharacterDs3TotalTp(): void {
-        const label = this._characterDs3Host?.binder?.getLabel('totalTpLabel');
+        const label = this._characterDs3Surface()?.binder?.getLabel('totalTpLabel');
         const general = this._characterDs3General as (GeneralConfig & { totalTp?: number }) | null;
         if (!label || !general) return;
         label.string = services().i18n.t('ui.general.soul_inject.total_tp', String(general.totalTp ?? 0));
@@ -3779,7 +3779,7 @@ export class LobbyScene extends Component {
     private _syncCharacterDs3PreviewTabVisualState(): void {
         // 命紋靈獸摘要、因子六角圖、版本圖鑑入口是程式掛在 host 上的暫定節點，放在總覽會壓到立繪與右欄；
         // 只在血脈分頁顯示（PROG-2-1625）
-        const hostNode = this._characterDs3Host?.node;
+        const hostNode = this._characterDs3Surface()?.node;
         const onBloodline = this._characterDs3ActiveTab === 'Bloodline';
         for (const name of [BEAST_SUMMARY_NODE_NAME, FACTOR_HEX_NODE_NAME, GALLERY_ENTRY_NODE_NAME]) {
             const extra = hostNode?.getChildByName(name);
@@ -4477,7 +4477,65 @@ export class LobbyScene extends Component {
      * Unity 對照：等同把 roster item click 統一路由到新版 Character Detail scene/prefab host。
      */
     private async _openGeneralDetailDirect(config: GeneralConfig): Promise<void> {
-        await this._openCharacterDs3FromListSelection(config);
+        await this._openCharacterFormalPanel(config);
+    }
+
+    /** 人物頁目前的承載面：正式面板開著時用它，否則用舊的 DS3 host（PROG-2-1686） */
+    private _characterDs3Surface(): { node: Node; binder: UITemplateBinder | null } | null {
+        const panel = this._detailPanel;
+        const panelBinder = panel?.node.active ? panel.ds3Binder : null;
+        if (panel && panelBinder) {
+            return { node: panel.node, binder: panelBinder };
+        }
+        const host = this._characterDs3Host;
+        return host ? { node: host.node, binder: host.binder ?? null } : null;
+    }
+
+    /** 大廳改開正式武將面板（ds3 版型），箭頭換武將、切分頁後重綁附加按鈕（PROG-2-1686） */
+    private async _openCharacterFormalPanel(config: GeneralConfig): Promise<void> {
+        const panel = this._detailPanel;
+        if (!panel) {
+            throw new Error('[LobbyScene] GeneralDetailComposite 尚未初始化，無法開啟人物頁');
+        }
+        (globalThis as { __UCUF_GENERAL_DETAIL_VARIANT?: string }).__UCUF_GENERAL_DETAIL_VARIANT = 'ds3';
+        if (services().ui.isOpen(UIID.GeneralList)) {
+            await services().ui.closeCurrentUI();
+        } else {
+            this._listPanel?.hide();
+        }
+        if (this._characterDs3Host) {
+            this._characterDs3Host.node.active = false;
+        }
+        panel.onRequestClose = () => panel.hide();
+        panel.onRequestCycle = (step: number) => {
+            const next = cyclePoolItem(this._generals, this._characterDs3General?.id, step);
+            if (next && next.id !== this._characterDs3General?.id) {
+                void this._showCharacterFormalGeneral(next);
+            }
+        };
+        panel.onDs3TabSwitched = (tab) => {
+            this._characterDs3ActiveTab = tab;
+            this._syncCharacterDs3PreviewTabVisualState();
+            if (tab === 'Overview') {
+                this._bindCharacterDs3SoulInject();
+                this._bindCharacterDs3BloodlineVignette();
+            }
+        };
+        await this._showCharacterFormalGeneral(config);
+    }
+
+    private async _showCharacterFormalGeneral(config: GeneralConfig): Promise<void> {
+        this._characterDs3General = config;
+        this._soulInjectArmedDeadUid = null;
+        this._setBloodlineVignetteOpen(false);
+        await this._detailPanel?.show(config);
+        this._refreshBeastSummary(config);
+        this._refreshGalleryEntry();
+        this._refreshFactorHex(config);
+        this._syncCharacterDs3PreviewTabVisualState();
+        this._bindCharacterDs3SoulInject();
+        this._bindCharacterDs3BloodlineVignette();
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] character formal panel shown', { generalId: config.id });
     }
 
     /**
@@ -4580,7 +4638,7 @@ export class LobbyScene extends Component {
     }
 
     private _refreshBeastSummary(config: GeneralConfig): void {
-        const hostNode = this._characterDs3Host?.node;
+        const hostNode = this._characterDs3Surface()?.node;
         if (!hostNode) {
             return;
         }
@@ -4603,7 +4661,7 @@ export class LobbyScene extends Component {
      * 同一武將在本次執行中第二次以後檢視時，新亮起的顏色會播一次解鎖特效。
      */
     private _refreshFactorHex(config: GeneralConfig): void {
-        const hostNode = this._characterDs3Host?.node;
+        const hostNode = this._characterDs3Surface()?.node;
         if (!hostNode) {
             return;
         }
@@ -4631,7 +4689,7 @@ export class LobbyScene extends Component {
      * 版本表與已擁有集合的來源見 galleryInputsFromGenerals（暫定）。
      */
     private _refreshGalleryEntry(): void {
-        const hostNode = this._characterDs3Host?.node;
+        const hostNode = this._characterDs3Surface()?.node;
         if (!hostNode) {
             return;
         }
