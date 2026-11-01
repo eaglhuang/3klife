@@ -1,0 +1,157 @@
+{
+  "ver": "1.0.27",
+  "importer": "image",
+  "imported": true,
+  "uuid": "64d9aa0a-484d-4b7c-9469-635ffd8d5f38",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "64d9aa0a-484d-4b7c-9469-635ffd8d5f38@6c48a",
+      "displayName": "chen_dao_portrait",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "64d9aa0a-484d-4b7c-9469-635ffd8d5f38",
+        "isUuid": true,
+        "visible": false,
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "ver": "1.0.12",
+      "importer": "sprite-frame",
+      "imported": true,
+      "uuid": "64d9aa0a-484d-4b7c-9469-635ffd8d5f38@f9941",
+      "displayName": "chen_dao_portrait",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "pixelsPerUnit": 100,
+        "extrude": 1,
+        "meshType": 0,
+        "pivot": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "originalSize": {
+          "width": 512,
+          "height": 768
+        },
+        "trimSize": {
+          "width": 512,
+          "height": 768
+        },
+        "trimOffset": {
+          "x": 0,
+          "y": 0
+        },
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 27,
+        "offsetY": 1,
+        "trimX": 65,
+        "trimY": 3,
+        "width": 436,
+        "height": 760,
+        "rawWidth": 512,
+        "rawHeight": 768,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "vertices": {
+          "rawPosition": [
+            -218,
+            -380,
+            0,
+            218,
+            -380,
+            0,
+            -218,
+            380,
+            0,
+            218,
+            380,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            65,
+            765,
+            501,
+            765,
+            65,
+            5,
+            501,
+            5
+          ],
+          "nuv": [
+            0.126953125,
+            0.006510416666666667,
+            0.978515625,
+            0.006510416666666667,
+            0.126953125,
+            0.99609375,
+            0.978515625,
+            0.99609375
+          ],
+          "minPos": [
+            -218,
+            -380,
+            0
+          ],
+          "maxPos": [
+            218,
+            380,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "64d9aa0a-484d-4b7c-9469-635ffd8d5f38@6c48a",
+        "atlasUuid": "",
+        "trimType": "auto"
+      },
+      "readonly": false,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "sprite-frame",
+    "fixAlphaTransparencyArtifacts": false,
+    "hasAlpha": true,
+    "redirect": "64d9aa0a-484d-4b7c-9469-635ffd8d5f38@6c48a"
+  }
+}

@@ -15,9 +15,10 @@
  *   - 正式頭像（sprites/generals/avatars）由美術總監管理，本工具不寫。
  *
  * 用法：
- *   node tools_node/generate-general-avatars.js            # 全部立繪
- *   node tools_node/generate-general-avatars.js zhao-yun   # 只做指定武將
- *   node tools_node/generate-general-avatars.js --verify   # 只驗證與估算，不寫檔
+ *   node tools_node/generate-general-avatars.js                                  # 全部立繪
+ *   node tools_node/generate-general-avatars.js zhao-yun                         # 指定武將（含 master / overview）
+ *   node tools_node/generate-general-avatars.js zhao-yun --cropped-only --preserve-crop # 僅輸出指定 cropped，沿用既有座標
+ *   node tools_node/generate-general-avatars.js --verify                         # 只驗證，不寫檔
  */
 
 'use strict';
@@ -47,6 +48,37 @@ const EYE_LINE_RATIO = 0.40;
 const args       = process.argv.slice(2);
 const verifyOnly = args.includes('--verify');
 const targetId   = args.find(a => !a.startsWith('--')) ?? null;
+const croppedOnly = args.includes('--cropped-only');
+const preserveCrop = args.includes('--preserve-crop');
+const HELP = `用法：
+  node tools_node/generate-general-avatars.js [general-id]
+  node tools_node/generate-general-avatars.js [general-id] --cropped-only --preserve-crop
+  node tools_node/generate-general-avatars.js --verify
+
+選項：
+  --verify          只驗證，不寫檔
+  --cropped-only    只寫 sprites/ui_avatars/cropped，不產生 master / overview
+  --preserve-crop   沿用 crops JSON 現有 x/y/w/h，不以 face 標記重算
+  --help, -h        顯示說明
+`;
+const KNOWN_FLAGS = new Set(['--verify', '--cropped-only', '--preserve-crop', '--help', '-h']);
+const unknownFlags = args.filter((arg) => arg.startsWith('-') && !KNOWN_FLAGS.has(arg));
+if (args.includes('--help') || args.includes('-h')) {
+    console.log(HELP);
+    process.exit(0);
+}
+if (unknownFlags.length > 0) {
+    console.error(`未知選項：${unknownFlags.join(', ')}\n${HELP}`);
+    process.exit(2);
+}
+if ((croppedOnly || preserveCrop) && !targetId) {
+    console.error('--cropped-only 與 --preserve-crop 必須搭配單一 general-id。');
+    process.exit(2);
+}
+if (croppedOnly && !preserveCrop) {
+    console.error('--cropped-only 必須搭配 --preserve-crop，避免輸出與裁切表記錄不一致。');
+    process.exit(2);
+}
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 
@@ -160,11 +192,12 @@ function main() {
         const png = PNG.sync.read(fs.readFileSync(src));
         let crop = cropsDoc.crops[id];
         if (!crop) {
+            if (preserveCrop) { console.error(`  ❌ ${id}：--preserve-crop 要求裁切表已有記錄`); fail++; continue; }
             crop = { ...autoCrop(png), source: 'auto' };
             cropsDoc.crops[id] = crop;
             added++;
         }
-        if (crop.face) {
+        if (crop.face && !preserveCrop) {
             const derived = cropFromFace(crop.face);
             if (['x', 'y', 'w', 'h'].some((k) => crop[k] !== derived[k])) { Object.assign(crop, derived); added++; }
         }
@@ -173,15 +206,19 @@ function main() {
         ok++;
         if (verifyOnly) continue;
         fs.mkdirSync(outDir, { recursive: true });
-        fs.mkdirSync(path.join(ARTIFACT_DIR, 'master'), { recursive: true });
         fs.writeFileSync(path.join(outDir, `${fileIdOf(id)}_avatar.png`), PNG.sync.write(cropAndResize(png, crop.x, crop.y, crop.w, crop.h, OUT_SIZE)));
-        fs.writeFileSync(path.join(ARTIFACT_DIR, 'master', `${fileIdOf(id)}_avatar.png`), PNG.sync.write(cropAndResize(png, crop.x, crop.y, crop.w, crop.h, MASTER_SIZE)));
-        review.push(cropAndResize(png, crop.x, crop.y, crop.w, crop.h, REVIEW_SIZE));
+        if (!croppedOnly) {
+            fs.mkdirSync(path.join(ARTIFACT_DIR, 'master'), { recursive: true });
+            fs.writeFileSync(path.join(ARTIFACT_DIR, 'master', `${fileIdOf(id)}_avatar.png`), PNG.sync.write(cropAndResize(png, crop.x, crop.y, crop.w, crop.h, MASTER_SIZE)));
+            review.push(cropAndResize(png, crop.x, crop.y, crop.w, crop.h, REVIEW_SIZE));
+        }
     }
     if (!verifyOnly) {
-        if (added) fs.writeFileSync(CROPS_PATH, JSON.stringify(cropsDoc, null, 2) + '\n');
+        if (added && !preserveCrop) fs.writeFileSync(CROPS_PATH, JSON.stringify(cropsDoc, null, 2) + '\n');
         if (review.length) writeOverview(review);
-        console.log(`\n輸出：${paths.croppedAvatarDir}（遊戲）、artifacts/general-avatars（512 母圖與 64px 總覽）；新增／更新座標 ${added} 筆`);
+        console.log(croppedOnly
+            ? `\n只輸出：${paths.croppedAvatarDir}；裁切表未寫入`
+            : `\n輸出：${paths.croppedAvatarDir}（遊戲）、artifacts/general-avatars（512 母圖與 64px 總覽）；新增／更新座標 ${added} 筆`);
     }
     console.log(`結果：${ok} 成功  ${fail} 失敗`);
     if (fail > 0) process.exit(1);
