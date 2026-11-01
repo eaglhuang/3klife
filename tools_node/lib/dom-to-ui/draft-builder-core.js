@@ -1004,7 +1004,14 @@ function deriveComputedGeometry(ctx, style, nodeType) {
   const hasPercentEdge = [style.left, style.right, style.top, style.bottom]
     .some(value => typeof value === 'string' && /%\s*$/.test(value.trim()));
   const shouldMap = hasOutOfFlowPosition && (hasTransform || hasImageFit || hasPercentEdge);
-  if (!shouldMap) return null;
+  if (!shouldMap) {
+    // 行內元素的 computed width／height 是 auto，實際大小只能從量到的框取得；否則會被父排版撐滿整列
+    const inlineRect = String(style.display || '').trim().toLowerCase() === 'inline' && normalizeRect(style._computedRect);
+    if (inlineRect && inlineRect.w > 0 && inlineRect.h > 0 && !hasOutOfFlowPosition) {
+      return { width: Math.max(1, Math.round(inlineRect.w)), height: Math.max(1, Math.round(inlineRect.h)), widget: null };
+    }
+    return null;
+  }
 
   const rect = normalizeRect(style._computedRect);
   if (!rect) return null;
@@ -1603,6 +1610,9 @@ function inferBlockFlowLayout(style, ctx, nodeName, el) {
   if (childElements.some(child => childHasOutOfFlowPosition(child, ctx))) return null;
 
   const out = { type: 'vertical' };
+  // 區塊流裡比父窄的子框（行內標籤等）照 text-align 放：預設靠左，引擎垂直排版預設卻是置中
+  const textAlign = String(style.textAlign || '').trim().toLowerCase();
+  out.alignItems = textAlign === 'center' ? 'center' : /^(right|end)$/.test(textAlign) ? 'end' : 'start';
   if (padding) {
     out.paddingTop = padding.top;
     out.paddingRight = padding.right;
