@@ -221,13 +221,16 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
             const [x, y] = sourceLabel
                 ? this._mapSourcePoint({ x: sourceLabel.x, y: sourceLabel.y }, sourceSvg, size)
                 : this._radialPoint(i, radius, axisCount);
-            labelNode.setPosition(x, y + offsetY, 0);
+            // Source label coordinates already carry the SVG text offset; only synthetic labels need offsetY.
+            labelNode.setPosition(x, sourceLabel ? y : y + offsetY, 0);
 
             const label = labelNode.getComponent(Label);
             if (!label) continue;
             label.string = sourceLabel?.text || config.axes[i] || '';
-            label.fontSize = fontSize;
-            label.lineHeight = fontSize + 2;
+            // SVG text scales with the viewBox like the geometry does.
+            const labelFontSize = sourceLabel ? fontSize * this._sourceScale(sourceSvg, size) : fontSize;
+            label.fontSize = labelFontSize;
+            label.lineHeight = labelFontSize + 2;
             label.color = cssToColor(colors[i] ?? sourceLabel?.fill ?? '#8CCFC4');
             label.isBold = true;
             label.horizontalAlign = HorizontalTextAlignment.CENTER;
@@ -443,6 +446,11 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
         gfx.lineWidth = Math.max(1, px) + GRAPHICS_AA_FEATHER_PX;
         if (px < 1) color.a = Math.round(color.a * Math.max(0, px));
         gfx.strokeColor = color;
+    }
+
+    private _sourceScale(sourceSvg: RadarSourceSvgGeometry | null, targetRadius: number): number {
+        const sourceRadius = sourceSvg ? this._resolveSourceOuterRadius(sourceSvg) : 0;
+        return sourceRadius > 0 ? targetRadius / sourceRadius : 1;
     }
 
     private _mapSourcePoint(point: RadarPoint, sourceSvg: RadarSourceSvgGeometry | null, targetRadius: number): [number, number] {
