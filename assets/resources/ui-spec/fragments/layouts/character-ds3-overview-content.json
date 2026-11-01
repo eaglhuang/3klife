@@ -68,7 +68,7 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabOverview_span_1",
+                          "name": "OverviewName",
                           "width": 119,
                           "height": 54,
                           "text": "張飛",
@@ -86,7 +86,7 @@
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabOverview_div_5",
+                      "name": "OverviewRoleBadge",
                       "width": 223,
                       "height": 24,
                       "text": "翼德 · 蜀 · 先鋒",
@@ -108,7 +108,7 @@
                   "children": [
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabOverview_span_3",
+                      "name": "OverviewRarityTier",
                       "width": 62,
                       "height": 29,
                       "text": "UR",
@@ -116,7 +116,7 @@
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabOverview_div_7",
+                      "name": "OverviewRarityStars",
                       "width": 104,
                       "height": 30,
                       "layout": {
@@ -269,7 +269,7 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabOverview_span_12",
+                              "name": "OverviewStat_str",
                               "width": 24,
                               "height": 27,
                               "text": "98",
@@ -299,7 +299,7 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabOverview_span_14",
+                              "name": "OverviewStat_lea",
                               "width": 22,
                               "height": 27,
                               "text": "88",
@@ -329,7 +329,7 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabOverview_span_16",
+                              "name": "OverviewStat_cha",
                               "width": 20,
                               "height": 27,
                               "text": "74",
@@ -359,7 +359,7 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabOverview_span_18",
+                              "name": "OverviewStat_int",
                               "width": 22,
                               "height": 27,
                               "text": "52",
@@ -389,7 +389,7 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabOverview_span_20",
+                              "name": "OverviewStat_pol",
                               "width": 22,
                               "height": 27,
                               "text": "38",
@@ -419,7 +419,7 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabOverview_span_22",
+                              "name": "OverviewStat_luk",
                               "width": 22,
                               "height": 27,
                               "text": "76",
@@ -485,7 +485,7 @@
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabOverview_div_22",
+                      "name": "OverviewRoleRow0",
                       "width": 120,
                       "height": 25,
                       "layout": {
@@ -497,14 +497,14 @@
                       "children": [
                         {
                           "type": "panel",
-                          "name": "CharacterDs3TabOverview_span_25",
+                          "name": "OverviewRoleBullet0",
                           "width": 8,
                           "height": 8,
                           "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_25"
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabOverview_span_26",
+                          "name": "OverviewRoleText0",
                           "width": 75,
                           "height": 25,
                           "text": "前排突破",
@@ -514,7 +514,7 @@
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabOverview_div_23",
+                      "name": "OverviewRoleRow1",
                       "width": 120,
                       "height": 25,
                       "layout": {
@@ -526,14 +526,14 @@
                       "children": [
                         {
                           "type": "panel",
-                          "name": "CharacterDs3TabOverview_span_27",
+                          "name": "OverviewRoleBullet1",
                           "width": 8,
                           "height": 8,
                           "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_27"
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabOverview_span_28",
+                          "name": "OverviewRoleText1",
                           "width": 75,
                           "height": 25,
                           "text": "破陣主攻",
@@ -597,7 +597,7 @@
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabOverview_div_27",
+                      "name": "OverviewTraitRow0",
                       "width": 137,
                       "height": 25,
                       "layout": {
@@ -609,14 +609,14 @@
                       "children": [
                         {
                           "type": "panel",
-                          "name": "CharacterDs3TabOverview_span_31",
+                          "name": "OverviewTraitBullet0",
                           "width": 8,
                           "height": 8,
                           "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_31"
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabOverview_span_32",
+                          "name": "OverviewTraitText0",
                           "width": 75,
                           "height": 25,
                           "text": "戰意特聚",
@@ -626,7 +626,7 @@
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabOverview_div_28",
+                      "name": "OverviewTraitRow1",
                       "width": 137,
                       "height": 25,
                       "layout": {
@@ -638,14 +638,14 @@
                       "children": [
                         {
                           "type": "panel",
-                          "name": "CharacterDs3TabOverview_span_33",
+                          "name": "OverviewTraitBullet1",
                           "width": 8,
                           "height": 8,
                           "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_33"
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabOverview_span_34",
+                          "name": "OverviewTraitText1",
                           "width": 75,
                           "height": 25,
                           "text": "平原適性",
@@ -755,7 +755,7 @@
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabOverview_span_37",
+                          "name": "OverviewCrestTitle",
                           "width": 62,
                           "height": 19,
                           "text": "命紋顯現",
@@ -776,7 +776,7 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabOverview_div_36",
+                          "name": "OverviewBloodlineName",
                           "width": 370,
                           "height": 32,
                           "text": "燕血脈",
@@ -804,14 +804,14 @@
                             },
                             {
                               "type": "panel",
-                              "name": "CharacterDs3TabOverview_div_38",
+                              "name": "OverviewAwakeningTrack",
                               "width": 249,
                               "height": 10,
                               "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_38",
                               "children": [
                                 {
                                   "type": "panel",
-                                  "name": "CharacterDs3TabOverview_div_39",
+                                  "name": "OverviewAwakeningFill",
                                   "width": 144,
                                   "height": 8,
                                   "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_39"
@@ -820,7 +820,7 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabOverview_span_39",
+                              "name": "OverviewAwakeningPercent",
                               "width": 33,
                               "height": 22,
                               "text": "58%",
@@ -850,7 +850,7 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabOverview_span_41",
+                              "name": "OverviewCrestHint",
                               "width": 136,
                               "height": 24,
                               "text": "已建立 14 人血統圖",
@@ -880,7 +880,7 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabOverview_span_43",
+                              "name": "OverviewPersonality",
                               "width": 96,
                               "height": 24,
                               "text": "燕地酒坊流傳",
@@ -948,7 +948,7 @@
                 },
                 {
                   "type": "label",
-                  "name": "CharacterDs3TabOverview_div_45",
+                  "name": "OverviewBio",
                   "width": 482,
                   "height": 150,
                   "text": "張飛，字翼德，幽州涿郡人。少年以屠豬賣酒為業，後於桃園與劉備、關羽義結金蘭，誓同生死。性烈如火，勇猛無雙——長坂橋前單槍匹馬，一聲怒吼令曹軍百萬退散；義釋嚴顏一事，足見其粗中有細，智勇兼備。然酒後失德，醉鞭督卒，終命喪部將之手，令千古扼腕。其一生豪烈，血脈中燕地武人的剛猛之氣，至今仍在後裔身上延燃。",
@@ -958,7 +958,7 @@
             },
             {
               "type": "label",
-              "name": "CharacterDs3TabOverview_div_46",
+              "name": "OverviewFooterTitle",
               "width": 520,
               "height": 35,
               "text": "燕人武聖",

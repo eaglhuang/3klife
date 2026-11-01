@@ -13,37 +13,37 @@ interface Ds3SummaryLineSlot {
 }
 
 const CORE_STAT_LABELS: Record<Ds3StatKey, string> = {
-    str: 'CharacterDs3Main_span_16',
-    lea: 'CharacterDs3Main_span_18',
-    cha: 'CharacterDs3Main_span_20',
-    int: 'CharacterDs3Main_span_22',
-    pol: 'CharacterDs3Main_span_24',
-    luk: 'CharacterDs3Main_span_26',
+    str: 'OverviewStat_str',
+    lea: 'OverviewStat_lea',
+    cha: 'OverviewStat_cha',
+    int: 'OverviewStat_int',
+    pol: 'OverviewStat_pol',
+    luk: 'OverviewStat_luk',
 };
 
 const ROLE_LINE_SLOTS: Ds3SummaryLineSlot[] = [
     {
-        row: 'CharacterDs3Main_div_28',
-        bullet: 'CharacterDs3Main_span_29',
-        text: 'CharacterDs3Main_span_30',
+        row: 'OverviewRoleRow0',
+        bullet: 'OverviewRoleBullet0',
+        text: 'OverviewRoleText0',
     },
     {
-        row: 'CharacterDs3Main_div_29',
-        bullet: 'CharacterDs3Main_span_31',
-        text: 'CharacterDs3Main_span_32',
+        row: 'OverviewRoleRow1',
+        bullet: 'OverviewRoleBullet1',
+        text: 'OverviewRoleText1',
     },
 ];
 
 const TRAIT_LINE_SLOTS: Ds3SummaryLineSlot[] = [
     {
-        row: 'CharacterDs3Main_div_33',
-        bullet: 'CharacterDs3Main_span_35',
-        text: 'CharacterDs3Main_span_36',
+        row: 'OverviewTraitRow0',
+        bullet: 'OverviewTraitBullet0',
+        text: 'OverviewTraitText0',
     },
     {
-        row: 'CharacterDs3Main_div_34',
-        bullet: 'CharacterDs3Main_span_37',
-        text: 'CharacterDs3Main_span_38',
+        row: 'OverviewTraitRow1',
+        bullet: 'OverviewTraitBullet1',
+        text: 'OverviewTraitText1',
     },
 ];
 
@@ -102,12 +102,12 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         this._setLabelText('OverviewRoleBadge', state.headerMeta);
         this._setLabelText('OverviewRarityTier', state.rarityLabel);
         this._setLabelText('OverviewBio', state.biographyBody);
-        this._setLabelText('CharacterDs3Main_span_41', state.crestTitle);
-        this._setLabelText('CharacterDs3Main_div_42', state.bloodlineName);
-        this._setLabelText('CharacterDs3Main_span_43', `${Math.round(state.awakeningProgress)}%`);
-        this._setLabelText('CharacterDs3Main_span_45', state.crestHint);
-        this._setLabelText('CharacterDs3Main_span_47', state.personalityValue);
-        this._setLabelText('CharacterDs3Main_div_52', state.footerTitle);
+        this._setLabelText('OverviewCrestTitle', state.crestTitle);
+        this._setLabelText('OverviewBloodlineName', state.bloodlineName);
+        this._setLabelText('OverviewAwakeningPercent', `${Math.round(state.awakeningProgress)}%`);
+        this._setLabelText('OverviewCrestHint', state.crestHint);
+        this._setLabelText('OverviewPersonality', state.personalityValue);
+        this._setLabelText('OverviewFooterTitle', state.footerTitle);
 
         this._applyCoreStats(state);
         this._applySummaryLines(state.roleValue, ROLE_LINE_SLOTS, '定位未定');
@@ -183,7 +183,7 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
     }
 
     private _applyRarityPill(tier: GeneralDetailOverviewContentState['rarityTier']): void {
-        const pillNode = this.binder.getNode('CharacterDs3Main_div_12_pill');
+        const pillNode = this.binder.getNode('OverviewRarityTier');
         const pillSprite = pillNode?.getComponent(Sprite) ?? null;
         const pillLabel = this.binder.getLabel('OverviewRarityTier');
 
@@ -197,8 +197,8 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
     }
 
     private _applyAwakeningProgress(progress: number): void {
-        const trackNode = this.binder.getNode('CharacterDs3Main_div_44');
-        const fillNode = this.binder.getNode('CharacterDs3Main_div_45');
+        const trackNode = this.binder.getNode('OverviewAwakeningTrack');
+        const fillNode = this.binder.getNode('OverviewAwakeningFill');
         const trackTransform = trackNode?.getComponent(UITransform) ?? null;
         const fillTransform = fillNode?.getComponent(UITransform) ?? null;
         if (!trackTransform || !fillTransform) {
