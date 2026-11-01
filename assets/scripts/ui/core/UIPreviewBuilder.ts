@@ -721,6 +721,7 @@ export class UIPreviewBuilder extends Component {
             if (!frame) continue;
 
             const child = new Node(`composite_${layer.spriteSlotId}`);
+            child.layer = node.layer;  // UI camera only renders UI_2D
             node.addChild(child);
 
             const childT = child.addComponent(UITransform);
@@ -758,6 +759,7 @@ export class UIPreviewBuilder extends Component {
 
         for (const layer of sorted) {
             const child = new Node(`skinLayer_${layer.layerId}`);
+            child.layer = node.layer;  // UI camera only renders UI_2D
             node.addChild(child);
 
             const childT = child.addComponent(UITransform);
