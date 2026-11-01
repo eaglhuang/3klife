@@ -3,10 +3,11 @@
  * ResultPopupComposite — 戰鬥結果彈窗（Composite 版）
  * Wave 2 migration from ResultPopup - shows victory/defeat/stalemate results
  */
-import { _decorator, Button, Mask, Node, Sprite, tween, UIOpacity } from 'cc';
+import { _decorator, Button, Color, Graphics, Label, Mask, Node, Sprite, tween, UIOpacity, UITransform, Vec3 } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
+import type { AwakeningFreezeTiming } from '../../shared/interfaces/IBattleUIComponents';
 
 const { ccclass } = _decorator;
 
@@ -93,6 +94,55 @@ export class ResultPopupComposite extends CompositePanel {
         if (!this._visible || lines.length === 0) return;
         this._description = [this._description, ...lines].join('\n');
         this._binder?.setTexts({ DescLabel: this._description });
+    }
+
+    /** 戰場覺醒定格演出（PROG-2-1702）：暗幕＋大字逐一彈出、停留後淡出；結算窗未開時略過 */
+    public async playAwakeningFreeze(titles: readonly string[], timing: AwakeningFreezeTiming): Promise<void> {
+        for (const title of titles) {
+            if (!this._visible || !this.node.isValid) return;
+            await this._playFreezeOnce(title, timing);
+        }
+    }
+
+    private _playFreezeOnce(title: string, t: AwakeningFreezeTiming): Promise<void> {
+        const host = this.node.getComponent(UITransform);
+        const width = host?.width ?? 1920;
+        const height = host?.height ?? 1080;
+
+        const overlay = new Node('AwakeningFreeze');
+        overlay.layer = this.node.layer;
+        overlay.addComponent(UITransform).setContentSize(width, height);
+        const dim = overlay.addComponent(Graphics);
+        dim.fillColor = new Color(0, 0, 0, 170);
+        dim.rect(-width / 2, -height / 2, width, height);
+        dim.fill();
+        const fade = overlay.addComponent(UIOpacity);
+        fade.opacity = 0;
+
+        const text = new Node('AwakeningFreezeTitle');
+        text.layer = this.node.layer;
+        text.addComponent(UITransform);
+        const label = text.addComponent(Label);
+        label.string = title;
+        label.fontSize = 64;
+        label.lineHeight = 72;
+        label.color = new Color(255, 215, 0, 255);
+        text.setScale(new Vec3(t.popScaleFrom, t.popScaleFrom, 1));
+        overlay.addChild(text);
+        this.node.addChild(overlay);
+
+        return new Promise<void>((resolve) => {
+            tween(text).to(t.pop, { scale: new Vec3(1, 1, 1) }, { easing: 'backOut' }).start();
+            tween(fade)
+                .to(t.fadeIn, { opacity: 255 })
+                .delay(t.hold)
+                .to(t.fadeOut, { opacity: 0 })
+                .call(() => {
+                    if (overlay.isValid) overlay.destroy();
+                    resolve();
+                })
+                .start();
+        });
     }
 
     private async _applyGeneralAvatar(generalId: string | undefined): Promise<void> {
