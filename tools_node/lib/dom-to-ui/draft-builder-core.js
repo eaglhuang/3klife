@@ -490,7 +490,7 @@ function processElement(el, ctx, depth) {
         if (!node.layout) sub.widget = { left: layout.paddingLeft || 0, top: layout.paddingTop || 0 };
       }
     }
-    appendNodeWithGeneratedSiblings(childNodes, sub);
+    appendNodeWithGeneratedSiblings(childNodes, wrapFlexItemMainAxisMargin(sub, source, style, ctx));
   }
   const afterPseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'after', hasElementChildren);
   if (beforePseudoNodes.length > 0) childNodes.unshift(...beforePseudoNodes);
@@ -1684,6 +1684,39 @@ function childHasOutOfFlowPosition(child, ctx) {
   const childStyle = collectElementStyle(child, ctx).style;
   const position = String(childStyle.position || '').trim().toLowerCase();
   return position === 'absolute' || position === 'fixed';
+}
+
+// flex 子項的主軸 margin 會疊加在 gap 上，引擎排版元件沒有單一子項外距：
+// 包一層透明容器，以容器內距表達 margin（中立格式，各引擎皆可用）。
+function wrapFlexItemMainAxisMargin(sub, childEl, parentStyle, ctx) {
+  if (!sub || sub._generatedBefore || !childEl || childEl.type !== 'element') return sub;
+  const display = String(parentStyle && parentStyle.display || '').trim().toLowerCase();
+  if (display !== 'flex' && display !== 'inline-flex') return sub;
+  if (childHasOutOfFlowPosition(childEl, ctx)) return sub;
+  const childStyle = collectElementStyle(childEl, ctx).style;
+  const registry = ctx && ctx.tokenRegistry;
+  const box = parseBox(childStyle.margin, registry) || {};
+  const side = (key, fallback) => {
+    const value = resolveLength(childStyle[key], registry).value ?? fallback;
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  };
+  const column = String(parentStyle.flexDirection || '').trim().toLowerCase().startsWith('column');
+  const before = column ? side('marginTop', box.top) : side('marginLeft', box.left);
+  const after = column ? side('marginBottom', box.bottom) : side('marginRight', box.right);
+  if (before === 0 && after === 0) return sub;
+  const along = column ? sub.height : sub.width;
+  if (typeof along !== 'number' || !Number.isFinite(along)) return sub;
+  const layout = column
+    ? { type: 'vertical', paddingTop: before, paddingBottom: after }
+    : { type: 'horizontal', paddingLeft: before, paddingRight: after };
+  return {
+    type: 'container',
+    name: `${sub.name || 'node'}_margin`,
+    width: column ? sub.width : along + before + after,
+    height: column ? along + before + after : sub.height,
+    layout,
+    children: [sub],
+  };
 }
 
 function inferChildBlockSpacing(childElements, ctx) {
