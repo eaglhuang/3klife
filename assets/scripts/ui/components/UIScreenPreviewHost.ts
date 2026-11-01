@@ -1,5 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Node } from 'cc';
+import { _decorator, Node, UIOpacity } from 'cc';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
 import type { ICompositeRenderer } from '../core/interfaces/ICompositeRenderer';
 import { CocosCompositeRenderer } from '../platform/cocos/CocosCompositeRenderer';
@@ -41,6 +41,8 @@ interface PreviewTabRoutingSidecar {
         slotId?: string;
         buttonNode?: string;
         fragment?: string;
+        regions?: Array<{ mount: string; fragment: string }>;
+        hides?: string[];
     }>;
 }
 
@@ -301,6 +303,8 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
                 slotId: route.slotId,
                 fragment: route.fragment,
                 transition: route.transition,
+                regions: route.regions,
+                hides: route.hides,
             });
         };
 
@@ -310,7 +314,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
         for (const tab of tabSidecar?.tabs ?? []) {
             const slotId = tab.slotId ?? tab.mount;
-            addRoute(tab.id ?? tab.key, slotId && tab.fragment ? { slotId, fragment: tab.fragment } : null);
+            addRoute(tab.id ?? tab.key, slotId && tab.fragment ? { slotId, fragment: tab.fragment, regions: tab.regions, hides: tab.hides } : null);
         }
 
         return routeMap;
@@ -374,6 +378,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
         // Plan 4：sidecar 綁定必須由 runtime 執行，不能只在 workflow 複製 JSON 後宣稱通過。
         const callback = () => {
+            void this._applyTabRegions(route, routeMap);
             void this.switchLazySlot(route.slotId, route.fragment).then((ok) => {
                 if (!ok) {
                     console.warn(`[UIScreenPreviewHost] sidecar tabSwitch failed: ${actionId}`);
@@ -391,6 +396,47 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             slotId: route.slotId,
             fragment: route.fragment,
         });
+    }
+
+    /**
+     * Show the areas this tab owns outside its content slot (filling each from its fragment) and
+     * hide the ones it covers; areas other tabs own go back to hidden, hidden ones come back.
+     */
+    private async _applyTabRegions(route: TabRoute, routeMap: Map<string, TabRoute>): Promise<void> {
+        const shown = new Set((route.regions ?? []).map(region => region.mount));
+        const hidden = new Set(route.hides ?? []);
+        for (const other of new Set(routeMap.values())) {
+            for (const region of other.regions ?? []) {
+                if (!shown.has(region.mount)) this._setSourceAreaVisible(region.mount, false);
+            }
+            for (const id of other.hides ?? []) {
+                if (!hidden.has(id)) this._setSourceAreaVisible(id, true);
+            }
+        }
+        for (const id of hidden) this._setSourceAreaVisible(id, false);
+        for (const region of route.regions ?? []) {
+            this._setSourceAreaVisible(region.mount, true);
+            await this.switchLazySlot(region.mount, region.fragment);
+        }
+    }
+
+    private _setSourceAreaVisible(sourceId: string, visible: boolean): void {
+        const spec = this._findLayoutSpecById(sourceId);
+        const node = spec?.name ? this._binder?.getNode(spec.name) : null;
+        if (!node) return;
+        node.active = visible;
+        const opacity = node.getComponent(UIOpacity);
+        if (visible && opacity && opacity.opacity === 0) opacity.opacity = 255;
+    }
+
+    private _findLayoutSpecById(sourceId: string): UILayoutNodeSpec | null {
+        const stack = this._layoutRoot ? [this._layoutRoot] : [];
+        while (stack.length > 0) {
+            const spec = stack.pop()!;
+            if (spec.id === sourceId) return spec;
+            stack.push(...(spec.children ?? []));
+        }
+        return null;
     }
 
     private _resolveInteractionRoute(routeMap: Map<string, TabRoute>, target: string): TabRoute | undefined {

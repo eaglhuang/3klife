@@ -236,6 +236,8 @@ async function main() {
       process.exit(1);
     }
 
+    const baselineVisibleIds = await page.evaluate(collectVisibleIds);
+
     for (let index = 0; index < tabs.length; index += 1) {
       const tab = tabs[index];
       const result = await page.evaluate(async ({ tabKey, tabId, index, tabSelector, contentSelector, rootNamePrefix, allowLegacyContentFallback, tabTextHints }) => {
@@ -434,9 +436,24 @@ async function main() {
       });
 
       const fragmentPath = path.join(outputDir, `${opts.screenId}.${tab.key}.right-content.html`);
+      const regions = [];
+      let hides = [];
       if (result.ok) {
         const html = `<!doctype html>\n<html><head>${result.head}</head><body>${result.html}</body></html>\n`;
         fs.writeFileSync(fragmentPath, html, 'utf8');
+        // Areas outside the content host that this tab shows or hides (e.g. a full-width
+        // family tree replacing the portrait); each shown area becomes its own fragment.
+        const delta = await page.evaluate(collectTabRegionDelta, {
+          baseline: baselineVisibleIds,
+          hostName: result.hostName,
+          rootNamePrefix: `${opts.rootNamePrefix || toPascal(opts.screenId)}${tab.id}`,
+        });
+        hides = delta.hides;
+        for (const region of delta.regions) {
+          const regionPath = path.join(outputDir, `${opts.screenId}.${tab.key}.region.${region.id}.html`);
+          fs.writeFileSync(regionPath, `<!doctype html>\n<html><head>${result.head}</head><body>${region.html}</body></html>\n`, 'utf8');
+          regions.push({ id: region.id, html: regionPath });
+        }
       }
       manifest.tabs.push({
         id: tab.id,
@@ -452,6 +469,8 @@ async function main() {
         hostName: result.hostName || null,
         legacyHost: !!result.legacyHost,
         fixAction: result.fixAction || undefined,
+        regions: regions.length > 0 ? regions : undefined,
+        hides: hides.length > 0 ? hides : undefined,
       });
     }
 
@@ -527,4 +546,61 @@ function toTabDescriptor(value) {
     .toLowerCase();
   if (!key) return null;
   return { id: toRuntimeTabId(key), key };
+}
+
+// Runs in the page: ids of elements the user can currently see.
+function collectVisibleIds() {
+  const isVisible = (element) => {
+    const style = window.getComputedStyle(element);
+    if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) return false;
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  };
+  return Array.from(document.querySelectorAll('[id]')).filter(isVisible).map(element => element.id);
+}
+
+// Runs in the page: id'd areas outside the tab content host that the current tab shows
+// (cloned as fragment HTML) or hides, compared with the page's default state.
+async function collectTabRegionDelta({ baseline, hostName, rootNamePrefix }) {
+  // Let show/hide transitions settle so visibility reflects the tab's resting state.
+  // Looping animations never finish, so cap the wait.
+  const settled = Promise.all((document.getAnimations ? document.getAnimations() : []).map(a => a.finished.catch(() => null)));
+  await Promise.race([settled, new Promise(resolve => setTimeout(resolve, 1000))]);
+  const host = hostName ? document.getElementById(hostName) : null;
+  const related = (element) => !!host && (element === host || element.contains(host) || host.contains(element));
+  const outermost = (elements) => elements.filter(element => !elements.some(other => other !== element && other.contains(element)));
+  const nowVisible = new Set(collectVisibleIdsInPage());
+  const before = new Set(baseline || []);
+  const byId = id => document.getElementById(id);
+  const shown = outermost([...nowVisible].filter(id => !before.has(id)).map(byId).filter(el => el && !related(el)));
+  const hidden = outermost([...before].filter(id => !nowVisible.has(id)).map(byId).filter(el => el && !related(el)));
+  const regions = shown.map((element) => {
+    const computed = window.getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+    const clone = document.createElement('div');
+    const pascal = String(element.id).replace(/(^|[-_\s]+)(\w)/g, (_, __, c) => c.toUpperCase());
+    clone.setAttribute('data-name', `${rootNamePrefix}${pascal}Root`);
+    // The mount keeps the area's own box (background, padding); the fragment is its content box.
+    const padX = parseFloat(computed.paddingLeft) + parseFloat(computed.paddingRight);
+    const padY = parseFloat(computed.paddingTop) + parseFloat(computed.paddingBottom);
+    for (const prop of ['display', 'flex-direction', 'gap', 'box-sizing']) {
+      const value = computed.getPropertyValue(prop);
+      if (value) clone.style.setProperty(prop, value);
+    }
+    clone.style.setProperty('width', `${Math.max(1, Math.round(rect.width - padX))}px`);
+    clone.style.setProperty('min-height', `${Math.max(1, Math.round(element.scrollHeight - padY))}px`);
+    for (const child of Array.from(element.childNodes)) clone.appendChild(child.cloneNode(true));
+    return { id: element.id, html: clone.outerHTML };
+  });
+  return { regions, hides: hidden.map(element => element.id) };
+
+  function collectVisibleIdsInPage() {
+    const isVisible = (element) => {
+      const style = window.getComputedStyle(element);
+      if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    };
+    return Array.from(document.querySelectorAll('[id]')).filter(isVisible).map(element => element.id);
+  }
 }
