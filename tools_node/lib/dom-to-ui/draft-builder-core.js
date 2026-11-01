@@ -1958,6 +1958,9 @@ function wrapLooseTextNode(textNode, parentStyle, centerByDefault) {
     if (LOOSE_TEXT_INHERITED_PROPS.includes(prop) && value != null && value !== '') inherited[prop] = value;
   }
   if (centerByDefault && !inherited['text-align']) inherited['text-align'] = 'center';
+  // 匿名文字盒撐滿內容寬：grid／flex 容器把它置中或靠右時，改用 text-align 表達同一位置
+  const boxAlign = looseTextBoxAlign(parentStyle);
+  if (boxAlign) inherited['text-align'] = boxAlign;
   const declarations = Object.entries(inherited).map(([prop, value]) => `${prop}: ${value}`);
   return {
     type: 'element',
@@ -1965,6 +1968,28 @@ function wrapLooseTextNode(textNode, parentStyle, centerByDefault) {
     attrs: declarations.length > 0 ? { style: declarations.join('; ') } : {},
     children: [textNode],
   };
+}
+
+// grid 看 justify-items（place-items 第二值），flex 看主軸 justify-content 或縱向的 align-items
+function looseTextBoxAlign(style) {
+  if (!style) return null;
+  const display = String(style.display || '').toLowerCase();
+  const pick = value => {
+    const v = String(value || '').trim().toLowerCase();
+    if (/^(center|safe center)$/.test(v)) return 'center';
+    if (/^(end|flex-end|right|self-end)$/.test(v)) return 'right';
+    return null;
+  };
+  const placeHorizontal = value => {
+    const parts = String(value || '').trim().split(/\s+/).filter(Boolean);
+    return parts.length > 1 ? parts[1] : parts[0];
+  };
+  if (/grid/.test(display)) return pick(style.justifyItems || placeHorizontal(style.placeItems));
+  if (/flex/.test(display)) {
+    const column = /^column/.test(String(style.flexDirection || '').toLowerCase());
+    return column ? pick(style.alignItems || String(style.placeItems || '').split(/\s+/)[0]) : pick(style.justifyContent || placeHorizontal(style.placeContent));
+  }
+  return null;
 }
 
 function collectText(el) {
@@ -2871,7 +2896,8 @@ function ensureLabelStyle(ctx, slotId, style, attrs, text = '') {
     // §37.2 鐵律 1：黑色輪廓 + 寬度 2，沒明確指定就自動填
     outlineColor: 'colorOutlineDark',
     outlineWidth: 2,
-    horizontalAlign: ENGINE.textAlign(style.textAlign),
+    // 文字自成 grid／flex 項目時，盒子的置中／靠右決定位置，text-align 只影響盒內換行
+    horizontalAlign: ENGINE.textAlign(looseTextBoxAlign(style) || style.textAlign),
     // CSS 行盒以半行距把字形放在行高正中；引擎預設靠上會讓字整排偏高
     verticalAlign: 'CENTER',
   };
