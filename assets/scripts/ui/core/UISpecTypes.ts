@@ -521,7 +521,15 @@ export interface UISkinManifest {
 // ═══════════════════════════════════════════════════════════════
 
 /** Tab 路由條目（UCUF M2）。由 CompositePanel.switchSlot() 使用 */
-export type TabRoute = { slotId: string; fragment: string; transition?: TransitionDef };
+export type TabRoute = {
+    slotId: string;
+    fragment: string;
+    transition?: TransitionDef;
+    /** Areas outside the content slot this tab shows, each filled by its own fragment. */
+    regions?: Array<{ mount: string; fragment: string }>;
+    /** Areas (by source id) this tab hides, e.g. the portrait behind a full-width tree. */
+    hides?: string[];
+};
 
 /** 設備驗證配置 */
 export interface ValidationDef {
