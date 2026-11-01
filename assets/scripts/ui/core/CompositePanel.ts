@@ -30,7 +30,7 @@ import type { ICompositeRenderer } from './interfaces/ICompositeRenderer';
 import type { IScrollVirtualizer } from './interfaces/IScrollVirtualizer';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import type { AssetRefType } from './AssetRegistryEntry';
-import { UINodePool } from './UINodePool';
+import { UINodePool, splitRecyclableChildren } from './UINodePool';
 import { EventSystem } from '../../core/systems/EventSystem';
 
 // ─── 內部型別 ─────────────────────────────────────────────────────────────────
@@ -47,6 +47,8 @@ export interface LazySlotEntry {
     parentH: number;
     /** 目前已載入的 fragmentId（供 NodePool release 時鍵値用） */
     currentFragmentId?: string;
+    /** 目前片段的根節點；子面板可能在槽上另掛執行期節點，回收與重綁都以此為準（PROG-2-1692） */
+    currentFragmentRoot?: Node | null;
 }
 
 // ─── 主類別 ──────────────────────────────────────────────────────────────────
@@ -208,7 +210,9 @@ export abstract class CompositePanel extends UIPreviewBuilder {
         const isSameFragment = entry.currentFragmentId === fragmentId;
         if (isSameFragment && entry.node.children.length > 0) {
             const fragLayout = await services().specLoader.loadLayout(fragmentId);
-            const fragmentRootNode = entry.node.children[entry.node.children.length - 1] ?? null;
+            const fragmentRootNode = entry.currentFragmentRoot?.isValid
+                ? entry.currentFragmentRoot
+                : entry.node.children[entry.node.children.length - 1] ?? null;
             if (this._panelBinder && fragmentRootNode) {
                 this._panelBinder.bindLazyFragment(fragmentRootNode, fragLayout.root);
             }
@@ -236,9 +240,12 @@ export abstract class CompositePanel extends UIPreviewBuilder {
         // Unity 對照：ObjectPool.Release(go) — 停用並回收節點，避免直接 Destroy
         if (entry.currentFragmentId) {
             const oldFragId = entry.currentFragmentId;
-            const children = [...entry.node.children];
-            for (const child of children) {
+            const { recycle, destroy } = splitRecyclableChildren(entry.node.children, entry.currentFragmentRoot);
+            for (const child of recycle) {
                 this._nodePool.release(oldFragId, child);
+            }
+            for (const child of destroy) {
+                child.destroy();
             }
         } else {
             // 尚無 fragmentId 記錄（首次載入），直接銷毀
@@ -280,6 +287,7 @@ export abstract class CompositePanel extends UIPreviewBuilder {
         // lazy fragment 是在 buildScreen 之後才動態掛進 slot；
         // 若不補建 path 索引，ChildPanel 的 content binder 會找不到 HeaderRow/... 這類節點。
         const fragmentRootNode = entry.node.children[entry.node.children.length - 1] ?? null;
+        entry.currentFragmentRoot = fragmentRootNode;
         if (this._panelBinder && fragmentRootNode) {
             this._panelBinder.bindLazyFragment(fragmentRootNode, fragLayout.root);
         }
