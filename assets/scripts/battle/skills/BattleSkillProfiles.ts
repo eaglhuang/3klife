@@ -1,5 +1,5 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)、兵種（虎符）系統.md (doc_spec_0012)；PROG-2-1429 依建檔紀錄補標出處
-import { StatusEffect } from '../../core/config/Constants';
+import { StatusEffect, Weather } from '../../core/config/Constants';
 import { RULED_EXTRA_TALLY_SKILL_IDS, TIGER_TALLY_PENDING_SKILL_IDS } from '../../core/config/TigerTallySpecTactics';
 import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } from '../../shared/SkillRuntimeContract';
 
@@ -42,6 +42,8 @@ export interface BattleSkillProfile {
   healMissingRatio?: number;
   /** 精銳突擊：衝鋒傷害倍率（PROG-2-0751，規格 2.0） */
   chargeMultiplier?: number;
+  /** 依天氣的傷害倍率（PROG-2-1698 夜襲：夜晚 ×1.5）；未列的天氣不變 */
+  weatherDamageMultiplier?: Readonly<Partial<Record<Weather, number>>>;
   /** 首回合傷害倍率（PROG-2-0773 威震華夏）：戰鬥第 1 回合傷害 × 此值 */
   firstTurnDamageMultiplier?: number;
   /** 擊殺目標後重置施放者行動（PROG-2-0773 威震華夏） */
@@ -265,6 +267,18 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     maxTargets: 1,
     hitStageMultipliers: [1.0, 1.0],
     battleLogKey: 'skill.insp_combo_attack.hit',
+  },
+  // 夜襲（PROG-2-1698 靈感戰法，數值暫定）：前排單體，夜晚傷害 ×1.5
+  'insp-night-raid': {
+    battleSkillId: 'insp-night-raid',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    coefficient: 1.0,
+    scalingStat: 'str',
+    maxTargets: 1,
+    weatherDamageMultiplier: { [Weather.Night]: 1.5 },
+    battleLogKey: 'skill.insp_night_raid.hit',
   },
   // 疾行（PROG-2-1600 靈感戰法，數值暫定）：全體友軍下一回合移動 +1
   'insp-haste': {
