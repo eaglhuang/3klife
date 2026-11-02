@@ -23,6 +23,7 @@ import { SeededRandom } from './SeededRandom';
 import { shouldEvaluateStanding, shouldTriggerEraShift, strongestDomainRatioOf } from './RivalRiseFall';
 import { bondStep, type AiGeneral, type BondPair } from './RivalBonding';
 import { evaluateExpansion } from './RivalExpansion';
+import { formatAllianceFormed, formatRivalDeclareWar } from './RivalRulerLines';
 import { adjustedAttackChance, averageMilitaryIndex, isWeakNation, militaryIndexOf } from './RivalMilitaryIndex';
 
 export interface NationDef {
@@ -167,7 +168,7 @@ export function proposeAlliance(world: RivalWorld, id: string): DiplomacyResult 
         return { ok: false, world, goldSpent: 0, message: `邦交需達 ${ALLIANCE_MIN_RELATION} 才能結盟（目前 ${nation.relation}）` };
     }
     const next = updateNation(world, id, (n) => ({ ...n, allied: true, relation: clampRelation(n.relation + ALLIANCE_RELATION_GAIN) }));
-    return { ok: true, world: next, goldSpent: 0, message: `與 ${name} 結為同盟` };
+    return { ok: true, world: next, goldSpent: 0, message: formatAllianceFormed(id, name) };
 }
 
 /** 宣戰：邦交歸 -100、解除同盟、進入交戰 */
@@ -263,7 +264,7 @@ export function advanceRivalSeason(
                 random,
             );
             if (decision.kind === 'ATTACK') {
-                events.push({ nationId: n.id, kind: 'attack', message: `${def?.name ?? n.id} 率軍來犯！` });
+                events.push({ nationId: n.id, kind: 'attack', message: formatRivalDeclareWar(n.id, def?.name ?? n.id) });
             }
         }
         const resources = { food: governed.food, gold: governed.gold, fame: governed.fame, intel: governed.intel };
