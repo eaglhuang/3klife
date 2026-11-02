@@ -35,3 +35,6 @@ export function formatAllianceFormed(nationId: string, nationName: string): stri
     const base = `與 ${nationName} 結為同盟`;
     return lines?.alliance ? `${base}。${lines.ruler}：『${lines.alliance}』` : base;
 }
+
+/** G-1 天下大亂文案（PROG-2-1708） */
+export const ERA_SHIFT_TEXT = '天下大亂，諸侯版圖重整，新的霸權競逐再次開始。';
