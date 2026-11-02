@@ -23,6 +23,7 @@ import { SeededRandom } from './SeededRandom';
 import { shouldEvaluateStanding, shouldTriggerEraShift, strongestDomainRatioOf } from './RivalRiseFall';
 import { bondStep, type AiGeneral, type BondPair } from './RivalBonding';
 import { evaluateExpansion } from './RivalExpansion';
+import { adjustedAttackChance, averageMilitaryIndex, isWeakNation, militaryIndexOf } from './RivalMilitaryIndex';
 
 export interface NationDef {
     readonly id: string;
@@ -233,6 +234,8 @@ export function advanceRivalSeason(
     player: RivalPlayerStats = { troops: 0, food: 0, gold: 0 },
 ): SeasonTickResult {
     const events: SeasonEvent[] = [];
+    // E-9 Phase 4~5：以季初兵力算軍力指數，弱勢國家本季偏防守（PROG-2-1706）
+    const averageIndex = averageMilitaryIndex(world.nations);
     const nations = world.nations.map((n) => {
         const def = nationDef(n.id);
         const profile = def?.profile ?? 'PASSIVE';
@@ -252,7 +255,8 @@ export function advanceRivalSeason(
             relation = relation > 0 ? Math.max(0, relation - RELATION_DRIFT) : Math.min(0, relation + RELATION_DRIFT);
         }
         const hostile = n.atWar || relation <= -40;
-        if (hostile && !n.allied && random() < tuning.attack) {
+        const attackChance = adjustedAttackChance(tuning.attack, isWeakNation(militaryIndexOf(n), averageIndex));
+        if (hostile && !n.allied && random() < attackChance) {
             const decision = evaluateExpansion(
                 { troops, food: governed.food, intel: governed.intel, profile },
                 [{ id: 'player', troops: player.troops, food: player.food, gold: player.gold, hatred: Math.max(0, -relation), relation }],
