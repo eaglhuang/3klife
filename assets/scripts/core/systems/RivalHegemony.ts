@@ -77,3 +77,17 @@ export function decayRelation(value: number, rate: number = RELATION_DECAY_RATE)
     if (value < 0) return Math.min(0, value + rate);
     return 0;
 }
+
+/**
+ * 本季新崛起的 AI 霸主 id（G-1「AI 稱霸」提示用，PROG-2-1710）：
+ * 季末有霸主、與季初不同、且不是玩家時回傳；其他情況回 null（同一霸主連續多季不重複提示）。
+ */
+export function newAiHegemonOf(
+    before: readonly DomainHolder[],
+    after: readonly DomainHolder[],
+    playerId: string,
+): string | null {
+    const next = findHegemon(after);
+    if (!next || next.id === playerId) return null;
+    return findHegemon(before)?.id === next.id ? null : next.id;
+}

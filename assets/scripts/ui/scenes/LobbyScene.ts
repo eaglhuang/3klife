@@ -1,6 +1,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
-import { ERA_SHIFT_TEXT } from '../../core/systems/RivalRulerLines';
+import { ERA_SHIFT_TEXT, formatHegemonRise } from '../../core/systems/RivalRulerLines';
+import { nationDef } from '../../core/systems/RivalNations';
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
@@ -965,6 +966,11 @@ export class LobbyScene extends Component {
             // G-1 天下大亂文案（doc_spec_0020，PROG-2-1708）
             event.on(GAME_SESSION_EVENTS.EraReset, () => {
                 services().event.emit('SHOW_TOAST', { message: ERA_SHIFT_TEXT, duration: 4 });
+            }),
+            // G-1 AI 稱霸提示（doc_spec_0020，PROG-2-1710）
+            event.on(GAME_SESSION_EVENTS.RivalHegemonRose, (payload?: unknown) => {
+                const nationId = (payload as { nationId?: string } | undefined)?.nationId ?? '';
+                services().event.emit('SHOW_TOAST', { message: formatHegemonRise(nationDef(nationId)?.name ?? nationId), duration: 4 });
             }),
             event.on(GAME_SESSION_EVENTS.Loaded, () => { this._refreshNurtureFlow(); }),
             // 壽命 UI（PROG-2-0074）：武將辭世時提示 UI_DEATH_NOTIFY

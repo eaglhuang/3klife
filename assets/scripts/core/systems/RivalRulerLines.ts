@@ -38,3 +38,8 @@ export function formatAllianceFormed(nationId: string, nationName: string): stri
 
 /** G-1 天下大亂文案（PROG-2-1708） */
 export const ERA_SHIFT_TEXT = '天下大亂，諸侯版圖重整，新的霸權競逐再次開始。';
+
+/** G-1 AI 稱霸：「{國名} 勢力空前強大！天下諸侯密謀結盟對抗霸主。」（PROG-2-1710） */
+export function formatHegemonRise(nationName: string): string {
+    return `${nationName} 勢力空前強大！天下諸侯密謀結盟對抗霸主。`;
+}

@@ -247,6 +247,7 @@ import {
 } from '../systems/JournalLog';
 import type { DomesticTaskId } from '../systems/DomesticTasks';
 import { TRADE_RESOURCE_NAMES, tradeWithRival as tradeWithRivalPure, type TradeResult } from '../systems/RivalTrade';
+import { newAiHegemonOf } from '../systems/RivalHegemony';
 import { advanceRivalSeason, applyEraShift, autoResolveBattle, createRivalWorld, generalPower, nationDef, normalizeRivalWorld, type AutoBattleResult, type BattleGeneral, type RivalWorld } from '../systems/RivalNations';
 import {
     defaultKeepTerritories,
@@ -287,6 +288,8 @@ export const GAME_SESSION_EVENTS = {
     GeneralGrowthStage: 'game-session-general-growth-stage',
     /** payload: EraResetEvent（每 60 月一次；目前只發訊號，領土/外交/AI 重置待世界沙盤接入，TIME-10） */
     EraReset: 'game-session-era-reset',
+    /** payload: { nationId: string }（他國新成為霸主，G-1 稱霸提示，PROG-2-1710） */
+    RivalHegemonRose: 'game-session-rival-hegemon-rose',
     /** payload: UnveilingEvent（UI 在此播放血脈命鏡開獎演出，再讓玩家選宿命） */
     GeneralUnveiled: 'game-session-general-unveiled',
     /** payload: MentorCard */
@@ -1780,6 +1783,8 @@ export class GameSession {
     /** 季度推進：勢力成長、邦交回歸；來犯的勢力用名冊前 3 強自動迎戰 */
     private _tickRivals(): AutoBattleResult[] {
         // 玩家金幣不在 GameSession 內（錢包由呼叫端持有），RAI-05 暫傳 0（暫定）
+        const holdersOf = (w: typeof this._rivals) => [...w.nations.map((n) => ({ id: n.id, territories: n.territories })), { id: 'player', territories: this._territories.length }];
+        const beforeHolders = holdersOf(this._rivals);
         const tick = advanceRivalSeason(this._rivals, this._random, { troops: this._military.cityTroops, food: this._military.food, gold: 0, territories: this._territories.length });
         let world = tick.world;
         const battles: AutoBattleResult[] = [];
@@ -1792,6 +1797,8 @@ export class GameSession {
         }
         // RAI-12：年度天下大亂評估；玩家領土數取守城領地清單長度
         this._rivals = applyEraShift(world, this._clock.state.totalSeasonsElapsed, this._territories.length);
+        const risen = newAiHegemonOf(beforeHolders, holdersOf(this._rivals), 'player');
+        if (risen) this._emit(GAME_SESSION_EVENTS.RivalHegemonRose, { nationId: risen });
         return battles;
     }
 
