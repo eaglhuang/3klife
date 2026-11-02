@@ -39,7 +39,7 @@
 | **因子爆發系統.md (doc_spec_0010)** | BuffSystem.ts, BuffGainEffectPool.ts, BuffEffectPrefabController.ts, GeneObject.ts, FactorInheritance.ts, FactorTacticLinkage.ts, HiddenFactorAwakening.ts（§E 功能清單逐項核對已實作，PROG-2-1704） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **治理模式他國AI系統.md (doc_spec_0020)** | EnemyAI.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **大廳系統.md (doc_spec_0002)** | LobbyScene.ts, UIConfig.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **官職系統.md (doc_spec_0014)** | UIConfig.ts, LobbyScene.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| **官職系統.md (doc_spec_0014)** | UIConfig.ts, LobbyScene.ts（§E 7 項逐項核對已實作：OfficerTierTable、OfficerSnapshot 聯盟文書、HallMissionSettlement 晉升獎勵、天下大亂保留，PROG-2-1705） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **AI武將強度系統.md (doc_data_0002)** | EnemyAI.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **名將挑戰賽系統.md (doc_spec_0007)** | DuelChallengePanel.ts、MonthlyScenarioCup.ts（月度場景賽 1~4 月場景、積分、歷史，PROG-2-1609；參賽資格〔禁騎兵戰法、水軍／弓兵適性 A 以上〕PROG-2-1610 已補；威力規則〔春耕奇謀智力戰法 ×1.5、山地奇兵步兵 S 地形加成翻倍〕PROG-2-1611 已接進積分；其餘月份未定、尚無報名畫面）；九州盃特殊規則〔赤壁火攻 ×2、官渡騎兵 ×1.8、夷陵弓兵 ×0.5／陷阱 ×2〕PROG-2-1612 已接進報名鏡像戰力，虎牢單挑規則只顯示 | ✅ | 🟡 | ❌ | ✅ | ⬜ |
 | **關卡設計系統.md (doc_spec_0049)** | BattleScene.ts, BattleHUD.ts, DeployPanel.ts | ✅ | 🟡 | 🟡 | ❌ | ⬜ |
