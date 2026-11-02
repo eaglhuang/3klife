@@ -37,7 +37,7 @@
 | **戰法系統.md (doc_spec_0038)** | ActionSystem.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **奧義系統.md (doc_spec_0030)** | ActionSystem.ts, UltimateDamage.ts, UltimateUpgrade.ts, BloodlineTransmissionUltimate.ts, ChildUltimateAwaken.ts, VitalityBattleGate.ts, BattleSkillDispatcher.ts（§E 功能清單逐項核對已實作，PROG-2-1704） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **因子爆發系統.md (doc_spec_0010)** | BuffSystem.ts, BuffGainEffectPool.ts, BuffEffectPrefabController.ts, GeneObject.ts, FactorInheritance.ts, FactorTacticLinkage.ts, HiddenFactorAwakening.ts（§E 功能清單逐項核對已實作，PROG-2-1704） | ✅ | ✅ | ✅ | ✅ | ⬜ |
-| **治理模式他國AI系統.md (doc_spec_0020)** | EnemyAI.ts、RivalRulerLines.ts（G-1／G-2 君主宣戰與結盟台詞，PROG-2-1707；天下大亂提示，PROG-2-1708） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| **治理模式他國AI系統.md (doc_spec_0020)** | EnemyAI.ts、RivalRulerLines.ts（G-1／G-2 君主宣戰與結盟台詞，PROG-2-1707；天下大亂提示，PROG-2-1708）、RivalHegemony 接進季度推進（E-8 聯盟成員邦交衰減 4，PROG-2-1709；叛亂壓力未做） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **大廳系統.md (doc_spec_0002)** | LobbyScene.ts, UIConfig.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **官職系統.md (doc_spec_0014)** | UIConfig.ts, LobbyScene.ts（§E 7 項逐項核對已實作：OfficerTierTable、OfficerSnapshot 聯盟文書、HallMissionSettlement 晉升獎勵、天下大亂保留，PROG-2-1705） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **AI武將強度系統.md (doc_data_0002)** | EnemyAI.ts、RivalMilitaryIndex.ts（E-9 軍力指數與弱勢守勢，PROG-2-1706；E-9 Phase 1~3 逐將重算未做） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
