@@ -25,7 +25,12 @@
 
 | 規格書 |被依賴|依賴|
 |---|---|---|
-| doc_spec_0011 |doc_spec_0010、doc_spec_0026、doc_spec_0028、doc_spec_0005、doc_spec_0024、doc_spec_0012、doc_spec_0022、doc_ui_0012、doc_spec_0031、doc_ui_0027|—|
+| doc_spec_0011 |doc_spec_0010、doc_spec_0026、doc_spec_0028、doc_spec_0005、doc_spec_0024、doc_spec_0012、doc_spec_0022、doc_ui_0012、doc_spec_0031、doc_ui_0027、doc_spec_0181、doc_spec_0184|—|
+| doc_spec_0181 |doc_spec_0182、doc_spec_0184、doc_spec_0185、doc_spec_0183|doc_spec_0011、doc_spec_0009、doc_spec_0028|
+| doc_spec_0182 |doc_spec_0184|doc_spec_0181、doc_spec_0026、doc_spec_0042|
+| doc_spec_0184 |doc_spec_0185|doc_spec_0181、doc_spec_0182、doc_spec_0011、doc_spec_0027|
+| doc_spec_0185 |doc_spec_0183|doc_spec_0181、doc_spec_0184、doc_spec_0028、doc_spec_0018|
+| doc_spec_0183 |—|doc_spec_0181、doc_spec_0185、doc_spec_0022、doc_spec_0006|
 | doc_spec_0010 |doc_spec_0038、doc_spec_0041、doc_spec_0009、doc_spec_0035、doc_spec_0024|doc_spec_0011|
 | doc_spec_0009 |doc_spec_0006|doc_spec_0010、doc_spec_0026|
 | doc_spec_0005 |doc_spec_0012|doc_spec_0011、doc_spec_0042|

@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-07-19
+> 生成日期: 2026-11-02
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 1/3 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -186,6 +186,11 @@
 | `doc_spec_0178` | docs/遊戲規格文件/系統規格書/武將個性卡規格.md | 武將個性卡規格 |
 | `doc_spec_0179` | docs/遊戲規格文件/討論來源/比較舊的/遊戲機制優化與策略建議.md | --- |
 | `doc_spec_0180` | docs/遊戲規格文件/設計參考/育成與戰鬥公式基準手冊.md | 育成與戰鬥公式基準手冊 |
+| `doc_spec_0181` | docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書.md | 血統與家系漸進揭露里程碑總綱規格書 |
+| `doc_spec_0182` | docs/遊戲規格文件/系統規格書/血統傳承G1初代開局_直覺相馬與開蒙修業規格書.md | 血統傳承 G1 初代開局：直覺相馬與開蒙修業規格書 |
+| `doc_spec_0183` | docs/遊戲規格文件/系統規格書/血統傳承G4百年門閥_開宗立派與天下郡望規格書.md | 血統傳承 G4 百年門閥：開宗立派與天下郡望規格書 |
+| `doc_spec_0184` | docs/遊戲規格文件/系統規格書/血統傳承G2二代傳承_功業回流與三代譜牒規格書.md | 血統傳承 G2 二代傳承：功業回流與三代譜牒規格書 |
+| `doc_spec_0185` | docs/遊戲規格文件/系統規格書/血統傳承G3三代深淵_外戚純化與世交合譜規格書.md | 血統傳承 G3 三代深淵：外戚純化與世交合譜規格書 |
 
 ## 索引類 (`doc_index`)
 
