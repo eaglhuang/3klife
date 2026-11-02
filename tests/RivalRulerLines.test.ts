@@ -1,5 +1,5 @@
 import { TestSuite, assert } from './TestRunner';
-import { formatAllianceFormed, formatRivalDeclareWar, RULER_LINES } from '../assets/scripts/core/systems/RivalRulerLines';
+import { ERA_SHIFT_TEXT, formatAllianceFormed, formatRivalDeclareWar, RULER_LINES } from '../assets/scripts/core/systems/RivalRulerLines';
 import { NATION_DEFS, proposeAlliance, createRivalWorld } from '../assets/scripts/core/systems/RivalNations';
 
 export function createRivalRulerLinesSuite(): TestSuite {
@@ -25,6 +25,10 @@ export function createRivalRulerLinesSuite(): TestSuite {
         const r = proposeAlliance(world, 'shu');
         assert.isTrue(r.ok);
         assert.isTrue(r.message.includes('義結金蘭'), r.message);
+    });
+
+    suite.test('天下大亂文案照規格 G-1', () => {
+        assert.equals('天下大亂，諸侯版圖重整，新的霸權競逐再次開始。', ERA_SHIFT_TEXT);
     });
 
     return suite;
