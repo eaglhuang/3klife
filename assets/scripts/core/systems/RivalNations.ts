@@ -23,6 +23,7 @@ import { SeededRandom } from './SeededRandom';
 import { shouldEvaluateStanding, shouldTriggerEraShift, strongestDomainRatioOf } from './RivalRiseFall';
 import { bondStep, type AiGeneral, type BondPair } from './RivalBonding';
 import { evaluateExpansion } from './RivalExpansion';
+import { coalitionStatusOf } from './RivalHegemony';
 import { formatAllianceFormed, formatRivalDeclareWar } from './RivalRulerLines';
 import { adjustedAttackChance, averageMilitaryIndex, isWeakNation, militaryIndexOf } from './RivalMilitaryIndex';
 
@@ -208,6 +209,8 @@ export interface RivalPlayerStats {
     readonly troops: number;
     readonly food: number;
     readonly gold: number;
+    /** 玩家領土數（E-8 霸權判定用；沒傳視為 0） */
+    readonly territories?: number;
 }
 
 /**
@@ -237,6 +240,8 @@ export function advanceRivalSeason(
     const events: SeasonEvent[] = [];
     // E-9 Phase 4~5：以季初兵力算軍力指數，弱勢國家本季偏防守（PROG-2-1706）
     const averageIndex = averageMilitaryIndex(world.nations);
+    // E-8 霸權反制：玩家與各勢力一起算領土佔比，聯盟成員邦交回歸較快（PROG-2-1709）
+    const holders = [...world.nations.map((n) => ({ id: n.id, territories: n.territories })), { id: 'player', territories: player.territories ?? 0 }];
     const nations = world.nations.map((n) => {
         const def = nationDef(n.id);
         const profile = def?.profile ?? 'PASSIVE';
@@ -253,7 +258,8 @@ export function advanceRivalSeason(
         );
         let relation = n.relation;
         if (!n.atWar && !n.allied) {
-            relation = relation > 0 ? Math.max(0, relation - RELATION_DRIFT) : Math.min(0, relation + RELATION_DRIFT);
+            const drift = coalitionStatusOf(n.id, holders).relationDecayRate;
+            relation = relation > 0 ? Math.max(0, relation - drift) : Math.min(0, relation + drift);
         }
         const hostile = n.atWar || relation <= -40;
         const attackChance = adjustedAttackChance(tuning.attack, isWeakNation(militaryIndexOf(n), averageIndex));
