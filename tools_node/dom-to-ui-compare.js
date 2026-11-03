@@ -724,15 +724,15 @@ function generateHighFidelityHtml(canvasW, canvasH, snapshots, tokenMap, opts) {
     if (snap.tag === 'img' && styles._imgSrc) {
       const src = resolveUrl(styles._imgSrc);
       // M30: object-fit/position come from alignStyle (via alignParts). No hardcoded cover.
-      return `<img${idAttr} src="${attrEscape(src)}" alt="${attrEscape(styles._imgAlt || '')}" style="${baseStyle}${css}" onerror="this.style.opacity=0">`;
+      return `<img${idAttr} src="${attrEscape(src)}" alt="${attrEscape(styles._imgAlt || '')}" style="${attrEscape(baseStyle + css)}" onerror="this.style.opacity=0">`;
     }
     if (snap.tag === 'svg' && styles._svgOuter) {
       // Skip descendants — SVG children render via outerHTML inline.
-      return `<div${idAttr} style="${baseStyle}${css}">${styles._svgOuter}</div>`;
+      return `<div${idAttr} style="${attrEscape(baseStyle + css)}">${styles._svgOuter}</div>`;
     }
 
     const text = hasText ? htmlEscape(pseudoText || inlineText) : '';
-    return `<div${idAttr} style="${baseStyle}${css}">${text}${kids}</div>`;
+    return `<div${idAttr} style="${attrEscape(baseStyle + css)}">${text}${kids}</div>`;
   }
 
   const body = (childrenOf.get(0) || []).map(renderNode).join('\n');
@@ -1185,5 +1185,6 @@ if (require.main === module) {
 
 module.exports = {
   parseArgs,
+  generateHighFidelityHtml,
   main,
 };

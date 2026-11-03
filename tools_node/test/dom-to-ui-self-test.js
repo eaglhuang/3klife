@@ -994,6 +994,26 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     ok('R-9 text-transform applied offline (uppercase/lowercase/capitalize), CJK and none preserved');
   }
 
+  // R-9b: high-fidelity preview must escape quotes inside the style attribute.
+  // A quoted font-family (e.g. "Songti TC") or url("...") used to terminate the
+  // attribute early, silently dropping every later declaration (text-align etc.).
+  {
+    const { generateHighFidelityHtml } = require(COMPARE_CLI);
+    const html = generateHighFidelityHtml(200, 100, [{
+      id: 1, parentId: 0, tag: 'div',
+      styles: {
+        _rect: { x: 0, y: 0, w: 196, h: 76 }, _textContent: '出征',
+        color: 'rgb(255, 255, 255)', 'font-size': '28px',
+        'font-family': 'Newsreader, "Songti TC", serif', 'text-align': 'center',
+      },
+    }], {});
+    const m = html.match(/<div data-id="1" style="([^"]*)">/);
+    if (!m) fail('R-9b preview div / style attribute not found');
+    if (!/text-align:center/.test(m[1])) fail(`R-9b text-align lost from style attribute: ${m[1]}`);
+    if (!/&quot;Songti TC&quot;/.test(m[1])) fail(`R-9b quoted font-family not escaped: ${m[1]}`);
+    ok('R-9b high-fidelity preview escapes quotes in style attribute (font-family / text-align preserved)');
+  }
+
   // R-10: font-family stack 必須走 registry-based 解析。converter 不能把整個
   // stack 都打成同一份字型資產（舊 pickFontByTag 寫死回 newsreader）。任何走
   // v2 source-package flow 的 UI 都應該照 stack 順序找到第一個有資產的 family。
