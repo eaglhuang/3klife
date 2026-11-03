@@ -115,6 +115,8 @@ import { FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterStat
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
+import { buildHallStageFeed, type HallStageFeed, type HallStageProfile } from '../systems/HallStageFeed';
+import type { HallVolunteerTask } from '../systems/HallVolunteer';
 import { createPlayerSaveSnapshot, normalizeGachaMentorJournal, normalizeHallAssignLog, type GachaMentorJournalEntry, normalizeSandtableMarkerTerritories, normalizeSortiePresets, normalizeGachaWalletSave, type GachaWalletSave, normalizeDailySubsidyRecord, type DailySubsidyRecord, normalizeClearedStageIds, normalizeFavoriteGeneralIds, normalizeHallAssignments, normalizeFame, normalizeScorePoints, normalizeAutoNurtureTickets, normalizeFlag, normalizeTallyCardsMap, normalizeTallyHoldingsMap, normalizeTallyLoyaltyMap, PlayerSaveService, PlayerSaveSnapshot } from '../services/PlayerSaveService';
 import { appendAssignRecord, autoAssignHallTask, listAssignRecords, settleLatestAssign, settleOpenAssignsForSeason, type HallAssignOutcome, type HallAutoAssignRecord, type HallAutoAssignResult, type HallAutoAssignTaskInput } from '../systems/HallAutoAssign';
 import type { HallTaskIntelInput } from '../systems/HallTaskIntel';
@@ -2838,6 +2840,24 @@ export class GameSession {
             favorite: favorites.has(g.id),
             assigned: assigned.has(g.id),
         }));
+    }
+
+    /**
+     * 大廳舞台用的武將檔案（UI-2-0140）：姓名、稱號、角色標籤（careerClass／role，同派遣評分）與情緒。
+     * 名冊目前沒有情緒欄位時以 NORMAL 處理，自告奮勇標記（需 EAGER）不會出現。
+     */
+    public hallStageProfile(generalId: string): HallStageProfile | null {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        if (!general) return null;
+        const raw = general as unknown as Record<string, unknown>;
+        const roleTags = [raw.careerClass, raw.role].filter((t): t is string => typeof t === 'string' && t.length > 0);
+        const mood = typeof raw.mood === 'string' && raw.mood.length > 0 ? raw.mood : 'NORMAL';
+        return { name: general.name, title: general.title ?? null, roleTags, mood };
+    }
+
+    /** 目前點位上的在場名單與任務標記（不觸發刷新；先呼叫 refreshHallSpots）。 */
+    public hallStageCast(openTasks: readonly HallVolunteerTask[]): HallStageFeed {
+        return buildHallStageFeed(this.hallSpotRows, (id) => this.hallStageProfile(id), openTasks);
     }
 
     /**
