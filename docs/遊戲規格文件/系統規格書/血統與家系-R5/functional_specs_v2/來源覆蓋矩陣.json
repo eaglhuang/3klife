@@ -1,0 +1,490 @@
+{
+  "scope": "R4工程§1–24與玩法§1–16及R5需求責任；工程§25–42歷史案例保留但逐條映射待驗收盤點",
+  "rows": [
+    {
+      "source": "R4工程§1",
+      "feature_ids": [
+        "R5F-C01"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§2",
+      "feature_ids": [
+        "R5F-C01",
+        "R5F-G01",
+        "R5F-G04"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§3",
+      "feature_ids": [
+        "R5F-B01",
+        "R5F-B02",
+        "R5F-B03"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§4",
+      "feature_ids": [
+        "R5F-C01",
+        "R5F-B01",
+        "R5F-B06"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§5",
+      "feature_ids": [
+        "R5F-B03",
+        "R5F-B05",
+        "R5F-B07",
+        "R5F-B08"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§6",
+      "feature_ids": [
+        "R5F-C03",
+        "R5F-B06"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§7",
+      "feature_ids": [
+        "R5F-C04",
+        "R5F-B01",
+        "R5F-B02",
+        "R5F-B03"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§8",
+      "feature_ids": [
+        "R5F-G04",
+        "R5F-B09"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§9",
+      "feature_ids": [
+        "R5F-G01",
+        "R5F-G02"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§10",
+      "feature_ids": [
+        "R5F-G05",
+        "R5F-G02"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§11",
+      "feature_ids": [
+        "R5F-G01",
+        "R5F-G02",
+        "R5F-G05"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§12",
+      "feature_ids": [
+        "R5F-B07",
+        "R5F-B03"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§13",
+      "feature_ids": [
+        "R5F-U01",
+        "R5F-U02"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§14",
+      "feature_ids": [
+        "R5F-G06",
+        "R5F-G08",
+        "R5F-C02"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§15",
+      "feature_ids": [
+        "R5F-C05"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§16",
+      "feature_ids": [
+        "R5F-C03",
+        "R5F-C05"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§17",
+      "feature_ids": [
+        "R5F-C05",
+        "R5F-C01"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§18",
+      "feature_ids": [
+        "R5F-B02",
+        "R5F-B08"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§19",
+      "feature_ids": [
+        "R5F-B03",
+        "R5F-G03"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§20",
+      "feature_ids": [
+        "R5F-B04",
+        "R5F-B10",
+        "R5F-C02"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§21",
+      "feature_ids": [
+        "R5F-B01",
+        "R5F-B04"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§22",
+      "feature_ids": [
+        "R5F-B05"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§23",
+      "feature_ids": [
+        "R5F-B05"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§24",
+      "feature_ids": [
+        "R5F-U02",
+        "R5F-G07"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "本章需求責任已列功能分母；獨立規格與產品consumer待下一階段核。"
+    },
+    {
+      "source": "R4工程§25–42：R3T01–74／R4E01–32／M01–23及驗收層級",
+      "feature_ids": [],
+      "coverage_status": "CASE_TO_FEATURE_NOT_YET_MAPPED",
+      "note": "完整歷史案例在原冊保留；case→feature逐條映射待後續驗收盤點，本列不冒稱章級映射或產品PASS。"
+    },
+    {
+      "source": "R4玩法§1",
+      "feature_ids": [
+        "R5F-C01",
+        "R5F-G01",
+        "R5F-G04"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§2",
+      "feature_ids": [
+        "R5F-B01",
+        "R5F-B03",
+        "R5F-B07"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§3",
+      "feature_ids": [
+        "R5F-B03",
+        "R5F-B04",
+        "R5F-B06",
+        "R5F-B10"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§4",
+      "feature_ids": [
+        "R5F-B05",
+        "R5F-G07"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§5",
+      "feature_ids": [
+        "R5F-B04"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§6",
+      "feature_ids": [
+        "R5F-B01",
+        "R5F-B04",
+        "R5F-C02"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§7",
+      "feature_ids": [
+        "R5F-B03",
+        "R5F-G03",
+        "R5F-B09"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§8",
+      "feature_ids": [
+        "R5F-B02",
+        "R5F-B08"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§9",
+      "feature_ids": [
+        "R5F-G01",
+        "R5F-G02"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§10",
+      "feature_ids": [
+        "R5F-G02",
+        "R5F-G05"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§11",
+      "feature_ids": [
+        "R5F-G06",
+        "R5F-G08"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§12",
+      "feature_ids": [
+        "R5F-B03",
+        "R5F-B04",
+        "R5F-B05",
+        "R5F-B10",
+        "R5F-G07",
+        "R5F-G03",
+        "R5F-U02",
+        "R5F-B08"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§13",
+      "feature_ids": [
+        "R5F-G07",
+        "R5F-B03",
+        "R5F-B06"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§14",
+      "feature_ids": [
+        "R5F-U02",
+        "R5F-B10"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§15",
+      "feature_ids": [
+        "R5F-C02",
+        "R5F-U01",
+        "R5F-G02"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R4玩法§16",
+      "feature_ids": [
+        "R5F-B04",
+        "R5F-B05",
+        "R5F-G03",
+        "R5F-U02"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "章級玩法責任映射；不視為任何未決參數已採定或實際效果已驗收。"
+    },
+    {
+      "source": "R5需求：首次統一畫面及功臣後代戰史",
+      "feature_ids": [
+        "R5F-E01",
+        "R5F-E03"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "方案值與產品接線未定；以各功能DEC狀態為準。"
+    },
+    {
+      "source": "R5需求：當季主題目標／結季",
+      "feature_ids": [
+        "R5F-S04",
+        "R5F-S03"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "方案值與產品接線未定；以各功能DEC狀態為準。"
+    },
+    {
+      "source": "R5需求：獎勵與排名",
+      "feature_ids": [
+        "R5F-E02",
+        "R5F-S05"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "方案值與產品接線未定；以各功能DEC狀態為準。"
+    },
+    {
+      "source": "R5需求：敵我家族通婚與子代延續",
+      "feature_ids": [
+        "R5F-S01",
+        "R5F-B06",
+        "R5F-C05"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "方案值與產品接線未定；以各功能DEC狀態為準。"
+    },
+    {
+      "source": "R5需求：地盤重建候選",
+      "feature_ids": [
+        "R5F-S02"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "方案值與產品接線未定；以各功能DEC狀態為準。"
+    },
+    {
+      "source": "R5需求：資源carry/roster未選",
+      "feature_ids": [
+        "R5F-S01",
+        "R5F-S02",
+        "R5F-S03"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "方案值與產品接線未定；以各功能DEC狀態為準。"
+    },
+    {
+      "source": "R5需求：祖地及地方勢力民兵",
+      "feature_ids": [
+        "R5F-A01",
+        "R5F-A02"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "方案值與產品接線未定；以各功能DEC狀態為準。"
+    },
+    {
+      "source": "R5需求：存續敵家及新家供給",
+      "feature_ids": [
+        "R5F-S06"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "方案值與產品接線未定；以各功能DEC狀態為準。"
+    },
+    {
+      "source": "R5需求：海外與跨時代選項討論",
+      "feature_ids": [
+        "R5F-S08"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "方案值與產品接線未定；以各功能DEC狀態為準。"
+    },
+    {
+      "source": "R5需求：門閥郡望提案",
+      "feature_ids": [
+        "R5F-S07"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "方案值與產品接線未定；以各功能DEC狀態為準。"
+    },
+    {
+      "source": "R5需求：季度／學院turn／主題季分離",
+      "feature_ids": [
+        "R5F-C02",
+        "R5F-S03",
+        "R5F-B10"
+      ],
+      "coverage_status": "REQUIREMENT_OWNER_IDENTIFIED",
+      "note": "方案值與產品接線未定；以各功能DEC狀態為準。"
+    }
+  ]
+}

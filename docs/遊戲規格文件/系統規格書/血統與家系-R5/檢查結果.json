@@ -1,0 +1,25 @@
+{
+  "status": "LOCAL_INDEX_TRACEABILITY_REVIEW_PASS",
+  "base_zip_unchanged": true,
+  "historical_rows": 129,
+  "feature_reverse_sets_equal": true,
+  "case_reverse_sets_equal": true,
+  "source_and_case_hash_lines_verified": true,
+  "semantic_sample_ids": [
+    "R3T07",
+    "R3T18",
+    "R3T38",
+    "R3T43",
+    "R3T54",
+    "R4E01",
+    "R4E16",
+    "R4E32",
+    "M06",
+    "M17",
+    "M23"
+  ],
+  "formal_doc_ids_assigned": false,
+  "repository_admission_verified": false,
+  "product_tests_run": false,
+  "review_scope": "File/feature/case/source mapping and binding only; no product tests, official registry, admission, or source completeness waiver"
+}

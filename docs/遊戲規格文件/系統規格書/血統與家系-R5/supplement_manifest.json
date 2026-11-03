@@ -1,0 +1,67 @@
+{
+  "version": "R5-index-supplement-v4-final",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2673,
+      "sha256": "5ab74631145554a074e8394b78dec176fc5e8dc66723bbb70b2056278d7ccb87"
+    },
+    {
+      "path": "historical_case_index/manifest.json",
+      "bytes": 955,
+      "sha256": "1ebc14574ec4a2d525f60fd640b522aab1e6cfccf483f0a59adb60080940f2be"
+    },
+    {
+      "path": "historical_case_index/歷史案例對照索引.json",
+      "bytes": 517660,
+      "sha256": "62f3557c13a54a2b96673cf84e75b0854ac645cd978d774b3e47bd4e082030ae"
+    },
+    {
+      "path": "historical_case_index/歷史案例對照索引.md",
+      "bytes": 40093,
+      "sha256": "969b89ff4ef0a753e2d5cc23a5ee9ba84dbc0c68948d23baaba20e4b1b1401eb"
+    },
+    {
+      "path": "來源章節反向索引.json",
+      "bytes": 15120,
+      "sha256": "0797913c133352d6848f69c45de287c438f08f841585dc5720b826a67338c244"
+    },
+    {
+      "path": "來源綁定.json",
+      "bytes": 30153,
+      "sha256": "845d5e1589f71c1281547cd6e35e467121d8c96d017513af6f10e6499cd2b80d"
+    },
+    {
+      "path": "功能反向索引.json",
+      "bytes": 103436,
+      "sha256": "24cfa6a17237605a8ee2ad62334e5cd38eac75ac983ce7f99e146dccf299913b"
+    },
+    {
+      "path": "文件總索引.json",
+      "bytes": 42345,
+      "sha256": "258a1a52494edad26158197738db9657f8616aee303c581b0ad07a2b17e95a3a"
+    },
+    {
+      "path": "案例索引.json",
+      "bytes": 308670,
+      "sha256": "b0d94048a6f548c4df489bdb7ac32d93709d91634a5dfb5e47bf5ba79808e77c"
+    },
+    {
+      "path": "檢查結果.json",
+      "bytes": 657,
+      "sha256": "9927460b63a164c8a37813ede6c636d4a6f98328d4a6c97e863af92b4a8366eb"
+    },
+    {
+      "path": "決策與補件反向索引.json",
+      "bytes": 18146,
+      "sha256": "118e8a1d91421cc10bf20ccedb329b0e58dcc80b73ac40052326ecf0ba2dca17"
+    },
+    {
+      "path": "索引總覽.md",
+      "bytes": 4556,
+      "sha256": "21d6ca35e50ea13fcd842f7fecbe37609956926089201ad4c80ab1302e627398"
+    }
+  ],
+  "allowed_changes": "New local index files only; no v3 base bytes changed",
+  "base_zip_sha256": "b04bbeb21a47a2b458d67a936370775bf91bcd7297841291018983b6b3009fae"
+}

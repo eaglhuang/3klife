@@ -1,0 +1,1214 @@
+{
+  "version": "C2-R5-review-20261103",
+  "formal_task_ids": false,
+  "product_tests_executed": false,
+  "features": [
+    {
+      "feature_id": "R5F-C01",
+      "module": "01",
+      "title": "身份與單位契約",
+      "purpose": "作所有模組共用型別，不重定單位",
+      "input_contract": [
+        "personUID/familyUID/factionUID分型",
+        "mechanicsProfile與dictionaryVersion",
+        "Talent/能力點/BodyTicks分型"
+      ],
+      "output_contract": [
+        "validated identity refs",
+        "UNIT_MISMATCH / SOURCE_INCOMPLETE"
+      ],
+      "dependencies": [],
+      "decision_dependencies": [],
+      "design_status": "不變量可先拆規格",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-C01-P",
+          "given": "P1600能力點",
+          "when": "轉為BodyTicks",
+          "then": "16000000ticks，同人同UID",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-C01-N",
+          "given": "P1600但標ticks且宣稱1600能力點",
+          "when": "驗入",
+          "then": "拒跨單位，不改人物",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "驗證身份引用及單位，不建立新人物",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [],
+      "effective_blocking_decisions": [],
+      "document_path": "01_共同身份_時間與存檔契約.md",
+      "formal_doc_id": "doc_spec_0213",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C01.md"
+    },
+    {
+      "feature_id": "R5F-C02",
+      "module": "01",
+      "title": "三時鐘與代數",
+      "purpose": "明確命名季度、學院turn、主題季和真代數",
+      "input_contract": [
+        "worldQuarterIndex",
+        "trainingTurn",
+        "campaignSeasonId",
+        "parent links"
+      ],
+      "output_contract": [
+        "clock mapping / generation references"
+      ],
+      "dependencies": [
+        "R5F-C01"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S04"
+      ],
+      "design_status": "型別可先拆；換季跳時待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-C02-P",
+          "given": "同一已出生人物",
+          "when": "只切主題seasonId",
+          "then": "不自動改年齡或parentUID",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-C02-N",
+          "given": "timePolicy缺失且有孕期",
+          "when": "要求推進換季",
+          "then": "拒提交，保原孕期和季",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "解讀明確時鐘與映射；未定換季跳時不寫入",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R5-S04"
+      ],
+      "document_path": "01_共同身份_時間與存檔契約.md",
+      "formal_doc_id": "doc_spec_0214",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C02.md"
+    },
+    {
+      "feature_id": "R5F-C03",
+      "module": "01",
+      "title": "保存與冪等",
+      "purpose": "提供單次事件提交及引用閉包",
+      "input_contract": [
+        "eventId/payloadDigest/expectedRevision",
+        "core references",
+        "previous save pointer"
+      ],
+      "output_contract": [
+        "committed result or pending",
+        "checksum/closure report"
+      ],
+      "dependencies": [
+        "R5F-C01"
+      ],
+      "decision_dependencies": [],
+      "design_status": "不變量可先拆規格",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-C03-P",
+          "given": "同key同payload已提交",
+          "when": "重送",
+          "then": "回原結果不再扣費",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-C03-N",
+          "given": "同key異payload或閉包缺件",
+          "when": "提交",
+          "then": "拒衝突／缺件，不切指標",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "驗證閉包、提交單次事件並回讀提交結果",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [],
+      "document_path": "01_共同身份_時間與存檔契約.md",
+      "formal_doc_id": "doc_spec_0215",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C03.md"
+    },
+    {
+      "feature_id": "R5F-B01",
+      "module": "02",
+      "title": "祖位與來源正規化",
+      "purpose": "保14/28位置並去重效果",
+      "input_contract": [
+        "parentUID祖譜",
+        "sourceRevision",
+        "canonical factor dictionary"
+      ],
+      "output_contract": [
+        "14 carrier positions / 28 risk positions",
+        "去重來源清單與缺件"
+      ],
+      "dependencies": [
+        "R5F-C01"
+      ],
+      "decision_dependencies": [],
+      "design_status": "不變量與基線可先拆",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-B01-P",
+          "given": "同UID占重複祖位",
+          "when": "正規化",
+          "then": "保位置，sourceUID+ID只按規則取一次",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-B01-N",
+          "given": "缺父母來源",
+          "when": "要求作無共祖外婚",
+          "then": "SOURCE_INCOMPLETE，不能補乾淨模板",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "唯讀正規化祖位、來源去重及缺件檢查",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [],
+      "document_path": "02_出生_血統與聯姻.md",
+      "formal_doc_id": "doc_spec_0203",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B01.md"
+    },
+    {
+      "feature_id": "R5F-B02",
+      "module": "02",
+      "title": "H與EP出生分布",
+      "purpose": "對已定profile算先天候選",
+      "input_contract": [
+        "已核十藍來源",
+        "給定完整EP/精確Fraction",
+        "profile與命名流"
+      ],
+      "output_contract": [
+        "H/T/P候選和birthWitness",
+        "逐流結果"
+      ],
+      "dependencies": [
+        "R5F-B01",
+        "R5F-C03"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-03",
+        "DEC-R4-09"
+      ],
+      "design_status": "純算法可比；完整出生待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-B02-P",
+          "given": "雙三星且無純化的同版基線",
+          "when": "計H",
+          "then": "61，依正式單位映P",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-B02-N",
+          "given": "EP總成分缺失",
+          "when": "提交出生",
+          "then": "PROFILE_UNSUPPORTED，不套舊R分項",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "預覽精確出生候選；正式提交另經保存契約",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-B01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R4-03",
+        "DEC-R4-09"
+      ],
+      "document_path": "02_出生_血統與聯姻.md",
+      "formal_doc_id": "doc_spec_0204",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B02.md"
+    },
+    {
+      "feature_id": "R5F-B03",
+      "module": "02",
+      "title": "保留ID與傳星",
+      "purpose": "分開ID保留、星級及啟用",
+      "input_contract": [
+        "候選pool",
+        "唯一保留choice",
+        "held cap與star kernel"
+      ],
+      "output_contract": [
+        "held≤6",
+        "一次star result/future source revision"
+      ],
+      "dependencies": [
+        "R5F-B01",
+        "R5F-C03"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-02",
+        "DEC-R4-04"
+      ],
+      "design_status": "基線可拆；新保留成本待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-B03-P",
+          "given": "合法同一ID已保留",
+          "when": "普通槽抽取",
+          "then": "移除同ID不重占槽",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-B03-N",
+          "given": "同胎父系和母門各要求保障",
+          "when": "提交",
+          "then": "拒互斥，不添第七槽",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "驗證保留資格並一次結算傳星，不增加槽位",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-B01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R4-02",
+        "DEC-R4-04"
+      ],
+      "document_path": "02_出生_血統與聯姻.md",
+      "formal_doc_id": "doc_spec_0205",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B03.md"
+    },
+    {
+      "feature_id": "R5F-B04",
+      "module": "02",
+      "title": "親緣風險與m-only",
+      "purpose": "分離合法性、D、h、當胎風險",
+      "input_contract": [
+        "雙親完整祖譜與h",
+        "risk policy",
+        "purification target"
+      ],
+      "output_contract": [
+        "風險預覽/合法性結果",
+        "m-only效果候選"
+      ],
+      "dependencies": [
+        "R5F-B01"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-03"
+      ],
+      "design_status": "合法性可拆；新風險待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-B04-P",
+          "given": "四個唯一(2,2)共祖同版D基線",
+          "when": "計D",
+          "then": "20扣滿到0，去重UID",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-B04-N",
+          "given": "O當胎risk未採定",
+          "when": "要求產生健康結果",
+          "then": "拒缺profile，不自填1%",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "唯讀檢核親緣與風險候選，不自行產生健康結果",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-B01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R4-03"
+      ],
+      "document_path": "02_出生_血統與聯姻.md",
+      "formal_doc_id": "doc_spec_0206",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B04.md"
+    },
+    {
+      "feature_id": "R5F-B05",
+      "module": "02",
+      "title": "K樣本與候選比較",
+      "purpose": "全出生歸戶不因換季洗分母",
+      "input_contract": [
+        "birth cohort/frozen family pair",
+        "evaluation clock",
+        "outcome revision"
+      ],
+      "output_contract": [
+        "去重樣本視圖",
+        "指定公式候選結果"
+      ],
+      "dependencies": [
+        "R5F-C01",
+        "R5F-C02",
+        "R5F-C03"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-01"
+      ],
+      "design_status": "樣本可拆；收益待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-B05-P",
+          "given": "改姓的已登記孩子",
+          "when": "到期finalize",
+          "then": "原pair只入帳一次，保原因",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-B05-N",
+          "given": "g6/n8用G3式",
+          "when": "宣稱滿額",
+          "then": "測例應攔，結果2/3非1",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "去重出生歸戶與到期入帳；候選收益比較唯讀",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C02",
+          "required_capability": "單調世界季度時鐘，不含主題換季跳時",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R4-01"
+      ],
+      "document_path": "02_出生_血統與聯姻.md",
+      "formal_doc_id": "doc_spec_0207",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B05.md"
+    },
+    {
+      "feature_id": "R5F-G01",
+      "module": "03",
+      "title": "共享培育回合",
+      "purpose": "一個run內成長及資源一次結算",
+      "input_contract": [
+        "A0/L/C/stamina/turn",
+        "已定教官事件catalog",
+        "action與weights"
+      ],
+      "output_contract": [
+        "新C/A/TP/stamina",
+        "成本與overflow ledger"
+      ],
+      "dependencies": [
+        "R5F-C01",
+        "R5F-C03"
+      ],
+      "decision_dependencies": [],
+      "design_status": "同profile回歸可拆",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-G01-P",
+          "given": "精力足且合法單項訓練",
+          "when": "成功結算",
+          "then": "只扣一回合，C不超1，A不超P",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-G01-N",
+          "given": "28T8R基線計畫",
+          "when": "准入",
+          "then": "拒不可行，不以5項各20次繞預算",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "驗證行動後一次結算回合、成本與成長",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [],
+      "document_path": "03_培育_太傅與研習.md",
+      "formal_doc_id": "doc_spec_0221",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G01.md"
+    },
+    {
+      "feature_id": "R5F-G02",
+      "module": "03",
+      "title": "太傅代管與畢業",
+      "purpose": "減少操作且不新增隱性收益",
+      "input_contract": [
+        "eligibility與manual person set",
+        "同一run方針",
+        "completed candidate refs"
+      ],
+      "output_contract": [
+        "代管結果",
+        "選定單一畢業candidate"
+      ],
+      "dependencies": [
+        "R5F-G01"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-07"
+      ],
+      "design_status": "機制可拆；開放門檻待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-G02-P",
+          "given": "Rank3匹配同族auto成功",
+          "when": "結算同版TP",
+          "then": "基礎10+教官額外3=13",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-G02-N",
+          "given": "同人三份candidate各取最好項",
+          "when": "選畢業",
+          "then": "拒拼接，保三份歷史",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "同一run代管結算及單一候選畢業選取",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-G01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R4-07"
+      ],
+      "document_path": "03_培育_太傅與研習.md",
+      "formal_doc_id": "doc_spec_0222",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G02.md"
+    },
+    {
+      "feature_id": "R5F-G03",
+      "module": "03",
+      "title": "研習與社會教養",
+      "purpose": "只對held低星作一次plan",
+      "input_contract": [
+        "held1/2star ID",
+        "studyPlanVersion/target",
+        "時間與成本policy"
+      ],
+      "output_contract": [
+        "plan status",
+        "futureTransmissionSnapshot"
+      ],
+      "dependencies": [
+        "R5F-G01",
+        "R5F-C02",
+        "R5F-C03"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-02",
+        "DEC-R4-04",
+        "DEC-R4-08"
+      ],
+      "design_status": "候選規格可拆；數值待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-G03-P",
+          "given": "已有2星且採cap3方案",
+          "when": "完成plan",
+          "then": "最多至目標3，不回改P",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-G03-N",
+          "given": "未held某祖先ID",
+          "when": "申請研習",
+          "then": "拒絕，不用研習補造ID",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "建立合法研習plan並一次完成，不改出生P",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-G01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C02",
+          "required_capability": "研習使用既有季度時鐘，不含主題季跳時",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R4-02",
+        "DEC-R4-04",
+        "DEC-R4-08"
+      ],
+      "document_path": "03_培育_太傅與研習.md",
+      "formal_doc_id": "doc_spec_0223",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G03.md"
+    },
+    {
+      "feature_id": "R5F-U01",
+      "module": "04",
+      "title": "知識投影與分階段教學",
+      "purpose": "教學權限不等數值知識",
+      "input_contract": [
+        "knowledgeTier",
+        "公開可行區間",
+        "milestone stage與eligibility"
+      ],
+      "output_contract": [
+        "public view model",
+        "risk/cost warnings"
+      ],
+      "dependencies": [
+        "R5F-C01"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-07"
+      ],
+      "design_status": "不變量可先拆",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-U01-P",
+          "given": "G1遇親緣風險",
+          "when": "開提親預覽",
+          "then": "即告知不等G3",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-U01-N",
+          "given": "公開資料相同只換hidden LUK",
+          "when": "排序/tooltip/export",
+          "then": "輸出相同，expert不免費揭露",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "唯讀公開知識投影與教學提示，不寫hidden值或改角色",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R4-07"
+      ],
+      "document_path": "04_知識投影與漸進介面.md",
+      "formal_doc_id": "doc_spec_0237",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-U01.md"
+    },
+    {
+      "feature_id": "R5F-U02",
+      "module": "04",
+      "title": "情報市場與查券",
+      "purpose": "成本供給與真正揭露事件分帳",
+      "input_contract": [
+        "候選公開池",
+        "查券ownerScope與帳本",
+        "query cost/time policy"
+      ],
+      "output_contract": [
+        "已知增量",
+        "query event/result"
+      ],
+      "dependencies": [
+        "R5F-U01",
+        "R5F-C03"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-06"
+      ],
+      "design_status": "需求帳可拆；定價待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-U02-P",
+          "given": "已知單項精確P",
+          "when": "換季重開UI",
+          "then": "不藏回未知",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-U02-N",
+          "given": "價格或月旦母數缺失",
+          "when": "提交付費查驗",
+          "then": "不猜1券、不暗用hidden排名",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "合法查驗一次扣費並記錄知識增量",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-U01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R4-06"
+      ],
+      "document_path": "04_知識投影與漸進介面.md",
+      "formal_doc_id": "doc_spec_0238",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-U02.md"
+    },
+    {
+      "feature_id": "R5F-E01",
+      "module": "05",
+      "title": "首次統一結局",
+      "purpose": "展示首通與家族育成成果",
+      "input_contract": [
+        "已凍結的有效統一快照/劇本勝利policy",
+        "已知角色與戰史refs",
+        "ending view version"
+      ],
+      "output_contract": [
+        "唯讀結局視圖",
+        "列傳與軍種/成年家庭貢獻展示"
+      ],
+      "dependencies": [
+        "R5F-C01",
+        "R5F-U01"
+      ],
+      "decision_dependencies": [],
+      "design_status": "展示規格可獨立拆，不依K",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-E01-P",
+          "given": "有效首次統一事件及已知功臣",
+          "when": "開結局",
+          "then": "快照指回原UID與當時數值",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-E01-N",
+          "given": "關閉再重播結局",
+          "when": "再次開啟",
+          "then": "只重播不觸發出生或重算戰績",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "只讀已凍結統一快照並呈現既有公開資料；不新建快照、不發獎、不改人物或戰績。持久快照的建立屬勝利事件來源與C03，須另核consumer",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-U01",
+          "required_capability": "既有公開知識投影，不含新世代開放政策",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [],
+      "document_path": "05_首次統一結局與家族榮譽.md",
+      "formal_doc_id": "doc_spec_0218",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E01.md"
+    },
+    {
+      "feature_id": "R5F-E02",
+      "module": "05",
+      "title": "季成就與首通獎勵",
+      "purpose": "唯一業務鍵避免重複領取",
+      "input_contract": [
+        "canonical achievement event",
+        "reward policy",
+        "season/lifetime scope"
+      ],
+      "output_contract": [
+        "settlement record",
+        "reward ledger"
+      ],
+      "dependencies": [
+        "R5F-E01",
+        "R5F-C03"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S01",
+        "DEC-R5-S08"
+      ],
+      "design_status": "事件契約可拆；獎勵待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-E02-P",
+          "given": "首通reward已提交",
+          "when": "讀檔再領",
+          "then": "回原收據，不再發",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-E02-N",
+          "given": "只因AI重建缺勝利證據",
+          "when": "要求首通結算",
+          "then": "拒勝利不成立；不直接發獎",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "以唯一業務鍵結算成就與獎勵",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-E01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R5-S01",
+        "DEC-R5-S08"
+      ],
+      "document_path": "05_首次統一結局與家族榮譽.md",
+      "formal_doc_id": "doc_spec_0219",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E02.md"
+    },
+    {
+      "feature_id": "R5F-S01",
+      "module": "06",
+      "title": "永久家系與當季世界承接",
+      "purpose": "保敵我人物通婚連續",
+      "input_contract": [
+        "season snapshot",
+        "person/family/marriage refs",
+        "carry policy per category"
+      ],
+      "output_contract": [
+        "承接diff",
+        "core integrity assertions"
+      ],
+      "dependencies": [
+        "R5F-C01",
+        "R5F-C02",
+        "R5F-C03"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S03",
+        "DEC-R5-S04"
+      ],
+      "design_status": "不變量可拆；承接政策待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-S01-P",
+          "given": "玩家女兒嫁敵族且同childUID",
+          "when": "換季預覽",
+          "then": "雙親婚姻子代P仍同",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-S01-N",
+          "given": "敵將已dead",
+          "when": "用開局名單重建",
+          "then": "不可原UID復活，保死亡史",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "唯讀產生承接diff與完整性檢查，正式寫入交S03",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C02",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R5-S03",
+        "DEC-R5-S04"
+      ],
+      "document_path": "06_主題賽季與跨家族延續.md",
+      "formal_doc_id": "doc_spec_0229",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S01.md"
+    },
+    {
+      "feature_id": "R5F-S02",
+      "module": "06",
+      "title": "主題與地盤候選生成",
+      "purpose": "產生可驗而非直接覆寫的戰略盤",
+      "input_contract": [
+        "theme/rulesHash",
+        "surviving factions與seedRef",
+        "起點約束policy"
+      ],
+      "output_contract": [
+        "candidate world",
+        "constraint report"
+      ],
+      "dependencies": [
+        "R5F-S01"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S02",
+        "DEC-R5-S06",
+        "DEC-R5-S07"
+      ],
+      "design_status": "生成規格可拆；政策待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-S02-P",
+          "given": "已採定連通糧道規則",
+          "when": "生成candidate",
+          "then": "逐條驗證並可重播",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-S02-N",
+          "given": "兩勢力同城唯一城主或無糧路",
+          "when": "驗入",
+          "then": "拒candidate，舊世界不變",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "在候選區生成並驗證世界，不覆寫現行世界",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-S01",
+          "required_capability": "只讀存續家族／人物快照，不作正式資源承接",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R5-S02",
+        "DEC-R5-S06",
+        "DEC-R5-S07"
+      ],
+      "document_path": "06_主題賽季與跨家族延續.md",
+      "formal_doc_id": "doc_spec_0230",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S02.md"
+    },
+    {
+      "feature_id": "R5F-S03",
+      "module": "06",
+      "title": "季終換季交易",
+      "purpose": "結算到新世界全程可恢復",
+      "input_contract": [
+        "transitionId/payloadDigest",
+        "expectedRevision與settlement",
+        "candidate validation"
+      ],
+      "output_contract": [
+        "new current pointer or pending",
+        "previous valid save"
+      ],
+      "dependencies": [
+        "R5F-S01",
+        "R5F-S02",
+        "R5F-E02",
+        "R5F-C03"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S01",
+        "DEC-R5-S03",
+        "DEC-R5-S04"
+      ],
+      "design_status": "契約可拆；完整提交待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-S03-P",
+          "given": "同transition已commit但回應遺失",
+          "when": "重入",
+          "then": "查marker回原結果不雙領",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-S03-N",
+          "given": "寫新slot前崩潰",
+          "when": "恢復",
+          "then": "原slot可用，不半清人物與地盤",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "一次結算季終並切換有效存檔指標，支援恢復",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-S01",
+          "required_capability": "正式承接與時間政策",
+          "required_decisions": [
+            "DEC-R5-S03",
+            "DEC-R5-S04"
+          ]
+        },
+        {
+          "feature_id": "R5F-S02",
+          "required_capability": "已定起點／敵家／難度政策之合法候選世界",
+          "required_decisions": [
+            "DEC-R5-S02",
+            "DEC-R5-S06",
+            "DEC-R5-S07"
+          ]
+        },
+        {
+          "feature_id": "R5F-E02",
+          "required_capability": "已定季終與獎勵政策之一次結算",
+          "required_decisions": [
+            "DEC-R5-S01",
+            "DEC-R5-S08"
+          ]
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R5-S01",
+        "DEC-R5-S02",
+        "DEC-R5-S03",
+        "DEC-R5-S04",
+        "DEC-R5-S06",
+        "DEC-R5-S07",
+        "DEC-R5-S08"
+      ],
+      "document_path": "06_主題賽季與跨家族延續.md",
+      "formal_doc_id": "doc_spec_0231",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S03.md"
+    },
+    {
+      "feature_id": "R5F-A01",
+      "module": "07",
+      "title": "祖地存續狀態",
+      "purpose": "失城不等全家消失",
+      "input_contract": [
+        "敗北faction",
+        "在世family members",
+        "祖地policy"
+      ],
+      "output_contract": [
+        "ancestral refuge state",
+        "歷史與人員refs"
+      ],
+      "dependencies": [
+        "R5F-S01"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S05",
+        "DEC-R5-S06"
+      ],
+      "design_status": "方向規格可拆；政策待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-A01-P",
+          "given": "失光領地但有人在世",
+          "when": "結算敗北",
+          "then": "保人物婚姻與家族，不刪UID",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-A01-N",
+          "given": "無活人且無合法旁系",
+          "when": "要求原家主回歸",
+          "then": "不復活；新身分需新合法事件",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "合法敗北事件轉祖地狀態並保全家系",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-S01",
+          "required_capability": "永久人物／家系身份，不含換季資源承接與跳時",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R5-S05",
+        "DEC-R5-S06"
+      ],
+      "document_path": "07_祖地存續與敵方再起.md",
+      "formal_doc_id": "doc_spec_0201",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-A01.md"
+    },
+    {
+      "feature_id": "R5F-A02",
+      "module": "07",
+      "title": "民兵與地方勢力再起",
+      "purpose": "有前兆成本反制的出山",
+      "input_contract": [
+        "領袖/地方聯繫",
+        "動員resource/time policy",
+        "城防/內應事件"
+      ],
+      "output_contract": [
+        "mobilization events",
+        "可攻部署與奪城結果"
+      ],
+      "dependencies": [
+        "R5F-A01",
+        "R5F-C03"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S05",
+        "DEC-R5-S07"
+      ],
+      "design_status": "驗收可拆；數值待決",
+      "execution_status": "未核目前產品准入，不宣稱可直接施工",
+      "consumer_status": "下列接口為擬接責任，不宣稱已核現行呼叫路徑",
+      "acceptance": [
+        {
+          "case_id": "R5F-A02-P",
+          "given": "合法動員且達已定內應條件",
+          "when": "嘗試奪城",
+          "then": "有結果與代價，部署可反制",
+          "execution": "NOT_RUN"
+        },
+        {
+          "case_id": "R5F-A02-N",
+          "given": "僅高INT無任何內應資源",
+          "when": "要求直接奪城",
+          "then": "不得免費改領主或生無限民兵",
+          "execution": "NOT_RUN"
+        }
+      ],
+      "proposed_consumer_responsibility": "按已定政策結算動員、部署與交戰事件，不免費改城主",
+      "dependency_contract": "依賴只取required_capability，不繼承上游全部待決項；正式整合須各能力版本相容",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-A01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "effective_blocking_decisions": [
+        "DEC-R5-S05",
+        "DEC-R5-S07"
+      ],
+      "document_path": "07_祖地存續與敵方再起.md",
+      "formal_doc_id": "doc_spec_0202",
+      "formal_spec_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-A02.md"
+    }
+  ],
+  "document_index_status": "PENDING_OFFICIAL_ASSIGNMENT"
+}

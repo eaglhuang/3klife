@@ -1,0 +1,1901 @@
+{
+  "version": "R5-independent-feature-specifications-v3-20261103",
+  "total_features": 38,
+  "main_scope_features": 36,
+  "unselected_proposals": [
+    "R5F-S07",
+    "R5F-S08"
+  ],
+  "global_programming_gate": "全部範圍內工作文件完成→功能清單定版→全部範圍內獨立功能規格完成→才評估產品編碼；不得因單功能ready提早開工",
+  "review_status": "SOURCE_BOUNDED_CONDITIONAL_SPEC_CONTENT_PASS",
+  "product_code_modified": false,
+  "product_tests_run": false,
+  "features": [
+    {
+      "feature_id": "R5F-C01",
+      "title": "身份與單位契約",
+      "specification_path": "features/R5F-C01.md",
+      "bytes": 5800,
+      "sha256": "c2b425e10167551d37404ccd4abf074ba821882cf509b88760baed0ea4759d88",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-C01-V3-01",
+        "R5F-C01-V3-02",
+        "R5F-C01-V3-03",
+        "R5F-C01-V3-04",
+        "R5F-C01-V3-05",
+        "R5F-C01-V3-06"
+      ],
+      "original_case_refs": [
+        "R5F-C01-P",
+        "R5F-C01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-C01"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0213",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-C02",
+      "title": "三時鐘與代數",
+      "specification_path": "features/R5F-C02.md",
+      "bytes": 4916,
+      "sha256": "8b39fed79ac11c2f38cf8308eed5211d84e919b24f8b08d473e5255ea856316e",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-C02-V3-01",
+        "R5F-C02-V3-02",
+        "R5F-C02-V3-03",
+        "R5F-C02-V3-04",
+        "R5F-C02-V3-05"
+      ],
+      "original_case_refs": [
+        "R5F-C02-P",
+        "R5F-C02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-C02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S04"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0214",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R5-S04"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-C03",
+      "title": "保存與冪等",
+      "specification_path": "features/R5F-C03.md",
+      "bytes": 6979,
+      "sha256": "1665ea9130d4133f5cbb8d4927d6bb8cbf043ccd24b5dd8531fb924ab0722324",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-C03-V3-01",
+        "R5F-C03-V3-02",
+        "R5F-C03-V3-03",
+        "R5F-C03-V3-04",
+        "R5F-C03-V3-05",
+        "R5F-C03-V3-06",
+        "C03-V3-07",
+        "C03-V3-08"
+      ],
+      "original_case_refs": [
+        "R5F-C03-P",
+        "R5F-C03-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-C03"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0215",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-C04",
+      "title": "命名亂數與事件回放",
+      "specification_path": "features/R5F-C04.md",
+      "bytes": 5176,
+      "sha256": "c64eb84e54a22322b2901d9cde221707b2885c30fd43f3bd4cfee1d3e4c8cb87",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-C04-V3-01",
+        "R5F-C04-V3-02",
+        "R5F-C04-V3-03",
+        "R5F-C04-V3-04",
+        "R5F-C04-V3-05"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-C03",
+        "R5F-B02"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0216",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-C05",
+      "title": "存檔遷移與引用閉包",
+      "specification_path": "features/R5F-C05.md",
+      "bytes": 5544,
+      "sha256": "7080e695344a05e234df565467dbd46873fed2a64e861b8aaee11ae98f802767",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-C05-V3-01",
+        "R5F-C05-V3-02",
+        "R5F-C05-V3-03",
+        "R5F-C05-V3-04",
+        "R5F-C05-V3-05",
+        "R5F-C05-V3-06"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-C03"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0217",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-B01",
+      "title": "祖位與來源正規化",
+      "specification_path": "features/R5F-B01.md",
+      "bytes": 8415,
+      "sha256": "93f28b5215e890d163ac03c38f600f9b1305cd28e9994f47dd56538a85eb16d0",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "B01-P1",
+        "B01-P2",
+        "B01-N1",
+        "B01-N2",
+        "B01-B1",
+        "B01-R1",
+        "B01-F1"
+      ],
+      "original_case_refs": [
+        "R5F-B01-P",
+        "R5F-B01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-B01"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0203",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-B02",
+      "title": "出生H／EP／LUK與巔峰型生成",
+      "specification_path": "features/R5F-B02.md",
+      "bytes": 9855,
+      "sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "B02-P1",
+        "B02-P2",
+        "B02-N1",
+        "B02-N2",
+        "B02-B1",
+        "B02-B2",
+        "B02-R1",
+        "B02-F1",
+        "B02-N3"
+      ],
+      "original_case_refs": [
+        "R5F-B02-P",
+        "R5F-B02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-B02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-03",
+        "DEC-R4-09"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0204",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R4-03",
+          "DEC-R4-09"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-B03",
+      "title": "保留ID與傳星",
+      "specification_path": "features/R5F-B03.md",
+      "bytes": 9151,
+      "sha256": "5bbe284081f47264ce05373b07502e6ebb1224257c6d2fca768760798adaccfe",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "B03-P1",
+        "B03-N1",
+        "B03-B1",
+        "B03-P2",
+        "B03-N2",
+        "B03-R1",
+        "B03-F1",
+        "B03-N3"
+      ],
+      "original_case_refs": [
+        "R5F-B03-P",
+        "R5F-B03-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-B03"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-02",
+        "DEC-R4-04"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0205",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R4-02",
+          "DEC-R4-04"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-B04",
+      "title": "親緣風險與m-only",
+      "specification_path": "features/R5F-B04.md",
+      "bytes": 7987,
+      "sha256": "fa77ed7f0e05b881c558ccff8169ad50dd36bc726c61bdd7bd35445fe7476b0a",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "B04-P1",
+        "B04-N1",
+        "B04-N2",
+        "B04-P2",
+        "B04-B1",
+        "B04-R1",
+        "B04-F1",
+        "B04-R2"
+      ],
+      "original_case_refs": [
+        "R5F-B04-P",
+        "R5F-B04-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-B04"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-03"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0206",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R4-03"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-B05",
+      "title": "K樣本與候選比較",
+      "specification_path": "features/R5F-B05.md",
+      "bytes": 8505,
+      "sha256": "ddfa0b0c7a53e2be7dc0e19e62fda2bb9a1a58ebc0d04a75e70109a2d2ea1c5d",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "B05-P1",
+        "B05-N1",
+        "B05-P2",
+        "B05-B1",
+        "B05-N2",
+        "B05-R1",
+        "B05-F1",
+        "B05-B2"
+      ],
+      "original_case_refs": [
+        "R5F-B05-P",
+        "R5F-B05-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-B05"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-01"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0207",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R4-01"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-B06",
+      "title": "婚約孕期及出生交易",
+      "specification_path": "features/R5F-B06.md",
+      "bytes": 9504,
+      "sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "B06-P1",
+        "B06-P2",
+        "B06-N1",
+        "B06-N2",
+        "B06-B1",
+        "B06-R1",
+        "B06-F1",
+        "B06-N3",
+        "B06-R2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-B02",
+        "R5F-B03"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-02",
+        "DEC-R4-03",
+        "DEC-R4-09",
+        "DEC-R5-S04"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0208",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R4-02",
+          "DEC-R4-03",
+          "DEC-R4-09",
+          "DEC-R5-S04"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-B07",
+      "title": "因子效果與啟用投影",
+      "specification_path": "features/R5F-B07.md",
+      "bytes": 9945,
+      "sha256": "4f0c30144dd2fb63faa6585bfd62554cebf01a6f3621b1762c42cce19058767b",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "B07-P1",
+        "B07-N1",
+        "B07-B1",
+        "B07-P2",
+        "B07-N2",
+        "B07-R1",
+        "B07-F1",
+        "B07-B2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-B03"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0209",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-B08",
+      "title": "功業事件與EP來源",
+      "specification_path": "features/R5F-B08.md",
+      "bytes": 12889,
+      "sha256": "39cd0609a21972886311b2674770b58b30424d777910f86f66667b9ac3dd6555",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "B08-P1",
+        "B08-B1",
+        "B08-N1",
+        "B08-N2",
+        "B08-P2",
+        "B08-R1",
+        "B08-F1",
+        "B08-N3",
+        "B08-P3",
+        "B08-N4",
+        "B08-N5",
+        "B08-R2",
+        "B08-F2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-B02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-09"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0210",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R4-09"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-B09",
+      "title": "媒介因子傳授",
+      "specification_path": "features/R5F-B09.md",
+      "bytes": 8599,
+      "sha256": "38f0bde34e726debed252a0ab9dbcf68ce2060f8638dc58960a8444f43e5dd09",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "B09-P1",
+        "B09-N1",
+        "B09-B1",
+        "B09-P2",
+        "B09-N2",
+        "B09-P3",
+        "B09-N4",
+        "B09-R1",
+        "B09-F1",
+        "B09-N3"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-B03",
+        "R5F-G01"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0211",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-B10",
+      "title": "季度配偶候選與NPC配對",
+      "specification_path": "features/R5F-B10.md",
+      "bytes": 9520,
+      "sha256": "b3bb249a9f33adf222b162101ac13ae6cf830427f5aa9d42750e75f9fa4d92ad",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "B10-P1",
+        "B10-N1",
+        "B10-N2",
+        "B10-B1",
+        "B10-R1",
+        "B10-F1",
+        "B10-N3",
+        "B10-P2",
+        "B10-B2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-B01",
+        "R5F-B04",
+        "R5F-C02"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0212",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-G01",
+      "title": "共享培育回合",
+      "specification_path": "features/R5F-G01.md",
+      "bytes": 14289,
+      "sha256": "74e860877c039cc4e5d751323a14861afa585232471974e13c20b51e4d8abffd",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-G01-A1",
+        "R5F-G01-A2",
+        "R5F-G01-A3",
+        "R5F-G01-A4",
+        "R5F-G01-P",
+        "R5F-G01-N",
+        "R5F-G01-B1",
+        "R5F-G01-F1",
+        "R5F-G01-B2",
+        "R5F-G01-R1",
+        "R5F-G01-F2",
+        "R5F-G01-U1",
+        "R5F-G01-R2"
+      ],
+      "original_case_refs": [
+        "R5F-G01-P",
+        "R5F-G01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-G01"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0221",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-G02",
+      "title": "太傅代管與畢業",
+      "specification_path": "features/R5F-G02.md",
+      "bytes": 11045,
+      "sha256": "a67612f9d819f34e1abb7640d02518912c11438d354c5e526e41c168c7a4730b",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-G02-A1",
+        "R5F-G02-A2",
+        "R5F-G02-P",
+        "R5F-G02-N",
+        "R5F-G02-B1",
+        "R5F-G02-B2",
+        "R5F-G02-P2",
+        "R5F-G02-N2",
+        "R5F-G02-R1",
+        "R5F-G02-F1",
+        "R5F-G02-N3"
+      ],
+      "original_case_refs": [
+        "R5F-G02-P",
+        "R5F-G02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-G02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-07"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0222",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R4-07"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-G03",
+      "title": "研習計畫與傳星資格",
+      "specification_path": "features/R5F-G03.md",
+      "bytes": 11582,
+      "sha256": "0afb79f5b6cc6ef69c2d4f4a343eae3d4cdebc4872ea965eab3484edaaf275a6",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-G03-T1",
+        "R5F-G03-T2",
+        "R5F-G03-P",
+        "R5F-G03-N",
+        "R5F-G03-B1",
+        "R5F-G03-N2",
+        "R5F-G03-F1",
+        "R5F-G03-F2",
+        "R5F-G03-R1",
+        "R5F-G03-F3",
+        "R5F-G03-N3",
+        "R5F-G03-R2"
+      ],
+      "original_case_refs": [
+        "R5F-G03-P",
+        "R5F-G03-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-G03"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-02",
+        "DEC-R4-04",
+        "DEC-R4-08"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0223",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R4-02",
+          "DEC-R4-04",
+          "DEC-R4-08"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-G04",
+      "title": "童年自然成長與增益記帳",
+      "specification_path": "features/R5F-G04.md",
+      "bytes": 9421,
+      "sha256": "7b00dd95dc51ea018a57a46b6396778d97a71397bb6a61bc314a024d5197f37d",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-G04-P",
+        "R5F-G04-P2",
+        "R5F-G04-N",
+        "R5F-G04-B1",
+        "R5F-G04-N2",
+        "R5F-G04-R1",
+        "R5F-G04-R2",
+        "R5F-G04-F1",
+        "R5F-G04-F2",
+        "R5F-G04-B2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-G01"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0224",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-G05",
+      "title": "教官TP與技能兌換",
+      "specification_path": "features/R5F-G05.md",
+      "bytes": 14237,
+      "sha256": "87d4244f57bf4857f3dbb398ffead4fcb0c4b086e4c7bd6d7c37b10e67b454e1",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-G05-I1",
+        "R5F-G05-I2",
+        "R5F-G05-I3",
+        "R5F-G05-I4",
+        "R5F-G05-I5",
+        "R5F-G05-I6",
+        "R5F-G05-P",
+        "R5F-G05-N",
+        "R5F-G05-B1",
+        "R5F-G05-P2",
+        "R5F-G05-N2",
+        "R5F-G05-F1",
+        "R5F-G05-R1",
+        "R5F-G05-F2",
+        "R5F-G05-N3",
+        "R5F-G05-B2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-G01",
+        "R5F-G02"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0225",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-G06",
+      "title": "HP休養壽命與死亡",
+      "specification_path": "features/R5F-G06.md",
+      "bytes": 10075,
+      "sha256": "041581d3906e15f035c2eb6352a667111629fe0121f15e47281ebfaca21a4e3c",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-G06-P",
+        "R5F-G06-N",
+        "R5F-G06-P2",
+        "R5F-G06-B1",
+        "R5F-G06-B2",
+        "R5F-G06-P3",
+        "R5F-G06-N2",
+        "R5F-G06-R1",
+        "R5F-G06-F1",
+        "R5F-G06-N3"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-C02",
+        "R5F-G01"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0226",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-G07",
+      "title": "社會教養及條約服務",
+      "specification_path": "features/R5F-G07.md",
+      "bytes": 12634,
+      "sha256": "b7503063a46100b71e1c6eec6b20fce648667ffcd3b4659a8222a17c330853f8",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-G07-P",
+        "R5F-G07-N",
+        "R5F-G07-P2",
+        "R5F-G07-N2",
+        "R5F-G07-P3",
+        "R5F-G07-P4",
+        "R5F-G07-B1",
+        "R5F-G07-N3",
+        "R5F-G07-F1",
+        "R5F-G07-R1",
+        "R5F-G07-F2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-G03"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-08"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0227",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R4-08"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-G08",
+      "title": "職務年齡投影",
+      "specification_path": "features/R5F-G08.md",
+      "bytes": 10794,
+      "sha256": "aa558dc1099efb84be6ba171d8d5ffb05569cbc6f72e636001abe817d5d86b80",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-G08-P",
+        "R5F-G08-B1",
+        "R5F-G08-N",
+        "R5F-G08-N2",
+        "R5F-G08-R1",
+        "R5F-G08-F1",
+        "R5F-G08-B2",
+        "R5F-G08-N3",
+        "R5F-G08-U1",
+        "R5F-G08-F2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-C02",
+        "R5F-G01"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-05"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0228",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R4-05"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-U01",
+      "title": "知識投影與分階段教學",
+      "specification_path": "features/R5F-U01.md",
+      "bytes": 6419,
+      "sha256": "da4f1163ac3402ccb4524d393c7d2e3bbed4a2d4cbdd3930ac4c48f68e21f6b1",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-U01-V3-01",
+        "R5F-U01-V3-02",
+        "R5F-U01-V3-03",
+        "R5F-U01-V3-04",
+        "R5F-U01-V3-05",
+        "U01-V3-06",
+        "U01-V3-07",
+        "U01-V3-08",
+        "U01-V3-09",
+        "U01-V3-10"
+      ],
+      "original_case_refs": [
+        "R5F-U01-P",
+        "R5F-U01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-U01"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-07"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0237",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R4-07"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-U02",
+      "title": "情報市場與查券",
+      "specification_path": "features/R5F-U02.md",
+      "bytes": 10285,
+      "sha256": "78124d024d641eca934291af5cf8ae8bdee45428357fc4d0b2aa83bc60a160df",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-U02-V3-01",
+        "R5F-U02-V3-02",
+        "R5F-U02-V3-03",
+        "R5F-U02-V3-04",
+        "R5F-U02-V3-05",
+        "R5F-U02-V3-06",
+        "U02-V3-07",
+        "U02-V3-08",
+        "U02-V3-09",
+        "U02-V3-10",
+        "U02-V3-11",
+        "U02-V3-12",
+        "U02-V3-13",
+        "U02-V3-14",
+        "U02-V3-15"
+      ],
+      "original_case_refs": [
+        "R5F-U02-P",
+        "R5F-U02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-U02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-06"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0238",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R4-06"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-E01",
+      "title": "首次統一結局",
+      "specification_path": "features/R5F-E01.md",
+      "bytes": 5027,
+      "sha256": "061abc8b902af5b92135eb8ad580302a970184a4b944a2b04e5cab3bf4431cc5",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-E01-V3-01",
+        "R5F-E01-V3-02",
+        "R5F-E01-V3-03",
+        "R5F-E01-V3-04",
+        "R5F-E01-V3-05"
+      ],
+      "original_case_refs": [
+        "R5F-E01-P",
+        "R5F-E01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-E01"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0218",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-E02",
+      "title": "季成就與首通獎勵",
+      "specification_path": "features/R5F-E02.md",
+      "bytes": 5340,
+      "sha256": "46051e8d17a2983b8752312d42ab8830cec82874981b1d65099b03f72202f7f1",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-E02-V3-01",
+        "R5F-E02-V3-02",
+        "R5F-E02-V3-03",
+        "R5F-E02-V3-04",
+        "R5F-E02-V3-05",
+        "R5F-E02-V3-06"
+      ],
+      "original_case_refs": [
+        "R5F-E02-P",
+        "R5F-E02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-E02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S01",
+        "DEC-R5-S08"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0219",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R5-S01",
+          "DEC-R5-S08"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-E03",
+      "title": "首次統一結局快照封存",
+      "specification_path": "features/R5F-E03.md",
+      "bytes": 6141,
+      "sha256": "6cc0f43163f1dad96fd16c83ff6c506cf974f1c49afe0ee9388ee5adec95f769",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-E03-V3-01",
+        "R5F-E03-V3-02",
+        "R5F-E03-V3-03",
+        "R5F-E03-V3-04",
+        "R5F-E03-V3-05",
+        "R5F-E03-V3-06",
+        "R5F-E03-V3-07"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-E01",
+        "R5F-E02"
+      ],
+      "catalog_decision_dependencies": [],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0220",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-S01",
+      "title": "永久家系與當季世界承接",
+      "specification_path": "features/R5F-S01.md",
+      "bytes": 10350,
+      "sha256": "8b860be01f385b412f435167487d0e1c19a573666d937610d30c40681ef970e3",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-S01-P",
+        "R5F-S01-N",
+        "R5F-S01-T01",
+        "R5F-S01-T02",
+        "R5F-S01-T03",
+        "R5F-S01-T04",
+        "R5F-S01-T05"
+      ],
+      "original_case_refs": [
+        "R5F-S01-P",
+        "R5F-S01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-S01"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S03",
+        "DEC-R5-S04"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0229",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R5-S03",
+          "DEC-R5-S04"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-S02",
+      "title": "主題與地盤候選生成",
+      "specification_path": "features/R5F-S02.md",
+      "bytes": 9763,
+      "sha256": "5354f6bb57851f12f629e88249beddd4820bf5a0fabd6df2931c686611012750",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-S02-P",
+        "R5F-S02-N",
+        "R5F-S02-T01",
+        "R5F-S02-T02",
+        "R5F-S02-T03",
+        "R5F-S02-T04",
+        "R5F-S02-T05",
+        "R5F-S02-T06"
+      ],
+      "original_case_refs": [
+        "R5F-S02-P",
+        "R5F-S02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-S02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S02",
+        "DEC-R5-S06",
+        "DEC-R5-S07"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0230",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R5-S02",
+          "DEC-R5-S06",
+          "DEC-R5-S07"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-S03",
+      "title": "季終換季交易",
+      "specification_path": "features/R5F-S03.md",
+      "bytes": 16140,
+      "sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-S03-P",
+        "R5F-S03-N",
+        "R5F-S03-T01",
+        "R5F-S03-T02",
+        "R5F-S03-T03",
+        "R5F-S03-T04",
+        "R5F-S03-T05",
+        "R5F-S03-T06",
+        "R5F-S03-T07",
+        "R5F-S03-T09",
+        "R5F-S03-T08",
+        "R5F-S03-T10",
+        "R5F-S03-T11"
+      ],
+      "original_case_refs": [
+        "R5F-S03-P",
+        "R5F-S03-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-S03"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S01",
+        "DEC-R5-S02",
+        "DEC-R5-S03",
+        "DEC-R5-S04",
+        "DEC-R5-S06",
+        "DEC-R5-S07",
+        "DEC-R5-S08"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0231",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R5-S01",
+          "DEC-R5-S02",
+          "DEC-R5-S03",
+          "DEC-R5-S04",
+          "DEC-R5-S06",
+          "DEC-R5-S07",
+          "DEC-R5-S08"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-S04",
+      "title": "主題目標與結季資格",
+      "specification_path": "features/R5F-S04.md",
+      "bytes": 10218,
+      "sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-S04-P",
+        "R5F-S04-N",
+        "R5F-S04-T01",
+        "R5F-S04-T02",
+        "R5F-S04-T03",
+        "R5F-S04-T04",
+        "R5F-S04-T05",
+        "R5F-S04-T06",
+        "R5F-S04-T07"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-S03",
+        "R5F-E02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S01"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0232",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R5-S01"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-S05",
+      "title": "當季積分與比較分組",
+      "specification_path": "features/R5F-S05.md",
+      "bytes": 9731,
+      "sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-S05-P",
+        "R5F-S05-N",
+        "R5F-S05-T01",
+        "R5F-S05-T02",
+        "R5F-S05-T03",
+        "R5F-S05-T04",
+        "R5F-S05-T05",
+        "R5F-S05-T06",
+        "R5F-S05-T07"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-E02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S08"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0233",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R5-S08"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-S06",
+      "title": "敵家供給與家族存續",
+      "specification_path": "features/R5F-S06.md",
+      "bytes": 10002,
+      "sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-S06-P",
+        "R5F-S06-N",
+        "R5F-S06-T01",
+        "R5F-S06-T02",
+        "R5F-S06-T03",
+        "R5F-S06-T04",
+        "R5F-S06-T05",
+        "R5F-S06-T06",
+        "R5F-S06-T07"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-S01",
+        "R5F-S02",
+        "R5F-A01"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S06"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0234",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R5-S06"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-S07",
+      "title": "門閥稱號及候選資格",
+      "specification_path": "features/R5F-S07.md",
+      "bytes": 9602,
+      "sha256": "e0039bacc3d5b9a6c7a235e46c6d1afdc0b056313988fac83ad667535c6e1f50",
+      "scope_status": "OPTIONAL_PROPOSAL_NOT_SELECTED",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-S07-P",
+        "R5F-S07-N",
+        "R5F-S07-T01",
+        "R5F-S07-T02",
+        "R5F-S07-T03",
+        "R5F-S07-T04",
+        "R5F-S07-T05",
+        "R5F-S07-T06"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-U01",
+        "R5F-B03"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S10"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0235",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R5-S10"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-S08",
+      "title": "模式隔離與擴充入口",
+      "specification_path": "features/R5F-S08.md",
+      "bytes": 9488,
+      "sha256": "0f3a69d069c2dd0b7d6926335e40980fe0f2802aaaf624ca264f80a3d32cdfec",
+      "scope_status": "OPTIONAL_PROPOSAL_NOT_SELECTED",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-S08-P",
+        "R5F-S08-N",
+        "R5F-S08-T01",
+        "R5F-S08-T02",
+        "R5F-S08-T03",
+        "R5F-S08-T04",
+        "R5F-S08-T05",
+        "R5F-S08-T06"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-S02",
+        "R5F-E02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S09"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0236",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R5-S09"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-A01",
+      "title": "祖地存續狀態",
+      "specification_path": "features/R5F-A01.md",
+      "bytes": 9603,
+      "sha256": "8abb2ad0af491ac389957e4d170186734c461bae4adcd950bdb1cc4f12222adc",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-A01-P",
+        "R5F-A01-N",
+        "R5F-A01-T01",
+        "R5F-A01-T02",
+        "R5F-A01-T03",
+        "R5F-A01-T04",
+        "R5F-A01-T05",
+        "R5F-A01-T06"
+      ],
+      "original_case_refs": [
+        "R5F-A01-P",
+        "R5F-A01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-A01"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S05",
+        "DEC-R5-S06"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0201",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R5-S05",
+          "DEC-R5-S06"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    },
+    {
+      "feature_id": "R5F-A02",
+      "title": "民兵與地方勢力再起",
+      "specification_path": "features/R5F-A02.md",
+      "bytes": 12703,
+      "sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "content_review_status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS",
+      "implementationReady": false,
+      "implementation_status": "NOT_VERIFIED",
+      "test_status": "NOT_RUN",
+      "acceptance_status": "NOT_ASSESSED",
+      "document_case_ids": [
+        "R5F-A02-P",
+        "R5F-A02-N",
+        "R5F-A02-T01",
+        "R5F-A02-T02",
+        "R5F-A02-T03",
+        "R5F-A02-T04",
+        "R5F-A02-T05",
+        "R5F-A02-T06",
+        "R5F-A02-T07",
+        "R5F-A02-T08",
+        "R5F-A02-T09",
+        "R5F-A02-T10"
+      ],
+      "original_case_refs": [
+        "R5F-A02-P",
+        "R5F-A02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-A02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S05",
+        "DEC-R5-S07"
+      ],
+      "decision_note": "有效決策以各規格實際操作能力所需參數為準，不整功能傳染所有上游待決。",
+      "formal_doc_id": "doc_spec_0202",
+      "formal_task_id": null,
+      "acceptance_evidence": [],
+      "consumer_evidence": [],
+      "decision_status": {
+        "status": "OPERATION_SCOPED_OPEN_ITEMS_NOT_AUTO_RESOLVED",
+        "catalog_dependencies": [
+          "DEC-R5-S05",
+          "DEC-R5-S07"
+        ],
+        "rule": "Only fixed contract may have no new decision; operation-specific DEC requirements remain in specification."
+      },
+      "source_completeness": {
+        "status": "ATTACHED_BASELINES_WITH_SCOPED_OPEN_GAPS",
+        "gap_register": "來源缺口與待決分帳.json",
+        "consumer_rechecked": false
+      }
+    }
+  ],
+  "unique_document_case_count": 346,
+  "case_count_boundary": "Includes expanded/reused original P/N cases; do not add historical40 again; none executed."
+}

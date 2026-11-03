@@ -316,5 +316,29 @@
     "path": "docs/keep-memory/README.md",
     "title": "keep-memory/ 記憶筆記層契約",
     "category": "index"
+  },
+  {
+    "id": "doc_index_1029",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/README.md",
+    "title": "R4／R5 待入庫文件包",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1030",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/README.md",
+    "title": "R5 逐功能獨立規格 v3｜整合工作版",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1031",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/README.md",
+    "title": "R5 功能總清單 v2",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1032",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/README.md",
+    "title": "R4／R5 文件與案例索引增補 v4",
+    "category": "index"
   }
 ]

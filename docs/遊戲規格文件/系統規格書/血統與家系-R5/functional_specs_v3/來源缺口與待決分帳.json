@@ -1,0 +1,161 @@
+{
+  "version": "R5-v3",
+  "status": "REVIEWED_OPEN_GAPS_NOT_NEW_DECISIONS",
+  "not_new_decisions": true,
+  "existing_decision_count": 19,
+  "items": [
+    {
+      "gap_id": "B-GAP-01",
+      "type": "SOURCE_GAP",
+      "missing_or_pending": "實際canonical alias對照、合法founder完整度證據與來源revision矛盾處理的正式對應",
+      "affected_features": "B01、B02、B03、B04、B10",
+      "source_and_behavior": "工程§3/4/7只有契約；規格保unknown與拒絕，不補乾淨模板",
+      "required_resolution": "具版本canonical alias表、founder完整度原始契約、來源衝突規則及對應fixtures。",
+      "blocked_operation": "阻需要完整映射/祖譜的正規化與出生提交；已有部分資料仍可保守顯示。"
+    },
+    {
+      "gap_id": "B-GAP-02",
+      "type": "SOURCE_GAP",
+      "missing_or_pending": "childLUK雙親基底如何合成及精確運算順序；peakType機率表／分布版本",
+      "affected_features": "B02、B06",
+      "source_and_behavior": "玩法§8及T54只列向50回歸、擾動與最大序列；不猜父母均值或三型等機率",
+      "required_resolution": "同版childLUK合成完整細式、peakType分布表、rngVersion與邊界fixtures。",
+      "blocked_operation": "阻缺少分布的LUK/peakType生成；不能猜父母均值或均分。"
+    },
+    {
+      "gap_id": "B-GAP-03",
+      "type": "SOURCE_GAP",
+      "missing_or_pending": "FamilyLineage初始streak、缺位後重啟的完整編碼；全部n2/n3等加成表及非Max5星核",
+      "affected_features": "B03",
+      "source_and_behavior": "工程§5/7/19、T56–58；保單親根與n5五邊六人，不用缺位復興冒承n5",
+      "required_resolution": "同版FamilyLineage初值/重啟契約、完整n2/n3加成及非Max5星核表與fixtures。",
+      "blocked_operation": "阻缺值的streak初始化/星核抽樣，不改已知單親鏈和n5結構。"
+    },
+    {
+      "gap_id": "B-GAP-04",
+      "type": "DECISION_PENDING",
+      "missing_or_pending": "新家傳／兼收／母門／復興來源放寬、入池順序、費用／工時／舊免費家傳遷移；n5四星+.02或+.04；命名獎勵採用額",
+      "affected_features": "B03、B06",
+      "source_and_behavior": "DEC-R4-02/04；T58的2券為C類歷史，若新券採用需相關DEC-R4-06，不自發2券",
+      "required_resolution": "按原授權完成相關DEC02/04/06採定，形成有revision的完整profile與遷移規則。",
+      "blocked_operation": "阻未採新增來源放寬、n5新核或新獎勵；不把歷史2券直接授予。"
+    },
+    {
+      "gap_id": "B-GAP-05",
+      "type": "SOURCE_AND_DECISION",
+      "missing_or_pending": "完整禁親距離／D扣分表；h時鐘與合成、外胎風險、純化率／增量／成本",
+      "affected_features": "B04、B02、B06、B10",
+      "source_and_behavior": "工程§20/21及DEC-R4-03；可審已列合法性，未定數值不採G3的32/48%、外胎1%、h10",
+      "required_resolution": "取得既有禁親/D完整來源表，另依DEC03採定h/純化等新參數，各自提供fixtures。",
+      "blocked_operation": "阻缺表的風險/純化判定，unknown仍不得判安全。來源缺表不能以批准取代。"
+    },
+    {
+      "gap_id": "B-GAP-06",
+      "type": "DECISION_PENDING",
+      "missing_or_pending": "K合格catalog、評估日、窗口排序／時鐘、冷啟動、效用／成本與更正權責",
+      "affected_features": "B05",
+      "source_and_behavior": "DEC-R4-01；先保全cohort與原歸戶，不猜18歲/W8/折扣50%/太傅15%",
+      "required_resolution": "DEC01完成同版K全cohort、評估與效用profile及反例fixtures。",
+      "blocked_operation": "阻未採K計算/收益；全樣本與原歸戶保全不受影響。"
+    },
+    {
+      "gap_id": "B-GAP-07",
+      "type": "SOURCE_AND_DECISION",
+      "missing_or_pending": "婚約費用扣款時點、冷卻、取消／退款、父親孕期死亡處理、同時事件排序；主題換季跳時",
+      "affected_features": "B06、B10",
+      "source_and_behavior": "工程§4–7只明示母親死亡中止與四季孕期；DEC-R5-S04未採，不類推擴大刪胎",
+      "required_resolution": "補婚約費用/取消/父亡/同時事件的可核原始契約，S04跳時另依既有決策採定。",
+      "blocked_operation": "阻缺政策的新婚約/取消或換季推進；母亡既定終態不得無證擴寫。"
+    },
+    {
+      "gap_id": "B-GAP-08",
+      "type": "SOURCE_GAP",
+      "missing_or_pending": "全kind合法取得／啟用事件catalog與實際效果consumer；LEGACY年度線索owner／去重／存量；legacy映射",
+      "affected_features": "B07",
+      "source_and_behavior": "工程§12及T43；完整列現有11非藍效果，其他ID不猜映射；held6與終身新增2共用一帳",
+      "required_resolution": "取得全kind取得/啟用catalog、legacy映射與線索owner/去重契約，再核對實際consumer。",
+      "blocked_operation": "阻未知ID映射、未列明啟用或線索發放，不否定已列11項效果。"
+    },
+    {
+      "gap_id": "B-GAP-09",
+      "type": "SOURCE_AND_DECISION",
+      "missing_or_pending": "功業catalog及獎勵表；形成機會的全人／ID scope、target選法、達Max／不合格處理；R退出後EP總成分；另含名號catalog、G02畢業證據到B08資格及U02來源/回執契約。",
+      "affected_features": "B08、B02、B06",
+      "source_and_behavior": "工程§2/6/18/19、T16/17/39及DEC-R4-09；保兩次.03首成功停有效+1，不給每ID免費兩次",
+      "required_resolution": "同版功業及名號catalog、G02凍結證據格式、B08 canonical資格、U02來源/回執契約；EP總分另依DEC09採定。",
+      "blocked_operation": "阻缺catalog的名號/形成機會或新總EP，不阻普通已定功業。"
+    },
+    {
+      "gap_id": "B-GAP-10",
+      "type": "SOURCE_AND_ADOPTION",
+      "missing_or_pending": "媒介0–5歲精確端點、62.5%試作率是否採用、費用取消、雙候選槽競爭／流消耗順序及來源終身使用scope對應",
+      "affected_features": "B09",
+      "source_and_behavior": "工程§8、T18/T38；無可變不耗、合法全敗耗一次；原率僅同profile回歸，不誤作75%",
+      "required_resolution": "補媒介端點/來源使用scope與競爭順序原契約；62.5%等候選採用須按原決策權限確認，附fixtures。",
+      "blocked_operation": "阻缺policy的新媒介attempt；不得以新增ID額度拒既有ID合法升星。"
+    },
+    {
+      "gap_id": "B-GAP-11",
+      "type": "SOURCE_GAP",
+      "missing_or_pending": "NPC保留比例／owner、冷卻起點與長度、外來quota、配對排序權重／同意政策、整季或逐對批次恢復策略",
+      "affected_features": "B10",
+      "source_and_behavior": "T31只定每人最多一組與先檢；四外來候選不是四組NPC配對，不猜比例或一季冷卻",
+      "required_resolution": "提供NPC配對完整同版policy、排序/同意/冷卻/批次恢復契約與fixtures。",
+      "blocked_operation": "阻不完整的季度配對提交，不把四外來候選當四組配對。"
+    },
+    {
+      "gap_id": "B-GAP-12",
+      "type": "REPLAY_EVIDENCE_GAP",
+      "missing_or_pending": "round3_recompute/results、pedigree_witness、產品fixture/runner與對應版本未隨包",
+      "affected_features": "B01–B10",
+      "source_and_behavior": "工程公開整理更正及§37明示附件未納；保歷史期望，不聲稱本次重跑或產品PASS",
+      "required_resolution": "提供所引用歷史腳本/JSON/runner原件、精確版本與hash、依賴和可重跑fixtures；欲聲稱重跑通過須另有實際執行結果。",
+      "blocked_operation": "阻歷史可重跑/動態重現完成的主張，不阻閱讀已附原文；批准或DEC採定不能取代原件。"
+    },
+    {
+      "gap_id": "B-GAP-13",
+      "type": "IMPLEMENTATION_EVIDENCE_GAP",
+      "missing_or_pending": "真consumer、正式ATM工單/准入、profileHash/fixtureHash及實際ran/skip證據",
+      "affected_features": "B01–B10",
+      "source_and_behavior": "全域文件先行閘門仍有效；本批只文件，implementationReady=false",
+      "required_resolution": "在合法准入後核對真consumer與schema/接口，取得對應版本fixtureHash、實際ran/skip與結果證據，再逐功能驗收。",
+      "blocked_operation": "阻implementationReady及產品驗收完成的主張；文件或批准本身不等實作/測試證據。"
+    },
+    {
+      "gap_id": "GAP-R5-G03-PROFILE-01",
+      "type": "EXISTING_DECISION_OR_PROFILE_CONFLICT",
+      "missing_or_pending": "B方案的1→2 .5/2→3 .25與每低星.5為不同比較組；A/B、attempt、工時、n5及終態政策未凍結。",
+      "affected_features": "R5F-G03",
+      "source_and_behavior": "R4玩法§7；R4工程§19及M06；G03候選profile對照，DEC-R4-04。",
+      "required_resolution": "依DEC04採定同一組單步研習率、attempt、工時、n5與終態；附同版fixtures。",
+      "blocked_operation": "只阻未採新研習plan；已保存舊plan保其原profile，不混用另一候選數字。"
+    },
+    {
+      "gap_id": "GAP-R5-G05-CATALOG-01",
+      "type": "SOURCE_GAP",
+      "missing_or_pending": "缺完整三段靈感與混種技能catalog、canonical技能ID及資格；僅有歷史R3T49摘要，不能反推參數。",
+      "affected_features": "R5F-G05",
+      "source_and_behavior": "R4工程§9/10、歷史R3T49；G05技能與靈感reservation。",
+      "required_resolution": "取得完整同版技能ID/資格/時段/保證reservation catalog與fixtures，不以批准替代缺少原表。",
+      "blocked_operation": "只阻缺catalog的靈感／混種分支；已定TP記帳與完整基本技能分支不連帶停用。"
+    },
+    {
+      "gap_id": "GAP-R5-G08-PROJECTION-01",
+      "type": "EXISTING_DECISION_OR_PROFILE_CONFLICT",
+      "missing_or_pending": "新role曲線、裝備／傷勢組合和取整順序未完整採定；不能借武職表補文職。",
+      "affected_features": "R5F-G08",
+      "source_and_behavior": "R4工程§14、R5模組03；G08角色外部投影，DEC-R4-05。",
+      "required_resolution": "DEC05採定各role與成熟型曲線、外部倍率組合和取整順序，提供同版fixtures。",
+      "blocked_operation": "只阻未採新role曲線/組合/取整；G06既有HP與休養契約不受阻。"
+    },
+    {
+      "gap_id": "U-GAP-01",
+      "type": "EXISTING_DECISION_INPUTS",
+      "missing_or_pending": "逐發券來源的producer/owner/epoch/額度/去重/cap/overflow，以及查驗工時/取消政策。",
+      "affected_features": "R5F-U02",
+      "source_and_behavior": "R4工程§13/24；U02§11/12/13；DEC-R4-06。",
+      "required_resolution": "逐入口完整SourcePolicy/QueryPolicy及所需canonical資格來源。",
+      "blocked_operation": "阻缺政策入口的reserve、發券或付費查驗；不阻既有已知投影或無關完整入口。"
+    }
+  ]
+}

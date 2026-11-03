@@ -1,0 +1,3497 @@
+{
+  "features": [
+    {
+      "feature_id": "R5F-C01",
+      "title": "身份與單位契約",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-C01.md",
+      "specification_sha256": "c2b425e10167551d37404ccd4abf074ba821882cf509b88760baed0ea4759d88",
+      "source_chapter_rows": [
+        "R4工程§1",
+        "R4工程§2",
+        "R4工程§4",
+        "R4工程§17",
+        "R4玩法§1"
+      ],
+      "document_case_ids": [
+        "R5F-C01-V3-01",
+        "R5F-C01-V3-02",
+        "R5F-C01-V3-03",
+        "R5F-C01-V3-04",
+        "R5F-C01-V3-05",
+        "R5F-C01-V3-06"
+      ],
+      "original_case_refs": [
+        "R5F-C01-P",
+        "R5F-C01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-C01"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T25",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T46",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T47",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T56",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 10,
+          "heading": "## 2. 規範來源與優先關係"
+        },
+        {
+          "line_1based": 36,
+          "heading": "## 8. 依賴能力及待決閘門"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-C02",
+      "title": "三時鐘與代數",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-C02.md",
+      "specification_sha256": "8b39fed79ac11c2f38cf8308eed5211d84e919b24f8b08d473e5255ea856316e",
+      "source_chapter_rows": [
+        "R4工程§14",
+        "R4工程§20",
+        "R4玩法§6",
+        "R4玩法§15",
+        "R5需求：季度／學院turn／主題季分離"
+      ],
+      "document_case_ids": [
+        "R5F-C02-V3-01",
+        "R5F-C02-V3-02",
+        "R5F-C02-V3-03",
+        "R5F-C02-V3-04",
+        "R5F-C02-V3-05"
+      ],
+      "original_case_refs": [
+        "R5F-C02-P",
+        "R5F-C02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-C02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S04"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T32",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T68",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-C02-V3-03"
+          ]
+        },
+        {
+          "historical_case_id": "R3T69",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-C02-V3-04"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 10,
+          "heading": "## 2. 規範來源與優先關係"
+        },
+        {
+          "line_1based": 36,
+          "heading": "## 8. 依賴能力及待決閘門"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-C03",
+      "title": "保存與冪等",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-C03.md",
+      "specification_sha256": "1665ea9130d4133f5cbb8d4927d6bb8cbf043ccd24b5dd8531fb924ab0722324",
+      "source_chapter_rows": [
+        "R4工程§6",
+        "R4工程§16"
+      ],
+      "document_case_ids": [
+        "R5F-C03-V3-01",
+        "R5F-C03-V3-02",
+        "R5F-C03-V3-03",
+        "R5F-C03-V3-04",
+        "R5F-C03-V3-05",
+        "R5F-C03-V3-06",
+        "C03-V3-07",
+        "C03-V3-08"
+      ],
+      "original_case_refs": [
+        "R5F-C03-P",
+        "R5F-C03-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-C03"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T35",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-C03-V3-04"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 10,
+          "heading": "## 2. 規範來源與優先關係"
+        },
+        {
+          "line_1based": 36,
+          "heading": "## 8. 依賴能力及待決閘門"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-C04",
+      "title": "命名亂數與事件回放",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-C04.md",
+      "specification_sha256": "c64eb84e54a22322b2901d9cde221707b2885c30fd43f3bd4cfee1d3e4c8cb87",
+      "source_chapter_rows": [
+        "R4工程§7"
+      ],
+      "document_case_ids": [
+        "R5F-C04-V3-01",
+        "R5F-C04-V3-02",
+        "R5F-C04-V3-03",
+        "R5F-C04-V3-04",
+        "R5F-C04-V3-05"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-C03",
+        "R5F-B02"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T07",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T28",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T36",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T37",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T51",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 10,
+          "heading": "## 2. 規範來源與優先關係"
+        },
+        {
+          "line_1based": 36,
+          "heading": "## 8. 依賴能力及待決閘門"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-C05",
+      "title": "存檔遷移與引用閉包",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-C05.md",
+      "specification_sha256": "7080e695344a05e234df565467dbd46873fed2a64e861b8aaee11ae98f802767",
+      "source_chapter_rows": [
+        "R4工程§15",
+        "R4工程§16",
+        "R4工程§17",
+        "R5需求：敵我家族通婚與子代延續"
+      ],
+      "document_case_ids": [
+        "R5F-C05-V3-01",
+        "R5F-C05-V3-02",
+        "R5F-C05-V3-03",
+        "R5F-C05-V3-04",
+        "R5F-C05-V3-05",
+        "R5F-C05-V3-06"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-C03"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T25",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T28",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-C05-V3-06"
+          ]
+        },
+        {
+          "historical_case_id": "R3T34",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T36",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-C05-V3-03"
+          ]
+        },
+        {
+          "historical_case_id": "R3T45",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-C05-V3-04"
+          ]
+        },
+        {
+          "historical_case_id": "R3T71",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T72",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-C05-V3-02",
+            "R5F-C05-V3-03",
+            "R5F-C05-V3-04"
+          ]
+        },
+        {
+          "historical_case_id": "R3T74",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-C05-V3-06"
+          ]
+        },
+        {
+          "historical_case_id": "R4E28",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-C05-V3-06"
+          ]
+        },
+        {
+          "historical_case_id": "R4E31",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "R5F-C05-V3-02",
+            "R5F-C05-V3-04"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 10,
+          "heading": "## 2. 規範來源與優先關係"
+        },
+        {
+          "line_1based": 37,
+          "heading": "## 8. 依賴能力及待決閘門"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-B01",
+      "title": "祖位與來源正規化",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-B01.md",
+      "specification_sha256": "93f28b5215e890d163ac03c38f600f9b1305cd28e9994f47dd56538a85eb16d0",
+      "source_chapter_rows": [
+        "R4工程§3",
+        "R4工程§4",
+        "R4工程§7",
+        "R4工程§21",
+        "R4玩法§2",
+        "R4玩法§6"
+      ],
+      "document_case_ids": [
+        "B01-P1",
+        "B01-P2",
+        "B01-N1",
+        "B01-N2",
+        "B01-B1",
+        "B01-R1",
+        "B01-F1"
+      ],
+      "original_case_refs": [
+        "R5F-B01-P",
+        "R5F-B01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-B01"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T03",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B01-N2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T10",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B01-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T48",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B01-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E13",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B01-N1",
+            "B01-F1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E24",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B01-B1"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 72,
+          "heading": "## 精確依賴能力"
+        },
+        {
+          "line_1based": 99,
+          "heading": "## 待決與完成條件"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-B02",
+      "title": "出生H／EP／LUK與巔峰型生成",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-B02.md",
+      "specification_sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c",
+      "source_chapter_rows": [
+        "R4工程§3",
+        "R4工程§7",
+        "R4工程§18",
+        "R4玩法§8"
+      ],
+      "document_case_ids": [
+        "B02-P1",
+        "B02-P2",
+        "B02-N1",
+        "B02-N2",
+        "B02-B1",
+        "B02-B2",
+        "B02-R1",
+        "B02-F1",
+        "B02-N3"
+      ],
+      "original_case_refs": [
+        "R5F-B02-P",
+        "R5F-B02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-B02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-03",
+        "DEC-R4-09"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-B01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T01",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T02",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B02-P1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T03",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T04",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T05",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B02-P2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T06",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T07",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B02-R1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T11",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T33",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T52",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T53",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T54",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T55",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T63",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T65",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T74",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B02-R1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E01",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B02-P2",
+            "B02-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E02",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B02-N1"
+          ]
+        },
+        {
+          "historical_case_id": "M01",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M02",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B02-P2"
+          ]
+        },
+        {
+          "historical_case_id": "M03",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M04",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B02-P2"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 75,
+          "heading": "## 精確依賴能力與待決"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-B03",
+      "title": "保留ID與傳星",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-B03.md",
+      "specification_sha256": "5bbe284081f47264ce05373b07502e6ebb1224257c6d2fca768760798adaccfe",
+      "source_chapter_rows": [
+        "R4工程§3",
+        "R4工程§5",
+        "R4工程§7",
+        "R4工程§12",
+        "R4工程§19",
+        "R4玩法§2",
+        "R4玩法§3",
+        "R4玩法§7",
+        "R4玩法§12",
+        "R4玩法§13"
+      ],
+      "document_case_ids": [
+        "B03-P1",
+        "B03-N1",
+        "B03-B1",
+        "B03-P2",
+        "B03-N2",
+        "B03-R1",
+        "B03-F1",
+        "B03-N3"
+      ],
+      "original_case_refs": [
+        "R5F-B03-P",
+        "R5F-B03-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-B03"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-02",
+        "DEC-R4-04"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-B01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T07",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B03-F1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T11",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T13",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B03-P1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T14",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T15",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T37",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B03-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T51",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T56",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B03-P2",
+            "B03-N2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T57",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B03-P2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T58",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B03-R1",
+            "B03-N2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T61",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T62",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T69",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E03",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E04",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B03-N3"
+          ]
+        },
+        {
+          "historical_case_id": "R4E05",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B03-N3"
+          ]
+        },
+        {
+          "historical_case_id": "R4E06",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B03-N3"
+          ]
+        },
+        {
+          "historical_case_id": "R4E07",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E23",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B03-N1",
+            "B03-P1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E24",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B03-N2"
+          ]
+        },
+        {
+          "historical_case_id": "R4E32",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B03-N3"
+          ]
+        },
+        {
+          "historical_case_id": "M05",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M06",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B03-N3"
+          ]
+        },
+        {
+          "historical_case_id": "M07",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B03-N3"
+          ]
+        },
+        {
+          "historical_case_id": "M08",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B03-N3"
+          ]
+        },
+        {
+          "historical_case_id": "M09",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M10",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": []
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 65,
+          "heading": "## 精確依賴能力"
+        },
+        {
+          "line_1based": 96,
+          "heading": "## 審查待決"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-B04",
+      "title": "親緣風險與m-only",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-B04.md",
+      "specification_sha256": "fa77ed7f0e05b881c558ccff8169ad50dd36bc726c61bdd7bd35445fe7476b0a",
+      "source_chapter_rows": [
+        "R4工程§20",
+        "R4工程§21",
+        "R4玩法§3",
+        "R4玩法§5",
+        "R4玩法§6",
+        "R4玩法§12",
+        "R4玩法§16"
+      ],
+      "document_case_ids": [
+        "B04-P1",
+        "B04-N1",
+        "B04-N2",
+        "B04-P2",
+        "B04-B1",
+        "B04-R1",
+        "B04-F1",
+        "B04-R2"
+      ],
+      "original_case_refs": [
+        "R5F-B04-P",
+        "R5F-B04-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-B04"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-03"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-B01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T09",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T10",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T11",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B04-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T15",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T48",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T50",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B04-P1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T51",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T52",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T53",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E03",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B04-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E07",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B04-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E08",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B04-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E09",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B04-P2"
+          ]
+        },
+        {
+          "historical_case_id": "R4E10",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B04-P2"
+          ]
+        },
+        {
+          "historical_case_id": "R4E11",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B04-P2",
+            "B04-F1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E12",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B04-R1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E13",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B04-N2",
+            "B04-N1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E14",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B04-P1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E32",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M01",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B04-B1"
+          ]
+        },
+        {
+          "historical_case_id": "M03",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M09",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B04-B1"
+          ]
+        },
+        {
+          "historical_case_id": "M10",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B04-B1"
+          ]
+        },
+        {
+          "historical_case_id": "M11",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M12",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M13",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B04-P2"
+          ]
+        },
+        {
+          "historical_case_id": "M14",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B04-P2"
+          ]
+        },
+        {
+          "historical_case_id": "M15",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B04-P2"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 62,
+          "heading": "## 精確依賴能力"
+        },
+        {
+          "line_1based": 90,
+          "heading": "## 待決與完成條件"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-B05",
+      "title": "K樣本與候選比較",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-B05.md",
+      "specification_sha256": "ddfa0b0c7a53e2be7dc0e19e62fda2bb9a1a58ebc0d04a75e70109a2d2ea1c5d",
+      "source_chapter_rows": [
+        "R4工程§5",
+        "R4工程§22",
+        "R4工程§23",
+        "R4玩法§4",
+        "R4玩法§12",
+        "R4玩法§16"
+      ],
+      "document_case_ids": [
+        "B05-P1",
+        "B05-N1",
+        "B05-P2",
+        "B05-B1",
+        "B05-N2",
+        "B05-R1",
+        "B05-F1",
+        "B05-B2"
+      ],
+      "original_case_refs": [
+        "R5F-B05-P",
+        "R5F-B05-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-B05"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-01"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C02",
+          "required_capability": "單調世界季度時鐘，不含主題換季跳時",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T47",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B05-P1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E15",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B05-N2"
+          ]
+        },
+        {
+          "historical_case_id": "R4E16",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E17",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B05-P1",
+            "B05-N1",
+            "B05-P2",
+            "B05-R1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E18",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E19",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E20",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B05-B2"
+          ]
+        },
+        {
+          "historical_case_id": "M16",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M17",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M18",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B05-N2"
+          ]
+        },
+        {
+          "historical_case_id": "M19",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M20",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M21",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M22",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B05-B2"
+          ]
+        },
+        {
+          "historical_case_id": "M23",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 76,
+          "heading": "## 精確依賴能力"
+        },
+        {
+          "line_1based": 105,
+          "heading": "## 待決與完成條件"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-B06",
+      "title": "婚約孕期及出生交易",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-B06.md",
+      "specification_sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090",
+      "source_chapter_rows": [
+        "R4工程§4",
+        "R4工程§6",
+        "R4玩法§3",
+        "R4玩法§13",
+        "R5需求：敵我家族通婚與子代延續"
+      ],
+      "document_case_ids": [
+        "B06-P1",
+        "B06-P2",
+        "B06-N1",
+        "B06-N2",
+        "B06-B1",
+        "B06-R1",
+        "B06-F1",
+        "B06-N3",
+        "B06-R2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-B02",
+        "R5F-B03"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-02",
+        "DEC-R4-03",
+        "DEC-R4-09",
+        "DEC-R5-S04"
+      ],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T07",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B06-R1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T08",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B06-P2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T32",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B06-P1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T35",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B06-F1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T68",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B06-P1"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 68,
+          "heading": "## 精確依賴能力及待決"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-B07",
+      "title": "因子效果與啟用投影",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-B07.md",
+      "specification_sha256": "4f0c30144dd2fb63faa6585bfd62554cebf01a6f3621b1762c42cce19058767b",
+      "source_chapter_rows": [
+        "R4工程§5",
+        "R4工程§12",
+        "R4玩法§2"
+      ],
+      "document_case_ids": [
+        "B07-P1",
+        "B07-N1",
+        "B07-B1",
+        "B07-P2",
+        "B07-N2",
+        "B07-R1",
+        "B07-F1",
+        "B07-B2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-B03"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T12",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T14",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T28",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T42",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T43",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B07-B1",
+            "B07-R1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T66",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": []
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 85,
+          "heading": "## 精確依賴能力"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-B08",
+      "title": "功業事件與EP來源",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-B08.md",
+      "specification_sha256": "39cd0609a21972886311b2674770b58b30424d777910f86f66667b9ac3dd6555",
+      "source_chapter_rows": [
+        "R4工程§5",
+        "R4工程§18",
+        "R4玩法§8",
+        "R4玩法§12"
+      ],
+      "document_case_ids": [
+        "B08-P1",
+        "B08-B1",
+        "B08-N1",
+        "B08-N2",
+        "B08-P2",
+        "B08-R1",
+        "B08-F1",
+        "B08-N3",
+        "B08-P3",
+        "B08-N4",
+        "B08-N5",
+        "B08-R2",
+        "B08-F2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-B02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-09"
+      ],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T08",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B08-P2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T16",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B08-N1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T17",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B08-P1",
+            "B08-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T39",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B08-P1",
+            "B08-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T55",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E04",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "B08-N3"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 76,
+          "heading": "## 精確依賴能力"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-B09",
+      "title": "媒介因子傳授",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-B09.md",
+      "specification_sha256": "38f0bde34e726debed252a0ab9dbcf68ce2060f8638dc58960a8444f43e5dd09",
+      "source_chapter_rows": [
+        "R4工程§8",
+        "R4玩法§7"
+      ],
+      "document_case_ids": [
+        "B09-P1",
+        "B09-N1",
+        "B09-B1",
+        "B09-P2",
+        "B09-N2",
+        "B09-P3",
+        "B09-N4",
+        "B09-R1",
+        "B09-F1",
+        "B09-N3"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-B03",
+        "R5F-G01"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T18",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B09-N1",
+            "B09-P2",
+            "B09-R1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T38",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B09-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T43",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T56",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B09-N3"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 61,
+          "heading": "## 精確依賴能力"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-B10",
+      "title": "季度配偶候選與NPC配對",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-B10.md",
+      "specification_sha256": "b3bb249a9f33adf222b162101ac13ae6cf830427f5aa9d42750e75f9fa4d92ad",
+      "source_chapter_rows": [
+        "R4工程§20",
+        "R4玩法§3",
+        "R4玩法§12",
+        "R4玩法§14",
+        "R5需求：季度／學院turn／主題季分離"
+      ],
+      "document_case_ids": [
+        "B10-P1",
+        "B10-N1",
+        "B10-N2",
+        "B10-B1",
+        "B10-R1",
+        "B10-F1",
+        "B10-N3",
+        "B10-P2",
+        "B10-B2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-B01",
+        "R5F-B04",
+        "R5F-C02"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T09",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T30",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B10-N1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T31",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "B10-P1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T44",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E21",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B10-P2"
+          ]
+        },
+        {
+          "historical_case_id": "R4E22",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "B10-B1",
+            "B10-R1",
+            "B10-B2"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 68,
+          "heading": "## 精確依賴能力"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-G01",
+      "title": "共享培育回合",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-G01.md",
+      "specification_sha256": "74e860877c039cc4e5d751323a14861afa585232471974e13c20b51e4d8abffd",
+      "source_chapter_rows": [
+        "R4工程§2",
+        "R4工程§9",
+        "R4工程§11",
+        "R4玩法§1",
+        "R4玩法§9"
+      ],
+      "document_case_ids": [
+        "R5F-G01-A1",
+        "R5F-G01-A2",
+        "R5F-G01-A3",
+        "R5F-G01-A4",
+        "R5F-G01-P",
+        "R5F-G01-N",
+        "R5F-G01-B1",
+        "R5F-G01-F1",
+        "R5F-G01-B2",
+        "R5F-G01-R1",
+        "R5F-G01-F2",
+        "R5F-G01-U1",
+        "R5F-G01-R2"
+      ],
+      "original_case_refs": [
+        "R5F-G01-P",
+        "R5F-G01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-G01"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T12",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T20",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G01-R2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T21",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G01-N"
+          ]
+        },
+        {
+          "historical_case_id": "R3T22",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G01-N"
+          ]
+        },
+        {
+          "historical_case_id": "R3T23",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G01-P"
+          ]
+        },
+        {
+          "historical_case_id": "R3T24",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T25",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T29",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G01-U1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T32",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T68",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G01-A1"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 29,
+          "heading": "## 必要依賴能力"
+        },
+        {
+          "line_1based": 135,
+          "heading": "## 待決與准入條件"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-G02",
+      "title": "太傅代管與畢業",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-G02.md",
+      "specification_sha256": "a67612f9d819f34e1abb7640d02518912c11438d354c5e526e41c168c7a4730b",
+      "source_chapter_rows": [
+        "R4工程§9",
+        "R4工程§10",
+        "R4工程§11",
+        "R4玩法§9",
+        "R4玩法§10",
+        "R4玩法§15"
+      ],
+      "document_case_ids": [
+        "R5F-G02-A1",
+        "R5F-G02-A2",
+        "R5F-G02-P",
+        "R5F-G02-N",
+        "R5F-G02-B1",
+        "R5F-G02-B2",
+        "R5F-G02-P2",
+        "R5F-G02-N2",
+        "R5F-G02-R1",
+        "R5F-G02-F1",
+        "R5F-G02-N3"
+      ],
+      "original_case_refs": [
+        "R5F-G02-P",
+        "R5F-G02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-G02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-07"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-G01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T23",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G02-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T24",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G02-P",
+            "R5F-G02-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T27",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G02-N"
+          ]
+        },
+        {
+          "historical_case_id": "R3T40",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T46",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G02-B2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T70",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G02-P2"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 24,
+          "heading": "## 必要依賴能力"
+        },
+        {
+          "line_1based": 104,
+          "heading": "## 待決與完整性要求"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-G03",
+      "title": "研習計畫與傳星資格",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-G03.md",
+      "specification_sha256": "0afb79f5b6cc6ef69c2d4f4a343eae3d4cdebc4872ea965eab3484edaaf275a6",
+      "source_chapter_rows": [
+        "R4工程§19",
+        "R4玩法§7",
+        "R4玩法§12",
+        "R4玩法§16"
+      ],
+      "document_case_ids": [
+        "R5F-G03-T1",
+        "R5F-G03-T2",
+        "R5F-G03-P",
+        "R5F-G03-N",
+        "R5F-G03-B1",
+        "R5F-G03-N2",
+        "R5F-G03-F1",
+        "R5F-G03-F2",
+        "R5F-G03-R1",
+        "R5F-G03-F3",
+        "R5F-G03-N3",
+        "R5F-G03-R2"
+      ],
+      "original_case_refs": [
+        "R5F-G03-P",
+        "R5F-G03-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-G03"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-02",
+        "DEC-R4-04",
+        "DEC-R4-08"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-G01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C02",
+          "required_capability": "研習使用既有季度時鐘，不含主題季跳時",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T59",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T60",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G03-P",
+            "R5F-G03-R1",
+            "R5F-G03-F3"
+          ]
+        },
+        {
+          "historical_case_id": "R3T61",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T62",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E04",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E05",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "R5F-G03-P"
+          ]
+        },
+        {
+          "historical_case_id": "R4E06",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E25",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G03-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E26",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G03-N2"
+          ]
+        },
+        {
+          "historical_case_id": "R4E32",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M05",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "R5F-G03-R2"
+          ]
+        },
+        {
+          "historical_case_id": "M06",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "R5F-G03-F1"
+          ]
+        },
+        {
+          "historical_case_id": "M07",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": [
+            "R5F-G03-P"
+          ]
+        },
+        {
+          "historical_case_id": "M08",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M09",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "M10",
+          "mapping_status": "RELATED_CONTRACT_ONLY",
+          "v3_case_ids": []
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 26,
+          "heading": "## 必要依賴能力與決策範圍"
+        },
+        {
+          "line_1based": 113,
+          "heading": "## 待決與來源疑點"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-G04",
+      "title": "童年自然成長與增益記帳",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-G04.md",
+      "specification_sha256": "7b00dd95dc51ea018a57a46b6396778d97a71397bb6a61bc314a024d5197f37d",
+      "source_chapter_rows": [
+        "R4工程§2",
+        "R4工程§8",
+        "R4玩法§1"
+      ],
+      "document_case_ids": [
+        "R5F-G04-P",
+        "R5F-G04-P2",
+        "R5F-G04-N",
+        "R5F-G04-B1",
+        "R5F-G04-N2",
+        "R5F-G04-R1",
+        "R5F-G04-R2",
+        "R5F-G04-F1",
+        "R5F-G04-F2",
+        "R5F-G04-B2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-G01"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T19",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G04-P",
+            "R5F-G04-P2",
+            "R5F-G04-N",
+            "R5F-G04-B1",
+            "R5F-G04-R1",
+            "R5F-G04-R2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T46",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": []
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 25,
+          "heading": "## 必要依賴能力"
+        },
+        {
+          "line_1based": 97,
+          "heading": "## 待決與核對條件"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-G05",
+      "title": "教官TP與技能兌換",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-G05.md",
+      "specification_sha256": "87d4244f57bf4857f3dbb398ffead4fcb0c4b086e4c7bd6d7c37b10e67b454e1",
+      "source_chapter_rows": [
+        "R4工程§10",
+        "R4工程§11",
+        "R4玩法§10"
+      ],
+      "document_case_ids": [
+        "R5F-G05-I1",
+        "R5F-G05-I2",
+        "R5F-G05-I3",
+        "R5F-G05-I4",
+        "R5F-G05-I5",
+        "R5F-G05-I6",
+        "R5F-G05-P",
+        "R5F-G05-N",
+        "R5F-G05-B1",
+        "R5F-G05-P2",
+        "R5F-G05-N2",
+        "R5F-G05-F1",
+        "R5F-G05-R1",
+        "R5F-G05-F2",
+        "R5F-G05-N3",
+        "R5F-G05-B2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-G01",
+        "R5F-G02"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T24",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G05-N"
+          ]
+        },
+        {
+          "historical_case_id": "R3T40",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G05-P"
+          ]
+        },
+        {
+          "historical_case_id": "R3T41",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G05-B1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T42",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G05-P2",
+            "R5F-G05-N2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T49",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 26,
+          "heading": "## 必要依賴能力"
+        },
+        {
+          "line_1based": 125,
+          "heading": "## 待決與准入"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-G06",
+      "title": "HP休養壽命與死亡",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-G06.md",
+      "specification_sha256": "041581d3906e15f035c2eb6352a667111629fe0121f15e47281ebfaca21a4e3c",
+      "source_chapter_rows": [
+        "R4工程§14",
+        "R4玩法§11"
+      ],
+      "document_case_ids": [
+        "R5F-G06-P",
+        "R5F-G06-N",
+        "R5F-G06-P2",
+        "R5F-G06-B1",
+        "R5F-G06-B2",
+        "R5F-G06-P3",
+        "R5F-G06-N2",
+        "R5F-G06-R1",
+        "R5F-G06-F1",
+        "R5F-G06-N3"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-C02",
+        "R5F-G01"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T12",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T66",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G06-P",
+            "R5F-G06-P2",
+            "R5F-G06-B1",
+            "R5F-G06-B2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T67",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G06-N",
+            "R5F-G06-P3"
+          ]
+        },
+        {
+          "historical_case_id": "R3T74",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G06-N2"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 26,
+          "heading": "## 必要依賴能力"
+        },
+        {
+          "line_1based": 107,
+          "heading": "## 待決與准入條件"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-G07",
+      "title": "社會教養及條約服務",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-G07.md",
+      "specification_sha256": "b7503063a46100b71e1c6eec6b20fce648667ffcd3b4659a8222a17c330853f8",
+      "source_chapter_rows": [
+        "R4工程§24",
+        "R4玩法§4",
+        "R4玩法§12",
+        "R4玩法§13"
+      ],
+      "document_case_ids": [
+        "R5F-G07-P",
+        "R5F-G07-N",
+        "R5F-G07-P2",
+        "R5F-G07-N2",
+        "R5F-G07-P3",
+        "R5F-G07-P4",
+        "R5F-G07-B1",
+        "R5F-G07-N3",
+        "R5F-G07-F1",
+        "R5F-G07-R1",
+        "R5F-G07-F2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-G03"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-08"
+      ],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R4E29",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G07-P",
+            "R5F-G07-N",
+            "R5F-G07-F1",
+            "R5F-G07-R1"
+          ]
+        },
+        {
+          "historical_case_id": "R4E30",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 26,
+          "heading": "## 必要依賴能力"
+        },
+        {
+          "line_1based": 121,
+          "heading": "## 待決與完整性要求"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-G08",
+      "title": "職務年齡投影",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-G08.md",
+      "specification_sha256": "aa558dc1099efb84be6ba171d8d5ffb05569cbc6f72e636001abe817d5d86b80",
+      "source_chapter_rows": [
+        "R4工程§14",
+        "R4玩法§11"
+      ],
+      "document_case_ids": [
+        "R5F-G08-P",
+        "R5F-G08-B1",
+        "R5F-G08-N",
+        "R5F-G08-N2",
+        "R5F-G08-R1",
+        "R5F-G08-F1",
+        "R5F-G08-B2",
+        "R5F-G08-N3",
+        "R5F-G08-U1",
+        "R5F-G08-F2"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-C02",
+        "R5F-G01"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-05"
+      ],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T26",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G08-P",
+            "R5F-G08-B1",
+            "R5F-G08-N2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T29",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G08-U1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T64",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G08-U1"
+          ]
+        },
+        {
+          "historical_case_id": "R3T73",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-G08-P",
+            "R5F-G08-B1",
+            "R5F-G08-N2"
+          ]
+        },
+        {
+          "historical_case_id": "R3T74",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 24,
+          "heading": "## 必要依賴能力"
+        },
+        {
+          "line_1based": 119,
+          "heading": "## 待決與來源缺口"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-U01",
+      "title": "知識投影與分階段教學",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-U01.md",
+      "specification_sha256": "da4f1163ac3402ccb4524d393c7d2e3bbed4a2d4cbdd3930ac4c48f68e21f6b1",
+      "source_chapter_rows": [
+        "R4工程§13",
+        "R4玩法§15"
+      ],
+      "document_case_ids": [
+        "R5F-U01-V3-01",
+        "R5F-U01-V3-02",
+        "R5F-U01-V3-03",
+        "R5F-U01-V3-04",
+        "R5F-U01-V3-05",
+        "U01-V3-06",
+        "U01-V3-07",
+        "U01-V3-08",
+        "U01-V3-09",
+        "U01-V3-10"
+      ],
+      "original_case_refs": [
+        "R5F-U01-P",
+        "R5F-U01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-U01"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-07"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T28",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T29",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-U01-V3-01",
+            "R5F-U01-V3-04"
+          ]
+        },
+        {
+          "historical_case_id": "R3T55",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "U01-V3-08"
+          ]
+        },
+        {
+          "historical_case_id": "R3T63",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "U01-V3-06"
+          ]
+        },
+        {
+          "historical_case_id": "R3T64",
+          "mapping_status": "DIRECT_EXPECTATION",
+          "v3_case_ids": [
+            "U01-V3-06",
+            "U01-V3-07",
+            "U01-V3-09"
+          ]
+        },
+        {
+          "historical_case_id": "R3T65",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "U01-V3-08"
+          ]
+        },
+        {
+          "historical_case_id": "R3T74",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E21",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-U01-V3-01",
+            "U01-V3-08"
+          ]
+        },
+        {
+          "historical_case_id": "R4E27",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "R5F-U01-V3-02",
+            "U01-V3-10"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 10,
+          "heading": "## 2. 規範來源與優先關係"
+        },
+        {
+          "line_1based": 36,
+          "heading": "## 8. 依賴能力及待決閘門"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-U02",
+      "title": "情報市場與查券",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-U02.md",
+      "specification_sha256": "78124d024d641eca934291af5cf8ae8bdee45428357fc4d0b2aa83bc60a160df",
+      "source_chapter_rows": [
+        "R4工程§13",
+        "R4工程§24",
+        "R4玩法§12",
+        "R4玩法§14",
+        "R4玩法§16"
+      ],
+      "document_case_ids": [
+        "R5F-U02-V3-01",
+        "R5F-U02-V3-02",
+        "R5F-U02-V3-03",
+        "R5F-U02-V3-04",
+        "R5F-U02-V3-05",
+        "R5F-U02-V3-06",
+        "U02-V3-07",
+        "U02-V3-08",
+        "U02-V3-09",
+        "U02-V3-10",
+        "U02-V3-11",
+        "U02-V3-12",
+        "U02-V3-13",
+        "U02-V3-14",
+        "U02-V3-15"
+      ],
+      "original_case_refs": [
+        "R5F-U02-P",
+        "R5F-U02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-U02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R4-06"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-U01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T33",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T44",
+          "mapping_status": "NO_V3_CASE",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T58",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R3T63",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        },
+        {
+          "historical_case_id": "R4E28",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": [
+            "U02-V3-11"
+          ]
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 10,
+          "heading": "## 2. 規範來源與優先關係"
+        },
+        {
+          "line_1based": 37,
+          "heading": "## 8. 依賴能力及待決閘門"
+        },
+        {
+          "line_1based": 83,
+          "heading": "## 11. 發券來源最低契約與缺件處理"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-E01",
+      "title": "首次統一結局",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-E01.md",
+      "specification_sha256": "061abc8b902af5b92135eb8ad580302a970184a4b944a2b04e5cab3bf4431cc5",
+      "source_chapter_rows": [
+        "R5需求：首次統一畫面及功臣後代戰史"
+      ],
+      "document_case_ids": [
+        "R5F-E01-V3-01",
+        "R5F-E01-V3-02",
+        "R5F-E01-V3-03",
+        "R5F-E01-V3-04",
+        "R5F-E01-V3-05"
+      ],
+      "original_case_refs": [
+        "R5F-E01-P",
+        "R5F-E01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-E01"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-U01",
+          "required_capability": "既有公開知識投影，不含新世代開放政策",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 10,
+          "heading": "## 2. 規範來源與優先關係"
+        },
+        {
+          "line_1based": 36,
+          "heading": "## 8. 依賴能力及待決閘門"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-E02",
+      "title": "季成就與首通獎勵",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-E02.md",
+      "specification_sha256": "46051e8d17a2983b8752312d42ab8830cec82874981b1d65099b03f72202f7f1",
+      "source_chapter_rows": [
+        "R5需求：獎勵與排名"
+      ],
+      "document_case_ids": [
+        "R5F-E02-V3-01",
+        "R5F-E02-V3-02",
+        "R5F-E02-V3-03",
+        "R5F-E02-V3-04",
+        "R5F-E02-V3-05",
+        "R5F-E02-V3-06"
+      ],
+      "original_case_refs": [
+        "R5F-E02-P",
+        "R5F-E02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-E02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S01",
+        "DEC-R5-S08"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-E01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 10,
+          "heading": "## 2. 規範來源與優先關係"
+        },
+        {
+          "line_1based": 36,
+          "heading": "## 8. 依賴能力及待決閘門"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-E03",
+      "title": "首次統一結局快照封存",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-E03.md",
+      "specification_sha256": "6cc0f43163f1dad96fd16c83ff6c506cf974f1c49afe0ee9388ee5adec95f769",
+      "source_chapter_rows": [
+        "R5需求：首次統一畫面及功臣後代戰史"
+      ],
+      "document_case_ids": [
+        "R5F-E03-V3-01",
+        "R5F-E03-V3-02",
+        "R5F-E03-V3-03",
+        "R5F-E03-V3-04",
+        "R5F-E03-V3-05",
+        "R5F-E03-V3-06",
+        "R5F-E03-V3-07"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-E01",
+        "R5F-E02"
+      ],
+      "catalog_decision_dependencies": [],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 10,
+          "heading": "## 2. 規範來源與優先關係"
+        },
+        {
+          "line_1based": 37,
+          "heading": "## 8. 依賴能力及待決閘門"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-S01",
+      "title": "永久家系與當季世界承接",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-S01.md",
+      "specification_sha256": "8b860be01f385b412f435167487d0e1c19a573666d937610d30c40681ef970e3",
+      "source_chapter_rows": [
+        "R5需求：敵我家族通婚與子代延續",
+        "R5需求：資源carry/roster未選"
+      ],
+      "document_case_ids": [
+        "R5F-S01-P",
+        "R5F-S01-N",
+        "R5F-S01-T01",
+        "R5F-S01-T02",
+        "R5F-S01-T03",
+        "R5F-S01-T04",
+        "R5F-S01-T05"
+      ],
+      "original_case_refs": [
+        "R5F-S01-P",
+        "R5F-S01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-S01"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S03",
+        "DEC-R5-S04"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C02",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [
+        {
+          "historical_case_id": "R3T69",
+          "mapping_status": "PARTIAL_EXPECTATION",
+          "v3_case_ids": []
+        }
+      ],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 27,
+          "heading": "## 責任 owner 與精確依賴能力"
+        },
+        {
+          "line_1based": 90,
+          "heading": "## 待決門檻"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-S02",
+      "title": "主題與地盤候選生成",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-S02.md",
+      "specification_sha256": "5354f6bb57851f12f629e88249beddd4820bf5a0fabd6df2931c686611012750",
+      "source_chapter_rows": [
+        "R5需求：地盤重建候選",
+        "R5需求：資源carry/roster未選"
+      ],
+      "document_case_ids": [
+        "R5F-S02-P",
+        "R5F-S02-N",
+        "R5F-S02-T01",
+        "R5F-S02-T02",
+        "R5F-S02-T03",
+        "R5F-S02-T04",
+        "R5F-S02-T05",
+        "R5F-S02-T06"
+      ],
+      "original_case_refs": [
+        "R5F-S02-P",
+        "R5F-S02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-S02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S02",
+        "DEC-R5-S06",
+        "DEC-R5-S07"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-S01",
+          "required_capability": "只讀存續家族／人物快照，不作正式資源承接",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 27,
+          "heading": "## 責任 owner 與精確依賴能力"
+        },
+        {
+          "line_1based": 87,
+          "heading": "## 待決門檻"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-S03",
+      "title": "季終換季交易",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-S03.md",
+      "specification_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+      "source_chapter_rows": [
+        "R5需求：當季主題目標／結季",
+        "R5需求：資源carry/roster未選",
+        "R5需求：季度／學院turn／主題季分離"
+      ],
+      "document_case_ids": [
+        "R5F-S03-P",
+        "R5F-S03-N",
+        "R5F-S03-T01",
+        "R5F-S03-T02",
+        "R5F-S03-T03",
+        "R5F-S03-T04",
+        "R5F-S03-T05",
+        "R5F-S03-T06",
+        "R5F-S03-T07",
+        "R5F-S03-T09",
+        "R5F-S03-T08",
+        "R5F-S03-T10",
+        "R5F-S03-T11"
+      ],
+      "original_case_refs": [
+        "R5F-S03-P",
+        "R5F-S03-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-S03"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S01",
+        "DEC-R5-S02",
+        "DEC-R5-S03",
+        "DEC-R5-S04",
+        "DEC-R5-S06",
+        "DEC-R5-S07",
+        "DEC-R5-S08"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-S01",
+          "required_capability": "正式承接與時間政策",
+          "required_decisions": [
+            "DEC-R5-S03",
+            "DEC-R5-S04"
+          ]
+        },
+        {
+          "feature_id": "R5F-S02",
+          "required_capability": "已定起點／敵家／難度政策之合法候選世界",
+          "required_decisions": [
+            "DEC-R5-S02",
+            "DEC-R5-S06",
+            "DEC-R5-S07"
+          ]
+        },
+        {
+          "feature_id": "R5F-E02",
+          "required_capability": "已定季終與獎勵政策之一次結算",
+          "required_decisions": [
+            "DEC-R5-S01",
+            "DEC-R5-S08"
+          ]
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 27,
+          "heading": "## 責任 owner 與精確依賴能力"
+        },
+        {
+          "line_1based": 103,
+          "heading": "## 待決門檻"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-S04",
+      "title": "主題目標與結季資格",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-S04.md",
+      "specification_sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212",
+      "source_chapter_rows": [
+        "R5需求：當季主題目標／結季"
+      ],
+      "document_case_ids": [
+        "R5F-S04-P",
+        "R5F-S04-N",
+        "R5F-S04-T01",
+        "R5F-S04-T02",
+        "R5F-S04-T03",
+        "R5F-S04-T04",
+        "R5F-S04-T05",
+        "R5F-S04-T06",
+        "R5F-S04-T07"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-S03",
+        "R5F-E02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S01"
+      ],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 27,
+          "heading": "## 責任 owner 與精確依賴能力"
+        },
+        {
+          "line_1based": 92,
+          "heading": "## 待決門檻"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-S05",
+      "title": "當季積分與比較分組",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-S05.md",
+      "specification_sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62",
+      "source_chapter_rows": [
+        "R5需求：獎勵與排名"
+      ],
+      "document_case_ids": [
+        "R5F-S05-P",
+        "R5F-S05-N",
+        "R5F-S05-T01",
+        "R5F-S05-T02",
+        "R5F-S05-T03",
+        "R5F-S05-T04",
+        "R5F-S05-T05",
+        "R5F-S05-T06",
+        "R5F-S05-T07"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-E02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S08"
+      ],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 27,
+          "heading": "## 責任 owner 與精確依賴能力"
+        },
+        {
+          "line_1based": 88,
+          "heading": "## 待決門檻"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-S06",
+      "title": "敵家供給與家族存續",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-S06.md",
+      "specification_sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad",
+      "source_chapter_rows": [
+        "R5需求：存續敵家及新家供給"
+      ],
+      "document_case_ids": [
+        "R5F-S06-P",
+        "R5F-S06-N",
+        "R5F-S06-T01",
+        "R5F-S06-T02",
+        "R5F-S06-T03",
+        "R5F-S06-T04",
+        "R5F-S06-T05",
+        "R5F-S06-T06",
+        "R5F-S06-T07"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-S01",
+        "R5F-S02",
+        "R5F-A01"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S06"
+      ],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 27,
+          "heading": "## 責任 owner 與精確依賴能力"
+        },
+        {
+          "line_1based": 91,
+          "heading": "## 待決門檻"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-S07",
+      "title": "門閥稱號及候選資格",
+      "scope_status": "OPTIONAL_PROPOSAL_NOT_SELECTED",
+      "specification_path": "functional_specs_v3/features/R5F-S07.md",
+      "specification_sha256": "e0039bacc3d5b9a6c7a235e46c6d1afdc0b056313988fac83ad667535c6e1f50",
+      "source_chapter_rows": [
+        "R5需求：門閥郡望提案"
+      ],
+      "document_case_ids": [
+        "R5F-S07-P",
+        "R5F-S07-N",
+        "R5F-S07-T01",
+        "R5F-S07-T02",
+        "R5F-S07-T03",
+        "R5F-S07-T04",
+        "R5F-S07-T05",
+        "R5F-S07-T06"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-U01",
+        "R5F-B03"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S10"
+      ],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 27,
+          "heading": "## 責任 owner 與精確依賴能力"
+        },
+        {
+          "line_1based": 90,
+          "heading": "## 待決門檻"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-S08",
+      "title": "模式隔離與擴充入口",
+      "scope_status": "OPTIONAL_PROPOSAL_NOT_SELECTED",
+      "specification_path": "functional_specs_v3/features/R5F-S08.md",
+      "specification_sha256": "0f3a69d069c2dd0b7d6926335e40980fe0f2802aaaf624ca264f80a3d32cdfec",
+      "source_chapter_rows": [
+        "R5需求：海外與跨時代選項討論"
+      ],
+      "document_case_ids": [
+        "R5F-S08-P",
+        "R5F-S08-N",
+        "R5F-S08-T01",
+        "R5F-S08-T02",
+        "R5F-S08-T03",
+        "R5F-S08-T04",
+        "R5F-S08-T05",
+        "R5F-S08-T06"
+      ],
+      "original_case_refs": [],
+      "original_feature_mapping": [
+        "R5F-S02",
+        "R5F-E02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S09"
+      ],
+      "dependency_scope": [],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 27,
+          "heading": "## 責任 owner 與精確依賴能力"
+        },
+        {
+          "line_1based": 90,
+          "heading": "## 待決門檻"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-A01",
+      "title": "祖地存續狀態",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-A01.md",
+      "specification_sha256": "8abb2ad0af491ac389957e4d170186734c461bae4adcd950bdb1cc4f12222adc",
+      "source_chapter_rows": [
+        "R5需求：祖地及地方勢力民兵"
+      ],
+      "document_case_ids": [
+        "R5F-A01-P",
+        "R5F-A01-N",
+        "R5F-A01-T01",
+        "R5F-A01-T02",
+        "R5F-A01-T03",
+        "R5F-A01-T04",
+        "R5F-A01-T05",
+        "R5F-A01-T06"
+      ],
+      "original_case_refs": [
+        "R5F-A01-P",
+        "R5F-A01-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-A01"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S05",
+        "DEC-R5-S06"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-S01",
+          "required_capability": "永久人物／家系身份，不含換季資源承接與跳時",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 27,
+          "heading": "## 責任 owner 與精確依賴能力"
+        },
+        {
+          "line_1based": 90,
+          "heading": "## 待決門檻"
+        }
+      ]
+    },
+    {
+      "feature_id": "R5F-A02",
+      "title": "民兵與地方勢力再起",
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "specification_path": "functional_specs_v3/features/R5F-A02.md",
+      "specification_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+      "source_chapter_rows": [
+        "R5需求：祖地及地方勢力民兵"
+      ],
+      "document_case_ids": [
+        "R5F-A02-P",
+        "R5F-A02-N",
+        "R5F-A02-T01",
+        "R5F-A02-T02",
+        "R5F-A02-T03",
+        "R5F-A02-T04",
+        "R5F-A02-T05",
+        "R5F-A02-T06",
+        "R5F-A02-T07",
+        "R5F-A02-T08",
+        "R5F-A02-T09",
+        "R5F-A02-T10"
+      ],
+      "original_case_refs": [
+        "R5F-A02-P",
+        "R5F-A02-N"
+      ],
+      "original_feature_mapping": [
+        "R5F-A02"
+      ],
+      "catalog_decision_dependencies": [
+        "DEC-R5-S05",
+        "DEC-R5-S07"
+      ],
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-A01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "dependency_caveat": "Catalog scoped mapping is historical. Current operative dependencies are feature specification section; no transitive decision propagation. Not a current code consumer graph.",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "implementationReady": false,
+      "test_execution": "NOT_RUN",
+      "product_acceptance": "NOT_ASSESSED",
+      "historical_case_links": [],
+      "normative_dependency_source_locators": [
+        {
+          "line_1based": 27,
+          "heading": "## 責任 owner 與精確依賴能力"
+        },
+        {
+          "line_1based": 100,
+          "heading": "## 待決門檻"
+        }
+      ]
+    }
+  ],
+  "feature_count": 38,
+  "main_scope": 36,
+  "unselected": 2
+}

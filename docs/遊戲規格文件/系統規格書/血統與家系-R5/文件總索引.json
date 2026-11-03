@@ -1,0 +1,1404 @@
+{
+  "scope": "Existing immutable v3 bundle only; supplemental files indexed in own manifest",
+  "documents": [
+    {
+      "package_relative_path": "README.md",
+      "bytes": 871,
+      "sha256": "b8c00e532d16b16172b96ab76ef945bd201218d9143c420a4f0f21b46e7ee436",
+      "format": "md",
+      "role": "index",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/README.md",
+      "formal_doc_id": "doc_index_1032",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "index",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "functional_specs_v2/00_覆蓋與缺口盤點.md",
+      "bytes": 5287,
+      "sha256": "6e8d16b6b6acafbbd5033d45c129ac71c6c561f36e89bbc91338987b0a260a3a",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/00_覆蓋與缺口盤點.md",
+      "formal_doc_id": "doc_spec_0239",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "functional_specs_v2/01_功能總清單.md",
+      "bytes": 22767,
+      "sha256": "2ca5ea3c15a38688ea8c791dad82e3395dbf040311cea57592550ae540e0e339",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/01_功能總清單.md",
+      "formal_doc_id": "doc_spec_0240",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "functional_specs_v2/02_來源覆蓋矩陣.md",
+      "bytes": 3945,
+      "sha256": "cd3001d7ecbcfcaafca9fdebf556707bc8359fa31a47b22f9d35b873743c833f",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/02_來源覆蓋矩陣.md",
+      "formal_doc_id": "doc_spec_0241",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "functional_specs_v2/README.md",
+      "bytes": 1102,
+      "sha256": "43867031ed7b0fd2aaad63b4f8365f0e899b71b01e7b1838c0eba1a0a97326e8",
+      "format": "md",
+      "role": "index",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/README.md",
+      "formal_doc_id": "doc_index_1031",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "index",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "functional_specs_v2/來源覆蓋矩陣.json",
+      "bytes": 14985,
+      "sha256": "ee51b4017efb93f556e533076b8b8ffeb9d59c2c4a90bca0495e12ff6d048933",
+      "format": "json",
+      "role": "machine_readable_support",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": null,
+      "formal_doc_id": null,
+      "assignment_status": "OFFICIAL_ASSIGNMENT_PENDING",
+      "candidate_doc_kind": null,
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "functional_specs_v2/功能總清單.json",
+      "bytes": 75682,
+      "sha256": "b1bcf2d12279c54d7c9bedaab81b33d971893818562d9ebc5467753d5bd90580",
+      "format": "json",
+      "role": "machine_readable_support",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": null,
+      "formal_doc_id": null,
+      "assignment_status": "OFFICIAL_ASSIGNMENT_PENDING",
+      "candidate_doc_kind": null,
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "functional_specs_v3/README.md",
+      "bytes": 4211,
+      "sha256": "f10d8653444f0b04d031bad97558939c50726f572f39d009ebfdc923454118c9",
+      "format": "md",
+      "role": "index",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/README.md",
+      "formal_doc_id": "doc_index_1030",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "index",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-A01.md",
+      "bytes": 9603,
+      "sha256": "8abb2ad0af491ac389957e4d170186734c461bae4adcd950bdb1cc4f12222adc",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-A01.md",
+      "formal_doc_id": "doc_spec_0201",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-A01"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-A01-P",
+        "R5F-A01-N",
+        "R5F-A01-T01",
+        "R5F-A01-T02",
+        "R5F-A01-T03",
+        "R5F-A01-T04",
+        "R5F-A01-T05",
+        "R5F-A01-T06"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-A02.md",
+      "bytes": 12703,
+      "sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-A02.md",
+      "formal_doc_id": "doc_spec_0202",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-A02"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-A02-P",
+        "R5F-A02-N",
+        "R5F-A02-T01",
+        "R5F-A02-T02",
+        "R5F-A02-T03",
+        "R5F-A02-T04",
+        "R5F-A02-T05",
+        "R5F-A02-T06",
+        "R5F-A02-T07",
+        "R5F-A02-T08",
+        "R5F-A02-T09",
+        "R5F-A02-T10"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-B01.md",
+      "bytes": 8415,
+      "sha256": "93f28b5215e890d163ac03c38f600f9b1305cd28e9994f47dd56538a85eb16d0",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B01.md",
+      "formal_doc_id": "doc_spec_0203",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-B01"
+      ],
+      "direct_v3_case_ids": [
+        "B01-P1",
+        "B01-P2",
+        "B01-N1",
+        "B01-N2",
+        "B01-B1",
+        "B01-R1",
+        "B01-F1"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-B02.md",
+      "bytes": 9855,
+      "sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B02.md",
+      "formal_doc_id": "doc_spec_0204",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-B02"
+      ],
+      "direct_v3_case_ids": [
+        "B02-P1",
+        "B02-P2",
+        "B02-N1",
+        "B02-N2",
+        "B02-B1",
+        "B02-B2",
+        "B02-R1",
+        "B02-F1",
+        "B02-N3"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-B03.md",
+      "bytes": 9151,
+      "sha256": "5bbe284081f47264ce05373b07502e6ebb1224257c6d2fca768760798adaccfe",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B03.md",
+      "formal_doc_id": "doc_spec_0205",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-B03"
+      ],
+      "direct_v3_case_ids": [
+        "B03-P1",
+        "B03-N1",
+        "B03-B1",
+        "B03-P2",
+        "B03-N2",
+        "B03-R1",
+        "B03-F1",
+        "B03-N3"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-B04.md",
+      "bytes": 7987,
+      "sha256": "fa77ed7f0e05b881c558ccff8169ad50dd36bc726c61bdd7bd35445fe7476b0a",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B04.md",
+      "formal_doc_id": "doc_spec_0206",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-B04"
+      ],
+      "direct_v3_case_ids": [
+        "B04-P1",
+        "B04-N1",
+        "B04-N2",
+        "B04-P2",
+        "B04-B1",
+        "B04-R1",
+        "B04-F1",
+        "B04-R2"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-B05.md",
+      "bytes": 8505,
+      "sha256": "ddfa0b0c7a53e2be7dc0e19e62fda2bb9a1a58ebc0d04a75e70109a2d2ea1c5d",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B05.md",
+      "formal_doc_id": "doc_spec_0207",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-B05"
+      ],
+      "direct_v3_case_ids": [
+        "B05-P1",
+        "B05-N1",
+        "B05-P2",
+        "B05-B1",
+        "B05-N2",
+        "B05-R1",
+        "B05-F1",
+        "B05-B2"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-B06.md",
+      "bytes": 9504,
+      "sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B06.md",
+      "formal_doc_id": "doc_spec_0208",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-B06"
+      ],
+      "direct_v3_case_ids": [
+        "B06-P1",
+        "B06-P2",
+        "B06-N1",
+        "B06-N2",
+        "B06-B1",
+        "B06-R1",
+        "B06-F1",
+        "B06-N3",
+        "B06-R2"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-B07.md",
+      "bytes": 9945,
+      "sha256": "4f0c30144dd2fb63faa6585bfd62554cebf01a6f3621b1762c42cce19058767b",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B07.md",
+      "formal_doc_id": "doc_spec_0209",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-B07"
+      ],
+      "direct_v3_case_ids": [
+        "B07-P1",
+        "B07-N1",
+        "B07-B1",
+        "B07-P2",
+        "B07-N2",
+        "B07-R1",
+        "B07-F1",
+        "B07-B2"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-B08.md",
+      "bytes": 12889,
+      "sha256": "39cd0609a21972886311b2674770b58b30424d777910f86f66667b9ac3dd6555",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B08.md",
+      "formal_doc_id": "doc_spec_0210",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-B08"
+      ],
+      "direct_v3_case_ids": [
+        "B08-P1",
+        "B08-B1",
+        "B08-N1",
+        "B08-N2",
+        "B08-P2",
+        "B08-R1",
+        "B08-F1",
+        "B08-N3",
+        "B08-P3",
+        "B08-N4",
+        "B08-N5",
+        "B08-R2",
+        "B08-F2"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-B09.md",
+      "bytes": 8599,
+      "sha256": "38f0bde34e726debed252a0ab9dbcf68ce2060f8638dc58960a8444f43e5dd09",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B09.md",
+      "formal_doc_id": "doc_spec_0211",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-B09"
+      ],
+      "direct_v3_case_ids": [
+        "B09-P1",
+        "B09-N1",
+        "B09-B1",
+        "B09-P2",
+        "B09-N2",
+        "B09-P3",
+        "B09-N4",
+        "B09-R1",
+        "B09-F1",
+        "B09-N3"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-B10.md",
+      "bytes": 9520,
+      "sha256": "b3bb249a9f33adf222b162101ac13ae6cf830427f5aa9d42750e75f9fa4d92ad",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B10.md",
+      "formal_doc_id": "doc_spec_0212",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-B10"
+      ],
+      "direct_v3_case_ids": [
+        "B10-P1",
+        "B10-N1",
+        "B10-N2",
+        "B10-B1",
+        "B10-R1",
+        "B10-F1",
+        "B10-N3",
+        "B10-P2",
+        "B10-B2"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-C01.md",
+      "bytes": 5800,
+      "sha256": "c2b425e10167551d37404ccd4abf074ba821882cf509b88760baed0ea4759d88",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C01.md",
+      "formal_doc_id": "doc_spec_0213",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-C01"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-C01-V3-01",
+        "R5F-C01-V3-02",
+        "R5F-C01-V3-03",
+        "R5F-C01-V3-04",
+        "R5F-C01-V3-05",
+        "R5F-C01-V3-06"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-C02.md",
+      "bytes": 4916,
+      "sha256": "8b39fed79ac11c2f38cf8308eed5211d84e919b24f8b08d473e5255ea856316e",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C02.md",
+      "formal_doc_id": "doc_spec_0214",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-C02"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-C02-V3-01",
+        "R5F-C02-V3-02",
+        "R5F-C02-V3-03",
+        "R5F-C02-V3-04",
+        "R5F-C02-V3-05"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-C03.md",
+      "bytes": 6979,
+      "sha256": "1665ea9130d4133f5cbb8d4927d6bb8cbf043ccd24b5dd8531fb924ab0722324",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C03.md",
+      "formal_doc_id": "doc_spec_0215",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-C03"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-C03-V3-01",
+        "R5F-C03-V3-02",
+        "R5F-C03-V3-03",
+        "R5F-C03-V3-04",
+        "R5F-C03-V3-05",
+        "R5F-C03-V3-06",
+        "C03-V3-07",
+        "C03-V3-08"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-C04.md",
+      "bytes": 5176,
+      "sha256": "c64eb84e54a22322b2901d9cde221707b2885c30fd43f3bd4cfee1d3e4c8cb87",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C04.md",
+      "formal_doc_id": "doc_spec_0216",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-C04"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-C04-V3-01",
+        "R5F-C04-V3-02",
+        "R5F-C04-V3-03",
+        "R5F-C04-V3-04",
+        "R5F-C04-V3-05"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-C05.md",
+      "bytes": 5544,
+      "sha256": "7080e695344a05e234df565467dbd46873fed2a64e861b8aaee11ae98f802767",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C05.md",
+      "formal_doc_id": "doc_spec_0217",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-C05"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-C05-V3-01",
+        "R5F-C05-V3-02",
+        "R5F-C05-V3-03",
+        "R5F-C05-V3-04",
+        "R5F-C05-V3-05",
+        "R5F-C05-V3-06"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-E01.md",
+      "bytes": 5027,
+      "sha256": "061abc8b902af5b92135eb8ad580302a970184a4b944a2b04e5cab3bf4431cc5",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E01.md",
+      "formal_doc_id": "doc_spec_0218",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-E01"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-E01-V3-01",
+        "R5F-E01-V3-02",
+        "R5F-E01-V3-03",
+        "R5F-E01-V3-04",
+        "R5F-E01-V3-05"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-E02.md",
+      "bytes": 5340,
+      "sha256": "46051e8d17a2983b8752312d42ab8830cec82874981b1d65099b03f72202f7f1",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E02.md",
+      "formal_doc_id": "doc_spec_0219",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-E02"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-E02-V3-01",
+        "R5F-E02-V3-02",
+        "R5F-E02-V3-03",
+        "R5F-E02-V3-04",
+        "R5F-E02-V3-05",
+        "R5F-E02-V3-06"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-E03.md",
+      "bytes": 6141,
+      "sha256": "6cc0f43163f1dad96fd16c83ff6c506cf974f1c49afe0ee9388ee5adec95f769",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E03.md",
+      "formal_doc_id": "doc_spec_0220",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-E03"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-E03-V3-01",
+        "R5F-E03-V3-02",
+        "R5F-E03-V3-03",
+        "R5F-E03-V3-04",
+        "R5F-E03-V3-05",
+        "R5F-E03-V3-06",
+        "R5F-E03-V3-07"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-G01.md",
+      "bytes": 14289,
+      "sha256": "74e860877c039cc4e5d751323a14861afa585232471974e13c20b51e4d8abffd",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G01.md",
+      "formal_doc_id": "doc_spec_0221",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-G01"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-G01-A1",
+        "R5F-G01-A2",
+        "R5F-G01-A3",
+        "R5F-G01-A4",
+        "R5F-G01-P",
+        "R5F-G01-N",
+        "R5F-G01-B1",
+        "R5F-G01-F1",
+        "R5F-G01-B2",
+        "R5F-G01-R1",
+        "R5F-G01-F2",
+        "R5F-G01-U1",
+        "R5F-G01-R2"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-G02.md",
+      "bytes": 11045,
+      "sha256": "a67612f9d819f34e1abb7640d02518912c11438d354c5e526e41c168c7a4730b",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G02.md",
+      "formal_doc_id": "doc_spec_0222",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-G02"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-G02-A1",
+        "R5F-G02-A2",
+        "R5F-G02-P",
+        "R5F-G02-N",
+        "R5F-G02-B1",
+        "R5F-G02-B2",
+        "R5F-G02-P2",
+        "R5F-G02-N2",
+        "R5F-G02-R1",
+        "R5F-G02-F1",
+        "R5F-G02-N3"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-G03.md",
+      "bytes": 11582,
+      "sha256": "0afb79f5b6cc6ef69c2d4f4a343eae3d4cdebc4872ea965eab3484edaaf275a6",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G03.md",
+      "formal_doc_id": "doc_spec_0223",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-G03"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-G03-T1",
+        "R5F-G03-T2",
+        "R5F-G03-P",
+        "R5F-G03-N",
+        "R5F-G03-B1",
+        "R5F-G03-N2",
+        "R5F-G03-F1",
+        "R5F-G03-F2",
+        "R5F-G03-R1",
+        "R5F-G03-F3",
+        "R5F-G03-N3",
+        "R5F-G03-R2"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-G04.md",
+      "bytes": 9421,
+      "sha256": "7b00dd95dc51ea018a57a46b6396778d97a71397bb6a61bc314a024d5197f37d",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G04.md",
+      "formal_doc_id": "doc_spec_0224",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-G04"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-G04-P",
+        "R5F-G04-P2",
+        "R5F-G04-N",
+        "R5F-G04-B1",
+        "R5F-G04-N2",
+        "R5F-G04-R1",
+        "R5F-G04-R2",
+        "R5F-G04-F1",
+        "R5F-G04-F2",
+        "R5F-G04-B2"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-G05.md",
+      "bytes": 14237,
+      "sha256": "87d4244f57bf4857f3dbb398ffead4fcb0c4b086e4c7bd6d7c37b10e67b454e1",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G05.md",
+      "formal_doc_id": "doc_spec_0225",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-G05"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-G05-I1",
+        "R5F-G05-I2",
+        "R5F-G05-I3",
+        "R5F-G05-I4",
+        "R5F-G05-I5",
+        "R5F-G05-I6",
+        "R5F-G05-P",
+        "R5F-G05-N",
+        "R5F-G05-B1",
+        "R5F-G05-P2",
+        "R5F-G05-N2",
+        "R5F-G05-F1",
+        "R5F-G05-R1",
+        "R5F-G05-F2",
+        "R5F-G05-N3",
+        "R5F-G05-B2"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-G06.md",
+      "bytes": 10075,
+      "sha256": "041581d3906e15f035c2eb6352a667111629fe0121f15e47281ebfaca21a4e3c",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G06.md",
+      "formal_doc_id": "doc_spec_0226",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-G06"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-G06-P",
+        "R5F-G06-N",
+        "R5F-G06-P2",
+        "R5F-G06-B1",
+        "R5F-G06-B2",
+        "R5F-G06-P3",
+        "R5F-G06-N2",
+        "R5F-G06-R1",
+        "R5F-G06-F1",
+        "R5F-G06-N3"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-G07.md",
+      "bytes": 12634,
+      "sha256": "b7503063a46100b71e1c6eec6b20fce648667ffcd3b4659a8222a17c330853f8",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G07.md",
+      "formal_doc_id": "doc_spec_0227",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-G07"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-G07-P",
+        "R5F-G07-N",
+        "R5F-G07-P2",
+        "R5F-G07-N2",
+        "R5F-G07-P3",
+        "R5F-G07-P4",
+        "R5F-G07-B1",
+        "R5F-G07-N3",
+        "R5F-G07-F1",
+        "R5F-G07-R1",
+        "R5F-G07-F2"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-G08.md",
+      "bytes": 10794,
+      "sha256": "aa558dc1099efb84be6ba171d8d5ffb05569cbc6f72e636001abe817d5d86b80",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G08.md",
+      "formal_doc_id": "doc_spec_0228",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-G08"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-G08-P",
+        "R5F-G08-B1",
+        "R5F-G08-N",
+        "R5F-G08-N2",
+        "R5F-G08-R1",
+        "R5F-G08-F1",
+        "R5F-G08-B2",
+        "R5F-G08-N3",
+        "R5F-G08-U1",
+        "R5F-G08-F2"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-S01.md",
+      "bytes": 10350,
+      "sha256": "8b860be01f385b412f435167487d0e1c19a573666d937610d30c40681ef970e3",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S01.md",
+      "formal_doc_id": "doc_spec_0229",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-S01"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-S01-P",
+        "R5F-S01-N",
+        "R5F-S01-T01",
+        "R5F-S01-T02",
+        "R5F-S01-T03",
+        "R5F-S01-T04",
+        "R5F-S01-T05"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-S02.md",
+      "bytes": 9763,
+      "sha256": "5354f6bb57851f12f629e88249beddd4820bf5a0fabd6df2931c686611012750",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S02.md",
+      "formal_doc_id": "doc_spec_0230",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-S02"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-S02-P",
+        "R5F-S02-N",
+        "R5F-S02-T01",
+        "R5F-S02-T02",
+        "R5F-S02-T03",
+        "R5F-S02-T04",
+        "R5F-S02-T05",
+        "R5F-S02-T06"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-S03.md",
+      "bytes": 16140,
+      "sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S03.md",
+      "formal_doc_id": "doc_spec_0231",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-S03"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-S03-P",
+        "R5F-S03-N",
+        "R5F-S03-T01",
+        "R5F-S03-T02",
+        "R5F-S03-T03",
+        "R5F-S03-T04",
+        "R5F-S03-T05",
+        "R5F-S03-T06",
+        "R5F-S03-T07",
+        "R5F-S03-T09",
+        "R5F-S03-T08",
+        "R5F-S03-T10",
+        "R5F-S03-T11"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-S04.md",
+      "bytes": 10218,
+      "sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S04.md",
+      "formal_doc_id": "doc_spec_0232",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-S04"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-S04-P",
+        "R5F-S04-N",
+        "R5F-S04-T01",
+        "R5F-S04-T02",
+        "R5F-S04-T03",
+        "R5F-S04-T04",
+        "R5F-S04-T05",
+        "R5F-S04-T06",
+        "R5F-S04-T07"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-S05.md",
+      "bytes": 9731,
+      "sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S05.md",
+      "formal_doc_id": "doc_spec_0233",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-S05"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-S05-P",
+        "R5F-S05-N",
+        "R5F-S05-T01",
+        "R5F-S05-T02",
+        "R5F-S05-T03",
+        "R5F-S05-T04",
+        "R5F-S05-T05",
+        "R5F-S05-T06",
+        "R5F-S05-T07"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-S06.md",
+      "bytes": 10002,
+      "sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S06.md",
+      "formal_doc_id": "doc_spec_0234",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-S06"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-S06-P",
+        "R5F-S06-N",
+        "R5F-S06-T01",
+        "R5F-S06-T02",
+        "R5F-S06-T03",
+        "R5F-S06-T04",
+        "R5F-S06-T05",
+        "R5F-S06-T06",
+        "R5F-S06-T07"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-S07.md",
+      "bytes": 9602,
+      "sha256": "e0039bacc3d5b9a6c7a235e46c6d1afdc0b056313988fac83ad667535c6e1f50",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S07.md",
+      "formal_doc_id": "doc_spec_0235",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-S07"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-S07-P",
+        "R5F-S07-N",
+        "R5F-S07-T01",
+        "R5F-S07-T02",
+        "R5F-S07-T03",
+        "R5F-S07-T04",
+        "R5F-S07-T05",
+        "R5F-S07-T06"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-S08.md",
+      "bytes": 9488,
+      "sha256": "0f3a69d069c2dd0b7d6926335e40980fe0f2802aaaf624ca264f80a3d32cdfec",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S08.md",
+      "formal_doc_id": "doc_spec_0236",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-S08"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-S08-P",
+        "R5F-S08-N",
+        "R5F-S08-T01",
+        "R5F-S08-T02",
+        "R5F-S08-T03",
+        "R5F-S08-T04",
+        "R5F-S08-T05",
+        "R5F-S08-T06"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-U01.md",
+      "bytes": 6419,
+      "sha256": "da4f1163ac3402ccb4524d393c7d2e3bbed4a2d4cbdd3930ac4c48f68e21f6b1",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-U01.md",
+      "formal_doc_id": "doc_spec_0237",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-U01"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-U01-V3-01",
+        "R5F-U01-V3-02",
+        "R5F-U01-V3-03",
+        "R5F-U01-V3-04",
+        "R5F-U01-V3-05",
+        "U01-V3-06",
+        "U01-V3-07",
+        "U01-V3-08",
+        "U01-V3-09",
+        "U01-V3-10"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/features/R5F-U02.md",
+      "bytes": 10285,
+      "sha256": "78124d024d641eca934291af5cf8ae8bdee45428357fc4d0b2aa83bc60a160df",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-U02.md",
+      "formal_doc_id": "doc_spec_0238",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [
+        "R5F-U02"
+      ],
+      "direct_v3_case_ids": [
+        "R5F-U02-V3-01",
+        "R5F-U02-V3-02",
+        "R5F-U02-V3-03",
+        "R5F-U02-V3-04",
+        "R5F-U02-V3-05",
+        "R5F-U02-V3-06",
+        "U02-V3-07",
+        "U02-V3-08",
+        "U02-V3-09",
+        "U02-V3-10",
+        "U02-V3-11",
+        "U02-V3-12",
+        "U02-V3-13",
+        "U02-V3-14",
+        "U02-V3-15"
+      ]
+    },
+    {
+      "package_relative_path": "functional_specs_v3/來源缺口與待決分帳.json",
+      "bytes": 11055,
+      "sha256": "b208629cb4f648348688f970e9e4b1af0f3e39b8716ae011fa2c23fff45fc928",
+      "format": "json",
+      "role": "machine_readable_support",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": null,
+      "formal_doc_id": null,
+      "assignment_status": "OFFICIAL_ASSIGNMENT_PENDING",
+      "candidate_doc_kind": null,
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "functional_specs_v3/來源缺口與待決分帳.md",
+      "bytes": 9201,
+      "sha256": "03470fe2c824efbd4b65a92491a79be0475a67a83496fc6b40ad21c5bbdd90d4",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/來源缺口與待決分帳.md",
+      "formal_doc_id": "doc_spec_0198",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "functional_specs_v3/修訂摘要.md",
+      "bytes": 1254,
+      "sha256": "e39e12c4a59c70877614b6ed607513e47331b6f01a02d1ae3f23abe6d933fa62",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/修訂摘要.md",
+      "formal_doc_id": "doc_spec_0200",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "functional_specs_v3/待補契約問題清單.md",
+      "bytes": 3862,
+      "sha256": "2bb7e13c4d13a0e95415e55a3de318ce51be0e4e627a1cc2c8b04af0aae3773f",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/待補契約問題清單.md",
+      "formal_doc_id": "doc_spec_0199",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "functional_specs_v3/逐功能規格索引.json",
+      "bytes": 65141,
+      "sha256": "537e6b102988ff9dbdd716ea1d0c7abe4e90c41e3d6c47e920bd3a8f927426c6",
+      "format": "json",
+      "role": "machine_readable_support",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": null,
+      "formal_doc_id": null,
+      "assignment_status": "OFFICIAL_ASSIGNMENT_PENDING",
+      "candidate_doc_kind": null,
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "manifest.json",
+      "bytes": 11988,
+      "sha256": "66040a24c2c1f4485139cafed7b22a56967c278a47490a5c6982bcbb6b8765d4",
+      "format": "json",
+      "role": "machine_readable_support",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": null,
+      "formal_doc_id": null,
+      "assignment_status": "OFFICIAL_ASSIGNMENT_PENDING",
+      "candidate_doc_kind": null,
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/00_R5_模組化總綱.md",
+      "bytes": 12801,
+      "sha256": "51bd63f993e1711fd3dc837bbd8e840ca74fdf9b3555fa13bd996b5f6c05eb12",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/00_R5_模組化總綱.md",
+      "formal_doc_id": "doc_spec_0186",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/01_共同身份_時間與存檔契約.md",
+      "bytes": 13127,
+      "sha256": "7abbeace9679e06d9d1641aec0348d09a6342bf9b3823c65b5caf715b66d9530",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/01_共同身份_時間與存檔契約.md",
+      "formal_doc_id": "doc_spec_0187",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/02_出生_血統與聯姻.md",
+      "bytes": 17666,
+      "sha256": "a056ded263ecce61960f814e1f9734d3ed8df7d4ec119af528a58629c4f4a13d",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/02_出生_血統與聯姻.md",
+      "formal_doc_id": "doc_spec_0188",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/03_培育_太傅與研習.md",
+      "bytes": 7731,
+      "sha256": "ecdb1715a77a4746b1f67058cb7c8bfa4148f6044532c86a4ed783e77a330804",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/03_培育_太傅與研習.md",
+      "formal_doc_id": "doc_spec_0189",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/04_知識投影與漸進介面.md",
+      "bytes": 5552,
+      "sha256": "cfa7ac22fda5039ba68c31895b6a4c3b359a4232dee96681e9d43edae8a18b28",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/04_知識投影與漸進介面.md",
+      "formal_doc_id": "doc_spec_0190",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/05_首次統一結局與家族榮譽.md",
+      "bytes": 6013,
+      "sha256": "460102a9b0f3d482a91f47aa4c838450e50b0ad9deb8b2b5d2d94525f1c29bfa",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/05_首次統一結局與家族榮譽.md",
+      "formal_doc_id": "doc_spec_0191",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/06_主題賽季與跨家族延續.md",
+      "bytes": 12089,
+      "sha256": "e513c2b89514d6b3f27b92d4cb0bc6b76555d6c23e0895ecc8eec2d46bfff7e9",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/06_主題賽季與跨家族延續.md",
+      "formal_doc_id": "doc_spec_0192",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/07_祖地存續與敵方再起.md",
+      "bytes": 5526,
+      "sha256": "fa482a462481a245104289a2312decb20c61dfddefb69696e54e65f8ee8eeb69",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/07_祖地存續與敵方再起.md",
+      "formal_doc_id": "doc_spec_0193",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/08_決策_衝突與擴充邊界.md",
+      "bytes": 8816,
+      "sha256": "872b454a64b6aae7e564b73c995e6640e9752f81ad8df641c11368ce04c67028",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/08_決策_衝突與擴充邊界.md",
+      "formal_doc_id": "doc_spec_0194",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/09_證據來源與驗收索引.md",
+      "bytes": 10399,
+      "sha256": "6ee25ddcd3eca4f97c42a2d31df80fba8cbb5f6bd0c5f35d0209ceb0b81343b9",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/09_證據來源與驗收索引.md",
+      "formal_doc_id": "doc_spec_0195",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/10_R4歷史基線_玩法.md",
+      "bytes": 34199,
+      "sha256": "54a992396450250d3a259ae9e38767f7365c0d63ec571ba46bcbe205ca0f66a4",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/10_R4歷史基線_玩法.md",
+      "formal_doc_id": "doc_spec_0196",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/11_R4歷史基線_工程驗收.md",
+      "bytes": 99843,
+      "sha256": "c6b8686927a09b3e4b9774eeef929128fb7183e48834c598330a0f416c74c5ef",
+      "format": "md",
+      "role": "spec",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/11_R4歷史基線_工程驗收.md",
+      "formal_doc_id": "doc_spec_0197",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "spec",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/README.md",
+      "bytes": 1453,
+      "sha256": "8d4ae022cdc2be9bee30e37f528d8c6c1e314d297a08e687f92663778fe11304",
+      "format": "md",
+      "role": "index",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/README.md",
+      "formal_doc_id": "doc_index_1029",
+      "assignment_status": "OFFICIALLY_ASSIGNED",
+      "candidate_doc_kind": "index",
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/acceptance_cases.json",
+      "bytes": 7930,
+      "sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "format": "json",
+      "role": "machine_readable_support",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": null,
+      "formal_doc_id": null,
+      "assignment_status": "OFFICIAL_ASSIGNMENT_PENDING",
+      "candidate_doc_kind": null,
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    },
+    {
+      "package_relative_path": "publication_candidate/feature_index.json",
+      "bytes": 40787,
+      "sha256": "ec5d4fe5b8213ff95346221625e88bf7e03ea955ce7c72d7a9b8669f8260208e",
+      "format": "json",
+      "role": "machine_readable_support",
+      "version_scope": "R5-v3-delivered-bundle",
+      "formal_repo_path": null,
+      "formal_doc_id": null,
+      "assignment_status": "OFFICIAL_ASSIGNMENT_PENDING",
+      "candidate_doc_kind": null,
+      "feature_ids": [],
+      "direct_v3_case_ids": []
+    }
+  ],
+  "formal_registry_generated": false
+}

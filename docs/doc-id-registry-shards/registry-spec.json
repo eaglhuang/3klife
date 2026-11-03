@@ -1096,5 +1096,359 @@
     "path": "docs/遊戲規格文件/系統規格書/血統傳承G3三代深淵_外戚純化與世交合譜規格書.md",
     "title": "血統傳承 G3 三代深淵：外戚純化與世交合譜規格書",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_0186",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/00_R5_模組化總綱.md",
+    "title": "三國家族育成與主題賽季循環",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0187",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/01_共同身份_時間與存檔契約.md",
+    "title": "C2 R5 模組 01　共同身份 時間與存檔契約",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0188",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/02_出生_血統與聯姻.md",
+    "title": "C2 R5 模組 02　出生 血統與聯姻",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0189",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/03_培育_太傅與研習.md",
+    "title": "C2 R5 模組 03　培育 太傅與研習",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0190",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/04_知識投影與漸進介面.md",
+    "title": "C2 R5 模組 04　知識投影與漸進介面",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0191",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/05_首次統一結局與家族榮譽.md",
+    "title": "C2 R5 模組 05　首次統一結局與家族榮譽",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0192",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/06_主題賽季與跨家族延續.md",
+    "title": "C2 R5 模組 06　主題賽季與跨家族延續",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0193",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/07_祖地存續與敵方再起.md",
+    "title": "C2 R5 模組 07　祖地存續與敵方再起",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0194",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/08_決策_衝突與擴充邊界.md",
+    "title": "C2 R5 模組 08　決策 衝突與擴充邊界",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0195",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/09_證據來源與驗收索引.md",
+    "title": "C2 R5 模組 09　證據來源與驗收索引",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0196",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/10_R4歷史基線_玩法.md",
+    "title": "人物血統與家系玩法設計 C2 R4：歷史基線完整文字版",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0197",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/11_R4歷史基線_工程驗收.md",
+    "title": "人物血統與家系工程驗收 C2 R4：歷史基線完整文字版",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0198",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/來源缺口與待決分帳.md",
+    "title": "R5 來源缺口與既有待決分帳",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0199",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/待補契約問題清單.md",
+    "title": "R5 待補契約問題清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0200",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/修訂摘要.md",
+    "title": "R5 v3 規格修訂摘要",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0201",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-A01.md",
+    "title": "R5F-A01 祖地存續狀態",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0202",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-A02.md",
+    "title": "R5F-A02 民兵與地方勢力再起",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0203",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B01.md",
+    "title": "R5F-B01 祖位與來源正規化",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0204",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B02.md",
+    "title": "R5F-B02 出生 H EP LUK 與巔峰型生成",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0205",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B03.md",
+    "title": "R5F-B03 保留 ID 與傳星",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0206",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B04.md",
+    "title": "R5F-B04 親緣風險與 m-only",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0207",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B05.md",
+    "title": "R5F-B05 K 樣本與候選比較",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0208",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B06.md",
+    "title": "R5F-B06 婚約孕期及出生交易",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0209",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B07.md",
+    "title": "R5F-B07 因子效果與啟用投影",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0210",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B08.md",
+    "title": "R5F-B08 功業事件與 EP 來源",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0211",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B09.md",
+    "title": "R5F-B09 媒介因子傳授",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0212",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B10.md",
+    "title": "R5F-B10 季度配偶候選與 NPC 配對",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0213",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C01.md",
+    "title": "R5F-C01 身份與單位契約｜獨立功能規格 v3（已審條件版）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0214",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C02.md",
+    "title": "R5F-C02 三時鐘與代數｜獨立功能規格 v3（已審條件版）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0215",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C03.md",
+    "title": "R5F-C03 保存與冪等｜獨立功能規格 v3（已審條件版）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0216",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C04.md",
+    "title": "R5F-C04 命名亂數與事件回放｜獨立功能規格 v3（已審條件版）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0217",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C05.md",
+    "title": "R5F-C05 存檔遷移與引用閉包｜獨立功能規格 v3（已審條件版）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0218",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E01.md",
+    "title": "R5F-E01 首次統一結局｜獨立功能規格 v3（已審條件版）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0219",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E02.md",
+    "title": "R5F-E02 季成就與首通獎勵｜獨立功能規格 v3（已審條件版）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0220",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E03.md",
+    "title": "R5F-E03 首次統一結局快照封存｜獨立功能規格 v3（已審條件版）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0221",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G01.md",
+    "title": "R5F-G01 共享培育回合功能規格",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0222",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G02.md",
+    "title": "R5F-G02 太傅代管與畢業功能規格",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0223",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G03.md",
+    "title": "R5F-G03 研習計畫與傳星資格功能規格",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0224",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G04.md",
+    "title": "R5F-G04 童年自然成長與增益記帳功能規格",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0225",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G05.md",
+    "title": "R5F-G05 教官TP與技能兌換功能規格",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0226",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G06.md",
+    "title": "R5F-G06 HP休養壽命與死亡功能規格",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0227",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G07.md",
+    "title": "R5F-G07 社會教養及條約服務功能規格",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0228",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G08.md",
+    "title": "R5F-G08 職務年齡投影功能規格",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0229",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S01.md",
+    "title": "R5F-S01 永久家系與當季世界承接",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0230",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S02.md",
+    "title": "R5F-S02 主題與地盤候選生成",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0231",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S03.md",
+    "title": "R5F-S03 季終換季交易",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0232",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S04.md",
+    "title": "R5F-S04 主題目標與結季資格",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0233",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S05.md",
+    "title": "R5F-S05 當季積分與比較分組",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0234",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S06.md",
+    "title": "R5F-S06 敵家供給與家族存續",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0235",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S07.md",
+    "title": "R5F-S07 門閥稱號及候選資格",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0236",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S08.md",
+    "title": "R5F-S08 模式隔離與擴充入口",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0237",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-U01.md",
+    "title": "R5F-U01 知識投影與分階段教學｜獨立功能規格 v3（已審條件版）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0238",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-U02.md",
+    "title": "R5F-U02 情報市場與查券｜獨立功能規格 v3（已審條件版）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0239",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/00_覆蓋與缺口盤點.md",
+    "title": "R4／R5 文件覆蓋與功能粒度盤點 v2",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0240",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/01_功能總清單.md",
+    "title": "R5 完整功能總清單 v2（本來源範圍清單完整性通過）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0241",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/02_來源覆蓋矩陣.md",
+    "title": "來源覆蓋矩陣",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0242",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/索引總覽.md",
+    "title": "索引總覽 v4",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0243",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/historical_case_index/歷史案例對照索引.md",
+    "title": "R4歷史案例與R5逐功能規格對照索引",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0244",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/R5_待補契約問題清單_v3.md",
+    "title": "R5 待補契約問題清單",
+    "category": "spec"
   }
 ]

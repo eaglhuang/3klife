@@ -1,0 +1,344 @@
+{
+  "package_version": "R5-independent-specs-v3",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 871,
+      "sha256": "b8c00e532d16b16172b96ab76ef945bd201218d9143c420a4f0f21b46e7ee436"
+    },
+    {
+      "path": "functional_specs_v2/00_覆蓋與缺口盤點.md",
+      "bytes": 5287,
+      "sha256": "6e8d16b6b6acafbbd5033d45c129ac71c6c561f36e89bbc91338987b0a260a3a"
+    },
+    {
+      "path": "functional_specs_v2/01_功能總清單.md",
+      "bytes": 22767,
+      "sha256": "2ca5ea3c15a38688ea8c791dad82e3395dbf040311cea57592550ae540e0e339"
+    },
+    {
+      "path": "functional_specs_v2/02_來源覆蓋矩陣.md",
+      "bytes": 3945,
+      "sha256": "cd3001d7ecbcfcaafca9fdebf556707bc8359fa31a47b22f9d35b873743c833f"
+    },
+    {
+      "path": "functional_specs_v2/README.md",
+      "bytes": 1102,
+      "sha256": "43867031ed7b0fd2aaad63b4f8365f0e899b71b01e7b1838c0eba1a0a97326e8"
+    },
+    {
+      "path": "functional_specs_v2/來源覆蓋矩陣.json",
+      "bytes": 14985,
+      "sha256": "ee51b4017efb93f556e533076b8b8ffeb9d59c2c4a90bca0495e12ff6d048933"
+    },
+    {
+      "path": "functional_specs_v2/功能總清單.json",
+      "bytes": 75682,
+      "sha256": "b1bcf2d12279c54d7c9bedaab81b33d971893818562d9ebc5467753d5bd90580"
+    },
+    {
+      "path": "functional_specs_v3/README.md",
+      "bytes": 4211,
+      "sha256": "f10d8653444f0b04d031bad97558939c50726f572f39d009ebfdc923454118c9"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-A01.md",
+      "bytes": 9603,
+      "sha256": "8abb2ad0af491ac389957e4d170186734c461bae4adcd950bdb1cc4f12222adc"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-A02.md",
+      "bytes": 12703,
+      "sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-B01.md",
+      "bytes": 8415,
+      "sha256": "93f28b5215e890d163ac03c38f600f9b1305cd28e9994f47dd56538a85eb16d0"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-B02.md",
+      "bytes": 9855,
+      "sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-B03.md",
+      "bytes": 9151,
+      "sha256": "5bbe284081f47264ce05373b07502e6ebb1224257c6d2fca768760798adaccfe"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-B04.md",
+      "bytes": 7987,
+      "sha256": "fa77ed7f0e05b881c558ccff8169ad50dd36bc726c61bdd7bd35445fe7476b0a"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-B05.md",
+      "bytes": 8505,
+      "sha256": "ddfa0b0c7a53e2be7dc0e19e62fda2bb9a1a58ebc0d04a75e70109a2d2ea1c5d"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-B06.md",
+      "bytes": 9504,
+      "sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-B07.md",
+      "bytes": 9945,
+      "sha256": "4f0c30144dd2fb63faa6585bfd62554cebf01a6f3621b1762c42cce19058767b"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-B08.md",
+      "bytes": 12889,
+      "sha256": "39cd0609a21972886311b2674770b58b30424d777910f86f66667b9ac3dd6555"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-B09.md",
+      "bytes": 8599,
+      "sha256": "38f0bde34e726debed252a0ab9dbcf68ce2060f8638dc58960a8444f43e5dd09"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-B10.md",
+      "bytes": 9520,
+      "sha256": "b3bb249a9f33adf222b162101ac13ae6cf830427f5aa9d42750e75f9fa4d92ad"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-C01.md",
+      "bytes": 5800,
+      "sha256": "c2b425e10167551d37404ccd4abf074ba821882cf509b88760baed0ea4759d88"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-C02.md",
+      "bytes": 4916,
+      "sha256": "8b39fed79ac11c2f38cf8308eed5211d84e919b24f8b08d473e5255ea856316e"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-C03.md",
+      "bytes": 6979,
+      "sha256": "1665ea9130d4133f5cbb8d4927d6bb8cbf043ccd24b5dd8531fb924ab0722324"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-C04.md",
+      "bytes": 5176,
+      "sha256": "c64eb84e54a22322b2901d9cde221707b2885c30fd43f3bd4cfee1d3e4c8cb87"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-C05.md",
+      "bytes": 5544,
+      "sha256": "7080e695344a05e234df565467dbd46873fed2a64e861b8aaee11ae98f802767"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-E01.md",
+      "bytes": 5027,
+      "sha256": "061abc8b902af5b92135eb8ad580302a970184a4b944a2b04e5cab3bf4431cc5"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-E02.md",
+      "bytes": 5340,
+      "sha256": "46051e8d17a2983b8752312d42ab8830cec82874981b1d65099b03f72202f7f1"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-E03.md",
+      "bytes": 6141,
+      "sha256": "6cc0f43163f1dad96fd16c83ff6c506cf974f1c49afe0ee9388ee5adec95f769"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-G01.md",
+      "bytes": 14289,
+      "sha256": "74e860877c039cc4e5d751323a14861afa585232471974e13c20b51e4d8abffd"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-G02.md",
+      "bytes": 11045,
+      "sha256": "a67612f9d819f34e1abb7640d02518912c11438d354c5e526e41c168c7a4730b"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-G03.md",
+      "bytes": 11582,
+      "sha256": "0afb79f5b6cc6ef69c2d4f4a343eae3d4cdebc4872ea965eab3484edaaf275a6"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-G04.md",
+      "bytes": 9421,
+      "sha256": "7b00dd95dc51ea018a57a46b6396778d97a71397bb6a61bc314a024d5197f37d"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-G05.md",
+      "bytes": 14237,
+      "sha256": "87d4244f57bf4857f3dbb398ffead4fcb0c4b086e4c7bd6d7c37b10e67b454e1"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-G06.md",
+      "bytes": 10075,
+      "sha256": "041581d3906e15f035c2eb6352a667111629fe0121f15e47281ebfaca21a4e3c"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-G07.md",
+      "bytes": 12634,
+      "sha256": "b7503063a46100b71e1c6eec6b20fce648667ffcd3b4659a8222a17c330853f8"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-G08.md",
+      "bytes": 10794,
+      "sha256": "aa558dc1099efb84be6ba171d8d5ffb05569cbc6f72e636001abe817d5d86b80"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-S01.md",
+      "bytes": 10350,
+      "sha256": "8b860be01f385b412f435167487d0e1c19a573666d937610d30c40681ef970e3"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-S02.md",
+      "bytes": 9763,
+      "sha256": "5354f6bb57851f12f629e88249beddd4820bf5a0fabd6df2931c686611012750"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-S03.md",
+      "bytes": 16140,
+      "sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-S04.md",
+      "bytes": 10218,
+      "sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-S05.md",
+      "bytes": 9731,
+      "sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-S06.md",
+      "bytes": 10002,
+      "sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-S07.md",
+      "bytes": 9602,
+      "sha256": "e0039bacc3d5b9a6c7a235e46c6d1afdc0b056313988fac83ad667535c6e1f50"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-S08.md",
+      "bytes": 9488,
+      "sha256": "0f3a69d069c2dd0b7d6926335e40980fe0f2802aaaf624ca264f80a3d32cdfec"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-U01.md",
+      "bytes": 6419,
+      "sha256": "da4f1163ac3402ccb4524d393c7d2e3bbed4a2d4cbdd3930ac4c48f68e21f6b1"
+    },
+    {
+      "path": "functional_specs_v3/features/R5F-U02.md",
+      "bytes": 10285,
+      "sha256": "78124d024d641eca934291af5cf8ae8bdee45428357fc4d0b2aa83bc60a160df"
+    },
+    {
+      "path": "functional_specs_v3/來源缺口與待決分帳.json",
+      "bytes": 11055,
+      "sha256": "b208629cb4f648348688f970e9e4b1af0f3e39b8716ae011fa2c23fff45fc928"
+    },
+    {
+      "path": "functional_specs_v3/來源缺口與待決分帳.md",
+      "bytes": 9201,
+      "sha256": "03470fe2c824efbd4b65a92491a79be0475a67a83496fc6b40ad21c5bbdd90d4"
+    },
+    {
+      "path": "functional_specs_v3/修訂摘要.md",
+      "bytes": 1254,
+      "sha256": "e39e12c4a59c70877614b6ed607513e47331b6f01a02d1ae3f23abe6d933fa62"
+    },
+    {
+      "path": "functional_specs_v3/待補契約問題清單.md",
+      "bytes": 3862,
+      "sha256": "2bb7e13c4d13a0e95415e55a3de318ce51be0e4e627a1cc2c8b04af0aae3773f"
+    },
+    {
+      "path": "functional_specs_v3/逐功能規格索引.json",
+      "bytes": 65141,
+      "sha256": "537e6b102988ff9dbdd716ea1d0c7abe4e90c41e3d6c47e920bd3a8f927426c6"
+    },
+    {
+      "path": "publication_candidate/00_R5_模組化總綱.md",
+      "bytes": 12801,
+      "sha256": "51bd63f993e1711fd3dc837bbd8e840ca74fdf9b3555fa13bd996b5f6c05eb12"
+    },
+    {
+      "path": "publication_candidate/01_共同身份_時間與存檔契約.md",
+      "bytes": 13127,
+      "sha256": "7abbeace9679e06d9d1641aec0348d09a6342bf9b3823c65b5caf715b66d9530"
+    },
+    {
+      "path": "publication_candidate/02_出生_血統與聯姻.md",
+      "bytes": 17666,
+      "sha256": "a056ded263ecce61960f814e1f9734d3ed8df7d4ec119af528a58629c4f4a13d"
+    },
+    {
+      "path": "publication_candidate/03_培育_太傅與研習.md",
+      "bytes": 7731,
+      "sha256": "ecdb1715a77a4746b1f67058cb7c8bfa4148f6044532c86a4ed783e77a330804"
+    },
+    {
+      "path": "publication_candidate/04_知識投影與漸進介面.md",
+      "bytes": 5552,
+      "sha256": "cfa7ac22fda5039ba68c31895b6a4c3b359a4232dee96681e9d43edae8a18b28"
+    },
+    {
+      "path": "publication_candidate/05_首次統一結局與家族榮譽.md",
+      "bytes": 6013,
+      "sha256": "460102a9b0f3d482a91f47aa4c838450e50b0ad9deb8b2b5d2d94525f1c29bfa"
+    },
+    {
+      "path": "publication_candidate/06_主題賽季與跨家族延續.md",
+      "bytes": 12089,
+      "sha256": "e513c2b89514d6b3f27b92d4cb0bc6b76555d6c23e0895ecc8eec2d46bfff7e9"
+    },
+    {
+      "path": "publication_candidate/07_祖地存續與敵方再起.md",
+      "bytes": 5526,
+      "sha256": "fa482a462481a245104289a2312decb20c61dfddefb69696e54e65f8ee8eeb69"
+    },
+    {
+      "path": "publication_candidate/08_決策_衝突與擴充邊界.md",
+      "bytes": 8816,
+      "sha256": "872b454a64b6aae7e564b73c995e6640e9752f81ad8df641c11368ce04c67028"
+    },
+    {
+      "path": "publication_candidate/09_證據來源與驗收索引.md",
+      "bytes": 10399,
+      "sha256": "6ee25ddcd3eca4f97c42a2d31df80fba8cbb5f6bd0c5f35d0209ceb0b81343b9"
+    },
+    {
+      "path": "publication_candidate/10_R4歷史基線_玩法.md",
+      "bytes": 34199,
+      "sha256": "54a992396450250d3a259ae9e38767f7365c0d63ec571ba46bcbe205ca0f66a4"
+    },
+    {
+      "path": "publication_candidate/11_R4歷史基線_工程驗收.md",
+      "bytes": 99843,
+      "sha256": "c6b8686927a09b3e4b9774eeef929128fb7183e48834c598330a0f416c74c5ef"
+    },
+    {
+      "path": "publication_candidate/README.md",
+      "bytes": 1453,
+      "sha256": "8d4ae022cdc2be9bee30e37f528d8c6c1e314d297a08e687f92663778fe11304"
+    },
+    {
+      "path": "publication_candidate/acceptance_cases.json",
+      "bytes": 7930,
+      "sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411"
+    },
+    {
+      "path": "publication_candidate/feature_index.json",
+      "bytes": 40787,
+      "sha256": "ec5d4fe5b8213ff95346221625e88bf7e03ea955ce7c72d7a9b8669f8260208e"
+    }
+  ],
+  "scope": {
+    "features": 38,
+    "main": 36,
+    "unselected_proposals": 2,
+    "document_cases": 346,
+    "product_tests_run": 0,
+    "implementationReady": false
+  },
+  "status": "CONTENT_REVIEWED_WITH_OPEN_DECISIONS"
+}

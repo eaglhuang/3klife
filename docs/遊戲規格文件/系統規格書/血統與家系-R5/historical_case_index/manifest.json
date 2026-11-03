@@ -1,0 +1,34 @@
+{
+  "version": "R5-HISTORICAL-CASE-TRACEABILITY-20261103-r01",
+  "status": "FROZEN_DOCUMENT_TRACEABILITY_INDEX",
+  "counts": {
+    "historical_cases": 129,
+    "R3T": 74,
+    "R4E": 32,
+    "M": 23,
+    "features": 38,
+    "main_features": 36,
+    "unselected_proposals": 2,
+    "v3_document_cases": 346,
+    "original_case_refs_separately_preserved": 40,
+    "mapping_status_counts": {
+      "NO_V3_CASE": 33,
+      "PARTIAL_EXPECTATION": 50,
+      "DIRECT_EXPECTATION": 29,
+      "RELATED_CONTRACT_ONLY": 17
+    }
+  },
+  "source_sha256": "c6b8686927a09b3e4b9774eeef929128fb7183e48834c598330a0f416c74c5ef",
+  "files": [
+    {
+      "path": "歷史案例對照索引.json",
+      "bytes": 517660,
+      "sha256": "62f3557c13a54a2b96673cf84e75b0854ac645cd978d774b3e47bd4e082030ae"
+    },
+    {
+      "path": "歷史案例對照索引.md",
+      "bytes": 40093,
+      "sha256": "969b89ff4ef0a753e2d5cc23a5ee9ba84dbc0c68948d23baaba20e4b1b1401eb"
+    }
+  ]
+}

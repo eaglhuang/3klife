@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — 分類統計
 
-> 生成日期: 2026-07-19
+> 生成日期: 2026-11-03
 > 這是 `doc-id-registry.md` 的「分類統計」分片。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -12,11 +12,11 @@
 | 畫面UI類 | `doc_ui` | 47 |
 | 美術非UI類 | `doc_art` | 3 |
 | 數值類 | `doc_data` | 2 |
-| 遊戲規格類 | `doc_spec` | 178 |
-| 索引類 | `doc_index` | 53 |
-| 任務卡類 | `doc_task` | 386 |
+| 遊戲規格類 | `doc_spec` | 242 |
+| 索引類 | `doc_index` | 57 |
+| 任務卡類 | `doc_task` | 402 |
 | AI Agent 專用 | `doc_ai` | 43 |
 | Agent Skill 專用 | `doc_agentskill` | 102 |
 | Server 文件類 | `doc_server_<subtype>` | 3 |
-| 其它類 | `doc_other` | 1441 |
-| **合計** | — | **2281** |
+| 其它類 | `doc_other` | 1442 |
+| **合計** | — | **2366** |

@@ -1,0 +1,1912 @@
+{
+  "version": "R5-functional-catalog-v2-20261103",
+  "phase": "FEATURE_CATALOG_BEFORE_ACCEPTANCE_AUDIT",
+  "review_status": "SOURCE_BOUNDED_FEATURE_CATALOG_COMPLETENESS_PASS",
+  "total_features": 38,
+  "retained_original_features": 20,
+  "additional_explicit_splits": 18,
+  "optional_proposals_in_total": 2,
+  "product_code_modified": false,
+  "global_execution_order": "全部範圍內工作文件完成→功能清單定版→全部範圍內獨立功能規格完成→才評估產品編碼；不得因單功能ready提早開工",
+  "status_semantics": {
+    "NOT_VERIFIED": "未核現行產品，不能解讀未實作或已完成",
+    "NOT_RUN_IN_THIS_WORK": "本次未跑產品測試，不抹除外部歷史測試",
+    "NOT_ASSESSED": "尚未按完整功能清單核對驗收證據"
+  },
+  "optional_detail_proposals": [
+    {
+      "owner": "R5F-E01",
+      "items": [
+        "收藏釘選",
+        "自訂家徽"
+      ],
+      "status": "UNSELECTED_NOT_REQUIRED_SCOPE"
+    },
+    {
+      "owner": "R5F-S08",
+      "items": [
+        "海外地域／軍隊美術內容",
+        "跨時代幻想人物內容"
+      ],
+      "status": "UNSELECTED_NOT_REQUIRED_SCOPE"
+    }
+  ],
+  "features": [
+    {
+      "feature_id": "R5F-C01",
+      "title": "身份與單位契約",
+      "module": "01",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-C01"
+      ],
+      "requirement_sources": [
+        "R4工程§1–4",
+        "R5模組01"
+      ],
+      "purpose": "作所有模組共用型別，不重定單位",
+      "acceptance_conditions": [
+        "16000000ticks，同人同UID",
+        "拒跨單位，不改人物"
+      ],
+      "existing_case_ids": [
+        "R5F-C01-P",
+        "R5F-C01-N"
+      ],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-C01.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": "身份與單位契約",
+      "split_parent_ids": [
+        "R5F-C01"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "身份／單位／profile字典型別"
+    },
+    {
+      "feature_id": "R5F-C02",
+      "title": "三時鐘與代數",
+      "module": "01",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-C02"
+      ],
+      "requirement_sources": [
+        "R4工程§14",
+        "R5模組01/06"
+      ],
+      "purpose": "明確命名季度、學院turn、主題季和真代數",
+      "acceptance_conditions": [
+        "不自動改年齡或parentUID",
+        "拒提交，保原孕期和季"
+      ],
+      "existing_case_ids": [
+        "R5F-C02-P",
+        "R5F-C02-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S04"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-C02.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "三時鐘與代數",
+      "split_parent_ids": [
+        "R5F-C02"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "三時鐘映射，不計季度NPC選配"
+    },
+    {
+      "feature_id": "R5F-C03",
+      "title": "保存與冪等",
+      "module": "01",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-C03"
+      ],
+      "requirement_sources": [
+        "R4工程§4–6/16",
+        "R5模組01"
+      ],
+      "purpose": "提供單次事件提交及引用閉包",
+      "acceptance_conditions": [
+        "回原結果不再扣費",
+        "拒衝突／缺件，不切指標"
+      ],
+      "existing_case_ids": [
+        "R5F-C03-P",
+        "R5F-C03-N"
+      ],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-C03.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": "保存與冪等",
+      "split_parent_ids": [
+        "R5F-C03"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "單次事件保存／冪等，不計C05遷移或C04亂數算法"
+    },
+    {
+      "feature_id": "R5F-C04",
+      "title": "命名亂數與事件回放",
+      "module": "01",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-C03",
+        "R5F-B02"
+      ],
+      "requirement_sources": [
+        "R4工程§4/6/7"
+      ],
+      "purpose": "將既有來源中命名亂數與事件回放的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "同事件同流回放一致",
+        "不同領域不污染",
+        "重送不多draw"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-C04.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-C03",
+        "R5F-B02"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "命名亂數與事件回放獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-C05",
+      "title": "存檔遷移與引用閉包",
+      "module": "01",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-C03"
+      ],
+      "requirement_sources": [
+        "R4工程§15–17"
+      ],
+      "purpose": "將既有來源中存檔遷移與引用閉包的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "舊P/A/知識與來源閉包保留",
+        "雙槽崩潰可回舊檔",
+        "容量超限不刪核心"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-C05.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-C03"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "存檔遷移與引用閉包獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-B01",
+      "title": "祖位與來源正規化",
+      "module": "02",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-B01"
+      ],
+      "requirement_sources": [
+        "R4工程§3/7",
+        "R5模組02"
+      ],
+      "purpose": "保14/28位置並去重效果",
+      "acceptance_conditions": [
+        "保位置，sourceUID+ID只按規則取一次",
+        "SOURCE_INCOMPLETE，不能補乾淨模板"
+      ],
+      "existing_case_ids": [
+        "R5F-B01-P",
+        "R5F-B01-N"
+      ],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-B01.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": "祖位與來源正規化",
+      "split_parent_ids": [
+        "R5F-B01"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "祖位來源正規化，不計B10選配決策"
+    },
+    {
+      "feature_id": "R5F-B02",
+      "title": "出生H／EP／LUK與巔峰型生成",
+      "module": "02",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-B02"
+      ],
+      "requirement_sources": [
+        "R4工程§3/7/18",
+        "R5模組02",
+        "R4工程§7命名流",
+        "R3T54"
+      ],
+      "purpose": "對已定profile算先天候選",
+      "acceptance_conditions": [
+        "61，依正式單位映P",
+        "PROFILE_UNSUPPORTED，不套舊R分項",
+        "LUK與peakType使用指定命名流，出生日凍結；未知值不由公開UI反推出"
+      ],
+      "existing_case_ids": [
+        "R5F-B02-P",
+        "R5F-B02-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-03",
+        "DEC-R4-09"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-B01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-B02.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "H與EP出生分布",
+      "split_parent_ids": [
+        "R5F-B02"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "純出生數值／LUK／peakType候選算法，不計B06長期交易"
+    },
+    {
+      "feature_id": "R5F-B03",
+      "title": "保留ID與傳星",
+      "module": "02",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-B03"
+      ],
+      "requirement_sources": [
+        "R4工程§7/19",
+        "R5模組02"
+      ],
+      "purpose": "分開ID保留、星級及啟用",
+      "acceptance_conditions": [
+        "移除同ID不重占槽",
+        "拒互斥，不添第七槽",
+        "FamilyLineage／streak只選單一真親本；n5與一次家傳命名獎勵依同profile，不能跨親拼接或重領"
+      ],
+      "existing_case_ids": [
+        "R5F-B03-P",
+        "R5F-B03-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-02",
+        "DEC-R4-04"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-B01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-B03.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "保留ID與傳星",
+      "split_parent_ids": [
+        "R5F-B03"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "保留ID／傳星／單親系譜延續，不計媒介新增取得或效果投影"
+    },
+    {
+      "feature_id": "R5F-B04",
+      "title": "親緣風險與m-only",
+      "module": "02",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-B04"
+      ],
+      "requirement_sources": [
+        "R4工程§20–21",
+        "R5模組02"
+      ],
+      "purpose": "分離合法性、D、h、當胎風險",
+      "acceptance_conditions": [
+        "20扣滿到0，去重UID",
+        "拒缺profile，不自填1%"
+      ],
+      "existing_case_ids": [
+        "R5F-B04-P",
+        "R5F-B04-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-03"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-B01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-B04.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "親緣風險與m-only",
+      "split_parent_ids": [
+        "R5F-B04"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "親緣／純化風險算法，不計NPC配對執行"
+    },
+    {
+      "feature_id": "R5F-B05",
+      "title": "K樣本與候選比較",
+      "module": "02",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-B05"
+      ],
+      "requirement_sources": [
+        "R4工程§22–23",
+        "R5模組02"
+      ],
+      "purpose": "全出生歸戶不因換季洗分母",
+      "acceptance_conditions": [
+        "原pair只入帳一次，保原因",
+        "測例應攔，結果2/3非1"
+      ],
+      "existing_case_ids": [
+        "R5F-B05-P",
+        "R5F-B05-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-01"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C02",
+          "required_capability": "單調世界季度時鐘，不含主題換季跳時",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-B05.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "K樣本與候選比較",
+      "split_parent_ids": [
+        "R5F-B05"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "K樣本帳與候選效用"
+    },
+    {
+      "feature_id": "R5F-B06",
+      "title": "婚約孕期及出生交易",
+      "module": "02",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-B02",
+        "R5F-B03"
+      ],
+      "requirement_sources": [
+        "R4工程§4–7",
+        "R5模組02/06"
+      ],
+      "purpose": "將既有來源中婚約孕期及出生交易的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "婚約鎖源後父母改變不影響胎次",
+        "出生一次扣費／一人一UID",
+        "中斷不重抽"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [
+        "DEC-R4-02",
+        "DEC-R4-03",
+        "DEC-R4-09",
+        "DEC-R5-S04"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-B06.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-B02",
+        "R5F-B03"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "婚約孕期及出生交易獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-B07",
+      "title": "因子效果與啟用投影",
+      "module": "02",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-B03"
+      ],
+      "requirement_sources": [
+        "R4工程§12",
+        "R5模組02"
+      ],
+      "purpose": "將既有來源中因子效果與啟用投影的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "held／已知／啟用／可傳分開",
+        "非藍不進H",
+        "外部效果不回改P",
+        "終身新取得最多2個與held6是不同限制；達cap不偷換成解鎖即取得"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-B07.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-B03"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "因子效果與啟用投影獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-B08",
+      "title": "功業事件與EP來源",
+      "module": "02",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-B02"
+      ],
+      "requirement_sources": [
+        "R4工程§5/18",
+        "R5模組02"
+      ],
+      "purpose": "將既有來源中功業事件與EP來源的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "相同功業只記一次",
+        "來源revision與舊事蹟保留",
+        "總EP缺值不得猜",
+        "功業回流兩次合格機會、首次成功即停、有效只+1，不重複授星"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [
+        "DEC-R4-09"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-B08.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-B02"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "功業事件與EP來源獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-B09",
+      "title": "媒介因子傳授",
+      "module": "02",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-B03",
+        "R5F-G01"
+      ],
+      "requirement_sources": [
+        "R4工程§8",
+        "R3T18/T38"
+      ],
+      "purpose": "將既有來源中媒介因子傳授的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "媒介只影響held及future source，不增加童年A",
+        "每子／來源各一次",
+        "無可變候選不耗、合法失敗耗一次不重抽"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-B09.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-B03",
+        "R5F-G01"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "媒介因子傳授獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-B10",
+      "title": "季度配偶候選與NPC配對",
+      "module": "02",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-B01",
+        "R5F-B04",
+        "R5F-C02"
+      ],
+      "requirement_sources": [
+        "R4工程§28 R3T31",
+        "R4工程§4/6/20"
+      ],
+      "purpose": "將既有來源中季度配偶候選與NPC配對的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "每世界季度配對一次且每人最多一組",
+        "保留比例、禁親與冷卻依同profile",
+        "未知祖譜不視為無共祖"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-B10.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-B01",
+        "R5F-B04",
+        "R5F-C02"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "季度配偶候選與NPC配對獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-G01",
+      "title": "共享培育回合",
+      "module": "03",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-G01"
+      ],
+      "requirement_sources": [
+        "R4工程§9/11",
+        "R5模組03"
+      ],
+      "purpose": "一個run內成長及資源一次結算",
+      "acceptance_conditions": [
+        "只扣一回合，C不超1，A不超P",
+        "拒不可行，不以5項各20次繞預算"
+      ],
+      "existing_case_ids": [
+        "R5F-G01-P",
+        "R5F-G01-N"
+      ],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-G01.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": "共享培育回合",
+      "split_parent_ids": [
+        "R5F-G01"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "成年學院單次訓練資源成長，不計童年或技能消費"
+    },
+    {
+      "feature_id": "R5F-G02",
+      "title": "太傅代管與畢業",
+      "module": "03",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-G02"
+      ],
+      "requirement_sources": [
+        "R4工程§9–11",
+        "R5模組03"
+      ],
+      "purpose": "減少操作且不新增隱性收益",
+      "acceptance_conditions": [
+        "基礎10+教官額外3=13",
+        "拒拼接，保三份歷史",
+        "育成ΣC評級；全L=0時為N/A，稱號與auto資格分開；舊450/460門檻不直接套ticks；未採auto門檻不自開"
+      ],
+      "existing_case_ids": [
+        "R5F-G02-P",
+        "R5F-G02-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-07"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-G01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-G02.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "太傅代管與畢業",
+      "split_parent_ids": [
+        "R5F-G02"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "代管策略與單一畢業結果／評級，不重計G01單行動或G05TP"
+    },
+    {
+      "feature_id": "R5F-G03",
+      "title": "研習計畫與傳星資格",
+      "module": "03",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-G03"
+      ],
+      "requirement_sources": [
+        "R4工程§19",
+        "R5模組03"
+      ],
+      "purpose": "只對held低星作一次plan",
+      "acceptance_conditions": [
+        "最多至目標3，不回改P",
+        "拒絕，不用研習補造ID"
+      ],
+      "existing_case_ids": [
+        "R5F-G03-P",
+        "R5F-G03-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-02",
+        "DEC-R4-04",
+        "DEC-R4-08"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-G01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C02",
+          "required_capability": "研習使用既有季度時鐘，不含主題季跳時",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-G03.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "研習與社會教養",
+      "split_parent_ids": [
+        "R5F-G03"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "研習plan，不計G07社會渠道服務"
+    },
+    {
+      "feature_id": "R5F-G04",
+      "title": "童年自然成長與增益記帳",
+      "module": "03",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-G01"
+      ],
+      "requirement_sources": [
+        "R4工程§8",
+        "R5模組02/03"
+      ],
+      "purpose": "將既有來源中童年自然成長與增益記帳的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "合法自然成長與creditedGain分帳",
+        "超cap不補領",
+        "媒介不增加童年A"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-G04.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-G01"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "童年自然成長與增益記帳獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-G05",
+      "title": "教官TP與技能兌換",
+      "module": "03",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-G01",
+        "R5F-G02"
+      ],
+      "requirement_sources": [
+        "R4工程§10",
+        "R5模組03"
+      ],
+      "purpose": "將既有來源中教官TP與技能兌換的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "auto Rank3 TP=10+3=13",
+        "兌換核run見習/inspiration/槽/TP",
+        "重入不雙扣"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-G05.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-G01",
+        "R5F-G02"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "教官TP與技能兌換獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-G06",
+      "title": "HP休養壽命與死亡",
+      "module": "03",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-C02",
+        "R5F-G01"
+      ],
+      "requirement_sources": [
+        "R4工程§14",
+        "R5模組01/03"
+      ],
+      "purpose": "將既有來源中HP休養壽命與死亡的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "HP休養與死亡依同profile",
+        "壽命時鐘不因換季重置",
+        "死亡保歷史不復活"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-G06.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-C02",
+        "R5F-G01"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "HP休養壽命與死亡獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-G07",
+      "title": "社會教養及條約服務",
+      "module": "03",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-G03"
+      ],
+      "requirement_sources": [
+        "R4工程§24",
+        "R5模組03/08",
+        "R4玩法§4社交R與政治信用"
+      ],
+      "purpose": "將既有來源中社會教養及條約服務的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "履約解鎖服務不免費送EP",
+        "破約不清已學知識／已出生P",
+        "成本一次記帳",
+        "社交R／政治信用獨立記帳，列通行／援助／婚配／教官交換用途，與K統計及出生EP分離；年度正增5只按原方向／採定profile，不自造其他變動值",
+        "敵系和親、長者親授／典籍、母門教養、雙親課題四條渠道各列資格／成本／服務事件，不混為新增EP"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [
+        "DEC-R4-08"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-G07.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-G03"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "社會教養及條約服務獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-G08",
+      "title": "職務年齡投影",
+      "module": "03",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-C02",
+        "R5F-G01"
+      ],
+      "requirement_sources": [
+        "R4工程§14",
+        "DEC-R4-05"
+      ],
+      "purpose": "將既有來源中職務年齡投影的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "P/A不倒扣",
+        "文武職務曲線及健康代價依採定profile",
+        "缺曲線不拿武職表冒充文職"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [
+        "DEC-R4-05"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-G08.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-C02",
+        "R5F-G01"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "職務年齡投影獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-U01",
+      "title": "知識投影與分階段教學",
+      "module": "04",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-U01"
+      ],
+      "requirement_sources": [
+        "R4工程§13",
+        "R5模組04"
+      ],
+      "purpose": "教學權限不等數值知識",
+      "acceptance_conditions": [
+        "即告知不等G3",
+        "輸出相同，expert不免費揭露"
+      ],
+      "existing_case_ids": [
+        "R5F-U01-P",
+        "R5F-U01-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-07"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-U01.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "知識投影與分階段教學",
+      "split_parent_ids": [
+        "R5F-U01"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "已知投影／教學提示，不計查券取得消費"
+    },
+    {
+      "feature_id": "R5F-U02",
+      "title": "情報市場與查券",
+      "module": "04",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-U02"
+      ],
+      "requirement_sources": [
+        "R4工程§24",
+        "R5模組04"
+      ],
+      "purpose": "成本供給與真正揭露事件分帳",
+      "acceptance_conditions": [
+        "不藏回未知",
+        "不猜1券、不暗用hidden排名",
+        "託夢／百家之血與各查券入口逐一有事件來源及一次性帳；13/25歲等舊數值僅同profile歷史基線，未定不得猜用"
+      ],
+      "existing_case_ids": [
+        "R5F-U02-P",
+        "R5F-U02-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R4-06"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-U01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-U02.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "情報市場與查券",
+      "split_parent_ids": [
+        "R5F-U02"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "情報／查券入口與揭露服務"
+    },
+    {
+      "feature_id": "R5F-E01",
+      "title": "首次統一結局",
+      "module": "05",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-E01"
+      ],
+      "requirement_sources": [
+        "使用者首次統一結局需求",
+        "R5模組05"
+      ],
+      "purpose": "展示首通與家族育成成果",
+      "acceptance_conditions": [
+        "快照指回原UID與當時數值",
+        "只重播不觸發出生或重算戰績",
+        "功臣／軍種／成年配偶／自育後代及當時數值戰績完整；歷代比較／重播只讀快照，不覆舊紀錄"
+      ],
+      "existing_case_ids": [
+        "R5F-E01-P",
+        "R5F-E01-N"
+      ],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-U01",
+          "required_capability": "既有公開知識投影，不含新世代開放政策",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-E01.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": "首次統一結局",
+      "split_parent_ids": [
+        "R5F-E01"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "唯讀展示，不計E03快照建立或E02發獎"
+    },
+    {
+      "feature_id": "R5F-E02",
+      "title": "季成就與首通獎勵",
+      "module": "05",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-E02"
+      ],
+      "requirement_sources": [
+        "使用者季獎勵需求",
+        "R5模組05"
+      ],
+      "purpose": "唯一業務鍵避免重複領取",
+      "acceptance_conditions": [
+        "回原收據，不再發",
+        "拒勝利不成立；不直接發獎"
+      ],
+      "existing_case_ids": [
+        "R5F-E02-P",
+        "R5F-E02-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S01",
+        "DEC-R5-S08"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-E01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-E02.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "季成就與首通獎勵",
+      "split_parent_ids": [
+        "R5F-E02"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "獎勵帳，不計S05積分排序"
+    },
+    {
+      "feature_id": "R5F-E03",
+      "title": "首次統一結局快照封存",
+      "module": "05",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-E01",
+        "R5F-E02"
+      ],
+      "requirement_sources": [
+        "使用者首次統一成果需求",
+        "R5模組05",
+        "R4工程§6/16"
+      ],
+      "purpose": "將既有來源中首次統一結局快照封存的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "合法統一事件建立不可變snapshotId，凍結已知人物與戰史引用",
+        "同事件只建一次",
+        "後來改名／死亡不覆寫歷史",
+        "E01僅讀此結果"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-E03.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "仍須完成獨立規格／真consumer核對／正常施工准入",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-E01",
+        "R5F-E02"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "首次統一結局快照封存獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-S01",
+      "title": "永久家系與當季世界承接",
+      "module": "06",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-S01"
+      ],
+      "requirement_sources": [
+        "使用者雙方家族／通婚延續需求",
+        "R5模組06"
+      ],
+      "purpose": "保敵我人物通婚連續",
+      "acceptance_conditions": [
+        "雙親婚姻子代P仍同",
+        "不可原UID復活，保死亡史",
+        "陣營／臣屬／盟約與生物家系分離；未完孕期／研習／K／婚約保引用與採定時間政策"
+      ],
+      "existing_case_ids": [
+        "R5F-S01-P",
+        "R5F-S01-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S03",
+        "DEC-R5-S04"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-C01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C02",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-S01.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "永久家系與當季世界承接",
+      "split_parent_ids": [
+        "R5F-S01"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "跨季承接diff，不計S06人口供給或S03切檔"
+    },
+    {
+      "feature_id": "R5F-S02",
+      "title": "主題與地盤候選生成",
+      "module": "06",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-S02"
+      ],
+      "requirement_sources": [
+        "使用者下一季地盤提問（方案未選）",
+        "R5模組06"
+      ],
+      "purpose": "產生可驗而非直接覆寫的戰略盤",
+      "acceptance_conditions": [
+        "逐條驗證並可重播",
+        "拒candidate，舊世界不變"
+      ],
+      "existing_case_ids": [
+        "R5F-S02-P",
+        "R5F-S02-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S02",
+        "DEC-R5-S06",
+        "DEC-R5-S07"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-S01",
+          "required_capability": "只讀存續家族／人物快照，不作正式資源承接",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-S02.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "主題與地盤候選生成",
+      "split_parent_ids": [
+        "R5F-S02"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "候選地盤生成，不計S04目標判定"
+    },
+    {
+      "feature_id": "R5F-S03",
+      "title": "季終換季交易",
+      "module": "06",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-S03"
+      ],
+      "requirement_sources": [
+        "使用者主題季循環需求",
+        "R5模組06"
+      ],
+      "purpose": "結算到新世界全程可恢復",
+      "acceptance_conditions": [
+        "查marker回原結果不雙領",
+        "原slot可用，不半清人物與地盤",
+        "承接預覽→明確確認→一次提交→失敗恢復分態；不因看預覽即改存檔"
+      ],
+      "existing_case_ids": [
+        "R5F-S03-P",
+        "R5F-S03-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S01",
+        "DEC-R5-S02",
+        "DEC-R5-S03",
+        "DEC-R5-S04",
+        "DEC-R5-S06",
+        "DEC-R5-S07",
+        "DEC-R5-S08"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-S01",
+          "required_capability": "正式承接與時間政策",
+          "required_decisions": [
+            "DEC-R5-S03",
+            "DEC-R5-S04"
+          ]
+        },
+        {
+          "feature_id": "R5F-S02",
+          "required_capability": "已定起點／敵家／難度政策之合法候選世界",
+          "required_decisions": [
+            "DEC-R5-S02",
+            "DEC-R5-S06",
+            "DEC-R5-S07"
+          ]
+        },
+        {
+          "feature_id": "R5F-E02",
+          "required_capability": "已定季終與獎勵政策之一次結算",
+          "required_decisions": [
+            "DEC-R5-S01",
+            "DEC-R5-S08"
+          ]
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-S03.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "季終換季交易",
+      "split_parent_ids": [
+        "R5F-S03"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "一次換季提交，不計S04是否達標"
+    },
+    {
+      "feature_id": "R5F-S04",
+      "title": "主題目標與結季資格",
+      "module": "06",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-S03",
+        "R5F-E02"
+      ],
+      "requirement_sources": [
+        "使用者當季目標／獎勵／重開需求",
+        "R5模組06/08"
+      ],
+      "purpose": "將既有來源中主題目標與結季資格的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "同規則目標計數可重播",
+        "達標開結算預覽",
+        "未定延長／截止不擅結季",
+        "主題選擇與規則版本鎖定；勝利事件由明確條件產生，不以UI按鈕自行宣告"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [
+        "DEC-R5-S01"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-S04.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-S03",
+        "R5F-E02"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "主題目標與結季資格獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-S05",
+      "title": "當季積分與比較分組",
+      "module": "06",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-E02"
+      ],
+      "requirement_sources": [
+        "使用者當季排行榜需求",
+        "R5模組05/06/08"
+      ],
+      "purpose": "將既有來源中當季積分與比較分組的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "生涯與季積分分帳",
+        "不同rulesHash／模式不混榜",
+        "重送不重加分"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [
+        "DEC-R5-S08"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-S05.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-E02"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "當季積分與比較分組獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-S06",
+      "title": "敵家供給與家族存續",
+      "module": "06",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-S01",
+        "R5F-S02",
+        "R5F-A01"
+      ],
+      "requirement_sources": [
+        "使用者敵方家族延續需求",
+        "R5模組06/07/08"
+      ],
+      "purpose": "將既有來源中敵家供給與家族存續的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "舊族活人與真後代保UID",
+        "死者不復活",
+        "新族創建有新合法來源而非洗白"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [
+        "DEC-R5-S06"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-S06.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-S01",
+        "R5F-S02",
+        "R5F-A01"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "敵家供給與家族存續獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-S07",
+      "title": "門閥稱號及候選資格",
+      "module": "06",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-U01",
+        "R5F-B03"
+      ],
+      "requirement_sources": [
+        "GitHub0183門閥提案",
+        "R5模組08"
+      ],
+      "purpose": "將既有來源中門閥稱號及候選資格的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "稱號與數值資格分帳",
+        "未採條件不給+10%或新金ID",
+        "公開名稱不洩hidden"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [
+        "DEC-R5-S10"
+      ],
+      "scope_status": "OPTIONAL_PROPOSAL_NOT_SELECTED",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-S07.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-U01",
+        "R5F-B07"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "門閥稱號及候選資格獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-S08",
+      "title": "模式隔離與擴充入口",
+      "module": "06",
+      "origin": "EXPLICIT_SPLIT_OF_COVERED_REQUIREMENT",
+      "original_feature_mapping": [
+        "R5F-S02",
+        "R5F-E02"
+      ],
+      "requirement_sources": [
+        "使用者海外／幻想選項討論",
+        "R5模組08"
+      ],
+      "purpose": "將既有來源中模式隔離與擴充入口的獨立狀態／驗收責任顯式列出，不新增默認玩法",
+      "acceptance_conditions": [
+        "未選模式不啟用",
+        "跨模式比較分組",
+        "不以入口規格授權全球內容／美術"
+      ],
+      "existing_case_ids": [],
+      "decision_dependencies": [
+        "DEC-R5-S09"
+      ],
+      "scope_status": "OPTIONAL_PROPOSAL_NOT_SELECTED",
+      "dependency_scope": [],
+      "specification_target": "features/R5F-S08.md",
+      "specification_status": "NEW_SPLIT_IDENTIFIED_INDIVIDUAL_SPEC_PENDING",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": null,
+      "split_parent_ids": [
+        "R5F-S02",
+        "R5F-S05"
+      ],
+      "dependency_mapping_status": "NOT_YET_MAPPED_INDIVIDUAL_SPEC_PHASE",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "模式隔離與擴充入口獨立責任；原入口映射僅追溯，不另計原入口同一子責任完成度"
+    },
+    {
+      "feature_id": "R5F-A01",
+      "title": "祖地存續狀態",
+      "module": "07",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-A01"
+      ],
+      "requirement_sources": [
+        "使用者祖地與失城存續方向",
+        "R5模組07"
+      ],
+      "purpose": "失城不等全家消失",
+      "acceptance_conditions": [
+        "保人物婚姻與家族，不刪UID",
+        "不復活；新身分需新合法事件"
+      ],
+      "existing_case_ids": [
+        "R5F-A01-P",
+        "R5F-A01-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S05",
+        "DEC-R5-S06"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-S01",
+          "required_capability": "永久人物／家系身份，不含換季資源承接與跳時",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-A01.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "祖地存續狀態",
+      "split_parent_ids": [
+        "R5F-A01"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "敗北轉祖地，不計S06創建新族"
+    },
+    {
+      "feature_id": "R5F-A02",
+      "title": "民兵與地方勢力再起",
+      "module": "07",
+      "origin": "EXISTING_FEATURE_ID",
+      "original_feature_mapping": [
+        "R5F-A02"
+      ],
+      "requirement_sources": [
+        "使用者民兵／地方勢力再起方向",
+        "R5模組07"
+      ],
+      "purpose": "有前兆成本反制的出山",
+      "acceptance_conditions": [
+        "有結果與代價，部署可反制",
+        "不得免費改領主或生無限民兵",
+        "蓄勢→集結→部署→攻城或內應→成敗成本→首城後正常勢力；每階段有前兆與可反制，不無限免傷兵"
+      ],
+      "existing_case_ids": [
+        "R5F-A02-P",
+        "R5F-A02-N"
+      ],
+      "decision_dependencies": [
+        "DEC-R5-S05",
+        "DEC-R5-S07"
+      ],
+      "scope_status": "REQUESTED_OR_BASELINE",
+      "dependency_scope": [
+        {
+          "feature_id": "R5F-A01",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        },
+        {
+          "feature_id": "R5F-C03",
+          "required_capability": "僅本功能列明輸入所需的同版不變量／基線能力",
+          "required_decisions": []
+        }
+      ],
+      "specification_target": "features/R5F-A02.md",
+      "specification_status": "TOPIC_COVERED_INDIVIDUAL_SPEC_NOT_YET_COMPLETE",
+      "implementation_status": "NOT_VERIFIED",
+      "test_execution_status": "NOT_RUN_IN_THIS_WORK",
+      "acceptance_status": "NOT_ASSESSED",
+      "acceptance_evidence": [],
+      "product_consumer_status": "NOT_RECHECKED",
+      "formal_doc_id": null,
+      "formal_task_id": null,
+      "readiness_gate": "相關DEC未採定部分不可進產品；獨立基線可先完成規格",
+      "original_title": "民兵與地方勢力再起",
+      "split_parent_ids": [
+        "R5F-A02"
+      ],
+      "dependency_mapping_status": "PREVIOUS_SCOPED_MAPPING_RETAINED",
+      "global_programming_gate": "BLOCKED_UNTIL_ALL_WORK_DOCUMENTS_CATALOG_AND_IN_SCOPE_INDIVIDUAL_SPECS_COMPLETE; then resolve applicable decisions and formal admission",
+      "counting_boundary": "有成本出山動員與攻城事件"
+    }
+  ],
+  "review_scope": "只核本次R4/R5來源範圍內功能清單及責任覆蓋，不是38份獨立規格完成或產品驗收通過"
+}
