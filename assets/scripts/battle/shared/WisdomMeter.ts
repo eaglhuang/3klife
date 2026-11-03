@@ -3,11 +3,16 @@
  * WisdomMeter — 軍師智謀能量累積（WBS v7 SCN-10 純邏輯，PROG-2-0616）
  *
  * 每回合累積 INT × 0.5，滿 100 觸發一次後歸零。
- * 全局增幅效果與 HUD 不在本檔範圍。
+ * 滿格觸發「全局增幅」（PROG-2-1574，暫定）：我方全軍鼓舞士氣 +20（沿用士氣系統，+20% 攻擊、3 回合不疊加）。
+ * 戰場顯示：每回合在戰鬥紀錄列出「智謀 N/100」，觸發時另列一行（PROG-2-1577）。
  */
+import type { Faction } from '../../core/config/Constants';
+import { castMorale, MoraleCarrier } from './Morale';
 
 export const WISDOM_METER_MAX = 100;
 export const WISDOM_METER_GAIN_RATIO = 0.5;
+/** 智謀滿格時全軍士氣加成（暫定，PROG-2-1574） */
+export const WISDOM_SURGE_MORALE = 20;
 
 export interface WisdomMeterStep {
     meter: number;
@@ -22,3 +27,22 @@ export function advanceWisdomMeter(meter: number, intelligence: number): WisdomM
     }
     return { meter: next, triggered: false };
 }
+
+/** 智謀全局增幅：該陣營存活部隊全體鼓舞；回傳受影響數量 */
+export function applyWisdomSurge(units: Iterable<MoraleCarrier & { isDead(): boolean }>, faction: Faction): number {
+    let count = 0;
+    for (const unit of units) {
+        if (unit.faction !== faction || unit.isDead()) continue;
+        castMorale(unit, WISDOM_SURGE_MORALE);
+        count += 1;
+    }
+    return count;
+}
+
+/** 回合紀錄用的智謀能量文字，例如「智謀 45/100」 */
+export function wisdomMeterText(meter: number): string {
+    return `智謀 ${Math.floor(Math.max(0, Math.min(WISDOM_METER_MAX, meter)))}/${WISDOM_METER_MAX}`;
+}
+
+/** 智謀觸發時的戰鬥紀錄文字 */
+export const WISDOM_SURGE_LOG = `智謀滿格：我方全軍鼓舞，士氣 +${WISDOM_SURGE_MORALE}`;

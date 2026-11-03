@@ -21,7 +21,6 @@
 //
 // Additional reducers:
 //   - empty <br>-style placeholder containers are dropped
-//   - panel -> label wrappers are collapsed into one label node
 //   - decorative panel leaves are absorbed into parent.skinLayers so purely
 //     visual overlay nodes stop consuming runtime node budget
 //
@@ -325,39 +324,12 @@ function demoteParentSkinSlotToLayer(parent, demotedNames) {
   return true;
 }
 
-function canCollapsePanelIntoLabel(node) {
-  if (!node || node.type !== 'panel' || !node.skinSlot) return false;
-  if (!Array.isArray(node.children) || node.children.length !== 1) return false;
-  const child = node.children[0];
-  if (!child || child.type !== 'label') return false;
-  if (Array.isArray(child.children) && child.children.length > 0) return false;
-  if (child.skinSlot) return false;
-  if (!isDefaultFillWidget(child.widget)) return false;
-  return true;
-}
-
-function collapsePanelIntoLabel(node, collapsedNames) {
-  const child = node.children[0];
-  node.type = 'label';
-  if (child.text != null) node.text = child.text;
-  if (child.textKey != null) node.textKey = child.textKey;
-  if (child.styleSlot) node.styleSlot = child.styleSlot;
-  if (child.bind && !node.bind) node.bind = child.bind;
-  if (child._contract && !node._contract) node._contract = child._contract;
-  if (child._bind && !node._bind) node._bind = child._bind;
-  if (child._action && !node._action) node._action = child._action;
-  delete node.children;
-  delete node.layout;
-  collapsedNames.push(node.name);
-  return node;
-}
-
-function foldOnce(node, foldedNames, droppedNames, absorbedNames, collapsedNames, demotedNames) {
+function foldOnce(node, foldedNames, droppedNames, absorbedNames, demotedNames) {
   if (!node) return node;
   if (Array.isArray(node.children)) {
     const nextChildren = [];
     for (const child of node.children) {
-      let folded = foldOnce(child, foldedNames, droppedNames, absorbedNames, collapsedNames, demotedNames);
+      let folded = foldOnce(child, foldedNames, droppedNames, absorbedNames, demotedNames);
       if (!folded) continue;
       if (isBrPlaceholder(folded) || isEmptyLeaf(folded)) {
         droppedNames.push(folded.name);
@@ -370,9 +342,6 @@ function foldOnce(node, foldedNames, droppedNames, absorbedNames, collapsedNames
       while (canHoistSingleChildContainer(folded)) {
         foldedNames.push(folded.name);
         folded = folded.children[0];
-      }
-      if (canCollapsePanelIntoLabel(folded)) {
-        folded = collapsePanelIntoLabel(folded, collapsedNames);
       }
       if (absorbVisualLayerContainer(node, folded, absorbedNames)) {
         continue;
@@ -444,8 +413,8 @@ function buildStructuralSignature(node) {
   return JSON.stringify(payload);
 }
 
-function foldRoot(root, foldedNames, droppedNames, absorbedNames, collapsedNames, demotedNames) {
-  return foldOnce(root, foldedNames, droppedNames, absorbedNames, collapsedNames, demotedNames);
+function foldRoot(root, foldedNames, droppedNames, absorbedNames, demotedNames) {
+  return foldOnce(root, foldedNames, droppedNames, absorbedNames, demotedNames);
 }
 
 /**
@@ -500,7 +469,6 @@ function main() {
   const foldedNames = [];
   const droppedNames = [];
   const absorbedNames = [];
-  const collapsedNames = [];
   const demotedSkinHostNames = [];
   const markedLazyNames = [];
 
@@ -510,7 +478,7 @@ function main() {
   let pass = 0;
   let prevCount = before;
   for (; pass < opts.maxPasses; pass += 1) {
-    foldRoot(rootNode, foldedNames, droppedNames, absorbedNames, collapsedNames, demotedSkinHostNames);
+    foldRoot(rootNode, foldedNames, droppedNames, absorbedNames, demotedSkinHostNames);
     const current = countNodes(rootNode);
     if (current === prevCount) break;
     prevCount = current;
@@ -526,22 +494,20 @@ function main() {
     foldedCount: foldedNames.length,
     droppedCount: droppedNames.length,
     absorbedCount: absorbedNames.length,
-    collapsedCount: collapsedNames.length,
     demotedSkinHostCount: demotedSkinHostNames.length,
     markedLazyCount: markedLazyNames.length,
     foldedNames,
     droppedNames,
     absorbedNames,
-    collapsedNames,
     demotedSkinHostNames,
     markedLazyNames,
   };
 
   if (opts.dryRun) {
-    console.log(`[optimize-ucuf-layout] dry-run: would fold ${foldedNames.length} + drop ${droppedNames.length} + absorb ${absorbedNames.length} + collapse ${collapsedNames.length} + demote-skin-host ${demotedSkinHostNames.length} (${before} -> ${after})`);
+    console.log(`[optimize-ucuf-layout] dry-run: would fold ${foldedNames.length} + drop ${droppedNames.length} + absorb ${absorbedNames.length} + demote-skin-host ${demotedSkinHostNames.length} (${before} -> ${after})`);
   } else {
     fs.writeFileSync(opts.output, JSON.stringify(layoutDocument, null, 2), 'utf8');
-    console.log(`[optimize-ucuf-layout] wrote ${opts.output}: folded ${foldedNames.length} + dropped ${droppedNames.length} + absorbed ${absorbedNames.length} + collapsed ${collapsedNames.length} + demoted-skin-host ${demotedSkinHostNames.length} + lazy-marked ${markedLazyNames.length} (${before} -> ${after}) in ${pass + 1} passes`);
+    console.log(`[optimize-ucuf-layout] wrote ${opts.output}: folded ${foldedNames.length} + dropped ${droppedNames.length} + absorbed ${absorbedNames.length} + demoted-skin-host ${demotedSkinHostNames.length} + lazy-marked ${markedLazyNames.length} (${before} -> ${after}) in ${pass + 1} passes`);
   }
   if (opts.report) {
     const reportDir = path.dirname(path.resolve(opts.report));

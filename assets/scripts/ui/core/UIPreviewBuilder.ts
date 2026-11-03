@@ -10,11 +10,11 @@
  *
  * Unity 對照：Prefab Variant Builder + EditorWindow 動態生成 UI 的組合
  */
-import { _decorator, Component, Label, Node, Sprite, UITransform,
-         UIOpacity, Color, tween, Font, Widget, Layout } from 'cc';
+import { _decorator, Button, Component, Label, Node, Sprite, UITransform,
+         UIOpacity, Color, tween, Font, Widget, Layout, Graphics } from 'cc';
 import { UISkinResolver, ResolvedButtonSkin } from './UISkinResolver';
 import { services } from '../../core/managers/ServiceLoader';
-import { resolveSize, DEFAULT_TRANSITION } from './UISpecTypes';
+import { resolveSize, widgetStretchSize, DEFAULT_TRANSITION } from './UISpecTypes';
 import type { UILayoutNodeSpec, UILayoutSpec, UISkinManifest, TransitionDef,
                SkinLayerDef } from './UISpecTypes';
 import { UIPreviewDiagnostics } from './UIPreviewDiagnostics';
@@ -27,6 +27,14 @@ import { UITemplateBinder } from './UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { CssClipPathMask } from './CssClipPathMask';
 import { resolveLabelText, type LabelTextSpec } from './UILabelText';
+import type { ICompositeRenderer, RadarSourceSvgGeometry } from './interfaces/ICompositeRenderer';
+import { radarConfigFromSourceSvg } from './RadarSvgConfig';
+import { isSvgLineArtMeta, layoutSvgLineArt } from './SvgLineArt';
+import { coverSize, resolveScreenBackdrop, SCREEN_BACKDROP_TABLE_PATH,
+         type ScreenBackdropTable } from './ScreenBackdrop';
+import { RoundedRectBackground } from '../components/RoundedRectBackground';
+import { SolidBackground } from '../components/SolidBackground';
+import { GradientBackground } from '../components/GradientBackground';
 
 const { ccclass } = _decorator;
 
@@ -61,12 +69,14 @@ export class UIPreviewBuilder extends Component {
      * @param skin    Skin Manifest；傳 null 時使用 SolidBackground fallback
      * @param i18n    i18n 字串對照表；傳 null 時顯示 key 作為 placeholder
      * @param tokens  Design Tokens（顏色與 elevation 等變數）
+     * @param host    掛載父節點，預設 this.node
      */
     public async buildScreen(
         layout: UILayoutSpec,
         skin: UISkinManifest | null,
         i18n?: Record<string, string>,
         tokens?: any,
+        host: Node = this.node,
     ): Promise<Node> {
         // ⚠️ 防禦：layout 或 layout.root 為 null 時提前拋出有意義的錯誤
         // 這可讓 BattleHUD catch 區段印出詳細來源，而不是神秘的 "reading 'root'"
@@ -97,13 +107,15 @@ export class UIPreviewBuilder extends Component {
         // 每次 buildScreen 前同步 i18nStrings 給 nodeFactory
         this.nodeFactory.i18nStrings = this.i18nStrings;
 
-        const designWidth  = layout.canvas.designWidth  ?? 1920;
-        const designHeight = layout.canvas.designHeight ?? 1080;
+        // 實際尺寸優先 (PROG-2-1628)
+        const hostT = host.getComponent(UITransform);
+        const designWidth  = hostT && hostT.width  > 0 ? hostT.width  : (layout.canvas.designWidth  ?? 1920);
+        const designHeight = hostT && hostT.height > 0 ? hostT.height : (layout.canvas.designHeight ?? 1080);
         const _tBuildScreen = UCUFLogger.perfBegin('UIPreviewBuilder.buildScreen');
 
         let rootNode: Node;
         try {
-            rootNode = await this._buildNode(layout.root, this.node, designWidth, designHeight);
+            rootNode = await this._buildNode(layout.root, host, designWidth, designHeight);
         } catch (e) {
             UIPreviewDiagnostics.buildScreenError(layout.id ?? '?', e as Error);
             throw e;
@@ -120,6 +132,7 @@ export class UIPreviewBuilder extends Component {
         // ─────────────────────────────────────────────────────────────────────
         this._postBuildPass(rootNode);
         this._dedupeTabSwitchNodes(rootNode);
+        await this._applyScreenBackdrop(layout.id, host, rootNode, designWidth, designHeight);
         UCUFLogger.perfEnd('UIPreviewBuilder.buildScreen', _tBuildScreen);
 
         // 通用佔位符清除：所有 UIPreviewBuilder 子類在 onBuildComplete 鉤子前
@@ -316,36 +329,19 @@ export class UIPreviewBuilder extends Component {
                 if (spec.skinSlot) await this.styleBuilder.applyBackgroundSkin(node, spec.skinSlot);
                 break;
             case 'panel':           await this.nodeFactory.buildPanel(node, spec);        break;
-            case 'label':           await this.nodeFactory.buildLabel(node, spec);        break;
+            case 'label':           await this.nodeFactory.buildLabel(node, spec);        this._measureFlowLabel(node, spec, flowChildInLayout); break;
             case 'button':          await this.nodeFactory.buildButton(node, spec);       break;
             case 'toggle':          await this.nodeFactory.buildToggle(node, spec);       break;
             case 'scroll-list':
             case 'scroll-view': {
                 let scrollW = w;
                 let scrollH = h;
-                if (widgetDef) {
-                    if (widgetDef.left !== undefined && widgetDef.right !== undefined) {
-                        scrollW = Math.max(
-                            parentWidth
-                            - resolveSize(widgetDef.left, parentWidth)
-                            - resolveSize(widgetDef.right, parentWidth),
-                            0,
-                        );
-                    }
-                    if (widgetDef.top !== undefined && widgetDef.bottom !== undefined) {
-                        scrollH = Math.max(
-                            parentHeight
-                            - resolveSize(widgetDef.top, parentHeight)
-                            - resolveSize(widgetDef.bottom, parentHeight),
-                            0,
-                        );
-                    }
-                }
+                ({ width: scrollW, height: scrollH } = widgetStretchSize(widgetDef, parentWidth, parentHeight, scrollW, scrollH));
                 await this.nodeFactory.buildScrollList(node, spec, scrollW, scrollH);
                 break;
             }
             case 'image':           await this.nodeFactory.buildImage(node, spec);        break;
-            case 'resource-counter': await this.nodeFactory.buildLabel(node, spec);       break;
+            case 'resource-counter': await this.nodeFactory.buildLabel(node, spec);       this._measureFlowLabel(node, spec, flowChildInLayout); break;
             case 'spacer': break;  // 空白佔位，無需掛載元件
             case 'composite-image': await this._buildCompositeImage(node, spec); break;
         }
@@ -364,6 +360,13 @@ export class UIPreviewBuilder extends Component {
         }
         if (compositeSpec.svgMeta) {
             (node as Node & { __ucufSvgMeta?: Record<string, unknown> }).__ucufSvgMeta = compositeSpec.svgMeta;
+            // Draw converted SVG radar through the engine-neutral renderer.
+            const renderer = compositeSpec.rendererHint === 'svg-radar-chart' ? this._getSvgCompositeRenderer() : undefined;
+            const radar = renderer
+                ? radarConfigFromSourceSvg(compositeSpec.svgMeta as unknown as RadarSourceSvgGeometry, w, h)
+                : null;
+            if (renderer && radar) await renderer.drawRadarChart(node, radar);
+            if (isSvgLineArtMeta(compositeSpec.svgMeta)) this._drawSvgLineArt(node, compositeSpec.svgMeta, w, h);
         }
 
         this._applySpecOpacity(node, spec.opacity);
@@ -384,24 +387,7 @@ export class UIPreviewBuilder extends Component {
             const nodeT      = node.getComponent(UITransform);
             let effectiveW = nodeT && nodeT.width  > 0 ? nodeT.width  : w;
             let effectiveH = nodeT && nodeT.height > 0 ? nodeT.height : h;
-            if (widgetDef) {
-                if (widgetDef.left !== undefined && widgetDef.right !== undefined) {
-                    effectiveW = Math.max(
-                        parentWidth
-                        - resolveSize(widgetDef.left, parentWidth)
-                        - resolveSize(widgetDef.right, parentWidth),
-                        0,
-                    );
-                }
-                if (widgetDef.top !== undefined && widgetDef.bottom !== undefined) {
-                    effectiveH = Math.max(
-                        parentHeight
-                        - resolveSize(widgetDef.top, parentHeight)
-                        - resolveSize(widgetDef.bottom, parentHeight),
-                        0,
-                    );
-                }
-            }
+            ({ width: effectiveW, height: effectiveH } = widgetStretchSize(widgetDef, parentWidth, parentHeight, effectiveW, effectiveH));
             const layoutDef = spec.layout;
             if (layoutDef) {
                 effectiveW = Math.max(
@@ -431,6 +417,52 @@ export class UIPreviewBuilder extends Component {
      * Unity 對照：Component.OnEnable() 虛函式鉤子模式。
      */
     protected _onLazySlotCreated(_spec: UILayoutNodeSpec, _node: Node, _w: number, _h: number): void { /* no-op */ }
+
+    /** Restyle a node built from `target` with the looks of a same-shaped `source` spec (e.g. tab active/inactive). */
+    /** Draw converted line-only SVG (e.g. family-tree connectors) stretched to the node box. */
+    private _drawSvgLineArt(node: Node, meta: Parameters<typeof layoutSvgLineArt>[0], w: number, h: number): void {
+        const t = node.getComponent(UITransform);
+        const bw = t && t.width > 0 ? t.width : w;
+        const bh = t && t.height > 0 ? t.height : h;
+        const segments = layoutSvgLineArt(meta, bw, bh);
+        if (segments.length === 0) return;
+        const g = node.getComponent(Graphics) ?? node.addComponent(Graphics);
+        g.clear();
+        const left = -bw * (t ? t.anchorX : 0.5);
+        const top = bh * (1 - (t ? t.anchorY : 0.5));
+        for (const seg of segments) {
+            g.lineWidth = seg.width;
+            g.strokeColor = new Color(seg.rgba[0], seg.rgba[1], seg.rgba[2], seg.rgba[3]);
+            g.moveTo(left + seg.x1, top - seg.y1);
+            g.lineTo(left + seg.x2, top - seg.y2);
+            g.stroke();
+        }
+    }
+
+    /** Renderer for converted SVG composites; subclasses supply one. */
+    protected _getSvgCompositeRenderer(): ICompositeRenderer | undefined {
+        return undefined;
+    }
+
+    protected async _restyleFromSpec(node: Node, target: UILayoutNodeSpec, source: UILayoutNodeSpec): Promise<void> {
+        if (source.type === 'label') {
+            const label = node.getComponent(Label);
+            const style = source.styleSlot ? this.skinResolver.getLabelStyle(source.styleSlot) : null;
+            if (label && style) this.styleBuilder.applyLabelStyle(label, style);
+        } else if (source.skinSlot) {
+            // Same fallback as buildButton: gradient skins are not button skins
+            const button = node.getComponent(Button);
+            const applied = button ? await this.styleBuilder.applyButtonSkin(node, source.skinSlot, button) : false;
+            if (!applied) await this.styleBuilder.applyBackgroundSkin(node, source.skinSlot);
+        }
+        const targetChildren = target.children ?? [];
+        const sourceChildren = source.children ?? [];
+        for (let i = 0; i < targetChildren.length && i < sourceChildren.length; i++) {
+            // Match children by name: style helpers may add extra nodes such as Background
+            const child = node.getChildByName(targetChildren[i].name ?? '');
+            if (child) await this._restyleFromSpec(child, targetChildren[i], sourceChildren[i]);
+        }
+    }
 
     private _dedupeTabSwitchNodes(rootNode: Node): void {
         const seenContracts = new Set<string>();
@@ -601,6 +633,16 @@ export class UIPreviewBuilder extends Component {
         return estimatedWidth;
     }
 
+    /** 估寬只是後備；Label 自己決定尺寸的模式下改用實測 (PROG-2-1630) */
+    private _measureFlowLabel(node: Node, spec: UILayoutNodeSpec, flowChildInLayout: boolean): void {
+        if (!flowChildInLayout || (spec.width !== undefined && spec.height !== undefined)) return;
+        const lbl = node.getComponent(Label);
+        if (!lbl) return;
+        const measured = lbl.overflow === Label.Overflow.NONE
+            || (lbl.overflow === Label.Overflow.RESIZE_HEIGHT && spec.height === undefined);
+        if (measured) (lbl as Label & { updateRenderData?: (force?: boolean) => void }).updateRenderData?.(true);
+    }
+
     private _resolveSpecText(spec: UILayoutNodeSpec): string {
         return resolveLabelText(spec as LabelTextSpec, this.i18nStrings);
     }
@@ -707,6 +749,7 @@ export class UIPreviewBuilder extends Component {
             if (!frame) continue;
 
             const child = new Node(`composite_${layer.spriteSlotId}`);
+            child.layer = node.layer;  // UI camera only renders UI_2D
             node.addChild(child);
 
             const childT = child.addComponent(UITransform);
@@ -744,6 +787,7 @@ export class UIPreviewBuilder extends Component {
 
         for (const layer of sorted) {
             const child = new Node(`skinLayer_${layer.layerId}`);
+            child.layer = node.layer;  // UI camera only renders UI_2D
             node.addChild(child);
 
             const childT = child.addComponent(UITransform);
@@ -797,14 +841,60 @@ export class UIPreviewBuilder extends Component {
      * 統一以 perfBegin/perfEnd 包裹供 UCUFLogger 監控。
      * Unity 對照：Canvas.ForceUpdateCanvases() + LayoutRebuilder 組合
      */
+    /**
+     * Table-driven full-screen backdrop (data/ui-screen-backdrops.json). A cover-fit
+     * sprite goes beneath the screen; opaque fills of containers covering at least
+     * replaceFillCoverRatio of the screen are disabled so the picture shows through.
+     * Overlay layers (__bgLayer_*, pseudo elements) stay on top as decoration.
+     */
+    private async _applyScreenBackdrop(screenId: string | undefined, host: Node, root: Node,
+                                       width: number, height: number): Promise<void> {
+        const old = host.getChildByName('__screenBackdrop');
+        if (old) { old.removeFromParent(); old.destroy(); }
+        const table = await services().resource.loadJson<ScreenBackdropTable>(SCREEN_BACKDROP_TABLE_PATH).catch(() => null);
+        const backdrop = resolveScreenBackdrop(table, screenId);
+        if (!backdrop) return;
+        const frame = await services().resource.loadSpriteFrame(backdrop.sprite, { preferTextureFallback: true }).catch(() => null);
+        if (!frame) {
+            UCUFLogger.warn(LogCategory.UI, `[UIPreviewBuilder] backdrop sprite missing: ${backdrop.sprite}`);
+            return;
+        }
+        const node = new Node('__screenBackdrop');
+        node.layer = host.layer;
+        const t = node.addComponent(UITransform);
+        const sprite = node.addComponent(Sprite);
+        sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+        sprite.spriteFrame = frame;
+        const fit = coverSize(frame.originalSize.width, frame.originalSize.height, width, height);
+        t.width = fit.width;
+        t.height = fit.height;
+        host.addChild(node);
+        node.setSiblingIndex(0);
+        const minArea = width * height * backdrop.replaceFillCoverRatio;
+        const strip = (n: Node) => {
+            const ut = n.getComponent(UITransform);
+            if (!ut || ut.width * ut.height < minArea) return;
+            let filled = false;
+            for (const C of [SolidBackground, GradientBackground, RoundedRectBackground]) {
+                const c = n.getComponent(C as any) as Component | null;
+                if (c) { c.enabled = false; filled = true; }
+            }
+            // Fill components render through the node's Sprite.
+            const fillSprite = filled ? n.getComponent(Sprite) : null;
+            if (fillSprite) fillSprite.enabled = false;
+            for (const c of n.children) {
+                if (!c.name.startsWith('__bgLayer_') && !c.name.endsWith('_PseudoAfter')
+                    && !c.name.endsWith('_PseudoBefore')) strip(c);
+            }
+        };
+        strip(root);
+    }
+
     protected _postBuildPass(root: Node): void {
         const t = UCUFLogger.perfBegin('UIPreviewBuilder._postBuildPass');
         this._realignAllWidgets(root);
         this._updateAllLayouts(root);
-        this.layoutBuilder.applyPostLayoutAlignment(root);
-        this._realignAllWidgets(root);
         this._enforceContainerBounds(root);
-        this._updateAllLayouts(root);
         this.layoutBuilder.applyPostLayoutAlignment(root);
         this._realignAllWidgets(root);
         UCUFLogger.perfEnd('UIPreviewBuilder._postBuildPass', t);
@@ -824,7 +914,6 @@ export class UIPreviewBuilder extends Component {
     private _realignAllWidgets(node: Node): void {
         const widget = node.getComponent(Widget);
         if (widget) {
-            widget.alignMode = Widget.AlignMode.ALWAYS;
             widget.updateAlignment();
         }
         for (const child of node.children) {
@@ -856,6 +945,8 @@ export class UIPreviewBuilder extends Component {
         for (const slot of Object.values(skin.slots)) {
             if (slot.kind === 'label-style' && (slot as any).font) {
                 paths.add((slot as any).font as string);
+                const bold = (slot as any).isBold ? this.skinResolver.resolveBoldFontPath((slot as any).font) : undefined;
+                if (bold) paths.add(bold);
             }
         }
         await Promise.all(Array.from(paths).map(async (path) => {

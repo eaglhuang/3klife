@@ -3,12 +3,14 @@
 
 const fs = require('fs');
 const path = require('path');
+const { loadBindMap, installBindMap } = require('./lib/html-to-ucuf/bind-map');
 const {
   findBrowser,
   prepareSource,
   toFileUrl,
   waitForPageSettle,
 } = require('./render-html-snapshot');
+const { TAB_TEXT_HINTS } = require('./lib/dom-to-ui/draft-builder-core');
 
 function parseArgs(argv) {
   const opts = {
@@ -34,6 +36,7 @@ function parseArgs(argv) {
       case '--viewport': opts.viewport = next(); break;
       case '--settle-ms': opts.settleMs = parseInt(next(), 10) || 1500; break;
       case '--browser': opts.browser = next(); break;
+      case '--bind-map': opts.bindMap = next(); break;
       case '--tabs':
         opts.tabs = String(next() || '')
           .split(',')
@@ -226,6 +229,7 @@ async function main() {
     await page.setViewport({ width: vw || 1920, height: vh || 1080 });
     await page.goto(toFileUrl(preparedPath), { waitUntil: 'networkidle0', timeout: 30000 });
     await waitForPageSettle(page, opts.settleMs);
+    await installBindMap(page, loadBindMap(opts.bindMap));
 
     const tabs = opts.tabs || await discoverTabs(page, opts);
     if (!tabs || tabs.length === 0) {
@@ -235,9 +239,11 @@ async function main() {
       process.exit(1);
     }
 
+    const baselineVisibleIds = await page.evaluate(collectVisibleIds);
+
     for (let index = 0; index < tabs.length; index += 1) {
       const tab = tabs[index];
-      const result = await page.evaluate(async ({ tabKey, tabId, index, tabSelector, contentSelector, rootNamePrefix, allowLegacyContentFallback }) => {
+      const result = await page.evaluate(async ({ tabKey, tabId, index, tabSelector, contentSelector, rootNamePrefix, allowLegacyContentFallback, tabTextHints }) => {
         const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
         const normalize = value => String(value || '').trim().toLowerCase();
         const queryAll = selector => {
@@ -262,6 +268,46 @@ async function main() {
               && (!rect || (rect.width > 0 && rect.height > 0));
           });
           return visible || candidates[0] || null;
+        };
+        // 依分頁鍵文字推回分頁 key（原稿沒有 data-tab / aria-controls 時使用）
+        const textTabKey = button => {
+          const raw = String(button && button.textContent || '').replace(/\s+/g, '').toUpperCase();
+          if (!raw) return null;
+          const hit = tabTextHints.find(([hint]) => raw.includes(hint));
+          return hit ? hit[1] : null;
+        };
+        // 原稿沒有標記內容區時：切到另一個分頁，比對前後文字有變的元素，取其最近共同祖先當內容區
+        const inferHostByTabDiff = async (button, allButtons) => {
+          const other = allButtons.find(candidate => candidate !== button && textTabKey(candidate) && textTabKey(candidate) !== textTabKey(button));
+          if (!button || !other) return null;
+          const snapshot = () => {
+            const map = new Map();
+            for (const element of document.body.querySelectorAll('*')) {
+              if (element.children.length === 0) map.set(element, element.textContent || '');
+            }
+            return map;
+          };
+          const before = snapshot();
+          other.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+          await wait(350);
+          const after = snapshot();
+          // React 等框架切分頁會整批換節點：在另一分頁的狀態下取變動葉節點的共同祖先鏈
+          const changed = [];
+          for (const [element, text] of after) {
+            if (!before.has(element) || before.get(element) !== text) changed.push(element);
+          }
+          const inButtons = element => allButtons.some(candidate => candidate.contains(element));
+          const leaves = changed.filter(element => element.isConnected && !inButtons(element));
+          let lca = leaves.length > 0 ? leaves[0].parentElement : null;
+          while (lca && !leaves.every(element => lca.contains(element))) lca = lca.parentElement;
+          const chain = [];
+          for (let node = lca; node && node !== document.body; node = node.parentElement) chain.push(node);
+          button.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+          await wait(350);
+          // 切回目標分頁後，沿祖先鏈取第一個仍存在的容器
+          const host = chain.find(node => node.isConnected) || null;
+          if (!host || host === document.documentElement) return null;
+          return host;
         };
         const resolveContentHost = (button, preferredSelector, key, id, allowLegacy) => {
           const preferred = queryAll(preferredSelector).find(Boolean);
@@ -308,7 +354,7 @@ async function main() {
             button.id,
           ].map(normalize);
           return dataValues.includes(tabKey) || dataValues.includes(tabId.toLowerCase());
-        }) || buttons[index] || null;
+        }) || buttons.find(button => textTabKey(button) === tabKey) || buttons[index] || null;
 
         if (target) {
           target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
@@ -317,7 +363,11 @@ async function main() {
         if (document.fonts && document.fonts.ready) await document.fonts.ready;
         await wait(150);
 
-        const resolvedHost = resolveContentHost(target, contentSelector, tabKey, tabId, allowLegacyContentFallback);
+        let resolvedHost = resolveContentHost(target, contentSelector, tabKey, tabId, allowLegacyContentFallback);
+        if (!resolvedHost.element) {
+          const inferred = await inferHostByTabDiff(target, buttons);
+          if (inferred) resolvedHost = { element: inferred, source: 'inferred-tab-diff', legacy: false };
+        }
         const source = resolvedHost && resolvedHost.element;
         if (!source) {
           return {
@@ -385,12 +435,28 @@ async function main() {
         contentSelector: opts.contentSelector,
         rootNamePrefix: opts.rootNamePrefix || toPascal(opts.screenId),
         allowLegacyContentFallback: opts.allowLegacyContentFallback,
+        tabTextHints: TAB_TEXT_HINTS,
       });
 
       const fragmentPath = path.join(outputDir, `${opts.screenId}.${tab.key}.right-content.html`);
+      const regions = [];
+      let hides = [];
       if (result.ok) {
         const html = `<!doctype html>\n<html><head>${result.head}</head><body>${result.html}</body></html>\n`;
         fs.writeFileSync(fragmentPath, html, 'utf8');
+        // Areas outside the content host that this tab shows or hides (e.g. a full-width
+        // family tree replacing the portrait); each shown area becomes its own fragment.
+        const delta = await page.evaluate(collectTabRegionDelta, {
+          baseline: baselineVisibleIds,
+          hostName: result.hostName,
+          rootNamePrefix: `${opts.rootNamePrefix || toPascal(opts.screenId)}${tab.id}`,
+        });
+        hides = delta.hides;
+        for (const region of delta.regions) {
+          const regionPath = path.join(outputDir, `${opts.screenId}.${tab.key}.region.${region.id}.html`);
+          fs.writeFileSync(regionPath, `<!doctype html>\n<html><head>${result.head}</head><body>${region.html}</body></html>\n`, 'utf8');
+          regions.push({ id: region.id, html: regionPath });
+        }
       }
       manifest.tabs.push({
         id: tab.id,
@@ -406,6 +472,8 @@ async function main() {
         hostName: result.hostName || null,
         legacyHost: !!result.legacyHost,
         fixAction: result.fixAction || undefined,
+        regions: regions.length > 0 ? regions : undefined,
+        hides: hides.length > 0 ? hides : undefined,
       });
     }
 
@@ -481,4 +549,61 @@ function toTabDescriptor(value) {
     .toLowerCase();
   if (!key) return null;
   return { id: toRuntimeTabId(key), key };
+}
+
+// Runs in the page: ids of elements the user can currently see.
+function collectVisibleIds() {
+  const isVisible = (element) => {
+    const style = window.getComputedStyle(element);
+    if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) return false;
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  };
+  return Array.from(document.querySelectorAll('[id]')).filter(isVisible).map(element => element.id);
+}
+
+// Runs in the page: id'd areas outside the tab content host that the current tab shows
+// (cloned as fragment HTML) or hides, compared with the page's default state.
+async function collectTabRegionDelta({ baseline, hostName, rootNamePrefix }) {
+  // Let show/hide transitions settle so visibility reflects the tab's resting state.
+  // Looping animations never finish, so cap the wait.
+  const settled = Promise.all((document.getAnimations ? document.getAnimations() : []).map(a => a.finished.catch(() => null)));
+  await Promise.race([settled, new Promise(resolve => setTimeout(resolve, 1000))]);
+  const host = hostName ? document.getElementById(hostName) : null;
+  const related = (element) => !!host && (element === host || element.contains(host) || host.contains(element));
+  const outermost = (elements) => elements.filter(element => !elements.some(other => other !== element && other.contains(element)));
+  const nowVisible = new Set(collectVisibleIdsInPage());
+  const before = new Set(baseline || []);
+  const byId = id => document.getElementById(id);
+  const shown = outermost([...nowVisible].filter(id => !before.has(id)).map(byId).filter(el => el && !related(el)));
+  const hidden = outermost([...before].filter(id => !nowVisible.has(id)).map(byId).filter(el => el && !related(el)));
+  const regions = shown.map((element) => {
+    const computed = window.getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+    const clone = document.createElement('div');
+    const pascal = String(element.id).replace(/(^|[-_\s]+)(\w)/g, (_, __, c) => c.toUpperCase());
+    clone.setAttribute('data-name', `${rootNamePrefix}${pascal}Root`);
+    // The mount keeps the area's own box (background, padding); the fragment is its content box.
+    const padX = parseFloat(computed.paddingLeft) + parseFloat(computed.paddingRight);
+    const padY = parseFloat(computed.paddingTop) + parseFloat(computed.paddingBottom);
+    for (const prop of ['display', 'flex-direction', 'gap', 'box-sizing']) {
+      const value = computed.getPropertyValue(prop);
+      if (value) clone.style.setProperty(prop, value);
+    }
+    clone.style.setProperty('width', `${Math.max(1, Math.round(rect.width - padX))}px`);
+    clone.style.setProperty('min-height', `${Math.max(1, Math.round(element.scrollHeight - padY))}px`);
+    for (const child of Array.from(element.childNodes)) clone.appendChild(child.cloneNode(true));
+    return { id: element.id, html: clone.outerHTML };
+  });
+  return { regions, hides: hidden.map(element => element.id) };
+
+  function collectVisibleIdsInPage() {
+    const isVisible = (element) => {
+      const style = window.getComputedStyle(element);
+      if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    };
+    return Array.from(document.querySelectorAll('[id]')).filter(isVisible).map(element => element.id);
+  }
 }

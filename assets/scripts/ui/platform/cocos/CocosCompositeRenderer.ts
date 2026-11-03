@@ -60,6 +60,9 @@ type RadarLayoutMetrics = {
     labelBoxes: RadarLabelBox[];
 };
 
+/** Width Graphics' edge antialiasing removes from a stroke's visible coverage. */
+const GRAPHICS_AA_FEATHER_PX = 1;
+
 export class CocosCompositeRenderer implements ICompositeRenderer {
     async drawRadarChart(parent: NodeHandle, config: RadarChartConfig): Promise<NodeHandle> {
         const parentNode = parent as Node;
@@ -155,9 +158,7 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
             gfx.fill();
 
             const outlineColor = cssToColor(layer.color ?? (layerIndex === 0 ? '#4488FF' : '#FFAA22'));
-            outlineColor.a = 230;
-            gfx.strokeColor = outlineColor;
-            gfx.lineWidth = outlineWidth;
+            this._applySourceStroke(gfx, outlineWidth, outlineColor, sourceSvg, size);
             gfx.moveTo(firstX, firstY);
             for (let i = 1; i < axisCount; i += 1) {
                 const [x, y] = this._radarValuePoint(i, layer.values[i] * size, axisCount, sourceVectors);
@@ -220,13 +221,16 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
             const [x, y] = sourceLabel
                 ? this._mapSourcePoint({ x: sourceLabel.x, y: sourceLabel.y }, sourceSvg, size)
                 : this._radialPoint(i, radius, axisCount);
-            labelNode.setPosition(x, y + offsetY, 0);
+            // Source label coordinates already carry the SVG text offset; only synthetic labels need offsetY.
+            labelNode.setPosition(x, sourceLabel ? y : y + offsetY, 0);
 
             const label = labelNode.getComponent(Label);
             if (!label) continue;
             label.string = sourceLabel?.text || config.axes[i] || '';
-            label.fontSize = fontSize;
-            label.lineHeight = fontSize + 2;
+            // SVG text scales with the viewBox like the geometry does.
+            const labelFontSize = sourceLabel ? fontSize * this._sourceScale(sourceSvg, size) : fontSize;
+            label.fontSize = labelFontSize;
+            label.lineHeight = labelFontSize + 2;
             label.color = cssToColor(colors[i] ?? sourceLabel?.fill ?? '#8CCFC4');
             label.isBold = true;
             label.horizontalAlign = HorizontalTextAlignment.CENTER;
@@ -342,8 +346,8 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
     ): void {
         for (const polygon of sourceSvg.gridPolygons ?? []) {
             if (!polygon.points || polygon.points.length < 3) continue;
-            gfx.lineWidth = polygon.strokeWidth ?? fallbackGridLineWidth;
-            gfx.strokeColor = polygon.stroke ? cssToColor(polygon.stroke) : fallbackGridColor;
+            this._applySourceStroke(gfx, polygon.strokeWidth ?? fallbackGridLineWidth,
+                polygon.stroke ? cssToColor(polygon.stroke) : fallbackGridColor.clone(), sourceSvg, size);
             const [firstX, firstY] = this._mapSourcePoint(polygon.points[0], sourceSvg, size);
             gfx.moveTo(firstX, firstY);
             for (let i = 1; i < polygon.points.length; i += 1) {
@@ -355,8 +359,8 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
         }
 
         for (const line of sourceSvg.axisLines ?? []) {
-            gfx.lineWidth = line.strokeWidth ?? fallbackAxisLineWidth;
-            gfx.strokeColor = line.stroke ? cssToColor(line.stroke) : fallbackGridColor;
+            this._applySourceStroke(gfx, line.strokeWidth ?? fallbackAxisLineWidth,
+                line.stroke ? cssToColor(line.stroke) : fallbackGridColor.clone(), sourceSvg, size);
             const [x1, y1] = this._mapSourcePoint({ x: line.x1, y: line.y1 }, sourceSvg, size);
             const [x2, y2] = this._mapSourcePoint({ x: line.x2, y: line.y2 }, sourceSvg, size);
             gfx.moveTo(x1, y1);
@@ -429,6 +433,24 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
             }
         }
         return radius;
+    }
+
+    /**
+     * Match browser stroke coverage. Graphics feathers ~1px of the line edge away for antialiasing,
+     * so the visible width is lineWidth - 1: add that back. Browsers draw sub-pixel strokes at
+     * partial coverage, so a stroke thinner than 1px keeps 1px visible width with alpha scaled down.
+     */
+    private _applySourceStroke(gfx: Graphics, width: number, color: Color, sourceSvg: RadarSourceSvgGeometry | null, targetRadius: number): void {
+        const sourceRadius = sourceSvg ? this._resolveSourceOuterRadius(sourceSvg) : 0;
+        const px = width * (sourceRadius > 0 ? targetRadius / sourceRadius : 1);
+        gfx.lineWidth = Math.max(1, px) + GRAPHICS_AA_FEATHER_PX;
+        if (px < 1) color.a = Math.round(color.a * Math.max(0, px));
+        gfx.strokeColor = color;
+    }
+
+    private _sourceScale(sourceSvg: RadarSourceSvgGeometry | null, targetRadius: number): number {
+        const sourceRadius = sourceSvg ? this._resolveSourceOuterRadius(sourceSvg) : 0;
+        return sourceRadius > 0 ? targetRadius / sourceRadius : 1;
     }
 
     private _mapSourcePoint(point: RadarPoint, sourceSvg: RadarSourceSvgGeometry | null, targetRadius: number): [number, number] {

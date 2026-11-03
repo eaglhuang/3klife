@@ -82,6 +82,9 @@ export class UIPreviewNodeFactory {
         }
 
         const label = node.addComponent(Label);
+        // 預設 NONE 溢出會依字串把節點寬度撐開；spec 有寫死寬度時，套完樣式要還原（人物傳記被撐到 2384px、整段變一行，PROG-2-1625）
+        const transform = node.getComponent(UITransform);
+        const specWidth = typeof spec.width === 'number' ? spec.width : null;
 
         // 文字優先順序：textKey > text > bind > 空字串
         if (spec.textKey) {
@@ -104,6 +107,11 @@ export class UIPreviewNodeFactory {
             if (style) {
                 this.styleBuilder.applyLabelStyle(label, style);
                 // applyLabelStyle 已保證 overflow ≥ SHRINK，不再硬蓋
+                // 按鈕文字未指定對齊時置中（開場「繼續」卡在按鈕左上角）
+                if (node.parent?.getComponent(Button)) {
+                    if (!style.alignExplicit?.horizontal) label.horizontalAlign = Label.HorizontalAlign.CENTER;
+                    if (!style.alignExplicit?.vertical) label.verticalAlign = Label.VerticalAlign.CENTER;
+                }
             } else {
                 // styleSlot 找不到時，仍保障 SHRINK
                 label.overflow = Label.Overflow.SHRINK;
@@ -112,6 +120,26 @@ export class UIPreviewNodeFactory {
             // 無 styleSlot 的 label，一律 SHRINK 防溢出
             // Unity 對照：TextMeshPro AutoSize 預設行為
             label.overflow = Label.Overflow.SHRINK;
+        }
+        if (specWidth !== null && transform && transform.width !== specWidth && label.overflow !== Label.Overflow.NONE) {
+            transform.width = specWidth;
+        }
+        // Styling runs while overflow is still NONE, so Cocos shrinks the box to one line of text;
+        // a fixed-size mode must get the source height back too (e.g. 戰法等級 stacked one glyph per line).
+        const specBoxHeight = typeof spec.height === 'number' ? spec.height : null;
+        if (specBoxHeight !== null && transform && transform.height !== specBoxHeight
+            && (label.overflow === Label.Overflow.SHRINK || label.overflow === Label.Overflow.CLAMP)) {
+            transform.height = specBoxHeight;
+        }
+        // A box the source laid out as one line must stay one line: glyph widths differ slightly
+        // between engines, so never wrap it (e.g. "LV.7" split in two and grown to double height).
+        const specHeight = typeof spec.height === 'number' ? spec.height : null;
+        if (specHeight !== null && label.lineHeight > 0 && specHeight < label.lineHeight * 1.5
+            && label.overflow !== Label.Overflow.NONE) {
+            // RESIZE_HEIGHT always wraps in Cocos; SHRINK keeps the measured box and scales instead.
+            label.overflow = Label.Overflow.SHRINK;
+            (label as unknown as { enableWrapText: boolean }).enableWrapText = false; // not in the test cc mock
+            if (transform) transform.height = specHeight;
         }
     }
 

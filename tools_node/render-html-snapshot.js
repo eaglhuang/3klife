@@ -21,6 +21,13 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const { loadBindMap, installBindMap } = require('./lib/html-to-ucuf/bind-map');
+
+function reportBindMap(report) {
+  const missed = report.filter(item => !item.matched).map(item => item.name);
+  if (missed.length > 0) console.warn(`
+[render-html-snapshot] bind-map unmatched: ${missed.join(', ')}`);
+}
 
 function parseArgs(argv) {
   const opts = {
@@ -30,6 +37,7 @@ function parseArgs(argv) {
     settleMs: 1500,
     preEval: null,
     browser: null,
+    bindMap: null,
   };
   for (let i = 2; i < argv.length; i += 1) {
     const a = argv[i];
@@ -41,9 +49,10 @@ function parseArgs(argv) {
       case '--settle-ms': opts.settleMs = parseInt(next(), 10) || 1500; break;
       case '--pre-eval': opts.preEval = next(); break;
       case '--browser': opts.browser = next(); break;
+      case '--bind-map': opts.bindMap = next(); break;
       case '--help':
       case '-h':
-        console.log('Usage: render-html-snapshot.js --input <html> --output <html> [--viewport WxH] [--settle-ms N] [--pre-eval <js>] [--browser <path>]');
+        console.log('Usage: render-html-snapshot.js --input <html> --output <html> [--viewport WxH] [--settle-ms N] [--pre-eval <js>] [--browser <path>] [--bind-map <json>]');
         process.exit(0);
         break;
       default:
@@ -151,6 +160,7 @@ async function main() {
     await page.setViewport({ width: vw || 1920, height: vh || 1080 });
     await page.goto(toFileUrl(preparedPath), { waitUntil: 'networkidle0', timeout: 30000 });
     await waitForPageSettle(page, opts.settleMs);
+    reportBindMap(await installBindMap(page, loadBindMap(opts.bindMap)));
 
     if (opts.preEval) {
       try {

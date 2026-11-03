@@ -79,8 +79,13 @@ export class TroopUnit {
     this.depth = depth;
   }
 
+  /** 護盾（SYS-SKILL-ULT-0003）：受到傷害時先扣護盾再扣 HP，預設 0 不影響既有數值 */
+  public shield = 0;
+
   public takeDamage(value: number): void {
-    this.currentHp = Math.max(0, this.currentHp - value);
+    const absorbed = Math.min(this.shield, Math.max(0, value));
+    this.shield -= absorbed;
+    this.currentHp = Math.max(0, this.currentHp - (value - absorbed));
   }
 
   public heal(value: number): void {
@@ -92,6 +97,14 @@ export class TroopUnit {
 
   /** 士氣剩餘回合（PROG-2-0770，暫定 3 回合）；0 表示無鼓舞 */
   public moraleTurns = 0;
+  /** 本回合自動前進的格數（神威符強擊突刺，PROG-2-1573）；每次移動階段開始歸零 */
+  public chargeCells = 0;
+  /** 連擊目標與層數（工甲符工甲連弩，PROG-2-1581）：連續攻擊同一目標時累加，換目標歸零 */
+  public comboTargetId: string | null = null;
+  public comboStreak = 0;
+
+  /** 受控抵抗率（虎符特性「韌性」，PROG-2-1627）：被控制戰法選中時依此機率抵抗；預設 0 不影響既有行為 */
+  public controlResistChance = 0;
 
   /** 單騎破陣（PROG-2-0794）：回合開始重算，無相鄰友軍時 ×1.3；預設 1 不影響既有數值 */
   public soloBreachMultiplier = 1;

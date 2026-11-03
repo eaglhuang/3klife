@@ -1,14 +1,19 @@
 // @spec-source → 戰場格子系統.md (doc_spec_0044)、戰場適性系統.md (doc_spec_0041)；PROG-2-1429 依建檔紀錄補標出處
 import { BattleTactic, Faction } from '../../../core/config/Constants';
 import { services } from '../../../core/managers/ServiceLoader';
+import { EVENT_NAMES } from '../../../core/config/Constants';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
 import { advanceFormationZonesOf } from '../../shared/FormationZone';
+import { tickSelfBurst } from '../../shared/SelfBurstWindow';
+import { tickTeamAura } from '../../shared/TeamAura';
+import { massDebuffDotDamage, tickEnemyMassDebuff } from '../../shared/EnemyMassDebuff';
 import { advanceMoraleOf } from '../../shared/Morale';
 import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
 import { sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
-import { addStageSalvage, FIRE_RAID_TILE_NOTE, rollFirePlunderGain } from '../../shared/StageSalvage';
+import { applyTallyDefection, applyTallyTeamMoraleAura } from '../../shared/TallyPassive';
+import { addStageSalvage, FIRE_RAID_TILE_NOTE, hazardDamageTakenOf, luckSalvageMultiplierOf, ROCK_SLIDE_TILE_NOTE, rollFirePlunderGain, rollRockBreakGain, scaleSalvageGain } from '../../shared/StageSalvage';
 
 export interface BattleTileEffectPhaseContext {
   readonly state: BattleState;
@@ -42,10 +47,60 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
     return !!caster && !caster.isDead();
   });
   advanceMoraleOf(context.state.units.values(), context.actingFaction);
+  // 自身爆發窗口在施放陣營自己的回合倒數（SYS-SKILL-ULT-0001）
+  // 測試用的精簡 state 沒有爆發窗口時略過
+  if (context.state.getSelfBurst) {
+    const before = context.state.getSelfBurst(context.actingFaction);
+    const ticked = tickSelfBurst(before);
+    context.state.setSelfBurst(context.actingFaction, ticked.window);
+    if (ticked.phase === 'ended' && before) {
+      svc.event.emit(EVENT_NAMES.SelfBurstChanged, {
+        faction: context.actingFaction, phase: 'ended', ultimateId: before.ultimateId, turns: 0,
+      });
+    }
+  }
+  // 全隊增益 aura 同樣在施放陣營自己的回合倒數（SYS-SKILL-ULT-0002）
+  if (context.state.getTeamAura) {
+    const auraBefore = context.state.getTeamAura(context.actingFaction);
+    const auraTicked = tickTeamAura(auraBefore);
+    context.state.setTeamAura(context.actingFaction, auraTicked.aura);
+    if (auraTicked.phase === 'ended' && auraBefore) {
+      svc.event.emit(EVENT_NAMES.TeamAuraChanged, {
+        faction: context.actingFaction, phase: 'ended', ultimateId: auraBefore.ultimateId, turns: 0,
+      });
+    }
+  }
+  // 敵方全體減益（SYS-SKILL-ULT-0004）：被減益陣營自己的回合先吃 DOT 再倒數
+  if (context.state.getMassDebuff) {
+    const debuff = context.state.getMassDebuff(context.actingFaction);
+    if (debuff && debuff.dotPct > 0) {
+      for (const unit of Array.from(context.state.units.values())) {
+        if (unit.faction !== context.actingFaction || unit.isDead()) continue;
+        context.applyUnitDamage(unit, massDebuffDotDamage(debuff, unit.maxHp), null, {
+          attackerId: null, attackerLane: null, attackerDepth: null, damageSource: 'mass-debuff-dot', allowDamageLink: false,
+        });
+      }
+    }
+    const ticked = tickEnemyMassDebuff(debuff);
+    context.state.setMassDebuff(context.actingFaction, ticked.debuff);
+    if (ticked.phase === 'ended') {
+      svc.event.emit(EVENT_NAMES.MassDebuffChanged, { faction: context.actingFaction, phase: 'ended', debuff: null });
+    }
+  }
+  // 全隊魅力（大喬，PROG-2-1582 暫定）：換算為己方回合開始全隊士氣 +20
+  applyTallyTeamMoraleAura(context.state.units.values(), context.actingFaction);
+  // 鷹視狼顧（狼顧符，PROG-2-1572）：己方回合開始策反一支殘血敵軍，主將部隊不會被策反
+  applyTallyDefection(
+    context.state.units.values(),
+    context.actingFaction,
+    (unit) => unit.id === context.playerGeneralUnitId || unit.id === context.enemyGeneralUnitId,
+    context.random ?? (() => svc.session.randomSource()),
+  );
   const killed: TroopUnit[] = [];
   const killedIds = new Set<string>();
 
   plunderFireRaidTiles(context, svc);
+  breakRockSlideTiles(context, svc);
 
   for (const [, unit] of context.state.units) {
     if (unit.faction !== context.actingFaction) {
@@ -58,7 +113,9 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
 
     // 火燒偷襲戰我方火抗（PROG-2-1459）：火格傷害依場景倍率減免
     const fireTaken = effect.state === 'hazard-fire' ? sceneFireDamageTakenOf(unit, context.state) : 1;
-    const tileDamage = fireTaken === 1 ? effect.damagePerTurn : Math.max(1, Math.floor(effect.damagePerTurn * fireTaken));
+    // 統率抗地形懲罰（PROG-2-1607 暫定）：所屬陣營主將統率越高，地形傷害越低
+    const taken = fireTaken * hazardDamageTakenOf(context.state.getGeneral?.(unit.faction)?.lea);
+    const tileDamage = taken === 1 ? effect.damagePerTurn : Math.max(1, Math.floor(effect.damagePerTurn * taken));
     context.applyUnitDamage(unit, tileDamage, null, {
       attackerId: null,
       attackerLane: null,
@@ -127,6 +184,29 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
  * 火燒偷襲戰掠奪（戰法場景規格書 B-3，PROG-2-1462）：我方回合結束時站在火攻格 = 佔領 = 掠奪成功，
  * 每格一次，補給、武器材料、教官經驗寫入 Stage_Salvage（PROG-2-1509）。場景戰法只由玩家發動（B-1），敵方不掠奪。
  */
+/**
+ * 擊破落石（峽谷落石戰，PROG-2-1583 暫定）：我方回合開始，我方部隊同列前後相鄰的落石格被擊破，
+ * 移除封鎖並把掉落寫入 Stage_Salvage。
+ */
+function breakRockSlideTiles(context: BattleTileEffectPhaseContext, svc: ReturnType<typeof services>): void {
+  if (context.actingFaction !== Faction.Player) return;
+  const random = context.random ?? (() => svc.session.randomSource());
+  for (const [, unit] of context.state.units) {
+    if (unit.faction !== Faction.Player || unit.isDead()) continue;
+    for (const depth of [unit.depth - 1, unit.depth + 1]) {
+      const effect = context.state.getTileEffect(unit.lane, depth);
+      if (effect?.state !== 'hazard-rock' || effect.notes !== ROCK_SLIDE_TILE_NOTE) continue;
+      context.state.removeTileEffect(unit.lane, depth);
+      addStageSalvage(context.state.stageSalvage, scaleSalvageGain(rollRockBreakGain(random), playerLuckMultiplier(context)));
+    }
+  }
+}
+
+/** 我方主將運勢的掠奪倍率（PROG-2-1606） */
+function playerLuckMultiplier(context: BattleTileEffectPhaseContext): number {
+  return luckSalvageMultiplierOf(context.state.getGeneral?.(Faction.Player)?.luk);
+}
+
 function plunderFireRaidTiles(context: BattleTileEffectPhaseContext, svc: ReturnType<typeof services>): void {
   if (context.actingFaction !== Faction.Player || context.state.battleTactic !== BattleTactic.FireAttack) return;
   const random = context.random ?? (() => svc.session.randomSource());
@@ -137,6 +217,6 @@ function plunderFireRaidTiles(context: BattleTileEffectPhaseContext, svc: Return
     const key = `${unit.lane},${unit.depth}`;
     if (context.state.plunderedTiles.has(key)) continue;
     context.state.plunderedTiles.add(key);
-    addStageSalvage(context.state.stageSalvage, rollFirePlunderGain(random));
+    addStageSalvage(context.state.stageSalvage, scaleSalvageGain(rollFirePlunderGain(random), playerLuckMultiplier(context)));
   }
 }

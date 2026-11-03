@@ -27,7 +27,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/戰法系統.md (doc_spec_0038)
   - docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md (doc_tech_0013)
-notes: "供場景戰法與關卡腳本共用，不得讓 stage injection 在 battle runtime 外再長一份平行棋盤邏輯。2026-04-16 已完成：SceneGambitAdapter/BattleHUD badge/pulse VFX/BattleEntryParams 橋接全部到位；Editor 視覺 QA、VFX 資源補全（assets/fx/tactics/）與 AI 場景響應驗收為剩餘主要工作。"
+notes: "2026-10-31 | 狀態: open | 驗證: 程式審核 | 變更: 場景注入與障礙已落地；火計佈陣走 G-5 tactic-library | 阻塞: 卡上畫面表演驗收需人工實機確認"
 ---
 
 # [SYS-SKILL-TAC-0005] 戰法場景注入與障礙模組包

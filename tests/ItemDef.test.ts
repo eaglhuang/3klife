@@ -37,7 +37,7 @@ export function createItemDefSuite(): TestSuite {
         const keys = Object.keys(Inventory.ITEM_DISPLAY_NAMES);
         assert.equals(ITEM_DEFS.length, keys.length);
         assert.equals(
-            '求籤令,轉職令,試用券,竹簡,戰法筆記,補元散,高級補元散,歸宗令,傳道令,祈風令,祈雨符,刷新券,安胎藥,入學令,虎符精華,延壽丹,加速卡,傳家寶物',
+            '求籤令,轉職令,試用券,竹簡,戰法筆記,補元散,高級補元散,歸宗令,傳道令,祈風令,祈雨符,刷新券,安胎藥,入學令,虎符精華,延壽丹,加速卡,傳家寶物,石材,木材,情報,武器材料,教官心得',
             keys.map((key) => Inventory.ITEM_DISPLAY_NAMES[key]).join(','),
         );
     });

@@ -10,7 +10,11 @@ export interface GradientColorStop {
 
 export interface GradientBackgroundShapeOptions {
     cornerRadius?: number;
+    /** 四角不同時：[左上, 右上, 右下, 左下] */
+    cornerRadii?: number[];
     borderWidth?: number;
+    /** 各邊不同時的邊框寬度；未給則四邊皆用 borderWidth */
+    borderSides?: { top: number; right: number; bottom: number; left: number };
     borderColor?: Color;
     repeating?: boolean;
     repeatSpanPx?: number;
@@ -23,6 +27,8 @@ export interface GradientBackgroundRadialOptions extends GradientBackgroundShape
 }
 
 type GradientBackgroundType = 'linear' | 'radial';
+
+const EDGE_TEXTURE_MAX_SIDE = 1024;
 
 @ccclass('GradientBackground')
 @requireComponent(UITransform)
@@ -44,6 +50,8 @@ export class GradientBackground extends Component {
     private _cornerRadius = 0;
     private _borderWidth = 0;
     private _borderColor = new Color(255, 255, 255, 0);
+    private _cornerRadii: number[] | null = null;
+    private _borderSides: { top: number; right: number; bottom: number; left: number } | null = null;
     private _tintColor = new Color(255, 255, 255, 255);
     private _sprite: Sprite | null = null;
 
@@ -68,9 +76,7 @@ export class GradientBackground extends Component {
         this._repeatSpanPx = Math.max(0, Number(shape?.repeatSpanPx) || 0);
         this._repeatSpanRatio = Math.max(0, Number(shape?.repeatSpanRatio) || 0);
         this._stops = this._normalizeStops(stops);
-        this._cornerRadius = Math.max(0, Number(shape?.cornerRadius) || 0);
-        this._borderWidth = Math.max(0, Number(shape?.borderWidth) || 0);
-        this._borderColor = shape?.borderColor || new Color(255, 255, 255, 0);
+        this._applyShape(shape);
         this._redraw();
     }
 
@@ -84,9 +90,32 @@ export class GradientBackground extends Component {
         this._radialCenterY = this._resolveFiniteNumber(shape?.center?.y, 0.5);
         this._radialRadiusX = Math.max(0.0001, this._resolveFiniteNumber(shape?.radius?.x, 0.5));
         this._radialRadiusY = Math.max(0.0001, this._resolveFiniteNumber(shape?.radius?.y, 0.5));
+        this._applyShape(shape);
+        this._redraw();
+    }
+
+    private _applyShape(shape?: GradientBackgroundShapeOptions): void {
         this._cornerRadius = Math.max(0, Number(shape?.cornerRadius) || 0);
         this._borderWidth = Math.max(0, Number(shape?.borderWidth) || 0);
         this._borderColor = shape?.borderColor || new Color(255, 255, 255, 0);
+        const radii = shape?.cornerRadii;
+        this._cornerRadii = Array.isArray(radii) && radii.length === 4
+            ? radii.map(value => Math.max(0, Number(value) || 0))
+            : null;
+        const sides = shape?.borderSides;
+        this._borderSides = sides
+            ? {
+                top: Math.max(0, Number(sides.top) || 0),
+                right: Math.max(0, Number(sides.right) || 0),
+                bottom: Math.max(0, Number(sides.bottom) || 0),
+                left: Math.max(0, Number(sides.left) || 0),
+            }
+            : null;
+    }
+
+    /** 只換外框色，其餘形狀不變（PROG-2-1697：適分頁依評等換框） */
+    public setBorderColor(color: Color): void {
+        this._borderColor = new Color(color.r, color.g, color.b, color.a);
         this._redraw();
     }
 
@@ -145,7 +174,11 @@ export class GradientBackground extends Component {
         const transform = this.getComponent(UITransform);
         const width = Math.max(1, transform?.width || 1);
         const height = Math.max(1, transform?.height || 1);
-        const maxTextureSide = Math.max(64, Math.min(256, Math.round(Math.max(width, height) / 6)));
+        // 有圓角或邊框時邊緣需逐像素反鋸齒，貼圖改 1:1；純漸層可低解析度放大。
+        const hasEdge = this._cornerRadius > 0 || this._borderWidth > 0 || !!this._cornerRadii || !!this._borderSides;
+        const maxTextureSide = hasEdge
+            ? Math.max(2, Math.min(EDGE_TEXTURE_MAX_SIDE, Math.ceil(Math.max(width, height))))
+            : Math.max(64, Math.min(256, Math.round(Math.max(width, height) / 6)));
         const aspect = width / height;
         const textureWidth = aspect >= 1 ? maxTextureSide : Math.max(2, Math.round(maxTextureSide * aspect));
         const textureHeight = aspect >= 1 ? Math.max(2, Math.round(maxTextureSide / aspect)) : maxTextureSide;
@@ -189,6 +222,10 @@ export class GradientBackground extends Component {
         const texture = new Texture2D();
         texture.reset({ width: textureWidth, height: textureHeight, format: Texture2D.PixelFormat.RGBA8888 });
         texture.uploadData(data);
+        // 1:1 邊緣貼圖已自行反鋸齒；線性過濾會在未預乘的邊框與半透明填色之間內插出灰白色
+        // 測試用 cc 型別樁沒有 Filter 列舉，經 any 取用
+        const nearest = (Texture2D as any).Filter?.NEAREST;
+        if (hasEdge && nearest !== undefined) texture.setFilters(nearest, nearest);
         (texture as any).loaded = true;
 
         const frame = new SpriteFrame();
@@ -251,42 +288,75 @@ export class GradientBackground extends Component {
     private _samplePixelColor(t: number, uiX: number, uiY: number, width: number, height: number): Color {
         const halfWidth = width * 0.5;
         const halfHeight = height * 0.5;
-        const outerRadius = Math.min(this._cornerRadius, halfWidth, halfHeight);
-        if (!this._isInsideRoundedRect(uiX, uiY, halfWidth, halfHeight, outerRadius)) {
+        // 角序：左上、右上、右下、左下（uiY 負值為上方）
+        const radii = (this._cornerRadii || [this._cornerRadius, this._cornerRadius, this._cornerRadius, this._cornerRadius])
+            .map(value => Math.min(value, halfWidth, halfHeight));
+        // 以有號距離算邊緣覆蓋率（約 1 像素過渡），取代二值內外判斷避免鋸齒。
+        const outerCoverage = this._edgeCoverage(this._roundedRectDistance(uiX, uiY, 0, 0, halfWidth, halfHeight, radii));
+        if (outerCoverage <= 0) {
             return new Color(0, 0, 0, 0);
         }
 
-        const borderWidth = Math.min(this._borderWidth, halfWidth, halfHeight);
-        if (borderWidth > 0 && this._borderColor.a > 0) {
-            const innerHalfWidth = Math.max(0, halfWidth - borderWidth);
-            const innerHalfHeight = Math.max(0, halfHeight - borderWidth);
-            const innerRadius = Math.max(0, outerRadius - borderWidth);
-            if (!this._isInsideRoundedRect(uiX, uiY, innerHalfWidth, innerHalfHeight, innerRadius)) {
-                return this._borderColor;
-            }
+        let color = this._sampleColor(t);
+        const fallback = Math.min(this._borderWidth, halfWidth, halfHeight);
+        const sides = this._borderSides || { top: fallback, right: fallback, bottom: fallback, left: fallback };
+        if ((sides.top || sides.right || sides.bottom || sides.left) && this._borderColor.a > 0) {
+            const innerRadii = [
+                Math.max(0, radii[0] - Math.max(sides.top, sides.left)),
+                Math.max(0, radii[1] - Math.max(sides.top, sides.right)),
+                Math.max(0, radii[2] - Math.max(sides.bottom, sides.right)),
+                Math.max(0, radii[3] - Math.max(sides.bottom, sides.left)),
+            ];
+            const innerDistance = this._roundedRectDistance(
+                uiX, uiY,
+                (sides.left - sides.right) * 0.5,
+                (sides.top - sides.bottom) * 0.5,
+                Math.max(0, halfWidth - (sides.left + sides.right) * 0.5),
+                Math.max(0, halfHeight - (sides.top + sides.bottom) * 0.5),
+                innerRadii,
+            );
+            color = this._mixColor(this._borderColor, color, this._edgeCoverage(innerDistance));
         }
-
-        return this._sampleColor(t);
+        return outerCoverage >= 1
+            ? color
+            : new Color(color.r, color.g, color.b, Math.round(color.a * outerCoverage));
     }
 
-    private _isInsideRoundedRect(x: number, y: number, halfWidth: number, halfHeight: number, radius: number): boolean {
+    private _roundedRectDistance(
+        x: number, y: number, centerX: number, centerY: number,
+        halfWidth: number, halfHeight: number, radii: number[],
+    ): number {
         if (halfWidth <= 0 || halfHeight <= 0) {
-            return false;
+            return Number.POSITIVE_INFINITY;
         }
-        if (Math.abs(x) > halfWidth || Math.abs(y) > halfHeight) {
-            return false;
-        }
-        if (radius <= 0) {
-            return true;
-        }
-        const innerX = halfWidth - radius;
-        const innerY = halfHeight - radius;
-        const dx = Math.abs(x) - innerX;
-        const dy = Math.abs(y) - innerY;
-        if (dx <= 0 || dy <= 0) {
-            return true;
-        }
-        return dx * dx + dy * dy <= radius * radius;
+        const localX = x - centerX;
+        const localY = y - centerY;
+        const corner = localY < 0 ? (localX < 0 ? 0 : 1) : (localX < 0 ? 3 : 2);
+        const r = Math.min(radii[corner], halfWidth, halfHeight);
+        const qx = Math.abs(localX) - (halfWidth - r);
+        const qy = Math.abs(localY) - (halfHeight - r);
+        const outside = Math.hypot(Math.max(qx, 0), Math.max(qy, 0));
+        return outside + Math.min(Math.max(qx, qy), 0) - r;
+    }
+
+    private _edgeCoverage(distance: number): number {
+        return Math.max(0, Math.min(1, 0.5 - distance));
+    }
+
+    private _mixColor(outer: Color, inner: Color, innerWeight: number): Color {
+        if (innerWeight >= 1) return inner;
+        if (innerWeight <= 0) return outer;
+        // 依透明度加權混色：近乎透明的填色不能把邊框的 RGB 拉向自己
+        const wo = outer.a * (1 - innerWeight);
+        const wi = inner.a * innerWeight;
+        const a = wo + wi;
+        if (a <= 0) return new Color(0, 0, 0, 0);
+        return new Color(
+            Math.round((outer.r * wo + inner.r * wi) / a),
+            Math.round((outer.g * wo + inner.g * wi) / a),
+            Math.round((outer.b * wo + inner.b * wi) / a),
+            Math.round(a),
+        );
     }
 
     private _sampleColor(t: number): Color {

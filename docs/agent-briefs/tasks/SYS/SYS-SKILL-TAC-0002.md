@@ -26,7 +26,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/戰法系統.md (doc_spec_0038)
   - docs/主戰場UI規格書.md (doc_ui_0001)
-notes: "先把可疊加的 buff / heal / debuff 規則釘死，避免後續戰法與奧義共用狀態系統時出現乘區分裂。2026-04-20 更新：長槍列陣/軍心鼓舞已落地；G-2 六招規格對位進行中，毒箭 DOT 段與幼麒天算 debuff 段為主要未開始項目。"
+notes: "2026-10-31 | 狀態: open | 驗證: 程式審核 | 變更: 7/9 已落地；長槍列陣、軍心鼓舞走 G-5 tactic-library＋BattleSkillSourceTranslator | 阻塞: 卡上畫面表演驗收需人工實機確認"
 ---
 
 # [SYS-SKILL-TAC-0002] 戰法增益治療減益模組包

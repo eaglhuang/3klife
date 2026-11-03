@@ -15,7 +15,7 @@ const {
 
 const DEFAULT_H2U_ALLOW_DIRTY_PREFIXES = [
   'assets/resources/ui-spec/screens/legacy-h2u-dryrun.local-tokens.json',
-  'assets/resources/ui-spec/screens/legacy-h2u-dryrun.readiness.json',
+  'ui-spec-evidence/screens/legacy-h2u-dryrun.readiness.json',
   'assets/resources/ui-spec/screens/legacy-h2u-dryrun.runtime-version.json',
 ];
 

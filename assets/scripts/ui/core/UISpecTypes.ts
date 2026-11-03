@@ -31,10 +31,8 @@ export interface CanvasDef {
     designHeight?: number;
     /**
      * R29: 單邊 Widget 錨點的寬螢幕安全模式。
-     * 設為 true 時，CompositePanel.mount() 會在 buildScreen 後：
-     * 1. 將宿主節點 UITransform 鎖定為 designWidth × designHeight
-     * 2. 重新執行 Widget 計算
-     * 3. 將所有子 Widget 設為 AlignMode.ONCE（不再 ALWAYS 重算）
+     * 設為 true 時，CompositePanel.mount() 先在宿主下建 designWidth × designHeight 的
+     * __safeArea，再把畫面建在裡面（PROG-2-1636）。
      * 避免 FIXED_HEIGHT 策略下 Canvas 比設計寬導致 left=0 / right=X 把節點推到螢幕外。
      */
     safeAreaConstrained?: boolean;
@@ -523,7 +521,15 @@ export interface UISkinManifest {
 // ═══════════════════════════════════════════════════════════════
 
 /** Tab 路由條目（UCUF M2）。由 CompositePanel.switchSlot() 使用 */
-export type TabRoute = { slotId: string; fragment: string; transition?: TransitionDef };
+export type TabRoute = {
+    slotId: string;
+    fragment: string;
+    transition?: TransitionDef;
+    /** Areas outside the content slot this tab shows, each filled by its own fragment. */
+    regions?: Array<{ mount: string; fragment: string }>;
+    /** Areas (by source id) this tab hides, e.g. the portrait behind a full-width tree. */
+    hides?: string[];
+};
 
 /** 設備驗證配置 */
 export interface ValidationDef {
@@ -645,6 +651,32 @@ export function resolveSize(value: number | string | undefined, parentSize: numb
         return Math.floor(parentSize * pct);
     }
     return parentSize;
+}
+
+/** "12.5%" -> 0.125; otherwise null */
+export function percentFraction(value: number | string | undefined): number | null {
+    if (typeof value !== 'string' || !value.endsWith('%')) return null;
+    const pct = parseFloat(value);
+    return Number.isFinite(pct) ? pct / 100 : null;
+}
+
+/** Stretched size when both edges align; shared by builder and Widget (PROG-2-1628). */
+export function widgetStretchSize(
+    widgetDef: { top?: number | string; bottom?: number | string; left?: number | string; right?: number | string } | undefined,
+    parentWidth: number,
+    parentHeight: number,
+    fallbackWidth: number,
+    fallbackHeight: number,
+): { width: number; height: number } {
+    let width = fallbackWidth;
+    let height = fallbackHeight;
+    if (widgetDef?.left !== undefined && widgetDef.right !== undefined) {
+        width = Math.max(parentWidth - resolveSize(widgetDef.left, parentWidth) - resolveSize(widgetDef.right, parentWidth), 0);
+    }
+    if (widgetDef?.top !== undefined && widgetDef.bottom !== undefined) {
+        height = Math.max(parentHeight - resolveSize(widgetDef.top, parentHeight) - resolveSize(widgetDef.bottom, parentHeight), 0);
+    }
+    return { width, height };
 }
 
 // ═══════════════════════════════════════════════════════════════

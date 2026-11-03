@@ -71,3 +71,15 @@ export class UINodePool {
         this._buckets.clear();
     }
 }
+
+/**
+ * 槽位切換時決定哪些子節點可回收（PROG-2-1692）：只有片段根能進池子重用；
+ * 子面板執行期掛在槽上的節點（按鈕、提示卡）若一起進池，下次取出的會是它們而不是片段根。
+ * 片段根不明時維持舊行為：全部回收。
+ */
+export function splitRecyclableChildren<T>(children: readonly T[], fragmentRoot: T | null | undefined): { recycle: T[]; destroy: T[] } {
+    if (!fragmentRoot || !children.includes(fragmentRoot)) {
+        return { recycle: [...children], destroy: [] };
+    }
+    return { recycle: [fragmentRoot], destroy: children.filter((c) => c !== fragmentRoot) };
+}

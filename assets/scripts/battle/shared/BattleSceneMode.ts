@@ -3,7 +3,7 @@ import { Color } from 'cc';
 import { BattleTactic, GAME_CONFIG, TerrainType } from '../../core/config/Constants';
 import type { TileEffectState } from '../models/BattleState';
 
-export type BattleSceneMode = 'normal' | 'flood' | 'fire' | 'rock' | 'ambush' | 'night';
+export type BattleSceneMode = 'normal' | 'flood' | 'fire' | 'rock' | 'ambush' | 'night' | 'siege';
 
 export type BattleSceneBaseStyle = 'default' | 'flood-river';
 
@@ -135,6 +135,14 @@ export const BATTLE_SCENE_DISPLAY_RULES: Readonly<Record<BattleSceneMode, Battle
     resolvePulseColor: () => new Color(120, 150, 255, 170),
     resolvePulseCells: resolveUpperHalfPulseCells,
   },
+  // 攻城戰最小版沿用一般場景的視覺（PROG-2-1589，城牆美術待補）
+  siege: {
+    resolveBackgroundId: resolveDefaultBackgroundId,
+    resolveCellBaseStyle: resolveDefaultBaseStyle,
+    resolveOverlayState: resolvePassThroughOverlayState,
+    resolvePulseColor: () => new Color(255, 220, 140, 180),
+    resolvePulseCells: resolveDefaultPulseCells,
+  },
 };
 
 export function resolveBattleSceneMode(battleTactic: BattleTactic): BattleSceneMode {
@@ -149,6 +157,8 @@ export function resolveBattleSceneMode(battleTactic: BattleTactic): BattleSceneM
       return 'ambush';
     case BattleTactic.NightRaid:
       return 'night';
+    case BattleTactic.Siege:
+      return 'siege';
     default:
       return 'normal';
   }

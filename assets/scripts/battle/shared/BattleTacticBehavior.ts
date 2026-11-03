@@ -1,5 +1,5 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
-import { BattleTactic, EVENT_NAMES, Faction, GAME_CONFIG, TerrainType } from '../../core/config/Constants';
+import { BattleTactic, EVENT_NAMES, Faction, GAME_CONFIG, TerrainType, TroopType } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../core/models/TroopUnit';
 import type { BattleState } from '../models/BattleState';
@@ -8,6 +8,17 @@ import { resolveBattleSceneMode, type BattleSceneMode } from './BattleSceneMode'
 import { floodDepthBonus } from '../../core/systems/WeatherTacticRestriction';
 import { tileStateRuleOf } from './TileStateRules';
 import { fateBlessingLevel, fateSuccessChance, rollEventSuccess, ROCK_SLIDE_BASE_SUCCESS, type FateHeldGene } from '../../core/systems/FateBlessing';
+import { ROCK_SLIDE_TILE_NOTE } from './StageSalvage';
+import { allocateSceneTiles, SCENE_TILE_PRESETS } from './SceneTilePresets';
+
+/**
+ * 峽谷落石的 Tile 鋪設（PROG-2-1585 暫定）：比例只套用中間兩排（depth 3–4，共 10 格），兩側出生區不鋪。
+ * 落石依序放在 depth 4 中央三列、再往兩側；第 5 列（lane 4）保留通道。碎石格（強制後退）放在落石前一排。
+ */
+const ROCK_SLIDE_ZONE_CELLS = 10;
+const ROCK_SLIDE_ROCK_ORDER: ReadonlyArray<readonly [number, number]> = [[1, 4], [2, 4], [3, 4], [0, 4], [0, 3], [4, 3]];
+const ROCK_SLIDE_DEBRIS_ORDER: ReadonlyArray<readonly [number, number]> = [[1, 3], [2, 3], [3, 3], [4, 4]];
+export const ROCK_DEBRIS_TILE_NOTE = 'scene-gambit:rock-debris';
 
 export interface BattleDamageAdjustment {
   damage: number;
@@ -58,8 +69,26 @@ export interface BattleTacticBehavior {
   getCritBonus?(attacker: TroopUnit, state: BattleState): number;
   /** 場景對單位承受火焰傷害的倍率（火格、火計）；沒有則為 1 */
   getFireDamageTakenMultiplier?(unit: TroopUnit, state: BattleState): number;
+  /** 場景對單位防禦的倍率（攻城戰城牆地利）；沒有則為 1 */
+  getDefenseMultiplier?(unit: TroopUnit, state: BattleState): number;
+  /** 場景對工兵攻城傷害的倍率（攻城戰衝車）；沒有則為 1 */
+  getSiegeDamageMultiplier?(unit: TroopUnit, state: BattleState): number;
+  /** 場景投石機：工兵每回合對城牆區敵軍的範圍傷害；沒有則為 0 */
+  getCatapultDamage?(unit: TroopUnit, state: BattleState): number;
 }
 
+/** 城牆區：敵方城池在最後兩列（敵方由 depth 7 出兵，我方工兵到 depth 7 攻城，PROG-2-1596 修正） */
+export const SIEGE_WALL_MIN_DEPTH = GAME_CONFIG.GRID_DEPTH - 2;
+/** 投石機：我方工兵每回合對城牆區敵軍造成的傷害（PROG-2-1596 暫定，不致死） */
+export const SIEGE_CATAPULT_DAMAGE = 10;
+/** 護城河：城牆區前一列（PROG-2-1598 暫定），站上去的部隊移動力 -1，不擋路、不推移 */
+export const SIEGE_MOAT_DEPTH = SIEGE_WALL_MIN_DEPTH - 1;
+export const SIEGE_MOAT_MOVE_DELTA = -1;
+export const SIEGE_MOAT_TILE_NOTE = 'scene-gambit:siege-moat';
+export const SIEGE_WALL_DEFENSE_MULTIPLIER = 1.5;
+export const SIEGE_RAM_MULTIPLIER = 2;
+/** 水淹深水格每回合傷害（PROG-2-1591，暫定） */
+export const FLOOD_DEEP_WATER_DAMAGE_PER_TURN = 10;
 const FLOOD_DEPTH_START = 2;
 const FLOOD_DEPTH_END = 4;
 export const FLOOD_ATTACK_PUSH_LANE_DELTA = -1;
@@ -108,18 +137,40 @@ export function refreshFloodAttackTerrain(state: BattleState): void {
     state.floodOriginalTerrain.delete(key);
   }
 
-  for (const { lane, depth } of targets) {
+  // 水淹七軍 Tile 比例（SCENE_FLOOD，PROG-2-1591）：淹沒區依比例分成水流（推移）／深水（扣血）／淺灘（無效果）。
+  // 下游（depth 大）先放水流，其次深水，上游剩餘格是淺灘；全部地形仍是河流
+  const ordered = [...targets].sort((a, b) => b.depth - a.depth || a.lane - b.lane);
+  const counts = allocateSceneTiles(SCENE_TILE_PRESETS, 'SCENE_FLOOD', ordered.length);
+  ordered.forEach(({ lane, depth }, index) => {
     const cell = state.getCell(lane, depth);
-    if (!cell) continue;
+    if (!cell) return;
     const key = `${lane},${depth}`;
     if (!state.floodOriginalTerrain.has(key)) state.floodOriginalTerrain.set(key, cell.terrain);
     cell.terrain = TerrainType.River;
+    if (index >= counts.forceMove + counts.hazard) {
+      state.removeTileEffect(lane, depth);
+      return;
+    }
     state.setTileEffect({
       id: `flood-${lane}-${depth}`,
       lane,
       depth,
       state: 'river-current',
+      ...(index >= counts.forceMove ? { damagePerTurn: FLOOD_DEEP_WATER_DAMAGE_PER_TURN } : {}),
       notes: 'scene-gambit:flood-attack',
+    });
+  });
+}
+
+function applySiegeMoat(state: BattleState): void {
+  for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
+    state.setTileEffect({
+      id: `siege-moat-${lane}-${SIEGE_MOAT_DEPTH}`,
+      lane,
+      depth: SIEGE_MOAT_DEPTH,
+      state: 'river-current',
+      moveRangeDelta: SIEGE_MOAT_MOVE_DELTA,
+      notes: SIEGE_MOAT_TILE_NOTE,
     });
   }
 }
@@ -258,16 +309,29 @@ function applyRockSlideTerrain(state: BattleState, context: BattleStartContext):
   // 天命加護（FBR-10）：落石成功率 = 基礎 85% + 施放者天命加成，上限 100%；亂數走戰場亂數源
   const fateLevel = fateBlessingLevel(context.casterGenes);
   if (!rollEventSuccess(fateSuccessChance(ROCK_SLIDE_BASE_SUCCESS, fateLevel), context.random())) return;
-  for (let lane = 1; lane <= 3; lane++) {
+  const counts = allocateSceneTiles(SCENE_TILE_PRESETS, 'SCENE_CANYON_ROCK', ROCK_SLIDE_ZONE_CELLS);
+  for (const [lane, depth] of ROCK_SLIDE_ROCK_ORDER.slice(0, counts.hazard)) {
     state.setTileEffect({
-      id: `rock-${lane}-4`,
+      id: `rock-${lane}-${depth}`,
       lane,
-      depth: 4,
+      depth,
       state: 'hazard-rock',
       blocksMovement: true,
       forcedMoveDirection: 'backward',
       forcedMoveSteps: 1,
-      notes: 'scene-gambit:rock-slide',
+      notes: ROCK_SLIDE_TILE_NOTE,
+    });
+  }
+  for (const [lane, depth] of ROCK_SLIDE_DEBRIS_ORDER.slice(0, counts.forceMove)) {
+    state.setTileEffect({
+      id: `rock-debris-${lane}-${depth}`,
+      lane,
+      depth,
+      state: 'hazard-rock',
+      blocksMovement: false,
+      forcedMoveDirection: 'backward',
+      forcedMoveSteps: 1,
+      notes: ROCK_DEBRIS_TILE_NOTE,
     });
   }
 }
@@ -291,20 +355,42 @@ function applySceneCamp(state: BattleState): void {
   });
 }
 
-function applyAmbushAttackDecorations(state: BattleState): void {
-  for (const cell of state.cells) {
-    if (cell.terrain !== TerrainType.Forest) {
-      continue;
-    }
+export const AMBUSH_TRAP_TILE_NOTE = 'scene-gambit:ambush-trap';
+/** 埋伏陷阱每回合傷害（PROG-2-1590，暫定） */
+export const AMBUSH_TRAP_DAMAGE_PER_TURN = 10;
 
-    state.setTileEffect({
-      id: `ambush-${cell.lane}-${cell.depth}`,
-      lane: cell.lane,
-      depth: cell.depth,
-      state: 'ambush-field',
-      notes: 'scene-gambit:ambush-attack',
-    });
-  }
+/**
+ * 森林埋伏 Tile 比例（SCENE_FOREST_AMBUSH，PROG-2-1590）：林地格依比例分成陷阱／掩體／一般。
+ * 陷阱優先放在最靠敵方的林地（depth 小），其次掩體，剩下維持一般地形。
+ */
+function applyAmbushAttackDecorations(state: BattleState): void {
+  const forest = state.cells
+    .filter((cell) => cell.terrain === TerrainType.Forest)
+    .sort((a, b) => a.depth - b.depth || a.lane - b.lane);
+  const counts = allocateSceneTiles(SCENE_TILE_PRESETS, 'SCENE_FOREST_AMBUSH', forest.length);
+  forest.forEach((cell, index) => {
+    if (index < counts.hazard) {
+      state.setTileEffect({
+        id: `ambush-trap-${cell.lane}-${cell.depth}`,
+        lane: cell.lane,
+        depth: cell.depth,
+        state: 'hazard-rock',
+        blocksMovement: false,
+        damagePerTurn: AMBUSH_TRAP_DAMAGE_PER_TURN,
+        notes: AMBUSH_TRAP_TILE_NOTE,
+      });
+      return;
+    }
+    if (index < counts.hazard + counts.stealth) {
+      state.setTileEffect({
+        id: `ambush-${cell.lane}-${cell.depth}`,
+        lane: cell.lane,
+        depth: cell.depth,
+        state: 'ambush-field',
+        notes: 'scene-gambit:ambush-attack',
+      });
+    }
+  });
 }
 
 function applyNightRaidDecorations(state: BattleState): void {
@@ -383,6 +469,17 @@ export const BATTLE_TACTIC_BEHAVIOR_REGISTRY: Readonly<Record<BattleSceneMode, B
       && state.sceneFlags.stealthOpenTurns > 0
     ),
   },
+  // 攻城戰最小版（PROG-2-1589，暫定）：敵方守城（城牆區 depth ≥ 6）防禦 ×1.5、我方工兵衝車攻城 ×2、投石機 AOE（PROG-2-1596）。
+  // 城牆不阻擋移動：敵方由城牆區出兵，阻擋格會讓守軍也無法出城而卡死
+  siege: {
+    ...DEFAULT_BATTLE_TACTIC_BEHAVIOR,
+    applyStartOfBattle: applySiegeMoat,
+    getDefenseMultiplier: (unit: TroopUnit) => (
+      isSiegeWallDefender(unit) ? SIEGE_WALL_DEFENSE_MULTIPLIER : 1
+    ),
+    getSiegeDamageMultiplier: (unit: TroopUnit) => (unit.faction === Faction.Player ? SIEGE_RAM_MULTIPLIER : 1),
+    getCatapultDamage: (unit: TroopUnit) => (unit.faction === Faction.Player ? SIEGE_CATAPULT_DAMAGE : 0),
+  },
   night: {
     ...DEFAULT_BATTLE_TACTIC_BEHAVIOR,
     applyStartOfBattle: (state: BattleState) => {
@@ -415,4 +512,45 @@ export function resolveBattleTacticBehavior(battleTactic: BattleTactic): BattleT
 /** 目前場景下單位承受火焰傷害的倍率（PROG-2-1459）；場景沒有規則時為 1 */
 export function sceneFireDamageTakenOf(unit: TroopUnit, state: BattleState): number {
   return resolveBattleTacticBehavior(state.battleTactic).getFireDamageTakenMultiplier?.(unit, state) ?? 1;
+}
+/** 目前場景下單位防禦倍率（攻城戰城牆地利，PROG-2-1589）；場景沒有規則時為 1 */
+export function sceneDefenseMultiplierOf(unit: TroopUnit, state: BattleState): number {
+  return resolveBattleTacticBehavior(state.battleTactic).getDefenseMultiplier?.(unit, state) ?? 1;
+}
+
+/** 目前場景下工兵攻城傷害倍率（攻城戰衝車，PROG-2-1589）；場景沒有規則時為 1 */
+export function sceneSiegeDamageMultiplierOf(unit: TroopUnit, state: BattleState): number {
+  return resolveBattleTacticBehavior(state.battleTactic).getSiegeDamageMultiplier?.(unit, state) ?? 1;
+}
+
+/** 攻城戰城牆區的守軍（敵方、在最後兩列） */
+export function isSiegeWallDefender(unit: TroopUnit): boolean {
+  return unit.faction === Faction.Enemy && unit.depth >= SIEGE_WALL_MIN_DEPTH;
+}
+
+/**
+ * 投石機（攻城戰，PROG-2-1596 暫定）：工兵每回合對所有城牆區敵軍造成固定傷害，最少留 1 血（不致死，陣亡結算交給一般戰鬥）。
+ * 回傳受擊部隊 id。
+ */
+export function applySceneCatapult(engineer: TroopUnit, state: BattleState): string[] {
+  const damage = resolveBattleTacticBehavior(state.battleTactic).getCatapultDamage?.(engineer, state) ?? 0;
+  if (damage <= 0) return [];
+  const hit: string[] = [];
+  for (const unit of state.units.values()) {
+    if (unit.isDead() || !isSiegeWallDefender(unit)) continue;
+    unit.currentHp = Math.max(1, unit.currentHp - damage);
+    hit.push(unit.id);
+  }
+  return hit;
+}
+
+/**
+ * 雲梯（攻城戰，PROG-2-1597 暫定）：我方步兵攀城，普攻城牆區守軍時抵銷城牆地利。
+ * 回傳乘在守方防禦上的倍率；不適用時為 1。
+ */
+export function sceneLadderDefenseBypassOf(attacker: TroopUnit, defender: TroopUnit, state: BattleState): number {
+  if (attacker.faction !== Faction.Player || attacker.type !== TroopType.Infantry) return 1;
+  if (!isSiegeWallDefender(defender)) return 1;
+  const wall = sceneDefenseMultiplierOf(defender, state);
+  return wall > 0 ? 1 / wall : 1;
 }

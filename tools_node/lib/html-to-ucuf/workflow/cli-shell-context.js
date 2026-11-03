@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { destinationFor } = require('../../ui-spec-sidecars');
 const cp = require('child_process');
 const crypto = require('crypto');
 const { runScriptInProcess, shouldFallbackForEperm } = require('../../in-process-cli-runner');
@@ -291,7 +292,7 @@ function resolveCanonicalRuntimePaths(screenId) {
     layoutPath: path.join(base, 'layouts', `${screenId}.json`),
     layoutAliasPath: path.join(base, 'layouts', `${screenId}.layout.json`),
     skinPath: path.join(base, 'skins', `${screenId}.skin.json`),
-    readinessPath: path.join(base, 'screens', `${screenId}.readiness.json`),
+    readinessPath: destinationFor(path.join(base, 'screens', `${screenId}.readiness.json`)),
   };
 }
 

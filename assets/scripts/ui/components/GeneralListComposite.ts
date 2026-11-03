@@ -17,6 +17,7 @@ import type { NpcContextOption, NpcDialogueKeywordSelection, NpcDialogueLocale, 
 import { EVENT_NPC_INTERACTION_COMPLETED } from '../../core/dialogue/NpcMemoryAdapter';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
+import { factionDisplayName } from '../core/FactionDisplay';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { RetirementFlowController } from '../core/RetirementFlowController';
@@ -111,6 +112,10 @@ const NPC_DIALOGUE_MODEL_OPTIONS: Array<{ value: NpcDialogueModelPreset; label: 
     { value: 'deepseek_r1_7b', label: 'DeepSeek R1' },
     { value: 'local_llama_env', label: 'Local Env' },
 ];
+
+/** 退役列字色：深墨與停用色（PROG-2-1643） */
+const RETIRE_INK = new Color(45, 41, 38, 255);
+const RETIRE_INK_DISABLED = new Color(45, 41, 38, 110);
 
 @ccclass('GeneralListComposite')
 export class GeneralListComposite extends CompositePanel {
@@ -321,7 +326,7 @@ export class GeneralListComposite extends CompositePanel {
             set('Cha',     g.cha   ?? 0);
             set('Luk',     g.luk   ?? 0);
             set('Troop',   this._bestTroop(g));
-            set('Faction', g.faction ?? '—');
+            set('Faction', factionDisplayName(g.faction));
             this._renderedRowsByGeneralId.set(g.id, row);
 
             const button = row.getComponent(Button) ?? row.addComponent(Button);
@@ -633,12 +638,12 @@ export class GeneralListComposite extends CompositePanel {
                 this._retirementFlow.cancel(); this._refreshRetirementToolbar();
             });
             const notice = this._addToolbarLabel(toolbar, 'RetirementNotice', 940, 44, 0, 0, '', 17, HorizontalTextAlignment.LEFT);
-            // The existing dialogue helper uses dark ink for its paper toolbar; this footer has a dark background.
+            // 底部列放在淺色羊皮紙上，字一律用深墨色（白字會看不見）
             for (const child of controls.children) {
                 const label = child.getComponent(Label);
-                if (label) label.color = Color.WHITE;
+                if (label) label.color = RETIRE_INK;
             }
-            notice.color = Color.WHITE;
+            notice.color = RETIRE_INK;
             const noticeWidget = notice.node.addComponent(Widget);
             noticeWidget.isAlignLeft = noticeWidget.isAlignRight = noticeWidget.isAlignBottom = true;
             noticeWidget.left = noticeWidget.right = noticeWidget.bottom = 0;
@@ -678,7 +683,7 @@ export class GeneralListComposite extends CompositePanel {
             if (button) {
                 button.interactable = !flow.busy && !!target && (name !== 'RetirementCancel' || flow.confirming);
                 const label = button.node.getComponent(Label);
-                if (label) label.color = button.interactable ? Color.WHITE : Color.GRAY;
+                if (label) label.color = button.interactable ? RETIRE_INK : RETIRE_INK_DISABLED;
             }
         }
     }

@@ -11,6 +11,7 @@ import type {
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
 import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
 import { isLukVisible } from '../../core/systems/LuckVisibility';
+import { NATION_DEFS } from '../../core/systems/RivalNations';
 import { PERSON_PAGE_TABS, mapGeneralReadModel, type GeneralReadModel, type PersonPageTab } from '../../core/systems/GeneralReadModel';
 import { buildGeneralCommandRows, type GeneralCommandRow } from '../../core/systems/GeneralCommandPanel';
 import { deriveGeneralBackpack, gearNameOfUid } from '../../core/systems/GeneralBackpackView';
@@ -147,6 +148,7 @@ const STORY_SLOT_FALLBACK: Record<GeneralDetailStorySlot, (config: GeneralConfig
 const FACTION_DISPLAY: Record<string, string> = {
     player: '蜀漢',
     enemy: '敵軍',
+    neutral: '在野',
 };
 
 const ROLE_DISPLAY: Record<string, string> = {
@@ -435,7 +437,8 @@ function formatStatValue(value: number | undefined): string {
 
 function formatFaction(faction: string | undefined): string {
     if (!faction) return '陣營未定';
-    return FACTION_DISPLAY[faction] ?? faction;
+    // 勢力代碼（shu／wei／wu…）取勢力表的顯示名，不讓代碼直接出現在副標（PROG-2-1695）
+    return FACTION_DISPLAY[faction] ?? NATION_DEFS.find((nation) => nation.id === faction)?.name ?? faction;
 }
 
 function formatRole(role: string | undefined): string {

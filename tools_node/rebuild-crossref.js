@@ -289,12 +289,14 @@ function rebuildProgress() {
   scriptsDirs.forEach(dir => walkTs(dir, scriptFiles));
   walkTs(testsDir,   testFiles);
 
-  const codeRefPath = path.join(ROOT, 'docs', 'cross-ref', 'cross-ref-code.md');
-  if (!fs.existsSync(codeRefPath)) {
-    console.error('[rebuild-progress] cross-ref-code.md not found');
+  // B-1 已拆到 docs/cross-ref/code/ 分片（PROG-2-1613）：讀全部分片
+  const codeShardDir = path.join(ROOT, 'docs', 'cross-ref', 'code');
+  if (!fs.existsSync(codeShardDir)) {
+    console.error('[rebuild-progress] docs/cross-ref/code/ not found');
     process.exit(1);
   }
-  const content = fs.readFileSync(codeRefPath, 'utf8');
+  const content = fs.readdirSync(codeShardDir).filter((f) => f.endsWith('.md')).sort()
+    .map((f) => fs.readFileSync(path.join(codeShardDir, f), 'utf8')).join('\n');
 
   // Extract .ts filenames from the first column of B-1 tables
   const b1TsRe = /^\|\s*(\*\*)?([A-Za-z_][\w/@.-]*\.ts)\1?\s*\|/gm;
@@ -401,7 +403,8 @@ function rebuildScreens() {
     rows.push(`| ${id} | ${layout} | ${skin} | ${name} | ${json.bundle || '—'} | ${ts} |`);
   }
 
-  const codeRefPath = path.join(ROOT, 'docs', 'cross-ref', 'cross-ref-code.md');
+  // UI Spec JSON 表已拆到獨立分片（PROG-2-1613）
+  const codeRefPath = path.join(ROOT, 'docs', 'cross-ref', 'code', 'ui-spec-json.md');
   const content = fs.readFileSync(codeRefPath, 'utf8');
   const start = content.search(/^#### UI Spec JSON.*$/m);
   if (start < 0) { console.error('[rebuild-screens] 找不到「#### UI Spec JSON」標題'); process.exit(1); }
@@ -419,7 +422,7 @@ function rebuildScreens() {
   ].join('\n');
   const next = content.slice(0, start) + table + content.slice(end);
   if (next !== content) fs.writeFileSync(codeRefPath, next, 'utf8');
-  console.log(`[rebuild-screens] ${rows.length} 個畫面寫入 cross-ref-code.md${next === content ? '（無變化）' : ''}`);
+  console.log(`[rebuild-screens] ${rows.length} 個畫面寫入 cross-ref/code/ui-spec-json.md${next === content ? '（無變化）' : ''}`);
 }
 
 function main() {

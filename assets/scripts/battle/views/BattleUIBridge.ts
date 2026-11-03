@@ -10,7 +10,12 @@
  *             + UIEventHandler (純事件轉接，無業務邏輯)
  */
 
-import { formatAwakeningReveal } from './AwakeningReveal';
+import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
+import { selfBurstNoticeText, type SelfBurstChangedEvent } from '../shared/SelfBurstWindow';
+import { teamAuraNoticeText, type TeamAuraChangedEvent } from '../shared/TeamAura';
+import { teamRecoverNoticeText, type TeamRecoveredEvent } from '../shared/TeamRecover';
+import { enemyMassDebuffNoticeText, type EnemyMassDebuffChangedEvent } from '../shared/EnemyMassDebuff';
+import { AWAKENING_FREEZE_TIMING, awakeningFreezeTitles, formatAwakeningReveal } from './AwakeningReveal';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
@@ -123,6 +128,8 @@ export function createBattleSceneContext(): BattleSceneContext {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export class BattleUIBridge {
+  /** 已寫進戰鬥紀錄的智謀觸發次數（PROG-2-1577） */
+  private _wisdomTriggersLogged = 0;
   private readonly unsubs: (() => void)[] = [];
   /** 本場我方的戰場特定動作（騎兵衝鋒、背刺…），戰後交給覺醒判定 */
   private readonly specialActions = new BattleSpecialActionTracker();
@@ -181,6 +188,10 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.UnitDied,                this._onUnitDied.bind(this)),
       svc.event.on(EVENT_NAMES.GeneralDamaged,          this._onGeneralDamaged.bind(this)),
       svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._onGeneralSkillUsed.bind(this)),
+      svc.event.on(EVENT_NAMES.SelfBurstChanged,        this._onSelfBurstChanged.bind(this)),
+      svc.event.on(EVENT_NAMES.TeamAuraChanged,         this._onTeamAuraChanged.bind(this)),
+      svc.event.on(EVENT_NAMES.TeamRecovered,           this._onTeamRecovered.bind(this)),
+      svc.event.on(EVENT_NAMES.MassDebuffChanged,       this._onMassDebuffChanged.bind(this)),
       svc.event.on(EVENT_NAMES.TileBuffSpawned,         this._onTileBuffSpawned.bind(this)),
       svc.event.on(EVENT_NAMES.TileBuffConsumed,        this._onTileBuffConsumed.bind(this)),
       svc.event.on(EVENT_NAMES.BattleEnded,             this._onBattleEnded.bind(this)),
@@ -317,7 +328,15 @@ export class BattleUIBridge {
   private _onTurnPhaseChanged(snap: { turn: number; playerFood: number; phase?: TurnPhase }): void {
     const c = this.ctx;
     c.deployRuntime?.updateDp(snap.playerFood);
-    this.appendLog(`回合更新：第 ${snap.turn} 回合，糧草 ${snap.playerFood}`);
+    // 軍師智謀能量（PROG-2-1577）：回合紀錄附上能量，觸發次數增加時另列一行
+    const state = c.ctrl?.state;
+    const wisdom = state ? `，${wisdomMeterText(state.wisdomMeter)}` : '';
+    this.appendLog(`回合更新：第 ${snap.turn} 回合，糧草 ${snap.playerFood}${wisdom}`);
+    if (state && state.wisdomTriggerCount < this._wisdomTriggersLogged) this._wisdomTriggersLogged = 0;
+    if (state && state.wisdomTriggerCount > this._wisdomTriggersLogged) {
+      this._wisdomTriggersLogged = state.wisdomTriggerCount;
+      this.appendLog(WISDOM_SURGE_LOG);
+    }
     // 若仍在回合推進或單挑面板開啟中，暫時不要顯示我方回合提示或切回 deployHint
     if (!c.isAdvancingTurn && !c.isDuelPanelActive) {
       c.boardRenderer?.setDeployHintFaction(Faction.Player);
@@ -569,6 +588,31 @@ export class BattleUIBridge {
     playBattleFlowEffectAtBoardCenter(services().effect, this.ctx.boardRenderer, effectKey, 1.35);
   }
 
+  /** 自身爆發開始／結束寫進戰報（SYS-SKILL-ULT-0001）；爆發 icon 待美術 */
+  /** 團隊回復結算寫進戰報並刷新血條與狀態 icon（SYS-SKILL-ULT-0003） */
+  private _onTeamRecovered(data: TeamRecoveredEvent): void {
+    const text = teamRecoverNoticeText(data, data.faction === Faction.Player);
+    if (text) this.appendLog(text);
+    this.refreshBattleViews();
+  }
+
+  /** 敵方全體減益開始／結束寫進戰報（SYS-SKILL-ULT-0004） */
+  private _onMassDebuffChanged(data: EnemyMassDebuffChangedEvent): void {
+    this.appendLog(enemyMassDebuffNoticeText(data, data.faction === Faction.Player));
+    this.refreshBattleViews();
+  }
+
+  /** 全隊增益開始／結束寫進戰報（SYS-SKILL-ULT-0002） */
+  private _onTeamAuraChanged(data: TeamAuraChangedEvent): void {
+    this.appendLog(teamAuraNoticeText(data, data.faction === Faction.Player));
+    this.refreshBattleViews();
+  }
+
+  private _onSelfBurstChanged(data: SelfBurstChangedEvent): void {
+    this.appendLog(selfBurstNoticeText(data, data.faction === Faction.Player));
+    this.refreshBattleViews();
+  }
+
   private _onTileBuffSpawned(): void { this.refreshBattleViews(); }
 
   private _onTileBuffConsumed(data: { unitId: string; faction: Faction; lane: number; depth: number; buffText: string; attackDelta: number; hpDelta: number }): void {
@@ -685,7 +729,9 @@ export class BattleUIBridge {
     // 戰鬥結束時主將的精力（已扣奧義成本）是結算的基準，戰後再扣 30（PM 裁定，2026-10-14）
     const battleVitality = this.ctx.ctrl?.state.playerGeneral?.vitality;
     const vitalityAfterBattle = battleVitality !== undefined ? { [pgId]: battleVitality } : undefined;
-    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, teachingSpirit: this.ctx.teachingSpirit }).then((settlement) => {
+    const pgUnit = this.ctx.ctrl?.state.playerGeneral;
+    const hpRatioAfterBattle = pgUnit && pgUnit.maxHp > 0 ? { [pgId]: pgUnit.currentHp / pgUnit.maxHp } : undefined;
+    void services().session.recordBattle([pgId], result, { specialActions, sortie, performance: { [pgId]: performance }, stageId, deployedTallyIds, vitalityAfterBattle, hpRatioAfterBattle, stageSalvage: this.ctx.ctrl?.state.stageSalvage, teachingSpirit: this.ctx.teachingSpirit }).then((settlement) => {
       const entry = settlement.entries[0];
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);
@@ -697,6 +743,9 @@ export class BattleUIBridge {
         this.appendLog(`【覺醒】${awakened.displayName}！`);
       }
       this.ctx.resultPopup?.appendDetails?.(formatAwakeningReveal(settlement.awakenings));
+      if (settlement.awakenings.length > 0) {
+        void this.ctx.resultPopup?.playAwakeningFreeze?.(awakeningFreezeTitles(settlement.awakenings), AWAKENING_FREEZE_TIMING);
+      }
       // 地窖保護（ECO-06，PROG-2-1342）：戰敗時糧草被保底，寫日誌並加進結算細項
       const cellar = cellarProtectionText(services().session.lastCellarProtectedFood);
       if (cellar) {

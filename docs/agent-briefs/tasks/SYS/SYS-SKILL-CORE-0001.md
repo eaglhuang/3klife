@@ -6,7 +6,7 @@ phase: M1-E
 created: 2026-04-15
 created_by_agent: GitHubCopilot
 owner: Agent1
-status: open
+status: done
 type: skill-runtime
 related_cards:
   - SYS-SKILL-TAC-0001
@@ -30,7 +30,7 @@ docs_backwritten:
   - docs/遊戲規格文件/系統規格書/戰法系統.md (doc_spec_0038)
   - docs/遊戲規格文件/系統規格書/奧義系統.md (doc_spec_0030)
   - docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md (doc_tech_0013)
-notes: "Battle / GeneralDetail 先共用 canonical definition type 與 map builder；後續 resolver、AI、save overlay 都必須延續同一份 shared contract。"
+notes: "2026-10-31 | 狀態: 完成 | 驗證: 程式審核 | 變更: canonical 型別與 buildIdMap 已在 shared/skill-runtime.ts＋assets/scripts/shared/SkillRuntimeContract.ts；BattleSceneLoader、GeneralDetailSkillsChild 皆改用共用 buildIdMap；tsconfig 已含 shared/**/*.ts | 阻塞: 無"
 ---
 
 # [SYS-SKILL-CORE-0001] Shared Skill Runtime 讀模型統一
