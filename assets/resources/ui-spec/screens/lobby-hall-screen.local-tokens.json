@@ -1,0 +1,230 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "lobby-hall-screen",
+  "generatedAt": "2026-11-03T19:09:53.422Z",
+  "_sourceAuthority": "html-to-ucuf",
+  "policy": {
+    "mode": "replace-all-per-run",
+    "source": "token-suggestions sidecars",
+    "note": "Always regenerate full screen-local tokens from current conversion to avoid stale residue."
+  },
+  "sourceSuggestionFiles": [
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+  ],
+  "stats": {
+    "unresolvedColorCount": 13,
+    "tokenCount": 13
+  },
+  "colors": {
+    "lobby_hall_screen_local_color_01": "#FFE9B0",
+    "lobby_hall_screen_local_color_02": "#3A2410",
+    "lobby_hall_screen_local_color_03": "#7A7363",
+    "lobby_hall_screen_local_color_04": "#280E0A",
+    "lobby_hall_screen_local_color_05": "#6A1C16",
+    "lobby_hall_screen_local_color_06": "#8A2A22",
+    "lobby_hall_screen_local_color_07": "#2F4F8A",
+    "lobby_hall_screen_local_color_08": "#4D6A3F",
+    "lobby_hall_screen_local_color_09": "#7A4A10",
+    "lobby_hall_screen_local_color_10": "#7A4A9A",
+    "lobby_hall_screen_local_color_11": "#A8864A",
+    "lobby_hall_screen_local_color_12": "#FBF3DE",
+    "lobby_hall_screen_local_color_13": "#FFAAC8"
+  },
+  "unresolvedColors": [
+    {
+      "token": "lobby_hall_screen_local_color_01",
+      "value": "rgb(255, 233, 176)",
+      "normalized": "#ffe9b0",
+      "hex": "#FFE9B0",
+      "occurrences": 7,
+      "nearestExisting": {
+        "token": "gdv3LabelMode",
+        "value": "#F4E5C1",
+        "distance": 21
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "lobby_hall_screen_local_color_02",
+      "value": "rgb(58, 36, 16)",
+      "normalized": "#3a2410",
+      "hex": "#3A2410",
+      "occurrences": 6,
+      "nearestExisting": {
+        "token": "gdv3OutlineWarm",
+        "value": "#3F2309",
+        "distance": 9
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "lobby_hall_screen_local_color_03",
+      "value": "rgb(122, 115, 99)",
+      "normalized": "#7a7363",
+      "hex": "#7A7363",
+      "occurrences": 6,
+      "nearestExisting": {
+        "token": "dividerOnParchment",
+        "value": "#8C7A66",
+        "distance": 20
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "lobby_hall_screen_local_color_04",
+      "value": "rgba(40, 14, 10, 0.85)",
+      "normalized": "#280e0a",
+      "hex": "#280E0A",
+      "occurrences": 5,
+      "nearestExisting": {
+        "token": "etcrLabelDark",
+        "value": "#2B1A0E",
+        "distance": 13
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "lobby_hall_screen_local_color_05",
+      "value": "rgb(106, 28, 22)",
+      "normalized": "#6a1c16",
+      "hex": "#6A1C16",
+      "occurrences": 3,
+      "nearestExisting": {
+        "token": "gdv3OutlineDarkWarm",
+        "value": "#593714",
+        "distance": 32
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "lobby_hall_screen_local_color_06",
+      "value": "rgb(138, 42, 34)",
+      "normalized": "#8a2a22",
+      "hex": "#8A2A22",
+      "occurrences": 3,
+      "nearestExisting": {
+        "token": "primary",
+        "value": "#B22222",
+        "distance": 41
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "lobby_hall_screen_local_color_07",
+      "value": "rgb(47, 79, 138)",
+      "normalized": "#2f4f8a",
+      "hex": "#2F4F8A",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "stdArtSpiritCard",
+        "value": "#2E475E",
+        "distance": 45
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "lobby_hall_screen_local_color_08",
+      "value": "rgb(77, 106, 63)",
+      "normalized": "#4d6a3f",
+      "hex": "#4D6A3F",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "gdv3BloodlineTitle",
+        "value": "#3A4F49",
+        "distance": 34
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "lobby_hall_screen_local_color_09",
+      "value": "rgb(122, 74, 16)",
+      "normalized": "#7a4a10",
+      "hex": "#7A4A10",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "gdv3OutlineDarkWarm",
+        "value": "#593714",
+        "distance": 38
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "lobby_hall_screen_local_color_10",
+      "value": "rgb(122, 74, 154)",
+      "normalized": "#7a4a9a",
+      "hex": "#7A4A9A",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "rarityPurple",
+        "value": "#9C27B0",
+        "distance": 54
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "lobby_hall_screen_local_color_11",
+      "value": "rgb(168, 134, 74)",
+      "normalized": "#a8864a",
+      "hex": "#A8864A",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "etcrAccent",
+        "value": "#B8904A",
+        "distance": 19
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "lobby_hall_screen_local_color_12",
+      "value": "rgb(251, 243, 222)",
+      "normalized": "#fbf3de",
+      "hex": "#FBF3DE",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "gdv3BloodlineTextGlow",
+        "value": "#FFF5DB",
+        "distance": 5
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "lobby_hall_screen_local_color_13",
+      "value": "rgba(255, 170, 200, 0.35)",
+      "normalized": "#ffaac8",
+      "hex": "#FFAAC8",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "gdv3StatCha",
+        "value": "#ff9bba",
+        "distance": 21
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.token-suggestions.json"
+      ]
+    }
+  ]
+}

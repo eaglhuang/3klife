@@ -1,0 +1,35 @@
+{
+  "screenId": "lobby-hall-screen",
+  "version": 1,
+  "firstScreen": {
+    "bundles": [
+      "lobby_ui",
+      "generals",
+      "ui_bg"
+    ],
+    "spriteFrames": [
+      "sprites/generals/avatars/zhang_fei_avatar",
+      "sprites/generals/chibi/guan_yu_chibi",
+      "sprites/generals/chibi/liu_bei_chibi",
+      "sprites/generals/chibi/zhang_fei_chibi",
+      "sprites/generals/chibi/zhuge_liang_chibi",
+      "sprites/generals/chibi/huang_zhong_chibi",
+      "sprites/ui_bg/lobby_hall_spring_bg",
+      "sprites/ui_bg/lobby_hall_map_preview"
+    ],
+    "fonts": [
+      "fonts/notosans_tc/font",
+      "fonts/manrope/font",
+      "fonts/newsreader/font"
+    ],
+    "fragments": []
+  },
+  "deferred": {
+    "lazySlots": []
+  },
+  "counts": {
+    "firstScreenSpriteCount": 8,
+    "deferredSpriteCount": 0
+  },
+  "_warnings": []
+}

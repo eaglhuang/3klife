@@ -1,0 +1,27 @@
+{
+  "screenId": "lobby-hall-screen",
+  "verdict": "pass",
+  "metrics": {
+    "screenshotZoneConfidence": 1,
+    "motionPresenceRate": 1,
+    "interactionSuccessRate": 1,
+    "buttonStateLayerCoverage": 1,
+    "compositeReviewCoverage": 1
+  },
+  "zones": [
+    {
+      "node": "LobbyHallScreen_div_3",
+      "width": 1864,
+      "height": 84,
+      "stableBounds": true,
+      "zone": "header"
+    }
+  ],
+  "stateLayerIssues": [],
+  "compositeReviewRequired": [],
+  "effectReview": [
+    "css-effect-needs-art-review",
+    "css-transform-manual-layout-risk"
+  ],
+  "blockers": []
+}

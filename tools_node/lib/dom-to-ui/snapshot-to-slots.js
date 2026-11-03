@@ -139,9 +139,16 @@ function parseGradient(s) {
       radius = { x: parseFloat(sizeMatch[1]) / 100, y: parseFloat(sizeMatch[2]) / 100 };
     } else if (/^circle$/i.test(shape.trim())) {
       radius = { x: 0.5 }; // CSS default radius for plain circle
-    } else if (!/circle/i.test(sizePart)) {
+    } else if (/circle/i.test(sizePart)) {
+      // circle 未寫長度：照 CSS 預設 farthest-corner（或指定的 closest/farthest 關鍵字）
+      radius = circleKeywordRadius(sizePart, center || { x: 0.5, y: 0.5 });
+    } else {
       radius = ellipseKeywordRadius(sizePart, center || { x: 0.5, y: 0.5 });
     }
+  } else if (type === 'radial') {
+    // 瀏覽器會把預設的 "ellipse farthest-corner at center" 整段省略：照 CSS 預設補上
+    center = { x: 0.5, y: 0.5 };
+    radius = ellipseKeywordRadius('', center);
   }
 
   const rawStops = stopParts.map((p, i) => {
@@ -195,6 +202,17 @@ function parseGradient(s) {
 }
 
 // 橢圓尺寸關鍵字（預設 farthest-corner），以元素寬高比例表示各軸半徑
+function circleKeywordRadius(sizePart, center) {
+  if (/[\d.]+\s*(px|%)/i.test(sizePart)) return null;
+  const near = { x: Math.min(center.x, 1 - center.x), y: Math.min(center.y, 1 - center.y) };
+  const far = { x: Math.max(center.x, 1 - center.x), y: Math.max(center.y, 1 - center.y) };
+  const kw = (String(sizePart).match(/(closest|farthest)-(side|corner)/i) || [null, 'farthest', 'corner']);
+  const closest = /closest/i.test(kw[1]);
+  const base = closest ? near : far;
+  if (/corner/i.test(kw[2])) return { x: Math.hypot(base.x, base.y) };
+  return { x: closest ? Math.min(base.x, base.y) : Math.max(base.x, base.y) };
+}
+
 function ellipseKeywordRadius(sizePart, center) {
   const near = { x: Math.min(center.x, 1 - center.x), y: Math.min(center.y, 1 - center.y) };
   const far = { x: Math.max(center.x, 1 - center.x), y: Math.max(center.y, 1 - center.y) };

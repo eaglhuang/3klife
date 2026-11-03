@@ -1,0 +1,66 @@
+{
+  "screenId": "lobby-hall-screen",
+  "motionTokens": {
+    "instant": {
+      "durationMs": 80,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "fast": {
+      "durationMs": 120,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "standard": {
+      "durationMs": 180,
+      "easing": "quadOut",
+      "emphasis": "medium"
+    },
+    "slow": {
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "emphasis": "medium"
+    },
+    "emphasis": {
+      "durationMs": 360,
+      "easing": "backOut",
+      "emphasis": "high"
+    }
+  },
+  "motions": [
+    {
+      "id": "lobby-hall-screen_div_51.transition",
+      "target": "LobbyHallScreen_div_51",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "lobby-hall-screen_div_52.transition",
+      "target": "LobbyHallScreen_div_52",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "motionCount": 2,
+    "tokenCount": 5,
+    "manualRewriteCount": 28
+  }
+}

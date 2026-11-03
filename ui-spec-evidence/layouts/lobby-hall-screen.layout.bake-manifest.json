@@ -1,0 +1,148 @@
+{
+  "schemaVersion": "1.2.0",
+  "schemaSpec": "doc_other_0017 (R-25 + R-26 sourceHtml/viewport + R-27 art-gated autoBake)",
+  "screenId": "lobby-hall-screen",
+  "sidecarBundle": "resources",
+  "sidecarRoot": "assets/resources/sidecars/lobby-hall-screen/",
+  "sourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.ucuf-ready.html",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "bakerHint": {
+    "tool": "puppeteer-core (build-time)",
+    "runWhen": "developer / CI; never at runtime",
+    "runtimeCost": "zero — runtime only loads pre-baked PNGs as SpriteFrame",
+    "autoBakeContract": "Only entries with autoBake=true and bakeAction=auto-screenshot-fragment may be baked automatically. Authors must mark small standalone missing fragments with data-ucuf-bake=\"fragment\"; large UI regions and geometry masks are review/converter work.",
+    "artistOverride": "For autoBake entries only: drop a same-named PNG at outputPath to replace the placeholder; converter loads via uuid, no code change required."
+  },
+  "summary": {
+    "totalEntries": 4,
+    "autoBakeEntries": 0,
+    "reviewOnlyEntries": 4,
+    "byProperty": {
+      "background-image": 1,
+      "mask-image": 2,
+      "mix-blend-mode": 1
+    },
+    "bySkinSlotKind": {
+      "background-set": 2,
+      "mask-set": 2
+    },
+    "byBakeAction": {
+      "review-only": 1,
+      "converter-geometry": 2,
+      "manual-art-asset": 1
+    }
+  },
+  "entries": [
+    {
+      "bakeId": "lobby-hall-screen__span_83__background-image",
+      "screenId": "lobby-hall-screen",
+      "selector": "div.npc[8]>span.body[0]>span.mark[1]",
+      "ucufId": null,
+      "tag": "span",
+      "nodeId": 83,
+      "property": "background-image",
+      "value": "radial-gradient(circle at 40% 35%, rgb(255, 224, 136), rgb(212, 175, 55))",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 780.99,
+        "y": 614.54,
+        "width": 38,
+        "height": 38,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "background-set",
+      "autoBake": false,
+      "bakeAction": "review-only",
+      "artGuidance": "Not auto-baked by default. Add data-ucuf-bake=\"fragment\" only to small standalone missing visual fragments.",
+      "status": "needs-art-direction"
+    },
+    {
+      "bakeId": "lobby-hall-screen__div_95__mask-image",
+      "screenId": "lobby-hall-screen",
+      "selector": "div.sandbox[11]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 95,
+      "property": "mask-image",
+      "value": "radial-gradient(50% 50%, rgb(0, 0, 0) 62%, rgba(0, 0, 0, 0.55) 80%, rgba(0, 0, 0, 0) 100%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 730,
+        "y": 190,
+        "width": 460,
+        "height": 330,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "mask-set",
+      "autoBake": false,
+      "bakeAction": "converter-geometry",
+      "artGuidance": "Geometry/mask CSS is not a missing picture. Implement as Cocos mask/vector/shape logic; do not screenshot rendered content.",
+      "status": "needs-converter-rule"
+    },
+    {
+      "bakeId": "lobby-hall-screen__div_96__mask-image",
+      "screenId": "lobby-hall-screen",
+      "selector": "div.season-tint[12]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 96,
+      "property": "mask-image",
+      "value": "radial-gradient(50% 50%, rgb(0, 0, 0) 62%, rgba(0, 0, 0, 0.55) 80%, rgba(0, 0, 0, 0) 100%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 730,
+        "y": 190,
+        "width": 460,
+        "height": 330,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "mask-set",
+      "autoBake": false,
+      "bakeAction": "converter-geometry",
+      "artGuidance": "Geometry/mask CSS is not a missing picture. Implement as Cocos mask/vector/shape logic; do not screenshot rendered content.",
+      "status": "needs-converter-rule"
+    },
+    {
+      "bakeId": "lobby-hall-screen__div_96__mix-blend-mode",
+      "screenId": "lobby-hall-screen",
+      "selector": "div.season-tint[12]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 96,
+      "property": "mix-blend-mode",
+      "value": "soft-light",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 730,
+        "y": 190,
+        "width": 460,
+        "height": 330,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "background-set",
+      "autoBake": false,
+      "bakeAction": "manual-art-asset",
+      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
+      "status": "needs-art-asset"
+    }
+  ]
+}

@@ -245,6 +245,8 @@ async function captureComputedStyles(page) {
       if (tag === 'script' || tag === 'style' || tag === 'link' || tag === 'meta' || tag === 'br') return;
       const r = el.getBoundingClientRect();
       if (r.width === 0 || r.height === 0) return;
+      // data-ucuf-skip：整棵子樹交給 runtime（例如季節粒子特效），不轉成 UCUF 節點
+      if (el.closest('[data-ucuf-skip]')) return;
       idMap.set(el, ++nodeId);
     });
     all.forEach(el => {
