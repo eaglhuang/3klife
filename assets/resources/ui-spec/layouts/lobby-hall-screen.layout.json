@@ -27,6 +27,25 @@
         },
         "children": [
           {
+            "type": "panel",
+            "name": "LobbyHallScreen_div_1",
+            "widget": {
+              "top": -200,
+              "left": 0
+            },
+            "_ucufId": "lobby-hall-screen.hall-bg",
+            "width": 1920,
+            "height": 1480,
+            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_1"
+          },
+          {
+            "type": "panel",
+            "name": "LobbyHallScreen_div_2",
+            "active": false,
+            "_ucufId": "lobby-hall-screen.night-tint",
+            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_2"
+          },
+          {
             "type": "container",
             "name": "LobbyHallScreen_div_3",
             "widget": {
@@ -117,6 +136,7 @@
               {
                 "type": "container",
                 "name": "LobbyHallScreen_div_8",
+                "_ucufId": "lobby-hall-screen.hall-title",
                 "width": 204,
                 "height": 74,
                 "layout": {
@@ -136,6 +156,7 @@
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_10",
+                    "_ucufId": "lobby-hall-screen.hall-time",
                     "width": 204,
                     "height": 19,
                     "text": "第 1 年 春 · 晝",
@@ -294,6 +315,7 @@
               "top": 122,
               "left": 24
             },
+            "_ucufId": "lobby-hall-screen.wall-left",
             "width": 400,
             "height": 640,
             "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_section_1",
@@ -567,6 +589,7 @@
               "top": 122,
               "right": 24
             },
+            "_ucufId": "lobby-hall-screen.wall-right",
             "width": 400,
             "height": 640,
             "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_section_2",
@@ -1223,6 +1246,7 @@
               "top": 520,
               "left": 1000
             },
+            "_ucufId": "lobby-hall-screen.bubble",
             "width": 300,
             "height": 122,
             "layout": {
@@ -1328,143 +1352,183 @@
           },
           {
             "type": "container",
-            "name": "LobbyHallScreen_div_54",
-            "widget": {
-              "top": 397,
-              "left": 960
-            },
-            "active": false,
-            "layout": {
-              "type": "vertical",
-              "alignItems": "start"
-            },
+            "name": "LobbyHallScreen_div_51",
+            "_ucufId": "lobby-hall-screen.sandbox-group",
+            "width": 1920,
+            "height": 1080,
             "children": [
               {
-                "type": "label",
-                "name": "LobbyHallScreen_i_1",
-                "text": "戰",
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_i_1"
+                "type": "panel",
+                "name": "LobbyHallScreen_div_54",
+                "active": false,
+                "_ucufId": "lobby-hall-screen.sunrays",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_54"
               },
               {
-                "type": "label",
-                "name": "LobbyHallScreen_span_51",
-                "text": "烏巢告急 · 兗州",
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_51",
-                "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-51"
-              }
-            ]
-          },
-          {
-            "type": "panel",
-            "name": "LobbyHallScreen_div_55",
-            "widget": {
-              "top": 160,
-              "left": 840
-            },
-            "width": 240,
-            "height": 40,
-            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_55",
-            "children": [
+                "type": "panel",
+                "name": "LobbyHallScreen_div_52",
+                "_ucufId": "lobby-hall-screen.sandbox",
+                "width": 460,
+                "height": 330,
+                "_motionId": "lobby-hall-screen_div_52.transition",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_52"
+              },
               {
-                "type": "label",
-                "name": "LobbyHallScreen_span_52",
+                "type": "panel",
+                "name": "LobbyHallScreen_div_53",
+                "_ucufId": "lobby-hall-screen.season-tint",
+                "width": 460,
+                "height": 330,
+                "_motionId": "lobby-hall-screen_div_53.transition",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_53"
+              },
+              {
+                "type": "container",
+                "name": "LobbyHallScreen_div_55",
                 "widget": {
-                  "left": 0,
-                  "top": 0
+                  "top": 397,
+                  "left": 960
                 },
-                "text": "天下勢力圖",
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_52",
+                "active": false,
+                "_ucufId": "lobby-hall-screen.map-ping",
+                "layout": {
+                  "type": "vertical",
+                  "alignItems": "start"
+                },
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "LobbyHallScreen_i_1",
+                    "text": "戰",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_i_1"
+                  },
+                  {
+                    "type": "label",
+                    "name": "LobbyHallScreen_span_51",
+                    "text": "烏巢告急 · 兗州",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_51",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-51"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "LobbyHallScreen_div_56",
+                "widget": {
+                  "top": 160,
+                  "left": 840
+                },
+                "_ucufId": "lobby-hall-screen.sandbox-label",
                 "width": 240,
                 "height": 40,
-                "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-52"
-              }
-            ]
-          },
-          {
-            "type": "panel",
-            "name": "LobbyHallScreen_div_56",
-            "widget": {
-              "top": 250,
-              "left": 1150
-            },
-            "width": 170,
-            "height": 44,
-            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_56",
-            "children": [
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_56",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "LobbyHallScreen_span_52",
+                    "widget": {
+                      "left": 0,
+                      "top": 0
+                    },
+                    "text": "天下勢力圖",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_52",
+                    "width": 240,
+                    "height": 40,
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-52"
+                  }
+                ]
+              },
               {
-                "type": "label",
-                "name": "LobbyHallScreen_span_53",
+                "type": "panel",
+                "name": "LobbyHallScreen_div_57",
                 "widget": {
-                  "left": 0,
-                  "top": 0
+                  "top": 250,
+                  "left": 1150
                 },
-                "text": "S1 中原統一",
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_53",
+                "_ucufId": "lobby-hall-screen.stage-s1",
                 "width": 170,
                 "height": 44,
-                "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-53"
-              }
-            ]
-          },
-          {
-            "type": "panel",
-            "name": "LobbyHallScreen_div_57",
-            "widget": {
-              "top": 304,
-              "left": 1150
-            },
-            "width": 170,
-            "height": 44,
-            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_57",
-            "children": [
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_57",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "LobbyHallScreen_span_53",
+                    "widget": {
+                      "left": 0,
+                      "top": 0
+                    },
+                    "text": "S1 中原統一",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_53",
+                    "width": 170,
+                    "height": 44,
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-53"
+                  }
+                ]
+              },
               {
-                "type": "label",
-                "name": "LobbyHallScreen_span_54",
+                "type": "panel",
+                "name": "LobbyHallScreen_div_58",
                 "widget": {
-                  "left": 0,
-                  "top": 0
+                  "top": 304,
+                  "left": 1150
                 },
-                "text": "S2 邊境征伐",
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_54",
+                "_ucufId": "lobby-hall-screen.stage-s2",
                 "width": 170,
                 "height": 44,
-                "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-54"
-              }
-            ]
-          },
-          {
-            "type": "panel",
-            "name": "LobbyHallScreen_div_58",
-            "widget": {
-              "top": 358,
-              "left": 1150
-            },
-            "width": 170,
-            "height": 44,
-            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_58",
-            "children": [
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_58",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "LobbyHallScreen_span_54",
+                    "widget": {
+                      "left": 0,
+                      "top": 0
+                    },
+                    "text": "S2 邊境征伐",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_54",
+                    "width": 170,
+                    "height": 44,
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-54"
+                  }
+                ]
+              },
               {
-                "type": "label",
-                "name": "LobbyHallScreen_span_55",
+                "type": "panel",
+                "name": "LobbyHallScreen_div_59",
                 "widget": {
-                  "left": 0,
-                  "top": 0
+                  "top": 358,
+                  "left": 1150
                 },
-                "text": "S3 全球遠征",
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_55",
+                "_ucufId": "lobby-hall-screen.stage-s3",
                 "width": 170,
                 "height": 44,
-                "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-55"
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_59",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "LobbyHallScreen_span_55",
+                    "widget": {
+                      "left": 0,
+                      "top": 0
+                    },
+                    "text": "S3 全球遠征",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_55",
+                    "width": 170,
+                    "height": 44,
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-55"
+                  }
+                ]
               }
             ]
           },
           {
             "type": "panel",
-            "name": "LobbyHallScreen_div_59",
+            "name": "LobbyHallScreen_div_60",
             "widget": {
               "top": 782,
               "left": 24
             },
+            "_ucufId": "lobby-hall-screen.altar",
             "width": 400,
             "height": 150,
             "layout": {
@@ -1475,11 +1539,11 @@
               "paddingBottom": 12,
               "paddingLeft": 16
             },
-            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_59",
+            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_60",
             "children": [
               {
                 "type": "container",
-                "name": "LobbyHallScreen_div_60",
+                "name": "LobbyHallScreen_div_61",
                 "width": 364,
                 "height": 32,
                 "layout": {
@@ -1509,7 +1573,7 @@
               },
               {
                 "type": "container",
-                "name": "LobbyHallScreen_div_61",
+                "name": "LobbyHallScreen_div_62",
                 "width": 364,
                 "height": 78,
                 "layout": {
@@ -1520,7 +1584,7 @@
                 "children": [
                   {
                     "type": "panel",
-                    "name": "LobbyHallScreen_div_62",
+                    "name": "LobbyHallScreen_div_63",
                     "width": 116,
                     "height": 78,
                     "layout": {
@@ -1532,7 +1596,7 @@
                       "paddingLeft": 0,
                       "spacingY": 4
                     },
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_62",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_63",
                     "children": [
                       {
                         "type": "label",
@@ -1556,7 +1620,7 @@
                   },
                   {
                     "type": "panel",
-                    "name": "LobbyHallScreen_div_63",
+                    "name": "LobbyHallScreen_div_64",
                     "width": 116,
                     "height": 78,
                     "layout": {
@@ -1568,7 +1632,7 @@
                       "paddingLeft": 0,
                       "spacingY": 4
                     },
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_63",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_64",
                     "children": [
                       {
                         "type": "label",
@@ -1592,7 +1656,7 @@
                   },
                   {
                     "type": "panel",
-                    "name": "LobbyHallScreen_div_64",
+                    "name": "LobbyHallScreen_div_65",
                     "width": 116,
                     "height": 78,
                     "layout": {
@@ -1604,7 +1668,7 @@
                       "paddingLeft": 0,
                       "spacingY": 4
                     },
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_64",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_65",
                     "children": [
                       {
                         "type": "label",
@@ -1631,11 +1695,12 @@
           },
           {
             "type": "panel",
-            "name": "LobbyHallScreen_div_65",
+            "name": "LobbyHallScreen_div_66",
             "widget": {
               "top": 782,
               "right": 24
             },
+            "_ucufId": "lobby-hall-screen.clan",
             "width": 400,
             "height": 150,
             "layout": {
@@ -1646,20 +1711,20 @@
               "paddingBottom": 14,
               "paddingLeft": 18
             },
-            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_65",
+            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_66",
             "children": [
               {
                 "type": "label",
-                "name": "LobbyHallScreen_div_66",
+                "name": "LobbyHallScreen_div_67",
                 "width": 360,
                 "height": 35,
                 "text": "世家總覽",
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_66",
-                "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-66"
+                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_67",
+                "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-67"
               },
               {
                 "type": "container",
-                "name": "LobbyHallScreen_div_67",
+                "name": "LobbyHallScreen_div_68",
                 "width": 360,
                 "height": 48,
                 "layout": {
@@ -1669,21 +1734,21 @@
                 "children": [
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_div_68",
-                    "width": 360,
-                    "height": 24,
-                    "text": "管理麾下世家與英靈 · 已成家族 1",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_68",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-68"
-                  },
-                  {
-                    "type": "label",
                     "name": "LobbyHallScreen_div_69",
                     "width": 360,
                     "height": 24,
-                    "text": "張氏一門 · 主卡 張飛 · 深度 2 · 名聲 340",
+                    "text": "管理麾下世家與英靈 · 已成家族 1",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_69",
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-69"
+                  },
+                  {
+                    "type": "label",
+                    "name": "LobbyHallScreen_div_70",
+                    "width": 360,
+                    "height": 24,
+                    "text": "張氏一門 · 主卡 張飛 · 深度 2 · 名聲 340",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_70",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-70"
                   }
                 ]
               }
@@ -1697,6 +1762,7 @@
               "right": 440,
               "bottom": 24
             },
+            "_ucufId": "lobby-hall-screen.dock",
             "width": 1040,
             "height": 84,
             "layout": {
@@ -1707,10 +1773,11 @@
             "children": [
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_71",
+                "name": "LobbyHallScreen_div_72",
+                "_ucufId": "lobby-hall-screen.dock-sortie",
                 "width": 196,
                 "height": 76,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_71",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_72",
                 "children": [
                   {
                     "type": "label",
@@ -1728,10 +1795,11 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_72",
+                "name": "LobbyHallScreen_div_73",
+                "_ucufId": "lobby-hall-screen.dock-generals",
                 "width": 196,
                 "height": 76,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_72",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_73",
                 "children": [
                   {
                     "type": "label",
@@ -1749,10 +1817,11 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_73",
+                "name": "LobbyHallScreen_div_74",
+                "_ucufId": "lobby-hall-screen.dock-domestic",
                 "width": 196,
                 "height": 76,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_73",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_74",
                 "children": [
                   {
                     "type": "label",
@@ -1770,10 +1839,11 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_74",
+                "name": "LobbyHallScreen_div_75",
+                "_ucufId": "lobby-hall-screen.dock-training",
                 "width": 196,
                 "height": 76,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_74",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_75",
                 "children": [
                   {
                     "type": "label",
@@ -1791,10 +1861,11 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_75",
+                "name": "LobbyHallScreen_div_76",
+                "_ucufId": "lobby-hall-screen.dock-shop",
                 "width": 196,
                 "height": 76,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_75",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_76",
                 "children": [
                   {
                     "type": "label",
@@ -1811,48 +1882,6 @@
                 ]
               }
             ]
-          }
-        ],
-        "skinLayers": [
-          {
-            "layerId": "LobbyHallScreen_div_1",
-            "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_1",
-            "zOrder": 0,
-            "expand": false,
-            "width": 1920,
-            "height": 1480,
-            "widget": {
-              "top": -200,
-              "left": 0
-            }
-          },
-          {
-            "layerId": "LobbyHallScreen_div_2",
-            "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_2",
-            "zOrder": 1,
-            "expand": true
-          },
-          {
-            "layerId": "LobbyHallScreen_div_51",
-            "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_51",
-            "zOrder": 2,
-            "expand": false,
-            "width": 460,
-            "height": 330
-          },
-          {
-            "layerId": "LobbyHallScreen_div_52",
-            "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_52",
-            "zOrder": 3,
-            "expand": false,
-            "width": 460,
-            "height": 330
-          },
-          {
-            "layerId": "LobbyHallScreen_div_53",
-            "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_53",
-            "zOrder": 4,
-            "expand": true
           }
         ]
       }

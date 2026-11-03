@@ -29,8 +29,8 @@
   },
   "motions": [
     {
-      "id": "lobby-hall-screen_div_51.transition",
-      "target": "LobbyHallScreen_div_51",
+      "id": "lobby-hall-screen_div_52.transition",
+      "target": "LobbyHallScreen_div_52",
       "trigger": "state-change",
       "preset": "scale-fade",
       "token": "standard",
@@ -43,8 +43,8 @@
       "source": "css-transition"
     },
     {
-      "id": "lobby-hall-screen_div_52.transition",
-      "target": "LobbyHallScreen_div_52",
+      "id": "lobby-hall-screen_div_53.transition",
+      "target": "LobbyHallScreen_div_53",
       "trigger": "state-change",
       "preset": "scale-fade",
       "token": "standard",

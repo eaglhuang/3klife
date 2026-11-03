@@ -4,17 +4,17 @@
   "firstScreen": {
     "bundles": [
       "lobby_ui",
-      "generals",
-      "ui_bg"
+      "ui_bg",
+      "generals"
     ],
     "spriteFrames": [
+      "sprites/ui_bg/lobby_hall_spring_bg",
       "sprites/generals/avatars/zhang_fei_avatar",
       "sprites/generals/chibi/guan_yu_chibi",
       "sprites/generals/chibi/liu_bei_chibi",
       "sprites/generals/chibi/zhang_fei_chibi",
       "sprites/generals/chibi/zhuge_liang_chibi",
       "sprites/generals/chibi/huang_zhong_chibi",
-      "sprites/ui_bg/lobby_hall_spring_bg",
       "sprites/ui_bg/lobby_hall_map_preview"
     ],
     "fonts": [
