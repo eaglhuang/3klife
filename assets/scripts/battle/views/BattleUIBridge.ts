@@ -580,6 +580,7 @@ export class BattleUIBridge {
 
   private _onGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {
     this.refreshBattleViews();
+    this.ctx.unitRenderer?.playGeneralAttackPose(data.faction);
     const skillId = data.skillId ?? data.skillName ?? null;
     if (!skillId) return;
     this.appendLog(buildBattleSkillUsedMessage(skillId, data.faction, data.sourceType, data.generalName));
