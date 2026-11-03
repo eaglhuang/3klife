@@ -297,6 +297,8 @@ export class UIPreviewBuilder extends Component {
         node.parent  = parent;
         const contract = typeof (spec as any)._contract === 'string' ? String((spec as any)._contract).trim().toLowerCase() : '';
         if (contract.length > 0) (node as any)._ucufContract = contract;
+        const ucufId = typeof (spec as any)._ucufId === 'string' ? String((spec as any)._ucufId).trim() : '';
+        if (ucufId.length > 0) (node as any)._ucufId = ucufId; // 供 UcufNodeLookup 依語意 id 找節點
 
         const flowChildInLayout = this._isLayoutFlowChild(spec, parent);
         const widgetDef = flowChildInLayout ? undefined : spec.widget;
