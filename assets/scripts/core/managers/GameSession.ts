@@ -250,7 +250,9 @@ import {
 import type { DomesticTaskId } from '../systems/DomesticTasks';
 import { TRADE_RESOURCE_NAMES, tradeWithRival as tradeWithRivalPure, type TradeResult } from '../systems/RivalTrade';
 import { newAiHegemonOf } from '../systems/RivalHegemony';
-import { advanceRivalSeason, applyEraShift, autoResolveBattle, createRivalWorld, generalPower, nationDef, normalizeRivalWorld, type AutoBattleResult, type BattleGeneral, type RivalWorld } from '../systems/RivalNations';
+import type { RivalNationRoster } from '../systems/RivalOfficers';
+import type { RivalPowerContext } from '../systems/RivalOfficerSeason';
+import { advanceRivalSeason, applyEraShift, attachRivalOfficers, autoResolveBattle, createRivalWorld, generalPower, nationDef, normalizeRivalWorld, type AutoBattleResult, type BattleGeneral, type RivalWorld } from '../systems/RivalNations';
 import {
     defaultKeepTerritories,
     normalizeGovernanceAssignments,
@@ -651,6 +653,8 @@ export class GameSession {
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
     private _rivals: RivalWorld = createRivalWorld();
+    /** 他國逐將名冊與重算情境（E-9，PROG-2-1714）；未設定時他國照舊以兵力計軍力 */
+    private _rivalOfficers: { rosters: Readonly<Record<string, RivalNationRoster>>; context: RivalPowerContext } | null = null;
     /** 季末糧不足標記（TRP-12）；只給下一場出征用，不進存檔 */
     private _tallyFoodDiscountArmed = false;
     /** 傭兵存檔包（試用、薪水、冷卻）；隨存檔保存（MERC-01 接線） */
@@ -1612,7 +1616,7 @@ export class GameSession {
         this._firstBattleCleared = false;
         this._openingRedFaceShown = false;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
-        this._rivals = createRivalWorld();
+        this._rivals = this._withRivalOfficers(createRivalWorld());
         this._mercenaries = createEmptyMercenaryBundle();
     }
 
@@ -1749,6 +1753,19 @@ export class GameSession {
         return this._rivals;
     }
 
+    /**
+     * 設定他國逐將名冊與重算情境（E-9，PROG-2-1714）：尚未有名冊的勢力立即掛上，
+     * 之後每季推進會逐將重算軍力。讀檔與新遊戲也會補掛。
+     */
+    public setRivalOfficerContext(rosters: Readonly<Record<string, RivalNationRoster>>, context: RivalPowerContext): void {
+        this._rivalOfficers = { rosters, context };
+        this._rivals = this._withRivalOfficers(this._rivals);
+    }
+
+    private _withRivalOfficers(world: RivalWorld): RivalWorld {
+        return this._rivalOfficers ? attachRivalOfficers(world, this._rivalOfficers.rosters, this._rivalOfficers.context) : world;
+    }
+
     /** 外交指令或出征結算後寫回勢力狀態並存檔 */
     public async setRivals(world: RivalWorld): Promise<void> {
         this._rivals = normalizeRivalWorld(world);
@@ -1794,7 +1811,7 @@ export class GameSession {
         // 玩家金幣不在 GameSession 內（錢包由呼叫端持有），RAI-05 暫傳 0（暫定）
         const holdersOf = (w: typeof this._rivals) => [...w.nations.map((n) => ({ id: n.id, territories: n.territories })), { id: 'player', territories: this._territories.length }];
         const beforeHolders = holdersOf(this._rivals);
-        const tick = advanceRivalSeason(this._rivals, this._random, { troops: this._military.cityTroops, food: this._military.food, gold: 0, territories: this._territories.length });
+        const tick = advanceRivalSeason(this._rivals, this._random, { troops: this._military.cityTroops, food: this._military.food, gold: 0, territories: this._territories.length }, this._rivalOfficers?.context);
         let world = tick.world;
         const battles: AutoBattleResult[] = [];
         for (const event of tick.events) {
@@ -4242,7 +4259,7 @@ export class GameSession {
         this._openingRedFaceShown = normalizeFlag(snapshot.resources?.openingRedFaceShown)
             || (snapshot.resources?.firstBattleCleared === undefined && this._clearedStageIds.length > 0);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
-        this._rivals = normalizeRivalWorld(snapshot.rivals);
+        this._rivals = this._withRivalOfficers(normalizeRivalWorld(snapshot.rivals));
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         if (this._postLoadHook) {
             try {

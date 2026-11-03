@@ -25,7 +25,9 @@ import { bondStep, type AiGeneral, type BondPair } from './RivalBonding';
 import { evaluateExpansion } from './RivalExpansion';
 import { coalitionStatusOf } from './RivalHegemony';
 import { formatAllianceFormed, formatRivalDeclareWar } from './RivalRulerLines';
-import { adjustedAttackChance, averageMilitaryIndex, isWeakNation, militaryIndexOf } from './RivalMilitaryIndex';
+import { adjustedAttackChance, averageMilitaryIndex, isWeakNation, militaryIndexOf, usesOfficerPower } from './RivalMilitaryIndex';
+import { advanceRivalRoster, evaluateRivalRoster, type RivalPowerContext } from './RivalOfficerSeason';
+import type { RivalNationRoster, RivalOfficer, RivalTally } from './RivalOfficers';
 
 export interface NationDef {
     readonly id: string;
@@ -72,6 +74,10 @@ export interface NationState {
     readonly roster?: readonly AiGeneral[];
     /** 已結緣的配對紀錄（RAI-08，PROG-2-1507） */
     readonly bonds?: readonly BondPair[];
+    /** 逐將名冊（E-9，PROG-2-1714）；舊存檔缺漏 */
+    readonly officerRoster?: RivalNationRoster;
+    /** 逐將總戰力加總（E-9 Phase 4），每季推進後更新 */
+    readonly officerPower?: number;
 }
 
 /** 招募擲骰的獨立亂數（依勢力與季數定種子），不消耗局內亂數流，免得改動其他既有擲骰結果 */
@@ -236,10 +242,12 @@ export function advanceRivalSeason(
     world: RivalWorld,
     random: () => number,
     player: RivalPlayerStats = { troops: 0, food: 0, gold: 0 },
+    officerContext?: RivalPowerContext,
 ): SeasonTickResult {
     const events: SeasonEvent[] = [];
     // E-9 Phase 4~5：以季初兵力算軍力指數，弱勢國家本季偏防守（PROG-2-1706）
     const averageIndex = averageMilitaryIndex(world.nations);
+    const byOfficers = usesOfficerPower(world.nations);
     // E-8 霸權反制：玩家與各勢力一起算領土佔比，聯盟成員邦交回歸較快（PROG-2-1709）
     const holders = [...world.nations.map((n) => ({ id: n.id, territories: n.territories })), { id: 'player', territories: player.territories ?? 0 }];
     const nations = world.nations.map((n) => {
@@ -262,7 +270,7 @@ export function advanceRivalSeason(
             relation = relation > 0 ? Math.max(0, relation - drift) : Math.min(0, relation + drift);
         }
         const hostile = n.atWar || relation <= -40;
-        const attackChance = adjustedAttackChance(tuning.attack, isWeakNation(militaryIndexOf(n), averageIndex));
+        const attackChance = adjustedAttackChance(tuning.attack, isWeakNation(militaryIndexOf(n, byOfficers), averageIndex));
         if (hostile && !n.allied && random() < attackChance) {
             const decision = evaluateExpansion(
                 { troops, food: governed.food, intel: governed.intel, profile },
@@ -285,6 +293,8 @@ export function advanceRivalSeason(
         }
         // E-7 結緣：糧草達門檻時從待命池配對（RAI-08 最小切片）
         const bonded = bondStep(roster, n.bonds ?? [], resources.food, governedSeasons);
+        // E-9 Phase 1~4：有名冊且帶入逐將情境時推進名冊並重算軍力
+        const officers = n.officerRoster && officerContext ? advanceRivalRoster(n.officerRoster, officerContext) : null;
         return {
             ...n,
             troops: troops + governed.troops,
@@ -294,6 +304,9 @@ export function advanceRivalSeason(
             recruits,
             roster: bonded.roster,
             bonds: bonded.bonds,
+            ...(officers && officerContext
+                ? { officerRoster: officers, officerPower: evaluateRivalRoster(officers, officerContext).militaryIndex }
+                : {}),
         };
     });
     return { world: { nations }, events };
@@ -364,6 +377,25 @@ export function autoResolveBattle(
     return { win, world: next, playerStrength, enemyStrength, enemyLosses, goldReward, territoryGained, lines };
 }
 
+/**
+ * 替尚未有名冊的勢力掛上逐將名冊並算初始軍力（PROG-2-1714）。
+ * 已有名冊（讀檔還原）的勢力不覆蓋；名冊裡沒有的勢力維持原狀。
+ */
+export function attachRivalOfficers(
+    world: RivalWorld,
+    rosters: Readonly<Record<string, RivalNationRoster>>,
+    context: RivalPowerContext,
+): RivalWorld {
+    return {
+        nations: world.nations.map((n) => {
+            if (n.officerRoster) return n;
+            const roster = rosters[n.id];
+            if (!roster) return n;
+            return { ...n, officerRoster: roster, officerPower: evaluateRivalRoster(roster, context).militaryIndex };
+        }),
+    };
+}
+
 /** 讀存檔：缺漏的勢力補初始值，未知勢力丟棄，數值夾在合法範圍 */
 export function normalizeRivalWorld(raw: unknown): RivalWorld {
     const base = createRivalWorld();
@@ -386,6 +418,32 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
     const bondsOf = (raw: unknown): BondPair[] => (Array.isArray(raw) ? raw : [])
         .filter((b): b is BondPair => !!b && typeof b.first === 'string' && typeof b.second === 'string')
         .map((b) => ({ first: b.first, second: b.second, season: count(b.season) }));
+    const officerRosterOf = (raw: unknown): RivalNationRoster | null => {
+        const r = (raw && typeof raw === 'object' ? raw : null) as { officers?: unknown; tallies?: unknown } | null;
+        if (!r || !Array.isArray(r.officers) || !Array.isArray(r.tallies)) return null;
+        const officers = (r.officers as RivalOfficer[])
+            .filter((o) => !!o && typeof o.generalId === 'string' && !!o.baseStats && typeof o.baseStats === 'object')
+            .map((o): RivalOfficer => ({
+                generalId: o.generalId,
+                age: Math.max(0, num(o.age, 0)),
+                vitality: Math.max(0, num(o.vitality, 0)),
+                baseStats: {
+                    str: num(o.baseStats.str, 0), int: num(o.baseStats.int, 0), lea: num(o.baseStats.lea, 0),
+                    pol: num(o.baseStats.pol, 0), cha: num(o.baseStats.cha, 0),
+                },
+            }));
+        const tallies = (r.tallies as RivalTally[])
+            .filter((t) => !!t && typeof t.id === 'string' && ['R', 'SR', 'SSR', 'UR'].includes(t.quality) && typeof t.troopType === 'string')
+            .map((t): RivalTally => ({
+                id: t.id,
+                quality: t.quality,
+                troopType: t.troopType,
+                star: Math.max(1, count(t.star)),
+                starExp: count(t.starExp),
+                equippedGeneralId: typeof t.equippedGeneralId === 'string' ? t.equippedGeneralId : null,
+            }));
+        return { officers, tallies };
+    };
     const resourcesOf = (raw: unknown): NationResources => {
         const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
         const whole = (v: unknown, fallback: number): number => Math.max(0, Math.round(num(v, fallback)));
@@ -400,6 +458,7 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
         nations: base.nations.map((n) => {
             const s = saved.get(n.id);
             if (!s) return n;
+            const officerRoster = officerRosterOf(s.officerRoster);
             return {
                 id: n.id,
                 troops: Math.max(0, Math.round(num(s.troops, n.troops))),
@@ -412,6 +471,9 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
                 recruits: recruitsOf(s.recruits),
                 roster: rosterOf(s.roster),
                 bonds: bondsOf(s.bonds),
+                ...(officerRoster
+                    ? { officerRoster, ...(typeof s.officerPower === 'number' && Number.isFinite(s.officerPower) ? { officerPower: Math.max(0, s.officerPower) } : {}) }
+                    : {}),
                 ...(typeof s.tradeSeason === 'number' && Number.isFinite(s.tradeSeason)
                     ? { tradeSeason: Math.floor(s.tradeSeason), tradeCount: Math.max(0, Math.floor(num(s.tradeCount, 0))) }
                     : {}),
