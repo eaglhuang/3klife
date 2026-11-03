@@ -1,0 +1,15 @@
+{
+  "$note": "幕府大廳主題（大廳系統規格書 E-6）：季節背景、夜色遮罩、夏日光束、勢力圖季節色調與粒子季節，數值取自 Design System/design_handoff/lobby-hall 設計稿。節慶以 festivals 覆寫背景／裝飾／粒子三層，平時為空。",
+  "seasonKeys": { "1": "spring", "2": "summer", "3": "autumn", "4": "winter" },
+  "backgroundPath": "sprites/ui_bg/lobby_hall_{season}_bg",
+  "night": { "startHour": 18, "endHour": 6 },
+  "nightTint": { "color": "#0A1028", "alpha": 0.55, "glowColor": "#FFAA50", "glowAlpha": 0.18 },
+  "sunraySeasons": ["summer"],
+  "seasonTint": {
+    "spring": { "color": "#FFAAC8", "alpha": 0.35, "blend": "soft-light" },
+    "summer": { "color": "#78DC8C", "alpha": 0.30, "blend": "soft-light" },
+    "autumn": { "color": "#FF8C28", "alpha": 0.45, "blend": "soft-light" },
+    "winter": { "color": "#DCEBFF", "alpha": 0.29, "blend": "screen" }
+  },
+  "festivals": {}
+}
