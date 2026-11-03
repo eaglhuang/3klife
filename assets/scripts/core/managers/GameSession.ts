@@ -273,6 +273,11 @@ import {
 /** 倉庫擴容次數的庫存標記道具 id（PROG-2-1103） */
 export const WAREHOUSE_EXPANSION_ITEM = 'warehouse.expansion';
 
+/** 本季他國事件（依發生順序）；kind 與 RivalNations.SeasonEvent 相同，playerWon 為自動迎戰結果。 */
+export interface RivalSeasonEventsPayload {
+    events: Array<{ nationId: string; kind: string; playerWon: boolean }>;
+}
+
 export const GAME_SESSION_EVENTS = {
     /** payload: SeasonAdvancedPayload */
     SeasonAdvanced: 'game-session-season-advanced',
@@ -290,6 +295,8 @@ export const GAME_SESSION_EVENTS = {
     EraReset: 'game-session-era-reset',
     /** payload: { nationId: string }（他國新成為霸主，G-1 稱霸提示，PROG-2-1710） */
     RivalHegemonRose: 'game-session-rival-hegemon-rose',
+    /** payload: RivalSeasonEventsPayload（本季他國來犯與迎戰結果；大廳勢力圖據此逐州聚焦，UI-2-0130） */
+    RivalSeasonEvents: 'game-session-rival-season-events',
     /** payload: UnveilingEvent（UI 在此播放血脈命鏡開獎演出，再讓玩家選宿命） */
     GeneralUnveiled: 'game-session-general-unveiled',
     /** payload: MentorCard */
@@ -1794,6 +1801,12 @@ export class GameSession {
             world = battle.world;
             battles.push(battle);
             this._recordOfflineBattle(squad, event.nationId, battle, battles.length);
+        }
+        if (tick.events.length > 0) {
+            const payload: RivalSeasonEventsPayload = {
+                events: tick.events.map((event, i) => ({ nationId: event.nationId, kind: event.kind, playerWon: battles[i].win })),
+            };
+            this._emit(GAME_SESSION_EVENTS.RivalSeasonEvents, payload);
         }
         // RAI-12：年度天下大亂評估；玩家領土數取守城領地清單長度
         this._rivals = applyEraShift(world, this._clock.state.totalSeasonsElapsed, this._territories.length);
