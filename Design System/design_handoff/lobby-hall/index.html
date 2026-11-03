@@ -55,20 +55,42 @@
   .wall-more { position:absolute; left:18px; right:18px; bottom:14px; height:44px; border-radius:8px; text-align:center; line-height:44px; font-family:var(--font-headline); font-size:20px; color:#FFE088; background:rgba(0,0,0,.4); border:1px solid #D4AF37; }
 
   /* 中央天下勢力圖（E-4）：底圖 1280×960 縮放顯示，州界與勢力色由執行期依 han13 遮罩上色 */
-  .sandbox { position:absolute; left:600px; top:116px; width:720px; height:540px; border-radius:10px; z-index:3; overflow:hidden;
-    background:url(map-preview.png) center / cover no-repeat; border:4px solid #D4AF37; box-shadow:0 0 0 2px #5a3a10, 0 24px 48px rgba(0,0,0,.6); }
-  .sandbox-label { position:absolute; left:810px; top:126px; width:300px; height:40px; line-height:40px; text-align:center; z-index:4; border-radius:20px; background:rgba(45,30,0,.78); border:1px solid #D4AF37; font-family:var(--font-headline); font-size:24px; color:#FFE088; letter-spacing:.3em; }
-  .stage { position:absolute; top:600px; width:180px; height:44px; border-radius:22px; text-align:center; line-height:44px; z-index:4; font-family:var(--font-headline); font-size:20px; }
+  .sandbox { position:absolute; left:600px; top:150px; width:720px; height:520px; z-index:3;
+    background:url(map-preview.png) center / cover no-repeat;
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, rgba(0,0,0,.55) 80%, transparent 100%);
+            mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, rgba(0,0,0,.55) 80%, transparent 100%); }
+  .season-tint { position:absolute; left:600px; top:150px; width:720px; height:520px; z-index:3; pointer-events:none; mix-blend-mode:soft-light;
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 60%, transparent 100%); mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 60%, transparent 100%); }
+  body[data-season="spring"] .season-tint { background: rgba(255,170,200,.35); }
+  body[data-season="summer"] .season-tint { background: rgba(120,220,140,.30); }
+  body[data-season="autumn"] .season-tint { background: rgba(255,140,40,.45); }
+  body[data-season="winter"] .season-tint { background: rgba(220,235,255,.65); mix-blend-mode:screen; opacity:.45; }
+  .fx { position:absolute; inset:0; z-index:20; pointer-events:none; overflow:hidden; }
+  .fx i { position:absolute; display:block; border-radius:60% 0 60% 0; opacity:.85; }
+  body[data-season="spring"] .fx i { background:#F7B6C8; box-shadow:0 0 2px #fff; }
+  body[data-season="summer"] .fx i { background:#FFF6B0; border-radius:50%; box-shadow:0 0 10px 3px rgba(255,240,140,.8); width:6px !important; height:6px !important; }
+  body[data-season="autumn"] .fx i { background:#D9662A; border-radius:0 70% 0 70%; }
+  body[data-season="winter"] .fx i { background:#FFFFFF; border-radius:50%; box-shadow:0 0 4px #fff; }
+  .sandbox-label { position:absolute; left:830px; top:118px; width:260px !important; width:300px; height:40px; line-height:40px; text-align:center; z-index:4; border-radius:20px; background:rgba(45,30,0,.78); border:1px solid #D4AF37; font-family:var(--font-headline); font-size:24px; color:#FFE088; letter-spacing:.3em; }
+  .stage { position:absolute; width:170px; height:44px; border-radius:22px; text-align:center; line-height:44px; z-index:4; font-family:var(--font-headline); font-size:20px; }
   .stage.on { background:#D4AF37; color:#2D1E00; } .stage.off { background:rgba(0,0,0,.55); color:#7a7363; border:1px dashed #7a7363; }
-  .s1 { left:660px; } .s2 { left:870px; } .s3 { left:1080px; }
+  .s1, .s2, .s3 { left:1150px; } .s1 { top:250px; } .s2 { top:304px; } .s3 { top:358px; }
 
   /* 武將點位（E-5） */
-  .spot { position:absolute; width:130px; height:180px; z-index:5; text-align:center; }
-  .spot img { width:120px; height:120px; object-fit:cover; object-position:center top; border-radius:50% 50% 12px 12px; border:2px solid #4D4635; background:#1a1610; }
-  .spot .s-name { font-family:var(--font-headline); font-size:22px; font-weight:700; color:#FFF; margin-top:4px; text-shadow:0 2px 4px #000; }
-  .spot .s-rank { font-family:var(--font-label); font-size:15px; color:#FFE088; }
-  .spot .s-vol { position:absolute; top:-8px; right:-6px; width:52px; height:26px; border-radius:13px; background:#B22222; color:#FFF; font-family:var(--font-label); font-size:14px; line-height:26px; }
-  .sp1 { left:590px; top:690px; } .sp2 { left:895px; top:676px; } .sp3 { left:1200px; top:690px; }
+  /* 武將點位（E-5）：Q 版武將在大廳走動，點擊對話接任務 */
+  .npc { position:absolute; z-index:5; transform:translateX(-50%); text-align:center; }
+  .npc .body { position:relative; display:block; animation: idle 2.6s ease-in-out infinite; transform-origin:50% 100%; }
+  .npc img { display:block; filter: drop-shadow(0 0 2px rgba(255,236,190,.9)) drop-shadow(6px 10px 8px rgba(0,0,0,.45)); }
+  .npc.flip img { transform:scaleX(-1); }
+  .npc::after { content:""; position:absolute; left:15%; right:15%; bottom:-8px; height:22px; border-radius:50%; background:radial-gradient(ellipse, rgba(0,0,0,.55), transparent 70%); z-index:-1; }
+  .npc .tag { position:absolute; left:50%; bottom:-34px; transform:translateX(-50%); white-space:nowrap; padding:2px 12px; border-radius:12px; background:rgba(40,14,10,.85); border:1px solid #D4AF37; font-family:var(--font-headline); font-size:18px; color:#FFE9B0; }
+  .npc .mark { position:absolute; left:50%; top:-46px; transform:translateX(-50%); width:38px; height:38px; border-radius:50%; background:radial-gradient(circle at 40% 35%, #FFE088, #D4AF37); border:2px solid #7a4a10; font:900 26px/34px var(--font-headline); color:#6a1c16; animation: bob 1.2s ease-in-out infinite; }
+  .bubble { position:absolute; z-index:8; max-width:300px; padding:12px 16px; border-radius:14px; background:#FBF3DE; border:2px solid #8A6E1F; box-shadow:0 8px 16px rgba(0,0,0,.4); font-family:var(--font-body); font-size:19px; line-height:1.45; color:#3a2410; }
+  .bubble b { color:#8A2A22; } .bubble .acts { display:flex; gap:8px; margin-top:8px; }
+  .bubble .acts span { padding:3px 12px; border-radius:8px; font-size:16px; background:#6a1c16; color:#FFE9B0; border:1px solid #D4AF37; }
+  .bubble::after { content:""; position:absolute; right:40px; bottom:-14px; border:12px solid transparent; border-top-color:#8A6E1F; border-bottom:0; }
+  @keyframes idle { 0%,100% { transform: translateY(0) scale(1,1); } 50% { transform: translateY(-3px) scale(1,1.015); } }
+  @keyframes bob { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,-6px); } }
 
   /* 許願祭壇（E-7） */
   .altar { position:absolute; left:24px; top:782px; width:400px; height:150px; padding:12px 16px; border-radius:12px; z-index:6; background:linear-gradient(180deg,rgba(60,40,10,.92),rgba(25,18,6,.95)); border:2px solid #D4AF37; }
@@ -126,11 +148,15 @@
     <div class="wall-more">展開內政牆</div>
   </section>
 
-  <div class="spot sp1"><img src="../../../assets/resources/sprites/generals/avatars/zhang_fei_avatar.png" alt=""><div class="s-name">張飛</div><div class="s-rank">偏將軍</div><span class="s-vol">自薦</span></div>
-  <div class="spot sp2"><img src="../../../assets/resources/sprites/generals/avatars/guan_yu_avatar.png" alt=""><div class="s-name">關羽</div><div class="s-rank">偏將軍</div></div>
-  <div class="spot sp3"><img src="../../../assets/resources/sprites/generals/avatars/wei_yan_avatar.png" alt=""><div class="s-name">魏延</div><div class="s-rank">牙門將</div></div>
+  <div class="npc " style="left:640px; top:560px;"><span class="body"><img src="chibi/guanyu.png" style="height:300px" alt=""></span><span class="tag">關羽</span></div>
+  <div class="npc " style="left:960px; top:610px;"><span class="body"><img src="chibi/liubei.png" style="height:262px" alt=""></span><span class="tag">劉備</span></div>
+  <div class="npc flip" style="left:1280px; top:584px;"><span class="body"><img src="chibi/zhangfei.png" style="height:282px" alt=""></span><span class="tag">張飛</span></div>
+  <div class="npc " style="left:800px; top:670px;"><span class="body"><img src="chibi/zhugeliang.png" style="height:256px" alt=""><span class="mark">!</span></span><span class="tag">諸葛亮</span></div>
+  <div class="npc flip" style="left:1120px; top:666px;"><span class="body"><img src="chibi/huangzhong.png" style="height:258px" alt=""></span><span class="tag">黃忠</span></div>
+  <div class="bubble" style="left:1000px; top:520px;"><b>張飛：</b>大哥！烏巢糧倉守備鬆散，俺老張今夜就去劫了它！<div class="acts"><span>交給你</span><span>再議</span></div></div>
 
   <div class="sandbox"></div>
+  <div class="season-tint"></div>
   <div class="sandbox-label">天下勢力圖</div>
   <div class="stage s1 on">S1 中原統一</div>
   <div class="stage s2 off">S2 邊境征伐</div>
@@ -158,5 +184,12 @@
     <div class="dock-btn">培育</div>
     <div class="dock-btn">商城</div>
   </nav>
+  <div class="fx" id="fx"></div>
+<script>
+  (function(){ var fx=document.getElementById('fx'), r=0.37; var k=0; function rnd(){ var x=Math.sin(++k*12.9898)*43758.5453; return x-Math.floor(x); }
+    for (var i=0;i<90;i++){ var e=document.createElement('i'), z=12+rnd()*16;
+      e.style.left=(rnd()*1920)+'px'; e.style.top=(rnd()*1080)+'px'; e.style.width=z+'px'; e.style.height=(z*0.7)+'px';
+      e.style.transform='rotate('+(rnd()*360)+'deg)'; e.style.opacity=(0.45+rnd()*0.5); fx.appendChild(e); } })();
+</script>
 </body>
 </html>
