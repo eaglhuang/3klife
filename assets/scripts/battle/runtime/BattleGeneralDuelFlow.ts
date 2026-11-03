@@ -292,7 +292,7 @@ export class BattleGeneralDuelFlow {
 
     const getAttack = (general: GeneralUnit, unit: TroopUnit | null): number => {
       if (unit) return unit.getEffectiveAttack();
-      return services().formula.calculateGeneralAttack({ str: general.str, int: general.int, lea: general.lea, maxHp: general.maxHp });
+      return svc.formula.calculateGeneralAttack({ str: general.str, int: general.int, lea: general.lea, maxHp: general.maxHp });
     };
 
     const challengerAttack = getAttack(challengerGeneral, challengerUnit);
