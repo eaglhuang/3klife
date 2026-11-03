@@ -1,0 +1,8 @@
+{
+  "$note": "幕府大廳 Q 版武將的名牌、任務標記與 idle 動作參數，數值換算自 Design System/design_handoff/lobby-hall 設計稿（.npc .tag / .mark、@keyframes idle / bob）。",
+  "tagBelowFootPx": 20,
+  "markAboveHeadPx": 27,
+  "idle": { "periodSec": 2.6, "risePx": 3, "stretchY": 0.015 },
+  "markBob": { "periodSec": 1.2, "risePx": 6 },
+  "phaseStepSec": 0.37
+}
