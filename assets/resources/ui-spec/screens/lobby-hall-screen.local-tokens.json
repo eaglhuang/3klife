@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "lobby-hall-screen",
-  "generatedAt": "2026-11-03T19:42:56.731Z",
+  "generatedAt": "2026-11-03T22:54:11.325Z",
   "_sourceAuthority": "html-to-ucuf",
   "policy": {
     "mode": "replace-all-per-run",
@@ -9,7 +9,7 @@
     "note": "Always regenerate full screen-local tokens from current conversion to avoid stale residue."
   },
   "sourceSuggestionFiles": [
-    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
   ],
   "stats": {
     "unresolvedColorCount": 13,
@@ -43,7 +43,7 @@
         "distance": 21
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -58,7 +58,7 @@
         "distance": 9
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -73,7 +73,7 @@
         "distance": 20
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -88,7 +88,7 @@
         "distance": 13
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -103,7 +103,7 @@
         "distance": 32
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -118,7 +118,7 @@
         "distance": 41
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -133,7 +133,7 @@
         "distance": 45
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -148,7 +148,7 @@
         "distance": 34
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -163,7 +163,7 @@
         "distance": 38
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -178,7 +178,7 @@
         "distance": 54
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -193,7 +193,7 @@
         "distance": 19
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -208,7 +208,7 @@
         "distance": 5
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -223,7 +223,7 @@
         "distance": 21
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.final.layout.token-suggestions.json"
       ]
     }
   ]

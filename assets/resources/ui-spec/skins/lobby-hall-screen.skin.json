@@ -458,6 +458,64 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
+    "auto.lobby-hall-screen.lobbyhallscreen_div_16": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(138, 26, 18)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(90, 14, 8)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "rgb(138, 26, 18)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(90, 14, 8)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 26,
+      "borderWidth": 1,
+      "borderColor": "#d4af37"
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_span_5": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 4,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
     "auto.lobby-hall-screen.lobbyhallscreen_section_1": {
       "kind": "gradient-rect",
       "backgroundLayers": [
@@ -504,7 +562,7 @@
       "borderWidth": 2,
       "borderColor": "lobby_hall_screen_local_color_06"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_16": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_17": {
       "kind": "color-rect",
       "color": "#000000",
       "opacity": 0,
@@ -517,7 +575,7 @@
       "borderWidth": 1,
       "borderColor": "#ffe08840"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_5": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_6": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 28,
@@ -530,7 +588,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_6": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_7": {
       "kind": "label-style",
       "font": "fonts/manrope/font",
       "fontSize": 16,
@@ -543,7 +601,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_17": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_18": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.18,
@@ -551,7 +609,7 @@
       "borderWidth": 2,
       "borderColor": "#d4af37"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_18": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_19": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
@@ -564,7 +622,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_19": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_20": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -577,13 +635,13 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_7": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_8": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_10",
       "opacity": 1,
       "cornerRadius": 4
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_8": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_9": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -596,7 +654,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_9": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_10": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 15,
@@ -608,7 +666,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_20": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_21": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.35,
@@ -616,7 +674,7 @@
       "borderWidth": 1,
       "borderColor": "#ffe0882e"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_21": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_22": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
@@ -629,7 +687,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_22": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_23": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -642,13 +700,13 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_10": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_11": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_08",
       "opacity": 1,
       "cornerRadius": 4
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_11": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_12": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -661,7 +719,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_23": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_24": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.35,
@@ -669,7 +727,7 @@
       "borderWidth": 1,
       "borderColor": "#ffe0882e"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_24": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_25": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
@@ -682,7 +740,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_25": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_26": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -695,13 +753,13 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_12": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_13": {
       "kind": "color-rect",
       "color": "stdButtonPrimary",
       "opacity": 1,
       "cornerRadius": 4
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_13": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_14": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -714,7 +772,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_26": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_27": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.35,
@@ -722,7 +780,7 @@
       "borderWidth": 1,
       "borderColor": "#ffe0882e"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_27": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_28": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
@@ -735,7 +793,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_28": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_29": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -748,13 +806,13 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_14": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_15": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_07",
       "opacity": 1,
       "cornerRadius": 4
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_15": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_16": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -767,7 +825,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_29": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_30": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.4,
@@ -775,7 +833,7 @@
       "borderWidth": 1,
       "borderColor": "#d4af37"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_16": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_17": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 20,
@@ -833,7 +891,7 @@
       "borderWidth": 2,
       "borderColor": "lobby_hall_screen_local_color_11"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_30": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_31": {
       "kind": "color-rect",
       "color": "#000000",
       "opacity": 0,
@@ -846,7 +904,7 @@
       "borderWidth": 1,
       "borderColor": "#ffe08840"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_17": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_18": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 28,
@@ -859,7 +917,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_18": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_19": {
       "kind": "label-style",
       "font": "fonts/manrope/font",
       "fontSize": 16,
@@ -872,7 +930,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_31": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_32": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.18,
@@ -880,7 +938,7 @@
       "borderWidth": 2,
       "borderColor": "#d4af37"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_32": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_33": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
@@ -893,7 +951,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_33": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_34": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -906,13 +964,13 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_19": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_20": {
       "kind": "color-rect",
       "color": "stdButtonPrimary",
       "opacity": 1,
       "cornerRadius": 4
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_20": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_21": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -925,7 +983,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_21": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_22": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 15,
@@ -937,7 +995,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_34": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_35": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.35,
@@ -945,7 +1003,7 @@
       "borderWidth": 1,
       "borderColor": "#ffe0882e"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_35": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_36": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
@@ -958,7 +1016,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_36": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_37": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -971,13 +1029,13 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_22": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_23": {
       "kind": "color-rect",
       "color": "primary",
       "opacity": 1,
       "cornerRadius": 4
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_23": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_24": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -990,7 +1048,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_37": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_38": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.35,
@@ -998,7 +1056,7 @@
       "borderWidth": 1,
       "borderColor": "#ffe0882e"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_38": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_39": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
@@ -1011,7 +1069,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_39": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_40": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -1024,13 +1082,13 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_24": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_25": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_08",
       "opacity": 1,
       "cornerRadius": 4
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_25": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_26": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -1043,7 +1101,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_40": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_41": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.35,
@@ -1051,7 +1109,7 @@
       "borderWidth": 1,
       "borderColor": "#ffe0882e"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_41": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_42": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
@@ -1064,7 +1122,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_42": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_43": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -1077,13 +1135,13 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_26": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_27": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_07",
       "opacity": 1,
       "cornerRadius": 4
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_27": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_28": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -1096,7 +1154,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_43": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_44": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.4,
@@ -1104,7 +1162,7 @@
       "borderWidth": 1,
       "borderColor": "#d4af37"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_28": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_29": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 20,
@@ -1116,7 +1174,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_29": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_30": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -1135,113 +1193,15 @@
       "expectedWidth": 175,
       "expectedHeight": 300
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_30": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_31": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_04",
       "opacity": 0.85,
       "cornerRadius": 12,
       "borderWidth": 1,
       "borderColor": "#d4af37"
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_31": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
-      "fontSize": 18,
-      "lineHeight": 25,
-      "letterSpacing": 0,
-      "color": "lobby_hall_screen_local_color_01",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER"
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_44_pseudoafter": {
-      "kind": "gradient-rect",
-      "backgroundLayers": [
-        {
-          "kind": "gradient",
-          "gradient": {
-            "type": "radial",
-            "repeating": false,
-            "angle": 180,
-            "shape": null,
-            "center": {
-              "x": 0.5,
-              "y": 0.5
-            },
-            "radius": {
-              "x": 0.7071067811865476,
-              "y": 0.7071067811865476
-            },
-            "repeatSpanRatio": 0.7,
-            "stops": [
-              {
-                "color": "rgba(0, 0, 0, 0.55)",
-                "offset": 0
-              },
-              {
-                "color": "rgba(0, 0, 0, 0)",
-                "offset": 0.7
-              }
-            ]
-          }
-        }
-      ],
-      "gradient": {
-        "type": "radial",
-        "repeating": false,
-        "angle": 180,
-        "repeatSpanRatio": 0.7,
-        "center": {
-          "x": 0.5,
-          "y": 0.5
-        },
-        "radius": {
-          "x": 0.7071067811865476,
-          "y": 0.7071067811865476
-        },
-        "stops": [
-          {
-            "color": "colorBlack",
-            "offset": 0,
-            "opacity": 0.55
-          },
-          {
-            "color": "colorBlack",
-            "offset": 0.7,
-            "opacity": 0
-          }
-        ]
-      }
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_32": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
-      "fontSize": 16,
-      "lineHeight": 22,
-      "letterSpacing": 0,
-      "color": "textPrimary",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "style": "labelLg"
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_img_3": {
-      "kind": "sprite-frame",
-      "path": "sprites/generals/chibi/liu_bei_chibi",
-      "expectedWidth": 125,
-      "expectedHeight": 262
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_33": {
-      "kind": "color-rect",
-      "color": "lobby_hall_screen_local_color_04",
-      "opacity": 0.85,
-      "cornerRadius": 12,
-      "borderWidth": 1,
-      "borderColor": "#d4af37"
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_34": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 18,
@@ -1312,7 +1272,7 @@
         ]
       }
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_35": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_33": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -1325,13 +1285,13 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_img_4": {
+    "auto.lobby-hall-screen.lobbyhallscreen_img_3": {
       "kind": "sprite-frame",
-      "path": "sprites/generals/chibi/zhang_fei_chibi",
-      "expectedWidth": 171,
-      "expectedHeight": 282
+      "path": "sprites/generals/chibi/liu_bei_chibi",
+      "expectedWidth": 125,
+      "expectedHeight": 262
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_36": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_34": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_04",
       "opacity": 0.85,
@@ -1339,7 +1299,7 @@
       "borderWidth": 1,
       "borderColor": "#d4af37"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_37": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_35": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 18,
@@ -1410,7 +1370,7 @@
         ]
       }
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_38": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_36": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -1421,89 +1381,15 @@
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
-      "overflow": "RESIZE_HEIGHT",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_img_5": {
+    "auto.lobby-hall-screen.lobbyhallscreen_img_4": {
       "kind": "sprite-frame",
-      "path": "sprites/generals/chibi/zhuge_liang_chibi",
-      "expectedWidth": 101,
-      "expectedHeight": 256
+      "path": "sprites/generals/chibi/zhang_fei_chibi",
+      "expectedWidth": 171,
+      "expectedHeight": 282
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_39": {
-      "kind": "gradient-rect",
-      "backgroundLayers": [
-        {
-          "kind": "gradient",
-          "gradient": {
-            "type": "radial",
-            "repeating": false,
-            "angle": 180,
-            "shape": "circle at 40% 35%",
-            "center": {
-              "x": 0.4,
-              "y": 0.35
-            },
-            "radius": {
-              "x": 0.8845903006477067
-            },
-            "stops": [
-              {
-                "color": "rgb(255, 224, 136)",
-                "offset": 0
-              },
-              {
-                "color": "rgb(212, 175, 55)",
-                "offset": 1
-              }
-            ]
-          }
-        }
-      ],
-      "gradient": {
-        "type": "radial",
-        "repeating": false,
-        "angle": 180,
-        "shape": "circle at 40% 35%",
-        "center": {
-          "x": 0.4,
-          "y": 0.35
-        },
-        "radius": {
-          "x": 0.8845903006477067
-        },
-        "stops": [
-          {
-            "color": "secondaryLight",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "secondary",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      },
-      "cornerRadius": 19,
-      "borderWidth": 2,
-      "borderColor": "lobby_hall_screen_local_color_09"
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_40": {
-      "kind": "label-style",
-      "font": "fonts/newsreader/font",
-      "fontSize": 26,
-      "lineHeight": 34,
-      "letterSpacing": 0,
-      "color": "lobby_hall_screen_local_color_05",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "overflow": "RESIZE_HEIGHT",
-      "isBold": true
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_41": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_37": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_04",
       "opacity": 0.85,
@@ -1511,7 +1397,7 @@
       "borderWidth": 1,
       "borderColor": "#d4af37"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_42": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_38": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 18,
@@ -1582,7 +1468,7 @@
         ]
       }
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_43": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_39": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -1593,15 +1479,89 @@
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
+      "overflow": "RESIZE_HEIGHT",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_img_6": {
+    "auto.lobby-hall-screen.lobbyhallscreen_img_5": {
       "kind": "sprite-frame",
-      "path": "sprites/generals/chibi/huang_zhong_chibi",
-      "expectedWidth": 163,
-      "expectedHeight": 258
+      "path": "sprites/generals/chibi/zhuge_liang_chibi",
+      "expectedWidth": 101,
+      "expectedHeight": 256
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_44": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_40": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "circle at 40% 35%",
+            "center": {
+              "x": 0.4,
+              "y": 0.35
+            },
+            "radius": {
+              "x": 0.8845903006477067
+            },
+            "stops": [
+              {
+                "color": "rgb(255, 224, 136)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(212, 175, 55)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "shape": "circle at 40% 35%",
+        "center": {
+          "x": 0.4,
+          "y": 0.35
+        },
+        "radius": {
+          "x": 0.8845903006477067
+        },
+        "stops": [
+          {
+            "color": "secondaryLight",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "secondary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 19,
+      "borderWidth": 2,
+      "borderColor": "lobby_hall_screen_local_color_09"
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_span_41": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 26,
+      "lineHeight": 34,
+      "letterSpacing": 0,
+      "color": "lobby_hall_screen_local_color_05",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "overflow": "RESIZE_HEIGHT",
+      "isBold": true
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_span_42": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_04",
       "opacity": 0.85,
@@ -1609,7 +1569,7 @@
       "borderWidth": 1,
       "borderColor": "#d4af37"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_45": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_43": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 18,
@@ -1680,7 +1640,105 @@
         ]
       }
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_49": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_44": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "textPrimary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "style": "labelLg"
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_img_6": {
+      "kind": "sprite-frame",
+      "path": "sprites/generals/chibi/huang_zhong_chibi",
+      "expectedWidth": 163,
+      "expectedHeight": 258
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_span_45": {
+      "kind": "color-rect",
+      "color": "lobby_hall_screen_local_color_04",
+      "opacity": 0.85,
+      "cornerRadius": 12,
+      "borderWidth": 1,
+      "borderColor": "#d4af37"
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_span_46": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 0,
+      "color": "lobby_hall_screen_local_color_01",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_div_49_pseudoafter": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "radius": {
+              "x": 0.7071067811865476,
+              "y": 0.7071067811865476
+            },
+            "repeatSpanRatio": 0.7,
+            "stops": [
+              {
+                "color": "rgba(0, 0, 0, 0.55)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(0, 0, 0, 0)",
+                "offset": 0.7
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 0.7,
+        "center": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "radius": {
+          "x": 0.7071067811865476,
+          "y": 0.7071067811865476
+        },
+        "stops": [
+          {
+            "color": "colorBlack",
+            "offset": 0,
+            "opacity": 0.55
+          },
+          {
+            "color": "colorBlack",
+            "offset": 0.7,
+            "opacity": 0
+          }
+        ]
+      }
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_div_50": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_12",
       "opacity": 1,
@@ -1688,7 +1746,7 @@
       "borderWidth": 2,
       "borderColor": "#8a6e1f"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_49_cssshadow": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_50_cssshadow": {
       "kind": "shadow-set",
       "boxShadows": [
         {
@@ -1721,7 +1779,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_46": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_47": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 19,
@@ -1734,35 +1792,15 @@
       "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_47": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_48": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_05",
       "opacity": 1,
       "cornerRadius": 8,
       "borderWidth": 1,
       "borderColor": "#d4af37"
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_48": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
-      "fontSize": 16,
-      "lineHeight": 23,
-      "letterSpacing": 0,
-      "color": "lobby_hall_screen_local_color_01",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_49": {
-      "kind": "color-rect",
-      "color": "lobby_hall_screen_local_color_05",
-      "opacity": 1,
-      "cornerRadius": 8,
-      "borderWidth": 1,
-      "borderColor": "#d4af37"
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_50": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -1774,18 +1812,38 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_52": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_50": {
+      "kind": "color-rect",
+      "color": "lobby_hall_screen_local_color_05",
+      "opacity": 1,
+      "cornerRadius": 8,
+      "borderWidth": 1,
+      "borderColor": "#d4af37"
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_span_51": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 16,
+      "lineHeight": 23,
+      "letterSpacing": 0,
+      "color": "lobby_hall_screen_local_color_01",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_div_53": {
       "kind": "sprite-frame",
       "path": "sprites/ui_bg/lobby_hall_map_preview",
       "expectedWidth": 460,
       "expectedHeight": 330
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_53": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_54": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_13",
       "opacity": 0.35
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_54": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_55": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -1940,7 +1998,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_51": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_52": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -1953,7 +2011,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_56": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_57": {
       "kind": "color-rect",
       "color": "gdv3InkDeep",
       "opacity": 0.78,
@@ -1961,7 +2019,7 @@
       "borderWidth": 1,
       "borderColor": "#d4af37"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_52": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_53": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 20,
@@ -1973,31 +2031,11 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_57": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_58": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 1,
       "cornerRadius": 22
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_53": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
-      "fontSize": 20,
-      "lineHeight": 44,
-      "letterSpacing": 0,
-      "color": "gdv3InkDeep",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER"
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_58": {
-      "kind": "color-rect",
-      "color": "colorBlack",
-      "opacity": 0.55,
-      "cornerRadius": 22,
-      "borderWidth": 1,
-      "borderColor": "lobby_hall_screen_local_color_03"
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_54": {
       "kind": "label-style",
@@ -2005,7 +2043,7 @@
       "fontSize": 20,
       "lineHeight": 44,
       "letterSpacing": 0,
-      "color": "lobby_hall_screen_local_color_03",
+      "color": "gdv3InkDeep",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
@@ -2032,6 +2070,26 @@
       "verticalAlign": "CENTER"
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_60": {
+      "kind": "color-rect",
+      "color": "colorBlack",
+      "opacity": 0.55,
+      "cornerRadius": 22,
+      "borderWidth": 1,
+      "borderColor": "lobby_hall_screen_local_color_03"
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_span_56": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 44,
+      "letterSpacing": 0,
+      "color": "lobby_hall_screen_local_color_03",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_div_61": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2077,7 +2135,7 @@
       "borderWidth": 2,
       "borderColor": "#d4af37"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_56": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_57": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
@@ -2089,7 +2147,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_57": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_58": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 15,
@@ -2101,7 +2159,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_63": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_64": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.25,
@@ -2122,7 +2180,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_58": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_59": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -2135,7 +2193,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_64": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_65": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.4,
@@ -2156,7 +2214,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_59": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_60": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -2169,7 +2227,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_65": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_66": {
       "kind": "color-rect",
       "color": "#000000",
       "opacity": 0,
@@ -2190,7 +2248,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_60": {
+    "auto.lobby-hall-screen.lobbyhallscreen_span_61": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 16,
@@ -2203,7 +2261,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_66": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_67": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2249,25 +2307,13 @@
       "borderWidth": 2,
       "borderColor": "#4d4635"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_67": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_68": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 24,
       "lineHeight": 34,
       "letterSpacing": 0,
       "color": "secondaryLight",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_69": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
-      "fontSize": 16,
-      "lineHeight": 24,
-      "letterSpacing": 0,
-      "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
@@ -2285,64 +2331,17 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_72": {
-      "kind": "gradient-rect",
-      "backgroundLayers": [
-        {
-          "kind": "gradient",
-          "gradient": {
-            "type": "linear",
-            "repeating": false,
-            "angle": 180,
-            "shape": null,
-            "center": null,
-            "radius": null,
-            "stops": [
-              {
-                "color": "rgb(90, 26, 22)",
-                "offset": 0
-              },
-              {
-                "color": "rgb(58, 15, 12)",
-                "offset": 1
-              }
-            ]
-          }
-        }
-      ],
-      "gradient": {
-        "type": "linear",
-        "repeating": false,
-        "angle": 180,
-        "stops": [
-          {
-            "color": "rgb(90, 26, 22)",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(58, 15, 12)",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      },
-      "cornerRadius": 12,
-      "borderWidth": 2,
-      "borderColor": "#8a6e1f"
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_span_61": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_71": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
-      "fontSize": 28,
-      "lineHeight": 76,
+      "fontSize": 16,
+      "lineHeight": 24,
       "letterSpacing": 0,
-      "color": "stdLabelButton",
+      "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "isBold": true
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_73": {
       "kind": "gradient-rect",
@@ -2579,6 +2578,65 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
       "isBold": true
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_div_77": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(90, 26, 22)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(58, 15, 12)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "rgb(90, 26, 22)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(58, 15, 12)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 12,
+      "borderWidth": 2,
+      "borderColor": "#8a6e1f"
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_span_66": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 28,
+      "lineHeight": 76,
+      "letterSpacing": 0,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
     }
   },
   "bundles": [
@@ -2733,256 +2791,260 @@
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_5.color"
         },
         {
-          "token": "textSecondary",
+          "token": "secondaryLight",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_6.color"
         },
         {
-          "token": "secondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_17.color"
-        },
-        {
-          "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_18.color"
-        },
-        {
           "token": "textSecondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_19.color"
-        },
-        {
-          "token": "#7A4A9A",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_7.color"
         },
         {
+          "token": "secondary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_18.color"
+        },
+        {
           "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_8.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_19.color"
         },
         {
-          "token": "secondaryLight",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_9.color"
-        },
-        {
-          "token": "colorBlack",
+          "token": "textSecondary",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_20.color"
         },
         {
-          "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_21.color"
-        },
-        {
-          "token": "textSecondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_22.color"
-        },
-        {
-          "token": "#4D6A3F",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_10.color"
+          "token": "#7A4A9A",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_8.color"
         },
         {
           "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_11.color"
-        },
-        {
-          "token": "colorBlack",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_23.color"
-        },
-        {
-          "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_24.color"
-        },
-        {
-          "token": "textSecondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_25.color"
-        },
-        {
-          "token": "stdButtonPrimary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_12.color"
-        },
-        {
-          "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_13.color"
-        },
-        {
-          "token": "colorBlack",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_26.color"
-        },
-        {
-          "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_27.color"
-        },
-        {
-          "token": "textSecondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_28.color"
-        },
-        {
-          "token": "#2F4F8A",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_14.color"
-        },
-        {
-          "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_15.color"
-        },
-        {
-          "token": "colorBlack",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_29.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_9.color"
         },
         {
           "token": "secondaryLight",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_10.color"
+        },
+        {
+          "token": "colorBlack",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_21.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_22.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_23.color"
+        },
+        {
+          "token": "#4D6A3F",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_11.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_12.color"
+        },
+        {
+          "token": "colorBlack",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_24.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_25.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_26.color"
+        },
+        {
+          "token": "stdButtonPrimary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_13.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_14.color"
+        },
+        {
+          "token": "colorBlack",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_27.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_28.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_29.color"
+        },
+        {
+          "token": "#2F4F8A",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_15.color"
+        },
+        {
+          "token": "stdLabelButton",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_16.color"
+        },
+        {
+          "token": "colorBlack",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_30.color"
         },
         {
           "token": "secondaryLight",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_17.color"
         },
         {
-          "token": "textSecondary",
+          "token": "secondaryLight",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_18.color"
         },
         {
-          "token": "secondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_31.color"
-        },
-        {
-          "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_32.color"
-        },
-        {
           "token": "textSecondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_33.color"
-        },
-        {
-          "token": "stdButtonPrimary",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_19.color"
         },
         {
+          "token": "secondary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_32.color"
+        },
+        {
           "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_20.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_33.color"
         },
         {
-          "token": "secondaryLight",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_21.color"
-        },
-        {
-          "token": "colorBlack",
+          "token": "textSecondary",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_34.color"
         },
         {
-          "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_35.color"
-        },
-        {
-          "token": "textSecondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_36.color"
-        },
-        {
-          "token": "primary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_22.color"
-        },
-        {
-          "token": "colorWhite",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_23.color"
-        },
-        {
-          "token": "colorBlack",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_37.color"
+          "token": "stdButtonPrimary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_20.color"
         },
         {
           "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_38.color"
-        },
-        {
-          "token": "textSecondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_39.color"
-        },
-        {
-          "token": "#4D6A3F",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_24.color"
-        },
-        {
-          "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_25.color"
-        },
-        {
-          "token": "colorBlack",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_40.color"
-        },
-        {
-          "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_41.color"
-        },
-        {
-          "token": "textSecondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_42.color"
-        },
-        {
-          "token": "#2F4F8A",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_26.color"
-        },
-        {
-          "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_27.color"
-        },
-        {
-          "token": "colorBlack",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_43.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_21.color"
         },
         {
           "token": "secondaryLight",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_22.color"
+        },
+        {
+          "token": "colorBlack",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_35.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_36.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_37.color"
+        },
+        {
+          "token": "primary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_23.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_24.color"
+        },
+        {
+          "token": "colorBlack",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_38.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_39.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_40.color"
+        },
+        {
+          "token": "#4D6A3F",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_25.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_26.color"
+        },
+        {
+          "token": "colorBlack",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_41.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_42.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_43.color"
+        },
+        {
+          "token": "#2F4F8A",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_27.color"
+        },
+        {
+          "token": "stdLabelButton",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_28.color"
         },
         {
-          "token": "textPrimary",
+          "token": "colorBlack",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_44.color"
+        },
+        {
+          "token": "secondaryLight",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_29.color"
         },
         {
-          "token": "#280E0A",
+          "token": "textPrimary",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_30.color"
         },
         {
-          "token": "textPrimary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_32.color"
+          "token": "#280E0A",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_31.color"
         },
         {
-          "token": "#280E0A",
+          "token": "textPrimary",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_33.color"
         },
         {
-          "token": "textPrimary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_35.color"
+          "token": "#280E0A",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_34.color"
         },
         {
-          "token": "#280E0A",
+          "token": "textPrimary",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_36.color"
         },
         {
-          "token": "textPrimary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_38.color"
-        },
-        {
           "token": "#280E0A",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_41.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_37.color"
         },
         {
           "token": "textPrimary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_43.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_39.color"
         },
         {
           "token": "#280E0A",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_42.color"
+        },
+        {
+          "token": "textPrimary",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_44.color"
         },
         {
+          "token": "#280E0A",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_45.color"
+        },
+        {
           "token": "#FBF3DE",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_49.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_50.color"
         },
         {
           "token": "#6A1C16",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_47.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_48.color"
         },
         {
           "token": "#6A1C16",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_49.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_50.color"
         },
         {
           "token": "#FFAAC8",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_53.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_54.color"
         },
         {
           "token": "textPrimary",
@@ -2990,43 +3052,43 @@
         },
         {
           "token": "textPrimary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_51.color"
-        },
-        {
-          "token": "gdv3InkDeep",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_56.color"
-        },
-        {
-          "token": "secondaryLight",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_52.color"
         },
         {
-          "token": "secondary",
+          "token": "gdv3InkDeep",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_57.color"
         },
         {
-          "token": "gdv3InkDeep",
+          "token": "secondaryLight",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_53.color"
         },
         {
-          "token": "colorBlack",
+          "token": "secondary",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_58.color"
+        },
+        {
+          "token": "gdv3InkDeep",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_54.color"
         },
         {
           "token": "colorBlack",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_59.color"
         },
         {
-          "token": "secondaryLight",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_56.color"
+          "token": "colorBlack",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_60.color"
         },
         {
-          "token": "textSecondary",
+          "token": "secondaryLight",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_57.color"
         },
         {
+          "token": "textSecondary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_58.color"
+        },
+        {
           "token": "secondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_63.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_64.color"
         },
         {
           "token": "secondaryLight",
@@ -3034,11 +3096,11 @@
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_58.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_59.color"
         },
         {
           "token": "colorBlack",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_64.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_65.color"
         },
         {
           "token": "textSecondary",
@@ -3046,23 +3108,19 @@
         },
         {
           "token": "textSecondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_59.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_60.color"
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_67.color"
-        },
-        {
-          "token": "textSecondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_69.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_68.color"
         },
         {
           "token": "textSecondary",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_70.color"
         },
         {
-          "token": "stdLabelButton",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_61.color"
+          "token": "textSecondary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_71.color"
         },
         {
           "token": "stdLabelButton",
@@ -3079,6 +3137,10 @@
         {
           "token": "stdLabelButton",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_65.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_66.color"
         }
       ],
       "cssVars": [],
@@ -3101,31 +3163,27 @@
         },
         {
           "token": "spacing.md",
-          "detail": "LobbyHallScreen_div_49.padding"
+          "detail": "LobbyHallScreen_div_50.padding"
         },
         {
           "token": "spacing.lg",
-          "detail": "LobbyHallScreen_div_49.padding"
+          "detail": "LobbyHallScreen_div_50.padding"
         },
         {
           "token": "spacing.sm",
-          "detail": "LobbyHallScreen_div_50.gap"
+          "detail": "LobbyHallScreen_div_51.gap"
         },
         {
           "token": "spacing.md",
-          "detail": "LobbyHallScreen_div_60.padding"
+          "detail": "LobbyHallScreen_div_61.padding"
         },
         {
           "token": "spacing.lg",
-          "detail": "LobbyHallScreen_div_60.padding"
+          "detail": "LobbyHallScreen_div_61.padding"
         },
         {
           "token": "spacing.sm",
-          "detail": "LobbyHallScreen_div_62.gap"
-        },
-        {
-          "token": "spacing.md",
-          "detail": "LobbyHallScreen_div_63.padding"
+          "detail": "LobbyHallScreen_div_63.gap"
         },
         {
           "token": "spacing.md",
@@ -3134,6 +3192,10 @@
         {
           "token": "spacing.md",
           "detail": "LobbyHallScreen_div_65.padding"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "LobbyHallScreen_div_66.padding"
         }
       ],
       "typography": [
@@ -3147,163 +3209,163 @@
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_6.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_7.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_6.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_7.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_19.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_20.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_19.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_20.fontSize"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_8.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_9.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_22.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_23.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_22.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_23.fontSize"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_11.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_12.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_25.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_26.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_25.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_26.fontSize"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_13.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_14.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_28.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_29.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_28.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_29.fontSize"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_15.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_16.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_18.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_19.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_18.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_19.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_33.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_34.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_33.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_34.fontSize"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_20.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_21.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_36.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_37.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_36.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_37.fontSize"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_23.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_24.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_39.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_40.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_39.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_40.fontSize"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_25.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_26.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_42.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_43.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_42.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_43.fontSize"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_27.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_28.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_29.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_30.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_29.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_30.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_32.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_33.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_32.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_33.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_35.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_36.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_35.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_36.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_38.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_39.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_38.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_39.fontSize"
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_43.style"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_44.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_43.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_44.fontSize"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_48.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_49.fontSize"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_50.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_51.fontSize"
         },
         {
           "token": "typography.labelLg",
@@ -3311,15 +3373,7 @@
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_51.style"
-        },
-        {
-          "token": "typography.labelLg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_58.style"
-        },
-        {
-          "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_58.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_52.style"
         },
         {
           "token": "typography.labelLg",
@@ -3338,16 +3392,16 @@
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_60.fontSize"
         },
         {
-          "token": "spacing.xl",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_67.fontSize"
+          "token": "typography.labelLg",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_61.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_69.fontSize"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_span_61.fontSize"
         },
         {
           "token": "spacing.xl",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_69.lineHeight"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_68.fontSize"
         },
         {
           "token": "spacing.lg",
@@ -3356,6 +3410,14 @@
         {
           "token": "spacing.xl",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_70.lineHeight"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_71.fontSize"
+        },
+        {
+          "token": "spacing.xl",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_71.lineHeight"
         }
       ],
       "artWarnings": [
@@ -3391,42 +3453,22 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "LobbyHallScreen_div_44",
-          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
-        },
-        {
-          "code": "css-transform-manual-layout-risk",
-          "node": "LobbyHallScreen_span_29",
-          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
-        },
-        {
-          "code": "overflow-hidden-clipping-risk",
-          "node": "LobbyHallScreen_img_2",
-          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
-        },
-        {
-          "code": "css-effect-needs-art-review",
-          "node": "LobbyHallScreen_img_2",
-          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
-        },
-        {
-          "code": "z-index-manual-zorder-risk",
           "node": "LobbyHallScreen_div_45",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "css-transform-manual-layout-risk",
-          "node": "LobbyHallScreen_span_32",
+          "node": "LobbyHallScreen_span_30",
           "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "LobbyHallScreen_img_3",
+          "node": "LobbyHallScreen_img_2",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "LobbyHallScreen_img_3",
+          "node": "LobbyHallScreen_img_2",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
@@ -3436,22 +3478,17 @@
         },
         {
           "code": "css-transform-manual-layout-risk",
-          "node": "LobbyHallScreen_span_35",
-          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
-        },
-        {
-          "code": "css-transform-manual-layout-risk",
-          "node": "LobbyHallScreen_img_4",
+          "node": "LobbyHallScreen_span_33",
           "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "LobbyHallScreen_img_4",
+          "node": "LobbyHallScreen_img_3",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "LobbyHallScreen_img_4",
+          "node": "LobbyHallScreen_img_3",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
@@ -3461,17 +3498,22 @@
         },
         {
           "code": "css-transform-manual-layout-risk",
-          "node": "LobbyHallScreen_span_38",
+          "node": "LobbyHallScreen_span_36",
+          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
+        },
+        {
+          "code": "css-transform-manual-layout-risk",
+          "node": "LobbyHallScreen_img_4",
           "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "LobbyHallScreen_img_5",
+          "node": "LobbyHallScreen_img_4",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "LobbyHallScreen_img_5",
+          "node": "LobbyHallScreen_img_4",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
@@ -3481,7 +3523,27 @@
         },
         {
           "code": "css-transform-manual-layout-risk",
-          "node": "LobbyHallScreen_span_43",
+          "node": "LobbyHallScreen_span_39",
+          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "LobbyHallScreen_img_5",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "LobbyHallScreen_img_5",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "LobbyHallScreen_div_49",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "css-transform-manual-layout-risk",
+          "node": "LobbyHallScreen_span_44",
           "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
         },
         {
@@ -3501,18 +3563,13 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "LobbyHallScreen_div_49",
+          "node": "LobbyHallScreen_div_50",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "LobbyHallScreen_div_49",
+          "node": "LobbyHallScreen_div_50",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
-        },
-        {
-          "code": "z-index-manual-zorder-risk",
-          "node": "LobbyHallScreen_div_52",
-          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "z-index-manual-zorder-risk",
@@ -3525,14 +3582,14 @@
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
-          "code": "css-transform-manual-layout-risk",
-          "node": "LobbyHallScreen_div_55",
-          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
-        },
-        {
           "code": "z-index-manual-zorder-risk",
           "node": "LobbyHallScreen_div_55",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "css-transform-manual-layout-risk",
+          "node": "LobbyHallScreen_div_56",
+          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
         },
         {
           "code": "z-index-manual-zorder-risk",
@@ -3561,7 +3618,12 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "LobbyHallScreen_div_66",
+          "node": "LobbyHallScreen_div_61",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "LobbyHallScreen_div_67",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
@@ -3572,9 +3634,9 @@
       ]
     },
     "tokenSources": {
-      "runtimePath": "C:\\Users\\User\\3KLife-wt-lh23\\assets\\resources\\ui-spec\\ui-design-tokens.json",
-      "handoffPath": "C:\\Users\\User\\3KLife-wt-lh23\\Design System\\design_handoff\\source\\ui-design-tokens.json",
-      "sourcePath": "C:\\Users\\User\\3KLife-wt-lh23\\Design System\\design_handoff\\source\\ui-design-tokens.json"
+      "runtimePath": "C:\\Users\\User\\3KLife-wt-lh27\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife-wt-lh27\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "sourcePath": "C:\\Users\\User\\3KLife-wt-lh27\\Design System\\design_handoff\\source\\ui-design-tokens.json"
     },
     "tokenConflictReport": [],
     "atlasUsageReport": {

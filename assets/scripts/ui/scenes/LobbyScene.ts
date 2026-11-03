@@ -6,6 +6,9 @@ import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
+import { LobbyHallScreenBinder, type LobbyHallDockId } from '../core/LobbyHallScreenBinder';
+import type { HallThemeConfig } from '../../core/systems/HallTheme';
+import type { HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
@@ -308,6 +311,9 @@ export class LobbyScene extends Component {
     private _dailyReportHost: UIScreenPreviewHost | null = null;
     private _rival: RivalDiplomacyController | null = null;
     private _hallBoardHost: UIScreenPreviewHost | null = null;
+    /** 幕府大廳（UI-2-0149）：另開入口，與主大廳並存 */
+    private _lobbyHallHost: UIScreenPreviewHost | null = null;
+    private _lobbyHall: LobbyHallScreenBinder | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
     private _mercPanelHost: UIScreenPreviewHost | null = null;
     private _mercPanel: MercenaryPanelController | null = null;
@@ -483,6 +489,7 @@ export class LobbyScene extends Component {
         await this._mountWishAltar();
         await this._mountDailyReport();
         await this._mountHallBoard();
+        await this._mountLobbyHall();
         await this._mountMercenaryPanel();
         await this._mountGovernorHall();
         await this._mountItemBag();
@@ -794,6 +801,7 @@ export class LobbyScene extends Component {
             battle: () => this.onClickEnterBattle(),
             rival: () => this._openRivalDiplomacy(),
             floodBattle: () => this.onClickFloodBattle(),
+            lobbyHall: () => this._openLobbyHall(),
             generalList: () => this.onClickGeneralList(),
             mercenary: () => this.openMercenaryPanel(),
             bonding: () => { void this._openBondingSetup(); },
@@ -2428,6 +2436,40 @@ export class LobbyScene extends Component {
             { buttonId: 'btnNext', handler: () => { recruit.next(); this._refreshRecruitHall(); } },
         ]);
         this._recruitHost.node.active = false;
+    }
+
+    private async _mountLobbyHall(): Promise<void> {
+        const [themeConfig, fxConfig] = await Promise.all([
+            this._loadDataJson<HallThemeConfig>('data/hall-map/hall-theme'),
+            this._loadDataJson<HallSeasonFxConfig>('data/hall-map/hall-season-fx'),
+        ]);
+        const host = await this._mountPreviewScreenHost('LobbyHallHost', 'lobby-hall-screen');
+        this._lobbyHallHost = host;
+        const dock: Record<LobbyHallDockId, () => void> = {
+            sortie: () => this.onClickEnterBattle(),
+            generals: () => this.onClickGeneralList(),
+            domestic: () => this._openDomestic(),
+            training: () => this._openNurtureFlow(),
+            shop: () => this.onClickShopMain(),
+        };
+        this._lobbyHall = new LobbyHallScreenBinder(host.node, {
+            themeConfig,
+            fxConfig,
+            onBack: () => { host.node.active = false; },
+            onDock: (id) => dock[id](),
+        });
+        host.node.active = false;
+    }
+
+    private _openLobbyHall(): void {
+        const host = this._lobbyHallHost;
+        if (!host) {
+            return;
+        }
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        // 晝夜依裝置當地時間，季節依遊戲時鐘（1 春～4 冬）
+        this._lobbyHall?.refresh(services().session.gameTime.currentSeason, new Date().getHours());
     }
 
     private _openRecruitHall(): void {
