@@ -73,6 +73,17 @@
   .map-ping::before { content:""; position:absolute; left:-46px; top:-46px; width:92px; height:92px; border-radius:50%; border:4px solid #FF4A3A; box-shadow:0 0 18px #FF4A3A; }
   .map-ping span { position:absolute; right:56px; top:-20px; white-space:nowrap; padding:4px 12px; border-radius:8px; background:#8A1A12; border:2px solid #FFE088; color:#FFF; font:700 20px var(--font-headline); }
   body[data-map="focus"] .map-ping { display:block; }
+  /* 事件小動畫：雙層漣漪＋區域閃光＋跳動事件章 */
+  .map-ping::before { animation: pingRipple 1.6s ease-out infinite; }
+  .map-ping::after { content:""; position:absolute; left:-46px; top:-46px; width:92px; height:92px; border-radius:50%; border:3px solid #FFE088; animation: pingRipple 1.6s ease-out .8s infinite; }
+  .map-ping b { position:absolute; left:-110px; top:-110px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle, rgba(255,90,60,.45), rgba(255,90,60,0) 70%); animation: regionFlash 1.6s ease-in-out infinite; }
+  .map-ping i { position:absolute; left:-24px; top:-78px; width:48px; height:48px; border-radius:50%; background:#8A1A12; border:3px solid #FFE088; color:#FFE088; font:900 26px/42px var(--font-headline); text-align:center; font-style:normal; box-shadow:0 4px 10px rgba(0,0,0,.5); animation: badgeHop 1.2s ease-in-out infinite; }
+  .map-ping.left span { right:auto; left:56px; }
+  @keyframes pingRipple { 0% { transform:scale(.4); opacity:1; } 100% { transform:scale(1.6); opacity:0; } }
+  @keyframes regionFlash { 0%,100% { opacity:.35; } 50% { opacity:1; } }
+  @keyframes badgeHop { 0%,100% { transform:translateY(0); } 40% { transform:translateY(-12px); } 60% { transform:translateY(-4px); } }
+  .map-ping.enter i { animation: badgeDrop .5s cubic-bezier(.3,1.6,.5,1) both, badgeHop 1.2s ease-in-out .5s infinite; }
+  @keyframes badgeDrop { 0% { transform:translateY(-60px) scale(.3); opacity:0; } 100% { transform:none; opacity:1; } }
   /* 夏日陽光：斜射光束＋浮塵（僅夏季） */
   .sunrays { position:absolute; inset:0; z-index:2; pointer-events:none; display:none; mix-blend-mode:screen;
     background: linear-gradient(115deg, transparent 30%, rgba(255,236,170,.0) 34%, rgba(255,236,170,.42) 38%, transparent 44%),
@@ -177,7 +188,7 @@
   <div class="sandbox"></div>
   <div class="season-tint"></div>
   <div class="sunrays"></div>
-  <div class="map-ping"><span>烏巢告急 · 兗州</span></div>
+  <div class="map-ping"><b></b><i>戰</i><span>烏巢告急 · 兗州</span></div>
   <div class="sandbox-label">天下勢力圖</div>
   <div class="stage s1 on">S1 中原統一</div>
   <div class="stage s2 off">S2 邊境征伐</div>
@@ -206,6 +217,29 @@
     <div class="dock-btn">商城</div>
   </nav>
   <div class="fx" id="fx"></div>
+<script>
+  /* 勢力圖聚焦：換季／下勢力指令時依事件逐一放大並移到該州（中心點取自 han13-mask） */
+  var HALL_MAP = { Z:1.7, box:{L:560,T:140,W:800,H:560},
+    prov:{ sili:[.508,.307], yu:[.636,.357], yan:[.663,.27], xu:[.746,.344], qing:[.753,.209], ji:[.645,.177], you:[.788,.064],
+           bing:[.497,.116], liang:[.273,.18], jing:[.553,.532], yang:[.716,.546], yi:[.333,.585], jiao:[.5,.808] } };
+  function focusMap(provId, label, glyph){
+    var c=HALL_MAP.prov[provId], Z=HALL_MAP.Z, b=HALL_MAP.box, sb=document.querySelector('.sandbox'), pg=document.querySelector('.map-ping');
+    function pos(f){ return Math.max(0, Math.min(1, (f*Z-0.5)/(Z-1))); }
+    var px=pos(c[0]), py=pos(c[1]);
+    sb.style.backgroundPosition=(px*100)+'% '+(py*100)+'%';
+    var x=b.L + px*(b.W-b.W*Z) + c[0]*b.W*Z, y=b.T + py*(b.H-b.H*Z) + c[1]*b.H*Z;
+    pg.style.left=x+'px'; pg.style.top=y+'px'; pg.classList.toggle('left', x < b.L+b.W*0.45);
+    pg.querySelector('span').textContent=label; pg.querySelector('i').textContent=glyph;
+    pg.classList.remove('enter'); void pg.offsetWidth; pg.classList.add('enter');
+  }
+  function playSeasonTurn(events, done){
+    document.body.dataset.map='focus'; var n=0;
+    (function step(){ if(n>=events.length){ document.body.dataset.map='mini'; if(done) done(); return; }
+      var e=events[n++]; focusMap(e[0], e[1], e[2]); setTimeout(step, 2600); })();
+  }
+  focusMap('yan','烏巢告急 · 兗州','戰');
+  if (location.hash==='#turn') playSeasonTurn([['yan','烏巢告急 · 兗州','戰'],['jing','劉表屯兵 · 荊州','兵'],['yang','孫堅結盟 · 揚州','盟'],['yi','蜀中大旱 · 益州','災']]);
+</script>
 <script>
   (function(){ var fx=document.getElementById('fx'), r=0.37; var k=0; function rnd(){ var x=Math.sin(++k*12.9898)*43758.5453; return x-Math.floor(x); }
     for (var i=0;i<90;i++){ var e=document.createElement('i'), z=12+rnd()*16;
