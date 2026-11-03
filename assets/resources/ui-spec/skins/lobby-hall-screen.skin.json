@@ -1774,18 +1774,18 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_51": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_52": {
       "kind": "sprite-frame",
       "path": "sprites/ui_bg/lobby_hall_map_preview",
       "expectedWidth": 460,
       "expectedHeight": 330
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_52": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_53": {
       "kind": "color-rect",
       "color": "lobby_hall_screen_local_color_13",
       "opacity": 0.35
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_53": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_54": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -1953,7 +1953,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_55": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_56": {
       "kind": "color-rect",
       "color": "gdv3InkDeep",
       "opacity": 0.78,
@@ -1973,7 +1973,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_56": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_57": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 1,
@@ -1991,7 +1991,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_57": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_58": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.55,
@@ -2011,7 +2011,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_58": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_59": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.55,
@@ -2031,7 +2031,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_59": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_60": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2101,7 +2101,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_62": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_63": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.25,
@@ -2135,7 +2135,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_63": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_64": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.4,
@@ -2169,7 +2169,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_64": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_65": {
       "kind": "color-rect",
       "color": "#000000",
       "opacity": 0,
@@ -2203,7 +2203,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_65": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_66": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2249,25 +2249,13 @@
       "borderWidth": 2,
       "borderColor": "#4d4635"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_66": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_67": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 24,
       "lineHeight": 34,
       "letterSpacing": 0,
       "color": "secondaryLight",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_68": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
-      "fontSize": 16,
-      "lineHeight": 24,
-      "letterSpacing": 0,
-      "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
@@ -2285,7 +2273,19 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_71": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_70": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 16,
+      "lineHeight": 24,
+      "letterSpacing": 0,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.lobby-hall-screen.lobbyhallscreen_div_72": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2344,7 +2344,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_72": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_73": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2403,7 +2403,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_73": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_74": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2462,7 +2462,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_74": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_75": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2521,7 +2521,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.lobby-hall-screen.lobbyhallscreen_div_75": {
+    "auto.lobby-hall-screen.lobbyhallscreen_div_76": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2982,7 +2982,7 @@
         },
         {
           "token": "#FFAAC8",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_52.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_53.color"
         },
         {
           "token": "textPrimary",
@@ -2994,7 +2994,7 @@
         },
         {
           "token": "gdv3InkDeep",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_55.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_56.color"
         },
         {
           "token": "secondaryLight",
@@ -3002,7 +3002,7 @@
         },
         {
           "token": "secondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_56.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_57.color"
         },
         {
           "token": "gdv3InkDeep",
@@ -3010,11 +3010,11 @@
         },
         {
           "token": "colorBlack",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_57.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_58.color"
         },
         {
           "token": "colorBlack",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_58.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_59.color"
         },
         {
           "token": "secondaryLight",
@@ -3026,7 +3026,7 @@
         },
         {
           "token": "secondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_62.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_63.color"
         },
         {
           "token": "secondaryLight",
@@ -3038,7 +3038,7 @@
         },
         {
           "token": "colorBlack",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_63.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_64.color"
         },
         {
           "token": "textSecondary",
@@ -3050,15 +3050,15 @@
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_66.color"
-        },
-        {
-          "token": "textSecondary",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_68.color"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_67.color"
         },
         {
           "token": "textSecondary",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_69.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_70.color"
         },
         {
           "token": "stdLabelButton",
@@ -3113,19 +3113,15 @@
         },
         {
           "token": "spacing.md",
-          "detail": "LobbyHallScreen_div_59.padding"
+          "detail": "LobbyHallScreen_div_60.padding"
         },
         {
           "token": "spacing.lg",
-          "detail": "LobbyHallScreen_div_59.padding"
+          "detail": "LobbyHallScreen_div_60.padding"
         },
         {
           "token": "spacing.sm",
-          "detail": "LobbyHallScreen_div_61.gap"
-        },
-        {
-          "token": "spacing.md",
-          "detail": "LobbyHallScreen_div_62.padding"
+          "detail": "LobbyHallScreen_div_62.gap"
         },
         {
           "token": "spacing.md",
@@ -3134,6 +3130,10 @@
         {
           "token": "spacing.md",
           "detail": "LobbyHallScreen_div_64.padding"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "LobbyHallScreen_div_65.padding"
         }
       ],
       "typography": [
@@ -3339,15 +3339,7 @@
         },
         {
           "token": "spacing.xl",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_66.fontSize"
-        },
-        {
-          "token": "spacing.lg",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_68.fontSize"
-        },
-        {
-          "token": "spacing.xl",
-          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_68.lineHeight"
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_67.fontSize"
         },
         {
           "token": "spacing.lg",
@@ -3356,6 +3348,14 @@
         {
           "token": "spacing.xl",
           "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_69.lineHeight"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_70.fontSize"
+        },
+        {
+          "token": "spacing.xl",
+          "detail": "auto.lobby-hall-screen.lobbyhallscreen_div_70.lineHeight"
         }
       ],
       "artWarnings": [
@@ -3511,11 +3511,6 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "LobbyHallScreen_div_51",
-          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
-        },
-        {
-          "code": "z-index-manual-zorder-risk",
           "node": "LobbyHallScreen_div_52",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
@@ -3525,14 +3520,14 @@
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
-          "code": "css-transform-manual-layout-risk",
-          "node": "LobbyHallScreen_div_54",
-          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
-        },
-        {
           "code": "z-index-manual-zorder-risk",
           "node": "LobbyHallScreen_div_54",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "css-transform-manual-layout-risk",
+          "node": "LobbyHallScreen_div_55",
+          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
         },
         {
           "code": "z-index-manual-zorder-risk",
@@ -3561,7 +3556,12 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "LobbyHallScreen_div_65",
+          "node": "LobbyHallScreen_div_60",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "LobbyHallScreen_div_66",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
@@ -3572,9 +3572,9 @@
       ]
     },
     "tokenSources": {
-      "runtimePath": "C:\\Users\\User\\3KLife-wt-lh19\\assets\\resources\\ui-spec\\ui-design-tokens.json",
-      "handoffPath": "C:\\Users\\User\\3KLife-wt-lh19\\Design System\\design_handoff\\source\\ui-design-tokens.json",
-      "sourcePath": "C:\\Users\\User\\3KLife-wt-lh19\\Design System\\design_handoff\\source\\ui-design-tokens.json"
+      "runtimePath": "C:\\Users\\User\\3KLife-wt-lh23\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife-wt-lh23\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "sourcePath": "C:\\Users\\User\\3KLife-wt-lh23\\Design System\\design_handoff\\source\\ui-design-tokens.json"
     },
     "tokenConflictReport": [],
     "atlasUsageReport": {

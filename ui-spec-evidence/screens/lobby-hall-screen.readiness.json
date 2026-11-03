@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "lobby-hall-screen",
-  "generatedAt": "2026-11-03T19:10:14.975Z",
+  "generatedAt": "2026-11-03T19:43:17.667Z",
   "verdict": "not-ready",
   "readinessScore": 0.75,
   "summary": {
@@ -21,7 +21,7 @@
     "performance": "ui-spec-evidence/screens/lobby-hall-screen.performance.json",
     "bakeManifest": "ui-spec-evidence/layouts/lobby-hall-screen.layout.bake-manifest.json",
     "artAuthorityWaivers": "assets/resources/ui-spec/screens/lobby-hall-screen.art-authority-waivers.json",
-    "finalVerdict": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.html-cocos-verdict.json"
+    "finalVerdict": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.html-cocos-verdict.json"
   },
   "gates": {
     "finalGate": {
@@ -68,12 +68,12 @@
         },
         {
           "name": "LobbyHallScreen_span_62",
-          "path": "LobbyHallScreen/LobbyHallScreen_body/LobbyHallScreen_nav_1/LobbyHallScreen_div_72/LobbyHallScreen_span_62",
+          "path": "LobbyHallScreen/LobbyHallScreen_body/LobbyHallScreen_nav_1/LobbyHallScreen_div_73/LobbyHallScreen_span_62",
           "text": "武將"
         },
         {
           "name": "LobbyHallScreen_span_63",
-          "path": "LobbyHallScreen/LobbyHallScreen_body/LobbyHallScreen_nav_1/LobbyHallScreen_div_73/LobbyHallScreen_span_63",
+          "path": "LobbyHallScreen/LobbyHallScreen_body/LobbyHallScreen_nav_1/LobbyHallScreen_div_74/LobbyHallScreen_span_63",
           "text": "內政"
         }
       ]
@@ -95,11 +95,11 @@
     "loading": {
       "status": "blocker",
       "workUnits": 1,
-      "summary": "node-count-blocker: 148 (>60)",
+      "summary": "node-count-blocker: 154 (>60)",
       "actualLayoutStats": {
-        "nodeCount": 148,
+        "nodeCount": 154,
         "deferredNodeCount": 0,
-        "totalNodeCount": 148,
+        "totalNodeCount": 154,
         "maxDepth": 6,
         "colorRectCount": 0,
         "lazySlotCount": 0,
@@ -111,16 +111,16 @@
         }
       },
       "reportedRendering": {
-        "nodeCount": 148,
+        "nodeCount": 154,
         "deferredNodeCount": 0,
-        "totalNodeCount": 148,
+        "totalNodeCount": 154,
         "maxDepth": 6,
         "estimatedDrawCalls": 7,
         "colorRectCount": 0
       },
       "skinSlotCount": 148,
       "issues": [
-        "node-count-blocker: 148 (>60)"
+        "node-count-blocker: 154 (>60)"
       ]
     }
   },
@@ -158,7 +158,7 @@
     {
       "severity": "blocker",
       "code": "loading-performance",
-      "summary": "node-count-blocker: 148 (>60)",
+      "summary": "node-count-blocker: 154 (>60)",
       "workUnits": 1
     }
   ]

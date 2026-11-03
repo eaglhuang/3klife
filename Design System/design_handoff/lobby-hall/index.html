@@ -60,6 +60,8 @@
   /* 天下勢力圖：外觀固定（彩色勢力＋淡出邊緣），尺寸與焦點可變。
      data-map="mini"：平常縮小置中，窗景大片露出；"focus"：事件發生時放大並平移到事件州；"hidden"：其他介面開啟時收起。
      焦點座標取 han13-mask 州中心（此例兗州 0.663, 0.270），執行期以 tween 過場。 */
+  .sandbox-group { position:absolute; inset:0; pointer-events:none; }
+  .sandbox-group > * { pointer-events:auto; }
   .sandbox, .season-tint { position:absolute; z-index:3; transition: all .6s ease;
     -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, rgba(0,0,0,.55) 80%, transparent 100%);
             mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, rgba(0,0,0,.55) 80%, transparent 100%); }
@@ -147,14 +149,14 @@
 </style>
 </head>
 <body data-screen-label="01 幕府大廳" data-time="day" data-season="spring" data-map="mini">
-  <div class="hall-bg"></div>
-  <div class="night-tint"></div>
+  <div data-ucuf-id="lobby-hall-screen.hall-bg" class="hall-bg"></div>
+  <div data-ucuf-id="lobby-hall-screen.night-tint" class="night-tint"></div>
   <div class="topbar">
     <div class="player">
       <img src="../../../assets/resources/sprites/generals/avatars/zhang_fei_avatar.png" alt="">
       <div><div class="p-name">蜀漢舊部</div><div class="p-sub">官職 鄉里義士 · 主將 張飛</div></div>
     </div>
-    <div class="hall-title"><div class="zh">幕府大廳</div><div class="time">第 1 年 春 · 晝</div></div>
+    <div data-ucuf-id="lobby-hall-screen.hall-title" class="hall-title"><div class="zh">幕府大廳</div><div data-ucuf-id="lobby-hall-screen.hall-time" class="time">第 1 年 春 · 晝</div></div>
     <div class="res">
       <div class="res-pill"><b>金</b><span>128,450</span></div>
       <div class="res-pill"><b>玉</b><span>1,280</span></div>
@@ -163,7 +165,7 @@
     </div>
   </div>
 
-  <section class="wall wall-left">
+  <section data-ucuf-id="lobby-hall-screen.wall-left" class="wall wall-left">
     <div class="wall-head"><span class="zh">軍務 / 外交</span><span class="count">3 / 6</span></div>
     <div class="task accepted"><div class="t-title">夜襲烏巢糧倉</div><div class="t-meta">情報 50% · 派遣 張飛</div><span class="t-diff d4">高級</span><span class="t-pin">已接取 · 置頂</span></div>
     <div class="task"><div class="t-title">圍堵汝南黃巾</div><div class="t-meta">情報 50% · 耗時 2 季</div><span class="t-diff d2">一般</span></div>
@@ -172,7 +174,7 @@
     <div class="wall-more">展開軍務牆</div>
   </section>
 
-  <section class="wall wall-right">
+  <section data-ucuf-id="lobby-hall-screen.wall-right" class="wall wall-right">
     <div class="wall-head"><span class="zh">內政 / 人脈</span><span class="count">2 / 6</span></div>
     <div class="task accepted"><div class="t-title">新野賑災</div><div class="t-meta">情報 100% · 派遣 魏延</div><span class="t-diff d1">簡易</span><span class="t-pin">已接取 · 置頂</span></div>
     <div class="task"><div class="t-title">尋訪臥龍</div><div class="t-meta">情報 50% · 耗時 3 季</div><span class="t-diff d5">地獄</span></div>
@@ -186,18 +188,20 @@
   <div class="npc flip" style="left:1280px; top:584px;"><span class="body"><img src="../../../assets/resources/sprites/generals/chibi/zhang_fei_chibi.png" style="height:282px" alt=""></span><span class="tag">張飛</span></div>
   <div class="npc " style="left:800px; top:670px;"><span class="body"><img src="../../../assets/resources/sprites/generals/chibi/zhuge_liang_chibi.png" style="height:256px" alt=""><span class="mark">!</span></span><span class="tag">諸葛亮</span></div>
   <div class="npc flip" style="left:1120px; top:666px;"><span class="body"><img src="../../../assets/resources/sprites/generals/chibi/huang_zhong_chibi.png" style="height:258px" alt=""></span><span class="tag">黃忠</span></div>
-  <div class="bubble" style="left:1000px; top:520px;"><b>張飛：</b><span>大哥！烏巢糧倉守備鬆散，俺老張今夜就去劫了它！</span><div class="acts"><span>交給你</span><span>再議</span></div></div>
+  <div data-ucuf-id="lobby-hall-screen.bubble" class="bubble" style="left:1000px; top:520px;"><b>張飛：</b><span>大哥！烏巢糧倉守備鬆散，俺老張今夜就去劫了它！</span><div class="acts"><span>交給你</span><span>再議</span></div></div>
 
-  <div class="sandbox"></div>
-  <div class="season-tint"></div>
-  <div class="sunrays"></div>
-  <div class="map-ping"><b></b><i>戰</i><span>烏巢告急 · 兗州</span></div>
-  <div class="sandbox-label">天下勢力圖</div>
-  <div class="stage s1 on">S1 中原統一</div>
-  <div class="stage s2 off">S2 邊境征伐</div>
-  <div class="stage s3 off">S3 全球遠征</div>
+  <div class="sandbox-group" data-ucuf-id="lobby-hall-screen.sandbox-group">
+    <div data-ucuf-id="lobby-hall-screen.sandbox" class="sandbox"></div>
+    <div data-ucuf-id="lobby-hall-screen.season-tint" class="season-tint"></div>
+    <div data-ucuf-id="lobby-hall-screen.sunrays" class="sunrays"></div>
+    <div data-ucuf-id="lobby-hall-screen.map-ping" class="map-ping"><b></b><i>戰</i><span>烏巢告急 · 兗州</span></div>
+    <div data-ucuf-id="lobby-hall-screen.sandbox-label" class="sandbox-label">天下勢力圖</div>
+    <div data-ucuf-id="lobby-hall-screen.stage-s1" class="stage s1 on">S1 中原統一</div>
+    <div data-ucuf-id="lobby-hall-screen.stage-s2" class="stage s2 off">S2 邊境征伐</div>
+    <div data-ucuf-id="lobby-hall-screen.stage-s3" class="stage s3 off">S3 全球遠征</div>
+  </div>
 
-  <div class="altar">
+  <div data-ucuf-id="lobby-hall-screen.altar" class="altar">
     <div class="a-head"><span>許願祭壇 · 晝巡</span><span>下一巡 03:12:40</span></div>
     <div class="slots">
       <div class="slot ready"><b>精鐵 ×20</b><span>可收取</span></div>
@@ -206,18 +210,18 @@
     </div>
   </div>
 
-  <div class="clan">
+  <div data-ucuf-id="lobby-hall-screen.clan" class="clan">
     <div class="c-title">世家總覽</div>
     <div class="c-sub"><div>管理麾下世家與英靈 · 已成家族 1</div><div>張氏一門 · 主卡 張飛 · 深度 2 · 名聲 340</div></div>
   </div>
-  <div class="festival-slot" data-layer="background"></div>
+  <div data-ucuf-id="lobby-hall-screen.festival-slot" class="festival-slot" data-layer="background"></div>
 
-  <nav class="dock">
-    <div class="dock-btn">出征</div>
-    <div class="dock-btn">武將</div>
-    <div class="dock-btn">內政</div>
-    <div class="dock-btn">培育</div>
-    <div class="dock-btn">商城</div>
+  <nav data-ucuf-id="lobby-hall-screen.dock" class="dock">
+    <div class="dock-btn" data-ucuf-id="lobby-hall-screen.dock-sortie">出征</div>
+    <div class="dock-btn" data-ucuf-id="lobby-hall-screen.dock-generals">武將</div>
+    <div class="dock-btn" data-ucuf-id="lobby-hall-screen.dock-domestic">內政</div>
+    <div class="dock-btn" data-ucuf-id="lobby-hall-screen.dock-training">培育</div>
+    <div class="dock-btn" data-ucuf-id="lobby-hall-screen.dock-shop">商城</div>
   </nav>
   <div class="fx" id="fx" data-ucuf-skip="runtime-fx"></div>
 <script>

@@ -2,8 +2,8 @@
   "screenId": "lobby-hall-screen",
   "layout": "lobby-hall-screen",
   "skin": "lobby-hall-screen.skin",
-  "layoutRef": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.layout.json",
-  "skinRef": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.final.skin.json",
+  "layoutRef": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.layout.json",
+  "skinRef": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.final.skin.json",
   "meta": {
     "scaffoldHints": {
       "useUCUFLogger": true
