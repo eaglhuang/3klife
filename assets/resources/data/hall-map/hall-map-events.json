@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "$note": "大廳勢力圖事件對照：勢力 → 根據地州（han13-provinces 的 id，示意用，可依劇本調整）；事件種類 → 地圖上的字章與標籤樣板。樣板可用 {nation}、{province}。",
+  "nationSeats": {
+    "wei": "yan",
+    "shu": "xu",
+    "wu": "yang",
+    "lvbu": "bing",
+    "yuan": "ji",
+    "liuzhang": "yi",
+    "mateng": "liang",
+    "nanman": "jiao"
+  },
+  "eventKinds": {
+    "attack": { "glyph": "戰", "label": "{nation}來犯 · {province}" }
+  }
+}
