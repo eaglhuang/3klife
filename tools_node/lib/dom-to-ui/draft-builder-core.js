@@ -3108,6 +3108,10 @@ function guardSpritePath(ctx, rawPath, slotId, explicit) {
 
 function mapKnownRuntimeSpritePath(rawPath) {
   const normalized = stripExt(String(rawPath || '').split(String.fromCharCode(92)).join('/'));
+  // Source HTML that points straight into the project (e.g. ../../../assets/resources/sprites/x.png)
+  // already names the runtime resource; keep the part after assets/resources/.
+  const inResources = normalized.match(/(?:^|\/)assets\/resources\/(.+)$/i);
+  if (inResources) return inResources[1];
   const general = normalized.match(/(?:^|\/)(?:assets|lobby_assets)\/generals\/([^/]+)$/i);
   if (general) return `sprites/generals/${general[1]}_portrait`;
   const avatar = normalized.match(/(?:^|\/)(?:assets|lobby_assets)\/avatars\/([^/]+)$/i);
@@ -3153,4 +3157,5 @@ module.exports = {
   inferNodeType,
   anchorToWidget,
   parseColor,
+  mapKnownRuntimeSpritePath,
 };
