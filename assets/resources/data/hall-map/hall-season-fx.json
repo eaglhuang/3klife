@@ -1,0 +1,14 @@
+{
+  "$note": "幕府大廳季節粒子，數量／大小／透明度／顏色取自 Design System/design_handoff/lobby-hall 設計稿 .fx i；飄落速度與擺動為 runtime 新增。座標為 1920×1080 中心原點、y 向上。",
+  "canvas": { "width": 1920, "height": 1080 },
+  "count": 90,
+  "seed": 0.37,
+  "size": { "min": 12, "max": 28, "aspect": 0.7 },
+  "opacity": { "min": 0.45, "max": 0.95 },
+  "seasons": {
+    "spring": { "color": "#F7B6C8", "fixedSize": null, "glowPx": 2, "fallPx": 38, "driftPx": 22, "swayPx": 18, "swayPeriodSec": 4.2 },
+    "summer": { "color": "#FFF6B0", "fixedSize": 6, "glowPx": 10, "fallPx": -6, "driftPx": 0, "swayPx": 26, "swayPeriodSec": 5.5 },
+    "autumn": { "color": "#D9662A", "fixedSize": null, "glowPx": 0, "fallPx": 52, "driftPx": -30, "swayPx": 24, "swayPeriodSec": 3.6 },
+    "winter": { "color": "#FFFFFF", "fixedSize": null, "glowPx": 4, "fallPx": 30, "driftPx": 8, "swayPx": 10, "swayPeriodSec": 6.0 }
+  }
+}
