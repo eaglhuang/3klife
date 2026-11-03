@@ -1035,6 +1035,16 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
       fail(`R-9d lone url() background dropped: ${JSON.stringify(loneImg)}`);
     }
     ok('R-9d lone url() background layer is kept as a slot');
+
+    // R-9e: source HTML pointing into the project (../../../assets/resources/...)
+    // must map to the resources-relative sprite path, not the placeholder.
+    const { mapKnownRuntimeSpritePath } = require('../lib/dom-to-ui/draft-builder-core');
+    const mapped = mapKnownRuntimeSpritePath('../../../assets/resources/sprites/ui_bg/lobby_hall_spring_bg.jpg');
+    if (mapped !== 'sprites/ui_bg/lobby_hall_spring_bg') fail(`R-9e in-project path not mapped: ${mapped}`);
+    if (mapKnownRuntimeSpritePath('lobby_assets/avatars/zhang_fei') !== 'sprites/generals/avatars/zhang_fei_avatar') {
+      fail('R-9e legacy avatar mapping regressed');
+    }
+    ok('R-9e in-project assets/resources paths map to runtime sprite paths');
   }
 
   // R-10: font-family stack 必須走 registry-based 解析。converter 不能把整個
