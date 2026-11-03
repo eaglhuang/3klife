@@ -75,6 +75,7 @@ P(靈感) = Base_Rate × (1 + Friendship_Bonus) × (1 + 子嗣_LUK / 200)
 > **實作狀態（2026-10-26，PROG-2-1135，PR #929）**
 > - 靈感戰法 id（`TAC_*`）以 `InspiredTacticMap.ts` 對應到現有 8 招戰法庫：顯示使用規格中文名；戰場暫時沿用對應戰法庫招式的效果，逐招獨立效果待設計。
 > - 目前 map 登記 17 個靈感戰法。**待確認**：本節表中的 `TAC_SEVEN_IN_OUT`（七進七出）、`TAC_EIGHT_ARRAY`（八陣圖）尚未列入 `InspiredTacticMap.ts`，需後續決定對照方式。
+> - **PROG-2-1615 更新**：依使用者裁定（照戰法系統 G-2 補齊 6 招），已登記 `TAC_EIGHT_ARRAY`（八陣圖 → eight-formation，3x3 防禦區）、`TAC_HEAL`（醫療 → medical-aid，補已損 25%）、`TAC_INSPIRE`（鼓舞 → mentor-morale，全隊士氣 +20），map 現為 20 招。`TAC_SEVEN_IN_OUT`（七進七出）不在 G-2，仍待決定。
 
 ### F-7. 名將傳道機制（Legendary_Mentoring）
 

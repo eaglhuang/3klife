@@ -408,6 +408,9 @@ function buildCommand(stepId, args, h2uGateConfig = null) {
         ...baselineWorktreeArgs,
         ...snapshotOutArgs,
         ...allowDirtyArgs,
+        ...((args.mode === 'pr' || args.mode === 'release') && effectiveWorktreeStatusFile
+          ? ['--allow-dirty-list-file', effectiveWorktreeStatusFile]
+          : []),
       ];
     case 'validate-legacy-h2u-first-win':
       return [

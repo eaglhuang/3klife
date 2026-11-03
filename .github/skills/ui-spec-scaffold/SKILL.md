@@ -1,11 +1,16 @@
 ---
 doc_id: doc_agentskill_0030
 name: ui-spec-scaffold
-description: 'UI spec 與 Panel scaffold SKILL — 以 normalized recipe、family defaults、content contract 產出或更新 screen package 與 CompositePanel / ChildPanel TypeScript 骨架。USE FOR: 新 screen 從 recipe 落地、既有 screen 做 structure normalization、需要執行 compile-recipe-to-screen-spec.js / compile-recipe-to-panel-scaffold.js。DO NOT USE FOR: 最終視覺 QA、手工 Prefab 微調當正式流程。'
+description: '【已退役，新畫面改用 html-to-ucuf】UI spec 與 Panel scaffold SKILL — 以 normalized recipe、family defaults、content contract 產出或更新 screen package 與 CompositePanel / ChildPanel TypeScript 骨架。USE FOR: 新 screen 從 recipe 落地、既有 screen 做 structure normalization、需要執行 compile-recipe-to-screen-spec.js / compile-recipe-to-panel-scaffold.js。DO NOT USE FOR: 最終視覺 QA、手工 Prefab 微調當正式流程。'
 argument-hint: '提供 recipe 路徑、screenId 或 familyId，並說明要產生 screen package、Panel scaffold，或兩者都要。'
 ---
 
 # UI Spec Scaffold
+
+> ⚠️ **已退役為非正式路徑（PROG-2-1640）**：產生 layout／skin／screen 的唯一正式路徑是 HTML 工作流——
+> 先備妥 HTML 來源包，再用 `html-to-ucuf` skill（`node tools_node/run-html-to-ucuf-workflow.js`）。
+> 手上只有參考圖時，proof／family 分析僅用來**先產出 HTML 來源包**，不要再走 recipe → `compile-recipe-to-*` 直接出 JSON。
+> 既有 screen 仍採三檔一畫面（screen → layout + skin），不合併。
 
 把已確認的 normalized recipe / contract / family defaults，正式落成目前專案使用的 `ui-spec + CompositePanel / ChildPanel` 架構。
 

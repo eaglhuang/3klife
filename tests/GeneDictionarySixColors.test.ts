@@ -48,9 +48,9 @@ export function createGeneDictionarySixColorsSuite(): TestSuite {
         assert.isTrue(loadEntries().every((entry) => entry.color !== 'gold'));
     });
 
-    suite.test('筆數與 id 集合不變：31 筆，gene_hidden_01~05 仍在（被武將與奧義表引用）', () => {
+    suite.test('筆數與 id 集合不變：33 筆（PROG-2-1586 新增 gene_calm、gene_fury），gene_hidden_01~05 仍在（被武將與奧義表引用）', () => {
         const entries = loadEntries();
-        assert.equals(31, entries.length);
+        assert.equals(33, entries.length);
         const ids = new Set(entries.map((entry) => entry.id));
         for (let i = 1; i <= 5; i++) {
             assert.isTrue(ids.has(`gene_hidden_0${i}`));

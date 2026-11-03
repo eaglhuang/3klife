@@ -31,24 +31,24 @@
 |---|---|:-:|:-:|:-:|:-:|:-:|
 | **數值系統.md (doc_data_0001)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, GeneralUnit.ts, BattleController.ts, BattleState.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **兵種（虎符）系統.md (doc_spec_0012)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, BattleController.ts, EnemyAI.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **戰場部署系統.md (doc_spec_0040)** | BattleSystem.ts, BattleState.ts, BattleController.ts, BattleScene.ts, BoardRenderer.ts, DeployPanel.ts, ResultPopup.ts, SortieDeploy.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| **戰場部署系統.md (doc_spec_0040)** | BattleSystem.ts, BattleState.ts, BattleController.ts, BattleScene.ts, BoardRenderer.ts, DeployPanel.ts, ResultPopup.ts, SortieDeploy.ts（§E 功能清單逐項核對已實作，PROG-2-1704） | ✅ | ✅ | 🟡 | ✅ | ⬜ |
 | **武將系統.md (doc_spec_0016)** | GeneralUnit.ts, GeneralDetailComposite.ts, GeneralListPanel.ts, LobbyScene.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | **武將人物介面規格書.md (doc_ui_0012)** | GeneralDetailComposite.ts, GeneralDetailOverviewChild.ts, GeneralListPanel.ts, LobbyScene.ts, GeneralUnit.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
 | **戰法系統.md (doc_spec_0038)** | ActionSystem.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **奧義系統.md (doc_spec_0030)** | ActionSystem.ts, UltimateDamage.ts, UltimateUpgrade.ts, BloodlineTransmissionUltimate.ts, ChildUltimateAwaken.ts, VitalityBattleGate.ts, BattleSkillDispatcher.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **因子爆發系統.md (doc_spec_0010)** | BuffSystem.ts, BuffGainEffectPool.ts, BuffEffectPrefabController.ts, GeneObject.ts, FactorInheritance.ts, FactorTacticLinkage.ts, HiddenFactorAwakening.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **治理模式他國AI系統.md (doc_spec_0020)** | EnemyAI.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| **奧義系統.md (doc_spec_0030)** | ActionSystem.ts, UltimateDamage.ts, UltimateUpgrade.ts, BloodlineTransmissionUltimate.ts, ChildUltimateAwaken.ts, VitalityBattleGate.ts, BattleSkillDispatcher.ts（§E 功能清單逐項核對已實作，PROG-2-1704） | ✅ | ✅ | ✅ | ✅ | ⬜ |
+| **因子爆發系統.md (doc_spec_0010)** | BuffSystem.ts, BuffGainEffectPool.ts, BuffEffectPrefabController.ts, GeneObject.ts, FactorInheritance.ts, FactorTacticLinkage.ts, HiddenFactorAwakening.ts（§E 功能清單逐項核對已實作，PROG-2-1704） | ✅ | ✅ | ✅ | ✅ | ⬜ |
+| **治理模式他國AI系統.md (doc_spec_0020)** | EnemyAI.ts、RivalRulerLines.ts（G-1／G-2 君主宣戰與結盟台詞，PROG-2-1707；天下大亂提示，PROG-2-1708；AI 稱霸提示，PROG-2-1710）、RivalHegemony 接進季度推進（E-8 聯盟成員邦交衰減 4，PROG-2-1709；叛亂壓力未做：規格未定義效果） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **大廳系統.md (doc_spec_0002)** | LobbyScene.ts, UIConfig.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **官職系統.md (doc_spec_0014)** | UIConfig.ts, LobbyScene.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **AI武將強度系統.md (doc_data_0002)** | EnemyAI.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| **名將挑戰賽系統.md (doc_spec_0007)** | DuelChallengePanel.ts | ✅ | 🟡 | ❌ | ❌ | ⬜ |
+| **官職系統.md (doc_spec_0014)** | UIConfig.ts, LobbyScene.ts（§E 7 項逐項核對已實作：OfficerTierTable、OfficerSnapshot 聯盟文書、HallMissionSettlement 晉升獎勵、天下大亂保留，PROG-2-1705） | ✅ | ✅ | ✅ | ✅ | ⬜ |
+| **AI武將強度系統.md (doc_data_0002)** | EnemyAI.ts、RivalMilitaryIndex.ts（E-9 軍力指數與弱勢守勢，PROG-2-1706；E-9 Phase 1~3 逐將重算未做） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| **名將挑戰賽系統.md (doc_spec_0007)** | DuelChallengePanel.ts、MonthlyScenarioCup.ts（月度場景賽 1~4 月場景、積分、歷史，PROG-2-1609；參賽資格〔禁騎兵戰法、水軍／弓兵適性 A 以上〕PROG-2-1610 已補；威力規則〔春耕奇謀智力戰法 ×1.5、山地奇兵步兵 S 地形加成翻倍〕PROG-2-1611 已接進積分；其餘月份未定、尚無報名畫面）；九州盃特殊規則〔赤壁火攻 ×2、官渡騎兵 ×1.8、夷陵弓兵 ×0.5／陷阱 ×2〕PROG-2-1612 已接進報名鏡像戰力，虎牢單挑規則只顯示 | ✅ | 🟡 | ❌ | ✅ | ⬜ |
 | **關卡設計系統.md (doc_spec_0049)** | BattleScene.ts, BattleHUD.ts, DeployPanel.ts | ✅ | 🟡 | 🟡 | ❌ | ⬜ |
 | **武將日誌與離線互動系統.md (doc_spec_0015)** | LobbyScene.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
 | **MVP遊戲驗證規格書.md (doc_spec_0045)** | GameManager.ts | ✅ | ✅ | ✅ | ❌ | ⬜ |
 | **新手開場規格書.md (doc_spec_0031)** | SceneManager.ts, LoadingScene.ts, LobbyScene.ts, LoginScene.ts | ✅ | ✅ | 🟡 | ❌ | ⬜ |
 | **UI 規格書.md (doc_ui_0027)** | UIConfig.ts, UIManager.ts, BattleHUD.ts, BattleLogPanel.ts, DeployPanel.ts, ToastMessage.ts, UILayer.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
-| **主戰場UI規格書.md (doc_ui_0001)** | UIConfig.ts, UIManager.ts, BattleHUD.ts, BattleScenePanel.ts, TigerTallyPanel.ts, UnitInfoPanel.ts, ActionCommandPanel.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
-| **主戰場UI規格補充_v3.md (doc_ui_0003)** | BattleHUD.ts, ActionCommandPanel.ts, BattleLogPanel.ts, TigerTallyPanel.ts, GeneralQuickViewPanel.ts, Constants.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
+| **主戰場UI規格書.md (doc_ui_0001)** | UIConfig.ts, UIManager.ts, BattleHUD.ts, BattleScenePanel.ts, TigerTallyPanel.ts, UnitInfoPanel.ts, ActionCommandPanel.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| **主戰場UI規格補充_v3.md (doc_ui_0003)** | BattleHUD.ts, ActionCommandPanel.ts, BattleLogPanel.ts, TigerTallyPanel.ts, GeneralQuickViewPanel.ts, Constants.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | **美術素材規劃與使用說明.md (doc_art_0003)** | UnitAssetCatalog.ts, MaterialSystem.ts, UnitRenderer.ts, ResourceManager.ts, I18nSystem.ts, BattleScene.ts, DeployPanel.ts, VfxComposerTool.ts, vfx-block-registry.ts, VideoPlayerTest.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
 | **UI技術規格書.md (doc_ui_0049)** | SolidBackground.ts, GeneralListPanel.ts, NetworkStatusIndicator.ts | ✅ | ✅ | 🟡 | ❌ | ⬜ |
 | **Data Schema文件（本機端與Server端）.md (doc_tech_0013)** | ResourceManager.ts, NetworkService.ts, SyncManager.ts, NetworkStatusIndicator.ts, index.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
@@ -62,11 +62,11 @@
 | 同名武將系統.md (doc_spec_0005) | SoulTransfer.ts, BloodlineInfusion.ts, BloodlineMerge.ts, ReviveRetrain.ts, SortieDeploy.ts, SoulFragmentLedger.ts, SoulInjectCandidates.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | 名士預言系統.md (doc_spec_0006) | BondingSetupController.ts（名士批語 3 列，PROG-2-1131） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 名詞定義文件.md (doc_spec_0008) | 尚無實作 | ✅ | ✅ | — | — | ⬜ |
-| 因子解鎖系統.md (doc_spec_0009) | AwakeningReveal.ts（戰後覺醒結算揭示，PROG-2-1133；畫面定格動畫未做） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 因子解鎖系統.md (doc_spec_0009) | AwakeningReveal.ts（戰後覺醒結算揭示，PROG-2-1133；畫面定格動畫已補（PROG-2-1702）） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 培育系統.md (doc_spec_0026) | NurtureSystem.ts、TacticLearning.ts、NurtureFlowController.ts（戰法列，PROG-2-1132／1134）；InspiredTacticMap.ts（靈感戰法對應戰法庫，PROG-2-1135） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 家族關係（史實相性）系統.md (doc_spec_0024) | ComboAttackKin.ts, RelationEvents.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| 戰場適性系統.md (doc_spec_0041) | ArenaScore.ts, BattleAptitude.ts, BattlefieldRecon.ts, DesertVitality.ts, TerrainTroopRules.ts, WeatherSchedule.ts, WeatherTacticRestriction.ts, EnvScoutPresenter.ts, TacticAvailabilityPresenter.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
-| 教官系統（支援卡）.md (doc_spec_0027) | NurtureSystem.ts（inspiredTacticIds）、GameSession.ts（learnTactic 擋法，PROG-2-1134）；InspiredTacticMap.ts（17 個靈感戰法對應現有 8 招戰法庫，PROG-2-1135；逐招獨立戰場效果未做）；NpcFriendMentor.ts（friendMentorCard）、NurtureFlowController.ts（setBorrowedMentor）、LobbyScene.ts（_onClickStartBorrow，好友借用入學前，PROG-2-1138） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 戰場適性系統.md (doc_spec_0041) | ArenaScore.ts, BattleAptitude.ts, BattlefieldRecon.ts, DesertVitality.ts, TerrainTroopRules.ts, WeatherSchedule.ts, WeatherTacticRestriction.ts, EnvScoutPresenter.ts, TacticAvailabilityPresenter.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 教官系統（支援卡）.md (doc_spec_0027) | NurtureSystem.ts（inspiredTacticIds）、GameSession.ts（learnTactic 擋法，PROG-2-1134）；InspiredTacticMap.ts（17 個靈感戰法對應現有 8 招戰法庫，PROG-2-1135；疾行／堅盾已改獨立效果 Haste 移動 +1、Fortified 防禦 ×1.2，PROG-2-1600；夜襲改獨立技能 insp-night-raid 前排單體、夜晚傷害 ×1.5，PROG-2-1698；長槍突刺改獨立技能 insp-lance-thrust 直線貫穿 2 格、無視 30% 防禦，PROG-2-1699；龍膽改獨立技能 insp-dragon-gall 前排單體、爆擊率 +30%，PROG-2-1700；結義之怒改獨立技能 insp-sworn-fury 前方扇形不衰減、爆擊率 +20%，PROG-2-1701；其餘 11 招借用同名既有技能、已逐招盤點無需另做，PROG-2-1703）；NpcFriendMentor.ts（friendMentorCard）、NurtureFlowController.ts（setBorrowedMentor）、LobbyScene.ts（_onClickStartBorrow，好友借用入學前，PROG-2-1138） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 正式版劇本文案.md (doc_spec_0004) | FunLineLibrary.ts, OpeningLetter.ts, RedFaceCopy.ts, UIOpeningLetterPanel.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | 武將壽命系統.md (doc_spec_0018) | GeneralAging.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 武將戰績系統.md (doc_spec_0019) | BattleLeaderboardView.ts, BattleRecordStats.ts, BattleSnapshot.ts, HiddenFactorAwakening.ts, MilestoneRewards.ts, RetireReviewCopy.ts, SeasonReportPanel.ts, HiddenFactorText.ts, RetireReviewController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
@@ -85,71 +85,11 @@
 | **戰法場景規格書.md (doc_spec_0039)** | ActionSystem.ts, SceneGambitTrigger.ts, SceneGambitAdapter.ts, TileStateRules.ts, StealthTile.ts, BattleTacticBehavior.ts, WisdomMeter.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | 熱更新與版本控制規格書.md (doc_tech_0012) | SaveVersion.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 
-#### D-1a. 邏輯欄重判紀錄（逐份對照規格條目）
+#### D-1a. 邏輯欄重判紀錄 → 已拆至 [progress/d1a-rejudge.md](progress/d1a-rejudge.md)（PROG-2-1614）
 
-> 「邏輯」欄判定：規格的功能條目全部有程式效果才標 ✅；有缺口標 🟡 並在此列出缺口，缺口即後續任務卡來源。改動此欄後重跑 `node tools_node/build-progress-matrix.js` 更新 D-4。
+### D-2. 待建 UI Spec 檔案 → [progress/d2-d3-pending-ui.md](progress/d2-d3-pending-ui.md)
 
-| 規格書 | 判定 | 依據 | 缺口（後續卡來源） | 重判卡 |
-|---|:-:|---|---|---|
-| 戰法系統.md (doc_spec_0038) | 🟡（維持） | G-1 虎符 14 招、G-2 教官 6 招、G-3 趙家槍法、G-4 場景戰法（火攻／水淹／落石／伏兵／夜襲）都有效果：BattleSkillProfiles、各 resolver、TallyPassive（騎射合一、結姻連射、七進七出）、BattleTactic；H-1 天氣禁用已做（PROG-2-0406） | H-2 SSR／UR 英靈面閃現、火計格 VFX、水計流向與 H-3 掠奪金色飄字：TacticVfxHooks.ts 只有純邏輯，沒有任何檔案 import，未接畫面；`assets/fx/tactics/` 資源目錄不存在 | PROG-2-1432 |
-| 兵種（虎符）系統.md (doc_spec_0012) | ✅→🟡 | 「特殊兵種列表」34 條特殊戰法：11 條沿用既有 profile、9 條以被動實作（白馬、梟姬、龍膽；解煩、丹陽、吳國由 PROG-2-1433、止啼符、藤甲由 PROG-2-1437、虎痴符由 PROG-2-1444 補上）；錦帆、工甲符、白耳、元戎、常山女以暫定數字部分實作（PROG-2-1457），其餘 9 條是 `pendingEffect` 殼（不可施放、無效果） | 9 條特殊戰法未實作：~~鐵騎（恐懼衝鋒）~~ PROG-2-1514 已補、先登（攻城 ×2；~~免恐懼~~ PROG-2-1513 已補）、大喬（全隊魅力、士氣不降）、南蠻（巨型踐踏）、都督符（火燒連營）、神威符（強擊突刺）、惡來符（捨命護主）、奉孝符（遺計定遼）、狼顧符（鷹視狼顧）；5 條部分實作（數字暫定）待補：常山女治療友軍、白耳替主將承傷與斷後防禦 ×2、元戎範圍傷害、工甲符連擊時傷害提升；另 TallyCardCatalog 只有 6 種虎符卡，龍膽符等名將專屬虎符尚無卡片模板，玩家拿不到（解煩、丹陽、吳國、止啼符、藤甲、虎痴符、錦帆、工甲符、白耳、元戎、常山女亦同） | PROG-2-1432、PROG-2-1433、PROG-2-1437、PROG-2-1444、PROG-2-1457 |
-| 奧義系統.md (doc_spec_0030) | 🟡（維持） | E 製作功能清單 10 項：資料表、轉生解鎖欄位、精力消耗（VitalityBattleGate.spendUltimateVitality）、專屬綁定、子嗣覺醒（ChildUltimateAwaken）、奧義升級與圖鑑（UltimateUpgrade）已落地；F-0 血脈五階解鎖（BloodlineTransmissionUltimate）、傷害公式（UltimateDamage）已落地 | ~~① 每場限用 1 次~~、~~② 升級等級進戰鬥傷害~~（PROG-2-1451 補上；~~奧義選單灰化已用奧義~~ PROG-2-1512 已補）；③ E-10 組合奧義（P2）未做；④「英靈附體」（兵力劣勢時召喚祖先虛影同步施放成名奧義）未做 | PROG-2-1447、PROG-2-1451 |
-| 因子爆發系統.md (doc_spec_0010) | 🟡（維持） | E 製作清單 8 項都有代碼：基因物件（GeneObject）、遺傳（FactorInheritance）、發現度與隱性覺醒（HiddenFactorAwakening）、因子戰法聯動（FactorTacticLinkage）、因子遮罩、EP 計算（BreedingSystem.computeEpMvp）、標籤池；水戰／大霧／林地因子有戰場效果 | 1. 白色因子「抗性、性格」沒有遊戲效果；2. K 段揭露順序（新手藍粉綠／中期白紅／後期紫）與 UnlockPhase.phaseFactorColors（藍粉／綠白／紫紅）不一致，也沒接進培育可參與顏色，需人工裁定；~~3. EP「精力滿載 +10」加成~~（PROG-2-1511 已補） | PROG-2-1458 |
-| 戰場部署系統.md (doc_spec_0040) | ✅→🟡 | 出陣部署（SortieDeploy）、委任 AI、預備隊、雙方部署深度、勝敗結算都有代碼 | 1. 攻城戰場景 SCENE_SIEGE 不存在：BattleSceneMode 只有 normal／flood／fire／rock／ambush／night，沒有城牆、護城河、器械通道格；SortieDeploy 只做了攻城精英上限加成 | PROG-2-1458 |
-| 戰法場景規格書.md (doc_spec_0039) | 🟡（維持） | B-2 成功率公式（SceneGambitTrigger：min 95%、50%+(INT−門檻)×2%）、場景戰法轉接（SceneGambitAdapter）、Tile 狀態（TileStateRules、StealthTile）、夜襲命中 −25%／暴擊 +20%、營帳格（BattleTacticBehavior）已落地 | 1. 軍師智謀能量（WisdomMeter，每回合 INT×0.5、滿 100 觸發）只有純邏輯，沒接進戰鬥，也沒有全局增幅與 HUD；2. 攻城戰（SCENE_SIEGE：衝車、雲梯、投石機、城牆地利）未做；3. 擊破落石掉落找不到代碼（落石擊破機制未定義）；火攻掠奪已由 PROG-2-1462 寫入 Stage_Salvage 補給（武器材料、教官經驗待裁定，戰後顯示未接）（~~火抗 +50%~~ 已由 PROG-2-1459 補上：火燒偷襲戰我方火格與火計傷害 ×0.5）；4. F 段 P1 計謀格子掉落未做 | PROG-2-1458 |
-
----
-
-### D-2. 待建 UI Spec 檔案（待辦）
-
-> 原 `cross-ref-ui-spec.md C-3`。優先級：P0 = 阻擋功能開發 / P1 = 下週目標 / P2 = 月底目標。
-> 狀態欄（PROG-2-1355，2026-10-28 依 repo 檔案回寫）：✅ 已建 11 個、⬜ 待建 10 個；PROG-2-1422（2026-10-28）查出其中 4 個已用其他檔名建成，改標 ✅，實際已建 15 個、待建 6 個；PROG-2-1424 建成 rank-progress 三件後為已建 18 個、待建 3 個；PROG-2-1428 建成血統小傳三件後全部 21 個已建。
-
-| 優先級 | 檔案 | 依賴規格書 | 狀態 |
-|---|---|---|:-:|
-| P0 | `layouts/nurture-session-main.json` | 培育系統.md (doc_spec_0026) | ✅ 已建 |
-| P1 | `skins/nurture-session-default.json` | 培育系統.md (doc_spec_0026) | ✅ 已建 |
-| P1 | `screens/nurture-session-screen.json` | 培育系統.md (doc_spec_0026)、教官系統（支援卡）.md (doc_spec_0027) | ✅ 已建 |
-| P2 | `layouts/general-detail.json` | 武將人物介面規格書.md (doc_ui_0012) | ✅ 已建（實際檔名 `general-detail-main` / `general-detail-unified-main` / `character-ds3-main`） |
-| P2 | `layouts/general-bloodline-vignette-main.json` | 武將人物介面規格書.md (doc_ui_0012)、血統理論系統.md (doc_spec_0011) | ✅ 已建（PROG-2-1428 血統小傳開窗，由人物頁總覽「血統小傳」打開；使用者 2026-10-28 裁定做） |
-| P2 | `skins/general-bloodline-vignette-default.json` | 武將人物介面規格書.md (doc_ui_0012)、UI 規格書.md (doc_ui_0027) | ✅ 已建（PROG-2-1428 血統小傳開窗，由人物頁總覽「血統小傳」打開；使用者 2026-10-28 裁定做） |
-| P2 | `screens/general-bloodline-vignette-screen.json` | 武將人物介面規格書.md (doc_ui_0012)、UI 規格書.md (doc_ui_0027) | ✅ 已建（PROG-2-1428 血統小傳開窗，由人物頁總覽「血統小傳」打開；使用者 2026-10-28 裁定做） |
-| P2 | `layouts/spirit-tally-detail-main.json` | 兵種（虎符）系統.md (doc_spec_0012)、武將人物介面規格書.md (doc_ui_0012) | ✅ 已建 |
-| P2 | `skins/spirit-tally-detail-default.json` | 兵種（虎符）系統.md (doc_spec_0012)、UI 規格書.md (doc_ui_0027) | ✅ 已建 |
-| P2 | `screens/spirit-tally-detail-screen.json` | 兵種（虎符）系統.md (doc_spec_0012)、UI 規格書.md (doc_ui_0027) | ✅ 已建 |
-| P2 | `layouts/world-sandtable-main.json` | 大廳系統.md (doc_spec_0002)、官職系統.md (doc_spec_0014) | ✅ 已建（實際檔名 `layouts/sandtable-territory-main.json`，PROG-2-0967） |
-| P2 | `skins/world-sandtable-default.json` | 大廳系統.md (doc_spec_0002)、UI 規格書.md (doc_ui_0027) | ✅ 已建（實際檔名 `skins/sandtable-territory-default.json`，PROG-2-0967） |
-| P2 | `screens/world-sandtable-screen.json` | 大廳系統.md (doc_spec_0002)、官職系統.md (doc_spec_0014) | ✅ 已建（實際檔名 `screens/sandtable-territory-screen.json`，PROG-2-0967） |
-| P2 | `layouts/rank-progress-main.json` | 官職系統.md (doc_spec_0014) | ✅ 已建（PROG-2-1424 官職進度小開窗，由官職頁「階位總覽」打開） |
-| P2 | `skins/rank-progress-default.json` | 官職系統.md (doc_spec_0014)、UI 規格書.md (doc_ui_0027) | ✅ 已建（PROG-2-1424 官職進度小開窗，由官職頁「階位總覽」打開） |
-| P2 | `screens/rank-progress-screen.json` | 官職系統.md (doc_spec_0014)、UI 規格書.md (doc_ui_0027) | ✅ 已建（PROG-2-1424 官職進度小開窗，由官職頁「階位總覽」打開） |
-| P2 | `layouts/bloodline-mirror-loading-main.json` | 血脈命鏡過場載入規格書.md (doc_ui_0005)、UI 規格書.md (doc_ui_0027) | ✅ 已建 |
-| P2 | `skins/bloodline-mirror-loading-default.json` | 血脈命鏡過場載入規格書.md (doc_ui_0005)、UI 規格書.md (doc_ui_0027) | ✅ 已建 |
-| P2 | `screens/bloodline-mirror-loading-screen.json` | 血脈命鏡過場載入規格書.md (doc_ui_0005)、UI 規格書.md (doc_ui_0027) | ✅ 已建 |
-| P2 | `content/bloodline-mirror-states-v1.json` | 血脈命鏡過場載入規格書.md (doc_ui_0005)、UI 規格書.md (doc_ui_0027) | ✅ 已建 |
-| P2 | `contracts/bloodline-mirror-state-content.schema.json` | 血脈命鏡過場載入規格書.md (doc_ui_0005)、UI 規格書.md (doc_ui_0027) | ✅ 已建 |
-
----
-
-### D-3. 待定 Contract（尚未決定是否拆成獨立 screen）
-
-> 原 `cross-ref-ui-spec.md C-4`。
-
-| 概念 | 暫定 contract / state | 實作狀態（PROG-2-1346 回寫，2026-10-28） | 目前掛點 | 規格來源 |
-|---|---|---|---|---|
-| 晨報摘要 | `pending: morning-report-content` | ✅ DailyReportController.ts（PROG-2-1170/1174） | `LobbyMain` 登入後摘要層 | 武將日誌與離線互動系統.md (doc_spec_0015)、UI 規格書.md (doc_ui_0027) |
-| 武將日誌抽屜 | `pending: general-journal-content` | ✅ GeneralJournalController.ts（PROG-2-1183） | `LobbyMain` / `GeneralDetail` 抽屜層 | 武將日誌與離線互動系統.md (doc_spec_0015)、武將人物介面規格書.md (doc_ui_0012) |
-| 派遣整備掛點 | `pending: dispatch-board-content` | ✅ DispatchCatalog.ts＋LobbyScene 日誌樞紐（PROG-2-1179） | `LobbyMain` 任務 / 生活感入口 | 武將日誌與離線互動系統.md (doc_spec_0015)、UI 規格書.md (doc_ui_0027) |
-| 挑戰賽賽季卡 | `pending: tournament-season-card` | ✅ TournamentPanelController.ts 賽季列（PROG-2-1191）；天下沙盤彈窗右側賽季次卡（PROG-2-1431，共用 tournamentSeasonCardLines） | `LobbyMain` 世界沙盤旁次卡 | 名將挑戰賽系統.md (doc_spec_0007)、UI 規格補遺_2026-04-11_大廳晨報與人物日誌pending.md (doc_ui_0030) |
-| 經濟補貼提示 | `pending: economy-subsidy-banner` | ✅ 許願祭壇 waSubsidyLabel（PROG-2-1343）、登入 toast（PROG-2-1340）、戰敗地窖提示（PROG-2-1342）；規格定位為「資源列或許願祭壇附近」，許願祭壇已滿足（PROG-2-1431 確認） | `LobbyMain` 資源列 / 許願祭壇提示條 | 經濟系統.md (doc_spec_0032)、UI 規格補遺_2026-04-11_大廳晨報與人物日誌pending.md (doc_ui_0030) |
-| 虎符戰記摘要 | `pending: general-tally-summary` | 🟡 GeneralTallySummary.ts 純邏輯與 overview tallySummary（PROG-2-1344/1345）；畫面位置待定 | `GeneralDetail` overview 次卡 / peek | 兵種（虎符）系統.md (doc_spec_0012)、武將人物介面規格書.md (doc_ui_0012)、UI 規格補遺_2026-04-11_大廳晨報與人物日誌pending.md (doc_ui_0030) |
-| 結緣模式摘要 | `pending: bonding-lineage-mode-chip` | ✅ BondingSetupController.ts modeChip（Standard / Peace_Lineage） | `BondingSetup` 父母摘要列 / 結果預估卡 | 結緣系統（配種）.md (doc_spec_0028)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 培育學年階段列 | `pending: nurture-phase-block-header` | ✅ NurtureFlowController.ts nurturePhase（Phase_Block 1-12/13-24/25-36） | `NurtureSession` 頂部進度列 | 培育系統.md (doc_spec_0026)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 畢業戰術標籤條 | `pending: graduation-tags-strip` | ✅ NurtureSessionMapper.ts graduationTags | `NurtureSession` 畢業摘要 / `GeneralDetail` peek | 培育系統.md (doc_spec_0026)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 軍師 HUD 摘要 | `pending: strategist-hud-summary` | 🟡 StrategistHud.ts 純邏輯（PROG-2-1313）；未接戰場，待互動物件 | `BattleScene` Top HUD 次層 / 右側可收合抽屜 | 關卡設計系統.md (doc_spec_0049)、主戰場UI規格書.md (doc_ui_0001)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 關卡回收摘要 | `pending: stage-salvage-summary` | 🟡 StrategistHud.ts SalvageTotals（PROG-2-1313）；戰場互動物件與回收累計未實作 | `BattleScene` 戰中提示條 / 戰後摘要卡 | 關卡設計系統.md (doc_spec_0049)、主戰場UI規格書.md (doc_ui_0001)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 雙池定位導覽 | `pending: gacha-pool-positioning-brief` | ✅ GachaPoolGuide.ts＋GachaPoolGuidePresenter.ts（PROG-2-0563/0565） | `GachaMain` tab header / pity 區旁說明帶 | 轉蛋系統.md (doc_spec_0042)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
-| 轉蛋 Banner 主視覺 | `pending: gacha-banner-hero-art-policy` | ⬜ 美術政策待定 | `GachaMain` BannerStage 人物主視覺 / pool-specific key visual | 轉蛋系統.md (doc_spec_0042)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
+### D-3. 待定 Contract → 同上分片
 
 ---
 

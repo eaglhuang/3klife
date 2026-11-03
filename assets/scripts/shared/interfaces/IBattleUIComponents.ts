@@ -46,6 +46,8 @@ export interface IResultPopupLike {
     show(result: any): Promise<void>;
     /** 結算窗開著時在描述下方追加行（戰後覺醒，PROG-2-1133） */
     appendDetails?(lines: readonly string[]): void;
+    /** 戰場覺醒定格演出（PROG-2-1702） */
+    playAwakeningFreeze?(titles: readonly string[], timing: AwakeningFreezeTiming): Promise<void>;
     hide(): void;
 }
 
@@ -90,4 +92,13 @@ export interface IBattleScenePanelLike {
     appendLog(text: string): void;
     actionCommandComposite?: any;
     actionCommandPanel?: any;
+}
+
+/** 戰場覺醒定格演出時序（秒） */
+export interface AwakeningFreezeTiming {
+    readonly fadeIn: number;
+    readonly popScaleFrom: number;
+    readonly pop: number;
+    readonly hold: number;
+    readonly fadeOut: number;
 }

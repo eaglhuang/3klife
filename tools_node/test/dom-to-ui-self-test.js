@@ -617,6 +617,44 @@ function main() {
     if (pseudoSlot.gradient.stops[0].opacity !== 0) fail(`transparent gradient stop should map opacity=0: ${JSON.stringify(pseudoSlot)}`);
     ok('computed ::after pseudo overlay maps to reusable fill child skin slot');
 
+    const stackHtml = `
+      <div data-name="StackRoot">
+        <div data-name="Cell" data-ucuf-capture-id="1" style="position:relative;width:100px;height:50px">
+          <div data-name="CellBg" style="position:absolute;width:100px;height:50px;background:#123456"></div>
+          <div data-name="CellTop" style="position:absolute;z-index:3;width:100px;height:50px;background:#654321"></div>
+        </div>
+      </div>`;
+    const stackDraft = buildDraftFromHtml(stackHtml, {
+      screenId: 'pseudo-stacking',
+      bundle: 'ui_test',
+      useComputedStyle: true,
+      fidelitySnapshots: [
+        { id: 1, parentId: 0, styles: { _rect: { x: 0, y: 0, w: 100, h: 50 }, 'background-color': 'rgba(0, 0, 0, 0)' }, pseudo: null },
+        { id: 1001, parentId: 1, styles: { 'background-color': 'rgba(0, 0, 0, 0.07)', position: 'absolute', 'z-index': '1' }, pseudo: 'before' },
+        { id: 1002, parentId: 1, styles: { 'background-color': 'rgba(0, 0, 0, 0.5)', position: 'absolute', 'z-index': '2' }, pseudo: 'after' },
+      ],
+    });
+    const stackCell = findNode(stackDraft.layoutDraft, n => n.name === 'Cell');
+    const stackOrder = (stackCell && stackCell.children || []).map(n => n.name);
+    const expectedStack = ['CellBg', 'Cell_PseudoBefore', 'Cell_PseudoAfter', 'CellTop'];
+    if (JSON.stringify(stackOrder) !== JSON.stringify(expectedStack)) fail(`pseudo + children should follow CSS stacking order: ${JSON.stringify(stackOrder)}`);
+    if ((stackCell.children || []).some(n => '_cssZIndex' in n || '_cssPosition' in n)) fail('stacking hints should not leak into layout');
+    ok('::before/::after with element children follow CSS stacking order');
+    const gridTextDraft = buildDraftFromHtml(`
+      <div data-name="GridRoot">
+        <div data-name="Badge" style="width:30px;height:30px;display:grid;place-items:center;font-size:15px">S</div>
+        <div data-name="Pill" style="width:80px;height:20px;display:flex;justify-content:flex-end;font-size:12px">tag</div>
+      </div>`, { screenId: 'grid-text-align', bundle: 'ui_test' });
+    const alignOf = name => {
+      const host = findNode(gridTextDraft.layoutDraft, n => n.name === name);
+      const label = host && (host.type === 'label' ? host : (host.children || []).find(n => n.type === 'label'));
+      const slot = label && gridTextDraft.skinDraft.slots[label.styleSlot];
+      return slot && slot.horizontalAlign;
+    };
+    if (alignOf('Badge') !== 'CENTER') fail(`grid place-items:center text should center: ${alignOf('Badge')}`);
+    if (alignOf('Pill') !== 'RIGHT') fail(`flex justify-content:flex-end text should align right: ${alignOf('Pill')}`);
+    ok('loose text in grid/flex containers follows the container box alignment');
+
     const shadowDraft = buildDraftFromHtml(`
       <div data-name="ShadowRoot">
         <div data-name="ShadowPanel" data-ucuf-capture-id="1" style="position:absolute;left:20px;top:30px;width:100px;height:50px"></div>
@@ -976,6 +1014,13 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     }
     if (resolveFontFamilyToAsset('"Manrope", "Newsreader", serif') !== 'fonts/manrope/font') {
       fail('R-10 num stack must resolve to manrope');
+    }
+    // 字元涵蓋：中文跳過只涵蓋拉丁字的字族，照瀏覽器逐字退字族的結果（PROG-2-1650）
+    if (resolveFontFamilyToAsset('"Newsreader", "NotoSansTC", serif', null, null, '張飛') !== 'fonts/notosans_tc/font') {
+      fail('R-10 CJK text must skip latin-only newsreader');
+    }
+    if (resolveFontFamilyToAsset('"Newsreader", "NotoSansTC", serif', null, null, 'Vanguard') !== 'fonts/newsreader/font') {
+      fail('R-10 latin text must keep newsreader');
     }
     // System CJK aliases 落到 notosans_tc
     if (resolveFontFamilyToAsset('"PingFang TC"') !== 'fonts/notosans_tc/font') {

@@ -1,4 +1,5 @@
 'use strict';
+const { bindMapPathFor } = require('../bind-map');
 
 const fs = require('fs');
 const path = require('path');
@@ -179,6 +180,8 @@ function writePerTabReplayRouting(paths, opts, previousRouting, fragments, helpe
       fragment: `fragments/layouts/${prefix}-${key}-content`,
       childPanelClass: previous.childPanelClass || deriveChildPanelClass(opts.screenId, key),
       replaySourceHtml: fragment.sourceHtml || null,
+      regions: fragment.regions && fragment.regions.length > 0 ? fragment.regions : undefined,
+      hides: fragment.hides && fragment.hides.length > 0 ? fragment.hides : undefined,
     }));
   }
   const sidecar = {
@@ -237,6 +240,7 @@ async function runPerTabReplay(args) {
   ];
   if (tabs.length > 0) renderArgs.push('--tabs', tabs.map(tab => tab.key).join(','));
   if (opts.browser) renderArgs.push('--browser', opts.browser);
+  if (fs.existsSync(bindMapPathFor(opts.screenId))) renderArgs.push('--bind-map', bindMapPathFor(opts.screenId));
   const renderProc = await helpers.runNodeStep('render-html-tab-fragments', 'render-html-tab-fragments.js', renderArgs);
 
   const manifestPath = path.join(paths.tabReplayDir, `${opts.screenId}.tab-fragments.json`);
@@ -274,17 +278,11 @@ async function runPerTabReplay(args) {
       slotWidthByTabId.set(tab.id, width);
     }
   }
-  for (const tab of manifest.tabs || []) {
-    if (!tab.ok || !tab.html) {
-      result.fragments.push({ id: tab.id, ok: false, error: tab.error || 'missing-html' });
-      continue;
-    }
-    const key = toKebab(tab.key || tab.id);
-    const fragmentScreenId = `${prefix}-tab-${key}`;
+  const convertHtml = async (htmlPath, fragmentScreenId, label) => {
     const layoutOut = path.join(paths.tabReplayDir, `${fragmentScreenId}.layout.json`);
     const skinOut = path.join(paths.tabReplayDir, `${fragmentScreenId}.skin.json`);
     const conversionArgs = [
-      '--input', tab.html,
+      '--input', htmlPath,
       '--output', layoutOut,
       '--skin-output', skinOut,
       '--screen-id', fragmentScreenId,
@@ -305,16 +303,36 @@ async function runPerTabReplay(args) {
       conversionArgs.push('--source-css', sourceCssPath);
     }
     conversionArgs.push('--use-computed-style');
-
-    const proc = await helpers.runNodeStep(`dom-to-ui-json:tab-fragment:${key}`, 'dom-to-ui-json.js', conversionArgs);
-    const converted = helpers.readJsonIfExists(layoutOut);
+    const proc = await helpers.runNodeStep(`dom-to-ui-json:tab-fragment:${label}`, 'dom-to-ui-json.js', conversionArgs);
+    return { proc, converted: helpers.readJsonIfExists(layoutOut), skinOut };
+  };
+  for (const tab of manifest.tabs || []) {
+    if (!tab.ok || !tab.html) {
+      result.fragments.push({ id: tab.id, ok: false, error: tab.error || 'missing-html' });
+      continue;
+    }
+    const key = toKebab(tab.key || tab.id);
+    const { proc, converted, skinOut } = await convertHtml(tab.html, `${prefix}-tab-${key}`, key);
     const normalized = normalizeFragmentLayout(converted, tab.id, slotWidthByTabId.get(tab.id) || null);
     const fragmentTarget = path.join(runtime.fragmentsDir, `${prefix}-${key}-content.json`);
     if (proc.status === 0 && normalized) {
       helpers.writeJson(fragmentTarget, normalized);
       const merge = mergeSkinSlots(paths.finalSkin, skinOut, helpers);
       result.mergedSkinSlots += merge.merged;
+      const regions = [];
+      for (const region of tab.regions || []) {
+        const regionKey = toKebab(region.id);
+        const regionId = `${prefix}-${key}-${regionKey}`;
+        const regionResult = await convertHtml(region.html, `${prefix}-tab-${key}-${regionKey}`, `${key}:${regionKey}`);
+        const regionLayout = normalizeFragmentLayout(regionResult.converted, `${tab.id}-${regionKey}`);
+        if (regionResult.proc.status !== 0 || !regionLayout) continue;
+        helpers.writeJson(path.join(runtime.fragmentsDir, `${regionId}.json`), regionLayout);
+        result.mergedSkinSlots += mergeSkinSlots(paths.finalSkin, regionResult.skinOut, helpers).merged;
+        regions.push({ mount: region.id, fragment: `fragments/layouts/${regionId}` });
+      }
       result.fragments.push({
+        regions,
+        hides: Array.isArray(tab.hides) ? tab.hides : [],
         id: tab.id,
         key,
         ok: true,
@@ -338,14 +356,84 @@ async function runPerTabReplay(args) {
     }
   }
   result.ok = result.fragments.length > 0 && result.fragments.every(fragment => fragment.ok);
+  result.unresolvedLazySlots = dropUnresolvedLazySlots(paths.finalLayout, runtime.fragmentsDir, helpers).dropped;
   if (result.ok) {
     const nextRouting = writePerTabReplayRouting(paths, opts, routing, result.fragments, helpers);
     const lazySlotUpdate = updateLazySlotDefaultFragments(paths.finalLayout, nextRouting, helpers);
+    result.regionMounts = markRegionMounts(paths.finalLayout, runtime.fragmentsDir, nextRouting, helpers).marked;
     result.tabRoutingPath = helpers.rel(helpers.sidecarPath(paths.finalLayout, '.tab-routing.json'));
     result.tabRoutingCount = nextRouting.tabs.length;
     result.lazySlotDefaultUpdated = lazySlotUpdate.changed;
   }
   return result;
+}
+
+// 延遲插槽指向的內容檔若沒有任何步驟產生，執行期會直接載入失敗：
+// 改回一般容器並移除找不到的內容檔引用，避免執行期報錯（PROG-2-1646）
+// Areas a tab shows outside its content host become lazy slots filled by their region fragment.
+// The mount keeps its own skin; its padding moves onto the fragment root so content sits inside it.
+function markRegionMounts(layoutPath, fragmentsDir, tabRouting, helpers) {
+  const fragmentByMount = new Map();
+  for (const tab of tabRouting && tabRouting.tabs || []) {
+    for (const region of tab && tab.regions || []) {
+      if (region && region.mount && region.fragment && !fragmentByMount.has(region.mount)) {
+        fragmentByMount.set(region.mount, region.fragment);
+      }
+    }
+  }
+  if (fragmentByMount.size === 0) return { marked: 0 };
+  const layout = helpers.readJsonIfExists(layoutPath);
+  if (!layout || !layout.root) return { marked: 0 };
+  let marked = 0;
+  const walk = (node) => {
+    if (!node || typeof node !== 'object') return;
+    const fragment = node.id && fragmentByMount.get(node.id);
+    if (fragment) {
+      node.lazySlot = true;
+      node.defaultFragment = fragment;
+      node.children = [];
+      const pad = node.layout || {};
+      const fragmentPath = path.join(fragmentsDir, `${path.basename(fragment)}.json`);
+      const fragmentLayout = helpers.readJsonIfExists(fragmentPath);
+      if (fragmentLayout) {
+        const root = fragmentLayout.root || fragmentLayout;
+        root.widget = { top: pad.paddingTop || 0, left: pad.paddingLeft || 0, right: pad.paddingRight || 0, bottom: pad.paddingBottom || 0 };
+        helpers.writeJson(fragmentPath, fragmentLayout);
+      }
+      delete node.layout;
+      marked += 1;
+      return;
+    }
+    for (const child of node.children || []) walk(child);
+  };
+  walk(layout.root);
+  if (marked > 0) helpers.writeJson(layoutPath, layout);
+  return { marked };
+}
+
+function dropUnresolvedLazySlots(layoutPath, fragmentsDir, helpers) {
+  const layout = helpers.readJsonIfExists(layoutPath);
+  if (!layout || !layout.root || !fragmentsDir) return { dropped: [] };
+  const exists = ref => typeof ref === 'string'
+    && fs.existsSync(path.join(fragmentsDir, `${path.basename(ref)}.json`));
+  const dropped = [];
+  const walk = (node) => {
+    if (!node || typeof node !== 'object') return;
+    if (node.lazySlot && node.defaultFragment && !exists(node.defaultFragment)) {
+      dropped.push({ slot: node.name, fragment: node.defaultFragment, inlineChildren: (node.children || []).length });
+      delete node.lazySlot;
+      delete node.defaultFragment;
+      delete node.fragments;
+      delete node.warmupHint;
+    } else if (node.lazySlot && Array.isArray(node.fragments)) {
+      node.fragments = node.fragments.filter(exists);
+      if (node.fragments.length === 0) delete node.fragments;
+    }
+    for (const child of node.children || []) walk(child);
+  };
+  walk(layout.root);
+  if (dropped.length > 0) helpers.writeJson(layoutPath, layout);
+  return { dropped };
 }
 
 module.exports = {

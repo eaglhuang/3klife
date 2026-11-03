@@ -49,7 +49,7 @@ function collectIds(node: any, out: Set<string>): void {
 export function createDestinyOpeningControllerSuite(): TestSuite {
     const suite = new TestSuite('DestinyOpeningController (宿命轉蛋畫面流程)');
 
-    suite.test('初始只有轉蛋鈕可按；六框已列出六位名將（含稱號與台詞），但還不能點（PROG-2-1147）', () => {
+    suite.test('初始只有轉蛋鈕可按；六框是盲盒只露綽號，還不能點（PROG-2-1147、1621）', () => {
         const { controller } = makeController();
         const view = controller.getFlowView();
         assert.isTrue(view.enabled.btnDestinyRoll);
@@ -60,25 +60,49 @@ export function createDestinyOpeningControllerSuite(): TestSuite {
             const id = STARTER_GENERAL_IDS[i];
             assert.isTrue(view.actives[`btnFrame${i}`]);
             assert.isFalse(view.enabled[`btnFrame${i}`]);
-            assert.equals(generals.find(g => g.id === id)!.name, view.texts[`frame${i}Name`]);
-            assert.equals(DESTINY_INTRO[id].title, view.texts[`frame${i}Sub`]);
-            assert.equals(`「${DESTINY_INTRO[id].quote}」`, view.texts[`frame${i}Quote`]);
+            assert.equals(DESTINY_INTRO[id].title, view.texts[`frame${i}Name`]);
+            assert.equals('', view.texts[`frame${i}Sub`]);
+            assert.equals('', view.texts[`frame${i}Quote`]);
             assert.isFalse(view.actives[`frame${i}Sel`]);
         }
     });
 
-    suite.test('轉蛋後顯示六位初始名將的名字，轉蛋鈕停用、重置鈕啟用', () => {
+    suite.test('轉蛋後仍是盲盒（只露綽號），轉蛋鈕停用、重置鈕啟用', () => {
         const { controller } = makeController();
         assert.isTrue(controller.roll());
         const view = controller.getFlowView();
         const names = Array.from({ length: DESTINY_OPENING_MAX_ROWS }, (_, i) => view.texts[`frame${i}Name`]);
-        const expected = STARTER_GENERAL_IDS.map(id => generals.find(g => g.id === id)!.name).sort();
+        const expected = STARTER_GENERAL_IDS.map(id => DESTINY_INTRO[id].title).sort();
         assert.equals(expected.join(','), [...names].sort().join(','));
         assert.isFalse(view.enabled.btnDestinyRoll);
         assert.isTrue(view.enabled.btnDestinyReset);
         assert.isFalse(controller.roll());
         assert.equals(controller.state.rolled.join(','), controller.framePortraitKeys().join(','));
         assert.isTrue(view.enabled.btnFrame0);
+    });
+
+    suite.test('點選後名字與台詞逐字浮現，看完就留著，重置後也不再蓋回去（PROG-2-1621）', async () => {
+        const { controller } = makeController({ ...heroPool, confirmRequired: true });
+        controller.roll();
+        const id = controller.state.rolled[0] as keyof typeof DESTINY_INTRO;
+        const name = generals.find(g => g.id === id)!.name;
+        assert.isTrue(await controller.select(0));
+        assert.isTrue(controller.revealing);
+        controller.tickReveal(1);
+        let view = controller.getFlowView();
+        assert.equals(name.slice(0, 1), view.texts.frame0Name);
+        assert.equals('', view.texts.frame0Quote);
+        controller.tickReveal(name.length + 1);
+        view = controller.getFlowView();
+        assert.equals(name, view.texts.frame0Name);
+        assert.equals('「' + DESTINY_INTRO[id].quote.slice(0, 1), view.texts.frame0Quote);
+        controller.tickReveal(999);
+        assert.isFalse(controller.revealing);
+        controller.reset();
+        view = controller.getFlowView();
+        const idx = controller.framePortraitKeys().indexOf(id);
+        assert.equals(name, view.texts[`frame${idx}Name`]);
+        assert.equals(`「${DESTINY_INTRO[id].quote}」`, view.texts[`frame${idx}Quote`]);
     });
 
     suite.test('重置回到未抽，次數累計；可再轉蛋', () => {

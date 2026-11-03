@@ -1,6 +1,8 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Node } from 'cc';
+import { _decorator, Node, UIOpacity } from 'cc';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
+import type { ICompositeRenderer } from '../core/interfaces/ICompositeRenderer';
+import { CocosCompositeRenderer } from '../platform/cocos/CocosCompositeRenderer';
 import { services } from '../../core/managers/ServiceLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { applyUIScreenRuntimeState } from '../core/UIScreenRuntimeStateRegistry';
@@ -39,6 +41,8 @@ interface PreviewTabRoutingSidecar {
         slotId?: string;
         buttonNode?: string;
         fragment?: string;
+        regions?: Array<{ mount: string; fragment: string }>;
+        hides?: string[];
     }>;
 }
 
@@ -59,6 +63,9 @@ interface PreviewInteractionSmokeResult {
  */
 @ccclass('UIScreenPreviewHost')
 export class UIScreenPreviewHost extends UIPreviewBuilder {
+    /** Emitted on the host node with the step (-1 / +1) when a pool.prev / pool.next action fires. */
+    public static readonly EVENT_POOL_CYCLE = 'ucuf-pool-cycle';
+
     @property({ tooltip: '預覽時使用的語系檔，預設 zh-TW。' })
     public locale = 'zh-TW';
 
@@ -70,6 +77,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
     private readonly _sidecarInteractionHooks: Array<{ node: Node; callback: () => void }> = [];
     private _interactionSmokeResults: PreviewInteractionSmokeResult[] = [];
     private _interactionActionsBound = 0;
+    private _layoutRoot: UILayoutNodeSpec | null = null;
 
     public get binder(): UITemplateBinder | null {
         return this._binder;
@@ -146,6 +154,12 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         return boundCount;
     }
 
+    private _svgRenderer: ICompositeRenderer | undefined;
+
+    protected override _getSvgCompositeRenderer(): ICompositeRenderer {
+        return this._svgRenderer ??= new CocosCompositeRenderer();
+    }
+
     public async showScreen(screenId: string): Promise<void> {
         if (!screenId) {
             console.warn('[UIScreenPreviewHost] screenId 為空，略過載入');
@@ -170,6 +184,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             this._specLoader.invalidateScreen(screenId);
 
             const { screen, layout, skin } = await this._specLoader.loadFullScreen(screenId);
+            this._layoutRoot = layout.root;
             const i18n = await this._specLoader.loadI18n(this.locale);
             const tokens = await this._specLoader.loadDesignTokensForScreen(screenId);
 
@@ -208,7 +223,10 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         if (!spec.name) {
             throw new Error('[UIScreenPreviewHost] lazySlot 缺少 spec.name，無法載入 defaultFragment');
         }
-        this._lazySlots.set(spec.name, { spec, node, parentW: w, parentH: h });
+        const entry = { spec, node, parentW: w, parentH: h };
+        this._lazySlots.set(spec.name, entry);
+        // 互動路由以語意 id（如 right-content）指定插槽，節點名是轉換器產生的流水號，兩者都要查得到
+        if (spec.id && spec.id !== spec.name) this._lazySlots.set(spec.id, entry);
     }
 
     private async _installSyncedInteractionSidecars(screenId: string, screen: UIScreenSpec): Promise<void> {
@@ -226,8 +244,55 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         for (const action of interaction.actions) {
             this._bindSidecarInteractionAction(action, routeMap);
         }
+        this._bindTabActiveStyles(interaction.actions, routeMap);
 
         UCUFLogger.info(LogCategory.UI, `[UIScreenPreviewHost] interaction sidecar bound ${this._interactionActionsBound}/${interaction.actions.length}`);
+    }
+
+    /**
+     * 分頁鈕的啟用外觀：轉換器只看得到開場狀態（一顆啟用、其餘未啟用）。
+     * 同一插槽的分頁鈕成一組，點擊時把開場啟用鈕的樣式套到被點的鈕，其餘套未啟用鈕的樣式。
+     * 只收語意直達的分頁（prev／next 這類相對切換不算分頁鈕）。
+     */
+    private _bindTabActiveStyles(actions: PreviewInteractionAction[], routeMap: Map<string, TabRoute>): void {
+        const groups = new Map<string, Array<{ node: Node; spec: UILayoutNodeSpec; fragment: string }>>();
+        for (const action of actions) {
+            if (action.type !== 'tabSwitch') continue;
+            const route = routeMap.get(this._normalizeRouteKey(action.target || action.smoke?.expectActiveTab || ''));
+            const node = action.trigger ? this._binder?.getButton(action.trigger)?.node : null;
+            const spec = action.trigger ? this._findLayoutSpec(action.trigger) : null;
+            if (!route || !node || !spec) continue;
+            const group = groups.get(route.slotId) ?? [];
+            group.push({ node, spec, fragment: route.fragment });
+            groups.set(route.slotId, group);
+        }
+
+        for (const [slotId, group] of groups) {
+            const current = this._lazySlots.get(slotId)?.currentFragmentId;
+            const activeTemplate = group.find(tab => tab.fragment === current);
+            const inactiveTemplate = group.find(tab => tab !== activeTemplate);
+            if (group.length < 2 || !activeTemplate || !inactiveTemplate) continue;
+            for (const clicked of group) {
+                const callback = () => {
+                    for (const tab of group) {
+                        const source = tab === clicked ? activeTemplate.spec : inactiveTemplate.spec;
+                        void this._restyleFromSpec(tab.node, tab.spec, source);
+                    }
+                };
+                clicked.node.on(Node.EventType.TOUCH_END, callback, this);
+                this._sidecarInteractionHooks.push({ node: clicked.node, callback });
+            }
+        }
+    }
+
+    private _findLayoutSpec(name: string): UILayoutNodeSpec | null {
+        const stack = this._layoutRoot ? [this._layoutRoot] : [];
+        while (stack.length > 0) {
+            const spec = stack.pop()!;
+            if (spec.name === name) return spec;
+            stack.push(...(spec.children ?? []));
+        }
+        return null;
     }
 
     private _buildTabRouteMap(screen: UIScreenSpec, tabSidecar: PreviewTabRoutingSidecar | null): Map<string, TabRoute> {
@@ -238,6 +303,8 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
                 slotId: route.slotId,
                 fragment: route.fragment,
                 transition: route.transition,
+                regions: route.regions,
+                hides: route.hides,
             });
         };
 
@@ -247,7 +314,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
         for (const tab of tabSidecar?.tabs ?? []) {
             const slotId = tab.slotId ?? tab.mount;
-            addRoute(tab.id ?? tab.key, slotId && tab.fragment ? { slotId, fragment: tab.fragment } : null);
+            addRoute(tab.id ?? tab.key, slotId && tab.fragment ? { slotId, fragment: tab.fragment, regions: tab.regions, hides: tab.hides } : null);
         }
 
         return routeMap;
@@ -291,6 +358,18 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             return;
         }
 
+        // Relative targets (pool.prev / pool.next) step through the screen's data pool, e.g. the
+        // previous/next general; they are not routes, so hand the step to whoever owns the pool.
+        const cycleStep = poolCycleStep(target);
+        if (cycleStep !== null) {
+            const cycleCallback = () => this.node.emit(UIScreenPreviewHost.EVENT_POOL_CYCLE, cycleStep);
+            button.node.on(Node.EventType.TOUCH_END, cycleCallback, this);
+            this._sidecarInteractionHooks.push({ node: button.node, callback: cycleCallback });
+            this._interactionActionsBound += 1;
+            this._interactionSmokeResults.push({ actionId, trigger, target, status: 'bound' });
+            return;
+        }
+
         const route = this._resolveInteractionRoute(routeMap, target);
         if (!route) {
             this._interactionSmokeResults.push({ actionId, trigger, target, status: 'missing-route' });
@@ -299,6 +378,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
         // Plan 4：sidecar 綁定必須由 runtime 執行，不能只在 workflow 複製 JSON 後宣稱通過。
         const callback = () => {
+            void this._applyTabRegions(route, routeMap);
             void this.switchLazySlot(route.slotId, route.fragment).then((ok) => {
                 if (!ok) {
                     console.warn(`[UIScreenPreviewHost] sidecar tabSwitch failed: ${actionId}`);
@@ -316,6 +396,47 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             slotId: route.slotId,
             fragment: route.fragment,
         });
+    }
+
+    /**
+     * Show the areas this tab owns outside its content slot (filling each from its fragment) and
+     * hide the ones it covers; areas other tabs own go back to hidden, hidden ones come back.
+     */
+    private async _applyTabRegions(route: TabRoute, routeMap: Map<string, TabRoute>): Promise<void> {
+        const shown = new Set((route.regions ?? []).map(region => region.mount));
+        const hidden = new Set(route.hides ?? []);
+        for (const other of new Set(routeMap.values())) {
+            for (const region of other.regions ?? []) {
+                if (!shown.has(region.mount)) this._setSourceAreaVisible(region.mount, false);
+            }
+            for (const id of other.hides ?? []) {
+                if (!hidden.has(id)) this._setSourceAreaVisible(id, true);
+            }
+        }
+        for (const id of hidden) this._setSourceAreaVisible(id, false);
+        for (const region of route.regions ?? []) {
+            this._setSourceAreaVisible(region.mount, true);
+            await this.switchLazySlot(region.mount, region.fragment);
+        }
+    }
+
+    private _setSourceAreaVisible(sourceId: string, visible: boolean): void {
+        const spec = this._findLayoutSpecById(sourceId);
+        const node = spec?.name ? this._binder?.getNode(spec.name) : null;
+        if (!node) return;
+        node.active = visible;
+        const opacity = node.getComponent(UIOpacity);
+        if (visible && opacity && opacity.opacity === 0) opacity.opacity = 255;
+    }
+
+    private _findLayoutSpecById(sourceId: string): UILayoutNodeSpec | null {
+        const stack = this._layoutRoot ? [this._layoutRoot] : [];
+        while (stack.length > 0) {
+            const spec = stack.pop()!;
+            if (spec.id === sourceId) return spec;
+            stack.push(...(spec.children ?? []));
+        }
+        return null;
     }
 
     private _resolveInteractionRoute(routeMap: Map<string, TabRoute>, target: string): TabRoute | undefined {
@@ -352,7 +473,8 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
     private async _loadDefaultFragments(screen: UIScreenSpec): Promise<void> {
         const previewFragments = screen.preview?.lazySlotFragments ?? {};
-        for (const entry of this._lazySlots.values()) {
+        // 同一插槽可能以節點名與 id 各登記一次，去重後再載入
+        for (const entry of new Set(this._lazySlots.values())) {
             const fragmentId = previewFragments[entry.spec.name] ?? entry.spec.defaultFragment;
             if (!fragmentId) {
                 continue;
@@ -390,4 +512,11 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             tags: ['UIScreenPreviewHost'],
         });
     }
+}
+
+/** Step for a relative pool target (pool.prev / pool-next / prev / next), or null for a route target. */
+export function poolCycleStep(target: string): number | null {
+    const match = /^(?:pool[-.])?(prev|next)$/.exec(String(target || '').trim());
+    if (!match) return null;
+    return match[1] === 'prev' ? -1 : 1;
 }

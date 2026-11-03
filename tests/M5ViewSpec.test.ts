@@ -206,7 +206,8 @@ export function createM5ViewSpecSuite(): TestSuite {
         const lead = readSpec<{ root: SpecNode & { id?: string } }>('layouts/lobby-lead-select-main.json');
         assert.isTrue(collectIds(lead.root, new Set()).has('btnOpenSortie'));
         const lobby = fs.readFileSync(path.resolve(__dirname, '../assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
-        assert.isTrue(lobby.includes("buttonId: 'btnOpenSortie'") && lobby.includes("'sortie-setup-screen'"));
+        const leadCtrl = fs.readFileSync(path.resolve(__dirname, '../assets/scripts/ui/core/LeadSelectController.ts'), 'utf8');
+        assert.isTrue(leadCtrl.includes("buttonId: 'btnOpenSortie'") && lobby.includes("'sortie-setup-screen'"));
         assert.isTrue(lobby.includes("'prisoner-popup-screen'") && lobby.includes('_openPrisonerPopupIfPending()'));
     });
 

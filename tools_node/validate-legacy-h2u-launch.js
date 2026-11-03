@@ -8,7 +8,7 @@ const vm = require('node:vm');
 const { runTaskStoreTruthPipeline } = require('./sync-atm-stabilization-milestone');
 const { runValidation: runH2uEvolutionValidation } = require('./validate-h2u-evolution-pilot');
 const { runRuleGuard } = require('./lib/html-to-ucuf/rule-guard');
-const { inspectH2uWorktreeIsolation } = require('./lib/h2u-worktree-isolation');
+const { inspectH2uWorktreeIsolation, readStatusSnapshotFromFile } = require('./lib/h2u-worktree-isolation');
 
 const ROOT = path.resolve(__dirname, '..');
 const WORKFLOW_ENTRY = path.join(ROOT, 'tools_node', 'run-html-to-ucuf-workflow.js');
@@ -23,13 +23,13 @@ const DEFAULT_CANONICAL_EVIDENCE = [
 const LOCAL_ATOMIC_EVIDENCE = [
   'atomic-registry.json',
   'atomic_workbench/atoms/ATM-CORE-0005/atom.source.mjs',
-  'atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs',
+  'atomic_workbench/atoms/ATM-CORE-0005/atom.test.ts',
   'atomic_workbench/atoms/ATM-CORE-0006/atom.source.mjs',
-  'atomic_workbench/atoms/ATM-CORE-0006/atom.test.mjs',
+  'atomic_workbench/atoms/ATM-CORE-0006/atom.test.ts',
   'atomic_workbench/atoms/ATM-CORE-0007/atom.source.mjs',
-  'atomic_workbench/atoms/ATM-CORE-0007/atom.test.mjs',
+  'atomic_workbench/atoms/ATM-CORE-0007/atom.test.ts',
   'atomic_workbench/maps/ATM-MAP-0003/map.spec.json',
-  'atomic_workbench/maps/ATM-MAP-0003/map.integration.test.mjs',
+  'atomic_workbench/maps/ATM-MAP-0003/map.integration.test.ts',
 ];
 const LOCAL_ATOMIC_IDS = ['ATM-CORE-0005', 'ATM-CORE-0006', 'ATM-CORE-0007', 'ATM-MAP-0003'];
 
@@ -82,6 +82,17 @@ function parseArgs(argv) {
       index += 1;
       if (value) {
         parsed.allowDirtyPrefixes.push(value);
+      }
+      continue;
+    }
+    // PR／release 模式由 CI 傳入「本 PR 變更清單」：這些檔就是本 lane 的改動，不算無關髒檔。
+    if (token === '--allow-dirty-list-file') {
+      const value = argv[index + 1] || '';
+      index += 1;
+      if (value) {
+        const snapshot = readStatusSnapshotFromFile(value, ROOT, 'allow-dirty-list-file');
+        if (!snapshot.ok) throw new Error(snapshot.error);
+        parsed.allowDirtyPrefixes.push(...snapshot.files);
       }
       continue;
     }

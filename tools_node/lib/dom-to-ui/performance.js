@@ -26,7 +26,6 @@ function analyzeLayout(layoutDraft) {
   const root = layoutRoot(layoutDraft);
   let nodeCount = 0;
   let deferredNodeCount = 0;
-  const _totalNodeCount = 0;
   let maxDepth = 0;
   let colorRectCount = 0;
   let lazySlotCount = 0;
@@ -34,7 +33,6 @@ function analyzeLayout(layoutDraft) {
 
   function walk(node, depth) {
     if (!node || typeof node !== 'object') return;
-    totalNodeCount += 1;
     nodeCount += 1;
     if (depth > maxDepth) maxDepth = depth;
     if (node.lazySlot === true) {

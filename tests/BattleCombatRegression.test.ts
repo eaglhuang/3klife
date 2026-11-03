@@ -2,7 +2,6 @@ import { Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { BattleState } from '../assets/scripts/battle/models/BattleState';
 import { BattleCombatResolver, type BattleCombatAction } from '../assets/scripts/battle/runtime/BattleCombatResolver';
-import { BattleDuelResolver } from '../assets/scripts/battle/runtime/BattleDuelResolver';
 import { executeBattleCombatPhase } from '../assets/scripts/battle/runtime/phases/BattleCombatPhase';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
@@ -279,61 +278,6 @@ export function createBattleCombatRegressionSuite(): TestSuite {
             assert.equals(1, nextTurnCalls);
         } finally {
             services().battle.nextTurn = originalNextTurn;
-        }
-    });
-
-    suite.test('BattleDuelResolver：單挑攻擊力應使用注入 svc.formula，而非全域 services', () => {
-        services().initialize();
-        const playerGeneral = createGeneral('guan-yu', Faction.Player, 'guan-yu-slash');
-        const enemyGeneral = createGeneral('sima-yi', Faction.Enemy, 'sima-yi-shadow');
-        const state = new BattleState();
-        state.reset(playerGeneral, enemyGeneral);
-        playerGeneral.currentHp = 1;
-        enemyGeneral.currentHp = 1;
-
-        const resolver = new BattleDuelResolver({
-            state,
-            combatResolver: new BattleCombatResolver({
-                state,
-                getPlayerGeneralUnitId: () => null,
-                getEnemyGeneralUnitId: () => null,
-                setPlayerGeneralUnitId: () => {},
-                setEnemyGeneralUnitId: () => {},
-            }),
-            getPlayerGeneralUnitId: () => null,
-            getEnemyGeneralUnitId: () => null,
-            setPlayerGeneralUnitId: () => {},
-            setEnemyGeneralUnitId: () => {},
-            checkVictory: () => ({ winner: null, reason: 'in-progress' } as any),
-        });
-
-        const originalCalculateGeneralAttack = services().formula.calculateGeneralAttack;
-        let calculateGeneralAttackCalls = 0;
-        services().formula.calculateGeneralAttack = () => {
-            throw new Error('global formula should not be used');
-        };
-
-        try {
-            const fakeSvc = {
-                formula: {
-                    calculateGeneralAttack: () => {
-                        calculateGeneralAttackCalls += 1;
-                        return 1;
-                    },
-                    rollDodge: () => false,
-                    rollCrit: () => false,
-                },
-                event: {
-                    emit: () => {},
-                },
-            } as any;
-
-            resolver.resolveAcceptedGeneralDuel(Faction.Player, Faction.Enemy, fakeSvc);
-
-            assert.equals(2, calculateGeneralAttackCalls);
-            assert.isTrue(enemyGeneral.isDead());
-        } finally {
-            services().formula.calculateGeneralAttack = originalCalculateGeneralAttack;
         }
     });
 

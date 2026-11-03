@@ -166,7 +166,7 @@ function testCloseoutH2uLiveRolloutBindings() {
     '--allow-dirty-prefix',
     'assets/resources/ui-spec/screens/legacy-h2u-dryrun.local-tokens.json',
     '--allow-dirty-prefix',
-    'assets/resources/ui-spec/screens/legacy-h2u-dryrun.readiness.json',
+    'ui-spec-evidence/screens/legacy-h2u-dryrun.readiness.json',
   ]);
   assert(parsed.strict === true, 'closeout parser should keep strict flag');
   assert(parsed.includeH2uLiveRollout === true, 'closeout parser should parse include-h2u-live-rollout');

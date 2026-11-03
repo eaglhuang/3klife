@@ -3,6 +3,7 @@ import { _decorator, Component } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { SceneName } from '../../core/config/Constants';
 import { ensureGlobalDevOverlay } from '../dev/GachaDevOverlay';
+import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 
 const { ccclass } = _decorator;
 
@@ -10,6 +11,7 @@ const { ccclass } = _decorator;
 export class LoginScene extends Component {
 
     start(): void {
+        installAdaptiveResolution();
         ensureGlobalDevOverlay();
     }
 

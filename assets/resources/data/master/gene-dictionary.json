@@ -100,6 +100,22 @@
       "defaultTags": ["rescue", "guard", "loyalty"]
     },
     {
+      "id": "gene_calm",
+      "displayName": "冷靜",
+      "color": "white",
+      "category": "personality",
+      "maxLevel": 3,
+      "defaultTags": ["calm", "resist", "morale"]
+    },
+    {
+      "id": "gene_fury",
+      "displayName": "暴躁",
+      "color": "white",
+      "category": "personality",
+      "maxLevel": 3,
+      "defaultTags": ["fury", "attack", "reckless"]
+    },
+    {
       "id": "gene_overpower",
       "displayName": "霸威",
       "color": "red",

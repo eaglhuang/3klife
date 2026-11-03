@@ -24,7 +24,7 @@
  */
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
-import { addOfficerExp, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
+import { addOfficerExp, BATTLE_MERIT_OFFICER_TASK, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
 import { canPlaceSandtableMarker, remainingSandtableMarkers } from '../systems/SandtableMarkers';
 import { buildStartingSpiritTalisman, normalizeStartingTalisman, type StartingSpiritTalisman, type TeachingSpiritInput } from '../systems/TeachingSpiritTalisman';
@@ -51,6 +51,9 @@ import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally'
 import { normalizeCountdownState, createCountdown, OPENING_TRAVEL_DURATION_MS, OPENING_TRAVEL_TARGET_ID, type CountdownState } from '../systems/CountdownManager';
 import { createTravelCountdown, normalizeTravelCountdown, tickTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { ageGeneralsOneSeason, AgingEvent, isGeneralDead, RandomSource } from '../systems/GeneralAging';
+import { applyWarInjury } from '../systems/WarInjury';
+import { settleStageSalvage } from '../systems/StageSalvageSettlement';
+import type { SalvageTotals } from '../systems/StrategistHud';
 import { applyActiveLifespanToRoster, ActiveLifespanResult, preLifespanBaseline } from '../systems/LifespanWiring';
 import { applyJobChangeToRoster, JobWiringGeneral } from '../systems/JobChangeWiring';
 import type { JobChangeResult, JobClass } from '../systems/JobChange';
@@ -244,6 +247,7 @@ import {
 } from '../systems/JournalLog';
 import type { DomesticTaskId } from '../systems/DomesticTasks';
 import { TRADE_RESOURCE_NAMES, tradeWithRival as tradeWithRivalPure, type TradeResult } from '../systems/RivalTrade';
+import { newAiHegemonOf } from '../systems/RivalHegemony';
 import { advanceRivalSeason, applyEraShift, autoResolveBattle, createRivalWorld, generalPower, nationDef, normalizeRivalWorld, type AutoBattleResult, type BattleGeneral, type RivalWorld } from '../systems/RivalNations';
 import {
     defaultKeepTerritories,
@@ -284,6 +288,8 @@ export const GAME_SESSION_EVENTS = {
     GeneralGrowthStage: 'game-session-general-growth-stage',
     /** payload: EraResetEvent（每 60 月一次；目前只發訊號，領土/外交/AI 重置待世界沙盤接入，TIME-10） */
     EraReset: 'game-session-era-reset',
+    /** payload: { nationId: string }（他國新成為霸主，G-1 稱霸提示，PROG-2-1710） */
+    RivalHegemonRose: 'game-session-rival-hegemon-rose',
     /** payload: UnveilingEvent（UI 在此播放血脈命鏡開獎演出，再讓玩家選宿命） */
     GeneralUnveiled: 'game-session-general-unveiled',
     /** payload: MentorCard */
@@ -389,6 +395,10 @@ export interface RecordBattleOptions {
     deployedTallyIds?: readonly string[];
     /** 武將 id → 戰鬥結束時的精力（已扣奧義成本）；結算以此為基準再扣戰後精力 */
     vitalityAfterBattle?: Readonly<Record<string, number>>;
+    /** 武將 id → 戰鬥結束時的血量比例（0~1）；重傷扣壽命上限（戰傷減損，PROG-2-1570） */
+    hpRatioAfterBattle?: Readonly<Record<string, number>>;
+    /** 本場戰場撿拾累計（Stage_Salvage）；勝利或平手時戰後一次入帳（PROG-2-1571） */
+    stageSalvage?: Readonly<SalvageTotals>;
     /** 英靈夢回教學戰的傳說英靈；勝利時產出初始虎符（OPEN-13），沒有時不做任何事 */
     teachingSpirit?: TeachingSpiritInput | null;
 }
@@ -1773,6 +1783,8 @@ export class GameSession {
     /** 季度推進：勢力成長、邦交回歸；來犯的勢力用名冊前 3 強自動迎戰 */
     private _tickRivals(): AutoBattleResult[] {
         // 玩家金幣不在 GameSession 內（錢包由呼叫端持有），RAI-05 暫傳 0（暫定）
+        const holdersOf = (w: typeof this._rivals) => [...w.nations.map((n) => ({ id: n.id, territories: n.territories })), { id: 'player', territories: this._territories.length }];
+        const beforeHolders = holdersOf(this._rivals);
         const tick = advanceRivalSeason(this._rivals, this._random, { troops: this._military.cityTroops, food: this._military.food, gold: 0, territories: this._territories.length });
         let world = tick.world;
         const battles: AutoBattleResult[] = [];
@@ -1785,6 +1797,8 @@ export class GameSession {
         }
         // RAI-12：年度天下大亂評估；玩家領土數取守城領地清單長度
         this._rivals = applyEraShift(world, this._clock.state.totalSeasonsElapsed, this._territories.length);
+        const risen = newAiHegemonOf(beforeHolders, holdersOf(this._rivals), 'player');
+        if (risen) this._emit(GAME_SESSION_EVENTS.RivalHegemonRose, { nationId: risen });
         return battles;
     }
 
@@ -3701,6 +3715,13 @@ export class GameSession {
         const firstClear = result === 'player-win' && !this._firstBattleCleared;
         if (firstClear) this._firstBattleCleared = true;
         const tallyChanged = this._settleTallyBattleExp(options.deployedTallyIds ?? [], result);
+        // 戰功入帳官職經驗（官職系統 E-2，PROG-2-1619 暫定）：正式勝敗以「一般難度軍事任務」計，勝 19、敗 7
+        let officerChanged = false;
+        if (result === 'player-win' || result === 'enemy-win') {
+            const promoted = this.gainOfficerExp({ ...BATTLE_MERIT_OFFICER_TASK, success: result === 'player-win' });
+            officerChanged = true;
+            if (promoted.length > 0) this._emit(GAME_SESSION_EVENTS.OfficerPromoted, { tiers: promoted });
+        }
         if (result === 'player-win' || result === 'enemy-win') {
             this.recordPlayerLog(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE');
             this._recordEventJournal(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE', this._journalSubjects(deployedIds));
@@ -3727,7 +3748,7 @@ export class GameSession {
         this._inventory = grantTacticNotes(this._inventory, milestoneRewards);
         this._recordGain(beforeMilestone, 'TASK');
         if (settlement.entries.length === 0) {
-            if ((clearChanged || firstClear || tallyChanged || comradeChanged || mercenaryChanged) && this._autoSave && this._save) {
+            if ((clearChanged || firstClear || tallyChanged || comradeChanged || mercenaryChanged || officerChanged) && this._autoSave && this._save) {
                 await this.save();
             }
             if (firstClear) this._emit(GAME_SESSION_EVENTS.FirstBattleCleared, undefined);
@@ -3745,6 +3766,16 @@ export class GameSession {
             }
         }
 
+        // 戰場撿拾戰後入帳（關卡設計 §I-2，PROG-2-1571）：補給轉糧草、其餘轉背包材料，戰敗不入帳
+        if (options.stageSalvage) {
+            const beforeSalvage = this._inventory;
+            const salvage = settleStageSalvage(options.stageSalvage, result !== 'enemy-win',
+                this._military.food, this._military.foodCap, this._inventory);
+            this._military = { ...this._military, food: salvage.food };
+            this._inventory = salvage.inventory;
+            this._recordGain(beforeSalvage, 'TASK');
+        }
+
         const source = battleExpSource(result);
         const discovery = source ? this._applyDiscoveryExp(source) : undefined;
         const special = new Set(options.specialActionIds ?? []);
@@ -3757,6 +3788,11 @@ export class GameSession {
             const entry = settlement.entries.find((e) => e.generalId === g.id);
             return entry ? awakenHiddenFactors(g, entry.newMilestones) : g;
         });
+        // 戰傷減損（武將壽命系統 §E-1，PROG-2-1570）：重傷的出陣武將壽命上限扣 1 年
+        const hpRatios = options.hpRatioAfterBattle;
+        if (hpRatios) {
+            roster = roster.map((g) => (g.id in hpRatios ? applyWarInjury(g, hpRatios[g.id]) : g));
+        }
         for (const entry of settlement.entries) {
             const index = roster.findIndex((g) => g.id === entry.generalId);
             const actions = options.specialActions?.[entry.generalId] ?? [];

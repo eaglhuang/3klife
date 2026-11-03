@@ -28,7 +28,7 @@ verification_commands:
 docs_backwritten:
   - docs/遊戲規格文件/系統規格書/戰法系統.md (doc_spec_0038)
   - docs/主戰場UI規格書.md (doc_ui_0001)
-notes: "把 condition / reaction / link 收斂到統一觸發管線，避免每招各自偷偷改 turn state。2026-04-16 已完成：TLINK/TCOUNTER/TRESET 第一版 runtime 已落地；TSTEALTH（AmbushAttack）已實作前 2 回合隱匿規則；G-1 虎符完整版（火計連環、幼麒天算、連環計、結姻連射、威震華夏、七進七出）規格完整對位與 Editor/smoke 驗收待補。"
+notes: "2026-10-31 | 狀態: open | 驗證: 程式審核 | 變更: Link／Counter／Reset resolver 已存在；水路伏擊走 G-5 tactic-library（TacticConditionData 測試） | 阻塞: 卡上畫面表演驗收需人工實機確認"
 ---
 
 # [SYS-SKILL-TAC-0004] 戰法反應連鎖條件模組包

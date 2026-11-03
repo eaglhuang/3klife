@@ -78,7 +78,7 @@ These switches always mean `debugOnly=true` and cannot produce a formal pass ver
 4. Optimize layout and auto-fix skin without falling back to old skins.
 5. Run final replay from the source-derived output.
 6. Replay each tab and write fragment JSON for tabbed sources.
-7. Sync final layout/skin/screen into `assets/resources/ui-spec`.
+7. Sync final layout/skin/screen into `assets/resources/ui-spec`; conversion evidence sidecars (r-guard, visual-review, readiness, bake-manifest, ...) go to `ui-spec-evidence/` at the same sub-path (see `tools_node/lib/ui-spec-sidecars.json`).
 8. Run Plan 4.1 rule guard.
 9. Run current-roadmap governance checks when touching workflow/converter/runtime/final-gate logic.
 10. Run visual fidelity risk checks for semantic, background, and composite fidelity.

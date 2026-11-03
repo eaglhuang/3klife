@@ -312,6 +312,20 @@
       },
       "$note": "512×768 立繪；蜀國機巧女匠，竹葉綠袍與簡潔髮飾，人工檢視臉部定位"
     },
+    "huang-yue-ying": {
+      "x": 182,
+      "y": 66,
+      "w": 197,
+      "h": 197,
+      "source": "reviewed",
+      "face": {
+        "top": 110,
+        "chin": 185,
+        "eyeY": 145,
+        "cx": 280
+      },
+      "$note": "沿用黃月英既有經人工檢視的裁切；canonical general id 為 huang-yue-ying"
+    },
     "cai-wenji": {
       "x": 219,
       "y": 57,
@@ -525,6 +539,590 @@
         "cx": 260
       },
       "$note": "512×768 立繪；中立隱士長者、白鬚、灰梅紫文士袍，人工檢視臉部定位"
+    },
+    "wang-yi": {
+      "x": 146,
+      "y": 0,
+      "w": 220,
+      "h": 220,
+      "source": "reviewed"
+    },
+    "xi-zhi-cai": {
+      "x": 151,
+      "y": -52,
+      "w": 295,
+      "h": 295,
+      "source": "reviewed",
+      "face": {
+        "top": 12,
+        "chin": 124,
+        "eyeY": 66,
+        "cx": 298
+      }
+    },
+    "mao-jie": {
+      "x": 123,
+      "y": -46,
+      "w": 279,
+      "h": 279,
+      "source": "reviewed",
+      "face": {
+        "top": 20,
+        "chin": 126,
+        "eyeY": 66,
+        "cx": 262
+      }
+    },
+    "lu-su": {
+      "x": 131,
+      "y": -24,
+      "w": 250,
+      "h": 250,
+      "source": "reviewed",
+      "face": {
+        "top": 34,
+        "chin": 129,
+        "eyeY": 76,
+        "cx": 256
+      }
+    },
+    "huo-yi": {
+      "x": 135,
+      "y": -30,
+      "w": 250,
+      "h": 250,
+      "source": "reviewed",
+      "face": {
+        "top": 29,
+        "chin": 124,
+        "eyeY": 70,
+        "cx": 260
+      }
+    },
+    "liao-li": {
+      "x": 146,
+      "y": -25,
+      "w": 232,
+      "h": 232,
+      "source": "reviewed",
+      "face": {
+        "top": 35,
+        "chin": 123,
+        "eyeY": 68,
+        "cx": 262
+      }
+    },
+    "du-qiong": {
+      "x": 140,
+      "y": -23,
+      "w": 226,
+      "h": 226,
+      "source": "reviewed",
+      "face": {
+        "top": 27,
+        "chin": 113,
+        "eyeY": 67,
+        "cx": 253
+      }
+    },
+    "fei-guan": {
+      "x": 145,
+      "y": -29,
+      "w": 237,
+      "h": 237,
+      "source": "reviewed",
+      "face": {
+        "top": 28,
+        "chin": 118,
+        "eyeY": 66,
+        "cx": 263
+      }
+    },
+    "luo-xian": {
+      "x": 140,
+      "y": -27,
+      "w": 239,
+      "h": 239,
+      "source": "reviewed",
+      "face": {
+        "top": 34,
+        "chin": 125,
+        "eyeY": 69,
+        "cx": 259
+      }
+    },
+    "jiang-wan": {
+      "x": 139,
+      "y": -27,
+      "w": 242,
+      "h": 242,
+      "source": "reviewed",
+      "face": {
+        "top": 28,
+        "chin": 120,
+        "eyeY": 70,
+        "cx": 260
+      }
+    },
+    "gou-fu": {
+      "x": 131,
+      "y": -25,
+      "w": 258,
+      "h": 258,
+      "source": "reviewed",
+      "face": {
+        "top": 30,
+        "chin": 128,
+        "eyeY": 78,
+        "cx": 260
+      }
+    },
+    "liu-chen": {
+      "x": 158,
+      "y": -36,
+      "w": 205,
+      "h": 205,
+      "source": "reviewed",
+      "face": {
+        "top": 8,
+        "chin": 86,
+        "eyeY": 46,
+        "cx": 260
+      }
+    },
+    "zhu-bao": {
+      "x": 182,
+      "y": -38,
+      "w": 224,
+      "h": 224,
+      "source": "reviewed",
+      "face": {
+        "top": 18,
+        "chin": 103,
+        "eyeY": 52,
+        "cx": 294
+      }
+    },
+    "li-hui": {
+      "x": 202,
+      "y": -4,
+      "w": 216,
+      "h": 216,
+      "source": "reviewed",
+      "face": {
+        "top": 47,
+        "chin": 129,
+        "eyeY": 82,
+        "cx": 310
+      }
+    },
+    "chen-zhi": {
+      "x": 170,
+      "y": 61,
+      "w": 168,
+      "h": 168,
+      "source": "reviewed",
+      "face": {
+        "top": 100,
+        "chin": 164,
+        "eyeY": 128,
+        "cx": 254
+      }
+    },
+    "zhang-yi-shu": {
+      "x": 130,
+      "y": 0,
+      "w": 240,
+      "h": 240,
+      "source": "reviewed"
+    },
+    "fu-tong": {
+      "x": 185,
+      "y": 0,
+      "w": 240,
+      "h": 240,
+      "source": "reviewed"
+    },
+    "ma-liang": {
+      "x": 185,
+      "y": 0,
+      "w": 180,
+      "h": 180,
+      "source": "reviewed"
+    },
+    "guan-suo": {
+      "x": 199,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed"
+    },
+    "yu-fan": {
+      "x": 199,
+      "y": 0,
+      "w": 220,
+      "h": 220,
+      "source": "reviewed"
+    },
+    "chen-wu": {
+      "x": 197,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed"
+    },
+    "sun-yi": {
+      "x": 213,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed"
+    },
+    "zhu-ji": {
+      "x": 177,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed"
+    },
+    "quan-cong": {
+      "x": 193,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed"
+    },
+    "lv-dai": {
+      "x": 203,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed"
+    },
+    "hu-zun": {
+      "x": 166,
+      "y": 82,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed"
+    },
+    "wang-ji": {
+      "x": 160,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed"
+    },
+    "sun-li": {
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed"
+    },
+    "wang-hun": {
+      "x": 146,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed"
+    },
+    "wen-qin": {
+      "x": 185,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed"
+    },
+    "gongsun-yuan": {
+      "x": 180,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 18,
+        "chin": 150,
+        "eyeY": 82,
+        "cx": 290
+      }
+    },
+    "mu-lu-da-wang": {
+      "x": 158,
+      "y": 14,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 28,
+        "chin": 155,
+        "eyeY": 91,
+        "cx": 258
+      }
+    },
+    "e-huan": {
+      "x": 160,
+      "y": 10,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 25,
+        "chin": 165,
+        "eyeY": 95,
+        "cx": 260
+      }
+    },
+    "sha-mo-ke": {
+      "x": 168,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 25,
+        "chin": 175,
+        "eyeY": 98,
+        "cx": 270
+      }
+    },
+    "mi-heng": {
+      "x": 166,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 25,
+        "chin": 155,
+        "eyeY": 86,
+        "cx": 266
+      }
+    },
+    "tian-chou": {
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 20,
+        "chin": 170,
+        "eyeY": 96,
+        "cx": 258
+      }
+    },
+    "guan-ning": {
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 28,
+        "chin": 140,
+        "eyeY": 70,
+        "cx": 256
+      }
+    },
+    "zuo-ci": {
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 20,
+        "chin": 95,
+        "eyeY": 57,
+        "cx": 256
+      }
+    },
+    "yu-ji": {
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 20,
+        "chin": 138,
+        "eyeY": 74,
+        "cx": 258
+      }
+    },
+    "liu-ba": {
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 24,
+        "chin": 128,
+        "eyeY": 75,
+        "cx": 258
+      }
+    },
+    "qin-mi": {
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 20,
+        "chin": 126,
+        "eyeY": 77,
+        "cx": 258
+      }
+    },
+    "yi-ji": {
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 15,
+        "chin": 128,
+        "eyeY": 74,
+        "cx": 256
+      }
+    },
+    "fei-shi": {
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 14,
+        "chin": 126,
+        "eyeY": 73,
+        "cx": 256
+      }
+    },
+    "zhang-nan": {
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 82,
+        "chin": 147,
+        "eyeY": 114,
+        "cx": 258
+      }
+    },
+    "fu-shou": {
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 26,
+        "chin": 145,
+        "eyeY": 82,
+        "cx": 260
+      }
+    },
+    "sun-sheng": {
+      "x": 176,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 35,
+        "chin": 136,
+        "eyeY": 88,
+        "cx": 284
+      }
+    },
+    "wei-zhao": {
+      "x": 126,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 64,
+        "chin": 146,
+        "eyeY": 99,
+        "cx": 260
+      }
+    },
+    "xue-zong": {
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed",
+      "face": {
+        "top": 55,
+        "chin": 138,
+        "eyeY": 91,
+        "cx": 265
+      }
+    },
+    "zhu-yi": {
+      "x": 184,
+      "y": -10,
+      "w": 172,
+      "h": 172,
+      "source": "reviewed"
+    },
+    "pan-jun": {
+      "x": 182,
+      "y": -8,
+      "w": 175,
+      "h": 175,
+      "source": "reviewed"
+    },
+    "lv-kai": {
+      "x": 176,
+      "y": -12,
+      "w": 205,
+      "h": 205,
+      "source": "reviewed"
+    },
+    "chen-dao": {
+      "x": 163,
+      "y": -16,
+      "w": 239,
+      "h": 239,
+      "source": "reviewed"
+    },
+    "wu-ban": {
+      "x": 190,
+      "y": -13,
+      "w": 217,
+      "h": 217,
+      "source": "reviewed"
+    },
+    "sun-hao": {
+      "x": 163,
+      "y": -13,
+      "w": 210,
+      "h": 210,
+      "source": "reviewed"
+    },
+    "sun-shang-xiang": {
+      "x": 104,
+      "y": -12,
+      "w": 223,
+      "h": 223,
+      "source": "reviewed"
+    },
+    "cai-yan": {
+      "x": 180,
+      "y": -3,
+      "w": 136,
+      "h": 136,
+      "source": "reviewed"
     }
   }
 }

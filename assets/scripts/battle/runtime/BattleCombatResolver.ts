@@ -1,4 +1,5 @@
 // @spec-source → 戰場部署系統.md (doc_spec_0040)、demo_技術架構.md (doc_tech_0015)、戰場適性系統.md (doc_spec_0041)；PROG-2-1429 依建檔紀錄補標出處
+import { calmAdjustedAura, calmReductionOf, furyModifiersOf } from '../../core/systems/WhiteFactorTraits';
 import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER, Weather } from '../../core/config/Constants';
 import { aiSpGainPerKill } from '../../core/systems/AiSpCharge';
 import { comboChanceOfPair } from '../../core/systems/ComboAttackKin';
@@ -8,28 +9,40 @@ import type { TroopUnit } from '../../core/models/TroopUnit';
 import { fieldTallySetMods, type TallySetMember } from '../../core/systems/TigerTallySetBonus';
 import type { BattleState } from '../models/BattleState';
 import { BattleTurnManager } from './BattleTurnManager';
-import { resolveBattleTacticBehavior } from '../shared/BattleTacticBehavior';
+import { resolveBattleTacticBehavior, sceneDefenseMultiplierOf, sceneLadderDefenseBypassOf } from '../shared/BattleTacticBehavior';
 import { canTargetUnderStealth, isHiddenOnTile, isRangedAttack } from '../shared/StealthTile';
 import { weatherRangedHitDelta, weatherRangedRangeDelta } from '../../core/systems/WeatherTacticRestriction';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
+import { massDebuffAccuracyDelta, massDebuffAttackMultiplier, massDebuffCritDelta, massDebuffDamageTakenMultiplier } from '../shared/EnemyMassDebuff';
+import { TEAM_AURA_DEBUFF_EFFECTS, applyTeamAuraToDamage, teamAuraAccuracyDelta, teamAuraAttackMultiplier, teamAuraCounterRate, teamAuraDefenseMultiplier, teamAuraVsDebuffedMultiplier } from '../shared/TeamAura';
+import { consumeSelfBurstExtraAction, selfBurstAttackMultiplier, selfBurstBlocksEffect, selfBurstCritBonus } from '../shared/SelfBurstWindow';
 import {
   extraAttackHitsOf,
+  advanceTallyCombo,
+  tallyComboDamageMultiplierOf,
   tallyAttackMultiplierOf,
   tallyBackRowDamageMultiplierOf,
   tallyDefenseMultiplierOf,
+  tallyRearguardDefenseMultiplierOf,
   tallyDefensePenetrationOf,
   tallyEnemyAuraAttackMultiplierOf,
   tallyEvasionBonusOf,
+  tallyEvadeCounterRatioOf,
   tallyPhysicalDamageTakenOf,
   tallyTroopTypeDamageMultiplierOf,
   applyFearCharge,
+  tallySplashTargetsOf,
+  tallyDamageGuardOf,
+  tallyIgniteCellsOf,
+  tallyDeathConfusionOf,
 } from '../shared/TallyPassive';
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import { tacticTriggerRate } from '../../core/systems/TacticTriggerRate';
-import { tileStateRuleOf } from '../shared/TileStateRules';
+import { isFixedTileState, tileStateRuleOf } from '../shared/TileStateRules';
+import { FIRE_HAZARD_DAMAGE_PER_TURN } from '../skills/SkillEffectFormulas';
 import {
   canNavalCombinedAttack,
   hasNavalAptitude,
@@ -55,6 +68,9 @@ export interface BattleCombatResolverContext {
   relationsBetween?(attackerId: string, helperId: string): readonly HistoricalRelation[];
 }
 
+/** 堅盾（靈感戰法，PROG-2-1600 暫定）：防禦 ×1.2 */
+export const FORTIFIED_DEFENSE_MULTIPLIER = 1.2;
+
 export class BattleCombatResolver {
   /** 命中判定用亂數；測試可換成固定序列（PROG-2-0080） */
   /** 命中與暴擊的擲骰走戰場種子亂數源（Q25），不用 Math.random */
@@ -66,7 +82,10 @@ export class BattleCombatResolver {
   /** 虎符部隊的攻擊乘數：星級 × 同陣營在場 Set 的攻擊加成（PROG-2-0574）× 被動地形加成（PROG-2-1433）；非虎符單位恆為 1 */
   public getTallyAttackMod(unit: TroopUnit): number {
     // 錦帆恐懼光環（PROG-2-1457）：周圍有帶光環的敵方虎符部隊時，任何部隊（含非虎符）攻擊下降
-    const aura = tallyEnemyAuraAttackMultiplierOf(unit, this.context.state.units.values());
+    // 白色因子（PROG-2-1586 暫定）：主將冷靜減輕恐懼懲罰、暴躁攻擊 +3%/級，對全隊生效
+    const genes = this.context.state.getGeneral?.(unit.faction)?.genes;
+    const aura = calmAdjustedAura(tallyEnemyAuraAttackMultiplierOf(unit, this.context.state.units.values()), genes)
+      * furyModifiersOf(genes).attack;
     if (!unit.tallyId) return aura;
     // 虎符被動攻擊加成（解煩／丹陽／吳國，PROG-2-1433）：依部隊所站地形判定
     const terrain = this.context.state.getCell(unit.lane, unit.depth)?.terrain ?? TerrainType.Plain;
@@ -77,7 +96,8 @@ export class BattleCombatResolver {
   public getTallyPhysicalDamageMod(attacker: TroopUnit, defender: TroopUnit): number {
     return tallyBackRowDamageMultiplierOf(attacker, defender)
       * tallyTroopTypeDamageMultiplierOf(attacker, defender)
-      * tallyPhysicalDamageTakenOf(defender);
+      * tallyPhysicalDamageTakenOf(defender)
+      * tallyComboDamageMultiplierOf(attacker, defender);
   }
 
   private applyTallyPhysicalDamageMod(damage: number, attacker: TroopUnit, defender: TroopUnit): number {
@@ -87,8 +107,13 @@ export class BattleCombatResolver {
 
   /** 虎符部隊的防禦乘數：星級 × 同陣營在場 Set 的防禦加成（PROG-2-0574）× 被動防禦乘數（虎痴符，PROG-2-1444）；非虎符單位恆為 1 */
   public getTallyDefenseMod(unit: TroopUnit): number {
-    if (!unit.tallyId) return 1;
-    return unit.tallyStarMultiplier * this.tallySetMods(unit.faction).defMod * tallyDefenseMultiplierOf(unit);
+    // 暴躁（PROG-2-1586 暫定）：防禦 −3%/級，對全隊生效
+    const furyBase = furyModifiersOf(this.context.state.getGeneral?.(unit.faction)?.genes).defense;
+    const fury = furyBase * sceneDefenseMultiplierOf(unit, this.context.state)
+      * (services().buff.hasBuff(unit.id, StatusEffect.Fortified) ? FORTIFIED_DEFENSE_MULTIPLIER : 1);
+    if (!unit.tallyId) return fury;
+    return fury * unit.tallyStarMultiplier * this.tallySetMods(unit.faction).defMod * tallyDefenseMultiplierOf(unit)
+      * tallyRearguardDefenseMultiplierOf(unit, this.context.state.units.values());
   }
 
   private tallySetMods(faction: Faction): { atkMod: number; defMod: number } {
@@ -213,7 +238,9 @@ export class BattleCombatResolver {
     // 結姻連射（PROG-2-0775）：攻擊次數 = 1 + 額外次數；每一下都是完整的命中、傷害、反擊解算
     const hits = 1 + extraAttackHitsOf(attacker, this.isAdjacentToMaleGeneral(attacker));
     // 恐懼衝鋒（鐵騎，PROG-2-1514）：每次發動攻擊時周圍敵軍士氣扣減
-    applyFearCharge(attacker, this.context.state.units.values());
+    applyFearCharge(attacker, this.context.state.units.values(), (u) => 1 - calmReductionOf(this.context.state.getGeneral?.(u.faction)?.genes));
+    // 工甲連弩（PROG-2-1581）：連續攻擊同一目標累積連擊層數
+    advanceTallyCombo(attacker, defender);
     for (let hit = 0; hit < hits; hit += 1) {
       if (attacker.isDead() || defender.isDead()) return;
       this.resolveHit(attacker, defender, svc);
@@ -245,7 +272,11 @@ export class BattleCombatResolver {
     // 常山女迴避（PROG-2-1457）：防守方虎符迴避加成再降低命中率
     // 天氣強約束（PROG-2-1460）：遠程攻擊命中雨 -20%／霧 -30%／夜 -25%；夜襲場景已有全局 -25%，夜戰不再疊加（暫定）
     const weatherAccuracy = this.getWeatherRangedHitDelta(attacker);
-    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth - defenderEvasion - tallyEvasionBonusOf(defender) + sceneAccuracy + weatherAccuracy;
+    const attackerAccuracy = this.getUnitAptitude(attacker).accuracyDelta - defenderStealth - defenderEvasion - tallyEvasionBonusOf(defender) + sceneAccuracy + weatherAccuracy
+      // 全隊增益條件型命中（孫權坐斷東南，SYS-SKILL-ULT-0002）
+      + teamAuraAccuracyDelta(this.context.state.getTeamAura(attacker.faction), attacker.type)
+      // 敵方全體減益命中下降（貂蟬貂影惑心，SYS-SKILL-ULT-0004）
+      + massDebuffAccuracyDelta(this.context.state.getMassDebuff(attacker.faction));
     // 大霧免疫（PROG-2-0584）：大霧天氣下攻擊方有此效果時命中必中，略過擲骰
     const fogGuaranteed = isFogHitGuaranteed(this.context.state.weather, attacker.factorEffects);
     if (!fogGuaranteed && !rollHit(attackerAccuracy, this.hitRandom)) {
@@ -254,14 +285,22 @@ export class BattleCombatResolver {
         targetId: defender.id,
         hitRate: hitRateOf(attackerAccuracy),
       });
+      this.tryTallyEvadeCounter(defender, attacker, svc);
       return;
     }
 
     // 盾牆：防禦力加倍
-    const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender) * (1 - tallyDefensePenetrationOf(attacker));
+    const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender) * (1 - tallyDefensePenetrationOf(attacker))
+      // 雲梯（攻城戰，PROG-2-1597）：我方步兵攀城，抵銷城牆地利
+      * sceneLadderDefenseBypassOf(attacker, defender, this.context.state)
+      // 全隊增益 aura 防禦倍率（SYS-SKILL-ULT-0002）
+      * teamAuraDefenseMultiplier(this.context.state.getTeamAura(defender.faction));
 
+    const attackerBurst = this.context.state.getSelfBurst(attacker.faction);
     let damage = svc.formula.calculateDamage({
-      attackerAttack: attacker.getEffectiveAttack() * this.getTallyAttackMod(attacker),
+      attackerAttack: attacker.getEffectiveAttack() * this.getTallyAttackMod(attacker) * selfBurstAttackMultiplier(attackerBurst)
+        * teamAuraAttackMultiplier(this.context.state.getTeamAura(attacker.faction))
+        * massDebuffAttackMultiplier(this.context.state.getMassDebuff(attacker.faction)),
       defenderDefense: effectiveDef,
       attackerType: attacker.type,
       defenderType: defender.type,
@@ -288,10 +327,18 @@ export class BattleCombatResolver {
     }
 
     // 暴擊（SCN-06）：基礎 5% + 場景加成，暴擊時傷害 ×1.5；擲骰走戰場亂數源
-    const critRate = critRateOf(tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0);
+    const critRate = critRateOf((tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0) + selfBurstCritBonus(attackerBurst)
+      + massDebuffCritDelta(this.context.state.getMassDebuff(attacker.faction)));
     if (rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);
     }
+    // 全隊增益條件型增傷（郭嘉十勝定論，SYS-SKILL-ULT-0002）：目標身上有負面狀態才生效
+    const defenderDebuffed = TEAM_AURA_DEBUFF_EFFECTS.some((effect) => svc.buff.hasBuff(defender.id, effect));
+    damage = Math.floor(damage * teamAuraVsDebuffedMultiplier(this.context.state.getTeamAura(attacker.faction), defenderDebuffed));
+    // 敵方全體減益易傷（郭嘉奉孝天機崩解，SYS-SKILL-ULT-0004）
+    damage = Math.floor(damage * massDebuffDamageTakenMultiplier(this.context.state.getMassDebuff(defender.faction)));
+    // 全隊增益減傷（SYS-SKILL-ULT-0002）：護盾尚未接，先只套減傷
+    damage = Math.max(1, applyTeamAuraToDamage(this.context.state.getTeamAura(defender.faction), damage, 0).hpDamage);
 
     this.applyUnitDamage(defender, damage, attacker.faction, {
       attackerId: attacker.id,
@@ -300,12 +347,52 @@ export class BattleCombatResolver {
       damageSource: damageAdjustment.damageSource,
       allowDamageLink: true,
     });
+    this.resolveTallySplash(attacker, defender, damage, svc);
+    this.resolveTallyIgnite(attacker, defender);
 
     if (!defender.isDead()) {
       this.tryTriggerCounterReaction(defender, attacker, svc);
     }
     this.resolveNavalCombinedFollowUp(attacker, defender, svc);
     this.resolveKinComboFollowUp(attacker, defender, svc);
+  }
+
+  /** 都督符火燒連營（PROG-2-1531）：目標及周圍格設為火場；固定地形格不覆蓋（同技能火場） */
+  private resolveTallyIgnite(attacker: TroopUnit, defender: TroopUnit): void {
+    const state = this.context.state;
+    for (const cell of tallyIgniteCellsOf(attacker, defender)) {
+      const existing = state.getTileEffect(cell.lane, cell.depth);
+      if (existing && isFixedTileState(existing.state)) continue;
+      state.setTileEffect({
+        id: `tally-fire-${cell.lane}-${cell.depth}`,
+        lane: cell.lane,
+        depth: cell.depth,
+        state: 'hazard-fire',
+        damagePerTurn: FIRE_HAZARD_DAMAGE_PER_TURN,
+        notes: 'tally:du-du-fu',
+      });
+    }
+  }
+
+  /** 南蠻巨型踐踏濺射（PROG-2-1527）：目標周圍敵軍受主傷害比例傷害，不反擊、不連結；打死照常結算 */
+  private resolveTallySplash(attacker: TroopUnit, defender: TroopUnit, damage: number, svc: ReturnType<typeof services>): void {
+    const { targets, ratio } = tallySplashTargetsOf(attacker, defender, this.context.state.units.values());
+    for (const target of targets) {
+      this.applyUnitDamage(target, Math.max(1, Math.floor(damage * ratio)), attacker.faction, {
+        attackerId: attacker.id,
+        attackerLane: attacker.lane,
+        attackerDepth: attacker.depth,
+        damageSource: 'tally-splash',
+        allowDamageLink: false,
+      });
+      if (!target.isDead()) continue;
+      if (target.id === this.context.getPlayerGeneralUnitId()) {
+        this.onGeneralUnitKilled(Faction.Player, svc);
+      } else if (target.id === this.context.getEnemyGeneralUnitId()) {
+        this.onGeneralUnitKilled(Faction.Enemy, svc);
+      }
+      this.onUnitKilled(target, attacker, svc);
+    }
   }
 
   /**
@@ -389,6 +476,7 @@ export class BattleCombatResolver {
     didKill: boolean,
     actions: BattleCombatAction[],
   ): void {
+    this.resolveSelfBurstExtraAction(attacker, actions);
     const actionReset = this.context.state.getActionReset(attacker.id);
     if (!actionReset) {
       return;
@@ -420,6 +508,16 @@ export class BattleCombatResolver {
     }
 
     this.context.state.setActionReset(nextState);
+  }
+
+  /** 自身爆發再行動（SYS-SKILL-ULT-0001）：窗口內首位出手者追加一次攻擊，次數用完不再連鎖 */
+  private resolveSelfBurstExtraAction(attacker: TroopUnit, actions: BattleCombatAction[]): void {
+    if (attacker.isDead() || !this.context.state.getSelfBurst) return;
+    const consumed = consumeSelfBurstExtraAction(this.context.state.getSelfBurst(attacker.faction));
+    if (!consumed.allowed) return;
+    this.context.state.setSelfBurst(attacker.faction, consumed.window);
+    const followUpAction = this.buildAttackAction(attacker, { ignoreDeadOccupants: true });
+    if (followUpAction) actions.push(followUpAction);
   }
 
   public advanceAfterKill(attacker: TroopUnit, svc: ReturnType<typeof services>): void {
@@ -466,11 +564,20 @@ export class BattleCombatResolver {
       attackerDepth: number | null;
       damageSource?: string;
       allowDamageLink: boolean;
+      /** 已被代為承傷轉移過，不再轉移（PROG-2-1530） */
+      skipGuard?: boolean;
     },
   ): void {
     const svc = services();
     // 無敵（白馬銀槍·不滅，PM 裁定）：有無敵狀態的單位本次結算傷害歸零，不扣血、不發傷害事件
     if (svc.buff.hasBuff(unit.id, StatusEffect.Invincible)) return;
+    // 代為承傷（白耳護主將 PROG-2-1529、惡來護友軍 PROG-2-1530）：改由相鄰護衛承受，護衛陣亡照常結算
+    const guard = options.skipGuard ? null : tallyDamageGuardOf(unit, this.context.state.units.values(), () => this.isGeneralUnit(unit.id));
+    if (guard) {
+      this.applyUnitDamage(guard, damage, attackerFaction, { ...options, damageSource: 'tally-guard', skipGuard: true });
+      if (guard.isDead()) this.onUnitKilled(guard, null, svc);
+      return;
+    }
     unit.takeDamage(damage);
     svc.event.emit(EVENT_NAMES.UnitDamaged, {
       unitId: unit.id,
@@ -554,6 +661,15 @@ export class BattleCombatResolver {
     svc.buff.clearUnit(unit.id);
     clearMorale(unit);
     svc.event.emit(EVENT_NAMES.UnitDied, { unitId: unit.id, lane, depth, faction, type });
+    // 遺計定遼（奉孝符，PROG-2-1572）：陣亡時全場敵軍混亂（暈眩）
+    const confusion = tallyDeathConfusionOf(unit, this.context.state.units.values());
+    if (confusion) {
+      for (const target of confusion.targets) {
+        if (selfBurstBlocksEffect(this.context.state.getSelfBurst(target.faction), StatusEffect.Stun)) continue;
+        svc.buff.applyBuff(target.id, StatusEffect.Stun, confusion.turns);
+        target.isShieldWallActive = false;
+      }
+    }
 
     if (killer) {
       const general = this.context.state.getGeneral(killer.faction);
@@ -708,6 +824,39 @@ export class BattleCombatResolver {
     return unit.faction === Faction.Player ? 1 : -1;
   }
 
+  /** 閃避後反擊（龍膽符七進七出，PROG-2-1595）：攻擊落空且攻方在守方射程內時回擊一次；不擲命中、不連結 */
+  private tryTallyEvadeCounter(defender: TroopUnit, attacker: TroopUnit, svc: ReturnType<typeof services>): void {
+    const ratio = tallyEvadeCounterRatioOf(defender);
+    if (ratio <= 0 || defender.isDead() || attacker.isDead()) return;
+    const distance = Math.abs(defender.lane - attacker.lane) + Math.abs(defender.depth - attacker.depth);
+    if (distance > defender.attackRange) return;
+    const defenderCell = this.context.state.getCell(defender.lane, defender.depth);
+    const attackerCell = this.context.state.getCell(attacker.lane, attacker.depth);
+    const damage = svc.formula.calculateDamage({
+      attackerAttack: Math.max(1, Math.floor(defender.getEffectiveAttack() * this.getTallyAttackMod(defender) * ratio)),
+      defenderDefense: attacker.getEffectiveDefense() * (attacker.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(attacker) * this.getTallyDefenseMod(attacker),
+      attackerType: defender.type,
+      defenderType: attacker.type,
+      attackerTerrain: defenderCell?.terrain ?? TerrainType.Plain,
+      defenderTerrain: attackerCell?.terrain ?? TerrainType.Plain,
+    });
+    this.applyUnitDamage(attacker, damage, defender.faction, {
+      attackerId: defender.id,
+      attackerLane: defender.lane,
+      attackerDepth: defender.depth,
+      damageSource: 'counter:tally-evade',
+      allowDamageLink: false,
+    });
+    if (attacker.isDead()) {
+      if (attacker.id === this.context.getPlayerGeneralUnitId()) {
+        this.onGeneralUnitKilled(Faction.Player, svc);
+      } else if (attacker.id === this.context.getEnemyGeneralUnitId()) {
+        this.onGeneralUnitKilled(Faction.Enemy, svc);
+      }
+      this.onUnitKilled(attacker, defender, svc);
+    }
+  }
+
   private tryTriggerCounterReaction(
     defender: TroopUnit,
     attacker: TroopUnit,
@@ -726,7 +875,8 @@ export class BattleCombatResolver {
 
     const defenderGeneral = this.context.state.getGeneral(defender.faction);
     // 反擊屬於被動自動觸發（PROG-2-1317）：依守方武將智力擲發動率；未過不反擊，也不消耗觸發次數
-    if (defenderGeneral && this.hitRandom() >= tacticTriggerRate(defenderGeneral.int)) {
+    // 全隊反擊率（孫權碧眼統軍，SYS-SKILL-ULT-0003）加在發動率上
+    if (defenderGeneral && this.hitRandom() >= teamAuraCounterRate(this.context.state.getTeamAura(defender.faction), tacticTriggerRate(defenderGeneral.int))) {
       return;
     }
     const defenderCell = this.context.state.getCell(defender.lane, defender.depth);

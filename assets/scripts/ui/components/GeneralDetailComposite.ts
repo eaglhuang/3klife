@@ -25,6 +25,10 @@ const DS3_CONTENT_SLOT_CANDIDATES = ['ContentSlot', 'CharacterDs3Main_div_8', 'C
 @ccclass('GeneralDetailComposite')
 export class GeneralDetailComposite extends CompositePanel {
     public onRequestClose: (() => void) | null = null;
+    /** DS3 左右箭頭：-1 上一位、+1 下一位，由呼叫端決定換哪位武將（PROG-2-1686） */
+    public onRequestCycle: ((step: number) => void) | null = null;
+    /** DS3 切分頁後通知呼叫端，讓掛在面板上的附加按鈕重新綁定 */
+    public onDs3TabSwitched: ((tab: TabKey) => void) | null = null;
 
     private _isMounted = false;
     private _activeTab: TabKey = 'Overview';
@@ -77,6 +81,11 @@ export class GeneralDetailComposite extends CompositePanel {
         this._gdBinder = binder;
         this.setCompositeRenderer(new CocosCompositeRenderer());
         this._bindStaticEvents();
+    }
+
+    /** DS3 主畫面的綁定器，供呼叫端查找附加按鈕 */
+    public get ds3Binder(): UITemplateBinder | null {
+        return this._isDs3Active() ? this._gdBinder : null;
     }
 
     /** 目前 GeneralDetailComposite 是否以 DS3 layout 作為當前 screen。 */
@@ -134,6 +143,7 @@ export class GeneralDetailComposite extends CompositePanel {
             const overview = buildGeneralDetailOverviewContentState(config, services().session.inventoryViews, services().session.inventoryRecords, services().session.military.cityTroops, null, services().session.inventory);
             const entryTab = this._chrome.resolveEntryTab(config);
             await this._switchToDs3Tab(entryTab, overview);
+            this._applyDs3PortraitChrome(overview);
             (this.node as Node & { __generalDetailReadyTab?: string }).__generalDetailReadyTab = entryTab;
             UCUFLogger.info(LogCategory.LIFECYCLE, '[GeneralDetailComposite] DS3 show complete', {
                 generalId: config.id,
@@ -236,6 +246,8 @@ export class GeneralDetailComposite extends CompositePanel {
         this._bindOptionalClickByNodeName('CharacterDs3Main_button_3', () => {
             this.requestClose();
         });
+        this._bindOptionalClickByNodeName('CharacterDs3Main_button_1', () => this.onRequestCycle?.(-1));
+        this._bindOptionalClickByNodeName('CharacterDs3Main_button_2', () => this.onRequestCycle?.(1));
 
         for (const tab of TAB_ORDER) {
             const nodeName = DS3_TAB_BUTTON_NODE[tab];
@@ -259,6 +271,7 @@ export class GeneralDetailComposite extends CompositePanel {
             });
         }
         this._syncDs3TabVisualState();
+        this.onDs3TabSwitched?.(tab);
     }
 
     private _resolveDs3ContentSlotHost(): Node | null {
@@ -387,6 +400,19 @@ export class GeneralDetailComposite extends CompositePanel {
         this._syncSpiritFamilyShortcut();
     }
 
+    /** DS3 左欄：立繪與立繪下方稱號隨武將更換（PROG-2-1687） */
+    private _applyDs3PortraitChrome(state: UnifiedOverviewContentState): void {
+        void this._chrome.loadPortrait(state.portraitResource).catch(() => undefined);
+        // 版型轉換時烘進去的示意立繪會疊在實際立繪後面，關掉
+        const placeholder = this._gdBinder?.getSprite('PortraitImage_ImageContent');
+        if (placeholder) placeholder.enabled = false;
+        const footer = this._gdBinder?.getLabel('PortraitFooterTitle');
+        if (footer) {
+            // 原稿字距以空格呈現
+            footer.string = [...(state.footerTitle ?? '').replace(/[【】]/g, '')].join(' ');
+        }
+    }
+
     private _applyOverviewChrome(state: UnifiedOverviewContentState): void {
         void this._chrome.loadBackground(state.backgroundResource);
         void this._chrome.loadPortrait(state.portraitResource);
@@ -454,7 +480,9 @@ export class GeneralDetailComposite extends CompositePanel {
 
     private _requireNode(path: string): Node {
         const fullPath = this._mainPath(path);
-        const node = this.node.getChildByPath(fullPath);
+        // DS3 版型節點不在固定路徑下，單一名稱改以綁定器依節點名查找（PROG-2-1687）
+        const node = this.node.getChildByPath(fullPath)
+            ?? (path.includes('/') ? null : this._gdBinder?.getNode(path) ?? null);
         if (!node) {
             UCUFLogger.error(LogCategory.LIFECYCLE, `[GeneralDetailComposite] 缺少必要節點 ${fullPath}`);
             throw new Error(`[GeneralDetailComposite] 缺少必要節點 ${fullPath}`);

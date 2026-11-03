@@ -34,6 +34,20 @@ export const TOURNAMENT_LOCAL_CONFIG = {
     competitionReplaceLimit: 1,
 } as const;
 
+/**
+ * 單機對戰樹（PROG-2-1575，暫定 4 輪）：初賽、複賽、準決賽五戰三勝，決賽一場定勝負。
+ * 贏一輪晉級；輸了回到初賽；奪冠後記一次冠軍並從初賽重來。
+ */
+export const TOURNAMENT_BRACKET_ROUNDS = ['初賽', '複賽', '準決賽', '決賽'] as const;
+export const TOURNAMENT_FINAL_ROUND = TOURNAMENT_BRACKET_ROUNDS.length - 1;
+
+/** 該輪的局數與勝場門檻：決賽單場，其餘五戰三勝 */
+export function bracketSeriesRule(round: number): { bestOf: number; winNeeded: number } {
+    return round >= TOURNAMENT_FINAL_ROUND
+        ? { bestOf: 1, winNeeded: 1 }
+        : { bestOf: TOURNAMENT_LOCAL_CONFIG.bestOf, winNeeded: TOURNAMENT_LOCAL_CONFIG.winNeeded };
+}
+
 /** BOSS 弱點／攻擊標籤（規格例：SLOW、ANTI_CONTROL、FIRE；其餘為暫定） */
 export type TournamentBossTag = 'FIRE' | 'SLOW' | 'ANTI_CONTROL' | 'ANTI_CAVALRY' | 'RANGED';
 
@@ -63,6 +77,8 @@ export interface TournamentVenue {
     terrain: TerrainType;
     weather: Weather;
     boss: TournamentSeasonBoss;
+    /** 九州盃特殊規則（規格 §K，PROG-2-1612）：攻擊標籤 → 戰力倍率；規則文字供畫面顯示 */
+    specialRule?: { label: string; tagMultipliers: Readonly<Record<string, number>> };
 }
 
 /**
@@ -71,18 +87,22 @@ export interface TournamentVenue {
  */
 export const TOURNAMENT_CUPS: readonly TournamentVenue[] = [
     { cupName: '赤壁盃', terrain: TerrainType.River, weather: Weather.Windy,
+        specialRule: { label: '火攻傷害 ×2', tagMultipliers: { FIRE: 2 } },
         boss: { bossId: 'boss-1', name: '連環戰船', weaknessTags: ['FIRE', 'RANGED'], basePower: 10000 } },
     { cupName: '張飛盃', terrain: TerrainType.Mountain, weather: Weather.Clear,
         boss: { bossId: 'boss-2', name: '燕人猛將', weaknessTags: ['SLOW', 'ANTI_CONTROL'], basePower: 10000 } },
     { cupName: '官渡盃', terrain: TerrainType.Plain, weather: Weather.Clear,
+        specialRule: { label: '騎兵衝鋒傷害 ×1.8', tagMultipliers: { CAVALRY: 1.8 } },
         boss: { bossId: 'boss-3', name: '袁軍重騎', weaknessTags: ['ANTI_CAVALRY', 'FIRE'], basePower: 10000 } },
     { cupName: '呂布盃', terrain: TerrainType.Fortress, weather: Weather.Thunder,
         boss: { bossId: 'boss-4', name: '飛將無雙', weaknessTags: ['SLOW', 'ANTI_CAVALRY'], basePower: 10000 } },
     { cupName: '虎牢盃', terrain: TerrainType.Mountain, weather: Weather.Night,
+        specialRule: { label: '單挑武力直接結算', tagMultipliers: {} },
         boss: { bossId: 'boss-5', name: '虎牢關守軍', weaknessTags: ['RANGED', 'ANTI_CONTROL'], basePower: 10000 } },
     { cupName: '趙雲盃', terrain: TerrainType.Plain, weather: Weather.Windy,
         boss: { bossId: 'boss-6', name: '白馬銀槍', weaknessTags: ['ANTI_CAVALRY', 'SLOW'], basePower: 10000 } },
     { cupName: '夷陵盃', terrain: TerrainType.Forest, weather: Weather.Rain,
+        specialRule: { label: '弓兵射程減半；谷地陷阱觸發率 ×2', tagMultipliers: { RANGED: 0.5, TRAP: 2 } },
         boss: { bossId: 'boss-7', name: '連營大軍', weaknessTags: ['FIRE', 'SLOW'], basePower: 10000 } },
     { cupName: '長坂盃', terrain: TerrainType.Plain, weather: Weather.Fog,
         boss: { bossId: 'boss-8', name: '虎豹騎', weaknessTags: ['ANTI_CAVALRY', 'RANGED'], basePower: 10000 } },
@@ -93,6 +113,15 @@ export function tournamentVenueOf(seasonIndex: number): TournamentVenue {
     const n = TOURNAMENT_CUPS.length;
     const cup = TOURNAMENT_CUPS[(((Math.floor(seasonIndex) - 1) % n) + n) % n];
     return { ...cup, boss: { ...cup.boss, weaknessTags: cup.boss.weaknessTags.slice() } };
+}
+
+/**
+ * 九州盃特殊規則戰力倍率（PROG-2-1612 暫定）：武將攻擊標籤命中規則的標籤時相乘；沒有規則或沒命中為 1。
+ * 虎牢盃「單挑武力直接結算」目前只顯示規則，不改戰力。
+ */
+export function cupSpecialPowerMultiplier(venue: Readonly<TournamentVenue>, attackTags: readonly string[] | undefined): number {
+    const table = venue.specialRule?.tagMultipliers ?? {};
+    return (attackTags ?? []).reduce((mult, tag) => mult * (table[tag] ?? 1), 1);
 }
 
 /** 攻擊標籤命中 BOSS 任一弱點 → ×1.5，否則 ×1 */
@@ -148,11 +177,16 @@ export interface TournamentState {
     winStreak: number;
     bestWinStreak: number;
     history: TournamentSeasonHistory[];
+    /** 對戰樹目前輪次（0=初賽 … 3=決賽）與本季奪冠次數（PROG-2-1575） */
+    bracketRound: number;
+    championships: number;
 }
 
 export interface TournamentEntrant {
     id: string;
     power: number;
+    /** 攻擊標籤（FIRE／CAVALRY／RANGED／TRAP…）；九州盃特殊規則用（PROG-2-1612），缺省不套 */
+    attackTags?: readonly string[];
 }
 
 export interface TournamentStatus {
@@ -171,7 +205,7 @@ export function createTournamentState(nowMs: number): TournamentState {
     return {
         seasonIndex: 1, seasonStartMs: nowMs, points: 0, team: null,
         entryDay: 0, entriesToday: 0, lastPrepRegisterDay: -1, competitionReplaces: 0,
-        winStreak: 0, bestWinStreak: 0, history: [],
+        winStreak: 0, bestWinStreak: 0, history: [], bracketRound: 0, championships: 0,
     };
 }
 
@@ -193,7 +227,7 @@ export function rolloverTournament(state: Readonly<TournamentState>, nowMs: numb
             seasonStartMs: next.seasonStartMs + TOURNAMENT_SEASON_DAYS * TOURNAMENT_DAY_MS,
             points: softResetPoints(next.points),
             team: null, entryDay: 0, entriesToday: 0, lastPrepRegisterDay: -1, competitionReplaces: 0,
-            winStreak: 0, bestWinStreak: 0,
+            winStreak: 0, bestWinStreak: 0, bracketRound: 0, championships: 0,
         };
     }
     return next;
@@ -255,12 +289,13 @@ export function registerTournamentTeam(
         }
     }
     if (phase === 'PREPARATION') next.lastPrepRegisterDay = day;
+    const venue = tournamentVenueOf(state.seasonIndex);
     next.team = {
         snapshotId: `TRN_S${state.seasonIndex}_${nowMs}`,
         seasonIndex: state.seasonIndex,
         registeredAtMs: nowMs,
         generals: entrants.map((e) => e.id),
-        totalPower: entrants.reduce((sum, e) => sum + Math.max(0, e.power), 0),
+        totalPower: Math.round(entrants.reduce((sum, e) => sum + Math.max(0, e.power) * cupSpecialPowerMultiplier(venue, e.attackTags), 0)),
     };
     return { ok: true, state: next };
 }
@@ -282,6 +317,9 @@ export interface TournamentSeriesResult {
     pointsAfter: number;
     tierAfter: RankTier;
     paidExtra: boolean;
+    /** 本場所在輪次、是否因此奪冠 */
+    round: number;
+    champion: boolean;
 }
 
 /**
@@ -315,14 +353,17 @@ export function playTournamentSeries(
     const games: boolean[] = [];
     let wins = 0;
     let losses = 0;
-    while (wins < cfg.winNeeded && losses < cfg.winNeeded && games.length < cfg.bestOf) {
+    const round = Math.min(TOURNAMENT_FINAL_ROUND, Math.max(0, next.bracketRound));
+    const rule = bracketSeriesRule(round);
+    while (wins < rule.winNeeded && losses < rule.winNeeded && games.length < rule.bestOf) {
         const mine = myPower * (1 - cfg.terrainVariance + random() * cfg.terrainVariance * 2);
         const theirs = opponentPower * (1 - cfg.terrainVariance + random() * cfg.terrainVariance * 2);
         const won = mine >= theirs;
         games.push(won);
         if (won) wins++; else losses++;
     }
-    const win = wins >= cfg.winNeeded;
+    const win = wins >= rule.winNeeded;
+    const champion = win && round === TOURNAMENT_FINAL_ROUND;
     const pointsDelta = tournamentEloChange(next.points, opponentPoints, win);
     const pointsAfter = Math.max(0, next.points + pointsDelta);
     const winStreak = win ? next.winStreak + 1 : 0;
@@ -333,11 +374,13 @@ export function playTournamentSeries(
         entriesToday: used + 1,
         winStreak,
         bestWinStreak: Math.max(next.bestWinStreak, winStreak),
+        bracketRound: win && !champion ? round + 1 : 0,
+        championships: next.championships + (champion ? 1 : 0),
     };
     return {
         ok: true,
         state: next,
-        result: { win, games, opponentPower, opponentPoints, pointsDelta, pointsAfter: pointsAfter, tierAfter: rankTierOf(pointsAfter), paidExtra },
+        result: { win, games, opponentPower, opponentPoints, pointsDelta, pointsAfter: pointsAfter, tierAfter: rankTierOf(pointsAfter), paidExtra, round, champion },
     };
 }
 
@@ -368,5 +411,7 @@ export function normalizeTournamentState(raw: unknown): TournamentState | null {
         competitionReplaces: isNum(s.competitionReplaces) ? s.competitionReplaces : 0,
         winStreak: isNum(s.winStreak) ? s.winStreak : 0, bestWinStreak: isNum(s.bestWinStreak) ? s.bestWinStreak : 0,
         history,
+        bracketRound: isNum(s.bracketRound) ? Math.min(TOURNAMENT_FINAL_ROUND, Math.max(0, Math.floor(s.bracketRound))) : 0,
+        championships: isNum(s.championships) ? Math.max(0, Math.floor(s.championships)) : 0,
     };
 }

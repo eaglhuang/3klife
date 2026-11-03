@@ -32,6 +32,17 @@ export class ControlOverrideSkillResolver implements BattleSkillResolver {
 
     const casterFaction = request.ownerUid === Faction.Enemy ? Faction.Enemy : Faction.Player;
     const [target] = this.targetSelector.selectTargets(request, profile, context);
+    // 韌性（PROG-2-1627）：被選中的目標依受控抵抗率擲骰，抵抗成功則不被控制
+    if (target && target.controlResistChance > 0 && (context.randomSource?.() ?? Math.random()) < target.controlResistChance) {
+      return {
+        requestId,
+        battleSkillId: request.battleSkillId,
+        applied: false,
+        blockedReason: 'control-resisted',
+        deltas: [],
+        battleLogLines: [`${request.battleSkillId}:resisted:${target.id}`],
+      };
+    }
     if (!target || !context.controlUnit?.(target, casterFaction, profile.controlTurns ?? 2)) {
       return {
         requestId,

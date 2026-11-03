@@ -7,6 +7,9 @@ export type { TerrainGrid };
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import type { FormationZone } from "../shared/FormationZone";
+import type { SelfBurstWindow } from "../shared/SelfBurstWindow";
+import type { TeamAura } from "../shared/TeamAura";
+import type { EnemyMassDebuff } from "../shared/EnemyMassDebuff";
 import type { UnitDot } from "../shared/UnitDot";
 import type { WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import type { SalvageTotals } from "../../core/systems/StrategistHud";
@@ -85,6 +88,12 @@ export class BattleState {
   public readonly unitDots = new Map<string, UnitDot>();
   /** 持續防禦區獨立成表：可與同格的火場等格子狀態共存（PROG-2-0761） */
   public readonly formationZones = new Map<string, FormationZone>();
+  /** 奧義自身爆發窗口（SYS-SKILL-ULT-0001）：以施放者陣營為鍵，整支軍隊共用（PM 暫定） */
+  public readonly selfBursts = new Map<Faction, SelfBurstWindow>();
+  /** 奧義全隊增益 aura（SYS-SKILL-ULT-0002）：以施放者陣營為鍵，中途加入單位自動吃到 */
+  public readonly teamAuras = new Map<Faction, TeamAura>();
+  /** 奧義敵方全體減益（SYS-SKILL-ULT-0004）：以被減益陣營為鍵 */
+  public readonly massDebuffs = new Map<Faction, EnemyMassDebuff>();
   public readonly damageLinks = new Map<string, DamageLinkState>();
   public readonly counterReactions = new Map<string, CounterReactionState>();
   public readonly actionResets = new Map<string, ActionResetState>();
@@ -136,6 +145,10 @@ export class BattleState {
   public lastSpurtMode = false;
   /** 戰場上出現過的最高合計兵力（FORM-10 存活比例分母） */
   public peakTroopCount = 0;
+  /** 軍師智謀能量（SCN-10，WisdomMeter）：每回合 INT×0.5 累積，滿 100 觸發後歸零 */
+  public wisdomMeter = 0;
+  /** 智謀能量本場觸發次數 */
+  public wisdomTriggerCount = 0;
 
   constructor() {
     for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
@@ -158,6 +171,9 @@ export class BattleState {
     this.tileEffects.clear();
     this.unitDots.clear();
     this.formationZones.clear();
+    this.selfBursts.clear();
+    this.teamAuras.clear();
+    this.massDebuffs.clear();
     this.damageLinks.clear();
     this.counterReactions.clear();
     this.actionResets.clear();
@@ -179,6 +195,8 @@ export class BattleState {
     this.fallenUnits = [];
     this.lastSpurtMode = false;
     this.peakTroopCount = 0;
+    this.wisdomMeter = 0;
+    this.wisdomTriggerCount = 0;
     this.battleEndAnnounced = false;
     this.stageSalvage = { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 };
     this.plunderedTiles = new Set<string>();
@@ -308,6 +326,33 @@ export class BattleState {
 
   public setFormationZone(zone: FormationZone): void {
     this.formationZones.set(`${zone.lane},${zone.depth}`, zone);
+  }
+
+  public getMassDebuff(faction: Faction): EnemyMassDebuff | null {
+    return this.massDebuffs.get(faction) ?? null;
+  }
+
+  public setMassDebuff(faction: Faction, debuff: EnemyMassDebuff | null): void {
+    if (debuff) this.massDebuffs.set(faction, debuff);
+    else this.massDebuffs.delete(faction);
+  }
+
+  public getTeamAura(faction: Faction): TeamAura | null {
+    return this.teamAuras.get(faction) ?? null;
+  }
+
+  public setTeamAura(faction: Faction, aura: TeamAura | null): void {
+    if (aura) this.teamAuras.set(faction, aura);
+    else this.teamAuras.delete(faction);
+  }
+
+  public getSelfBurst(faction: Faction): SelfBurstWindow | null {
+    return this.selfBursts.get(faction) ?? null;
+  }
+
+  public setSelfBurst(faction: Faction, window: SelfBurstWindow | null): void {
+    if (window) this.selfBursts.set(faction, window);
+    else this.selfBursts.delete(faction);
   }
 
   public getFormationZone(lane: number, depth: number): FormationZone | null {

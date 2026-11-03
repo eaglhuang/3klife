@@ -149,7 +149,7 @@ async function captureComputedStyles(page) {
       'font-feature-settings', 'font-variant',
       'text-transform',
       // Stacking & overflow
-      'z-index', 'overflow', 'overflow-x', 'overflow-y',
+      'z-index', 'position', 'overflow', 'overflow-x', 'overflow-y',
       // Image fit (M30)
       'object-fit', 'object-position',
       // Alignment & layout (M23)

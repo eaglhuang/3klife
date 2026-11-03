@@ -77,3 +77,76 @@ export const TIGER_TALLY_SPEC_TACTICS: readonly TigerTallySpecTactic[] = [
 export const TIGER_TALLY_PENDING_SKILL_IDS: readonly string[] = TIGER_TALLY_SPEC_TACTICS
     .filter(tactic => !tactic.reusesProfile)
     .map(tactic => tactic.battleSkillId);
+
+/**
+ * 裁定追加虎符（規格表外，PROG-2-1617）：MCQ Q56 選項 A「孟獲產出南蠻勇士、祝融產出南蠻豹騎」，
+ * 兩者規格沒有數值；依使用者裁定參照步兵／騎兵基礎值 ×1.1，暫定。特殊戰法未定，技能走待實作殼（不可施放）。
+ */
+export interface RuledExtraTally extends TigerTallySpecTactic {
+    /** 卡面攻防血相對基礎兵種的倍率 */
+    statMultiplier: number;
+}
+
+export const RULED_EXTRA_TALLIES: readonly RuledExtraTally[] = [
+    { tacticId: 'tiger-tally-nan-man-yong-shi', battleSkillId: 'tally-nan-man-yong-shi', group: 'general', tallyName: '虎符：南蠻勇士', unitName: '南蠻勇士', sourceGeneral: '孟獲', quality: 'SR', effect: '蠻勇：基礎攻防血較步兵高 10%（暫定，特殊戰法待定）', reusesProfile: false, statMultiplier: 1.1 },
+    { tacticId: 'tiger-tally-nan-man-bao-qi', battleSkillId: 'tally-nan-man-bao-qi', group: 'general', tallyName: '虎符：南蠻豹騎', unitName: '南蠻豹騎', sourceGeneral: '祝融夫人', quality: 'SR', effect: '豹突：基礎攻防血較騎兵高 10%（暫定，特殊戰法待定）', reusesProfile: false, statMultiplier: 1.1 },
+];
+
+export const RULED_EXTRA_TALLY_SKILL_IDS: readonly string[] = RULED_EXTRA_TALLIES.map(tactic => tactic.battleSkillId);
+
+/**
+ * 名將專屬虎符：原名將的武將模板 id → 虎符 tacticId（PROG-2-1593）。
+ * 死亡虎符的 templateId 仍是武將 id（史實合攻要用），查被動／卡面時才經 resolveTallyTemplateId 換成專屬虎符。
+ */
+export const NAMED_TALLY_BY_GENERAL_TEMPLATE: Readonly<Record<string, string>> = {
+    'zhao-yun': 'tiger-tally-long-dan',
+    'zhou-yu': 'tiger-tally-du-du-fu',
+    'guan-yu': 'tiger-tally-zhong-yi-fu',
+    'zhang-fei': 'tiger-tally-dang-yang-fu',
+    'huang-zhong': 'tiger-tally-lie-gong-fu',
+    'ma-chao': 'tiger-tally-shen-wei-fu',
+    'jiang-wei': 'tiger-tally-qi-lin-fu',
+    'xu-zhu': 'tiger-tally-hu-chi-fu',
+    'dian-wei': 'tiger-tally-e-lai-fu',
+    'zhang-liao': 'tiger-tally-zhi-ti-fu',
+    'lu-bu': 'tiger-tally-wu-shuang-fu',
+    'pang-tong': 'tiger-tally-lian-huan-fu',
+    'guo-jia': 'tiger-tally-feng-xiao-fu',
+    'sima-yi': 'tiger-tally-lang-gu-fu',
+    'sun-shang-xiang': 'tiger-tally-jiao-ji',
+    'zhu-rong': 'tiger-tally-huo-shen-fu',
+    'huang-yue-ying': 'tiger-tally-gong-jia-fu',
+};
+
+/**
+ * 死亡傳承虎符（通用型）：來源武將模板 id → 虎符 tacticId（PROG-2-1594）。
+ * 規格「來源」欄一張虎符可對應多位武將；同時是名將專屬來源者（馬超、周瑜）以專屬虎符為準。
+ * 孟獲同時列在藤甲與南蠻，暫定歸藤甲；高順、麴義、「趙雲系女性名將」名冊中沒有對應武將，暫不對照。
+ */
+export const LEGACY_TALLY_BY_GENERAL_TEMPLATE: Readonly<Record<string, string>> = {
+    'gongsun-zan': 'tiger-tally-bai-ma',
+    'cao-cao': 'tiger-tally-hu-bao',
+    'cao-ren': 'tiger-tally-hu-bao',
+    'sun-ce': 'tiger-tally-dan-yang',
+    'taishi-ci': 'tiger-tally-dan-yang',
+    'ma-teng': 'tiger-tally-tie-qi',
+    'wang-ping': 'tiger-tally-wu-dang',
+    // 規格裁決（選項 A）：藤甲兵歸兀突骨；孟獲改產南蠻勇士、祝融夫人產南蠻豹騎（PROG-2-1602／1617，裁定追加卡）
+    'wu-tu-gu': 'tiger-tally-teng-jia',
+    'meng-huo': 'tiger-tally-nan-man-yong-shi',
+    'zhu-rong-furen': 'tiger-tally-nan-man-bao-qi',
+    'yuan-shao': 'tiger-tally-xian-deng',
+    'sun-quan': 'tiger-tally-jie-fan',
+    'da-qiao': 'tiger-tally-da-qiao',
+    'zhou-tai': 'tiger-tally-wu-guo',
+    'han-dang': 'tiger-tally-wu-guo',
+    'gan-ning': 'tiger-tally-jin-fan',
+    'chen-dao': 'tiger-tally-bai-er',
+    'zhuge-liang': 'tiger-tally-yuan-rong',
+    'mu-lu-da-wang': 'tiger-tally-nan-man',
+};
+
+/** 虎符模板 id → 查被動／卡面用的 id：名將專屬優先，其次死亡傳承，其餘原樣 */
+export function resolveTallyTemplateId(templateId: string): string {
+    return NAMED_TALLY_BY_GENERAL_TEMPLATE[templateId] ?? LEGACY_TALLY_BY_GENERAL_TEMPLATE[templateId] ?? templateId;
+}

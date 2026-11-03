@@ -60,6 +60,8 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         await f.panels.mountDestiny();
         assert.equals(0, f.hosts.size);
         assert.isTrue(f.events[0].includes('找不到 hero-pool'));
+        // 開不起來時回 false，大廳據此照舊顯示（PROG-2-1620）
+        assert.isFalse(f.panels.openDestiny());
     });
     suite.test('保留 host/screen 與六列按鈕契約；開啟與重置刷新畫面', async () => {
         const f = fixture();
@@ -68,7 +70,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.equals(9, host.bindings.length);
         assert.equals('mount:DestinyOpeningHost:destiny-opening-screen', f.events[0]);
         assert.isFalse(host.node.active);
-        f.panels.openDestiny();
+        assert.isTrue(f.panels.openDestiny());
         assert.isTrue(host.node.active);
         f.click('DestinyOpeningHost', 'btnDestinyRoll');
         await flush();
@@ -320,5 +322,18 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             assert.isFalse(service.lastLoadRecoveredFromBackup());
         });
     }
+    suite.test('新局：開宿命轉蛋時先開信件，關信後才進轉蛋（PROG-2-1622）', async () => {
+        const f = fixture();
+        await f.panels.mountOpeningLetter();
+        await f.panels.mountDestiny();
+        assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
+        assert.isTrue(f.panels.openDestiny());
+        assert.isTrue(f.hosts.get('OpeningLetterHost')!.node.active);
+        assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
+        await f.panels.closeOpeningLetter();
+        assert.isFalse(f.hosts.get('OpeningLetterHost')!.node.active);
+        assert.isTrue(f.hosts.get('DestinyOpeningHost')!.node.active);
+    });
+
     return suite;
 }

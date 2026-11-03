@@ -9,6 +9,7 @@
 import type { GeneralVersionRecord } from '../../core/models/GeneralVersion';
 import { buildVersionGallery, GALLERY_GROUP_SLOTS, toGalleryLayoutState } from '../../core/systems/GeneralVersionGallery';
 import { pickComparePair, toVersionDiffLayoutState } from '../../core/systems/GeneralVersionDiff';
+import { sameNameLoreText } from './SameNameTexts';
 
 export interface GeneralVersionGalleryView {
     open: boolean;
@@ -59,9 +60,17 @@ export class GeneralVersionGalleryController {
         const layout = toGalleryLayoutState(groups, this._selected);
         const pair = this._selected ? pickComparePair(this._table, this._selected) : null;
         const diff = toVersionDiffLayoutState(pair);
+        // 暫定：選中血源有兩個以上版本時，顯示血脈歸一台詞（V1 繼承 V2 的名號欄位）；單版本不出台詞。
+        const sameNameLore = pair
+            ? sameNameLoreText('LORE_SAME_BLOODLINE_MERGE', [
+                pair.before.Version_Title ?? pair.before.Template_ID,
+                pair.after.Version_Title ?? pair.after.Template_ID,
+                pair.after.Display_Name ?? pair.after.Template_ID,
+            ])
+            : '';
         return {
             open: true,
-            texts: { ...layout.texts, ...diff.texts },
+            texts: { ...layout.texts, ...diff.texts, sameNameLore },
             actives: { ...layout.actives, ...diff.actives },
             selectedBloodlineId: this._selected,
         };

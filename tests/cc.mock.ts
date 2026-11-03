@@ -380,3 +380,13 @@ export const input = {
     on(_type: string, _callback: (...args: any[]) => void, _target?: unknown): void {},
     off(_type: string, _callback?: (...args: any[]) => void, _target?: unknown): void {},
 };
+
+// 縮放策略（PROG-2-1626）：數值與 Cocos 3.x ResolutionPolicy 常數一致
+export const ResolutionPolicy = { EXACT_FIT: 0, NO_BORDER: 1, SHOW_ALL: 2, FIXED_HEIGHT: 3, FIXED_WIDTH: 4 } as const;
+
+export const view = {
+    getFrameSize: () => ({ width: 1920, height: 1080 }),
+    getDesignResolutionSize: () => ({ width: 1920, height: 1080 }),
+    setResolutionPolicy: (_policy: number): void => undefined,
+    on: (_event: string, _cb: () => void): void => undefined,
+};

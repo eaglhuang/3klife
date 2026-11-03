@@ -2,12 +2,27 @@
 // 對應 §3 / §6 / §7 / §8 / §27
 'use strict';
 
+const nodeFs = require('fs');
+const nodePath = require('path');
 const { parseHtml, parseStylesheets, parseInlineStyle } = require('./html-parser');
 const { loadTokenRegistry, normalizeHex } = require('./token-registry');
 const { extractInteraction, buildInteractionDraft } = require('./interaction-translator');
 const { extractKeyframes, extractMotion, buildMotionDraft } = require('./motion-translator');
 const { parseBackgroundImage, parseShadowList } = require('./snapshot-to-slots');
-const { extractFontFaceMappings } = require('./css-capability-matrix');
+const {
+  inferLabelOverflow,
+  isItalicStyle,
+  computeLetterSpacing,
+  PROJECT_FONT_REGISTRY,
+  pickFontByTag,
+  buildFontFaceRegistry,
+  parseSimpleTextShadow,
+  resolveTypographyToken,
+  isBoldWeight,
+  applyTextTransformGeneral,
+  normalizeCssColorToHex,
+} = require('./draft-builder/typography');
+const ENGINE = require('./engine-profiles').active;
 const { draftBuilderStageRules: DRAFT_BUILDER_STAGE_RULES } = require('../html-to-ucuf/rule-registry.json');
 
 const ANCHOR_MAP = {
@@ -34,8 +49,6 @@ const RICH_TEXT_INNER_TAGS = new Set(['strong', 'em', 'a', 'small']);
 const NINESLICE_FAMILY_HINTS = ['parchment', 'dark_metal', 'dark-metal', 'gold_cta', 'gold-cta'];
 
 const PLACEHOLDER_SPRITE = 'sprites/ui_common/placeholder/missing_sprite';
-const TAB_BUTTON_SKIN_NORMAL = 'sprites/ui_families/general_detail/tab_active_button';
-const TAB_BUTTON_SKIN_SELECTED = 'sprites/ui_families/general_detail/detail_tab_active_frame';
 
 const SIMPLIFIED_CHINESE_HINTS = ['国', '将', '历', '战', '门', '画', '员']; // partial set; warn only
 
@@ -339,8 +352,7 @@ function processElement(el, ctx, depth) {
       : pickDim(style.height, attrs.height);
     if (width != null) node.width = width;
     if (height != null) node.height = height;
-    const layoutSpec = inferLayout(style, ctx, name, el);
-    if (layoutSpec) node.layout = layoutSpec;
+    // 延後掛載的宿主沒有自己的子節點：排版與內距已複製到片段根節點，宿主再套一次會讓內容位移兩倍內距
     collectBehavior(el, node, style, ctx);
     if (nodeType === 'panel' && hasMeaningfulBackground(style)) {
       const skinLayers = emitSkinLayers(ctx, name, style, attrs);
@@ -440,7 +452,7 @@ function processElement(el, ctx, depth) {
     const slotId = attrs['data-skin'] || autoSlotId(ctx, name);
     node.skinSlot = slotId;
     if (isTabSwitchContract(node._contract)) {
-      ensureTabButtonSkinSlot(ctx, slotId, attrs, style);
+      ensureTabButtonSkinSlot(ctx, slotId, attrs, style, { width, height });
     } else {
       ensureSpriteOrColorSlot(ctx, slotId, style, attrs, { width, height });
     }
@@ -453,16 +465,56 @@ function processElement(el, ctx, depth) {
 
   // ---- 7. recurse children ----
   const childNodes = [];
+  const stackedChildren = [];
   const hasElementChildren = (el.children || []).some(child => child.type === 'element');
-  const beforePseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'before', hasElementChildren);
+  const beforePseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'before');
+  // 自帶文字的框：按鈕，或只有文字的 panel
+  const wrapsOwnText = nodeType === 'button' || (nodeType === 'panel' && !hasElementChildren);
   for (const child of el.children) {
-    if (child.type !== 'element') continue;
-    const sub = processElement(child, ctx, depth + 1);
-    appendNodeWithGeneratedSiblings(childNodes, sub);
+    // 混合內容：容器內直接寫的文字（旁邊另有子元素）包成匿名文字節點，否則會被丟掉（PROG-2-1647）
+    // 按鈕只有文字（如 ‹ ›）時同理，按鈕本身不帶字（PROG-2-1649）
+    const source = child.type === 'text' && (hasElementChildren || wrapsOwnText) && String(child.value || '').trim()
+      ? wrapLooseTextNode(child, style, nodeType === 'button')
+      : child;
+    if (source.type !== 'element') continue;
+    const sub = processElement(source, ctx, depth + 1);
+    // 匿名文字沒有量到寬度：用容器內容寬（扣左右內距），否則引擎不知在哪換行
+    if (source !== child && sub && sub.type === 'label' && sub.width == null && typeof node.width === 'number') {
+      const layout = node.layout || boxPaddingFromStyle(style);
+      sub.width = Math.max(1, node.width - (layout.paddingLeft || 0) - (layout.paddingRight || 0));
+      // 按鈕文字在瀏覽器預設上下置中：撐滿按鈕高度
+      if (nodeType === 'button' && sub.height == null && typeof node.height === 'number') sub.height = node.height;
+      // 只有文字的 panel：文字撐滿內容區（扣上下內距）
+      if (nodeType === 'panel' && wrapsOwnText && sub.height == null && typeof node.height === 'number') {
+        sub.height = Math.max(1, node.height - (layout.paddingTop || 0) - (layout.paddingBottom || 0));
+        // 沒有 layout 的框不會自動套內距：文字直接定位在內容區
+        if (!node.layout) sub.widget = { left: layout.paddingLeft || 0, top: layout.paddingTop || 0 };
+      }
+    }
+    const startIndex = childNodes.length;
+    appendNodeWithGeneratedSiblings(childNodes, wrapFlexItemMainAxisMargin(sub, source, style, ctx));
+    // 排版容器靠子項順序定位：留在流內的子項（含 relative）維持文件順序，只有脫離流的子項依疊放順序排
+    const flowLayout = node.layout && /^(horizontal|vertical|grid)$/.test(String(node.layout.type || ''));
+    const stacking = flowLayout && !childHasOutOfFlowPosition(source, ctx)
+      ? { bucket: 1, z: 0 }
+      : elementStackingKey(source, ctx);
+    for (let i = startIndex; i < childNodes.length; i += 1) stackedChildren.push({ node: childNodes[i], key: stacking });
   }
-  const afterPseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'after', hasElementChildren);
-  if (beforePseudoNodes.length > 0) childNodes.unshift(...beforePseudoNodes);
-  if (afterPseudoNodes.length > 0) childNodes.push(...afterPseudoNodes);
+  childNodes.length = 0;
+  // ::before／::after 與子元素一起依 CSS 疊放順序排序（負 z → 一般流 → 定位 auto/0 → 正 z，同層照文件順序）
+  const afterPseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'after');
+  const ordered = [
+    ...beforePseudoNodes.map(node => ({ node, key: pseudoStackingKey(node) })),
+    ...stackedChildren,
+    ...afterPseudoNodes.map(node => ({ node, key: pseudoStackingKey(node) })),
+  ];
+  ordered.forEach((item, index) => { item.index = index; });
+  ordered.sort((a, b) => a.key.bucket - b.key.bucket || a.key.z - b.key.z || a.index - b.index);
+  for (const item of ordered) {
+    delete item.node._cssPosition;
+    delete item.node._cssZIndex;
+    childNodes.push(item.node);
+  }
 
   // §7.8 color-rect 濫發防護
   enforceColorRectGuard(ctx, name, childNodes);
@@ -476,6 +528,13 @@ function processElement(el, ctx, depth) {
   dedupeIdenticalLargeChildren(node, ctx);
   stabilizeGridLayout(node);
   normalizeSingleChildFill(node, ctx);
+  // 空盒只靠 min-width／min-height 撐開時就是佔位（例：對齊上一行標籤的空欄），保留其大小
+  if (nodeType === 'container' && childNodes.length === 0 && !node.width && !node.height) {
+    const minWidth = pickDim(style.minWidth, null);
+    const minHeight = pickDim(style.minHeight, null);
+    if (minWidth != null && minWidth > 0) node.width = minWidth;
+    if (minHeight != null && minHeight > 0) node.height = minHeight;
+  }
   if (nodeType === 'container' && childNodes.length === 0 && !node.width && !node.height && !node.skinSlot && !node.skinLayers && !node.compositeImageLayers && !node._flexFill) {
     return null;
   }
@@ -527,14 +586,13 @@ function resolveFillChildWidths(node, childNodes) {
 
   // Sum up widths of fixed children (those without _flexFill already removed).
   let fixedSum = 0;
-  let _fixedCount = 0;
   for (const child of childNodes) {
     if (!child || typeof child !== 'object') continue;
-    if (typeof child.width === 'number') { fixedSum += child.width; fixedCount++; }
+    if (typeof child.width === 'number') { fixedSum += child.width; }
   }
   // Subtract fill children that might already have a width assigned.
   for (const child of fillChildren) {
-    if (typeof child.width === 'number') { fixedSum -= child.width; _fixedCount--; }
+    if (typeof child.width === 'number') { fixedSum -= child.width; }
   }
 
   const spacingX = typeof node.layout.spacingX === 'number' ? node.layout.spacingX : 0;
@@ -778,24 +836,29 @@ function inferTabSemanticHints(el, tag, attrs, cls, style, ctx) {
   return hints;
 }
 
+// 分頁鍵文字 → 分頁 key；轉換與分頁重播共用同一份對照（PROG-2-1645）
+const TAB_TEXT_HINTS = [
+  ['將', 'overview'],
+  ['GEN', 'overview'],
+  ['屬', 'stats'],
+  ['STAT', 'stats'],
+  ['技', 'tactics'],
+  ['TACT', 'tactics'],
+  ['命', 'bloodline'],
+  ['FATE', 'bloodline'],
+  ['寶', 'equip'],
+  ['GEAR', 'equip'],
+  ['適', 'aptitude'],
+  ['APT', 'aptitude'],
+  // 正式六分頁「兵」即兵種適性（doc_ui_0012 §0）
+  ['兵', 'aptitude'],
+  ['ARMY', 'aptitude'],
+];
+
 function inferTabIdFromElement(el, attrs) {
   const raw = String(collectText(el) || '').replace(/\s+/g, '').toUpperCase();
   if (!raw) return null;
-  const map = [
-    ['將', 'overview'],
-    ['GEN', 'overview'],
-    ['屬', 'stats'],
-    ['STAT', 'stats'],
-    ['技', 'tactics'],
-    ['TACT', 'tactics'],
-    ['命', 'bloodline'],
-    ['FATE', 'bloodline'],
-    ['寶', 'equip'],
-    ['GEAR', 'equip'],
-    ['適', 'aptitude'],
-    ['APT', 'aptitude'],
-  ];
-  for (const [hint, tabId] of map) {
+  for (const [hint, tabId] of TAB_TEXT_HINTS) {
     if (raw.includes(hint)) return tabId;
   }
   const dataTab = attrs && typeof attrs['data-tab'] === 'string' ? attrs['data-tab'].trim().toLowerCase() : '';
@@ -820,12 +883,16 @@ function inferStoryStripHints(el, tag, attrs, cls, ctx) {
   const ownerTab = inferOwnerTabFromElement(attrs, cls, el, ctx) || 'unknown';
   const screenId = String((ctx && ctx.opts && ctx.opts.screenId) || '').trim();
   const prefix = screenId ? screenId.replace(/-main$/i, '') : 'screen';
-  if (ctx) ctx._hasStoryStripSlot = true;
+  const defaultFragment = `fragments/layouts/${prefix}-story-strip-collapsed`;
+  if (ctx) {
+    ctx._hasStoryStripSlot = true;
+    ctx._storyStripDefaultFragment = defaultFragment;
+  }
 
   return {
     dataSlot: 'slot.story-strip',
     dataContract: `tab.owner.${ownerTab}`,
-    defaultFragment: `fragments/layouts/${prefix}-story-strip-collapsed`,
+    defaultFragment,
     fragments: [`fragments/layouts/${prefix}-story-strip-open`],
     warmupHint: 'manual',
     deferredReason: `${ownerTab}-tab-owned-story-strip`,
@@ -874,8 +941,17 @@ function parseFragmentList(raw) {
     .filter(Boolean);
 }
 
+const UI_SPEC_ROOT = nodePath.resolve(__dirname, '../../../assets/resources/ui-spec');
+
+// 切換鈕只在「預設收合片段已存在」時交給片段提供；片段不存在就保留原位，否則畫面會少一顆鈕。
+function storyStripFragmentExists(fragmentPath) {
+  if (!fragmentPath) return false;
+  return nodeFs.existsSync(nodePath.join(UI_SPEC_ROOT, `${fragmentPath}.json`));
+}
+
 function shouldPruneStandaloneStoryStripLabel(text, attrs, ctx) {
   if (!ctx || !ctx._hasStoryStripSlot) return false;
+  if (!storyStripFragmentExists(ctx._storyStripDefaultFragment)) return false;
   const rawText = String(text || '').replace(/\s+/g, '').toLowerCase();
   const id = String((attrs && attrs.id) || '').toLowerCase();
   const cls = String((attrs && attrs.class) || '').toLowerCase();
@@ -939,7 +1015,14 @@ function deriveComputedGeometry(ctx, style, nodeType) {
   const hasPercentEdge = [style.left, style.right, style.top, style.bottom]
     .some(value => typeof value === 'string' && /%\s*$/.test(value.trim()));
   const shouldMap = hasOutOfFlowPosition && (hasTransform || hasImageFit || hasPercentEdge);
-  if (!shouldMap) return null;
+  if (!shouldMap) {
+    // 行內元素的 computed width／height 是 auto，實際大小只能從量到的框取得；否則會被父排版撐滿整列
+    const inlineRect = String(style.display || '').trim().toLowerCase() === 'inline' && normalizeRect(style._computedRect);
+    if (inlineRect && inlineRect.w > 0 && inlineRect.h > 0 && !hasOutOfFlowPosition) {
+      return { width: Math.max(1, Math.round(inlineRect.w)), height: Math.max(1, Math.round(inlineRect.h)), widget: null };
+    }
+    return null;
+  }
 
   const rect = normalizeRect(style._computedRect);
   if (!rect) return null;
@@ -1112,11 +1195,11 @@ function inferNodeType(tag, cls, style, attrs, el) {
   if (isEmptyFlexSpacer(tag, style, attrs, el, hasBg)) return 'container';
   if (TEXT_TAGS.has(tag)) {
     if (isVisualOnlyInlinePrimitive(tag, style, attrs, el, hasBg)) return 'panel';
-    return 'label';
   }
-  if (hasOnlyTextContent(el)) return 'label';
+  // 只有文字但帶底色或邊框（如帶框的切換鈕、稀有度徽章）：轉成 panel，文字另包節點，否則底框會被丟掉
+  if (TEXT_TAGS.has(tag) || hasOnlyTextContent(el)) return (hasBg || hasRenderableBorder(style)) ? 'panel' : 'label';
 
-  if (hasBg) return 'panel';
+  if (hasBg || hasRenderableBorder(style)) return 'panel';
   return 'container';
 }
 
@@ -1165,17 +1248,41 @@ function inferCompositeRendererHint(tag, el, attrs) {
   if (polygonCount >= 3 && lineCount >= 4 && (circleCount > 0 || groupCount > 0) && textCount + groupCount >= 4) {
     return 'svg-radar-chart';
   }
+  if (lineCount + groupCount > 0 && polygonCount + circleCount + textCount === 0) {
+    const shapes = { polygons: [], lines: [], circles: [], labels: [] };
+    collectSvgShapes(el, {}, shapes);
+    if (shapes.lines.length > 0 && shapes.polygons.length + shapes.circles.length + shapes.labels.length === 0) {
+      return 'svg-line-art';
+    }
+  }
   return null;
 }
 
 function inferCompositeGeometrySummary(tag, el, attrs) {
   const rendererHint = inferCompositeRendererHint(tag, el, attrs);
+  if (rendererHint === 'svg-line-art') return extractSvgLineArtMeta(el, attrs);
   if (rendererHint !== 'svg-radar-chart') return null;
   return extractSvgRadarChartMeta(el, attrs);
 }
 
+// 純線條 SVG（連接線、分隔線）：保留 viewBox 與縮放方式，由引擎端依節點尺寸畫線
+function extractSvgLineArtMeta(el, attrs) {
+  const viewBox = parseSvgViewBox(attrs && (attrs.viewBox || attrs.viewbox));
+  const width = parseSvgNumber(attrs && attrs.width) || 0;
+  const height = parseSvgNumber(attrs && attrs.height) || 0;
+  const shapes = { polygons: [], lines: [], circles: [], labels: [] };
+  collectSvgShapes(el, {}, shapes);
+  return {
+    kind: 'line-art',
+    viewBox: viewBox || { x: 0, y: 0, width, height },
+    preserveAspectRatio: (attrs && (attrs.preserveAspectRatio || attrs.preserveaspectratio)) || 'xMidYMid meet',
+    lines: shapes.lines,
+  };
+}
+
 function extractSvgRadarChartMeta(el, attrs) {
-  const viewBox = parseSvgViewBox(attrs && attrs.viewBox);
+  // HTML 解析器會把屬性名轉小寫（viewbox）
+  const viewBox = parseSvgViewBox(attrs && (attrs.viewBox || attrs.viewbox));
   const fallbackWidth = parseSvgNumber(attrs && attrs.width) || 0;
   const fallbackHeight = parseSvgNumber(attrs && attrs.height) || fallbackWidth || 0;
   const resolvedViewBox = viewBox || { x: 0, y: 0, width: fallbackWidth, height: fallbackHeight };
@@ -1532,11 +1639,13 @@ function inferGridLayout(style, ctx, nodeName) {
 function inferBlockFlowLayout(style, ctx, nodeName, el) {
   const childElements = (el.children || []).filter(c => c.type === 'element');
   const padding = resolveBoxEdges(style, 'padding', ctx && ctx.tokenRegistry);
-  if (childElements.length < 2 && !padding) return null;
   if (childElements.length === 0) return null;
   if (childElements.some(child => childHasOutOfFlowPosition(child, ctx))) return null;
 
   const out = { type: 'vertical' };
+  // 區塊流裡比父窄的子框（行內標籤等）照 text-align 放：預設靠左，引擎垂直排版預設卻是置中
+  const textAlign = String(style.textAlign || '').trim().toLowerCase();
+  out.alignItems = textAlign === 'center' ? 'center' : /^(right|end)$/.test(textAlign) ? 'end' : 'start';
   if (padding) {
     out.paddingTop = padding.top;
     out.paddingRight = padding.right;
@@ -1634,6 +1743,53 @@ function childHasOutOfFlowPosition(child, ctx) {
   const childStyle = collectElementStyle(child, ctx).style;
   const position = String(childStyle.position || '').trim().toLowerCase();
   return position === 'absolute' || position === 'fixed';
+}
+
+// flex 子項的主軸 margin 會疊加在 gap 上，引擎排版元件沒有單一子項外距：
+// 包一層透明容器，以容器內距表達 margin（中立格式，各引擎皆可用）。
+function wrapFlexItemMainAxisMargin(sub, childEl, parentStyle, ctx) {
+  if (!sub || sub._generatedBefore || !childEl || childEl.type !== 'element') return sub;
+  const display = String(parentStyle && parentStyle.display || '').trim().toLowerCase();
+  if (display !== 'flex' && display !== 'inline-flex') return sub;
+  if (childHasOutOfFlowPosition(childEl, ctx)) return sub;
+  const childStyle = collectElementStyle(childEl, ctx).style;
+  const registry = ctx && ctx.tokenRegistry;
+  const box = parseBox(childStyle.margin, registry) || {};
+  const side = (key, fallback) => {
+    const value = resolveLength(childStyle[key], registry).value ?? fallback;
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  };
+  const column = String(parentStyle.flexDirection || '').trim().toLowerCase().startsWith('column');
+  const top = side('marginTop', box.top);
+  const bottom = side('marginBottom', box.bottom);
+  const left = side('marginLeft', box.left);
+  const right = side('marginRight', box.right);
+  if (top + bottom + left + right === 0) return sub;
+  const along = column ? sub.height : sub.width;
+  if (typeof along !== 'number' || !Number.isFinite(along)) return sub;
+  const before = column ? top : left;
+  const after = column ? bottom : right;
+  // 交叉軸外距（如直排中的 margin-left）也轉成容器內距，子項靠起點對齊
+  const crossBefore = column ? left : top;
+  const crossAfter = column ? right : bottom;
+  const across = column ? sub.width : sub.height;
+  const layout = column
+    ? { type: 'vertical', paddingTop: before, paddingBottom: after }
+    : { type: 'horizontal', paddingLeft: before, paddingRight: after };
+  if (crossBefore + crossAfter > 0) {
+    if (column) { layout.paddingLeft = crossBefore; layout.paddingRight = crossAfter; }
+    else { layout.paddingTop = crossBefore; layout.paddingBottom = crossAfter; }
+    layout.alignItems = 'start';
+  }
+  const acrossTotal = typeof across === 'number' && Number.isFinite(across) ? across + crossBefore + crossAfter : across;
+  return {
+    type: 'container',
+    name: `${sub.name || 'node'}_margin`,
+    width: column ? acrossTotal : along + before + after,
+    height: column ? along + before + after : acrossTotal,
+    layout,
+    children: [sub],
+  };
 }
 
 function inferChildBlockSpacing(childElements, ctx) {
@@ -1832,6 +1988,67 @@ function matchesSimpleStyleRule(rule, classSet, attrs = {}, tag = '') {
   return classes.every(className => classSet.has(className));
 }
 
+// 匿名文字只繼承容器的文字相關樣式（字型、字級、顏色等），不帶邊框、底色與內距
+const LOOSE_TEXT_INHERITED_PROPS = [
+  'font-family', 'font-size', 'font-weight', 'font-style', 'color',
+  'line-height', 'letter-spacing', 'text-align', 'text-transform', 'white-space',
+];
+
+// parentStyle 為容器已解析樣式（含 class 規則，camelCase 鍵）；按鈕文字瀏覽器預設水平置中
+function boxPaddingFromStyle(style) {
+  const px = (v) => {
+    const n = Number.parseFloat(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+  return {
+    paddingLeft: px(style && style.paddingLeft),
+    paddingRight: px(style && style.paddingRight),
+    paddingTop: px(style && style.paddingTop),
+    paddingBottom: px(style && style.paddingBottom),
+  };
+}
+
+function wrapLooseTextNode(textNode, parentStyle, centerByDefault) {
+  const inherited = {};
+  for (const [key, value] of Object.entries(parentStyle || {})) {
+    const prop = key.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
+    if (LOOSE_TEXT_INHERITED_PROPS.includes(prop) && value != null && value !== '') inherited[prop] = value;
+  }
+  if (centerByDefault && !inherited['text-align']) inherited['text-align'] = 'center';
+  // 匿名文字盒撐滿內容寬：grid／flex 容器把它置中或靠右時，改用 text-align 表達同一位置
+  const boxAlign = looseTextBoxAlign(parentStyle);
+  if (boxAlign) inherited['text-align'] = boxAlign;
+  const declarations = Object.entries(inherited).map(([prop, value]) => `${prop}: ${value}`);
+  return {
+    type: 'element',
+    tag: 'span',
+    attrs: declarations.length > 0 ? { style: declarations.join('; ') } : {},
+    children: [textNode],
+  };
+}
+
+// grid 看 justify-items（place-items 第二值），flex 看主軸 justify-content 或縱向的 align-items
+function looseTextBoxAlign(style) {
+  if (!style) return null;
+  const display = String(style.display || '').toLowerCase();
+  const pick = value => {
+    const v = String(value || '').trim().toLowerCase();
+    if (/^(center|safe center)$/.test(v)) return 'center';
+    if (/^(end|flex-end|right|self-end)$/.test(v)) return 'right';
+    return null;
+  };
+  const placeHorizontal = value => {
+    const parts = String(value || '').trim().split(/\s+/).filter(Boolean);
+    return parts.length > 1 ? parts[1] : parts[0];
+  };
+  if (/grid/.test(display)) return pick(style.justifyItems || placeHorizontal(style.placeItems));
+  if (/flex/.test(display)) {
+    const column = /^column/.test(String(style.flexDirection || '').toLowerCase());
+    return column ? pick(style.alignItems || String(style.placeItems || '').split(/\s+/)[0]) : pick(style.justifyContent || placeHorizontal(style.placeContent));
+  }
+  return null;
+}
+
 function collectText(el) {
   const parts = [];
   for (const c of el.children) {
@@ -1839,25 +2056,6 @@ function collectText(el) {
     else if (c.type === 'element') parts.push(collectText(c));
   }
   return parts.join('').trim().replace(/\s+/g, ' ');
-}
-
-// R-9 (general rule): offline `text-transform` for Label text. Exported as a
-// pure helper so the same general rule applies to every UI source going through
-// the converter. Locale-safe via String.prototype.toLocaleUpperCase /
-// toLocaleLowerCase, which leave non-cased scripts (e.g. CJK) unchanged.
-function applyTextTransformGeneral(text, transform) {
-  if (!text) return text;
-  const t = String(transform || '').trim().toLowerCase();
-  if (!t || t === 'none') return text;
-  if (t === 'uppercase') return text.toLocaleUpperCase();
-  if (t === 'lowercase') return text.toLocaleLowerCase();
-  if (t === 'capitalize') {
-    return text.replace(/(^|\s)(\S)/g, (_, ws, ch) => ws + ch.toLocaleUpperCase());
-  }
-  if (t === 'full-width') {
-    return text.replace(/[!-~]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0xFEE0));
-  }
-  return text;
 }
 
 function containsRichInner(el) {
@@ -1910,15 +2108,22 @@ function ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint) {
   // color rect
   const bg = pickBackgroundFill(style);
   if (bg) {
-    const { color, opacity, warning, tokenSource } = parseColor(bg, ctx.tokenRegistry);
+    let { color, opacity, warning, tokenSource } = parseColor(bg, ctx.tokenRegistry);
     if (warning) ctx.warnings.push({ code: warning, slotId });
     if (!color) {
-      ctx.skinSlots[slotId] = {
-        kind: 'transparent',
-        _unmappedBackground: bg,
-      };
-      ctx.warnings.push({ code: 'unmapped-color', detail: bg });
-      return;
+      // 對不到色票：照網頁原色畫（引擎吃 #rrggbb），警告保留讓色票缺口可追；轉不出色碼才退回透明
+      const literal = normalizeCssColorToHex(String(bg));
+      if (!literal) {
+        ctx.skinSlots[slotId] = {
+          kind: 'transparent',
+          _unmappedBackground: bg,
+        };
+        ctx.warnings.push({ code: 'unmapped-color', detail: bg });
+        return;
+      }
+      ctx.warnings.push({ code: 'unmapped-color-literal', detail: bg });
+      color = literal.slice(0, 7);
+      if (opacity == null) opacity = parseInt(literal.slice(7, 9), 16) / 255;
     }
     if (color) recordTokenUsage(ctx, 'colors', color, `${slotId}.color${tokenSource ? ':' + tokenSource : ''}`);
     const slot = {
@@ -1943,13 +2148,18 @@ function ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint) {
   }
 }
 
-function ensureTabButtonSkinSlot(ctx, slotId, attrs, style) {
+function ensureTabButtonSkinSlot(ctx, slotId, attrs, style, sizeHint) {
   if (ctx.skinSlots[slotId]) return;
 
   const explicitNormal = attrs['data-tab-normal'] || attrs['data-sprite'] || null;
   const explicitSelected = attrs['data-tab-selected'] || null;
-  const normalPath = guardSpritePath(ctx, explicitNormal || TAB_BUTTON_SKIN_NORMAL, `${slotId}.normal`, !!explicitNormal).path;
-  const selectedPath = guardSpritePath(ctx, explicitSelected || TAB_BUTTON_SKIN_SELECTED, `${slotId}.selected`, !!explicitSelected).path;
+  // 原稿沒指定貼圖時照 HTML 的框與底色產生，不套舊畫面的分頁貼圖（PROG-2-1652）
+  if (!explicitNormal && !explicitSelected) {
+    ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint);
+    return;
+  }
+  const normalPath = guardSpritePath(ctx, explicitNormal || explicitSelected, `${slotId}.normal`, true).path;
+  const selectedPath = guardSpritePath(ctx, explicitSelected || explicitNormal, `${slotId}.selected`, true).path;
 
   const slot = {
     kind: 'button-skin',
@@ -1973,9 +2183,17 @@ function ensureTabButtonSkinSlot(ctx, slotId, attrs, style) {
 function attachBoxShapeMetadata(ctx, slot, style, slotId) {
   const radius = resolveUniformCornerRadius(style);
   if (radius > 0) slot.cornerRadius = radius;
+  const radii = resolveCornerRadii(style);
+  if (radii) slot.cornerRadii = radii;
 
-  const borderWidth = resolveUniformBorderWidth(style);
-  if (borderWidth <= 0) return;
+  let borderWidth = resolveUniformBorderWidth(style);
+  if (borderWidth <= 0) {
+    // 各邊不同（如底邊 none）：記下每邊寬度，引擎端分邊畫框
+    const sides = resolveBorderSides(style);
+    if (!sides) return;
+    slot.borderSides = sides;
+    borderWidth = Math.max(sides.top, sides.right, sides.bottom, sides.left);
+  }
 
   slot.borderWidth = borderWidth;
   const borderColor = resolveUniformBorderColor(ctx, style, slotId);
@@ -1986,8 +2204,19 @@ function attachBoxShapeMetadata(ctx, slot, style, slotId) {
   }
 }
 
+function resolveBorderSides(style) {
+  if (!style) return null;
+  const side = (name) => {
+    if (/^(none|hidden)$/i.test(String(style[`border${name}Style`] || '').trim())) return 0;
+    return parseBorderWidthValue(style[`border${name}Width`]);
+  };
+  const sides = { top: side('Top'), right: side('Right'), bottom: side('Bottom'), left: side('Left') };
+  return (sides.top || sides.right || sides.bottom || sides.left) ? sides : null;
+}
+
 function hasRenderableBorder(style) {
-  return resolveUniformBorderWidth(style) > 0;
+  // 單邊框（如 border-bottom 分隔線）其餘各邊 style 為 none，均一寬度會判成 0，須再看各邊
+  return resolveUniformBorderWidth(style) > 0 || !!resolveBorderSides(style);
 }
 
 function resolveUniformBorderWidth(style) {
@@ -2025,7 +2254,13 @@ function parseBorderWidthValue(value) {
 
 function resolveUniformBorderColor(ctx, style, slotId) {
   if (!style) return null;
+  // 先取有寬度那幾邊的顏色：單邊框時簡寫與其他邊的顏色只是預設的文字色
+  const sides = resolveBorderSides(style);
+  const drawnSideColors = sides
+    ? ['Top', 'Right', 'Bottom', 'Left'].filter(n => sides[n.toLowerCase()] > 0).map(n => style[`border${n}Color`])
+    : [];
   const candidate = firstMeaningfulBorderColor([
+    ...drawnSideColors,
     style.borderColor,
     style.borderTopColor,
     style.borderRightColor,
@@ -2158,7 +2393,7 @@ function buildGradientRectSlot(ctx, backgroundImage, slotId) {
 
 function buildEffectSiblingNodes(ctx, node, style, name, width, height) {
   if (!ctx || !style || !node || !canUseGeneratedEffectSibling(node, width, height)) return [];
-  const shadows = collectOuterShadows(style);
+  const shadows = collectOuterShadows(style, { alphaShapedContent: hasAlphaShapedContent(node, style) });
   if (shadows.length === 0) return [];
 
   const padding = calculateShadowPadding(shadows);
@@ -2195,11 +2430,19 @@ function canUseGeneratedEffectSibling(node, width, height) {
   return hasHorizontalAnchor && hasVerticalAnchor;
 }
 
-function collectOuterShadows(style) {
+// 圖片內容的外形由透明度決定，不是矩形
+function hasAlphaShapedContent(node, style) {
+  if (node && (node.type === 'image' || node.type === 'composite-image')) return true;
+  return /url\(/i.test(String(style && style.backgroundImage || ''));
+}
+
+// drop-shadow 沿內容透明輪廓投影：外形非矩形時不能換成矩形陰影，略過（box-shadow 本就沿盒子，照常保留）
+function collectOuterShadows(style, options = {}) {
   const shadows = [];
   for (const shadow of parseShadowList(style.boxShadow || '')) {
     if (shadow && !shadow.inset) shadows.push(normalizeShadow(shadow));
   }
+  if (options.alphaShapedContent) return shadows.filter(Boolean);
   for (const shadow of parseDropShadowFilters(style.filter || '')) {
     if (shadow && !shadow.inset) shadows.push(normalizeShadow(shadow));
   }
@@ -2269,6 +2512,25 @@ function expandWidgetForEffect(widget, padding) {
   if (typeof out.hCenter === 'number') out.hCenter = out.hCenter + (padding.right - padding.left) * 0.5;
   if (typeof out.vCenter === 'number') out.vCenter = out.vCenter + (padding.top - padding.bottom) * 0.5;
   return out;
+}
+
+// 四角不同時回 [左上, 右上, 右下, 左下]；四角相同回 null（用 cornerRadius 即可）
+function resolveCornerRadii(style) {
+  if (!style) return null;
+  let values = [
+    style.borderTopLeftRadius,
+    style.borderTopRightRadius,
+    style.borderBottomRightRadius,
+    style.borderBottomLeftRadius,
+  ].map(value => resolveRadiusValue(value, style));
+  if (values.some(value => value == null)) {
+    const raw = String(style.borderRadius || '').split('/')[0].trim();
+    const parts = raw ? raw.split(/\s+/).map(item => resolveRadiusValue(item, style)) : [];
+    if (parts.length === 0 || parts.some(item => item == null)) return null;
+    const [a, b = a, c = a, d = b] = parts;
+    values = [a, b, c, d];
+  }
+  return values.every(value => value === values[0]) ? null : values;
 }
 
 function resolveUniformCornerRadius(style) {
@@ -2424,10 +2686,11 @@ function mergeComputedStyle(style, attrs, ctx) {
   assignComputed(out, 'color', computed.color, meaningfulCssColor);
   assignComputed(out, 'width', computed.width, meaningfulCssLength);
   assignComputed(out, 'height', computed.height, meaningfulCssLength);
-  assignComputed(out, 'top', computed.top, meaningfulCssLength);
-  assignComputed(out, 'right', computed.right, meaningfulCssLength);
-  assignComputed(out, 'bottom', computed.bottom, meaningfulCssLength);
-  assignComputed(out, 'left', computed.left, meaningfulCssLength);
+  // 定位四邊只換算作者原本有寫的邊（PROG-2-1641）：瀏覽器對絕對定位元素會把四邊全算成 px，
+  // 全抄會讓 widget 同時釘住左右/上下，畫布寬高一偏離設計尺寸元件就被拉長
+  for (const key of ['top', 'right', 'bottom', 'left']) {
+    if (style[key] != null && style[key] !== 'auto') assignComputed(out, key, computed[key], meaningfulCssLength);
+  }
   assignComputed(out, 'marginTop', computed['margin-top'], meaningfulCssLength);
   assignComputed(out, 'marginRight', computed['margin-right'], meaningfulCssLength);
   assignComputed(out, 'marginBottom', computed['margin-bottom'], meaningfulCssLength);
@@ -2503,16 +2766,29 @@ function meaningfulClipPath(value) {
   return null;
 }
 
-function buildPseudoVisualNodes(ctx, parentStyle, parentName, pseudoKind, hasElementChildren) {
+// CSS 疊放層：0 負 z、1 一般流、2 定位且 z 為 auto/0、3 正 z
+function stackingKey(position, zIndexRaw) {
+  const positioned = /^(absolute|relative|fixed|sticky)$/i.test(String(position || ''));
+  const z = Number(zIndexRaw);
+  if (!positioned || !Number.isFinite(z)) return { bucket: positioned ? 2 : 1, z: 0 };
+  if (z < 0) return { bucket: 0, z };
+  return z > 0 ? { bucket: 3, z } : { bucket: 2, z: 0 };
+}
+
+function elementStackingKey(el, ctx) {
+  if (!el || el.type !== 'element') return { bucket: 1, z: 0 };
+  const childStyle = collectElementStyle(el, ctx).style || {};
+  return stackingKey(childStyle.position, childStyle.zIndex);
+}
+
+function pseudoStackingKey(node) {
+  return stackingKey(node._cssPosition, node._cssZIndex);
+}
+
+function buildPseudoVisualNodes(ctx, parentStyle, parentName, pseudoKind) {
   if (!ctx || !ctx.opts || !ctx.opts.useComputedStyle || !parentStyle || !parentStyle._computedCaptureId) return [];
   const list = ctx.pseudoStyleByParentCaptureId && ctx.pseudoStyleByParentCaptureId[String(parentStyle._computedCaptureId)];
   if (!Array.isArray(list) || list.length === 0) return [];
-  if (hasElementChildren) {
-    if (pseudoKind === 'after') {
-      ctx.warnings.push({ code: 'pseudo-overlay-skipped-child-stacking-risk', detail: parentName });
-    }
-    return [];
-  }
   return list
     .filter(snapshot => snapshot.pseudo === pseudoKind)
     .map(snapshot => buildPseudoVisualNode(ctx, parentName, snapshot))
@@ -2534,6 +2810,8 @@ function buildPseudoVisualNode(ctx, parentName, snapshot) {
     widget: { top: 0, left: 0, right: 0, bottom: 0 },
     skinSlot: slotId,
     _cssPseudo: snapshot.pseudo,
+    _cssPosition: (snapshot.styles || {}).position,
+    _cssZIndex: (snapshot.styles || {})['z-index'],
   };
   const opacity = parseOpacity(style.opacity);
   if (opacity !== null) node.opacity = opacity;
@@ -2647,6 +2925,15 @@ function isTransparentCssColor(value) {
   return !!slash;
 }
 
+// 文字色對不到色票：與色塊同規則，照網頁原色（#rrggbb）並留警告；轉不出色碼才退回預設文字色
+function labelColorLiteral(ctx, slotId, cssColor) {
+  if (!cssColor) return null;
+  const literal = normalizeCssColorToHex(String(cssColor));
+  if (!literal) return null;
+  ctx.warnings.push({ code: 'unmapped-color-literal', slotId, detail: cssColor });
+  return literal.slice(0, 7);
+}
+
 function ensureLabelStyle(ctx, slotId, style, attrs, text = '') {
   if (ctx.skinSlots[slotId]) return;
   const fontSizeResolved = resolveLength(style.fontSize, ctx.tokenRegistry);
@@ -2658,15 +2945,18 @@ function ensureLabelStyle(ctx, slotId, style, attrs, text = '') {
   const typographyToken = resolveTypographyToken(ctx.tokenRegistry, fontSize, lineHeight);
   const slot = {
     kind: 'label-style',
-    font: attrs['data-font'] || pickFontByTag(style, ctx),
+    font: attrs['data-font'] || pickFontByTag(style, ctx, text),
     fontSize,
     lineHeight,
     letterSpacing,
-    color: colorParsed.color || 'textPrimary',
+    color: colorParsed.color || labelColorLiteral(ctx, slotId, style.color) || 'textPrimary',
     // §37.2 鐵律 1：黑色輪廓 + 寬度 2，沒明確指定就自動填
     outlineColor: 'colorOutlineDark',
     outlineWidth: 2,
-    horizontalAlign: (style.textAlign || 'LEFT').toUpperCase(),
+    // 文字自成 grid／flex 項目時，盒子的置中／靠右決定位置，text-align 只影響盒內換行
+    horizontalAlign: ENGINE.textAlign(looseTextBoxAlign(style) || style.textAlign),
+    // CSS 行盒以半行距把字形放在行高正中；引擎預設靠上會讓字整排偏高
+    verticalAlign: 'CENTER',
   };
   const overflow = inferLabelOverflow(style, text);
   if (overflow) slot.overflow = overflow;
@@ -2690,226 +2980,6 @@ function ensureLabelStyle(ctx, slotId, style, attrs, text = '') {
   if (!colorParsed.color && style.color) {
     ctx.warnings.push({ code: 'unmapped-color', slotId, detail: style.color });
   }
-}
-
-function inferLabelOverflow(style, text) {
-  const whiteSpace = String(style.whiteSpace || '').trim().toLowerCase();
-  if (whiteSpace === 'nowrap' || whiteSpace === 'pre') return null;
-  const normalizedText = String(text || '').trim();
-  if (!normalizedText) return null;
-  const textAlign = String(style.textAlign || '').trim().toLowerCase();
-  const longText = Array.from(normalizedText).length >= 48;
-  if (textAlign === 'justify' || longText || /[。！？.!?]\s*/.test(normalizedText)) {
-    return 'RESIZE_HEIGHT';
-  }
-  return null;
-}
-
-function isItalicStyle(value) {
-  return /^(italic|oblique)/i.test(String(value || '').trim());
-}
-
-function computeLetterSpacing(value, fontSize) {
-  if (value == null) return 0;
-  if (typeof value === 'string' && value.endsWith('em') && fontSize) {
-    const n = parseFloat(value);
-    if (Number.isFinite(n)) return Number((n * fontSize).toFixed(2));
-  }
-  const raw = String(value).trim();
-  const match = raw.match(/^(-?\d+(?:\.\d+)?)(px)?$/i);
-  if (match) return Number(parseFloat(match[1]).toFixed(2));
-  return 0;
-}
-
-// R-10: Generic font-family stack → project font asset resolver.
-// 通則：CSS font-family 是優先級堆疊（"A","B",fallback），converter 必須依序嘗試
-// 比對到第一個有資產的 family；不能因為堆疊裡有一個 generic `serif` 就把所有
-// font 都打成同一份資產。Registry 為資料導向，加新字型只需要在此加一筆。
-const PROJECT_FONT_REGISTRY = [
-  // 具名專案字型（exact / alias）
-  { match: /^newsreader$/i,                            asset: 'fonts/newsreader/font' },
-  { match: /^manrope$/i,                               asset: 'fonts/manrope/font' },
-  { match: /^notosans[\s_-]?tc$|^noto sans tc$|^noto sans cjk tc$/i, asset: 'fonts/notosans_tc/font' },
-  // 系統 CJK（落到 NotoSansTC，runtime 字模幾何最接近）
-  { match: /^pingfang tc$|^microsoft jhengHei$|^microsoft yahei$|^hiragino sans gb$|^思源黑體$|^蘋方$/i, asset: 'fonts/notosans_tc/font' },
-  // 系統 serif（落到 Newsreader）
-  { match: /^songti tc$|^stsong$|^playfair display$|^merriweather$/i, asset: 'fonts/newsreader/font' },
-  // CSS generic family（最後一道保險）
-  { match: /^serif$/i,                                 asset: 'fonts/newsreader/font' },
-  { match: /^sans-serif$|^system-ui$|^ui-sans-serif$/i, asset: 'fonts/notosans_tc/font' },
-];
-
-const PROJECT_FONT_DEFAULT = 'fonts/notosans_tc/font';
-
-function resolveFontFamilyToAsset(fontFamilyValue, registry, defaultAsset) {
-  const reg = Array.isArray(registry) ? registry : PROJECT_FONT_REGISTRY;
-  const def = typeof defaultAsset === 'string' ? defaultAsset : PROJECT_FONT_DEFAULT;
-  if (!fontFamilyValue || typeof fontFamilyValue !== 'string') return def;
-  const families = fontFamilyValue
-    .split(',')
-    .map(s => s.trim().replace(/^["']|["']$/g, '').trim())
-    .filter(Boolean);
-  for (const fam of families) {
-    for (const entry of reg) {
-      if (entry.match.test(fam)) return entry.asset;
-    }
-  }
-  return def;
-}
-
-function pickFontByTag(style, ctx) {
-  const extra = (ctx && Array.isArray(ctx.fontFaceRegistry)) ? ctx.fontFaceRegistry : [];
-  // Layered registry: source-CSS @font-face mappings win over project defaults.
-  const layered = extra.length > 0 ? extra.concat(PROJECT_FONT_REGISTRY) : PROJECT_FONT_REGISTRY;
-  return resolveFontFamilyToAsset(style && style.fontFamily, layered, PROJECT_FONT_DEFAULT);
-}
-
-// R-12: build per-conversion font registry from `@font-face` blocks in the
-// source stylesheets. Each block contributes one regex→asset entry that takes
-// precedence over `PROJECT_FONT_REGISTRY`. `customResolver` (optional) lets
-// callers override the default convention-based asset path. Generic helper —
-// reusable by any pipeline that wants to inject ad-hoc font mappings.
-function buildFontFaceRegistry(styleSheets, customResolver) {
-  const reg = [];
-  for (const sheet of (styleSheets || [])) {
-    const mappings = extractFontFaceMappings(sheet);
-    for (const m of mappings) {
-      if (!m.family) continue;
-      const asset = (typeof customResolver === 'function')
-        ? customResolver(m.family, m.src, m.srcs)
-        : resolveFontAssetByConvention(m.family, m.src);
-      if (!asset) continue;
-      const escaped = m.family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      reg.push({ match: new RegExp(`^${escaped}$`, 'i'), asset, source: '@font-face', family: m.family });
-    }
-  }
-  return reg;
-}
-
-// R-12 helper: convention-based resolver — derives a Cocos font asset path
-// from the @font-face family + src URL. Default convention:
-//   `fonts/<sanitized-family>/font` (matches existing repo layout
-//    assets/resources/fonts/<family>/font.ttf)
-// `src` is currently unused but retained for future hash-based mapping.
-function resolveFontAssetByConvention(family, _src) {
-  if (!family) return null;
-  const known = PROJECT_FONT_REGISTRY.find(entry => entry.match && entry.match.test(String(family).trim()));
-  if (known && known.asset) return known.asset;
-  const sanitized = String(family)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '_')
-    .replace(/^_+|_+$/g, '');
-  if (!sanitized) return null;
-  return `fonts/${sanitized}/font`;
-}
-
-// R-11 (general rule): `text-shadow` simple single-shadow form is natively
-// supported by Cocos Label (`enableShadow`/`shadowOffset`/`shadowBlur`/
-// `shadowColor`). The converter must parse the CSS value offline and emit
-// structured `{ color, offsetX, offsetY, blur }` onto the label-style slot, so
-// runtime never has to re-parse CSS strings. Multi-layer / inset shadows
-// remain `assetize` (handled by css-capability-matrix R-11). This helper is
-// exported so any mapper / future label slot generator can reuse it.
-function parseSimpleTextShadow(value) {
-  if (!value || typeof value !== 'string') return null;
-  const raw = value.trim();
-  if (!raw || raw.toLowerCase() === 'none') return null;
-  // Reject multi-layer shadows (multiple comma-separated shadow descriptors).
-  // Commas inside rgba(...)/hsla(...) must not count.
-  const probe = raw.replace(/rgba?\([^)]*\)/gi, 'C').replace(/hsla?\([^)]*\)/gi, 'C');
-  if (probe.split(',').filter(s => s.trim()).length > 1) return null;
-  // Tokenize: keep parenthesized color groups intact.
-  const tokens = [];
-  let i = 0;
-  while (i < raw.length) {
-    const ch = raw[i];
-    if (/\s/.test(ch)) { i++; continue; }
-    if (ch === '(') break; // shouldn't happen at top-level
-    // color forms with parentheses
-    const colorParen = raw.slice(i).match(/^(rgba?|hsla?)\([^)]*\)/i);
-    if (colorParen) { tokens.push(colorParen[0]); i += colorParen[0].length; continue; }
-    // hex / named color / length
-    const tok = raw.slice(i).match(/^[^\s]+/);
-    if (!tok) break;
-    tokens.push(tok[0]); i += tok[0].length;
-  }
-  if (tokens.length < 2) return null;
-  // Color may appear at start or end. Identify color token.
-  const colorRe = /^(#[0-9a-f]{3,8}|rgba?\(|hsla?\(|[a-z]+)/i;
-  const isLength = (t) => /^-?\d+(?:\.\d+)?(px|em|rem|%)?$/.test(t);
-  let colorTok = null;
-  const lengths = [];
-  for (const t of tokens) {
-    if (isLength(t)) lengths.push(t);
-    else if (!colorTok && colorRe.test(t)) colorTok = t;
-    else if (isLength(t)) lengths.push(t);
-  }
-  if (lengths.length < 2) return null;
-  const toPx = (t) => {
-    const n = parseFloat(t);
-    return Number.isFinite(n) ? n : 0;
-  };
-  const offsetX = toPx(lengths[0]);
-  const offsetY = toPx(lengths[1]);
-  const blur = lengths.length >= 3 ? Math.max(0, toPx(lengths[2])) : 0;
-  return {
-    offsetX,
-    offsetY,
-    blur,
-    color: normalizeCssColorToHex(colorTok) || '#00000080',
-  };
-}
-
-// R-11 helper: normalize rgb()/rgba()/#hex/#hex8 forms to `#RRGGBBAA` so that
-// downstream UISkinResolver.resolveColor() (which only understands hex/token)
-// can consume converter output without a CSS parser at runtime. Returns null
-// if the value cannot be normalized; caller decides fallback.
-function normalizeCssColorToHex(value) {
-  if (!value || typeof value !== 'string') return null;
-  const v = value.trim();
-  if (!v) return null;
-  if (/^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(v)) {
-    let h = v.slice(1);
-    if (h.length === 3) h = h.split('').map(c => c + c).join('') + 'ff';
-    else if (h.length === 4) h = h.split('').map(c => c + c).join('');
-    else if (h.length === 6) h = h + 'ff';
-    return '#' + h.toUpperCase();
-  }
-  const m = v.match(/^rgba?\(\s*([^)]+)\)$/i);
-  if (m) {
-    const parts = m[1].split(/\s*[,/]\s*|\s+/).filter(Boolean);
-    if (parts.length < 3) return null;
-    const toByte = (p) => {
-      if (/%$/.test(p)) return Math.round(parseFloat(p) * 255 / 100);
-      const n = parseFloat(p);
-      return Number.isFinite(n) ? Math.max(0, Math.min(255, Math.round(n))) : 0;
-    };
-    const r = toByte(parts[0]);
-    const g = toByte(parts[1]);
-    const b = toByte(parts[2]);
-    let a = 255;
-    if (parts.length >= 4) {
-      const ap = parts[3];
-      const an = /%$/.test(ap) ? parseFloat(ap) / 100 : parseFloat(ap);
-      if (Number.isFinite(an)) a = Math.max(0, Math.min(255, Math.round(an * 255)));
-    }
-    const hex = (n) => n.toString(16).padStart(2, '0').toUpperCase();
-    return '#' + hex(r) + hex(g) + hex(b) + hex(a);
-  }
-  return null;
-}
-
-function resolveTypographyToken(registry, fontSize, lineHeight) {
-  if (!registry || !registry.typographyByMetric) return null;
-  return registry.typographyByMetric.get(`${fontSize}/${lineHeight}`) || null;
-}
-
-function isBoldWeight(value) {
-  if (!value) return false;
-  const raw = String(value).trim().toLowerCase();
-  if (raw === 'bold' || raw === 'bolder') return true;
-  const n = parseInt(raw, 10);
-  return Number.isFinite(n) && n >= 600;
 }
 
 function numAttr(v) {
@@ -3077,18 +3147,10 @@ module.exports = {
   buildDraftFromHtml,
   collectBehavior,
   inferTabSemanticHints,
+  TAB_TEXT_HINTS,
   parseFragmentList,
   // exported for unit tests
   inferNodeType,
   anchorToWidget,
   parseColor,
-  computeLetterSpacing,
-  applyTextTransformGeneral,
-  resolveFontFamilyToAsset,
-  PROJECT_FONT_REGISTRY,
-  PROJECT_FONT_DEFAULT,
-  parseSimpleTextShadow,
-  normalizeCssColorToHex,
-  buildFontFaceRegistry,
-  resolveFontAssetByConvention,
 };

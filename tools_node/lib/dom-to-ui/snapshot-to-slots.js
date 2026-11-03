@@ -132,11 +132,15 @@ function parseGradient(s) {
     } else if (/circle|ellipse/i.test(shape)) {
       center = { x: 0.5, y: 0.5 }; // CSS default center
     }
-    const sizeMatch = shape.match(/([\d.]+)%\s+([\d.]+)%/);
+    // 尺寸只看 "at" 之前的部分，否則會把位置誤當半徑
+    const sizePart = shape.split(/\bat\b/i)[0];
+    const sizeMatch = sizePart.match(/([\d.]+)%\s+([\d.]+)%/);
     if (sizeMatch) {
       radius = { x: parseFloat(sizeMatch[1]) / 100, y: parseFloat(sizeMatch[2]) / 100 };
     } else if (/^circle$/i.test(shape.trim())) {
       radius = { x: 0.5 }; // CSS default radius for plain circle
+    } else if (!/circle/i.test(sizePart)) {
+      radius = ellipseKeywordRadius(sizePart, center || { x: 0.5, y: 0.5 });
     }
   }
 
@@ -188,6 +192,16 @@ function parseGradient(s) {
     repeatSpanRatio: repeatSpanRatio > 0 ? repeatSpanRatio : undefined,
     stops,
   };
+}
+
+// 橢圓尺寸關鍵字（預設 farthest-corner），以元素寬高比例表示各軸半徑
+function ellipseKeywordRadius(sizePart, center) {
+  const near = { x: Math.min(center.x, 1 - center.x), y: Math.min(center.y, 1 - center.y) };
+  const far = { x: Math.max(center.x, 1 - center.x), y: Math.max(center.y, 1 - center.y) };
+  const kw = (String(sizePart).match(/(closest|farthest)-(side|corner)/i) || [null, 'farthest', 'corner']);
+  const base = /closest/i.test(kw[1]) ? near : far;
+  const k = /corner/i.test(kw[2]) ? Math.SQRT2 : 1;
+  return { x: base.x * k, y: base.y * k };
 }
 
 /**

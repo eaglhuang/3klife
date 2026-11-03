@@ -46,6 +46,14 @@ export class BuffSystem {
     return list.some(b => b.effect === effect);
   }
 
+  /** 移除指定單位的某個狀態（淨化用，SYS-SKILL-ULT-0003）；沒有時不動作 */
+  public removeBuff(unitId: string, effect: StatusEffect): void {
+    const list = this.buffs.get(unitId);
+    if (!list) return;
+    const index = list.findIndex(b => b.effect === effect);
+    if (index >= 0) list.splice(index, 1);
+  }
+
   /**
    * 獲取某個單位身上所有列表（只讀）。
    */

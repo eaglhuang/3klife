@@ -19,6 +19,7 @@ import {
     resources,
     JsonAsset,
 } from 'cc';
+import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
@@ -402,6 +403,7 @@ export class LoadingScene extends Component {
     }
 
     start() {
+        if (!this.previewMode) installAdaptiveResolution();
         if (this.previewMode) {
             void this._startPreview().finally(() => {
                 if (!this.isValid) {

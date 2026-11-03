@@ -28,8 +28,15 @@ import {
   type SkillExecutionResult,
 } from '../../shared/SkillRuntimeContract';
 import { services } from '../../core/managers/ServiceLoader';
+import { selfBurstBlocksEffect, startSelfBurst } from '../shared/SelfBurstWindow';
+import { startTeamAura, teamAuraResistsDebuff } from '../shared/TeamAura';
+import { resolveTeamRecover } from '../shared/TeamRecover';
+import { MORALE_DURATION_TURNS } from '../shared/Morale';
+import { dispelPick, dispelShieldPct, enemyMassDebuffParamsOf, massDebuffStatusesFor, massDebuffTargets, startEnemyMassDebuff } from '../shared/EnemyMassDebuff';
 import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
 import { sceneFireDamageTakenOf } from '../shared/BattleTacticBehavior';
+import { COMBO_ULTIMATE_MULTIPLIER, findComboUltimate } from '../shared/ComboUltimate';
+import { ANCESTRAL_SPIRIT_LOG, ancestralSpiritAttackOf, isOutnumbered } from '../shared/AncestralSpirit';
 
 export interface GeneralSkillCastOptions {
   tacticId?: string | null;
@@ -56,6 +63,10 @@ export interface BattleSkillDispatcherContext {
   getUltimateDamageDef?(ultimateId: string): { slot?: number; scalingStat?: string | null } | undefined;
   /** 奧義 base_power 表（NumericalConfig.Ult_Base_Power）；未載入時不套用（PROG-2-0927） */
   getUltBasePowerTable?(): Readonly<Record<string, number>> | undefined;
+  /** 部隊的來源武將模板 id（虎符 sourceTemplateId）；組合奧義判定搭檔用（PROG-2-1588） */
+  getUnitSourceGeneralId?(unitId: string): string | null;
+  /** 祖先成名奧義的戰法 id（英靈附體，PROG-2-1603）；查不到回 null，沿用本體奧義 */
+  getAncestorSignatureSkillId?(ancestorTemplateId: string | null): string | null;
 }
 
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
@@ -63,6 +74,8 @@ export class BattleSkillDispatcher {
   private readonly skillExecutor: BattleSkillExecutor = createDefaultBattleSkillExecutor();
   /** 本場已生效的奧義（陣營:ultimateId）；E-9 每場戰鬥每個奧義限用 1 次（PROG-2-1451） */
   private readonly usedUltimates = new Set<string>();
+  /** 本場已發動英靈附體的陣營（PROG-2-1587，每場一次） */
+  private readonly ancestralSpiritUsed = new Set<Faction>();
 
   constructor(
     private readonly context: BattleSkillDispatcherContext,
@@ -101,7 +114,7 @@ export class BattleSkillDispatcher {
       };
     }
 
-    return this.executeBattleSkillRequest({
+    const result = this.executeBattleSkillRequest({
       sourceType,
       ownerUid: casterFaction,
       generalTemplateId: general.id,
@@ -112,6 +125,101 @@ export class BattleSkillDispatcher {
       targetUnitUid: options.targetUnitUid ?? null,
       targetTileId: options.targetTileId ?? null,
     });
+    // 自身爆發家族奧義施放成功後開窗（SYS-SKILL-ULT-0001）；非爆發奧義 startSelfBurst 原樣回傳
+    if (result.applied && options.ultimateId) {
+      const state = this.context.state;
+      const before = state.getSelfBurst(casterFaction);
+      const after = startSelfBurst(before, options.ultimateId);
+      state.setSelfBurst(casterFaction, after);
+      if (after && after !== before) {
+        services().event.emit(EVENT_NAMES.SelfBurstChanged, {
+          faction: casterFaction, phase: 'started', ultimateId: after.ultimateId, turns: after.remainingTurns,
+        });
+      }
+      // 全隊增益家族（SYS-SKILL-ULT-0002）：同家族逐欄取高不疊加
+      // 團隊回復家族（SYS-SKILL-ULT-0003）：施放當下對我方存活單位補血、淨化、回士氣、加護盾
+      this.applyTeamRecover(casterFaction, options.ultimateId);
+      const auraBefore = state.getTeamAura(casterFaction);
+      const auraAfter = startTeamAura(auraBefore, options.ultimateId);
+      state.setTeamAura(casterFaction, auraAfter);
+      if (auraAfter && auraAfter !== auraBefore) {
+        services().event.emit(EVENT_NAMES.TeamAuraChanged, {
+          faction: casterFaction, phase: 'started', ultimateId: auraAfter.ultimateId, turns: auraAfter.remainingTurns,
+        });
+      }
+      // 敵方全體減益家族（SYS-SKILL-ULT-0004）：對敵方陣營掛持續層、附加狀態、驅散增益
+      this.applyEnemyMassDebuff(casterFaction, options.ultimateId);
+    }
+    return result;
+  }
+
+  private applyEnemyMassDebuff(casterFaction: Faction, ultimateId: string): void {
+    const params = enemyMassDebuffParamsOf(ultimateId);
+    if (!params) return;
+    const state = this.context.state;
+    const svc = services();
+    const opponent = casterFaction === Faction.Player ? Faction.Enemy : Faction.Player;
+    const foes = Array.from(state.units.values())
+      .filter((u) => u.faction === opponent)
+      .map((u) => ({ id: u.id, unit: u, isDead: () => u.isDead(), effects: svc.buff.getBuffs(u.id).map((b) => b.effect) }));
+    const targets = massDebuffTargets(foes, params, params.targetCount !== undefined ? svc.session.randomSource() : 0);
+    let dispelled = 0;
+    targets.forEach((t, i) => {
+      if (params.dispel) {
+        for (const effect of dispelPick(t.effects)) {
+          svc.buff.removeBuff(t.id, effect);
+          dispelled++;
+        }
+      }
+      for (const effect of massDebuffStatusesFor(params, i)) {
+        // 與單體 debuff 同規則：爆發免控、全隊抗性先判
+        if (selfBurstBlocksEffect(state.getSelfBurst(opponent), effect)) continue;
+        if (teamAuraResistsDebuff(state.getTeamAura(opponent), effect, svc.session.randomSource())) continue;
+        svc.buff.applyBuff(t.id, effect, params.statusTurns);
+        svc.event.emit(EVENT_NAMES.BuffApplied, { unitId: t.id, effect, turns: params.statusTurns });
+      }
+    });
+    // 司馬懿高平陵變：驅散數轉為我方全體護盾，護盾不疊加取較大者
+    const shieldPct = dispelShieldPct(params, dispelled);
+    if (shieldPct > 0) {
+      for (const ally of Array.from(state.units.values())) {
+        if (ally.faction !== casterFaction || ally.isDead()) continue;
+        ally.shield = Math.max(ally.shield, Math.floor(ally.getEffectiveMaxHp() * shieldPct));
+      }
+    }
+    const before = state.getMassDebuff(opponent);
+    const after = startEnemyMassDebuff(before, ultimateId);
+    state.setMassDebuff(opponent, after);
+    if (after && after !== before) {
+      svc.event.emit(EVENT_NAMES.MassDebuffChanged, { faction: opponent, phase: 'started', debuff: after });
+    }
+  }
+
+  private applyTeamRecover(casterFaction: Faction, ultimateId: string): void {
+    const buff = services().buff;
+    const allies = Array.from(this.context.state.units.values()).filter((u) => u.faction === casterFaction && !u.isDead());
+    const byId = new Map(allies.map((u) => [u.id, u]));
+    const outcomes = resolveTeamRecover(ultimateId, allies.map((u) => ({
+      id: u.id,
+      currentHp: u.currentHp,
+      maxHp: u.getEffectiveMaxHp(),
+      morale: u.morale,
+      effects: buff.getBuffs(u.id).map((b) => b.effect),
+    })));
+    for (const o of outcomes) {
+      const unit = byId.get(o.id)!;
+      if (o.healed > 0) unit.heal(o.healed);
+      if (o.moraleGained > 0) {
+        unit.morale += o.moraleGained;
+        unit.moraleTurns = MORALE_DURATION_TURNS;
+      }
+      // 護盾不疊加：取較大者
+      unit.shield = Math.max(unit.shield, o.shield);
+      for (const effect of o.cleansed) buff.removeBuff(unit.id, effect);
+    }
+    if (outcomes.length) {
+      services().event.emit(EVENT_NAMES.TeamRecovered, { faction: casterFaction, ultimateId, outcomes });
+    }
   }
 
   public dispatchSeedTactic(
@@ -221,10 +329,19 @@ export class BattleSkillDispatcher {
         battleLogLines: [vitalityCheck.reason],
       };
     }
-    const result = this.skillExecutor.execute(this.withUltimateAttack(request), this.buildBattleSkillExecutionContext());
+    const combo = this.findCombo(request);
+    const baseRequest = this.withUltimateAttack(request);
+    const ultimateRequest = combo && baseRequest.ultimateAttack != null
+      ? { ...baseRequest, ultimateAttack: Math.floor(baseRequest.ultimateAttack * COMBO_ULTIMATE_MULTIPLIER) }
+      : baseRequest;
+    const executed = this.skillExecutor.execute(ultimateRequest, this.buildBattleSkillExecutionContext());
+    const result = combo && ultimateRequest !== baseRequest && executed.applied
+      ? { ...executed, battleLogLines: [`組合奧義：${combo.name}（威力 ×${COMBO_ULTIMATE_MULTIPLIER}）`, ...executed.battleLogLines] }
+      : executed;
     if (result.applied && request.sourceType === SkillSourceType.Ultimate) {
       this.spendUltimateCost(request);
       if (usedKey) this.usedUltimates.add(usedKey);
+      return this.tryAncestralSpirit(ultimateRequest, result);
     }
     return result;
   }
@@ -245,9 +362,43 @@ export class BattleSkillDispatcher {
     return attack === null ? request : { ...request, ultimateAttack: attack };
   }
 
+  /** 組合奧義（PROG-2-1588 暫定）：施放者是主將，且己方存活部隊的來源武將是組合搭檔 */
+  private findCombo(request: BattleSkillRequest) {
+    if (request.sourceType !== SkillSourceType.Ultimate || !this.context.getUnitSourceGeneralId) return null;
+    const general = this.resolveCasterGeneral(request);
+    if (!general) return null;
+    const allies: Array<string | null> = [];
+    for (const unit of this.context.state.units.values()) {
+      if (unit.faction !== general.faction || unit.isDead()) continue;
+      allies.push(this.context.getUnitSourceGeneralId(unit.id));
+    }
+    return findComboUltimate(general.id, allies);
+  }
+
+  /**
+   * 英靈附體（PROG-2-1587 暫定）：奧義生效後，若施放方兵力劣勢（存活部隊 < 敵方 70%）且本場未發動，
+   * 祖先虛影以 50% 奧義攻擊基準同步再施放一次；不再扣精力。
+   */
+  private tryAncestralSpirit(request: BattleSkillRequest, result: SkillExecutionResult): SkillExecutionResult {
+    const general = this.resolveCasterGeneral(request);
+    if (!general || this.ancestralSpiritUsed.has(general.faction)) return result;
+    if (!isOutnumbered(this.context.state.units.values(), general.faction)) return result;
+    const spiritAttack = ancestralSpiritAttackOf(request.ultimateAttack);
+    if (spiritAttack === null) return result;
+    this.ancestralSpiritUsed.add(general.faction);
+    const ancestorSkillId = this.context.getAncestorSignatureSkillId?.(general.ancestorTemplateId ?? null) ?? null;
+    const echo = this.skillExecutor.execute({ ...request, ultimateAttack: spiritAttack, battleSkillId: ancestorSkillId ?? request.battleSkillId }, this.buildBattleSkillExecutionContext());
+    return {
+      ...result,
+      deltas: [...result.deltas, ...echo.deltas],
+      battleLogLines: [...result.battleLogLines, ANCESTRAL_SPIRIT_LOG, ...echo.battleLogLines],
+    };
+  }
+
   /** 新一局戰鬥開始時清空已施放奧義紀錄（BattleController.initBattle 呼叫） */
   public resetUltimateUsage(): void {
     this.usedUltimates.clear();
+    this.ancestralSpiritUsed.clear();
   }
 
   private usedUltimateKey(request: BattleSkillRequest): string | null {
@@ -371,6 +522,10 @@ export class BattleSkillDispatcher {
         const cell = state.getCell(lane, depth);
         return !!cell && !cell.occupantId && !tileStateRuleOf(state.getTileEffect(lane, depth)).blocksOnEnter;
       },
+      isHazardCell: (lane: number, depth: number) => {
+        const effect = state.getTileEffect(lane, depth);
+        return !!effect?.damagePerTurn && tileStateRuleOf(effect).damagesOnTurnEnd;
+      },
       pushUnitTo: (unit: TroopUnit, lane: number, depth: number) => {
         const fromLane = unit.lane;
         const fromDepth = unit.depth;
@@ -441,7 +596,11 @@ export class BattleSkillDispatcher {
         });
       },
       applyBuff: (unit: TroopUnit, effect: StatusEffect, turns: number) => {
+        // 自身爆發免控（SYS-SKILL-ULT-0001）：窗口期間擋下控制類狀態
+        if (selfBurstBlocksEffect(state.getSelfBurst(unit.faction), effect)) return;
         const svc = services();
+        // 全隊抗性（曹植建安風骨，SYS-SKILL-ULT-0003）：負面狀態依機率抵抗，擲骰走戰場亂數源
+        if (teamAuraResistsDebuff(state.getTeamAura(unit.faction), effect, svc.session.randomSource())) return;
         svc.buff.applyBuff(unit.id, effect, turns);
         svc.event.emit(EVENT_NAMES.BuffApplied, {
           unitId: unit.id,

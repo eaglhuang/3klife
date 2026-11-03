@@ -1,4 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
+import { resolveAiDeployPreference } from '../../core/systems/AiDeployTroopPick';
 import {
   EVENT_NAMES,
   Faction,
@@ -25,7 +26,7 @@ import { EnemyAI, AI_USABLE_TYPES } from "./EnemyAI";
 import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
-import { findUltBasePowerTable, findUltimateBattleSkillId, findUltimateDamageDef, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
+import { findAncestorSignatureSkillId, findUltBasePowerTable, findUltimateBattleSkillId, findUltimateDamageDef, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
 import { BattleFlowStateMachine } from './BattleFlowStateMachine';
 import { BattleRuntimeOrchestrator } from '../orchestrators/BattleRuntimeOrchestrator';
 import { executeBattleCombatPhase } from '../runtime/phases/BattleCombatPhase';
@@ -57,6 +58,7 @@ import type { TigerTallySkillCarrier, TigerTallyTacticRequestOptions } from '../
 import { rollLoyaltyRefusal } from '../../core/systems/TigerTallyLoyalty';
 import { factorBattleEffectsOf, type FactorBattleEffectMap } from '../../core/systems/FactorTacticLinkage';
 import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../../core/systems/TallyDeployAffinity';
+import { resolveTallyTemplateId } from '../../core/config/TigerTallySpecTactics';
 import { buildTallyCardCatalog, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { buildAiTallyPool, allocateAiTallies } from '../../core/systems/AiTallyPool';
 import { starStatMultiplier } from '../../core/systems/TigerTallyStar';
@@ -102,6 +104,7 @@ import { fillTacticNumbers, type TacticMetrics } from '../shared/EnemyTacticNumb
 import { aiHoldsTactic, pickTacticByIq } from '../shared/AiTacticDecision';
 import { aiShouldInitiateDuel } from '../../core/systems/AiDuelDecision';
 import { lastSpurtReasonOf } from '../../core/systems/LastSpurtJudge';
+import { advanceWisdomMeter, applyWisdomSurge } from '../shared/WisdomMeter';
 import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
@@ -213,7 +216,9 @@ export class BattleController {
       getUltimateVitalityCostPct: (ultimateId) => findUltimateVitalityCostPct(ultimateId),
       getUltimateDamageDef: (ultimateId) => findUltimateDamageDef(ultimateId),
       getUltBasePowerTable: () => findUltBasePowerTable(),
+      getAncestorSignatureSkillId: (ancestorTemplateId) => findAncestorSignatureSkillId(ancestorTemplateId),
       isUnitActionBlocked: (unitId) => this.turnManager.isUnitActionBlockedThisTurn(unitId),
+      getUnitSourceGeneralId: (unitId) => this.sourceTemplateOfUnit(unitId),
     },
     this.skillSourceTranslator,
   );
@@ -283,7 +288,8 @@ export class BattleController {
     // 敵將 Profile 路線策略（PROG-2-1463）：沒有時 EnemyAI 隨機選路
     this.enemyAi.laneStrategy = enemyGeneral.aiLaneStrategy ?? null;
     // 敵將 Profile 部署兵種偏好與 IQ（PROG-2-1468）：IQ 由 configureAiDifficulty 寫入
-    this.enemyAi.deployPreference = enemyGeneral.aiDeployPreference ?? null;
+    // 沒有 Profile 偏好時依場景偏好出兵（PROG-2-1605）
+    this.enemyAi.deployPreference = resolveAiDeployPreference(enemyGeneral.aiDeployPreference, battleTactic);
     this.enemyAi.iq = null;
     this.enemyAi.tallyTroopTypes = [];
     this.flowStateMachine.reset();
@@ -384,7 +390,7 @@ export class BattleController {
   }
 
   private bindTallyAffinity(unit: TroopUnit, ref: TallyDeployRef): void {
-    const profile = buildTallyCardCatalog().get(ref.templateId)?.affinity ?? null;
+    const profile = buildTallyCardCatalog().get(resolveTallyTemplateId(ref.templateId))?.affinity ?? null;
     const general = this.state.getGeneral(Faction.Player);
     const commander: TallyCommanderInfo | null = general ? toTallyCommander(general.id, general.gender) : null;
     unit.tallyId = ref.cardUid;
@@ -892,6 +898,19 @@ export class BattleController {
   }
 
   /** 殘局判斷（FORM-10）：每回合切換時更新合計兵力峰值，達條件就進入殘局模式並只發一次事件 */
+  /** 軍師智謀能量（SCN-10，PROG-2-1553）：每回合依我方主將智力累積，滿了觸發全軍鼓舞（HUD 未做） */
+  private updateWisdomMeter(): void {
+    const player = this.state.playerGeneral;
+    if (!player) return;
+    const step = advanceWisdomMeter(this.state.wisdomMeter, player.int);
+    this.state.wisdomMeter = step.meter;
+    if (step.triggered) {
+      this.state.wisdomTriggerCount += 1;
+      // 全局增幅（PROG-2-1574，暫定）：我方全軍士氣 +20
+      applyWisdomSurge(this.state.units.values(), Faction.Player);
+    }
+  }
+
   private updateLastSpurtMode(): void {
     const living = this.livingUnitsOf(Faction.Player).length + this.livingUnitsOf(Faction.Enemy).length;
     this.state.peakTroopCount = Math.max(this.state.peakTroopCount, living);
@@ -1386,6 +1405,7 @@ export class BattleController {
     svc.battle.nextTurn();
     this.state.tickControlledUnits();
     this.updateLastSpurtMode();
+    this.updateWisdomMeter();
     const weatherBefore = this.state.weather;
     this.applyWeatherForTurn(svc.battle.getSnapshot().turn);
     this.announceAptitudeDialogue(weatherBefore !== this.state.weather);

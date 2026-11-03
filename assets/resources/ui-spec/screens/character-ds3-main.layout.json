@@ -62,7 +62,7 @@
               },
               {
                 "type": "image",
-                "name": "CharacterDs3Main_img_1",
+                "name": "PortraitImage",
                 "widget": {
                   "left": "50%",
                   "bottom": 0
@@ -97,7 +97,7 @@
           },
           {
             "type": "label",
-            "name": "CharacterDs3Main_div_3",
+            "name": "PortraitFooterTitle",
             "widget": {
               "left": 36,
               "bottom": 36

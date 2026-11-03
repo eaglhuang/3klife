@@ -9,7 +9,7 @@ import { applyAptitudeMove } from '../../../core/systems/BattleAptitude';
 import { forestMoveBonusFor } from '../../../core/systems/FactorTacticLinkage';
 import { forcedMoveBlockedDamageRatio, resolveForcedMove } from '../../shared/ForcedMoveTile';
 import { resolveGhostPath, type GhostPathCell } from '../../shared/GhostMovePath';
-import { hasGhostMove, tallyTerrainMoveBonusOf } from '../../shared/TallyPassive';
+import { hasGhostMove, tallyTerrainMoveBonusOf, tallyTileMoveDeltaOf, canTrampleOver } from '../../shared/TallyPassive';
 
 const FORWARD_DIR: Record<Faction, number> = {
   [Faction.Player]: 1,
@@ -52,6 +52,7 @@ export function executeBattleAutoMovePhase(context: BattleAutoMovePhaseContext):
 }
 
 function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context: BattleAutoMovePhaseContext): void {
+  unit.chargeCells = 0;
   if (svc.buff.hasBuff(unit.id, StatusEffect.Stun)) {
     unit.isShieldWallActive = false;
     return;
@@ -62,14 +63,17 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
 
   const dir = FORWARD_DIR[unit.faction];
   const slowPenalty = svc.buff.hasBuff(unit.id, StatusEffect.Slow) ? 1 : 0;
+  // 疾行（PROG-2-1600 暫定）：移動 +1，以負懲罰計
+  const hasteBonus = svc.buff.hasBuff(unit.id, StatusEffect.Haste) ? 1 : 0;
   const tacticMoveRange = resolveBattleTacticBehavior(context.state.battleTactic).getEffectiveMoveRange(unit, context.state);
   const isFloodBattle = context.state.battleTactic === BattleTactic.FloodAttack;
   const baseMoveRange = isFloodBattle
     ? 1
     : applyAptitudeMove(tacticMoveRange, context.getAptitudeMoveDelta?.(unit) ?? 0, context.getAptitudeMoveSetTo?.(unit) ?? null);
-  let remainingMoveBudget = Math.max(0, baseMoveRange - slowPenalty);
+  let remainingMoveBudget = Math.max(0, baseMoveRange - slowPenalty + hasteBonus);
   if (!isFloodBattle) {
-    remainingMoveBudget += resolveTileMoveRangeDelta(context.state, unit.lane, unit.depth);
+    // 神威符無視地形（PROG-2-1576）：減移動的格子效果對它無效
+    remainingMoveBudget += tallyTileMoveDeltaOf(unit, resolveTileMoveRangeDelta(context.state, unit.lane, unit.depth));
     // 林地適性（PROG-2-0584）：站在林地且有 forest-move-bonus 的部隊移動力 +1
     const cell = context.state.getCell(unit.lane, unit.depth);
     remainingMoveBudget += forestMoveBonusFor(cell?.terrain ?? TerrainType.Plain, unit.factorEffects);
@@ -91,6 +95,33 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
     if (nextCell.occupantId) {
       const blocker = context.state.units.get(nextCell.occupantId)!;
 
+      // 巨型踐踏（南蠻，PROG-2-1578）：越過敵方步兵，落在後一格（需空著且可通行），花 1 點移動力
+      if (canTrampleOver(unit, blocker)) {
+        const landDepth = nextDepth + dir;
+        const landCell = context.state.getCell(unit.lane, landDepth);
+        if (landCell && !landCell.occupantId && !context.isCellMovementBlocked(unit.lane, landDepth)) {
+          const fromDepth = unit.depth;
+          context.state.getCell(unit.lane, fromDepth)!.occupantId = null;
+          unit.moveTo(unit.lane, landDepth);
+          landCell.occupantId = unit.id;
+          unit.chargeCells += 2;
+          svc.event.emit(EVENT_NAMES.UnitMoved, {
+            unitId: unit.id,
+            lane: unit.lane,
+            depth: landDepth,
+            fromLane: unit.lane,
+            fromDepth,
+            ghostMove: true,
+          });
+          context.turnManager.markUnitMoved(unit.id);
+          context.consumeTileBuff(unit);
+          remainingMoveBudget -= 1;
+          remainingMoveBudget += applyTileEffectOnEnter(unit, dir, svc, context);
+          if (unit.isDead()) return;
+          continue;
+        }
+      }
+
       if (
         blocker.faction === unit.faction
         && context.isGeneralUnit(unit.id)
@@ -105,6 +136,7 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
 
         blocker.moveTo(previousLane, previousDepth);
         unit.moveTo(unit.lane, nextDepth);
+        unit.chargeCells += 1;
         context.turnManager.markGeneralSwapUsed(unit.faction);
 
         svc.event.emit(EVENT_NAMES.UnitMoved, {
@@ -150,6 +182,7 @@ function stepMoveUnit(unit: TroopUnit, svc: ReturnType<typeof services>, context
     context.state.getCell(unit.lane, unit.depth)!.occupantId = null;
     unit.moveTo(unit.lane, nextDepth);
     nextCell.occupantId = unit.id;
+    unit.chargeCells += 1;
     svc.event.emit(EVENT_NAMES.UnitMoved, {
       unitId: unit.id,
       lane: unit.lane,

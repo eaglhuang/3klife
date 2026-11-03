@@ -118,6 +118,7 @@ const TACTIC_LABEL: Record<BattleTactic, string> = {
   [BattleTactic.RockSlide]: '落石',
   [BattleTactic.AmbushAttack]: '伏擊',
   [BattleTactic.NightRaid]: '夜襲',
+  [BattleTactic.Siege]: '攻城戰',
 };
 
 const SOURCE_TAG: Record<IBattleEntryParams['entrySource'], string> = {

@@ -7,7 +7,7 @@ const DEFAULT_H2U_BASELINE_WORKTREE_STATUS_FILE = 'artifacts/legacy-h2u-first-wi
 const DEFAULT_H2U_STATUS_SNAPSHOT_OUT = 'artifacts/legacy-h2u-first-win/worktree-status.snapshot.txt';
 const DEFAULT_H2U_ALLOW_DIRTY_PREFIXES = Object.freeze([
   'assets/resources/ui-spec/screens/legacy-h2u-dryrun.local-tokens.json',
-  'assets/resources/ui-spec/screens/legacy-h2u-dryrun.readiness.json',
+  'ui-spec-evidence/screens/legacy-h2u-dryrun.readiness.json',
   'assets/resources/ui-spec/screens/legacy-h2u-dryrun.runtime-version.json',
 ]);
 

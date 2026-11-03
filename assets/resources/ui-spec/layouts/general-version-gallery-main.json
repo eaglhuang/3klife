@@ -1101,6 +1101,19 @@
                 "styleSlot": "nurture.label.meta"
               }
             ]
+          },
+          {
+            "type": "label",
+            "name": "GalleryLoreText",
+            "id": "sameNameLore",
+            "widget": {
+              "bottom": 24,
+              "left": 32
+            },
+            "width": 900,
+            "height": 40,
+            "text": "",
+            "styleSlot": "nurture.label.body"
           }
         ]
       }

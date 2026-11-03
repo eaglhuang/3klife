@@ -15,7 +15,7 @@ import type { RankTier, TournamentPhase } from '../../core/systems/TournamentSea
 import { WEATHER_LABEL } from '../../shared/BattleEntryParams';
 import { TERRAIN_LABEL } from './EnvScoutPresenter';
 import {
-    TOURNAMENT_BOSS_TAG_LABEL, TOURNAMENT_LOCAL_CONFIG, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeasonReward,
+    TOURNAMENT_BOSS_TAG_LABEL, TOURNAMENT_BRACKET_ROUNDS, TOURNAMENT_LOCAL_CONFIG, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeasonReward,
     type TournamentSeriesResult, type TournamentStatus,
 } from '../../core/systems/TournamentLocal';
 import type { TigerTallyCard } from '../../core/models/TigerTallyCard';
@@ -171,5 +171,5 @@ export function seriesText(result: TournamentSeriesResult): string {
     const wins = result.games.filter((g) => g).length;
     const losses = result.games.length - wins;
     const delta = result.pointsDelta >= 0 ? `+${result.pointsDelta}` : `${result.pointsDelta}`;
-    return `${result.win ? '勝' : '敗'} ${wins}:${losses}｜積分 ${delta} → ${result.pointsAfter}（${TOURNAMENT_TIER_LABEL[result.tierAfter]}）${result.paidExtra ? `｜花費 ${TOURNAMENT_LOCAL_CONFIG.extraEntryCost} 金` : ''}`;
+    return `${TOURNAMENT_BRACKET_ROUNDS[result.round] ?? ''}${result.champion ? '奪冠' : result.win ? '勝' : '敗'} ${wins}:${losses}｜積分 ${delta} → ${result.pointsAfter}（${TOURNAMENT_TIER_LABEL[result.tierAfter]}）${result.paidExtra ? `｜花費 ${TOURNAMENT_LOCAL_CONFIG.extraEntryCost} 金` : ''}`;
 }

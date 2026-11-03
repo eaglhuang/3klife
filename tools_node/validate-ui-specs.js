@@ -1460,6 +1460,24 @@ for (const filePath of listCanonicalSpecFiles(screenDir)) {
     }
 }
 
+// runtime-spec-only（PROG-2-1638）：resources 會整包進遊戲，轉換證據檔必須放 ui-spec-evidence/
+(function checkRuntimeSpecOnly() {
+    const { evidenceSuffixOf } = require('./lib/ui-spec-sidecars');
+    const walk = (dir) => {
+        if (!fs.existsSync(dir)) return;
+        for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+            const full = path.join(dir, entry.name);
+            if (entry.isDirectory()) { walk(full); continue; }
+            if (!entry.name.endsWith('.json')) continue;
+            const suffix = evidenceSuffixOf(entry.name);
+            if (suffix) {
+                strictFail('runtime-spec-only', `${relative(full)} - 轉換證據檔（.${suffix}）不可放在遊戲資源目錄，請移到 ui-spec-evidence/ 同子路徑`, failures);
+            }
+        }
+    };
+    walk(uiSpecRoot);
+})();
+
 if (failures.length > 0) {
     console.error('❌ UI Spec 驗證失敗\n');
     for (const failure of failures) {

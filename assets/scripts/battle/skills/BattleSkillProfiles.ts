@@ -1,6 +1,6 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)、兵種（虎符）系統.md (doc_spec_0012)；PROG-2-1429 依建檔紀錄補標出處
-import { StatusEffect } from '../../core/config/Constants';
-import { TIGER_TALLY_PENDING_SKILL_IDS } from '../../core/config/TigerTallySpecTactics';
+import { StatusEffect, Weather } from '../../core/config/Constants';
+import { RULED_EXTRA_TALLY_SKILL_IDS, TIGER_TALLY_PENDING_SKILL_IDS } from '../../core/config/TigerTallySpecTactics';
 import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } from '../../shared/SkillRuntimeContract';
 
 export type BattleSkillFalloffRule = 'none' | 'linear-step';
@@ -42,6 +42,8 @@ export interface BattleSkillProfile {
   healMissingRatio?: number;
   /** 精銳突擊：衝鋒傷害倍率（PROG-2-0751，規格 2.0） */
   chargeMultiplier?: number;
+  /** 依天氣的傷害倍率（PROG-2-1698 夜襲：夜晚 ×1.5）；未列的天氣不變 */
+  weatherDamageMultiplier?: Readonly<Partial<Record<Weather, number>>>;
   /** 首回合傷害倍率（PROG-2-0773 威震華夏）：戰鬥第 1 回合傷害 × 此值 */
   firstTurnDamageMultiplier?: number;
   /** 擊殺目標後重置施放者行動（PROG-2-0773 威震華夏） */
@@ -265,6 +267,81 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     maxTargets: 1,
     hitStageMultipliers: [1.0, 1.0],
     battleLogKey: 'skill.insp_combo_attack.hit',
+  },
+  // 結義之怒（PROG-2-1701 靈感戰法，數值暫定）：前方扇形 2 格、不衰減、爆擊率 +20%
+  'insp-sworn-fury': {
+    battleSkillId: 'insp-sworn-fury',
+    targetMode: BattleSkillTargetMode.Fan,
+    manualTargeting: false,
+    autoAimMode: 'densest-fan',
+    coefficient: 0.7,
+    scalingStat: 'str',
+    maxTargets: 4,
+    fanDepth: 2,
+    fanHalfWidth: 1,
+    critRateBonus: 0.2,
+    battleLogKey: 'skill.insp_sworn_fury.hit',
+  },
+  // 龍膽（PROG-2-1700 靈感戰法，數值暫定）：前排單體、爆擊率 +30%
+  'insp-dragon-gall': {
+    battleSkillId: 'insp-dragon-gall',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    coefficient: 1.0,
+    scalingStat: 'str',
+    maxTargets: 1,
+    critRateBonus: 0.3,
+    battleLogKey: 'skill.insp_dragon_gall.hit',
+  },
+  // 長槍突刺（PROG-2-1699 靈感戰法，數值暫定）：直線貫穿 2 格、不衰減、無視 30% 防禦
+  'insp-lance-thrust': {
+    battleSkillId: 'insp-lance-thrust',
+    targetMode: BattleSkillTargetMode.Line,
+    manualTargeting: false,
+    autoAimMode: 'densest-line',
+    coefficient: 0.9,
+    scalingStat: 'str',
+    maxTargets: 2,
+    lineLength: 2,
+    defensePenetrationRatio: 0.3,
+    battleLogKey: 'skill.insp_lance_thrust.hit',
+  },
+  // 夜襲（PROG-2-1698 靈感戰法，數值暫定）：前排單體，夜晚傷害 ×1.5
+  'insp-night-raid': {
+    battleSkillId: 'insp-night-raid',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    coefficient: 1.0,
+    scalingStat: 'str',
+    maxTargets: 1,
+    weatherDamageMultiplier: { [Weather.Night]: 1.5 },
+    battleLogKey: 'skill.insp_night_raid.hit',
+  },
+  // 疾行（PROG-2-1600 靈感戰法，數值暫定）：全體友軍下一回合移動 +1
+  'insp-haste': {
+    battleSkillId: 'insp-haste',
+    targetMode: BattleSkillTargetMode.AllyAll,
+    manualTargeting: false,
+    autoAimMode: 'all-allies',
+    effectKind: 'control',
+    coefficient: 0,
+    statusEffect: StatusEffect.Haste,
+    statusTurns: 1,
+    battleLogKey: 'skill.insp_haste.buff',
+  },
+  // 堅盾（PROG-2-1600 靈感戰法，數值暫定）：全體友軍 1 回合防禦 ×1.2
+  'insp-shield': {
+    battleSkillId: 'insp-shield',
+    targetMode: BattleSkillTargetMode.AllyAll,
+    manualTargeting: false,
+    autoAimMode: 'all-allies',
+    effectKind: 'control',
+    coefficient: 0,
+    statusEffect: StatusEffect.Fortified,
+    statusTurns: 1,
+    battleLogKey: 'skill.insp_shield.buff',
   },
   // 挑釁（PROG-2-1145 靈感戰法，數值暫定）：單體敵軍暈眩 1 回合
   'insp-taunt': {
@@ -556,7 +633,8 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
 
 // --- 虎符特殊戰法殼（PROG-2-0928，TRP-15）：規格 34 條中尚未實作效果的 23 條 ---
 // coefficient 0、無效果欄位，只讓 battleSkillId 能解析進管線；效果待各戰法另卡補上，此時不造成傷害
-for (const battleSkillId of TIGER_TALLY_PENDING_SKILL_IDS) {
+// 裁定追加虎符（南蠻勇士／豹騎，PROG-2-1617）同樣只有殼
+for (const battleSkillId of [...TIGER_TALLY_PENDING_SKILL_IDS, ...RULED_EXTRA_TALLY_SKILL_IDS]) {
   PROFILE_BY_SKILL_ID[battleSkillId] = {
     battleSkillId,
     targetMode: BattleSkillTargetMode.EnemySingle,

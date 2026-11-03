@@ -3,6 +3,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { resolveExisting } = require('../ui-spec-sidecars');
 
 const { analyzeLayout } = require('./performance');
 const { normalizeFinalCaptureProtocol } = require('./final-capture-protocol');
@@ -106,16 +107,16 @@ function resolveReadinessPaths(repoRoot, screenId, explicit, screen) {
       path.join(screensDir, `${screenId}.json`),
       path.join(screensDir, `${screenId}.screen.json`),
     ]),
-    captureProtocol: explicit.captureProtocol || path.join(screensDir, `${screenId}.final-capture-protocol.json`),
-    zoneOwnership: explicit.zoneOwnership || path.join(screensDir, `${screenId}.zone-ownership.json`),
+    captureProtocol: explicit.captureProtocol || resolveExisting(path.join(screensDir, `${screenId}.final-capture-protocol.json`)),
+    zoneOwnership: explicit.zoneOwnership || resolveExisting(path.join(screensDir, `${screenId}.zone-ownership.json`)),
     tabRouting: explicit.tabRouting || path.join(screensDir, `${screenId}.tab-routing.json`),
-    preload: explicit.preload || path.join(screensDir, `${screenId}.preload.json`),
-    performance: explicit.performance || path.join(screensDir, `${screenId}.performance.json`),
+    preload: explicit.preload || resolveExisting(path.join(screensDir, `${screenId}.preload.json`)),
+    performance: explicit.performance || resolveExisting(path.join(screensDir, `${screenId}.performance.json`)),
     bakeManifest: explicit.bakeManifest || firstExisting([
       path.join(layoutsDir, `${screenId}.layout.bake-manifest.json`),
       path.join(layoutsDir, `${screenId}.bake-manifest.json`),
     ]),
-    artAuthorityWaivers: explicit.artAuthorityWaivers || path.join(screensDir, `${screenId}.art-authority-waivers.json`),
+    artAuthorityWaivers: explicit.artAuthorityWaivers || resolveExisting(path.join(screensDir, `${screenId}.art-authority-waivers.json`)),
     finalVerdict: explicit.finalVerdict || null,
   };
 }
@@ -338,7 +339,8 @@ function readJson(filePath) {
 }
 
 function firstExisting(candidates) {
-  return candidates.find(candidate => fs.existsSync(candidate)) || candidates[0];
+  const resolved = candidates.map(resolveExisting);
+  return resolved.find(candidate => fs.existsSync(candidate)) || resolved[0];
 }
 
 function resolveSpecJson(baseDir, specId, suffixes) {

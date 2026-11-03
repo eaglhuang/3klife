@@ -102,13 +102,17 @@ export function createTournamentPanelControllerSuite(): TestSuite {
     });
 
     suite.test('系列賽結果文字：勝負、比分、積分變化與花費', () => {
-        assert.equals('勝 3:1｜積分 +16 → 1016（白銀）｜花費 30 金', seriesText({
+        assert.equals('複賽勝 3:1｜積分 +16 → 1016（白銀）｜花費 30 金', seriesText({
             win: true, games: [true, false, true, true], opponentPower: 100, opponentPoints: 1000,
-            pointsDelta: 16, pointsAfter: 1016, tierAfter: 'SILVER', paidExtra: true,
+            pointsDelta: 16, pointsAfter: 1016, tierAfter: 'SILVER', paidExtra: true, round: 1, champion: false,
         }));
-        assert.equals('敗 0:3｜積分 -16 → 0（青銅）', seriesText({
+        assert.equals('初賽敗 0:3｜積分 -16 → 0（青銅）', seriesText({
             win: false, games: [false, false, false], opponentPower: 100, opponentPoints: 0,
-            pointsDelta: -16, pointsAfter: 0, tierAfter: 'BRONZE', paidExtra: false,
+            pointsDelta: -16, pointsAfter: 0, tierAfter: 'BRONZE', paidExtra: false, round: 0, champion: false,
+        }));
+        assert.equals('決賽奪冠 1:0｜積分 +16 → 1016（白銀）', seriesText({
+            win: true, games: [true], opponentPower: 100, opponentPoints: 1000,
+            pointsDelta: 16, pointsAfter: 1016, tierAfter: 'SILVER', paidExtra: false, round: 3, champion: true,
         }));
     });
 

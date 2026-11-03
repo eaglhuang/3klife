@@ -31,6 +31,10 @@ export const INSPIRED_TACTIC_MAP: Readonly<Record<string, InspiredTacticEntry>> 
     TAC_RED_CLIFF: { name: '赤壁烈焰', libraryId: 'tactic-insp-red-cliff' },
     TAC_CHAIN_LINK: { name: '連環計', libraryId: 'tactic-insp-chain-link' },
     TAC_NIGHT_RAID: { name: '夜襲', libraryId: 'tactic-insp-night-raid' },
+    // 戰法系統 G-2 教官靈感 6 招補齊（PROG-2-1615）：沿用既有技能 eight-formation／medical-aid／mentor-morale
+    TAC_EIGHT_ARRAY: { name: '八陣圖', libraryId: 'tactic-insp-eight-array' },
+    TAC_HEAL: { name: '醫療', libraryId: 'tactic-insp-heal' },
+    TAC_INSPIRE: { name: '鼓舞', libraryId: 'tactic-insp-inspire' },
 };
 
 /** 規格 id 轉戰法庫 id；本來就是戰法庫 id 或查無對照時原樣回傳 */
