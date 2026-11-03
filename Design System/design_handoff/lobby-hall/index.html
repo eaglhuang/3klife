@@ -7,17 +7,22 @@
 <!--
   幕府大廳設計稿（UI-2-0122，草稿）。依 doc_spec_0002 大廳系統 E-1～E-10：
   左牆軍務／外交、右牆內政／人脈、中央天下沙盤、武將點位、許願祭壇、頂部狀態列、世家總覽入口。
-  晝夜以 body[data-time] 切換（day / night），節慶插槽預留於 .festival-slot。
+  晝夜以 body[data-time] 切換（day / night），四季以 body[data-season] 切換（spring / summer / autumn / winter）。
+  背景 1920×1480，安全區為中央 1920×1080；勢力圖為底圖＋han13 州界遮罩，執行期上色。節慶插槽預留於 .festival-slot。
 -->
 <style>
   * { box-sizing: border-box; margin: 0; }
   html, body { width: 1920px; height: 1080px; overflow: hidden; font-family: var(--font-body); color: var(--text-primary); }
   body {
     --hall-bg-top: #2a2116; --hall-bg-bottom: #0f0c08; --hall-light: rgba(255,214,140,.18);
-    background: radial-gradient(ellipse at 50% 38%, var(--hall-light), transparent 60%), linear-gradient(180deg, var(--hall-bg-top), var(--hall-bg-bottom));
+    background: #1a120a url(../../../assets/resources/sprites/ui_bg/lobby_hall_spring_bg.jpg) center center / 1920px 1480px no-repeat;
     position: relative;
   }
-  body[data-time="night"] { --hall-bg-top: #10141f; --hall-bg-bottom: #05060a; --hall-light: rgba(120,150,220,.16); }
+  body[data-season="summer"] { background-image: url(../../../assets/resources/sprites/ui_bg/lobby_hall_summer_bg.jpg); }
+  body[data-season="autumn"] { background-image: url(../../../assets/resources/sprites/ui_bg/lobby_hall_autumn_bg.jpg); }
+  body[data-season="winter"] { background-image: url(../../../assets/resources/sprites/ui_bg/lobby_hall_winter_bg.jpg); }
+  .night-tint { position:absolute; inset:0; z-index:1; pointer-events:none; display:none; background: radial-gradient(ellipse at 50% 60%, rgba(255,170,80,.18), transparent 55%), rgba(10,16,40,.55); }
+  body[data-time="night"] .night-tint { display:block; }
 
   /* 頂部狀態列（E-1） */
   .topbar { position:absolute; top:20px; left:28px; right:28px; height:84px; display:flex; justify-content:space-between; align-items:center; z-index:10; }
@@ -33,9 +38,9 @@
   .res-pill b { font-family:var(--font-headline); color:#D0C5AF; }
 
   /* 雙牆任務（E-2） */
-  .wall { position:absolute; top:128px; width:420px; height:700px; padding:18px 18px 14px; border-radius:12px; z-index:6; }
-  .wall-left { left:28px; background:linear-gradient(180deg,rgba(90,20,18,.92),rgba(40,10,10,.94)); border:2px solid #8A2A22; }
-  .wall-right { right:28px; background:linear-gradient(180deg,rgba(92,72,36,.92),rgba(46,34,16,.94)); border:2px solid #A8864A; }
+  .wall { position:absolute; top:122px; width:400px; height:640px; padding:18px 18px 14px; border-radius:12px; z-index:6; }
+  .wall-left { left:24px; background:linear-gradient(180deg,rgba(90,20,18,.78),rgba(40,10,10,.82)); border:2px solid #8A2A22; }
+  .wall-right { right:24px; background:linear-gradient(180deg,rgba(92,72,36,.78),rgba(46,34,16,.82)); border:2px solid #A8864A; }
   .wall-head { display:flex; justify-content:space-between; align-items:baseline; height:44px; border-bottom:1px solid rgba(255,224,136,.25); }
   .wall-head .zh { font-family:var(--font-headline); font-size:28px; font-weight:700; color:#FFE088; letter-spacing:.2em; }
   .wall-head .count { font-family:var(--font-label); font-size:16px; color:#D0C5AF; }
@@ -49,51 +54,52 @@
   .d4 { background:#7A4A9A; color:#F5F1E8; } .d5 { background:#B22222; color:#FFF; }
   .wall-more { position:absolute; left:18px; right:18px; bottom:14px; height:44px; border-radius:8px; text-align:center; line-height:44px; font-family:var(--font-headline); font-size:20px; color:#FFE088; background:rgba(0,0,0,.4); border:1px solid #D4AF37; }
 
-  /* 中央天下沙盤（E-4） */
-  .sandbox { position:absolute; left:500px; top:330px; width:920px; height:380px; border-radius:50%; z-index:3;
-    background:radial-gradient(ellipse at 50% 45%, #6b5a3a, #3a2f1c 70%, #21190e); border:4px solid #8A6E1F; box-shadow:0 30px 60px rgba(0,0,0,.6); }
-  .sandbox-label { position:absolute; left:860px; top:350px; width:200px; text-align:center; z-index:4; font-family:var(--font-headline); font-size:24px; color:#FFE088; letter-spacing:.3em; }
-  .stage { position:absolute; top:610px; width:180px; height:44px; border-radius:22px; text-align:center; line-height:44px; z-index:4; font-family:var(--font-headline); font-size:20px; }
+  /* 中央天下勢力圖（E-4）：底圖 1280×960 縮放顯示，州界與勢力色由執行期依 han13 遮罩上色 */
+  .sandbox { position:absolute; left:600px; top:116px; width:720px; height:540px; border-radius:10px; z-index:3; overflow:hidden;
+    background:url(map-preview.png) center / cover no-repeat; border:4px solid #D4AF37; box-shadow:0 0 0 2px #5a3a10, 0 24px 48px rgba(0,0,0,.6); }
+  .sandbox-label { position:absolute; left:810px; top:126px; width:300px; height:40px; line-height:40px; text-align:center; z-index:4; border-radius:20px; background:rgba(45,30,0,.78); border:1px solid #D4AF37; font-family:var(--font-headline); font-size:24px; color:#FFE088; letter-spacing:.3em; }
+  .stage { position:absolute; top:600px; width:180px; height:44px; border-radius:22px; text-align:center; line-height:44px; z-index:4; font-family:var(--font-headline); font-size:20px; }
   .stage.on { background:#D4AF37; color:#2D1E00; } .stage.off { background:rgba(0,0,0,.55); color:#7a7363; border:1px dashed #7a7363; }
-  .s1 { left:640px; } .s2 { left:870px; } .s3 { left:1100px; }
+  .s1 { left:660px; } .s2 { left:870px; } .s3 { left:1080px; }
 
   /* 武將點位（E-5） */
-  .spot { position:absolute; width:150px; height:210px; z-index:5; text-align:center; }
-  .spot img { width:150px; height:150px; object-fit:cover; object-position:center top; border-radius:50% 50% 12px 12px; border:2px solid #4D4635; background:#1a1610; }
-  .spot .s-name { font-family:var(--font-headline); font-size:22px; font-weight:700; color:#FFF; margin-top:6px; }
+  .spot { position:absolute; width:130px; height:180px; z-index:5; text-align:center; }
+  .spot img { width:120px; height:120px; object-fit:cover; object-position:center top; border-radius:50% 50% 12px 12px; border:2px solid #4D4635; background:#1a1610; }
+  .spot .s-name { font-family:var(--font-headline); font-size:22px; font-weight:700; color:#FFF; margin-top:4px; text-shadow:0 2px 4px #000; }
   .spot .s-rank { font-family:var(--font-label); font-size:15px; color:#FFE088; }
   .spot .s-vol { position:absolute; top:-8px; right:-6px; width:52px; height:26px; border-radius:13px; background:#B22222; color:#FFF; font-family:var(--font-label); font-size:14px; line-height:26px; }
-  .sp1 { left:520px; top:150px; } .sp2 { left:885px; top:118px; } .sp3 { left:1250px; top:150px; }
+  .sp1 { left:590px; top:690px; } .sp2 { left:895px; top:676px; } .sp3 { left:1200px; top:690px; }
 
   /* 許願祭壇（E-7） */
-  .altar { position:absolute; left:470px; top:770px; width:470px; height:150px; padding:12px 16px; border-radius:12px; z-index:6; background:linear-gradient(180deg,rgba(60,40,10,.92),rgba(25,18,6,.95)); border:2px solid #D4AF37; }
+  .altar { position:absolute; left:24px; top:782px; width:400px; height:150px; padding:12px 16px; border-radius:12px; z-index:6; background:linear-gradient(180deg,rgba(60,40,10,.92),rgba(25,18,6,.95)); border:2px solid #D4AF37; }
   .altar .a-head { display:flex; justify-content:space-between; height:32px; font-family:var(--font-headline); font-size:22px; color:#FFE088; }
   .altar .a-head span:last-child { font-family:var(--font-label); font-size:15px; color:#D0C5AF; }
-  .slots { display:flex; gap:10px; margin-top:8px; }
-  .slot { width:136px; height:78px; border-radius:8px; text-align:center; padding-top:12px; font-family:var(--font-label); font-size:16px; }
+  .slots { display:flex; gap:8px; margin-top:8px; }
+  .slot { width:116px; height:78px; border-radius:8px; text-align:center; padding-top:12px; font-family:var(--font-label); font-size:16px; }
   .slot b { display:block; font-family:var(--font-headline); font-size:18px; margin-bottom:4px; }
   .slot.empty { border:1px dashed #7a7363; color:#7a7363; }
   .slot.running { background:rgba(0,0,0,.4); border:1px solid #B0A880; color:#D0C5AF; }
   .slot.ready { background:rgba(212,175,55,.25); border:2px solid #FFE088; color:#FFE088; }
 
   /* 世家總覽入口（E-10）＋節慶插槽（E-6） */
-  .clan { position:absolute; left:980px; top:770px; width:470px; height:150px; padding:14px 18px; border-radius:12px; z-index:6; background:linear-gradient(180deg,rgba(32,32,31,.92),rgba(15,15,15,.95)); border:2px solid #4D4635; }
+  .clan { position:absolute; right:24px; top:782px; width:400px; height:150px; padding:14px 18px; border-radius:12px; z-index:6; background:linear-gradient(180deg,rgba(32,32,31,.92),rgba(15,15,15,.95)); border:2px solid #4D4635; }
   .clan .c-title { font-family:var(--font-headline); font-size:24px; color:#FFE088; }
   .clan .c-sub { font-family:var(--font-label); font-size:16px; color:#D0C5AF; margin-top:10px; line-height:1.5; }
   .festival-slot { display:none; }
 
   /* 底部導覽（保留現行五大入口） */
-  .dock { position:absolute; left:340px; right:340px; bottom:24px; height:84px; display:flex; gap:14px; justify-content:center; z-index:10; }
-  .dock-btn { width:210px; height:76px; border-radius:12px; text-align:center; line-height:76px; font-family:var(--font-headline); font-size:28px; font-weight:700; color:#F5F1E8; background:linear-gradient(180deg,#5a1a16,#3a0f0c); border:2px solid #8A6E1F; }
+  .dock { position:absolute; left:440px; right:440px; bottom:24px; height:84px; display:flex; gap:14px; justify-content:center; z-index:10; }
+  .dock-btn { width:196px; height:76px; border-radius:12px; text-align:center; line-height:76px; font-family:var(--font-headline); font-size:28px; font-weight:700; color:#F5F1E8; background:linear-gradient(180deg,#5a1a16,#3a0f0c); border:2px solid #8A6E1F; }
 </style>
 </head>
-<body data-screen-label="01 幕府大廳" data-time="day">
+<body data-screen-label="01 幕府大廳" data-time="day" data-season="spring">
+  <div class="night-tint"></div>
   <div class="topbar">
     <div class="player">
       <img src="../../../assets/resources/sprites/generals/avatars/zhang_fei_avatar.png" alt="">
       <div><div class="p-name">蜀漢舊部</div><div class="p-sub">官職 鄉里義士 · 主將 張飛</div></div>
     </div>
-    <div class="hall-title"><div class="zh">幕府大廳</div><div class="time">第 1 年 1 季 · 晝</div></div>
+    <div class="hall-title"><div class="zh">幕府大廳</div><div class="time">第 1 年 春 · 晝</div></div>
     <div class="res">
       <div class="res-pill"><b>金</b>128,450</div>
       <div class="res-pill"><b>玉</b>1,280</div>
@@ -125,7 +131,7 @@
   <div class="spot sp3"><img src="../../../assets/resources/sprites/generals/avatars/wei_yan_avatar.png" alt=""><div class="s-name">魏延</div><div class="s-rank">牙門將</div></div>
 
   <div class="sandbox"></div>
-  <div class="sandbox-label">天下沙盤</div>
+  <div class="sandbox-label">天下勢力圖</div>
   <div class="stage s1 on">S1 中原統一</div>
   <div class="stage s2 off">S2 邊境征伐</div>
   <div class="stage s3 off">S3 全球遠征</div>
