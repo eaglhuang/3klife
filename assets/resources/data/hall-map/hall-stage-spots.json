@@ -1,0 +1,19 @@
+{
+  "$note": "幕府大廳 Q 版武將站位（設計座標 1920x1080，左上原點）。footX/footY 為腳底中心；height 為顯示高度。前 5 點取自 Design System/design_handoff/lobby-hall 設計稿，spot-6/7 為暫定外側後排、待設計稿補位。",
+  "canvas": { "width": 1920, "height": 1080 },
+  "faceCenterX": 960,
+  "spots": [
+    { "id": "spot-1", "footX": 640,  "footY": 860, "height": 300 },
+    { "id": "spot-2", "footX": 960,  "footY": 872, "height": 262 },
+    { "id": "spot-3", "footX": 1280, "footY": 866, "height": 282 },
+    { "id": "spot-4", "footX": 800,  "footY": 926, "height": 256 },
+    { "id": "spot-5", "footX": 1120, "footY": 924, "height": 258 },
+    { "id": "spot-6", "footX": 520,  "footY": 856, "height": 262 },
+    { "id": "spot-7", "footX": 1400, "footY": 856, "height": 262 }
+  ],
+  "fillOrder": ["spot-2", "spot-4", "spot-5", "spot-1", "spot-3", "spot-6", "spot-7"],
+  "spriteCandidates": [
+    "sprites/generals/chibi/{snake}_chibi",
+    "sprites/generals/avatars/{snake}_avatar"
+  ]
+}
