@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "$note": "大廳勢力圖三態版面（設計解析度 1920×1080，原點左上，單位 px）。mini 平時縮小；focus 事件時放大並移到事發州；hidden 開其他 UI 時關閉。來源：UI-2-0126 設計稿 Design System/design_handoff/lobby-hall。",
+  "modes": {
+    "mini": { "x": 730, "y": 190, "width": 460, "height": 330, "zoom": 1, "visible": true },
+    "focus": { "x": 560, "y": 140, "width": 800, "height": 560, "zoom": 1.7, "visible": true },
+    "hidden": { "x": 730, "y": 190, "width": 460, "height": 330, "zoom": 1, "visible": false }
+  },
+  "transitionSec": 0.6,
+  "seasonTurn": {
+    "dwellSec": 2.6,
+    "maxEvents": 4
+  },
+  "labelSideSplit": 0.45
+}
