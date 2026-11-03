@@ -168,7 +168,7 @@
               {
                 "type": "container",
                 "name": "LobbyHallScreen_div_11",
-                "width": 630,
+                "width": 736,
                 "height": 52,
                 "layout": {
                   "type": "horizontal",
@@ -303,6 +303,29 @@
                         "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-4"
                       }
                     ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "LobbyHallScreen_div_16",
+                    "_ucufId": "lobby-hall-screen.back",
+                    "width": 96,
+                    "height": 52,
+                    "layout": {
+                      "type": "horizontal",
+                      "alignItems": "center",
+                      "justifyContent": "center"
+                    },
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_16",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "LobbyHallScreen_span_5",
+                        "text": "返回",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_5",
+                        "width": 96,
+                        "height": 52
+                      }
+                    ]
                   }
                 ]
               }
@@ -322,7 +345,7 @@
             "children": [
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_16",
+                "name": "LobbyHallScreen_div_17",
                 "width": 360,
                 "height": 44,
                 "layout": {
@@ -330,69 +353,69 @@
                   "alignItems": "baseline",
                   "justifyContent": "space-between"
                 },
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_16",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_17",
                 "children": [
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_5",
+                    "name": "LobbyHallScreen_span_6",
                     "width": 173,
                     "height": 40,
                     "text": "軍務 / 外交",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_5",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-5"
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_6",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-6"
                   },
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_6",
+                    "name": "LobbyHallScreen_span_7",
                     "width": 33,
                     "height": 20,
                     "text": "3 / 6",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_6",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-6"
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_7",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-7"
                   }
                 ]
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_17",
+                "name": "LobbyHallScreen_div_18",
                 "width": 360,
                 "height": 96,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_17",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_18",
                 "children": [
-                  {
-                    "type": "label",
-                    "name": "LobbyHallScreen_div_18",
-                    "width": 328,
-                    "height": 32,
-                    "text": "夜襲烏巢糧倉",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_18",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-18"
-                  },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_19",
                     "width": 328,
-                    "height": 20,
-                    "text": "情報 50% · 派遣 張飛",
+                    "height": 32,
+                    "text": "夜襲烏巢糧倉",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_19",
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-19"
                   },
                   {
+                    "type": "label",
+                    "name": "LobbyHallScreen_div_20",
+                    "width": 328,
+                    "height": 20,
+                    "text": "情報 50% · 派遣 張飛",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_20",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-20"
+                  },
+                  {
                     "type": "panel",
-                    "name": "LobbyHallScreen_span_7",
+                    "name": "LobbyHallScreen_span_8",
                     "width": 64,
                     "height": 28,
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_7",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_8",
                     "children": [
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_span_8",
+                        "name": "LobbyHallScreen_span_9",
                         "widget": {
                           "left": 0,
                           "top": 0
                         },
                         "text": "高級",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_8",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_9",
                         "width": 64,
                         "height": 28
                       }
@@ -400,56 +423,56 @@
                   },
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_9",
+                    "name": "LobbyHallScreen_span_10",
                     "width": 86,
                     "height": 19,
                     "text": "已接取 · 置頂",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_9",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-9"
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_10",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-10"
                   }
                 ]
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_20",
+                "name": "LobbyHallScreen_div_21",
                 "width": 360,
                 "height": 96,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_20",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_21",
                 "children": [
-                  {
-                    "type": "label",
-                    "name": "LobbyHallScreen_div_21",
-                    "width": 330,
-                    "height": 32,
-                    "text": "圍堵汝南黃巾",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_21",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-21"
-                  },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_22",
                     "width": 330,
-                    "height": 20,
-                    "text": "情報 50% · 耗時 2 季",
+                    "height": 32,
+                    "text": "圍堵汝南黃巾",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_22",
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-22"
                   },
                   {
+                    "type": "label",
+                    "name": "LobbyHallScreen_div_23",
+                    "width": 330,
+                    "height": 20,
+                    "text": "情報 50% · 耗時 2 季",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_23",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-23"
+                  },
+                  {
                     "type": "panel",
-                    "name": "LobbyHallScreen_span_10",
+                    "name": "LobbyHallScreen_span_11",
                     "width": 64,
                     "height": 28,
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_10",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_11",
                     "children": [
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_span_11",
+                        "name": "LobbyHallScreen_span_12",
                         "widget": {
                           "left": 0,
                           "top": 0
                         },
                         "text": "一般",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_11",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_12",
                         "width": 64,
                         "height": 28
                       }
@@ -459,45 +482,45 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_23",
+                "name": "LobbyHallScreen_div_24",
                 "width": 360,
                 "height": 96,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_23",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_24",
                 "children": [
-                  {
-                    "type": "label",
-                    "name": "LobbyHallScreen_div_24",
-                    "width": 330,
-                    "height": 32,
-                    "text": "遣使結好江東",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_24",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-24"
-                  },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_25",
                     "width": 330,
-                    "height": 20,
-                    "text": "情報 100% · 耗時 1 季",
+                    "height": 32,
+                    "text": "遣使結好江東",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_25",
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-25"
                   },
                   {
+                    "type": "label",
+                    "name": "LobbyHallScreen_div_26",
+                    "width": 330,
+                    "height": 20,
+                    "text": "情報 100% · 耗時 1 季",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_26",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-26"
+                  },
+                  {
                     "type": "panel",
-                    "name": "LobbyHallScreen_span_12",
+                    "name": "LobbyHallScreen_span_13",
                     "width": 64,
                     "height": 28,
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_12",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_13",
                     "children": [
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_span_13",
+                        "name": "LobbyHallScreen_span_14",
                         "widget": {
                           "left": 0,
                           "top": 0
                         },
                         "text": "簡易",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_13",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_14",
                         "width": 64,
                         "height": 28
                       }
@@ -507,45 +530,45 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_26",
+                "name": "LobbyHallScreen_div_27",
                 "width": 360,
                 "height": 96,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_26",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_27",
                 "children": [
-                  {
-                    "type": "label",
-                    "name": "LobbyHallScreen_div_27",
-                    "width": 330,
-                    "height": 32,
-                    "text": "邊境斥候巡防",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_27",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-27"
-                  },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_28",
                     "width": 330,
-                    "height": 20,
-                    "text": "情報 50% · 耗時 1 季",
+                    "height": 32,
+                    "text": "邊境斥候巡防",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_28",
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-28"
                   },
                   {
+                    "type": "label",
+                    "name": "LobbyHallScreen_div_29",
+                    "width": 330,
+                    "height": 20,
+                    "text": "情報 50% · 耗時 1 季",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_29",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-29"
+                  },
+                  {
                     "type": "panel",
-                    "name": "LobbyHallScreen_span_14",
+                    "name": "LobbyHallScreen_span_15",
                     "width": 64,
                     "height": 28,
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_14",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_15",
                     "children": [
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_span_15",
+                        "name": "LobbyHallScreen_span_16",
                         "widget": {
                           "left": 0,
                           "top": 0
                         },
                         "text": "菁英",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_15",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_16",
                         "width": 64,
                         "height": 28
                       }
@@ -555,7 +578,7 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_29",
+                "name": "LobbyHallScreen_div_30",
                 "widget": {
                   "left": 18,
                   "right": 18,
@@ -563,20 +586,20 @@
                 },
                 "width": 360,
                 "height": 44,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_29",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_30",
                 "children": [
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_16",
+                    "name": "LobbyHallScreen_span_17",
                     "widget": {
                       "left": 0,
                       "top": 0
                     },
                     "text": "展開軍務牆",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_16",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_17",
                     "width": 360,
                     "height": 44,
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-16"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-17"
                   }
                 ]
               }
@@ -596,7 +619,7 @@
             "children": [
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_30",
+                "name": "LobbyHallScreen_div_31",
                 "width": 360,
                 "height": 44,
                 "layout": {
@@ -604,69 +627,69 @@
                   "alignItems": "baseline",
                   "justifyContent": "space-between"
                 },
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_30",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_31",
                 "children": [
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_17",
+                    "name": "LobbyHallScreen_span_18",
                     "width": 173,
                     "height": 40,
                     "text": "內政 / 人脈",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_17",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-17"
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_18",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-18"
                   },
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_18",
+                    "name": "LobbyHallScreen_span_19",
                     "width": 33,
                     "height": 20,
                     "text": "2 / 6",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_18",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-18"
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_19",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-19"
                   }
                 ]
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_31",
+                "name": "LobbyHallScreen_div_32",
                 "width": 360,
                 "height": 96,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_31",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_32",
                 "children": [
-                  {
-                    "type": "label",
-                    "name": "LobbyHallScreen_div_32",
-                    "width": 328,
-                    "height": 32,
-                    "text": "新野賑災",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_32",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-32"
-                  },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_33",
                     "width": 328,
-                    "height": 20,
-                    "text": "情報 100% · 派遣 魏延",
+                    "height": 32,
+                    "text": "新野賑災",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_33",
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-33"
                   },
                   {
+                    "type": "label",
+                    "name": "LobbyHallScreen_div_34",
+                    "width": 328,
+                    "height": 20,
+                    "text": "情報 100% · 派遣 魏延",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_34",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-34"
+                  },
+                  {
                     "type": "panel",
-                    "name": "LobbyHallScreen_span_19",
+                    "name": "LobbyHallScreen_span_20",
                     "width": 64,
                     "height": 28,
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_19",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_20",
                     "children": [
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_span_20",
+                        "name": "LobbyHallScreen_span_21",
                         "widget": {
                           "left": 0,
                           "top": 0
                         },
                         "text": "簡易",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_20",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_21",
                         "width": 64,
                         "height": 28
                       }
@@ -674,56 +697,56 @@
                   },
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_21",
+                    "name": "LobbyHallScreen_span_22",
                     "width": 86,
                     "height": 19,
                     "text": "已接取 · 置頂",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_21",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-21"
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_22",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-22"
                   }
                 ]
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_34",
+                "name": "LobbyHallScreen_div_35",
                 "width": 360,
                 "height": 96,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_34",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_35",
                 "children": [
-                  {
-                    "type": "label",
-                    "name": "LobbyHallScreen_div_35",
-                    "width": 330,
-                    "height": 32,
-                    "text": "尋訪臥龍",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_35",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-35"
-                  },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_36",
                     "width": 330,
-                    "height": 20,
-                    "text": "情報 50% · 耗時 3 季",
+                    "height": 32,
+                    "text": "尋訪臥龍",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_36",
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-36"
                   },
                   {
+                    "type": "label",
+                    "name": "LobbyHallScreen_div_37",
+                    "width": 330,
+                    "height": 20,
+                    "text": "情報 50% · 耗時 3 季",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_37",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-37"
+                  },
+                  {
                     "type": "panel",
-                    "name": "LobbyHallScreen_span_22",
+                    "name": "LobbyHallScreen_span_23",
                     "width": 64,
                     "height": 28,
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_22",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_23",
                     "children": [
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_span_23",
+                        "name": "LobbyHallScreen_span_24",
                         "widget": {
                           "left": 0,
                           "top": 0
                         },
                         "text": "地獄",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_23",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_24",
                         "width": 64,
                         "height": 28
                       }
@@ -733,45 +756,45 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_37",
+                "name": "LobbyHallScreen_div_38",
                 "width": 360,
                 "height": 96,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_37",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_38",
                 "children": [
-                  {
-                    "type": "label",
-                    "name": "LobbyHallScreen_div_38",
-                    "width": 330,
-                    "height": 32,
-                    "text": "整頓治安",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_38",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-38"
-                  },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_39",
                     "width": 330,
-                    "height": 20,
-                    "text": "情報 100% · 耗時 1 季",
+                    "height": 32,
+                    "text": "整頓治安",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_39",
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-39"
                   },
                   {
+                    "type": "label",
+                    "name": "LobbyHallScreen_div_40",
+                    "width": 330,
+                    "height": 20,
+                    "text": "情報 100% · 耗時 1 季",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_40",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-40"
+                  },
+                  {
                     "type": "panel",
-                    "name": "LobbyHallScreen_span_24",
+                    "name": "LobbyHallScreen_span_25",
                     "width": 64,
                     "height": 28,
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_24",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_25",
                     "children": [
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_span_25",
+                        "name": "LobbyHallScreen_span_26",
                         "widget": {
                           "left": 0,
                           "top": 0
                         },
                         "text": "一般",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_25",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_26",
                         "width": 64,
                         "height": 28
                       }
@@ -781,45 +804,45 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_40",
+                "name": "LobbyHallScreen_div_41",
                 "width": 360,
                 "height": 96,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_40",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_41",
                 "children": [
-                  {
-                    "type": "label",
-                    "name": "LobbyHallScreen_div_41",
-                    "width": 330,
-                    "height": 32,
-                    "text": "開闢荊襄商路",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_41",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-41"
-                  },
                   {
                     "type": "label",
                     "name": "LobbyHallScreen_div_42",
                     "width": 330,
-                    "height": 20,
-                    "text": "情報 50% · 耗時 2 季",
+                    "height": 32,
+                    "text": "開闢荊襄商路",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_42",
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-42"
                   },
                   {
+                    "type": "label",
+                    "name": "LobbyHallScreen_div_43",
+                    "width": 330,
+                    "height": 20,
+                    "text": "情報 50% · 耗時 2 季",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_43",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-43"
+                  },
+                  {
                     "type": "panel",
-                    "name": "LobbyHallScreen_span_26",
+                    "name": "LobbyHallScreen_span_27",
                     "width": 64,
                     "height": 28,
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_26",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_27",
                     "children": [
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_span_27",
+                        "name": "LobbyHallScreen_span_28",
                         "widget": {
                           "left": 0,
                           "top": 0
                         },
                         "text": "菁英",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_27",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_28",
                         "width": 64,
                         "height": 28
                       }
@@ -829,7 +852,7 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_43",
+                "name": "LobbyHallScreen_div_44",
                 "widget": {
                   "left": 18,
                   "right": 18,
@@ -837,20 +860,20 @@
                 },
                 "width": 360,
                 "height": 44,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_43",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_44",
                 "children": [
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_28",
+                    "name": "LobbyHallScreen_span_29",
                     "widget": {
                       "left": 0,
                       "top": 0
                     },
                     "text": "展開內政牆",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_28",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_29",
                     "width": 360,
                     "height": 44,
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-28"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-29"
                   }
                 ]
               }
@@ -858,7 +881,7 @@
           },
           {
             "type": "container",
-            "name": "LobbyHallScreen_div_44",
+            "name": "LobbyHallScreen_div_45",
             "widget": {
               "left": 552,
               "top": 560
@@ -868,14 +891,14 @@
             "children": [
               {
                 "type": "label",
-                "name": "LobbyHallScreen_span_29",
+                "name": "LobbyHallScreen_span_30",
                 "width": 175,
                 "height": 300,
                 "layout": {
                   "type": "vertical",
                   "alignItems": "center"
                 },
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_29",
+                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_30",
                 "children": [],
                 "skinLayers": [
                   {
@@ -896,24 +919,24 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_span_30",
+                "name": "LobbyHallScreen_span_31",
                 "widget": {
                   "left": 57,
                   "top": 302
                 },
                 "width": 62,
                 "height": 32,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_30",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_31",
                 "children": [
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_31",
+                    "name": "LobbyHallScreen_span_32",
                     "widget": {
                       "left": 12,
                       "top": 2
                     },
                     "text": "關羽",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_31",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_32",
                     "width": 38,
                     "height": 28
                   }
@@ -922,8 +945,8 @@
             ],
             "skinLayers": [
               {
-                "layerId": "LobbyHallScreen_div_44_PseudoAfter",
-                "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_44_pseudoafter",
+                "layerId": "LobbyHallScreen_div_45_PseudoAfter",
+                "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_45_pseudoafter",
                 "zOrder": 0,
                 "expand": true
               }
@@ -931,7 +954,7 @@
           },
           {
             "type": "container",
-            "name": "LobbyHallScreen_div_45",
+            "name": "LobbyHallScreen_div_46",
             "widget": {
               "left": 897,
               "top": 610
@@ -941,14 +964,14 @@
             "children": [
               {
                 "type": "label",
-                "name": "LobbyHallScreen_span_32",
+                "name": "LobbyHallScreen_span_33",
                 "width": 125,
                 "height": 262,
                 "layout": {
                   "type": "vertical",
                   "alignItems": "center"
                 },
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_32",
+                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_33",
                 "children": [],
                 "skinLayers": [
                   {
@@ -969,24 +992,24 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_span_33",
+                "name": "LobbyHallScreen_span_34",
                 "widget": {
                   "left": 32,
                   "top": 264
                 },
                 "width": 62,
                 "height": 32,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_33",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_34",
                 "children": [
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_34",
+                    "name": "LobbyHallScreen_span_35",
                     "widget": {
                       "left": 12,
                       "top": 2
                     },
                     "text": "劉備",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_34",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_35",
                     "width": 38,
                     "height": 28
                   }
@@ -995,8 +1018,8 @@
             ],
             "skinLayers": [
               {
-                "layerId": "LobbyHallScreen_div_45_PseudoAfter",
-                "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_45_pseudoafter",
+                "layerId": "LobbyHallScreen_div_46_PseudoAfter",
+                "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_46_pseudoafter",
                 "zOrder": 0,
                 "expand": true
               }
@@ -1004,7 +1027,7 @@
           },
           {
             "type": "container",
-            "name": "LobbyHallScreen_div_46",
+            "name": "LobbyHallScreen_div_47",
             "widget": {
               "left": 1194,
               "top": 584
@@ -1014,14 +1037,14 @@
             "children": [
               {
                 "type": "label",
-                "name": "LobbyHallScreen_span_35",
+                "name": "LobbyHallScreen_span_36",
                 "width": 171,
                 "height": 282,
                 "layout": {
                   "type": "vertical",
                   "alignItems": "center"
                 },
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_35",
+                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_36",
                 "children": [],
                 "skinLayers": [
                   {
@@ -1042,24 +1065,24 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_span_36",
+                "name": "LobbyHallScreen_span_37",
                 "widget": {
                   "left": 55,
                   "top": 284
                 },
                 "width": 62,
                 "height": 32,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_36",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_37",
                 "children": [
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_37",
+                    "name": "LobbyHallScreen_span_38",
                     "widget": {
                       "left": 12,
                       "top": 2
                     },
                     "text": "張飛",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_37",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_38",
                     "width": 38,
                     "height": 28
                   }
@@ -1068,8 +1091,8 @@
             ],
             "skinLayers": [
               {
-                "layerId": "LobbyHallScreen_div_46_PseudoAfter",
-                "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_46_pseudoafter",
+                "layerId": "LobbyHallScreen_div_47_PseudoAfter",
+                "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_47_pseudoafter",
                 "zOrder": 0,
                 "expand": true
               }
@@ -1077,7 +1100,7 @@
           },
           {
             "type": "container",
-            "name": "LobbyHallScreen_div_47",
+            "name": "LobbyHallScreen_div_48",
             "widget": {
               "left": 749,
               "top": 670
@@ -1087,32 +1110,32 @@
             "children": [
               {
                 "type": "label",
-                "name": "LobbyHallScreen_span_38",
+                "name": "LobbyHallScreen_span_39",
                 "width": 101,
                 "height": 256,
                 "text": "!",
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_38",
+                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_39",
                 "children": [
                   {
                     "type": "panel",
-                    "name": "LobbyHallScreen_span_39",
+                    "name": "LobbyHallScreen_span_40",
                     "widget": {
                       "left": 32,
                       "top": -52
                     },
                     "width": 38,
                     "height": 38,
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_39",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_40",
                     "children": [
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_span_40",
+                        "name": "LobbyHallScreen_span_41",
                         "widget": {
                           "left": 0,
                           "top": 0
                         },
                         "text": "!",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_40",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_41",
                         "width": 38,
                         "height": 38
                       }
@@ -1132,35 +1155,35 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_span_41",
+                "name": "LobbyHallScreen_span_42",
                 "widget": {
                   "left": 11,
                   "top": 258
                 },
                 "width": 80,
                 "height": 32,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_41",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_42",
                 "children": [
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_42",
+                    "name": "LobbyHallScreen_span_43",
                     "widget": {
                       "left": 12,
                       "top": 2
                     },
                     "text": "諸葛亮",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_42",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_43",
                     "width": 56,
                     "height": 28,
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-42"
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-43"
                   }
                 ]
               }
             ],
             "skinLayers": [
               {
-                "layerId": "LobbyHallScreen_div_47_PseudoAfter",
-                "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_47_pseudoafter",
+                "layerId": "LobbyHallScreen_div_48_PseudoAfter",
+                "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_48_pseudoafter",
                 "zOrder": 0,
                 "expand": true
               }
@@ -1168,7 +1191,7 @@
           },
           {
             "type": "container",
-            "name": "LobbyHallScreen_div_48",
+            "name": "LobbyHallScreen_div_49",
             "widget": {
               "left": 1038,
               "top": 666
@@ -1178,14 +1201,14 @@
             "children": [
               {
                 "type": "label",
-                "name": "LobbyHallScreen_span_43",
+                "name": "LobbyHallScreen_span_44",
                 "width": 163,
                 "height": 258,
                 "layout": {
                   "type": "vertical",
                   "alignItems": "center"
                 },
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_43",
+                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_44",
                 "children": [],
                 "skinLayers": [
                   {
@@ -1206,24 +1229,24 @@
               },
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_span_44",
+                "name": "LobbyHallScreen_span_45",
                 "widget": {
                   "left": 51,
                   "top": 260
                 },
                 "width": 62,
                 "height": 32,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_44",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_45",
                 "children": [
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_45",
+                    "name": "LobbyHallScreen_span_46",
                     "widget": {
                       "left": 12,
                       "top": 2
                     },
                     "text": "黃忠",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_45",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_46",
                     "width": 38,
                     "height": 28
                   }
@@ -1232,8 +1255,8 @@
             ],
             "skinLayers": [
               {
-                "layerId": "LobbyHallScreen_div_48_PseudoAfter",
-                "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_48_pseudoafter",
+                "layerId": "LobbyHallScreen_div_49_PseudoAfter",
+                "slotId": "auto.lobby-hall-screen.lobbyhallscreen_div_49_pseudoafter",
                 "zOrder": 0,
                 "expand": true
               }
@@ -1241,7 +1264,7 @@
           },
           {
             "type": "panel",
-            "name": "LobbyHallScreen_div_49",
+            "name": "LobbyHallScreen_div_50",
             "widget": {
               "top": 520,
               "left": 1000
@@ -1257,20 +1280,20 @@
               "paddingBottom": 12,
               "paddingLeft": 16
             },
-            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_49",
+            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_50",
             "_generatedBefore": [
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_49_CssShadow",
+                "name": "LobbyHallScreen_div_50_CssShadow",
                 "width": 332,
                 "height": 154,
                 "widget": {
                   "top": 512,
                   "left": 984
                 },
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_49_cssshadow",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_50_cssshadow",
                 "_cssEffect": "shadow",
-                "_generatedEffectFor": "LobbyHallScreen_div_49"
+                "_generatedEffectFor": "LobbyHallScreen_div_50"
               }
             ],
             "children": [
@@ -1285,16 +1308,16 @@
               },
               {
                 "type": "label",
-                "name": "LobbyHallScreen_span_46",
+                "name": "LobbyHallScreen_span_47",
                 "width": 247,
                 "height": 53,
                 "text": "大哥！烏巢糧倉守備鬆散，俺老張今夜就去劫了它！",
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_46",
-                "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-46"
+                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_47",
+                "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-47"
               },
               {
                 "type": "container",
-                "name": "LobbyHallScreen_div_50",
+                "name": "LobbyHallScreen_div_51",
                 "width": 264,
                 "height": 31,
                 "layout": {
@@ -1305,42 +1328,42 @@
                 "children": [
                   {
                     "type": "panel",
-                    "name": "LobbyHallScreen_span_47",
+                    "name": "LobbyHallScreen_span_48",
                     "width": 74,
                     "height": 31,
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_47",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_48",
                     "children": [
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_span_48",
+                        "name": "LobbyHallScreen_span_49",
                         "widget": {
                           "left": 12,
                           "top": 3
                         },
                         "text": "交給你",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_48",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_49",
                         "width": 50,
                         "height": 25,
-                        "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-48"
+                        "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-49"
                       }
                     ]
                   },
                   {
                     "type": "panel",
-                    "name": "LobbyHallScreen_span_49",
+                    "name": "LobbyHallScreen_span_50",
                     "width": 58,
                     "height": 31,
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_49",
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_50",
                     "children": [
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_span_50",
+                        "name": "LobbyHallScreen_span_51",
                         "widget": {
                           "left": 12,
                           "top": 3
                         },
                         "text": "再議",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_50",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_51",
                         "width": 34,
                         "height": 25
                       }
@@ -1352,39 +1375,39 @@
           },
           {
             "type": "container",
-            "name": "LobbyHallScreen_div_51",
+            "name": "LobbyHallScreen_div_52",
             "_ucufId": "lobby-hall-screen.sandbox-group",
             "width": 1920,
             "height": 1080,
             "children": [
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_54",
+                "name": "LobbyHallScreen_div_55",
                 "active": false,
                 "_ucufId": "lobby-hall-screen.sunrays",
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_54"
-              },
-              {
-                "type": "panel",
-                "name": "LobbyHallScreen_div_52",
-                "_ucufId": "lobby-hall-screen.sandbox",
-                "width": 460,
-                "height": 330,
-                "_motionId": "lobby-hall-screen_div_52.transition",
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_52"
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_55"
               },
               {
                 "type": "panel",
                 "name": "LobbyHallScreen_div_53",
-                "_ucufId": "lobby-hall-screen.season-tint",
+                "_ucufId": "lobby-hall-screen.sandbox",
                 "width": 460,
                 "height": 330,
                 "_motionId": "lobby-hall-screen_div_53.transition",
                 "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_53"
               },
               {
+                "type": "panel",
+                "name": "LobbyHallScreen_div_54",
+                "_ucufId": "lobby-hall-screen.season-tint",
+                "width": 460,
+                "height": 330,
+                "_motionId": "lobby-hall-screen_div_54.transition",
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_54"
+              },
+              {
                 "type": "container",
-                "name": "LobbyHallScreen_div_55",
+                "name": "LobbyHallScreen_div_56",
                 "widget": {
                   "top": 397,
                   "left": 960
@@ -1404,36 +1427,9 @@
                   },
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_51",
-                    "text": "烏巢告急 · 兗州",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_51",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-51"
-                  }
-                ]
-              },
-              {
-                "type": "panel",
-                "name": "LobbyHallScreen_div_56",
-                "widget": {
-                  "top": 160,
-                  "left": 840
-                },
-                "_ucufId": "lobby-hall-screen.sandbox-label",
-                "width": 240,
-                "height": 40,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_56",
-                "children": [
-                  {
-                    "type": "label",
                     "name": "LobbyHallScreen_span_52",
-                    "widget": {
-                      "left": 0,
-                      "top": 0
-                    },
-                    "text": "天下勢力圖",
+                    "text": "烏巢告急 · 兗州",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_52",
-                    "width": 240,
-                    "height": 40,
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-52"
                   }
                 ]
@@ -1442,12 +1438,12 @@
                 "type": "panel",
                 "name": "LobbyHallScreen_div_57",
                 "widget": {
-                  "top": 250,
-                  "left": 1150
+                  "top": 160,
+                  "left": 840
                 },
-                "_ucufId": "lobby-hall-screen.stage-s1",
-                "width": 170,
-                "height": 44,
+                "_ucufId": "lobby-hall-screen.sandbox-label",
+                "width": 240,
+                "height": 40,
                 "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_57",
                 "children": [
                   {
@@ -1457,10 +1453,10 @@
                       "left": 0,
                       "top": 0
                     },
-                    "text": "S1 中原統一",
+                    "text": "天下勢力圖",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_53",
-                    "width": 170,
-                    "height": 44,
+                    "width": 240,
+                    "height": 40,
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-53"
                   }
                 ]
@@ -1469,10 +1465,10 @@
                 "type": "panel",
                 "name": "LobbyHallScreen_div_58",
                 "widget": {
-                  "top": 304,
+                  "top": 250,
                   "left": 1150
                 },
-                "_ucufId": "lobby-hall-screen.stage-s2",
+                "_ucufId": "lobby-hall-screen.stage-s1",
                 "width": 170,
                 "height": 44,
                 "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_58",
@@ -1484,7 +1480,7 @@
                       "left": 0,
                       "top": 0
                     },
-                    "text": "S2 邊境征伐",
+                    "text": "S1 中原統一",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_54",
                     "width": 170,
                     "height": 44,
@@ -1496,10 +1492,10 @@
                 "type": "panel",
                 "name": "LobbyHallScreen_div_59",
                 "widget": {
-                  "top": 358,
+                  "top": 304,
                   "left": 1150
                 },
-                "_ucufId": "lobby-hall-screen.stage-s3",
+                "_ucufId": "lobby-hall-screen.stage-s2",
                 "width": 170,
                 "height": 44,
                 "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_59",
@@ -1511,11 +1507,38 @@
                       "left": 0,
                       "top": 0
                     },
-                    "text": "S3 全球遠征",
+                    "text": "S2 邊境征伐",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_55",
                     "width": 170,
                     "height": 44,
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-55"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "LobbyHallScreen_div_60",
+                "widget": {
+                  "top": 358,
+                  "left": 1150
+                },
+                "_ucufId": "lobby-hall-screen.stage-s3",
+                "width": 170,
+                "height": 44,
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_60",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "LobbyHallScreen_span_56",
+                    "widget": {
+                      "left": 0,
+                      "top": 0
+                    },
+                    "text": "S3 全球遠征",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_56",
+                    "width": 170,
+                    "height": 44,
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-56"
                   }
                 ]
               }
@@ -1523,7 +1546,7 @@
           },
           {
             "type": "panel",
-            "name": "LobbyHallScreen_div_60",
+            "name": "LobbyHallScreen_div_61",
             "widget": {
               "top": 782,
               "left": 24
@@ -1539,11 +1562,11 @@
               "paddingBottom": 12,
               "paddingLeft": 16
             },
-            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_60",
+            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_61",
             "children": [
               {
                 "type": "container",
-                "name": "LobbyHallScreen_div_61",
+                "name": "LobbyHallScreen_div_62",
                 "width": 364,
                 "height": 32,
                 "layout": {
@@ -1553,27 +1576,27 @@
                 "children": [
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_56",
+                    "name": "LobbyHallScreen_span_57",
                     "width": 150,
                     "height": 32,
                     "text": "許願祭壇 · 晝巡",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_56",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-56"
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_57",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-57"
                   },
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_span_57",
+                    "name": "LobbyHallScreen_span_58",
                     "width": 108,
                     "height": 32,
                     "text": "下一巡 03:12:40",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_57",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-57"
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_58",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-58"
                   }
                 ]
               },
               {
                 "type": "container",
-                "name": "LobbyHallScreen_div_62",
+                "name": "LobbyHallScreen_div_63",
                 "width": 364,
                 "height": 78,
                 "layout": {
@@ -1582,42 +1605,6 @@
                   "spacingX": 8
                 },
                 "children": [
-                  {
-                    "type": "panel",
-                    "name": "LobbyHallScreen_div_63",
-                    "width": 116,
-                    "height": 78,
-                    "layout": {
-                      "type": "vertical",
-                      "alignItems": "center",
-                      "paddingTop": 12,
-                      "paddingRight": 0,
-                      "paddingBottom": 0,
-                      "paddingLeft": 0,
-                      "spacingY": 4
-                    },
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_63",
-                    "children": [
-                      {
-                        "type": "label",
-                        "name": "LobbyHallScreen_b_7",
-                        "width": 112,
-                        "height": 26,
-                        "text": "精鐵 ×20",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_b_7",
-                        "textKey": "auto.lobby-hall-screen.lobby-hall-screen-b-7"
-                      },
-                      {
-                        "type": "label",
-                        "name": "LobbyHallScreen_span_58",
-                        "width": 48,
-                        "height": 20,
-                        "text": "可收取",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_58",
-                        "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-58"
-                      }
-                    ]
-                  },
                   {
                     "type": "panel",
                     "name": "LobbyHallScreen_div_64",
@@ -1636,19 +1623,19 @@
                     "children": [
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_b_8",
-                        "width": 114,
+                        "name": "LobbyHallScreen_b_7",
+                        "width": 112,
                         "height": 26,
-                        "text": "糧草 ×500",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_b_8",
-                        "textKey": "auto.lobby-hall-screen.lobby-hall-screen-b-8"
+                        "text": "精鐵 ×20",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_b_7",
+                        "textKey": "auto.lobby-hall-screen.lobby-hall-screen-b-7"
                       },
                       {
                         "type": "label",
                         "name": "LobbyHallScreen_span_59",
-                        "width": 83,
+                        "width": 48,
                         "height": 20,
-                        "text": "剩 01:20:05",
+                        "text": "可收取",
                         "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_59",
                         "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-59"
                       }
@@ -1672,6 +1659,42 @@
                     "children": [
                       {
                         "type": "label",
+                        "name": "LobbyHallScreen_b_8",
+                        "width": 114,
+                        "height": 26,
+                        "text": "糧草 ×500",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_b_8",
+                        "textKey": "auto.lobby-hall-screen.lobby-hall-screen-b-8"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyHallScreen_span_60",
+                        "width": 83,
+                        "height": 20,
+                        "text": "剩 01:20:05",
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_60",
+                        "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-60"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "LobbyHallScreen_div_66",
+                    "width": 116,
+                    "height": 78,
+                    "layout": {
+                      "type": "vertical",
+                      "alignItems": "center",
+                      "paddingTop": 12,
+                      "paddingRight": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "spacingY": 4
+                    },
+                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_66",
+                    "children": [
+                      {
+                        "type": "label",
                         "name": "LobbyHallScreen_b_9",
                         "width": 114,
                         "height": 26,
@@ -1680,12 +1703,12 @@
                       },
                       {
                         "type": "label",
-                        "name": "LobbyHallScreen_span_60",
+                        "name": "LobbyHallScreen_span_61",
                         "width": 64,
                         "height": 20,
                         "text": "點擊許願",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_60",
-                        "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-60"
+                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_61",
+                        "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-61"
                       }
                     ]
                   }
@@ -1695,7 +1718,7 @@
           },
           {
             "type": "panel",
-            "name": "LobbyHallScreen_div_66",
+            "name": "LobbyHallScreen_div_67",
             "widget": {
               "top": 782,
               "right": 24
@@ -1711,20 +1734,20 @@
               "paddingBottom": 14,
               "paddingLeft": 18
             },
-            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_66",
+            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_67",
             "children": [
               {
                 "type": "label",
-                "name": "LobbyHallScreen_div_67",
+                "name": "LobbyHallScreen_div_68",
                 "width": 360,
                 "height": 35,
                 "text": "世家總覽",
-                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_67",
-                "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-67"
+                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_68",
+                "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-68"
               },
               {
                 "type": "container",
-                "name": "LobbyHallScreen_div_68",
+                "name": "LobbyHallScreen_div_69",
                 "width": 360,
                 "height": 48,
                 "layout": {
@@ -1734,21 +1757,21 @@
                 "children": [
                   {
                     "type": "label",
-                    "name": "LobbyHallScreen_div_69",
-                    "width": 360,
-                    "height": 24,
-                    "text": "管理麾下世家與英靈 · 已成家族 1",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_69",
-                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-69"
-                  },
-                  {
-                    "type": "label",
                     "name": "LobbyHallScreen_div_70",
                     "width": 360,
                     "height": 24,
-                    "text": "張氏一門 · 主卡 張飛 · 深度 2 · 名聲 340",
+                    "text": "管理麾下世家與英靈 · 已成家族 1",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_70",
                     "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-70"
+                  },
+                  {
+                    "type": "label",
+                    "name": "LobbyHallScreen_div_71",
+                    "width": 360,
+                    "height": 24,
+                    "text": "張氏一門 · 主卡 張飛 · 深度 2 · 名聲 340",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_71",
+                    "textKey": "auto.lobby-hall-screen.lobby-hall-screen-div-71"
                   }
                 ]
               }
@@ -1773,30 +1796,8 @@
             "children": [
               {
                 "type": "panel",
-                "name": "LobbyHallScreen_div_72",
-                "_ucufId": "lobby-hall-screen.dock-sortie",
-                "width": 196,
-                "height": 76,
-                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_72",
-                "children": [
-                  {
-                    "type": "label",
-                    "name": "LobbyHallScreen_span_61",
-                    "widget": {
-                      "left": 0,
-                      "top": 0
-                    },
-                    "text": "出征",
-                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_61",
-                    "width": 196,
-                    "height": 76
-                  }
-                ]
-              },
-              {
-                "type": "panel",
                 "name": "LobbyHallScreen_div_73",
-                "_ucufId": "lobby-hall-screen.dock-generals",
+                "_ucufId": "lobby-hall-screen.dock-sortie",
                 "width": 196,
                 "height": 76,
                 "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_73",
@@ -1808,7 +1809,7 @@
                       "left": 0,
                       "top": 0
                     },
-                    "text": "武將",
+                    "text": "出征",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_62",
                     "width": 196,
                     "height": 76
@@ -1818,7 +1819,7 @@
               {
                 "type": "panel",
                 "name": "LobbyHallScreen_div_74",
-                "_ucufId": "lobby-hall-screen.dock-domestic",
+                "_ucufId": "lobby-hall-screen.dock-generals",
                 "width": 196,
                 "height": 76,
                 "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_74",
@@ -1830,7 +1831,7 @@
                       "left": 0,
                       "top": 0
                     },
-                    "text": "內政",
+                    "text": "武將",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_63",
                     "width": 196,
                     "height": 76
@@ -1840,7 +1841,7 @@
               {
                 "type": "panel",
                 "name": "LobbyHallScreen_div_75",
-                "_ucufId": "lobby-hall-screen.dock-training",
+                "_ucufId": "lobby-hall-screen.dock-domestic",
                 "width": 196,
                 "height": 76,
                 "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_75",
@@ -1852,7 +1853,7 @@
                       "left": 0,
                       "top": 0
                     },
-                    "text": "培育",
+                    "text": "內政",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_64",
                     "width": 196,
                     "height": 76
@@ -1862,7 +1863,7 @@
               {
                 "type": "panel",
                 "name": "LobbyHallScreen_div_76",
-                "_ucufId": "lobby-hall-screen.dock-shop",
+                "_ucufId": "lobby-hall-screen.dock-training",
                 "width": 196,
                 "height": 76,
                 "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_76",
@@ -1874,8 +1875,30 @@
                       "left": 0,
                       "top": 0
                     },
-                    "text": "商城",
+                    "text": "培育",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_65",
+                    "width": 196,
+                    "height": 76
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "LobbyHallScreen_div_77",
+                "_ucufId": "lobby-hall-screen.dock-shop",
+                "width": 196,
+                "height": 76,
+                "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_77",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "LobbyHallScreen_span_66",
+                    "widget": {
+                      "left": 0,
+                      "top": 0
+                    },
+                    "text": "商城",
+                    "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_66",
                     "width": 196,
                     "height": 76
                   }

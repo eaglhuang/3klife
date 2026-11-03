@@ -4,7 +4,7 @@
   "screenId": "lobby-hall-screen",
   "sidecarBundle": "resources",
   "sidecarRoot": "assets/resources/sidecars/lobby-hall-screen/",
-  "sourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh23-out/lobby-hall-screen.ucuf-ready.html",
+  "sourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/lh27-out/lobby-hall-screen.ucuf-ready.html",
   "viewport": {
     "width": 1920,
     "height": 1080
@@ -37,12 +37,12 @@
   },
   "entries": [
     {
-      "bakeId": "lobby-hall-screen__span_83__background-image",
+      "bakeId": "lobby-hall-screen__span_84__background-image",
       "screenId": "lobby-hall-screen",
       "selector": "div.npc[8]>span.body[0]>span.mark[1]",
       "ucufId": null,
       "tag": "span",
-      "nodeId": 83,
+      "nodeId": 84,
       "property": "background-image",
       "value": "radial-gradient(circle at 40% 35%, rgb(255, 224, 136), rgb(212, 175, 55))",
       "capability": "assetize",
@@ -50,7 +50,7 @@
       "bakeNote": null,
       "target": {
         "x": 780.99,
-        "y": 614.54,
+        "y": 614.69,
         "width": 38,
         "height": 38,
         "dpr": 2
@@ -64,38 +64,11 @@
       "status": "needs-art-direction"
     },
     {
-      "bakeId": "lobby-hall-screen__div_96__mask-image",
+      "bakeId": "lobby-hall-screen__div_97__mask-image",
       "screenId": "lobby-hall-screen",
       "selector": "div.sandbox-group[11]>div.sandbox[0]",
       "ucufId": "lobby-hall-screen.sandbox",
       "tag": "div",
-      "nodeId": 96,
-      "property": "mask-image",
-      "value": "radial-gradient(50% 50%, rgb(0, 0, 0) 62%, rgba(0, 0, 0, 0.55) 80%, rgba(0, 0, 0, 0) 100%)",
-      "capability": "assetize",
-      "bakeMode": null,
-      "bakeNote": null,
-      "target": {
-        "x": 730,
-        "y": 190,
-        "width": 460,
-        "height": 330,
-        "dpr": 2
-      },
-      "outputPath": null,
-      "bundleHint": "resources",
-      "skinSlotKind": "mask-set",
-      "autoBake": false,
-      "bakeAction": "converter-geometry",
-      "artGuidance": "Geometry/mask CSS is not a missing picture. Implement as Cocos mask/vector/shape logic; do not screenshot rendered content.",
-      "status": "needs-converter-rule"
-    },
-    {
-      "bakeId": "lobby-hall-screen__div_97__mask-image",
-      "screenId": "lobby-hall-screen",
-      "selector": "div.sandbox-group[11]>div.season-tint[1]",
-      "ucufId": "lobby-hall-screen.season-tint",
-      "tag": "div",
       "nodeId": 97,
       "property": "mask-image",
       "value": "radial-gradient(50% 50%, rgb(0, 0, 0) 62%, rgba(0, 0, 0, 0.55) 80%, rgba(0, 0, 0, 0) 100%)",
@@ -118,12 +91,39 @@
       "status": "needs-converter-rule"
     },
     {
-      "bakeId": "lobby-hall-screen__div_97__mix-blend-mode",
+      "bakeId": "lobby-hall-screen__div_98__mask-image",
       "screenId": "lobby-hall-screen",
       "selector": "div.sandbox-group[11]>div.season-tint[1]",
       "ucufId": "lobby-hall-screen.season-tint",
       "tag": "div",
-      "nodeId": 97,
+      "nodeId": 98,
+      "property": "mask-image",
+      "value": "radial-gradient(50% 50%, rgb(0, 0, 0) 62%, rgba(0, 0, 0, 0.55) 80%, rgba(0, 0, 0, 0) 100%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 730,
+        "y": 190,
+        "width": 460,
+        "height": 330,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "mask-set",
+      "autoBake": false,
+      "bakeAction": "converter-geometry",
+      "artGuidance": "Geometry/mask CSS is not a missing picture. Implement as Cocos mask/vector/shape logic; do not screenshot rendered content.",
+      "status": "needs-converter-rule"
+    },
+    {
+      "bakeId": "lobby-hall-screen__div_98__mix-blend-mode",
+      "screenId": "lobby-hall-screen",
+      "selector": "div.sandbox-group[11]>div.season-tint[1]",
+      "ucufId": "lobby-hall-screen.season-tint",
+      "tag": "div",
+      "nodeId": 98,
       "property": "mix-blend-mode",
       "value": "soft-light",
       "capability": "assetize",

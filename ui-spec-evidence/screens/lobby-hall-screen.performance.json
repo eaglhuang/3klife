@@ -1,9 +1,9 @@
 {
   "screenId": "lobby-hall-screen",
   "rendering": {
-    "nodeCount": 154,
+    "nodeCount": 156,
     "deferredNodeCount": 0,
-    "totalNodeCount": 154,
+    "totalNodeCount": 156,
     "maxDepth": 6,
     "estimatedDrawCalls": 7,
     "colorRectCount": 0
@@ -27,7 +27,7 @@
   },
   "runtimeGate": {
     "nodeCount": {
-      "value": 154,
+      "value": 156,
       "warning": 35,
       "blocker": 60,
       "status": "fail"
@@ -43,11 +43,11 @@
     "level": "blocker",
     "warnings": [
       "atlas-batch-limit-near: at R24 ceiling",
-      "node-count-warning: 154 (>35)",
+      "node-count-warning: 156 (>35)",
       "texture-memory-warning: 12.21MB > 4.00MB"
     ],
     "blockers": [
-      "node-count-blocker: 154 (>60)"
+      "node-count-blocker: 156 (>60)"
     ]
   }
 }
