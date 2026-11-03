@@ -160,6 +160,7 @@ import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 import { DailyReportController } from '../core/DailyReportController';
 import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
+import type { TabKey } from '../components/character-ds3/GeneralDetailChromePresenter';
 
 const { ccclass } = _decorator;
 
@@ -365,7 +366,8 @@ export class LobbyScene extends Component {
     private _leaderboardPanel: LobbyLeaderboardComposite | null = null;
     private _seasonReportPanel: SeasonReportComposite | null = null;
     private _sandtableTerritoryPanel: SandtableTerritoryComposite | null = null;
-    private _characterDs3ActiveTab: GeneralDetailRuntimeTab = 'Overview';
+    /** 人物頁目前分頁；DS3 分頁切換會帶 Record 等非預覽分頁，所以用完整的 TabKey */
+    private _characterDs3ActiveTab: TabKey = 'Overview';
     /** 目前人物頁顯示的武將（寄宿戰魂用，PROG-2-1058） */
     private _characterDs3General: GeneralConfig | null = null;
     /** 寄宿戰魂兩段確認：第一次點按後記下待確認的亡者 uid */
