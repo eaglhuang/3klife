@@ -2,6 +2,8 @@
 import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
 import { ERA_SHIFT_TEXT, formatHegemonRise } from '../../core/systems/RivalRulerLines';
 import { nationDef } from '../../core/systems/RivalNations';
+import type { RivalRostersConfig } from '../../core/systems/RivalOfficers';
+import { buildRivalOfficerSetup, type RivalOfficerSetupInput, type RivalSetupGeneral } from '../../core/systems/RivalOfficerSetup';
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
@@ -558,6 +560,7 @@ export class LobbyScene extends Component {
         } catch (error) {
             UCUFLogger.error(LogCategory.DATA, '[LobbyScene] 載入資料失敗:', error);
         }
+        await this._setupRivalOfficers();
 
         // 測試 Toast
         this.scheduleOnce(() => {
@@ -568,6 +571,29 @@ export class LobbyScene extends Component {
         ensureGlobalDevOverlay(this._localGachaService, undefined, () => { PlayerRosterService.clear(); }, () => {
             this._refreshWalletPreviewState();
         });
+    }
+
+    /** 他國逐將名冊與重算情境（E-9，PROG-2-1715）；失敗時他國照舊以兵力計軍力 */
+    private async _setupRivalOfficers(): Promise<void> {
+        if (this._generals.length === 0) return;
+        try {
+            const [rosters, troops, difficultyTable] = await Promise.all([
+                services().resource.loadJson<RivalRostersConfig>('data/rival-rosters', { tags: ['LobbyScene'] }),
+                services().resource.loadJson<RivalOfficerSetupInput['troops']>('data/troops', { tags: ['LobbyScene'] }),
+                services().resource.loadJson<unknown>('data/ai-difficulty', { tags: ['LobbyScene'] }),
+            ]);
+            const session = services().session;
+            const setup = buildRivalOfficerSetup({
+                rosters,
+                generals: this._generals as unknown as RivalSetupGeneral[],
+                troops,
+                difficultyTable,
+                playerOwnedIds: new Set(session.roster.map((g) => g.templateId ?? g.id)),
+            });
+            session.setRivalOfficerContext(setup.rosters, setup.context);
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 他國名冊載入失敗，軍力改以兵力計:', error);
+        }
     }
 
     protected onDestroy(): void {
