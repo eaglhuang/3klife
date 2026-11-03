@@ -134,3 +134,7 @@ docs/ai_atomic_framework/arxiv-paper-v1/*.before-20260625-*.bak
 
 # Temporary rescue / inspection outputs
 tmp/
+
+# Spine 武將美術只放私有倉庫 spine-trial，不進公開倉庫
+assets/resources/spine/generals/
+assets/resources/spine/generals.meta

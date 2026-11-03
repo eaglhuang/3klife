@@ -40,6 +40,7 @@ import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 import { BattleState } from "../models/BattleState";
 import { BoardRenderer } from "./BoardRenderer";
+import { SpineGeneralOverlay } from "./SpineGeneralOverlay";
 import { BATTLE_VISUAL_TIMING } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { services } from "../../core/managers/ServiceLoader";
@@ -147,6 +148,7 @@ export class UnitRenderer extends Component {
   private readonly screenPosBuf = new Vec3();
   private readonly uiWorldPosBuf = new Vec3();
   private readonly generalViews = new Map<Faction, GeneralView>();
+  private readonly spineGenerals = new SpineGeneralOverlay(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly tileBuffViews = new Map<string, TileBuffView>();
   private readonly troopPrefabLoads = new Map<string, Promise<Prefab | null>>();
   private readonly heroPrefabLoads = new Map<string, Promise<Prefab | null>>();
@@ -958,6 +960,17 @@ export class UnitRenderer extends Component {
     view.hpLabel.string = `${Math.max(0, general.currentHp)}`;
     view.labelOpacity.opacity = 255;
     this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight + 0.28);
+
+    // Spine 2D 武將站在標籤下方；載入完成後隱藏 3D 模型
+    const label = view.labelNode.position;
+    if (this.spineGenerals.sync(faction, label.x, label.y - 230)) {
+      view.modelRoot.active = false;
+    }
+  }
+
+  /** 武將出招：Spine 武將播一次長槍突刺 */
+  public playGeneralAttackPose(faction: Faction): void {
+    this.spineGenerals.playAttack(faction);
   }
 
   private createGeneralView(faction: Faction): GeneralView {
@@ -1031,6 +1044,7 @@ export class UnitRenderer extends Component {
     const view = this.generalViews.get(faction);
     if (!view) return;
     services().material.releaseUnit(`General_${faction}`);
+    this.spineGenerals.remove(faction);
     view.worldNode.destroy();
     view.labelNode.destroy();
     this.generalViews.delete(faction);
