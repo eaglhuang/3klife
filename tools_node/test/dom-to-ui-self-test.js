@@ -1047,6 +1047,21 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     ok('R-9e in-project assets/resources paths map to runtime sprite paths');
   }
 
+  // R-9f: "circle at X Y" without an explicit length uses the CSS default
+  // farthest-corner radius instead of leaving radius null (strict radial gate).
+  {
+    const { parseGradient } = require('../lib/dom-to-ui/snapshot-to-slots');
+    const r = parseGradient('radial-gradient(circle at 40% 35%, red, blue)').radius;
+    if (!r || Math.abs(r.x - Math.hypot(0.6, 0.65)) > 1e-6) fail(`R-9f circle default radius wrong: ${JSON.stringify(r)}`);
+    const side = parseGradient('radial-gradient(circle closest-side at 50% 50%, red, blue)').radius;
+    if (!side || side.x !== 0.5) fail(`R-9f circle closest-side wrong: ${JSON.stringify(side)}`);
+    const bare = parseGradient('radial-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 70%)');
+    if (!bare.center || bare.center.x !== 0.5 || !bare.radius || Math.abs(bare.radius.x - Math.SQRT1_2) > 1e-6) {
+      fail(`R-9f shape-less radial must default to centered farthest-corner ellipse: ${JSON.stringify(bare)}`);
+    }
+    ok('R-9f circle / shape-less radial gradients resolve keyword/default geometry');
+  }
+
   // R-10: font-family stack 必須走 registry-based 解析。converter 不能把整個
   // stack 都打成同一份字型資產（舊 pickFontByTag 寫死回 newsreader）。任何走
   // v2 source-package flow 的 UI 都應該照 stack 順序找到第一個有資產的 family。

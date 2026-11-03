@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "lobby-hall-screen",
-  "generatedAt": "2026-11-03T18:47:19.446Z",
+  "generatedAt": "2026-11-03T19:10:14.975Z",
   "verdict": "not-ready",
   "readinessScore": 0.75,
   "summary": {
@@ -118,7 +118,7 @@
         "estimatedDrawCalls": 7,
         "colorRectCount": 0
       },
-      "skinSlotCount": 508,
+      "skinSlotCount": 148,
       "issues": [
         "node-count-blocker: 148 (>60)"
       ]

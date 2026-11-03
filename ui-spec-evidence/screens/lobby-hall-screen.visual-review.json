@@ -21,8 +21,7 @@
   "compositeReviewRequired": [],
   "effectReview": [
     "css-effect-needs-art-review",
-    "css-transform-manual-layout-risk",
-    "overflow-hidden-clipping-risk"
+    "css-transform-manual-layout-risk"
   ],
   "blockers": []
 }

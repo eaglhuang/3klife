@@ -221,6 +221,8 @@ function isTransparentSourceWrapper(el) {
 function processElement(el, ctx, depth) {
   const tag = el.tag;
   if (NON_VISUAL_TAGS.has(tag)) return null;
+  // data-ucuf-skip：整棵子樹交給 runtime（例如季節粒子特效），不建 UCUF 節點
+  if (el.attrs && Object.prototype.hasOwnProperty.call(el.attrs, 'data-ucuf-skip')) return null;
   // unwrap html/body: descend into children directly
   if (tag === 'html' || tag === 'body') {
     const out = {
