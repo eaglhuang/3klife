@@ -125,6 +125,21 @@ export function createMercenaryPanelControllerSuite(): TestSuite {
         assert.equals('a,b,c', rows.map(row => row.uid).join(','));
     });
 
+    suite.test('名牌列帶原主與稀有度文字，面板 flow view 輸出到 mercRow{i}Meta', () => {
+        const controller = new MercenaryPanelController(makeDeps());
+        const view = controller.getFlowView();
+        assert.equals('原主甲・R', view.texts.mercRow0Meta);
+        assert.equals('原主甲・R', view.texts.mercRow1Meta);
+        assert.equals('', view.texts.mercRow2Meta);
+        assert.isTrue(view.actives.mercRow1);
+        assert.isFalse(view.actives.mercRow2);
+        const rows = buildMercenaryNameplateRows(
+            [TRIAL],
+            (state) => ({ originalOwnerName: '原主甲', generalName: `名${state.generalId}`, rarity: 'SSR' }),
+        );
+        assert.equals('原主甲・SSR', rows[0].metaText);
+    });
+
     suite.test('名牌列上限與傭兵面板列數一致', () => {
         const many: MercenaryState[] = Array.from({ length: 9 }, (_, i) => ({
             uid: `u${i}`, daysLeft: 1, bond: 1, status: 'Trial', generalId: `g${i}`,
