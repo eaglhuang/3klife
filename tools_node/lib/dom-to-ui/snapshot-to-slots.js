@@ -266,7 +266,8 @@ function snapshotToSlots(styles, opts) {
   } else if (bgLayers.length === 1 && bgLayers[0].kind === 'gradient') {
     slots.push({ kind: 'gradient-rect', gradient: bgLayers[0].gradient });
     if (bgColor) slots.push({ kind: 'color-rect', color: bgColor });
-  } else if (bgLayers.length > 1 || (bgLayers.length === 1 && bgColor)) {
+  } else if (bgLayers.length > 1 || (bgLayers.length === 1 && (bgColor || bgLayers[0].kind === 'image'))) {
+    // A lone url() layer (no background-color) still needs a slot, or the image vanishes.
     const all = bgLayers.slice();
     if (bgColor) all.push({ kind: 'color', color: bgColor });
     slots.push({ kind: 'multi-layer-rect', layers: all });

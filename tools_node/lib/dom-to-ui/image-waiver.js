@@ -29,6 +29,10 @@ function urlExistsLocally(url, repoRoot) {
   if (/^(data|https?|blob):/i.test(url)) return true; // not a file we care about
   // Strip query / hash
   const clean = url.split('?')[0].split('#')[0];
+  // Computed styles report resolved absolute file:// URLs; check them as-is.
+  if (/^file:/i.test(clean)) {
+    try { return fs.existsSync(require('url').fileURLToPath(clean)); } catch (_) { return false; }
+  }
   // Resolve relative to repoRoot
   const abs = path.resolve(repoRoot, clean.replace(/^\//, ''));
   return fs.existsSync(abs);

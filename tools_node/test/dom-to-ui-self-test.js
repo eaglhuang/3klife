@@ -1014,6 +1014,29 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     ok('R-9b high-fidelity preview escapes quotes in style attribute (font-family / text-align preserved)');
   }
 
+  // R-9c: image waivers must resolve absolute file:// URLs (what computed styles
+  // report) instead of joining them onto repoRoot, or every local image is waived.
+  {
+    const { buildWaivers } = require('../lib/dom-to-ui/image-waiver');
+    const existing = require('url').pathToFileURL(path.join(REPO_ROOT, 'package.json')).href;
+    const missing = require('url').pathToFileURL(path.join(REPO_ROOT, 'no-such-image.png')).href;
+    const snap = (u) => ({ path: 'div', styles: { 'background-image': `url("${u}")`, _rect: { x: 0, y: 0, w: 10, h: 10 } } });
+    const report = buildWaivers({ snapshots: [snap(existing), snap(missing)], repoRoot: REPO_ROOT });
+    const urls = (report.waivers || []).map(w => w.url);
+    if (urls.includes(existing)) fail('R-9c existing file:// image must not be waived');
+    if (!urls.includes(missing)) fail('R-9c missing file:// image must still be waived');
+    ok('R-9c image waivers resolve file:// URLs (existing kept, missing waived)');
+
+    // R-9d: a lone url() background layer with no background-color must still
+    // produce a slot (it used to emit nothing, so preview images vanished).
+    const loneImg = snapshotToSlots({ 'background-image': `url("${existing}")`, 'background-color': 'rgba(0, 0, 0, 0)' }, {});
+    const imgSlot = loneImg.find(s => s.kind === 'multi-layer-rect');
+    if (!imgSlot || !imgSlot.layers.some(l => l.kind === 'image' && l.url === existing)) {
+      fail(`R-9d lone url() background dropped: ${JSON.stringify(loneImg)}`);
+    }
+    ok('R-9d lone url() background layer is kept as a slot');
+  }
+
   // R-10: font-family stack 必須走 registry-based 解析。converter 不能把整個
   // stack 都打成同一份字型資產（舊 pickFontByTag 寫死回 newsreader）。任何走
   // v2 source-package flow 的 UI 都應該照 stack 順序找到第一個有資產的 family。
