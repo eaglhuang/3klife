@@ -11,6 +11,8 @@ import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { LobbyHallScreenBinder, type LobbyHallDockId } from '../core/LobbyHallScreenBinder';
 import type { HallThemeConfig } from '../../core/systems/HallTheme';
 import type { HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
+import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
+import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
@@ -2465,10 +2467,13 @@ export class LobbyScene extends Component {
     }
 
     private async _mountLobbyHall(): Promise<void> {
-        const [themeConfig, fxConfig] = await Promise.all([
+        const [themeConfig, fxConfig, stageLayout, stageDecor] = await Promise.all([
             this._loadDataJson<HallThemeConfig>('data/hall-map/hall-theme'),
             this._loadDataJson<HallSeasonFxConfig>('data/hall-map/hall-season-fx'),
+            this._loadDataJson<HallStageLayout>('data/hall-map/hall-stage-spots'),
+            this._loadDataJson<HallStageDecor>('data/hall-map/hall-stage-decor'),
         ]);
+        const session = services().session;
         const host = await this._mountPreviewScreenHost('LobbyHallHost', 'lobby-hall-screen');
         this._lobbyHallHost = host;
         const dock: Record<LobbyHallDockId, () => void> = {
@@ -2481,8 +2486,21 @@ export class LobbyScene extends Component {
         this._lobbyHall = new LobbyHallScreenBinder(host.node, {
             themeConfig,
             fxConfig,
-            onBack: () => { host.node.active = false; },
+            onBack: () => {
+                this._lobbyHall?.closeStage();
+                host.node.active = false;
+            },
             onDock: (id) => dock[id](),
+            // Q 版武將人群（UI-2-0150）；自告奮勇任務來源未定，先不給任務（不顯示「!」）
+            stage: stageLayout && stageDecor
+                ? {
+                    layout: stageLayout,
+                    decor: stageDecor,
+                    refreshSpots: (nowSec) => { session.refreshHallSpots(nowSec, session.randomSource); },
+                    cast: () => session.hallStageCast([]),
+                    nowSec: () => Date.now() / 1000,
+                }
+                : null,
         });
         host.node.active = false;
     }
@@ -2496,6 +2514,7 @@ export class LobbyScene extends Component {
         this._bringNodeToFront(host.node);
         // 晝夜依裝置當地時間，季節依遊戲時鐘（1 春～4 冬）
         this._lobbyHall?.refresh(services().session.gameTime.currentSeason, new Date().getHours());
+        this._lobbyHall?.openStage();
     }
 
     private _openRecruitHall(): void {

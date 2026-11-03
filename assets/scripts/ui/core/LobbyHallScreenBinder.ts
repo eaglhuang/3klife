@@ -5,13 +5,20 @@
  * - 以 _ucufId 找返回鈕與底部五鈕，點擊轉成注入的動作（畫面轉出的是 panel，不是 Button，所以直接聽 TOUCH_END）。
  * - 依季節序號與當地小時解析主題（HallTheme），交給 LobbyHallThemeApplier／LobbyHallThemeNodeView 套到節點。
  * - 在畫面根節點下加一層季節粒子（HallSeasonFxLayer），換季時重撒。
+ * - 沙盤群組之後、粒子之下加一層 Q 版武將人群（HallStageCrowd＋LobbyHallStageController，UI-2-0150），
+ *   開啟期間每隔 STAGE_TICK_SEC 秒 tick 一次（點位本身 60 秒才輪換）。
  * LobbyScene 只負責掛 host、載設定檔、把動作接到既有流程。
  * Unity 對照：像掛在大廳 Canvas 上的 Presenter，持有主題綁定器與粒子層，按鈕事件往外拋。
  */
 import { Node, UITransform } from 'cc';
 import { HallThemeConfig, resolveHallTheme } from '../../core/systems/HallTheme';
 import type { HallSeason, HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
+import type { HallStageCast } from '../../core/systems/HallStageDirector';
+import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
+import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
 import { HallSeasonFxLayer } from '../components/HallSeasonFxLayer';
+import { HallStageCrowd } from '../components/HallStageCrowd';
+import { LobbyHallStageController } from './LobbyHallStageController';
 import { LobbyHallThemeApplier } from './LobbyHallThemeApplier';
 import { LobbyHallThemeNodeView } from './LobbyHallThemeNodeView';
 import { findUcufNode } from './UcufNodeLookup';
@@ -20,24 +27,61 @@ export type LobbyHallDockId = 'sortie' | 'generals' | 'domestic' | 'training' | 
 
 export const LOBBY_HALL_DOCK_IDS: readonly LobbyHallDockId[] = ['sortie', 'generals', 'domestic', 'training', 'shop'];
 
+/** 人群 tick 間隔（秒）；點位 60 秒才輪換，這裡只是檢查頻率 */
+export const STAGE_TICK_SEC = 5;
+
+export interface LobbyHallStageDepsInput {
+    readonly layout: HallStageLayout;
+    readonly decor: HallStageDecor;
+    readonly refreshSpots: (nowSec: number) => void;
+    readonly cast: () => HallStageCast;
+    readonly nowSec: () => number;
+}
+
 export interface LobbyHallScreenDeps {
     readonly themeConfig: HallThemeConfig | null;
     readonly fxConfig: HallSeasonFxConfig | null;
     readonly onBack: () => void;
     readonly onDock: (id: LobbyHallDockId) => void;
+    /** 人群設定；設定檔沒載到時為 null，不建人群層 */
+    readonly stage?: LobbyHallStageDepsInput | null;
 }
+
+/** 綁定器自建、緊接在沙盤後面的圖層節點名稱 */
+const LAYER_NAMES: readonly string[] = ['HallStageCrowd', 'HallSeasonFx'];
 
 export class LobbyHallScreenBinder {
     private readonly _applier: LobbyHallThemeApplier;
     private _fx: HallSeasonFxLayer | null = null;
     private _fxSeason: HallSeason | null = null;
+    private _crowd: HallStageCrowd | null = null;
+    private _stage: LobbyHallStageController | null = null;
+    private readonly _tickStage = (): void => {
+        if (this._stage && this._deps.stage) this._stage.tick(this._deps.stage.nowSec());
+    };
 
     /** screenRoot：畫面根節點（layout root，例如 LobbyHallScreen）。 */
     constructor(private readonly _screenRoot: Node, private readonly _deps: LobbyHallScreenDeps) {
         this._applier = new LobbyHallThemeApplier(new LobbyHallThemeNodeView(_screenRoot));
         this._bindTap('lobby-hall-screen.back', () => _deps.onBack());
         for (const id of LOBBY_HALL_DOCK_IDS) this._bindTap(`lobby-hall-screen.dock-${id}`, () => _deps.onDock(id));
+        if (_deps.stage) this._createStage(_deps.stage);
         if (_deps.fxConfig) this._fx = this._createFxLayer(_deps.fxConfig);
+    }
+
+    /** 開大廳時呼叫：立刻排站位並開始定時輪換 */
+    openStage(): void {
+        if (!this._stage || !this._crowd || !this._deps.stage) return;
+        this._stage.open(this._deps.stage.nowSec());
+        this._crowd.unschedule(this._tickStage);
+        this._crowd.schedule(this._tickStage, STAGE_TICK_SEC);
+    }
+
+    /** 離開大廳時呼叫：停止輪換並清掉人群 */
+    closeStage(): void {
+        if (!this._stage || !this._crowd) return;
+        this._crowd.unschedule(this._tickStage);
+        this._stage.close();
     }
 
     /** 依遊戲季節（1~4）與當地小時套主題；設定檔沒載到時不動畫面。 */
@@ -59,19 +103,43 @@ export class LobbyHallScreenBinder {
         node.on(Node.EventType.TOUCH_END, handler);
     }
 
+    private _createStage(input: LobbyHallStageDepsInput): void {
+        const node = new Node('HallStageCrowd');
+        node.layer = this._screenRoot.layer;
+        const rootSize = this._screenRoot.getComponent(UITransform);
+        node.addComponent(UITransform).setContentSize(rootSize?.width ?? input.layout.canvas.width, rootSize?.height ?? input.layout.canvas.height);
+        this._insertAfterSandbox(node);
+        const crowd = node.addComponent(HallStageCrowd);
+        crowd.configure(input.decor);
+        this._crowd = crowd;
+        this._stage = new LobbyHallStageController(input.layout, {
+            refreshSpots: input.refreshSpots,
+            cast: input.cast,
+            view: crowd,
+        });
+    }
+
+    /** 放在沙盤群組後面（場景元素之上、頂欄與面板之下）；找不到沙盤時掛在根節點 */
+    private _insertAfterSandbox(node: Node): void {
+        const sandbox = findUcufNode(this._screenRoot, 'lobby-hall-screen.sandbox-group');
+        const parent = sandbox?.parent ?? this._screenRoot;
+        parent.addChild(node);
+        if (sandbox && sandbox.parent) {
+            // 人群、粒子依建立順序排在沙盤之後：後建者在上
+            let index = sandbox.getSiblingIndex() + 1;
+            while (index < parent.children.length - 1 && LAYER_NAMES.includes(parent.children[index].name)) index++;
+            node.setSiblingIndex(index);
+        }
+    }
+
     private _createFxLayer(config: HallSeasonFxConfig): HallSeasonFxLayer {
         const node = new Node('HallSeasonFx');
         node.layer = this._screenRoot.layer;
         const rootSize = this._screenRoot.getComponent(UITransform);
         const transform = node.addComponent(UITransform);
         transform.setContentSize(rootSize?.width ?? config.canvas.width, rootSize?.height ?? config.canvas.height);
-        node.parent = this._screenRoot;
-        // 粒子在場景元素之上、頂欄與面板之下：放在沙盤群組後面
-        const sandbox = findUcufNode(this._screenRoot, 'lobby-hall-screen.sandbox-group');
-        if (sandbox && sandbox.parent) {
-            node.parent = sandbox.parent;
-            node.setSiblingIndex(sandbox.getSiblingIndex() + 1);
-        }
+        // 粒子在人群之上、頂欄與面板之下
+        this._insertAfterSandbox(node);
         const layer = node.addComponent(HallSeasonFxLayer);
         layer.configure(config);
         return layer;
