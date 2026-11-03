@@ -1,0 +1,13 @@
+{
+  "$note": "他國武將與虎符名冊（AI武將強度系統 doc_data_0002 E-5／E-9 前置，PROG-2-1712）。武將 id 取自 generals.json，依史實陣營分配；第一位為君主。虎符暫定：依 E-5 第一章「特殊兵種上限 1」每國配 1 張 R 級虎符，兵種取各國 Profile 慣用兵種，1★ 起。",
+  "nations": {
+    "wei":      { "generals": ["cao-cao", "xiahou-dun", "xiahou-yuan", "zhang-liao", "xu-zhu", "cao-ren", "xun-yu", "guo-jia"], "tallies": [{ "id": "wei-t1", "quality": "R", "troopType": "cavalry", "star": 1 }] },
+    "shu":      { "generals": ["liu-bei", "guan-yu", "zhao-yun", "zhuge-liang", "huang-zhong", "ma-chao"], "tallies": [{ "id": "shu-t1", "quality": "R", "troopType": "infantry", "star": 1 }] },
+    "wu":       { "generals": ["sun-quan", "zhou-yu", "lu-xun", "gan-ning", "taishi-ci", "lu-meng", "lu-su"], "tallies": [{ "id": "wu-t1", "quality": "R", "troopType": "navy", "star": 1 }] },
+    "lvbu":     { "generals": ["lu-bu", "diao-chan"], "tallies": [{ "id": "lvbu-t1", "quality": "R", "troopType": "cavalry", "star": 1 }] },
+    "yuan":     { "generals": ["yuan-shao", "yan-liang", "wen-chou", "tian-feng", "shen-pei"], "tallies": [{ "id": "yuan-t1", "quality": "R", "troopType": "archer", "star": 1 }] },
+    "liuzhang": { "generals": ["liu-zhang", "huang-quan"], "tallies": [{ "id": "liuzhang-t1", "quality": "R", "troopType": "shield", "star": 1 }] },
+    "mateng":   { "generals": ["ma-teng", "han-sui", "ma-dai", "pang-de"], "tallies": [{ "id": "mateng-t1", "quality": "R", "troopType": "cavalry", "star": 1 }] },
+    "nanman":   { "generals": ["meng-huo", "zhu-rong", "wu-tugu"], "tallies": [{ "id": "nanman-t1", "quality": "R", "troopType": "pikeman", "star": 1 }] }
+  }
+}
