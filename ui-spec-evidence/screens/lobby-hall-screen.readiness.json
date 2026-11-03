@@ -1,0 +1,165 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "lobby-hall-screen",
+  "generatedAt": "2026-11-03T18:47:19.446Z",
+  "verdict": "not-ready",
+  "readinessScore": 0.75,
+  "summary": {
+    "blockerUnits": 4,
+    "actionUnits": 6,
+    "bounded": true,
+    "nextCriticalAction": "capture Cocos Editor target screen and run final compare"
+  },
+  "paths": {
+    "layout": "assets/resources/ui-spec/layouts/lobby-hall-screen.json",
+    "skin": "assets/resources/ui-spec/skins/lobby-hall-screen.skin.json",
+    "screen": "assets/resources/ui-spec/screens/lobby-hall-screen.json",
+    "captureProtocol": "assets/resources/ui-spec/screens/lobby-hall-screen.final-capture-protocol.json",
+    "zoneOwnership": "assets/resources/ui-spec/screens/lobby-hall-screen.zone-ownership.json",
+    "tabRouting": "assets/resources/ui-spec/screens/lobby-hall-screen.tab-routing.json",
+    "preload": "ui-spec-evidence/screens/lobby-hall-screen.preload.json",
+    "performance": "ui-spec-evidence/screens/lobby-hall-screen.performance.json",
+    "bakeManifest": "ui-spec-evidence/layouts/lobby-hall-screen.layout.bake-manifest.json",
+    "artAuthorityWaivers": "assets/resources/ui-spec/screens/lobby-hall-screen.art-authority-waivers.json",
+    "finalVerdict": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/hall-deploy/lobby-hall-screen.html-cocos-verdict.json"
+  },
+  "gates": {
+    "finalGate": {
+      "status": "blocker",
+      "pass": false,
+      "workUnits": 1,
+      "summary": "no measured Cocos Editor final compare verdict"
+    },
+    "capture": {
+      "status": "blocker",
+      "ok": false,
+      "workUnits": 1,
+      "summary": "missing final capture protocol"
+    },
+    "zones": {
+      "status": "blocker",
+      "workUnits": 1,
+      "summary": "missing zone ownership report"
+    },
+    "tabMounts": {
+      "status": "warn",
+      "workUnits": 1,
+      "summary": "missing tab-routing sidecar"
+    },
+    "fragmentGeometry": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0 referenced fragments follow fill-root geometry contract",
+      "checks": [],
+      "failures": []
+    },
+    "textBinding": {
+      "status": "warn",
+      "workUnits": 1,
+      "summary": "3/36 dynamic text candidates missing bind/i18n contract",
+      "totalTextNodes": 81,
+      "dynamicCandidateCount": 36,
+      "missingContractCount": 3,
+      "samples": [
+        {
+          "name": "LobbyHallScreen_span_37",
+          "path": "LobbyHallScreen/LobbyHallScreen_body/LobbyHallScreen_div_46/LobbyHallScreen_span_36/LobbyHallScreen_span_37",
+          "text": "張飛"
+        },
+        {
+          "name": "LobbyHallScreen_span_62",
+          "path": "LobbyHallScreen/LobbyHallScreen_body/LobbyHallScreen_nav_1/LobbyHallScreen_div_72/LobbyHallScreen_span_62",
+          "text": "武將"
+        },
+        {
+          "name": "LobbyHallScreen_span_63",
+          "path": "LobbyHallScreen/LobbyHallScreen_body/LobbyHallScreen_nav_1/LobbyHallScreen_div_73/LobbyHallScreen_span_63",
+          "text": "內政"
+        }
+      ]
+    },
+    "visualPolicy": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "2 clip/mask geometry entries, 1 small texture entries, 0 unsafe auto-bake entries",
+      "totalEntries": 4,
+      "byBakeAction": {
+        "review-only": 1,
+        "converter-geometry": 2,
+        "manual-art-asset": 1
+      },
+      "clipGeometryCount": 2,
+      "smallTextureCount": 1,
+      "unsafeAutoBakeCount": 0
+    },
+    "loading": {
+      "status": "blocker",
+      "workUnits": 1,
+      "summary": "node-count-blocker: 148 (>60)",
+      "actualLayoutStats": {
+        "nodeCount": 148,
+        "deferredNodeCount": 0,
+        "totalNodeCount": 148,
+        "maxDepth": 6,
+        "colorRectCount": 0,
+        "lazySlotCount": 0,
+        "warmupHints": {
+          "next-frame": 0,
+          "idle": 0,
+          "tab-hover": 0,
+          "manual": 0
+        }
+      },
+      "reportedRendering": {
+        "nodeCount": 148,
+        "deferredNodeCount": 0,
+        "totalNodeCount": 148,
+        "maxDepth": 6,
+        "estimatedDrawCalls": 7,
+        "colorRectCount": 0
+      },
+      "skinSlotCount": 508,
+      "issues": [
+        "node-count-blocker: 148 (>60)"
+      ]
+    }
+  },
+  "issues": [
+    {
+      "severity": "blocker",
+      "code": "final-gate",
+      "summary": "no measured Cocos Editor final compare verdict",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "capture-protocol",
+      "summary": "missing final capture protocol",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "zone-ownership-waivers",
+      "summary": "missing zone ownership report",
+      "workUnits": 1
+    },
+    {
+      "severity": "warn",
+      "code": "tab-routing-mounts",
+      "summary": "missing tab-routing sidecar",
+      "workUnits": 1
+    },
+    {
+      "severity": "warn",
+      "code": "text-binding",
+      "summary": "3/36 dynamic text candidates missing bind/i18n contract",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "loading-performance",
+      "summary": "node-count-blocker: 148 (>60)",
+      "workUnits": 1
+    }
+  ]
+}

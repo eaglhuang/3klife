@@ -1,0 +1,53 @@
+{
+  "screenId": "lobby-hall-screen",
+  "rendering": {
+    "nodeCount": 148,
+    "deferredNodeCount": 0,
+    "totalNodeCount": 148,
+    "maxDepth": 6,
+    "estimatedDrawCalls": 7,
+    "colorRectCount": 0
+  },
+  "loading": {
+    "atlasCount": 4,
+    "atlasLimit": 4,
+    "preloadSpriteCount": 8,
+    "deferredSpriteCount": 0,
+    "estimatedTextureBytes": 12799864,
+    "fontCount": 3
+  },
+  "lifecycle": {
+    "lazySlotCount": 0,
+    "warmupHints": {
+      "next-frame": 0,
+      "idle": 0,
+      "tab-hover": 0,
+      "manual": 0
+    }
+  },
+  "runtimeGate": {
+    "nodeCount": {
+      "value": 148,
+      "warning": 35,
+      "blocker": 60,
+      "status": "fail"
+    },
+    "maxDepth": {
+      "value": 6,
+      "warning": 8,
+      "blocker": 12,
+      "status": "pass"
+    }
+  },
+  "verdict": {
+    "level": "blocker",
+    "warnings": [
+      "atlas-batch-limit-near: at R24 ceiling",
+      "node-count-warning: 148 (>35)",
+      "texture-memory-warning: 12.21MB > 4.00MB"
+    ],
+    "blockers": [
+      "node-count-blocker: 148 (>60)"
+    ]
+  }
+}

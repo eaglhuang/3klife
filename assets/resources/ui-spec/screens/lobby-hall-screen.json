@@ -1,0 +1,14 @@
+{
+  "id": "lobby-hall-screen",
+  "version": 2,
+  "uiId": "lobby-hall-screen",
+  "layout": "lobby-hall-screen",
+  "skin": "lobby-hall-screen.skin",
+  "bundle": "lobby_ui",
+  "meta": {
+    "htmlToUcufPlan4": true,
+    "runtimeAuthority": "synced-final-runtime-json"
+  },
+  "runtimeVersion": "lobhal-20261104-001",
+  "runtimeVersionUpdatedAt": "2026-11-03T18:46:54.173Z"
+}
