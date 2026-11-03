@@ -15,12 +15,14 @@
   html, body { width: 1920px; height: 1080px; overflow: hidden; font-family: var(--font-body); color: var(--text-primary); }
   body {
     --hall-bg-top: #2a2116; --hall-bg-bottom: #0f0c08; --hall-light: rgba(255,214,140,.18);
-    background: #1a120a url(../../../assets/resources/sprites/ui_bg/lobby_hall_spring_bg.jpg) center center / 1920px 1480px no-repeat;
+    background: #1a120a;
     position: relative;
   }
-  body[data-season="summer"] { background-image: url(../../../assets/resources/sprites/ui_bg/lobby_hall_summer_bg.jpg); }
-  body[data-season="autumn"] { background-image: url(../../../assets/resources/sprites/ui_bg/lobby_hall_autumn_bg.jpg); }
-  body[data-season="winter"] { background-image: url(../../../assets/resources/sprites/ui_bg/lobby_hall_winter_bg.jpg); }
+  /* 季節背景獨立成節點（轉換器只抓畫面元素，不抓 body 背景）：1920×1480 置中，上下各裁 200px */
+  .hall-bg { position:absolute; left:0; top:-200px; width:1920px; height:1480px; z-index:0; background: url(../../../assets/resources/sprites/ui_bg/lobby_hall_spring_bg.jpg) 0 0 / 1920px 1480px no-repeat; }
+  body[data-season="summer"] .hall-bg { background-image: url(../../../assets/resources/sprites/ui_bg/lobby_hall_summer_bg.jpg); }
+  body[data-season="autumn"] .hall-bg { background-image: url(../../../assets/resources/sprites/ui_bg/lobby_hall_autumn_bg.jpg); }
+  body[data-season="winter"] .hall-bg { background-image: url(../../../assets/resources/sprites/ui_bg/lobby_hall_winter_bg.jpg); }
   .night-tint { position:absolute; inset:0; z-index:1; pointer-events:none; display:none; background: radial-gradient(ellipse at 50% 60%, rgba(255,170,80,.18), transparent 55%), rgba(10,16,40,.55); }
   body[data-time="night"] .night-tint { display:block; }
 
@@ -61,7 +63,7 @@
   .sandbox, .season-tint { position:absolute; z-index:3; transition: all .6s ease;
     -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, rgba(0,0,0,.55) 80%, transparent 100%);
             mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, rgba(0,0,0,.55) 80%, transparent 100%); }
-  .sandbox { background:url(map-preview.png) 50% 50% / 100% 100% no-repeat; }
+  .sandbox { background:url(../../../assets/resources/sprites/ui_bg/lobby_hall_map_preview.png) 50% 50% / 100% 100% no-repeat; }
   .season-tint { pointer-events:none; mix-blend-mode:soft-light; }
   body[data-map="mini"] .sandbox, body[data-map="mini"] .season-tint { left:730px; top:190px; width:460px; height:330px; }
   body[data-map="focus"] .sandbox, body[data-map="focus"] .season-tint { left:560px; top:140px; width:800px; height:560px; }
@@ -145,6 +147,7 @@
 </style>
 </head>
 <body data-screen-label="01 幕府大廳" data-time="day" data-season="spring" data-map="mini">
+  <div class="hall-bg"></div>
   <div class="night-tint"></div>
   <div class="topbar">
     <div class="player">
@@ -153,10 +156,10 @@
     </div>
     <div class="hall-title"><div class="zh">幕府大廳</div><div class="time">第 1 年 春 · 晝</div></div>
     <div class="res">
-      <div class="res-pill"><b>金</b>128,450</div>
-      <div class="res-pill"><b>玉</b>1,280</div>
-      <div class="res-pill"><b>糧</b>300</div>
-      <div class="res-pill"><b>兵</b>3,000</div>
+      <div class="res-pill"><b>金</b><span>128,450</span></div>
+      <div class="res-pill"><b>玉</b><span>1,280</span></div>
+      <div class="res-pill"><b>糧</b><span>300</span></div>
+      <div class="res-pill"><b>兵</b><span>3,000</span></div>
     </div>
   </div>
 
@@ -183,7 +186,7 @@
   <div class="npc flip" style="left:1280px; top:584px;"><span class="body"><img src="chibi/zhangfei.png" style="height:282px" alt=""></span><span class="tag">張飛</span></div>
   <div class="npc " style="left:800px; top:670px;"><span class="body"><img src="chibi/zhugeliang.png" style="height:256px" alt=""><span class="mark">!</span></span><span class="tag">諸葛亮</span></div>
   <div class="npc flip" style="left:1120px; top:666px;"><span class="body"><img src="chibi/huangzhong.png" style="height:258px" alt=""></span><span class="tag">黃忠</span></div>
-  <div class="bubble" style="left:1000px; top:520px;"><b>張飛：</b>大哥！烏巢糧倉守備鬆散，俺老張今夜就去劫了它！<div class="acts"><span>交給你</span><span>再議</span></div></div>
+  <div class="bubble" style="left:1000px; top:520px;"><b>張飛：</b><span>大哥！烏巢糧倉守備鬆散，俺老張今夜就去劫了它！</span><div class="acts"><span>交給你</span><span>再議</span></div></div>
 
   <div class="sandbox"></div>
   <div class="season-tint"></div>
@@ -197,15 +200,15 @@
   <div class="altar">
     <div class="a-head"><span>許願祭壇 · 晝巡</span><span>下一巡 03:12:40</span></div>
     <div class="slots">
-      <div class="slot ready"><b>精鐵 ×20</b>可收取</div>
-      <div class="slot running"><b>糧草 ×500</b>剩 01:20:05</div>
-      <div class="slot empty"><b>空位</b>點擊許願</div>
+      <div class="slot ready"><b>精鐵 ×20</b><span>可收取</span></div>
+      <div class="slot running"><b>糧草 ×500</b><span>剩 01:20:05</span></div>
+      <div class="slot empty"><b>空位</b><span>點擊許願</span></div>
     </div>
   </div>
 
   <div class="clan">
     <div class="c-title">世家總覽</div>
-    <div class="c-sub">管理麾下世家與英靈 · 已成家族 1<br>張氏一門 · 主卡 張飛 · 深度 2 · 名聲 340</div>
+    <div class="c-sub"><div>管理麾下世家與英靈 · 已成家族 1</div><div>張氏一門 · 主卡 張飛 · 深度 2 · 名聲 340</div></div>
   </div>
   <div class="festival-slot" data-layer="background"></div>
 
