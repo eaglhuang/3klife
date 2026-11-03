@@ -87,7 +87,8 @@
       "fontSize": 22,
       "lineHeight": 30,
       "color": "secondaryLight",
-      "overflow": "RESIZE_HEIGHT"
+      "overflow": "SHRINK",
+      "verticalAlign": "TOP"
     },
     "letter.label.log": {
       "kind": "label-style",
