@@ -17,6 +17,7 @@ import {
     createSortieState,
     deployBlockMessage,
     finishSortie,
+    formatSortieSummary,
     getDeployCost,
     getMilitiaCombatStats,
     getDeputyFoodBonus,
@@ -133,6 +134,25 @@ export function createSortieDeploySuite(): TestSuite {
         assert.equals(Math.ceil(summary.lostTroops / 600), summary.turnsToRecover);
         assert.equals(8000, summary.poolMax);
         assert.equals(8000 - summary.lostTroops, summary.poolRemaining);
+    });
+
+    suite.test('逐虎符回報：同卡合併投入／返還／戰損，一般兵種不列；結算面板多一行（PROG-2-1751）', () => {
+        let state = createSortieState({ commandCapacity: 9000, cityTroops: 9000, food: 200 });
+        const tag = { cardUid: 'card-1', name: '虎豹騎' };
+        state = applyDeploy(state, 't1', { troopType: 'cavalry' }, tag).state;
+        state = applyDeploy(state, 't2', { troopType: 'cavalry' }, tag).state;
+        state = applyDeploy(state, 'n1', { troopType: 'infantry' }).state;
+        state = retireUnit(state, 't2', 0);
+        const summary = finishSortie(state, 9000);
+        assert.equals(1, summary.tallyReports!.length);
+        const report = summary.tallyReports![0];
+        assert.equals('虎豹騎', report.name);
+        assert.equals(UNIT_TROOP_COST.CAVALRY * 2, report.deployedTroops);
+        assert.equals(UNIT_TROOP_COST.CAVALRY, report.returnedTroops);
+        assert.equals(UNIT_TROOP_COST.CAVALRY, report.lostTroops);
+        const lines = formatSortieSummary(summary);
+        assert.equals(`虎豹騎：投入 ${UNIT_TROOP_COST.CAVALRY * 2}｜返還 ${UNIT_TROOP_COST.CAVALRY}｜戰損 ${UNIT_TROOP_COST.CAVALRY}`, lines[2]);
+        assert.equals(3, lines.length);
     });
 
     suite.test('戰鬥結束時場上部隊全數返還；陣亡部隊全損', () => {
