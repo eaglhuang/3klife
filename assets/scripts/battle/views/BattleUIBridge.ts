@@ -10,6 +10,7 @@
  *             + UIEventHandler (純事件轉接，無業務邏輯)
  */
 
+import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
 import { strategistHudInputOf } from '../shared/StrategistHudSource';
 import { strategistHudLogLine } from '../../core/systems/StrategistHud';
@@ -137,6 +138,7 @@ export class BattleUIBridge {
   private _wisdomTriggersLogged = 0;
   /** 上一次寫進日誌的軍師摘要（PROG-2-1744），內容沒變就不重寫 */
   private _lastStrategistLine = '';
+  private _foodEmptyLogged = false;
   /** 推薦戰法檢核（PROG-2-1763）：每個關卡只查一次；缺口帶進軍師 HUD 的對策缺口欄 */
   private _loadoutCheckedFor: string | null = null;
   private _loadoutGaps: string[] = [];
@@ -207,6 +209,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.TileBuffConsumed,        this._onTileBuffConsumed.bind(this)),
       svc.event.on(EVENT_NAMES.BattleEnded,             this._onBattleEnded.bind(this)),
       svc.event.on(EVENT_NAMES.AutoBattleToggled,       this._onAutoBattleToggled.bind(this)),
+      svc.event.on(EVENT_NAMES.DelegateToggled,         this._onDelegateToggled.bind(this)),
       svc.event.on(EVENT_NAMES.RequestGeneralQuickView, this._onRequestGeneralQuickView.bind(this)),
       svc.event.on(EVENT_NAMES.UltimateSkillSelected,   this._onUltimateSkillSelected.bind(this)),
     );
@@ -351,6 +354,9 @@ export class BattleUIBridge {
     const state = c.ctrl?.state;
     const wisdom = state ? `，${wisdomMeterText(state.wisdomMeter)}` : '';
     this.appendLog(`回合更新：第 ${snap.turn} 回合，糧草 ${snap.playerFood}${wisdom}`);
+    this._syncDelegateButton();
+    if (snap.playerFood <= 0 && !this._foodEmptyLogged) this.appendLog(FOOD_EMPTY_LINE);
+    this._foodEmptyLogged = snap.playerFood <= 0;
     if (state && state.wisdomTriggerCount < this._wisdomTriggersLogged) this._wisdomTriggersLogged = 0;
     if (state && state.wisdomTriggerCount > this._wisdomTriggersLogged) {
       this._wisdomTriggersLogged = state.wisdomTriggerCount;
@@ -658,6 +664,28 @@ export class BattleUIBridge {
       c.unitRenderer?.playBuffEffect(data.unitId, data.lane, data.depth, data.attackDelta, data.hpDelta);
     }
     this.refreshBattleViews();
+  }
+
+  /** 委任鈕（PROG-2-1766）：實際開關由控制器決定，按鈕只顯示結果 */
+  private _onDelegateToggled(on: boolean): void {
+    const c = this.ctx;
+    if (!c.ctrl) return;
+    if (on && !c.ctrl.canDelegate()) {
+      c.deployRuntime?.showToast(DELEGATE_UNAVAILABLE_LINE);
+      this._syncDelegateButton();
+      return;
+    }
+    c.ctrl.setDelegateEnabled(on);
+    const general = c.ctrl.state.getGeneral(Faction.Player);
+    const line = on && general ? delegateOnLine(general.name) : DELEGATE_OFF_LINE;
+    this.appendLog(line);
+    c.deployRuntime?.showToast(line);
+    this._syncDelegateButton();
+  }
+
+  private _syncDelegateButton(): void {
+    const c = this.ctx;
+    c.battleLogPanel?.setDelegateActive?.(c.ctrl?.isDelegateEnabled() ?? false);
   }
 
   /** 自動鈕（PROG-2-1091）：開啟即依雙方數值模擬勝負，走既有 BattleEnded → 結算彈窗流程 */

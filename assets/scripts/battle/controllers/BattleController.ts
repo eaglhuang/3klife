@@ -508,6 +508,11 @@ export class BattleController {
     return this.delegateQuality !== null;
   }
 
+  /** 委任只能部署出征軍勢；沒有出征帳本的戰鬥（內建 demo 武將）開了也不會出兵 */
+  public canDelegate(): boolean {
+    return this.sortie !== null;
+  }
+
   /**
    * 玩家部署階段（PROG-2-0913）：敵方部署前呼叫一次；委任關閉時不做事。
    * 路由由 pickDelegateLane 決定。

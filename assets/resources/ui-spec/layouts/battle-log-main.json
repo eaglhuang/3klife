@@ -60,6 +60,25 @@
           },
           {
             "type": "button",
+            "name": "BtnDelegate",
+            "id": "btnDelegate",
+            "width": 32,
+            "height": 32,
+            "skinSlot": "log.btn.auto",
+            "children": [
+              {
+                "type": "label",
+                "name": "DelegateText",
+                "id": "delegateText",
+                "width": 32,
+                "height": 32,
+                "text": "委",
+                "styleSlot": "log.label.title"
+              }
+            ]
+          },
+          {
+            "type": "button",
             "name": "BtnSpeed",
             "id": "btnSpeed",
             "width": 32,

@@ -31,6 +31,8 @@ export interface IBattleLogLike {
     clear(): void;
     append(text: string): void;
     waitUntilReady(timeoutMs?: number): Promise<boolean>;
+    /** 委任鈕亮暗（PROG-2-1766）；測試替身可不實作 */
+    setDelegateActive?(active: boolean): void;
 }
 
 export interface IDuelChallengeLike {
