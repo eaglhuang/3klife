@@ -17,17 +17,11 @@
       }
     },
     "zhen-ji": {
-      "x": 139,
-      "y": 27,
-      "w": 163,
-      "h": 163,
-      "source": "reviewed",
-      "face": {
-        "top": 65,
-        "chin": 127,
-        "eyeY": 92,
-        "cx": 220
-      }
+      "x": 156,
+      "y": 0,
+      "w": 200,
+      "h": 200,
+      "source": "reviewed"
     },
     "cao-ren": {
       "x": 165,

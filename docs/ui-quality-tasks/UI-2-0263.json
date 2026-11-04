@@ -1,0 +1,61 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0263",
+      "title": "甄姬名姝立繪、專屬玉簫與頭像重繪",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-04",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-04T22:37:19+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "重繪甄姬正式武將立繪，統一名將二次元幻想手繪風格；強化辨識度與成人S曲線，為她設計可縮成Q版仍易辨認的獨特代表武器／道具，更新正式立繪與兩種頭像並接入Cocos。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "與大喬、小喬、貂蟬臉型妝容髮飾清楚區隔",
+        "服裝呈現成人S曲線與飽滿胸線，衣帶收束簡潔",
+        "具有甄姬專屬、Q版清晰可辨的武器或代表物",
+        "正式512x768立繪及兩種256頭像與裁切索引更新",
+        "Cocos正式資源匯入正常，驗證通過並提交推送"
+      ],
+      "deliverables": [
+        "甄姬正式立繪",
+        "甄姬正式頭像與裁切頭像",
+        "裁切索引及 palette ledger 更新",
+        "UI品質任務卡與驗證結果"
+      ],
+      "notes": "2026-11-05 | 狀態: done | 驗證: 512×768 RGBA；兩種頭像256×256；reviewed crop (156,0)+200×200；單人頭像驗證1/1、全量214成功/0失敗；Cocos AssetDB三資產 imported=true/invalid=false，來源與Library雜湊一致 | 變更: 以趙雲名將手繪風格重繪甄姬，加入水紋玉簫及魏藍銀白冷紫配色，更新頭像裁切與ledger | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}
