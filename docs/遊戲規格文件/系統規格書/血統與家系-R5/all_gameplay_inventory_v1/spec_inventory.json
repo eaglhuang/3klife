@@ -1,0 +1,23 @@
+{
+  "_sharded": true,
+  "originalFile": "spec_inventory.json",
+  "totalCount": 309,
+  "shards": [
+    {
+      "file": "spec_inventory-shards/part-01.json",
+      "count": 100
+    },
+    {
+      "file": "spec_inventory-shards/part-02.json",
+      "count": 100
+    },
+    {
+      "file": "spec_inventory-shards/part-03.json",
+      "count": 100
+    },
+    {
+      "file": "spec_inventory-shards/part-04.json",
+      "count": 9
+    }
+  ]
+}

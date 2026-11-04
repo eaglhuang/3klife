@@ -1,0 +1,452 @@
+[
+  {
+    "path": ".agents",
+    "type": "tree",
+    "sha": "ee61a75b30254e0e3e08076abbad0ecba8930e66",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".atm",
+    "type": "tree",
+    "sha": "5ef06b8067e26d727a9b0554a62f3ebfb26b9216",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".claude",
+    "type": "tree",
+    "sha": "4d5aecbb9f0fff4c071e12b8fba867db3fd7deff",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".creator",
+    "type": "tree",
+    "sha": "f2cfbd1cdc81280cb3dbfa12f88fc608c99eb622",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".cursor",
+    "type": "tree",
+    "sha": "b4bcbeb1df9cc2b18067f54350cc619a0cd27de8",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".dockerignore",
+    "type": "blob",
+    "sha": "9c3d41bafdb32d9c85cfc51499545ca2f16f55ec",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".editorconfig",
+    "type": "blob",
+    "sha": "5ef90611b9330d7cd9afa0f87ed1f152c401d4f6",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".env.example",
+    "type": "blob",
+    "sha": "2eefe71af8e66737b839a8fb670d71f865ca7f4c",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".eslintrc.json",
+    "type": "blob",
+    "sha": "2cc70c294fc473d645311fd3a8cae5a442761537",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".gemini",
+    "type": "tree",
+    "sha": "d9f08c28a99caddfedcb008ea2b3b8530fb4804d",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".gitattributes",
+    "type": "blob",
+    "sha": "0a680d4585980b18825c0bcf615b6c5c06d363f1",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".githooks",
+    "type": "tree",
+    "sha": "4c57fc849c42fc21db1fce22298594f5a7ee10b1",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".github",
+    "type": "tree",
+    "sha": "8690c9dda02818b944448afdcd2d398aacc0f04f",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".gitignore",
+    "type": "blob",
+    "sha": "c865fd9610af4ccbc74e17cbdfbc8aebae047a6f",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".tmp",
+    "type": "tree",
+    "sha": "da667d2a1b5bae45d2aa9a0216a20b7f81624674",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": ".vscode",
+    "type": "tree",
+    "sha": "d484d793819ed97cb7d73bfaa0efde185f28948a",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "@cocos",
+    "type": "tree",
+    "sha": "d5c191210e7de95d212d0ea31fa617082a52c774",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "AGENTS.md",
+    "type": "blob",
+    "sha": "8051dc8db0f104e884fe08997467b881c392b4ce",
+    "scope_status": "ENTRY_CONTENT_READ"
+  },
+  {
+    "path": "CHANGELOG.md",
+    "type": "blob",
+    "sha": "f071978e1a0c867abb085905cc695a759d38a9fe",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "CLAUDE.md",
+    "type": "blob",
+    "sha": "364a14686c654e3030c81b24f1e0c3a1d9054533",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "Design System",
+    "type": "tree",
+    "sha": "42c44406b5e292d163fc9cb976020e41e96f82f7",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "GEMINI.md",
+    "type": "blob",
+    "sha": "c7553937132a005bae55201f0a163c07103aa9f1",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "README.md",
+    "type": "blob",
+    "sha": "0a2566356f35935d7d57f1b3c4be7dfd6de5b21c",
+    "scope_status": "ENTRY_CONTENT_READ"
+  },
+  {
+    "path": "all_paths.txt",
+    "type": "blob",
+    "sha": "07d858b3170df0e85e0afa8aea635c76393a32ca",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "artifacts",
+    "type": "tree",
+    "sha": "a6d7f1375fe05357831c236d8b073b1ca6f94100",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "assets",
+    "type": "tree",
+    "sha": "3dc50b9da8ec8c15b89ed62c31f5b1ecf0927964",
+    "scope_status": "SCRIPTS_RESOURCES_BUNDLES_SCENES_ENUMERATED_CONTENT_MOSTLY_UNREAD"
+  },
+  {
+    "path": "atm.mjs",
+    "type": "blob",
+    "sha": "afc6d6fc02527a33fbe7560c65e0fcf2b1ea0f33",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "atomic-registry.json",
+    "type": "blob",
+    "sha": "2a61886bd8522ce6c3f2213c11850030745b3ac5",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "atomic_workbench",
+    "type": "tree",
+    "sha": "e01c83f398d751ec7695ad85e927ab7c3a504ab9",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "build-templates",
+    "type": "tree",
+    "sha": "728639cf6d703cb0a47b63288f6434938e8effa7",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "capture-unified.log",
+    "type": "blob",
+    "sha": "9520e325b11bd55ac412dbb7e63b3b2f4e0ab013",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "capture.log",
+    "type": "blob",
+    "sha": "28ff6964812cd7518bf18602ffe8f3b40f003fdc",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "cocos_mcp.log",
+    "type": "blob",
+    "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "compute-gate-output.txt",
+    "type": "blob",
+    "sha": "daeab739da9e7252334b64daf5a2ab763085285e",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "docker-compose.dev.override.yml",
+    "type": "blob",
+    "sha": "1a54e6d3360bb98ba240595b67849487d6c45e35",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "docker-compose.dev.yml",
+    "type": "blob",
+    "sha": "4112731f191750ecb9b1898700f982f1a9f74802",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "docs",
+    "type": "tree",
+    "sha": "9e90a8bcd4c2835a6bba4dd6470ebbd780a8528b",
+    "scope_status": "GAME_SPEC_SUBTREE_ENUMERATED_OTHER_DOCS_PARTIAL"
+  },
+  {
+    "path": "dump-battlelog.js",
+    "type": "blob",
+    "sha": "e99dacaded4e38473430265d21445e00b16e556e",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "dump-battlelog2.js",
+    "type": "blob",
+    "sha": "d93bb9fe93fb14b4e86586eaa9584580a022bb8e",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "dump.js",
+    "type": "blob",
+    "sha": "18c58b42b01e56dee3f3a1bee2046e534a96347e",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "eslint.config.js",
+    "type": "blob",
+    "sha": "87179e23486cf1c79da0985fbf7674cdc91bad9e",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "examples",
+    "type": "tree",
+    "sha": "f97f94c507366a8eea579c8d3c52a6dde70ede9f",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "extensions",
+    "type": "tree",
+    "sha": "895ddade43152eb3730529f16c0e36a6141900f2",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "fixtures",
+    "type": "tree",
+    "sha": "a1dcd29b0bed15201c80416f002abe834dc066e1",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "integrations",
+    "type": "tree",
+    "sha": "648ab0d1695c9f27f3357c620049725b061b9b76",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "mcp_tools.json",
+    "type": "blob",
+    "sha": "264c7e1428f390113087163ee677641b06803c06",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "package-lock.json",
+    "type": "blob",
+    "sha": "5c487fb5fb28041442054a145bc5c07793811aaa",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "package.json",
+    "type": "blob",
+    "sha": "e10e9ee171d2cd79b0d88599cf7919c330f4f9c2",
+    "scope_status": "ENTRY_CONTENT_READ"
+  },
+  {
+    "path": "packages",
+    "type": "tree",
+    "sha": "2d75c61a1c5587ae3fdf852aa27476b618a7dc01",
+    "scope_status": "TREE_ENUMERATED_SUPPORT_OR_ATM_NOT_GAMEPLAY_DENOMINATOR"
+  },
+  {
+    "path": "page-deploy-status-after-wait.yml",
+    "type": "blob",
+    "sha": "7ddf84d004708eb65d2ecbc38c9d937095872078",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "render-blueprint.png",
+    "type": "blob",
+    "sha": "b810712cdc46f877f2f0770bea88b749c88c768c",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "render-login.png",
+    "type": "blob",
+    "sha": "64f8f862e3b3bfc77c57446a13930eef3215d85a",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "scan_summaries.js",
+    "type": "blob",
+    "sha": "b8fbb91444b242d6666316078d5e312467e2569c",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "schemas",
+    "type": "tree",
+    "sha": "b15c69099e0c5047a53135b66c63b3746d5f2222",
+    "scope_status": "TREE_ENUMERATED_SUPPORT_OR_ATM_NOT_GAMEPLAY_DENOMINATOR"
+  },
+  {
+    "path": "scratch",
+    "type": "tree",
+    "sha": "8f7c0999fe6a5a6a54020455dd86a2044e852fe9",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "scripts",
+    "type": "tree",
+    "sha": "61a8569441720f7fa20ee3efa112334471ce2ee8",
+    "scope_status": "TREE_ENUMERATED_SUPPORT_OR_ATM_NOT_GAMEPLAY_DENOMINATOR"
+  },
+  {
+    "path": "server",
+    "type": "tree",
+    "sha": "c9b6d9e7b8275e1d09800acf06ce2038141fc1c0",
+    "scope_status": "SOURCE_TREE_ENUMERATED_CONTENT_MOSTLY_UNREAD"
+  },
+  {
+    "path": "settings",
+    "type": "tree",
+    "sha": "bd0cd9e1d88d3dca783e25f8311555745892eaa1",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "shared",
+    "type": "tree",
+    "sha": "1794603c5d794ddd8ac3f10644d0031cc66920ea",
+    "scope_status": "SOURCE_TREE_ENUMERATED_CONTENT_MOSTLY_UNREAD"
+  },
+  {
+    "path": "specs",
+    "type": "tree",
+    "sha": "717bb31db2d9feed0683d0d8d48ddf796452050d",
+    "scope_status": "TREE_ENUMERATED_SUPPORT_OR_ATM_NOT_GAMEPLAY_DENOMINATOR"
+  },
+  {
+    "path": "test-output.txt",
+    "type": "blob",
+    "sha": "ea6def3522e46a5fb167827e11c76b26b6dbcb42",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "tests",
+    "type": "tree",
+    "sha": "d02807a7b01b39afcaee06a08123f07f472d4f38",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "tmp-chorus-body.json",
+    "type": "blob",
+    "sha": "ae4729237ce56f44b677bd36858946313570171c",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "tmp-npc-full.diff",
+    "type": "blob",
+    "sha": "adfaff5929a7eaf0bb9258837e0bdf1296553d87",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "tmp-npc-health-head.patch",
+    "type": "blob",
+    "sha": "116a8eb2016ade665f514bda1147c4e862111d1b",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "tmp-npc-health.patch",
+    "type": "blob",
+    "sha": "5bd20df1439413a621a37e64e91c53003a17e245",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "tools",
+    "type": "tree",
+    "sha": "031e3201a376726b43c71469d62d24b07f8455d2",
+    "scope_status": "TREE_ENUMERATED_SUPPORT_OR_ATM_NOT_GAMEPLAY_DENOMINATOR"
+  },
+  {
+    "path": "tools_mcp",
+    "type": "tree",
+    "sha": "062f8cde76e0a7982a496f75fe7179cfb4cd7f1a",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "tools_node",
+    "type": "tree",
+    "sha": "d9d66ab69c208ba5720a4c66d367f715841d994b",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "tsconfig.atomic.json",
+    "type": "blob",
+    "sha": "f7a4f6135b997d6c768505af1e0a3c763983ce5f",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "tsconfig.cc-check.json",
+    "type": "blob",
+    "sha": "cc40dfedb78e7443f8fef065d0134efdec7329a2",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "tsconfig.json",
+    "type": "blob",
+    "sha": "e63ea4d1751ce84b3917e6d487337df54aa28cac",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "tsconfig.test.json",
+    "type": "blob",
+    "sha": "e702954ea06c8e80f04f9ba8cce51249775fcc60",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  },
+  {
+    "path": "types",
+    "type": "tree",
+    "sha": "8f3a4776b6b92f5a2e083b75f793d3a9c25cd607",
+    "scope_status": "TREE_ENUMERATED_SUPPORT_OR_ATM_NOT_GAMEPLAY_DENOMINATOR"
+  },
+  {
+    "path": "ui-spec-evidence",
+    "type": "tree",
+    "sha": "30967fdeafa99848849982d56dffe2aadc6705f0",
+    "scope_status": "ROOT_ENTRY_ONLY_NOT_RECURSIVELY_INSPECTED"
+  }
+]

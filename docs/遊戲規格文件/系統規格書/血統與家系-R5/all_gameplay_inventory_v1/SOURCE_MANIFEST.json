@@ -1,0 +1,349 @@
+{
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "files": [
+    {
+      "path": "README.md",
+      "blob_sha": "0a2566356f35935d7d57f1b3c4be7dfd6de5b21c",
+      "sha256": "32e8a26774e843cdcf9cafd11b6972c075d520df1f04cab26ab94c4f5914161f",
+      "bytes": 3323,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/README.md",
+      "inspection": "REFERENCE_OR_ENTRY_ONLY"
+    },
+    {
+      "path": "AGENTS.md",
+      "blob_sha": "8051dc8db0f104e884fe08997467b881c392b4ce",
+      "sha256": "3a2ba2850c2fc7a6c6b67444299aa3d61c3dc4129605bc1e4a07a57e4f20787f",
+      "bytes": 8960,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/AGENTS.md",
+      "inspection": "REFERENCE_OR_ENTRY_ONLY"
+    },
+    {
+      "path": "package.json",
+      "blob_sha": "e10e9ee171d2cd79b0d88599cf7919c330f4f9c2",
+      "sha256": "6c7f7cc74b68780b0d4b7d6e35d0c5102ac9873d48176e868320a81c2771f553",
+      "bytes": 11382,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/package.json",
+      "inspection": "REFERENCE_OR_ENTRY_ONLY"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/evidence/system_inventory.json",
+      "blob_sha": "18bffe055981f428b3aad0a3c604b036d7523356",
+      "sha256": "b20571a3536bed4385a49c2dfa6c0edb1b6b377f3e3fd68ff5c19b1ef03f2636",
+      "bytes": 70393,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/evidence/system_inventory.json",
+      "inspection": "REFERENCE_OR_ENTRY_ONLY"
+    },
+    {
+      "path": "docs/keep.summary.md",
+      "blob_sha": "6f93a8217a117c8e9f1646f99bfbc8551e9036b0",
+      "sha256": "94e65930bddd507d49b79885c0d9da463aba1a2e4e74072f10904820b941fcdc",
+      "bytes": 7695,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/keep.summary.md",
+      "inspection": "REFERENCE_OR_ENTRY_ONLY"
+    },
+    {
+      "path": "docs/agent-identity-map.md",
+      "blob_sha": "3b18a96f406bd9141f0f1426b95dddb41b99c441",
+      "sha256": "261a82c6987561272e5e2c13a0e78412b645acfce50511de8537ebd478162fc6",
+      "bytes": 3483,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/agent-identity-map.md",
+      "inspection": "REFERENCE_OR_ENTRY_ONLY"
+    },
+    {
+      "path": ".agents/skills/best-mode/SKILL.md",
+      "blob_sha": "d7e7f64ed46ee8cead2f5182c0c3f1eb7cc6559b",
+      "sha256": "b479890215f0c38499f3dc643e9b94e863032dc4915a72d3943d9f244ce58080",
+      "bytes": 1993,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/.agents/skills/best-mode/SKILL.md",
+      "inspection": "REFERENCE_OR_ENTRY_ONLY"
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+      "blob_sha": "10dbfa81b502e83aa8c81f143a93ed0c00edfc64",
+      "sha256": "bfef11144100e424863705a0b8fa206dafe9730bf21fd7c80fca38e79640335e",
+      "bytes": 4394,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenaryRoster.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/UnlockPhase.ts",
+      "blob_sha": "1241320c3fcfc453233abd975a2a8f97f503f924",
+      "sha256": "59b0c879811bdc519b5527f20a45ebe03fadf7de14dd1c75786f904f438a5c6d",
+      "bytes": 5460,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/UnlockPhase.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/SageDivination.ts",
+      "blob_sha": "4d04ae10dffa286a941af9b506d5018ebafd0dc0",
+      "sha256": "8ab8cbbe03069d36629a611162f026c74e32459cc24ff72ee7c6a5570a1b1029",
+      "bytes": 10211,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/SageDivination.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/JobChange.ts",
+      "blob_sha": "e3863e5272b8d60659c6b759e1e445bc02ad002d",
+      "sha256": "80f7d7d8795a073a0b26efda42d3b33fe207b8a07d65c7aff049f493f762ba0c",
+      "bytes": 4140,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/JobChange.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/TigerTallyBreakthrough.ts",
+      "blob_sha": "5316a652d1630d371c7926467f837daf03299859",
+      "sha256": "73b6194d36af0f39f62ba607915a924de9d5cc32d07bb6fd5cb28ed59e343c2d",
+      "bytes": 4261,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/TigerTallyBreakthrough.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/NewPlayerOpening.ts",
+      "blob_sha": "d9d8e51ce17a089a1ef5e6ec17a3489997cb865a",
+      "sha256": "0f54c1821838272f9d67165a54917cb8e5bbb28d9fdc7166b69a425de2e708a1",
+      "bytes": 3018,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/NewPlayerOpening.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/GachaDraw.ts",
+      "blob_sha": "51b0ae93242adacd1bbb40e2bb5757b7da7d0406",
+      "sha256": "02af0a0e7aed2a8a9f76c40b8da8ce39cd4040e15ca8fda30b97f4214b00ea73",
+      "bytes": 7552,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GachaDraw.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/ResourceManager.ts",
+      "blob_sha": "513bccc89d9fef23c83386a7d32ecef88500bd05",
+      "sha256": "f84829cbb8e338921abecbcf420186470b4cdb55369f55a88284561b16c011e8",
+      "bytes": 18418,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ResourceManager.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/GearEquipFlow.ts",
+      "blob_sha": "cbf2c73958ff57f4aecdea59f84dd8372dbc2276",
+      "sha256": "aea6f6b365146a5ea5a058f38aa358ab39a7f257df3096e96ddd2902ee5658f9",
+      "bytes": 5192,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GearEquipFlow.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/OfficerState.ts",
+      "blob_sha": "529c56200d9b4a889c0d871d1f9e488d8b642ecd",
+      "sha256": "105aa014f0093d1121377c1e3ee27d6095956292b0ebfc9c856215b1c67aa253",
+      "bytes": 6222,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/OfficerState.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/DomesticTasks.ts",
+      "blob_sha": "f67195ecf9764b6ca749cc852a51d840932b84e7",
+      "sha256": "7e49bff117e74d3f9bbb5ed359ba3bf990c7196b9c17b8d29eab251f735f4fa9",
+      "bytes": 6014,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DomesticTasks.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/ItemUseFlow.ts",
+      "blob_sha": "f84460feee162af32fbc45dc0c8a11a6c4013682",
+      "sha256": "3b788a8ff51d1b2ed2f66db59e98f7405754c5a86a8016d5f910d737d1f3a142",
+      "bytes": 3048,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ItemUseFlow.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/HallMissionSettlement.ts",
+      "blob_sha": "ca80488a836786cf2cd1fd19b0e3eb85cb189550",
+      "sha256": "c00f18d4ca12e2aeb9754c4badbe46a45c5b9f35a932a997aea2dd64b17e3b21",
+      "bytes": 3422,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/HallMissionSettlement.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/TravelCountdown.ts",
+      "blob_sha": "abd1e47d19dae7e831005aa43b32e112f56596a4",
+      "sha256": "7f20dc277cebf2969aff942878c3cea2bc4fb51a81d17047dac2ee22945f2b40",
+      "bytes": 2647,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/TravelCountdown.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/config/CampaignStages.ts",
+      "blob_sha": "3fe292a234f0db8023093ecab33b9ebca1a45297",
+      "sha256": "c63fda0ca268caec3d640a68d702bad59dbb1a263d7e49f370de78145ea2bc23",
+      "bytes": 2265,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/config/CampaignStages.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalGovernance.ts",
+      "blob_sha": "84acfa03761f5eefc0d4efa2c023d0af244cddbf",
+      "sha256": "cb37834bc5a49c4f1146b826d53e6ae8ed1f170a06e3e19840b442999227fd2b",
+      "bytes": 6574,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalGovernance.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattleSystem.ts",
+      "blob_sha": "eb3cccdd4633b29db44c4c2be2c04c644d9a07d8",
+      "sha256": "1c26cd0651220d6c91184a1f4309bb0a7bb722f3c06578ebd101ac99bca05e21",
+      "bytes": 3593,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleSystem.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/SortieDeploy.ts",
+      "blob_sha": "4a3997749f7c9d973b805808490238825531e223",
+      "sha256": "b4db8112b531c741531fddf576d086d912321c634b34d0166fb9e89bea4cf660",
+      "bytes": 35568,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/SortieDeploy.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/AiDifficultyTable.ts",
+      "blob_sha": "21332cf1571ce5b8729ad778fe35743cb2dd659e",
+      "sha256": "5d7c0c350ec0532dfda5ddf95a980da0b3a6de81b789e47f60b4e160c0f0830a",
+      "bytes": 4105,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiDifficultyTable.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/PrisonerOfWar.ts",
+      "blob_sha": "8d91b4d69d3ad6125e02436531df4debf66dcf29",
+      "sha256": "c709cd877ded262e5410599c3d64e550addfb7a5dd49787dba87397dfa8d40e4",
+      "bytes": 18094,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/PrisonerOfWar.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/battle/skills/SkillEffectFormulas.ts",
+      "blob_sha": "6a01c6b33e9319f2b5695f0284683f854effc085",
+      "sha256": "ec0165a2680d9d08be6a6bc215f834d82966ce1cb3e95a8106d2b10b3536b3b2",
+      "bytes": 1945,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/battle/skills/SkillEffectFormulas.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/TournamentSeason.ts",
+      "blob_sha": "7b4a2b6bac4ea000338836b05333a2c860d9ce06",
+      "sha256": "07fee4ae46ff5a005a5f6dfe0718f27486f6c235273bff5c7127c46b7dba5bed",
+      "bytes": 2616,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/TournamentSeason.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattleRecordStats.ts",
+      "blob_sha": "4530d09f31bfb23ee772baf95d8e32992b7d133f",
+      "sha256": "9c50380b3b7de52dd26fdf893bc51b6a60917c5b396e70c4e456f6a7132a6d21",
+      "bytes": 11749,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleRecordStats.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/WeatherSchedule.ts",
+      "blob_sha": "5ea5b369b74264e67df027471f5d47a4b4fd7c67",
+      "sha256": "598f036d092bda21b58c84224c8f612cd1d6f4de895f45cfa4a8388bcf785f94",
+      "bytes": 3584,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/WeatherSchedule.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/DestinyShop.ts",
+      "blob_sha": "c536a946214cbeaf80c02759f36841131e29d6f8",
+      "sha256": "0881e52bd4c01fbaaf6324d1af8bea103178dca702c01bc05a70a82271514b57",
+      "bytes": 2555,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DestinyShop.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/services/PlayerSaveService.ts",
+      "blob_sha": "9c7e3c22cad87c03a86f4eb0f715d4b7402ef65a",
+      "sha256": "fbd898a5f727df1cdae57dc37f0e2d4135b599a9027cee51f0e9d781069ab2ff",
+      "bytes": 49566,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/PlayerSaveService.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/RelationEvents.ts",
+      "blob_sha": "b8b63c2a7e00d3421a9121409d4b4abfecd4fda3",
+      "sha256": "f0796627cfcc3b5b7c139a717e6933d2420030755d4080e9d223d6431397b592",
+      "bytes": 6366,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RelationEvents.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/LuckThresholds.ts",
+      "blob_sha": "b6d38e2974931c45d83fac3d692df9e767097768",
+      "sha256": "6278e0e879311f7bce7968685c9a79cef8398f0581bcefd08b5851a611c377f5",
+      "bytes": 2739,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/LuckThresholds.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/OfflineInteractionTrigger.ts",
+      "blob_sha": "faa8bf5e785a53a2766e677e0795793380302a72",
+      "sha256": "927c5a71c37af0b531f8bce4aa9e33c9aad5daacf957922376cec0a81ff579d5",
+      "bytes": 2141,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/OfflineInteractionTrigger.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/MonthlyCard.ts",
+      "blob_sha": "8aeb6f0b475fa2ebb39459da92f0e2d5bf0552f3",
+      "sha256": "7a461be07bc582d13e3ce3a52eaed0f233ab7113e4782a8f7087bb94b8ca99f7",
+      "bytes": 3349,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MonthlyCard.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/FatigueFailureRate.ts",
+      "blob_sha": "93bfb24438e679e351443e63621013c1fcd52b5c",
+      "sha256": "7c1644d09beb471a62e694c94e9d0a71f7a6a91a91638140f60e9603c79a456b",
+      "bytes": 1650,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FatigueFailureRate.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorBreakthrough.ts",
+      "blob_sha": "3588f123a03f83ae2315228bec03aee5e6a4be98",
+      "sha256": "015afd5614589cb7f9ce69fa93189eddbcaec67f5bc82c126669fb5d116befb3",
+      "bytes": 5790,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MentorBreakthrough.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/battle/runtime/BattleVictoryResolver.ts",
+      "blob_sha": "e886ac74948d47b0b843b59cf4da33b95f6fd0f7",
+      "sha256": "d59bfa1300d410a85133ddd8ddefcb88a09757cd9f66197fb1e51efaab990db0",
+      "bytes": 2171,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/battle/runtime/BattleVictoryResolver.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/battle/runtime/BattleGeneralDuelFlow.ts",
+      "blob_sha": "a315966c1716dfcefab26e8c1d2fd666c579b966",
+      "sha256": "b7c7432efc554d2448c4816d40faf614a02a37a97227c1c2630ec8a068fe14d5",
+      "bytes": 15050,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/battle/runtime/BattleGeneralDuelFlow.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/LegacyArena.ts",
+      "blob_sha": "a3acfc694ed15a2de2e860b016e202c147676d0a",
+      "sha256": "11df8a5526d8c5a93a17223d6744b99c5903f61314156665bcc7708a93518402",
+      "bytes": 3019,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/LegacyArena.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    },
+    {
+      "path": "assets/scripts/core/systems/Rebirth.ts",
+      "blob_sha": "0f18959c039e0074a5c329c2a3f97750e4c7c5e1",
+      "sha256": "4e435abbe0ec2bce6a2a004d80ae258edd9b2d65c9ff3cb8e89dbfde9c30ac94",
+      "bytes": 2951,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/Rebirth.ts",
+      "inspection": "SAMPLED_STATIC_NOT_FULL_AUDIT"
+    }
+  ]
+}

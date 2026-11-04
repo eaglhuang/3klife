@@ -355,8 +355,8 @@
   },
   {
     "id": "doc_index_1035",
-    "path": "docs/cross-ref/code/battle.md",
-    "title": "代碼索引分片：Battle",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/README.md",
+    "title": "3KLife 全玩法盤點第一階段",
     "category": "index"
   },
   {
@@ -417,6 +417,12 @@
     "id": "doc_index_1045",
     "path": "docs/cross-ref/progress/spec-audit-officer.md",
     "title": "規格逐條比對：官職系統.md (doc_spec_0014)",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1046",
+    "path": "docs/cross-ref/code/battle.md",
+    "title": "代碼索引分片：Battle",
     "category": "index"
   }
 ]

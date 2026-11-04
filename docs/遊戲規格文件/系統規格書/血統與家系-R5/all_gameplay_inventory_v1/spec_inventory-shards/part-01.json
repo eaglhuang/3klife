@@ -1,0 +1,951 @@
+[
+  {
+    "path": "docs/遊戲規格文件/M6-實戰驗證工作表-20260412.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "b975b8d69f8a6da78b726043f04a336c4f3c2b14",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/M6-實戰驗證工作表-20260412.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/M6-段落分類判定指南.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "42ad20429c7ab58467ff8cabc6c2bf50e24c7fe5",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/M6-段落分類判定指南.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/doc-consolidation-flow-DELIVERABLES.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "a6989e726f4288e67dd5b07456550b2c361df0fb",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/doc-consolidation-flow-DELIVERABLES.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/doc-consolidation-flow-FILE-MANIFEST.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "0a1db7bb3d6a27c4b38265512fd9463565e90563",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/doc-consolidation-flow-FILE-MANIFEST.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/doc-consolidation-flow-implementation-plan.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "b1c8d3751b07c092eb978c2d346294a9477199f6",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/doc-consolidation-flow-implementation-plan.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/doc-consolidation-flow-quick-start.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "ddd43475a4676b1351636ad9916b8c2c6352b533",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/doc-consolidation-flow-quick-start.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/整併疑問書-shards/meta.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "4ff41f667f1833129a80e571d70d2e74cdc7c802",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/整併疑問書-shards/meta.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q01-13.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "d2871fa4ad4141926328226e6e161614c8bd7840",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/整併疑問書-shards/q01-13.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "fd68051f2215429f302c52d92d9798f7a04196a2",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/整併疑問書-shards/q14-30.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-1.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "2405ecba25311de13fe9c06a21451438d07f5a40",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-1.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-2.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "e641c49af05d0f7a829b9de08c20af761386d9a3",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-2.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-3.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "a33acfb8b4acfaca89752356b67dc034ae58ff69",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-3.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q31-40.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "b00c1f2be9076ddb8d9927b46594891779ba1211",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/整併疑問書-shards/q31-40.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q41-52.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "f981a88c51788a0dd0ba27de4df00cb2cbc50d86",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/整併疑問書-shards/q41-52.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q53-63.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "1aa2da8ecdbb63635b3c59409d5abe932edc6e3f",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/整併疑問書-shards/q53-63.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q64-74.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "a77607d2aac45545147b70d37601f79f88f93f0a",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/整併疑問書-shards/q64-74.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q75-plus.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "c108c132f42353b2e6952b46cb03570cba7ef377",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/整併疑問書-shards/q75-plus.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/整併疑問書.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "7217a04d488352b44d5b8b9a792afa37fe308604",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/整併疑問書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/正式規格矛盾審查-shards/s1.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "c9dfef0397f57bc32f6daedce7aefaf0bd96ecc0",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/正式規格矛盾審查-shards/s1.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/正式規格矛盾審查-shards/s2.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "0c74b0a2eff6f37b4c5923c2045d81bf9e02e982",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/正式規格矛盾審查-shards/s2.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/正式規格矛盾審查-shards/s3.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "eead8f82688ab73ff9fd16d98ff543d7da558854",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/正式規格矛盾審查-shards/s3.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/正式規格矛盾審查.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "48d803145bfc0baccd014d1501a097a9f3e98c22",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/正式規格矛盾審查.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/AI武將強度系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "65f078dd74ba2a75c785b39d0e284fd53b57e9a7",
+    "candidate_domains": [
+      "G31"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/AI武將強度系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "260fb2a98376db1b7bc7a561713dab41cc2430f7",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/MVP遊戲驗證規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "cf6cc8094cb581c680aada9f4328662227d89838",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/MVP遊戲驗證規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/NPC人性化規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "c2d1b2c63b2406488716f8e2f6519244dfcd355e",
+    "candidate_domains": [
+      "G38"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/NPC人性化規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/bloodline-symbol-slot-contract-v1.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "554723f5f5f0affe21564bf3ada2e7efb975f8fb",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/bloodline-symbol-slot-contract-v1.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/三國大腦中台規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "55a8becfceb49f214b3a82e35760987d4e75c593",
+    "candidate_domains": [
+      "G38"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/三國大腦中台規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/俘虜處理系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "ed3101dd7df2fdb25ce62b77178f55e7c9f458d0",
+    "candidate_domains": [
+      "G34"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/俘虜處理系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/傭兵系統（試用）.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "530527632ebfc1d40923b7c89c4627b7483905df",
+    "candidate_domains": [
+      "G11"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/傭兵系統（試用）.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/兵種（虎符）系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "f246873612e26016135fdda3d7b6ba5d3c546eed",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/兵種（虎符）系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/可結緣女性來源系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "1991d8220f2e00f3e33776cb4d2c1a4ca9885740",
+    "candidate_domains": [
+      "G03"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/可結緣女性來源系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/同名武將系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "a3d1fe6694e03c3f19a7afaa9235be75ce52439c",
+    "candidate_domains": [
+      "G02",
+      "G14"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/同名武將系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/同步API規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "dd8b16aa6fa2eb95239c3658abd9659a04f7673a",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/同步API規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/名士預言系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "f8ad487a2f6c8ea0ca2837119fd4eaa7ebffe798",
+    "candidate_domains": [
+      "G10"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/名士預言系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/名將挑戰賽系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "dae5c0c6e121f1e5b746b7d06402fa746265e06f",
+    "candidate_domains": [
+      "G35"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/名將挑戰賽系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "9a327b3acb2f389fd4189f78b29ef5f6cb51641d",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/名詞定義文件.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/因子爆發系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "558531903bcbec2901e255b506f896efb900d4f9",
+    "candidate_domains": [
+      "G04",
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/因子爆發系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/因子解鎖系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "e1a4871af0468a8fa87324e852ac01d55511c763",
+    "candidate_domains": [
+      "G01",
+      "G04"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/因子解鎖系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-a.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "9d7fb3b989c8404968e999fa492f0c76364e4f8d",
+    "candidate_domains": [
+      "G05",
+      "G07"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/培育系統-shards/shard-a.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-b.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "198c827b268ba3adc2456a49dc5fc231998f553e",
+    "candidate_domains": [
+      "G05",
+      "G07"
+    ],
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/培育系統-shards/shard-b.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-c.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "23a01ebb0aa1b1e7af175100885ea70bbc9f5bb2",
+    "candidate_domains": [
+      "G05",
+      "G07"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/培育系統-shards/shard-c.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-d.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "6eb61202fa38f652fcb5bd755caff8b0c3b7e864",
+    "candidate_domains": [
+      "G05",
+      "G07"
+    ],
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/培育系統-shards/shard-d.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/培育系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "0504ca6f2d60d59c1f9a51f129a222e1ef205f63",
+    "candidate_domains": [
+      "G05",
+      "G07"
+    ],
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/培育系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/大廳系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "d9b1e414aa82e8d035263d11469190e96b99e91d",
+    "candidate_domains": [
+      "G22",
+      "G24"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/大廳系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/奧義系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "404897837a247d8569845f14e59342c71d6f2988",
+    "candidate_domains": [
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/奧義系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/官職系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "8fa549844b5734b10943c9a68f944af1621ad23a",
+    "candidate_domains": [
+      "G20"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/官職系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/ab.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "de08c626195a4bd423d34acdc8205052ef0ca2e7",
+    "candidate_domains": [
+      "G37"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/ab.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "ac375c2ee78adcae834875273def7950af19a441",
+    "candidate_domains": [
+      "G37"
+    ],
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "6126fd416f8b8228534a4629351dd73e121da4e7",
+    "candidate_domains": [
+      "G37"
+    ],
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/戰場格子系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "2121f30534b4ce0c47fab0fa54ecbcd342e505fe",
+    "candidate_domains": [
+      "G28"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/戰場格子系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/戰場適性系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "8271a45d8c732d20877335dc36f3c326fe634bca",
+    "candidate_domains": [
+      "G28"
+    ],
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/戰場適性系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/戰場部署系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "cf74e9ccd3be6e013aaad08703afcad4183e6d42",
+    "candidate_domains": [
+      "G26",
+      "G27",
+      "G32"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/戰場部署系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/ac.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "08a15a5b983d8d336f9deffdcbbba5093c1de716",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/ac.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/df.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "223bc147adbd725b0817ef70f41037cbbe7890b1",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/df.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/meta.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "bcb3c9da01031993dfdf7b62a29f41e730decec4",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/meta.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "f2b236ca68e82fd320169b8a3c3e55e7827ab1e4",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/戰法場景規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/a.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "ace3ace7d7a291ac3cde9a20178615ffa9d7a0e2",
+    "candidate_domains": [
+      "G29",
+      "G32"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/戰法系統-shards/a.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/fh.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "2f56c4e6c237b890cbb4e1a8ee45dcbd207c2a07",
+    "candidate_domains": [
+      "G29",
+      "G32"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/戰法系統-shards/fh.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/g.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "a38e125356ebcf8cd627680695e22dffe24a85e2",
+    "candidate_domains": [
+      "G29",
+      "G32"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/戰法系統-shards/g.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/g5.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "e503bdec9a42aad6ec31d2dc85e030122d6f5fbf",
+    "candidate_domains": [
+      "G29",
+      "G32"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/戰法系統-shards/g5.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "67f11f8d1afe0572ef67999020c6584bd0a4d7ca",
+    "candidate_domains": [
+      "G29",
+      "G32"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/戰法系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-a.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "ec23bc6c17ea8e1adfb89c7f108f7d4803f151c5",
+    "candidate_domains": [
+      "G06"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-a.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-b.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "4bb805f872dd6642c689a71263347a6278422828",
+    "candidate_domains": [
+      "G06"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-b.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-c.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "50a11a10201f896a239399ca090b4c060d5e2227",
+    "candidate_domains": [
+      "G06"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-c.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-d.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "50d1c54983f105f8f1fee230e31fac7102c72269",
+    "candidate_domains": [
+      "G06"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-d.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "a34ad051c28b0b8ae99c098bd5cdadf8042cc84e",
+    "candidate_domains": [
+      "G06"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/教官系統（支援卡）.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/數值系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "8eb9bc453622c7b0cc85eded13a53e7610d58fff",
+    "candidate_domains": [
+      "G27"
+    ],
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/數值系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/新手開場規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "5a6f1ff2e33624524104f2f1ead72d7c42dccaec",
+    "candidate_domains": [
+      "G01"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/新手開場規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/正式版劇本文案.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "ac694f99176de93f247747984dd901db009fe517",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/正式版劇本文案.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將人物介面美術接線清單.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "61f28db3e9aba8d9e4cb7e539cba8446c2b6926e",
+    "candidate_domains": [
+      "G02"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將人物介面美術接線清單.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將人物介面規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "81901d5ff93b94e01a45f9a4700f12e431e0fad4",
+    "candidate_domains": [
+      "G02"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將人物介面規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-02.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "6b4a9d3a735b2a90194b6c255ae02d1fc96245d2",
+    "candidate_domains": [
+      "G02"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-02.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-14.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "394f8746eb21fba42a52d9cfbe944e5223dcc345",
+    "candidate_domains": [
+      "G02"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-14.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將個性卡規格.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "d31c9f9dc21aac7f2163c9a2a62961084e05dc1a",
+    "candidate_domains": [
+      "G38"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將個性卡規格.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將壽命系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "95c11b009130b25bec40b7e3eb039fb0b7e74a0d",
+    "candidate_domains": [
+      "G07",
+      "G08"
+    ],
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將壽命系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將戰績系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "77b7ad9b9b8219f3e059ad04810a9b55b66ff5a2",
+    "candidate_domains": [
+      "G33",
+      "G36"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將戰績系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將日誌與離線互動系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "d42bbee7fdabd64d6f76e375daa76acfa9fda9fc",
+    "candidate_domains": [
+      "G38"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將日誌與離線互動系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "ade5fd335ac538adfd7de01eced82b0eb0ef0774",
+    "candidate_domains": [
+      "G02"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將背包（倉庫）系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "cf3bcd71ddebcf3bc61c10fa4ad09c89463002a8",
+    "candidate_domains": [
+      "G15"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將背包（倉庫）系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將裝備道具系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "1f30cd6684a896f8a6ba1ff893dc66ff8e2479e4",
+    "candidate_domains": [
+      "G15",
+      "G16"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將裝備道具系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將裝備道具系統_實作任務清單.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "ccdda045a27b1340a8d4f0460a29e3bd1750eb7f",
+    "candidate_domains": [
+      "G15",
+      "G16"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將裝備道具系統_實作任務清單.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/武將資料管線規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "09b79d628f7df0b374a755428976e148e6d19caf",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將資料管線規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "6891f16666cad5d1ade035c5c22f60c31b9ad14e",
+    "candidate_domains": [
+      "G23"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/熱更新與版本控制規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "c919c7c291d53b0a550b8fa8179c15f9d31353fe",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/熱更新與版本控制規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/留存系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "463ae739bc747d81f884d890630786e8eeae01b6",
+    "candidate_domains": [
+      "G19"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/留存系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-a.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "68491f1692367e08d1e3d6aeea6a5c0a42b00865",
+    "candidate_domains": [
+      "G03"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-a.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-b.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "e184f69e78b6f9bd773b02c97aec4afbdc67964c",
+    "candidate_domains": [
+      "G03"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-b.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "72f4339c04e29ed587bc8b3cf03fc63883a8514f",
+    "candidate_domains": [
+      "G03"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-d.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "382e88a710d0cae3bfa5ec9eedd50978b079bd1d",
+    "candidate_domains": [
+      "G03"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-d.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統（配種）.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "6bcd825df8f4a5fb838aca5495d95e43f5fcc1f2",
+    "candidate_domains": [
+      "G03"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/結緣系統（配種）.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/經濟系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "ed354cafccc7b6ebbd8ce2c739dbd7ee01606435",
+    "candidate_domains": [
+      "G17",
+      "G19"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/經濟系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/英靈世家系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "26292c6b6c1e847f69fb051953aafe99a0312230",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/英靈世家系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/英靈虎符與特種軍隊視覺契約補遺_2026-04-04.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "e12a174af0f8086a29985c14f139c4d72af99030",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/英靈虎符與特種軍隊視覺契約補遺_2026-04-04.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/血統傳承G1初代開局_直覺相馬與開蒙修業規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "69b055b875fcb44e39d6419525eebe5a378f2f67",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/血統傳承G1初代開局_直覺相馬與開蒙修業規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/血統傳承G2二代傳承_功業回流與三代譜牒規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "5d4ee65ff2cf332ea0ac3ca6fac7f1710bf53f3d",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/血統傳承G2二代傳承_功業回流與三代譜牒規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/血統傳承G3三代深淵_外戚純化與世交合譜規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "a3b5481a28a3a2e963b78cbe0bf79cef2594aac9",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/血統傳承G3三代深淵_外戚純化與世交合譜規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/血統傳承G4百年門閥_開宗立派與天下郡望規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "f2ad3fe3c330d850d64d50071af3e43644d6bf6c",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/血統傳承G4百年門閥_開宗立派與天下郡望規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/血統樹14人UI規格書.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "c87a0de8cc5384ea4434ddee58931cf16c6bba46",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/血統樹14人UI規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/系統規格書/血統理論系統.md",
+    "authority_layer": "SYSTEM_SPEC_CANDIDATE",
+    "blob_sha": "183d6ee8a61b09d38e900a9847e35482bb8f625a",
+    "candidate_domains": [
+      "G04"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/血統理論系統.md"
+  }
+]

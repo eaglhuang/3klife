@@ -167,4 +167,7 @@
 | doc_index_1034 | README.md (validation) | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/README.md | 工作包驗證說明索引 |
 | doc_spec_0288 | C2_R5_遊戲性決策拍板與體驗強化增補規格書.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_遊戲性決策拍板與體驗強化增補規格書.md | DEC決策編號校正、已核基線與候選設計分帳、體驗強化提案 |
 | doc_spec_0289 | C2_R5_待補數據表與Catalog定案總表.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_待補數據表與Catalog定案總表.md | 17項缺口真實狀態分帳、childLUK/peakType/近親與查券候選表 |
-| doc_spec_0290 | C2_R5_本地AI回覆更正與證據分帳報告.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_本地AI回覆更正與證據分帳報告.md | 血統公式驗證器、Q00-Q12與關聯玩法驗證包之更正與證據分帳報告 |
+| doc_spec_0290 | C2_R5_本地AI回覆更正與證據分帳報告.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_本地AI回覆更正與證據分帳報告.md | 血統公式驗證器、Q00-Q12、關聯玩法與全玩法盤點之更正與證據分帳報告 |
+| doc_index_1035 | README.md (all_gameplay_inventory_v1) | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/README.md | 3KLife全玩法盤點第一階段索引（42玩法域+4共同關卡） |
+| doc_spec_0291 | 全玩法覆蓋清單.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/全玩法覆蓋清單.md | 42個玩法域（G01-G42）與4個共同關卡（X01-X04）分母與未驗缺口清單 |
+| doc_spec_0292 | 跨系統待驗邊界.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/跨系統待驗邊界.md | 14條優先跨系統驗收邊界（抽卡/出生/時鐘/退役競爭等）待跑案例 |

@@ -1,0 +1,22 @@
+{
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "gameplay_domain_buckets": 42,
+  "crosscutting_gates": 4,
+  "full_gameplay_acceptance_pass": 0,
+  "new_execution_tests": 0,
+  "typescript_files_in_scanned_roots": 852,
+  "typescript_by_root": {
+    "assets": 835,
+    "server": 15,
+    "shared": 2
+  },
+  "code_read_status": {
+    "UNREAD": 773,
+    "SAMPLED_STATIC_NOT_FULL_AUDIT": 35,
+    "PRIOR_PARTIAL_EVIDENCE": 44
+  },
+  "unassigned_code_count": 0,
+  "test_filename_candidates": 1068,
+  "source_spec_markdown_files": 309,
+  "warning": "42 is a provisional behavior-domain routing denominator, not complete requirement/atomic-case count. 14 probes are earlier partial characterization, not 14 domains accepted."
+}

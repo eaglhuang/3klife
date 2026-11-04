@@ -1726,5 +1726,17 @@
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_本地AI回覆更正與證據分帳報告.md",
     "title": "3KLife R5 本地 AI 回覆更正與證據分帳報告",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_0291",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/全玩法覆蓋清單.md",
+    "title": "3KLife 全玩法第一階段：分母與未驗缺口",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0292",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/跨系統待驗邊界.md",
+    "title": "跨系統待驗邊界",
+    "category": "spec"
   }
 ]

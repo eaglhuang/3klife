@@ -1,0 +1,2007 @@
+[
+  {
+    "path": "tests/ServerSchemaNum17.test.ts",
+    "blob_sha": "6103e0f04f343d807bf051c34c777b3847f734f1",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/ServerSchemaNur15.test.ts",
+    "blob_sha": "d0cac562134c3de7eac41a88e8bf9945022f51df",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/ServerSchemaOfc10.test.ts",
+    "blob_sha": "95413ba7ec485b5bea9f26d9e4859b9578ec821d",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/ServerSchemaSaveSnapshot.test.ts",
+    "blob_sha": "3b00197589d8a986465bdde053dcd7dc6ed0d717",
+    "candidate_domains": [
+      "X01"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/ServerSchemaSync06.test.ts",
+    "blob_sha": "3cffbb09af78b195b68a3a7e037cc82c6d03a3f8",
+    "candidate_domains": [
+      "X01"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SevenDayJourney.test.ts",
+    "blob_sha": "70d82717c4668d0096309830fea4c904a6ca4481",
+    "candidate_domains": [
+      "G19"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SevenDayJourneyLoopE2E.test.ts",
+    "blob_sha": "314ad1d186d1c202e5ea27b67feb90e80f4c65e2",
+    "candidate_domains": [
+      "G19"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SevenDayJourneyPersistence.test.ts",
+    "blob_sha": "a2d91b12ffa92c9b627b8fc5a6397c0e690dd0c2",
+    "candidate_domains": [
+      "G19"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/ShopI18nKeys.test.ts",
+    "blob_sha": "5419fb523bf641f5fc12cd4d33c92443b3d1f00b",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SiegeEngineReserve.test.ts",
+    "blob_sha": "2144b264e51a9f24c1d2c85f267fcbc47761e403",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SiegeLifespan.test.ts",
+    "blob_sha": "8eef191d92b9f070d1142fef2394d71ddc8a4224",
+    "candidate_domains": [
+      "G08"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SiegeScene.test.ts",
+    "blob_sha": "565e6332dac7409497eb811ec0a5e015d3a72d5f",
+    "candidate_domains": [
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SingleExecute.test.ts",
+    "blob_sha": "2d8225def7e72d07a6184c641bc20fb1ad5eadd0",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SixTableGapFixes.test.ts",
+    "blob_sha": "58b8b5590a63ea969d96df7b3e8612633241640f",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SkillEffectFormulas.test.ts",
+    "blob_sha": "20d0083da7fd1fa3c9edc5992e8e9362e9296512",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SkillGridGeometry.test.ts",
+    "blob_sha": "503b566c51e3ad73ab7725c1025da66a589c99f2",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SlowSkillResolver.test.ts",
+    "blob_sha": "f43b6845849d8143e3bc23889737039422ed240a",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SoloBreachAttack.test.ts",
+    "blob_sha": "8247f280a3dba73168e916331b39a2a8e54f31da",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SortieDeploy.test.ts",
+    "blob_sha": "23e9b0d3943ba093840c7e6fd0123eea847b1a5b",
+    "candidate_domains": [
+      "G26"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SortieDeploySuggestion.test.ts",
+    "blob_sha": "fa5e60472f86d8f162d2650ce05c40dd337bb838",
+    "candidate_domains": [
+      "G26"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SortieLoadoutPreset.test.ts",
+    "blob_sha": "d6262a3f2347829c163cd178caa33a9e896da2ae",
+    "candidate_domains": [
+      "G26"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SortiePrediction.test.ts",
+    "blob_sha": "ef302b7265ea0ec10ba1fa0b33a1eb157c19a638",
+    "candidate_domains": [
+      "G26"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SortiePresetAutoSave.test.ts",
+    "blob_sha": "4e210c5939afbe8b9767dbd3d1b327bca6cfd600",
+    "candidate_domains": [
+      "G26",
+      "X01"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SortiePresetLoadPath.test.ts",
+    "blob_sha": "5375af764701e8ac819e8e4ad5dc448bd9ff7f30",
+    "candidate_domains": [
+      "G26"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SortiePresetSave.test.ts",
+    "blob_sha": "e36d7c669aff38cec7e2e20f61ca76f4d30e865b",
+    "candidate_domains": [
+      "G26",
+      "X01"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SoulFragmentLedger.test.ts",
+    "blob_sha": "2adf77f4ebf09a054cbc2fdf4bc0f93580266aa4",
+    "candidate_domains": [
+      "G09"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SoulFragmentSeasonFlow.test.ts",
+    "blob_sha": "dc08c75d89a4f3649d2d8a175362f67b5b98ba69",
+    "candidate_domains": [
+      "G09",
+      "G40"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SoulInjectCandidates.test.ts",
+    "blob_sha": "7864ede8da42bffb6c5eef2773553f15a93f4be2",
+    "candidate_domains": [
+      "G09"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SoulInjectPanelSessionE2E.test.ts",
+    "blob_sha": "6feb93634a8399ae627a5cf4183151a4c05880ea",
+    "candidate_domains": [
+      "G09",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SoulInjectStrings.test.ts",
+    "blob_sha": "37a0bbbb843f13565b6542caa5287cbcb3b4257f",
+    "candidate_domains": [
+      "G09"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SoulInjectUiWiring.test.ts",
+    "blob_sha": "e3c099ac970b65e21e5f098af0d72d5a0b0c1f85",
+    "candidate_domains": [
+      "G09"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SoulTransfer.test.ts",
+    "blob_sha": "07fb7345007aa76418518757f6cd49e70562dd1f",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpecTallyCards.test.ts",
+    "blob_sha": "20a090a348fdd0c092d3ce1d14827394583002d5",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritArchiveSnapshot.test.ts",
+    "blob_sha": "1eece7072ad7b1eafaf97f902187db4b526873e4",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritCardDetailScreen.test.ts",
+    "blob_sha": "691aba806c8d6422929083d6c9a5bf1d1a469973",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritCardDetailTexts.test.ts",
+    "blob_sha": "d8dfb1ce217ccf9b771a976f3a05ad4d4257e3e5",
+    "candidate_domains": [
+      "G13",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritCodexController.test.ts",
+    "blob_sha": "3cb8777bc30d0fbcc612c7fb9c8097ab55dec0ea",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritCodexLayout.test.ts",
+    "blob_sha": "1dcfe189c6b144339c83e2b2b555865e10a5c61c",
+    "candidate_domains": [
+      "G13",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritInfusionArchive.test.ts",
+    "blob_sha": "35fa10cc907c044c5dd28c8de0285f5f1a6750d1",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritInsertSequence.test.ts",
+    "blob_sha": "8b315d37b2e373dfccaf8844992afceb6fb53a2e",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritInsertWiring.test.ts",
+    "blob_sha": "07039b162cd9f267b87e71145110c4fb885ac738",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritRelic.test.ts",
+    "blob_sha": "4be1bd3a133813f71a5d2c3155dd5c98c4a9cd66",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritRelicUnique.test.ts",
+    "blob_sha": "68de87d140e72f83a33e1d589830a7dca1c621fe",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritSlotFlow.test.ts",
+    "blob_sha": "a6c47b5a92479cf6697f79433e93a41610094204",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritSlotInsertReplaceSaveE2E.test.ts",
+    "blob_sha": "10ea9ffa94adb2732f7946cb55907daaaeadfef9",
+    "candidate_domains": [
+      "G13",
+      "X01"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritSlotLifecycleE2E.test.ts",
+    "blob_sha": "e0d8d663d74a52bdb5206e2d20dd21cd2e4c4ee4",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritSlotState.test.ts",
+    "blob_sha": "7076f55f106fd2b685593c0ed804da9c5288023d",
+    "candidate_domains": [
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SpiritTallyDetailScreen.test.ts",
+    "blob_sha": "32e0d23af45d946b4d78fa2d35f39e99b2efe071",
+    "candidate_domains": [
+      "G12",
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StageChainNodes.test.ts",
+    "blob_sha": "01b41904c9ee70f272f775dfbdabcafcd9df7686",
+    "candidate_domains": [
+      "G25"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StageChainProgress.test.ts",
+    "blob_sha": "f72d72b0128712af41bc5dcd9289ba08e281f35d",
+    "candidate_domains": [
+      "G25"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StageLoadoutSlots.test.ts",
+    "blob_sha": "508782fbb137bf2aa78d6ec6a112e966c0355694",
+    "candidate_domains": [
+      "G25",
+      "G26"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StageProgressSave.test.ts",
+    "blob_sha": "f424bcf42ea7d32251b717eb08fb9079db837b2f",
+    "candidate_domains": [
+      "X01"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StageSalvage.test.ts",
+    "blob_sha": "f710861554ded0e25ef80cfb64c437acc32c88b9",
+    "candidate_domains": [
+      "G25",
+      "G33"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StageSalvageSettlement.test.ts",
+    "blob_sha": "a852e10f48a4933858ce6a7c6c831c0dd95ec1d4",
+    "candidate_domains": [
+      "G25",
+      "G33"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StarUpMaterial.test.ts",
+    "blob_sha": "f1354fa957c374adcc8395c5127f5055f1050ee1",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StarterRoster.test.ts",
+    "blob_sha": "a44205ff4146c7f557e1918ccf41c0e08f2810cc",
+    "candidate_domains": [
+      "G01"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StatusKindsE2E.test.ts",
+    "blob_sha": "2507258ec2a70f16008d2dcc20318e9142351f2d",
+    "candidate_domains": [
+      "G37"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StealthTargeting.test.ts",
+    "blob_sha": "de091d3569c81070d15144d66158efd102ba1d28",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StealthTile.test.ts",
+    "blob_sha": "7997862cfe8ba68a029c96d44f6f44eaf8e6c6e0",
+    "candidate_domains": [
+      "G28",
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StoryLayerCheck.test.ts",
+    "blob_sha": "1efebd599952e9a69aa32407df583015be7a9a1b",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StoryStripCells.test.ts",
+    "blob_sha": "eda66e35d87ac63a6c97dbde4f74b92d2158161a",
+    "candidate_domains": [
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StrategistHud.test.ts",
+    "blob_sha": "582fcc0b034fc0e86a9b392f691dee710c18e2c8",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StrategistHudLog.test.ts",
+    "blob_sha": "7eafaab05ec5fbd427a6026ea11086e78828884c",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StrategistHudSource.test.ts",
+    "blob_sha": "536ccbabfc3074ac016fbf862d0f713b9cf0b94d",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/StrengthPushHazard.test.ts",
+    "blob_sha": "b72a1494e4ec3be9cd1310b4c4abd06776002a55",
+    "candidate_domains": [
+      "G28"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SummerNurtureCycleE2E.test.ts",
+    "blob_sha": "f35340819546459592661fd1c06d4b6157ff95ce",
+    "candidate_domains": [
+      "G05"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SupportPoolValidator.test.ts",
+    "blob_sha": "105b073ee5ca54326ddd593fe3fca6d31cd22421",
+    "candidate_domains": [
+      "G18"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SvgLineArt.test.ts",
+    "blob_sha": "ac9883df23d8b7bd89075b7885151fadb84b5322",
+    "candidate_domains": [
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SyncContract.test.ts",
+    "blob_sha": "c722eb4d462a6d97916bcee289ebceee62ecec2f",
+    "candidate_domains": [
+      "X01"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/SyncManager.test.ts",
+    "blob_sha": "6b19164625411ad24267d2893c045b8a01989be0",
+    "candidate_domains": [
+      "X01"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticAiRules.test.ts",
+    "blob_sha": "944992d75a9547ee5023013ca0c792e5a3ff86b1",
+    "candidate_domains": [
+      "G29",
+      "G31"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticAvailabilityPresenter.test.ts",
+    "blob_sha": "282502d81c8100bfd8b31593ae0db67c0daf15fe",
+    "candidate_domains": [
+      "G29",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticCondition.test.ts",
+    "blob_sha": "805f2023f8c8857e95cbba2920c2e8aa17d91bf1",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticConditionData.test.ts",
+    "blob_sha": "0b4ce6a555417e87b2f87742c3fd2bc8ceb68f1a",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticDamageEstimate.test.ts",
+    "blob_sha": "c86b4ac45ceaea452e109e4d604ac7316ca29762",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticLearnWiring.test.ts",
+    "blob_sha": "7716a64052c77a6e7c13ef859f84c324909f892d",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticLearning.test.ts",
+    "blob_sha": "8c6b60fcab935d4886844b2905677341a2284dde",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticLoadout.test.ts",
+    "blob_sha": "82f6009b855c562653c43e1e3fbfe4d6f361a9a7",
+    "candidate_domains": [
+      "G26",
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticRandomization.test.ts",
+    "blob_sha": "b3c1efa1b815b0fc3e00fe36bca05ea0cbb7fa87",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticTpCostLibraryE2E.test.ts",
+    "blob_sha": "2ee6f42461c375532c12413e2f33f6ab6b4ae8a1",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticTpCostTable.test.ts",
+    "blob_sha": "be632b6ac9178938ae339720a4f9e6d179e58c94",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticTriggerRate.test.ts",
+    "blob_sha": "ab831c16992d212d549e02a7282e801b4800083d",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticVfxHooks.test.ts",
+    "blob_sha": "43721ba1c6a657ca03a848b8a9b593dac00644f4",
+    "candidate_domains": [
+      "G29",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticWeatherClickThrough.test.ts",
+    "blob_sha": "f90446e21d723aba448b528c54e3330c4931a3c8",
+    "candidate_domains": [
+      "G28",
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TacticsTabView.test.ts",
+    "blob_sha": "53113372ce3fef09860a310f1c441f7bc804ede0",
+    "candidate_domains": [
+      "G29",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TagPoolAncestorLookup.test.ts",
+    "blob_sha": "9c69dfab546314869e5c67357de370b0d334e62f",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TalismanSlotView.test.ts",
+    "blob_sha": "548fff26da62ef14d96cec913ded515f904bacbb",
+    "candidate_domains": [
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyBaiErRearguard.test.ts",
+    "blob_sha": "95f770ebffa8671fbcf50264ce485769d87a0d69",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyBossTags.test.ts",
+    "blob_sha": "8f1c59cf582e2d8fd1918dded169ab856007cb6f",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyBreakthroughWiring.test.ts",
+    "blob_sha": "5f221fb683741280913ab55965c2af3202950143",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyConfiscation.test.ts",
+    "blob_sha": "5cf582016e5abff201c8939efcbcdc276c612c0e",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyDaQiaoCharisma.test.ts",
+    "blob_sha": "ff28b3f090eb12a0356bd53b09f8be0cdcf961fa",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyDeployAffinity.test.ts",
+    "blob_sha": "2f4666a9d3bd27fc79866de60061cb319159667b",
+    "candidate_domains": [
+      "G12",
+      "G26"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyEquipBattleFlowE2E.test.ts",
+    "blob_sha": "32a9bb385bd6383c8b69cc12678bd67bb9cd2412",
+    "candidate_domains": [
+      "G12",
+      "G27"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyFearCharge.test.ts",
+    "blob_sha": "7e8a648f0c461c7227f98c18d157d0c64305435a",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyFengXiaoLangGu.test.ts",
+    "blob_sha": "f0f7ee681f4c952be93e18c3df4c308d5e9e6b6d",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyFoodShortage.test.ts",
+    "blob_sha": "d2f9c1a83fcbd1dfcad354081e414c28c4a9e896",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyGongJiaCombo.test.ts",
+    "blob_sha": "372a53305674fc8bae9f08b9bdae2de4d6910c35",
+    "candidate_domains": [
+      "G12",
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyHoldingsWiring.test.ts",
+    "blob_sha": "d748cb1845ac377d008b7049440a3128edb2fc5f",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyInsertTarget.test.ts",
+    "blob_sha": "f3ed03fea023512163d17ee1a1375fba377f6940",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyInstanceDeploy.test.ts",
+    "blob_sha": "20c64bcb194133fb263ed6759f7d54f29db9d425",
+    "candidate_domains": [
+      "G12",
+      "G26"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyNanManTrample.test.ts",
+    "blob_sha": "83dd4cea24e279d4e830e0e980c4b37ebea3d7fb",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyPassive.test.ts",
+    "blob_sha": "cd3a4cba7cfc4a9b39b370f6113a3e5b13c86606",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallySetLabelHud.test.ts",
+    "blob_sha": "eca3528b41fc0a4f2d6f5a7bc6281699697f8540",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyShenWeiCharge.test.ts",
+    "blob_sha": "6e4033158a202990f2c0f87801c0d2b7a8490992",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TallyTroopType.test.ts",
+    "blob_sha": "f46e598f900c436a38f4570a1a3ae6744ba39c9f",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TeachingBattleEntry.test.ts",
+    "blob_sha": "52372ba88974509bd0f9e30fac6b2018b07875e7",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TeachingSpiritProvisional.test.ts",
+    "blob_sha": "8fffe1b6635fcfbba88b9fe0765edc6674502a8a",
+    "candidate_domains": [
+      "G06",
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TeachingSpiritTalisman.test.ts",
+    "blob_sha": "2061aa84e9f601a0ebbaa16f0cf80f1c13d04484",
+    "candidate_domains": [
+      "G06",
+      "G13"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TeamAura.test.ts",
+    "blob_sha": "b93259ed8fc255acf0fc44c60a16799640a6d457",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TeamAuraBattleWiring.test.ts",
+    "blob_sha": "6511b9c565a8e244fcac550d7c346a1913516934",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TeamRecover.test.ts",
+    "blob_sha": "5feaf149cac5fbd20d23f824ec29306d31785368",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TeamRecoverBattleWiring.test.ts",
+    "blob_sha": "7946c23909a3111dcf863c594e8c4083b7fb87ae",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TerrainConfig.test.ts",
+    "blob_sha": "a1ca31edcff2f6ff873408f6de7338fdc50d7a10",
+    "candidate_domains": [
+      "G28"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TerritoryUpgrade.test.ts",
+    "blob_sha": "d2ae472e9e4aaebc2ca99322ff5465a637f2c9f8",
+    "candidate_domains": [
+      "G21"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TerritoryUpgradeSeasonChainE2E.test.ts",
+    "blob_sha": "da531a1b5c8aaed7693d7db8c970a223d6ab4875",
+    "candidate_domains": [
+      "G21",
+      "G40"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TerritoryUpgradeWalletSaveE2E.test.ts",
+    "blob_sha": "c45be8a9bb3638880d08b3c63814fc1f9c4d777c",
+    "candidate_domains": [
+      "G21",
+      "X01"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTally.test.ts",
+    "blob_sha": "28d5f0a6b23fc118e1fe944ee74e2f0c7096577c",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTallyBattleSettlement.test.ts",
+    "blob_sha": "ba954a54203f87bee33d246c945839e05c68f239",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTallyBreakthrough.test.ts",
+    "blob_sha": "5d031486f518393b1a0d1538cc447436f43467eb",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTallyCardStar.test.ts",
+    "blob_sha": "c65e76369de8247cac9cc4f310245a307740579d",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTallyHoldings.test.ts",
+    "blob_sha": "2433237d68a173888538c49d23cc64e1736a9ce3",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTallyLoyalty.test.ts",
+    "blob_sha": "5e58db39b4d3667937a19109a67300cbd9e24f14",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTallyProfiles.test.ts",
+    "blob_sha": "0204ef3c992ec08e0cd14a74851d5b09acd67f08",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTallyRuleConstraints.test.ts",
+    "blob_sha": "cc43a09fc72b818ae9d73b88641e42d49ba55f73",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTallySetBonus.test.ts",
+    "blob_sha": "5ae0ec8c463000d1413e18acf78c85b5315e3b88",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTallyShellGate.test.ts",
+    "blob_sha": "266a20c3a17525da0b6c9851f1535bb3b11eb488",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTallySpecTactics.test.ts",
+    "blob_sha": "241bfbbae5697ddd6fabf520fcc24d7cd7bcb0ae",
+    "candidate_domains": [
+      "G12",
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTallyStar.test.ts",
+    "blob_sha": "7c8c69e8e45157af6001c645814f7d9c18fd9ed4",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TigerTallyWiring.test.ts",
+    "blob_sha": "9d7961b4710e2a833a94bb1c75e3b5967aac0b0f",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TileStateFixedCells.test.ts",
+    "blob_sha": "e8a16afe348bcb0f9e72eb17cbcab88059f8441d",
+    "candidate_domains": [
+      "G28"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TileStateRules.test.ts",
+    "blob_sha": "28c333ef4bf632ff8f70ec36a220aa704aa82811",
+    "candidate_domains": [
+      "G28"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TitleScreenBinder.test.ts",
+    "blob_sha": "387e3c43750baa19b9b98b58aa84bd19686e7a7a",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/ToggleNodeWiring.test.ts",
+    "blob_sha": "63540d40f60222591636b234bc81b25b3e579702",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TournamentBracket.test.ts",
+    "blob_sha": "fdb4b94d43a2bc335074dcace9c295dc10fccaaf",
+    "candidate_domains": [
+      "G35"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TournamentLocal.test.ts",
+    "blob_sha": "63ff58d72e38d8b122102ffad0f2b5fa2b7ce29e",
+    "candidate_domains": [
+      "G35"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TournamentPanelController.test.ts",
+    "blob_sha": "e40c814be336cb38932719f35c87c6048075ea40",
+    "candidate_domains": [
+      "G35",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TournamentScripts.test.ts",
+    "blob_sha": "d34d76cf3def15d6a63591bf2193e40f176dfd34",
+    "candidate_domains": [
+      "G35"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TournamentSeason.test.ts",
+    "blob_sha": "b5579e51b5c15f55b3f4094ad1376bb3b3235a7d",
+    "candidate_domains": [
+      "G35",
+      "G40"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TrainingGainFormula.test.ts",
+    "blob_sha": "9ad264d3f897b5115be6f6cb96836d725b900a08",
+    "candidate_domains": [
+      "G05"
+    ],
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TravelCountdown.test.ts",
+    "blob_sha": "80f020b5beb40e124530f0a2f6d6686756e927d5",
+    "candidate_domains": [
+      "G24",
+      "G40"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TreasureCodex.test.ts",
+    "blob_sha": "d45d267a5caa5897e407049597a98cbb550a2b37",
+    "candidate_domains": [
+      "G15"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TroopCounterMatrix.test.ts",
+    "blob_sha": "cc7152ae7cb45e8c5ce3f6856d4b176454ca651e",
+    "candidate_domains": [
+      "G12"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/TutorialBattleEntry.test.ts",
+    "blob_sha": "e36e794bf5c216ff3a3fb581a7f1506723957d22",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UILabelText.test.ts",
+    "blob_sha": "55dad6c29fe18801d9ede97b61bbc40bb0efe4cc",
+    "candidate_domains": [
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UIManager.test.ts",
+    "blob_sha": "759157dcb27a3f7d30ab69453eb526ffb14c7bc4",
+    "candidate_domains": [
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UINodePoolRecycle.test.ts",
+    "blob_sha": "dcc799a6a179612979e31c89cd6cf42aefa8afd2",
+    "candidate_domains": [
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UISpecParser.test.ts",
+    "blob_sha": "29855fb22363d47ea2afff8c1bcaa0c42fe34881",
+    "candidate_domains": [
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UIValidationRunner.test.ts",
+    "blob_sha": "8cdf7e842ed64a66b9a7b2f46b158195d309ab5a",
+    "candidate_domains": [
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UcufNodeLookup.test.ts",
+    "blob_sha": "4e6db27c12daa84d8dcbaebbd1630a72f4fc948c",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UcufWidgetSizeSource.test.ts",
+    "blob_sha": "2f34281d16b19da038988a4050352bf35375e317",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltCaoCao2ReviveFlow.test.ts",
+    "blob_sha": "08e15f54818614d47745ea86b9003b6dc67dd385",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltCaoCao3ControlFlow.test.ts",
+    "blob_sha": "24dd65cd4c9447b1a819c72bbe445eb4169be6dc",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltControlReviveCrossFlow.test.ts",
+    "blob_sha": "d259e61caed35cd8ece74ecce5a5202cf5d390cc",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateActionView.test.ts",
+    "blob_sha": "17d3a2e5f17599e0099258d1f6a68156f509ba9c",
+    "candidate_domains": [
+      "G30",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateCinematic.test.ts",
+    "blob_sha": "c9e900f133323d377cb70e92b410d187dbab603b",
+    "candidate_domains": [
+      "G30",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateCodexController.test.ts",
+    "blob_sha": "6dd018053cecec430e22fda9cabf72f646260176",
+    "candidate_domains": [
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateCodexTexts.test.ts",
+    "blob_sha": "0053cf99600bf0bb754b0a16c249a1c09970d1c9",
+    "candidate_domains": [
+      "G30",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateDamage.test.ts",
+    "blob_sha": "1be7bff35b29af64da100b6f2b43b38038783cff",
+    "candidate_domains": [
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateDamageWiring.test.ts",
+    "blob_sha": "0481e6f7459dea5d3e460d3c9563ca93b6c59d5b",
+    "candidate_domains": [
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateFamilyData.test.ts",
+    "blob_sha": "b2b46ab01fb1edadba568a3b5255dd550ccbb023",
+    "candidate_domains": [
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateProgress.test.ts",
+    "blob_sha": "f007fbe500f0f7fae1ade4758d3ec43dceb1aa1a",
+    "candidate_domains": [
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateProgressBattleRecord.test.ts",
+    "blob_sha": "f320e522f73665a2009f4da8b9850904925ee05c",
+    "candidate_domains": [
+      "G30",
+      "G36"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateSlotUnlock.test.ts",
+    "blob_sha": "0221822cea400c2626d79d5a940471cd09b8f65d",
+    "candidate_domains": [
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateStageSummary.test.ts",
+    "blob_sha": "ff8a8e13418607d5634ee402f3f629936d5089c5",
+    "candidate_domains": [
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateTexts.test.ts",
+    "blob_sha": "040103634763be37e9927d103b797d034eefb206",
+    "candidate_domains": [
+      "G30",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateUiTexts.test.ts",
+    "blob_sha": "95f44295c49add80a2319b86ab3166b9d730d2df",
+    "candidate_domains": [
+      "G30",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateUnlockBattleE2E.test.ts",
+    "blob_sha": "aede0a053dcc25269490ee8292c9410cf6b700f2",
+    "candidate_domains": [
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateUpgrade.test.ts",
+    "blob_sha": "64238917e46e58db0ccaa090090f2d2785eb3ea4",
+    "candidate_domains": [
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateUsedGrey.test.ts",
+    "blob_sha": "703a048a5bf43994395aa9b0ee0b9f6a481e7991",
+    "candidate_domains": [
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UltimateUsedKeyFlow.test.ts",
+    "blob_sha": "bc340fc977a68bcb5d9a71e484add301bf5d20c1",
+    "candidate_domains": [
+      "G30"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UnitDot.test.ts",
+    "blob_sha": "f0621449f34a38e64f69f12c54e43c0113bc134e",
+    "candidate_domains": [
+      "G29"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UnityParticlePrefabParser.test.ts",
+    "blob_sha": "b11664f0255cc05a730123f7feba536b3b4017ab",
+    "candidate_domains": [
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/UnlockPhaseColors.test.ts",
+    "blob_sha": "8ac3ca85005228fb4a8fde31590768ba990d3ebf",
+    "candidate_domains": [
+      "G01"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/VfxEffectConfig.test.ts",
+    "blob_sha": "0cc4b13bba3620713cb70600136b3bfbc060c507",
+    "candidate_domains": [
+      "G29",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/VirtualAncestor.test.ts",
+    "blob_sha": "8ef085b3194c7cf9dac859a50db6b92a8f25ad0a",
+    "candidate_domains": [
+      "G04"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/VitalityBarView.test.ts",
+    "blob_sha": "860bd22abb22c58bcfc0456e0e51c7ad732c48e2",
+    "candidate_domains": [
+      "G07",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/VitalityBattleChain.test.ts",
+    "blob_sha": "a06f497b8d5263f0319287459016fa933b1b6be1",
+    "candidate_domains": [
+      "G07"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/VitalityBattleGate.test.ts",
+    "blob_sha": "508b3742e2076bec67840a0fbbf419b32dc61e40",
+    "candidate_domains": [
+      "G07"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/VitalityPill.test.ts",
+    "blob_sha": "4efb305803003eca339635870b55fb92e8cce02b",
+    "candidate_domains": [
+      "G07"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/VitalityPillController.test.ts",
+    "blob_sha": "0d9f8559a3215c3fd72a3e712f8885da87023174",
+    "candidate_domains": [
+      "G07"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/VitalityPillSessionE2E.test.ts",
+    "blob_sha": "631c6eedcc48686331c7bd5cc78a7ec3c58c728b",
+    "candidate_domains": [
+      "G07"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/VitalityScriptHooks.test.ts",
+    "blob_sha": "47e766f4488f9413928559b290319ef75e1b68e6",
+    "candidate_domains": [
+      "G07"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/VitalityScriptTexts.test.ts",
+    "blob_sha": "1daffc1450a221dd9ed9da83076216c22a2b6785",
+    "candidate_domains": [
+      "G07",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/VitalityStrings.test.ts",
+    "blob_sha": "d38c8ab0ca71fd54b45f8aa241db24b1afe7ef28",
+    "candidate_domains": [
+      "G07"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/VortexTransition.test.ts",
+    "blob_sha": "09be2562061b445f7e01f708b47f6b3f59218ccb",
+    "candidate_domains": [
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WarInjury.test.ts",
+    "blob_sha": "77c6bbfab64c2e6a40ae2c905bbd9f4e40a359c8",
+    "candidate_domains": [
+      "G07",
+      "G33"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WarehouseCapacity.test.ts",
+    "blob_sha": "da5f4082fe9d7006f92df6e54383195cd136ad72",
+    "candidate_domains": [
+      "G15"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WarehousePanelController.test.ts",
+    "blob_sha": "447a58b7fd07620eac8d9169da50f53934395a58",
+    "candidate_domains": [
+      "G15",
+      "X03"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WarehouseSessionSlots.test.ts",
+    "blob_sha": "27fb061a19551733acddcf97980cda879b4b027f",
+    "candidate_domains": [
+      "G15"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WarehouseSort.test.ts",
+    "blob_sha": "0034be391a48d7a240da565c7621fe95d9602073",
+    "candidate_domains": [
+      "G15"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WarehouseUsedSlots.test.ts",
+    "blob_sha": "8274490e3c0f5d76d344f4339b6d640bd4cfe1c2",
+    "candidate_domains": [
+      "G15"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WaterDAptitude.test.ts",
+    "blob_sha": "524b0b7e10798d0feeb9e297929c2d49308c6a08",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WaterSNavalAptitude.test.ts",
+    "blob_sha": "104329a0f059dcbc2262180c965427c32891d58c",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WeatherEnum.test.ts",
+    "blob_sha": "a6988d0c958b2c6d94d3b373e5dce0d8f3edc763",
+    "candidate_domains": [
+      "G28"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WeatherItem.test.ts",
+    "blob_sha": "8f4bbc6c0339ca6863345416c1046f8445fa1893",
+    "candidate_domains": [
+      "G16",
+      "G28"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WeatherItemBattleFlow.test.ts",
+    "blob_sha": "97f25deaa1b2fa904dcd9ab3ee0998deb1653198",
+    "candidate_domains": [
+      "G16",
+      "G27",
+      "G28"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WeatherItemInventory.test.ts",
+    "blob_sha": "1e523143a91e6fc680b43f96c4a8934b2c247354",
+    "candidate_domains": [
+      "G16",
+      "G28"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WeatherRangedConstraint.test.ts",
+    "blob_sha": "a40c9058b9026ede1a8bdf8f4cb5f3ab4e02e523",
+    "candidate_domains": [
+      "G28"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  },
+  {
+    "path": "tests/WeatherSchedule.test.ts",
+    "blob_sha": "367f1c84e177320b2e165f677c5caa8dd4225ac5",
+    "candidate_domains": [
+      "G28"
+    ],
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN",
+    "scope": "candidate only; mixed gameplay/framework/UI tests; filename E2E is not actual E2E evidence"
+  }
+]

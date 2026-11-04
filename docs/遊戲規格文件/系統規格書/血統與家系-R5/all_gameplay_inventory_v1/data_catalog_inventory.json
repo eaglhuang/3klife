@@ -1,0 +1,394 @@
+[
+  {
+    "path": "assets/resources/data/ai-difficulty.json",
+    "sha": "5802f6f492edb2f6c19163641a755928aa7252d0",
+    "bytes": 1135,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/ai-difficulty.json"
+  },
+  {
+    "path": "assets/resources/data/ai-population-config.json",
+    "sha": "aa9b86a5d234e92c6eab9474bc31918117746e08",
+    "bytes": 324,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/ai-population-config.json"
+  },
+  {
+    "path": "assets/resources/data/ai-profiles.json",
+    "sha": "8a2f55e578df97a4bc5edccd48a5cfcb66230e49",
+    "bytes": 3249,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/ai-profiles.json"
+  },
+  {
+    "path": "assets/resources/data/buff-particle-profiles.json",
+    "sha": "fabe13c2c0093b8d3bef451f559ad0d817bc32ac",
+    "bytes": 4320,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/buff-particle-profiles.json"
+  },
+  {
+    "path": "assets/resources/data/copy/red-face-copy.json",
+    "sha": "e021aa52136999d268048c3898d34ff63ef18ebc",
+    "bytes": 753,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/copy/red-face-copy.json"
+  },
+  {
+    "path": "assets/resources/data/encounters.json",
+    "sha": "0d146ac05de55373a7a082ae9ee2544ff7c42c62",
+    "bytes": 2244,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/encounters.json"
+  },
+  {
+    "path": "assets/resources/data/field-abbreviation-map.json",
+    "sha": "5fd690d744f4baf1bba71fb06856c28888d060b6",
+    "bytes": 1860,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/field-abbreviation-map.json"
+  },
+  {
+    "path": "assets/resources/data/gacha-config.json",
+    "sha": "2f7d33f281ff43967297c3d9d6456168e5a32753",
+    "bytes": 1700,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/gacha-config.json"
+  },
+  {
+    "path": "assets/resources/data/general-art-paths.json",
+    "sha": "ffe1659c3bb2b300805c17280a79e3faf3765b69",
+    "bytes": 702,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/general-art-paths.json"
+  },
+  {
+    "path": "assets/resources/data/general-avatar-crops.json",
+    "sha": "f0f9362cd7dcce66f9d6e1814f81c4e3ba52dd09",
+    "bytes": 20246,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/general-avatar-crops.json"
+  },
+  {
+    "path": "assets/resources/data/generals-index.json",
+    "sha": "553ad551220c161e45e32c5baeb47667fef03103",
+    "bytes": 86929,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/generals-index.json"
+  },
+  {
+    "path": "assets/resources/data/generals.json",
+    "sha": "29a5dc736b5c82bba56c5688580da91c139b00fd",
+    "bytes": 882180,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/generals.json"
+  },
+  {
+    "path": "assets/resources/data/hall-map/hall-map-events.json",
+    "sha": "3a07e3673d650e02569ae43d13b2b27ecdf63248",
+    "bytes": 519,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/hall-map/hall-map-events.json"
+  },
+  {
+    "path": "assets/resources/data/hall-map/hall-map-layout.json",
+    "sha": "d42bbb635468fbd1b3cfdff71f4917ffd10b8dcb",
+    "bytes": 703,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/hall-map/hall-map-layout.json"
+  },
+  {
+    "path": "assets/resources/data/hall-map/hall-season-fx.json",
+    "sha": "841e33ed1fe0dbf2e43dfbf67d51ff991f5ebfdb",
+    "bytes": 963,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/hall-map/hall-season-fx.json"
+  },
+  {
+    "path": "assets/resources/data/hall-map/hall-stage-decor.json",
+    "sha": "b5ba4c734c1521056847c4fef2414ee77d9f3f07",
+    "bytes": 390,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/hall-map/hall-stage-decor.json"
+  },
+  {
+    "path": "assets/resources/data/hall-map/hall-stage-spots.json",
+    "sha": "1a8484bc885737f45fd983ddd254f9779d134636",
+    "bytes": 1039,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/hall-map/hall-stage-spots.json"
+  },
+  {
+    "path": "assets/resources/data/hall-map/hall-theme.json",
+    "sha": "c901e7505cd057218b6aee859ae111d3333706d3",
+    "bytes": 1172,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/hall-map/hall-theme.json"
+  },
+  {
+    "path": "assets/resources/data/hall-map/han13-provinces.json",
+    "sha": "2dd2e4b1e62fff7676412737dd39d9815cea751e",
+    "bytes": 9160,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/hall-map/han13-provinces.json"
+  },
+  {
+    "path": "assets/resources/data/historical-relations.json",
+    "sha": "04f2165d705fe5eea64c612a6ae9da3239030b9d",
+    "bytes": 1713,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/historical-relations.json"
+  },
+  {
+    "path": "assets/resources/data/limited-pool-schedule.json",
+    "sha": "3f7ff1576c77f2cb1b951109b9e1bf24c580b16b",
+    "bytes": 22,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/limited-pool-schedule.json"
+  },
+  {
+    "path": "assets/resources/data/lobby-hub.json",
+    "sha": "412f9b3ef9a9cf24aae63b887617dbb1bd63aecc",
+    "bytes": 8104,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/lobby-hub.json"
+  },
+  {
+    "path": "assets/resources/data/master/bloodline-templates.json",
+    "sha": "23a91768b895ff0b88c082bfe877f253e80ab925",
+    "bytes": 3247,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/master/bloodline-templates.json"
+  },
+  {
+    "path": "assets/resources/data/master/factor-battle-effect-map.json",
+    "sha": "01ffdf468931e02a9e8cd38069e373e844333591",
+    "bytes": 401,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/master/factor-battle-effect-map.json"
+  },
+  {
+    "path": "assets/resources/data/master/gene-dictionary.json",
+    "sha": "c73fd6cf62ca28fb4095c6fe08d5730757fddd74",
+    "bytes": 7293,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/master/gene-dictionary.json"
+  },
+  {
+    "path": "assets/resources/data/master/generals-base.json",
+    "sha": "6213099cc7e50f408f92cd15aaef5d213f888b2f",
+    "bytes": 356371,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/master/generals-base.json"
+  },
+  {
+    "path": "assets/resources/data/master/generals-lore.json",
+    "sha": "51be6518a73dd290995836bd325046f6e2d31cce",
+    "bytes": 312358,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/master/generals-lore.json"
+  },
+  {
+    "path": "assets/resources/data/master/generals-stories.json",
+    "sha": "5a5e0b10109d6d0240b0069e7189d8f88bb8b9c4",
+    "bytes": 189675,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/master/generals-stories.json"
+  },
+  {
+    "path": "assets/resources/data/master/lore-id-aliases.json",
+    "sha": "d432c601dff83d31248247765f13e4121443b1b0",
+    "bytes": 859,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/master/lore-id-aliases.json"
+  },
+  {
+    "path": "assets/resources/data/master/sages.json",
+    "sha": "531523ab9f973c541413ec848c88e5660f1aabab",
+    "bytes": 1463,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/master/sages.json"
+  },
+  {
+    "path": "assets/resources/data/master/tactic-library.json",
+    "sha": "fa56595e63e8bbcbcc8b49cca0db5faecfaa9d74",
+    "bytes": 15975,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/master/tactic-library.json"
+  },
+  {
+    "path": "assets/resources/data/master/troop-definitions.json",
+    "sha": "db559f24763307fc46fec98eedc80bffe9a285ee",
+    "bytes": 164,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/master/troop-definitions.json"
+  },
+  {
+    "path": "assets/resources/data/master/ultimate-definitions.json",
+    "sha": "17df0d22c1415be24ff2b4494492b5ae72ad7081",
+    "bytes": 38651,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/master/ultimate-definitions.json"
+  },
+  {
+    "path": "assets/resources/data/mentor-support-cards.json",
+    "sha": "c1448fd0d2d11daf6c331f7204e59f36a1e2f0a5",
+    "bytes": 16351,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/mentor-support-cards.json"
+  },
+  {
+    "path": "assets/resources/data/npc-context-keys.json",
+    "sha": "69c8c64ebe47d14b292b319ff2bd9f36df160ede",
+    "bytes": 4407,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/npc-context-keys.json"
+  },
+  {
+    "path": "assets/resources/data/npc-friend-mentors.json",
+    "sha": "ae0348bb9943080e50625a78330ad9bc1b08d9e6",
+    "bytes": 488,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/npc-friend-mentors.json"
+  },
+  {
+    "path": "assets/resources/data/npc-persona-cards.json",
+    "sha": "f49140a4ea74542ad55d30293c6bdda157dad13f",
+    "bytes": 5991,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/npc-persona-cards.json"
+  },
+  {
+    "path": "assets/resources/data/numerical-config.json",
+    "sha": "c325bc10ec9240b549b4c424b5251ebd754cba59",
+    "bytes": 3580,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/numerical-config.json"
+  },
+  {
+    "path": "assets/resources/data/officer-tiers.json",
+    "sha": "be16997ee1ba2639678364b7f207d06f790aaa8b",
+    "bytes": 1248,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/officer-tiers.json"
+  },
+  {
+    "path": "assets/resources/data/person-registry.json",
+    "sha": "988202e5fb86beeca29c2dd923e906de6ab09fdf",
+    "bytes": 1420567,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/person-registry.json"
+  },
+  {
+    "path": "assets/resources/data/rarity-thresholds.json",
+    "sha": "e7c916ad246fcd7466409212774658af11b50862",
+    "bytes": 2745,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/rarity-thresholds.json"
+  },
+  {
+    "path": "assets/resources/data/rival-rosters.json",
+    "sha": "c47ddd0e9821b587a555763d0f2194dcf41d5940",
+    "bytes": 1745,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/rival-rosters.json"
+  },
+  {
+    "path": "assets/resources/data/sandtable-territories.json",
+    "sha": "541747c9212471b593a3e91c23b6b6fcfdc34631",
+    "bytes": 955,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/sandtable-territories.json"
+  },
+  {
+    "path": "assets/resources/data/scene-backgrounds.json",
+    "sha": "b35dfad94ca82986bfb4b5cfcfee2b0c9e4bf11e",
+    "bytes": 436,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/scene-backgrounds.json"
+  },
+  {
+    "path": "assets/resources/data/scene-tile-presets.json",
+    "sha": "afe9b4f957d75260abbe0d15ff0f7727b2926099",
+    "bytes": 381,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/scene-tile-presets.json"
+  },
+  {
+    "path": "assets/resources/data/season-modifiers.json",
+    "sha": "fbd9e9d7fa9e38c47a2555df28698389fac75947",
+    "bytes": 1122,
+    "content_status": "PRIOR_PARTIAL",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/season-modifiers.json"
+  },
+  {
+    "path": "assets/resources/data/skills.json",
+    "sha": "19a0122e22c75b6e8e3dab23e50f1f7d362c160a",
+    "bytes": 10006,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/skills.json"
+  },
+  {
+    "path": "assets/resources/data/support-cards.json",
+    "sha": "4f581bd220848cb39a4d985826649a20871e7ecf",
+    "bytes": 1913,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/support-cards.json"
+  },
+  {
+    "path": "assets/resources/data/tactic-counter-tags.json",
+    "sha": "23d92a939e99431eb0a2b49b3ce71de81fba215a",
+    "bytes": 1279,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/tactic-counter-tags.json"
+  },
+  {
+    "path": "assets/resources/data/teaching-spirit.provisional.json",
+    "sha": "3aca21d2932cf751225a26d28e9e447a32830a46",
+    "bytes": 353,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/teaching-spirit.provisional.json"
+  },
+  {
+    "path": "assets/resources/data/terrain.json",
+    "sha": "a46444a9c1a809e8b2c42f79480a489785ab6b4e",
+    "bytes": 517,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/terrain.json"
+  },
+  {
+    "path": "assets/resources/data/tile-buffs.json",
+    "sha": "318c68ffb10b37d2b07c09d97801c1add2e6f448",
+    "bytes": 479,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/tile-buffs.json"
+  },
+  {
+    "path": "assets/resources/data/troops.json",
+    "sha": "238ca2cdcab46a4756e7013b400fad919a2ca447",
+    "bytes": 739,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/troops.json"
+  },
+  {
+    "path": "assets/resources/data/ui-screen-backdrops.json",
+    "sha": "f7693a6367ee11bd79229e171bb45f16fbe17dc2",
+    "bytes": 840,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/ui-screen-backdrops.json"
+  },
+  {
+    "path": "assets/resources/data/uid-design-tokens.json",
+    "sha": "8507352045ca0a8b8cebddee5b9bf4d3ce1b0cfd",
+    "bytes": 171,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/uid-design-tokens.json"
+  },
+  {
+    "path": "assets/resources/data/vfx-effects.json",
+    "sha": "e20546aa34399f018d1f7e16177b49372e294600",
+    "bytes": 9677,
+    "content_status": "UNREAD_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/vfx-effects.json"
+  }
+]

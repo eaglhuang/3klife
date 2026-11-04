@@ -1,0 +1,15 @@
+{
+  "inventory_integrity": "PASS",
+  "source_files_verified": 43,
+  "typescript_entries": 852,
+  "test_filenames_not_run": 1068,
+  "gameplay_domains": 42,
+  "crosscutting_gates": 4,
+  "full_gameplay_acceptance_pass": 0,
+  "new_gameplay_tests_run": 0,
+  "code_read_status": {
+    "UNREAD": 773,
+    "SAMPLED_STATIC_NOT_FULL_AUDIT": 35,
+    "PRIOR_PARTIAL_EVIDENCE": 44
+  }
+}

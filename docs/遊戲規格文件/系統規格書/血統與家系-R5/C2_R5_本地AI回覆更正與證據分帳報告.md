@@ -143,12 +143,43 @@ node --experimental-transform-types --loader ./ts-resolver.mjs --test gameplay-p
 
 ---
 
-## 五、尚缺證據與待採內容清單
+## 五、全玩法第一階段盤點（`gameplay-inventory-20261104`）整合與未驗分母對帳
 
-### 5.1 來源與實作證據缺口
+針對固定快照 `96a83124094d3b2485bfb749ef37d567ad834559` 之《**3KLife 全玩法盤點第一階段**》（已收納於 `docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/`，對應 `doc_index_1035`、`doc_spec_0291`、`doc_spec_0292`），經本地 Node.js 實跑核驗 `SOURCE_MANIFEST.json` 43 份快照 SHA-256／Git blob SHA、852 筆 TS 清冊、1,068 筆測試檔名候選、309 筆規格 Markdown 與 56 筆 Data JSON（`inventory_integrity: PASS`），特將全倉分母與新取樣限制納入正式分帳：
+
+### 5.1 全倉行為域分母與閱讀狀態分帳
+- **42 個暫定玩法域（`G01–G42`）+ 4 個共同驗收關卡（`X01–X04`）**：
+  - `G01–G40` 為有對應原碼候選之行為域；`G41`（首次統一結局與家族榮譽）與 `G42`（主題賽季跨家族與祖地延續）為 R5 候選規格（本輪未確認正式 caller，不得由候選文件推論已實作）。
+  - **完整玩法驗收通過數：`0 / 42`**；本階段新增執行測試：`0`（既有 14 個原碼 characterization 探針僅覆蓋 11 個局部議題，不能換算為 14 或 11 個完整玩法域通過）。
+- **852 個 TypeScript 原碼檔案閱讀狀態**（`assets`: 835、`server`: 15、`shared`: 2）：
+  - `PRIOR_PARTIAL_EVIDENCE`（前包局部證據）：**44 檔**
+  - `SAMPLED_STATIC_NOT_FULL_AUDIT`（本輪新取樣靜態讀碼）：**35 檔**
+  - `UNREAD`（僅有 Git tree／檔名與 hash，未讀語義）：**773 檔**
+- **56 個 `assets/resources/data` JSON 與 1,068 個測試檔名候選**：
+  - 除既有 `season-modifiers` 局部證據外，其餘 JSON 尚未驗證 Catalog 完整性與真 consumer。
+  - 1,068 個 `*.test.ts/js/cjs` 為檔名候選（混含遊戲、UI、ATM、UCUF），本階段均標為 `NOT_RUN`。
+
+### 5.2 新取樣 35 檔靜態讀碼已確認之 7 項待核實限制
+以下為固定原碼明文註記或局部實作之待驗限制（不擴大宣稱為全系統缺功能，但不得在未驗前宣稱已完工）：
+1. **教官 ★5 突破（`MentorBreakthrough.ts` L8–10）**：「固有加成最高級」目前仍只有文字描述，尚須追查數值 Catalog 與實際計算 consumer。
+2. **精力疲勞失敗率曲線（`FatigueFailureRate.ts` L5–13）**：疲勞中段曲線標註為可逆暫定（風險段二次、危險段線性），不能因兩端點吻合即視為完整企劃公式已定案。
+3. **名士預言與占卜（`SageDivination.ts` L11–16）**：名士偏好權重 `3:1`、扭曲提示及名士等級提高準確率帶有暫定／未做註記，須核對後續接線。
+4. **領地內政偵查（`DomesticTasks.ts` L21–65）**：偵查任務規格本應產出情報，當前局部實作沿用黃金；且未指派武將走固定表、有指派才套用能力公式，兩條路徑須分別驗收。
+5. **幕府任務牆遠征經驗（`HallMissionSettlement.ts` L6–14）**：`Expedition` 類別未配置官職經驗映射而回傳 `null`，不可將所有派遣獎勵視為同一條已通過流程。
+6. **多時鐘正交邊界（`TournamentSeason.ts` L5–9）**：名將挑戰賽 14 日（7 日準備 + 7 日競賽）為獨立時鐘，不能與四季一年、20 季 Era、UTC+8 月卡／登入跨日或回合制趕路合併驗算。
+7. **戰場單挑回合上限（`BattleGeneralDuelFlow.ts` L10–14）**：單挑最多 50 回合屬原碼暫定保護上限，不代表正式戰鬥平衡已裁定。
+
+### 5.3 14 條優先跨系統待驗邊界（全部 `NOT_RUN`）
+詳見 [`all_gameplay_inventory_v1/跨系統待驗邊界.md`](file:///c:/Users/User/3KLife/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E8%A1%80%E7%B5%B1%E8%88%87%E5%AE%B6%E7%B3%BB-R5/all_gameplay_inventory_v1/%E8%B7%A8%E7%B3%BB%E7%B5%B1%E5%BE%85%E9%A9%97%E9%82%8A%E7%95%8C.md) (`doc_spec_0292`)，涵蓋：① 抽卡交易重進、② 出生跨資產原子性、③ 角色占用競爭、④ 戰場效果到勝敗、⑤ 戰果只結算一次、⑥ 俘虜回歸、⑦ 季末跨時鐘順序、⑧ 傭兵轉永久、⑨ 退役/死亡與傳承競爭、⑩ 物品與資源上限、⑪ 派遣→官職→權限→領地、⑫ 結局/世界更替與家族延續、⑬ 手動/自動路徑等價、⑭ 公開資訊防劇透界線。
+
+---
+
+## 六、尚缺證據與待採內容清單
+
+### 6.1 來源與實作證據缺口
 原始 alias／founder 契約、完整 catalog、歷史 runner／JSON、正式 consumer 及 `fixtureHash / ran / skip` 都要用相應原件或執行結果補足。17 項分帳涵蓋不同類型，不能全部改稱 17 項新決策，也不能用一份批准回覆宣告補件完成。[S2][S16]
 
-### 5.2 仍屬候選設計的內容
+### 6.2 仍屬候選設計的內容
 - 保留舊 $P$／$m$／年齡／休息基線或正式以 C2 取代的範圍與生效版本。
 - `childLUK` 親本合成與完整抽樣細式、`peakType` 完整配對表。
 - 三態效率、解鎖資格、共享預算、事件中斷與 `auto` 可觸發範圍。
@@ -160,7 +191,7 @@ node --experimental-transform-types --loader ./ts-resolver.mjs --test gameplay-p
 
 ---
 
-## 六、來源索引
+## 七、來源索引
 
 - **[S1]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/08_決策_衝突與擴充邊界.md` (`doc_spec_0237`)
 - **[S2]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/R5_待補契約問題清單_v3.md` (`doc_spec_0244`)
@@ -178,3 +209,4 @@ node --experimental-transform-types --loader ./ts-resolver.mjs --test gameplay-p
 - **[S14]** `assets/scripts/core/systems/NurtureSystem.ts`
 - **[S15]** `assets/scripts/core/services/LegacyService.ts`
 - **[S16]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/來源缺口與待決分帳.md` (`doc_spec_0227`)
+- **[S17]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/全玩法覆蓋清單.md` (`doc_spec_0291`) 與 `跨系統待驗邊界.md` (`doc_spec_0292`)

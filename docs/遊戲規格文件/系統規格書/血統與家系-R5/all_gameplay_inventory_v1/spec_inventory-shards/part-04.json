@@ -1,0 +1,78 @@
+[
+  {
+    "path": "docs/遊戲規格文件/討論來源/遊戲時間流逝與壽命機制.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "6ea37aae57ce9b933feadfcc2e38adb578d3fb16",
+    "candidate_domains": [
+      "G40"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/遊戲時間流逝與壽命機制.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/遊戲機制：精氣、大器、回流.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "ea37ad9125a0d436ff9f9864737e434fa7f00f98",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/遊戲機制：精氣、大器、回流.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/遊戲節奏：基因解鎖與視覺遮罩.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "8fdb90318a27aa9f06a6eb286331951ea1ab1b70",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/遊戲節奏：基因解鎖與視覺遮罩.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/遊戲系統：結婚生子與傳承.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "2284aa81e5956f43ec554d7db2c5cae1002c2eef",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/遊戲系統：結婚生子與傳承.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/運氣屬性加入爆發力公式.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "d8ccb2dd05e1793f22cc178a80a764c9a5bee0c7",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/運氣屬性加入爆發力公式.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/鏡像時空育才系統設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "1d067cb9b8a8c8760249510ad5c29e3bbbf4288e",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/鏡像時空育才系統設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/養成系統與教官來源定義.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "56033f1b5b1be6b3cbcf3fd14fbbb96a33d2b0fd",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/養成系統與教官來源定義.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源整併狀態.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "a1a212f06466d680508b5f78207fadbf91d7930d",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源整併狀態.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/設計參考/育成與戰鬥公式基準手冊.md",
+    "authority_layer": "REFERENCE_OR_AUDIT",
+    "blob_sha": "f8720e054ace4523fae75a319b5348709cb635d4",
+    "candidate_domains": [
+      "G05"
+    ],
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/設計參考/育成與戰鬥公式基準手冊.md"
+  }
+]

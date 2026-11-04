@@ -9,6 +9,8 @@
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
 | `doc_spec_0290` | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_本地AI回覆更正與證據分帳報告.md | 3KLife R5 本地 AI 回覆更正與證據分帳報告 |
+| `doc_spec_0291` | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/全玩法覆蓋清單.md | 3KLife 全玩法第一階段：分母與未驗缺口 |
+| `doc_spec_0292` | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/跨系統待驗邊界.md | 跨系統待驗邊界 |
 
 ## 索引類 (`doc_index`)
 
@@ -73,7 +75,7 @@
 | `doc_index_1032` | docs/遊戲規格文件/系統規格書/血統與家系-R5/README.md | R4／R5 文件與案例索引增補 v4 |
 | `doc_index_1033` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/README.md | 血統遺傳與全玩法文件補全工作包 |
 | `doc_index_1034` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/README.md | 工作包驗證說明 |
-| `doc_index_1035` | docs/cross-ref/code/battle.md | 代碼索引分片：Battle |
+| `doc_index_1035` | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/README.md | 3KLife 全玩法盤點第一階段 |
 | `doc_index_1036` | docs/cross-ref/code/core-shared.md | 代碼索引分片：Core 其他目錄與 Shared |
 | `doc_index_1037` | docs/cross-ref/code/core-systems-1.md | 代碼索引分片：Core Systems（上半，依檔名排序） |
 | `doc_index_1038` | docs/cross-ref/code/core-systems-2.md | 代碼索引分片：Core Systems（下半） |
@@ -84,3 +86,4 @@
 | `doc_index_1043` | docs/cross-ref/progress/d2-d3-pending-ui.md | 進度索引分片：D-2 待建 UI Spec／D-3 待定 Contract |
 | `doc_index_1044` | docs/cross-ref/progress/spec-audit-lifespan.md | 規格逐條比對：武將壽命系統.md (doc_spec_0018) |
 | `doc_index_1045` | docs/cross-ref/progress/spec-audit-officer.md | 規格逐條比對：官職系統.md (doc_spec_0014) |
+| `doc_index_1046` | docs/cross-ref/code/battle.md | 代碼索引分片：Battle |

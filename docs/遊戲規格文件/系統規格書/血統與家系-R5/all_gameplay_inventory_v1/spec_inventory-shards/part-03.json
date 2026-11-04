@@ -1,0 +1,845 @@
+[
+  {
+    "path": "docs/遊戲規格文件/討論來源/20260415/想問以目前地端AI 的開源模型 是否可以達到做一個有自己思維判斷的, 遊戲中NPC 行為決策模式呢....md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "949df743bf10e72cde5664e1db395fbaef407bbd",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/20260415/想問以目前地端AI 的開源模型 是否可以達到做一個有自己思維判斷的, 遊戲中NPC 行為決策模式呢....md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/20260415/推薦使用 ChromaDB（地端極輕量向量庫）+ llama.cpp（支援超低顯存運行）。 ==_....md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "83225578bfcb5b837c3533cc9a6cff878230a0ea",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/20260415/推薦使用 ChromaDB（地端極輕量向量庫）+ llama.cpp（支援超低顯存運行）。 ==_....md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/20260415/智慧 NPC 技術架構與風險.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "45ff413c908ca0bab03b872fa614578bdcf783ed",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/20260415/智慧 NPC 技術架構與風險.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/MVP 遊戲驗證規格書.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "5e7a6c76b7ef4065154704b28da2147ddb87f153",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/MVP 遊戲驗證規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/三國遊戲模式串接與循環.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "6b568f40fef81cadda9ad58c8cd2634b6170a4e6",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/三國遊戲模式串接與循環.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/五色因子與爆發力公式設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "0c622233476af4bbc1bdbec2c9e5c7a83d93d997",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/五色因子與爆發力公式設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/傭兵系統規格書：人才經營進化.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "311a852ee45f68ff62a6b09742d334069eb39c86",
+    "candidate_domains": [
+      "G11"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/傭兵系統規格書：人才經營進化.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/傭兵系統規格書：試用轉永久.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "bf109da0bc63153eab144be432436fcd79af0cea",
+    "candidate_domains": [
+      "G11"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/傭兵系統規格書：試用轉永久.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/傭兵職能分流與傳承機制.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "7edd9626e5c4741fabafcc0b5ccacf967a1c9df2",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/傭兵職能分流與傳承機制.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/傭兵養成與留存系統設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "96a4473a262890db2763750226c69600a395a38a",
+    "candidate_domains": [
+      "G19"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/傭兵養成與留存系統設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/名士預言：血統模擬器新玩法.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "5f41158a6eadadb98d17df7725c8fe6816782bd0",
+    "candidate_domains": [
+      "G10"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/名士預言：血統模擬器新玩法.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/名將時空保值制：玩家導向設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "df6e298e0f6bc610624d9303b39cdc30356e4630",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/名將時空保值制：玩家導向設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/名將虛擬祖先生成器規格.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "f8a2a2534133de9769652e4b5fe7c21146b1e012",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/名將虛擬祖先生成器規格.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/名將血統模擬與祖輩推演.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "378c514e587275e1b5876b50085585c47b159a0a",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/名將血統模擬與祖輩推演.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/因子血統論系統規格書.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "a73ca7e6f1b6748e1f7ca80c6ba85dabd314fe8e",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/因子血統論系統規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/子嗣系統規格書：三國傳承.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "33a313515551419ea197ebb06fd77bdf1cd2dd70",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/子嗣系統規格書：三國傳承.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/新手開場/史實校正與因子標籤清單5.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "082d72b8d0dafd1128bc3567bad5af02fd0f68ba",
+    "candidate_domains": [
+      "G01"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/新手開場/史實校正與因子標籤清單5.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/新手開場/懷舊像素轉場的視覺演繹4.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "b376444d4b16b61a11249c54a310408f0070fd97",
+    "candidate_domains": [
+      "G01"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/新手開場/懷舊像素轉場的視覺演繹4.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/新手開場/懷舊漫畫 Meta 開場設計3.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "45f6f0275a7d4171b9cf0716f834e40b0a2baf8a",
+    "candidate_domains": [
+      "G01"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/新手開場/懷舊漫畫 Meta 開場設計3.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/新手開場/支援紅顏現代化設計草圖6.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "ef441b6b0c207d61d4b0711b914fbb54a56e34dc",
+    "candidate_domains": [
+      "G01"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/新手開場/支援紅顏現代化設計草圖6.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/新手開場/新手名將開局與付費引導設計1.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "602876017dc103439c9f05f6bab9b1bca80a4ad7",
+    "candidate_domains": [
+      "G01"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/新手開場/新手名將開局與付費引導設計1.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/新手開場/新手引導與商業化開發規格書8.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "570d596f9f5e4a212182e4f66253b02fbd29cc59",
+    "candidate_domains": [
+      "G01"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/新手開場/新手引導與商業化開發規格書8.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/新手開場/遊戲流程優化與付費設計7.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "6cc3fbad9e6311eb80fdac35e57f3bedc62900b3",
+    "candidate_domains": [
+      "G01"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/新手開場/遊戲流程優化與付費設計7.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/新手開場/遊戲開場信件與武將對話設計2.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "b37269175d244fa376f4d3545b580597d1ea5a06",
+    "candidate_domains": [
+      "G01"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/新手開場/遊戲開場信件與武將對話設計2.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/AAA 級遊戲畫面視覺描述指令.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "d825d6b8347aa690eb2b38a36b8e499c0536b8d5",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/AAA 級遊戲畫面視覺描述指令.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/AI 繪圖指令：三國冷色調戰場.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "92cedf8f9ee9dfeaaea4cc334afbc934ac5cd927",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/AI 繪圖指令：三國冷色調戰場.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/三國傳承 UI 布局說明書.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "923345182020cd1cd6af25b1d9bba2a3d3fad38f",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/三國傳承 UI 布局說明書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/三國傳承：賽馬娘養成融合提案.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "110e9594aea81a10ba0a0de3e412bdea4ba65b21",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/三國傳承：賽馬娘養成融合提案.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/三國傳承：軍師演武模式提案.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "10c83686699573a3cf2fe188c6e5b3df00c0448e",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/三國傳承：軍師演武模式提案.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/夜襲戰場視覺規格提案.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "0a7d69fca0fe5e943744377689f5c0841fcc7ff8",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/夜襲戰場視覺規格提案.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/我的想法是這樣的挑戰關卡必須是連環破 _ 例如要擊敗曹操 就必須先過 典韋 許褚 兩關, 第三關才....md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "3f1984e6fe1767365bf2f934bf43fefb881ea9d6",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/我的想法是這樣的挑戰關卡必須是連環破 _ 例如要擊敗曹操 就必須先過 典韋 許褚 兩關, 第三關才....md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/戰場互動矩陣與養成動力.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "c04711aac3181c527876756f4b077f45f1643042",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/戰場互動矩陣與養成動力.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/戰場反制矩陣：培育驅動玩法.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "f6ef7f4549272f4064cded8bed7251805af6551d",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/戰場反制矩陣：培育驅動玩法.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/戰鬥畫面 AI 繪圖指令調整.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "0c1db18af8aaf9ecfd54a803af110072101d788c",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/戰鬥畫面 AI 繪圖指令調整.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/模組化戰場系統開發策略.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "7dd52125e2f12f19c953619201068a5066ffd32e",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/模組化戰場系統開發策略.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/策略戰場視覺與玩法融合設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "ac995441110858ad1c38390ca87244f223061ba2",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/策略戰場視覺與玩法融合設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/策略遊戲視覺與系統設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "2d7db0fb07f59cfb65693450bc4630760ba37049",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/策略遊戲視覺與系統設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/策略養成遊戲平衡與營運探討.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "76c11e151ad4080008c04cfc0281e9884854b602",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/策略養成遊戲平衡與營運探討.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/賽馬娘機制三國化轉化.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "7974230eccc4daa13ca53b32e6bbfd9cfcef0d89",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/賽馬娘機制三國化轉化.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/遊戲戰術設計與視覺規格.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "8a00fef9e3e7f964d9bf3bc0bbec3bce4611cf40",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/遊戲戰術設計與視覺規格.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/遊戲機制優化與戰略閉環.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "5b53d90eda2635d7cfe78e5b7a49825a9f78fd46",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/遊戲機制優化與戰略閉環.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/遊戲美術風格與市場區隔策略.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "703daa7f84c747e4012cc6f17a27a835b2d06ce6",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/遊戲美術風格與市場區隔策略.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/遊戲視覺構圖與攝影機規格.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "31b65a4c054fdc7a7606c107cb1426db11fa84dd",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/遊戲視覺構圖與攝影機規格.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/遊戲設計與市場分析建議.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "612312f370920c7a8a68a414415c72a064399e33",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/遊戲設計與市場分析建議.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/遊戲開場設計：傳承與養成.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "6cfc573bf460a309b2368fd60116605a6d16d1cf",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/遊戲開場設計：傳承與養成.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/馬娘養成機制三國化設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "8f2bcb6bea99d28d319bd884612364eb22ec6a14",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/更舊的討論/馬娘養成機制三國化設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/SLG 遊戲養成與商業化討論.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "32b2154c730bb8653c2b16160941c90a33657e82",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/SLG 遊戲養成與商業化討論.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/三國傳承：賽馬娘養成融合提案.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "c28cfcd39f265acdfcce0700ff22ca2dd91fb09d",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/三國傳承：賽馬娘養成融合提案.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/三國傳承：遊戲設計大綱.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "4d97c0714695fe4f5e67b5f83952af096ee8bbaa",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/三國傳承：遊戲設計大綱.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/三國武將養成與血統遺傳.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "4c307292e3befe0e609767f5fa64f3a685208a05",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/三國武將養成與血統遺傳.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/三國武將養成與遺傳系統設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "fae87af560794c2d0fdd9da001a133d3ab56d0f3",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/三國武將養成與遺傳系統設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/兵符數值設計與平衡策略.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "d2688ce67024f302d83aea7e9d9faa8196cc8861",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/兵符數值設計與平衡策略.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/兵符養成與AI委任機制.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "5517daf21c528964ad782b2c3aab03a84ceccf9a",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/兵符養成與AI委任機制.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/名將挑戰賽：張飛盃賽制設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "d63d5da81542b9226a7703316b9f1ff2a9405791",
+    "candidate_domains": [
+      "G35"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/名將挑戰賽：張飛盃賽制設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/幕府大廳 UI 設計與優化.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "ddc8d86c10ceff931fc159f4180eb3ae13760ab0",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/幕府大廳 UI 設計與優化.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/廢除部署點數設計討論.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "7628cac1e049e008f4f0b0cc3c884cd054e4fdb1",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/廢除部署點數設計討論.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/戰場策略與棋盤格玩法融合.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "4768b09f2c23fe040264db97f6c2eb5195ed66c8",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/戰場策略與棋盤格玩法融合.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/戰棋遊戲的武將傳承與繁衍.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "b220c760032468c414c05ec0cab8a625f1f484aa",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/戰棋遊戲的武將傳承與繁衍.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/戰術遊戲關卡設計規格書.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "bcc0787b1ac037768603ad52f8b0330f7bc662e8",
+    "candidate_domains": [
+      "G25",
+      "G33"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/戰術遊戲關卡設計規格書.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/打造三國生活感武將系統.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "b538666b31e7634d6fea0755dbcd1add75ee2aab",
+    "candidate_domains": [
+      "G02"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/打造三國生活感武將系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/武將血統繼承與養成系統綱要.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "7a61238005f418356945b36180a2de33d14d9a5c",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/武將血統繼承與養成系統綱要.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/結合玩家日誌的動態敘事.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "6a96696ee54a95048100345067a7dddb74b9cb30",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/結合玩家日誌的動態敘事.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/虎符系統借鑑賽馬娘設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "f5fa5bcb812b0a47ca4f567ebae71bc5e93095e0",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/虎符系統借鑑賽馬娘設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/虎符系統平衡與養成策略.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "870973c57f173c454445765da8c471c4f6b38d5f",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/虎符系統平衡與養成策略.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/虎符系統設計與商業化探討.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "fafe6dddcd2ef99f89776052e26b0169043d3d19",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/虎符系統設計與商業化探討.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/許願商城 UI 設計提案.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "8e5f3e92b2c3ee29b5ac0656f349b7bde38938f5",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/許願商城 UI 設計提案.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/賽馬娘式轉蛋系統平衡規劃.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "7b2ec084afd923d2670db0cc407b8adabcea02c4",
+    "candidate_domains": [
+      "G18"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/賽馬娘式轉蛋系統平衡規劃.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/輕量化動態大廳設計優化.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "3cde398f7c36dbda0b367f8495dff93ee7ccb74f",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/輕量化動態大廳設計優化.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/遊戲商城時間換價值設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "433212edf2f51d6423173e1594c750441f6295a9",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/遊戲商城時間換價值設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/遊戲大廳世界地圖設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "e0595aa20ca826eea8eb29e2208c3f720a38c48c",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/遊戲大廳世界地圖設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/遊戲大廳氛圍替換系統.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "5c6756740a0fd9f30f33415a9c114b02b9937115",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/遊戲大廳氛圍替換系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/遊戲玩法：幕府議事廳設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "256d090c966e41af658ed13edb2dd3ab8639c070",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/遊戲玩法：幕府議事廳設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/遊戲系統、玩家與行銷分析.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "24aa696ff10998531676283f495ffd4093728372",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/遊戲系統、玩家與行銷分析.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/遊戲設計規格書：三國傳承.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "f5cb43208f0e5565774f22fd4fd0341e1a66aba3",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/遊戲設計規格書：三國傳承.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/遊戲資源管道與商業化設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "e8a6539fe17874285102f20f86ed48ac79daa224",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/遊戲資源管道與商業化設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/離線互動與武將人性化設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "9e36dd6f9c433c977cf278c3ac44dc95ea8f20df",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/離線互動與武將人性化設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/革命幕府大廳 UI 與美術設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "09c8f10c793d936f4c3a925c4260a5c73a9e3271",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/革命幕府大廳 UI 與美術設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/最早的討論/養成遊戲的遺憾與挑戰設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "f35e228443fbb68954fbf91361dddd7b2e251301",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/最早的討論/養成遊戲的遺憾與挑戰設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/武將數據結構規範與 AI 使用.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "1c8165db4e10656f36b37c05b4af124a2152df40",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/武將數據結構規範與 AI 使用.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/名將傳承的心理門檻與解決方案.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "e18fa382e922a96cb17c29dd13947ac753fea606",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/比較舊的/名將傳承的心理門檻與解決方案.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/名將轉身與子嗣盲盒雙軌制.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "c6f1d9fee57c35de664eb344824fe6819e1b7a3b",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/比較舊的/名將轉身與子嗣盲盒雙軌制.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/策略養成遊戲平衡機制探討.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "a0b440b2b836b525c854beed9255cda000882995",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/比較舊的/策略養成遊戲平衡機制探討.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/賽馬娘機制轉化三國戰場.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "1e3a6775e4c0d32880925acb27f8a48d6bb88ad4",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/比較舊的/賽馬娘機制轉化三國戰場.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/遊戲時間與壽命機制改良.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "41c8110d56025750a8fb4b34d439924768447ca6",
+    "candidate_domains": [
+      "G40"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/比較舊的/遊戲時間與壽命機制改良.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/遊戲機制優化與策略建議.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "eb400e1f7841301945be3b7946340e7246defb62",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/比較舊的/遊戲機制優化與策略建議.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/遊戲機制推演與玩家歷程.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "392fd600dc99a1c13045ea22e460d906ab037c01",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/比較舊的/遊戲機制推演與玩家歷程.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/遊戲系統設計：運氣、刷寶、轉蛋優化.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "c174c8e9acbea75e30428216656f62b88a88715c",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/比較舊的/遊戲系統設計：運氣、刷寶、轉蛋優化.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/遊戲經濟循環與女性角色設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "b08f22965b6bdfe867276b6aff241da2db7d5865",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/比較舊的/遊戲經濟循環與女性角色設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/關卡設計與美術挑戰建議.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "91606780a4fd3dcc306b0e8d5729a5a4fa0f6bd3",
+    "candidate_domains": [
+      "G25",
+      "G33"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/比較舊的/關卡設計與美術挑戰建議.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/養成循環與營收節奏探討.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "4631f7b4a57deda86bf2159a07455a7a0b88049a",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/比較舊的/養成循環與營收節奏探討.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/精力系統優化建議.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "b3533723eb66cf768ceb20ecd3ce4af4f5ff393d",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/精力系統優化建議.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/虛擬祖輩補完血統系統.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "318b6a6e826c5cfc7f1a0aac201c28dcc9ddebc8",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/虛擬祖輩補完血統系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/賽馬娘式因子與戰法系統.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "d0b337cc864bc95f89a76166e08f0292ab080e51",
+    "candidate_domains": [
+      "G29",
+      "G32"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/賽馬娘式因子與戰法系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/賽馬娘模式：平行實體優缺點.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "006dff34a601a72f67d2ffd5c4d801ce4a09374a",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/賽馬娘模式：平行實體優缺點.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/賽馬娘與三國傳承因子比較.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "0bb521d440b680adb1f905d5bef91ffd5059dbfa",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/賽馬娘與三國傳承因子比較.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/趙雲分身與神聖趙雲包裝.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "69e3bc3136f4370b3ac36cae33d2c84698377cc4",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/趙雲分身與神聖趙雲包裝.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/趙雲血統繁殖倫理探討.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "395384627b40bb96de41ea617230b41381b12d09",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/趙雲血統繁殖倫理探討.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/轉職與宿命系統設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "192f8cc3ad8fdad3303d1e0f518205f1153d16ba",
+    "candidate_domains": [
+      "G09"
+    ],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/轉職與宿命系統設計.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/轉蛋與戰場武將處置系統.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "da2d44a40754d44766d45f17ae369835056212a8",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/轉蛋與戰場武將處置系統.md"
+  },
+  {
+    "path": "docs/遊戲規格文件/討論來源/逐步開鎖系統的設計.md",
+    "authority_layer": "HISTORICAL_DISCUSSION",
+    "blob_sha": "cfa70dd72da48166fd5f1df44e70a88b0b55f6e9",
+    "candidate_domains": [],
+    "read_status": "UNREAD",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/討論來源/逐步開鎖系統的設計.md"
+  }
+]
