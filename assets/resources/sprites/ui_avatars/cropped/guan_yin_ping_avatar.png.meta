@@ -2,7 +2,7 @@
   "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "65b2cc2d-1c2c-4bda-8c8a-429b09cc8dd8",
+  "uuid": "190248b1-c1c0-4e3e-b722-681a5dcba32f",
   "files": [
     ".json",
     ".png"
@@ -10,7 +10,7 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "65b2cc2d-1c2c-4bda-8c8a-429b09cc8dd8@6c48a",
+      "uuid": "190248b1-c1c0-4e3e-b722-681a5dcba32f@6c48a",
       "displayName": "guan_yin_ping_avatar",
       "id": "6c48a",
       "name": "texture",
@@ -22,7 +22,7 @@
         "mipfilter": "none",
         "anisotropy": 0,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "65b2cc2d-1c2c-4bda-8c8a-429b09cc8dd8",
+        "imageUuidOrDatabaseUri": "190248b1-c1c0-4e3e-b722-681a5dcba32f",
         "visible": false
       },
       "ver": "1.0.22",
@@ -37,6 +37,6 @@
     "type": "texture",
     "fixAlphaTransparencyArtifacts": false,
     "hasAlpha": true,
-    "redirect": "65b2cc2d-1c2c-4bda-8c8a-429b09cc8dd8@6c48a"
+    "redirect": "190248b1-c1c0-4e3e-b722-681a5dcba32f@6c48a"
   }
 }

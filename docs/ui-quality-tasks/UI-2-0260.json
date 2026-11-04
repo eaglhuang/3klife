@@ -1,0 +1,67 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1450",
+      "id": "UI-2-0260",
+      "title": "關銀屏名將二次元立繪與頭像重繪",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-11-04",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-11-04T21:44:16+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依照使用者回饋，重繪既有偏寫實的關銀屏立繪，改採趙雲、關羽、張飛基準的精緻二次元幻想手繪風，提升女性角色面容美感及辨識度，並覆蓋正式立繪與頭像資源。",
+      "related": [
+        "UI-2-0258"
+      ],
+      "depends": [],
+      "acceptance": [
+        "透明背景512×768 RGBA立繪",
+        "正式與列表頭像均為256×256 RGBA",
+        "reviewed square crop 經125px檢視",
+        "蜀綠為基底，臉部與髮型設計美麗且具辨識度",
+        "與趙雲、關羽、張飛同級精緻二次元幻想手繪風",
+        "Cocos PNG metadata UUID唯一",
+        "單人avatar verify通過",
+        "GeneralList/GeneralDetail canonical 路徑正確"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/guan_yin_ping_portrait.png",
+        "assets/resources/sprites/generals/avatars/guan_yin_ping_avatar.png",
+        "assets/resources/sprites/ui_avatars/cropped/guan_yin_ping_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger.md"
+      ],
+      "notes": "2026-11-04 | 狀態: done | 驗證: 512×768 RGBA；雙頭像256×256；reviewed 158×158 crop 已經125px檢視；單人 avatar verify 通過；Cocos AssetDB refresh=200 且 assets imported=true、invalid=false；GeneralList/GeneralDetail canonical path verified | 變更: 依名將二次元風格重繪關銀屏並更新遊戲立繪與頭像 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}
