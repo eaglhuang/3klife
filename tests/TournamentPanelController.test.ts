@@ -50,6 +50,9 @@ export function createTournamentPanelControllerSuite(): TestSuite {
         assert.isTrue(!view.enabled.btnPlay && view.enabled.btnRegister);
         assert.isTrue(!view.actives.trnResultLabel);
         assert.isTrue(panel.register());
+        const regLines = panel.message.split('\n');
+        assert.equals('第 1 屆【赤壁盃】正式開幕！地形：水域、天氣：大風', regLines[0]);
+        assert.equals('情報：本季 BOSS【連環戰船】弱點——火攻、遠射！', regLines[1]);
         view = panel.getFlowView();
         assert.equals('出戰：甲、乙（戰力 ' + view.texts.trnTeamLabel.split('戰力 ')[1], view.texts.trnTeamLabel);
         assert.equals('重新報名', view.texts.btnRegisterLabel);
@@ -63,6 +66,7 @@ export function createTournamentPanelControllerSuite(): TestSuite {
         clock.now = 7 * D;
         assert.equals('今日剩 5 次（免費 1 次）', panel.getFlowView().texts.trnEntriesLabel);
         assert.isTrue(panel.play());
+        assert.isTrue(/^你的 \S+ vs 對手 對手——五戰三勝，一決高下！/.test(panel.message));
         let view = panel.getFlowView();
         assert.equals('今日剩 4 次（每次 30 金）', view.texts.trnEntriesLabel);
         assert.equals('參戰（30 金）', view.texts.btnPlayLabel);
