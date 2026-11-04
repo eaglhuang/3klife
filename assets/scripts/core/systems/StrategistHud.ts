@@ -81,6 +81,21 @@ export function buildStrategistHudSummary(input: StrategistHudInput): Strategist
     };
 }
 
+/**
+ * 軍師 HUD 的戰場日誌句（PROG-2-1744，暫定）：戰場尚無 HUD 欄位節點，先在回合開始寫進戰場日誌。
+ * 只列有內容的欄位（危害、物件、回收、缺口），四欄都是預設空值時回傳空字串，不寫日誌。
+ * 例：「軍師：危害 火場延燒｜營帳：存活 2｜回收 石材 3｜缺少抗混亂」
+ */
+export function strategistHudLogLine(input: StrategistHudInput): string {
+    const summary = buildStrategistHudSummary(input);
+    const parts: string[] = [];
+    if (input.hazardsThisTurn.length > 0) parts.push(`危害 ${summary.themeHazard}`);
+    if (input.interactiveObjects.length > 0) parts.push(summary.interactiveObjectStatus.split('\n').join('；'));
+    if ((Object.keys(SALVAGE_LABEL) as (keyof SalvageTotals)[]).some((key) => input.salvage[key] > 0)) parts.push(`回收 ${summary.stageSalvageSummary}`);
+    if (input.missingCounters.length > 0) parts.push(summary.recommendedLoadoutGap);
+    return parts.length > 0 ? `軍師：${parts.join('｜')}` : '';
+}
+
 /** 依物件類別列出各狀態數量，例如「營帳：存活 2、已回收 1」；沒有的類別不列。 */
 function interactiveObjectStatusOf(objects: readonly InteractiveObjectView[]): string {
     if (objects.length === 0) return '無互動物件';
