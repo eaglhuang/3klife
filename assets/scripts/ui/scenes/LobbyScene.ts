@@ -1700,7 +1700,7 @@ export class LobbyScene extends Component {
         this._applyHallThemeFrame(resolveHallTheme(hub.Current_Theme, HALL_EMPTY_THEME_CATALOG));
         this._hallBoard = new HallBoardPanelController({
             hub: () => hub,
-            player: () => hallPlayerOf(services().session.officerUnlocks),
+            player: () => hallPlayerOf(services().session.officerUnlocks, services().session.intel),
             assignments: () => services().session.hallAssignments,
             leadGeneralId: () => services().session.leadGeneralId,
             assign: (taskId, generalId) => this._dispatchHallTask(taskId, generalId),
@@ -2356,7 +2356,7 @@ export class LobbyScene extends Component {
         const session = services().session;
         const general = session.roster.find((g) => g.id === generalId);
         const power = general ? estimateSortiePower(general) : 0;
-        const result = await session.dispatchHallTask(task, board, hallPlayerOf(session.officerUnlocks), generalId, power);
+        const result = await session.dispatchHallTask(task, board, hallPlayerOf(session.officerUnlocks, session.intel), generalId, power);
         if (!result.ok) {
             return false;
         }
