@@ -8602,5 +8602,17 @@
     "path": "docs/agent-briefs/tasks/UI/UI-2-0254.md",
     "title": "[UI-2-0254] 黃月英武將 ID 正式立繪與頭像路徑對齊",
     "category": "task"
+  },
+  {
+    "id": "doc_task_1445",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0255.md",
+    "title": "[UI-2-0255] 張春華魏藍素雅女文官立繪與列表頭像",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1446",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0256.md",
+    "title": "[UI-2-0256] 辛憲英魏藍玉金女謀士立繪與列表頭像",
+    "category": "task"
   }
 ]

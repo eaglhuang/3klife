@@ -219,3 +219,5 @@ manifest: ../ui-quality-todo.json
 | UI-2-0252 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0252](./tasks/UI-2-0252.md) |
 | UI-2-0253 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0253](./tasks/UI-2-0253.md) |
 | UI-2-0254 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0254](./tasks/UI-2-0254.md) |
+| UI-2-0255 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0255](./tasks/UI-2-0255.md) |
+| UI-2-0256 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0256](./tasks/UI-2-0256.md) |

@@ -3164,7 +3164,7 @@
         "cropped avatar",
         "crop alias and task record"
       ],
-      "notes": "2026-10-30 | 狀態: done | 驗證: reviewed crop、全量頭像驗證通過、7458 refresh success | 變更: 對齊黃月英canonical ID立繪與雙頭像路徑，保留原圖 | 阻塞: none",
+      "notes": "2026-11-04 | 狀態: done | 驗證: reviewed crop、全量頭像驗證通過；canonical 立繪與雙頭像 meta 已存在 | 變更: 對齊黃月英canonical ID立繪與雙頭像路徑，保留原圖 | 阻塞: none",
       "brief": {
         "style": "classic",
         "label": "",
@@ -3193,7 +3193,7 @@
       "title": "張春華魏藍素雅女文官立繪與列表頭像",
       "owner": "codex-gpt-6.1-sol",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "art",
       "phase": "M6",
       "created": "2026-10-30",
@@ -3210,7 +3210,8 @@
         "透明背景 512×768 RGBA 正式立繪",
         "正式與列表頭像均為 256×256 RGBA",
         "reviewed crop 並經縮圖檢查",
-        "全量 avatar verify 通過並刷新7458 Asset DB",
+        "全量 avatar verify 通過",
+        "canonical ID 路徑具備有效 Cocos PNG metadata",
         "色票符合魏國藍色基底且造型與既有女角可辨識"
       ],
       "deliverables": [
@@ -3220,7 +3221,65 @@
         "reviewed crop",
         "palette ledger"
       ],
-      "notes": "2026-10-30 | 狀態: in-progress | 驗證: pending | 變更: 製作張春華差異化魏藍立繪及列表頭像 | 阻塞: none",
+      "notes": "2026-11-04 | 狀態: done | 驗證: 512×768 RGBA；雙頭像256×256；reviewed crop；全量驗證210成功/0失敗；兩份頭像meta格式正確且UUID唯一 | 變更: 完成張春華魏藍立繪、雙頭像與Cocos metadata | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_1446",
+      "id": "UI-2-0256",
+      "title": "辛憲英魏藍玉金女謀士立繪與列表頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-11-04",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-11-04T20:20:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "製作辛憲英差異化魏藍、淡玉綠與舊金女謀士立繪與列表頭像，臉型、髮髻及髮飾與張春華清楚區隔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "透明背景 512×768 RGBA 正式立繪",
+        "正式與列表頭像均為 256×256 RGBA",
+        "reviewed square crop 並經 125px 檢視",
+        "Cocos PNG metadata 有效且 UUID 唯一",
+        "全量 avatar verify 通過",
+        "GeneralList 與 GeneralDetail 的 canonical 資產路徑對應正確",
+        "魏藍基底及造型與既有角色可辨識"
+      ],
+      "deliverables": [
+        "portrait",
+        "formal avatar",
+        "cropped avatar",
+        "reviewed crop",
+        "palette ledger"
+      ],
+      "notes": "2026-11-04 | 狀態: done | 驗證: 512×768 RGBA；雙頭像256×256；reviewed 180×180 crop；全量驗證；三份 assets 有效 metadata；GeneralList/GeneralDetail canonical 路徑核對 | 變更: 完成辛憲英魏藍玉金立繪與列表頭像 | 阻塞: none",
       "brief": {
         "style": "classic",
         "label": "",

@@ -1,0 +1,50 @@
+{
+  "ver": "1.0.8",
+  "importer": "image",
+  "imported": true,
+  "uuid": "333a3977-6d80-4b52-a5e6-d9be9cd39298",
+  "displayName": "",
+  "id": "",
+  "name": "zhang_chun_hua_portrait",
+  "userData": {
+    "type": "sprite-frame"
+  },
+  "readonly": false,
+  "subMetas": {
+    "f9941": {
+      "ver": "2.0.3",
+      "importer": "sprite-frame",
+      "imported": true,
+      "uuid": "e5f5d3db-aeab-462b-be42-2135d6bed7eb",
+      "displayName": "",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "pixelsPerUnit": 100,
+        "extrude": 1,
+        "meshType": 0,
+        "pivot": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "originalSize": {
+          "width": 512,
+          "height": 768
+        },
+        "trimSize": {
+          "width": 512,
+          "height": 768
+        },
+        "trimOffset": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "readonly": false
+    }
+  }
+}
