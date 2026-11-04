@@ -41,6 +41,7 @@ import type { DynamicRelation } from '../systems/KinRelation';
 import { normalizeFemaleSystemState, type FemaleSystemState } from '../systems/FemaleSystemState';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { SAVE_VERSION_LATEST, saveVersionOf } from '../storage/SaveVersion';
+import { migratePlayerSaveRaw } from '../storage/PlayerSaveMigrations';
 import { normalizeYearAgingEvents } from '../systems/YearReport';
 import type { AgingEvent } from '../systems/GeneralAging';
 import { mapSnapshotToSixTables } from './PlayerSaveTableRows';
@@ -503,7 +504,8 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
     if (!raw || typeof raw !== 'object') {
         throw new Error('[PlayerSaveService] 存檔格式錯誤：不是物件');
     }
-    const snapshot = raw as Partial<PlayerSaveSnapshot>;
+    // 熱更新規格 §二.1：舊版存檔先依序遷移到最新版號再驗證（PROG-2-1720）
+    const snapshot = migratePlayerSaveRaw(raw as Record<string, unknown>) as Partial<PlayerSaveSnapshot>;
     if (snapshot.schemaVersion !== PLAYER_SAVE_SCHEMA_VERSION) {
         throw new Error(`[PlayerSaveService] 不支援的存檔版本: ${String(snapshot.schemaVersion)}`);
     }
