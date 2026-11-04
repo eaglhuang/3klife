@@ -20,6 +20,31 @@ import {
 } from '../../core/systems/TournamentLocal';
 import type { TigerTallyCard } from '../../core/models/TigerTallyCard';
 import { tallyBossMatch, tallyBossMatchText } from '../../core/systems/TallyBossTags';
+import { monthlyScenarioOf, MONTHLY_REQUIRED_APTITUDE_RANKS, type MonthlyScenario } from '../../core/systems/MonthlyScenarioCup';
+import { STAT_LABELS } from './NurtureFlowController';
+
+/** 月度場景賽規則用到的兵種碼（generals troopAptitude）與戰法標籤中文；暫定，待企劃定版（PROG-2-1717） */
+export const MONTHLY_TROOP_LABEL: Record<string, string> = {
+    INFANTRY: '步兵', ARCHER: '弓兵', CAVALRY: '騎兵', NAVY: '水軍', SIEGE: '器械', ENGINEER: '工兵',
+};
+export const MONTHLY_TACTIC_TAG_LABEL: Record<string, string> = { cavalry: '騎兵', fire: '火攻' };
+
+/** 月度場景賽規則 → 一句中文 */
+export function monthlyScenarioRuleText(rule: MonthlyScenario['rule']): string {
+    const troops = (codes: readonly string[]): string => codes.map((c) => MONTHLY_TROOP_LABEL[c] ?? c).join('／');
+    switch (rule.kind) {
+        case 'ban-tactic-tag': return `禁用${MONTHLY_TACTIC_TAG_LABEL[rule.tag] ?? rule.tag}戰法`;
+        case 'require-aptitude': return `需${troops(rule.aptitudes)}適性 ${MONTHLY_REQUIRED_APTITUDE_RANKS[MONTHLY_REQUIRED_APTITUDE_RANKS.length - 1]} 以上`;
+        case 'tactic-power': return `${STAT_LABELS[rule.stat] ?? rule.stat}戰法威力 ×${rule.multiplier}`;
+        case 'aptitude-bonus': return `${troops([rule.troop])} ${rule.rank} 適性地形加成 ×${rule.multiplier}`;
+    }
+}
+
+/** 彈窗的本月場景賽列；月份取裝置當地月份（暫定：規格未指明時區） */
+export function monthlyScenarioLine(nowMs: number): string {
+    const scenario = monthlyScenarioOf(new Date(nowMs).getMonth() + 1);
+    return scenario ? `本月場景賽：${scenario.name}｜${monthlyScenarioRuleText(scenario.rule)}` : '本月場景賽：無';
+}
 
 export const TOURNAMENT_PHASE_LABEL: Record<TournamentPhase, string> = {
     PREPARATION: '培育期',
@@ -140,6 +165,7 @@ export class TournamentPanelController {
                 trnSeasonLabel: card.season,
                 trnVenueLabel: card.venue,
                 trnBossLabel: `${bossLine}${bossMatch}`,
+                trnMonthlyLabel: monthlyScenarioLine(nowMs),
                 trnRankLabel: `積分 ${status.points}｜${TOURNAMENT_TIER_LABEL[status.tier]}`,
                 trnEntriesLabel: entries,
                 trnTeamLabel: card.team,
