@@ -42,6 +42,10 @@ export interface EncounterConfig {
   order?: number;
   /** 所屬全球征途階段 id（MVP-13）；沒有就是第一階段 */
   campaignStage?: string;
+  /** 必備對策標籤（關卡設計 §D-2，PROG-2-1763）；缺任一即「高風險，仍可挑戰」 */
+  requiredLoadout?: string[];
+  /** 高建議對策標籤（關卡設計 §D-2，PROG-2-1763）；只缺這些為「缺少」 */
+  highlyRecommendedLoadout?: string[];
 }
 
 /**

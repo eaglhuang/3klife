@@ -19,6 +19,8 @@ export interface EncounterChainSource {
     enemyGeneralId?: string;
     theme?: string;
     requiredLoadout?: readonly string[];
+    /** 高建議對策（PROG-2-1763）；併入 Preview_Intel 的推薦清單 */
+    highlyRecommendedLoadout?: readonly string[];
 }
 
 /** 規格 D-1：戰前偵查可揭露的欄位（Formation_Preview 正式隱藏，不放進來） */
@@ -64,7 +66,7 @@ export function buildStageChainNodes(
                     enemyName: boss ? resolveName(boss) : '',
                     coreMechanic: theme,
                     riskTags: [],
-                    recommendedLoadout: requiredLoadout,
+                    recommendedLoadout: Array.from(new Set([...requiredLoadout, ...(source.highlyRecommendedLoadout ?? [])])),
                 },
             };
         })

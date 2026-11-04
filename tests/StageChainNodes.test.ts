@@ -54,8 +54,14 @@ export function createStageChainNodesSuite(): TestSuite {
         const nodes = buildStageChainNodes(loadEncounters(), resolveName);
         assert.equals('攻城', nodes[0].theme);
         assert.equals('夜襲', nodes[1].theme);
-        assert.equals(0, nodes[0].requiredLoadout.length);
+        assert.equals('破城', nodes[0].requiredLoadout.join('、'));
         assert.equals(0, validateStageChainNodes(nodes).length);
+    });
+
+    suite.test('Preview_Intel 推薦清單 = 必備＋高建議（PROG-2-1763）', () => {
+        const [first, second] = buildStageChainNodes(loadEncounters(), resolveName);
+        assert.equals('破城、鼓舞', first.previewIntel.recommendedLoadout.join('、'));
+        assert.equals('反隱、夜戰', second.previewIntel.recommendedLoadout.join('、'));
     });
 
     suite.test('Preview_Intel：敵將名稱走查表，核心機制取 Theme，風險標籤預設空', () => {
