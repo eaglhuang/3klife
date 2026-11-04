@@ -12,6 +12,7 @@ const SCENE_GAMBIT_LABELS: Partial<Record<BattleTactic, string>> = {
   [BattleTactic.RockSlide]: "落石封路",
   [BattleTactic.AmbushAttack]: "森林伏兵",
   [BattleTactic.NightRaid]: "夜襲奇襲",
+  [BattleTactic.Siege]: "攻城戰",
 };
 
 const SCENE_GAMBIT_DESCRIPTIONS: Partial<Record<BattleTactic, string>> = {
@@ -20,6 +21,7 @@ const SCENE_GAMBIT_DESCRIPTIONS: Partial<Record<BattleTactic, string>> = {
   [BattleTactic.RockSlide]: "前方落石封鎖部分路線，部隊將被迫繞行。",
   [BattleTactic.AmbushAttack]: "前 2 回合我方伏兵隱匿，敵軍索敵會忽略我方潛伏單位。",
   [BattleTactic.NightRaid]: "前 2 回合夜襲生效：我方先制增傷，敵軍遠程視野受限。",
+  [BattleTactic.Siege]: "城前護城河減緩行軍，我方衝車破門增傷，城牆守軍受地利加成。",
 };
 
 export function buildSceneGambitSummary(battleTactic: BattleTactic): BattleSceneGambitSummary | null {
