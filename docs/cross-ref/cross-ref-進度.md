@@ -32,7 +32,7 @@
 | **數值系統.md (doc_data_0001)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, GeneralUnit.ts, BattleController.ts, BattleState.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **兵種（虎符）系統.md (doc_spec_0012)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, BattleController.ts, EnemyAI.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **戰場部署系統.md (doc_spec_0040)** | BattleSystem.ts, BattleState.ts, BattleController.ts, BattleScene.ts, BoardRenderer.ts, DeployPanel.ts, ResultPopup.ts, SortieDeploy.ts（§E 功能清單逐項核對已實作，PROG-2-1704） | ✅ | ✅ | 🟡 | ✅ | ⬜ |
-| **武將系統.md (doc_spec_0016)** | GeneralUnit.ts, GeneralDetailComposite.ts, GeneralListPanel.ts, LobbyScene.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| **武將系統.md (doc_spec_0016)** | GeneralUnit.ts, GeneralDetailComposite.ts, GeneralListPanel.ts, LobbyScene.ts, GeneObject.ts, AncestorTreeLayout.ts, GeneralRole.ts, GeneralLifecycle.ts, GeneralStage.ts, GeneralAging.ts, BattleRoster.ts, VitalityPill.ts, RetirementRouting.ts, MilestoneRewards.ts, GeneralVersionGallery.ts, GeneralGrowth.ts, LifeVitalityPresenter.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
 | **武將人物介面規格書.md (doc_ui_0012)** | GeneralDetailComposite.ts, GeneralDetailOverviewChild.ts, GeneralListPanel.ts, LobbyScene.ts, GeneralUnit.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
 | **戰法系統.md (doc_spec_0038)** | ActionSystem.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **奧義系統.md (doc_spec_0030)** | ActionSystem.ts, UltimateDamage.ts, UltimateUpgrade.ts, BloodlineTransmissionUltimate.ts, ChildUltimateAwaken.ts, VitalityBattleGate.ts, BattleSkillDispatcher.ts（§E 功能清單逐項核對已實作，PROG-2-1704） | ✅ | ✅ | ✅ | ✅ | ⬜ |
@@ -58,7 +58,7 @@
 | **keep.md (doc_index_0011) §7** | MaterialUtils.ts, MaterialSystem.ts | ✅ | ✅ | ✅ | ❌ | ⬜ |
 | 俘虜處理系統.md (doc_spec_0021) | PrisonerOfWar.ts, PrisonerPopupController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 傭兵系統（試用）.md (doc_spec_0029) | MercenaryIllustration.ts, MercenaryPanelView.ts, MercenaryNameplateRows.ts, MercenaryPanelController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| 可結緣女性來源系統.md (doc_spec_0003) | DaughterComingOfAge.ts, FemaleSource.ts, FemaleSourcePresenter.ts, BreedingPreviewPresenter.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
+| 可結緣女性來源系統.md (doc_spec_0003) | DaughterComingOfAge.ts, FemaleSource.ts, FemaleSourcePresenter.ts, BreedingPreviewPresenter.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | 同名武將系統.md (doc_spec_0005) | SoulTransfer.ts, BloodlineInfusion.ts, BloodlineMerge.ts, ReviveRetrain.ts, SortieDeploy.ts, SoulFragmentLedger.ts, SoulInjectCandidates.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
 | 名士預言系統.md (doc_spec_0006) | BondingSetupController.ts（名士批語 3 列，PROG-2-1131） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 名詞定義文件.md (doc_spec_0008) | 尚無實作 | ✅ | ✅ | — | — | ⬜ |
@@ -105,16 +105,16 @@
 |---|---|---|---|---|---|
 | 核心戰場系統（數值 / 兵種 / 戰場部署 / 戰法 / 奧義 / 因子爆發 / AI 強度） | ×3 | 8 | 24 | 18.0 | **75%** |
 | UI 系統（doc_ui_*） | ×2 | 5 | 10 | 5.0 | **50%** |
-| 其他系統（大廳 / 養成 / 經濟 / 技術文件等） | ×1 | 42 | 42 | 24.5 | **58%** |
-| **合計（加權）** | — | **55** | **76** | **47.5** | **🟢 63%** |
+| 其他系統（大廳 / 養成 / 經濟 / 技術文件等） | ×1 | 42 | 42 | 25.0 | **60%** |
+| **合計（加權）** | — | **55** | **76** | **48.0** | **🟢 63%** |
 
 #### 規格書實作狀態分布
 
 | 狀態 | 規格書 | 規格書數 |
 |---|---|---|
-| 🟢 完整（邏輯／接線／測試皆 ✅） | 數值系統、奧義系統、因子爆發系統、官職系統、AI武將強度系統、MVP遊戲驗證規格書、demo_技術架構、因子解鎖系統、武將壽命系統、運氣系統 | 10 |
+| 🟢 完整（邏輯／接線／測試皆 ✅） | 數值系統、奧義系統、因子爆發系統、官職系統、AI武將強度系統、MVP遊戲驗證規格書、demo_技術架構、可結緣女性來源系統、因子解鎖系統、武將壽命系統、運氣系統 | 11 |
 | 🔷 名詞表類（不需代碼） | 名詞定義文件 | 1 |
-| 🟡 進行中（有代碼，三欄未全 ✅） | 兵種（虎符）系統、戰場部署系統、武將系統、武將人物介面規格書、戰法系統、治理模式他國AI系統、大廳系統、名將挑戰賽系統、關卡設計系統、武將日誌與離線互動系統、新手開場規格書、UI 規格書、主戰場UI規格書、主戰場UI規格補充_v3、美術素材規劃與使用說明、UI技術規格書、Data Schema文件（本機端與Server端）、場景搭建指南、demo_playbook、keep §7、俘虜處理系統、傭兵系統（試用）、可結緣女性來源系統、同名武將系統、名士預言系統、培育系統、家族關係（史實相性）系統、戰場適性系統、教官系統（支援卡）、正式版劇本文案、武將戰績系統、武將背包（倉庫）系統、留存系統、結緣系統（配種）、經濟系統、血統理論系統、資源循環系統、轉職與宿命系統、轉蛋系統、遊戲時間系統、道具系統（付費免費道具）、領地治理系統、戰法場景規格書、熱更新與版本控制規格書 | 44 |
+| 🟡 進行中（有代碼，三欄未全 ✅） | 兵種（虎符）系統、戰場部署系統、武將系統、武將人物介面規格書、戰法系統、治理模式他國AI系統、大廳系統、名將挑戰賽系統、關卡設計系統、武將日誌與離線互動系統、新手開場規格書、UI 規格書、主戰場UI規格書、主戰場UI規格補充_v3、美術素材規劃與使用說明、UI技術規格書、Data Schema文件（本機端與Server端）、場景搭建指南、demo_playbook、keep §7、俘虜處理系統、傭兵系統（試用）、同名武將系統、名士預言系統、培育系統、家族關係（史實相性）系統、戰場適性系統、教官系統（支援卡）、正式版劇本文案、武將戰績系統、武將背包（倉庫）系統、留存系統、結緣系統（配種）、經濟系統、血統理論系統、資源循環系統、轉職與宿命系統、轉蛋系統、遊戲時間系統、道具系統（付費免費道具）、領地治理系統、戰法場景規格書、熱更新與版本控制規格書 | 43 |
 | 🔴 尚無代碼或邏輯 ❌ | — | 0 |
 | **合計** | | **55** |
 

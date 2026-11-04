@@ -40,5 +40,6 @@
 | 領地治理系統.md (doc_spec_0037) | 🟡→✅ | E 10 項皆有代碼：內政五任務（DomesticTasks）、武將拖放指派（GovernanceAssignment）、每季產出結算、自動治理（DomesticAutoGovernance）、太守府（GovernorHallView、GovernorHallController）、領地升級解鎖任務格（TerritoryUpgrade）、手動／自動切換（DomesticPanelController）、世襲主城保護（HereditaryKeep）、非培育子嗣內政（ChildMagistrate、ChildOfficialPosts）、AI 反霸權同盟 30%（RivalHegemony） | — | PROG-2-1732 |
 | 正式版劇本文案.md (doc_spec_0004) | 🟡（維持） | §2 開場信、§4 教學引導、§5 紅顏趕路、§6 商業化提示、§7 趣味台詞庫皆已入庫；§3 名將登場正式版台詞已補進 InitialGeneralShowcase.formalLine（showcaseLineOf 可切換） | §3 正式版台詞尚未上畫面：開場名將展示預設仍用趣味版（§5.2／§7），改用正式版待裁定 | PROG-2-1732 |
 | 名將挑戰賽系統.md (doc_spec_0007) | 🟡（維持） | E 10 項單機版皆有代碼：賽季週期與段位（TournamentSeason）、場地公告與杯賽輪替、隊伍鏡像快照、本機對戰、五戰三勝與決賽單場（TournamentLocal.bracketSeriesRule）、季節 BOSS、賽季獎勵、虎符 BOSS 克制標籤（TallyBossTags）、月度場景賽（MonthlyScenarioCup） | E-3 上傳快照、E-4 服務端非同步對戰、E-8 全服合力 BOSS 需要伺服器；單機以本機模擬替代 | PROG-2-1733 |
+| 武將系統.md (doc_spec_0016) | 🟡→✅ | E 10 項皆有代碼：基礎資料（GeneralUnit）、因子槽（GeneObject）、14 人家族樹（AncestorTreeLayout）、職能雙軌（GeneralRole）、生命週期（GeneralLifecycle／GeneralStage／GeneralAging）、精力扣補（BattleRoster、VitalityPill）、65 歲退役轉化（RetirementRouting）、演武筆記（MilestoneRewards 里程碑發戰法筆記）、稱號版本（GeneralVersionGallery）、年齡屬性曲線（GeneralGrowth）；§H 精力狀態字（PROG-2-1736）、§G 開獎天象（PROG-2-1737）、職能分流對話與退休語錄（PROG-2-1738） | §G 英靈歸位告別台詞規格無原文；§H UI_ROLE_SELECT 宿命畫面無對應提示節點；UI_RETIRE_CONFIRM「轉化為英靈」與現行退役轉教官說法不同，以轉職與宿命系統為準 | PROG-2-1739 |
 
 ---
