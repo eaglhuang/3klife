@@ -6,6 +6,7 @@
  * - UI_AGE_DISPLAY「{Name}（{Age} 歲）」、UI_LIFESPAN_BAR「壽命：{Age}/{Max_Lifespan}」
  * - UI_PHASE_YOUTH / PRIME / PEAK / ELDER、UI_DEATH_NOTIFY「{Name} 辭世，享年 {Age} 歲」
  * - UI_VIT_BAR「精力：{Current}/{Max}」、UI_VIT_COST、UI_VIT_EXHAUSTED、UI_PREGNANCY_LOCK「待產中（剩餘 {N} 季）」
+ * - 武將系統.md §H：UI_VITALITY_HIGH「精力充沛」（精力 >80%）、UI_VITALITY_LOW「老驥伏櫪」（精力 <20% 且年齡 >50）（PROG-2-1736）
  * 年齡階段：幼兒 0~5、少年 5~15、青年 15~40、壯年 40~55、老年 55~65、超齡 65+
  *
  * 暫定（規格沒寫，PROG-2-0074）：
@@ -50,6 +51,12 @@ export const VITALITY_HIGH_RATIO = 0.6;
 export const VITALITY_LOW_RATIO = 0.3;
 
 export const UI_VIT_EXHAUSTED = '精力不足！';
+export const UI_VITALITY_HIGH = '精力充沛';
+export const UI_VITALITY_LOW = '老驥伏櫪';
+/** 武將系統 §H 門檻：精力比例高於 0.8 為充沛；低於 0.2 且年齡高於 50 為老驥伏櫪 */
+export const VITALITY_CONDITION_HIGH_RATIO = 0.8;
+export const VITALITY_CONDITION_LOW_RATIO = 0.2;
+export const VITALITY_CONDITION_LOW_MIN_AGE = 50;
 
 export interface LifespanView {
     age: number;
@@ -83,6 +90,10 @@ export interface VitalityView {
     exhausted: boolean;
     /** 精力卡標題列的狀態字：待產優先，其次精力不足；都沒有時為空字串 */
     statusText: string;
+    /** 武將系統 §H 精力狀態：精力充沛／老驥伏櫪；都不符合時為空字串 */
+    conditionText: string;
+    /** 精力卡標題：「精力 · 狀態」；狀態依序取待產、老驥伏櫪、精力不足、精力充沛，都沒有時只顯示「精力」 */
+    titleText: string;
 }
 
 export function lifePhaseOf(age: number): LifePhase {
@@ -128,6 +139,13 @@ export function vitalityTier(ratio: number): MeterTier {
     return 'low';
 }
 
+/** 武將系統 §H 精力狀態字；比例與年齡都用原始值比較，不取整 */
+export function vitalityConditionText(ratio: number, age: number): string {
+    if (ratio > VITALITY_CONDITION_HIGH_RATIO) return UI_VITALITY_HIGH;
+    if (ratio < VITALITY_CONDITION_LOW_RATIO && age > VITALITY_CONDITION_LOW_MIN_AGE) return UI_VITALITY_LOW;
+    return '';
+}
+
 export function describeVitality(general: GeneralConfig & { pregnancySeasonsLeft?: number }): VitalityView {
     const max = Math.max(0, Math.floor(general.maxVitality ?? general.vitality ?? 0));
     const current = Math.max(0, Math.min(max, Math.floor(general.vitality ?? max)));
@@ -136,6 +154,11 @@ export function describeVitality(general: GeneralConfig & { pregnancySeasonsLeft
     const pregnant = Math.max(0, Math.floor(general.pregnancySeasonsLeft ?? 0));
     const pregnancyText = pregnant > 0 ? `待產中（剩餘 ${pregnant} 季）` : null;
     const exhausted = current < BATTLE_VITALITY_COST;
+    const conditionText = vitalityConditionText(ratio, Math.max(0, general.age ?? 0));
+    const statusText = pregnancyText ?? (exhausted ? UI_VIT_EXHAUSTED : '');
+    const titleStatus = pregnancyText
+        ?? (conditionText === UI_VITALITY_LOW ? conditionText : null)
+        ?? (exhausted ? UI_VIT_EXHAUSTED : conditionText);
     return {
         current,
         max,
@@ -145,7 +168,9 @@ export function describeVitality(general: GeneralConfig & { pregnancySeasonsLeft
         color: METER_TIER_COLORS[tier],
         pregnancyText,
         exhausted,
-        statusText: pregnancyText ?? (exhausted ? UI_VIT_EXHAUSTED : ''),
+        statusText,
+        conditionText,
+        titleText: titleStatus ? `精力 · ${titleStatus}` : '精力',
     };
 }
 

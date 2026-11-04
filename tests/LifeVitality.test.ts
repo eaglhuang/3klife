@@ -15,6 +15,9 @@ import {
     lifePhaseOf,
     METER_TIER_COLORS,
     UI_VIT_EXHAUSTED,
+    UI_VITALITY_HIGH,
+    UI_VITALITY_LOW,
+    vitalityConditionText,
 } from '../assets/scripts/ui/core/LifeVitalityPresenter';
 import { resolveMaxLifespan } from '../assets/scripts/core/systems/GeneralAging';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
@@ -101,6 +104,23 @@ export function createLifeVitalitySuite(): TestSuite {
         assert.equals(null, tired.pregnancyText);
         assert.equals(UI_VIT_EXHAUSTED, tired.statusText);
         assert.equals('', describeVitality(general({ vitality: 30, maxVitality: 100 })).statusText, '剛好夠打一場');
+    });
+
+    suite.test('武將系統 §H 精力狀態：>80% 精力充沛；<20% 且年過 50 老驥伏櫪（PROG-2-1736）', () => {
+        assert.equals(UI_VITALITY_HIGH, vitalityConditionText(0.81, 20));
+        assert.equals('', vitalityConditionText(0.8, 20), '剛好 80% 不算充沛');
+        assert.equals(UI_VITALITY_LOW, vitalityConditionText(0.19, 51));
+        assert.equals('', vitalityConditionText(0.19, 50), '剛好 50 歲不算');
+        assert.equals('', vitalityConditionText(0.5, 70));
+    });
+
+    suite.test('精力標題：待產 → 老驥伏櫪 → 精力不足 → 精力充沛；statusText 不變', () => {
+        assert.equals('精力 · 精力充沛', describeVitality(general({ vitality: 90, maxVitality: 100, age: 30 })).titleText);
+        assert.equals('', describeVitality(general({ vitality: 90, maxVitality: 100, age: 30 })).statusText, '充沛不佔 statusText，數字照常顯示');
+        assert.equals('精力 · 老驥伏櫪', describeVitality(general({ vitality: 10, maxVitality: 100, age: 60 })).titleText);
+        assert.equals('精力 · ' + UI_VIT_EXHAUSTED, describeVitality(general({ vitality: 10, maxVitality: 100, age: 30 })).titleText);
+        assert.equals('精力 · 待產中（剩餘 2 季）', describeVitality(general({ vitality: 10, maxVitality: 100, age: 60, pregnancySeasonsLeft: 2 })).titleText);
+        assert.equals('精力', describeVitality(general({ vitality: 50, maxVitality: 100, age: 30 })).titleText);
     });
 
     suite.test('UI_VIT_COST、UI_DEATH_NOTIFY', () => {
