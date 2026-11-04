@@ -1,4 +1,4 @@
-// @spec-source → 轉職與宿命系統.md (doc_spec_0043)；PROG-2-1429 依建檔紀錄補標出處
+// @spec-source → 轉職與宿命系統.md (doc_spec_0043)；PROG-2-1429 依建檔紀錄補標出處；武將系統.md (doc_spec_0016) §G 5 歲開獎天象異變（PROG-2-1737）
 /**
  * 宿命揭曉文案（PROG-2-0735，承接 FATE-11 / PROG-2-0734）。純邏輯，不依賴 cc。
  *
@@ -20,7 +20,23 @@ export const FATE_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     'ui.fate.job_change': '消耗轉職令 ×1，追加副職能：{0}',
     'ui.fate.retire_weapon': '獲得虎符：{0}',
     'ui.fate.retire_scroll': '獲得竹簡：{0}',
+    'ui.fate.omen.0': '紫氣東來',
+    'ui.fate.omen.1': '流星落屋',
+    'ui.fate.omen.2': '百鳥朝鳳',
 };
+
+/** 武將系統 §G 5 歲開獎的三句天象異變台詞 */
+export const FATE_OMEN_KEYS: readonly string[] = Object.freeze(['ui.fate.omen.0', 'ui.fate.omen.1', 'ui.fate.omen.2']);
+
+/**
+ * 開獎天象：依子嗣 id 固定挑一句，同一位子嗣每次打開畫面都是同一句（暫定，規格只列三句、未定挑選規則）。
+ * 用字元碼加總取餘數，不吃亂數種子，不影響存檔重播。
+ */
+export function fateOmenKeyOf(childId: string): string {
+    let sum = 0;
+    for (let i = 0; i < childId.length; i++) sum += childId.charCodeAt(i);
+    return FATE_OMEN_KEYS[sum % FATE_OMEN_KEYS.length];
+}
 
 /** 宿命文案查詢：語系表查回 key 本身（尚未載入或缺 key）時改用 zh-TW 預設並代入參數 */
 export function fateText(lookup: BreedTextLookup, key: string, ...args: string[]): string {

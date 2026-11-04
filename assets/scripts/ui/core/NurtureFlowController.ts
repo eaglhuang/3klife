@@ -16,7 +16,7 @@
  */
 import { lateBloomClueText } from '../../core/systems/LateBloomClue';
 import { VITALITY_SCRIPT_KEYS, vitalityScriptText } from './VitalityScriptTexts';
-import { fateText } from './FateScriptTexts';
+import { fateOmenKeyOf, fateText } from './FateScriptTexts';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { MentorCard } from '../../core/models/MentorCard';
 import type { LegendaryMentoringBlock } from '../../core/systems/LegendaryMentoring';
@@ -730,7 +730,8 @@ function buildFateTexts(child: UnveilingGeneral, t: BreedTextLookup): Record<str
             ? `初始因子：${factors.map((gene) => gene.displayName ?? gene.id ?? '？').join('、')}`
             : '初始因子：尚未顯現',
         fateRecommend: fateText(t, 'ui.fate.reveal', careerLabelOf(t, recommended, '')),
-        fateScript: fateText(t, 'ui.fate.script.reveal', child.name, traitOf(t, recommended), careerLabelOf(t, recommended, '')),
+        // 武將系統 §G：開獎先播一句天象異變，再接天命指引（PROG-2-1737）
+        fateScript: `${fateText(t, fateOmenKeyOf(child.id))}！${fateText(t, 'ui.fate.script.reveal', child.name, traitOf(t, recommended), careerLabelOf(t, recommended, ''))}`,
         fateAcceptLabel: fateText(t, 'ui.fate.accept'),
         fateDefyLabel: fateText(t, 'ui.fate.defy'),
         fateDefyHint: `逆天：成長率 ×${FATE_DEFY_GROWTH_MODIFIER}，有 ${Math.round(LATE_BLOOMER_CHANCE * 100)}% 機率大器晚成。選擇後不可更改。`,
