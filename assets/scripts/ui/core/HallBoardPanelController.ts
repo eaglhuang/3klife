@@ -73,15 +73,20 @@ export class HallBoardPanelController {
 
     /** 目前牆的任務列，已接取者以指派狀態覆蓋，置頂規則沿用 buildHallBoardRows。 */
     public rows(): HallTaskRow[] {
+        return this.rowsFor(this._board);
+    }
+
+    /** 指定牆的任務列（不切換目前分頁；幕府大廳左右牆用，UI-2-0153）。 */
+    public rowsFor(board: HallBoardKey): HallTaskRow[] {
         const hub = this._deps.hub();
         const assigned = this._deps.assignments();
-        const current = hub.Mission_Boards[this._board];
+        const current = hub.Mission_Boards[board];
         if (!current) return [];
         const overlaid: LobbyHub = {
             ...hub,
             Mission_Boards: {
                 ...hub.Mission_Boards,
-                [this._board]: {
+                [board]: {
                     ...current,
                     Tasks: current.Tasks.map((task) => (
                         task.Task_ID in assigned ? { ...task, Is_Accepted: true } : task
@@ -89,7 +94,7 @@ export class HallBoardPanelController {
                 },
             },
         };
-        return buildHallBoardRows(overlaid, this._board, this._deps.player()).slice(0, HALL_BOARD_MAX_ROWS);
+        return buildHallBoardRows(overlaid, board, this._deps.player()).slice(0, HALL_BOARD_MAX_ROWS);
     }
 
     /** 第 index 列對應的任務資料（彈窗與委任用）；沒有該列時回傳 undefined。 */

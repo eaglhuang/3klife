@@ -17,6 +17,7 @@ import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapF
 import { HallThemeConfig, resolveHallTheme } from '../../core/systems/HallTheme';
 import type { HallSeason, HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import type { HallStageCast } from '../../core/systems/HallStageDirector';
+import { LOBBY_HALL_WALL_PIN_TEXT, type LobbyHallWallView } from '../../core/systems/LobbyHallWallView';
 import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
 import { HallMapTurnPlayer } from '../components/HallMapTurnPlayer';
@@ -60,6 +61,13 @@ export interface LobbyHallScreenDeps {
     readonly mapLayout?: HallMapLayout | null;
 }
 
+/** 節點本身或第一個子節點上的 Label 套字；找不到 Label 時不動 */
+function setText(node: Node | undefined, text: string): void {
+    if (!node) return;
+    const label = node.getComponent(Label) ?? node.children[0]?.getComponent(Label) ?? null;
+    if (label) label.string = text;
+}
+
 /** 綁定器自建、緊接在沙盤後面的圖層節點名稱 */
 const LAYER_NAMES: readonly string[] = ['HallStageCrowd', 'HallSeasonFx'];
 
@@ -90,6 +98,32 @@ export class LobbyHallScreenBinder {
     setPanelVisible(id: LobbyHallPanelId, visible: boolean): void {
         const node = findUcufNode(this._screenRoot, `lobby-hall-screen.${id}`);
         if (node) node.active = visible;
+    }
+
+    /**
+     * 任務牆套字（UI-2-0153）。依設計稿節點順序：第 1 個子節點是牆頭（標題、計數），
+     * 接著是任務列（標題、獎勵、難度徽章、可選的置頂標記），最後是頁尾；多的列隱藏。
+     */
+    setWall(id: 'wall-left' | 'wall-right', view: LobbyHallWallView): void {
+        const wall = findUcufNode(this._screenRoot, `lobby-hall-screen.${id}`);
+        if (!wall || wall.children.length < 2) return;
+        const [head, ...rest] = wall.children;
+        const rowNodes = rest.slice(0, rest.length - 1);
+        setText(head.children[1], view.countText);
+        rowNodes.forEach((rowNode, i) => {
+            const row = view.rows[i];
+            rowNode.active = !!row;
+            if (!row) return;
+            const pin = rowNode.children[3] ?? null;
+            setText(rowNode.children[0], row.title);
+            // 沒有置頂標記節點的列，把已接取併進獎勵那行
+            setText(rowNode.children[1], row.pinned && !pin ? `${row.meta}（已接取）` : row.meta);
+            setText(rowNode.children[2], row.difficulty);
+            if (pin) {
+                pin.active = row.pinned;
+                if (row.pinned) setText(pin, LOBBY_HALL_WALL_PIN_TEXT);
+            }
+        });
     }
 
     /** 播放換季聚焦序列；沒有地圖播放器時不動 */
