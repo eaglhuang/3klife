@@ -46,6 +46,8 @@ export interface ItemBagDeps {
 const MSG_NONE_SELECTED = '請先選擇道具';
 const MSG_NOT_USABLE = '此道具目前無法使用';
 const MSG_ALREADY_ARMED = '安胎藥已生效中，下一次結緣成功時才會消耗';
+/** 道具系統 §G 安胎藥使用（PROG-2-1774） */
+const MSG_FERTILITY_USED = '安胎藥服下，此次結緣成功率大增！';
 
 /** 使用被拒絕時的提示文字；數量不足沿用商城導向的提示。 */
 function rejectMessage(result: Extract<ItemUseResult, { ok: false }>): string {
@@ -143,7 +145,7 @@ export class ItemBagController {
         if (!this._pendingConfirm || !row) return null;
         const result = this._deps.useItem(row.itemId, this._deps.now());
         this._pendingConfirm = false;
-        this._message = result.ok === true ? `已使用 ${row.name}` : rejectMessage(result);
+        this._message = result.ok === true ? (result.fertilityMultiplier !== undefined ? MSG_FERTILITY_USED : `已使用 ${row.name}`) : rejectMessage(result);
         if (this._selectedRow() === null) this._selectedId = null;
         return result;
     }

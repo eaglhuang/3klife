@@ -285,7 +285,17 @@ export const PRISON_TREASURE_DROP_RATE = 0.05;
 
 /** 無期徒刑每季傳家寶物掉落數：每位關押中的俘虜各擲一次（EQP-09） */
 export function rollPrisonTreasures(prisoners: readonly PrisonEntry[], random: () => number): number {
-    return prisoners.reduce((count, _prisoner) => count + (random() < PRISON_TREASURE_DROP_RATE ? 1 : 0), 0);
+    return rollPrisonTreasureDonors(prisoners, random).length;
+}
+
+/** 同上，但回傳本季交出傳家寶物的俘虜，供顯示劇本句（道具系統 §G，PROG-2-1774） */
+export function rollPrisonTreasureDonors(prisoners: readonly PrisonEntry[], random: () => number): PrisonEntry[] {
+    return prisoners.filter(() => random() < PRISON_TREASURE_DROP_RATE);
+}
+
+/** 囚犯 {Name} 交出了一件傳家寶：{ItemName} */
+export function prisonTreasureLine(name: string, itemName: string): string {
+    return `囚犯 ${name} 交出了一件傳家寶：${itemName}`;
 }
 
 /** 關押中的俘虜每季產出合計 */
