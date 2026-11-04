@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "source": "../character-palette-ledger.md",
+  "indexTitle": "武將立繪配色索引",
+  "indexPath": "docs/art/character-palette-ledger.md",
+  "type": "markdown-h2",
+  "preambleShard": "palette-principles",
+  "defaultShard": "palette-generals",
+  "shards": [
+    {
+      "name": "palette-principles",
+      "title": "通用原則與基礎配色",
+      "pattern": "^(通用原則|UI-2-0112|UI-2-0115|UI-2-0116|UI-2-0121|記錄方式)"
+    },
+    {
+      "name": "palette-generals",
+      "title": "名將與近期武將配色",
+      "pattern": "^(UI-2-02|UI-2-023|UI-2-024|UI-2-025)"
+    }
+  ]
+}

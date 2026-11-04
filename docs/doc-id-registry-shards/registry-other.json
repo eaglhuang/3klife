@@ -11776,5 +11776,47 @@
     "path": "docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-06.md",
     "title": "Doc ID Registry Markdown Index — Spec / Index / Task",
     "category": "other"
+  },
+  {
+    "id": "doc_other_2693",
+    "path": "docs/agent-briefs/checklist-shards/checklist-process.md",
+    "title": "Agent Briefs CheckList — 協作與流程檢查",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2694",
+    "path": "docs/agent-briefs/checklist-shards/checklist-ui.md",
+    "title": "Agent Briefs CheckList — UI 視覺介面系統",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2695",
+    "path": "docs/agent-briefs/checklist-shards/checklist-harness.md",
+    "title": "Agent Briefs CheckList — HTML-to-UCUF 與 Harness",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2696",
+    "path": "docs/agent-briefs/tasks-index-shards/tasks-index-summary.md",
+    "title": "UI Quality Tasks Index — 任務摘要與使用方式",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2697",
+    "path": "docs/agent-briefs/tasks-index-shards/tasks-index-tasks.md",
+    "title": "UI Quality Tasks Index — 任務清單",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2698",
+    "path": "docs/art/character-palette-ledger-shards/palette-principles.md",
+    "title": "武將立繪配色索引 — 通用原則與基礎配色",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_2699",
+    "path": "docs/art/character-palette-ledger-shards/palette-generals.md",
+    "title": "武將立繪配色索引 — 名將與近期武將配色",
+    "category": "other"
   }
 ]

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "source": "../CheckList.md",
+  "indexTitle": "Agent Briefs CheckList",
+  "indexPath": "docs/agent-briefs/CheckList.md",
+  "type": "markdown-h2",
+  "preambleShard": "checklist-process",
+  "defaultShard": "checklist-process",
+  "shards": [
+    {
+      "name": "checklist-process",
+      "title": "協作與流程檢查",
+      "pattern": "^(ATM 獨立審核減負試行|UI 量產新增檢查|執行前檢查|依賴維護原則|更新流程|鎖卡最小欄位)$"
+    },
+    {
+      "name": "checklist-ui",
+      "title": "UI 視覺介面系統",
+      "pattern": "^UI 視覺介面系統$"
+    },
+    {
+      "name": "checklist-harness",
+      "title": "HTML-to-UCUF 與 Harness",
+      "pattern": "^(HTML-to-UCUF Plan5 Tooling|Harness Engineering Rollout)$"
+    }
+  ]
+}

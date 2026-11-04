@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "source": "../tasks_index.md",
+  "indexTitle": "UI Quality Tasks Index",
+  "indexPath": "docs/agent-briefs/tasks_index.md",
+  "type": "markdown-h2",
+  "keepSourceIntact": true,
+  "preambleShard": "tasks-index-summary",
+  "defaultShard": "tasks-index-tasks",
+  "shards": [
+    {
+      "name": "tasks-index-summary",
+      "title": "任務摘要與使用方式",
+      "pattern": "^Summary$"
+    },
+    {
+      "name": "tasks-index-tasks",
+      "title": "任務清單",
+      "pattern": "^Tasks$"
+    }
+  ]
+}

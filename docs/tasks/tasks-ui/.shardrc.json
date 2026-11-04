@@ -7,37 +7,70 @@
   "indexTitle": "UI Tasks（UI-*） (auto-parts)",
   "type": "auto-parts",
   "keepSourceIntact": true,
+  "partFormat": "json-array",
   "shards": [
     {
       "name": "tasks-ui-part-1",
-      "title": "Part 1 (items 1–25)",
+      "title": "Part 1 (items 1–15)",
       "range": [
         0,
-        24
+        14
       ]
     },
     {
       "name": "tasks-ui-part-2",
-      "title": "Part 2 (items 26–50)",
+      "title": "Part 2 (items 16–30)",
       "range": [
-        25,
-        49
+        15,
+        29
       ]
     },
     {
       "name": "tasks-ui-part-3",
-      "title": "Part 3 (items 51–75)",
+      "title": "Part 3 (items 31–45)",
       "range": [
-        50,
-        74
+        30,
+        44
       ]
     },
     {
       "name": "tasks-ui-part-4",
-      "title": "Part 4 (items 76–100)",
+      "title": "Part 4 (items 46–60)",
+      "range": [
+        45,
+        59
+      ]
+    },
+    {
+      "name": "tasks-ui-part-5",
+      "title": "Part 5 (items 61–75)",
+      "range": [
+        60,
+        74
+      ]
+    },
+    {
+      "name": "tasks-ui-part-6",
+      "title": "Part 6 (items 76–90)",
       "range": [
         75,
-        99
+        89
+      ]
+    },
+    {
+      "name": "tasks-ui-part-7",
+      "title": "Part 7 (items 91–105)",
+      "range": [
+        90,
+        104
+      ]
+    },
+    {
+      "name": "tasks-ui-part-8",
+      "title": "Part 8 (items 106–119)",
+      "range": [
+        105,
+        118
       ]
     }
   ]

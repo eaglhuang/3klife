@@ -24,10 +24,10 @@
   "shard": "UI",
   "generated": "2026-04-06",
   "summary": {
-    "done": 78,
+    "done": 83,
     "in_progress": 22,
     "open": 14,
-    "total": 114
+    "total": 119
   },
   "tasks": [
     {
@@ -3396,6 +3396,67 @@
         "palette ledger"
       ],
       "notes": "2026-11-04 | 狀態: done | 驗證: 512×768 RGBA；雙頭像256×256；reviewed 219×219 crop；三份 metadata UUID 唯一；全量驗證213成功/0失敗；GeneralList/GeneralDetail canonical path verified | 變更: 完成關銀屏蜀綠女戰將立繪與列表頭像 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_1449",
+      "id": "UI-2-0259",
+      "title": "呂玲綺敵方鋼白赭紅女戰將立繪與列表頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-11-04",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-11-04T20:44:49+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "以趙雲、關羽、張飛原始圖的高完成度二次元幻想手繪標準，製作呂玲綺正式立繪與列表頭像；以鋼白、赭紅及少量青銅建立非紫黑的敵方女戰將配色，並以高環馬尾、鳳翼額冠、琥珀杏眼和名姝型臉孔區隔既有女角。",
+      "related": [
+        "UI-2-0258"
+      ],
+      "depends": [],
+      "acceptance": [
+        "透明背景 512×768 RGBA 正式立繪",
+        "正式與列表頭像均為 256×256 RGBA",
+        "reviewed square crop 並經 125px 檢視",
+        "Cocos PNG metadata 有效且 UUID 唯一",
+        "單人 avatar verify 通過",
+        "GeneralList 與 GeneralDetail canonical 資產路徑對應正確",
+        "配色與臉部、髮型、髮飾、盔甲輪廓和既有角色有明確差異",
+        "名將二次元幻想手繪畫風與趙雲、關羽、張飛原圖一致"
+      ],
+      "deliverables": [
+        "portrait",
+        "formal avatar",
+        "cropped avatar",
+        "reviewed crop",
+        "palette ledger"
+      ],
+      "notes": "2026-11-04 | 狀態: done | 驗證: 512×768 RGBA；雙頭像256×256；reviewed 208×208 crop；全量 avatar verify 214 成功/0 失敗（趙雲原圖缺漏而略過）；metadata UUID 唯一；GeneralList/GeneralDetail canonical path verified | 變更: 以名將二次元幻想手繪標準重繪呂玲綺並登錄正式資源 | 阻塞: none",
       "brief": {
         "style": "classic",
         "label": "",

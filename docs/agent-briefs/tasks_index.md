@@ -1,6 +1,6 @@
 ---
 title: UI Quality Tasks Index
-generated: 2026-10-30
+generated: 2026-11-04
 manifest: ../ui-quality-todo.json
 ---
 
@@ -13,8 +13,8 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 189
-- done: 164
+- Total: 190
+- done: 165
 - in-progress: 8
 - open: 17
 
@@ -211,15 +211,4 @@ manifest: ../ui-quality-todo.json
 | UI-2-0244 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0244](./tasks/UI-2-0244.md) |
 | UI-2-0245 | codex-gpt-6.1-sol | done | P1 | M6 | implementation | [UI-2-0245](./tasks/UI-2-0245.md) |
 | UI-2-0246 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0246](./tasks/UI-2-0246.md) |
-| UI-2-0247 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0247](./tasks/UI-2-0247.md) |
-| UI-2-0248 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0248](./tasks/UI-2-0248.md) |
-| UI-2-0249 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0249](./tasks/UI-2-0249.md) |
-| UI-2-0250 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0250](./tasks/UI-2-0250.md) |
-| UI-2-0251 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0251](./tasks/UI-2-0251.md) |
-| UI-2-0252 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0252](./tasks/UI-2-0252.md) |
-| UI-2-0253 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0253](./tasks/UI-2-0253.md) |
-| UI-2-0254 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0254](./tasks/UI-2-0254.md) |
-| UI-2-0255 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0255](./tasks/UI-2-0255.md) |
-| UI-2-0256 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0256](./tasks/UI-2-0256.md) |
-| UI-2-0257 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0257](./tasks/UI-2-0257.md) |
-| UI-2-0258 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0258](./tasks/UI-2-0258.md) |
+| UI-2-0259 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0259](./tasks/UI-2-0259.md) |

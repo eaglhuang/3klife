@@ -1,212 +1,22 @@
-| P1 | [UI-2-0231](tasks/UI/UI-2-0231.md (doc_task_1421)) (doc_task_1421) | 禰衡墨紫士人立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
 # Agent Briefs CheckList
 
-| P1 | [UI-2-0244](tasks/UI/UI-2-0244.md (doc_task_1434)) (doc_task_1434) | 薛綜酒紅柔金文臣立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0245](tasks/UI/UI-2-0245.md (doc_task_1435)) (doc_task_1435) | 武將列表接入正式人物頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0246](tasks/UI/UI-2-0246.md (doc_task_1436)) (doc_task_1436) | 朱異紅黑銀甲立繪與正方頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0247](tasks/UI/UI-2-0247.md (doc_task_1437)) (doc_task_1437) | 潘浚差異化立繪與正方頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0248](tasks/UI/UI-2-0248.md (doc_task_1438)) (doc_task_1438) | 呂凱南中軍政官立繪與正方頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0249](tasks/UI/UI-2-0249.md (doc_task_1439)) (doc_task_1439) | 陳到蜀綠赭橙護衛將領立繪與頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0250](tasks/UI/UI-2-0250.md (doc_task_1440)) (doc_task_1440) | 吳班柳葉綠輕裝弓將立繪與正方頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0251](tasks/UI/UI-2-0251.md (doc_task_1441)) (doc_task_1441) | 孫皓酒紅舊金帝王立繪與頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0252](tasks/UI/UI-2-0252.md (doc_task_1442)) (doc_task_1442) | 孫尚香吳紅青綠女將立繪與正方頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0253](tasks/UI/UI-2-0253.md (doc_task_1443)) (doc_task_1443) | 蔡琰灰玉赭褐女文官立繪與正方頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0254](tasks/UI/UI-2-0254.md (doc_task_1444)) (doc_task_1444) | 黃月英武將 ID 正式立繪與頭像路徑對齊 | done | 100% | codex-gpt-6.1-sol |
+> **⚠️ 已拆分為 3 個分片，本檔為索引入口。**
+> Token 節流目的：避免整份讀入超過 6000 tokens。請**按需**讀對應分片。
 
-| P1 | [UI-2-0243](tasks/UI/UI-2-0243.md (doc_task_1433)) (doc_task_1433) | 韋昭墨黑朱紅史官文臣立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+## 分片索引
 
-| P1 | [UI-2-0242](tasks/UI/UI-2-0242.md (doc_task_1432)) (doc_task_1432) | 孫盛朱紅青瓷天文地理文士立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+| 分片 | 路徑 | 大小 |
+|------|------|------|
+| 協作與流程檢查 | `docs/agent-briefs/checklist-shards/checklist-process.md` | 95 行 / ~6 KB |
+| UI 視覺介面系統 | `docs/agent-briefs/checklist-shards/checklist-ui.md` | 69 行 / ~8 KB |
+| HTML-to-UCUF 與 Harness | `docs/agent-briefs/checklist-shards/checklist-harness.md` | 50 行 / ~5 KB |
 
-| P1 | [UI-2-0241](tasks/UI/UI-2-0241.md (doc_task_1431)) (doc_task_1431) | 傅肜深蜀綠鐵鏽紅宿將立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+## 使用說明
 
-| P1 | [UI-2-0240](tasks/UI/UI-2-0240.md (doc_task_1430)) (doc_task_1430) | 張南松綠赭皮青年槍將立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-
-| P1 | [UI-2-0239](tasks/UI/UI-2-0239.md (doc_task_1429)) (doc_task_1429) | 費詩松綠銅棕典簿文臣立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-
-| P1 | [UI-2-0238](tasks/UI/UI-2-0238.md (doc_task_1428)) (doc_task_1428) | 伊籍橄欖青石板藍使臣立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-
-| P1 | [UI-2-0237](tasks/UI/UI-2-0237.md (doc_task_1427)) (doc_task_1427) | 秦宓竹青赭紅辯士立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-
-| P1 | [UI-2-0236](tasks/UI/UI-2-0236.md (doc_task_1426)) (doc_task_1426) | 劉巴松綠墨灰文臣立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-
-| P1 | [UI-2-0235](tasks/UI/UI-2-0235.md (doc_task_1425)) (doc_task_1425) | 于吉蒼青丹霞方士立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-
-| P1 | [UI-2-0234](tasks/UI/UI-2-0234.md (doc_task_1424)) (doc_task_1424) | 左慈深靛暗青方士立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-
-| P1 | [UI-2-0233](tasks/UI/UI-2-0233.md (doc_task_1423)) (doc_task_1423) | 管寧灰藍陶白隱士立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-
-| P1 | [UI-2-0232](tasks/UI/UI-2-0232.md (doc_task_1422)) (doc_task_1422) | 田疇苔灰麻白立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-
-## ATM 獨立審核減負試行（2026-09-16）
-
-- 計畫：[獨立審核試行](../ai_atomic_framework/atm-product-proof/independent-review-pilot-plan.md)
-- ATM-0-0016～ATM-0-0025：10 張卡已於 2026-09-16 完成審核試行與停止規則結案；卡片及狀態真相見 `docs/tasks/tasks-atm.json` 指向的既有分片。結案不代表 npm、CI 或外部 A/B 產品證明完成。
-- 先完成目標、校準、基線，再執行三張既有 PRF 工作的審核試行；禁止把本批開卡當成產品交付。
-
-## UI 量產新增檢查
-
-- 新 UI 任務預設必須走：`template family -> content contract -> skin fragment -> smoke route -> docs backwrite`
-- 開卡或接卡時，先對照 [UI-task-card-template.md](C:\Users\User\3KLife\docs\agent-briefs\UI-task-card-template.md (doc_task_0132)) (doc_task_0132)
-- 若任務卡沒有 `template_family / content_contract / skin_fragments / smoke_route / docs_backwritten`，視為尚未收斂完成，不應直接進入大量實作
-
-本表是任務卡總覽。狀態更新時，必須同步修改：
-- 任務卡本身
-- 對應 docs/tasks/*.json 或 docs/ui-quality-tasks/*.json shard
-- 需要時重建 docs/ui-quality-todo.json aggregate 與 	asks_index.md (doc_task_0002)
-- 本檔
-
-共通硬規則以 [keep.md](C:\Users\User\3KLife\docs\keep.md (doc_index_0011)) (doc_index_0011) 為準。
-
-## 執行前檢查
-
-1. 這次工作是否已有任務卡。
-2. 若沒有，而且不是小錯字或一次性查詢，先開卡。
-3. 若決定開始做，先鎖卡：`status=in-progress`、補 `started_at` / `started_by_agent`、更新 `notes`。
-4. 若是 bug 修復，可以先做最小修補，但仍要保留可追蹤性與單一問題範圍。
-5. 若範圍擴大，先更新 `related / depends / notes`，必要時補開新卡。
-6. 準備 commit 前，確認這批變更能對回單一卡號、單一主題或單一 bug。
-
-## UI 視覺介面系統
-
-| 優先級 | 卡號 | 簡單描述 | 狀態 | 完成度% | Owner |
-|---|---|---|---|---|---|
-| P0 | [UI-1-0001](tasks/UI-1-0001.md (doc_task_0009)) (doc_task_0009) | 搬遷 `nav_ink` 按鈕 family 至 runtime 路徑 | done | 100% | Agent2 |
-| P0 | [UI-1-0002](tasks/UI-1-0002.md (doc_task_0010)) (doc_task_0010) | 搬遷 `paper_utility` 按鈕 family 至 runtime 路徑 | done | 100% | Agent2 |
-| P0 | [UI-1-0003](tasks/UI-1-0003.md (doc_task_0011)) (doc_task_0011) | 搬遷 `warning` 按鈕 family 至 runtime 路徑 | done | 100% | Agent2 |
-| P0 | [UI-1-0004](tasks/UI-1-0004.md (doc_task_0012)) (doc_task_0012) | 產生共用 shadow 與 noise 紋理 | not-started | 0% | Agent2 |
-| P0 | [UI-2-0001](tasks/UI-2-0001.md (doc_task_0025)) (doc_task_0025) | 更新 `lobby-main-default` skin 指向 `nav_ink` | done | 100% | Agent1 |
-| P0 | [UI-2-0002](tasks/UI-2-0002.md (doc_task_0026)) (doc_task_0026) | 更新 `duel-challenge-default` skin 指向 `paper_utility` | done | 100% | Agent1 |
-| P0 | [UI-2-0021](tasks/UI-2-0021.md (doc_task_0045)) (doc_task_0045) | 修復 PreviewInEditor 的 SpriteFrame 路徑解析 | done | 100% | Agent1 |
-| P1 | [UI-2-0003](tasks/UI-2-0003.md (doc_task_0027)) (doc_task_0027) | 新增 parchment 系列 design token | done | 100% | Agent1 |
-| P1 | [UI-2-0004](tasks/UI-2-0004.md (doc_task_0028)) (doc_task_0028) | 新增淺底專用 label-style 變體 | done | 100% | Agent1 |
-| P1 | [UI-2-0006](tasks/UI-2-0006.md (doc_task_0030)) (doc_task_0030) | 驗證 shared button family 的 border 20px 規範 | done | 100% | Agent1 |
-| P1 | [UI-2-0007](tasks/UI-2-0007.md (doc_task_0031)) (doc_task_0031) | 為多個 skin 補上 shadow slot 定義 | done | 100% | Agent1 |
-| P1 | [UI-2-0008](tasks/UI-2-0008.md (doc_task_0032)) (doc_task_0032) | 建立 item-cell 標準 skin fragment | done | 0% | Agent1 |
-| P1 | [UI-2-0009](tasks/UI-2-0009.md (doc_task_0033)) (doc_task_0033) | 建立 common-parchment skin fragment | done | 0% | Agent1 |
-| P1 | [UI-2-0010](tasks/UI-2-0010.md (doc_task_0034)) (doc_task_0034) | 為 `UIPreviewBuilder` 加入 shadow layer 渲染 | done | 85% | Agent1 |
-| P1 | [UI-2-0011](tasks/UI-2-0011.md (doc_task_0035)) (doc_task_0035) | 為 `UIPreviewBuilder` 加入 noise overlay | done | 100% | Agent1 |
-| P1 | [UI-2-0012](tasks/UI-2-0012.md (doc_task_0036)) (doc_task_0036) | `duel.btn.accept` 對齊 `equipment.primary` | done | 100% | Agent1 |
-| P1 | [UI-2-0013](tasks/UI-2-0013.md (doc_task_0037)) (doc_task_0037) | lobby / popup / duel 首批 skin 補 shadow slot | done | 100% | Agent1 |
-| P1 | [UI-2-0014](tasks/UI-2-0014.md (doc_task_0038)) (doc_task_0038) | general / support / shop / gacha 群組補 shadow slot | done | 100% | Agent1 |
-| P1 | [UI-2-0015](tasks/UI-2-0015.md (doc_task_0039)) (doc_task_0039) | battle / system 群組補 shadow slot | done | 100% | Agent1 |
-| P1 | [UI-2-0016](tasks/UI-2-0016.md (doc_task_0040)) (doc_task_0040) | 補齊 popup / Layout / legacy shadow 覆蓋 | done | 60% | Agent1 |
-| P1 | [UI-2-0017](tasks/UI-2-0017.md (doc_task_0041)) (doc_task_0041) | 修補 general-detail bleed slot 缺失 | done | 100% | Agent1 |
-| P1 | [UI-2-0018](tasks/UI-2-0018.md (doc_task_0042)) (doc_task_0042) | 補上 screen-driven preview harness | done | 100% | Agent1 |
-| P1 | [UI-2-0019](tasks/UI-2-0019.md (doc_task_0043)) (doc_task_0043) | 對齊 D-2 QA 目標與 target family | done | 100% | Agent1 |
-| P1 | [UI-2-0020](tasks/UI-2-0020.md (doc_task_0044)) (doc_task_0044) | 補上 shared light-surface carrier | done | 0% | Agent1 |
-| P1 | [UI-2-0022](tasks/UI-2-0022.md (doc_task_0046)) (doc_task_0046) | `general-list` 升級正式九宮格皮膚 | done | 100% | Agent1 |
-| P1 | [UI-2-0023](tasks/UI-2-0023.md (doc_task_0047)) (doc_task_0047) | 完成 headless preview screenshot 流程 | done | 100% | Agent1 |
-| P1 | [UI-2-0024](tasks/UI-2-0024.md (doc_task_0048)) (doc_task_0048) | 拆分 `UIPreviewBuilder.ts` 降低風險 | completed | 100% | Agent1 |
-| P1 | [UI-2-0025](tasks/UI-2-0025.md (doc_task_0049)) (doc_task_0049) | 對齊 `Gacha` preview contract | done | 100% | Agent1 |
-| P1 | [UI-1-0005](tasks/UI-1-0005.md (doc_task_0013)) (doc_task_0013) | 產生水平 Tab active/inactive sprites | done | 100% | Agent2 |
-| P1 | [UI-1-0006](tasks/UI-1-0006.md (doc_task_0014)) (doc_task_0014) | 產生 bleed overlay sprites | done | 100% | Agent2 |
-| P1 | [UI-1-0007](tasks/UI-1-0007.md (doc_task_0015)) (doc_task_0015) | 產生 dark_metal frame/fill/bg sprites | done | 100% | Agent2 |
-| P1 | [UI-1-0008](tasks/UI-1-0008.md (doc_task_0016)) (doc_task_0016) | 產生 circle_icon sprites | done | 100% | Agent2 |
-| P1 | [UI-1-0010](tasks/UI-1-0010.md (doc_task_0018)) (doc_task_0018) | 產生 badge sprites | done | 100% | Agent2 |
-| P1 | [UI-1-0011](tasks/UI-1-0011.md (doc_task_0019)) (doc_task_0019) | 產生 gold_cta frame/fill/bg sprites | done | 100% | Agent2 |
-| P1 | [UI-1-0012](tasks/UI-1-0012.md (doc_task_0020)) (doc_task_0020) | 建立 `validate-skin-contracts.js` | done | 100% | Agent2 |
-| P1 | [UI-1-0013](tasks/UI-1-0013.md (doc_task_0021)) (doc_task_0021) | 建立 frame sprite 金色邊緣掃描 | done | 100% | Agent2 |
-| P1 | [UI-1-0014](tasks/UI-1-0014.md (doc_task_0022)) (doc_task_0022) | `LobbyMain` 正式截圖與 notes 回填 | done | 100% | Agent2 |
-| P1 | [UI-1-0015](tasks/UI-1-0015.md (doc_task_0023)) (doc_task_0023) | `ShopMain/Gacha` 正式比較與 notes 回填 | done | 100% | Agent2 |
-| P1 | [UI-1-0016](tasks/UI-1-0016.md (doc_task_0024)) (doc_task_0024) | `DuelChallenge` mixed-family QA | done | 100% | Agent2 |
-| P2 | [UI-2-0005](tasks/UI-2-0005.md (doc_task_0029)) (doc_task_0029) | button-skin 新增 selected 第四態 | done | 100% | Agent1 |
-| P2 | [UI-1-0009](tasks/UI-1-0009.md (doc_task_0017)) (doc_task_0017) | 產生 diamond_tab sprites | done | 100% | Agent2 |
-
-| P1 | [UI-2-0117](tasks/UI/UI-2-0117.md (doc_task_0406)) (doc_task_0406) | 修正蔡文姬、黃月英臉型、髮型與配色辨識 | in-progress | 100% | codex-gpt-6.1 |
-
-| P1 | [UI-2-0118](tasks/UI/UI-2-0118.md (doc_task_0407)) (doc_task_0407) | 簡化女角衣帶並校正手指與道具 | done | 100% | codex-gpt-6.1 |
-
-| P1 | [UI-2-0119](tasks/UI/UI-2-0119.md (doc_task_0408)) (doc_task_0408) | 拉開五位吳將五官辨識度並收束衣帶 | done | 100% | codex-gpt-6.1 |
-
-| P1 | [UI-2-0120](tasks/UI/UI-2-0120.md (doc_task_0411)) (doc_task_0411) | 延長蔡文姬古琴並修正抱持姿勢 | done | 85% | codex-gpt-6.1 |
-
-| P1 | [UI-2-0223](tasks/UI/UI-2-0223.md (doc_task_1412)) (doc_task_1412) | 王基魏藍軍政官立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0224](tasks/UI/UI-2-0224.md (doc_task_1413)) (doc_task_1413) | 孫禮魏藍弓騎立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0225](tasks/UI/UI-2-0225.md (doc_task_1414)) (doc_task_1414) | 王渾魏藍年長都督立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0226](tasks/UI/UI-2-0226.md (doc_task_1415)) (doc_task_1415) | 文欽魏藍暗朱前線將領立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0227](tasks/UI/UI-2-0227.md (doc_task_1416)) (doc_task_1416) | 公孫淵深青骨白遼東割據者立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0228](tasks/UI/UI-2-0228.md (doc_task_1418)) (doc_task_1418) | 木鹿大王青銅赭金象兵統領立繪與列表頭像 | in-progress | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0229](tasks/UI/UI-2-0229.md (doc_task_1419)) (doc_task_1419) | 鄂煥鐵紫前線勇將立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0230](tasks/UI/UI-2-0230.md (doc_task_1420)) (doc_task_1420) | 沙摩柯青黛神射立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-
-| P1 | [UI-1-0017](tasks/UI/UI-1-0017.md (doc_task_0409)) (doc_task_0409) | 校正魏國五位武將立繪構圖與個人色票 | in-progress | 70% | codex-gpt-6.1 |
-
-| P1 | [UI-1-0018](tasks/UI/UI-1-0018.md (doc_task_0410)) (doc_task_0410) | 拉開魏國第二批五位武將的臉部與個人配色 | in-progress | 95% | codex-gpt-6.1 |
-
-| P1 | [UI-1-0019](tasks/UI/UI-1-0019.md (doc_task_0412)) (doc_task_0412) | 審核蜀國七位武將立繪辨識與個人色票 | in-progress | 15% | codex-gpt-6.1 |
-
-## HTML-to-UCUF Plan5 Tooling
-
-| 優先級 | 卡號 | 簡單描述 | 狀態 | 完成度% | Owner |
-|---|---|---|---|---|---|
-| P0 | [PROG-2-0001](tasks/PROG-2-0001.md (doc_task_0177)) (doc_task_0177) | 建立 Plan5、任務卡與 shard bootstrap | done | 100% | GitHubCopilot |
-| P0 | [PROG-2-0002](tasks/PROG-2-0002.md (doc_task_0178)) (doc_task_0178) | HTML-to-UCUF 舊規則與衝突流程審計 | done | 100% | GitHubCopilot |
-| P0 | [PROG-2-0003](tasks/PROG-2-0003.md (doc_task_0179)) (doc_task_0179) | final gate 低分診斷與 nextFixes 契約 | done | 100% | GitHubCopilot |
-| P0 | [PROG-2-0004](tasks/PROG-2-0004.md (doc_task_0180)) (doc_task_0180) | CSS semantics extraction parity | done | 100% | GitHubCopilot |
-| P0 | [PROG-2-0005](tasks/PROG-2-0005.md (doc_task_0181)) (doc_task_0181) | UCUF runtime renderer parity closure | done | 100% | GitHubCopilot |
-| P1 | [PROG-2-0006](tasks/PROG-2-0006.md (doc_task_0182)) (doc_task_0182) | source-derived spec authority hardening | done | 100% | GitHubCopilot |
-| P1 | [PROG-2-0007](tasks/PROG-2-0007.md (doc_task_0183)) (doc_task_0183) | 95% pixel fidelity regression matrix | open | 0% | GitHubCopilot |
-| P1 | [PROG-2-0008](tasks/PROG-2-0008.md (doc_task_0184)) (doc_task_0184) | html-to-ucuf skill Plan5 workflow rewrite | done | 100% | GitHubCopilot |
-
-## Harness Engineering Rollout
-
-| 優先級 | 卡號 | 簡單描述 | 狀態 | 完成度% | Owner |
-|---|---|---|---|---|---|
-| P0 | [HARN-ART-0001](tasks/HARN/HARN-ART-0001.md) | 建立 Turn Artifact Schema 與版本契約 | done | 100% | GitHubCopilot |
-| P0 | [HARN-ART-0002](tasks/HARN/HARN-ART-0002.md) | 建立 Turn Artifact Validator CLI | done | 100% | GitHubCopilot |
-| P1 | [HARN-ART-0003](tasks/HARN/HARN-ART-0003.md) | 建立 Turn Artifact Storage Policy | done | 100% | GitHubCopilot |
-| P1 | [HARN-ART-0004](tasks/HARN/HARN-ART-0004.md) | 讓 Finalize 使用標準 Artifact 預設路徑 | done | 100% | GitHubCopilot |
-| P0 | [HARN-HDO-0001](tasks/HARN/HARN-HDO-0001.md) | 建立 Handoff Diff Validator Core | done | 100% | GitHubCopilot |
-| P0 | [HARN-HDO-0002](tasks/HARN/HARN-HDO-0002.md) | 建立 Handoff Diff Validator Fixtures | done | 100% | GitHubCopilot |
-| P1 | [HARN-HDO-0003](tasks/HARN/HARN-HDO-0003.md) | 將 Handoff Diff Validator 接入 Finalize | done | 100% | GitHubCopilot |
-| P1 | [HARN-HDO-0004](tasks/HARN/HARN-HDO-0004.md) | 將 Task Lock Scope 納入 Handoff Validator | done | 100% | GitHubCopilot |
-| P1 | [HARN-TRC-0001](tasks/HARN/HARN-TRC-0001.md) | 定義 Execution Trace Event Schema | done | 100% | GitHubCopilot |
-| P1 | [HARN-TRC-0002](tasks/HARN/HARN-TRC-0002.md) | 建立 Node Tool Trace Middleware | done | 100% | GitHubCopilot |
-| P1 | [HARN-TRC-0003](tasks/HARN/HARN-TRC-0003.md) | 建立 Execution Trace Collector | done | 100% | GitHubCopilot |
-| P2 | [HARN-TRC-0004](tasks/HARN/HARN-TRC-0004.md) | 將 Trace Summary 掛入 Finalize 輸出 | done | 100% | GitHubCopilot |
-| P1 | [HARN-EVAL-0001](tasks/HARN/HARN-EVAL-0001.md) | 建立 Workflow Path Taxonomy | open | 0% | GitHubCopilot |
-| P2 | [HARN-EVAL-0002](tasks/HARN/HARN-EVAL-0002.md) | 建立 Workflow Baseline Fixture Pack | open | 0% | GitHubCopilot |
-| P2 | [HARN-EVAL-0003](tasks/HARN/HARN-EVAL-0003.md) | 建立 Path Drift Comparator | open | 0% | GitHubCopilot |
-| P1 | [HARN-MET-0001](tasks/HARN/HARN-MET-0001.md) | 建立 Turn Artifact History Query | open | 0% | GitHubCopilot |
-| P2 | [HARN-MET-0002](tasks/HARN/HARN-MET-0002.md) | 建立 Harness Metrics Accumulator | open | 0% | GitHubCopilot |
-| P2 | [HARN-MET-0003](tasks/HARN/HARN-MET-0003.md) | 擴充 Harness Health Report | open | 0% | GitHubCopilot |
-| P1 | [HARN-GOV-0001](tasks/HARN/HARN-GOV-0001.md) | 建立 Harness Capability Boundary Matrix | open | 0% | GitHubCopilot |
-| P1 | [HARN-GOV-0002](tasks/HARN/HARN-GOV-0002.md) | 更新 Agent Collaboration 強制規則入口 | open | 0% | GitHubCopilot |
-| P2 | [HARN-GOV-0003](tasks/HARN/HARN-GOV-0003.md) | 更新 Task Card Template 的 Harness 欄位 | done | 100% | GitHubCopilot |
-| P0 | [HARN-PILOT-0001](tasks/HARN/HARN-PILOT-0001.md) | 執行 Doc-only Pilot | done | 100% | GitHubCopilot |
-| P1 | [HARN-PILOT-0002](tasks/HARN/HARN-PILOT-0002.md) | 執行 Tooling-code Pilot | done | 100% | GitHubCopilot |
-| P2 | [HARN-PILOT-0003](tasks/HARN/HARN-PILOT-0003.md) | 執行 UI-QA Pilot | open | 0% | GitHubCopilot |
-
-### HARN 審核摘要（2026-05-04）
-
-- 全 HARN 任務卡盤點：34 張；done 25 張、open 9 張、in-progress 0 張。
-- 34 張 HARN 任務卡皆已回寫 `## 審核結果（2026-05-04）`，內容包含審核結論、驗證證據與需修改事項。
-- 已達成鏈：`HARN-ARCH-*`、`HARN-LOG-*`、`HARN-FIX-0001`、`HARN-UI-0001`、`HARN-GOV-0003`、`HARN-ART-0001/0002/0003/0004`、`HARN-DEMO-0003`、`HARN-HDO-0001/0002/0003/0004`、`HARN-TRC-0001/0002/0003/0004`。
-- 未達成主鏈：`HARN-EVAL-*`、`HARN-MET-*`、`HARN-GOV-0001/0002`、`HARN-PILOT-0003` 仍為 open；artifact schema、validator CLI、storage policy helper、finalize default path、handoff task scope check、execution trace schema/middleware/collector/finalize attachment 已落地，後續鏈可開始重用這條 gate。
-- 下一個應優先落地的根卡：`HARN-EVAL-0001`；TRC chain 已完成，下一步可建立 workflow path taxonomy。
-
-## 依賴維護原則
-
-- 依賴的單一真相是任務卡本身與對應 shard；docs/ui-quality-todo.json 只作為生成用 aggregate manifest。
-- 本檔只保留總覽，不再複製過長的依賴敘事。
-- 若新增 blocker 或前後置關係，請同步更新任務卡與 manifest。
-
-## 更新流程
-
-1. 更新任務卡 frontmatter 與 notes。
-2. 更新對應 task shard，必要時執行
-`node tools_node/build-ui-task-manifest.js` 重建 aggregate manifest.
-3. 更新本表狀態。
-4. 若要正式 commit，確認 commit message 已帶任務卡號與 Agent 標籤。
-5. 若是 bug commit，確認 message 也寫了系統代碼、問題描述與修改描述。
-
-## 鎖卡最小欄位
-
-- `status: in-progress`
-- `started_at: <RFC3339>`
-- `started_by_agent: AgentX`
-- `notes` 第一筆寫開始時間、目前處理範圍與是否有 blocker
-| P1 | [UI-2-0255](tasks/UI/UI-2-0255.md (doc_task_1445)) (doc_task_1445) | 張春華魏藍素雅女文官立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0256](tasks/UI/UI-2-0256.md (doc_task_1446)) (doc_task_1446) | 辛憲英魏藍玉金女謀士立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0257](tasks/UI/UI-2-0257.md (doc_task_1447)) (doc_task_1447) | 步練師吳紅碧玉女輔臣立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
-| P1 | [UI-2-0258](tasks/UI/UI-2-0258.md (doc_task_1448)) (doc_task_1448) | 關銀屏蜀綠琥珀女戰將立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+- 先讀 `docs/keep.summary.md`（必讀，33 行）
+- 依工作內容選對應分片讀取
+- 搜尋特定內容：`grep_search` 搜尋 `docs/agent-briefs/checklist-shards/` 目錄
+- 修改分片後重建索引：
+  ```
+  node tools_node/shard-manager.js rebuild-index docs/agent-briefs/checklist-shards
+  ```
