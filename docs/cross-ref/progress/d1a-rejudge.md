@@ -23,5 +23,8 @@
 | 資源循環系統.md (doc_spec_0033) | 🟡（維持） | 精力上限（VitalityCap）、消耗（戰鬥 -30、結緣父 -50／母 -100＋待產）、補元散（VitalityPill）、精力條（VitalityBarView）、大器晚成線索（LateBloomClue） | E-3 每季回復：程式依數值系統 Q45 裁決（出征 10%／待命 30% 上限比例，BattleRoster.recoverVitalityOneSeason），與本規格 §F「Base 20＋紅因子×5、老年×0.6」不一致，需 PM 決定以何者為準後回寫規格 | PROG-2-1722 |
 | 經濟系統.md (doc_spec_0032) | 🟡（維持） | 資源、稀缺貨幣、道具、商城定價（ItemShopPricing）、月卡（MonthlyCard）、許願池、資源上限（ResourceCap） | E-7 通行證：只有「季度任務獎勵」一句，未定義任務、等級與獎勵表 | PROG-2-1722 |
 | 熱更新與版本控制規格書.md (doc_tech_0012) | 🟡（維持） | §二 存檔 semver 與遷移鏈（SaveVersion）；讀檔已接遷移（PlayerSaveMigrations，PROG-2-1720） | §一 主版號不符強制導向商店、§二 第 2 步向伺服器取 Server_Schema_Version、§三 Web／Native 熱更新管線：需伺服器版本端點與原生打包，尚無實作 | PROG-2-1722 |
+| 同名武將系統.md (doc_spec_0005) | 🟡→✅ | E 8 項皆有代碼：Template 多版本、同隊名號限定（SortieDeploy）、戰魂寄宿（SoulTransfer）、血脈歸宗（BloodlineMerge）、版本圖鑑與差異（GeneralVersionGallery、GeneralVersionDiff）、復生重練（ReviveRetrain）、血脈灌注（BloodlineInfusion） | 無（接線欄 🟡 另依代碼計算） | PROG-2-1725 |
+| 可結緣女性來源系統.md (doc_spec_0003) | 🟡→✅ | E 8 項皆有代碼：轉蛋女將池（Female_Role_Type）、傭兵女將刷新（FemalePoolRefresh、宴客令 ItemRefreshEffect）、女性俘虜處理（PrisonerOfWar）、地下城救美（DungeonRescue）、女兒成年分流（DaughterComingOfAge）、品質分級（FemaleSource）、送禮好感（GiftAffection）、血統模擬預覽（BreedingPreviewPresenter） | 無（接線欄 🟡 另依代碼計算） | PROG-2-1725 |
+| 因子解鎖系統.md (doc_spec_0009) | 🟡→✅ | E 7 項皆有代碼：Discovery_Level 與三階段遮罩（FactorMask、FactorVisibility）、培育窺探與戰場覺醒（FactorAwakening 的 nurture／battle 觸發）、名士預覽（SageFactorPreview）、遮罩解鎖演出（AwakeningReveal，PROG-2-1702）、先知陷阱（名士準確率 70~85%） | 無 | PROG-2-1725 |
 
 ---
