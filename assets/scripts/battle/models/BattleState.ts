@@ -123,6 +123,8 @@ export class BattleState {
   public plunderedTiles = new Set<string>();
   /** 本場已擊破回收的落石數（PROG-2-1745）：落石格擊破後即移除，軍師 HUD 靠這個數字列「已回收」 */
   public recoveredRockSlides = 0;
+  /** 本場已被敵軍踩中觸發的埋伏陷阱數（PROG-2-1750）：陷阱觸發後即移除，軍師 HUD 靠這個數字列「已觸發」 */
+  public triggeredAmbushTraps = 0;
   /** AI 擊殺充能難度（PROG-2-0920）；只影響敵方擊殺的 SP，玩家擊殺仍是固定值 */
   public aiDifficulty: AiDifficulty = 'normal';
   /** AI 單挑接受閾值（ai-difficulty.json duelAcceptThreshold）；null 表示未設定難度表，退回一般閾值（PROG-2-1325） */
@@ -203,6 +205,7 @@ export class BattleState {
     this.stageSalvage = { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 };
     this.plunderedTiles = new Set<string>();
     this.recoveredRockSlides = 0;
+    this.triggeredAmbushTraps = 0;
 
     // 重置武將狀態
     playerGeneral.currentHp = playerGeneral.maxHp;

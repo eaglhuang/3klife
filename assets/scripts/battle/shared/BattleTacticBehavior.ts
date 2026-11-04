@@ -358,6 +358,8 @@ function applySceneCamp(state: BattleState): void {
 export const AMBUSH_TRAP_TILE_NOTE = 'scene-gambit:ambush-trap';
 /** 埋伏陷阱每回合傷害（PROG-2-1590，暫定） */
 export const AMBUSH_TRAP_DAMAGE_PER_TURN = 10;
+/** 踩中埋伏陷阱的定身回合數（戰法場景規格書 B-3 森林埋伏「定身 1 回合 + 傷害」，PROG-2-1750） */
+export const AMBUSH_TRAP_ROOT_TURNS = 1;
 
 /**
  * 森林埋伏 Tile 比例（SCENE_FOREST_AMBUSH，PROG-2-1590）：林地格依比例分成陷阱／掩體／一般。
