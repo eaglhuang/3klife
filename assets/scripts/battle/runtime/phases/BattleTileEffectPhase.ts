@@ -197,6 +197,7 @@ function breakRockSlideTiles(context: BattleTileEffectPhaseContext, svc: ReturnT
       const effect = context.state.getTileEffect(unit.lane, depth);
       if (effect?.state !== 'hazard-rock' || effect.notes !== ROCK_SLIDE_TILE_NOTE) continue;
       context.state.removeTileEffect(unit.lane, depth);
+      context.state.recoveredRockSlides += 1;
       addStageSalvage(context.state.stageSalvage, scaleSalvageGain(rollRockBreakGain(random), playerLuckMultiplier(context)));
     }
   }

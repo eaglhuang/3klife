@@ -20,6 +20,7 @@ function buildContext(units: ReturnType<typeof unit>[], rocks: Array<[number, nu
         formationZones: new Map(),
         stageSalvage: emptyStageSalvage(),
         plunderedTiles: new Set<string>(),
+        recoveredRockSlides: 0,
         getTileEffect: (lane: number, depth: number) => tiles.get(`${lane},${depth}`) ?? null,
         removeTileEffect: (lane: number, depth: number) => { const e = tiles.get(`${lane},${depth}`) ?? null; tiles.delete(`${lane},${depth}`); return e; },
         getGeneral: () => null,
@@ -56,6 +57,7 @@ export function createRockBreakSalvageSuite(): TestSuite {
         assert.equals(true, tiles.has('2,4'));
         assert.equals(100, state.stageSalvage.stone);
         assert.equals(5, state.stageSalvage.weaponMaterial);
+        assert.equals(1, state.recoveredRockSlides, '擊破數供軍師 HUD 列已回收（PROG-2-1745）');
     });
 
     suite.test('敵方回合或敵軍相鄰：不擊破', () => {
