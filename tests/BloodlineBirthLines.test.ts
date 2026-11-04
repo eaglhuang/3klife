@@ -7,7 +7,7 @@ import { assert, TestSuite } from './TestRunner';
 import { InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { BloodlineGraph } from '../assets/scripts/core/services/BloodlineGraph';
 import { BreedingService } from '../assets/scripts/core/services/BreedingService';
-import { ancestorGhostLine, BLOODLINE_RESONANCE_LINE, bloodlineBirthLines, WILD_GENE_LINE } from '../assets/scripts/core/systems/BloodlineBirthLines';
+import { ancestorGhostLine, BLOODLINE_RESONANCE_LINE, bloodlineBirthLines, generationLegacyLine, WILD_GENE_LINE } from '../assets/scripts/core/systems/BloodlineBirthLines';
 import { applyWildGeneMutation, type BreedingGeneral } from '../assets/scripts/core/systems/BreedingSystem';
 import type { InheritedFactor } from '../assets/scripts/core/systems/FactorInheritance';
 
@@ -28,6 +28,13 @@ export function createBloodlineBirthLinesSuite(): TestSuite {
         assert.equals(ancestorGhostLine('趙雲'), bloodlineBirthLines({ factors: [factor(2, ['fei']), factor(3, ['nobody', 'yun'])] }, nameOf)[0]);
         assert.equals(0, bloodlineBirthLines({ factors: [factor(1, ['yun'])] }, nameOf).length);
         assert.equals(0, bloodlineBirthLines({ factors: [factor(3, ['nobody'])] }, nameOf).length);
+    });
+
+    suite.test('曾祖輩用世代傳承句取代顯靈句；祖輩維持顯靈句', () => {
+        const child = { name: '趙統' };
+        assert.equals('驚人發現！趙統 身上顯現了曾祖 趙雲 的因子！', generationLegacyLine('趙統', '趙雲'));
+        assert.equals(generationLegacyLine('趙統', '趙雲'), bloodlineBirthLines({ child, factors: [factor(2, ['fei']), factor(3, ['yun'])] }, nameOf).join('|'));
+        assert.equals(ancestorGhostLine('張飛'), bloodlineBirthLines({ child, factors: [factor(2, ['fei']), factor(3, ['nobody'])] }, nameOf).join('|'));
     });
 
     suite.test('共鳴與突變各自成句，且不提因子名', () => {
