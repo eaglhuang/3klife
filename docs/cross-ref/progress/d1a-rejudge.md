@@ -31,5 +31,6 @@
 | 戰場適性系統.md (doc_spec_0041) | 🟡（維持） | E 1~9 項有代碼：兵種／地形／天氣適性與修正（BattleAptitude、TerrainTroopRules）、粉色因子→適性、白色因子天氣抗性（WhiteFactorTraits）、適性面板、環境偵察（BattlefieldRecon、EnvScoutPresenter）、天氣變化（WeatherSchedule） | E-10 地形特效視覺：棋盤格已依地形換底色材質（BoardRenderer.resolveCellBaseStyle），但「適性反饋」（武將站上適性高／低地形的提示）未實作 | PROG-2-1726 |
 | 俘虜處理系統.md (doc_spec_0021) | 🟡（維持） | E 7 項皆有代碼：POW 標記與豁免（PrisonerOfWar.createPowRecord、isPowExempt）、四選一彈窗（PrisonerPopupController）、勸降公式、招募消耗、監獄每季情報／資源與寶物（GameSession 季推進）、放走名聲與 5% 來投（rollFutureReturns）、監獄格數隨領地等級（prisonCapacityOf） | E-3「魅力+運氣+道具」的道具部分：公式已留 itemBonus 參數，但道具系統沒有定義「勸降提升道具」，呼叫端一律傳 0 | PROG-2-1727 |
 | 留存系統.md (doc_spec_0025) | 🟡（維持） | E 9 項中 8 項有代碼：5 階段插畫（MercenaryIllustration）、傭兵名牌、告別信、退役回流、世代成就（LegacyAchievement）、簽到連動（LoginStreak）、三國日報與插槽敘事（DailyNewsEngine） | E-7 薪資／懲罰系統：規格只有「武將離隊或忠誠度下降的懲罰機制」一句，未定義薪資數值、扣法與懲罰內容（虎符沒收降忠誠 30 點屬兵種系統，已另做） | PROG-2-1727 |
+| 家族關係（史實相性）系統.md (doc_spec_0024) | 🟡（維持） | E 9 項中 8 項有代碼：關係類型（KinRelation）、史實配對表（HistoricalPairs）、相性標籤引擎（analyzeTagResonance）、爆發力加成、動態關係（KinDynamicRelations）、關係事件（RelationEvents）、合攻聯動（ComboAttackKin）、衰退與維護（decaySeason 接季推進）；E-6 網絡圖資料層已做（RelationGraph） | E-6 關係圖鑑畫面（節點＋連線的版面、入口、頭像）規格未定，尚未接 UI | PROG-2-1728 |
 
 ---

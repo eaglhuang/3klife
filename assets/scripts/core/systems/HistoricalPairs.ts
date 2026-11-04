@@ -51,6 +51,13 @@ export class HistoricalPairTable {
         return this.byPair.get(pairKey(templateA, templateB)) ?? null;
     }
 
+    /** 列出與某位武將有關的所有史實關係（依 relationId 排序，輸出穩定） */
+    relationsOf(templateId: string): HistoricalRelation[] {
+        return Array.from(this.byPair.values())
+            .filter((r) => r.templateA === templateId || r.templateB === templateId)
+            .sort((a, b) => a.relationId.localeCompare(b.relationId));
+    }
+
     size(): number {
         return this.byPair.size;
     }
