@@ -4937,32 +4937,81 @@
     },
     "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject": {
       "kind": "color-rect",
-      "color": "colorWhite",
-      "opacity": 0.12,
+      "color": "secondary",
+      "opacity": 0.08,
       "cornerRadius": 8,
       "borderWidth": 1,
-      "borderColor": "#4d4635"
+      "borderColor": "#d4af3766"
     },
     "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
-      "fontSize": 24,
-      "lineHeight": 28,
-      "color": "stdLabelButton",
+      "fontSize": 18,
+      "lineHeight": 24,
+      "color": "secondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
-      "isBold": true
+      "isBold": true,
+      "overflow": "SHRINK"
     },
     "auto.character-ds3-tab-overview.characterds3taboverview_span_total_tp": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
-      "fontSize": 22,
-      "lineHeight": 28,
-      "color": "stdLabelButton",
+      "fontSize": 18,
+      "lineHeight": 24,
+      "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_nav_glyph": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 48,
+      "lineHeight": 56,
+      "letterSpacing": 0,
+      "color": "secondary",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-overview.characterds3taboverview_cmd_title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 22,
+      "letterSpacing": 4,
+      "color": "secondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-overview.characterds3taboverview_cmd_label": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 15,
+      "lineHeight": 22,
+      "letterSpacing": 1,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "overflow": "SHRINK"
+    },
+    "auto.character-ds3-tab-overview.characterds3taboverview_cmd_value": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 15,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "overflow": "SHRINK",
       "isBold": true
     }
   },
