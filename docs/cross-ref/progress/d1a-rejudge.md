@@ -29,5 +29,7 @@
 | 轉蛋系統.md (doc_spec_0042) | 🟡（維持） | E 14 項中 13 項有代碼：名將池（含 Female_Role_Type）、支援卡池、轉生（Rebirth）、保底（GameSession／LocalGachaService）、結義金蘭（OverflowBond）、戰法隨機化（TacticRandomization）、天命商店（DestinyShop）、限定池排程（LimitedPoolSchedule）、貨幣分流（GachaCurrency、GachaWalletRules）、單抽／十連（GachaFlowCoordinator）、溢出轉化、死亡傳承提示與雙池導覽（GachaPoolGuide） | E-9 支援卡被動技能驗證：規格只有「支援卡池針對支援卡 (SR/SSR)」一句，未定義驗證內容 | PROG-2-1726 |
 | 傭兵系統（試用）.md (doc_spec_0029) | 🟡（維持） | E 10 項中 9 項有代碼：取得與 6 日倒數（MercenaryBond）、結義轉永久、上場不計永久紀錄、退場與告別信（MercenaryDeparture、FarewellLetterInbox）、插畫進度（MercenaryIllustration）、凍結快照（MercenarySaveModel）、退役轉教官（共用退役分流）、名牌（MercenaryNameplateRows） | E-10 演武筆記「傭兵戰鬥記錄傳回原主」：原主是另一位玩家，需伺服器與多人同步 | PROG-2-1726 |
 | 戰場適性系統.md (doc_spec_0041) | 🟡（維持） | E 1~9 項有代碼：兵種／地形／天氣適性與修正（BattleAptitude、TerrainTroopRules）、粉色因子→適性、白色因子天氣抗性（WhiteFactorTraits）、適性面板、環境偵察（BattlefieldRecon、EnvScoutPresenter）、天氣變化（WeatherSchedule） | E-10 地形特效視覺：棋盤格已依地形換底色材質（BoardRenderer.resolveCellBaseStyle），但「適性反饋」（武將站上適性高／低地形的提示）未實作 | PROG-2-1726 |
+| 俘虜處理系統.md (doc_spec_0021) | 🟡（維持） | E 7 項皆有代碼：POW 標記與豁免（PrisonerOfWar.createPowRecord、isPowExempt）、四選一彈窗（PrisonerPopupController）、勸降公式、招募消耗、監獄每季情報／資源與寶物（GameSession 季推進）、放走名聲與 5% 來投（rollFutureReturns）、監獄格數隨領地等級（prisonCapacityOf） | E-3「魅力+運氣+道具」的道具部分：公式已留 itemBonus 參數，但道具系統沒有定義「勸降提升道具」，呼叫端一律傳 0 | PROG-2-1727 |
+| 留存系統.md (doc_spec_0025) | 🟡（維持） | E 9 項中 8 項有代碼：5 階段插畫（MercenaryIllustration）、傭兵名牌、告別信、退役回流、世代成就（LegacyAchievement）、簽到連動（LoginStreak）、三國日報與插槽敘事（DailyNewsEngine） | E-7 薪資／懲罰系統：規格只有「武將離隊或忠誠度下降的懲罰機制」一句，未定義薪資數值、扣法與懲罰內容（虎符沒收降忠誠 30 點屬兵種系統，已另做） | PROG-2-1727 |
 
 ---
