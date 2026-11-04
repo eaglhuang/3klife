@@ -15,6 +15,7 @@ import {
     verifyRetainedOfflineBattleChain, type OfflineBattleResultDigest, type OfflineBattleSnapshot,
 } from '../../core/systems/OfflineBattleSnapshot';
 import { formatJournalSeason } from './GeneralJournalController';
+import { journalSummaryText, journalText, type JournalTextLookup } from './JournalTexts';
 
 export const BATTLE_REVIEW_PAGE_SIZE = 6;
 
@@ -29,6 +30,8 @@ export interface BattleReviewDeps {
     snapshots: () => readonly OfflineBattleSnapshot[];
     /** 帶 snapshotRef 的日誌，用來取季節與摘要 */
     journal: () => readonly JournalEntry[];
+    /** 畫面文字查表（PROG-2-1743）：標題用 §H UI_OFFLINE_BATTLE_SNAPSHOT，摘要有 summaryKey 時換譯文；未提供時用 zh-TW */
+    lookup?: JournalTextLookup;
 }
 
 export interface BattleReviewFlowView {
@@ -67,7 +70,7 @@ export class BattleReviewController {
             .slice(page * BATTLE_REVIEW_PAGE_SIZE, (page + 1) * BATTLE_REVIEW_PAGE_SIZE)
             .map((s) => {
                 const entry = entries.get(s.snapshotId);
-                const head = entry ? `${formatJournalSeason(entry.timestamp)}　${entry.summary}` : s.snapshotId;
+                const head = entry ? `${formatJournalSeason(entry.timestamp)}　${journalSummaryText(this._deps.lookup, entry)}` : s.snapshotId;
                 return `${head}｜${BATTLE_RESULT_LABEL[s.resultDigest]}`;
             });
     }
@@ -84,7 +87,7 @@ export class BattleReviewController {
         const total = this._deps.snapshots().length;
         const page = Math.min(this._page, this.pageCount() - 1);
         const texts: Record<string, string> = {
-            reviewTitle: '戰報',
+            reviewTitle: journalText(this._deps.lookup, 'UI_OFFLINE_BATTLE_SNAPSHOT'),
             reviewPageLabel: `第 ${page + 1}／${this.pageCount()} 頁・共 ${total} 筆`,
             reviewChainLabel: this.chainLabel(),
             reviewEmptyLabel: total === 0 ? '尚無自動結算的戰報' : '',
