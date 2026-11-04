@@ -1,7 +1,12 @@
-// @spec-source → 武將壽命系統.md (doc_spec_0018)；PROG-2-1429 依建檔紀錄補標出處
+// @spec-source → 武將壽命系統.md (doc_spec_0018)；PROG-2-1429 依建檔紀錄補標出處；武將系統.md (doc_spec_0016) §G 職能分流對話與退役語錄（PROG-2-1738）
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { GENERAL_STATUS_DEAD, RETIREMENT_AGE } from '../../core/systems/GeneralAging';
 import { GENERAL_STATUS_UNVEILED, UNVEILING_AGE } from '../../core/systems/Unveiling';
+
+/** 武將系統 §G 職能分流：退役轉教官前的選擇對話 */
+export const RETIRE_ROLE_SPLIT_LINE = '將軍願橫刀立馬，還是傳道受業？';
+/** 武將系統 §G 退役：名將退休語錄 */
+export const RETIRE_FAREWELL_QUOTE = '「老驥伏櫪，志在千里」';
 
 type RetirementGeneral = GeneralConfig & { isMentorCard?: boolean; fatherId?: string; motherId?: string };
 export interface RetirementFlowDeps {
@@ -112,7 +117,7 @@ export class RetirementFlowController {
         }
         if (this._confirmId !== target.id) {
             this._confirmId = target.id;
-            this._notice = `${target.name} 將轉為教官，不能再出戰或結緣。再按一次確認退役。`;
+            this._notice = `${RETIRE_ROLE_SPLIT_LINE}${target.name} 將轉為教官，不能再出戰或結緣。再按一次確認退役。`;
             return 'confirmation-required';
         }
         this._busy = true;
@@ -124,7 +129,7 @@ export class RetirementFlowController {
         try {
             if (child || heir) await this._deps.retireGeneral(target.id, options);
             else await this._deps.retireGeneral(target.id);
-            this._notice = `${target.name} 已退役，教官卡已保存`;
+            this._notice = `${target.name} 已退役，教官卡已保存。${RETIRE_FAREWELL_QUOTE}`;
             return 'retired';
         } catch (error) {
             this._notice = error instanceof Error ? error.message : '退役失敗，請稍後重試';
