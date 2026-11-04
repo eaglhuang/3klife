@@ -11770,5 +11770,17 @@
     "path": "docs/agent-briefs/tasks/UI/UI-2-0159.md",
     "title": "UI-2-0159 主大廳背景沿用幕府大廳季節背景",
     "category": "task"
+  },
+  {
+    "id": "doc_task_1972",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0160.md",
+    "title": "UI-2-0160 開場名將登場卡補立繪",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_1973",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0161.md",
+    "title": "UI-2-0161 人物頁總覽補齊外觀",
+    "category": "task"
   }
 ]

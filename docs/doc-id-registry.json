@@ -31,7 +31,7 @@
       "name": "registry-spec",
       "title": "遊戲規格類（spec）",
       "path": "docs/doc-id-registry-shards/registry-spec.json",
-      "count": 287
+      "count": 288
     },
     {
       "name": "registry-index",
@@ -43,7 +43,7 @@
       "name": "registry-task",
       "title": "任務卡類（task）",
       "path": "docs/doc-id-registry-shards/registry-task.json",
-      "count": 1962
+      "count": 1964
     },
     {
       "name": "registry-ai",

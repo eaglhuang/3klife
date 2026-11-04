@@ -4,6 +4,12 @@
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 2/9 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
+## 遊戲規格類 (`doc_spec`) — Part 2/2
+
+| doc_id | 路徑 | 標題 |
+|--------|------|------|
+| `doc_spec_0290` | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_本地AI回覆更正與證據分帳報告.md | 3KLife R5 本地 AI 回覆更正與證據分帳報告 |
+
 ## 索引類 (`doc_index`)
 
 | doc_id | 路徑 | 標題 |

@@ -1712,13 +1712,19 @@
   {
     "id": "doc_spec_0288",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_遊戲性決策拍板與體驗強化增補規格書.md",
-    "title": "C2 R5 遊戲性決策拍板與體驗強化增補規格書",
+    "title": "C2 R5 遊戲性決策對照與體驗強化增補規格書",
     "category": "spec"
   },
   {
     "id": "doc_spec_0289",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_待補數據表與Catalog定案總表.md",
-    "title": "C2 R5 待補數據表與 Catalog 定案總表",
+    "title": "C2 R5 待補數據表與 Catalog 候選分帳總表",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0290",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_本地AI回覆更正與證據分帳報告.md",
+    "title": "3KLife R5 本地 AI 回覆更正與證據分帳報告",
     "category": "spec"
   }
 ]

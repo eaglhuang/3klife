@@ -4,7 +4,7 @@
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 1/9 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 遊戲規格類 (`doc_spec`)
+## 遊戲規格類 (`doc_spec`) — Part 1/2
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
@@ -293,5 +293,5 @@
 | `doc_spec_0285` | docs/遊戲規格文件/整併疑問書-shards/q64-74.md | 整併疑問書 — Q64–Q74 |
 | `doc_spec_0286` | docs/遊戲規格文件/整併疑問書-shards/q75-plus.md | 整併疑問書 — Q75 起 |
 | `doc_spec_0287` | docs/遊戲規格文件/整併疑問書.md | 整併疑問書 |
-| `doc_spec_0288` | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_遊戲性決策拍板與體驗強化增補規格書.md | C2 R5 遊戲性決策拍板與體驗強化增補規格書 |
-| `doc_spec_0289` | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_待補數據表與Catalog定案總表.md | C2 R5 待補數據表與 Catalog 定案總表 |
+| `doc_spec_0288` | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_遊戲性決策拍板與體驗強化增補規格書.md | C2 R5 遊戲性決策對照與體驗強化增補規格書 |
+| `doc_spec_0289` | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_待補數據表與Catalog定案總表.md | C2 R5 待補數據表與 Catalog 候選分帳總表 |

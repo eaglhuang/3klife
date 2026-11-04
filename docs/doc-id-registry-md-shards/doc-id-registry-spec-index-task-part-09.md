@@ -248,3 +248,5 @@
 | `doc_task_1969` | docs/agent-briefs/tasks/UI/UI-2-0157.md | UI-2-0157 遊戲入口標題畫面 title-screen 轉換部署 |
 | `doc_task_1970` | docs/agent-briefs/tasks/UI/UI-2-0158.md | UI-2-0158 遊戲入口標題畫面接到 LoginScene |
 | `doc_task_1971` | docs/agent-briefs/tasks/UI/UI-2-0159.md | UI-2-0159 主大廳背景沿用幕府大廳季節背景 |
+| `doc_task_1972` | docs/agent-briefs/tasks/UI/UI-2-0160.md | UI-2-0160 開場名將登場卡補立繪 |
+| `doc_task_1973` | docs/agent-briefs/tasks/UI/UI-2-0161.md | UI-2-0161 人物頁總覽補齊外觀 |
