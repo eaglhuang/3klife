@@ -1,5 +1,5 @@
 // @spec-source → 戰場格子系統.md (doc_spec_0044)、戰場適性系統.md (doc_spec_0041)；PROG-2-1429 依建檔紀錄補標出處
-import { BattleTactic, Faction } from '../../../core/config/Constants';
+import { BattleTactic, Faction, StatusEffect } from '../../../core/config/Constants';
 import { services } from '../../../core/managers/ServiceLoader';
 import { EVENT_NAMES } from '../../../core/config/Constants';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
@@ -11,7 +11,7 @@ import { massDebuffDotDamage, tickEnemyMassDebuff } from '../../shared/EnemyMass
 import { advanceMoraleOf } from '../../shared/Morale';
 import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
-import { sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
+import { AMBUSH_TRAP_ROOT_TURNS, AMBUSH_TRAP_TILE_NOTE, sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
 import { applyTallyDefection, applyTallyTeamMoraleAura } from '../../shared/TallyPassive';
 import { addStageSalvage, FIRE_RAID_TILE_NOTE, hazardDamageTakenOf, luckSalvageMultiplierOf, ROCK_SLIDE_TILE_NOTE, rollFirePlunderGain, rollRockBreakGain, scaleSalvageGain } from '../../shared/StageSalvage';
 
@@ -110,6 +110,11 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
     if (!effect?.damagePerTurn || !tileStateRuleOf(effect).damagesOnTurnEnd || unit.isDead()) {
       continue;
     }
+    // 埋伏陷阱只抓敵軍（B-3 森林埋伏，PROG-2-1750）：我方伏兵踩到不受傷
+    const isAmbushTrap = effect.notes === AMBUSH_TRAP_TILE_NOTE;
+    if (isAmbushTrap && unit.faction !== Faction.Enemy) {
+      continue;
+    }
 
     // 火燒偷襲戰我方火抗（PROG-2-1459）：火格傷害依場景倍率減免
     const fireTaken = effect.state === 'hazard-fire' ? sceneFireDamageTakenOf(unit, context.state) : 1;
@@ -123,6 +128,12 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
       damageSource: effect.state,
       allowDamageLink: true,
     });
+    // 陷阱一次性：傷害後定身並移除，計入已觸發數
+    if (isAmbushTrap) {
+      if (!unit.isDead()) svc.buff.applyBuff(unit.id, StatusEffect.Rooted, AMBUSH_TRAP_ROOT_TURNS);
+      context.state.removeTileEffect(unit.lane, unit.depth);
+      context.state.triggeredAmbushTraps += 1;
+    }
 
     if (unit.isDead() && !killedIds.has(unit.id)) {
       killedIds.add(unit.id);

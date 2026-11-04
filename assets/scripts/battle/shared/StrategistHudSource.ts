@@ -33,6 +33,8 @@ export function strategistHudInputOf(state: BattleState, missingCounters: readon
   }
   // 已擊破的落石格已從場上移除，依累計數補列「已回收」（PROG-2-1745）
   for (let i = 0; i < (state.recoveredRockSlides ?? 0); i++) interactiveObjects.push({ kind: 'Rockfall_Node', state: 'recovered' });
+  // 已被敵軍踩中的陷阱已從場上移除，依累計數補列「已觸發」（PROG-2-1750）
+  for (let i = 0; i < (state.triggeredAmbushTraps ?? 0); i++) interactiveObjects.push({ kind: 'Trap_Cluster', state: 'triggered' });
   return {
     hazardsThisTurn: Array.from(hazards),
     interactiveObjects,

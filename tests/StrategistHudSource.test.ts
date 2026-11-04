@@ -41,6 +41,13 @@ export function createStrategistHudSourceSuite(): TestSuite {
         assert.equals('落石機關：存活 1、已回收 2', summary.interactiveObjectStatus);
     });
 
+    suite.test('已被踩中的陷阱列為已觸發（PROG-2-1750）', () => {
+        const state = new BattleState();
+        state.triggeredAmbushTraps = 1;
+        const summary = buildStrategistHudSummary(strategistHudInputOf(state));
+        assert.equals('陷阱：已觸發 1', summary.interactiveObjectStatus);
+    });
+
     suite.test('空戰場：無互動物件、無危害、尚無收益', () => {
         const summary = buildStrategistHudSummary(strategistHudInputOf(new BattleState()));
         assert.equals('無互動物件', summary.interactiveObjectStatus);
