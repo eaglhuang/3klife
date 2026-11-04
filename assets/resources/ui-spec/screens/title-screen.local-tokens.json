@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "title-screen",
+  "generatedAt": "2026-11-04T12:55:34.562Z",
+  "_sourceAuthority": "html-to-ucuf",
+  "policy": {
+    "mode": "replace-all-per-run",
+    "source": "token-suggestions sidecars",
+    "note": "Always regenerate full screen-local tokens from current conversion to avoid stale residue."
+  },
+  "sourceSuggestionFiles": [
+    "artifacts/skill-test-html-to-ucuf/title-screen/title-screen.final.layout.token-suggestions.json"
+  ],
+  "stats": {
+    "unresolvedColorCount": 6,
+    "tokenCount": 6
+  },
+  "colors": {
+    "title_screen_local_color_01": "#FFF1E0",
+    "title_screen_local_color_02": "#5F5948",
+    "title_screen_local_color_03": "#8C846C",
+    "title_screen_local_color_04": "#E9DDBF",
+    "title_screen_local_color_05": "#4D6A3F",
+    "title_screen_local_color_06": "#FFF3C4"
+  },
+  "unresolvedColors": [
+    {
+      "token": "title_screen_local_color_01",
+      "value": "rgb(255, 241, 224)",
+      "normalized": "#fff1e0",
+      "hex": "#FFF1E0",
+      "occurrences": 3,
+      "nearestExisting": {
+        "token": "gdv3BloodlineTextGlow",
+        "value": "#FFF5DB",
+        "distance": 6
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/title-screen/title-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "title_screen_local_color_02",
+      "value": "rgb(95, 89, 72)",
+      "normalized": "#5f5948",
+      "hex": "#5F5948",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "textOnParchmentMuted",
+        "value": "#6B5E4E",
+        "distance": 14
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/title-screen/title-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "title_screen_local_color_03",
+      "value": "rgb(140, 132, 108)",
+      "normalized": "#8c846c",
+      "hex": "#8C846C",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "dividerOnParchment",
+        "value": "#8C7A66",
+        "distance": 12
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/title-screen/title-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "title_screen_local_color_04",
+      "value": "rgb(233, 221, 191)",
+      "normalized": "#e9ddbf",
+      "hex": "#E9DDBF",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "gdv3LabelNote",
+        "value": "#E6D9C0",
+        "distance": 5
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/title-screen/title-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "title_screen_local_color_05",
+      "value": "rgb(77, 106, 63)",
+      "normalized": "#4d6a3f",
+      "hex": "#4D6A3F",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "gdv3BloodlineTitle",
+        "value": "#3A4F49",
+        "distance": 34
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/title-screen/title-screen.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "title_screen_local_color_06",
+      "value": "rgb(255, 243, 196)",
+      "normalized": "#fff3c4",
+      "hex": "#FFF3C4",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "gdv3LabelMode",
+        "value": "#F4E5C1",
+        "distance": 18
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/title-screen/title-screen.final.layout.token-suggestions.json"
+      ]
+    }
+  ]
+}

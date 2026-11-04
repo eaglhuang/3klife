@@ -1,0 +1,28 @@
+{
+  "screenId": "title-screen",
+  "version": 1,
+  "firstScreen": {
+    "bundles": [
+      "lobby_ui",
+      "generals"
+    ],
+    "spriteFrames": [
+      "sprites/generals/sun_quan_portrait",
+      "sprites/generals/liu_bei_portrait"
+    ],
+    "fonts": [
+      "fonts/newsreader/font",
+      "fonts/notosans_tc/font",
+      "fonts/manrope/font"
+    ],
+    "fragments": []
+  },
+  "deferred": {
+    "lazySlots": []
+  },
+  "counts": {
+    "firstScreenSpriteCount": 2,
+    "deferredSpriteCount": 0
+  },
+  "_warnings": []
+}

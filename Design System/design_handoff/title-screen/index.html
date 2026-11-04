@@ -10,6 +10,7 @@
   不走科幻基因實驗室，也不走奇幻神魔。兩位名將立繪沿用 assets/resources/sprites/generals。
   遊戲名稱待定：body[data-title] 切換 legacy（三國傳承，規格 §2.2）／survival（三國志・生存，設計系統色票檔）。
   按 T 或右上角「名稱」切換；該切換鈕屬設計稿專用（data-draft-only），轉換時略過。
+  篆字環與餘燼標 data-ucuf-skip，改由 runtime 特效處理（UI-2-0157）。
   點擊流程不變：開始遊戲 → LoadingScene → 開場（黑場古文）或大廳。
 -->
 <style>
@@ -52,8 +53,7 @@
   /* 標題 */
   .title-block { position: absolute; left: 0; right: 0; top: 250px; text-align: center; }
   .title-zh { position: relative; display: inline-block; font-family: "Songti TC", "STSong", var(--font-headline); font-weight: 900; font-size: 168px; line-height: 1; letter-spacing: 24px;
-    background: linear-gradient(180deg, #FFF3C4 0%, #FFE088 30%, #D4AF37 62%, #8A6E1F 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
-    filter: drop-shadow(0 6px 0 rgba(0,0,0,.65)) drop-shadow(0 0 28px rgba(212,175,55,.35)); }
+    color: #FFE088; text-shadow: 0 6px 0 rgba(0,0,0,.65), 0 0 28px rgba(212,175,55,.45); }
   .stamp { position: absolute; right: -96px; top: 6px; width: 82px; height: 82px; border: 4px solid #B22222; border-radius: 6px; background: rgba(178,34,34,.92);
     color: #FFF1E0; font-family: "Songti TC", "STSong", var(--font-headline); font-size: 52px; line-height: 74px; text-align: center; letter-spacing: 0; transform: rotate(-6deg);
     box-shadow: inset 0 0 0 3px rgba(255,241,224,.35), 0 4px 12px rgba(0,0,0,.6); -webkit-text-fill-color: #FFF1E0; }
@@ -84,7 +84,7 @@
 
   /* 右下版本與伺服器 */
   .meta { position: absolute; right: 48px; bottom: 50px; text-align: right; font-family: var(--font-label); font-size: 17px; color: #8C846C; line-height: 30px; }
-  .meta b { color: #D0C5AF; font-weight: 600; }
+  .meta div { color: #D0C5AF; }
   .copyright { position: absolute; left: 0; right: 0; bottom: 18px; text-align: center; font-family: var(--font-label); font-size: 14px; color: #5f5948; letter-spacing: 2px; }
   .rating { position: absolute; right: 48px; top: 40px; width: 64px; height: 64px; border-radius: 8px; border: 2px solid #4D6A3F; background: rgba(46,139,87,.18);
     font-family: var(--font-label); font-size: 22px; font-weight: 800; color: #86E1A5; line-height: 60px; text-align: center; }
@@ -98,13 +98,13 @@
   <div class="bg" id="title-screen.bg" data-layer="background"></div>
   <div class="paper" data-layer="background"></div>
 
-  <svg class="seal-ring" id="title-screen.seal-ring" viewBox="0 0 900 900" data-layer="background">
+  <svg class="seal-ring" id="title-screen.seal-ring" viewBox="0 0 900 900" data-layer="background" data-ucuf-skip="true">
     <defs><path id="ring-o" d="M450,450 m-400,0 a400,400 0 1,1 800,0 a400,400 0 1,1 -800,0"/></defs>
     <circle cx="450" cy="450" r="430" fill="none" stroke="#D4AF37" stroke-width="1.5"/>
     <circle cx="450" cy="450" r="370" fill="none" stroke="#D4AF37" stroke-width="1" stroke-dasharray="2 10"/>
     <text font-size="40"><textPath href="#ring-o">祖紋命篆・血脈不滅・英靈長存・薪火相傳・宗嗣綿延・天命所歸・</textPath></text>
   </svg>
-  <svg class="seal-ring inner" viewBox="0 0 680 680" data-layer="background">
+  <svg class="seal-ring inner" viewBox="0 0 680 680" data-layer="background" data-ucuf-skip="true">
     <defs><path id="ring-i" d="M340,340 m-290,0 a290,290 0 1,1 580,0 a290,290 0 1,1 -580,0"/></defs>
     <circle cx="340" cy="340" r="320" fill="none" stroke="#D4AF37" stroke-width="1"/>
     <text font-size="30"><textPath href="#ring-i">魏・蜀・吳・群・十四祖・六色因・命紋靈獸・</textPath></text>
@@ -115,7 +115,7 @@
     <img class="hero right"  src="../../../assets/resources/sprites/generals/liu_bei_portrait.png" alt="劉備">
   </div>
   <div class="vignette" data-layer="background"></div>
-  <div id="embers" data-layer="fx"></div>
+  <div id="embers" data-layer="fx" data-ucuf-skip="true"></div>
 
   <div class="title-block" id="title-screen.title">
     <div class="title-zh"><span class="t-legacy">三國傳承</span><span class="t-survival">三國志・生存</span><span class="stamp" id="title-screen.stamp"><span class="t-legacy">傳</span><span class="t-survival">生</span></span></div>
@@ -133,11 +133,11 @@
     <div class="side-btn" id="title-screen.account"><div class="ico">籍</div><div class="lbl">帳號</div></div>
   </div>
 
-  <div class="meta" id="title-screen.meta">版本 <b>v0.1.0</b><br>伺服器 <b>本機（單機）</b></div>
+  <div class="meta" id="title-screen.meta"><div id="title-screen.version">版本 v0.1.0</div><div id="title-screen.server">伺服器 本機（單機）</div></div>
   <div class="rating" id="title-screen.rating">12+</div>
   <div class="copyright">© 3KLife　本作品為虛構創作，與史實人物無涉</div>
 
-  <div class="draft-toggle" data-draft-only="true" onclick="toggleTitle()">名稱：切換（T）</div>
+  <div class="draft-toggle" data-draft-only="true" data-ucuf-skip="true" onclick="toggleTitle()">名稱：切換（T）</div>
 
 <script>
   function toggleTitle() {

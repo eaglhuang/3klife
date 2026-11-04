@@ -1,0 +1,61 @@
+{
+  "screenId": "title-screen",
+  "motionTokens": {
+    "instant": {
+      "durationMs": 80,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "fast": {
+      "durationMs": 120,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "standard": {
+      "durationMs": 180,
+      "easing": "quadOut",
+      "emphasis": "medium"
+    },
+    "slow": {
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "emphasis": "medium"
+    },
+    "emphasis": {
+      "durationMs": 360,
+      "easing": "backOut",
+      "emphasis": "high"
+    }
+  },
+  "motions": [
+    {
+      "id": "title-screen_div_11.pulse",
+      "target": "TitleScreen_div_11",
+      "trigger": "onShow",
+      "preset": "fade",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "opacity"
+      ],
+      "keyframes": [
+        {
+          "at": "100%",
+          "body": "opacity: .35;"
+        },
+        {
+          "at": "50%",
+          "body": "opacity: .95;"
+        }
+      ],
+      "source": "css-keyframes"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "motionCount": 1,
+    "tokenCount": 5,
+    "manualRewriteCount": 2
+  }
+}

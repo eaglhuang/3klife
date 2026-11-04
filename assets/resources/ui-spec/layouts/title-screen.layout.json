@@ -1,0 +1,506 @@
+{
+  "id": "title-screen",
+  "version": 1,
+  "specVersion": 1,
+  "canvas": {
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "TitleScreen",
+    "widget": {
+      "top": 0,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "children": [
+      {
+        "type": "container",
+        "name": "TitleScreen_body",
+        "widget": {
+          "top": 0,
+          "left": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "children": [
+          {
+            "type": "container",
+            "name": "TitleScreen_div_5",
+            "widget": {
+              "top": 250,
+              "left": 0,
+              "right": 0
+            },
+            "id": "title-screen.title",
+            "width": 1920,
+            "height": 323,
+            "layout": {
+              "type": "vertical",
+              "alignItems": "center"
+            },
+            "children": [
+              {
+                "type": "container",
+                "name": "TitleScreen_div_6",
+                "width": 768,
+                "height": 168,
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "TitleScreen_span_1",
+                    "width": 768,
+                    "height": 168,
+                    "text": "三國傳承",
+                    "styleSlot": "auto.title-screen.titlescreen_span_1",
+                    "textKey": "auto.title-screen.title-screen-span-1"
+                  },
+                  {
+                    "type": "label",
+                    "name": "TitleScreen_span_2",
+                    "text": "三國志・生存",
+                    "styleSlot": "auto.title-screen.titlescreen_span_2",
+                    "textKey": "auto.title-screen.title-screen-span-2"
+                  },
+                  {
+                    "type": "panel",
+                    "name": "TitleScreen_span_3",
+                    "widget": {
+                      "right": -100,
+                      "top": 2
+                    },
+                    "id": "title-screen.stamp",
+                    "width": 90,
+                    "height": 90,
+                    "layout": {
+                      "type": "vertical",
+                      "alignItems": "center"
+                    },
+                    "skinSlot": "auto.title-screen.titlescreen_span_3",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "TitleScreen_span_4",
+                        "width": 57,
+                        "height": 57,
+                        "text": "傳",
+                        "styleSlot": "auto.title-screen.titlescreen_span_4"
+                      },
+                      {
+                        "type": "label",
+                        "name": "TitleScreen_span_5",
+                        "text": "生",
+                        "styleSlot": "auto.title-screen.titlescreen_span_5"
+                      }
+                    ]
+                  }
+                ],
+                "skinLayers": [
+                  {
+                    "layerId": "TitleScreen_span_3_CssShadow",
+                    "slotId": "auto.title-screen.titlescreen_span_3_cssshadow",
+                    "zOrder": 0,
+                    "expand": false,
+                    "width": 114,
+                    "height": 114,
+                    "widget": {
+                      "top": -6,
+                      "right": -112
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "TitleScreen_div_7",
+                "width": 1920,
+                "height": 30,
+                "layout": {
+                  "type": "vertical",
+                  "alignItems": "center"
+                },
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "TitleScreen_span_6",
+                    "width": 598,
+                    "height": 30,
+                    "text": "THREE KINGDOMS · LEGACY",
+                    "styleSlot": "auto.title-screen.titlescreen_span_6",
+                    "textKey": "auto.title-screen.title-screen-span-6"
+                  },
+                  {
+                    "type": "label",
+                    "name": "TitleScreen_span_7",
+                    "text": "THREE KINGDOMS · SURVIVAL",
+                    "styleSlot": "auto.title-screen.titlescreen_span_7",
+                    "textKey": "auto.title-screen.title-screen-span-7"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "TitleScreen_div_9",
+                "width": 1920,
+                "height": 49,
+                "text": "血脈不滅 英靈長存",
+                "styleSlot": "auto.title-screen.titlescreen_div_9",
+                "textKey": "auto.title-screen.title-screen-div-9"
+              }
+            ],
+            "skinLayers": [
+              {
+                "layerId": "TitleScreen_div_8",
+                "slotId": "auto.title-screen.titlescreen_div_8",
+                "zOrder": 0,
+                "expand": false,
+                "width": 520,
+                "height": 2,
+                "widget": {
+                  "left": 700,
+                  "right": 700,
+                  "top": 0,
+                  "bottom": 321
+                }
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "TitleScreen_div_10",
+            "widget": {
+              "top": 742,
+              "left": 960
+            },
+            "id": "title-screen.start",
+            "width": 440,
+            "height": 92,
+            "skinSlot": "auto.title-screen.titlescreen_div_10",
+            "_generatedBefore": [
+              {
+                "type": "panel",
+                "name": "TitleScreen_div_10_CssShadow",
+                "width": 520,
+                "height": 176,
+                "widget": {
+                  "top": 702,
+                  "left": 920
+                },
+                "skinSlot": "auto.title-screen.titlescreen_div_10_cssshadow",
+                "_cssEffect": "shadow",
+                "_generatedEffectFor": "TitleScreen_div_10"
+              }
+            ],
+            "children": [
+              {
+                "type": "label",
+                "name": "TitleScreen_span_8",
+                "widget": {
+                  "left": 0,
+                  "top": 0
+                },
+                "text": "開始遊戲",
+                "styleSlot": "auto.title-screen.titlescreen_span_8",
+                "width": 440,
+                "height": 92,
+                "textKey": "auto.title-screen.title-screen-span-8"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "TitleScreen_div_11",
+            "widget": {
+              "top": 860,
+              "left": 0,
+              "right": 0
+            },
+            "id": "title-screen.hint",
+            "width": 1920,
+            "height": 29,
+            "_motionId": "title-screen_div_11.pulse",
+            "text": "點擊任意處進入",
+            "styleSlot": "auto.title-screen.titlescreen_div_11",
+            "textKey": "auto.title-screen.title-screen-div-11"
+          },
+          {
+            "type": "container",
+            "name": "TitleScreen_div_12",
+            "widget": {
+              "left": 48,
+              "bottom": 44
+            },
+            "width": 308,
+            "height": 105,
+            "layout": {
+              "type": "horizontal",
+              "justifyContent": "start",
+              "spacingX": 22
+            },
+            "children": [
+              {
+                "type": "container",
+                "name": "TitleScreen_div_13",
+                "id": "title-screen.notice",
+                "width": 88,
+                "height": 105,
+                "layout": {
+                  "type": "vertical",
+                  "alignItems": "center"
+                },
+                "children": [
+                  {
+                    "type": "panel",
+                    "name": "TitleScreen_div_14",
+                    "width": 72,
+                    "height": 72,
+                    "skinSlot": "auto.title-screen.titlescreen_div_14",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "TitleScreen_span_9",
+                        "widget": {
+                          "left": 0,
+                          "top": 0
+                        },
+                        "text": "告",
+                        "styleSlot": "auto.title-screen.titlescreen_span_9",
+                        "width": 72,
+                        "height": 72
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "TitleScreen_div_15",
+                    "width": 88,
+                    "height": 25,
+                    "text": "公告",
+                    "styleSlot": "auto.title-screen.titlescreen_div_15"
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "TitleScreen_div_16",
+                "id": "title-screen.settings",
+                "width": 88,
+                "height": 105,
+                "layout": {
+                  "type": "vertical",
+                  "alignItems": "center"
+                },
+                "children": [
+                  {
+                    "type": "panel",
+                    "name": "TitleScreen_div_17",
+                    "width": 72,
+                    "height": 72,
+                    "skinSlot": "auto.title-screen.titlescreen_div_17",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "TitleScreen_span_10",
+                        "widget": {
+                          "left": 0,
+                          "top": 0
+                        },
+                        "text": "設",
+                        "styleSlot": "auto.title-screen.titlescreen_span_10",
+                        "width": 72,
+                        "height": 72
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "TitleScreen_div_18",
+                    "width": 88,
+                    "height": 25,
+                    "text": "設定",
+                    "styleSlot": "auto.title-screen.titlescreen_div_18"
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "TitleScreen_div_19",
+                "id": "title-screen.account",
+                "width": 88,
+                "height": 105,
+                "layout": {
+                  "type": "vertical",
+                  "alignItems": "center"
+                },
+                "children": [
+                  {
+                    "type": "panel",
+                    "name": "TitleScreen_div_20",
+                    "width": 72,
+                    "height": 72,
+                    "skinSlot": "auto.title-screen.titlescreen_div_20",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "TitleScreen_span_11",
+                        "widget": {
+                          "left": 0,
+                          "top": 0
+                        },
+                        "text": "籍",
+                        "styleSlot": "auto.title-screen.titlescreen_span_11",
+                        "width": 72,
+                        "height": 72
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "TitleScreen_div_21",
+                    "width": 88,
+                    "height": 25,
+                    "text": "帳號",
+                    "styleSlot": "auto.title-screen.titlescreen_div_21"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "TitleScreen_div_22",
+            "widget": {
+              "right": 48,
+              "bottom": 50
+            },
+            "id": "title-screen.meta",
+            "width": 156,
+            "height": 60,
+            "layout": {
+              "type": "vertical",
+              "alignItems": "end"
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "TitleScreen_div_23",
+                "id": "title-screen.version",
+                "width": 156,
+                "height": 30,
+                "text": "版本 v0.1.0",
+                "styleSlot": "auto.title-screen.titlescreen_div_23",
+                "textKey": "auto.title-screen.title-screen-div-23"
+              },
+              {
+                "type": "label",
+                "name": "TitleScreen_div_24",
+                "id": "title-screen.server",
+                "width": 156,
+                "height": 30,
+                "text": "伺服器 本機（單機）",
+                "styleSlot": "auto.title-screen.titlescreen_div_24",
+                "textKey": "auto.title-screen.title-screen-div-24"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "TitleScreen_div_25",
+            "widget": {
+              "top": 40,
+              "right": 48
+            },
+            "id": "title-screen.rating",
+            "width": 64,
+            "height": 64,
+            "skinSlot": "auto.title-screen.titlescreen_div_25",
+            "children": [
+              {
+                "type": "label",
+                "name": "TitleScreen_span_12",
+                "widget": {
+                  "left": 0,
+                  "top": 0
+                },
+                "text": "12+",
+                "styleSlot": "auto.title-screen.titlescreen_span_12",
+                "width": 64,
+                "height": 64,
+                "textKey": "auto.title-screen.title-screen-span-12"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "TitleScreen_div_26",
+            "widget": {
+              "left": 0,
+              "right": 0,
+              "bottom": 18
+            },
+            "width": 1920,
+            "height": 20,
+            "text": "© 3KLife 本作品為虛構創作，與史實人物無涉",
+            "styleSlot": "auto.title-screen.titlescreen_div_26",
+            "textKey": "auto.title-screen.title-screen-div-26"
+          }
+        ],
+        "skinLayers": [
+          {
+            "layerId": "TitleScreen_div_1",
+            "slotId": "auto.title-screen.titlescreen_div_1",
+            "zOrder": 0,
+            "expand": false,
+            "width": 1920,
+            "height": 1080
+          },
+          {
+            "layerId": "TitleScreen_div_2",
+            "slotId": "auto.title-screen.titlescreen_div_2",
+            "zOrder": 1,
+            "expand": false,
+            "width": 1920,
+            "height": 1080,
+            "opacity": 0.12
+          },
+          {
+            "layerId": "TitleScreen_div_3_TitleScreen_img_1",
+            "slotId": "auto.title-screen.titlescreen_img_1",
+            "zOrder": 2,
+            "expand": false,
+            "width": 560,
+            "height": 840,
+            "widget": {
+              "left": 150,
+              "bottom": -40
+            },
+            "opacity": 0.55
+          },
+          {
+            "layerId": "TitleScreen_div_3_TitleScreen_img_2",
+            "slotId": "auto.title-screen.titlescreen_img_2",
+            "zOrder": 3,
+            "expand": false,
+            "width": 560,
+            "height": 840,
+            "widget": {
+              "right": 150,
+              "bottom": -40
+            },
+            "opacity": 0.55
+          },
+          {
+            "layerId": "TitleScreen_div_4",
+            "slotId": "auto.title-screen.titlescreen_div_4",
+            "zOrder": 4,
+            "expand": false,
+            "width": 1920,
+            "height": 1080
+          }
+        ]
+      }
+    ]
+  }
+}
