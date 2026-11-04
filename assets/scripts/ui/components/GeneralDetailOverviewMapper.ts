@@ -11,6 +11,7 @@ import type {
 import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRarityMark';
 import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
 import { isLukVisible } from '../../core/systems/LuckVisibility';
+import { careerTagLabelOf } from '../../core/systems/CareerTag';
 import { NATION_DEFS } from '../../core/systems/RivalNations';
 import { PERSON_PAGE_TABS, mapGeneralReadModel, type GeneralReadModel, type PersonPageTab } from '../../core/systems/GeneralReadModel';
 import { buildGeneralCommandRows, type GeneralCommandRow } from '../../core/systems/GeneralCommandPanel';
@@ -455,7 +456,9 @@ function buildHeaderMeta(config: GeneralConfig): string {
     const faction = formatFaction(config.faction);
     const role = formatRole(config.role);
     const status = config.status ? formatStatus(config.status) : '';
-    const compact = [faction, role].filter((part) => part !== '' && !part.includes('未定'));
+    // 轉職與宿命 §E-4 職能標籤（PROG-2-1724）：5 歲宿命分流後才有
+    const career = careerTagLabelOf(config);
+    const compact = [faction, role, career].filter((part) => part !== '' && !part.includes('未定'));
 
     if (compact.length > 0) {
         return compact.join('．');
