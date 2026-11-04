@@ -462,7 +462,7 @@ export function applyWildGeneMutation(
         if (!rollWildGene(factor.generation, random)) return factor;
         const maxLevel = Math.min(STAR_JUMP_MAX_LEVEL, dictionary?.get(factor.id)?.maxLevel ?? STAR_JUMP_MAX_LEVEL);
         if (factor.level >= maxLevel) return factor;
-        return { ...factor, level: Math.min(maxLevel, factor.level + STAR_JUMP_STEP) };
+        return { ...factor, level: Math.min(maxLevel, factor.level + STAR_JUMP_STEP), wildGene: true };
     });
 }
 

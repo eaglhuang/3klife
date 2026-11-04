@@ -3,6 +3,7 @@ import { _decorator, Color, Label, Node, Tween, tween, UITransform, UIOpacity, W
 import { services } from "../../core/managers/ServiceLoader";
 import { UIPreviewBuilder } from "../core/UIPreviewBuilder";
 import { SolidBackground } from './SolidBackground';
+import { ToastQueue } from '../core/ToastQueue';
 
 const { ccclass } = _decorator;
 
@@ -15,6 +16,12 @@ export interface ToastOptions {
   blocking?: boolean;
 }
 
+interface QueuedToast {
+  message: string;
+  duration: number;
+  options?: ToastOptions;
+}
+
 @ccclass("ToastMessage")
 export class ToastMessage extends UIPreviewBuilder {
   
@@ -23,6 +30,7 @@ export class ToastMessage extends UIPreviewBuilder {
   private _isBuilt = false;
   private _blockingOverlay: Node | null = null;
   private _activeToastKey: string | null = null;
+  private _queue = new ToastQueue<QueuedToast>();
 
   /** 建立（或複用）全螢幕排序擋板 */
   private _ensureBlockingOverlay(): Node {
@@ -66,6 +74,7 @@ export class ToastMessage extends UIPreviewBuilder {
     if (key && this._activeToastKey && key !== this._activeToastKey) return;
     if (this._blockingOverlay) this._blockingOverlay.active = false;
     if (this.hideTween) { this.hideTween.stop(); this.hideTween = null; }
+    this._queue.clear();
     this._activeToastKey = null;
     this.node.active = false;
   }
@@ -80,14 +89,21 @@ export class ToastMessage extends UIPreviewBuilder {
   }
 
   public async show(message: string, duration = 1.2, options?: ToastOptions): Promise<void> {
-    this._activeToastKey = options?.key ?? null;
-
     // blocking 模式：顯示全螢幕擋板 + 置中文字，跳過一般 toast 流程
     if (options?.blocking) {
+      this._activeToastKey = options.key ?? null;
       this.node.active = true;
       this._ensureBlockingOverlay().active = true;
       return;
     }
+
+    // 連發時排隊，避免後一句蓋掉玩家還沒讀的前一句
+    const toast: QueuedToast = { message, duration, options };
+    if (this._queue.offer(toast, Date.now() / 1000)) await this._present(toast);
+  }
+
+  private async _present({ message, duration, options }: QueuedToast): Promise<void> {
+    this._activeToastKey = options?.key ?? null;
 
     if (!this._isBuilt) {
         // 1. 動態載入三層結構契約與 Design Tokens v2.2
@@ -129,6 +145,11 @@ export class ToastMessage extends UIPreviewBuilder {
       .delay(Math.max(0.2, duration))
       .to(0.3, { opacity: 0 })
       .call(() => {
+        const next = this._queue.next(Date.now() / 1000);
+        if (next) {
+          void this._present(next);
+          return;
+        }
         this._activeToastKey = null;
         this.node.active = false;
       })
