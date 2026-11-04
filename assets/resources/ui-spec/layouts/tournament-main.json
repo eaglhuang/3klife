@@ -134,7 +134,7 @@
                 "type": "button",
                 "name": "BtnRegister",
                 "id": "btnRegister",
-                "width": 220,
+                "width": 176,
                 "height": 64,
                 "skinSlot": "trn.button.bg",
                 "children": [
@@ -142,7 +142,7 @@
                     "type": "label",
                     "name": "BtnRegisterLabel",
                     "id": "btnRegisterLabel",
-                    "width": 220,
+                    "width": 176,
                     "height": 40,
                     "text": "報名",
                     "styleSlot": "trn.label.body"
@@ -157,7 +157,7 @@
                 "type": "button",
                 "name": "BtnPlay",
                 "id": "btnPlay",
-                "width": 220,
+                "width": 176,
                 "height": 64,
                 "skinSlot": "trn.button.bg",
                 "children": [
@@ -165,14 +165,37 @@
                     "type": "label",
                     "name": "BtnPlayLabel",
                     "id": "btnPlayLabel",
-                    "width": 220,
+                    "width": 176,
                     "height": 40,
                     "text": "參戰",
                     "styleSlot": "trn.label.body"
                   }
                 ],
                 "widget": {
-                  "left": 241,
+                  "left": 192,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnMonthly",
+                "id": "btnMonthly",
+                "width": 176,
+                "height": 64,
+                "skinSlot": "trn.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnMonthlyLabel",
+                    "id": "btnMonthlyLabel",
+                    "width": 176,
+                    "height": 40,
+                    "text": "場景賽",
+                    "styleSlot": "trn.label.body"
+                  }
+                ],
+                "widget": {
+                  "hCenter": true,
                   "vCenter": true
                 }
               },
@@ -180,7 +203,7 @@
                 "type": "button",
                 "name": "BtnClaim",
                 "id": "btnClaim",
-                "width": 220,
+                "width": 176,
                 "height": 64,
                 "skinSlot": "trn.button.bg",
                 "children": [
@@ -188,14 +211,14 @@
                     "type": "label",
                     "name": "BtnClaimLabel",
                     "id": "btnClaimLabel",
-                    "width": 220,
+                    "width": 176,
                     "height": 40,
                     "text": "領獎",
                     "styleSlot": "trn.label.body"
                   }
                 ],
                 "widget": {
-                  "right": 241,
+                  "right": 192,
                   "vCenter": true
                 }
               },
@@ -203,7 +226,7 @@
                 "type": "button",
                 "name": "BtnClose",
                 "id": "btnClose",
-                "width": 220,
+                "width": 176,
                 "height": 64,
                 "skinSlot": "trn.button.bg",
                 "children": [
@@ -211,7 +234,7 @@
                     "type": "label",
                     "name": "BtnCloseLabel",
                     "id": "btnCloseLabel",
-                    "width": 220,
+                    "width": 176,
                     "height": 40,
                     "text": "關閉",
                     "styleSlot": "trn.label.body"

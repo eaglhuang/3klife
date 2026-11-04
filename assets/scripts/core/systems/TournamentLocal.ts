@@ -16,6 +16,7 @@
  */
 import { TerrainType, Weather } from '../../shared/CommonEnums';
 import { rankTierOf, softResetPoints, tournamentPhaseOf, TOURNAMENT_SEASON_DAYS, type RankTier, type TournamentPhase } from './TournamentSeason';
+import { normalizeMonthlyScenarioHistory, type MonthlyScenarioHistoryEntry } from './MonthlyScenarioCup';
 
 export const TOURNAMENT_DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -180,6 +181,8 @@ export interface TournamentState {
     /** 對戰樹目前輪次（0=初賽 … 3=決賽）與本季奪冠次數（PROG-2-1575） */
     bracketRound: number;
     championships: number;
+    /** 月度場景賽歷史（不計入主賽積分；同月只留最高分，PROG-2-1754） */
+    monthlyHistory?: MonthlyScenarioHistoryEntry[];
 }
 
 export interface TournamentEntrant {
@@ -413,5 +416,6 @@ export function normalizeTournamentState(raw: unknown): TournamentState | null {
         history,
         bracketRound: isNum(s.bracketRound) ? Math.min(TOURNAMENT_FINAL_ROUND, Math.max(0, Math.floor(s.bracketRound))) : 0,
         championships: isNum(s.championships) ? Math.max(0, Math.floor(s.championships)) : 0,
+        ...(Array.isArray(s.monthlyHistory) ? { monthlyHistory: normalizeMonthlyScenarioHistory(s.monthlyHistory) } : {}),
     };
 }
