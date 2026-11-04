@@ -3301,6 +3301,64 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_1447",
+      "id": "UI-2-0257",
+      "title": "步練師吳紅碧玉女輔臣立繪與列表頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-11-04",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-11-04T21:00:00+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "製作步練師差異化吳紅碧玉女輔臣立繪與列表頭像，臉型、耳後雙股扁髻及服色與既有女角清楚區隔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "透明背景 512×768 RGBA 正式立繪",
+        "正式與列表頭像均為 256×256 RGBA",
+        "reviewed square crop 並經 125px 檢視",
+        "Cocos PNG metadata 有效且 UUID 唯一",
+        "全量 avatar verify 通過",
+        "GeneralList 與 GeneralDetail canonical 資產路徑對應正確",
+        "吳紅基底及造型與既有角色可辨識"
+      ],
+      "deliverables": [
+        "portrait",
+        "formal avatar",
+        "cropped avatar",
+        "reviewed crop",
+        "palette ledger"
+      ],
+      "notes": "2026-11-04 | 狀態: done | 驗證: 512×768 RGBA；雙頭像256×256；reviewed 130×130 crop；三份 metadata UUID 唯一；全量驗證212成功/0失敗；GeneralList/GeneralDetail canonical path verified | 變更: 完成步練師吳紅立繪與列表頭像 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

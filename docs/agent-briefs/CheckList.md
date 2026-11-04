@@ -208,3 +208,4 @@
 - `notes` 第一筆寫開始時間、目前處理範圍與是否有 blocker
 | P1 | [UI-2-0255](tasks/UI/UI-2-0255.md (doc_task_1445)) (doc_task_1445) | 張春華魏藍素雅女文官立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
 | P1 | [UI-2-0256](tasks/UI/UI-2-0256.md (doc_task_1446)) (doc_task_1446) | 辛憲英魏藍玉金女謀士立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
+| P1 | [UI-2-0257](tasks/UI/UI-2-0257.md (doc_task_1447)) (doc_task_1447) | 步練師吳紅碧玉女輔臣立繪與列表頭像 | done | 100% | codex-gpt-6.1-sol |
