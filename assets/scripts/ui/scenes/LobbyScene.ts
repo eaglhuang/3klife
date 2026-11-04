@@ -173,7 +173,7 @@ import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearBu
 import { DailyReportController } from '../core/DailyReportController';
 import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
 import type { TabKey } from '../components/character-ds3/GeneralDetailChromePresenter';
-import { ensureDs3SideAction, setDs3SideActionEnabled } from '../components/character-ds3/Ds3SideActions';
+import { ensureDs3SideAction, ensureDs3SideLabel, setDs3SideActionEnabled } from '../components/character-ds3/Ds3SideActions';
 import { DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
 
 const { ccclass } = _decorator;
@@ -187,7 +187,8 @@ const FACTOR_HEX_POSITION = { x: 90, y: -260 };
 
 /** 圖鑑入口的暫定位置（PROVISIONAL：畫面沒有預留節點，程式掛在 CharacterDs3Host 下，待 Codex 實機微調） */
 const GALLERY_ENTRY_NODE_NAME = 'GeneralVersionGalleryEntry';
-const CHARACTER_DS3_SIDE_ACTION_INDEX = { journal: 0, soulInject: 1, gallery: 2 };
+const CHARACTER_DS3_SIDE_ACTION_INDEX = { journal: 0, soulInject: 1, gallery: 2, totalTp: 3 };
+const TOTAL_TP_NODE_NAME = 'totalTpLabel';
 
 type GeneralDetailRuntimeTab = 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitude';
 type GeneralDetailEntrySmokeSource = 'ucuf-nav';
@@ -3976,9 +3977,10 @@ export class LobbyScene extends Component {
 
     /** 人物頁總 TP（寄宿戰魂會加總到 totalTp）；寄宿後重讀名冊，避免顯示舊值（PROG-2-1070） */
     private _refreshCharacterDs3TotalTp(): void {
-        const label = this._characterDs3Surface()?.binder?.getLabel('totalTpLabel');
+        const hostNode = this._characterDs3Surface()?.node;
         const general = this._characterDs3General as (GeneralConfig & { totalTp?: number }) | null;
-        if (!label || !general) return;
+        if (!hostNode || !general) return;
+        const label = ensureDs3SideLabel(hostNode, TOTAL_TP_NODE_NAME, CHARACTER_DS3_SIDE_ACTION_INDEX.totalTp);
         label.string = services().i18n.t('ui.general.soul_inject.total_tp', String(general.totalTp ?? 0));
     }
 
@@ -4031,7 +4033,7 @@ export class LobbyScene extends Component {
         const panel = ensureDs3BloodlineTree(hostNode, general.name);
         panel.onCardPeek = (view) => this._showToast(`${view.title}：${view.tendency}`);
         panel.node.active = true;
-        for (const name of [FACTOR_HEX_NODE_NAME, 'btnGeneralJournal', 'btnSoulInject', GALLERY_ENTRY_NODE_NAME]) {
+        for (const name of [FACTOR_HEX_NODE_NAME, 'btnGeneralJournal', 'btnSoulInject', GALLERY_ENTRY_NODE_NAME, TOTAL_TP_NODE_NAME]) {
             hostNode.getChildByName(name)?.setSiblingIndex(hostNode.children.length - 1);
         }
         void panel.loadForGeneral(general.id);

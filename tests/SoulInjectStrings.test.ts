@@ -40,10 +40,8 @@ export function createSoulInjectStringsSuite(): TestSuite {
     });
 
     suite.test('人物頁總 TP 標籤存在；寄宿後 LobbyScene 重讀名冊並刷新標籤', () => {
-        const layout = fs.readFileSync(path.join(ROOT, 'assets/resources/ui-spec/fragments/layouts/character-ds3-overview-content.json'), 'utf8');
-        assert.isTrue(layout.includes('"id": "totalTpLabel"'));
         const lobby = fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
-        assert.isTrue(lobby.includes("getLabel('totalTpLabel')"));
+        assert.isTrue(lobby.includes('ensureDs3SideLabel(hostNode, TOTAL_TP_NODE_NAME'));
         assert.isTrue(lobby.includes('services().session.roster.find((g) => g.id === general.id)'));
     });
 

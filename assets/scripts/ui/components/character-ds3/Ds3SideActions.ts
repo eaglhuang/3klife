@@ -50,6 +50,25 @@ export function ensureDs3SideAction(host: Node, name: string, text: string, inde
     return node.addComponent(Button);
 }
 
+/** 取得（或建立）動作欄裡的純文字列，例如總 TP */
+export function ensureDs3SideLabel(host: Node, name: string, index: number): Label {
+    const existing = host.getChildByName(name)?.getComponent(Label);
+    if (existing) return existing;
+
+    const node = new Node(name);
+    node.layer = host.layer;
+    node.parent = host;
+    node.setPosition(COLUMN.x, COLUMN.firstY + COLUMN.stepY * index, 0);
+    node.addComponent(UITransform).setContentSize(COLUMN.width, COLUMN.height);
+    const label = node.addComponent(Label);
+    label.fontSize = FONT_SIZE;
+    label.lineHeight = COLUMN.height;
+    label.color = TEXT_COLOR;
+    label.horizontalAlign = Label.HorizontalAlign.CENTER;
+    label.verticalAlign = Label.VerticalAlign.CENTER;
+    return label;
+}
+
 /** 不可點時要看得出來：這顆按鈕沒有轉場貼圖，用透明度表示 */
 export function setDs3SideActionEnabled(button: Button, enabled: boolean): void {
     button.interactable = enabled;

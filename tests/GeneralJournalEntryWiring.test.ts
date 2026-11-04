@@ -11,37 +11,12 @@ import { assert, TestSuite } from './TestRunner';
 const ROOT = path.resolve(__dirname, '..');
 const read = (rel: string): string => fs.readFileSync(path.join(ROOT, rel), 'utf8');
 
-type LayoutNode = Record<string, unknown> & { children?: LayoutNode[] };
-
-function findNode(node: LayoutNode | undefined, match: (n: LayoutNode) => boolean): LayoutNode | null {
-    if (!node || typeof node !== 'object') return null;
-    if (match(node)) return node;
-    for (const child of node.children ?? []) {
-        const found = findNode(child, match);
-        if (found) return found;
-    }
-    return null;
-}
-
 export function createGeneralJournalEntryWiringSuite(): TestSuite {
     const suite = new TestSuite('GeneralJournalEntryWiring (人物頁武將日誌入口 PROG-2-1723)');
 
-    suite.test('Overview 動作列有 btnGeneralJournal，slot 已註冊，整列寬度不超過容器', () => {
-        const layout = JSON.parse(read('assets/resources/ui-spec/fragments/layouts/character-ds3-overview-content.json'));
-        const skin = JSON.parse(read('assets/resources/ui-spec/skins/character-ds3-main.skin.json'));
-        const row = findNode(layout.root ?? layout, (n) => n.name === 'OverviewActionRow');
-        assert.isTrue(row !== null, '版面沒有 OverviewActionRow');
-        const button = findNode(row!, (n) => n.id === 'btnGeneralJournal');
-        assert.isTrue(button !== null, '動作列沒有 btnGeneralJournal');
-        const label = findNode(button!, (n) => n.id === 'generalJournalLabel');
-        assert.isTrue(label !== null, '按鈕沒有文字節點');
-        assert.equals('武將日誌', label!.text as string);
-        assert.isTrue(typeof skin.slots[button!.skinSlot as string] === 'object', 'skinSlot 沒有在皮膚檔註冊');
-        assert.isTrue(typeof skin.slots[label!.styleSlot as string] === 'object', 'styleSlot 沒有在皮膚檔註冊');
-        const children = row!.children ?? [];
-        const spacing = ((row!.layout as { spacingX?: number } | undefined)?.spacingX ?? 0) * Math.max(0, children.length - 1);
-        const used = children.reduce((sum, child) => sum + (child.width as number), 0) + spacing;
-        assert.isTrue(used <= (row!.width as number), `動作列寬度 ${used} 超過容器 ${String(row!.width)}`);
+    suite.test('v3 版面沒有這顆按鈕時，LobbyScene 把它建在立繪左側動作欄', () => {
+        const lobby = read('assets/scripts/ui/scenes/LobbyScene.ts');
+        assert.isTrue(lobby.includes("this._characterDs3ActionButton('btnGeneralJournal'"), '沒有建立 btnGeneralJournal');
     });
 
     suite.test('LobbyScene 在 Overview 綁定 btnGeneralJournal，點了用目前武將打開日誌', () => {
