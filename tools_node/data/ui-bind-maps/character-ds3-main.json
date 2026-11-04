@@ -121,6 +121,266 @@
       "text": "人物小傳張飛，字翼德，幽州涿郡人。少年以屠豬賣酒為業，後於桃園與劉備、關羽義結金蘭，誓同生死。性烈如火，勇猛無雙——長坂橋前單槍匹馬，一聲怒吼令曹軍百萬退散；義釋嚴顏一事，足見其粗中有細，智勇兼備。然酒後失德，醉鞭督卒，終命喪部將之手，令千古扼腕。其一生豪烈，血脈中燕地武人的剛猛之氣，至今仍在後裔身上延燃。",
       "index": 0,
       "looseText": true
+    },
+    {
+      "name": "StatsRoleComment",
+      "selector": "#right-content > div > div:nth-child(1) > div:nth-child(1) > span",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "StatsGradeBadge",
+      "selector": "#right-content > div > div:nth-child(1) > div:nth-child(1) > div",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "StatsTagRow",
+      "selector": "#right-content > div > div:nth-child(1) > div:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "StatsTag_0",
+      "selector": "#right-content > div > div:nth-child(1) > div:nth-child(2) > span:nth-child(1)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "StatsTag_1",
+      "selector": "#right-content > div > div:nth-child(1) > div:nth-child(2) > span:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "StatsRadar",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > svg",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "StatsRankBadge",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "StatsRankText",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > span",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "StatsMentorTitle",
+      "selector": "#right-content > div > div:nth-child(6)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "StatsMentorGrid",
+      "selector": "#right-content > div > div:nth-child(7)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_str_current",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > span:nth-of-type(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_str_prowess",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > span:nth-of-type(3)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_str_track",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_str_fill",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_str_max",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > span",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_int_current",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span:nth-of-type(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_int_prowess",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span:nth-of-type(3)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_int_track",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_int_fill",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_int_max",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > span",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_lea_current",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > span:nth-of-type(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_lea_prowess",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > span:nth-of-type(3)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_lea_track",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_lea_fill",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_lea_max",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > span",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_pol_current",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > span:nth-of-type(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_pol_prowess",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > span:nth-of-type(3)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_pol_track",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_pol_fill",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(2) > div",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_pol_max",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(4) > div:nth-child(2) > span",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_cha_current",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(5) > div:nth-child(1) > span:nth-of-type(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_cha_prowess",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(5) > div:nth-child(1) > span:nth-of-type(3)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_cha_track",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(5) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_cha_fill",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(5) > div:nth-child(2) > div:nth-child(2) > div",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_cha_max",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(5) > div:nth-child(2) > span",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_luk_current",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(6) > div:nth-child(1) > span:nth-of-type(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_luk_prowess",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(6) > div:nth-child(1) > span:nth-of-type(3)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_luk_track",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(6) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_luk_fill",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_luk_max",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(6) > div:nth-child(2) > span",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_hp_value",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_hp_track",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(1) > div:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_hp_fill",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_hp_max",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(1) > div:nth-child(3)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_sp_value",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_sp_track",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_sp_fill",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(2) > div:nth-child(2) > div",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_sp_max",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(2) > div:nth-child(3)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_vitality_value",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(3) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_vitality_track",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(3) > div:nth-child(2)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_vitality_fill",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(3) > div:nth-child(2) > div",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "Stats_vitality_max",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(3) > div:nth-child(3)",
+      "whenText": "DUAL-LAYER ATTRIBUTES"
     }
   ]
 }

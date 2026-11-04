@@ -23,7 +23,7 @@ function loadBindMap(filePath) {
   return entries;
 }
 
-// 在瀏覽器內執行：依 selector（可加 text 精確比對、index、looseText）找元素並寫入 data-name
+// 在瀏覽器內執行：依 selector（可加 text 精確比對、index、looseText、whenText）找元素並寫入 data-name
 function applyBindMapInPage(entries) {
   const norm = value => String(value || '').replace(/\s+/g, ' ').trim();
   const wrapLooseText = parent => {
@@ -40,7 +40,17 @@ function applyBindMapInPage(entries) {
   };
   const apply = () => {
     const report = [];
+    // innerText 才是畫面上看得到的字；textContent 會連內嵌 script 一起算
+    const bodyText = norm(document.body && document.body.innerText);
     for (const entry of entries) {
+      // whenText：只在畫面含這段文字時才套用，避免結構選擇器誤中其他分頁。
+      // 框架切分頁會重用元素，上一頁留下的名字也要清掉
+      if (entry.whenText != null && !bodyText.includes(norm(entry.whenText))) {
+        let stale = [];
+        try { stale = Array.from(document.querySelectorAll(`[data-name="${entry.name}"]`)); } catch (_e) { stale = []; }
+        stale.forEach(node => node.removeAttribute('data-name'));
+        continue;
+      }
       let nodes = [];
       try { nodes = Array.from(document.querySelectorAll(entry.selector)); } catch (_e) { nodes = []; }
       if (entry.text != null) nodes = nodes.filter(node => norm(node.textContent) === norm(entry.text));

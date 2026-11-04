@@ -2440,7 +2440,7 @@
       "borderWidth": 1,
       "borderColor": "#3f6a624d"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_1": {
+    "auto.character-ds3-tab-stats.statsrolecomment": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
@@ -2453,7 +2453,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_4": {
+    "auto.character-ds3-tab-stats.statsgradebadge": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2512,7 +2512,7 @@
       "borderWidth": 2,
       "borderColor": "#ffd700"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_2": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_1": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
@@ -2525,15 +2525,35 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
+    "auto.character-ds3-tab-stats.statstag_0": {
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 0.1,
+      "cornerRadius": 5,
+      "borderWidth": 1,
+      "borderColor": "#d4af374d"
+    },
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_2": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0.96,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-stats.statstag_1": {
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 0.1,
+      "cornerRadius": 5,
+      "borderWidth": 1,
+      "borderColor": "#d4af374d"
+    },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_3": {
-      "kind": "color-rect",
-      "color": "secondary",
-      "opacity": 0.1,
-      "cornerRadius": 5,
-      "borderWidth": 1,
-      "borderColor": "#d4af374d"
-    },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_4": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -2545,27 +2565,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_5": {
-      "kind": "color-rect",
-      "color": "secondary",
-      "opacity": 0.1,
-      "cornerRadius": 5,
-      "borderWidth": 1,
-      "borderColor": "#d4af374d"
-    },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_6": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 12,
-      "lineHeight": 17,
-      "letterSpacing": 0.96,
-      "color": "secondaryLight",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_7": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_5": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2609,7 +2609,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_7": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_4": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -2622,7 +2622,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_8": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_5": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -2634,7 +2634,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_11": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_9": {
       "kind": "color-rect",
       "color": "#000000",
       "opacity": 0,
@@ -2647,7 +2647,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_12": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_10": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -2659,7 +2659,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_14": {
+    "auto.character-ds3-tab-stats.statsrankbadge": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2718,7 +2718,7 @@
       "borderWidth": 2,
       "borderColor": "#ffd700"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_9": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_6": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 24,
@@ -2731,7 +2731,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_10": {
+    "auto.character-ds3-tab-stats.statsranktext": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -2743,7 +2743,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_11": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_7": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
@@ -2756,7 +2756,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_12": {
+    "auto.character-ds3-tab-stats.stats_str_current": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 20,
@@ -2769,7 +2769,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_13": {
+    "auto.character-ds3-tab-stats.stats_str_prowess": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 20,
@@ -2782,13 +2782,13 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_21": {
+    "auto.character-ds3-tab-stats.stats_str_track": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.08,
       "cornerRadius": 3
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_22": {
+    "auto.character-ds3-tab-stats.stats_str_fill": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2832,7 +2832,7 @@
       },
       "cornerRadius": 3
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_14": {
+    "auto.character-ds3-tab-stats.stats_str_max": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 11,
@@ -2844,7 +2844,7 @@
       "horizontalAlign": "RIGHT",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_15": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_8": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
@@ -2857,7 +2857,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_16": {
+    "auto.character-ds3-tab-stats.stats_int_current": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 20,
@@ -2870,7 +2870,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_17": {
+    "auto.character-ds3-tab-stats.stats_int_prowess": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 20,
@@ -2883,19 +2883,19 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_28": {
+    "auto.character-ds3-tab-stats.stats_int_track": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.08,
       "cornerRadius": 3
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_29": {
+    "auto.character-ds3-tab-stats.stats_int_fill": {
       "kind": "color-rect",
       "color": "character_ds3_main_local_color_11",
       "opacity": 1,
       "cornerRadius": 3
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_19": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_9": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
@@ -2908,7 +2908,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_20": {
+    "auto.character-ds3-tab-stats.stats_lea_current": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 20,
@@ -2921,7 +2921,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_21": {
+    "auto.character-ds3-tab-stats.stats_lea_prowess": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 20,
@@ -2934,13 +2934,13 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_35": {
+    "auto.character-ds3-tab-stats.stats_lea_track": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.08,
       "cornerRadius": 3
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_36": {
+    "auto.character-ds3-tab-stats.stats_lea_fill": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -2984,7 +2984,7 @@
       },
       "cornerRadius": 3
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_22": {
+    "auto.character-ds3-tab-stats.stats_lea_max": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 11,
@@ -2996,7 +2996,7 @@
       "horizontalAlign": "RIGHT",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_23": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_10": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
@@ -3009,7 +3009,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_24": {
+    "auto.character-ds3-tab-stats.stats_pol_current": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 20,
@@ -3022,7 +3022,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_25": {
+    "auto.character-ds3-tab-stats.stats_pol_prowess": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 20,
@@ -3035,19 +3035,19 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_42": {
+    "auto.character-ds3-tab-stats.stats_pol_track": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.08,
       "cornerRadius": 3
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_43": {
+    "auto.character-ds3-tab-stats.stats_pol_fill": {
       "kind": "color-rect",
       "color": "textKhaki",
       "opacity": 1,
       "cornerRadius": 3
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_27": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_11": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
@@ -3060,7 +3060,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_28": {
+    "auto.character-ds3-tab-stats.stats_cha_current": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 20,
@@ -3073,7 +3073,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_29": {
+    "auto.character-ds3-tab-stats.stats_cha_prowess": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 20,
@@ -3086,13 +3086,13 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_49": {
+    "auto.character-ds3-tab-stats.stats_cha_track": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.08,
       "cornerRadius": 3
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_50": {
+    "auto.character-ds3-tab-stats.stats_cha_fill": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -3136,7 +3136,7 @@
       },
       "cornerRadius": 3
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_30": {
+    "auto.character-ds3-tab-stats.stats_cha_max": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 11,
@@ -3148,7 +3148,7 @@
       "horizontalAlign": "RIGHT",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_31": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_12": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
@@ -3161,7 +3161,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_32": {
+    "auto.character-ds3-tab-stats.stats_luk_current": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 20,
@@ -3174,7 +3174,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_33": {
+    "auto.character-ds3-tab-stats.stats_luk_prowess": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 20,
@@ -3187,19 +3187,19 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_56": {
+    "auto.character-ds3-tab-stats.stats_luk_track": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.08,
       "cornerRadius": 3
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_57": {
+    "auto.character-ds3-tab-stats.stats_luk_fill": {
       "kind": "color-rect",
       "color": "character_ds3_main_local_color_11",
       "opacity": 1,
       "cornerRadius": 3
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_59": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_44": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -3243,7 +3243,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_35": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_13": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -3256,7 +3256,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_36": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_14": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -3268,7 +3268,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_61": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_46": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -3276,7 +3276,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_37": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_15": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
@@ -3289,7 +3289,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_38": {
+    "auto.character-ds3-tab-stats.stats_hp_value": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 18,
@@ -3302,7 +3302,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_63": {
+    "auto.character-ds3-tab-stats.stats_hp_track": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.2,
@@ -3310,7 +3310,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_64": {
+    "auto.character-ds3-tab-stats.stats_hp_fill": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -3354,7 +3354,7 @@
       },
       "cornerRadius": 5
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_65": {
+    "auto.character-ds3-tab-stats.stats_hp_max": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 11,
@@ -3366,7 +3366,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_66": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_48": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -3374,7 +3374,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_39": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_16": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
@@ -3387,7 +3387,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_40": {
+    "auto.character-ds3-tab-stats.stats_sp_value": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 18,
@@ -3400,7 +3400,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_68": {
+    "auto.character-ds3-tab-stats.stats_sp_track": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.2,
@@ -3408,7 +3408,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_69": {
+    "auto.character-ds3-tab-stats.stats_sp_fill": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -3452,7 +3452,7 @@
       },
       "cornerRadius": 5
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_70": {
+    "auto.character-ds3-tab-stats.stats_sp_max": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 11,
@@ -3464,7 +3464,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_71": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_50": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -3472,7 +3472,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_41": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_17": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
@@ -3485,7 +3485,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_42": {
+    "auto.character-ds3-tab-stats.stats_vitality_value": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 18,
@@ -3498,7 +3498,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_73": {
+    "auto.character-ds3-tab-stats.stats_vitality_track": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.2,
@@ -3506,7 +3506,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_74": {
+    "auto.character-ds3-tab-stats.stats_vitality_fill": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -3550,7 +3550,7 @@
       },
       "cornerRadius": 5
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_75": {
+    "auto.character-ds3-tab-stats.stats_vitality_max": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 11,
@@ -3562,7 +3562,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_77": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_52": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -3606,7 +3606,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_43": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_18": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -3619,7 +3619,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_44": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_19": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -3631,7 +3631,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_79": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_53": {
       "kind": "color-rect",
       "color": "gdv3StatStr",
       "opacity": 0.055,
@@ -3639,7 +3639,7 @@
       "borderWidth": 1,
       "borderColor": "#6fa8ff55"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_81": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_55": {
       "kind": "color-rect",
       "color": "gdv3StatStr",
       "opacity": 0.133,
@@ -3647,7 +3647,7 @@
       "borderWidth": 1,
       "borderColor": "#6fa8ff"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_45": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_20": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -3661,7 +3661,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_83": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_57": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -3675,7 +3675,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_84": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_58": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -3687,7 +3687,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_85": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_59": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -3699,7 +3699,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_86": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_60": {
       "kind": "color-rect",
       "color": "gdv3StatInt",
       "opacity": 0.055,
@@ -3707,7 +3707,7 @@
       "borderWidth": 1,
       "borderColor": "#c494ff55"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_88": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_62": {
       "kind": "color-rect",
       "color": "gdv3StatInt",
       "opacity": 0.133,
@@ -3715,7 +3715,7 @@
       "borderWidth": 1,
       "borderColor": "#c494ff"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_46": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_21": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -3729,7 +3729,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_90": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_64": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -3743,7 +3743,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_91": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_65": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -3755,7 +3755,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_92": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_66": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -3767,7 +3767,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_93": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_67": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -3775,7 +3775,7 @@
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_02"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_95": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_69": {
       "kind": "color-rect",
       "color": "tertiaryLight",
       "opacity": 0.133,
@@ -3783,7 +3783,7 @@
       "borderWidth": 1,
       "borderColor": "#86e1a5"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_47": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_22": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -3797,7 +3797,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_97": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_71": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -3811,7 +3811,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_98": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_72": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -3823,7 +3823,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_99": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_73": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -3835,7 +3835,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_100": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_74": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -3843,7 +3843,7 @@
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_02"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_102": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_76": {
       "kind": "color-rect",
       "color": "gdv3StatLuk",
       "opacity": 0.133,
@@ -3851,7 +3851,7 @@
       "borderWidth": 1,
       "borderColor": "#ff8d6e"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_48": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_23": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -3865,7 +3865,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_104": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_78": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -3879,7 +3879,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_105": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_79": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -3891,7 +3891,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_106": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_80": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -3903,7 +3903,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_107": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_81": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -3911,7 +3911,7 @@
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_02"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_109": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_83": {
       "kind": "color-rect",
       "color": "secondaryLight",
       "opacity": 0.133,
@@ -3919,7 +3919,7 @@
       "borderWidth": 1,
       "borderColor": "#ffe088"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_49": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_24": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -3933,7 +3933,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_111": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_85": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -3947,7 +3947,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_112": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_86": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -3959,7 +3959,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_113": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_87": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -3971,7 +3971,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_114": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_88": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -3979,7 +3979,7 @@
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_02"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_116": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_90": {
       "kind": "color-rect",
       "color": "gdv3StatCha",
       "opacity": 0.133,
@@ -3987,7 +3987,7 @@
       "borderWidth": 1,
       "borderColor": "#ff9bba"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_span_50": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_span_25": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -4001,7 +4001,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_118": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_92": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -4015,7 +4015,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_119": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_93": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -4027,7 +4027,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-stats.characterds3tabstats_div_120": {
+    "auto.character-ds3-tab-stats.characterds3tabstats_div_94": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -13744,11 +13744,45 @@
       ]
     },
     "tokenSources": {
-      "runtimePath": "C:\\Users\\User\\3KLife-wt-v3\\assets\\resources\\ui-spec\\ui-design-tokens.json",
-      "handoffPath": "C:\\Users\\User\\3KLife-wt-v3\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "runtimePath": "C:\\Users\\User\\3KLife-wt-st\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife-wt-st\\Design System\\design_handoff\\source\\ui-design-tokens.json",
       "sourcePath": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json"
     },
-    "tokenConflictReport": [],
+    "tokenConflictReport": [
+      {
+        "section": "typography",
+        "token": "headlineFont",
+        "previousSource": "runtime",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-st\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "source": "source",
+        "path": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json",
+        "previousValue": "fonts/newsreader/newsreader",
+        "value": "fonts/newsreader/font",
+        "chosenSource": "source"
+      },
+      {
+        "section": "typography",
+        "token": "bodyFont",
+        "previousSource": "runtime",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-st\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "source": "source",
+        "path": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json",
+        "previousValue": "fonts/notosans_tc/notosans_tc",
+        "value": "fonts/notosans_tc/font",
+        "chosenSource": "source"
+      },
+      {
+        "section": "typography",
+        "token": "labelFont",
+        "previousSource": "runtime",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-st\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "source": "source",
+        "path": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json",
+        "previousValue": "fonts/manrope/manrope",
+        "value": "fonts/manrope/font",
+        "chosenSource": "source"
+      }
+    ],
     "atlasUsageReport": {
       "atlases": [
         {
@@ -13760,6 +13794,6 @@
       "limit": 4,
       "_warning": null
     },
-    "perTabReplayMergedAt": "2026-11-04T15:25:55.070Z"
+    "perTabReplayMergedAt": "2026-11-04T16:56:14.807Z"
   }
 }
