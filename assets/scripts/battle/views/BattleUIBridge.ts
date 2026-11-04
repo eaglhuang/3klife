@@ -31,7 +31,8 @@ import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
 import { cellarProtectionText } from '../../ui/core/DailySubsidyNotice';
 import { generalNameMapOf, relationEventLogLine } from '../../ui/core/RelationEventLogText';
 import type { RelationEventHit } from '../../core/systems/RelationEvents';
-import { buildTacticSummary, loadGeneralConfig } from './BattleSceneLoader';
+import { buildTacticSummary, loadGeneralConfig, loadLoadoutCheck } from './BattleSceneLoader';
+import { loadoutCheckLogLine } from '../../core/systems/LoadoutCheck';
 import { buildTacticAvailability } from '../../ui/core/TacticAvailabilityPresenter';
 import { resolveBattleSkillProfile } from '../skills/BattleSkillProfiles';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
@@ -135,6 +136,9 @@ export class BattleUIBridge {
   private _wisdomTriggersLogged = 0;
   /** 上一次寫進日誌的軍師摘要（PROG-2-1744），內容沒變就不重寫 */
   private _lastStrategistLine = '';
+  /** 推薦戰法檢核（PROG-2-1763）：每個關卡只查一次；缺口帶進軍師 HUD 的對策缺口欄 */
+  private _loadoutCheckedFor: string | null = null;
+  private _loadoutGaps: string[] = [];
   private readonly unsubs: (() => void)[] = [];
   /** 本場我方的戰場特定動作（騎兵衝鋒、背刺…），戰後交給覺醒判定 */
   private readonly specialActions = new BattleSpecialActionTracker();
@@ -331,6 +335,14 @@ export class BattleUIBridge {
 
   // ── 私有事件處理（對應 BattleScene 原有 on* 方法）─────────────────────────
 
+  /** 推薦戰法三態檢核（關卡設計 §D-3，PROG-2-1763）：寫一行戰場日誌，缺口留給之後回合的軍師 HUD */
+  private async _runLoadoutCheck(encounterId: string, tacticIds: string[]): Promise<void> {
+    const result = await loadLoadoutCheck(encounterId, tacticIds);
+    if (!result || this._loadoutCheckedFor !== encounterId) return;
+    this._loadoutGaps = result.gaps;
+    this.appendLog(loadoutCheckLogLine(result));
+  }
+
   private _onTurnPhaseChanged(snap: { turn: number; playerFood: number; phase?: TurnPhase }): void {
     const c = this.ctx;
     c.deployRuntime?.updateDp(snap.playerFood);
@@ -343,8 +355,13 @@ export class BattleUIBridge {
       this._wisdomTriggersLogged = state.wisdomTriggerCount;
       this.appendLog(WISDOM_SURGE_LOG);
     }
+    if (c.encounterId && c.pg && this._loadoutCheckedFor !== c.encounterId) {
+      this._loadoutCheckedFor = c.encounterId;
+      this._loadoutGaps = [];
+      void this._runLoadoutCheck(c.encounterId, c.pg.tacticSlots.map(slot => slot.tacticId));
+    }
     // 軍師 HUD 摘要（關卡設計 §D-4，PROG-2-1744）：先寫進戰場日誌，內容與上回合相同時略過
-    const strategistLine = state ? strategistHudLogLine(strategistHudInputOf(state, [], services().session.intel)) : '';
+    const strategistLine = state ? strategistHudLogLine(strategistHudInputOf(state, this._loadoutGaps, services().session.intel)) : '';
     if (strategistLine && strategistLine !== this._lastStrategistLine) this.appendLog(strategistLine);
     this._lastStrategistLine = strategistLine;
     // 若仍在回合推進或單挑面板開啟中，暫時不要顯示我方回合提示或切回 deployHint

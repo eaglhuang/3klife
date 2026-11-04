@@ -22,6 +22,7 @@ import type {
   CanonicalUltimateDefinition,
 } from "../../shared/SkillRuntimeContract";
 import { isUltimateSlotUnlocked } from '../../core/systems/UltimateSlotUnlock';
+import { checkRecommendedLoadout, loadoutTagsOf, type LoadoutCheckResult, type TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
 import { buildTallyCardCatalog } from '../../core/config/TallyCardCatalog';
 import { cinematicProfileOf } from '../../core/systems/UltimateCinematic';
 import { TallyCardData } from '../../shared/TallyCardContract';
@@ -262,6 +263,23 @@ export async function loadEncounter(encounterId: string): Promise<EncounterConfi
   try {
     const data = await services().resource.loadJson<{ encounters: EncounterConfig[] }>("data/encounters");
     return data.encounters.find(e => e.id === encounterId) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * 開戰推薦戰法三態檢核（關卡設計 §D-2／D-3，PROG-2-1763）：主將戰法槽轉對策標籤後比對關卡必備與高建議。
+ * 關卡沒有填推薦、或關卡與標籤表讀不到時回傳 null（不顯示）。
+ */
+export async function loadLoadoutCheck(encounterId: string, tacticIds: readonly string[]): Promise<LoadoutCheckResult | null> {
+  try {
+    const encounter = await loadEncounter(encounterId);
+    const required = encounter?.requiredLoadout ?? [];
+    const recommended = encounter?.highlyRecommendedLoadout ?? [];
+    if (required.length + recommended.length === 0) return null;
+    const data = await services().resource.loadJson<{ tags?: TacticCounterTagTable }>("data/tactic-counter-tags");
+    return checkRecommendedLoadout(loadoutTagsOf(tacticIds, data.tags ?? {}), required, recommended);
   } catch {
     return null;
   }
