@@ -18,6 +18,7 @@ import { HallThemeConfig, resolveHallTheme } from '../../core/systems/HallTheme'
 import type { HallSeason, HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import type { HallStageCast } from '../../core/systems/HallStageDirector';
 import { LOBBY_HALL_WALL_PIN_TEXT, type LobbyHallWallView } from '../../core/systems/LobbyHallWallView';
+import type { LobbyHallAltarView } from './LobbyHallAltarView';
 import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
 import { HallMapTurnPlayer } from '../components/HallMapTurnPlayer';
@@ -98,6 +99,25 @@ export class LobbyHallScreenBinder {
     setPanelVisible(id: LobbyHallPanelId, visible: boolean): void {
         const node = findUcufNode(this._screenRoot, `lobby-hall-screen.${id}`);
         if (node) node.active = visible;
+    }
+
+    /**
+     * 祭壇面板套字（UI-2-0154）。依設計稿節點順序：第 1 個子節點是面板頭（巡次、下一巡），
+     * 第 2 個是插槽列，每格依序為品名與狀態。
+     */
+    setAltar(view: LobbyHallAltarView): void {
+        const altar = findUcufNode(this._screenRoot, 'lobby-hall-screen.altar');
+        const [head, slotRow] = altar?.children ?? [];
+        if (!head || !slotRow) return;
+        setText(head.children[0], view.headText);
+        setText(head.children[1], view.nextRoundText);
+        slotRow.children.forEach((slotNode, i) => {
+            const slot = view.slots[i];
+            slotNode.active = !!slot;
+            if (!slot) return;
+            setText(slotNode.children[0], slot.title);
+            setText(slotNode.children[1], slot.status);
+        });
     }
 
     /**

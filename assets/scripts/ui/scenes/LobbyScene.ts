@@ -15,6 +15,7 @@ import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallMapEventCatalog } from '../../core/systems/HallMapEventMapper';
 import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
 import { buildLobbyHallWallView } from '../../core/systems/LobbyHallWallView';
+import { buildLobbyHallAltarView } from '../core/LobbyHallAltarView';
 import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } from '../../core/systems/HallMapSeasonTurn';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
 import { UIID, LayerType } from '../../core/config/UIConfig';
@@ -1565,6 +1566,12 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._wishAltar.getFlowView());
+        this._refreshLobbyHallAltar();
+    }
+
+    /** 幕府大廳祭壇面板（UI-2-0154）：顯示許願池即時狀態；開大廳與許願祭壇操作後刷新 */
+    private _refreshLobbyHallAltar(): void {
+        this._lobbyHall?.setAltar(buildLobbyHallAltarView(services().session.wishPool, Date.now()));
     }
 
     private _openTournament(): void {
@@ -2546,6 +2553,7 @@ export class LobbyScene extends Component {
         // 晝夜依裝置當地時間，季節依遊戲時鐘（1 春～4 冬）
         this._lobbyHall?.refresh(services().session.gameTime.currentSeason, new Date().getHours());
         this._refreshLobbyHallWalls();
+        this._refreshLobbyHallAltar();
         this._lobbyHall?.setPanelVisible('clan', familyOverviewHotspotVisible(services().session.familySystemUnlocked));
         this._lobbyHall?.openStage();
         if (this._pendingHallMapTurn) {
