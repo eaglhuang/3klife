@@ -54,7 +54,8 @@ export function redrawBloodlineTreeConnections(
     const positions: Partial<Record<ConnectionNode, Point>> = { '': toLine(child) };
     for (const target of bindTreeCards(cards)) {
         const cardNode = findChildByName(root, target.nodeName);
-        if (cardNode) positions[target.card.slot] = toLine(cardNode);
+        // 簡化模式隱藏的祖先卡不給座標，連到它的線自動略過（PROG-2-1731）
+        if (cardNode && cardNode.activeInHierarchy) positions[target.card.slot] = toLine(cardNode);
     }
 
     lines.drawFactorConnections(factorConnectionEdges(positions, childColorOf));

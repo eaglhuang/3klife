@@ -36,5 +36,6 @@
 | 教官系統（支援卡）.md (doc_spec_0027) | 🟡（維持） | E 13 項中 12 項有代碼：資料結構與支援卡目錄（MentorSupportCatalog）、5 來源（MentorSources）、靈感事件（MentorInspiration）、突破（MentorBreakthrough）、鏡像快照與鎖定（NurtureService）、名將傳道（LegendaryMentoring）、師友羈絆（MentorSynergy）、好友借用（FriendBorrow、NpcFriendMentor）、溢出轉化（MentorOverflow）、訓練格爆發、血統邊界（MentorBoundary） | E-7 教官專屬劇情「SSR 教官獨有結緣事件」：規格 §G 只有對談／靈感／突破三句台詞，未定義結緣事件的觸發條件與內容 | PROG-2-1729 |
 | 培育系統.md (doc_spec_0026) | 🟡（維持） | E 11 項皆有代碼：鏡像快照、36 回合主流程、教官指派、訓練分類、事件、TP、戰法學習（TacticLearning）、畢業結算與畢業標籤（NurtureSystem.graduationTags）、入學令（NurtureService）、自動培育（AutoNurture）、三階段學年（NurtureSystem.phaseOfRound） | E-10 自動培育解鎖條件衝突：規格 shard-a 為「手動畢業 ≥30 次＋培育大師成就＋世代 ≥5」，程式照 WBS NUR-14 改為「主線第一次通過培育季」（PROG-2-0543），待裁定以哪邊為準 | PROG-2-1730 |
 | 結緣系統（配種）.md (doc_spec_0028) | 🟡（維持） | E 11 項中 10 項有代碼：結緣介面與 14 人血統樹、精力消耗、子嗣生成、受孕判定、神祕期天象（BreedingRecordSchema、SageRemarks）、5 歲開獎（Unveiling）、名士批語（BondingSetupController）、20 歲門檻、近親判定（BloodlineGraph）、和平保種邊界 | E-8 成長環境選擇（0~5 歲放藏經閣／演武場微調傾向，P2）：規格未定義微調幅度、作用欄位與「成長環境道具」來源，尚未實作 | PROG-2-1730 |
+| 血統理論系統.md (doc_spec_0011) | 🟡（維持） | E 8 項中 7 項有代碼：14 人祖譜（BloodlineGraph Pedigree）、虛擬祖先（PersonRegistry）、爆發力、近親判定、血脈歸宗（BloodlineMerge）、血統活性（WildGene）；E-6 簡化／專家切換邏輯與面板 API 已做（BloodlineTreeViewMode、BloodlineTreePanel.setViewMode），切換按鈕尚未上版面 | E-7 史實名門加成「袁紹／曹操等有預設家譜=初始 EP 更高」：名單、家譜內容與 EP 加成數值未定案（BloodlineMerge 註明不處理） | PROG-2-1731 |
 
 ---
