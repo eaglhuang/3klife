@@ -344,7 +344,7 @@ export class BattleUIBridge {
       this.appendLog(WISDOM_SURGE_LOG);
     }
     // 軍師 HUD 摘要（關卡設計 §D-4，PROG-2-1744）：先寫進戰場日誌，內容與上回合相同時略過
-    const strategistLine = state ? strategistHudLogLine(strategistHudInputOf(state)) : '';
+    const strategistLine = state ? strategistHudLogLine(strategistHudInputOf(state, [], services().session.intel)) : '';
     if (strategistLine && strategistLine !== this._lastStrategistLine) this.appendLog(strategistLine);
     this._lastStrategistLine = strategistLine;
     // 若仍在回合推進或單挑面板開啟中，暫時不要顯示我方回合提示或切回 deployHint

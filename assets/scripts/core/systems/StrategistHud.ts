@@ -50,6 +50,8 @@ export interface StrategistExecution {
     name: string;
     int: number;
     tactic: string;
+    /** 情報需求（主戰場UI §6.3，PROG-2-1760）：只有設情報門檻的戰法才帶 */
+    intel?: { current: number; required: number };
 }
 
 export interface StrategistHudSummary {
@@ -89,7 +91,7 @@ export function buildStrategistHudSummary(input: StrategistHudInput): Strategist
         interactiveObjectStatus: interactiveObjectStatusOf(input.interactiveObjects),
         stageSalvageSummary: salvageSummaryOf(input.salvage),
         recommendedLoadoutGap: input.missingCounters.length > 0 ? `缺少${input.missingCounters.join('、')}` : '對策槽無缺口',
-        executingTactic: input.executing ? `${input.executing.name} INT ${input.executing.int}，正在執行：${input.executing.tactic}` : '',
+        executingTactic: executingTacticOf(input.executing),
     };
 }
 
@@ -107,6 +109,13 @@ export function strategistHudLogLine(input: StrategistHudInput): string {
     if ((Object.keys(SALVAGE_LABEL) as (keyof SalvageTotals)[]).some((key) => input.salvage[key] > 0)) parts.push(`回收 ${summary.stageSalvageSummary}`);
     if (input.missingCounters.length > 0) parts.push(summary.recommendedLoadoutGap);
     return parts.length > 0 ? `軍師：${parts.join('｜')}` : '';
+}
+
+/** 「曹操 INT 91，正在執行：夜襲（情報 30 / 40）」；情報以 目前值 / 門檻 呈現，不用百分比（§6.3） */
+function executingTacticOf(executing: StrategistExecution | undefined): string {
+    if (!executing) return '';
+    const intel = executing.intel ? `（情報 ${executing.intel.current} / ${executing.intel.required}）` : '';
+    return `${executing.name} INT ${executing.int}，正在執行：${executing.tactic}${intel}`;
 }
 
 /** 依物件類別列出各狀態數量，例如「營帳：存活 2、已回收 1」；沒有的類別不列。 */
