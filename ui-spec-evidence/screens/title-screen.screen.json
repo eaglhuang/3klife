@@ -1,0 +1,12 @@
+{
+  "screenId": "title-screen",
+  "layout": "title-screen",
+  "skin": "title-screen.skin",
+  "layoutRef": "artifacts/skill-test-html-to-ucuf/title-screen/title-screen.final.layout.json",
+  "skinRef": "artifacts/skill-test-html-to-ucuf/title-screen/title-screen.final.skin.json",
+  "meta": {
+    "scaffoldHints": {
+      "useUCUFLogger": true
+    }
+  }
+}

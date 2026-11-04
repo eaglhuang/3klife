@@ -1,0 +1,229 @@
+{
+  "schemaVersion": "1.2.0",
+  "schemaSpec": "doc_other_0017 (R-25 + R-26 sourceHtml/viewport + R-27 art-gated autoBake)",
+  "screenId": "title-screen",
+  "sidecarBundle": "resources",
+  "sidecarRoot": "assets/resources/sidecars/title-screen/",
+  "sourceHtml": "artifacts/skill-test-html-to-ucuf/title-screen/title-screen.ucuf-ready.html",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "bakerHint": {
+    "tool": "puppeteer-core (build-time)",
+    "runWhen": "developer / CI; never at runtime",
+    "runtimeCost": "zero — runtime only loads pre-baked PNGs as SpriteFrame",
+    "autoBakeContract": "Only entries with autoBake=true and bakeAction=auto-screenshot-fragment may be baked automatically. Authors must mark small standalone missing fragments with data-ucuf-bake=\"fragment\"; large UI regions and geometry masks are review/converter work.",
+    "artistOverride": "For autoBake entries only: drop a same-named PNG at outputPath to replace the placeholder; converter loads via uuid, no code change required."
+  },
+  "summary": {
+    "totalEntries": 7,
+    "autoBakeEntries": 0,
+    "reviewOnlyEntries": 7,
+    "byProperty": {
+      "background-image": 3,
+      "filter": 2,
+      "mask-image": 2
+    },
+    "bySkinSlotKind": {
+      "background-set": 3,
+      "shadow-set": 2,
+      "mask-set": 2
+    },
+    "byBakeAction": {
+      "manual-art-asset": 5,
+      "converter-geometry": 2
+    }
+  },
+  "entries": [
+    {
+      "bakeId": "title-screen__div_2__background-image",
+      "screenId": "title-screen",
+      "selector": "div.paper[1]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 2,
+      "property": "background-image",
+      "value": "repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0px, rgba(255, 255, 255, 0.06) 1px, rgba(0, 0, 0, 0) 1px, rgba(0, 0, 0, 0) 3px), repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 1px, rgba(0, 0, 0, 0) 1px, rgba(0, 0, 0, 0) 4px)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 0,
+        "y": 0,
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "background-set",
+      "autoBake": false,
+      "bakeAction": "manual-art-asset",
+      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
+      "status": "needs-art-asset"
+    },
+    {
+      "bakeId": "title-screen__div_6__background-image",
+      "screenId": "title-screen",
+      "selector": "div.vignette[5]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 6,
+      "property": "background-image",
+      "value": "radial-gradient(75% 70% at 50% 45%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.78) 100%), linear-gradient(rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 18%, rgba(0, 0, 0, 0) 62%, rgba(0, 0, 0, 0.9) 100%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 0,
+        "y": 0,
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "background-set",
+      "autoBake": false,
+      "bakeAction": "manual-art-asset",
+      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
+      "status": "needs-art-asset"
+    },
+    {
+      "bakeId": "title-screen__div_1__background-image",
+      "screenId": "title-screen",
+      "selector": "div#title-screen.bg.bg[0]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 1,
+      "property": "background-image",
+      "value": "radial-gradient(60% 55% at 50% 42%, rgba(212, 175, 55, 0.2), rgba(0, 0, 0, 0) 70%), radial-gradient(90% 70% at 50% 110%, rgba(178, 34, 34, 0.22), rgba(0, 0, 0, 0) 70%), linear-gradient(rgb(23, 17, 10) 0%, rgb(12, 9, 6) 60%, rgb(5, 4, 3) 100%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 0,
+        "y": 0,
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "background-set",
+      "autoBake": false,
+      "bakeAction": "manual-art-asset",
+      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
+      "status": "needs-art-asset"
+    },
+    {
+      "bakeId": "title-screen__img_4__filter",
+      "screenId": "title-screen",
+      "selector": "div#title-screen.heroes.heroes[4]>img.hero.left[0]",
+      "ucufId": null,
+      "tag": "img",
+      "nodeId": 4,
+      "property": "filter",
+      "value": "saturate(0.85) contrast(1.05)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 150,
+        "y": 280,
+        "width": 560,
+        "height": 840,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "shadow-set",
+      "autoBake": false,
+      "bakeAction": "manual-art-asset",
+      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
+      "status": "needs-art-asset"
+    },
+    {
+      "bakeId": "title-screen__img_5__filter",
+      "screenId": "title-screen",
+      "selector": "div#title-screen.heroes.heroes[4]>img.hero.right[1]",
+      "ucufId": null,
+      "tag": "img",
+      "nodeId": 5,
+      "property": "filter",
+      "value": "saturate(0.85) contrast(1.05)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 1210,
+        "y": 280,
+        "width": 560,
+        "height": 840,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "shadow-set",
+      "autoBake": false,
+      "bakeAction": "manual-art-asset",
+      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
+      "status": "needs-art-asset"
+    },
+    {
+      "bakeId": "title-screen__img_4__mask-image",
+      "screenId": "title-screen",
+      "selector": "div#title-screen.heroes.heroes[4]>img.hero.left[0]",
+      "ucufId": null,
+      "tag": "img",
+      "nodeId": 4,
+      "property": "mask-image",
+      "value": "linear-gradient(rgb(0, 0, 0) 55%, rgba(0, 0, 0, 0) 96%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 150,
+        "y": 280,
+        "width": 560,
+        "height": 840,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "mask-set",
+      "autoBake": false,
+      "bakeAction": "converter-geometry",
+      "artGuidance": "Geometry/mask CSS is not a missing picture. Implement as Cocos mask/vector/shape logic; do not screenshot rendered content.",
+      "status": "needs-converter-rule"
+    },
+    {
+      "bakeId": "title-screen__img_5__mask-image",
+      "screenId": "title-screen",
+      "selector": "div#title-screen.heroes.heroes[4]>img.hero.right[1]",
+      "ucufId": null,
+      "tag": "img",
+      "nodeId": 5,
+      "property": "mask-image",
+      "value": "linear-gradient(rgb(0, 0, 0) 55%, rgba(0, 0, 0, 0) 96%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 1210,
+        "y": 280,
+        "width": 560,
+        "height": 840,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "mask-set",
+      "autoBake": false,
+      "bakeAction": "converter-geometry",
+      "artGuidance": "Geometry/mask CSS is not a missing picture. Implement as Cocos mask/vector/shape logic; do not screenshot rendered content.",
+      "status": "needs-converter-rule"
+    }
+  ]
+}

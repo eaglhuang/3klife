@@ -1,0 +1,14 @@
+{
+  "id": "title-screen",
+  "version": 2,
+  "uiId": "title-screen",
+  "layout": "title-screen",
+  "skin": "title-screen.skin",
+  "bundle": "lobby_ui",
+  "meta": {
+    "htmlToUcufPlan4": true,
+    "runtimeAuthority": "synced-final-runtime-json"
+  },
+  "runtimeVersion": "title-20261104-002",
+  "runtimeVersionUpdatedAt": "2026-11-04T12:55:34.574Z"
+}
