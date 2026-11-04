@@ -91,6 +91,7 @@ import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 /** 倉庫擴容費用：規格（doc_spec_0017）只寫「付費或任務解鎖」，暫定每次 5000 金幣 */
 const WAREHOUSE_EXPAND_GOLD_COST = 5000;
 import type { SeasonAdvancedPayload } from '../../core/managers/GameSession';
+import { bloodlineBirthLines } from '../../core/systems/BloodlineBirthLines';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
@@ -2960,6 +2961,10 @@ export class LobbyScene extends Component {
         try {
             const result = await this._bonding.confirm();
             if (result.outcome === 'conceived' && result.child) {
+                // 血統提示（血統理論 §G、§H，PROG-2-1775）：通知欄只有一行，改用 toast
+                for (const message of bloodlineBirthLines(result, (uid) => services().breeding.ancestorName(uid))) {
+                    services().event.emit('SHOW_TOAST', { message, duration: 3 });
+                }
                 // 結緣的動態關係（夫妻、親子）：KIN-06，有新增才自動存檔
                 await services().session.recordBreedingRelations(result.father.id, result.mother.id, result.child.id);
                 // 子嗣加入名冊：出戰清單與培育畫面跟著刷新

@@ -156,6 +156,13 @@ export class BreedingService {
         });
     }
 
+    /** 真實祖先姓名（出生提示用）：虛擬祖先與查不到的都回傳 null */
+    ancestorName(uid: string): string | null {
+        const person = this._graph.getPerson(uid);
+        if (person?.is_virtual) return null;
+        return person?.name ?? this._roster.getAll().find((g) => g.id === uid)?.name ?? null;
+    }
+
     /** 執行結緣；精力無論成敗都會扣，受孕成功時子嗣加入名冊 */
     breed(fatherId: string, motherId: string, mode?: BreedingMode): BreedingResult {
         const roster = this._roster.getAll() as BreedingGeneral[];

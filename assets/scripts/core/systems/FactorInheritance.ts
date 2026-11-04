@@ -165,6 +165,8 @@ export interface InheritedFactor {
     /** 星等來源的世代（同因子多來源時取最高星那一筆） */
     generation: 1 | 2 | 3;
     sourceUids: string[];
+    /** 本次結緣發生 Wild Gene 跳星（BLT-07）；只供出生提示，不進存檔 */
+    wildGene?: boolean;
 }
 
 export interface FactorInheritanceOptions {
