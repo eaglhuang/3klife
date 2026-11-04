@@ -9,8 +9,7 @@ import {
     MAX_REBIRTH_COUNT,
     normalizeRebirthCount,
     REBIRTH_TABLE,
-    tierOf,
-} from '../assets/scripts/core/systems/Rebirth';
+    tierOf, MAX_REBIRTH_VOICE_LINES, rebirthVoiceLines } from '../assets/scripts/core/systems/Rebirth';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
@@ -95,6 +94,17 @@ export function createRebirthSuite(): TestSuite {
         assert.equals('diao', result.added[0].id);
         assert.equals(1, result.rebirths.length);
         assert.equals(2, session.roster.length);
+    });
+
+    suite.test('轉生語音：滿轉溢出不說、同名只說一次、查不到姓名略過、最多三句', () => {
+        const names: Record<string, string> = { a: '趙雲', b: '張飛', c: '關羽', d: '馬超' };
+        const nameOf = (id: string): string | undefined => names[id];
+        assert.equals(
+            '趙雲再臨！這一世，讓我格外強大。',
+            rebirthVoiceLines([{ id: 'a', overflow: false }, { id: 'a', overflow: false }, { id: 'b', overflow: true }, { id: 'x', overflow: false }], nameOf).join('|'),
+        );
+        const many = ['a', 'b', 'c', 'd'].map((id) => ({ id, overflow: false }));
+        assert.equals(MAX_REBIRTH_VOICE_LINES, rebirthVoiceLines(many, nameOf).length);
     });
 
     return suite;
