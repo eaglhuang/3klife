@@ -61,7 +61,7 @@ import { resolveTallyDeployMod, toTallyCommander, TallyCommanderInfo } from '../
 import { resolveTallyTemplateId } from '../../core/config/TigerTallySpecTactics';
 import { buildTallyCardCatalog, type TallyDeployRef } from '../../core/config/TallyCardCatalog';
 import { buildAiTallyPool, allocateAiTallies } from '../../core/systems/AiTallyPool';
-import { starStatMultiplier } from '../../core/systems/TigerTallyStar';
+import { starStatMultiplier, tallyBattleOutcome } from '../../core/systems/TigerTallyStar';
 import { applyTallyPassive } from '../shared/TallyPassive';
 import { describeActiveTallySets } from '../../core/systems/TigerTallySetBonus';
 import type { TacticCondition } from '../../core/systems/TacticCondition';
@@ -633,7 +633,9 @@ export class BattleController {
   /** 戰後結算：剩餘部隊返還、計算戰損與城市兵源變化；沒有出征帳本時回傳 null */
   public finishSortie(cityTroopsBefore: number, recruitRegen?: number): SortieSummary | null {
     const state = this.getSortieState();
-    return state ? finishSortie(state, cityTroopsBefore, recruitRegen) : null;
+    // 已分勝負時一併算出逐虎符的戰鬥經驗（PROG-2-1752）
+    const outcome = tallyBattleOutcome(this.flowStateMachine.result ?? 'ongoing');
+    return state ? finishSortie(state, cityTroopsBefore, recruitRegen, outcome) : null;
   }
 
   /** 陣亡（已從場上移除）的部隊退場兵力 0；存活部隊依血量比例更新剩餘兵力 */

@@ -153,6 +153,12 @@ export function createSortieDeploySuite(): TestSuite {
         const lines = formatSortieSummary(summary);
         assert.equals(`虎豹騎：投入 ${UNIT_TROOP_COST.CAVALRY * 2}｜返還 ${UNIT_TROOP_COST.CAVALRY}｜戰損 ${UNIT_TROOP_COST.CAVALRY}`, lines[2]);
         assert.equals(3, lines.length);
+        assert.equals(undefined, report.expGain, '未分勝負不列經驗');
+
+        const won = finishSortie(state, 9000, undefined, 'win');
+        assert.equals(15, won.tallyReports![0].expGain);
+        assert.isTrue(formatSortieSummary(won)[2].endsWith('｜經驗 +15'));
+        assert.equals(8, finishSortie(state, 9000, undefined, 'lose').tallyReports![0].expGain);
     });
 
     suite.test('戰鬥結束時場上部隊全數返還；陣亡部隊全損', () => {
