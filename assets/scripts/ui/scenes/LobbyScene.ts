@@ -39,7 +39,7 @@ import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { GAME_SESSION_EVENTS, type AddGeneralsResult, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
-import { seasonDisplayText } from '../core/SeasonTexts';
+import { seasonDisplayText, seasonStartText } from '../core/SeasonTexts';
 import { SeasonHudController } from '../core/SeasonHudController';
 import { buildSandtableStatusLabel } from '../../core/systems/SandtableStatus';
 import type { YearReport } from '../../core/systems/YearReport';
@@ -2697,6 +2697,11 @@ export class LobbyScene extends Component {
         this._rivalHost.node.active = false;
         this._sessionEventUnsubscribers.push(
             services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, (payload: SeasonAdvancedPayload) => {
+                // 換季開場提示（遊戲時間系統 §G，PROG-2-1718）：先於來犯、離隊提示
+                if (payload?.advance) {
+                    const message = seasonStartText((key, ...args) => services().i18n.t(key, ...args), payload.advance.current);
+                    services().event.emit('SHOW_TOAST', { message, duration: 3 });
+                }
                 for (const battle of payload?.rivalBattles ?? []) {
                     if (battle.goldReward > 0) gacha.grantCurrency('gold', battle.goldReward);
                     services().event.emit('SHOW_TOAST', { message: `敵軍來犯！${battle.lines[2]}`, duration: 3 });
