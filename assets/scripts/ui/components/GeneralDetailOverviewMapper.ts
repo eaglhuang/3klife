@@ -12,6 +12,8 @@ import { getUIRarityMarkLabel, normalizeUIRarityMarkLabel } from '../core/UIRari
 import { portraitPathOf } from '../../core/systems/GeneralArtPaths';
 import { isLukVisible } from '../../core/systems/LuckVisibility';
 import { careerTagLabelOf } from '../../core/systems/CareerTag';
+import type { FemaleSource } from '../../core/systems/FemaleSource';
+import { femaleSourcePresentationOf } from '../../core/systems/FemaleSourcePresenter';
 import { NATION_DEFS } from '../../core/systems/RivalNations';
 import { PERSON_PAGE_TABS, mapGeneralReadModel, type GeneralReadModel, type PersonPageTab } from '../../core/systems/GeneralReadModel';
 import { buildGeneralCommandRows, type GeneralCommandRow } from '../../core/systems/GeneralCommandPanel';
@@ -182,7 +184,7 @@ const CREST_TITLE_DISPLAY: Record<GeneralDetailCrestState, string> = {
     awakened: '命紋覺醒',
 };
 
-export function buildGeneralDetailOverview(config: GeneralConfig): GeneralDetailOverviewData {
+export function buildGeneralDetailOverview(config: GeneralConfig, femaleSource: FemaleSource | null = null): GeneralDetailOverviewData {
     const str = resolveStat(config, 'str');
     const int = resolveStat(config, 'int');
     const lea = resolveStat(config, 'lea');
@@ -197,7 +199,7 @@ export function buildGeneralDetailOverview(config: GeneralConfig): GeneralDetail
         header: {
             title: mask(config.title, '燕人猛將'),
             name: mask(config.name, '張飛'),
-            meta: buildHeaderMeta(config),
+            meta: buildHeaderMeta(config, femaleSource),
         },
         summary: {
             epValue: config.ep !== undefined
@@ -251,8 +253,9 @@ export function buildGeneralDetailOverviewContentState(
     cityTroops: number | null = null,
     battleRecord: BattleRecordLike | null = null,
     inventory: PlayerInventory = EMPTY_PLAYER_INVENTORY,
+    femaleSource: FemaleSource | null = null,
 ): GeneralDetailOverviewContentState {
-    const overview = buildGeneralDetailOverview(config);
+    const overview = buildGeneralDetailOverview(config, femaleSource);
     const storyCells = storyCellsToRecord(overview.cards.storyCells);
     const crestState = config.profilePresentation?.crestState ?? overview.cards.crestState;
     const readModel = mapGeneralReadModel(config as unknown as Readonly<Record<string, unknown>>);
@@ -452,13 +455,15 @@ function formatStatus(status: string | undefined): string {
     return STATUS_DISPLAY[status] ?? status;
 }
 
-function buildHeaderMeta(config: GeneralConfig): string {
+function buildHeaderMeta(config: GeneralConfig, femaleSource: FemaleSource | null = null): string {
     const faction = formatFaction(config.faction);
     const role = formatRole(config.role);
     const status = config.status ? formatStatus(config.status) : '';
     // 轉職與宿命 §E-4 職能標籤（PROG-2-1724）：5 歲宿命分流後才有
     const career = careerTagLabelOf(config);
-    const compact = [faction, role, career].filter((part) => part !== '' && !part.includes('未定'));
+    // 可結緣女性來源 §H 來源標籤（PROG-2-1734）：只有女將有來源紀錄，沒有就不顯示
+    const source = femaleSourcePresentationOf(femaleSource)?.sourceLabel ?? '';
+    const compact = [faction, role, career, source].filter((part) => part !== '' && !part.includes('未定'));
 
     if (compact.length > 0) {
         return compact.join('．');
