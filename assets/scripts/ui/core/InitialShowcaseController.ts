@@ -10,7 +10,7 @@
  *
  * Unity 對照：Presenter。畫面只讀 getFlowView()，按鈕只呼叫 next()，像一份 Showcase 清單逐筆播放。
  */
-import { INITIAL_SHOWCASE_ENTRIES, type InitialShowcaseEntry } from '../../core/systems/InitialGeneralShowcase';
+import { INITIAL_SHOWCASE_ENTRIES, SHOWCASE_LINE_STYLE_DEFAULT, showcaseLineOf, type InitialShowcaseEntry, type ShowcaseLineStyle } from '../../core/systems/InitialGeneralShowcase';
 
 export interface InitialShowcaseFlowView {
     texts: Record<string, string>;
@@ -21,7 +21,10 @@ export interface InitialShowcaseFlowView {
 export class InitialShowcaseController {
     private _index = 0;
 
-    constructor(private readonly _entries: readonly InitialShowcaseEntry[] = INITIAL_SHOWCASE_ENTRIES) {}
+    constructor(
+        private readonly _entries: readonly InitialShowcaseEntry[] = INITIAL_SHOWCASE_ENTRIES,
+        private readonly _lineStyle: ShowcaseLineStyle = SHOWCASE_LINE_STYLE_DEFAULT,
+    ) {}
 
     public get index(): number { return this._index; }
     public get finished(): boolean { return this._index >= this._entries.length; }
@@ -45,7 +48,7 @@ export class InitialShowcaseController {
             texts: {
                 showcaseName: entry?.name ?? '',
                 showcaseTitle: entry?.title ?? '',
-                showcaseLine: entry ? `「${entry.line}」` : '',
+                showcaseLine: entry ? `「${showcaseLineOf(entry, this._lineStyle)}」` : '',
                 showcaseFactors: entry ? entry.factorTags.join('・') : '',
                 showcaseStep: entry ? `${this._index + 1} / ${this._entries.length}` : '',
                 btnShowcaseNextLabel: isLast ? '開始冒險' : '下一位',
