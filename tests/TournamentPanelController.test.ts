@@ -5,7 +5,8 @@ import { assert, TestSuite } from './TestRunner';
 import { GameSession } from '../assets/scripts/core/managers/GameSession';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { TOURNAMENT_DAY_MS } from '../assets/scripts/core/systems/TournamentLocal';
-import { rewardsText, seriesText, TournamentPanelController, tournamentSeasonCardLines } from '../assets/scripts/ui/core/TournamentPanelController';
+import { monthlyScenarioLine, monthlyScenarioRuleText, rewardsText, seriesText, TournamentPanelController, tournamentSeasonCardLines } from '../assets/scripts/ui/core/TournamentPanelController';
+import { MONTHLY_SCENARIOS } from '../assets/scripts/core/systems/MonthlyScenarioCup';
 
 const D = TOURNAMENT_DAY_MS;
 
@@ -127,6 +128,25 @@ export function createTournamentPanelControllerSuite(): TestSuite {
         assert.isTrue(session.registerTournament(0).ok);
         card = tournamentSeasonCardLines(session.tournamentStatus(0), (id) => names[id]);
         assert.isTrue(card.team.startsWith('出戰：甲（戰力 '));
+    });
+
+    suite.test('月度場景賽列（PROG-2-1717）：四種規則轉中文，彈窗帶本月場景', () => {
+        assert.equals(monthlyScenarioRuleText(MONTHLY_SCENARIOS[0].rule), '禁用騎兵戰法');
+        assert.equals(monthlyScenarioRuleText(MONTHLY_SCENARIOS[1].rule), '需水軍／弓兵適性 A 以上');
+        assert.equals(monthlyScenarioRuleText(MONTHLY_SCENARIOS[2].rule), '智力戰法威力 ×1.5');
+        assert.equals(monthlyScenarioRuleText(MONTHLY_SCENARIOS[3].rule), '步兵 S 適性地形加成 ×2');
+        const march = new Date(2026, 2, 15).getTime();
+        assert.equals(monthlyScenarioLine(march), '本月場景賽：春耕奇謀｜智力戰法威力 ×1.5');
+        const { panel, clock } = setup(0);
+        clock.now = march;
+        assert.equals(panel.getFlowView().texts.trnMonthlyLabel, '本月場景賽：春耕奇謀｜智力戰法威力 ×1.5');
+    });
+
+    suite.test('12 個月的規則都有中文標籤，不外露代碼', () => {
+        for (const scenario of MONTHLY_SCENARIOS) {
+            const text = monthlyScenarioRuleText(scenario.rule);
+            assert.isTrue(!/[a-z]|[A-Z]{2,}/.test(text), `${scenario.month} 月：${text}`);
+        }
     });
 
     return suite;

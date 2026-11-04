@@ -71,6 +71,15 @@
           },
           {
             "type": "label",
+            "name": "TrnMonthlyLabel",
+            "id": "trnMonthlyLabel",
+            "width": 944,
+            "height": 40,
+            "text": "本月場景賽：冰天雪地｜禁用騎兵戰法",
+            "styleSlot": "trn.label.body"
+          },
+          {
+            "type": "label",
             "name": "TrnRankLabel",
             "id": "trnRankLabel",
             "width": 944,
