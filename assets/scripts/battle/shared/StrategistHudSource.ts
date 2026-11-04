@@ -4,7 +4,7 @@
  *
  * 只讀已在場上的格子效果與回收累計：落石 → 落石機關、營帳 → 營帳、埋伏陷阱 → 陷阱；
  * 本回合危害只列場上正在作用的（火場、水流、深水／陷阱）。對策缺口目前沒有資料來源，由呼叫端補。
- * 畫面（BattleScene HUD）尚未接，接的時候呼叫 buildStrategistHudSummary(strategistHudInputOf(state))。
+ * 戰場 HUD 尚無欄位節點；PROG-2-1744 先由 BattleUIBridge 每回合以 strategistHudLogLine 寫進戰場日誌（內容沒變不重寫）。
  *
  * Unity 對照：像 HUD Presenter 的資料轉接器，把 BattleState 轉成 ViewModel。
  */

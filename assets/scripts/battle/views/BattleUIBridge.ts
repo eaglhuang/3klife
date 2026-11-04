@@ -11,6 +11,8 @@
  */
 
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
+import { strategistHudInputOf } from '../shared/StrategistHudSource';
+import { strategistHudLogLine } from '../../core/systems/StrategistHud';
 import { selfBurstNoticeText, type SelfBurstChangedEvent } from '../shared/SelfBurstWindow';
 import { teamAuraNoticeText, type TeamAuraChangedEvent } from '../shared/TeamAura';
 import { teamRecoverNoticeText, type TeamRecoveredEvent } from '../shared/TeamRecover';
@@ -130,6 +132,8 @@ export function createBattleSceneContext(): BattleSceneContext {
 export class BattleUIBridge {
   /** 已寫進戰鬥紀錄的智謀觸發次數（PROG-2-1577） */
   private _wisdomTriggersLogged = 0;
+  /** 上一次寫進日誌的軍師摘要（PROG-2-1744），內容沒變就不重寫 */
+  private _lastStrategistLine = '';
   private readonly unsubs: (() => void)[] = [];
   /** 本場我方的戰場特定動作（騎兵衝鋒、背刺…），戰後交給覺醒判定 */
   private readonly specialActions = new BattleSpecialActionTracker();
@@ -337,6 +341,10 @@ export class BattleUIBridge {
       this._wisdomTriggersLogged = state.wisdomTriggerCount;
       this.appendLog(WISDOM_SURGE_LOG);
     }
+    // 軍師 HUD 摘要（關卡設計 §D-4，PROG-2-1744）：先寫進戰場日誌，內容與上回合相同時略過
+    const strategistLine = state ? strategistHudLogLine(strategistHudInputOf(state)) : '';
+    if (strategistLine && strategistLine !== this._lastStrategistLine) this.appendLog(strategistLine);
+    this._lastStrategistLine = strategistLine;
     // 若仍在回合推進或單挑面板開啟中，暫時不要顯示我方回合提示或切回 deployHint
     if (!c.isAdvancingTurn && !c.isDuelPanelActive) {
       c.boardRenderer?.setDeployHintFaction(Faction.Player);
