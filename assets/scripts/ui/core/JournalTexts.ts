@@ -18,6 +18,8 @@ export const JOURNAL_TEXT_FALLBACK_ZH_TW = {
     UI_JOURNAL_EMPTY: '近日尚無值得記錄之事。',
     UI_MORNING_REPORT_EMPTY: '昨夜風平浪靜，暫無要事。',
     UI_OFFLINE_BATTLE_SNAPSHOT: '戰況摘要',
+    /** §G 日誌回看開場句（PROG-2-1755） */
+    UI_JOURNAL_STORY_LOG_REVIEW: '卷軸展開，往日行止歷歷在目。',
 } as const;
 
 export type JournalTextKey = keyof typeof JOURNAL_TEXT_FALLBACK_ZH_TW;

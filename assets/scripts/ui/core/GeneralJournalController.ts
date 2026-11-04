@@ -1,4 +1,4 @@
-// @spec-source → 武將日誌與離線互動系統.md (doc_spec_0015) 範圍 #6 人物頁故事回看掛點；PROG-2-1183
+// @spec-source → 武將日誌與離線互動系統.md (doc_spec_0015) 範圍 #6 人物頁故事回看掛點；PROG-2-1183；§G 日誌回看開場句 PROG-2-1755
 /**
  * GeneralJournalController — 武將日誌回看抽屜的畫面流程（純邏輯，不依賴 cc）。
  *
@@ -97,9 +97,10 @@ export class GeneralJournalController {
             journalTitle: general ? `${general.name}的日誌` : journalText(this._deps.lookup, 'UI_JOURNAL_TITLE'),
             journalPageLabel: general ? `${Math.min(this._index, generals.length - 1) + 1}／${generals.length}` : '',
             journalEmptyLabel: lines.length === 0 ? (general ? journalText(this._deps.lookup, 'UI_JOURNAL_EMPTY') : '名冊中沒有武將') : '',
+            journalOpeningLabel: lines.length > 0 ? journalText(this._deps.lookup, 'UI_JOURNAL_STORY_LOG_REVIEW') : '',
             btnCloseLabel: '關閉',
         };
-        const actives: Record<string, boolean> = { journalEmptyLabel: lines.length === 0 };
+        const actives: Record<string, boolean> = { journalEmptyLabel: lines.length === 0, journalOpeningLabel: lines.length > 0 };
         for (let i = 0; i < GENERAL_JOURNAL_MAX_LINES; i++) {
             actives[`journalLine${i}`] = lines[i] !== undefined;
             texts[`journalLine${i}`] = lines[i] ?? '';

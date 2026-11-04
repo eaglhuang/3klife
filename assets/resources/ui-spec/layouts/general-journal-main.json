@@ -112,6 +112,15 @@
           },
           {
             "type": "label",
+            "name": "JournalOpeningLabel",
+            "id": "journalOpeningLabel",
+            "width": 944,
+            "height": 40,
+            "text": "卷軸展開，往日行止歷歷在目。",
+            "styleSlot": "gj.label.body"
+          },
+          {
+            "type": "label",
             "name": "JournalEmptyLabel",
             "id": "journalEmptyLabel",
             "width": 944,
