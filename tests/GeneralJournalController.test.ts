@@ -59,6 +59,10 @@ export function createGeneralJournalControllerSuite(): TestSuite {
         assert.equals('張飛的日誌', view.texts.journalTitle);
         assert.equals('2／3', view.texts.journalPageLabel);
         assert.isTrue(view.actives.journalLine0);
+        // §G 日誌回看開場句（PROG-2-1755）：有日誌才顯示
+        assert.isTrue(view.actives.journalOpeningLabel);
+        assert.equals('卷軸展開，往日行止歷歷在目。', view.texts.journalOpeningLabel);
+        assert.isFalse(c.select('zhao') && c.getFlowView().actives.journalOpeningLabel);
         assert.isTrue(view.enabled.btnNextGeneral);
         assert.isFalse(c.select('nobody'));
         assert.isTrue(c.select('guan'));
