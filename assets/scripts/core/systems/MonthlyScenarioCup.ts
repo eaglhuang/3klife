@@ -124,3 +124,93 @@ export function monthlyScenarioMemberScore(scenario: Readonly<MonthlyScenario> |
 export function monthlyScenarioTeamScore(scenario: Readonly<MonthlyScenario> | null, members: readonly MonthlyScenarioMember[], sceneCounter = DEFAULT_SCENE_COUNTER): number {
     return members.reduce((sum, m) => sum + monthlyScenarioMemberScore(scenario, m, sceneCounter), 0);
 }
+
+/** 名冊武將轉場景賽成員需要的欄位（GeneralConfig 子集） */
+export interface MonthlyScenarioGeneral extends MonthlyScenarioEntrant {
+    id: string;
+    str?: number;
+    int?: number;
+    lea?: number;
+    luk?: number;
+}
+
+/** 場景賽出戰人數（與主賽同為 3，PROG-2-1754 暫定） */
+export const MONTHLY_TEAM_SIZE = 3;
+const RANK_ORDER: readonly string[] = ['S', 'A', 'B', 'C', 'D'];
+
+/**
+ * 名冊武將 → 場景賽成員（PROG-2-1754 暫定）：
+ * - 地形倍率取「山地奇兵」類規則指定兵種的適性，其餘規則取該將最高兵種適性；無適性視為 B
+ * - 名冊沒有戰法等級，戰法點數記 0；滿血出戰（存活係數 1）
+ */
+export function monthlyScenarioMemberOf(scenario: Readonly<MonthlyScenario>, general: Readonly<MonthlyScenarioGeneral>): MonthlyScenarioMember {
+    const aptitude = general.troopAptitude ?? {};
+    const rule = scenario.rule;
+    const best = Object.values(aptitude).filter((r) => RANK_ORDER.includes(r)).sort((a, b) => RANK_ORDER.indexOf(a) - RANK_ORDER.indexOf(b))[0];
+    const terrain = rule.kind === 'aptitude-bonus' ? aptitude[rule.troop] ?? 'B' : best ?? 'B';
+    return {
+        str: general.str ?? 0, int: general.int ?? 0, lea: general.lea ?? 0, luk: general.luk ?? 0,
+        tacticPoints: 0, terrain, hp: 1, maxHp: 1,
+        troopAptitude: aptitude, tacticTags: general.tacticTags ?? [],
+    };
+}
+
+/** 月份鍵 YYYY-MM（與 monthlyScenarioLine 同用本地月份） */
+export function monthKeyOf(nowMs: number): string {
+    const d = new Date(nowMs);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
+export type MonthlyScenarioPlayReason = 'no-scenario' | 'no-eligible';
+
+export interface MonthlyScenarioPlayResult {
+    ok: boolean;
+    reason?: MonthlyScenarioPlayReason;
+    scenarioName: string;
+    /** 本次得分（四捨五入）與本月最佳 */
+    score: number;
+    best: number;
+    memberIds: string[];
+    /** 不合資格被排除的人數 */
+    rejected: number;
+    history: MonthlyScenarioHistoryEntry[];
+}
+
+/** 打一場當月場景賽：排除不合格者、取單人積分前 3 計隊伍分，寫入歷史（同月留最高分）；不動主賽積分 */
+export function playMonthlyScenario(
+    history: readonly MonthlyScenarioHistoryEntry[],
+    generals: readonly MonthlyScenarioGeneral[],
+    nowMs: number,
+    sceneCounter = DEFAULT_SCENE_COUNTER,
+): MonthlyScenarioPlayResult {
+    const monthKey = monthKeyOf(nowMs);
+    const prevBest = history.find((h) => h.monthKey === monthKey)?.score ?? 0;
+    const scenario = monthlyScenarioOf(new Date(nowMs).getMonth() + 1);
+    const fail = (reason: MonthlyScenarioPlayReason, rejected: number): MonthlyScenarioPlayResult => ({
+        ok: false, reason, scenarioName: scenario?.name ?? '', score: 0, best: prevBest, memberIds: [], rejected, history: [...history],
+    });
+    if (!scenario) return fail('no-scenario', 0);
+    const { accepted, rejected } = filterMonthlyScenarioTeam(scenario, generals);
+    if (accepted.length === 0) return fail('no-eligible', rejected.length);
+    const team = accepted
+        .map((g) => ({ id: g.id, member: monthlyScenarioMemberOf(scenario, g) }))
+        .map((m) => ({ ...m, score: monthlyScenarioMemberScore(scenario, m.member, sceneCounter) }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, MONTHLY_TEAM_SIZE);
+    const score = Math.round(monthlyScenarioTeamScore(scenario, team.map((m) => m.member), sceneCounter));
+    const next = recordMonthlyScenario(history, { monthKey, scenarioName: scenario.name, score });
+    return {
+        ok: true, scenarioName: scenario.name, score, best: Math.max(prevBest, score),
+        memberIds: team.map((m) => m.id), rejected: rejected.length, history: next,
+    };
+}
+
+const isFiniteNum = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
+
+/** 存檔正規化：丟掉缺欄位的紀錄 */
+export function normalizeMonthlyScenarioHistory(raw: unknown): MonthlyScenarioHistoryEntry[] {
+    if (!Array.isArray(raw)) return [];
+    return raw
+        .filter((h): h is MonthlyScenarioHistoryEntry => !!h && typeof h.monthKey === 'string' && typeof h.scenarioName === 'string' && isFiniteNum(h.score))
+        .map((h) => ({ monthKey: h.monthKey, scenarioName: h.scenarioName, score: h.score }));
+}

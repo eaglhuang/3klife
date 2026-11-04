@@ -20,7 +20,7 @@ import {
 } from '../../core/systems/TournamentLocal';
 import type { TigerTallyCard } from '../../core/models/TigerTallyCard';
 import { tallyBossMatch, tallyBossMatchText } from '../../core/systems/TallyBossTags';
-import { monthlyScenarioOf, MONTHLY_REQUIRED_APTITUDE_RANKS, type MonthlyScenario } from '../../core/systems/MonthlyScenarioCup';
+import { monthKeyOf, monthlyScenarioOf, MONTHLY_REQUIRED_APTITUDE_RANKS, type MonthlyScenario, type MonthlyScenarioHistoryEntry, type MonthlyScenarioPlayReason, type MonthlyScenarioPlayResult } from '../../core/systems/MonthlyScenarioCup';
 import { STAT_LABELS } from './NurtureFlowController';
 import {
     tournamentBossIntelLine, tournamentMatchStartLine, tournamentOpeningLine, tournamentPrepHintLine, tournamentSeasonEndLine, tournamentSeriesHeadline,
@@ -85,7 +85,15 @@ export interface TournamentPanelDeps {
     /** 持有的虎符；有提供時 BOSS 列附命中弱點張數（E-10，PROG-2-1356） */
     tallies?: () => readonly TigerTallyCard[];
     claimRewards: (nowMs: number) => TournamentSeasonReward[];
+    /** 月度場景賽參戰與歷史（PROG-2-1754）；未提供時「場景賽」鈕停用 */
+    playMonthly?: (nowMs: number) => MonthlyScenarioPlayResult;
+    monthlyHistory?: () => readonly MonthlyScenarioHistoryEntry[];
 }
+
+export const MONTHLY_PLAY_REASON_LABEL: Record<MonthlyScenarioPlayReason, string> = {
+    'no-scenario': '本月沒有場景賽。',
+    'no-eligible': '名冊沒有符合本月場景賽資格的武將。',
+};
 
 export interface TournamentPanelFlowView {
     texts: Record<string, string>;
@@ -162,6 +170,20 @@ export class TournamentPanelController {
         return true;
     }
 
+    /** 打一場月度場景賽（PROG-2-1754）：顯示得分、本月最佳與出戰名單；成功回 true */
+    public playMonthly(): boolean {
+        if (!this._deps.playMonthly) return false;
+        const r = this._deps.playMonthly(this._deps.now());
+        if (!r.ok) {
+            this._message = MONTHLY_PLAY_REASON_LABEL[r.reason ?? 'no-eligible'];
+            return false;
+        }
+        const names = r.memberIds.map((id) => this._deps.generalName(id) ?? id).join('、');
+        const excluded = r.rejected > 0 ? `｜${r.rejected} 名不合資格未出戰` : '';
+        this._message = `場景賽【${r.scenarioName}】得分 ${r.score}（本月最佳 ${r.best}）｜出戰：${names}${excluded}`;
+        return true;
+    }
+
     /** 領取全部待領賽季獎勵；有領到回 true */
     public claim(): boolean {
         const rewards = this._deps.claimRewards(this._deps.now());
@@ -188,6 +210,8 @@ export class TournamentPanelController {
                 : `今日剩 ${status.entriesLeftToday} 次（${freeLeft > 0 ? `免費 ${freeLeft} 次` : `每次 ${cfg.extraEntryCost} 金`}）`;
         const card = tournamentSeasonCardLines(status, this._deps.generalName);
         const bossLine = `賽季 BOSS：${status.venue.boss.name}（弱點：${status.venue.boss.weaknessTags.map((t) => TOURNAMENT_BOSS_TAG_LABEL[t]).join('、')}）`;
+        const monthKey = monthKeyOf(nowMs);
+        const monthlyBest = this._deps.monthlyHistory?.().find((h) => h.monthKey === monthKey)?.score ?? null;
         const bossMatch = this._deps.tallies ? `｜${tallyBossMatchText(tallyBossMatch(this._deps.tallies(), status.venue.boss))}` : '';
         return {
             texts: {
@@ -195,7 +219,7 @@ export class TournamentPanelController {
                 trnSeasonLabel: card.season,
                 trnVenueLabel: card.venue,
                 trnBossLabel: `${bossLine}${bossMatch}`,
-                trnMonthlyLabel: monthlyScenarioLine(nowMs),
+                trnMonthlyLabel: `${monthlyScenarioLine(nowMs)}${monthlyBest === null ? '' : `｜本月最佳 ${monthlyBest}`}`,
                 trnRankLabel: `積分 ${status.points}｜${TOURNAMENT_TIER_LABEL[status.tier]}`,
                 trnEntriesLabel: entries,
                 trnTeamLabel: card.team,
@@ -204,6 +228,7 @@ export class TournamentPanelController {
                 btnRegisterLabel: status.team ? '重新報名' : '報名',
                 btnPlayLabel: competing && status.entriesLeftToday > 0 && freeLeft === 0 ? `參戰（${cfg.extraEntryCost} 金）` : '參戰',
                 btnClaimLabel: '領獎',
+                btnMonthlyLabel: '場景賽',
                 btnCloseLabel: '關閉',
             },
             actives: { trnResultLabel: this._message !== '' },
@@ -211,6 +236,7 @@ export class TournamentPanelController {
                 btnRegister: status.phase !== 'ENDED',
                 btnPlay: competing && status.entriesLeftToday > 0,
                 btnClaim: pending.length > 0,
+                btnMonthly: !!this._deps.playMonthly && monthlyScenarioOf(new Date(nowMs).getMonth() + 1) !== null,
                 btnClose: true,
             },
         };

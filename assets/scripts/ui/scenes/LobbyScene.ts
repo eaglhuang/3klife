@@ -1481,6 +1481,8 @@ export class LobbyScene extends Component {
             pendingRewards: (nowMs) => services().session.pendingTournamentRewards(nowMs),
             tallies: () => Object.values(services().session.tallyCards),
             claimRewards: (nowMs) => services().session.claimTournamentRewards(nowMs, (gold) => { gacha.grantCurrency('gold', gold); }),
+            playMonthly: (nowMs) => services().session.playMonthlyScenario(nowMs),
+            monthlyHistory: () => services().session.monthlyScenarioHistory,
         });
         this._tournament = tournament;
         const afterAction = (ok: boolean): void => {
@@ -1492,6 +1494,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnRegister', handler: () => { afterAction(tournament.register()); } },
             { buttonId: 'btnPlay', handler: () => { afterAction(tournament.play()); } },
             { buttonId: 'btnClaim', handler: () => { afterAction(tournament.claim()); } },
+            { buttonId: 'btnMonthly', handler: () => { afterAction(tournament.playMonthly()); } },
         ]);
         this._tournamentHost.node.active = false;
     }

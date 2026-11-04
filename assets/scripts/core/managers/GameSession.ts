@@ -108,6 +108,7 @@ import {
     rolloverTournament, tournamentStatus, type TournamentEntrant, type TournamentSeasonReward, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeasonHistory, type TournamentSeriesResult,
     type TournamentState, type TournamentStatus,
 } from '../systems/TournamentLocal';
+import { playMonthlyScenario, type MonthlyScenarioHistoryEntry, type MonthlyScenarioPlayResult } from '../systems/MonthlyScenarioCup';
 import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type DispatchCatalogRow, type DispatchPreview } from '../systems/DispatchCatalog';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
@@ -1843,6 +1844,20 @@ export class GameSession {
     private _tournamentAt(nowMs: number): TournamentState {
         this._tournament = rolloverTournament(this._tournament ?? createTournamentState(nowMs), nowMs);
         return this._tournament;
+    }
+
+    /** 月度場景賽歷史（PROG-2-1754）：同月只留最高分，不計入主賽積分 */
+    public get monthlyScenarioHistory(): MonthlyScenarioHistoryEntry[] {
+        return (this._tournament?.monthlyHistory ?? []).map((h) => ({ ...h }));
+    }
+
+    /** 打一場當月場景賽：名冊存活武將排除不合格者後取前 3；成功才寫回歷史 */
+    public playMonthlyScenario(nowMs: number): MonthlyScenarioPlayResult {
+        const state = this._tournamentAt(nowMs);
+        const generals = this._roster.getAll().filter((g) => g.status !== 'dead');
+        const result = playMonthlyScenario(state.monthlyHistory ?? [], generals, nowMs);
+        if (result.ok) this._tournament = { ...state, monthlyHistory: result.history };
+        return result;
     }
 
     /** 出戰陣容：名冊存活武將戰力前 3（與敵襲迎戰同一套戰力） */
