@@ -25,7 +25,7 @@ export interface DomesticTaskRow {
     governorName: string | null;
 }
 
-const TASK_LABEL: Readonly<Record<DomesticTaskId, string>> = Object.freeze({
+export const TASK_LABEL: Readonly<Record<DomesticTaskId, string>> = Object.freeze({
     farming: '農耕',
     commerce: '商業',
     diplomacy: '外交',
@@ -33,7 +33,7 @@ const TASK_LABEL: Readonly<Record<DomesticTaskId, string>> = Object.freeze({
     scouting: '偵查',
 });
 
-const RESOURCE_LABEL: Readonly<Record<DomesticResource, string>> = Object.freeze({
+export const RESOURCE_LABEL: Readonly<Record<DomesticResource, string>> = Object.freeze({
     food: '糧草',
     gold: '黃金',
     fame: '名聲',
@@ -46,11 +46,12 @@ export function buildDomesticRows(
     season: number,
     governorOf: (taskId: DomesticTaskId) => DomesticGovernor | null = () => null,
     goldBonus = 0,
+    multiplierOf: (taskId: DomesticTaskId) => number = () => 1,
 ): DomesticTaskRow[] {
     const chosenThisSeason = log.lastSeason === season;
     return DOMESTIC_TASK_IDS.map(taskId => {
         const governor = governorOf(taskId);
-        const output = domesticOutputFor(taskId, governor?.stats, goldBonus);
+        const output = domesticOutputFor(taskId, governor?.stats, goldBonus, multiplierOf(taskId));
         return {
             taskId,
             label: TASK_LABEL[taskId],

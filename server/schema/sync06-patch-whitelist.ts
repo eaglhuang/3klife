@@ -84,6 +84,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'gachaWallet',
     'resources',
     'domestic',
+    'governanceEvent',
     'rivals',
     'mercenaries',
     'femaleSystem',

@@ -58,6 +58,9 @@ export interface DomesticPanelDeps {
     magistrateCandidates?: () => MagistrateCandidate[];
     magistrateUid?: () => string | null;
     setMagistrate?: (uid: string | null) => boolean;
+    /** 治理事件（領地治理 §G，PROG-2-1773）：本季產出倍率與事件句；不提供時視為沒有事件 */
+    outputMultiplier?: (taskId: DomesticTaskId) => number;
+    eventLine?: () => string | null;
 }
 
 /** 任務 id → 節點名稱片段（layout 節點 id 用 btn<Name> / <name>Output / <name>Chosen） */
@@ -83,7 +86,7 @@ export class DomesticPanelController {
 
     /** 5 列資料（直接沿用 DomesticPresenter） */
     public rows(): DomesticTaskRow[] {
-        return buildDomesticRows(this._deps.log(), this._deps.season(), (taskId) => this._governorOf(taskId), this._goldBonus());
+        return buildDomesticRows(this._deps.log(), this._deps.season(), (taskId) => this._governorOf(taskId), this._goldBonus(), (taskId) => this._deps.outputMultiplier?.(taskId) ?? 1);
     }
 
     /**
@@ -197,10 +200,10 @@ export class DomesticPanelController {
         const canAssign = !!(this._deps.candidates && this._deps.assignedUid && this._deps.assign);
         const texts: Record<string, string> = {
             seasonLabel: `第 ${this._deps.season()} 季`,
-            noticeLabel: this._notice ?? '',
+            noticeLabel: this._notice ?? this._deps.eventLine?.() ?? '',
         };
         const actives: Record<string, boolean> = {
-            noticeLabel: this._notice !== null,
+            noticeLabel: this._notice !== null || !!this._deps.eventLine?.(),
         };
         const enabled: Record<string, boolean> = {};
         for (const row of rows) {

@@ -118,6 +118,8 @@ import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type Dispatch
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
+import { remarkRandomOf } from '../systems/SageRemarks';
+import { governanceEventLine, governanceOutputMultiplier, governanceReportLine, normalizeGovernanceEvent, rollGovernanceEvent, type ActiveGovernanceEvent } from '../systems/GovernanceEvents';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
@@ -365,6 +367,10 @@ export interface SessionEventEmitter {
 
 export interface SeasonAdvancedPayload {
     advance: SeasonAdvanceResult;
+    /** 季度治理報告句（領地治理 §G，PROG-2-1773）；本季沒有任何產出時沒有 */
+    governanceReport?: string;
+    /** 新一季發生治理事件時的提示句 */
+    governanceEventLine?: string;
     agingEvents: AgingEvent[];
     /** 本季新開獎的子嗣 */
     unveilings: UnveilingEvent[];
@@ -662,6 +668,9 @@ export class GameSession {
     private _openingRedFaceShown = false;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
+    /** 治理事件（PROG-2-1773）：只在發生那一季有效 */
+    private _governanceEvent: ActiveGovernanceEvent | null = null;
+    private _governanceEventRandom: RandomSource | null = null;
     private _rivals: RivalWorld = createRivalWorld();
     /** 他國逐將名冊與重算情境（E-9，PROG-2-1714）；未設定時他國照舊以兵力計軍力 */
     private _rivalOfficers: { rosters: Readonly<Record<string, RivalNationRoster>>; context: RivalPowerContext } | null = null;
@@ -1550,6 +1559,11 @@ export class GameSession {
         this._random = random;
     }
 
+    /** 測試替身：指定治理事件的擲骰來源 */
+    public setGovernanceEventRandom(random: RandomSource | null): void {
+        this._governanceEventRandom = random;
+    }
+
     public setAutoSave(enabled: boolean): void {
         this._autoSave = enabled;
     }
@@ -1650,6 +1664,7 @@ export class GameSession {
         this._firstBattleCleared = false;
         this._openingRedFaceShown = false;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
+        this._governanceEvent = null;
         this._rivals = this._withRivalOfficers(createRivalWorld());
         this._mercenaries = createEmptyMercenaryBundle();
     }
@@ -2072,6 +2087,23 @@ export class GameSession {
         return { ...this._domesticLog };
     }
 
+    /** 本季生效中的治理事件；過季的事件不算 */
+    public get activeGovernanceEvent(): ActiveGovernanceEvent | null {
+        const event = this._governanceEvent;
+        return event && event.season === this._clock.state.totalSeasonsElapsed ? event : null;
+    }
+
+    /** 內政任務本季的產出倍率（治理事件） */
+    public domesticOutputMultiplier(taskId: string): number {
+        return governanceOutputMultiplier(this._governanceEvent, taskId, this._clock.state.totalSeasonsElapsed);
+    }
+
+    /** 本季治理事件的提示句；沒有事件回傳 null */
+    public get governanceEventNotice(): string | null {
+        const event = this.activeGovernanceEvent;
+        return event ? governanceEventLine(event) : null;
+    }
+
     /**
      * 選一項內政任務，依規格當下入帳：糧草、城市兵源寫進軍備，名聲寫進 fame，黃金交給 grantGold（沿用 LocalGachaService 錢包）。
      * 同季已選過則拒絕且不變動任何資源。成功時自動存檔（若有開啟）。
@@ -2087,6 +2119,7 @@ export class GameSession {
             { food: this._military.foodCap, gold: Infinity, fame: BASE_RESOURCE_CAPS.fame, cityTroops: this._military.cityTroopsCap },
             this.domesticGovernorStats(taskId),
             this.magistrateGoldBonus,
+            this.domesticOutputMultiplier(taskId),
         );
         if (!result.ok) return result;
         this._military = { ...this._military, food: result.stock.food, cityTroops: result.stock.cityTroops };
@@ -3423,6 +3456,17 @@ export class GameSession {
         return result;
     }
 
+    /** 季度治理報告（領地治理 §G）：上一季內政入帳加上季結算增加的糧草與城市兵源 */
+    private _buildGovernanceReport(before: MilitaryReserve, previousSeason: number): string | null {
+        const gains: Partial<Record<'food' | 'gold' | 'fame' | 'cityTroops', number>> = {
+            food: Math.max(0, this._military.food - before.food),
+            cityTroops: Math.max(0, this._military.cityTroops - before.cityTroops),
+        };
+        const grant = this._domesticLog.lastSeason === previousSeason ? this._domesticLog.lastGrant : undefined;
+        if (grant) gains[grant.resource] = (gains[grant.resource] ?? 0) + grant.amount;
+        return governanceReportLine(gains);
+    }
+
     public async advanceSeason(): Promise<SeasonAdvancedPayload> {
         const advance = this._clock.advanceSeason();
         this._tickTravel();
@@ -3467,11 +3511,13 @@ export class GameSession {
         // 三國日報素材：缺糧（與虎符缺糧同一門檻，暫定）
         // 缺口 = 門檻 − 目前糧草（RET-05 復仇取回的基數，暫定）
         if (this._tallyFoodDiscountArmed) this.recordPlayerLog('RESOURCE_LOW', '糧草', undefined, TALLY_SHORTAGE_FOOD_THRESHOLD - this._military.food);
+        const reserveBeforeSettle = this._military;
         this._military = regenMilitaryOneSeason(this._military, 1, seasonModifiersOf(advance.previous.currentSeason).foodMultiplier);
         // 監獄產出：情報累積；資源暫定折成糧草（不超過糧草上限）
         const prisonYield = prisonYieldOneSeason(this._prison.prisoners);
         this._prison = { ...this._prison, intel: this._prison.intel + prisonYield.intel };
         this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + prisonYield.resource) };
+        const governanceReport = this._buildGovernanceReport(reserveBeforeSettle, advance.previous.totalSeasonsElapsed);
         // 無期徒刑傳家寶物掉落（EQP-09，機率暫定）
         const treasures = rollPrisonTreasures(this._prison.prisoners, this._random);
         if (treasures > 0) {
@@ -3503,7 +3549,12 @@ export class GameSession {
         // MVP 定案：一季＝傭兵一日（PROG-2-1154，使用者裁定）
         const mercenaryDay = this._tickMercenaryDay();
         const departedUids = mercenaryDay.events.filter((e) => e.type === 'departed').map((e) => e.uid);
-        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids, mercenaryDayThree: mercenaryDay.dayThreeUids } : {}) };
+        // 用另一條由季數與目前亂數狀態導出的序列，不消耗主亂數，既有結算的結果不變
+        const governanceSeason = advance.current.totalSeasonsElapsed;
+        const governanceRandom = this._governanceEventRandom ?? remarkRandomOf(`governance|${governanceSeason}|${this._seeded.snapshot().state}`);
+        this._governanceEvent = rollGovernanceEvent(governanceSeason, governanceRandom);
+        const eventNotice = this.governanceEventNotice;
+        const payload: SeasonAdvancedPayload = { ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids, mercenaryDayThree: mercenaryDay.dayThreeUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -4111,6 +4162,7 @@ export class GameSession {
                 openingRedFaceShown: this._openingRedFaceShown,
             },
             domestic: { ...this._domesticLog },
+            ...(this._governanceEvent ? { governanceEvent: { ...this._governanceEvent } } : {}),
             rivals: this._rivals,
             prison: this.prison,
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
@@ -4339,6 +4391,7 @@ export class GameSession {
         this._openingRedFaceShown = normalizeFlag(snapshot.resources?.openingRedFaceShown)
             || (snapshot.resources?.firstBattleCleared === undefined && this._clearedStageIds.length > 0);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
+        this._governanceEvent = normalizeGovernanceEvent(snapshot.governanceEvent);
         this._rivals = this._withRivalOfficers(normalizeRivalWorld(snapshot.rivals));
         this._mercenaries = normalizeMercenaryBundle(snapshot.mercenaries);
         if (this._postLoadHook) {
