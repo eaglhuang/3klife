@@ -2354,6 +2354,7 @@ export class LobbyScene extends Component {
         if (!result.ok) {
             return false;
         }
+        this._lobbyHall?.reactToDispatch(task.Difficulty);
         services().event.emit('SHOW_TOAST', { message: result.outcome.success ? '任務成功' : '任務失敗', duration: 2.5 });
         return true;
     }

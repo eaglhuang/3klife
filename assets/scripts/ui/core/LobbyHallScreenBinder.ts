@@ -24,6 +24,7 @@ import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
 import { HallMapTurnPlayer } from '../components/HallMapTurnPlayer';
 import { HallSeasonFxLayer } from '../components/HallSeasonFxLayer';
 import { HallStageCrowd } from '../components/HallStageCrowd';
+import { hallCrowdReactionOf } from '../../core/systems/HallCrowdReaction';
 import { LobbyHallStageController } from './LobbyHallStageController';
 import { LobbyHallThemeApplier } from './LobbyHallThemeApplier';
 import { LobbyHallThemeNodeView } from './LobbyHallThemeNodeView';
@@ -144,6 +145,12 @@ export class LobbyHallScreenBinder {
                 if (row.pinned) setText(pin, LOBBY_HALL_WALL_PIN_TEXT);
             }
         });
+    }
+
+    /** 派遣任務後呼叫：高難任務讓在場武將集體反應（大廳 §E-5，PROG-2-1740）；其他難度或沒有人群時不動 */
+    reactToDispatch(difficulty: string): void {
+        const reaction = hallCrowdReactionOf(difficulty);
+        if (reaction && this._crowd) this._crowd.react(reaction);
     }
 
     /** 播放換季聚焦序列；沒有地圖播放器時不動 */

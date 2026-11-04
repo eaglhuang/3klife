@@ -15,6 +15,7 @@ import { _decorator, Color, Component, Label, Node, Sprite, SpriteFrame, Tween, 
 import { services } from '../../core/managers/ServiceLoader';
 import type { HallStagePlacement } from '../../core/systems/HallStagePlanner';
 import { HallStageDecor, hallStageCrowdPose } from '../../core/systems/HallStageCrowdPose';
+import type { HallCrowdReaction } from '../../core/systems/HallCrowdReaction';
 
 const { ccclass } = _decorator;
 
@@ -26,6 +27,8 @@ const MARK_COLOR = new Color(255, 224, 136, 255);
 export class HallStageCrowd extends Component {
     private _decor: HallStageDecor | null = null;
     private _showToken = 0;
+    /** 每位在場武將頭頂的位置（集體反應用）；clear 時清空 */
+    private readonly _headPositions = new Map<string, Vec3>();
 
     public configure(decor: HallStageDecor): void {
         this._decor = decor;
@@ -40,8 +43,27 @@ export class HallStageCrowd extends Component {
         });
     }
 
+    /** 集體反應（大廳 §E-5，PROG-2-1740）：在場每位武將頭上短暫跳出字，時間到自動移除；人群為空時不動 */
+    public react(reaction: Readonly<HallCrowdReaction>): void {
+        let index = 0;
+        for (const [generalId, head] of this._headPositions) {
+            const node = this._makeLabel(`react-${generalId}`, reaction.text, 34, MARK_COLOR);
+            node.setPosition(head.x, head.y, 0);
+            node.setScale(0.2, 0.2, 1);
+            tween(node)
+                .delay(index * 0.05)
+                .to(0.18, { scale: new Vec3(1.15, 1.15, 1) }, { easing: 'backOut' })
+                .to(0.1, { scale: new Vec3(1, 1, 1) })
+                .delay(Math.max(0, reaction.durationSec - 0.28))
+                .call(() => { if (node.isValid) node.destroy(); })
+                .start();
+            index++;
+        }
+    }
+
     public clear(): void {
         this._showToken++;
+        this._headPositions.clear();
         for (const child of [...this.node.children]) {
             Tween.stopAllByTarget(child);
             child.destroy();
@@ -75,6 +97,7 @@ export class HallStageCrowd extends Component {
         body.setScale(pose.body.scaleX, pose.body.scaleY, 1);
         tag.setPosition(pose.tag.x, pose.tag.y, 0);
         if (mark) mark.setPosition(pose.mark.x, pose.mark.y, 0);
+        this._headPositions.set(placement.generalId, new Vec3(pose.mark.x, pose.mark.y, 0));
 
         this._playIdle(body, pose.body.scaleX, pose.body.scaleY, pose.idleDelaySec, decor);
         if (mark) this._playBob(mark, decor);
