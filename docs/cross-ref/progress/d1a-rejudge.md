@@ -39,5 +39,6 @@
 | 血統理論系統.md (doc_spec_0011) | 🟡（維持） | E 8 項中 7 項有代碼：14 人祖譜（BloodlineGraph Pedigree）、虛擬祖先（PersonRegistry）、爆發力、近親判定、血脈歸宗（BloodlineMerge）、血統活性（WildGene）；E-6 簡化／專家切換邏輯與面板 API 已做（BloodlineTreeViewMode、BloodlineTreePanel.setViewMode），切換按鈕尚未上版面 | E-7 史實名門加成「袁紹／曹操等有預設家譜=初始 EP 更高」：名單、家譜內容與 EP 加成數值未定案（BloodlineMerge 註明不處理） | PROG-2-1731 |
 | 領地治理系統.md (doc_spec_0037) | 🟡→✅ | E 10 項皆有代碼：內政五任務（DomesticTasks）、武將拖放指派（GovernanceAssignment）、每季產出結算、自動治理（DomesticAutoGovernance）、太守府（GovernorHallView、GovernorHallController）、領地升級解鎖任務格（TerritoryUpgrade）、手動／自動切換（DomesticPanelController）、世襲主城保護（HereditaryKeep）、非培育子嗣內政（ChildMagistrate、ChildOfficialPosts）、AI 反霸權同盟 30%（RivalHegemony） | — | PROG-2-1732 |
 | 正式版劇本文案.md (doc_spec_0004) | 🟡（維持） | §2 開場信、§4 教學引導、§5 紅顏趕路、§6 商業化提示、§7 趣味台詞庫皆已入庫；§3 名將登場正式版台詞已補進 InitialGeneralShowcase.formalLine（showcaseLineOf 可切換） | §3 正式版台詞尚未上畫面：開場名將展示預設仍用趣味版（§5.2／§7），改用正式版待裁定 | PROG-2-1732 |
+| 名將挑戰賽系統.md (doc_spec_0007) | 🟡（維持） | E 10 項單機版皆有代碼：賽季週期與段位（TournamentSeason）、場地公告與杯賽輪替、隊伍鏡像快照、本機對戰、五戰三勝與決賽單場（TournamentLocal.bracketSeriesRule）、季節 BOSS、賽季獎勵、虎符 BOSS 克制標籤（TallyBossTags）、月度場景賽（MonthlyScenarioCup） | E-3 上傳快照、E-4 服務端非同步對戰、E-8 全服合力 BOSS 需要伺服器；單機以本機模擬替代 | PROG-2-1733 |
 
 ---
