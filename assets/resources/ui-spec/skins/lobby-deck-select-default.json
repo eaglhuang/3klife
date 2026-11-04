@@ -16,7 +16,7 @@
     },
     "deck.select.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 30,
       "color": "secondaryLight",
@@ -25,7 +25,7 @@
     },
     "deck.select.label.card": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 24,
       "color": "secondaryLight",

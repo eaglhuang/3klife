@@ -41,7 +41,7 @@
     },
     "nurture.label.title": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 30,
       "lineHeight": 34,
       "color": "secondaryLight",
@@ -49,7 +49,7 @@
     },
     "nurture.label.subtitle": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 17,
       "lineHeight": 22,
       "color": "textSecondary",
@@ -57,7 +57,7 @@
     },
     "nurture.label.section": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 22,
       "color": "textWarmGold",
@@ -67,7 +67,7 @@
     },
     "nurture.label.body": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "color": "textPrimary",
@@ -76,7 +76,7 @@
     },
     "nurture.label.chip": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 18,
       "color": "colorWhite",

@@ -18,9 +18,9 @@
       "sprites/ui_bg/lobby_hall_map_preview"
     ],
     "fonts": [
-      "fonts/notosans_tc/font",
-      "fonts/manrope/font",
-      "fonts/newsreader/font"
+      "fonts/notosans_tc/notosans_tc",
+      "fonts/manrope/manrope",
+      "fonts/newsreader/newsreader"
     ],
     "fragments": []
   },

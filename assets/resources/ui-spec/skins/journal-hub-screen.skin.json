@@ -21,7 +21,7 @@
     },
     "jh.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 32,
       "lineHeight": 40,
       "color": "secondaryLight",
@@ -30,7 +30,7 @@
     },
     "jh.label.body": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 30,
       "color": "secondaryLight",
@@ -38,7 +38,7 @@
     },
     "jh.label.score": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "secondaryLight",
@@ -47,7 +47,7 @@
     },
     "jh.label.muted": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "secondaryLight",

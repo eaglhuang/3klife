@@ -65,7 +65,7 @@
     },
     "leaderboard.text.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 34,
       "lineHeight": 40,
       "color": "secondaryLight",
@@ -74,7 +74,7 @@
     },
     "leaderboard.text.primary": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 28,
       "color": "secondaryLight",
@@ -83,7 +83,7 @@
     },
     "leaderboard.text.value": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 28,
       "color": "primary",
@@ -92,7 +92,7 @@
     },
     "leaderboard.text.secondary": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 24,
       "color": "secondaryLight",

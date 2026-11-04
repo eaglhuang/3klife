@@ -1,27 +1,27 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "v2-workflow",
-  "generatedAt": "2026-05-02T08:59:50.639Z",
+  "generatedAt": "2026-11-04T16:17:54.996Z",
   "verdict": "measured-pass",
-  "readinessScore": 0.833,
+  "readinessScore": 0.917,
   "summary": {
-    "blockerUnits": 2,
-    "actionUnits": 4,
+    "blockerUnits": 1,
+    "actionUnits": 2,
     "bounded": true,
-    "nextCriticalAction": "missing final capture protocol"
+    "nextCriticalAction": "fill traceable rects for waiver-eligible art zones, then create art-authority waivers"
   },
   "paths": {
     "layout": "assets/resources/ui-spec/layouts/v2-workflow.json",
     "skin": "assets/resources/ui-spec/skins/v2-workflow.skin.json",
     "screen": "assets/resources/ui-spec/screens/v2-workflow.json",
-    "captureProtocol": "assets/resources/ui-spec/screens/v2-workflow.final-capture-protocol.json",
+    "captureProtocol": "../AppData/Local/Temp/dom-to-ui-selftest-GfuQ0I/v2-workflow.final-capture-protocol.json",
     "zoneOwnership": "assets/resources/ui-spec/screens/v2-workflow.zone-ownership.json",
     "tabRouting": "assets/resources/ui-spec/screens/v2-workflow.tab-routing.json",
-    "preload": "assets/resources/ui-spec/screens/v2-workflow.preload.json",
-    "performance": "assets/resources/ui-spec/screens/v2-workflow.performance.json",
-    "bakeManifest": "assets/resources/ui-spec/layouts/v2-workflow.layout.bake-manifest.json",
+    "preload": "ui-spec-evidence/screens/v2-workflow.preload.json",
+    "performance": "ui-spec-evidence/screens/v2-workflow.performance.json",
+    "bakeManifest": "ui-spec-evidence/layouts/v2-workflow.layout.bake-manifest.json",
     "artAuthorityWaivers": "assets/resources/ui-spec/screens/v2-workflow.art-authority-waivers.json",
-    "finalVerdict": "../AppData/Local/Temp/dom-to-ui-selftest-GvHiwF/v2-workflow/v2-workflow.html-cocos-verdict.json"
+    "finalVerdict": "../AppData/Local/Temp/dom-to-ui-selftest-GfuQ0I/v2-workflow/v2-workflow.html-cocos-verdict.json"
   },
   "gates": {
     "finalGate": {
@@ -34,10 +34,18 @@
       "verdict": "pass"
     },
     "capture": {
-      "status": "blocker",
-      "ok": false,
-      "workUnits": 1,
-      "summary": "missing final capture protocol"
+      "status": "pass",
+      "ok": true,
+      "workUnits": 0,
+      "summary": "capture protocol present",
+      "viewport": {
+        "width": 64,
+        "height": 64,
+        "dpr": 1
+      },
+      "settleMs": 0,
+      "warnings": [],
+      "errors": []
     },
     "zones": {
       "status": "blocker",
@@ -66,9 +74,14 @@
       "samples": []
     },
     "visualPolicy": {
-      "status": "warn",
-      "workUnits": 1,
-      "summary": "missing bake manifest; texture/clip review cannot be quantified"
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0 clip/mask geometry entries, 0 small texture entries, 0 unsafe auto-bake entries",
+      "totalEntries": 0,
+      "byBakeAction": {},
+      "clipGeometryCount": 0,
+      "smallTextureCount": 0,
+      "unsafeAutoBakeCount": 0
     },
     "loading": {
       "status": "pass",
@@ -103,12 +116,6 @@
   "issues": [
     {
       "severity": "blocker",
-      "code": "capture-protocol",
-      "summary": "missing final capture protocol",
-      "workUnits": 1
-    },
-    {
-      "severity": "blocker",
       "code": "zone-ownership-waivers",
       "summary": "missing zone ownership report",
       "workUnits": 1
@@ -117,12 +124,6 @@
       "severity": "warn",
       "code": "tab-routing-mounts",
       "summary": "missing tab-routing sidecar",
-      "workUnits": 1
-    },
-    {
-      "severity": "warn",
-      "code": "visual-policy",
-      "summary": "missing bake manifest; texture/clip review cannot be quantified",
       "workUnits": 1
     }
   ]

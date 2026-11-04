@@ -145,8 +145,9 @@ function buildFontFaceRegistry(styleSheets, customResolver) {
 
 // R-12 helper: convention-based resolver — derives a Cocos font asset path
 // from the @font-face family + src URL. Default convention:
-//   `fonts/<sanitized-family>/font` (matches existing repo layout
-//    assets/resources/fonts/<family>/font.ttf)
+//   `fonts/<sanitized-family>/<sanitized-family>` (matches existing repo layout
+//    assets/resources/fonts/<family>/<family>.ttf; Cocos web derives the
+//    font-family from the file name, so base names must be unique)
 // `src` is currently unused but retained for future hash-based mapping.
 function resolveFontAssetByConvention(family, _src) {
   if (!family) return null;

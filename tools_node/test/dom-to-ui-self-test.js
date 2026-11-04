@@ -1071,34 +1071,34 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
       fail('R-10 PROJECT_FONT_REGISTRY must be exported and non-trivial');
     }
     // 具名專案字型優先
-    if (resolveFontFamilyToAsset('"Newsreader", "NotoSansTC", "Songti TC", "STSong", serif') !== 'fonts/newsreader/font') {
+    if (resolveFontFamilyToAsset('"Newsreader", "NotoSansTC", "Songti TC", "STSong", serif') !== 'fonts/newsreader/newsreader') {
       fail('R-10 headline stack must resolve to newsreader');
     }
-    if (resolveFontFamilyToAsset('"NotoSansTC", "PingFang TC", "Microsoft JhengHei", sans-serif') !== 'fonts/notosans_tc/font') {
+    if (resolveFontFamilyToAsset('"NotoSansTC", "PingFang TC", "Microsoft JhengHei", sans-serif') !== 'fonts/notosans_tc/notosans_tc') {
       fail('R-10 body stack must resolve to notosans_tc');
     }
-    if (resolveFontFamilyToAsset('"Manrope", "NotoSansTC", system-ui, sans-serif') !== 'fonts/manrope/font') {
+    if (resolveFontFamilyToAsset('"Manrope", "NotoSansTC", system-ui, sans-serif') !== 'fonts/manrope/manrope') {
       fail('R-10 label stack must resolve to manrope (Latin first)');
     }
-    if (resolveFontFamilyToAsset('"Manrope", "Newsreader", serif') !== 'fonts/manrope/font') {
+    if (resolveFontFamilyToAsset('"Manrope", "Newsreader", serif') !== 'fonts/manrope/manrope') {
       fail('R-10 num stack must resolve to manrope');
     }
     // 字元涵蓋：中文跳過只涵蓋拉丁字的字族，照瀏覽器逐字退字族的結果（PROG-2-1650）
-    if (resolveFontFamilyToAsset('"Newsreader", "NotoSansTC", serif', null, null, '張飛') !== 'fonts/notosans_tc/font') {
+    if (resolveFontFamilyToAsset('"Newsreader", "NotoSansTC", serif', null, null, '張飛') !== 'fonts/notosans_tc/notosans_tc') {
       fail('R-10 CJK text must skip latin-only newsreader');
     }
-    if (resolveFontFamilyToAsset('"Newsreader", "NotoSansTC", serif', null, null, 'Vanguard') !== 'fonts/newsreader/font') {
+    if (resolveFontFamilyToAsset('"Newsreader", "NotoSansTC", serif', null, null, 'Vanguard') !== 'fonts/newsreader/newsreader') {
       fail('R-10 latin text must keep newsreader');
     }
     // System CJK aliases 落到 notosans_tc
-    if (resolveFontFamilyToAsset('"PingFang TC"') !== 'fonts/notosans_tc/font') {
+    if (resolveFontFamilyToAsset('"PingFang TC"') !== 'fonts/notosans_tc/notosans_tc') {
       fail('R-10 PingFang TC alias must resolve to notosans_tc');
     }
     // Generic fallback
-    if (resolveFontFamilyToAsset('serif') !== 'fonts/newsreader/font') {
+    if (resolveFontFamilyToAsset('serif') !== 'fonts/newsreader/newsreader') {
       fail('R-10 generic serif must resolve to newsreader');
     }
-    if (resolveFontFamilyToAsset('sans-serif') !== 'fonts/notosans_tc/font') {
+    if (resolveFontFamilyToAsset('sans-serif') !== 'fonts/notosans_tc/notosans_tc') {
       fail('R-10 generic sans-serif must resolve to notosans_tc');
     }
     // 完全未知 → default（CJK-safe）
@@ -1112,7 +1112,7 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
       fail('R-10 undefined must fall back to PROJECT_FONT_DEFAULT');
     }
     // 自訂 registry 仍可覆寫（保證資料導向）
-    const customAsset = resolveFontFamilyToAsset('CustomFont', [{ match: /^customfont$/i, asset: 'fonts/custom/font' }], 'fonts/notosans_tc/font');
+    const customAsset = resolveFontFamilyToAsset('CustomFont', [{ match: /^customfont$/i, asset: 'fonts/custom/font' }], 'fonts/notosans_tc/notosans_tc');
     if (customAsset !== 'fonts/custom/font') {
       fail('R-10 custom registry must take effect');
     }
@@ -1176,8 +1176,8 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     if (noSrc.length !== 1 || noSrc[0].family !== 'BareBoned' || noSrc[0].src !== null) fail('R-12 missing src must yield null src, not throw');
 
     // Convention resolver
-    if (resolveFontAssetByConvention('NotoSansTC') !== 'fonts/notosans_tc/font') fail('R-12 convention resolver must prefer registered project font assets');
-    if (resolveFontAssetByConvention('Manrope', './x.ttf') !== 'fonts/manrope/font') fail('R-12 convention resolver simple case');
+    if (resolveFontAssetByConvention('NotoSansTC') !== 'fonts/notosans_tc/notosans_tc') fail('R-12 convention resolver must prefer registered project font assets');
+    if (resolveFontAssetByConvention('Manrope', './x.ttf') !== 'fonts/manrope/manrope') fail('R-12 convention resolver simple case');
     if (resolveFontAssetByConvention('') !== null) fail('R-12 empty family must resolve null');
 
     // Built registry layering: source @font-face entry must take precedence
@@ -1185,10 +1185,10 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     // defaults for unrelated stacks.
     const sheets = ['@font-face{font-family:"BrandX";src:url(./brandx.woff);}'];
     const reg = buildFontFaceRegistry(sheets);
-    if (reg.length !== 1 || reg[0].asset !== 'fonts/brandx/font') fail('R-12 buildFontFaceRegistry default convention');
+    if (reg.length !== 1 || reg[0].asset !== 'fonts/brandx/brandx') fail('R-12 buildFontFaceRegistry default convention');
     const layered = reg.concat(require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'draft-builder.js')).PROJECT_FONT_REGISTRY);
-    if (resolveFontFamilyToAsset('"BrandX", sans-serif', layered, PROJECT_FONT_DEFAULT) !== 'fonts/brandx/font') fail('R-12 layered registry resolves @font-face family first');
-    if (resolveFontFamilyToAsset('"Newsreader", serif', layered, PROJECT_FONT_DEFAULT) !== 'fonts/newsreader/font') fail('R-12 layered registry must still resolve project fonts when not declared');
+    if (resolveFontFamilyToAsset('"BrandX", sans-serif', layered, PROJECT_FONT_DEFAULT) !== 'fonts/brandx/brandx') fail('R-12 layered registry resolves @font-face family first');
+    if (resolveFontFamilyToAsset('"Newsreader", serif', layered, PROJECT_FONT_DEFAULT) !== 'fonts/newsreader/newsreader') fail('R-12 layered registry must still resolve project fonts when not declared');
 
     // Custom resolver override
     const reg2 = buildFontFaceRegistry(sheets, (family) => `custom/${family}/font`);

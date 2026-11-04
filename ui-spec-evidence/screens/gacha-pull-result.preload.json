@@ -7,9 +7,9 @@
     ],
     "spriteFrames": [],
     "fonts": [
-      "fonts/manrope/font",
-      "fonts/newsreader/font",
-      "fonts/notosans_tc/font"
+      "fonts/manrope/manrope",
+      "fonts/newsreader/newsreader",
+      "fonts/notosans_tc/notosans_tc"
     ],
     "fragments": []
   },

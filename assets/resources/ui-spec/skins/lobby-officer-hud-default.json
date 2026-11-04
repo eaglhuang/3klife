@@ -11,7 +11,7 @@
     },
     "officer.hud.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 24,
       "color": "secondaryLight",
@@ -20,7 +20,7 @@
     },
     "officer.hud.label.rank": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 34,
       "color": "secondaryLight",
@@ -29,7 +29,7 @@
     },
     "officer.hud.label.exp": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 24,
       "color": "secondaryLight",
@@ -42,7 +42,7 @@
     },
     "officer.hud.label.button": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 24,
       "color": "secondaryLight",

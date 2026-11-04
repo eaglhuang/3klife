@@ -31,7 +31,7 @@
     },
     "job.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 32,
       "lineHeight": 40,
       "color": "secondaryLight",
@@ -40,7 +40,7 @@
     },
     "job.label.name": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 30,
       "lineHeight": 38,
       "color": "secondaryLight",
@@ -49,7 +49,7 @@
     },
     "job.label.ep": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 36,
       "color": "secondaryLight",
@@ -58,7 +58,7 @@
     },
     "job.label.stats": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "secondaryLight",
@@ -66,7 +66,7 @@
     },
     "job.label.chip": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 26,
       "color": "secondaryLight",
@@ -75,7 +75,7 @@
     },
     "job.label.meta": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 24,
       "color": "secondaryLight",
@@ -83,7 +83,7 @@
     },
     "job.label.body": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 30,
       "color": "secondaryLight",
@@ -91,7 +91,7 @@
     },
     "job.label.log": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 26,
       "color": "secondaryLight",
@@ -99,7 +99,7 @@
     },
     "job.label.button": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "secondaryLight",

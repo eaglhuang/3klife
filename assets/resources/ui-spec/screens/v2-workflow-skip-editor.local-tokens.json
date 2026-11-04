@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "v2-workflow-skip-editor",
-  "generatedAt": "2026-05-11T09:54:06.518Z",
+  "generatedAt": "2026-11-04T16:18:00.689Z",
   "_sourceAuthority": "html-to-ucuf",
   "policy": {
     "mode": "replace-all-per-run",
@@ -9,7 +9,7 @@
     "note": "Always regenerate full screen-local tokens from current conversion to avoid stale residue."
   },
   "sourceSuggestionFiles": [
-    "../AppData/Local/Temp/dom-to-ui-selftest-LnBH6p/v2-workflow-skip-editor/v2-workflow-skip-editor.final.layout.token-suggestions.json"
+    "../AppData/Local/Temp/dom-to-ui-selftest-GfuQ0I/v2-workflow-skip-editor/v2-workflow-skip-editor.final.layout.token-suggestions.json"
   ],
   "stats": {
     "unresolvedColorCount": 0,

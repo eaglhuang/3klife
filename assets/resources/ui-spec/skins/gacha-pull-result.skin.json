@@ -4,7 +4,7 @@
   "slots": {
     "auto.gacha-pull-result.gachapullresult_div_2": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.32,
@@ -16,7 +16,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_3": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.32,
@@ -28,7 +28,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_4": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.32,
@@ -175,7 +175,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_9": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 24,
       "lineHeight": 34,
       "letterSpacing": 2.4,
@@ -193,7 +193,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_10": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 2.2,
@@ -204,7 +204,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_11": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.32,
@@ -259,7 +259,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_14": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -271,7 +271,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_15": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -283,7 +283,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_16": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -340,7 +340,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_18": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -352,7 +352,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_19": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -364,7 +364,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_20": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -421,7 +421,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_22": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -433,7 +433,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_23": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -445,7 +445,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_24": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -504,7 +504,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_27": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0.96,
@@ -516,7 +516,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_29": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0.96,
@@ -528,7 +528,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_1": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0.96,
@@ -540,7 +540,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_31": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0.96,
@@ -552,7 +552,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_33": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0.96,
@@ -564,7 +564,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_35": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0.96,
@@ -576,7 +576,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_2": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0.96,
@@ -588,7 +588,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_37": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0.96,
@@ -600,7 +600,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_39": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.08,
@@ -611,7 +611,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_40": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -623,7 +623,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_42": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.8,
@@ -704,7 +704,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_46": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -776,7 +776,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_48": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.72,
@@ -788,7 +788,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_49": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -800,7 +800,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_51": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0.56,
@@ -813,7 +813,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_53": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0,
@@ -825,7 +825,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_54": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -838,7 +838,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_55": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0,
@@ -849,7 +849,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_56": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -910,7 +910,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_59": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -946,7 +946,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_61": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.72,
@@ -958,7 +958,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_63": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0.56,
@@ -971,7 +971,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_65": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0,
@@ -983,7 +983,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_66": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -1045,7 +1045,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_69": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1081,7 +1081,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_71": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.72,
@@ -1093,7 +1093,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_73": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0.56,
@@ -1106,7 +1106,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_75": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0,
@@ -1118,7 +1118,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_76": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -1180,7 +1180,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_79": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1216,7 +1216,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_81": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.72,
@@ -1228,7 +1228,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_83": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0.56,
@@ -1241,7 +1241,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_85": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0,
@@ -1253,7 +1253,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_86": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -1335,7 +1335,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_89": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1371,7 +1371,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_91": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.72,
@@ -1383,7 +1383,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_93": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0.56,
@@ -1396,7 +1396,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_95": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0,
@@ -1408,7 +1408,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_96": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -1470,7 +1470,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_99": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1485,7 +1485,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_101": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.72,
@@ -1497,7 +1497,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_103": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0.56,
@@ -1510,7 +1510,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_105": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0,
@@ -1522,7 +1522,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_106": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -1584,7 +1584,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_109": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1620,7 +1620,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_111": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.72,
@@ -1632,7 +1632,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_112": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -1644,7 +1644,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_114": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0.56,
@@ -1657,7 +1657,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_116": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0,
@@ -1669,7 +1669,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_117": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -1682,7 +1682,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_118": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0,
@@ -1742,7 +1742,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_121": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1778,7 +1778,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_123": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.72,
@@ -1790,7 +1790,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_125": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0.56,
@@ -1803,7 +1803,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_127": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0,
@@ -1815,7 +1815,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_128": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -2034,7 +2034,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_134": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 24,
       "lineHeight": 34,
       "letterSpacing": 1.44,
@@ -2046,7 +2046,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_136": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.2,
@@ -2058,7 +2058,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_137": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.9,
@@ -2069,7 +2069,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_139": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2081,7 +2081,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_142": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 1.2,
@@ -2092,7 +2092,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_143": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2105,7 +2105,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_145": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 1.2,
@@ -2116,7 +2116,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_146": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2129,7 +2129,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_148": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 1.2,
@@ -2140,7 +2140,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_149": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2152,7 +2152,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_151": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 1.2,
@@ -2163,7 +2163,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_152": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2175,7 +2175,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_156": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.32,
@@ -2186,7 +2186,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_158": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 32,
       "lineHeight": 45,
       "letterSpacing": 0,
@@ -2198,7 +2198,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_161": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0,
@@ -2210,7 +2210,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_162": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2222,7 +2222,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_163": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -2234,7 +2234,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_165": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.1,
@@ -2253,7 +2253,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_167": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2266,7 +2266,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_168": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -2278,7 +2278,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_169": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2344,7 +2344,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_3": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 1.6,
@@ -2357,7 +2357,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_172": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 7,
       "lineHeight": 10,
       "letterSpacing": 1.6,
@@ -2369,7 +2369,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_4": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.6,
@@ -2381,7 +2381,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_173": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.04,
@@ -2498,7 +2498,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_177": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -2510,7 +2510,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_179": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -2522,7 +2522,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_5": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -2534,7 +2534,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_181": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -2546,7 +2546,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_183": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.2,
@@ -2599,7 +2599,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_185": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0,
@@ -2611,7 +2611,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_186": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -2627,7 +2627,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_188": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -2639,7 +2639,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_strong_1": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2740,7 +2740,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_194": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2.2,
@@ -2752,7 +2752,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_195": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 56,
       "lineHeight": 56,
       "letterSpacing": 4.48,
@@ -2764,7 +2764,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_196": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 5.2,
@@ -2783,7 +2783,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_6": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -2836,7 +2836,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_201": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.6,
@@ -2848,7 +2848,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_202": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0.6,
@@ -2863,7 +2863,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_204": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0,
@@ -2875,7 +2875,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_7": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2887,7 +2887,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_8": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2899,7 +2899,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_9": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2911,7 +2911,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_10": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2923,7 +2923,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_207": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.6,
@@ -2941,7 +2941,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_210": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -2961,7 +2961,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_213": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2980,7 +2980,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_215": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -3002,7 +3002,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_218": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -3021,7 +3021,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_220": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -3043,7 +3043,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_223": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -3062,7 +3062,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_225": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -3084,7 +3084,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_228": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -3103,7 +3103,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_230": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -3125,7 +3125,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_233": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -3146,7 +3146,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_236": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.2,
@@ -3157,7 +3157,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_237": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -3173,7 +3173,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_240": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.2,
@@ -3184,7 +3184,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_241": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -3200,7 +3200,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_244": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.2,
@@ -3211,7 +3211,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_245": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -3264,7 +3264,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_248": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.3,
@@ -3318,7 +3318,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_250": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -3335,7 +3335,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_252": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0,
@@ -3347,7 +3347,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_253": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -3409,7 +3409,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_255": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -3420,7 +3420,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_256": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0,
@@ -3437,7 +3437,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_258": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0,
@@ -3449,7 +3449,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_259": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -3461,7 +3461,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_260": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0,
@@ -3472,7 +3472,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_262": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.1,
@@ -3484,7 +3484,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_263": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.1,
@@ -3586,7 +3586,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_267": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 1.32,
@@ -3598,7 +3598,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_268": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -3609,7 +3609,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_270": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.6,
@@ -3708,7 +3708,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_274": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0,
@@ -3720,7 +3720,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_275": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0,
@@ -3800,7 +3800,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_278": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0,
@@ -3880,7 +3880,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_281": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0,
@@ -3960,7 +3960,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_284": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0,
@@ -4022,7 +4022,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_11": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.1,
@@ -4033,7 +4033,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_12": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.1,
@@ -4045,7 +4045,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_288": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 1.12,
@@ -4141,7 +4141,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_291": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 1.32,
@@ -4153,7 +4153,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_292": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -4164,7 +4164,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_295": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 34,
       "letterSpacing": 0,
@@ -4175,7 +4175,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_strong_2": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 26,
       "letterSpacing": 0,
@@ -4187,7 +4187,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_297": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.88,
@@ -4198,7 +4198,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_299": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 1.12,
@@ -4211,7 +4211,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_300": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 1.12,
@@ -4309,7 +4309,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_303": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 1.32,
@@ -4321,7 +4321,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_304": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -4332,7 +4332,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_307": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -4343,7 +4343,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_309": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -4355,7 +4355,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_311": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.2,
@@ -4367,7 +4367,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_312": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.9,
@@ -4378,7 +4378,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_313": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -4394,7 +4394,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_316": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -4405,7 +4405,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_317": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -4421,7 +4421,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_319": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -4432,7 +4432,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_320": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -4448,7 +4448,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_322": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -4459,7 +4459,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_323": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -4475,7 +4475,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_325": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -4486,7 +4486,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_326": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -4498,7 +4498,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_328": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 1.12,
@@ -4511,7 +4511,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_329": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 1.12,
@@ -4609,7 +4609,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_332": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 1.32,
@@ -4621,7 +4621,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_333": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -4632,7 +4632,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_336": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -4643,7 +4643,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_strong_3": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 23,
       "letterSpacing": 0,
@@ -4655,7 +4655,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_strong_4": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 23,
       "letterSpacing": 0,
@@ -4667,7 +4667,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_339": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 1.12,
@@ -4680,7 +4680,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_340": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 1.12,
@@ -4778,7 +4778,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_343": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 1.32,
@@ -4790,7 +4790,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_344": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -4860,7 +4860,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_351": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -4872,7 +4872,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_352": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -4949,7 +4949,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_357": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -4961,7 +4961,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_358": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5038,7 +5038,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_363": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -5050,7 +5050,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_364": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5127,7 +5127,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_369": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -5139,7 +5139,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_370": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5236,7 +5236,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_375": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -5248,7 +5248,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_376": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.72,
@@ -5260,7 +5260,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_377": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0.78,
@@ -5337,7 +5337,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_381": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -5349,7 +5349,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_382": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5426,7 +5426,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_386": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -5438,7 +5438,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_387": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5515,7 +5515,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_391": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -5527,7 +5527,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_392": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5604,7 +5604,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_396": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -5616,7 +5616,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_397": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5693,7 +5693,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_402": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 0.48,
@@ -5705,7 +5705,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_403": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5729,7 +5729,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_13": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5740,7 +5740,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_strong_5": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5758,7 +5758,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_14": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5769,7 +5769,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_strong_6": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5787,7 +5787,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_span_15": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5798,7 +5798,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_strong_7": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.66,
@@ -5810,7 +5810,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_412": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 1.12,
@@ -5823,7 +5823,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_413": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 1.12,
@@ -5921,7 +5921,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_416": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 1.32,
@@ -5933,7 +5933,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_417": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -5944,7 +5944,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_strong_8": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 24,
       "letterSpacing": 0,
@@ -5956,7 +5956,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_420": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0.9,
@@ -5967,7 +5967,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_421": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 15,
       "letterSpacing": 0.8,
@@ -5978,7 +5978,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_423": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.04,
@@ -5990,7 +5990,7 @@
     },
     "auto.gacha-pull-result.gachapullresult_div_424": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.04,

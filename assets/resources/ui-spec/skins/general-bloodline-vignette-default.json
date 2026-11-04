@@ -16,7 +16,7 @@
     },
     "vignette.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 34,
       "color": "secondaryLight",
@@ -25,7 +25,7 @@
     },
     "vignette.label.rumor": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "color": "secondaryLight",
@@ -33,7 +33,7 @@
     },
     "vignette.label.progress": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 26,
       "color": "secondaryLight",
@@ -41,7 +41,7 @@
     },
     "vignette.label.cell": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "color": "secondaryLight",
@@ -49,7 +49,7 @@
     },
     "vignette.label.button": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 24,
       "color": "secondaryLight",

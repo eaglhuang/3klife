@@ -14,7 +14,8 @@
  *
  * Unity 對照：相當於 UIStyleApplier + UILayoutHelper 的組合
  */
-import { Node, Sprite, Label, Button, Font, Color, Vec2, UITransform, Widget } from 'cc';
+import { Node, Sprite, Label, Button, Font, Color, Vec2, UITransform, Widget, director } from 'cc';
+import { LabelCharAtlasBudget } from './LabelCharAtlasBudget';
 import { RoundedRectBackground } from '../components/RoundedRectBackground';
 import { SolidBackground } from '../components/SolidBackground';
 import { GradientBackground, GradientColorStop } from '../components/GradientBackground';
@@ -493,7 +494,13 @@ export class UIPreviewStyleBuilder {
         label.color           = style.color;
         label.spacingX        = style.letterSpacing;
         // Cocos 3.8 的 TTF 預設模式不吃 spacingX，只有逐字快取（CHAR）走 bmfont 排版才會套用字距
-        if (style.letterSpacing > 0) label.cacheMode = Label.CacheMode.CHAR;
+        const wantsCharCache = style.letterSpacing > 0
+            && charAtlasBudget.reserve(label.string, style.fontSize, `${style.fontPath ?? ''}|${style.color.r},${style.color.g},${style.color.b},${style.color.a}|${style.outlineWidth ?? 0}`);
+        if (wantsCharCache) {
+            label.cacheMode = Label.CacheMode.CHAR;
+        } else if (label.cacheMode === Label.CacheMode.CHAR) {
+            label.cacheMode = Label.CacheMode.NONE;
+        }
         label.horizontalAlign = style.horizontalAlign;
         label.verticalAlign   = style.verticalAlign;
         // overflow floor：不允許 skin 將 overflow 設為 NONE（0），
@@ -528,6 +535,10 @@ export class UIPreviewStyleBuilder {
         if (font) label.font = font;
     }
 }
+
+const charAtlasBudget = new LabelCharAtlasBudget();
+// 引擎在同一事件清空字元圖集
+director?.on?.('director_before_scene_launch', () => charAtlasBudget.reset());
 
 function textInRanges(text: string, ranges?: Array<[number, number]>): boolean {
     if (!ranges) return true;

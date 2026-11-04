@@ -183,9 +183,9 @@
     "hpBarEnemy": "#CC4444"
   },
   "typography": {
-    "headlineFont": "fonts/newsreader/font",
-    "bodyFont": "fonts/notosans_tc/font",
-    "labelFont": "fonts/manrope/font",
+    "headlineFont": "fonts/newsreader/newsreader",
+    "bodyFont": "fonts/notosans_tc/notosans_tc",
+    "labelFont": "fonts/manrope/manrope",
     "headlineLg": {
       "fontSize": 42,
       "lineHeight": 50,

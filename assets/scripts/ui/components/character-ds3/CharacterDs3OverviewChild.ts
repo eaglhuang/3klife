@@ -1,5 +1,5 @@
 // @spec-source → 武將人物介面規格書.md (doc_ui_0012)；PROG-2-1429 依建檔紀錄補標出處
-import { Color, Sprite, UITransform } from 'cc';
+import { Color, Label, Sprite, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { placeDs3BarFill } from './Ds3BarFill';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
@@ -247,6 +247,10 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         const label = this.binder.getLabel(nodeName);
         if (!label) {
             return;
+        }
+        // 換將時字元不可預期，不佔共用字元圖集（CHAR 滿了會缺字）
+        if (label.cacheMode === Label.CacheMode.CHAR) {
+            label.cacheMode = Label.CacheMode.NONE;
         }
         label.string = text?.trim() ?? '';
     }

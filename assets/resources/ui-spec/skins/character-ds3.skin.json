@@ -89,7 +89,7 @@
     },
     "auto.character-ds3.characterds3_div_3": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 12,
@@ -141,7 +141,7 @@
     },
     "auto.character-ds3.characterds3_span_1": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 32,
       "lineHeight": 45,
       "letterSpacing": 0,
@@ -153,7 +153,7 @@
     },
     "auto.character-ds3.characterds3_span_2": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 3,
@@ -230,7 +230,7 @@
     },
     "auto.character-ds3.characterds3_span_3": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -241,7 +241,7 @@
     },
     "auto.character-ds3.characterds3_span_4": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 2,
@@ -261,7 +261,7 @@
     },
     "auto.character-ds3.characterds3_span_5": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 32,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -273,7 +273,7 @@
     },
     "auto.character-ds3.characterds3_span_6": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
@@ -294,7 +294,7 @@
     },
     "auto.character-ds3.characterds3_span_7": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 32,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -306,7 +306,7 @@
     },
     "auto.character-ds3.characterds3_span_8": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
@@ -327,7 +327,7 @@
     },
     "auto.character-ds3.characterds3_span_9": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 32,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -339,7 +339,7 @@
     },
     "auto.character-ds3.characterds3_span_10": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
@@ -360,7 +360,7 @@
     },
     "auto.character-ds3.characterds3_span_11": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 32,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -372,7 +372,7 @@
     },
     "auto.character-ds3.characterds3_span_12": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
@@ -393,7 +393,7 @@
     },
     "auto.character-ds3.characterds3_span_13": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 32,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -405,7 +405,7 @@
     },
     "auto.character-ds3.characterds3_span_14": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
@@ -426,7 +426,7 @@
     },
     "auto.character-ds3.characterds3_span_15": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 32,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -438,7 +438,7 @@
     },
     "auto.character-ds3.characterds3_span_16": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,

@@ -11,7 +11,7 @@
     "widget.header.plaque.base": { "kind": "color-rect", "color": "surfaceDeep", "alpha": 224 },
     "widget.header.plaque.fill": { "kind": "sprite-frame", "path": "sprites/ui_families/general_detail/detail_header_fill", "spriteType": "simple", "allowAutoAtlas": true, "opacity": 0.92 },
     "widget.header.plaque.band": { "kind": "sprite-frame", "path": "sprites/ui_families/general_detail/formal/header_band_formal", "spriteType": "sliced", "border": [20, 0, 20, 0], "allowAutoAtlas": true, "opacity": 0.42 },
-    "widget.header.plaque.title": { "kind": "label-style", "font": "fonts/newsreader/font", "fontSize": 28, "lineHeight": 30, "color": "colorWhite", "outlineWidth": 0, "horizontalAlign": "LEFT" },
+    "widget.header.plaque.title": { "kind": "label-style", "font": "fonts/newsreader/newsreader", "fontSize": 28, "lineHeight": 30, "color": "colorWhite", "outlineWidth": 0, "horizontalAlign": "LEFT" },
     "widget.header.plaque.subtitle": { "kind": "label-style", "fontSize": 16, "lineHeight": 18, "color": "secondary", "outlineWidth": 0, "horizontalAlign": "LEFT" },
     "widget.header.plaque.badge.underlay": { "kind": "sprite-frame", "path": "sprites/ui_families/common/parchment/fill", "spriteType": "sliced", "border": [16, 16, 16, 16], "allowAutoAtlas": true, "opacity": 0.9 },
     "widget.header.plaque.badge.fill": { "kind": "sprite-frame", "path": "sprites/ui_families/common/parchment/fill", "spriteType": "sliced", "border": [16, 16, 16, 16], "allowAutoAtlas": true, "opacity": 0.96 },
@@ -58,7 +58,7 @@
     },
     "gacha.label.title": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 34,
       "color": "secondaryLight",
       "horizontalAlign": "CENTER",
@@ -109,7 +109,7 @@
 
     "gacha.label.strip_label": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -120,7 +120,7 @@
     },
     "gacha.label.strip_value": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 16,
       "lineHeight": 20,
       "letterSpacing": 2,
@@ -131,7 +131,7 @@
     },
     "gacha.label.banner_chip": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 14,
       "color": "textWarmGold",
@@ -140,7 +140,7 @@
     },
     "gacha.label.event_chip": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "bold": true,
@@ -152,7 +152,7 @@
     },
     "gacha.label.event_chip.gold": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "bold": true,
@@ -164,7 +164,7 @@
     },
     "gacha.label.event_chip.teal": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "bold": true,
@@ -176,7 +176,7 @@
     },
     "gacha.label.banner_name": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 72,
       "lineHeight": 72,
       "letterSpacing": 6,
@@ -189,7 +189,7 @@
     },
     "gacha.label.banner_subtitle": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 18,
       "letterSpacing": 6,
@@ -200,7 +200,7 @@
     },
     "gacha.label.banner_subtitle.gold": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 18,
       "letterSpacing": 6,
@@ -211,7 +211,7 @@
     },
     "gacha.label.guarantee": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -223,7 +223,7 @@
     },
     "gacha.label.guarantee.gold": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -235,7 +235,7 @@
     },
     "gacha.label.guarantee.teal": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -247,7 +247,7 @@
     },
     "gacha.label.nav_arrow": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 26,
       "lineHeight": 28,
       "color": "textSecondary",
@@ -257,7 +257,7 @@
     },
     "gacha.label.brief_tag": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 12,
       "bold": true,
@@ -269,7 +269,7 @@
     },
     "gacha.label.brief_line": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 16,
       "color": "textSecondary",
@@ -279,7 +279,7 @@
     },
     "gacha.label.art_placeholder": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 16,
       "color": "textMuted",
@@ -296,7 +296,7 @@
     },
     "gacha.label.rail_title": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 26,
       "bold": true,
@@ -309,7 +309,7 @@
     },
     "gacha.label.rail_subtitle": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 12,
       "letterSpacing": 2,
@@ -321,7 +321,7 @@
     },
     "gacha.label.rail_subtitle.gold": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 12,
       "letterSpacing": 2,
@@ -333,7 +333,7 @@
     },
     "gacha.label.rail_subtitle.teal": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 12,
       "letterSpacing": 2,
@@ -345,7 +345,7 @@
     },
     "gacha.label.pity_title": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 12,
       "bold": true,
@@ -357,7 +357,7 @@
     },
     "gacha.label.pity_title.gold": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 12,
       "bold": true,
@@ -369,7 +369,7 @@
     },
     "gacha.label.pity_title.teal": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 12,
       "bold": true,
@@ -423,7 +423,7 @@
     },
     "gacha.label.section_title": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "color": "textWarmGold",
@@ -432,7 +432,7 @@
     },
     "gacha.label.rate_title": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 14,
       "bold": true,
@@ -443,7 +443,7 @@
     },
     "gacha.label.micro_btn": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "color": "textMuted",
@@ -453,7 +453,7 @@
     },
     "gacha.label.scale": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 12,
       "color": "textMuted",
@@ -462,7 +462,7 @@
     },
     "gacha.label.pity_scale": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
@@ -473,7 +473,7 @@
     },
     "gacha.label.pity_scale.gold": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
@@ -484,7 +484,7 @@
     },
     "gacha.label.pity_scale.teal": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0,
@@ -495,7 +495,7 @@
     },
     "gacha.label.rate_rarity": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "bold": true,
@@ -506,7 +506,7 @@
     },
     "gacha.label.rate_rarity_green": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "bold": true,
@@ -517,7 +517,7 @@
     },
     "gacha.label.rate_rarity_blue": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "bold": true,
@@ -528,7 +528,7 @@
     },
     "gacha.label.rate_rarity_purple": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "bold": true,
@@ -539,7 +539,7 @@
     },
     "gacha.label.rate_pct": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 16,
       "color": "rarityWhite",
@@ -548,7 +548,7 @@
     },
     "gacha.label.rate_pct_green": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 16,
       "color": "rarityGreen",
@@ -557,7 +557,7 @@
     },
     "gacha.label.rate_pct_blue": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 16,
       "color": "rarityBlue",
@@ -566,7 +566,7 @@
     },
     "gacha.label.rate_pct_purple": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 16,
       "color": "rarityPurple",
@@ -575,7 +575,7 @@
     },
     "gacha.label.cost_kicker": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 11,
       "letterSpacing": 1,
@@ -586,7 +586,7 @@
     },
     "gacha.label.pullbar_caption": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 11,
       "letterSpacing": 2,
@@ -598,7 +598,7 @@
     },
     "gacha.label.cost_value": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 20,
       "color": "textSecondary",
@@ -607,7 +607,7 @@
     },
     "gacha.label.cost_value_accent": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 20,
       "color": "accent.gold.cta",
@@ -616,7 +616,7 @@
     },
     "gacha.label.rules_note": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 16,
       "letterSpacing": 1,
@@ -628,7 +628,7 @@
     },
     "gacha.label.history_btn": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1,
@@ -640,7 +640,7 @@
     },
     "gacha.label.pullbar_title": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 22,
       "letterSpacing": 1,
@@ -652,7 +652,7 @@
     },
     "gacha.label.pull_btn_gold": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 24,
       "letterSpacing": 2,
@@ -666,7 +666,7 @@
     },
     "gacha.label.pull_sub": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 14,
       "color": "textInk",
@@ -676,7 +676,7 @@
     },
     "gacha.label.pull_cost_gold": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 16,
       "color": "textInk",
@@ -686,7 +686,7 @@
     },
     "gacha.label.alt_btn": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -723,7 +723,7 @@
     },
     "gacha.label.pity_big": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 16,
       "bold": true,
@@ -863,7 +863,7 @@
     },
     "gacha.label.pull_btn": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 24,
       "letterSpacing": 2,
@@ -875,7 +875,7 @@
     },
     "gacha.label.pull_cost": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 16,
       "color": "textSecondary",
@@ -1190,7 +1190,7 @@
     },
     "gacha.label.banner_name.purple": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 72,
       "lineHeight": 72,
       "letterSpacing": 6,
@@ -1203,7 +1203,7 @@
     },
     "gacha.label.banner_name.teal": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 72,
       "lineHeight": 72,
       "letterSpacing": 6,

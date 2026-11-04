@@ -19,7 +19,7 @@
     },
     "topbar.label.title": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 34,
       "color": "secondaryLight",
       "horizontalAlign": "CENTER",

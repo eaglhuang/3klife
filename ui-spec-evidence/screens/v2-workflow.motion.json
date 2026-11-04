@@ -1,11 +1,37 @@
 {
   "screenId": "v2-workflow",
-  "motionTokens": {},
+  "motionTokens": {
+    "instant": {
+      "durationMs": 80,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "fast": {
+      "durationMs": 120,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "standard": {
+      "durationMs": 180,
+      "easing": "quadOut",
+      "emphasis": "medium"
+    },
+    "slow": {
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "emphasis": "medium"
+    },
+    "emphasis": {
+      "durationMs": 360,
+      "easing": "backOut",
+      "emphasis": "high"
+    }
+  },
   "motions": [],
   "warnings": [],
   "summary": {
     "motionCount": 0,
-    "tokenCount": 0,
+    "tokenCount": 5,
     "manualRewriteCount": 0
   }
 }

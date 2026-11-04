@@ -359,7 +359,7 @@
     },
     "gdv3.label.headerName": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 56,
       "lineHeight": 62,
       "color": "colorWhite",
@@ -379,7 +379,7 @@
     },
     "gdv3.label.headerTitle": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 22,
       "color": "gdv3BloodlineNarrative",
@@ -391,7 +391,7 @@
     },
     "gdv3.label.meta": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "color": "text.parchment.secondary",
@@ -400,7 +400,7 @@
     },
     "gdv3.label.headerMeta": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 15,
       "color": "gdv3BloodlineNarrativeSub",
@@ -412,7 +412,7 @@
     },
     "gdv3.label.section": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 26,
       "color": "tertiary",
@@ -424,7 +424,7 @@
     },
     "gdv3.label.sectionBand": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 24,
       "color": "tertiary",
@@ -436,7 +436,7 @@
     },
     "gdv3.label.sectionBandCompact": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 20,
       "color": "tertiary",
@@ -448,7 +448,7 @@
     },
     "gdv3.label.value": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 25,
       "lineHeight": 32,
       "color": "text.parchment.primary",
@@ -460,7 +460,7 @@
     },
     "gdv3.label.note": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 20,
       "color": "text.parchment.secondary",
@@ -469,7 +469,7 @@
     },
     "gdv3.label.dossierSection": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 16,
       "color": "text.parchment.secondary",
@@ -481,7 +481,7 @@
     },
     "gdv3.label.cardBody": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 24,
       "color": "text.parchment.primary",
@@ -490,7 +490,7 @@
     },
     "gdv3.label.cardBodySummary": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "color": "text.parchment.primary",
@@ -501,7 +501,7 @@
     },
     "gdv3.label.cardBodySummaryCompact": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 20,
       "color": "text.parchment.primary",
@@ -512,7 +512,7 @@
     },
     "gdv3.label.story": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 17,
       "lineHeight": 22,
       "color": "text.parchment.primary",
@@ -529,7 +529,7 @@
     },
     "gdv3.label.mode": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 20,
       "color": "text.parchment.secondary",
@@ -538,7 +538,7 @@
     },
     "gdv3.label.identityChip": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 16,
       "color": "gdv3BloodlineTextGlow",
@@ -550,7 +550,7 @@
     },
     "gdv3.label.identityMode": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 24,
       "color": "gdv3BloodlineTextSoft",
@@ -562,7 +562,7 @@
     },
     "gdv3.label.identitySub": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 14,
       "color": "gdv3BloodlineTextDim",
@@ -582,7 +582,7 @@
     },
     "gdv3.label.rarityBadge": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 24,
       "color": "gdv3BloodlineCTA",
@@ -594,7 +594,7 @@
     },
     "gdv3.label.rarityTitleChip": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 15,
       "color": "gdv3TextWarmLight",
@@ -607,7 +607,7 @@
     },
     "gdv3.label.crestState": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 18,
       "color": "tertiary",
@@ -616,7 +616,7 @@
     },
     "gdv3.label.crestGlyphSecondary": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 20,
       "color": "text.parchment.secondary",
@@ -625,7 +625,7 @@
     },
     "gdv3.label.crestGlyphPrimary": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 60,
       "lineHeight": 66,
       "color": "tertiary",

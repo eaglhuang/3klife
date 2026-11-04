@@ -13,7 +13,7 @@
     },
     "deploy.label.troop": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 20,
       "color": "secondary",
@@ -22,7 +22,7 @@
     },
     "deploy.label.cost": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 15,
       "lineHeight": 19,
       "color": "secondaryLight",
@@ -30,7 +30,7 @@
     },
     "deploy.label.hint": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 17,
       "color": "textDarkGray",
@@ -52,7 +52,7 @@
     },
     "deploy.label.action": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 24,
       "color": "onPrimary",
