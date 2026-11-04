@@ -50,9 +50,7 @@
                 "name": "CharacterDs3Main_button_1",
                 "widget": {
                   "left": 24,
-                  "right": 1070,
-                  "top": 492,
-                  "bottom": 492
+                  "vCenter": true
                 },
                 "_ucufId": "character-ds3-main.portrait-nav",
                 "_visualZone": "portrait",
@@ -60,11 +58,21 @@
                 "height": 96,
                 "_interactionId": "character-ds3main_button_1.tab-switch",
                 "_motionId": "character-ds3main_button_1.transition",
-                "layout": {
-                  "type": "grid",
-                  "cellHeight": 96
-                },
-                "skinSlot": "auto.character-ds3-main.characterds3main_button_1"
+                "skinSlot": "auto.character-ds3-main.characterds3main_button_1",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "CharacterDs3Main_button_1_glyph",
+                    "widget": {
+                      "left": 0,
+                      "right": 0,
+                      "top": 0,
+                      "bottom": 0
+                    },
+                    "text": "‹",
+                    "styleSlot": "auto.character-ds3-main.characterds3main_nav_glyph"
+                  }
+                ]
               },
               {
                 "type": "image",
@@ -87,10 +95,8 @@
                 "type": "button",
                 "name": "CharacterDs3Main_button_2",
                 "widget": {
-                  "left": 1070,
                   "right": 24,
-                  "top": 492,
-                  "bottom": 492
+                  "vCenter": true
                 },
                 "_ucufId": "character-ds3-main.portrait-nav-2",
                 "_visualZone": "portrait",
@@ -98,11 +104,21 @@
                 "height": 96,
                 "_interactionId": "character-ds3main_button_2.tab-switch",
                 "_motionId": "character-ds3main_button_2.transition",
-                "layout": {
-                  "type": "grid",
-                  "cellHeight": 96
-                },
-                "skinSlot": "auto.character-ds3-main.characterds3main_button_2"
+                "skinSlot": "auto.character-ds3-main.characterds3main_button_2",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "CharacterDs3Main_button_2_glyph",
+                    "widget": {
+                      "left": 0,
+                      "right": 0,
+                      "top": 0,
+                      "bottom": 0
+                    },
+                    "text": "›",
+                    "styleSlot": "auto.character-ds3-main.characterds3main_nav_glyph"
+                  }
+                ]
               }
             ],
             "skinLayers": [
