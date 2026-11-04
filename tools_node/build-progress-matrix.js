@@ -31,13 +31,11 @@ const progressPath = path.join(root, 'docs/cross-ref/cross-ref-進度.md');
 const checkOnly = process.argv.includes('--check');
 
 // 人工覆寫：邏輯層判斷（key = doc_id）。沒登記的走自動判定。
-const MANUAL_LOGIC = {
-  doc_spec_0034: '🟡', // 遊戲時間系統：GameClock.ts（PROG-2-0021）已有，尚未接入大廳
-  doc_spec_0018: '🟡', // 武將壽命系統：GeneralAging.ts（PROG-2-0021）已有
-};
+// 遊戲時間／武將壽命的 🟡 覆寫已移除：兩份規格 §E 逐項核對皆有實作（PROG-2-1719）
+const MANUAL_LOGIC = {};
 const MANUAL_CODE = {
-  doc_spec_0034: ['GameClock.ts'],
-  doc_spec_0018: ['GeneralAging.ts'],
+  doc_spec_0034: ['GameClock.ts', 'SeasonTexts.ts', 'YearReport.ts', 'EraReset.ts'],
+  doc_spec_0018: ['GeneralAging.ts', 'GeneralGrowth.ts', 'LifeScriptCopy.ts', 'LongevityPill.ts', 'LegacyArena.ts', 'LegacyService.ts'],
 };
 // 五欄模式不從 @spec-source 補登的規格（key = doc_id → 原因）
 const SPEC_SOURCE_SKIP = {
