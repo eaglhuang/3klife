@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "character-ds3-main",
-  "generatedAt": "2026-11-04T17:32:23.008Z",
+  "generatedAt": "2026-11-04T18:04:30.275Z",
   "_sourceAuthority": "html-to-ucuf",
   "policy": {
     "mode": "replace-all-per-run",
@@ -9,14 +9,14 @@
     "note": "Always regenerate full screen-local tokens from current conversion to avoid stale residue."
   },
   "sourceSuggestionFiles": [
-    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/character-ds3-main.final.layout.token-suggestions.json",
-    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-aptitude.layout.token-suggestions.json",
-    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-bloodline-bloodline-fullscreen.layout.token-suggestions.json",
-    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-bloodline.layout.token-suggestions.json",
-    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-equip.layout.token-suggestions.json",
-    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-overview.layout.token-suggestions.json",
-    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-stats.layout.token-suggestions.json",
-    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/character-ds3-main.final.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-aptitude.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-bloodline-bloodline-fullscreen.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-bloodline.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-equip.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-overview.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-stats.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
   ],
   "stats": {
     "unresolvedColorCount": 13,
@@ -50,11 +50,11 @@
         "distance": 7
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/character-ds3-main.final.layout.token-suggestions.json",
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-aptitude.layout.token-suggestions.json",
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-equip.layout.token-suggestions.json",
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-overview.layout.token-suggestions.json",
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/character-ds3-main.final.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-aptitude.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-equip.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-overview.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
       ]
     },
     {
@@ -69,10 +69,10 @@
         "distance": 4
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-bloodline.layout.token-suggestions.json",
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-equip.layout.token-suggestions.json",
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-stats.layout.token-suggestions.json",
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-bloodline.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-equip.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-stats.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
       ]
     },
     {
@@ -87,8 +87,8 @@
         "distance": 13
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/character-ds3-main.final.layout.token-suggestions.json",
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-overview.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/character-ds3-main.final.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-overview.layout.token-suggestions.json"
       ]
     },
     {
@@ -103,7 +103,7 @@
         "distance": 33
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
       ]
     },
     {
@@ -118,8 +118,8 @@
         "distance": 11
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/character-ds3-main.final.layout.token-suggestions.json",
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-overview.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/character-ds3-main.final.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-overview.layout.token-suggestions.json"
       ]
     },
     {
@@ -134,7 +134,7 @@
         "distance": 7
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-bloodline-bloodline-fullscreen.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-bloodline-bloodline-fullscreen.layout.token-suggestions.json"
       ]
     },
     {
@@ -149,7 +149,7 @@
         "distance": 61
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
       ]
     },
     {
@@ -164,7 +164,7 @@
         "distance": 12
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
       ]
     },
     {
@@ -179,7 +179,7 @@
         "distance": 18
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
       ]
     },
     {
@@ -194,7 +194,7 @@
         "distance": 17
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-bloodline-bloodline-fullscreen.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-bloodline-bloodline-fullscreen.layout.token-suggestions.json"
       ]
     },
     {
@@ -209,7 +209,7 @@
         "distance": 14
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-stats.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-stats.layout.token-suggestions.json"
       ]
     },
     {
@@ -224,7 +224,7 @@
         "distance": 11
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-tab-bloodline-bloodline-fullscreen.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/tab-replay/character-ds3-tab-bloodline-bloodline-fullscreen.layout.token-suggestions.json"
       ]
     },
     {
@@ -239,7 +239,7 @@
         "distance": 2
       },
       "sources": [
-        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/character-ds3-main.final.layout.token-suggestions.json"
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3p/character-ds3-main.final.layout.token-suggestions.json"
       ]
     }
   ]

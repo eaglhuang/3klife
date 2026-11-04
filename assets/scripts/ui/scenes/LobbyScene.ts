@@ -173,6 +173,7 @@ import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearBu
 import { DailyReportController } from '../core/DailyReportController';
 import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
 import type { TabKey } from '../components/character-ds3/GeneralDetailChromePresenter';
+import { ensureDs3SideAction, setDs3SideActionEnabled } from '../components/character-ds3/Ds3SideActions';
 
 const { ccclass } = _decorator;
 
@@ -184,7 +185,7 @@ const FACTOR_HEX_POSITION = { x: -240, y: -160 };
 
 /** 圖鑑入口的暫定位置（PROVISIONAL：畫面沒有預留節點，程式掛在 CharacterDs3Host 下，待 Codex 實機微調） */
 const GALLERY_ENTRY_NODE_NAME = 'GeneralVersionGalleryEntry';
-const GALLERY_ENTRY_POSITION = { x: 540, y: 462 };
+const CHARACTER_DS3_SIDE_ACTION_INDEX = { journal: 0, soulInject: 1, gallery: 2 };
 
 type GeneralDetailRuntimeTab = 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitude';
 type GeneralDetailEntrySmokeSource = 'ucuf-nav';
@@ -3760,18 +3761,26 @@ export class LobbyScene extends Component {
         ]);
     }
 
-    /** Overview 分頁的按鈕：血統小傳與武將日誌，切回 Overview 都重綁 */
+    /** Overview 分頁的按鈕，切回 Overview 都重綁 */
     private _bindCharacterDs3OverviewButtons(): void {
-        this._bindCharacterDs3BloodlineVignette();
         this._bindCharacterDs3JournalEntry();
+    }
+
+    /** 版面有該按鈕就用版面的；character_v3 沒有位置，改掛立繪左側 */
+    private _characterDs3ActionButton(id: string, text: string, index: number): Button | null {
+        const surface = this._characterDs3Surface();
+        const button = surface?.binder?.getButton(id);
+        if (button) return button;
+        return surface?.node ? ensureDs3SideAction(surface.node, id, text, index) : null;
     }
 
     /**
      * 武將日誌入口（doc_spec_0015 §E-6 人物頁故事回看掛點，PROG-2-1723）：
-     * 在人物頁 Overview 分頁，點了打開目前這位武將的日誌抽屜，疊在人物頁上。
+     * 點了打開目前這位武將的日誌抽屜，疊在人物頁上。
      */
     private _bindCharacterDs3JournalEntry(): void {
-        const button = this._characterDs3Surface()?.binder?.getButton('btnGeneralJournal');
+        const button = this._characterDs3Surface()?.binder?.getButton('btnGeneralJournal')
+            ?? this._characterDs3ActionButton('btnGeneralJournal', services().i18n.t('UI_JOURNAL_TITLE'), CHARACTER_DS3_SIDE_ACTION_INDEX.journal);
         if (!button) {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 journal button missing', { buttonNode: 'btnGeneralJournal' });
             return;
@@ -3786,7 +3795,7 @@ export class LobbyScene extends Component {
         this.openGeneralJournal(general.id);
     }
 
-    /** 血統小傳按鈕（PROG-2-1428）：在人物頁 Overview 分頁，切回 Overview 都重綁 */
+    /** 血統小傳按鈕（PROG-2-1428）：character_v3 綁在命分頁的標題列，切回命分頁都重綁 */
     private _bindCharacterDs3BloodlineVignette(): void {
         const button = this._characterDs3Surface()?.binder?.getButton('btnBloodlineVignette');
         if (!button) {
@@ -3795,7 +3804,8 @@ export class LobbyScene extends Component {
         }
         button.node.off(Button.EventType.CLICK, this._onBloodlineVignetteClick, this);
         button.node.on(Button.EventType.CLICK, this._onBloodlineVignetteClick, this);
-        const label = this._characterDs3Surface()?.binder?.getLabel('bloodlineVignetteLabel');
+        const label = this._characterDs3Surface()?.binder?.getLabel('bloodlineVignetteLabel') ?? button.getComponentInChildren(Label);
+        if (label) label.cacheMode = Label.CacheMode.NONE;
         if (label) label.string = bloodlineVignetteOpenLabel((key, ...args) => services().i18n.t(key, ...args));
     }
 
@@ -3915,6 +3925,7 @@ export class LobbyScene extends Component {
             this._characterDs3ActiveTab = tab;
             this._syncCharacterDs3PreviewTabVisualState();
             if (tab === 'Overview') this._bindCharacterDs3OverviewButtons();
+            if (tab === 'Bloodline') this._bindCharacterDs3BloodlineVignette();
 
             UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 tab switched', {
                 tab,
@@ -3939,7 +3950,7 @@ export class LobbyScene extends Component {
 
     /** 寄宿戰魂按鈕：綁定點按，並依可否寄宿設定灰階（PROG-2-1058） */
     private _bindCharacterDs3SoulInject(): void {
-        const button = this._characterDs3Surface()?.binder?.getButton('btnSoulInject');
+        const button = this._characterDs3SoulInjectButton();
         if (!button) {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 soul inject button missing', { buttonNode: 'btnSoulInject' });
             return;
@@ -3949,10 +3960,15 @@ export class LobbyScene extends Component {
         this._refreshCharacterDs3SoulInject();
     }
 
+    private _characterDs3SoulInjectButton(): Button | null {
+        return this._characterDs3Surface()?.binder?.getButton('btnSoulInject')
+            ?? this._characterDs3ActionButton('btnSoulInject', services().i18n.t('ui.general.soul_inject.open'), CHARACTER_DS3_SIDE_ACTION_INDEX.soulInject);
+    }
+
     private _refreshCharacterDs3SoulInject(): void {
-        const button = this._characterDs3Surface()?.binder?.getButton('btnSoulInject');
+        const button = this._characterDs3SoulInjectButton();
         if (!button) return;
-        button.interactable = canOpenSoulInject(this._soulInjectCandidates());
+        setDs3SideActionEnabled(button, canOpenSoulInject(this._soulInjectCandidates()));
         this._refreshCharacterDs3TotalTp();
     }
 
@@ -4010,14 +4026,12 @@ export class LobbyScene extends Component {
     }
 
     private _syncCharacterDs3PreviewTabVisualState(): void {
-        // 因子六角圖、版本圖鑑入口是程式掛在 host 上的暫定節點，放在總覽會壓到立繪與右欄；
+        // 因子六角圖是程式掛在 host 上的暫定節點，放在總覽會壓到立繪與右欄；
         // 只在血脈分頁顯示（PROG-2-1625）
         const hostNode = this._characterDs3Surface()?.node;
         const onBloodline = this._characterDs3ActiveTab === 'Bloodline';
-        for (const name of [FACTOR_HEX_NODE_NAME, GALLERY_ENTRY_NODE_NAME]) {
-            const extra = hostNode?.getChildByName(name);
-            if (extra) extra.active = onBloodline;
-        }
+        const factorHex = hostNode?.getChildByName(FACTOR_HEX_NODE_NAME);
+        if (factorHex) factorHex.active = onBloodline;
         const binder = this._characterDs3Host?.binder;
         if (!binder) {
             return;
@@ -4753,6 +4767,7 @@ export class LobbyScene extends Component {
                 this._bindCharacterDs3SoulInject();
                 this._bindCharacterDs3OverviewButtons();
             }
+            if (tab === 'Bloodline') this._bindCharacterDs3BloodlineVignette();
         };
         await this._showCharacterFormalGeneral(config);
     }
@@ -4896,7 +4911,7 @@ export class LobbyScene extends Component {
     }
 
     /**
-     * 版本圖鑑入口（GDUI-07 cc 接線）：在武將詳情頁掛一個文字按鈕，點擊後開啟圖鑑。
+     * 版本圖鑑入口（GDUI-07 cc 接線）：掛在立繪左側，點擊後開啟圖鑑。
      * 版本表與已擁有集合的來源見 galleryInputsFromGenerals（暫定）。
      */
     private _refreshGalleryEntry(): void {
@@ -4904,18 +4919,11 @@ export class LobbyScene extends Component {
         if (!hostNode) {
             return;
         }
-        let entryNode = hostNode.getChildByName(GALLERY_ENTRY_NODE_NAME);
-        if (!entryNode) {
-            entryNode = new Node(GALLERY_ENTRY_NODE_NAME);
-            entryNode.layer = hostNode.layer;
-            entryNode.parent = hostNode;
-            entryNode.setPosition(GALLERY_ENTRY_POSITION.x, GALLERY_ENTRY_POSITION.y, 0);
-            entryNode.addComponent(UITransform);
-            const label = entryNode.addComponent(Label);
-            label.fontSize = 22;
-            label.string = '版本圖鑑';
-            entryNode.on(Node.EventType.TOUCH_END, () => this._openGalleryFromDetail(), this);
+        if (hostNode.getChildByName(GALLERY_ENTRY_NODE_NAME)) {
+            return;
         }
+        const button = ensureDs3SideAction(hostNode, GALLERY_ENTRY_NODE_NAME, '版本圖鑑', CHARACTER_DS3_SIDE_ACTION_INDEX.gallery);
+        button.node.on(Button.EventType.CLICK, () => this._openGalleryFromDetail(), this);
     }
 
     private _openGalleryFromDetail(): void {

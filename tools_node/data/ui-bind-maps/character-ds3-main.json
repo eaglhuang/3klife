@@ -1291,6 +1291,19 @@
       "name": "BloodlineExpand",
       "selector": "#right-content > div > div:nth-child(11)",
       "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "btnBloodlineVignette",
+      "selector": "#right-content button",
+      "text": "查看世家 →",
+      "index": 0,
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "OverviewStoryExpand",
+      "selector": "#right-content div",
+      "text": "▼ 展開逸事故事條 ▼",
+      "index": 0
     }
   ]
 }

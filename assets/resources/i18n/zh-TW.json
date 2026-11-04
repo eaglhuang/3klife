@@ -154,6 +154,7 @@
   "ui.general.soul_inject.reason.same_template": "碎片與目標為同一版本，無法寄宿",
   "ui.general.soul_inject.reason.bloodline_mismatch": "碎片與目標血脈不同，無法寄宿",
   "ui.general.soul_inject.reason.unknown": "無法寄宿",
+  "ui.general.soul_inject.open": "寄宿戰魂",
   "ui.general.soul_inject.failed": "寄宿失敗：{0}",
   "ui.general.soul_inject.total_tp": "總 TP {0}",
   "ui.general.bloodline.parents": "父母摘要：",

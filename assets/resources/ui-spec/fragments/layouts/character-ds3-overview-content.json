@@ -874,7 +874,7 @@
             },
             {
               "type": "panel",
-              "name": "CharacterDs3TabOverview_div_47",
+              "name": "OverviewStoryExpand",
               "width": 520,
               "height": 47,
               "layout": {
@@ -886,7 +886,7 @@
                 "paddingBottom": 12,
                 "paddingLeft": 12
               },
-              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_47",
+              "skinSlot": "auto.character-ds3-tab-overview.overviewstoryexpand",
               "children": [
                 {
                   "type": "label",
@@ -900,10 +900,10 @@
             },
             {
               "type": "panel",
-              "name": "CharacterDs3TabOverview_div_48",
+              "name": "CharacterDs3TabOverview_div_47",
               "width": 520,
               "height": 23,
-              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_48",
+              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_47",
               "children": [
                 {
                   "type": "label",

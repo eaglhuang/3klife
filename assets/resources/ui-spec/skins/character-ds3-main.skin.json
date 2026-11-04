@@ -2387,7 +2387,7 @@
       "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT"
     },
-    "auto.character-ds3-tab-overview.characterds3taboverview_div_47": {
+    "auto.character-ds3-tab-overview.overviewstoryexpand": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.04,
@@ -2407,7 +2407,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-overview.characterds3taboverview_div_48": {
+    "auto.character-ds3-tab-overview.characterds3taboverview_div_47": {
       "kind": "color-rect",
       "color": "#000000",
       "opacity": 0,
@@ -4077,7 +4077,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_1": {
+    "auto.character-ds3-tab-bloodline.btnbloodlinevignette": {
       "kind": "color-rect",
       "color": "stdButtonPrimary",
       "opacity": 0.2,
@@ -5865,7 +5865,7 @@
       "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_2": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_1": {
       "kind": "color-rect",
       "color": "tertiaryLight",
       "opacity": 0.08,
@@ -5885,7 +5885,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_3": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_2": {
       "kind": "color-rect",
       "color": "stdCrestColor",
       "opacity": 0.08,
@@ -5905,7 +5905,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_4": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_3": {
       "kind": "color-rect",
       "color": "textKhaki",
       "opacity": 0.08,
@@ -5925,7 +5925,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_5": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_4": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.08,
@@ -5945,7 +5945,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_6": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_5": {
       "kind": "color-rect",
       "color": "gdv3StatStr",
       "opacity": 0.08,
@@ -5973,7 +5973,7 @@
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_02"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_7": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_6": {
       "kind": "transparent"
     },
     "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_58": {
@@ -13744,8 +13744,8 @@
       ]
     },
     "tokenSources": {
-      "runtimePath": "C:\\Users\\User\\3KLife-wt-tb\\assets\\resources\\ui-spec\\ui-design-tokens.json",
-      "handoffPath": "C:\\Users\\User\\3KLife-wt-tb\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "runtimePath": "C:\\Users\\User\\3KLife-wt-ov\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife-wt-ov\\Design System\\design_handoff\\source\\ui-design-tokens.json",
       "sourcePath": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json"
     },
     "tokenConflictReport": [
@@ -13753,7 +13753,7 @@
         "section": "typography",
         "token": "headlineFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-tb\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-ov\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
         "path": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json",
         "previousValue": "fonts/newsreader/newsreader",
@@ -13764,7 +13764,7 @@
         "section": "typography",
         "token": "bodyFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-tb\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-ov\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
         "path": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json",
         "previousValue": "fonts/notosans_tc/notosans_tc",
@@ -13775,7 +13775,7 @@
         "section": "typography",
         "token": "labelFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-tb\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-ov\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
         "path": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json",
         "previousValue": "fonts/manrope/manrope",
@@ -13794,6 +13794,6 @@
       "limit": 4,
       "_warning": null
     },
-    "perTabReplayMergedAt": "2026-11-04T17:32:22.982Z"
+    "perTabReplayMergedAt": "2026-11-04T18:04:30.251Z"
   }
 }

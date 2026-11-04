@@ -77,10 +77,10 @@
                 },
                 {
                   "type": "button",
-                  "name": "CharacterDs3TabBloodline_button_1",
+                  "name": "btnBloodlineVignette",
                   "width": 124,
                   "height": 38,
-                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_1",
+                  "skinSlot": "auto.character-ds3-tab-bloodline.btnbloodlinevignette",
                   "children": [
                     {
                       "type": "label",
@@ -2055,6 +2055,23 @@
                   "children": [
                     {
                       "type": "button",
+                      "name": "CharacterDs3TabBloodline_button_1",
+                      "width": 91,
+                      "height": 31,
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_1",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabBloodline_span_53",
+                          "text": "插入英靈卡",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_53",
+                          "width": 67,
+                          "height": 31
+                        }
+                      ]
+                    },
+                    {
+                      "type": "button",
                       "name": "CharacterDs3TabBloodline_button_2",
                       "width": 91,
                       "height": 31,
@@ -2062,9 +2079,9 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_53",
-                          "text": "插入英靈卡",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_53",
+                          "name": "CharacterDs3TabBloodline_span_54",
+                          "text": "更換英靈卡",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_54",
                           "width": 67,
                           "height": 31
                         }
@@ -2079,23 +2096,6 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_54",
-                          "text": "更換英靈卡",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_54",
-                          "width": 67,
-                          "height": 31
-                        }
-                      ]
-                    },
-                    {
-                      "type": "button",
-                      "name": "CharacterDs3TabBloodline_button_4",
-                      "width": 91,
-                      "height": 31,
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_4",
-                      "children": [
-                        {
-                          "type": "label",
                           "name": "CharacterDs3TabBloodline_span_55",
                           "text": "卸下英靈卡",
                           "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_55",
@@ -2106,10 +2106,10 @@
                     },
                     {
                       "type": "button",
-                      "name": "CharacterDs3TabBloodline_button_5",
+                      "name": "CharacterDs3TabBloodline_button_4",
                       "width": 78,
                       "height": 31,
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_5",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_4",
                       "children": [
                         {
                           "type": "label",
@@ -2123,10 +2123,10 @@
                     },
                     {
                       "type": "button",
-                      "name": "CharacterDs3TabBloodline_button_6",
+                      "name": "CharacterDs3TabBloodline_button_5",
                       "width": 78,
                       "height": 31,
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_6",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_5",
                       "children": [
                         {
                           "type": "label",
@@ -2155,7 +2155,7 @@
               "children": [
                 {
                   "type": "button",
-                  "name": "CharacterDs3TabBloodline_button_7",
+                  "name": "CharacterDs3TabBloodline_button_6",
                   "width": 518,
                   "height": 39,
                   "layout": {
@@ -2167,7 +2167,7 @@
                     "paddingBottom": 10,
                     "paddingLeft": 14
                   },
-                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_7",
+                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_6",
                   "children": [
                     {
                       "type": "label",
