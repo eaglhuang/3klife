@@ -195,8 +195,8 @@ type GeneralDetailEntrySmokeSource = 'ucuf-nav';
 const CHARACTER_DS3_PREVIEW_TAB_BUTTONS: Record<GeneralDetailRuntimeTab, string> = {
     Overview: 'CharacterDs3Main_button_4',
     Stats: 'CharacterDs3Main_button_5',
-    Tactics: 'CharacterDs3Main_button_6',
-    Bloodline: 'CharacterDs3Main_button_7',
+    Bloodline: 'CharacterDs3Main_button_6',
+    Tactics: 'CharacterDs3Main_button_7',
     Equip: 'CharacterDs3Main_button_8',
     Aptitude: 'CharacterDs3Main_button_9',
 };
@@ -213,13 +213,14 @@ const CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS: Record<GeneralDetailRuntimeTab, strin
 const CHARACTER_DS3_PREVIEW_TAB_ORDER: GeneralDetailRuntimeTab[] = [
     'Overview',
     'Stats',
-    'Tactics',
     'Bloodline',
+    'Tactics',
     'Equip',
     'Aptitude',
 ];
 
 const CHARACTER_DS3_PREVIEW_SLOT_CANDIDATES = [
+    'ContentSlot',
     'CharacterDs3Main_div_8',
 ] as const;
 
@@ -3929,6 +3930,7 @@ export class LobbyScene extends Component {
     }
 
     private async _switchCharacterDs3SlotFragment(host: UIScreenPreviewHost, fragmentId: string): Promise<string | null> {
+        await host.applyTabRegionsForFragment(fragmentId);
         for (const slotId of CHARACTER_DS3_PREVIEW_SLOT_CANDIDATES) {
             const switched = await host.switchLazySlot(slotId, fragmentId);
             if (switched) {
@@ -4812,8 +4814,8 @@ export class LobbyScene extends Component {
                 {
                     CharacterDs3Main_button_4: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Overview,
                     CharacterDs3Main_button_5: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Stats,
-                    CharacterDs3Main_button_6: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Tactics,
-                    CharacterDs3Main_button_7: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Bloodline,
+                    CharacterDs3Main_button_6: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Bloodline,
+                    CharacterDs3Main_button_7: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Tactics,
                     CharacterDs3Main_button_8: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Equip,
                     CharacterDs3Main_button_9: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Aptitude,
                 },

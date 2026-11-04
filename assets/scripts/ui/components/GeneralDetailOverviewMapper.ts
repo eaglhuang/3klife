@@ -91,6 +91,8 @@ export interface GeneralDetailOverviewContentState {
     readModel: GeneralReadModel;
     /** 將頁「名聲／官職／統領軍勢」五列（PROG-2-1213、TSK-06）；官職暫為 null（顯示 —） */
     commandPanelRows: GeneralCommandRow[];
+    /** character_v3 將分頁身份欄（陣營、職能、狀態、性別、年齡、壽命、精力、名聲） */
+    identity: GeneralDetailIdentityView;
     /** 兵分頁虎符槽（PROG-2-1026）：由統一物件庫視圖推導，沒有視圖時為 EMPTY */
     tallySlot: TalismanSlotView;
     /** 虎符戰記摘要（general-tally-summary，PROG-2-1344）：虎符、兵種傾向、近期戰績三行；畫面渲染另卡 */
@@ -246,6 +248,39 @@ export function battleRecordOf(config: GeneralConfig): BattleRecordLike | null {
     return typeof record.wins === 'number' && typeof record.losses === 'number' ? (record as BattleRecordLike) : null;
 }
 
+export interface GeneralDetailIdentityView {
+    faction: string;
+    role: string;
+    status: string;
+    gender: string;
+    age: string;
+    lifespan: string;
+    vitality: string;
+    fameValue: string;
+}
+
+const IDENTITY_EMPTY = '—';
+
+const GENDER_DISPLAY: Record<string, string> = { male: '男', female: '女', m: '男', f: '女', 男: '男', 女: '女' };
+
+/** character_v3 將分頁身份欄；沒資料的欄位顯示「—」，不顯示「未定」字樣 */
+export function buildGeneralDetailIdentity(config: GeneralConfig, fame: number | null): GeneralDetailIdentityView {
+    const known = (text: string): string => (text.includes('未定') ? IDENTITY_EMPTY : text);
+    const vitality = typeof config.vitality === 'number'
+        ? `${config.vitality} / ${config.maxVitality ?? 100}`
+        : IDENTITY_EMPTY;
+    return {
+        faction: known(formatFaction(config.faction)),
+        role: known(formatRole(config.role)),
+        status: known(formatStatus(config.status)),
+        gender: config.gender ? GENDER_DISPLAY[config.gender.toLowerCase()] ?? config.gender : IDENTITY_EMPTY,
+        age: typeof config.age === 'number' ? `${config.age} 歲` : IDENTITY_EMPTY,
+        lifespan: IDENTITY_EMPTY,
+        vitality,
+        fameValue: fame === null ? IDENTITY_EMPTY : fame.toLocaleString('en-US'),
+    };
+}
+
 export function buildGeneralDetailOverviewContentState(
     config: GeneralConfig,
     views: InventoryViews = EMPTY_INVENTORY_VIEWS,
@@ -310,6 +345,7 @@ export function buildGeneralDetailOverviewContentState(
         trainingProfile: buildTrainingProfile(config),
         readModel,
         commandPanelRows,
+        identity: buildGeneralDetailIdentity(config, readModel.generalFame.state === 'VALUE' ? readModel.generalFame.value : null),
         portraitResource: portraitPathOf(config.id),
         tallySlot: equippedTalismanSlot(views, config.id),
         tallySummary: buildGeneralTallySummary(equippedTalismanSlot(views, config.id), battleRecord ?? battleRecordOf(config)),

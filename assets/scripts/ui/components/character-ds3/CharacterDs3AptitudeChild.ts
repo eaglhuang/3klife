@@ -80,7 +80,7 @@ export function buildDs3AptitudeGrades(cfg: Partial<Record<AptitudeSource, Reado
 
 export class CharacterDs3AptitudeChild extends ChildPanelBase {
     override dataSource = 'config';
-    private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
+    private static readonly ROOT_PATH = 'ContentSlot';
 
     private _view: AptitudeView = buildAptitudeView(undefined);
     private _insertTargetIndex = 0;

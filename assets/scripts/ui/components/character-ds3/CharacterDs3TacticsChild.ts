@@ -74,7 +74,7 @@ export function buildDs3TacticRows(cfg: Partial<GeneralConfig> | null | undefine
 
 export class CharacterDs3TacticsChild extends ChildPanelBase {
     override dataSource = 'config';
-    private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
+    private static readonly ROOT_PATH = 'ContentSlot';
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3TacticsChild] onMount', { rootPath: CharacterDs3TacticsChild.ROOT_PATH });

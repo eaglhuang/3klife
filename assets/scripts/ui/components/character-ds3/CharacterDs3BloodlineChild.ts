@@ -76,7 +76,7 @@ export function buildDs3BloodlineView(cfg: GeneralConfig): Ds3BloodlineView {
 
 export class CharacterDs3BloodlineChild extends ChildPanelBase {
     override dataSource = 'config';
-    private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
+    private static readonly ROOT_PATH = 'ContentSlot';
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3BloodlineChild] onMount', { rootPath: CharacterDs3BloodlineChild.ROOT_PATH });

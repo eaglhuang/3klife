@@ -1,16 +1,29 @@
 {
-  "$note": "正式武將面板（Design System 3/ui_kits/character）將分頁固定節點名；列/點/星/進度條容器尚無穩定文字，暫由片段一次改名（PROG-2-1685）",
+  "$note": "人物頁 character_v3（Design System_20260513/ui_kits/character_v3）固定節點名；UI-2-0163 起取代舊 ds3 綁定。文字比對以張飛示範資料為準。",
   "bindings": [
     {
+      "name": "ContentSlot",
+      "selector": "#right-content"
+    },
+    {
+      "name": "PortraitImage",
+      "selector": "img.portrait-img"
+    },
+    {
+      "name": "PortraitFooterTitle",
+      "selector": "#portrait-title"
+    },
+    {
       "name": "OverviewName",
-      "selector": "span",
+      "selector": "div",
       "text": "張飛",
       "index": 0
     },
     {
       "name": "OverviewRoleBadge",
       "selector": "div",
-      "text": "翼德 · 蜀 · 先鋒"
+      "text": "字 翼德 · 燕人 · Vanguard",
+      "index": 0
     },
     {
       "name": "OverviewRarityTier",
@@ -19,90 +32,95 @@
       "index": 0
     },
     {
-      "name": "OverviewStat_str",
+      "name": "OverviewFaction",
       "selector": "span",
-      "text": "98",
+      "text": "蜀",
       "index": 0
     },
     {
-      "name": "OverviewStat_lea",
+      "name": "OverviewRole",
       "selector": "span",
-      "text": "88",
+      "text": "先鋒",
       "index": 0
     },
     {
-      "name": "OverviewStat_cha",
+      "name": "OverviewStatus",
       "selector": "span",
-      "text": "74",
+      "text": "出仕中",
       "index": 0
     },
     {
-      "name": "OverviewStat_int",
+      "name": "OverviewGender",
       "selector": "span",
-      "text": "52",
+      "text": "男",
       "index": 0
     },
     {
-      "name": "OverviewStat_pol",
+      "name": "OverviewAge",
       "selector": "span",
-      "text": "38",
+      "text": "34 歲",
       "index": 0
     },
     {
-      "name": "OverviewStat_luk",
+      "name": "OverviewVitality",
       "selector": "span",
-      "text": "76",
+      "text": "85 / 100",
       "index": 0
     },
     {
-      "name": "OverviewRoleText0",
-      "selector": "span",
-      "text": "前排突破"
-    },
-    {
-      "name": "OverviewRoleText1",
-      "selector": "span",
-      "text": "破陣主攻"
-    },
-    {
-      "name": "OverviewTraitText0",
-      "selector": "span",
-      "text": "戰意特聚"
-    },
-    {
-      "name": "OverviewTraitText1",
-      "selector": "span",
-      "text": "平原適性"
-    },
-    {
-      "name": "OverviewCrestTitle",
-      "selector": "span",
-      "text": "命紋顯現"
-    },
-    {
-      "name": "OverviewBloodlineName",
+      "name": "OverviewFameRank",
       "selector": "div",
-      "text": "燕血脈"
+      "text": "名將",
+      "index": 0
     },
     {
-      "name": "OverviewAwakeningPercent",
-      "selector": "span",
-      "text": "58%"
-    },
-    {
-      "name": "OverviewCrestHint",
-      "selector": "span",
-      "text": "已建立 14 人血統圖"
-    },
-    {
-      "name": "OverviewPersonality",
-      "selector": "span",
-      "text": "燕地酒坊流傳"
-    },
-    {
-      "name": "OverviewFooterTitle",
+      "name": "OverviewOfficial",
       "selector": "div",
-      "text": "燕人武聖"
+      "text": "中郎將",
+      "index": 0
+    },
+    {
+      "name": "OverviewFameValue",
+      "selector": "div",
+      "text": "2,840",
+      "index": 0
+    },
+    {
+      "name": "OverviewFameNext",
+      "selector": "div",
+      "text": "下一階：征南將軍 · 需 名聲 3000",
+      "index": 0
+    },
+    {
+      "name": "OverviewCmd_commandCapacity",
+      "selector": "div",
+      "text": "12,000",
+      "index": 0
+    },
+    {
+      "name": "OverviewCmd_cityTroops",
+      "selector": "div",
+      "text": "9,400",
+      "index": 0
+    },
+    {
+      "name": "OverviewCmd_sortiePool",
+      "selector": "div",
+      "text": "9,400",
+      "index": 1
+    },
+    {
+      "name": "OverviewStarHint",
+      "selector": "div",
+      "text": "目前 4 星 · 同名武將卡 ×1 可升",
+      "index": 0
+    },
+    {
+      "name": "OverviewBio",
+      "selector": "#right-content div",
+      "text": "人物小傳張飛，字翼德，幽州涿郡人。少年以屠豬賣酒為業，後於桃園與劉備、關羽義結金蘭，誓同生死。性烈如火，勇猛無雙——長坂橋前單槍匹馬，一聲怒吼令曹軍百萬退散；義釋嚴顏一事，足見其粗中有細，智勇兼備。然酒後失德，醉鞭督卒，終命喪部將之手，令千古扼腕。其一生豪烈，血脈中燕地武人的剛猛之氣，至今仍在後裔身上延燃。",
+      "index": 0,
+      "looseText": true
     }
   ]
 }

@@ -72,6 +72,26 @@ const DS3_RARITY_PILL_TEXT: Record<GeneralDetailOverviewContentState['rarityTier
     mythic: [255, 255, 255],
 };
 
+/** character_v3 將分頁身份欄節點（綁定表 ui-bind-maps/character-ds3-main.json 命名） */
+const IDENTITY_LABELS: Record<keyof GeneralDetailOverviewContentState['identity'], string> = {
+    faction: 'OverviewFaction',
+    role: 'OverviewRole',
+    status: 'OverviewStatus',
+    gender: 'OverviewGender',
+    age: 'OverviewAge',
+    lifespan: 'OverviewLifespan',
+    vitality: 'OverviewVitality',
+    fameValue: 'OverviewFameValue',
+};
+
+/** character_v3 統領軍勢三格，依 commandPanelRows 的 key 對應 */
+const V3_COMMAND_LABELS: Partial<Record<GeneralDetailOverviewContentState['commandPanelRows'][number]['key'], string>> = {
+    commandCapacity: 'OverviewCmd_commandCapacity',
+    cityTroops: 'OverviewCmd_cityTroops',
+    sortiePool: 'OverviewCmd_sortiePool',
+    official: 'OverviewOfficial',
+};
+
 /** 統領軍勢五列的值節點，依 commandPanelRows 的 key 對應（PROG-2-1213 / TSK-06） */
 const COMMAND_VALUE_NODE_PREFIX = 'CharacterDs3TabOverview_cmd_value_';
 
@@ -80,7 +100,7 @@ const INACTIVE_STAR_COLOR = new Color(77, 70, 53, 255);
 
 export class CharacterDs3OverviewChild extends ChildPanelBase {
     override dataSource = 'overview';
-    private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
+    private static readonly ROOT_PATH = 'ContentSlot';
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3OverviewChild] onMount', { rootPath: CharacterDs3OverviewChild.ROOT_PATH });
@@ -215,6 +235,11 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
     private _applyCommandPanel(state: GeneralDetailOverviewContentState): void {
         for (const row of state.commandPanelRows) {
             this._setLabelText(`${COMMAND_VALUE_NODE_PREFIX}${row.key}`, row.value);
+            const v3Label = V3_COMMAND_LABELS[row.key];
+            if (v3Label) this._setLabelText(v3Label, row.value);
+        }
+        for (const [key, nodeName] of Object.entries(IDENTITY_LABELS) as [keyof typeof IDENTITY_LABELS, string][]) {
+            this._setLabelText(nodeName, state.identity?.[key] ?? '');
         }
     }
 

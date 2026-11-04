@@ -2,7 +2,7 @@
   "screenId": "character-ds3-main",
   "lazySlots": [
     {
-      "slot": "CharacterDs3Main_div_8",
+      "slot": "ContentSlot",
       "ucufId": null,
       "defaultFragment": "fragments/layouts/character-ds3-overview-content",
       "warmupHint": "first-frame",
@@ -43,13 +43,13 @@
     },
     {
       "trigger": "CharacterDs3Main_button_6",
-      "target": "tactics",
+      "target": "bloodline",
       "interactionId": "character-ds3main_button_6.tab-switch",
       "status": "ready"
     },
     {
       "trigger": "CharacterDs3Main_button_7",
-      "target": "bloodline",
+      "target": "tactics",
       "interactionId": "character-ds3main_button_7.tab-switch",
       "status": "ready"
     },
@@ -64,47 +64,11 @@
       "target": "aptitude",
       "interactionId": "character-ds3main_button_9.tab-switch",
       "status": "ready"
-    },
-    {
-      "trigger": "CharacterDs3Main_button_10",
-      "target": "overview",
-      "interactionId": "character-ds3main_button_10.tab-switch",
-      "status": "ready"
-    },
-    {
-      "trigger": "CharacterDs3Main_button_11",
-      "target": "stats",
-      "interactionId": "character-ds3main_button_11.tab-switch",
-      "status": "ready"
-    },
-    {
-      "trigger": "CharacterDs3Main_button_12",
-      "target": "tactics",
-      "interactionId": "character-ds3main_button_12.tab-switch",
-      "status": "ready"
-    },
-    {
-      "trigger": "CharacterDs3Main_button_13",
-      "target": "bloodline",
-      "interactionId": "character-ds3main_button_13.tab-switch",
-      "status": "ready"
-    },
-    {
-      "trigger": "CharacterDs3Main_button_14",
-      "target": "equip",
-      "interactionId": "character-ds3main_button_14.tab-switch",
-      "status": "ready"
-    },
-    {
-      "trigger": "CharacterDs3Main_button_15",
-      "target": "aptitude",
-      "interactionId": "character-ds3main_button_15.tab-switch",
-      "status": "ready"
     }
   ],
   "summary": {
     "lazySlotCount": 2,
-    "tabRouteCount": 14,
+    "tabRouteCount": 8,
     "missingDefaultFragmentCount": 0,
     "missingTabTargetCount": 0
   }

@@ -38,7 +38,7 @@ const DS3_EQUIP_EMPTY = '—';
 
 export class CharacterDs3EquipChild extends ChildPanelBase {
     override dataSource = 'overview';
-    private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
+    private static readonly ROOT_PATH = 'ContentSlot';
     private _gearPick: GearSlotPickController | null = null;
     private _gearPickChanged: (() => void) | null = null;
     private _gearPickView: GearPickPanelView | null = null;

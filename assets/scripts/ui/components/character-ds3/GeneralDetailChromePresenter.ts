@@ -33,8 +33,9 @@ export const OPTIONAL_TABS: ReadonlySet<TabKey> = new Set<TabKey>(['Record']);
 export const DS3_TAB_BUTTON_NODE: Partial<Record<TabKey, string>> = {
     Overview: 'CharacterDs3Main_button_4',
     Stats: 'CharacterDs3Main_button_5',
-    Tactics: 'CharacterDs3Main_button_6',
-    Bloodline: 'CharacterDs3Main_button_7',
+    // v3 版面（UI-2-0163）：命（血統）在前、技（戰法）在後
+    Bloodline: 'CharacterDs3Main_button_6',
+    Tactics: 'CharacterDs3Main_button_7',
     Equip: 'CharacterDs3Main_button_8',
     Aptitude: 'CharacterDs3Main_button_9',
 };

@@ -23,16 +23,30 @@ function loadBindMap(filePath) {
   return entries;
 }
 
-// 在瀏覽器內執行：依 selector（可加 text 精確比對與 index）找元素並寫入 data-name
+// 在瀏覽器內執行：依 selector（可加 text 精確比對、index、looseText）找元素並寫入 data-name
 function applyBindMapInPage(entries) {
   const norm = value => String(value || '').replace(/\s+/g, ' ').trim();
+  const wrapLooseText = parent => {
+    for (const child of Array.from(parent.childNodes || [])) {
+      if (child.nodeType === 1 && child.getAttribute('data-ucuf-loose-text') != null) return child;
+    }
+    const textNode = Array.from(parent.childNodes || []).find(child => child.nodeType === 3 && norm(child.textContent));
+    if (!textNode) return null;
+    const span = document.createElement('span');
+    span.setAttribute('data-ucuf-loose-text', '');
+    parent.insertBefore(span, textNode);
+    span.appendChild(textNode);
+    return span;
+  };
   const apply = () => {
     const report = [];
     for (const entry of entries) {
       let nodes = [];
       try { nodes = Array.from(document.querySelectorAll(entry.selector)); } catch (_e) { nodes = []; }
       if (entry.text != null) nodes = nodes.filter(node => norm(node.textContent) === norm(entry.text));
-      const node = nodes[entry.index || 0];
+      let node = nodes[entry.index || 0];
+      // looseText：名字給元素裡直接的裸文字（例如標題後面接的內文），包成 span 再命名
+      if (node && entry.looseText) node = wrapLooseText(node);
       if (node && node.getAttribute('data-name') !== entry.name) node.setAttribute('data-name', entry.name);
       report.push({ name: entry.name, matched: !!node });
     }

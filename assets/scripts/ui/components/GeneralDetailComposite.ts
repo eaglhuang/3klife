@@ -263,11 +263,19 @@ export class GeneralDetailComposite extends CompositePanel {
     private async _switchToDs3Tab(tab: TabKey, overview: UnifiedOverviewContentState | null): Promise<void> {
         this._activeTab = tab;
         this._bindDs3TabChild(tab);
-        await this.switchTab(tab);
-        if (this._currentConfig) {
-            super.applyContentState({
-                config: this._currentConfig,
-                overview: overview ?? buildGeneralDetailOverviewContentState(this._currentConfig),
+        // 版型重轉後子面板可能還沒對上新節點名：記錯誤但照常完成切頁，畫面先顯示版型內容
+        try {
+            await this.switchTab(tab);
+            if (this._currentConfig) {
+                super.applyContentState({
+                    config: this._currentConfig,
+                    overview: overview ?? buildGeneralDetailOverviewContentState(this._currentConfig),
+                });
+            }
+        } catch (error) {
+            UCUFLogger.error(LogCategory.LIFECYCLE, '[GeneralDetailComposite] DS3 tab child failed', {
+                tab,
+                message: error instanceof Error ? error.message : String(error),
             });
         }
         this._syncDs3TabVisualState();
@@ -285,8 +293,9 @@ export class GeneralDetailComposite extends CompositePanel {
     }
 
     private _resolveDs3ContentSlotId(tab: TabKey): string | null {
+        // 路由寫的是 HTML 的 id（例如 right-content），只有對得到節點時才用，否則走節點名備選
         const routeSlotId = this.tabRouting?.[tab]?.slotId;
-        if (routeSlotId) {
+        if (routeSlotId && this.getSlotNode(routeSlotId)) {
             return routeSlotId;
         }
 
