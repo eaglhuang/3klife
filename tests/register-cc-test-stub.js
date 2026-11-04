@@ -129,7 +129,9 @@ function createClassDecoratorPassthrough() {
 }
 
 function createPropertyDecoratorPassthrough() {
-  return () => (target) => target;
+  // 屬性裝飾器必須回傳 undefined：回傳物件會被當成 descriptor，欄位變唯讀（例如 SolidBackground._color）
+  // 支援 @property 與 @property(Type) 兩種寫法
+  return (...args) => (args.length >= 2 && typeof args[1] === 'string' ? undefined : () => undefined);
 }
 
 function createFactoryDecoratorPassthrough() {
@@ -182,11 +184,11 @@ const baseCcStub = {
   Vec3: DummyVec3,
   Vec4: class { constructor(x = 0, y = 0, z = 0, w = 0) { this.x = x; this.y = y; this.z = z; this.w = w; } },
   Rect: class { constructor(x = 0, y = 0, width = 0, height = 0) { this.x = x; this.y = y; this.width = width; this.height = height; } },
-  UITransform: class extends DummyComponent {},
+  UITransform: class extends DummyComponent { constructor() { super(); this.width = 0; this.height = 0; } setContentSize(w, h) { this.width = w; this.height = h; } },
   Widget: class extends DummyComponent { static AlignMode = { ONCE: 0, ALWAYS: 1, ON_WINDOW_RESIZE: 2 }; },
   Button: class extends DummyComponent {},
   Label: class extends DummyComponent { static Overflow = { NONE: 0, CLAMP: 1, SHRINK: 2, RESIZE_HEIGHT: 3 }; constructor() { super(); this.string = ''; } },
-  Sprite: class extends DummyComponent {},
+  Sprite: class extends DummyComponent { static SizeMode = { CUSTOM: 0, TRIMMED: 1, RAW: 2 }; static Type = { SIMPLE: 0, SLICED: 1, TILED: 2, FILLED: 3 }; },
   SpriteFrame: class {},
   Prefab: class {},
   Font: class {},

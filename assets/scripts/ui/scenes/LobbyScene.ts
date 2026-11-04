@@ -9,7 +9,8 @@ import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule'
 import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { LobbyHallScreenBinder, type LobbyHallDockId, type LobbyHallPanelId } from '../core/LobbyHallScreenBinder';
-import { hallFestivalIdOf, type HallThemeConfig } from '../../core/systems/HallTheme';
+import { hallFestivalIdOf, mainLobbyBackdropOf, resolveHallTheme as resolveHallSceneTheme, type HallThemeConfig } from '../../core/systems/HallTheme';
+import { LobbyBackdrop } from '../core/LobbyBackdrop';
 import type { HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallMapEventCatalog } from '../../core/systems/HallMapEventMapper';
@@ -323,6 +324,8 @@ export class LobbyScene extends Component {
     /** 幕府大廳（UI-2-0149）：另開入口，與主大廳並存 */
     private _lobbyHallHost: UIScreenPreviewHost | null = null;
     private _lobbyHall: LobbyHallScreenBinder | null = null;
+    private _lobbyBackdrop: LobbyBackdrop | null = null;
+    private _lobbyBackdropConfig: HallThemeConfig | null = null;
     /** 大廳沒開時收到的換季聚焦序列，下次開大廳播一次 */
     private _pendingHallMapTurn: HallMapTurnStep[] | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
@@ -477,6 +480,7 @@ export class LobbyScene extends Component {
 
         this._isNewPlayer = !(await this._loadPlayerSave());
         await this._mountLobbyMainHub();
+        await this._mountLobbyBackdrop();
         await this._mountSecondaryMainHubs();
         await this._mountSeasonHud();
         await this._mountCityHub();
@@ -2197,6 +2201,33 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._intro.getFlowView());
+    }
+
+    /**
+     * 主大廳背景（UI-2-0159）：沿用幕府大廳的季節／節慶背景，夜間疊夜色，再疊 hall-theme.json 的壓暗層。
+     * 設定檔沒載到時維持 Background 原本的純色底；換季時重套。
+     */
+    private async _mountLobbyBackdrop(): Promise<void> {
+        const bgNode = this.node.getChildByName('Background');
+        const config = await this._loadDataJson<HallThemeConfig>('data/hall-map/hall-theme');
+        if (!bgNode || !config) return;
+        this._lobbyBackdropConfig = config;
+        this._lobbyBackdrop = new LobbyBackdrop(bgNode, { width: 1920, height: 1080 });
+        this._refreshLobbyBackdrop();
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, () => this._refreshLobbyBackdrop()),
+        );
+    }
+
+    private _refreshLobbyBackdrop(): void {
+        const config = this._lobbyBackdropConfig;
+        if (!this._lobbyBackdrop || !config) return;
+        const theme = resolveHallSceneTheme({
+            seasonIndex: services().session.gameTime.currentSeason,
+            hour: new Date().getHours(),
+            festivalId: hallFestivalIdOf(this._lobbyHub?.Current_Theme.Festival_Theme_ID),
+        }, config);
+        this._lobbyBackdrop.apply(mainLobbyBackdropOf(theme, config));
     }
 
     private _loadDataJson<T>(path: string): Promise<T | null> {

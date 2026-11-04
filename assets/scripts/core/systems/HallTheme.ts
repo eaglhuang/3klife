@@ -37,6 +37,8 @@ export interface HallThemeConfig {
     sunraySeasons: readonly HallSeason[];
     seasonTint: Record<HallSeason, HallSeasonTint>;
     festivals: Record<string, HallFestivalTheme>;
+    /** 主大廳沿用季節背景時的壓暗層（UI-2-0159）；未填不壓暗。 */
+    mainLobbyShade?: HallTint;
 }
 
 export interface HallThemeInput {
@@ -94,4 +96,18 @@ export function resolveHallTheme(input: Readonly<HallThemeInput>, config: Readon
         festivalId,
         decorPath: festival?.decorPath ?? null,
     };
+}
+
+/** 主大廳背景：背景圖＋由下往上疊的遮罩層（UI-2-0159） */
+export interface MainLobbyBackdrop {
+    backgroundPath: string;
+    layers: HallTint[];
+}
+
+/** 主大廳沿用幕府大廳的季節（含節慶）背景；夜間先疊夜色，再疊設定檔的壓暗層。 */
+export function mainLobbyBackdropOf(theme: Readonly<HallTheme>, config: Readonly<HallThemeConfig>): MainLobbyBackdrop {
+    const layers: HallTint[] = [];
+    if (theme.nightTint) layers.push({ color: theme.nightTint.color, alpha: theme.nightTint.alpha });
+    if (config.mainLobbyShade) layers.push({ color: config.mainLobbyShade.color, alpha: config.mainLobbyShade.alpha });
+    return { backgroundPath: theme.backgroundPath, layers };
 }
