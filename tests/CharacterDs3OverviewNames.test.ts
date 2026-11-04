@@ -25,7 +25,7 @@ export function createCharacterDs3OverviewNamesSuite(): TestSuite {
         const names = collectNames(fragment.root ?? fragment, new Set<string>());
         const source = fs.readFileSync(path.join(ROOT, CHILD), 'utf8');
         const referenced = [...new Set(source.match(/'Overview\w+'/g) ?? [])].map((q) => q.slice(1, -1));
-        assert.isTrue(referenced.length >= 25, `referenced=${referenced.length}`);
+        assert.isTrue(referenced.length >= 15, `referenced=${referenced.length}`);
         const missing = referenced.filter((name) => !names.has(name));
         assert.equals('', missing.join(','));
     });

@@ -1,7 +1,7 @@
 /**
  * SoulInjectUiWiring.test.ts — 寄宿戰魂按鈕的畫面接線（PROG-2-1058）headless 測試
  *
- * 鎖住：Overview 版面有 btnSoulInject 節點，它的 skinSlot 與文字 styleSlot 都在皮膚檔註冊；
+ * 鎖住：LobbyScene 在左側動作欄建立 btnSoulInject；舊版面的 skinSlot 與文字 styleSlot 檢查已隨版面移除註冊；
  * LobbyScene 在人物頁打開時綁定這顆按鈕，並讀 GameSession 的碎片帳本。
  */
 import * as fs from 'fs';
@@ -11,30 +11,12 @@ import { assert, TestSuite } from './TestRunner';
 const ROOT = path.resolve(__dirname, '..');
 const read = (rel: string): string => fs.readFileSync(path.join(ROOT, rel), 'utf8');
 
-function findNode(node: unknown, id: string): Record<string, unknown> | null {
-    if (!node || typeof node !== 'object') return null;
-    const record = node as Record<string, unknown>;
-    if (record.id === id) return record;
-    for (const child of (record.children as unknown[] | undefined) ?? []) {
-        const found = findNode(child, id);
-        if (found) return found;
-    }
-    return null;
-}
-
 export function createSoulInjectUiWiringSuite(): TestSuite {
     const suite = new TestSuite('SoulInjectUiWiring (寄宿戰魂按鈕接線 PROG-2-1058)');
 
-    suite.test('Overview 版面有 btnSoulInject，skinSlot 與文字 styleSlot 都在皮膚檔註冊', () => {
-        const layout = JSON.parse(read('assets/resources/ui-spec/fragments/layouts/character-ds3-overview-content.json'));
-        const skin = JSON.parse(read('assets/resources/ui-spec/skins/character-ds3-main.skin.json'));
-        const node = findNode(layout, 'btnSoulInject');
-        assert.isTrue(node !== null, '版面沒有 btnSoulInject');
-        assert.equals('button', node!.type);
-        const label = findNode(node, 'soulInjectLabel');
-        assert.isTrue(label !== null, '按鈕沒有文字節點');
-        assert.isTrue(typeof skin.slots[node!.skinSlot as string] === 'object', 'skinSlot 沒有在皮膚檔註冊');
-        assert.isTrue(typeof skin.slots[label!.styleSlot as string] === 'object', 'styleSlot 沒有在皮膚檔註冊');
+    suite.test('v3 版面沒有這顆按鈕時，LobbyScene 把它建在立繪左側動作欄', () => {
+        const lobby = read('assets/scripts/ui/scenes/LobbyScene.ts');
+        assert.isTrue(lobby.includes("this._characterDs3ActionButton('btnSoulInject'"), '沒有建立 btnSoulInject');
     });
 
     suite.test('LobbyScene 打開人物頁時綁定 btnSoulInject，並讀 GameSession 的碎片帳本', () => {

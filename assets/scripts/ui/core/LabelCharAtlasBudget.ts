@@ -21,7 +21,7 @@ export class LabelCharAtlasBudget {
         }
 
         const cell = Math.ceil(fontSize * GLYPH_CELL_RATIO) + GLYPH_CELL_PADDING;
-        const fresh = [...new Set(chars)]
+        const fresh = Array.from(new Set(chars))
             .map((char) => `${char}|${fontSize}|${styleKey}`)
             .filter((key) => !this._glyphs.has(key));
         const nextArea = this._usedArea + fresh.length * cell * cell;

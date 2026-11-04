@@ -1,61 +1,9 @@
 // @spec-source → 武將人物介面規格書.md (doc_ui_0012)；PROG-2-1429 依建檔紀錄補標出處
 import { Color, Label, Sprite, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
-import { placeDs3BarFill } from './Ds3BarFill';
 import { ds3SetActive } from './Ds3NodeLookup';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
-
-type Ds3StatKey = 'str' | 'lea' | 'cha' | 'int' | 'pol' | 'luk';
-
-interface Ds3SummaryLineSlot {
-    row: string;
-    bullet: string;
-    text: string;
-}
-
-const CORE_STAT_LABELS: Record<Ds3StatKey, string> = {
-    str: 'OverviewStat_str',
-    lea: 'OverviewStat_lea',
-    cha: 'OverviewStat_cha',
-    int: 'OverviewStat_int',
-    pol: 'OverviewStat_pol',
-    luk: 'OverviewStat_luk',
-};
-
-const ROLE_LINE_SLOTS: Ds3SummaryLineSlot[] = [
-    {
-        row: 'OverviewRoleRow0',
-        bullet: 'OverviewRoleBullet0',
-        text: 'OverviewRoleText0',
-    },
-    {
-        row: 'OverviewRoleRow1',
-        bullet: 'OverviewRoleBullet1',
-        text: 'OverviewRoleText1',
-    },
-];
-
-const TRAIT_LINE_SLOTS: Ds3SummaryLineSlot[] = [
-    {
-        row: 'OverviewTraitRow0',
-        bullet: 'OverviewTraitBullet0',
-        text: 'OverviewTraitText0',
-    },
-    {
-        row: 'OverviewTraitRow1',
-        bullet: 'OverviewTraitBullet1',
-        text: 'OverviewTraitText1',
-    },
-];
-
-const RARITY_STAR_COUNT: Record<GeneralDetailOverviewContentState['rarityTier'], number> = {
-    common: 1,
-    rare: 2,
-    epic: 3,
-    legendary: 4,
-    mythic: 5,
-};
 
 const DS3_RARITY_PILL_BG: Record<GeneralDetailOverviewContentState['rarityTier'], [number, number, number]> = {
     common: [76, 175, 80],
@@ -74,13 +22,12 @@ const DS3_RARITY_PILL_TEXT: Record<GeneralDetailOverviewContentState['rarityTier
 };
 
 /** character_v3 將分頁身份欄節點（綁定表 ui-bind-maps/character-ds3-main.json 命名） */
-const IDENTITY_LABELS: Record<keyof GeneralDetailOverviewContentState['identity'], string> = {
+const IDENTITY_LABELS: Partial<Record<keyof GeneralDetailOverviewContentState['identity'], string>> = {
     faction: 'OverviewFaction',
     role: 'OverviewRole',
     status: 'OverviewStatus',
     gender: 'OverviewGender',
     age: 'OverviewAge',
-    lifespan: 'OverviewLifespan',
     vitality: 'OverviewVitality',
     fameValue: 'OverviewFameValue',
 };
@@ -97,9 +44,6 @@ const V3_COMMAND_LABELS: Partial<Record<GeneralDetailOverviewContentState['comma
 const COMMAND_VALUE_NODE_PREFIX = 'CharacterDs3TabOverview_cmd_value_';
 
 const OVERVIEW_BIO_HEIGHT = 164;
-
-const ACTIVE_STAR_COLOR = new Color(212, 175, 55, 255);
-const INACTIVE_STAR_COLOR = new Color(77, 70, 53, 255);
 
 export class CharacterDs3OverviewChild extends ChildPanelBase {
     override dataSource = 'overview';
@@ -124,25 +68,12 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
 
         this._setLabelText('OverviewName', state.headerName);
         this._setLabelText('OverviewRoleBadge', state.headerMeta);
-        this._setLabelText('OverviewEpithet', state.headerTitle ?? '');
         this._setLabelText('OverviewRarityTier', state.rarityLabel);
         this._setLabelText('OverviewBio', state.biographyBody);
         this._clampBio();
         // 逸事故事條由立繪下方的頁籤展開，這一列在 v3 沒有功能，還會超出畫面
         ds3SetActive(this.binder, this.hostNode, 'OverviewStoryExpand', false);
-        this._setLabelText('OverviewCrestTitle', state.crestTitle);
-        this._setLabelText('OverviewBloodlineName', state.bloodlineName);
-        this._setLabelText('OverviewAwakeningPercent', `${Math.round(state.awakeningProgress)}%`);
-        this._setLabelText('OverviewCrestHint', state.crestHint);
-        this._setLabelText('OverviewPersonality', state.personalityValue);
-        this._setLabelText('OverviewFooterTitle', state.footerTitle);
-
-        this._applyCoreStats(state);
-        this._applySummaryLines(state.roleValue, ROLE_LINE_SLOTS, '定位未定');
-        this._applySummaryLines(state.traitValue, TRAIT_LINE_SLOTS, '氣質描述待補');
         this._applyRarityPill(state.rarityTier);
-        this._applyRarityStars(state.rarityTier);
-        this._applyAwakeningProgress(state.awakeningProgress);
         this._applyCommandPanel(state);
 
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3OverviewChild] onDataUpdate applied', {
@@ -166,50 +97,6 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         return null;
     }
 
-    private _applyCoreStats(state: GeneralDetailOverviewContentState): void {
-        const keys = Object.keys(CORE_STAT_LABELS) as Ds3StatKey[];
-        for (const key of keys) {
-            const value = state.dualLayerStats[key]?.talent.base ?? state.dualLayerStats[key]?.talent.current;
-            this._setLabelText(CORE_STAT_LABELS[key], this._formatNumber(value));
-        }
-    }
-
-    private _applySummaryLines(value: string, slots: Ds3SummaryLineSlot[], fallback: string): void {
-        const lines = this._splitSummaryLines(value, fallback);
-        for (let index = 0; index < slots.length; index += 1) {
-            const slot = slots[index];
-            const line = lines[index] ?? '';
-            const active = line.length > 0;
-            this._setNodeActive(slot.row, active);
-            if (!active) {
-                continue;
-            }
-            this._setLabelText(slot.bullet, '•');
-            this._setLabelText(slot.text, line);
-        }
-    }
-
-    private _applyRarityStars(tier: GeneralDetailOverviewContentState['rarityTier']): void {
-        const root = this.binder.getNode('OverviewRarityStars');
-        if (!root) {
-            return;
-        }
-
-        const starCount = RARITY_STAR_COUNT[tier] ?? 0;
-        const stars = root.children;
-        for (let index = 0; index < stars.length; index += 1) {
-            const star = stars[index];
-            if (!star) {
-                continue;
-            }
-            star.active = true;
-            const label = this.binder.getLabel(star.name);
-            if (label) {
-                label.color = (index < starCount ? ACTIVE_STAR_COLOR : INACTIVE_STAR_COLOR).clone();
-            }
-        }
-    }
-
     private _applyRarityPill(tier: GeneralDetailOverviewContentState['rarityTier']): void {
         const pillNode = this.binder.getNode('OverviewRarityTier');
         const pillSprite = pillNode?.getComponent(Sprite) ?? null;
@@ -222,20 +109,6 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         if (pillLabel) {
             pillLabel.color = this._toColor(DS3_RARITY_PILL_TEXT[tier]);
         }
-    }
-
-    private _applyAwakeningProgress(progress: number): void {
-        const trackNode = this.binder.getNode('OverviewAwakeningTrack');
-        const fillNode = this.binder.getNode('OverviewAwakeningFill');
-        const trackTransform = trackNode?.getComponent(UITransform) ?? null;
-        const fillTransform = fillNode?.getComponent(UITransform) ?? null;
-        if (!trackTransform || !fillTransform) {
-            return;
-        }
-
-        const placement = placeDs3BarFill(trackTransform.width, trackTransform.anchorX, fillTransform.anchorX, progress / 100);
-        fillTransform.width = placement.width;
-        fillNode!.setPosition(placement.x, fillNode!.position.y, fillNode!.position.z);
     }
 
     private _applyCommandPanel(state: GeneralDetailOverviewContentState): void {
@@ -269,34 +142,6 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
             label.cacheMode = Label.CacheMode.NONE;
         }
         label.string = text?.trim() ?? '';
-    }
-
-    private _setNodeActive(nodeName: string, active: boolean): void {
-        const node = this.binder.getNode(nodeName);
-        if (!node) {
-            return;
-        }
-        node.active = active;
-    }
-
-    private _splitSummaryLines(value: string | undefined, fallback: string): string[] {
-        const lines = (value ?? '')
-            .split(/\n+/)
-            .map((line) => line.trim())
-            .filter((line) => line.length > 0);
-
-        if (lines.length === 0) {
-            return [fallback];
-        }
-
-        return lines.slice(0, 2);
-    }
-
-    private _formatNumber(value: number | null | undefined): string {
-        if (value === null || value === undefined) {
-            return '--';
-        }
-        return `${value}`;
     }
 
     private _toColor(rgb: [number, number, number]): Color {

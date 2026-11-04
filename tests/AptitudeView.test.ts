@@ -16,6 +16,10 @@ import {
 } from '../assets/scripts/core/systems/AptitudeView';
 import { CharacterDs3AptitudeChild } from '../assets/scripts/ui/components/character-ds3/CharacterDs3AptitudeChild';
 
+// 空節點樹：子面板找不到節點時要安靜略過
+const EMPTY_HOST = { children: [], getComponent: () => null } as unknown as Node;
+const EMPTY_BINDER = { getNode: () => null, getLabel: () => null } as unknown as UITemplateBinder;
+
 export function createAptitudeViewSuite(): TestSuite {
     const suite = new TestSuite('AptitudeView (兵頁適性 TSK-05 PROG-2-1449)');
 
@@ -54,7 +58,7 @@ export function createAptitudeViewSuite(): TestSuite {
     });
 
     suite.test('CharacterDs3AptitudeChild 收到武將資料後更新 view（子面板為呼叫端）', () => {
-        const child = new CharacterDs3AptitudeChild({} as unknown as Node, {} as unknown as UISkinResolver, {} as unknown as UITemplateBinder);
+        const child = new CharacterDs3AptitudeChild(EMPTY_HOST, {} as unknown as UISkinResolver, EMPTY_BINDER);
         assert.equals(0, child.view.troopRows.length);
         child.onDataUpdate({ id: 'zhang-fei', troopAptitude: { CAVALRY: 'S', ARCHER: 'D' } });
         assert.equals('騎兵,弓兵', child.view.troopRows.map((r) => r.label).join(','));
@@ -62,7 +66,7 @@ export function createAptitudeViewSuite(): TestSuite {
     });
 
     suite.test('子面板收到非物件資料時回到空 view，不拋錯', () => {
-        const child = new CharacterDs3AptitudeChild({} as unknown as Node, {} as unknown as UISkinResolver, {} as unknown as UITemplateBinder);
+        const child = new CharacterDs3AptitudeChild(EMPTY_HOST, {} as unknown as UISkinResolver, EMPTY_BINDER);
         child.onDataUpdate({ troopAptitude: { CAVALRY: 'S' } });
         child.onDataUpdate(null);
         assert.equals(0, child.view.troopRows.length);
