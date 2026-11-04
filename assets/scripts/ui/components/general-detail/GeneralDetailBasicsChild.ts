@@ -97,7 +97,7 @@ export class GeneralDetailBasicsChild extends ChildPanelBase {
 
         const vit = cfg.vitality !== undefined && cfg.maxVitality !== undefined ? describeVitality(cfg) : null;
         this._set(this._lVitality, vit ? vit.text : this.t('ui.general.basics.unlocked'));
-        this._setOptional(this._lVitalityTitle, vit?.statusText ? `精力 · ${vit.statusText}` : '精力');
+        this._setOptional(this._lVitalityTitle, vit ? vit.titleText : '精力');
         this._applyMeter(this._vitalityFill, vit ? vit.ratio : 0, vit ? vit.color : null);
         this._set(this._lSource, appendDeathLegacyHint(mask(cfg.source, this.t('ui.general.basics.source_unlisted')), cfg.status));
     }
