@@ -1,4 +1,5 @@
 // @spec-source → 戰場部署系統.md (doc_spec_0040)、demo_技術架構.md (doc_tech_0015)、戰場適性系統.md (doc_spec_0041)；PROG-2-1429 依建檔紀錄補標出處
+import { TroopCounterAnnouncer } from '../../core/systems/TroopCounterScripts';
 import { calmAdjustedAura, calmReductionOf, furyModifiersOf } from '../../core/systems/WhiteFactorTraits';
 import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER, Weather } from '../../core/config/Constants';
 import { aiSpGainPerKill } from '../../core/systems/AiSpCharge';
@@ -75,6 +76,8 @@ export class BattleCombatResolver {
   /** 命中判定用亂數；測試可換成固定序列（PROG-2-0080） */
   /** 命中與暴擊的擲骰走戰場種子亂數源（Q25），不用 Math.random */
   public hitRandom: () => number = () => services().session.randomSource();
+
+  private readonly counterAnnouncer = new TroopCounterAnnouncer();
 
   constructor(private readonly context: BattleCombatResolverContext) {}
 
@@ -288,6 +291,10 @@ export class BattleCombatResolver {
       this.tryTallyEvadeCounter(defender, attacker, svc);
       return;
     }
+
+    // 剋制戰鬥句（兵種 §G，PROG-2-1772）：命中才算，同一場每組一次
+    const counterLine = this.counterAnnouncer.take(attacker.type, defender.type);
+    if (counterLine) svc.event.emit(EVENT_NAMES.TroopCounterLine, counterLine);
 
     // 盾牆：防禦力加倍
     const effectiveDef = defender.getEffectiveDefense() * (defender.isShieldWallActive ? 2 : 1) * this.getUnitTerrainDefenseMultiplier(defender) * this.getTallyDefenseMod(defender) * (1 - tallyDefensePenetrationOf(attacker))
