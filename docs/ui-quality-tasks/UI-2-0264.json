@@ -1,0 +1,74 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "",
+      "id": "UI-2-0264",
+      "title": "孫尚香吳紅女將立繪、雙弩與頭像重繪",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-04",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-05T07:15:23+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "重繪現有偏寫實且身形辨識不足的孫尚香立繪。對齊趙雲、關羽、張飛名將二次元幻想手繪品質，保留吳紅與深青玉，增加成人S曲線與飽滿胸線，為她設計一對Q版可清楚辨識的鳳紋手弩；更新正式立繪、雙頭像並接入Cocos。",
+      "related": [
+        "UI-2-0252"
+      ],
+      "depends": [],
+      "acceptance": [
+        "孫尚香成人美麗臉孔與大喬、小喬、甄姬、貂蟬明確區隔",
+        "朱砂吳紅為基底，深青玉與暖象牙第二色，避免沿用吳將已用配色比例",
+        "成人S曲線與飽滿胸線以端莊合身騎裝呈現，無幼態身形",
+        "一對鳳紋手弩外形獨特，縮至Q版仍一眼辨認",
+        "服裝輪廓俐落，無多層長衣帶或拖尾",
+        "512x768透明正式立繪與兩種256頭像更新，reviewed裁切通過",
+        "Cocos三項正式資產匯入正常，驗證通過並提交推送"
+      ],
+      "deliverables": [
+        "孫尚香正式立繪",
+        "孫尚香正式頭像與列表裁切頭像",
+        "reviewed裁切索引與palette ledger更新",
+        "UI任務卡、全量驗證與Cocos匯入證據"
+      ],
+      "notes": "2026-11-05 | 狀態: done | 驗證: 214/214頭像檢查成功(趙雲因本機缺原圖跳過既有資源)，Cocos三資產匯入有效且Library雜湊一致，encoding檢查通過 | 變更: 正式覆蓋孫尚香立繪及兩種頭像、更新 reviewed 裁切與配色台帳 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/sun_shang_xiang_portrait.png",
+          "assets/resources/sprites/generals/avatars/sun_shang_xiang_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/sun_shang_xiang_avatar.png"
+        ],
+        "validation_evidence": [
+          "generate-general-avatars.js sun-shang-xiang --verify: 1 success, 0 fail",
+          "generate-general-avatars.js --verify: 214 success, 0 fail; Zhao Yun skipped due missing local source",
+          "Cocos imported 3 assets, valid; Library hashes match active project sources",
+          "check:encoding:touched passed"
+        ],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}
