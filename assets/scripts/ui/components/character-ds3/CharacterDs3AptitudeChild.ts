@@ -6,10 +6,10 @@
 // CharacterDs3AptitudeChild — UCUF ChildPanel for tab "Aptitude".
 // Wire this into the CompositePanel's _switchToTab routing table.
 //
-// 插卡按鈕（TRP-18）：兵頁的虎符槽裝備段。循環選目標武將，確定後呼叫 GameSession.equipTally，
-// 成功後由 TallySpiritInserted 事件播放英靈插卡演出。按鈕建在 hostNode 下，不改 layout JSON。
+// 虎符槽（UI-2-0170）：顯示目前武將的虎符，更換／卸下／查看詳情都在卡片內；
+// 裝上後由 TallySpiritInserted 事件播放英靈插卡演出（TRP-18），文字顯示在卡片的提示列。
 
-import { Button, Color, Label, Node, UITransform } from 'cc';
+import { Button, Color, instantiate, Label, Layout, Node, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { RoundedRectBackground } from '../RoundedRectBackground';
 import { ds3Label, ds3Node, ds3Reflow, ds3SetActive } from './Ds3NodeLookup';
@@ -18,7 +18,13 @@ import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
 import { EVENT_NAMES } from '../../../core/config/Constants';
 import { buildSpiritInsertPlan, type SpiritInsertPlan, type SpiritInsertStageId } from '../../../core/systems/SpiritInsertSequence';
-import { firstUnequippedTallyUid, nextInsertTargetIndex } from '../../../core/systems/TallyInsertTarget';
+import { nextInsertTargetIndex } from '../../../core/systems/TallyInsertTarget';
+import {
+    buildTallySlotCardView, buildTallySlotDetailText, resolveTallyName, tallyEquipLine, tallyHintHeight, tallyLoyaltyDropLine,
+    tallyPickHint, tallySlotButtons, tallyUnequipLine, tallyUnequipWarn, TALLY_SLOT_EMPTY_NAME, TALLY_SLOT_MAX_STARS,
+    TALLY_SLOT_NOT_IN_ROSTER, TALLY_SLOT_NO_CANDIDATE, TALLY_SLOT_SEASON_LIMIT, type TallySlotMode,
+} from '../../../core/systems/TallySlotView';
+import type { TigerTallyCard } from '../../../core/models/TigerTallyCard';
 import { buildAptitudeView, APTITUDE_EMPTY_TEXT, type AptitudeView } from '../../../core/systems/AptitudeView';
 import { TALLY_CONFISCATE_LOYALTY_DROP } from '../../../core/systems/TigerTallyLoyalty';
 
@@ -44,6 +50,16 @@ const DS3_APTITUDE_WARN_CODES = ['SIEGE', 'WATER'];
 const DS3_GRADE_S_TEXT: [number, number, number] = [42, 30, 5];
 const DS3_GRADE_FILL_ALPHA = 38;
 const DS3_GRADE_NEUTRAL: [number, number, number] = [120, 112, 90];
+
+/** 虎符卡版面：片段的固定高度與間距（設計稿 AptitudeTally_card） */
+const TALLY_INFO_HEIGHT = 99;
+const TALLY_INFO_EMPTY_HEIGHT = 56;
+const TALLY_BODY_EMPTY_HEIGHT = 26;
+const TALLY_CARD_CHROME_HEIGHT = 77;
+const TALLY_CARD_SPACING = 12;
+const TALLY_STAR_ON: [number, number, number] = [255, 193, 7];
+const TALLY_STAR_OFF: [number, number, number] = [58, 54, 48];
+const TALLY_NAME_CHAR_WIDTH = 19;
 
 const DS3_GRADE_COLOR: Readonly<Record<string, [number, number, number]>> = {
     S: [212, 175, 55],
@@ -78,23 +94,22 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
     private static readonly ROOT_PATH = 'ContentSlot';
 
     private _view: AptitudeView = buildAptitudeView(undefined);
-    private _insertTargetIndex = 0;
-    private _targetLabel: Label | null = null;
-    private _sequenceNode: Node | null = null;
-    private _sequenceLabel: Label | null = null;
-    private _confiscateLabel: Label | null = null;
-    /** 沒收需要二段確認：第一次點擊只顯示提示，第二次才真的沒收（HUM-05） */
-    private _confiscateArmed = false;
+    private _generalId: string | null = null;
+    private _generalName = '';
+    private _mode: TallySlotMode = 'view';
+    private _candidates: string[] = [];
+    private _candidateIndex = 0;
+    private _hintNode: Node | null = null;
+    private _hint = '';
     private _offSpiritInserted: (() => void) | null = null;
     private _timers: ReturnType<typeof setTimeout>[] = [];
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3AptitudeChild] onMount', { rootPath: CharacterDs3AptitudeChild.ROOT_PATH });
-        this._buildInsertControls();
+        this._bindTallyButtons();
         this._offSpiritInserted = services().event.on(EVENT_NAMES.TallySpiritInserted, (data?: unknown) => {
             this._onSpiritInserted(data);
         });
-        this._refreshTargetLabel();
     }
 
     /** 最後一次 onDataUpdate 整理好的兵頁資料（PROG-2-1449） */
@@ -113,10 +128,11 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
         for (const code of DS3_APTITUDE_WARN_CODES) {
             ds3SetActive(this.binder, this.hostNode, `Aptitude_${code}_warn`, grades[`Aptitude_${code}_grade`] === 'D');
         }
-        // 虎符卡目前只有設計稿範例，資料接好前不顯示
-        ds3SetActive(this.binder, this.hostNode, 'AptitudeTally_title', false);
-        ds3SetActive(this.binder, this.hostNode, 'AptitudeTally_card', false);
+        const general = data as { id?: string; name?: string };
+        this._generalId = general.id ?? null;
+        this._generalName = general.name ?? general.id ?? '';
         ds3Reflow(this.hostNode);
+        this._setMode('view', '');
     }
 
     /** 評等徽章：範例把顏色寫死在各張卡，依實際評等重新著色（S 為實心金底） */
@@ -166,126 +182,280 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
         this._offSpiritInserted = null;
         for (const timer of this._timers) clearTimeout(timer);
         this._timers = [];
-        this._sequenceNode?.destroy();
-        this._sequenceNode = null;
-        this._sequenceLabel = null;
     }
 
-    /** 建立「選武將」「插上」兩個按鈕與演出文字（執行期建立，不改 layout） */
-    private _buildInsertControls(): void {
-        const cycle = this._makeLabelNode('BtnInsertCycle', 220, 40, this.t('ui.battle.tally.pick_target'));
-        cycle.on(Button.EventType.CLICK, () => this._onCycleTarget());
-        this._targetLabel = cycle.getComponent(Label);
-
-        const confirm = this._makeLabelNode('BtnInsertConfirm', 220, 40, this.t('ui.battle.tally.insert'));
-        confirm.on(Button.EventType.CLICK, () => { void this._onConfirmInsert(); });
-
-        const confiscate = this._makeLabelNode('BtnConfiscate', 220, 40, this.t('ui.general.tally.confiscate'));
-        confiscate.on(Button.EventType.CLICK, () => { void this._onConfiscateClick(); });
-        this._confiscateLabel = confiscate.getComponent(Label);
-
-        this._sequenceNode = this._makeLabelNode('InsertSequence', 320, 48, '');
-        this._sequenceNode.active = false;
-        this._sequenceLabel = this._sequenceNode.getComponent(Label);
-
-        this.hostNode.addChild(cycle);
-        this.hostNode.addChild(confirm);
-        this.hostNode.addChild(confiscate);
-        this.hostNode.addChild(this._sequenceNode);
-    }
-
-    /**
-     * 沒收（HUM-05）：第一次點擊彈出提示「沒收此虎符將導致 [武將] 忠誠度下降 30 點」，
-     * 第二次點擊才呼叫 GameSession.confiscateTally。目標武將沒有虎符時不做事。
-     */
-    private async _onConfiscateClick(): Promise<void> {
-        const session = services().session;
-        const target = session.roster[this._insertTargetIndex];
-        if (!target || session.tallyOf(target.id) === null) {
-            this._disarmConfiscate();
-            return;
-        }
-        if (!this._confiscateArmed) {
-            this._armConfiscate(target.name ?? target.id);
-            return;
-        }
-        this._disarmConfiscate();
-        const result = await session.confiscateTally(target.id);
-        if (!result) {
-            UCUFLogger.warn(LogCategory.LIFECYCLE, '[CharacterDs3AptitudeChild] 沒收失敗', { generalId: target.id });
+    /** 片段的按鈕沒有掛 Button，執行期補上（與裝備格相同做法） */
+    private _bindTallyButtons(): void {
+        const handlers: ReadonlyArray<readonly [string, () => void]> = [
+            ['AptitudeTally_btn_primary', () => this._onPrimary()],
+            ['AptitudeTally_btn_secondary', () => { void this._onSecondary(); }],
+            ['AptitudeTally_btn_detail', () => this._onDetail()],
+        ];
+        for (const [name, handler] of handlers) {
+            const node = ds3Node(this.binder, this.hostNode, name);
+            if (!node) continue;
+            if (!node.getComponent(Button)) node.addComponent(Button);
+            node.on(Button.EventType.CLICK, handler, this);
         }
     }
 
-    private _armConfiscate(targetName: string): void {
-        this._confiscateArmed = true;
-        if (this._confiscateLabel) this._confiscateLabel.string = this.t('ui.general.tally.confiscate_confirm');
-        if (this._sequenceNode && this._sequenceLabel) {
-            this._sequenceLabel.string = this.t('ui.general.tally.confiscate_warn', targetName, String(TALLY_CONFISCATE_LOYALTY_DROP));
-            this._sequenceNode.active = true;
-        }
+    private _setMode(mode: TallySlotMode, hint: string): void {
+        this._mode = mode;
+        this._hint = hint;
+        this._renderTallySlot();
     }
 
-    private _disarmConfiscate(): void {
-        if (!this._confiscateArmed) return;
-        this._confiscateArmed = false;
-        if (this._confiscateLabel) this._confiscateLabel.string = this.t('ui.general.tally.confiscate');
-        if (this._sequenceNode) this._sequenceNode.active = false;
-    }
-
-    private _makeLabelNode(name: string, width: number, height: number, text: string): Node {
-        const node = new Node(name);
-        node.addComponent(UITransform).setContentSize(width, height);
-        node.addComponent(Button);
-        const label = node.addComponent(Label);
-        label.string = text;
-        return node;
-    }
-
-    private _onCycleTarget(): void {
+    /** 人物頁的資料可能來自武將表（id 是模板 id），虎符要記在名冊的武將身上；不在名冊回傳 null */
+    private _ownedGeneralId(): string | null {
         const roster = services().session.roster;
-        this._insertTargetIndex = nextInsertTargetIndex(this._insertTargetIndex, roster.length);
-        this._disarmConfiscate();
-        this._refreshTargetLabel();
+        const owned = roster.find((g) => g.id === this._generalId) ?? roster.find((g) => g.templateId === this._generalId);
+        return owned?.id ?? null;
     }
 
-    private async _onConfirmInsert(): Promise<void> {
+    private _currentCard(): TigerTallyCard | null {
+        const generalId = this._ownedGeneralId();
+        if (!generalId) return null;
         const session = services().session;
-        const target = session.roster[this._insertTargetIndex];
-        if (!target) return;
-        const cardUid = firstUnequippedTallyUid(session.tallyCards, session.tallyHoldings);
-        if (!cardUid) {
-            UCUFLogger.warn(LogCategory.LIFECYCLE, '[CharacterDs3AptitudeChild] 沒有可插的虎符');
+        const uid = session.tallyOf(generalId);
+        return uid ? session.tallyCards[uid] ?? null : null;
+    }
+
+    private _tallyNameOf(card: TigerTallyCard): string {
+        const roster = services().session.roster;
+        return resolveTallyName(card, (id) => roster.find((g) => g.id === id)?.name);
+    }
+
+    private _renderTallySlot(): void {
+        const cardNode = ds3Node(this.binder, this.hostNode, 'AptitudeTally_card');
+        if (!cardNode) return;
+        const card = this._currentCard();
+        const candidate = this._mode === 'picking' ? services().session.tallyCards[this._candidates[this._candidateIndex]] : null;
+        const shown = candidate ?? card;
+        this._applyTallyCard(shown);
+        const buttons = tallySlotButtons(this._mode, card !== null, this._candidates.length);
+        this._applyTallyButton('AptitudeTally_btn_primary', buttons.primary);
+        this._applyTallyButton('AptitudeTally_btn_secondary', buttons.secondary);
+        this._applyTallyButton('AptitudeTally_btn_detail', buttons.detail);
+        ds3Node(this.binder, this.hostNode, 'AptitudeTally_actions')?.getComponent(Layout)?.updateLayout();
+        this._applyTallyLayout(cardNode, shown !== null);
+    }
+
+    private _applyTallyCard(card: TigerTallyCard | null): void {
+        const view = card ? buildTallySlotCardView(card, this._tallyNameOf(card)) : null;
+        for (const name of ['AptitudeTally_quality', 'AptitudeTally_stars', 'AptitudeTally_grid', 'AptitudeTally_score']) {
+            ds3SetActive(this.binder, this.hostNode, name, view !== null);
+        }
+        // 羈絆目前沒有資料來源，整列不顯示
+        ds3SetActive(this.binder, this.hostNode, 'AptitudeTally_bond_row', false);
+        const nameText = view?.name ?? TALLY_SLOT_EMPTY_NAME;
+        this._setTallyText('AptitudeTally_name', nameText);
+        const nameTransform = ds3Node(this.binder, this.hostNode, 'AptitudeTally_name')?.getComponent(UITransform);
+        nameTransform?.setContentSize(nameText.length * TALLY_NAME_CHAR_WIDTH, nameTransform.height);
+        if (!view) return;
+        this._setTallyText('AptitudeTally_quality', view.quality);
+        this._setTallyText('AptitudeTally_troop', view.troopName);
+        this._setTallyText('AptitudeTally_grain', view.grainText);
+        this._setTallyText('AptitudeTally_force', view.forceText);
+        this._setTallyText('AptitudeTally_score', view.scoreText);
+        const stars = ds3Node(this.binder, this.hostNode, 'AptitudeTally_stars');
+        stars?.children.slice(0, TALLY_SLOT_MAX_STARS).forEach((star, index) => {
+            const label = star.getComponent(Label);
+            const [r, g, b] = index < view.stars ? TALLY_STAR_ON : TALLY_STAR_OFF;
+            if (label) label.color = new Color(r, g, b, 255);
+        });
+    }
+
+    private _setTallyText(name: string, text: string): void {
+        const label = ds3Label(this.binder, this.hostNode, name);
+        if (label) label.string = text;
+    }
+
+    private _applyTallyButton(name: string, text: string | null): void {
+        ds3SetActive(this.binder, this.hostNode, name, text !== null);
+        if (text !== null) this._setTallyText(name, text);
+    }
+
+    /** 卡片高度隨內容與提示列變動；子節點全顯示時 ds3Reflow 不會重算，這裡直接設定 */
+    private _applyTallyLayout(cardNode: Node, hasTally: boolean): void {
+        const infoHeight = hasTally ? TALLY_INFO_HEIGHT : TALLY_INFO_EMPTY_HEIGHT;
+        const info = ds3Node(this.binder, this.hostNode, 'AptitudeTally_info');
+        const infoTransform = info?.getComponent(UITransform);
+        infoTransform?.setContentSize(infoTransform.width, infoHeight);
+        this._alignTallyInfo(info, infoHeight, hasTally);
+        const hintHeight = this._applyHint(cardNode);
+        const hintSpace = hintHeight > 0 ? hintHeight + TALLY_CARD_SPACING : 0;
+        const transform = cardNode.getComponent(UITransform);
+        transform?.setContentSize(transform.width, TALLY_CARD_CHROME_HEIGHT + infoHeight + hintSpace);
+        cardNode.getComponent(Layout)?.updateLayout();
+        cardNode.parent?.getComponent(Layout)?.updateLayout();
+    }
+
+    /** 水平排版不調整子節點的 y：高度變動後要自己把圖示與文字區對齊（節點錨點在中心） */
+    private _alignTallyInfo(info: Node | null, infoHeight: number, hasTally: boolean): void {
+        const body = ds3Node(this.binder, this.hostNode, 'AptitudeTally_body');
+        const bodyTransform = body?.getComponent(UITransform);
+        if (!info || !body || !bodyTransform) return;
+        const bodyHeight = hasTally ? TALLY_INFO_HEIGHT : TALLY_BODY_EMPTY_HEIGHT;
+        bodyTransform.setContentSize(bodyTransform.width, bodyHeight);
+        const top = infoHeight / 2;
+        const icon = info.children.find((child) => child !== body);
+        const iconHeight = icon?.getComponent(UITransform)?.height ?? 0;
+        if (icon) icon.setPosition(icon.position.x, top - iconHeight / 2);
+        // 空狀態只有一行字，對齊圖示中線；有虎符時從頂端排
+        body.setPosition(body.position.x, hasTally ? top - bodyHeight / 2 : top - iconHeight / 2);
+        body.getComponent(Layout)?.updateLayout();
+        info.getComponent(Layout)?.updateLayout();
+    }
+
+    /** 提示列沿用虎符分的字型與顏色，執行期加在卡片最下面 */
+    private _applyHint(cardNode: Node): number {
+        if (!this._hintNode) {
+            const source = ds3Node(this.binder, this.hostNode, 'AptitudeTally_score');
+            if (!source) return 0;
+            this._hintNode = instantiate(source);
+            this._hintNode.name = 'AptitudeTally_hint';
+            cardNode.addChild(this._hintNode);
+            const label = this._hintNode.getComponent(Label);
+            if (label) {
+                label.cacheMode = Label.CacheMode.NONE;
+                (label as unknown as { enableWrapText: boolean }).enableWrapText = true;
+                label.overflow = Label.Overflow.CLAMP;
+                label.verticalAlign = Label.VerticalAlign.TOP;
+            }
+        }
+        const height = tallyHintHeight(this._hint);
+        this._hintNode.active = height > 0;
+        const padding = cardNode.getComponent(Layout)?.paddingLeft ?? 0;
+        this._hintNode.getComponent(UITransform)?.setContentSize((cardNode.getComponent(UITransform)?.width ?? 0) - padding * 2, height);
+        this._showHintText(this._hint);
+        return height;
+    }
+
+    private _showHintText(text: string): void {
+        const label = this._hintNode?.getComponent(Label);
+        if (label) label.string = text;
+    }
+
+    /** 第一顆：瀏覽時進入挑選；挑選時換下一張 */
+    private _onPrimary(): void {
+        if (this._mode === 'picking') {
+            this._candidateIndex = nextInsertTargetIndex(this._candidateIndex, this._candidates.length);
+            this._setMode('picking', this._pickHint());
             return;
         }
-        const result = await session.equipTally(cardUid, target.id);
-        if (!result?.ok) {
-            UCUFLogger.warn(LogCategory.LIFECYCLE, '[CharacterDs3AptitudeChild] 插卡失敗', { cardUid, generalId: target.id });
+        const session = services().session;
+        if (!this._ownedGeneralId()) {
+            this._setMode('view', TALLY_SLOT_NOT_IN_ROSTER);
+            return;
         }
+        this._candidates = Object.keys(session.tallyCards).sort().filter((uid) => !session.tallyHoldings[uid]);
+        this._candidateIndex = 0;
+        if (this._candidates.length === 0) {
+            this._setMode('view', TALLY_SLOT_NO_CANDIDATE);
+            return;
+        }
+        this._setMode('picking', this._pickHint());
     }
 
-    private _refreshTargetLabel(): void {
-        const target = services().session.roster[this._insertTargetIndex];
-        if (this._targetLabel) this._targetLabel.string = target ? this.t('ui.battle.tally.target', target.name ?? target.id) : this.t('ui.battle.tally.pick_target');
+    private _pickHint(): string {
+        const card = services().session.tallyCards[this._candidates[this._candidateIndex]];
+        return tallyPickHint(card ? this._tallyNameOf(card) : '', this._candidateIndex, this._candidates.length);
+    }
+
+    /** 第二顆：瀏覽時要求確認卸下；其他模式執行該模式的操作 */
+    private async _onSecondary(): Promise<void> {
+        if (this._mode === 'picking') await this._confirmPick();
+        else if (this._mode === 'confirm-unequip') await this._confirmUnequip();
+        else if (this._mode === 'confirm-confiscate') await this._confirmConfiscate();
+        else this._setMode('confirm-unequip', tallyUnequipWarn(this._generalName));
+    }
+
+    /** 第三顆：瀏覽時顯示詳情；其他模式取消 */
+    private _onDetail(): void {
+        if (this._mode !== 'view') {
+            this._setMode('view', '');
+            return;
+        }
+        const card = this._currentCard();
+        if (card) this._setMode('view', buildTallySlotDetailText(card));
+    }
+
+    private async _confirmPick(): Promise<void> {
+        const session = services().session;
+        const uid = this._candidates[this._candidateIndex];
+        const next = session.tallyCards[uid];
+        const generalId = this._ownedGeneralId();
+        if (!next || !generalId) return;
+        const current = this._currentCard();
+        // 更換算一次變更，只扣舊虎符的拔除懲罰（暫定，規格沒寫更換怎麼算）；從空槽裝上才有加成
+        const loyalty = current
+            ? await session.changeTallyLoyalty(generalId, 'unequip', current.quality)
+            : await session.changeTallyLoyalty(generalId, 'equip', next.quality);
+        if (!loyalty?.ok) {
+            this._setMode('view', TALLY_SLOT_SEASON_LIMIT);
+            return;
+        }
+        if (current) await session.unequipTally(current.uid);
+        const result = await session.equipTally(uid, generalId);
+        if (!result?.ok) {
+            UCUFLogger.warn(LogCategory.LIFECYCLE, '[CharacterDs3AptitudeChild] 插卡失敗', { uid, generalId });
+            this._setMode('view', '');
+            return;
+        }
+        const view = buildTallySlotCardView(next, this._tallyNameOf(next));
+        this._setMode('view', tallyEquipLine(this._generalName, view.name, view.troopName));
+    }
+
+    private async _confirmUnequip(): Promise<void> {
+        const session = services().session;
+        const card = this._currentCard();
+        const generalId = this._ownedGeneralId();
+        if (!card || !generalId) {
+            this._setMode('view', '');
+            return;
+        }
+        const loyalty = await session.changeTallyLoyalty(generalId, 'unequip', card.quality);
+        if (!loyalty) {
+            this._setMode('view', TALLY_SLOT_NOT_IN_ROSTER);
+            return;
+        }
+        if (!loyalty.ok) {
+            // 本季已變更過：只剩強行沒收（HUM-05），懲罰較重，要再確認一次
+            const warn = this.t('ui.general.tally.confiscate_warn', this._generalName, String(TALLY_CONFISCATE_LOYALTY_DROP));
+            this._setMode('confirm-confiscate', `${TALLY_SLOT_SEASON_LIMIT}\n${warn}`);
+            return;
+        }
+        await session.unequipTally(card.uid);
+        const lines = [tallyUnequipLine(this._generalName, this._tallyNameOf(card))];
+        if (loyalty.delta < 0) lines.push(tallyLoyaltyDropLine(this._generalName));
+        this._setMode('view', lines.join('\n'));
+    }
+
+    private async _confirmConfiscate(): Promise<void> {
+        const card = this._currentCard();
+        const generalId = this._ownedGeneralId();
+        const result = generalId ? await services().session.confiscateTally(generalId) : null;
+        if (!result || !card) {
+            UCUFLogger.warn(LogCategory.LIFECYCLE, '[CharacterDs3AptitudeChild] 沒收失敗', { generalId });
+            this._setMode('view', '');
+            return;
+        }
+        this._setMode('view', [tallyUnequipLine(this._generalName, this._tallyNameOf(card)), tallyLoyaltyDropLine(this._generalName)].join('\n'));
     }
 
     private _onSpiritInserted(data: unknown): void {
         const sigilPatternId = (data as { sigilPatternId?: string } | undefined)?.sigilPatternId ?? '';
         const plan = buildSpiritInsertPlan(sigilPatternId);
-        if (!plan) return;
-        this._playSequence(plan);
+        if (plan) this._playSequence(plan);
     }
 
-    /** 依時間軸逐段換文字；播完隱藏。不用 cc 的排程，直接用 setTimeout，方便無頭測試替換。 */
+    /** 依時間軸逐段把文字換到提示列，播完還原成結果句。不用 cc 的排程，方便無頭測試替換。 */
     private _playSequence(plan: SpiritInsertPlan): void {
-        const node = this._sequenceNode;
-        const label = this._sequenceLabel;
-        if (!node || !label) return;
         for (const timer of this._timers) clearTimeout(timer);
         this._timers = [];
-        node.active = true;
         for (const stage of plan.stages) {
-            this._timers.push(setTimeout(() => { label.string = this.t(SPIRIT_INSERT_STAGE_KEY[stage.id]); }, stage.startMs));
+            this._timers.push(setTimeout(() => this._showHintText(this.t(SPIRIT_INSERT_STAGE_KEY[stage.id])), stage.startMs));
         }
-        this._timers.push(setTimeout(() => { node.active = false; }, plan.totalMs));
+        this._timers.push(setTimeout(() => this._showHintText(this._hint), plan.totalMs));
     }
 }

@@ -838,6 +838,81 @@
       "whenText": "TALLY SLOT"
     },
     {
+      "name": "AptitudeTally_info",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_body",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(1) > div:nth-child(2)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_name",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_quality",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_stars",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_grid",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_troop",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_grain",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > span:nth-child(2)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_force",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > span:nth-child(2)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_bond_row",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(4)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_score",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_actions",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(2)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_btn_primary",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(2) > button:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_btn_secondary",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(2) > button:nth-child(2)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_btn_detail",
+      "selector": "#right-content > div > div:nth-child(9) > div:nth-child(2) > button:nth-child(3)",
+      "whenText": "TALLY SLOT"
+    },
+    {
       "name": "EquipCard_WEAPON",
       "selector": "#right-content > div > div:nth-child(2) > div:nth-child(1)",
       "whenText": "GEAR RATING"
