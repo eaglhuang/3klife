@@ -13,8 +13,8 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 192
-- done: 167
+- Total: 193
+- done: 168
 - in-progress: 8
 - open: 17
 
@@ -214,3 +214,4 @@ manifest: ../ui-quality-todo.json
 | UI-2-0259 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0259](./tasks/UI-2-0259.md) |
 | UI-2-0260 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0260](./tasks/UI-2-0260.md) |
 | UI-2-0261 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0261](./tasks/UI-2-0261.md) |
+| UI-2-0262 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-2-0262](./tasks/UI-2-0262.md) |

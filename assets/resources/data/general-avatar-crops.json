@@ -382,17 +382,11 @@
       }
     },
     "xiao-qiao": {
-      "x": 204,
-      "y": 205,
-      "w": 158,
-      "h": 158,
-      "source": "reviewed",
-      "face": {
-        "top": 240,
-        "chin": 300,
-        "eyeY": 268,
-        "cx": 283
-      }
+      "x": 174,
+      "y": 20,
+      "w": 180,
+      "h": 180,
+      "source": "reviewed"
     },
     "wei-yan": {
       "x": 200,
