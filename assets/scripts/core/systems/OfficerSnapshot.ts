@@ -98,3 +98,14 @@ export function officerUnlocksOf(snapshot: OfficerSnapshot): OfficerUnlocks {
         antiHegemonySummit: ANTI_HEGEMONY_BY_TIER[tier],
     };
 }
+
+/** 官職系統 §G 天下大亂後保留（PROG-2-1779） */
+export const OFFICER_ERA_KEPT_LINE = '版圖雖變，舊日官印與號令仍歸於你。';
+
+/** 官職系統 §G 晉升與解鎖世界沙盤（PROG-2-1779）：一次晉升多階也各只說一次 */
+export function officerPromotionScriptLines(promotedTiers: readonly number[]): string[] {
+    if (promotedTiers.length === 0) return [];
+    const lines = ['朝議已定，今授你新官印，職權更重。'];
+    if (promotedTiers.some((tier) => SANDTABLE_BY_TIER[tier])) lines.push('官職既進，沙盤又展開更遠方的疆界。');
+    return lines;
+}

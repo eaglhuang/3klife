@@ -92,10 +92,12 @@ import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 const WAREHOUSE_EXPAND_GOLD_COST = 5000;
 import type { SeasonAdvancedPayload } from '../../core/managers/GameSession';
 import { bloodlineBirthLines } from '../../core/systems/BloodlineBirthLines';
+import type { DiscoveryGain } from '../../core/systems/DiscoveryProgress';
+import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress';
 import { rebirthVoiceLines } from '../../core/systems/Rebirth';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
-import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
+import { hallPlayerOf, officerPromotionScriptLines, OFFICER_ERA_KEPT_LINE } from '../../core/systems/OfficerSnapshot';
 import { loadLobbyHub } from '../../core/systems/HallMissionBoardPresenter';
 import { officerDisplayOf } from '../../core/systems/OfficerDisplay';
 import { LOBBY_CATEGORIES, LOBBY_SUB_SLOTS, actionAt, buildLobbyCityHubView, categoryButtonId, toggleCategory, type LobbyActionId, type LobbyCategoryId } from '../core/LobbyCityHubController';
@@ -683,7 +685,7 @@ export class LobbyScene extends Component {
                 // 晉升一次性獎勵（PROG-2-1197）：同一階只會發一次晉升事件
                 const gold = officerPromotionRewardTotal(payload.tiers);
                 if (gold > 0) this._localGachaService.grantCurrency('gold', gold);
-                for (const message of officerPromotionNoticeOf(payload.tiers)) {
+                for (const message of [...officerPromotionNoticeOf(payload.tiers), ...officerPromotionScriptLines(payload.tiers)]) {
                     services().event.emit('SHOW_TOAST', { message, duration: 2 });
                 }
             }),
@@ -1026,6 +1028,13 @@ export class LobbyScene extends Component {
             // G-1 天下大亂文案（doc_spec_0020，PROG-2-1708）
             event.on(GAME_SESSION_EVENTS.EraReset, () => {
                 services().event.emit('SHOW_TOAST', { message: ERA_SHIFT_TEXT, duration: 4 });
+                services().event.emit('SHOW_TOAST', { message: OFFICER_ERA_KEPT_LINE, duration: 3 });
+            }),
+            // 因子階段解鎖（因子解鎖系統 §H，PROG-2-1779）；戰場的升級由 BattleUIBridge 寫進結算
+            event.on(GAME_SESSION_EVENTS.DiscoveryLevelChanged, (payload?: unknown) => {
+                for (const message of discoveryPhaseUnlockLines(payload as DiscoveryGain)) {
+                    services().event.emit('SHOW_TOAST', { message, duration: 3 });
+                }
             }),
             // G-1 AI 稱霸提示（doc_spec_0020，PROG-2-1710）
             event.on(GAME_SESSION_EVENTS.RivalHegemonRose, (payload?: unknown) => {

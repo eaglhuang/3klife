@@ -85,3 +85,19 @@ export function battleExpSource(result: string): DiscoveryExpSource | null {
         default: return null;
     }
 }
+
+/** 因子解鎖系統 §H UI_GENE_PHASE2、UI_GENE_PHASE3；探索等級是玩家層級，所以不用 §G 帶武將名的句子（PROG-2-1779） */
+const PHASE_UNLOCK_LINES: Readonly<Record<number, string>> = {
+    2: '新因子類型已解鎖：⚪天賦因子 + 🔴體魄因子',
+    3: '終極因子已解鎖：🟣天命因子',
+};
+
+/** 這次升級跨過的階段提示，由低到高；一次跨兩階時兩句都有 */
+export function discoveryPhaseUnlockLines(gain: Readonly<Pick<DiscoveryGain, 'phaseBefore' | 'phaseAfter'>>): string[] {
+    const lines: string[] = [];
+    for (let phase = gain.phaseBefore + 1; phase <= gain.phaseAfter; phase++) {
+        const line = PHASE_UNLOCK_LINES[phase];
+        if (line) lines.push(line);
+    }
+    return lines;
+}
