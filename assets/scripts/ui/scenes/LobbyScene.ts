@@ -85,7 +85,7 @@ import { GeneralJournalController } from '../core/GeneralJournalController';
 import { BattleReviewController } from '../core/BattleReviewController';
 import { TournamentPanelController, tournamentSeasonCardLines } from '../core/TournamentPanelController';
 import { WishAltarController, WISH_ALTAR_SLOTS } from '../core/WishAltarController';
-import { dispatchClickMessage } from '../../core/systems/DispatchCatalog';
+import { dispatchClickMessage, dispatchSettleToast } from '../../core/systems/DispatchCatalog';
 import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 
 /** 倉庫擴容費用：規格（doc_spec_0017）只寫「付費或任務解鎖」，暫定每次 5000 金幣 */
@@ -1631,7 +1631,9 @@ export class LobbyScene extends Component {
         const session = services().session;
         const done = session.settleDispatchJobs(Date.now(), (amount) => { this._localGachaService.grantCurrency('gold', amount); });
         if (done.length > 0) {
-            services().event.emit('SHOW_TOAST', { message: `${done.length} 項派遣完成，獎勵已入帳。`, duration: 2 });
+            const roster = session.roster;
+            const message = dispatchSettleToast(done, (id) => roster.find((g) => g.id === id)?.name ?? id);
+            services().event.emit('SHOW_TOAST', { message, duration: 2 });
             void session.save().catch(() => undefined);
         }
         host.node.active = true;
