@@ -22,7 +22,9 @@ import type { TigerTallyCard } from '../../core/models/TigerTallyCard';
 import { tallyBossMatch, tallyBossMatchText } from '../../core/systems/TallyBossTags';
 import { monthlyScenarioOf, MONTHLY_REQUIRED_APTITUDE_RANKS, type MonthlyScenario } from '../../core/systems/MonthlyScenarioCup';
 import { STAT_LABELS } from './NurtureFlowController';
-import { tournamentOpeningLine, tournamentPrepHintLine, tournamentSeasonEndLine, tournamentSeriesHeadline } from '../../core/systems/TournamentScripts';
+import {
+    tournamentBossIntelLine, tournamentMatchStartLine, tournamentOpeningLine, tournamentPrepHintLine, tournamentSeasonEndLine, tournamentSeriesHeadline,
+} from '../../core/systems/TournamentScripts';
 
 /** 月度場景賽規則用到的兵種碼（generals troopAptitude）與戰法標籤中文；暫定，待企劃定版（PROG-2-1717） */
 export const MONTHLY_TROOP_LABEL: Record<string, string> = {
@@ -132,7 +134,9 @@ export class TournamentPanelController {
         const hint = status.phase === 'PREPARATION' ? `\n${tournamentPrepHintLine(status.daysLeft)}` : '';
         // §G 開幕句（PROG-2-1747）
         const opening = tournamentOpeningLine(status.seasonIndex, status.venue.cupName, TERRAIN_LABEL[status.venue.terrain], WEATHER_LABEL[status.venue.weather]);
-        this._message = `${opening}\n已報名，陣容鎖定為目前戰力前三。${hint}`;
+        // §G BOSS 情報句（PROG-2-1748）
+        const intel = tournamentBossIntelLine(status.venue.boss.name, status.venue.boss.weaknessTags.map((t) => TOURNAMENT_BOSS_TAG_LABEL[t]));
+        this._message = `${opening}\n${intel}\n已報名，陣容鎖定為目前戰力前三。${hint}`;
         return true;
     }
 
@@ -142,16 +146,19 @@ export class TournamentPanelController {
             this._message = TOURNAMENT_REASON_LABEL[played.reason ?? 'no-team'];
             return played.ok;
         }
-        // §G 勝利／決賽開頭句（PROG-2-1746）：主將取報名陣容第一位
+        // §G 對戰開始句（PROG-2-1748，決賽改用巔峰對決句）＋勝利／決賽開頭句（PROG-2-1746）：主將取報名陣容第一位
         const status = this._deps.status(this._deps.now());
         const leadId = status.team?.generals[0];
-        const headline = leadId ? tournamentSeriesHeadline({
-            general: this._deps.generalName(leadId) ?? leadId,
-            cupName: status.venue.cupName,
-            win: played.result.win,
-            isFinal: played.result.round === TOURNAMENT_FINAL_ROUND,
-        }) : '';
-        this._message = headline ? `${headline}\n${seriesText(played.result)}` : seriesText(played.result);
+        const lines: string[] = [];
+        if (leadId) {
+            const general = this._deps.generalName(leadId) ?? leadId;
+            const isFinal = played.result.round === TOURNAMENT_FINAL_ROUND;
+            if (!isFinal) lines.push(tournamentMatchStartLine(general));
+            const headline = tournamentSeriesHeadline({ general, cupName: status.venue.cupName, win: played.result.win, isFinal });
+            if (headline) lines.push(headline);
+        }
+        lines.push(seriesText(played.result));
+        this._message = lines.join('\n');
         return true;
     }
 
