@@ -101,7 +101,7 @@ import {
     DISPATCH_COMPLETE_KEY, dispatchCompleteArgs, dispatchCompleteLine, getDispatchScore, type DispatchGeneral, type DispatchStatKey,
 } from '../systems/DispatchQuality';
 import {
-    appendOfflineBattleSnapshot, nextOfflineBattleSnapshotId, normalizeOfflineBattleSnapshots, OFFLINE_BATTLE_JOURNAL, CAMPAIGN_BATTLE_JOURNAL, type OfflineBattleInput, type OfflineBattleSnapshot,
+    appendOfflineBattleSnapshot, nextOfflineBattleSnapshotId, normalizeOfflineBattleSnapshots, offlineRaidJournal, CAMPAIGN_BATTLE_JOURNAL, type OfflineBattleInput, type OfflineBattleJournal, type OfflineBattleSnapshot,
 } from '../systems/OfflineBattleSnapshot';
 import {
     claimTournamentRewards, createTournamentState, normalizeTournamentState, pendingTournamentRewards, playTournamentSeries, registerTournamentTeam,
@@ -1950,7 +1950,7 @@ export class GameSession {
             win: battle.win,
             playerStrength: battle.playerStrength,
             enemyStrength: battle.enemyStrength,
-        }, battle.win ? OFFLINE_BATTLE_JOURNAL.win : OFFLINE_BATTLE_JOURNAL.lose, []);
+        }, offlineRaidJournal(battle.win, (squad[0] as { name?: string } | undefined)?.name), []);
     }
 
     /** 外交出征結算：留 AUTO_RESOLVE 快照並寫 BATTLE 日誌（§F-4，PROG-2-1189）；不自動存檔，由出征後的 setRivals 帶走 */
@@ -1973,7 +1973,7 @@ export class GameSession {
      * 自動解決的戰果：快照接到同一條鏈尾，再寫一筆 BATTLE 日誌以 snapshotRef 指向快照（§F-4）。
      * 季度敵襲與戰場「自動」鈕（PROG-2-1185）共用；不自動存檔，由呼叫端的既有存檔帶走。
      */
-    public recordAutoResolveBattle(input: Readonly<OfflineBattleInput>, journal: { priority: number; summary: string }, relatedGeneralUids: readonly string[]): OfflineBattleSnapshot {
+    public recordAutoResolveBattle(input: Readonly<OfflineBattleInput>, journal: Readonly<OfflineBattleJournal>, relatedGeneralUids: readonly string[]): OfflineBattleSnapshot {
         const id = nextOfflineBattleSnapshotId(this._offlineBattleSnapshots);
         const appended = appendOfflineBattleSnapshot(this._offlineBattleSnapshots, id, input);
         this._offlineBattleSnapshots = appended.snapshots;
@@ -1984,6 +1984,8 @@ export class GameSession {
             relatedGeneralUids: Array.from(relatedGeneralUids),
             priority: journal.priority,
             summary: journal.summary,
+            ...(journal.summaryKey !== undefined ? { summaryKey: journal.summaryKey } : {}),
+            ...(journal.summaryArgs !== undefined ? { summaryArgs: [...journal.summaryArgs] } : {}),
             snapshotRef: appended.snapshot.snapshotId,
         });
         return { ...appended.snapshot };
