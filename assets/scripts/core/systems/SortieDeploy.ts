@@ -15,6 +15,7 @@
  * Unity 對照：像 RTS 的 SupplyManager（ScriptableObject 存表、純 C# class 管帳），
  * 戰場 MonoBehaviour 只呼叫 TryDeploy()/OnUnitDied()，不自己算資源。
  */
+import { battleExpGain, type TallyBattleOutcome } from './TigerTallyStar';
 
 // ── 常數（規格有的標出處；沒有的標「暫定」）────────────────────────────────
 
@@ -170,6 +171,8 @@ export interface SortieTallyReport {
     deployedTroops: number;
     returnedTroops: number;
     lostTroops: number;
+    /** 本場虎符戰鬥經驗（養成進度，TigerTallyStar.battleExpGain）；戰鬥未分勝負時不列（PROG-2-1752） */
+    expGain?: number;
 }
 
 export interface SortieState {
@@ -689,7 +692,12 @@ export function retireUnit(state: SortieState, unitId: string, currentTroops?: n
 }
 
 /** 戰鬥結束：場上剩餘部隊全數返還，計算戰損與城市兵源變化 */
-export function finishSortie(state: SortieState, cityTroopsBefore: number, recruitRegen = DEFAULT_RECRUIT_REGEN): SortieSummary {
+export function finishSortie(
+    state: SortieState,
+    cityTroopsBefore: number,
+    recruitRegen = DEFAULT_RECRUIT_REGEN,
+    outcome: TallyBattleOutcome | null = null,
+): SortieSummary {
     let finalState = state;
     for (const unit of activeUnits(state)) {
         finalState = retireUnit(finalState, unit.unitId);
@@ -712,17 +720,20 @@ export function finishSortie(state: SortieState, cityTroopsBefore: number, recru
         turnsToRecover: lostTroops <= 0 ? 0 : regen > 0 ? Math.ceil(lostTroops / regen) : Infinity,
         militiaDeployed: finalState.militiaDeployed,
         eliteDeployed: finalState.eliteDeployed,
-        tallyReports: tallyReportsOf(all),
+        tallyReports: tallyReportsOf(all, outcome),
     };
 }
 
 /** 依虎符卡分組加總投入／返還／戰損；同一張卡多次出陣合併為一筆 */
-function tallyReportsOf(units: readonly SortieUnitRecord[]): SortieTallyReport[] {
+function tallyReportsOf(units: readonly SortieUnitRecord[], outcome: TallyBattleOutcome | null): SortieTallyReport[] {
     const reports = new Map<string, SortieTallyReport>();
     for (const unit of units) {
         if (!unit.tally) continue;
         const report = reports.get(unit.tally.cardUid)
-            ?? { cardUid: unit.tally.cardUid, name: unit.tally.name, deployedTroops: 0, returnedTroops: 0, lostTroops: 0 };
+            ?? {
+                cardUid: unit.tally.cardUid, name: unit.tally.name, deployedTroops: 0, returnedTroops: 0, lostTroops: 0,
+                ...(outcome ? { expGain: battleExpGain(outcome) } : {}),
+            };
         report.deployedTroops += unit.troopCost;
         report.returnedTroops += unit.currentTroops;
         report.lostTroops += unit.troopCost - unit.currentTroops;
@@ -752,7 +763,7 @@ export function formatSortieSummary(summary: SortieSummary): string[] {
     return [
         `出征軍勢 ${summary.poolMax}｜返還 ${summary.returnedTroops}｜戰損 ${summary.lostTroops}｜糧草 -${summary.foodSpent}`,
         `城市兵源 ${summary.cityTroopsBefore}→${summary.cityTroopsAfter}｜補兵 ${summary.recruitRegen}/季｜約 ${recover}恢復`,
-        ...(summary.tallyReports ?? []).map((r) => `${r.name}：投入 ${r.deployedTroops}｜返還 ${r.returnedTroops}｜戰損 ${r.lostTroops}`),
+        ...(summary.tallyReports ?? []).map((r) => `${r.name}：投入 ${r.deployedTroops}｜返還 ${r.returnedTroops}｜戰損 ${r.lostTroops}${r.expGain ? `｜經驗 +${r.expGain}` : ''}`),
     ];
 }
 
