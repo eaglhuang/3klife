@@ -10,6 +10,7 @@
  *             + UIEventHandler (純事件轉接，無業務邏輯)
  */
 
+import { tallyLegendDeployLine } from '../../core/systems/TallyScripts';
 import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
 import { strategistHudInputOf } from '../shared/StrategistHudSource';
@@ -208,6 +209,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.TileBuffSpawned,         this._onTileBuffSpawned.bind(this)),
       svc.event.on(EVENT_NAMES.TileBuffConsumed,        this._onTileBuffConsumed.bind(this)),
       svc.event.on(EVENT_NAMES.BattleEnded,             this._onBattleEnded.bind(this)),
+      svc.event.on(EVENT_NAMES.TallyDeployed,           this._onTallyDeployed.bind(this)),
       svc.event.on(EVENT_NAMES.AutoBattleToggled,       this._onAutoBattleToggled.bind(this)),
       svc.event.on(EVENT_NAMES.DelegateToggled,         this._onDelegateToggled.bind(this)),
       svc.event.on(EVENT_NAMES.RequestGeneralQuickView, this._onRequestGeneralQuickView.bind(this)),
@@ -394,6 +396,11 @@ export class BattleUIBridge {
     this.refreshBattleViews();
     const unit = c.ctrl?.state.units.get(data.unitId) ?? null;
     c.unitRenderer?.playDeploy(unit);
+  }
+
+  private _onTallyDeployed(templateId: string): void {
+    const line = tallyLegendDeployLine(templateId);
+    if (line) this.appendLog(line);
   }
 
   private _onUnitDamaged(data: {
@@ -804,6 +811,9 @@ export class BattleUIBridge {
       if (settlement.awakenings.length > 0) {
         void this.ctx.resultPopup?.playAwakeningFreeze?.(awakeningFreezeTitles(settlement.awakenings), AWAKENING_FREEZE_TIMING);
       }
+      const tallyNotices = services().session.consumeTallyNotices();
+      for (const line of tallyNotices) this.appendLog(line);
+      if (tallyNotices.length > 0) this.ctx.resultPopup?.appendDetails?.(tallyNotices);
       // 地窖保護（ECO-06，PROG-2-1342）：戰敗時糧草被保底，寫日誌並加進結算細項
       const cellar = cellarProtectionText(services().session.lastCellarProtectedFood);
       if (cellar) {

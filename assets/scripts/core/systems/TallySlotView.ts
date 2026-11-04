@@ -47,7 +47,7 @@ function specOf(templateId: string) {
     return TIGER_TALLY_SPEC_TACTICS.find((spec) => spec.tacticId === templateId) ?? null;
 }
 
-function troopNameOf(card: Pick<TigerTallyCard, 'troopType'>): string {
+export function troopNameOf(card: Pick<TigerTallyCard, 'troopType'>): string {
     return card.troopType ? resolveTroopDisplayName(card.troopType as TroopType) : '—';
 }
 
