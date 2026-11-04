@@ -1,0 +1,436 @@
+{
+  "repository": "eaglhuang/3klife",
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "sources": [
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "file": "evidence/assets/scripts/core/managers/GameSession.ts",
+      "git_blob_sha": "75a387a2c49cafa7fb70fefd5028cc3c87035339",
+      "sha256": "4e7ac248cb0cfac92b4eb35bb84272cb2fc37903b090adcb20181c7fb90e96af",
+      "bytes": 239947,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/managers/GameSession.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": "gameplay-transactions-20261104"
+    },
+    {
+      "path": "assets/scripts/core/models/GeneralRole.ts",
+      "file": "evidence/assets/scripts/core/models/GeneralRole.ts",
+      "git_blob_sha": "00315ba7218134c5aff00a819a1a4afe1ce7565d",
+      "sha256": "a77b5a4de48ca0663602e8b78ab60fd074c4ed393e64b3a35857fe9189be5bbf",
+      "bytes": 2246,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/GeneralRole.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/models/GeneralUnit.ts",
+      "file": "evidence/assets/scripts/core/models/GeneralUnit.ts",
+      "git_blob_sha": "004acb1748ae24ba3cb081179fcdde889ee10b63",
+      "sha256": "2cbe8e39c9d8eec1dc2207cbd8cec3efe6840609ceb02b16623f5b9369215952",
+      "bytes": 13085,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/GeneralUnit.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/services/BreedingService.ts",
+      "file": "evidence/assets/scripts/core/services/BreedingService.ts",
+      "git_blob_sha": "ba6dc82536a0ce3d200ef5a4c64f894b77d74583",
+      "sha256": "765579a4c3351fe13b46d807e87071ae551c0da0ac41c5cda1c4f0ecf1d4f975",
+      "bytes": 11296,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/BreedingService.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/services/PlayerRosterService.ts",
+      "file": "evidence/assets/scripts/core/services/PlayerRosterService.ts",
+      "git_blob_sha": "a5e438741ea5adff4e9a01f902d64887efe78b88",
+      "sha256": "400074f95c9d3501b1f98e691fa3ec24618d1ef05941d4ebe3709caf52d6f515",
+      "bytes": 3250,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/PlayerRosterService.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/services/PlayerSaveService.ts",
+      "file": "evidence/assets/scripts/core/services/PlayerSaveService.ts",
+      "git_blob_sha": "9c7e3c22cad87c03a86f4eb0f715d4b7402ef65a",
+      "sha256": "fbd898a5f727df1cdae57dc37f0e2d4135b599a9027cee51f0e9d781069ab2ff",
+      "bytes": 49566,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/PlayerSaveService.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": "gameplay-transactions-20261104"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "file": "evidence/assets/scripts/core/systems/BattleRoster.ts",
+      "git_blob_sha": "f25e2698a08bb226ed2f9b0fbb40b01a832148d0",
+      "sha256": "736af78c3655f47c322192d3ac0e867169cf57e0e78dc947ca5d6665320580ee",
+      "bytes": 17969,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleRoster.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/FactorAwakening.ts",
+      "file": "evidence/assets/scripts/core/systems/FactorAwakening.ts",
+      "git_blob_sha": "9d64ea1648d43b1f1e0a0c7e2e4e4505b5797e94",
+      "sha256": "bb859e22a22bcec525113eb3d02463c91ad9b26593d8f296d7ce1ae358040b8e",
+      "bytes": 10482,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FactorAwakening.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/FactorInheritance.ts",
+      "file": "evidence/assets/scripts/core/systems/FactorInheritance.ts",
+      "git_blob_sha": "cfe18160bc8fbe9a9c7272ee7c2c7918e212c7ec",
+      "sha256": "dc1c80f9cfbeed3d5c04c47444edd0949189eadc158c9a110d8c44b9aefa6859",
+      "bytes": 10225,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FactorInheritance.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/FactorVisibility.ts",
+      "file": "evidence/assets/scripts/core/systems/FactorVisibility.ts",
+      "git_blob_sha": "cc59e67d1c632b61c58446e03fdf4873ce10e205",
+      "sha256": "7703e49564bcabfd4ab481cb54d9c9704e9957c13149930a4d163e01579fb0f5",
+      "bytes": 4601,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FactorVisibility.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/FarewellLetterInbox.ts",
+      "file": "evidence/assets/scripts/core/systems/FarewellLetterInbox.ts",
+      "git_blob_sha": "6ea349fc1169ba1e602ae5fc2c45d3482fcb2fa7",
+      "sha256": "fdfa12c74b9308b1a278536ce6f29254773d2c6bb450859fce5f61a924232f9d",
+      "bytes": 2896,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FarewellLetterInbox.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/GeneralAging.ts",
+      "file": "evidence/assets/scripts/core/systems/GeneralAging.ts",
+      "git_blob_sha": "8ebde70fa84edad28485ad6334328141f227fd4f",
+      "sha256": "871d651615843602e24a653d1f6b1fba2a6f520c6f0841fbc0655a4ffa258785",
+      "bytes": 5147,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GeneralAging.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": "gameplay-validation-20261104"
+    },
+    {
+      "path": "assets/scripts/core/systems/ItemDef.ts",
+      "file": "evidence/assets/scripts/core/systems/ItemDef.ts",
+      "git_blob_sha": "3d31e987c22668c647fab1ba3b4082abb0a26bc9",
+      "sha256": "ae1272e0c299b8661c8f91612db8a331f018bf69e8c004746beb8e69c44da825",
+      "bytes": 7017,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ItemDef.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": "gameplay-daily-entitlements-20261104"
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+      "file": "evidence/assets/scripts/core/systems/MercenaryAffection.ts",
+      "git_blob_sha": "89c56b15d39b234953f66afa8facfd83426019a5",
+      "sha256": "78c7bdaac2701db60fea34f797ff315b63f2d973bad4f6b4e22e5f6fd277f7a4",
+      "bytes": 1538,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenaryAffection.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+      "file": "evidence/assets/scripts/core/systems/MercenaryBattleRecord.ts",
+      "git_blob_sha": "3ab62574d07588666936f650f5ca86541c0de6d8",
+      "sha256": "10fb14a604f2d46a697ef2e68d5cecf5cdac15213e3b721a36cacb75abee880c",
+      "bytes": 1579,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenaryBattleRecord.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryBond.ts",
+      "file": "evidence/assets/scripts/core/systems/MercenaryBond.ts",
+      "git_blob_sha": "40e55fd66abafee2171fc9054b20cead2b3b3986",
+      "sha256": "e5ed8156ea5ace7326ca0cb4a320b11d5f341ae60a2d679060d341aec41a6987",
+      "bytes": 3652,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenaryBond.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+      "file": "evidence/assets/scripts/core/systems/MercenaryBondPermanent.ts",
+      "git_blob_sha": "5a49310a97d6940d0dad864dde3e40b9ae44e758",
+      "sha256": "b95c90109ad9bfdb2e95a9e9c6e55cb077376a3b1968243da1e960528e8c047d",
+      "bytes": 2959,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenaryBondPermanent.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+      "file": "evidence/assets/scripts/core/systems/MercenaryDeparture.ts",
+      "git_blob_sha": "4aa911a9d02816b3ee688f832d7653f32715d839",
+      "sha256": "ddb11a9a659a82ae4d3ae445030ed47b75dc7c9ca86c10f726b73ea8ee88d572",
+      "bytes": 6189,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenaryDeparture.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+      "file": "evidence/assets/scripts/core/systems/MercenaryIllustration.ts",
+      "git_blob_sha": "2c950311d1a2fcabb5b4ab7aabe501d74509ad42",
+      "sha256": "8422387d50c3f4b619e4657693d86e180664698d5c6b5e0bc0e091fc4648358c",
+      "bytes": 2752,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenaryIllustration.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryPanelView.ts",
+      "file": "evidence/assets/scripts/core/systems/MercenaryPanelView.ts",
+      "git_blob_sha": "578b5c9b813508f6a1cb22212e7b277e4890a3ec",
+      "sha256": "1045e419d7ced930515081d2fb1e2160ba4caed18cc5f74ab4b40dcdcb41c275",
+      "bytes": 2601,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenaryPanelView.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+      "file": "evidence/assets/scripts/core/systems/MercenaryRoster.ts",
+      "git_blob_sha": "10dbfa81b502e83aa8c81f143a93ed0c00edfc64",
+      "sha256": "bfef11144100e424863705a0b8fa206dafe9730bf21fd7c80fca38e79640335e",
+      "bytes": 4394,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenaryRoster.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": "gameplay-inventory-20261104"
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+      "file": "evidence/assets/scripts/core/systems/MercenarySaveModel.ts",
+      "git_blob_sha": "25bbc20669d59795c5c05a9b621a2f5382f7bf6a",
+      "sha256": "a1f4a29ff04514e02e98c02316ef58c2a5c92beeff20334433f1ea152445f708",
+      "bytes": 5309,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenarySaveModel.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryTrialDay.ts",
+      "file": "evidence/assets/scripts/core/systems/MercenaryTrialDay.ts",
+      "git_blob_sha": "26e85face081be97c0f55973a08866072748ad14",
+      "sha256": "4260b402223c3221ac044dc3e44c9f68baeed5dc2da9ec1fc55d40da21d28ff7",
+      "bytes": 1990,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenaryTrialDay.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryTrialTicket.ts",
+      "file": "evidence/assets/scripts/core/systems/MercenaryTrialTicket.ts",
+      "git_blob_sha": "7a5bd89a3e3554e136247d8c4df2cf225ced0bc6",
+      "sha256": "e4fa87ff52eb0ab48095aec136728bff1ad46fd69440e74bea8f60be94fd98a5",
+      "bytes": 2754,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenaryTrialTicket.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+      "file": "evidence/assets/scripts/core/systems/MercenaryUpkeep.ts",
+      "git_blob_sha": "f82d685e79e5dcbfc75ec1c00ca45923c003ab2b",
+      "sha256": "febe9ae8a0430009db74e88d481f63b66ec753545843819c8a69662fb9497822",
+      "bytes": 5085,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MercenaryUpkeep.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/PlayerInventory.ts",
+      "file": "evidence/assets/scripts/core/systems/PlayerInventory.ts",
+      "git_blob_sha": "4262f657d6d22e3dfe276b2b6a1f07039eb5644b",
+      "sha256": "706b9fbdf275eccf6987a143e4cbcc1b731b4fabe2a688ca4740d3dc47f880f2",
+      "bytes": 4464,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/PlayerInventory.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": "gameplay-daily-entitlements-20261104"
+    },
+    {
+      "path": "assets/scripts/core/systems/RosterRoleLoad.ts",
+      "file": "evidence/assets/scripts/core/systems/RosterRoleLoad.ts",
+      "git_blob_sha": "c10f561e3d4e2cd42fdd21c3a6613ddce13e9534",
+      "sha256": "88b47defa271fa2f1006092442fa365daf4eac90cda35b0de4dac51928883aa2",
+      "bytes": 1044,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RosterRoleLoad.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/SageDivination.ts",
+      "file": "evidence/assets/scripts/core/systems/SageDivination.ts",
+      "git_blob_sha": "4d04ae10dffa286a941af9b506d5018ebafd0dc0",
+      "sha256": "8ab8cbbe03069d36629a611162f026c74e32459cc24ff72ee7c6a5570a1b1029",
+      "bytes": 10211,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/SageDivination.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": "gameplay-inventory-20261104"
+    },
+    {
+      "path": "assets/scripts/core/systems/SageFactorPreview.ts",
+      "file": "evidence/assets/scripts/core/systems/SageFactorPreview.ts",
+      "git_blob_sha": "53829dd606cca0e72c48811f0a5a4104e032f735",
+      "sha256": "9dd30ecb6fb96d5047b8d004cc510f91931b04557c95193783c9b11204041abb",
+      "bytes": 1982,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/SageFactorPreview.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/SageRegistry.ts",
+      "file": "evidence/assets/scripts/core/systems/SageRegistry.ts",
+      "git_blob_sha": "16d314da893699f86639f1826c742a32670573ea",
+      "sha256": "48f488beefe16bbea00ceeb406c58626502ddccb65072f66fb40714c7ea6477a",
+      "bytes": 3389,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/SageRegistry.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/core/systems/SageRemarks.ts",
+      "file": "evidence/assets/scripts/core/systems/SageRemarks.ts",
+      "git_blob_sha": "35ebe9feed77f1448c760e5fd39b7196c7e72670",
+      "sha256": "10c967c19cb82600b87511f065207a661f4d86fb0311735ab074f98e94b47b72",
+      "bytes": 4105,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/SageRemarks.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/ui/core/MercenaryNameplateRows.ts",
+      "file": "evidence/assets/scripts/ui/core/MercenaryNameplateRows.ts",
+      "git_blob_sha": "da493429fc319e061a5ee63b9d635eb36a4fd2fd",
+      "sha256": "00fa4c3d5c956e4ca0b606df7edccb653a1e0c32528e51fcd85fb6f615f3d777",
+      "bytes": 1936,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/core/MercenaryNameplateRows.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+      "file": "evidence/assets/scripts/ui/core/MercenaryPanelController.ts",
+      "git_blob_sha": "9e996c48ff7d9890a6c30de665d5860105e2ae7e",
+      "sha256": "07d5462c55c59ffdadeb6f2c3757cc740b42bbeec824c02becbc644f6d113ab5",
+      "bytes": 7270,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/core/MercenaryPanelController.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/ui/core/OracleLockedText.ts",
+      "file": "evidence/assets/scripts/ui/core/OracleLockedText.ts",
+      "git_blob_sha": "dc0e96a87db219e87e4bdfd940a5552d1df56fb4",
+      "sha256": "e7f034ba08f7dd5bfbd3aa1b5a93dd4559a4ddc8e7df03b5ba028f614b03ecf2",
+      "bytes": 1533,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/core/OracleLockedText.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/ui/core/SageOracleController.ts",
+      "file": "evidence/assets/scripts/ui/core/SageOracleController.ts",
+      "git_blob_sha": "e066a0fe094e7caef36c5ce2ae6fd0bc841fdea3",
+      "sha256": "c117c48db8c21364d78f0165314b1b97ce015d1e0b9a4b13bbbced70c9386f11",
+      "bytes": 15029,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/core/SageOracleController.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "assets/scripts/ui/scenes/LobbyScene.ts",
+      "file": "evidence/assets/scripts/ui/scenes/LobbyScene.ts",
+      "git_blob_sha": "020af72e606b8682a31e122afdb6ecde791f00d2",
+      "sha256": "7bcd932588b5ccd0a960f318a72b64fab2a3443d1218611d64aac2c5b056b4b3",
+      "bytes": 277587,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/scenes/LobbyScene.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": "gameplay-transactions-20261104"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/傭兵系統（試用）.md",
+      "file": "evidence/docs/遊戲規格文件/系統規格書/傭兵系統（試用）.md",
+      "git_blob_sha": "530527632ebfc1d40923b7c89c4627b7483905df",
+      "sha256": "6eebfd236c9d3fcfe90bce351590d70d56fff1348aed9a3651963ee76a1b393d",
+      "bytes": 7563,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E5%82%AD%E5%85%B5%E7%B3%BB%E7%B5%B1%EF%BC%88%E8%A9%A6%E7%94%A8%EF%BC%89.md",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/名士預言系統.md",
+      "file": "evidence/docs/遊戲規格文件/系統規格書/名士預言系統.md",
+      "git_blob_sha": "f8ad487a2f6c8ea0ca2837119fd4eaa7ebffe798",
+      "sha256": "b15e5c15d94f51d4f93163b1dd14bb9be0538a75e5ea1c942b973d5bf2d5668a",
+      "bytes": 6726,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E5%90%8D%E5%A3%AB%E9%A0%90%E8%A8%80%E7%B3%BB%E7%B5%B1.md",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "package.json",
+      "file": "evidence/package.json",
+      "git_blob_sha": "e10e9ee171d2cd79b0d88599cf7919c330f4f9c2",
+      "sha256": "6c7f7cc74b68780b0d4b7d6e35d0c5102ac9873d48176e868320a81c2771f553",
+      "bytes": 11382,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/package.json",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": "gameplay-inventory-20261104"
+    },
+    {
+      "path": "tests/GameSessionMercenary.test.ts",
+      "file": "evidence/tests/GameSessionMercenary.test.ts",
+      "git_blob_sha": "0095d49b6521d0689d049cd05c7044640f592a6c",
+      "sha256": "c277f2641091870f38003c31bf8901675ce5257af275fae3653db67aa32e17bc",
+      "bytes": 3019,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/tests/GameSessionMercenary.test.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "tests/GameSessionMercenaryBattle.test.ts",
+      "file": "evidence/tests/GameSessionMercenaryBattle.test.ts",
+      "git_blob_sha": "9a6e679c25e78c8d95529b65b836da721df1961f",
+      "sha256": "0fc4f370a35b5bb6d601abbf5db7725c57b602866f5d96bd7d928a19164bb08f",
+      "bytes": 2448,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/tests/GameSessionMercenaryBattle.test.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "tests/SageOracle.test.ts",
+      "file": "evidence/tests/SageOracle.test.ts",
+      "git_blob_sha": "e1fbf5e46172eacd53a8d3ef6d6fc8987f3f26d8",
+      "sha256": "43d5acfc7e553478d7867acbf26ea1602841cf8d000babf149284346d93be477",
+      "bytes": 13248,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/tests/SageOracle.test.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    },
+    {
+      "path": "tests/SageProphecy.test.ts",
+      "file": "evidence/tests/SageProphecy.test.ts",
+      "git_blob_sha": "87a4f01be15a8b716bfa28a4ef147efba5c17e8b",
+      "sha256": "45e0fdcd174d9b24b362847bfc1254bce48ddedb030c9381a24d50e4ec7c5d55",
+      "bytes": 15317,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/tests/SageProphecy.test.ts",
+      "ref": "96a83124094d3b2485bfb749ef37d567ad834559",
+      "reused_from": null
+    }
+  ]
+}

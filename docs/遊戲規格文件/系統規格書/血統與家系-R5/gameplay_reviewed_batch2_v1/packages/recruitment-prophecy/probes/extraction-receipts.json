@@ -1,0 +1,4542 @@
+[
+  {
+    "kind": "NATIVE_UNCHANGED_MODULE",
+    "path": "assets/scripts/core/systems/ItemDef.ts",
+    "source_sha256": "ae1272e0c299b8661c8f91612db8a331f018bf69e8c004746beb8e69c44da825",
+    "exports": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/PlayerInventory.ts",
+    "source_sha256": "706b9fbdf275eccf6987a143e4cbcc1b731b4fabe2a688ca4740d3dc47f880f2",
+    "transformed_sha256": "59d296b75046a7a4e96c4f8ebd334d5375ec6f5cdfa838fde2a8509ef324f80e",
+    "exports": [
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "./ItemDef",
+        "declaration": "import { ITEM_DEFS, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET } from './ItemDef';",
+        "bindings": [
+          {
+            "name": "ITEM_DEFS",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/ItemDef.ts",
+              "symbol": "ITEM_DEFS"
+            }
+          },
+          {
+            "name": "ITEM_ORACLE_TOKEN",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/ItemDef.ts",
+              "symbol": "ITEM_ORACLE_TOKEN"
+            }
+          },
+          {
+            "name": "ITEM_TRIAL_TICKET",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/ItemDef.ts",
+              "symbol": "ITEM_TRIAL_TICKET"
+            }
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf"
+    ]
+  },
+  {
+    "kind": "NATIVE_UNCHANGED_MODULE",
+    "path": "assets/scripts/core/systems/GeneralAging.ts",
+    "source_sha256": "871d651615843602e24a653d1f6b1fba2a6f520c6f0841fbc0655a4ffa258785",
+    "exports": [
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan"
+    ]
+  },
+  {
+    "kind": "NATIVE_UNCHANGED_MODULE",
+    "path": "assets/scripts/core/systems/FactorInheritance.ts",
+    "source_sha256": "dc1c80f9cfbeed3d5c04c47444edd0949189eadc158c9a110d8c44b9aefa6859",
+    "exports": [
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/FactorVisibility.ts",
+    "source_sha256": "7703e49564bcabfd4ab481cb54d9c9704e9957c13149930a4d163e01579fb0f5",
+    "transformed_sha256": "bea887b3e3a6d528372055742cf704e86108c04a8c3bc206e2527ba50f5b8fd4",
+    "exports": [
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "./FactorInheritance",
+        "declaration": "import { ALL_FACTOR_COLORS, FACTOR_DISCOVERY_LEVEL, FactorColor, normalizeFactorColor } from './FactorInheritance';",
+        "bindings": [
+          {
+            "name": "ALL_FACTOR_COLORS",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorInheritance.ts",
+              "symbol": "ALL_FACTOR_COLORS"
+            }
+          },
+          {
+            "name": "FACTOR_DISCOVERY_LEVEL",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorInheritance.ts",
+              "symbol": "FACTOR_DISCOVERY_LEVEL"
+            }
+          },
+          {
+            "name": "FactorColor",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "normalizeFactorColor",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorInheritance.ts",
+              "symbol": "normalizeFactorColor"
+            }
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/FactorAwakening.ts",
+    "source_sha256": "bb859e22a22bcec525113eb3d02463c91ad9b26593d8f296d7ce1ae358040b8e",
+    "transformed_sha256": "83bd6d8a98905c4d47035560be480e29b669ce8688d317ef758a3e67d284e3e9",
+    "exports": [
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "../models/GeneralUnit",
+        "declaration": "import type { GeneralConfig, GeneralGeneConfig } from '../models/GeneralUnit';",
+        "bindings": [
+          {
+            "name": "GeneralConfig",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          },
+          {
+            "name": "GeneralGeneConfig",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./FactorInheritance",
+        "declaration": "import { FACTOR_DISCOVERY_LEVEL, FactorColor, normalizeFactorColor } from './FactorInheritance';",
+        "bindings": [
+          {
+            "name": "FACTOR_DISCOVERY_LEVEL",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorInheritance.ts",
+              "symbol": "FACTOR_DISCOVERY_LEVEL"
+            }
+          },
+          {
+            "name": "FactorColor",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "normalizeFactorColor",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorInheritance.ts",
+              "symbol": "normalizeFactorColor"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./FactorVisibility",
+        "declaration": "import { isFactorLevelUnlocked } from './FactorVisibility';",
+        "bindings": [
+          {
+            "name": "isFactorLevelUnlocked",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorVisibility.ts",
+              "symbol": "isFactorLevelUnlocked"
+            }
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/SageDivination.ts",
+    "source_sha256": "8ab8cbbe03069d36629a611162f026c74e32459cc24ff72ee7c6a5570a1b1029",
+    "transformed_sha256": "135db7cd99b164566fd29151fdc906eb401b8886232131f5ca36be1003db31dc",
+    "exports": [
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "../models/GeneralUnit",
+        "declaration": "import type { GeneralConfig } from '../models/GeneralUnit';",
+        "bindings": [
+          {
+            "name": "GeneralConfig",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./FactorAwakening",
+        "declaration": "import { awakenFactor, AwakeningCandidate, FactorAwakenedEvent, listAwakeningCandidates } from './FactorAwakening';",
+        "bindings": [
+          {
+            "name": "awakenFactor",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorAwakening.ts",
+              "symbol": "awakenFactor"
+            }
+          },
+          {
+            "name": "AwakeningCandidate",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "FactorAwakenedEvent",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "listAwakeningCandidates",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorAwakening.ts",
+              "symbol": "listAwakeningCandidates"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./FactorInheritance",
+        "declaration": "import { ALL_FACTOR_COLORS, FactorColor, normalizeFactorColor } from './FactorInheritance';",
+        "bindings": [
+          {
+            "name": "ALL_FACTOR_COLORS",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorInheritance.ts",
+              "symbol": "ALL_FACTOR_COLORS"
+            }
+          },
+          {
+            "name": "FactorColor",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "normalizeFactorColor",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorInheritance.ts",
+              "symbol": "normalizeFactorColor"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./BreedingSystem",
+        "declaration": "import type { FactorPoolEntry } from './BreedingSystem';",
+        "bindings": [
+          {
+            "name": "FactorPoolEntry",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/SageFactorPreview.ts",
+    "source_sha256": "9dd30ecb6fb96d5047b8d004cc510f91931b04557c95193783c9b11204041abb",
+    "transformed_sha256": "b33f4e51135f3c6bc73d60414595f6c837bb426a12252d3d1a198cb256a5d800",
+    "exports": [
+      "previewLockedFactorDirections"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "../models/GeneralUnit",
+        "declaration": "import type { GeneralConfig } from '../models/GeneralUnit';",
+        "bindings": [
+          {
+            "name": "GeneralConfig",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./FactorInheritance",
+        "declaration": "import { FACTOR_DISCOVERY_LEVEL, FactorColor, normalizeFactorColor } from './FactorInheritance';",
+        "bindings": [
+          {
+            "name": "FACTOR_DISCOVERY_LEVEL",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorInheritance.ts",
+              "symbol": "FACTOR_DISCOVERY_LEVEL"
+            }
+          },
+          {
+            "name": "FactorColor",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "normalizeFactorColor",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorInheritance.ts",
+              "symbol": "normalizeFactorColor"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./FactorVisibility",
+        "declaration": "import { isFactorLevelUnlocked } from './FactorVisibility';",
+        "bindings": [
+          {
+            "name": "isFactorLevelUnlocked",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorVisibility.ts",
+              "symbol": "isFactorLevelUnlocked"
+            }
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring"
+    ]
+  },
+  {
+    "kind": "NATIVE_UNCHANGED_MODULE",
+    "path": "assets/scripts/core/systems/MercenaryBond.ts",
+    "source_sha256": "e5ed8156ea5ace7326ca0cb4a320b11d5f341ae60a2d679060d341aec41a6987",
+    "exports": [
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary"
+    ]
+  },
+  {
+    "kind": "NATIVE_UNCHANGED_MODULE",
+    "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+    "source_sha256": "78c7bdaac2701db60fea34f797ff315b63f2d973bad4f6b4e22e5f6fd277f7a4",
+    "exports": [
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection"
+    ]
+  },
+  {
+    "kind": "NATIVE_UNCHANGED_MODULE",
+    "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+    "source_sha256": "b95c90109ad9bfdb2e95a9e9c6e55cb077376a3b1968243da1e960528e8c047d",
+    "exports": [
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats"
+    ]
+  },
+  {
+    "kind": "NATIVE_UNCHANGED_MODULE",
+    "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+    "source_sha256": "ddb11a9a659a82ae4d3ae445030ed47b75dc7c9ca86c10f726b73ea8ee88d572",
+    "exports": [
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown"
+    ]
+  },
+  {
+    "kind": "NATIVE_UNCHANGED_MODULE",
+    "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+    "source_sha256": "8422387d50c3f4b619e4657693d86e180664698d5c6b5e0bc0e091fc4648358c",
+    "exports": [
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/MercenaryTrialDay.ts",
+    "source_sha256": "4260b402223c3221ac044dc3e44c9f68baeed5dc2da9ec1fc55d40da21d28ff7",
+    "transformed_sha256": "bc847d0a0e5abbdcc1885eb23dc128e42b8d2afbc72a951fac12d8442a4222af",
+    "exports": [
+      "advanceTrialDay"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "./MercenaryBond",
+        "declaration": "import { advanceMercenaryDay, MercenaryResult, MercenaryState } from './MercenaryBond';",
+        "bindings": [
+          {
+            "name": "advanceMercenaryDay",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryBond.ts",
+              "symbol": "advanceMercenaryDay"
+            }
+          },
+          {
+            "name": "MercenaryResult",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "MercenaryState",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryAffection",
+        "declaration": "import { applyDailyAffection } from './MercenaryAffection';",
+        "bindings": [
+          {
+            "name": "applyDailyAffection",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+              "symbol": "applyDailyAffection"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryIllustration",
+        "declaration": "import { advanceIllustrationStage } from './MercenaryIllustration';",
+        "bindings": [
+          {
+            "name": "advanceIllustrationStage",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+              "symbol": "advanceIllustrationStage"
+            }
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring",
+      "previewLockedFactorDirections",
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary",
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection",
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats",
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown",
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+    "source_sha256": "10fb14a604f2d46a697ef2e68d5cecf5cdac15213e3b721a36cacb75abee880c",
+    "transformed_sha256": "92bfeac40d642ee3bf091acf4f40ac6b9231c27b14daf66f937136a49b76c40e",
+    "exports": [
+      "recordTrialBattle"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "./BattleRoster",
+        "declaration": "import type { BattleOutcome } from './BattleRoster';",
+        "bindings": [
+          {
+            "name": "BattleOutcome",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryIllustration",
+        "declaration": "import { advanceIllustrationStage } from './MercenaryIllustration';",
+        "bindings": [
+          {
+            "name": "advanceIllustrationStage",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+              "symbol": "advanceIllustrationStage"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryBond",
+        "declaration": "import type { MercenaryState } from './MercenaryBond';",
+        "bindings": [
+          {
+            "name": "MercenaryState",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring",
+      "previewLockedFactorDirections",
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary",
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection",
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats",
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown",
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf",
+      "advanceTrialDay"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/MercenaryTrialTicket.ts",
+    "source_sha256": "e4fa87ff52eb0ab48095aec136728bff1ad46fd69440e74bea8f60be94fd98a5",
+    "transformed_sha256": "6c740af86081fdb0d1ab611210c140f4c5bb4d680c69a6de376bc478a6bf7fea",
+    "exports": [
+      "TRIAL_TICKET_ABILITY_RATIO",
+      "scaleTrialStats",
+      "useTrialTicket"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "./MercenaryBond",
+        "declaration": "import { createTrialMercenary, MercenaryState } from './MercenaryBond';",
+        "bindings": [
+          {
+            "name": "createTrialMercenary",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryBond.ts",
+              "symbol": "createTrialMercenary"
+            }
+          },
+          {
+            "name": "MercenaryState",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring",
+      "previewLockedFactorDirections",
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary",
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection",
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats",
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown",
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf",
+      "advanceTrialDay",
+      "recordTrialBattle"
+    ]
+  },
+  {
+    "kind": "NATIVE_UNCHANGED_MODULE",
+    "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+    "source_sha256": "febe9ae8a0430009db74e88d481f63b66ec753545843819c8a69662fb9497822",
+    "exports": [
+      "FREEZE_GRACE_DAYS",
+      "canDeployMercenary",
+      "canTeachMercenary",
+      "createUpkeepState",
+      "repayUpkeep",
+      "settleUpkeepDay"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+    "source_sha256": "a1f4a29ff04514e02e98c02316ef58c2a5c92beeff20334433f1ea152445f708",
+    "transformed_sha256": "692a53e6c7cb4b2726c985eff2f9c9e0410794ea5d7a389132bbc51050ec69a8",
+    "exports": [
+      "createEmptyMercenaryBundle",
+      "serializeMercenaryBundle",
+      "normalizeMercenaryBundle"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "./MercenaryBond",
+        "declaration": "import { MercenaryState, MercenaryStatus, TRIAL_DAYS } from './MercenaryBond';",
+        "bindings": [
+          {
+            "name": "MercenaryState",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "MercenaryStatus",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "TRIAL_DAYS",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryBond.ts",
+              "symbol": "TRIAL_DAYS"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryAffection",
+        "declaration": "import { AFFECTION_CAP } from './MercenaryAffection';",
+        "bindings": [
+          {
+            "name": "AFFECTION_CAP",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+              "symbol": "AFFECTION_CAP"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryIllustration",
+        "declaration": "import { ILLUSTRATION_STAGE_MAX, ILLUSTRATION_STAGE_MIN } from './MercenaryIllustration';",
+        "bindings": [
+          {
+            "name": "ILLUSTRATION_STAGE_MAX",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+              "symbol": "ILLUSTRATION_STAGE_MAX"
+            }
+          },
+          {
+            "name": "ILLUSTRATION_STAGE_MIN",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+              "symbol": "ILLUSTRATION_STAGE_MIN"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryDeparture",
+        "declaration": "import { PoolCooldown } from './MercenaryDeparture';",
+        "bindings": [
+          {
+            "name": "PoolCooldown",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryUpkeep",
+        "declaration": "import { UpkeepState, UpkeepStatus } from './MercenaryUpkeep';",
+        "bindings": [
+          {
+            "name": "UpkeepState",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "UpkeepStatus",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring",
+      "previewLockedFactorDirections",
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary",
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection",
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats",
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown",
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf",
+      "advanceTrialDay",
+      "recordTrialBattle",
+      "TRIAL_TICKET_ABILITY_RATIO",
+      "scaleTrialStats",
+      "useTrialTicket",
+      "FREEZE_GRACE_DAYS",
+      "canDeployMercenary",
+      "canTeachMercenary",
+      "createUpkeepState",
+      "repayUpkeep",
+      "settleUpkeepDay"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+    "source_sha256": "bfef11144100e424863705a0b8fa206dafe9730bf21fd7c80fca38e79640335e",
+    "transformed_sha256": "ac6dedef116c06c507e47638b70243d331b7f03d048560b960bd496739a2b505",
+    "exports": [
+      "RARITY_BY_TIER",
+      "AFFECTION_BOND_THRESHOLD",
+      "rarityOfTemplate",
+      "statsOfTemplate",
+      "bondMercenaryToRoster"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "../models/GeneralUnit",
+        "declaration": "import { GeneralConfig, GeneralDetailRarityTier } from '../models/GeneralUnit';",
+        "bindings": [
+          {
+            "name": "GeneralConfig",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "GeneralDetailRarityTier",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryAffection",
+        "declaration": "import { AFFECTION_CAP } from './MercenaryAffection';",
+        "bindings": [
+          {
+            "name": "AFFECTION_CAP",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+              "symbol": "AFFECTION_CAP"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryBond",
+        "declaration": "import { bondMercenary, MercenaryRejectReason, MercenaryState } from './MercenaryBond';",
+        "bindings": [
+          {
+            "name": "bondMercenary",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryBond.ts",
+              "symbol": "bondMercenary"
+            }
+          },
+          {
+            "name": "MercenaryRejectReason",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "MercenaryState",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryBondPermanent",
+        "declaration": "import { BondRarity, BondRejectReason, BondStats, bondToPermanent } from './MercenaryBondPermanent';",
+        "bindings": [
+          {
+            "name": "BondRarity",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "BondRejectReason",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "BondStats",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "bondToPermanent",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+              "symbol": "bondToPermanent"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryDeparture",
+        "declaration": "import { PoolCooldown, startCooldownAfterBond } from './MercenaryDeparture';",
+        "bindings": [
+          {
+            "name": "PoolCooldown",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "startCooldownAfterBond",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+              "symbol": "startCooldownAfterBond"
+            }
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring",
+      "previewLockedFactorDirections",
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary",
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection",
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats",
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown",
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf",
+      "advanceTrialDay",
+      "recordTrialBattle",
+      "TRIAL_TICKET_ABILITY_RATIO",
+      "scaleTrialStats",
+      "useTrialTicket",
+      "FREEZE_GRACE_DAYS",
+      "canDeployMercenary",
+      "canTeachMercenary",
+      "createUpkeepState",
+      "repayUpkeep",
+      "settleUpkeepDay",
+      "createEmptyMercenaryBundle",
+      "serializeMercenaryBundle",
+      "normalizeMercenaryBundle"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/MercenaryPanelView.ts",
+    "source_sha256": "1045e419d7ced930515081d2fb1e2160ba4caed18cc5f74ab4b40dcdcb41c275",
+    "transformed_sha256": "02e24d8262fb70407028501c6cfd92acfde26e568cffc3365c4cd6691b19b3cd",
+    "exports": [
+      "buildMercenaryPanelView"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "./MercenaryBondPermanent",
+        "declaration": "import { BOND_POINT_COST, BondRarity } from './MercenaryBondPermanent';",
+        "bindings": [
+          {
+            "name": "BOND_POINT_COST",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+              "symbol": "BOND_POINT_COST"
+            }
+          },
+          {
+            "name": "BondRarity",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryBond",
+        "declaration": "import { canBondMercenary, MercenaryState, TRIAL_DAYS } from './MercenaryBond';",
+        "bindings": [
+          {
+            "name": "canBondMercenary",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryBond.ts",
+              "symbol": "canBondMercenary"
+            }
+          },
+          {
+            "name": "MercenaryState",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "TRIAL_DAYS",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryBond.ts",
+              "symbol": "TRIAL_DAYS"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryIllustration",
+        "declaration": "import { ILLUSTRATION_STAGE_MAX, ILLUSTRATION_STAGE_MIN } from './MercenaryIllustration';",
+        "bindings": [
+          {
+            "name": "ILLUSTRATION_STAGE_MAX",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+              "symbol": "ILLUSTRATION_STAGE_MAX"
+            }
+          },
+          {
+            "name": "ILLUSTRATION_STAGE_MIN",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+              "symbol": "ILLUSTRATION_STAGE_MIN"
+            }
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring",
+      "previewLockedFactorDirections",
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary",
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection",
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats",
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown",
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf",
+      "advanceTrialDay",
+      "recordTrialBattle",
+      "TRIAL_TICKET_ABILITY_RATIO",
+      "scaleTrialStats",
+      "useTrialTicket",
+      "FREEZE_GRACE_DAYS",
+      "canDeployMercenary",
+      "canTeachMercenary",
+      "createUpkeepState",
+      "repayUpkeep",
+      "settleUpkeepDay",
+      "createEmptyMercenaryBundle",
+      "serializeMercenaryBundle",
+      "normalizeMercenaryBundle",
+      "RARITY_BY_TIER",
+      "AFFECTION_BOND_THRESHOLD",
+      "rarityOfTemplate",
+      "statsOfTemplate",
+      "bondMercenaryToRoster"
+    ]
+  },
+  {
+    "kind": "NATIVE_UNCHANGED_MODULE",
+    "path": "assets/scripts/core/systems/FarewellLetterInbox.ts",
+    "source_sha256": "fdfa12c74b9308b1a278536ce6f29254773d2c6bb450859fce5f61a924232f9d",
+    "exports": [
+      "FAREWELL_INBOX_LIMIT",
+      "FAREWELL_MIN_AFFECTION",
+      "FAREWELL_MOVING_AFFECTION",
+      "appendFarewellLetter",
+      "createFarewellLetter",
+      "farewellTierOf",
+      "markFarewellLetterRead",
+      "unreadFarewellCount"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/BattleRoster.ts",
+    "source_sha256": "736af78c3655f47c322192d3ac0e867169cf57e0e78dc947ca5d6665320580ee",
+    "transformed_sha256": "5f25dc4602866ac11cb8073138b17d10bc65307e5e6ad5cee756e4a6df42e97f",
+    "exports": [
+      "BATTLE_VITALITY_COST",
+      "BATTLE_MIN_VITALITY",
+      "VITALITY_RECOVER_DEPLOYED",
+      "VITALITY_RECOVER_STANDBY",
+      "PROWESS_PER_BATTLE_STAT",
+      "BATTLE_HP_BASE",
+      "BATTLE_HP_PER_STR",
+      "BATTLE_HP_PER_LEA",
+      "FATIGUE_THRESHOLD",
+      "FATIGUE_MIN_HP_FACTOR",
+      "FACTOR_ATTACK_BONUS_PER_STAR",
+      "FACTOR_ATTACK_BONUS_CAP",
+      "NEGATIVE_FACTOR_ATTACK_PENALTY",
+      "RATING_ATTACK_BONUS",
+      "BATTLE_TACTIC_SLOT_LIMIT",
+      "BATTLE_MERIT",
+      "checkDeployable",
+      "listDeployable",
+      "battleIntelligenceOf",
+      "computeAttackBonus",
+      "buildBattleConfig",
+      "outcomeOf",
+      "settleBattle",
+      "recoverVitalityOneSeason"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "./InspiredTacticMap",
+        "declaration": "import { toLibraryTacticId } from './InspiredTacticMap';",
+        "bindings": [
+          {
+            "name": "toLibraryTacticId",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./TacticLoadout",
+        "declaration": "import { tacticLoadoutCapacity } from './TacticLoadout';",
+        "bindings": [
+          {
+            "name": "tacticLoadoutCapacity",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../models/GeneralUnit",
+        "declaration": "import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig, GeneralTacticSlotConfig } from '../models/GeneralUnit';",
+        "bindings": [
+          {
+            "name": "GeneralConfig",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          },
+          {
+            "name": "GeneralGeneConfig",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          },
+          {
+            "name": "GeneralStatsConfig",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          },
+          {
+            "name": "GeneralTacticSlotConfig",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./BreedingSystem",
+        "declaration": "import { CHILD_STATUS_MYSTERY } from './BreedingSystem';",
+        "bindings": [
+          {
+            "name": "CHILD_STATUS_MYSTERY",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./GeneralAging",
+        "declaration": "import { GENERAL_STATUS_DEAD } from './GeneralAging';",
+        "bindings": [
+          {
+            "name": "GENERAL_STATUS_DEAD",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/GeneralAging.ts",
+              "symbol": "GENERAL_STATUS_DEAD"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "./VitalityCap",
+        "declaration": "import { baseVitalityMaxOf } from './VitalityCap';",
+        "bindings": [
+          {
+            "name": "baseVitalityMaxOf",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./NurtureSystem",
+        "declaration": "import type { NurtureRating } from './NurtureSystem';",
+        "bindings": [
+          {
+            "name": "NurtureRating",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./BattleRecordStats",
+        "declaration": "import { EMPTY_PERFORMANCE, guardianPowerOf, newlyReachedMilestones, type BattlePerformance } from './BattleRecordStats';",
+        "bindings": [
+          {
+            "name": "EMPTY_PERFORMANCE",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "guardianPowerOf",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "newlyReachedMilestones",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "BattlePerformance",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./PrisonerOfWar",
+        "declaration": "import { isTrialMercenary } from './PrisonerOfWar';",
+        "bindings": [
+          {
+            "name": "isTrialMercenary",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./BattleSeasonStats",
+        "declaration": "import { accumulateSeasonBattle, rolloverSeason, type SeasonStats } from './BattleSeasonStats';",
+        "bindings": [
+          {
+            "name": "accumulateSeasonBattle",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "rolloverSeason",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "SeasonStats",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring",
+      "previewLockedFactorDirections",
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary",
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection",
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats",
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown",
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf",
+      "advanceTrialDay",
+      "recordTrialBattle",
+      "TRIAL_TICKET_ABILITY_RATIO",
+      "scaleTrialStats",
+      "useTrialTicket",
+      "FREEZE_GRACE_DAYS",
+      "canDeployMercenary",
+      "canTeachMercenary",
+      "createUpkeepState",
+      "repayUpkeep",
+      "settleUpkeepDay",
+      "createEmptyMercenaryBundle",
+      "serializeMercenaryBundle",
+      "normalizeMercenaryBundle",
+      "RARITY_BY_TIER",
+      "AFFECTION_BOND_THRESHOLD",
+      "rarityOfTemplate",
+      "statsOfTemplate",
+      "bondMercenaryToRoster",
+      "buildMercenaryPanelView",
+      "FAREWELL_INBOX_LIMIT",
+      "FAREWELL_MIN_AFFECTION",
+      "FAREWELL_MOVING_AFFECTION",
+      "appendFarewellLetter",
+      "createFarewellLetter",
+      "farewellTierOf",
+      "markFarewellLetterRead",
+      "unreadFarewellCount"
+    ]
+  },
+  {
+    "kind": "NATIVE_UNCHANGED_MODULE",
+    "path": "assets/scripts/core/models/GeneralRole.ts",
+    "source_sha256": "a77b5a4de48ca0663602e8b78ab60fd074c4ed393e64b3a35857fe9189be5bbf",
+    "exports": [
+      "lockRole",
+      "reportRoles",
+      "toCanonicalRole"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/core/systems/RosterRoleLoad.ts",
+    "source_sha256": "88b47defa271fa2f1006092442fa365daf4eac90cda35b0de4dac51928883aa2",
+    "transformed_sha256": "5fb586971995c5a6f4cbb677b9cfb2fccfd817762d4fce3da9c4760788b3cdfe",
+    "exports": [
+      "normalizeRosterRoles"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "../models/GeneralRole",
+        "declaration": "import { toCanonicalRole } from '../models/GeneralRole';",
+        "bindings": [
+          {
+            "name": "toCanonicalRole",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/models/GeneralRole.ts",
+              "symbol": "toCanonicalRole"
+            }
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring",
+      "previewLockedFactorDirections",
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary",
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection",
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats",
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown",
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf",
+      "advanceTrialDay",
+      "recordTrialBattle",
+      "TRIAL_TICKET_ABILITY_RATIO",
+      "scaleTrialStats",
+      "useTrialTicket",
+      "FREEZE_GRACE_DAYS",
+      "canDeployMercenary",
+      "canTeachMercenary",
+      "createUpkeepState",
+      "repayUpkeep",
+      "settleUpkeepDay",
+      "createEmptyMercenaryBundle",
+      "serializeMercenaryBundle",
+      "normalizeMercenaryBundle",
+      "RARITY_BY_TIER",
+      "AFFECTION_BOND_THRESHOLD",
+      "rarityOfTemplate",
+      "statsOfTemplate",
+      "bondMercenaryToRoster",
+      "buildMercenaryPanelView",
+      "FAREWELL_INBOX_LIMIT",
+      "FAREWELL_MIN_AFFECTION",
+      "FAREWELL_MOVING_AFFECTION",
+      "appendFarewellLetter",
+      "createFarewellLetter",
+      "farewellTierOf",
+      "markFarewellLetterRead",
+      "unreadFarewellCount",
+      "BATTLE_VITALITY_COST",
+      "BATTLE_MIN_VITALITY",
+      "VITALITY_RECOVER_DEPLOYED",
+      "VITALITY_RECOVER_STANDBY",
+      "PROWESS_PER_BATTLE_STAT",
+      "BATTLE_HP_BASE",
+      "BATTLE_HP_PER_STR",
+      "BATTLE_HP_PER_LEA",
+      "FATIGUE_THRESHOLD",
+      "FATIGUE_MIN_HP_FACTOR",
+      "FACTOR_ATTACK_BONUS_PER_STAR",
+      "FACTOR_ATTACK_BONUS_CAP",
+      "NEGATIVE_FACTOR_ATTACK_PENALTY",
+      "RATING_ATTACK_BONUS",
+      "BATTLE_TACTIC_SLOT_LIMIT",
+      "BATTLE_MERIT",
+      "checkDeployable",
+      "listDeployable",
+      "battleIntelligenceOf",
+      "computeAttackBonus",
+      "buildBattleConfig",
+      "outcomeOf",
+      "settleBattle",
+      "recoverVitalityOneSeason",
+      "lockRole",
+      "reportRoles",
+      "toCanonicalRole"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/ui/core/OracleLockedText.ts",
+    "source_sha256": "e7f034ba08f7dd5bfbd3aa1b5a93dd4559a4ddc8e7df03b5ba028f614b03ecf2",
+    "transformed_sha256": "31f182ee247c5601cb9bc1bab7a23be1a8ade03786159240bf35d76748487fca",
+    "exports": [
+      "ORACLE_LOCKED_KEY",
+      "ORACLE_LOCKED_FALLBACK_ZH_TW",
+      "oracleLockedText",
+      "ORACLE_SAGE_LOCKED_KEY",
+      "ORACLE_SAGE_LOCKED_FALLBACK_ZH_TW",
+      "sageLockedOutcomeText"
+    ],
+    "dependency_contract": [],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring",
+      "previewLockedFactorDirections",
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary",
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection",
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats",
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown",
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf",
+      "advanceTrialDay",
+      "recordTrialBattle",
+      "TRIAL_TICKET_ABILITY_RATIO",
+      "scaleTrialStats",
+      "useTrialTicket",
+      "FREEZE_GRACE_DAYS",
+      "canDeployMercenary",
+      "canTeachMercenary",
+      "createUpkeepState",
+      "repayUpkeep",
+      "settleUpkeepDay",
+      "createEmptyMercenaryBundle",
+      "serializeMercenaryBundle",
+      "normalizeMercenaryBundle",
+      "RARITY_BY_TIER",
+      "AFFECTION_BOND_THRESHOLD",
+      "rarityOfTemplate",
+      "statsOfTemplate",
+      "bondMercenaryToRoster",
+      "buildMercenaryPanelView",
+      "FAREWELL_INBOX_LIMIT",
+      "FAREWELL_MIN_AFFECTION",
+      "FAREWELL_MOVING_AFFECTION",
+      "appendFarewellLetter",
+      "createFarewellLetter",
+      "farewellTierOf",
+      "markFarewellLetterRead",
+      "unreadFarewellCount",
+      "BATTLE_VITALITY_COST",
+      "BATTLE_MIN_VITALITY",
+      "VITALITY_RECOVER_DEPLOYED",
+      "VITALITY_RECOVER_STANDBY",
+      "PROWESS_PER_BATTLE_STAT",
+      "BATTLE_HP_BASE",
+      "BATTLE_HP_PER_STR",
+      "BATTLE_HP_PER_LEA",
+      "FATIGUE_THRESHOLD",
+      "FATIGUE_MIN_HP_FACTOR",
+      "FACTOR_ATTACK_BONUS_PER_STAR",
+      "FACTOR_ATTACK_BONUS_CAP",
+      "NEGATIVE_FACTOR_ATTACK_PENALTY",
+      "RATING_ATTACK_BONUS",
+      "BATTLE_TACTIC_SLOT_LIMIT",
+      "BATTLE_MERIT",
+      "checkDeployable",
+      "listDeployable",
+      "battleIntelligenceOf",
+      "computeAttackBonus",
+      "buildBattleConfig",
+      "outcomeOf",
+      "settleBattle",
+      "recoverVitalityOneSeason",
+      "lockRole",
+      "reportRoles",
+      "toCanonicalRole",
+      "normalizeRosterRoles"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/ui/core/SageOracleController.ts",
+    "source_sha256": "c117c48db8c21364d78f0165314b1b97ce015d1e0b9a4b13bbbced70c9386f11",
+    "transformed_sha256": "2a4c716e665c40eab0e9d8f03a5a135248d71398a7306c320dc1ddf19a6c8bab",
+    "exports": [
+      "SAGE_ORDER",
+      "ORACLE_CONFLICT_TEXT",
+      "SageOracleController"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "../../core/models/GeneralUnit",
+        "declaration": "import type { GeneralConfig } from '../../core/models/GeneralUnit';",
+        "bindings": [
+          {
+            "name": "GeneralConfig",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../../core/systems/FactorAwakening",
+        "declaration": "import { listAwakeningCandidates } from '../../core/systems/FactorAwakening';",
+        "bindings": [
+          {
+            "name": "listAwakeningCandidates",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FactorAwakening.ts",
+              "symbol": "listAwakeningCandidates"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "../../core/systems/FactorInheritance",
+        "declaration": "import type { FactorColor } from '../../core/systems/FactorInheritance';",
+        "bindings": [
+          {
+            "name": "FactorColor",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../../core/systems/GeneralAging",
+        "declaration": "import { GENERAL_STATUS_DEAD } from '../../core/systems/GeneralAging';",
+        "bindings": [
+          {
+            "name": "GENERAL_STATUS_DEAD",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/GeneralAging.ts",
+              "symbol": "GENERAL_STATUS_DEAD"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "../../core/systems/PlayerInventory",
+        "declaration": "import { ITEM_DISPLAY_NAMES, ITEM_ORACLE_TOKEN } from '../../core/systems/PlayerInventory';",
+        "bindings": [
+          {
+            "name": "ITEM_DISPLAY_NAMES",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/PlayerInventory.ts",
+              "symbol": "ITEM_DISPLAY_NAMES"
+            }
+          },
+          {
+            "name": "ITEM_ORACLE_TOKEN",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/ItemDef.ts",
+              "symbol": "ITEM_ORACLE_TOKEN"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "../../core/systems/BreedingSystem",
+        "declaration": "import type { FactorPoolEntry } from '../../core/systems/BreedingSystem';",
+        "bindings": [
+          {
+            "name": "FactorPoolEntry",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../../core/systems/SageFactorPreview",
+        "declaration": "import { previewLockedFactorDirections } from '../../core/systems/SageFactorPreview';",
+        "bindings": [
+          {
+            "name": "previewLockedFactorDirections",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/SageFactorPreview.ts",
+              "symbol": "previewLockedFactorDirections"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "../../core/systems/SageDivination",
+        "declaration": "import { ProphecyResult, SAGES, SageDefinition, SageDivinationResult, SageId } from '../../core/systems/SageDivination';",
+        "bindings": [
+          {
+            "name": "ProphecyResult",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "SAGES",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/SageDivination.ts",
+              "symbol": "SAGES"
+            }
+          },
+          {
+            "name": "SageDefinition",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "SageDivinationResult",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "SageId",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./OracleLockedText",
+        "declaration": "import { oracleLockedText, sageLockedOutcomeText } from './OracleLockedText';",
+        "bindings": [
+          {
+            "name": "oracleLockedText",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/ui/core/OracleLockedText.ts",
+              "symbol": "oracleLockedText"
+            }
+          },
+          {
+            "name": "sageLockedOutcomeText",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/ui/core/OracleLockedText.ts",
+              "symbol": "sageLockedOutcomeText"
+            }
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring",
+      "previewLockedFactorDirections",
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary",
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection",
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats",
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown",
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf",
+      "advanceTrialDay",
+      "recordTrialBattle",
+      "TRIAL_TICKET_ABILITY_RATIO",
+      "scaleTrialStats",
+      "useTrialTicket",
+      "FREEZE_GRACE_DAYS",
+      "canDeployMercenary",
+      "canTeachMercenary",
+      "createUpkeepState",
+      "repayUpkeep",
+      "settleUpkeepDay",
+      "createEmptyMercenaryBundle",
+      "serializeMercenaryBundle",
+      "normalizeMercenaryBundle",
+      "RARITY_BY_TIER",
+      "AFFECTION_BOND_THRESHOLD",
+      "rarityOfTemplate",
+      "statsOfTemplate",
+      "bondMercenaryToRoster",
+      "buildMercenaryPanelView",
+      "FAREWELL_INBOX_LIMIT",
+      "FAREWELL_MIN_AFFECTION",
+      "FAREWELL_MOVING_AFFECTION",
+      "appendFarewellLetter",
+      "createFarewellLetter",
+      "farewellTierOf",
+      "markFarewellLetterRead",
+      "unreadFarewellCount",
+      "BATTLE_VITALITY_COST",
+      "BATTLE_MIN_VITALITY",
+      "VITALITY_RECOVER_DEPLOYED",
+      "VITALITY_RECOVER_STANDBY",
+      "PROWESS_PER_BATTLE_STAT",
+      "BATTLE_HP_BASE",
+      "BATTLE_HP_PER_STR",
+      "BATTLE_HP_PER_LEA",
+      "FATIGUE_THRESHOLD",
+      "FATIGUE_MIN_HP_FACTOR",
+      "FACTOR_ATTACK_BONUS_PER_STAR",
+      "FACTOR_ATTACK_BONUS_CAP",
+      "NEGATIVE_FACTOR_ATTACK_PENALTY",
+      "RATING_ATTACK_BONUS",
+      "BATTLE_TACTIC_SLOT_LIMIT",
+      "BATTLE_MERIT",
+      "checkDeployable",
+      "listDeployable",
+      "battleIntelligenceOf",
+      "computeAttackBonus",
+      "buildBattleConfig",
+      "outcomeOf",
+      "settleBattle",
+      "recoverVitalityOneSeason",
+      "lockRole",
+      "reportRoles",
+      "toCanonicalRole",
+      "normalizeRosterRoles",
+      "ORACLE_LOCKED_KEY",
+      "ORACLE_LOCKED_FALLBACK_ZH_TW",
+      "oracleLockedText",
+      "ORACLE_SAGE_LOCKED_KEY",
+      "ORACLE_SAGE_LOCKED_FALLBACK_ZH_TW",
+      "sageLockedOutcomeText"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/ui/core/MercenaryNameplateRows.ts",
+    "source_sha256": "00fa4c3d5c956e4ca0b606df7edccb653a1e0c32528e51fcd85fb6f615f3d777",
+    "transformed_sha256": "85653a36eeff6531576d925a8c389e61e94f4de2bb77d0f1efd8de65e8508dfe",
+    "exports": [
+      "MERC_PANEL_MAX_ROWS",
+      "mercenaryNameplateStatusText",
+      "buildMercenaryNameplateRows"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "../../core/systems/MercenaryBond",
+        "declaration": "import type { MercenaryState } from '../../core/systems/MercenaryBond';",
+        "bindings": [
+          {
+            "name": "MercenaryState",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryPanelController",
+        "declaration": "import type { MercenaryDisplayInfo } from './MercenaryPanelController';",
+        "bindings": [
+          {
+            "name": "MercenaryDisplayInfo",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring",
+      "previewLockedFactorDirections",
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary",
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection",
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats",
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown",
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf",
+      "advanceTrialDay",
+      "recordTrialBattle",
+      "TRIAL_TICKET_ABILITY_RATIO",
+      "scaleTrialStats",
+      "useTrialTicket",
+      "FREEZE_GRACE_DAYS",
+      "canDeployMercenary",
+      "canTeachMercenary",
+      "createUpkeepState",
+      "repayUpkeep",
+      "settleUpkeepDay",
+      "createEmptyMercenaryBundle",
+      "serializeMercenaryBundle",
+      "normalizeMercenaryBundle",
+      "RARITY_BY_TIER",
+      "AFFECTION_BOND_THRESHOLD",
+      "rarityOfTemplate",
+      "statsOfTemplate",
+      "bondMercenaryToRoster",
+      "buildMercenaryPanelView",
+      "FAREWELL_INBOX_LIMIT",
+      "FAREWELL_MIN_AFFECTION",
+      "FAREWELL_MOVING_AFFECTION",
+      "appendFarewellLetter",
+      "createFarewellLetter",
+      "farewellTierOf",
+      "markFarewellLetterRead",
+      "unreadFarewellCount",
+      "BATTLE_VITALITY_COST",
+      "BATTLE_MIN_VITALITY",
+      "VITALITY_RECOVER_DEPLOYED",
+      "VITALITY_RECOVER_STANDBY",
+      "PROWESS_PER_BATTLE_STAT",
+      "BATTLE_HP_BASE",
+      "BATTLE_HP_PER_STR",
+      "BATTLE_HP_PER_LEA",
+      "FATIGUE_THRESHOLD",
+      "FATIGUE_MIN_HP_FACTOR",
+      "FACTOR_ATTACK_BONUS_PER_STAR",
+      "FACTOR_ATTACK_BONUS_CAP",
+      "NEGATIVE_FACTOR_ATTACK_PENALTY",
+      "RATING_ATTACK_BONUS",
+      "BATTLE_TACTIC_SLOT_LIMIT",
+      "BATTLE_MERIT",
+      "checkDeployable",
+      "listDeployable",
+      "battleIntelligenceOf",
+      "computeAttackBonus",
+      "buildBattleConfig",
+      "outcomeOf",
+      "settleBattle",
+      "recoverVitalityOneSeason",
+      "lockRole",
+      "reportRoles",
+      "toCanonicalRole",
+      "normalizeRosterRoles",
+      "ORACLE_LOCKED_KEY",
+      "ORACLE_LOCKED_FALLBACK_ZH_TW",
+      "oracleLockedText",
+      "ORACLE_SAGE_LOCKED_KEY",
+      "ORACLE_SAGE_LOCKED_FALLBACK_ZH_TW",
+      "sageLockedOutcomeText",
+      "SAGE_ORDER",
+      "ORACLE_CONFLICT_TEXT",
+      "SageOracleController"
+    ]
+  },
+  {
+    "kind": "MODULE_NO_IMPORT_EXPORT_WRAPPER",
+    "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+    "source_sha256": "07d5462c55c59ffdadeb6f2c3757cc740b42bbeec824c02becbc644f6d113ab5",
+    "transformed_sha256": "cfd3a2816417493599b112bf830119b155a87f1d930b4c58755ec0357c9aff47",
+    "exports": [
+      "MercenaryPanelController"
+    ],
+    "dependency_contract": [
+      {
+        "specifier": "../../core/systems/MercenaryBondPermanent",
+        "declaration": "import type { BondRarity } from '../../core/systems/MercenaryBondPermanent';",
+        "bindings": [
+          {
+            "name": "BondRarity",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../../core/systems/MercenaryBond",
+        "declaration": "import { MercenaryState } from '../../core/systems/MercenaryBond';",
+        "bindings": [
+          {
+            "name": "MercenaryState",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../../core/systems/MercenaryPanelView",
+        "declaration": "import { buildMercenaryPanelView, MercenaryPanelView } from '../../core/systems/MercenaryPanelView';",
+        "bindings": [
+          {
+            "name": "buildMercenaryPanelView",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryPanelView.ts",
+              "symbol": "buildMercenaryPanelView"
+            }
+          },
+          {
+            "name": "MercenaryPanelView",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "./MercenaryNameplateRows",
+        "declaration": "import { buildMercenaryNameplateRows, MERC_PANEL_MAX_ROWS } from './MercenaryNameplateRows';",
+        "bindings": [
+          {
+            "name": "buildMercenaryNameplateRows",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/ui/core/MercenaryNameplateRows.ts",
+              "symbol": "buildMercenaryNameplateRows"
+            }
+          },
+          {
+            "name": "MERC_PANEL_MAX_ROWS",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/ui/core/MercenaryNameplateRows.ts",
+              "symbol": "MERC_PANEL_MAX_ROWS"
+            }
+          }
+        ]
+      }
+    ],
+    "injected_parameter_names": [
+      "ITEM_ADMISSION_TOKEN",
+      "ITEM_BAMBOO_SLIP",
+      "ITEM_BATTLE_NOTE",
+      "ITEM_CATEGORIES",
+      "ITEM_DEFS",
+      "ITEM_FERTILITY",
+      "ITEM_INSTRUCTOR_EXP",
+      "ITEM_INTEL",
+      "ITEM_JOB_CHANGE_ORDER",
+      "ITEM_LEGENDARY_MENTORING_TICKET",
+      "ITEM_LONGEVITY_PILL",
+      "ITEM_MERGE_TOKEN",
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_PREMIUM_VITALITY_PILL",
+      "ITEM_REFRESH",
+      "ITEM_STONE",
+      "ITEM_TALLY_ESSENCE",
+      "ITEM_TREASURE",
+      "ITEM_TRIAL_TICKET",
+      "ITEM_VITALITY_PILL",
+      "ITEM_WEAPON_MATERIAL",
+      "ITEM_WEATHER_RAIN",
+      "ITEM_WEATHER_WIND",
+      "ITEM_WISH_SPEED_CARD",
+      "ITEM_WOOD",
+      "itemDefOf",
+      "ITEM_FERTILITY_ARMED",
+      "MERGE_TOKEN_SHORTAGE_KEY",
+      "MERGE_TOKEN_SHORTAGE_TEXT",
+      "ITEM_DISPLAY_NAMES",
+      "STARTER_INVENTORY",
+      "ORACLE_TOKEN_PER_SEASON",
+      "ORACLE_TOKEN_FREE_CAP",
+      "normalizeInventory",
+      "itemCount",
+      "addItem",
+      "consumeItem",
+      "grantSeasonalOracleTokens",
+      "AGE_PER_SEASON",
+      "BASE_LIFESPAN",
+      "DEATH_CHANCE_PER_OVER_YEAR",
+      "GENERAL_STATUS_DEAD",
+      "LIFESPAN_VARIANCE_MAX",
+      "LIFESPAN_VARIANCE_MIN",
+      "LIFE_GROWTH_STAGE_STARTS",
+      "MAX_DEATH_CHANCE_PER_SEASON",
+      "RETIREMENT_AGE",
+      "ageGeneralsOneSeason",
+      "deathChancePerSeason",
+      "growthStagesCrossed",
+      "isGeneralDead",
+      "resolveMaxLifespan",
+      "ALL_FACTOR_COLORS",
+      "DEFAULT_ENABLED_FACTOR_COLORS",
+      "DEFAULT_MAX_INHERITED_FACTORS",
+      "EARLY_REVEAL_FACTOR_COLORS",
+      "FACTOR_DISCOVERY_LEVEL",
+      "FACTOR_POOL_RATE",
+      "FACTOR_STAR_DISTRIBUTION",
+      "buildFactorDictionary",
+      "inheritFactors",
+      "inheritanceLukRate",
+      "normalizeFactorColor",
+      "resolveFactorColor",
+      "rollFactorStar",
+      "toGeneConfigs",
+      "requiredDiscoveryLevel",
+      "getFactorVisibility",
+      "factorStageSummary",
+      "factorStageText",
+      "isFactorLevelUnlocked",
+      "isGeneFactorVisible",
+      "AWAKENING_TRIGGERS_BY_COLOR",
+      "discoveryPhase",
+      "awakenFactor",
+      "NURTURE_PEEK_BASE_CHANCE",
+      "NURTURE_PEEK_RANK_STEP",
+      "BATTLE_AWAKENING_CHANCE",
+      "BATTLE_AWAKENING_SPECIAL_CHANCE",
+      "LUK_AWAKENING_SPEED_DIVISOR",
+      "awakeningSpeedModifier",
+      "nurtureAwakeningChance",
+      "listAwakeningCandidates",
+      "rollAwakening",
+      "nurturePeekChance",
+      "rollNurtureAwakening",
+      "rollBattleAwakening",
+      "SAGES",
+      "SAGE_BIAS_WEIGHT",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "distortColor",
+      "predictOffspring",
+      "previewLockedFactorDirections",
+      "TRIAL_DAYS",
+      "advanceMercenaryDay",
+      "bondMercenary",
+      "canBondMercenary",
+      "createTrialMercenary",
+      "AFFECTION_CAP",
+      "AFFECTION_PER_DAY",
+      "applyDailyAffection",
+      "BOND_POINT_COST",
+      "bondToPermanent",
+      "isBondRarity",
+      "snapshotBondStats",
+      "FAREWELL_TEXT_KEY",
+      "POOL_COOLDOWN_DAYS",
+      "isAvailableForPool",
+      "isGeneralAvailableForPool",
+      "settleTrialRollover",
+      "settleUpkeepDeparture",
+      "startCooldownAfterBond",
+      "startPoolCooldown",
+      "ILLUSTRATION_AFFECTION_FOR_STAGE_4",
+      "ILLUSTRATION_BATTLES_FOR_STAGE_2",
+      "ILLUSTRATION_BOND_MAX",
+      "ILLUSTRATION_STAGE_MAX",
+      "ILLUSTRATION_STAGE_MIN",
+      "ILLUSTRATION_WINS_FOR_STAGE_3",
+      "advanceIllustrationStage",
+      "illustrationStageOf",
+      "advanceTrialDay",
+      "recordTrialBattle",
+      "TRIAL_TICKET_ABILITY_RATIO",
+      "scaleTrialStats",
+      "useTrialTicket",
+      "FREEZE_GRACE_DAYS",
+      "canDeployMercenary",
+      "canTeachMercenary",
+      "createUpkeepState",
+      "repayUpkeep",
+      "settleUpkeepDay",
+      "createEmptyMercenaryBundle",
+      "serializeMercenaryBundle",
+      "normalizeMercenaryBundle",
+      "RARITY_BY_TIER",
+      "AFFECTION_BOND_THRESHOLD",
+      "rarityOfTemplate",
+      "statsOfTemplate",
+      "bondMercenaryToRoster",
+      "buildMercenaryPanelView",
+      "FAREWELL_INBOX_LIMIT",
+      "FAREWELL_MIN_AFFECTION",
+      "FAREWELL_MOVING_AFFECTION",
+      "appendFarewellLetter",
+      "createFarewellLetter",
+      "farewellTierOf",
+      "markFarewellLetterRead",
+      "unreadFarewellCount",
+      "BATTLE_VITALITY_COST",
+      "BATTLE_MIN_VITALITY",
+      "VITALITY_RECOVER_DEPLOYED",
+      "VITALITY_RECOVER_STANDBY",
+      "PROWESS_PER_BATTLE_STAT",
+      "BATTLE_HP_BASE",
+      "BATTLE_HP_PER_STR",
+      "BATTLE_HP_PER_LEA",
+      "FATIGUE_THRESHOLD",
+      "FATIGUE_MIN_HP_FACTOR",
+      "FACTOR_ATTACK_BONUS_PER_STAR",
+      "FACTOR_ATTACK_BONUS_CAP",
+      "NEGATIVE_FACTOR_ATTACK_PENALTY",
+      "RATING_ATTACK_BONUS",
+      "BATTLE_TACTIC_SLOT_LIMIT",
+      "BATTLE_MERIT",
+      "checkDeployable",
+      "listDeployable",
+      "battleIntelligenceOf",
+      "computeAttackBonus",
+      "buildBattleConfig",
+      "outcomeOf",
+      "settleBattle",
+      "recoverVitalityOneSeason",
+      "lockRole",
+      "reportRoles",
+      "toCanonicalRole",
+      "normalizeRosterRoles",
+      "ORACLE_LOCKED_KEY",
+      "ORACLE_LOCKED_FALLBACK_ZH_TW",
+      "oracleLockedText",
+      "ORACLE_SAGE_LOCKED_KEY",
+      "ORACLE_SAGE_LOCKED_FALLBACK_ZH_TW",
+      "sageLockedOutcomeText",
+      "SAGE_ORDER",
+      "ORACLE_CONFLICT_TEXT",
+      "SageOracleController",
+      "MERC_PANEL_MAX_ROWS",
+      "mercenaryNameplateStatusText",
+      "buildMercenaryNameplateRows"
+    ]
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "inventory",
+    "start_line": 761,
+    "end_line": 763,
+    "sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+    "text": "    public get inventory(): PlayerInventory {\n        return { ...this._inventory };\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "oracleCount",
+    "start_line": 766,
+    "end_line": 768,
+    "sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+    "text": "    public get oracleCount(): number {\n        return this._oracleCount;\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "mercenaries",
+    "start_line": 787,
+    "end_line": 789,
+    "sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+    "text": "    public get mercenaries(): MercenarySaveBundle {\n        return serializeMercenaryBundle(this._mercenaries);\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "mercenaryDay",
+    "start_line": 792,
+    "end_line": 794,
+    "sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+    "text": "    public get mercenaryDay(): number {\n        return this._mercenaries.day ?? 0;\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "advanceMercenaryDay",
+    "start_line": 801,
+    "end_line": 807,
+    "sha256": "ff3882304e4b53cf99dd7278a75eb3ff2fa03652afd3772f3d6862a30a16ea79",
+    "text": "    public async advanceMercenaryDay(): Promise<MercenaryDayReport> {\n        const report = this._tickMercenaryDay();\n        if (this._autoSave && this._save) {\n            await this.save();\n        }\n        return report;\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "_tickMercenaryDay",
+    "start_line": 810,
+    "end_line": 837,
+    "sha256": "adadda01b991948e4c4ba4523b280671c1676e268d2837d6fb81bce34754554b",
+    "text": "    private _tickMercenaryDay(): MercenaryDayReport {\n        const today = this.mercenaryDay + 1;\n        const events: DepartureEvent[] = [];\n        const departed = new Set<string>();\n        const letters: FarewellLetter[] = [];\n        let cooldowns = this._mercenaries.cooldowns;\n        const mercenaries = this._mercenaries.mercenaries.map((merc) => {\n            const settled = settleTrialRollover(merc, today, cooldowns);\n            cooldowns = settled.cooldowns;\n            if (settled.departed) {\n                departed.add(merc.uid);\n                events.push(...settled.events);\n                const letter = createFarewellLetter({ uid: merc.uid, generalName: this.generalNameOf(merc.generalId, merc.uid), affection: merc.affection ?? 0, day: today });\n                if (letter) letters.push(letter);\n                return { ...merc, status: settled.record.status };\n            }\n            return advanceTrialDay(merc).state;\n        });\n        for (const letter of letters) this._farewellLetters = appendFarewellLetter(this._farewellLetters, letter);\n        this._mercenaries = {\n            ...this._mercenaries,\n            mercenaries,\n            upkeep: this._mercenaries.upkeep.filter((u) => !departed.has(u.uid)),\n            cooldowns,\n            day: today,\n        };\n        return { day: today, events };\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "generalNameOf",
+    "start_line": 840,
+    "end_line": 843,
+    "sha256": "e5b1e899f1ff7eeb85f2a0c98d3913ee61abaf49e31e2df1bfa2f09ef19a978a",
+    "text": "    private generalNameOf(generalId: string | undefined, fallback: string): string {\n        if (!generalId) return fallback;\n        return this._roster.getAll().find(g => g.id === generalId)?.name ?? fallback;\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "bondMercenaryToRoster",
+    "start_line": 872,
+    "end_line": 891,
+    "sha256": "d1b252cf3b7bdbb3e59ec6e2142cd3718a6fffc8979f0f0f330eaee498a6c32f",
+    "text": "    public async bondMercenaryToRoster(uid: string, template: GeneralConfig): Promise<RosterBondResult & { rosterAdded?: boolean }> {\n        const mercenary = this._mercenaries.mercenaries.find((m) => m.uid === uid);\n        if (!mercenary) {\n            return { ok: false, reason: 'not-found', pointsSpent: 0 };\n        }\n        const result = bondMercenaryToRoster(mercenary, template, this._bondPoints, this._mercenaries.cooldowns, this.mercenaryDay);\n        if (!result.ok || !result.mercenary || !result.general || !result.cooldowns) {\n            return result;\n        }\n        this._mercenaries = {\n            mercenaries: this._mercenaries.mercenaries.map((m) => (m.uid === uid ? result.mercenary! : m)),\n            upkeep: this._mercenaries.upkeep.filter((u) => u.uid !== uid),\n            cooldowns: result.cooldowns,\n            day: this.mercenaryDay,\n        };\n        this._bondPoints -= result.pointsSpent;\n        const { added } = await this.addGenerals([result.general]);\n        if (added.length > 0) await this.recordMercenaryOath(result.general.id);\n        return { ...result, rosterAdded: added.length > 0 };\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "hireTrialMercenary",
+    "start_line": 1049,
+    "end_line": 1073,
+    "sha256": "f4753e0965616bb7fb9419521a20036540c177f95fd93c71e4708a8902bc9192",
+    "text": "    public async hireTrialMercenary(uid: string, template: GeneralConfig): Promise<HireTrialResult> {\n        const wallet = { trialTickets: this.itemCount(ITEM_TRIAL_TICKET) };\n        if (this._mercenaries.mercenaries.some((m) => m.uid === uid)) {\n            return { ok: false, reason: 'uid-taken', wallet };\n        }\n        const result = useTrialTicket(wallet, uid, statsOfTemplate(template), template.id);\n        if (!result.ok || !result.mercenary) {\n            return result;\n        }\n        const inventory = consumeItem(this._inventory, ITEM_TRIAL_TICKET);\n        if (!inventory) {\n            return { ok: false, reason: 'no-ticket', wallet };\n        }\n        this._inventory = inventory;\n        this._mercenaries = {\n            ...this._mercenaries,\n            mercenaries: [...this._mercenaries.mercenaries, result.mercenary],\n            upkeep: [...this._mercenaries.upkeep, createUpkeepState(uid)],\n        };\n        if (this._autoSave && this._save) {\n            await this.save();\n        }\n        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);\n        return result;\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "isSageUnlocked",
+    "start_line": 1447,
+    "end_line": 1449,
+    "sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+    "text": "    public isSageUnlocked(sageId: string): boolean {\n        return isSageUnlocked(sageId, this._oracleCount);\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "itemCount",
+    "start_line": 1451,
+    "end_line": 1453,
+    "sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+    "text": "    public itemCount(itemId: string): number {\n        return itemCount(this._inventory, itemId);\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "divineFactor",
+    "start_line": 3199,
+    "end_line": 3219,
+    "sha256": "60d1717efb2adc44b217c33812e381fb994f4ebfca60925ef47e69b42f1f2920",
+    "text": "    public async divineFactor(generalId: string, sageId: string): Promise<SageDivinationResult> {\n        if (!this.isSageUnlocked(sageId)) {\n            return { sageId, outcome: getSage(sageId) ? 'sage-locked' : 'no-such-sage', hintColor: null, consumed: false };\n        }\n        if (this.itemCount(ITEM_ORACLE_TOKEN) < 1) {\n            return { sageId, outcome: 'no-token', hintColor: null, consumed: false };\n        }\n        const roster = this._roster.getAll();\n        const result = divineFactor(roster.find((g) => g.id === generalId), sageId, this._discoveryLevel, this._random);\n        if (result.outcome === 'awakened' && result.general) {\n            const general = result.general;\n            this._roster.replaceAll(roster.map((g) => (g.id === generalId ? general : g)));\n        }\n        if (result.consumed) {\n            await this._spendOracleToken();\n        }\n        if (result.event) {\n            this._emit(GAME_SESSION_EVENTS.FactorAwakened, result.event);\n        }\n        return result;\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "predictOffspring",
+    "start_line": 3225,
+    "end_line": 3237,
+    "sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+    "text": "    public async predictOffspring(pool: readonly FactorPoolEntry[], sageId: string): Promise<ProphecyResult> {\n        if (!this.isSageUnlocked(sageId)) {\n            return { sageId, outcome: getSage(sageId) ? 'sage-locked' : 'no-such-sage', consumed: false };\n        }\n        if (this.itemCount(ITEM_ORACLE_TOKEN) < 1) {\n            return { sageId, outcome: 'no-token', consumed: false };\n        }\n        const result = predictOffspring(pool, sageId, this._random, this._prophecyKeywordSources());\n        if (result.consumed) {\n            await this._spendOracleToken();\n        }\n        return result;\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "_spendOracleToken",
+    "start_line": 3240,
+    "end_line": 3247,
+    "sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+    "text": "    private async _spendOracleToken(): Promise<void> {\n        this._inventory = consumeItem(this._inventory, ITEM_ORACLE_TOKEN) ?? this._inventory;\n        this._oracleCount += 1;\n        if (this._autoSave && this._save) {\n            await this.save();\n        }\n        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "addGenerals",
+    "start_line": 3654,
+    "end_line": 3662,
+    "sha256": "ac49db92589674acbb112dd0f0742cdc4300305086598ebbc03a1b530f5909fa",
+    "text": "    public async addGenerals(generals: GeneralConfig[], options: AddGeneralsOptions = {}): Promise<AddGeneralsResult> {\n        const result = this.enrollGenerals(generals, options);\n        if (result.added.length > 0 || result.rebirths.length > 0) {\n            if (this._autoSave && this._save) {\n                await this.save();\n            }\n        }\n        return result;\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "enrollGenerals",
+    "start_line": 3668,
+    "end_line": 3729,
+    "sha256": "0558108052b7a69ceffacb5d3a2044c710f6211776dd662098ccbfd1086c7a02",
+    "text": "    public enrollGenerals(generals: GeneralConfig[], options: AddGeneralsOptions = {}): AddGeneralsResult {\n        const owned = new Set(this._roster.getAll().map((general) => general.id));\n        const added: GeneralConfig[] = [];\n        const duplicates: GeneralConfig[] = [];\n        const rebirths: Array<RebirthPullResult & { id: string }> = [];\n        let bondPointsGained = 0;\n        for (const general of normalizeRosterRoles(generals)) {\n            if (!general || typeof general.id !== 'string') {\n                continue;\n            }\n            if (owned.has(general.id)) {\n                duplicates.push(general);\n                continue;\n            }\n            owned.add(general.id);\n            added.push(options.rebirthOnDuplicate ? this._withPulledTactics({ ...general }) : { ...general });\n        }\n\n        if (options.rebirthOnDuplicate && duplicates.length > 0) {\n            // 同一批可能抽到同名多次，逐筆依序累加轉數\n            // 同一批先抽到的新武將還在 added 裡、尚未進名冊，批內第二張也要算重複（與跨批一致）\n            const roster = this._roster.getAll();\n            const byId = new Map([...roster, ...added].map((general) => [general.id, general]));\n            for (const duplicate of duplicates) {\n                const target = byId.get(duplicate.id);\n                if (!target) continue;\n                const pull = applyDuplicatePull(target.rebirthCount);\n                byId.set(duplicate.id, {\n                    ...this._withPulledTactics(target),\n                    rebirthCount: pull.rebirthCount,\n                    ultimateSlots: withUltimateUnlockState(target.ultimateSlots ?? [], pull.rebirthCount),\n                });\n                rebirths.push({ id: duplicate.id, ...pull });\n                if (pull.overflow) {\n                    bondPointsGained += overflowBondPoints(overflowRarityOf(target));\n                }\n            }\n            if (rebirths.length > 0) {\n                this._roster.replaceAll(roster.map((general) => byId.get(general.id) ?? general));\n                for (let i = 0; i < added.length; i++) added[i] = byId.get(added[i].id) ?? added[i];\n            }\n            this._bondPoints += bondPointsGained;\n        }\n\n        if (options.fromGacha) {\n            for (const general of added) {\n                if (this._tallyLoyalty[general.id]) continue;\n                this._tallyLoyalty = { ...this._tallyLoyalty, [general.id]: createTallyLoyaltyState(TALLY_LOYALTY_INITIAL, true) };\n            }\n        }\n        if (added.length > 0) {\n            this._roster.replaceAll([...this._roster.getAll(), ...added]);\n        }\n        if (added.length > 0) {\n            this._emit(GAME_SESSION_EVENTS.RosterChanged, added);\n        }\n        // 三國日報素材（暫定判定）：轉蛋抽到新武將算成功，全是重複算失敗\n        if (options.rebirthOnDuplicate && (added.length > 0 || duplicates.length > 0)) {\n            this.recordPlayerLog(added.length > 0 ? 'GACHA_SUCCESS' : 'GACHA_FAIL');\n        }\n        return { added, duplicates, rebirths, bondPointsGained };\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "_recordTrialMercenaryBattles",
+    "start_line": 3751,
+    "end_line": 3763,
+    "sha256": "9200264144dd92441a401e5d81e7b708b636137d5521be3e15d3f7dd1507a507",
+    "text": "    private _recordTrialMercenaryBattles(deployedIds: readonly string[], result: BattleResult): boolean {\n        const outcome = outcomeOf(result);\n        if (!outcome) return false;\n        let changed = false;\n        const mercenaries = this._mercenaries.mercenaries.map((m) => {\n            if (!deployedIds.includes(m.uid)) return m;\n            const next = recordTrialBattle(m, outcome);\n            if (next !== m) changed = true;\n            return next;\n        });\n        if (changed) this._mercenaries = { ...this._mercenaries, mercenaries };\n        return changed;\n    }"
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "name": "save",
+    "start_line": 4200,
+    "end_line": 4206,
+    "sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+    "text": "    public async save(): Promise<PlayerSaveSnapshot> {\n        const service = this._requireSave();\n        const snapshot = this.createSnapshot();\n        await service.save(snapshot);\n        this._emit(GAME_SESSION_EVENTS.Saved, snapshot);\n        return snapshot;\n    }"
+  },
+  {
+    "kind": "CLASS_WRAPPER_DEPENDENCY_CONTRACT",
+    "path": "assets/scripts/core/managers/GameSession.ts",
+    "methods": [
+      "inventory",
+      "oracleCount",
+      "mercenaries",
+      "mercenaryDay",
+      "advanceMercenaryDay",
+      "_tickMercenaryDay",
+      "generalNameOf",
+      "bondMercenaryToRoster",
+      "hireTrialMercenary",
+      "isSageUnlocked",
+      "itemCount",
+      "divineFactor",
+      "predictOffspring",
+      "_spendOracleToken",
+      "addGenerals",
+      "enrollGenerals",
+      "_recordTrialMercenaryBattles",
+      "save"
+    ],
+    "extraction": "FIXED_LINE_RANGE_TEXT_NOT_AST",
+    "dependency_contract": [
+      {
+        "specifier": "../systems/BattleRoster",
+        "declaration": "import { battleIntelligenceOf, outcomeOf } from '../systems/BattleRoster';",
+        "bindings": [
+          {
+            "name": "battleIntelligenceOf",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "outcomeOf",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/BattleRoster.ts",
+              "symbol": "outcomeOf"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "../systems/MercenarySaveModel",
+        "declaration": "import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';",
+        "bindings": [
+          {
+            "name": "createEmptyMercenaryBundle",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "normalizeMercenaryBundle",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "serializeMercenaryBundle",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+              "symbol": "serializeMercenaryBundle"
+            }
+          },
+          {
+            "name": "MercenarySaveBundle",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../systems/MercenaryRoster",
+        "declaration": "import { bondMercenaryToRoster, statsOfTemplate, type RosterBondResult } from '../systems/MercenaryRoster';",
+        "bindings": [
+          {
+            "name": "bondMercenaryToRoster",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+              "symbol": "bondMercenaryToRoster"
+            }
+          },
+          {
+            "name": "statsOfTemplate",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+              "symbol": "statsOfTemplate"
+            }
+          },
+          {
+            "name": "RosterBondResult",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../systems/MercenaryTrialTicket",
+        "declaration": "import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } from '../systems/MercenaryTrialTicket';",
+        "bindings": [
+          {
+            "name": "useTrialTicket",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryTrialTicket.ts",
+              "symbol": "useTrialTicket"
+            }
+          },
+          {
+            "name": "TrialTicketRejectReason",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          },
+          {
+            "name": "TrialTicketResult",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../systems/MercenaryUpkeep",
+        "declaration": "import { createUpkeepState } from '../systems/MercenaryUpkeep';",
+        "bindings": [
+          {
+            "name": "createUpkeepState",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+              "symbol": "createUpkeepState"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "../systems/MercenaryTrialDay",
+        "declaration": "import { advanceTrialDay } from '../systems/MercenaryTrialDay';",
+        "bindings": [
+          {
+            "name": "advanceTrialDay",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryTrialDay.ts",
+              "symbol": "advanceTrialDay"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "../systems/MercenaryBattleRecord",
+        "declaration": "import { recordTrialBattle } from '../systems/MercenaryBattleRecord';",
+        "bindings": [
+          {
+            "name": "recordTrialBattle",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+              "symbol": "recordTrialBattle"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "../systems/MercenaryDeparture",
+        "declaration": "import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';",
+        "bindings": [
+          {
+            "name": "settleTrialRollover",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+              "symbol": "settleTrialRollover"
+            }
+          },
+          {
+            "name": "DepartureEvent",
+            "explicit_type_only": true,
+            "handling": "ERASED_TYPE_IMPORT",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../systems/FarewellLetterInbox",
+        "declaration": "import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';",
+        "bindings": [
+          {
+            "name": "appendFarewellLetter",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FarewellLetterInbox.ts",
+              "symbol": "appendFarewellLetter"
+            }
+          },
+          {
+            "name": "createFarewellLetter",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/FarewellLetterInbox.ts",
+              "symbol": "createFarewellLetter"
+            }
+          },
+          {
+            "name": "FarewellLetter",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "markFarewellLetterRead",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../systems/SageDivination",
+        "declaration": "import { divineFactor, getSage, isSageUnlocked, predictOffspring, ProphecyKeywordSource, ProphecyResult, SageDivinationResult } from '../systems/SageDivination';",
+        "bindings": [
+          {
+            "name": "divineFactor",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/SageDivination.ts",
+              "symbol": "divineFactor"
+            }
+          },
+          {
+            "name": "getSage",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/SageDivination.ts",
+              "symbol": "getSage"
+            }
+          },
+          {
+            "name": "isSageUnlocked",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/SageDivination.ts",
+              "symbol": "isSageUnlocked"
+            }
+          },
+          {
+            "name": "predictOffspring",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/SageDivination.ts",
+              "symbol": "predictOffspring"
+            }
+          },
+          {
+            "name": "ProphecyKeywordSource",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "ProphecyResult",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "SageDivinationResult",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../systems/PlayerInventory",
+        "declaration": "import { addItem, consumeItem, grantSeasonalOracleTokens, ITEM_ADMISSION_TOKEN, ITEM_BAMBOO_SLIP, ITEM_FERTILITY_ARMED, ITEM_JOB_CHANGE_ORDER, ITEM_LEGENDARY_MENTORING_TICKET, ITEM_MERGE_TOKEN, ITEM_ORACLE_TOKEN, ITEM_TRIAL_TICKET, ITEM_TREASURE, ITEM_WISH_SPEED_CARD, itemCount, normalizeInventory, PlayerInventory, STARTER_INVENTORY } from '../systems/PlayerInventory';",
+        "bindings": [
+          {
+            "name": "addItem",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "consumeItem",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/PlayerInventory.ts",
+              "symbol": "consumeItem"
+            }
+          },
+          {
+            "name": "grantSeasonalOracleTokens",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "ITEM_ADMISSION_TOKEN",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "ITEM_BAMBOO_SLIP",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "ITEM_FERTILITY_ARMED",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "ITEM_JOB_CHANGE_ORDER",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "ITEM_LEGENDARY_MENTORING_TICKET",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "ITEM_MERGE_TOKEN",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "ITEM_ORACLE_TOKEN",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/ItemDef.ts",
+              "symbol": "ITEM_ORACLE_TOKEN"
+            }
+          },
+          {
+            "name": "ITEM_TRIAL_TICKET",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/ItemDef.ts",
+              "symbol": "ITEM_TRIAL_TICKET"
+            }
+          },
+          {
+            "name": "ITEM_TREASURE",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "ITEM_WISH_SPEED_CARD",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "itemCount",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/PlayerInventory.ts",
+              "symbol": "itemCount"
+            }
+          },
+          {
+            "name": "normalizeInventory",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "PlayerInventory",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "STARTER_INVENTORY",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      },
+      {
+        "specifier": "../systems/RosterRoleLoad",
+        "declaration": "import { normalizeRosterRoles } from '../systems/RosterRoleLoad';",
+        "bindings": [
+          {
+            "name": "normalizeRosterRoles",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/RosterRoleLoad.ts",
+              "symbol": "normalizeRosterRoles"
+            }
+          }
+        ]
+      }
+    ],
+    "injected_referenced_symbols": [
+      "ITEM_ORACLE_TOKEN",
+      "ITEM_TRIAL_TICKET",
+      "itemCount",
+      "consumeItem",
+      "getSage",
+      "isSageUnlocked",
+      "divineFactor",
+      "predictOffspring",
+      "advanceMercenaryDay",
+      "settleTrialRollover",
+      "advanceTrialDay",
+      "recordTrialBattle",
+      "useTrialTicket",
+      "createUpkeepState",
+      "serializeMercenaryBundle",
+      "statsOfTemplate",
+      "bondMercenaryToRoster",
+      "appendFarewellLetter",
+      "createFarewellLetter",
+      "outcomeOf",
+      "normalizeRosterRoles",
+      "GAME_SESSION_EVENTS"
+    ],
+    "fixtures": [
+      "GAME_SESSION_EVENTS"
+    ]
+  },
+  {
+    "kind": "EXACT_ORIGINAL_METHOD",
+    "path": "assets/scripts/ui/scenes/LobbyScene.ts",
+    "name": "_mountMercenaryPanel",
+    "start_line": 1729,
+    "end_line": 1771,
+    "sha256": "2a570b0e6134c3d4ef4dbf651f629a536e526db5a9599fd02a7df4f4bcef4f1e",
+    "text": "    private async _mountMercenaryPanel(): Promise<void> {\n        this._mercPanel = new MercenaryPanelController({\n            mercenaries: () => services().session.mercenaries.mercenaries,\n            info: (state) => {\n                const general = this._generals.find(g => g.id === state.generalId);\n                return {\n                    // 原主尚無正式來源（暫定）；稀有度與實際結義扣點同源（rarityOfTemplate，PROG-2-1153）\n                    originalOwnerName: '原主未定',\n                    generalName: general?.name ?? state.generalId ?? '未知武將',\n                    rarity: (general ? rarityOfTemplate(general) : undefined) ?? 'R',\n                };\n            },\n            bondPoints: () => services().session.bondPoints,\n            bond: async (uid) => {\n                const state = services().session.mercenaries.mercenaries.find(m => m.uid === uid);\n                const template = this._generals.find(g => g.id === state?.generalId);\n                if (!template) return false;\n                const result = await services().session.bondMercenaryToRoster(uid, template);\n                return result.ok;\n            },\n            trialTickets: () => services().session.itemCount(ITEM_TRIAL_TICKET),\n            hire: async () => {\n                const session = services().session;\n                const taken = new Set([...session.roster.map(g => g.id), ...session.mercenaries.mercenaries.map(m => m.generalId)]);\n                const pool = session.availablePoolGeneralIds(this._heroPoolIds.filter(id => !taken.has(id)));\n                const template = this._generals.find(g => g.id === pool[Math.floor(Math.random() * pool.length)]);\n                if (!template) return null;\n                const result = await session.hireTrialMercenary(`merc-${Date.now()}-${template.id}`, template);\n                return result.ok ? template.name : null;\n            },\n        });\n        const rowBindings = Array.from({ length: MERC_PANEL_MAX_ROWS }, (_, i) => ({\n            buttonId: `btnMercRow${i}`,\n            handler: () => { this._selectMercenary(i); },\n        }));\n        this._mercPanelHost = await this._mountPreviewScreenHost('MercenaryPanelHost', 'mercenary-panel-screen', [\n            { buttonId: 'btnClose', handler: () => { this._closeMercenaryPanel(); } },\n            { buttonId: 'btnMercBond', handler: () => { void this._onClickMercenaryBond(); } },\n            { buttonId: 'btnMercHire', handler: () => { void this._mercPanel?.hireTrial().then(() => this._refreshMercenaryPanel()); } },\n            ...rowBindings,\n        ]);\n        this._mercPanelHost.node.active = false;\n    }"
+  },
+  {
+    "kind": "CLASS_WRAPPER_DEPENDENCY_CONTRACT",
+    "path": "assets/scripts/ui/scenes/LobbyScene.ts",
+    "methods": [
+      "_mountMercenaryPanel"
+    ],
+    "extraction": "FIXED_LINE_RANGE_TEXT_NOT_AST",
+    "dependency_contract": [
+      {
+        "specifier": "../../core/managers/ServiceLoader",
+        "declaration": "import { services } from '../../core/managers/ServiceLoader';",
+        "bindings": [
+          {
+            "name": "services",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "fixture": true
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "../core/MercenaryPanelController",
+        "declaration": "import { MercenaryPanelController, MERC_PANEL_MAX_ROWS } from '../core/MercenaryPanelController';",
+        "bindings": [
+          {
+            "name": "MercenaryPanelController",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+              "symbol": "MercenaryPanelController"
+            }
+          },
+          {
+            "name": "MERC_PANEL_MAX_ROWS",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/ui/core/MercenaryNameplateRows.ts",
+              "symbol": "MERC_PANEL_MAX_ROWS"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "../../core/systems/MercenaryRoster",
+        "declaration": "import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';",
+        "bindings": [
+          {
+            "name": "rarityOfTemplate",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+              "symbol": "rarityOfTemplate"
+            }
+          }
+        ]
+      },
+      {
+        "specifier": "../../core/systems/PlayerInventory",
+        "declaration": "import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD } from '../../core/systems/PlayerInventory';",
+        "bindings": [
+          {
+            "name": "ITEM_JOB_CHANGE_ORDER",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          },
+          {
+            "name": "ITEM_TRIAL_TICKET",
+            "explicit_type_only": false,
+            "handling": "INJECTED_EXACT_SOURCE_SYMBOL",
+            "origin": {
+              "path": "assets/scripts/core/systems/ItemDef.ts",
+              "symbol": "ITEM_TRIAL_TICKET"
+            }
+          },
+          {
+            "name": "ITEM_WISH_SPEED_CARD",
+            "explicit_type_only": false,
+            "handling": "SKIPPED_UNAVAILABLE_OR_ERASED_TYPE",
+            "origin": null
+          }
+        ]
+      }
+    ],
+    "injected_referenced_symbols": [
+      "ITEM_TRIAL_TICKET",
+      "itemCount",
+      "rarityOfTemplate",
+      "bondMercenaryToRoster",
+      "MERC_PANEL_MAX_ROWS",
+      "MercenaryPanelController",
+      "services"
+    ],
+    "fixtures": [
+      "services"
+    ]
+  }
+]

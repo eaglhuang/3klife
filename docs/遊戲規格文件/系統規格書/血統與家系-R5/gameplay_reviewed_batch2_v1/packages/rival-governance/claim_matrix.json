@@ -1,0 +1,292 @@
+{
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "claims": [
+    {
+      "id": "C01",
+      "spec": "E-3/F-1",
+      "authorityClass": "FORMAL_FORMULA_WITH_CONFLICTING_EFFICIENCY_TABLE",
+      "numbersAndBehavior": "60屬性：220/230/140/200/150；MILITARIST農198軍240；WARLORD實作220/200對F-1的176/280",
+      "sourcePath": "assets/scripts/core/systems/RivalGovernance.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalGovernance.ts",
+      "probeIds": [
+        "G23-01",
+        "G23-02",
+        "G23-03"
+      ],
+      "judgment": "MIXED_CONTRACT_AND_SPEC_AMBIGUITY"
+    },
+    {
+      "id": "C02",
+      "spec": "E-3; ResourceCap",
+      "authorityClass": "IMPLEMENTATION_EXPLICITLY_BYPASSES_TOTAL_CAP",
+      "numbersAndBehavior": "魏9000→9600；helper cap3000；需AI總cap裁定",
+      "sourcePath": "assets/scripts/core/systems/RivalNations.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalNations.ts",
+      "probeIds": [
+        "G23-04"
+      ],
+      "judgment": "REPRODUCED_SPEC_DIFFERENCE"
+    },
+    {
+      "id": "C03",
+      "spec": "E-3/E-4",
+      "authorityClass": "NO_WAGE_FORMULA_ESTABLISHED",
+      "numbersAndBehavior": "已測攻擊季糧5000→5198、金不減；僅此路徑",
+      "sourcePath": "assets/scripts/core/systems/RivalNations.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalNations.ts",
+      "probeIds": [
+        "G23-05"
+      ],
+      "judgment": "BOUNDED_OBSERVATION"
+    },
+    {
+      "id": "C04",
+      "spec": "E-7",
+      "authorityClass": "FORMAL_THRESHOLDS",
+      "numbersAndBehavior": "每2季招募；fame>800、>1500嚴格分段",
+      "sourcePath": "assets/scripts/core/systems/RivalGovernance.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalGovernance.ts",
+      "probeIds": [
+        "G23-06"
+      ],
+      "judgment": "CONTRACT_OBSERVED"
+    },
+    {
+      "id": "C05",
+      "spec": "E-7",
+      "authorityClass": "PROVISIONAL_PAIRING_NO_COST",
+      "numbersAndBehavior": "food>2000；高品質先配；同季helper重跑可再一對；無後代驗證",
+      "sourcePath": "assets/scripts/core/systems/RivalBonding.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalBonding.ts",
+      "probeIds": [
+        "G23-07",
+        "G23-08"
+      ],
+      "judgment": "PROVISIONAL_BEHAVIOR"
+    },
+    {
+      "id": "C06",
+      "spec": "AIPopulationConfig / JSON _spec",
+      "authorityClass": "DISTINCT_POPULATION_DOMAIN",
+      "numbersAndBehavior": "branch50/global500為後裔預算；待命池501→502不等於違反該正式預算",
+      "sourcePath": "assets/scripts/core/models/AIPopulationConfig.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/AIPopulationConfig.ts",
+      "probeIds": [
+        "G23-09",
+        "G23-10"
+      ],
+      "judgment": "DOMAIN_MAPPING_UNVERIFIED"
+    },
+    {
+      "id": "C07",
+      "spec": "E-4/F-2",
+      "authorityClass": "PROVISIONAL_TUNING",
+      "numbersAndBehavior": "troops1500、food3000；score.75、WARLORD.1/MILITARIST.2不同規格.6/.9/.7",
+      "sourcePath": "assets/scripts/core/systems/RivalExpansion.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalExpansion.ts",
+      "probeIds": [
+        "G23-11",
+        "G23-12"
+      ],
+      "judgment": "PROVISIONAL_BEHAVIOR"
+    },
+    {
+      "id": "C08",
+      "spec": "AI強度 E-9",
+      "authorityClass": "FORMAL_0_7_AND_PROVISIONAL_0_5",
+      "numbersAndBehavior": "完整officerPower才用；弱勢<平均*.7；進攻*.5",
+      "sourcePath": "assets/scripts/core/systems/RivalMilitaryIndex.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalMilitaryIndex.ts",
+      "probeIds": [
+        "G23-13"
+      ],
+      "judgment": "CONTRACT_OBSERVED"
+    },
+    {
+      "id": "C09",
+      "spec": "E-8/F-4/F-5",
+      "authorityClass": "PARTIAL_WIRING",
+      "numbersAndBehavior": "30%霸權40%壓力helper；聯盟成員衰減4、同盟/戰爭不衰減",
+      "sourcePath": "assets/scripts/core/systems/RivalHegemony.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalHegemony.ts",
+      "probeIds": [
+        "G23-14",
+        "G23-15"
+      ],
+      "judgment": "SELECTED_CONTRACT_OBSERVED"
+    },
+    {
+      "id": "C10",
+      "spec": "E-5/E-12",
+      "authorityClass": "FORMAL_AND_MVP_FIXED_GIFT",
+      "numbersAndBehavior": "送禮1000/+15、宿敵≤-80拒；結盟40/+30、性格限制",
+      "sourcePath": "assets/scripts/core/systems/RivalNations.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalNations.ts",
+      "probeIds": [
+        "G23-16",
+        "G23-17"
+      ],
+      "judgment": "CONTRACT_OBSERVED"
+    },
+    {
+      "id": "C11",
+      "spec": "E-5/E-6",
+      "authorityClass": "SPEC_GAP",
+      "numbersAndBehavior": "成功交易無邦交+5、未扣AI對應庫存",
+      "sourcePath": "assets/scripts/core/systems/RivalTrade.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalTrade.ts",
+      "probeIds": [
+        "G23-18",
+        "G23-19"
+      ],
+      "judgment": "REPRODUCED_GAP"
+    },
+    {
+      "id": "C12",
+      "spec": "E-6",
+      "authorityClass": "TWO_WAY_DISCOUNT_CONSERVATION",
+      "numbersAndBehavior": "同盟70非戰，2額度，100金→250糧→156金；兩個ceil公式見報告",
+      "sourcePath": "assets/scripts/core/systems/RivalTrade.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalTrade.ts",
+      "probeIds": [
+        "G23-20"
+      ],
+      "judgment": "REPRODUCED_GAMESESSION_API_ARBITRAGE; UI_UNVERIFIED"
+    },
+    {
+      "id": "C13",
+      "spec": "GameSession transaction contract",
+      "authorityClass": "ADAPTER_FAILURE_FIXTURE",
+      "numbersAndBehavior": "上限整筆拒；wallet throw時糧已加、次數未寫；gift setWorld reject不退款",
+      "sourcePath": "assets/scripts/core/managers/GameSession.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/managers/GameSession.ts",
+      "probeIds": [
+        "G23-21",
+        "G23-22",
+        "G23-39"
+      ],
+      "judgment": "BOUNDARY_TEST_NOT_REAL_STORAGE_FAILURE"
+    },
+    {
+      "id": "C14",
+      "spec": "E-9/E-10",
+      "authorityClass": "PARTIAL_IMPLEMENTATION",
+      "numbersAndBehavior": "國力嚴格門檻；年度90%reset；玩家collapse分支在正式applyEraShift固定0",
+      "sourcePath": "assets/scripts/core/systems/RivalRiseFall.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalRiseFall.ts",
+      "probeIds": [
+        "G23-23",
+        "G23-24",
+        "G23-45"
+      ],
+      "judgment": "HELPER_VERIFIED_CALLER_PARTIAL"
+    },
+    {
+      "id": "C15",
+      "spec": "E-7/E-9",
+      "authorityClass": "INCOMPLETE_LIFECYCLE_WIRING",
+      "numbersAndBehavior": "0地仍生兵招募；100歲0精力仍增齡回血；upkeep predicates另有規則",
+      "sourcePath": "assets/scripts/core/systems/RivalNations.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalNations.ts",
+      "probeIds": [
+        "G23-25",
+        "G23-26"
+      ],
+      "judgment": "REPRODUCED_SELECTED_PATH_GAP"
+    },
+    {
+      "id": "C16",
+      "spec": "AI強度 E-9",
+      "authorityClass": "PARTIAL_AND_PROVISIONAL",
+      "numbersAndBehavior": "名冊去重；age+.25；一將一符；經驗50/季9季3星；無4/5星",
+      "sourcePath": "assets/scripts/core/systems/RivalOfficerSeason.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalOfficerSeason.ts",
+      "probeIds": [
+        "G23-27",
+        "G23-28",
+        "G23-29",
+        "G23-42"
+      ],
+      "judgment": "SELECTED_CONTRACT_OBSERVED"
+    },
+    {
+      "id": "C17",
+      "spec": "官職 F-2/F-3;治理指派",
+      "authorityClass": "DO_NOT_CONFLATE_BASIC_ALLIANCE_WITH_DOCS_UNLOCK",
+      "numbersAndBehavior": "tier3/4/5沙盤、4文書5會盟；tier1基本結盟可成功，死者委派待下季濾除",
+      "sourcePath": "assets/scripts/core/systems/OfficerSnapshot.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/OfficerSnapshot.ts",
+      "probeIds": [
+        "G23-30",
+        "G23-31",
+        "G23-32"
+      ],
+      "judgment": "UNLOCK_HELPER_VERIFIED; UI_GATING_UNVERIFIED"
+    },
+    {
+      "id": "C18",
+      "spec": "GameSession.advanceSeason",
+      "authorityClass": "EXACT_CALLER_SLICES_WITH_FIXTURES",
+      "numbersAndBehavior": "時鐘先進、rival每次一季、save後event；save拒絕後重試進下一季；私有同clock重跑可再結",
+      "sourcePath": "assets/scripts/core/managers/GameSession.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/managers/GameSession.ts",
+      "probeIds": [
+        "G23-33",
+        "G23-34",
+        "G23-35",
+        "G23-36"
+      ],
+      "judgment": "BOUNDED_CALLER_OBSERVATION"
+    },
+    {
+      "id": "C19",
+      "spec": "2026-04-26 City_Troops override vs MVP source comment",
+      "authorityClass": "AUTHORITY_RECONCILIATION_NEEDED",
+      "numbersAndBehavior": "迎戰AI減地但玩家領土未加、玩家兵源未扣；原碼記載MVP裁定但原裁定未取",
+      "sourcePath": "assets/scripts/core/managers/GameSession.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/managers/GameSession.ts",
+      "probeIds": [
+        "G23-37"
+      ],
+      "judgment": "REPRODUCED_PATH_AND_SPEC_DIFFERENCE"
+    },
+    {
+      "id": "C20",
+      "spec": "E-10 + AI強度 E-9",
+      "authorityClass": "ERA_RESET_ROSTER_LOSS",
+      "numbersAndBehavior": "重組清8國名冊但context仍在，該步未補掛",
+      "sourcePath": "assets/scripts/core/managers/GameSession.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/managers/GameSession.ts",
+      "probeIds": [
+        "G23-38"
+      ],
+      "judgment": "REPRODUCED_CALLER_GAP"
+    },
+    {
+      "id": "C21",
+      "spec": "E-12 campaign",
+      "authorityClass": "SYNTHETIC_VALID_STATE_NOT_NEW_GAME_REACHABILITY",
+      "numbersAndBehavior": "0兵0地連按2次各500金；真Lobby callback→controller→session；假screen/wallet/save",
+      "sourcePath": "assets/scripts/ui/core/RivalDiplomacyController.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/core/RivalDiplomacyController.ts",
+      "probeIds": [
+        "G23-40",
+        "G23-44"
+      ],
+      "judgment": "REPRODUCED_BOUNDED_PATH; NOT_PLAYER_INFINITE_REWARD_PROOF"
+    },
+    {
+      "id": "C22",
+      "spec": "Normalization / Lobby seasonal reward",
+      "authorityClass": "STORAGE_LIMIT",
+      "numbersAndBehavior": "正常化保留額度修壞值；勝利獎金在season save後grant，不推論錢包未另存",
+      "sourcePath": "assets/scripts/core/managers/GameSession.ts",
+      "sourceUrl": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/managers/GameSession.ts",
+      "probeIds": [
+        "G23-41",
+        "G23-43"
+      ],
+      "judgment": "ORDER_OBSERVED; WALLET_PERSISTENCE_UNVERIFIED"
+    }
+  ]
+}

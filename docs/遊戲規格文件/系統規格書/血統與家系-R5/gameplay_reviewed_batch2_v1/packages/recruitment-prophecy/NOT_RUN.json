@@ -1,0 +1,68 @@
+[
+  {
+    "id": "NR01",
+    "target": "npm test / tools_node/run-tests.js 與 G10/G11 全部原測試套件",
+    "status": "NOT_RUN",
+    "reason": "本包非完整repo checkout；未安裝或改寫測試環境。package.json正式指令已存。抽樣4份原測試檔僅閱讀，不等於套件執行。"
+  },
+  {
+    "id": "NR02",
+    "target": "完整 GameSession constructor/advanceSeason/recordBattle/關係結義鏈",
+    "status": "NOT_RUN",
+    "reason": "Node直接import缺UCUFLogger等完整依賴；保留原碼抽取19個方法，未以替身聲稱完整原Session執行。"
+  },
+  {
+    "id": "NR03",
+    "target": "Cocos 真實畫面、按鈕掛線、快速重點、關閉重開、Back/Forward",
+    "status": "NOT_RUN",
+    "reason": "未啟動Cocos；Lobby mount只用host shell與原controller。"
+  },
+  {
+    "id": "NR04",
+    "target": "正式 PlayerSaveService、真實儲存、重啟/備份回復/崩潰後重做",
+    "status": "NOT_RUN",
+    "reason": "save failure為記憶體替身拒絕；只證原caller變更順序，不代表durable atomicity已驗。"
+  },
+  {
+    "id": "NR05",
+    "target": "求籤令商城實際購買、價格、付費入帳重試",
+    "status": "NOT_RUN",
+    "reason": "consumer扣令已測；沒有本版正式購買價格與完整支付caller證據，不替企劃定價、不做實際交易。"
+  },
+  {
+    "id": "NR06",
+    "target": "預言連到真實結緣出生、5歲揭露、育成收益",
+    "status": "NOT_RUN",
+    "reason": "bounded caller/pool不變與BreedingService靜態無consumer引用不是完整出生育成鏈；預言是否應持久化/施效需規格定義。"
+  },
+  {
+    "id": "NR07",
+    "target": "試用武將由正式部署UI到戰場、戰敗不俘虜與不傷永久紀錄",
+    "status": "NOT_RUN",
+    "reason": "戰績probe直接給uid；hireTrial只建傭兵包，未驗真實部署取得。BattleRoster原碼有試用豁免，但不重做transactions俘虜包也不冒認整鏈完成。"
+  },
+  {
+    "id": "NR08",
+    "target": "SSR/UR美酒或極難成就、薪俸正式強度公式、名士等級、左慈活動、模板POL/CHR mapping",
+    "status": "UNRESOLVED_PRODUCT_VALUES",
+    "reason": "規格Q42與points路徑衝突；原碼多處明標未定/暫定，保留缺口。"
+  },
+  {
+    "id": "NR09",
+    "target": "真實同日/同季事件重送與戰果request id去重",
+    "status": "NOT_RUN_END_TO_END",
+    "reason": "僅測直接重呼caller與一令並行；沒有真的重送UI/network事件。"
+  },
+  {
+    "id": "NR10",
+    "target": "原主名牌身分、演武筆記傳回原主、完整每日薪俸consumer",
+    "status": "NOT_RUN",
+    "reason": "Lobby原主未定；日tick沒有settleUpkeepDay；未對外通訊。"
+  },
+  {
+    "id": "NR11",
+    "target": "Node未變更原檔直接載入",
+    "status": "PARTIAL_NOT_RUN",
+    "reason": "8個native load目標中3個可載；5個因型別/缺依賴/參數屬性失敗，逐筆見probes/native-imports.json。harness執行不得覆蓋此結果。"
+  }
+]

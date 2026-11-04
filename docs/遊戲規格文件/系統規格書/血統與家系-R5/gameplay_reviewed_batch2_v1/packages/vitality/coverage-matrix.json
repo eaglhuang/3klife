@@ -1,0 +1,593 @@
+{
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "meaning": "PASS means the scoped assertion held, including characterization of gaps; not acceptance",
+  "cases": [
+    {
+      "id": "G07-01",
+      "kind": "contract",
+      "scenario": "FORM02 70/30 分段端點與夾值",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-02",
+      "kind": "characterization_gap",
+      "scenario": "非有限疲勞輸入回0失敗率；70/30邊界不連續",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-03",
+      "kind": "characterization_spec_divergence",
+      "scenario": "培育原函式不是FORM02曲線",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/NurtureSystem.ts.failureRateForVigor"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-04",
+      "kind": "caller_contract",
+      "scenario": "培育原executeRound休息40/60、紅因子增益與100封頂；輸入不變",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/NurtureSystem.ts.executeRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.phaseOfRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.randInt"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-05",
+      "kind": "caller_contract",
+      "scenario": "培育失敗仍扣15，受傷跳過回合不耗精力；使用現行培育曲線",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/NurtureSystem.ts.executeRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.phaseOfRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.trainingFailureRate",
+        "assets/scripts/core/systems/NurtureSystem.ts.failureRateForVigor",
+        "assets/scripts/core/systems/NurtureSystem.ts.randInt",
+        "assets/scripts/core/systems/NurtureSystem.ts.negativeFactorChance"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-06",
+      "kind": "contract",
+      "scenario": "男女預設上限與既定字串別名",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-07",
+      "kind": "contract",
+      "scenario": "戰場50/10門檻、基本行動永遠允許與撤退風險",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-08",
+      "kind": "contract",
+      "scenario": "無效精力資料判耗盡；奧義成本按max四捨五入並夾0",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-09",
+      "kind": "contract",
+      "scenario": "補元散+50/高級+100並封頂，純函式不改庫存",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-10",
+      "kind": "contract",
+      "scenario": "滿值不扣藥；無藥優先回no-item；無效max拒絕",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-11",
+      "kind": "characterization",
+      "scenario": "補元散非有限current當0，小數向下取整",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-12",
+      "kind": "caller_contract",
+      "scenario": "GameSession成功扣藥、回精力、事件與await一次save",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-13",
+      "kind": "caller_contract",
+      "scenario": "GameSession查無武將/滿值均不發事件不存檔",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-14",
+      "kind": "caller_characterization_gap",
+      "scenario": "舊資料僅有vitality時current被當max，低精力也拒絕補藥",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "GameSession.usePillOnGeneral"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-15",
+      "kind": "caller_characterization_gap",
+      "scenario": "補藥save拒絕後庫存/名冊/事件不回滾，controller也reject",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-16",
+      "kind": "caller_characterization_gap",
+      "scenario": "save未完成時第二次補藥仍可進入，兩顆可連用",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-17",
+      "kind": "caller_contract",
+      "scenario": "補藥controller庫存數及拒絕/成功文字",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "GameSession.inventory",
+        "GameSession.usePillOnGeneral"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-18",
+      "kind": "contract",
+      "scenario": "重傷25%包含等號、非finite不算；不改輸入",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-19",
+      "kind": "characterization_gap",
+      "scenario": "重傷壽命無下限，反覆受傷可成負值",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-20",
+      "kind": "characterization",
+      "scenario": "負hpRatio仍算重傷，缺壽命走確定性預設再扣1",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-21",
+      "kind": "contract",
+      "scenario": "加速每張2h、ceil實耗、不耗多卡與已完成不耗卡",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-22",
+      "kind": "contract",
+      "scenario": "加速小數卡取floor，非finite/負值視0",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-23",
+      "kind": "caller_contract",
+      "scenario": "GameSession許願加速扣實耗/受庫存限制，完成後不再扣",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "GameSession.startWish",
+        "GameSession.speedUpWish",
+        "GameSession.inventory",
+        "GameSession.wishPool"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-24",
+      "kind": "caller_contract",
+      "scenario": "加速後許願領取只給一次；3個方法本身不自動save",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "GameSession.startWish",
+        "GameSession.speedUpWish",
+        "GameSession.inventory",
+        "GameSession.claimWishes"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-25",
+      "kind": "characterization_gap",
+      "scenario": "applySpeedCards直接接受NaN污染願望；正式speedUpWish擋下",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "GameSession.speedUpWish",
+        "GameSession.inventory"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-26",
+      "kind": "contract",
+      "scenario": "沙漠S扣2、其他級扣4、非沙漠扣0",
+      "status": "PASS",
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "extractedCallableIds": [],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-27",
+      "kind": "caller_contract",
+      "scenario": "原TileEffectPhase取同陣營最大沙漠drain、主將只扣一次",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "assets/scripts/battle/runtime/phases/BattleTileEffectPhase.ts.executeBattleTileEffectPhase"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-28",
+      "kind": "caller_contract",
+      "scenario": "原TileEffectPhase忽略死亡/敵陣營、精力下限0",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "assets/scripts/battle/runtime/phases/BattleTileEffectPhase.ts.executeBattleTileEffectPhase"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-29",
+      "kind": "caller_contract",
+      "scenario": "原Dispatcher中段擋奧義、10%仍放行種子戰法、低於10%擋種子",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-30",
+      "kind": "caller_characterization",
+      "scenario": "原Dispatcher不攔虎符/血統等來源，無法解析施放者亦放行",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.resolveCasterGeneral"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-31",
+      "kind": "caller_contract",
+      "scenario": "原Dispatcher僅applied才扣精力；已用奧義再播不扣",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext",
+        "BattleSkillDispatcher.spendUltimateCost",
+        "assets/scripts/battle/views/BattleSceneLoader.ts.findUltimateVitalityCostPct"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-32",
+      "kind": "caller_contract",
+      "scenario": "原Dispatcher無目標或撤退鎖擋下不扣不記已使用",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-33",
+      "kind": "caller_characterization",
+      "scenario": "原Dispatcher精力足夠進gate但不足以覆蓋成本仍施放並夾0；無成本資料不扣",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext",
+        "BattleSkillDispatcher.spendUltimateCost"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-34",
+      "kind": "caller_contract",
+      "scenario": "對酒當歌實際profile20%、原buildContext整數回復並封頂",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-35",
+      "kind": "caller_characterization",
+      "scenario": "精力已滿時回復resolver仍applied，接原dispatcher會扣奧義精力",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext",
+        "BattleSkillDispatcher.spendUltimateCost",
+        "assets/scripts/battle/views/BattleSceneLoader.ts.findUltimateVitalityCostPct"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-36",
+      "kind": "caller_contract",
+      "scenario": "回復resolver無主將/無callback拒絕，錯誤profile拒絕",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-37",
+      "kind": "caller_contract",
+      "scenario": "原BattleRoster出戰門檻30，戰後從戰內精力再扣30、ongoing不扣",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/BattleRoster.ts.checkDeployable",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.settleBattle",
+        "assets/scripts/core/systems/BattleRoster.ts.outcomeOf",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-38",
+      "kind": "caller_contract",
+      "scenario": "每季回復出戰10%/待命30%，上限封頂，死者不回復",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/BattleRoster.ts.recoverVitalityOneSeason",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-39",
+      "kind": "caller_contract",
+      "scenario": "待產原holdPregnancyVigor覆蓋季回復，非待產正常增加",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/BattleRoster.ts.recoverVitalityOneSeason",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf",
+        "assets/scripts/core/systems/BreedingSystem.ts.holdPregnancyVigor"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-40",
+      "kind": "characterization_gap",
+      "scenario": "缺max的低精力舊資料季回復也被視為滿值；future lastDeployed歸出戰",
+      "status": "PASS",
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/BattleRoster.ts.recoverVitalityOneSeason",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf"
+      ],
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    }
+  ]
+}

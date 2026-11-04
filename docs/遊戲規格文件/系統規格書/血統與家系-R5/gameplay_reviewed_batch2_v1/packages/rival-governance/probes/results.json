@@ -1,0 +1,1091 @@
+{
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "node": "v24.12.0",
+  "typescript": "5.9.3",
+  "sourceFilesVerified": 63,
+  "probes": 45,
+  "passed": 45,
+  "failed": 0,
+  "fullDomainAcceptance": "NOT_RUN",
+  "fixtures": {
+    "sessionDependencies": "Real Rival modules, GameClock and governance/permissions; pass-through player aging, lifecycle, prison, oracle, military regen and reporting. Not a whole GameSession instance, save adapter, Cocos, or E2E.",
+    "passThroughDependencies": [
+      "ageGeneralsOneSeason",
+      "unveilDueGenerals",
+      "recoverVitalityOneSeason",
+      "holdPregnancyVigor",
+      "advanceBreedingSeason",
+      "grantSeasonalOracleTokens",
+      "TALLY_SHORTAGE_FOOD_THRESHOLD",
+      "regenMilitaryOneSeason",
+      "seasonModifiersOf",
+      "prisonYieldOneSeason",
+      "rollPrisonTreasures",
+      "rollFutureReturns",
+      "buildYearReport",
+      "buildQuarterlyBattleReportRows",
+      "buildEraResetEvent",
+      "agingEventChannel"
+    ],
+    "fixtureMethods": [
+      "_tickTravel",
+      "_clearLeadIfGone",
+      "_releaseGearOfInactiveGenerals",
+      "_settleOpenHallAssigns",
+      "_settleDeaths",
+      "_recordSoulFragmentsFor",
+      "_recordGain",
+      "recordPlayerLog",
+      "applyPendingTerritoryUpgrade",
+      "recordSeasonJournal",
+      "recordJournal",
+      "_tickMercenaryDay",
+      "_recordOfflineBattle",
+      "_emit",
+      "save"
+    ],
+    "clock": "Real GameClock"
+  },
+  "extracted": [
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "rivals",
+      "lineStart": 1758,
+      "lineEnd": 1760,
+      "startUtf16": 85137,
+      "endUtf16": 85205,
+      "sha256": "53d5a1b5aced7d916bb8a60c171c3495f99bbfe72f9b917f9cdd7453f750520c",
+      "sliceFile": "probes/extracted/GameSession.rivals.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "setRivals",
+      "lineStart": 1776,
+      "lineEnd": 1781,
+      "startUtf16": 85790,
+      "endUtf16": 85972,
+      "sha256": "91b5947e1a801e3bdad0a378b7132c03190c630f75593b92c6813f15a641d4ff",
+      "sliceFile": "probes/extracted/GameSession.setRivals.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "setRivalOfficerContext",
+      "lineStart": 1766,
+      "lineEnd": 1769,
+      "startUtf16": 85312,
+      "endUtf16": 85551,
+      "sha256": "2d960e09d45a519361fba5299931ef7780574da4b219b466418622dbe1c1c71e",
+      "sliceFile": "probes/extracted/GameSession.setRivalOfficerContext.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "_withRivalOfficers",
+      "lineStart": 1771,
+      "lineEnd": 1773,
+      "startUtf16": 85557,
+      "endUtf16": 85753,
+      "sha256": "a3f689e6aab3f51b7f1280d361058979c291a08abaf1c8748ae8e1914e75de54",
+      "sliceFile": "probes/extracted/GameSession._withRivalOfficers.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "tradeWithRival",
+      "lineStart": 1787,
+      "lineEnd": 1804,
+      "startUtf16": 86124,
+      "endUtf16": 87549,
+      "sha256": "29fd4d00020b00a2f92c4c758e55c8835707a67104ca949e583abc34036dea64",
+      "sliceFile": "probes/extracted/GameSession.tradeWithRival.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "rivalBattleSquad",
+      "lineStart": 1807,
+      "lineEnd": 1813,
+      "startUtf16": 87594,
+      "endUtf16": 87913,
+      "sha256": "008f9409cb7131059830b83decb0330f8f135a5384fb15b41d7bcfb097c92325",
+      "sliceFile": "probes/extracted/GameSession.rivalBattleSquad.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "recordRivalCampaign",
+      "lineStart": 1977,
+      "lineEnd": 1990,
+      "startUtf16": 95956,
+      "endUtf16": 96728,
+      "sha256": "c0b561ecd41f8c90049eeb6b63d7787803b6fc80063608190a7e32d787d42c17",
+      "sliceFile": "probes/extracted/GameSession.recordRivalCampaign.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "recordAutoResolveBattle",
+      "lineStart": 1996,
+      "lineEnd": 2012,
+      "startUtf16": 96869,
+      "endUtf16": 97925,
+      "sha256": "f0d0ee28536926db397a7d4dd66e537e1073e090e3aa617a9e2c6a5338dc0ae0",
+      "sliceFile": "probes/extracted/GameSession.recordAutoResolveBattle.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "_tickRivals",
+      "lineStart": 1816,
+      "lineEnd": 1841,
+      "startUtf16": 87963,
+      "endUtf16": 89625,
+      "sha256": "ff3c359f90e31ca9634cadca4b389b69440f1456f1da4a48ed5026a83188ada0",
+      "sliceFile": "probes/extracted/GameSession._tickRivals.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "advanceSeason",
+      "lineStart": 3369,
+      "lineEnd": 3474,
+      "startUtf16": 158198,
+      "endUtf16": 164395,
+      "sha256": "176ad05a066a430450eae5085cfc8917f003c716a2ef85e3a9c749af04d6e737",
+      "sliceFile": "probes/extracted/GameSession.advanceSeason.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "governanceAssignments",
+      "lineStart": 2568,
+      "lineEnd": 2570,
+      "startUtf16": 123942,
+      "endUtf16": 124062,
+      "sha256": "a7bfd83aec8549e777dd3be5fb16541e1d0c93dab653aec12c5d61664ce65076",
+      "sliceFile": "probes/extracted/GameSession.governanceAssignments.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "assignGovernor",
+      "lineStart": 2573,
+      "lineEnd": 2578,
+      "startUtf16": 124109,
+      "endUtf16": 124578,
+      "sha256": "c785357f5b4819360fc193dde16d2a16da3c6c977064957841ee100f043370ce",
+      "sliceFile": "probes/extracted/GameSession.assignGovernor.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "officerPermissions",
+      "lineStart": 2110,
+      "lineEnd": 2112,
+      "startUtf16": 101878,
+      "endUtf16": 102004,
+      "sha256": "cab6384d9d28e55effc96eb9749ea3f2b926f2a2e26bac965cf6b0e7b6be9fe9",
+      "sliceFile": "probes/extracted/GameSession.officerPermissions.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/ui/scenes/LobbyScene.ts",
+      "class": "LobbyScene",
+      "method": "_mountRivalDiplomacy",
+      "lineStart": 2711,
+      "lineEnd": 2764,
+      "startUtf16": 135123,
+      "endUtf16": 138446,
+      "sha256": "30d5610ce543bf602ea0759b331422371f5d45d3e2c9a060043c516cacd21d2c",
+      "sliceFile": "probes/extracted/LobbyScene._mountRivalDiplomacy.ts",
+      "exactOriginalSlice": true
+    }
+  ],
+  "results": [
+    {
+      "id": "G23-01",
+      "kind": "contract",
+      "title": "五任務產出與性格 floor 修正",
+      "status": "PASS",
+      "observation": {
+        "food": 198,
+        "gold": 230,
+        "troops": 240,
+        "fame": 140,
+        "intel": 100
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-02",
+      "kind": "spec_ambiguity",
+      "title": "效率依 E-3 簡表；F-1 全性格詳細表未套用",
+      "status": "PASS",
+      "observation": {
+        "actual": {
+          "food": 220,
+          "gold": 0,
+          "troops": 200,
+          "fame": 0,
+          "intel": 0
+        },
+        "F1_expected": {
+          "food": 176,
+          "troops": 280
+        },
+        "sourceLabels": "E-3 chosen, F-1 contradictory"
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-03",
+      "kind": "contract",
+      "title": "資源 helper 上限與輸入不變",
+      "status": "PASS",
+      "observation": {
+        "food": 10000,
+        "gold": 5000,
+        "troops": 3000,
+        "fame": 2000,
+        "intel": 100
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-04",
+      "kind": "characterization_gap",
+      "title": "真季 tick 的總兵力超過共用上限",
+      "status": "PASS",
+      "observation": {
+        "beforeTroops": 9000,
+        "afterTroops": 9600,
+        "helperCap": 3000,
+        "resources": {
+          "food": 498,
+          "gold": 5000,
+          "fame": 0,
+          "intel": 0
+        }
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-05",
+      "kind": "characterization_scope",
+      "title": "季度資源生產無扣薪俸／行軍糧的已讀路徑",
+      "status": "PASS",
+      "observation": {
+        "attackEvents": 1,
+        "before": {
+          "food": 5000,
+          "gold": 5000
+        },
+        "after": {
+          "food": 5198,
+          "gold": 5000,
+          "fame": 0,
+          "intel": 0
+        },
+        "scope": "advanceRivalSeason only; no project-wide absence claim"
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-06",
+      "kind": "contract",
+      "title": "招募嚴格名聲門檻與第二季一次招募",
+      "status": "PASS",
+      "observation": {
+        "seasons": 2,
+        "recruits": {
+          "S": 0,
+          "A": 0,
+          "B": 0,
+          "C": 1
+        }
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-07",
+      "kind": "contract",
+      "title": "結緣糧 2000 不過、2001 過；品質／招募先後選一對",
+      "status": "PASS",
+      "observation": {
+        "roster": [
+          {
+            "id": "c",
+            "quality": "C",
+            "recruitedSeason": 1
+          }
+        ],
+        "bonds": [
+          {
+            "first": "s",
+            "second": "a",
+            "season": 4
+          }
+        ]
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-08",
+      "kind": "provisional_behavior",
+      "title": "結緣不扣糧、每呼叫一對；同季直接再呼叫會再配",
+      "status": "PASS",
+      "observation": {
+        "bonds": [
+          {
+            "first": "0",
+            "second": "1",
+            "season": 4
+          },
+          {
+            "first": "2",
+            "second": "3",
+            "season": 4
+          }
+        ],
+        "foodInput": 2001,
+        "noResourceDeltaReturned": true
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-09",
+      "kind": "contract",
+      "title": "AI人口預設與繁殖上限，與國家 recruits 分開",
+      "status": "PASS",
+      "observation": {
+        "caps": [
+          3,
+          3,
+          4,
+          4,
+          5,
+          5
+        ],
+        "branch": 50,
+        "global": 500,
+        "scope": "config helper only; not connected to Rival roster in tested path"
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-10",
+      "kind": "characterization_gap",
+      "title": "待命池超 500 仍招募；本路徑未用人口預算",
+      "status": "PASS",
+      "observation": {
+        "before": 501,
+        "after": 502,
+        "food": 198,
+        "scope": "Rival recruitment roster is not proven to be global AI descendant population"
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-11",
+      "kind": "contract",
+      "title": "擴張兵1500／糧3000邊界及 RNG 消耗",
+      "status": "PASS",
+      "observation": {
+        "minTroops": 1500,
+        "minFood": 3000,
+        "draws": 1
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-12",
+      "kind": "provisional_behavior",
+      "title": "實作 0.75分與0.1/0.2意願，規格不同且標暫定",
+      "status": "PASS",
+      "observation": {
+        "score": 0.7000000000000001,
+        "actualThreshold": 0.75,
+        "specThreshold": 0.6,
+        "equalityWillingnessPasses": true
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-13",
+      "kind": "contract",
+      "title": "軍力同尺度 fallback、弱勢嚴格0.7與進攻半率",
+      "status": "PASS",
+      "observation": {
+        "fallbackAverage": 150,
+        "officersAverage": 1000,
+        "boundary": 0.7
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-14",
+      "kind": "contract",
+      "title": "霸權30%與叛亂40%、平手先列、邦交回零",
+      "status": "PASS",
+      "observation": {
+        "coalition": 0.3,
+        "rebellion": 0.4,
+        "tie": "first"
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-15",
+      "kind": "characterization_scope",
+      "title": "季 tick 聯盟回歸例外：非同盟4、已同盟與交戰不回歸",
+      "status": "PASS",
+      "observation": [
+        46,
+        50,
+        50
+      ],
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-16",
+      "kind": "contract",
+      "title": "送禮扣1000與宿敵-80拒收；結盟40與性格禁令",
+      "status": "PASS",
+      "observation": {
+        "giftCost": 1000,
+        "giftGain": 15,
+        "allianceRelation": 40
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-17",
+      "kind": "contract",
+      "title": "AI外交意圖嚴格30/3000與背叛弱半兵",
+      "status": "PASS",
+      "observation": [
+        {
+          "kind": "PROPOSE_ALLIANCE",
+          "targetId": "b"
+        },
+        {
+          "kind": "PROPOSE_TRADE",
+          "targetId": "b",
+          "give": "gold",
+          "receive": "food"
+        },
+        {
+          "kind": "PROPOSE_ANTI_HEGEMONY",
+          "targetId": "b",
+          "againstId": "c"
+        }
+      ],
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-18",
+      "kind": "contract",
+      "title": "交易六路比率、下取整、無效量拒絕、每季2次",
+      "status": "PASS",
+      "observation": {
+        "rates": [
+          20,
+          5,
+          30,
+          4,
+          50,
+          2
+        ],
+        "perSeason": 2
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-19",
+      "kind": "characterization_gap",
+      "title": "交易成功無邦交+5、AI資源未扣出",
+      "status": "PASS",
+      "observation": {
+        "relationBefore": 40,
+        "relationAfter": 40,
+        "aiGoldBefore": 0,
+        "aiGoldAfter": 0,
+        "playerReceived": {
+          "resource": "gold",
+          "amount": 100
+        }
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-20",
+      "kind": "characterization_gap",
+      "title": "雙向盟友8折同季兩交易套利：100金→250糧→156金",
+      "status": "PASS",
+      "observation": {
+        "goldBefore": 100,
+        "goldAfter": 156,
+        "foodNet": 0,
+        "seasonTrades": 2
+      },
+      "extractedMethodCalls": [
+        "GameSession.tradeWithRival",
+        "GameSession.tradeWithRival",
+        "GameSession.rivals"
+      ]
+    },
+    {
+      "id": "G23-21",
+      "kind": "caller_contract",
+      "title": "交易超上限整筆拒絕、無扣款／無計數／無存檔",
+      "status": "PASS",
+      "observation": "糧草倉庫已滿，無法收下",
+      "extractedMethodCalls": [
+        "GameSession.tradeWithRival",
+        "GameSession.rivals"
+      ]
+    },
+    {
+      "id": "G23-22",
+      "kind": "caller_failure_characterization",
+      "title": "wallet.spend 拋錯發生於糧入帳後，無 rollback",
+      "status": "PASS",
+      "observation": {
+        "foodAfterException": 100,
+        "tradeCount": null,
+        "fixture": "wallet.spend exception; not observed real wallet failure"
+      },
+      "extractedMethodCalls": [
+        "GameSession.tradeWithRival",
+        "GameSession.rivals"
+      ]
+    },
+    {
+      "id": "G23-23",
+      "kind": "contract",
+      "title": "國力分級嚴格門檻及天下大亂分支",
+      "status": "PASS",
+      "observation": {
+        "score": 3000,
+        "eraRatio": 0.9,
+        "collapseSeasons": 3
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-24",
+      "kind": "contract",
+      "title": "年度 applyEraShift 重設8國，非年度不重設",
+      "status": "PASS",
+      "observation": {
+        "nonYearSameReference": true,
+        "yearResets8Nations": true
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-25",
+      "kind": "characterization_gap",
+      "title": "零領土國未淘汰、仍成長招募；超齡／零精力官員仍回復",
+      "status": "PASS",
+      "observation": {
+        "troops": 240,
+        "recruitCount": 1,
+        "oldOfficer": {
+          "generalId": "old",
+          "age": 100.25,
+          "vitality": 30,
+          "baseStats": {
+            "str": 60,
+            "int": 60,
+            "lea": 60,
+            "pol": 60,
+            "cha": 60
+          }
+        },
+        "scope": "selected production seasonal path"
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-26",
+      "kind": "contract",
+      "title": "退役死亡俘虜 helper 門檻與骰序",
+      "status": "PASS",
+      "observation": {
+        "retire": 65,
+        "death": "age>max or vitality<=0",
+        "release": ">4",
+        "draws": 1
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-27",
+      "kind": "contract",
+      "title": "官員名冊排除玩家／未知／跨國重複；虎符未裝",
+      "status": "PASS",
+      "observation": {
+        "a": {
+          "officers": [
+            {
+              "generalId": "x",
+              "age": 30,
+              "vitality": 100,
+              "baseStats": {
+                "str": 0,
+                "int": 0,
+                "lea": 0,
+                "pol": 0,
+                "cha": 0
+              }
+            }
+          ],
+          "tallies": [
+            {
+              "id": "t",
+              "quality": "R",
+              "troopType": "infantry",
+              "star": 1,
+              "starExp": 0,
+              "equippedGeneralId": null
+            }
+          ]
+        },
+        "b": {
+          "officers": [],
+          "tallies": []
+        }
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-28",
+      "kind": "contract",
+      "title": "名冊每季年齡0.25、精力上限、一將一符、AI星經驗50",
+      "status": "PASS",
+      "observation": {
+        "roster": {
+          "officers": [
+            {
+              "generalId": "a",
+              "age": 30.25,
+              "vitality": 80,
+              "baseStats": {
+                "str": 60,
+                "int": 60,
+                "lea": 60,
+                "pol": 60,
+                "cha": 60
+              }
+            },
+            {
+              "generalId": "b",
+              "age": 30.25,
+              "vitality": 100,
+              "baseStats": {
+                "str": 60,
+                "int": 60,
+                "lea": 60,
+                "pol": 60,
+                "cha": 60
+              }
+            }
+          ],
+          "tallies": [
+            {
+              "id": "t1",
+              "quality": "R",
+              "troopType": "infantry",
+              "star": 2,
+              "starExp": 0,
+              "equippedGeneralId": "a"
+            },
+            {
+              "id": "t2",
+              "quality": "R",
+              "troopType": "infantry",
+              "star": 1,
+              "starExp": 50,
+              "equippedGeneralId": "b"
+            },
+            {
+              "id": "t3",
+              "quality": "R",
+              "troopType": "infantry",
+              "star": 1,
+              "starExp": 50,
+              "equippedGeneralId": null
+            }
+          ]
+        },
+        "power": {
+          "officers": [
+            {
+              "generalId": "a",
+              "tallyId": "t1",
+              "totalPower": 1346
+            },
+            {
+              "generalId": "b",
+              "tallyId": "t2",
+              "totalPower": 1344
+            }
+          ],
+          "militaryIndex": 2690
+        }
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-29",
+      "kind": "provisional_behavior",
+      "title": "AI升3星9季 vs 玩家累計經驗350門檻",
+      "status": "PASS",
+      "observation": {
+        "aiTurnsTo3": 9,
+        "expResetEachStar": true,
+        "scope": "source explicitly provisional 50/season"
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-30",
+      "kind": "contract",
+      "title": "官職解鎖快照與晉升一次記錄、天下大亂保留",
+      "status": "PASS",
+      "observation": [
+        {
+          "tier": 1,
+          "questDifficultyCap": "basic",
+          "questColumns": 1,
+          "sandtableStage": null,
+          "hotspotCount": 1,
+          "allianceDocs": false,
+          "antiHegemonySummit": false
+        },
+        {
+          "tier": 2,
+          "questDifficultyCap": "normal",
+          "questColumns": 2,
+          "sandtableStage": null,
+          "hotspotCount": 2,
+          "allianceDocs": false,
+          "antiHegemonySummit": false
+        },
+        {
+          "tier": 3,
+          "questDifficultyCap": "elite",
+          "questColumns": 2,
+          "sandtableStage": "S1",
+          "hotspotCount": 3,
+          "allianceDocs": false,
+          "antiHegemonySummit": false
+        },
+        {
+          "tier": 4,
+          "questDifficultyCap": "advanced",
+          "questColumns": 3,
+          "sandtableStage": "S2",
+          "hotspotCount": 4,
+          "allianceDocs": true,
+          "antiHegemonySummit": false
+        },
+        {
+          "tier": 5,
+          "questDifficultyCap": "hell",
+          "questColumns": 4,
+          "sandtableStage": "S3",
+          "hotspotCount": 5,
+          "allianceDocs": true,
+          "antiHegemonySummit": true
+        }
+      ],
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-31",
+      "kind": "caller_characterization",
+      "title": "低官職可基礎結盟／委派；不得把文書旗標誤作所有外交禁令",
+      "status": "PASS",
+      "observation": {
+        "tier": 1,
+        "allianceDocs": false,
+        "basicAlliance": true,
+        "assignment": true,
+        "interpretation": "spec only explicitly gates high-level documents/summit, not every base alliance"
+      },
+      "extractedMethodCalls": [
+        "GameSession.officerPermissions",
+        "GameSession.assignGovernor",
+        "GameSession.rivals"
+      ]
+    },
+    {
+      "id": "G23-32",
+      "kind": "caller_characterization_gap",
+      "title": "assignGovernor 僅查存在，已死亡名冊項可先委派",
+      "status": "PASS",
+      "observation": {
+        "accepted": {
+          "ok": true,
+          "assignments": [
+            {
+              "task": "farming",
+              "generalUid": "dead"
+            }
+          ]
+        },
+        "scope": "removed on later advanceSeason filter; UI eligibility not tested"
+      },
+      "extractedMethodCalls": [
+        "GameSession.assignGovernor"
+      ]
+    },
+    {
+      "id": "G23-33",
+      "kind": "contract",
+      "title": "原資料同一輸入同RNG可重播；套回季結果不是冪等",
+      "status": "PASS",
+      "observation": {
+        "deterministic": true,
+        "applyingAgainAdvances": true
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-34",
+      "kind": "caller_contract",
+      "title": "真 advanceSeason→_tickRivals 每季一次，存檔先於季事件",
+      "status": "PASS",
+      "observation": {
+        "clock": 2,
+        "governedSeasons": 2,
+        "saves": 2,
+        "order": [
+          "save",
+          "emit:season",
+          "save",
+          "emit:season"
+        ]
+      },
+      "extractedMethodCalls": [
+        "GameSession.advanceSeason",
+        "GameSession._tickRivals",
+        "GameSession.rivals",
+        "GameSession.advanceSeason",
+        "GameSession._tickRivals",
+        "GameSession.rivals"
+      ]
+    },
+    {
+      "id": "G23-35",
+      "kind": "caller_failure_characterization",
+      "title": "季存檔失敗無 rollback，重試 public advanceSeason 會進下一季",
+      "status": "PASS",
+      "observation": {
+        "afterFailureSeason": 1,
+        "afterRetrySeason": 2,
+        "scope": "synthetic save failure, not real persistence E2E"
+      },
+      "extractedMethodCalls": [
+        "GameSession.advanceSeason",
+        "GameSession._tickRivals",
+        "GameSession.rivals",
+        "GameSession.advanceSeason",
+        "GameSession._tickRivals",
+        "GameSession.rivals"
+      ]
+    },
+    {
+      "id": "G23-36",
+      "kind": "caller_characterization",
+      "title": "直接重跑 _tickRivals 同一clock仍成長兩次",
+      "status": "PASS",
+      "observation": {
+        "clock": 1,
+        "governedSeasons": 2,
+        "scope": "private helper not public UI duplicate guarantee"
+      },
+      "extractedMethodCalls": [
+        "GameSession._tickRivals",
+        "GameSession._tickRivals",
+        "GameSession.rivals"
+      ]
+    },
+    {
+      "id": "G23-37",
+      "kind": "caller_characterization_gap",
+      "title": "真季迎戰勝利減AI領土，但玩家領土未加、出征池未扣",
+      "status": "PASS",
+      "observation": {
+        "territoryGainedFlag": true,
+        "aiTerritories": 1,
+        "playerTerritories": 1,
+        "playerCityTroopsUnchanged": 1000
+      },
+      "extractedMethodCalls": [
+        "GameSession._tickRivals",
+        "GameSession.rivalBattleSquad",
+        "GameSession.rivals"
+      ]
+    },
+    {
+      "id": "G23-38",
+      "kind": "caller_characterization_gap",
+      "title": "年度重組清掉逐將名冊，_withRivalOfficers 未在該步補掛",
+      "status": "PASS",
+      "observation": {
+        "eraResetNations": 8,
+        "officerRostersAfter": 0,
+        "contextStillPresent": true
+      },
+      "extractedMethodCalls": [
+        "GameSession._tickRivals",
+        "GameSession.rivals",
+        "GameSession.rivals"
+      ]
+    },
+    {
+      "id": "G23-39",
+      "kind": "caller_failure_characterization",
+      "title": "送禮扣款後 setWorld 拒絕無退款；錯誤由上層處理",
+      "status": "PASS",
+      "observation": {
+        "goldAfterFailure": 0,
+        "fixture": "setWorld rejection before fixture publishes world"
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-40",
+      "kind": "caller_characterization_gap",
+      "title": "零領土敵仍可反覆出征收金，無行軍成本",
+      "status": "PASS",
+      "observation": {
+        "twoCallsGold": 1000,
+        "targetTroops": 0,
+        "targetTerritories": 0
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-41",
+      "kind": "contract",
+      "title": "normalize 保存交易額度、修壞數、未知國棄置與缺國補回",
+      "status": "PASS",
+      "observation": {
+        "id": "wei",
+        "troops": 9000,
+        "territories": 0,
+        "relation": 100,
+        "allied": false,
+        "atWar": false,
+        "resources": {
+          "food": 300,
+          "gold": 5000,
+          "fame": 0,
+          "intel": 0
+        },
+        "governedSeasons": 0,
+        "recruits": {
+          "S": 0,
+          "A": 0,
+          "B": 0,
+          "C": 0
+        },
+        "roster": [],
+        "bonds": [],
+        "tradeSeason": 4,
+        "tradeCount": 2
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-42",
+      "kind": "contract",
+      "title": "官員設定以 normal/ch1/fallback倍率1，查不到資料不憑空造官員",
+      "status": "PASS",
+      "observation": {
+        "officers": 1,
+        "scale": 1,
+        "chapter": 1
+      },
+      "extractedMethodCalls": []
+    },
+    {
+      "id": "G23-43",
+      "kind": "caller_wiring",
+      "title": "真Lobby外交掛載→controller→GameSession，季勝利獎金在季存檔後發",
+      "status": "PASS",
+      "observation": {
+        "walletGold": 554,
+        "order": [
+          "recordBattle",
+          "emit:rival",
+          "save",
+          "emit:season",
+          "walletGrant:554"
+        ],
+        "scope": "real original mounting, controller and session method text; fake screen/event/wallet/save adapters. Ordering only, wallet persistence itself untested"
+      },
+      "extractedMethodCalls": [
+        "LobbyScene._mountRivalDiplomacy",
+        "GameSession.advanceSeason",
+        "GameSession._tickRivals",
+        "GameSession.rivalBattleSquad"
+      ]
+    },
+    {
+      "id": "G23-44",
+      "kind": "caller_wiring",
+      "title": "真Lobby出征按鈕連按對零領土敵兩次均給500金",
+      "status": "PASS",
+      "observation": {
+        "gold": 1000,
+        "saves": 2,
+        "scope": "synthetic mount, original button callbacks, controller, session setRivals"
+      },
+      "extractedMethodCalls": [
+        "LobbyScene._mountRivalDiplomacy",
+        "GameSession.rivalBattleSquad",
+        "GameSession.rivals",
+        "GameSession.recordRivalCampaign",
+        "GameSession.recordAutoResolveBattle",
+        "GameSession.setRivals",
+        "GameSession.rivalBattleSquad",
+        "GameSession.rivals",
+        "GameSession.recordRivalCampaign",
+        "GameSession.recordAutoResolveBattle",
+        "GameSession.setRivals"
+      ]
+    },
+    {
+      "id": "G23-45",
+      "kind": "characterization_scope",
+      "title": "玩家崩潰條件只在helper，applyEraShift固定傳0",
+      "status": "PASS",
+      "observation": {
+        "helperCollapseTrigger": true,
+        "productionWorldUnchanged": true,
+        "source": "applyEraShift explicitly passes playerCollapseSeasons:0 and documents branch deferred"
+      },
+      "extractedMethodCalls": []
+    }
+  ]
+}

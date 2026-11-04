@@ -1,0 +1,1859 @@
+{
+  "summary": {
+    "repository": "eaglhuang/3klife",
+    "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+    "node": "v24.12.0",
+    "typescript": "5.9.3",
+    "source_count": 34,
+    "probe_count": 40,
+    "passed": 40,
+    "failed": 0,
+    "full_gameplay_acceptance": "NOT_RUN",
+    "product_code_modified": false
+  },
+  "probes": [
+    {
+      "id": "G07-01",
+      "kind": "contract",
+      "description": "FORM02 70/30 分段端點與夾值",
+      "status": "PASS",
+      "observation": [
+        [
+          0.7,
+          0
+        ],
+        [
+          0.5,
+          0.12499999999999997
+        ],
+        [
+          0.3,
+          0.35
+        ],
+        [
+          0,
+          0.99
+        ],
+        [
+          -1,
+          0.99
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-02",
+      "kind": "characterization_gap",
+      "description": "非有限疲勞輸入回0失敗率；70/30邊界不連續",
+      "status": "PASS",
+      "observation": {
+        "nonFiniteRate": 0,
+        "below70": 0.05,
+        "at70": 0,
+        "below30": 0.40000000196666674,
+        "at30": 0.35
+      },
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-03",
+      "kind": "characterization_spec_divergence",
+      "description": "培育原函式不是FORM02曲線",
+      "status": "PASS",
+      "observation": [
+        {
+          "vigor": 70,
+          "nurture": 0.01,
+          "form02": 0
+        },
+        {
+          "vigor": 50,
+          "nurture": 0.08,
+          "form02": 0.12499999999999997
+        },
+        {
+          "vigor": 30,
+          "nurture": 0.15000000000000002,
+          "form02": 0.35
+        },
+        {
+          "vigor": 0,
+          "nurture": 0.6000000000000001,
+          "form02": 0.99
+        }
+      ],
+      "actualExtractedCalls": [
+        "assets/scripts/core/systems/NurtureSystem.ts.failureRateForVigor",
+        "assets/scripts/core/systems/NurtureSystem.ts.failureRateForVigor",
+        "assets/scripts/core/systems/NurtureSystem.ts.failureRateForVigor",
+        "assets/scripts/core/systems/NurtureSystem.ts.failureRateForVigor"
+      ],
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/NurtureSystem.ts.failureRateForVigor"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-04",
+      "kind": "caller_contract",
+      "description": "培育原executeRound休息40/60、紅因子增益與100封頂；輸入不變",
+      "status": "PASS",
+      "observation": {
+        "minRest": 40,
+        "maxRest": 60,
+        "redLevel5CappedAt": 100
+      },
+      "actualExtractedCalls": [
+        "assets/scripts/core/systems/NurtureSystem.ts.executeRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.phaseOfRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.randInt",
+        "assets/scripts/core/systems/NurtureSystem.ts.executeRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.phaseOfRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.randInt",
+        "assets/scripts/core/systems/NurtureSystem.ts.executeRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.phaseOfRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.randInt"
+      ],
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/NurtureSystem.ts.executeRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.phaseOfRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.randInt"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-05",
+      "kind": "caller_contract",
+      "description": "培育失敗仍扣15，受傷跳過回合不耗精力；使用現行培育曲線",
+      "status": "PASS",
+      "observation": {
+        "failureRate": 0.01,
+        "failedVigorAfter": 55,
+        "skipVigorAfter": 30
+      },
+      "actualExtractedCalls": [
+        "assets/scripts/core/systems/NurtureSystem.ts.executeRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.phaseOfRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.trainingFailureRate",
+        "assets/scripts/core/systems/NurtureSystem.ts.failureRateForVigor",
+        "assets/scripts/core/systems/NurtureSystem.ts.randInt",
+        "assets/scripts/core/systems/NurtureSystem.ts.negativeFactorChance",
+        "assets/scripts/core/systems/NurtureSystem.ts.executeRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.phaseOfRound"
+      ],
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/NurtureSystem.ts.executeRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.phaseOfRound",
+        "assets/scripts/core/systems/NurtureSystem.ts.trainingFailureRate",
+        "assets/scripts/core/systems/NurtureSystem.ts.failureRateForVigor",
+        "assets/scripts/core/systems/NurtureSystem.ts.randInt",
+        "assets/scripts/core/systems/NurtureSystem.ts.negativeFactorChance"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-06",
+      "kind": "contract",
+      "description": "男女預設上限與既定字串別名",
+      "status": "PASS",
+      "observation": {
+        "male": 120,
+        "female": 100,
+        "unknown": 100
+      },
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-07",
+      "kind": "contract",
+      "description": "戰場50/10門檻、基本行動永遠允許與撤退風險",
+      "status": "PASS",
+      "observation": [
+        {
+          "v": 50.001,
+          "band": "high"
+        },
+        {
+          "v": 50,
+          "band": "mid"
+        },
+        {
+          "v": 10,
+          "band": "mid"
+        },
+        {
+          "v": 9.999,
+          "band": "exhausted"
+        },
+        {
+          "v": 0,
+          "band": "exhausted"
+        }
+      ],
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-08",
+      "kind": "contract",
+      "description": "無效精力資料判耗盡；奧義成本按max四捨五入並夾0",
+      "status": "PASS",
+      "observation": {
+        "invalidBand": "exhausted",
+        "roundedCost": 20,
+        "lowerBound": 0
+      },
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-09",
+      "kind": "contract",
+      "description": "補元散+50/高級+100並封頂，純函式不改庫存",
+      "status": "PASS",
+      "observation": {
+        "normal": {
+          "ok": true,
+          "inventory": {
+            "ITEM_VITALITY_PILL": 1,
+            "ITEM_VITALITY_PILL_PREMIUM": 1
+          },
+          "vitality": 60,
+          "restored": 50
+        },
+        "premium": {
+          "ok": true,
+          "inventory": {
+            "ITEM_VITALITY_PILL": 2
+          },
+          "vitality": 120,
+          "restored": 70
+        }
+      },
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-10",
+      "kind": "contract",
+      "description": "滿值不扣藥；無藥優先回no-item；無效max拒絕",
+      "status": "PASS",
+      "observation": {
+        "fullRejected": true,
+        "originalCount": 1
+      },
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-11",
+      "kind": "characterization",
+      "description": "補元散非有限current當0，小數向下取整",
+      "status": "PASS",
+      "observation": {
+        "NaNCurrentAfter": 50,
+        "fractionalAfter": 119
+      },
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-12",
+      "kind": "caller_contract",
+      "description": "GameSession成功扣藥、回精力、事件與await一次save",
+      "status": "PASS",
+      "observation": {
+        "vitality": 70,
+        "count": 0,
+        "saves": 1,
+        "events": 1
+      },
+      "actualExtractedCalls": [
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory",
+        "GameSession.inventory"
+      ],
+      "extractedCallableIds": [
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-13",
+      "kind": "caller_contract",
+      "description": "GameSession查無武將/滿值均不發事件不存檔",
+      "status": "PASS",
+      "observation": {
+        "count": 1,
+        "saves": 0,
+        "events": 0
+      },
+      "actualExtractedCalls": [
+        "GameSession.usePillOnGeneral",
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory"
+      ],
+      "extractedCallableIds": [
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-14",
+      "kind": "caller_characterization_gap",
+      "description": "舊資料僅有vitality時current被當max，低精力也拒絕補藥",
+      "status": "PASS",
+      "observation": {
+        "current": 20,
+        "genderDefaultMax": 120,
+        "inferredCallerMax": 20,
+        "result": "vitality-full"
+      },
+      "actualExtractedCalls": [
+        "GameSession.usePillOnGeneral"
+      ],
+      "extractedCallableIds": [
+        "GameSession.usePillOnGeneral"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-15",
+      "kind": "caller_characterization_gap",
+      "description": "補藥save拒絕後庫存/名冊/事件不回滾，controller也reject",
+      "status": "PASS",
+      "observation": {
+        "vitality": 70,
+        "remainingPills": 1,
+        "events": 1,
+        "controller": "rejects",
+        "realPersistence": "NOT_RUN"
+      },
+      "actualExtractedCalls": [
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory",
+        "GameSession.inventory"
+      ],
+      "extractedCallableIds": [
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-16",
+      "kind": "caller_characterization_gap",
+      "description": "save未完成時第二次補藥仍可進入，兩顆可連用",
+      "status": "PASS",
+      "observation": {
+        "remaining": 0,
+        "vitality": 100,
+        "saves": 2,
+        "scope": "Concurrent direct controller calls; live button timing NOT_PROVEN"
+      },
+      "actualExtractedCalls": [
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory",
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory",
+        "GameSession.inventory"
+      ],
+      "extractedCallableIds": [
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-17",
+      "kind": "caller_contract",
+      "description": "補藥controller庫存數及拒絕/成功文字",
+      "status": "PASS",
+      "observation": {
+        "vitalityPillCount": 0,
+        "premiumVitalityPillCount": 2
+      },
+      "actualExtractedCalls": [
+        "GameSession.inventory",
+        "GameSession.usePillOnGeneral",
+        "GameSession.usePillOnGeneral",
+        "GameSession.inventory",
+        "GameSession.inventory"
+      ],
+      "extractedCallableIds": [
+        "GameSession.inventory",
+        "GameSession.usePillOnGeneral"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-18",
+      "kind": "contract",
+      "description": "重傷25%包含等號、非finite不算；不改輸入",
+      "status": "PASS",
+      "observation": {
+        "at25": 64,
+        "above25": 65,
+        "NaN": "unchanged"
+      },
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-19",
+      "kind": "characterization_gap",
+      "description": "重傷壽命無下限，反覆受傷可成負值",
+      "status": "PASS",
+      "observation": {
+        "afterOne": 0,
+        "afterTwo": -1,
+        "lowerBound": "none in inspected helpers",
+        "policy": "minimum lifespan not specified here"
+      },
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-20",
+      "kind": "characterization",
+      "description": "負hpRatio仍算重傷，缺壽命走確定性預設再扣1",
+      "status": "PASS",
+      "observation": {
+        "base": 66,
+        "after": 65,
+        "negativeRatioAccepted": true
+      },
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-21",
+      "kind": "contract",
+      "description": "加速每張2h、ceil實耗、不耗多卡與已完成不耗卡",
+      "status": "PASS",
+      "observation": {
+        "threeHoursUsed": 2,
+        "alreadyReadyUsed": 0
+      },
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-22",
+      "kind": "contract",
+      "description": "加速小數卡取floor，非finite/負值視0",
+      "status": "PASS",
+      "observation": {
+        "fractionalCardsUsed": 1,
+        "invalidCardsUsed": 0
+      },
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-23",
+      "kind": "caller_contract",
+      "description": "GameSession許願加速扣實耗/受庫存限制，完成後不再扣",
+      "status": "PASS",
+      "observation": {
+        "used": 2,
+        "remaining": 0,
+        "endMs": 1793764800000,
+        "automaticSaveCalls": 0
+      },
+      "actualExtractedCalls": [
+        "GameSession.startWish",
+        "GameSession.speedUpWish",
+        "GameSession.inventory",
+        "GameSession.inventory",
+        "GameSession.speedUpWish",
+        "GameSession.wishPool"
+      ],
+      "extractedCallableIds": [
+        "GameSession.startWish",
+        "GameSession.speedUpWish",
+        "GameSession.inventory",
+        "GameSession.wishPool"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-24",
+      "kind": "caller_contract",
+      "description": "加速後許願領取只給一次；3個方法本身不自動save",
+      "status": "PASS",
+      "observation": {
+        "pills": 1,
+        "cards": 5,
+        "saves": 0,
+        "scope": "GameSession methods only; upstream save ownership NOT_PROVEN"
+      },
+      "actualExtractedCalls": [
+        "GameSession.startWish",
+        "GameSession.speedUpWish",
+        "GameSession.inventory",
+        "GameSession.claimWishes",
+        "GameSession.inventory",
+        "GameSession.claimWishes",
+        "GameSession.inventory",
+        "GameSession.inventory"
+      ],
+      "extractedCallableIds": [
+        "GameSession.startWish",
+        "GameSession.speedUpWish",
+        "GameSession.inventory",
+        "GameSession.claimWishes"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-25",
+      "kind": "characterization_gap",
+      "description": "applySpeedCards直接接受NaN污染願望；正式speedUpWish擋下",
+      "status": "PASS",
+      "observation": {
+        "directHelperEndMs": "NaN",
+        "formalCallerUsed": 0,
+        "formalCallerProtected": true
+      },
+      "actualExtractedCalls": [
+        "GameSession.speedUpWish",
+        "GameSession.inventory"
+      ],
+      "extractedCallableIds": [
+        "GameSession.speedUpWish",
+        "GameSession.inventory"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-26",
+      "kind": "contract",
+      "description": "沙漠S扣2、其他級扣4、非沙漠扣0",
+      "status": "PASS",
+      "observation": {
+        "S": 2,
+        "AtoD": 4,
+        "nonDesert": 0
+      },
+      "actualExtractedCalls": [],
+      "extractedCallableIds": [],
+      "executionScope": "DIRECT_FULL_MODULE_IMPORT",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-27",
+      "kind": "caller_contract",
+      "description": "原TileEffectPhase取同陣營最大沙漠drain、主將只扣一次",
+      "status": "PASS",
+      "observation": {
+        "before": 20,
+        "after": 16,
+        "drain": 4,
+        "notSum": 10
+      },
+      "actualExtractedCalls": [
+        "assets/scripts/battle/runtime/phases/BattleTileEffectPhase.ts.executeBattleTileEffectPhase"
+      ],
+      "extractedCallableIds": [
+        "assets/scripts/battle/runtime/phases/BattleTileEffectPhase.ts.executeBattleTileEffectPhase"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-28",
+      "kind": "caller_contract",
+      "description": "原TileEffectPhase忽略死亡/敵陣營、精力下限0",
+      "status": "PASS",
+      "observation": {
+        "oneAfterDrain": 0,
+        "missingCallbackAfter": 20
+      },
+      "actualExtractedCalls": [
+        "assets/scripts/battle/runtime/phases/BattleTileEffectPhase.ts.executeBattleTileEffectPhase",
+        "assets/scripts/battle/runtime/phases/BattleTileEffectPhase.ts.executeBattleTileEffectPhase"
+      ],
+      "extractedCallableIds": [
+        "assets/scripts/battle/runtime/phases/BattleTileEffectPhase.ts.executeBattleTileEffectPhase"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-29",
+      "kind": "caller_contract",
+      "description": "原Dispatcher中段擋奧義、10%仍放行種子戰法、低於10%擋種子",
+      "status": "PASS",
+      "observation": {
+        "blockedNoExecutor": true,
+        "at10SeedAllowed": true,
+        "below10SeedBlocked": true
+      },
+      "actualExtractedCalls": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.resolveCasterGeneral"
+      ],
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-30",
+      "kind": "caller_characterization",
+      "description": "原Dispatcher不攔虎符/血統等來源，無法解析施放者亦放行",
+      "status": "PASS",
+      "observation": {
+        "tigerTallyAtZero": "allowed",
+        "unresolvedOwner": "allowed",
+        "scope": "explicit source design, not proven exploit"
+      },
+      "actualExtractedCalls": [
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.resolveCasterGeneral"
+      ],
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.resolveCasterGeneral"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-31",
+      "kind": "caller_contract",
+      "description": "原Dispatcher僅applied才扣精力；已用奧義再播不扣",
+      "status": "PASS",
+      "observation": {
+        "afterFirst": 92,
+        "afterReplay": 92,
+        "executions": 1,
+        "canonicalCostPct": 0.08
+      },
+      "actualExtractedCalls": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext",
+        "BattleSkillDispatcher.spendUltimateCost",
+        "assets/scripts/battle/views/BattleSceneLoader.ts.findUltimateVitalityCostPct",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral"
+      ],
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext",
+        "BattleSkillDispatcher.spendUltimateCost",
+        "assets/scripts/battle/views/BattleSceneLoader.ts.findUltimateVitalityCostPct"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-32",
+      "kind": "caller_contract",
+      "description": "原Dispatcher無目標或撤退鎖擋下不扣不記已使用",
+      "status": "PASS",
+      "observation": {
+        "vitality": 100,
+        "usedCount": 0
+      },
+      "actualExtractedCalls": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext",
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral"
+      ],
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-33",
+      "kind": "caller_characterization",
+      "description": "原Dispatcher精力足夠進gate但不足以覆蓋成本仍施放並夾0；無成本資料不扣",
+      "status": "PASS",
+      "observation": {
+        "cost80With51": "applied, vitality0",
+        "missingCost": "applied, vitality100"
+      },
+      "actualExtractedCalls": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext",
+        "BattleSkillDispatcher.spendUltimateCost",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext",
+        "BattleSkillDispatcher.spendUltimateCost"
+      ],
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext",
+        "BattleSkillDispatcher.spendUltimateCost"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-34",
+      "kind": "caller_contract",
+      "description": "對酒當歌實際profile20%、原buildContext整數回復並封頂",
+      "status": "PASS",
+      "observation": {
+        "profileRatio": 0.2,
+        "after": 120,
+        "emitted": 1
+      },
+      "actualExtractedCalls": [
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext"
+      ],
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-35",
+      "kind": "caller_characterization",
+      "description": "精力已滿時回復resolver仍applied，接原dispatcher會扣奧義精力",
+      "status": "PASS",
+      "observation": {
+        "before": 100,
+        "afterRestoreAndCost": 92,
+        "canonicalCostPct": 0.08,
+        "scope": "real profile/resolver/data + exact dispatcher/loader methods"
+      },
+      "actualExtractedCalls": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext",
+        "BattleSkillDispatcher.spendUltimateCost",
+        "assets/scripts/battle/views/BattleSceneLoader.ts.findUltimateVitalityCostPct",
+        "BattleSkillDispatcher.resolveCasterGeneral"
+      ],
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.executeBattleSkillRequest",
+        "BattleSkillDispatcher.usedUltimateKey",
+        "BattleSkillDispatcher.resolveCasterGeneral",
+        "BattleSkillDispatcher.checkVitalityGate",
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext",
+        "BattleSkillDispatcher.spendUltimateCost",
+        "assets/scripts/battle/views/BattleSceneLoader.ts.findUltimateVitalityCostPct"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-36",
+      "kind": "caller_contract",
+      "description": "回復resolver無主將/無callback拒絕，錯誤profile拒絕",
+      "status": "PASS",
+      "observation": {
+        "missingGeneral": "no-target",
+        "missingCallback": "no-target",
+        "missingProfile": "missing-skill-profile"
+      },
+      "actualExtractedCalls": [
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext"
+      ],
+      "extractedCallableIds": [
+        "BattleSkillDispatcher.buildBattleSkillExecutionContext"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-37",
+      "kind": "caller_contract",
+      "description": "原BattleRoster出戰門檻30，戰後從戰內精力再扣30、ongoing不扣",
+      "status": "PASS",
+      "observation": {
+        "deployBelow30": "blocked",
+        "deployAt30": "allowed",
+        "battleEndVitality": 70,
+        "afterSettlement": 40,
+        "ongoingAfter": 100
+      },
+      "actualExtractedCalls": [
+        "assets/scripts/core/systems/BattleRoster.ts.checkDeployable",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.checkDeployable",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.settleBattle",
+        "assets/scripts/core/systems/BattleRoster.ts.outcomeOf",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.settleBattle",
+        "assets/scripts/core/systems/BattleRoster.ts.outcomeOf"
+      ],
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/BattleRoster.ts.checkDeployable",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.settleBattle",
+        "assets/scripts/core/systems/BattleRoster.ts.outcomeOf",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-38",
+      "kind": "caller_contract",
+      "description": "每季回復出戰10%/待命30%，上限封頂，死者不回復",
+      "status": "PASS",
+      "observation": [
+        {
+          "id": "used",
+          "vitality": 22
+        },
+        {
+          "id": "rest",
+          "vitality": 46
+        },
+        {
+          "id": "cap",
+          "vitality": 120
+        },
+        {
+          "id": "dead",
+          "vitality": 0
+        }
+      ],
+      "actualExtractedCalls": [
+        "assets/scripts/core/systems/BattleRoster.ts.recoverVitalityOneSeason",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf"
+      ],
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/BattleRoster.ts.recoverVitalityOneSeason",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-39",
+      "kind": "caller_contract",
+      "description": "待產原holdPregnancyVigor覆蓋季回復，非待產正常增加",
+      "status": "PASS",
+      "observation": {
+        "recovered": [
+          50,
+          50
+        ],
+        "afterPregnancyHold": [
+          20,
+          50
+        ],
+        "scope": "same helper order as GameSession L3385-3386, full season transaction NOT_RUN"
+      },
+      "actualExtractedCalls": [
+        "assets/scripts/core/systems/BattleRoster.ts.recoverVitalityOneSeason",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf",
+        "assets/scripts/core/systems/BreedingSystem.ts.holdPregnancyVigor"
+      ],
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/BattleRoster.ts.recoverVitalityOneSeason",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf",
+        "assets/scripts/core/systems/BreedingSystem.ts.holdPregnancyVigor"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    },
+    {
+      "id": "G07-40",
+      "kind": "characterization_gap",
+      "description": "缺max的低精力舊資料季回復也被視為滿值；future lastDeployed歸出戰",
+      "status": "PASS",
+      "observation": {
+        "legacyVitality": 20,
+        "legacyMax": "not populated",
+        "futureDeploymentRecovery": 10,
+        "productionLegacyReachability": "NOT_PROVEN"
+      },
+      "actualExtractedCalls": [
+        "assets/scripts/core/systems/BattleRoster.ts.recoverVitalityOneSeason",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf"
+      ],
+      "extractedCallableIds": [
+        "assets/scripts/core/systems/BattleRoster.ts.recoverVitalityOneSeason",
+        "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+        "assets/scripts/core/systems/BattleRoster.ts.vitalityOf"
+      ],
+      "executionScope": "EXACT_AST_SOURCE_IN_INJECTED_HARNESS_NOT_FULL_MODULE",
+      "limitations": [
+        "No complete GameSession/Dispatcher initialization, Cocos runtime or real persistence",
+        "Injected collaborators and controlled fixtures; not full-game E2E"
+      ]
+    }
+  ],
+  "sourceChecks": [
+    {
+      "path": "assets/scripts/core/systems/AccelerateCard.ts",
+      "blob_sha": "b228e1651aaf140935778e6175b29f2f0e489529",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/DesertVitality.ts",
+      "blob_sha": "4c5f0b6fafa34c0a5868829d0ad7aa11bb6a567e",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/FatigueFailureRate.ts",
+      "blob_sha": "93bfb24438e679e351443e63621013c1fcd52b5c",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/VitalityBattleGate.ts",
+      "blob_sha": "8ae3597f17ff9f94c2758aa781aa4b55b2083f9c",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/VitalityCap.ts",
+      "blob_sha": "dd4d372c0c85b3b6b90edae7688a1ebc48c1cde5",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/VitalityPill.ts",
+      "blob_sha": "4577392401d93a6628091b24c3c49eccbdeddad5",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/WarInjury.ts",
+      "blob_sha": "e651877cf5cefc8ff761ad950faba05b20c46863",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/ui/core/VitalityPillController.ts",
+      "blob_sha": "1b7c34a04ed7586dd6a5d52be0b18654d49d3b67",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/battle/skills/resolvers/VitalityRestoreSkillResolver.ts",
+      "blob_sha": "1b173e1d40a3b6db7f551ba2f4c8cbe261258463",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/battle/runtime/phases/BattleTileEffectPhase.ts",
+      "blob_sha": "4823124bf7eaa678ab4fcb1e4a2c0c9f05e18e60",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/battle/runtime/BattleSkillDispatcher.ts",
+      "blob_sha": "32cf08afcbf893074c9f733f9b1fb566adf6d8cf",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/battle/controllers/BattleController.ts",
+      "blob_sha": "049511fb8fbac841a0bff74fc01d3c5246cd15e9",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/battle/skills/BattleSkillProfiles.ts",
+      "blob_sha": "36ce4fe8a8977beb4d98a32ecb4bce8773c3364b",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/WishPool.ts",
+      "blob_sha": "9c43ce4405d83372dd626b8addb53f1fcbd4c8eb",
+      "verified": true
+    },
+    {
+      "path": "docs/遊戲規格文件/設計參考/育成與戰鬥公式基準手冊.md",
+      "blob_sha": "f8720e054ace4523fae75a319b5348709cb635d4",
+      "verified": true
+    },
+    {
+      "path": "docs/agent-briefs/tasks/PROG/PROG-2-1268.md",
+      "blob_sha": "fabce9586c93b236d5463d5c0ea3447fe0db5a17",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/LoginStreak.ts",
+      "blob_sha": "13ab418ecc0f06d7ec6ed46e5fe19516e55c1843",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/ui/core/BreedingTexts.ts",
+      "blob_sha": "57b485a1592c700c42ac8cc1a4382d421a097cc9",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/ui/core/VitalityScriptTexts.ts",
+      "blob_sha": "237765cfcda0bbc8c9e3d73dc514329c4aebdbcb",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/config/TigerTallySpecTactics.ts",
+      "blob_sha": "494cef62de42e63d455de1ce69265d6b4b05e552",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/shared/SkillRuntimeContract.ts",
+      "blob_sha": "bb151dc6773886737868bcc25b5b3f1f2650a9cd",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "blob_sha": "f25e2698a08bb226ed2f9b0fbb40b01a832148d0",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/battle/views/BattleSceneLoader.ts",
+      "blob_sha": "c1ccbca8da35f2c0beaa471e5b08f387bd826a7c",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/BreedingSystem.ts",
+      "blob_sha": "aa00f689366a4ea67c68535b92431fc2c3322b61",
+      "verified": true
+    },
+    {
+      "path": "assets/resources/data/master/ultimate-definitions.json",
+      "blob_sha": "17df0d22c1415be24ff2b4494492b5ae72ad7081",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "blob_sha": "75a387a2c49cafa7fb70fefd5028cc3c87035339",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "blob_sha": "745a0235ba075a604fa26df135f6d76c51bdadae",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/GeneralAging.ts",
+      "blob_sha": "8ebde70fa84edad28485ad6334328141f227fd4f",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/config/Constants.ts",
+      "blob_sha": "b46e94469158edfa211c6a77ec4d624c347ac738",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/shared/CommonEnums.ts",
+      "blob_sha": "090bc87b7e738513cadbeace408c5cd86b397b15",
+      "verified": true
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將壽命系統.md",
+      "blob_sha": "95c11b009130b25bec40b7e3eb039fb0b7e74a0d",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/PlayerInventory.ts",
+      "blob_sha": "4262f657d6d22e3dfe276b2b6a1f07039eb5644b",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/ItemDef.ts",
+      "blob_sha": "3d31e987c22668c647fab1ba3b4082abb0a26bc9",
+      "verified": true
+    },
+    {
+      "path": "assets/scripts/core/systems/ItemEffectDispatcher.ts",
+      "blob_sha": "29825210ba6c545e48ced0759b079dadd11f570d",
+      "verified": true
+    }
+  ],
+  "extractedCallables": [
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.NEGATIVE_FACTOR_CHANCE",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 65,
+      "lineEnd": 65,
+      "sourceStartUtf16": 2934,
+      "sourceEndUtf16": 2976,
+      "sha256": "1ac59fdb38079ccb48fa8ae83c203472e9d8579f3415e9ee88d11563382c6cf8",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.failureRateForVigor",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 221,
+      "lineEnd": 225,
+      "sourceStartUtf16": 8044,
+      "sourceEndUtf16": 8256,
+      "sha256": "5f74eeb34e65bd7545b5497f0c503f1ed8278f7088292535cdf62c2a34ef1a30",
+      "bodySha256": "0a91e212f4eef0b9e72a3f6dfbf69611c58bc8ede2b3c18d359f4f5aeea38e71",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.phaseOfRound",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 197,
+      "lineEnd": 201,
+      "sourceStartUtf16": 7307,
+      "sourceEndUtf16": 7468,
+      "sha256": "e6d593cfd47db590755924dcccd814b07965c26f45de4459e25fc1e3eabd930c",
+      "bodySha256": "359e2bcefaf0d28023e2d01814988b787a5919626c5d6c61b8629adbe3bb3ca3",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.randInt",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 203,
+      "lineEnd": 205,
+      "sourceStartUtf16": 7470,
+      "sourceEndUtf16": 7603,
+      "sha256": "412a07f2b3c2c230694ce75c235621b0dad186e4914cf6fc0d824005cb1f0e08",
+      "bodySha256": "b58b9e9c0fad33a83efc22076634aa0b08e1e9b357d64b8cb3c7dc2584d9898d",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.negativeFactorChance",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 71,
+      "lineEnd": 73,
+      "sourceStartUtf16": 3094,
+      "sourceEndUtf16": 3222,
+      "sha256": "fa8969d6ee4495d9bdbb0ca03cb9ff8197c548a0de88f6f5a4b8978acfe2e93d",
+      "bodySha256": "72a44f9f5101a204de40fef6984a7027a8bf65f740928247d6506c33afb28e9e",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.trainingFailureRate",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 232,
+      "lineEnd": 235,
+      "sourceStartUtf16": 8362,
+      "sourceEndUtf16": 8655,
+      "sha256": "797df731259e91521d398dc8d64a10adefe5069d77ea2411d985e06a82fd9720",
+      "bodySha256": "698503239cdc10426e5dade5b4e2d85b3da6d5f4ab2bd01c3d3b5f2ed2d22285",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.TRAINING_KINDS",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 37,
+      "lineEnd": 37,
+      "sourceStartUtf16": 1823,
+      "sourceEndUtf16": 1914,
+      "sha256": "761ae0e50319bcb509a7fce61b887361f0aeadb8fceb149e69ad33e2c4050ecd",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.VIGOR_MAX",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 49,
+      "lineEnd": 49,
+      "sourceStartUtf16": 2241,
+      "sourceEndUtf16": 2270,
+      "sha256": "35d90c4511cb110c45acab2a218810bca851c93abbaaf732bcff5764e006afc2",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.REST_VIGOR_RECOVER",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 51,
+      "lineEnd": 51,
+      "sourceStartUtf16": 2343,
+      "sourceEndUtf16": 2413,
+      "sha256": "da82033f63972a75cc97cc16de6e4d283bbb35fbbbe1fe42106841d4d834b3cb",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.RED_VIGOR_RECOVER_PER_LEVEL",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 53,
+      "lineEnd": 53,
+      "sourceStartUtf16": 2457,
+      "sourceEndUtf16": 2504,
+      "sha256": "0d2122c5fa745714bd4cde9a1191b65a647a129bb1a7989139f85736bee48196",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.TRAINING_VIGOR_COST",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 50,
+      "lineEnd": 50,
+      "sourceStartUtf16": 2271,
+      "sourceEndUtf16": 2342,
+      "sha256": "8b68a31e60511693e762cf4355270716ebed753e14874768d05d33ac32fba584",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.NURTURE_TOTAL_ROUNDS",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 32,
+      "lineEnd": 32,
+      "sourceStartUtf16": 1646,
+      "sourceEndUtf16": 1685,
+      "sha256": "61abaf2d7ea179e6671b232e147ddc84bb49b58d1e0e38be0e091a29fa295e11",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.NEGATIVE_FACTORS",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 74,
+      "lineEnd": 74,
+      "sourceStartUtf16": 3223,
+      "sourceEndUtf16": 3287,
+      "sha256": "0e8d3287d6c957086f162ed0e6a179e7c2e973baf8f9d59a068d226c0f808ebc",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/NurtureSystem.ts.executeRound",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "lineStart": 392,
+      "lineEnd": 517,
+      "sourceStartUtf16": 14931,
+      "sourceEndUtf16": 20371,
+      "sha256": "9f5023a03bf59cf2c2700c4d7a492e7ccc9d791bcd840d07937248ed906bb08c",
+      "bodySha256": "a71256532ef21f5162f6246820c7d5ca27ebce14d767c99c06de729989d2d4e3",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "GameSession.inventory",
+      "kind": "class-member",
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "lineStart": 761,
+      "lineEnd": 763,
+      "sourceStartUtf16": 41909,
+      "sourceEndUtf16": 41995,
+      "sha256": "658da0a8894402094413d1823f3f4632f29e88d753bc1e2dbcf9669e0c93815d",
+      "bodySha256": "607ab2eb9cadadcdbc0318eeeb149580d7e8158d9ebeded92966a94555781682",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "GameSession.usePillOnGeneral",
+      "kind": "class-member",
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "lineStart": 898,
+      "lineEnd": 912,
+      "sourceStartUtf16": 47404,
+      "sourceEndUtf16": 48355,
+      "sha256": "70e2c588f4e8cb08687dff700d2dd71fea3a63ea361f02d5487eacca11f13951",
+      "bodySha256": "791fe7b99a19092d12a8ff7eba87ea40438f4f9d4d427bf54b26d9e93262629a",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "GameSession.wishPool",
+      "kind": "class-member",
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "lineStart": 1919,
+      "lineEnd": 1921,
+      "sourceStartUtf16": 93125,
+      "sourceEndUtf16": 93270,
+      "sha256": "8034db2f93fcc86d678aa849b6c40594d2aa0cee419eace1592c1975a1c84b07",
+      "bodySha256": "8ef5dec7f92cbc47b8e7d02110abfef6906f8368657ec2dae87af25e1c491d29",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "GameSession.startWish",
+      "kind": "class-member",
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "lineStart": 1924,
+      "lineEnd": 1929,
+      "sourceStartUtf16": 93310,
+      "sourceEndUtf16": 93688,
+      "sha256": "a5f4149f1cc9df83b5e376a493dd83d76a8b356c1004c498b0858a9c0df19803",
+      "bodySha256": "1c956d1a47fa9aa05a325039d228e8c4c1db04e306146e2871d0b5d51b8e21d5",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "GameSession.speedUpWish",
+      "kind": "class-member",
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "lineStart": 1932,
+      "lineEnd": 1941,
+      "sourceStartUtf16": 93740,
+      "sourceEndUtf16": 94336,
+      "sha256": "a457e534aa915aaa303b8ea8e075a6cce7ad7bd34a6c918b16f590f9ce2a96aa",
+      "bodySha256": "618366524b329474e86201b026b99b8b705c4fef188c3c33acda0fe840feb5ae",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "GameSession.claimWishes",
+      "kind": "class-member",
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "lineStart": 1944,
+      "lineEnd": 1954,
+      "sourceStartUtf16": 94374,
+      "sourceEndUtf16": 94956,
+      "sha256": "7fd429dc74ece11de37c26b72d803320ea3864f8c489cb887782e76baa90cdb2",
+      "bodySha256": "6b9cf7cd1ba72c53b7535f5e8bf2cd4b679f9280289b608df33f48af65b1987b",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/battle/views/BattleSceneLoader.ts.findUltimateVitalityCostPct",
+      "kind": "function",
+      "path": "assets/scripts/battle/views/BattleSceneLoader.ts",
+      "lineStart": 71,
+      "lineEnd": 73,
+      "sourceStartUtf16": 3550,
+      "sourceEndUtf16": 3702,
+      "sha256": "d6422722d58b0143814d510b210533aa5481692bc6c5eb9f6094e97bf9e4b18e",
+      "bodySha256": "5e789156cf5d9144942817998f9662b17ec8021398c52dcbd35bf41dfb83d9fe",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "BattleSkillDispatcher.executeBattleSkillRequest",
+      "kind": "class-member",
+      "path": "assets/scripts/battle/runtime/BattleSkillDispatcher.ts",
+      "lineStart": 261,
+      "lineEnd": 347,
+      "sourceStartUtf16": 11563,
+      "sourceEndUtf16": 15110,
+      "sha256": "5feda90e2f90989eb4b389bb8af48dfd7764410ad8fc69a8aabd84dd26570915",
+      "bodySha256": "c986acccbb644defdc2b3ef8656c14bb159f17a0ebbabda9b9c9b9f2908e2f3f",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "BattleSkillDispatcher.usedUltimateKey",
+      "kind": "class-member",
+      "path": "assets/scripts/battle/runtime/BattleSkillDispatcher.ts",
+      "lineStart": 404,
+      "lineEnd": 408,
+      "sourceStartUtf16": 17931,
+      "sourceEndUtf16": 18225,
+      "sha256": "c27e973d0e223e3034f4d90c9c5e251f2126cdeb17c464292d784bf85af4dcf8",
+      "bodySha256": "3c27844cc7d9820db6bab303549cafea372ebec481ae49eb1a4d6c7623c7e911",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "BattleSkillDispatcher.spendUltimateCost",
+      "kind": "class-member",
+      "path": "assets/scripts/battle/runtime/BattleSkillDispatcher.ts",
+      "lineStart": 411,
+      "lineEnd": 418,
+      "sourceStartUtf16": 18284,
+      "sourceEndUtf16": 18673,
+      "sha256": "306bd33199833175391079ba138005a2b7a62dd002f3b5ab0e1b419fa13263ea",
+      "bodySha256": "120f25c979e9031820ca216a4e1ad8bcdff5ef788eab5ff552ef4a9f7e1c28a3",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "BattleSkillDispatcher.resolveCasterGeneral",
+      "kind": "class-member",
+      "path": "assets/scripts/battle/runtime/BattleSkillDispatcher.ts",
+      "lineStart": 421,
+      "lineEnd": 426,
+      "sourceStartUtf16": 18732,
+      "sourceEndUtf16": 19069,
+      "sha256": "6f423ce7d3168e6b47dbcd18f2a1386f0d843bb44aaa7dba3b3591434167fb37",
+      "bodySha256": "8026a48d0b2018bde1a31c8102dde65c010613ec404b3391d0a65ddc1aecdaef",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "BattleSkillDispatcher.checkVitalityGate",
+      "kind": "class-member",
+      "path": "assets/scripts/battle/runtime/BattleSkillDispatcher.ts",
+      "lineStart": 432,
+      "lineEnd": 446,
+      "sourceStartUtf16": 19157,
+      "sourceEndUtf16": 19906,
+      "sha256": "b1d5dcda2087a22d4584aad2725f82a456e9b1bc6d450a842da9b66b72a5ec74",
+      "bodySha256": "ac19949bc32bb4bf4e652734f7672c73f8d7075d2ecdf8d48e788205bab54ebd",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "BattleSkillDispatcher.buildBattleSkillExecutionContext",
+      "kind": "class-member",
+      "path": "assets/scripts/battle/runtime/BattleSkillDispatcher.ts",
+      "lineStart": 472,
+      "lineEnd": 645,
+      "sourceStartUtf16": 20929,
+      "sourceEndUtf16": 29066,
+      "sha256": "923d5be1cd0e70fb29ed4a2d49b13e09bf44ec77b3d9d221d7b03efc8ef222e2",
+      "bodySha256": "d0bf273e09d25b8ef596f8e5f0673472433032c84517a02221c4041ad0e49c18",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/battle/runtime/phases/BattleTileEffectPhase.ts.executeBattleTileEffectPhase",
+      "kind": "function",
+      "path": "assets/scripts/battle/runtime/phases/BattleTileEffectPhase.ts",
+      "lineStart": 43,
+      "lineEnd": 192,
+      "sourceStartUtf16": 2183,
+      "sourceEndUtf16": 8213,
+      "sha256": "5e506c008b326ab5b75e3dcf9d29c68edc302d1095eacf3f26374bdfd3a5b60d",
+      "bodySha256": "38e2a4951c548e43a4c087c6e9028b12212e52e4cd8ea81b2ed8cb84ec242996",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BattleRoster.ts.vitalityOf",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "lineStart": 116,
+      "lineEnd": 118,
+      "sourceStartUtf16": 4372,
+      "sourceEndUtf16": 4522,
+      "sha256": "32d84d9597834f159d57a45f9366ceb5d85579fe97c959c79e8cf5ade60f9fa9",
+      "bodySha256": "fc03d76800aece905324148fe0a6e65aa5b403ecb996fb059bab513b181bdb25",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BattleRoster.ts.maxVitalityOf",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "lineStart": 120,
+      "lineEnd": 122,
+      "sourceStartUtf16": 4524,
+      "sourceEndUtf16": 4677,
+      "sha256": "fcba056be4068cda87b0b4d6a758c2b8a190488fae9e6e82a337e11c7c2196ef",
+      "bodySha256": "6899b18ed0b5e1731643df8398df5ca523212bb2b61adb7c214030d5adb6edb8",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BattleRoster.ts.outcomeOf",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "lineStart": 228,
+      "lineEnd": 233,
+      "sourceStartUtf16": 9626,
+      "sourceEndUtf16": 9852,
+      "sha256": "997ce53e203be1d5da111bc05f1f4d955eb90032950c808eb2812c2cf01eac12",
+      "bodySha256": "a2d335c290d417bcacd04addba18d7559da5fc4586d32efd60289044b8d172dd",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BattleRoster.ts.BATTLE_VITALITY_COST",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "lineStart": 29,
+      "lineEnd": 29,
+      "sourceStartUtf16": 1415,
+      "sourceEndUtf16": 1454,
+      "sha256": "6b963665dadae3f78bfd275e98c611931d7c16d884528583b890083de277b86a",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BattleRoster.ts.BATTLE_MIN_VITALITY",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "lineStart": 31,
+      "lineEnd": 31,
+      "sourceStartUtf16": 1491,
+      "sourceEndUtf16": 1547,
+      "sha256": "b682a5715704cfa02031cdf42977c932905abee46b0300deba7a8b5d8a4715b2",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BattleRoster.ts.checkDeployable",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "lineStart": 130,
+      "lineEnd": 139,
+      "sourceStartUtf16": 4987,
+      "sourceEndUtf16": 5570,
+      "sha256": "d8825f5506cc0d836eeeaac6bdd95cad6f0fe10caf760ca486673e9631b41ddd",
+      "bodySha256": "3397ff678634aaca79d2d250a34e8ce97af737619ad5ae89583106f4f8393a35",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BattleRoster.ts.VITALITY_RECOVER_DEPLOYED",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "lineStart": 34,
+      "lineEnd": 34,
+      "sourceStartUtf16": 1650,
+      "sourceEndUtf16": 1695,
+      "sha256": "3c311a6112a4d102554923b86a4ebc597783e49ecc3336ad7b0e4141d3275a6c",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BattleRoster.ts.VITALITY_RECOVER_STANDBY",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "lineStart": 35,
+      "lineEnd": 35,
+      "sourceStartUtf16": 1696,
+      "sourceEndUtf16": 1740,
+      "sha256": "9f8c6a3822b37d58644fa29d08cd9d1ec868ebafb613d2c805601a98e22d8538",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BattleRoster.ts.recoverVitalityOneSeason",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "lineStart": 326,
+      "lineEnd": 337,
+      "sourceStartUtf16": 13906,
+      "sourceEndUtf16": 14590,
+      "sha256": "326b972db729b459a7da963cd5471e3b73d6dc1f21c17aafd1302d86ea66ff3f",
+      "bodySha256": "6cb953b1c8d9e39ab50722267973af96610fc1f905fff4c4101c51b8488c09b9",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BattleRoster.ts.BATTLE_VITALITY_COST",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "lineStart": 29,
+      "lineEnd": 29,
+      "sourceStartUtf16": 1415,
+      "sourceEndUtf16": 1454,
+      "sha256": "6b963665dadae3f78bfd275e98c611931d7c16d884528583b890083de277b86a",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BattleRoster.ts.BATTLE_MERIT",
+      "kind": "constant",
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "lineStart": 55,
+      "lineEnd": 55,
+      "sourceStartUtf16": 2577,
+      "sourceEndUtf16": 2676,
+      "sha256": "2d3c208d11183de954278e5c72250c7b79688e07ffdd79ca721caa83481daca0",
+      "bodySha256": null,
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": false,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BattleRoster.ts.settleBattle",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "lineStart": 268,
+      "lineEnd": 318,
+      "sourceStartUtf16": 10857,
+      "sourceEndUtf16": 13705,
+      "sha256": "8db386efb254a7ae623ee3531c181faaa33940df6baafb4fc7b6444a029e6071",
+      "bodySha256": "736eaf37418f7354ce7e412a903dd8af9db36e558c7469cc4b01dabee166f948",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    },
+    {
+      "id": "assets/scripts/core/systems/BreedingSystem.ts.holdPregnancyVigor",
+      "kind": "function",
+      "path": "assets/scripts/core/systems/BreedingSystem.ts",
+      "lineStart": 727,
+      "lineEnd": 734,
+      "sourceStartUtf16": 28872,
+      "sourceEndUtf16": 29353,
+      "sha256": "4fdbe91064308042e1f3c5133b65ba42c626dada67d4711049cf28cd67a30d79",
+      "bodySha256": "854fd81b88f322a0de1ee64d98f992a6827b54c4cfa587f1fcf62b92ce5d0df7",
+      "sourceSliceEqualsAstText": true,
+      "bodySliceEqualsAstText": true,
+      "extraction": "TypeScript 5.9.3 AST exact source slice, unmodified before transpilation"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "repository": "eaglhuang/3klife",
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "node": "v24.22.1",
+  "typescript": "5.9.3",
+  "source_count": 34,
+  "probe_count": 40,
+  "passed": 40,
+  "failed": 0,
+  "full_gameplay_acceptance": "NOT_RUN",
+  "product_code_modified": false
+}
+PASS G07-01 FORM02 70/30 分段端點與夾值
+PASS G07-02 非有限疲勞輸入回0失敗率；70/30邊界不連續
+PASS G07-03 培育原函式不是FORM02曲線
+PASS G07-04 培育原executeRound休息40/60、紅因子增益與100封頂；輸入不變
+PASS G07-05 培育失敗仍扣15，受傷跳過回合不耗精力；使用現行培育曲線
+PASS G07-06 男女預設上限與既定字串別名
+PASS G07-07 戰場50/10門檻、基本行動永遠允許與撤退風險
+PASS G07-08 無效精力資料判耗盡；奧義成本按max四捨五入並夾0
+PASS G07-09 補元散+50/高級+100並封頂，純函式不改庫存
+PASS G07-10 滿值不扣藥；無藥優先回no-item；無效max拒絕
+PASS G07-11 補元散非有限current當0，小數向下取整
+PASS G07-12 GameSession成功扣藥、回精力、事件與await一次save
+PASS G07-13 GameSession查無武將/滿值均不發事件不存檔
+PASS G07-14 舊資料僅有vitality時current被當max，低精力也拒絕補藥
+PASS G07-15 補藥save拒絕後庫存/名冊/事件不回滾，controller也reject
+PASS G07-16 save未完成時第二次補藥仍可進入，兩顆可連用
+PASS G07-17 補藥controller庫存數及拒絕/成功文字
+PASS G07-18 重傷25%包含等號、非finite不算；不改輸入
+PASS G07-19 重傷壽命無下限，反覆受傷可成負值
+PASS G07-20 負hpRatio仍算重傷，缺壽命走確定性預設再扣1
+PASS G07-21 加速每張2h、ceil實耗、不耗多卡與已完成不耗卡
+PASS G07-22 加速小數卡取floor，非finite/負值視0
+PASS G07-23 GameSession許願加速扣實耗/受庫存限制，完成後不再扣
+PASS G07-24 加速後許願領取只給一次；3個方法本身不自動save
+PASS G07-25 applySpeedCards直接接受NaN污染願望；正式speedUpWish擋下
+PASS G07-26 沙漠S扣2、其他級扣4、非沙漠扣0
+PASS G07-27 原TileEffectPhase取同陣營最大沙漠drain、主將只扣一次
+PASS G07-28 原TileEffectPhase忽略死亡/敵陣營、精力下限0
+PASS G07-29 原Dispatcher中段擋奧義、10%仍放行種子戰法、低於10%擋種子
+PASS G07-30 原Dispatcher不攔虎符/血統等來源，無法解析施放者亦放行
+PASS G07-31 原Dispatcher僅applied才扣精力；已用奧義再播不扣
+PASS G07-32 原Dispatcher無目標或撤退鎖擋下不扣不記已使用
+PASS G07-33 原Dispatcher精力足夠進gate但不足以覆蓋成本仍施放並夾0；無成本資料不扣
+PASS G07-34 對酒當歌實際profile20%、原buildContext整數回復並封頂
+PASS G07-35 精力已滿時回復resolver仍applied，接原dispatcher會扣奧義精力
+PASS G07-36 回復resolver無主將/無callback拒絕，錯誤profile拒絕
+PASS G07-37 原BattleRoster出戰門檻30，戰後從戰內精力再扣30、ongoing不扣
+PASS G07-38 每季回復出戰10%/待命30%，上限封頂，死者不回復
+PASS G07-39 待產原holdPregnancyVigor覆蓋季回復，非待產正常增加
+PASS G07-40 缺max的低精力舊資料季回復也被視為滿值；future lastDeployed歸出戰

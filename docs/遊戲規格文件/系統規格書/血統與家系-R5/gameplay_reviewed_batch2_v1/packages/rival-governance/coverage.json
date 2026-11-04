@@ -1,0 +1,557 @@
+{
+  "repository": "eaglhuang/3klife",
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "fullDomainAcceptance": "NOT_RUN",
+  "sourceCopies": 63,
+  "candidateRuntimeCount": 16,
+  "candidateRuntimeFullyRead": 16,
+  "primarySpecsFullyRead": 1,
+  "supportingSpecsSampled": 3,
+  "originalCallerMethodSlices": 14,
+  "deterministicProbeCount": 45,
+  "probeAssertionPass": 45,
+  "probeAssertionFail": 0,
+  "wholeProductE2E": "NOT_RUN",
+  "originalTestSuite": "NOT_RUN",
+  "typecheck": "NOT_RUN",
+  "sourceProvenance": "Recomputed git blob SHA-1 and SHA-256; frozen exact-ref connector fetch or same-blob reuse. Search results never used as absence proof.",
+  "candidates": [
+    {
+      "path": "assets/scripts/core/models/AIPopulationConfig.ts",
+      "purpose": "AI後裔人口設定及繁殖上限helper；不是城市兵源或Rival待命池上限。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-09",
+        "G23-10"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalAiDiplomacy.ts",
+      "purpose": "外交事件delta與AI對另一國的意圖；不自行提交交易。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-17"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalBonding.ts",
+      "purpose": "待命池依品質與招募季選兩人，food>2000時一對進bonds，不扣糧。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-07",
+        "G23-08"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalExpansion.ts",
+      "purpose": "兵糧門檻、意願骰、加權效用選攻擊目標；數值含暫定改動。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-11",
+        "G23-12"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalGeneralUpkeep.ts",
+      "purpose": "退休、死亡、傭兵流入與俘虜決策predicate；已測季caller未用此完成生命週期。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-26"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalGovernance.ts",
+      "purpose": "五內政公式、性格效率、資源cap及招募品質段；生產使用統一60屬性。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-01",
+        "G23-02",
+        "G23-03",
+        "G23-06"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalHegemony.ts",
+      "purpose": "領土比例霸權、聯盟衰減與稱霸提示判定；不提交戰鬥。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-14",
+        "G23-15"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalMilitaryIndex.ts",
+      "purpose": "全體逐將軍力完整才使用，否則全體回兵力；弱勢嚴格0.7與進攻半率。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-13",
+        "G23-38"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalNations.ts",
+      "purpose": "國家初始、外交、季度內政招募結緣／軍力、簡化自動戰鬥、重組與正規化。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-04",
+        "G23-05",
+        "G23-06",
+        "G23-10",
+        "G23-15",
+        "G23-16",
+        "G23-24",
+        "G23-25",
+        "G23-33",
+        "G23-37",
+        "G23-38",
+        "G23-40",
+        "G23-41",
+        "G23-45"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalOfficerSeason.ts",
+      "purpose": "逐將age/vitality/虎符升星與分配及軍力；不含死亡淘汰或4/5星突破。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-25",
+        "G23-28",
+        "G23-29"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalOfficerSetup.ts",
+      "purpose": "將roster/general/troop/difficulty資料組成初始名冊及戰力context。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-42"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalOfficers.ts",
+      "purpose": "去除玩家已持有及跨國重複武將，建官員／虎符名冊。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-27"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalRiseFall.ts",
+      "purpose": "國力分級與效果表、年度與時代重組條件helper。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-23",
+        "G23-24",
+        "G23-45"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalRulerLines.ts",
+      "purpose": "君主台詞與事件格式化；格式化經Nations/controller間接執行。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-16",
+        "G23-37",
+        "G23-43"
+      ],
+      "executionNote": "selected functions, not complete branch coverage; RivalRulerLines indirect formatting only"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalTrade.ts",
+      "purpose": "六資源路線、雙向盟友折扣、關係／交戰／量／季次數檢查；不直接扣玩家資源。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-18",
+        "G23-19",
+        "G23-20",
+        "G23-21",
+        "G23-22"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    },
+    {
+      "path": "assets/scripts/ui/core/RivalDiplomacyController.ts",
+      "purpose": "外交畫面動作，將規則結果提交錢包和session；失敗回滾與去重未在此保證。",
+      "readStatus": "FULLY_READ",
+      "probeIds": [
+        "G23-16",
+        "G23-31",
+        "G23-39",
+        "G23-40",
+        "G23-44"
+      ],
+      "executionNote": "selected original functions or controller; not full-system acceptance"
+    }
+  ],
+  "originalTestCandidates": [
+    {
+      "path": "tests/RivalAiDiplomacy.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalBonding.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalCoalitionDecay.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalDiplomacy.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalEraShift.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalEraShiftSaveFlowE2E.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalExpansion.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalExpansionWiring.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalGeneralUpkeep.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalGovernance.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalHegemonNotice.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalHegemony.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalHegemonyWiring.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalMilitaryIndex.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalNationResources.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalNations.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalOfficerSeason.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalOfficerSetup.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalOfficerWiring.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalOfficers.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalRecruitRoster.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalRecruitment.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalRiseFall.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalRiseFallBoundary.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalRulerLines.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalSeasonSaveFlowE2E.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "tests/RivalTrade.test.ts",
+      "read": "NOT_READ",
+      "execution": "NOT_RUN"
+    }
+  ],
+  "callerSlices": [
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "rivals",
+      "lineStart": 1758,
+      "lineEnd": 1760,
+      "startUtf16": 85137,
+      "endUtf16": 85205,
+      "sha256": "53d5a1b5aced7d916bb8a60c171c3495f99bbfe72f9b917f9cdd7453f750520c",
+      "sliceFile": "probes/extracted/GameSession.rivals.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "setRivals",
+      "lineStart": 1776,
+      "lineEnd": 1781,
+      "startUtf16": 85790,
+      "endUtf16": 85972,
+      "sha256": "91b5947e1a801e3bdad0a378b7132c03190c630f75593b92c6813f15a641d4ff",
+      "sliceFile": "probes/extracted/GameSession.setRivals.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "setRivalOfficerContext",
+      "lineStart": 1766,
+      "lineEnd": 1769,
+      "startUtf16": 85312,
+      "endUtf16": 85551,
+      "sha256": "2d960e09d45a519361fba5299931ef7780574da4b219b466418622dbe1c1c71e",
+      "sliceFile": "probes/extracted/GameSession.setRivalOfficerContext.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "_withRivalOfficers",
+      "lineStart": 1771,
+      "lineEnd": 1773,
+      "startUtf16": 85557,
+      "endUtf16": 85753,
+      "sha256": "a3f689e6aab3f51b7f1280d361058979c291a08abaf1c8748ae8e1914e75de54",
+      "sliceFile": "probes/extracted/GameSession._withRivalOfficers.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "tradeWithRival",
+      "lineStart": 1787,
+      "lineEnd": 1804,
+      "startUtf16": 86124,
+      "endUtf16": 87549,
+      "sha256": "29fd4d00020b00a2f92c4c758e55c8835707a67104ca949e583abc34036dea64",
+      "sliceFile": "probes/extracted/GameSession.tradeWithRival.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "rivalBattleSquad",
+      "lineStart": 1807,
+      "lineEnd": 1813,
+      "startUtf16": 87594,
+      "endUtf16": 87913,
+      "sha256": "008f9409cb7131059830b83decb0330f8f135a5384fb15b41d7bcfb097c92325",
+      "sliceFile": "probes/extracted/GameSession.rivalBattleSquad.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "recordRivalCampaign",
+      "lineStart": 1977,
+      "lineEnd": 1990,
+      "startUtf16": 95956,
+      "endUtf16": 96728,
+      "sha256": "c0b561ecd41f8c90049eeb6b63d7787803b6fc80063608190a7e32d787d42c17",
+      "sliceFile": "probes/extracted/GameSession.recordRivalCampaign.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "recordAutoResolveBattle",
+      "lineStart": 1996,
+      "lineEnd": 2012,
+      "startUtf16": 96869,
+      "endUtf16": 97925,
+      "sha256": "f0d0ee28536926db397a7d4dd66e537e1073e090e3aa617a9e2c6a5338dc0ae0",
+      "sliceFile": "probes/extracted/GameSession.recordAutoResolveBattle.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "_tickRivals",
+      "lineStart": 1816,
+      "lineEnd": 1841,
+      "startUtf16": 87963,
+      "endUtf16": 89625,
+      "sha256": "ff3c359f90e31ca9634cadca4b389b69440f1456f1da4a48ed5026a83188ada0",
+      "sliceFile": "probes/extracted/GameSession._tickRivals.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "advanceSeason",
+      "lineStart": 3369,
+      "lineEnd": 3474,
+      "startUtf16": 158198,
+      "endUtf16": 164395,
+      "sha256": "176ad05a066a430450eae5085cfc8917f003c716a2ef85e3a9c749af04d6e737",
+      "sliceFile": "probes/extracted/GameSession.advanceSeason.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "governanceAssignments",
+      "lineStart": 2568,
+      "lineEnd": 2570,
+      "startUtf16": 123942,
+      "endUtf16": 124062,
+      "sha256": "a7bfd83aec8549e777dd3be5fb16541e1d0c93dab653aec12c5d61664ce65076",
+      "sliceFile": "probes/extracted/GameSession.governanceAssignments.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "assignGovernor",
+      "lineStart": 2573,
+      "lineEnd": 2578,
+      "startUtf16": 124109,
+      "endUtf16": 124578,
+      "sha256": "c785357f5b4819360fc193dde16d2a16da3c6c977064957841ee100f043370ce",
+      "sliceFile": "probes/extracted/GameSession.assignGovernor.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "class": "GameSession",
+      "method": "officerPermissions",
+      "lineStart": 2110,
+      "lineEnd": 2112,
+      "startUtf16": 101878,
+      "endUtf16": 102004,
+      "sha256": "cab6384d9d28e55effc96eb9749ea3f2b926f2a2e26bac965cf6b0e7b6be9fe9",
+      "sliceFile": "probes/extracted/GameSession.officerPermissions.ts",
+      "exactOriginalSlice": true
+    },
+    {
+      "path": "assets/scripts/ui/scenes/LobbyScene.ts",
+      "class": "LobbyScene",
+      "method": "_mountRivalDiplomacy",
+      "lineStart": 2711,
+      "lineEnd": 2764,
+      "startUtf16": 135123,
+      "endUtf16": 138446,
+      "sha256": "30d5610ce543bf602ea0759b331422371f5d45d3e2c9a060043c516cacd21d2c",
+      "sliceFile": "probes/extracted/LobbyScene._mountRivalDiplomacy.ts",
+      "exactOriginalSlice": true
+    }
+  ],
+  "fixtureBoundaries": {
+    "sessionDependencies": "Real Rival modules, GameClock and governance/permissions; pass-through player aging, lifecycle, prison, oracle, military regen and reporting. Not a whole GameSession instance, save adapter, Cocos, or E2E.",
+    "passThroughDependencies": [
+      "ageGeneralsOneSeason",
+      "unveilDueGenerals",
+      "recoverVitalityOneSeason",
+      "holdPregnancyVigor",
+      "advanceBreedingSeason",
+      "grantSeasonalOracleTokens",
+      "TALLY_SHORTAGE_FOOD_THRESHOLD",
+      "regenMilitaryOneSeason",
+      "seasonModifiersOf",
+      "prisonYieldOneSeason",
+      "rollPrisonTreasures",
+      "rollFutureReturns",
+      "buildYearReport",
+      "buildQuarterlyBattleReportRows",
+      "buildEraResetEvent",
+      "agingEventChannel"
+    ],
+    "fixtureMethods": [
+      "_tickTravel",
+      "_clearLeadIfGone",
+      "_releaseGearOfInactiveGenerals",
+      "_settleOpenHallAssigns",
+      "_settleDeaths",
+      "_recordSoulFragmentsFor",
+      "_recordGain",
+      "recordPlayerLog",
+      "applyPendingTerritoryUpgrade",
+      "recordSeasonJournal",
+      "recordJournal",
+      "_tickMercenaryDay",
+      "_recordOfflineBattle",
+      "_emit",
+      "save"
+    ],
+    "clock": "Real GameClock"
+  },
+  "untested": [
+    "Full Cocos UI / true scene lifecycle",
+    "real wallet and save adapters",
+    "save/reload/restart recovery",
+    "entire production caller inventory",
+    "AI descendants generation/GC/persistence",
+    "AI retirement/death/mercenary delivery",
+    "cross-AI diplomacy and joint campaigns",
+    "full city troop allocation and battle loss integration",
+    "trade UI path",
+    "reachable new-game path to synthetic 0-troop fixture"
+  ]
+}

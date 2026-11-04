@@ -1,0 +1,48 @@
+{
+  "full_modules": [
+    "assets/scripts/core/models/GeneObject.ts",
+    "assets/scripts/core/models/GeneralRole.ts",
+    "assets/scripts/core/models/GeneralVersion.ts",
+    "assets/scripts/core/models/MentorCard.ts",
+    "assets/scripts/core/models/MentorSupportSchema.ts",
+    "assets/scripts/core/services/PersonRegistry.ts",
+    "assets/scripts/core/services/PlayerRosterService.ts",
+    "assets/scripts/core/services/StarterRosterService.ts",
+    "assets/scripts/core/systems/BloodlineInfusion.ts",
+    "assets/scripts/core/systems/GeneralPoolCycle.ts",
+    "assets/scripts/core/systems/GeneralVersionGallery.ts",
+    "assets/scripts/core/systems/MentorBreakthrough.ts",
+    "assets/scripts/core/systems/MentorOverflow.ts",
+    "assets/scripts/core/systems/MentorSources.ts",
+    "assets/scripts/core/systems/MentorSupportCatalog.ts",
+    "assets/scripts/core/systems/OverflowBond.ts",
+    "assets/scripts/core/systems/ProvisionalGeneralVersions.ts",
+    "assets/scripts/core/systems/Rebirth.ts",
+    "assets/scripts/core/systems/ReviveRetrain.ts",
+    "assets/scripts/core/systems/RosterRoleLoad.ts",
+    "assets/scripts/core/systems/TacticRandomization.ts",
+    "assets/scripts/core/systems/TigerTallyLoyalty.ts",
+    "assets/scripts/core/systems/UltimateSlotUnlock.ts",
+    "assets/scripts/core/systems/VitalityCap.ts"
+  ],
+  "partial_dependencies": [
+    "assets/scripts/core/systems/NurtureSystem.ts",
+    "assets/scripts/core/systems/SortieDeploy.ts"
+  ],
+  "extracted_nodes": 27,
+  "fixtures": [
+    "cc.sys.localStorage is an isolated in-memory Map, with injected write failure",
+    "UCUFLogger.warn captures warnings only",
+    "GameSession omitted constructor dependencies: _emit and recordPlayerLog record calls; _nurturingIds returns []; _autoSave is false unless tested; save records calls or throws; startNewGame records calls without resetting world state",
+    "GameSession roster getter exposes exact extracted InMemoryRosterStore; original called methods are unchanged",
+    "GameSession random source fixed to () => 0 for tactic draws",
+    "Lobby services() points only at probe session; gameTime and journal queue are fixtures; MENTOR_POOL_ID is verified mentor-pool"
+  ],
+  "not_run": [
+    "Full GameSession or Lobby module initialization",
+    "Cocos/UI and click/interruption/resume E2E",
+    "Real PlayerSaveService full parse/migration/storage chain",
+    "Server sync, payment, production game state",
+    "Live first-run startup guard and actual spirit-card selection flow"
+  ]
+}

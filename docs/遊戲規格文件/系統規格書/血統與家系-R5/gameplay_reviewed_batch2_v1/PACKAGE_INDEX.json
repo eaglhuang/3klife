@@ -1,0 +1,83 @@
+{
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "batch_scope": "Four newly reviewed bounded packages; prior batch is referenced, not duplicated",
+  "full_gameplay_acceptance": "0 of 42 provisional domains",
+  "packages": [
+    {
+      "id": "recruitment-prophecy",
+      "original_archive": "gameplay-recruitment-prophecy-20261104.zip",
+      "bytes": 308234,
+      "sha256": "bde3b4ba7d1db22d4090e26699c1244f7df6e8d2b5f29879cc5f6e64a4d670f5",
+      "characterization_cases_in_package": 38,
+      "source_files": 43,
+      "domains_partial_only": [
+        "G10",
+        "G11"
+      ],
+      "independent_review": "REVIEW_PASSED",
+      "full_acceptance": "NOT_RUN",
+      "directory": "packages/recruitment-prophecy",
+      "entry_count": 63,
+      "archive_root_stripped": "gameplay-recruitment-prophecy-20261104/",
+      "start_here": "packages/recruitment-prophecy/名士與傭兵驗證報告.md",
+      "evidence_scope": "19個固定行原方法切片，獨立AST核為完整方法且全部有trace；11完整模組＋17宣告移除wrapper。"
+    },
+    {
+      "id": "roster-identity",
+      "original_archive": "3klife-roster-identity-20261104.zip",
+      "bytes": 2118948,
+      "sha256": "ecca6618162fd98d732204f4b7f1d9b7174079c418f0935716f3ded3ec688c32",
+      "characterization_cases_in_package": 44,
+      "source_files": 60,
+      "domains_partial_only": [
+        "G01",
+        "G02",
+        "G14"
+      ],
+      "independent_review": "REVIEW_PASSED",
+      "full_acceptance": "NOT_RUN",
+      "directory": "packages/roster-identity",
+      "entry_count": 103,
+      "archive_root_stripped": "",
+      "start_here": "packages/roster-identity/名冊與重複流轉報告.md",
+      "evidence_scope": "24個完整模組；27個完整AST節點切片；UI/storage/startNewGame為明示替身。"
+    },
+    {
+      "id": "rival-governance",
+      "original_archive": "G23-rival-governance-evidence.zip",
+      "bytes": 2013226,
+      "sha256": "8765ba629c307efc76ce4d295644416385cfbfebea70ff862803406ad04d926e",
+      "characterization_cases_in_package": 45,
+      "source_files": 63,
+      "domains_partial_only": [
+        "G23"
+      ],
+      "independent_review": "REVIEW_PASSED",
+      "full_acceptance": "NOT_RUN",
+      "directory": "packages/rival-governance",
+      "entry_count": 95,
+      "archive_root_stripped": "",
+      "start_here": "packages/rival-governance/他國治理外交與盛衰報告.md",
+      "evidence_scope": "原helper與14個AST方法切片，只有11個有trace；16個G23候選原碼完整讀過，非63來源全部完整審讀。"
+    },
+    {
+      "id": "vitality",
+      "original_archive": "3klife-gameplay-vitality-20261104.zip",
+      "bytes": 1899415,
+      "sha256": "63a8127f7e65a6c9177c135dfd71a8dab1f392ef9e64fb28fd547dc494b925e3",
+      "characterization_cases_in_package": 40,
+      "source_files": 34,
+      "domains_partial_only": [
+        "G07"
+      ],
+      "independent_review": "REVIEW_PASSED",
+      "full_acceptance": "NOT_RUN",
+      "directory": "packages/vitality",
+      "entry_count": 54,
+      "archive_root_stripped": "gameplay-vitality-20261104/",
+      "start_here": "packages/vitality/REPORT.md",
+      "evidence_scope": "41抽取紀錄=40唯一節點：27可呼叫ID全有trace、13常數；不是41函式。完整原helpers＋局部caller/phase/dispatcher。"
+    }
+  ],
+  "review_completed_at_utc": "2026-11-04T15:38:34Z"
+}

@@ -1,0 +1,479 @@
+{
+  "algorithm": "sha256",
+  "excludes": [
+    "ARTIFACT_SHA256.json (self-reference)",
+    "*.zip (delivery container)"
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 1597,
+      "sha256": "b27c967efe00c63213eb072076856591d6609ad374a21ce67a2cdecefaed37a7"
+    },
+    {
+      "path": "SOURCE_MANIFEST.json",
+      "bytes": 43211,
+      "sha256": "93f9e252945c0b17bd0aee1bf33ebc4ace997398cf4b93cd21d3d9c2fa226dff"
+    },
+    {
+      "path": "claim_matrix.json",
+      "bytes": 12434,
+      "sha256": "7930c3a73a498acde077cc7b8ab8e7b8d81c2e71784e06f6803ab093c77b6e60"
+    },
+    {
+      "path": "coverage.json",
+      "bytes": 17982,
+      "sha256": "0e1dd99c21c0b53a5d644724852c31f5b234e21c398c5148b7a35a52127ce96e"
+    },
+    {
+      "path": "evidence/assets/resources/data/ai-population-config.json",
+      "bytes": 324,
+      "sha256": "a60667fe06c69f38f123a73efc6682e78637b6aba80a57d76d5dbb964feff590"
+    },
+    {
+      "path": "evidence/assets/resources/data/rival-rosters.json",
+      "bytes": 1745,
+      "sha256": "577e574cc8dc16f25329f3b09666aa6d026b68f9c702319c710d15528e1a7344"
+    },
+    {
+      "path": "evidence/assets/scripts/core/managers/GameSession.ts",
+      "bytes": 239947,
+      "sha256": "4e7ac248cb0cfac92b4eb35bb84272cb2fc37903b090adcb20181c7fb90e96af"
+    },
+    {
+      "path": "evidence/assets/scripts/core/models/AIPopulationConfig.ts",
+      "bytes": 2555,
+      "sha256": "d280d85b2124847c3ceb060e803ecaecaa378cab868f96b606ed80b1f446982f"
+    },
+    {
+      "path": "evidence/assets/scripts/core/models/GeneralRole.ts",
+      "bytes": 2246,
+      "sha256": "a77b5a4de48ca0663602e8b78ab60fd074c4ed393e64b3a35857fe9189be5bbf"
+    },
+    {
+      "path": "evidence/assets/scripts/core/services/BloodlineGraph.ts",
+      "bytes": 11621,
+      "sha256": "98283cd17ae090312e1ea0d60b271115f4d706167604b59c4076fff77b9b2e86"
+    },
+    {
+      "path": "evidence/assets/scripts/core/storage/SaveVersion.ts",
+      "bytes": 5911,
+      "sha256": "40fb397dddc2844ecaa2f8f211279609f9d6afedeea6fb2ae381e9d26ba4d379"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/AiDifficultyTable.ts",
+      "bytes": 4105,
+      "sha256": "5d7c0c350ec0532dfda5ddf95a980da0b3a6de81b789e47f60b4e160c0f0830a"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/AiPowerEvaluation.ts",
+      "bytes": 5368,
+      "sha256": "e8ae0dda5c62802d053bbab10e947af3873a0fa33ff8be31b766ef9a4526ebb9"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/AiStatScaling.ts",
+      "bytes": 5176,
+      "sha256": "04938ee787795b5a0ec8a33cb405eca549646a846c84c299407159202baf27b6"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/BattlePowerRating.ts",
+      "bytes": 6504,
+      "sha256": "2ebd0467d6309448d30cec731b1a7d4b41b7f25a39a4aac7de150265bde0102b"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/BattleRecordStats.ts",
+      "bytes": 11749,
+      "sha256": "9c50380b3b7de52dd26fdf893bc51b6a60917c5b396e70c4e456f6a7132a6d21"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/BattleRoster.ts",
+      "bytes": 17969,
+      "sha256": "736af78c3655f47c322192d3ac0e867169cf57e0e78dc947ca5d6665320580ee"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/BattleSeasonStats.ts",
+      "bytes": 4446,
+      "sha256": "8c013b0051098242651b46eeadc1aa559ce307c498ef6ad043239a4289fe9716"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/BlueFactorInheritance.ts",
+      "bytes": 1097,
+      "sha256": "057d8ae8049840339373069b8e95ec5f0150a7389c39845bd27c4157a04d5dba"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/BreedingSystem.ts",
+      "bytes": 34900,
+      "sha256": "bf8939ffe07609fecaca3a270c5f36cf92b75fd2da7989b6217239d69afd3c0d"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/ChildFactorExpectation.ts",
+      "bytes": 4637,
+      "sha256": "65fb892b8dc96c925f781cc9a8f2b92d23ce377ffb1496fc437c6bfe986da57a"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/DomesticAutoGovernance.ts",
+      "bytes": 2543,
+      "sha256": "8fc47dab75b289c0074a154c9a96f5e361d96a067b493cf1ea3fbd598c771924"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/DomesticTasks.ts",
+      "bytes": 6014,
+      "sha256": "7e49bff117e74d3f9bbb5ed359ba3bf990c7196b9c17b8d29eab251f735f4fa9"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/FactorInheritance.ts",
+      "bytes": 10225,
+      "sha256": "dc1c80f9cfbeed3d5c04c47444edd0949189eadc158c9a110d8c44b9aefa6859"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/FateBlessing.ts",
+      "bytes": 2170,
+      "sha256": "42bbbb32370f928f79f0af61574a8d199e983b331b2dd90a86a9d296010d3cd2"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/GameClock.ts",
+      "bytes": 4898,
+      "sha256": "ad2236e7065e7bee8df6b4bf93bcda0360f928018f4cd7eeded0bd50b401c89d"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/GeneralAging.ts",
+      "bytes": 5147,
+      "sha256": "871d651615843602e24a653d1f6b1fba2a6f520c6f0841fbc0655a4ffa258785"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/GovernanceAssignment.ts",
+      "bytes": 2918,
+      "sha256": "e6d2157ff56b94554bbb3b28cb2229ade636c2d5dff97bc36aff12b5150f77ec"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/InspiredTacticMap.ts",
+      "bytes": 2932,
+      "sha256": "f100b62cf15e2eac35bb4fcde1a58121e6d317bc8f151ea4bc301a1b5ea4f439"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/KinRelation.ts",
+      "bytes": 7191,
+      "sha256": "d9bd986b9dd4bb0f9c7b7ccc3f67958452cf570b5f8e89044d2ac03c46570f6c"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/LuckBloodlineMutation.ts",
+      "bytes": 1905,
+      "sha256": "f04d6d452c7316be7a212bff66619b4a9817e29d7c40230965548869eb8b6b1e"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/LuckFateInheritance.ts",
+      "bytes": 3190,
+      "sha256": "8023b94c362f8ac1f9bf6dc7eca1aae38d7656df4444b559c2df9ccf73b7f664"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/LuckTacticCopy.ts",
+      "bytes": 3249,
+      "sha256": "dbc4d6b2dad832afd400c9f6a083d864dabcbf2bd682ddd411c9a648c03415fc"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/LuckThresholds.ts",
+      "bytes": 2739,
+      "sha256": "6278e0e879311f7bce7968685c9a79cef8398f0581bcefd08b5851a611c377f5"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/OfficerPermissions.ts",
+      "bytes": 1424,
+      "sha256": "63f212ab211690ac4c27536c915adaa009de32eaec0253eeda836790c62e5579"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/OfficerSnapshot.ts",
+      "bytes": 4669,
+      "sha256": "55315361d27360ee6f7206f00ab14b7e36c1820d8ee1c5ceacc89ae0481de2d3"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/OfficerState.ts",
+      "bytes": 6222,
+      "sha256": "105aa014f0093d1121377c1e3ee27d6095956292b0ebfc9c856215b1c67aa253"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/OfflineBattleSnapshot.ts",
+      "bytes": 9353,
+      "sha256": "772190a6668d8859f4a6c3dfff5f50ca2cbee5e5b5bd4b0d58a0dcfe47d81748"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/PrisonerOfWar.ts",
+      "bytes": 18094,
+      "sha256": "c709cd877ded262e5410599c3d64e550addfb7a5dd49787dba87397dfa8d40e4"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/ResourceCap.ts",
+      "bytes": 1544,
+      "sha256": "15fef7647c885d342956c88734f5adc5ac5fafc26e5aa1d0b93564a242a6f5b5"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalAiDiplomacy.ts",
+      "bytes": 4863,
+      "sha256": "f19e882b24d74f529dc744dc388b18993052a1879491b662ba3aa3668aac15a8"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalBonding.ts",
+      "bytes": 2522,
+      "sha256": "4d530a0918f4530789cf9512fe4f335ad66b06f8c5c33685a117744168e08fba"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalExpansion.ts",
+      "bytes": 5203,
+      "sha256": "19e15b0d2dc793b2e12141df15fd6aea439b9b5e4c1a3f70a6f38125446ca38e"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalGeneralUpkeep.ts",
+      "bytes": 2639,
+      "sha256": "0bb203b97abe6af4932f9513e657050c2a92a609062b74b386a97e1ffdcedccd"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalGovernance.ts",
+      "bytes": 6574,
+      "sha256": "cb37834bc5a49c4f1146b826d53e6ae8ed1f170a06e3e19840b442999227fd2b"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalHegemony.ts",
+      "bytes": 3701,
+      "sha256": "be812b2f5f84d701f0e49c7b24d07cf7c136a2cf62217631fb47d2165f997c6d"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalMilitaryIndex.ts",
+      "bytes": 2325,
+      "sha256": "bee235655781086d931be9602a37c29ff1c202b695f8f05329744ae0add0abff"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalNations.ts",
+      "bytes": 24460,
+      "sha256": "642de884e261cdc8c7d0705e24dc524d63b939c1cf8dbec1dec1840307ed6b5e"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalOfficerSeason.ts",
+      "bytes": 8236,
+      "sha256": "6f9900ba3f672baea324d0623b9ffd743c1fa278e243e9fde93ce7fcb75fe96f"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalOfficerSetup.ts",
+      "bytes": 3337,
+      "sha256": "2d54947727537083b0a4540c18b0a28cd3424a751b305cd570f89d5e84354c9c"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalOfficers.ts",
+      "bytes": 3839,
+      "sha256": "6d0c4653b896f11fc8b246a411b1b488a281a8074c4184c8b120276effd55b1c"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalRiseFall.ts",
+      "bytes": 4071,
+      "sha256": "a3446772b80e37e50a7ff1c505ce6b7c4c340f92c73f708e93ccd08488ce86e6"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalRulerLines.ts",
+      "bytes": 2744,
+      "sha256": "ceaa844fc8146d768356f2387bc9dda26abd8aa005896938332783652f09f521"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/RivalTrade.ts",
+      "bytes": 4288,
+      "sha256": "c874685c13a96123cec5fb2b2a8a631e7a688f109694948f71b582a706b97b2a"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/SeededRandom.ts",
+      "bytes": 1523,
+      "sha256": "2c1289a0b00ad305d731d48d0fbf8886dcf1adbd17e092c19335cf333837c6ae"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/TacticLoadout.ts",
+      "bytes": 1139,
+      "sha256": "89f35038ab15fd4913be1f37cfdaa6383cc5ee27b0aa88305a071bb38c4e294a"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/TigerTallyStar.ts",
+      "bytes": 4471,
+      "sha256": "a232559811da234e1e54ff5d484a4e5dc321e9c6448e4d4a6a29391834f79693"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/VitalityBattleGate.ts",
+      "bytes": 2872,
+      "sha256": "7c6043978188ba537150c3615f4b23d94554e3bb2963e79ccf105c8101dd5920"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/VitalityCap.ts",
+      "bytes": 1265,
+      "sha256": "cc2b849f352cc1770864290597ff18b43be70fceb0d20d60683bb8f145171d01"
+    },
+    {
+      "path": "evidence/assets/scripts/core/systems/WildGene.ts",
+      "bytes": 2284,
+      "sha256": "e7cb237fe5dc143cf847f3e1df51a8f967f059931544a4847086032b21ecc553"
+    },
+    {
+      "path": "evidence/assets/scripts/core/utils/UCUFLogger.ts",
+      "bytes": 5203,
+      "sha256": "e55de0c2ca135696d2a21172d5da960bc5f266b2e2e11e7d3b92a0cb4d0b2f51"
+    },
+    {
+      "path": "evidence/assets/scripts/ui/core/RivalDiplomacyController.ts",
+      "bytes": 5211,
+      "sha256": "72b89de1ff2fbe7bc8426236fb3031e648ea24fe0ea9a0b680c749e47a2f97b3"
+    },
+    {
+      "path": "evidence/assets/scripts/ui/scenes/LobbyScene.ts",
+      "bytes": 277587,
+      "sha256": "7bcd932588b5ccd0a960f318a72b64fab2a3443d1218611d64aac2c5b056b4b3"
+    },
+    {
+      "path": "evidence/docs/遊戲規格文件/系統規格書/AI武將強度系統.md",
+      "bytes": 24212,
+      "sha256": "b7f4910b3dbb3e37ea7f425634abdd8e57b7c26a718a2426751103d9d5d6f504"
+    },
+    {
+      "path": "evidence/docs/遊戲規格文件/系統規格書/官職系統.md",
+      "bytes": 7234,
+      "sha256": "0b466f5c9c47c9f230dd2a8d963831cd02462a9e5754a8cfbf0c24b41b229f11"
+    },
+    {
+      "path": "evidence/docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md",
+      "bytes": 31270,
+      "sha256": "2374239576b2060736b9a04d67935d195fc4029c02330521515e12b3427adeb9"
+    },
+    {
+      "path": "evidence/docs/遊戲規格文件/系統規格書/領地治理系統.md",
+      "bytes": 7682,
+      "sha256": "0d80cc0bb35954e1943206845dd8149b9e9607b279eaa9afdd94b6a178712fe4"
+    },
+    {
+      "path": "probe-development-history.json",
+      "bytes": 1114,
+      "sha256": "70f1b4ad92b8e9557b566aa84f0578f7ba4daa979a83bcc6b263c4a35399c927"
+    },
+    {
+      "path": "probes/extracted/GameSession._tickRivals.ts",
+      "bytes": 1758,
+      "sha256": "ff3c359f90e31ca9634cadca4b389b69440f1456f1da4a48ed5026a83188ada0"
+    },
+    {
+      "path": "probes/extracted/GameSession._withRivalOfficers.ts",
+      "bytes": 196,
+      "sha256": "a3f689e6aab3f51b7f1280d361058979c291a08abaf1c8748ae8e1914e75de54"
+    },
+    {
+      "path": "probes/extracted/GameSession.advanceSeason.ts",
+      "bytes": 6797,
+      "sha256": "176ad05a066a430450eae5085cfc8917f003c716a2ef85e3a9c749af04d6e737"
+    },
+    {
+      "path": "probes/extracted/GameSession.assignGovernor.ts",
+      "bytes": 469,
+      "sha256": "c785357f5b4819360fc193dde16d2a16da3c6c977064957841ee100f043370ce"
+    },
+    {
+      "path": "probes/extracted/GameSession.governanceAssignments.ts",
+      "bytes": 120,
+      "sha256": "a7bfd83aec8549e777dd3be5fb16541e1d0c93dab653aec12c5d61664ce65076"
+    },
+    {
+      "path": "probes/extracted/GameSession.officerPermissions.ts",
+      "bytes": 126,
+      "sha256": "cab6384d9d28e55effc96eb9749ea3f2b926f2a2e26bac965cf6b0e7b6be9fe9"
+    },
+    {
+      "path": "probes/extracted/GameSession.recordAutoResolveBattle.ts",
+      "bytes": 1056,
+      "sha256": "f0d0ee28536926db397a7d4dd66e537e1073e090e3aa617a9e2c6a5338dc0ae0"
+    },
+    {
+      "path": "probes/extracted/GameSession.recordRivalCampaign.ts",
+      "bytes": 772,
+      "sha256": "c0b561ecd41f8c90049eeb6b63d7787803b6fc80063608190a7e32d787d42c17"
+    },
+    {
+      "path": "probes/extracted/GameSession.rivalBattleSquad.ts",
+      "bytes": 319,
+      "sha256": "008f9409cb7131059830b83decb0330f8f135a5384fb15b41d7bcfb097c92325"
+    },
+    {
+      "path": "probes/extracted/GameSession.rivals.ts",
+      "bytes": 68,
+      "sha256": "53d5a1b5aced7d916bb8a60c171c3495f99bbfe72f9b917f9cdd7453f750520c"
+    },
+    {
+      "path": "probes/extracted/GameSession.setRivalOfficerContext.ts",
+      "bytes": 239,
+      "sha256": "2d960e09d45a519361fba5299931ef7780574da4b219b466418622dbe1c1c71e"
+    },
+    {
+      "path": "probes/extracted/GameSession.setRivals.ts",
+      "bytes": 182,
+      "sha256": "91b5947e1a801e3bdad0a378b7132c03190c630f75593b92c6813f15a641d4ff"
+    },
+    {
+      "path": "probes/extracted/GameSession.tradeWithRival.ts",
+      "bytes": 1443,
+      "sha256": "29fd4d00020b00a2f92c4c758e55c8835707a67104ca949e583abc34036dea64"
+    },
+    {
+      "path": "probes/extracted/LobbyScene._mountRivalDiplomacy.ts",
+      "bytes": 3462,
+      "sha256": "30d5610ce543bf602ea0759b331422371f5d45d3e2c9a060043c516cacd21d2c"
+    },
+    {
+      "path": "probes/results.json",
+      "bytes": 30371,
+      "sha256": "72e3e7d6c26fe01067ddd3f8b1851ddce846d211604ac5192e742decd9b1feab"
+    },
+    {
+      "path": "probes/run.mjs",
+      "bytes": 33839,
+      "sha256": "b4edb058f443fb0b19033934694fb945a4199ade050063ef5d72e6f50a6ecd64"
+    },
+    {
+      "path": "probes/run.stderr.txt",
+      "bytes": 390,
+      "sha256": "5e7de119b69f15c692307e1034e1ef2a8f8fe92da57c6f81f39ba3c6f7264d45"
+    },
+    {
+      "path": "probes/run.stdout.txt",
+      "bytes": 50,
+      "sha256": "aa2a30cb35d89060c7d5c9871bef691679e7a49729783a1e7a95e7d11265eaf9"
+    },
+    {
+      "path": "probes/ts-resolver.mjs",
+      "bytes": 954,
+      "sha256": "38bae793a1795f630ed63e76b55a7e857e90f1adecb5a5bf1cda92d41dfef8c1"
+    },
+    {
+      "path": "probes/vendor/COMPILER.json",
+      "bytes": 927,
+      "sha256": "9f03c2aab26e2fefe5def90ad80ff35c623fb63d11018e8747513ef99876d90e"
+    },
+    {
+      "path": "probes/vendor/TYPESCRIPT_LICENSE.txt",
+      "bytes": 9197,
+      "sha256": "a7d00bfd54525bc694b6e32f64c7ebcf5e6b7ae3657be5cc12767bce74654a47"
+    },
+    {
+      "path": "probes/vendor/typescript.js",
+      "bytes": 9112572,
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "path": "scope.json",
+      "bytes": 2474,
+      "sha256": "41063c76a9eae735f3947a0f07fb43e81a97a23836e5e0ec392c38d8ec564434"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 527,
+      "sha256": "716ec9a68338cee3906a77608f917baeecf80415ba8d918762fe83580a2a1f38"
+    },
+    {
+      "path": "verify_package.py",
+      "bytes": 2342,
+      "sha256": "2f31006ed8d9c95e53f8b8961294934a83728f311e03f2b26a18a62b429a8188"
+    },
+    {
+      "path": "他國治理外交與盛衰報告.md",
+      "bytes": 10412,
+      "sha256": "69ea83ea69c3dac52bc61a26840fd4eadc2f40839a8f9dfc1dd1c48b8a1c1f47"
+    }
+  ]
+}

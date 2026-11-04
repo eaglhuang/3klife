@@ -1,0 +1,636 @@
+{
+  "repository": "eaglhuang/3klife",
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "files": [
+    {
+      "path": "assets/scripts/core/systems/RivalGovernance.ts",
+      "blob_sha": "84acfa03761f5eefc0d4efa2c023d0af244cddbf",
+      "sha256": "cb37834bc5a49c4f1146b826d53e6ae8ed1f170a06e3e19840b442999227fd2b",
+      "bytes": 6574,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalGovernance.ts",
+      "acquisition": "reused verified gameplay-inventory-20261104/evidence/assets/scripts/core/systems/RivalGovernance.ts",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "blob_sha": "75a387a2c49cafa7fb70fefd5028cc3c87035339",
+      "sha256": "4e7ac248cb0cfac92b4eb35bb84272cb2fc37903b090adcb20181c7fb90e96af",
+      "bytes": 239947,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/managers/GameSession.ts",
+      "acquisition": "reused verified gameplay-validation-20261104/evidence/assets/scripts/core/managers/GameSession.ts",
+      "inspection": "SELECTED_ORIGINAL_CALLERS_READ_AND_EXECUTED; remainder unreviewed",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/ui/scenes/LobbyScene.ts",
+      "blob_sha": "020af72e606b8682a31e122afdb6ecde791f00d2",
+      "sha256": "7bcd932588b5ccd0a960f318a72b64fab2a3443d1218611d64aac2c5b056b4b3",
+      "bytes": 277587,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/scenes/LobbyScene.ts",
+      "acquisition": "reused verified gameplay-transactions-20261104/evidence/assets/scripts/ui/scenes/LobbyScene.ts",
+      "inspection": "SELECTED_ORIGINAL_CALLERS_READ_AND_EXECUTED; remainder unreviewed",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/models/AIPopulationConfig.ts",
+      "blob_sha": "9c4aa38b342c8202143f27fe70af5795dbddeac2",
+      "sha256": "d280d85b2124847c3ceb060e803ecaecaa378cab868f96b606ed80b1f446982f",
+      "bytes": 2555,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/AIPopulationConfig.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalAiDiplomacy.ts",
+      "blob_sha": "8b79e122b34d771201a4af5fcc388147510642b9",
+      "sha256": "f19e882b24d74f529dc744dc388b18993052a1879491b662ba3aa3668aac15a8",
+      "bytes": 4863,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalAiDiplomacy.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalBonding.ts",
+      "blob_sha": "40383d49e9dd37e2fd9a6f04f7438edbad374cd6",
+      "sha256": "4d530a0918f4530789cf9512fe4f335ad66b06f8c5c33685a117744168e08fba",
+      "bytes": 2522,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalBonding.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalExpansion.ts",
+      "blob_sha": "ef230cd37e3304b13aa1a16c913b08f085bb3739",
+      "sha256": "19e15b0d2dc793b2e12141df15fd6aea439b9b5e4c1a3f70a6f38125446ca38e",
+      "bytes": 5203,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalExpansion.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalGeneralUpkeep.ts",
+      "blob_sha": "aacf72297505573496e0c53a79a76f5d536d71c3",
+      "sha256": "0bb203b97abe6af4932f9513e657050c2a92a609062b74b386a97e1ffdcedccd",
+      "bytes": 2639,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalGeneralUpkeep.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalHegemony.ts",
+      "blob_sha": "8094c3662cb86fdd6a471db16bbe1414e3275362",
+      "sha256": "be812b2f5f84d701f0e49c7b24d07cf7c136a2cf62217631fb47d2165f997c6d",
+      "bytes": 3701,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalHegemony.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalMilitaryIndex.ts",
+      "blob_sha": "4b9e08973d1c96b6a057f40d8ac5ac9b82ca6138",
+      "sha256": "bee235655781086d931be9602a37c29ff1c202b695f8f05329744ae0add0abff",
+      "bytes": 2325,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalMilitaryIndex.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalNations.ts",
+      "blob_sha": "681687bb71b3cd5745456fb3e9d6bf60044d1e3a",
+      "sha256": "642de884e261cdc8c7d0705e24dc524d63b939c1cf8dbec1dec1840307ed6b5e",
+      "bytes": 24460,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalNations.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalOfficerSeason.ts",
+      "blob_sha": "013fb601a09d2f710b8a15e30a7271696391cefc",
+      "sha256": "6f9900ba3f672baea324d0623b9ffd743c1fa278e243e9fde93ce7fcb75fe96f",
+      "bytes": 8236,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalOfficerSeason.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalOfficerSetup.ts",
+      "blob_sha": "327ec2d01856b4f5b1c3a607ed2e06824b344ecb",
+      "sha256": "2d54947727537083b0a4540c18b0a28cd3424a751b305cd570f89d5e84354c9c",
+      "bytes": 3337,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalOfficerSetup.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalOfficers.ts",
+      "blob_sha": "380e1e21b48270e54727a5a4b5ab42c7fca89b46",
+      "sha256": "6d0c4653b896f11fc8b246a411b1b488a281a8074c4184c8b120276effd55b1c",
+      "bytes": 3839,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalOfficers.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalRiseFall.ts",
+      "blob_sha": "283992ee0b40a1f7b3250cb292251ef18857cc73",
+      "sha256": "a3446772b80e37e50a7ff1c505ce6b7c4c340f92c73f708e93ccd08488ce86e6",
+      "bytes": 4071,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalRiseFall.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalRulerLines.ts",
+      "blob_sha": "9f51e16df569ffc1d16c3ebe0a1c5360cecd38ad",
+      "sha256": "ceaa844fc8146d768356f2387bc9dda26abd8aa005896938332783652f09f521",
+      "bytes": 2744,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalRulerLines.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/RivalTrade.ts",
+      "blob_sha": "84fd5f636ff1e857cbbfb230fc38f174c6e85e88",
+      "sha256": "c874685c13a96123cec5fb2b2a8a631e7a688f109694948f71b582a706b97b2a",
+      "bytes": 4288,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RivalTrade.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/ui/core/RivalDiplomacyController.ts",
+      "blob_sha": "ec00492865f726cd564d140f1f469251d74b7718",
+      "sha256": "72b89de1ff2fbe7bc8426236fb3031e648ea24fe0ea9a0b680c749e47a2f97b3",
+      "bytes": 5211,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/core/RivalDiplomacyController.ts",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md",
+      "blob_sha": "6891f16666cad5d1ade035c5c22f60c31b9ad14e",
+      "sha256": "2374239576b2060736b9a04d67935d195fc4029c02330521515e12b3427adeb9",
+      "bytes": 31270,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E6%B2%BB%E7%90%86%E6%A8%A1%E5%BC%8F%E4%BB%96%E5%9C%8BAI%E7%B3%BB%E7%B5%B1.md",
+      "acquisition": "GitHub plugin fetch_file exact ref; verified against frozen inventory",
+      "inspection": "FULLY_READ",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/ResourceCap.ts",
+      "blob_sha": "55f46bdcbd5aa4aa85496f3786450f6622e34578",
+      "sha256": "15fef7647c885d342956c88734f5adc5ac5fafc26e5aa1d0b93564a242a6f5b5",
+      "bytes": 1544,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ResourceCap.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "blob_sha": "f25e2698a08bb226ed2f9b0fbb40b01a832148d0",
+      "sha256": "736af78c3655f47c322192d3ac0e867169cf57e0e78dc947ca5d6665320580ee",
+      "bytes": 17969,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleRoster.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/AiDifficultyTable.ts",
+      "blob_sha": "21332cf1571ce5b8729ad778fe35743cb2dd659e",
+      "sha256": "5d7c0c350ec0532dfda5ddf95a980da0b3a6de81b789e47f60b4e160c0f0830a",
+      "bytes": 4105,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiDifficultyTable.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/OfficerState.ts",
+      "blob_sha": "529c56200d9b4a889c0d871d1f9e488d8b642ecd",
+      "sha256": "105aa014f0093d1121377c1e3ee27d6095956292b0ebfc9c856215b1c67aa253",
+      "bytes": 6222,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/OfficerState.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/SeededRandom.ts",
+      "blob_sha": "954af8dada81f4d66b61a74bc76f07ee4e3e1666",
+      "sha256": "2c1289a0b00ad305d731d48d0fbf8886dcf1adbd17e092c19335cf333837c6ae",
+      "bytes": 1523,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/SeededRandom.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/AiStatScaling.ts",
+      "blob_sha": "2ff25ef0ab2a5963a41c82517b4b5e1d7127e17e",
+      "sha256": "04938ee787795b5a0ec8a33cb405eca549646a846c84c299407159202baf27b6",
+      "bytes": 5176,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiStatScaling.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/AiPowerEvaluation.ts",
+      "blob_sha": "f6d00edce3881f5ad9c5e507a9dd9b9f6ab4450e",
+      "sha256": "e8ae0dda5c62802d053bbab10e947af3873a0fa33ff8be31b766ef9a4526ebb9",
+      "bytes": 5368,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiPowerEvaluation.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattlePowerRating.ts",
+      "blob_sha": "9062e8f8eb80574a2d91c4775025b12ac74d0710",
+      "sha256": "2ebd0467d6309448d30cec731b1a7d4b41b7f25a39a4aac7de150265bde0102b",
+      "bytes": 6504,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattlePowerRating.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/TigerTallyStar.ts",
+      "blob_sha": "a104e151075f342632a1b97c2d954128505b5771",
+      "sha256": "a232559811da234e1e54ff5d484a4e5dc321e9c6448e4d4a6a29391834f79693",
+      "bytes": 4471,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/TigerTallyStar.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/OfficerPermissions.ts",
+      "blob_sha": "763d8f8040e2047fca9245ae904775bf058618b4",
+      "sha256": "63f212ab211690ac4c27536c915adaa009de32eaec0253eeda836790c62e5579",
+      "bytes": 1424,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/OfficerPermissions.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/OfficerSnapshot.ts",
+      "blob_sha": "b9b4bd9f029964fc9ba08aceb2a003fd51d5439f",
+      "sha256": "55315361d27360ee6f7206f00ab14b7e36c1820d8ee1c5ceacc89ae0481de2d3",
+      "bytes": 4669,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/OfficerSnapshot.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/GovernanceAssignment.ts",
+      "blob_sha": "1b240241c88f7345fc1ca89cd7c9c7f518d71bd0",
+      "sha256": "e6d2157ff56b94554bbb3b28cb2229ade636c2d5dff97bc36aff12b5150f77ec",
+      "bytes": 2918,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GovernanceAssignment.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/DomesticAutoGovernance.ts",
+      "blob_sha": "f70a1959917509f57aa0ae96de8bc28bdb0791e8",
+      "sha256": "8fc47dab75b289c0074a154c9a96f5e361d96a067b493cf1ea3fbd598c771924",
+      "bytes": 2543,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DomesticAutoGovernance.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/InspiredTacticMap.ts",
+      "blob_sha": "abb68960160fb005aa7172b84f8ec3a084717c6f",
+      "sha256": "f100b62cf15e2eac35bb4fcde1a58121e6d317bc8f151ea4bc301a1b5ea4f439",
+      "bytes": 2932,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/InspiredTacticMap.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/TacticLoadout.ts",
+      "blob_sha": "43f560da63fbbe4098f7d668d0c56360ecde3b99",
+      "sha256": "89f35038ab15fd4913be1f37cfdaa6383cc5ee27b0aa88305a071bb38c4e294a",
+      "bytes": 1139,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/TacticLoadout.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/GeneralAging.ts",
+      "blob_sha": "8ebde70fa84edad28485ad6334328141f227fd4f",
+      "sha256": "871d651615843602e24a653d1f6b1fba2a6f520c6f0841fbc0655a4ffa258785",
+      "bytes": 5147,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GeneralAging.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattleRecordStats.ts",
+      "blob_sha": "4530d09f31bfb23ee772baf95d8e32992b7d133f",
+      "sha256": "9c50380b3b7de52dd26fdf893bc51b6a60917c5b396e70c4e456f6a7132a6d21",
+      "bytes": 11749,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleRecordStats.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/PrisonerOfWar.ts",
+      "blob_sha": "8d91b4d69d3ad6125e02436531df4debf66dcf29",
+      "sha256": "c709cd877ded262e5410599c3d64e550addfb7a5dd49787dba87397dfa8d40e4",
+      "bytes": 18094,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/PrisonerOfWar.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/DomesticTasks.ts",
+      "blob_sha": "f67195ecf9764b6ca749cc852a51d840932b84e7",
+      "sha256": "7e49bff117e74d3f9bbb5ed359ba3bf990c7196b9c17b8d29eab251f735f4fa9",
+      "bytes": 6014,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DomesticTasks.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/BreedingSystem.ts",
+      "blob_sha": "aa00f689366a4ea67c68535b92431fc2c3322b61",
+      "sha256": "bf8939ffe07609fecaca3a270c5f36cf92b75fd2da7989b6217239d69afd3c0d",
+      "bytes": 34900,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BreedingSystem.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/VitalityCap.ts",
+      "blob_sha": "dd4d372c0c85b3b6b90edae7688a1ebc48c1cde5",
+      "sha256": "cc2b849f352cc1770864290597ff18b43be70fceb0d20d60683bb8f145171d01",
+      "bytes": 1265,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/VitalityCap.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattleSeasonStats.ts",
+      "blob_sha": "e6eb8e65ec93a7ec3e28a68ac68aa9e7b502ecf9",
+      "sha256": "8c013b0051098242651b46eeadc1aa559ce307c498ef6ad043239a4289fe9716",
+      "bytes": 4446,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleSeasonStats.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/models/GeneralRole.ts",
+      "blob_sha": "00315ba7218134c5aff00a819a1a4afe1ce7565d",
+      "sha256": "a77b5a4de48ca0663602e8b78ab60fd074c4ed393e64b3a35857fe9189be5bbf",
+      "bytes": 2246,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/GeneralRole.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/FactorInheritance.ts",
+      "blob_sha": "cfe18160bc8fbe9a9c7272ee7c2c7918e212c7ec",
+      "sha256": "dc1c80f9cfbeed3d5c04c47444edd0949189eadc158c9a110d8c44b9aefa6859",
+      "bytes": 10225,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FactorInheritance.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/KinRelation.ts",
+      "blob_sha": "4c3d1ebb4a618d7db89482d9d0ae5f347ca55b69",
+      "sha256": "d9bd986b9dd4bb0f9c7b7ccc3f67958452cf570b5f8e89044d2ac03c46570f6c",
+      "bytes": 7191,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/KinRelation.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/LuckThresholds.ts",
+      "blob_sha": "b6d38e2974931c45d83fac3d692df9e767097768",
+      "sha256": "6278e0e879311f7bce7968685c9a79cef8398f0581bcefd08b5851a611c377f5",
+      "bytes": 2739,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/LuckThresholds.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/services/BloodlineGraph.ts",
+      "blob_sha": "2bc4543253cd3375796550a165ae32cfc24959b8",
+      "sha256": "98283cd17ae090312e1ea0d60b271115f4d706167604b59c4076fff77b9b2e86",
+      "bytes": 11621,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/BloodlineGraph.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/ChildFactorExpectation.ts",
+      "blob_sha": "34ed918da9eaf6da3fde3527342478c09e8791b7",
+      "sha256": "65fb892b8dc96c925f781cc9a8f2b92d23ce377ffb1496fc437c6bfe986da57a",
+      "bytes": 4637,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ChildFactorExpectation.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/BlueFactorInheritance.ts",
+      "blob_sha": "f78e4d71a6c658cf8efddc194bf66ce68523d6cb",
+      "sha256": "057d8ae8049840339373069b8e95ec5f0150a7389c39845bd27c4157a04d5dba",
+      "bytes": 1097,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BlueFactorInheritance.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/VitalityBattleGate.ts",
+      "blob_sha": "8ae3597f17ff9f94c2758aa781aa4b55b2083f9c",
+      "sha256": "7c6043978188ba537150c3615f4b23d94554e3bb2963e79ccf105c8101dd5920",
+      "bytes": 2872,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/VitalityBattleGate.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/WildGene.ts",
+      "blob_sha": "2b762602661c90b744e8e923c641c6f759bc34c7",
+      "sha256": "e7cb237fe5dc143cf847f3e1df51a8f967f059931544a4847086032b21ecc553",
+      "bytes": 2284,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/WildGene.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/LuckTacticCopy.ts",
+      "blob_sha": "fd8465844e2933c8f9c8f601bdb28ab7eef79efa",
+      "sha256": "dbc4d6b2dad832afd400c9f6a083d864dabcbf2bd682ddd411c9a648c03415fc",
+      "bytes": 3249,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/LuckTacticCopy.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/LuckFateInheritance.ts",
+      "blob_sha": "0578c2030ab2e6e53fc989708cf3d5de2d631f75",
+      "sha256": "8023b94c362f8ac1f9bf6dc7eca1aae38d7656df4444b559c2df9ccf73b7f664",
+      "bytes": 3190,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/LuckFateInheritance.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/LuckBloodlineMutation.ts",
+      "blob_sha": "913f67c756f0f9099c5d60c57b89d106903afe44",
+      "sha256": "f04d6d452c7316be7a212bff66619b4a9817e29d7c40230965548869eb8b6b1e",
+      "bytes": 1905,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/LuckBloodlineMutation.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/FateBlessing.ts",
+      "blob_sha": "17a1a7892024a7ef3be102e8a5e4f4b1d369acba",
+      "sha256": "42bbbb32370f928f79f0af61574a8d199e983b331b2dd90a86a9d296010d3cd2",
+      "bytes": 2170,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FateBlessing.ts",
+      "acquisition": "GitHub plugin exact ref; inventory blob match",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/GameClock.ts",
+      "blob_sha": "f7bd2a1ad9807828f77eb15f3a67cfa772176fee",
+      "sha256": "ad2236e7065e7bee8df6b4bf93bcda0360f928018f4cd7eeded0bd50b401c89d",
+      "bytes": 4898,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GameClock.ts",
+      "acquisition": "reused exact-blob verified copy",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/AI武將強度系統.md",
+      "blob_sha": "65f078dd74ba2a75c785b39d0e284fd53b57e9a7",
+      "sha256": "b7f4910b3dbb3e37ea7f425634abdd8e57b7c26a718a2426751103d9d5d6f504",
+      "bytes": 24212,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/AI%E6%AD%A6%E5%B0%87%E5%BC%B7%E5%BA%A6%E7%B3%BB%E7%B5%B1.md",
+      "acquisition": "GitHub plugin exact ref; computed Git blob equals returned sha",
+      "inspection": "RELEVANT_SECTIONS_READ; remainder unreviewed",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/官職系統.md",
+      "blob_sha": "8fa549844b5734b10943c9a68f944af1621ad23a",
+      "sha256": "0b466f5c9c47c9f230dd2a8d963831cd02462a9e5754a8cfbf0c24b41b229f11",
+      "bytes": 7234,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E5%AE%98%E8%81%B7%E7%B3%BB%E7%B5%B1.md",
+      "acquisition": "GitHub plugin exact ref; computed Git blob equals returned sha",
+      "inspection": "RELEVANT_SECTIONS_READ; remainder unreviewed",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/領地治理系統.md",
+      "blob_sha": "a1c8b3adede0d2689e9ae0af3a76b4e209b51097",
+      "sha256": "0d80cc0bb35954e1943206845dd8149b9e9607b279eaa9afdd94b6a178712fe4",
+      "bytes": 7682,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E9%A0%98%E5%9C%B0%E6%B2%BB%E7%90%86%E7%B3%BB%E7%B5%B1.md",
+      "acquisition": "GitHub plugin exact ref; computed Git blob equals returned sha",
+      "inspection": "RELEVANT_SECTIONS_READ; remainder unreviewed",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/resources/data/ai-population-config.json",
+      "blob_sha": "aa9b86a5d234e92c6eab9474bc31918117746e08",
+      "sha256": "a60667fe06c69f38f123a73efc6682e78637b6aba80a57d76d5dbb964feff590",
+      "bytes": 324,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/ai-population-config.json",
+      "acquisition": "GitHub plugin exact ref; computed Git blob equals returned sha",
+      "inspection": "CONFIG_READ; production asset loading not tested",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/resources/data/rival-rosters.json",
+      "blob_sha": "c47ddd0e9821b587a555763d0f2194dcf41d5940",
+      "sha256": "577e574cc8dc16f25329f3b09666aa6d026b68f9c702319c710d15528e1a7344",
+      "bytes": 1745,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/rival-rosters.json",
+      "acquisition": "GitHub plugin exact ref; computed Git blob equals returned sha",
+      "inspection": "CONFIG_READ; production asset loading not tested",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/utils/UCUFLogger.ts",
+      "blob_sha": "0881f01dbb0631ec1e2f6aeeb80b9576dc58404f",
+      "sha256": "e55de0c2ca135696d2a21172d5da960bc5f266b2e2e11e7d3b92a0cb4d0b2f51",
+      "bytes": 5203,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/utils/UCUFLogger.ts",
+      "acquisition": "GitHub plugin exact ref; computed Git blob equals returned sha",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/systems/OfflineBattleSnapshot.ts",
+      "blob_sha": "1f3a3b7ed1bd1bd2ecae48ab0cc66962d3956d8e",
+      "sha256": "772190a6668d8859f4a6c3dfff5f50ca2cbee5e5b5bd4b0d58a0dcfe47d81748",
+      "bytes": 9353,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/OfflineBattleSnapshot.ts",
+      "acquisition": "GitHub plugin exact ref; computed Git blob equals returned sha",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    },
+    {
+      "path": "assets/scripts/core/storage/SaveVersion.ts",
+      "blob_sha": "99e240e1dc296695c8e1a69845fa95a94c1ac1f3",
+      "sha256": "40fb397dddc2844ecaa2f8f211279609f9d6afedeea6fb2ae381e9d26ba4d379",
+      "bytes": 5911,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/storage/SaveVersion.ts",
+      "acquisition": "GitHub plugin exact ref; computed Git blob equals returned sha",
+      "inspection": "DEPENDENCY_COPY_VERIFIED; selected symbols/reference only, not full semantic review",
+      "execution_scope": "See probes/results.json and coverage.json; importing a module is not full function coverage"
+    }
+  ]
+}

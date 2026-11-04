@@ -141,25 +141,44 @@ node --experimental-transform-types --loader ./ts-resolver.mjs --test gameplay-p
 | **訓練友情乘區** | helper 實跑 + caller 靜態核對 | `calculateSessionGain` helper 的多友情連乘已實跑；`NurtureSystem.ts` 真 caller 傳入固定 `hasFriendship ? 1.5 : 1.0` 簡化參數經靜態閱讀核對 | helper 結果不能直接冒充完整 `NurtureService` session 輸出，接線 E2E 未跑。[S14] |
 | **家族供養／同模板成長** | 檢查範圍內未找到 consumer | 已讀 `LegacyService.ts` 路徑（同模板死亡僅 push 新紀錄）與指定符號搜尋（`CardGrowth`、`FamilyContributionPool`）未找到完整生產計算 consumer | 只能說**本次檢查範圍內未找到**，不能斷言全 repo 不存在。正式數值表與成長 E2E 仍缺。[S15] |
 
+### 4.1 退役虎符與獨立工程問題之優先序與設計／實作建議（小豆建議整合）
+
+1. **退役名將真正死亡之虎符結算**：
+   - **玩法與契約方向**：支持「退役成教官不等於放棄真正死亡後的一次虎符資格」，但目前母規格（`英靈世家系統.md`）與較晚任務卡（`PROG-2-1020`）／測試存在契約衝突，**須先確定採哪一版，不能單純刪一行 `continue` 即稱修正**。
+   - **實作架構要求**：應拆為獨立的「退役事件」與「死亡結算事件」；`boolean` 僅可作快取而非唯一權威，死亡結算須以穩定 `personUID`／死亡業務事件與 `receipt` 確保只發一次。舊存檔不可因缺少新 `boolean` 就一律視為未領而補發第二張（須定義歷史映射與不可自動判斷之分支）。
+2. **奧義 `229 / 230` 與數值精度（可獨立優先修復，無須等 Q00–Q12 全數拍板）**：
+   - **重要更正（不可宣稱 `Math.floor(base * (100 + 15 * level) * stat / 10000)` 徹底消除精度問題）**：該整數化寫法僅消除部分小數乘法誤差，但 JavaScript `Number` 整數乘積仍可能超過安全整數範圍（`Number.MAX_SAFE_INTEGER`）。獨立複核反例：當 `base=500, level=10000000008, stat=1999` 時，`Number` 版得出 `14992500021988`，而精確整數結果為 `14992500021989`。
+   - **實作要求**：先定義合法整數／小數輸入與上限，再選用精確有理數（`Fraction`）／`BigInt`（若輸入允許小數，不可直接用 `BigInt` 截斷），或嚴格證明所有合法中間乘積均落在安全整數範圍內（不得為避開數值問題臨時替遊戲加一個未採定的等級上限）。
+3. **UR 死亡虎符品質來源**：
+   - 不改動 `0.7 / 0.3` 權重去硬湊 UR，亦不在 `rarityTier` 與 `EP` 之間任選一個推定等價。若企劃希望高功業人物死亡有 UR 機會，應為該死亡 caller 補上有來源的品質映射與 `85` 門檻測試；若不希望，則明寫該來源不產 UR（且 `70` 分上限結論僅限目前已核的死亡 caller，不擴大稱全遊戲 UR 不可達）。
+4. **友情乘區與世家供養（獨立排修原則）**：
+   - 不必等 Q00–Q12 全部採定後才處理接線，亦不把 helper 測試當成 session 已通。只要修復所需契約已完整，即可依正式流程核對真 caller、卡組範圍、好感閾值、逐位乘法與最終 cap 獨立提修。
+
 ---
 
-## 五、全玩法第一階段盤點（`gameplay-inventory-20261104`）整合與未驗分母對帳
+## 五、全玩法第一階段盤點（`gameplay-inventory-20261104`）與第二批有界驗證包（`batch2`）整合對帳
 
-針對固定快照 `96a83124094d3b2485bfb749ef37d567ad834559` 之《**3KLife 全玩法盤點第一階段**》（已收納於 `docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/`，對應 `doc_index_1035`、`doc_spec_0291`、`doc_spec_0292`），經本地 Node.js 實跑核驗 `SOURCE_MANIFEST.json` 43 份快照 SHA-256／Git blob SHA、852 筆 TS 清冊、1,068 筆測試檔名候選、309 筆規格 Markdown 與 56 筆 Data JSON（`inventory_integrity: PASS`），特將全倉分母與新取樣限制納入正式分帳：
+針對固定快照 `96a83124094d3b2485bfb749ef37d567ad834559` 之《**3KLife 全玩法盤點第一階段**》（`all_gameplay_inventory_v1/`，`doc_index_1035`、`doc_spec_0291`、`doc_spec_0292`）與《**全玩法研究第二批：招募、名冊、治理與精力**》（`gameplay_reviewed_batch2_v1/`，`doc_spec_0293`～`0297`、`doc_index_1036`～`1039`），經本地 Node.js 實跑核驗全部 SHA-256 清單與執行 4 包共 **167 個有界探針（`38 + 44 + 45 + 40 = 167 PASS`）**，特將全倉分母與第二批已重現觀察納入正式分帳：
 
-### 5.1 全倉行為域分母與閱讀狀態分帳
+### 5.1 全倉行為域分母與累積證據路徑聯集
 - **42 個暫定玩法域（`G01–G42`）+ 4 個共同驗收關卡（`X01–X04`）**：
-  - `G01–G40` 為有對應原碼候選之行為域；`G41`（首次統一結局與家族榮譽）與 `G42`（主題賽季跨家族與祖地延續）為 R5 候選規格（本輪未確認正式 caller，不得由候選文件推論已實作）。
-  - **完整玩法驗收通過數：`0 / 42`**；本階段新增執行測試：`0`（既有 14 個原碼 characterization 探針僅覆蓋 11 個局部議題，不能換算為 14 或 11 個完整玩法域通過）。
-- **852 個 TypeScript 原碼檔案閱讀狀態**（`assets`: 835、`server`: 15、`shared`: 2）：
-  - `PRIOR_PARTIAL_EVIDENCE`（前包局部證據）：**44 檔**
-  - `SAMPLED_STATIC_NOT_FULL_AUDIT`（本輪新取樣靜態讀碼）：**35 檔**
-  - `UNREAD`（僅有 Git tree／檔名與 hash，未讀語義）：**773 檔**
-- **56 個 `assets/resources/data` JSON 與 1,068 個測試檔名候選**：
-  - 除既有 `season-modifiers` 局部證據外，其餘 JSON 尚未驗證 Catalog 完整性與真 consumer。
-  - 1,068 個 `*.test.ts/js/cjs` 為檔名候選（混含遊戲、UI、ATM、UCUF），本階段均標為 `NOT_RUN`。
+  - **完整玩法驗收通過數仍為：`0 / 42`**（全部 `NOT_RUN`）。
+- **852 個候選 TypeScript 原碼檔案之覆蓋聯集分帳**：
+  - 第一階段基線局部／靜態證據：**79 檔**（`PRIOR_PARTIAL_EVIDENCE: 44` + `SAMPLED_STATIC_NOT_FULL_AUDIT: 35`），未讀 `UNREAD`：**773 檔**。
+  - 加計第一批 5 個已審包後之聯集：**159 檔**。
+  - 第二批 4 個已審包涵蓋 **142 個**候選路徑，相對前批新增 **89 檔**，使「基線取樣／來源保全／匯入／局部證據」累積聯集達 **248 檔**，另有 **604 檔**不在該聯集內。
+  - **嚴格限制聲明**：`248` 僅代表基線取樣、來源保全、匯入或局部探針觸及之路徑聯集，**不代表 248 檔已完整讀過或審計完畢**；原始盤點之 `773 UNREAD` 狀態不因匯入依賴而自動改寫為已讀。
 
-### 5.2 新取樣 35 檔靜態讀碼已確認之 7 項待核實限制
+### 5.2 第二批四個有界驗證包（167 個觀察案例）之核心重現結果與邊界
+
+| 子包識別與對應文件 | 涵蓋域（僅局部） | 本地 Node 實跑結果 | 優先關注之已重現原碼觀察（包含缺口與待裁定邊界，非整域驗收通過） |
+| :--- | :---: | :---: | :--- |
+| **`recruitment-prophecy`**<br>[`名士與傭兵驗證報告.md`](file:///c:/Users/User/3KLife/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E8%A1%80%E7%B5%B1%E8%88%87%E5%AE%B6%E7%B3%BB-R5/gameplay_reviewed_batch2_v1/packages/recruitment-prophecy/%E5%90%8D%E5%A3%AB%E8%88%87%E5%82%AD%E5%85%B5%E9%A9%97%E8%AD%89%E5%A0%B1%E5%91%8A.md) (`doc_spec_0294`) | `G10`, `G11` | `38/38 PASS`<br>(43 來源, 19 方法切片) | 1. **結義遇同 ID 已在冊 (`M09`)**：照扣結義點 (`1000->900`)、改 `Bonded`，但 `addGenerals` 跳過重複 ID 且不觸發 `save`。<br>2. **冷卻已過仍阻擋再招募 (`M20`)**：Lobby 招募 closure 將所有歷史傭兵狀態 `generalId` 列入 `taken`，使 30 日冷卻結束後仍無法入池。<br>3. **6 筆非 Trial 歷史列關閉招募鈕 (`M19`)**：`rows()` 固定取前 6 筆未過濾 `Expired/Bonded`，導致 `btnMercHire=false`。<br>4. **結義插畫未升第 5 階 (`M12`)**；**零令仍顯示鎖因子方向 (`P15`)**；**save 失敗無記憶體回滾 (`P13/P14/M10/M11`)**。 |
+| **`roster-identity`**<br>[`名冊與重複流轉報告.md`](file:///c:/Users/User/3KLife/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E8%A1%80%E7%B5%B1%E8%88%87%E5%AE%B6%E7%B3%BB-R5/gameplay_reviewed_batch2_v1/packages/roster-identity/%E5%90%8D%E5%86%8A%E8%88%87%E9%87%8D%E8%A4%87%E6%B5%81%E8%BD%89%E5%A0%B1%E5%91%8A.md) (`doc_spec_0296`) | `G02`, `G14`, 有限 `G01` | `44/44 PASS`<br>(60 來源, 27 AST 切片) | 1. **同 UID 死者/退役者再抽不復生 (`RI09-10`)**：`enrollGenerals` 僅加轉數 (`1->2`)，未建新 UID 或接 `reviveRetrain`（對應 `PROG-2-1064` 未完項）。<br>2. **出戰資格職能漏口 (`RI15-16`)**：`Support->Mentor` 正規化後，`BattleRoster` 僅擋 `isMentorCard` 未擋 `role=Mentor`（235 筆資料中 94 筆 Support 通過該資格函式）。<br>3. **暫定圖鑑 mapper 誤用 runtime id (`RI26-27`)**；`PlayerRosterService` 存取層無 UID 去重 (`RI11/23`)。 |
+| **`rival-governance`**<br>[`他國治理外交與盛衰報告.md`](file:///c:/Users/User/3KLife/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E8%A1%80%E7%B5%B1%E8%88%87%E5%AE%B6%E7%B3%BB-R5/gameplay_reviewed_batch2_v1/packages/rival-governance/%E4%BB%96%E5%9C%8B%E6%B2%BB%E7%90%86%E5%A4%96%E4%BA%A4%E8%88%87%E7%9B%9B%E8%A1%B0%E5%A0%B1%E5%91%8A.md) (`doc_spec_0295`) | `G23` | `45/45 PASS`<br>(63 來源, 14 AST 切片) | 1. **同季雙向盟友交易八折套利**：同盟且容量足夠時，原 API 路徑可執行 `100 金 -> 250 糧 -> 156 金`（兩筆同季合法交易，未走真 UI）。<br>2. **0 兵 0 地敵國出征缺少覆滅守門**：有界 fixture 連按兩次出征得 `1000 金`、2 次 `save`。<br>3. **年度天下大亂 `applyEraShift` 清空 `officerRoster` 後未於 `_tickRivals` 補掛**；0 地國仍生兵且百歲官員未在此季節路徑觸發死亡淘汰。 |
+| **`vitality`**<br>[`REPORT.md`](file:///c:/Users/User/3KLife/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E8%A1%80%E7%B5%B1%E8%88%87%E5%AE%B6%E7%B3%BB-R5/gameplay_reviewed_batch2_v1/packages/vitality/REPORT.md) (`doc_spec_0297`) | `G07` | `40/40 PASS`<br>(34 來源, 40 唯一 AST 節點) | 1. **補藥 save 拒絕無記憶體回滾 (`G07-15/16`)**：`usePillOnGeneral` 先改記憶體（精力 `20->70`、藥 `2->1`）再 `await save()`，且無 in-flight 並行鎖。<br>2. **缺 `maxVitality` 舊資料把當前精力當上限 (`G07-14/40`)**：`{vitality:20}` 無 `maxVitality` 時補藥與季回復均停在 20。<br>3. **對酒當歌 (`ult-cao-cao-4`) 滿精力施放 `100->92` (`G07-34/35`)**；**戰傷 `applyWarInjury` 扣壽命無下界 (`G07-18~20`)**；**`FORM02` 與 `Nurture` 失敗率為不同曲線 (`G07-03/05`)**。 |
+
+### 5.3 第一階段新取樣 35 檔靜態讀碼已確認之 7 項待核實限制
 以下為固定原碼明文註記或局部實作之待驗限制（不擴大宣稱為全系統缺功能，但不得在未驗前宣稱已完工）：
 1. **教官 ★5 突破（`MentorBreakthrough.ts` L8–10）**：「固有加成最高級」目前仍只有文字描述，尚須追查數值 Catalog 與實際計算 consumer。
 2. **精力疲勞失敗率曲線（`FatigueFailureRate.ts` L5–13）**：疲勞中段曲線標註為可逆暫定（風險段二次、危險段線性），不能因兩端點吻合即視為完整企劃公式已定案。
@@ -169,7 +188,7 @@ node --experimental-transform-types --loader ./ts-resolver.mjs --test gameplay-p
 6. **多時鐘正交邊界（`TournamentSeason.ts` L5–9）**：名將挑戰賽 14 日（7 日準備 + 7 日競賽）為獨立時鐘，不能與四季一年、20 季 Era、UTC+8 月卡／登入跨日或回合制趕路合併驗算。
 7. **戰場單挑回合上限（`BattleGeneralDuelFlow.ts` L10–14）**：單挑最多 50 回合屬原碼暫定保護上限，不代表正式戰鬥平衡已裁定。
 
-### 5.3 14 條優先跨系統待驗邊界（全部 `NOT_RUN`）
+### 5.4 14 條優先跨系統待驗邊界（全部 `NOT_RUN`）
 詳見 [`all_gameplay_inventory_v1/跨系統待驗邊界.md`](file:///c:/Users/User/3KLife/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E8%A1%80%E7%B5%B1%E8%88%87%E5%AE%B6%E7%B3%BB-R5/all_gameplay_inventory_v1/%E8%B7%A8%E7%B3%BB%E7%B5%B1%E5%BE%85%E9%A9%97%E9%82%8A%E7%95%8C.md) (`doc_spec_0292`)，涵蓋：① 抽卡交易重進、② 出生跨資產原子性、③ 角色占用競爭、④ 戰場效果到勝敗、⑤ 戰果只結算一次、⑥ 俘虜回歸、⑦ 季末跨時鐘順序、⑧ 傭兵轉永久、⑨ 退役/死亡與傳承競爭、⑩ 物品與資源上限、⑪ 派遣→官職→權限→領地、⑫ 結局/世界更替與家族延續、⑬ 手動/自動路徑等價、⑭ 公開資訊防劇透界線。
 
 ---
@@ -210,3 +229,4 @@ node --experimental-transform-types --loader ./ts-resolver.mjs --test gameplay-p
 - **[S15]** `assets/scripts/core/services/LegacyService.ts`
 - **[S16]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/來源缺口與待決分帳.md` (`doc_spec_0227`)
 - **[S17]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/全玩法覆蓋清單.md` (`doc_spec_0291`) 與 `跨系統待驗邊界.md` (`doc_spec_0292`)
+- **[S18]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/總覽與驗收界線.md` (`doc_spec_0293`) 及四子包報告（`doc_spec_0294` ~ `doc_spec_0297`）

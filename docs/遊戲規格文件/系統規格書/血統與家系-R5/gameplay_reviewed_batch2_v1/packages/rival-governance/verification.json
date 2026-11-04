@@ -1,0 +1,22 @@
+{
+  "sourceFilesVerified": 63,
+  "exactOriginalMethodSlicesVerified": 14,
+  "compiler": "5.9.3",
+  "fullDomainAcceptance": "NOT_RUN",
+  "artifactHashes": "PASS",
+  "probeCommand": [
+    "node",
+    "--loader",
+    "./probes/ts-resolver.mjs",
+    "./probes/run.mjs"
+  ],
+  "probeExitCode": 0,
+  "stdout": "{\n  \"probes\": 45,\n  \"passed\": 45,\n  \"failed\": 0\n}",
+  "probes": {
+    "count": 45,
+    "passed": 45,
+    "failed": 0
+  },
+  "ranFromIsolatedCwd": true,
+  "verificationCommand": "python verify_package.py --run"
+}

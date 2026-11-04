@@ -1,0 +1,21 @@
+{
+  "source_count": 43,
+  "method_count": 19,
+  "errors": [],
+  "full_acceptance": "NOT_RUN",
+  "rerun_exit_code": 0,
+  "rerun_summary": {
+    "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+    "total": 38,
+    "pass": 38,
+    "fail": 0,
+    "reproducedBoundaries": 14,
+    "fullAcceptance": "NOT_RUN",
+    "productionRepoChanged": false
+  },
+  "status": "PASS",
+  "isolated_copy": true,
+  "cwd_outside_package": true,
+  "network_or_external_repo_required": false,
+  "process_exit_code": 0
+}

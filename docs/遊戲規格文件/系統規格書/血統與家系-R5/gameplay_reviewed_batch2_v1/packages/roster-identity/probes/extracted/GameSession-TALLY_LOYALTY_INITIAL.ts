@@ -1,0 +1,1 @@
+const TALLY_LOYALTY_INITIAL = 50;

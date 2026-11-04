@@ -1,0 +1,23 @@
+{
+  "finalStatus": "45/45 assertions passed",
+  "productFilesEdited": false,
+  "history": [
+    {
+      "stage": "initial 42 cases",
+      "observed": "41 pass, G23-36 failed",
+      "reason": "Fixture used clock=0 with a single country; original shouldEvaluateStanding(0) is true and dominant-country era reset occurred.",
+      "correction": "Use clock=1 to isolate same-clock private helper rerun. Not a product fix."
+    },
+    {
+      "stage": "added real Lobby wiring, 45 cases",
+      "observed": "44 pass, G23-44 save-count assertion failed",
+      "reason": "Fixture lacked recordRivalCampaign; real Lobby catch swallowed that adapter error after gold grant.",
+      "correction": "Include exact original recordRivalCampaign and recordAutoResolveBattle methods plus original OfflineBattleSnapshot and SaveVersion dependencies. Journal sink remains declared fixture. Not a product fix."
+    },
+    {
+      "stage": "dependency closure",
+      "observed": "Node MODULE_NOT_FOUND for SaveVersion before cases",
+      "correction": "Fetch missing exact-ref dependency, verify blob; rerun passed."
+    }
+  ]
+}

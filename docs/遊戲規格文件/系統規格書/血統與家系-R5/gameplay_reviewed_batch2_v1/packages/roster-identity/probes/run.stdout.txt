@@ -1,0 +1,45 @@
+PASS RI01 Same template, distinct UID coexist without overwrite
+PASS RI02 Same bloodline, different version remains separately held
+PASS RI03 Repeated identical UID does not append
+PASS RI04 Batch duplicates progress 1 to 5 then overflow twice
+PASS RI05 Sequential pulls and single batch have equivalent final roster
+PASS RI06 Rebirth upgrades unlock slots but preserve factor levels and stats
+PASS RI07 Full rebirth overflow uses old holder rarity, not incoming rarity
+PASS RI08 All overflow rarity tiers and fallback are deterministic
+PASS RI09 Dead same UID drawn again stays dead instead of a new body
+PASS RI10 Retired mentor same UID drawn again remains retired mentor
+PASS RI11 Corrupt pre-existing duplicate UIDs collapse contents on rebirth
+PASS RI12 Malformed records skipped, but empty-string UID accepted
+PASS RI13 Favorite and lead changes target UID independently
+PASS RI14 Known dead, mentor-flag, child, low-vitality and nurturing blocks
+PASS RI15 Role-only Mentor is deployable without mentor-card flag
+PASS RI16 Dataset support role rows expose real role-only deploy boundary
+PASS RI17 Trial mercenary flag alone does not block battlefield eligibility
+PASS RI18 Missing bloodline IDs do not trigger same-name prohibition
+PASS RI19 UID role lock and same bloodline guards independently reject
+PASS RI20 PersonRegistry accepts same template distinct UID and rejects duplicate UID
+PASS RI21 Virtual ancestor null template accepted by model type but rejected by registry service
+PASS RI22 PlayerRosterService roundtrips same-template UIDs and gene payload
+PASS RI23 PlayerRosterService addGenerals and reload do not deduplicate UID
+PASS RI24 Storage write failure leaves changed cache but old durable roster
+PASS RI25 Version table groups actual V1/V2 and owned templates correctly
+PASS RI26 Lobby provisional mapping mistakes same-template UID copies for versions
+PASS RI27 Provisional gallery can merge different IDs after name normalization
+PASS RI28 Catalog has no real same-template or same-bloodline version examples
+PASS RI29 Carousel uses UID and wraps without changing roster
+PASS RI30 Starter six are deep copies and optional beauty is added once
+PASS RI31 Missing starter data rejects before reset or roster replacement
+PASS RI32 Explicit starter-new-game replaces existing roster; repeat does not append
+PASS RI33 Starter setLead failure happens after replacing roster
+PASS RI34 addGenerals awaits save for rebirth; save failure does not roll back roster
+PASS RI35 Duplicate-only rebirth does not emit RosterChanged
+PASS RI36 Gacha loyalty locked for new holder and preserved for existing UID
+PASS RI37 Lobby routes ordinary hero pulls into roster and mentor pool away
+PASS RI38 Mentor pool repeats use stars and score without bond ledger
+PASS RI39 ReviveRetrain helper returns new identity, preserves spirit reference, normalizes turns
+PASS RI40 Revive helper accepts duplicate/empty new UID; uniqueness belongs to absent caller
+PASS RI41 Infusion helper changes card counters without generating a body or bond currency
+PASS RI42 Hero rebirth 1..5 and mentor star 0..5 are different ladders
+PASS RI43 Unconfirmed destiny state rejects before touching roster
+PASS RI44 Locked destiny entry has no consumed-state guard at this layer
+{"total":44,"passed":44,"failed":0}

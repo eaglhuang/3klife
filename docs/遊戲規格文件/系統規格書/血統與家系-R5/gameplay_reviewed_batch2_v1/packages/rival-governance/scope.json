@@ -1,0 +1,65 @@
+{
+  "id": "G23",
+  "name": "他國治理外交與盛衰",
+  "tokens": [
+    "Rival"
+  ],
+  "spec_tokens": [
+    "治理模式他國AI"
+  ],
+  "minimum_acceptance": "國家產出→軍備薪俸→結盟／貿易／宣戰→擴張／敗亡／再起；季順序與守恆",
+  "prior_evidence": "新樣本靜態讀碼，未測",
+  "full_acceptance": "NOT_RUN",
+  "source_candidates": [
+    "assets/scripts/core/models/AIPopulationConfig.ts",
+    "assets/scripts/core/systems/RivalAiDiplomacy.ts",
+    "assets/scripts/core/systems/RivalBonding.ts",
+    "assets/scripts/core/systems/RivalExpansion.ts",
+    "assets/scripts/core/systems/RivalGeneralUpkeep.ts",
+    "assets/scripts/core/systems/RivalGovernance.ts",
+    "assets/scripts/core/systems/RivalHegemony.ts",
+    "assets/scripts/core/systems/RivalMilitaryIndex.ts",
+    "assets/scripts/core/systems/RivalNations.ts",
+    "assets/scripts/core/systems/RivalOfficerSeason.ts",
+    "assets/scripts/core/systems/RivalOfficerSetup.ts",
+    "assets/scripts/core/systems/RivalOfficers.ts",
+    "assets/scripts/core/systems/RivalRiseFall.ts",
+    "assets/scripts/core/systems/RivalRulerLines.ts",
+    "assets/scripts/core/systems/RivalTrade.ts",
+    "assets/scripts/ui/core/RivalDiplomacyController.ts"
+  ],
+  "test_candidates": [
+    "tests/RivalAiDiplomacy.test.ts",
+    "tests/RivalBonding.test.ts",
+    "tests/RivalCoalitionDecay.test.ts",
+    "tests/RivalDiplomacy.test.ts",
+    "tests/RivalEraShift.test.ts",
+    "tests/RivalEraShiftSaveFlowE2E.test.ts",
+    "tests/RivalExpansion.test.ts",
+    "tests/RivalExpansionWiring.test.ts",
+    "tests/RivalGeneralUpkeep.test.ts",
+    "tests/RivalGovernance.test.ts",
+    "tests/RivalHegemonNotice.test.ts",
+    "tests/RivalHegemony.test.ts",
+    "tests/RivalHegemonyWiring.test.ts",
+    "tests/RivalMilitaryIndex.test.ts",
+    "tests/RivalNationResources.test.ts",
+    "tests/RivalNations.test.ts",
+    "tests/RivalOfficerSeason.test.ts",
+    "tests/RivalOfficerSetup.test.ts",
+    "tests/RivalOfficerWiring.test.ts",
+    "tests/RivalOfficers.test.ts",
+    "tests/RivalRecruitRoster.test.ts",
+    "tests/RivalRecruitment.test.ts",
+    "tests/RivalRiseFall.test.ts",
+    "tests/RivalRiseFallBoundary.test.ts",
+    "tests/RivalRulerLines.test.ts",
+    "tests/RivalSeasonSaveFlowE2E.test.ts",
+    "tests/RivalTrade.test.ts"
+  ],
+  "spec_candidates": [
+    "docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md"
+  ],
+  "fully_read": "NO",
+  "snapshot_evidence_count": 1
+}

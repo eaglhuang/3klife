@@ -7,7 +7,7 @@
 | Part | 路徑 | 行數 |
 |------|------|-----:|
 | 1 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-01.md | 298 |
-| 2 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-02.md | 90 |
+| 2 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-02.md | 99 |
 | 3 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-03.md | 298 |
 | 4 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-04.md | 298 |
 | 5 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-05.md | 298 |

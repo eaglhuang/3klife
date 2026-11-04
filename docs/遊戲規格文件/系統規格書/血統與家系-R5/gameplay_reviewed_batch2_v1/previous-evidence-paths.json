@@ -1,0 +1,830 @@
+{
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "previous_batch_archive": "3klife-gameplay-reviewed-batch-20261104.zip",
+  "previous_batch_sha256": "496148628bb88f1c3a91a40928fb6b56e6bfa80564cab03da634ef7d0f11cd04",
+  "meaning": "Prior package source manifests, not new semantic coverage or copies of those source files",
+  "code_paths": {
+    "assets/scripts/core/services/LocalGachaService.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "c8c9d3b6b26fe44cf4472dea6c2ae38d2a166d7e0fdeb9baa2acfef0d9394e00"
+      }
+    ],
+    "assets/scripts/ui/core/GachaFlowCoordinator.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "b31a5277d12383c3afcaca375ba5f62e6a72d58940506c4edf69f3c9836be20d"
+      }
+    ],
+    "assets/scripts/core/systems/GachaCurrency.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "4ea74cf692490af25a4d77996bd07d356ae570cfbe9776f99f612cc28cae57f2"
+      },
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "4ea74cf692490af25a4d77996bd07d356ae570cfbe9776f99f612cc28cae57f2"
+      }
+    ],
+    "assets/scripts/core/services/GachaWalletRules.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "249b8bb319683618bb0c7c0b476b466338c1b44c0aef8f2d6fc779fcbcc5bd0b"
+      }
+    ],
+    "assets/scripts/core/models/GachaConfig.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "de6a142babbff57d2c087d786e138743a1d947e8c74ac67f20425e40c71d3d70"
+      }
+    ],
+    "assets/scripts/ui/core/DestinyShopController.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "13ddf75cf8dfd74b408c71787e72fa97a878923d2507c03756d79284f03ccf09"
+      }
+    ],
+    "assets/scripts/core/systems/GachaSyncRecord.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "2bbdf465d3222d4c1918617901c8ae00536963a8fab55600475042d25748af3e"
+      }
+    ],
+    "assets/scripts/ui/core/PrisonerPopupController.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "19d35388dae561690bd9ec84f574141b79475cd0274ec01b9bd0941065ffbb7e"
+      },
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "19d35388dae561690bd9ec84f574141b79475cd0274ec01b9bd0941065ffbb7e"
+      }
+    ],
+    "assets/scripts/ui/scenes/LobbyScene.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "7bcd932588b5ccd0a960f318a72b64fab2a3443d1218611d64aac2c5b056b4b3"
+      },
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "7bcd932588b5ccd0a960f318a72b64fab2a3443d1218611d64aac2c5b056b4b3"
+      },
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "7bcd932588b5ccd0a960f318a72b64fab2a3443d1218611d64aac2c5b056b4b3"
+      },
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "7bcd932588b5ccd0a960f318a72b64fab2a3443d1218611d64aac2c5b056b4b3"
+      }
+    ],
+    "assets/scripts/core/systems/MentorSupportCatalog.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "b6d8991c9edd80b5d34454cfcf3fcbeed6e579f6133d93fd59df703dc23f4965"
+      },
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "b6d8991c9edd80b5d34454cfcf3fcbeed6e579f6133d93fd59df703dc23f4965"
+      }
+    ],
+    "assets/scripts/core/systems/MentorSources.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "d039004114525d3a4c208efcfadca3b5ca0f761a13ed64cce3bf34c94d11caff"
+      },
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "d039004114525d3a4c208efcfadca3b5ca0f761a13ed64cce3bf34c94d11caff"
+      }
+    ],
+    "assets/scripts/core/managers/GameSession.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "4e7ac248cb0cfac92b4eb35bb84272cb2fc37903b090adcb20181c7fb90e96af"
+      },
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "4e7ac248cb0cfac92b4eb35bb84272cb2fc37903b090adcb20181c7fb90e96af"
+      },
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "4e7ac248cb0cfac92b4eb35bb84272cb2fc37903b090adcb20181c7fb90e96af"
+      },
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "4e7ac248cb0cfac92b4eb35bb84272cb2fc37903b090adcb20181c7fb90e96af"
+      }
+    ],
+    "assets/scripts/core/services/LegacyService.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "91a25e3f9b36622aa43474c95c9d8853ef21880c6aba364b0eb87180e588c9a9"
+      }
+    ],
+    "assets/scripts/core/services/PlayerSaveService.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "fbd898a5f727df1cdae57dc37f0e2d4135b599a9027cee51f0e9d781069ab2ff"
+      },
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "fbd898a5f727df1cdae57dc37f0e2d4135b599a9027cee51f0e9d781069ab2ff"
+      },
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "fbd898a5f727df1cdae57dc37f0e2d4135b599a9027cee51f0e9d781069ab2ff"
+      }
+    ],
+    "assets/scripts/core/systems/GachaDraw.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "02af0a0e7aed2a8a9f76c40b8da8ce39cd4040e15ca8fda30b97f4214b00ea73"
+      }
+    ],
+    "assets/scripts/core/systems/DestinyShop.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "0881e52bd4c01fbaaf6324d1af8bea103178dca702c01bc05a70a82271514b57"
+      }
+    ],
+    "assets/scripts/core/systems/DomesticTasks.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "7e49bff117e74d3f9bbb5ed359ba3bf990c7196b9c17b8d29eab251f735f4fa9"
+      }
+    ],
+    "assets/scripts/core/systems/OfficerState.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "105aa014f0093d1121377c1e3ee27d6095956292b0ebfc9c856215b1c67aa253"
+      }
+    ],
+    "assets/scripts/core/systems/HallMissionSettlement.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "c00f18d4ca12e2aeb9754c4badbe46a45c5b9f35a932a997aea2dd64b17e3b21"
+      }
+    ],
+    "assets/scripts/core/systems/PrisonerOfWar.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "c709cd877ded262e5410599c3d64e550addfb7a5dd49787dba87397dfa8d40e4"
+      }
+    ],
+    "assets/scripts/core/systems/OfficerDisplay.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "2db4bb75c7dde86e851acf095ac479950d65e1558ee44667fae02f7f7584587e"
+      }
+    ],
+    "assets/scripts/core/systems/MentorBreakthrough.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "015afd5614589cb7f9ce69fa93189eddbcaec67f5bc82c126669fb5d116befb3"
+      },
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "015afd5614589cb7f9ce69fa93189eddbcaec67f5bc82c126669fb5d116befb3"
+      }
+    ],
+    "assets/scripts/core/systems/MentorOverflow.ts": [
+      {
+        "package": "transactions",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "5212efb286412f30dc91409f0f12a4e6ac8cde642512a29407ccbc14f132abc3"
+      },
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "5212efb286412f30dc91409f0f12a4e6ac8cde642512a29407ccbc14f132abc3"
+      }
+    ],
+    "assets/scripts/core/systems/StageChainNodes.ts": [
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "e938e9d77c8d359d2b18f1f4f77322b7f9b9e3edb6ed74a805d50b65f0870799"
+      },
+      {
+        "package": "import-supplement",
+        "manifest": "campaign/SOURCE_MANIFEST.json",
+        "sha256": "e938e9d77c8d359d2b18f1f4f77322b7f9b9e3edb6ed74a805d50b65f0870799"
+      }
+    ],
+    "assets/scripts/core/systems/StageChainProgress.ts": [
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "e54c69a7744bbdbf9e11b46bd26f86b3a4b849b4ac8c6c30b105e4830864b82e"
+      },
+      {
+        "package": "import-supplement",
+        "manifest": "campaign/SOURCE_MANIFEST.json",
+        "sha256": "e54c69a7744bbdbf9e11b46bd26f86b3a4b849b4ac8c6c30b105e4830864b82e"
+      }
+    ],
+    "assets/scripts/core/systems/StageLoadoutSlots.ts": [
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "1a3ae14d1ce098bd32b58a2aad60b0c7652dae8141be066b6b2ed22be9b70020"
+      }
+    ],
+    "assets/scripts/core/systems/StageSalvageSettlement.ts": [
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "0bb6c0a18c0bf6ee6d6f9e1fa43904fb29dd9ecb4243cc52bbc14bf29b0629d2"
+      },
+      {
+        "package": "import-supplement",
+        "manifest": "campaign/SOURCE_MANIFEST.json",
+        "sha256": "0bb6c0a18c0bf6ee6d6f9e1fa43904fb29dd9ecb4243cc52bbc14bf29b0629d2"
+      }
+    ],
+    "assets/scripts/battle/shared/StageSalvage.ts": [
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "aa7bc77a8247d99507390a4c522e279b26740cb4b06b22ff66ae2bbb7b5e1557"
+      }
+    ],
+    "assets/scripts/core/config/CampaignStages.ts": [
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "c63fda0ca268caec3d640a68d702bad59dbb1a263d7e49f370de78145ea2bc23"
+      }
+    ],
+    "assets/scripts/core/systems/MonthlyScenarioCup.ts": [
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "5424aa15ff703c24908dc4bef3cd5676e2dfb12b2dbc055fe46f763bf9d290f4"
+      }
+    ],
+    "assets/scripts/core/systems/ArenaScore.ts": [
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "947ffd091d7f10fd4ad1c1927750c703ab4a453c2f4bc602ab011beab303b8fe"
+      }
+    ],
+    "assets/scripts/core/systems/TacticLoadout.ts": [
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "89f35038ab15fd4913be1f37cfdaa6383cc5ee27b0aa88305a071bb38c4e294a"
+      }
+    ],
+    "assets/scripts/ui/core/TournamentPanelController.ts": [
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "d4f467d4113de1470d51797869f77c4bc394eada9edbdf87e2e7f30e919efd20"
+      }
+    ],
+    "assets/scripts/core/systems/PlayerInventory.ts": [
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "706b9fbdf275eccf6987a143e4cbcc1b731b4fabe2a688ca4740d3dc47f880f2"
+      },
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "706b9fbdf275eccf6987a143e4cbcc1b731b4fabe2a688ca4740d3dc47f880f2"
+      },
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "706b9fbdf275eccf6987a143e4cbcc1b731b4fabe2a688ca4740d3dc47f880f2"
+      },
+      {
+        "package": "import-supplement",
+        "manifest": "campaign/SOURCE_MANIFEST.json",
+        "sha256": "706b9fbdf275eccf6987a143e4cbcc1b731b4fabe2a688ca4740d3dc47f880f2"
+      }
+    ],
+    "assets/scripts/core/systems/ItemDef.ts": [
+      {
+        "package": "campaign",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "ae1272e0c299b8661c8f91612db8a331f018bf69e8c004746beb8e69c44da825"
+      },
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "ae1272e0c299b8661c8f91612db8a331f018bf69e8c004746beb8e69c44da825"
+      },
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "ae1272e0c299b8661c8f91612db8a331f018bf69e8c004746beb8e69c44da825"
+      },
+      {
+        "package": "import-supplement",
+        "manifest": "campaign/SOURCE_MANIFEST.json",
+        "sha256": "ae1272e0c299b8661c8f91612db8a331f018bf69e8c004746beb8e69c44da825"
+      }
+    ],
+    "assets/scripts/core/systems/GearLockDecompose.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "ed27a0052f4f42e9ac08b9c0cb864538dd40351c75ed506edcbba09eacaf9907"
+      }
+    ],
+    "assets/scripts/core/systems/GeneralBackpack.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "e25315f3f75ebe37c2c6e10fc8df2e0a1efd5f263d57b654bb9729f0365b6b9e"
+      }
+    ],
+    "assets/scripts/core/systems/GeneralBackpackView.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "c520004d534233ec6d3db772cd419fc30f4403a7810ac94efb5858ef5af7b72d"
+      }
+    ],
+    "assets/scripts/core/systems/GearDefinitions.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "90d35093baac40a28f60f4d0bec0998c870499a8c49946f02b319c876a66a536"
+      }
+    ],
+    "assets/scripts/core/systems/WarehouseCapacity.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "1281405ea6da5465ea41f86cebc8e78a27bda442bdab992d9e7b38ea7ea061d7"
+      }
+    ],
+    "assets/scripts/core/systems/InventoryProjection.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "5348782cf01f18f3ad5280228435bbef26b867b6fdb17a46efcfa125b5fcbad4"
+      }
+    ],
+    "assets/scripts/core/systems/ItemExpiry.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "e97c8d1518b31b5a5078e2d57f0ddc30454ad7cdf41e1fadce80e6a222c7f8db"
+      }
+    ],
+    "assets/scripts/core/systems/ItemRefreshEffect.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "f10b387f38190af82e0185a122291f5755242c237570bdb4efc35dd9cb5e0604"
+      }
+    ],
+    "assets/scripts/core/systems/FertilityBoost.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "3925012ccd46d2013e075486055f15b0c291ece126dc0c154937bd4d291a7603"
+      }
+    ],
+    "assets/scripts/core/systems/ItemBagView.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "7ac68a6758123f8e1a9209d3c368bba0164ac81f04d2df84122a604402d2053d"
+      }
+    ],
+    "assets/scripts/core/systems/ItemEffectDispatcher.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "92b8739d2c3ae6c462ba97eb501aa5047a30cc5ba409ce39554f456b6b629dc8"
+      }
+    ],
+    "assets/scripts/ui/core/ItemBagController.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "ad1718f70ec57b5d13ff6298e099b67c42f41afadc58d1507ac1274bcd1d4bf8"
+      }
+    ],
+    "assets/scripts/ui/core/GearSlotPickController.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "c89351b5d81e2281a823aba6744c7e0b5315a507d6f9b085b5f7239bde0f587b"
+      }
+    ],
+    "assets/scripts/ui/core/WarehousePanelController.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "3919497161310c62fb3d2a53a15f1ffa7b7ef5f3e189689e64abe18115bd63ea"
+      }
+    ],
+    "assets/scripts/core/systems/GearEquipFlow.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "aea6f6b365146a5ea5a058f38aa358ab39a7f257df3096e96ddd2902ee5658f9"
+      }
+    ],
+    "assets/scripts/core/systems/ItemUseFlow.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "3b788a8ff51d1b2ed2f66db59e98f7405754c5a86a8016d5f910d737d1f3a142"
+      }
+    ],
+    "assets/scripts/core/systems/FemalePoolRefresh.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "a8423c549f0e10d7f1e712907a3c19dcebc22a32b9775184259705878cba419f"
+      }
+    ],
+    "assets/scripts/core/systems/DungeonRescue.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "8570d5c5b71bf8f615a216c16bd3894427a120bf164d650a6400d46500520541"
+      }
+    ],
+    "assets/scripts/core/systems/TreasureCodex.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "b023ffd6f0c49446a7c710178fd61ee07747510482b38c5a41eb3ba4e55f9550"
+      }
+    ],
+    "assets/scripts/core/systems/GearPickerView.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "2b3f0355a59fc03bf8f255b57ad02cb23a8420ebb5c91fbd6fdeadede6899229"
+      }
+    ],
+    "assets/scripts/core/systems/GearPageSlots.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "a649d0da65ca22950ee560b9d01104ce8c6ae56d70fdd6abbc7eb35dd36a6d49"
+      }
+    ],
+    "assets/scripts/core/systems/WarehouseSort.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "97c040cff18dac33fd0ec45b8fae3df4a10cec096e9ef0cfd4e7d798deb13a03"
+      }
+    ],
+    "assets/scripts/core/systems/InventoryRecordBridge.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "62381bc33f96c8b5c683f8defe885bcf2c548eff237b0b6b6c7e31b6dc2890ef"
+      }
+    ],
+    "assets/scripts/core/systems/BagDomain.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "4ca138dfa1080c05a02c26e69070c23f0035f95beb5ca4d7036aebb2189478f6"
+      }
+    ],
+    "assets/scripts/ui/components/character-ds3/CharacterDs3EquipChild.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "752da316a95149e0d4f1c3105e163127908b3663aba924f505edc84eab57a237"
+      }
+    ],
+    "assets/scripts/ui/components/GeneralDetailComposite.ts": [
+      {
+        "package": "inventory-consumption",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "d6064f9eab928051e3dcc0b267bcd5572044554f60c49e1538ee27596a089468"
+      }
+    ],
+    "assets/scripts/core/systems/DailyFreeEnroll.ts": [
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "1d672e48c7940a264ef8eda62a93f5905f0124045fb5065cb3afa04c30a9d019"
+      }
+    ],
+    "assets/scripts/core/systems/DailySubsidy.ts": [
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "93128b7ca7a0449a6b8e406b6c1e29b184e0d4f6686d7f4213c47a2312b016d6"
+      }
+    ],
+    "assets/scripts/core/systems/LoginStreak.ts": [
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "fd539f9ea03b55ed095725bf41ec9a154d72a92d007bcc1ad64b3963cc21d88d"
+      }
+    ],
+    "assets/scripts/core/systems/MilestoneRewards.ts": [
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "ebb4747bca6fca32908f399490089b7f79c2b06cf98eb52a474165a37b780f12"
+      }
+    ],
+    "assets/scripts/core/systems/SevenDayJourney.ts": [
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "6c22fbea16714ed33ba5a2aa7dbd53d249740de617dcbac636022fdc4cee2f6e"
+      }
+    ],
+    "assets/scripts/ui/core/DailySubsidyNotice.ts": [
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "ddc70f51d67e148835bc5ffa35a4c626be21981edc1c9f6c76e598bf92df939c"
+      }
+    ],
+    "assets/scripts/core/systems/MonthlyCard.ts": [
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "7a461be07bc582d13e3ce3a52eaed0f233ab7113e4782a8f7087bb94b8ca99f7"
+      }
+    ],
+    "assets/scripts/core/systems/ResourceCap.ts": [
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "15fef7647c885d342956c88734f5adc5ac5fafc26e5aa1d0b93564a242a6f5b5"
+      }
+    ],
+    "assets/scripts/core/systems/CellarProtection.ts": [
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "05b3b16d64b5150ab89203ebcf536f7241fc94be06aab81b386031e51c62aca8"
+      }
+    ],
+    "assets/scripts/core/systems/BattleRecordStats.ts": [
+      {
+        "package": "daily-entitlements",
+        "manifest": "SOURCE_MANIFEST.json",
+        "sha256": "9c50380b3b7de52dd26fdf893bc51b6a60917c5b396e70c4e456f6a7132a6d21"
+      }
+    ],
+    "assets/scripts/core/models/MentorSupportSchema.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "c0c835f0ebe6d3f8a79b4e5db789946631754b6dbe40a1660dd7685ba0a976fe"
+      }
+    ],
+    "assets/scripts/core/systems/NurtureSystem.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "edc60414565c656f690a528f169f3bded1efdecd66753cbb506c7cd3bc2cd2f6"
+      }
+    ],
+    "assets/scripts/core/models/MentorCard.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "2205927a4d797350fa2ee2282b554a9fd1159721c31f33ebdb4c700fc85ec7d0"
+      }
+    ],
+    "assets/scripts/core/systems/AwakeningTitle.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "f555454bf3cac14ab5598499430c819f71c7883d877c63d0a05346fbd58e3399"
+      }
+    ],
+    "assets/scripts/core/systems/Unveiling.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "d42cbcc152560f32763e2e49cf6d2198cb3160ed54ba74b79ea144ecce08dfef"
+      }
+    ],
+    "assets/scripts/core/systems/HybridSkill.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "ea384b9e692d0b4133f837d4ff40d9a3528dfd422198dd588a7d89fec52f66b8"
+      }
+    ],
+    "assets/scripts/core/systems/NurtureEvents.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "00066ab4f350085b184d538185459ffdba2cf58bf6ad54eb4d69c737d48ec0a4"
+      }
+    ],
+    "assets/scripts/core/systems/FactorInheritance.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "dc1c80f9cfbeed3d5c04c47444edd0949189eadc158c9a110d8c44b9aefa6859"
+      }
+    ],
+    "assets/scripts/core/systems/MentorInspiration.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "44347f574365c2c14e0594869edbcd4ce54b2606ef375ab58734ebb6d12d5948"
+      }
+    ],
+    "assets/scripts/core/systems/VirtualAncestorGenerator.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "52988e2f1c5caff05f5e07d9855b0962ce472f8e4ca6fd924516eb048ab937e7"
+      }
+    ],
+    "assets/scripts/core/systems/MentorSynergy.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "51adf2e17b159fae9cdf799b9ace8d080e9565863484563825e2662e9132f519"
+      }
+    ],
+    "assets/scripts/core/systems/TrainingGainFormula.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "5884fc4ca5f01a0aef46b6f529887496fa84a1c93c879a97bc789e2cf1748521"
+      }
+    ],
+    "assets/scripts/core/systems/BreedingSystem.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "bf8939ffe07609fecaca3a270c5f36cf92b75fd2da7989b6217239d69afd3c0d"
+      }
+    ],
+    "assets/scripts/core/systems/GeneralAging.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "871d651615843602e24a653d1f6b1fba2a6f520c6f0841fbc0655a4ffa258785"
+      }
+    ],
+    "assets/scripts/core/systems/LuckEventRate.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "a2ec460fcb9e7fff2cbffa58cfa099043772f891ee343820170cbcfa6a0791d7"
+      }
+    ],
+    "assets/scripts/core/services/BloodlineGraph.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "98283cd17ae090312e1ea0d60b271115f4d706167604b59c4076fff77b9b2e86"
+      }
+    ],
+    "assets/scripts/core/systems/SeededRandom.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "2c1289a0b00ad305d731d48d0fbf8886dcf1adbd17e092c19335cf333837c6ae"
+      }
+    ],
+    "assets/scripts/core/models/GeneralRole.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "a77b5a4de48ca0663602e8b78ab60fd074c4ed393e64b3a35857fe9189be5bbf"
+      }
+    ],
+    "assets/scripts/core/systems/ChildFactorExpectation.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "65fb892b8dc96c925f781cc9a8f2b92d23ce377ffb1496fc437c6bfe986da57a"
+      }
+    ],
+    "assets/scripts/core/systems/BlueFactorInheritance.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "057d8ae8049840339373069b8e95ec5f0150a7389c39845bd27c4157a04d5dba"
+      }
+    ],
+    "assets/scripts/core/systems/KinRelation.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "d9bd986b9dd4bb0f9c7b7ccc3f67958452cf570b5f8e89044d2ac03c46570f6c"
+      }
+    ],
+    "assets/scripts/core/systems/VitalityCap.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "cc2b849f352cc1770864290597ff18b43be70fceb0d20d60683bb8f145171d01"
+      }
+    ],
+    "assets/scripts/core/systems/VitalityBattleGate.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "7c6043978188ba537150c3615f4b23d94554e3bb2963e79ccf105c8101dd5920"
+      }
+    ],
+    "assets/scripts/core/systems/WildGene.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "e7cb237fe5dc143cf847f3e1df51a8f967f059931544a4847086032b21ecc553"
+      }
+    ],
+    "assets/scripts/core/systems/LuckThresholds.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "6278e0e879311f7bce7968685c9a79cef8398f0581bcefd08b5851a611c377f5"
+      }
+    ],
+    "assets/scripts/core/systems/LuckTacticCopy.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "dbc4d6b2dad832afd400c9f6a083d864dabcbf2bd682ddd411c9a648c03415fc"
+      }
+    ],
+    "assets/scripts/core/systems/LuckFateInheritance.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "8023b94c362f8ac1f9bf6dc7eca1aae38d7656df4444b559c2df9ccf73b7f664"
+      }
+    ],
+    "assets/scripts/core/systems/LuckBloodlineMutation.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "f04d6d452c7316be7a212bff66619b4a9817e29d7c40230965548869eb8b6b1e"
+      }
+    ],
+    "assets/scripts/core/utils/UCUFLogger.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "e55de0c2ca135696d2a21172d5da960bc5f266b2e2e11e7d3b92a0cb4d0b2f51"
+      }
+    ],
+    "assets/scripts/core/systems/FateBlessing.ts": [
+      {
+        "package": "import-supplement",
+        "manifest": "mentor-replay/source-manifest.json",
+        "sha256": "42bbbb32370f928f79f0af61574a8d199e983b331b2dd90a86a9d296010d3cd2"
+      }
+    ]
+  }
+}

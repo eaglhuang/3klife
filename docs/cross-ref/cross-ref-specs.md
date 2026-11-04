@@ -171,3 +171,12 @@
 | doc_index_1035 | README.md (all_gameplay_inventory_v1) | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/README.md | 3KLife全玩法盤點第一階段索引（42玩法域+4共同關卡） |
 | doc_spec_0291 | 全玩法覆蓋清單.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/全玩法覆蓋清單.md | 42個玩法域（G01-G42）與4個共同關卡（X01-X04）分母與未驗缺口清單 |
 | doc_spec_0292 | 跨系統待驗邊界.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/跨系統待驗邊界.md | 14條優先跨系統驗收邊界（抽卡/出生/時鐘/退役競爭等）待跑案例 |
+| doc_spec_0293 | 總覽與驗收界線.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/總覽與驗收界線.md | 全玩法研究第二批（招募/名冊/治理/精力167案）總覽與驗收界線 |
+| doc_index_1036 | README.md (recruitment-prophecy) | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/recruitment-prophecy/README.md | G10/G11名士預言與傭兵有界驗證包索引 |
+| doc_spec_0294 | 名士與傭兵驗證報告.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/recruitment-prophecy/名士與傭兵驗證報告.md | G10名士預言與G11傭兵試用永久招募38案有界驗證報告 |
+| doc_index_1037 | README.md (rival-governance) | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/rival-governance/README.md | G23他國治理外交與盛衰有界驗證包索引 |
+| doc_spec_0295 | 他國治理外交與盛衰報告.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/rival-governance/他國治理外交與盛衰報告.md | G23他國治理外交與盛衰45案有界驗證報告（含雙向盟友折扣套利分析） |
+| doc_index_1038 | README.md (roster-identity) | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/roster-identity/README.md | G02/G14武將名冊與重複轉生有界驗證包索引 |
+| doc_spec_0296 | 名冊與重複流轉報告.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/roster-identity/名冊與重複流轉報告.md | G02/G14武將名冊與重複流轉44案有界驗證報告 |
+| doc_index_1039 | README.md (vitality) | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/README.md | G07精力疲勞恢復與加速卡有界驗證包索引 |
+| doc_spec_0297 | REPORT.md (vitality) | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/REPORT.md | G07精力疲勞恢復與加速卡40案有界驗證報告 |

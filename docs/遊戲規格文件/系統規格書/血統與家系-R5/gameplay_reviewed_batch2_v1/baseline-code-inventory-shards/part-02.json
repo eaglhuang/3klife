@@ -1,0 +1,1982 @@
+[
+  {
+    "path": "assets/scripts/core/models/SupportCardBase.ts",
+    "blob_sha": "ca47ab83ef90879dde47c8e9aa1b702031f9f089",
+    "bytes": 1598,
+    "candidate_domains": [
+      "G03",
+      "G06"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/SupportCardBase.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/models/TigerTallyCard.ts",
+    "blob_sha": "e6d6117fc5e2cfa89da4997d876a11cd777023b3",
+    "bytes": 858,
+    "candidate_domains": [
+      "G12"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/TigerTallyCard.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/models/TroopUnit.ts",
+    "blob_sha": "942b6c339050c812567fcdd31fe5090650d1a74a",
+    "bytes": 6822,
+    "candidate_domains": [
+      "G12"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/TroopUnit.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/serialization/GzipCodec.ts",
+    "blob_sha": "e1c04dbc036f05cb190629d3c9609dc3999b20df",
+    "bytes": 3711,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/serialization/GzipCodec.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/serialization/MsgpackCodec.ts",
+    "blob_sha": "bc0094d955d7cd51fcbb6f93bf8a4089af5cabb5",
+    "bytes": 3493,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/serialization/MsgpackCodec.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/ActionLogStore.ts",
+    "blob_sha": "e23760bdde6d337f2b4fd50b39a03d88b00975cc",
+    "bytes": 5822,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/ActionLogStore.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/BattleLogArchiver.ts",
+    "blob_sha": "0cac08043726f58437316b251770c8c0f91fe610",
+    "bytes": 5385,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/BattleLogArchiver.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/BloodlineGraph.ts",
+    "blob_sha": "2bc4543253cd3375796550a165ae32cfc24959b8",
+    "bytes": 11621,
+    "candidate_domains": [
+      "G04"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/BloodlineGraph.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/BranchCompactor.ts",
+    "blob_sha": "51eab8af246ffb55522afc8b8af304a0b1e8b503",
+    "bytes": 11058,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/BranchCompactor.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/BreedingQuotaEnforcer.ts",
+    "blob_sha": "5200ed3380c336ee68e2f041435fc5ccad1f26de",
+    "bytes": 8914,
+    "candidate_domains": [
+      "G03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/BreedingQuotaEnforcer.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/BreedingService.ts",
+    "blob_sha": "ba6dc82536a0ce3d200ef5a4c64f894b77d74583",
+    "bytes": 11296,
+    "candidate_domains": [
+      "G03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/BreedingService.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/DataGrowthMonitor.ts",
+    "blob_sha": "a4b427faaa303568794cd312b47b89c9274f112b",
+    "bytes": 5296,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/DataGrowthMonitor.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/DataLifecycleScheduler.ts",
+    "blob_sha": "039d48633531694e42ddebd71263976892c00363",
+    "bytes": 6723,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/DataLifecycleScheduler.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/DeltaPatchBuilder.ts",
+    "blob_sha": "ad29b4f8f66f110099e13159e04ce72908386371",
+    "bytes": 6289,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/DeltaPatchBuilder.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/GachaWalletRules.ts",
+    "blob_sha": "8d61127e8e302fb652c8d7ebd4daef17b1ada59e",
+    "bytes": 2464,
+    "candidate_domains": [
+      "G17",
+      "G18"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/GachaWalletRules.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/GeneralArchiver.ts",
+    "blob_sha": "532587425d56ac4a1164b803e2fc516fbaa9e77d",
+    "bytes": 10829,
+    "candidate_domains": [
+      "G13"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/GeneralArchiver.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/LeadGeneralSelectRules.ts",
+    "blob_sha": "6550e8e21e869fc93abadb1936d77c0f1971df24",
+    "bytes": 2174,
+    "candidate_domains": [
+      "G26"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/LeadGeneralSelectRules.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/LegacyService.ts",
+    "blob_sha": "47909435bc8fcd96c187316858f8d12d74277fa8",
+    "bytes": 13701,
+    "candidate_domains": [
+      "G13"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/LegacyService.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/LocalGachaService.ts",
+    "blob_sha": "8eb814a352ed43b2aa37773434187b395cbb5739",
+    "bytes": 26953,
+    "candidate_domains": [
+      "G18"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/LocalGachaService.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/NpcDialogueService.ts",
+    "blob_sha": "1266596d06be8337f00a7ad140783635161487c4",
+    "bytes": 10205,
+    "candidate_domains": [
+      "G38"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/NpcDialogueService.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/NurtureService.ts",
+    "blob_sha": "a6695c49bcc106d0fb67ff708ce688623a1ffae2",
+    "bytes": 24594,
+    "candidate_domains": [
+      "G05"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/NurtureService.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/PendingDeleteStore.ts",
+    "blob_sha": "32e7efaeefafa0ea6083449e5f7619959d5a9609",
+    "bytes": 6672,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/PendingDeleteStore.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/PersonRegistry.ts",
+    "blob_sha": "1174a4d15f625b05177aa0522faa89537fd11981",
+    "bytes": 2810,
+    "candidate_domains": [
+      "G02"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/PersonRegistry.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/PlayerDeckRules.ts",
+    "blob_sha": "6f9e26510bae25bd9fce4220c016e4cfefc049b4",
+    "bytes": 2560,
+    "candidate_domains": [
+      "G26"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/PlayerDeckRules.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/PlayerRosterService.ts",
+    "blob_sha": "a5e438741ea5adff4e9a01f902d64887efe78b88",
+    "bytes": 3250,
+    "candidate_domains": [
+      "G02"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/PlayerRosterService.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/PlayerSaveService.ts",
+    "blob_sha": "9c7e3c22cad87c03a86f4eb0f715d4b7402ef65a",
+    "bytes": 49566,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "SAMPLED_STATIC_NOT_FULL_AUDIT",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/PlayerSaveService.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/PlayerSaveTableRows.ts",
+    "blob_sha": "79ca39b93a1bd0d60f8e8d246f6640832fa6c491",
+    "bytes": 8428,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/PlayerSaveTableRows.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/SaveSerializer.ts",
+    "blob_sha": "d43d03ebbc1a3de81ca4eabdd6621dcecdf383de",
+    "bytes": 10930,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/SaveSerializer.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/SeasonalRollup.ts",
+    "blob_sha": "f8dcae53af243dc0e408c8f8ca7b68c4cfd0a116",
+    "bytes": 6314,
+    "candidate_domains": [
+      "G40",
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/SeasonalRollup.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/StarterRosterService.ts",
+    "blob_sha": "ac56931143074f72e814e86b29dd92ec8702a14a",
+    "bytes": 2867,
+    "candidate_domains": [
+      "G01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/StarterRosterService.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/services/UnveilingService.ts",
+    "blob_sha": "8cdb6a0a4c0e2f3350b370c929a23db46f7c2e4a",
+    "bytes": 1597,
+    "candidate_domains": [
+      "G04"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/UnveilingService.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/storage/DataCatalog.ts",
+    "blob_sha": "cc7c9c77fe0c5a99ae57cf04ba71437b3c265033",
+    "bytes": 5330,
+    "candidate_domains": [
+      "X02"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/storage/DataCatalog.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/storage/DataMounts.ts",
+    "blob_sha": "f9a63c35426be20ae3abc542fdd06f0dc6435102",
+    "bytes": 6126,
+    "candidate_domains": [
+      "X02"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/storage/DataMounts.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/storage/DataPageLoader.ts",
+    "blob_sha": "553b06420756801093f6da056d1e5fa77603cafb",
+    "bytes": 5904,
+    "candidate_domains": [
+      "X02"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/storage/DataPageLoader.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/storage/DataStorageAdapter.ts",
+    "blob_sha": "8fc783f7bf90be61060bedd46cc6dee910803d17",
+    "bytes": 2507,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/storage/DataStorageAdapter.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/storage/GeneralSearch.ts",
+    "blob_sha": "6381344d7b749ec79bea436c98f09ed4aaca0ed4",
+    "bytes": 5244,
+    "candidate_domains": [
+      "X02"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/storage/GeneralSearch.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/storage/IndexedDbAdapter.ts",
+    "blob_sha": "5ea3ed36ab236faf8eac6ced2fdb359ae4273c13",
+    "bytes": 5790,
+    "candidate_domains": [
+      "X01",
+      "X02"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/storage/IndexedDbAdapter.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/storage/MemoryStorageAdapter.ts",
+    "blob_sha": "6a5295f4a2187968341b7a3b034fc6ccfee07589",
+    "bytes": 1780,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/storage/MemoryStorageAdapter.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/storage/PlayerSaveMigrations.ts",
+    "blob_sha": "369692693eb165a53b78315d5f509a5097746ffe",
+    "bytes": 1541,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/storage/PlayerSaveMigrations.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/storage/SaveVersion.ts",
+    "blob_sha": "99e240e1dc296695c8e1a69845fa95a94c1ac1f3",
+    "bytes": 5911,
+    "candidate_domains": [
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/storage/SaveVersion.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/storage/SqliteAdapter.ts",
+    "blob_sha": "3b43d4dfe505190704f3ce1abc1866fdf9515c84",
+    "bytes": 2433,
+    "candidate_domains": [
+      "X01",
+      "X02"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/storage/SqliteAdapter.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AccelerateCard.ts",
+    "blob_sha": "b228e1651aaf140935778e6175b29f2f0e489529",
+    "bytes": 1961,
+    "candidate_domains": [
+      "G07"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AccelerateCard.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/ActionSystem.ts",
+    "blob_sha": "375f14f4348b56f0566c702b9b62a6f38e816f43",
+    "bytes": 9698,
+    "candidate_domains": [
+      "G27"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ActionSystem.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiAdaptiveDifficulty.ts",
+    "blob_sha": "dd01f3259d208eecc7b48d66bb990da17a96f588",
+    "bytes": 3390,
+    "candidate_domains": [
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiAdaptiveDifficulty.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiDeployCount.ts",
+    "blob_sha": "aa0d1c8022011e897d6e375909411cf00eedd8b0",
+    "bytes": 1103,
+    "candidate_domains": [
+      "G26",
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiDeployCount.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiDeployTroopPick.ts",
+    "blob_sha": "f21fc71a243eda5307aca07b58f256ebda361666",
+    "bytes": 4575,
+    "candidate_domains": [
+      "G12",
+      "G26",
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiDeployTroopPick.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiDifficultyTable.ts",
+    "blob_sha": "21332cf1571ce5b8729ad778fe35743cb2dd659e",
+    "bytes": 4105,
+    "candidate_domains": [
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "SAMPLED_STATIC_NOT_FULL_AUDIT",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiDifficultyTable.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiDuelDecision.ts",
+    "blob_sha": "7f76b8fa2e7218bb9bc4d4122a4f61003e8c9427",
+    "bytes": 3270,
+    "candidate_domains": [
+      "G31",
+      "G32"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiDuelDecision.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiEntranceLines.ts",
+    "blob_sha": "ec9dd6b212b1c0ceb040e17120bffeaab3b6f029",
+    "bytes": 2321,
+    "candidate_domains": [
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiEntranceLines.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiLaneStrategy.ts",
+    "blob_sha": "c91ff97e346d6bde920432abf673f1e984b34973",
+    "bytes": 3062,
+    "candidate_domains": [
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiLaneStrategy.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiPowerEvaluation.ts",
+    "blob_sha": "f6d00edce3881f5ad9c5e507a9dd9b9f6ab4450e",
+    "bytes": 5368,
+    "candidate_domains": [
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiPowerEvaluation.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiPowerMatch.ts",
+    "blob_sha": "156b47f8929ad74cfa31a67d86f9c2659f38b8d6",
+    "bytes": 3439,
+    "candidate_domains": [
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiPowerMatch.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiProfiles.ts",
+    "blob_sha": "e53062c691cc0b325d8bef26a77330021594fe61",
+    "bytes": 7030,
+    "candidate_domains": [
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiProfiles.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiSpCharge.ts",
+    "blob_sha": "21cee5a5650b7448c55a39e21d69cc160f9c04e3",
+    "bytes": 1561,
+    "candidate_domains": [
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiSpCharge.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiStatScaling.ts",
+    "blob_sha": "2ff25ef0ab2a5963a41c82517b4b5e1d7127e17e",
+    "bytes": 5176,
+    "candidate_domains": [
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiStatScaling.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiTallyPool.ts",
+    "blob_sha": "d533f661b6c8770fa5cc4a477bb7ef41bea6ce08",
+    "bytes": 3394,
+    "candidate_domains": [
+      "G12",
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiTallyPool.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiTallySelection.ts",
+    "blob_sha": "933d896e1e204dd0481626bcf2454f80f0ad288b",
+    "bytes": 2790,
+    "candidate_domains": [
+      "G12",
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiTallySelection.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiUltimateDecision.ts",
+    "blob_sha": "88d012bb9d6b2cd45bad6e5a82686b15c1d8ebcc",
+    "bytes": 2073,
+    "candidate_domains": [
+      "G30",
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiUltimateDecision.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AiUltimateFamilyRule.ts",
+    "blob_sha": "8c4e4aec34cb7a393ef8a93861f8ecb980e32615",
+    "bytes": 2809,
+    "candidate_domains": [
+      "G30",
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AiUltimateFamilyRule.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AncestorTreeLayout.ts",
+    "blob_sha": "a2cf55d84ad1dea8a08034371af420248df4325b",
+    "bytes": 3558,
+    "candidate_domains": [
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AncestorTreeLayout.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AptitudeDialogue.ts",
+    "blob_sha": "ca78c749ac3b61f32797165cd5666a11c4ef5f42",
+    "bytes": 4122,
+    "candidate_domains": [
+      "G28",
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AptitudeDialogue.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AptitudeView.ts",
+    "blob_sha": "4c6f0d9f31527348ab93595462fe3435d25e178c",
+    "bytes": 3675,
+    "candidate_domains": [
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AptitudeView.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/ArenaScore.ts",
+    "blob_sha": "a20a49140cf43b9e893056d1127d2fd449fff560",
+    "bytes": 2742,
+    "candidate_domains": [
+      "G35"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ArenaScore.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AudioSystem.ts",
+    "blob_sha": "9054c12ec319a48a59b40c36b7dafdfddf58586b",
+    "bytes": 10532,
+    "candidate_domains": [
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AudioSystem.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AutoNurture.ts",
+    "blob_sha": "c8e71e13b1fd5ca0b3cea8653509733d38604581",
+    "bytes": 4030,
+    "candidate_domains": [
+      "G05"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AutoNurture.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/AwakeningTitle.ts",
+    "blob_sha": "ccff0550a19649a264104a86cb561f2c78ac1a20",
+    "bytes": 3665,
+    "candidate_domains": [
+      "G30"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AwakeningTitle.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BagDomain.ts",
+    "blob_sha": "80acd672a44ab97dfb19abcc970cef7835bdc3d0",
+    "bytes": 1305,
+    "candidate_domains": [
+      "G16"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BagDomain.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattleAptitude.ts",
+    "blob_sha": "8f58cd9a21c3708270f74f2bfa5724f6d73bccf6",
+    "bytes": 12857,
+    "candidate_domains": [
+      "G28"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleAptitude.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattleLeaderboard.ts",
+    "blob_sha": "1654071c61b88277dd71d8bc16dc033d0893c382",
+    "bytes": 2518,
+    "candidate_domains": [
+      "G36"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleLeaderboard.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattleLeaderboardView.ts",
+    "blob_sha": "7277a4210733b76976109678023541ebe37b5da2",
+    "bytes": 4353,
+    "candidate_domains": [
+      "G36",
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleLeaderboardView.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattleModifiers.ts",
+    "blob_sha": "83860e8f248a76d26d80d2348ab714a25ab0f758",
+    "bytes": 3811,
+    "candidate_domains": [
+      "G27",
+      "G28"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleModifiers.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattlePowerPrediction.ts",
+    "blob_sha": "900434454e7393efe061afd283753cb44f82adf3",
+    "bytes": 1704,
+    "candidate_domains": [
+      "G26"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattlePowerPrediction.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattlePowerRating.ts",
+    "blob_sha": "9062e8f8eb80574a2d91c4775025b12ac74d0710",
+    "bytes": 6504,
+    "candidate_domains": [
+      "G26"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattlePowerRating.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattleRecordStats.ts",
+    "blob_sha": "4530d09f31bfb23ee772baf95d8e32992b7d133f",
+    "bytes": 11749,
+    "candidate_domains": [
+      "G36"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "SAMPLED_STATIC_NOT_FULL_AUDIT",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleRecordStats.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattleRetreat.ts",
+    "blob_sha": "4500c7c3aa8056a1bd67ad45af1d11d68a95659d",
+    "bytes": 2307,
+    "candidate_domains": [
+      "G33"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleRetreat.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattleRoster.ts",
+    "blob_sha": "f25e2698a08bb226ed2f9b0fbb40b01a832148d0",
+    "bytes": 17969,
+    "candidate_domains": [
+      "G26"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleRoster.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattleSeasonStats.ts",
+    "blob_sha": "e6eb8e65ec93a7ec3e28a68ac68aa9e7b502ecf9",
+    "bytes": 4446,
+    "candidate_domains": [
+      "G36",
+      "G40"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleSeasonStats.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattleSnapshot.ts",
+    "blob_sha": "d2b9ee52bcf9631c136d82b4532d4e3ac0631ece",
+    "bytes": 3125,
+    "candidate_domains": [
+      "G36",
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleSnapshot.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattleSpecialActions.ts",
+    "blob_sha": "7c827f2c3ea0979c28981e89619902a2ba69c460",
+    "bytes": 9043,
+    "candidate_domains": [
+      "G32"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleSpecialActions.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattleSystem.ts",
+    "blob_sha": "eb3cccdd4633b29db44c4c2be2c04c644d9a07d8",
+    "bytes": 3593,
+    "candidate_domains": [
+      "G27"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "SAMPLED_STATIC_NOT_FULL_AUDIT",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleSystem.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BattlefieldRecon.ts",
+    "blob_sha": "6a3853e71343a5a89c6d868db826ace25ddd1b8e",
+    "bytes": 4803,
+    "candidate_domains": [
+      "G32"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattlefieldRecon.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineBeast.ts",
+    "blob_sha": "6969655449602ebcae4cf469e12836ccdec4300c",
+    "bytes": 6397,
+    "candidate_domains": [
+      "G30"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineBeast.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineConnections.ts",
+    "blob_sha": "f412f771e283d4e637b4f913382fdc978bf98b0c",
+    "bytes": 4688,
+    "candidate_domains": [
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineConnections.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineCurve.ts",
+    "blob_sha": "b1bbb610283f1bcc3a791f268f7c31afea2df96d",
+    "bytes": 2589,
+    "candidate_domains": [
+      "G05"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineCurve.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineGuarantee.ts",
+    "blob_sha": "a8c61b080d6865a37a7cf04715ba884fa0ad0615",
+    "bytes": 2681,
+    "candidate_domains": [
+      "G04",
+      "G05"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineGuarantee.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineInfusion.ts",
+    "blob_sha": "ef085602482561675631c7ed11c72746f6f1ec40",
+    "bytes": 1944,
+    "candidate_domains": [
+      "G04"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineInfusion.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineMerge.ts",
+    "blob_sha": "67628e136c7ab66d36a7377245b4fb6ec0608e7c",
+    "bytes": 3831,
+    "candidate_domains": [
+      "G04"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineMerge.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineNodeCards.ts",
+    "blob_sha": "75f59cdf2f83b155f632320229384351be0a0ffe",
+    "bytes": 3220,
+    "candidate_domains": [
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineNodeCards.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineRightPanelLayout.ts",
+    "blob_sha": "d2f7c057a288a24922aac5fb9e52276f90b059ad",
+    "bytes": 2788,
+    "candidate_domains": [
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineRightPanelLayout.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineStoryDockLayout.ts",
+    "blob_sha": "08a5b03de6346f4353c8ae5e89e9e2bd3c95b4fa",
+    "bytes": 2792,
+    "candidate_domains": [
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineStoryDockLayout.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineTransmissionUltimate.ts",
+    "blob_sha": "8fb86d74fc158346267fd386f55ccfebbbca1c10",
+    "bytes": 4588,
+    "candidate_domains": [
+      "G30"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineTransmissionUltimate.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineTreeBinding.ts",
+    "blob_sha": "d42931f23fa9cc901c1ffed8a14fbc8ac6b45ba0",
+    "bytes": 2015,
+    "candidate_domains": [
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineTreeBinding.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineTreeSlots.ts",
+    "blob_sha": "059a3c2d3c76be26bf47c3e7a8c28dcf2dd93002",
+    "bytes": 2039,
+    "candidate_domains": [
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineTreeSlots.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineTreeViewMode.ts",
+    "blob_sha": "7f269dd3465cc25cb88e3cc947f9a337eb9a9865",
+    "bytes": 2221,
+    "candidate_domains": [
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineTreeViewMode.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BloodlineUltimateRoster.ts",
+    "blob_sha": "44c97daa609c411ed13e82ccca588c3698bac065",
+    "bytes": 2267,
+    "candidate_domains": [
+      "G30"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineUltimateRoster.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BlueFactorInheritance.ts",
+    "blob_sha": "f78e4d71a6c658cf8efddc194bf66ce68523d6cb",
+    "bytes": 1097,
+    "candidate_domains": [
+      "G04"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BlueFactorInheritance.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BossGuardSummon.ts",
+    "blob_sha": "7d01cd76d553952de2d7ad32eea8773515f6d80f",
+    "bytes": 769,
+    "candidate_domains": [
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BossGuardSummon.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BreedingBirthRecord.ts",
+    "blob_sha": "3c78189d38764aef5ad172dffa58ded28d5cd997",
+    "bytes": 2373,
+    "candidate_domains": [
+      "G03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BreedingBirthRecord.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BreedingBirthRecordSave.ts",
+    "blob_sha": "563bd183665ab196eb227e6b33b58ed8e48c6da1",
+    "bytes": 1966,
+    "candidate_domains": [
+      "G03",
+      "X01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BreedingBirthRecordSave.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BreedingSystem.ts",
+    "blob_sha": "aa00f689366a4ea67c68535b92431fc2c3322b61",
+    "bytes": 34900,
+    "candidate_domains": [
+      "G03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BreedingSystem.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/BuffSystem.ts",
+    "blob_sha": "f3596bf28b7d7332d730bc309e36428dcb1bdd58",
+    "bytes": 2793,
+    "candidate_domains": [
+      "G29"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BuffSystem.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/CareerTag.ts",
+    "blob_sha": "edb7dfb2633eecb2a78db384ce163f4c4b32a613",
+    "bytes": 1898,
+    "candidate_domains": [
+      "G20"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/CareerTag.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/CellarProtection.ts",
+    "blob_sha": "fbf2b1e93d0f5458b6a55fbe05f22e0828df3852",
+    "bytes": 1388,
+    "candidate_domains": [
+      "G17"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/CellarProtection.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/ChildFactorExpectation.ts",
+    "blob_sha": "34ed918da9eaf6da3fde3527342478c09e8791b7",
+    "bytes": 4637,
+    "candidate_domains": [
+      "G03",
+      "G04"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ChildFactorExpectation.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/ChildMagistrate.ts",
+    "blob_sha": "43c9d13e147d759eae18402f78208ebf649b2172",
+    "bytes": 1471,
+    "candidate_domains": [
+      "G20"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ChildMagistrate.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/ChildOfficialPosts.ts",
+    "blob_sha": "1a7f18879171fe1847b8a2183edab05b91f9620c",
+    "bytes": 2121,
+    "candidate_domains": [
+      "G20"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ChildOfficialPosts.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/ChildUltimateAwaken.ts",
+    "blob_sha": "12038832c4bdad264a593d6e3e7b468d1613a9b8",
+    "bytes": 3782,
+    "candidate_domains": [
+      "G30"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ChildUltimateAwaken.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/CombatCrit.ts",
+    "blob_sha": "09e39913cfdd750ec30bf466f28aa8f1b0f0980f",
+    "bytes": 1357,
+    "candidate_domains": [
+      "G27"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/CombatCrit.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/ComboAttackKin.ts",
+    "blob_sha": "2ced1e84a70215a1f6df8f9e7911f8d4092576ac",
+    "bytes": 1576,
+    "candidate_domains": [
+      "G30",
+      "G37"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ComboAttackKin.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/CountdownIconView.ts",
+    "blob_sha": "fcc3cc41d5ed98fd8376312bf6b2c37aa7c3f2b1",
+    "bytes": 2610,
+    "candidate_domains": [
+      "G40",
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/CountdownIconView.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/CountdownManager.ts",
+    "blob_sha": "f0bdc3eecbdc0ae6ae67f13a6f069854eda0c2b5",
+    "bytes": 4326,
+    "candidate_domains": [
+      "G40"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/CountdownManager.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/CrestStyle.ts",
+    "blob_sha": "5951c43e6590a798259165c081ade41972a28245",
+    "bytes": 2480,
+    "candidate_domains": [
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/CrestStyle.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/CurveSystem.ts",
+    "blob_sha": "11916ed6fb87c7428d579113a613baa2f0e9f4d7",
+    "bytes": 8815,
+    "candidate_domains": [
+      "G05"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/CurveSystem.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DailyFreeEnroll.ts",
+    "blob_sha": "114b1b8d643593325626c4297d234b8c716b8ead",
+    "bytes": 1822,
+    "candidate_domains": [
+      "G19"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DailyFreeEnroll.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DailyNewsEngine.ts",
+    "blob_sha": "17c56624a4137499aec66327419c775f786655f3",
+    "bytes": 17010,
+    "candidate_domains": [
+      "G38"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DailyNewsEngine.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DailySubsidy.ts",
+    "blob_sha": "316f84be51cce362752f636a31b13d3b9110fed9",
+    "bytes": 2707,
+    "candidate_domains": [
+      "G19"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DailySubsidy.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DaughterComingOfAge.ts",
+    "blob_sha": "6b88b928ab7071971fa3c19b4312ede532ff7c9e",
+    "bytes": 3097,
+    "candidate_domains": [
+      "G03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DaughterComingOfAge.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DelegateAi.ts",
+    "blob_sha": "a5b872683044c30cead4c818a056cee98e12463a",
+    "bytes": 5607,
+    "candidate_domains": [
+      "G31"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DelegateAi.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DesertVitality.ts",
+    "blob_sha": "4c5f0b6fafa34c0a5868829d0ad7aa11bb6a567e",
+    "bytes": 1423,
+    "candidate_domains": [
+      "G07",
+      "G28"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DesertVitality.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DestinyGacha.ts",
+    "blob_sha": "0e2f7eb015e704c50e723d4c15db31e4176cc02d",
+    "bytes": 5470,
+    "candidate_domains": [
+      "G18"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DestinyGacha.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DestinyOpening.ts",
+    "blob_sha": "0143043e95993049a50291af481e891211474707",
+    "bytes": 1619,
+    "candidate_domains": [
+      "G01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DestinyOpening.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DestinyPool.ts",
+    "blob_sha": "136e647975a40d9282d8d432b3b768da2260a31f",
+    "bytes": 3045,
+    "candidate_domains": [
+      "G18"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DestinyPool.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DestinyShop.ts",
+    "blob_sha": "c536a946214cbeaf80c02759f36841131e29d6f8",
+    "bytes": 2555,
+    "candidate_domains": [
+      "G18"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "SAMPLED_STATIC_NOT_FULL_AUDIT",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DestinyShop.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DiscoveryProgress.ts",
+    "blob_sha": "c74309fded1c9ef2d819439c520f2278339cea08",
+    "bytes": 3348,
+    "candidate_domains": [
+      "G01"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DiscoveryProgress.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DispatchCatalog.ts",
+    "blob_sha": "560a1d0c8071ab426543a1b9da8b9b5dab36635b",
+    "bytes": 6189,
+    "candidate_domains": [
+      "G22"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DispatchCatalog.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DispatchJobs.ts",
+    "blob_sha": "c159c9167339d51650b0024725d1b8b0c54fab39",
+    "bytes": 7914,
+    "candidate_domains": [
+      "G22"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DispatchJobs.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DispatchQuality.ts",
+    "blob_sha": "42454709705831dc1836bf9ee547c86494426ee0",
+    "bytes": 5134,
+    "candidate_domains": [
+      "G22"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DispatchQuality.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DomesticAutoGovernance.ts",
+    "blob_sha": "f70a1959917509f57aa0ae96de8bc28bdb0791e8",
+    "bytes": 2543,
+    "candidate_domains": [
+      "G21"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DomesticAutoGovernance.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DomesticPresenter.ts",
+    "blob_sha": "c7415096df9cecb6fdcd926c9e66ad6de0a9a576",
+    "bytes": 2401,
+    "candidate_domains": [
+      "G21",
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DomesticPresenter.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DomesticTasks.ts",
+    "blob_sha": "f67195ecf9764b6ca749cc852a51d840932b84e7",
+    "bytes": 6014,
+    "candidate_domains": [
+      "G21"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "SAMPLED_STATIC_NOT_FULL_AUDIT",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DomesticTasks.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/DungeonRescue.ts",
+    "blob_sha": "b34e5036c52f547030413b241ca7d2d82603a1a4",
+    "bytes": 1859,
+    "candidate_domains": [
+      "G34"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DungeonRescue.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/EffectSystem.ts",
+    "blob_sha": "9f41e76016fb5c75ea8a38396d670ca8bf5623d9",
+    "bytes": 26204,
+    "candidate_domains": [
+      "G29"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/EffectSystem.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/EquipPageSegments.ts",
+    "blob_sha": "66063a8936a33f95697a34d1c1c19796f029512b",
+    "bytes": 1951,
+    "candidate_domains": [
+      "G15",
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/EquipPageSegments.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/EquipmentBonus.ts",
+    "blob_sha": "68c50ed07fc949d97f5c66f48c427d801dc56807",
+    "bytes": 3020,
+    "candidate_domains": [
+      "G15"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/EquipmentBonus.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/EraReset.ts",
+    "blob_sha": "52660bf15e13d6344dee1217fab51bf53befb553",
+    "bytes": 2168,
+    "candidate_domains": [
+      "G40"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/EraReset.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/EventSystem.ts",
+    "blob_sha": "71d33782c5ed3cc7ede77304d9cb6ee91dc0f558",
+    "bytes": 2621,
+    "candidate_domains": [
+      "X04"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/EventSystem.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/ExtremeTaskDrop.ts",
+    "blob_sha": "9f3839a738a754f97e9608eb7650e4c0845a0652",
+    "bytes": 2690,
+    "candidate_domains": [
+      "G33"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ExtremeTaskDrop.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FactorAwakening.ts",
+    "blob_sha": "9d64ea1648d43b1f1e0a0c7e2e4e4505b5797e94",
+    "bytes": 10482,
+    "candidate_domains": [
+      "G04",
+      "G30"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FactorAwakening.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FactorHexPanel.ts",
+    "blob_sha": "6c90b42a005b32219c96356dcf857bc7388c7f57",
+    "bytes": 3983,
+    "candidate_domains": [
+      "G04",
+      "X03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FactorHexPanel.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FactorInheritance.ts",
+    "blob_sha": "cfe18160bc8fbe9a9c7272ee7c2c7918e212c7ec",
+    "bytes": 10225,
+    "candidate_domains": [
+      "G04"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FactorInheritance.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FactorMask.ts",
+    "blob_sha": "d50856ee7edb761ba461f33cf2847378dc315de4",
+    "bytes": 2848,
+    "candidate_domains": [
+      "G04"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FactorMask.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FactorMaskState.ts",
+    "blob_sha": "b9860e6145c6423ac4cc92e7a6f75465ff95f491",
+    "bytes": 3056,
+    "candidate_domains": [
+      "G04"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FactorMaskState.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FactorTacticLinkage.ts",
+    "blob_sha": "5e1491c4ff87406c2419eb81feaafcd1d8e36052",
+    "bytes": 5074,
+    "candidate_domains": [
+      "G04",
+      "G29"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FactorTacticLinkage.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FactorTagTokens.ts",
+    "blob_sha": "373748bd351c6983c468f2c0dc308708d9960da3",
+    "bytes": 4589,
+    "candidate_domains": [
+      "G04"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FactorTagTokens.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FactorVisibility.ts",
+    "blob_sha": "cc59e67d1c632b61c58446e03fdf4873ce10e205",
+    "bytes": 4601,
+    "candidate_domains": [
+      "G04"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FactorVisibility.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FamilyOverviewHotspot.ts",
+    "blob_sha": "ef7f3bfb12a3f7a0db33ab2d183ae2ccf15d7e38",
+    "bytes": 2483,
+    "candidate_domains": [
+      "G13"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "PRIOR_PARTIAL_EVIDENCE",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FamilyOverviewHotspot.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FarewellLetterInbox.ts",
+    "blob_sha": "6ea349fc1169ba1e602ae5fc2c45d3482fcb2fa7",
+    "bytes": 2896,
+    "candidate_domains": [
+      "G38"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FarewellLetterInbox.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FateBlessing.ts",
+    "blob_sha": "17a1a7892024a7ef3be102e8a5e4f4b1d369acba",
+    "bytes": 2170,
+    "candidate_domains": [
+      "G09",
+      "G39"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FateBlessing.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FatigueFailureRate.ts",
+    "blob_sha": "93bfb24438e679e351443e63621013c1fcd52b5c",
+    "bytes": 1650,
+    "candidate_domains": [
+      "G07"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "SAMPLED_STATIC_NOT_FULL_AUDIT",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FatigueFailureRate.ts",
+    "scope": "runtime_or_presentation_candidate"
+  },
+  {
+    "path": "assets/scripts/core/systems/FemalePoolRefresh.ts",
+    "blob_sha": "569c0b1700d23e984f0f085d104b5f4fb8af8af9",
+    "bytes": 2135,
+    "candidate_domains": [
+      "G03"
+    ],
+    "routing_basis": "filename token only; not semantic verification",
+    "read_status": "UNREAD",
+    "execution_status": "NOT_RUN_IN_THIS_INVENTORY",
+    "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FemalePoolRefresh.ts",
+    "scope": "runtime_or_presentation_candidate"
+  }
+]

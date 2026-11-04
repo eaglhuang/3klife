@@ -361,26 +361,26 @@
   },
   {
     "id": "doc_index_1036",
-    "path": "docs/cross-ref/code/core-shared.md",
-    "title": "代碼索引分片：Core 其他目錄與 Shared",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/recruitment-prophecy/README.md",
+    "title": "名士預言與傭兵：有界原碼驗證包",
     "category": "index"
   },
   {
     "id": "doc_index_1037",
-    "path": "docs/cross-ref/code/core-systems-1.md",
-    "title": "代碼索引分片：Core Systems（上半，依檔名排序）",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/rival-governance/README.md",
+    "title": "G23 他國治理、外交與盛衰：有界驗證包",
     "category": "index"
   },
   {
     "id": "doc_index_1038",
-    "path": "docs/cross-ref/code/core-systems-2.md",
-    "title": "代碼索引分片：Core Systems（下半）",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/roster-identity/README.md",
+    "title": "G02 武將名冊與同名版本 / G14 重複名將轉生與分流",
     "category": "index"
   },
   {
     "id": "doc_index_1039",
-    "path": "docs/cross-ref/code/tools.md",
-    "title": "代碼索引分片：工具、建置與 Agent Skills",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/README.md",
+    "title": "G07 有界玩法證據包",
     "category": "index"
   },
   {
@@ -423,6 +423,30 @@
     "id": "doc_index_1046",
     "path": "docs/cross-ref/code/battle.md",
     "title": "代碼索引分片：Battle",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1047",
+    "path": "docs/cross-ref/code/core-shared.md",
+    "title": "代碼索引分片：Core 其他目錄與 Shared",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1048",
+    "path": "docs/cross-ref/code/core-systems-1.md",
+    "title": "代碼索引分片：Core Systems（上半，依檔名排序）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1049",
+    "path": "docs/cross-ref/code/core-systems-2.md",
+    "title": "代碼索引分片：Core Systems（下半）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1050",
+    "path": "docs/cross-ref/code/tools.md",
+    "title": "代碼索引分片：工具、建置與 Agent Skills",
     "category": "index"
   }
 ]

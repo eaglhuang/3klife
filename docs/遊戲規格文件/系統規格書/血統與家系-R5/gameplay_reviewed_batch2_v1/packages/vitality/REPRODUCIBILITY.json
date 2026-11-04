@@ -1,0 +1,21 @@
+{
+  "node": "v24.22.1",
+  "typescript": "5.9.3",
+  "command": "bash run.sh",
+  "dependencies": "Included compiler only; Node/Python standard library; no install/network",
+  "sourceValidation": "Git blob SHA-1 + SHA-256 of every evidence file",
+  "methodValidation": "TypeScript AST exact source substring, UTF-16 ranges, lines, method/body SHA-256; per-case calls",
+  "scope": "40 bounded probes; selected original helper modules and exact-source extracted functions/methods with injected collaborators",
+  "notRun": [
+    "Cocos",
+    "full GameSession/Dispatcher constructors",
+    "real persistence",
+    "browser/UI",
+    "repository full suite",
+    "type-check"
+  ],
+  "developmentCorrections": [
+    "Three early resolver probes used ultimate ID as battleSkillId. The harness was corrected to canonical cao-cao-revelry and rerun. No product sources were changed.",
+    "Canonical data established actual ult-cao-cao-4 cost at 8%; final dispatcher probes use original loader lookup against bundled canonical JSON, not the initial synthetic 20% cost."
+  ]
+}

@@ -1,0 +1,502 @@
+{
+  "summary": {
+    "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+    "total": 38,
+    "pass": 38,
+    "fail": 0,
+    "reproducedBoundaries": 14,
+    "fullAcceptance": "NOT_RUN",
+    "productionRepoChanged": false
+  },
+  "probes": [
+    {
+      "id": "P01",
+      "title": "六名士準確率等號與剛超過界線",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": [
+        {
+          "id": "zhuge-liang",
+          "accuracy": 0.85
+        },
+        {
+          "id": "hua-tuo",
+          "accuracy": 0.8
+        },
+        {
+          "id": "sima-hui",
+          "accuracy": 0.75
+        },
+        {
+          "id": "xu-shao",
+          "accuracy": 0.8
+        },
+        {
+          "id": "pang-tong",
+          "accuracy": 0.85
+        },
+        {
+          "id": "zuo-ci",
+          "accuracy": 0.7
+        }
+      ]
+    },
+    {
+      "id": "P02",
+      "title": "偏好權重3:1 deterministic 邊界",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "blueUpperExclusive": 0.75
+      }
+    },
+    {
+      "id": "P03",
+      "title": "無候選與未知名士不擲骰不消耗",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "rngCalls": 0
+      }
+    },
+    {
+      "id": "P04",
+      "title": "扭曲預言換色與池外關鍵詞",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "sageId": "zhuge-liang",
+        "outcome": "predicted",
+        "consumed": true,
+        "prophecy": {
+          "color": "pink",
+          "factorId": "pink-decoy",
+          "keyword": "適性",
+          "isDistorted": true
+        }
+      }
+    },
+    {
+      "id": "P05",
+      "title": "未知名士、鎖定名士、無令、無候選 caller 零扣款",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": [
+        "no-such-sage",
+        "sage-locked",
+        "no-token",
+        "no-candidate"
+      ]
+    },
+    {
+      "id": "P06",
+      "title": "成功與扭曲都扣1令增加1次並呼叫存檔",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": [
+        {
+          "distorted": false,
+          "tokens": 1,
+          "count": 1
+        },
+        {
+          "distorted": true,
+          "tokens": 1,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "P07",
+      "title": "同季同對父母重做每次消耗，不緩存免費重看",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "count": 2,
+        "tokens": 1,
+        "saves": 2
+      }
+    },
+    {
+      "id": "P08",
+      "title": "一令同時兩次預言只有一次成功",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": [
+        "predicted",
+        "no-token"
+      ]
+    },
+    {
+      "id": "P09",
+      "title": "49→50次解鎖龐統；99→100次左慈",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "pangTong": 50,
+        "zuoCi": 100,
+        "leftProvisional": true
+      }
+    },
+    {
+      "id": "P10",
+      "title": "占卜覺醒原因子，二次無候選不扣令",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "outcomes": [
+          "awakened",
+          "no-candidate"
+        ],
+        "tokens": 2
+      }
+    },
+    {
+      "id": "P11",
+      "title": "扭曲占卜不改因子但照扣令",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "outcome": "distorted",
+        "tokens": 2
+      }
+    },
+    {
+      "id": "P12",
+      "title": "付費預言不改父母、候選池或新增出生結果",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "rosterUnchanged": true,
+        "poolUnchanged": true,
+        "scope": "No claim about unexecuted BreedingService/NurtureService"
+      }
+    },
+    {
+      "id": "P13",
+      "title": "預言存檔失敗仍保留已扣令與次數",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "tokens": 0,
+        "count": 1,
+        "durableFixtureSaves": 0
+      }
+    },
+    {
+      "id": "P14",
+      "title": "占卜存檔失敗後覺醒與扣令未回滾",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "awakened": true,
+        "tokens": 0
+      }
+    },
+    {
+      "id": "P15",
+      "title": "零求籤令也顯示未解鎖因子方向",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "direction": "未解鎖方向：體魄",
+        "tokens": 0,
+        "nameLeaked": false
+      }
+    },
+    {
+      "id": "P16",
+      "title": "預言顯示色彩與關鍵詞，不暴露isDistorted旗標",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "notice": "諸葛亮：『觀此子星盤，屬性之才盡得祖脈。』 · 色彩傾向：屬性"
+      }
+    },
+    {
+      "id": "P17",
+      "title": "預言記憶只在controller，同一存檔重建controller無結果",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "newControllerNotice": "",
+        "count": 1,
+        "qualification": "Potential product requirement gap, not necessarily mandated persistence"
+      }
+    },
+    {
+      "id": "M01",
+      "title": "試用券成功扣1張、6日、100%數值",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "days": 6,
+        "stats": {
+          "STR": 80,
+          "INT": 60,
+          "POL": 70,
+          "CHR": 70,
+          "LUK": 50
+        },
+        "upkeep": {
+          "uid": "m",
+          "status": "Active",
+          "unpaidDays": 0,
+          "frozenDaysLeft": 0
+        }
+      }
+    },
+    {
+      "id": "M02",
+      "title": "試用券無券、空template id、重複uid均不改狀態",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": [
+        "no-ticket",
+        "no-general",
+        "uid-taken"
+      ]
+    },
+    {
+      "id": "M03",
+      "title": "六日倒數好感60，第七日離隊並30日冷卻，重推不重發信",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "departureDay": 7,
+        "availableDay": 37,
+        "letters": 1
+      }
+    },
+    {
+      "id": "M04",
+      "title": "冷卻第29天阻擋、第30天可用",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "blocked": 36,
+        "available": 37
+      }
+    },
+    {
+      "id": "M05",
+      "title": "R/SR/SSR/UR原函式費用100/300/600/1200",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "R": 100,
+        "SR": 300,
+        "SSR": 600,
+        "UR": 1200
+      }
+    },
+    {
+      "id": "M06",
+      "title": "Q42要求SSR/UR美酒，實作points可成，wine拒絕未定",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "SSR": {
+          "pointsAllowed": true,
+          "wine": "wine-path-undecided"
+        },
+        "UR": {
+          "pointsAllowed": true,
+          "wine": "wine-path-undecided"
+        }
+      }
+    },
+    {
+      "id": "M07",
+      "title": "結義失敗門檻依序不扣點不入冊",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": [
+        "trial-incomplete",
+        "not-trial",
+        "affection-not-full",
+        "general-mismatch"
+      ]
+    },
+    {
+      "id": "M08",
+      "title": "正常結義R扣100入冊一次再做拒絕",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "points": 900,
+        "roster": 1,
+        "saves": 1,
+        "second": "not-trial"
+      }
+    },
+    {
+      "id": "M09",
+      "title": "已擁有同ID時仍扣100轉Bonded，未入冊也未存檔",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "ok": true,
+        "rosterAdded": false,
+        "points": 900,
+        "saves": 0
+      }
+    },
+    {
+      "id": "M10",
+      "title": "結義存檔失敗留下扣點、入冊、Bonded；重試not-trial",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "points": 900,
+        "roster": 1,
+        "status": "Bonded",
+        "retry": "not-trial"
+      }
+    },
+    {
+      "id": "M11",
+      "title": "招募存檔失敗仍扣券留傭兵，重試uid-taken",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "ticket": 0,
+        "mercenaries": 1,
+        "retry": "uid-taken"
+      }
+    },
+    {
+      "id": "M12",
+      "title": "完成結義仍保留插畫4，不推進規格5",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "storedStage": 4,
+        "derivedStage": 5,
+        "status": "Bonded"
+      }
+    },
+    {
+      "id": "M13",
+      "title": "敗北平手記場不記勝，三勝插畫3，永久者不變",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "battles": 5,
+        "wins": 3,
+        "stage": 3
+      }
+    },
+    {
+      "id": "M14",
+      "title": "戰績caller僅deployed uid計數，ongoing不計",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": [
+        {
+          "uid": "one",
+          "battles": 1,
+          "wins": 1
+        },
+        {
+          "uid": "two",
+          "battles": 0,
+          "wins": 0
+        }
+      ]
+    },
+    {
+      "id": "M15",
+      "title": "重播戰果沒有battle id去重，計數加二",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "wins": 2,
+        "scope": "Helper/caller replay behavior, not proof UI emits duplicates"
+      }
+    },
+    {
+      "id": "M16",
+      "title": "薪俸原函式凍結1日及補繳路徑",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "freeze": {
+          "uid": "m",
+          "status": "Frozen",
+          "unpaidDays": 1,
+          "frozenDaysLeft": 1
+        },
+        "unpaidNext": {
+          "uid": "m",
+          "status": "Departed",
+          "unpaidDays": 2,
+          "frozenDaysLeft": 0
+        },
+        "repay": {
+          "uid": "m",
+          "status": "Active",
+          "unpaidDays": 0,
+          "frozenDaysLeft": 0
+        }
+      }
+    },
+    {
+      "id": "M17",
+      "title": "季度共用日tick未處理Frozen薪俸仍加好感",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "upkeep": {
+          "uid": "m",
+          "status": "Frozen",
+          "unpaidDays": 1,
+          "frozenDaysLeft": 1
+        },
+        "affection": 20
+      }
+    },
+    {
+      "id": "M18",
+      "title": "傭兵儲存模型JSON往返保留狀態/戰績/冷卻",
+      "status": "PASS",
+      "classification": "PASS_BOUNDED_EXPECTATION",
+      "observed": {
+        "roundTrip": true,
+        "notProductionDiskSave": true
+      }
+    },
+    {
+      "id": "M19",
+      "title": "六筆Expired/Bonded舊列仍佔六格而關閉招募按鈕",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "rows": 6,
+        "activeTrialCount": 0,
+        "hireEnabled": false
+      }
+    },
+    {
+      "id": "M20",
+      "title": "30日冷卻已過，Lobby仍把Expired generalId排除招募池",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "cooldownHelperAllows": true,
+        "lobbyHire": false,
+        "notice": "目前沒有可試用的武將"
+      }
+    },
+    {
+      "id": "M21",
+      "title": "面板結義啟用未檢查好感60，caller最終拒絕",
+      "status": "PASS",
+      "classification": "REPRODUCED_BOUNDARY_OR_DEFECT",
+      "observed": {
+        "buttonEnabled": true,
+        "callerReason": "affection-not-full"
+      }
+    }
+  ]
+}

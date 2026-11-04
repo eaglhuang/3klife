@@ -11,6 +11,11 @@
 | `doc_spec_0290` | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_本地AI回覆更正與證據分帳報告.md | 3KLife R5 本地 AI 回覆更正與證據分帳報告 |
 | `doc_spec_0291` | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/全玩法覆蓋清單.md | 3KLife 全玩法第一階段：分母與未驗缺口 |
 | `doc_spec_0292` | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/跨系統待驗邊界.md | 跨系統待驗邊界 |
+| `doc_spec_0293` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/總覽與驗收界線.md | 全玩法研究第二批：招募、名冊、治理與精力 |
+| `doc_spec_0294` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/recruitment-prophecy/名士與傭兵驗證報告.md | G10 名士預言 / G11 傭兵試用與永久招募 |
+| `doc_spec_0295` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/rival-governance/他國治理外交與盛衰報告.md | G23 他國治理外交與盛衰 |
+| `doc_spec_0296` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/roster-identity/名冊與重複流轉報告.md | 名冊與重複流轉報告 |
+| `doc_spec_0297` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/REPORT.md | G07 精力、疲勞、恢復與加速卡：有界玩法驗證 |
 
 ## 索引類 (`doc_index`)
 
@@ -76,10 +81,10 @@
 | `doc_index_1033` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/README.md | 血統遺傳與全玩法文件補全工作包 |
 | `doc_index_1034` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/README.md | 工作包驗證說明 |
 | `doc_index_1035` | docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/README.md | 3KLife 全玩法盤點第一階段 |
-| `doc_index_1036` | docs/cross-ref/code/core-shared.md | 代碼索引分片：Core 其他目錄與 Shared |
-| `doc_index_1037` | docs/cross-ref/code/core-systems-1.md | 代碼索引分片：Core Systems（上半，依檔名排序） |
-| `doc_index_1038` | docs/cross-ref/code/core-systems-2.md | 代碼索引分片：Core Systems（下半） |
-| `doc_index_1039` | docs/cross-ref/code/tools.md | 代碼索引分片：工具、建置與 Agent Skills |
+| `doc_index_1036` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/recruitment-prophecy/README.md | 名士預言與傭兵：有界原碼驗證包 |
+| `doc_index_1037` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/rival-governance/README.md | G23 他國治理、外交與盛衰：有界驗證包 |
+| `doc_index_1038` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/roster-identity/README.md | G02 武將名冊與同名版本 / G14 重複名將轉生與分流 |
+| `doc_index_1039` | docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/README.md | G07 有界玩法證據包 |
 | `doc_index_1040` | docs/cross-ref/code/ui-spec-json.md | 代碼索引分片：UI Spec JSON 畫面表 |
 | `doc_index_1041` | docs/cross-ref/code/ui.md | 代碼索引分片：UI |
 | `doc_index_1042` | docs/cross-ref/progress/d1a-rejudge.md | 進度索引分片：D-1a 邏輯欄重判紀錄 |
@@ -87,3 +92,7 @@
 | `doc_index_1044` | docs/cross-ref/progress/spec-audit-lifespan.md | 規格逐條比對：武將壽命系統.md (doc_spec_0018) |
 | `doc_index_1045` | docs/cross-ref/progress/spec-audit-officer.md | 規格逐條比對：官職系統.md (doc_spec_0014) |
 | `doc_index_1046` | docs/cross-ref/code/battle.md | 代碼索引分片：Battle |
+| `doc_index_1047` | docs/cross-ref/code/core-shared.md | 代碼索引分片：Core 其他目錄與 Shared |
+| `doc_index_1048` | docs/cross-ref/code/core-systems-1.md | 代碼索引分片：Core Systems（上半，依檔名排序） |
+| `doc_index_1049` | docs/cross-ref/code/core-systems-2.md | 代碼索引分片：Core Systems（下半） |
+| `doc_index_1050` | docs/cross-ref/code/tools.md | 代碼索引分片：工具、建置與 Agent Skills |

@@ -1,0 +1,4445 @@
+{
+  "mechanism": "Outside-body invocation wrappers, original bodies unchanged; no argument values collected",
+  "cases": {
+    "P01": [
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      }
+    ],
+    "P02": [
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      }
+    ],
+    "P03": [
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      }
+    ],
+    "P04": [
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      }
+    ],
+    "P05": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "getSage",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "oracleCount",
+        "kind": "getter",
+        "line": 766,
+        "method_sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+        "end_line": 768
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "getSage",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "oracleCount",
+        "kind": "getter",
+        "line": 766,
+        "method_sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+        "end_line": 768
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "oracleCount",
+        "kind": "getter",
+        "line": 766,
+        "method_sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+        "end_line": 768
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "oracleCount",
+        "kind": "getter",
+        "line": 766,
+        "method_sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+        "end_line": 768
+      }
+    ],
+    "P06": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "oracleCount",
+        "kind": "getter",
+        "line": 766,
+        "method_sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+        "end_line": 768
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "oracleCount",
+        "kind": "getter",
+        "line": 766,
+        "method_sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+        "end_line": 768
+      }
+    ],
+    "P07": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "oracleCount",
+        "kind": "getter",
+        "line": 766,
+        "method_sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+        "end_line": 768
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      }
+    ],
+    "P08": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "oracleCount",
+        "kind": "getter",
+        "line": 766,
+        "method_sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+        "end_line": 768
+      }
+    ],
+    "P09": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      }
+    ],
+    "P10": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "divineFactor",
+        "kind": "method",
+        "line": 3199,
+        "method_sha256": "60d1717efb2adc44b217c33812e381fb994f4ebfca60925ef47e69b42f1f2920",
+        "end_line": 3219
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "divineFactor",
+        "kind": "function",
+        "line": 106
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorAwakening.ts",
+        "symbol": "listAwakeningCandidates",
+        "kind": "function",
+        "line": 142
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorAwakening.ts",
+        "symbol": "awakenFactor",
+        "kind": "function",
+        "line": 65
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "divineFactor",
+        "kind": "method",
+        "line": 3199,
+        "method_sha256": "60d1717efb2adc44b217c33812e381fb994f4ebfca60925ef47e69b42f1f2920",
+        "end_line": 3219
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "divineFactor",
+        "kind": "function",
+        "line": 106
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorAwakening.ts",
+        "symbol": "listAwakeningCandidates",
+        "kind": "function",
+        "line": 142
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "oracleCount",
+        "kind": "getter",
+        "line": 766,
+        "method_sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+        "end_line": 768
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      }
+    ],
+    "P11": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "divineFactor",
+        "kind": "method",
+        "line": 3199,
+        "method_sha256": "60d1717efb2adc44b217c33812e381fb994f4ebfca60925ef47e69b42f1f2920",
+        "end_line": 3219
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "divineFactor",
+        "kind": "function",
+        "line": 106
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorAwakening.ts",
+        "symbol": "listAwakeningCandidates",
+        "kind": "function",
+        "line": 142
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "oracleCount",
+        "kind": "getter",
+        "line": 766,
+        "method_sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+        "end_line": 768
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      }
+    ],
+    "P12": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      }
+    ],
+    "P13": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "oracleCount",
+        "kind": "getter",
+        "line": 766,
+        "method_sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+        "end_line": 768
+      }
+    ],
+    "P14": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "divineFactor",
+        "kind": "method",
+        "line": 3199,
+        "method_sha256": "60d1717efb2adc44b217c33812e381fb994f4ebfca60925ef47e69b42f1f2920",
+        "end_line": 3219
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "divineFactor",
+        "kind": "function",
+        "line": 106
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorAwakening.ts",
+        "symbol": "listAwakeningCandidates",
+        "kind": "function",
+        "line": 142
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorAwakening.ts",
+        "symbol": "awakenFactor",
+        "kind": "function",
+        "line": 65
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      }
+    ],
+    "P15": [
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "SageOracleController",
+        "kind": "constructor",
+        "line": 104
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "getView",
+        "kind": "method",
+        "line": 171
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "targets",
+        "kind": "method",
+        "line": 115
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "_resolveTarget",
+        "kind": "method",
+        "line": 233
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "targets",
+        "kind": "method",
+        "line": 115
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "sage",
+        "kind": "getter",
+        "line": 126
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "_resolveCouple",
+        "kind": "method",
+        "line": 242
+      },
+      {
+        "path": "assets/scripts/ui/core/OracleLockedText.ts",
+        "symbol": "oracleLockedText",
+        "kind": "function",
+        "line": 15
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorAwakening.ts",
+        "symbol": "listAwakeningCandidates",
+        "kind": "function",
+        "line": 142
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/systems/SageFactorPreview.ts",
+        "symbol": "previewLockedFactorDirections",
+        "kind": "function",
+        "line": 22
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorInheritance.ts",
+        "symbol": "normalizeFactorColor",
+        "kind": "function",
+        "line": 130
+      },
+      {
+        "path": "assets/scripts/core/systems/FactorVisibility.ts",
+        "symbol": "isFactorLevelUnlocked",
+        "kind": "function",
+        "line": 86
+      }
+    ],
+    "P16": [
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "SageOracleController",
+        "kind": "constructor",
+        "line": 104
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "open",
+        "kind": "method",
+        "line": 131
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "predict",
+        "kind": "method",
+        "line": 152
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "_resolveCouple",
+        "kind": "method",
+        "line": 242
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "sage",
+        "kind": "getter",
+        "line": 126
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "_describeProphecy",
+        "kind": "method",
+        "line": 250
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "getView",
+        "kind": "method",
+        "line": 171
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "targets",
+        "kind": "method",
+        "line": 115
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "_resolveTarget",
+        "kind": "method",
+        "line": 233
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "targets",
+        "kind": "method",
+        "line": 115
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "sage",
+        "kind": "getter",
+        "line": 126
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "_resolveCouple",
+        "kind": "method",
+        "line": 242
+      },
+      {
+        "path": "assets/scripts/ui/core/OracleLockedText.ts",
+        "symbol": "oracleLockedText",
+        "kind": "function",
+        "line": 15
+      }
+    ],
+    "P17": [
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "SageOracleController",
+        "kind": "constructor",
+        "line": 104
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "open",
+        "kind": "method",
+        "line": 131
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "predict",
+        "kind": "method",
+        "line": 152
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "_resolveCouple",
+        "kind": "method",
+        "line": 242
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "sage",
+        "kind": "getter",
+        "line": 126
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "predictOffspring",
+        "kind": "method",
+        "line": 3225,
+        "method_sha256": "68301eaf1baf93088ee17cb1288d59398235b987235673007f1d91ffc349054e",
+        "end_line": 3237
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "predictOffspring",
+        "kind": "function",
+        "line": 183
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_spendOracleToken",
+        "kind": "method",
+        "line": 3240,
+        "method_sha256": "5cfdea53e47a1e42b948cf27092ccc048fef58d061f5c844218631bb2588de3e",
+        "end_line": 3247
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "_describeProphecy",
+        "kind": "method",
+        "line": 250
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "SageOracleController",
+        "kind": "constructor",
+        "line": 104
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "open",
+        "kind": "method",
+        "line": 131
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "getView",
+        "kind": "method",
+        "line": 171
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "targets",
+        "kind": "method",
+        "line": 115
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "_resolveTarget",
+        "kind": "method",
+        "line": 233
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "targets",
+        "kind": "method",
+        "line": 115
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "sage",
+        "kind": "getter",
+        "line": 126
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "_resolveCouple",
+        "kind": "method",
+        "line": 242
+      },
+      {
+        "path": "assets/scripts/ui/core/OracleLockedText.ts",
+        "symbol": "oracleLockedText",
+        "kind": "function",
+        "line": 15
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "getView",
+        "kind": "method",
+        "line": 171
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "targets",
+        "kind": "method",
+        "line": 115
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "_resolveTarget",
+        "kind": "method",
+        "line": 233
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "targets",
+        "kind": "method",
+        "line": 115
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "sage",
+        "kind": "getter",
+        "line": 126
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "method",
+        "line": 1447,
+        "method_sha256": "2339132d7194a14c08a94fb92e10085947fb59cb6307dbea556e3a4168bada4b",
+        "end_line": 1449
+      },
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "symbol": "isSageUnlocked",
+        "kind": "function",
+        "line": 75
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "symbol": "_resolveCouple",
+        "kind": "method",
+        "line": 242
+      },
+      {
+        "path": "assets/scripts/ui/core/OracleLockedText.ts",
+        "symbol": "oracleLockedText",
+        "kind": "function",
+        "line": 15
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "oracleCount",
+        "kind": "getter",
+        "line": 766,
+        "method_sha256": "69913903881e5236488cd7dae2fde21cdb6a30cc80e0bb3b4c38877d969e3933",
+        "end_line": 768
+      }
+    ],
+    "M01": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "hireTrialMercenary",
+        "kind": "method",
+        "line": 1049,
+        "method_sha256": "f4753e0965616bb7fb9419521a20036540c177f95fd93c71e4708a8902bc9192",
+        "end_line": 1073
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "statsOfTemplate",
+        "kind": "function",
+        "line": 52
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialTicket.ts",
+        "symbol": "useTrialTicket",
+        "kind": "function",
+        "line": 56
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "createTrialMercenary",
+        "kind": "function",
+        "line": 40
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "inventory",
+        "kind": "getter",
+        "line": 761,
+        "method_sha256": "08183ee966e54b77e0d2acae77a07e597e477159cb688b8523f1b70901250a59",
+        "end_line": 763
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      }
+    ],
+    "M02": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "hireTrialMercenary",
+        "kind": "method",
+        "line": 1049,
+        "method_sha256": "f4753e0965616bb7fb9419521a20036540c177f95fd93c71e4708a8902bc9192",
+        "end_line": 1073
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "statsOfTemplate",
+        "kind": "function",
+        "line": 52
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialTicket.ts",
+        "symbol": "useTrialTicket",
+        "kind": "function",
+        "line": 56
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "hireTrialMercenary",
+        "kind": "method",
+        "line": 1049,
+        "method_sha256": "f4753e0965616bb7fb9419521a20036540c177f95fd93c71e4708a8902bc9192",
+        "end_line": 1073
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "statsOfTemplate",
+        "kind": "function",
+        "line": 52
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialTicket.ts",
+        "symbol": "useTrialTicket",
+        "kind": "function",
+        "line": 56
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "hireTrialMercenary",
+        "kind": "method",
+        "line": 1049,
+        "method_sha256": "f4753e0965616bb7fb9419521a20036540c177f95fd93c71e4708a8902bc9192",
+        "end_line": 1073
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      }
+    ],
+    "M03": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "method",
+        "line": 801,
+        "method_sha256": "ff3882304e4b53cf99dd7278a75eb3ff2fa03652afd3772f3d6862a30a16ea79",
+        "end_line": 807
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_tickMercenaryDay",
+        "kind": "method",
+        "line": 810,
+        "method_sha256": "adadda01b991948e4c4ba4523b280671c1676e268d2837d6fb81bce34754554b",
+        "end_line": 837
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "settleTrialRollover",
+        "kind": "function",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialDay.ts",
+        "symbol": "advanceTrialDay",
+        "kind": "function",
+        "line": 22
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+        "symbol": "applyDailyAffection",
+        "kind": "function",
+        "line": 32
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "method",
+        "line": 801,
+        "method_sha256": "ff3882304e4b53cf99dd7278a75eb3ff2fa03652afd3772f3d6862a30a16ea79",
+        "end_line": 807
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_tickMercenaryDay",
+        "kind": "method",
+        "line": 810,
+        "method_sha256": "adadda01b991948e4c4ba4523b280671c1676e268d2837d6fb81bce34754554b",
+        "end_line": 837
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "settleTrialRollover",
+        "kind": "function",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialDay.ts",
+        "symbol": "advanceTrialDay",
+        "kind": "function",
+        "line": 22
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+        "symbol": "applyDailyAffection",
+        "kind": "function",
+        "line": 32
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "method",
+        "line": 801,
+        "method_sha256": "ff3882304e4b53cf99dd7278a75eb3ff2fa03652afd3772f3d6862a30a16ea79",
+        "end_line": 807
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_tickMercenaryDay",
+        "kind": "method",
+        "line": 810,
+        "method_sha256": "adadda01b991948e4c4ba4523b280671c1676e268d2837d6fb81bce34754554b",
+        "end_line": 837
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "settleTrialRollover",
+        "kind": "function",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialDay.ts",
+        "symbol": "advanceTrialDay",
+        "kind": "function",
+        "line": 22
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+        "symbol": "applyDailyAffection",
+        "kind": "function",
+        "line": 32
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "method",
+        "line": 801,
+        "method_sha256": "ff3882304e4b53cf99dd7278a75eb3ff2fa03652afd3772f3d6862a30a16ea79",
+        "end_line": 807
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_tickMercenaryDay",
+        "kind": "method",
+        "line": 810,
+        "method_sha256": "adadda01b991948e4c4ba4523b280671c1676e268d2837d6fb81bce34754554b",
+        "end_line": 837
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "settleTrialRollover",
+        "kind": "function",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialDay.ts",
+        "symbol": "advanceTrialDay",
+        "kind": "function",
+        "line": 22
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+        "symbol": "applyDailyAffection",
+        "kind": "function",
+        "line": 32
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "method",
+        "line": 801,
+        "method_sha256": "ff3882304e4b53cf99dd7278a75eb3ff2fa03652afd3772f3d6862a30a16ea79",
+        "end_line": 807
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_tickMercenaryDay",
+        "kind": "method",
+        "line": 810,
+        "method_sha256": "adadda01b991948e4c4ba4523b280671c1676e268d2837d6fb81bce34754554b",
+        "end_line": 837
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "settleTrialRollover",
+        "kind": "function",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialDay.ts",
+        "symbol": "advanceTrialDay",
+        "kind": "function",
+        "line": 22
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+        "symbol": "applyDailyAffection",
+        "kind": "function",
+        "line": 32
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "method",
+        "line": 801,
+        "method_sha256": "ff3882304e4b53cf99dd7278a75eb3ff2fa03652afd3772f3d6862a30a16ea79",
+        "end_line": 807
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_tickMercenaryDay",
+        "kind": "method",
+        "line": 810,
+        "method_sha256": "adadda01b991948e4c4ba4523b280671c1676e268d2837d6fb81bce34754554b",
+        "end_line": 837
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "settleTrialRollover",
+        "kind": "function",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialDay.ts",
+        "symbol": "advanceTrialDay",
+        "kind": "function",
+        "line": 22
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+        "symbol": "applyDailyAffection",
+        "kind": "function",
+        "line": 32
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "method",
+        "line": 801,
+        "method_sha256": "ff3882304e4b53cf99dd7278a75eb3ff2fa03652afd3772f3d6862a30a16ea79",
+        "end_line": 807
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_tickMercenaryDay",
+        "kind": "method",
+        "line": 810,
+        "method_sha256": "adadda01b991948e4c4ba4523b280671c1676e268d2837d6fb81bce34754554b",
+        "end_line": 837
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "settleTrialRollover",
+        "kind": "function",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "generalNameOf",
+        "kind": "method",
+        "line": 840,
+        "method_sha256": "e5b1e899f1ff7eeb85f2a0c98d3913ee61abaf49e31e2df1bfa2f09ef19a978a",
+        "end_line": 843
+      },
+      {
+        "path": "assets/scripts/core/systems/FarewellLetterInbox.ts",
+        "symbol": "createFarewellLetter",
+        "kind": "function",
+        "line": 36
+      },
+      {
+        "path": "assets/scripts/core/systems/FarewellLetterInbox.ts",
+        "symbol": "appendFarewellLetter",
+        "kind": "function",
+        "line": 52
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "method",
+        "line": 801,
+        "method_sha256": "ff3882304e4b53cf99dd7278a75eb3ff2fa03652afd3772f3d6862a30a16ea79",
+        "end_line": 807
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_tickMercenaryDay",
+        "kind": "method",
+        "line": 810,
+        "method_sha256": "adadda01b991948e4c4ba4523b280671c1676e268d2837d6fb81bce34754554b",
+        "end_line": 837
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "settleTrialRollover",
+        "kind": "function",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialDay.ts",
+        "symbol": "advanceTrialDay",
+        "kind": "function",
+        "line": 22
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      }
+    ],
+    "M04": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "startCooldownAfterBond",
+        "kind": "function",
+        "line": 134
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "isGeneralAvailableForPool",
+        "kind": "function",
+        "line": 65
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "isGeneralAvailableForPool",
+        "kind": "function",
+        "line": 65
+      }
+    ],
+    "M05": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      }
+    ],
+    "M06": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      }
+    ],
+    "M07": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "method",
+        "line": 872,
+        "method_sha256": "d1b252cf3b7bdbb3e59ec6e2142cd3718a6fffc8979f0f0f330eaee498a6c32f",
+        "end_line": 891
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "function",
+        "line": 68
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "bondMercenary",
+        "kind": "function",
+        "line": 73
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "method",
+        "line": 872,
+        "method_sha256": "d1b252cf3b7bdbb3e59ec6e2142cd3718a6fffc8979f0f0f330eaee498a6c32f",
+        "end_line": 891
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "function",
+        "line": 68
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "bondMercenary",
+        "kind": "function",
+        "line": 73
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "method",
+        "line": 872,
+        "method_sha256": "d1b252cf3b7bdbb3e59ec6e2142cd3718a6fffc8979f0f0f330eaee498a6c32f",
+        "end_line": 891
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "function",
+        "line": 68
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "bondMercenary",
+        "kind": "function",
+        "line": 73
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "method",
+        "line": 872,
+        "method_sha256": "d1b252cf3b7bdbb3e59ec6e2142cd3718a6fffc8979f0f0f330eaee498a6c32f",
+        "end_line": 891
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "function",
+        "line": 68
+      }
+    ],
+    "M08": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "method",
+        "line": 872,
+        "method_sha256": "d1b252cf3b7bdbb3e59ec6e2142cd3718a6fffc8979f0f0f330eaee498a6c32f",
+        "end_line": 891
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "function",
+        "line": 68
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "bondMercenary",
+        "kind": "function",
+        "line": 73
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "startCooldownAfterBond",
+        "kind": "function",
+        "line": 134
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "addGenerals",
+        "kind": "method",
+        "line": 3654,
+        "method_sha256": "ac49db92589674acbb112dd0f0742cdc4300305086598ebbc03a1b530f5909fa",
+        "end_line": 3662
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "enrollGenerals",
+        "kind": "method",
+        "line": 3668,
+        "method_sha256": "0558108052b7a69ceffacb5d3a2044c710f6211776dd662098ccbfd1086c7a02",
+        "end_line": 3729
+      },
+      {
+        "path": "assets/scripts/core/systems/RosterRoleLoad.ts",
+        "symbol": "normalizeRosterRoles",
+        "kind": "function",
+        "line": 12
+      },
+      {
+        "path": "assets/scripts/core/models/GeneralRole.ts",
+        "symbol": "toCanonicalRole",
+        "kind": "function",
+        "line": 30
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "method",
+        "line": 872,
+        "method_sha256": "d1b252cf3b7bdbb3e59ec6e2142cd3718a6fffc8979f0f0f330eaee498a6c32f",
+        "end_line": 891
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "function",
+        "line": 68
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "bondMercenary",
+        "kind": "function",
+        "line": 73
+      }
+    ],
+    "M09": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "method",
+        "line": 872,
+        "method_sha256": "d1b252cf3b7bdbb3e59ec6e2142cd3718a6fffc8979f0f0f330eaee498a6c32f",
+        "end_line": 891
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "function",
+        "line": 68
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "bondMercenary",
+        "kind": "function",
+        "line": 73
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "startCooldownAfterBond",
+        "kind": "function",
+        "line": 134
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "addGenerals",
+        "kind": "method",
+        "line": 3654,
+        "method_sha256": "ac49db92589674acbb112dd0f0742cdc4300305086598ebbc03a1b530f5909fa",
+        "end_line": 3662
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "enrollGenerals",
+        "kind": "method",
+        "line": 3668,
+        "method_sha256": "0558108052b7a69ceffacb5d3a2044c710f6211776dd662098ccbfd1086c7a02",
+        "end_line": 3729
+      },
+      {
+        "path": "assets/scripts/core/systems/RosterRoleLoad.ts",
+        "symbol": "normalizeRosterRoles",
+        "kind": "function",
+        "line": 12
+      },
+      {
+        "path": "assets/scripts/core/models/GeneralRole.ts",
+        "symbol": "toCanonicalRole",
+        "kind": "function",
+        "line": 30
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      }
+    ],
+    "M10": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "method",
+        "line": 872,
+        "method_sha256": "d1b252cf3b7bdbb3e59ec6e2142cd3718a6fffc8979f0f0f330eaee498a6c32f",
+        "end_line": 891
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "function",
+        "line": 68
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "bondMercenary",
+        "kind": "function",
+        "line": 73
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "startCooldownAfterBond",
+        "kind": "function",
+        "line": 134
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "addGenerals",
+        "kind": "method",
+        "line": 3654,
+        "method_sha256": "ac49db92589674acbb112dd0f0742cdc4300305086598ebbc03a1b530f5909fa",
+        "end_line": 3662
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "enrollGenerals",
+        "kind": "method",
+        "line": 3668,
+        "method_sha256": "0558108052b7a69ceffacb5d3a2044c710f6211776dd662098ccbfd1086c7a02",
+        "end_line": 3729
+      },
+      {
+        "path": "assets/scripts/core/systems/RosterRoleLoad.ts",
+        "symbol": "normalizeRosterRoles",
+        "kind": "function",
+        "line": 12
+      },
+      {
+        "path": "assets/scripts/core/models/GeneralRole.ts",
+        "symbol": "toCanonicalRole",
+        "kind": "function",
+        "line": 30
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "method",
+        "line": 872,
+        "method_sha256": "d1b252cf3b7bdbb3e59ec6e2142cd3718a6fffc8979f0f0f330eaee498a6c32f",
+        "end_line": 891
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "function",
+        "line": 68
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "bondMercenary",
+        "kind": "function",
+        "line": 73
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      }
+    ],
+    "M11": [
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "hireTrialMercenary",
+        "kind": "method",
+        "line": 1049,
+        "method_sha256": "f4753e0965616bb7fb9419521a20036540c177f95fd93c71e4708a8902bc9192",
+        "end_line": 1073
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "statsOfTemplate",
+        "kind": "function",
+        "line": 52
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialTicket.ts",
+        "symbol": "useTrialTicket",
+        "kind": "function",
+        "line": 56
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "createTrialMercenary",
+        "kind": "function",
+        "line": 40
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "consumeItem",
+        "kind": "function",
+        "line": 82
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "hireTrialMercenary",
+        "kind": "method",
+        "line": 1049,
+        "method_sha256": "f4753e0965616bb7fb9419521a20036540c177f95fd93c71e4708a8902bc9192",
+        "end_line": 1073
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      }
+    ],
+    "M12": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "method",
+        "line": 872,
+        "method_sha256": "d1b252cf3b7bdbb3e59ec6e2142cd3718a6fffc8979f0f0f330eaee498a6c32f",
+        "end_line": 891
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "function",
+        "line": 68
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "bondMercenary",
+        "kind": "function",
+        "line": 73
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "symbol": "bondToPermanent",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "startCooldownAfterBond",
+        "kind": "function",
+        "line": 134
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "addGenerals",
+        "kind": "method",
+        "line": 3654,
+        "method_sha256": "ac49db92589674acbb112dd0f0742cdc4300305086598ebbc03a1b530f5909fa",
+        "end_line": 3662
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "enrollGenerals",
+        "kind": "method",
+        "line": 3668,
+        "method_sha256": "0558108052b7a69ceffacb5d3a2044c710f6211776dd662098ccbfd1086c7a02",
+        "end_line": 3729
+      },
+      {
+        "path": "assets/scripts/core/systems/RosterRoleLoad.ts",
+        "symbol": "normalizeRosterRoles",
+        "kind": "function",
+        "line": 12
+      },
+      {
+        "path": "assets/scripts/core/models/GeneralRole.ts",
+        "symbol": "toCanonicalRole",
+        "kind": "function",
+        "line": 30
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "illustrationStageOf",
+        "kind": "function",
+        "line": 42
+      }
+    ],
+    "M13": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+        "symbol": "recordTrialBattle",
+        "kind": "function",
+        "line": 16
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+        "symbol": "recordTrialBattle",
+        "kind": "function",
+        "line": 16
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+        "symbol": "recordTrialBattle",
+        "kind": "function",
+        "line": 16
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+        "symbol": "recordTrialBattle",
+        "kind": "function",
+        "line": 16
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+        "symbol": "recordTrialBattle",
+        "kind": "function",
+        "line": 16
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+        "symbol": "recordTrialBattle",
+        "kind": "function",
+        "line": 16
+      }
+    ],
+    "M14": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_recordTrialMercenaryBattles",
+        "kind": "method",
+        "line": 3751,
+        "method_sha256": "9200264144dd92441a401e5d81e7b708b636137d5521be3e15d3f7dd1507a507",
+        "end_line": 3763
+      },
+      {
+        "path": "assets/scripts/core/systems/BattleRoster.ts",
+        "symbol": "outcomeOf",
+        "kind": "function",
+        "line": 228
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_recordTrialMercenaryBattles",
+        "kind": "method",
+        "line": 3751,
+        "method_sha256": "9200264144dd92441a401e5d81e7b708b636137d5521be3e15d3f7dd1507a507",
+        "end_line": 3763
+      },
+      {
+        "path": "assets/scripts/core/systems/BattleRoster.ts",
+        "symbol": "outcomeOf",
+        "kind": "function",
+        "line": 228
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+        "symbol": "recordTrialBattle",
+        "kind": "function",
+        "line": 16
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      }
+    ],
+    "M15": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_recordTrialMercenaryBattles",
+        "kind": "method",
+        "line": 3751,
+        "method_sha256": "9200264144dd92441a401e5d81e7b708b636137d5521be3e15d3f7dd1507a507",
+        "end_line": 3763
+      },
+      {
+        "path": "assets/scripts/core/systems/BattleRoster.ts",
+        "symbol": "outcomeOf",
+        "kind": "function",
+        "line": 228
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+        "symbol": "recordTrialBattle",
+        "kind": "function",
+        "line": 16
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_recordTrialMercenaryBattles",
+        "kind": "method",
+        "line": 3751,
+        "method_sha256": "9200264144dd92441a401e5d81e7b708b636137d5521be3e15d3f7dd1507a507",
+        "end_line": 3763
+      },
+      {
+        "path": "assets/scripts/core/systems/BattleRoster.ts",
+        "symbol": "outcomeOf",
+        "kind": "function",
+        "line": 228
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+        "symbol": "recordTrialBattle",
+        "kind": "function",
+        "line": 16
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      }
+    ],
+    "M16": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "settleUpkeepDay",
+        "kind": "function",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "canDeployMercenary",
+        "kind": "function",
+        "line": 68
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "settleUpkeepDay",
+        "kind": "function",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "repayUpkeep",
+        "kind": "function",
+        "line": 114
+      }
+    ],
+    "M17": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "method",
+        "line": 801,
+        "method_sha256": "ff3882304e4b53cf99dd7278a75eb3ff2fa03652afd3772f3d6862a30a16ea79",
+        "end_line": 807
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "_tickMercenaryDay",
+        "kind": "method",
+        "line": 810,
+        "method_sha256": "adadda01b991948e4c4ba4523b280671c1676e268d2837d6fb81bce34754554b",
+        "end_line": 837
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "settleTrialRollover",
+        "kind": "function",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialDay.ts",
+        "symbol": "advanceTrialDay",
+        "kind": "function",
+        "line": 22
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "advanceMercenaryDay",
+        "kind": "function",
+        "line": 53
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+        "symbol": "applyDailyAffection",
+        "kind": "function",
+        "line": 32
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "symbol": "advanceIllustrationStage",
+        "kind": "function",
+        "line": 54
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "save",
+        "kind": "method",
+        "line": 4200,
+        "method_sha256": "147d4a3e638e7ed144d331c0afaef7f379380de6a57feabc6964c14e28c56b44",
+        "end_line": 4206
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      }
+    ],
+    "M18": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "normalizeMercenaryBundle",
+        "kind": "function",
+        "line": 102
+      }
+    ],
+    "M19": [
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "MercenaryPanelController",
+        "kind": "constructor",
+        "line": 45
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "getFlowView",
+        "kind": "method",
+        "line": 129
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "rows",
+        "kind": "method",
+        "line": 52
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "selected",
+        "kind": "method",
+        "line": 57
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "rows",
+        "kind": "method",
+        "line": 52
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "view",
+        "kind": "method",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "selected",
+        "kind": "method",
+        "line": 57
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "rows",
+        "kind": "method",
+        "line": 52
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryPanelView.ts",
+        "symbol": "buildMercenaryPanelView",
+        "kind": "function",
+        "line": 41
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "canBondMercenary",
+        "kind": "function",
+        "line": 45
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryNameplateRows.ts",
+        "symbol": "buildMercenaryNameplateRows",
+        "kind": "function",
+        "line": 32
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "rows",
+        "kind": "method",
+        "line": 52
+      }
+    ],
+    "M20": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "symbol": "createUpkeepState",
+        "kind": "function",
+        "line": 63
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaryDay",
+        "kind": "getter",
+        "line": 792,
+        "method_sha256": "675d152fc92cdcf4c8344dbe0ed7d7b6fbf9d61fe3074c454250ddabfc45418d",
+        "end_line": 794
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "symbol": "isGeneralAvailableForPool",
+        "kind": "function",
+        "line": 65
+      },
+      {
+        "path": "assets/scripts/ui/scenes/LobbyScene.ts",
+        "symbol": "_mountMercenaryPanel",
+        "kind": "method",
+        "line": 1729,
+        "method_sha256": "2a570b0e6134c3d4ef4dbf651f629a536e526db5a9599fd02a7df4f4bcef4f1e",
+        "end_line": 1771
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "MercenaryPanelController",
+        "kind": "constructor",
+        "line": 45
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "hireTrial",
+        "kind": "method",
+        "line": 94
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "getFlowView",
+        "kind": "method",
+        "line": 129
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "rows",
+        "kind": "method",
+        "line": 52
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "selected",
+        "kind": "method",
+        "line": 57
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "rows",
+        "kind": "method",
+        "line": 52
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "view",
+        "kind": "method",
+        "line": 81
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "selected",
+        "kind": "method",
+        "line": 57
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "symbol": "rows",
+        "kind": "method",
+        "line": 52
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "mercenaries",
+        "kind": "getter",
+        "line": 787,
+        "method_sha256": "e9e0e17738be3e225261f8e7bedcbca348eed60b807bc545abd5decf681e03fa",
+        "end_line": 789
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "symbol": "serializeMercenaryBundle",
+        "kind": "function",
+        "line": 33
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "rarityOfTemplate",
+        "kind": "function",
+        "line": 44
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryPanelView.ts",
+        "symbol": "buildMercenaryPanelView",
+        "kind": "function",
+        "line": 41
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "canBondMercenary",
+        "kind": "function",
+        "line": 45
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/core/managers/GameSession.ts",
+        "symbol": "itemCount",
+        "kind": "method",
+        "line": 1451,
+        "method_sha256": "d6d13426f7823713ca1cf49f2679ca8aa1057350dd064df8c2c623aca5b73a4f",
+        "end_line": 1453
+      },
+      {
+        "path": "assets/scripts/core/systems/PlayerInventory.ts",
+        "symbol": "itemCount",
+        "kind": "function",
+        "line": 70
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryNameplateRows.ts",
+        "symbol": "buildMercenaryNameplateRows",
+        "kind": "function",
+        "line": 32
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "rarityOfTemplate",
+        "kind": "function",
+        "line": 44
+      }
+    ],
+    "M21": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryPanelView.ts",
+        "symbol": "buildMercenaryPanelView",
+        "kind": "function",
+        "line": 41
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "canBondMercenary",
+        "kind": "function",
+        "line": 45
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "symbol": "bondMercenaryToRoster",
+        "kind": "function",
+        "line": 68
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "symbol": "bondMercenary",
+        "kind": "function",
+        "line": 73
+      }
+    ]
+  }
+}

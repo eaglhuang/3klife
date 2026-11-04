@@ -1,0 +1,306 @@
+[
+  {
+    "id": "G10",
+    "name": "名士預言與占卜",
+    "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+    "minimum_acceptance": "未解鎖名士、無候選、扭曲／準確預言、求籤令扣除、因子覺醒與保存",
+    "full_acceptance": "NOT_RUN",
+    "bounded_probes": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13",
+      "P14",
+      "P15",
+      "P16",
+      "P17"
+    ],
+    "source_candidates": [
+      {
+        "path": "assets/scripts/core/systems/SageDivination.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/SageFactorPreview.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/SageRegistry.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/SageRemarks.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/ui/core/OracleLockedText.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/ui/core/SageOracleController.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      }
+    ],
+    "test_candidates": [
+      {
+        "path": "tests/OracleLockedText.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/OracleTokenText.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/SageAccuracySpec.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/SageDivination.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/SageFactorPreview.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/SageOracle.test.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_NOT_FORMAL_SUITE_RUN"
+      },
+      {
+        "path": "tests/SageOracleDirectionHint.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/SageProphecy.test.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_NOT_FORMAL_SUITE_RUN"
+      },
+      {
+        "path": "tests/SageRegistry.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/SageRemarks.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      }
+    ],
+    "spec_candidates": [
+      {
+        "path": "docs/遊戲規格文件/系統規格書/名士預言系統.md",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "docs/遊戲規格文件/討論來源/名士預言：血統模擬器新玩法.md",
+        "status": "NOT_READ_NOT_RUN"
+      }
+    ]
+  },
+  {
+    "id": "G11",
+    "name": "傭兵試用與永久招募",
+    "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+    "minimum_acceptance": "入池→試用倒數→好感／薪俸→結義扣點→永久名冊或離隊冷卻；試用戰敗保護",
+    "full_acceptance": "NOT_RUN",
+    "bounded_probes": [
+      "M01",
+      "M02",
+      "M03",
+      "M04",
+      "M05",
+      "M06",
+      "M07",
+      "M08",
+      "M09",
+      "M10",
+      "M11",
+      "M12",
+      "M13",
+      "M14",
+      "M15",
+      "M16",
+      "M17",
+      "M18",
+      "M19",
+      "M20",
+      "M21"
+    ],
+    "source_candidates": [
+      {
+        "path": "assets/scripts/core/systems/MercenaryAffection.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBattleRecord.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBond.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryBondPermanent.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryDeparture.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryFarewellPresenter.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryIllustration.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryPanelView.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryPoolPresenter.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryRoster.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenarySaveModel.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialDay.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryTrialTicket.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/core/systems/MercenaryUpkeep.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryNameplateRows.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      }
+    ],
+    "test_candidates": [
+      {
+        "path": "tests/GameSessionMercenary.test.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_NOT_FORMAL_SUITE_RUN"
+      },
+      {
+        "path": "tests/GameSessionMercenaryBattle.test.ts",
+        "status": "EXACT_SNAPSHOT_PRESENT_NOT_FORMAL_SUITE_RUN"
+      },
+      {
+        "path": "tests/GameSessionMercenaryDay.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/HallMercenaryFlowE2E.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryAffection.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryBattleRecord.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryBattleSaveChainE2E.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryBond.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryBondPermanent.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryDeparture.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryFarewellPresenter.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryIllustration.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryOathWiring.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryPanelController.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryPanelView.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryPoolPresenter.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryRoster.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenarySaveModel.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenarySaveWire.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryTrialDay.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryTrialTicket.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "tests/MercenaryUpkeep.test.ts",
+        "status": "NOT_READ_NOT_RUN"
+      }
+    ],
+    "spec_candidates": [
+      {
+        "path": "docs/遊戲規格文件/系統規格書/傭兵系統（試用）.md",
+        "status": "EXACT_SNAPSHOT_PRESENT_BOUNDED_INSPECTION"
+      },
+      {
+        "path": "docs/遊戲規格文件/討論來源/傭兵系統規格書：人才經營進化.md",
+        "status": "NOT_READ_NOT_RUN"
+      },
+      {
+        "path": "docs/遊戲規格文件/討論來源/傭兵系統規格書：試用轉永久.md",
+        "status": "NOT_READ_NOT_RUN"
+      }
+    ]
+  }
+]

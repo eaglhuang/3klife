@@ -1,0 +1,44 @@
+[
+  {
+    "path": "core/systems/MercenaryBond.ts",
+    "status": "IMPORT_OK_NOT_FULL_SUITE"
+  },
+  {
+    "path": "core/systems/MercenaryBondPermanent.ts",
+    "status": "IMPORT_OK_NOT_FULL_SUITE"
+  },
+  {
+    "path": "core/systems/MercenaryUpkeep.ts",
+    "status": "IMPORT_OK_NOT_FULL_SUITE"
+  },
+  {
+    "path": "core/systems/MercenaryTrialDay.ts",
+    "status": "NOT_RUN_NATIVE_MODULE",
+    "name": "SyntaxError",
+    "reason": "The requested module './MercenaryBond' does not provide an export named 'MercenaryResult'"
+  },
+  {
+    "path": "core/systems/MercenaryRoster.ts",
+    "status": "NOT_RUN_NATIVE_MODULE",
+    "name": "Error",
+    "reason": "Cannot find module '<PACKAGE_ROOT>/evidence/assets/scripts/core/config/Constants' imported from <PACKAGE_ROOT>/evidence/assets/scripts/core/models/GeneralUnit.ts"
+  },
+  {
+    "path": "core/systems/SageDivination.ts",
+    "status": "NOT_RUN_NATIVE_MODULE",
+    "name": "SyntaxError",
+    "reason": "The requested module './FactorInheritance' does not provide an export named 'FactorColor'"
+  },
+  {
+    "path": "ui/core/SageOracleController.ts",
+    "status": "NOT_RUN_NATIVE_MODULE",
+    "name": "SyntaxError",
+    "reason": "TypeScript parameter property is not supported in strip-only mode"
+  },
+  {
+    "path": "core/managers/GameSession.ts",
+    "status": "NOT_RUN_NATIVE_MODULE",
+    "name": "Error",
+    "reason": "Cannot find module '<PACKAGE_ROOT>/evidence/assets/scripts/core/utils/UCUFLogger' imported from <PACKAGE_ROOT>/evidence/assets/scripts/core/managers/GameSession.ts"
+  }
+]

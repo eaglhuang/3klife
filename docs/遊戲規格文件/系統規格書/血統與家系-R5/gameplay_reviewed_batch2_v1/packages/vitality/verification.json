@@ -1,0 +1,16 @@
+{
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "dateUTC": "2026-11-04",
+  "sourceFilesVerified": 34,
+  "probesPassed": 40,
+  "probesFailed": 0,
+  "method": "bounded direct imports + exact-source AST injected harness",
+  "portableReplay": "PASS",
+  "fullGameplayAcceptance": "NOT_RUN",
+  "productCodeModified": false,
+  "portableReplayCommand": "bash run.sh after ZIP extraction in separate directory",
+  "portableReplayExitCode": 0,
+  "portableArtifactHashesAfterReplay": "PASS",
+  "whitelistOnly": true,
+  "transpilationOnlyNotTypecheck": true
+}

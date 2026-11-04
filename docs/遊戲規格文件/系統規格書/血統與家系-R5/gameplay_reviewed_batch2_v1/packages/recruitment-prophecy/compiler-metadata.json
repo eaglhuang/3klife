@@ -1,0 +1,19 @@
+{
+  "runtime": "v24.22.1",
+  "typescript_transform_api": "node:module.stripTypeScriptTypes",
+  "mode": "transform",
+  "amaro": "1.1.11",
+  "builtin_compiler": true,
+  "vendored_compiler": false,
+  "installation_required": false,
+  "release": {
+    "name": "node",
+    "lts": "Krypton",
+    "sourceUrl": "https://nodejs.org/download/release/v24.22.1/node-v24.22.1.tar.gz",
+    "headersUrl": "https://nodejs.org/download/release/v24.22.1/node-v24.22.1-headers.tar.gz"
+  },
+  "official_documentation": "https://nodejs.org/download/release/v24.22.1/docs/api/module.html#modulestriptypescripttypescode-options",
+  "official_license": "https://github.com/nodejs/node/blob/v24.22.1/LICENSE",
+  "license_bundled": false,
+  "license_note": "No compiler code is redistributed; runtime supplied by recipient. Official Node release includes constituent component licenses."
+}

@@ -1,0 +1,776 @@
+{
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "compiler": "5.9.3",
+  "scope": "Original complete modules or exact full AST nodes in memory; dependency fixtures declared in README. No product edits; no full GameSession/Lobby module or UI E2E.",
+  "full_acceptance": {
+    "G01": "NOT_RUN",
+    "G02": "NOT_RUN",
+    "G14": "NOT_RUN"
+  },
+  "total": 44,
+  "passed": 44,
+  "failed": 0,
+  "results": [
+    {
+      "id": "RI01",
+      "title": "Same template, distinct UID coexist without overwrite",
+      "kind": "OBSERVED_BEHAVIOR",
+      "status": "PASS",
+      "observation": {
+        "roster": [
+          {
+            "id": "u-1",
+            "templateId": "Zhao_Yun_V1"
+          },
+          {
+            "id": "u-2",
+            "templateId": "Zhao_Yun_V1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "RI02",
+      "title": "Same bloodline, different version remains separately held",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "count": 2,
+        "formation": {
+          "ok": false,
+          "issues": [
+            "SAME_BLOODLINE"
+          ]
+        }
+      }
+    },
+    {
+      "id": "RI03",
+      "title": "Repeated identical UID does not append",
+      "kind": "OBSERVED_BEHAVIOR",
+      "status": "PASS",
+      "observation": {
+        "count": 1,
+        "storedName": "趙雲"
+      }
+    },
+    {
+      "id": "RI04",
+      "title": "Batch duplicates progress 1 to 5 then overflow twice",
+      "kind": "PROVISIONAL_NUMERIC",
+      "status": "PASS",
+      "observation": {
+        "rebirths": [
+          {
+            "id": "u-1",
+            "rebirthCount": 2,
+            "overflow": false,
+            "attributeCap": 1100,
+            "trainingChances": 2
+          },
+          {
+            "id": "u-1",
+            "rebirthCount": 3,
+            "overflow": false,
+            "attributeCap": 1200,
+            "trainingChances": 3
+          },
+          {
+            "id": "u-1",
+            "rebirthCount": 4,
+            "overflow": false,
+            "attributeCap": 1350,
+            "trainingChances": 4
+          },
+          {
+            "id": "u-1",
+            "rebirthCount": 5,
+            "overflow": false,
+            "attributeCap": 1500,
+            "trainingChances": 5
+          },
+          {
+            "id": "u-1",
+            "rebirthCount": 5,
+            "overflow": true,
+            "attributeCap": 1500,
+            "trainingChances": 5
+          },
+          {
+            "id": "u-1",
+            "rebirthCount": 5,
+            "overflow": true,
+            "attributeCap": 1500,
+            "trainingChances": 5
+          }
+        ],
+        "bondPoints": 1200
+      }
+    },
+    {
+      "id": "RI05",
+      "title": "Sequential pulls and single batch have equivalent final roster",
+      "kind": "OBSERVED_BEHAVIOR",
+      "status": "PASS",
+      "observation": {
+        "rebirth": 5,
+        "tacticExp": {
+          "tactic-cavalry-shock": 400,
+          "tactic-fire-scheme": 400
+        }
+      }
+    },
+    {
+      "id": "RI06",
+      "title": "Rebirth upgrades unlock slots but preserve factor levels and stats",
+      "kind": "OBSERVED_BEHAVIOR",
+      "status": "PASS",
+      "observation": {
+        "rebirth": 3,
+        "genes": [
+          {
+            "id": "gene-fixture",
+            "level": 2,
+            "isLocked": false
+          }
+        ],
+        "str": 88,
+        "slots": [
+          {
+            "slotId": "ult-1",
+            "unlockReincarnation": 1,
+            "isUnlocked": true
+          },
+          {
+            "slotId": "ult-3",
+            "unlockReincarnation": 3,
+            "isUnlocked": true
+          },
+          {
+            "slotId": "ult-5",
+            "unlockReincarnation": 5,
+            "isUnlocked": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "RI07",
+      "title": "Full rebirth overflow uses old holder rarity, not incoming rarity",
+      "kind": "PROVISIONAL_NUMERIC",
+      "status": "PASS",
+      "observation": {
+        "bondPointsGained": 300
+      }
+    },
+    {
+      "id": "RI08",
+      "title": "All overflow rarity tiers and fallback are deterministic",
+      "kind": "PROVISIONAL_NUMERIC",
+      "status": "PASS",
+      "observation": {
+        "labels": [
+          "common",
+          "rare",
+          "epic",
+          "legendary",
+          "mythic",
+          "UNKNOWN",
+          null
+        ],
+        "values": [
+          100,
+          300,
+          600,
+          1200,
+          1200,
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "id": "RI09",
+      "title": "Dead same UID drawn again stays dead instead of a new body",
+      "kind": "COUNTEREXAMPLE_TO_REVIVE_FLOW",
+      "status": "PASS",
+      "observation": {
+        "added": 0,
+        "rebirth": {
+          "id": "u-1",
+          "rebirthCount": 2,
+          "overflow": false,
+          "attributeCap": 1100,
+          "trainingChances": 2
+        },
+        "status": "dead"
+      }
+    },
+    {
+      "id": "RI10",
+      "title": "Retired mentor same UID drawn again remains retired mentor",
+      "kind": "COUNTEREXAMPLE_TO_REVIVE_FLOW",
+      "status": "PASS",
+      "observation": {
+        "role": "Mentor",
+        "rebirth": 2
+      }
+    },
+    {
+      "id": "RI11",
+      "title": "Corrupt pre-existing duplicate UIDs collapse contents on rebirth",
+      "kind": "COUNTEREXAMPLE_DATA_INTEGRITY",
+      "status": "PASS",
+      "observation": {
+        "roster": [
+          {
+            "id": "u-1",
+            "name": "second",
+            "rebirth": 5
+          },
+          {
+            "id": "u-1",
+            "name": "second",
+            "rebirth": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "RI12",
+      "title": "Malformed records skipped, but empty-string UID accepted",
+      "kind": "OBSERVED_VALIDATION_GAP",
+      "status": "PASS",
+      "observation": {
+        "ids": [
+          ""
+        ]
+      }
+    },
+    {
+      "id": "RI13",
+      "title": "Favorite and lead changes target UID independently",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "favorites": [
+          "u-1"
+        ],
+        "lead": "u-2"
+      }
+    },
+    {
+      "id": "RI14",
+      "title": "Known dead, mentor-flag, child, low-vitality and nurturing blocks",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "eligible": false,
+        "reasons": [
+          "dead",
+          "retired-mentor",
+          "not-graduated",
+          "low-vitality",
+          "in-nurture"
+        ]
+      }
+    },
+    {
+      "id": "RI15",
+      "title": "Role-only Mentor is deployable without mentor-card flag",
+      "kind": "COUNTEREXAMPLE_ROLE_BOUNDARY",
+      "status": "PASS",
+      "observation": {
+        "role": "Mentor",
+        "isMentorCard": null,
+        "deploy": {
+          "eligible": true,
+          "reasons": []
+        }
+      }
+    },
+    {
+      "id": "RI16",
+      "title": "Dataset support role rows expose real role-only deploy boundary",
+      "kind": "COUNTEREXAMPLE_ROLE_BOUNDARY",
+      "status": "PASS",
+      "observation": {
+        "mentorRows": 94,
+        "eligibleRows": 94,
+        "examples": [
+          {
+            "id": "zhuge-liang",
+            "role": "Mentor",
+            "vitality": 100
+          },
+          {
+            "id": "sima-yi",
+            "role": "Mentor",
+            "vitality": 100
+          },
+          {
+            "id": "lu-xun",
+            "role": "Mentor",
+            "vitality": 100
+          },
+          {
+            "id": "pang-tong",
+            "role": "Mentor",
+            "vitality": 100
+          },
+          {
+            "id": "guo-jia",
+            "role": "Mentor",
+            "vitality": 100
+          },
+          {
+            "id": "xun-yu",
+            "role": "Mentor",
+            "vitality": 100
+          },
+          {
+            "id": "jia-xu",
+            "role": "Mentor",
+            "vitality": 100
+          },
+          {
+            "id": "cao-ang",
+            "role": "Mentor",
+            "vitality": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "RI17",
+      "title": "Trial mercenary flag alone does not block battlefield eligibility",
+      "kind": "OBSERVED_BEHAVIOR",
+      "status": "PASS",
+      "observation": {
+        "eligible": true,
+        "reasons": []
+      }
+    },
+    {
+      "id": "RI18",
+      "title": "Missing bloodline IDs do not trigger same-name prohibition",
+      "kind": "OBSERVED_POLICY_GAP",
+      "status": "PASS",
+      "observation": {
+        "ok": true,
+        "issues": []
+      }
+    },
+    {
+      "id": "RI19",
+      "title": "UID role lock and same bloodline guards independently reject",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "roleLocked": {
+          "ok": false,
+          "issues": [
+            "ROLE_LOCK"
+          ]
+        },
+        "same": {
+          "ok": false,
+          "issues": [
+            "SAME_BLOODLINE"
+          ]
+        }
+      }
+    },
+    {
+      "id": "RI20",
+      "title": "PersonRegistry accepts same template distinct UID and rejects duplicate UID",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "size": 2,
+        "ids": [
+          "u-1",
+          "u-2"
+        ]
+      }
+    },
+    {
+      "id": "RI21",
+      "title": "Virtual ancestor null template accepted by model type but rejected by registry service",
+      "kind": "COUNTEREXAMPLE_SCHEMA_BOUNDARY",
+      "status": "PASS",
+      "observation": {
+        "ok": false,
+        "reason": "INVALID_RECORD"
+      }
+    },
+    {
+      "id": "RI22",
+      "title": "PlayerRosterService roundtrips same-template UIDs and gene payload",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "count": 2,
+        "factor": {
+          "id": "gene-fixture",
+          "level": 2,
+          "isLocked": false
+        }
+      }
+    },
+    {
+      "id": "RI23",
+      "title": "PlayerRosterService addGenerals and reload do not deduplicate UID",
+      "kind": "COUNTEREXAMPLE_DATA_INTEGRITY",
+      "status": "PASS",
+      "observation": {
+        "storedIds": [
+          "u-1",
+          "u-1"
+        ]
+      }
+    },
+    {
+      "id": "RI24",
+      "title": "Storage write failure leaves changed cache but old durable roster",
+      "kind": "OBSERVED_FAILURE_BOUNDARY",
+      "status": "PASS",
+      "observation": {
+        "cacheCount": 2,
+        "reloadCount": 1,
+        "warningCount": 6
+      }
+    },
+    {
+      "id": "RI25",
+      "title": "Version table groups actual V1/V2 and owned templates correctly",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "groups": [
+          {
+            "bloodlineId": "BL_ZhaoYun",
+            "displayName": "Zhao_Yun_V1",
+            "entries": [
+              {
+                "templateId": "Zhao_Yun_V1",
+                "displayName": "Zhao_Yun_V1",
+                "versionTitle": "",
+                "releaseDate": "2026-01-01",
+                "isLimited": false,
+                "owned": true
+              },
+              {
+                "templateId": "Zhao_Yun_V2",
+                "displayName": "Zhao_Yun_V2",
+                "versionTitle": "",
+                "releaseDate": "2026-02-01",
+                "isLimited": false,
+                "owned": false
+              }
+            ],
+            "ownedCount": 1,
+            "totalCount": 2,
+            "progressText": "收集 1/2",
+            "complete": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "RI26",
+      "title": "Lobby provisional mapping mistakes same-template UID copies for versions",
+      "kind": "COUNTEREXAMPLE_PROVISIONAL_GALLERY",
+      "status": "PASS",
+      "observation": {
+        "table": [
+          {
+            "Template_ID": "U_1_V1",
+            "Bloodline_ID": "BL_U_1",
+            "Display_Name": "趙雲",
+            "Version_Title": "",
+            "Is_Limited": false
+          },
+          {
+            "Template_ID": "U_2_V1",
+            "Bloodline_ID": "BL_U_2",
+            "Display_Name": "趙雲",
+            "Version_Title": "",
+            "Is_Limited": false
+          }
+        ],
+        "owned": [
+          "U_1_V1",
+          "U_2_V1"
+        ],
+        "inputTemplateIds": [
+          "Zhao_Yun_V1",
+          "Zhao_Yun_V1"
+        ]
+      }
+    },
+    {
+      "id": "RI27",
+      "title": "Provisional gallery can merge different IDs after name normalization",
+      "kind": "COUNTEREXAMPLE_PROVISIONAL_GALLERY",
+      "status": "PASS",
+      "observation": {
+        "out": [
+          {
+            "Template_ID": "A_B_V1",
+            "Bloodline_ID": "BL_A_B",
+            "Display_Name": "A",
+            "Version_Title": "",
+            "Is_Limited": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "RI28",
+      "title": "Catalog has no real same-template or same-bloodline version examples",
+      "kind": "DATA_COVERAGE_LIMIT",
+      "status": "PASS",
+      "observation": {
+        "total": 235,
+        "uniqueIds": 235,
+        "uniqueTemplates": 235,
+        "uniqueBloodlines": 235,
+        "uniqueNames": 235
+      }
+    },
+    {
+      "id": "RI29",
+      "title": "Carousel uses UID and wraps without changing roster",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "previous": "u-2",
+        "unknownFallback": "u-1"
+      }
+    },
+    {
+      "id": "RI30",
+      "title": "Starter six are deep copies and optional beauty is added once",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "six": [
+          "zhang-fei",
+          "wei-yan",
+          "xiahou-dun",
+          "zhang-he",
+          "sun-ce",
+          "gan-ning"
+        ],
+        "optional": "cao-cao"
+      }
+    },
+    {
+      "id": "RI31",
+      "title": "Missing starter data rejects before reset or roster replacement",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "resetCalls": 0,
+        "rosterCount": 1
+      }
+    },
+    {
+      "id": "RI32",
+      "title": "Explicit starter-new-game replaces existing roster; repeat does not append",
+      "kind": "OBSERVED_DESTRUCTIVE_NEW_GAME_BOUNDARY",
+      "status": "PASS",
+      "observation": {
+        "resetCalls": 2,
+        "roster": [
+          "zhang-fei",
+          "wei-yan",
+          "xiahou-dun",
+          "zhang-he",
+          "sun-ce",
+          "gan-ning"
+        ],
+        "lead": "zhang-fei",
+        "limit": "startNewGame dependency is a recording fixture; startup guard and UI not exercised"
+      }
+    },
+    {
+      "id": "RI33",
+      "title": "Starter setLead failure happens after replacing roster",
+      "kind": "OBSERVED_FAILURE_BOUNDARY",
+      "status": "PASS",
+      "observation": {
+        "count": 6,
+        "resetCalls": 1,
+        "error": "setLeadGeneral fixture false after replacement"
+      }
+    },
+    {
+      "id": "RI34",
+      "title": "addGenerals awaits save for rebirth; save failure does not roll back roster",
+      "kind": "OBSERVED_FAILURE_BOUNDARY",
+      "status": "PASS",
+      "observation": {
+        "rebirth": 2,
+        "saveCalls": 1
+      }
+    },
+    {
+      "id": "RI35",
+      "title": "Duplicate-only rebirth does not emit RosterChanged",
+      "kind": "OBSERVED_EVENT_BOUNDARY",
+      "status": "PASS",
+      "observation": {
+        "rebirth": 2,
+        "events": []
+      }
+    },
+    {
+      "id": "RI36",
+      "title": "Gacha loyalty locked for new holder and preserved for existing UID",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "existingLoyalty": {
+          "loyalty": 17,
+          "isGachaHero": false
+        }
+      }
+    },
+    {
+      "id": "RI37",
+      "title": "Lobby routes ordinary hero pulls into roster and mentor pool away",
+      "kind": "SPEC_ALIGNED_EXTRACTED_CALLER",
+      "status": "PASS",
+      "observation": {
+        "roster": [
+          "u-1"
+        ],
+        "queuedPools": [
+          "hero-pool",
+          "mentor-pool"
+        ]
+      }
+    },
+    {
+      "id": "RI38",
+      "title": "Mentor pool repeats use stars and score without bond ledger",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "id": "zhao-yun",
+        "stars": 5,
+        "events": [
+          {
+            "kind": "breakthrough",
+            "name": "趙雲",
+            "fromStar": 0,
+            "toStar": 1
+          },
+          {
+            "kind": "breakthrough",
+            "name": "趙雲",
+            "fromStar": 1,
+            "toStar": 2
+          },
+          {
+            "kind": "breakthrough",
+            "name": "趙雲",
+            "fromStar": 2,
+            "toStar": 3
+          },
+          {
+            "kind": "breakthrough",
+            "name": "趙雲",
+            "fromStar": 3,
+            "toStar": 4
+          },
+          {
+            "kind": "breakthrough",
+            "name": "趙雲",
+            "fromStar": 4,
+            "toStar": 5
+          },
+          {
+            "kind": "overflow",
+            "name": "趙雲",
+            "scoreGain": 500
+          }
+        ]
+      }
+    },
+    {
+      "id": "RI39",
+      "title": "ReviveRetrain helper returns new identity, preserves spirit reference, normalizes turns",
+      "kind": "SPEC_ALIGNED_HELPER_ONLY",
+      "status": "PASS",
+      "observation": {
+        "newBodyUid": "new-uid",
+        "templateId": "Zhao_Yun_V1",
+        "rebirthCount": 5,
+        "overflow": false,
+        "embeddedSpiritCardUid": "spirit-1"
+      }
+    },
+    {
+      "id": "RI40",
+      "title": "Revive helper accepts duplicate/empty new UID; uniqueness belongs to absent caller",
+      "kind": "OBSERVED_VALIDATION_BOUNDARY",
+      "status": "PASS",
+      "observation": {
+        "newBodyUid": "",
+        "templateId": "Zhao_Yun_V1",
+        "rebirthCount": 5,
+        "overflow": true,
+        "embeddedSpiritCardUid": "spirit-1"
+      }
+    },
+    {
+      "id": "RI41",
+      "title": "Infusion helper changes card counters without generating a body or bond currency",
+      "kind": "SPEC_ALIGNED_HELPER_ONLY",
+      "status": "PASS",
+      "observation": {
+        "bloodlineLevel": 3,
+        "spiritPower": 17,
+        "linkedTallyLevel": 4
+      }
+    },
+    {
+      "id": "RI42",
+      "title": "Hero rebirth 1..5 and mentor star 0..5 are different ladders",
+      "kind": "SPEC_ALIGNED_LOCAL",
+      "status": "PASS",
+      "observation": {
+        "heroFirstDuplicate": 2,
+        "mentorFirstDuplicate": 1,
+        "mentorOverflowScore": 500
+      }
+    },
+    {
+      "id": "RI43",
+      "title": "Unconfirmed destiny state rejects before touching roster",
+      "kind": "SPEC_ALIGNED_EXTRACTED_CALLER",
+      "status": "PASS",
+      "observation": {
+        "newGames": 0
+      }
+    },
+    {
+      "id": "RI44",
+      "title": "Locked destiny entry has no consumed-state guard at this layer",
+      "kind": "OBSERVED_IDEMPOTENCE_BOUNDARY",
+      "status": "PASS",
+      "observation": {
+        "newGames": 2,
+        "rosterCount": 6,
+        "state": {
+          "phase": "locked",
+          "locked": "zhang-fei"
+        },
+        "limit": "No claim about live UI invocation; full opening flow remains NOT_RUN"
+      }
+    }
+  ]
+}

@@ -1738,5 +1738,35 @@
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/跨系統待驗邊界.md",
     "title": "跨系統待驗邊界",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_0293",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/總覽與驗收界線.md",
+    "title": "全玩法研究第二批：招募、名冊、治理與精力",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0294",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/recruitment-prophecy/名士與傭兵驗證報告.md",
+    "title": "G10 名士預言 / G11 傭兵試用與永久招募",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0295",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/rival-governance/他國治理外交與盛衰報告.md",
+    "title": "G23 他國治理外交與盛衰",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0296",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/roster-identity/名冊與重複流轉報告.md",
+    "title": "名冊與重複流轉報告",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0297",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/packages/vitality/REPORT.md",
+    "title": "G07 精力、疲勞、恢復與加速卡：有界玩法驗證",
+    "category": "spec"
   }
 ]

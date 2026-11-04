@@ -1,0 +1,607 @@
+{
+  "repository": "eaglhuang/3klife",
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "sources": [
+    {
+      "path": "assets/scripts/core/services/PlayerRosterService.ts",
+      "file": "evidence/assets/scripts/core/services/PlayerRosterService.ts",
+      "git_blob_sha": "a5e438741ea5adff4e9a01f902d64887efe78b88",
+      "sha256": "400074f95c9d3501b1f98e691fa3ec24618d1ef05941d4ebe3709caf52d6f515",
+      "bytes": 3250,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/PlayerRosterService.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/services/StarterRosterService.ts",
+      "file": "evidence/assets/scripts/core/services/StarterRosterService.ts",
+      "git_blob_sha": "ac56931143074f72e814e86b29dd92ec8702a14a",
+      "sha256": "2c6827e1af8285affd20b8b0d9954aedb718e9ae45a9e46326a2059b5695ff7a",
+      "bytes": 2867,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/StarterRosterService.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/models/GeneralVersion.ts",
+      "file": "evidence/assets/scripts/core/models/GeneralVersion.ts",
+      "git_blob_sha": "eca3788d44ef74f76a201d2e5ab475e57dd4f00d",
+      "sha256": "6d97b2179895653d8c88c7a1561130c7e5a46cdf495aac82a6c4719c744ef94f",
+      "bytes": 3066,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/GeneralVersion.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/models/GeneralRole.ts",
+      "file": "evidence/assets/scripts/core/models/GeneralRole.ts",
+      "git_blob_sha": "00315ba7218134c5aff00a819a1a4afe1ce7565d",
+      "sha256": "a77b5a4de48ca0663602e8b78ab60fd074c4ed393e64b3a35857fe9189be5bbf",
+      "bytes": 2246,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/GeneralRole.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/models/GeneralUnit.ts",
+      "file": "evidence/assets/scripts/core/models/GeneralUnit.ts",
+      "git_blob_sha": "004acb1748ae24ba3cb081179fcdde889ee10b63",
+      "sha256": "2cbe8e39c9d8eec1dc2207cbd8cec3efe6840609ceb02b16623f5b9369215952",
+      "bytes": 13085,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/GeneralUnit.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "assets/scripts/core/systems/GeneralVersionGallery.ts",
+      "file": "evidence/assets/scripts/core/systems/GeneralVersionGallery.ts",
+      "git_blob_sha": "9c4292a36b50e8771d4867d65f6f7720a9bd6598",
+      "sha256": "54c609d9eb9b848dd17aac1fb40c3d5737a965d94e256abd560b94247f7a8e5a",
+      "bytes": 4944,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GeneralVersionGallery.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/GeneralReadModel.ts",
+      "file": "evidence/assets/scripts/core/systems/GeneralReadModel.ts",
+      "git_blob_sha": "1b10b7a2f62aad5a5978e5cc4869a90fb62db752",
+      "sha256": "9d78c7d3a0f459f16b037f7a4209d2790dad572f7f19beeea870e41ad623476c",
+      "bytes": 10147,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GeneralReadModel.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "assets/scripts/core/systems/OverflowBond.ts",
+      "file": "evidence/assets/scripts/core/systems/OverflowBond.ts",
+      "git_blob_sha": "4b17ee0ef2e01dac22a90c3898a7d39e62c1018a",
+      "sha256": "0b6c5f3b17c7af491e6d977375bc467c8f75ef7dacd88733d40634c8fe0675c3",
+      "bytes": 2678,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/OverflowBond.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/RosterRoleLoad.ts",
+      "file": "evidence/assets/scripts/core/systems/RosterRoleLoad.ts",
+      "git_blob_sha": "c10f561e3d4e2cd42fdd21c3a6613ddce13e9534",
+      "sha256": "88b47defa271fa2f1006092442fa365daf4eac90cda35b0de4dac51928883aa2",
+      "bytes": 1044,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/RosterRoleLoad.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/同名武將系統.md",
+      "file": "evidence/docs/遊戲規格文件/系統規格書/同名武將系統.md",
+      "git_blob_sha": "a3d1fe6694e03c3f19a7afaa9235be75ce52439c",
+      "sha256": "2387f4dd07d3e6a0b3040f3c5af962c043291948cb093e05f08312e8f18c7c3e",
+      "bytes": 6489,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E5%90%8C%E5%90%8D%E6%AD%A6%E5%B0%87%E7%B3%BB%E7%B5%B1.md",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/重複卡分流與血脈灌注補遺_2026-04-04.md",
+      "file": "evidence/docs/遊戲規格文件/系統規格書/重複卡分流與血脈灌注補遺_2026-04-04.md",
+      "git_blob_sha": "ffa7df419d130977e5281379d3fcac3a9dc6a567",
+      "sha256": "d3519830db16a1a823c2819db9bb47b41d3684395113eea7d2c40c1d8f4b90dc",
+      "bytes": 1259,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E9%87%8D%E8%A4%87%E5%8D%A1%E5%88%86%E6%B5%81%E8%88%87%E8%A1%80%E8%84%88%E7%81%8C%E6%B3%A8%E8%A3%9C%E9%81%BA_2026-04-04.md",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "assets/scripts/core/systems/ProvisionalGeneralVersions.ts",
+      "file": "evidence/assets/scripts/core/systems/ProvisionalGeneralVersions.ts",
+      "git_blob_sha": "d59c6b828b952e31b378e14c73585e75a4ae64d7",
+      "sha256": "88d9229ddc72e5665c9e95a252550be31ac5731d743d186835b5e6c32ab0b9d7",
+      "bytes": 2336,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ProvisionalGeneralVersions.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/services/PersonRegistry.ts",
+      "file": "evidence/assets/scripts/core/services/PersonRegistry.ts",
+      "git_blob_sha": "1174a4d15f625b05177aa0522faa89537fd11981",
+      "sha256": "ae6c6f346a83018af8c958d8807b5d928b7ea2e0bc3d40a02ecfc7d5df06c489",
+      "bytes": 2810,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/PersonRegistry.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/models/PersonRegistry.ts",
+      "file": "evidence/assets/scripts/core/models/PersonRegistry.ts",
+      "git_blob_sha": "3c19a47ffeb452dffed8561c8c864db2ad78370a",
+      "sha256": "f25f6eab14f5acc8d8c46b9e5010de302dce9e6145f441fd469ccf708c41a386",
+      "bytes": 2502,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/PersonRegistry.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "assets/scripts/core/systems/GeneralCoreFields.ts",
+      "file": "evidence/assets/scripts/core/systems/GeneralCoreFields.ts",
+      "git_blob_sha": "26e4c3934d4ba9375f39129f3d4b7caf0989f5f6",
+      "sha256": "39defabd93c045816b15f15314a5c01e214d256ad0cefbf8bbad3b858df49cea",
+      "bytes": 2871,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GeneralCoreFields.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "assets/scripts/core/systems/GeneralPoolCycle.ts",
+      "file": "evidence/assets/scripts/core/systems/GeneralPoolCycle.ts",
+      "git_blob_sha": "0175803119c9d484263989c6245db2be8c3f972f",
+      "sha256": "dcc3af6d59f9f6bc53f305ed1070bab693fd33f5c778c2ea576cb1d0a28f0d78",
+      "bytes": 566,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GeneralPoolCycle.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/Rebirth.ts",
+      "file": "evidence/assets/scripts/core/systems/Rebirth.ts",
+      "git_blob_sha": "0f18959c039e0074a5c329c2a3f97750e4c7c5e1",
+      "sha256": "4e435abbe0ec2bce6a2a004d80ae258edd9b2d65c9ff3cb8e89dbfde9c30ac94",
+      "bytes": 2951,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/Rebirth.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/BloodlineInfusion.ts",
+      "file": "evidence/assets/scripts/core/systems/BloodlineInfusion.ts",
+      "git_blob_sha": "ef085602482561675631c7ed11c72746f6f1ec40",
+      "sha256": "c6c9f9531d7cfb36f90a51406f03a4b17383887fa7dc2812d92219ad218439e6",
+      "bytes": 1944,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BloodlineInfusion.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorOverflow.ts",
+      "file": "evidence/assets/scripts/core/systems/MentorOverflow.ts",
+      "git_blob_sha": "d609fe8c2be82697b041693d9a9001dadef5ceb6",
+      "sha256": "5212efb286412f30dc91409f0f12a4e6ac8cde642512a29407ccbc14f132abc3",
+      "bytes": 1907,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MentorOverflow.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorBreakthrough.ts",
+      "file": "evidence/assets/scripts/core/systems/MentorBreakthrough.ts",
+      "git_blob_sha": "3588f123a03f83ae2315228bec03aee5e6a4be98",
+      "sha256": "015afd5614589cb7f9ce69fa93189eddbcaec67f5bc82c126669fb5d116befb3",
+      "bytes": 5790,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MentorBreakthrough.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將系統.md",
+      "file": "evidence/docs/遊戲規格文件/系統規格書/武將系統.md",
+      "git_blob_sha": "ade5fd335ac538adfd7de01eced82b0eb0ef0774",
+      "sha256": "d378b829922c568722bc9bb26c43fff4cf017b5c748be7d9590759086017ec14",
+      "bytes": 9176,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E6%AD%A6%E5%B0%87%E7%B3%BB%E7%B5%B1.md",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "file": "evidence/assets/scripts/core/managers/GameSession.ts",
+      "git_blob_sha": "75a387a2c49cafa7fb70fefd5028cc3c87035339",
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/managers/GameSession.ts",
+      "inspection": "ORIGINAL_NODE_EXTRACTION_TARGETED_PROBES",
+      "bytes": 239947,
+      "sha256": "4e7ac248cb0cfac92b4eb35bb84272cb2fc37903b090adcb20181c7fb90e96af",
+      "acquisition": "sealed gameplay-transactions-20261104; verified Git blob and SHA256"
+    },
+    {
+      "path": "assets/scripts/ui/scenes/LobbyScene.ts",
+      "file": "evidence/assets/scripts/ui/scenes/LobbyScene.ts",
+      "git_blob_sha": "020af72e606b8682a31e122afdb6ecde791f00d2",
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/scenes/LobbyScene.ts",
+      "inspection": "ORIGINAL_NODE_EXTRACTION_TARGETED_PROBES",
+      "bytes": 277587,
+      "sha256": "7bcd932588b5ccd0a960f318a72b64fab2a3443d1218611d64aac2c5b056b4b3",
+      "acquisition": "sealed gameplay-transactions-20261104; verified Git blob and SHA256"
+    },
+    {
+      "path": "assets/scripts/core/systems/GachaSyncRecord.ts",
+      "file": "evidence/assets/scripts/core/systems/GachaSyncRecord.ts",
+      "git_blob_sha": "f7d785bd874d3aca233d8b138078415e7aeb9ce6",
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GachaSyncRecord.ts",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED",
+      "bytes": 4100,
+      "sha256": "2bbdf465d3222d4c1918617901c8ae00536963a8fab55600475042d25748af3e",
+      "acquisition": "sealed gameplay-transactions-20261104; verified Git blob and SHA256"
+    },
+    {
+      "path": "assets/scripts/ui/core/GachaFlowCoordinator.ts",
+      "file": "evidence/assets/scripts/ui/core/GachaFlowCoordinator.ts",
+      "git_blob_sha": "ebd3836eb03d9d00904e42c3a4b5dfb055dac777",
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/core/GachaFlowCoordinator.ts",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED",
+      "bytes": 14573,
+      "sha256": "b31a5277d12383c3afcaca375ba5f62e6a72d58940506c4edf69f3c9836be20d",
+      "acquisition": "sealed gameplay-transactions-20261104; verified Git blob and SHA256"
+    },
+    {
+      "path": "assets/scripts/core/services/PlayerSaveService.ts",
+      "file": "evidence/assets/scripts/core/services/PlayerSaveService.ts",
+      "git_blob_sha": "9c7e3c22cad87c03a86f4eb0f715d4b7402ef65a",
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/PlayerSaveService.ts",
+      "inspection": "ORIGINAL_NODE_EXTRACTION_TARGETED_PROBES",
+      "bytes": 49566,
+      "sha256": "fbd898a5f727df1cdae57dc37f0e2d4135b599a9027cee51f0e9d781069ab2ff",
+      "acquisition": "sealed gameplay-transactions-20261104; verified Git blob and SHA256"
+    },
+    {
+      "path": "assets/resources/data/generals.json",
+      "file": "evidence/assets/resources/data/generals.json",
+      "git_blob_sha": "29a5dc736b5c82bba56c5688580da91c139b00fd",
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/generals.json",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED",
+      "bytes": 882180,
+      "sha256": "2c803a3a35ef44cae49d089d1bb5b0f6bf2b779ad644b6b376b78217aa2db128",
+      "acquisition": "sealed gameplay-transactions-20261104; verified Git blob and SHA256"
+    },
+    {
+      "path": "tests/GachaPullToRosterE2E.test.ts",
+      "file": "evidence/tests/GachaPullToRosterE2E.test.ts",
+      "git_blob_sha": "1162e1582ad1e36a084acf636be9fc6ef3ccd029",
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/tests/GachaPullToRosterE2E.test.ts",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED",
+      "bytes": 9878,
+      "sha256": "3f47858dde8c5e4b3aa1931366718b1c889267994925415ebd21c9e507804215",
+      "acquisition": "sealed gameplay-transactions-20261104; verified Git blob and SHA256"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/轉蛋系統.md",
+      "file": "evidence/docs/遊戲規格文件/系統規格書/轉蛋系統.md",
+      "git_blob_sha": "622cbbb2a5789b8fa98995d03530b2562c5ae3e4",
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E8%BD%89%E8%9B%8B%E7%B3%BB%E7%B5%B1.md",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED",
+      "bytes": 14719,
+      "sha256": "f278f8ab2f1f507c9f34c965067de7e2d745131f7bf9adea4381dc6aa4335434",
+      "acquisition": "sealed gameplay-transactions-20261104; verified Git blob and SHA256"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "file": "evidence/assets/scripts/core/systems/BattleRoster.ts",
+      "git_blob_sha": "f25e2698a08bb226ed2f9b0fbb40b01a832148d0",
+      "sha256": "736af78c3655f47c322192d3ac0e867169cf57e0e78dc947ca5d6665320580ee",
+      "bytes": 17969,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleRoster.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "ORIGINAL_NODE_EXTRACTION_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/TacticRandomization.ts",
+      "file": "evidence/assets/scripts/core/systems/TacticRandomization.ts",
+      "git_blob_sha": "68b6c2bc8f6b83c468d0e34a2c7bb45650bf89d7",
+      "sha256": "af0f2f7f2e28203ee111bc72c9b5ef2629e06ee7bbc3c312ac498eca29ac9e33",
+      "bytes": 4454,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/TacticRandomization.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/UltimateSlotUnlock.ts",
+      "file": "evidence/assets/scripts/core/systems/UltimateSlotUnlock.ts",
+      "git_blob_sha": "66b9ab4ad44c199354dafbea4fb495059e31e55f",
+      "sha256": "395e7a927b63b9ce315ab26277a70df50c5e8b51a203f1130937619ce9309e4a",
+      "bytes": 1189,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/UltimateSlotUnlock.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/TigerTallyLoyalty.ts",
+      "file": "evidence/assets/scripts/core/systems/TigerTallyLoyalty.ts",
+      "git_blob_sha": "e75b1c198d1d845359e8bd18d9e223954c777abb",
+      "sha256": "d8a0eaf2e79ad3e8afdb117d6d6748f3fa3d694a04f40a646fd4a1eb61cf88a8",
+      "bytes": 6917,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/TigerTallyLoyalty.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/models/GeneObject.ts",
+      "file": "evidence/assets/scripts/core/models/GeneObject.ts",
+      "git_blob_sha": "7bff00fba9b28b098aa80c616ecb9f3229b19f52",
+      "sha256": "705b233277e373f112869d088a96979377a0442fab30e57a12bb96094802106d",
+      "bytes": 6304,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/GeneObject.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/services/LocalGachaService.ts",
+      "file": "evidence/assets/scripts/core/services/LocalGachaService.ts",
+      "git_blob_sha": "8eb814a352ed43b2aa37773434187b395cbb5739",
+      "sha256": "c8c9d3b6b26fe44cf4472dea6c2ae38d2a166d7e0fdeb9baa2acfef0d9394e00",
+      "bytes": 26953,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/LocalGachaService.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "assets/scripts/core/systems/GeneralVersionDiff.ts",
+      "file": "evidence/assets/scripts/core/systems/GeneralVersionDiff.ts",
+      "git_blob_sha": "64fb3515f1f7e5daf4af430f444421ba5c4fa0ee",
+      "sha256": "11229318220530754c07ea0b00a036b90ff460d7a7ddf4294830a0f188aae653",
+      "bytes": 5264,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GeneralVersionDiff.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "assets/scripts/ui/core/GeneralVersionGalleryController.ts",
+      "file": "evidence/assets/scripts/ui/core/GeneralVersionGalleryController.ts",
+      "git_blob_sha": "38d8e5e8ade41fa4164df72c7eaa7e956834231c",
+      "sha256": "29a7663d709431acdfb919e4c0363c893050dd7ae45f32dc839bd2cc78d4042d",
+      "bytes": 3572,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/core/GeneralVersionGalleryController.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "assets/scripts/core/systems/ReviveRetrain.ts",
+      "file": "evidence/assets/scripts/core/systems/ReviveRetrain.ts",
+      "git_blob_sha": "5574856445394c1bbf02592950059256ef787af6",
+      "sha256": "ff7745da071d7453017a9fad088dc37d2bba34c31ad1e76bd672a579028f1e6f",
+      "bytes": 1913,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ReviveRetrain.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "tests/StarterRoster.test.ts",
+      "file": "evidence/tests/StarterRoster.test.ts",
+      "git_blob_sha": "a44205ff4146c7f557e1918ccf41c0e08f2810cc",
+      "sha256": "65b9609370ed1039891ff98bbe6533777f8a25c0b918e7aea392af21eaf6ac38",
+      "bytes": 5274,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/tests/StarterRoster.test.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "tests/GeneralVersionGalleryInputs.test.ts",
+      "file": "evidence/tests/GeneralVersionGalleryInputs.test.ts",
+      "git_blob_sha": "01481eb2adbd90b2183457ec518572e1d974045a",
+      "sha256": "31abd07540d0c0849b71bb3ba74f75b7f08689bb7be9be265c96a24c95642b8b",
+      "bytes": 1477,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/tests/GeneralVersionGalleryInputs.test.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "tests/Rebirth.test.ts",
+      "file": "evidence/tests/Rebirth.test.ts",
+      "git_blob_sha": "f7c5c5ba101dfa1609c2480b259ea1e7be7bd00f",
+      "sha256": "2ac0b709c5216f9349dd9e7a83eb53e9110bd71bff6d5557db74908c00c9f686",
+      "bytes": 4722,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/tests/Rebirth.test.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "tests/PersonRegistry.test.ts",
+      "file": "evidence/tests/PersonRegistry.test.ts",
+      "git_blob_sha": "8c8b7d5011afbb122fc0d86395a2d08cee53dc8b",
+      "sha256": "677940f8615c8e6b51c430f39441b409f775a5625eb6a6af600be7c9994c8a05",
+      "bytes": 3236,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/tests/PersonRegistry.test.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "assets/scripts/core/systems/SortieDeploy.ts",
+      "file": "evidence/assets/scripts/core/systems/SortieDeploy.ts",
+      "git_blob_sha": "4a3997749f7c9d973b805808490238825531e223",
+      "sha256": "b4db8112b531c741531fddf576d086d912321c634b34d0166fb9e89bea4cf660",
+      "bytes": 35568,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/SortieDeploy.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "ORIGINAL_NODE_EXTRACTION_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/GeneralAging.ts",
+      "file": "evidence/assets/scripts/core/systems/GeneralAging.ts",
+      "git_blob_sha": "8ebde70fa84edad28485ad6334328141f227fd4f",
+      "sha256": "871d651615843602e24a653d1f6b1fba2a6f520c6f0841fbc0655a4ffa258785",
+      "bytes": 5147,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GeneralAging.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "ORIGINAL_NODE_EXTRACTION_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/BreedingSystem.ts",
+      "file": "evidence/assets/scripts/core/systems/BreedingSystem.ts",
+      "git_blob_sha": "aa00f689366a4ea67c68535b92431fc2c3322b61",
+      "sha256": "bf8939ffe07609fecaca3a270c5f36cf92b75fd2da7989b6217239d69afd3c0d",
+      "bytes": 34900,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BreedingSystem.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "ORIGINAL_NODE_EXTRACTION_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/VitalityCap.ts",
+      "file": "evidence/assets/scripts/core/systems/VitalityCap.ts",
+      "git_blob_sha": "dd4d372c0c85b3b6b90edae7688a1ebc48c1cde5",
+      "sha256": "cc2b849f352cc1770864290597ff18b43be70fceb0d20d60683bb8f145171d01",
+      "bytes": 1265,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/VitalityCap.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/StatRevelation.ts",
+      "file": "evidence/assets/scripts/core/systems/StatRevelation.ts",
+      "git_blob_sha": "26ca86e50acdf57529ff2c68f5b4746bf9a9ac7d",
+      "sha256": "b93bd45dcac20970ff1d14a6d9c6c02f9d8c9e0def77f187dcefc76eaf1f9b6e",
+      "bytes": 2538,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/StatRevelation.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/新手開場規格書.md",
+      "file": "evidence/docs/遊戲規格文件/系統規格書/新手開場規格書.md",
+      "git_blob_sha": "5a6f1ff2e33624524104f2f1ead72d7c42dccaec",
+      "sha256": "85e68f711da26fd3fba55af56150fa2e621b09a91de2f3dd6c2febbef05c9337",
+      "bytes": 22966,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E6%96%B0%E6%89%8B%E9%96%8B%E5%A0%B4%E8%A6%8F%E6%A0%BC%E6%9B%B8.md",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "docs/agent-briefs/tasks/PROG/PROG-2-1064.md",
+      "file": "evidence/docs/agent-briefs/tasks/PROG/PROG-2-1064.md",
+      "git_blob_sha": "bfb76dd65ae81c1a3108e6dc98b12ebb64a556c8",
+      "sha256": "5b2b4b4bddfae221164fa3dcd50cc5dbb173bef21b851e1c2c09fe74e7dcc648",
+      "bytes": 1110,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/agent-briefs/tasks/PROG/PROG-2-1064.md",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "tests/GeneralVersion.test.ts",
+      "file": "evidence/tests/GeneralVersion.test.ts",
+      "git_blob_sha": "7275544ffad3f5bf208571dc5d290a20480775fd",
+      "sha256": "5b1c1f9ae6af7c507072dcc6cfb147c9e3a47102962b95e3a1646732cf817700",
+      "bytes": 3404,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/tests/GeneralVersion.test.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "tests/GeneralRole.test.ts",
+      "file": "evidence/tests/GeneralRole.test.ts",
+      "git_blob_sha": "ad2c77922dbb177483c96c8f2cec90f75762b195",
+      "sha256": "e6a956e38143f7973f90a6ff4b8163e94118ef27d5205c7227ce087c73af9a1d",
+      "bytes": 2404,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/tests/GeneralRole.test.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorSupportCatalog.ts",
+      "file": "evidence/assets/scripts/core/systems/MentorSupportCatalog.ts",
+      "git_blob_sha": "b31ff1b9e8ce52b13b5e7f58d2e48afecfd57aea",
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MentorSupportCatalog.ts",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES",
+      "bytes": 6809,
+      "sha256": "b6d8991c9edd80b5d34454cfcf3fcbeed6e579f6133d93fd59df703dc23f4965",
+      "acquisition": "sealed gameplay-transactions-20261104; verified Git blob and SHA256"
+    },
+    {
+      "path": "assets/scripts/core/systems/MentorSources.ts",
+      "file": "evidence/assets/scripts/core/systems/MentorSources.ts",
+      "git_blob_sha": "72093122ddd2080bb6184da782c10221f3678cd9",
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/MentorSources.ts",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES",
+      "bytes": 1880,
+      "sha256": "d039004114525d3a4c208efcfadca3b5ca0f761a13ed64cce3bf34c94d11caff",
+      "acquisition": "sealed gameplay-transactions-20261104; verified Git blob and SHA256"
+    },
+    {
+      "path": "assets/scripts/core/services/LegacyService.ts",
+      "file": "evidence/assets/scripts/core/services/LegacyService.ts",
+      "git_blob_sha": "47909435bc8fcd96c187316858f8d12d74277fa8",
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/services/LegacyService.ts",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED",
+      "bytes": 13701,
+      "sha256": "91a25e3f9b36622aa43474c95c9d8853ef21880c6aba364b0eb87180e588c9a9",
+      "acquisition": "sealed gameplay-transactions-20261104; verified Git blob and SHA256"
+    },
+    {
+      "path": "assets/resources/data/mentor-support-cards.json",
+      "file": "evidence/assets/resources/data/mentor-support-cards.json",
+      "git_blob_sha": "c1448fd0d2d11daf6c331f7204e59f36a1e2f0a5",
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/mentor-support-cards.json",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED",
+      "bytes": 16351,
+      "sha256": "143fc6a13b97c3afb28115426fa5d23657956e2dc81d19a0e8bd93f5f00a0292",
+      "acquisition": "sealed gameplay-transactions-20261104; verified Git blob and SHA256"
+    },
+    {
+      "path": "assets/scripts/core/models/MentorCard.ts",
+      "file": "evidence/assets/scripts/core/models/MentorCard.ts",
+      "git_blob_sha": "3ccae5be62e1b5191662405b07357f711b5facbc",
+      "sha256": "2205927a4d797350fa2ee2282b554a9fd1159721c31f33ebdb4c700fc85ec7d0",
+      "bytes": 2554,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/MentorCard.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/models/MentorSupportSchema.ts",
+      "file": "evidence/assets/scripts/core/models/MentorSupportSchema.ts",
+      "git_blob_sha": "e4df00adb23c78d8f09ec33d5b202242831e6327",
+      "sha256": "c0c835f0ebe6d3f8a79b4e5db789946631754b6dbe40a1660dd7685ba0a976fe",
+      "bytes": 13118,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/MentorSupportSchema.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "FULL_MODULE_LOADED_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/models/SupportCardBase.ts",
+      "file": "evidence/assets/scripts/core/models/SupportCardBase.ts",
+      "git_blob_sha": "ca47ab83ef90879dde47c8e9aa1b702031f9f089",
+      "sha256": "27a7f9c881331de26f1305d502013c7af0a0a817c708c7a6eecbf210654abd73",
+      "bytes": 1598,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/models/SupportCardBase.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "SOURCE_CONTEXT_ONLY_NOT_EXECUTED"
+    },
+    {
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "file": "evidence/assets/scripts/core/systems/NurtureSystem.ts",
+      "git_blob_sha": "745a0235ba075a604fa26df135f6d76c51bdadae",
+      "sha256": "edc60414565c656f690a528f169f3bded1efdecd66753cbb506c7cd3bc2cd2f6",
+      "bytes": 33667,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/NurtureSystem.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "ORIGINAL_NODE_EXTRACTION_TARGETED_PROBES"
+    },
+    {
+      "path": "assets/scripts/core/systems/DestinyPool.ts",
+      "file": "evidence/assets/scripts/core/systems/DestinyPool.ts",
+      "git_blob_sha": "136e647975a40d9282d8d432b3b768da2260a31f",
+      "sha256": "f61be3022c239d7a203a58e9e52df495d55856e6c2a4a33691409a27a6853221",
+      "bytes": 3045,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DestinyPool.ts",
+      "acquisition": "GitHub fetch_file exact ref",
+      "inspection": "ORIGINAL_NODE_EXTRACTION_TARGETED_PROBES"
+    }
+  ],
+  "source_count": 60
+}

@@ -1,0 +1,55 @@
+{
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "domain_status": {
+    "G02": {
+      "full_acceptance": "NOT_RUN",
+      "method_level_observations": [
+        "RI01-RI03",
+        "RI09-RI29",
+        "RI34-RI36"
+      ],
+      "remaining": [
+        "live acquisition of unique bodies from shared template",
+        "actual version data and UI selection",
+        "full save migration/reload chain",
+        "spirit-form restrictions",
+        "UI duplicate data lifecycle"
+      ]
+    },
+    "G14": {
+      "full_acceptance": "NOT_RUN",
+      "method_level_observations": [
+        "RI04-RI10",
+        "RI37-RI42"
+      ],
+      "remaining": [
+        "duplicate choice UI",
+        "unique revived body persistence",
+        "spirit attachment",
+        "cross-store journal exactly-once",
+        "failure retry and cancellation"
+      ]
+    },
+    "G01": {
+      "full_acceptance": "NOT_RUN",
+      "scope": "starter roster source and new-game callers only",
+      "method_level_observations": [
+        "RI30-RI33",
+        "RI43-RI44"
+      ],
+      "remaining": [
+        "first-run UI guard",
+        "interrupted/repeated startup",
+        "resume without regrant",
+        "first battle and beauty flow"
+      ]
+    }
+  },
+  "probe_count": 44,
+  "observed_passes": 44,
+  "failed_assertions": 0,
+  "pass_semantics": "Observed behavior matched assertions; counterexamples count as reproduced observations, not acceptance PASS.",
+  "product_edits": false,
+  "external_game_actions": false,
+  "full_module_e2e": false
+}

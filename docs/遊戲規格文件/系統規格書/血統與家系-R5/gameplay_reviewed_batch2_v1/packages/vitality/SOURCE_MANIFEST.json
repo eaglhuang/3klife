@@ -1,0 +1,278 @@
+{
+  "repository": "eaglhuang/3klife",
+  "commit": "96a83124094d3b2485bfb749ef37d567ad834559",
+  "files": [
+    {
+      "path": "assets/scripts/core/systems/AccelerateCard.ts",
+      "blob_sha": "b228e1651aaf140935778e6175b29f2f0e489529",
+      "sha256": "2a398f64b9ba3096af2358d9cc613dcced60925bc9bf4e204afd04bba3449b17",
+      "bytes": 1961,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/AccelerateCard.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/core/systems/DesertVitality.ts",
+      "blob_sha": "4c5f0b6fafa34c0a5868829d0ad7aa11bb6a567e",
+      "sha256": "f882326ef0e75f58989db225056ffcd6273dce42c192f0f436ca57bd7f81f1a2",
+      "bytes": 1423,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/DesertVitality.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/core/systems/FatigueFailureRate.ts",
+      "blob_sha": "93bfb24438e679e351443e63621013c1fcd52b5c",
+      "sha256": "7c1644d09beb471a62e694c94e9d0a71f7a6a91a91638140f60e9603c79a456b",
+      "bytes": 1650,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/FatigueFailureRate.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/core/systems/VitalityBattleGate.ts",
+      "blob_sha": "8ae3597f17ff9f94c2758aa781aa4b55b2083f9c",
+      "sha256": "7c6043978188ba537150c3615f4b23d94554e3bb2963e79ccf105c8101dd5920",
+      "bytes": 2872,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/VitalityBattleGate.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/core/systems/VitalityCap.ts",
+      "blob_sha": "dd4d372c0c85b3b6b90edae7688a1ebc48c1cde5",
+      "sha256": "cc2b849f352cc1770864290597ff18b43be70fceb0d20d60683bb8f145171d01",
+      "bytes": 1265,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/VitalityCap.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/core/systems/VitalityPill.ts",
+      "blob_sha": "4577392401d93a6628091b24c3c49eccbdeddad5",
+      "sha256": "b4bafc0657f552bf402b7ab54ccdd42a3df56a143f18d3e126baac0e889878d9",
+      "bytes": 3807,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/VitalityPill.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/core/systems/WarInjury.ts",
+      "blob_sha": "e651877cf5cefc8ff761ad950faba05b20c46863",
+      "sha256": "4da07690237cf5d7e0b1ffac1ccc3746e06dc52c6b33a809ba60f773ff4705a8",
+      "bytes": 976,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/WarInjury.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/ui/core/VitalityPillController.ts",
+      "blob_sha": "1b7c34a04ed7586dd6a5d52be0b18654d49d3b67",
+      "sha256": "31670c2f0ac79d7cbb4c970b9d90c36b355a5ba69e70cab8fb5c8ff58d8fab4f",
+      "bytes": 2917,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/core/VitalityPillController.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/battle/skills/resolvers/VitalityRestoreSkillResolver.ts",
+      "blob_sha": "1b173e1d40a3b6db7f551ba2f4c8cbe261258463",
+      "sha256": "61433ca6a3fb4f59e44fde1a366c1737c8099211c94ac97778c5b8e264f4ac7b",
+      "bytes": 2028,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/battle/skills/resolvers/VitalityRestoreSkillResolver.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/battle/runtime/phases/BattleTileEffectPhase.ts",
+      "blob_sha": "4823124bf7eaa678ab4fcb1e4a2c0c9f05e18e60",
+      "sha256": "f9aaf39685818f6cab6f126a25e8706704574b8c5ffe9483b400ea14883588be",
+      "bytes": 11426,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/battle/runtime/phases/BattleTileEffectPhase.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/battle/runtime/BattleSkillDispatcher.ts",
+      "blob_sha": "32cf08afcbf893074c9f733f9b1fb566adf6d8cf",
+      "sha256": "0f2a379d25a32d399868b710fd00c6c3847a1aa52431c999cf9b431bdb368583",
+      "bytes": 31590,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/battle/runtime/BattleSkillDispatcher.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/battle/controllers/BattleController.ts",
+      "blob_sha": "049511fb8fbac841a0bff74fc01d3c5246cd15e9",
+      "sha256": "2a4b50c9e20b71eda4c488144292802ca88cbd85a1dc8b57467b220e52e36a19",
+      "bytes": 71930,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/battle/controllers/BattleController.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/battle/skills/BattleSkillProfiles.ts",
+      "blob_sha": "36ce4fe8a8977beb4d98a32ecb4bce8773c3364b",
+      "sha256": "f5ecd060d2aa6bf91b62bdda151e10857835ca43454a8a42bbff991a0a8fd84d",
+      "bytes": 23500,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/battle/skills/BattleSkillProfiles.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/core/systems/WishPool.ts",
+      "blob_sha": "9c43ce4405d83372dd626b8addb53f1fcbd4c8eb",
+      "sha256": "0219c66dc7a668aa2e11cab04ee10728acdf026bb8be25bba222b9a9ce591093",
+      "bytes": 8799,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/WishPool.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "docs/遊戲規格文件/設計參考/育成與戰鬥公式基準手冊.md",
+      "blob_sha": "f8720e054ace4523fae75a319b5348709cb635d4",
+      "sha256": "f5f80e1de4c58a8a0d0034e61d75bc995c4144435b6de7284a77dd0223b169eb",
+      "bytes": 14546,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/設計參考/育成與戰鬥公式基準手冊.md",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "docs/agent-briefs/tasks/PROG/PROG-2-1268.md",
+      "blob_sha": "fabce9586c93b236d5463d5c0ea3447fe0db5a17",
+      "sha256": "44379d3f279c244949a1da638b2d50efbcc4aeb57dc5e49e4bad4d850e84cecd",
+      "bytes": 1438,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/agent-briefs/tasks/PROG/PROG-2-1268.md",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/core/systems/LoginStreak.ts",
+      "blob_sha": "13ab418ecc0f06d7ec6ed46e5fe19516e55c1843",
+      "sha256": "fd539f9ea03b55ed095725bf41ec9a154d72a92d007bcc1ad64b3963cc21d88d",
+      "bytes": 2048,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/LoginStreak.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/ui/core/BreedingTexts.ts",
+      "blob_sha": "57b485a1592c700c42ac8cc1a4382d421a097cc9",
+      "sha256": "ea7a5f627b885e4d49f168bb2bab909351da8c6d2a614a8eff6e76873c93eed7",
+      "bytes": 2248,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/core/BreedingTexts.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/ui/core/VitalityScriptTexts.ts",
+      "blob_sha": "237765cfcda0bbc8c9e3d73dc514329c4aebdbcb",
+      "sha256": "597945ae4dacdb4f72821f342374ab7c4555f3ddf4a7aac370295cbe7b98ec21",
+      "bytes": 2028,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/ui/core/VitalityScriptTexts.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/core/config/TigerTallySpecTactics.ts",
+      "blob_sha": "494cef62de42e63d455de1ce69265d6b4b05e552",
+      "sha256": "4158ab93f69120189873cf9dad3d634de4f7b746eec7c79b883f4f98a84fdc72",
+      "bytes": 15340,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/config/TigerTallySpecTactics.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/shared/SkillRuntimeContract.ts",
+      "blob_sha": "bb151dc6773886737868bcc25b5b3f1f2650a9cd",
+      "sha256": "f5219295081464497857a60185c1770a69553e7ba048c24366ec0a43ec7ec51c",
+      "bytes": 6241,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/shared/SkillRuntimeContract.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/core/systems/BattleRoster.ts",
+      "blob_sha": "f25e2698a08bb226ed2f9b0fbb40b01a832148d0",
+      "sha256": "736af78c3655f47c322192d3ac0e867169cf57e0e78dc947ca5d6665320580ee",
+      "bytes": 17969,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BattleRoster.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/battle/views/BattleSceneLoader.ts",
+      "blob_sha": "c1ccbca8da35f2c0beaa471e5b08f387bd826a7c",
+      "sha256": "efeee2076339293af1f02d9cff01a11244f315ab7236736a81c356fa352528d6",
+      "bytes": 24903,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/battle/views/BattleSceneLoader.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/core/systems/BreedingSystem.ts",
+      "blob_sha": "aa00f689366a4ea67c68535b92431fc2c3322b61",
+      "sha256": "bf8939ffe07609fecaca3a270c5f36cf92b75fd2da7989b6217239d69afd3c0d",
+      "bytes": 34900,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/BreedingSystem.ts",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/resources/data/master/ultimate-definitions.json",
+      "blob_sha": "17df0d22c1415be24ff2b4494492b5ae72ad7081",
+      "sha256": "bc9499450eb54e6a79cd11c6b97e9baca419869cefd21f1a4d88a3992d6d606c",
+      "bytes": 38651,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/resources/data/master/ultimate-definitions.json",
+      "provenance": "exact-commit GitHub fetch"
+    },
+    {
+      "path": "assets/scripts/core/managers/GameSession.ts",
+      "blob_sha": "75a387a2c49cafa7fb70fefd5028cc3c87035339",
+      "sha256": "4e7ac248cb0cfac92b4eb35bb84272cb2fc37903b090adcb20181c7fb90e96af",
+      "bytes": 239947,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/managers/GameSession.ts",
+      "provenance": "reused sealed gameplay-validation-20261104; reverified blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/NurtureSystem.ts",
+      "blob_sha": "745a0235ba075a604fa26df135f6d76c51bdadae",
+      "sha256": "edc60414565c656f690a528f169f3bded1efdecd66753cbb506c7cd3bc2cd2f6",
+      "bytes": 33667,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/NurtureSystem.ts",
+      "provenance": "reused sealed gameplay-validation-20261104; reverified blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/GeneralAging.ts",
+      "blob_sha": "8ebde70fa84edad28485ad6334328141f227fd4f",
+      "sha256": "871d651615843602e24a653d1f6b1fba2a6f520c6f0841fbc0655a4ffa258785",
+      "bytes": 5147,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/GeneralAging.ts",
+      "provenance": "reused sealed gameplay-validation-20261104; reverified blob"
+    },
+    {
+      "path": "assets/scripts/core/config/Constants.ts",
+      "blob_sha": "b46e94469158edfa211c6a77ec4d624c347ac738",
+      "sha256": "945672da9dfb34c6af80229bcc2dc8faabe6d27748e2b09673eda6272a3284f7",
+      "bytes": 6297,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/config/Constants.ts",
+      "provenance": "reused sealed gameplay-validation-20261104; reverified blob"
+    },
+    {
+      "path": "assets/scripts/shared/CommonEnums.ts",
+      "blob_sha": "090bc87b7e738513cadbeace408c5cd86b397b15",
+      "sha256": "7c39a1a416f80f31197146edd0026f92c128c154819fc90c6339105c0bfd7766",
+      "bytes": 2942,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/shared/CommonEnums.ts",
+      "provenance": "reused sealed gameplay-validation-20261104; reverified blob"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將壽命系統.md",
+      "blob_sha": "95c11b009130b25bec40b7e3eb039fb0b7e74a0d",
+      "sha256": "75af767d6d5700096e808e68ed1d52ed57d2a82b34cce2aa49613e061895e572",
+      "bytes": 10539,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/docs/遊戲規格文件/系統規格書/武將壽命系統.md",
+      "provenance": "reused sealed gameplay-validation-20261104; reverified blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/PlayerInventory.ts",
+      "blob_sha": "4262f657d6d22e3dfe276b2b6a1f07039eb5644b",
+      "sha256": "706b9fbdf275eccf6987a143e4cbcc1b731b4fabe2a688ca4740d3dc47f880f2",
+      "bytes": 4464,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/PlayerInventory.ts",
+      "provenance": "reused sealed gameplay-inventory-consumption-20261104; reverified blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/ItemDef.ts",
+      "blob_sha": "3d31e987c22668c647fab1ba3b4082abb0a26bc9",
+      "sha256": "ae1272e0c299b8661c8f91612db8a331f018bf69e8c004746beb8e69c44da825",
+      "bytes": 7017,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ItemDef.ts",
+      "provenance": "reused sealed gameplay-inventory-consumption-20261104; reverified blob"
+    },
+    {
+      "path": "assets/scripts/core/systems/ItemEffectDispatcher.ts",
+      "blob_sha": "29825210ba6c545e48ced0759b079dadd11f570d",
+      "sha256": "92b8739d2c3ae6c462ba97eb501aa5047a30cc5ba409ce39554f456b6b629dc8",
+      "bytes": 2261,
+      "source_url": "https://github.com/eaglhuang/3klife/blob/96a83124094d3b2485bfb749ef37d567ad834559/assets/scripts/core/systems/ItemEffectDispatcher.ts",
+      "provenance": "reused sealed gameplay-inventory-consumption-20261104; reverified blob"
+    }
+  ]
+}
