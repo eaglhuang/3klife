@@ -33,6 +33,44 @@
         "skinSlot": "oi.card.bg",
         "children": [
           {
+            "type": "panel",
+            "name": "ShowcasePortraitFrame",
+            "id": "showcasePortraitFrame",
+            "widget": {
+              "top": 20,
+              "left": 1020
+            },
+            "width": 360,
+            "height": 560,
+            "skinSlot": "oi.portrait.frame",
+            "_doc": "UI-2-0160：名將登場立繪；Mask 由 LobbyScene 掛上，立繪依臉部標記對齊",
+            "children": [
+              {
+                "type": "container",
+                "name": "ShowcasePortraitMask",
+                "id": "showcasePortraitMask",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "width": 360,
+                "height": 560,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "ShowcasePortrait",
+                    "id": "showcasePortrait",
+                    "width": 360,
+                    "height": 560,
+                    "skinSlot": "oi.portrait"
+                  }
+                ]
+              }
+            ]
+          },
+          {
             "type": "label",
             "name": "ShowcaseName",
             "id": "showcaseName",
@@ -40,7 +78,7 @@
               "top": 40,
               "left": 60
             },
-            "width": 900,
+            "width": 920,
             "height": 50,
             "text": "",
             "styleSlot": "oi.label.title"
@@ -53,7 +91,7 @@
               "top": 100,
               "left": 60
             },
-            "width": 1000,
+            "width": 920,
             "height": 30,
             "text": "",
             "styleSlot": "oi.label.meta"
@@ -66,7 +104,7 @@
               "top": 170,
               "left": 60
             },
-            "width": 1280,
+            "width": 920,
             "height": 240,
             "text": "",
             "styleSlot": "oi.label.body"
@@ -79,7 +117,7 @@
               "top": 420,
               "left": 60
             },
-            "width": 1000,
+            "width": 920,
             "height": 30,
             "text": "",
             "styleSlot": "oi.label.meta"
@@ -102,8 +140,8 @@
             "name": "BtnShowcaseNext",
             "id": "btnShowcaseNext",
             "widget": {
-              "top": 460,
-              "left": 1060
+              "top": 480,
+              "left": 700
             },
             "width": 280,
             "height": 64,

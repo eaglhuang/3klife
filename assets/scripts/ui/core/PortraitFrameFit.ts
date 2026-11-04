@@ -39,6 +39,14 @@ export const PORTRAIT_FRAME_SPEC: Readonly<PortraitFrameSpec> = {
     eyeFromTop: 118,
 };
 
+/** 開場名將登場卡右側半身立繪框（UI-2-0160）：框比六框寬，臉放大到約 1.5 倍 */
+export const SHOWCASE_PORTRAIT_SPEC: Readonly<PortraitFrameSpec> = {
+    frameWidth: 360,
+    frameHeight: 560,
+    faceHeight: 90,
+    eyeFromTop: 150,
+};
+
 export function estimateFaceMarks(imageWidth: number, imageHeight: number): FaceMarks {
     const eyeY = imageHeight * 0.12;
     const half = imageHeight * 0.0325;
