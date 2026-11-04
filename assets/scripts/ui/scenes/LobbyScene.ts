@@ -174,6 +174,7 @@ import { DailyReportController } from '../core/DailyReportController';
 import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
 import type { TabKey } from '../components/character-ds3/GeneralDetailChromePresenter';
 import { ensureDs3SideAction, setDs3SideActionEnabled } from '../components/character-ds3/Ds3SideActions';
+import { DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
 
 const { ccclass } = _decorator;
 
@@ -181,7 +182,8 @@ const { ccclass } = _decorator;
 /** 六角圖暫定位置與半徑：畫面沒有預留節點，由程式掛在 CharacterDs3Host 下（PROVISIONAL，座標待 Codex 實機微調） */
 const FACTOR_HEX_NODE_NAME = 'FactorHexGraphic';
 const FACTOR_HEX_RADIUS = 120;
-const FACTOR_HEX_POSITION = { x: -240, y: -160 };
+// 血統樹「本代」右側的空位
+const FACTOR_HEX_POSITION = { x: 90, y: -260 };
 
 /** 圖鑑入口的暫定位置（PROVISIONAL：畫面沒有預留節點，程式掛在 CharacterDs3Host 下，待 Codex 實機微調） */
 const GALLERY_ENTRY_NODE_NAME = 'GeneralVersionGalleryEntry';
@@ -4021,6 +4023,20 @@ export class LobbyScene extends Component {
         this._refreshCharacterDs3SoulInject();
     }
 
+    /** 命分頁左區血統樹：蓋住立繪，徽章下的動作按鈕與六角圖留在上層（UI-2-0168） */
+    private _refreshCharacterDs3BloodlineTree(): void {
+        const hostNode = this._characterDs3Surface()?.node;
+        const general = this._characterDs3General;
+        if (!hostNode || !general) return;
+        const panel = ensureDs3BloodlineTree(hostNode, general.name);
+        panel.onCardPeek = (view) => this._showToast(`${view.title}：${view.tendency}`);
+        panel.node.active = true;
+        for (const name of [FACTOR_HEX_NODE_NAME, 'btnGeneralJournal', 'btnSoulInject', GALLERY_ENTRY_NODE_NAME]) {
+            hostNode.getChildByName(name)?.setSiblingIndex(hostNode.children.length - 1);
+        }
+        void panel.loadForGeneral(general.id);
+    }
+
     private _showToast(message: string): void {
         services().event.emit('SHOW_TOAST', { message, duration: 2 });
     }
@@ -4030,6 +4046,9 @@ export class LobbyScene extends Component {
         // 只在血脈分頁顯示（PROG-2-1625）
         const hostNode = this._characterDs3Surface()?.node;
         const onBloodline = this._characterDs3ActiveTab === 'Bloodline';
+        const tree = hostNode?.getChildByName(DS3_BLOODLINE_TREE_NODE_NAME);
+        if (tree) tree.active = onBloodline;
+        if (onBloodline) this._refreshCharacterDs3BloodlineTree();
         const factorHex = hostNode?.getChildByName(FACTOR_HEX_NODE_NAME);
         if (factorHex) factorHex.active = onBloodline;
         const binder = this._characterDs3Host?.binder;
