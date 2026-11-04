@@ -31,6 +31,8 @@ export function strategistHudInputOf(state: BattleState, missingCounters: readon
     else if (effect.state === 'river-current' && effect.notes === 'scene-gambit:flood-attack') hazards.add('水流推移');
     else if (effect.notes === AMBUSH_TRAP_TILE_NOTE) hazards.add('埋伏陷阱');
   }
+  // 已擊破的落石格已從場上移除，依累計數補列「已回收」（PROG-2-1745）
+  for (let i = 0; i < (state.recoveredRockSlides ?? 0); i++) interactiveObjects.push({ kind: 'Rockfall_Node', state: 'recovered' });
   return {
     hazardsThisTurn: Array.from(hazards),
     interactiveObjects,
