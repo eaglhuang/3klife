@@ -41,6 +41,15 @@ export interface StrategistHudInput {
     salvage: SalvageTotals;
     /** 缺少的對策關鍵字（如 抗混亂、反隱） */
     missingCounters: readonly string[];
+    /** 本場正在執行的場景戰法與執行者（主戰場UI §6.3，PROG-2-1758）；一般戰鬥不傳 */
+    executing?: StrategistExecution;
+}
+
+/** 參謀常駐行的資料：執行者姓名、智力、場景戰法名稱 */
+export interface StrategistExecution {
+    name: string;
+    int: number;
+    tactic: string;
 }
 
 export interface StrategistHudSummary {
@@ -48,6 +57,8 @@ export interface StrategistHudSummary {
     interactiveObjectStatus: string;
     stageSalvageSummary: string;
     recommendedLoadoutGap: string;
+    /** 參謀常駐行，例如「曹操 INT 91，正在執行：夜襲」；一般戰鬥為空字串 */
+    executingTactic: string;
 }
 
 const KIND_LABEL: Readonly<Record<InteractiveObjectKind, string>> = {
@@ -78,17 +89,19 @@ export function buildStrategistHudSummary(input: StrategistHudInput): Strategist
         interactiveObjectStatus: interactiveObjectStatusOf(input.interactiveObjects),
         stageSalvageSummary: salvageSummaryOf(input.salvage),
         recommendedLoadoutGap: input.missingCounters.length > 0 ? `缺少${input.missingCounters.join('、')}` : '對策槽無缺口',
+        executingTactic: input.executing ? `${input.executing.name} INT ${input.executing.int}，正在執行：${input.executing.tactic}` : '',
     };
 }
 
 /**
  * 軍師 HUD 的戰場日誌句（PROG-2-1744，暫定）：戰場尚無 HUD 欄位節點，先在回合開始寫進戰場日誌。
- * 只列有內容的欄位（危害、物件、回收、缺口），四欄都是預設空值時回傳空字串，不寫日誌。
- * 例：「軍師：危害 火場延燒｜營帳：存活 2｜回收 石材 3｜缺少抗混亂」
+ * 只列有內容的欄位（執行中戰法、危害、物件、回收、缺口），都是預設空值時回傳空字串，不寫日誌。
+ * 例：「軍師：曹操 INT 91，正在執行：火攻｜危害 火場延燒｜營帳：存活 2｜回收 石材 3｜缺少抗混亂」
  */
 export function strategistHudLogLine(input: StrategistHudInput): string {
     const summary = buildStrategistHudSummary(input);
     const parts: string[] = [];
+    if (summary.executingTactic) parts.push(summary.executingTactic);
     if (input.hazardsThisTurn.length > 0) parts.push(`危害 ${summary.themeHazard}`);
     if (input.interactiveObjects.length > 0) parts.push(summary.interactiveObjectStatus.split('\n').join('；'));
     if ((Object.keys(SALVAGE_LABEL) as (keyof SalvageTotals)[]).some((key) => input.salvage[key] > 0)) parts.push(`回收 ${summary.stageSalvageSummary}`);

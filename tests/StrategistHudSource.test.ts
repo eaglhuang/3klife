@@ -9,6 +9,8 @@ import { buildStrategistHudSummary } from '../assets/scripts/core/systems/Strate
 import { BattleState } from '../assets/scripts/battle/models/BattleState';
 import { ROCK_SLIDE_TILE_NOTE } from '../assets/scripts/battle/shared/StageSalvage';
 import { AMBUSH_TRAP_TILE_NOTE } from '../assets/scripts/battle/shared/BattleTacticBehavior';
+import { BattleTactic } from '../assets/scripts/core/config/Constants';
+import type { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 
 export function createStrategistHudSourceSuite(): TestSuite {
     const suite = new TestSuite('StrategistHudSource (軍師 HUD 戰場資料來源 PROG-2-1599)');
@@ -31,6 +33,16 @@ export function createStrategistHudSourceSuite(): TestSuite {
 
         input.salvage.stone = 0;
         assert.equals(120, state.stageSalvage.stone, '回收累計不能共用參照');
+    });
+
+    suite.test('場景戰法帶出主將智力與戰法名，一般戰鬥不帶（PROG-2-1758）', () => {
+        const state = new BattleState();
+        state.playerGeneral = { name: '諸葛亮', int: 99 } as unknown as GeneralUnit;
+        assert.equals('', buildStrategistHudSummary(strategistHudInputOf(state)).executingTactic);
+        state.battleTactic = BattleTactic.NightRaid;
+        assert.equals('諸葛亮 INT 99，正在執行：夜襲', buildStrategistHudSummary(strategistHudInputOf(state)).executingTactic);
+        state.playerGeneral = null;
+        assert.equals(undefined, strategistHudInputOf(state).executing);
     });
 
     suite.test('已擊破的落石列為已回收（PROG-2-1745）', () => {

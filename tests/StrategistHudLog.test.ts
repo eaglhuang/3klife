@@ -22,5 +22,16 @@ export function createStrategistHudLogSuite(): TestSuite {
         assert.equals('軍師：回收 補給 5', strategistHudLogLine({ hazardsThisTurn: [], interactiveObjects: [], salvage: { ...ZERO, supply: 5 }, missingCounters: [] }));
     });
 
+    suite.test('場景戰法的參謀常駐行排在最前（PROG-2-1758）', () => {
+        const line = strategistHudLogLine({
+            hazardsThisTurn: ['火場延燒'],
+            interactiveObjects: [],
+            salvage: { ...ZERO },
+            missingCounters: [],
+            executing: { name: '曹操', int: 91, tactic: '火攻' },
+        });
+        assert.equals('軍師：曹操 INT 91，正在執行：火攻｜危害 火場延燒', line);
+    });
+
     return suite;
 }
