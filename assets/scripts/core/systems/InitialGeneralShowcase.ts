@@ -3,7 +3,9 @@
  * InitialGeneralShowcase — 六位初始名將的展示卡與登場台詞資料（純邏輯，不依賴 cc）。
  *
  * - 順序依規格清單：張飛、魏延、夏侯惇、張郃、孫策、甘寧。
- * - 每位名將有一句登場台詞，台詞原文來自規格 §5.2。
+ * - 每位名將有一句登場台詞，台詞原文來自規格 §5.2（趣味版，同正式版劇本文案 §7 備選庫）；
+ *   另附正式版劇本文案 §3「名將登場正式版」的正式台詞（formalLine，PROG-2-1732）。
+ * - 暫定：畫面預設沿用趣味版（SHOWCASE_LINE_STYLE_DEFAULT），改用正式版待裁定。
  * - generalId 對應 generals.json；測試會檢查 id 與名稱是否對得上。
  *
  * Unity 對照：像一份 Showcase 的 ScriptableObject 清單，畫面只依序取出一筆來播放。
@@ -20,8 +22,21 @@ export interface InitialShowcaseEntry {
     originRegion: string;
     /** 主因子，必須是 factorTags 之一 */
     coreFactorTag: string;
-    /** 登場台詞（規格 §5.2） */
+    /** 登場台詞（規格 §5.2，趣味版） */
     line: string;
+    /** 正式版登場台詞（正式版劇本文案 §3） */
+    formalLine: string;
+}
+
+/** 登場台詞風格：fun = 趣味版（§5.2／§7）、formal = 正式版（§3） */
+export type ShowcaseLineStyle = 'fun' | 'formal';
+
+/** 暫定：沿用目前畫面的趣味版；正式上線改用哪一版待裁定 */
+export const SHOWCASE_LINE_STYLE_DEFAULT: ShowcaseLineStyle = 'fun';
+
+/** 依風格取登場台詞 */
+export function showcaseLineOf(entry: InitialShowcaseEntry, style: ShowcaseLineStyle = SHOWCASE_LINE_STYLE_DEFAULT): string {
+    return style === 'formal' ? entry.formalLine : entry.line;
 }
 
 export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.freeze([
@@ -33,6 +48,7 @@ export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.
         originRegion: '幽州涿郡',
         coreFactorTag: '燕人',
         line: '主公！俺老張等這封信等得嗓子都乾了！',
+        formalLine: '主公，這一回，我不會再讓你孤身向前。',
     },
     {
         generalId: 'wei-yan',
@@ -42,6 +58,7 @@ export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.
         originRegion: '義陽',
         coreFactorTag: '義陽',
         line: '他們都說我有反骨，只有你願意給我這封信。',
+        formalLine: '別人看見的是反骨，你看見的，應該是我替你撕開局面的力量。',
     },
     {
         generalId: 'xiahou-dun',
@@ -51,6 +68,7 @@ export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.
         originRegion: '豫州沛國譙縣',
         coreFactorTag: '譙縣',
         line: '雙眼尚在，戰魂未冷。',
+        formalLine: '雙眼可失，信念不失。主公，請下令吧。',
     },
     {
         generalId: 'zhang-he',
@@ -60,6 +78,7 @@ export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.
         originRegion: '冀州河間國',
         coreFactorTag: '河間',
         line: '在這渾沌的亂世中，唯有主公的選擇，才配得上我這華麗的謝幕。',
+        formalLine: '在這亂世之中，真正值得我出手的人，只有主公。',
     },
     {
         generalId: 'sun-ce',
@@ -69,6 +88,7 @@ export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.
         originRegion: '揚州吳郡富春',
         coreFactorTag: '富春',
         line: '江東的風吹到了現代，還是這麼燙人。',
+        formalLine: '江東之風再起。主公，這一次我與你並肩而行。',
     },
     {
         generalId: 'gan-ning',
@@ -78,6 +98,7 @@ export const INITIAL_SHOWCASE_ENTRIES: readonly InitialShowcaseEntry[] = Object.
         originRegion: '益州巴郡臨江',
         coreFactorTag: '巴郡',
         line: '這長江水，往後就歸主公管，我負責開路！',
+        formalLine: '你聽見鈴聲了嗎？那是我回來替你開路的聲音。',
     },
 ]);
 

@@ -4,7 +4,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { TestSuite, assert } from './TestRunner';
-import { INITIAL_SHOWCASE_ENTRIES, initialShowcaseEntries, initialShowcaseOf } from '../assets/scripts/core/systems/InitialGeneralShowcase';
+import { INITIAL_SHOWCASE_ENTRIES, SHOWCASE_LINE_STYLE_DEFAULT, initialShowcaseEntries, initialShowcaseOf, showcaseLineOf } from '../assets/scripts/core/systems/InitialGeneralShowcase';
 
 const GENERALS_PATH = path.join(__dirname, '..', 'assets', 'resources', 'data', 'generals.json');
 const LINE_MAX_CHARS = 40;
@@ -60,6 +60,21 @@ export function createInitialGeneralShowcaseSuite(): TestSuite {
         const entries = initialShowcaseEntries();
         (entries[0].factorTags as string[]).push('HACKED');
         assert.equals(3, INITIAL_SHOWCASE_ENTRIES[0].factorTags.length);
+    });
+
+    suite.test('每位名將都有正式版台詞（正式版劇本文案 §3），且與趣味版不同（PROG-2-1732）', () => {
+        for (const entry of INITIAL_SHOWCASE_ENTRIES) {
+            assert.isTrue(entry.formalLine.length > 0, `${entry.name} 缺正式版台詞`);
+            assert.isTrue(entry.formalLine !== entry.line, `${entry.name} 正式版與趣味版相同`);
+        }
+        assert.equals('主公，這一回，我不會再讓你孤身向前。', initialShowcaseOf('zhang-fei')!.formalLine);
+    });
+
+    suite.test('依風格取台詞：預設沿用趣味版，formal 取正式版', () => {
+        const ganNing = initialShowcaseOf('gan-ning')!;
+        assert.equals('fun', SHOWCASE_LINE_STYLE_DEFAULT);
+        assert.equals(ganNing.line, showcaseLineOf(ganNing));
+        assert.equals('你聽見鈴聲了嗎？那是我回來替你開路的聲音。', showcaseLineOf(ganNing, 'formal'));
     });
 
     return suite;
