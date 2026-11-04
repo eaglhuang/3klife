@@ -62,6 +62,34 @@
           },
           {
             "type": "button",
+            "name": "BtnWarehouseSort",
+            "id": "btnWarehouseSort",
+            "width": 320,
+            "height": 64,
+            "skinSlot": "wp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnWarehouseSortLabel",
+                "id": "btnWarehouseSortLabel",
+                "width": 320,
+                "height": 40,
+                "text": "",
+                "styleSlot": "wp.label.body"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "WarehouseList",
+            "id": "warehouseList",
+            "width": 944,
+            "height": 220,
+            "text": "",
+            "styleSlot": "wp.label.body"
+          },
+          {
+            "type": "button",
             "name": "BtnWarehouseExpand",
             "id": "btnWarehouseExpand",
             "width": 320,
