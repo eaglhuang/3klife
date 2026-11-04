@@ -15,6 +15,14 @@ import {
     WAREHOUSE_EXPAND_STEP,
     WarehouseStoreResult,
 } from '../../core/systems/WarehouseCapacity';
+import type { InventoryRecord } from '../../core/systems/InventoryProjection';
+import {
+    nextWarehouseSortKey,
+    sortWarehouseRecords,
+    WAREHOUSE_SORT_LABEL,
+    warehouseRecordLine,
+    WarehouseSortKey,
+} from '../../core/systems/WarehouseSort';
 
 export interface WarehousePanelFlowView {
     texts: Record<string, string>;
@@ -29,12 +37,18 @@ export interface WarehousePanelDeps {
     expansions: () => number;
     /** 擴容一次：回傳是否成功；由呼叫端寫入存檔。 */
     expand: () => boolean;
+    /** 倉庫裡的物件列（不含已裝在武將身上的）；不給時清單顯示空倉提示（PROG-2-1721） */
+    storedRecords?: () => readonly InventoryRecord[];
 }
+
+/** 清單最多列出幾件，其餘以「…另有 N 件」帶過 */
+export const WAREHOUSE_LIST_MAX_LINES = 8;
 
 const FULL_NOTICE = '倉庫已滿，請擴容或整理';
 
 export class WarehousePanelController {
     private _notice: string | null = null;
+    private _sortKey: WarehouseSortKey = 'quality';
 
     constructor(private readonly _deps: WarehousePanelDeps) {}
 
@@ -64,6 +78,28 @@ export class WarehousePanelController {
         return ok;
     }
 
+    /** 目前排序方式 */
+    public get sortKey(): WarehouseSortKey {
+        return this._sortKey;
+    }
+
+    /** 排序按鈕：品質 → 類型 → 取得時間 循環（倉庫系統 §E-6） */
+    public cycleSort(): WarehouseSortKey {
+        this._sortKey = nextWarehouseSortKey(this._sortKey);
+        return this._sortKey;
+    }
+
+    /** 依目前排序方式組出清單文字 */
+    public listText(): string {
+        const records = this._deps.storedRecords?.() ?? [];
+        if (records.length === 0) return '倉庫目前沒有物品';
+        const sorted = sortWarehouseRecords(records, this._sortKey);
+        const lines = sorted.slice(0, WAREHOUSE_LIST_MAX_LINES).map(warehouseRecordLine);
+        const rest = sorted.length - lines.length;
+        if (rest > 0) lines.push(`…另有 ${rest} 件`);
+        return lines.join('\n');
+    }
+
     /** 扁平 FlowView：key 與 warehouse-panel-main.json 的節點 id 對應。 */
     public getFlowView(): WarehousePanelFlowView {
         const used = this._deps.usedSlots();
@@ -74,11 +110,13 @@ export class WarehousePanelController {
             warehouseTitle: '武將倉庫',
             warehouseCapacity: `容量 ${used}/${capacity}`,
             warehouseNotice: notice,
+            btnWarehouseSortLabel: `排序：${WAREHOUSE_SORT_LABEL[this._sortKey]}`,
+            warehouseList: this.listText(),
             btnWarehouseExpandLabel: expandable ? `擴容 +${WAREHOUSE_EXPAND_STEP} 格` : '已達上限',
             btnCloseLabel: '關閉',
         };
         const actives: Record<string, boolean> = { warehouseNotice: notice !== '' };
-        const enabled: Record<string, boolean> = { btnClose: true, btnWarehouseExpand: expandable };
+        const enabled: Record<string, boolean> = { btnClose: true, btnWarehouseExpand: expandable, btnWarehouseSort: true };
         return { texts, actives, enabled };
     }
 }

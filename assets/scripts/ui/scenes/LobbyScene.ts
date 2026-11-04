@@ -1349,6 +1349,7 @@ export class LobbyScene extends Component {
         const warehouse = new WarehousePanelController({
             usedSlots: () => services().session.warehouseUsedSlots,
             expansions: () => services().session.warehouseExpansions,
+            storedRecords: () => services().session.inventoryRecords.filter((record) => !record.equippedBy),
             expand: () => {
                 if (!gacha.spendCurrency('gold', WAREHOUSE_EXPAND_GOLD_COST)) {
                     services().event.emit('SHOW_TOAST', { message: `金幣不足：擴容需要 ${WAREHOUSE_EXPAND_GOLD_COST} 金幣`, duration: 2 });
@@ -1362,6 +1363,7 @@ export class LobbyScene extends Component {
         this._warehouseHost = await this._mountPreviewScreenHost('WarehouseHost', 'warehouse-panel-screen', [
             { buttonId: 'btnClose', handler: () => { if (this._warehouseHost) this._warehouseHost.node.active = false; } },
             { buttonId: 'btnWarehouseExpand', handler: () => { warehouse.expandSelected(); this._refreshWarehouse(); } },
+            { buttonId: 'btnWarehouseSort', handler: () => { warehouse.cycleSort(); this._refreshWarehouse(); } },
         ]);
         this._warehouseHost.node.active = false;
     }
