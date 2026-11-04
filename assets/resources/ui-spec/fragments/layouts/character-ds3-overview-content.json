@@ -980,7 +980,7 @@
                   "type": "button",
                   "name": "BtnBloodlineVignette",
                   "id": "btnBloodlineVignette",
-                  "width": 170,
+                  "width": 110,
                   "height": 52,
                   "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
                   "children": [
@@ -1001,9 +1001,32 @@
                 },
                 {
                   "type": "button",
+                  "name": "BtnGeneralJournal",
+                  "id": "btnGeneralJournal",
+                  "width": 110,
+                  "height": 52,
+                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "BtnGeneralJournalLabel",
+                      "id": "generalJournalLabel",
+                      "widget": {
+                        "vCenter": true,
+                        "left": 0,
+                        "right": 0
+                      },
+                      "height": 44,
+                      "text": "武將日誌",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject"
+                    }
+                  ]
+                },
+                {
+                  "type": "button",
                   "name": "BtnSoulInject",
                   "id": "btnSoulInject",
-                  "width": 170,
+                  "width": 110,
                   "height": 52,
                   "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
                   "children": [

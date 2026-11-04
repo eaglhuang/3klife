@@ -1424,7 +1424,7 @@ export class LobbyScene extends Component {
 
     /**
      * 武將日誌回看抽屜（doc_spec_0015 範圍 #6，PROG-2-1183）：名冊武將可上一位／下一位切換。
-     * 入口暫放晨報派遣板；人物頁加入口鈕後呼叫 openGeneralJournal(generalId)。
+     * 入口：晨報派遣板，以及人物頁 Overview 的「武將日誌」按鈕（PROG-2-1723）。
      */
     private async _mountGeneralJournal(): Promise<void> {
         const journal = new GeneralJournalController({
@@ -3719,6 +3719,32 @@ export class LobbyScene extends Component {
         ]);
     }
 
+    /** Overview 分頁的按鈕：血統小傳與武將日誌，切回 Overview 都重綁 */
+    private _bindCharacterDs3OverviewButtons(): void {
+        this._bindCharacterDs3BloodlineVignette();
+        this._bindCharacterDs3JournalEntry();
+    }
+
+    /**
+     * 武將日誌入口（doc_spec_0015 §E-6 人物頁故事回看掛點，PROG-2-1723）：
+     * 在人物頁 Overview 分頁，點了打開目前這位武將的日誌抽屜，疊在人物頁上。
+     */
+    private _bindCharacterDs3JournalEntry(): void {
+        const button = this._characterDs3Surface()?.binder?.getButton('btnGeneralJournal');
+        if (!button) {
+            UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 journal button missing', { buttonNode: 'btnGeneralJournal' });
+            return;
+        }
+        button.node.off(Button.EventType.CLICK, this._onCharacterDs3JournalClick, this);
+        button.node.on(Button.EventType.CLICK, this._onCharacterDs3JournalClick, this);
+    }
+
+    private _onCharacterDs3JournalClick(): void {
+        const general = this._characterDs3General;
+        if (!general) return;
+        this.openGeneralJournal(general.id);
+    }
+
     /** 血統小傳按鈕（PROG-2-1428）：在人物頁 Overview 分頁，切回 Overview 都重綁 */
     private _bindCharacterDs3BloodlineVignette(): void {
         const button = this._characterDs3Surface()?.binder?.getButton('btnBloodlineVignette');
@@ -3847,7 +3873,7 @@ export class LobbyScene extends Component {
 
             this._characterDs3ActiveTab = tab;
             this._syncCharacterDs3PreviewTabVisualState();
-            if (tab === 'Overview') this._bindCharacterDs3BloodlineVignette();
+            if (tab === 'Overview') this._bindCharacterDs3OverviewButtons();
 
             UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 tab switched', {
                 tab,
@@ -4683,7 +4709,7 @@ export class LobbyScene extends Component {
             this._syncCharacterDs3PreviewTabVisualState();
             if (tab === 'Overview') {
                 this._bindCharacterDs3SoulInject();
-                this._bindCharacterDs3BloodlineVignette();
+                this._bindCharacterDs3OverviewButtons();
             }
         };
         await this._showCharacterFormalGeneral(config);
@@ -4699,7 +4725,7 @@ export class LobbyScene extends Component {
         this._refreshFactorHex(config);
         this._syncCharacterDs3PreviewTabVisualState();
         this._bindCharacterDs3SoulInject();
-        this._bindCharacterDs3BloodlineVignette();
+        this._bindCharacterDs3OverviewButtons();
         UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] character formal panel shown', { generalId: config.id });
     }
 
@@ -4773,7 +4799,7 @@ export class LobbyScene extends Component {
         if (resetSlotId) {
             this._characterDs3ActiveTab = 'Overview';
             this._syncCharacterDs3PreviewTabVisualState();
-            this._bindCharacterDs3BloodlineVignette();
+            this._bindCharacterDs3OverviewButtons();
         } else {
             UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 default tab reset failed', {
                 tab: 'Overview',
