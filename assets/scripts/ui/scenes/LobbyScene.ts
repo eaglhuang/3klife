@@ -14,6 +14,7 @@ import type { HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallMapEventCatalog } from '../../core/systems/HallMapEventMapper';
 import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
+import { buildLobbyHallWallView } from '../../core/systems/LobbyHallWallView';
 import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } from '../../core/systems/HallMapSeasonTurn';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
 import { UIID, LayerType } from '../../core/config/UIConfig';
@@ -2544,12 +2545,21 @@ export class LobbyScene extends Component {
         this._bringNodeToFront(host.node);
         // 晝夜依裝置當地時間，季節依遊戲時鐘（1 春～4 冬）
         this._lobbyHall?.refresh(services().session.gameTime.currentSeason, new Date().getHours());
+        this._refreshLobbyHallWalls();
         this._lobbyHall?.setPanelVisible('clan', familyOverviewHotspotVisible(services().session.familySystemUnlocked));
         this._lobbyHall?.openStage();
         if (this._pendingHallMapTurn) {
             this._lobbyHall?.playMapTurn(this._pendingHallMapTurn);
             this._pendingHallMapTurn = null;
         }
+    }
+
+    /** 幕府大廳左右牆（UI-2-0153）：左軍務、右內政，資料同任務板；任務資料沒載到時維持設計稿文字 */
+    private _refreshLobbyHallWalls(): void {
+        const board = this._hallBoard;
+        if (!board || !this._lobbyHall) return;
+        this._lobbyHall.setWall('wall-left', buildLobbyHallWallView(board.rowsFor('Military'), HALL_BOARD_MAX_ROWS));
+        this._lobbyHall.setWall('wall-right', buildLobbyHallWallView(board.rowsFor('Domestic'), HALL_BOARD_MAX_ROWS));
     }
 
     private _openRecruitHall(): void {

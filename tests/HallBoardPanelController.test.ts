@@ -47,6 +47,14 @@ export function createHallBoardPanelControllerSuite(): TestSuite {
         assert.isFalse(view.actives[`hallRow${HALL_BOARD_MAX_ROWS - 1}`] && rows.length < HALL_BOARD_MAX_ROWS);
     });
 
+    suite.test('rowsFor 取指定牆的列，不切換目前分頁（UI-2-0153）', () => {
+        const controller = new HallBoardPanelController(makeDeps());
+        const domestic = controller.rowsFor('Domestic');
+        assert.equals(controller.board, 'Military');
+        controller.switchBoard('Domestic');
+        assert.equals(JSON.stringify(controller.rows()), JSON.stringify(domestic));
+    });
+
     suite.test('指派狀態覆蓋靜態資料：已接取列顯示已接取且按鈕停用', () => {
         const first = hub().Mission_Boards.Military.Tasks[0].Task_ID;
         const controller = new HallBoardPanelController(makeDeps({ assignments: () => ({ [first]: 'zhang-fei' }) }));
