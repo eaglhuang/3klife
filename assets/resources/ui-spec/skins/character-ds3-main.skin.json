@@ -12836,7 +12836,7 @@
       "borderWidth": 1,
       "borderColor": "#ffc1074d"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_75": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_74": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -12894,7 +12894,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_38": {
+    "auto.character-ds3-tab-aptitude.aptitudetally_name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -12907,7 +12907,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_39": {
+    "auto.character-ds3-tab-aptitude.aptitudetally_quality": {
       "kind": "color-rect",
       "color": "rarityGold",
       "opacity": 0.18,
@@ -12915,11 +12915,35 @@
       "borderWidth": 1,
       "borderColor": "#ffc107"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_40": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_38": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
+      "letterSpacing": 0,
+      "color": "rarityGold",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_39": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "rarityGold",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_40": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
       "letterSpacing": 0,
       "color": "rarityGold",
       "outlineColor": "colorOutlineDark",
@@ -12957,7 +12981,7 @@
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
-      "color": "rarityGold",
+      "color": "character_ds3_main_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
@@ -12966,26 +12990,52 @@
     "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_44": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 12,
-      "lineHeight": 17,
-      "letterSpacing": 0,
-      "color": "rarityGold",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0.88,
+      "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
+    "auto.character-ds3-tab-aptitude.aptitudetally_troop": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/newsreader",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 0,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
     "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_45": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 12,
-      "lineHeight": 17,
-      "letterSpacing": 0,
-      "color": "character_ds3_main_local_color_01",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0.88,
+      "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.aptitudetally_grain": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/newsreader",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 0,
+      "color": "gdv3StatLuk",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
     },
     "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_46": {
       "kind": "label-style",
@@ -12999,57 +13049,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_47": {
-      "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
-      "fontSize": 13,
-      "lineHeight": 18,
-      "letterSpacing": 0,
-      "color": "textKhaki",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_48": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 11,
-      "lineHeight": 15,
-      "letterSpacing": 0.88,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_49": {
-      "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
-      "fontSize": 13,
-      "lineHeight": 18,
-      "letterSpacing": 0,
-      "color": "gdv3StatLuk",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_50": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 11,
-      "lineHeight": 15,
-      "letterSpacing": 0.88,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_51": {
+    "auto.character-ds3-tab-aptitude.aptitudetally_force": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 13,
@@ -13062,7 +13062,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_52": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_47": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -13074,7 +13074,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_53": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_48": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 13,
@@ -13087,7 +13087,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_84": {
+    "auto.character-ds3-tab-aptitude.aptitudetally_score": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 13,
@@ -13099,7 +13099,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_button_1": {
+    "auto.character-ds3-tab-aptitude.aptitudetally_btn_primary": {
       "kind": "color-rect",
       "color": "rarityGold",
       "opacity": 0.08,
@@ -13107,7 +13107,7 @@
       "borderWidth": 1,
       "borderColor": "#ffc10766"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_54": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_49": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -13119,7 +13119,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_button_2": {
+    "auto.character-ds3-tab-aptitude.aptitudetally_btn_secondary": {
       "kind": "color-rect",
       "color": "textKhaki",
       "opacity": 0.08,
@@ -13127,7 +13127,7 @@
       "borderWidth": 1,
       "borderColor": "#b0a88066"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_55": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_50": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -13139,7 +13139,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_button_3": {
+    "auto.character-ds3-tab-aptitude.aptitudetally_btn_detail": {
       "kind": "color-rect",
       "color": "gdv3StatStr",
       "opacity": 0.08,
@@ -13147,7 +13147,7 @@
       "borderWidth": 1,
       "borderColor": "#6fa8ff66"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_56": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_51": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -13744,8 +13744,8 @@
       ]
     },
     "tokenSources": {
-      "runtimePath": "C:\\Users\\User\\3KLife-wt-ov\\assets\\resources\\ui-spec\\ui-design-tokens.json",
-      "handoffPath": "C:\\Users\\User\\3KLife-wt-ov\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "runtimePath": "C:\\Users\\User\\3KLife-wt-tl\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife-wt-tl\\Design System\\design_handoff\\source\\ui-design-tokens.json",
       "sourcePath": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json"
     },
     "tokenConflictReport": [
@@ -13753,7 +13753,7 @@
         "section": "typography",
         "token": "headlineFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-ov\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-tl\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
         "path": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json",
         "previousValue": "fonts/newsreader/newsreader",
@@ -13764,7 +13764,7 @@
         "section": "typography",
         "token": "bodyFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-ov\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-tl\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
         "path": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json",
         "previousValue": "fonts/notosans_tc/notosans_tc",
@@ -13775,7 +13775,7 @@
         "section": "typography",
         "token": "labelFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-ov\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-tl\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
         "path": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json",
         "previousValue": "fonts/manrope/manrope",
@@ -13794,6 +13794,6 @@
       "limit": 4,
       "_warning": null
     },
-    "perTabReplayMergedAt": "2026-11-04T18:04:30.251Z"
+    "perTabReplayMergedAt": "2026-11-04T19:27:37.940Z"
   }
 }

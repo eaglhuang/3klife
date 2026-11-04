@@ -1670,7 +1670,7 @@
               "children": [
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabAptitude_div_74",
+                  "name": "AptitudeTally_info",
                   "width": 490,
                   "height": 99,
                   "layout": {
@@ -1682,14 +1682,14 @@
                   "children": [
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabAptitude_div_75",
+                      "name": "CharacterDs3TabAptitude_div_74",
                       "width": 56,
                       "height": 56,
                       "layout": {
                         "type": "grid",
                         "cellHeight": 56
                       },
-                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_75",
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_74",
                       "children": [
                         {
                           "type": "label",
@@ -1703,7 +1703,7 @@
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabAptitude_div_76",
+                      "name": "AptitudeTally_body",
                       "width": 420,
                       "height": 99,
                       "layout": {
@@ -1714,7 +1714,7 @@
                       "children": [
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabAptitude_div_77",
+                          "name": "CharacterDs3TabAptitude_div_75",
                           "width": 420,
                           "height": 26,
                           "layout": {
@@ -1726,28 +1726,28 @@
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabAptitude_span_38",
+                              "name": "AptitudeTally_name",
                               "width": 106,
                               "height": 26,
                               "text": "白虎符·步兵",
-                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_38"
+                              "styleSlot": "auto.character-ds3-tab-aptitude.aptitudetally_name"
                             },
                             {
                               "type": "panel",
-                              "name": "CharacterDs3TabAptitude_span_39",
+                              "name": "AptitudeTally_quality",
                               "width": 39,
                               "height": 21,
-                              "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_39",
+                              "skinSlot": "auto.character-ds3-tab-aptitude.aptitudetally_quality",
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabAptitude_span_40",
+                                  "name": "CharacterDs3TabAptitude_span_38",
                                   "widget": {
                                     "left": 8,
                                     "top": 2
                                   },
                                   "text": "SSR",
-                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_40",
+                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_38",
                                   "width": 23,
                                   "height": 17
                                 }
@@ -1755,7 +1755,7 @@
                             },
                             {
                               "type": "container",
-                              "name": "CharacterDs3TabAptitude_div_78",
+                              "name": "AptitudeTally_stars",
                               "width": 58,
                               "height": 17,
                               "layout": {
@@ -1764,6 +1764,22 @@
                                 "spacingX": 2
                               },
                               "children": [
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabAptitude_span_39",
+                                  "width": 10,
+                                  "height": 17,
+                                  "text": "★",
+                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_39"
+                                },
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabAptitude_span_40",
+                                  "width": 10,
+                                  "height": 17,
+                                  "text": "★",
+                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_40"
+                                },
                                 {
                                   "type": "label",
                                   "name": "CharacterDs3TabAptitude_span_41",
@@ -1787,22 +1803,6 @@
                                   "height": 17,
                                   "text": "★",
                                   "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_43"
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabAptitude_span_44",
-                                  "width": 10,
-                                  "height": 17,
-                                  "text": "★",
-                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_44"
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabAptitude_span_45",
-                                  "width": 10,
-                                  "height": 17,
-                                  "text": "★",
-                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_45"
                                 }
                               ]
                             }
@@ -1810,7 +1810,7 @@
                         },
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabAptitude_div_79",
+                          "name": "AptitudeTally_grid",
                           "width": 420,
                           "height": 42,
                           "layout": {
@@ -1825,7 +1825,67 @@
                           "children": [
                             {
                               "type": "container",
-                              "name": "CharacterDs3TabAptitude_div_80",
+                              "name": "CharacterDs3TabAptitude_div_76",
+                              "width": 204,
+                              "height": 19,
+                              "layout": {
+                                "type": "horizontal",
+                                "alignItems": "center",
+                                "justifyContent": "start",
+                                "spacingX": 6
+                              },
+                              "children": [
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabAptitude_span_44",
+                                  "width": 24,
+                                  "height": 16,
+                                  "text": "兵種",
+                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_44"
+                                },
+                                {
+                                  "type": "label",
+                                  "name": "AptitudeTally_troop",
+                                  "width": 52,
+                                  "height": 19,
+                                  "text": "重裝步兵",
+                                  "styleSlot": "auto.character-ds3-tab-aptitude.aptitudetally_troop"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabAptitude_div_77",
+                              "width": 204,
+                              "height": 19,
+                              "layout": {
+                                "type": "horizontal",
+                                "alignItems": "center",
+                                "justifyContent": "start",
+                                "spacingX": 6
+                              },
+                              "children": [
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabAptitude_span_45",
+                                  "width": 24,
+                                  "height": 16,
+                                  "text": "糧耗",
+                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_45"
+                                },
+                                {
+                                  "type": "label",
+                                  "name": "AptitudeTally_grain",
+                                  "width": 55,
+                                  "height": 19,
+                                  "text": "320/回合",
+                                  "styleSlot": "auto.character-ds3-tab-aptitude.aptitudetally_grain"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabAptitude_div_78",
                               "width": 204,
                               "height": 19,
                               "layout": {
@@ -1838,84 +1898,24 @@
                                 {
                                   "type": "label",
                                   "name": "CharacterDs3TabAptitude_span_46",
-                                  "width": 24,
+                                  "width": 48,
                                   "height": 16,
-                                  "text": "兵種",
+                                  "text": "投入兵力",
                                   "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_46"
                                 },
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabAptitude_span_47",
-                                  "width": 52,
-                                  "height": 19,
-                                  "text": "重裝步兵",
-                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_47"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabAptitude_div_81",
-                              "width": 204,
-                              "height": 19,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "center",
-                                "justifyContent": "start",
-                                "spacingX": 6
-                              },
-                              "children": [
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabAptitude_span_48",
-                                  "width": 24,
-                                  "height": 16,
-                                  "text": "糧耗",
-                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_48"
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabAptitude_span_49",
-                                  "width": 55,
-                                  "height": 19,
-                                  "text": "320/回合",
-                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_49"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabAptitude_div_82",
-                              "width": 204,
-                              "height": 19,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "center",
-                                "justifyContent": "start",
-                                "spacingX": 6
-                              },
-                              "children": [
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabAptitude_span_50",
-                                  "width": 48,
-                                  "height": 16,
-                                  "text": "投入兵力",
-                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_50"
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabAptitude_span_51",
+                                  "name": "AptitudeTally_force",
                                   "width": 38,
                                   "height": 18,
                                   "text": "8,000",
-                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_51"
+                                  "styleSlot": "auto.character-ds3-tab-aptitude.aptitudetally_force"
                                 }
                               ]
                             },
                             {
                               "type": "container",
-                              "name": "CharacterDs3TabAptitude_div_83",
+                              "name": "AptitudeTally_bond_row",
                               "width": 204,
                               "height": 19,
                               "layout": {
@@ -1927,19 +1927,19 @@
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabAptitude_span_52",
+                                  "name": "CharacterDs3TabAptitude_span_47",
                                   "width": 24,
                                   "height": 16,
                                   "text": "羈絆",
-                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_52"
+                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_47"
                                 },
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabAptitude_span_53",
+                                  "name": "CharacterDs3TabAptitude_span_48",
                                   "width": 69,
                                   "height": 19,
                                   "text": "白虎羈絆 ×2",
-                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_53"
+                                  "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_48"
                                 }
                               ]
                             }
@@ -1947,11 +1947,11 @@
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabAptitude_div_84",
+                          "name": "AptitudeTally_score",
                           "width": 420,
                           "height": 19,
                           "text": "虎符分 1840",
-                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_84"
+                          "styleSlot": "auto.character-ds3-tab-aptitude.aptitudetally_score"
                         }
                       ]
                     }
@@ -1959,7 +1959,7 @@
                 },
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabAptitude_div_85",
+                  "name": "AptitudeTally_actions",
                   "width": 490,
                   "height": 35,
                   "layout": {
@@ -1970,17 +1970,17 @@
                   "children": [
                     {
                       "type": "button",
-                      "name": "CharacterDs3TabAptitude_button_1",
+                      "name": "AptitudeTally_btn_primary",
                       "opacity": 1,
                       "width": 87,
                       "height": 35,
-                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_button_1",
+                      "skinSlot": "auto.character-ds3-tab-aptitude.aptitudetally_btn_primary",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabAptitude_span_54",
+                          "name": "CharacterDs3TabAptitude_span_49",
                           "text": "更換虎符",
-                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_54",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_49",
                           "width": 59,
                           "height": 35
                         }
@@ -1988,17 +1988,17 @@
                     },
                     {
                       "type": "button",
-                      "name": "CharacterDs3TabAptitude_button_2",
+                      "name": "AptitudeTally_btn_secondary",
                       "opacity": 1,
                       "width": 87,
                       "height": 35,
-                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_button_2",
+                      "skinSlot": "auto.character-ds3-tab-aptitude.aptitudetally_btn_secondary",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabAptitude_span_55",
+                          "name": "CharacterDs3TabAptitude_span_50",
                           "text": "卸下虎符",
-                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_55",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_50",
                           "width": 59,
                           "height": 35
                         }
@@ -2006,17 +2006,17 @@
                     },
                     {
                       "type": "button",
-                      "name": "CharacterDs3TabAptitude_button_3",
+                      "name": "AptitudeTally_btn_detail",
                       "opacity": 1,
                       "width": 87,
                       "height": 35,
-                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_button_3",
+                      "skinSlot": "auto.character-ds3-tab-aptitude.aptitudetally_btn_detail",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabAptitude_span_56",
+                          "name": "CharacterDs3TabAptitude_span_51",
                           "text": "查看詳情",
-                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_56",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_51",
                           "width": 59,
                           "height": 35
                         }
