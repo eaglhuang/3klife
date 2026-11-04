@@ -15,13 +15,14 @@ import type { RankTier, TournamentPhase } from '../../core/systems/TournamentSea
 import { WEATHER_LABEL } from '../../shared/BattleEntryParams';
 import { TERRAIN_LABEL } from './EnvScoutPresenter';
 import {
-    TOURNAMENT_BOSS_TAG_LABEL, TOURNAMENT_BRACKET_ROUNDS, TOURNAMENT_LOCAL_CONFIG, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeasonReward,
+    TOURNAMENT_BOSS_TAG_LABEL, TOURNAMENT_BRACKET_ROUNDS, TOURNAMENT_FINAL_ROUND, TOURNAMENT_LOCAL_CONFIG, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeasonReward,
     type TournamentSeriesResult, type TournamentStatus,
 } from '../../core/systems/TournamentLocal';
 import type { TigerTallyCard } from '../../core/models/TigerTallyCard';
 import { tallyBossMatch, tallyBossMatchText } from '../../core/systems/TallyBossTags';
 import { monthlyScenarioOf, MONTHLY_REQUIRED_APTITUDE_RANKS, type MonthlyScenario } from '../../core/systems/MonthlyScenarioCup';
 import { STAT_LABELS } from './NurtureFlowController';
+import { tournamentPrepHintLine, tournamentSeriesHeadline } from '../../core/systems/TournamentScripts';
 
 /** 月度場景賽規則用到的兵種碼（generals troopAptitude）與戰法標籤中文；暫定，待企劃定版（PROG-2-1717） */
 export const MONTHLY_TROOP_LABEL: Record<string, string> = {
@@ -122,14 +123,34 @@ export class TournamentPanelController {
 
     public register(): boolean {
         const result = this._deps.register(this._deps.now());
-        this._message = result.ok ? '已報名，陣容鎖定為目前戰力前三。' : TOURNAMENT_REASON_LABEL[result.reason ?? 'empty-team'];
-        return result.ok;
+        if (!result.ok) {
+            this._message = TOURNAMENT_REASON_LABEL[result.reason ?? 'empty-team'];
+            return false;
+        }
+        // 培育期報名附 §G 培育期提示（PROG-2-1746）
+        const status = this._deps.status(this._deps.now());
+        const hint = status.phase === 'PREPARATION' ? `\n${tournamentPrepHintLine(status.daysLeft)}` : '';
+        this._message = `已報名，陣容鎖定為目前戰力前三。${hint}`;
+        return true;
     }
 
     public play(): boolean {
         const played = this._deps.play(this._deps.now());
-        this._message = played.ok && played.result ? seriesText(played.result) : TOURNAMENT_REASON_LABEL[played.reason ?? 'no-team'];
-        return played.ok;
+        if (!played.ok || !played.result) {
+            this._message = TOURNAMENT_REASON_LABEL[played.reason ?? 'no-team'];
+            return played.ok;
+        }
+        // §G 勝利／決賽開頭句（PROG-2-1746）：主將取報名陣容第一位
+        const status = this._deps.status(this._deps.now());
+        const leadId = status.team?.generals[0];
+        const headline = leadId ? tournamentSeriesHeadline({
+            general: this._deps.generalName(leadId) ?? leadId,
+            cupName: status.venue.cupName,
+            win: played.result.win,
+            isFinal: played.result.round === TOURNAMENT_FINAL_ROUND,
+        }) : '';
+        this._message = headline ? `${headline}\n${seriesText(played.result)}` : seriesText(played.result);
+        return true;
     }
 
     /** 領取全部待領賽季獎勵；有領到回 true */
