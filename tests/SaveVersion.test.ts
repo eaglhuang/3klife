@@ -16,6 +16,7 @@ import {
     toSaveEnvelope,
 } from '../assets/scripts/core/storage/SaveVersion';
 import { createPlayerSaveSnapshot, validatePlayerSaveSnapshot } from '../assets/scripts/core/services/PlayerSaveService';
+import { migratePlayerSaveRaw, PLAYER_SAVE_MIGRATIONS } from '../assets/scripts/core/storage/PlayerSaveMigrations';
 import { createInitialGameTimeState } from '../assets/scripts/core/systems/GameClock';
 
 type Data = Record<string, unknown>;
@@ -97,6 +98,21 @@ export function createSaveVersionSuite(): TestSuite {
         const legacy = JSON.parse(JSON.stringify(fresh));
         delete legacy.saveVersion;
         assert.equals('1.0.0', validatePlayerSaveSnapshot(legacy).saveVersion!);
+    });
+
+    suite.test('PlayerSaveMigrations：登錄表能把目前所有版號接到最新版（PROG-2-1720）', () => {
+        const fresh = createPlayerSaveSnapshot(createInitialGameTimeState(), [], new Date(0));
+        const migrated = migratePlayerSaveRaw({ ...fresh, saveVersion: '1.0.0' } as Data, PLAYER_SAVE_MIGRATIONS);
+        assert.equals(SAVE_VERSION_LATEST, migrated.saveVersion as string);
+    });
+
+    suite.test('PlayerSaveMigrations：舊版存檔依序跑完步驟並蓋上新版號；新於 latest 的不降版', () => {
+        const upgraded = migratePlayerSaveRaw({ saveVersion: '1.0.0' }, [stepB, stepA], '1.1.0');
+        assert.equals('1.1.0', upgraded.saveVersion as string);
+        assert.equals(2, upgraded.b as number);
+        const newer = migratePlayerSaveRaw({ saveVersion: '2.0.0', keep: true }, [stepA], '1.1.0');
+        assert.equals('2.0.0', newer.saveVersion as string);
+        assert.isTrue(newer.keep === true);
     });
 
     return suite;
