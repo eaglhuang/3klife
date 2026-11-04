@@ -89,7 +89,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_3": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 12,
@@ -131,7 +131,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_1": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 32,
       "lineHeight": 45,
       "letterSpacing": 0,
@@ -143,7 +143,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_2": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 3,
@@ -179,7 +179,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_3": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -190,7 +190,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_4": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 2,
@@ -201,7 +201,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_5": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 54,
       "lineHeight": 54,
       "letterSpacing": 5,
@@ -219,7 +219,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_6": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 3,
@@ -230,7 +230,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_11": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 1,
@@ -254,7 +254,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_7": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 15,
       "lineHeight": 29,
       "letterSpacing": 3,
@@ -266,7 +266,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_8": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -277,7 +277,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_9": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -288,7 +288,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_10": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -299,7 +299,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_11": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -310,7 +310,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_12": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -348,7 +348,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_13": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 4,
@@ -360,7 +360,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_14": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -371,7 +371,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_15": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 24,
       "letterSpacing": 2,
@@ -383,7 +383,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_16": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -395,7 +395,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_17": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 24,
       "letterSpacing": 2,
@@ -407,7 +407,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_18": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -419,7 +419,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_19": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 24,
       "letterSpacing": 2,
@@ -431,7 +431,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_20": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -443,7 +443,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_21": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 24,
       "letterSpacing": 2,
@@ -455,7 +455,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_22": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -467,7 +467,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_23": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 24,
       "letterSpacing": 2,
@@ -479,7 +479,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_24": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -491,7 +491,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_25": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 24,
       "letterSpacing": 2,
@@ -503,7 +503,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_26": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -542,7 +542,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_27": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 4,
@@ -554,7 +554,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_28": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -571,7 +571,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_30": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 24,
       "letterSpacing": 2,
@@ -589,7 +589,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_32": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 24,
       "letterSpacing": 2,
@@ -628,7 +628,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_33": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 4,
@@ -640,7 +640,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_34": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -657,7 +657,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_36": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 24,
       "letterSpacing": 2,
@@ -675,7 +675,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_38": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 24,
       "letterSpacing": 2,
@@ -714,7 +714,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_39": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 4,
@@ -726,7 +726,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_40": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -745,7 +745,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_41": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 3,
@@ -756,7 +756,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_42": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 7,
@@ -768,7 +768,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_42": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 2,
@@ -803,7 +803,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_43": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -816,7 +816,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_44": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 2,
@@ -828,7 +828,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_45": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -840,7 +840,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_46": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 2,
@@ -852,7 +852,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_47": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -891,7 +891,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_48": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 4,
@@ -903,7 +903,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_49": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -914,7 +914,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_51": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 30,
       "letterSpacing": 1,
@@ -926,7 +926,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_52": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 9,
@@ -943,7 +943,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_50": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 32,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -955,7 +955,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_51": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
@@ -972,7 +972,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_52": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 32,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -984,7 +984,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_53": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
@@ -1001,7 +1001,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_54": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 32,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -1013,7 +1013,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_55": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
@@ -1030,7 +1030,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_56": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 32,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -1042,7 +1042,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_57": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
@@ -1059,7 +1059,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_58": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 32,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -1071,7 +1071,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_59": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
@@ -1088,7 +1088,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_60": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 32,
       "lineHeight": 32,
       "letterSpacing": 0,
@@ -1100,7 +1100,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_61": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
@@ -1136,7 +1136,7 @@
     },
     "auto.character-ds3-main.characterds3main_h4_1": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 6,
@@ -1149,7 +1149,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_62": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -1160,7 +1160,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_63": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -1196,7 +1196,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_64": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 30,
       "lineHeight": 30,
       "letterSpacing": -1,
@@ -1208,7 +1208,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_60": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 2,
@@ -1220,7 +1220,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_65": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
@@ -1255,7 +1255,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_66": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 30,
       "lineHeight": 30,
       "letterSpacing": -1,
@@ -1267,7 +1267,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_64": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 2,
@@ -1279,7 +1279,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_67": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
@@ -1314,7 +1314,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_68": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 30,
       "lineHeight": 30,
       "letterSpacing": -1,
@@ -1326,7 +1326,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_68": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 2,
@@ -1338,7 +1338,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_69": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
@@ -1373,7 +1373,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_70": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 30,
       "lineHeight": 30,
       "letterSpacing": -1,
@@ -1385,7 +1385,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_72": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 2,
@@ -1397,7 +1397,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_71": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
@@ -1432,7 +1432,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_72": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 30,
       "lineHeight": 30,
       "letterSpacing": -1,
@@ -1444,7 +1444,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_76": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 2,
@@ -1456,7 +1456,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_73": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
@@ -1491,7 +1491,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_74": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 30,
       "lineHeight": 30,
       "letterSpacing": -1,
@@ -1503,7 +1503,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_80": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 2,
@@ -1515,7 +1515,7 @@
     },
     "auto.character-ds3-main.characterds3main_span_75": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
@@ -1526,7 +1526,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_81": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 3,

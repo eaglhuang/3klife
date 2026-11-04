@@ -24,7 +24,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_1": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 4,
@@ -36,7 +36,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_2": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -55,7 +55,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_3": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 2,
@@ -67,7 +67,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_4": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -78,7 +78,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_div_8": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -91,7 +91,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_5": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -103,7 +103,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_6": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -149,7 +149,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_7": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 2,
@@ -161,7 +161,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_8": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -172,7 +172,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_div_12": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -185,7 +185,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_9": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -197,7 +197,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_10": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -243,7 +243,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_11": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 2,
@@ -255,7 +255,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_12": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -266,7 +266,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_div_16": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -279,7 +279,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_13": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -291,7 +291,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_14": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -337,7 +337,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_15": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 2,
@@ -349,7 +349,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_16": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -360,7 +360,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_div_20": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -373,7 +373,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_17": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -385,7 +385,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_18": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -431,7 +431,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_19": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 2,
@@ -443,7 +443,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_20": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -454,7 +454,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_div_24": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -467,7 +467,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_21": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -479,7 +479,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_22": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -525,7 +525,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_23": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 2,
@@ -537,7 +537,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_24": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -548,7 +548,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_div_28": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -561,7 +561,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_25": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -573,7 +573,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_26": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -619,7 +619,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_27": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 3,
@@ -631,7 +631,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_div_32": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 21,
       "lineHeight": 29,
       "letterSpacing": 0,
@@ -643,7 +643,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_28": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 4,
@@ -674,7 +674,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_29": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 4,
@@ -686,7 +686,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_30": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -705,7 +705,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_31": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 2,
@@ -717,7 +717,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_32": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -757,7 +757,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_div_40": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1,
@@ -776,7 +776,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_33": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 2,
@@ -788,7 +788,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_34": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -828,7 +828,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_div_45": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1,
@@ -847,7 +847,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_35": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 2,
@@ -859,7 +859,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_36": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -899,7 +899,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_div_50": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1,
@@ -930,7 +930,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_37": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 4,
@@ -942,7 +942,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_38": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -961,7 +961,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_39": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 2,
@@ -973,7 +973,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_40": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -993,7 +993,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_41": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 2,
@@ -1005,7 +1005,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_42": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -1025,7 +1025,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_43": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 2,
@@ -1037,7 +1037,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_44": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -1057,7 +1057,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_45": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 2,
@@ -1069,7 +1069,7 @@
     },
     "auto.character-ds3-tab-stats.characterds3tabstats_span_46": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,

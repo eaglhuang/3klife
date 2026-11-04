@@ -57,7 +57,7 @@
     },
     "lobby.label.name": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "secondaryLight",
@@ -66,7 +66,7 @@
     },
     "lobby.label.resource": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 20,
       "color": "textPrimary",
@@ -74,7 +74,7 @@
     },
     "lobby.label.nav": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 19,
       "color": "secondary",
@@ -83,7 +83,7 @@
     },
     "lobby.label.section": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 28,
       "color": "secondaryLight",
@@ -92,7 +92,7 @@
     },
     "lobby.label.cardTitle": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 22,
       "color": "secondaryLight",
@@ -101,7 +101,7 @@
     },
     "lobby.label.body": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "color": "textPrimary",
@@ -109,7 +109,7 @@
     },
     "lobby.label.bodyMuted": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "color": "secondary",
@@ -117,7 +117,7 @@
     },
     "lobby.label.meta": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 17,
       "color": "secondary",
@@ -125,7 +125,7 @@
     },
     "lobby.label.chip": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "color": "secondaryLight",
@@ -134,7 +134,7 @@
     },
     "lobby.label.badge": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 14,
       "color": "secondaryLight",
@@ -143,7 +143,7 @@
     },
     "lobby.label.button": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 20,
       "color": "secondaryLight",

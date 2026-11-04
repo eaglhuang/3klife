@@ -44,7 +44,7 @@
     },
     "hub.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 30,
       "lineHeight": 36,
       "color": "#F0D9A8",
@@ -53,7 +53,7 @@
     },
     "hub.label.sub": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 26,
       "color": "#C9B48A",
@@ -61,7 +61,7 @@
     },
     "hub.label.res": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 30,
       "color": "#F0D9A8",
@@ -72,7 +72,7 @@
     },
     "hub.label.city": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 36,
       "lineHeight": 44,
       "color": "#F0D9A8",
@@ -81,7 +81,7 @@
     },
     "hub.label.stat": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "#E8D6B0",
@@ -89,7 +89,7 @@
     },
     "hub.label.small": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 24,
       "color": "#B8A27A",
@@ -97,7 +97,7 @@
     },
     "hub.label.cat": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 30,
       "lineHeight": 36,
       "color": "#FFECC8",
@@ -108,7 +108,7 @@
     },
     "hub.label.button": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 30,
       "color": "#FFECC8",

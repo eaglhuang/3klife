@@ -122,6 +122,27 @@ function warn(message, warnings) {
 
 // ── Strict 模式輔助函式 ──────────────────────────────────────────────────────
 
+// Cocos web 以「字型檔名_LABEL」當 font-family，不同資料夾的同名字型會互相覆蓋，瀏覽器只載入其中一套
+function checkFontBaseNamesUnique(failures) {
+    const fontsRoot = path.join(process.cwd(), 'assets', 'resources', 'fonts');
+    if (!fs.existsSync(fontsRoot)) return;
+    const seen = new Map();
+    const walk = (dir) => {
+        for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+            const full = path.join(dir, entry.name);
+            if (entry.isDirectory()) { walk(full); continue; }
+            if (!/\.(ttf|otf|woff2?)$/i.test(entry.name)) continue;
+            const base = path.parse(entry.name).name.toLowerCase();
+            if (seen.has(base)) {
+                failures.push(`[font-basename-unique] ${path.relative(process.cwd(), full)} 與 ${seen.get(base)} 檔名相同，瀏覽器只會載入其中一套字型。Fix: 改成 fonts/<family>/<family>.ttf`);
+            } else {
+                seen.set(base, path.relative(process.cwd(), full));
+            }
+        }
+    };
+    walk(fontsRoot);
+}
+
 function strictFail(ruleId, message, failures, exceptions) {
     if (skipRules.has(ruleId)) return;
     if (onlyRules.size > 0 && !onlyRules.has(ruleId)) return;
@@ -1166,6 +1187,7 @@ function validateScreenContentRequirements(screenNode, filePath, contracts, fail
 }
 
 const failures = [];
+checkFontBaseNamesUnique(failures);
 const warnings = [];
 const layouts = new Map();
 const layoutJsons = new Map();

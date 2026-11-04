@@ -4,7 +4,7 @@
   "slots": {
     "auto.lobby-main-screen.lobbymainscreen_div_1": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 32,
       "lineHeight": 45,
       "letterSpacing": 19.2,
@@ -15,7 +15,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_2": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 6.6,
@@ -84,7 +84,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_6": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0.88,
@@ -96,7 +96,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_7": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.32,
@@ -203,7 +203,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_11": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -215,7 +215,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_1": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -228,7 +228,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_2": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -286,7 +286,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_13": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -298,7 +298,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_3": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -311,7 +311,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_4": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -369,7 +369,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_15": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -381,7 +381,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_5": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -394,7 +394,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_6": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -452,7 +452,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_7": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 0,
@@ -464,7 +464,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_8": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.35,
@@ -522,7 +522,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_9": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 0,
@@ -534,7 +534,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_10": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.35,
@@ -592,7 +592,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_11": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 0,
@@ -604,7 +604,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_12": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.35,
@@ -662,7 +662,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_13": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 0,
@@ -674,7 +674,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_14": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.35,
@@ -732,7 +732,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_15": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 0,
@@ -744,7 +744,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_16": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.35,
@@ -762,7 +762,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_22": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 56,
       "lineHeight": 78,
       "letterSpacing": 5.6,
@@ -774,7 +774,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_23": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 7,
@@ -838,7 +838,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_27": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -850,7 +850,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_28": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.2,
@@ -862,7 +862,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_29": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -874,7 +874,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_17": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.88,
@@ -885,7 +885,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_18": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.88,
@@ -942,7 +942,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_33": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -954,7 +954,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_34": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.2,
@@ -966,7 +966,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_35": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -978,7 +978,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_19": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.88,
@@ -989,7 +989,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_20": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.88,
@@ -1046,7 +1046,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_39": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -1058,7 +1058,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_40": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.2,
@@ -1070,7 +1070,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_div_41": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 20,
       "letterSpacing": 0,
@@ -1082,7 +1082,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_21": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.88,
@@ -1093,7 +1093,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_22": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.88,
@@ -1150,7 +1150,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_23": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 24,
       "lineHeight": 34,
       "letterSpacing": 0,
@@ -1208,7 +1208,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_24": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 24,
       "lineHeight": 34,
       "letterSpacing": 0,
@@ -1266,7 +1266,7 @@
     },
     "auto.lobby-main-screen.lobbymainscreen_span_25": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 24,
       "lineHeight": 34,
       "letterSpacing": 0,

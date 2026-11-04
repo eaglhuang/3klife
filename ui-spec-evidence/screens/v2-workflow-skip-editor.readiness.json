@@ -1,12 +1,12 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "v2-workflow-skip-editor",
-  "generatedAt": "2026-05-02T08:59:55.187Z",
+  "generatedAt": "2026-11-04T16:18:00.745Z",
   "verdict": "not-ready",
-  "readinessScore": 0.792,
+  "readinessScore": 0.833,
   "summary": {
     "blockerUnits": 3,
-    "actionUnits": 5,
+    "actionUnits": 4,
     "bounded": true,
     "nextCriticalAction": "capture Cocos Editor target screen and run final compare"
   },
@@ -17,11 +17,11 @@
     "captureProtocol": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.final-capture-protocol.json",
     "zoneOwnership": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.zone-ownership.json",
     "tabRouting": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.tab-routing.json",
-    "preload": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.preload.json",
-    "performance": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.performance.json",
-    "bakeManifest": "assets/resources/ui-spec/layouts/v2-workflow-skip-editor.layout.bake-manifest.json",
+    "preload": "ui-spec-evidence/screens/v2-workflow-skip-editor.preload.json",
+    "performance": "ui-spec-evidence/screens/v2-workflow-skip-editor.performance.json",
+    "bakeManifest": "ui-spec-evidence/layouts/v2-workflow-skip-editor.layout.bake-manifest.json",
     "artAuthorityWaivers": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.art-authority-waivers.json",
-    "finalVerdict": "../AppData/Local/Temp/dom-to-ui-selftest-GvHiwF/v2-workflow-skip-editor/v2-workflow-skip-editor.html-cocos-verdict.json"
+    "finalVerdict": "../AppData/Local/Temp/dom-to-ui-selftest-GfuQ0I/v2-workflow-skip-editor/v2-workflow-skip-editor.html-cocos-verdict.json"
   },
   "gates": {
     "finalGate": {
@@ -63,9 +63,14 @@
       "samples": []
     },
     "visualPolicy": {
-      "status": "warn",
-      "workUnits": 1,
-      "summary": "missing bake manifest; texture/clip review cannot be quantified"
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0 clip/mask geometry entries, 0 small texture entries, 0 unsafe auto-bake entries",
+      "totalEntries": 0,
+      "byBakeAction": {},
+      "clipGeometryCount": 0,
+      "smallTextureCount": 0,
+      "unsafeAutoBakeCount": 0
     },
     "loading": {
       "status": "pass",
@@ -120,12 +125,6 @@
       "severity": "warn",
       "code": "tab-routing-mounts",
       "summary": "missing tab-routing sidecar",
-      "workUnits": 1
-    },
-    {
-      "severity": "warn",
-      "code": "visual-policy",
-      "summary": "missing bake manifest; texture/clip review cannot be quantified",
       "workUnits": 1
     }
   ]

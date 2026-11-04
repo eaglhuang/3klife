@@ -680,7 +680,7 @@
     },
     "detail.label.circleTab": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 20,
       "color": "textOnParchment",
@@ -692,7 +692,7 @@
     },
     "detail.label.circleTabLabel": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 15,
       "color": "gdv3TitleWarm",
@@ -704,7 +704,7 @@
     },
     "detail.label.circleTabBadge": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 11,
       "color": "gdv3TabBadgeText",
@@ -726,7 +726,7 @@
     },
     "detail.label.circleBack": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 30,
       "lineHeight": 34,
       "color": "textOnParchment",

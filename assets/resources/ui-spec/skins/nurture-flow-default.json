@@ -36,7 +36,7 @@
     },
     "nurture.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 32,
       "lineHeight": 40,
       "color": "secondaryLight",
@@ -45,7 +45,7 @@
     },
     "nurture.label.name": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 30,
       "lineHeight": 38,
       "color": "secondaryLight",
@@ -54,7 +54,7 @@
     },
     "nurture.label.phase": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 30,
       "color": "secondaryLight",
@@ -63,7 +63,7 @@
     },
     "nurture.label.stats": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "secondaryLight",
@@ -71,7 +71,7 @@
     },
     "nurture.label.meta": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 24,
       "color": "secondaryLight",
@@ -79,7 +79,7 @@
     },
     "nurture.label.body": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 26,
       "color": "secondaryLight",
@@ -87,7 +87,7 @@
     },
     "nurture.label.log": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 26,
       "color": "secondaryLight",
@@ -95,7 +95,7 @@
     },
     "nurture.label.button": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "secondaryLight",

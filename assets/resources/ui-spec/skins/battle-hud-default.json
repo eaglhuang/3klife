@@ -60,7 +60,7 @@
     },
     "hud.label.name": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "textSteelLighter",
@@ -70,7 +70,7 @@
     },
     "hud.label.name.enemy": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "primaryLight",
@@ -80,7 +80,7 @@
     },
     "hud.label.round": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 24,
       "color": "secondaryLight",
@@ -90,7 +90,7 @@
     },
     "hud.label.food": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 18,
       "color": "textWarmGold",
@@ -100,7 +100,7 @@
     },
     "hud.label.hp": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "secondaryLight",
@@ -110,7 +110,7 @@
     },
     "hud.label.hp.enemy": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "primaryLight",
@@ -120,7 +120,7 @@
     },
     "hud.label.status": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 18,
       "color": "textCyanLight",
@@ -131,7 +131,7 @@
     },
     "hud.label.sceneGambitBadge": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 16,
       "color": "textWarmGold",
@@ -141,7 +141,7 @@
     },
     "hud.label.summaryTitle": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 18,
       "color": "secondaryLight",
@@ -151,7 +151,7 @@
     },
     "hud.label.summaryBody": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 18,
       "color": "textSteelLighter",
@@ -162,7 +162,7 @@
     },
     "hud.label.summaryBodyRight": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 18,
       "color": "textSteelLighter",
@@ -173,7 +173,7 @@
     },
     "hud.label.fortress.player": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "color": "textCyan",
@@ -183,7 +183,7 @@
     },
     "hud.label.vs": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 24,
       "color": "secondaryLight",
@@ -193,7 +193,7 @@
     },
     "hud.label.fortress.enemy": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 20,
       "color": "primaryLight",

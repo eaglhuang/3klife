@@ -595,7 +595,7 @@
     },
     "detail.label.circleBack": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 30,
       "color": "textAccent",
@@ -607,7 +607,7 @@
     },
     "detail.label.backArrow": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 28,
       "color": "textAccent",
@@ -619,7 +619,7 @@
     },
     "detail.label.backCaption": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 11,
       "color": "textKhaki",
@@ -632,7 +632,7 @@
     },
     "detail.label.circleTabMain": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 32,
       "lineHeight": 32,
       "color": "textAccent",
@@ -645,7 +645,7 @@
     },
     "detail.label.circleTabBadge": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 11,
       "color": "gdv3TabBadgeText",
@@ -657,7 +657,7 @@
     },
     "detail.label.circleTabLabel": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 12,
       "color": "textKhaki",
@@ -678,7 +678,7 @@
     },
     "detail.label.statName": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 20,
       "color": "textPrimary",
@@ -690,7 +690,7 @@
     },
     "detail.label.talentNum": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 18,
       "color": "textAccent",
@@ -701,7 +701,7 @@
     },
     "detail.label.prowessNum": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 22,
       "lineHeight": 24,
       "color": "gdv3NumProwess",
@@ -712,7 +712,7 @@
     },
     "detail.label.dimArrow": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
       "lineHeight": 16,
       "color": "outline",
@@ -722,7 +722,7 @@
     },
     "detail.label.vitalLabel": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 16,
       "lineHeight": 20,
       "color": "textKhaki",
@@ -733,7 +733,7 @@
     },
     "detail.label.vitalMax": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 14,
       "color": "gdv3TextMetaDim",
@@ -744,7 +744,7 @@
     },
     "detail.label.profileKey": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 16,
       "lineHeight": 18,
       "color": "accent.jade.base",
@@ -755,7 +755,7 @@
     },
     "detail.label.profileValue": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 22,
       "color": "textOffWhite",
@@ -774,7 +774,7 @@
     },
     "detail.label.body": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "color": "textSecondary",
@@ -782,7 +782,7 @@
     },
     "detail.label.meta": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
       "lineHeight": 18,
       "color": "accent.jade.base",
@@ -823,7 +823,7 @@
     },
     "detail.label.bloodlineName": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 26,
       "color": "accent.jade.crest",
@@ -835,7 +835,7 @@
 
     "gdv3.label.headerName": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 54,
       "lineHeight": 60,
       "color": "colorWhite",
@@ -848,7 +848,7 @@
     },
     "gdv3.label.headerTitle": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 20,
       "lineHeight": 24,
       "color": "gdv3TextMutedWarm",
@@ -860,7 +860,7 @@
     },
     "gdv3.label.headerMeta": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 16,
       "lineHeight": 16,
       "color": "gdv3TextMetaDim",
@@ -872,7 +872,7 @@
     },
     "gdv3.label.summarySection": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 20,
       "color": "accent.jade.crest",
@@ -885,7 +885,7 @@
     },
     "gdv3.label.summarySectionEn": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 12,
       "color": "gdv3TextMetaDim",
@@ -897,7 +897,7 @@
     },
     "gdv3.label.sectionBand": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 24,
       "color": "tertiary",
@@ -909,7 +909,7 @@
     },
     "gdv3.label.sectionBandCompact": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 20,
       "color": "tertiary",
@@ -921,7 +921,7 @@
     },
     "gdv3.label.cardBodySummary": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 22,
       "color": "textOffWhite",
@@ -934,7 +934,7 @@
     },
     "gdv3.label.coreStatKey": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 20,
       "color": "rarityWhite",
@@ -947,7 +947,7 @@
     },
     "gdv3.label.coreStatValue": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 22,
       "color": "accent.gold.light",
@@ -959,7 +959,7 @@
     },
     "gdv3.label.listBullet": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 12,
       "color": "accent.jade.base",
@@ -971,7 +971,7 @@
     },
     "gdv3.label.listItem": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 17,
       "lineHeight": 20,
       "color": "textOffWhite",
@@ -984,7 +984,7 @@
     },
     "gdv3.label.sectionEnglish": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 12,
       "color": "textMuted",
@@ -996,7 +996,7 @@
     },
     "gdv3.label.crestState": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 16,
       "color": "tertiary",
@@ -1005,7 +1005,7 @@
     },
     "gdv3.label.crestGlyphSecondary": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 18,
       "color": "text.parchment.secondary",
@@ -1014,7 +1014,7 @@
     },
     "gdv3.label.crestGlyphPrimary": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 40,
       "lineHeight": 44,
       "color": "tertiary",
@@ -1025,7 +1025,7 @@
     },
     "gdv3.label.biographyBody": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 30,
       "color": "textSecondary",
@@ -1036,7 +1036,7 @@
     },
     "gdv3.label.footerTitle": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 22,
       "color": "gdv3TextMetaDim",
@@ -1049,7 +1049,7 @@
     },
     "gdv3.label.rarityBadge": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 15,
       "lineHeight": 18,
       "color": "gdv3InkDeep",
@@ -1060,7 +1060,7 @@
     },
     "gdv3.label.rarityTitleChip": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 15,
       "color": "gdv3TextWarmLight",

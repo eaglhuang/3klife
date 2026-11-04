@@ -71,7 +71,7 @@
     },
     "log.label.title": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
       "lineHeight": 20,
       "color": "secondaryLight",
@@ -81,7 +81,7 @@
     },
     "log.label.toggle": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 18,
       "color": "textWarmGold",
@@ -89,7 +89,7 @@
     },
     "log.label.content": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 18,
       "color": "textSteelLight",
@@ -97,7 +97,7 @@
     },
     "log.label.btn": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 16,
       "color": "rarityWhite",

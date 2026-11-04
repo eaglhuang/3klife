@@ -69,7 +69,7 @@
     },
     "shop.label.title": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 34,
       "color": "secondary",
@@ -79,7 +79,7 @@
     },
     "shop.label.resource": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 22,
       "color": "secondaryLight",
@@ -87,7 +87,7 @@
     },
     "shop.label.tab": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 20,
       "color": "textPrimary",

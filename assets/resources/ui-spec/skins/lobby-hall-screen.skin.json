@@ -122,7 +122,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_6": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 26,
       "lineHeight": 36,
       "letterSpacing": 0,
@@ -135,7 +135,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_7": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -148,7 +148,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_9": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 34,
       "lineHeight": 48,
       "letterSpacing": 17,
@@ -160,7 +160,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_10": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 4.5,
@@ -218,7 +218,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_b_1": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -231,7 +231,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_1": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -290,7 +290,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_b_2": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -303,7 +303,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_2": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -362,7 +362,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_b_3": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -375,7 +375,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_3": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -434,7 +434,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_b_4": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -447,7 +447,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_4": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -506,7 +506,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_5": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 4,
@@ -577,7 +577,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_6": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 5.6,
@@ -590,7 +590,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_7": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -611,7 +611,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_19": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -624,7 +624,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_20": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -643,7 +643,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_9": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -656,7 +656,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_10": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -676,7 +676,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_22": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -689,7 +689,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_23": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -708,7 +708,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_12": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -729,7 +729,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_25": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -742,7 +742,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_26": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -761,7 +761,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_14": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -782,7 +782,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_28": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -795,7 +795,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_29": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -814,7 +814,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_16": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -835,7 +835,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_17": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 44,
       "letterSpacing": 0,
@@ -906,7 +906,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_18": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 5.6,
@@ -919,7 +919,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_19": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -940,7 +940,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_33": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -953,7 +953,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_34": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -972,7 +972,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_21": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -985,7 +985,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_22": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -1005,7 +1005,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_36": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -1018,7 +1018,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_37": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -1037,7 +1037,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_24": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -1058,7 +1058,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_39": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -1071,7 +1071,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_40": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -1090,7 +1090,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_26": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -1111,7 +1111,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_42": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -1124,7 +1124,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_43": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -1143,7 +1143,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_28": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -1164,7 +1164,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_29": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 44,
       "letterSpacing": 0,
@@ -1176,7 +1176,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_30": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -1203,7 +1203,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_32": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -1274,7 +1274,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_33": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -1301,7 +1301,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_35": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -1372,7 +1372,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_36": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -1399,7 +1399,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_38": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -1470,7 +1470,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_39": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -1549,7 +1549,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_41": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 26,
       "lineHeight": 34,
       "letterSpacing": 0,
@@ -1571,7 +1571,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_43": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -1642,7 +1642,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_44": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -1669,7 +1669,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_46": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -1768,7 +1768,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_b_5": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 19,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -1781,7 +1781,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_47": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 19,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -1802,7 +1802,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_49": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 23,
       "letterSpacing": 0,
@@ -1822,7 +1822,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_51": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 23,
       "letterSpacing": 0,
@@ -1987,7 +1987,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_i_1": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2000,7 +2000,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_52": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2021,7 +2021,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_53": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 40,
       "letterSpacing": 6,
@@ -2039,7 +2039,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_54": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 44,
       "letterSpacing": 0,
@@ -2059,7 +2059,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_55": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 44,
       "letterSpacing": 0,
@@ -2079,7 +2079,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_56": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 44,
       "letterSpacing": 0,
@@ -2137,7 +2137,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_57": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
@@ -2149,7 +2149,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_58": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -2169,7 +2169,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_b_7": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -2182,7 +2182,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_59": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2203,7 +2203,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_b_8": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -2216,7 +2216,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_60": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2237,7 +2237,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_b_9": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -2250,7 +2250,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_61": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2309,7 +2309,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_68": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
       "lineHeight": 34,
       "letterSpacing": 0,
@@ -2321,7 +2321,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_70": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 24,
       "letterSpacing": 0,
@@ -2333,7 +2333,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_div_71": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 24,
       "letterSpacing": 0,
@@ -2391,7 +2391,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_62": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 76,
       "letterSpacing": 0,
@@ -2450,7 +2450,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_63": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 76,
       "letterSpacing": 0,
@@ -2509,7 +2509,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_64": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 76,
       "letterSpacing": 0,
@@ -2568,7 +2568,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_65": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 76,
       "letterSpacing": 0,
@@ -2627,7 +2627,7 @@
     },
     "auto.lobby-hall-screen.lobbyhallscreen_span_66": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 76,
       "letterSpacing": 0,

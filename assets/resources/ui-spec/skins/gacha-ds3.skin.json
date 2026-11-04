@@ -223,7 +223,7 @@
     },
     "auto.gacha-ds3.gachads3_div_8": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -235,7 +235,7 @@
     },
     "auto.gacha-ds3.gachads3_div_9": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 72,
       "lineHeight": 72,
       "letterSpacing": 5.76,
@@ -247,7 +247,7 @@
     },
     "auto.gacha-ds3.gachads3_div_10": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 5.6,
@@ -259,7 +259,7 @@
     },
     "auto.gacha-ds3.gachads3_div_11": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.1,
@@ -489,7 +489,7 @@
     },
     "auto.gacha-ds3.gachads3_div_18": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -501,7 +501,7 @@
     },
     "auto.gacha-ds3.gachads3_div_19": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 72,
       "lineHeight": 72,
       "letterSpacing": 5.76,
@@ -513,7 +513,7 @@
     },
     "auto.gacha-ds3.gachads3_div_20": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 5.6,
@@ -525,7 +525,7 @@
     },
     "auto.gacha-ds3.gachads3_div_21": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.1,
@@ -755,7 +755,7 @@
     },
     "auto.gacha-ds3.gachads3_div_28": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
@@ -767,7 +767,7 @@
     },
     "auto.gacha-ds3.gachads3_div_29": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 72,
       "lineHeight": 72,
       "letterSpacing": 5.76,
@@ -779,7 +779,7 @@
     },
     "auto.gacha-ds3.gachads3_div_30": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 5.6,
@@ -791,7 +791,7 @@
     },
     "auto.gacha-ds3.gachads3_div_31": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.1,
@@ -845,7 +845,7 @@
     },
     "auto.gacha-ds3.gachads3_div_33": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2.2,
@@ -857,7 +857,7 @@
     },
     "auto.gacha-ds3.gachads3_div_34": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 2.24,
@@ -870,7 +870,7 @@
     },
     "auto.gacha-ds3.btnpoolprev": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 26,
       "lineHeight": 36,
       "letterSpacing": 0,
@@ -882,7 +882,7 @@
     },
     "auto.gacha-ds3.btnpoolnext": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 26,
       "lineHeight": 36,
       "letterSpacing": 0,
@@ -926,7 +926,7 @@
     },
     "auto.gacha-ds3.gachads3_div_36": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 8,
       "lineHeight": 11,
       "letterSpacing": 1.6,
@@ -938,7 +938,7 @@
     },
     "auto.gacha-ds3.gachads3_strong_1": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 17,
       "letterSpacing": 0.44,
@@ -1040,7 +1040,7 @@
     },
     "auto.gacha-ds3.gachads3_div_40": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
@@ -1051,7 +1051,7 @@
     },
     "auto.gacha-ds3.gachads3_div_41": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 1.44,
@@ -1063,7 +1063,7 @@
     },
     "auto.gacha-ds3.gachads3_div_42": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.3,
@@ -1121,7 +1121,7 @@
     },
     "auto.gacha-ds3.gachads3_div_44": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 1.6,
@@ -1139,7 +1139,7 @@
     },
     "auto.gacha-ds3.gachads3_div_46": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 7,
       "lineHeight": 10,
       "letterSpacing": 1.6,
@@ -1151,7 +1151,7 @@
     },
     "auto.gacha-ds3.gachads3_div_47": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.6,
@@ -1220,7 +1220,7 @@
     },
     "auto.gacha-ds3.gachads3_div_49": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 1.6,
@@ -1232,7 +1232,7 @@
     },
     "auto.gacha-ds3.gachads3_div_50": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.6,
@@ -1250,7 +1250,7 @@
     },
     "auto.gacha-ds3.gachads3_div_52": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 7,
       "lineHeight": 10,
       "letterSpacing": 1.6,
@@ -1262,7 +1262,7 @@
     },
     "auto.gacha-ds3.gachads3_div_53": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.6,
@@ -1274,7 +1274,7 @@
     },
     "auto.gacha-ds3.gachads3_span_1": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.6,
@@ -1286,7 +1286,7 @@
     },
     "auto.gacha-ds3.gachads3_div_55": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.88,
@@ -1298,7 +1298,7 @@
     },
     "auto.gacha-ds3.gachads3_div_56": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.88,
@@ -1361,7 +1361,7 @@
     },
     "auto.gacha-ds3.gachads3_h2_1": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 4.2,
@@ -1373,7 +1373,7 @@
     },
     "auto.gacha-ds3.gachads3_div_60": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
@@ -1384,7 +1384,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_4": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 26,
       "letterSpacing": 1.76,
@@ -1396,7 +1396,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_5": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
@@ -1407,7 +1407,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_6": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.08,
@@ -1419,7 +1419,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_9": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
@@ -1431,7 +1431,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_10": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0.6,
@@ -1493,7 +1493,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_1": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0,
@@ -1505,7 +1505,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_2": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1516,7 +1516,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_3": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1527,7 +1527,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_4": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1538,7 +1538,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_5": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1549,7 +1549,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_span_6": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1560,7 +1560,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_15": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.8,
@@ -1578,7 +1578,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_18": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -1600,7 +1600,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_21": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -1619,7 +1619,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_23": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -1643,7 +1643,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_26": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -1662,7 +1662,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_28": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -1686,7 +1686,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_31": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -1705,7 +1705,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_33": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -1729,7 +1729,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_36": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -1750,7 +1750,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_39": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -1761,7 +1761,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_40": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -1778,7 +1778,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_43": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -1789,7 +1789,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_44": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -1806,7 +1806,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_47": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -1817,7 +1817,7 @@
     },
     "auto.gacha-ds3-tab-general.gachads3tabgeneral_div_48": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -1829,7 +1829,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_4": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 26,
       "letterSpacing": 1.76,
@@ -1841,7 +1841,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_5": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
@@ -1852,7 +1852,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_6": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.08,
@@ -1864,7 +1864,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_9": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
@@ -1876,7 +1876,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_10": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0.6,
@@ -1938,7 +1938,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_1": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0,
@@ -1950,7 +1950,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_2": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1961,7 +1961,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_3": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1972,7 +1972,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_4": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1983,7 +1983,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_5": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -1994,7 +1994,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_span_6": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -2005,7 +2005,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_15": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.8,
@@ -2023,7 +2023,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_18": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -2045,7 +2045,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_21": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2064,7 +2064,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_23": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -2088,7 +2088,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_26": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2107,7 +2107,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_28": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -2131,7 +2131,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_31": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2150,7 +2150,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_33": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -2174,7 +2174,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_36": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2193,7 +2193,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_38": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -2217,7 +2217,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_41": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2238,7 +2238,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_44": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -2249,7 +2249,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_45": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -2266,7 +2266,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_48": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -2277,7 +2277,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_49": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -2294,7 +2294,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_52": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -2305,7 +2305,7 @@
     },
     "auto.gacha-ds3-tab-legendary.gachads3tablegendary_div_53": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -2317,7 +2317,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_4": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 26,
       "letterSpacing": 1.76,
@@ -2329,7 +2329,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_5": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
@@ -2340,7 +2340,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_6": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.08,
@@ -2352,7 +2352,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_9": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
@@ -2364,7 +2364,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_10": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0.6,
@@ -2426,7 +2426,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_span_1": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0,
@@ -2438,7 +2438,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_span_2": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -2449,7 +2449,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_span_3": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -2460,7 +2460,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_span_4": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -2471,7 +2471,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_span_5": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -2482,7 +2482,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_span_6": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 0.54,
@@ -2493,7 +2493,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_15": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.8,
@@ -2511,7 +2511,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_18": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -2533,7 +2533,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_21": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2552,7 +2552,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_23": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -2576,7 +2576,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_26": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2595,7 +2595,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_28": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -2619,7 +2619,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_31": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2638,7 +2638,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_33": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -2662,7 +2662,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_36": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2681,7 +2681,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_38": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -2705,7 +2705,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_41": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2726,7 +2726,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_44": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -2737,7 +2737,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_45": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -2754,7 +2754,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_48": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -2765,7 +2765,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_49": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -2782,7 +2782,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_52": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -2793,7 +2793,7 @@
     },
     "auto.gacha-ds3-tab-support.gachads3tabsupport_div_53": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,

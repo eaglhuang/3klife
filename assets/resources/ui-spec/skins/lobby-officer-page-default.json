@@ -16,7 +16,7 @@
     },
     "officer.page.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 34,
       "color": "secondaryLight",
@@ -25,7 +25,7 @@
     },
     "officer.page.label.body": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 30,
       "color": "secondaryLight",
@@ -33,7 +33,7 @@
     },
     "officer.page.label.button": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 24,
       "color": "secondaryLight",

@@ -31,7 +31,7 @@
     },
     "dshop.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 32,
       "lineHeight": 40,
       "color": "secondaryLight",
@@ -40,7 +40,7 @@
     },
     "dshop.label.name": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 30,
       "lineHeight": 38,
       "color": "secondaryLight",
@@ -49,7 +49,7 @@
     },
     "dshop.label.stats": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "secondaryLight",
@@ -57,7 +57,7 @@
     },
     "dshop.label.meta": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 24,
       "color": "secondaryLight",
@@ -65,7 +65,7 @@
     },
     "dshop.label.body": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 30,
       "color": "secondaryLight",
@@ -73,7 +73,7 @@
     },
     "dshop.label.button": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "secondaryLight",

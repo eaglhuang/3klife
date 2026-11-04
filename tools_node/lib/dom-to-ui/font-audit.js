@@ -107,9 +107,9 @@ function buildProjectFontFaces(projectRoot) {
   const fs   = require('fs');
   const path = require('path');
   const FONTS = [
-    { family: 'NotoSansTC', relPath: 'assets/resources/fonts/notosans_tc/font.ttf' },
-    { family: 'Manrope',    relPath: 'assets/resources/fonts/manrope/font.ttf'    },
-    { family: 'Newsreader', relPath: 'assets/resources/fonts/newsreader/font.ttf' },
+    { family: 'NotoSansTC', relPath: 'assets/resources/fonts/notosans_tc/notosans_tc.ttf' },
+    { family: 'Manrope',    relPath: 'assets/resources/fonts/manrope/manrope.ttf'    },
+    { family: 'Newsreader', relPath: 'assets/resources/fonts/newsreader/newsreader.ttf' },
   ];
   const decls = FONTS
     .map(f => {

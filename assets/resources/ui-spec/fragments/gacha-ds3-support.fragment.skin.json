@@ -4,7 +4,7 @@
   "slots": {
     "auto.gacha-ds3-support.gachads3support_div_4": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
       "lineHeight": 26,
       "letterSpacing": 1.76,
@@ -16,7 +16,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_5": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
@@ -27,7 +27,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_6": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.08,
@@ -39,7 +39,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_9": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.62,
@@ -51,7 +51,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_10": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0.6,
@@ -87,7 +87,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_span_1": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0,
@@ -99,7 +99,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_span_2": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -111,7 +111,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_span_3": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -123,7 +123,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_span_4": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -135,7 +135,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_span_5": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -147,7 +147,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_span_6": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -159,7 +159,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_15": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.8,
@@ -177,7 +177,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_18": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -199,7 +199,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_21": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -218,7 +218,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_23": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -242,7 +242,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_26": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -261,7 +261,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_28": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -285,7 +285,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_31": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -304,7 +304,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_33": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -328,7 +328,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_36": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -347,7 +347,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_38": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1,
@@ -371,7 +371,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_41": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -392,7 +392,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_44": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -403,7 +403,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_45": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -420,7 +420,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_48": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -431,7 +431,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_49": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,
@@ -448,7 +448,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_52": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1.26,
@@ -459,7 +459,7 @@
     },
     "auto.gacha-ds3-support.gachads3support_div_53": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 25,
       "letterSpacing": 0,

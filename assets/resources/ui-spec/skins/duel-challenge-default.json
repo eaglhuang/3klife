@@ -61,7 +61,7 @@
     },
     "duel.label.title": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 20,
       "lineHeight": 26,
       "color": "secondaryLight",
@@ -71,7 +71,7 @@
     },
     "duel.label.score": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
       "lineHeight": 20,
       "color": "textPrimary",
@@ -79,7 +79,7 @@
     },
     "duel.label.btn": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
       "lineHeight": 22,
       "color": "background",
@@ -88,7 +88,7 @@
     },
     "duel.label.hint": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 18,
       "color": "textHintBlue",

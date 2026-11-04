@@ -51,7 +51,7 @@
     },
     "quickview.label.name": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 22,
       "lineHeight": 28,
       "color": "secondaryLight",
@@ -60,7 +60,7 @@
     },
     "quickview.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 18,
       "color": "textKhaki",
@@ -68,7 +68,7 @@
     },
     "quickview.label.faction": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 16,
       "color": "textSteelMid",
@@ -76,7 +76,7 @@
     },
     "quickview.label.stat": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 18,
       "color": "textSteelLight",
@@ -84,7 +84,7 @@
     },
     "quickview.label.section": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 16,
       "color": "secondary",
@@ -93,7 +93,7 @@
     },
     "quickview.label.skill": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
       "lineHeight": 17,
       "color": "textSteelLight",
@@ -102,7 +102,7 @@
     },
     "quickview.label.close": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 18,
       "lineHeight": 22,
       "color": "textHintGray",

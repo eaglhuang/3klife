@@ -375,7 +375,7 @@ export interface SkinLabelSlot {
     kind: 'label-style';
     /** 可選：引用 ui-design-tokens.typography 內的預設樣式 */
     style?: string;
-    /** 字型資源路徑（Bundle 內，如 'fonts/notosans_tc/font'） */
+    /** 字型資源路徑（Bundle 內，如 'fonts/notosans_tc/notosans_tc'） */
     font?: string;
     fontSize?: number;
     lineHeight?: number;

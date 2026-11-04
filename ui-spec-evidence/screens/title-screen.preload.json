@@ -11,9 +11,9 @@
       "sprites/generals/liu_bei_portrait"
     ],
     "fonts": [
-      "fonts/newsreader/font",
-      "fonts/notosans_tc/font",
-      "fonts/manrope/font"
+      "fonts/newsreader/newsreader",
+      "fonts/notosans_tc/notosans_tc",
+      "fonts/manrope/manrope"
     ],
     "fragments": []
   },

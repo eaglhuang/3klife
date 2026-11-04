@@ -16,7 +16,7 @@
     },
     "rank.label.title": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
       "lineHeight": 34,
       "color": "secondaryLight",
@@ -25,7 +25,7 @@
     },
     "rank.label.exp": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 30,
       "color": "secondaryLight",
@@ -33,7 +33,7 @@
     },
     "rank.label.row": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 28,
       "color": "secondaryLight",
@@ -41,7 +41,7 @@
     },
     "rank.label.button": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 24,
       "color": "secondaryLight",

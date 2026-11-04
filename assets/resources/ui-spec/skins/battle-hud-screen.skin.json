@@ -67,7 +67,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_4": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 34,
       "lineHeight": 48,
       "letterSpacing": 2.72,
@@ -85,7 +85,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_5": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 3.3,
@@ -96,7 +96,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_7": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 26,
       "lineHeight": 36,
       "letterSpacing": 7.8,
@@ -114,7 +114,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_8": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 4.5,
@@ -125,7 +125,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_10": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -138,7 +138,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_11": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -151,7 +151,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_12": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
@@ -2029,7 +2029,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_58": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.55,
@@ -2047,7 +2047,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_59": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0,
@@ -2125,7 +2125,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_63": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.55,
@@ -2143,7 +2143,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_64": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0,
@@ -2221,7 +2221,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_68": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.55,
@@ -2239,7 +2239,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_69": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0,
@@ -2317,7 +2317,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_73": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.55,
@@ -2335,7 +2335,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_74": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0,
@@ -2413,7 +2413,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_78": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.55,
@@ -2431,7 +2431,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_79": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0,
@@ -2509,7 +2509,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_83": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.55,
@@ -2527,7 +2527,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_84": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0,
@@ -2605,7 +2605,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_88": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.55,
@@ -2623,7 +2623,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_89": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0,
@@ -2701,7 +2701,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_93": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 0.55,
@@ -2719,7 +2719,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_94": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0,
@@ -2732,7 +2732,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_1": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 3.6,
@@ -2853,7 +2853,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_97": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
       "lineHeight": 20,
       "letterSpacing": 1.4,
@@ -2866,7 +2866,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_98": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 0,
@@ -2877,7 +2877,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_2": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2889,7 +2889,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_b_1": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2901,7 +2901,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_3": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2913,7 +2913,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_4": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2925,7 +2925,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_5": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2937,7 +2937,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_6": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2949,7 +2949,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_7": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2961,7 +2961,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_b_2": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -2973,7 +2973,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_8": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
@@ -3104,7 +3104,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_107": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 24,
       "lineHeight": 34,
       "letterSpacing": 0,
@@ -3116,7 +3116,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_108": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 1.98,
@@ -3127,7 +3127,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_109": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 1.8,
@@ -3139,7 +3139,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_9": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.56,
@@ -3150,7 +3150,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_10": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0,
@@ -3162,7 +3162,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_11": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.56,
@@ -3173,7 +3173,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_12": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0,
@@ -3185,7 +3185,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_13": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.56,
@@ -3196,7 +3196,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_14": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0,
@@ -3208,7 +3208,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_15": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.56,
@@ -3219,7 +3219,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_16": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0,
@@ -3231,7 +3231,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_17": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 1.56,
@@ -3242,7 +3242,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_span_18": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0,
@@ -3300,7 +3300,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_117": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -3312,7 +3312,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_118": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 18,
       "letterSpacing": 0,
@@ -3370,7 +3370,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_120": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
@@ -3382,7 +3382,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_121": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 18,
       "letterSpacing": 0,
@@ -3474,7 +3474,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_124": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 1.6,
@@ -3533,7 +3533,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_127": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2.5,
@@ -3606,7 +3606,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_129": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2.5,
@@ -3680,7 +3680,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_131": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 0,
@@ -3692,7 +3692,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_132": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.5,
@@ -3766,7 +3766,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_134": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 0,
@@ -3778,7 +3778,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_135": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.5,
@@ -3881,7 +3881,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_137": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 0,
@@ -3893,7 +3893,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_138": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.5,
@@ -3967,7 +3967,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_140": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 0,
@@ -3979,7 +3979,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_141": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.5,
@@ -4053,7 +4053,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_143": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
       "lineHeight": 39,
       "letterSpacing": 0,
@@ -4065,7 +4065,7 @@
     },
     "auto.battle-hud-screen.battlehudscreen_div_144": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 1.5,

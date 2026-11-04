@@ -110,7 +110,7 @@
     },
     "ttd.label.cost": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 15,
       "lineHeight": 16,
       "color": "secondaryLight",
@@ -119,7 +119,7 @@
     },
     "ttd.label.atk": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 28,
       "lineHeight": 30,
       "color": "secondaryLight",
@@ -128,7 +128,7 @@
     },
     "ttd.label.hp": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 28,
       "lineHeight": 30,
       "color": "secondaryLight",

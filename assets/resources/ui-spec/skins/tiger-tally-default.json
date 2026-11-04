@@ -143,7 +143,7 @@
     },
     "tally.label.rarity": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 15,
       "color": "#FFE28A",
@@ -154,7 +154,7 @@
     },
     "tally.label.stars": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 14,
       "lineHeight": 16,
       "color": "#FFD36A",
@@ -165,7 +165,7 @@
     },
     "widget.resource.icon": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 18,
       "color": "#F6D37A",
@@ -176,7 +176,7 @@
     },
     "tally.label.atk": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 24,
       "lineHeight": 26,
       "color": "#7EC4FF",
@@ -187,7 +187,7 @@
     },
     "tally.label.hp": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 24,
       "lineHeight": 26,
       "color": "#C4F7C3",
@@ -198,7 +198,7 @@
     },
     "tally.label.name": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 20,
       "lineHeight": 22,
       "color": "#F7FAFF",
@@ -209,7 +209,7 @@
     },
     "tally.label.sub": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
       "lineHeight": 14,
       "color": "#A6B8CA",
@@ -219,7 +219,7 @@
     },
     "tally.label.stats": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
+      "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
       "lineHeight": 17,
       "color": "textCoolGray",
@@ -227,7 +227,7 @@
     },
     "tally.label.cost": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 18,
       "color": "#F6D37A",
@@ -238,7 +238,7 @@
     },
     "tally.label.badge": {
       "kind": "label-style",
-      "font": "fonts/manrope/font",
+      "font": "fonts/manrope/manrope",
       "fontSize": 16,
       "lineHeight": 18,
       "color": "colorWhite",
