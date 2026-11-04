@@ -9,7 +9,7 @@ import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule'
 import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { LobbyHallScreenBinder, type LobbyHallDockId, type LobbyHallPanelId } from '../core/LobbyHallScreenBinder';
-import type { HallThemeConfig } from '../../core/systems/HallTheme';
+import { hallFestivalIdOf, type HallThemeConfig } from '../../core/systems/HallTheme';
 import type { HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallMapEventCatalog } from '../../core/systems/HallMapEventMapper';
@@ -2551,7 +2551,12 @@ export class LobbyScene extends Component {
         host.node.active = true;
         this._bringNodeToFront(host.node);
         // 晝夜依裝置當地時間，季節依遊戲時鐘（1 春～4 冬）
-        this._lobbyHall?.refresh(services().session.gameTime.currentSeason, new Date().getHours());
+        // 節慶跟隨 lobby-hub 目前主題（UI-2-0155），hall-theme.json 查不到該節慶時維持平常畫面
+        this._lobbyHall?.refresh(
+            services().session.gameTime.currentSeason,
+            new Date().getHours(),
+            hallFestivalIdOf(this._lobbyHub?.Current_Theme.Festival_Theme_ID),
+        );
         this._refreshLobbyHallWalls();
         this._refreshLobbyHallAltar();
         this._lobbyHall?.setPanelVisible('clan', familyOverviewHotspotVisible(services().session.familySystemUnlocked));
