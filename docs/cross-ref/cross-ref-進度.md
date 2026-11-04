@@ -30,7 +30,7 @@
 | 規格書 | 對應代碼檔 | 規格 | 邏輯 | 接線 | 測試 | runtime 驗收 |
 |---|---|:-:|:-:|:-:|:-:|:-:|
 | **數值系統.md (doc_data_0001)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, GeneralUnit.ts, BattleController.ts, BattleState.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
-| **兵種（虎符）系統.md (doc_spec_0012)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, BattleController.ts, EnemyAI.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| **兵種（虎符）系統.md (doc_spec_0012)** | FormulaSystem.ts, Constants.ts, TroopUnit.ts, BattleController.ts, EnemyAI.ts, SortieDeploy.ts（覆寫裁定 5 戰後逐虎符回報投入／返還／戰損，PROG-2-1751；養成進度未接） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **戰場部署系統.md (doc_spec_0040)** | BattleSystem.ts, BattleState.ts, BattleController.ts, BattleScene.ts, BoardRenderer.ts, DeployPanel.ts, ResultPopup.ts, SortieDeploy.ts（§E 功能清單逐項核對已實作，PROG-2-1704） | ✅ | ✅ | 🟡 | ✅ | ⬜ |
 | **武將系統.md (doc_spec_0016)** | GeneralUnit.ts, GeneralDetailComposite.ts, GeneralListPanel.ts, LobbyScene.ts, GeneObject.ts, AncestorTreeLayout.ts, GeneralRole.ts, GeneralLifecycle.ts, GeneralStage.ts, GeneralAging.ts, BattleRoster.ts, VitalityPill.ts, RetirementRouting.ts, MilestoneRewards.ts, GeneralVersionGallery.ts, GeneralGrowth.ts, LifeVitalityPresenter.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |
 | **武將人物介面規格書.md (doc_ui_0012)** | GeneralDetailComposite.ts, GeneralDetailOverviewChild.ts, GeneralListPanel.ts, LobbyScene.ts, GeneralUnit.ts | ✅ | ✅ | 🟡 | ✅ | ⬜ |

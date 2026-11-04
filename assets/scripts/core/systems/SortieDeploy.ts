@@ -154,6 +154,22 @@ export interface SortieUnitRecord {
     retired: boolean;
     /** 攻城器械（工兵）；器械保留槽判定用（PROG-2-1604），舊紀錄缺欄位視為否 */
     isSiegeEngine?: boolean;
+    /** 帶虎符出陣時的卡片識別與顯示名（戰後逐虎符回報，PROG-2-1751）；一般兵種沒有 */
+    tally?: SortieTallyTag;
+}
+
+export interface SortieTallyTag {
+    cardUid: string;
+    name: string;
+}
+
+/** 單張虎符本場回報（兵種（虎符）系統覆寫裁定 5：投入／返還／戰損兵力） */
+export interface SortieTallyReport {
+    cardUid: string;
+    name: string;
+    deployedTroops: number;
+    returnedTroops: number;
+    lostTroops: number;
 }
 
 export interface SortieState {
@@ -221,6 +237,8 @@ export interface SortieSummary {
     turnsToRecover: number;
     militiaDeployed: number;
     eliteDeployed: number;
+    /** 逐虎符回報，依首次出陣順序；沒有帶虎符出陣時為空陣列（PROG-2-1751） */
+    tallyReports?: SortieTallyReport[];
 }
 
 // ── 公式 ───────────────────────────────────────────────────────────────────
@@ -620,7 +638,7 @@ export interface ApplyDeployResult {
 }
 
 /** 部署成功扣軍勢與糧草並登記該隊；不成功原樣回傳（不自動改派） */
-export function applyDeploy(state: SortieState, unitId: string, request: DeployRequest): ApplyDeployResult {
+export function applyDeploy(state: SortieState, unitId: string, request: DeployRequest, tally?: SortieTallyTag): ApplyDeployResult {
     const check = checkDeploy(state, request);
     if (!check.ok || state.units[unitId]) {
         return { ok: false, state, check: state.units[unitId] ? { ...check, ok: false } : check };
@@ -634,7 +652,10 @@ export function applyDeploy(state: SortieState, unitId: string, request: DeployR
             poolCurrent: state.poolCurrent - troopCost,
             food: state.food - foodCost,
             foodSpent: state.foodSpent + foodCost,
-            units: { ...state.units, [unitId]: { unitId, troopCost, currentTroops: troopCost, isElite, retired: false, isSiegeEngine: isSiegeEngineRequest(request) } },
+            units: {
+                ...state.units,
+                [unitId]: { unitId, troopCost, currentTroops: troopCost, isElite, retired: false, isSiegeEngine: isSiegeEngineRequest(request), ...(tally ? { tally: { ...tally } } : {}) },
+            },
             militiaDeployed: state.militiaDeployed + (request.militia ? 1 : 0),
             eliteDeployed: state.eliteDeployed + (isElite ? 1 : 0),
         },
@@ -691,7 +712,23 @@ export function finishSortie(state: SortieState, cityTroopsBefore: number, recru
         turnsToRecover: lostTroops <= 0 ? 0 : regen > 0 ? Math.ceil(lostTroops / regen) : Infinity,
         militiaDeployed: finalState.militiaDeployed,
         eliteDeployed: finalState.eliteDeployed,
+        tallyReports: tallyReportsOf(all),
     };
+}
+
+/** 依虎符卡分組加總投入／返還／戰損；同一張卡多次出陣合併為一筆 */
+function tallyReportsOf(units: readonly SortieUnitRecord[]): SortieTallyReport[] {
+    const reports = new Map<string, SortieTallyReport>();
+    for (const unit of units) {
+        if (!unit.tally) continue;
+        const report = reports.get(unit.tally.cardUid)
+            ?? { cardUid: unit.tally.cardUid, name: unit.tally.name, deployedTroops: 0, returnedTroops: 0, lostTroops: 0 };
+        report.deployedTroops += unit.troopCost;
+        report.returnedTroops += unit.currentTroops;
+        report.lostTroops += unit.troopCost - unit.currentTroops;
+        reports.set(unit.tally.cardUid, report);
+    }
+    return Array.from(reports.values());
 }
 
 // ── 劇本字串（戰場部署 §G / §H） ────────────────────────────────────────────
@@ -715,6 +752,7 @@ export function formatSortieSummary(summary: SortieSummary): string[] {
     return [
         `出征軍勢 ${summary.poolMax}｜返還 ${summary.returnedTroops}｜戰損 ${summary.lostTroops}｜糧草 -${summary.foodSpent}`,
         `城市兵源 ${summary.cityTroopsBefore}→${summary.cityTroopsAfter}｜補兵 ${summary.recruitRegen}/季｜約 ${recover}恢復`,
+        ...(summary.tallyReports ?? []).map((r) => `${r.name}：投入 ${r.deployedTroops}｜返還 ${r.returnedTroops}｜戰損 ${r.lostTroops}`),
     ];
 }
 

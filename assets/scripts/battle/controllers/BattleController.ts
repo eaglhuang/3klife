@@ -464,7 +464,11 @@ export class BattleController {
     this.turnManager.notePlayerDeployment();
     this.checkBattleRelationEvents();
     if (this.sortie) {
-      const applied = applyDeploy(this.sortie, unit.id, { troopType: type, militia: options.militia });
+      // 帶虎符出陣時登記卡片與名稱，供戰後逐虎符回報（PROG-2-1751）
+      const tallyTag = options.tally
+        ? { cardUid: options.tally.cardUid, name: buildTallyCardCatalog().get(resolveTallyTemplateId(options.tally.templateId))?.unitName ?? options.tally.templateId }
+        : undefined;
+      const applied = applyDeploy(this.sortie, unit.id, { troopType: type, militia: options.militia }, tallyTag);
       this.sortie = applied.state;
       services().battle.spendFood(applied.check.cost.foodCost);
     }
