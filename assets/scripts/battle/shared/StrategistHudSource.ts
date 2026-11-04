@@ -15,6 +15,7 @@ import { FIRE_RAID_TILE_NOTE, ROCK_SLIDE_TILE_NOTE } from './StageSalvage';
 import { AMBUSH_TRAP_TILE_NOTE } from './BattleTacticBehavior';
 import { BattleTactic } from '../../core/config/Constants';
 import { battleTacticLabel } from '../../shared/BattleEntryParams';
+import { sceneGambitGateOf } from './SceneGambitTrigger';
 
 /** 格子備註 → 互動物件類別 */
 const OBJECT_KIND_BY_NOTE: Readonly<Record<string, InteractiveObjectKind>> = {
@@ -23,7 +24,8 @@ const OBJECT_KIND_BY_NOTE: Readonly<Record<string, InteractiveObjectKind>> = {
   [AMBUSH_TRAP_TILE_NOTE]: 'Trap_Cluster',
 };
 
-export function strategistHudInputOf(state: BattleState, missingCounters: readonly string[] = []): StrategistHudInput {
+/** playerIntel：玩家累積情報（GameSession.intel）；有傳且戰法設情報門檻時，參謀常駐行附「情報 目前 / 門檻」（PROG-2-1760） */
+export function strategistHudInputOf(state: BattleState, missingCounters: readonly string[] = [], playerIntel?: number): StrategistHudInput {
   const interactiveObjects: InteractiveObjectView[] = [];
   const hazards = new Set<string>();
   for (const effect of state.tileEffects.values()) {
@@ -38,13 +40,17 @@ export function strategistHudInputOf(state: BattleState, missingCounters: readon
   for (let i = 0; i < (state.recoveredRockSlides ?? 0); i++) interactiveObjects.push({ kind: 'Rockfall_Node', state: 'recovered' });
   // 已被敵軍踩中的陷阱已從場上移除，依累計數補列「已觸發」（PROG-2-1750）
   for (let i = 0; i < (state.triggeredAmbushTraps ?? 0); i++) interactiveObjects.push({ kind: 'Trap_Cluster', state: 'triggered' });
+  const gate = sceneGambitGateOf(state.battleTactic);
+  const intel = gate && gate.intelThreshold > 0 && playerIntel !== undefined && Number.isFinite(playerIntel)
+    ? { current: Math.max(0, Math.floor(playerIntel)), required: gate.intelThreshold }
+    : undefined;
   return {
     hazardsThisTurn: Array.from(hazards),
     interactiveObjects,
     salvage: { ...state.stageSalvage },
     missingCounters,
     executing: state.battleTactic !== BattleTactic.Normal && state.playerGeneral
-      ? { name: state.playerGeneral.name, int: state.playerGeneral.int, tactic: battleTacticLabel(state.battleTactic) }
+      ? { name: state.playerGeneral.name, int: state.playerGeneral.int, tactic: battleTacticLabel(state.battleTactic), ...(intel ? { intel } : {}) }
       : undefined,
   };
 }
