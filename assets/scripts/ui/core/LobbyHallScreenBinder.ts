@@ -7,15 +7,18 @@
  * - 在畫面根節點下加一層季節粒子（HallSeasonFxLayer），換季時重撒。
  * - 沙盤群組之後、粒子之下加一層 Q 版武將人群（HallStageCrowd＋LobbyHallStageController，UI-2-0150），
  *   開啟期間每隔 STAGE_TICK_SEC 秒 tick 一次（點位本身 60 秒才輪換）。
+ * - 以 sandbox 為勢力圖視窗、map-ping 為事件標記掛 HallMapTurnPlayer，換季時播聚焦序列（UI-2-0151）。
  * LobbyScene 只負責掛 host、載設定檔、把動作接到既有流程。
  * Unity 對照：像掛在大廳 Canvas 上的 Presenter，持有主題綁定器與粒子層，按鈕事件往外拋。
  */
-import { Node, UITransform } from 'cc';
+import { Label, Node, UITransform } from 'cc';
+import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
 import { HallThemeConfig, resolveHallTheme } from '../../core/systems/HallTheme';
 import type { HallSeason, HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import type { HallStageCast } from '../../core/systems/HallStageDirector';
 import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
+import { HallMapTurnPlayer } from '../components/HallMapTurnPlayer';
 import { HallSeasonFxLayer } from '../components/HallSeasonFxLayer';
 import { HallStageCrowd } from '../components/HallStageCrowd';
 import { LobbyHallStageController } from './LobbyHallStageController';
@@ -45,6 +48,8 @@ export interface LobbyHallScreenDeps {
     readonly onDock: (id: LobbyHallDockId) => void;
     /** 人群設定；設定檔沒載到時為 null，不建人群層 */
     readonly stage?: LobbyHallStageDepsInput | null;
+    /** 勢力圖三態版面；沒載到時為 null，不掛地圖播放 */
+    readonly mapLayout?: HallMapLayout | null;
 }
 
 /** 綁定器自建、緊接在沙盤後面的圖層節點名稱 */
@@ -56,6 +61,7 @@ export class LobbyHallScreenBinder {
     private _fxSeason: HallSeason | null = null;
     private _crowd: HallStageCrowd | null = null;
     private _stage: LobbyHallStageController | null = null;
+    private _map: HallMapTurnPlayer | null = null;
     private readonly _tickStage = (): void => {
         if (this._stage && this._deps.stage) this._stage.tick(this._deps.stage.nowSec());
     };
@@ -65,8 +71,14 @@ export class LobbyHallScreenBinder {
         this._applier = new LobbyHallThemeApplier(new LobbyHallThemeNodeView(_screenRoot));
         this._bindTap('lobby-hall-screen.back', () => _deps.onBack());
         for (const id of LOBBY_HALL_DOCK_IDS) this._bindTap(`lobby-hall-screen.dock-${id}`, () => _deps.onDock(id));
+        if (_deps.mapLayout) this._map = this._createMapPlayer(_deps.mapLayout);
         if (_deps.stage) this._createStage(_deps.stage);
         if (_deps.fxConfig) this._fx = this._createFxLayer(_deps.fxConfig);
+    }
+
+    /** 播放換季聚焦序列；沒有地圖播放器時不動 */
+    playMapTurn(steps: readonly HallMapTurnStep[]): void {
+        this._map?.playTurn(steps);
     }
 
     /** 開大廳時呼叫：立刻排站位並開始定時輪換 */
@@ -101,6 +113,25 @@ export class LobbyHallScreenBinder {
         if (!node) return;
         node.off(Node.EventType.TOUCH_END);
         node.on(Node.EventType.TOUCH_END, handler);
+    }
+
+    private _createMapPlayer(layout: HallMapLayout): HallMapTurnPlayer | null {
+        const viewport = findUcufNode(this._screenRoot, 'lobby-hall-screen.sandbox');
+        if (!viewport) return null;
+        const ping = findUcufNode(this._screenRoot, 'lobby-hall-screen.map-ping');
+        const labels = ping ? ping.children.map((c) => c.getComponent(Label)).filter((l): l is Label => !!l) : [];
+        // 掛在沙盤的父節點：hidden 模式會關掉視窗節點，元件不能跟著停
+        const player = (viewport.parent ?? this._screenRoot).addComponent(HallMapTurnPlayer);
+        player.viewport = viewport;
+        // 設計稿沙盤沒有內層地圖圖層，content 留空：只縮放視窗、落事件標記（暫定）
+        player.content = null;
+        player.ping = ping;
+        player.pingGlyph = labels[0] ?? null;
+        player.pingLabel = labels[1] ?? null;
+        const rootSize = this._screenRoot.getComponent(UITransform);
+        player.configure(layout, { width: rootSize?.width ?? 1920, height: rootSize?.height ?? 1080 });
+        player.setMode('mini', true);
+        return player;
     }
 
     private _createStage(input: LobbyHallStageDepsInput): void {
