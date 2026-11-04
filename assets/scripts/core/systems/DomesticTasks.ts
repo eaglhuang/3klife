@@ -50,8 +50,9 @@ const DOMESTIC_STAT_FORMULA: Readonly<Record<DomesticTaskId, { base: number; wei
 /**
  * 該任務的產出：有武將屬性時套 §F 公式，未指派時沿用固定表（暫定）。
  * goldBonus：黃金產出的加成比例（子嗣郡城縣令，PROG-2-1162），只作用在產黃金的任務。
+ * multiplier：治理事件的本季產出倍率（PROG-2-1773）。
  */
-export function domesticOutputFor(taskId: DomesticTaskId, stats?: Readonly<DomesticStats> | null, goldBonus = 0): DomesticOutput {
+export function domesticOutputFor(taskId: DomesticTaskId, stats?: Readonly<DomesticStats> | null, goldBonus = 0, multiplier = 1): DomesticOutput {
     const fixed = DOMESTIC_TASK_OUTPUT[taskId];
     let amount = fixed.amount;
     if (stats) {
@@ -63,6 +64,7 @@ export function domesticOutputFor(taskId: DomesticTaskId, stats?: Readonly<Domes
     }
     // 加 1e-9 吸收浮點誤差（100 × 1.3 不應變成 129）
     if (fixed.resource === 'gold' && goldBonus > 0) amount = Math.floor(amount * (1 + goldBonus) + 1e-9);
+    if (multiplier !== 1) amount = Math.floor(amount * multiplier + 1e-9);
     return { resource: fixed.resource, amount };
 }
 
@@ -79,6 +81,8 @@ export type DomesticCaps = Readonly<DomesticStock>;
 export interface DomesticSeasonLog {
     lastSeason: number | null;
     lastTask: DomesticTaskId | null;
+    /** 該次實際入帳（季度治理報告用，PROG-2-1773）；舊存檔沒有 */
+    lastGrant?: { resource: DomesticResource; amount: number };
 }
 
 export type DomesticRejectReason = 'already-chosen-this-season' | 'unknown-task';
@@ -101,7 +105,10 @@ export function normalizeDomesticLog(raw: unknown): DomesticSeasonLog {
     const r = raw as Record<string, unknown>;
     const lastSeason = typeof r.lastSeason === 'number' && Number.isInteger(r.lastSeason) ? r.lastSeason : null;
     const lastTask = typeof r.lastTask === 'string' && isDomesticTaskId(r.lastTask) ? r.lastTask : null;
-    return { lastSeason, lastTask };
+    const grant = r.lastGrant as { resource?: unknown; amount?: unknown } | undefined;
+    const validGrant = !!grant && typeof grant.amount === 'number' && grant.amount >= 0
+        && (['food', 'gold', 'fame', 'cityTroops'] as unknown[]).indexOf(grant.resource) >= 0;
+    return { lastSeason, lastTask, ...(validGrant ? { lastGrant: { resource: grant!.resource as DomesticResource, amount: grant!.amount as number } } : {}) };
 }
 
 export function isDomesticTaskId(value: string): value is DomesticTaskId {
@@ -120,6 +127,7 @@ export function runDomesticTask(
     caps: DomesticCaps,
     stats?: Readonly<DomesticStats> | null,
     goldBonus = 0,
+    multiplier = 1,
 ): DomesticTaskResult {
     const stock = { ...source };
     const result: DomesticTaskResult = { stock, log: { ...log }, ok: false, granted: 0 };
@@ -131,14 +139,14 @@ export function runDomesticTask(
         result.reason = 'already-chosen-this-season';
         return result;
     }
-    const output = domesticOutputFor(taskId, stats, goldBonus);
+    const output = domesticOutputFor(taskId, stats, goldBonus, multiplier);
     const before = stock[output.resource];
     // 已超過上限時只會不增加，不會被強制砍回上限。
     const after = Math.max(before, Math.min(caps[output.resource], before + output.amount));
     stock[output.resource] = after;
     result.granted = Math.max(0, after - before);
     result.output = output;
-    result.log = { lastSeason: season, lastTask: taskId };
+    result.log = { lastSeason: season, lastTask: taskId, lastGrant: { resource: output.resource, amount: result.granted } };
     result.ok = true;
     return result;
 }

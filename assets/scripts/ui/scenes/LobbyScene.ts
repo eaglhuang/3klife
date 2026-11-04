@@ -1298,6 +1298,8 @@ export class LobbyScene extends Component {
         const domestic = new DomesticPanelController({
             log: () => services().session.domesticLog,
             season: () => services().session.gameTime.totalSeasonsElapsed,
+            outputMultiplier: (taskId: DomesticTaskId) => services().session.domesticOutputMultiplier(taskId),
+            eventLine: () => services().session.governanceEventNotice,
             choose: (taskId: DomesticTaskId) => services().session.chooseDomesticTask(taskId, (amount) => { gacha.grantCurrency('gold', amount); }),
             // 任務格指派武將（GOV-04 / PROG-2-1159）：產出依武將屬性；指派變動即存檔
             candidates: () => services().session.roster
@@ -2762,6 +2764,9 @@ export class LobbyScene extends Component {
                     const message = seasonStartText((key, ...args) => services().i18n.t(key, ...args), payload.advance.current);
                     services().event.emit('SHOW_TOAST', { message, duration: 3 });
                 }
+                // 季度治理報告與治理事件（領地治理 §G，PROG-2-1773）
+                if (payload?.governanceReport) services().event.emit('SHOW_TOAST', { message: payload.governanceReport, duration: 3 });
+                if (payload?.governanceEventLine) services().event.emit('SHOW_TOAST', { message: payload.governanceEventLine, duration: 3 });
                 for (const battle of payload?.rivalBattles ?? []) {
                     if (battle.goldReward > 0) gacha.grantCurrency('gold', battle.goldReward);
                     services().event.emit('SHOW_TOAST', { message: `敵軍來犯！${battle.lines[2]}`, duration: 3 });
