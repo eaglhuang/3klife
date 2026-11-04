@@ -1,14 +1,17 @@
 // @spec-source → 武將人物介面規格書.md (doc_ui_0012)；PROG-2-1429 依建檔紀錄補標出處
-import { Color, Label, Node, Sprite, UITransform } from 'cc';
+import { Color, Label, Layout, Node, Sprite, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
+import { GradientBackground } from '../../components/GradientBackground';
+import { RoundedRectBackground } from '../../components/RoundedRectBackground';
 import { SolidBackground } from '../../components/SolidBackground';
-import type { GeneralConfig, GeneralStatsConfig } from '../../../core/models/GeneralUnit';
+import type { GeneralConfig, GeneralStatsConfig, GeneralTalentRevealLevel } from '../../../core/models/GeneralUnit';
 import type { RadarChartConfig } from '../../core/interfaces/ICompositeRenderer';
 import { resolveStat } from '../general-detail/GeneralDetailFormatters';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
-import { describeLifespan, describeVitality } from '../../core/LifeVitalityPresenter';
+import { describeVitality } from '../../core/LifeVitalityPresenter';
 import { loyaltyGaugeOf, type LoyaltyTier } from '../../../core/systems/LoyaltyGauge';
+import { placeDs3BarFill } from './Ds3BarFill';
 
 /** 忠誠度條（HUM-04）顏色：正常沿用金色，低於 60 橙色、低於 30 紅色 */
 const LOYALTY_TIER_HEX: Record<LoyaltyTier, string> = {
@@ -25,16 +28,13 @@ type StatKey = keyof GeneralStatsConfig;
 
 interface StatRowDefinition {
     key: StatKey;
-    currentLabel: string;
-    prowessLabel: string;
-    barTrack: string;
-    barFill: string;
     colorToken: string;
 }
 
 interface StatRowBinding {
     current: Label;
     prowess: Label;
+    max: Label | null;
     barTrack: Node;
     barFill: Node;
 }
@@ -46,84 +46,28 @@ interface VitalBinding {
     barFill: Node;
 }
 
-const STAT_DEFS: StatRowDefinition[] = [
-    {
-        key: 'str',
-        currentLabel: 'CharacterDs3TabStats_span_4',
-        prowessLabel: 'CharacterDs3TabStats_span_6',
-        barTrack: 'CharacterDs3TabStats_div_10',
-        barFill: 'CharacterDs3TabStats_div_11',
-        colorToken: 'gdv3StatStr',
-    },
-    {
-        key: 'int',
-        currentLabel: 'CharacterDs3TabStats_span_9',
-        prowessLabel: 'CharacterDs3TabStats_span_11',
-        barTrack: 'CharacterDs3TabStats_div_16',
-        barFill: 'CharacterDs3TabStats_div_17',
-        colorToken: 'gdv3StatInt',
-    },
-    {
-        key: 'lea',
-        currentLabel: 'CharacterDs3TabStats_span_14',
-        prowessLabel: 'CharacterDs3TabStats_span_16',
-        barTrack: 'CharacterDs3TabStats_div_22',
-        barFill: 'CharacterDs3TabStats_div_23',
-        colorToken: 'gdv3StatLea',
-    },
-    {
-        key: 'pol',
-        currentLabel: 'CharacterDs3TabStats_span_19',
-        prowessLabel: 'CharacterDs3TabStats_span_21',
-        barTrack: 'CharacterDs3TabStats_div_28',
-        barFill: 'CharacterDs3TabStats_div_29',
-        colorToken: 'gdv3StatPol',
-    },
-    {
-        key: 'cha',
-        currentLabel: 'CharacterDs3TabStats_span_24',
-        prowessLabel: 'CharacterDs3TabStats_span_26',
-        barTrack: 'CharacterDs3TabStats_div_34',
-        barFill: 'CharacterDs3TabStats_div_35',
-        colorToken: 'gdv3StatCha',
-    },
-    {
-        key: 'luk',
-        currentLabel: 'CharacterDs3TabStats_span_29',
-        prowessLabel: 'CharacterDs3TabStats_span_31',
-        barTrack: 'CharacterDs3TabStats_div_40',
-        barFill: 'CharacterDs3TabStats_div_41',
-        colorToken: 'gdv3StatLuk',
-    },
-];
-
-interface VitalBindingDefinition {
-    value: string;
+export interface Ds3StatRowView {
+    talent: string;
+    prowess: string;
     max: string;
-    barTrack: string;
-    barFill: string;
+    barRatio: number;
+    /** 未完整揭露時條的顏色（v3 tabs.jsx）；null 表示用該屬性的代表色 */
+    barColor: string | null;
 }
 
-const VITAL_BINDINGS = {
-    hp: {
-        value: 'CharacterDs3TabStats_span_38',
-        max: 'CharacterDs3TabStats_div_51',
-        barTrack: 'CharacterDs3TabStats_div_49',
-        barFill: 'CharacterDs3TabStats_div_50',
-    },
-    sp: {
-        value: 'CharacterDs3TabStats_span_40',
-        max: 'CharacterDs3TabStats_div_56',
-        barTrack: 'CharacterDs3TabStats_div_54',
-        barFill: 'CharacterDs3TabStats_div_55',
-    },
-    vitality: {
-        value: 'CharacterDs3TabStats_span_42',
-        max: 'CharacterDs3TabStats_div_61',
-        barTrack: 'CharacterDs3TabStats_div_59',
-        barFill: 'CharacterDs3TabStats_div_60',
-    },
-} as const;
+const STAT_DEFS: StatRowDefinition[] = [
+    { key: 'str', colorToken: 'gdv3StatStr' },
+    { key: 'int', colorToken: 'gdv3StatInt' },
+    { key: 'lea', colorToken: 'gdv3StatLea' },
+    { key: 'pol', colorToken: 'gdv3StatPol' },
+    { key: 'cha', colorToken: 'gdv3StatCha' },
+    { key: 'luk', colorToken: 'gdv3StatLuk' },
+];
+
+const PROWESS_MAX = 2000;
+const TAG_SLOT_COUNT = 2;
+const BAR_GRADIENT_START_ALPHA = 136;
+const BAR_CORNER_RADIUS = 3;
 
 const RADAR_AXIS_LABELS: Record<StatKey, string> = {
     str: '武力',
@@ -133,6 +77,33 @@ const RADAR_AXIS_LABELS: Record<StatKey, string> = {
     cha: '魅力',
     luk: '運氣',
 };
+
+/** 依揭露階段決定顯示內容（v3 §6.2.1）：未揭露時不露數值，條長歸零 */
+export function buildDs3StatRow(level: GeneralTalentRevealLevel | undefined, talent: number, prowess: number): Ds3StatRowView {
+    const clampedRatio = Math.max(0, Math.min(1, prowess / PROWESS_MAX));
+    switch (level) {
+    case 'HIDDEN':
+        return { talent: '?', prowess: '?', max: '', barRatio: 0, barColor: '#4D4635' };
+    case 'TENDENCY':
+        return { talent: '傾', prowess: '待', max: '', barRatio: 0, barColor: '#B0A880' };
+    case 'RANGE':
+        return { talent: `${talent}`, prowess: '~', max: '', barRatio: clampedRatio, barColor: '#C8B060' };
+    default:
+        return { talent: `${talent}`, prowess: prowess.toLocaleString(), max: `/${PROWESS_MAX}`, barRatio: clampedRatio, barColor: null };
+    }
+}
+
+/** 資料未提供評等時，由最高能力值推算；門檻待規格定案 */
+export function deriveDs3Rank(rawRank: unknown, stats: number[]): string {
+    if (typeof rawRank === 'string' && rawRank.trim().length > 0) return rawRank.trim().toUpperCase();
+    if (typeof rawRank === 'number') return `${Math.round(rawRank)}`;
+    const top = Math.max(0, ...stats);
+    if (top >= 98) return 'SS';
+    if (top >= 90) return 'S';
+    if (top >= 75) return 'A';
+    if (top >= 60) return 'B';
+    return 'C';
+}
 
 export class CharacterDs3StatsChild extends ChildPanelBase {
     override dataSource = 'config';
@@ -146,12 +117,10 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
     private _loyaltyTrack: Node | null = null;
     private _loyaltyFill: Node | null = null;
     private _loyaltyLabel: Label | null = null;
-    private _age!: Label;
-    private _vitalityProfile!: Label;
-    private _status!: Label;
-    private _level!: Label;
-    private _totalRankBadge!: Label;
-    private _totalRankText!: Label;
+    private _roleComment: Label | null = null;
+    private _gradeBadge: Label | null = null;
+    private _totalRankBadge: Label | null = null;
+    private _totalRankText: Label | null = null;
     private _tokenColors: Record<string, string> = {};
     private _latestConfig: GeneralConfig | null = null;
     private _metrics = {
@@ -169,18 +138,20 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         await this._loadTokenColors();
-        this._radarChartNode = this._node('CharacterDs3TabStats_svg_1');
-        this._statRows = STAT_DEFS.map((def) => this._bindStatRow(def));
-        this._hp = this._bindVital(VITAL_BINDINGS.hp);
-        this._sp = this._bindVital(VITAL_BINDINGS.sp);
-        this._vitality = this._bindVital(VITAL_BINDINGS.vitality);
+        this._radarChartNode = this._node('StatsRadar');
+        this._statRows = STAT_DEFS.map((def) => this._bindStatRow(def.key));
+        this._normalizeStatRows();
+        this._hp = this._bindVital('hp');
+        this._sp = this._bindVital('sp');
+        this._vitality = this._bindVital('vitality');
         this._ensureLoyaltyRow();
-        this._age = this._label('CharacterDs3TabStats_span_46');
-        this._vitalityProfile = this._label('CharacterDs3TabStats_span_48');
-        this._status = this._label('CharacterDs3TabStats_span_50');
-        this._level = this._label('CharacterDs3TabStats_span_52');
-        this._totalRankBadge = this._label('CharacterDs3TabStats_div_43');
-        this._totalRankText = this._label('CharacterDs3TabStats_span_34');
+        this._roleComment = this._findLabel('StatsRoleComment');
+        this._gradeBadge = this._findLabel('StatsGradeBadge');
+        this._totalRankBadge = this._findLabel('StatsRankBadge');
+        this._totalRankText = this._findLabel('StatsRankText');
+        // 教官群目前只有設計稿範例，沒有武將資料可接，先不顯示
+        this._setActive('StatsMentorTitle', false);
+        this._setActive('StatsMentorGrid', false);
 
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3StatsChild] onMount', {
             rootPath: CharacterDs3StatsChild.ROOT_PATH,
@@ -203,8 +174,7 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         this._syncStatsRows(cfg);
         this._syncVitals(cfg);
         this._syncLoyalty(cfg.id);
-        this._syncProfile(cfg);
-        this._syncTotalRank(cfg);
+        this._syncHeader(cfg);
     }
 
     public override validateDataFormat(data: unknown): string | null {
@@ -219,21 +189,77 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         this._statRows = [];
     }
 
-    private _bindStatRow(def: StatRowDefinition): StatRowBinding {
+    private _bindStatRow(key: StatKey): StatRowBinding {
         return {
-            current: this._label(def.currentLabel),
-            prowess: this._label(def.prowessLabel),
-            barTrack: this._node(def.barTrack),
-            barFill: this._node(def.barFill),
+            current: this._label(`Stats_${key}_current`),
+            prowess: this._label(`Stats_${key}_prowess`),
+            max: this._findLabel(`Stats_${key}_max`),
+            barTrack: this._node(`Stats_${key}_track`),
+            barFill: this._node(`Stats_${key}_fill`),
         };
     }
 
-    private _bindVital(binding: VitalBindingDefinition): VitalBinding {
+    /** 轉換來源的範例資料有未揭露列（沒有上限文字、列較矮）；實際每列都可能完整揭露，以第一列為範本補齊 */
+    private _normalizeStatRows(): void {
+        const template = this._statRows[0];
+        const templateMax = template?.max;
+        if (!templateMax) return;
+        STAT_DEFS.forEach((def, index) => {
+            const binding = this._statRows[index];
+            if (binding.max) return;
+            const maxNode = this._node(`Stats_${def.key}_max`);
+            const label = maxNode.addComponent(Label);
+            label.font = templateMax.font;
+            label.fontSize = templateMax.fontSize;
+            label.lineHeight = templateMax.lineHeight;
+            label.horizontalAlign = templateMax.horizontalAlign;
+            label.overflow = templateMax.overflow;
+            label.verticalAlign = templateMax.verticalAlign;
+            label.color = templateMax.color;
+            binding.max = label;
+            this._copySize(this._node(`Stats_${STAT_DEFS[0].key}_max`), maxNode);
+            this._copyHeight(template.barTrack.parent, binding.barTrack.parent);
+            this._copyHeight(template.barTrack.parent?.parent ?? null, binding.barTrack.parent?.parent ?? null);
+            binding.barTrack.parent?.getComponent(Layout)?.updateLayout();
+            binding.barTrack.parent?.parent?.getComponent(Layout)?.updateLayout();
+        });
+        template.barTrack.parent?.parent?.parent?.getComponent(Layout)?.updateLayout();
+    }
+
+    private _copySize(from: Node, to: Node): void {
+        const fromTransform = from.getComponent(UITransform);
+        const toTransform = to.getComponent(UITransform) ?? to.addComponent(UITransform);
+        if (!fromTransform) return;
+        toTransform.setAnchorPoint(fromTransform.anchorX, fromTransform.anchorY);
+        toTransform.setContentSize(fromTransform.width, fromTransform.height);
+    }
+
+    private _copyHeight(from: Node | null, to: Node | null): void {
+        const fromTransform = from?.getComponent(UITransform);
+        const toTransform = to?.getComponent(UITransform) ?? to?.addComponent(UITransform);
+        if (fromTransform && toTransform) toTransform.setContentSize(toTransform.width, fromTransform.height);
+    }
+
+    private _setBarColor(fillNode: Node, hex: string): void {
+        const color = this._hexToColor(hex);
+        const rounded = fillNode.getComponent(RoundedRectBackground);
+        if (rounded) rounded.enabled = false;
+        const solid = fillNode.getComponent(SolidBackground);
+        if (solid) solid.enabled = false;
+        const gradient = fillNode.getComponent(GradientBackground) ?? fillNode.addComponent(GradientBackground);
+        gradient.enabled = true;
+        gradient.setLinearGradient(90, [
+            { offset: 0, color: new Color(color.r, color.g, color.b, BAR_GRADIENT_START_ALPHA) },
+            { offset: 1, color },
+        ], { cornerRadius: BAR_CORNER_RADIUS });
+    }
+
+    private _bindVital(key: 'hp' | 'sp' | 'vitality'): VitalBinding {
         return {
-            value: this._label(binding.value),
-            max: this._label(binding.max),
-            barTrack: this._node(binding.barTrack),
-            barFill: this._node(binding.barFill),
+            value: this._label(`Stats_${key}_value`),
+            max: this._label(`Stats_${key}_max`),
+            barTrack: this._node(`Stats_${key}_track`),
+            barFill: this._node(`Stats_${key}_fill`),
         };
     }
 
@@ -344,11 +370,14 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
                 ? Math.round(stat.prowess)
                 : Math.round(current * this._metrics.prowessScaleFactor);
 
-            binding.current.string = `${current}`;
+            const view = buildDs3StatRow(stat?.revelationLevel, current, prowess);
+            binding.current.string = view.talent;
             binding.current.color = this._hexToColor(this._tokenColor(def.colorToken, '#8CCFC4'));
-            binding.prowess.string = prowess.toLocaleString();
+            binding.prowess.string = view.prowess;
             binding.prowess.color = this._hexToColor(this._tokenColor('gdv3NumProwess', '#E8D8A0'));
-            this._setBarRatio(binding.barTrack, binding.barFill, prowess / 2000, def.colorToken, 5, 232);
+            if (binding.max) binding.max.string = view.max;
+            this._setBarRatio(binding.barTrack, binding.barFill, view.barRatio);
+            this._setBarColor(binding.barFill, view.barColor ?? this._tokenColor(def.colorToken, '#8CCFC4'));
         });
     }
 
@@ -358,12 +387,12 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         const currentSp = cfg.currentSp ?? cfg.initialSp ?? cfg.maxSp ?? 0;
         const maxSp = cfg.maxSp ?? currentSp;
 
-        this._syncVital(this._hp, currentHp, maxHp, 'gdv3StatLea');
-        this._syncVital(this._sp, currentSp, maxSp, 'gdv3StatStr');
+        this._syncVital(this._hp, currentHp, maxHp);
+        this._syncVital(this._sp, currentSp, maxSp);
 
         // 精力條沿用 LifeVitalityPresenter 的比例與三段變色（PROG-2-0074）
         const vit = describeVitality(cfg);
-        this._syncVital(this._vitality, vit.current, vit.max, 'accent.gold.light');
+        this._syncVital(this._vitality, vit.current, vit.max);
         this._setBarColorHex(this._vitality.barFill, vit.color);
     }
 
@@ -374,7 +403,7 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
     private _syncLoyalty(generalId: string): void {
         if (!this._loyaltyTrack || !this._loyaltyFill || !this._loyaltyLabel) return;
         const view = loyaltyGaugeOf(services().session.tallyLoyalty[generalId]);
-        this._setBarRatio(this._loyaltyTrack, this._loyaltyFill, view.ratio, 'accent.gold.light', LOYALTY_BAR_HEIGHT, 255);
+        this._setBarRatio(this._loyaltyTrack, this._loyaltyFill, view.ratio);
         this._setBarColorHex(this._loyaltyFill, LOYALTY_TIER_HEX[view.tier]);
 
         const valueText = view.locked
@@ -421,50 +450,43 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         this._loyaltyLabel = label;
     }
 
-    private _syncVital(binding: VitalBinding, value: number, max: number, colorToken: string): void {
+    private _syncVital(binding: VitalBinding, value: number, max: number): void {
         const current = Math.max(0, Math.round(value));
         const total = Math.max(0, Math.round(max));
         binding.value.string = current.toLocaleString();
         binding.max.string = `/ ${total.toLocaleString()}`;
         binding.value.color = this._hexToColor(this._tokenColor('accent.gold.light', '#FFE088'));
         binding.max.color = this._hexToColor(this._tokenColor('gdv3TextMetaDim', '#807765'));
-        this._setBarRatio(binding.barTrack, binding.barFill, total > 0 ? current / total : 0, colorToken, 8, 255);
+        this._setBarRatio(binding.barTrack, binding.barFill, total > 0 ? current / total : 0);
     }
 
-    private _syncProfile(cfg: GeneralConfig): void {
-        const life = describeLifespan(cfg);
-        const vit = describeVitality(cfg);
-        const level = typeof (cfg as { level?: unknown }).level === 'number'
-            ? Math.round((cfg as { level?: number }).level ?? 0)
-            : null;
-        const maxLevel = typeof (cfg as { maxLevel?: unknown }).maxLevel === 'number'
-            ? Math.round((cfg as { maxLevel?: number }).maxLevel ?? 0)
-            : null;
+    private _syncHeader(cfg: GeneralConfig): void {
+        const stats = STAT_DEFS.map((def) => Math.round(resolveStat(cfg, def.key) ?? 0));
+        const rank = deriveDs3Rank((cfg as { prowessRank?: unknown }).prowessRank, stats);
+        if (this._gradeBadge) this._gradeBadge.string = rank;
+        if (this._totalRankBadge) this._totalRankBadge.string = rank;
+        if (this._totalRankText) this._totalRankText.string = this._describeRank(rank);
 
-        this._age.string = cfg.age != null ? life.ageText : '--';
-        // 待產優先，其次精力不足；都沒有時顯示「精力 / 上限」
-        this._vitalityProfile.string = vit.statusText || `${vit.current} / ${vit.max}`;
-        this._status.string = cfg.status?.trim() ? cfg.status : '--';
-        this._level.string = level != null
-            ? `${level}${maxLevel != null ? ` / ${maxLevel}` : ''}`
-            : '--';
-    }
+        const topKey = STAT_DEFS[stats.indexOf(Math.max(...stats))].key;
+        const title = cfg.title?.replace(/[【】]/g, '').trim();
+        if (this._roleComment) {
+            this._roleComment.string = `${RADAR_AXIS_LABELS[topKey]}型${title ? ` · ${title}` : ''}`;
+        }
 
-    private _syncTotalRank(cfg: GeneralConfig): void {
-        const rankRaw = (cfg as { prowessRank?: unknown }).prowessRank;
-        const rank = typeof rankRaw === 'string' && rankRaw.trim().length > 0
-            ? rankRaw.trim().toUpperCase()
-            : typeof rankRaw === 'number'
-                ? `${Math.round(rankRaw)}`
-                : 'S';
-        this._totalRankBadge.string = rank;
-        this._totalRankText.string = this._describeRank(rank);
+        const tags = (cfg as { graduationTags?: string[] }).graduationTags ?? [];
+        this._setActive('StatsTagRow', tags.length > 0);
+        for (let index = 0; index < TAG_SLOT_COUNT; index += 1) {
+            this._setActive(`StatsTag_${index}`, index < tags.length);
+            const tagLabel = this._findLabel(`StatsTag_${index}`);
+            if (tagLabel && index < tags.length) tagLabel.string = tags[index];
+        }
     }
 
     private async _loadTokenColors(): Promise<void> {
+        const defaultMetrics = this._metrics;
         const designTokens = await services().specLoader.loadDesignTokens() as {
             colors?: Record<string, string>;
-            generalDetailStats?: Partial<typeof this._metrics>;
+            generalDetailStats?: Partial<typeof defaultMetrics>;
         };
         this._tokenColors = designTokens?.colors && typeof designTokens.colors === 'object'
             ? designTokens.colors
@@ -488,24 +510,12 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
         }
     }
 
-    private _setBarRatio(trackNode: Node, fillNode: Node, ratio: number, colorToken: string, height: number, alpha: number): void {
+    private _setBarRatio(trackNode: Node, fillNode: Node, ratio: number): void {
         const trackTransform = trackNode.getComponent(UITransform) ?? trackNode.addComponent(UITransform);
         const fillTransform = fillNode.getComponent(UITransform) ?? fillNode.addComponent(UITransform);
-        const safeRatio = Math.max(0, Math.min(1, ratio));
-        fillTransform.setContentSize(Math.round(trackTransform.width * safeRatio), height);
-        const color = this._hexToColor(this._tokenColor(colorToken, '#8CCFC4'));
-        color.a = Math.max(0, Math.min(255, alpha));
-
-        const sprite = fillNode.getComponent(Sprite);
-        if (sprite) {
-            sprite.color = color;
-            return;
-        }
-
-        const solidBackground = fillNode.getComponent(SolidBackground);
-        if (solidBackground) {
-            solidBackground.color = color;
-        }
+        const placement = placeDs3BarFill(trackTransform.width, trackTransform.anchorX, fillTransform.anchorX, ratio);
+        fillTransform.setContentSize(placement.width, fillTransform.height || trackTransform.height);
+        fillNode.setPosition(placement.x, fillNode.position.y, fillNode.position.z);
     }
 
     private _describeRank(rank: string): string {
@@ -524,16 +534,23 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
     }
 
     private _label(name: string): Label {
-        const direct = this.binder.getLabel(name);
-        if (direct) {
-            return direct;
-        }
-        const label = this._findDescendantByName(this.hostNode, name)?.getComponent(Label) ?? null;
+        const label = this._findLabel(name);
         if (!label) {
             UCUFLogger.error(LogCategory.LIFECYCLE, `[CharacterDs3StatsChild] missing label ${name}`);
             throw new Error(`[CharacterDs3StatsChild] missing label ${name}`);
         }
         return label;
+    }
+
+    /** 有底色的文字會被轉成「面板＋文字」兩層，名字在面板上，文字在子節點 */
+    private _findLabel(name: string): Label | null {
+        const node = this.binder.getNode(name) ?? this._findDescendantByName(this.hostNode, name);
+        return this.binder.getLabel(name) ?? node?.getComponent(Label) ?? node?.getComponentInChildren(Label) ?? null;
+    }
+
+    private _setActive(name: string, active: boolean): void {
+        const node = this.binder.getNode(name) ?? this._findDescendantByName(this.hostNode, name);
+        if (node) node.active = active;
     }
 
     private _node(name: string): Node {

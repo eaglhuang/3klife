@@ -44,6 +44,19 @@ assert.strictEqual(bioDiv.childNodes[1].childNodes[0], bioText);
 assert.strictEqual(bioDiv.attrs['data-name'], undefined);
 delete nodes.div;
 
+// whenText：畫面沒有該文字就不套用也不回報未命中，切頁重用的元素要清掉舊名
+const reused = Object.assign(fakeNode('甲'), { removeAttribute(k) { delete this.attrs[k]; } });
+nodes.p = [reused];
+nodes['[data-name="Gated"]'] = [reused];
+const gated = [{ name: 'Gated', selector: 'p', whenText: '屬性頁' }];
+global.document.body.innerText = '屬性頁 內容';
+assert.deepStrictEqual(applyBindMapInPage(gated).map(r => r.matched), [true]);
+assert.strictEqual(reused.attrs['data-name'], 'Gated');
+global.document.body.innerText = '總覽頁';
+assert.deepStrictEqual(applyBindMapInPage(gated), []);
+assert.strictEqual(reused.attrs['data-name'], undefined);
+delete nodes.p;
+
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'bindmap-'));
 const good = path.join(tmp, 'good.json');
 fs.writeFileSync(good, JSON.stringify({ bindings: [{ name: 'A', selector: 'span' }] }));
