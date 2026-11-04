@@ -8,6 +8,7 @@ import { treeCardNodeName } from '../../core/systems/BloodlineTreeBinding';
 import { buildNodeCards } from '../../core/systems/BloodlineNodeCards';
 import { redrawBloodlineTreeConnections } from '../components/BloodlineTreeLines';
 import { ancestorPeekView, isAncestorRevealed, type AncestorPeekView } from '../../core/systems/AncestorTreeLayout';
+import { isGenerationVisible, toggleBloodlineTreeMode, type BloodlineTreeViewMode } from '../../core/systems/BloodlineTreeViewMode';
 
 const { ccclass, property } = _decorator;
 
@@ -46,6 +47,24 @@ export class BloodlineTreePanel extends Component {
     private _pedigree: Pedigree | null = null;
     /** 點擊祖先卡時的 peek 回呼；由命頁 ChildPanel 設定（PROG-2-1278） */
     onCardPeek: ((view: AncestorPeekView) => void) | null = null;
+    /** 簡化／專家顯示模式；切換按鈕尚未上版面前維持 expert（PROG-2-1731） */
+    private _viewMode: BloodlineTreeViewMode = 'expert';
+
+    get viewMode(): BloodlineTreeViewMode {
+        return this._viewMode;
+    }
+
+    /** 切換簡化（父母＋祖父母）／專家（14 人）顯示，並重畫連線 */
+    setViewMode(mode: BloodlineTreeViewMode): void {
+        this._viewMode = mode;
+        this._applyViewMode();
+        this._redrawLines();
+    }
+
+    toggleViewMode(): BloodlineTreeViewMode {
+        this.setViewMode(toggleBloodlineTreeMode(this._viewMode));
+        return this._viewMode;
+    }
 
     /**
      * 根據武將 uid 載入並渲染 3 代祖先樹。
@@ -67,6 +86,7 @@ export class BloodlineTreePanel extends Component {
         this._fillContainer(this.gen2Container, 2, slots.gen2, graph);
         this._fillContainer(this.gen1Container, 1, slots.gen1, graph);
         this._pedigree = graph.getPedigree(uid);
+        this._applyViewMode();
         this._redrawLines();
     }
 
@@ -79,6 +99,13 @@ export class BloodlineTreePanel extends Component {
     }
 
     // ---- private ----
+
+    /** 依模式顯示／隱藏各代容器（gen3 = 父母、gen2 = 祖父母、gen1 = 曾祖父母） */
+    private _applyViewMode(): void {
+        if (this.gen3Container) this.gen3Container.active = isGenerationVisible(1, this._viewMode);
+        if (this.gen2Container) this.gen2Container.active = isGenerationVisible(2, this._viewMode);
+        if (this.gen1Container) this.gen1Container.active = isGenerationVisible(3, this._viewMode);
+    }
 
     /**
      * 依卡片實際位置重畫父子連線（PROG-2-1279）。延後一幀，等版面排好再讀座標。
