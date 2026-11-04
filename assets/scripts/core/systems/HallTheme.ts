@@ -59,6 +59,14 @@ export interface HallTheme {
     decorPath: string | null;
 }
 
+/** lobby-hub.json Current_Theme.Festival_Theme_ID 表示「無節慶」的哨兵值。 */
+export const HALL_NO_FESTIVAL_ID = 'NONE';
+
+/** lobby-hub 的節慶 ID → 大廳主題的 festivalId；哨兵值、空字串或缺值為 null（UI-2-0155）。 */
+export function hallFestivalIdOf(festivalThemeId: string | null | undefined): string | null {
+    return festivalThemeId && festivalThemeId !== HALL_NO_FESTIVAL_ID ? festivalThemeId : null;
+}
+
 /** 跨午夜的區間（例如 18~6）也成立；start === end 視為沒有夜間。 */
 export function hallDaypartOf(hour: number, night: Readonly<HallThemeConfig['night']>): HallDaypart {
     const h = ((Math.floor(hour) % 24) + 24) % 24;

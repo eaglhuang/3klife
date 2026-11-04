@@ -2,7 +2,7 @@
  * HallTheme.test.ts — 幕府大廳主題解析（UI-2-0144，UI-2-0123 子項）
  */
 import { assert, TestSuite } from './TestRunner';
-import { hallDaypartOf, HallThemeConfig, resolveHallTheme } from '../assets/scripts/core/systems/HallTheme';
+import { hallDaypartOf, hallFestivalIdOf, HallThemeConfig, resolveHallTheme } from '../assets/scripts/core/systems/HallTheme';
 
 function loadJson<T>(rel: string): T {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -67,6 +67,13 @@ export function createHallThemeSuite(): TestSuite {
 
     suite.test('季節序號超出範圍時退回春季', () => {
         assert.equals(resolveHallTheme({ seasonIndex: 9, hour: 12 }, CONFIG).season, 'spring', '退回春季');
+    });
+
+    suite.test('lobby-hub 節慶 ID：NONE／空字串／缺值為無節慶，其餘原樣傳入（UI-2-0155）', () => {
+        assert.equals(hallFestivalIdOf('NONE'), null);
+        assert.equals(hallFestivalIdOf(''), null);
+        assert.equals(hallFestivalIdOf(undefined), null);
+        assert.equals(hallFestivalIdOf('lantern'), 'lantern');
     });
 
     return suite;
