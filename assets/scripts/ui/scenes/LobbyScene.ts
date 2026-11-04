@@ -119,7 +119,7 @@ import { GovernorHallController, GovernorTerritoryInfo } from '../core/GovernorH
 import { BAG_CATEGORY_TABS, BAG_ROW_SLOTS, ItemBagController } from '../core/ItemBagController';
 import { planTerritoryUpgrade } from '../../core/systems/TerritoryUpgrade';
 import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
-import { mercBondedLine, mercDayThreeLine, mercFarewellLine } from '../../core/systems/MercenaryScripts';
+import { mercBondedLine, mercDayThreeLine, mercFarewellLine, mercTrustLine } from '../../core/systems/MercenaryScripts';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceGalleryController } from '../core/RedFaceShowcaseController';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
@@ -2784,6 +2784,10 @@ export class LobbyScene extends Component {
                 // 試用第 3 日對話（傭兵 §G 日常互動，PROG-2-1771）
                 for (const uid of payload?.mercenaryDayThree ?? []) {
                     services().event.emit('SHOW_TOAST', { message: mercDayThreeLine(mercName(uid)), duration: 3 });
+                }
+                // 插畫第 4 階段「信任」（留存 §G，PROG-2-1777）
+                for (const uid of payload?.mercenaryTrust ?? []) {
+                    services().event.emit('SHOW_TOAST', { message: mercTrustLine(mercName(uid)), duration: 3 });
                 }
                 // 傭兵試用期滿離隊告別（傭兵 §G 退場告別，PROG-2-1154、PROG-2-1771）
                 for (const uid of payload?.mercenaryDepartures ?? []) {

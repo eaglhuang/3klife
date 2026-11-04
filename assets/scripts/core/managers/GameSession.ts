@@ -72,7 +72,7 @@ import { bondMercenaryToRoster, statsOfTemplate, type RosterBondResult } from '.
 import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } from '../systems/MercenaryTrialTicket';
 import { createUpkeepState } from '../systems/MercenaryUpkeep';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
-import { reachedTrialDayThree } from '../systems/MercenaryScripts';
+import { reachedTrialDayThree, reachedTrustStage } from '../systems/MercenaryScripts';
 import { recordTrialBattle } from '../systems/MercenaryBattleRecord';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
 import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
@@ -395,6 +395,8 @@ export interface SeasonAdvancedPayload {
     mercenaryDepartures?: string[];
     /** 本季走到試用第 3 日的傭兵 uid（傭兵 §G 日常互動，PROG-2-1771） */
     mercenaryDayThree?: string[];
+    /** 本季剛進插畫第 4 階段「信任」的傭兵 uid（留存 §G，PROG-2-1777） */
+    mercenaryTrust?: string[];
 }
 
 /** 進行中的培育會話存取介面；正式環境為 NurtureService，讓存檔帶著培育進度 */
@@ -515,6 +517,8 @@ export interface MercenaryDayReport {
     events: DepartureEvent[];
     /** 本日走到試用第 3 日的傭兵 uid（PROG-2-1771） */
     dayThreeUids: string[];
+    /** 本日剛進插畫第 4 階段的傭兵 uid（PROG-2-1777） */
+    trustUids: string[];
 }
 
 /** 派遣板點列派遣結果（PROG-2-1181） */
@@ -838,6 +842,7 @@ export class GameSession {
         const departed = new Set<string>();
         const letters: FarewellLetter[] = [];
         const dayThreeUids: string[] = [];
+        const trustUids: string[] = [];
         let cooldowns = this._mercenaries.cooldowns;
         const mercenaries = this._mercenaries.mercenaries.map((merc) => {
             const settled = settleTrialRollover(merc, today, cooldowns);
@@ -851,6 +856,7 @@ export class GameSession {
             }
             const next = advanceTrialDay(merc).state;
             if (reachedTrialDayThree(merc, next)) dayThreeUids.push(merc.uid);
+            if (reachedTrustStage(merc, next)) trustUids.push(merc.uid);
             return next;
         });
         for (const letter of letters) this._farewellLetters = appendFarewellLetter(this._farewellLetters, letter);
@@ -861,7 +867,7 @@ export class GameSession {
             cooldowns,
             day: today,
         };
-        return { day: today, events, dayThreeUids };
+        return { day: today, events, dayThreeUids, trustUids };
     }
 
     /** 告別信用的武將名：名冊查得到用名字，否則用傭兵 uid。 */
@@ -3561,7 +3567,7 @@ export class GameSession {
         const governanceRandom = this._governanceEventRandom ?? remarkRandomOf(`governance|${governanceSeason}|${this._seeded.snapshot().state}`);
         this._governanceEvent = rollGovernanceEvent(governanceSeason, governanceRandom);
         const eventNotice = this.governanceEventNotice;
-        const payload: SeasonAdvancedPayload = { ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids, mercenaryDayThree: mercenaryDay.dayThreeUids } : {}) };
+        const payload: SeasonAdvancedPayload = { ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
