@@ -1,11 +1,11 @@
 {
   "screenId": "character-ds3-main",
   "rendering": {
-    "nodeCount": 36,
+    "nodeCount": 46,
     "deferredNodeCount": 0,
-    "totalNodeCount": 36,
-    "maxDepth": 6,
-    "estimatedDrawCalls": 3,
+    "totalNodeCount": 46,
+    "maxDepth": 7,
+    "estimatedDrawCalls": 4,
     "colorRectCount": 0
   },
   "loading": {
@@ -14,7 +14,7 @@
     "preloadSpriteCount": 1,
     "deferredSpriteCount": 0,
     "estimatedTextureBytes": 2518040,
-    "fontCount": 2
+    "fontCount": 3
   },
   "lifecycle": {
     "lazySlotCount": 2,
@@ -28,13 +28,13 @@
   },
   "runtimeGate": {
     "nodeCount": {
-      "value": 36,
+      "value": 46,
       "warning": 35,
       "blocker": 60,
       "status": "warn"
     },
     "maxDepth": {
-      "value": 6,
+      "value": 7,
       "warning": 8,
       "blocker": 12,
       "status": "pass"
@@ -43,7 +43,7 @@
   "verdict": {
     "level": "warning",
     "warnings": [
-      "node-count-warning: 36 (>35)"
+      "node-count-warning: 46 (>35)"
     ],
     "blockers": []
   }

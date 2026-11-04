@@ -1,6 +1,6 @@
 {
   "type": "container",
-  "name": "CharacterDs3TabOverview",
+  "name": "TabOverviewContent",
   "widget": {
     "top": 0,
     "left": 0,
@@ -10,9 +10,10 @@
   "children": [
     {
       "type": "container",
-      "name": "CharacterDs3TabOverviewRoot",
+      "name": "CharacterDs3MainOverviewRoot",
       "layout": {
         "type": "vertical",
+        "alignItems": "start",
         "paddingTop": 50,
         "paddingRight": 20,
         "paddingBottom": 60,
@@ -23,147 +24,156 @@
           "type": "container",
           "name": "CharacterDs3TabOverview_div_1",
           "width": 520,
-          "height": 812,
+          "height": 1099,
           "layout": {
             "type": "vertical",
             "justifyContent": "start",
-            "spacingY": 12
+            "spacingY": 16
           },
           "children": [
             {
-              "type": "container",
+              "type": "panel",
               "name": "CharacterDs3TabOverview_div_2",
               "width": 520,
-              "height": 91,
+              "height": 102,
               "layout": {
-                "type": "horizontal",
-                "alignItems": "end",
-                "justifyContent": "space-between",
+                "type": "vertical",
+                "alignItems": "start",
                 "paddingTop": 0,
                 "paddingRight": 0,
-                "paddingBottom": 10,
+                "paddingBottom": 14,
                 "paddingLeft": 0
               },
+              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_2",
               "children": [
                 {
                   "type": "container",
                   "name": "CharacterDs3TabOverview_div_3",
-                  "width": 223,
-                  "height": 80,
+                  "width": 520,
+                  "height": 87,
                   "layout": {
-                    "type": "vertical"
+                    "type": "horizontal",
+                    "alignItems": "start",
+                    "justifyContent": "space-between"
                   },
                   "children": [
                     {
                       "type": "container",
                       "name": "CharacterDs3TabOverview_div_4",
-                      "width": 223,
-                      "height": 54,
+                      "width": 296,
+                      "height": 87,
                       "layout": {
-                        "type": "horizontal",
-                        "alignItems": "baseline",
-                        "justifyContent": "start",
-                        "spacingX": 12
+                        "type": "vertical",
+                        "alignItems": "start"
                       },
                       "children": [
                         {
                           "type": "label",
                           "name": "OverviewName",
-                          "width": 119,
-                          "height": 54,
+                          "width": 296,
+                          "height": 56,
                           "text": "張飛",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_1"
+                          "styleSlot": "auto.character-ds3-tab-overview.overviewname"
                         },
                         {
                           "type": "label",
-                          "name": "OverviewEpithet",
-                          "width": 92,
-                          "height": 29,
-                          "text": "【燕人】",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_2"
+                          "name": "OverviewRoleBadge",
+                          "width": 296,
+                          "height": 25,
+                          "text": "字 翼德 · 燕人 · Vanguard",
+                          "styleSlot": "auto.character-ds3-tab-overview.overviewrolebadge"
                         }
                       ]
                     },
                     {
-                      "type": "label",
-                      "name": "OverviewRoleBadge",
-                      "width": 223,
-                      "height": 24,
-                      "text": "翼德 · 蜀 · 先鋒",
-                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_5"
-                    }
-                  ]
-                },
-                {
-                  "type": "container",
-                  "name": "CharacterDs3TabOverview_div_6",
-                  "width": 104,
-                  "height": 65,
-                  "layout": {
-                    "type": "vertical",
-                    "alignItems": "end",
-                    "justifyContent": "start",
-                    "spacingY": 6
-                  },
-                  "children": [
-                    {
-                      "type": "label",
-                      "name": "OverviewRarityTier",
-                      "width": 62,
-                      "height": 29,
-                      "text": "UR",
-                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_3"
-                    },
-                    {
                       "type": "container",
-                      "name": "OverviewRarityStars",
-                      "width": 104,
-                      "height": 30,
+                      "name": "CharacterDs3TabOverview_div_5",
+                      "width": 108,
+                      "height": 74,
                       "layout": {
-                        "type": "horizontal",
+                        "type": "vertical",
+                        "alignItems": "end",
                         "justifyContent": "start",
-                        "spacingX": 3
+                        "spacingY": 8,
+                        "paddingTop": 4,
+                        "paddingRight": 0,
+                        "paddingBottom": 0,
+                        "paddingLeft": 0
                       },
                       "children": [
                         {
-                          "type": "label",
-                          "name": "CharacterDs3TabOverview_span_4",
-                          "width": 18,
-                          "height": 30,
-                          "text": "★",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_4"
+                          "type": "panel",
+                          "name": "OverviewRarityTier",
+                          "width": 68,
+                          "height": 32,
+                          "skinSlot": "auto.character-ds3-tab-overview.overviewraritytier",
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabOverview_span_1",
+                              "widget": {
+                                "left": 20,
+                                "top": 5
+                              },
+                              "text": "UR",
+                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_1",
+                              "width": 28,
+                              "height": 22
+                            }
+                          ]
                         },
                         {
-                          "type": "label",
-                          "name": "CharacterDs3TabOverview_span_5",
-                          "width": 18,
+                          "type": "container",
+                          "name": "CharacterDs3TabOverview_div_6",
+                          "width": 108,
                           "height": 30,
-                          "text": "★",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_5"
-                        },
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabOverview_span_6",
-                          "width": 18,
-                          "height": 30,
-                          "text": "★",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_6"
-                        },
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabOverview_span_7",
-                          "width": 18,
-                          "height": 30,
-                          "text": "★",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_7"
-                        },
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabOverview_span_8",
-                          "width": 18,
-                          "height": 30,
-                          "text": "★",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_8"
+                          "layout": {
+                            "type": "horizontal",
+                            "justifyContent": "start",
+                            "spacingX": 4
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabOverview_span_2",
+                              "width": 18,
+                              "height": 30,
+                              "text": "★",
+                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_2"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabOverview_span_3",
+                              "width": 18,
+                              "height": 30,
+                              "text": "★",
+                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_3"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabOverview_span_4",
+                              "width": 18,
+                              "height": 30,
+                              "text": "★",
+                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_4"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabOverview_span_5",
+                              "width": 18,
+                              "height": 30,
+                              "text": "★",
+                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_5"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabOverview_span_6",
+                              "width": 18,
+                              "height": 30,
+                              "text": "★",
+                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_6"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -173,485 +183,219 @@
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabOverview_div_8",
+              "name": "CharacterDs3TabOverview_div_7",
               "width": 520,
-              "height": 154,
+              "height": 150,
               "layout": {
-                "type": "horizontal",
-                "spacingX": 10
+                "type": "grid",
+                "spacingX": 10,
+                "spacingY": 10,
+                "constraint": "fixed-col",
+                "constraintNum": 3,
+                "cellHeight": 150
               },
               "children": [
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabOverview_div_9",
-                  "width": 183,
-                  "height": 154,
-                  "layout": {
-                    "type": "vertical",
-                    "paddingTop": 12,
-                    "paddingRight": 14,
-                    "paddingBottom": 12,
-                    "paddingLeft": 14,
-                    "spacingY": 10
-                  },
-                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_9",
-                  "children": [
-                    {
-                      "type": "container",
-                      "name": "CharacterDs3TabOverview_div_10",
-                      "width": 153,
-                      "height": 26,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 8
-                      },
-                      "children": [
-                        {
-                          "type": "panel",
-                          "name": "CharacterDs3TabOverview_div_11",
-                          "width": 4,
-                          "height": 16,
-                          "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_11"
-                        },
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabOverview_span_9",
-                          "width": 86,
-                          "height": 26,
-                          "text": "核心屬性",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_9"
-                        },
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabOverview_span_10",
-                          "width": 34,
-                          "height": 14,
-                          "text": "CORE",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_10"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "container",
-                      "name": "CharacterDs3TabOverview_div_12",
-                      "width": 153,
-                      "height": 89,
-                      "layout": {
-                        "type": "grid",
-                        "spacingX": 12,
-                        "spacingY": 4,
-                        "constraint": "fixed-col",
-                        "constraintNum": 2,
-                        "cellHeight": 89
-                      },
-                      "children": [
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabOverview_div_13",
-                          "width": 71,
-                          "height": 27,
-                          "layout": {
-                            "type": "horizontal",
-                            "alignItems": "center",
-                            "justifyContent": "start",
-                            "spacingX": 6
-                          },
-                          "children": [
-                            {
-                              "type": "label",
-                              "name": "CharacterDs3TabOverview_span_11",
-                              "width": 19,
-                              "height": 25,
-                              "text": "武",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_11"
-                            },
-                            {
-                              "type": "label",
-                              "name": "OverviewStat_str",
-                              "width": 24,
-                              "height": 27,
-                              "text": "98",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_12"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabOverview_div_14",
-                          "width": 71,
-                          "height": 27,
-                          "layout": {
-                            "type": "horizontal",
-                            "alignItems": "center",
-                            "justifyContent": "start",
-                            "spacingX": 6
-                          },
-                          "children": [
-                            {
-                              "type": "label",
-                              "name": "CharacterDs3TabOverview_span_13",
-                              "width": 19,
-                              "height": 25,
-                              "text": "統",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_13"
-                            },
-                            {
-                              "type": "label",
-                              "name": "OverviewStat_lea",
-                              "width": 22,
-                              "height": 27,
-                              "text": "88",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_14"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabOverview_div_15",
-                          "width": 71,
-                          "height": 27,
-                          "layout": {
-                            "type": "horizontal",
-                            "alignItems": "center",
-                            "justifyContent": "start",
-                            "spacingX": 6
-                          },
-                          "children": [
-                            {
-                              "type": "label",
-                              "name": "CharacterDs3TabOverview_span_15",
-                              "width": 19,
-                              "height": 25,
-                              "text": "魅",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_15"
-                            },
-                            {
-                              "type": "label",
-                              "name": "OverviewStat_cha",
-                              "width": 20,
-                              "height": 27,
-                              "text": "74",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_16"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabOverview_div_16",
-                          "width": 71,
-                          "height": 27,
-                          "layout": {
-                            "type": "horizontal",
-                            "alignItems": "center",
-                            "justifyContent": "start",
-                            "spacingX": 6
-                          },
-                          "children": [
-                            {
-                              "type": "label",
-                              "name": "CharacterDs3TabOverview_span_17",
-                              "width": 19,
-                              "height": 25,
-                              "text": "智",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_17"
-                            },
-                            {
-                              "type": "label",
-                              "name": "OverviewStat_int",
-                              "width": 22,
-                              "height": 27,
-                              "text": "52",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_18"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabOverview_div_17",
-                          "width": 71,
-                          "height": 27,
-                          "layout": {
-                            "type": "horizontal",
-                            "alignItems": "center",
-                            "justifyContent": "start",
-                            "spacingX": 6
-                          },
-                          "children": [
-                            {
-                              "type": "label",
-                              "name": "CharacterDs3TabOverview_span_19",
-                              "width": 19,
-                              "height": 25,
-                              "text": "政",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_19"
-                            },
-                            {
-                              "type": "label",
-                              "name": "OverviewStat_pol",
-                              "width": 22,
-                              "height": 27,
-                              "text": "38",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_20"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabOverview_div_18",
-                          "width": 71,
-                          "height": 27,
-                          "layout": {
-                            "type": "horizontal",
-                            "alignItems": "center",
-                            "justifyContent": "start",
-                            "spacingX": 6
-                          },
-                          "children": [
-                            {
-                              "type": "label",
-                              "name": "CharacterDs3TabOverview_span_21",
-                              "width": 19,
-                              "height": 25,
-                              "text": "運",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_21"
-                            },
-                            {
-                              "type": "label",
-                              "name": "OverviewStat_luk",
-                              "width": 22,
-                              "height": 27,
-                              "text": "76",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_22"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "panel",
-                  "name": "CharacterDs3TabOverview_div_19",
-                  "width": 150,
-                  "height": 154,
-                  "layout": {
-                    "type": "vertical",
-                    "paddingTop": 12,
-                    "paddingRight": 14,
-                    "paddingBottom": 12,
-                    "paddingLeft": 14,
-                    "spacingY": 10
-                  },
-                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_19",
-                  "children": [
-                    {
-                      "type": "container",
-                      "name": "CharacterDs3TabOverview_div_20",
-                      "width": 120,
-                      "height": 52,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 8
-                      },
-                      "children": [
-                        {
-                          "type": "panel",
-                          "name": "CharacterDs3TabOverview_div_21",
-                          "width": 3,
-                          "height": 16,
-                          "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_21"
-                        },
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabOverview_span_23",
-                          "width": 69,
-                          "height": 52,
-                          "text": "戰場定位",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_23"
-                        },
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabOverview_span_24",
-                          "width": 32,
-                          "height": 14,
-                          "text": "ROLE",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_24"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "container",
-                      "name": "OverviewRoleRow0",
-                      "width": 120,
-                      "height": 25,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 8
-                      },
-                      "children": [
-                        {
-                          "type": "panel",
-                          "name": "OverviewRoleBullet0",
-                          "width": 8,
-                          "height": 8,
-                          "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_25"
-                        },
-                        {
-                          "type": "label",
-                          "name": "OverviewRoleText0",
-                          "width": 75,
-                          "height": 25,
-                          "text": "前排突破",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_26"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "container",
-                      "name": "OverviewRoleRow1",
-                      "width": 120,
-                      "height": 25,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 8
-                      },
-                      "children": [
-                        {
-                          "type": "panel",
-                          "name": "OverviewRoleBullet1",
-                          "width": 8,
-                          "height": 8,
-                          "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_27"
-                        },
-                        {
-                          "type": "label",
-                          "name": "OverviewRoleText1",
-                          "width": 75,
-                          "height": 25,
-                          "text": "破陣主攻",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_28"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "panel",
-                  "name": "CharacterDs3TabOverview_div_24",
+                  "name": "CharacterDs3TabOverview_div_8",
                   "width": 167,
-                  "height": 154,
+                  "height": 70,
                   "layout": {
                     "type": "vertical",
+                    "alignItems": "start",
                     "paddingTop": 12,
                     "paddingRight": 14,
                     "paddingBottom": 12,
                     "paddingLeft": 14,
-                    "spacingY": 10
+                    "spacingY": 4
                   },
-                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_24",
+                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_8",
                   "children": [
                     {
-                      "type": "container",
-                      "name": "CharacterDs3TabOverview_div_25",
+                      "type": "label",
+                      "name": "CharacterDs3TabOverview_div_9",
                       "width": 137,
-                      "height": 52,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 8
-                      },
-                      "children": [
-                        {
-                          "type": "panel",
-                          "name": "CharacterDs3TabOverview_div_26",
-                          "width": 3,
-                          "height": 16,
-                          "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_26"
-                        },
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabOverview_span_29",
-                          "width": 73,
-                          "height": 52,
-                          "text": "性格氣質",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_29"
-                        },
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabOverview_span_30",
-                          "width": 44,
-                          "height": 14,
-                          "text": "TRAITS",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_30"
-                        }
-                      ]
+                      "height": 16,
+                      "text": "陣 營",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_9"
                     },
                     {
-                      "type": "container",
-                      "name": "OverviewTraitRow0",
+                      "type": "label",
+                      "name": "OverviewFaction",
+                      "width": 22,
+                      "height": 30,
+                      "text": "蜀",
+                      "styleSlot": "auto.character-ds3-tab-overview.overviewfaction"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabOverview_div_10",
+                  "width": 167,
+                  "height": 70,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "start",
+                    "paddingTop": 12,
+                    "paddingRight": 14,
+                    "paddingBottom": 12,
+                    "paddingLeft": 14,
+                    "spacingY": 4
+                  },
+                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_10",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabOverview_div_11",
                       "width": 137,
-                      "height": 25,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 8
-                      },
-                      "children": [
-                        {
-                          "type": "panel",
-                          "name": "OverviewTraitBullet0",
-                          "width": 8,
-                          "height": 8,
-                          "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_31"
-                        },
-                        {
-                          "type": "label",
-                          "name": "OverviewTraitText0",
-                          "width": 75,
-                          "height": 25,
-                          "text": "戰意特聚",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_32"
-                        }
-                      ]
+                      "height": 16,
+                      "text": "職 能",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_11"
                     },
                     {
-                      "type": "container",
-                      "name": "OverviewTraitRow1",
+                      "type": "label",
+                      "name": "OverviewRole",
+                      "width": 44,
+                      "height": 30,
+                      "text": "先鋒",
+                      "styleSlot": "auto.character-ds3-tab-overview.overviewrole"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabOverview_div_12",
+                  "width": 167,
+                  "height": 70,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "start",
+                    "paddingTop": 12,
+                    "paddingRight": 14,
+                    "paddingBottom": 12,
+                    "paddingLeft": 14,
+                    "spacingY": 4
+                  },
+                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_12",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabOverview_div_13",
                       "width": 137,
-                      "height": 25,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 8
-                      },
-                      "children": [
-                        {
-                          "type": "panel",
-                          "name": "OverviewTraitBullet1",
-                          "width": 8,
-                          "height": 8,
-                          "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_33"
-                        },
-                        {
-                          "type": "label",
-                          "name": "OverviewTraitText1",
-                          "width": 75,
-                          "height": 25,
-                          "text": "平原適性",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_34"
-                        }
-                      ]
+                      "height": 16,
+                      "text": "狀 態",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_13"
+                    },
+                    {
+                      "type": "label",
+                      "name": "OverviewStatus",
+                      "width": 66,
+                      "height": 30,
+                      "text": "出仕中",
+                      "styleSlot": "auto.character-ds3-tab-overview.overviewstatus"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabOverview_div_14",
+                  "width": 167,
+                  "height": 70,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "start",
+                    "paddingTop": 12,
+                    "paddingRight": 14,
+                    "paddingBottom": 12,
+                    "paddingLeft": 14,
+                    "spacingY": 4
+                  },
+                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_14",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabOverview_div_15",
+                      "width": 137,
+                      "height": 16,
+                      "text": "性 別",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_15"
+                    },
+                    {
+                      "type": "label",
+                      "name": "OverviewGender",
+                      "width": 22,
+                      "height": 30,
+                      "text": "男",
+                      "styleSlot": "auto.character-ds3-tab-overview.overviewgender"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabOverview_div_16",
+                  "width": 167,
+                  "height": 70,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "start",
+                    "paddingTop": 12,
+                    "paddingRight": 14,
+                    "paddingBottom": 12,
+                    "paddingLeft": 14,
+                    "spacingY": 4
+                  },
+                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_16",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabOverview_div_17",
+                      "width": 137,
+                      "height": 16,
+                      "text": "年 齡",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_17"
+                    },
+                    {
+                      "type": "label",
+                      "name": "OverviewAge",
+                      "width": 53,
+                      "height": 30,
+                      "text": "34 歲",
+                      "styleSlot": "auto.character-ds3-tab-overview.overviewage"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabOverview_div_18",
+                  "width": 167,
+                  "height": 70,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "start",
+                    "paddingTop": 12,
+                    "paddingRight": 14,
+                    "paddingBottom": 12,
+                    "paddingLeft": 14,
+                    "spacingY": 4
+                  },
+                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_18",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabOverview_div_19",
+                      "width": 137,
+                      "height": 16,
+                      "text": "壽 命",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_19"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabOverview_span_7",
+                      "width": 20,
+                      "height": 22,
+                      "text": "—",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_7"
                     }
                   ]
                 }
@@ -659,234 +403,313 @@
             },
             {
               "type": "panel",
-              "name": "CharacterDs3TabOverview_div_29",
+              "name": "CharacterDs3TabOverview_div_20",
               "width": 520,
-              "height": 204,
+              "height": 77,
               "layout": {
                 "type": "vertical",
-                "paddingTop": 14,
+                "alignItems": "start",
+                "paddingTop": 12,
                 "paddingRight": 16,
-                "paddingBottom": 14,
+                "paddingBottom": 12,
                 "paddingLeft": 16,
-                "spacingY": 10
+                "spacingY": 8
               },
-              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_29",
+              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_20",
               "children": [
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabOverview_div_30",
+                  "name": "CharacterDs3TabOverview_div_21",
                   "width": 486,
-                  "height": 26,
+                  "height": 33,
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "baseline",
+                    "justifyContent": "space-between"
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabOverview_span_8",
+                      "width": 136,
+                      "height": 24,
+                      "text": "精力 VITALITY",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_8"
+                    },
+                    {
+                      "type": "label",
+                      "name": "OverviewVitality",
+                      "width": 91,
+                      "height": 33,
+                      "text": "85 / 100",
+                      "styleSlot": "auto.character-ds3-tab-overview.overviewvitality"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabOverview_div_22",
+                  "width": 486,
+                  "height": 10,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "start"
+                  },
+                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_22",
+                  "children": [
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabOverview_div_23",
+                      "width": 413,
+                      "height": 10,
+                      "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_23"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "CharacterDs3TabOverview_div_24",
+              "width": 520,
+              "height": 154,
+              "layout": {
+                "type": "vertical",
+                "alignItems": "start",
+                "paddingTop": 16,
+                "paddingRight": 18,
+                "paddingBottom": 16,
+                "paddingLeft": 18,
+                "spacingY": 10
+              },
+              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_24",
+              "children": [
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabOverview_div_25",
+                  "width": 482,
+                  "height": 79,
                   "layout": {
                     "type": "horizontal",
                     "alignItems": "center",
-                    "justifyContent": "start",
-                    "spacingX": 8
+                    "justifyContent": "space-between"
                   },
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabOverview_div_26",
+                      "width": 69,
+                      "height": 79,
+                      "layout": {
+                        "type": "vertical",
+                        "alignItems": "start",
+                        "spacingY": 4
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabOverview_div_27",
+                          "width": 69,
+                          "height": 16,
+                          "text": "名聲 · 官職",
+                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_27"
+                        },
+                        {
+                          "type": "label",
+                          "name": "OverviewFameRank",
+                          "width": 69,
+                          "height": 30,
+                          "text": "名將",
+                          "styleSlot": "auto.character-ds3-tab-overview.overviewfamerank"
+                        },
+                        {
+                          "type": "label",
+                          "name": "OverviewOfficial",
+                          "width": 69,
+                          "height": 24,
+                          "text": "中郎將",
+                          "styleSlot": "auto.character-ds3-tab-overview.overviewofficial"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabOverview_div_28",
+                      "width": 133,
+                      "height": 66,
+                      "layout": {
+                        "type": "vertical",
+                        "alignItems": "end"
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "OverviewFameValue",
+                          "width": 133,
+                          "height": 48,
+                          "text": "2,840",
+                          "styleSlot": "auto.character-ds3-tab-overview.overviewfamevalue"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabOverview_div_29",
+                          "width": 133,
+                          "height": 15,
+                          "text": "FAME",
+                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_29"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabOverview_div_30",
+                  "width": 482,
+                  "height": 6,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "start"
+                  },
+                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_30",
                   "children": [
                     {
                       "type": "panel",
                       "name": "CharacterDs3TabOverview_div_31",
-                      "width": 4,
-                      "height": 16,
+                      "width": 456,
+                      "height": 6,
                       "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_31"
-                    },
-                    {
-                      "type": "label",
-                      "name": "CharacterDs3TabOverview_span_35",
-                      "width": 43,
-                      "height": 26,
-                      "text": "血脈",
-                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_35"
-                    },
-                    {
-                      "type": "label",
-                      "name": "CharacterDs3TabOverview_span_36",
-                      "width": 69,
-                      "height": 14,
-                      "text": "BLOODLINE",
-                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_36"
                     }
                   ]
                 },
                 {
+                  "type": "label",
+                  "name": "OverviewFameNext",
+                  "width": 482,
+                  "height": 18,
+                  "text": "下一階：征南將軍 · 需 名聲 3000",
+                  "styleSlot": "auto.character-ds3-tab-overview.overviewfamenext"
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "CharacterDs3TabOverview_div_32",
+              "width": 520,
+              "height": 111,
+              "layout": {
+                "type": "vertical",
+                "alignItems": "start",
+                "paddingTop": 16,
+                "paddingRight": 18,
+                "paddingBottom": 16,
+                "paddingLeft": 18,
+                "spacingY": 12
+              },
+              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_32",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_div_33",
+                  "width": 482,
+                  "height": 16,
+                  "text": "統領軍勢",
+                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_33"
+                },
+                {
                   "type": "container",
-                  "name": "CharacterDs3TabOverview_div_32",
-                  "width": 486,
-                  "height": 138,
+                  "name": "CharacterDs3TabOverview_div_34",
+                  "width": 482,
+                  "height": 49,
                   "layout": {
                     "type": "horizontal",
-                    "spacingX": 16
+                    "spacingX": 12
                   },
                   "children": [
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabOverview_div_33",
-                      "width": 100,
-                      "height": 109,
+                      "name": "CharacterDs3TabOverview_div_35",
+                      "width": 153,
+                      "height": 49,
                       "layout": {
                         "type": "vertical",
                         "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingY": 6
+                        "spacingY": 5
                       },
                       "children": [
                         {
-                          "type": "panel",
-                          "name": "CharacterDs3TabOverview_div_34",
-                          "width": 84,
-                          "height": 84,
-                          "layout": {
-                            "type": "grid",
-                            "cellHeight": 84
-                          },
-                          "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_34",
-                          "children": [
-                            {
-                              "type": "composite",
-                              "name": "CharacterDs3TabOverview_svg_1",
-                              "width": 72,
-                              "height": 72,
-                              "layout": {
-                                "type": "vertical"
-                              }
-                            }
-                          ]
+                          "type": "label",
+                          "name": "OverviewCmd_commandCapacity",
+                          "width": 153,
+                          "height": 28,
+                          "text": "12,000",
+                          "styleSlot": "auto.character-ds3-tab-overview.overviewcmd_commandcapacity"
                         },
                         {
                           "type": "label",
-                          "name": "OverviewCrestTitle",
-                          "width": 62,
-                          "height": 19,
-                          "text": "命紋顯現",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_37"
+                          "name": "CharacterDs3TabOverview_div_36",
+                          "width": 153,
+                          "height": 16,
+                          "text": "帶兵上限",
+                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_36"
                         }
                       ]
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabOverview_div_35",
-                      "width": 370,
-                      "height": 138,
+                      "name": "CharacterDs3TabOverview_div_37",
+                      "width": 153,
+                      "height": 49,
                       "layout": {
                         "type": "vertical",
-                        "justifyContent": "start",
-                        "spacingY": 8
+                        "alignItems": "center",
+                        "spacingY": 5
                       },
                       "children": [
                         {
                           "type": "label",
-                          "name": "OverviewBloodlineName",
-                          "width": 370,
-                          "height": 32,
-                          "text": "燕血脈",
-                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_36"
+                          "name": "OverviewCmd_cityTroops",
+                          "width": 153,
+                          "height": 28,
+                          "text": "9,400",
+                          "styleSlot": "auto.character-ds3-tab-overview.overviewcmd_citytroops"
                         },
                         {
-                          "type": "container",
-                          "name": "CharacterDs3TabOverview_div_37",
-                          "width": 370,
-                          "height": 22,
-                          "layout": {
-                            "type": "horizontal",
-                            "alignItems": "center",
-                            "justifyContent": "start",
-                            "spacingX": 10
-                          },
-                          "children": [
-                            {
-                              "type": "label",
-                              "name": "CharacterDs3TabOverview_span_38",
-                              "width": 68,
-                              "height": 21,
-                              "text": "覺醒傾向",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_38"
-                            },
-                            {
-                              "type": "panel",
-                              "name": "OverviewAwakeningTrack",
-                              "width": 249,
-                              "height": 10,
-                              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_38",
-                              "children": [
-                                {
-                                  "type": "panel",
-                                  "name": "OverviewAwakeningFill",
-                                  "width": 144,
-                                  "height": 8,
-                                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_39"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "label",
-                              "name": "OverviewAwakeningPercent",
-                              "width": 33,
-                              "height": 22,
-                              "text": "58%",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_39"
-                            }
-                          ]
+                          "type": "label",
+                          "name": "CharacterDs3TabOverview_div_38",
+                          "width": 153,
+                          "height": 16,
+                          "text": "城市兵源",
+                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_38"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabOverview_div_39",
+                      "width": 153,
+                      "height": 49,
+                      "layout": {
+                        "type": "vertical",
+                        "alignItems": "center",
+                        "spacingY": 5
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "OverviewCmd_sortiePool",
+                          "width": 153,
+                          "height": 28,
+                          "text": "9,400",
+                          "styleSlot": "auto.character-ds3-tab-overview.overviewcmd_sortiepool"
                         },
                         {
-                          "type": "container",
+                          "type": "label",
                           "name": "CharacterDs3TabOverview_div_40",
-                          "width": 370,
-                          "height": 24,
-                          "layout": {
-                            "type": "horizontal",
-                            "alignItems": "baseline",
-                            "justifyContent": "start",
-                            "spacingX": 10
-                          },
-                          "children": [
-                            {
-                              "type": "label",
-                              "name": "CharacterDs3TabOverview_span_40",
-                              "width": 60,
-                              "height": 21,
-                              "text": "祖紋",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_40"
-                            },
-                            {
-                              "type": "label",
-                              "name": "OverviewCrestHint",
-                              "width": 136,
-                              "height": 24,
-                              "text": "已建立 14 人血統圖",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_41"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabOverview_div_41",
-                          "width": 370,
-                          "height": 24,
-                          "layout": {
-                            "type": "horizontal",
-                            "alignItems": "baseline",
-                            "justifyContent": "start",
-                            "spacingX": 10
-                          },
-                          "children": [
-                            {
-                              "type": "label",
-                              "name": "CharacterDs3TabOverview_span_42",
-                              "width": 60,
-                              "height": 21,
-                              "text": "印象",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_42"
-                            },
-                            {
-                              "type": "label",
-                              "name": "OverviewPersonality",
-                              "width": 96,
-                              "height": 24,
-                              "text": "燕地酒坊流傳",
-                              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_43"
-                            }
-                          ]
+                          "width": 153,
+                          "height": 16,
+                          "text": "出征軍勢",
+                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_40"
                         }
                       ]
                     }
@@ -896,342 +719,207 @@
             },
             {
               "type": "panel",
-              "name": "CharacterDs3TabOverview_div_42",
+              "name": "CharacterDs3TabOverview_div_41",
               "width": 520,
-              "height": 216,
+              "height": 81,
               "layout": {
-                "type": "vertical",
+                "type": "horizontal",
+                "alignItems": "center",
+                "justifyContent": "space-between",
                 "paddingTop": 14,
                 "paddingRight": 18,
                 "paddingBottom": 14,
-                "paddingLeft": 18,
-                "spacingY": 10
+                "paddingLeft": 18
               },
-              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_42",
+              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_41",
               "children": [
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabOverview_div_43",
-                  "width": 482,
-                  "height": 26,
+                  "name": "CharacterDs3TabOverview_div_42",
+                  "width": 174,
+                  "height": 51,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "start"
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabOverview_div_43",
+                      "width": 174,
+                      "height": 29,
+                      "text": "升 星",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_43"
+                    },
+                    {
+                      "type": "label",
+                      "name": "OverviewStarHint",
+                      "width": 174,
+                      "height": 18,
+                      "text": "目前 4 星 · 同名武將卡 ×1 可升",
+                      "styleSlot": "auto.character-ds3-tab-overview.overviewstarhint"
+                    }
+                  ]
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabOverview_div_44",
+                  "width": 144,
+                  "height": 37,
                   "layout": {
                     "type": "horizontal",
                     "alignItems": "center",
                     "justifyContent": "start",
-                    "spacingX": 8
+                    "spacingX": 5
                   },
                   "children": [
                     {
-                      "type": "panel",
-                      "name": "CharacterDs3TabOverview_div_44",
-                      "width": 4,
-                      "height": 16,
-                      "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_44"
+                      "type": "label",
+                      "name": "CharacterDs3TabOverview_span_9",
+                      "width": 17,
+                      "height": 27,
+                      "text": "★",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_9"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabOverview_span_44",
-                      "width": 86,
-                      "height": 26,
-                      "text": "人物傳記",
-                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_44"
+                      "name": "CharacterDs3TabOverview_span_10",
+                      "width": 17,
+                      "height": 27,
+                      "text": "★",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_10"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabOverview_span_45",
-                      "width": 70,
-                      "height": 14,
-                      "text": "BIOGRAPHY",
-                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_45"
+                      "name": "CharacterDs3TabOverview_span_11",
+                      "width": 17,
+                      "height": 27,
+                      "text": "★",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_11"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabOverview_span_12",
+                      "width": 17,
+                      "height": 27,
+                      "text": "★",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_12"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabOverview_span_13",
+                      "width": 17,
+                      "height": 27,
+                      "text": "★",
+                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_13"
+                    },
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabOverview_span_14_margin",
+                      "width": 36,
+                      "height": 37,
+                      "layout": {
+                        "type": "horizontal",
+                        "paddingLeft": 10,
+                        "paddingRight": 0
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabOverview_span_14",
+                          "width": 26,
+                          "height": 37,
+                          "text": "→",
+                          "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_14"
+                        }
+                      ]
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "CharacterDs3TabOverview_div_45",
+              "width": 520,
+              "height": 225,
+              "layout": {
+                "type": "vertical",
+                "alignItems": "start",
+                "paddingTop": 14,
+                "paddingRight": 16,
+                "paddingBottom": 14,
+                "paddingLeft": 16,
+                "spacingY": 8
+              },
+              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_45",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_div_46",
+                  "width": 486,
+                  "height": 19,
+                  "text": "人物小傳",
+                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_46"
                 },
                 {
                   "type": "label",
                   "name": "OverviewBio",
-                  "width": 482,
-                  "height": 150,
+                  "width": 478,
+                  "height": 164,
                   "text": "張飛，字翼德，幽州涿郡人。少年以屠豬賣酒為業，後於桃園與劉備、關羽義結金蘭，誓同生死。性烈如火，勇猛無雙——長坂橋前單槍匹馬，一聲怒吼令曹軍百萬退散；義釋嚴顏一事，足見其粗中有細，智勇兼備。然酒後失德，醉鞭督卒，終命喪部將之手，令千古扼腕。其一生豪烈，血脈中燕地武人的剛猛之氣，至今仍在後裔身上延燃。",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_45"
+                  "styleSlot": "auto.character-ds3-tab-overview.overviewbio"
                 }
               ]
             },
             {
-              "type": "label",
-              "name": "OverviewFooterTitle",
+              "type": "panel",
+              "name": "CharacterDs3TabOverview_div_47",
               "width": 520,
-              "height": 35,
-              "text": "燕人武聖",
-              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_46"
-            },
-            {
-              "type": "container",
-              "name": "OverviewActionRow",
-              "width": 520,
-              "height": 52,
+              "height": 47,
               "layout": {
                 "type": "horizontal",
                 "alignItems": "center",
-                "justifyContent": "start",
-                "spacingX": 10
+                "justifyContent": "center",
+                "paddingTop": 12,
+                "paddingRight": 12,
+                "paddingBottom": 12,
+                "paddingLeft": 12
               },
+              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_47",
               "children": [
                 {
-                  "type": "button",
-                  "name": "BtnBloodlineVignette",
-                  "id": "btnBloodlineVignette",
-                  "width": 110,
-                  "height": 52,
-                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
-                  "children": [
-                    {
-                      "type": "label",
-                      "name": "BtnBloodlineVignetteLabel",
-                      "id": "bloodlineVignetteLabel",
-                      "widget": {
-                        "vCenter": true,
-                        "left": 0,
-                        "right": 0
-                      },
-                      "height": 44,
-                      "text": "血統小傳",
-                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject"
-                    }
-                  ]
-                },
-                {
-                  "type": "button",
-                  "name": "BtnGeneralJournal",
-                  "id": "btnGeneralJournal",
-                  "width": 110,
-                  "height": 52,
-                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
-                  "children": [
-                    {
-                      "type": "label",
-                      "name": "BtnGeneralJournalLabel",
-                      "id": "generalJournalLabel",
-                      "widget": {
-                        "vCenter": true,
-                        "left": 0,
-                        "right": 0
-                      },
-                      "height": 44,
-                      "text": "武將日誌",
-                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject"
-                    }
-                  ]
-                },
-                {
-                  "type": "button",
-                  "name": "BtnSoulInject",
-                  "id": "btnSoulInject",
-                  "width": 110,
-                  "height": 52,
-                  "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_btn_soul_inject",
-                  "children": [
-                    {
-                      "type": "label",
-                      "name": "BtnSoulInjectLabel",
-                      "id": "soulInjectLabel",
-                      "widget": {
-                        "vCenter": true,
-                        "left": 0,
-                        "right": 0
-                      },
-                      "height": 44,
-                      "text": "寄宿戰魂",
-                      "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_btn_soul_inject"
-                    }
-                  ]
-                },
+                  "type": "label",
+                  "name": "CharacterDs3TabOverview_span_15",
+                  "width": 206,
+                  "height": 21,
+                  "text": "▼ 展開逸事故事條 ▼",
+                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_15"
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "CharacterDs3TabOverview_div_48",
+              "width": 520,
+              "height": 23,
+              "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_48",
+              "children": [
                 {
                   "type": "label",
-                  "name": "TotalTpLabel",
-                  "id": "totalTpLabel",
-                  "width": 160,
-                  "height": 44,
-                  "text": "總 TP 0",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_total_tp"
+                  "name": "CharacterDs3TabOverview_span_16",
+                  "widget": {
+                    "left": 0,
+                    "top": 6
+                  },
+                  "text": "TEMPLATE · ZF_01 · 燕人武聖",
+                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_span_16",
+                  "width": 520,
+                  "height": 17
                 }
               ]
             }
           ]
-        },
-        {
-          "type": "panel",
-          "name": "CharacterDs3TabOverview_cmd",
-          "width": 520,
-          "height": 160,
-          "layout": {
-            "type": "vertical",
-            "paddingTop": 8,
-            "paddingRight": 18,
-            "paddingBottom": 8,
-            "paddingLeft": 18,
-            "spacingY": 4
-          },
-          "children": [
-            {
-              "type": "label",
-              "name": "CharacterDs3TabOverview_cmd_title",
-              "width": 482,
-              "height": 22,
-              "text": "統領軍勢",
-              "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_cmd_title"
-            },
-            {
-              "type": "container",
-              "name": "CharacterDs3TabOverview_cmd_row_fame",
-              "width": 482,
-              "height": 22,
-              "layout": {
-                "type": "horizontal",
-                "alignItems": "center",
-                "justifyContent": "start",
-                "spacingX": 8
-              },
-              "children": [
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabOverview_cmd_label_fame",
-                  "width": 150,
-                  "height": 22,
-                  "text": "名聲",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_cmd_label"
-                },
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabOverview_cmd_value_fame",
-                  "width": 300,
-                  "height": 22,
-                  "text": "—",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_cmd_value"
-                }
-              ]
-            },
-            {
-              "type": "container",
-              "name": "CharacterDs3TabOverview_cmd_row_official",
-              "width": 482,
-              "height": 22,
-              "layout": {
-                "type": "horizontal",
-                "alignItems": "center",
-                "justifyContent": "start",
-                "spacingX": 8
-              },
-              "children": [
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabOverview_cmd_label_official",
-                  "width": 150,
-                  "height": 22,
-                  "text": "官職",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_cmd_label"
-                },
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabOverview_cmd_value_official",
-                  "width": 300,
-                  "height": 22,
-                  "text": "—",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_cmd_value"
-                }
-              ]
-            },
-            {
-              "type": "container",
-              "name": "CharacterDs3TabOverview_cmd_row_commandCapacity",
-              "width": 482,
-              "height": 22,
-              "layout": {
-                "type": "horizontal",
-                "alignItems": "center",
-                "justifyContent": "start",
-                "spacingX": 8
-              },
-              "children": [
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabOverview_cmd_label_commandCapacity",
-                  "width": 150,
-                  "height": 22,
-                  "text": "帶兵上限",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_cmd_label"
-                },
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabOverview_cmd_value_commandCapacity",
-                  "width": 300,
-                  "height": 22,
-                  "text": "—",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_cmd_value"
-                }
-              ]
-            },
-            {
-              "type": "container",
-              "name": "CharacterDs3TabOverview_cmd_row_cityTroops",
-              "width": 482,
-              "height": 22,
-              "layout": {
-                "type": "horizontal",
-                "alignItems": "center",
-                "justifyContent": "start",
-                "spacingX": 8
-              },
-              "children": [
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabOverview_cmd_label_cityTroops",
-                  "width": 150,
-                  "height": 22,
-                  "text": "可用城市兵源",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_cmd_label"
-                },
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabOverview_cmd_value_cityTroops",
-                  "width": 300,
-                  "height": 22,
-                  "text": "—",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_cmd_value"
-                }
-              ]
-            },
-            {
-              "type": "container",
-              "name": "CharacterDs3TabOverview_cmd_row_sortiePool",
-              "width": 482,
-              "height": 22,
-              "layout": {
-                "type": "horizontal",
-                "alignItems": "center",
-                "justifyContent": "start",
-                "spacingX": 8
-              },
-              "children": [
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabOverview_cmd_label_sortiePool",
-                  "width": 150,
-                  "height": 22,
-                  "text": "預估出征軍勢",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_cmd_label"
-                },
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabOverview_cmd_value_sortiePool",
-                  "width": 300,
-                  "height": 22,
-                  "text": "—",
-                  "styleSlot": "auto.character-ds3-tab-overview.characterds3taboverview_cmd_value"
-                }
-              ]
-            }
-          ],
-          "skinSlot": "auto.character-ds3-tab-overview.characterds3taboverview_div_42"
         }
       ],
       "widget": {

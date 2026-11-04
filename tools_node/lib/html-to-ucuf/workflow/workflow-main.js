@@ -1,5 +1,6 @@
 'use strict';
 const { bindMapPathFor } = require('../bind-map');
+const { applyTabButtonVisualStates } = require('../tab-button-states');
 const fs = require('fs');
 
 async function runWorkflowMain(ctx) {
@@ -224,6 +225,13 @@ async function runWorkflowMain(ctx) {
     updateMergeMode: opts.updateMode ? opts.updateMergeMode : null,
     issues: extractIssues((strictProc.stdout || '') + '\n' + (strictProc.stderr || '')),
   });
+
+  if (fs.existsSync(paths.finalLayout) && fs.existsSync(paths.finalSkin)) {
+    const finalSkinJson = JSON.parse(fs.readFileSync(paths.finalSkin, 'utf8'));
+    const tabStates = applyTabButtonVisualStates(JSON.parse(fs.readFileSync(paths.finalLayout, 'utf8')), finalSkinJson);
+    if (tabStates.applied) fs.writeFileSync(paths.finalSkin, JSON.stringify(finalSkinJson, null, 2) + '\n', 'utf8');
+    steps.push({ step: 'tab-button-visual-states', exitCode: 0, ok: true, ...tabStates });
+  }
 
   const perTabReplay = await runPerTabReplay(paths, opts, sourcePackage, inputPath);
   steps.push({

@@ -1,0 +1,246 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "character-ds3-main",
+  "generatedAt": "2026-11-04T15:25:55.096Z",
+  "_sourceAuthority": "html-to-ucuf",
+  "policy": {
+    "mode": "replace-all-per-run",
+    "source": "token-suggestions sidecars",
+    "note": "Always regenerate full screen-local tokens from current conversion to avoid stale residue."
+  },
+  "sourceSuggestionFiles": [
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/character-ds3-main.final.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-aptitude.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-bloodline-bloodline-fullscreen.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-bloodline.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-equip.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-overview.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-stats.layout.token-suggestions.json",
+    "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+  ],
+  "stats": {
+    "unresolvedColorCount": 13,
+    "tokenCount": 13
+  },
+  "colors": {
+    "character_ds3_main_local_color_01": "#3A3630",
+    "character_ds3_main_local_color_02": "#2E2A22",
+    "character_ds3_main_local_color_03": "#3A3428",
+    "character_ds3_main_local_color_04": "#C09090",
+    "character_ds3_main_local_color_05": "#C8BFAA",
+    "character_ds3_main_local_color_06": "#D0D0D0",
+    "character_ds3_main_local_color_07": "#2B5EA8",
+    "character_ds3_main_local_color_08": "#3A2020",
+    "character_ds3_main_local_color_09": "#5A3A3A",
+    "character_ds3_main_local_color_10": "#8C8575",
+    "character_ds3_main_local_color_11": "#C8B060",
+    "character_ds3_main_local_color_12": "#C8B87A",
+    "character_ds3_main_local_color_13": "#141412"
+  },
+  "unresolvedColors": [
+    {
+      "token": "character_ds3_main_local_color_01",
+      "value": "rgb(58, 54, 48)",
+      "normalized": "#3a3630",
+      "hex": "#3A3630",
+      "occurrences": 45,
+      "nearestExisting": {
+        "token": "surfaceHighest",
+        "value": "#353535",
+        "distance": 7
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/character-ds3-main.final.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-aptitude.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-equip.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-overview.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "character_ds3_main_local_color_02",
+      "value": "rgb(46, 42, 34)",
+      "normalized": "#2e2a22",
+      "hex": "#2E2A22",
+      "occurrences": 31,
+      "nearestExisting": {
+        "token": "textInk",
+        "value": "#2D2926",
+        "distance": 4
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-bloodline.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-equip.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-stats.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "character_ds3_main_local_color_03",
+      "value": "rgb(58, 52, 40)",
+      "normalized": "#3a3428",
+      "hex": "#3A3428",
+      "occurrences": 27,
+      "nearestExisting": {
+        "token": "surfaceGray",
+        "value": "#333333",
+        "distance": 13
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/character-ds3-main.final.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-overview.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "character_ds3_main_local_color_04",
+      "value": "rgb(192, 144, 144)",
+      "normalized": "#c09090",
+      "hex": "#C09090",
+      "occurrences": 8,
+      "nearestExisting": {
+        "token": "etcCardTroop",
+        "value": "#C6B08E",
+        "distance": 33
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "character_ds3_main_local_color_05",
+      "value": "rgb(200, 191, 170)",
+      "normalized": "#c8bfaa",
+      "hex": "#C8BFAA",
+      "occurrences": 7,
+      "nearestExisting": {
+        "token": "textSecondary",
+        "value": "#D0C5AF",
+        "distance": 11
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/character-ds3-main.final.layout.token-suggestions.json",
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-overview.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "character_ds3_main_local_color_06",
+      "value": "rgb(208, 208, 208)",
+      "normalized": "#d0d0d0",
+      "hex": "#D0D0D0",
+      "occurrences": 7,
+      "nearestExisting": {
+        "token": "textMidGray",
+        "value": "#CCCCCC",
+        "distance": 7
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-bloodline-bloodline-fullscreen.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "character_ds3_main_local_color_07",
+      "value": "rgb(43, 94, 168)",
+      "normalized": "#2b5ea8",
+      "hex": "#2B5EA8",
+      "occurrences": 5,
+      "nearestExisting": {
+        "token": "hpBarAlly",
+        "value": "#4488CC",
+        "distance": 61
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "character_ds3_main_local_color_08",
+      "value": "rgb(58, 32, 32)",
+      "normalized": "#3a2020",
+      "hex": "#3A2020",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "gdv3TabBadgeText",
+        "value": "#342819",
+        "distance": 12
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "character_ds3_main_local_color_09",
+      "value": "rgb(90, 58, 58)",
+      "normalized": "#5a3a3a",
+      "hex": "#5A3A3A",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "outline",
+        "value": "#4D4635",
+        "distance": 18
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-tactics.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "character_ds3_main_local_color_10",
+      "value": "rgb(140, 133, 117)",
+      "normalized": "#8c8575",
+      "hex": "#8C8575",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "gdv3TextMutedWarm",
+        "value": "#9a8f74",
+        "distance": 17
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-bloodline-bloodline-fullscreen.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "character_ds3_main_local_color_11",
+      "value": "rgb(200, 176, 96)",
+      "normalized": "#c8b060",
+      "hex": "#C8B060",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "gdv3TabBadgeFill",
+        "value": "#C8A25E",
+        "distance": 14
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-stats.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "character_ds3_main_local_color_12",
+      "value": "rgb(200, 184, 122)",
+      "normalized": "#c8b87a",
+      "hex": "#C8B87A",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "gdv3BloodlineOrnament",
+        "value": "#C5AE7E",
+        "distance": 11
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-tab-bloodline-bloodline-fullscreen.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "character_ds3_main_local_color_13",
+      "value": "rgba(20, 20, 18, 0.9)",
+      "normalized": "#141412",
+      "hex": "#141412",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "backgroundOlive",
+        "value": "#151513",
+        "distance": 2
+      },
+      "sources": [
+        "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/character-ds3-main.final.layout.token-suggestions.json"
+      ]
+    }
+  ]
+}

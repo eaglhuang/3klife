@@ -3,7 +3,7 @@
   "version": 1,
   "firstScreen": {
     "bundles": [
-      "resources",
+      "lobby_ui",
       "generals"
     ],
     "spriteFrames": [
@@ -11,6 +11,7 @@
     ],
     "fonts": [
       "fonts/newsreader/font",
+      "fonts/notosans_tc/font",
       "fonts/manrope/font"
     ],
     "fragments": []
@@ -18,7 +19,7 @@
   "deferred": {
     "lazySlots": [
       {
-        "slotName": "CharacterDs3Main_div_8",
+        "slotName": "ContentSlot",
         "warmupHint": "first-frame",
         "fragments": [
           "fragments/layouts/character-ds3-overview-content"

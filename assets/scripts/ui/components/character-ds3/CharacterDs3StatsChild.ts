@@ -136,7 +136,7 @@ const RADAR_AXIS_LABELS: Record<StatKey, string> = {
 
 export class CharacterDs3StatsChild extends ChildPanelBase {
     override dataSource = 'config';
-    private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
+    private static readonly ROOT_PATH = 'ContentSlot';
 
     private _radarChartNode: Node | null = null;
     private _statRows: StatRowBinding[] = [];

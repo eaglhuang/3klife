@@ -76,6 +76,9 @@ export class UIPreviewStyleBuilder {
         }
 
         if (slot && (slot as any).kind === 'gradient-rect') {
+            if ((slot as any).visualStates) {
+                (node as any)._proceduralButtonStates = (slot as any).visualStates;
+            }
             const solid = node.getComponent(SolidBackground);
             if (solid) {
                 solid.enabled = false;

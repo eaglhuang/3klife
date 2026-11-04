@@ -1,6 +1,6 @@
 {
   "screenId": "character-ds3-main",
-  "currentBundle": "resources",
+  "currentBundle": "lobby_ui",
   "distribution": [
     {
       "bundle": "generals",
@@ -10,6 +10,6 @@
   "suggestion": {
     "primary": "generals",
     "confidence": "high",
-    "reason": "current=resources 但實際資產主要落在 generals (1)"
+    "reason": "current=lobby_ui 但實際資產主要落在 generals (1)"
   }
 }

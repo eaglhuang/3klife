@@ -1,71 +1,97 @@
 {
   "screenId": "character-ds3-main",
-  "generatedAt": "2026-05-02T15:23:40.570Z",
+  "generatedAt": "2026-11-04T15:25:55.074Z",
+  "source": "per-tab-replay",
   "tabs": [
     {
       "id": "Overview",
-      "mount": "CharacterDs3Main_div_8",
-      "mountSource": "converter-lazy-slot",
+      "mount": "ContentSlot",
+      "mountSource": "source-dom:inferred-tab-diff",
       "buttonNode": "CharacterDs3Main_button_4",
       "lifecycle": "lazy",
       "fragment": "fragments/layouts/character-ds3-overview-content",
-      "childPanelClass": "CharacterDs3OverviewChild",
-      "interactionId": "character-ds3main_button_4.tab-switch"
+      "childPanelClass": "CharacterDs3OverviewChildPanel",
+      "interactionId": "character-ds3main_button_4.tab-switch",
+      "key": "overview",
+      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-main.overview.right-content.html"
     },
     {
       "id": "Stats",
-      "mount": "CharacterDs3Main_div_8",
-      "mountSource": "converter-lazy-slot",
+      "mount": "ContentSlot",
+      "mountSource": "source-dom:inferred-tab-diff",
       "buttonNode": "CharacterDs3Main_button_5",
       "lifecycle": "lazy",
       "fragment": "fragments/layouts/character-ds3-stats-content",
-      "childPanelClass": "CharacterDs3StatsChild",
-      "interactionId": "character-ds3main_button_5.tab-switch"
-    },
-    {
-      "id": "Tactics",
-      "mount": "CharacterDs3Main_div_8",
-      "mountSource": "converter-lazy-slot",
-      "buttonNode": "CharacterDs3Main_button_6",
-      "lifecycle": "lazy",
-      "fragment": "fragments/layouts/character-ds3-tactics-content",
-      "childPanelClass": "CharacterDs3TacticsChild",
-      "interactionId": "character-ds3main_button_6.tab-switch"
+      "childPanelClass": "CharacterDs3StatsChildPanel",
+      "interactionId": "character-ds3main_button_5.tab-switch",
+      "key": "stats",
+      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-main.stats.right-content.html"
     },
     {
       "id": "Bloodline",
-      "mount": "CharacterDs3Main_div_8",
-      "mountSource": "converter-lazy-slot",
-      "buttonNode": "CharacterDs3Main_button_7",
+      "mount": "ContentSlot",
+      "mountSource": "source-dom:inferred-tab-diff",
+      "buttonNode": "CharacterDs3Main_button_6",
       "lifecycle": "lazy",
       "fragment": "fragments/layouts/character-ds3-bloodline-content",
-      "childPanelClass": "CharacterDs3BloodlineChild",
-      "interactionId": "character-ds3main_button_7.tab-switch"
+      "childPanelClass": "CharacterDs3BloodlineChildPanel",
+      "interactionId": "character-ds3main_button_6.tab-switch",
+      "key": "bloodline",
+      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-main.bloodline.right-content.html",
+      "regions": [
+        {
+          "mount": "bloodline-fullscreen",
+          "fragment": "fragments/layouts/character-ds3-bloodline-bloodline-fullscreen"
+        }
+      ],
+      "hides": [
+        "portrait-bg",
+        "portrait-title",
+        "rank-badge"
+      ]
+    },
+    {
+      "id": "Tactics",
+      "mount": "ContentSlot",
+      "mountSource": "source-dom:inferred-tab-diff",
+      "buttonNode": "CharacterDs3Main_button_7",
+      "lifecycle": "lazy",
+      "fragment": "fragments/layouts/character-ds3-tactics-content",
+      "childPanelClass": "CharacterDs3TacticsChildPanel",
+      "interactionId": "character-ds3main_button_7.tab-switch",
+      "key": "tactics",
+      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-main.tactics.right-content.html"
     },
     {
       "id": "Equip",
-      "mount": "CharacterDs3Main_div_8",
-      "mountSource": "converter-lazy-slot",
+      "mount": "ContentSlot",
+      "mountSource": "source-dom:inferred-tab-diff",
       "buttonNode": "CharacterDs3Main_button_8",
       "lifecycle": "lazy",
       "fragment": "fragments/layouts/character-ds3-equip-content",
-      "childPanelClass": "CharacterDs3EquipChild",
-      "interactionId": "character-ds3main_button_8.tab-switch"
+      "childPanelClass": "CharacterDs3EquipChildPanel",
+      "interactionId": "character-ds3main_button_8.tab-switch",
+      "key": "equip",
+      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-main.equip.right-content.html"
     },
     {
       "id": "Aptitude",
-      "mount": "CharacterDs3Main_div_8",
-      "mountSource": "converter-lazy-slot",
+      "mount": "ContentSlot",
+      "mountSource": "source-dom:inferred-tab-diff",
       "buttonNode": "CharacterDs3Main_button_9",
       "lifecycle": "lazy",
       "fragment": "fragments/layouts/character-ds3-aptitude-content",
-      "childPanelClass": "CharacterDs3AptitudeChild",
-      "interactionId": "character-ds3main_button_9.tab-switch"
+      "childPanelClass": "CharacterDs3AptitudeChildPanel",
+      "interactionId": "character-ds3main_button_9.tab-switch",
+      "key": "aptitude",
+      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/tab-replay/character-ds3-main.aptitude.right-content.html"
     }
   ],
   "summary": {
     "tabCount": 6,
-    "mountSlotId": "CharacterDs3Main_div_8",
+    "mountSlotIds": [
+      "ContentSlot"
+    ],
     "missingMountCount": 0,
     "missingTriggerCount": 0
   }

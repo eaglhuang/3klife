@@ -77,6 +77,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
     private readonly _sidecarInteractionHooks: Array<{ node: Node; callback: () => void }> = [];
     private _interactionSmokeResults: PreviewInteractionSmokeResult[] = [];
     private _interactionActionsBound = 0;
+    private _tabRouteMap: Map<string, TabRoute> | null = null;
     private _layoutRoot: UILayoutNodeSpec | null = null;
 
     public get binder(): UITemplateBinder | null {
@@ -241,6 +242,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
         const tabSidecar = await this._specLoader.loadScreenSidecar<PreviewTabRoutingSidecar>(screenId, 'tab-routing');
         const routeMap = this._buildTabRouteMap(screen, tabSidecar);
+        this._tabRouteMap = routeMap;
         for (const action of interaction.actions) {
             this._bindSidecarInteractionAction(action, routeMap);
         }
@@ -396,6 +398,21 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             slotId: route.slotId,
             fragment: route.fragment,
         });
+    }
+
+    /**
+     * Callers that switch tabs themselves (instead of through the sidecar buttons) use this to get
+     * the same out-of-slot areas shown or hidden for the tab whose content fragment is `fragment`.
+     */
+    public async applyTabRegionsForFragment(fragment: string): Promise<void> {
+        const routeMap = this._tabRouteMap;
+        if (!routeMap) return;
+        for (const route of routeMap.values()) {
+            if (route.fragment === fragment) {
+                await this._applyTabRegions(route, routeMap);
+                return;
+            }
+        }
     }
 
     /**

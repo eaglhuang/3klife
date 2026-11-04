@@ -959,6 +959,15 @@ function validateScreenStrict(screenNode, screenFilePath, layoutJsons, skinJsons
                             strictFail('composite-panel-tab-route-integrity',
                                 `${rel} - tabRouting["${tabKey}"] 的 skinSlot "${tabSkinSlotId}" 不存在於 skin "${skinId}"`,
                                 failures, exceptions);
+                        } else if (slot.visualStates && slot.visualStates.normal && slot.visualStates.selected) {
+                            // 程序繪製的分頁鈕：選中狀態由 visualStates 指向另一個 slot，不需狀態貼圖
+                            for (const stateSlotId of [slot.visualStates.normal, slot.visualStates.selected]) {
+                                if (!skinJson.slots[stateSlotId]) {
+                                    strictFail('composite-panel-tab-route-integrity',
+                                        `${rel} - tabRouting["${tabKey}"] 的 visualStates 指向不存在的 slot "${stateSlotId}"`,
+                                        failures, exceptions);
+                                }
+                            }
                         } else if (slot.kind !== 'button-skin') {
                             strictFail('composite-panel-tab-route-integrity',
                                 `${rel} - tabRouting["${tabKey}"] 的 skinSlot "${tabSkinSlotId}" kind=${slot.kind}，必須為 button-skin`,

@@ -50,10 +50,10 @@
       "trigger": "CharacterDs3Main_button_6",
       "event": "click",
       "type": "tabSwitch",
-      "target": "tactics",
+      "target": "bloodline",
       "requires": [],
       "smoke": {
-        "expectActiveTab": "tactics"
+        "expectActiveTab": "bloodline"
       }
     },
     {
@@ -61,10 +61,10 @@
       "trigger": "CharacterDs3Main_button_7",
       "event": "click",
       "type": "tabSwitch",
-      "target": "bloodline",
+      "target": "tactics",
       "requires": [],
       "smoke": {
-        "expectActiveTab": "bloodline"
+        "expectActiveTab": "tactics"
       }
     },
     {
@@ -88,72 +88,6 @@
       "smoke": {
         "expectActiveTab": "aptitude"
       }
-    },
-    {
-      "id": "character-ds3main_button_10.tab-switch",
-      "trigger": "CharacterDs3Main_button_10",
-      "event": "click",
-      "type": "tabSwitch",
-      "target": "overview",
-      "requires": [],
-      "smoke": {
-        "expectActiveTab": "overview"
-      }
-    },
-    {
-      "id": "character-ds3main_button_11.tab-switch",
-      "trigger": "CharacterDs3Main_button_11",
-      "event": "click",
-      "type": "tabSwitch",
-      "target": "stats",
-      "requires": [],
-      "smoke": {
-        "expectActiveTab": "stats"
-      }
-    },
-    {
-      "id": "character-ds3main_button_12.tab-switch",
-      "trigger": "CharacterDs3Main_button_12",
-      "event": "click",
-      "type": "tabSwitch",
-      "target": "tactics",
-      "requires": [],
-      "smoke": {
-        "expectActiveTab": "tactics"
-      }
-    },
-    {
-      "id": "character-ds3main_button_13.tab-switch",
-      "trigger": "CharacterDs3Main_button_13",
-      "event": "click",
-      "type": "tabSwitch",
-      "target": "bloodline",
-      "requires": [],
-      "smoke": {
-        "expectActiveTab": "bloodline"
-      }
-    },
-    {
-      "id": "character-ds3main_button_14.tab-switch",
-      "trigger": "CharacterDs3Main_button_14",
-      "event": "click",
-      "type": "tabSwitch",
-      "target": "equip",
-      "requires": [],
-      "smoke": {
-        "expectActiveTab": "equip"
-      }
-    },
-    {
-      "id": "character-ds3main_button_15.tab-switch",
-      "trigger": "CharacterDs3Main_button_15",
-      "event": "click",
-      "type": "tabSwitch",
-      "target": "aptitude",
-      "requires": [],
-      "smoke": {
-        "expectActiveTab": "aptitude"
-      }
     }
   ],
   "warnings": [
@@ -163,11 +97,11 @@
     },
     {
       "code": "manual-adapter-required",
-      "detail": "CharacterDs3Main_div_10: inline onclick is not executed; rewrite as data-ucuf-action"
+      "detail": "CharacterDs3Main_div_8: inline onclick is not executed; rewrite as data-ucuf-action"
     }
   ],
   "summary": {
-    "actionCount": 14,
+    "actionCount": 8,
     "missingTargetCount": 0,
     "manualAdapterCount": 2
   }

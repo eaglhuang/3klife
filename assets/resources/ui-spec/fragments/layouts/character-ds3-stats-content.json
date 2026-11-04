@@ -1,6 +1,6 @@
 {
   "type": "container",
-  "name": "CharacterDs3TabStats",
+  "name": "TabStatsContent",
   "widget": {
     "top": 0,
     "left": 0,
@@ -10,9 +10,10 @@
   "children": [
     {
       "type": "container",
-      "name": "CharacterDs3TabStatsRoot",
+      "name": "CharacterDs3MainStatsRoot",
       "layout": {
         "type": "vertical",
+        "alignItems": "start",
         "paddingTop": 50,
         "paddingRight": 20,
         "paddingBottom": 60,
@@ -23,7 +24,7 @@
           "type": "container",
           "name": "CharacterDs3TabStats_div_1",
           "width": 520,
-          "height": 775,
+          "height": 840,
           "layout": {
             "type": "vertical",
             "justifyContent": "start",
@@ -31,1159 +32,114 @@
           },
           "children": [
             {
-              "type": "container",
+              "type": "panel",
               "name": "CharacterDs3TabStats_div_2",
               "width": 520,
-              "height": 26,
+              "height": 58,
               "layout": {
                 "type": "horizontal",
                 "alignItems": "center",
-                "justifyContent": "start",
-                "spacingX": 8
+                "justifyContent": "space-between",
+                "paddingTop": 10,
+                "paddingRight": 14,
+                "paddingBottom": 10,
+                "paddingLeft": 14
               },
+              "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_2",
               "children": [
                 {
-                  "type": "panel",
+                  "type": "container",
                   "name": "CharacterDs3TabStats_div_3",
-                  "width": 4,
-                  "height": 16,
-                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_3"
-                },
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabStats_span_1",
-                  "width": 110,
-                  "height": 26,
-                  "text": "資質 · 實力",
-                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_1"
-                },
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabStats_span_2",
-                  "width": 155,
-                  "height": 14,
-                  "text": "DUAL-LAYER ATTRIBUTES",
-                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_2"
-                }
-              ]
-            },
-            {
-              "type": "container",
-              "name": "CharacterDs3TabStats_div_4",
-              "width": 520,
-              "height": 422,
-              "layout": {
-                "type": "horizontal",
-                "spacingX": 20
-              },
-              "children": [
-                {
-                  "type": "composite",
-                  "name": "CharacterDs3TabStats_svg_1",
-                  "width": 220,
-                  "height": 220,
-                  "rendererHint": "svg-radar-chart",
-                  "svgMeta": {
-                    "kind": "radar-chart",
-                    "viewBox": {
-                      "x": 0,
-                      "y": 0,
-                      "width": 220,
-                      "height": 220
-                    },
-                    "center": {
-                      "x": 110,
-                      "y": 110
-                    },
-                    "outerRadius": 90,
-                    "gridPolygons": [
-                      {
-                        "points": [
-                          {
-                            "x": 110,
-                            "y": 87.5
-                          },
-                          {
-                            "x": 129.48557158514987,
-                            "y": 98.75
-                          },
-                          {
-                            "x": 129.48557158514987,
-                            "y": 121.25
-                          },
-                          {
-                            "x": 110,
-                            "y": 132.5
-                          },
-                          {
-                            "x": 90.51442841485013,
-                            "y": 121.25
-                          },
-                          {
-                            "x": 90.51442841485013,
-                            "y": 98.75
-                          }
-                        ],
-                        "stroke": "#4D4635",
-                        "strokeWidth": 0.7,
-                        "fill": "none",
-                        "opacity": null
-                      },
-                      {
-                        "points": [
-                          {
-                            "x": 110,
-                            "y": 65
-                          },
-                          {
-                            "x": 148.97114317029974,
-                            "y": 87.5
-                          },
-                          {
-                            "x": 148.97114317029974,
-                            "y": 132.5
-                          },
-                          {
-                            "x": 110,
-                            "y": 155
-                          },
-                          {
-                            "x": 71.02885682970026,
-                            "y": 132.5
-                          },
-                          {
-                            "x": 71.02885682970026,
-                            "y": 87.5
-                          }
-                        ],
-                        "stroke": "#4D4635",
-                        "strokeWidth": 0.7,
-                        "fill": "none",
-                        "opacity": null
-                      },
-                      {
-                        "points": [
-                          {
-                            "x": 110,
-                            "y": 42.5
-                          },
-                          {
-                            "x": 168.4567147554496,
-                            "y": 76.25
-                          },
-                          {
-                            "x": 168.4567147554496,
-                            "y": 143.75
-                          },
-                          {
-                            "x": 110,
-                            "y": 177.5
-                          },
-                          {
-                            "x": 51.543285244550404,
-                            "y": 143.75000000000003
-                          },
-                          {
-                            "x": 51.5432852445504,
-                            "y": 76.25
-                          }
-                        ],
-                        "stroke": "#4D4635",
-                        "strokeWidth": 0.7,
-                        "fill": "none",
-                        "opacity": null
-                      },
-                      {
-                        "points": [
-                          {
-                            "x": 110,
-                            "y": 20
-                          },
-                          {
-                            "x": 187.94228634059948,
-                            "y": 65
-                          },
-                          {
-                            "x": 187.94228634059948,
-                            "y": 155
-                          },
-                          {
-                            "x": 110,
-                            "y": 200
-                          },
-                          {
-                            "x": 32.057713659400534,
-                            "y": 155.00000000000003
-                          },
-                          {
-                            "x": 32.05771365940052,
-                            "y": 65
-                          }
-                        ],
-                        "stroke": "#4D4635",
-                        "strokeWidth": 0.7,
-                        "fill": "none",
-                        "opacity": null
-                      }
-                    ],
-                    "dataPolygons": [
-                      {
-                        "points": [
-                          {
-                            "x": 110,
-                            "y": 21.799999999999997
-                          },
-                          {
-                            "x": 150.52998889711174,
-                            "y": 86.6
-                          },
-                          {
-                            "x": 178.58921197972757,
-                            "y": 149.6
-                          },
-                          {
-                            "x": 110,
-                            "y": 144.2
-                          },
-                          {
-                            "x": 52.3227081079564,
-                            "y": 143.3
-                          },
-                          {
-                            "x": 50.76386238114439,
-                            "y": 75.79999999999998
-                          }
-                        ],
-                        "stroke": "#8CCFC4",
-                        "strokeWidth": 2,
-                        "fill": "rgba(140,207,196,.18)",
-                        "opacity": null
-                      }
-                    ],
-                    "axisLines": [
-                      {
-                        "x1": 110,
-                        "y1": 110,
-                        "x2": 110,
-                        "y2": 20,
-                        "stroke": "#4D4635",
-                        "strokeWidth": 0.7
-                      },
-                      {
-                        "x1": 110,
-                        "y1": 110,
-                        "x2": 187.94228634059948,
-                        "y2": 65,
-                        "stroke": "#4D4635",
-                        "strokeWidth": 0.7
-                      },
-                      {
-                        "x1": 110,
-                        "y1": 110,
-                        "x2": 187.94228634059948,
-                        "y2": 155,
-                        "stroke": "#4D4635",
-                        "strokeWidth": 0.7
-                      },
-                      {
-                        "x1": 110,
-                        "y1": 110,
-                        "x2": 110,
-                        "y2": 200,
-                        "stroke": "#4D4635",
-                        "strokeWidth": 0.7
-                      },
-                      {
-                        "x1": 110,
-                        "y1": 110,
-                        "x2": 32.057713659400534,
-                        "y2": 155.00000000000003,
-                        "stroke": "#4D4635",
-                        "strokeWidth": 0.7
-                      },
-                      {
-                        "x1": 110,
-                        "y1": 110,
-                        "x2": 32.05771365940052,
-                        "y2": 65,
-                        "stroke": "#4D4635",
-                        "strokeWidth": 0.7
-                      }
-                    ],
-                    "labels": [
-                      {
-                        "text": "武力",
-                        "x": 110,
-                        "y": 3,
-                        "fill": "#6fa8ff",
-                        "fontSize": 13,
-                        "fontWeight": "700",
-                        "fontFamily": "var(--font-headline)",
-                        "textAnchor": "middle",
-                        "box": {
-                          "width": 37,
-                          "height": 19
-                        }
-                      },
-                      {
-                        "text": "智力",
-                        "x": 206.9948452238571,
-                        "y": 59,
-                        "fill": "#c494ff",
-                        "fontSize": 13,
-                        "fontWeight": "700",
-                        "fontFamily": "var(--font-headline)",
-                        "textAnchor": "middle",
-                        "box": {
-                          "width": 37,
-                          "height": 19
-                        }
-                      },
-                      {
-                        "text": "統率",
-                        "x": 206.99484522385714,
-                        "y": 170.99999999999997,
-                        "fill": "#86E1A5",
-                        "fontSize": 13,
-                        "fontWeight": "700",
-                        "fontFamily": "var(--font-headline)",
-                        "textAnchor": "middle",
-                        "box": {
-                          "width": 37,
-                          "height": 19
-                        }
-                      },
-                      {
-                        "text": "政治",
-                        "x": 110,
-                        "y": 227,
-                        "fill": "#E0E0E0",
-                        "fontSize": 13,
-                        "fontWeight": "700",
-                        "fontFamily": "var(--font-headline)",
-                        "textAnchor": "middle",
-                        "box": {
-                          "width": 37,
-                          "height": 19
-                        }
-                      },
-                      {
-                        "text": "魅力",
-                        "x": 13.005154776142888,
-                        "y": 171.00000000000003,
-                        "fill": "#ff9bba",
-                        "fontSize": 13,
-                        "fontWeight": "700",
-                        "fontFamily": "var(--font-headline)",
-                        "textAnchor": "middle",
-                        "box": {
-                          "width": 37,
-                          "height": 19
-                        }
-                      },
-                      {
-                        "text": "運氣",
-                        "x": 13.005154776142874,
-                        "y": 58.999999999999986,
-                        "fill": "#ff8d6e",
-                        "fontSize": 13,
-                        "fontWeight": "700",
-                        "fontFamily": "var(--font-headline)",
-                        "textAnchor": "middle",
-                        "box": {
-                          "width": 37,
-                          "height": 19
-                        }
-                      }
-                    ],
-                    "markers": [
-                      {
-                        "cx": 110,
-                        "cy": 21.799999999999997,
-                        "r": 4,
-                        "fill": "#6fa8ff",
-                        "stroke": null,
-                        "strokeWidth": null
-                      },
-                      {
-                        "cx": 150.52998889711174,
-                        "cy": 86.6,
-                        "r": 4,
-                        "fill": "#c494ff",
-                        "stroke": null,
-                        "strokeWidth": null
-                      },
-                      {
-                        "cx": 178.58921197972757,
-                        "cy": 149.6,
-                        "r": 4,
-                        "fill": "#86E1A5",
-                        "stroke": null,
-                        "strokeWidth": null
-                      },
-                      {
-                        "cx": 110,
-                        "cy": 144.2,
-                        "r": 4,
-                        "fill": "#E0E0E0",
-                        "stroke": null,
-                        "strokeWidth": null
-                      },
-                      {
-                        "cx": 52.3227081079564,
-                        "cy": 143.3,
-                        "r": 4,
-                        "fill": "#ff9bba",
-                        "stroke": null,
-                        "strokeWidth": null
-                      },
-                      {
-                        "cx": 50.76386238114439,
-                        "cy": 75.79999999999998,
-                        "r": 4,
-                        "fill": "#ff8d6e",
-                        "stroke": null,
-                        "strokeWidth": null
-                      }
-                    ]
-                  },
+                  "width": 299,
+                  "height": 36,
                   "layout": {
-                    "type": "vertical"
-                  }
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "justifyContent": "start",
+                    "spacingX": 10
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_1",
+                      "width": 253,
+                      "height": 32,
+                      "text": "武力型 · 前線猛攻定位",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_1"
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabStats_div_4",
+                      "width": 36,
+                      "height": 36,
+                      "layout": {
+                        "type": "grid",
+                        "cellHeight": 36
+                      },
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_4",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_2",
+                          "text": "S",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_2",
+                          "width": 36,
+                          "height": 36
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "container",
                   "name": "CharacterDs3TabStats_div_5",
-                  "width": 280,
-                  "height": 422,
+                  "width": 154,
+                  "height": 26,
                   "layout": {
-                    "type": "vertical",
+                    "type": "horizontal",
                     "justifyContent": "start",
-                    "spacingY": 6
+                    "spacingX": 6
                   },
                   "children": [
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabStats_div_6",
-                      "width": 280,
-                      "height": 53,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 10,
-                        "paddingTop": 6,
-                        "paddingRight": 10,
-                        "paddingBottom": 7,
-                        "paddingLeft": 10
-                      },
-                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_6",
+                      "name": "CharacterDs3TabStats_span_3",
+                      "width": 74,
+                      "height": 26,
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_3",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabStats_span_3",
-                          "width": 52,
-                          "height": 22,
-                          "text": "武力",
-                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_3"
-                        },
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabStats_div_7",
-                          "width": 198,
-                          "height": 38,
-                          "layout": {
-                            "type": "vertical",
-                            "justifyContent": "start",
-                            "spacingY": 3
+                          "name": "CharacterDs3TabStats_span_4",
+                          "widget": {
+                            "left": 10,
+                            "top": 3
                           },
-                          "children": [
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabStats_div_8",
-                              "width": 196,
-                              "height": 22,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "baseline",
-                                "justifyContent": "start",
-                                "spacingX": 0
-                              },
-                              "children": [
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_4",
-                                  "width": 23,
-                                  "height": 20,
-                                  "text": "98",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_4"
-                                },
-                                {
-                                  "type": "container",
-                                  "name": "CharacterDs3TabStats_span_5",
-                                  "width": 124
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_6",
-                                  "width": 49,
-                                  "height": 22,
-                                  "text": "1,820",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_6"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabStats_div_9",
-                              "width": 196,
-                              "height": 13,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "center",
-                                "justifyContent": "start",
-                                "spacingX": 6
-                              },
-                              "children": [
-                                {
-                                  "type": "panel",
-                                  "name": "CharacterDs3TabStats_div_10",
-                                  "width": 158,
-                                  "height": 5,
-                                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_10",
-                                  "children": [
-                                    {
-                                      "type": "panel",
-                                      "name": "CharacterDs3TabStats_div_11",
-                                      "width": 144,
-                                      "height": 5,
-                                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_11"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_7",
-                                  "width": 32,
-                                  "height": 13,
-                                  "text": "2,000",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_7"
-                                }
-                              ]
-                            }
-                          ]
+                          "text": "長槍核心",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_4",
+                          "width": 54,
+                          "height": 20
                         }
                       ]
                     },
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabStats_div_12",
-                      "width": 280,
-                      "height": 53,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 10,
-                        "paddingTop": 6,
-                        "paddingRight": 10,
-                        "paddingBottom": 7,
-                        "paddingLeft": 10
-                      },
-                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_12",
+                      "name": "CharacterDs3TabStats_span_5",
+                      "width": 74,
+                      "height": 26,
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_5",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabStats_span_8",
-                          "width": 52,
-                          "height": 22,
-                          "text": "智力",
-                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_8"
-                        },
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabStats_div_13",
-                          "width": 198,
-                          "height": 38,
-                          "layout": {
-                            "type": "vertical",
-                            "justifyContent": "start",
-                            "spacingY": 3
+                          "name": "CharacterDs3TabStats_span_6",
+                          "widget": {
+                            "left": 10,
+                            "top": 3
                           },
-                          "children": [
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabStats_div_14",
-                              "width": 196,
-                              "height": 22,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "baseline",
-                                "justifyContent": "start",
-                                "spacingX": 0
-                              },
-                              "children": [
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_9",
-                                  "width": 18,
-                                  "height": 17,
-                                  "text": "52",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_9"
-                                },
-                                {
-                                  "type": "container",
-                                  "name": "CharacterDs3TabStats_span_10",
-                                  "width": 139
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_11",
-                                  "width": 39,
-                                  "height": 22,
-                                  "text": "890",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_11"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabStats_div_15",
-                              "width": 196,
-                              "height": 13,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "center",
-                                "justifyContent": "start",
-                                "spacingX": 6
-                              },
-                              "children": [
-                                {
-                                  "type": "panel",
-                                  "name": "CharacterDs3TabStats_div_16",
-                                  "width": 158,
-                                  "height": 5,
-                                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_16",
-                                  "children": [
-                                    {
-                                      "type": "panel",
-                                      "name": "CharacterDs3TabStats_div_17",
-                                      "width": 70,
-                                      "height": 5,
-                                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_17"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_12",
-                                  "width": 32,
-                                  "height": 13,
-                                  "text": "2,000",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_12"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "panel",
-                      "name": "CharacterDs3TabStats_div_18",
-                      "width": 280,
-                      "height": 53,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 10,
-                        "paddingTop": 6,
-                        "paddingRight": 10,
-                        "paddingBottom": 7,
-                        "paddingLeft": 10
-                      },
-                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_18",
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabStats_span_13",
-                          "width": 52,
-                          "height": 22,
-                          "text": "統率",
-                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_13"
-                        },
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabStats_div_19",
-                          "width": 198,
-                          "height": 38,
-                          "layout": {
-                            "type": "vertical",
-                            "justifyContent": "start",
-                            "spacingY": 3
-                          },
-                          "children": [
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabStats_div_20",
-                              "width": 196,
-                              "height": 22,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "baseline",
-                                "justifyContent": "start",
-                                "spacingX": 0
-                              },
-                              "children": [
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_14",
-                                  "width": 19,
-                                  "height": 17,
-                                  "text": "88",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_14"
-                                },
-                                {
-                                  "type": "container",
-                                  "name": "CharacterDs3TabStats_span_15",
-                                  "width": 127
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_16",
-                                  "width": 50,
-                                  "height": 22,
-                                  "text": "1,540",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_16"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabStats_div_21",
-                              "width": 196,
-                              "height": 13,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "center",
-                                "justifyContent": "start",
-                                "spacingX": 6
-                              },
-                              "children": [
-                                {
-                                  "type": "panel",
-                                  "name": "CharacterDs3TabStats_div_22",
-                                  "width": 158,
-                                  "height": 5,
-                                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_22",
-                                  "children": [
-                                    {
-                                      "type": "panel",
-                                      "name": "CharacterDs3TabStats_div_23",
-                                      "width": 122,
-                                      "height": 5,
-                                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_23"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_17",
-                                  "width": 32,
-                                  "height": 13,
-                                  "text": "2,000",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_17"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "panel",
-                      "name": "CharacterDs3TabStats_div_24",
-                      "width": 280,
-                      "height": 53,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 10,
-                        "paddingTop": 6,
-                        "paddingRight": 10,
-                        "paddingBottom": 7,
-                        "paddingLeft": 10
-                      },
-                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_24",
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabStats_span_18",
-                          "width": 52,
-                          "height": 22,
-                          "text": "政治",
-                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_18"
-                        },
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabStats_div_25",
-                          "width": 198,
-                          "height": 38,
-                          "layout": {
-                            "type": "vertical",
-                            "justifyContent": "start",
-                            "spacingY": 3
-                          },
-                          "children": [
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabStats_div_26",
-                              "width": 196,
-                              "height": 22,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "baseline",
-                                "justifyContent": "start",
-                                "spacingX": 0
-                              },
-                              "children": [
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_19",
-                                  "width": 18,
-                                  "height": 17,
-                                  "text": "38",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_19"
-                                },
-                                {
-                                  "type": "container",
-                                  "name": "CharacterDs3TabStats_span_20",
-                                  "width": 139
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_21",
-                                  "width": 39,
-                                  "height": 22,
-                                  "text": "640",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_21"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabStats_div_27",
-                              "width": 196,
-                              "height": 13,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "center",
-                                "justifyContent": "start",
-                                "spacingX": 6
-                              },
-                              "children": [
-                                {
-                                  "type": "panel",
-                                  "name": "CharacterDs3TabStats_div_28",
-                                  "width": 158,
-                                  "height": 5,
-                                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_28",
-                                  "children": [
-                                    {
-                                      "type": "panel",
-                                      "name": "CharacterDs3TabStats_div_29",
-                                      "width": 51,
-                                      "height": 5,
-                                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_29"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_22",
-                                  "width": 32,
-                                  "height": 13,
-                                  "text": "2,000",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_22"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "panel",
-                      "name": "CharacterDs3TabStats_div_30",
-                      "width": 280,
-                      "height": 53,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 10,
-                        "paddingTop": 6,
-                        "paddingRight": 10,
-                        "paddingBottom": 7,
-                        "paddingLeft": 10
-                      },
-                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_30",
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabStats_span_23",
-                          "width": 52,
-                          "height": 22,
-                          "text": "魅力",
-                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_23"
-                        },
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabStats_div_31",
-                          "width": 198,
-                          "height": 38,
-                          "layout": {
-                            "type": "vertical",
-                            "justifyContent": "start",
-                            "spacingY": 3
-                          },
-                          "children": [
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabStats_div_32",
-                              "width": 196,
-                              "height": 22,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "baseline",
-                                "justifyContent": "start",
-                                "spacingX": 0
-                              },
-                              "children": [
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_24",
-                                  "width": 17,
-                                  "height": 17,
-                                  "text": "74",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_24"
-                                },
-                                {
-                                  "type": "container",
-                                  "name": "CharacterDs3TabStats_span_25",
-                                  "width": 130
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_26",
-                                  "width": 49,
-                                  "height": 22,
-                                  "text": "1,280",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_26"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabStats_div_33",
-                              "width": 196,
-                              "height": 13,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "center",
-                                "justifyContent": "start",
-                                "spacingX": 6
-                              },
-                              "children": [
-                                {
-                                  "type": "panel",
-                                  "name": "CharacterDs3TabStats_div_34",
-                                  "width": 158,
-                                  "height": 5,
-                                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_34",
-                                  "children": [
-                                    {
-                                      "type": "panel",
-                                      "name": "CharacterDs3TabStats_div_35",
-                                      "width": 101,
-                                      "height": 5,
-                                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_35"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_27",
-                                  "width": 32,
-                                  "height": 13,
-                                  "text": "2,000",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_27"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "panel",
-                      "name": "CharacterDs3TabStats_div_36",
-                      "width": 280,
-                      "height": 53,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 10,
-                        "paddingTop": 6,
-                        "paddingRight": 10,
-                        "paddingBottom": 7,
-                        "paddingLeft": 10
-                      },
-                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_36",
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabStats_span_28",
-                          "width": 52,
-                          "height": 22,
-                          "text": "運氣",
-                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_28"
-                        },
-                        {
-                          "type": "container",
-                          "name": "CharacterDs3TabStats_div_37",
-                          "width": 198,
-                          "height": 38,
-                          "layout": {
-                            "type": "vertical",
-                            "justifyContent": "start",
-                            "spacingY": 3
-                          },
-                          "children": [
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabStats_div_38",
-                              "width": 196,
-                              "height": 22,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "baseline",
-                                "justifyContent": "start",
-                                "spacingX": 0
-                              },
-                              "children": [
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_29",
-                                  "width": 18,
-                                  "height": 17,
-                                  "text": "76",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_29"
-                                },
-                                {
-                                  "type": "container",
-                                  "name": "CharacterDs3TabStats_span_30",
-                                  "width": 136
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_31",
-                                  "width": 42,
-                                  "height": 22,
-                                  "text": "1,120",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_31"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "container",
-                              "name": "CharacterDs3TabStats_div_39",
-                              "width": 196,
-                              "height": 13,
-                              "layout": {
-                                "type": "horizontal",
-                                "alignItems": "center",
-                                "justifyContent": "start",
-                                "spacingX": 6
-                              },
-                              "children": [
-                                {
-                                  "type": "panel",
-                                  "name": "CharacterDs3TabStats_div_40",
-                                  "width": 158,
-                                  "height": 5,
-                                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_40",
-                                  "children": [
-                                    {
-                                      "type": "panel",
-                                      "name": "CharacterDs3TabStats_div_41",
-                                      "width": 88,
-                                      "height": 5,
-                                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_41"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabStats_span_32",
-                                  "width": 32,
-                                  "height": 13,
-                                  "text": "2,000",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_32"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "panel",
-                      "name": "CharacterDs3TabStats_div_42",
-                      "width": 280,
-                      "height": 64,
-                      "layout": {
-                        "type": "horizontal",
-                        "alignItems": "center",
-                        "justifyContent": "start",
-                        "spacingX": 14,
-                        "paddingTop": 10,
-                        "paddingRight": 14,
-                        "paddingBottom": 10,
-                        "paddingLeft": 14
-                      },
-                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_42",
-                      "children": [
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabStats_span_33",
-                          "width": 77,
-                          "height": 24,
-                          "text": "總評等級",
-                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_33"
-                        },
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabStats_div_43",
-                          "width": 42,
-                          "height": 42,
-                          "layout": {
-                            "type": "grid",
-                            "cellHeight": 42
-                          },
-                          "text": "S",
-                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_43"
-                        },
-                        {
-                          "type": "label",
-                          "name": "CharacterDs3TabStats_span_34",
-                          "width": 86,
-                          "height": 26,
-                          "text": "良才美質",
-                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_34"
+                          "text": "前線突擊",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_6",
+                          "width": 54,
+                          "height": 20
                         }
                       ]
                     }
@@ -1193,44 +149,1256 @@
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabStats_div_44",
+              "name": "CharacterDs3TabStats_div_6_margin",
               "width": 520,
-              "height": 26,
+              "height": 36,
               "layout": {
-                "type": "horizontal",
-                "alignItems": "center",
-                "justifyContent": "start",
-                "spacingX": 8
+                "type": "vertical",
+                "paddingTop": 0,
+                "paddingBottom": 10
               },
               "children": [
                 {
-                  "type": "panel",
-                  "name": "CharacterDs3TabStats_div_45",
-                  "width": 4,
-                  "height": 16,
-                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_45"
-                },
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabStats_span_35",
-                  "width": 86,
+                  "type": "container",
+                  "name": "CharacterDs3TabStats_div_6",
+                  "width": 520,
                   "height": 26,
-                  "text": "生命狀態",
-                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_35"
-                },
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabStats_span_36",
-                  "width": 42,
-                  "height": 14,
-                  "text": "VITALS",
-                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_36"
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "justifyContent": "start",
+                    "spacingX": 8
+                  },
+                  "children": [
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabStats_div_7",
+                      "width": 4,
+                      "height": 16,
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_7"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_7",
+                      "width": 110,
+                      "height": 26,
+                      "text": "資質 · 實力",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_7"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_8",
+                      "width": 158,
+                      "height": 14,
+                      "text": "DUAL-LAYER ATTRIBUTES",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_8"
+                    }
+                  ]
                 }
               ]
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabStats_div_46",
+              "name": "CharacterDs3TabStats_div_8",
+              "width": 520,
+              "height": 353,
+              "layout": {
+                "type": "horizontal",
+                "spacingX": 24
+              },
+              "children": [
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabStats_div_9",
+                  "width": 240,
+                  "height": 353,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "center",
+                    "justifyContent": "start",
+                    "spacingY": 16
+                  },
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_10",
+                      "width": 240,
+                      "height": 240,
+                      "layout": {
+                        "type": "horizontal",
+                        "justifyContent": "center"
+                      },
+                      "children": [
+                        {
+                          "type": "composite",
+                          "name": "CharacterDs3TabStats_svg_1",
+                          "width": 240,
+                          "height": 240,
+                          "rendererHint": "svg-radar-chart",
+                          "svgMeta": {
+                            "kind": "radar-chart",
+                            "viewBox": {
+                              "x": 0,
+                              "y": 0,
+                              "width": 220,
+                              "height": 220
+                            },
+                            "center": {
+                              "x": 110,
+                              "y": 110
+                            },
+                            "outerRadius": 90,
+                            "gridPolygons": [
+                              {
+                                "points": [
+                                  {
+                                    "x": 110,
+                                    "y": 87.5
+                                  },
+                                  {
+                                    "x": 129.48557158514987,
+                                    "y": 98.75
+                                  },
+                                  {
+                                    "x": 129.48557158514987,
+                                    "y": 121.25
+                                  },
+                                  {
+                                    "x": 110,
+                                    "y": 132.5
+                                  },
+                                  {
+                                    "x": 90.51442841485013,
+                                    "y": 121.25
+                                  },
+                                  {
+                                    "x": 90.51442841485013,
+                                    "y": 98.75
+                                  }
+                                ],
+                                "stroke": "#4D4635",
+                                "strokeWidth": 0.7,
+                                "fill": "none",
+                                "opacity": null
+                              },
+                              {
+                                "points": [
+                                  {
+                                    "x": 110,
+                                    "y": 65
+                                  },
+                                  {
+                                    "x": 148.97114317029974,
+                                    "y": 87.5
+                                  },
+                                  {
+                                    "x": 148.97114317029974,
+                                    "y": 132.5
+                                  },
+                                  {
+                                    "x": 110,
+                                    "y": 155
+                                  },
+                                  {
+                                    "x": 71.02885682970026,
+                                    "y": 132.5
+                                  },
+                                  {
+                                    "x": 71.02885682970026,
+                                    "y": 87.5
+                                  }
+                                ],
+                                "stroke": "#4D4635",
+                                "strokeWidth": 0.7,
+                                "fill": "none",
+                                "opacity": null
+                              },
+                              {
+                                "points": [
+                                  {
+                                    "x": 110,
+                                    "y": 42.5
+                                  },
+                                  {
+                                    "x": 168.4567147554496,
+                                    "y": 76.25
+                                  },
+                                  {
+                                    "x": 168.4567147554496,
+                                    "y": 143.75
+                                  },
+                                  {
+                                    "x": 110,
+                                    "y": 177.5
+                                  },
+                                  {
+                                    "x": 51.543285244550404,
+                                    "y": 143.75000000000003
+                                  },
+                                  {
+                                    "x": 51.5432852445504,
+                                    "y": 76.25
+                                  }
+                                ],
+                                "stroke": "#4D4635",
+                                "strokeWidth": 0.7,
+                                "fill": "none",
+                                "opacity": null
+                              },
+                              {
+                                "points": [
+                                  {
+                                    "x": 110,
+                                    "y": 20
+                                  },
+                                  {
+                                    "x": 187.94228634059948,
+                                    "y": 65
+                                  },
+                                  {
+                                    "x": 187.94228634059948,
+                                    "y": 155
+                                  },
+                                  {
+                                    "x": 110,
+                                    "y": 200
+                                  },
+                                  {
+                                    "x": 32.057713659400534,
+                                    "y": 155.00000000000003
+                                  },
+                                  {
+                                    "x": 32.05771365940052,
+                                    "y": 65
+                                  }
+                                ],
+                                "stroke": "#4D4635",
+                                "strokeWidth": 0.7,
+                                "fill": "none",
+                                "opacity": null
+                              }
+                            ],
+                            "dataPolygons": [
+                              {
+                                "points": [
+                                  {
+                                    "x": 110,
+                                    "y": 21.799999999999997
+                                  },
+                                  {
+                                    "x": 150.52998889711174,
+                                    "y": 86.6
+                                  },
+                                  {
+                                    "x": 178.58921197972757,
+                                    "y": 149.6
+                                  },
+                                  {
+                                    "x": 110,
+                                    "y": 144.2
+                                  },
+                                  {
+                                    "x": 52.3227081079564,
+                                    "y": 143.3
+                                  },
+                                  {
+                                    "x": 50.76386238114439,
+                                    "y": 75.79999999999998
+                                  }
+                                ],
+                                "stroke": "#8CCFC4",
+                                "strokeWidth": 2,
+                                "fill": "rgba(140,207,196,.18)",
+                                "opacity": null
+                              }
+                            ],
+                            "valuePolygon": {
+                              "points": [
+                                {
+                                  "x": 110,
+                                  "y": 21.799999999999997
+                                },
+                                {
+                                  "x": 150.52998889711174,
+                                  "y": 86.6
+                                },
+                                {
+                                  "x": 178.58921197972757,
+                                  "y": 149.6
+                                },
+                                {
+                                  "x": 110,
+                                  "y": 144.2
+                                },
+                                {
+                                  "x": 52.3227081079564,
+                                  "y": 143.3
+                                },
+                                {
+                                  "x": 50.76386238114439,
+                                  "y": 75.79999999999998
+                                }
+                              ],
+                              "stroke": "#8CCFC4",
+                              "strokeWidth": 2,
+                              "fill": "rgba(140,207,196,.18)",
+                              "opacity": null
+                            },
+                            "axisLines": [
+                              {
+                                "x1": 110,
+                                "y1": 110,
+                                "x2": 110,
+                                "y2": 20,
+                                "stroke": "#4D4635",
+                                "strokeWidth": 0.7
+                              },
+                              {
+                                "x1": 110,
+                                "y1": 110,
+                                "x2": 187.94228634059948,
+                                "y2": 65,
+                                "stroke": "#4D4635",
+                                "strokeWidth": 0.7
+                              },
+                              {
+                                "x1": 110,
+                                "y1": 110,
+                                "x2": 187.94228634059948,
+                                "y2": 155,
+                                "stroke": "#4D4635",
+                                "strokeWidth": 0.7
+                              },
+                              {
+                                "x1": 110,
+                                "y1": 110,
+                                "x2": 110,
+                                "y2": 200,
+                                "stroke": "#4D4635",
+                                "strokeWidth": 0.7
+                              },
+                              {
+                                "x1": 110,
+                                "y1": 110,
+                                "x2": 32.057713659400534,
+                                "y2": 155.00000000000003,
+                                "stroke": "#4D4635",
+                                "strokeWidth": 0.7
+                              },
+                              {
+                                "x1": 110,
+                                "y1": 110,
+                                "x2": 32.05771365940052,
+                                "y2": 65,
+                                "stroke": "#4D4635",
+                                "strokeWidth": 0.7
+                              }
+                            ],
+                            "labels": [
+                              {
+                                "text": "武力",
+                                "x": 110,
+                                "y": 3,
+                                "fill": "#6fa8ff",
+                                "fontSize": 14,
+                                "fontWeight": "700",
+                                "fontFamily": "var(--font-headline)",
+                                "textAnchor": "middle",
+                                "box": {
+                                  "width": 40,
+                                  "height": 20
+                                }
+                              },
+                              {
+                                "text": "智力",
+                                "x": 206.9948452238571,
+                                "y": 59,
+                                "fill": "#c494ff",
+                                "fontSize": 14,
+                                "fontWeight": "700",
+                                "fontFamily": "var(--font-headline)",
+                                "textAnchor": "middle",
+                                "box": {
+                                  "width": 40,
+                                  "height": 20
+                                }
+                              },
+                              {
+                                "text": "統率",
+                                "x": 206.99484522385714,
+                                "y": 170.99999999999997,
+                                "fill": "#86E1A5",
+                                "fontSize": 14,
+                                "fontWeight": "700",
+                                "fontFamily": "var(--font-headline)",
+                                "textAnchor": "middle",
+                                "box": {
+                                  "width": 40,
+                                  "height": 20
+                                }
+                              },
+                              {
+                                "text": "政治",
+                                "x": 110,
+                                "y": 227,
+                                "fill": "#E0E0E0",
+                                "fontSize": 14,
+                                "fontWeight": "700",
+                                "fontFamily": "var(--font-headline)",
+                                "textAnchor": "middle",
+                                "box": {
+                                  "width": 40,
+                                  "height": 20
+                                }
+                              },
+                              {
+                                "text": "魅力",
+                                "x": 13.005154776142888,
+                                "y": 171.00000000000003,
+                                "fill": "#ff9bba",
+                                "fontSize": 14,
+                                "fontWeight": "700",
+                                "fontFamily": "var(--font-headline)",
+                                "textAnchor": "middle",
+                                "box": {
+                                  "width": 40,
+                                  "height": 20
+                                }
+                              },
+                              {
+                                "text": "運氣",
+                                "x": 13.005154776142874,
+                                "y": 58.999999999999986,
+                                "fill": "#ff8d6e",
+                                "fontSize": 14,
+                                "fontWeight": "700",
+                                "fontFamily": "var(--font-headline)",
+                                "textAnchor": "middle",
+                                "box": {
+                                  "width": 40,
+                                  "height": 20
+                                }
+                              }
+                            ],
+                            "textBox": {
+                              "x": -6.9948,
+                              "y": -7,
+                              "width": 233.9897,
+                              "height": 244
+                            },
+                            "markers": [
+                              {
+                                "cx": 110,
+                                "cy": 21.799999999999997,
+                                "r": 4,
+                                "fill": "#6fa8ff",
+                                "stroke": null,
+                                "strokeWidth": null
+                              },
+                              {
+                                "cx": 150.52998889711174,
+                                "cy": 86.6,
+                                "r": 4,
+                                "fill": "#c494ff",
+                                "stroke": null,
+                                "strokeWidth": null
+                              },
+                              {
+                                "cx": 178.58921197972757,
+                                "cy": 149.6,
+                                "r": 4,
+                                "fill": "#86E1A5",
+                                "stroke": null,
+                                "strokeWidth": null
+                              },
+                              {
+                                "cx": 110,
+                                "cy": 144.2,
+                                "r": 4,
+                                "fill": "#E0E0E0",
+                                "stroke": null,
+                                "strokeWidth": null
+                              },
+                              {
+                                "cx": 52.3227081079564,
+                                "cy": 143.3,
+                                "r": 4,
+                                "fill": "#ff9bba",
+                                "stroke": null,
+                                "strokeWidth": null
+                              },
+                              {
+                                "cx": 50.76386238114439,
+                                "cy": 75.79999999999998,
+                                "r": 4,
+                                "fill": "#ff8d6e",
+                                "stroke": null,
+                                "strokeWidth": null
+                              }
+                            ]
+                          },
+                          "layout": {
+                            "type": "vertical",
+                            "alignItems": "start"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabStats_div_11",
+                      "width": 240,
+                      "height": 97,
+                      "layout": {
+                        "type": "vertical",
+                        "alignItems": "center",
+                        "justifyContent": "start",
+                        "spacingY": 6,
+                        "paddingTop": 12,
+                        "paddingRight": 0,
+                        "paddingBottom": 12,
+                        "paddingLeft": 0
+                      },
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_11",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_div_12",
+                          "width": 58,
+                          "height": 18,
+                          "text": "絕評等級",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_12"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_13",
+                          "width": 141,
+                          "height": 48,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 10
+                          },
+                          "children": [
+                            {
+                              "type": "panel",
+                              "name": "CharacterDs3TabStats_div_14",
+                              "width": 48,
+                              "height": 48,
+                              "layout": {
+                                "type": "grid",
+                                "cellHeight": 48
+                              },
+                              "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_14",
+                              "children": [
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabStats_span_9",
+                                  "text": "S",
+                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_9",
+                                  "width": 48,
+                                  "height": 48
+                                }
+                              ]
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_10",
+                              "width": 83,
+                              "height": 26,
+                              "text": "良才美質",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_10"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabStats_div_15",
+                  "width": 256,
+                  "height": 347,
+                  "layout": {
+                    "type": "vertical",
+                    "justifyContent": "start",
+                    "spacingY": 10
+                  },
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_16",
+                      "width": 256,
+                      "height": 54,
+                      "layout": {
+                        "type": "vertical",
+                        "justifyContent": "start",
+                        "spacingY": 4
+                      },
+                      "children": [
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_17",
+                          "width": 256,
+                          "height": 35,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 12
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_11",
+                              "width": 51,
+                              "height": 35,
+                              "text": "武力",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_11"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_12",
+                              "width": 32,
+                              "height": 27,
+                              "text": "98",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_12"
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_div_18",
+                              "width": 87
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_13",
+                              "width": 50,
+                              "height": 27,
+                              "text": "1820",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_13"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_19",
+                          "width": 256,
+                          "height": 15,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 12
+                          },
+                          "children": [
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_div_20",
+                              "width": 48
+                            },
+                            {
+                              "type": "panel",
+                              "name": "CharacterDs3TabStats_div_21",
+                              "width": 134,
+                              "height": 6,
+                              "layout": {
+                                "type": "vertical",
+                                "alignItems": "start"
+                              },
+                              "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_21",
+                              "children": [
+                                {
+                                  "type": "panel",
+                                  "name": "CharacterDs3TabStats_div_22",
+                                  "width": 122,
+                                  "height": 6,
+                                  "_motionId": "character-ds3tab-stats_div_22.transition",
+                                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_22"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_14",
+                              "width": 50,
+                              "height": 15,
+                              "text": "/2000",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_14"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_23",
+                      "width": 256,
+                      "height": 45,
+                      "layout": {
+                        "type": "vertical",
+                        "justifyContent": "start",
+                        "spacingY": 4
+                      },
+                      "children": [
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_24",
+                          "width": 256,
+                          "height": 35,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 12
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_15",
+                              "width": 51,
+                              "height": 35,
+                              "text": "智力",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_15"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_16",
+                              "width": 32,
+                              "height": 27,
+                              "text": "52",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_16"
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_div_25",
+                              "width": 87
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_17",
+                              "width": 50,
+                              "height": 27,
+                              "text": "~",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_17"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_26",
+                          "width": 256,
+                          "height": 6,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 12
+                          },
+                          "children": [
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_div_27",
+                              "width": 48
+                            },
+                            {
+                              "type": "panel",
+                              "name": "CharacterDs3TabStats_div_28",
+                              "width": 134,
+                              "height": 6,
+                              "layout": {
+                                "type": "vertical",
+                                "alignItems": "start"
+                              },
+                              "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_28",
+                              "children": [
+                                {
+                                  "type": "panel",
+                                  "name": "CharacterDs3TabStats_div_29",
+                                  "width": 60,
+                                  "height": 6,
+                                  "_motionId": "character-ds3tab-stats_div_29.transition",
+                                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_29"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_span_18",
+                              "width": 50
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_30",
+                      "width": 256,
+                      "height": 54,
+                      "layout": {
+                        "type": "vertical",
+                        "justifyContent": "start",
+                        "spacingY": 4
+                      },
+                      "children": [
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_31",
+                          "width": 256,
+                          "height": 35,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 12
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_19",
+                              "width": 51,
+                              "height": 35,
+                              "text": "統率",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_19"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_20",
+                              "width": 32,
+                              "height": 27,
+                              "text": "88",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_20"
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_div_32",
+                              "width": 87
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_21",
+                              "width": 50,
+                              "height": 27,
+                              "text": "1540",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_21"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_33",
+                          "width": 256,
+                          "height": 15,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 12
+                          },
+                          "children": [
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_div_34",
+                              "width": 48
+                            },
+                            {
+                              "type": "panel",
+                              "name": "CharacterDs3TabStats_div_35",
+                              "width": 134,
+                              "height": 6,
+                              "layout": {
+                                "type": "vertical",
+                                "alignItems": "start"
+                              },
+                              "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_35",
+                              "children": [
+                                {
+                                  "type": "panel",
+                                  "name": "CharacterDs3TabStats_div_36",
+                                  "width": 103,
+                                  "height": 6,
+                                  "_motionId": "character-ds3tab-stats_div_36.transition",
+                                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_36"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_22",
+                              "width": 50,
+                              "height": 15,
+                              "text": "/2000",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_22"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_37",
+                      "width": 256,
+                      "height": 45,
+                      "layout": {
+                        "type": "vertical",
+                        "justifyContent": "start",
+                        "spacingY": 4
+                      },
+                      "children": [
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_38",
+                          "width": 256,
+                          "height": 35,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 12
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_23",
+                              "width": 51,
+                              "height": 35,
+                              "text": "政治",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_23"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_24",
+                              "width": 32,
+                              "height": 29,
+                              "text": "傾",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_24"
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_div_39",
+                              "width": 87
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_25",
+                              "width": 50,
+                              "height": 29,
+                              "text": "待",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_25"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_40",
+                          "width": 256,
+                          "height": 6,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 12
+                          },
+                          "children": [
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_div_41",
+                              "width": 48
+                            },
+                            {
+                              "type": "panel",
+                              "name": "CharacterDs3TabStats_div_42",
+                              "width": 134,
+                              "height": 6,
+                              "layout": {
+                                "type": "vertical",
+                                "alignItems": "start"
+                              },
+                              "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_42",
+                              "children": [
+                                {
+                                  "type": "panel",
+                                  "name": "CharacterDs3TabStats_div_43",
+                                  "width": "0%",
+                                  "height": "100%",
+                                  "_motionId": "character-ds3tab-stats_div_43.transition",
+                                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_43"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_span_26",
+                              "width": 50
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_44",
+                      "width": 256,
+                      "height": 54,
+                      "layout": {
+                        "type": "vertical",
+                        "justifyContent": "start",
+                        "spacingY": 4
+                      },
+                      "children": [
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_45",
+                          "width": 256,
+                          "height": 35,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 12
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_27",
+                              "width": 51,
+                              "height": 35,
+                              "text": "魅力",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_27"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_28",
+                              "width": 32,
+                              "height": 27,
+                              "text": "74",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_28"
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_div_46",
+                              "width": 87
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_29",
+                              "width": 50,
+                              "height": 27,
+                              "text": "1280",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_29"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_47",
+                          "width": 256,
+                          "height": 15,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 12
+                          },
+                          "children": [
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_div_48",
+                              "width": 48
+                            },
+                            {
+                              "type": "panel",
+                              "name": "CharacterDs3TabStats_div_49",
+                              "width": 134,
+                              "height": 6,
+                              "layout": {
+                                "type": "vertical",
+                                "alignItems": "start"
+                              },
+                              "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_49",
+                              "children": [
+                                {
+                                  "type": "panel",
+                                  "name": "CharacterDs3TabStats_div_50",
+                                  "width": 86,
+                                  "height": 6,
+                                  "_motionId": "character-ds3tab-stats_div_50.transition",
+                                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_50"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_30",
+                              "width": 50,
+                              "height": 15,
+                              "text": "/2000",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_30"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_51",
+                      "width": 256,
+                      "height": 45,
+                      "layout": {
+                        "type": "vertical",
+                        "justifyContent": "start",
+                        "spacingY": 4
+                      },
+                      "children": [
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_52",
+                          "width": 256,
+                          "height": 35,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 12
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_31",
+                              "width": 51,
+                              "height": 35,
+                              "text": "運氣",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_31"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_32",
+                              "width": 32,
+                              "height": 27,
+                              "text": "76",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_32"
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_div_53",
+                              "width": 87
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_33",
+                              "width": 50,
+                              "height": 27,
+                              "text": "~",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_33"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_54",
+                          "width": 256,
+                          "height": 6,
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "start",
+                            "spacingX": 12
+                          },
+                          "children": [
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_div_55",
+                              "width": 48
+                            },
+                            {
+                              "type": "panel",
+                              "name": "CharacterDs3TabStats_div_56",
+                              "width": 134,
+                              "height": 6,
+                              "layout": {
+                                "type": "vertical",
+                                "alignItems": "start"
+                              },
+                              "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_56",
+                              "children": [
+                                {
+                                  "type": "panel",
+                                  "name": "CharacterDs3TabStats_div_57",
+                                  "width": 75,
+                                  "height": 6,
+                                  "_motionId": "character-ds3tab-stats_div_57.transition",
+                                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_57"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabStats_span_34",
+                              "width": 50
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabStats_div_58_margin",
+              "width": 520,
+              "height": 36,
+              "layout": {
+                "type": "vertical",
+                "paddingTop": 0,
+                "paddingBottom": 10
+              },
+              "children": [
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabStats_div_58",
+                  "width": 520,
+                  "height": 26,
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "justifyContent": "start",
+                    "spacingX": 8
+                  },
+                  "children": [
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabStats_div_59",
+                      "width": 4,
+                      "height": 16,
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_59"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_35",
+                      "width": 86,
+                      "height": 26,
+                      "text": "生命狀態",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_35"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_36",
+                      "width": 44,
+                      "height": 14,
+                      "text": "VITALS",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_36"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabStats_div_60",
               "width": 520,
               "height": 81,
               "layout": {
@@ -1240,22 +1408,23 @@
               "children": [
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabStats_div_47",
+                  "name": "CharacterDs3TabStats_div_61",
                   "width": 167,
                   "height": 81,
                   "layout": {
                     "type": "vertical",
+                    "alignItems": "start",
                     "paddingTop": 10,
                     "paddingRight": 12,
                     "paddingBottom": 10,
                     "paddingLeft": 12,
                     "spacingY": 6
                   },
-                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_47",
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_61",
                   "children": [
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabStats_div_48",
+                      "name": "CharacterDs3TabStats_div_62",
                       "width": 141,
                       "height": 24,
                       "layout": {
@@ -1266,7 +1435,7 @@
                         {
                           "type": "label",
                           "name": "CharacterDs3TabStats_span_37",
-                          "width": 65,
+                          "width": 66,
                           "height": 24,
                           "text": "HP 生命",
                           "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_37"
@@ -1274,7 +1443,7 @@
                         {
                           "type": "label",
                           "name": "CharacterDs3TabStats_span_38",
-                          "width": 53,
+                          "width": 59,
                           "height": 24,
                           "text": "16,800",
                           "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_38"
@@ -1283,48 +1452,53 @@
                     },
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabStats_div_49",
+                      "name": "CharacterDs3TabStats_div_63",
                       "width": 141,
                       "height": 10,
-                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_49",
+                      "layout": {
+                        "type": "vertical",
+                        "alignItems": "start"
+                      },
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_63",
                       "children": [
                         {
                           "type": "panel",
-                          "name": "CharacterDs3TabStats_div_50",
+                          "name": "CharacterDs3TabStats_div_64",
                           "width": 139,
                           "height": 8,
-                          "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_50"
+                          "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_64"
                         }
                       ]
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabStats_div_51",
+                      "name": "CharacterDs3TabStats_div_65",
                       "width": 141,
                       "height": 15,
                       "text": "/ 16,800",
-                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_51"
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_65"
                     }
                   ]
                 },
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabStats_div_52",
+                  "name": "CharacterDs3TabStats_div_66",
                   "width": 167,
                   "height": 81,
                   "layout": {
                     "type": "vertical",
+                    "alignItems": "start",
                     "paddingTop": 10,
                     "paddingRight": 12,
                     "paddingBottom": 10,
                     "paddingLeft": 12,
                     "spacingY": 6
                   },
-                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_52",
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_66",
                   "children": [
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabStats_div_53",
+                      "name": "CharacterDs3TabStats_div_67",
                       "width": 141,
                       "height": 24,
                       "layout": {
@@ -1335,7 +1509,7 @@
                         {
                           "type": "label",
                           "name": "CharacterDs3TabStats_span_39",
-                          "width": 61,
+                          "width": 62,
                           "height": 24,
                           "text": "SP 戰氣",
                           "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_39"
@@ -1343,7 +1517,7 @@
                         {
                           "type": "label",
                           "name": "CharacterDs3TabStats_span_40",
-                          "width": 27,
+                          "width": 30,
                           "height": 24,
                           "text": "120",
                           "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_40"
@@ -1352,48 +1526,53 @@
                     },
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabStats_div_54",
+                      "name": "CharacterDs3TabStats_div_68",
                       "width": 141,
                       "height": 10,
-                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_54",
+                      "layout": {
+                        "type": "vertical",
+                        "alignItems": "start"
+                      },
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_68",
                       "children": [
                         {
                           "type": "panel",
-                          "name": "CharacterDs3TabStats_div_55",
+                          "name": "CharacterDs3TabStats_div_69",
                           "width": 139,
                           "height": 8,
-                          "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_55"
+                          "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_69"
                         }
                       ]
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabStats_div_56",
+                      "name": "CharacterDs3TabStats_div_70",
                       "width": 141,
                       "height": 15,
                       "text": "/ 120",
-                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_56"
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_70"
                     }
                   ]
                 },
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabStats_div_57",
+                  "name": "CharacterDs3TabStats_div_71",
                   "width": 167,
                   "height": 81,
                   "layout": {
                     "type": "vertical",
+                    "alignItems": "start",
                     "paddingTop": 10,
                     "paddingRight": 12,
                     "paddingBottom": 10,
                     "paddingLeft": 12,
                     "spacingY": 6
                   },
-                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_57",
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_71",
                   "children": [
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabStats_div_58",
+                      "name": "CharacterDs3TabStats_div_72",
                       "width": 141,
                       "height": 24,
                       "layout": {
@@ -1412,7 +1591,7 @@
                         {
                           "type": "label",
                           "name": "CharacterDs3TabStats_span_42",
-                          "width": 20,
+                          "width": 22,
                           "height": 24,
                           "text": "85",
                           "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_42"
@@ -1421,27 +1600,31 @@
                     },
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabStats_div_59",
+                      "name": "CharacterDs3TabStats_div_73",
                       "width": 141,
                       "height": 10,
-                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_59",
+                      "layout": {
+                        "type": "vertical",
+                        "alignItems": "start"
+                      },
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_73",
                       "children": [
                         {
                           "type": "panel",
-                          "name": "CharacterDs3TabStats_div_60",
+                          "name": "CharacterDs3TabStats_div_74",
                           "width": 118,
                           "height": 8,
-                          "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_60"
+                          "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_74"
                         }
                       ]
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabStats_div_61",
+                      "name": "CharacterDs3TabStats_div_75",
                       "width": 141,
                       "height": 15,
                       "text": "/ 100",
-                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_61"
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_75"
                     }
                   ]
                 }
@@ -1449,193 +1632,606 @@
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabStats_div_62",
+              "name": "CharacterDs3TabStats_div_76_margin",
               "width": 520,
-              "height": 26,
+              "height": 36,
               "layout": {
-                "type": "horizontal",
-                "alignItems": "center",
-                "justifyContent": "start",
-                "spacingX": 8
+                "type": "vertical",
+                "paddingTop": 0,
+                "paddingBottom": 10
               },
               "children": [
                 {
-                  "type": "panel",
-                  "name": "CharacterDs3TabStats_div_63",
-                  "width": 4,
-                  "height": 16,
-                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_63"
-                },
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabStats_span_43",
-                  "width": 86,
+                  "type": "container",
+                  "name": "CharacterDs3TabStats_div_76",
+                  "width": 520,
                   "height": 26,
-                  "text": "基本資料",
-                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_43"
-                },
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabStats_span_44",
-                  "width": 50,
-                  "height": 14,
-                  "text": "PROFILE",
-                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_44"
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "justifyContent": "start",
+                    "spacingX": 8
+                  },
+                  "children": [
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabStats_div_77",
+                      "width": 4,
+                      "height": 16,
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_77"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_43",
+                      "width": 108,
+                      "height": 26,
+                      "text": "養成教官群",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_43"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_44",
+                      "width": 102,
+                      "height": 14,
+                      "text": "MENTOR LINEUP",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_44"
+                    }
+                  ]
                 }
               ]
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabStats_div_64",
+              "name": "CharacterDs3TabStats_div_78",
               "width": 520,
-              "height": 94,
+              "height": 156,
               "layout": {
                 "type": "grid",
                 "spacingX": 8,
                 "spacingY": 8,
                 "constraint": "fixed-col",
-                "constraintNum": 2,
-                "cellWidth": 256,
-                "cellHeight": 94
+                "constraintNum": 3,
+                "cellWidth": 168,
+                "cellHeight": 156
               },
               "children": [
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabStats_div_65",
-                  "width": 256,
-                  "height": 44,
+                  "name": "CharacterDs3TabStats_div_79",
+                  "opacity": 1,
+                  "width": 168,
+                  "height": 74,
                   "layout": {
-                    "type": "horizontal",
-                    "alignItems": "center",
+                    "type": "vertical",
                     "justifyContent": "start",
-                    "spacingX": 10,
-                    "paddingTop": 8,
-                    "paddingRight": 12,
-                    "paddingBottom": 8,
-                    "paddingLeft": 12
+                    "spacingY": 4,
+                    "paddingTop": 10,
+                    "paddingRight": 10,
+                    "paddingBottom": 10,
+                    "paddingLeft": 10
                   },
-                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_65",
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_79",
                   "children": [
                     {
-                      "type": "label",
-                      "name": "CharacterDs3TabStats_span_45",
-                      "width": 44,
-                      "height": 24,
-                      "text": "年齡",
-                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_45"
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_80",
+                      "width": 146,
+                      "height": 33,
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "justifyContent": "start",
+                        "spacingX": 6
+                      },
+                      "children": [
+                        {
+                          "type": "panel",
+                          "name": "CharacterDs3TabStats_div_81",
+                          "width": 32,
+                          "height": 32,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 32
+                          },
+                          "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_81",
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_45",
+                              "text": "關",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_45",
+                              "width": 32,
+                              "height": 32
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_82",
+                          "width": 30,
+                          "height": 33,
+                          "layout": {
+                            "type": "vertical",
+                            "alignItems": "start"
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_div_83",
+                              "width": 30,
+                              "height": 20,
+                              "text": "關羽",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_83"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_div_84",
+                              "width": 30,
+                              "height": 13,
+                              "text": "武·統",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_84"
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabStats_span_46",
-                      "width": 42,
-                      "height": 26,
-                      "text": "34 歲",
-                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_46"
+                      "name": "CharacterDs3TabStats_div_85",
+                      "width": 146,
+                      "height": 15,
+                      "text": "武力+2/週",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_85"
                     }
                   ]
                 },
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabStats_div_66",
-                  "width": 256,
-                  "height": 44,
+                  "name": "CharacterDs3TabStats_div_86",
+                  "opacity": 1,
+                  "width": 168,
+                  "height": 74,
                   "layout": {
-                    "type": "horizontal",
-                    "alignItems": "center",
+                    "type": "vertical",
                     "justifyContent": "start",
-                    "spacingX": 10,
-                    "paddingTop": 8,
-                    "paddingRight": 12,
-                    "paddingBottom": 8,
-                    "paddingLeft": 12
+                    "spacingY": 4,
+                    "paddingTop": 10,
+                    "paddingRight": 10,
+                    "paddingBottom": 10,
+                    "paddingLeft": 10
                   },
-                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_66",
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_86",
                   "children": [
                     {
-                      "type": "label",
-                      "name": "CharacterDs3TabStats_span_47",
-                      "width": 44,
-                      "height": 24,
-                      "text": "精力",
-                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_47"
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_87",
+                      "width": 146,
+                      "height": 33,
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "justifyContent": "start",
+                        "spacingX": 6
+                      },
+                      "children": [
+                        {
+                          "type": "panel",
+                          "name": "CharacterDs3TabStats_div_88",
+                          "width": 32,
+                          "height": 32,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 32
+                          },
+                          "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_88",
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_46",
+                              "text": "諸",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_46",
+                              "width": 32,
+                              "height": 32
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_89",
+                          "width": 45,
+                          "height": 33,
+                          "layout": {
+                            "type": "vertical",
+                            "alignItems": "start"
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_div_90",
+                              "width": 45,
+                              "height": 20,
+                              "text": "諸葛亮",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_90"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_div_91",
+                              "width": 45,
+                              "height": 13,
+                              "text": "智·政",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_91"
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabStats_span_48",
-                      "width": 61,
-                      "height": 24,
-                      "text": "85 / 100",
-                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_48"
+                      "name": "CharacterDs3TabStats_div_92",
+                      "width": 146,
+                      "height": 15,
+                      "text": "智力+2/週",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_92"
                     }
                   ]
                 },
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabStats_div_67",
-                  "width": 256,
-                  "height": 42,
+                  "name": "CharacterDs3TabStats_div_93",
+                  "opacity": 0.5,
+                  "width": 168,
+                  "height": 74,
                   "layout": {
-                    "type": "horizontal",
-                    "alignItems": "center",
+                    "type": "vertical",
                     "justifyContent": "start",
-                    "spacingX": 10,
-                    "paddingTop": 8,
-                    "paddingRight": 12,
-                    "paddingBottom": 8,
-                    "paddingLeft": 12
+                    "spacingY": 4,
+                    "paddingTop": 10,
+                    "paddingRight": 10,
+                    "paddingBottom": 10,
+                    "paddingLeft": 10
                   },
-                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_67",
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_93",
                   "children": [
                     {
-                      "type": "label",
-                      "name": "CharacterDs3TabStats_span_49",
-                      "width": 44,
-                      "height": 24,
-                      "text": "狀態",
-                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_49"
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_94",
+                      "width": 146,
+                      "height": 33,
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "justifyContent": "start",
+                        "spacingX": 6
+                      },
+                      "children": [
+                        {
+                          "type": "panel",
+                          "name": "CharacterDs3TabStats_div_95",
+                          "width": 32,
+                          "height": 32,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 32
+                          },
+                          "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_95",
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_47",
+                              "text": "趙",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_47",
+                              "width": 32,
+                              "height": 32
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_96",
+                          "width": 30,
+                          "height": 33,
+                          "layout": {
+                            "type": "vertical",
+                            "alignItems": "start"
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_div_97",
+                              "width": 30,
+                              "height": 20,
+                              "text": "趙雲",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_97"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_div_98",
+                              "width": 30,
+                              "height": 13,
+                              "text": "武·魅",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_98"
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabStats_span_50",
-                      "width": 50,
-                      "height": 24,
-                      "text": "Active",
-                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_50"
+                      "name": "CharacterDs3TabStats_div_99",
+                      "width": 146,
+                      "height": 15,
+                      "text": "未指派",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_99"
                     }
                   ]
                 },
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabStats_div_68",
-                  "width": 256,
-                  "height": 42,
+                  "name": "CharacterDs3TabStats_div_100",
+                  "opacity": 0.5,
+                  "width": 168,
+                  "height": 74,
                   "layout": {
-                    "type": "horizontal",
-                    "alignItems": "center",
+                    "type": "vertical",
                     "justifyContent": "start",
-                    "spacingX": 10,
-                    "paddingTop": 8,
-                    "paddingRight": 12,
-                    "paddingBottom": 8,
-                    "paddingLeft": 12
+                    "spacingY": 4,
+                    "paddingTop": 10,
+                    "paddingRight": 10,
+                    "paddingBottom": 10,
+                    "paddingLeft": 10
                   },
-                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_68",
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_100",
                   "children": [
                     {
-                      "type": "label",
-                      "name": "CharacterDs3TabStats_span_51",
-                      "width": 44,
-                      "height": 24,
-                      "text": "等級",
-                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_51"
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_101",
+                      "width": 146,
+                      "height": 33,
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "justifyContent": "start",
+                        "spacingX": 6
+                      },
+                      "children": [
+                        {
+                          "type": "panel",
+                          "name": "CharacterDs3TabStats_div_102",
+                          "width": 32,
+                          "height": 32,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 32
+                          },
+                          "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_102",
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_48",
+                              "text": "龐",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_48",
+                              "width": 32,
+                              "height": 32
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_103",
+                          "width": 30,
+                          "height": 33,
+                          "layout": {
+                            "type": "vertical",
+                            "alignItems": "start"
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_div_104",
+                              "width": 30,
+                              "height": 20,
+                              "text": "龐統",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_104"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_div_105",
+                              "width": 30,
+                              "height": 13,
+                              "text": "智·運",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_105"
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabStats_span_52",
-                      "width": 56,
-                      "height": 24,
-                      "text": "42 / 60",
-                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_52"
+                      "name": "CharacterDs3TabStats_div_106",
+                      "width": 146,
+                      "height": 15,
+                      "text": "未指派",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_106"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabStats_div_107",
+                  "opacity": 0.5,
+                  "width": 168,
+                  "height": 74,
+                  "layout": {
+                    "type": "vertical",
+                    "justifyContent": "start",
+                    "spacingY": 4,
+                    "paddingTop": 10,
+                    "paddingRight": 10,
+                    "paddingBottom": 10,
+                    "paddingLeft": 10
+                  },
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_107",
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_108",
+                      "width": 146,
+                      "height": 33,
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "justifyContent": "start",
+                        "spacingX": 6
+                      },
+                      "children": [
+                        {
+                          "type": "panel",
+                          "name": "CharacterDs3TabStats_div_109",
+                          "width": 32,
+                          "height": 32,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 32
+                          },
+                          "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_109",
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_49",
+                              "text": "黃",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_49",
+                              "width": 32,
+                              "height": 32
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_110",
+                          "width": 30,
+                          "height": 33,
+                          "layout": {
+                            "type": "vertical",
+                            "alignItems": "start"
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_div_111",
+                              "width": 30,
+                              "height": 20,
+                              "text": "黃忠",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_111"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_div_112",
+                              "width": 30,
+                              "height": 13,
+                              "text": "武·技",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_112"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_div_113",
+                      "width": 146,
+                      "height": 15,
+                      "text": "未指派",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_113"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabStats_div_114",
+                  "opacity": 0.5,
+                  "width": 168,
+                  "height": 74,
+                  "layout": {
+                    "type": "vertical",
+                    "justifyContent": "start",
+                    "spacingY": 4,
+                    "paddingTop": 10,
+                    "paddingRight": 10,
+                    "paddingBottom": 10,
+                    "paddingLeft": 10
+                  },
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_114",
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_115",
+                      "width": 146,
+                      "height": 33,
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "justifyContent": "start",
+                        "spacingX": 6
+                      },
+                      "children": [
+                        {
+                          "type": "panel",
+                          "name": "CharacterDs3TabStats_div_116",
+                          "width": 32,
+                          "height": 32,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 32
+                          },
+                          "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_116",
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_span_50",
+                              "text": "馬",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_50",
+                              "width": 32,
+                              "height": 32
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabStats_div_117",
+                          "width": 30,
+                          "height": 33,
+                          "layout": {
+                            "type": "vertical",
+                            "alignItems": "start"
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_div_118",
+                              "width": 30,
+                              "height": 20,
+                              "text": "馬超",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_118"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabStats_div_119",
+                              "width": 30,
+                              "height": 13,
+                              "text": "武·魅",
+                              "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_119"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_div_120",
+                      "width": 146,
+                      "height": 15,
+                      "text": "未指派",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_120"
                     }
                   ]
                 }

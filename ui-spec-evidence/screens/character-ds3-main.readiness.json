@@ -1,12 +1,12 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "character-ds3-main",
-  "generatedAt": "2026-05-02T15:24:47.546Z",
+  "generatedAt": "2026-11-04T15:26:22.003Z",
   "verdict": "not-ready",
-  "readinessScore": 0.917,
+  "readinessScore": 0.958,
   "summary": {
     "blockerUnits": 1,
-    "actionUnits": 2,
+    "actionUnits": 1,
     "bounded": true,
     "nextCriticalAction": "capture Cocos Editor target screen and run final compare"
   },
@@ -14,14 +14,14 @@
     "layout": "assets/resources/ui-spec/layouts/character-ds3-main.json",
     "skin": "assets/resources/ui-spec/skins/character-ds3-main.skin.json",
     "screen": "assets/resources/ui-spec/screens/character-ds3-main.json",
-    "captureProtocol": "assets/resources/ui-spec/screens/character-ds3-main.final-capture-protocol.json",
-    "zoneOwnership": "assets/resources/ui-spec/screens/character-ds3-main.zone-ownership.json",
+    "captureProtocol": "ui-spec-evidence/screens/character-ds3-main.final-capture-protocol.json",
+    "zoneOwnership": "ui-spec-evidence/screens/character-ds3-main.zone-ownership.json",
     "tabRouting": "assets/resources/ui-spec/screens/character-ds3-main.tab-routing.json",
-    "preload": "assets/resources/ui-spec/screens/character-ds3-main.preload.json",
-    "performance": "assets/resources/ui-spec/screens/character-ds3-main.performance.json",
-    "bakeManifest": "assets/resources/ui-spec/layouts/character-ds3-main.layout.bake-manifest.json",
-    "artAuthorityWaivers": "assets/resources/ui-spec/screens/character-ds3-main.art-authority-waivers.json",
-    "finalVerdict": "artifacts/skill-test-html-to-ucuf/r119-radar-source-geometry/character-ds3-main.html-cocos-verdict.json"
+    "preload": "ui-spec-evidence/screens/character-ds3-main.preload.json",
+    "performance": "ui-spec-evidence/screens/character-ds3-main.performance.json",
+    "bakeManifest": "ui-spec-evidence/layouts/character-ds3-main.layout.bake-manifest.json",
+    "artAuthorityWaivers": "ui-spec-evidence/screens/character-ds3-main.art-authority-waivers.json",
+    "finalVerdict": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3e/character-ds3-main.html-cocos-verdict.json"
   },
   "gates": {
     "finalGate": {
@@ -80,45 +80,45 @@
       "checks": [
         {
           "id": "Overview",
-          "mount": "CharacterDs3Main_div_8",
+          "mount": "ContentSlot",
           "exists": true,
           "matchType": "name",
-          "childPanelClass": "CharacterDs3OverviewChild"
+          "childPanelClass": "CharacterDs3OverviewChildPanel"
         },
         {
           "id": "Stats",
-          "mount": "CharacterDs3Main_div_8",
+          "mount": "ContentSlot",
           "exists": true,
           "matchType": "name",
-          "childPanelClass": "CharacterDs3StatsChild"
-        },
-        {
-          "id": "Tactics",
-          "mount": "CharacterDs3Main_div_8",
-          "exists": true,
-          "matchType": "name",
-          "childPanelClass": "CharacterDs3TacticsChild"
+          "childPanelClass": "CharacterDs3StatsChildPanel"
         },
         {
           "id": "Bloodline",
-          "mount": "CharacterDs3Main_div_8",
+          "mount": "ContentSlot",
           "exists": true,
           "matchType": "name",
-          "childPanelClass": "CharacterDs3BloodlineChild"
+          "childPanelClass": "CharacterDs3BloodlineChildPanel"
+        },
+        {
+          "id": "Tactics",
+          "mount": "ContentSlot",
+          "exists": true,
+          "matchType": "name",
+          "childPanelClass": "CharacterDs3TacticsChildPanel"
         },
         {
           "id": "Equip",
-          "mount": "CharacterDs3Main_div_8",
+          "mount": "ContentSlot",
           "exists": true,
           "matchType": "name",
-          "childPanelClass": "CharacterDs3EquipChild"
+          "childPanelClass": "CharacterDs3EquipChildPanel"
         },
         {
           "id": "Aptitude",
-          "mount": "CharacterDs3Main_div_8",
+          "mount": "ContentSlot",
           "exists": true,
           "matchType": "name",
-          "childPanelClass": "CharacterDs3AptitudeChild"
+          "childPanelClass": "CharacterDs3AptitudeChildPanel"
         }
       ],
       "missing": []
@@ -126,18 +126,30 @@
     "fragmentGeometry": {
       "status": "pass",
       "workUnits": 0,
-      "summary": "8 referenced fragments follow fill-root geometry contract",
+      "summary": "9 referenced fragments follow fill-root geometry contract",
       "checks": [
         {
-          "fragment": "fragments/layouts/character-ds3-overview-content",
+          "fragment": "fragments/layouts/character-ds3-bloodline-bloodline-fullscreen",
           "source": "layout.defaultFragment",
-          "slotId": "CharacterDs3Main_div_8",
+          "slotId": "CharacterDs3Main_div_4",
           "status": "pass",
           "code": "fill-root-ok",
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-overview-content.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-v3\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-bloodline-bloodline-fullscreen.json",
+          "path": "fragments/layouts/character-ds3-bloodline-bloodline-fullscreen.json"
+        },
+        {
+          "fragment": "fragments/layouts/character-ds3-overview-content",
+          "source": "layout.defaultFragment",
+          "slotId": "ContentSlot",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife-wt-v3\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-overview-content.json",
           "path": "fragments/layouts/character-ds3-overview-content.json"
         },
         {
@@ -149,7 +161,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-story-strip-collapsed.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-v3\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-story-strip-collapsed.json",
           "path": "fragments/layouts/character-ds3-story-strip-collapsed.json"
         },
         {
@@ -161,104 +173,97 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-story-strip-open.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-v3\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-story-strip-open.json",
           "path": "fragments/layouts/character-ds3-story-strip-open.json"
         },
         {
           "fragment": "fragments/layouts/character-ds3-stats-content",
           "source": "screen.tabRouting",
           "tabId": "Stats",
-          "slotId": "CharacterDs3Main_div_8",
+          "slotId": "ContentSlot",
           "status": "pass",
           "code": "fill-root-ok",
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-stats-content.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-v3\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-stats-content.json",
           "path": "fragments/layouts/character-ds3-stats-content.json"
-        },
-        {
-          "fragment": "fragments/layouts/character-ds3-tactics-content",
-          "source": "screen.tabRouting",
-          "tabId": "Tactics",
-          "slotId": "CharacterDs3Main_div_8",
-          "status": "pass",
-          "code": "fill-root-ok",
-          "summary": "fragment mount layers fill lazySlot",
-          "recommendation": null,
-          "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-tactics-content.json",
-          "path": "fragments/layouts/character-ds3-tactics-content.json"
         },
         {
           "fragment": "fragments/layouts/character-ds3-bloodline-content",
           "source": "screen.tabRouting",
           "tabId": "Bloodline",
-          "slotId": "CharacterDs3Main_div_8",
+          "slotId": "ContentSlot",
           "status": "pass",
           "code": "fill-root-ok",
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-bloodline-content.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-v3\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-bloodline-content.json",
           "path": "fragments/layouts/character-ds3-bloodline-content.json"
+        },
+        {
+          "fragment": "fragments/layouts/character-ds3-tactics-content",
+          "source": "screen.tabRouting",
+          "tabId": "Tactics",
+          "slotId": "ContentSlot",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife-wt-v3\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-tactics-content.json",
+          "path": "fragments/layouts/character-ds3-tactics-content.json"
         },
         {
           "fragment": "fragments/layouts/character-ds3-equip-content",
           "source": "screen.tabRouting",
           "tabId": "Equip",
-          "slotId": "CharacterDs3Main_div_8",
+          "slotId": "ContentSlot",
           "status": "pass",
           "code": "fill-root-ok",
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-equip-content.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-v3\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-equip-content.json",
           "path": "fragments/layouts/character-ds3-equip-content.json"
         },
         {
           "fragment": "fragments/layouts/character-ds3-aptitude-content",
           "source": "screen.tabRouting",
           "tabId": "Aptitude",
-          "slotId": "CharacterDs3Main_div_8",
+          "slotId": "ContentSlot",
           "status": "pass",
           "code": "fill-root-ok",
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-aptitude-content.json",
+          "filePath": "C:\\Users\\User\\3KLife-wt-v3\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-aptitude-content.json",
           "path": "fragments/layouts/character-ds3-aptitude-content.json"
         }
       ],
       "failures": []
     },
     "textBinding": {
-      "status": "warn",
-      "workUnits": 1,
-      "summary": "1/1 dynamic text candidates missing bind/i18n contract",
-      "totalTextNodes": 17,
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0/1 dynamic text candidates missing bind/i18n contract",
+      "totalTextNodes": 20,
       "dynamicCandidateCount": 1,
-      "missingContractCount": 1,
-      "samples": [
-        {
-          "name": "CharacterDs3Main_div_3",
-          "path": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_3",
-          "text": "燕 人 武 聖"
-        }
-      ]
+      "missingContractCount": 0,
+      "samples": []
     },
     "visualPolicy": {
       "status": "pass",
       "workUnits": 0,
-      "summary": "5 clip/mask geometry entries, 1 small texture entries, 0 unsafe auto-bake entries",
-      "totalEntries": 7,
+      "summary": "11 clip/mask geometry entries, 0 small texture entries, 0 unsafe auto-bake entries",
+      "totalEntries": 12,
       "byBakeAction": {
         "manual-art-asset": 1,
-        "review-only": 1,
-        "converter-geometry": 5
+        "converter-geometry": 11
       },
-      "clipGeometryCount": 5,
-      "smallTextureCount": 1,
+      "clipGeometryCount": 11,
+      "smallTextureCount": 0,
       "unsafeAutoBakeCount": 0
     },
     "loading": {
@@ -266,29 +271,29 @@
       "workUnits": 0,
       "summary": "preload/performance sidecars present and current",
       "actualLayoutStats": {
-        "nodeCount": 36,
+        "nodeCount": 46,
         "deferredNodeCount": 0,
-        "totalNodeCount": 36,
-        "maxDepth": 6,
+        "totalNodeCount": 46,
+        "maxDepth": 7,
         "colorRectCount": 0,
-        "lazySlotCount": 2,
+        "lazySlotCount": 3,
         "warmupHints": {
           "next-frame": 0,
           "idle": 0,
           "tab-hover": 0,
-          "manual": 1,
+          "manual": 2,
           "first-frame": 1
         }
       },
       "reportedRendering": {
-        "nodeCount": 36,
+        "nodeCount": 46,
         "deferredNodeCount": 0,
-        "totalNodeCount": 36,
-        "maxDepth": 6,
-        "estimatedDrawCalls": 3,
+        "totalNodeCount": 46,
+        "maxDepth": 7,
+        "estimatedDrawCalls": 4,
         "colorRectCount": 0
       },
-      "skinSlotCount": 401,
+      "skinSlotCount": 884,
       "issues": []
     }
   },
@@ -297,12 +302,6 @@
       "severity": "blocker",
       "code": "final-gate",
       "summary": "no measured Cocos Editor final compare verdict",
-      "workUnits": 1
-    },
-    {
-      "severity": "warn",
-      "code": "text-binding",
-      "summary": "1/1 dynamic text candidates missing bind/i18n contract",
       "workUnits": 1
     }
   ]
