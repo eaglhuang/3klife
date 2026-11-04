@@ -53,6 +53,11 @@ export const NATION_DEFS: readonly NationDef[] = [
     { id: 'nanman', name: '南蠻', leaderId: 'meng-huo', profile: 'RAIDER', territories: 2, troops: 3500, relation: -10 },
 ];
 
+/** 他國等待玩家回覆的提議（PROG-2-1770） */
+export type RivalProposal =
+    | { readonly kind: 'ALLIANCE' }
+    | { readonly kind: 'TRADE'; readonly giveGold: number; readonly askFood: number };
+
 export interface NationState {
     readonly id: string;
     readonly troops: number;
@@ -80,6 +85,10 @@ export interface NationState {
     readonly officerPower?: number;
     /** 領地歸零而滅亡（PROG-2-1769）；滅亡後不再出兵，領地恢復時解除 */
     readonly fallen?: boolean;
+    /** 等待玩家回覆的提議（PROG-2-1770） */
+    readonly proposal?: RivalProposal;
+    /** 到這一季（totalSeasonsElapsed）之前不再提議（PROG-2-1770） */
+    readonly proposalBlockedUntil?: number;
 }
 
 /** 招募擲骰的獨立亂數（依勢力與季數定種子），不消耗局內亂數流，免得改動其他既有擲骰結果 */
@@ -399,6 +408,19 @@ export function attachRivalOfficers(
 }
 
 /** 讀存檔：缺漏的勢力補初始值，未知勢力丟棄，數值夾在合法範圍 */
+function proposalFieldsOf(s: Partial<NationState>): Pick<NationState, 'proposal' | 'proposalBlockedUntil'> {
+    const p = s.proposal;
+    const proposal: RivalProposal | undefined = p?.kind === 'ALLIANCE'
+        ? { kind: 'ALLIANCE' }
+        : p?.kind === 'TRADE' && Number.isFinite(p.giveGold) && Number.isFinite(p.askFood)
+            ? { kind: 'TRADE', giveGold: p.giveGold, askFood: p.askFood }
+            : undefined;
+    return {
+        ...(proposal ? { proposal } : {}),
+        ...(Number.isFinite(s.proposalBlockedUntil) ? { proposalBlockedUntil: s.proposalBlockedUntil } : {}),
+    };
+}
+
 export function normalizeRivalWorld(raw: unknown): RivalWorld {
     const base = createRivalWorld();
     const list = Array.isArray((raw as { nations?: unknown } | null)?.nations) ? (raw as { nations: unknown[] }).nations : [];
@@ -474,6 +496,7 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
                 roster: rosterOf(s.roster),
                 bonds: bondsOf(s.bonds),
                 ...(s.fallen === true ? { fallen: true } : {}),
+                ...proposalFieldsOf(s),
                 ...(officerRoster
                     ? { officerRoster, ...(typeof s.officerPower === 'number' && Number.isFinite(s.officerPower) ? { officerPower: Math.max(0, s.officerPower) } : {}) }
                     : {}),

@@ -785,9 +785,89 @@
               "left": 430
             },
             "width": 720,
-            "height": 380,
+            "height": 200,
             "text": "",
             "styleSlot": "rival.label.log"
+          },
+          {
+            "type": "container",
+            "name": "ProposalGroup",
+            "id": "proposalGroup",
+            "widget": {
+              "top": 560,
+              "left": 430
+            },
+            "width": 720,
+            "height": 162,
+            "children": [
+              {
+                "type": "label",
+                "name": "ProposalLabel",
+                "id": "proposalLabel",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 720,
+                "height": 84,
+                "text": "",
+                "styleSlot": "rival.label.log"
+              },
+              {
+                "type": "button",
+                "name": "BtnProposalAccept",
+                "id": "btnProposalAccept",
+                "widget": {
+                  "top": 90,
+                  "left": 0
+                },
+                "width": 170,
+                "height": 72,
+                "skinSlot": "rival.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnProposalAcceptLabel",
+                    "id": "btnProposalAcceptLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "接受",
+                    "styleSlot": "rival.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnProposalReject",
+                "id": "btnProposalReject",
+                "widget": {
+                  "top": 90,
+                  "left": 182
+                },
+                "width": 170,
+                "height": 72,
+                "skinSlot": "rival.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnProposalRejectLabel",
+                    "id": "btnProposalRejectLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "拒絕",
+                    "styleSlot": "rival.label.button"
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
