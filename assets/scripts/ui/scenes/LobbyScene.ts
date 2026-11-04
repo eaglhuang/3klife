@@ -2728,6 +2728,7 @@ export class LobbyScene extends Component {
             random: Math.random,
             leaderName: (id) => this._generals.find((g) => g.id === id)?.name,
             recordBattle: (squad, nationId, battle) => { services().session.recordRivalCampaign(squad, nationId, battle); },
+            respondProposal: (nationId, accept) => services().session.respondRivalProposal(nationId, accept, (amount) => { gacha.grantCurrency('gold', amount); }),
         });
         this._rival = rival;
         const act = (run: () => Promise<void>): void => {
@@ -2746,6 +2747,8 @@ export class LobbyScene extends Component {
             { buttonId: 'btnAlliance', handler: () => { act(() => rival.alliance()); } },
             { buttonId: 'btnWar', handler: () => { act(() => rival.war()); } },
             { buttonId: 'btnCampaign', handler: () => { act(() => rival.campaign()); } },
+            { buttonId: 'btnProposalAccept', handler: () => { act(() => rival.respondProposal(true)); } },
+            { buttonId: 'btnProposalReject', handler: () => { act(() => rival.respondProposal(false)); } },
         ]);
         this._rivalHost.node.active = false;
         this._sessionEventUnsubscribers.push(

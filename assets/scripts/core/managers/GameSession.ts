@@ -23,6 +23,7 @@
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
 import { resolveRivalPlayerEvents } from '../systems/RivalPlayerEvents';
+import { respondToRivalProposal, type ProposalResponse } from '../systems/RivalProposals';
 import { resolveTallyName, troopNameOf } from '../systems/TallySlotView';
 import { tallyProducedLine, tallyStarUpLine } from '../systems/TallyScripts';
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
@@ -1823,6 +1824,17 @@ export class GameSession {
         if (result.give.resource === 'gold') wallet.spend(result.give.amount);
         if (result.get.resource === 'gold') wallet.grant(result.get.amount);
         this._rivals = result.world;
+        if (this._autoSave && this._save) await this.save();
+        return result;
+    }
+
+    /** 回覆他國提議（§G-1，PROG-2-1770）：同意商隊時扣糧草、黃金走 grantGold；成功時存檔（若有開啟） */
+    public async respondRivalProposal(nationId: string, accept: boolean, grantGold: (amount: number) => void): Promise<ProposalResponse> {
+        const result = respondToRivalProposal(this._rivals, nationId, accept, this._military.food, this._clock.state.totalSeasonsElapsed);
+        if (!result.ok) return result;
+        this._rivals = result.world;
+        this._military = { ...this._military, food: this._military.food - result.foodSpent };
+        if (result.goldGained > 0) grantGold(result.goldGained);
         if (this._autoSave && this._save) await this.save();
         return result;
     }

@@ -14,6 +14,7 @@ import {
     autoResolveBattle, declareWar, nationDef, proposeAlliance, relationTier, sendGift,
     type AutoBattleResult, type BattleGeneral, type RivalWorld,
 } from '../../core/systems/RivalNations';
+import { formatRivalProposal, pendingRivalProposal } from '../../core/systems/RivalProposals';
 
 export interface RivalDiplomacyFlowView {
     texts: Record<string, string>;
@@ -34,6 +35,8 @@ export interface RivalDiplomacyDeps {
     leaderName?: (generalId: string) => string | undefined;
     /** 出征結算留離線戰鬥快照（GameSession.recordRivalCampaign，PROG-2-1189）；在 setWorld 存檔前呼叫 */
     recordBattle?: (squad: readonly BattleGeneral[], nationId: string, battle: AutoBattleResult) => void;
+    /** 回覆他國提議（GameSession.respondRivalProposal，PROG-2-1770） */
+    respondProposal?: (nationId: string, accept: boolean) => Promise<{ readonly message: string }>;
 }
 
 export const RIVAL_NATION_SLOTS = NATION_DEFS.length;
@@ -84,6 +87,14 @@ export class RivalDiplomacyController {
         this._lines = ['【出征結算】', ...battle.lines];
     }
 
+    /** 回覆目前顯示的他國提議 */
+    public async respondProposal(accept: boolean): Promise<void> {
+        const pending = pendingRivalProposal(this._deps.world());
+        if (!pending || !this._deps.respondProposal) return;
+        const result = await this._deps.respondProposal(pending.nationId, accept);
+        this._lines = [result.message];
+    }
+
     /** 各勢力君主武將 id（依按鈕順序），供列表畫小頭像 */
     public leaderIds(): string[] {
         return NATION_DEFS.map((def) => def.leaderId);
@@ -112,6 +123,10 @@ export class RivalDiplomacyController {
         enabled.btnAlliance = !state.allied && !state.atWar;
         enabled.btnWar = !state.atWar;
         enabled.btnCampaign = squad.length > 0;
-        return { texts, actives: {}, enabled };
+        const pending = pendingRivalProposal(world);
+        texts.proposalLabel = pending ? formatRivalProposal(pending.nationId, pending.proposal) : '';
+        texts.btnProposalAcceptLabel = pending?.proposal.kind === 'TRADE' ? '同意' : '接受';
+        const actives = { proposalGroup: !!pending };
+        return { texts, actives, enabled };
     }
 }
