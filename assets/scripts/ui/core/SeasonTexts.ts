@@ -21,6 +21,32 @@ export function seasonDisplayText(lookup: BreedTextLookup, state: Pick<GameTimeS
     return localized === SEASON_DISPLAY_KEY ? fillBreedText(SEASON_DISPLAY_FALLBACK_ZH_TW, args) : localized;
 }
 
+/** 季節主題（§H UI_SEASON_SPRING～WINTER）的 i18n key 與 zh-TW 預設，依季序 1 春～4 冬（PROG-2-1718） */
+export const SEASON_THEME_KEYS: Record<SeasonIndex, string> = {
+    1: 'ui.season.spring',
+    2: 'ui.season.summer',
+    3: 'ui.season.autumn',
+    4: 'ui.season.winter',
+};
+export const SEASON_THEME_FALLBACK_ZH_TW: Record<SeasonIndex, string> = {
+    1: '春——萬物復甦',
+    2: '夏——烽火連天',
+    3: '秋——策馬奔騰',
+    4: '冬——雪夜屯兵',
+};
+
+/** 季節主題句；語系表查不到時退回 zh-TW 預設 */
+export function seasonThemeText(lookup: BreedTextLookup, season: SeasonIndex): string {
+    const key = SEASON_THEME_KEYS[season];
+    const localized = lookup(key);
+    return localized === key ? SEASON_THEME_FALLBACK_ZH_TW[season] : localized;
+}
+
+/** 換季開場提示（§G 季度開始）：「第 N 年 M 季　春——萬物復甦」 */
+export function seasonStartText(lookup: BreedTextLookup, state: Pick<GameTimeState, 'currentYear' | 'currentSeason'>): string {
+    return `${seasonDisplayText(lookup, state)}　${seasonThemeText(lookup, state.currentSeason)}`;
+}
+
 /** 季節效果提示的 zh-TW 預設：只列已接線的效果（春稅收、夏建設尚無系統，不列出） */
 export const SEASON_EFFECT_FALLBACK_ZH_TW = {
     none: '本季無特殊效果',

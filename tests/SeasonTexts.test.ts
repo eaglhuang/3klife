@@ -5,7 +5,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { formatSeasonLabel } from '../assets/scripts/core/systems/GameClock';
-import { SEASON_DISPLAY_KEY, seasonDisplayText, seasonEffectHintText } from '../assets/scripts/ui/core/SeasonTexts';
+import { SEASON_DISPLAY_KEY, seasonDisplayText, seasonEffectHintText, seasonStartText, seasonThemeText } from '../assets/scripts/ui/core/SeasonTexts';
 
 export function createSeasonTextsSuite(): TestSuite {
     const suite = new TestSuite('SeasonTexts (大廳季節文案 PROG-2-0730)');
@@ -41,6 +41,18 @@ export function createSeasonTextsSuite(): TestSuite {
         const lookup = (key: string, ...args: string[]) => (key.startsWith('ui.season.effect.') ? `${key}:${args.join(',')}` : key);
         assert.equals('ui.season.effect.training:1.25', seasonEffectHintText(lookup, 2));
         assert.equals('ui.season.effect.none:', seasonEffectHintText(lookup, 1));
+    });
+
+    suite.test('季節主題與換季開場提示（PROG-2-1718）：查不到語系表退回 §H 預設', () => {
+        const missingLookup = (key: string) => key;
+        assert.equals('春——萬物復甦', seasonThemeText(missingLookup, 1));
+        assert.equals('冬——雪夜屯兵', seasonThemeText(missingLookup, 4));
+        assert.equals('第 3 年 2 季　夏——烽火連天', seasonStartText(missingLookup, { currentYear: 3, currentSeason: 2 }));
+    });
+
+    suite.test('換季開場提示採用語系表的季節主題', () => {
+        const lookup = (key: string, ...args: string[]) => (key === 'ui.season.autumn' ? 'Autumn' : key === SEASON_DISPLAY_KEY ? `Y${args[0]} S${args[1]}` : key);
+        assert.equals('Y1 S3　Autumn', seasonStartText(lookup, { currentYear: 1, currentSeason: 3 }));
     });
 
     return suite;
