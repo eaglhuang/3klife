@@ -54,13 +54,13 @@ export function createWarehousePanelControllerSuite(): TestSuite {
 
     suite.test('滿倉：已用達容量時自動顯示滿倉提示，存入被拒時也會顯示', () => {
         const full = new WarehousePanelController(makeDeps({ usedSlots: () => 50 }));
-        assert.equals('倉庫已滿，請擴容或整理', full.getFlowView().texts.warehouseNotice);
+        assert.equals('主城倉庫已滿！請清理或擴充空間。', full.getFlowView().texts.warehouseNotice);
         assert.isTrue(full.getFlowView().actives.warehouseNotice);
 
         const rejected = new WarehousePanelController(makeDeps());
         rejected.reportStore({ ok: false, reason: 'full', usedSlots: 12 });
         assert.isTrue(rejected.getFlowView().actives.warehouseNotice);
-        assert.equals('倉庫已滿，請擴容或整理', rejected.getFlowView().texts.warehouseNotice);
+        assert.equals('主城倉庫已滿！請清理或擴充空間。', rejected.getFlowView().texts.warehouseNotice);
     });
 
     suite.test('擴容失敗時顯示失敗提示，容量不因此改變', () => {

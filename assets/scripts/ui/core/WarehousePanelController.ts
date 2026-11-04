@@ -9,6 +9,7 @@
  *
  * Unity 對照：Presenter。Button onClick 只呼叫 expandSelected()，畫面層拿 getFlowView() 一次刷新。
  */
+import { warehouseFullLine } from '../../core/systems/BackpackScripts';
 import {
     canExpandWarehouse,
     warehouseCapacity,
@@ -44,7 +45,7 @@ export interface WarehousePanelDeps {
 /** 清單最多列出幾件，其餘以「…另有 N 件」帶過 */
 export const WAREHOUSE_LIST_MAX_LINES = 8;
 
-const FULL_NOTICE = '倉庫已滿，請擴容或整理';
+const FULL_NOTICE = warehouseFullLine();
 
 export class WarehousePanelController {
     private _notice: string | null = null;
@@ -107,7 +108,7 @@ export class WarehousePanelController {
         const expandable = this.expandable();
         const notice = this._notice ?? (this.isFull() ? FULL_NOTICE : '');
         const texts: Record<string, string> = {
-            warehouseTitle: '武將倉庫',
+            warehouseTitle: '主城倉庫',
             warehouseCapacity: `容量 ${used}/${capacity}`,
             warehouseNotice: notice,
             btnWarehouseSortLabel: `排序：${WAREHOUSE_SORT_LABEL[this._sortKey]}`,

@@ -341,6 +341,7 @@ export class GeneralDetailComposite extends CompositePanel {
         return new GearSlotPickController({
             records: () => services().session.inventoryRecords,
             generalUid: () => this._currentConfig?.id ?? '',
+            generalName: () => this._currentConfig?.name ?? '',
             equip: (gearUid, generalUid, slotId) => services().session.equipGear(gearUid, generalUid, slotId),
             unequip: (generalUid, slotId) => services().session.unequipGear(generalUid, slotId),
             setLocked: (gearUid, locked) => services().session.setInventoryLocked(gearUid, locked),

@@ -39,7 +39,7 @@
             "id": "warehouseTitle",
             "width": 944,
             "height": 48,
-            "text": "武將倉庫",
+            "text": "主城倉庫",
             "styleSlot": "wp.label.title"
           },
           {

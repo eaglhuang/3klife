@@ -134,6 +134,7 @@ export class GeneralListComposite extends CompositePanel {
     private readonly _retirementFlow = new RetirementFlowController({
         roster: () => services().session.roster,
         retireGeneral: (id, options) => services().session.retireGeneral(id, options),
+        hasEquippedGear: (id) => services().session.inventoryRecords.some((record) => record.Item_Type === 'OTHER' && record.equippedBy === id),
     });
     private _filterMode: GeneralFilterMode = 'all';
     private _sortKey: SortKey | null = null;

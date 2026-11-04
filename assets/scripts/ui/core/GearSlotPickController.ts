@@ -18,6 +18,7 @@ import type { GearEquipRejectReason, GearEquipResult } from '../../core/systems/
 import type { InventoryRecord } from '../../core/systems/InventoryProjection';
 import { GEAR_SLOT_NAMES } from '../../core/systems/GearPageSlots';
 import type { GearDecomposeResult } from '../../core/systems/GearLockDecompose';
+import { equipHorseLine } from '../../core/systems/BackpackScripts';
 
 /** 選取面板的列節點數（與 layout 固定列對應，之後接 layout 時使用）。 */
 export const GEAR_PICK_ROW_SLOTS = 8;
@@ -25,6 +26,8 @@ export const GEAR_PICK_ROW_SLOTS = 8;
 export interface GearSlotPickDeps {
     records: () => readonly InventoryRecord[];
     generalUid: () => string;
+    /** 目前武將姓名；裝備名馬的劇本句用（§G），沒給時用一般提示 */
+    generalName?: () => string;
     equip: (gearUid: string, generalUid: string, slotId: EquipSlot) => GearEquipResult;
     unequip: (generalUid: string, slotId: EquipSlot) => GearEquipResult;
     /** 設定鎖定（BAG-07，GameSession.setInventoryLocked）；回傳是否找到該列 */
@@ -144,7 +147,8 @@ export class GearSlotPickController {
             return null;
         }
         const result = this._deps.equip(row.gearUid, this._deps.generalUid(), this._slot);
-        this._finish(result, `已穿上 ${row.name}`);
+        const generalName = this._deps.generalName?.();
+        this._finish(result, this._slot === 'MOUNT' && generalName ? equipHorseLine(row.name, generalName) : `已穿上 ${row.name}`);
         return result;
     }
 
