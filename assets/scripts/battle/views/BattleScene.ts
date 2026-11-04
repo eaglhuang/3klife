@@ -268,8 +268,6 @@ export class BattleScene extends Component {
       this.hud           = (hudResult.hud          ?? this.hud)         as any;
       this.resultPopup   = (hudResult.resultPopup  ?? this.resultPopup) as any;
       this.battleLogPanel   = (ensureBattleLogPanel(this.battleLogPanel, canvas) ?? this.battleLogPanel) as any;
-      if (enemyScale?.adaptiveHint) this.battleLogPanel?.append(enemyScale.adaptiveHint);
-      for (const line of openingAiLogLinesOf(egId, eg.name, difficulty)) this.battleLogPanel?.append(line);
       this.battleScenePanel = (ensureBattleScenePanel(this.battleScenePanel, canvas) ?? this.battleScenePanel) as any;
       this.boardRenderer    = (ensureBoardRenderer(this.boardRenderer, this.node.scene, this.boardGapRatio, this.boardTargetDepth) ?? this.boardRenderer) as BoardRenderer;
       if (this.boardRenderer) {
@@ -413,6 +411,8 @@ export class BattleScene extends Component {
       this.battleLogPanel?.append(`第 ${snap.turn} 回合開始，糧草 ${snap.playerFood}`);
       const deputyLine = deputySupportLine(support.deputy?.name, support.deputyBonus.foodCapBonus);
       if (deputyLine) this.battleLogPanel?.append(deputyLine);
+      if (enemyScale?.adaptiveHint) this.battleLogPanel?.append(enemyScale.adaptiveHint);
+      for (const line of openingAiLogLinesOf(egId, eg.name, difficulty)) this.battleLogPanel?.append(line);
       this.presentSceneGambitFeedback();
       this.playTurnBanner(Faction.Player);
 
