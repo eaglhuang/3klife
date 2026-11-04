@@ -82,7 +82,7 @@
 | 運氣系統.md (doc_spec_0035) | FateBlessing.ts, LuckVisibility.ts（E-1 前期隱藏、E-4 Lv46 解鎖）, BreedingSystem.ts（E-2 天命波動）, LuckThresholds.ts（E-3 紫因子 LUK 上限）, LuckEventRate.ts（E-5 事件率，PROG-2-1349）, FactorAwakening.ts（E-6 覺醒速度） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | 道具系統（付費免費道具）.md (doc_spec_0036) | FertilityBoost.ts, ItemBagView.ts, ItemEffectDispatcher.ts, ItemRefreshEffect.ts, PlayerInventory.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 領地治理系統.md (doc_spec_0037) | ChildMagistrate.ts, ChildOfficialPosts.ts, DomesticAutoGovernance.ts, DomesticTasks.ts, GovernanceAssignment.ts, GovernorHallView.ts, HereditaryKeep.ts, LifespanSave.ts, TerritoryUpgrade.ts, GovernorHallController.ts（§E 10 項逐項核對，PROG-2-1732） | ✅ | ✅ | 🟡 | ✅ | ⬜ |
-| **戰法場景規格書.md (doc_spec_0039)** | ActionSystem.ts, BattleTileEffectPhase.ts（森林埋伏陷阱只抓敵軍、踩中定身 1 回合後移除，PROG-2-1750）, SceneGambitTrigger.ts（B-3 六場景 INT／情報門檻表與查表判定，PROG-2-1749；尚無大廳軍事任務觸發入口）, SceneGambitAdapter.ts, TileStateRules.ts, StealthTile.ts, BattleTacticBehavior.ts, WisdomMeter.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| **戰法場景規格書.md (doc_spec_0039)** | ActionSystem.ts, BattleTileEffectPhase.ts（森林埋伏陷阱只抓敵軍、踩中定身 1 回合後移除，PROG-2-1750）, SceneGambitTrigger.ts（B-3 六場景 INT／情報門檻表與查表判定，PROG-2-1749；尚無大廳軍事任務觸發入口）, SceneGambitAdapter.ts, TileStateRules.ts, StealthTile.ts, BattleTacticBehavior.ts, WisdomMeter.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 熱更新與版本控制規格書.md (doc_tech_0012) | SaveVersion.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 
 #### D-1a. 邏輯欄重判紀錄 → 已拆至 [progress/d1a-rejudge.md](progress/d1a-rejudge.md)（PROG-2-1614）
