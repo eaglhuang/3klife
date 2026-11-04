@@ -55,6 +55,18 @@ export function createWarehouseSortSuite(): TestSuite {
         assert.equals('abcde', ids(SAMPLE));
     });
 
+    suite.test('取得時間排序：虎符依取得季由新到舊，不看列順序；沒有取得季的列排後面（PROG-2-1735）', () => {
+        const season = (n: number) => ({ Attributes: { Acquired_Season: n } });
+        const rows = [
+            record('g', 'OTHER', 'R'),
+            record('t', 'TALLY', 'SR', season(3)),
+            record('u', 'TALLY', 'SR', season(7)),
+            record('v', 'TALLY', 'SR', season(3)),
+            record('h', 'SPIRIT_CARD', 'UR'),
+        ];
+        assert.equals('uvthg', ids(sortWarehouseRecords(rows, 'acquired')));
+    });
+
     suite.test('排序按鈕循環：品質 → 類型 → 取得時間 → 品質', () => {
         assert.equals('type', nextWarehouseSortKey('quality'));
         assert.equals('acquired', nextWarehouseSortKey('type'));
