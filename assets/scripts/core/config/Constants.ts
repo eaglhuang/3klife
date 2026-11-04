@@ -131,6 +131,7 @@ export const EVENT_NAMES = {
   /** 奧義選擇：ActionCommandPanel 觸發，payload: { skillId: string } */
   UltimateSkillSelected: "ultimate-skill-selected",
   // 戰鬥控制列
+  TallyDeployed:        "tally-deployed",        // payload: string (虎符模板 id)
   AutoBattleToggled:    "auto-battle-toggled",   // payload: boolean (isEnabled)
   DelegateToggled:      "delegate-toggled",      // payload: boolean (要求開或關)
   BattleSpeedToggled:   "battle-speed-toggled",  // payload: number  (1 | 2)

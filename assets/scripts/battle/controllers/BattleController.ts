@@ -398,6 +398,7 @@ export class BattleController {
     unit.tallyStarMultiplier = starStatMultiplier(info?.star ?? 1);
     unit.tallyTemplateId = info?.templateId ?? null;
     applyTallyPassive(unit, unit.tallyTemplateId);
+    if (unit.tallyTemplateId) services().event.emit(EVENT_NAMES.TallyDeployed, unit.tallyTemplateId);
     this._deployedTallyIds.add(ref.cardUid);
     unit.commanderUid = commander?.uid ?? null;
     unit.tallyAffinity = (lane, depth) =>

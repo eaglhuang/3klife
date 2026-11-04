@@ -22,6 +22,8 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
+import { resolveTallyName, troopNameOf } from '../systems/TallySlotView';
+import { tallyProducedLine, tallyStarUpLine } from '../systems/TallyScripts';
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
 import { addOfficerExp, BATTLE_MERIT_OFFICER_TASK, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
@@ -1210,6 +1212,19 @@ export class GameSession {
         this._inventoryRecords = [...others, ...buildTallyInventoryRecords(this._tallyCards, this._tallyHoldings.holders)];
     }
 
+    private _tallyNotices: string[] = [];
+
+    /** 取走尚未顯示的虎符提示（產出、升星，PROG-2-1768）；戰場結算或大廳換季時顯示一次 */
+    public consumeTallyNotices(): string[] {
+        const notices = this._tallyNotices;
+        this._tallyNotices = [];
+        return notices;
+    }
+
+    private _tallyNameOf(card: TigerTallyCard): string {
+        return resolveTallyName(card, (id) => this._roster.getAll().find((g) => g.id === id || g.templateId === id)?.name);
+    }
+
     /**
      * 戰後把戰鬥經驗寫回出陣的虎符卡片實例（PROG-2-0573）。
      * 只有有結果的戰鬥會結算（ongoing 不結算）；卡片不存在的 id 略過。回傳是否有卡片被改動。
@@ -1223,7 +1238,10 @@ export class GameSession {
             const card = nextCards[uid];
             if (!card) continue;
             const applied = applyBattleExpToCard(card, outcome);
-            if (applied.stars > readCardStarState(card).star) this.recordPlayerLog('TALLY_UPGRADE');
+            if (applied.stars > readCardStarState(card).star) {
+                this.recordPlayerLog('TALLY_UPGRADE');
+                this._tallyNotices.push(tallyStarUpLine(this._tallyNameOf(card), applied.stars, troopNameOf(card)));
+            }
             nextCards[uid] = { ...card, ...applied };
             changed = true;
         }
@@ -1386,6 +1404,11 @@ export class GameSession {
         const result = settleDeathTallies({ holdings: this._tallyHoldings, cards: this._tallyCards }, before.map(withTroop), after.map(withTroop), season);
         this._tallyHoldings = result.holdings;
         this._tallyCards = { ...result.cards };
+        for (const uid of result.produced) {
+            const card = this._tallyCards[uid];
+            const source = after.find((g) => g.id === card?.sourceGeneralUid);
+            if (card) this._tallyNotices.push(tallyProducedLine(source?.name ?? card.sourceGeneralUid, this._tallyNameOf(card)));
+        }
         this._syncInventoryRecords();
     }
 
