@@ -69,17 +69,11 @@
       }
     },
     "diao-chan": {
-      "x": 48,
-      "y": 62,
-      "w": 184,
-      "h": 184,
-      "source": "reviewed",
-      "face": {
-        "top": 112,
-        "chin": 182,
-        "eyeY": 136,
-        "cx": 140
-      }
+      "x": 145,
+      "y": 20,
+      "w": 180,
+      "h": 180,
+      "source": "reviewed"
     },
     "guo-jia": {
       "x": 165,

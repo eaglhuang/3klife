@@ -1,0 +1,70 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1451",
+      "id": "UI-2-0261",
+      "title": "貂蟬名將二次元立繪與頭像重繪",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-11-04",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-11-04T22:10:46+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依使用者名將畫風與女性美感要求，將貂蟬偏寫實、衣帶繁雜的現行立繪重繪為趙雲、關羽、張飛基準的精緻二次元手繪幻想風，重整臉部辨識度、高髻金冠與簡化舞裝，並覆蓋正式立繪及兩路頭像。 女性身形以明確S曲線與飽滿胸線塑形並保持端莊，並配置專屬月輪雙刃以支援Q版辨識。",
+      "related": [
+        "UI-2-0260"
+      ],
+      "depends": [],
+      "acceptance": [
+        "透明背景512×768 RGBA正式立繪",
+        "正式與列表頭像均為256×256 RGBA",
+        "reviewed square crop 經125px檢視",
+        "月白為主色、暗梅紫古金為第二色",
+        "臉部美麗且與大喬、小喬、甄姬明確區別",
+        "高髻金冠可辨識，服裝移除繁複長飄帶",
+        "高完成度二次元幻想手繪風符合趙雲關羽張飛基準",
+        "Cocos metadata UUID唯一、AssetDB有效",
+        "單人avatar verify通過",
+        "成人女性體態呈現清楚S型曲線與飽滿胸線，服裝合身且端莊",
+        "一對月輪彎刃環刀為專屬武器，125px仍能辨認輪廓並可供Q版使用"
+      ],
+      "deliverables": [
+        "assets/resources/sprites/generals/diao_chan_portrait.png",
+        "assets/resources/sprites/generals/avatars/diao_chan_avatar.png",
+        "assets/resources/sprites/ui_avatars/cropped/diao_chan_avatar.png",
+        "assets/resources/data/general-avatar-crops.json",
+        "docs/art/character-palette-ledger-shards/palette-principles.md"
+      ],
+      "notes": "2026-11-04 | 狀態: done | 驗證: 512×768 RGBA；雙頭像256×256；reviewed crop(145,20)+180×180經125px檢視；單人avatar verify通過；全量avatar verify 214成功/0失敗（趙雲缺少本機原圖而略過）；三個metadata UUID唯一；Cocos AssetDB refresh=200且三資產imported=true、invalid=false；GeneralList/GeneralDetail canonical paths verified | 變更: 重繪貂蟬並落實S曲線、豐滿胸線及專屬月輪雙刃 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}
