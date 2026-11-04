@@ -121,7 +121,7 @@ import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceGalleryController } from '../core/RedFaceShowcaseController';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
-import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, fitPortraitInFrame } from '../core/PortraitFrameFit';
+import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, fitPortraitInFrame } from '../core/PortraitFrameFit';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { INTRO_TICK_SEC, OpeningIntroController } from '../core/OpeningIntroController';
 import { InitialShowcaseController } from '../core/InitialShowcaseController';
@@ -2174,6 +2174,11 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._showcase.getFlowView());
+        // 名將立繪（UI-2-0160）：臉部標記對齊，框外裁掉；沒立繪時退回剪影頭像
+        const generalId = this._showcase.current?.generalId;
+        if (generalId) {
+            this._applyFramePortraits(binder, 'showcase', [generalId], () => ['showcasePortraitMask', 'showcasePortrait'], SHOWCASE_PORTRAIT_SPEC);
+        }
     }
 
     private _onClickIntroNext(): void {
