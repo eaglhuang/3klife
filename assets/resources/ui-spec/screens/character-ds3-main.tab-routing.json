@@ -1,6 +1,6 @@
 {
   "screenId": "character-ds3-main",
-  "generatedAt": "2026-11-04T16:56:14.813Z",
+  "generatedAt": "2026-11-04T17:32:22.986Z",
   "source": "per-tab-replay",
   "tabs": [
     {
@@ -13,7 +13,7 @@
       "childPanelClass": "CharacterDs3OverviewChildPanel",
       "interactionId": "character-ds3main_button_4.tab-switch",
       "key": "overview",
-      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3l/tab-replay/character-ds3-main.overview.right-content.html"
+      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-main.overview.right-content.html"
     },
     {
       "id": "Stats",
@@ -25,7 +25,7 @@
       "childPanelClass": "CharacterDs3StatsChildPanel",
       "interactionId": "character-ds3main_button_5.tab-switch",
       "key": "stats",
-      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3l/tab-replay/character-ds3-main.stats.right-content.html"
+      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-main.stats.right-content.html"
     },
     {
       "id": "Bloodline",
@@ -37,7 +37,7 @@
       "childPanelClass": "CharacterDs3BloodlineChildPanel",
       "interactionId": "character-ds3main_button_6.tab-switch",
       "key": "bloodline",
-      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3l/tab-replay/character-ds3-main.bloodline.right-content.html",
+      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-main.bloodline.right-content.html",
       "regions": [
         {
           "mount": "bloodline-fullscreen",
@@ -60,7 +60,7 @@
       "childPanelClass": "CharacterDs3TacticsChildPanel",
       "interactionId": "character-ds3main_button_7.tab-switch",
       "key": "tactics",
-      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3l/tab-replay/character-ds3-main.tactics.right-content.html"
+      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-main.tactics.right-content.html"
     },
     {
       "id": "Equip",
@@ -72,7 +72,7 @@
       "childPanelClass": "CharacterDs3EquipChildPanel",
       "interactionId": "character-ds3main_button_8.tab-switch",
       "key": "equip",
-      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3l/tab-replay/character-ds3-main.equip.right-content.html"
+      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-main.equip.right-content.html"
     },
     {
       "id": "Aptitude",
@@ -84,7 +84,7 @@
       "childPanelClass": "CharacterDs3AptitudeChildPanel",
       "interactionId": "character-ds3main_button_9.tab-switch",
       "key": "aptitude",
-      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3l/tab-replay/character-ds3-main.aptitude.right-content.html"
+      "replaySourceHtml": "../AppData/Local/Temp/claude/C--Users-User-3KLife/aa64f30b-b332-4889-8e1f-6cc4a5ed215b/scratchpad/v3m/tab-replay/character-ds3-main.aptitude.right-content.html"
     }
   ],
   "summary": {

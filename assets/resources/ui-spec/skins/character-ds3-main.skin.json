@@ -4132,7 +4132,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_12": {
+    "auto.character-ds3-tab-bloodline.bloodlinefamily": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -4145,7 +4145,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_14": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_13": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -4157,7 +4157,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_15": {
+    "auto.character-ds3-tab-bloodline.bloodlineserial": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 15,
@@ -4169,7 +4169,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_17": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_15": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -4181,7 +4181,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_2": {
+    "auto.character-ds3-tab-bloodline.bloodlinestate": {
       "kind": "color-rect",
       "color": "stdCrestColor",
       "opacity": 0.094,
@@ -4189,7 +4189,7 @@
       "borderWidth": 1,
       "borderColor": "#8ccfc444"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_3": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_2": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -4202,7 +4202,7 @@
       "verticalAlign": "CENTER",
       "style": "bodySm"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_18": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_16": {
       "kind": "color-rect",
       "color": "gdv3StatLuk",
       "opacity": 0.04,
@@ -4210,7 +4210,7 @@
       "borderWidth": 1,
       "borderColor": "#ff8d6e44"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_19": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_17": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -4223,7 +4223,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_22": {
+    "auto.character-ds3-tab-bloodline.beastglyph": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -4282,7 +4282,7 @@
       "borderWidth": 2,
       "borderColor": "#ff8d6e66"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_4": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_3": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
@@ -4294,7 +4294,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_24": {
+    "auto.character-ds3-tab-bloodline.beastname": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -4307,7 +4307,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_25": {
+    "auto.character-ds3-tab-bloodline.beasttype": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -4319,7 +4319,47 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
+    "auto.character-ds3-tab-bloodline.beasttag_0": {
+      "kind": "color-rect",
+      "color": "gdv3StatLuk",
+      "opacity": 0.094,
+      "cornerRadius": 5,
+      "borderWidth": 1,
+      "borderColor": "#ff8d6e44"
+    },
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_4": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0.96,
+      "color": "gdv3StatLuk",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-bloodline.beasttag_1": {
+      "kind": "color-rect",
+      "color": "gdv3StatLuk",
+      "opacity": 0.094,
+      "cornerRadius": 5,
+      "borderWidth": 1,
+      "borderColor": "#ff8d6e44"
+    },
     "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_5": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0.96,
+      "color": "gdv3StatLuk",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-bloodline.beasttag_2": {
       "kind": "color-rect",
       "color": "gdv3StatLuk",
       "opacity": 0.094,
@@ -4339,47 +4379,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_7": {
-      "kind": "color-rect",
-      "color": "gdv3StatLuk",
-      "opacity": 0.094,
-      "cornerRadius": 5,
-      "borderWidth": 1,
-      "borderColor": "#ff8d6e44"
-    },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_8": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 12,
-      "lineHeight": 17,
-      "letterSpacing": 0.96,
-      "color": "gdv3StatLuk",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_9": {
-      "kind": "color-rect",
-      "color": "gdv3StatLuk",
-      "opacity": 0.094,
-      "cornerRadius": 5,
-      "borderWidth": 1,
-      "borderColor": "#ff8d6e44"
-    },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_10": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 12,
-      "lineHeight": 17,
-      "letterSpacing": 0.96,
-      "color": "gdv3StatLuk",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_28": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_23": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -4391,7 +4391,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_29": {
+    "auto.character-ds3-tab-bloodline.beasthint": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -4403,7 +4403,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_30": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_24": {
       "kind": "color-rect",
       "color": "stdButtonPrimary",
       "opacity": 0.08,
@@ -4411,7 +4411,7 @@
       "borderWidth": 2,
       "borderColor": "#3f6a6280"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_32": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_26": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -4481,7 +4481,7 @@
       "borderWidth": 3,
       "borderColor": "#8ccfc4"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_11": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_7": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 28,
@@ -4494,7 +4494,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_12": {
+    "auto.character-ds3-tab-bloodline.bloodlineultimatename": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
@@ -4507,13 +4507,13 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_13": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_8": {
       "kind": "color-rect",
       "color": "stdCrestColor",
       "opacity": 1,
       "cornerRadius": 5
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_14": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_9": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -4526,7 +4526,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_35": {
+    "auto.character-ds3-tab-bloodline.bloodlineultimatedesc": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
@@ -4538,7 +4538,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_36": {
+    "auto.character-ds3-tab-bloodline.bloodlineultimatecond": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -4550,7 +4550,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_38": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_29": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -4562,7 +4562,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_39": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_30": {
       "kind": "color-rect",
       "color": "stdButtonPrimary",
       "opacity": 0.08,
@@ -4570,7 +4570,7 @@
       "borderWidth": 1,
       "borderColor": "#3f6a624d"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_40": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_31": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -4616,7 +4616,7 @@
       "borderWidth": 2,
       "borderColor": "#8ccfc4"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_15": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_10": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 12,
@@ -4626,31 +4626,143 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_11": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 1.04,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_12": {
+      "kind": "color-rect",
+      "color": "stdCrestColor",
+      "opacity": 0.094,
+      "cornerRadius": 3,
+      "borderWidth": 1,
+      "borderColor": "#8ccfc444"
+    },
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_13": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 0,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_34": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0.33,
+      "color": "tertiaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_35": {
+      "kind": "color-rect",
+      "color": "stdButtonPrimary",
+      "opacity": 0.08,
+      "cornerRadius": 9,
+      "borderWidth": 1,
+      "borderColor": "#3f6a624d"
+    },
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_36": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 135,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(63, 106, 98)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(140, 207, 196)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 135,
+        "stops": [
+          {
+            "color": "stdButtonPrimary",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdCrestColor",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 15,
+      "borderWidth": 2,
+      "borderColor": "#8ccfc4"
+    },
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_14": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_15": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 1.04,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
       "verticalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_16": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 13,
-      "lineHeight": 18,
-      "letterSpacing": 1.04,
-      "color": "textOffWhite",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
+      "kind": "color-rect",
+      "color": "stdCrestColor",
+      "opacity": 0.094,
+      "cornerRadius": 3,
+      "borderWidth": 1,
+      "borderColor": "#8ccfc444"
     },
     "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_17": {
-      "kind": "color-rect",
-      "color": "stdCrestColor",
-      "opacity": 0.094,
-      "cornerRadius": 3,
-      "borderWidth": 1,
-      "borderColor": "#8ccfc444"
-    },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_18": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -4662,7 +4774,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_43": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_39": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -4674,119 +4786,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_44": {
-      "kind": "color-rect",
-      "color": "stdButtonPrimary",
-      "opacity": 0.08,
-      "cornerRadius": 9,
-      "borderWidth": 1,
-      "borderColor": "#3f6a624d"
-    },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_45": {
-      "kind": "gradient-rect",
-      "backgroundLayers": [
-        {
-          "kind": "gradient",
-          "gradient": {
-            "type": "linear",
-            "repeating": false,
-            "angle": 135,
-            "shape": null,
-            "center": null,
-            "radius": null,
-            "stops": [
-              {
-                "color": "rgb(63, 106, 98)",
-                "offset": 0
-              },
-              {
-                "color": "rgb(140, 207, 196)",
-                "offset": 1
-              }
-            ]
-          }
-        }
-      ],
-      "gradient": {
-        "type": "linear",
-        "repeating": false,
-        "angle": 135,
-        "stops": [
-          {
-            "color": "stdButtonPrimary",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "stdCrestColor",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      },
-      "cornerRadius": 15,
-      "borderWidth": 2,
-      "borderColor": "#8ccfc4"
-    },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_19": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 12,
-      "lineHeight": 17,
-      "letterSpacing": 0,
-      "color": "stdCrestColor",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_20": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 13,
-      "lineHeight": 18,
-      "letterSpacing": 1.04,
-      "color": "textOffWhite",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_21": {
-      "kind": "color-rect",
-      "color": "stdCrestColor",
-      "opacity": 0.094,
-      "cornerRadius": 3,
-      "borderWidth": 1,
-      "borderColor": "#8ccfc444"
-    },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_22": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 0,
-      "color": "stdCrestColor",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_48": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 11,
-      "lineHeight": 15,
-      "letterSpacing": 0.33,
-      "color": "tertiaryLight",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_49": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_40": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.05,
@@ -4794,7 +4794,7 @@
       "borderWidth": 1,
       "borderColor": "#d4af3740"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_50": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_41": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.15,
@@ -4802,7 +4802,7 @@
       "borderWidth": 2,
       "borderColor": "#ffe088"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_23": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_18": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 12,
@@ -4815,7 +4815,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_24": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_19": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -4828,7 +4828,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_25": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_20": {
       "kind": "color-rect",
       "color": "secondaryLight",
       "opacity": 0.094,
@@ -4836,7 +4836,7 @@
       "borderWidth": 1,
       "borderColor": "#ffe08844"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_26": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_21": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -4848,7 +4848,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_53": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_44": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -4860,7 +4860,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_54": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_45": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.01,
@@ -4868,7 +4868,7 @@
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_02"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_55": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_46": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.03,
@@ -4876,7 +4876,7 @@
       "borderWidth": 2,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_27": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_22": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 12,
@@ -4889,7 +4889,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_28": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_23": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -4902,7 +4902,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_29": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_24": {
       "kind": "color-rect",
       "color": "outline",
       "opacity": 0.094,
@@ -4910,7 +4910,7 @@
       "borderWidth": 1,
       "borderColor": "#4d463544"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_30": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_25": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -4922,7 +4922,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_58": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_49": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -4934,7 +4934,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_60": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_51": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -4978,7 +4978,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_31": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_26": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -4991,7 +4991,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_32": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_27": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -5003,7 +5003,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_62": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor1_row": {
       "kind": "color-rect",
       "color": "gdv3StatStr",
       "opacity": 0.04,
@@ -5011,7 +5011,7 @@
       "borderWidth": 1,
       "borderColor": "#6fa8ff44"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_63": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor1_icon": {
       "kind": "color-rect",
       "color": "gdv3StatStr",
       "opacity": 0.094,
@@ -5019,7 +5019,7 @@
       "borderWidth": 1,
       "borderColor": "#6fa8ff55"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_33": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_28": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -5032,7 +5032,7 @@
       "verticalAlign": "CENTER",
       "style": "bodySm"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_34": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor1_name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -5045,7 +5045,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_35": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor1_tag": {
       "kind": "color-rect",
       "color": "gdv3StatStr",
       "opacity": 0.133,
@@ -5053,7 +5053,7 @@
       "borderWidth": 1,
       "borderColor": "#6fa8ff44"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_36": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_29": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -5065,7 +5065,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_66": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor1_desc": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -5077,7 +5077,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_67": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor2_row": {
       "kind": "color-rect",
       "color": "gdv3StatLuk",
       "opacity": 0.04,
@@ -5085,7 +5085,7 @@
       "borderWidth": 1,
       "borderColor": "#ff8d6e44"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_68": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor2_icon": {
       "kind": "color-rect",
       "color": "gdv3StatLuk",
       "opacity": 0.094,
@@ -5093,7 +5093,7 @@
       "borderWidth": 1,
       "borderColor": "#ff8d6e55"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_37": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_30": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -5106,7 +5106,7 @@
       "verticalAlign": "CENTER",
       "style": "bodySm"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_38": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor2_name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -5119,7 +5119,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_39": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor2_tag": {
       "kind": "color-rect",
       "color": "gdv3StatLuk",
       "opacity": 0.133,
@@ -5127,7 +5127,7 @@
       "borderWidth": 1,
       "borderColor": "#ff8d6e44"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_40": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_31": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -5139,7 +5139,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_71": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor2_desc": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -5151,7 +5151,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_72": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor3_row": {
       "kind": "color-rect",
       "color": "tertiaryLight",
       "opacity": 0.04,
@@ -5159,7 +5159,7 @@
       "borderWidth": 1,
       "borderColor": "#86e1a544"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_73": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor3_icon": {
       "kind": "color-rect",
       "color": "tertiaryLight",
       "opacity": 0.094,
@@ -5167,7 +5167,7 @@
       "borderWidth": 1,
       "borderColor": "#86e1a555"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_41": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_32": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -5180,7 +5180,7 @@
       "verticalAlign": "CENTER",
       "style": "bodySm"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_42": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor3_name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -5193,7 +5193,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_43": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor3_tag": {
       "kind": "color-rect",
       "color": "tertiaryLight",
       "opacity": 0.133,
@@ -5201,7 +5201,7 @@
       "borderWidth": 1,
       "borderColor": "#86e1a544"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_44": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_33": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -5213,7 +5213,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_76": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor3_desc": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -5225,7 +5225,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_77": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor4_row": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -5233,7 +5233,7 @@
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_02"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_78": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor4_icon": {
       "kind": "color-rect",
       "color": "gdv3StatInt",
       "opacity": 0.094,
@@ -5241,7 +5241,7 @@
       "borderWidth": 1,
       "borderColor": "#c494ff55"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_45": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_34": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -5254,7 +5254,7 @@
       "verticalAlign": "CENTER",
       "style": "bodySm"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_46": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor4_name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -5267,7 +5267,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_47": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor4_tag": {
       "kind": "color-rect",
       "color": "gdv3StatInt",
       "opacity": 0.133,
@@ -5275,7 +5275,7 @@
       "borderWidth": 1,
       "borderColor": "#c494ff44"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_48": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_35": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -5287,7 +5287,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_81": {
+    "auto.character-ds3-tab-bloodline.bloodlinefactor4_desc": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -5299,7 +5299,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_83": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_62": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -5343,7 +5343,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_49": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_36": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -5356,7 +5356,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_50": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_37": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -5368,7 +5368,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_84": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_63": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.06,
@@ -5376,7 +5376,7 @@
       "borderWidth": 1,
       "borderColor": "#d4af374d"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_51": {
+    "auto.character-ds3-tab-bloodline.bloodlineep": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 52,
@@ -5395,7 +5395,7 @@
         "color": "#FFE08880"
       }
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_52": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_38": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -5407,7 +5407,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_88": {
+    "auto.character-ds3-tab-bloodline.bloodlineeplabel": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
@@ -5420,7 +5420,7 @@
       "verticalAlign": "CENTER",
       "style": "labelLg"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_53": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_39": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -5432,7 +5432,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_90": {
+    "auto.character-ds3-tab-bloodline.bloodlineeptrack": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.3,
@@ -5440,7 +5440,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_91": {
+    "auto.character-ds3-tab-bloodline.bloodlineepfill": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -5484,7 +5484,7 @@
       },
       "cornerRadius": 4
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_54": {
+    "auto.character-ds3-tab-bloodline.bloodlineeppct": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 12,
@@ -5496,7 +5496,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_55": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_40": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -5508,13 +5508,13 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_93": {
+    "auto.character-ds3-tab-bloodline.bloodlineawaketrack": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.2,
       "cornerRadius": 4
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_94": {
+    "auto.character-ds3-tab-bloodline.bloodlineawakefill": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -5558,7 +5558,7 @@
       },
       "cornerRadius": 4
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_56": {
+    "auto.character-ds3-tab-bloodline.bloodlineawakepct": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 12,
@@ -5571,13 +5571,13 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_95": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_69": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.1,
       "cornerRadius": 6
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_57": {
+    "auto.character-ds3-tab-bloodline.bloodlinefather": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -5589,7 +5589,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_58": {
+    "auto.character-ds3-tab-bloodline.bloodlinemother": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -5601,7 +5601,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_97": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_70": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -5645,7 +5645,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_59": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_41": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -5658,7 +5658,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_60": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_42": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -5670,7 +5670,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_98": {
+    "auto.character-ds3-tab-bloodline.bloodlinespirit_card": {
       "kind": "color-rect",
       "color": "stdCrestColor",
       "opacity": 0.05,
@@ -5678,7 +5678,7 @@
       "borderWidth": 1,
       "borderColor": "#8ccfc44d"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_61": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_43": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -5690,7 +5690,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_62": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_44": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.2,
@@ -5698,7 +5698,7 @@
       "borderWidth": 1,
       "borderColor": "#d4af37"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_63": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_45": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -5710,7 +5710,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_64": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_46": {
       "kind": "color-rect",
       "color": "stdCrestColor",
       "opacity": 0.12,
@@ -5718,7 +5718,7 @@
       "borderWidth": 1,
       "borderColor": "#8ccfc44d"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_65": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_47": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 11,
@@ -5730,7 +5730,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_101": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_73": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -5776,7 +5776,7 @@
       "borderWidth": 2,
       "borderColor": "#8ccfc4"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_66": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_48": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
@@ -5789,7 +5789,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_103": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_75": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 17,
@@ -5802,7 +5802,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_67": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_49": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -5814,7 +5814,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_68": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_50": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -5826,7 +5826,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_69": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_51": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 11,
@@ -5838,7 +5838,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_105": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_77": {
       "kind": "color-rect",
       "color": "stdButtonPrimary",
       "opacity": 0.08,
@@ -5852,7 +5852,7 @@
       "borderWidth": 2,
       "borderColor": "#3f6a62"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_70": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_52": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -5873,7 +5873,7 @@
       "borderWidth": 1,
       "borderColor": "#86e1a566"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_71": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_53": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -5893,7 +5893,7 @@
       "borderWidth": 1,
       "borderColor": "#8ccfc466"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_72": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_54": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -5913,7 +5913,7 @@
       "borderWidth": 1,
       "borderColor": "#b0a88066"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_73": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_55": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -5933,7 +5933,7 @@
       "borderWidth": 1,
       "borderColor": "#d4af3766"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_74": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_56": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -5953,7 +5953,7 @@
       "borderWidth": 1,
       "borderColor": "#6fa8ff66"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_75": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_57": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -5965,7 +5965,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_107": {
+    "auto.character-ds3-tab-bloodline.bloodlineexpand": {
       "kind": "color-rect",
       "color": "#000000",
       "opacity": 0,
@@ -5976,7 +5976,7 @@
     "auto.character-ds3-tab-bloodline.characterds3tabbloodline_button_7": {
       "kind": "transparent"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_76": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_58": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -5988,7 +5988,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_77": {
+    "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_59": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -8312,7 +8312,7 @@
       "borderWidth": 2,
       "borderColor": "#b2222259"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_6": {
+    "auto.character-ds3-tab-tactics.tacticmain_glyph": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -8395,7 +8395,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_4": {
+    "auto.character-ds3-tab-tactics.tacticmain_name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
@@ -8408,13 +8408,13 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_5": {
+    "auto.character-ds3-tab-tactics.tacticmain_tag0": {
       "kind": "color-rect",
       "color": "primary",
       "opacity": 1,
       "cornerRadius": 5
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_6": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_4": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -8426,13 +8426,13 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_7": {
+    "auto.character-ds3-tab-tactics.tacticmain_tag1": {
       "kind": "color-rect",
       "color": "outline",
       "opacity": 1,
       "cornerRadius": 5
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_8": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_5": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -8444,13 +8444,13 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_9": {
+    "auto.character-ds3-tab-tactics.tacticmain_tag2": {
       "kind": "color-rect",
       "color": "character_ds3_main_local_color_07",
       "opacity": 1,
       "cornerRadius": 5
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_10": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_6": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 12,
@@ -8462,7 +8462,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_9": {
+    "auto.character-ds3-tab-tactics.tacticmain_desc": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 16,
@@ -8474,7 +8474,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_11": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_7": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -8485,6 +8485,30 @@
       "outlineWidth": 2,
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_9": {
+      "kind": "color-rect",
+      "color": "primary",
+      "opacity": 1,
+      "cornerRadius": 3,
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_10": {
+      "kind": "color-rect",
+      "color": "primary",
+      "opacity": 1,
+      "cornerRadius": 3,
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_11": {
+      "kind": "color-rect",
+      "color": "primary",
+      "opacity": 1,
+      "cornerRadius": 3,
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b"
     },
     "auto.character-ds3-tab-tactics.characterds3tabtactics_div_12": {
       "kind": "color-rect",
@@ -8520,53 +8544,29 @@
     },
     "auto.character-ds3-tab-tactics.characterds3tabtactics_div_16": {
       "kind": "color-rect",
-      "color": "primary",
+      "color": "character_ds3_main_local_color_02",
       "opacity": 1,
       "cornerRadius": 3,
       "borderWidth": 1,
-      "borderColor": "#ff6b6b"
+      "borderColor": "character_ds3_main_local_color_01"
     },
     "auto.character-ds3-tab-tactics.characterds3tabtactics_div_17": {
       "kind": "color-rect",
-      "color": "primary",
+      "color": "character_ds3_main_local_color_02",
       "opacity": 1,
       "cornerRadius": 3,
       "borderWidth": 1,
-      "borderColor": "#ff6b6b"
+      "borderColor": "character_ds3_main_local_color_01"
     },
     "auto.character-ds3-tab-tactics.characterds3tabtactics_div_18": {
       "kind": "color-rect",
-      "color": "primary",
-      "opacity": 1,
-      "cornerRadius": 3,
-      "borderWidth": 1,
-      "borderColor": "#ff6b6b"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_19": {
-      "kind": "color-rect",
       "color": "character_ds3_main_local_color_02",
       "opacity": 1,
       "cornerRadius": 3,
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_01"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_20": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 3,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_21": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 3,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_24": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_20": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 20,
@@ -8580,7 +8580,7 @@
       "overflow": "RESIZE_HEIGHT",
       "isBold": true
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_25": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_21": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 11,
@@ -8592,7 +8592,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_23": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_20": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -8636,7 +8636,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_26": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_22": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -8649,7 +8649,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_27": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_23": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -8661,7 +8661,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_25": {
+    "auto.character-ds3-tab-tactics.tacticlearned1_row": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -8669,7 +8669,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_26": {
+    "auto.character-ds3-tab-tactics.tacticlearned1_glyph": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -8739,7 +8739,7 @@
       "borderWidth": 2,
       "borderColor": "#8a6e1f"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_28": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_24": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
@@ -8752,7 +8752,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_29": {
+    "auto.character-ds3-tab-tactics.tacticlearned1_name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 19,
@@ -8765,13 +8765,13 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_30": {
+    "auto.character-ds3-tab-tactics.tacticlearned1_tag0": {
       "kind": "color-rect",
       "color": "outline",
       "opacity": 1,
       "cornerRadius": 4
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_31": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_25": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -8783,7 +8783,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_29": {
+    "auto.character-ds3-tab-tactics.tacticlearned1_desc": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -8795,87 +8795,87 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_32": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_25": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 1,
       "cornerRadius": 2,
       "borderWidth": 1,
       "borderColor": "#ffe088"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_26": {
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "#ffe088"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_27": {
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "#ffe088"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_28": {
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "#ffe088"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_29": {
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "#ffe088"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_30": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_02",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "character_ds3_main_local_color_01"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_31": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_02",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "character_ds3_main_local_color_01"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_32": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_02",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "character_ds3_main_local_color_01"
     },
     "auto.character-ds3-tab-tactics.characterds3tabtactics_div_33": {
       "kind": "color-rect",
-      "color": "secondary",
+      "color": "character_ds3_main_local_color_02",
       "opacity": 1,
       "cornerRadius": 2,
       "borderWidth": 1,
-      "borderColor": "#ffe088"
+      "borderColor": "character_ds3_main_local_color_01"
     },
     "auto.character-ds3-tab-tactics.characterds3tabtactics_div_34": {
       "kind": "color-rect",
-      "color": "secondary",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "#ffe088"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_35": {
-      "kind": "color-rect",
-      "color": "secondary",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "#ffe088"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_36": {
-      "kind": "color-rect",
-      "color": "secondary",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "#ffe088"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_37": {
-      "kind": "color-rect",
       "color": "character_ds3_main_local_color_02",
       "opacity": 1,
       "cornerRadius": 2,
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_01"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_38": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_39": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_40": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_41": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_40": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_34": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -8887,7 +8887,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_42": {
+    "auto.character-ds3-tab-tactics.tacticlearned2_row": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -8895,7 +8895,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_43": {
+    "auto.character-ds3-tab-tactics.tacticlearned2_glyph": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -8965,7 +8965,7 @@
       "borderWidth": 2,
       "borderColor": "#8a6e1f"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_41": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_35": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 24,
@@ -8978,7 +8978,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_42": {
+    "auto.character-ds3-tab-tactics.tacticlearned2_name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 19,
@@ -8991,13 +8991,13 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_43": {
+    "auto.character-ds3-tab-tactics.tacticlearned2_tag0": {
       "kind": "color-rect",
       "color": "outline",
       "opacity": 1,
       "cornerRadius": 4
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_44": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_36": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -9009,13 +9009,13 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_45": {
+    "auto.character-ds3-tab-tactics.tacticlearned2_tag1": {
       "kind": "color-rect",
       "color": "outline",
       "opacity": 1,
       "cornerRadius": 4
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_46": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_37": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -9027,13 +9027,13 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_47": {
+    "auto.character-ds3-tab-tactics.tacticlearned2_tag2": {
       "kind": "color-rect",
       "color": "character_ds3_main_local_color_07",
       "opacity": 1,
       "cornerRadius": 4
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_48": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_38": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 11,
@@ -9045,7 +9045,253 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_46": {
+    "auto.character-ds3-tab-tactics.tacticlearned2_desc": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 14,
+      "lineHeight": 21,
+      "letterSpacing": 0,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_38": {
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "#ffe088"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_39": {
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "#ffe088"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_40": {
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "#ffe088"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_41": {
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "#ffe088"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_42": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_02",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "character_ds3_main_local_color_01"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_43": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_02",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "character_ds3_main_local_color_01"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_44": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_02",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "character_ds3_main_local_color_01"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_45": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_02",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "character_ds3_main_local_color_01"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_47": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 1,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticlearned3_row": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-tactics.tacticlearned3_glyph": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "circle at 35% 30%",
+            "center": {
+              "x": 0.35,
+              "y": 0.3
+            },
+            "radius": {
+              "x": 0.9552486587271399
+            },
+            "repeatSpanRatio": 0.6,
+            "stops": [
+              {
+                "color": "rgb(255, 224, 136)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(212, 175, 55)",
+                "offset": 0.6
+              },
+              {
+                "color": "rgb(138, 110, 31)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 0.6,
+        "shape": "circle at 35% 30%",
+        "center": {
+          "x": 0.35,
+          "y": 0.3
+        },
+        "radius": {
+          "x": 0.9552486587271399
+        },
+        "stops": [
+          {
+            "color": "secondaryLight",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "secondary",
+            "offset": 0.6,
+            "opacity": 1
+          },
+          {
+            "color": "gdv3GoldBorder",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 12,
+      "borderWidth": 2,
+      "borderColor": "#8a6e1f"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_48": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 24,
+      "lineHeight": 34,
+      "letterSpacing": 0,
+      "color": "gdv3InkDeep",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-tactics.tacticlearned3_name": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 19,
+      "lineHeight": 27,
+      "letterSpacing": 1.52,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-tactics.tacticlearned3_tag0": {
+      "kind": "color-rect",
+      "color": "outline",
+      "opacity": 1,
+      "cornerRadius": 4
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_49": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 1.1,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticlearned3_tag1": {
+      "kind": "color-rect",
+      "color": "outline",
+      "opacity": 1,
+      "cornerRadius": 4
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_50": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticlearned3_tag2": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_07",
+      "opacity": 1,
+      "cornerRadius": 4
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_51": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0,
+      "color": "colorWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticlearned3_desc": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 14,
@@ -9083,11 +9329,11 @@
     },
     "auto.character-ds3-tab-tactics.characterds3tabtactics_div_52": {
       "kind": "color-rect",
-      "color": "secondary",
+      "color": "character_ds3_main_local_color_02",
       "opacity": 1,
       "cornerRadius": 2,
       "borderWidth": 1,
-      "borderColor": "#ffe088"
+      "borderColor": "character_ds3_main_local_color_01"
     },
     "auto.character-ds3-tab-tactics.characterds3tabtactics_div_53": {
       "kind": "color-rect",
@@ -9121,7 +9367,23 @@
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_01"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_57": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_57": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_02",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "character_ds3_main_local_color_01"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_58": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_02",
+      "opacity": 1,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "character_ds3_main_local_color_01"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_60": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -9133,43 +9395,25 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_57": {
-      "kind": "color-rect",
-      "color": "colorWhite",
-      "opacity": 0.02,
-      "cornerRadius": 10,
-      "borderWidth": 1,
-      "borderColor": "#4d4635"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_58": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_59": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
           "kind": "gradient",
           "gradient": {
-            "type": "radial",
+            "type": "linear",
             "repeating": false,
             "angle": 180,
-            "shape": "circle at 35% 30%",
-            "center": {
-              "x": 0.35,
-              "y": 0.3
-            },
-            "radius": {
-              "x": 0.9552486587271399
-            },
-            "repeatSpanRatio": 0.6,
+            "shape": null,
+            "center": null,
+            "radius": null,
             "stops": [
               {
-                "color": "rgb(255, 224, 136)",
+                "color": "rgb(140, 207, 196)",
                 "offset": 0
               },
               {
-                "color": "rgb(212, 175, 55)",
-                "offset": 0.6
-              },
-              {
-                "color": "rgb(138, 110, 31)",
+                "color": "rgb(63, 106, 98)",
                 "offset": 1
               }
             ]
@@ -9177,31 +9421,94 @@
         }
       ],
       "gradient": {
-        "type": "radial",
+        "type": "linear",
         "repeating": false,
         "angle": 180,
-        "repeatSpanRatio": 0.6,
-        "shape": "circle at 35% 30%",
-        "center": {
-          "x": 0.35,
-          "y": 0.3
-        },
-        "radius": {
-          "x": 0.9552486587271399
-        },
         "stops": [
           {
-            "color": "secondaryLight",
+            "color": "stdCrestColor",
             "offset": 0,
             "opacity": 1
           },
           {
-            "color": "secondary",
-            "offset": 0.6,
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 2
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_61": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 3.6,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_62": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticinspired1_row": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.01,
+      "cornerRadius": 10,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-tactics.tacticinspired1_glyph": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(42, 32, 32)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(26, 20, 24)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "rgb(42, 32, 32)",
+            "offset": 0,
             "opacity": 1
           },
           {
-            "color": "gdv3GoldBorder",
+            "color": "rgb(26, 20, 24)",
             "offset": 1,
             "opacity": 1
           }
@@ -9209,71 +9516,63 @@
       },
       "cornerRadius": 12,
       "borderWidth": 2,
-      "borderColor": "#8a6e1f"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_58": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 24,
-      "lineHeight": 34,
-      "letterSpacing": 0,
-      "color": "gdv3InkDeep",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_59": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 19,
-      "lineHeight": 27,
-      "letterSpacing": 1.52,
-      "color": "secondaryLight",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_60": {
-      "kind": "color-rect",
-      "color": "outline",
-      "opacity": 1,
-      "cornerRadius": 4
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_61": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 11,
-      "lineHeight": 15,
-      "letterSpacing": 1.1,
-      "color": "secondaryLight",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_62": {
-      "kind": "color-rect",
-      "color": "outline",
-      "opacity": 1,
-      "cornerRadius": 4
+      "borderColor": "character_ds3_main_local_color_09"
     },
     "auto.character-ds3-tab-tactics.characterds3tabtactics_span_63": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 11,
-      "lineHeight": 15,
+      "fontSize": 22,
+      "lineHeight": 31,
       "letterSpacing": 0,
-      "color": "secondaryLight",
+      "color": "primary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticinspired1_badge": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 0.54,
+      "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
+    "auto.character-ds3-tab-tactics.tacticinspired1_name": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 1.8,
+      "color": "character_ds3_main_local_color_04",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticinspired1_tag0": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_08",
+      "opacity": 1,
+      "cornerRadius": 4
+    },
     "auto.character-ds3-tab-tactics.characterds3tabtactics_span_64": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 0,
+      "color": "character_ds3_main_local_color_04",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticinspired1_tag1": {
       "kind": "color-rect",
       "color": "character_ds3_main_local_color_07",
       "opacity": 1,
@@ -9282,8 +9581,8 @@
     "auto.character-ds3-tab-tactics.characterds3tabtactics_span_65": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
-      "fontSize": 11,
-      "lineHeight": 15,
+      "fontSize": 10,
+      "lineHeight": 14,
       "letterSpacing": 0,
       "color": "colorWhite",
       "outlineColor": "colorOutlineDark",
@@ -9291,111 +9590,181 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_61": {
+    "auto.character-ds3-tab-tactics.tacticinspired1_lock": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 14,
-      "lineHeight": 21,
-      "letterSpacing": 0,
-      "color": "textSecondary",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0.96,
+      "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_64": {
-      "kind": "color-rect",
-      "color": "secondary",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "#ffe088"
+    "auto.character-ds3-tab-tactics.tacticinspired1_hint": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_65": {
+    "auto.character-ds3-tab-tactics.tacticinspired2_row": {
       "kind": "color-rect",
-      "color": "secondary",
-      "opacity": 1,
-      "cornerRadius": 2,
+      "color": "colorWhite",
+      "opacity": 0.01,
+      "cornerRadius": 10,
       "borderWidth": 1,
-      "borderColor": "#ffe088"
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-tactics.tacticinspired2_glyph": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(42, 32, 32)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(26, 20, 24)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "rgb(42, 32, 32)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(26, 20, 24)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 12,
+      "borderWidth": 2,
+      "borderColor": "character_ds3_main_local_color_09"
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_66": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 31,
+      "letterSpacing": 0,
+      "color": "primary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticinspired2_badge": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 0.54,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticinspired2_name": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 1.8,
+      "color": "character_ds3_main_local_color_04",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticinspired2_tag0": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_08",
+      "opacity": 1,
+      "cornerRadius": 4
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_67": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 0,
+      "color": "character_ds3_main_local_color_04",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticinspired2_tag1": {
+      "kind": "color-rect",
+      "color": "character_ds3_main_local_color_07",
+      "opacity": 1,
+      "cornerRadius": 4
+    },
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_68": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 0,
+      "color": "colorWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticinspired2_lock": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0.96,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-tactics.tacticinspired2_hint": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
     },
     "auto.character-ds3-tab-tactics.characterds3tabtactics_div_66": {
-      "kind": "color-rect",
-      "color": "secondary",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "#ffe088"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_67": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_68": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_69": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_70": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_71": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_72": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_73": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_02",
-      "opacity": 1,
-      "cornerRadius": 2,
-      "borderWidth": 1,
-      "borderColor": "character_ds3_main_local_color_01"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_74": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 10,
-      "lineHeight": 14,
-      "letterSpacing": 1,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_75": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -9439,7 +9808,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_75": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_69": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -9452,7 +9821,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_76": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_70": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -9464,376 +9833,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_77": {
-      "kind": "color-rect",
-      "color": "colorWhite",
-      "opacity": 0.01,
-      "cornerRadius": 10,
-      "borderWidth": 1,
-      "borderColor": "#4d4635"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_79": {
-      "kind": "gradient-rect",
-      "backgroundLayers": [
-        {
-          "kind": "gradient",
-          "gradient": {
-            "type": "linear",
-            "repeating": false,
-            "angle": 180,
-            "shape": null,
-            "center": null,
-            "radius": null,
-            "stops": [
-              {
-                "color": "rgb(42, 32, 32)",
-                "offset": 0
-              },
-              {
-                "color": "rgb(26, 20, 24)",
-                "offset": 1
-              }
-            ]
-          }
-        }
-      ],
-      "gradient": {
-        "type": "linear",
-        "repeating": false,
-        "angle": 180,
-        "stops": [
-          {
-            "color": "rgb(42, 32, 32)",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(26, 20, 24)",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      },
-      "cornerRadius": 12,
-      "borderWidth": 2,
-      "borderColor": "character_ds3_main_local_color_09"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_77": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 22,
-      "lineHeight": 31,
-      "letterSpacing": 0,
-      "color": "primary",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_78": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 0.54,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_79": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 18,
-      "lineHeight": 25,
-      "letterSpacing": 1.8,
-      "color": "character_ds3_main_local_color_04",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_80": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_08",
-      "opacity": 1,
-      "cornerRadius": 4
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_81": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 10,
-      "lineHeight": 14,
-      "letterSpacing": 0,
-      "color": "character_ds3_main_local_color_04",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_82": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_07",
-      "opacity": 1,
-      "cornerRadius": 4
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_83": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 10,
-      "lineHeight": 14,
-      "letterSpacing": 0,
-      "color": "colorWhite",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_82": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 12,
-      "lineHeight": 17,
-      "letterSpacing": 0.96,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_83": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 11,
-      "lineHeight": 15,
-      "letterSpacing": 0,
-      "color": "outline",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_84": {
-      "kind": "color-rect",
-      "color": "colorWhite",
-      "opacity": 0.01,
-      "cornerRadius": 10,
-      "borderWidth": 1,
-      "borderColor": "#4d4635"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_86": {
-      "kind": "gradient-rect",
-      "backgroundLayers": [
-        {
-          "kind": "gradient",
-          "gradient": {
-            "type": "linear",
-            "repeating": false,
-            "angle": 180,
-            "shape": null,
-            "center": null,
-            "radius": null,
-            "stops": [
-              {
-                "color": "rgb(42, 32, 32)",
-                "offset": 0
-              },
-              {
-                "color": "rgb(26, 20, 24)",
-                "offset": 1
-              }
-            ]
-          }
-        }
-      ],
-      "gradient": {
-        "type": "linear",
-        "repeating": false,
-        "angle": 180,
-        "stops": [
-          {
-            "color": "rgb(42, 32, 32)",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(26, 20, 24)",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      },
-      "cornerRadius": 12,
-      "borderWidth": 2,
-      "borderColor": "character_ds3_main_local_color_09"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_84": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 22,
-      "lineHeight": 31,
-      "letterSpacing": 0,
-      "color": "primary",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_85": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 0.54,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_86": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 18,
-      "lineHeight": 25,
-      "letterSpacing": 1.8,
-      "color": "character_ds3_main_local_color_04",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_87": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_08",
-      "opacity": 1,
-      "cornerRadius": 4
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_88": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 10,
-      "lineHeight": 14,
-      "letterSpacing": 0,
-      "color": "character_ds3_main_local_color_04",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_89": {
-      "kind": "color-rect",
-      "color": "character_ds3_main_local_color_07",
-      "opacity": 1,
-      "cornerRadius": 4
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_90": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 10,
-      "lineHeight": 14,
-      "letterSpacing": 0,
-      "color": "colorWhite",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_89": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 12,
-      "lineHeight": 17,
-      "letterSpacing": 0.96,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_90": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 11,
-      "lineHeight": 15,
-      "letterSpacing": 0,
-      "color": "outline",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_92": {
-      "kind": "gradient-rect",
-      "backgroundLayers": [
-        {
-          "kind": "gradient",
-          "gradient": {
-            "type": "linear",
-            "repeating": false,
-            "angle": 180,
-            "shape": null,
-            "center": null,
-            "radius": null,
-            "stops": [
-              {
-                "color": "rgb(140, 207, 196)",
-                "offset": 0
-              },
-              {
-                "color": "rgb(63, 106, 98)",
-                "offset": 1
-              }
-            ]
-          }
-        }
-      ],
-      "gradient": {
-        "type": "linear",
-        "repeating": false,
-        "angle": 180,
-        "stops": [
-          {
-            "color": "stdCrestColor",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "stdButtonPrimary",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      },
-      "cornerRadius": 2
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_91": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 18,
-      "lineHeight": 25,
-      "letterSpacing": 3.6,
-      "color": "stdCrestColor",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_92": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 10,
-      "lineHeight": 14,
-      "letterSpacing": 2,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_94": {
+    "auto.character-ds3-tab-tactics.tacticlocked1_row": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.01,
@@ -9841,7 +9841,7 @@
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_02"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_95": {
+    "auto.character-ds3-tab-tactics.tacticlocked1_glyph": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -9887,7 +9887,7 @@
       "borderWidth": 2,
       "borderColor": "character_ds3_main_local_color_02"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_93": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_71": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
@@ -9899,7 +9899,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_97": {
+    "auto.character-ds3-tab-tactics.tacticlocked1_name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -9911,7 +9911,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_98": {
+    "auto.character-ds3-tab-tactics.tacticlocked1_lock": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -9924,7 +9924,7 @@
       "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_99": {
+    "auto.character-ds3-tab-tactics.tacticlocked2_row": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.01,
@@ -9932,7 +9932,7 @@
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_02"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_100": {
+    "auto.character-ds3-tab-tactics.tacticlocked2_glyph": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -9978,7 +9978,7 @@
       "borderWidth": 2,
       "borderColor": "character_ds3_main_local_color_02"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_94": {
+    "auto.character-ds3-tab-tactics.characterds3tabtactics_span_72": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 22,
@@ -9990,7 +9990,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_102": {
+    "auto.character-ds3-tab-tactics.tacticlocked2_name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -10002,7 +10002,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-tactics.characterds3tabtactics_div_103": {
+    "auto.character-ds3-tab-tactics.tacticlocked2_lock": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -10083,7 +10083,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_5": {
+    "auto.character-ds3-tab-equip.equipcard_weapon": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -10129,7 +10129,7 @@
       "borderWidth": 2,
       "borderColor": "#ffc107"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_3": {
+    "auto.character-ds3-tab-equip.equiptitle_weapon": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -10141,7 +10141,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.overviewraritytier": {
+    "auto.character-ds3-tab-equip.equiprarity_weapon": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -10154,7 +10154,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_4": {
+    "auto.character-ds3-tab-equip.equipglyph_weapon": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
@@ -10167,7 +10167,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_5": {
+    "auto.character-ds3-tab-equip.equipslot_weapon": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -10179,7 +10179,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_6": {
+    "auto.character-ds3-tab-equip.equipplus_weapon": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 14,
@@ -10193,7 +10193,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_6": {
+    "auto.character-ds3-tab-equip.equipcard_armor": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -10239,7 +10239,7 @@
       "borderWidth": 2,
       "borderColor": "#9c27b0"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_7": {
+    "auto.character-ds3-tab-equip.equiptitle_armor": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -10251,7 +10251,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_8": {
+    "auto.character-ds3-tab-equip.equiprarity_armor": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -10264,7 +10264,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_9": {
+    "auto.character-ds3-tab-equip.equipglyph_armor": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
@@ -10277,7 +10277,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_10": {
+    "auto.character-ds3-tab-equip.equipslot_armor": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -10289,7 +10289,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_11": {
+    "auto.character-ds3-tab-equip.equipplus_armor": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 14,
@@ -10303,7 +10303,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_7": {
+    "auto.character-ds3-tab-equip.equipcard_accessory": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -10349,7 +10349,7 @@
       "borderWidth": 2,
       "borderColor": "#2196f3"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_12": {
+    "auto.character-ds3-tab-equip.equiptitle_accessory": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -10361,7 +10361,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_13": {
+    "auto.character-ds3-tab-equip.equiprarity_accessory": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -10374,7 +10374,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_14": {
+    "auto.character-ds3-tab-equip.equipglyph_accessory": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
@@ -10387,7 +10387,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_15": {
+    "auto.character-ds3-tab-equip.equipslot_accessory": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -10399,7 +10399,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_16": {
+    "auto.character-ds3-tab-equip.equipplus_accessory": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 14,
@@ -10413,7 +10413,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_8": {
+    "auto.character-ds3-tab-equip.equipcard_mount": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -10459,7 +10459,7 @@
       "borderWidth": 2,
       "borderColor": "#9c27b0"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_17": {
+    "auto.character-ds3-tab-equip.equiptitle_mount": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -10471,7 +10471,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_18": {
+    "auto.character-ds3-tab-equip.equiprarity_mount": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -10484,7 +10484,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_19": {
+    "auto.character-ds3-tab-equip.equipglyph_mount": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 28,
@@ -10497,7 +10497,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_20": {
+    "auto.character-ds3-tab-equip.equipslot_mount": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -10509,7 +10509,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_21": {
+    "auto.character-ds3-tab-equip.equipplus_mount": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 14,
@@ -10523,7 +10523,7 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_9": {
+    "auto.character-ds3-tab-equip.equipcard_tome": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -10569,7 +10569,7 @@
       "borderWidth": 2,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_22": {
+    "auto.character-ds3-tab-equip.equiptitle_tome": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -10581,7 +10581,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_23": {
+    "auto.character-ds3-tab-equip.equipslot_tome": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -10594,7 +10594,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_24": {
+    "auto.character-ds3-tab-equip.equipglyph_tome": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -10606,7 +10606,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_10": {
+    "auto.character-ds3-tab-equip.equipcard_treasure": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -10652,7 +10652,7 @@
       "borderWidth": 2,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_25": {
+    "auto.character-ds3-tab-equip.equiptitle_treasure": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -10664,7 +10664,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_26": {
+    "auto.character-ds3-tab-equip.equipslot_treasure": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -10677,7 +10677,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_27": {
+    "auto.character-ds3-tab-equip.equipglyph_treasure": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -10689,7 +10689,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_12": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_6": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -10733,7 +10733,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_28": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_3": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -10746,7 +10746,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_29": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_4": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -10758,7 +10758,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_13": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_7": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.05,
@@ -10766,7 +10766,7 @@
       "borderWidth": 1,
       "borderColor": "#d4af374d"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_14": {
+    "auto.character-ds3-tab-equip.equipheirloom_glyph": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -10812,7 +10812,7 @@
       "borderWidth": 2,
       "borderColor": "#d4af3780"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_30": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_5": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 26,
@@ -10824,7 +10824,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_31": {
+    "auto.character-ds3-tab-equip.equipheirloom_name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 17,
@@ -10837,7 +10837,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_32": {
+    "auto.character-ds3-tab-equip.equipheirloom_tag": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.15,
@@ -10845,7 +10845,7 @@
       "borderWidth": 1,
       "borderColor": "#d4af3766"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_33": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_6": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 10,
@@ -10857,7 +10857,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_17": {
+    "auto.character-ds3-tab-equip.equipheirloom_desc": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 12,
@@ -10869,7 +10869,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_19": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_11": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -10913,7 +10913,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_34": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_7": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -10926,7 +10926,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_35": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_8": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -10938,7 +10938,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_21": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_13": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -10946,7 +10946,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_22": {
+    "auto.character-ds3-tab-equip.equipitem_glyph": {
       "kind": "color-rect",
       "color": "gdv3StatLuk",
       "opacity": 0.094,
@@ -10954,7 +10954,7 @@
       "borderWidth": 1,
       "borderColor": "#ff8d6e44"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_36": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_9": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -10966,7 +10966,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_37": {
+    "auto.character-ds3-tab-equip.equipitem_count": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 16,
@@ -10980,7 +10980,7 @@
       "style": "labelLg",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_38": {
+    "auto.character-ds3-tab-equip.equipitemsummary": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -10992,7 +10992,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_23": {
+    "auto.character-ds3-tab-equip.equipitemcell_2": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -11000,7 +11000,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_24": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_14": {
       "kind": "color-rect",
       "color": "gdv3StatStr",
       "opacity": 0.094,
@@ -11008,7 +11008,7 @@
       "borderWidth": 1,
       "borderColor": "#6fa8ff44"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_39": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_10": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -11020,7 +11020,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_40": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_11": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 16,
@@ -11034,7 +11034,7 @@
       "style": "labelLg",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_41": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_12": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -11046,7 +11046,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_25": {
+    "auto.character-ds3-tab-equip.equipitemcell_3": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -11054,7 +11054,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_26": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_15": {
       "kind": "color-rect",
       "color": "tertiaryLight",
       "opacity": 0.094,
@@ -11062,7 +11062,7 @@
       "borderWidth": 1,
       "borderColor": "#86e1a544"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_42": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_13": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -11074,7 +11074,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_43": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_14": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 16,
@@ -11088,7 +11088,7 @@
       "style": "labelLg",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_44": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_15": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -11100,7 +11100,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_27": {
+    "auto.character-ds3-tab-equip.equipitemcell_4": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.01,
@@ -11108,7 +11108,7 @@
       "borderWidth": 1,
       "borderColor": "character_ds3_main_local_color_02"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_28": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_16": {
       "kind": "color-rect",
       "color": "outline",
       "opacity": 0.094,
@@ -11116,7 +11116,7 @@
       "borderWidth": 1,
       "borderColor": "#4d463544"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_45": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_16": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -11128,7 +11128,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_46": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_17": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 16,
@@ -11142,7 +11142,7 @@
       "style": "labelLg",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_47": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_18": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 9,
@@ -11154,7 +11154,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_30": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_17": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -11198,7 +11198,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_48": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_19": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -11211,7 +11211,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_49": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_20": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -11223,7 +11223,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_31": {
+    "auto.character-ds3-tab-equip.equiprating_card": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -11231,7 +11231,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_34": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_20": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -11243,7 +11243,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_35": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_21": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 11,
@@ -11255,7 +11255,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_36": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_22": {
       "kind": "color-rect",
       "color": "gdv3StatStr",
       "opacity": 0.094,
@@ -11263,7 +11263,7 @@
       "borderWidth": 2,
       "borderColor": "#6fa8ff"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_50": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_21": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 21,
@@ -11276,13 +11276,13 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_38": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_24": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.1,
       "cornerRadius": 6
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_51": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_22": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -11294,7 +11294,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_52": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_23": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 14,
@@ -11308,13 +11308,13 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_39": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_25": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.1,
       "cornerRadius": 6
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_53": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_24": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -11326,7 +11326,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_54": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_25": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 14,
@@ -11340,13 +11340,13 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_40": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_26": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.1,
       "cornerRadius": 6
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_55": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_26": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -11358,7 +11358,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_56": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_27": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
@@ -11372,13 +11372,13 @@
       "style": "bodySm",
       "isBold": true
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_div_41": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_27": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.1,
       "cornerRadius": 6
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_57": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_28": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -11390,7 +11390,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-equip.characterds3tabequip_span_58": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_29": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 14,
@@ -11454,7 +11454,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_7": {
+    "auto.character-ds3-tab-aptitude.aptitude_infantry_card": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -11462,7 +11462,7 @@
       "borderWidth": 1,
       "borderColor": "#ffd70066"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_9": {
+    "auto.character-ds3-tab-aptitude.aptitude_infantry_grade": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -11534,7 +11534,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_11": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_9": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
@@ -11547,7 +11547,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_12": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_10": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -11571,7 +11571,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_13": {
+    "auto.character-ds3-tab-aptitude.aptitude_cavalry_card": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -11579,7 +11579,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_15": {
+    "auto.character-ds3-tab-aptitude.aptitude_cavalry_grade": {
       "kind": "color-rect",
       "color": "tertiaryLight",
       "opacity": 0.094,
@@ -11594,6 +11594,72 @@
       "lineHeight": 21,
       "letterSpacing": 0,
       "color": "tertiaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_13": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 1.5,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_14": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1.08,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_4": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 0,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_archer_card": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_archer_grade": {
+      "kind": "color-rect",
+      "color": "textKhaki",
+      "opacity": 0.094,
+      "cornerRadius": 15,
+      "borderWidth": 2,
+      "borderColor": "#b0a880"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_5": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/newsreader",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 0,
+      "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
@@ -11625,72 +11691,6 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_4": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 0,
-      "color": "outline",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_19": {
-      "kind": "color-rect",
-      "color": "colorWhite",
-      "opacity": 0.02,
-      "cornerRadius": 10,
-      "borderWidth": 1,
-      "borderColor": "#4d4635"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_21": {
-      "kind": "color-rect",
-      "color": "textKhaki",
-      "opacity": 0.094,
-      "cornerRadius": 15,
-      "borderWidth": 2,
-      "borderColor": "#b0a880"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_5": {
-      "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
-      "fontSize": 15,
-      "lineHeight": 21,
-      "letterSpacing": 0,
-      "color": "textKhaki",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_23": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 15,
-      "lineHeight": 21,
-      "letterSpacing": 1.5,
-      "color": "textOffWhite",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_24": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 1.08,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
     "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_6": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
@@ -11703,7 +11703,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_25": {
+    "auto.character-ds3-tab-aptitude.aptitude_siege_card": {
       "kind": "color-rect",
       "color": "error",
       "opacity": 0.04,
@@ -11711,7 +11711,7 @@
       "borderWidth": 1,
       "borderColor": "#ff6b6b44"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_27": {
+    "auto.character-ds3-tab-aptitude.aptitude_siege_grade": {
       "kind": "color-rect",
       "color": "error",
       "opacity": 0.094,
@@ -11732,7 +11732,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_29": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_21": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
@@ -11745,7 +11745,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_30": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_22": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -11757,7 +11757,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_8": {
+    "auto.character-ds3-tab-aptitude.aptitude_siege_warn": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -11769,7 +11769,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_9": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_8": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -11781,7 +11781,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_32": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_24": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -11825,7 +11825,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_10": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_9": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -11838,7 +11838,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_11": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_10": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -11850,7 +11850,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_34": {
+    "auto.character-ds3-tab-aptitude.aptitude_plain_card": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -11858,7 +11858,7 @@
       "borderWidth": 1,
       "borderColor": "#ffd70066"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_36": {
+    "auto.character-ds3-tab-aptitude.aptitude_plain_grade": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -11917,7 +11917,7 @@
       "borderWidth": 2,
       "borderColor": "#ffd700"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_12": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_11": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
@@ -11930,7 +11930,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_38": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_28": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
@@ -11943,7 +11943,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_39": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_29": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -11955,7 +11955,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_13": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_12": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -11967,7 +11967,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_40": {
+    "auto.character-ds3-tab-aptitude.aptitude_mountain_card": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -11975,7 +11975,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_42": {
+    "auto.character-ds3-tab-aptitude.aptitude_mountain_grade": {
       "kind": "color-rect",
       "color": "tertiaryLight",
       "opacity": 0.094,
@@ -11983,13 +11983,223 @@
       "borderWidth": 2,
       "borderColor": "#86e1a5"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_14": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_13": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
       "color": "tertiaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_32": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 1.5,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_33": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1.08,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_14": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 0,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_water_card": {
+      "kind": "color-rect",
+      "color": "error",
+      "opacity": 0.04,
+      "cornerRadius": 10,
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b44"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_water_grade": {
+      "kind": "color-rect",
+      "color": "error",
+      "opacity": 0.094,
+      "cornerRadius": 15,
+      "borderWidth": 2,
+      "borderColor": "#ff6b6b"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_15": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/newsreader",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 0,
+      "color": "error",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_36": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 1.5,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_37": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1.08,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_water_warn": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 0,
+      "color": "error",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_16": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 0,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_forest_card": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_forest_grade": {
+      "kind": "color-rect",
+      "color": "gdv3StatStr",
+      "opacity": 0.094,
+      "cornerRadius": 15,
+      "borderWidth": 2,
+      "borderColor": "#6fa8ff"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_17": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/newsreader",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 0,
+      "color": "gdv3StatStr",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_40": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 1.5,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_41": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1.08,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_18": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 0,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_desert_card": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_desert_grade": {
+      "kind": "color-rect",
+      "color": "textKhaki",
+      "opacity": 0.094,
+      "cornerRadius": 15,
+      "borderWidth": 2,
+      "borderColor": "#b0a880"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_19": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/newsreader",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 0,
+      "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
@@ -12021,150 +12231,6 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_15": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 0,
-      "color": "outline",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_46": {
-      "kind": "color-rect",
-      "color": "error",
-      "opacity": 0.04,
-      "cornerRadius": 10,
-      "borderWidth": 1,
-      "borderColor": "#ff6b6b44"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_48": {
-      "kind": "color-rect",
-      "color": "error",
-      "opacity": 0.094,
-      "cornerRadius": 15,
-      "borderWidth": 2,
-      "borderColor": "#ff6b6b"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_16": {
-      "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
-      "fontSize": 15,
-      "lineHeight": 21,
-      "letterSpacing": 0,
-      "color": "error",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_50": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 15,
-      "lineHeight": 21,
-      "letterSpacing": 1.5,
-      "color": "textOffWhite",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_51": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 1.08,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_17": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 13,
-      "lineHeight": 18,
-      "letterSpacing": 0,
-      "color": "error",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_18": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 0,
-      "color": "outline",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_52": {
-      "kind": "color-rect",
-      "color": "colorWhite",
-      "opacity": 0.02,
-      "cornerRadius": 10,
-      "borderWidth": 1,
-      "borderColor": "#4d4635"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_54": {
-      "kind": "color-rect",
-      "color": "gdv3StatStr",
-      "opacity": 0.094,
-      "cornerRadius": 15,
-      "borderWidth": 2,
-      "borderColor": "#6fa8ff"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_19": {
-      "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
-      "fontSize": 15,
-      "lineHeight": 21,
-      "letterSpacing": 0,
-      "color": "gdv3StatStr",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_56": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 15,
-      "lineHeight": 21,
-      "letterSpacing": 1.5,
-      "color": "textOffWhite",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_57": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 1.08,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
     "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_20": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
@@ -12177,73 +12243,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_58": {
-      "kind": "color-rect",
-      "color": "colorWhite",
-      "opacity": 0.02,
-      "cornerRadius": 10,
-      "borderWidth": 1,
-      "borderColor": "#4d4635"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_60": {
-      "kind": "color-rect",
-      "color": "textKhaki",
-      "opacity": 0.094,
-      "cornerRadius": 15,
-      "borderWidth": 2,
-      "borderColor": "#b0a880"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_21": {
-      "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
-      "fontSize": 15,
-      "lineHeight": 21,
-      "letterSpacing": 0,
-      "color": "textKhaki",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_62": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 15,
-      "lineHeight": 21,
-      "letterSpacing": 1.5,
-      "color": "textOffWhite",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_63": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 1.08,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_22": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 0,
-      "color": "outline",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_65": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_47": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -12287,7 +12287,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_23": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_21": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -12300,7 +12300,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_24": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_22": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -12312,7 +12312,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_67": {
+    "auto.character-ds3-tab-aptitude.aptitude_sunny_card": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -12320,7 +12320,7 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_69": {
+    "auto.character-ds3-tab-aptitude.aptitude_sunny_grade": {
       "kind": "color-rect",
       "color": "tertiaryLight",
       "opacity": 0.094,
@@ -12328,7 +12328,7 @@
       "borderWidth": 2,
       "borderColor": "#86e1a5"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_25": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_23": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
@@ -12341,7 +12341,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_71": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_51": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
@@ -12354,7 +12354,73 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_72": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_52": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1.08,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_24": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 0,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_rainy_card": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_rainy_grade": {
+      "kind": "color-rect",
+      "color": "gdv3StatStr",
+      "opacity": 0.094,
+      "cornerRadius": 15,
+      "borderWidth": 2,
+      "borderColor": "#6fa8ff"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_25": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/newsreader",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 0,
+      "color": "gdv3StatStr",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_55": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 1.5,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_56": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -12378,7 +12444,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_73": {
+    "auto.character-ds3-tab-aptitude.aptitude_fog_card": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -12386,13 +12452,13 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_75": {
+    "auto.character-ds3-tab-aptitude.aptitude_fog_grade": {
       "kind": "color-rect",
-      "color": "gdv3StatStr",
+      "color": "textKhaki",
       "opacity": 0.094,
       "cornerRadius": 15,
       "borderWidth": 2,
-      "borderColor": "#6fa8ff"
+      "borderColor": "#b0a880"
     },
     "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_27": {
       "kind": "label-style",
@@ -12400,14 +12466,14 @@
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
-      "color": "gdv3StatStr",
+      "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_77": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_59": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
@@ -12420,7 +12486,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_78": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_60": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -12444,7 +12510,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_79": {
+    "auto.character-ds3-tab-aptitude.aptitude_windy_card": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -12452,13 +12518,13 @@
       "borderWidth": 1,
       "borderColor": "#4d4635"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_81": {
+    "auto.character-ds3-tab-aptitude.aptitude_windy_grade": {
       "kind": "color-rect",
-      "color": "textKhaki",
+      "color": "tertiaryLight",
       "opacity": 0.094,
       "cornerRadius": 15,
       "borderWidth": 2,
-      "borderColor": "#b0a880"
+      "borderColor": "#86e1a5"
     },
     "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_29": {
       "kind": "label-style",
@@ -12466,14 +12532,14 @@
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 0,
-      "color": "textKhaki",
+      "color": "tertiaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_83": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_63": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
@@ -12486,7 +12552,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_84": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_64": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -12510,73 +12576,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_85": {
-      "kind": "color-rect",
-      "color": "colorWhite",
-      "opacity": 0.02,
-      "cornerRadius": 10,
-      "borderWidth": 1,
-      "borderColor": "#4d4635"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_87": {
-      "kind": "color-rect",
-      "color": "tertiaryLight",
-      "opacity": 0.094,
-      "cornerRadius": 15,
-      "borderWidth": 2,
-      "borderColor": "#86e1a5"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_31": {
-      "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
-      "fontSize": 15,
-      "lineHeight": 21,
-      "letterSpacing": 0,
-      "color": "tertiaryLight",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_89": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 15,
-      "lineHeight": 21,
-      "letterSpacing": 1.5,
-      "color": "textOffWhite",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_90": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 1.08,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_32": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 0,
-      "color": "outline",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_91": {
+    "auto.character-ds3-tab-aptitude.aptitude_night_card": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.02,
@@ -12584,7 +12584,7 @@
       "borderWidth": 1,
       "borderColor": "#ffd70066"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_93": {
+    "auto.character-ds3-tab-aptitude.aptitude_night_grade": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -12643,7 +12643,7 @@
       "borderWidth": 2,
       "borderColor": "#ffd700"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_33": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_31": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 15,
@@ -12656,7 +12656,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_95": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_67": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 15,
@@ -12669,7 +12669,73 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_96": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_68": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1.08,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_32": {
+      "kind": "label-style",
+      "font": "fonts/manrope/manrope",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 0,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_thunder_card": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.aptitude_thunder_grade": {
+      "kind": "color-rect",
+      "color": "gdv3StatStr",
+      "opacity": 0.094,
+      "cornerRadius": 15,
+      "borderWidth": 2,
+      "borderColor": "#6fa8ff"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_33": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/newsreader",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 0,
+      "color": "gdv3StatStr",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_71": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 1.5,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_72": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 9,
@@ -12693,73 +12759,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_97": {
-      "kind": "color-rect",
-      "color": "colorWhite",
-      "opacity": 0.02,
-      "cornerRadius": 10,
-      "borderWidth": 1,
-      "borderColor": "#4d4635"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_99": {
-      "kind": "color-rect",
-      "color": "gdv3StatStr",
-      "opacity": 0.094,
-      "cornerRadius": 15,
-      "borderWidth": 2,
-      "borderColor": "#6fa8ff"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_35": {
-      "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
-      "fontSize": 15,
-      "lineHeight": 21,
-      "letterSpacing": 0,
-      "color": "gdv3StatStr",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "CENTER",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_101": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 15,
-      "lineHeight": 21,
-      "letterSpacing": 1.5,
-      "color": "textOffWhite",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_102": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 1.08,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_36": {
-      "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 9,
-      "lineHeight": 13,
-      "letterSpacing": 0,
-      "color": "outline",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_104": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_73": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -12803,7 +12803,7 @@
       },
       "cornerRadius": 2
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_37": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_35": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -12816,7 +12816,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_38": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_36": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 10,
@@ -12828,7 +12828,7 @@
       "horizontalAlign": "START",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_105": {
+    "auto.character-ds3-tab-aptitude.aptitudetally_card": {
       "kind": "color-rect",
       "color": "rarityGold",
       "opacity": 0.05,
@@ -12836,7 +12836,7 @@
       "borderWidth": 1,
       "borderColor": "#ffc1074d"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_107": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_75": {
       "kind": "gradient-rect",
       "backgroundLayers": [
         {
@@ -12882,7 +12882,7 @@
       "borderWidth": 2,
       "borderColor": "#ffc107"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_39": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_37": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 26,
@@ -12894,7 +12894,7 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_40": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_38": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 18,
@@ -12907,7 +12907,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_41": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_39": {
       "kind": "color-rect",
       "color": "rarityGold",
       "opacity": 0.18,
@@ -12915,11 +12915,35 @@
       "borderWidth": 1,
       "borderColor": "#ffc107"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_42": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_40": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
       "fontSize": 11,
       "lineHeight": 15,
+      "letterSpacing": 0,
+      "color": "rarityGold",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_41": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "rarityGold",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_42": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 12,
+      "lineHeight": 17,
       "letterSpacing": 0,
       "color": "rarityGold",
       "outlineColor": "colorOutlineDark",
@@ -12957,7 +12981,7 @@
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 0,
-      "color": "rarityGold",
+      "color": "character_ds3_main_local_color_01",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
@@ -12966,10 +12990,10 @@
     "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_46": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 12,
-      "lineHeight": 17,
-      "letterSpacing": 0,
-      "color": "rarityGold",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0.88,
+      "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
@@ -12977,15 +13001,16 @@
     },
     "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_47": {
       "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 12,
-      "lineHeight": 17,
+      "font": "fonts/newsreader/newsreader",
+      "fontSize": 13,
+      "lineHeight": 18,
       "letterSpacing": 0,
-      "color": "character_ds3_main_local_color_01",
+      "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
+      "verticalAlign": "CENTER",
+      "isBold": true
     },
     "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_48": {
       "kind": "label-style",
@@ -13005,7 +13030,7 @@
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0,
-      "color": "textKhaki",
+      "color": "gdv3StatLuk",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
@@ -13026,11 +13051,11 @@
     },
     "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_51": {
       "kind": "label-style",
-      "font": "fonts/newsreader/newsreader",
+      "font": "fonts/manrope/manrope",
       "fontSize": 13,
       "lineHeight": 18,
       "letterSpacing": 0,
-      "color": "gdv3StatLuk",
+      "color": "gdv3StatStr",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
       "horizontalAlign": "START",
@@ -13051,31 +13076,6 @@
     },
     "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_53": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 13,
-      "lineHeight": 18,
-      "letterSpacing": 0,
-      "color": "gdv3StatStr",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER",
-      "isBold": true
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_54": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 11,
-      "lineHeight": 15,
-      "letterSpacing": 0.88,
-      "color": "gdv3TextMetaDim",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
-      "horizontalAlign": "START",
-      "verticalAlign": "CENTER"
-    },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_55": {
-      "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 13,
       "lineHeight": 18,
@@ -13087,7 +13087,7 @@
       "verticalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_116": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_84": {
       "kind": "label-style",
       "font": "fonts/newsreader/newsreader",
       "fontSize": 13,
@@ -13107,7 +13107,7 @@
       "borderWidth": 1,
       "borderColor": "#ffc10766"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_56": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_54": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -13127,7 +13127,7 @@
       "borderWidth": 1,
       "borderColor": "#b0a88066"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_57": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_55": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -13147,7 +13147,7 @@
       "borderWidth": 1,
       "borderColor": "#6fa8ff66"
     },
-    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_58": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_56": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
       "fontSize": 13,
@@ -13744,8 +13744,8 @@
       ]
     },
     "tokenSources": {
-      "runtimePath": "C:\\Users\\User\\3KLife-wt-st\\assets\\resources\\ui-spec\\ui-design-tokens.json",
-      "handoffPath": "C:\\Users\\User\\3KLife-wt-st\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "runtimePath": "C:\\Users\\User\\3KLife-wt-tb\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife-wt-tb\\Design System\\design_handoff\\source\\ui-design-tokens.json",
       "sourcePath": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json"
     },
     "tokenConflictReport": [
@@ -13753,7 +13753,7 @@
         "section": "typography",
         "token": "headlineFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-st\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-tb\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
         "path": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json",
         "previousValue": "fonts/newsreader/newsreader",
@@ -13764,7 +13764,7 @@
         "section": "typography",
         "token": "bodyFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-st\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-tb\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
         "path": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json",
         "previousValue": "fonts/notosans_tc/notosans_tc",
@@ -13775,7 +13775,7 @@
         "section": "typography",
         "token": "labelFont",
         "previousSource": "runtime",
-        "previousPath": "C:\\Users\\User\\3KLife-wt-st\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "previousPath": "C:\\Users\\User\\3KLife-wt-tb\\assets\\resources\\ui-spec\\ui-design-tokens.json",
         "source": "source",
         "path": "C:\\Users\\User\\3KLife\\Design System_20260513\\source\\ui-design-tokens.json",
         "previousValue": "fonts/manrope/manrope",
@@ -13794,6 +13794,6 @@
       "limit": 4,
       "_warning": null
     },
-    "perTabReplayMergedAt": "2026-11-04T16:56:14.807Z"
+    "perTabReplayMergedAt": "2026-11-04T17:32:22.982Z"
   }
 }

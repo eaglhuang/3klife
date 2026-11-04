@@ -23,11 +23,11 @@ export function createCharacterDs3AptitudeGradesSuite(): TestSuite {
             terrainAptitude: { MOUNTAIN: 'A' },
             weatherAptitude: { FOG: 'A' },
         });
-        assert.equals('B', grades.CharacterDs3TabAptitude_div_7);
-        assert.equals('S', grades.CharacterDs3TabAptitude_div_10);
-        assert.equals('—', grades.CharacterDs3TabAptitude_div_13);
-        assert.equals('A', grades.CharacterDs3TabAptitude_div_26);
-        assert.equals('A', grades.CharacterDs3TabAptitude_div_48);
+        assert.equals('B', grades.Aptitude_INFANTRY_grade);
+        assert.equals('S', grades.Aptitude_CAVALRY_grade);
+        assert.equals('—', grades.Aptitude_ARCHER_grade);
+        assert.equals('A', grades.Aptitude_MOUNTAIN_grade);
+        assert.equals('A', grades.Aptitude_FOG_grade);
         assert.equals(15, Object.keys(buildDs3AptitudeGrades(null)).length);
     });
 

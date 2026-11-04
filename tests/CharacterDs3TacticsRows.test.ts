@@ -16,15 +16,16 @@ export function createCharacterDs3TacticsRowsSuite(): TestSuite {
         } as unknown as GeneralConfig);
         assert.equals('龍膽旋風,孤軍救主,百鳥朝鳳', rows.learned.map((r) => r.name).join(','));
         assert.equals('龍', rows.learned[0].glyph);
-        assert.equals('七進七出|未啟發,龍魂覺醒|🔒 待解鎖', rows.locked.map((r) => `${r.name}|${r.hint}`).join(','));
+        assert.equals('七進七出|未啟發', rows.inspired.map((r) => `${r.name}|${r.hint}`).join(','));
+        assert.equals('龍魂覺醒|🔒 待解鎖', rows.locked.map((r) => `${r.name}|${r.hint}`).join(','));
     });
 
     suite.test('超過槽位截斷、空資料回傳空列', () => {
         const rows = buildDs3TacticRows({ learnedTactics: ['甲', '乙', '丙', '丁', '戊'], inspiredTactics: ['一', '二', '三'] } as unknown as GeneralConfig);
         assert.equals(4, rows.learned.length);
-        assert.equals(2, rows.locked.length);
+        assert.equals(2, rows.inspired.length);
         const empty = buildDs3TacticRows(null);
-        assert.equals(0, empty.learned.length + empty.locked.length);
+        assert.equals(0, empty.learned.length + empty.inspired.length + empty.locked.length);
     });
 
     return suite;

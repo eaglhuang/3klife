@@ -3,7 +3,7 @@
 
 const ATLAS_AREA = 1024 * 1024;
 /** 只預約七成：其餘留給執行期才換字的短文字，以及排版留白 */
-const BUDGET_RATIO = 0.7;
+const BUDGET_RATIO = 0.35;
 /** 過長多半是內文或資料綁定，字元不可預期，不走 CHAR */
 const MAX_TEXT_LENGTH = 12;
 const GLYPH_CELL_RATIO = 1.25;

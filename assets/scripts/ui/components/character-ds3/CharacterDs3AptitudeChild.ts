@@ -12,6 +12,7 @@
 import { Button, Color, Label, Node, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { RoundedRectBackground } from '../RoundedRectBackground';
+import { ds3Label, ds3Node, ds3Reflow, ds3SetActive } from './Ds3NodeLookup';
 import { GradientBackground } from '../GradientBackground';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
@@ -31,26 +32,18 @@ const SPIRIT_INSERT_STAGE_KEY: Readonly<Record<SpiritInsertStageId, string>> = {
 
 type AptitudeSource = 'troopAptitude' | 'terrainAptitude' | 'weatherAptitude';
 
-const A = 'CharacterDs3TabAptitude_';
-
-/** 片段裡每張卡的評等節點 → 武將資料欄位與代碼（PROG-2-1693） */
-const DS3_APTITUDE_GRADE_NODES: ReadonlyArray<readonly [string, AptitudeSource, string]> = [
-    [`${A}div_7`, 'troopAptitude', 'INFANTRY'],
-    [`${A}div_10`, 'troopAptitude', 'CAVALRY'],
-    [`${A}div_13`, 'troopAptitude', 'ARCHER'],
-    [`${A}div_16`, 'troopAptitude', 'SIEGE'],
-    [`${A}div_23`, 'terrainAptitude', 'PLAIN'],
-    [`${A}div_26`, 'terrainAptitude', 'MOUNTAIN'],
-    [`${A}div_29`, 'terrainAptitude', 'WATER'],
-    [`${A}div_32`, 'terrainAptitude', 'FOREST'],
-    [`${A}div_35`, 'terrainAptitude', 'DESERT'],
-    [`${A}div_42`, 'weatherAptitude', 'SUNNY'],
-    [`${A}div_45`, 'weatherAptitude', 'RAINY'],
-    [`${A}div_48`, 'weatherAptitude', 'FOG'],
-    [`${A}div_51`, 'weatherAptitude', 'WINDY'],
-    [`${A}div_54`, 'weatherAptitude', 'NIGHT'],
-    [`${A}div_57`, 'weatherAptitude', 'THUNDER'],
+/** 片段裡每張卡的評等節點 → 武將資料欄位（PROG-2-1693）；節點名固定為 Aptitude_<代碼>_grade */
+const DS3_APTITUDE_CODES: ReadonlyArray<readonly [AptitudeSource, readonly string[]]> = [
+    ['troopAptitude', ['INFANTRY', 'CAVALRY', 'ARCHER', 'SIEGE']],
+    ['terrainAptitude', ['PLAIN', 'MOUNTAIN', 'WATER', 'FOREST', 'DESERT']],
+    ['weatherAptitude', ['SUNNY', 'RAINY', 'FOG', 'WINDY', 'NIGHT', 'THUNDER']],
 ];
+
+/** 設計稿只在這兩張卡放了 ⚠，只有評等 D 才顯示 */
+const DS3_APTITUDE_WARN_CODES = ['SIEGE', 'WATER'];
+const DS3_GRADE_S_TEXT: [number, number, number] = [42, 30, 5];
+const DS3_GRADE_FILL_ALPHA = 38;
+const DS3_GRADE_NEUTRAL: [number, number, number] = [120, 112, 90];
 
 const DS3_GRADE_COLOR: Readonly<Record<string, [number, number, number]>> = {
     S: [212, 175, 55],
@@ -71,9 +64,11 @@ export function ds3AptitudeBorderColor(grade: string): [number, number, number, 
 
 export function buildDs3AptitudeGrades(cfg: Partial<Record<AptitudeSource, Readonly<Record<string, unknown>>>> | null | undefined): Record<string, string> {
     const out: Record<string, string> = {};
-    for (const [node, source, code] of DS3_APTITUDE_GRADE_NODES) {
-        const raw = cfg?.[source]?.[code];
-        out[node] = typeof raw === 'string' && raw.length > 0 ? raw : APTITUDE_EMPTY_TEXT;
+    for (const [source, codes] of DS3_APTITUDE_CODES) {
+        for (const code of codes) {
+            const raw = cfg?.[source]?.[code];
+            out[`Aptitude_${code}_grade`] = typeof raw === 'string' && raw.length > 0 ? raw : APTITUDE_EMPTY_TEXT;
+        }
     }
     return out;
 }
@@ -113,20 +108,50 @@ export class CharacterDs3AptitudeChild extends ChildPanelBase {
         if (!data || typeof data !== 'object') return;
         const grades = buildDs3AptitudeGrades(data as Partial<Record<AptitudeSource, Readonly<Record<string, unknown>>>>);
         for (const [node, grade] of Object.entries(grades)) {
-            const label = this.binder?.getLabel?.(node);
-            if (!label) continue;
+            this._applyGradeBadge(node, grade);
+        }
+        for (const code of DS3_APTITUDE_WARN_CODES) {
+            ds3SetActive(this.binder, this.hostNode, `Aptitude_${code}_warn`, grades[`Aptitude_${code}_grade`] === 'D');
+        }
+        // 虎符卡目前只有設計稿範例，資料接好前不顯示
+        ds3SetActive(this.binder, this.hostNode, 'AptitudeTally_title', false);
+        ds3SetActive(this.binder, this.hostNode, 'AptitudeTally_card', false);
+        ds3Reflow(this.hostNode);
+    }
+
+    /** 評等徽章：範例把顏色寫死在各張卡，依實際評等重新著色（S 為實心金底） */
+    private _applyGradeBadge(nodeName: string, grade: string): void {
+        const rgb = DS3_GRADE_COLOR[grade] ?? DS3_GRADE_NEUTRAL;
+        const isTop = grade === 'S';
+        const label = ds3Label(this.binder, this.hostNode, nodeName);
+        if (label) {
             label.string = grade;
-            const rgb = DS3_GRADE_COLOR[grade];
-            if (rgb) label.color = new Color(rgb[0], rgb[1], rgb[2], 255);
-            const card = this.binder?.getNode?.(node)?.parent;
-            if (card) {
-                const [r, g, b, a] = ds3AptitudeBorderColor(grade);
-                const border = new Color(r, g, b, a);
-                const rounded = card.getComponent(RoundedRectBackground);
-                if (rounded) rounded.borderColor = border;
-                card.getComponent(GradientBackground)?.setBorderColor(border);
+            const text = isTop ? DS3_GRADE_S_TEXT : rgb;
+            label.color = new Color(text[0], text[1], text[2], 255);
+        }
+        const badge = ds3Node(this.binder, this.hostNode, nodeName);
+        if (badge) {
+            const stroke = new Color(rgb[0], rgb[1], rgb[2], 255);
+            const fill = new Color(rgb[0], rgb[1], rgb[2], isTop ? 255 : DS3_GRADE_FILL_ALPHA);
+            const rounded = badge.getComponent(RoundedRectBackground);
+            if (rounded) {
+                rounded.fillColor = fill;
+                rounded.borderColor = stroke;
+            }
+            const gradient = badge.getComponent(GradientBackground);
+            if (gradient) {
+                const radius = (badge.getComponent(UITransform)?.width ?? 0) / 2;
+                gradient.setLinearGradient(90, [{ offset: 0, color: fill }, { offset: 1, color: fill }], {
+                    cornerRadius: radius, borderWidth: 2, borderColor: stroke,
+                });
             }
         }
+        const [r, g, b, a] = ds3AptitudeBorderColor(grade);
+        const border = new Color(r, g, b, a);
+        const card = ds3Node(this.binder, this.hostNode, nodeName.replace('_grade', '_card'));
+        const cardRounded = card?.getComponent(RoundedRectBackground);
+        if (cardRounded) cardRounded.borderColor = border;
+        card?.getComponent(GradientBackground)?.setBorderColor(border);
     }
 
     public override validateDataFormat(data: unknown): string | null {
