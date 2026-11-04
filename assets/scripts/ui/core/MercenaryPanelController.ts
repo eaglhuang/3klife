@@ -54,6 +54,12 @@ export class MercenaryPanelController {
     }
 
     /** 目前選中的傭兵；沒選過或已不在列中時回退為第一位。 */
+    /** 目前選取傭兵的武將名；沒有傭兵時為 null */
+    public selectedGeneralName(): string | null {
+        const state = this.selected();
+        return state ? this._deps.info(state).generalName : null;
+    }
+
     public selected(): MercenaryState | null {
         const rows = this.rows();
         return rows.find(row => row.uid === this._selectedUid) ?? rows[0] ?? null;
