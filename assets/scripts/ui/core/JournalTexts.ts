@@ -17,6 +17,7 @@ export const JOURNAL_TEXT_FALLBACK_ZH_TW = {
     UI_DISPATCH_BOARD_TITLE: '派遣整備',
     UI_JOURNAL_EMPTY: '近日尚無值得記錄之事。',
     UI_MORNING_REPORT_EMPTY: '昨夜風平浪靜，暫無要事。',
+    UI_OFFLINE_BATTLE_SNAPSHOT: '戰況摘要',
 } as const;
 
 export type JournalTextKey = keyof typeof JOURNAL_TEXT_FALLBACK_ZH_TW;

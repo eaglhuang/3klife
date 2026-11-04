@@ -1458,6 +1458,7 @@ export class LobbyScene extends Component {
         const review = new BattleReviewController({
             snapshots: () => services().session.offlineBattleSnapshots,
             journal: () => services().session.queryJournal({ category: 'BATTLE' }),
+            lookup: (key, ...args) => services().i18n.t(key, ...args),
         });
         this._battleReview = review;
         this._battleReviewHost = await this._mountPreviewScreenHost('BattleReviewHost', 'battle-review-screen', [
