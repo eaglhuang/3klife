@@ -20,6 +20,9 @@ export const RULER_LINES: Readonly<Record<string, RulerLines>> = {
     wu: { ruler: '孫權', declareWar: '侵我江東者，必遭覆滅。', alliance: '長江南北，共享太平。', betray: '形勢所迫，非吾本意。' },
     lvbu: { ruler: '呂布', declareWar: '天下第一，有何不服？' },
     yuan: { ruler: '袁紹', declareWar: '四世三公，豈容小輩放肆！', alliance: '吾家門高貴，結盟自有分寸。', betray: '勢不如人，自當另尋出路。' },
+    liuzhang: { ruler: '劉璋' },
+    mateng: { ruler: '馬騰' },
+    nanman: { ruler: '孟獲' },
 };
 
 /** G-1 AI 宣戰：「{國名} 的 {君主名} 向你宣戰！『{宣戰台詞}』準備迎戰吧！」；無台詞時退回簡短版 */
@@ -34,6 +37,24 @@ export function formatAllianceFormed(nationId: string, nationName: string): stri
     const lines = RULER_LINES[nationId];
     const base = `與 ${nationName} 結為同盟`;
     return lines?.alliance ? `${base}。${lines.ruler}：『${lines.alliance}』` : base;
+}
+
+/** G-1 AI 背叛（PROG-2-1769）；無背叛台詞時省略君主與台詞 */
+export function formatNationBetrayal(nationId: string, nationName: string): string {
+    const lines = RULER_LINES[nationId];
+    return lines?.betray
+        ? `${nationName} 撕毀盟約！${lines.ruler}：『${lines.betray}』邦交驟降！`
+        : `${nationName} 撕毀盟約！邦交驟降！`;
+}
+
+/** G-1 AI 國滅亡（PROG-2-1769） */
+export function formatNationFallen(nationId: string, nationName: string): string {
+    return `${nationName} 已覆滅。${RULER_LINES[nationId]?.ruler ?? nationName} 下落不明... 殘餘武將流入各地傭兵市場。`;
+}
+
+/** G-1 AI 掠奪（PROG-2-1769） */
+export function formatRaid(food: number, troops: number): string {
+    return `南蠻蠻族再次入侵邊境！失去 ${food} 糧草與 ${troops} 兵力！`;
 }
 
 /** G-1 天下大亂文案（PROG-2-1708） */

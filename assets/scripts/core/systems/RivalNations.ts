@@ -78,6 +78,8 @@ export interface NationState {
     readonly officerRoster?: RivalNationRoster;
     /** 逐將總戰力加總（E-9 Phase 4），每季推進後更新 */
     readonly officerPower?: number;
+    /** 領地歸零而滅亡（PROG-2-1769）；滅亡後不再出兵，領地恢復時解除 */
+    readonly fallen?: boolean;
 }
 
 /** 招募擲骰的獨立亂數（依勢力與季數定種子），不消耗局內亂數流，免得改動其他既有擲骰結果 */
@@ -271,7 +273,7 @@ export function advanceRivalSeason(
         }
         const hostile = n.atWar || relation <= -40;
         const attackChance = adjustedAttackChance(tuning.attack, isWeakNation(militaryIndexOf(n, byOfficers), averageIndex));
-        if (hostile && !n.allied && random() < attackChance) {
+        if (hostile && !n.allied && !n.fallen && random() < attackChance) {
             const decision = evaluateExpansion(
                 { troops, food: governed.food, intel: governed.intel, profile },
                 [{ id: 'player', troops: player.troops, food: player.food, gold: player.gold, hatred: Math.max(0, -relation), relation }],
@@ -471,6 +473,7 @@ export function normalizeRivalWorld(raw: unknown): RivalWorld {
                 recruits: recruitsOf(s.recruits),
                 roster: rosterOf(s.roster),
                 bonds: bondsOf(s.bonds),
+                ...(s.fallen === true ? { fallen: true } : {}),
                 ...(officerRoster
                     ? { officerRoster, ...(typeof s.officerPower === 'number' && Number.isFinite(s.officerPower) ? { officerPower: Math.max(0, s.officerPower) } : {}) }
                     : {}),

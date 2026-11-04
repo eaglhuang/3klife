@@ -22,6 +22,7 @@
  * Unity 對照：像一個 DontDestroyOnLoad 的 GameManager 持有 TimeManager 與 SaveSystem，
  * 每季呼叫一次 AdvanceSeason()，再用 C# event 通知 UI 更新「第 N 年 M 季」。
  */
+import { resolveRivalPlayerEvents } from '../systems/RivalPlayerEvents';
 import { resolveTallyName, troopNameOf } from '../systems/TallySlotView';
 import { tallyProducedLine, tallyStarUpLine } from '../systems/TallyScripts';
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
@@ -1836,6 +1837,15 @@ export class GameSession {
     }
 
     /** 季度推進：勢力成長、邦交回歸；來犯的勢力用名冊前 3 強自動迎戰 */
+    private _rivalNotices: string[] = [];
+
+    /** 取走尚未顯示的他國事件句（背叛、掠奪、滅亡，PROG-2-1769）；大廳換季時顯示一次 */
+    public consumeRivalNotices(): string[] {
+        const notices = this._rivalNotices;
+        this._rivalNotices = [];
+        return notices;
+    }
+
     private _tickRivals(): AutoBattleResult[] {
         // 玩家金幣不在 GameSession 內（錢包由呼叫端持有），RAI-05 暫傳 0（暫定）
         const holdersOf = (w: typeof this._rivals) => [...w.nations.map((n) => ({ id: n.id, territories: n.territories })), { id: 'player', territories: this._territories.length }];
@@ -1858,6 +1868,10 @@ export class GameSession {
         }
         // RAI-12：年度天下大亂評估；玩家領土數取守城領地清單長度
         this._rivals = applyEraShift(world, this._clock.state.totalSeasonsElapsed, this._territories.length);
+        const events = resolveRivalPlayerEvents(this._rivals, this._clock.state.totalSeasonsElapsed, { troops: this._military.cityTroops, food: this._military.food }, this._random);
+        this._rivals = events.world;
+        this._military = { ...this._military, food: this._military.food - events.foodLost, cityTroops: this._military.cityTroops - events.troopsLost };
+        this._rivalNotices.push(...events.notices);
         const risen = newAiHegemonOf(beforeHolders, holdersOf(this._rivals), 'player');
         if (risen) this._emit(GAME_SESSION_EVENTS.RivalHegemonRose, { nationId: risen });
         return battles;
