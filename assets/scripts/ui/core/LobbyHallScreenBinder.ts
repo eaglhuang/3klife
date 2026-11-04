@@ -2,7 +2,8 @@
 /**
  * LobbyHallScreenBinder — 把 lobby-hall-screen 的 runtime 行為接到已建好的畫面上。
  *
- * - 以 _ucufId 找返回鈕與底部五鈕，點擊轉成注入的動作（畫面轉出的是 panel，不是 Button，所以直接聽 TOUCH_END）。
+ * - 以 _ucufId 找返回鈕、底部五鈕與場景面板（任務牆、祭壇、世家，UI-2-0152），點擊轉成注入的動作
+ *   （畫面轉出的是 panel，不是 Button，所以直接聽 TOUCH_END）。
  * - 依季節序號與當地小時解析主題（HallTheme），交給 LobbyHallThemeApplier／LobbyHallThemeNodeView 套到節點。
  * - 在畫面根節點下加一層季節粒子（HallSeasonFxLayer），換季時重撒。
  * - 沙盤群組之後、粒子之下加一層 Q 版武將人群（HallStageCrowd＋LobbyHallStageController，UI-2-0150），
@@ -30,6 +31,11 @@ export type LobbyHallDockId = 'sortie' | 'generals' | 'domestic' | 'training' | 
 
 export const LOBBY_HALL_DOCK_IDS: readonly LobbyHallDockId[] = ['sortie', 'generals', 'domestic', 'training', 'shop'];
 
+/** 場景面板：設計稿 data-ucuf-id 的後綴 */
+export type LobbyHallPanelId = 'wall-left' | 'wall-right' | 'altar' | 'clan';
+
+export const LOBBY_HALL_PANEL_IDS: readonly LobbyHallPanelId[] = ['wall-left', 'wall-right', 'altar', 'clan'];
+
 /** 人群 tick 間隔（秒）；點位 60 秒才輪換，這裡只是檢查頻率 */
 export const STAGE_TICK_SEC = 5;
 
@@ -46,6 +52,8 @@ export interface LobbyHallScreenDeps {
     readonly fxConfig: HallSeasonFxConfig | null;
     readonly onBack: () => void;
     readonly onDock: (id: LobbyHallDockId) => void;
+    /** 場景面板點擊；未提供時面板不接點擊 */
+    readonly onPanel?: (id: LobbyHallPanelId) => void;
     /** 人群設定；設定檔沒載到時為 null，不建人群層 */
     readonly stage?: LobbyHallStageDepsInput | null;
     /** 勢力圖三態版面；沒載到時為 null，不掛地圖播放 */
@@ -71,9 +79,17 @@ export class LobbyHallScreenBinder {
         this._applier = new LobbyHallThemeApplier(new LobbyHallThemeNodeView(_screenRoot));
         this._bindTap('lobby-hall-screen.back', () => _deps.onBack());
         for (const id of LOBBY_HALL_DOCK_IDS) this._bindTap(`lobby-hall-screen.dock-${id}`, () => _deps.onDock(id));
+        const onPanel = _deps.onPanel;
+        if (onPanel) for (const id of LOBBY_HALL_PANEL_IDS) this._bindTap(`lobby-hall-screen.${id}`, () => onPanel(id));
         if (_deps.mapLayout) this._map = this._createMapPlayer(_deps.mapLayout);
         if (_deps.stage) this._createStage(_deps.stage);
         if (_deps.fxConfig) this._fx = this._createFxLayer(_deps.fxConfig);
+    }
+
+    /** 顯示或隱藏場景面板（例如家族系統未解鎖時隱藏世家） */
+    setPanelVisible(id: LobbyHallPanelId, visible: boolean): void {
+        const node = findUcufNode(this._screenRoot, `lobby-hall-screen.${id}`);
+        if (node) node.active = visible;
     }
 
     /** 播放換季聚焦序列；沒有地圖播放器時不動 */
