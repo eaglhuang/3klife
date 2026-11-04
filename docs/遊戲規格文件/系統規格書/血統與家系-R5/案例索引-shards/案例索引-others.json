@@ -1,0 +1,906 @@
+{
+  "original_40_cases": [
+    {
+      "case_id": "R5F-C01-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/0",
+      "feature_ids": [
+        "R5F-C01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-C01-P",
+        "given": "P1600能力點",
+        "when": "轉為BodyTicks",
+        "then": "16000000ticks，同人同UID",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-C01-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/1",
+      "feature_ids": [
+        "R5F-C01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-C01-N",
+        "given": "P1600但標ticks且宣稱1600能力點",
+        "when": "驗入",
+        "then": "拒跨單位，不改人物",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-C02-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/2",
+      "feature_ids": [
+        "R5F-C02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-C02-P",
+        "given": "同一已出生人物",
+        "when": "只切主題seasonId",
+        "then": "不自動改年齡或parentUID",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-C02-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/3",
+      "feature_ids": [
+        "R5F-C02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-C02-N",
+        "given": "timePolicy缺失且有孕期",
+        "when": "要求推進換季",
+        "then": "拒提交，保原孕期和季",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-C03-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/4",
+      "feature_ids": [
+        "R5F-C03"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-C03-P",
+        "given": "同key同payload已提交",
+        "when": "重送",
+        "then": "回原結果不再扣費",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-C03-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/5",
+      "feature_ids": [
+        "R5F-C03"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-C03-N",
+        "given": "同key異payload或閉包缺件",
+        "when": "提交",
+        "then": "拒衝突／缺件，不切指標",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-B01-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/6",
+      "feature_ids": [
+        "R5F-B01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-B01-P",
+        "given": "同UID占重複祖位",
+        "when": "正規化",
+        "then": "保位置，sourceUID+ID只按規則取一次",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-B01-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/7",
+      "feature_ids": [
+        "R5F-B01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-B01-N",
+        "given": "缺父母來源",
+        "when": "要求作無共祖外婚",
+        "then": "SOURCE_INCOMPLETE，不能補乾淨模板",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-B02-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/8",
+      "feature_ids": [
+        "R5F-B02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-B02-P",
+        "given": "雙三星且無純化的同版基線",
+        "when": "計H",
+        "then": "61，依正式單位映P",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-B02-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/9",
+      "feature_ids": [
+        "R5F-B02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-B02-N",
+        "given": "EP總成分缺失",
+        "when": "提交出生",
+        "then": "PROFILE_UNSUPPORTED，不套舊R分項",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-B03-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/10",
+      "feature_ids": [
+        "R5F-B03"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-B03-P",
+        "given": "合法同一ID已保留",
+        "when": "普通槽抽取",
+        "then": "移除同ID不重占槽",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-B03-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/11",
+      "feature_ids": [
+        "R5F-B03"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-B03-N",
+        "given": "同胎父系和母門各要求保障",
+        "when": "提交",
+        "then": "拒互斥，不添第七槽",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-B04-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/12",
+      "feature_ids": [
+        "R5F-B04"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-B04-P",
+        "given": "四個唯一(2,2)共祖同版D基線",
+        "when": "計D",
+        "then": "20扣滿到0，去重UID",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-B04-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/13",
+      "feature_ids": [
+        "R5F-B04"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-B04-N",
+        "given": "O當胎risk未採定",
+        "when": "要求產生健康結果",
+        "then": "拒缺profile，不自填1%",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-B05-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/14",
+      "feature_ids": [
+        "R5F-B05"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-B05-P",
+        "given": "改姓的已登記孩子",
+        "when": "到期finalize",
+        "then": "原pair只入帳一次，保原因",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-B05-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/15",
+      "feature_ids": [
+        "R5F-B05"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-B05-N",
+        "given": "g6/n8用G3式",
+        "when": "宣稱滿額",
+        "then": "測例應攔，結果2/3非1",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-G01-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/16",
+      "feature_ids": [
+        "R5F-G01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-G01-P",
+        "given": "精力足且合法單項訓練",
+        "when": "成功結算",
+        "then": "只扣一回合，C不超1，A不超P",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-G01-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/17",
+      "feature_ids": [
+        "R5F-G01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-G01-N",
+        "given": "28T8R基線計畫",
+        "when": "准入",
+        "then": "拒不可行，不以5項各20次繞預算",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-G02-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/18",
+      "feature_ids": [
+        "R5F-G02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-G02-P",
+        "given": "Rank3匹配同族auto成功",
+        "when": "結算同版TP",
+        "then": "基礎10+教官額外3=13",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-G02-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/19",
+      "feature_ids": [
+        "R5F-G02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-G02-N",
+        "given": "同人三份candidate各取最好項",
+        "when": "選畢業",
+        "then": "拒拼接，保三份歷史",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-G03-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/20",
+      "feature_ids": [
+        "R5F-G03"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-G03-P",
+        "given": "已有2星且採cap3方案",
+        "when": "完成plan",
+        "then": "最多至目標3，不回改P",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-G03-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/21",
+      "feature_ids": [
+        "R5F-G03"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-G03-N",
+        "given": "未held某祖先ID",
+        "when": "申請研習",
+        "then": "拒絕，不用研習補造ID",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-U01-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/22",
+      "feature_ids": [
+        "R5F-U01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-U01-P",
+        "given": "G1遇親緣風險",
+        "when": "開提親預覽",
+        "then": "即告知不等G3",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-U01-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/23",
+      "feature_ids": [
+        "R5F-U01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-U01-N",
+        "given": "公開資料相同只換hidden LUK",
+        "when": "排序/tooltip/export",
+        "then": "輸出相同，expert不免費揭露",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-U02-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/24",
+      "feature_ids": [
+        "R5F-U02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-U02-P",
+        "given": "已知單項精確P",
+        "when": "換季重開UI",
+        "then": "不藏回未知",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-U02-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/25",
+      "feature_ids": [
+        "R5F-U02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-U02-N",
+        "given": "價格或月旦母數缺失",
+        "when": "提交付費查驗",
+        "then": "不猜1券、不暗用hidden排名",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-E01-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/26",
+      "feature_ids": [
+        "R5F-E01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-E01-P",
+        "given": "有效首次統一事件及已知功臣",
+        "when": "開結局",
+        "then": "快照指回原UID與當時數值",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-E01-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/27",
+      "feature_ids": [
+        "R5F-E01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-E01-N",
+        "given": "關閉再重播結局",
+        "when": "再次開啟",
+        "then": "只重播不觸發出生或重算戰績",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-E02-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/28",
+      "feature_ids": [
+        "R5F-E02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-E02-P",
+        "given": "首通reward已提交",
+        "when": "讀檔再領",
+        "then": "回原收據，不再發",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-E02-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/29",
+      "feature_ids": [
+        "R5F-E02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-E02-N",
+        "given": "只因AI重建缺勝利證據",
+        "when": "要求首通結算",
+        "then": "拒勝利不成立；不直接發獎",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": false,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-S01-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/30",
+      "feature_ids": [
+        "R5F-S01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-S01-P",
+        "given": "玩家女兒嫁敵族且同childUID",
+        "when": "換季預覽",
+        "then": "雙親婚姻子代P仍同",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-S01-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/31",
+      "feature_ids": [
+        "R5F-S01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-S01-N",
+        "given": "敵將已dead",
+        "when": "用開局名單重建",
+        "then": "不可原UID復活，保死亡史",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-S02-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/32",
+      "feature_ids": [
+        "R5F-S02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-S02-P",
+        "given": "已採定連通糧道規則",
+        "when": "生成candidate",
+        "then": "逐條驗證並可重播",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-S02-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/33",
+      "feature_ids": [
+        "R5F-S02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-S02-N",
+        "given": "兩勢力同城唯一城主或無糧路",
+        "when": "驗入",
+        "then": "拒candidate，舊世界不變",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-S03-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/34",
+      "feature_ids": [
+        "R5F-S03"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-S03-P",
+        "given": "同transition已commit但回應遺失",
+        "when": "重入",
+        "then": "查marker回原結果不雙領",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-S03-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/35",
+      "feature_ids": [
+        "R5F-S03"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-S03-N",
+        "given": "寫新slot前崩潰",
+        "when": "恢復",
+        "then": "原slot可用，不半清人物與地盤",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-A01-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/36",
+      "feature_ids": [
+        "R5F-A01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-A01-P",
+        "given": "失光領地但有人在世",
+        "when": "結算敗北",
+        "then": "保人物婚姻與家族，不刪UID",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-A01-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/37",
+      "feature_ids": [
+        "R5F-A01"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-A01-N",
+        "given": "無活人且無合法旁系",
+        "when": "要求原家主回歸",
+        "then": "不復活；新身分需新合法事件",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-A02-P",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/38",
+      "feature_ids": [
+        "R5F-A02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-A02-P",
+        "given": "合法動員且達已定內應條件",
+        "when": "嘗試奪城",
+        "then": "有結果與代價，部署可反制",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    },
+    {
+      "case_id": "R5F-A02-N",
+      "namespace": "R5-original-topic-case",
+      "version": "original-v1",
+      "source_path": "publication_candidate/acceptance_cases.json",
+      "source_sha256": "7f8bb8f32bc438ef028ff5e26860fa89d57ab52b0e84a0c79e6ce276c04c0411",
+      "source_json_pointer": "/cases/39",
+      "feature_ids": [
+        "R5F-A02"
+      ],
+      "case_kind": "HISTORICAL_DOCUMENT_GWT",
+      "execution": "NOT_RUN",
+      "original_gwt": {
+        "case_id": "R5F-A02-N",
+        "given": "僅高INT無任何內應資源",
+        "when": "要求直接奪城",
+        "then": "不得免費改領主或生無限民兵",
+        "execution": "NOT_RUN"
+      },
+      "same_id_in_v3": true,
+      "mapping_semantics": "Original case reference retained; same ID does not prove identical or executed fixture"
+    }
+  ],
+  "historical_index": {
+    "path": "historical_case_index/歷史案例對照索引.json",
+    "sha256": "62f3557c13a54a2b96673cf84e75b0854ac645cd978d774b3e47bd4e082030ae",
+    "counts": {
+      "historical_cases": 129,
+      "R3T": 74,
+      "R4E": 32,
+      "M": 23,
+      "features": 38,
+      "main_features": 36,
+      "unselected_proposals": 2,
+      "v3_document_cases": 346,
+      "original_case_refs_separately_preserved": 40,
+      "mapping_status_counts": {
+        "NO_V3_CASE": 33,
+        "PARTIAL_EXPECTATION": 50,
+        "DIRECT_EXPECTATION": 29,
+        "RELATED_CONTRACT_ONLY": 17
+      }
+    },
+    "source_path_resolution": "All historical source paths resolve against the unchanged v3 base root, NOT the nested supplement directory."
+  }
+}

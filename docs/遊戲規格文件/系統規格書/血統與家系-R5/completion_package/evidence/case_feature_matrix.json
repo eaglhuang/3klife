@@ -1,0 +1,475 @@
+{
+  "baseline_commit": "b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe",
+  "scope": "Direct feature references in designed cases; not complete behavioral coverage or executed tests.",
+  "product_tests": "NOT_RUN",
+  "features": [
+    {
+      "feature_id": "R5F-A01",
+      "case_ids": [
+        "XGAME-022",
+        "XGAME-023",
+        "XGAME-057"
+      ]
+    },
+    {
+      "feature_id": "R5F-A02",
+      "case_ids": [
+        "XGAME-057"
+      ]
+    },
+    {
+      "feature_id": "R5F-B01",
+      "case_ids": [
+        "XGAME-019",
+        "XGAME-035",
+        "XGAME-043"
+      ]
+    },
+    {
+      "feature_id": "R5F-B02",
+      "case_ids": [
+        "XGAME-058"
+      ]
+    },
+    {
+      "feature_id": "R5F-B03",
+      "case_ids": [
+        "XGAME-059"
+      ]
+    },
+    {
+      "feature_id": "R5F-B04",
+      "case_ids": [
+        "XGAME-019"
+      ]
+    },
+    {
+      "feature_id": "R5F-B05",
+      "case_ids": [
+        "XGAME-003",
+        "XGAME-005",
+        "XGAME-009",
+        "XGAME-011",
+        "XGAME-012",
+        "XGAME-022",
+        "XGAME-035",
+        "XGAME-051",
+        "XGAME-054"
+      ]
+    },
+    {
+      "feature_id": "R5F-B06",
+      "case_ids": [
+        "XGAME-001",
+        "XGAME-002",
+        "XGAME-003",
+        "XGAME-004",
+        "XGAME-005",
+        "XGAME-006",
+        "XGAME-009",
+        "XGAME-010",
+        "XGAME-011",
+        "XGAME-012",
+        "XGAME-015",
+        "XGAME-019",
+        "XGAME-020",
+        "XGAME-021",
+        "XGAME-022",
+        "XGAME-023",
+        "XGAME-032",
+        "XGAME-035",
+        "XGAME-037",
+        "XGAME-038",
+        "XGAME-041",
+        "XGAME-043",
+        "XGAME-045",
+        "XGAME-051",
+        "XGAME-053",
+        "XGAME-054",
+        "XGAME-058",
+        "XGAME-059",
+        "XGAME-061"
+      ]
+    },
+    {
+      "feature_id": "R5F-B07",
+      "case_ids": [
+        "XGAME-031",
+        "XGAME-032",
+        "XGAME-035",
+        "XGAME-036",
+        "XGAME-049",
+        "XGAME-059"
+      ]
+    },
+    {
+      "feature_id": "R5F-B08",
+      "case_ids": [
+        "XGAME-012",
+        "XGAME-028",
+        "XGAME-030",
+        "XGAME-038",
+        "XGAME-047",
+        "XGAME-054",
+        "XGAME-060"
+      ]
+    },
+    {
+      "feature_id": "R5F-B09",
+      "case_ids": [
+        "XGAME-035",
+        "XGAME-036"
+      ]
+    },
+    {
+      "feature_id": "R5F-B10",
+      "case_ids": [
+        "XGAME-010",
+        "XGAME-019",
+        "XGAME-021",
+        "XGAME-025",
+        "XGAME-039"
+      ]
+    },
+    {
+      "feature_id": "R5F-C01",
+      "case_ids": [
+        "XGAME-014",
+        "XGAME-018",
+        "XGAME-019",
+        "XGAME-020",
+        "XGAME-024",
+        "XGAME-025",
+        "XGAME-034",
+        "XGAME-044",
+        "XGAME-045",
+        "XGAME-048",
+        "XGAME-058"
+      ]
+    },
+    {
+      "feature_id": "R5F-C02",
+      "case_ids": [
+        "XGAME-001",
+        "XGAME-009",
+        "XGAME-010",
+        "XGAME-013",
+        "XGAME-021",
+        "XGAME-023",
+        "XGAME-025",
+        "XGAME-026",
+        "XGAME-051"
+      ]
+    },
+    {
+      "feature_id": "R5F-C03",
+      "case_ids": [
+        "XGAME-003",
+        "XGAME-005",
+        "XGAME-006",
+        "XGAME-007",
+        "XGAME-008",
+        "XGAME-010",
+        "XGAME-013",
+        "XGAME-014",
+        "XGAME-015",
+        "XGAME-016",
+        "XGAME-017",
+        "XGAME-026",
+        "XGAME-027",
+        "XGAME-028",
+        "XGAME-030",
+        "XGAME-031",
+        "XGAME-032",
+        "XGAME-033",
+        "XGAME-036",
+        "XGAME-038",
+        "XGAME-040",
+        "XGAME-041",
+        "XGAME-042",
+        "XGAME-043",
+        "XGAME-046",
+        "XGAME-047",
+        "XGAME-048",
+        "XGAME-051",
+        "XGAME-052",
+        "XGAME-057"
+      ]
+    },
+    {
+      "feature_id": "R5F-C04",
+      "case_ids": [
+        "XGAME-005",
+        "XGAME-036",
+        "XGAME-037",
+        "XGAME-041",
+        "XGAME-043",
+        "XGAME-046",
+        "XGAME-047",
+        "XGAME-058",
+        "XGAME-059",
+        "XGAME-061"
+      ]
+    },
+    {
+      "feature_id": "R5F-C05",
+      "case_ids": [
+        "XGAME-004",
+        "XGAME-006",
+        "XGAME-016",
+        "XGAME-024",
+        "XGAME-025",
+        "XGAME-033",
+        "XGAME-041",
+        "XGAME-042",
+        "XGAME-043",
+        "XGAME-044",
+        "XGAME-045",
+        "XGAME-046",
+        "XGAME-047",
+        "XGAME-048",
+        "XGAME-050",
+        "XGAME-052",
+        "XGAME-056",
+        "XGAME-061"
+      ]
+    },
+    {
+      "feature_id": "R5F-E01",
+      "case_ids": [
+        "XGAME-060"
+      ]
+    },
+    {
+      "feature_id": "R5F-E02",
+      "case_ids": [
+        "XGAME-007",
+        "XGAME-008",
+        "XGAME-025",
+        "XGAME-028",
+        "XGAME-029",
+        "XGAME-055",
+        "XGAME-056",
+        "XGAME-060"
+      ]
+    },
+    {
+      "feature_id": "R5F-E03",
+      "case_ids": [
+        "XGAME-029",
+        "XGAME-043",
+        "XGAME-056",
+        "XGAME-060"
+      ]
+    },
+    {
+      "feature_id": "R5F-G01",
+      "case_ids": [
+        "XGAME-009",
+        "XGAME-033",
+        "XGAME-034",
+        "XGAME-051",
+        "XGAME-052",
+        "XGAME-058"
+      ]
+    },
+    {
+      "feature_id": "R5F-G02",
+      "case_ids": [
+        "XGAME-030",
+        "XGAME-039",
+        "XGAME-051",
+        "XGAME-052"
+      ]
+    },
+    {
+      "feature_id": "R5F-G03",
+      "case_ids": [
+        "XGAME-009",
+        "XGAME-023",
+        "XGAME-031",
+        "XGAME-032",
+        "XGAME-054"
+      ]
+    },
+    {
+      "feature_id": "R5F-G04",
+      "case_ids": [
+        "XGAME-035"
+      ]
+    },
+    {
+      "feature_id": "R5F-G05",
+      "case_ids": [
+        "XGAME-015",
+        "XGAME-033",
+        "XGAME-034",
+        "XGAME-049",
+        "XGAME-051",
+        "XGAME-052"
+      ]
+    },
+    {
+      "feature_id": "R5F-G06",
+      "case_ids": [
+        "XGAME-001",
+        "XGAME-002",
+        "XGAME-003",
+        "XGAME-004",
+        "XGAME-010",
+        "XGAME-011",
+        "XGAME-013",
+        "XGAME-014",
+        "XGAME-015",
+        "XGAME-016",
+        "XGAME-017",
+        "XGAME-018",
+        "XGAME-023",
+        "XGAME-024",
+        "XGAME-032",
+        "XGAME-042",
+        "XGAME-051",
+        "XGAME-053",
+        "XGAME-057"
+      ]
+    },
+    {
+      "feature_id": "R5F-G07",
+      "case_ids": [
+        "XGAME-054"
+      ]
+    },
+    {
+      "feature_id": "R5F-G08",
+      "case_ids": [
+        "XGAME-020",
+        "XGAME-039",
+        "XGAME-053",
+        "XGAME-058",
+        "XGAME-059"
+      ]
+    },
+    {
+      "feature_id": "R5F-S01",
+      "case_ids": [
+        "XGAME-007",
+        "XGAME-009",
+        "XGAME-011",
+        "XGAME-013",
+        "XGAME-017",
+        "XGAME-018",
+        "XGAME-020",
+        "XGAME-022",
+        "XGAME-026",
+        "XGAME-027",
+        "XGAME-061"
+      ]
+    },
+    {
+      "feature_id": "R5F-S02",
+      "case_ids": [
+        "XGAME-061"
+      ]
+    },
+    {
+      "feature_id": "R5F-S03",
+      "case_ids": [
+        "XGAME-006",
+        "XGAME-007",
+        "XGAME-008",
+        "XGAME-009",
+        "XGAME-013",
+        "XGAME-017",
+        "XGAME-026",
+        "XGAME-027",
+        "XGAME-029",
+        "XGAME-047",
+        "XGAME-050",
+        "XGAME-057",
+        "XGAME-060",
+        "XGAME-061"
+      ]
+    },
+    {
+      "feature_id": "R5F-S04",
+      "case_ids": [
+        "XGAME-024",
+        "XGAME-025",
+        "XGAME-028",
+        "XGAME-029",
+        "XGAME-056",
+        "XGAME-060"
+      ]
+    },
+    {
+      "feature_id": "R5F-S05",
+      "case_ids": [
+        "XGAME-012",
+        "XGAME-028",
+        "XGAME-039",
+        "XGAME-045",
+        "XGAME-050",
+        "XGAME-055"
+      ]
+    },
+    {
+      "feature_id": "R5F-S06",
+      "case_ids": [
+        "XGAME-018",
+        "XGAME-021",
+        "XGAME-022",
+        "XGAME-047",
+        "XGAME-061"
+      ]
+    },
+    {
+      "feature_id": "R5F-S07",
+      "case_ids": [
+        "XGAME-049"
+      ]
+    },
+    {
+      "feature_id": "R5F-S08",
+      "case_ids": [
+        "XGAME-050",
+        "XGAME-055"
+      ]
+    },
+    {
+      "feature_id": "R5F-U01",
+      "case_ids": [
+        "XGAME-037",
+        "XGAME-038",
+        "XGAME-039",
+        "XGAME-040",
+        "XGAME-044",
+        "XGAME-046",
+        "XGAME-049",
+        "XGAME-053",
+        "XGAME-055",
+        "XGAME-056",
+        "XGAME-057",
+        "XGAME-059",
+        "XGAME-060"
+      ]
+    },
+    {
+      "feature_id": "R5F-U02",
+      "case_ids": [
+        "XGAME-012",
+        "XGAME-019",
+        "XGAME-028",
+        "XGAME-030",
+        "XGAME-037",
+        "XGAME-038",
+        "XGAME-039",
+        "XGAME-040",
+        "XGAME-042",
+        "XGAME-044",
+        "XGAME-049",
+        "XGAME-054",
+        "XGAME-059"
+      ]
+    }
+  ]
+}

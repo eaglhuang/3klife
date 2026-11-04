@@ -1,0 +1,1100 @@
+{
+  "repository": "eaglhuang/3klife",
+  "baseline_commit": "b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe",
+  "observed_master_at": "2026-11-04T00:20:52Z",
+  "directory": "docs/遊戲規格文件/系統規格書",
+  "tree_sha": "d1503311c71770bb9f024bbddd386282a64953c1",
+  "truncated": false,
+  "counts": {
+    "all_files": 180,
+    "markdown": 157,
+    "top_level_markdown": 73,
+    "non_r5_shard_markdown": 21,
+    "r5_files": 80,
+    "r5_markdown": 63,
+    "r5_json": 17,
+    "other_json": 6
+  },
+  "files": [
+    {
+      "path": "docs/遊戲規格文件/系統規格書/AI武將強度系統.md",
+      "git_blob_sha": "65f078dd74ba2a75c785b39d0e284fd53b57e9a7",
+      "size_bytes": 24212,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/AI武將強度系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md",
+      "git_blob_sha": "260fb2a98376db1b7bc7a561713dab41cc2430f7",
+      "size_bytes": 37232,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/MVP遊戲驗證規格書.md",
+      "git_blob_sha": "cf6cc8094cb581c680aada9f4328662227d89838",
+      "size_bytes": 6668,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/MVP遊戲驗證規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/NPC人性化規格書.md",
+      "git_blob_sha": "c2d1b2c63b2406488716f8e2f6519244dfcd355e",
+      "size_bytes": 10272,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/NPC人性化規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/bloodline-symbol-slot-contract-v1.md",
+      "git_blob_sha": "554723f5f5f0affe21564bf3ada2e7efb975f8fb",
+      "size_bytes": 2140,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/bloodline-symbol-slot-contract-v1.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/三國大腦中台規格書.md",
+      "git_blob_sha": "55a8becfceb49f214b3a82e35760987d4e75c593",
+      "size_bytes": 42253,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/三國大腦中台規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/俘虜處理系統.md",
+      "git_blob_sha": "ed3101dd7df2fdb25ce62b77178f55e7c9f458d0",
+      "size_bytes": 7211,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/俘虜處理系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/傭兵系統（試用）.md",
+      "git_blob_sha": "530527632ebfc1d40923b7c89c4627b7483905df",
+      "size_bytes": 7563,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/傭兵系統（試用）.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/兵種（虎符）系統.md",
+      "git_blob_sha": "f246873612e26016135fdda3d7b6ba5d3c546eed",
+      "size_bytes": 54066,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/兵種（虎符）系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/可結緣女性來源系統.md",
+      "git_blob_sha": "1991d8220f2e00f3e33776cb4d2c1a4ca9885740",
+      "size_bytes": 7758,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/可結緣女性來源系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/同名武將系統.md",
+      "git_blob_sha": "a3d1fe6694e03c3f19a7afaa9235be75ce52439c",
+      "size_bytes": 6489,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/同名武將系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/同步API規格書.md",
+      "git_blob_sha": "dd8b16aa6fa2eb95239c3658abd9659a04f7673a",
+      "size_bytes": 6101,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/同步API規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/名士預言系統.md",
+      "git_blob_sha": "f8ad487a2f6c8ea0ca2837119fd4eaa7ebffe798",
+      "size_bytes": 6726,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/名士預言系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/名將挑戰賽系統.md",
+      "git_blob_sha": "dae5c0c6e121f1e5b746b7d06402fa746265e06f",
+      "size_bytes": 19003,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/名將挑戰賽系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
+      "git_blob_sha": "9a327b3acb2f389fd4189f78b29ef5f6cb51641d",
+      "size_bytes": 38050,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/名詞定義文件.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/因子爆發系統.md",
+      "git_blob_sha": "558531903bcbec2901e255b506f896efb900d4f9",
+      "size_bytes": 9975,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/因子爆發系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/因子解鎖系統.md",
+      "git_blob_sha": "e1a4871af0468a8fa87324e852ac01d55511c763",
+      "size_bytes": 5587,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/因子解鎖系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/.shardrc.json",
+      "git_blob_sha": "3bf72bd7860f8597199e812752a7040de8d7a5c7",
+      "size_bytes": 720,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/培育系統-shards/.shardrc.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-a.md",
+      "git_blob_sha": "9d7fb3b989c8404968e999fa492f0c76364e4f8d",
+      "size_bytes": 5078,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/培育系統-shards/shard-a.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-b.md",
+      "git_blob_sha": "198c827b268ba3adc2456a49dc5fc231998f553e",
+      "size_bytes": 4603,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/培育系統-shards/shard-b.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-c.md",
+      "git_blob_sha": "23a01ebb0aa1b1e7af175100885ea70bbc9f5bb2",
+      "size_bytes": 4233,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/培育系統-shards/shard-c.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-d.md",
+      "git_blob_sha": "6eb61202fa38f652fcb5bd755caff8b0c3b7e864",
+      "size_bytes": 4486,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/培育系統-shards/shard-d.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/培育系統.md",
+      "git_blob_sha": "0504ca6f2d60d59c1f9a51f129a222e1ef205f63",
+      "size_bytes": 1227,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/培育系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/大廳系統.md",
+      "git_blob_sha": "d9b1e414aa82e8d035263d11469190e96b99e91d",
+      "size_bytes": 20411,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/大廳系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/奧義系統.md",
+      "git_blob_sha": "404897837a247d8569845f14e59342c71d6f2988",
+      "size_bytes": 36935,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/奧義系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/官職系統.md",
+      "git_blob_sha": "8fa549844b5734b10943c9a68f944af1621ad23a",
+      "size_bytes": 7234,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/官職系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/.shardrc.json",
+      "git_blob_sha": "467242c0b4794c64660b4698c718e347cdea4561",
+      "size_bytes": 495,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/.shardrc.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/ab.md",
+      "git_blob_sha": "de08c626195a4bd423d34acdc8205052ef0ca2e7",
+      "size_bytes": 3503,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/ab.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md",
+      "git_blob_sha": "ac375c2ee78adcae834875273def7950af19a441",
+      "size_bytes": 4783,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md",
+      "git_blob_sha": "6126fd416f8b8228534a4629351dd73e121da4e7",
+      "size_bytes": 937,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰場格子系統.md",
+      "git_blob_sha": "2121f30534b4ce0c47fab0fa54ecbcd342e505fe",
+      "size_bytes": 742,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰場格子系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰場適性系統.md",
+      "git_blob_sha": "8271a45d8c732d20877335dc36f3c326fe634bca",
+      "size_bytes": 12706,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰場適性系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰場部署系統.md",
+      "git_blob_sha": "cf74e9ccd3be6e013aaad08703afcad4183e6d42",
+      "size_bytes": 29008,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰場部署系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/.shardrc.json",
+      "git_blob_sha": "7996949b6bc35d9ab3b8f5224450986513dc1482",
+      "size_bytes": 546,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/.shardrc.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/ac.md",
+      "git_blob_sha": "08a15a5b983d8d336f9deffdcbbba5093c1de716",
+      "size_bytes": 4975,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/ac.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/df.md",
+      "git_blob_sha": "223bc147adbd725b0817ef70f41037cbbe7890b1",
+      "size_bytes": 950,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/df.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/meta.md",
+      "git_blob_sha": "bcb3c9da01031993dfdf7b62a29f41e730decec4",
+      "size_bytes": 1019,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/meta.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書.md",
+      "git_blob_sha": "f2b236ca68e82fd320169b8a3c3e55e7827ab1e4",
+      "size_bytes": 984,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰法場景規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/.shardrc.json",
+      "git_blob_sha": "c27d6678c4306a4ec96b23c5bc6a82305d940208",
+      "size_bytes": 642,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰法系統-shards/.shardrc.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/a.md",
+      "git_blob_sha": "ace3ace7d7a291ac3cde9a20178615ffa9d7a0e2",
+      "size_bytes": 1207,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰法系統-shards/a.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/fh.md",
+      "git_blob_sha": "2f56c4e6c237b890cbb4e1a8ee45dcbd207c2a07",
+      "size_bytes": 1355,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰法系統-shards/fh.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/g.md",
+      "git_blob_sha": "a38e125356ebcf8cd627680695e22dffe24a85e2",
+      "size_bytes": 9229,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰法系統-shards/g.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/g5.md",
+      "git_blob_sha": "e503bdec9a42aad6ec31d2dc85e030122d6f5fbf",
+      "size_bytes": 24913,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰法系統-shards/g5.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/戰法系統.md",
+      "git_blob_sha": "67f11f8d1afe0572ef67999020c6584bd0a4d7ca",
+      "size_bytes": 1071,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰法系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/.shardrc.json",
+      "git_blob_sha": "c0b6276423458241d988370a43c0c1c9c80250db",
+      "size_bytes": 817,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/.shardrc.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-a.md",
+      "git_blob_sha": "ec23bc6c17ea8e1adfb89c7f108f7d4803f151c5",
+      "size_bytes": 4252,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-a.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-b.md",
+      "git_blob_sha": "4bb805f872dd6642c689a71263347a6278422828",
+      "size_bytes": 8538,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-b.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-c.md",
+      "git_blob_sha": "50a11a10201f896a239399ca090b4c060d5e2227",
+      "size_bytes": 5814,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-c.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-d.md",
+      "git_blob_sha": "50d1c54983f105f8f1fee230e31fac7102c72269",
+      "size_bytes": 8543,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-d.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）.md",
+      "git_blob_sha": "a34ad051c28b0b8ae99c098bd5cdadf8042cc84e",
+      "size_bytes": 1385,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/教官系統（支援卡）.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/數值系統.md",
+      "git_blob_sha": "8eb9bc453622c7b0cc85eded13a53e7610d58fff",
+      "size_bytes": 36508,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/數值系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/新手開場規格書.md",
+      "git_blob_sha": "5a6f1ff2e33624524104f2f1ead72d7c42dccaec",
+      "size_bytes": 22966,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/新手開場規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/正式版劇本文案.md",
+      "git_blob_sha": "ac694f99176de93f247747984dd901db009fe517",
+      "size_bytes": 5193,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/正式版劇本文案.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將人物介面美術接線清單.md",
+      "git_blob_sha": "61f28db3e9aba8d9e4cb7e539cba8446c2b6926e",
+      "size_bytes": 23567,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將人物介面美術接線清單.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將人物介面規格書.md",
+      "git_blob_sha": "81901d5ff93b94e01a45f9a4700f12e431e0fad4",
+      "size_bytes": 12819,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將人物介面規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-02.md",
+      "git_blob_sha": "6b4a9d3a735b2a90194b6c255ae02d1fc96245d2",
+      "size_bytes": 2261,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-02.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-14.md",
+      "git_blob_sha": "394f8746eb21fba42a52d9cfbe944e5223dcc345",
+      "size_bytes": 4215,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-14.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將個性卡規格.md",
+      "git_blob_sha": "d31c9f9dc21aac7f2163c9a2a62961084e05dc1a",
+      "size_bytes": 21114,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將個性卡規格.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將壽命系統.md",
+      "git_blob_sha": "95c11b009130b25bec40b7e3eb039fb0b7e74a0d",
+      "size_bytes": 10539,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將壽命系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將戰績系統.md",
+      "git_blob_sha": "77b7ad9b9b8219f3e059ad04810a9b55b66ff5a2",
+      "size_bytes": 7782,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將戰績系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將日誌與離線互動系統.md",
+      "git_blob_sha": "d42bbee7fdabd64d6f76e375daa76acfa9fda9fc",
+      "size_bytes": 12043,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將日誌與離線互動系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將系統.md",
+      "git_blob_sha": "ade5fd335ac538adfd7de01eced82b0eb0ef0774",
+      "size_bytes": 9176,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將背包（倉庫）系統.md",
+      "git_blob_sha": "cf3bcd71ddebcf3bc61c10fa4ad09c89463002a8",
+      "size_bytes": 8569,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將背包（倉庫）系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將裝備道具系統.md",
+      "git_blob_sha": "1f30cd6684a896f8a6ba1ff893dc66ff8e2479e4",
+      "size_bytes": 20844,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將裝備道具系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將裝備道具系統_實作任務清單.md",
+      "git_blob_sha": "ccdda045a27b1340a8d4f0460a29e3bd1750eb7f",
+      "size_bytes": 7586,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將裝備道具系統_實作任務清單.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/武將資料管線規格書.md",
+      "git_blob_sha": "09b79d628f7df0b374a755428976e148e6d19caf",
+      "size_bytes": 7706,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將資料管線規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md",
+      "git_blob_sha": "6891f16666cad5d1ade035c5c22f60c31b9ad14e",
+      "size_bytes": 31270,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/熱更新與版本控制規格書.md",
+      "git_blob_sha": "c919c7c291d53b0a550b8fa8179c15f9d31353fe",
+      "size_bytes": 5380,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/熱更新與版本控制規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/留存系統.md",
+      "git_blob_sha": "463ae739bc747d81f884d890630786e8eeae01b6",
+      "size_bytes": 11677,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/留存系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/.shardrc.json",
+      "git_blob_sha": "cdd32da75614679e2ca33450f42ef263723bd1ca",
+      "size_bytes": 765,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/結緣系統-shards/.shardrc.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-a.md",
+      "git_blob_sha": "68491f1692367e08d1e3d6aeea6a5c0a42b00865",
+      "size_bytes": 3265,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-a.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-b.md",
+      "git_blob_sha": "e184f69e78b6f9bd773b02c97aec4afbdc67964c",
+      "size_bytes": 5268,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-b.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md",
+      "git_blob_sha": "72f4339c04e29ed587bc8b3cf03fc63883a8514f",
+      "size_bytes": 3200,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-d.md",
+      "git_blob_sha": "382e88a710d0cae3bfa5ec9eedd50978b079bd1d",
+      "size_bytes": 3117,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-d.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/結緣系統（配種）.md",
+      "git_blob_sha": "6bcd825df8f4a5fb838aca5495d95e43f5fcc1f2",
+      "size_bytes": 1243,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/結緣系統（配種）.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/經濟系統.md",
+      "git_blob_sha": "ed354cafccc7b6ebbd8ce2c739dbd7ee01606435",
+      "size_bytes": 13257,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/經濟系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/英靈世家系統.md",
+      "git_blob_sha": "26292c6b6c1e847f69fb051953aafe99a0312230",
+      "size_bytes": 18543,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/英靈世家系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/英靈虎符與特種軍隊視覺契約補遺_2026-04-04.md",
+      "git_blob_sha": "e12a174af0f8086a29985c14f139c4d72af99030",
+      "size_bytes": 2151,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/英靈虎符與特種軍隊視覺契約補遺_2026-04-04.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統傳承G1初代開局_直覺相馬與開蒙修業規格書.md",
+      "git_blob_sha": "69b055b875fcb44e39d6419525eebe5a378f2f67",
+      "size_bytes": 9775,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統傳承G1初代開局_直覺相馬與開蒙修業規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統傳承G2二代傳承_功業回流與三代譜牒規格書.md",
+      "git_blob_sha": "5d4ee65ff2cf332ea0ac3ca6fac7f1710bf53f3d",
+      "size_bytes": 11575,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統傳承G2二代傳承_功業回流與三代譜牒規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統傳承G3三代深淵_外戚純化與世交合譜規格書.md",
+      "git_blob_sha": "a3b5481a28a3a2e963b78cbe0bf79cef2594aac9",
+      "size_bytes": 15480,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統傳承G3三代深淵_外戚純化與世交合譜規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統傳承G4百年門閥_開宗立派與天下郡望規格書.md",
+      "git_blob_sha": "f2ad3fe3c330d850d64d50071af3e43644d6bf6c",
+      "size_bytes": 12626,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統傳承G4百年門閥_開宗立派與天下郡望規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統樹14人UI規格書.md",
+      "git_blob_sha": "c87a0de8cc5384ea4434ddee58931cf16c6bba46",
+      "size_bytes": 6420,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統樹14人UI規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統理論系統.md",
+      "git_blob_sha": "183d6ee8a61b09d38e900a9847e35482bb8f625a",
+      "size_bytes": 18569,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統理論系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/R5_待補契約問題清單_v3.md",
+      "git_blob_sha": "594d3e237d240fba628a3c795a5d78a719a94a32",
+      "size_bytes": 3893,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/R5_待補契約問題清單_v3.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/README.md",
+      "git_blob_sha": "0ac275fdcef59c8eecb529ccf8e96919c6680fc6",
+      "size_bytes": 2705,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/README.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/00_覆蓋與缺口盤點.md",
+      "git_blob_sha": "6074a3e3a54ab6b878c53769eb81fbdefa9123a7",
+      "size_bytes": 5318,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/00_覆蓋與缺口盤點.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/01_功能總清單.md",
+      "git_blob_sha": "e2c662987f2512f79e7b8d1b47428d82cb3a09f3",
+      "size_bytes": 22798,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/01_功能總清單.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/02_來源覆蓋矩陣.md",
+      "git_blob_sha": "bec337408b3a50ec185b17663907cd06b72f6a7a",
+      "size_bytes": 3976,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/02_來源覆蓋矩陣.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/README.md",
+      "git_blob_sha": "0835db2d52b5ab78a7d936eb9e0af6b6c87af462",
+      "size_bytes": 1134,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/README.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/來源覆蓋矩陣.json",
+      "git_blob_sha": "95e3f984cf6c2bbc0ae4de4bbad7d23a738445ab",
+      "size_bytes": 14985,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/來源覆蓋矩陣.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/功能總清單.json",
+      "git_blob_sha": "fa39757b4441c3da14768d8f4efbe43559abc304",
+      "size_bytes": 75682,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/功能總清單.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/README.md",
+      "git_blob_sha": "ecf38b752451330971ba9f4d32231994d2d77326",
+      "size_bytes": 4243,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/README.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-A01.md",
+      "git_blob_sha": "776d47f1cdc8bc5ad85b126a7dfcaddcbf039876",
+      "size_bytes": 9634,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-A01.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-A02.md",
+      "git_blob_sha": "7b48c8c61ebde323a7d98257d8ca4b1633632afa",
+      "size_bytes": 12734,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-A02.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B01.md",
+      "git_blob_sha": "1e54db5a746d0861ee3160e07b455a40c8bcaf4c",
+      "size_bytes": 8437,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B01.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B02.md",
+      "git_blob_sha": "69ee759853b4c0bc0238d89e6307c381e16f0692",
+      "size_bytes": 9877,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B02.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B03.md",
+      "git_blob_sha": "b14cc841a3793567110b9a30c3d6b00c7e475122",
+      "size_bytes": 9173,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B03.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B04.md",
+      "git_blob_sha": "da6a640361167315d318322e1a4339e129493f1b",
+      "size_bytes": 8009,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B04.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B05.md",
+      "git_blob_sha": "06becf686525ef97cbb6412f84dffcc8c732cac3",
+      "size_bytes": 8527,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B05.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B06.md",
+      "git_blob_sha": "f1384488f746b6cdddd8d3aaabdb8cc9ca92d2da",
+      "size_bytes": 9526,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B06.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B07.md",
+      "git_blob_sha": "e0018db4e0f81d0986c005ab6ee5be52d4403308",
+      "size_bytes": 9967,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B07.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B08.md",
+      "git_blob_sha": "b15419fd24ddffb5a660f89a4d41c3574b833eda",
+      "size_bytes": 12911,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B08.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B09.md",
+      "git_blob_sha": "eab5cb774f412e00a28cedea254fde8a177258f5",
+      "size_bytes": 8621,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B09.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B10.md",
+      "git_blob_sha": "43f195460330da0b6d0a6b8d933c6e0878aab907",
+      "size_bytes": 9542,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B10.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C01.md",
+      "git_blob_sha": "9ad1e90954622596ad0413dabd56f9a2d6c57c07",
+      "size_bytes": 5831,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C01.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C02.md",
+      "git_blob_sha": "e89bd1f586b4553c412a354899fbe9162b7fe545",
+      "size_bytes": 4947,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C02.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C03.md",
+      "git_blob_sha": "55c1c2c25c4903bcb5e54f263b4ec4312c312880",
+      "size_bytes": 7010,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C03.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C04.md",
+      "git_blob_sha": "dd49550b2ffd5165489e51aeebcc2da0e7a54587",
+      "size_bytes": 5207,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C04.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C05.md",
+      "git_blob_sha": "7d119fa5eafc552e1e9f424e57472742d312b7e8",
+      "size_bytes": 5575,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C05.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E01.md",
+      "git_blob_sha": "a6be2273f2ec86cdfc4dcab8d773b2275d14743e",
+      "size_bytes": 5058,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E01.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E02.md",
+      "git_blob_sha": "5a95eca4f1dcc144c2dd351ccc366407d7bbe08a",
+      "size_bytes": 5371,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E02.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E03.md",
+      "git_blob_sha": "49e6dff7c9a6683e53a7064d5fb86a5047664270",
+      "size_bytes": 6172,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-E03.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G01.md",
+      "git_blob_sha": "fed8e6e8777e4578690126bdafd2df79171b79a7",
+      "size_bytes": 14320,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G01.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G02.md",
+      "git_blob_sha": "6814d58c66323593b8cfc7c22c6fe3297def7b7d",
+      "size_bytes": 11076,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G02.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G03.md",
+      "git_blob_sha": "1f6c41d01c36455c040b995656010eff64b20c07",
+      "size_bytes": 11613,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G03.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G04.md",
+      "git_blob_sha": "a4539d7b9f360c4bd9117191808899f2ad3f8305",
+      "size_bytes": 9452,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G04.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G05.md",
+      "git_blob_sha": "aa2cc002e3782ed3e5d97523666eefccb8c147c8",
+      "size_bytes": 14268,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G05.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G06.md",
+      "git_blob_sha": "f5f6b1b0fae288a851428c379cae7eb8eb59f5e8",
+      "size_bytes": 10106,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G06.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G07.md",
+      "git_blob_sha": "e0672f231ace8ee16ebe2ea5c41b467620960522",
+      "size_bytes": 12665,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G07.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G08.md",
+      "git_blob_sha": "96a09eeebf75cb4be35fd1539b94615bd0dd5c23",
+      "size_bytes": 10825,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-G08.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S01.md",
+      "git_blob_sha": "35b166602aaee14894fb08e0fa5bf3cbb1c8fb3c",
+      "size_bytes": 10381,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S01.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S02.md",
+      "git_blob_sha": "4e94e64decb421018267f8c7a3378cab9f2637ac",
+      "size_bytes": 9794,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S02.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S03.md",
+      "git_blob_sha": "c7793c40a84944512d3274ab1ab67a04f910dd57",
+      "size_bytes": 16171,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S03.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S04.md",
+      "git_blob_sha": "7534593e7e6a1e4d2a4eecbbc66c1527567089fe",
+      "size_bytes": 10249,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S04.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S05.md",
+      "git_blob_sha": "2119ccef05e559392c6f6cc75b0c4db026723e31",
+      "size_bytes": 9762,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S05.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S06.md",
+      "git_blob_sha": "08f4f7125621318555e2963cd115f35cd2d034aa",
+      "size_bytes": 10033,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S06.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S07.md",
+      "git_blob_sha": "ae5fb59a08d2118a8bca1f499733bf88a5212c02",
+      "size_bytes": 9633,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S07.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S08.md",
+      "git_blob_sha": "2bc71316870a9d0d33cfc10de578cac1cf7d05cd",
+      "size_bytes": 9519,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S08.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-U01.md",
+      "git_blob_sha": "d5749ec3f52730367b6413dbb3cbc82a821b0a46",
+      "size_bytes": 6450,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-U01.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-U02.md",
+      "git_blob_sha": "e5666e0cdfd8ca0729de74c5a9ec451f79b2ee95",
+      "size_bytes": 10316,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-U02.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/來源缺口與待決分帳.json",
+      "git_blob_sha": "fb4a1cf7e98e788cab263b83388196a25ab217f6",
+      "size_bytes": 11055,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/來源缺口與待決分帳.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/來源缺口與待決分帳.md",
+      "git_blob_sha": "595b898f8084188e04e979bca07b201cfb64eb9d",
+      "size_bytes": 9232,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/來源缺口與待決分帳.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/修訂摘要.md",
+      "git_blob_sha": "879ee438dc3e138e65e28dd354fbef7b3a94ae01",
+      "size_bytes": 1285,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/修訂摘要.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/待補契約問題清單.md",
+      "git_blob_sha": "ae1356fa4cf3f8103e48c694bb618e55f09f9ffe",
+      "size_bytes": 3893,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/待補契約問題清單.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/逐功能規格索引.json",
+      "git_blob_sha": "78d046cae085ed95386f6b3275ff8b8524b7c716",
+      "size_bytes": 65559,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/逐功能規格索引.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/historical_case_index/manifest.json",
+      "git_blob_sha": "0358df4d9261c358aa5a871521b658c89a3178fe",
+      "size_bytes": 955,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/historical_case_index/manifest.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/historical_case_index/歷史案例對照索引.json",
+      "git_blob_sha": "f844d1b1d1a2b43e214e0a17c7ea6888fefca01c",
+      "size_bytes": 517660,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/historical_case_index/歷史案例對照索引.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/historical_case_index/歷史案例對照索引.md",
+      "git_blob_sha": "17e38e7df9dfccf4003db65e8ee7a22759394d72",
+      "size_bytes": 40124,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/historical_case_index/歷史案例對照索引.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/manifest.json",
+      "git_blob_sha": "de2a4a30a82cec733c4941f0790232960dbe1d15",
+      "size_bytes": 11988,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/manifest.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/00_R5_模組化總綱.md",
+      "git_blob_sha": "3d3aa5d035bf3c2356792cff937d2b0cd8eb2f60",
+      "size_bytes": 12832,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/00_R5_模組化總綱.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/01_共同身份_時間與存檔契約.md",
+      "git_blob_sha": "48200645987502114ee9cb01f181949a87af9024",
+      "size_bytes": 13158,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/01_共同身份_時間與存檔契約.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/02_出生_血統與聯姻.md",
+      "git_blob_sha": "0acb6e0eec08ff885c4d3de803aad22e1511bf9f",
+      "size_bytes": 17697,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/02_出生_血統與聯姻.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/03_培育_太傅與研習.md",
+      "git_blob_sha": "7f1d34c586e91051437a2230aa985ebaabe92639",
+      "size_bytes": 7762,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/03_培育_太傅與研習.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/04_知識投影與漸進介面.md",
+      "git_blob_sha": "3d1ce886331c18d93fb7c552723c90a907f1ccc5",
+      "size_bytes": 5583,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/04_知識投影與漸進介面.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/05_首次統一結局與家族榮譽.md",
+      "git_blob_sha": "d4272c2b32758de09de68582c977ca6f7d9ed1df",
+      "size_bytes": 6044,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/05_首次統一結局與家族榮譽.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/06_主題賽季與跨家族延續.md",
+      "git_blob_sha": "9c9658a8f76923e5cfcb650272f4d45579f544e4",
+      "size_bytes": 12120,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/06_主題賽季與跨家族延續.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/07_祖地存續與敵方再起.md",
+      "git_blob_sha": "68d41f8ad3869cb48a3a5a155321c691d0eb9a38",
+      "size_bytes": 5557,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/07_祖地存續與敵方再起.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/08_決策_衝突與擴充邊界.md",
+      "git_blob_sha": "2a5bd3fd4a7524ce3e5592a13a016e94fc51feaf",
+      "size_bytes": 8847,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/08_決策_衝突與擴充邊界.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/09_證據來源與驗收索引.md",
+      "git_blob_sha": "3faabbb4328555403b91a3e7e1b9ded913e6d296",
+      "size_bytes": 10430,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/09_證據來源與驗收索引.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/10_R4歷史基線_玩法.md",
+      "git_blob_sha": "666897b0d587ab09255ece5675c51d14b271226c",
+      "size_bytes": 34230,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/10_R4歷史基線_玩法.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/11_R4歷史基線_工程驗收.md",
+      "git_blob_sha": "5b42e28d36f28a13ac5ce9d73628217a4dd3a087",
+      "size_bytes": 99874,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/11_R4歷史基線_工程驗收.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/README.md",
+      "git_blob_sha": "4d49ff93b09d450dad15d7b24641ddedda3737b2",
+      "size_bytes": 1485,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/README.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/acceptance_cases.json",
+      "git_blob_sha": "113a6a89578d9cb14181fd0f6136f2e479468909",
+      "size_bytes": 7930,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/acceptance_cases.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/feature_index.json",
+      "git_blob_sha": "90c85f79ff3b9d0cb5345c7497de08e5fde4c364",
+      "size_bytes": 43566,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/feature_index.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/supplement_manifest.json",
+      "git_blob_sha": "15fc8bb29cc2b97401e93cb7ea2308bc73a12716",
+      "size_bytes": 2174,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/supplement_manifest.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/來源章節反向索引.json",
+      "git_blob_sha": "3d0c2083715860d5bc64d3eb166d92e4730fd166",
+      "size_bytes": 15120,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/來源章節反向索引.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/來源綁定.json",
+      "git_blob_sha": "7f6f9764fe46f046727c9eeeba9feec34d0c2e7f",
+      "size_bytes": 30153,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/來源綁定.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/功能反向索引.json",
+      "git_blob_sha": "b9ef16ea90733583d9bb2c5173ae80dcd8e1f27f",
+      "size_bytes": 103436,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/功能反向索引.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/文件總索引.json",
+      "git_blob_sha": "402beaa56e72a2c6ceb4ac5fd90305735dab1bee",
+      "size_bytes": 48444,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/文件總索引.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/案例索引.json",
+      "git_blob_sha": "edbd67dd915d6d89c353d06056569c948c910af4",
+      "size_bytes": 308670,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/案例索引.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/檢查結果.json",
+      "git_blob_sha": "7884ec821ec1b2377a70d05392f29ea884787cba",
+      "size_bytes": 657,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/檢查結果.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/決策與補件反向索引.json",
+      "git_blob_sha": "e77458a0f0093f3e695ee4512967c3d66724fba2",
+      "size_bytes": 18146,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/決策與補件反向索引.json"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/索引總覽.md",
+      "git_blob_sha": "9626067c9847458250c9ff97ad8f3eb290456281",
+      "size_bytes": 4587,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/索引總覽.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書.md",
+      "git_blob_sha": "61c95328249f784d40c87806a8a5443ed41c0414",
+      "size_bytes": 13643,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血脈命鏡LoadingTips補遺_2026-04-04.md",
+      "git_blob_sha": "7a630793422629ead6f0c1a48dffcee960d06e16",
+      "size_bytes": 644,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血脈命鏡LoadingTips補遺_2026-04-04.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血脈命鏡過場載入規格書.md",
+      "git_blob_sha": "4a4ea7f1d9d7b66eda174688fa9f36b106475e6a",
+      "size_bytes": 9033,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血脈命鏡過場載入規格書.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血脈命鏡過場載入規格補遺_2026-04-02_v3.md",
+      "git_blob_sha": "7a4df62ba8316d1029715f244e1a25d7ef7c036e",
+      "size_bytes": 4151,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血脈命鏡過場載入規格補遺_2026-04-02_v3.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/血脈視覺契約補遺_2026-04-02.md",
+      "git_blob_sha": "cbc30160c103caa917aa30d02b4c57cb21c9cc6b",
+      "size_bytes": 2116,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血脈視覺契約補遺_2026-04-02.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/角色血脈符號插槽規格補遺_2026-04-02.md",
+      "git_blob_sha": "25e3012db7a24b69f6866a31f0724c0f8579b883",
+      "size_bytes": 1320,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/角色血脈符號插槽規格補遺_2026-04-02.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/角色雙故事層補遺_2026-04-04.md",
+      "git_blob_sha": "1db6167a896817be0e198cb4a2610c571d402dfa",
+      "size_bytes": 1793,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/角色雙故事層補遺_2026-04-04.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/資源循環系統.md",
+      "git_blob_sha": "9321dfad0e14772f62f653a1d0b22f0869dac5b1",
+      "size_bytes": 4239,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/資源循環系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統.md",
+      "git_blob_sha": "f144126a6b2206e43b5a6614c7b019a0f53ed4b7",
+      "size_bytes": 9821,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/轉職與宿命系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/轉蛋系統.md",
+      "git_blob_sha": "622cbbb2a5789b8fa98995d03530b2562c5ae3e4",
+      "size_bytes": 14719,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/轉蛋系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/遊戲時間系統.md",
+      "git_blob_sha": "632f8bc0a8c66b3516a9f6836aac7ac39d145d8b",
+      "size_bytes": 5874,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/遊戲時間系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/運氣系統.md",
+      "git_blob_sha": "e11c4ced7051616f2c14a3fce80cc0c07035831f",
+      "size_bytes": 4698,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/運氣系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/道具系統（付費免費道具）.md",
+      "git_blob_sha": "c8019915b1b3968b6fcb2c2573f5150b402a4db8",
+      "size_bytes": 9164,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/道具系統（付費免費道具）.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/重複卡分流與血脈灌注補遺_2026-04-04.md",
+      "git_blob_sha": "ffa7df419d130977e5281379d3fcac3a9dc6a567",
+      "size_bytes": 1259,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/重複卡分流與血脈灌注補遺_2026-04-04.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/關卡設計系統.md",
+      "git_blob_sha": "1bbd97eb1adf37f8884d43ee223e4b4b2b65feda",
+      "size_bytes": 10838,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/關卡設計系統.md"
+    },
+    {
+      "path": "docs/遊戲規格文件/系統規格書/領地治理系統.md",
+      "git_blob_sha": "a1c8b3adede0d2689e9ae0af3a76b4e209b51097",
+      "size_bytes": 7682,
+      "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/領地治理系統.md"
+    }
+  ]
+}

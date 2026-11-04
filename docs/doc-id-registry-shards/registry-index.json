@@ -14,7 +14,7 @@
   {
     "id": "doc_index_0003",
     "path": "docs/cross-ref/cross-ref-ui-spec.md",
-    "title": "Cross-Reference: UI Spec JSON 鞈蝝Ｗ?",
+    "title": "Cross-Reference: UI Spec JSON 資產索引",
     "category": "index"
   },
   {
@@ -339,6 +339,84 @@
     "id": "doc_index_1032",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/README.md",
     "title": "R4／R5 文件與案例索引增補 v4",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1033",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/README.md",
+    "title": "血統遺傳與全玩法文件補全工作包",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1034",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/README.md",
+    "title": "工作包驗證說明",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1035",
+    "path": "docs/cross-ref/code/battle.md",
+    "title": "代碼索引分片：Battle",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1036",
+    "path": "docs/cross-ref/code/core-shared.md",
+    "title": "代碼索引分片：Core 其他目錄與 Shared",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1037",
+    "path": "docs/cross-ref/code/core-systems-1.md",
+    "title": "代碼索引分片：Core Systems（上半，依檔名排序）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1038",
+    "path": "docs/cross-ref/code/core-systems-2.md",
+    "title": "代碼索引分片：Core Systems（下半）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1039",
+    "path": "docs/cross-ref/code/tools.md",
+    "title": "代碼索引分片：工具、建置與 Agent Skills",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1040",
+    "path": "docs/cross-ref/code/ui-spec-json.md",
+    "title": "代碼索引分片：UI Spec JSON 畫面表",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1041",
+    "path": "docs/cross-ref/code/ui.md",
+    "title": "代碼索引分片：UI",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1042",
+    "path": "docs/cross-ref/progress/d1a-rejudge.md",
+    "title": "進度索引分片：D-1a 邏輯欄重判紀錄",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1043",
+    "path": "docs/cross-ref/progress/d2-d3-pending-ui.md",
+    "title": "進度索引分片：D-2 待建 UI Spec／D-3 待定 Contract",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1044",
+    "path": "docs/cross-ref/progress/spec-audit-lifespan.md",
+    "title": "規格逐條比對：武將壽命系統.md (doc_spec_0018)",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_1045",
+    "path": "docs/cross-ref/progress/spec-audit-officer.md",
+    "title": "規格逐條比對：官職系統.md (doc_spec_0014)",
     "category": "index"
   }
 ]

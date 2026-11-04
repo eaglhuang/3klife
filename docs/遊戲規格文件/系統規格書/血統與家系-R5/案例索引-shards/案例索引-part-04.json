@@ -1,0 +1,1532 @@
+{
+  "261": {
+    "case_id": "R5F-S01-T05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S01.md",
+    "source_sha256": "8b860be01f385b412f435167487d0e1c19a573666d937610d30c40681ef970e3",
+    "source_line_1based": 88,
+    "source_locator_text": "- **R5F-S01-T05 遷移存讀**：Given legacy worldSeason=120 且人物曾精查；When 依明示別名映射讀入再存讀候選；Then worldQuarterIndex=120、知識聯集保留、舊 P/B/A 與版本不重算。",
+    "feature_ids": [
+      "R5F-S01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "262": {
+    "case_id": "R5F-S02-P",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S02.md",
+    "source_sha256": "5354f6bb57851f12f629e88249beddd4820bf5a0fabd6df2931c686611012750",
+    "source_line_1based": 78,
+    "source_locator_text": "- **R5F-S02-P 正例**：Given 已採的連通與糧道 policy、固定地理、固定合法名冊和 seedRef=s；When 生成並再次回放；Then 每城 owner 與 constraint evidence 相同，全部必要約束逐條 PASS，active 世界 hash 未變。",
+    "feature_ids": [
+      "R5F-S02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": true,
+    "historical_case_links": []
+  },
+  "263": {
+    "case_id": "R5F-S02-N",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S02.md",
+    "source_sha256": "5354f6bb57851f12f629e88249beddd4820bf5a0fabd6df2931c686611012750",
+    "source_line_1based": 79,
+    "source_locator_text": "- **R5F-S02-N 反例**：Given candidate 把城 X 同時指定為 faction a 和 b 的唯一領地；When 驗入；Then 唯一領主約束 FAIL，舊世界、人物與國庫全不變。",
+    "feature_ids": [
+      "R5F-S02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": true,
+    "historical_case_links": []
+  },
+  "264": {
+    "case_id": "R5F-S02-T01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S02.md",
+    "source_sha256": "5354f6bb57851f12f629e88249beddd4820bf5a0fabd6df2931c686611012750",
+    "source_line_1based": 80,
+    "source_locator_text": "- **R5F-S02-T01 生存失敗**：Given 已採規則要求基本補給可達，而 faction a 無任何可用糧路；When 驗證；Then 拒候選，不以改人物 P 或臨時免費軍隊補 PASS。",
+    "feature_ids": [
+      "R5F-S02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "265": {
+    "case_id": "R5F-S02-T02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S02.md",
+    "source_sha256": "5354f6bb57851f12f629e88249beddd4820bf5a0fabd6df2931c686611012750",
+    "source_line_1based": 81,
+    "source_locator_text": "- **R5F-S02-T02 未決邊界**：Given strategy、分地家數、roster cap 仍未採；When 請求正式候選；Then 回 policyIncomplete，未把限制式亂數或全部家族一城當預設。",
+    "feature_ids": [
+      "R5F-S02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "266": {
+    "case_id": "R5F-S02-T03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S02.md",
+    "source_sha256": "5354f6bb57851f12f629e88249beddd4820bf5a0fabd6df2931c686611012750",
+    "source_line_1based": 82,
+    "source_locator_text": "- **R5F-S02-T03 資源缺口**：Given 地盤連通已驗但軍隊／國庫 envelope 未知；When 評估可生存與提交資格；Then 基本結構結果保留、相關檢查 UNRESOLVED，不聲稱整體 PASS。",
+    "feature_ids": [
+      "R5F-S02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "267": {
+    "case_id": "R5F-S02-T04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S02.md",
+    "source_sha256": "5354f6bb57851f12f629e88249beddd4820bf5a0fabd6df2931c686611012750",
+    "source_line_1based": 83,
+    "source_locator_text": "- **R5F-S02-T04 重入**：Given request 已生成但回應遺失；When 同 requestId/digest 再送；Then 回原 candidate，不多消耗生成流、不換 seed；出生流 draw count 不變。",
+    "feature_ids": [
+      "R5F-S02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "268": {
+    "case_id": "R5F-S02-T05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S02.md",
+    "source_sha256": "5354f6bb57851f12f629e88249beddd4820bf5a0fabd6df2931c686611012750",
+    "source_line_1based": 84,
+    "source_locator_text": "- **R5F-S02-T05 版本衝突**：Given 預覽後新增出生造成 sourceRevision 變動；When S03 驗候選；Then stale/REVISION_CONFLICT，要求新預覽，不偷補新生兒到已確認名冊。",
+    "feature_ids": [
+      "R5F-S02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "269": {
+    "case_id": "R5F-S02-T06",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S02.md",
+    "source_sha256": "5354f6bb57851f12f629e88249beddd4820bf5a0fabd6df2931c686611012750",
+    "source_line_1based": 85,
+    "source_locator_text": "- **R5F-S02-T06 存讀**：Given candidate 含失城但存活之家族與死者歷史；When 寫候選區後讀回；Then 活人沿原 UID、死者只歷史，不因模板重建復活。",
+    "feature_ids": [
+      "R5F-S02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "270": {
+    "case_id": "R5F-S03-P",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 87,
+    "source_locator_text": "- **R5F-S03-P 重入成功**：Given transition t 已 commit 但回應遺失；When 同 t/digest 重入；Then 查 marker 回原 pointer／收據，E02 reward ledger 筆數不變，不建立第二個 toSeasonId。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": true,
+    "historical_case_links": []
+  },
+  "271": {
+    "case_id": "R5F-S03-N",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 88,
+    "source_locator_text": "- **R5F-S03-N 寫入失敗**：Given 已確認 t，在新槽尚未寫完時崩潰；When 重啟；Then 舊槽仍可讀、人物地盤未半清，未校驗新槽不得被設 current。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": true,
+    "historical_case_links": []
+  },
+  "272": {
+    "case_id": "R5F-S03-T01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 89,
+    "source_locator_text": "- **R5F-S03-T01 預覽正例**：Given 已定 policy 與合法 candidate；When 玩家只查看再取消；Then source pointer、資源、世界季度、出生／獎勵 marker 均不變。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "273": {
+    "case_id": "R5F-S03-T02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 90,
+    "source_locator_text": "- **R5F-S03-T02 未定反例**：Given 國庫 carry 及 time policy 未定；When 玩家要求確認；Then 列兩缺項並拒提交，不以零或全帶填值。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "274": {
+    "case_id": "R5F-S03-T03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 91,
+    "source_locator_text": "- **R5F-S03-T03 確認過時**：Given previewRevision=8 並已確認，背景出生令來源=9；When preparing；Then REVISION_CONFLICT，不偷重建 candidate，不沿舊確認切檔。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "275": {
+    "case_id": "R5F-S03-T04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 92,
+    "source_locator_text": "- **R5F-S03-T04 結算後失敗**：Given E02 已保存一次 reward 收據而新槽 checksum 失敗；When 恢復 t；Then 沿原收據與已核 post-settlement baseline 重建／驗證候選，獎勵 ledger 及應保留餘額均在，不退獎再領、不再累加分數；外部來源若另變則重新預覽，不重用過時候選。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "276": {
+    "case_id": "R5F-S03-T05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 93,
+    "source_locator_text": "- **R5F-S03-T05 切指標後中斷**：Given 新槽完整且 pointer 已切，回應前崩潰；When 讀 marker/pointer；Then 調和為同一已提交結果，不恢復舊槽冒稱失敗。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "277": {
+    "case_id": "R5F-S03-T06",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 94,
+    "source_locator_text": "- **R5F-S03-T06 同鍵異文**：Given t 綁 planDigest=a；When 以同 t 送 digest=b 或新 key 再指同來源季；Then 異文衝突／既有交易回讀，不另付成本或再創季。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "278": {
+    "case_id": "R5F-S03-T07",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 95,
+    "source_locator_text": "- **R5F-S03-T07 跳時未採**：Given 孕期、研習及 K 到期事件存在而 DEC-R5-S04 未採；When 要求切季並跳年；Then 阻擋，不只加日期亦不自動完成未完事件。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "279": {
+    "case_id": "R5F-S03-T09",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 96,
+    "source_locator_text": "- **R5F-S03-T09 非統一主題**：Given 後勤主題有 S04 合法資格且無首次統一 E03 快照；When 所有適用政策均完備後確認換季；Then 不因不存在首次統一快照而阻擋一般成就，E02 只依其所需 evidence 唯一結算。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "280": {
+    "case_id": "R5F-S03-T08",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 97,
+    "source_locator_text": "- **R5F-S03-T08 真閉包**：Given 新槽漏敵家祖源，該祖源也是玩家外孫祖父；When 驗 closure；Then 拒切檔，保原來源及錯誤證據。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "281": {
+    "case_id": "R5F-S03-T10",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 100,
+    "source_locator_text": "- **R5F-S03-T10 本交易結算 revision**：Given 玩家確認 sourceRevision=8，E02 的唯一 reward event 在同交易中成功使 revision=9，且已採 carry policy 明示保留該獎勵；When S03 準備並提交新槽，之後再重入；Then journal 證明 8→9 只含該子收據、從含獎勵基線組槽，既不誤報外部衝突，也不以 revision8 舊 preview 覆獎；新槽 reward ledger 一筆、獎勵淨額恰一次，重入不再加。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "282": {
+    "case_id": "R5F-S03-T11",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S03.md",
+    "source_sha256": "9517bc47b07ae3f8d13d51883f795c476e4bafb191638c7c606a16dfdc134657",
+    "source_line_1based": 101,
+    "source_locator_text": "- **R5F-S03-T11 最後校驗後外部出生**：Given 候選按 baselineRevision=9 驗完且 expectedCommitStateStamp 綁 revision9，外部合法出生在切指標前提交成 revision10；When S03 嘗試最後切換；Then 等價排他／CAS 保護使出生與換季有單一合法順序：若出生先成功則切換失敗、最新來源保孩子與原 E02 獎勵，須新預覽確認；不能無條件切入 revision9 候選丟掉孩子，不能只補改 expectedRevision 後續切。",
+    "feature_ids": [
+      "R5F-S03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "283": {
+    "case_id": "R5F-S04-P",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S04.md",
+    "source_sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212",
+    "source_line_1based": 82,
+    "source_locator_text": "- **R5F-S04-P 正例**：Given 已採 theme t 的條件為 policy 中具名的兩個目標，兩項均有合法完成事件；When 最後事件提交；Then 產一個同 rulesHash 的 qualified event，開結算預覽但未切世界。",
+    "feature_ids": [
+      "R5F-S04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "284": {
+    "case_id": "R5F-S04-N",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S04.md",
+    "source_sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212",
+    "source_line_1based": 83,
+    "source_locator_text": "- **R5F-S04-N 反例**：Given AI 候選世界正在重建、畫面暫無敵軍，原世界未符合統一 policy；When 玩家點「完成」；Then 無統一事件、無首通快照或獎勵。",
+    "feature_ids": [
+      "R5F-S04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "285": {
+    "case_id": "R5F-S04-T01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S04.md",
+    "source_sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212",
+    "source_line_1based": 84,
+    "source_locator_text": "- **R5F-S04-T01 規則鎖定**：Given season s 已鎖 rulesHash=a；When catalog 更新為 b；Then s 仍以 a 計數，不能套新門檻補勝利。",
+    "feature_ids": [
+      "R5F-S04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "286": {
+    "case_id": "R5F-S04-T02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S04.md",
+    "source_sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212",
+    "source_line_1based": 85,
+    "source_locator_text": "- **R5F-S04-T02 截止未決**：Given 目標達成但強制截止／自由延長未採；When 玩家打開季終；Then 顯資格與待決，未擅清盤、推時間或宣告不能返回。",
+    "feature_ids": [
+      "R5F-S04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "287": {
+    "case_id": "R5F-S04-T03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S04.md",
+    "source_sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212",
+    "source_line_1based": 86,
+    "source_locator_text": "- **R5F-S04-T03 重送重入**：Given 事件 e 已增加一次進度並產 q；When 同 e 重送與存讀後再送；Then 進度不再加、q 的 ID 相同、E02 不收到新的業務成就。",
+    "feature_ids": [
+      "R5F-S04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "288": {
+    "case_id": "R5F-S04-T04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S04.md",
+    "source_sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212",
+    "source_line_1based": 87,
+    "source_locator_text": "- **R5F-S04-T04 故障恢復**：Given q 持久化成功但回覆遺失；When 恢復；Then 先查 marker 回 q，不換 canonical key。",
+    "feature_ids": [
+      "R5F-S04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "289": {
+    "case_id": "R5F-S04-T05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S04.md",
+    "source_sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212",
+    "source_line_1based": 88,
+    "source_locator_text": "- **R5F-S04-T05 主題分界**：Given 後勤主題已達標但領土未統一；When 分派 q；Then completionKind 為該主題完成，不送首次統一 E03 分支。",
+    "feature_ids": [
+      "R5F-S04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "290": {
+    "case_id": "R5F-S04-T06",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S04.md",
+    "source_sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212",
+    "source_line_1based": 89,
+    "source_locator_text": "- **R5F-S04-T06 證據邊界**：Given 顯示目標已滿但缺一個領域來源 ref；When 判定；Then SOURCE_INCOMPLETE，不能以 UI 計數補證據。",
+    "feature_ids": [
+      "R5F-S04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "291": {
+    "case_id": "R5F-S04-T07",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S04.md",
+    "source_sha256": "8e779060fd0a45bf69260d46d3750079b1adf46831debfa5fba0e82933f9b212",
+    "source_line_1based": 90,
+    "source_locator_text": "- **R5F-S04-T07 時鐘**：Given campaignSeasonId=s、worldSeason 對應季度 100；When 只選看下一個 theme；Then 世界季度與人物年齡不變。",
+    "feature_ids": [
+      "R5F-S04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "292": {
+    "case_id": "R5F-S05-P",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S05.md",
+    "source_sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62",
+    "source_line_1based": 78,
+    "source_locator_text": "- **R5F-S05-P 正例**：Given 已採 score policy、三筆不同合法事蹟與相同 comparisonGroupKey；When 提交並產本地榜；Then 每筆依原 policy 計一次，精確總分可由 ledger 重算，生涯 EP 值不變。",
+    "feature_ids": [
+      "R5F-S05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "293": {
+    "case_id": "R5F-S05-N",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S05.md",
+    "source_sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62",
+    "source_line_1based": 79,
+    "source_locator_text": "- **R5F-S05-N 混榜反例**：Given 兩筆 rulesHash 相同但一為純三國、一為未來幻想 mode，或難度不同；When 請求同榜排序；Then 分組或回不可比，不直接產統一第一名。",
+    "feature_ids": [
+      "R5F-S05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "294": {
+    "case_id": "R5F-S05-T01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S05.md",
+    "source_sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62",
+    "source_line_1based": 80,
+    "source_locator_text": "- **R5F-S05-T01 重送**：Given canonicalEventId=e 已加分；When 以原 key 或新 transport key 再送同業務事件；Then 回原 contribution，總分與筆數不增。",
+    "feature_ids": [
+      "R5F-S05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "295": {
+    "case_id": "R5F-S05-T02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S05.md",
+    "source_sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62",
+    "source_line_1based": 81,
+    "source_locator_text": "- **R5F-S05-T02 同鍵異分**：Given e 在 policy v1 有既存結果；When 客戶端把 delta 改大再送；Then 拒衝突，不採 UI 傳入的分數。",
+    "feature_ids": [
+      "R5F-S05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "296": {
+    "case_id": "R5F-S05-T03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S05.md",
+    "source_sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62",
+    "source_line_1based": 82,
+    "source_locator_text": "- **R5F-S05-T03 保存失敗**：Given ledger 更新寫入逾時；When 讀回 marker；Then 已提交回原結果，未定保 pending，不先補加一次。",
+    "feature_ids": [
+      "R5F-S05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "297": {
+    "case_id": "R5F-S05-T04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S05.md",
+    "source_sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62",
+    "source_line_1based": 83,
+    "source_locator_text": "- **R5F-S05-T04 歷史邊界**：Given 上季已凍結 s1 分數，人物本季能力提高；When 重開 s1 榜；Then 分數與快照不變，本季新帳不清生涯榮譽。",
+    "feature_ids": [
+      "R5F-S05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "298": {
+    "case_id": "R5F-S05-T05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S05.md",
+    "source_sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62",
+    "source_line_1based": 84,
+    "source_locator_text": "- **R5F-S05-T05 權限界線**：Given 只有本地功能且沒有上傳授權；When 完成賽季／開排行榜；Then 僅本地讀寫，無網路上傳與佇列，UI 不稱線上排名。",
+    "feature_ids": [
+      "R5F-S05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "299": {
+    "case_id": "R5F-S05-T06",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S05.md",
+    "source_sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62",
+    "source_line_1based": 85,
+    "source_locator_text": "- **R5F-S05-T06 知識界線**：Given 兩個公開資料相同、隱藏 P/LUK 不同的個體；When 顯示名次／破同分；Then 不用未知資料改排序或曝出精確值。",
+    "feature_ids": [
+      "R5F-S05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "300": {
+    "case_id": "R5F-S05-T07",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S05.md",
+    "source_sha256": "300bde155027cb2f683189eb544e20b11dba94c643ede4e09e5303261642bd62",
+    "source_line_1based": 86,
+    "source_locator_text": "- **R5F-S05-T07 未定公式**：Given scorePolicyRef 缺失；When 開正式分數榜；Then 顯政策未定與既有事實紀錄，不以全零或舊 EP 權重自造榜。",
+    "feature_ids": [
+      "R5F-S05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "301": {
+    "case_id": "R5F-S06-P",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S06.md",
+    "source_sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad",
+    "source_line_1based": 81,
+    "source_locator_text": "- **R5F-S06-P 正例**：Given 敵族 f 失城但成員 a 及其真出生子女 b 在世；When 建存續名冊；Then 沿 f/a/b 原 UID 與 birthEvent，列可用候選，不新增原名將。",
+    "feature_ids": [
+      "R5F-S06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "302": {
+    "case_id": "R5F-S06-N",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S06.md",
+    "source_sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad",
+    "source_line_1based": 82,
+    "source_locator_text": "- **R5F-S06-N 反例**：Given 舊名將 d 已 dead、原家族無合法延續來源；When 補入模板要求 d 原 UID 活著；Then 拒絕，不假造復活或孩子。",
+    "feature_ids": [
+      "R5F-S06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "303": {
+    "case_id": "R5F-S06-T01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S06.md",
+    "source_sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad",
+    "source_line_1based": 83,
+    "source_locator_text": "- **R5F-S06-T01 配對分界**：Given worldQuarterIndex=40 的 B10 配對已完成；When 只重建 campaign s2 敵家候選；Then 不再執行 B10、不新增孕期，季度仍 40。",
+    "feature_ids": [
+      "R5F-S06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "304": {
+    "case_id": "R5F-S06-T02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S06.md",
+    "source_sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad",
+    "source_line_1based": 84,
+    "source_locator_text": "- **R5F-S06-T02 未定供給**：Given 所有舊族分類完整但新家補入比例缺失；When 要求正式供給計畫；Then 保舊名冊可讀、回 policyIncomplete，不自選數家或 cap。",
+    "feature_ids": [
+      "R5F-S06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "305": {
+    "case_id": "R5F-S06-T03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S06.md",
+    "source_sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad",
+    "source_line_1based": 85,
+    "source_locator_text": "- **R5F-S06-T03 unknown 邊界**：Given 新姓模板父母來源缺失；When 驗來源；Then unresolved/SOURCE_INCOMPLETE，不標無共祖、不推成可安全婚配。",
+    "feature_ids": [
+      "R5F-S06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "306": {
+    "case_id": "R5F-S06-T04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S06.md",
+    "source_sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad",
+    "source_line_1based": 86,
+    "source_locator_text": "- **R5F-S06-T04 新家重入**：Given 已採 policy 下 foundingEvent=e 已提交 familyUID=n；When 換新 transport key 再送 e；Then 回 n，不多建一族或複製人。",
+    "feature_ids": [
+      "R5F-S06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "307": {
+    "case_id": "R5F-S06-T05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S06.md",
+    "source_sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad",
+    "source_line_1based": 87,
+    "source_locator_text": "- **R5F-S06-T05 故障恢復**：Given 新家提交逾時且結果未明；When 重啟；Then 查 marker，結果確定前不換 seed／UID 重新補入。",
+    "feature_ids": [
+      "R5F-S06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "308": {
+    "case_id": "R5F-S06-T06",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S06.md",
+    "source_sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad",
+    "source_line_1based": 88,
+    "source_locator_text": "- **R5F-S06-T06 人口大於地盤**：Given 十個存續家族而候選地圖可用城少於家族數；When 輸出名冊；Then 保全部家系，分地另報約束，不為每家一城刪人或擴圖。",
+    "feature_ids": [
+      "R5F-S06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "309": {
+    "case_id": "R5F-S06-T07",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S06.md",
+    "source_sha256": "90df2a66bf07ff0bb19f25af99910c420d9b5f545b576f2045654eb5d83468ad",
+    "source_line_1based": 89,
+    "source_locator_text": "- **R5F-S06-T07 存讀遷移**：Given 一 faction 同含兩 family，且某 family 有兩 faction 分支；When 存讀；Then 映射保持多對多，birthFamily 與父母不被政治 owner 覆寫。",
+    "feature_ids": [
+      "R5F-S06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "310": {
+    "case_id": "R5F-S07-P",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S07.md",
+    "source_sha256": "e0039bacc3d5b9a6c7a235e46c6d1afdc0b056313988fac83ad667535c6e1f50",
+    "source_line_1based": 81,
+    "source_locator_text": "- **R5F-S07-P 停用正例**：Given adoptionStatus=NOT_SELECTED；When 開提案／家族頁；Then 保既有資料，顯未採狀態，教學倍率、P、held、金資格與券均不變。",
+    "feature_ids": [
+      "R5F-S07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "311": {
+    "case_id": "R5F-S07-N",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S07.md",
+    "source_sha256": "e0039bacc3d5b9a6c7a235e46c6d1afdc0b056313988fac83ad667535c6e1f50",
+    "source_line_1based": 82,
+    "source_locator_text": "- **R5F-S07-N 反例**：Given 敘事已有「郡望」稱號但 DEC-R5-S10 未採；When 請求 +10% 教學或新金 ID；Then FEATURE_NOT_SELECTED/PROFILE_UNSUPPORTED，不授效果。",
+    "feature_ids": [
+      "R5F-S07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "312": {
+    "case_id": "R5F-S07-T01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S07.md",
+    "source_sha256": "e0039bacc3d5b9a6c7a235e46c6d1afdc0b056313988fac83ad667535c6e1f50",
+    "source_line_1based": 83,
+    "source_locator_text": "- **R5F-S07-T01 條件衝突**：Given 同時提供四代三人與三代四人的兩份提案；When 要凍結資格 policy；Then 回未決衝突，不自選較新檔或同時採兩套。",
+    "feature_ids": [
+      "R5F-S07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "313": {
+    "case_id": "R5F-S07-T02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S07.md",
+    "source_sha256": "e0039bacc3d5b9a6c7a235e46c6d1afdc0b056313988fac83ad667535c6e1f50",
+    "source_line_1based": 84,
+    "source_locator_text": "- **R5F-S07-T02 知識邊界**：Given 兩家公開資訊相同但隱藏因子不同；When 產公開名稱及資格提示；Then 不因隱藏值輸出可反推未知因子的不同提示，未定揭露時不發布結果。",
+    "feature_ids": [
+      "R5F-S07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "314": {
+    "case_id": "R5F-S07-T03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S07.md",
+    "source_sha256": "e0039bacc3d5b9a6c7a235e46c6d1afdc0b056313988fac83ad667535c6e1f50",
+    "source_line_1based": 85,
+    "source_locator_text": "- **R5F-S07-T03 代數邊界**：Given 同一真親子鏈跨五主題季但只兩親子邊；When 未來已採 policy 評估代數；Then 讀真親子邊，不把五次換季當五代。",
+    "feature_ids": [
+      "R5F-S07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "315": {
+    "case_id": "R5F-S07-T04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S07.md",
+    "source_sha256": "e0039bacc3d5b9a6c7a235e46c6d1afdc0b056313988fac83ad667535c6e1f50",
+    "source_line_1based": 86,
+    "source_locator_text": "- **R5F-S07-T04 未來重入**：Given 將來有已採授稱事件 e 並提交成功；When 同 e 重送／改姓後重送；Then 回原 TitleRecord，不另發因子或券，先查結果不因新 revision 誤判未提交。",
+    "feature_ids": [
+      "R5F-S07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "316": {
+    "case_id": "R5F-S07-T05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S07.md",
+    "source_sha256": "e0039bacc3d5b9a6c7a235e46c6d1afdc0b056313988fac83ad667535c6e1f50",
+    "source_line_1based": 87,
+    "source_locator_text": "- **R5F-S07-T05 未來寫入失敗**：Given 授稱寫入逾時；When 恢復；Then 查 marker，未知保持 pending，不以新 key 重授。",
+    "feature_ids": [
+      "R5F-S07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "317": {
+    "case_id": "R5F-S07-T06",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S07.md",
+    "source_sha256": "e0039bacc3d5b9a6c7a235e46c6d1afdc0b056313988fac83ad667535c6e1f50",
+    "source_line_1based": 88,
+    "source_locator_text": "- **R5F-S07-T06 遷移**：Given legacy 已有稱號與舊因子；When 只增加提案資料索引；Then 原 P、A、held、效果與知識不變，未新增金 ID。",
+    "feature_ids": [
+      "R5F-S07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "318": {
+    "case_id": "R5F-S08-P",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S08.md",
+    "source_sha256": "0f3a69d069c2dd0b7d6926335e40980fe0f2802aaaf624ca264f80a3d32cdfec",
+    "source_line_1based": 81,
+    "source_locator_text": "- **R5F-S08-P 停用正例**：Given 玩家在純三國模式且海外／幻想未選；When 載入新文件或瀏覽提案；Then 原人物、字典、地圖與排名組不變，未插入跨時代人物。",
+    "feature_ids": [
+      "R5F-S08"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "319": {
+    "case_id": "R5F-S08-N",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S08.md",
+    "source_sha256": "0f3a69d069c2dd0b7d6926335e40980fe0f2802aaaf624ca264f80a3d32cdfec",
+    "source_line_1based": 82,
+    "source_locator_text": "- **R5F-S08-N 反例**：Given 僅有幻想入口 schema、沒有採用證據或內容 manifest；When 要求開始；Then FEATURE_NOT_SELECTED/CONTENT_UNAVAILABLE，不創建缺失資產或假人物。",
+    "feature_ids": [
+      "R5F-S08"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "320": {
+    "case_id": "R5F-S08-T01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S08.md",
+    "source_sha256": "0f3a69d069c2dd0b7d6926335e40980fe0f2802aaaf624ca264f80a3d32cdfec",
+    "source_line_1based": 83,
+    "source_locator_text": "- **R5F-S08-T01 未來相容性**：Given 未來採定目標模式，但外來因子缺合法 mapping；When 預覽；Then 列 unmapped refs 並拒提交，原因子／P 不改。",
+    "feature_ids": [
+      "R5F-S08"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "321": {
+    "case_id": "R5F-S08-T02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S08.md",
+    "source_sha256": "0f3a69d069c2dd0b7d6926335e40980fe0f2802aaaf624ca264f80a3d32cdfec",
+    "source_line_1based": 84,
+    "source_locator_text": "- **R5F-S08-T02 比較邊界**：Given 同 theme/rulesHash 的兩筆歷史分屬不同 mode；When 交 S05；Then comparisonGroupKey 不同，不能混榜。",
+    "feature_ids": [
+      "R5F-S08"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "322": {
+    "case_id": "R5F-S08-T03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S08.md",
+    "source_sha256": "0f3a69d069c2dd0b7d6926335e40980fe0f2802aaaf624ca264f80a3d32cdfec",
+    "source_line_1based": 85,
+    "source_locator_text": "- **R5F-S08-T03 返回反例**：Given 未來幻想分支有外來因子但返回 policy 未採；When 要回純三國；Then 阻擋提交，不只改 mode label 後保留外來效果。",
+    "feature_ids": [
+      "R5F-S08"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "323": {
+    "case_id": "R5F-S08-T04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S08.md",
+    "source_sha256": "0f3a69d069c2dd0b7d6926335e40980fe0f2802aaaf624ca264f80a3d32cdfec",
+    "source_line_1based": 86,
+    "source_locator_text": "- **R5F-S08-T04 重入**：Given 已採轉換 t 已由 S03 commit 而回應遺失；When 重開入口；Then 回原 receipt，不建第二分支或複製人。",
+    "feature_ids": [
+      "R5F-S08"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "324": {
+    "case_id": "R5F-S08-T05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S08.md",
+    "source_sha256": "0f3a69d069c2dd0b7d6926335e40980fe0f2802aaaf624ca264f80a3d32cdfec",
+    "source_line_1based": 87,
+    "source_locator_text": "- **R5F-S08-T05 寫入失敗**：Given 目標新槽缺內容引用而 checksum／closure 失敗；When 恢復；Then 原模式存檔可用，不設半套新模式為 current。",
+    "feature_ids": [
+      "R5F-S08"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "325": {
+    "case_id": "R5F-S08-T06",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-S08.md",
+    "source_sha256": "0f3a69d069c2dd0b7d6926335e40980fe0f2802aaaf624ca264f80a3d32cdfec",
+    "source_line_1based": 88,
+    "source_locator_text": "- **R5F-S08-T06 歷史保存**：Given 人物在原模式已 dead；When 新模式模板有同名角色；Then 不復用該 UID 復活，需明示合法新身份或拒模板。",
+    "feature_ids": [
+      "R5F-S08"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "326": {
+    "case_id": "R5F-A01-P",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A01.md",
+    "source_sha256": "8abb2ad0af491ac389957e4d170186734c461bae4adcd950bdb1cc4f12222adc",
+    "source_line_1based": 81,
+    "source_locator_text": "- **R5F-A01-P 正例**：Given faction f 已合法失去最後一城，family a 的人 p、配偶 q、孩子 r 在世；When 已採 policy 下處理敗北；Then 建 refuge 引用 p/q/r 原 UID，婚姻、雙親、孩子出生 P 與死史不改。",
+    "feature_ids": [
+      "R5F-A01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": true,
+    "historical_case_links": []
+  },
+  "327": {
+    "case_id": "R5F-A01-N",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A01.md",
+    "source_sha256": "8abb2ad0af491ac389957e4d170186734c461bae4adcd950bdb1cc4f12222adc",
+    "source_line_1based": 82,
+    "source_locator_text": "- **R5F-A01-N 反例**：Given 家族無在世人且無合法旁系；When 要求原家主回歸；Then 拒復活，保歷史，新身份需 S06 合法來源。",
+    "feature_ids": [
+      "R5F-A01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": true,
+    "historical_case_links": []
+  },
+  "328": {
+    "case_id": "R5F-A01-T01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A01.md",
+    "source_sha256": "8abb2ad0af491ac389957e4d170186734c461bae4adcd950bdb1cc4f12222adc",
+    "source_line_1based": 83,
+    "source_locator_text": "- **R5F-A01-T01 多分支邊界**：Given 同 family 另有一 faction 仍持城；When 其中一支失城；Then 不把全家自動搬入祖地，按已採分支政策列候選，缺政策則未決。",
+    "feature_ids": [
+      "R5F-A01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "329": {
+    "case_id": "R5F-A01-T02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A01.md",
+    "source_sha256": "8abb2ad0af491ac389957e4d170186734c461bae4adcd950bdb1cc4f12222adc",
+    "source_line_1based": 84,
+    "source_locator_text": "- **R5F-A01-T02 免傷反例**：Given 祖地本體不可攻、其部隊已部署地圖；When 敵方攻擊部署營地；Then 不套祖地免傷，交正常交戰 owner 處理。",
+    "feature_ids": [
+      "R5F-A01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "330": {
+    "case_id": "R5F-A01-T03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A01.md",
+    "source_sha256": "8abb2ad0af491ac389957e4d170186734c461bae4adcd950bdb1cc4f12222adc",
+    "source_line_1based": 85,
+    "source_locator_text": "- **R5F-A01-T03 重入**：Given defeat e 已建立 refuge r；When 存讀後換 transport key 重送 e；Then 回 r，不生第二祖地、軍隊或收入，先查原結果。",
+    "feature_ids": [
+      "R5F-A01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "331": {
+    "case_id": "R5F-A01-T04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A01.md",
+    "source_sha256": "8abb2ad0af491ac389957e4d170186734c461bae4adcd950bdb1cc4f12222adc",
+    "source_line_1based": 86,
+    "source_locator_text": "- **R5F-A01-T04 儲存失敗**：Given 進祖地提交逾時；When 恢復；Then 查 marker，結果未知維持 pending，不復原失城前的城主來冒稱補償。",
+    "feature_ids": [
+      "R5F-A01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "332": {
+    "case_id": "R5F-A01-T05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A01.md",
+    "source_sha256": "8abb2ad0af491ac389957e4d170186734c461bae4adcd950bdb1cc4f12222adc",
+    "source_line_1based": 87,
+    "source_locator_text": "- **R5F-A01-T05 未完事件**：Given 成員有固定 conceptionId、studyPlanId 與 K 到期 ref；When 進祖地再讀檔；Then refs、進度、世界季度均沿原 owner，無多生一胎／免費完成研習。",
+    "feature_ids": [
+      "R5F-A01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "333": {
+    "case_id": "R5F-A01-T06",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A01.md",
+    "source_sha256": "8abb2ad0af491ac389957e4d170186734c461bae4adcd950bdb1cc4f12222adc",
+    "source_line_1based": 88,
+    "source_locator_text": "- **R5F-A01-T06 未定成本**：Given 生活教養／動員額度尚未採；When 在祖地請求資源或免費兵；Then 回 policyIncomplete，僅保全家系，不默給收益。",
+    "feature_ids": [
+      "R5F-A01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "334": {
+    "case_id": "R5F-A02-P",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A02.md",
+    "source_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+    "source_line_1based": 87,
+    "source_locator_text": "- **R5F-A02-P 正例**：Given 合法 refuge、在世領袖、足夠已採動員資源與有效內應 evidence；When 依序完成蓄勢、集結、部署並嘗試內應；Then 每階段有及時前兆和可用反制，結果與成本一次保存，成功取得首城才恢復正常 faction 規則。",
+    "feature_ids": [
+      "R5F-A02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": true,
+    "historical_case_links": []
+  },
+  "335": {
+    "case_id": "R5F-A02-N",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A02.md",
+    "source_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+    "source_line_1based": 88,
+    "source_locator_text": "- **R5F-A02-N 反例**：Given 領袖 INT 高但無部署、人脈或內應資源；When 請求直接奪城；Then 拒絕，不改城主、不生民兵、不以高 INT 自動成功。",
+    "feature_ids": [
+      "R5F-A02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": true,
+    "historical_case_links": []
+  },
+  "336": {
+    "case_id": "R5F-A02-T01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A02.md",
+    "source_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+    "source_line_1based": 89,
+    "source_locator_text": "- **R5F-A02-T01 守方反制**：Given 集結已預警且補給可被攔截；When 守方在窗口內合法切斷補給；Then 接戰輸入含該反制結果，按已採 policy 降低能力／中止，不能忽略仍滿兵免費攻城。",
+    "feature_ids": [
+      "R5F-A02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "337": {
+    "case_id": "R5F-A02-T02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A02.md",
+    "source_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+    "source_line_1based": 90,
+    "source_locator_text": "- **R5F-A02-T02 合法失敗成本**：Given 所有前置合法且攻城 attempt a 結果失敗；When 結算；Then 扣已採失敗成本並保存傷亡／倖存者，城主不變；不因失敗退款或立即重抽。",
+    "feature_ids": [
+      "R5F-A02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "338": {
+    "case_id": "R5F-A02-T03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A02.md",
+    "source_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+    "source_line_1based": 91,
+    "source_locator_text": "- **R5F-A02-T03 無效成本邊界**：Given 資源不足／來源缺件；When 驗證 a；Then 在 attempt 前拒絕，季度、資源與 RNG draw 不增。",
+    "feature_ids": [
+      "R5F-A02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "339": {
+    "case_id": "R5F-A02-T04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A02.md",
+    "source_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+    "source_line_1based": 92,
+    "source_locator_text": "- **R5F-A02-T04 重入**：Given attempt a 已提交但回應遺失；When 同 key/digest 或新 transport key 重送同 business attempt；Then 回原成敗與成本收據，不多扣、不多生兵、不再改城主。",
+    "feature_ids": [
+      "R5F-A02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "340": {
+    "case_id": "R5F-A02-T05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A02.md",
+    "source_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+    "source_line_1based": 93,
+    "source_locator_text": "- **R5F-A02-T05 免傷反例**：Given 部隊已部署或已奪首城；When 遭正常攻擊；Then 正常受傷／死亡與補給損耗，不得以 refugeId 抹去傷害或瞬間退回無敵空間。",
+    "feature_ids": [
+      "R5F-A02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "341": {
+    "case_id": "R5F-A02-T06",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A02.md",
+    "source_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+    "source_line_1based": 94,
+    "source_locator_text": "- **R5F-A02-T06 前兆失敗**：Given 城主已被更新後才記第一個 warning；When 驗流程；Then 前兆／可反制驗收 FAIL，不把事後戰報算通過。",
+    "feature_ids": [
+      "R5F-A02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "342": {
+    "case_id": "R5F-A02-T07",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A02.md",
+    "source_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+    "source_line_1based": 95,
+    "source_locator_text": "- **R5F-A02-T07 中途死亡**：Given 領袖在集結後死亡且替換 policy 缺失；When 要進部署；Then 保死亡終態並阻擋，不能復活或無成本換同名領袖。",
+    "feature_ids": [
+      "R5F-A02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "343": {
+    "case_id": "R5F-A02-T08",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A02.md",
+    "source_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+    "source_line_1based": 96,
+    "source_locator_text": "- **R5F-A02-T08 保存失敗**：Given 成本與結果處於不確定提交狀態；When 恢復；Then 查 journal/marker，維持 pending 至確認，不另建 attempt 或退款。",
+    "feature_ids": [
+      "R5F-A02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "344": {
+    "case_id": "R5F-A02-T09",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A02.md",
+    "source_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+    "source_line_1based": 97,
+    "source_locator_text": "- **R5F-A02-T09 存讀／跨季**：Given 部隊已被攔截、有傷亡與未完成 attempt；When 讀檔或換季預覽；Then 傷亡、預警、反制與原 attemptId 保留，未採歷法時不跳到免費成功。",
+    "feature_ids": [
+      "R5F-A02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "345": {
+    "case_id": "R5F-A02-T10",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-A02.md",
+    "source_sha256": "8405ddbe2881fb27f9c909f2a44abb7051239f51481e8bc46d299a5cb1a9f4bf",
+    "source_line_1based": 98,
+    "source_locator_text": "- **R5F-A02-T10 併發資源**：Given 同一領袖和同批民兵已被 plan a 預留；When plan b 同時請求全額動員；Then 拒衝突，不複製人員或資源。",
+    "feature_ids": [
+      "R5F-A02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  }
+}

@@ -253,8 +253,8 @@
   },
   {
     "id": "doc_ui_0050",
-    "path": "docs/ui/UI-vibe-pipeline.md",
-    "title": "UI Vibe Coding 自動化生產藍圖",
+    "path": "docs/ui-vibe-pipeline-shards/ui-core.md",
+    "title": "UI Vibe Pipeline — Core（TL;DR · §1–§3 · §3.1）",
     "category": "ui"
   },
   {
@@ -279,6 +279,30 @@
     "id": "doc_ui_0091",
     "path": "docs/UI品質檢核表.md",
     "title": "UI 品質檢核表（v0）",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0092",
+    "path": "docs/i18n/general-detail-overflow-report-batch2.md",
+    "title": "ui.general 武將詳情 — 寬度風險摘要（第 2 批，40 鍵）",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0093",
+    "path": "docs/i18n/general-detail-overflow-report-batch3.md",
+    "title": "ui.general 武將詳情 — 寬度風險摘要（第 3 批，40 鍵）",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0094",
+    "path": "docs/i18n/general-detail-overflow-report-batch4.md",
+    "title": "ui.general 武將詳情 — 寬度風險摘要（第 4 批，10 鍵，收尾）",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0095",
+    "path": "docs/ui/UI-vibe-pipeline.md",
+    "title": "UI Vibe Pipeline",
     "category": "ui"
   }
 ]

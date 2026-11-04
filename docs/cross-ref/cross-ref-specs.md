@@ -151,3 +151,19 @@
 | doc_other_0011 |—|doc_spec_0002、doc_tech_0014、doc_ui_0012|
 
 ---
+
+### 血統與家系 R5 補全包與遊戲性強化規格增補
+
+| Doc ID | 標題 | 相對路徑 | 摘要說明 |
+|---|---|---|---|
+| doc_spec_0245 | 01_權威與衝突帳.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/01_權威與衝突帳.md | 權威層級、歷史記錄保留與版本分帳 |
+| doc_spec_0246 | 02_全玩法接口矩陣.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/02_全玩法接口矩陣.md | 12組玩法、53具體入口與身份數值契約 |
+| doc_spec_0247 | 03_38功能與待決補件追蹤.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/03_38功能與待決補件追蹤.md | 38功能既有契約與缺件追蹤 |
+| doc_spec_0248 | 04_共同資料事件時鐘契約.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/04_共同資料事件時鐘契約.md | 共同資料事件、時鐘契約與生命週期 |
+| doc_spec_0249 | 05_跨玩法驗收案例.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/05_跨玩法驗收案例.md | 跨玩法Given/When/Then驗收案例 |
+| doc_spec_0250 | 內容審核記錄.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/內容審核記錄.md | 工作包內容審核記錄 |
+| doc_spec_0251 | 版本漂移記錄.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/版本漂移記錄.md | 固定起點與版本漂移比對記錄 |
+| doc_index_1033 | README.md (completion_package) | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/README.md | 血統遺傳與全玩法文件補全工作包總索引 |
+| doc_index_1034 | README.md (validation) | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/README.md | 工作包驗證說明索引 |
+| doc_spec_0288 | C2_R5_遊戲性決策拍板與體驗強化增補規格書.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_遊戲性決策拍板與體驗強化增補規格書.md | 拍板DEC決策、賽馬娘開獎與WP10自創門閥金因子 |
+| doc_spec_0289 | C2_R5_待補數據表與Catalog定案總表.md | docs/遊戲規格文件/系統規格書/血統與家系-R5/C2_R5_待補數據表與Catalog定案總表.md | 填平17項GAP、childLUK/peakType/近親懲罰等定案表 |

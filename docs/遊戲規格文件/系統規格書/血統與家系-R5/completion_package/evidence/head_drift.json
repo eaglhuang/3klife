@@ -1,0 +1,127 @@
+{
+  "observation_utc": "2026-11-04T00:47:16Z",
+  "repository": "eaglhuang/3klife",
+  "baseline_commit": "b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe",
+  "observed_master": "bd2a5a4c298531f8260589044896ac42f4f78b58",
+  "observed_head_commit_time": "2026-11-04T00:42:26Z",
+  "branch_api": "https://api.github.com/repos/eaglhuang/3klife/branches/master",
+  "compare_url": "https://github.com/eaglhuang/3klife/compare/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe...bd2a5a4c298531f8260589044896ac42f4f78b58",
+  "status": "ahead",
+  "ahead_by": 3,
+  "total_commits": 3,
+  "changed_file_count": 13,
+  "review_scope": "Full compare file list and available patches read; no product execution, full caller traversal, CI log verification or Cocos acceptance.",
+  "baseline_documentation_changed": false,
+  "commits": [
+    {
+      "sha": "0deaa358a48f312e73e3361b1b56ae5e29e2211d",
+      "message": "feat(lobby-hall): 幕府大廳左右任務牆顯示真實任務（UI-2-0153） (#1602)",
+      "url": "https://github.com/eaglhuang/3klife/commit/0deaa358a48f312e73e3361b1b56ae5e29e2211d"
+    },
+    {
+      "sha": "59aea2fac9dec86415f6500ec145f73f8cdb0c7a",
+      "message": "feat(lobby-hall): 幕府大廳祭壇面板顯示即時許願池（UI-2-0154） (#1603)",
+      "url": "https://github.com/eaglhuang/3klife/commit/59aea2fac9dec86415f6500ec145f73f8cdb0c7a"
+    },
+    {
+      "sha": "bd2a5a4c298531f8260589044896ac42f4f78b58",
+      "message": "feat(lobby-hall): 幕府大廳節慶槽跟隨 lobby-hub 目前節慶（UI-2-0155） (#1604)",
+      "url": "https://github.com/eaglhuang/3klife/commit/bd2a5a4c298531f8260589044896ac42f4f78b58"
+    }
+  ],
+  "files": [
+    {
+      "path": "assets/scripts/core/systems/HallTheme.ts",
+      "status": "modified",
+      "git_blob_sha": "7d3dec49fedb40d9657e212a0a4676489a625fa7",
+      "changes": 8,
+      "patch": "@@ -59,6 +59,14 @@ export interface HallTheme {\n     decorPath: string | null;\n }\n \n+/** lobby-hub.json Current_Theme.Festival_Theme_ID 表示「無節慶」的哨兵值。 */\n+export const HALL_NO_FESTIVAL_ID = 'NONE';\n+\n+/** lobby-hub 的節慶 ID → 大廳主題的 festivalId；哨兵值、空字串或缺值為 null（UI-2-0155）。 */\n+export function hallFestivalIdOf(festivalThemeId: string | null | undefined): string | null {\n+    return festivalThemeId && festivalThemeId !== HALL_NO_FESTIVAL_ID ? festivalThemeId : null;\n+}\n+\n /** 跨午夜的區間（例如 18~6）也成立；start === end 視為沒有夜間。 */\n export function hallDaypartOf(hour: number, night: Readonly<HallThemeConfig['night']>): HallDaypart {\n     const h = ((Math.floor(hour) % 24) + 24) % 24;"
+    },
+    {
+      "path": "assets/scripts/core/systems/LobbyHallWallView.ts",
+      "status": "added",
+      "git_blob_sha": "3d3aa9b6e9a7b8ebd2da0dad19bf619a8b2093d0",
+      "changes": 39,
+      "patch": "@@ -0,0 +1,39 @@\n+// @spec-source → WBS v3 HALL-03（雙牆任務板可見性與置頂）；UI-2-0153（UI-2-0123 子項：幕府大廳左右任務牆）\n+/**\n+ * LobbyHallWallView — 任務板列資料 → 幕府大廳牆面顯示（純邏輯，不依賴 cc）。\n+ *\n+ * 牆面只放得下 LOBBY_HALL_WALL_ROWS 列；計數顯示「可見任務數 / 任務板上限」。\n+ * 已接取的任務會置頂（buildHallBoardRows 已排好），顯示置頂標記。\n+ *\n+ * Unity 對照：像 ViewModel，把 Model 的列資料轉成 UI Text 要顯示的字串。\n+ */\n+import type { HallTaskRow } from './HallMissionBoardPresenter';\n+\n+/** 設計稿每面牆的任務列數 */\n+export const LOBBY_HALL_WALL_ROWS = 4;\n+/** 已接取任務的置頂標記文字（暫定，與設計稿一致） */\n+export const LOBBY_HALL_WALL_PIN_TEXT = '已接取 · 置頂';\n+\n+export interface LobbyHallWallRowView {\n+    readonly title: string;\n+    readonly meta: string;\n+    readonly difficulty: string;\n+    readonly pinned: boolean;\n+}\n+\n+export interface LobbyHallWallView {\n+    readonly countText: string;\n+    readonly rows: readonly LobbyHallWallRowView[];\n+}\n+\n+export function buildLobbyHallWallView(rows: readonly HallTaskRow[], boardMax: number): LobbyHallWallView {\n+    return {\n+        countText: `${rows.length} / ${boardMax}`,\n+        rows: rows.slice(0, LOBBY_HALL_WALL_ROWS).map((row) => ({\n+            title: row.title,\n+            meta: row.rewardText || row.requiredRankText,\n+            difficulty: row.difficultyText,\n+            pinned: row.accepted,\n+        })),\n+    };\n+}"
+    },
+    {
+      "path": "assets/scripts/ui/core/HallBoardPanelController.ts",
+      "status": "modified",
+      "git_blob_sha": "9e988d4c8d92b7ed385cadd4c6bba2764c3dab8d",
+      "changes": 11,
+      "patch": "@@ -73,23 +73,28 @@ export class HallBoardPanelController {\n \n     /** 目前牆的任務列，已接取者以指派狀態覆蓋，置頂規則沿用 buildHallBoardRows。 */\n     public rows(): HallTaskRow[] {\n+        return this.rowsFor(this._board);\n+    }\n+\n+    /** 指定牆的任務列（不切換目前分頁；幕府大廳左右牆用，UI-2-0153）。 */\n+    public rowsFor(board: HallBoardKey): HallTaskRow[] {\n         const hub = this._deps.hub();\n         const assigned = this._deps.assignments();\n-        const current = hub.Mission_Boards[this._board];\n+        const current = hub.Mission_Boards[board];\n         if (!current) return [];\n         const overlaid: LobbyHub = {\n             ...hub,\n             Mission_Boards: {\n                 ...hub.Mission_Boards,\n-                [this._board]: {\n+                [board]: {\n                     ...current,\n                     Tasks: current.Tasks.map((task) => (\n                         task.Task_ID in assigned ? { ...task, Is_Accepted: true } : task\n                     )),\n                 },\n             },\n         };\n-        return buildHallBoardRows(overlaid, this._board, this._deps.player()).slice(0, HALL_BOARD_MAX_ROWS);\n+        return buildHallBoardRows(overlaid, board, this._deps.player()).slice(0, HALL_BOARD_MAX_ROWS);\n     }\n \n     /** 第 index 列對應的任務資料（彈窗與委任用）；沒有該列時回傳 undefined。 */"
+    },
+    {
+      "path": "assets/scripts/ui/core/LobbyHallAltarView.ts",
+      "status": "added",
+      "git_blob_sha": "7214849ac33491a9d9ec460f41034d24513a7531",
+      "changes": 61,
+      "patch": "@@ -0,0 +1,61 @@\n+// @spec-source → 大廳系統.md (doc_spec_0002) §E-7 許願祭壇；UI-2-0154（UI-2-0123 子項：幕府大廳祭壇面板）\n+/**\n+ * LobbyHallAltarView — 許願池狀態 → 幕府大廳祭壇面板顯示（純邏輯，不依賴 cc）。\n+ *\n+ * 面板只放得下 LOBBY_HALL_ALTAR_SLOTS 格；格子依進行中許願的順序排列，不足補空位。\n+ * 巡次與時間以 WishPool 為權威，剩餘時間沿用許願祭壇彈窗的 remainingText 格式。\n+ *\n+ * Unity 對照：像 ViewModel，把 Model 狀態轉成 UI Text 要顯示的字串。\n+ */\n+import { LOGIN_DAY_OFFSET_MINUTES } from '../../core/systems/LoginStreak';\n+import { isWishReady, wishItemName, wishRoundOf, WISH_POOL_CONFIG, type WishPoolState } from '../../core/systems/WishPool';\n+import { remainingText } from './WishAltarController';\n+\n+/** 設計稿祭壇面板的插槽數 */\n+export const LOBBY_HALL_ALTAR_SLOTS = 3;\n+\n+const HOUR_MS = 3_600_000;\n+const DAY_MS = 24 * HOUR_MS;\n+\n+export interface LobbyHallAltarSlotView {\n+    readonly title: string;\n+    readonly status: string;\n+    readonly ready: boolean;\n+}\n+\n+export interface LobbyHallAltarView {\n+    readonly headText: string;\n+    readonly nextRoundText: string;\n+    readonly slots: readonly LobbyHallAltarSlotView[];\n+}\n+\n+/** 距下一巡開始的毫秒數；巡次邊界與 wishRoundOf 相同（含登入日偏移） */\n+export function msUntilNextWishRound(nowMs: number): number {\n+    const [first, ...rest] = WISH_POOL_CONFIG.roundStartHours;\n+    const shifted = nowMs + LOGIN_DAY_OFFSET_MINUTES * 60_000 - first * HOUR_MS;\n+    const intoDay = ((shifted % DAY_MS) + DAY_MS) % DAY_MS;\n+    const bounds = [...rest.map((h) => (h - first) * HOUR_MS), DAY_MS];\n+    return (bounds.find((b) => b > intoDay) ?? DAY_MS) - intoDay;\n+}\n+\n+export function buildLobbyHallAltarView(pool: WishPoolState, nowMs: number): LobbyHallAltarView {\n+    const slots: LobbyHallAltarSlotView[] = [];\n+    for (let i = 0; i < LOBBY_HALL_ALTAR_SLOTS; i++) {\n+        const wish = pool.activeWishes[i];\n+        if (!wish) {\n+            slots.push({ title: '空位', status: '點擊許願', ready: false });\n+            continue;\n+        }\n+        const ready = isWishReady(wish, nowMs);\n+        slots.push({\n+            title: `${wishItemName(wish.itemId)} ×${wish.amount}`,\n+            status: ready ? '可收取' : `剩 ${remainingText(wish.endMs - nowMs)}`,\n+            ready,\n+        });\n+    }\n+    return {\n+        headText: `許願祭壇 · 第 ${wishRoundOf(nowMs).round} 巡`,\n+        nextRoundText: `下一巡 ${remainingText(msUntilNextWishRound(nowMs))}`,\n+        slots,\n+    };\n+}"
+    },
+    {
+      "path": "assets/scripts/ui/core/LobbyHallScreenBinder.ts",
+      "status": "modified",
+      "git_blob_sha": "fd942d745f198e5f170c901970295ecb2fe9d7c8",
+      "changes": 54,
+      "patch": "@@ -17,6 +17,8 @@ import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapF\n import { HallThemeConfig, resolveHallTheme } from '../../core/systems/HallTheme';\n import type { HallSeason, HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';\n import type { HallStageCast } from '../../core/systems/HallStageDirector';\n+import { LOBBY_HALL_WALL_PIN_TEXT, type LobbyHallWallView } from '../../core/systems/LobbyHallWallView';\n+import type { LobbyHallAltarView } from './LobbyHallAltarView';\n import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';\n import type { HallStageLayout } from '../../core/systems/HallStagePlanner';\n import { HallMapTurnPlayer } from '../components/HallMapTurnPlayer';\n@@ -60,6 +62,13 @@ export interface LobbyHallScreenDeps {\n     readonly mapLayout?: HallMapLayout | null;\n }\n \n+/** 節點本身或第一個子節點上的 Label 套字；找不到 Label 時不動 */\n+function setText(node: Node | undefined, text: string): void {\n+    if (!node) return;\n+    const label = node.getComponent(Label) ?? node.children[0]?.getComponent(Label) ?? null;\n+    if (label) label.string = text;\n+}\n+\n /** 綁定器自建、緊接在沙盤後面的圖層節點名稱 */\n const LAYER_NAMES: readonly string[] = ['HallStageCrowd', 'HallSeasonFx'];\n \n@@ -92,6 +101,51 @@ export class LobbyHallScreenBinder {\n         if (node) node.active = visible;\n     }\n \n+    /**\n+     * 祭壇面板套字（UI-2-0154）。依設計稿節點順序：第 1 個子節點是面板頭（巡次、下一巡），\n+     * 第 2 個是插槽列，每格依序為品名與狀態。\n+     */\n+    setAltar(view: LobbyHallAltarView): void {\n+        const altar = findUcufNode(this._screenRoot, 'lobby-hall-screen.altar');\n+        const [head, slotRow] = altar?.children ?? [];\n+        if (!head || !slotRow) return;\n+        setText(head.children[0], view.headText);\n+        setText(head.children[1], view.nextRoundText);\n+        slotRow.children.forEach((slotNode, i) => {\n+            const slot = view.slots[i];\n+            slotNode.active = !!slot;\n+            if (!slot) return;\n+            setText(slotNode.children[0], slot.title);\n+            setText(slotNode.children[1], slot.status);\n+        });\n+    }\n+\n+    /**\n+     * 任務牆套字（UI-2-0153）。依設計稿節點順序：第 1 個子節點是牆頭（標題、計數），\n+     * 接著是任務列（標題、獎勵、難度徽章、可選的置頂標記），最後是頁尾；多的列隱藏。\n+     */\n+    setWall(id: 'wall-left' | 'wall-right', view: LobbyHallWallView): void {\n+        const wall = findUcufNode(this._screenRoot, `lobby-hall-screen.${id}`);\n+        if (!wall || wall.children.length < 2) return;\n+        const [head, ...rest] = wall.children;\n+        const rowNodes = rest.slice(0, rest.length - 1);\n+        setText(head.children[1], view.countText);\n+        rowNodes.forEach((rowNode, i) => {\n+            const row = view.rows[i];\n+            rowNode.active = !!row;\n+            if (!row) return;\n+            const pin = rowNode.children[3] ?? null;\n+            setText(rowNode.children[0], row.title);\n+            // 沒有置頂標記節點的列，把已接取併進獎勵那行\n+            setText(rowNode.children[1], row.pinned && !pin ? `${row.meta}（已接取）` : row.meta);\n+            setText(rowNode.children[2], row.difficulty);\n+            if (pin) {\n+                pin.active = row.pinned;\n+                if (row.pinned) setText(pin, LOBBY_HALL_WALL_PIN_TEXT);\n+            }\n+        });\n+    }\n+\n     /** 播放換季聚焦序列；沒有地圖播放器時不動 */\n     playMapTurn(steps: readonly HallMapTurnStep[]): void {\n         this._map?.playTurn(steps);"
+    },
+    {
+      "path": "assets/scripts/ui/scenes/LobbyScene.ts",
+      "status": "modified",
+      "git_blob_sha": "279ca257dd6b7c3121a6ba4b03d768f058d598c0",
+      "changes": 27,
+      "patch": "@@ -9,11 +9,13 @@ import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule'\n import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';\n import { installAdaptiveResolution } from '../core/AdaptiveResolution';\n import { LobbyHallScreenBinder, type LobbyHallDockId, type LobbyHallPanelId } from '../core/LobbyHallScreenBinder';\n-import type { HallThemeConfig } from '../../core/systems/HallTheme';\n+import { hallFestivalIdOf, type HallThemeConfig } from '../../core/systems/HallTheme';\n import type { HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';\n import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';\n import type { HallMapEventCatalog } from '../../core/systems/HallMapEventMapper';\n import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';\n+import { buildLobbyHallWallView } from '../../core/systems/LobbyHallWallView';\n+import { buildLobbyHallAltarView } from '../core/LobbyHallAltarView';\n import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } from '../../core/systems/HallMapSeasonTurn';\n import type { HallStageLayout } from '../../core/systems/HallStagePlanner';\n import { UIID, LayerType } from '../../core/config/UIConfig';\n@@ -1564,6 +1566,12 @@ export class LobbyScene extends Component {\n             return;\n         }\n         applyFlowView(binder, this._wishAltar.getFlowView());\n+        this._refreshLobbyHallAltar();\n+    }\n+\n+    /** 幕府大廳祭壇面板（UI-2-0154）：顯示許願池即時狀態；開大廳與許願祭壇操作後刷新 */\n+    private _refreshLobbyHallAltar(): void {\n+        this._lobbyHall?.setAltar(buildLobbyHallAltarView(services().session.wishPool, Date.now()));\n     }\n \n     private _openTournament(): void {\n@@ -2543,7 +2551,14 @@ export class LobbyScene extends Component {\n         host.node.active = true;\n         this._bringNodeToFront(host.node);\n         // 晝夜依裝置當地時間，季節依遊戲時鐘（1 春～4 冬）\n-        this._lobbyHall?.refresh(services().session.gameTime.currentSeason, new Date().getHours());\n+        // 節慶跟隨 lobby-hub 目前主題（UI-2-0155），hall-theme.json 查不到該節慶時維持平常畫面\n+        this._lobbyHall?.refresh(\n+            services().session.gameTime.currentSeason,\n+            new Date().getHours(),\n+            hallFestivalIdOf(this._lobbyHub?.Current_Theme.Festival_Theme_ID),\n+        );\n+        this._refreshLobbyHallWalls();\n+        this._refreshLobbyHallAltar();\n         this._lobbyHall?.setPanelVisible('clan', familyOverviewHotspotVisible(services().session.familySystemUnlocked));\n         this._lobbyHall?.openStage();\n         if (this._pendingHallMapTurn) {\n@@ -2552,6 +2567,14 @@ export class LobbyScene extends Component {\n         }\n     }\n \n+    /** 幕府大廳左右牆（UI-2-0153）：左軍務、右內政，資料同任務板；任務資料沒載到時維持設計稿文字 */\n+    private _refreshLobbyHallWalls(): void {\n+        const board = this._hallBoard;\n+        if (!board || !this._lobbyHall) return;\n+        this._lobbyHall.setWall('wall-left', buildLobbyHallWallView(board.rowsFor('Military'), HALL_BOARD_MAX_ROWS));\n+        this._lobbyHall.setWall('wall-right', buildLobbyHallWallView(board.rowsFor('Domestic'), HALL_BOARD_MAX_ROWS));\n+    }\n+\n     private _openRecruitHall(): void {\n         const host = this._recruitHost;\n         if (!host) {"
+    },
+    {
+      "path": "docs/agent-briefs/tasks/UI/UI-2-0153.md",
+      "status": "added",
+      "git_blob_sha": "3bc618394f014c7daefb19416fe3043c3cfe6885",
+      "changes": 23,
+      "patch": "@@ -0,0 +1,23 @@\n+---\n+id: UI-2-0153\n+title: 幕府大廳左右任務牆顯示真實任務（UI-2-0123 子項）\n+status: done\n+priority: P1\n+started_at: 2026-11-04T04:20:00Z\n+started_by_agent: ClaudeCode_opus-5-5\n+completed_at: 2026-11-04T05:10:00Z\n+---\n+\n+# UI-2-0153 幕府大廳左右任務牆顯示真實任務\n+\n+UI-2-0123 子項。把 lobby-hall-screen 左牆（Military）與右牆（Domestic）的設計稿示意文字換成任務板資料：\n+- HallBoardPanelController.rowsFor(board)：不切換目前分頁即可取指定牆的任務列。\n+- LobbyHallWallView.buildLobbyHallWallView：任務列 → 牆面顯示（數量、標題、獎勵、難度、置頂）。\n+- LobbyHallScreenBinder.setWall：依設計稿節點順序套字，多的列隱藏。\n+- LobbyScene：開大廳時刷新兩面牆。\n+\n+## notes\n+\n+- 狀態: 完成。左牆軍務、右牆內政在開大廳時依任務板刷新；計數為「可見任務數 / 任務板上限」，牆面最多 4 列，多的列隱藏；已接取列顯示置頂標記（沒有標記節點的列在獎勵後加「（已接取）」）。\n+- 驗證: LobbyHallWallView 3 例、HallBoardPanelController 新增 rowsFor 1 例皆通過；測試 tsc 0 錯；全專案 tsc 改動檔無錯。\n+- 阻塞: Cocos MCP 未連線，未做實機截圖驗收；綁定器依設計稿節點順序套字，cc 測試替身無法建節點樹，未做綁定器單元測試。"
+    },
+    {
+      "path": "docs/agent-briefs/tasks/UI/UI-2-0154.md",
+      "status": "added",
+      "git_blob_sha": "a9488de79fc5e9efe3652bfdf558554755a39071",
+      "changes": 25,
+      "patch": "@@ -0,0 +1,25 @@\n+---\n+id: UI-2-0154\n+title: 幕府大廳許願祭壇面板顯示即時許願池（UI-2-0123 子項）\n+status: done\n+priority: P1\n+started_at: 2026-11-04T05:40:00Z\n+started_by_agent: ClaudeCode_opus-5-5\n+completed_at: 2026-11-04T06:05:00Z\n+---\n+\n+# UI-2-0154 幕府大廳許願祭壇面板顯示即時許願池\n+\n+UI-2-0123 子項。把 lobby-hall-screen 祭壇面板（altar）的設計稿示意文字換成許願池（WishPool）即時狀態：\n+- ui/core/LobbyHallAltarView.buildLobbyHallAltarView：目前巡次、距下一巡剩餘時間、前 3 個許願插槽（品名×數量；可收取／剩餘時間／空位）。\n+- LobbyHallScreenBinder.setAltar：依設計稿節點順序套字。\n+- LobbyScene：開大廳時與許願祭壇操作後刷新面板。\n+\n+數值與時間以經濟系統 WishPool 為權威（doc_spec_0002 §E-7），本卡只做顯示映射。\n+\n+## notes\n+\n+- 狀態: 完成。開大廳與許願祭壇任一操作後，祭壇面板顯示目前巡次、距下一巡剩餘時間、前 3 個許願（品名×數量；可收取／剩 XhYYm／空位）。\n+- 驗證: LobbyHallAltarView 3 例通過（含巡次邊界前一分鐘）；測試 tsc 0 錯；全專案 tsc 改動檔無錯。\n+- 變更: 顯示模組放在 ui/core（沿用 WishAltarController.remainingText，避免 core 依賴 ui）。\n+- 阻塞: 倒數只在開大廳與祭壇操作時刷新，不逐秒更新；Cocos MCP 未連線，未做實機截圖驗收；綁定器無單元測試（cc 測試替身無法建節點樹）。"
+    },
+    {
+      "path": "docs/agent-briefs/tasks/UI/UI-2-0155.md",
+      "status": "added",
+      "git_blob_sha": "378f3890573381c42dbe7eb067eede878ffd75d3",
+      "changes": 24,
+      "patch": "@@ -0,0 +1,24 @@\n+---\n+id: UI-2-0155\n+title: 幕府大廳節慶槽跟隨 lobby-hub 目前節慶（UI-2-0123 子項）\n+status: done\n+priority: P2\n+started_at: 2026-11-04T06:30:00Z\n+started_by_agent: ClaudeCode_opus-5-5\n+completed_at: 2026-11-04T06:45:00Z\n+---\n+\n+# UI-2-0155 幕府大廳節慶槽跟隨 lobby-hub 目前節慶\n+\n+UI-2-0123 子項。大廳主題原本固定傳入「無節慶」，節慶槽永遠不會開。改為開大廳時讀 lobby-hub.json 的\n+Current_Theme.Festival_Theme_ID（與主大廳 HALL-09 同一來源）：\n+- HallTheme.hallFestivalIdOf：'NONE'、空字串或缺值視為無節慶。\n+- LobbyScene：開大廳時把節慶 ID 傳進 LobbyHallScreenBinder.refresh；hall-theme.json 的 festivals 查不到就維持平常畫面（既有行為）。\n+\n+節慶美術與 festivals 配置內容不在本卡範圍（大廳系統 E-6：節慶槽平時為空，由配置開啟）。\n+\n+## notes\n+\n+- 狀態: 完成。開大廳時節慶 ID 取自 lobby-hub Current_Theme.Festival_Theme_ID；目前 lobby-hub 為 NONE、hall-theme.json festivals 為空，畫面不變。\n+- 驗證: HallTheme 6 例通過（新增 hallFestivalIdOf 1 例）；測試 tsc 0 錯；全專案 tsc 改動檔無錯。\n+- 阻塞: 節慶美術與 festivals 配置、layout 的 festival-slot 節點需另開美術卡；Cocos MCP 未連線，未做實機驗收。"
+    },
+    {
+      "path": "tests/HallBoardPanelController.test.ts",
+      "status": "modified",
+      "git_blob_sha": "2cf89220b93c2003ac7a2f2c2bf2d00700a53947",
+      "changes": 8,
+      "patch": "@@ -47,6 +47,14 @@ export function createHallBoardPanelControllerSuite(): TestSuite {\n         assert.isFalse(view.actives[`hallRow${HALL_BOARD_MAX_ROWS - 1}`] && rows.length < HALL_BOARD_MAX_ROWS);\n     });\n \n+    suite.test('rowsFor 取指定牆的列，不切換目前分頁（UI-2-0153）', () => {\n+        const controller = new HallBoardPanelController(makeDeps());\n+        const domestic = controller.rowsFor('Domestic');\n+        assert.equals(controller.board, 'Military');\n+        controller.switchBoard('Domestic');\n+        assert.equals(JSON.stringify(controller.rows()), JSON.stringify(domestic));\n+    });\n+\n     suite.test('指派狀態覆蓋靜態資料：已接取列顯示已接取且按鈕停用', () => {\n         const first = hub().Mission_Boards.Military.Tasks[0].Task_ID;\n         const controller = new HallBoardPanelController(makeDeps({ assignments: () => ({ [first]: 'zhang-fei' }) }));"
+    },
+    {
+      "path": "tests/HallTheme.test.ts",
+      "status": "modified",
+      "git_blob_sha": "12a7b6188a6e7cc25b972685bcdc478058b504a6",
+      "changes": 9,
+      "patch": "@@ -2,7 +2,7 @@\n  * HallTheme.test.ts — 幕府大廳主題解析（UI-2-0144，UI-2-0123 子項）\n  */\n import { assert, TestSuite } from './TestRunner';\n-import { hallDaypartOf, HallThemeConfig, resolveHallTheme } from '../assets/scripts/core/systems/HallTheme';\n+import { hallDaypartOf, hallFestivalIdOf, HallThemeConfig, resolveHallTheme } from '../assets/scripts/core/systems/HallTheme';\n \n function loadJson<T>(rel: string): T {\n     // eslint-disable-next-line @typescript-eslint/no-require-imports\n@@ -69,5 +69,12 @@ export function createHallThemeSuite(): TestSuite {\n         assert.equals(resolveHallTheme({ seasonIndex: 9, hour: 12 }, CONFIG).season, 'spring', '退回春季');\n     });\n \n+    suite.test('lobby-hub 節慶 ID：NONE／空字串／缺值為無節慶，其餘原樣傳入（UI-2-0155）', () => {\n+        assert.equals(hallFestivalIdOf('NONE'), null);\n+        assert.equals(hallFestivalIdOf(''), null);\n+        assert.equals(hallFestivalIdOf(undefined), null);\n+        assert.equals(hallFestivalIdOf('lantern'), 'lantern');\n+    });\n+\n     return suite;\n }"
+    },
+    {
+      "path": "tests/LobbyHallAltarView.test.ts",
+      "status": "added",
+      "git_blob_sha": "d6535e6877c86c8d47b5d7173e764f89df2e720c",
+      "changes": 46,
+      "patch": "@@ -0,0 +1,46 @@\n+/**\n+ * LobbyHallAltarView.test.ts — 許願池狀態轉幕府大廳祭壇面板顯示（UI-2-0154）\n+ */\n+import { assert, TestSuite } from './TestRunner';\n+import { createWishPoolState, startWish, wishRoundOf, WISH_ITEMS } from '../assets/scripts/core/systems/WishPool';\n+import { buildLobbyHallAltarView, msUntilNextWishRound, LOBBY_HALL_ALTAR_SLOTS } from '../assets/scripts/ui/core/LobbyHallAltarView';\n+\n+const HOUR = 3_600_000;\n+const NOW = Date.UTC(2026, 10, 4, 2, 0, 0); // 台北 10:00，第 1 巡\n+\n+export function createLobbyHallAltarViewSuite(): TestSuite {\n+    const suite = new TestSuite('LobbyHallAltarView');\n+\n+    suite.test('下一巡倒數落在巡次邊界：邊界前一分鐘剩 1 分、跨過後巡次改變', () => {\n+        const left = msUntilNextWishRound(NOW);\n+        assert.isTrue(left > 0 && left <= 12 * HOUR);\n+        const before = NOW + left - 60_000;\n+        assert.equals(msUntilNextWishRound(before), 60_000);\n+        assert.isTrue(wishRoundOf(before).round !== wishRoundOf(NOW + left).round || wishRoundOf(before).day !== wishRoundOf(NOW + left).day);\n+    });\n+\n+    suite.test('沒有許願時 3 格皆為空位，標題帶目前巡次', () => {\n+        const view = buildLobbyHallAltarView(createWishPoolState(), NOW);\n+        assert.equals(view.slots.length, LOBBY_HALL_ALTAR_SLOTS);\n+        assert.equals(view.slots[0].title, '空位');\n+        assert.equals(view.slots[0].status, '點擊許願');\n+        assert.equals(view.headText, `許願祭壇 · 第 ${wishRoundOf(NOW).round} 巡`);\n+        assert.isTrue(view.nextRoundText.startsWith('下一巡 '));\n+    });\n+\n+    suite.test('進行中顯示剩餘時間，到期顯示可收取', () => {\n+        const def = WISH_ITEMS[0];\n+        const r = startWish(createWishPoolState(), def.itemId, NOW);\n+        assert.isTrue(r.ok);\n+        if (!r.ok) return;\n+        const running = buildLobbyHallAltarView(r.state, NOW);\n+        assert.equals(running.slots[0].status, `剩 ${def.redemptionHours}h00m`);\n+        assert.isTrue(!running.slots[0].ready);\n+        assert.equals(running.slots[1].title, '空位');\n+        const done = buildLobbyHallAltarView(r.state, NOW + def.redemptionHours * HOUR);\n+        assert.equals(done.slots[0].status, '可收取');\n+        assert.isTrue(done.slots[0].ready);\n+    });\n+\n+    return suite;\n+}"
+    },
+    {
+      "path": "tests/LobbyHallWallView.test.ts",
+      "status": "added",
+      "git_blob_sha": "aa2713c36f3c7ba88b0e4385299141a7e747b56a",
+      "changes": 42,
+      "patch": "@@ -0,0 +1,42 @@\n+/**\n+ * LobbyHallWallView.test.ts — 任務板列資料轉幕府大廳牆面顯示（UI-2-0153）\n+ */\n+import { assert, TestSuite } from './TestRunner';\n+import type { HallTaskRow } from '../assets/scripts/core/systems/HallMissionBoardPresenter';\n+import { buildLobbyHallWallView, LOBBY_HALL_WALL_ROWS } from '../assets/scripts/core/systems/LobbyHallWallView';\n+\n+function row(id: string, over: Partial<HallTaskRow> = {}): HallTaskRow {\n+    return {\n+        taskId: id, title: `任務${id}`, brief: '', difficultyText: '中',\n+        requiredRankText: '官階 2 以上', rewardText: '金錢 +100',\n+        accepted: false, canAccept: true, ...over,\n+    };\n+}\n+\n+export function createLobbyHallWallViewSuite(): TestSuite {\n+    const suite = new TestSuite('LobbyHallWallView');\n+\n+    suite.test('計數用全部列數，牆面只取前 4 列', () => {\n+        const view = buildLobbyHallWallView(['1', '2', '3', '4', '5', '6'].map(id => row(id)), 8);\n+        assert.equals(view.countText, '6 / 8');\n+        assert.equals(view.rows.length, LOBBY_HALL_WALL_ROWS);\n+        assert.equals(view.rows[0].title, '任務1');\n+        assert.equals(view.rows[0].difficulty, '中');\n+    });\n+\n+    suite.test('沒有獎勵時改顯示官階需求；已接取標成置頂', () => {\n+        const view = buildLobbyHallWallView([row('1', { accepted: true }), row('2', { rewardText: '' })], 8);\n+        assert.equals(view.rows[0].meta, '金錢 +100');\n+        assert.isTrue(view.rows[0].pinned);\n+        assert.equals(view.rows[1].meta, '官階 2 以上');\n+        assert.isTrue(!view.rows[1].pinned);\n+    });\n+\n+    suite.test('沒有任務時計數為 0，無列', () => {\n+        const view = buildLobbyHallWallView([], 8);\n+        assert.equals(view.countText, '0 / 8');\n+        assert.equals(view.rows.length, 0);\n+    });\n+\n+    return suite;\n+}"
+    }
+  ],
+  "product_tests": "NOT_RUN",
+  "reported_tests": "Task cards report unit test successes; not rerun or independently verified in this work."
+}

@@ -1,0 +1,1935 @@
+{
+  "0": {
+    "case_id": "R5F-C01-V3-01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C01.md",
+    "source_sha256": "c2b425e10167551d37404ccd4abf074ba821882cf509b88760baed0ea4759d88",
+    "source_line_1based": 43,
+    "source_locator_text": "### R5F-C01-V3-01",
+    "feature_ids": [
+      "R5F-C01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "1": {
+    "case_id": "R5F-C01-V3-02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C01.md",
+    "source_sha256": "c2b425e10167551d37404ccd4abf074ba821882cf509b88760baed0ea4759d88",
+    "source_line_1based": 49,
+    "source_locator_text": "### R5F-C01-V3-02",
+    "feature_ids": [
+      "R5F-C01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "2": {
+    "case_id": "R5F-C01-V3-03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C01.md",
+    "source_sha256": "c2b425e10167551d37404ccd4abf074ba821882cf509b88760baed0ea4759d88",
+    "source_line_1based": 55,
+    "source_locator_text": "### R5F-C01-V3-03",
+    "feature_ids": [
+      "R5F-C01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "3": {
+    "case_id": "R5F-C01-V3-04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C01.md",
+    "source_sha256": "c2b425e10167551d37404ccd4abf074ba821882cf509b88760baed0ea4759d88",
+    "source_line_1based": 61,
+    "source_locator_text": "### R5F-C01-V3-04",
+    "feature_ids": [
+      "R5F-C01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "4": {
+    "case_id": "R5F-C01-V3-05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C01.md",
+    "source_sha256": "c2b425e10167551d37404ccd4abf074ba821882cf509b88760baed0ea4759d88",
+    "source_line_1based": 67,
+    "source_locator_text": "### R5F-C01-V3-05",
+    "feature_ids": [
+      "R5F-C01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "5": {
+    "case_id": "R5F-C01-V3-06",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C01.md",
+    "source_sha256": "c2b425e10167551d37404ccd4abf074ba821882cf509b88760baed0ea4759d88",
+    "source_line_1based": 73,
+    "source_locator_text": "### R5F-C01-V3-06 [NOT_RUN]",
+    "feature_ids": [
+      "R5F-C01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "6": {
+    "case_id": "R5F-C02-V3-01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C02.md",
+    "source_sha256": "8b39fed79ac11c2f38cf8308eed5211d84e919b24f8b08d473e5255ea856316e",
+    "source_line_1based": 43,
+    "source_locator_text": "### R5F-C02-V3-01",
+    "feature_ids": [
+      "R5F-C02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "7": {
+    "case_id": "R5F-C02-V3-02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C02.md",
+    "source_sha256": "8b39fed79ac11c2f38cf8308eed5211d84e919b24f8b08d473e5255ea856316e",
+    "source_line_1based": 49,
+    "source_locator_text": "### R5F-C02-V3-02",
+    "feature_ids": [
+      "R5F-C02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "8": {
+    "case_id": "R5F-C02-V3-03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C02.md",
+    "source_sha256": "8b39fed79ac11c2f38cf8308eed5211d84e919b24f8b08d473e5255ea856316e",
+    "source_line_1based": 55,
+    "source_locator_text": "### R5F-C02-V3-03",
+    "feature_ids": [
+      "R5F-C02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T68",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "9": {
+    "case_id": "R5F-C02-V3-04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C02.md",
+    "source_sha256": "8b39fed79ac11c2f38cf8308eed5211d84e919b24f8b08d473e5255ea856316e",
+    "source_line_1based": 61,
+    "source_locator_text": "### R5F-C02-V3-04",
+    "feature_ids": [
+      "R5F-C02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T69",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "10": {
+    "case_id": "R5F-C02-V3-05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C02.md",
+    "source_sha256": "8b39fed79ac11c2f38cf8308eed5211d84e919b24f8b08d473e5255ea856316e",
+    "source_line_1based": 67,
+    "source_locator_text": "### R5F-C02-V3-05",
+    "feature_ids": [
+      "R5F-C02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "11": {
+    "case_id": "R5F-C03-V3-01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C03.md",
+    "source_sha256": "1665ea9130d4133f5cbb8d4927d6bb8cbf043ccd24b5dd8531fb924ab0722324",
+    "source_line_1based": 43,
+    "source_locator_text": "### R5F-C03-V3-01",
+    "feature_ids": [
+      "R5F-C03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "12": {
+    "case_id": "R5F-C03-V3-02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C03.md",
+    "source_sha256": "1665ea9130d4133f5cbb8d4927d6bb8cbf043ccd24b5dd8531fb924ab0722324",
+    "source_line_1based": 49,
+    "source_locator_text": "### R5F-C03-V3-02",
+    "feature_ids": [
+      "R5F-C03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "13": {
+    "case_id": "R5F-C03-V3-03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C03.md",
+    "source_sha256": "1665ea9130d4133f5cbb8d4927d6bb8cbf043ccd24b5dd8531fb924ab0722324",
+    "source_line_1based": 55,
+    "source_locator_text": "### R5F-C03-V3-03",
+    "feature_ids": [
+      "R5F-C03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "14": {
+    "case_id": "R5F-C03-V3-04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C03.md",
+    "source_sha256": "1665ea9130d4133f5cbb8d4927d6bb8cbf043ccd24b5dd8531fb924ab0722324",
+    "source_line_1based": 61,
+    "source_locator_text": "### R5F-C03-V3-04",
+    "feature_ids": [
+      "R5F-C03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T35",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "15": {
+    "case_id": "R5F-C03-V3-05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C03.md",
+    "source_sha256": "1665ea9130d4133f5cbb8d4927d6bb8cbf043ccd24b5dd8531fb924ab0722324",
+    "source_line_1based": 67,
+    "source_locator_text": "### R5F-C03-V3-05",
+    "feature_ids": [
+      "R5F-C03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "16": {
+    "case_id": "R5F-C03-V3-06",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C03.md",
+    "source_sha256": "1665ea9130d4133f5cbb8d4927d6bb8cbf043ccd24b5dd8531fb924ab0722324",
+    "source_line_1based": 73,
+    "source_locator_text": "### R5F-C03-V3-06 [NOT_RUN]",
+    "feature_ids": [
+      "R5F-C03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "17": {
+    "case_id": "C03-V3-07",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C03.md",
+    "source_sha256": "1665ea9130d4133f5cbb8d4927d6bb8cbf043ccd24b5dd8531fb924ab0722324",
+    "source_line_1based": 87,
+    "source_locator_text": "案例全部NOT_RUN：C03-V3-07 Given檢查revision10後外部合法出生提交11，When本交易欲以10切槽，Then切換失敗/重驗，出生不遺失，不無條件覆pointer；C03-V3-08 Given本交易獎勵子收據已使8→9，When恢復最終保存，Then9的已提交獎勵納入一次且保原收據，不以8舊preview覆回。",
+    "feature_ids": [
+      "R5F-C03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "18": {
+    "case_id": "C03-V3-08",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C03.md",
+    "source_sha256": "1665ea9130d4133f5cbb8d4927d6bb8cbf043ccd24b5dd8531fb924ab0722324",
+    "source_line_1based": 87,
+    "source_locator_text": "案例全部NOT_RUN：C03-V3-07 Given檢查revision10後外部合法出生提交11，When本交易欲以10切槽，Then切換失敗/重驗，出生不遺失，不無條件覆pointer；C03-V3-08 Given本交易獎勵子收據已使8→9，When恢復最終保存，Then9的已提交獎勵納入一次且保原收據，不以8舊preview覆回。",
+    "feature_ids": [
+      "R5F-C03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "19": {
+    "case_id": "R5F-C04-V3-01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C04.md",
+    "source_sha256": "c64eb84e54a22322b2901d9cde221707b2885c30fd43f3bd4cfee1d3e4c8cb87",
+    "source_line_1based": 43,
+    "source_locator_text": "### R5F-C04-V3-01",
+    "feature_ids": [
+      "R5F-C04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "20": {
+    "case_id": "R5F-C04-V3-02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C04.md",
+    "source_sha256": "c64eb84e54a22322b2901d9cde221707b2885c30fd43f3bd4cfee1d3e4c8cb87",
+    "source_line_1based": 49,
+    "source_locator_text": "### R5F-C04-V3-02",
+    "feature_ids": [
+      "R5F-C04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "21": {
+    "case_id": "R5F-C04-V3-03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C04.md",
+    "source_sha256": "c64eb84e54a22322b2901d9cde221707b2885c30fd43f3bd4cfee1d3e4c8cb87",
+    "source_line_1based": 55,
+    "source_locator_text": "### R5F-C04-V3-03",
+    "feature_ids": [
+      "R5F-C04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "22": {
+    "case_id": "R5F-C04-V3-04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C04.md",
+    "source_sha256": "c64eb84e54a22322b2901d9cde221707b2885c30fd43f3bd4cfee1d3e4c8cb87",
+    "source_line_1based": 61,
+    "source_locator_text": "### R5F-C04-V3-04",
+    "feature_ids": [
+      "R5F-C04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "23": {
+    "case_id": "R5F-C04-V3-05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C04.md",
+    "source_sha256": "c64eb84e54a22322b2901d9cde221707b2885c30fd43f3bd4cfee1d3e4c8cb87",
+    "source_line_1based": 67,
+    "source_locator_text": "### R5F-C04-V3-05",
+    "feature_ids": [
+      "R5F-C04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "24": {
+    "case_id": "R5F-C05-V3-01",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C05.md",
+    "source_sha256": "7080e695344a05e234df565467dbd46873fed2a64e861b8aaee11ae98f802767",
+    "source_line_1based": 44,
+    "source_locator_text": "### R5F-C05-V3-01",
+    "feature_ids": [
+      "R5F-C05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "25": {
+    "case_id": "R5F-C05-V3-02",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C05.md",
+    "source_sha256": "7080e695344a05e234df565467dbd46873fed2a64e861b8aaee11ae98f802767",
+    "source_line_1based": 50,
+    "source_locator_text": "### R5F-C05-V3-02",
+    "feature_ids": [
+      "R5F-C05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T72",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R4E31",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      }
+    ]
+  },
+  "26": {
+    "case_id": "R5F-C05-V3-03",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C05.md",
+    "source_sha256": "7080e695344a05e234df565467dbd46873fed2a64e861b8aaee11ae98f802767",
+    "source_line_1based": 56,
+    "source_locator_text": "### R5F-C05-V3-03",
+    "feature_ids": [
+      "R5F-C05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T36",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R3T72",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "27": {
+    "case_id": "R5F-C05-V3-04",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C05.md",
+    "source_sha256": "7080e695344a05e234df565467dbd46873fed2a64e861b8aaee11ae98f802767",
+    "source_line_1based": 62,
+    "source_locator_text": "### R5F-C05-V3-04",
+    "feature_ids": [
+      "R5F-C05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T45",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R3T72",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R4E31",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      }
+    ]
+  },
+  "28": {
+    "case_id": "R5F-C05-V3-05",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C05.md",
+    "source_sha256": "7080e695344a05e234df565467dbd46873fed2a64e861b8aaee11ae98f802767",
+    "source_line_1based": 68,
+    "source_locator_text": "### R5F-C05-V3-05",
+    "feature_ids": [
+      "R5F-C05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "29": {
+    "case_id": "R5F-C05-V3-06",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-C05.md",
+    "source_sha256": "7080e695344a05e234df565467dbd46873fed2a64e861b8aaee11ae98f802767",
+    "source_line_1based": 74,
+    "source_locator_text": "### R5F-C05-V3-06",
+    "feature_ids": [
+      "R5F-C05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T28",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R3T74",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R4E28",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "30": {
+    "case_id": "B01-P1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B01.md",
+    "source_sha256": "93f28b5215e890d163ac03c38f600f9b1305cd28e9994f47dd56538a85eb16d0",
+    "source_line_1based": 89,
+    "source_locator_text": "| B01-P1 | 同 UID 位於兩個祖位且持同 canonicalID | 正規化 | 兩位置保留，來源只一筆，nearestDepth 取較近；不抽兩次 |",
+    "feature_ids": [
+      "R5F-B01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "31": {
+    "case_id": "B01-P2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B01.md",
+    "source_sha256": "93f28b5215e890d163ac03c38f600f9b1305cd28e9994f47dd56538a85eb16d0",
+    "source_line_1based": 90,
+    "source_locator_text": "| B01-P2 | 兩個不同 UID 持同 ID，星數不同 | 正規化 | 兩來源均留待 B03 各自入池，不能先只留高星 |",
+    "feature_ids": [
+      "R5F-B01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "32": {
+    "case_id": "B01-N1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B01.md",
+    "source_sha256": "93f28b5215e890d163ac03c38f600f9b1305cd28e9994f47dd56538a85eb16d0",
+    "source_line_1based": 91,
+    "source_locator_text": "| B01-N1 | 一個 parent 風險窗 unknown | 要求無共祖判定 | SOURCE_INCOMPLETE，不補乾淨模板、不輸出 O |",
+    "feature_ids": [
+      "R5F-B01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E13",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "33": {
+    "case_id": "B01-N2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B01.md",
+    "source_sha256": "93f28b5215e890d163ac03c38f600f9b1305cd28e9994f47dd56538a85eb16d0",
+    "source_line_1based": 92,
+    "source_locator_text": "| B01-N2 | 同名異 ID 及舊 alias 同 ID 並存 | 正規化 | alias 合併正確，不誤刪另一真 ID |",
+    "feature_ids": [
+      "R5F-B01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T03",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "34": {
+    "case_id": "B01-B1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B01.md",
+    "source_sha256": "93f28b5215e890d163ac03c38f600f9b1305cd28e9994f47dd56538a85eb16d0",
+    "source_line_1based": 93,
+    "source_locator_text": "| B01-B1 | 共祖只在雙親風險窗，超出子代三代 carrier 窗 | 建兩類來源 | 可供風險比對，不能進 H 或 carrier |",
+    "feature_ids": [
+      "R5F-B01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T10",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R3T48",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R4E24",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "35": {
+    "case_id": "B01-R1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B01.md",
+    "source_sha256": "93f28b5215e890d163ac03c38f600f9b1305cd28e9994f47dd56538a85eb16d0",
+    "source_line_1based": 94,
+    "source_locator_text": "| B01-R1 | 相同 graph/sourceRevision/dictionary、輸入列序不同 | 重讀再算 | 固定排序結果與 digest 相同；原位置路徑相同 |",
+    "feature_ids": [
+      "R5F-B01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "36": {
+    "case_id": "B01-F1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B01.md",
+    "source_sha256": "93f28b5215e890d163ac03c38f600f9b1305cd28e9994f47dd56538a85eb16d0",
+    "source_line_1based": 95,
+    "source_locator_text": "| B01-F1 | 讀來源中途缺 revision 或發現循環 | 完成檢核 | 不交付可提交的完整結果；原祖譜、成本與 RNG 不變 |",
+    "feature_ids": [
+      "R5F-B01"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E13",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "37": {
+    "case_id": "B02-P1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B02.md",
+    "source_sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c",
+    "source_line_1based": 97,
+    "source_locator_text": "| B02-P1 | 同維雙三星父母來源，無純化，bonus0 | 結算 | H61、T61、P1220能力點=12200000ticks、B183能力點 |",
+    "feature_ids": [
+      "R5F-B02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T02",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "38": {
+    "case_id": "B02-P2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B02.md",
+    "source_sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c",
+    "source_line_1based": 98,
+    "source_locator_text": "| B02-P2 | E74/75/76/94/95 | 算分布 | mean依序5.424/5.5/5.6125/7.6375/7.75；和1、非負 |",
+    "feature_ids": [
+      "R5F-B02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T05",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R4E01",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "M02",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "M04",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "39": {
+    "case_id": "B02-N1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B02.md",
+    "source_sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c",
+    "source_line_1based": 99,
+    "source_locator_text": "| B02-N1 | 給 E75 但缺總EP必要成分 | 要求正式出生 | PROFILE_UNSUPPORTED；只容比較算法，不提交人物 |",
+    "feature_ids": [
+      "R5F-B02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E02",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "40": {
+    "case_id": "B02-N2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B02.md",
+    "source_sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c",
+    "source_line_1based": 100,
+    "source_locator_text": "| B02-N2 | P1600標ticks卻當能力點傳入 | 驗證 | UNIT_MISMATCH，不默乘或默除修正 |",
+    "feature_ids": [
+      "R5F-B02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "41": {
+    "case_id": "B02-B1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B02.md",
+    "source_sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c",
+    "source_line_1based": 101,
+    "source_locator_text": "| B02-B1 | E=1/7；EP75流值.349999/.35/.65/.90 | 抽樣 | p0=2797/3500；四個邊界各落正確左閉右開區間，不截ppm |",
+    "feature_ids": [
+      "R5F-B02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E01",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "42": {
+    "case_id": "B02-B2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B02.md",
+    "source_sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c",
+    "source_line_1based": 102,
+    "source_locator_text": "| B02-B2 | 隔離比較profile明許指定較低m的ID純化；同維原m為.6/.5，後者成功+.2，bonus0 | 依完整流程重算 | 最終m排序.7/.6、H65、P1300能力點；不得沿舊排序得H63，亦不得沿用原H59；此fixture不採定正式純化資格 |",
+    "feature_ids": [
+      "R5F-B02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "43": {
+    "case_id": "B02-R1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B02.md",
+    "source_sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c",
+    "source_line_1based": 103,
+    "source_locator_text": "| B02-R1 | 已出生且有原witness | 讀檔、重播成材或換主題 | P/B/LUK/peakType不變，不重抽流 |",
+    "feature_ids": [
+      "R5F-B02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T07",
+        "mapping_status": "DIRECT_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R3T74",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "44": {
+    "case_id": "B02-F1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B02.md",
+    "source_sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c",
+    "source_line_1based": 104,
+    "source_locator_text": "| B02-F1 | 結果已算、提交磁碟失敗 | B06恢復 | 返回pending/原提交結果；不以新seed再算、不半寫五維 |",
+    "feature_ids": [
+      "R5F-B02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "45": {
+    "case_id": "B02-N3",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B02.md",
+    "source_sha256": "de1a5ceaaf01fcc5a9ac51da7c530551b6c894861016391e5baa4aed8a36308c",
+    "source_line_1based": 105,
+    "source_locator_text": "| B02-N3 | 公開資料相同，只改未知LUK | 預覽／排序／tooltip | 公開輸出不變；缺peakType表不以等機率預設通過 |",
+    "feature_ids": [
+      "R5F-B02"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "46": {
+    "case_id": "B03-P1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B03.md",
+    "source_sha256": "5bbe284081f47264ce05373b07502e6ebb1224257c6d2fca768760798adaccfe",
+    "source_line_1based": 85,
+    "source_locator_text": "| B03-P1 | 合法保留ID X且普通池亦有X | 抽其餘槽 | X僅占一槽；其他ID不放回，總held≤6 |",
+    "feature_ids": [
+      "R5F-B03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T13",
+        "mapping_status": "DIRECT_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R4E23",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "47": {
+    "case_id": "B03-N1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B03.md",
+    "source_sha256": "5bbe284081f47264ce05373b07502e6ebb1224257c6d2fca768760798adaccfe",
+    "source_line_1based": 86,
+    "source_locator_text": "| B03-N1 | 父系與母門各要一個保證 | 提交choice | 拒互斥，不增加第七槽、不偷偷選較優方案 |",
+    "feature_ids": [
+      "R5F-B03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E23",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "48": {
+    "case_id": "B03-B1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B03.md",
+    "source_sha256": "5bbe284081f47264ce05373b07502e6ebb1224257c6d2fca768760798adaccfe",
+    "source_line_1based": 87,
+    "source_locator_text": "| B03-B1 | 祖父母pool U=.499999/.5 | 同profile入池 | 前者入、後者不入；H不受這次入池運氣改寫 |",
+    "feature_ids": [
+      "R5F-B03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T37",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "49": {
+    "case_id": "B03-P2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B03.md",
+    "source_sha256": "5bbe284081f47264ce05373b07502e6ebb1224257c6d2fca768760798adaccfe",
+    "source_line_1based": 88,
+    "source_locator_text": "| B03-P2 | 真單親支同ID五條連續邊 | 建n5資格 | 由六人歷史可驗；不拼雙親root，不預借子代streak |",
+    "feature_ids": [
+      "R5F-B03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T56",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R3T57",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "50": {
+    "case_id": "B03-N2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B03.md",
+    "source_sha256": "5bbe284081f47264ce05373b07502e6ebb1224257c6d2fca768760798adaccfe",
+    "source_line_1based": 89,
+    "source_locator_text": "| B03-N2 | ID由媒介取得或祖輩缺位復興 | 要求承接祖輩n5 | 拒無連續真親子證據；不白加星或命名獎勵 |",
+    "feature_ids": [
+      "R5F-B03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T56",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R3T58",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R4E24",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "51": {
+    "case_id": "B03-R1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B03.md",
+    "source_sha256": "5bbe284081f47264ce05373b07502e6ebb1224257c6d2fca768760798adaccfe",
+    "source_line_1based": 90,
+    "source_locator_text": "| B03-R1 | 同根同ID一分支已領命名獎勵 | 另分支／新key／讀檔重送 | 回已領結果，一次券或命名不重發 |",
+    "feature_ids": [
+      "R5F-B03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T58",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "52": {
+    "case_id": "B03-F1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B03.md",
+    "source_sha256": "5bbe284081f47264ce05373b07502e6ebb1224257c6d2fca768760798adaccfe",
+    "source_line_1based": 91,
+    "source_locator_text": "| B03-F1 | pool/star結果已算但存檔失敗 | 恢復出生 | 回原流結果或pending；不重抽、無半數held |",
+    "feature_ids": [
+      "R5F-B03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T07",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "53": {
+    "case_id": "B03-N3",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B03.md",
+    "source_sha256": "5bbe284081f47264ce05373b07502e6ebb1224257c6d2fca768760798adaccfe",
+    "source_line_1based": 92,
+    "source_locator_text": "| B03-N3 | 未採n5+.02/.04，或Max3卻給Max5核 | 正式結算 | PROFILE_UNSUPPORTED，不挑更有利表 |",
+    "feature_ids": [
+      "R5F-B03"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E04",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      },
+      {
+        "historical_case_id": "R4E05",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      },
+      {
+        "historical_case_id": "R4E06",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      },
+      {
+        "historical_case_id": "R4E32",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "M06",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      },
+      {
+        "historical_case_id": "M07",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      },
+      {
+        "historical_case_id": "M08",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      }
+    ]
+  },
+  "54": {
+    "case_id": "B04-P1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B04.md",
+    "source_sha256": "fa77ed7f0e05b881c558ccff8169ad50dd36bc726c61bdd7bd35445fe7476b0a",
+    "source_line_1based": 79,
+    "source_locator_text": "| B04-P1 | 四個唯一(2,2)共祖，各有多路位置 | 算D候選 | 20扣至0，同UID不再扣；路徑保留 |",
+    "feature_ids": [
+      "R5F-B04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T50",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R4E14",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "55": {
+    "case_id": "B04-N1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B04.md",
+    "source_sha256": "fa77ed7f0e05b881c558ccff8169ad50dd36bc726c61bdd7bd35445fe7476b0a",
+    "source_line_1based": 80,
+    "source_locator_text": "| B04-N1 | 父子／同母手足／叔姪 | 檢合法性 | 明確拒絕，無成本與RNG消耗 |",
+    "feature_ids": [
+      "R5F-B04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E13",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "56": {
+    "case_id": "B04-N2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B04.md",
+    "source_sha256": "fa77ed7f0e05b881c558ccff8169ad50dd36bc726c61bdd7bd35445fe7476b0a",
+    "source_line_1based": 81,
+    "source_locator_text": "| B04-N2 | 任一祖位unknown，另一親h0 | 要求O與h回復 | SOURCE_INCOMPLETE，不輸出乾淨／h0 |",
+    "feature_ids": [
+      "R5F-B04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E13",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "57": {
+    "case_id": "B04-P2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B04.md",
+    "source_sha256": "fa77ed7f0e05b881c558ccff8169ad50dd36bc726c61bdd7bd35445fe7476b0a",
+    "source_line_1based": 82,
+    "source_locator_text": "| B04-P2 | 完整O且h3+h2，採減1比較profile | 算履歷 | h2；不只讀其中較低一親；risk仍依另定表 |",
+    "feature_ids": [
+      "R5F-B04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E09",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      },
+      {
+        "historical_case_id": "R4E10",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      },
+      {
+        "historical_case_id": "R4E11",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "M13",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      },
+      {
+        "historical_case_id": "M14",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      },
+      {
+        "historical_case_id": "M15",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      }
+    ]
+  },
+  "58": {
+    "case_id": "B04-B1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B04.md",
+    "source_sha256": "fa77ed7f0e05b881c558ccff8169ad50dd36bc726c61bdd7bd35445fe7476b0a",
+    "source_line_1based": 83,
+    "source_locator_text": "| B04-B1 | m1=.6與m1=1，其他條件固定 | 純化成功候選 | 前者條件下單項P+160，後者0；星核完全不變 |",
+    "feature_ids": [
+      "R5F-B04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T11",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R4E03",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R4E07",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      },
+      {
+        "historical_case_id": "R4E08",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "M01",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "M09",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "M10",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      }
+    ]
+  },
+  "59": {
+    "case_id": "B04-R1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B04.md",
+    "source_sha256": "fa77ed7f0e05b881c558ccff8169ad50dd36bc726c61bdd7bd35445fe7476b0a",
+    "source_line_1based": 84,
+    "source_locator_text": "| B04-R1 | 已保存h與出生結果，等十年再讀或換主題 | 再預覽 | h不因時間減少；舊P／衰薄不改 |",
+    "feature_ids": [
+      "R5F-B04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E12",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "60": {
+    "case_id": "B04-F1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B04.md",
+    "source_sha256": "fa77ed7f0e05b881c558ccff8169ad50dd36bc726c61bdd7bd35445fe7476b0a",
+    "source_line_1based": 85,
+    "source_locator_text": "| B04-F1 | h計算已備但O當胎risk缺值 | 請求出生交易 | PROFILE_UNSUPPORTED，保原存檔；不補1%也不把null當0 |",
+    "feature_ids": [
+      "R5F-B04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E11",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "61": {
+    "case_id": "B04-R2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B04.md",
+    "source_sha256": "fa77ed7f0e05b881c558ccff8169ad50dd36bc726c61bdd7bd35445fe7476b0a",
+    "source_line_1based": 86,
+    "source_locator_text": "| B04-R2 | 同出生重入且父母h其後有新revision | 恢復 | 用凍結parentHistoryRefs及原結果，不重新取max |",
+    "feature_ids": [
+      "R5F-B04"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "62": {
+    "case_id": "B05-P1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B05.md",
+    "source_sha256": "ddfa0b0c7a53e2be7dc0e19e62fda2bb9a1a58ebc0d04a75e70109a2d2ea1c5d",
+    "source_line_1based": 94,
+    "source_locator_text": "| B05-P1 | 已登記孩子後改姓／過繼／換factor root | 到期finalize | 原family pair入帳一次，原因與revision保留 |",
+    "feature_ids": [
+      "R5F-B05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T47",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R4E17",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "63": {
+    "case_id": "B05-N1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B05.md",
+    "source_sha256": "ddfa0b0c7a53e2be7dc0e19e62fda2bb9a1a58ebc0d04a75e70109a2d2ea1c5d",
+    "source_line_1based": 95,
+    "source_locator_text": "| B05-N1 | 未到期孩子，或到期policy缺失 | 查K或要求finalize | 前者pending不fail；後者拒結算，不猜18歲 |",
+    "feature_ids": [
+      "R5F-B05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E17",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "64": {
+    "case_id": "B05-P2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B05.md",
+    "source_sha256": "ddfa0b0c7a53e2be7dc0e19e62fda2bb9a1a58ebc0d04a75e70109a2d2ea1c5d",
+    "source_line_1based": 96,
+    "source_locator_text": "| B05-P2 | 孩子到期前死亡 | 到原定評估日 | 記未達標與死亡原因，不能從分母移除 |",
+    "feature_ids": [
+      "R5F-B05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E17",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "65": {
+    "case_id": "B05-B1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B05.md",
+    "source_sha256": "ddfa0b0c7a53e2be7dc0e19e62fda2bb9a1a58ebc0d04a75e70109a2d2ea1c5d",
+    "source_line_1based": 97,
+    "source_locator_text": "| B05-B1 | g6/n8及g5/n6，指定G3比較式 | 計算 | 結果2/3及5/6，不顯滿額；原分數不回寫產品 |",
+    "feature_ids": [
+      "R5F-B05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "66": {
+    "case_id": "B05-N2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B05.md",
+    "source_sha256": "ddfa0b0c7a53e2be7dc0e19e62fda2bb9a1a58ebc0d04a75e70109a2d2ea1c5d",
+    "source_line_1based": 98,
+    "source_locator_text": "| B05-N2 | 相同20孩16好，只換生物父母分組 | 重算舊收縮比較 | 固定pair仍90/7，不重收樣本 |",
+    "feature_ids": [
+      "R5F-B05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E15",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "M18",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "67": {
+    "case_id": "B05-R1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B05.md",
+    "source_sha256": "ddfa0b0c7a53e2be7dc0e19e62fda2bb9a1a58ebc0d04a75e70109a2d2ea1c5d",
+    "source_line_1based": 99,
+    "source_locator_text": "| B05-R1 | finalize成功後換季、新key或讀檔重送 | 再提交 | 回原結果，不增n/g，frozenFamilyPair不換 |",
+    "feature_ids": [
+      "R5F-B05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E17",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "68": {
+    "case_id": "B05-F1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B05.md",
+    "source_sha256": "ddfa0b0c7a53e2be7dc0e19e62fda2bb9a1a58ebc0d04a75e70109a2d2ea1c5d",
+    "source_line_1based": 100,
+    "source_locator_text": "| B05-F1 | 結果已算但commit中斷 | 恢復 | 全舊或一次新結果；不得n已增而原因遺失 |",
+    "feature_ids": [
+      "R5F-B05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "69": {
+    "case_id": "B05-B2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B05.md",
+    "source_sha256": "ddfa0b0c7a53e2be7dc0e19e62fda2bb9a1a58ebc0d04a75e70109a2d2ea1c5d",
+    "source_line_1based": 101,
+    "source_locator_text": "| B05-B2 | 100舊敗後窗內4好仍n8 | 比較G3 | 0；替換至6好2/3、7好1，不誤報4好即滿 |",
+    "feature_ids": [
+      "R5F-B05"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R4E20",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      },
+      {
+        "historical_case_id": "M22",
+        "mapping_status": "RELATED_CONTRACT_ONLY"
+      }
+    ]
+  },
+  "70": {
+    "case_id": "B06-P1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B06.md",
+    "source_sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090",
+    "source_line_1based": 93,
+    "source_locator_text": "| B06-P1 | 合法同profile成年雙親，完整來源 | 確認後過4季度 | 正確到期，一胎一childUID；費用依已定ledger只一次 |",
+    "feature_ids": [
+      "R5F-B06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T32",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      },
+      {
+        "historical_case_id": "R3T68",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "71": {
+    "case_id": "B06-P2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B06.md",
+    "source_sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090",
+    "source_line_1based": 94,
+    "source_locator_text": "| B06-P2 | 婚約已鎖，父母隨後升星立功 | 出生 | 用原sourceRevision；新婚約才可讀新來源 |",
+    "feature_ids": [
+      "R5F-B06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T08",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "72": {
+    "case_id": "B06-N1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B06.md",
+    "source_sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090",
+    "source_line_1based": 95,
+    "source_locator_text": "| B06-N1 | 必要EP／風險／費用policy缺值 | 確認或出生 | PROFILE_UNSUPPORTED，無新成本、無RNG、無半人物 |",
+    "feature_ids": [
+      "R5F-B06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "73": {
+    "case_id": "B06-N2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B06.md",
+    "source_sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090",
+    "source_line_1based": 96,
+    "source_locator_text": "| B06-N2 | 母親孕期死亡 | 到期 | 胎次terminated，保歷史，不換母／不復用seed |",
+    "feature_ids": [
+      "R5F-B06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "74": {
+    "case_id": "B06-B1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B06.md",
+    "source_sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090",
+    "source_line_1based": 97,
+    "source_locator_text": "| B06-B1 | dueQuarter前1／到期季度，同季重複通知 | 處理 | 前者不生；到期一次；重複不多推或多生 |",
+    "feature_ids": [
+      "R5F-B06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "75": {
+    "case_id": "B06-R1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B06.md",
+    "source_sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090",
+    "source_line_1based": 98,
+    "source_locator_text": "| B06-R1 | 已born，同鍵重送或同胎新key | 提交出生 | 回原UID及結果，無第二次扣費／cohort |",
+    "feature_ids": [
+      "R5F-B06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T07",
+        "mapping_status": "DIRECT_EXPECTATION"
+      }
+    ]
+  },
+  "76": {
+    "case_id": "B06-F1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B06.md",
+    "source_sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090",
+    "source_line_1based": 99,
+    "source_locator_text": "| B06-F1 | 分別在結果落盤、成本、marker切換前後中斷 | 恢復 | 全舊或完整同一新結果；不雙扣、不重抽、不半掛家族 |",
+    "feature_ids": [
+      "R5F-B06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T35",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "77": {
+    "case_id": "B06-N3",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B06.md",
+    "source_sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090",
+    "source_line_1based": 100,
+    "source_locator_text": "| B06-N3 | 孕期中只改campaignSeasonId，未採跳時policy | 請求跨季提前生育 | 拒絕／保持dueQuarter，不免費完成 |",
+    "feature_ids": [
+      "R5F-B06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "78": {
+    "case_id": "B06-R2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B06.md",
+    "source_sha256": "bba647b42d21903db4a2825091756707f7278aff5c6d84cfbf49e25057ad0090",
+    "source_line_1based": 101,
+    "source_locator_text": "| B06-R2 | 玩家子女嫁敵家且已有childUID | 跨季存讀 | 同父母、同婚約、同childUID；兩家不各建副本 |",
+    "feature_ids": [
+      "R5F-B06"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "79": {
+    "case_id": "B07-P1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B07.md",
+    "source_sha256": "4f0c30144dd2fb63faa6585bfd62554cebf01a6f3621b1762c42cce19058767b",
+    "source_line_1based": 105,
+    "source_locator_text": "| B07-P1 | held S_RESCUE但未active，合法見習／靈感／TP50／空槽 | 畢業兌換 | 折扣可用，學會才active；P/A不變 |",
+    "feature_ids": [
+      "R5F-B07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "80": {
+    "case_id": "B07-N1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B07.md",
+    "source_sha256": "4f0c30144dd2fb63faa6585bfd62554cebf01a6f3621b1762c42cce19058767b",
+    "source_line_1based": 106,
+    "source_locator_text": "| B07-N1 | 圖鑑已知但人物未held | 要求技能折扣或傳承 | 不給效果／來源，不當取得 |",
+    "feature_ids": [
+      "R5F-B07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "81": {
+    "case_id": "B07-B1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B07.md",
+    "source_sha256": "4f0c30144dd2fb63faa6585bfd62554cebf01a6f3621b1762c42cce19058767b",
+    "source_line_1based": 107,
+    "source_locator_text": "| B07-B1 | held5且終身新增2；另例held6且新增0 | 新ID取得 | 兩例皆拒，分別說明終身額度／槽滿 |",
+    "feature_ids": [
+      "R5F-B07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T43",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "82": {
+    "case_id": "B07-P2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B07.md",
+    "source_sha256": "4f0c30144dd2fb63faa6585bfd62554cebf01a6f3621b1762c42cce19058767b",
+    "source_line_1based": 108,
+    "source_locator_text": "| B07-P2 | 同ID已held1星，合法來源升至3星 | 提交 | 新增計數不加1，更新來源；本人P不變 |",
+    "feature_ids": [
+      "R5F-B07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "83": {
+    "case_id": "B07-N2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B07.md",
+    "source_sha256": "4f0c30144dd2fb63faa6585bfd62554cebf01a6f3621b1762c42cce19058767b",
+    "source_line_1based": 109,
+    "source_locator_text": "| B07-N2 | 非藍因子active或寶物效果提升展示 | 計H與保存P | 非藍不進H，外部值不回寫P/A |",
+    "feature_ids": [
+      "R5F-B07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "84": {
+    "case_id": "B07-R1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B07.md",
+    "source_sha256": "4f0c30144dd2fb63faa6585bfd62554cebf01a6f3621b1762c42cce19058767b",
+    "source_line_1based": 110,
+    "source_locator_text": "| B07-R1 | 已取得／啟用事件重送、新key、讀檔換季 | 提交 | 回原結果，終身帳不清／不雙增，年度線索不重領 |",
+    "feature_ids": [
+      "R5F-B07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": [
+      {
+        "historical_case_id": "R3T43",
+        "mapping_status": "PARTIAL_EXPECTATION"
+      }
+    ]
+  },
+  "85": {
+    "case_id": "B07-F1",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B07.md",
+    "source_sha256": "4f0c30144dd2fb63faa6585bfd62554cebf01a6f3621b1762c42cce19058767b",
+    "source_line_1based": 111,
+    "source_locator_text": "| B07-F1 | 因子寫入後、額度帳提交前中斷 | 恢復 | 同一原子結果或pending，不出現有因子卻未扣額度 |",
+    "feature_ids": [
+      "R5F-B07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  },
+  "86": {
+    "case_id": "B07-B2",
+    "namespace": "R5-v3-document-case",
+    "version": "v3",
+    "source_path": "functional_specs_v3/features/R5F-B07.md",
+    "source_sha256": "4f0c30144dd2fb63faa6585bfd62554cebf01a6f3621b1762c42cce19058767b",
+    "source_line_1based": 112,
+    "source_locator_text": "| B07-B2 | 新得韌性尚未合法休養；18後新得長壽 | 處理觸發 | 韌性首次休養不追補自身加成；長壽下一季評鑑才生效，不復活 |",
+    "feature_ids": [
+      "R5F-B07"
+    ],
+    "case_kind": "GIVEN_WHEN_THEN_SPECIFICATION",
+    "execution": "NOT_RUN",
+    "acceptance": "NOT_ASSESSED",
+    "execution_evidence": [],
+    "same_id_in_original_40": false,
+    "historical_case_links": []
+  }
+}

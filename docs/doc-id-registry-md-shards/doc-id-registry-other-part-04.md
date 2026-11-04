@@ -1,10 +1,10 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-07-19
-> 這是 `doc-id-registry.md` 的「其它類」分片，第 4/6 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
+> 生成日期: 2026-11-04
+> 這是 `doc-id-registry.md` 的「其它類」分片，第 4/7 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 其它類 (`doc_other`) — Part 4/6
+## 其它類 (`doc_other`) — Part 4/7
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
@@ -230,7 +230,7 @@
 | `doc_other_1806` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0013-agent-raw-git-deny-and-atm-git-tool-gate.task.md | TASK-GIT-0013 |
 | `doc_other_1807` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0014-atm-git-push-wrapper-and-tool-only-push-lane.task.md | TASK-GIT-0014 |
 | `doc_other_1808` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0015-broker-owned-staging-index-arbitration.task.md | TASK-GIT-0015 |
-| `doc_other_1809` | docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v2.md | ATM 端到端自動併批與效能證明計畫 2.0 |
+| `doc_other_1809` | docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v2.md | ATM 端到端自動併批與效能證明計畫 2.0（v2.2 Closure Amendment） |
 | `doc_other_1810` | docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan.md | ATM 端到端自動併批與效能證明計畫 |
 | `doc_other_1811` | docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md | ATM Lane Session Rollout Plan |
 | `doc_other_1812` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0124-charter-authority-bundle.task.md | ATM-GOV-0124 - Install the content-bound Charter authority bundle |

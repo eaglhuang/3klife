@@ -1,0 +1,902 @@
+{
+  "baseline_commit": "b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe",
+  "status": "REVIEW_DRAFT",
+  "items": [
+    {
+      "id": "AUTH-01",
+      "title": "入學 成年與儀式年齡",
+      "type": "PROFILE_MAPPING",
+      "priority": "P0",
+      "finding": "R5 C02保同版15歲入學、18成年；舊培育寫5歲以上、女性來源14歲成年，G1十二／十六歲在R5模組08已有衝突裁定。",
+      "proposed_document_change": "新增年齡×入口×profile矩陣；對現行母規格加適用版本／覆寫連結。保留歷史討論與儀式，不把它們視為實際成長事件。",
+      "completion_evidence": "每一入學、婚配、出仕、女兒分流入口只找到一個適用profile；未決模式不自填年齡。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C02.md",
+          "start_line": 21,
+          "end_line": 26,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C02.md#L21-L26",
+          "label": "C02"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-a.md",
+          "start_line": 18,
+          "end_line": 22,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/培育系統-shards/shard-a.md#L18-L22",
+          "label": "shard-a.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/可結緣女性來源系統.md",
+          "start_line": 55,
+          "end_line": 59,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/可結緣女性來源系統.md#L55-L59",
+          "label": "可結緣女性來源系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/08_決策_衝突與擴充邊界.md",
+          "start_line": 31,
+          "end_line": 34,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/08_決策_衝突與擴充邊界.md#L31-L34",
+          "label": "08_決策_衝突與擴充邊界.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-02",
+      "title": "三時鐘及36與60回合",
+      "type": "HISTORY_ANNOTATION",
+      "priority": "P0",
+      "finding": "C02為同版36回合一季度；教官末尾Q決策記錄仍有60回合，歷史記錄本身不能抹改，但不能當現行保證時點。",
+      "proposed_document_change": "保留決策原文，補歷史適用期與現行G05引用；run turn/worldQuarter/campaignSeason分型。",
+      "completion_evidence": "現行正常流程、fixture及UI顯示統一；歷史60回合不參與新run計算。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C02.md",
+          "start_line": 21,
+          "end_line": 32,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C02.md#L21-L32",
+          "label": "C02"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-d.md",
+          "start_line": 197,
+          "end_line": 203,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-d.md#L197-L203",
+          "label": "shard-d.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-03",
+      "title": "生前退休與死亡雙卡",
+      "type": "EXPLICIT_RULING",
+      "priority": "P0",
+      "finding": "英靈世家明定死亡雙卡、生前退休不產；轉職正文仍寫退役變虎符。",
+      "proposed_document_change": "修現行敘述與流程箭頭，引用死亡receipt；保舊討論原件並標已被何裁定取代。",
+      "completion_evidence": "所有退休入口不直接生成雙卡；死亡重送只按原receipt產物。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/英靈世家系統.md",
+          "start_line": 17,
+          "end_line": 26,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/英靈世家系統.md#L17-L26",
+          "label": "英靈世家系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統.md",
+          "start_line": 8,
+          "end_line": 10,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/轉職與宿命系統.md#L8-L10",
+          "label": "轉職與宿命系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統.md",
+          "start_line": 81,
+          "end_line": 98,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/轉職與宿命系統.md#L81-L98",
+          "label": "轉職與宿命系統.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-04",
+      "title": "英靈頁面位置",
+      "type": "EXPLICIT_RULING",
+      "priority": "P1",
+      "finding": "人物頁2.0與英靈頂部覆寫定命頁；英靈切主卡段仍寫寶頁。",
+      "proposed_document_change": "把當前入口／交叉引用改為命頁或陳列室；維持戰鬥中鎖定，歷史補遺不刪。",
+      "completion_evidence": "人物頁六tab、路由、命頁英靈與兵頁虎符一致。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/武將人物介面規格書.md",
+          "start_line": 4,
+          "end_line": 20,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/武將人物介面規格書.md#L4-L20",
+          "label": "武將人物介面規格書.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/英靈世家系統.md",
+          "start_line": 3,
+          "end_line": 6,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/英靈世家系統.md#L3-L6",
+          "label": "英靈世家系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/英靈世家系統.md",
+          "start_line": 120,
+          "end_line": 138,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/英靈世家系統.md#L120-L138",
+          "label": "英靈世家系統.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-05",
+      "title": "六色揭露次序與端點",
+      "type": "EXPLICIT_RULING_WITH_ADAPTER_GAP",
+      "priority": "P0",
+      "finding": "MVP六色已採；解鎖正文記2026-10-28的藍粉綠/白紅/紫三階，但爆發表仍綠白20、紫紅45。Discovery欄20/45與實際21/46入口也需釐清比較運算。",
+      "proposed_document_change": "保六色資料層；新增discoveryProfile表，明列玩家等級、threshold語義、>或>=、取得/可見/生效分離，不任意改為五色。",
+      "completion_evidence": "20/21及45/46端點fixture有唯一結果；UI門檻不代表因子已active。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/因子解鎖系統.md",
+          "start_line": 8,
+          "end_line": 10,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/因子解鎖系統.md#L8-L10",
+          "label": "因子解鎖系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/因子解鎖系統.md",
+          "start_line": 60,
+          "end_line": 64,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/因子解鎖系統.md#L60-L64",
+          "label": "因子解鎖系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/因子爆發系統.md",
+          "start_line": 74,
+          "end_line": 78,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/因子爆發系統.md#L74-L78",
+          "label": "因子爆發系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/因子爆發系統.md",
+          "start_line": 140,
+          "end_line": 144,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/因子爆發系統.md#L140-L144",
+          "label": "因子爆發系統.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-06",
+      "title": "生育次數公式與分段",
+      "type": "INTERNAL_CONFLICT",
+      "priority": "P0",
+      "finding": "同段公式3+floor(Vitality/30)與<90為3、90–119為4、>=120為5不符，且公式用當前Vitality、註解說上限。",
+      "proposed_document_change": "記錄兩版本並向既有規格來源核定公式／單位／cap／道具增次；在採定前不得靠工程師推一個看似合理的新公式。",
+      "completion_evidence": "至少89/90/119/120端點、當前值與max不同、+1道具及cap相容fixture齊。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md",
+          "start_line": 54,
+          "end_line": 62,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md#L54-L62",
+          "label": "shard-c.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-07",
+      "title": "孕期 冷卻與可行動資格",
+      "type": "PROFILE_MAPPING_AND_MISSING_POLICY",
+      "priority": "P0",
+      "finding": "舊結緣母方3治理月不能直接等同R5孕期4季度；孕期、受孕後冷卻、精力恢復是不同狀態。",
+      "proposed_document_change": "拆三時段與各行動資格；母死中止的既有規則保留；父死政策仍待補，不做類推。",
+      "completion_evidence": "每個婚配/派遣/出征/入學入口讀明確資格，取消與冷卻policy不可互代。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md",
+          "start_line": 29,
+          "end_line": 50,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md#L29-L50",
+          "label": "shard-c.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C02.md",
+          "start_line": 21,
+          "end_line": 26,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C02.md#L21-L26",
+          "label": "C02"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B06.md",
+          "start_line": 1,
+          "end_line": 30,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B06.md#L1-L30",
+          "label": "B06"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B06.md",
+          "start_line": 43,
+          "end_line": 55,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B06.md#L43-L55",
+          "label": "B06"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-08",
+      "title": "近親禁配 純化與unknown",
+      "type": "PROFILE_MAPPING_AND_DECISION",
+      "priority": "P0",
+      "finding": "舊三代共祖禁配與近親劣化/純化需合法性優先級；R5禁自配/直系/手足並保真祖譜，不允unknown當外婚。",
+      "proposed_document_change": "按profile列不可配集合與可配但有風險集合，再列DEC-R4-03缺表；不以可計風險代表配對合法。",
+      "completion_evidence": "禁配先於候選出生；unknown不變零風險；純化只動m不回改星核。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md",
+          "start_line": 10,
+          "end_line": 28,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md#L10-L28",
+          "label": "shard-c.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B04.md",
+          "start_line": 1,
+          "end_line": 40,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B04.md#L1-L40",
+          "label": "B04"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B04.md",
+          "start_line": 40,
+          "end_line": 50,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B04.md#L40-L50",
+          "label": "B04"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-09",
+      "title": "舊EP與新出生分帳",
+      "type": "PROFILE_MAPPING",
+      "priority": "P0",
+      "finding": "舊EP分項、覺醒門檻及運氣加成不能與R5 H、錨點插值、LUK、功業混算。",
+      "proposed_document_change": "建立舊公式→R5相應能力/已替代/未採表；B02總EP缺件照列，B08catalog缺失不套舊460/95。",
+      "completion_evidence": "同fixture不得混profile；供給E的comparisonOnly不冒充完整出生結果。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B02.md",
+          "start_line": 30,
+          "end_line": 68,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B02.md#L30-L68",
+          "label": "B02"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統理論系統.md",
+          "start_line": 180,
+          "end_line": 200,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統理論系統.md#L180-L200",
+          "label": "血統理論系統.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-10",
+      "title": "史實宿敵效果",
+      "type": "INTERNAL_CONFLICT",
+      "priority": "P1",
+      "finding": "家族關係演算法說宿敵只降低受孕不固定EP，類型表卻EP-10；因子爆發估算另有+25。",
+      "proposed_document_change": "分史實Template關係、動態人物關係、familyPair K與社交R；核定同版宿敵效果來源，缺表保留拒絕邊界。",
+      "completion_evidence": "受孕、EP、特殊因子三效果分欄，不能拿一欄代另一欄。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md",
+          "start_line": 21,
+          "end_line": 27,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md#L21-L27",
+          "label": "fj.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md",
+          "start_line": 39,
+          "end_line": 46,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md#L39-L46",
+          "label": "fj.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/因子爆發系統.md",
+          "start_line": 191,
+          "end_line": 197,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/因子爆發系統.md#L191-L197",
+          "label": "因子爆發系統.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-11",
+      "title": "戰場適性星階對照",
+      "type": "INTERNAL_CONFLICT",
+      "priority": "P1",
+      "finding": "同文一表★3→S、另一段★3→A，且有14祖先人數升級規則；無法直接映射B07。",
+      "proposed_document_change": "列兩表來源，查採定映射和祖位/唯一人物計數；對每個因子ID輸出effect contract。",
+      "completion_evidence": "★1/2/3及重複祖先位置fixture有單一結果。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/戰場適性系統.md",
+          "start_line": 82,
+          "end_line": 86,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰場適性系統.md#L82-L86",
+          "label": "戰場適性系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/戰場適性系統.md",
+          "start_line": 139,
+          "end_line": 141,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/戰場適性系統.md#L139-L141",
+          "label": "戰場適性系統.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-12",
+      "title": "AI模板與真實人物",
+      "type": "INTERFACE_GAP",
+      "priority": "P0",
+      "finding": "AI模板缺真personUID/父母/生死；治理generateGeneral未分創始者、外來招募或投影。",
+      "proposed_document_change": "新增四來源身份結果型別及轉為持續人物的合法條件；祖源缺失保持unknown，不能生新姓就清親緣。",
+      "completion_evidence": "可婚配/被俘角色可回真實來源；同模板再遇不復活死者UID。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/AI武將強度系統.md",
+          "start_line": 244,
+          "end_line": 269,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/AI武將強度系統.md#L244-L269",
+          "label": "AI武將強度系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/AI武將強度系統.md",
+          "start_line": 534,
+          "end_line": 559,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/AI武將強度系統.md#L534-L559",
+          "label": "AI武將強度系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md",
+          "start_line": 270,
+          "end_line": 283,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md#L270-L283",
+          "label": "治理模式他國AI系統.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-13",
+      "title": "AI縮放 精力與死亡",
+      "type": "INTERFACE_CONFLICT",
+      "priority": "P0",
+      "finding": "scaledStats、AI_EP、永遠充足精力與季度恢復語義未分；治理精力0判死且死後可回傭兵市場。",
+      "proposed_document_change": "區分模板戰力預算、本體/有效值、HP/stamina；死亡唯一owner，市場補人必保新來源而非原UID復活。",
+      "completion_evidence": "縮放不改P/EP/家譜；同季不重長年齡；死者不部署/配對/配裝。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/AI武將強度系統.md",
+          "start_line": 75,
+          "end_line": 89,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/AI武將強度系統.md#L75-L89",
+          "label": "AI武將強度系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/AI武將強度系統.md",
+          "start_line": 327,
+          "end_line": 346,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/AI武將強度系統.md#L327-L346",
+          "label": "AI武將強度系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md",
+          "start_line": 286,
+          "end_line": 303,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md#L286-L303",
+          "label": "治理模式他國AI系統.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-14",
+      "title": "重洗版圖與海外定位",
+      "type": "PROFILE_MAPPING_AND_DECISION",
+      "priority": "P0",
+      "finding": "舊五年Era_Reset與90%領土重洗不是R5季切政策；海外正式敘事與S08未採分帳。",
+      "proposed_document_change": "保舊profile歷史，新增適用範圍、季切資格owner及未採模式列表；不得文案或預設schema先啟用海外。",
+      "completion_evidence": "S03不默默重洗；S07/S08不進主體完成率或正式獎勵。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/遊戲時間系統.md",
+          "start_line": 153,
+          "end_line": 179,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/遊戲時間系統.md#L153-L179",
+          "label": "遊戲時間系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md",
+          "start_line": 367,
+          "end_line": 386,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md#L367-L386",
+          "label": "治理模式他國AI系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S08.md",
+          "start_line": 22,
+          "end_line": 35,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S08.md#L22-L35",
+          "label": "S08"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-15",
+      "title": "大廳自告奮勇成功率",
+      "type": "INTERNAL_CONFLICT",
+      "priority": "P1",
+      "finding": "大廳固定+50%與詞條預設不固定並存，schema事件log又明非固定成功率。",
+      "proposed_document_change": "確認任務來源/成功率policy；UI只輸出意圖與公開理由，不能把點擊接線當完整派遣結算。",
+      "completion_evidence": "成功率組合及cap有明確profile；缺policy顯缺件不假+50%。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/大廳系統.md",
+          "start_line": 178,
+          "end_line": 184,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/大廳系統.md#L178-L184",
+          "label": "大廳系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/大廳系統.md",
+          "start_line": 428,
+          "end_line": 434,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/大廳系統.md#L428-L434",
+          "label": "大廳系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md",
+          "start_line": 338,
+          "end_line": 349,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md#L338-L349",
+          "label": "Data Schema文件（本機端與Server端）.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-16",
+      "title": "玩家官職 武將將階與本體",
+      "type": "EXPLICIT_RULING_WITH_MAPPING_GAP",
+      "priority": "P0",
+      "finding": "官方母規格明無武將Level/EXP，本體不靠刷副本成長；舊G2綜合EP及UI官職/將階用語不能混用。",
+      "proposed_document_change": "為Officer_Exp、General_Fame、Rank、Command_Capacity、A、EP、名號各列owner及來源事件。",
+      "completion_evidence": "一事件的各帳可追溯，官職/名望不直接加出生P或本體A。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/官職系統.md",
+          "start_line": 3,
+          "end_line": 24,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/官職系統.md#L3-L24",
+          "label": "官職系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md",
+          "start_line": 3,
+          "end_line": 10,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md#L3-L10",
+          "label": "Data Schema文件（本機端與Server端）.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-17",
+      "title": "MVP欄位與目前schema",
+      "type": "EXPLICIT_RULING",
+      "priority": "P1",
+      "finding": "MVP樣例仍CHR且無LEA；schema已記CHR→CHA並補LEA。MVP只是階段驗證範圍，不能當全部產品分母。",
+      "proposed_document_change": "修當前MVP樣例及引用；保歷史精簡範圍，明示六維顯示/五維培育/LUK例外。",
+      "completion_evidence": "所有新樣例同單位及同欄位；不新增武將Level/EXP。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/MVP遊戲驗證規格書.md",
+          "start_line": 138,
+          "end_line": 145,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/MVP遊戲驗證規格書.md#L138-L145",
+          "label": "MVP遊戲驗證規格書.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md",
+          "start_line": 138,
+          "end_line": 143,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md#L138-L143",
+          "label": "Data Schema文件（本機端與Server端）.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-18",
+      "title": "祖譜主檔與巢狀投影",
+      "type": "INTERFACE_GAP",
+      "priority": "P0",
+      "finding": "schema仍嵌Ancestors_JSON；資料中心有PersonRegistry+ancestor_chain方案。兩者未明canonical與相容投影關係。",
+      "proposed_document_change": "建立欄位映射、祖位path、來源版本、unknown、遷移預覽與閉包契約；先核真consumer再定存儲選型。",
+      "completion_evidence": "反覆遷移不增人/洗祖源；相同祖先多路保位置、效果去重。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md",
+          "start_line": 107,
+          "end_line": 143,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md#L107-L143",
+          "label": "Data Schema文件（本機端與Server端）.md"
+        },
+        {
+          "path": "docs/資料中心架構規格書.md",
+          "start_line": 320,
+          "end_line": 344,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/資料中心架構規格書.md#L320-L344",
+          "label": "資料中心架構規格書.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C05.md",
+          "start_line": 14,
+          "end_line": 33,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C05.md#L14-L33",
+          "label": "C05"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-19",
+      "title": "Fraction容量及單位",
+      "type": "EXPLICIT_RULING",
+      "priority": "P0",
+      "finding": "R5已明確每分子分母最多256十進位數字、P以能力點顯示、BodyTicks保存；256-bit及P0..2000ticks不可混。",
+      "proposed_document_change": "在總綱與新接口寫明單位表，保歷史錯誤帳與修正來源，不換成浮點。",
+      "completion_evidence": "P1600能力點=16000000ticks；錯單位先拒，Fraction邊界有fixture。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C01.md",
+          "start_line": 19,
+          "end_line": 29,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C01.md#L19-L29",
+          "label": "C01"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B02.md",
+          "start_line": 36,
+          "end_line": 46,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B02.md#L36-L46",
+          "label": "B02"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/08_決策_衝突與擴充邊界.md",
+          "start_line": 33,
+          "end_line": 44,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/publication_candidate/08_決策_衝突與擴充邊界.md#L33-L44",
+          "label": "08_決策_衝突與擴充邊界.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-20",
+      "title": "14人UI的視覺索引與祖代",
+      "type": "INTERNAL_TEXT_DEFECT",
+      "priority": "P1",
+      "finding": "UI標曾祖1世代、祖父母4世代、父母2世代、主角1世代；視覺順序和生物深度混雜。",
+      "proposed_document_change": "分visualRow與ancestorDepth/path，14祖位+主角15槽；NodeCard經U01公開view，不以姓名綁身份。",
+      "completion_evidence": "同一人可出現多槽但同UID；unknown不補假名字；tooltip不可越權。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統樹14人UI規格書.md",
+          "start_line": 12,
+          "end_line": 27,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統樹14人UI規格書.md#L12-L27",
+          "label": "血統樹14人UI規格書.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統樹14人UI規格書.md",
+          "start_line": 43,
+          "end_line": 58,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統樹14人UI規格書.md#L43-L58",
+          "label": "血統樹14人UI規格書.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B01.md",
+          "start_line": 18,
+          "end_line": 44,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-B01.md#L18-L44",
+          "label": "B01"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-21",
+      "title": "預言 故事與未知資料",
+      "type": "INTERFACE_GAP",
+      "priority": "P0",
+      "finding": "預言母規格讀child_actual_genes；R5預覽不產生胎兒結果，所有展示需U01；未有合法揭露政策不能旁路。",
+      "proposed_document_change": "區分合法查驗、帶噪公開預測與未知；接U02券與knowledge receipt，涵蓋故事、晨報、推薦及error。",
+      "completion_evidence": "公開輸入相同、hidden改變，未授權輸出不變；不得重查刷更窄包絡。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/名士預言系統.md",
+          "start_line": 61,
+          "end_line": 90,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/名士預言系統.md#L61-L90",
+          "label": "名士預言系統.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-U01.md",
+          "start_line": 14,
+          "end_line": 35,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-U01.md#L14-L35",
+          "label": "U01"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C04.md",
+          "start_line": 21,
+          "end_line": 35,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-C04.md#L21-L35",
+          "label": "C04"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-22",
+      "title": "localOnly與正式同步",
+      "type": "EXPLICIT_RULING_WITH_MAPPING_GAP",
+      "priority": "P0",
+      "finding": "離線決策明local-only紀錄永不自動送server，schema註解寫尚未上傳易被誤讀。",
+      "proposed_document_change": "更新現行解釋並列各玩法online/local/outbox資格；正式抽卡與商城online-only，不改安全設定。",
+      "completion_evidence": "重試/full-sync不把local-only抽卡及人物混入正式存檔。",
+      "source_refs": [
+        {
+          "path": "docs/決策-Mobile-Offline-2026-04-23.md",
+          "start_line": 9,
+          "end_line": 25,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/決策-Mobile-Offline-2026-04-23.md#L9-L25",
+          "label": "決策-Mobile-Offline-2026-04-23.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md",
+          "start_line": 433,
+          "end_line": 459,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md#L433-L459",
+          "label": "Data Schema文件（本機端與Server端）.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-23",
+      "title": "符號slot外部完整稿",
+      "type": "SOURCE_MISSING",
+      "priority": "P1",
+      "finding": "repo僅8槽摘要，文件明稱Windows本機完整契約優先；本輪未讀完整稿。",
+      "proposed_document_change": "列repo摘要已核與外部完整稿未取得兩狀態；後續經授權取得並建立正式可追溯版本，未讀前不稱完整。",
+      "completion_evidence": "不從符號/姓氏推家系或遺傳效果，不猜外部差異。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/bloodline-symbol-slot-contract-v1.md",
+          "start_line": 6,
+          "end_line": 38,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/bloodline-symbol-slot-contract-v1.md#L6-L38",
+          "label": "bloodline-symbol-slot-contract-v1.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-24",
+      "title": "R5已登錄副本與原包狀態",
+      "type": "HISTORY_AND_CURRENT_STATUS",
+      "priority": "P0",
+      "finding": "當前63份正式ID存在，入口仍有尚未配號落repo等歷史文字；有些正文formalDocId:null可能是原包快照。",
+      "proposed_document_change": "新增當前登錄狀態層及registry連結；逐欄判斷原快照或現況，禁止全域替換null或把task/實作也改done。",
+      "completion_evidence": "使用者能區分原包、當前登錄、內容審核、決策、准入、實作與測試。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/README.md",
+          "start_line": 1,
+          "end_line": 20,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/README.md#L1-L20",
+          "label": "README.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/README.md",
+          "start_line": 1,
+          "end_line": 12,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/README.md#L1-L12",
+          "label": "README.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S03.md",
+          "start_line": 8,
+          "end_line": 20,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/features/R5F-S03.md#L8-L20",
+          "label": "S03"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-25",
+      "title": "R5來源README碰撞與案例定位",
+      "type": "SOURCE_BINDING_DEFECT",
+      "priority": "P0",
+      "finding": "v3原根README不在現80檔，現root為v4README；加入doc_id使346與129原locator偏一行，不是案例本文消失。",
+      "proposed_document_change": "保存原manifest歷史；另建當前artifact commit/hash/locator綁定，標缺失原v3README，不重複匯入或冒稱原件齊全。",
+      "completion_evidence": "來源hash與現件hash分帳；案例都能從當前locator定位；缺原件仍明示。",
+      "source_refs": [
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/manifest.json",
+          "start_line": 1,
+          "end_line": 10,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/manifest.json#L1-L10",
+          "label": "manifest.json"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/文件總索引.json",
+          "start_line": 1,
+          "end_line": 15,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/文件總索引.json#L1-L15",
+          "label": "文件總索引.json"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-26",
+      "title": "R5主模組cross-ref錯位",
+      "type": "INDEX_DEFECT",
+      "priority": "P0",
+      "finding": "主模組分拆ID範圍混到其他功能組，38功能尚無完整逐項入口與反向依賴。",
+      "proposed_document_change": "01→C01–C05、02→B01–B10、03→G01–G08、04→U01/U02、05→E01–E03、06→S01–S08、07→A01/A02；主拆分與真正依賴兩欄分開，S07/S08標未採。",
+      "completion_evidence": "每feature的檔案、正式ID、主模組和反向連結唯一且一致；不因關聯就偽造規範依賴。",
+      "source_refs": [
+        {
+          "path": "docs/cross-ref/cross-ref-specs.md",
+          "start_line": 34,
+          "end_line": 48,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/cross-ref/cross-ref-specs.md#L34-L48",
+          "label": "cross-ref-specs.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-27",
+      "title": "巢狀舊registry不同步",
+      "type": "STALE_GENERATED_COPY",
+      "priority": "P1",
+      "finding": "深層registry-spec-part-1把虎符/奧義/挑戰賽配成0013/0034/0008，上層registry-spec為0012/0030/0007與正文一致。",
+      "proposed_document_change": "先確認正式生成/索引入口，再更新或標歷史副本；不重新配號、不改正確上層registry以遷就舊副本。",
+      "completion_evidence": "同一正式path只有一有效ID解析；歷史副本不參與現行ID解析。",
+      "source_refs": [
+        {
+          "path": "docs/doc-id-registry-shards/registry-spec/registry-spec-part-1.json",
+          "start_line": 45,
+          "end_line": 48,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/doc-id-registry-shards/registry-spec/registry-spec-part-1.json#L45-L48",
+          "label": "registry-spec-part-1.json"
+        },
+        {
+          "path": "docs/doc-id-registry-shards/registry-spec/registry-spec-part-1.json",
+          "start_line": 75,
+          "end_line": 78,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/doc-id-registry-shards/registry-spec/registry-spec-part-1.json#L75-L78",
+          "label": "registry-spec-part-1.json"
+        },
+        {
+          "path": "docs/doc-id-registry-shards/registry-spec/registry-spec-part-1.json",
+          "start_line": 201,
+          "end_line": 204,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/doc-id-registry-shards/registry-spec/registry-spec-part-1.json#L201-L204",
+          "label": "registry-spec-part-1.json"
+        },
+        {
+          "path": "docs/doc-id-registry-shards/registry-spec.json",
+          "start_line": 39,
+          "end_line": 42,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/doc-id-registry-shards/registry-spec.json#L39-L42",
+          "label": "registry-spec.json"
+        },
+        {
+          "path": "docs/doc-id-registry-shards/registry-spec.json",
+          "start_line": 69,
+          "end_line": 72,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/doc-id-registry-shards/registry-spec.json#L69-L72",
+          "label": "registry-spec.json"
+        },
+        {
+          "path": "docs/doc-id-registry-shards/registry-spec.json",
+          "start_line": 177,
+          "end_line": 180,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/doc-id-registry-shards/registry-spec.json#L177-L180",
+          "label": "registry-spec.json"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    },
+    {
+      "id": "AUTH-28",
+      "title": "原資料中心完成率與當前產品",
+      "type": "EVIDENCE_CLASSIFICATION",
+      "priority": "P1",
+      "finding": "資料中心文內有日期不同的未解與已完成記錄；R5也明NOT_VERIFIED，不能挑一句宣稱全部完成或全部未做。",
+      "proposed_document_change": "按commit/日期/範圍列author claim、static read、executed三欄；核真caller後才升狀態。",
+      "completion_evidence": "歷史37/37、舊PASS或file存在都不直接等R5產品驗收。",
+      "source_refs": [
+        {
+          "path": "docs/資料中心架構規格書.md",
+          "start_line": 717,
+          "end_line": 729,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/資料中心架構規格書.md#L717-L729",
+          "label": "資料中心架構規格書.md"
+        },
+        {
+          "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/README.md",
+          "start_line": 23,
+          "end_line": 29,
+          "url": "https://github.com/eaglhuang/3klife/blob/b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe/docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/README.md#L23-L29",
+          "label": "README.md"
+        }
+      ],
+      "status": "OPEN_DOCUMENT_ACTION",
+      "product_test_status": "NOT_RUN"
+    }
+  ]
+}

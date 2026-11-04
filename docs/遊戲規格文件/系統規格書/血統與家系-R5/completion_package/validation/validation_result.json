@@ -1,0 +1,43 @@
+{
+  "validation_kind": "DOCUMENT_STRUCTURE_AND_SOURCE_LOCATORS_ONLY",
+  "status": "PASS",
+  "baseline_commit": "b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe",
+  "checked_at_utc": "2026-11-04T00:49:03.131153+00:00",
+  "checks": {
+    "source_cache_files": 9,
+    "unique_sources": 146,
+    "system_tree_sources_verified": 137,
+    "markdown_links": 765,
+    "markdown_tables": 36,
+    "json_source_references": 812,
+    "headings": 313,
+    "citations": 686,
+    "missing_outputs": [],
+    "authority_issues": 28,
+    "gameplay_groups": 12,
+    "gameplay_entrances": 53,
+    "interface_expectations": 44,
+    "features": 38,
+    "existing_document_case_count": 346,
+    "unselected_proposals": [
+      "R5F-S07",
+      "R5F-S08"
+    ],
+    "decisions": 19,
+    "gaps": 17,
+    "cross_gameplay_cases": 61,
+    "cross_case_feature_references": 38,
+    "features_without_cross_case": [],
+    "cross_cases_with_conditional_assertions": 28
+  },
+  "missing_source_paths": [],
+  "errors": [],
+  "warnings": [],
+  "product_tests": "NOT_RUN",
+  "semantic_entailment": "HUMAN_REVIEW_REQUIRED_NOT_PROVEN_BY_THIS_SCRIPT",
+  "limitations": [
+    "No product execution or UI rendering",
+    "No automatic proof that cited text entails each claim",
+    "Open decisions and missing external sources remain open"
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "manifest_kind": "CURRENT_LOCAL_DOCUMENT_WORK_PACKAGE_NOT_ORIGINAL_R5_MANIFEST",
+  "baseline_commit": "b35b349c01e728358a8ef9a21cbcb8fbdd9dadfe",
+  "sealed_at_utc": "2026-11-04T00:49:19.221534+00:00",
+  "document_validation_status": "PASS",
+  "product_tests": "NOT_RUN",
+  "files": [
+    {
+      "path": "README.md",
+      "size_bytes": 8540,
+      "sha256": "d714e55a5d51f6526a6767b2e5e7ddb29af11f48b9a0df0867aec9f0bb407d37"
+    },
+    {
+      "path": "evidence/authority_issues.json",
+      "size_bytes": 48934,
+      "sha256": "017630be481e63bb20e8871edd9d5cb1d1c043809f522054659738a4f712d796"
+    },
+    {
+      "path": "evidence/case_feature_matrix.json",
+      "size_bytes": 8765,
+      "sha256": "d9b50ac23ac24299e6e03fc32591054d10aa26f915953d32da6af9d452340d11"
+    },
+    {
+      "path": "evidence/cross_gameplay_cases.json",
+      "size_bytes": 297043,
+      "sha256": "a956a5d83726f4b453a4e22fb4a5a2cbea74bbd01470c195478b9c45a015c19e"
+    },
+    {
+      "path": "evidence/feature_tracker.json",
+      "size_bytes": 467703,
+      "sha256": "e3c07d413ee4a4d3b4e213c5d3040da41f137c6f4f6b9cebb735b5d4d9d6cec4"
+    },
+    {
+      "path": "evidence/head_drift.json",
+      "size_bytes": 29215,
+      "sha256": "881ea5df63e9846b25d84e710a5f0aaf39a9c1fe37f36e84ac81c191e25dbf19"
+    },
+    {
+      "path": "evidence/source_catalog.json",
+      "size_bytes": 72591,
+      "sha256": "3bbc164409ebbd60f0c7f6dc6e491de75dcb20cbc3ee8f726e2b250f03f682f1"
+    },
+    {
+      "path": "evidence/source_citations.json",
+      "size_bytes": 1655501,
+      "sha256": "60309a42ec805990755d44050a3d01cb7832e09b1e83f34eebc605816b401ed0"
+    },
+    {
+      "path": "evidence/system_inventory.json",
+      "size_bytes": 70393,
+      "sha256": "b20571a3536bed4385a49c2dfa6c0edb1b6b377f3e3fd68ff5c19b1ef03f2636"
+    },
+    {
+      "path": "specs/01_權威與衝突帳.md",
+      "size_bytes": 37509,
+      "sha256": "dfc9851c0a44f5b93a69cf1f1b6b21ac3007075fcf2dd88fb8a5186afafdfe64"
+    },
+    {
+      "path": "specs/02_全玩法接口矩陣.md",
+      "size_bytes": 83984,
+      "sha256": "b28211c556cf34316b00387db1236c7fee5cd5f27e5d1cd471360811017a0aad"
+    },
+    {
+      "path": "specs/03_38功能與待決補件追蹤.md",
+      "size_bytes": 179669,
+      "sha256": "b0d0c853074350f0cdd344094dc623f0399212b9ddfd98dcdc714dc6343778ca"
+    },
+    {
+      "path": "specs/04_共同資料事件時鐘契約.md",
+      "size_bytes": 31421,
+      "sha256": "a926a53be27ec08bbd54845b3de6449c1aeb54aabdfed1282d5b911cb09cc0ae"
+    },
+    {
+      "path": "specs/05_跨玩法驗收案例.md",
+      "size_bytes": 180443,
+      "sha256": "3cbea97143b5de0e1bda40e390cf46091c826197b029a2fb74f5c84091dc103c"
+    },
+    {
+      "path": "validation/README.md",
+      "size_bytes": 2306,
+      "sha256": "432320a292634ca0185d935d94916cb32c61183c5bede4d3376f7fa96495573b"
+    },
+    {
+      "path": "validation/missing_source_paths.json",
+      "size_bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "validation/seal_package.py",
+      "size_bytes": 1167,
+      "sha256": "a060269520f06283a86b9499ab0d0f1fd9881f80f2633936cfab4be51bca2d9e"
+    },
+    {
+      "path": "validation/validate_package.py",
+      "size_bytes": 12446,
+      "sha256": "086618481f0823e01eb4da8d142c9787bdc60960c95fdbdcd609a0f4ce7e2466"
+    },
+    {
+      "path": "validation/validation_result.json",
+      "size_bytes": 1297,
+      "sha256": "8e43dd7b3dcf7d2feade03792e26b63cb9a385c712e66d24d6d882ba4e0ab190"
+    },
+    {
+      "path": "validation/內容審核記錄.md",
+      "size_bytes": 2099,
+      "sha256": "aeee774d9af4441cd65ba8cfde2245c4dc15a735240fa6f3e85ce42c789ba790"
+    },
+    {
+      "path": "validation/版本漂移記錄.md",
+      "size_bytes": 3292,
+      "sha256": "655c4eb0fb1b177420ada8907e59c80b310763a8feb345d19d76622ab7e412b4"
+    }
+  ],
+  "file_count_excluding_this_manifest": 21,
+  "total_bytes_excluding_this_manifest": 3194321
+}

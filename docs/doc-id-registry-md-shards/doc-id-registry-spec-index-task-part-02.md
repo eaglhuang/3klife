@@ -1,7 +1,7 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-03
-> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 2/4 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 生成日期: 2026-11-04
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 2/9 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
 ## 索引類 (`doc_index`)
@@ -10,7 +10,7 @@
 |--------|------|------|
 | `doc_index_0001` | docs/cross-ref/cross-ref-code.md | Cross-Reference: 代碼索引（代碼 ↔ 規格書 雙向映射） |
 | `doc_index_0002` | docs/cross-ref/cross-ref-specs.md | Cross-Reference: 規格書索引（文件 → 相關文件） |
-| `doc_index_0003` | docs/cross-ref/cross-ref-ui-spec.md | Cross-Reference: UI Spec JSON 鞈蝝Ｗ? |
+| `doc_index_0003` | docs/cross-ref/cross-ref-ui-spec.md | Cross-Reference: UI Spec JSON 資產索引 |
 | `doc_index_0004` | docs/cross-ref/README.md | cross-ref/ |
 | `doc_index_0006` | docs/keep-shards/keep-core.md | Keep Consensus — Core（P0 · §0–§2c） |
 | `doc_index_0007` | docs/cross-reference-index.md | 交叉索引表 (Cross-Reference Index) |
@@ -65,3 +65,16 @@
 | `doc_index_1030` | docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v3/README.md | R5 逐功能獨立規格 v3｜整合工作版 |
 | `doc_index_1031` | docs/遊戲規格文件/系統規格書/血統與家系-R5/functional_specs_v2/README.md | R5 功能總清單 v2 |
 | `doc_index_1032` | docs/遊戲規格文件/系統規格書/血統與家系-R5/README.md | R4／R5 文件與案例索引增補 v4 |
+| `doc_index_1033` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/README.md | 血統遺傳與全玩法文件補全工作包 |
+| `doc_index_1034` | docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/README.md | 工作包驗證說明 |
+| `doc_index_1035` | docs/cross-ref/code/battle.md | 代碼索引分片：Battle |
+| `doc_index_1036` | docs/cross-ref/code/core-shared.md | 代碼索引分片：Core 其他目錄與 Shared |
+| `doc_index_1037` | docs/cross-ref/code/core-systems-1.md | 代碼索引分片：Core Systems（上半，依檔名排序） |
+| `doc_index_1038` | docs/cross-ref/code/core-systems-2.md | 代碼索引分片：Core Systems（下半） |
+| `doc_index_1039` | docs/cross-ref/code/tools.md | 代碼索引分片：工具、建置與 Agent Skills |
+| `doc_index_1040` | docs/cross-ref/code/ui-spec-json.md | 代碼索引分片：UI Spec JSON 畫面表 |
+| `doc_index_1041` | docs/cross-ref/code/ui.md | 代碼索引分片：UI |
+| `doc_index_1042` | docs/cross-ref/progress/d1a-rejudge.md | 進度索引分片：D-1a 邏輯欄重判紀錄 |
+| `doc_index_1043` | docs/cross-ref/progress/d2-d3-pending-ui.md | 進度索引分片：D-2 待建 UI Spec／D-3 待定 Contract |
+| `doc_index_1044` | docs/cross-ref/progress/spec-audit-lifespan.md | 規格逐條比對：武將壽命系統.md (doc_spec_0018) |
+| `doc_index_1045` | docs/cross-ref/progress/spec-audit-officer.md | 規格逐條比對：官職系統.md (doc_spec_0014) |
