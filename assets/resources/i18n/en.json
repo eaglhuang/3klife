@@ -152,6 +152,7 @@
   "ui.general.soul_inject.reason.same_template": "The fragment and target are the same version; cannot inject.",
   "ui.general.soul_inject.reason.bloodline_mismatch": "The fragment and target have different bloodlines; cannot inject.",
   "ui.general.soul_inject.reason.unknown": "Cannot inject.",
+  "ui.general.soul_inject.open": "Soul Host",
   "ui.general.soul_inject.failed": "Injection failed: {0}",
   "ui.general.soul_inject.total_tp": "Total TP {0}",
   "ui.general.bloodline.parents": "Parent summary: ",

@@ -2,6 +2,7 @@
 import { Color, Label, Sprite, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
 import { placeDs3BarFill } from './Ds3BarFill';
+import { ds3SetActive } from './Ds3NodeLookup';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
 
@@ -95,6 +96,8 @@ const V3_COMMAND_LABELS: Partial<Record<GeneralDetailOverviewContentState['comma
 /** 統領軍勢五列的值節點，依 commandPanelRows 的 key 對應（PROG-2-1213 / TSK-06） */
 const COMMAND_VALUE_NODE_PREFIX = 'CharacterDs3TabOverview_cmd_value_';
 
+const OVERVIEW_BIO_HEIGHT = 164;
+
 const ACTIVE_STAR_COLOR = new Color(212, 175, 55, 255);
 const INACTIVE_STAR_COLOR = new Color(77, 70, 53, 255);
 
@@ -124,6 +127,9 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         this._setLabelText('OverviewEpithet', state.headerTitle ?? '');
         this._setLabelText('OverviewRarityTier', state.rarityLabel);
         this._setLabelText('OverviewBio', state.biographyBody);
+        this._clampBio();
+        // 逸事故事條由立繪下方的頁籤展開，這一列在 v3 沒有功能，還會超出畫面
+        ds3SetActive(this.binder, this.hostNode, 'OverviewStoryExpand', false);
         this._setLabelText('OverviewCrestTitle', state.crestTitle);
         this._setLabelText('OverviewBloodlineName', state.bloodlineName);
         this._setLabelText('OverviewAwakeningPercent', `${Math.round(state.awakeningProgress)}%`);
@@ -241,6 +247,16 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         for (const [key, nodeName] of Object.entries(IDENTITY_LABELS) as [keyof typeof IDENTITY_LABELS, string][]) {
             this._setLabelText(nodeName, state.identity?.[key] ?? '');
         }
+    }
+
+    /** 小傳長度因人而異，卡片高度固定，超過的部分裁掉，不可蓋到下方區塊 */
+    private _clampBio(): void {
+        const label = this.binder.getLabel('OverviewBio');
+        const transform = label?.node.getComponent(UITransform);
+        if (!label || !transform) return;
+        label.overflow = Label.Overflow.CLAMP;
+        label.verticalAlign = Label.VerticalAlign.TOP;
+        transform.setContentSize(transform.width, OVERVIEW_BIO_HEIGHT);
     }
 
     private _setLabelText(nodeName: string, text: string): void {
