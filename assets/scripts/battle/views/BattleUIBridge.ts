@@ -25,7 +25,8 @@ import { EVENT_NAMES, Faction, SP_PER_KILL, TroopType, TurnPhase } from '../../c
 import { applyOpeningWinGuarantee, autoResolveOutcome } from '../runtime/BattleAutoResolve';
 import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
 import { services } from '../../core/managers/ServiceLoader';
-import { BattlePerformanceTracker, formatPerformance, localizedMilestoneName } from '../../core/systems/BattleRecordStats';
+import { BattlePerformanceTracker, formatPerformance } from '../../core/systems/BattleRecordStats';
+import { milestoneAnnouncementLines } from '../../core/systems/BattleMilestoneScripts';
 import { formatSortieSummary } from '../../core/systems/SortieDeploy';
 import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
 import { cellarProtectionText } from '../../ui/core/DailySubsidyNotice';
@@ -763,9 +764,10 @@ export class BattleUIBridge {
       const entry = settlement.entries[0];
       if (entry) {
         this.appendLog(`${this.ctx.pg?.name ?? pgId} 精力 ${entry.vitalityBefore}→${entry.vitalityAfter}，功勳 +${entry.meritGained}`);
-        for (const milestone of entry.newMilestones) {
-          this.appendLog(`【${localizedMilestoneName(milestone, key => services().i18n.t(key))}】達成！`);
-        }
+        const milestoneLines = entry.newMilestones.flatMap((milestone) =>
+          milestoneAnnouncementLines(milestone, this.ctx.pg?.name ?? pgId, key => services().i18n.t(key)));
+        for (const line of milestoneLines) this.appendLog(line);
+        if (milestoneLines.length > 0) this.ctx.resultPopup?.appendDetails?.(milestoneLines);
       }
       for (const awakened of settlement.awakenings) {
         this.appendLog(`【覺醒】${awakened.displayName}！`);
