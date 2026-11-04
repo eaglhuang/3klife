@@ -10,6 +10,8 @@
 import type { TallyCardData } from '../../shared/TallyCardContract';
 import type { SpiritCard } from '../../core/models/SpiritCard';
 import { buildSpiritCardDetailView, type SpiritCardDetailLookup } from './SpiritCardDetailTexts';
+import { TALLY_TROOP_COST } from '../../core/systems/SortieDeploy';
+import { starStatMultiplier } from '../../core/systems/TigerTallyStar';
 
 export const SPIRIT_TALLY_DETAIL_SCREEN_ID = 'spirit-tally-detail-screen';
 
@@ -44,11 +46,24 @@ export function tallyLoreBodyText(data: TallyCardData): string {
     return blocks.join('\n');
 }
 
-/** 虎符摘要：描述加取得條件，兩行以上換行。 */
+/**
+ * 虎符出陣行（兵種（虎符）系統覆寫裁定 4，PROG-2-1753）：投入兵力依品質查出征帳本、糧耗即卡面費用、星級倍率依星數。
+ * 品質不在投入兵力表（R/SR/SSR/UR）時回傳空字串，不顯示。
+ */
+export function tallyDeployLine(data: TallyCardData): string {
+    const troops = data.rarityLabel ? TALLY_TROOP_COST[data.rarityLabel] : undefined;
+    if (troops === undefined) return '';
+    const star = Math.max(1, Array.from(data.stars ?? '').filter((c) => c === '★').length);
+    return `出陣：投入兵力 ${troops}｜糧耗 ${data.cost}｜星級倍率 ×${starStatMultiplier(star).toFixed(2)}`;
+}
+
+/** 虎符摘要：描述、取得條件、出陣行，兩行以上換行。 */
 export function tallySummaryText(data: TallyCardData): string {
     const lines: string[] = [];
     if (data.desc) lines.push(data.desc);
     if (data.source?.obtainHint) lines.push(`取得：${data.source.obtainHint}`);
+    const deploy = tallyDeployLine(data);
+    if (deploy) lines.push(deploy);
     return lines.join('\n');
 }
 

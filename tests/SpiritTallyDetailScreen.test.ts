@@ -93,6 +93,12 @@ export function createSpiritTallyDetailScreenSuite(): TestSuite {
         assert.equals('趙雲單騎救主', full.texts.LoreBody);
     });
 
+    suite.test('虎符：摘要附出陣行（投入兵力、糧耗、星級倍率）；品質不在表內不顯示（PROG-2-1753）', () => {
+        const view = spiritTallyDetailOfTally(tallyOf({ desc: '精騎', rarityLabel: 'SR', stars: '★★' }));
+        assert.equals('精騎\n出陣：投入兵力 1300｜糧耗 12｜星級倍率 ×1.16', view.texts.SummaryText);
+        assert.equals('', spiritTallyDetailOfTally(tallyOf({ rarityLabel: 'LR', stars: '★★★★★' })).texts.SummaryText);
+    });
+
     suite.test('虎符：數值文字與共用版面節點對得上', () => {
         const view = spiritTallyDetailOfTally(tallyOf({}));
         assert.equals('80', view.texts.AtkValue);
