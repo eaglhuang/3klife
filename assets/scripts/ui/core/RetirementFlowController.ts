@@ -1,4 +1,6 @@
 // @spec-source → 武將壽命系統.md (doc_spec_0018)；PROG-2-1429 依建檔紀錄補標出處；武將系統.md (doc_spec_0016) §G 職能分流對話與退役語錄（PROG-2-1738）
+import { gearInheritLine, retireGearReturnLine } from '../../core/systems/BackpackScripts';
+import { isFemale } from '../../core/systems/BreedingSystem';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { GENERAL_STATUS_DEAD, RETIREMENT_AGE } from '../../core/systems/GeneralAging';
 import { GENERAL_STATUS_UNVEILED, UNVEILING_AGE } from '../../core/systems/Unveiling';
@@ -13,6 +15,8 @@ export interface RetirementFlowDeps {
     /** Must return the owned session roster, never the template catalogue. */
     roster(): GeneralConfig[];
     retireGeneral(id: string, options?: { catalystChildId?: string; heirChildId?: string }): Promise<unknown>;
+    /** 這位武將身上有沒有一般裝備；決定退役提示要不要帶裝備去向（背包 §G） */
+    hasEquippedGear?(id: string): boolean;
 }
 export type RetirementOutcome = 'confirmation-required' | 'retired' | 'unavailable' | 'busy' | 'failed';
 
@@ -126,10 +130,11 @@ export class RetirementFlowController {
         const options: { catalystChildId?: string; heirChildId?: string } = {};
         if (child) options.catalystChildId = child.id;
         if (heir) options.heirChildId = heir.id;
+        const gearLine = this._retireGearLine(target, heir);
         try {
             if (child || heir) await this._deps.retireGeneral(target.id, options);
             else await this._deps.retireGeneral(target.id);
-            this._notice = `${target.name} 已退役，教官卡已保存。${RETIRE_FAREWELL_QUOTE}`;
+            this._notice = `${target.name} 已退役，教官卡已保存。${RETIRE_FAREWELL_QUOTE}${gearLine}`;
             return 'retired';
         } catch (error) {
             this._notice = error instanceof Error ? error.message : '退役失敗，請稍後重試';
@@ -138,5 +143,11 @@ export class RetirementFlowController {
             this._busy = false;
             this._confirmId = null;
         }
+    }
+
+    /** 裝備去向：指定繼承人走傳承句，否則回倉；身上沒裝備就不提。要在退役前算，退役後裝備已移走 */
+    private _retireGearLine(target: RetirementGeneral, heir: RetirementGeneral | null | undefined): string {
+        if (!this._deps.hasEquippedGear?.(target.id)) return '';
+        return heir ? gearInheritLine(heir.name, isFemale(target)) : retireGearReturnLine(target.name, isFemale(target));
     }
 }
