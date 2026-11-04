@@ -76,6 +76,26 @@ export function dispatchBoardRows(
     return activeRows.concat(idleRows);
 }
 
+/** §H 派遣完成與評級字串（與 zh-TW.json 的 UI_DISPATCH_COMPLETE／UI_DISPATCH_QUALITY 同文） */
+export const DISPATCH_SETTLE_TEXT = {
+    complete: '{Name} 已完成派遣',
+    quality: '派遣評級：{Quality}',
+} as const;
+
+/**
+ * 派遣結算提示（PROG-2-1742）：單項時用 §H「{Name} 已完成派遣」＋「派遣評級：{Quality}」；
+ * 多項時列第一項並附「另 N 項」，避免 toast 過長。沒有完成項回傳空字串。
+ */
+export function dispatchSettleToast(
+    done: readonly { generalId: string; quality: DispatchQuality }[],
+    nameOf: (generalId: string) => string,
+): string {
+    if (done.length === 0) return '';
+    const first = done[0];
+    const line = `${DISPATCH_SETTLE_TEXT.complete.replace('{Name}', nameOf(first.generalId))}，${DISPATCH_SETTLE_TEXT.quality.replace('{Quality}', DISPATCH_QUALITY_LABEL[first.quality])}`;
+    return done.length === 1 ? `${line}。` : `${line}（另 ${done.length - 1} 項完成），獎勵已入帳。`;
+}
+
 /** 點列派遣結果的提示文字（PROG-2-1181，暫定字串） */
 export function dispatchClickMessage(result: { ok: boolean; reason?: string; jobName?: string; generalName?: string }): string {
     if (result.ok) return `${result.generalName ?? ''}出發執行「${result.jobName ?? ''}」。`;
