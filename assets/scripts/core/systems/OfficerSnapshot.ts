@@ -78,10 +78,12 @@ export function normalizeOfficerSnapshot(raw: unknown): OfficerSnapshot {
  * 大廳任務牆的玩家狀態（PROG-2-0824）：階位即 rankTier；世界沙盤階段 S1/S2/S3 對應 worldStage 1/2/3。
  * 未解鎖沙盤時 worldStage 退回 1，與既有 HALL_DEFAULT_PLAYER 一致，避免舊的任務牆被隱藏。
  * 暫定：worldStage 退回值沿用既有預設。
+ * 情報度（PROG-2-1759）：取玩家累積情報（目前來源為監獄產出），夾在 0~100，供軍事任務 Required_Intel 判定可見。
  */
-export function hallPlayerOf(unlocks: OfficerUnlocks): { rankTier: number; worldStage: number; intel: number } {
+export function hallPlayerOf(unlocks: OfficerUnlocks, intel = 0): { rankTier: number; worldStage: number; intel: number } {
     const stage = unlocks.sandtableStage ? Number(unlocks.sandtableStage.slice(1)) : 1;
-    return { rankTier: unlocks.tier, worldStage: stage, intel: 0 };
+    const clamped = Number.isFinite(intel) ? Math.min(100, Math.max(0, Math.floor(intel))) : 0;
+    return { rankTier: unlocks.tier, worldStage: stage, intel: clamped };
 }
 
 export function officerUnlocksOf(snapshot: OfficerSnapshot): OfficerUnlocks {

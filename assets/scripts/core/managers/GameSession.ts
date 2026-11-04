@@ -1633,6 +1633,11 @@ export class GameSession {
         this._emit(GAME_SESSION_EVENTS.RosterChanged, this.roster);
     }
 
+    /** 玩家累積情報（PROG-2-1759）：目前來源為監獄產出，大廳軍事任務以此判定 Required_Intel */
+    public get intel(): number {
+        return this._prison.intel;
+    }
+
     /** 俘虜與監獄（PROG-2-0073）：待處置俘虜、關押中、名聲、情報 */
     public get prison(): PrisonState<GeneralConfig> {
         return {
