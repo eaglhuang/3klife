@@ -8,7 +8,7 @@ import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { _decorator, BlockInputEvents, Button, Color, Component, instantiate, JsonAsset, Label, Mask, Node, Sprite, UITransform, Widget, resources } from 'cc';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
-import { LobbyHallScreenBinder, type LobbyHallDockId } from '../core/LobbyHallScreenBinder';
+import { LobbyHallScreenBinder, type LobbyHallDockId, type LobbyHallPanelId } from '../core/LobbyHallScreenBinder';
 import type { HallThemeConfig } from '../../core/systems/HallTheme';
 import type { HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
@@ -2491,6 +2491,13 @@ export class LobbyScene extends Component {
             training: () => this._openNurtureFlow(),
             shop: () => this.onClickShopMain(),
         };
+        // 場景面板（UI-2-0152）：左牆軍務／外交、右牆內政／人脈、許願祭壇、世家總覽
+        const panels: Record<LobbyHallPanelId, () => void> = {
+            'wall-left': () => this._openHallBoard('Military'),
+            'wall-right': () => this._openHallBoard('Domestic'),
+            altar: () => this._openWishAltar(),
+            clan: () => this.onClickSpiritFamilyOverview(),
+        };
         this._lobbyHall = new LobbyHallScreenBinder(host.node, {
             themeConfig,
             fxConfig,
@@ -2499,6 +2506,7 @@ export class LobbyScene extends Component {
                 host.node.active = false;
             },
             onDock: (id) => dock[id](),
+            onPanel: (id) => panels[id](),
             // Q 版武將人群（UI-2-0150）；自告奮勇任務來源未定，先不給任務（不顯示「!」）
             stage: stageLayout && stageDecor
                 ? {
@@ -2536,6 +2544,7 @@ export class LobbyScene extends Component {
         this._bringNodeToFront(host.node);
         // 晝夜依裝置當地時間，季節依遊戲時鐘（1 春～4 冬）
         this._lobbyHall?.refresh(services().session.gameTime.currentSeason, new Date().getHours());
+        this._lobbyHall?.setPanelVisible('clan', familyOverviewHotspotVisible(services().session.familySystemUnlocked));
         this._lobbyHall?.openStage();
         if (this._pendingHallMapTurn) {
             this._lobbyHall?.playMapTurn(this._pendingHallMapTurn);
