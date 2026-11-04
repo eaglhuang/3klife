@@ -42,6 +42,7 @@ import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, I
 
 import { BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
 import { buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
+import { quickViewSkillLines } from '../../shared/QuickViewSkillLines';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
 import {
   BATTLE_FLOW_FX,
@@ -192,6 +193,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.UnitDied,                this._onUnitDied.bind(this)),
       svc.event.on(EVENT_NAMES.GeneralDamaged,          this._onGeneralDamaged.bind(this)),
       svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._onGeneralSkillUsed.bind(this)),
+      svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._noteEnemySkillRevealed.bind(this)),
       svc.event.on(EVENT_NAMES.SelfBurstChanged,        this._onSelfBurstChanged.bind(this)),
       svc.event.on(EVENT_NAMES.TeamAuraChanged,         this._onTeamAuraChanged.bind(this)),
       svc.event.on(EVENT_NAMES.TeamRecovered,           this._onTeamRecovered.bind(this)),
@@ -820,6 +822,14 @@ export class BattleUIBridge {
     this.ctx.skillTargetingFlow.cancelPendingSkillTargeting(true);
   }
 
+  /** 本場已發動過的敵方戰法 id；快覽只對這些顯示名稱（PROG-2-1756） */
+  private readonly _revealedEnemySkills = new Set<string>();
+
+  private _noteEnemySkillRevealed(data: { faction: Faction; skillId?: string; skillName?: string }): void {
+    const skillId = data.skillId ?? data.skillName;
+    if (data.faction === Faction.Enemy && skillId) this._revealedEnemySkills.add(skillId);
+  }
+
   private _onRequestGeneralQuickView(req: { side: 'player' | 'enemy'; isEnemy: boolean }): void {
     const unit = req.side === 'player' ? this.ctx.pg : this.ctx.eg;
     if (!unit) { UCUFLogger.warn(LogCategory.LIFECYCLE, '[BattleUIBridge] _onRequestGeneralQuickView: 武將資料尚未備妥'); return; }
@@ -828,7 +838,7 @@ export class BattleUIBridge {
       faction: req.isEnemy ? '敵方' : '玩家',
       hp: unit.currentHp, maxHp: unit.maxHp,
       atk: Math.round(unit.str * 10), def: Math.round(unit.lea * 10), spd: unit.luk, int: unit.int,
-      skills: unit.skillId ? [`技能：${unit.skillId}`] : [], isEnemy: req.isEnemy,
+      skills: quickViewSkillLines(unit.skillId ? [unit.skillId] : [], req.isEnemy, this._revealedEnemySkills), isEnemy: req.isEnemy,
     };
     services().event.emit(EVENT_NAMES.ShowGeneralQuickView, data);
   }
