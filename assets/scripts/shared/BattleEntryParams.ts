@@ -121,6 +121,11 @@ const TACTIC_LABEL: Record<BattleTactic, string> = {
   [BattleTactic.Siege]: '攻城戰',
 };
 
+/** 戰法的簡短中文名（夜襲、火攻…）；未知值原樣回傳。 */
+export function battleTacticLabel(tactic: BattleTactic): string {
+  return TACTIC_LABEL[tactic] ?? tactic;
+}
+
 const SOURCE_TAG: Record<IBattleEntryParams['entrySource'], string> = {
   lobby: '大廳進入戰場',
   preview: 'QA工具進入戰場',

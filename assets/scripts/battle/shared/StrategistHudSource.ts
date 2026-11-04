@@ -4,6 +4,7 @@
  *
  * 只讀已在場上的格子效果與回收累計：落石 → 落石機關、營帳 → 營帳、埋伏陷阱 → 陷阱；
  * 本回合危害只列場上正在作用的（火場、水流、深水／陷阱）。對策缺口目前沒有資料來源，由呼叫端補。
+ * 場景戰法戰鬥另帶參謀常駐行（主戰場UI §6.3，PROG-2-1758）：戰場沒有獨立參謀官，以我方主將的姓名與智力代表。
  * 戰場 HUD 尚無欄位節點；PROG-2-1744 先由 BattleUIBridge 每回合以 strategistHudLogLine 寫進戰場日誌（內容沒變不重寫）。
  *
  * Unity 對照：像 HUD Presenter 的資料轉接器，把 BattleState 轉成 ViewModel。
@@ -12,6 +13,8 @@ import type { BattleState } from '../models/BattleState';
 import type { InteractiveObjectKind, InteractiveObjectView, StrategistHudInput } from '../../core/systems/StrategistHud';
 import { FIRE_RAID_TILE_NOTE, ROCK_SLIDE_TILE_NOTE } from './StageSalvage';
 import { AMBUSH_TRAP_TILE_NOTE } from './BattleTacticBehavior';
+import { BattleTactic } from '../../core/config/Constants';
+import { battleTacticLabel } from '../../shared/BattleEntryParams';
 
 /** 格子備註 → 互動物件類別 */
 const OBJECT_KIND_BY_NOTE: Readonly<Record<string, InteractiveObjectKind>> = {
@@ -40,5 +43,8 @@ export function strategistHudInputOf(state: BattleState, missingCounters: readon
     interactiveObjects,
     salvage: { ...state.stageSalvage },
     missingCounters,
+    executing: state.battleTactic !== BattleTactic.Normal && state.playerGeneral
+      ? { name: state.playerGeneral.name, int: state.playerGeneral.int, tactic: battleTacticLabel(state.battleTactic) }
+      : undefined,
   };
 }
