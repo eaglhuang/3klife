@@ -18,12 +18,13 @@ interface SpineGeneralEntry {
 
 /** 陣營預設角色；之後改成依武將 id 對表即可 */
 const SPINE_GENERAL_BY_FACTION: Record<string, SpineGeneralEntry> = {
-  [Faction.Player]: { path: 'spine/generals/zhao_yun/zhao', scale: 0.22 },
+  [Faction.Player]: { path: 'spine/generals/zhao_yun/zhao_v2', scale: 0.22 },
   [Faction.Enemy]: { path: 'spine/generals/zhang_fei/char2', scale: 0.22 },
 };
 
 const IDLE = 'idle';
 const ATTACK = 'spear_thrust';
+const MIRROR_SKIN = 'hand_mirror';
 
 export class SpineGeneralOverlay {
   private readonly nodes = new Map<string, Node>();
@@ -78,6 +79,8 @@ export class SpineGeneralOverlay {
       const skel = node.addComponent(sp.Skeleton);
       skel.premultipliedAlpha = false;
       skel.skeletonData = data;
+      // 鏡像後仍要右手持槍：spine-trial 產出的 hand_mirror 皮膚
+      if (faction === Faction.Enemy && data.getRuntimeData()?.findSkin(MIRROR_SKIN)) skel.setSkin(MIRROR_SKIN);
       skel.setAnimation(0, IDLE, true);
       this.nodes.set(faction, node);
     });
