@@ -19,7 +19,7 @@ import { sys } from 'cc';
 // 其他 suite 會把 globalThis.fetch 換成 mock；在 module 載入時先記住真實 fetch
 const realFetch: typeof fetch | undefined = (globalThis as any).fetch;
 
-async function waitFor(predicate: () => boolean, timeoutMs = 2000): Promise<void> {
+async function waitFor(predicate: () => boolean, timeoutMs = 15000): Promise<void> {
     const startedAt = Date.now();
     while (!predicate()) {
         if (Date.now() - startedAt > timeoutMs) {

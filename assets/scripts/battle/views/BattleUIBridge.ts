@@ -20,6 +20,7 @@ import { teamAuraNoticeText, type TeamAuraChangedEvent } from '../shared/TeamAur
 import { teamRecoverNoticeText, type TeamRecoveredEvent } from '../shared/TeamRecover';
 import { enemyMassDebuffNoticeText, type EnemyMassDebuffChangedEvent } from '../shared/EnemyMassDebuff';
 import { AWAKENING_FREEZE_TIMING, awakeningFreezeTitles, formatAwakeningReveal } from './AwakeningReveal';
+import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
@@ -812,6 +813,10 @@ export class BattleUIBridge {
       if (settlement.awakenings.length > 0) {
         void this.ctx.resultPopup?.playAwakeningFreeze?.(awakeningFreezeTitles(settlement.awakenings), AWAKENING_FREEZE_TIMING);
       }
+      // 因子階段解鎖（因子解鎖系統 §H，PROG-2-1779）
+      const phaseLines = settlement.discovery ? discoveryPhaseUnlockLines(settlement.discovery) : [];
+      for (const line of phaseLines) this.appendLog(line);
+      if (phaseLines.length > 0) this.ctx.resultPopup?.appendDetails?.(phaseLines);
       const tallyNotices = services().session.consumeTallyNotices();
       for (const line of tallyNotices) this.appendLog(line);
       if (tallyNotices.length > 0) this.ctx.resultPopup?.appendDetails?.(tallyNotices);
