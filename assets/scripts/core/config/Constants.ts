@@ -132,6 +132,7 @@ export const EVENT_NAMES = {
   UltimateSkillSelected: "ultimate-skill-selected",
   // 戰鬥控制列
   AutoBattleToggled:    "auto-battle-toggled",   // payload: boolean (isEnabled)
+  DelegateToggled:      "delegate-toggled",      // payload: boolean (要求開或關)
   BattleSpeedToggled:   "battle-speed-toggled",  // payload: number  (1 | 2)
   ShowSettingsRequested:"show-settings-requested",
   /** 彈出系統通知 (Toast)：{ text: string } */

@@ -18,7 +18,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  *
  * Unity 對照：BattleRightPanel，含 BattleLog + 控制列
  */
-import { _decorator, Button, Label, Node, ScrollView, tween, UITransform } from "cc";
+import { _decorator, Button, Label, Node, ScrollView, tween, UIOpacity, UITransform } from "cc";
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { EVENT_NAMES } from '../../core/config/Constants';
@@ -54,6 +54,8 @@ export class BattleLogComposite extends CompositePanel {
     // 控制列節點引用（供視覺反饋使用）
     private _btnAuto:    Node | null = null;
     private _btnSpeed:   Node | null = null;
+    private _btnDelegate: Node | null = null;
+    private _delegateActive = false;
 
     // ── 生命週期 ─────────────────────────────────────────────────────────────
 
@@ -148,6 +150,9 @@ export class BattleLogComposite extends CompositePanel {
         // ── 控制列按鈕（BtnAuto / BtnSpeed / BtnSetting）────────────────────
         this._btnAuto  = binder.getNode('BtnAuto');
         this._btnSpeed = binder.getNode('BtnSpeed');
+        this._btnDelegate = binder.getNode('BtnDelegate');
+        this.setDelegateActive(false);
+        this._btnDelegate?.on(Button.EventType.CLICK, this._onDelegateClick, this);
         this._btnAuto?.on(Button.EventType.CLICK,    this._onAutoClick,    this);
         this._btnSpeed?.on(Button.EventType.CLICK,   this._onSpeedClick,   this);
         binder.getNode('BtnSetting')?.on(Button.EventType.CLICK, this._onSettingClick, this);
@@ -179,6 +184,15 @@ export class BattleLogComposite extends CompositePanel {
         this.scrollView?.scrollToBottom(0.05);
     }
 
+    /** 委任鈕的亮暗跟控制器實際狀態走（PROG-2-1766）；由戰場橋接層呼叫 */
+    public setDelegateActive(active: boolean): void {
+        this._delegateActive = active;
+        const btn = this._btnDelegate;
+        if (!btn) return;
+        const op = btn.getComponent(UIOpacity) ?? btn.addComponent(UIOpacity);
+        op.opacity = active ? 255 : 130;
+    }
+
     // ── 私有：按鈕事件處理 ───────────────────────────────────────────────────
 
     private _onAutoClick(): void {
@@ -187,6 +201,10 @@ export class BattleLogComposite extends CompositePanel {
         if (op) op.opacity = this._isAuto ? 180 : 255;
         services().event.emit(EVENT_NAMES.AutoBattleToggled, this._isAuto);
         UCUFLogger.info(LogCategory.UI, `[BattleLogComposite] AutoBattle → ${this._isAuto}`);
+    }
+
+    private _onDelegateClick(): void {
+        services().event.emit(EVENT_NAMES.DelegateToggled, !this._delegateActive);
     }
 
     private _onSpeedClick(): void {

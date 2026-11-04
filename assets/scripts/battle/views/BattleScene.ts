@@ -1,5 +1,6 @@
 
 // @spec-source → 見 docs/cross-reference-index.md
+import { deputySupportLine } from '../../core/systems/SortieDeployScripts';
 import { DEV } from 'cc/env';
 import { _decorator, Component, Label, Node, Vec3, geometry } from "cc";
 import {
@@ -410,6 +411,8 @@ export class BattleScene extends Component {
       UCUFLogger.info(LogCategory.BATTLE, `[BattleScene] HUD 已刷新: ${!!this.hud}`);
       this.battleLogPanel?.clear();
       this.battleLogPanel?.append(`第 ${snap.turn} 回合開始，糧草 ${snap.playerFood}`);
+      const deputyLine = deputySupportLine(support.deputy?.name, support.deputyBonus.foodCapBonus);
+      if (deputyLine) this.battleLogPanel?.append(deputyLine);
       this.presentSceneGambitFeedback();
       this.playTurnBanner(Faction.Player);
 

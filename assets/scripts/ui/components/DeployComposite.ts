@@ -8,6 +8,7 @@
  *
  * Unity 對照：等同 MonoBehaviour 完整搬進 CompositePanel 容器，spec 已覆蓋全部 UI 節點。
  */
+import { foodShortMessage } from '../../core/systems/SortieDeployScripts';
 import {
   _decorator,
   Color,
@@ -390,6 +391,6 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
     if (reason === 'troops-short') return '⚠ 軍勢不足，無法部署';
     if (reason === 'field-limit') return '⚠ 場上部隊已滿，請先等待退場或撤回部隊';
     if (reason === 'order-refused') return '⚠ 主將忠誠不足，本回合拒絕執行命令';
-    return '糧草不足，無法部署';
+    return foodShortMessage(this.currentDp);
   }
 }
