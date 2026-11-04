@@ -1,8 +1,10 @@
-// @spec-source → 名將挑戰賽系統.md (doc_spec_0007) §G 劇本相關；PROG-2-1746
+// @spec-source → 名將挑戰賽系統.md (doc_spec_0007) §G 劇本相關；PROG-2-1746、PROG-2-1747
 import { TestSuite, assert } from './TestRunner';
 import {
     tournamentBossIntelLine, tournamentMatchStartLine, tournamentOpeningLine, tournamentPrepHintLine, tournamentSeasonEndLine, tournamentSeriesHeadline,
 } from '../assets/scripts/core/systems/TournamentScripts';
+import { tournamentVenueOf } from '../assets/scripts/core/systems/TournamentLocal';
+import { seasonEndText, TOURNAMENT_TIER_LABEL } from '../assets/scripts/ui/core/TournamentPanelController';
 
 export function createTournamentScriptsSuite(): TestSuite {
     const suite = new TestSuite('TournamentScripts');
@@ -19,6 +21,14 @@ export function createTournamentScriptsSuite(): TestSuite {
         assert.equals('巔峰對決！一場定勝負——張飛 vs 對手！', tournamentSeriesHeadline({ general: '張飛', cupName: '赤壁盃', win: false, isFinal: true }));
         assert.equals('漂亮！張飛 在【赤壁盃】中擊敗對手，晉級下一輪！', tournamentSeriesHeadline({ general: '張飛', cupName: '赤壁盃', win: true, isFinal: false }));
         assert.equals('', tournamentSeriesHeadline({ general: '張飛', cupName: '赤壁盃', win: false, isFinal: false }));
+    });
+
+    suite.test('領獎附賽季落幕句：每季一行，盃名依季序', () => {
+        const text = seasonEndText([{ seasonIndex: 1, tier: 'GOLD', gold: 300 }, { seasonIndex: 2, tier: 'BRONZE', gold: 100 }]);
+        const lines = text.split('\n');
+        assert.equals(2, lines.length);
+        assert.equals(`第 1 屆【${tournamentVenueOf(1).cupName}】落幕！你的最終排名：${TOURNAMENT_TIER_LABEL.GOLD}`, lines[0]);
+        assert.isTrue(lines[1].startsWith(`第 2 屆【${tournamentVenueOf(2).cupName}】落幕！`));
     });
 
     return suite;

@@ -15,14 +15,14 @@ import type { RankTier, TournamentPhase } from '../../core/systems/TournamentSea
 import { WEATHER_LABEL } from '../../shared/BattleEntryParams';
 import { TERRAIN_LABEL } from './EnvScoutPresenter';
 import {
-    TOURNAMENT_BOSS_TAG_LABEL, TOURNAMENT_BRACKET_ROUNDS, TOURNAMENT_FINAL_ROUND, TOURNAMENT_LOCAL_CONFIG, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeasonReward,
+    TOURNAMENT_BOSS_TAG_LABEL, TOURNAMENT_BRACKET_ROUNDS, TOURNAMENT_FINAL_ROUND, TOURNAMENT_LOCAL_CONFIG, tournamentVenueOf, type TournamentEntryReason, type TournamentRegisterReason, type TournamentSeasonReward,
     type TournamentSeriesResult, type TournamentStatus,
 } from '../../core/systems/TournamentLocal';
 import type { TigerTallyCard } from '../../core/models/TigerTallyCard';
 import { tallyBossMatch, tallyBossMatchText } from '../../core/systems/TallyBossTags';
 import { monthlyScenarioOf, MONTHLY_REQUIRED_APTITUDE_RANKS, type MonthlyScenario } from '../../core/systems/MonthlyScenarioCup';
 import { STAT_LABELS } from './NurtureFlowController';
-import { tournamentPrepHintLine, tournamentSeriesHeadline } from '../../core/systems/TournamentScripts';
+import { tournamentOpeningLine, tournamentPrepHintLine, tournamentSeasonEndLine, tournamentSeriesHeadline } from '../../core/systems/TournamentScripts';
 
 /** 月度場景賽規則用到的兵種碼（generals troopAptitude）與戰法標籤中文；暫定，待企劃定版（PROG-2-1717） */
 export const MONTHLY_TROOP_LABEL: Record<string, string> = {
@@ -130,7 +130,9 @@ export class TournamentPanelController {
         // 培育期報名附 §G 培育期提示（PROG-2-1746）
         const status = this._deps.status(this._deps.now());
         const hint = status.phase === 'PREPARATION' ? `\n${tournamentPrepHintLine(status.daysLeft)}` : '';
-        this._message = `已報名，陣容鎖定為目前戰力前三。${hint}`;
+        // §G 開幕句（PROG-2-1747）
+        const opening = tournamentOpeningLine(status.seasonIndex, status.venue.cupName, TERRAIN_LABEL[status.venue.terrain], WEATHER_LABEL[status.venue.weather]);
+        this._message = `${opening}\n已報名，陣容鎖定為目前戰力前三。${hint}`;
         return true;
     }
 
@@ -156,7 +158,7 @@ export class TournamentPanelController {
     /** 領取全部待領賽季獎勵；有領到回 true */
     public claim(): boolean {
         const rewards = this._deps.claimRewards(this._deps.now());
-        this._message = rewards.length > 0 ? `已領取：${rewardsText(rewards)}` : '沒有可領取的賽季獎勵。';
+        this._message = rewards.length > 0 ? `已領取：${rewardsText(rewards)}\n${seasonEndText(rewards)}` : '沒有可領取的賽季獎勵。';
         return rewards.length > 0;
     }
 
@@ -211,6 +213,11 @@ export class TournamentPanelController {
 /** 獎勵清單一句話：「第 N 季 段位 金錢 X」以「、」相接 */
 export function rewardsText(rewards: readonly TournamentSeasonReward[]): string {
     return rewards.map((r) => `第 ${r.seasonIndex} 季 ${TOURNAMENT_TIER_LABEL[r.tier]} 金錢 ${r.gold}`).join('、');
+}
+
+/** §G 賽季落幕句（PROG-2-1747）：每筆獎勵一行，盃名依季序輪替、排名用段位名 */
+export function seasonEndText(rewards: readonly TournamentSeasonReward[]): string {
+    return rewards.map((r) => tournamentSeasonEndLine(r.seasonIndex, tournamentVenueOf(r.seasonIndex).cupName, TOURNAMENT_TIER_LABEL[r.tier])).join('\n');
 }
 
 /** 系列賽結果一句話：勝負、比分、積分變化 */
