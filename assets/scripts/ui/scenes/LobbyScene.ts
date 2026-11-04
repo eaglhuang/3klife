@@ -117,6 +117,7 @@ import { GovernorHallController, GovernorTerritoryInfo } from '../core/GovernorH
 import { BAG_CATEGORY_TABS, BAG_ROW_SLOTS, ItemBagController } from '../core/ItemBagController';
 import { planTerritoryUpgrade } from '../../core/systems/TerritoryUpgrade';
 import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
+import { mercBondedLine, mercDayThreeLine, mercFarewellLine } from '../../core/systems/MercenaryScripts';
 import { EXPEDITION_TRAVEL_TURNS } from '../../core/systems/TravelCountdown';
 import { RedFaceGalleryController } from '../core/RedFaceShowcaseController';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
@@ -1940,9 +1941,12 @@ export class LobbyScene extends Component {
             return;
         }
         try {
+            const name = this._mercPanel.selectedGeneralName();
             const ok = await this._mercPanel.bondSelected();
             if (!ok) {
                 services().event.emit('SHOW_TOAST', { message: '無法結義此傭兵', duration: 2.5 });
+            } else if (name) {
+                services().event.emit('SHOW_TOAST', { message: mercBondedLine(name), duration: 3 });
             }
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 傭兵結義失敗', error);
@@ -2763,11 +2767,17 @@ export class LobbyScene extends Component {
                     services().event.emit('SHOW_TOAST', { message: `敵軍來犯！${battle.lines[2]}`, duration: 3 });
                 }
                 this._refreshRivalDiplomacy();
-                // 傭兵試用期滿離隊告別（傭兵規格 UI_MERC_FAREWELL，PROG-2-1154）
-                for (const uid of payload?.mercenaryDepartures ?? []) {
+                const mercName = (uid: string): string => {
                     const merc = services().session.mercenaries.mercenaries.find((m) => m.uid === uid);
-                    const name = this._generals.find((g) => g.id === merc?.generalId)?.name ?? '傭兵';
-                    services().event.emit('SHOW_TOAST', { message: `${name} 已離隊。六日情緣，且作追憶。`, duration: 3 });
+                    return this._generals.find((g) => g.id === merc?.generalId)?.name ?? '傭兵';
+                };
+                // 試用第 3 日對話（傭兵 §G 日常互動，PROG-2-1771）
+                for (const uid of payload?.mercenaryDayThree ?? []) {
+                    services().event.emit('SHOW_TOAST', { message: mercDayThreeLine(mercName(uid)), duration: 3 });
+                }
+                // 傭兵試用期滿離隊告別（傭兵 §G 退場告別，PROG-2-1154、PROG-2-1771）
+                for (const uid of payload?.mercenaryDepartures ?? []) {
+                    services().event.emit('SHOW_TOAST', { message: mercFarewellLine(mercName(uid)), duration: 3 });
                 }
                 this._refreshMercenaryPanel();
             }),

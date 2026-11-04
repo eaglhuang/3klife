@@ -72,6 +72,7 @@ import { bondMercenaryToRoster, statsOfTemplate, type RosterBondResult } from '.
 import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } from '../systems/MercenaryTrialTicket';
 import { createUpkeepState } from '../systems/MercenaryUpkeep';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
+import { reachedTrialDayThree } from '../systems/MercenaryScripts';
 import { recordTrialBattle } from '../systems/MercenaryBattleRecord';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
 import { appendFarewellLetter, createFarewellLetter, FarewellLetter, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
@@ -379,6 +380,8 @@ export interface SeasonAdvancedPayload {
     rivalBattles?: AutoBattleResult[];
     /** 本季（＝傭兵一日，MVP 定案）試用期滿未結義而離隊的傭兵 uid（PROG-2-1154） */
     mercenaryDepartures?: string[];
+    /** 本季走到試用第 3 日的傭兵 uid（傭兵 §G 日常互動，PROG-2-1771） */
+    mercenaryDayThree?: string[];
 }
 
 /** 進行中的培育會話存取介面；正式環境為 NurtureService，讓存檔帶著培育進度 */
@@ -497,6 +500,8 @@ export type HireTrialResult = Omit<TrialTicketResult, 'reason'> & { reason?: Tri
 export interface MercenaryDayReport {
     day: number;
     events: DepartureEvent[];
+    /** 本日走到試用第 3 日的傭兵 uid（PROG-2-1771） */
+    dayThreeUids: string[];
 }
 
 /** 派遣板點列派遣結果（PROG-2-1181） */
@@ -816,6 +821,7 @@ export class GameSession {
         const events: DepartureEvent[] = [];
         const departed = new Set<string>();
         const letters: FarewellLetter[] = [];
+        const dayThreeUids: string[] = [];
         let cooldowns = this._mercenaries.cooldowns;
         const mercenaries = this._mercenaries.mercenaries.map((merc) => {
             const settled = settleTrialRollover(merc, today, cooldowns);
@@ -827,7 +833,9 @@ export class GameSession {
                 if (letter) letters.push(letter);
                 return { ...merc, status: settled.record.status };
             }
-            return advanceTrialDay(merc).state;
+            const next = advanceTrialDay(merc).state;
+            if (reachedTrialDayThree(merc, next)) dayThreeUids.push(merc.uid);
+            return next;
         });
         for (const letter of letters) this._farewellLetters = appendFarewellLetter(this._farewellLetters, letter);
         this._mercenaries = {
@@ -837,7 +845,7 @@ export class GameSession {
             cooldowns,
             day: today,
         };
-        return { day: today, events };
+        return { day: today, events, dayThreeUids };
     }
 
     /** 告別信用的武將名：名冊查得到用名字，否則用傭兵 uid。 */
@@ -3493,8 +3501,9 @@ export class GameSession {
         this.recordSeasonJournal(advance.previous, quarterlyReports);
         const rivalBattles = this._tickRivals();
         // MVP 定案：一季＝傭兵一日（PROG-2-1154，使用者裁定）
-        const departedUids = this._tickMercenaryDay().events.filter((e) => e.type === 'departed').map((e) => e.uid);
-        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}) };
+        const mercenaryDay = this._tickMercenaryDay();
+        const departedUids = mercenaryDay.events.filter((e) => e.type === 'departed').map((e) => e.uid);
+        const payload: SeasonAdvancedPayload = { advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids, mercenaryDayThree: mercenaryDay.dayThreeUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
