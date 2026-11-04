@@ -12,6 +12,9 @@ import { LobbyHallScreenBinder, type LobbyHallDockId } from '../core/LobbyHallSc
 import type { HallThemeConfig } from '../../core/systems/HallTheme';
 import type { HallSeasonFxConfig } from '../../core/systems/HallSeasonFx';
 import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
+import type { HallMapEventCatalog } from '../../core/systems/HallMapEventMapper';
+import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
+import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } from '../../core/systems/HallMapSeasonTurn';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
@@ -31,7 +34,7 @@ import { SeasonReportComposite, type SeasonReportOpenPayload } from '../componen
 import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
-import { GAME_SESSION_EVENTS, type AddGeneralsResult } from '../../core/managers/GameSession';
+import { GAME_SESSION_EVENTS, type AddGeneralsResult, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
 import { seasonDisplayText } from '../core/SeasonTexts';
@@ -318,6 +321,8 @@ export class LobbyScene extends Component {
     /** 幕府大廳（UI-2-0149）：另開入口，與主大廳並存 */
     private _lobbyHallHost: UIScreenPreviewHost | null = null;
     private _lobbyHall: LobbyHallScreenBinder | null = null;
+    /** 大廳沒開時收到的換季聚焦序列，下次開大廳播一次 */
+    private _pendingHallMapTurn: HallMapTurnStep[] | null = null;
     private _hallBoard: HallBoardPanelController | null = null;
     private _mercPanelHost: UIScreenPreviewHost | null = null;
     private _mercPanel: MercenaryPanelController | null = null;
@@ -2467,11 +2472,14 @@ export class LobbyScene extends Component {
     }
 
     private async _mountLobbyHall(): Promise<void> {
-        const [themeConfig, fxConfig, stageLayout, stageDecor] = await Promise.all([
+        const [themeConfig, fxConfig, stageLayout, stageDecor, mapLayout, mapCatalog, provinceFile] = await Promise.all([
             this._loadDataJson<HallThemeConfig>('data/hall-map/hall-theme'),
             this._loadDataJson<HallSeasonFxConfig>('data/hall-map/hall-season-fx'),
             this._loadDataJson<HallStageLayout>('data/hall-map/hall-stage-spots'),
             this._loadDataJson<HallStageDecor>('data/hall-map/hall-stage-decor'),
+            this._loadDataJson<HallMapLayout>('data/hall-map/hall-map-layout'),
+            this._loadDataJson<HallMapEventCatalog>('data/hall-map/hall-map-events'),
+            this._loadDataJson<{ provinces: HallMapProvinceSource[] }>('data/hall-map/han13-provinces'),
         ]);
         const session = services().session;
         const host = await this._mountPreviewScreenHost('LobbyHallHost', 'lobby-hall-screen');
@@ -2501,8 +2509,22 @@ export class LobbyScene extends Component {
                     nowSec: () => Date.now() / 1000,
                 }
                 : null,
+            mapLayout,
         });
         host.node.active = false;
+        // 換季勢力圖聚焦（UI-2-0151）：大廳開著就播，沒開就留到下次開大廳播一次
+        if (mapLayout && mapCatalog && provinceFile?.provinces) {
+            const config = { layout: mapLayout, catalog: mapCatalog, provinces: provinceFile.provinces, nationName: (id: string) => nationDef(id)?.name };
+            this._sessionEventUnsubscribers.push(
+                services().event.on(GAME_SESSION_EVENTS.RivalSeasonEvents, (payload?: unknown) => {
+                    const events = (payload as RivalSeasonEventsPayload | undefined)?.events ?? [];
+                    const steps = buildHallMapTurnSteps(events, config);
+                    if (!hasHallMapFocus(steps)) return;
+                    if (host.node.active) this._lobbyHall?.playMapTurn(steps);
+                    else this._pendingHallMapTurn = steps;
+                }),
+            );
+        }
     }
 
     private _openLobbyHall(): void {
@@ -2515,6 +2537,10 @@ export class LobbyScene extends Component {
         // 晝夜依裝置當地時間，季節依遊戲時鐘（1 春～4 冬）
         this._lobbyHall?.refresh(services().session.gameTime.currentSeason, new Date().getHours());
         this._lobbyHall?.openStage();
+        if (this._pendingHallMapTurn) {
+            this._lobbyHall?.playMapTurn(this._pendingHallMapTurn);
+            this._pendingHallMapTurn = null;
+        }
     }
 
     private _openRecruitHall(): void {
