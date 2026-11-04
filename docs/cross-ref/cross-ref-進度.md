@@ -42,9 +42,9 @@
 | **官職系統.md (doc_spec_0014)** | UIConfig.ts, LobbyScene.ts（§E 7 項逐項核對已實作：OfficerTierTable、OfficerSnapshot 聯盟文書、HallMissionSettlement 晉升獎勵、天下大亂保留，PROG-2-1705） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **AI武將強度系統.md (doc_data_0002)** | EnemyAI.ts、RivalMilitaryIndex.ts（E-9 軍力指數與弱勢守勢，PROG-2-1706）、RivalOfficers.ts（他國名冊，PROG-2-1712）、RivalOfficerSeason.ts（E-9 Phase 1~3 逐將季推進重算，PROG-2-1713）、RivalNations.ts／GameSession.ts（名冊存讀檔與季推進，PROG-2-1714）、RivalOfficerSetup.ts（開局載入，PROG-2-1715） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **名將挑戰賽系統.md (doc_spec_0007)** | DuelChallengePanel.ts、MonthlyScenarioCup.ts（月度場景賽 1~4 月場景、積分、歷史，PROG-2-1609；參賽資格〔禁騎兵戰法、水軍／弓兵適性 A 以上〕PROG-2-1610 已補；威力規則〔春耕奇謀智力戰法 ×1.5、山地奇兵步兵 S 地形加成翻倍〕PROG-2-1611 已接進積分；其餘月份未定、尚無報名畫面）；九州盃特殊規則〔赤壁火攻 ×2、官渡騎兵 ×1.8、夷陵弓兵 ×0.5／陷阱 ×2〕PROG-2-1612 已接進報名鏡像戰力，虎牢單挑規則只顯示 | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
-| **關卡設計系統.md (doc_spec_0049)** | BattleScene.ts, BattleHUD.ts, DeployPanel.ts | ✅ | 🟡 | 🟡 | ❌ | ⬜ |
-| **武將日誌與離線互動系統.md (doc_spec_0015)** | LobbyScene.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
-| **MVP遊戲驗證規格書.md (doc_spec_0045)** | GameManager.ts | ✅ | ✅ | ✅ | ❌ | ⬜ |
+| **關卡設計系統.md (doc_spec_0049)** | BattleScene.ts, BattleHUD.ts, DeployPanel.ts, StageChainNodes.ts, StageChainProgress.ts, StageLoadoutSlots.ts, LoadoutCheck.ts, StageSalvage.ts, StageSalvageSettlement.ts, BossGuardSummon.ts, StrategistHud.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| **武將日誌與離線互動系統.md (doc_spec_0015)** | LobbyScene.ts, JournalEvents.ts, JournalLog.ts, JournalReaction.ts, OfflineBattleSnapshot.ts, OfflineInteractionEvents.ts, OfflineInteractionTrigger.ts, OfflineTemplateEngine.ts, GeneralJournalController.ts, JournalHubController.ts, JournalTexts.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| **MVP遊戲驗證規格書.md (doc_spec_0045)** | GameManager.ts, CampaignStages.ts, PlayerSaveTableRows.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **新手開場規格書.md (doc_spec_0031)** | SceneManager.ts, LoadingScene.ts, LobbyScene.ts, LoginScene.ts | ✅ | ✅ | 🟡 | ❌ | ⬜ |
 | **UI 規格書.md (doc_ui_0027)** | UIConfig.ts, UIManager.ts, BattleHUD.ts, BattleLogPanel.ts, DeployPanel.ts, ToastMessage.ts, UILayer.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | **主戰場UI規格書.md (doc_ui_0001)** | UIConfig.ts, UIManager.ts, BattleHUD.ts, BattleScenePanel.ts, TigerTallyPanel.ts, UnitInfoPanel.ts, ActionCommandPanel.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
@@ -105,16 +105,16 @@
 |---|---|---|---|---|---|
 | 核心戰場系統（數值 / 兵種 / 戰場部署 / 戰法 / 奧義 / 因子爆發 / AI 強度） | ×3 | 8 | 24 | 18.0 | **75%** |
 | UI 系統（doc_ui_*） | ×2 | 5 | 10 | 5.0 | **50%** |
-| 其他系統（大廳 / 養成 / 經濟 / 技術文件等） | ×1 | 42 | 42 | 24.0 | **57%** |
-| **合計（加權）** | — | **55** | **76** | **47.0** | **🟢 62%** |
+| 其他系統（大廳 / 養成 / 經濟 / 技術文件等） | ×1 | 42 | 42 | 24.5 | **58%** |
+| **合計（加權）** | — | **55** | **76** | **47.5** | **🟢 63%** |
 
 #### 規格書實作狀態分布
 
 | 狀態 | 規格書 | 規格書數 |
 |---|---|---|
-| 🟢 完整（邏輯／接線／測試皆 ✅） | 數值系統、奧義系統、因子爆發系統、官職系統、AI武將強度系統、demo_技術架構、因子解鎖系統、武將壽命系統、運氣系統 | 9 |
+| 🟢 完整（邏輯／接線／測試皆 ✅） | 數值系統、奧義系統、因子爆發系統、官職系統、AI武將強度系統、MVP遊戲驗證規格書、demo_技術架構、因子解鎖系統、武將壽命系統、運氣系統 | 10 |
 | 🔷 名詞表類（不需代碼） | 名詞定義文件 | 1 |
-| 🟡 進行中（有代碼，三欄未全 ✅） | 兵種（虎符）系統、戰場部署系統、武將系統、武將人物介面規格書、戰法系統、治理模式他國AI系統、大廳系統、名將挑戰賽系統、關卡設計系統、武將日誌與離線互動系統、MVP遊戲驗證規格書、新手開場規格書、UI 規格書、主戰場UI規格書、主戰場UI規格補充_v3、美術素材規劃與使用說明、UI技術規格書、Data Schema文件（本機端與Server端）、場景搭建指南、demo_playbook、keep §7、俘虜處理系統、傭兵系統（試用）、可結緣女性來源系統、同名武將系統、名士預言系統、培育系統、家族關係（史實相性）系統、戰場適性系統、教官系統（支援卡）、正式版劇本文案、武將戰績系統、武將背包（倉庫）系統、留存系統、結緣系統（配種）、經濟系統、血統理論系統、資源循環系統、轉職與宿命系統、轉蛋系統、遊戲時間系統、道具系統（付費免費道具）、領地治理系統、戰法場景規格書、熱更新與版本控制規格書 | 45 |
+| 🟡 進行中（有代碼，三欄未全 ✅） | 兵種（虎符）系統、戰場部署系統、武將系統、武將人物介面規格書、戰法系統、治理模式他國AI系統、大廳系統、名將挑戰賽系統、關卡設計系統、武將日誌與離線互動系統、新手開場規格書、UI 規格書、主戰場UI規格書、主戰場UI規格補充_v3、美術素材規劃與使用說明、UI技術規格書、Data Schema文件（本機端與Server端）、場景搭建指南、demo_playbook、keep §7、俘虜處理系統、傭兵系統（試用）、可結緣女性來源系統、同名武將系統、名士預言系統、培育系統、家族關係（史實相性）系統、戰場適性系統、教官系統（支援卡）、正式版劇本文案、武將戰績系統、武將背包（倉庫）系統、留存系統、結緣系統（配種）、經濟系統、血統理論系統、資源循環系統、轉職與宿命系統、轉蛋系統、遊戲時間系統、道具系統（付費免費道具）、領地治理系統、戰法場景規格書、熱更新與版本控制規格書 | 44 |
 | 🔴 尚無代碼或邏輯 ❌ | — | 0 |
 | **合計** | | **55** |
 
@@ -162,7 +162,7 @@
 
 | 日期 | 加權總進度 | 資料來源 | 備註 |
 |---|---|---|---|
-| 2026-11-04 | 62% | 工具重算（D-4，build-progress-matrix.js） | 同日覆蓋最新值 |
+| 2026-11-04 | 63% | 工具重算（D-4，build-progress-matrix.js） | 同日覆蓋最新值 |
 | 2026-10-28 | 54% | 工具重算（D-4，build-progress-matrix.js） | 同日覆蓋最新值 |
 | 2026-10-26 | 38% | 掃描實算（D-4） | 同日覆蓋最新值 |
 | 2026-04-12 | 38% | 掃描實算（D-4） | 同日覆蓋最新值 |
