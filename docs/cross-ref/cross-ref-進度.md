@@ -41,7 +41,7 @@
 | **大廳系統.md (doc_spec_0002)** | LobbyScene.ts, UIConfig.ts；幕府大廳 lobby-hall-screen 另開入口（UI-2-0149）：LobbyHallScreenBinder.ts、LobbyHallStageController.ts（Q 版人群，UI-2-0150）、HallMapSeasonTurn.ts（換季聚焦，UI-2-0151）、面板點擊（UI-2-0152）、LobbyHallWallView.ts（左右任務牆，UI-2-0153）、LobbyHallAltarView.ts（祭壇面板，UI-2-0154）、HallTheme.hallFestivalIdOf（節慶槽，UI-2-0155）；世家總覽面板內容、自告奮勇任務來源未做（缺資料來源） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | **官職系統.md (doc_spec_0014)** | UIConfig.ts, LobbyScene.ts（§E 7 項逐項核對已實作：OfficerTierTable、OfficerSnapshot 聯盟文書、HallMissionSettlement 晉升獎勵、天下大亂保留，PROG-2-1705） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **AI武將強度系統.md (doc_data_0002)** | EnemyAI.ts、RivalMilitaryIndex.ts（E-9 軍力指數與弱勢守勢，PROG-2-1706）、RivalOfficers.ts（他國名冊，PROG-2-1712）、RivalOfficerSeason.ts（E-9 Phase 1~3 逐將季推進重算，PROG-2-1713）、RivalNations.ts／GameSession.ts（名冊存讀檔與季推進，PROG-2-1714）、RivalOfficerSetup.ts（開局載入，PROG-2-1715） | ✅ | ✅ | ✅ | ✅ | ⬜ |
-| **名將挑戰賽系統.md (doc_spec_0007)** | DuelChallengePanel.ts、MonthlyScenarioCup.ts（月度場景賽 1~4 月場景、積分、歷史，PROG-2-1609；參賽資格〔禁騎兵戰法、水軍／弓兵適性 A 以上〕PROG-2-1610 已補；威力規則〔春耕奇謀智力戰法 ×1.5、山地奇兵步兵 S 地形加成翻倍〕PROG-2-1611 已接進積分；其餘月份未定、尚無報名畫面）；九州盃特殊規則〔赤壁火攻 ×2、官渡騎兵 ×1.8、夷陵弓兵 ×0.5／陷阱 ×2〕PROG-2-1612 已接進報名鏡像戰力，虎牢單挑規則只顯示 | ✅ | 🟡 | ❌ | ✅ | ⬜ |
+| **名將挑戰賽系統.md (doc_spec_0007)** | DuelChallengePanel.ts、MonthlyScenarioCup.ts（月度場景賽 1~4 月場景、積分、歷史，PROG-2-1609；參賽資格〔禁騎兵戰法、水軍／弓兵適性 A 以上〕PROG-2-1610 已補；威力規則〔春耕奇謀智力戰法 ×1.5、山地奇兵步兵 S 地形加成翻倍〕PROG-2-1611 已接進積分；其餘月份未定、尚無報名畫面）；九州盃特殊規則〔赤壁火攻 ×2、官渡騎兵 ×1.8、夷陵弓兵 ×0.5／陷阱 ×2〕PROG-2-1612 已接進報名鏡像戰力，虎牢單挑規則只顯示 | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | **關卡設計系統.md (doc_spec_0049)** | BattleScene.ts, BattleHUD.ts, DeployPanel.ts | ✅ | 🟡 | 🟡 | ❌ | ⬜ |
 | **武將日誌與離線互動系統.md (doc_spec_0015)** | LobbyScene.ts | ✅ | 🟡 | ✅ | ❌ | ⬜ |
 | **MVP遊戲驗證規格書.md (doc_spec_0045)** | GameManager.ts | ✅ | ✅ | ✅ | ❌ | ⬜ |
@@ -57,7 +57,7 @@
 | **demo_技術架構.md (doc_tech_0015)** | ServiceLoader.ts, PoolSystem.ts, ResourceManager.ts, EffectSystem.ts, AudioSystem.ts | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **keep.md (doc_index_0011) §7** | MaterialUtils.ts, MaterialSystem.ts | ✅ | ✅ | ✅ | ❌ | ⬜ |
 | 俘虜處理系統.md (doc_spec_0021) | PrisonerOfWar.ts, PrisonerPopupController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| 傭兵系統（試用）.md (doc_spec_0029) | MercenaryIllustration.ts, MercenaryPanelView.ts, MercenaryNameplateRows.ts, MercenaryPanelController.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
+| 傭兵系統（試用）.md (doc_spec_0029) | MercenaryIllustration.ts, MercenaryPanelView.ts, MercenaryNameplateRows.ts, MercenaryPanelController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 可結緣女性來源系統.md (doc_spec_0003) | DaughterComingOfAge.ts, FemaleSource.ts, FemaleSourcePresenter.ts, BreedingPreviewPresenter.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | 同名武將系統.md (doc_spec_0005) | SoulTransfer.ts, BloodlineInfusion.ts, BloodlineMerge.ts, ReviveRetrain.ts, SortieDeploy.ts, SoulFragmentLedger.ts, SoulInjectCandidates.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | 名士預言系統.md (doc_spec_0006) | BondingSetupController.ts（名士批語 3 列，PROG-2-1131） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
@@ -68,7 +68,7 @@
 | 戰場適性系統.md (doc_spec_0041) | ArenaScore.ts, BattleAptitude.ts, BattlefieldRecon.ts, DesertVitality.ts, TerrainTroopRules.ts, WeatherSchedule.ts, WeatherTacticRestriction.ts, EnvScoutPresenter.ts, TacticAvailabilityPresenter.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 教官系統（支援卡）.md (doc_spec_0027) | NurtureSystem.ts（inspiredTacticIds）、GameSession.ts（learnTactic 擋法，PROG-2-1134）；InspiredTacticMap.ts（17 個靈感戰法對應現有 8 招戰法庫，PROG-2-1135；疾行／堅盾已改獨立效果 Haste 移動 +1、Fortified 防禦 ×1.2，PROG-2-1600；夜襲改獨立技能 insp-night-raid 前排單體、夜晚傷害 ×1.5，PROG-2-1698；長槍突刺改獨立技能 insp-lance-thrust 直線貫穿 2 格、無視 30% 防禦，PROG-2-1699；龍膽改獨立技能 insp-dragon-gall 前排單體、爆擊率 +30%，PROG-2-1700；結義之怒改獨立技能 insp-sworn-fury 前方扇形不衰減、爆擊率 +20%，PROG-2-1701；其餘 11 招借用同名既有技能、已逐招盤點無需另做，PROG-2-1703）；NpcFriendMentor.ts（friendMentorCard）、NurtureFlowController.ts（setBorrowedMentor）、LobbyScene.ts（_onClickStartBorrow，好友借用入學前，PROG-2-1138） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 正式版劇本文案.md (doc_spec_0004) | FunLineLibrary.ts, OpeningLetter.ts, RedFaceCopy.ts, UIOpeningLetterPanel.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
-| 武將壽命系統.md (doc_spec_0018) | GeneralAging.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 武將壽命系統.md (doc_spec_0018) | GeneralAging.ts、GeneralGrowth.ts、LifeScriptCopy.ts、LongevityPill.ts、LegacyArena.ts、LegacyService.ts（§E 8 項逐項核對已實作，PROG-2-1719） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | 武將戰績系統.md (doc_spec_0019) | BattleLeaderboardView.ts, BattleRecordStats.ts, BattleSnapshot.ts, HiddenFactorAwakening.ts, MilestoneRewards.ts, RetireReviewCopy.ts, SeasonReportPanel.ts, HiddenFactorText.ts, RetireReviewController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 武將背包（倉庫）系統.md (doc_spec_0017) | EquipmentBonus.ts, GeneralBackpack.ts, GeneralEquipTransfer.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
 | 留存系統.md (doc_spec_0025) | FarewellLetterInbox.ts, LoginStreak.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
@@ -78,7 +78,7 @@
 | 資源循環系統.md (doc_spec_0033) | LateBloomClue.ts, LifeVitalityPresenter.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 轉職與宿命系統.md (doc_spec_0043) | UnveilingService.ts, JobChange.ts, JobChangeWiring.ts, RetirementRouting.ts, Unveiling.ts, JobChangeController.ts, NurtureFlowController.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 轉蛋系統.md (doc_spec_0042) | DestinyShop.ts, GachaCurrency.ts, GachaDraw.ts, GachaPoolGuide.ts, OverflowBond.ts, Rebirth.ts, DestinyShopController.ts, GachaPoolGuidePresenter.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
-| 遊戲時間系統.md (doc_spec_0034) | GameClock.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
+| 遊戲時間系統.md (doc_spec_0034) | GameClock.ts、SeasonTexts.ts（換季提示，PROG-2-1718）、YearReport.ts、EraReset.ts（§E 逐項核對，PROG-2-1719；E-5 季度事件規格無效果定義未做） | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 運氣系統.md (doc_spec_0035) | FateBlessing.ts, LuckVisibility.ts（E-1 前期隱藏、E-4 Lv46 解鎖）, BreedingSystem.ts（E-2 天命波動）, LuckThresholds.ts（E-3 紫因子 LUK 上限）, LuckEventRate.ts（E-5 事件率，PROG-2-1349）, FactorAwakening.ts（E-6 覺醒速度） | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | 道具系統（付費免費道具）.md (doc_spec_0036) | FertilityBoost.ts, ItemBagView.ts, ItemEffectDispatcher.ts, ItemRefreshEffect.ts, PlayerInventory.ts | ✅ | 🟡 | ✅ | ✅ | ⬜ |
 | 領地治理系統.md (doc_spec_0037) | ChildMagistrate.ts, ChildOfficialPosts.ts, DomesticAutoGovernance.ts, DomesticTasks.ts, GovernanceAssignment.ts, GovernorHallView.ts, HereditaryKeep.ts, LifespanSave.ts, TerritoryUpgrade.ts, GovernorHallController.ts | ✅ | 🟡 | 🟡 | ✅ | ⬜ |
@@ -95,7 +95,7 @@
 
 ### D-4. 專案總進度摘要
 
-> 最後由 `node tools_node/build-progress-matrix.js` 依 D-1 五欄自動計算：**2026-10-28**。
+> 最後由 `node tools_node/build-progress-matrix.js` 依 D-1 五欄自動計算：**2026-11-04**。
 > 加權公式：核心戰場系統 ×3 ／ UI 系統 ×2 ／ 其他系統 ×1；🟢/🩵/☑️/🔷 = 1.0、🟡 = 0.5、🔴 = 0。
 > 更新指令：加權總表與狀態分布 `node tools_node/build-progress-matrix.js`（先重算 D-1 接線／測試欄）；代碼覆蓋摘要 `node tools_node/rebuild-crossref.js --rebuild-progress`。邏輯欄（規格條目是否全部落地）仍為人工標記。
 
@@ -103,18 +103,18 @@
 
 | 分類 | 計分權重 | 規格書數 | 最高得分 | 實得分 | 完成率 |
 |---|---|---|---|---|---|
-| 核心戰場系統（數值 / 兵種 / 戰場部署 / 戰法 / 奧義 / 因子爆發 / AI 強度） | ×3 | 8 | 24 | 13.5 | **56%** |
+| 核心戰場系統（數值 / 兵種 / 戰場部署 / 戰法 / 奧義 / 因子爆發 / AI 強度） | ×3 | 8 | 24 | 18.0 | **75%** |
 | UI 系統（doc_ui_*） | ×2 | 5 | 10 | 5.0 | **50%** |
-| 其他系統（大廳 / 養成 / 經濟 / 技術文件等） | ×1 | 42 | 42 | 22.5 | **54%** |
-| **合計（加權）** | — | **55** | **76** | **41.0** | **🟡 54%** |
+| 其他系統（大廳 / 養成 / 經濟 / 技術文件等） | ×1 | 42 | 42 | 23.5 | **56%** |
+| **合計（加權）** | — | **55** | **76** | **46.5** | **🟢 61%** |
 
 #### 規格書實作狀態分布
 
 | 狀態 | 規格書 | 規格書數 |
 |---|---|---|
-| 🟢 完整（邏輯／接線／測試皆 ✅） | 數值系統、demo_技術架構、運氣系統 | 3 |
+| 🟢 完整（邏輯／接線／測試皆 ✅） | 數值系統、奧義系統、因子爆發系統、官職系統、AI武將強度系統、demo_技術架構、武將壽命系統、運氣系統 | 8 |
 | 🔷 名詞表類（不需代碼） | 名詞定義文件 | 1 |
-| 🟡 進行中（有代碼，三欄未全 ✅） | 兵種（虎符）系統、戰場部署系統、武將系統、武將人物介面規格書、戰法系統、奧義系統、因子爆發系統、治理模式他國AI系統、大廳系統、官職系統、AI武將強度系統、名將挑戰賽系統、關卡設計系統、武將日誌與離線互動系統、MVP遊戲驗證規格書、新手開場規格書、UI 規格書、主戰場UI規格書、主戰場UI規格補充_v3、美術素材規劃與使用說明、UI技術規格書、Data Schema文件（本機端與Server端）、場景搭建指南、demo_playbook、keep §7、俘虜處理系統、傭兵系統（試用）、可結緣女性來源系統、同名武將系統、名士預言系統、因子解鎖系統、培育系統、家族關係（史實相性）系統、戰場適性系統、教官系統（支援卡）、正式版劇本文案、武將壽命系統、武將戰績系統、武將背包（倉庫）系統、留存系統、結緣系統（配種）、經濟系統、血統理論系統、資源循環系統、轉職與宿命系統、轉蛋系統、遊戲時間系統、道具系統（付費免費道具）、領地治理系統、戰法場景規格書、熱更新與版本控制規格書 | 51 |
+| 🟡 進行中（有代碼，三欄未全 ✅） | 兵種（虎符）系統、戰場部署系統、武將系統、武將人物介面規格書、戰法系統、治理模式他國AI系統、大廳系統、名將挑戰賽系統、關卡設計系統、武將日誌與離線互動系統、MVP遊戲驗證規格書、新手開場規格書、UI 規格書、主戰場UI規格書、主戰場UI規格補充_v3、美術素材規劃與使用說明、UI技術規格書、Data Schema文件（本機端與Server端）、場景搭建指南、demo_playbook、keep §7、俘虜處理系統、傭兵系統（試用）、可結緣女性來源系統、同名武將系統、名士預言系統、因子解鎖系統、培育系統、家族關係（史實相性）系統、戰場適性系統、教官系統（支援卡）、正式版劇本文案、武將戰績系統、武將背包（倉庫）系統、留存系統、結緣系統（配種）、經濟系統、血統理論系統、資源循環系統、轉職與宿命系統、轉蛋系統、遊戲時間系統、道具系統（付費免費道具）、領地治理系統、戰法場景規格書、熱更新與版本控制規格書 | 46 |
 | 🔴 尚無代碼或邏輯 ❌ | — | 0 |
 | **合計** | | **55** |
 
@@ -162,6 +162,7 @@
 
 | 日期 | 加權總進度 | 資料來源 | 備註 |
 |---|---|---|---|
+| 2026-11-04 | 61% | 工具重算（D-4，build-progress-matrix.js） | 同日覆蓋最新值 |
 | 2026-10-28 | 54% | 工具重算（D-4，build-progress-matrix.js） | 同日覆蓋最新值 |
 | 2026-10-26 | 38% | 掃描實算（D-4） | 同日覆蓋最新值 |
 | 2026-04-12 | 38% | 掃描實算（D-4） | 同日覆蓋最新值 |
