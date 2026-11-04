@@ -31,6 +31,9 @@ export function clampResource(key: BaseResourceKey, amount: number): number {
     return Math.min(amount, BASE_RESOURCE_CAPS[key]);
 }
 
+/** 季末糧草見底時的提示（經濟系統 §G 資源不足，PROG-2-1774） */
+export const FOOD_LOW_LINE = '主公，糧草告急！將士們快要餓肚子了。';
+
 /** 存量不足 `need` 時回傳警示字串（UI_RES_LOW），足夠時回傳 null。 */
 export function resourceShortageWarning(key: BaseResourceKey, have: number, need: number): string | null {
     if (have >= need) return null;

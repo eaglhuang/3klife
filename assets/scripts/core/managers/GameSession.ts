@@ -119,6 +119,9 @@ import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } f
 import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { remarkRandomOf } from '../systems/SageRemarks';
+import { FOOD_LOW_LINE } from '../systems/ResourceCap';
+import { ITEM_DISPLAY_NAMES } from '../systems/PlayerInventory';
+import { prisonTreasureLine } from '../systems/PrisonerOfWar';
 import { governanceEventLine, governanceOutputMultiplier, governanceReportLine, normalizeGovernanceEvent, rollGovernanceEvent, type ActiveGovernanceEvent } from '../systems/GovernanceEvents';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
 import type { HallCandidate } from '../systems/HallCharacterRoll';
@@ -207,7 +210,7 @@ import { buildBattleSnapshot, type BattleSnapshot } from '../systems/BattleSnaps
 import { leaderboardEntryOf, rankLeaderboard, type LeaderboardMetric, type LeaderboardEntry } from '../systems/BattleLeaderboard';
 import { grantTacticNotes, rewardsForMilestones } from '../systems/MilestoneRewards';
 import { awakenHiddenFactors } from '../systems/HiddenFactorAwakening';
-import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonCapacityOf, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, rollPrisonTreasures, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
+import { captiveFemaleSourceOf, createPowRecord, createPrisonState, normalizePrisonState, prisonCapacityOf, prisonYieldOneSeason, resolvePowDecision, rollFutureReturns, rollPrisonTreasureDonors, type PowDecision, type PowRecord, type PowResolution, type PrisonState } from '../systems/PrisonerOfWar';
 import { createFemaleSource, normalizeFemaleSource, normalizeFemaleSourcesMap, type FemaleSource } from '../systems/FemaleSource';
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { drawFemalePool, isFemalePoolRefreshDue, type PoolCandidate } from '../systems/FemalePoolRefresh';
@@ -371,6 +374,10 @@ export interface SeasonAdvancedPayload {
     governanceReport?: string;
     /** 新一季發生治理事件時的提示句 */
     governanceEventLine?: string;
+    /** 季末糧草見底的提示（經濟系統 §G，PROG-2-1774） */
+    foodLowLine?: string;
+    /** 本季交出傳家寶物的俘虜提示（道具系統 §G，PROG-2-1774） */
+    prisonTreasureLines?: string[];
     agingEvents: AgingEvent[];
     /** 本季新開獎的子嗣 */
     unveilings: UnveilingEvent[];
@@ -3519,10 +3526,10 @@ export class GameSession {
         this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + prisonYield.resource) };
         const governanceReport = this._buildGovernanceReport(reserveBeforeSettle, advance.previous.totalSeasonsElapsed);
         // 無期徒刑傳家寶物掉落（EQP-09，機率暫定）
-        const treasures = rollPrisonTreasures(this._prison.prisoners, this._random);
-        if (treasures > 0) {
+        const treasures = rollPrisonTreasureDonors(this._prison.prisoners, this._random);
+        if (treasures.length > 0) {
             const beforeTreasure = this._inventory;
-            this._inventory = addItem(this._inventory, ITEM_TREASURE, treasures);
+            this._inventory = addItem(this._inventory, ITEM_TREASURE, treasures.length);
             this._recordGain(beforeTreasure, 'DROP');
         }
         // 放走俘虜的未來來投（5%）：依 uid 查配置以初始狀態入冊；查不到配置就略過並記警告
@@ -3554,7 +3561,7 @@ export class GameSession {
         const governanceRandom = this._governanceEventRandom ?? remarkRandomOf(`governance|${governanceSeason}|${this._seeded.snapshot().state}`);
         this._governanceEvent = rollGovernanceEvent(governanceSeason, governanceRandom);
         const eventNotice = this.governanceEventNotice;
-        const payload: SeasonAdvancedPayload = { ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids, mercenaryDayThree: mercenaryDay.dayThreeUids } : {}) };
+        const payload: SeasonAdvancedPayload = { ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids, mercenaryDayThree: mercenaryDay.dayThreeUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
