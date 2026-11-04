@@ -381,6 +381,916 @@
       "name": "Stats_vitality_max",
       "selector": "#right-content > div > div:nth-child(5) > div:nth-child(3) > div:nth-child(3)",
       "whenText": "DUAL-LAYER ATTRIBUTES"
+    },
+    {
+      "name": "TacticMain_glyph",
+      "selector": "#right-content > div > div:nth-child(2) > div > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticMain_name",
+      "selector": "#right-content > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticMain_tag0",
+      "selector": "#right-content > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticMain_tag1",
+      "selector": "#right-content > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(1) > span:nth-child(3)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticMain_tag2",
+      "selector": "#right-content > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(1) > span:nth-child(4)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticMain_desc",
+      "selector": "#right-content > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticMain_level",
+      "selector": "#right-content > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(3)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned1_row",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned1_glyph",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned1_name",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned1_tag0",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned1_desc",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned1_level",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(1) > div:nth-child(3)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned2_row",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned2_glyph",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(2) > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned2_name",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned2_tag0",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned2_tag1",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span:nth-child(3)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned2_tag2",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span:nth-child(4)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned2_desc",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned2_level",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(2) > div:nth-child(3)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned3_row",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(3)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned3_glyph",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(3) > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned3_name",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned3_tag0",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned3_tag1",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > span:nth-child(3)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned3_tag2",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > span:nth-child(4)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned3_desc",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLearned3_level",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(3) > div:nth-child(3)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired_title",
+      "selector": "#right-content > div > div:nth-child(5)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired_grid",
+      "selector": "#right-content > div > div:nth-child(6)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired1_row",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired1_glyph",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired1_badge",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > div:nth-child(1) > span",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired1_name",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired1_tag0",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired1_tag1",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(3)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired1_lock",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired1_hint",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired2_row",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired2_glyph",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired2_badge",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2) > div:nth-child(1) > span",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired2_name",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired2_tag0",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired2_tag1",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span:nth-child(3)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired2_lock",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticInspired2_hint",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(3)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLocked_title",
+      "selector": "#right-content > div > div:nth-child(7)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLocked_grid",
+      "selector": "#right-content > div > div:nth-child(8)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLocked1_row",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLocked1_glyph",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLocked1_name",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLocked1_lock",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLocked2_row",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLocked2_glyph",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(2) > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLocked2_name",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "TacticLocked2_lock",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "PRIMARY TACTIC"
+    },
+    {
+      "name": "Aptitude_INFANTRY_grade",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_INFANTRY_card",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_CAVALRY_grade",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_CAVALRY_card",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(2)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_ARCHER_grade",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_ARCHER_card",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(3)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_SIEGE_grade",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_SIEGE_card",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(4)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_SIEGE_warn",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(4) > div:nth-child(1) > span:nth-child(3)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_PLAIN_grade",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_PLAIN_card",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_MOUNTAIN_grade",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_MOUNTAIN_card",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(2)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_WATER_grade",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_WATER_card",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(3)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_WATER_warn",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(3) > div:nth-child(1) > span:nth-child(3)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_FOREST_grade",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_FOREST_card",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(4)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_DESERT_grade",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_DESERT_card",
+      "selector": "#right-content > div > div:nth-child(5) > div:nth-child(5)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_SUNNY_grade",
+      "selector": "#right-content > div > div:nth-child(7) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_SUNNY_card",
+      "selector": "#right-content > div > div:nth-child(7) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_RAINY_grade",
+      "selector": "#right-content > div > div:nth-child(7) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_RAINY_card",
+      "selector": "#right-content > div > div:nth-child(7) > div:nth-child(2)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_FOG_grade",
+      "selector": "#right-content > div > div:nth-child(7) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_FOG_card",
+      "selector": "#right-content > div > div:nth-child(7) > div:nth-child(3)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_WINDY_grade",
+      "selector": "#right-content > div > div:nth-child(7) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_WINDY_card",
+      "selector": "#right-content > div > div:nth-child(7) > div:nth-child(4)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_NIGHT_grade",
+      "selector": "#right-content > div > div:nth-child(7) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_NIGHT_card",
+      "selector": "#right-content > div > div:nth-child(7) > div:nth-child(5)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_THUNDER_grade",
+      "selector": "#right-content > div > div:nth-child(7) > div:nth-child(6) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "Aptitude_THUNDER_card",
+      "selector": "#right-content > div > div:nth-child(7) > div:nth-child(6)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_title",
+      "selector": "#right-content > div > div:nth-child(8)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "AptitudeTally_card",
+      "selector": "#right-content > div > div:nth-child(9)",
+      "whenText": "TALLY SLOT"
+    },
+    {
+      "name": "EquipCard_WEAPON",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(1)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipTitle_WEAPON",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipGlyph_WEAPON",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(1) > span:nth-child(3)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipRarity_WEAPON",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipSlot_WEAPON",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(1) > span:nth-child(4)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipPlus_WEAPON",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(1) > span:nth-child(5)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipCard_ARMOR",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipTitle_ARMOR",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2) > span:nth-child(1)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipGlyph_ARMOR",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2) > span:nth-child(3)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipRarity_ARMOR",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2) > span:nth-child(2)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipSlot_ARMOR",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2) > span:nth-child(4)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipPlus_ARMOR",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2) > span:nth-child(5)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipCard_ACCESSORY",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(3)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipTitle_ACCESSORY",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(3) > span:nth-child(1)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipGlyph_ACCESSORY",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(3) > span:nth-child(3)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipRarity_ACCESSORY",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(3) > span:nth-child(2)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipSlot_ACCESSORY",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(3) > span:nth-child(4)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipPlus_ACCESSORY",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(3) > span:nth-child(5)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipCard_MOUNT",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(4)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipTitle_MOUNT",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(4) > span:nth-child(1)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipGlyph_MOUNT",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(4) > span:nth-child(3)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipRarity_MOUNT",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(4) > span:nth-child(2)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipSlot_MOUNT",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(4) > span:nth-child(4)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipPlus_MOUNT",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(4) > span:nth-child(5)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipCard_TOME",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(5)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipTitle_TOME",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(5) > span:nth-child(1)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipGlyph_TOME",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(5) > span:nth-child(3)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipSlot_TOME",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(5) > span:nth-child(2)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipCard_TREASURE",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(6)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipTitle_TREASURE",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(6) > span:nth-child(1)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipGlyph_TREASURE",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(6) > span:nth-child(3)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipSlot_TREASURE",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(6) > span:nth-child(2)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipHeirloom_glyph",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(1)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipHeirloom_name",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipHeirloom_tag",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipHeirloom_desc",
+      "selector": "#right-content > div > div:nth-child(4) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipItem_glyph",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipItem_count",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipItemSummary",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > span:nth-child(3)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipItemCell_2",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipItemCell_3",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(3)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipItemCell_4",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(4)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipRating_title",
+      "selector": "#right-content > div > div:nth-child(7)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "EquipRating_card",
+      "selector": "#right-content > div > div:nth-child(8)",
+      "whenText": "GEAR RATING"
+    },
+    {
+      "name": "BloodlineFamily",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineSerial",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineState",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > span",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BeastGlyph",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BeastName",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BeastType",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BeastTag_0",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > span:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BeastTag_1",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > span:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BeastTag_2",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > span:nth-child(3)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BeastHint",
+      "selector": "#right-content > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineUltimateName",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineUltimateDesc",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineUltimateCond",
+      "selector": "#right-content > div > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineTrack",
+      "selector": "#right-content > div > div:nth-child(4)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor1_row",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor1_icon",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > div:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor1_name",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor1_tag",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor1_desc",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor2_row",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor2_icon",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2) > div:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor2_name",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor2_tag",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor2_desc",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor3_row",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(3)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor3_icon",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(3) > div:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor3_name",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor3_tag",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor3_desc",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor4_row",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(4)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor4_icon",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(4) > div:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor4_name",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor4_tag",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFactor4_desc",
+      "selector": "#right-content > div > div:nth-child(6) > div:nth-child(4) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineEp",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(1) > div:nth-child(1) > span:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineEpLabel",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineEpTrack",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineEpFill",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineEpPct",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > span:nth-child(3)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineAwakeTrack",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineAwakeFill",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineAwakePct",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > span:nth-child(3)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineFather",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(2) > span:nth-child(1)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineMother",
+      "selector": "#right-content > div > div:nth-child(8) > div:nth-child(2) > span:nth-child(2)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineSpirit_title",
+      "selector": "#right-content > div > div:nth-child(9)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineSpirit_card",
+      "selector": "#right-content > div > div:nth-child(10)",
+      "whenText": "LINEAGE FACTORS"
+    },
+    {
+      "name": "BloodlineExpand",
+      "selector": "#right-content > div > div:nth-child(11)",
+      "whenText": "LINEAGE FACTORS"
     }
   ]
 }

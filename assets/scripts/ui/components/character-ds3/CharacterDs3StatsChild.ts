@@ -545,7 +545,10 @@ export class CharacterDs3StatsChild extends ChildPanelBase {
     /** 有底色的文字會被轉成「面板＋文字」兩層，名字在面板上，文字在子節點 */
     private _findLabel(name: string): Label | null {
         const node = this.binder.getNode(name) ?? this._findDescendantByName(this.hostNode, name);
-        return this.binder.getLabel(name) ?? node?.getComponent(Label) ?? node?.getComponentInChildren(Label) ?? null;
+        const label = this.binder.getLabel(name) ?? node?.getComponent(Label) ?? node?.getComponentInChildren(Label) ?? null;
+        // 換將時字元不可預期，不佔共用字元圖集（CHAR 滿了會缺字）
+        if (label && label.cacheMode === Label.CacheMode.CHAR) label.cacheMode = Label.CacheMode.NONE;
+        return label;
     }
 
     private _setActive(name: string, active: boolean): void {

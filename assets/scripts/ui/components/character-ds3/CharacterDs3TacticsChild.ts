@@ -3,6 +3,7 @@
 // PROG-2-1690：技分頁依武將寫入已習得／未啟發戰法，不再停在張飛範例。
 
 import { ChildPanelBase } from '../../core/ChildPanelBase';
+import { ds3Label, ds3Reflow, ds3SetActive } from './Ds3NodeLookup';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import type { GeneralConfig } from '../../../core/models/GeneralUnit';
 
@@ -16,41 +17,27 @@ export interface Ds3LockedTacticRow extends Ds3TacticRow {
 }
 
 export interface Ds3TacticRows {
+    /** 第一筆是主戰法，其餘是已習得列 */
     learned: Ds3TacticRow[];
+    inspired: Ds3LockedTacticRow[];
     locked: Ds3LockedTacticRow[];
 }
 
-interface LearnedSlot {
-    row: string;
-    glyph: string;
-    name: string;
-    clear: string[];
-}
-
-interface LockedSlot {
-    row: string;
-    glyph: string;
-    name: string;
-    hint: string;
-}
-
-const P = 'CharacterDs3TabTactics_';
-
-/** 片段裡四列已習得戰法；clear 為資料尚未提供的標籤／TP／說明／等級欄 */
-const LEARNED_SLOTS: LearnedSlot[] = [
-    { row: `${P}div_4`, glyph: `${P}div_5`, name: `${P}span_3`, clear: [`${P}span_4`, `${P}span_5`, `${P}span_6`, `${P}div_8`, `${P}span_7`, `${P}span_8`] },
-    { row: `${P}div_10`, glyph: `${P}div_11`, name: `${P}span_9`, clear: [`${P}span_10`, `${P}div_14`, `${P}span_11`, `${P}span_12`] },
-    { row: `${P}div_16`, glyph: `${P}div_17`, name: `${P}span_13`, clear: [`${P}span_14`, `${P}span_15`, `${P}span_16`, `${P}div_20`, `${P}span_17`, `${P}span_18`] },
-    { row: `${P}div_22`, glyph: `${P}div_23`, name: `${P}span_19`, clear: [`${P}span_20`, `${P}span_21`, `${P}span_22`, `${P}div_26`, `${P}span_23`, `${P}span_24`] },
-];
-
-const LOCKED_SLOTS: LockedSlot[] = [
-    { row: `${P}div_30`, glyph: `${P}div_31`, name: `${P}div_33`, hint: `${P}div_34` },
-    { row: `${P}div_35`, glyph: `${P}div_36`, name: `${P}div_38`, hint: `${P}div_39` },
-];
-
-const LOCKED_HEADER = `${P}div_28`;
+/** 片段槽位數：主戰法 1＋已習得 3、可習得 2、無法習得 2 */
+const LEARNED_SLOT_COUNT = 4;
+const INSPIRED_SLOT_COUNT = 2;
+const LOCKED_SLOT_COUNT = 2;
 const LOCK_PREFIX = /^🔒\s*/u;
+
+/** 武將資料只有戰法名稱，標籤、TP、說明、等級都是設計稿範例，先不顯示 */
+const TACTIC_DEMO_NODES = [
+    'TacticMain_tag0', 'TacticMain_tag1', 'TacticMain_tag2', 'TacticMain_desc', 'TacticMain_level',
+    'TacticLearned1_tag0', 'TacticLearned1_desc', 'TacticLearned1_level',
+    'TacticLearned2_tag0', 'TacticLearned2_tag1', 'TacticLearned2_tag2', 'TacticLearned2_desc', 'TacticLearned2_level',
+    'TacticLearned3_tag0', 'TacticLearned3_tag1', 'TacticLearned3_tag2', 'TacticLearned3_desc', 'TacticLearned3_level',
+    'TacticInspired1_badge', 'TacticInspired1_tag0', 'TacticInspired1_tag1', 'TacticInspired1_hint',
+    'TacticInspired2_badge', 'TacticInspired2_tag0', 'TacticInspired2_tag1', 'TacticInspired2_hint',
+];
 
 function glyphOf(name: string): string {
     return [...name][0] ?? '';
@@ -63,13 +50,13 @@ export function buildDs3TacticRows(cfg: Partial<GeneralConfig> | null | undefine
         .map((v) => v.replace(LOCK_PREFIX, '').trim())
         .filter((v) => v.length > 0);
 
-    const learned = clean(cfg?.learnedTactics).slice(0, LEARNED_SLOTS.length)
+    const learned = clean(cfg?.learnedTactics).slice(0, LEARNED_SLOT_COUNT)
         .map((name) => ({ glyph: glyphOf(name), name }));
-    const locked = [
-        ...clean(cfg?.inspiredTactics).map((name) => ({ glyph: glyphOf(name), name, hint: '未啟發' })),
-        ...clean(cfg?.lockedTactics).map((name) => ({ glyph: glyphOf(name), name, hint: '🔒 待解鎖' })),
-    ].slice(0, LOCKED_SLOTS.length);
-    return { learned, locked };
+    const inspired = clean(cfg?.inspiredTactics).slice(0, INSPIRED_SLOT_COUNT)
+        .map((name) => ({ glyph: glyphOf(name), name, hint: '未啟發' }));
+    const locked = clean(cfg?.lockedTactics).slice(0, LOCKED_SLOT_COUNT)
+        .map((name) => ({ glyph: glyphOf(name), name, hint: '🔒 待解鎖' }));
+    return { learned, inspired, locked };
 }
 
 export class CharacterDs3TacticsChild extends ChildPanelBase {
@@ -85,25 +72,35 @@ export class CharacterDs3TacticsChild extends ChildPanelBase {
             return;
         }
         const rows = buildDs3TacticRows(data as GeneralConfig);
+        TACTIC_DEMO_NODES.forEach((name) => this._setActive(name, false));
 
-        LEARNED_SLOTS.forEach((slot, i) => {
-            const row = rows.learned[i];
-            this._setActive(slot.row, !!row);
-            if (!row) return;
-            this._setText(slot.glyph, row.glyph);
-            this._setText(slot.name, row.name);
-            slot.clear.forEach((n) => this._setText(n, ''));
-        });
+        const [primary, ...others] = rows.learned;
+        this._setText('TacticMain_glyph', primary?.glyph ?? '—');
+        this._setText('TacticMain_name', primary?.name ?? '尚未習得');
+        for (let i = 1; i < LEARNED_SLOT_COUNT; i += 1) {
+            const row = others[i - 1];
+            this._setActive(`TacticLearned${i}_row`, !!row);
+            if (!row) continue;
+            this._setText(`TacticLearned${i}_glyph`, row.glyph);
+            this._setText(`TacticLearned${i}_name`, row.name);
+        }
 
-        this._setActive(LOCKED_HEADER, rows.locked.length > 0);
-        LOCKED_SLOTS.forEach((slot, i) => {
-            const row = rows.locked[i];
-            this._setActive(slot.row, !!row);
-            if (!row) return;
-            this._setText(slot.glyph, row.glyph);
-            this._setText(slot.name, row.name);
-            this._setText(slot.hint, row.hint);
-        });
+        this._applyLockedRows('TacticInspired', rows.inspired, INSPIRED_SLOT_COUNT);
+        this._applyLockedRows('TacticLocked', rows.locked, LOCKED_SLOT_COUNT);
+        ds3Reflow(this.hostNode);
+    }
+
+    private _applyLockedRows(prefix: string, rows: Ds3LockedTacticRow[], slotCount: number): void {
+        this._setActive(`${prefix}_title`, rows.length > 0);
+        this._setActive(`${prefix}_grid`, rows.length > 0);
+        for (let i = 1; i <= slotCount; i += 1) {
+            const row = rows[i - 1];
+            this._setActive(`${prefix}${i}_row`, !!row);
+            if (!row) continue;
+            this._setText(`${prefix}${i}_glyph`, row.glyph);
+            this._setText(`${prefix}${i}_name`, row.name);
+            this._setText(`${prefix}${i}_lock`, row.hint);
+        }
     }
 
     public override validateDataFormat(data: unknown): string | null {
@@ -116,12 +113,11 @@ export class CharacterDs3TacticsChild extends ChildPanelBase {
     public override onUnmount(): void { /* no-op */ }
 
     private _setText(nodeName: string, text: string): void {
-        const label = this.binder.getLabel(nodeName);
+        const label = ds3Label(this.binder, this.hostNode, nodeName);
         if (label) label.string = text;
     }
 
     private _setActive(nodeName: string, active: boolean): void {
-        const node = this.binder.getNode(nodeName);
-        if (node) node.active = active;
+        ds3SetActive(this.binder, this.hostNode, nodeName, active);
     }
 }

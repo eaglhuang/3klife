@@ -165,17 +165,17 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_div_12",
+                              "name": "BloodlineFamily",
                               "width": 222,
                               "height": 26,
                               "text": "燕血脈",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_12"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.bloodlinefamily"
                             }
                           ]
                         },
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_13",
+                          "name": "CharacterDs3TabBloodline_div_12",
                           "width": 222,
                           "height": 40,
                           "layout": {
@@ -186,25 +186,25 @@
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_div_14",
+                              "name": "CharacterDs3TabBloodline_div_13",
                               "width": 222,
                               "height": 16,
                               "text": "血源 ID",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_14"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_13"
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_div_15",
+                              "name": "BloodlineSerial",
                               "width": 222,
                               "height": 21,
                               "text": "YAN_ZF_001",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_15"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.bloodlineserial"
                             }
                           ]
                         },
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_16",
+                          "name": "CharacterDs3TabBloodline_div_14",
                           "width": 222,
                           "height": 39,
                           "layout": {
@@ -215,28 +215,28 @@
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_div_17",
+                              "name": "CharacterDs3TabBloodline_div_15",
                               "width": 222,
                               "height": 16,
                               "text": "狀 態",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_17"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_15"
                             },
                             {
                               "type": "panel",
-                              "name": "CharacterDs3TabBloodline_span_2",
+                              "name": "BloodlineState",
                               "width": 88,
                               "height": 24,
-                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_2",
+                              "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinestate",
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_3",
+                                  "name": "CharacterDs3TabBloodline_span_2",
                                   "widget": {
                                     "left": 12,
                                     "top": 4
                                   },
                                   "text": "命紋已顯",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_3",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_2",
                                   "width": 64,
                                   "height": 16
                                 }
@@ -250,7 +250,7 @@
                 },
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabBloodline_div_18",
+                  "name": "CharacterDs3TabBloodline_div_16",
                   "width": 252,
                   "height": 206,
                   "layout": {
@@ -262,19 +262,19 @@
                     "paddingLeft": 14,
                     "spacingY": 10
                   },
-                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_18",
+                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_16",
                   "children": [
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabBloodline_div_19",
+                      "name": "CharacterDs3TabBloodline_div_17",
                       "width": 222,
                       "height": 26,
                       "text": "命紋靈獸",
-                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_19"
+                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_17"
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabBloodline_div_20",
+                      "name": "CharacterDs3TabBloodline_div_18",
                       "width": 222,
                       "height": 127,
                       "layout": {
@@ -285,7 +285,7 @@
                       "children": [
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_21",
+                          "name": "CharacterDs3TabBloodline_div_19",
                           "width": 222,
                           "height": 48,
                           "layout": {
@@ -297,20 +297,20 @@
                           "children": [
                             {
                               "type": "panel",
-                              "name": "CharacterDs3TabBloodline_div_22",
+                              "name": "BeastGlyph",
                               "width": 48,
                               "height": 48,
                               "layout": {
                                 "type": "grid",
                                 "cellHeight": 48
                               },
-                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_22",
+                              "skinSlot": "auto.character-ds3-tab-bloodline.beastglyph",
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_4",
+                                  "name": "CharacterDs3TabBloodline_span_3",
                                   "text": "虎",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_4",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_3",
                                   "width": 48,
                                   "height": 48
                                 }
@@ -318,7 +318,7 @@
                             },
                             {
                               "type": "container",
-                              "name": "CharacterDs3TabBloodline_div_23",
+                              "name": "CharacterDs3TabBloodline_div_20",
                               "width": 79,
                               "height": 46,
                               "layout": {
@@ -328,19 +328,19 @@
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_div_24",
+                                  "name": "BeastName",
                                   "width": 79,
                                   "height": 26,
                                   "text": "燕地玄虎",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_24"
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.beastname"
                                 },
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_div_25",
+                                  "name": "BeastType",
                                   "width": 79,
                                   "height": 18,
                                   "text": "原型 · 虎",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_25"
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.beasttype"
                                 }
                               ]
                             }
@@ -348,7 +348,7 @@
                         },
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_26",
+                          "name": "CharacterDs3TabBloodline_div_21",
                           "width": 222,
                           "height": 26,
                           "layout": {
@@ -359,10 +359,52 @@
                           "children": [
                             {
                               "type": "panel",
-                              "name": "CharacterDs3TabBloodline_span_5",
+                              "name": "BeastTag_0",
                               "width": 48,
                               "height": 26,
-                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_5",
+                              "skinSlot": "auto.character-ds3-tab-bloodline.beasttag_0",
+                              "children": [
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabBloodline_span_4",
+                                  "widget": {
+                                    "left": 10,
+                                    "top": 3
+                                  },
+                                  "text": "威猛",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_4",
+                                  "width": 28,
+                                  "height": 20
+                                }
+                              ]
+                            },
+                            {
+                              "type": "panel",
+                              "name": "BeastTag_1",
+                              "width": 48,
+                              "height": 26,
+                              "skinSlot": "auto.character-ds3-tab-bloodline.beasttag_1",
+                              "children": [
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabBloodline_span_5",
+                                  "widget": {
+                                    "left": 10,
+                                    "top": 3
+                                  },
+                                  "text": "義烈",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_5",
+                                  "width": 28,
+                                  "height": 20
+                                }
+                              ]
+                            },
+                            {
+                              "type": "panel",
+                              "name": "BeastTag_2",
+                              "width": 48,
+                              "height": 26,
+                              "skinSlot": "auto.character-ds3-tab-bloodline.beasttag_2",
                               "children": [
                                 {
                                   "type": "label",
@@ -371,50 +413,8 @@
                                     "left": 10,
                                     "top": 3
                                   },
-                                  "text": "威猛",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_6",
-                                  "width": 28,
-                                  "height": 20
-                                }
-                              ]
-                            },
-                            {
-                              "type": "panel",
-                              "name": "CharacterDs3TabBloodline_span_7",
-                              "width": 48,
-                              "height": 26,
-                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_7",
-                              "children": [
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_8",
-                                  "widget": {
-                                    "left": 10,
-                                    "top": 3
-                                  },
-                                  "text": "義烈",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_8",
-                                  "width": 28,
-                                  "height": 20
-                                }
-                              ]
-                            },
-                            {
-                              "type": "panel",
-                              "name": "CharacterDs3TabBloodline_span_9",
-                              "width": 48,
-                              "height": 26,
-                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_9",
-                              "children": [
-                                {
-                                  "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_10",
-                                  "widget": {
-                                    "left": 10,
-                                    "top": 3
-                                  },
                                   "text": "衝鋒",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_10",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_6",
                                   "width": 28,
                                   "height": 20
                                 }
@@ -424,7 +424,7 @@
                         },
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_27",
+                          "name": "CharacterDs3TabBloodline_div_22",
                           "width": 222,
                           "height": 37,
                           "layout": {
@@ -435,19 +435,19 @@
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_div_28",
+                              "name": "CharacterDs3TabBloodline_div_23",
                               "width": 222,
                               "height": 16,
                               "text": "覺醒傾向",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_28"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_23"
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_div_29",
+                              "name": "BeastHint",
                               "width": 222,
                               "height": 18,
                               "text": "義字系戰績、結義事件、為友捨命",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_29"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.beasthint"
                             }
                           ]
                         }
@@ -459,7 +459,7 @@
             },
             {
               "type": "panel",
-              "name": "CharacterDs3TabBloodline_div_30",
+              "name": "CharacterDs3TabBloodline_div_24",
               "width": 520,
               "height": 127,
               "layout": {
@@ -470,11 +470,11 @@
                 "paddingBottom": 16,
                 "paddingLeft": 16
               },
-              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_30",
+              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_24",
               "children": [
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabBloodline_div_31",
+                  "name": "CharacterDs3TabBloodline_div_25",
                   "width": 484,
                   "height": 91,
                   "layout": {
@@ -486,20 +486,20 @@
                   "children": [
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_32",
+                      "name": "CharacterDs3TabBloodline_div_26",
                       "width": 72,
                       "height": 72,
                       "layout": {
                         "type": "grid",
                         "cellHeight": 72
                       },
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_32",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_26",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_11",
+                          "name": "CharacterDs3TabBloodline_span_7",
                           "text": "◈",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_11",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_7",
                           "width": 72,
                           "height": 72
                         }
@@ -507,7 +507,7 @@
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabBloodline_div_33",
+                      "name": "CharacterDs3TabBloodline_div_27",
                       "width": 396,
                       "height": 91,
                       "layout": {
@@ -518,7 +518,7 @@
                       "children": [
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_34",
+                          "name": "CharacterDs3TabBloodline_div_28",
                           "width": 396,
                           "height": 35,
                           "layout": {
@@ -530,28 +530,28 @@
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_12",
+                              "name": "BloodlineUltimateName",
                               "width": 158,
                               "height": 35,
                               "text": "翼德真名奧義",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_12"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.bloodlineultimatename"
                             },
                             {
                               "type": "panel",
-                              "name": "CharacterDs3TabBloodline_span_13",
+                              "name": "CharacterDs3TabBloodline_span_8",
                               "width": 77,
                               "height": 24,
-                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_13",
+                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_8",
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_14",
+                                  "name": "CharacterDs3TabBloodline_span_9",
                                   "widget": {
                                     "left": 12,
                                     "top": 3
                                   },
                                   "text": "終極覺醒",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_14",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_9",
                                   "width": 53,
                                   "height": 18
                                 }
@@ -561,19 +561,19 @@
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_div_35",
+                          "name": "BloodlineUltimateDesc",
                           "width": 396,
                           "height": 24,
                           "text": "真名覺醒，血脈奧義完全解封",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_35"
+                          "styleSlot": "auto.character-ds3-tab-bloodline.bloodlineultimatedesc"
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_div_36",
+                          "name": "BloodlineUltimateCond",
                           "width": 396,
                           "height": 18,
                           "text": "條件：名聲 1500 + 史詩事蹟 ×1",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_36"
+                          "styleSlot": "auto.character-ds3-tab-bloodline.bloodlineultimatecond"
                         }
                       ]
                     }
@@ -583,7 +583,7 @@
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabBloodline_div_37_margin",
+              "name": "BloodlineTrack_margin",
               "width": 520,
               "height": 274,
               "layout": {
@@ -594,7 +594,7 @@
               "children": [
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabBloodline_div_37",
+                  "name": "BloodlineTrack",
                   "width": 520,
                   "height": 262,
                   "layout": {
@@ -605,7 +605,7 @@
                   "children": [
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabBloodline_div_38_margin",
+                      "name": "CharacterDs3TabBloodline_div_29_margin",
                       "width": 520,
                       "height": 18,
                       "layout": {
@@ -616,17 +616,17 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_div_38",
+                          "name": "CharacterDs3TabBloodline_div_29",
                           "width": 520,
                           "height": 16,
                           "text": "覺醒軌道",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_38"
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_29"
                         }
                       ]
                     },
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_39",
+                      "name": "CharacterDs3TabBloodline_div_30",
                       "width": 520,
                       "height": 55,
                       "layout": {
@@ -639,24 +639,24 @@
                         "paddingBottom": 8,
                         "paddingLeft": 12
                       },
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_39",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_30",
                       "children": [
                         {
                           "type": "panel",
-                          "name": "CharacterDs3TabBloodline_div_40",
+                          "name": "CharacterDs3TabBloodline_div_31",
                           "width": 30,
                           "height": 30,
                           "layout": {
                             "type": "grid",
                             "cellHeight": 30
                           },
-                          "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_40",
+                          "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_31",
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_15",
+                              "name": "CharacterDs3TabBloodline_span_10",
                               "text": "1",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_15",
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_10",
                               "width": 30,
                               "height": 30
                             }
@@ -664,7 +664,7 @@
                         },
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_41",
+                          "name": "CharacterDs3TabBloodline_div_32",
                           "width": 456,
                           "height": 37,
                           "layout": {
@@ -675,7 +675,7 @@
                           "children": [
                             {
                               "type": "container",
-                              "name": "CharacterDs3TabBloodline_div_42",
+                              "name": "CharacterDs3TabBloodline_div_33",
                               "width": 454,
                               "height": 19,
                               "layout": {
@@ -687,28 +687,28 @@
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_16",
+                                  "name": "CharacterDs3TabBloodline_span_11",
                                   "width": 56,
                                   "height": 19,
                                   "text": "燕血初鳴",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_16"
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_11"
                                 },
                                 {
                                   "type": "panel",
-                                  "name": "CharacterDs3TabBloodline_span_17",
+                                  "name": "CharacterDs3TabBloodline_span_12",
                                   "width": 41,
                                   "height": 17,
-                                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_17",
+                                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_12",
                                   "children": [
                                     {
                                       "type": "label",
-                                      "name": "CharacterDs3TabBloodline_span_18",
+                                      "name": "CharacterDs3TabBloodline_span_13",
                                       "widget": {
                                         "left": 6,
                                         "top": 1
                                       },
                                       "text": "已覺醒",
-                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_18",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_13",
                                       "width": 29,
                                       "height": 15
                                     }
@@ -718,11 +718,11 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_div_43",
+                              "name": "CharacterDs3TabBloodline_div_34",
                               "width": 454,
                               "height": 16,
                               "text": "武力+50，開放長槍特技",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_43"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_34"
                             }
                           ]
                         }
@@ -730,7 +730,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_44",
+                      "name": "CharacterDs3TabBloodline_div_35",
                       "width": 520,
                       "height": 55,
                       "layout": {
@@ -743,24 +743,24 @@
                         "paddingBottom": 8,
                         "paddingLeft": 12
                       },
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_44",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_35",
                       "children": [
                         {
                           "type": "panel",
-                          "name": "CharacterDs3TabBloodline_div_45",
+                          "name": "CharacterDs3TabBloodline_div_36",
                           "width": 30,
                           "height": 30,
                           "layout": {
                             "type": "grid",
                             "cellHeight": 30
                           },
-                          "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_45",
+                          "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_36",
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_19",
+                              "name": "CharacterDs3TabBloodline_span_14",
                               "text": "2",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_19",
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_14",
                               "width": 30,
                               "height": 30
                             }
@@ -768,7 +768,7 @@
                         },
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_46",
+                          "name": "CharacterDs3TabBloodline_div_37",
                           "width": 456,
                           "height": 37,
                           "layout": {
@@ -779,7 +779,7 @@
                           "children": [
                             {
                               "type": "container",
-                              "name": "CharacterDs3TabBloodline_div_47",
+                              "name": "CharacterDs3TabBloodline_div_38",
                               "width": 454,
                               "height": 19,
                               "layout": {
@@ -791,28 +791,28 @@
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_20",
+                                  "name": "CharacterDs3TabBloodline_span_15",
                                   "width": 56,
                                   "height": 19,
                                   "text": "義氣共鳴",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_20"
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_15"
                                 },
                                 {
                                   "type": "panel",
-                                  "name": "CharacterDs3TabBloodline_span_21",
+                                  "name": "CharacterDs3TabBloodline_span_16",
                                   "width": 41,
                                   "height": 17,
-                                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_21",
+                                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_16",
                                   "children": [
                                     {
                                       "type": "label",
-                                      "name": "CharacterDs3TabBloodline_span_22",
+                                      "name": "CharacterDs3TabBloodline_span_17",
                                       "widget": {
                                         "left": 6,
                                         "top": 1
                                       },
                                       "text": "已覺醒",
-                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_22",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_17",
                                       "width": 29,
                                       "height": 15
                                     }
@@ -822,11 +822,11 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_div_48",
+                              "name": "CharacterDs3TabBloodline_div_39",
                               "width": 454,
                               "height": 16,
                               "text": "義字系戰法傷害+12%",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_48"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_39"
                             }
                           ]
                         }
@@ -834,7 +834,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_49",
+                      "name": "CharacterDs3TabBloodline_div_40",
                       "width": 520,
                       "height": 55,
                       "layout": {
@@ -847,24 +847,24 @@
                         "paddingBottom": 8,
                         "paddingLeft": 12
                       },
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_49",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_40",
                       "children": [
                         {
                           "type": "panel",
-                          "name": "CharacterDs3TabBloodline_div_50",
+                          "name": "CharacterDs3TabBloodline_div_41",
                           "width": 30,
                           "height": 30,
                           "layout": {
                             "type": "grid",
                             "cellHeight": 30
                           },
-                          "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_50",
+                          "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_41",
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_23",
+                              "name": "CharacterDs3TabBloodline_span_18",
                               "text": "3",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_23",
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_18",
                               "width": 30,
                               "height": 30
                             }
@@ -872,7 +872,7 @@
                         },
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_51",
+                          "name": "CharacterDs3TabBloodline_div_42",
                           "width": 456,
                           "height": 37,
                           "layout": {
@@ -883,7 +883,7 @@
                           "children": [
                             {
                               "type": "container",
-                              "name": "CharacterDs3TabBloodline_div_52",
+                              "name": "CharacterDs3TabBloodline_div_43",
                               "width": 454,
                               "height": 19,
                               "layout": {
@@ -895,28 +895,28 @@
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_24",
+                                  "name": "CharacterDs3TabBloodline_span_19",
                                   "width": 56,
                                   "height": 19,
                                   "text": "燕人威震",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_24"
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_19"
                                 },
                                 {
                                   "type": "panel",
-                                  "name": "CharacterDs3TabBloodline_span_25",
+                                  "name": "CharacterDs3TabBloodline_span_20",
                                   "width": 41,
                                   "height": 17,
-                                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_25",
+                                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_20",
                                   "children": [
                                     {
                                       "type": "label",
-                                      "name": "CharacterDs3TabBloodline_span_26",
+                                      "name": "CharacterDs3TabBloodline_span_21",
                                       "widget": {
                                         "left": 6,
                                         "top": 1
                                       },
                                       "text": "可覺醒",
-                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_26",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_21",
                                       "width": 29,
                                       "height": 15
                                     }
@@ -926,11 +926,11 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_div_53",
+                              "name": "CharacterDs3TabBloodline_div_44",
                               "width": 454,
                               "height": 16,
                               "text": "奧義「怒吼」傷害+20%",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_53"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_44"
                             }
                           ]
                         }
@@ -938,7 +938,7 @@
                     },
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_54",
+                      "name": "CharacterDs3TabBloodline_div_45",
                       "width": 520,
                       "height": 55,
                       "layout": {
@@ -951,24 +951,24 @@
                         "paddingBottom": 8,
                         "paddingLeft": 12
                       },
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_54",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_45",
                       "children": [
                         {
                           "type": "panel",
-                          "name": "CharacterDs3TabBloodline_div_55",
+                          "name": "CharacterDs3TabBloodline_div_46",
                           "width": 30,
                           "height": 30,
                           "layout": {
                             "type": "grid",
                             "cellHeight": 30
                           },
-                          "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_55",
+                          "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_46",
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_27",
+                              "name": "CharacterDs3TabBloodline_span_22",
                               "text": "4",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_27",
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_22",
                               "width": 30,
                               "height": 30
                             }
@@ -976,7 +976,7 @@
                         },
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_56",
+                          "name": "CharacterDs3TabBloodline_div_47",
                           "width": 456,
                           "height": 37,
                           "layout": {
@@ -987,7 +987,7 @@
                           "children": [
                             {
                               "type": "container",
-                              "name": "CharacterDs3TabBloodline_div_57",
+                              "name": "CharacterDs3TabBloodline_div_48",
                               "width": 454,
                               "height": 19,
                               "layout": {
@@ -999,28 +999,28 @@
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_28",
+                                  "name": "CharacterDs3TabBloodline_span_23",
                                   "width": 56,
                                   "height": 19,
                                   "text": "猛虎破陣",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_28"
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_23"
                                 },
                                 {
                                   "type": "panel",
-                                  "name": "CharacterDs3TabBloodline_span_29",
+                                  "name": "CharacterDs3TabBloodline_span_24",
                                   "width": 41,
                                   "height": 17,
-                                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_29",
+                                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_24",
                                   "children": [
                                     {
                                       "type": "label",
-                                      "name": "CharacterDs3TabBloodline_span_30",
+                                      "name": "CharacterDs3TabBloodline_span_25",
                                       "widget": {
                                         "left": 6,
                                         "top": 1
                                       },
                                       "text": "未解鎖",
-                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_30",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_25",
                                       "width": 29,
                                       "height": 15
                                     }
@@ -1030,11 +1030,11 @@
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_div_58",
+                              "name": "CharacterDs3TabBloodline_div_49",
                               "width": 454,
                               "height": 16,
                               "text": "🔒 名聲700 + 義氣事蹟×3",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_58"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_49"
                             }
                           ]
                         }
@@ -1046,7 +1046,7 @@
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabBloodline_div_59_margin",
+              "name": "CharacterDs3TabBloodline_div_50_margin",
               "width": 520,
               "height": 36,
               "layout": {
@@ -1057,7 +1057,7 @@
               "children": [
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabBloodline_div_59",
+                  "name": "CharacterDs3TabBloodline_div_50",
                   "width": 520,
                   "height": 26,
                   "layout": {
@@ -1069,26 +1069,26 @@
                   "children": [
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_60",
+                      "name": "CharacterDs3TabBloodline_div_51",
                       "width": 4,
                       "height": 16,
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_60"
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_51"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabBloodline_span_31",
+                      "name": "CharacterDs3TabBloodline_span_26",
                       "width": 130,
                       "height": 26,
                       "text": "特殊傳承因子",
-                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_31"
+                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_26"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabBloodline_span_32",
+                      "name": "CharacterDs3TabBloodline_span_27",
                       "width": 115,
                       "height": 14,
                       "text": "LINEAGE FACTORS",
-                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_32"
+                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_27"
                     }
                   ]
                 }
@@ -1096,7 +1096,7 @@
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabBloodline_div_61",
+              "name": "CharacterDs3TabBloodline_div_52",
               "width": 520,
               "height": 124,
               "layout": {
@@ -1111,7 +1111,7 @@
               "children": [
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabBloodline_div_62",
+                  "name": "BloodlineFactor1_row",
                   "opacity": 1,
                   "width": 256,
                   "height": 58,
@@ -1125,24 +1125,24 @@
                     "paddingBottom": 10,
                     "paddingLeft": 12
                   },
-                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_62",
+                  "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor1_row",
                   "children": [
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_63",
+                      "name": "BloodlineFactor1_icon",
                       "width": 32,
                       "height": 32,
                       "layout": {
                         "type": "grid",
                         "cellHeight": 32
                       },
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_63",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor1_icon",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_33",
+                          "name": "CharacterDs3TabBloodline_span_28",
                           "text": "◈",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_33",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_28",
                           "width": 32,
                           "height": 32
                         }
@@ -1150,7 +1150,7 @@
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabBloodline_div_64",
+                      "name": "CharacterDs3TabBloodline_div_53",
                       "width": 105,
                       "height": 36,
                       "layout": {
@@ -1161,7 +1161,7 @@
                       "children": [
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_65",
+                          "name": "CharacterDs3TabBloodline_div_54",
                           "width": 105,
                           "height": 19,
                           "layout": {
@@ -1173,28 +1173,28 @@
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_34",
+                              "name": "BloodlineFactor1_name",
                               "width": 56,
                               "height": 19,
                               "text": "武力因子",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_34"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor1_name"
                             },
                             {
                               "type": "panel",
-                              "name": "CharacterDs3TabBloodline_span_35",
+                              "name": "BloodlineFactor1_tag",
                               "width": 44,
                               "height": 17,
-                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_35",
+                              "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor1_tag",
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_36",
+                                  "name": "CharacterDs3TabBloodline_span_29",
                                   "widget": {
                                     "left": 5,
                                     "top": 1
                                   },
                                   "text": "武力★5",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_36",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_29",
                                   "width": 34,
                                   "height": 15
                                 }
@@ -1204,11 +1204,11 @@
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_div_66",
+                          "name": "BloodlineFactor1_desc",
                           "width": 105,
                           "height": 15,
                           "text": "父：張威",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_66"
+                          "styleSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor1_desc"
                         }
                       ]
                     }
@@ -1216,7 +1216,7 @@
                 },
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabBloodline_div_67",
+                  "name": "BloodlineFactor2_row",
                   "opacity": 1,
                   "width": 256,
                   "height": 58,
@@ -1230,24 +1230,24 @@
                     "paddingBottom": 10,
                     "paddingLeft": 12
                   },
-                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_67",
+                  "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor2_row",
                   "children": [
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_68",
+                      "name": "BloodlineFactor2_icon",
                       "width": 32,
                       "height": 32,
                       "layout": {
                         "type": "grid",
                         "cellHeight": 32
                       },
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_68",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor2_icon",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_37",
+                          "name": "CharacterDs3TabBloodline_span_30",
                           "text": "◈",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_37",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_30",
                           "width": 32,
                           "height": 32
                         }
@@ -1255,7 +1255,7 @@
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabBloodline_div_69",
+                      "name": "CharacterDs3TabBloodline_div_55",
                       "width": 105,
                       "height": 36,
                       "layout": {
@@ -1266,7 +1266,7 @@
                       "children": [
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_70",
+                          "name": "CharacterDs3TabBloodline_div_56",
                           "width": 105,
                           "height": 19,
                           "layout": {
@@ -1278,28 +1278,28 @@
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_38",
+                              "name": "BloodlineFactor2_name",
                               "width": 56,
                               "height": 19,
                               "text": "體魄因子",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_38"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor2_name"
                             },
                             {
                               "type": "panel",
-                              "name": "CharacterDs3TabBloodline_span_39",
+                              "name": "BloodlineFactor2_tag",
                               "width": 44,
                               "height": 17,
-                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_39",
+                              "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor2_tag",
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_40",
+                                  "name": "CharacterDs3TabBloodline_span_31",
                                   "widget": {
                                     "left": 5,
                                     "top": 1
                                   },
                                   "text": "體魄★4",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_40",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_31",
                                   "width": 34,
                                   "height": 15
                                 }
@@ -1309,11 +1309,11 @@
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_div_71",
+                          "name": "BloodlineFactor2_desc",
                           "width": 105,
                           "height": 15,
                           "text": "祖父：燕地武人",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_71"
+                          "styleSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor2_desc"
                         }
                       ]
                     }
@@ -1321,7 +1321,7 @@
                 },
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabBloodline_div_72",
+                  "name": "BloodlineFactor3_row",
                   "opacity": 1,
                   "width": 256,
                   "height": 58,
@@ -1335,24 +1335,24 @@
                     "paddingBottom": 10,
                     "paddingLeft": 12
                   },
-                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_72",
+                  "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor3_row",
                   "children": [
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_73",
+                      "name": "BloodlineFactor3_icon",
                       "width": 32,
                       "height": 32,
                       "layout": {
                         "type": "grid",
                         "cellHeight": 32
                       },
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_73",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor3_icon",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_41",
+                          "name": "CharacterDs3TabBloodline_span_32",
                           "text": "◈",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_41",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_32",
                           "width": 32,
                           "height": 32
                         }
@@ -1360,7 +1360,7 @@
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabBloodline_div_74",
+                      "name": "CharacterDs3TabBloodline_div_57",
                       "width": 105,
                       "height": 36,
                       "layout": {
@@ -1371,7 +1371,7 @@
                       "children": [
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_75",
+                          "name": "CharacterDs3TabBloodline_div_58",
                           "width": 105,
                           "height": 19,
                           "layout": {
@@ -1383,28 +1383,28 @@
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_42",
+                              "name": "BloodlineFactor3_name",
                               "width": 56,
                               "height": 19,
                               "text": "戰法因子",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_42"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor3_name"
                             },
                             {
                               "type": "panel",
-                              "name": "CharacterDs3TabBloodline_span_43",
+                              "name": "BloodlineFactor3_tag",
                               "width": 44,
                               "height": 17,
-                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_43",
+                              "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor3_tag",
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_44",
+                                  "name": "CharacterDs3TabBloodline_span_33",
                                   "widget": {
                                     "left": 5,
                                     "top": 1
                                   },
                                   "text": "戰法★4",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_44",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_33",
                                   "width": 34,
                                   "height": 15
                                 }
@@ -1414,11 +1414,11 @@
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_div_76",
+                          "name": "BloodlineFactor3_desc",
                           "width": 105,
                           "height": 15,
                           "text": "父：張威",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_76"
+                          "styleSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor3_desc"
                         }
                       ]
                     }
@@ -1426,7 +1426,7 @@
                 },
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabBloodline_div_77",
+                  "name": "BloodlineFactor4_row",
                   "opacity": 0.5,
                   "width": 256,
                   "height": 58,
@@ -1440,24 +1440,24 @@
                     "paddingBottom": 10,
                     "paddingLeft": 12
                   },
-                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_77",
+                  "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor4_row",
                   "children": [
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_78",
+                      "name": "BloodlineFactor4_icon",
                       "width": 32,
                       "height": 32,
                       "layout": {
                         "type": "grid",
                         "cellHeight": 32
                       },
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_78",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor4_icon",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_45",
+                          "name": "CharacterDs3TabBloodline_span_34",
                           "text": "🔒",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_45",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_34",
                           "width": 32,
                           "height": 32
                         }
@@ -1465,7 +1465,7 @@
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabBloodline_div_79",
+                      "name": "CharacterDs3TabBloodline_div_59",
                       "width": 100,
                       "height": 36,
                       "layout": {
@@ -1476,7 +1476,7 @@
                       "children": [
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_80",
+                          "name": "CharacterDs3TabBloodline_div_60",
                           "width": 100,
                           "height": 19,
                           "layout": {
@@ -1488,28 +1488,28 @@
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_46",
+                              "name": "BloodlineFactor4_name",
                               "width": 56,
                               "height": 19,
                               "text": "靈獸因子",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_46"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor4_name"
                             },
                             {
                               "type": "panel",
-                              "name": "CharacterDs3TabBloodline_span_47",
+                              "name": "BloodlineFactor4_tag",
                               "width": 39,
                               "height": 17,
-                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_47",
+                              "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor4_tag",
                               "children": [
                                 {
                                   "type": "label",
-                                  "name": "CharacterDs3TabBloodline_span_48",
+                                  "name": "CharacterDs3TabBloodline_span_35",
                                   "widget": {
                                     "left": 5,
                                     "top": 1
                                   },
                                   "text": "未覺醒",
-                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_48",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_35",
                                   "width": 29,
                                   "height": 15
                                 }
@@ -1519,11 +1519,11 @@
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_div_81",
+                          "name": "BloodlineFactor4_desc",
                           "width": 100,
                           "height": 15,
                           "text": "母：燕氏",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_81"
+                          "styleSlot": "auto.character-ds3-tab-bloodline.bloodlinefactor4_desc"
                         }
                       ]
                     }
@@ -1533,7 +1533,7 @@
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabBloodline_div_82_margin",
+              "name": "CharacterDs3TabBloodline_div_61_margin",
               "width": 520,
               "height": 36,
               "layout": {
@@ -1544,7 +1544,7 @@
               "children": [
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabBloodline_div_82",
+                  "name": "CharacterDs3TabBloodline_div_61",
                   "width": 520,
                   "height": 26,
                   "layout": {
@@ -1556,26 +1556,26 @@
                   "children": [
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_83",
+                      "name": "CharacterDs3TabBloodline_div_62",
                       "width": 4,
                       "height": 16,
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_83"
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_62"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabBloodline_span_49",
+                      "name": "CharacterDs3TabBloodline_span_36",
                       "width": 218,
                       "height": 26,
                       "text": "出生爆發力 · 覺醒進度",
-                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_49"
+                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_36"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabBloodline_span_50",
+                      "name": "CharacterDs3TabBloodline_span_37",
                       "width": 101,
                       "height": 14,
                       "text": "EP · AWAKENING",
-                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_50"
+                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_37"
                     }
                   ]
                 }
@@ -1583,7 +1583,7 @@
             },
             {
               "type": "panel",
-              "name": "CharacterDs3TabBloodline_div_84",
+              "name": "CharacterDs3TabBloodline_div_63",
               "width": 520,
               "height": 148,
               "layout": {
@@ -1595,11 +1595,11 @@
                 "paddingLeft": 16,
                 "spacingY": 12
               },
-              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_84",
+              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_63",
               "children": [
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabBloodline_div_85",
+                  "name": "CharacterDs3TabBloodline_div_64",
                   "width": 486,
                   "height": 72,
                   "layout": {
@@ -1611,7 +1611,7 @@
                   "children": [
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabBloodline_div_86",
+                      "name": "CharacterDs3TabBloodline_div_65",
                       "width": 63,
                       "height": 69,
                       "layout": {
@@ -1623,25 +1623,25 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_51",
+                          "name": "BloodlineEp",
                           "width": 63,
                           "height": 52,
                           "text": "82",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_51"
+                          "styleSlot": "auto.character-ds3-tab-bloodline.bloodlineep"
                         },
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_52",
+                          "name": "CharacterDs3TabBloodline_span_38",
                           "width": 56,
                           "height": 15,
                           "text": "爆發力 EP",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_52"
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_38"
                         }
                       ]
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabBloodline_div_87",
+                      "name": "CharacterDs3TabBloodline_div_66",
                       "width": 407,
                       "height": 72,
                       "layout": {
@@ -1652,15 +1652,15 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_div_88",
+                          "name": "BloodlineEpLabel",
                           "width": 407,
                           "height": 24,
                           "text": "良才美質",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_88"
+                          "styleSlot": "auto.character-ds3-tab-bloodline.bloodlineeplabel"
                         },
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_89",
+                          "name": "CharacterDs3TabBloodline_div_67",
                           "width": 407,
                           "height": 17,
                           "layout": {
@@ -1672,45 +1672,45 @@
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_53",
+                              "name": "CharacterDs3TabBloodline_span_39",
                               "width": 56,
                               "height": 15,
                               "text": "出生爆發",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_53"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_39"
                             },
                             {
                               "type": "panel",
-                              "name": "CharacterDs3TabBloodline_div_90",
+                              "name": "BloodlineEpTrack",
                               "width": 310,
                               "height": 8,
                               "layout": {
                                 "type": "vertical",
                                 "alignItems": "start"
                               },
-                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_90",
+                              "skinSlot": "auto.character-ds3-tab-bloodline.bloodlineeptrack",
                               "children": [
                                 {
                                   "type": "panel",
-                                  "name": "CharacterDs3TabBloodline_div_91",
+                                  "name": "BloodlineEpFill",
                                   "width": 253,
                                   "height": 6,
-                                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_91"
+                                  "skinSlot": "auto.character-ds3-tab-bloodline.bloodlineepfill"
                                 }
                               ]
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_54",
+                              "name": "BloodlineEpPct",
                               "width": 25,
                               "height": 17,
                               "text": "82%",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_54"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.bloodlineeppct"
                             }
                           ]
                         },
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_92",
+                          "name": "CharacterDs3TabBloodline_div_68",
                           "width": 407,
                           "height": 17,
                           "layout": {
@@ -1722,39 +1722,39 @@
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_55",
+                              "name": "CharacterDs3TabBloodline_span_40",
                               "width": 56,
                               "height": 15,
                               "text": "覺醒進度",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_55"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_40"
                             },
                             {
                               "type": "panel",
-                              "name": "CharacterDs3TabBloodline_div_93",
+                              "name": "BloodlineAwakeTrack",
                               "width": 310,
                               "height": 8,
                               "layout": {
                                 "type": "vertical",
                                 "alignItems": "start"
                               },
-                              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_93",
+                              "skinSlot": "auto.character-ds3-tab-bloodline.bloodlineawaketrack",
                               "children": [
                                 {
                                   "type": "panel",
-                                  "name": "CharacterDs3TabBloodline_div_94",
+                                  "name": "BloodlineAwakeFill",
                                   "width": 180,
                                   "height": 8,
-                                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_94"
+                                  "skinSlot": "auto.character-ds3-tab-bloodline.bloodlineawakefill"
                                 }
                               ]
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_56",
+                              "name": "BloodlineAwakePct",
                               "width": 25,
                               "height": 17,
                               "text": "58%",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_56"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.bloodlineawakepct"
                             }
                           ]
                         }
@@ -1764,7 +1764,7 @@
                 },
                 {
                   "type": "panel",
-                  "name": "CharacterDs3TabBloodline_div_95",
+                  "name": "CharacterDs3TabBloodline_div_69",
                   "width": 486,
                   "height": 34,
                   "layout": {
@@ -1776,23 +1776,23 @@
                     "paddingBottom": 8,
                     "paddingLeft": 10
                   },
-                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_95",
+                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_69",
                   "children": [
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabBloodline_span_57",
+                      "name": "BloodlineFather",
                       "width": 48,
                       "height": 18,
                       "text": "父：張角",
-                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_57"
+                      "styleSlot": "auto.character-ds3-tab-bloodline.bloodlinefather"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabBloodline_span_58",
+                      "name": "BloodlineMother",
                       "width": 48,
                       "height": 18,
                       "text": "母：燕姬",
-                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_58"
+                      "styleSlot": "auto.character-ds3-tab-bloodline.bloodlinemother"
                     }
                   ]
                 }
@@ -1800,7 +1800,7 @@
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabBloodline_div_96_margin",
+              "name": "BloodlineSpirit_title_margin",
               "width": 520,
               "height": 36,
               "layout": {
@@ -1811,7 +1811,7 @@
               "children": [
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabBloodline_div_96",
+                  "name": "BloodlineSpirit_title",
                   "width": 520,
                   "height": 26,
                   "layout": {
@@ -1823,26 +1823,26 @@
                   "children": [
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_97",
+                      "name": "CharacterDs3TabBloodline_div_70",
                       "width": 4,
                       "height": 16,
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_97"
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_70"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabBloodline_span_59",
+                      "name": "CharacterDs3TabBloodline_span_41",
                       "width": 108,
                       "height": 26,
                       "text": "英靈卡操作",
-                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_59"
+                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_41"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabBloodline_span_60",
+                      "name": "CharacterDs3TabBloodline_span_42",
                       "width": 115,
                       "height": 14,
                       "text": "SPIRIT CARD SLOT",
-                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_60"
+                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_42"
                     }
                   ]
                 }
@@ -1850,7 +1850,7 @@
             },
             {
               "type": "panel",
-              "name": "CharacterDs3TabBloodline_div_98",
+              "name": "BloodlineSpirit_card",
               "width": 520,
               "height": 213,
               "layout": {
@@ -1862,11 +1862,11 @@
                 "paddingLeft": 14,
                 "spacingY": 12
               },
-              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_98",
+              "skinSlot": "auto.character-ds3-tab-bloodline.bloodlinespirit_card",
               "children": [
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabBloodline_div_99",
+                  "name": "CharacterDs3TabBloodline_div_71",
                   "width": 490,
                   "height": 22,
                   "layout": {
@@ -1878,28 +1878,28 @@
                   "children": [
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabBloodline_span_61",
+                      "name": "CharacterDs3TabBloodline_span_43",
                       "width": 29,
                       "height": 19,
                       "text": "命槽",
-                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_61"
+                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_43"
                     },
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_span_62",
+                      "name": "CharacterDs3TabBloodline_span_44",
                       "width": 44,
                       "height": 22,
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_62",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_44",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_63",
+                          "name": "CharacterDs3TabBloodline_span_45",
                           "widget": {
                             "left": 10,
                             "top": 2
                           },
                           "text": "主卡",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_63",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_45",
                           "width": 24,
                           "height": 18
                         }
@@ -1907,20 +1907,20 @@
                     },
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_span_64",
+                      "name": "CharacterDs3TabBloodline_span_46",
                       "width": 57,
                       "height": 21,
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_64",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_46",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_65",
+                          "name": "CharacterDs3TabBloodline_span_47",
                           "widget": {
                             "left": 10,
                             "top": 2
                           },
                           "text": "FAMILY",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_65",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_47",
                           "width": 37,
                           "height": 17
                         }
@@ -1930,7 +1930,7 @@
                 },
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabBloodline_div_100",
+                  "name": "CharacterDs3TabBloodline_div_72",
                   "width": 490,
                   "height": 108,
                   "layout": {
@@ -1942,20 +1942,20 @@
                   "children": [
                     {
                       "type": "panel",
-                      "name": "CharacterDs3TabBloodline_div_101",
+                      "name": "CharacterDs3TabBloodline_div_73",
                       "width": 56,
                       "height": 56,
                       "layout": {
                         "type": "grid",
                         "cellHeight": 56
                       },
-                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_101",
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_73",
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_66",
+                          "name": "CharacterDs3TabBloodline_span_48",
                           "text": "關",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_66",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_48",
                           "width": 56,
                           "height": 56
                         }
@@ -1963,7 +1963,7 @@
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabBloodline_div_102",
+                      "name": "CharacterDs3TabBloodline_div_74",
                       "width": 420,
                       "height": 108,
                       "layout": {
@@ -1974,15 +1974,15 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_div_103",
+                          "name": "CharacterDs3TabBloodline_div_75",
                           "width": 420,
                           "height": 25,
                           "text": "武聖·關羽英靈",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_103"
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_75"
                         },
                         {
                           "type": "container",
-                          "name": "CharacterDs3TabBloodline_div_104",
+                          "name": "CharacterDs3TabBloodline_div_76",
                           "width": 420,
                           "height": 16,
                           "layout": {
@@ -1993,46 +1993,46 @@
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_67",
+                              "name": "CharacterDs3TabBloodline_span_49",
                               "width": 55,
                               "height": 16,
                               "text": "來源：關羽",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_67"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_49"
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_68",
+                              "name": "CharacterDs3TabBloodline_span_50",
                               "width": 47,
                               "height": 16,
                               "text": "世家·關氏",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_68"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_50"
                             },
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_69",
+                              "name": "CharacterDs3TabBloodline_span_51",
                               "width": 48,
                               "height": 16,
                               "text": "世家分 88",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_69"
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_51"
                             }
                           ]
                         },
                         {
                           "type": "panel",
-                          "name": "CharacterDs3TabBloodline_div_105",
+                          "name": "CharacterDs3TabBloodline_div_77",
                           "width": 420,
                           "height": 54,
-                          "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_105",
+                          "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_77",
                           "children": [
                             {
                               "type": "label",
-                              "name": "CharacterDs3TabBloodline_span_70",
+                              "name": "CharacterDs3TabBloodline_span_52",
                               "widget": {
                                 "left": 10,
                                 "top": 8
                               },
                               "text": "關羽英靈入命後，命紋共鳴方向向義氣傾斜，戰法「忠義」自動加成 +12%。此英靈已記錄三場以上的關鍵戰役，死亡快照完整。",
-                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_70",
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_52",
                               "width": 400,
                               "height": 38
                             }
@@ -2044,7 +2044,7 @@
                 },
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabBloodline_div_106",
+                  "name": "CharacterDs3TabBloodline_div_78",
                   "width": 490,
                   "height": 31,
                   "layout": {
@@ -2062,9 +2062,9 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_71",
+                          "name": "CharacterDs3TabBloodline_span_53",
                           "text": "插入英靈卡",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_71",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_53",
                           "width": 67,
                           "height": 31
                         }
@@ -2079,9 +2079,9 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_72",
+                          "name": "CharacterDs3TabBloodline_span_54",
                           "text": "更換英靈卡",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_72",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_54",
                           "width": 67,
                           "height": 31
                         }
@@ -2096,9 +2096,9 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_73",
+                          "name": "CharacterDs3TabBloodline_span_55",
                           "text": "卸下英靈卡",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_73",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_55",
                           "width": 67,
                           "height": 31
                         }
@@ -2113,9 +2113,9 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_74",
+                          "name": "CharacterDs3TabBloodline_span_56",
                           "text": "設為主卡",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_74",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_56",
                           "width": 54,
                           "height": 31
                         }
@@ -2130,9 +2130,9 @@
                       "children": [
                         {
                           "type": "label",
-                          "name": "CharacterDs3TabBloodline_span_75",
+                          "name": "CharacterDs3TabBloodline_span_57",
                           "text": "查看詳情",
-                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_75",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_57",
                           "width": 54,
                           "height": 31
                         }
@@ -2144,14 +2144,14 @@
             },
             {
               "type": "panel",
-              "name": "CharacterDs3TabBloodline_div_107",
+              "name": "BloodlineExpand",
               "width": 520,
               "height": 41,
               "layout": {
                 "type": "vertical",
                 "alignItems": "start"
               },
-              "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_107",
+              "skinSlot": "auto.character-ds3-tab-bloodline.bloodlineexpand",
               "children": [
                 {
                   "type": "button",
@@ -2171,19 +2171,19 @@
                   "children": [
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabBloodline_span_76",
+                      "name": "CharacterDs3TabBloodline_span_58",
                       "width": 125,
                       "height": 19,
                       "text": "展開詳細血脈資訊",
-                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_76"
+                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_58"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabBloodline_span_77",
+                      "name": "CharacterDs3TabBloodline_span_59",
                       "width": 14,
                       "height": 16,
                       "text": "▼",
-                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_77"
+                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_59"
                     }
                   ]
                 }

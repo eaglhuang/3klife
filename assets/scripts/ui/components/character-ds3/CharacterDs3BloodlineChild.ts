@@ -5,6 +5,8 @@
 import { placeDs3BarFill } from './Ds3BarFill';
 import { UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
+import { ds3Label, ds3Node, ds3Reflow, ds3SetActive } from './Ds3NodeLookup';
+import { BEAST_ARCHETYPE_LABELS, beastForGeneral } from '../../../core/systems/BloodlineBeast';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import type { GeneralConfig } from '../../../core/models/GeneralUnit';
 import { epRatingLabel } from '../../../core/systems/BreedingSystem';
@@ -23,6 +25,13 @@ export interface Ds3BloodlineView {
     bloodlineName: string;
     awakeningProgress: number;
     factors: Ds3FactorRow[];
+    serial: string;
+    stateText: string;
+    ultimateName: string;
+    ultimateDesc: string;
+    father: string;
+    mother: string;
+    beast: { glyph: string; name: string; type: string; tags: string[]; hint: string };
 }
 
 interface GeneLike {
@@ -34,15 +43,12 @@ interface GeneLike {
     discoveryLevel?: number;
 }
 
-const P = 'CharacterDs3TabBloodline_';
 const EP_MAX = 100;
-
-const FACTOR_SLOTS = [
-    { row: `${P}div_21`, icon: `${P}div_22`, name: `${P}span_7`, tag: `${P}span_8`, desc: `${P}div_25` },
-    { row: `${P}div_26`, icon: `${P}div_27`, name: `${P}span_9`, tag: `${P}span_10`, desc: `${P}div_30` },
-    { row: `${P}div_31`, icon: `${P}div_32`, name: `${P}span_11`, tag: `${P}span_12`, desc: `${P}div_35` },
-    { row: `${P}div_36`, icon: `${P}div_37`, name: `${P}span_13`, tag: `${P}span_14`, desc: `${P}div_40` },
-];
+const FACTOR_SLOT_COUNT = 4;
+const BEAST_TAG_SLOT_COUNT = 3;
+const CREST_STATE_TEXT: Record<string, string> = { revealed: '命紋已顯', hidden: '命紋未顯' };
+/** 覺醒軌道、英靈卡與展開按鈕目前只有設計稿範例，資料接好前不顯示 */
+const BLOODLINE_DEMO_NODES = ['BloodlineTrack', 'BloodlineUltimateCond', 'BloodlineSpirit_title', 'BloodlineSpirit_card', 'BloodlineExpand'];
 
 const FACTOR_ICON: Record<string, string> = { 戰鬥: '⚔', 體魄: '🛡', 特質: '🛡', 戰法: '📖' };
 const LOCKED_ICON = '✨';
@@ -56,7 +62,7 @@ export function buildDs3BloodlineView(cfg: GeneralConfig): Ds3BloodlineView {
     const ep = Number.isFinite(cfg.ep) ? Number(cfg.ep) : 0;
     const cards = buildGeneralDetailOverview(cfg).cards;
     const genes = (Array.isArray(cfg.genes) ? cfg.genes : []) as GeneLike[];
-    const factors = genes.slice(0, FACTOR_SLOTS.length).map((g) => {
+    const factors = genes.slice(0, FACTOR_SLOT_COUNT).map((g) => {
         const name = g.displayName ?? '';
         if (g.isLocked) {
             const lv = g.discoveryLevel;
@@ -65,12 +71,27 @@ export function buildDs3BloodlineView(cfg: GeneralConfig): Ds3BloodlineView {
         const type = g.type ?? '';
         return { icon: FACTOR_ICON[type] ?? LOCKED_ICON, name, tag: `${type}★${g.level ?? 0}`, desc: g.description ?? '' };
     });
+    const beast = beastForGeneral(cfg.id);
+    const parents = (cfg.parentsSummary ?? '').split('/').map((part) => part.trim()).filter((part) => part.length > 0);
     return {
         ep,
         epLabel: epRatingLabel(ep),
         bloodlineName: cards.bloodlineName,
         awakeningProgress: clampPercent(cards.awakeningProgress),
         factors,
+        serial: cfg.bloodlineId ?? '—',
+        stateText: CREST_STATE_TEXT[String((cfg as { crestState?: string }).crestState)] ?? '—',
+        ultimateName: (cfg as { awakeningTitle?: string }).awakeningTitle ?? '—',
+        ultimateDesc: (cfg as { crestHint?: string }).crestHint ?? '',
+        father: parents[0] ?? '父：—',
+        mother: parents[1] ?? '母：—',
+        beast: {
+            glyph: [...beast.name][0] ?? '',
+            name: beast.name,
+            type: `原型 · ${BEAST_ARCHETYPE_LABELS[beast.archetype]}`,
+            tags: beast.personaTags.slice(0, BEAST_TAG_SLOT_COUNT),
+            hint: beast.awakeningHint,
+        },
     };
 }
 
@@ -88,22 +109,41 @@ export class CharacterDs3BloodlineChild extends ChildPanelBase {
         }
         const view = buildDs3BloodlineView(data as GeneralConfig);
 
-        this._setText(`${P}span_1`, String(view.ep));
-        this._setText(`${P}div_9`, view.epLabel);
-        this._setFill(`${P}div_10`, `${P}div_11`, clampPercent(view.ep / EP_MAX * 100));
-        this._setText(`${P}div_15`, view.bloodlineName);
-        this._setText(`${P}span_4`, `${Math.round(view.awakeningProgress)}%`);
-        this._setFill(`${P}div_17`, `${P}div_18`, view.awakeningProgress);
+        BLOODLINE_DEMO_NODES.forEach((name) => this._setActive(name, false));
+        this._setText('BloodlineFamily', view.bloodlineName);
+        this._setText('BloodlineSerial', view.serial);
+        this._setText('BloodlineState', view.stateText);
+        this._setText('BeastGlyph', view.beast.glyph);
+        this._setText('BeastName', view.beast.name);
+        this._setText('BeastType', view.beast.type);
+        for (let i = 0; i < BEAST_TAG_SLOT_COUNT; i += 1) {
+            this._setActive(`BeastTag_${i}`, i < view.beast.tags.length);
+            this._setText(`BeastTag_${i}`, view.beast.tags[i] ?? '');
+        }
+        this._setText('BeastHint', view.beast.hint);
+        this._setText('BloodlineUltimateName', view.ultimateName);
+        this._setText('BloodlineUltimateDesc', view.ultimateDesc);
 
-        FACTOR_SLOTS.forEach((slot, i) => {
-            const row = view.factors[i];
-            this._setActive(slot.row, !!row);
-            if (!row) return;
-            this._setText(slot.icon, row.icon);
-            this._setText(slot.name, row.name);
-            this._setText(slot.tag, row.tag);
-            this._setText(slot.desc, row.desc);
-        });
+        this._setText('BloodlineEp', String(view.ep));
+        this._setText('BloodlineEpLabel', view.epLabel);
+        const epPercent = clampPercent(view.ep / EP_MAX * 100);
+        this._setText('BloodlineEpPct', `${Math.round(epPercent)}%`);
+        this._setFill('BloodlineEpTrack', 'BloodlineEpFill', epPercent);
+        this._setText('BloodlineAwakePct', `${Math.round(view.awakeningProgress)}%`);
+        this._setFill('BloodlineAwakeTrack', 'BloodlineAwakeFill', view.awakeningProgress);
+        this._setText('BloodlineFather', view.father);
+        this._setText('BloodlineMother', view.mother);
+
+        for (let i = 1; i <= FACTOR_SLOT_COUNT; i += 1) {
+            const row = view.factors[i - 1];
+            this._setActive(`BloodlineFactor${i}_row`, !!row);
+            if (!row) continue;
+            this._setText(`BloodlineFactor${i}_icon`, row.icon);
+            this._setText(`BloodlineFactor${i}_name`, row.name);
+            this._setText(`BloodlineFactor${i}_tag`, row.tag);
+            this._setText(`BloodlineFactor${i}_desc`, row.desc);
+        }
+        ds3Reflow(this.hostNode);
     }
 
     public override validateDataFormat(data: unknown): string | null {
@@ -116,19 +156,18 @@ export class CharacterDs3BloodlineChild extends ChildPanelBase {
     public override onUnmount(): void { /* no-op */ }
 
     private _setText(nodeName: string, text: string): void {
-        const label = this.binder.getLabel(nodeName);
+        const label = ds3Label(this.binder, this.hostNode, nodeName);
         if (label) label.string = text;
     }
 
     private _setActive(nodeName: string, active: boolean): void {
-        const node = this.binder.getNode(nodeName);
-        if (node) node.active = active;
+        ds3SetActive(this.binder, this.hostNode, nodeName, active);
     }
 
     /** 進度條：填色寬度＝軌道寬度 × 百分比，由左往右長 */
     private _setFill(trackName: string, fillName: string, percent: number): void {
-        const track = this.binder.getNode(trackName)?.getComponent(UITransform);
-        const fillNode = this.binder.getNode(fillName);
+        const track = ds3Node(this.binder, this.hostNode, trackName)?.getComponent(UITransform);
+        const fillNode = ds3Node(this.binder, this.hostNode, fillName);
         const fill = fillNode?.getComponent(UITransform);
         if (!track || !fillNode || !fill) return;
         const placement = placeDs3BarFill(track.width, track.anchorX, fill.anchorX, percent / 100);

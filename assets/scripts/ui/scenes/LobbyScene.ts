@@ -63,7 +63,6 @@ import { GeneralVersionGalleryController } from '../core/GeneralVersionGalleryCo
 import type { GeneralVersionRecord } from '../../core/models/GeneralVersion';
 import { GALLERY_GROUP_SLOTS } from '../../core/systems/GeneralVersionGallery';
 import { galleryInputsFromGenerals } from '../../core/systems/ProvisionalGeneralVersions';
-import { beastForGeneral, formatBeastSummary } from '../../core/systems/BloodlineBeast';
 import { buildFactorHexView, factorHexInputsFromGenes, newlyLitFactorColors, type FactorHexInput } from '../../core/systems/FactorHexPanel';
 import { FactorHexGraphic } from '../components/FactorHexGraphic';
 import type { MentorCardData, MentorCardTab } from '../../core/systems/MentorCardTabs';
@@ -178,8 +177,6 @@ import type { TabKey } from '../components/character-ds3/GeneralDetailChromePres
 const { ccclass } = _decorator;
 
 /** 命紋靈獸摘要的暫定位置（PROVISIONAL：畫面沒有預留節點，程式掛在 CharacterDs3Host 下，待 Codex 實機微調） */
-const BEAST_SUMMARY_NODE_NAME = 'BeastSummaryLabel';
-const BEAST_SUMMARY_POSITION = { x: -240, y: -280 };
 /** 六角圖暫定位置與半徑：畫面沒有預留節點，由程式掛在 CharacterDs3Host 下（PROVISIONAL，座標待 Codex 實機微調） */
 const FACTOR_HEX_NODE_NAME = 'FactorHexGraphic';
 const FACTOR_HEX_RADIUS = 120;
@@ -187,7 +184,7 @@ const FACTOR_HEX_POSITION = { x: -240, y: -160 };
 
 /** 圖鑑入口的暫定位置（PROVISIONAL：畫面沒有預留節點，程式掛在 CharacterDs3Host 下，待 Codex 實機微調） */
 const GALLERY_ENTRY_NODE_NAME = 'GeneralVersionGalleryEntry';
-const GALLERY_ENTRY_POSITION = { x: 240, y: -280 };
+const GALLERY_ENTRY_POSITION = { x: 540, y: 462 };
 
 type GeneralDetailRuntimeTab = 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitude';
 type GeneralDetailEntrySmokeSource = 'ucuf-nav';
@@ -4013,11 +4010,11 @@ export class LobbyScene extends Component {
     }
 
     private _syncCharacterDs3PreviewTabVisualState(): void {
-        // 命紋靈獸摘要、因子六角圖、版本圖鑑入口是程式掛在 host 上的暫定節點，放在總覽會壓到立繪與右欄；
+        // 因子六角圖、版本圖鑑入口是程式掛在 host 上的暫定節點，放在總覽會壓到立繪與右欄；
         // 只在血脈分頁顯示（PROG-2-1625）
         const hostNode = this._characterDs3Surface()?.node;
         const onBloodline = this._characterDs3ActiveTab === 'Bloodline';
-        for (const name of [BEAST_SUMMARY_NODE_NAME, FACTOR_HEX_NODE_NAME, GALLERY_ENTRY_NODE_NAME]) {
+        for (const name of [FACTOR_HEX_NODE_NAME, GALLERY_ENTRY_NODE_NAME]) {
             const extra = hostNode?.getChildByName(name);
             if (extra) extra.active = onBloodline;
         }
@@ -4765,7 +4762,6 @@ export class LobbyScene extends Component {
         this._soulInjectArmedDeadUid = null;
         this._setBloodlineVignetteOpen(false);
         await this._detailPanel?.show(config);
-        this._refreshBeastSummary(config);
         this._refreshGalleryEntry();
         this._refreshFactorHex(config);
         this._syncCharacterDs3PreviewTabVisualState();
@@ -4822,7 +4818,6 @@ export class LobbyScene extends Component {
             );
         }
 
-        this._refreshBeastSummary(config);
         this._refreshGalleryEntry();
         this._refreshFactorHex(config);
 
@@ -4863,7 +4858,6 @@ export class LobbyScene extends Component {
         if (!next || next.id === this._characterDs3General?.id) return;
         this._characterDs3General = next;
         this._setBloodlineVignetteOpen(false);
-        this._refreshBeastSummary(next);
         this._refreshGalleryEntry();
         this._refreshFactorHex(next);
         UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] CharacterDs3 general cycled', {
@@ -4871,25 +4865,6 @@ export class LobbyScene extends Component {
             generalId: next.id,
             generalName: next.name,
         });
-    }
-
-    private _refreshBeastSummary(config: GeneralConfig): void {
-        const hostNode = this._characterDs3Surface()?.node;
-        if (!hostNode) {
-            return;
-        }
-        let labelNode = hostNode.getChildByName(BEAST_SUMMARY_NODE_NAME);
-        if (!labelNode) {
-            labelNode = new Node(BEAST_SUMMARY_NODE_NAME);
-            labelNode.layer = hostNode.layer;
-            labelNode.parent = hostNode;
-            labelNode.setPosition(BEAST_SUMMARY_POSITION.x, BEAST_SUMMARY_POSITION.y, 0);
-            labelNode.addComponent(UITransform);
-        }
-        const label = labelNode.getComponent(Label) ?? labelNode.addComponent(Label);
-        label.fontSize = 20;
-        label.lineHeight = 26;
-        label.string = formatBeastSummary(beastForGeneral(config.id));
     }
 
     /**

@@ -14,8 +14,8 @@
       "CharacterDs3Main_div_54": "fragments/layouts/character-ds3-story-strip-open"
     }
   },
-  "runtimeVersion": "chads3-20261105-002",
-  "runtimeVersionUpdatedAt": "2026-11-04T16:56:14.848Z",
+  "runtimeVersion": "chads3-20261105-001",
+  "runtimeVersionUpdatedAt": "2026-11-04T17:32:23.026Z",
   "tabRouting": {
     "Overview": {
       "slotId": "ContentSlot",
