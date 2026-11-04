@@ -148,6 +148,32 @@ export const OFFLINE_BATTLE_JOURNAL = {
     lose: { priority: 65, summary: '邊境來犯，我軍自動迎戰失利。' },
 } as const;
 
+/** §G 離線支援劇本句的查表 key（zh-TW.json 已有），{0} 換成主將名（PROG-2-1741） */
+export const OFFLINE_SUPPORT_KEY = 'UI_JOURNAL_STORY_OFFLINE_SUPPORT';
+
+export interface OfflineBattleJournal {
+    priority: number;
+    summary: string;
+    summaryKey?: string;
+    summaryArgs?: string[];
+}
+
+/**
+ * 敵襲自動迎戰的日誌句：告捷且有主將時用 §G「{GeneralName} 代你鎮住局面，留下了一份戰況摘要。」，
+ * 重要度沿用告捷值；失利或沒有主將時維持原句。
+ */
+export function offlineRaidJournal(win: boolean, leadName?: string | null): OfflineBattleJournal {
+    const base = win ? OFFLINE_BATTLE_JOURNAL.win : OFFLINE_BATTLE_JOURNAL.lose;
+    const name = leadName?.trim();
+    if (!win || !name) return { priority: base.priority, summary: base.summary };
+    return {
+        priority: base.priority,
+        summary: `${name} 代你鎮住局面，留下了一份戰況摘要。`,
+        summaryKey: OFFLINE_SUPPORT_KEY,
+        summaryArgs: [name],
+    };
+}
+
 /** 暫定：外交出征結算寫日誌的重要度與摘要，{Nation} 換成勢力名（PROG-2-1189） */
 export const CAMPAIGN_BATTLE_JOURNAL = {
     win: { priority: 70, summary: '我軍出征{Nation}告捷。' },
