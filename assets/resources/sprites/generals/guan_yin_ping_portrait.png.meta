@@ -1,0 +1,50 @@
+{
+  "ver": "1.0.8",
+  "importer": "image",
+  "imported": true,
+  "uuid": "ed2c5eef-bd8d-4057-8310-2322238568ee",
+  "displayName": "",
+  "id": "",
+  "name": "guan_yin_ping_portrait",
+  "userData": {
+    "type": "sprite-frame"
+  },
+  "readonly": false,
+  "subMetas": {
+    "f9941": {
+      "ver": "2.0.3",
+      "importer": "sprite-frame",
+      "imported": true,
+      "uuid": "1b75550e-24de-4ccf-bfac-fdbb84d32b5c",
+      "displayName": "",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "pixelsPerUnit": 100,
+        "extrude": 1,
+        "meshType": 0,
+        "pivot": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "originalSize": {
+          "width": 512,
+          "height": 768
+        },
+        "trimSize": {
+          "width": 512,
+          "height": 768
+        },
+        "trimOffset": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "readonly": false
+    }
+  }
+}
