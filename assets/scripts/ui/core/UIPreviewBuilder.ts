@@ -185,6 +185,13 @@ export class UIPreviewBuilder extends Component {
      * Unity 對照：Selectable.spriteState + Toggle.isOn 判斷視覺狀態
      */
     protected setButtonVisualState(node: Node, state: ButtonVisualState): boolean {
+        const proceduralStates = (node as any)._proceduralButtonStates as Partial<Record<ButtonVisualState, string>> | undefined;
+        if (proceduralStates) {
+            const slotId = proceduralStates[state] ?? proceduralStates.normal;
+            if (!slotId) return false;
+            void this.styleBuilder.applyBackgroundSkin(node, slotId);
+            return true;
+        }
         const sprite   = node.getComponent(Sprite);
         const stateMap = (node as any)._buttonSkinStateMap as Record<ButtonVisualState, ResolvedButtonSkin['normal']> | undefined;
         if (!sprite || !stateMap) return false;

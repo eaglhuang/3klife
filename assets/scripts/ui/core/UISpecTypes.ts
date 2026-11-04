@@ -436,6 +436,8 @@ export interface SkinGradientRectSlot {
     borderColor?: string;
     borderWidth?: number;
     cornerRadius?: number;
+    /** 程序繪製按鈕的狀態：各狀態指向同 skin 內另一個 slot */
+    visualStates?: { normal: string; selected: string };
 }
 
 export interface SkinShadowDef {

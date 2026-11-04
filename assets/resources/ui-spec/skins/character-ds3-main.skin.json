@@ -704,6 +704,10 @@
         "hover": "#9c9c9c",
         "pressed": "#747474",
         "disabled": "#555555"
+      },
+      "visualStates": {
+        "normal": "auto.character-ds3-main.characterds3main_button_5",
+        "selected": "auto.character-ds3-main.characterds3main_button_4"
       }
     },
     "auto.character-ds3-main.characterds3main_span_7": {
@@ -782,6 +786,10 @@
         "hover": "#9c9c9c",
         "pressed": "#747474",
         "disabled": "#555555"
+      },
+      "visualStates": {
+        "normal": "auto.character-ds3-main.characterds3main_button_5",
+        "selected": "auto.character-ds3-main.characterds3main_button_4"
       }
     },
     "auto.character-ds3-main.characterds3main_span_9": {
@@ -860,6 +868,10 @@
         "hover": "#9c9c9c",
         "pressed": "#747474",
         "disabled": "#555555"
+      },
+      "visualStates": {
+        "normal": "auto.character-ds3-main.characterds3main_button_5",
+        "selected": "auto.character-ds3-main.characterds3main_button_4"
       }
     },
     "auto.character-ds3-main.characterds3main_span_11": {
@@ -938,6 +950,10 @@
         "hover": "#9c9c9c",
         "pressed": "#747474",
         "disabled": "#555555"
+      },
+      "visualStates": {
+        "normal": "auto.character-ds3-main.characterds3main_button_5",
+        "selected": "auto.character-ds3-main.characterds3main_button_4"
       }
     },
     "auto.character-ds3-main.characterds3main_span_13": {
@@ -1016,6 +1032,10 @@
         "hover": "#9c9c9c",
         "pressed": "#747474",
         "disabled": "#555555"
+      },
+      "visualStates": {
+        "normal": "auto.character-ds3-main.characterds3main_button_5",
+        "selected": "auto.character-ds3-main.characterds3main_button_4"
       }
     },
     "auto.character-ds3-main.characterds3main_span_15": {
@@ -1094,6 +1114,10 @@
         "hover": "#9c9c9c",
         "pressed": "#747474",
         "disabled": "#555555"
+      },
+      "visualStates": {
+        "normal": "auto.character-ds3-main.characterds3main_button_5",
+        "selected": "auto.character-ds3-main.characterds3main_button_4"
       }
     },
     "auto.character-ds3-main.characterds3main_span_17": {
