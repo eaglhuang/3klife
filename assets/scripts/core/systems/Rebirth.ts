@@ -53,6 +53,23 @@ export interface RebirthPullResult {
     trainingChances: number;
 }
 
+/** 一批抽卡最多顯示幾句轉生語音（暫定，避免十連抽排隊太久） */
+export const MAX_REBIRTH_VOICE_LINES = 3;
+
+/** 轉生語音（轉蛋系統 §G，PROG-2-1776）：滿轉溢出不算轉生，同名只說一次 */
+export function rebirthVoiceLines(
+    rebirths: ReadonlyArray<{ id: string; overflow: boolean }>,
+    nameOf: (id: string) => string | undefined,
+): string[] {
+    const names = rebirths
+        .filter((entry) => !entry.overflow)
+        .map((entry) => nameOf(entry.id))
+        .filter((name): name is string => !!name);
+    return Array.from(new Set(names))
+        .slice(0, MAX_REBIRTH_VOICE_LINES)
+        .map((name) => `${name}再臨！這一世，讓我格外強大。`);
+}
+
 /** 重複抽到同名武將：未滿 5 轉則 +1，已滿則標記溢出。 */
 export function applyDuplicatePull(currentRebirthCount: number | undefined): RebirthPullResult {
     const current = normalizeRebirthCount(currentRebirthCount);

@@ -92,6 +92,7 @@ import { WAREHOUSE_EXPANSION_ITEM } from '../../core/managers/GameSession';
 const WAREHOUSE_EXPAND_GOLD_COST = 5000;
 import type { SeasonAdvancedPayload } from '../../core/managers/GameSession';
 import { bloodlineBirthLines } from '../../core/systems/BloodlineBirthLines';
+import { rebirthVoiceLines } from '../../core/systems/Rebirth';
 import { HallBoardPanelController, HALL_BOARD_MAX_ROWS } from '../core/HallBoardPanelController';
 import { HALL_BOARD_TYPE_LABEL, hallAssignNoticeOf, hallMissionDialogStateOf } from '../core/HallMissionDialogState';
 import { hallPlayerOf } from '../../core/systems/OfficerSnapshot';
@@ -3558,6 +3559,10 @@ export class LobbyScene extends Component {
             }
             if (parts.length > 0) {
                 services().event.emit('SHOW_TOAST', { message: parts.join('，'), duration: 2.2 });
+            }
+            const nameOf = (id: string) => duplicates.find((general) => general.id === id)?.name;
+            for (const message of rebirthVoiceLines(rebirths, nameOf)) {
+                services().event.emit('SHOW_TOAST', { message, duration: 3 });
             }
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 抽卡結果寫入名冊 / 存檔失敗', error);
