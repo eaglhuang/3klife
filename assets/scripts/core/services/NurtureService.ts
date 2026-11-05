@@ -118,6 +118,8 @@ export interface NurtureServiceOptions {
     factorDictionary?: FactorDictionary;
     /** 家族的郡望家風維度（G4 §F-1）；有父母紀錄的子嗣入學時帶入 */
     clanTraditionKind?: () => TrainingKind | undefined;
+    /** 世交太傅伴讀（G3 §F-2）；未提供時沒有加成 */
+    synergyTutorBonus?: (mentors: readonly TrainingMentor[]) => number;
 }
 
 export interface NurtureAwakeningHooks {
@@ -279,6 +281,7 @@ export class NurtureService {
             hybridSources: hybridSourcesFromParents(parents, this._options.factorDictionary),
             factorDictionary: this._options.factorDictionary,
             clanTraditionKind: child.fatherId || child.motherId ? this._options.clanTraditionKind?.() : undefined,
+            synergyTutorBonus: this._options.synergyTutorBonus?.(mentors) || undefined,
         });
         const used = this._state.admission.season === season ? this._state.admission.used : 0;
         this._state.admission = { season, used: used + 1 };
