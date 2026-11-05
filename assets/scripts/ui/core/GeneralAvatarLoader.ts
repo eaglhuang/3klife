@@ -5,11 +5,13 @@
  */
 import type { SpriteFrame } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
+import { BloodlineGraph } from '../../core/services/BloodlineGraph';
 import {
     GENERAL_ART_PATHS_JSON,
     avatarCandidates,
     avatarPlaceholderPath,
     configureGeneralArtPaths,
+    firstKnownGender,
     generalIdFromKey,
     portraitCandidates,
 } from '../../core/systems/GeneralArtPaths';
@@ -17,7 +19,7 @@ import {
 let _configReady: Promise<void> | null = null;
 let _genders: Promise<Map<string, string>> | null = null;
 
-/** 未知頭像要分男女，性別從輕量的 generals-index 取。 */
+/** 未知頭像要分男女：名將從輕量的 generals-index 取；後代不在索引裡，改查名冊與血統圖。 */
 function genderOf(id: string): Promise<string | undefined> {
     if (!_genders) {
         _genders = services().resource.loadJson('data/generals-index')
@@ -27,7 +29,11 @@ function genderOf(id: string): Promise<string | undefined> {
             })
             .catch(() => new Map<string, string>());
     }
-    return _genders.then((m) => m.get(id));
+    return _genders.then((m) => firstKnownGender([
+        () => m.get(id),
+        () => services().session.roster.find((general) => general.id === id)?.gender,
+        () => BloodlineGraph.getInstance().getPerson(id)?.gender,
+    ]));
 }
 
 function ensureConfig(): Promise<void> {
