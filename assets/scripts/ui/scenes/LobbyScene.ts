@@ -1294,6 +1294,7 @@ export class LobbyScene extends Component {
         this._bondingHost = await this._mountPreviewScreenHost('BondingSetupHost', 'bonding-setup-screen', [
             { buttonId: 'btnCloseBond', handler: () => { this._closeBondingSetup(); } },
             { buttonId: 'btnYuedanFilter', handler: () => { bonding.toggleYuedanFilter(); this._refreshBondingSetup(); } },
+            { buttonId: 'btnRumorRoute', handler: () => { bonding.cycleRumorRoute(); this._refreshBondingSetup(); } },
             { buttonId: 'btnPrevFather', handler: () => { bonding.cycleFather(-1); this._refreshBondingSetup(); } },
             { buttonId: 'btnNextFather', handler: () => { bonding.cycleFather(1); this._refreshBondingSetup(); } },
             { buttonId: 'btnPrevMother', handler: () => { bonding.cycleMother(-1); this._refreshBondingSetup(); toastPregnantMother(bonding); } },

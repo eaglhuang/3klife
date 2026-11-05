@@ -23,7 +23,7 @@ import { buildBreedingPreviewLines } from './BreedingPreviewPresenter';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
-import { matchRumorLine, sameSurnameNote } from '../../core/systems/MatchRumor';
+import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, RumorRoute, rumorRouteFiltered, rumorRouteName } from '../../core/systems/MatchRumor';
 import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
 import type { FactorDictionary } from '../../core/systems/FactorInheritance';
 import type { BreedingService } from '../../core/services/BreedingService';
@@ -128,6 +128,8 @@ export class BondingSetupController {
     private _notice = '';
     /** 只看月旦評榜上人物（G4 §H）；只影響清單，不寫存檔 */
     private _yuedanOnly = false;
+    /** 鄉評路線篩選（G4 §F-2 Layer 1）；只影響清單，不寫存檔 */
+    private _route: RumorRoute = null;
 
     constructor(private readonly _deps: BondingSetupDeps) {}
 
@@ -151,7 +153,7 @@ export class BondingSetupController {
 
     /** 可放進父方欄位的武將；精力不足等暫時狀態仍列出，由資格檢查說明原因 */
     fathers(): BreedingGeneral[] {
-        return this._applyYuedanFilter(this._parents().filter((g) => isMale(g)));
+        return this._applyFilters(this._parents().filter((g) => isMale(g)));
     }
 
     /** 結緣畫面：目前選中的母方待產中時回傳劇本句（PROG-2-0732，ui.vit.script.pregnancy_lock）；否則 null */
@@ -162,7 +164,7 @@ export class BondingSetupController {
     }
 
     mothers(): BreedingGeneral[] {
-        return this._applyYuedanFilter(this._parents().filter((g) => isFemale(g)));
+        return this._applyFilters(this._parents().filter((g) => isFemale(g)));
     }
 
     get fatherId(): string | null {
@@ -195,6 +197,19 @@ export class BondingSetupController {
             parents.some((g) => isFemale(g) && listed.indexOf(g.id) >= 0) ? '' : '母方',
         ].filter((side) => !!side);
         this._notice = this._yuedanOnly && missing.length > 0 ? `月旦評榜上沒有${missing.join('、')}人選，這邊仍顯示全部。` : '';
+    }
+
+    /** 切換鄉評路線；目前選的人不在清單裡時，getView 會改挑清單內的預設配對 */
+    cycleRumorRoute(): void {
+        this._route = nextRumorRoute(this._route);
+        const route = this._route;
+        const parents = this._parents();
+        const hasMatch = (side: BreedingGeneral[]): boolean => this._applyYuedanFilter(side).some((g) => matchesRumorRoute(g, route));
+        const missing = [
+            hasMatch(parents.filter((g) => isMale(g))) ? '' : '父方',
+            hasMatch(parents.filter((g) => isFemale(g))) ? '' : '母方',
+        ].filter((side) => !!side);
+        this._notice = missing.length > 0 ? `沒有${rumorRouteName(route)}路線的${missing.join('、')}人選，這邊不篩路線。` : '';
     }
 
     cycleFather(step = 1): void {
@@ -274,6 +289,7 @@ export class BondingSetupController {
         const texts: Record<string, string> = {
             bondTitle: '結緣配置',
             yuedanFilterLabel: this._yuedanOnly ? '顯示全部' : '只看月旦評',
+            rumorRouteLabel: `路線：${rumorRouteName(this._route)}`,
             bondNotice: this._notice,
             bondEmptyHint: `名冊中需要至少一位滿 ${BREEDING_MIN_AGE} 歲的男性與女性武將才能結緣。可先到轉蛋招募，或推進季度讓子嗣長大。`,
             fatherPager: pagerText(fathers, father),
@@ -287,6 +303,7 @@ export class BondingSetupController {
         const enabled: Record<string, boolean> = {
             btnCloseBond: true,
             btnYuedanFilter: this._yuedanIds().length > 0,
+            btnRumorRoute: this._parents().length > 0,
             btnPrevFather: fathers.length > 1,
             btnNextFather: fathers.length > 1,
             btnPrevMother: mothers.length > 1,
@@ -351,6 +368,10 @@ export class BondingSetupController {
 
     private _applyYuedanFilter(candidates: BreedingGeneral[]): BreedingGeneral[] {
         return this._yuedanOnly ? yuedanFiltered(candidates, this._yuedanIds()) : candidates;
+    }
+
+    private _applyFilters(candidates: BreedingGeneral[]): BreedingGeneral[] {
+        return rumorRouteFiltered(this._applyYuedanFilter(candidates), this._route);
     }
 
     private _parents(): BreedingGeneral[] {

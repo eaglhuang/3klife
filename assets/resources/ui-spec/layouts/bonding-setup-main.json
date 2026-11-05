@@ -111,6 +111,33 @@
           },
           {
             "type": "button",
+            "name": "BtnRumorRoute",
+            "id": "btnRumorRoute",
+            "widget": {
+              "top": 16,
+              "right": 326
+            },
+            "width": 170,
+            "height": 48,
+            "skinSlot": "bonding.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnRumorRouteLabel",
+                "id": "rumorRouteLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "路線：不限",
+                "styleSlot": "bonding.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
             "name": "BtnOpenOracle",
             "id": "btnOpenOracle",
             "widget": {
