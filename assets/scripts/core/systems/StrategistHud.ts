@@ -85,6 +85,16 @@ const SALVAGE_LABEL: Readonly<Record<keyof SalvageTotals, string>> = {
     instructorExp: '教官經驗',
 };
 
+/** 一次掉落的資源清單（中文名稱 + 數量），略過 0；順序同軍師 HUD 回收欄（PROG-2-1852） */
+export function salvageGainItems(gain: Partial<SalvageTotals>): { name: string; amount: number }[] {
+    const items: { name: string; amount: number }[] = [];
+    for (const key of Object.keys(SALVAGE_LABEL) as (keyof SalvageTotals)[]) {
+        const amount = gain[key] ?? 0;
+        if (amount > 0) items.push({ name: SALVAGE_LABEL[key], amount });
+    }
+    return items;
+}
+
 export function buildStrategistHudSummary(input: StrategistHudInput): StrategistHudSummary {
     return {
         themeHazard: input.hazardsThisTurn.length > 0 ? input.hazardsThisTurn.join('、') : '本回合無主題危害',

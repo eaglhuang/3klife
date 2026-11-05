@@ -13,6 +13,7 @@ import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
 import { AMBUSH_TRAP_ROOT_TURNS, AMBUSH_TRAP_TILE_NOTE, sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
 import { applyTallyDefection, applyTallyTeamMoraleAura } from '../../shared/TallyPassive';
+import type { StageSalvageGainedEvent } from '../../shared/StageSalvage';
 import { addStageSalvage, FIRE_RAID_TILE_NOTE, hazardDamageTakenOf, luckSalvageMultiplierOf, ROCK_SLIDE_TILE_NOTE, rollFirePlunderGain, rollRockBreakGain, scaleSalvageGain } from '../../shared/StageSalvage';
 
 export interface BattleTileEffectPhaseContext {
@@ -209,9 +210,15 @@ function breakRockSlideTiles(context: BattleTileEffectPhaseContext, svc: ReturnT
       if (effect?.state !== 'hazard-rock' || effect.notes !== ROCK_SLIDE_TILE_NOTE) continue;
       context.state.removeTileEffect(unit.lane, depth);
       context.state.recoveredRockSlides += 1;
-      addStageSalvage(context.state.stageSalvage, scaleSalvageGain(rollRockBreakGain(random), playerLuckMultiplier(context)));
+      gainSalvage(context, svc, { lane: unit.lane, depth, source: 'rock-slide', gain: scaleSalvageGain(rollRockBreakGain(random), playerLuckMultiplier(context)) });
     }
   }
+}
+
+/** 入帳 Stage_Salvage 並通知畫面飄金色字（戰法系統 §H-3，PROG-2-1852） */
+function gainSalvage(context: BattleTileEffectPhaseContext, svc: ReturnType<typeof services>, event: StageSalvageGainedEvent): void {
+  addStageSalvage(context.state.stageSalvage, event.gain);
+  svc.event.emit(EVENT_NAMES.StageSalvageGained, event);
 }
 
 /** 我方主將運勢的掠奪倍率（PROG-2-1606） */
@@ -229,6 +236,6 @@ function plunderFireRaidTiles(context: BattleTileEffectPhaseContext, svc: Return
     const key = `${unit.lane},${unit.depth}`;
     if (context.state.plunderedTiles.has(key)) continue;
     context.state.plunderedTiles.add(key);
-    addStageSalvage(context.state.stageSalvage, scaleSalvageGain(rollFirePlunderGain(random), playerLuckMultiplier(context)));
+    gainSalvage(context, svc, { lane: unit.lane, depth: unit.depth, source: 'fire-raid', gain: scaleSalvageGain(rollFirePlunderGain(random), playerLuckMultiplier(context)) });
   }
 }

@@ -47,6 +47,9 @@ import { BattleController } from '../controllers/BattleController';
 import type { BattleResult } from '../BattleTypes';
 import { BattleSpecialActionTracker, specialActionDisplayName, toUnitHitObservation, type UnitDamagedPayload } from '../../core/systems/BattleSpecialActions';
 import { strategistHudViewOf } from '../shared/StrategistHudView';
+import { salvageLootTexts } from '../shared/TacticVfxHooks';
+import type { StageSalvageGainedEvent } from '../shared/StageSalvage';
+import { salvageGainItems } from '../../core/systems/StrategistHud';
 import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike, IStrategistHudLike } from '../../shared/interfaces/IBattleUIComponents';
 
 import { BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
@@ -210,6 +213,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._onGeneralSkillUsed.bind(this)),
       svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._noteEnemySkillRevealed.bind(this)),
       svc.event.on(EVENT_NAMES.SelfBurstChanged,        this._onSelfBurstChanged.bind(this)),
+      svc.event.on(EVENT_NAMES.StageSalvageGained, this._onStageSalvageGained.bind(this)),
       svc.event.on(EVENT_NAMES.TeamAuraChanged,         this._onTeamAuraChanged.bind(this)),
       svc.event.on(EVENT_NAMES.TeamRecovered,           this._onTeamRecovered.bind(this)),
       svc.event.on(EVENT_NAMES.MassDebuffChanged,       this._onMassDebuffChanged.bind(this)),
@@ -367,6 +371,12 @@ export class BattleUIBridge {
     const view = strategistHudViewOf(strategistHudInputOf(state, this._loadoutGaps, services().session.intel), state.wisdomMeter);
     c.strategistHud?.setView(view);
     return view.summaryText;
+  }
+
+  /** 落石擊破／火燒掠奪入帳：在該格飄金色字（戰法系統 §H-3，PROG-2-1852） */
+  private _onStageSalvageGained(event: StageSalvageGainedEvent): void {
+    const texts = salvageLootTexts(event.source, salvageGainItems(event.gain)).map(loot => loot.text);
+    if (texts.length > 0) this.ctx.unitRenderer?.playLootTexts(event.lane, event.depth, texts);
   }
 
   private _onTurnPhaseChanged(snap: { turn: number; playerFood: number; phase?: TurnPhase }): void {

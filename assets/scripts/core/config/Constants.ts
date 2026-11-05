@@ -109,6 +109,8 @@ export const EVENT_NAMES = {
   BuffApplied:       "buff-applied",
   /** 奧義自身爆發開始／結束（SYS-SKILL-ULT-0001）：{ faction, phase, ultimateId, turns } */
   SelfBurstChanged:  "self-burst-changed",
+  /** 落石擊破／火燒掠奪入帳（戰法系統 §H-3，PROG-2-1852）：{ lane, depth, source, gain } */
+  StageSalvageGained: "stage-salvage-gained",
   /** 奧義全隊增益開始／結束（SYS-SKILL-ULT-0002）：{ faction, phase, ultimateId, turns } */
   TeamAuraChanged:   "team-aura-changed",
   /** 奧義團隊回復結算（SYS-SKILL-ULT-0003）：{ faction, ultimateId, outcomes } */
