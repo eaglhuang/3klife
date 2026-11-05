@@ -11,6 +11,7 @@
  */
 
 import { tallyLegendDeployLine } from '../../core/systems/TallyScripts';
+import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
 import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
 import { strategistHudInputOf } from '../shared/StrategistHudSource';
@@ -826,6 +827,8 @@ export class BattleUIBridge {
     this.performance.reset();
     const sortie = this.ctx.ctrl?.finishSortie(services().session.military.cityTroops, services().session.military.recruitRegen) ?? null;
     const details = sortie ? [...formatSortieSummary(sortie), formatPerformance(performance)] : [];
+    // 戰後結算視窗的關卡回收摘要（關卡設計 §I-2，PROG-2-1857）；平手照常入帳
+    details.push(...salvageSummaryLines(this.ctx.ctrl?.state.stageSalvage, result !== 'enemy-win'));
     for (const line of details) this.appendLog(line);
     const pgId = this.ctx.pg?.id;
     if (!pgId) return details;
