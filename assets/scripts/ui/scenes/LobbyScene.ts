@@ -1792,11 +1792,13 @@ export class LobbyScene extends Component {
                 const session = services().session;
                 const taken = new Set([...session.roster.map(g => g.id), ...session.mercenaries.mercenaries.map(m => m.generalId)]);
                 const pool = session.availablePoolGeneralIds(this._heroPoolIds.filter(id => !taken.has(id)));
-                const template = this._generals.find(g => g.id === pool[Math.floor(Math.random() * pool.length)]);
-                if (!template) return null;
-                const result = await session.hireTrialMercenary(`merc-${Date.now()}-${template.id}`, template);
-                return result.ok ? template.name : null;
+                return this._hireMercenaryFrom(pool);
             },
+            femalePool: () => {
+                const { ids, remainingMs } = services().session.femalePoolStatus(this._generals, Date.now());
+                return { count: ids.length, remainingMs };
+            },
+            hireFemale: () => this._hireMercenaryFrom(services().session.femalePoolStatus(this._generals, Date.now()).ids),
         });
         const rowBindings = Array.from({ length: MERC_PANEL_MAX_ROWS }, (_, i) => ({
             buttonId: `btnMercRow${i}`,
@@ -1806,9 +1808,18 @@ export class LobbyScene extends Component {
             { buttonId: 'btnClose', handler: () => { this._closeMercenaryPanel(); } },
             { buttonId: 'btnMercBond', handler: () => { void this._onClickMercenaryBond(); } },
             { buttonId: 'btnMercHire', handler: () => { void this._mercPanel?.hireTrial().then(() => this._refreshMercenaryPanel()); } },
+            { buttonId: 'btnMercHireFemale', handler: () => { void this._mercPanel?.hireFemale().then(() => this._refreshMercenaryPanel()); } },
             ...rowBindings,
         ]);
         this._mercPanelHost.node.active = false;
+    }
+
+    /** 從候選武將隨機招一位試用傭兵：成功回傳武將名，沒有候選或招募失敗回傳 null */
+    private async _hireMercenaryFrom(pool: readonly string[]): Promise<string | null> {
+        const template = this._generals.find(g => g.id === pool[Math.floor(Math.random() * pool.length)]);
+        if (!template) return null;
+        const result = await services().session.hireTrialMercenary(`merc-${Date.now()}-${template.id}`, template);
+        return result.ok ? template.name : null;
     }
 
     /** 太守府（GOV-07）：隱藏掛載，入口待 PM 指定，對外提供 openGovernorHall()。 */

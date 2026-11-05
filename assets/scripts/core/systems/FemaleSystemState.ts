@@ -13,6 +13,8 @@ import type { DaughterRecord, DaughterRoute } from './DaughterComingOfAge';
 /** 上次刷新時間（毫秒）；null 表示從未刷新，第一次一定會刷新 */
 export interface FemaleSystemState {
     poolRefreshedAtMs: number | null;
+    /** 目前這批傭兵女將的武將 id（PROG-2-1790）；後加的選填欄位，舊檔讀回為空清單 */
+    poolIds: string[];
     rescueRefreshedAtMs: number | null;
     giftAffection: Record<string, number>;
     /** 子嗣女兒清單（FEM-06）；後加的選填欄位，舊檔讀回為空清單 */
@@ -21,6 +23,7 @@ export interface FemaleSystemState {
 
 export const EMPTY_FEMALE_SYSTEM_STATE: Readonly<FemaleSystemState> = Object.freeze({
     poolRefreshedAtMs: null,
+    poolIds: Object.freeze([] as string[]) as string[],
     rescueRefreshedAtMs: null,
     giftAffection: Object.freeze({}) as Record<string, number>,
     daughters: Object.freeze([] as DaughterRecord[]) as DaughterRecord[],
@@ -41,6 +44,7 @@ export function normalizeFemaleSystemState(raw: unknown): FemaleSystemState {
     }
     return {
         poolRefreshedAtMs: timestampOrNull(source.poolRefreshedAtMs),
+        poolIds: Array.isArray(source.poolIds) ? source.poolIds.filter((id): id is string => typeof id === 'string' && id.length > 0) : [],
         rescueRefreshedAtMs: timestampOrNull(source.rescueRefreshedAtMs),
         giftAffection,
         daughters: normalizeDaughters(source.daughters),
