@@ -1207,7 +1207,7 @@
                       "top": 214,
                       "left": 27
                     },
-                    "width": 360,
+                    "width": 190,
                     "height": 48,
                     "skinSlot": "nurture.button.rest.bg",
                     "children": [
@@ -1221,7 +1221,34 @@
                           "right": 0
                         },
                         "height": 44,
-                        "text": "自動培育整季",
+                        "text": "太傅代管整季",
+                        "styleSlot": "nurture.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnDelegatePolicy",
+                    "id": "btnDelegatePolicy",
+                    "widget": {
+                      "top": 214,
+                      "left": 225
+                    },
+                    "width": 162,
+                    "height": 48,
+                    "skinSlot": "nurture.button.rest.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnDelegatePolicyLabel",
+                        "id": "delegatePolicyLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 44,
+                        "text": "方針：均衡",
                         "styleSlot": "nurture.label.button"
                       }
                     ]

@@ -73,6 +73,7 @@ import { learnTpCost } from '../../core/systems/FactorTacticLinkage';
 import { hasMatchingGreenFactor, tacticLearnThreshold, type TacticLearnBlock, type TacticLearnCheck } from '../../core/systems/TacticLearning';
 import { tacticLoadoutCapacity } from '../../core/systems/TacticLoadout';
 import { battleIntelligenceOf } from '../../core/systems/BattleRoster';
+import { DELEGATE_POLICIES, DELEGATE_POLICY_LABEL, type DelegatePolicy } from '../../core/systems/AutoNurture';
 
 
 export const STAT_LABELS: Record<string, string> = {
@@ -181,7 +182,7 @@ interface GraduationReport {
 export interface NurtureFlowDeps {
     roster: { getAll(): GeneralConfig[] };
     /** 自動培育（NUR-14）：正式環境接 GameSession.runAutoNurture；未提供時不顯示按鈕 */
-    autoNurture?: (childId: string) => Promise<AutoNurtureResult>;
+    autoNurture?: (childId: string, policy: DelegatePolicy) => Promise<AutoNurtureResult>;
     unveiling: Pick<UnveilingService, 'choose'>;
     nurture: Pick<
         NurtureService,
@@ -252,6 +253,7 @@ export function exclusiveSkillOf(general: Pick<GeneralConfig, 'ultimateSlots'> |
 export class NurtureFlowController {
     /** 家學研習目前指到第幾個候選因子 */
     private _studyIndex = 0;
+    private _delegatePolicy: DelegatePolicy = 'balanced';
     private _selectedId: string | null = null;
     private _report: GraduationReport | null = null;
     private _notice = '';
@@ -711,7 +713,9 @@ export class NurtureFlowController {
         texts.legendaryCardLabel = legendary ? `英靈：${legendary.name}` : '英靈：未選';
         enabled.btnLegendaryMentor = !!this._deps.performLegendaryMentoring && !!legendary && session.status === 'active';
         texts.legendaryMentorLabel = '傳道';
-        texts.autoNurtureLabel = '自動培育整季';
+        texts.autoNurtureLabel = '太傅代管整季';
+        enabled.btnDelegatePolicy = !!this._deps.autoNurture;
+        texts.delegatePolicyLabel = `方針：${DELEGATE_POLICY_LABEL[this._delegatePolicy]}`;
         this._applyStudyButton(child, texts, enabled);
         return { mode: 'train', childId: child.id, texts, actives, enabled };
     }
@@ -728,6 +732,10 @@ export class NurtureFlowController {
         return { title: mentor.name, card: mentorToCardData(mentor) };
     }
 
+    cycleDelegatePolicy(): void {
+        this._delegatePolicy = DELEGATE_POLICIES[(DELEGATE_POLICIES.indexOf(this._delegatePolicy) + 1) % DELEGATE_POLICIES.length];
+    }
+
     /**
      * 自動培育整季（NUR-14）：成功時寫入提示，被擋下時顯示對應原因，都不改動券數以外的狀態。
      * 扣券與寫回培育狀態由 GameSession.runAutoNurture 負責。
@@ -735,9 +743,9 @@ export class NurtureFlowController {
     async autoNurture(): Promise<void> {
         const child = this._requireSelected();
         if (!this._deps.autoNurture) return;
-        const result = await this._deps.autoNurture(child.id);
+        const result = await this._deps.autoNurture(child.id, this._delegatePolicy);
         this._notice = result.ok === true
-            ? `自動培育完成（${result.logs.length} 回合），可以畢業了`
+            ? `太傅代管完成（${DELEGATE_POLICY_LABEL[this._delegatePolicy]}，${result.logs.length} 回合），可以畢業了`
             : AUTO_BLOCK_TEXT[result.blocked] ?? '無法自動培育';
         await this._persist();
     }

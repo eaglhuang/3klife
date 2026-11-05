@@ -67,6 +67,32 @@ export function resolveAutoSchedule(
     return Array.from({ length: NURTURE_TOTAL_ROUNDS }, (_, index) => lowest[index % lowest.length]);
 }
 
+/** 太傅代管方針（G1 §E #6，PROG-2-1820）；均衡沿用「練最低屬性」 */
+export type DelegatePolicy = 'balanced' | 'martial' | 'civil' | 'strategy';
+
+export const DELEGATE_POLICIES: readonly DelegatePolicy[] = ['balanced', 'martial', 'civil', 'strategy'];
+
+export const DELEGATE_POLICY_LABEL: Record<DelegatePolicy, string> = {
+    balanced: '均衡',
+    martial: '尚武',
+    civil: '經世',
+    strategy: '奇謀',
+};
+
+/** 暫定：規格只給方針名稱，配課自擬；每 4 回休沐 1 回，36 回合正好是規格的 27T + 9R */
+const DELEGATE_CYCLES: Record<Exclude<DelegatePolicy, 'balanced'>, readonly NurtureAction[]> = {
+    martial: ['str', 'str', 'lea', 'rest'],
+    civil: ['pol', 'pol', 'cha', 'rest'],
+    strategy: ['int', 'int', 'lea', 'rest'],
+};
+
+/** 回傳可直接給 resolveAutoSchedule 的排程；均衡回 undefined，走練最低屬性 */
+export function delegateSchedule(policy: DelegatePolicy): NurtureAction[] | undefined {
+    if (policy === 'balanced') return undefined;
+    const cycle = DELEGATE_CYCLES[policy];
+    return Array.from({ length: NURTURE_TOTAL_ROUNDS }, (_, index) => cycle[index % cycle.length]);
+}
+
 export interface AutoNurtureResult {
     session: NurtureSession;
     logs: NurtureRoundLog[];
