@@ -55,3 +55,11 @@ export function buildGeneralTallySummary(slot: TalismanSlotView, record: BattleR
         recordLine: recordLine(record),
     };
 }
+
+/** 人物頁總覽「虎符戰記」次卡的標題（PROG-2-1858） */
+export const TALLY_SUMMARY_CARD_TITLE = '虎符戰記';
+
+/** 總覽次卡兩行：第一行虎符與分數帶，第二行兵種傾向與近期戰績（PROG-2-1858） */
+export function tallySummaryCardLines(summary: GeneralTallySummary): [string, string] {
+    return [summary.tallyLine, `${summary.troopLine}｜${summary.recordLine}`];
+}
