@@ -209,6 +209,7 @@ import { clanMembersOf, clanStatsOf, clanTierOf, normalizeClanTier, type ClanTie
 import { buildSuitorGeneral, normalizeMarriageProposal, rollMarriageProposal, type MarriageProposal } from '../systems/MarriageProposal';
 import { emptyFamilySynergyLedger, finalizeAdultChildren, fullSynergyAlliesOf, normalizeFamilySynergy, type FamilySynergyLedger } from '../systems/FamilySynergy';
 import { forgeCustomGold, mergeCustomFactors, normalizeCustomFactors } from '../systems/CustomGoldFactor';
+import { normalizePedigreeProbes, PEDIGREE_PROBE_COST, pedigreeProbeKey } from '../systems/PedigreeProbe';
 import { yuedanBannerLines } from '../systems/YuedanReview';
 import { clanHallNameOf, normalizeClanHall } from '../systems/ClanHall';
 import { CLAN_TRADITION_MIN_TIER, clanTraditionOf, normalizeClanTradition, type ClanTradition } from '../systems/ClanTradition';
@@ -658,6 +659,7 @@ export class GameSession {
     private _clanTier: ClanTier = 0;
     private _marriageProposal: MarriageProposal | null = null;
     private _familySynergy: FamilySynergyLedger = emptyFamilySynergyLedger();
+    private _pedigreeProbes: string[] = [];
     private _clanTradition: ClanTradition | null = null;
     private _clanHall: string | null = null;
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
@@ -1845,6 +1847,7 @@ export class GameSession {
         this._clanTier = 0;
         this._marriageProposal = null;
         this._familySynergy = emptyFamilySynergyLedger();
+        this._pedigreeProbes = [];
         this._clanTradition = null;
         this._clanHall = null;
         this._setCustomFactors([]);
@@ -3558,6 +3561,24 @@ export class GameSession {
         this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
     }
 
+    public isPedigreeProbed(fatherId: string, motherId: string): boolean {
+        return this._pedigreeProbes.indexOf(pedigreeProbeKey(fatherId, motherId)) >= 0;
+    }
+
+    /** 譜牒密考：同一對只收一次；不是占卜，不累計占卜次數。求籤令不足時回傳 false */
+    public async probePedigree(fatherId: string, motherId: string): Promise<boolean> {
+        if (this.isPedigreeProbed(fatherId, motherId)) return true;
+        const inventory = consumeItem(this._inventory, ITEM_ORACLE_TOKEN, PEDIGREE_PROBE_COST);
+        if (!inventory) return false;
+        this._inventory = inventory;
+        this._pedigreeProbes = [...this._pedigreeProbes, pedigreeProbeKey(fatherId, motherId)];
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+        this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+        return true;
+    }
+
     /** 扭曲預言借用關鍵詞的因子：字典裡可判定色系的因子 */
     private _prophecyKeywordSources(): ProphecyKeywordSource[] {
         const out: ProphecyKeywordSource[] = [];
@@ -4476,6 +4497,7 @@ export class GameSession {
             clanTier: this._clanTier,
             marriageProposal: this._marriageProposal ?? undefined,
             familySynergy: this._familySynergy.finalizedIds.length > 0 ? this._familySynergy : undefined,
+            pedigreeProbes: this._pedigreeProbes.length > 0 ? [...this._pedigreeProbes] : undefined,
             clanTradition: this._clanTradition ?? undefined,
             clanHall: this._clanHall ?? undefined,
             customFactors: this._customFactors.map((def) => ({ ...def })),
@@ -4647,6 +4669,7 @@ export class GameSession {
         this._clanTier = normalizeClanTier(snapshot.clanTier);
         this._marriageProposal = normalizeMarriageProposal(snapshot.marriageProposal);
         this._familySynergy = normalizeFamilySynergy(snapshot.familySynergy);
+        this._pedigreeProbes = normalizePedigreeProbes(snapshot.pedigreeProbes);
         this._clanTradition = normalizeClanTradition(snapshot.clanTradition);
         this._clanHall = normalizeClanHall(snapshot.clanHall);
         this._setCustomFactors(normalizeCustomFactors(snapshot.customFactors));

@@ -149,6 +149,7 @@ import { validateSupportPool } from '../../core/systems/SupportPoolValidator';
 import type { DomesticTaskId } from '../../core/systems/DomesticTasks';
 import { isDescendant } from '../../core/systems/ChildMagistrate';
 import { ITEM_JOB_CHANGE_ORDER, ITEM_TRIAL_TICKET, ITEM_WISH_SPEED_CARD } from '../../core/systems/PlayerInventory';
+import { ITEM_ORACLE_TOKEN } from '../../core/systems/ItemDef';
 import { JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { DestinyShopController, destinyBriefTexts } from '../core/DestinyShopController';
@@ -1298,7 +1299,9 @@ export class LobbyScene extends Component {
             gold: () => this._localGachaService.getCurrencyAmount('gold'),
             spendGold: (amount) => this._localGachaService.spendCurrency('gold', amount),
             omenSeed: () => services().session.omenSeed(),
-            oracleTokens: () => services().session.oracleCount,
+            oracleTokens: () => services().session.itemCount(ITEM_ORACLE_TOKEN),
+            isPedigreeProbed: (fatherId, motherId) => services().session.isPedigreeProbed(fatherId, motherId),
+            probePedigree: (fatherId, motherId) => services().session.probePedigree(fatherId, motherId),
             tagName: (tag) => services().session.factorDictionary?.get(tag)?.displayName,
             recordBreeding: (record) => services().session.recordBreedingBirth(record),
             sageRemarks: (fatherId, motherId) => {
@@ -1320,6 +1323,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnPrevMother', handler: () => { bonding.cycleMother(-1); this._refreshBondingSetup(); toastPregnantMother(bonding); } },
             { buttonId: 'btnNextMother', handler: () => { bonding.cycleMother(1); this._refreshBondingSetup(); toastPregnantMother(bonding); } },
             { buttonId: 'btnConfirmBond', handler: () => { void this._onClickConfirmBond(); } },
+            { buttonId: 'btnProbePedigree', handler: () => { void bonding.probePedigree().then(() => this._refreshBondingSetup()); } },
             {
                 buttonId: 'btnOpenOracle',
                 handler: () => {

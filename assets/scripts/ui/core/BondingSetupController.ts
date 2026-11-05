@@ -15,7 +15,8 @@
  * 畫面層拿 GetView() 的 ViewModel 一次刷新 Text 與 Button.interactable。
  */
 import { bloodFatigueForecast } from '../../core/systems/BloodFatigue';
-import { diversityLine } from '../../core/systems/DiversityFactor';
+import { DIVERSITY_HINT } from '../../core/systems/DiversityFactor';
+import { PEDIGREE_PROBE_COST, pedigreeProbeLine } from '../../core/systems/PedigreeProbe';
 import { getSage } from '../../core/systems/SageDivination';
 import { OMEN_LABEL, pickOmen, type OmenKind, type SageRemark } from '../../core/systems/SageRemarks';
 import { buildBreedingBirthRecord, type BreedingBirthRecord } from '../../core/systems/BreedingBirthRecord';
@@ -113,7 +114,10 @@ export interface BondingSetupDeps {
     sageRemarks?: (fatherId: string, motherId: string) => SageRemark[];
     /** 求籤令數量（ORAC-05）；未提供時顯示 ×0 */
     oracleTokens?: () => number;
-    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'ancestorSeats' | 'diversityOf' | 'kinPurificationTargets'>>;
+    breeding: Pick<BreedingService, 'checkEligibility' | 'previewEp' | 'breed'> & Partial<Pick<BreedingService, 'ancestorSeats' | 'diversityOf' | 'kinPurificationTargets' | 'pedigreeProbe'>>;
+    /** 譜牒密考（G4 §F-2 Layer 3）；未提供時不能密考 */
+    isPedigreeProbed?: (fatherId: string, motherId: string) => boolean;
+    probePedigree?: (fatherId: string, motherId: string) => Promise<boolean>;
     /** 開畫面前的準備（載入血統圖、補回已出生子嗣）；失敗只提示，不擋畫面 */
     prepare?: () => Promise<unknown>;
     /** 結緣後存檔；失敗只回報，不回滾 */
@@ -393,6 +397,7 @@ export class BondingSetupController {
             btnPrevMother: mothers.length > 1,
             btnNextMother: mothers.length > 1,
             btnConfirmBond: false,
+            btnProbePedigree: false,
         };
 
         const level = this._deps.playerDiscoveryLevel?.() ?? 1;
@@ -432,7 +437,13 @@ export class BondingSetupController {
         const sage = this._sageRemarks(father.id, mother.id);
         texts.sageRemarkLines = sage.hint;
         sage.lines.forEach((line, i) => { texts[`sageLine${i}`] = line; actives[`sageRow${i}`] = true; });
-        texts.oracleTokenLabel = oracleTokenText(this._deps.oracleTokens?.() ?? 0);
+        const tokens = this._deps.oracleTokens?.() ?? 0;
+        texts.oracleTokenLabel = oracleTokenText(tokens);
+        const probed = this._deps.isPedigreeProbed?.(father.id, mother.id) ?? false;
+        const probeReport = probed ? this._deps.breeding.pedigreeProbe?.(father.id, mother.id) : null;
+        texts.probePedigreeLabel = probed ? '已密考' : `譜牒密考（${PEDIGREE_PROBE_COST} 券）`;
+        texts.pedigreeProbeLine = probeReport ? pedigreeProbeLine(probeReport) : '';
+        enabled.btnProbePedigree = !probed && !!this._deps.probePedigree && tokens >= PEDIGREE_PROBE_COST;
         texts.costLabel = this._t('ui.breed.confirm', father.name, String(FATHER_VIGOR_COST), mother.name, String(MOTHER_VIGOR_COST));
         texts.eligibilityLabel = eligibility.ok
             ? `${father.name} 與 ${mother.name} 良緣天成，可以結緣`
@@ -446,7 +457,7 @@ export class BondingSetupController {
         const fatigueForecast = bloodFatigueForecast((father as BreedingGeneral).bloodFatigue, (mother as BreedingGeneral).bloodFatigue, eligibility.inbred);
         if (fatigueForecast) texts.inbreedingLabel += `｜${fatigueForecast}`;
         const diversity = this._deps.breeding.diversityOf?.(father.id, mother.id) ?? 1;
-        if (diversity < 1) texts.inbreedingLabel += `｜${diversityLine(diversity)}`;
+        if (diversity < 1) texts.inbreedingLabel += `｜${DIVERSITY_HINT}`;
         const allianceTag = ledger ? centuryAllianceTag(father as { familyUid?: string }, mother as { familyUid?: string }, ledger) : null;
         if (allianceTag) texts.inbreedingLabel += `｜${allianceTag}`;
         const kinTargets = (this._deps.breeding.kinPurificationTargets?.(father.id, mother.id) ?? []).filter((target) => (target.gene.discoveryLevel ?? 1) <= level);
@@ -471,6 +482,12 @@ export class BondingSetupController {
         enabled.btnConfirmBond = eligibility.ok;
 
         return { fatherId: father.id, motherId: mother.id, mode, sageIds: sage.ids, texts, actives, enabled };
+    }
+
+    async probePedigree(): Promise<boolean> {
+        const pair = this._currentPair();
+        if (!pair || !this._deps.probePedigree) return false;
+        return this._deps.probePedigree(pair.father.id, pair.mother.id);
     }
 
     // ── 內部 ───────────────────────────────────────────────────────────────

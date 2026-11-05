@@ -1336,6 +1336,46 @@
             "styleSlot": "bonding.label.log"
           },
           {
+            "type": "button",
+            "name": "BtnProbePedigree",
+            "id": "btnProbePedigree",
+            "widget": {
+              "bottom": 12,
+              "left": 40
+            },
+            "width": 200,
+            "height": 48,
+            "skinSlot": "bonding.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnProbePedigreeLabel",
+                "id": "probePedigreeLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "譜牒密考",
+                "styleSlot": "bonding.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "PedigreeProbeLine",
+            "id": "pedigreeProbeLine",
+            "widget": {
+              "bottom": 8,
+              "left": 252
+            },
+            "width": 520,
+            "height": 56,
+            "text": "",
+            "styleSlot": "bonding.label.log"
+          },
+          {
             "type": "label",
             "name": "OracleTokenLabel",
             "id": "oracleTokenLabel",
