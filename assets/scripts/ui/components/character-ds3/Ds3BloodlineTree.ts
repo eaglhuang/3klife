@@ -9,7 +9,7 @@
  */
 import { BlockInputEvents, Color, Graphics, Label, Node, UITransform, Mask, Sprite } from 'cc';
 import { treeCardNodeName } from '../../../core/systems/BloodlineTreeBinding';
-import { PEDIGREE_SEAT_WEIGHTS, pedigreeRowLabel, TREE_CARD_AVATAR } from '../../../core/systems/BloodlineTreeSlots';
+import { PEDIGREE_SEAT_WEIGHTS, pedigreeRowLabel, TREE_CARD_AVATAR, TREE_CARD_KIN_FRAME } from '../../../core/systems/BloodlineTreeSlots';
 import { treeGenerationVisible, type MilestoneStage } from '../../../core/systems/FamilyMilestone';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 
@@ -70,11 +70,15 @@ function addLabel(parent: Node, name: string, text: string, x: number, y: number
     return label;
 }
 
-function fillRoundRect(node: Node, width: number, height: number, fill: Color, border: Color): void {
+const KIN_FRAME_FILL = new Color(0, 0, 0, 0);
+const KIN_FRAME_BORDER = new Color().fromHEX('#E5483A');
+const KIN_FRAME_LINE_WIDTH = 4;
+
+function fillRoundRect(node: Node, width: number, height: number, fill: Color, border: Color, lineWidth = 2): void {
     const graphics = node.addComponent(Graphics);
     graphics.fillColor = fill;
     graphics.strokeColor = border;
-    graphics.lineWidth = 2;
+    graphics.lineWidth = lineWidth;
     graphics.roundRect(-width / 2, -height / 2, width, height, CARD_RADIUS);
     graphics.fill();
     graphics.stroke();
@@ -99,6 +103,9 @@ function buildGenerationRow(root: Node, config: (typeof ROWS)[number]): void {
         fillRoundRect(card, config.width, config.height, CARD_FILL, CARD_BORDER);
         addLabel(card, 'Txt', '—', 0, 0, config.width - 8, config.height - 8, CARD_FONT_SIZE, CARD_TEXT);
         addCardAvatar(card);
+        const kinFrame = addNode(card, TREE_CARD_KIN_FRAME, 0, 0, config.width, config.height);
+        fillRoundRect(kinFrame, config.width, config.height, KIN_FRAME_FILL, KIN_FRAME_BORDER, KIN_FRAME_LINE_WIDTH);
+        kinFrame.active = false;
     }
 }
 
