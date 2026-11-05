@@ -273,9 +273,20 @@ export interface AncestralPeak {
   ancestorName: string;
 }
 
+/** 出生時記下的母系資料（G3 §F-3 途徑③，PROG-2-1817） */
+export interface MaternalLine {
+  motherId: string;
+  /** 母親的父母，用來認舅氏 */
+  motherParentIds: string[];
+  factors: AncestralPeak[];
+}
+
 export interface GeneralConfig {
   /** 已用過家學研習或隔代復興（G2 Study_Used_Flag，兩者共用，每胎限 1 次，PROG-2-1793） */
   familyStudyUsed?: boolean;
+  /** 已用過母門擇承（每胎限 1 次，與家學研習名額分開） */
+  maternalStudyUsed?: boolean;
+  maternalLine?: MaternalLine;
   /** 出生時記下的雙親 3★ 以上因子，供下一代判斷隔代復興；祖先冷存檔後查不到星數 */
   peakFactors?: AncestralPeak[];
   /** 隔代復興種子：祖輩 3★ 以上而雙親斷代或不足 1★ 的因子 */

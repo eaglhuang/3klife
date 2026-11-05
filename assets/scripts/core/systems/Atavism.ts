@@ -14,6 +14,7 @@
 import type { AncestralPeak, GeneralGeneConfig } from '../models/GeneralUnit';
 import { DEFAULT_MAX_INHERITED_FACTORS } from './FactorInheritance';
 import { FAMILY_STUDY_ROUND_COST, familyStudyHint, familyStudyLine, type FamilyStudyCandidate } from './FamilyStudy';
+import { MATERNAL_ROUND_COST, maternalHint, maternalLineText } from './MaternalStudy';
 
 export const ATAVISM_ROUND_COST = 3;
 export const ATAVISM_FLOOR_STAR = 2;
@@ -63,31 +64,34 @@ export function mergeStudyCandidates(study: readonly FamilyStudyCandidate[], ata
 }
 
 export function studyRoundCost(candidate: FamilyStudyCandidate): number {
+    if (candidate.maternalFrom) return MATERNAL_ROUND_COST;
     return candidate.ancestorName ? ATAVISM_ROUND_COST : FAMILY_STUDY_ROUND_COST;
 }
 
-/** 把補救結果寫進因子：已有就改星數，斷代的補回一項 */
+/** 把補救結果寫進因子：已有就改星數，斷代的補回一項；祖先的覺醒狀態不會跟著過來 */
 export function applyStudyCandidate(genes: Genes, candidate: FamilyStudyCandidate, seeds: readonly AncestralPeak[] | undefined): GeneralGeneConfig[] {
     const current = genes ?? [];
     if (current.some((gene) => gene.id === candidate.geneId)) {
         return current.map((gene) => (gene.id === candidate.geneId ? { ...gene, level: candidate.starAfter } : gene));
     }
     const seed = (seeds ?? []).find((s) => s.gene.id === candidate.geneId);
-    return seed ? [...current, { ...seed.gene, level: candidate.starAfter }] : [...current];
+    return seed ? [...current, { ...seed.gene, level: candidate.starAfter, isLocked: true }] : [...current];
 }
 
 export function studyLabelOf(candidate: FamilyStudyCandidate): string {
-    const prefix = candidate.ancestorName ? '隔代復興' : '家學研習';
+    const prefix = candidate.maternalFrom ? '母門擇承' : candidate.ancestorName ? '隔代復興' : '家學研習';
     return `${prefix}：${candidate.displayName} ${candidate.starBefore}→${candidate.starAfter}★`;
 }
 
 export function studyHintOf(candidate: FamilyStudyCandidate): string {
+    if (candidate.maternalFrom) return maternalHint(candidate);
     if (!candidate.ancestorName) return familyStudyHint(candidate);
     return `隔代復興（消耗 ${ATAVISM_ROUND_COST} 季課業，與家學研習共用名額，重現 ${candidate.ancestorName} 的 ${candidate.displayName}，保底 ${ATAVISM_FLOOR_STAR}★）`;
 }
 
 /** §G 隔代復興（乃祖之風）；規格的「老太公（祖父）」換成實際祖先的名字 */
 export function studyLineOf(candidate: FamilyStudyCandidate): string {
+    if (candidate.maternalFrom) return maternalLineText(candidate);
     if (!candidate.ancestorName) return familyStudyLine(candidate);
     return `奇哉！此子父母雖未顯山露水，然其演武之姿，竟與昔年${candidate.ancestorName}如出一轍！真乃【隔代復興，有乃祖之風】！`;
 }
