@@ -1,0 +1,21 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T16-03-20-120Z-scope-amendment-240261b09c14",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:1784ef7c701c19695a1e75d48f4bcb6d5d808baf419ae1e10fd4fafe1a9928d1",
+  "createdAt": "2026-11-05T16:03:20.120Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add assets/resources/sprites/ui_avatars/cropped/xin_xian_ying_avatar.png.meta --reason \"Include the current Cocos-generated metadata sidecar for the regenerated cropped avatar.\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal",
+    "reason": "Include the current Cocos-generated metadata sidecar for the regenerated cropped avatar."
+  }
+}
