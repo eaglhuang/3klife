@@ -22,6 +22,7 @@ import { buildBreedingPreviewLines } from './BreedingPreviewPresenter';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
+import { matchRumorLine } from '../../core/systems/MatchRumor';
 import type { BreedingService } from '../../core/services/BreedingService';
 import { type BreedTextLookup, fallbackBreedText } from './BreedingTexts';
 import { relationLoreText, withRelationFallback } from './RelationTexts';
@@ -40,6 +41,7 @@ import {
     lifetimeBreedingCap,
     MOTHER_VIGOR_COST,
     PREGNANCY_LOCK_SEASONS,
+    statOf,
 } from '../../core/systems/BreedingSystem';
 import { GENERAL_STATUS_DEAD, RETIREMENT_AGE } from '../../core/systems/GeneralAging';
 
@@ -394,6 +396,7 @@ function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null,
         return {
             [`${side}Name`]: side === 'father' ? '父方：無人可選' : '母方：無人可選',
             [`${side}Info`]: '',
+            [`${side}Rumor`]: '',
         };
     }
     const vigor = general.vitality ?? general.maxVitality ?? 100;
@@ -408,5 +411,12 @@ function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null,
         [`${side}Name`]: `${side === 'father' ? '父方' : '母方'}：${general.name}`,
         [`${side}Info`]: parts.join(' · '),
         [`${side}Factors`]: factorLine(general, playerLevel),
+        [`${side}Rumor`]: matchRumorLine({
+            str: statOf(general, 'str'),
+            int: statOf(general, 'int'),
+            lea: statOf(general, 'lea'),
+            pol: statOf(general, 'pol'),
+            cha: statOf(general, 'cha'),
+        }),
     };
 }
