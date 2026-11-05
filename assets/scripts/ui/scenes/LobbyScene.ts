@@ -1283,6 +1283,7 @@ export class LobbyScene extends Component {
             spendLifespan: (generalId, command) => services().session.spendLifespan(generalId, command),
             playerDiscoveryLevel: () => services().session.discoveryLevel,
             factorDictionary: () => services().session.factorDictionary,
+            familySynergy: () => services().session.familySynergy,
             omenSeed: () => services().session.omenSeed(),
             oracleTokens: () => services().session.oracleCount,
             tagName: (tag) => services().session.factorDictionary?.get(tag)?.displayName,

@@ -37,6 +37,8 @@ export interface ClanStats {
     ep90: number;
     /** 同持某項 3★ 以上藍因子的最多人數 */
     sharedBlueHolders: number;
+    /** 世交相性滿額的世家數（G3 §F-2）；未提供視為 0 */
+    fullSynergyAllies?: number;
 }
 
 type LineageGeneral = GeneralConfig & { fatherId?: string; motherId?: string };
@@ -163,7 +165,7 @@ export function clanStatsOf(members: readonly ClanMember[]): ClanStats {
 export function clanTierOf(stats: ClanStats): ClanTier {
     if (stats.adultDescendants < 3 || stats.ep60 < 1) return 0;
     if (stats.generations < 3 || stats.ep75 < 4 || stats.sharedBlueHolders < 3) return 1;
-    if (stats.generations < 4 || stats.branches < 2 || stats.ep90 < 2) return 2;
+    if (stats.generations < 4 || (stats.branches < 2 && (stats.fullSynergyAllies ?? 0) < 2) || stats.ep90 < 2) return 2;
     return 3;
 }
 
