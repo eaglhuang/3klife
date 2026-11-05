@@ -9,6 +9,7 @@ import { treeCardNodeName } from '../../core/systems/BloodlineTreeBinding';
 import { buildNodeCards } from '../../core/systems/BloodlineNodeCards';
 import { redrawBloodlineTreeConnections } from '../components/BloodlineTreeLines';
 import { ancestorPeekView, isAncestorRevealed, type AncestorPeekView } from '../../core/systems/AncestorTreeLayout';
+import { treeGenerationVisible, type MilestoneStage } from '../../core/systems/FamilyMilestone';
 import { isGenerationVisible, toggleBloodlineTreeMode, type BloodlineTreeViewMode } from '../../core/systems/BloodlineTreeViewMode';
 
 const { ccclass, property } = _decorator;
@@ -50,6 +51,7 @@ export class BloodlineTreePanel extends Component {
     onCardPeek: ((view: AncestorPeekView) => void) | null = null;
     /** 簡化／專家顯示模式；切換按鈕尚未上版面前維持 expert（PROG-2-1731） */
     private _viewMode: BloodlineTreeViewMode = 'expert';
+    private _stage: MilestoneStage = 4;
     /** 頭像是非同步載入；切換武將後，上一位還沒載完的頭像不能蓋上來 */
     private _avatarSeq = 0;
 
@@ -62,6 +64,12 @@ export class BloodlineTreePanel extends Component {
         this._viewMode = mode;
         this._applyViewMode();
         this._redrawLines();
+    }
+
+    /** 家族階段再疊在顯示模式上（總綱 M_stage 表）；未設定時視為全開 */
+    setMilestoneStage(stage: MilestoneStage): void {
+        this._stage = stage;
+        this._applyViewMode();
     }
 
     toggleViewMode(): BloodlineTreeViewMode {
@@ -114,9 +122,13 @@ export class BloodlineTreePanel extends Component {
 
     /** 依模式顯示／隱藏各代容器（gen3 = 父母、gen2 = 祖父母、gen1 = 曾祖父母） */
     private _applyViewMode(): void {
-        if (this.gen3Container) this.gen3Container.active = isGenerationVisible(1, this._viewMode);
-        if (this.gen2Container) this.gen2Container.active = isGenerationVisible(2, this._viewMode);
-        if (this.gen1Container) this.gen1Container.active = isGenerationVisible(3, this._viewMode);
+        if (this.gen3Container) this.gen3Container.active = this._generationVisible(1);
+        if (this.gen2Container) this.gen2Container.active = this._generationVisible(2);
+        if (this.gen1Container) this.gen1Container.active = this._generationVisible(3);
+    }
+
+    private _generationVisible(generation: 1 | 2 | 3): boolean {
+        return isGenerationVisible(generation, this._viewMode) && treeGenerationVisible(this._stage, generation);
     }
 
     /**

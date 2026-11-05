@@ -190,6 +190,7 @@ import { DEFAULT_POOL_ID as GACHA_GENERAL_POOL_ID, GachaFlowCoordinator, GACHA_S
 import { buildGachaPoolGuideLines } from '../core/GachaPoolGuidePresenter';
 import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBindings';
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
+import { treeGenerationVisible } from '../../core/systems/FamilyMilestone';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 import { DailyReportController } from '../core/DailyReportController';
 import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
@@ -4344,14 +4345,15 @@ export class LobbyScene extends Component {
         const hostNode = this._characterDs3Surface()?.node;
         const general = this._characterDs3General;
         if (!hostNode || !general) return;
-        const panel = ensureDs3BloodlineTree(hostNode, general.name, clanTitleText(CLAN_TIER_NAMES[services().session.clanTier], services().session.clanTradition, services().session.clanHall));
+        const stage = services().session.milestoneStage;
+        const panel = ensureDs3BloodlineTree(hostNode, general.name, clanTitleText(CLAN_TIER_NAMES[services().session.clanTier], services().session.clanTradition, services().session.clanHall), stage);
         panel.onCardPeek = (view) => this._showToast(`${view.title}：${view.tendency}`);
         panel.node.active = true;
         for (const name of [FACTOR_HEX_NODE_NAME, 'btnGeneralJournal', 'btnSoulInject', GALLERY_ENTRY_NODE_NAME, TOTAL_TP_NODE_NAME]) {
             hostNode.getChildByName(name)?.setSiblingIndex(hostNode.children.length - 1);
         }
         void panel.loadForGeneral(general.id);
-        if (!this._bloodlineTreeLineShown) {
+        if (!this._bloodlineTreeLineShown && treeGenerationVisible(stage, 3)) {
             this._bloodlineTreeLineShown = true;
             services().event.emit('SHOW_TOAST', { message: BLOODLINE_TREE_OPEN_LINE, duration: 4 });
         }
