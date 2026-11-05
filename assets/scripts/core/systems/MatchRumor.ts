@@ -6,6 +6,8 @@
  *
  * Unity 對照：像把數值區間映射成顯示字串的 ScriptableObject 查表。
  */
+import { surnameOf } from './VirtualAncestorGenerator';
+
 export type RumorStatKey = 'str' | 'int' | 'lea' | 'pol' | 'cha';
 export type RumorStats = Partial<Record<RumorStatKey, number>>;
 
@@ -40,6 +42,15 @@ export function rumorTopTrait(stats: RumorStats): string {
         if ((stats[entry[0]] ?? 0) > (stats[top[0]] ?? 0)) top = entry;
     }
     return `${top[1]}${tierOf(stats[top[0]] ?? 0, SINGLE_TIERS, SINGLE_LOWEST)}`;
+}
+
+/** surnameOf 對空白名字的佔位，不算同姓 */
+const UNKNOWN_SURNAME = '某';
+
+/** G4 §F-2 Layer 1：同宗同姓的公開句；不同姓或姓氏不明時回傳 null */
+export function sameSurnameNote(fatherName: string, motherName: string): string | null {
+    const surname = surnameOf(fatherName);
+    return surname !== UNKNOWN_SURNAME && surname === surnameOf(motherName) ? `同宗同姓：皆為${surname}氏` : null;
 }
 
 /** UI_G1_MATCH_PREVIEW */

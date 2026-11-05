@@ -23,7 +23,7 @@ import { buildBreedingPreviewLines } from './BreedingPreviewPresenter';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { factorMaskLabels } from '../../core/systems/FactorMask';
 import { factorStageText } from '../../core/systems/FactorVisibility';
-import { matchRumorLine } from '../../core/systems/MatchRumor';
+import { matchRumorLine, sameSurnameNote } from '../../core/systems/MatchRumor';
 import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
 import type { FactorDictionary } from '../../core/systems/FactorInheritance';
 import type { BreedingService } from '../../core/services/BreedingService';
@@ -336,6 +336,8 @@ export class BondingSetupController {
                 : '血緣：3 代內無共同祖先';
         const fatigueForecast = bloodFatigueForecast((father as BreedingGeneral).bloodFatigue, (mother as BreedingGeneral).bloodFatigue, eligibility.inbred);
         if (fatigueForecast) texts.inbreedingLabel += `｜${fatigueForecast}`;
+        const surnameNote = sameSurnameNote(father.name, mother.name);
+        if (surnameNote) texts.inbreedingLabel += `｜${surnameNote}`;
         enabled.btnConfirmBond = eligibility.ok;
 
         return { fatherId: father.id, motherId: mother.id, mode, sageIds: sage.ids, texts, actives, enabled };
