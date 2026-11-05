@@ -1474,6 +1474,7 @@ export class LobbyScene extends Component {
             usedSlots: () => services().session.warehouseUsedSlots,
             expansions: () => services().session.warehouseExpansions,
             storedRecords: () => services().session.inventoryRecords.filter((record) => !record.equippedBy),
+            setLocked: (inventoryId, locked) => services().session.setInventoryLocked(inventoryId, locked),
             expand: () => {
                 if (!gacha.spendCurrency('gold', WAREHOUSE_EXPAND_GOLD_COST)) {
                     services().event.emit('SHOW_TOAST', { message: `金幣不足：擴容需要 ${WAREHOUSE_EXPAND_GOLD_COST} 金幣`, duration: 2 });
@@ -1488,6 +1489,9 @@ export class LobbyScene extends Component {
             { buttonId: 'btnClose', handler: () => { if (this._warehouseHost) this._warehouseHost.node.active = false; } },
             { buttonId: 'btnWarehouseExpand', handler: () => { warehouse.expandSelected(); this._refreshWarehouse(); } },
             { buttonId: 'btnWarehouseSort', handler: () => { warehouse.cycleSort(); this._refreshWarehouse(); } },
+            { buttonId: 'btnWarehousePrev', handler: () => { warehouse.moveSelection(-1); this._refreshWarehouse(); } },
+            { buttonId: 'btnWarehouseNext', handler: () => { warehouse.moveSelection(1); this._refreshWarehouse(); } },
+            { buttonId: 'btnWarehouseLock', handler: () => { warehouse.toggleLockSelected(); this._refreshWarehouse(); } },
         ]);
         this._warehouseHost.node.active = false;
     }
