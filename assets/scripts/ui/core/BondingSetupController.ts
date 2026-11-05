@@ -18,6 +18,7 @@ import { kinshipLampLine, outcrossRecoveryLine } from '../../core/systems/BloodF
 import { ancestorSeatVisible, diversityVisible, factorDetailVisible, G1_FACTOR_TEXT, KIN_TEXT_WARNING, kinshipScanVisible, MILESTONE_G1_HINT, type MilestoneStage } from '../../core/systems/FamilyMilestone';
 import { PEDIGREE_SLOTS } from '../../core/services/BloodlineGraph';
 import { DIVERSITY_HINT } from '../../core/systems/DiversityFactor';
+import { POTENTIAL_ROW_KINDS, potentialFill, potentialHeadLine, potentialValueLine, rosterAncestorsOf, type PotentialGeneral } from '../../core/systems/PotentialBar';
 import { HIDDEN_LINEAGE_COST, hiddenLineageLine, PEDIGREE_PROBE_COST, pedigreeProbeLine, STAT_PROBE_COST, statProbeLine } from '../../core/systems/PedigreeProbe';
 import { getSage } from '../../core/systems/SageDivination';
 import { OMEN_LABEL, pickOmen, type OmenKind, type SageRemark } from '../../core/systems/SageRemarks';
@@ -106,6 +107,8 @@ export interface BondingView {
     sageIds: string[];
     /** layout 節點 id → 文字 */
     texts: Record<string, string>;
+    /** layout 節點 id → 佔父節點寬度的比例（潛力條） */
+    fills: Record<string, number>;
     /** layout 節點 id → 顯示 / 隱藏 */
     actives: Record<string, boolean>;
     /** 按鈕 id → 是否可按 */
@@ -180,6 +183,12 @@ export class BondingSetupController {
     }
 
     /** 名士批語：最多三列，各列一位名士；未解鎖足夠名士時只回提示句 */
+    private _potentialOpen = false;
+
+    togglePotential(): void {
+        this._potentialOpen = !this._potentialOpen;
+    }
+
     private _stage(): MilestoneStage {
         return this._deps.milestoneStage?.() ?? 4;
     }
@@ -401,6 +410,7 @@ export class BondingSetupController {
             yuedanFilterLabel: this._yuedanOnly ? '顯示全部' : '只看月旦評',
             rumorRouteLabel: `路線：${rumorRouteName(this._route)}`,
             compactLabel: this._slotLabel(),
+            potentialLabel: this._potentialOpen ? '收起潛力' : '潛力條',
             bondNotice: this._notice,
             bondEmptyHint: `名冊中需要至少一位滿 ${BREEDING_MIN_AGE} 歲的男性與女性武將才能結緣。可先到轉蛋招募，或推進季度讓子嗣長大。`,
             fatherPager: pagerText(fathers, father),
@@ -410,9 +420,13 @@ export class BondingSetupController {
         const actives: Record<string, boolean> = {
             bondPanel: false,
             bondEmptyHint: false,
+            potentialPanel: false,
+            estimateBox: !this._potentialOpen || !factorDetailVisible(stage),
+            statProbeLine: !this._potentialOpen || !factorDetailVisible(stage),
+            btnPotential: factorDetailVisible(stage),
             btnCompact: kinshipScanVisible(stage),
             btnYuedanFilter: factorDetailVisible(stage),
-            btnCycleProbeStat: factorDetailVisible(stage),
+            btnCycleProbeStat: factorDetailVisible(stage) && !this._potentialOpen,
             btnProbeFatherStat: factorDetailVisible(stage),
             btnProbeMotherStat: factorDetailVisible(stage),
         };
@@ -426,6 +440,7 @@ export class BondingSetupController {
             btnYuedanFilter: this._yuedanIds().length > 0,
             btnRumorRoute: this._parents().length > 0,
             btnCompact: this._slotOptions().length > 0,
+            btnPotential: !!father && !!mother,
             btnPrevFather: fathers.length > 1,
             btnNextFather: fathers.length > 1,
             btnPrevMother: mothers.length > 1,
@@ -443,10 +458,16 @@ export class BondingSetupController {
         if (!father || !mother) {
             actives.bondEmptyHint = true;
             Object.assign(texts, parentTexts('father', father, level, stage, yuedan), parentTexts('mother', mother, level, stage, yuedan));
-            return { fatherId: father?.id ?? null, motherId: mother?.id ?? null, mode: null, sageIds: [], texts, actives, enabled };
+            return { fatherId: father?.id ?? null, motherId: mother?.id ?? null, mode: null, sageIds: [], texts, fills: {}, actives, enabled };
         }
 
         actives.bondPanel = true;
+        const fills: Record<string, number> = {};
+        if (factorDetailVisible(stage) && this._potentialOpen) {
+            actives.potentialPanel = true;
+            this._fillPotential('father', father, stage, texts, fills);
+            this._fillPotential('mother', mother, stage, texts, fills);
+        }
         Object.assign(texts, parentTexts('father', father, level, stage, yuedan), parentTexts('mother', mother, level, stage, yuedan));
 
         const mode: BondingMode = (father.age ?? 0) >= RETIREMENT_AGE || (mother.age ?? 0) >= RETIREMENT_AGE ? 'Peace_Lineage' : 'Standard';
@@ -546,7 +567,7 @@ export class BondingSetupController {
         texts.inbreedingLabel = texts.inbreedingLabel.replace(/^｜/, '');
         enabled.btnConfirmBond = eligibility.ok;
 
-        return { fatherId: father.id, motherId: mother.id, mode, sageIds: sage.ids, texts, actives, enabled };
+        return { fatherId: father.id, motherId: mother.id, mode, sageIds: sage.ids, texts, fills, actives, enabled };
     }
 
     async probePedigree(): Promise<boolean> {
@@ -625,6 +646,19 @@ export class BondingSetupController {
         const pair = this._currentPair();
         const family = pair ? compactFamilyOf(pair.father, pair.mother) : null;
         return family ? compactCostFor(family, this._deps.familySynergy?.()) : 0;
+    }
+
+    private _fillPotential(side: 'father' | 'mother', general: BreedingGeneral, stage: MilestoneStage, texts: Record<string, string>, fills: Record<string, number>): void {
+        const target = general as PotentialGeneral;
+        const ancestors = rosterAncestorsOf(target, this._deps.roster.getAll() as PotentialGeneral[]);
+        texts[`${side}PotentialHead`] = potentialHeadLine(general.name, stage);
+        POTENTIAL_ROW_KINDS.forEach((kind, i) => {
+            const fill = potentialFill(target, kind, stage);
+            texts[`${side}PotentialName${i}`] = rumorRouteName(kind);
+            texts[`${side}PotentialValue${i}`] = potentialValueLine(target, kind, stage, ancestors);
+            fills[`${side}PotentialP${i}`] = fill.potential;
+            fills[`${side}PotentialA${i}`] = fill.awakened;
+        });
     }
 
     private _yuedanIds(): string[] {

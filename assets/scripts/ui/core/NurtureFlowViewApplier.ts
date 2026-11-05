@@ -7,7 +7,7 @@
  * Unity 對照：像 View.Bind(viewModel)，把 ViewModel 的欄位一次寫進 Text / GameObject.SetActive /
  * Button.interactable。
  */
-import { UIOpacity } from 'cc';
+import { UIOpacity, UITransform, Widget } from 'cc';
 import type { UITemplateBinder } from './UITemplateBinder';
 import type { FlowView } from './NurtureFlowController';
 
@@ -17,9 +17,17 @@ const ENABLED_OPACITY = 255;
 /** 任何流程控制器吐出的 view 只要有這三組 key → 值，就能用同一個 applier 套到節點上 */
 export type FlowViewState = Pick<FlowView, 'texts' | 'actives' | 'enabled'>;
 
-export function applyFlowView(binder: UITemplateBinder, view: FlowViewState): void {
+export function applyFlowView(binder: UITemplateBinder, view: FlowViewState & { fills?: Record<string, number> }): void {
     binder.setTexts(view.texts);
     binder.setActives(view.actives);
+    for (const [id, ratio] of Object.entries(view.fills ?? {})) {
+        const node = binder.getNode(id);
+        const transform = node?.getComponent(UITransform);
+        const track = node?.parent?.getComponent(UITransform);
+        if (!node || !transform || !track) continue;
+        transform.setContentSize(track.width * Math.max(0, Math.min(1, ratio)), transform.height);
+        node.getComponent(Widget)?.updateAlignment();
+    }
     for (const [id, enabled] of Object.entries(view.enabled)) {
         const button = binder.getButton(id);
         if (!button) continue;
