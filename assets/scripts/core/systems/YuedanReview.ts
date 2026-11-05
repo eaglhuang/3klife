@@ -69,7 +69,13 @@ export function yuedanRevealLine(general: GeneralConfig, dictionary?: FactorDict
     return `月旦評：${factors.length > 0 ? factors.join('、') : '榜上有名'}｜${yuedanHealthTier(general)}`;
 }
 
-/** §G 放榜句＋§H UI_G4_YUEDAN_BANNER；說親名冊篩選還沒做，句尾改成查看；榜上沒人時不放榜 */
+/** 說親篩選：只留榜上的人；這份清單榜上沒人時回傳原清單，免得玩家選不到人 */
+export function yuedanFiltered<T extends { id: string }>(candidates: readonly T[], listedIds: readonly string[]): T[] {
+    const listed = candidates.filter((general) => listedIds.indexOf(general.id) >= 0);
+    return listed.length > 0 ? listed : [...candidates];
+}
+
+/** §G 放榜句＋§H UI_G4_YUEDAN_BANNER；榜上沒人時不放榜 */
 export function yuedanBannerLines(generals: readonly GeneralConfig[]): string[] {
     const list = yuedanList(generals);
     if (list.length === 0) return [];
@@ -82,6 +88,6 @@ export function yuedanBannerLines(generals: readonly GeneralConfig[]): string[] 
     })}】`);
     return [
         `滾滾長江東逝水，且看今歲【月旦評】天下俊彥榜！${names.join('、')}，皆一時之選也！`,
-        `【今歲月旦評】名士品評已揭曉當代 ${list.length} 位青年才俊之顯性天賦，可於結緣畫面查看！`,
+        `【今歲月旦評】名士品評已揭曉當代 ${list.length} 位青年才俊之顯性天賦，可於說親名冊中直接篩選！`,
     ];
 }
