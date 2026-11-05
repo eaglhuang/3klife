@@ -35,6 +35,10 @@ import { MORALE_DURATION_TURNS } from '../shared/Morale';
 import { dispelPick, dispelShieldPct, enemyMassDebuffParamsOf, massDebuffStatusesFor, massDebuffTargets, startEnemyMassDebuff } from '../shared/EnemyMassDebuff';
 import { ultimateAttackOf } from '../../core/systems/UltimateDamage';
 import { ultimateCastLine, ultimateVitalityLowLine } from '../../core/systems/UltimateScriptLines';
+
+const TACTIC_CONDITION_BLOCKED_LINE = '戰法條件未達成，無法發動';
+const ULTIMATE_USED_LINE = '此奧義本場已施放過';
+const RETREAT_BLOCKED_LINE = '本回合撤退失敗，無法行動';
 import { sceneFireDamageTakenOf } from '../shared/BattleTacticBehavior';
 import { COMBO_ULTIMATE_MULTIPLIER, findComboUltimate } from '../shared/ComboUltimate';
 import { ANCESTRAL_SPIRIT_LOG, ancestralSpiritAttackOf, isOutnumbered } from '../shared/AncestralSpirit';
@@ -286,45 +290,45 @@ export class BattleSkillDispatcher {
     // 戰法條件（TCOND，PROG-2-0573）：兵種／天氣／鄰格全部成立才發動，不成立同樣不扣資源
     const conditionCheck = this.checkTacticConditions(request);
     if (!conditionCheck.ok) {
+      this.noticeBlockedForPlayer(request, TACTIC_CONDITION_BLOCKED_LINE);
       return {
         requestId: `${request.ownerUid}:${request.battleSkillId}`,
         battleSkillId: request.battleSkillId,
         applied: false,
         blockedReason: 'condition-restricted',
         deltas: [],
-        battleLogLines: ['戰法條件未達成，無法發動'],
+        battleLogLines: [TACTIC_CONDITION_BLOCKED_LINE],
       };
     }
     // 每場戰鬥每個奧義限用 1 次（E-9，PROG-2-1451）：已生效過的奧義擋下，不扣資源
     const usedKey = this.usedUltimateKey(request);
     if (usedKey && this.usedUltimates.has(usedKey)) {
+      this.noticeBlockedForPlayer(request, ULTIMATE_USED_LINE);
       return {
         requestId: `${request.ownerUid}:${request.battleSkillId}`,
         battleSkillId: request.battleSkillId,
         applied: false,
         blockedReason: 'ultimate-used',
         deltas: [],
-        battleLogLines: ['此奧義本場已施放過'],
+        battleLogLines: [ULTIMATE_USED_LINE],
       };
     }
     // 撤退失敗鎖回合（PROG-2-0441）：本回合撤退失敗的部隊不能發動戰法或奧義，不扣資源
     if (this.context.isUnitActionBlocked?.(request.ownerUid)) {
+      this.noticeBlockedForPlayer(request, RETREAT_BLOCKED_LINE);
       return {
         requestId: `${request.ownerUid}:${request.battleSkillId}`,
         battleSkillId: request.battleSkillId,
         applied: false,
         blockedReason: 'action-blocked',
         deltas: [],
-        battleLogLines: ['本回合撤退失敗，無法行動'],
+        battleLogLines: [RETREAT_BLOCKED_LINE],
       };
     }
     // 精力軟懲罰（LIFE-10，PROG-2-0426）：依施放者武將的精力區間擋下奧義或種子戰法，不扣資源
     const vitalityCheck = this.checkVitalityGate(request);
     if (!vitalityCheck.allowed) {
-      // 只有玩家要看原因；AI 被擋下時會改選別招，不寫戰報
-      if (request.sourceType === SkillSourceType.Ultimate && this.resolveCasterGeneral(request)?.faction === Faction.Player) {
-        services().event.emit(EVENT_NAMES.UltimateScriptLine, vitalityCheck.reason);
-      }
+      this.noticeBlockedForPlayer(request, vitalityCheck.reason);
       return {
         requestId: `${request.ownerUid}:${request.battleSkillId}`,
         battleSkillId: request.battleSkillId,
@@ -340,13 +344,16 @@ export class BattleSkillDispatcher {
       ? { ...baseRequest, ultimateAttack: Math.floor(baseRequest.ultimateAttack * COMBO_ULTIMATE_MULTIPLIER) }
       : baseRequest;
     const executed = this.skillExecutor.execute(ultimateRequest, this.buildBattleSkillExecutionContext());
-    const result = combo && ultimateRequest !== baseRequest && executed.applied
-      ? { ...executed, battleLogLines: [`組合奧義：${combo.name}（威力 ×${COMBO_ULTIMATE_MULTIPLIER}）`, ...executed.battleLogLines] }
-      : executed;
+    const comboLine = combo && ultimateRequest !== baseRequest && executed.applied
+      ? `組合奧義：${combo.name}（威力 ×${COMBO_ULTIMATE_MULTIPLIER}）`
+      : null;
+    const result = comboLine ? { ...executed, battleLogLines: [comboLine, ...executed.battleLogLines] } : executed;
     if (result.applied && request.sourceType === SkillSourceType.Ultimate) {
       this.spendUltimateCost(request);
       if (usedKey) this.usedUltimates.add(usedKey);
-      return this.tryAncestralSpirit(ultimateRequest, this.withUltimateCastLine(request, result));
+      const announced = this.withUltimateCastLine(request, result);
+      if (comboLine) services().event.emit(EVENT_NAMES.BattleSkillNotice, comboLine);
+      return this.tryAncestralSpirit(ultimateRequest, announced);
     }
     return result;
   }
@@ -367,6 +374,12 @@ export class BattleSkillDispatcher {
     return attack === null ? request : { ...request, ultimateAttack: attack };
   }
 
+  /** 被擋下的原因只給玩家看；AI 被擋下時會改選別招，不寫戰報（PROG-2-1781） */
+  private noticeBlockedForPlayer(request: BattleSkillRequest, line: string): void {
+    if (this.resolveCasterGeneral(request)?.faction !== Faction.Player) return;
+    services().event.emit(EVENT_NAMES.BattleSkillNotice, line);
+  }
+
   /** 奧義系統 §G 施放句（PROG-2-1780）：放在日誌最前面，接著才是傷害結算 */
   private withUltimateCastLine(request: BattleSkillRequest, result: SkillExecutionResult): SkillExecutionResult {
     const caster = this.resolveCasterGeneral(request);
@@ -374,7 +387,7 @@ export class BattleSkillDispatcher {
     const def = this.context.getUltimateDamageDef?.(request.ultimateId);
     const line = ultimateCastLine({ ultimateId: request.ultimateId, slot: def?.slot, generalName: caster.name, ultimateName: def?.name });
     if (!line) return result;
-    services().event.emit(EVENT_NAMES.UltimateScriptLine, line);
+    services().event.emit(EVENT_NAMES.BattleSkillNotice, line);
     return { ...result, battleLogLines: [line, ...result.battleLogLines] };
   }
 
@@ -403,6 +416,7 @@ export class BattleSkillDispatcher {
     if (spiritAttack === null) return result;
     this.ancestralSpiritUsed.add(general.faction);
     const ancestorSkillId = this.context.getAncestorSignatureSkillId?.(general.ancestorTemplateId ?? null) ?? null;
+    services().event.emit(EVENT_NAMES.BattleSkillNotice, ANCESTRAL_SPIRIT_LOG);
     const echo = this.skillExecutor.execute({ ...request, ultimateAttack: spiritAttack, battleSkillId: ancestorSkillId ?? request.battleSkillId }, this.buildBattleSkillExecutionContext());
     return {
       ...result,

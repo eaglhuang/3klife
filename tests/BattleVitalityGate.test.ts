@@ -58,7 +58,7 @@ export function createBattleVitalityGateSuite(): TestSuite {
     suite.test('玩家被擋下時精力句會進戰報事件（PROG-2-1780）', () => {
         const { dispatcher } = setupCaster(30, 100);
         const lines: string[] = [];
-        const off = services().event.on(EVENT_NAMES.UltimateScriptLine, (line: string) => { lines.push(line); });
+        const off = services().event.on(EVENT_NAMES.BattleSkillNotice, (line: string) => { lines.push(line); });
         dispatcher.executeBattleSkillRequest({
             sourceType: SkillSourceType.Ultimate,
             ownerUid: 'player-unit',
@@ -78,7 +78,7 @@ export function createBattleVitalityGateSuite(): TestSuite {
             execute: (request: { battleSkillId: string }) => ({ requestId: 'spy', battleSkillId: request.battleSkillId, applied: true, deltas: [], battleLogLines: ['傷害結算'] }),
         };
         const lines: string[] = [];
-        const off = services().event.on(EVENT_NAMES.UltimateScriptLine, (line: string) => { lines.push(line); });
+        const off = services().event.on(EVENT_NAMES.BattleSkillNotice, (line: string) => { lines.push(line); });
         const result = dispatcher.executeBattleSkillRequest({
             sourceType: SkillSourceType.Ultimate,
             ownerUid: 'player-unit',
