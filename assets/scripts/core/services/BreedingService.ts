@@ -147,6 +147,17 @@ export class BreedingService {
         });
     }
 
+    /** 某人的 14 席中，哪幾席也出現在對方的 14 席裡；順序同 ancestorSeats */
+    commonAncestorSeats(generalId: string, otherId: string): boolean[] {
+        const mine = this._graph.getPedigree(generalId);
+        const other = this._graph.getPedigree(otherId);
+        const otherUids = new Set(PEDIGREE_SLOTS.map((slot) => other[slot]).filter((uid) => !!uid));
+        return PEDIGREE_SLOTS.map((slot) => {
+            const uid = mine[slot];
+            return !!uid && otherUids.has(uid);
+        });
+    }
+
     diversityOf(fatherId: string, motherId: string): number {
         return diversityOfPair(fatherId, motherId, this._graph);
     }
