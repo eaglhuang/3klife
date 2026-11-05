@@ -145,7 +145,7 @@ export function normalizeClanTier(value: unknown): ClanTier {
     return value === 1 || value === 2 || value === 3 ? value : 0;
 }
 
-/** §H UI_G4_CLAN_TIER_UP；原句的郡望家風與高門求親效果還沒做，先不提 */
+/** §H UI_G4_CLAN_TIER_UP；郡望家風另發一句（ClanTradition），高門求親效果還沒做，先不提 */
 export function clanTierUpLine(oldTier: ClanTier, newTier: ClanTier): string {
     return `門閥升格！家族已由【${CLAN_TIER_NAMES[oldTier]}】晉升為【${CLAN_TIER_NAMES[newTier]}】！`;
 }

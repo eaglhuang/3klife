@@ -116,6 +116,8 @@ export interface NurtureServiceOptions {
     onGraduated?: (result: GraduationResult) => void;
     /** 因子字典；用來推導混種戰法領域（defaultTags），沒提供則退回因子 id */
     factorDictionary?: FactorDictionary;
+    /** 家族的郡望家風維度（G4 §F-1）；有父母紀錄的子嗣入學時帶入 */
+    clanTraditionKind?: () => TrainingKind | undefined;
 }
 
 export interface NurtureAwakeningHooks {
@@ -276,6 +278,7 @@ export class NurtureService {
             random: this._rng(),
             hybridSources: hybridSourcesFromParents(parents, this._options.factorDictionary),
             factorDictionary: this._options.factorDictionary,
+            clanTraditionKind: child.fatherId || child.motherId ? this._options.clanTraditionKind?.() : undefined,
         });
         const used = this._state.admission.season === season ? this._state.admission.used : 0;
         this._state.admission = { season, used: used + 1 };

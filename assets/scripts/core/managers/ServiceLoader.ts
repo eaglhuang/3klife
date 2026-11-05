@@ -83,6 +83,7 @@ export class ServiceLoader {
         onGraduated: () => { void this.session.gainDiscoveryExp('nurture-graduate'); },
         // 子嗣奧義覺醒（ULT-15）：奧義母表在 prepareBreeding() 載入
         childUltimate: { definitions: () => this.ultimateDefinitions },
+        clanTraditionKind: () => this.session.clanTradition?.kind,
     });
     /** loadUltimateDefinitions() 載入後的奧義母表（只留 id 與繼承基因）；子嗣奧義覺醒用 */
     private ultimateDefinitions: ChildUltimateDefinition[] = [];

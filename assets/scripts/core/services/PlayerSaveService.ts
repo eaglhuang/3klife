@@ -20,6 +20,7 @@ import { normalizeInventory, PlayerInventory } from '../systems/PlayerInventory'
 import { normalizeBondPoints } from '../systems/OverflowBond';
 import { normalizeClanTier, type ClanTier } from '../systems/ClanTier';
 import { normalizeCustomFactors } from '../systems/CustomGoldFactor';
+import { normalizeClanTradition, type ClanTradition } from '../systems/ClanTradition';
 import type { FactorDefinition } from '../systems/FactorInheritance';
 import { normalizeOnboardingState, OnboardingState } from '../systems/OnboardingTutorial';
 import { normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
@@ -265,6 +266,8 @@ export interface PlayerSaveSnapshot {
     soulFragments?: SoulFragmentLedger;
     /** 門第階級；後加的選填欄位，舊檔讀回為布衣寒門（PROG-2-1795） */
     clanTier?: ClanTier;
+    /** 郡望家風（G4 §F-1）；舊存檔沒有此欄位 */
+    clanTradition?: ClanTradition;
     /** 玩家自創的因子定義（G4 §E #2）；舊存檔沒有此欄位 */
     customFactors?: FactorDefinition[];
     /** 趕路（回合制）；後加的選填欄位，舊檔讀回為沒有趕路（PROG-2-0475） */
@@ -579,6 +582,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.friendBorrowLedger !== undefined ? { friendBorrowLedger: normalizeBorrowLedger(snapshot.friendBorrowLedger) } : {}),
         ...(snapshot.soulFragments !== undefined ? { soulFragments: normalizeSoulFragmentLedger(snapshot.soulFragments) } : {}),
         ...(snapshot.clanTier !== undefined ? { clanTier: normalizeClanTier(snapshot.clanTier) } : {}),
+        ...(normalizeClanTradition(snapshot.clanTradition) ? { clanTradition: normalizeClanTradition(snapshot.clanTradition) as ClanTradition } : {}),
         ...(snapshot.customFactors !== undefined ? { customFactors: normalizeCustomFactors(snapshot.customFactors) } : {}),
         ...(normalizeTravelCountdown(snapshot.travelCountdown) ? { travelCountdown: normalizeTravelCountdown(snapshot.travelCountdown)! } : {}),
         ...(normalizeCountdownState(snapshot.countdown) ? { countdown: normalizeCountdownState(snapshot.countdown)! } : {}),

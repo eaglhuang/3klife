@@ -206,6 +206,7 @@ import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '.
 import { withLifeImprints } from '../systems/LifeImprint';
 import { clanMembersOf, clanStatsOf, clanTierOf, normalizeClanTier, type ClanTier } from '../systems/ClanTier';
 import { forgeCustomGold, mergeCustomFactors, normalizeCustomFactors } from '../systems/CustomGoldFactor';
+import { CLAN_TRADITION_MIN_TIER, clanTraditionOf, normalizeClanTradition, type ClanTradition } from '../systems/ClanTradition';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from '../systems/BattleRecordStats';
@@ -642,6 +643,7 @@ export class GameSession {
     private _soulFragments: SoulFragmentLedger = emptySoulFragmentLedger();
     /** 門第階級，只升不降（G4 §F-1） */
     private _clanTier: ClanTier = 0;
+    private _clanTradition: ClanTradition | null = null;
     /** 已通關的關卡 id（連環破，PROG-2-0215） */
     private _clearedStageIds: string[] = [];
     /** 收藏武將 id（HALL-07 收藏權重，PROG-2-0453） */
@@ -1714,6 +1716,10 @@ export class GameSession {
         return this._clanTier;
     }
 
+    public get clanTradition(): ClanTradition | null {
+        return this._clanTradition;
+    }
+
     public setFactorDictionary(dictionary: FactorDictionary | undefined): void {
         this._baseFactorDictionary = dictionary;
         this._factorDictionary = mergeCustomFactors(dictionary, this._customFactors);
@@ -1793,6 +1799,7 @@ export class GameSession {
         // 上一局的進度不能帶進新局（PROG-2-0660）
         this._soulFragments = emptySoulFragmentLedger();
         this._clanTier = 0;
+        this._clanTradition = null;
         this._setCustomFactors([]);
         this._pendingLifespanEvents = [];
         this._bondPoints = 0;
@@ -3877,9 +3884,12 @@ export class GameSession {
         const cards = await this._lifecycle?.getArchiver?.()?.getAllSpiritCards() ?? [];
         const members = clanMembersOf(this._roster.getAll(), cards, this._factorDictionary);
         const reached = clanTierOf(clanStatsOf(members));
-        if (reached <= this._clanTier) return null;
-        const payload: ClanTierUpPayload = { oldTier: this._clanTier, newTier: reached };
-        this._clanTier = reached;
+        const payload: ClanTierUpPayload | null = reached > this._clanTier ? { oldTier: this._clanTier, newTier: reached } : null;
+        if (payload) this._clanTier = reached;
+        // 家風只定一次；舊存檔已是郡望世家時也在這裡補上
+        if (this._clanTier >= CLAN_TRADITION_MIN_TIER && !this._clanTradition) {
+            this._clanTradition = clanTraditionOf(this._roster.getAll(), this._factorDictionary);
+        }
         return payload;
     }
 
@@ -4401,6 +4411,7 @@ export class GameSession {
             friendBorrowLedger: { records: [...this._borrowLedger.records] },
             soulFragments: { ...this._soulFragments },
             clanTier: this._clanTier,
+            clanTradition: this._clanTradition ?? undefined,
             customFactors: this._customFactors.map((def) => ({ ...def })),
             femaleSystem: this.femaleSystemState,
             ...(this._travel ? { travelCountdown: { ...this._travel } } : {}),
@@ -4568,6 +4579,7 @@ export class GameSession {
         this._borrowLedger = normalizeBorrowLedger(snapshot.friendBorrowLedger);
         this._soulFragments = normalizeSoulFragmentLedger(snapshot.soulFragments);
         this._clanTier = normalizeClanTier(snapshot.clanTier);
+        this._clanTradition = normalizeClanTradition(snapshot.clanTradition);
         this._setCustomFactors(normalizeCustomFactors(snapshot.customFactors));
         this._deck = [...snapshot.deck];
         this._leadGeneralId = snapshot.leadGeneralId ?? null;

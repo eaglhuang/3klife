@@ -14,6 +14,7 @@
  * Unity 對照：像 MVP 裡的 Presenter。View（UCUF 組出來的節點）只負責顯示，
  * Presenter 讀 Model（名冊 / NurtureService）後吐出 ViewModel，按鈕 onClick 只轉呼叫 Presenter 的方法。
  */
+import { clanTraditionEffectText } from '../../core/systems/ClanTradition';
 import { FAMILY_STUDY_BLOCK_TEXT, FAMILY_STUDY_ROUND_COST, familyStudyHint, familyStudyLine } from '../../core/systems/FamilyStudy';
 import { lateBloomClueText } from '../../core/systems/LateBloomClue';
 import { childUltimateAwakenLine } from '../../core/systems/UltimateScriptLines';
@@ -362,6 +363,7 @@ export class NurtureFlowController {
         const session = this._deps.nurture.startWithCards(child.id, cards);
         this._borrowed = null;
         this._notice = `入學完成，${cards.length} 位教官任教`;
+        if (session.clanTraditionKind) this._notice += `\n郡望家風：${clanTraditionEffectText(session.clanTraditionKind)}`;
         if (borrowed && this._deps.commitFriendBorrow) {
             const result = await this._deps.commitFriendBorrow(borrowed.friendId, session.sessionId);
             if (!result.ok) this._notice += `（借用紀錄未寫入：${result.message ?? '借用失敗'}）`;
@@ -882,7 +884,8 @@ function buildSessionTexts(session: NurtureSession, notice: string, t: BreedText
             ? `教官：${session.mentors.map((m) => m.name).join('、')}`
             : '教官：無',
         nurtureFactors: session.negativeFactors.length > 0 ? `負面因子：${session.negativeFactors.join('、')}` : '負面因子：無',
-        nurtureLog: notice || lateBloomClueText(session.vigor, VIGOR_MAX) || (last ? describeRound(last, t) : '選擇本回合的訓練，或休息回復精力'),
+        // 紀錄列只有一行高，換行會讓字被縮小
+        nurtureLog: notice.replace(/\n/g, '　') || lateBloomClueText(session.vigor, VIGOR_MAX) || (last ? describeRound(last, t) : '選擇本回合的訓練，或休息回復精力'),
     };
 }
 
