@@ -15,6 +15,7 @@
  * 回傳新的 GeneralData；寫回名冊與存檔交給上層 Service（BreedingService）。
  */
 import { applyCompactLock, applyHeritageLock } from './FamilyCompact';
+import { applyLineageSynergy } from './LineageSynergy';
 import { atavismSeedsOf, peakFactorsOf } from './Atavism';
 import type { AncestralPeak, GeneralConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
 import { toCanonicalRole, type CanonicalRole } from '../models/GeneralRole';
@@ -579,6 +580,8 @@ export interface BreedingResult {
     compactRescued?: boolean;
     /** 父系家傳真的保住了原本會流失的因子 */
     heritageRescued?: boolean;
+    /** 門風連攜升星的因子 id（PROG-2-1818） */
+    lineageSynergyFactorId?: string;
     outcome: BreedingOutcome;
     /** 本次結緣新觸發的治理關係事件（KIN-08，例如宿敵配種）；blocked 時不產生 */
     relationEvents?: RelationEventHit[];
@@ -738,11 +741,16 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         : bloodlineFactors;
     const lockOptions = { dictionary: request.dictionary, enabledColors: request.enabledColors, maxFactors: request.maxFactors ?? DEFAULT_MAX_INHERITED_FACTORS };
     const heritageLocked = !request.lockedFactorId && !!request.heritageFactorId;
-    const childFactors = request.lockedFactorId
+    const lockedFactors = request.lockedFactorId
         ? applyCompactLock(fatedFactors, request.lockedFactorId, request.father, request.mother, lockOptions)
         : request.heritageFactorId
             ? applyHeritageLock(fatedFactors, request.heritageFactorId, request.father, lockOptions)
             : fatedFactors;
+    // 只走外婚：同血脈已有近親純化
+    const synergy = inbred
+        ? { factors: lockedFactors, risen: null }
+        : applyLineageSynergy(lockedFactors, request.father, request.mother, { random: request.random, dictionary: request.dictionary, priorityId: request.lockedFactorId });
+    const childFactors = synergy.factors;
     const child = createChild({
         id: request.childId,
         father: request.father,
@@ -772,8 +780,9 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
 
     return {
         bloodFatigue,
-        compactRescued: !heritageLocked && childFactors !== fatedFactors,
-        heritageRescued: heritageLocked && childFactors !== fatedFactors,
+        compactRescued: !heritageLocked && lockedFactors !== fatedFactors,
+        heritageRescued: heritageLocked && lockedFactors !== fatedFactors,
+        lineageSynergyFactorId: synergy.risen?.id,
         outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: childFactors,
         luckEffects,
     };
