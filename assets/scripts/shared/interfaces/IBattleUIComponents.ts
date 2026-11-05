@@ -29,6 +29,7 @@ export interface IBattleHUDLike {
 
 export interface IStrategistHudLike {
     node: Node;
+    ensureMounted(): Promise<void>;
     setView(view: StrategistHudView): void;
     playSurge(): void;
 }

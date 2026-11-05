@@ -10,7 +10,6 @@
 
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { Node, Camera, UITransform, Widget } from 'cc';
-import { StrategistHudComposite } from '../../ui/components/StrategistHudComposite';
 import type { IStrategistHudLike } from '../../shared/interfaces/IBattleUIComponents';
 import { BoardRenderer } from './BoardRenderer';
 import { UnitRenderer } from './UnitRenderer';
@@ -138,7 +137,9 @@ export function ensureStrategistHud(canvas: Node | null, hudNode: Node | null): 
   widget.isAlignTop = widget.isAlignBottom = widget.isAlignLeft = widget.isAlignRight = true;
   widget.top = widget.bottom = widget.left = widget.right = 0;
   if (hudNode?.parent === canvas) node.setSiblingIndex(hudNode.getSiblingIndex() + 1);
-  const panel = node.getComponent(StrategistHudComposite) ?? node.addComponent(StrategistHudComposite);
+  // 依元件名稱掛載（battle 不直接引用 ui 層），類別由 ui/components/StrategistHudComposite 註冊
+  const panel = (node.getComponent('StrategistHudComposite') ?? node.addComponent('StrategistHudComposite')) as unknown as IStrategistHudLike | null;
+  if (!panel) return null;
   void panel.ensureMounted();
   return panel;
 }
