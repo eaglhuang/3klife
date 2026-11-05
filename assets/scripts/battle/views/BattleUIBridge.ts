@@ -21,6 +21,7 @@ import { teamRecoverNoticeText, type TeamRecoveredEvent } from '../shared/TeamRe
 import { enemyMassDebuffNoticeText, type EnemyMassDebuffChangedEvent } from '../shared/EnemyMassDebuff';
 import { AWAKENING_FREEZE_TIMING, awakeningFreezeTitles, formatAwakeningReveal } from './AwakeningReveal';
 import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress';
+import { factorAwakeningLines } from '../../core/systems/FactorAwakening';
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import type { TeachingSpiritInput } from '../../core/systems/TeachingSpiritTalisman';
 import { Color, Component, EventKeyboard, EventMouse, EventTouch, Input, KeyCode, Node, input } from 'cc';
@@ -807,10 +808,10 @@ export class BattleUIBridge {
         for (const line of milestoneLines) this.appendLog(line);
         if (milestoneLines.length > 0) this.ctx.resultPopup?.appendDetails?.(milestoneLines);
       }
-      for (const awakened of settlement.awakenings) {
-        this.appendLog(`【覺醒】${awakened.displayName}！`);
-      }
-      this.ctx.resultPopup?.appendDetails?.(formatAwakeningReveal(settlement.awakenings));
+      // 因子爆發系統 §G 覺醒提示（PROG-2-1783）
+      const awakeningLines = settlement.awakenings.flatMap(factorAwakeningLines);
+      for (const line of awakeningLines) this.appendLog(line);
+      this.ctx.resultPopup?.appendDetails?.([...formatAwakeningReveal(settlement.awakenings), ...awakeningLines]);
       if (settlement.awakenings.length > 0) {
         void this.ctx.resultPopup?.playAwakeningFreeze?.(awakeningFreezeTitles(settlement.awakenings), AWAKENING_FREEZE_TIMING);
       }

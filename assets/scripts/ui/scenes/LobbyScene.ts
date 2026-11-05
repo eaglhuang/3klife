@@ -94,6 +94,7 @@ import type { SeasonAdvancedPayload } from '../../core/managers/GameSession';
 import { bloodlineBirthLines } from '../../core/systems/BloodlineBirthLines';
 import type { DiscoveryGain } from '../../core/systems/DiscoveryProgress';
 import { discoveryPhaseUnlockLines } from '../../core/systems/DiscoveryProgress';
+import { factorAwakeningLines, type FactorAwakenedEvent } from '../../core/systems/FactorAwakening';
 import { rebirthVoiceLines } from '../../core/systems/Rebirth';
 import { ultimateUnlockLines } from '../../core/systems/UltimateScriptLines';
 import { rebirthBreakthroughLine } from '../../core/systems/NumericalScriptLines';
@@ -1035,6 +1036,12 @@ export class LobbyScene extends Component {
             // 因子階段解鎖（因子解鎖系統 §H，PROG-2-1779）；戰場的升級由 BattleUIBridge 寫進結算
             event.on(GAME_SESSION_EVENTS.DiscoveryLevelChanged, (payload?: unknown) => {
                 for (const message of discoveryPhaseUnlockLines(payload as DiscoveryGain)) {
+                    services().event.emit('SHOW_TOAST', { message, duration: 3 });
+                }
+            }),
+            // 因子爆發系統 §G 覺醒提示（PROG-2-1783）：培育、名士占卜都走這個事件
+            event.on(GAME_SESSION_EVENTS.FactorAwakened, (payload?: unknown) => {
+                for (const message of factorAwakeningLines(payload as FactorAwakenedEvent)) {
                     services().event.emit('SHOW_TOAST', { message, duration: 3 });
                 }
             }),
