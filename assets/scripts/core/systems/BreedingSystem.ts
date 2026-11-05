@@ -143,7 +143,7 @@ export function baseStatTotalOf(father: GeneralConfig, mother: GeneralConfig): n
     return [father, mother].reduce((total, general) => total + STAT_KEYS.reduce((sum, key) => sum + statOf(general, key), 0), 0);
 }
 
-function statOf(general: GeneralConfig, key: keyof GeneralStatsConfig): number {
+export function statOf(general: GeneralConfig, key: keyof GeneralStatsConfig): number {
     const top = (general as unknown as Record<string, unknown>)[key];
     if (typeof top === 'number') return top;
     return general.stats?.[key] ?? 50;

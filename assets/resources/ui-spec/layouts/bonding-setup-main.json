@@ -184,7 +184,7 @@
                     "name": "FatherName",
                     "id": "fatherName",
                     "widget": {
-                      "top": 16,
+                      "top": 10,
                       "left": 144,
                       "right": 20
                     },
@@ -197,7 +197,7 @@
                     "name": "FatherInfo",
                     "id": "fatherInfo",
                     "widget": {
-                      "top": 62,
+                      "top": 50,
                       "left": 144,
                       "right": 20
                     },
@@ -210,7 +210,20 @@
                     "name": "FatherFactors",
                     "id": "fatherFactors",
                     "widget": {
-                      "top": 92,
+                      "top": 78,
+                      "left": 144,
+                      "right": 20
+                    },
+                    "height": 28,
+                    "text": "",
+                    "styleSlot": "bonding.label.meta"
+                  },
+                  {
+                    "type": "label",
+                    "name": "FatherRumor",
+                    "id": "fatherRumor",
+                    "widget": {
+                      "top": 106,
                       "left": 144,
                       "right": 20
                     },
@@ -338,7 +351,7 @@
                     "name": "MotherName",
                     "id": "motherName",
                     "widget": {
-                      "top": 16,
+                      "top": 10,
                       "left": 144,
                       "right": 20
                     },
@@ -351,7 +364,7 @@
                     "name": "MotherInfo",
                     "id": "motherInfo",
                     "widget": {
-                      "top": 62,
+                      "top": 50,
                       "left": 144,
                       "right": 20
                     },
@@ -364,7 +377,20 @@
                     "name": "MotherFactors",
                     "id": "motherFactors",
                     "widget": {
-                      "top": 92,
+                      "top": 78,
+                      "left": 144,
+                      "right": 20
+                    },
+                    "height": 28,
+                    "text": "",
+                    "styleSlot": "bonding.label.meta"
+                  },
+                  {
+                    "type": "label",
+                    "name": "MotherRumor",
+                    "id": "motherRumor",
+                    "widget": {
+                      "top": 106,
                       "left": 144,
                       "right": 20
                     },
