@@ -8,12 +8,15 @@
  *
  * Unity 對照：像一筆排程好的 ScriptableObject 事件資料，UI 只讀，回覆後清掉。
  */
-import type { GeneralConfig } from '../models/GeneralUnit';
+import type { GeneralConfig, GeneralGeneConfig } from '../models/GeneralUnit';
 import { BREEDING_MIN_AGE, epRatingLabel, isFemale, type BreedingGeneral } from './BreedingSystem';
 import type { ClanTier } from './ClanTier';
 import { matchRumorLine, sameSurnameNote } from './MatchRumor';
 import { isYuedanCandidate } from './YuedanReview';
 
+const HEIRLOOM_MAX_LEVEL = 2;
+/** 沒有這兩欄時，結緣扣完精力後上限會跟著變 0，再也恢復不了 */
+const SUITOR_VITALITY = 100;
 export const MARRIAGE_MARKET_MIN_TIER: ClanTier = 2;
 
 /** [郡望, 姓] */
@@ -62,6 +65,15 @@ export interface MarriageProposal {
     family: string;
     giftGold: number;
     suitor: MarriageSuitor;
+    /** 對象帶進門的家學因子，與提親子弟相同，世交合譜才有得鎖（PROG-2-1813） */
+    heirloom?: GeneralGeneConfig;
+}
+
+/** 提親子弟的最高星因子；金因子是自家宗脈，不算。星數最多 2★ */
+function heirloomOf(target: GeneralConfig): GeneralGeneConfig | undefined {
+    const genes = (target.genes ?? []).filter((gene) => gene.type !== 'gold');
+    genes.sort((a, b) => (b.level ?? 0) - (a.level ?? 0) || (a.id ?? '').localeCompare(b.id ?? ''));
+    return genes[0] ? { ...genes[0], level: Math.min(HEIRLOOM_MAX_LEVEL, genes[0].level ?? 1) } : undefined;
 }
 
 /** 提親對象：族中適齡未婚的子嗣，EP 高者優先 */
@@ -82,7 +94,9 @@ export function rollMarriageProposal(roster: readonly GeneralConfig[], tier: Cla
     const stat = (): number => roll(profile.min, profile.max);
     const [commandery, surname] = pick(PROPOSAL_FAMILIES);
     const gender: '男' | '女' = isFemale(target) ? '男' : '女';
+    const heirloom = heirloomOf(target);
     return {
+        ...(heirloom ? { heirloom } : {}),
         id,
         targetId: target.id,
         targetName: target.name,
@@ -98,7 +112,7 @@ export function rollMarriageProposal(roster: readonly GeneralConfig[], tier: Cla
     };
 }
 
-/** 應允後進名冊的武將；因子還沒給，見任務卡 */
+/** 應允後進名冊的武將；只帶家學因子 */
 export function buildSuitorGeneral(proposal: MarriageProposal): GeneralConfig {
     const { name, gender, age, ep, ...stats } = proposal.suitor;
     return {
@@ -112,12 +126,14 @@ export function buildSuitorGeneral(proposal: MarriageProposal): GeneralConfig {
         role: 'Combat',
         hp: SUITOR_HP,
         currentHp: SUITOR_HP,
+        vitality: SUITOR_VITALITY,
+        maxVitality: SUITOR_VITALITY,
         ...stats,
         stats,
         ep,
         epRating: epRatingLabel(ep),
         rarityTier: 'rare',
-        genes: [],
+        genes: proposal.heirloom ? [proposal.heirloom] : [],
         hiddenFlags: [],
     } as unknown as GeneralConfig;
 }
@@ -149,5 +165,6 @@ export function normalizeMarriageProposal(raw: unknown): MarriageProposal | null
     if (typeof suitor.name !== 'string' || (suitor.gender !== '男' && suitor.gender !== '女')) return null;
     const numbers = [suitor.age, suitor.str, suitor.int, suitor.lea, suitor.pol, suitor.cha, suitor.luk, suitor.ep];
     if (!numbers.every(isStat)) return null;
-    return { id: value.id, targetId: value.targetId, targetName: value.targetName, family: value.family, giftGold: value.giftGold, suitor: { ...suitor } };
+    const heirloom = value.heirloom && typeof value.heirloom.id === 'string' ? { heirloom: { ...value.heirloom } } : {};
+    return { ...heirloom, id: value.id, targetId: value.targetId, targetName: value.targetName, family: value.family, giftGold: value.giftGold, suitor: { ...suitor } };
 }

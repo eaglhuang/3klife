@@ -111,6 +111,33 @@
           },
           {
             "type": "button",
+            "name": "BtnCompact",
+            "id": "btnCompact",
+            "widget": {
+              "top": 16,
+              "right": 506
+            },
+            "width": 170,
+            "height": 48,
+            "skinSlot": "bonding.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnCompactLabel",
+                "id": "compactLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "合譜：不用",
+                "styleSlot": "bonding.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
             "name": "BtnRumorRoute",
             "id": "btnRumorRoute",
             "widget": {
