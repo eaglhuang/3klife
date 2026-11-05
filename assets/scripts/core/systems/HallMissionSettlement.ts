@@ -64,3 +64,17 @@ export function officerPromotionNoticeOf(promotedTiers: readonly number[], rows:
         return gold > 0 ? `晉升 ${rankName}（金錢 +${gold}）` : `晉升 ${rankName}`;
     });
 }
+
+/** 大廳晉升演出時序（官職系統 E-6 升官動畫，PROG-2-1859；秒，數值暫定，沿用覺醒定格的節奏但停留稍長） */
+export const OFFICER_PROMOTION_FREEZE_TIMING = {
+    fadeIn: 0.12,
+    popScaleFrom: 1.6,
+    pop: 0.3,
+    hold: 1.4,
+    fadeOut: 0.4,
+} as const;
+
+/** 晉升演出的大字（每階一個，由低到高）：「晉升 {RankName}」，不帶獎勵金額（獎勵另由提示列顯示） */
+export function officerPromotionFreezeTitles(promotedTiers: readonly number[], rows: readonly OfficerDisplayRow[] | null = null): string[] {
+    return promotedTiers.map((tier) => `晉升 ${rows?.find((row) => row.tier === tier)?.title ?? OFFICER_TIER_TITLES[tier - 1] ?? ''}`);
+}
