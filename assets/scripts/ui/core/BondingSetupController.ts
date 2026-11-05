@@ -26,7 +26,8 @@ import { factorStageText } from '../../core/systems/FactorVisibility';
 import { matchRumorLine, sameSurnameNote, matchesRumorRoute, nextRumorRoute, RumorRoute, rumorRouteFiltered, rumorRouteName } from '../../core/systems/MatchRumor';
 import { yuedanFiltered, yuedanList, yuedanRevealLine } from '../../core/systems/YuedanReview';
 import { synergyWindowLine, type FamilySynergyLedger } from '../../core/systems/FamilySynergy';
-import { compactCostFor, compactFamilyOf, heritageFactorsOf, sharedFactorsOf } from '../../core/systems/FamilyCompact';
+import { compactCeremonyLine, kinWarningLine } from '../../core/systems/BondingStoryLines';
+import { compactCostFor, compactFamilyOf, compactSynergyFull, heritageFactorsOf, sharedFactorsOf } from '../../core/systems/FamilyCompact';
 import { epContribLine } from '../../core/systems/EpLegacyBonus';
 import { bondingSeatText } from '../../core/systems/BloodlineTreeSlots';
 import { blueFactorCapLine, blueFactorCaps, lineageSynergyHint, lineageSynergyLine, sharedBlueGenesOf } from '../../core/systems/LineageSynergy';
@@ -126,6 +127,8 @@ export interface BondingSetupDeps {
     omenSeed?: () => number;
     /** 結緣成功時記下本機子嗣紀錄（BRD-12）；正式環境接 GameSession.recordBreedingBirth，不送 server */
     recordBreeding?: (record: BreedingBirthRecord) => void;
+    /** 劇本演出句（G2／G3 §G）；通知欄只有一行，正式環境接 toast，未提供時不演出 */
+    announce?: (line: string) => void;
     /** 世交相性 K 的滑動窗（G3 §F-2）；未提供時不顯示 */
     familySynergy?: () => FamilySynergyLedger;
     /** 世交合譜收的黃金（G3 §F-3）；未提供時不能合譜 */
@@ -143,6 +146,8 @@ export class BondingSetupController {
     private _fatherId: string | null = null;
     private _motherId: string | null = null;
     private _notice = '';
+    private _warnedPair = '';
+    private _pairWarningReady = false;
     /** 只看月旦評榜上人物（G4 §H）；只影響清單，不寫存檔 */
     private _yuedanOnly = false;
     /** 鄉評路線篩選（G4 §F-2 Layer 1）；只影響清單，不寫存檔 */
@@ -249,6 +254,19 @@ export class BondingSetupController {
         this._notice = '';
     }
 
+    /** 譜牒官預警（G3 §G）；畫面刷新時呼叫，同一對連續刷新只提一次；血統圖載入前查不到共祖，先不判 */
+    announcePairWarning(): void {
+        if (!this._pairWarningReady) return;
+        const pair = this._currentPair();
+        const key = pair ? `${pair.father.id}|${pair.mother.id}` : '';
+        if (key === this._warnedPair) return;
+        this._warnedPair = key;
+        if (!pair) return;
+        const level = this._deps.playerDiscoveryLevel?.() ?? 1;
+        const target = (this._deps.breeding.kinPurificationTargets?.(pair.father.id, pair.mother.id) ?? []).find((item) => (item.gene.discoveryLevel ?? 1) <= level);
+        if (target) this._deps.announce?.(kinWarningLine(pair.father.name, pair.mother.name, target.ancestorName));
+    }
+
     cycleFather(step = 1): void {
         this._fatherId = cycle(this.fathers(), this.fatherId, step);
         this._notice = '';
@@ -263,11 +281,14 @@ export class BondingSetupController {
 
     async open(): Promise<void> {
         this._notice = '';
+        this._pairWarningReady = false;
         try {
             await this._deps.prepare?.();
         } catch {
             this._notice = '血統資料載入失敗，EP 預估可能偏低';
         }
+        this._warnedPair = '';
+        this._pairWarningReady = true;
     }
 
     /** 確認結緣；精力無論成敗都會扣，受孕成功時子嗣以 0 歲加入名冊 */
@@ -300,6 +321,8 @@ export class BondingSetupController {
             // 驗證通過才記錄；驗證失敗不影響結緣結果（BRD-12 暫定）
             const built = buildBreedingBirthRecord(result, omen);
             if (built?.record) this._deps.recordBreeding?.(built.record);
+            const compactFamily = compact && canPay ? compactFamilyOf(result.father, result.mother) : null;
+            if (compact && compactFamily) this._deps.announce?.(compactCeremonyLine(compact.displayName ?? compact.id ?? '', compactSynergyFull(compactFamily, this._deps.familySynergy?.())));
             if (compact && !canPay) {
                 this._notice += '　黃金不足，這胎未行世交合譜。';
             } else if (compact && result.compactRescued && this._deps.spendGold?.(cost)) {
@@ -423,7 +446,8 @@ export class BondingSetupController {
         if (fatigueForecast) texts.inbreedingLabel += `｜${fatigueForecast}`;
         const kinTargets = (this._deps.breeding.kinPurificationTargets?.(father.id, mother.id) ?? []).filter((target) => (target.gene.discoveryLevel ?? 1) <= level);
         const kinHint = kinPurificationHint(kinTargets);
-        texts.factorCapLabel = blueFactorCapLine(blueFactorCaps(father, mother, {
+        // 通知欄與上限列在同一位置，有通知時先讓位
+        texts.factorCapLabel = this._notice ? '' : blueFactorCapLine(blueFactorCaps(father, mother, {
             dictionary: this._deps.factorDictionary?.(),
             synergyAllowed: !isSameBloodline(father, mother),
             purifyIds: kinTargets.map((target) => target.gene.id ?? ''),
