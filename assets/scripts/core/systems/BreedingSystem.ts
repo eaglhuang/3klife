@@ -16,6 +16,7 @@
  */
 import { applyCompactLock, applyHeritageLock } from './FamilyCompact';
 import { applyLineageSynergy } from './LineageSynergy';
+import { applyKinPurification, kinPurificationTargetsOf, type KinPurificationOutcome, type KinPurificationTarget } from './KinPurification';
 import { atavismSeedsOf, peakFactorsOf } from './Atavism';
 import type { AncestralPeak, GeneralConfig, GeneralGeneConfig, GeneralStatsConfig } from '../models/GeneralUnit';
 import { toCanonicalRole, type CanonicalRole } from '../models/GeneralRole';
@@ -123,6 +124,7 @@ export interface PedigreeSource {
     getPedigree(uid: string): Pedigree;
     getPerson(uid: string): PersonRecord | null;
     commonAncestorDistance(uidA: string, uidB: string, maxGeneration?: number): number | null;
+    commonAncestors?(uidA: string, uidB: string, maxGeneration?: number): string[];
 }
 
 /** 名將契合（史實 / 宿敵配對）判定；家族關係資料接上前預設為 false */
@@ -440,6 +442,18 @@ export function isInbredPair(father: GeneralConfig, mother: GeneralConfig, pedig
     return pedigree.commonAncestorDistance(father.id, mother.id, BLOOD_FATIGUE_SCAN_GENERATIONS) !== null;
 }
 
+/** 外戚血脈純化可判的因子；同血脈走近親純化，這裡回空 */
+export function kinPurificationTargets(
+    father: GeneralConfig,
+    mother: GeneralConfig,
+    pedigree: Pick<PedigreeSource, 'commonAncestors'>,
+    lookup: (uid: string) => GeneralConfig | undefined,
+    dictionary?: FactorDictionary,
+): KinPurificationTarget[] {
+    if (isSameBloodline(father, mother)) return [];
+    return kinPurificationTargetsOf(pedigree.commonAncestors?.(father.id, mother.id, BLOOD_FATIGUE_SCAN_GENERATIONS) ?? [], lookup, dictionary);
+}
+
 /** Base_Stat = (父 + 母) / 2 × (EP / 100) */
 export function childBaseStat(fatherStat: number, motherStat: number, ep: number): number {
     return Math.max(1, Math.round(((fatherStat + motherStat) / 2) * (ep / 100)));
@@ -582,6 +596,8 @@ export interface BreedingResult {
     heritageRescued?: boolean;
     /** 門風連攜升星的因子 id（PROG-2-1818） */
     lineageSynergyFactorId?: string;
+    /** 外戚血脈純化升星的結果（PROG-2-1819） */
+    kinPurification?: KinPurificationOutcome;
     outcome: BreedingOutcome;
     /** 本次結緣新觸發的治理關係事件（KIN-08，例如宿敵配種）；blocked 時不產生 */
     relationEvents?: RelationEventHit[];
@@ -747,9 +763,13 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
             ? applyHeritageLock(fatedFactors, request.heritageFactorId, request.father, lockOptions)
             : fatedFactors;
     // 只走外婚：同血脈已有近親純化
-    const synergy = inbred
-        ? { factors: lockedFactors, risen: null }
-        : applyLineageSynergy(lockedFactors, request.father, request.mother, { random: request.random, dictionary: request.dictionary, priorityId: request.lockedFactorId });
+    const kin = inbred
+        ? { factors: lockedFactors, outcome: null }
+        : applyKinPurification(lockedFactors, kinPurificationTargets(request.father, request.mother, request.pedigree, (uid) => request.rosterLookup?.(uid), request.dictionary), { random: request.random, dictionary: request.dictionary, priorityId: request.lockedFactorId });
+    // 每胎只升一項：純化中了就不再判連攜
+    const synergy = inbred || kin.outcome
+        ? { factors: kin.factors, risen: null }
+        : applyLineageSynergy(kin.factors, request.father, request.mother, { random: request.random, dictionary: request.dictionary, priorityId: request.lockedFactorId });
     const childFactors = synergy.factors;
     const child = createChild({
         id: request.childId,
@@ -783,6 +803,7 @@ function runBreeding(request: BreedingRequest): Omit<BreedingResult, 'breedingMo
         compactRescued: !heritageLocked && lockedFactors !== fatedFactors,
         heritageRescued: heritageLocked && lockedFactors !== fatedFactors,
         lineageSynergyFactorId: synergy.risen?.id,
+        kinPurification: kin.outcome ?? undefined,
         outcome: 'conceived', reasons: [], conceptionRate: rate, father, mother, child, childPedigree: pedigree, ep, factors: childFactors,
         luckEffects,
     };

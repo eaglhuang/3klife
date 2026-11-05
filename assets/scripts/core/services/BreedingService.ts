@@ -29,7 +29,9 @@ import {
     previewBreedingEp,
     expectedFactorPool,
     toPersonRecord,
+    kinPurificationTargets,
 } from '../systems/BreedingSystem';
+import type { KinPurificationTarget } from '../systems/KinPurification';
 import type { FactorColor, FactorDictionary } from '../systems/FactorInheritance';
 import { femaleSourceConceptionMod, type FemaleSource } from '../systems/FemaleSource';
 import { affinityResolverOf, conceptionModBetween, type HistoricalPairTable } from '../systems/HistoricalPairs';
@@ -132,6 +134,12 @@ export class BreedingService {
     }
 
     /** 結緣介面的 EP 預估（不改資料、不擲骰） */
+    /** 結緣預覽：這對夫妻可外戚純化的因子（PROG-2-1819） */
+    kinPurificationTargets(fatherId: string, motherId: string): KinPurificationTarget[] {
+        const { father, mother } = this._findPair(fatherId, motherId);
+        return kinPurificationTargets(father, mother, this._graph, this._rosterLookup(), this._options.getDictionary?.() ?? this._options.dictionary);
+    }
+
     previewEp(fatherId: string, motherId: string): EpBreakdown {
         const { father, mother } = this._findPair(fatherId, motherId);
         return previewBreedingEp({
