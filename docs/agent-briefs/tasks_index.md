@@ -1,6 +1,6 @@
 ---
 title: UI Quality Tasks Index
-generated: 2026-11-04
+generated: 2026-11-05
 manifest: ../ui-quality-todo.json
 ---
 
@@ -13,8 +13,8 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 195
-- done: 170
+- Total: 196
+- done: 171
 - in-progress: 8
 - open: 17
 
@@ -81,6 +81,7 @@ manifest: ../ui-quality-todo.json
 | UI-1-0017 | codex-gpt-6.1 | in-progress | P1 | M6 | art | [UI-1-0017](./tasks/UI-1-0017.md) |
 | UI-1-0018 | codex-gpt-6.1 | in-progress | P1 | M6 | art | [UI-1-0018](./tasks/UI-1-0018.md) |
 | UI-1-0019 | codex-gpt-6.1 | in-progress | P1 | M6 | art | [UI-1-0019](./tasks/UI-1-0019.md) |
+| UI-1-0020 | codex-gpt-6.1-sol | done | P1 | M6 | art | [UI-1-0020](./tasks/UI-1-0020.md) |
 | UI-2-0117 | codex-gpt-6.1 | done | P1 | M6 | art | [UI-2-0117](./tasks/UI-2-0117.md) |
 | UI-2-0118 | codex-gpt-6.1 | done | P1 | M6 | art | [UI-2-0118](./tasks/UI-2-0118.md) |
 | UI-2-0119 | codex-gpt-6.1 | done | P1 | M6 | art | [UI-2-0119](./tasks/UI-2-0119.md) |

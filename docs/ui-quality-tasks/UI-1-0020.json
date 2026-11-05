@@ -1,0 +1,76 @@
+{
+  "kind": "ui-quality-task-shard",
+  "version": 1,
+  "tasks": [
+    {
+      "doc_id": "doc_task_1455",
+      "id": "UI-1-0020",
+      "title": "重繪蔡文姬七弦古琴演奏立繪與正式頭像",
+      "owner": "codex-gpt-6.1-sol",
+      "priority": "P1",
+      "status": "done",
+      "type": "art",
+      "phase": "M6",
+      "created": "2026-11-05",
+      "created_by_agent": "codex-gpt-6.1-sol",
+      "started_at": "2026-11-05T20:25:21+08:00",
+      "started_by_agent": "codex-gpt-6.1-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "重繪蔡文姬正式立繪，改為完整長身七弦古琴置於低矮輕便琴架上演奏，修正雙手支撐與撥弦姿勢；保持成熟優雅且與大喬、甄姬、蔡琰區隔的臉型髮型，採深墨藍、麥稈白、古銅赭金配色；完成512x768透明全身立繪、兩種256頭像、reviewed crop、Cocos資源更新與驗證。",
+      "related": [
+        "UI-2-0121"
+      ],
+      "depends": [],
+      "acceptance": [
+        "臉孔成熟美麗且可與大喬、甄姬、蔡琰辨識區隔",
+        "深墨藍為主色，麥稈白與古銅赭金為副色，配色沿用既有台帳而非複製其他女將",
+        "古琴全長完整、七弦可辨，穩置於琴架上；右手撥弦、左手按弦，手臂與指掌自然",
+        "古琴是蔡文姬專屬代表物，縮成Q版仍可一眼辨認且不與他人道具重複",
+        "衣袖與衣帶收束簡潔，雙手、琴架與鞋履完整入鏡",
+        "輸出512x768透明正式立繪與兩種256x256頭像，reviewed crop通過",
+        "Cocos正式資產匯入有效，頭像驗證及計算閘門通過"
+      ],
+      "deliverables": [
+        "蔡文姬512x768透明正式立繪",
+        "general-avatar-crops.json中的reviewed裁切索引",
+        "正式武將頭像256x256",
+        "武將列表裁切頭像256x256",
+        "蔡文姬配色與角色特徵台帳更新",
+        "任務卡及驗證記錄"
+      ],
+      "notes": "2026-11-05 | 狀態: done | 驗證: reviewed crop 1/1；Cocos 三資產 imported/valid 且 Library hash 相符；avatar verify 1/1；compute-gate quick 3/3、import-boundary 1/1 | 變更: 完成蔡文姬512x768立繪、兩種256x256正式頭像及琴架演奏姿勢；古琴為專屬代表道具 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [
+          "assets/resources/sprites/generals/cai_wenji_portrait.png",
+          "assets/resources/sprites/generals/avatars/cai_wenji_avatar.png",
+          "assets/resources/sprites/ui_avatars/cropped/cai_wenji_avatar.png",
+          "assets/resources/data/general-avatar-crops.json"
+        ],
+        "validation_evidence": [
+          "512x768 transparent portrait and two 256x256 avatar outputs; source and Cocos Library hashes match",
+          "Reviewed crop verification passed 1/1 with --preserve-crop; all three Cocos assets imported=true and invalid=false",
+          "compute-gate quick passed 3/3; import-boundary passed 1/1"
+        ],
+        "handoff_diff_status": "正式資源、頭像、裁切索引與角色台帳完成；已提交並推送",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    }
+  ]
+}
