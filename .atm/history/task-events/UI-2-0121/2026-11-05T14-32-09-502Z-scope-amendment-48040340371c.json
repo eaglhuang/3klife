@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T14-32-09-502Z-scope-amendment-48040340371c",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:1b1e99dcb02ca523de5f745ae87cb04ed79ed9e127485f46fee235e743384e71",
+  "createdAt": "2026-11-05T14:32:09.502Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"docs/agent-briefs/tasks/UI/UI-2-0121.md,docs/ui-quality-tasks/UI-2-0121.json,docs/ui-quality-todo.json,docs/agent-briefs/tasks_index.md,docs/art/character-palette-ledger-shards/palette-principles.md,assets/resources/data/general-avatar-crops.json,assets/resources/sprites/generals/wei_yan_portrait.png,assets/resources/sprites/generals/wei_yan_portrait.png.meta,assets/resources/sprites/generals/avatars/wei_yan_avatar.png,assets/resources/sprites/ui_avatars/cropped/wei_yan_avatar.png,artifacts/ui-generated/wei-yan/wei_yan_portrait_candidate_3.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

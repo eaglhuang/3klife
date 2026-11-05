@@ -1,0 +1,20 @@
+{
+  "schemaId": "atm.taskTransition.v1",
+  "specVersion": "0.1.0",
+  "transitionId": "2026-11-05T14-48-56-405Z-scope-amendment-588df7ee1c57",
+  "taskId": "UI-2-0121",
+  "action": "scope-amendment",
+  "actorId": "codex-gpt-6.1-sol",
+  "sessionId": null,
+  "fromStatus": "running",
+  "toStatus": "running",
+  "taskPath": ".atm/history/tasks/UI-2-0121.json",
+  "taskSha256": "sha256:751cdfd8ae7f594de281e6166e21fd28c36e48f05e291a314147e14e29972468",
+  "createdAt": "2026-11-05T14:48:56.405Z",
+  "command": "node atm.mjs tasks scope add --task UI-2-0121 --actor codex-gpt-6.1-sol --add \"assets/resources/data/general-avatar-crops.json,assets/resources/sprites/generals/wei_yan_portrait.png,assets/resources/sprites/ui_avatars/cropped/wei_yan_avatar.png\" --json",
+  "amendmentMetadata": {
+    "amendmentClass": "linked-surface",
+    "amendmentPhase": "during-implementation",
+    "amendmentMode": "normal"
+  }
+}

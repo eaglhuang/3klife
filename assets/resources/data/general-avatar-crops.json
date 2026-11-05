@@ -383,17 +383,11 @@
       "source": "reviewed"
     },
     "wei-yan": {
-      "x": 200,
-      "y": 46,
-      "w": 124,
-      "h": 124,
-      "source": "reviewed",
-      "face": {
-        "top": 78,
-        "chin": 125,
-        "eyeY": 96,
-        "cx": 262
-      }
+      "x": 190,
+      "y": 0,
+      "w": 192,
+      "h": 192,
+      "source": "reviewed"
     },
     "xiahou-dun": {
       "x": 181,
