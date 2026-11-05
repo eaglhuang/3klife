@@ -23,6 +23,24 @@ export function createCharacterDs3BloodlineViewSuite(): TestSuite {
         assert.isTrue(view.awakeningProgress >= 0 && view.awakeningProgress <= 100, `progress=${view.awakeningProgress}`);
     });
 
+    suite.test('G1 因子列不顯示星數，G2 起顯示（PROG-2-1843）', () => {
+        const cfg = {
+            id: 'test-general', name: '測試',
+            genes: [
+                { id: 'g1', displayName: '膽量', type: '戰鬥', level: 4, description: '無視士氣壓制' },
+                { id: 'g2', displayName: '隱藏因子', isLocked: true, discoveryLevel: 18 },
+            ],
+        } as unknown as GeneralConfig;
+        const g1 = buildDs3BloodlineView(cfg, 1);
+        assert.equals('⚔|膽量|戰鬥|無視士氣壓制', Object.values(g1.factors[0]).join('|'));
+        assert.equals('🔒', g1.factors[1].tag);
+        for (const stage of [2, 3, 4] as const) {
+            const view = buildDs3BloodlineView(cfg, stage);
+            assert.equals('戰鬥★4', view.factors[0].tag);
+            assert.equals('★?🔒', view.factors[1].tag);
+        }
+    });
+
     suite.test('因子超過 4 列截斷、缺資料不拋錯', () => {
         const genes = [1, 2, 3, 4, 5].map((i) => ({ id: `g${i}`, displayName: `因子${i}`, type: '戰法', level: i }));
         const view = buildDs3BloodlineView({ id: 'x', name: 'x', genes } as unknown as GeneralConfig);

@@ -25,6 +25,14 @@ export function createFactorMaskWiringSuite(): TestSuite {
         assert.contains(text, '🔒');
     });
 
+    suite.test('詳情因子槽：G2 起補星數，G1 與看不到的因子都沒有（PROG-2-1843）', () => {
+        const starred = { ...blue, level: 4 } as typeof blue;
+        assert.equals(formatGene(1, blue, 5), formatGene(1, { ...blue } as typeof blue, 5, false));
+        assert.isFalse(formatGene(1, starred, 5).includes('★'));
+        assert.contains(formatGene(1, starred, 5, true), '藍因子甲 ★4');
+        assert.isFalse(formatGene(2, { ...green, level: 4 } as typeof green, 5, true).includes('★'));
+    });
+
     suite.test('詳情因子槽：未傳發現等級時維持舊行為，直接顯示名稱', () => {
         assert.contains(formatGene(1, blue), '藍因子甲');
     });
