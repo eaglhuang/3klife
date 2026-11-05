@@ -37,7 +37,7 @@ import { SeasonReportComposite, type SeasonReportOpenPayload } from '../componen
 import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
-import { GAME_SESSION_EVENTS, type AddGeneralsResult, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
+import { GAME_SESSION_EVENTS, type AddGeneralsResult, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
 import { seasonDisplayText, seasonStartText } from '../core/SeasonTexts';
@@ -160,6 +160,7 @@ import { UltimateCodexController } from '../core/UltimateCodexController';
 import { withSpiritCardDetailFallback } from '../core/SpiritCardDetailTexts';
 import { SPIRIT_TALLY_DETAIL_SCREEN_ID, spiritTallyDetailOfSpirit } from '../core/SpiritTallyDetailView';
 import type { SpiritCard } from '../../core/models/SpiritCard';
+import { lifeImprintLine } from '../../core/systems/LifeImprint';
 import { lifeScriptCopy, type LifeScriptEvent } from '../../core/systems/LifeScriptCopy';
 import { getTallyCardSummaries } from '../../core/config/TallyCardCatalog';
 import { DeckSelectController } from '../core/DeckSelectController';
@@ -1088,6 +1089,11 @@ export class LobbyScene extends Component {
                 const card = payload as { name?: string } | undefined;
                 if (!card?.name) return;
                 this._showLifeScriptToast('retire', card.name);
+            }),
+            // 血統傳承 G2 §E #7 蓋棺論定（PROG-2-1794）
+            event.on(GAME_SESSION_EVENTS.LifeImprinted, (payload?: unknown) => {
+                const imprinted = payload as LifeImprintedPayload;
+                event.emit('SHOW_TOAST', { message: lifeImprintLine(imprinted.name, imprinted.imprints), duration: 3 });
             }),
         );
     }

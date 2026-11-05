@@ -203,6 +203,7 @@ import { protectedAfterLoss, CELLAR_PROTECTION } from '../systems/CellarProtecti
 import { applySortieResult, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { buildEraResetEvent } from '../systems/EraReset';
 import { buildQuarterlyBattleReportRows, type QuarterlyBattleReportRow } from '../systems/RetireReviewCopy';
+import { withLifeImprints } from '../systems/LifeImprint';
 import { seasonModifiersOf } from '../systems/SeasonModifiers';
 import { computeCommandCapacity, getDeputyFoodBonus, getStrategistBonus, getTacticTpCost, TALLY_SHORTAGE_FOOD_THRESHOLD, validateSortieLoadout, type CreateSortieInput, type DeputyFoodBonus, type SortieLoadoutCheck, type SortieMember, type StrategistBonus, type SortieSummary } from '../systems/SortieDeploy';
 import { EMPTY_PERFORMANCE, type BattlePerformance, type BattleRecordLike } from '../systems/BattleRecordStats';
@@ -330,6 +331,8 @@ export const GAME_SESSION_EVENTS = {
     GeneralUnveiled: 'game-session-general-unveiled',
     /** payload: MentorCard */
     GeneralRetired: 'game-session-general-retired',
+    /** payload: { generalId, name, imprints }（退役或去世凝練生平印記，PROG-2-1794） */
+    LifeImprinted: 'game-session-life-imprinted',
     /** payload: { childId, injectedFactorId, consumed }（退役時因子媒介注入，PROG-2-0865） */
     GeneCatalystInjected: 'game-session-gene-catalyst-injected',
     /** payload: SpiritCard（每位死亡武將一張） */
@@ -524,6 +527,13 @@ const TALLY_LOYALTY_INITIAL = 50;
 
 /** 試用券招募結果：沿用 TrialTicketResult，另加上 uid 重複的拒絕原因。 */
 export type HireTrialResult = Omit<TrialTicketResult, 'reason'> & { reason?: TrialTicketRejectReason | 'uid-taken' };
+
+/** 退役或去世凝練生平印記（PROG-2-1794） */
+export interface LifeImprintedPayload {
+    generalId: string;
+    name: string;
+    imprints: string[];
+}
 
 /** 單一遊戲日的傭兵結算結果：日序與本日產生的離隊事件（告別信等）。 */
 export interface MercenaryDayReport {
@@ -3612,6 +3622,12 @@ export class GameSession {
         const recovered = recoverVitalityOneSeason(unveil.roster, advance.current.totalSeasonsElapsed - 1);
         let roster: GeneralConfig[] = advanceBreedingSeason(holdPregnancyVigor(unveil.roster, recovered)).generals;
         let lifecycle: LifecycleSettlement | undefined;
+        // 生平印記要在季結歸檔前寫入，歸檔快照才帶得到（G2 §E #7）
+        const newlyDead = roster
+            .filter((general) => isGeneralDead(general) && !deathBaseline.some((before) => before.id === general.id && isGeneralDead(before)))
+            .map((general) => general.id);
+        const deathImprints = this._imprintLives(roster, newlyDead);
+        roster = deathImprints.roster;
         // 季結會把死者從名冊移除，所以陣亡虎符要用移除前的名冊結算，否則真實 lifecycle 下一個都抓不到
         const rosterBeforeLifecycle = roster;
         if (this._lifecycle) {
@@ -3620,6 +3636,7 @@ export class GameSession {
             lifecycle = settled.settlement;
         }
         this._roster.replaceAll(roster);
+        this._emitLifeImprints(deathImprints.imprinted);
         this._clearLeadIfGone();
         this._releaseGearOfInactiveGenerals();
         this._settleOpenHallAssigns(formatSeasonLabel(advance.previous));
@@ -3753,7 +3770,9 @@ export class GameSession {
         const heirId = options?.heirChildId;
         if (heirId !== undefined) this._assertHeir(generalId, heirId);
         const retiredSubjects = this._journalSubjects([generalId]);
-        const result = await this._lifecycle.retireGeneral(this._roster.getAll(), generalId, this._clock.state);
+        // 生平印記要在產生教官卡前寫入，卡片的因子才帶得到（G2 §E #7）
+        const retireImprints = this._imprintLives(this._roster.getAll(), [generalId]);
+        const result = await this._lifecycle.retireGeneral(retireImprints.roster, generalId, this._clock.state);
         let roster = result.roster;
         let injection: { childId: string; injectedFactorId: string | null; consumed: boolean } | null = null;
         if (childId !== undefined) {
@@ -3785,8 +3804,25 @@ export class GameSession {
         this.recordPlayerLog('GENERAL_RETIRE');
         this._recordEventJournal('GENERAL_RETIRE', retiredSubjects);
         this._emit(GAME_SESSION_EVENTS.GeneralRetired, result.card);
+        this._emitLifeImprints(retireImprints.imprinted);
         if (injection) this._emit(GAME_SESSION_EVENTS.GeneCatalystInjected, injection);
         return result.card;
+    }
+
+    /** 蓋棺論定：把生平印記寫進這些武將，回傳新名冊與要發的事件內容（G2 §E #7） */
+    private _imprintLives(roster: readonly GeneralConfig[], generalIds: readonly string[]): { roster: GeneralConfig[]; imprinted: LifeImprintedPayload[] } {
+        const imprinted: LifeImprintedPayload[] = [];
+        const next = roster.map((general) => {
+            if (!generalIds.includes(general.id)) return general;
+            const result = withLifeImprints(general);
+            if (result.added.length > 0) imprinted.push({ generalId: general.id, name: general.name, imprints: result.added });
+            return result.general;
+        });
+        return { roster: next, imprinted };
+    }
+
+    private _emitLifeImprints(imprinted: readonly LifeImprintedPayload[]): void {
+        for (const payload of imprinted) this._emit(GAME_SESSION_EVENTS.LifeImprinted, payload);
     }
 
     /** 裝備傳承的接收者：名冊內存活、非導師卡，且 fatherId／motherId 指向退役者（與血統圖同源） */
