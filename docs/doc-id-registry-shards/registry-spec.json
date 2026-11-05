@@ -1786,5 +1786,11 @@
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/provenance/prior-birth-coverage/REPORT.md",
     "title": "原出生 → 原20季增齡 → 開獎／宿命 → 育成入場",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_0301",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/REPORT.md",
+    "title": "3KLife 最新版血統與出生驗證",
+    "category": "spec"
   }
 ]

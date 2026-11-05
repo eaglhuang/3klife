@@ -184,3 +184,5 @@
 | doc_spec_0298 | REPORT.md (nation_fall_save_v1) | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/REPORT.md | 原生出征→零領地→滅亡→保存讀回（NF01/NF02）有界驗證報告 |
 | doc_spec_0299 | INDEPENDENT_REVIEW.md (nation_fall_save_v1) | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/INDEPENDENT_REVIEW.md | 出征滅亡保存鏈獨立複核與6組負向控制驗證報告 |
 | doc_spec_0300 | REPORT.md (prior-birth-coverage) | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/provenance/prior-birth-coverage/REPORT.md | 原出生→20季增齡→5歲開獎宿命→育成入場（BN01-BN04）有界驗證報告 |
+| doc_index_1052 | README.md (handoff_2983a19f_v1) | docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/README.md | 最新版血統與出生驗證交接包索引（Commit 2983a19f） |
+| doc_spec_0301 | REPORT.md (handoff_2983a19f_v1) | docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/REPORT.md | 3KLife 最新版血統與出生驗證報告（含純化改星違規反例） |

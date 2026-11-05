@@ -1,0 +1,85 @@
+{
+  "ok": true,
+  "command": "guide",
+  "mode": "standalone",
+  "cwd": "/workspace/scratch/b22cdb26c624/gameplay-latest-2983a19f-20261105/source",
+  "messages": [
+    {
+      "level": "info",
+      "code": "ATM_GUIDE_READY",
+      "text": "Guide for goal is ready.",
+      "data": {
+        "intent": "goal"
+      }
+    }
+  ],
+  "evidence": {
+    "intent": "goal",
+    "summary": "Free-text ATM intent guidance is ready.",
+    "goal": "抓最新版本繼續驗證，唯讀測試，不修改產品或推送",
+    "matchedIntent": "unknown",
+    "routeIntent": "unknown",
+    "confidence": 0.4,
+    "matchedTerms": [],
+    "requiredFlow": [
+      "atm orient",
+      "atm start",
+      "atm next"
+    ],
+    "prerequisiteCommands": [],
+    "nextCommand": "node atm.mjs orient --cwd . --json",
+    "readFirst": [
+      "README.md"
+    ],
+    "guidedFallback": {
+      "missingDocs": [],
+      "fallbackSources": [],
+      "continuedOriginalRequest": true
+    },
+    "targetSelectionHint": null,
+    "blockedAntiPatterns": [
+      "host mutation without guidance session"
+    ],
+    "lexiconSources": [
+      "framework-default"
+    ],
+    "hostLearning": {
+      "lexiconPath": ".atm/guidance/intent-lexicon.json",
+      "activeEntryCount": 0
+    },
+    "orientationSummary": {
+      "adapterStatus": "available",
+      "configLegacyHotspotCount": 1,
+      "detectedLanguages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "releaseBlockers": [
+        "git-repository-missing"
+      ],
+      "releaseAdvisories": []
+    }
+  },
+  "nextAction": null,
+  "taskIntent": null,
+  "userNotice": null,
+  "runnerMode": null,
+  "frameworkReport": null,
+  "frameworkClaim": null,
+  "evidenceSummary": null,
+  "guardReport": null,
+  "taskflowReadiness": null,
+  "commitBundle": null,
+  "skillGrowth": null,
+  "laneSession": null,
+  "severity": "success",
+  "exitCode": 0,
+  "blocking": false,
+  "diagnostics": {
+    "errorCodes": [],
+    "warningCodes": [],
+    "infoCodes": [
+      "ATM_GUIDE_READY"
+    ]
+  }
+}

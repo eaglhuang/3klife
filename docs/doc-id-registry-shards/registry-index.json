@@ -454,5 +454,11 @@
     "path": "docs/cross-ref/code/ui-spec-json.md",
     "title": "代碼索引分片：UI Spec JSON 畫面表",
     "category": "index"
+  },
+  {
+    "id": "doc_index_1052",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/README.md",
+    "title": "3KLife 最新版血統與出生驗證交接包 (v1, Fixed `2983a19f`)",
+    "category": "index"
   }
 ]

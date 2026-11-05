@@ -19,6 +19,7 @@
 | `doc_spec_0298` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/REPORT.md | 原生出征 → 零領地 → 滅亡 → 保存／讀回 |
 | `doc_spec_0299` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/INDEPENDENT_REVIEW.md | Independent review |
 | `doc_spec_0300` | docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/provenance/prior-birth-coverage/REPORT.md | 原出生 → 原20季增齡 → 開獎／宿命 → 育成入場 |
+| `doc_spec_0301` | docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/REPORT.md | 3KLife 最新版血統與出生驗證 |
 
 ## 索引類 (`doc_index`)
 
@@ -100,3 +101,4 @@
 | `doc_index_1049` | docs/cross-ref/code/core-systems-2.md | 代碼索引分片：Core Systems（下半） |
 | `doc_index_1050` | docs/cross-ref/code/tools.md | 代碼索引分片：工具、建置與 Agent Skills |
 | `doc_index_1051` | docs/cross-ref/code/ui-spec-json.md | 代碼索引分片：UI Spec JSON 畫面表 |
+| `doc_index_1052` | docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/README.md | 3KLife 最新版血統與出生驗證交接包 (v1, Fixed 2983a19f) |

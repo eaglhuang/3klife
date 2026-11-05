@@ -235,6 +235,21 @@ node --experimental-transform-types --loader ./ts-resolver.mjs --test gameplay-p
    - 解決痛點：多子嗣培育時 36 回合逐回合點擊造成作業感疲勞。
    - 規則定案：全自動（Auto 0.70）適合旁系；半自動（Semi-Auto 0.95）以方針推進，僅在第 12 回合（期中考評方針三選一）、第 24 回合（弱冠禮戰法突破三選一）與重大彩圈共鳴（$u \ge 1.8$）強制暫停請示，通關時產出一頁式成長集錦。
 
+### 5.7 最新 Commit `2983a19f` 血統與出生驗證（`handoff_2983a19f_v1`，6,213 測試全過與純化違背反例）
+依據最新交接包 [`handoff_2983a19f_v1/REPORT.md`](file:///c:/Users/User/3KLife/docs/%E9%81%8A%E6%88%B2%E8%A6%8F%E6%A0%BC%E6%96%87%E4%BB%B6/%E7%B3%BB%E7%B5%B1%E8%A6%8F%E6%A0%BC%E6%9B%B8/%E8%A1%80%E7%B5%B1%E8%88%87%E5%AE%B6%E7%B3%BB-R5/handoff_2983a19f_v1/REPORT.md) (`doc_spec_0301`)，針對 GitHub 最新 HEAD（Commit `2983a19f676e7a18c1a95aaccf34b62ce8a298fa`）之原生測試集與 5 組獨立探針執行結果，納入下列關鍵分帳 [S20]：
+1. **原生測試與型別檢查狀態**：
+   - 原生 `tests/run-cli.ts`：**6,213 passed、0 failed、3 skipped**（skipped 為 Cocos UINodePool 節點池測試）；`tsc --project tsconfig.test.json --noEmit`：exit 0，零診斷錯誤。
+   - 證實 EP 五錨點、戰後 EP、多樣性 D、外戚純化、求籤令密考與單維細查等新功能代碼已確實落地。
+2. **重大規格不符：外戚純化直接升星（★+1）違規反例重現（`probe.cjs` Case 2）**：
+   - 探針以 `random = 0`、原 3★ 因子輸入時，`KinPurification.ts` 實際輸出因子等級由 3 變為 4（`actual.factors[0].level = 4`），原碼註明「暫以 30% ★+1 替代上限 m」。
+   - **分帳裁決**：此實作嚴重違反母規格（`R5F-B04.md` / G3 規格書 §E #2）中「純化只提高當胎上限 $m$、不改星級與抽星率」之核心契約。探針測試 PASS 僅代表重現了該現況行為，**規格判定為 FAIL**。後續工程必須鎖住星數不得提升，回歸 $m$ 加法管線。
+3. **缺譜降級邊界風險（`probe.cjs` Case 3）**：
+   - 探針確認 `DiversityFactor.ts` 在缺譜時輸出 $D=1$，`isInbredPair` 將無譜視為無共祖。此為工程降級處置，不可於規格或 UI 上等同宣稱為「證實為外婚」；未經密考查清 14 席者，不得享有外婚雜交優勢。
+4. **疲勞與風險轉移（`probe.cjs` Case 4）**：
+   - 證實 $h=3$ 外婚轉為 $h=2$（當胎病弱 $1\%$）；再近親通婚轉為 $h=3$（當胎病弱 $32\%$），轉移與風險計算符合預期。
+5. **記憶體存讀輪轉（`probe.cjs` Case 5）**：
+   - 驗證 `GameSession` 在 `MemoryStorageAdapter` 下成功持久化並讀回 `roster.ep = 76`、`bloodFatigue = 2` 及已密考記錄。但真實瀏覽器儲存、寫入中斷與崩潰恢復仍屬未驗（NOT_RUN）。
+
 ---
 
 ## 六、尚缺證據與待採內容清單
@@ -275,3 +290,4 @@ node --experimental-transform-types --loader ./ts-resolver.mjs --test gameplay-p
 - **[S17]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/all_gameplay_inventory_v1/全玩法覆蓋清單.md` (`doc_spec_0291`) 與 `跨系統待驗邊界.md` (`doc_spec_0292`)
 - **[S18]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/gameplay_reviewed_batch2_v1/總覽與驗收界線.md` (`doc_spec_0293`) 及四子包報告（`doc_spec_0294` ~ `doc_spec_0297`）
 - **[S19]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/nation_fall_save_v1/REPORT.md` (`doc_spec_0298`)、`INDEPENDENT_REVIEW.md` (`doc_spec_0299`) 及 `provenance/prior-birth-coverage/REPORT.md` (`doc_spec_0300`)
+- **[S20]** `docs/遊戲規格文件/系統規格書/血統與家系-R5/handoff_2983a19f_v1/REPORT.md` (`doc_spec_0301`)、`probe.cjs` 及 `results/probe.json`

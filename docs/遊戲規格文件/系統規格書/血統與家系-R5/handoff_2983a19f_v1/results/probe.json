@@ -1,0 +1,53 @@
+{
+  "sha": "2983a19f676e7a18c1a95aaccf34b62ce8a298fa",
+  "transpileOnly": true,
+  "results": [
+    {
+      "name": "EP probability normalization and monotonic expectation 0..100",
+      "status": "PASS",
+      "observed": {
+        "difference86vs76": 1.125,
+        "fiveStatBonusDifference": 5.625,
+        "note": "bonus only; not full child P expectation"
+      }
+    },
+    {
+      "name": "m-only counterexample: actual inherited star changes",
+      "status": "PASS",
+      "observed": {
+        "before": 3,
+        "after": 4,
+        "roll": 0,
+        "chance": 0.3,
+        "specConformance": "FAIL: changes star instead of cap only"
+      }
+    },
+    {
+      "name": "Missing pedigree produces diversity 1",
+      "status": "PASS",
+      "observed": {
+        "D": 1,
+        "note": "missing ancestry not proof of complete unrelated ancestry"
+      }
+    },
+    {
+      "name": "h3 outcross -> h2 risk1%; then inbred -> h3 risk32%",
+      "status": "PASS",
+      "observed": {
+        "h2": 2,
+        "h3": 3
+      }
+    },
+    {
+      "name": "GameSession save/load roundtrip",
+      "status": "PASS",
+      "observed": {
+        "ep": 76,
+        "bloodFatigue": 2,
+        "pedigreeProbe": true,
+        "storage": "MemoryStorageAdapter",
+        "notCovered": "browser storage, failed write, crash recovery"
+      }
+    }
+  ]
+}
