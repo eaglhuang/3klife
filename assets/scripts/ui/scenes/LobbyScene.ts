@@ -121,7 +121,8 @@ import { OfficerPanelsController } from '../core/OfficerPanelsController';
 import { BLOODLINE_VIGNETTE_CELL_COUNT, bloodlineVignetteOpenLabel, bloodlineVignetteViewOf } from '../core/BloodlineVignetteText';
 import { installOfficerTierTable, type OfficerTierRow } from '../../core/systems/OfficerTierTable';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
-import { officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
+import { OFFICER_PROMOTION_FREEZE_TIMING, officerPromotionFreezeTitles, officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
+import { playTitleFreeze } from '../core/TitleFreezeOverlay';
 import { estimateSortiePower } from '../../core/systems/SortiePrediction';
 import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import { HALL_EMPTY_THEME_CATALOG, resolveHallTheme, type HallThemeFrame } from '../../core/systems/LobbyThemeResolver';
@@ -723,6 +724,8 @@ export class LobbyScene extends Component {
                 for (const message of [...officerPromotionNoticeOf(payload.tiers), ...officerPromotionScriptLines(payload.tiers)]) {
                     services().event.emit('SHOW_TOAST', { message, duration: 2 });
                 }
+                // 升官動畫（官職系統 E-6，PROG-2-1859）：每升一階播一次大字定格
+                void this._playOfficerPromotionFreeze(payload.tiers);
             }),
             services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, () => {
                 const session = services().session;
@@ -5162,6 +5165,12 @@ export class LobbyScene extends Component {
             this._detailPanel?.hide();
         };
         await this._detailPanel.show(config);
+    }
+
+    private async _playOfficerPromotionFreeze(tiers: readonly number[]): Promise<void> {
+        for (const title of officerPromotionFreezeTitles(tiers)) {
+            await playTitleFreeze(this.node, title, OFFICER_PROMOTION_FREEZE_TIMING, 'OfficerPromotionFreeze');
+        }
     }
 
     private async _openCharacterDs3FromListSelection(config: GeneralConfig): Promise<void> {
