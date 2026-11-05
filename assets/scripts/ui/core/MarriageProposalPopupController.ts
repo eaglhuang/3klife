@@ -7,6 +7,7 @@
  *
  * Unity 對照：MVP 的 Presenter。按鈕 onClick 只呼叫 Respond，畫面層拿 GetView() 一次刷新。
  */
+import { factorDetailVisible, kinshipScanVisible, type MilestoneStage } from '../../core/systems/FamilyMilestone';
 import { ITEM_ORACLE_TOKEN } from '../../core/systems/ItemDef';
 import { RUMOR_STAT_KEYS, rumorRouteName, nextRumorStat, type RumorStatKey } from '../../core/systems/MatchRumor';
 import { marriageAcceptLabel, marriageGiftLine, marriageProposalLine, marriageSuitorLine, type MarriageProposal } from '../../core/systems/MarriageProposal';
@@ -21,6 +22,8 @@ export interface MarriageProposalPopupView {
 export interface MarriageProposalPopupDeps {
     session: {
         readonly marriageProposal: MarriageProposal | null;
+        /** 家族階段（總綱 M_stage）；沒有提供時視為全開 */
+        readonly milestoneStage?: MilestoneStage;
         respondMarriageProposal(accept: boolean, grantGold: (amount: number) => void): Promise<{ ok: boolean }>;
         itemCount(itemId: string): number;
         isStatProbed(generalId: string, stat: RumorStatKey): boolean;
@@ -62,11 +65,19 @@ export class MarriageProposalPopupController {
     /** 對象的武將 id 就是提親 id，應允後在結緣畫面不必重查（PROG-2-1835） */
     async probeSuitorStat(): Promise<boolean> {
         const proposal = this._deps.session.marriageProposal;
-        return proposal ? this._deps.session.probeStat(proposal.id, this._probeStat) : false;
+        if (!proposal || !factorDetailVisible(this._stage())) return false;
+        return this._deps.session.probeStat(proposal.id, this._probeStat);
+    }
+
+    private _stage(): MilestoneStage {
+        return this._deps.session.milestoneStage ?? 4;
     }
 
     getView(): MarriageProposalPopupView {
         const { session } = this._deps;
+        const stage = this._stage();
+        const probeVisible = factorDetailVisible(stage);
+        const showAlliance = kinshipScanVisible(stage);
         const proposal = session.marriageProposal;
         const stat = this._probeStat;
         const tokens = session.itemCount(ITEM_ORACLE_TOKEN);
@@ -76,9 +87,9 @@ export class MarriageProposalPopupController {
                 mpTitle: '名門求親',
                 closeMpLabel: proposal ? '稍後' : '關閉',
                 mpEmptyHint: '目前沒有上門提親的名門。',
-                mpLine: proposal ? marriageProposalLine(proposal) : '',
+                mpLine: proposal ? marriageProposalLine(proposal, showAlliance) : '',
                 mpSuitor: proposal ? marriageSuitorLine(proposal) : '',
-                mpGift: proposal ? marriageGiftLine(proposal) : '',
+                mpGift: proposal ? marriageGiftLine(proposal, showAlliance) : '',
                 mpNotice: this._notice,
                 acceptMpLabel: proposal ? marriageAcceptLabel(proposal) : '應允',
                 declineMpLabel: '婉拒',
@@ -86,13 +97,19 @@ export class MarriageProposalPopupController {
                 probeMpStatLabel: probed ? '已細查' : `細查（${STAT_PROBE_COST} 券）`,
                 mpStatLine: proposal ? `${statProbeLine(stat, { name: proposal.suitor.name, stats: proposal.suitor, probed })}｜求籤令 ×${tokens}` : '',
             },
-            actives: { mpPanel: proposal !== null, mpEmptyHint: proposal === null && this._notice === '' },
+            actives: {
+                mpPanel: proposal !== null,
+                mpEmptyHint: proposal === null && this._notice === '',
+                btnCycleMpStat: probeVisible,
+                btnProbeMpStat: probeVisible,
+                mpStatLine: probeVisible,
+            },
             enabled: {
                 btnCloseMp: true,
                 btnAcceptMp: proposal !== null,
                 btnDeclineMp: proposal !== null,
                 btnCycleMpStat: proposal !== null,
-                btnProbeMpStat: proposal !== null && !probed && tokens >= STAT_PROBE_COST,
+                btnProbeMpStat: probeVisible && proposal !== null && !probed && tokens >= STAT_PROBE_COST,
             },
         };
     }

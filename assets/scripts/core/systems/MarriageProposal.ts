@@ -148,12 +148,13 @@ export function buildSuitorGeneral(proposal: MarriageProposal): GeneralConfig {
     } as unknown as GeneralConfig;
 }
 
-export function marriageProposalLine(proposal: MarriageProposal): string {
-    return `${proposal.centuryAlliance ? '百年世交' : ''}${proposal.family}氏遣媒人攜重禮上門，願以${proposal.suitor.name}與${proposal.targetName}結親。`;
+/** showAlliance：世交字樣 G3 起才解鎖（總綱 M_stage 表），預設顯示 */
+export function marriageProposalLine(proposal: MarriageProposal, showAlliance = true): string {
+    return `${showAlliance && proposal.centuryAlliance ? '百年世交' : ''}${proposal.family}氏遣媒人攜重禮上門，願以${proposal.suitor.name}與${proposal.targetName}結親。`;
 }
 
-export function marriageGiftLine(proposal: MarriageProposal): string {
-    return `聘禮：黃金 ${proposal.giftGold}${proposal.allianceBonusGold ? `（世交加禮 +${proposal.allianceBonusGold}）` : ''}`;
+export function marriageGiftLine(proposal: MarriageProposal, showAlliance = true): string {
+    return `聘禮：黃金 ${proposal.giftGold}${showAlliance && proposal.allianceBonusGold ? `（世交加禮 +${proposal.allianceBonusGold}）` : ''}`;
 }
 
 /** 只用鄉評公開的資訊（G4 §F-2 Layer 1） */
