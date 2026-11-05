@@ -7,9 +7,9 @@
  *
  * Unity 對照：像一支 runtime 組 UI 的 Builder，節點命名照 BloodlineTreePanel 要求的 Prefab 結構。
  */
-import { BlockInputEvents, Color, Graphics, Label, Node, UITransform } from 'cc';
+import { BlockInputEvents, Color, Graphics, Label, Node, UITransform, Mask, Sprite } from 'cc';
 import { treeCardNodeName } from '../../../core/systems/BloodlineTreeBinding';
-import { PEDIGREE_SEAT_WEIGHTS, pedigreeRowLabel } from '../../../core/systems/BloodlineTreeSlots';
+import { PEDIGREE_SEAT_WEIGHTS, pedigreeRowLabel, TREE_CARD_AVATAR } from '../../../core/systems/BloodlineTreeSlots';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 
 export const DS3_BLOODLINE_TREE_NODE_NAME = 'Ds3BloodlineTree';
@@ -79,6 +79,16 @@ function fillRoundRect(node: Node, width: number, height: number, fill: Color, b
     graphics.stroke();
 }
 
+/** 圓形頭像：外層遮罩、內層 Sprite；有頭像時才由 BloodlineTreePanel 打開 */
+function addCardAvatar(card: Node): void {
+    const { nodeName, size, y } = TREE_CARD_AVATAR;
+    const holder = addNode(card, nodeName, 0, y, size, size);
+    holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+    const sprite = addNode(holder, 'Sprite', 0, 0, size, size).addComponent(Sprite);
+    sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+    holder.active = false;
+}
+
 function buildGenerationRow(root: Node, config: (typeof ROWS)[number]): void {
     addLabel(root, `GenLabel_${config.row}`, pedigreeRowLabel(config.zh, config.count, config.weight), LABEL_COLUMN_X, config.y, 90, 60, 15, new Color().fromHEX(config.color));
     const container = addNode(root, config.container, CARDS_CENTER_X, config.y, config.step * config.count, config.height);
@@ -87,6 +97,7 @@ function buildGenerationRow(root: Node, config: (typeof ROWS)[number]): void {
         const card = addNode(container, treeCardNodeName(config.row, i), x, 0, config.width, config.height);
         fillRoundRect(card, config.width, config.height, CARD_FILL, CARD_BORDER);
         addLabel(card, 'Txt', '—', 0, 0, config.width - 8, config.height - 8, CARD_FONT_SIZE, CARD_TEXT);
+        addCardAvatar(card);
     }
 }
 
