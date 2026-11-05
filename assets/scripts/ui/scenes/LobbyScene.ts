@@ -1299,6 +1299,7 @@ export class LobbyScene extends Component {
             factorDictionary: () => services().session.factorDictionary,
             announce: (message) => services().event.emit('SHOW_TOAST', { message, duration: 4 }),
             noteKinPair: (fatherName, motherName, ancestorName) => services().session.noteKinPair(fatherName, motherName, ancestorName),
+            milestoneStage: () => services().session.milestoneStage,
             familySynergy: () => services().session.familySynergy,
             gold: () => this._localGachaService.getCurrencyAmount('gold'),
             spendGold: (amount) => this._localGachaService.spendCurrency('gold', amount),

@@ -47,6 +47,12 @@ export function birthFrailRisk(childH: number, inbred: boolean): number {
     return INBRED_FRAIL_RISK[Math.min(Math.max(childH, 1), INBRED_FRAIL_RISK.length) - 1];
 }
 
+/** 每次異姓外婚 h 減 1，要幾代才回到清朗 */
+export function outcrossRecoveryLine(fatherH: unknown, motherH: unknown): string {
+    const before = Math.max(normalizeBloodFatigue(fatherH), normalizeBloodFatigue(motherH));
+    return before > 0 ? `外婚復壯需 ${before} 代` : '';
+}
+
 export function kinshipLampLevel(h: unknown): number {
     return Math.min(normalizeBloodFatigue(h), KINSHIP_LAMP_TEXT.length - 1);
 }
