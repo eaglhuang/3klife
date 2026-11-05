@@ -407,6 +407,26 @@ export function attachRivalOfficers(
     };
 }
 
+/**
+ * 把玩家已擁有的武將移出他國名冊並卸下其虎符（PROG-2-1849）；沒有人要移除的勢力維持原物件。
+ * 軍力在下一次季推進重算。
+ */
+export function dropOwnedRivalOfficers(world: RivalWorld, ownedIds: ReadonlySet<string>): RivalWorld {
+    return {
+        nations: world.nations.map((n) => {
+            const roster = n.officerRoster;
+            if (!roster || !roster.officers.some((o) => ownedIds.has(o.generalId))) return n;
+            return {
+                ...n,
+                officerRoster: {
+                    officers: roster.officers.filter((o) => !ownedIds.has(o.generalId)),
+                    tallies: roster.tallies.map((t) => (t.equippedGeneralId && ownedIds.has(t.equippedGeneralId) ? { ...t, equippedGeneralId: null } : t)),
+                },
+            };
+        }),
+    };
+}
+
 /** 讀存檔：缺漏的勢力補初始值，未知勢力丟棄，數值夾在合法範圍 */
 function proposalFieldsOf(s: Partial<NationState>): Pick<NationState, 'proposal' | 'proposalBlockedUntil'> {
     const p = s.proposal;
