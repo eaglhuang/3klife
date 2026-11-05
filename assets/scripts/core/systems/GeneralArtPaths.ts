@@ -67,6 +67,19 @@ export function avatarCandidates(idOrPortraitKey: string): string[] {
     return _config.avatar.map((t) => fill(t, id));
 }
 
+/** 依序查各來源，第一個有值的性別為準；查詢丟例外視同查不到（服務還沒就緒時不擋頭像）。 */
+export function firstKnownGender(sources: ReadonlyArray<() => string | null | undefined>): string | undefined {
+    for (const source of sources) {
+        try {
+            const gender = source();
+            if (gender) return gender;
+        } catch {
+            // 換下一個來源
+        }
+    }
+    return undefined;
+}
+
 /** 未知頭像：依性別挑男女版；沒有性別資料一律用男版。 */
 export function avatarPlaceholderPath(gender?: string | null): string {
     const g = gender === '女' || gender === 'f' || gender === 'female' ? 'f' : 'm';

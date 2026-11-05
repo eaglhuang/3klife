@@ -5,6 +5,7 @@ import {
     avatarCandidates,
     avatarPlaceholderPath,
     configureGeneralArtPaths,
+    firstKnownGender,
     defaultGeneralArtPaths,
     portraitPathOf,
     resetGeneralArtPaths,
@@ -49,6 +50,18 @@ export function createGeneralArtPathsSuite(): TestSuite {
         assert.equals('sprites/ui_avatars/unknown_avatar_f', avatarPlaceholderPath('女'));
         assert.equals('sprites/ui_avatars/unknown_avatar_m', avatarPlaceholderPath('男'));
         assert.equals('sprites/ui_avatars/unknown_avatar_m', avatarPlaceholderPath(undefined));
+    });
+
+    suite.test('性別依序查來源，第一個有值的為準', () => {
+        assert.equals('女', firstKnownGender([() => undefined, () => '女', () => '男']) ?? '');
+        assert.equals('男', firstKnownGender([() => '男', () => '女']) ?? '');
+        assert.equals(undefined, firstKnownGender([() => null, () => '']));
+    });
+
+    suite.test('來源丟例外就換下一個，不擋頭像', () => {
+        const broken = (): string => { throw new Error('服務還沒就緒'); };
+        assert.equals('女', firstKnownGender([broken, () => '女']) ?? '');
+        assert.equals(undefined, firstKnownGender([broken]));
     });
 
     return suite;
